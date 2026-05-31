@@ -6,7 +6,7 @@ Beschreibung: Punktwertung gültiger Farbgruppen nach R4.2/R4.4 und R8.4.
               Gruppen < 3 Karten zählen 0. Sonderkarten unterbrechen Gruppen.
 */
 
-import type { Schlange } from './types';
+import type { Schlange, Spieler } from './types';
 import { ermittleFarbgruppen, type Farbgruppe } from './colorGroups';
 
 export type FarbgruppenWertung = Farbgruppe & { punkte: number };
@@ -14,6 +14,22 @@ export type FarbgruppenWertung = Farbgruppe & { punkte: number };
 export interface FarbgruppenPunkteErgebnis {
   gesamtPunkte: number;
   gruppen: FarbgruppenWertung[];
+}
+
+export type SchlangenFarbgruppenPunkteErgebnis = FarbgruppenPunkteErgebnis & { schlangenId: string };
+
+export interface SpielerFarbgruppenPunkteErgebnis {
+  gesamtPunkte: number;
+  schlangen: SchlangenFarbgruppenPunkteErgebnis[];
+}
+
+export function berechneSpielerFarbgruppenPunkte(spieler: Spieler): SpielerFarbgruppenPunkteErgebnis {
+  const schlangen = spieler.schlangen.map((s) => {
+    const ergebnis = berechneFarbgruppenPunkte(s);
+    return { schlangenId: s.id, ...ergebnis };
+  });
+  const gesamtPunkte = schlangen.reduce((sum, s) => sum + s.gesamtPunkte, 0);
+  return { gesamtPunkte, schlangen };
 }
 
 export function berechneFarbgruppenPunkte(schlange: Schlange): FarbgruppenPunkteErgebnis {
