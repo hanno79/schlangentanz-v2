@@ -6,7 +6,7 @@ Beschreibung: TDD-Tests für die Zugphasen-State-Machine im Schlangentanz-Engine
 */
 
 import { describe, it, expect } from 'vitest';
-import { erstelleSpielzustand, starteAusspielphase } from '../index';
+import { beendeAusspielphase, erstelleSpielzustand, starteAusspielphase } from '../index';
 
 describe('Turn State Machine — R2 Nachziehphase', () => {
   it('zieht Pflichtkarten bis zur Mindesthand und wechselt in die Ausspielphase', () => {
@@ -82,6 +82,59 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
 
     expect(() => starteAusspielphase(zustand)).toThrow(
       'Ausspielphase kann nur aus der Nachziehphase gestartet werden.',
+    );
+  });
+});
+
+describe('Turn State Machine — R2.3 Ausspielphase', () => {
+  function basisZustand() {
+    return erstelleSpielzustand(2, () => 0.999999);
+  }
+  function zustandInAusspielphase() {
+    return { ...basisZustand(), zugphase: 'Ausspielphase' as const };
+  }
+
+  it.each([1, 2])('wechselt nach %i ausgespielten Karten in die Aufgabenprüfung', (n) => {
+    const zustand = zustandInAusspielphase();
+
+    const aktualisiert = beendeAusspielphase(zustand, { ausgespielteKarten: n });
+
+    expect(aktualisiert.zugphase).toBe('Aufgabenpruefung');
+    expect(zustand.zugphase).toBe('Ausspielphase');
+  });
+
+  it('verbietet Abschluss ohne ausgespielte Karte', () => {
+    const zustand = zustandInAusspielphase();
+
+    expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 0 })).toThrow(
+      'Die Ausspielphase darf erst nach mindestens einer gespielten Karte beendet werden.',
+    );
+  });
+
+  it.each([1.5, Number.NaN, Number.POSITIVE_INFINITY])(
+    'verbietet nicht-ganzzahlige oder ungültige Kartenanzahl %s',
+    (ausgespielteKarten) => {
+      const zustand = zustandInAusspielphase();
+
+      expect(() => beendeAusspielphase(zustand, { ausgespielteKarten })).toThrow(
+        'Die Anzahl ausgespielter Karten muss eine ganze Zahl sein.',
+      );
+    },
+  );
+
+  it('verbietet Abschluss nach mehr als zwei ausgespielten Karten', () => {
+    const zustand = zustandInAusspielphase();
+
+    expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 3 })).toThrow(
+      'Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.',
+    );
+  });
+
+  it('verbietet Abschluss außerhalb der Ausspielphase', () => {
+    const zustand = basisZustand();
+
+    expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 1 })).toThrow(
+      'Ausspielphase kann nur aus der Ausspielphase beendet werden.',
     );
   });
 });
