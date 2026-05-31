@@ -14,7 +14,32 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 ## 3. Setup
 
-TODO: Define initial deck/state/hand/turn order and all starting conditions.
+> **Draft — Signoff ausstehend.** Die folgenden Regeln wurden aus dem Dart-Backlog (R1.1/R1.2/R1.3/R1.4) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+
+### R1.1/R1.2 Kartenstapel vorbereiten
+
+- Alle Karten werden vor Spielbeginn nach Kartentyp sortiert.
+- Haupt-/Nachziehstapel: 78 Farbkarten + 33 Sonderkarten = **Nachziehstapel enthält exakt 111 Karten**.
+- Aufgabenkarten: 15 Stück gesamt, unterteilt in 8 offene Aufgabenkarten und 7 geheime Aufgabenkarten. Diese liegen getrennt bereit.
+- Comeback-Karten: je 1 pro Spieler.
+- Risiko-Belohnungs-Karten: je 2 pro Spieler.
+- Digital: Hauptstapel wird per Fisher-Yates oder gleichwertigem Zufallsalgorithmus gemischt.
+
+### R1.3 Startkarten verteilen
+
+- Jeder Spieler erhält 5 Startkarten vom Nachziehstapel.
+- Verteilung erfolgt reihum (kein Durcheinander).
+- Handkarten anderer Spieler dürfen nicht sichtbar sein.
+- Handkartenlimit: 10 Karten.
+- Mindesthandkarten nach Nachziehen: 5 Karten.
+
+### R1.4 Aufgabenkarten auslegen
+
+- Zu Spielbeginn werden 3 offene Aufgaben offen ausgelegt und sind für alle sichtbar.
+- Die restlichen 5 offenen Aufgabenkarten bilden einen verdeckten Aufgaben-Nachziehstapel.
+- Jeder Spieler erhält genau 1 geheime Aufgabe; übrige geheime Aufgaben werden aus dem Spiel entfernt.
+- Offene Aufgaben können von jedem Spieler erfüllt werden; nach Erfüllung werden sie ersetzt und zählen in der Endspurt-Phase doppelt.
+- Geheime Aufgaben sind nur dem jeweiligen Spieler sichtbar und bringen Bonuspunkte bei Erfüllung.
 
 ## 4. Turn Structure
 
