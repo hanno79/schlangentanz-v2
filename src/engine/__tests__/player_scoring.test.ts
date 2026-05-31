@@ -6,7 +6,7 @@ Beschreibung: TDD-Tests für die Farbgruppen-Punktwertung über alle Schlangen e
 */
 
 import { describe, expect, it } from 'vitest';
-import { berechneSpielerFarbgruppenPunkte } from '../index';
+import { berechneSpielerAufgabenPunkte, berechneSpielerFarbgruppenPunkte } from '../index';
 import type { AufgabenkarteInfo, Spieler } from '../types';
 import { farbkarte, schlange, sonderkarte } from './testHelpers';
 
@@ -106,6 +106,43 @@ describe('Spieler-Farbgruppen-Punktwertung — R4.2/R4.4', () => {
     const vorher = JSON.parse(JSON.stringify(spieler));
 
     berechneSpielerFarbgruppenPunkte(spieler);
+
+    expect(spieler).toEqual(vorher);
+  });
+});
+
+describe('Spieler-Aufgaben-Punktwertung — R8.4c', () => {
+  it('summiert die Punkte bereits erfüllter Aufgaben eines Spielers', () => {
+    const spieler = spielerMitSchlangen([]);
+    spieler.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'aufgabe-test-1', name: 'Farbenpracht', punkte: 8, bedingung: 'Test' },
+      { typ: 'Aufgabenkarte', id: 'aufgabe-test-2', name: 'Schlangentanz', punkte: 7, bedingung: 'Test' },
+    ];
+
+    expect(berechneSpielerAufgabenPunkte(spieler)).toEqual({
+      gesamtPunkte: 15,
+      aufgaben: [
+        { aufgabenId: 'aufgabe-test-1', name: 'Farbenpracht', punkte: 8 },
+        { aufgabenId: 'aufgabe-test-2', name: 'Schlangentanz', punkte: 7 },
+      ],
+    });
+  });
+
+  it('wertet Spieler ohne erfüllte Aufgaben mit 0 Punkten', () => {
+    expect(berechneSpielerAufgabenPunkte(spielerMitSchlangen([]))).toEqual({
+      gesamtPunkte: 0,
+      aufgaben: [],
+    });
+  });
+
+  it('mutiert erfüllte Aufgaben und Spieler nicht', () => {
+    const spieler = spielerMitSchlangen([]);
+    spieler.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'aufgabe-test-3', name: 'Symmetriemeister', punkte: 10, bedingung: 'Test' },
+    ];
+    const vorher = JSON.parse(JSON.stringify(spieler));
+
+    berechneSpielerAufgabenPunkte(spieler);
 
     expect(spieler).toEqual(vorher);
   });
