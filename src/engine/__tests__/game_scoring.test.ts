@@ -6,7 +6,7 @@ Beschreibung: TDD-Tests für die Spiel-Gesamtwertung über alle Spieler nach R8.
 */
 
 import { describe, expect, it } from 'vitest';
-import { berechneSpielGesamtwertung } from '../index';
+import { berechneSpielGesamtwertung, berechneSpielzustandGesamtwertung } from '../index';
 import { farbkarte, schlange, spielerMitId } from './testHelpers';
 
 describe('Spiel-Gesamtwertung — R8.4e', () => {
@@ -79,5 +79,56 @@ describe('Spiel-Gesamtwertung — R8.4e', () => {
     berechneSpielGesamtwertung([spieler]);
 
     expect(spieler).toEqual(vorher);
+  });
+});
+
+describe('Spielzustand-Gesamtwertung — R8.4f', () => {
+  it('berechnet die Spiel-Gesamtwertung direkt aus dem Spielzustand', () => {
+    const anna = spielerMitId('spieler-anna', 'Anna', [
+      schlange([
+        farbkarte('anna-zustand-blau-1', 'Blau', 1),
+        farbkarte('anna-zustand-blau-2', 'Blau', 1),
+        farbkarte('anna-zustand-blau-3', 'Blau', 1),
+      ], 'anna-zustand-schlange-1'),
+    ]);
+    anna.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'anna-zustand-aufgabe-1', name: 'Farbenpracht', punkte: 8, bedingung: 'Test' },
+    ];
+
+    const ben = spielerMitId('spieler-ben', 'Ben', [
+      schlange([
+        farbkarte('ben-zustand-gelb-1', 'Gelb', 2),
+        farbkarte('ben-zustand-gelb-2', 'Gelb', 2),
+        farbkarte('ben-zustand-gelb-3', 'Gelb', 2),
+      ], 'ben-zustand-schlange-1'),
+    ]);
+
+    const zustand = { spieler: [anna, ben] };
+
+    const erwarteteWertung = berechneSpielGesamtwertung(zustand.spieler);
+
+    expect(berechneSpielzustandGesamtwertung(zustand)).toEqual(erwarteteWertung);
+    expect(erwarteteWertung).toEqual({
+      spielerwertungen: [
+        expect.objectContaining({ spielerId: 'spieler-anna', name: 'Anna', gesamtPunkte: 11 }),
+        expect.objectContaining({ spielerId: 'spieler-ben', name: 'Ben', gesamtPunkte: 6 }),
+      ],
+    });
+  });
+
+  it('mutiert den Spielzustand und enthaltene Spieler nicht', () => {
+    const spieler = spielerMitId('spieler-caro', 'Caro', [
+      schlange([
+        farbkarte('caro-zustand-rot-1', 'Rot', 1),
+        farbkarte('caro-zustand-rot-2', 'Rot', 1),
+        farbkarte('caro-zustand-rot-3', 'Rot', 1),
+      ], 'caro-zustand-schlange-1'),
+    ]);
+    const zustand = { spieler: [spieler] };
+    const vorher = JSON.parse(JSON.stringify(zustand));
+
+    berechneSpielzustandGesamtwertung(zustand);
+
+    expect(zustand).toEqual(vorher);
   });
 });

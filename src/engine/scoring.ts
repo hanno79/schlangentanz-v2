@@ -7,9 +7,10 @@ Beschreibung: Punktwertung gültiger Farbgruppen nach R4.2/R4.4 und R8.4.
               R8.4c: Erfüllte Aufgabenpunkte eines Spielers summieren.
               R8.4d: Spieler-Gesamtpunkte aus Farbgruppen + erfüllten Aufgaben aggregieren.
               R8.4e: Spiel-Gesamtwertung über alle Spieler berechnen.
+              R8.4f: Spiel-Gesamtwertung aus Spielzustand berechnen.
 */
 
-import type { Schlange, Spieler } from './types';
+import type { Schlange, Spieler, Spielzustand } from './types';
 import { ermittleFarbgruppen, type Farbgruppe } from './colorGroups';
 
 export type FarbgruppenWertung = Farbgruppe & { punkte: number };
@@ -90,6 +91,10 @@ export function berechneSpielGesamtwertung(spieler: Spieler[]): SpielGesamtwertu
       return { spielerId: s.id, name: s.name, gesamtPunkte: wertung.gesamtPunkte, wertung };
     }),
   };
+}
+
+export function berechneSpielzustandGesamtwertung(zustand: Pick<Spielzustand, 'spieler'>): SpielGesamtwertungErgebnis {
+  return berechneSpielGesamtwertung(zustand.spieler);
 }
 
 export function berechneFarbgruppenPunkte(schlange: Schlange): FarbgruppenPunkteErgebnis {
