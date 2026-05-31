@@ -8,6 +8,8 @@
 
 ## Phase 1 — Dart backlog ingestion
 
+Current source snapshot: `docs/DART_BACKLOG_SOURCE.md`.
+
 - Locate Schlangentanz/Dart AI tasks.
 - Reset relevant tasks to Todo only after confirming scope.
 - Cluster tasks into rules, engine, UI/UX, audio, analytics, deployment, QA/security.
