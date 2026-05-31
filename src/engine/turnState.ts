@@ -5,16 +5,32 @@ Version: 1.5
 Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf und Pflichtprüfung im Zugabschluss (R2.5).
 */
 
-import { HANDKARTENLIMIT, MINDESTHANDKARTEN } from './constants';
+import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER } from './constants';
 import type { Spielzustand, Spielphase } from './types';
 
-function aktualisiereAktiveHand(
+function aktualisiereAktivenSpieler(
   zustand: Spielzustand,
-  neueHand: Spielzustand['spieler'][number]['hand'],
+  patch: Partial<Spielzustand['spieler'][number]>,
 ): Spielzustand['spieler'] {
   return zustand.spieler.map((spieler, index) =>
-    index === zustand.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
+    index === zustand.aktiverSpielerIndex ? { ...spieler, ...patch } : spieler,
   );
+}
+
+function erstelleSchlangenId(spielerId: string, nummer: number): string {
+  return `schlange-${spielerId}-${nummer}`;
+}
+
+function ermittleNaechsteFreieSchlangenNummer(spieler: Spielzustand['spieler'][number]): number {
+  const belegteIds = new Set(spieler.schlangen.map((schlange) => schlange.id));
+
+  for (let nummer = 1; nummer <= MAX_SCHLANGEN_PRO_SPIELER; nummer += 1) {
+    if (!belegteIds.has(erstelleSchlangenId(spieler.id, nummer))) {
+      return nummer;
+    }
+  }
+
+  throw new Error('Alle Schlangennummern sind belegt.');
 }
 
 export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
@@ -39,7 +55,7 @@ export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
       ? 'Endspurt'
       : zustand.spielphase;
 
-  const neueSpieler = aktualisiereAktiveHand(zustand, neueHand);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
 
   return {
     ...zustand,
@@ -108,7 +124,7 @@ export function werfeUeberzaehligeHandkartenAb(
   }
   const neueHand = aktiverSpieler.hand.filter((karte) => !abzuwerfenSet.has(karte.id));
 
-  const neueSpieler = aktualisiereAktiveHand(zustand, neueHand);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
 
   return {
     ...zustand,
@@ -138,12 +154,59 @@ export function werfeKarteMangelsSpielbarerAktionAb(
   }
 
   const neueHand = aktiverSpieler.hand.filter((karte) => karte.id !== kartenId);
-  const neueSpieler = aktualisiereAktiveHand(zustand, neueHand);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
 
   return {
     ...zustand,
     spieler: neueSpieler,
     ablagestapel: [...zustand.ablagestapel, abzuwerfendeKarte],
+    zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
+  };
+}
+
+export function starteNeueSchlange(
+  zustand: Spielzustand,
+  optionen: { kartenId?: string } | null = {},
+): Spielzustand {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    throw new Error('Neue Schlangen können nur in der Ausspielphase gestartet werden.');
+  }
+
+  const kartenId = optionen?.kartenId;
+  if (typeof kartenId !== 'string' || kartenId.trim() === '') {
+    throw new Error('Es muss genau eine Handkarte zum Starten gewählt werden.');
+  }
+  if (zustand.zugpflichten.gespielteKarten >= 2) {
+    throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  if (aktiverSpieler.schlangen.length >= MAX_SCHLANGEN_PRO_SPIELER) {
+    throw new Error(`Ein Spieler darf maximal ${MAX_SCHLANGEN_PRO_SPIELER} Schlangen haben.`);
+  }
+
+  const karte = aktiverSpieler.hand.find((k) => k.id === kartenId);
+  if (!karte) {
+    throw new Error('Die Karte befindet sich nicht auf der Hand des aktiven Spielers.');
+  }
+  if (karte.typ !== 'Farbkarte') {
+    throw new Error('Eine neue Schlange kann nur mit einer Farbkarte gestartet werden.');
+  }
+
+  const neueSchlange = {
+    id: erstelleSchlangenId(aktiverSpieler.id, ermittleNaechsteFreieSchlangenNummer(aktiverSpieler)),
+    zustand: 'aktiv' as const,
+    karten: [karte],
+  };
+  const neueHand = aktiverSpieler.hand.filter((k) => k.id !== kartenId);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, {
+    hand: neueHand,
+    schlangen: [...aktiverSpieler.schlangen, neueSchlange],
+  });
+
+  return {
+    ...zustand,
+    spieler: neueSpieler,
     zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
   };
 }
