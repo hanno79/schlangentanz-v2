@@ -1,7 +1,7 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.1
+Version: 1.2
 Beschreibung: Gemeinsame Test-Builder für Engine-Unit-Tests.
 */
 
@@ -28,4 +28,8 @@ export function spielerMitSchlangen(schlangen: Spieler['schlangen']): Spieler {
     erfuellteAufgaben: [],
     geheimeAufgabe: { typ: 'Aufgabenkarte', id: 'test-aufgabe-geheim', name: 'Testaufgabe', punkte: 1, bedingung: 'Testbedingung' },
   };
+}
+
+export function spielerMitId(id: string, name: string, schlangen: Spieler['schlangen']): Spieler {
+  return { ...spielerMitSchlangen(schlangen), id, name };
 }
