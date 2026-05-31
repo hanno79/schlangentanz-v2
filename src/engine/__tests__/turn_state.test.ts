@@ -206,7 +206,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
   it('beendet den Zug ohne Überhand und aktiviert den nächsten Spieler in der Nachziehphase', () => {
     const zustand = zustandInZugabschluss(0);
 
-    const aktualisiert = beendeZug(zustand);
+    const aktualisiert = beendeZug(zustand, { pflichtenErfuellt: true });
 
     expect(aktualisiert.aktiverSpielerIndex).toBe(1);
     expect(aktualisiert.zugphase).toBe('Nachziehphase');
@@ -218,7 +218,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
   it('wechselt nach dem letzten Spieler wieder zum ersten Spieler', () => {
     const zustand = zustandInZugabschluss(3, 4);
 
-    const aktualisiert = beendeZug(zustand);
+    const aktualisiert = beendeZug(zustand, { pflichtenErfuellt: true });
 
     expect(aktualisiert.aktiverSpielerIndex).toBe(0);
     expect(aktualisiert.zugphase).toBe('Nachziehphase');
@@ -227,7 +227,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
   it('verbietet Zugende mit mehr als zehn Handkarten beim aktiven Spieler', () => {
     const zustand = zustandMitUeberhand();
 
-    expect(() => beendeZug(zustand)).toThrow(
+    expect(() => beendeZug(zustand, { pflichtenErfuellt: true })).toThrow(
       'Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.',
     );
   });
@@ -252,7 +252,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
       kartenIds: ueberhandIds(zustand),
     });
 
-    const beendet = beendeZug(nachAbwurf);
+    const beendet = beendeZug(nachAbwurf, { pflichtenErfuellt: true });
 
     expect(beendet.aktiverSpielerIndex).toBe(1);
     expect(beendet.zugphase).toBe('Nachziehphase');
@@ -291,9 +291,34 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     );
   });
 
+  it('verbietet Zugende, solange die Zugpflichten nicht erfüllt sind', () => {
+    const zustand = zustandInZugabschluss(0);
+
+    expect(() => beendeZug(zustand, { pflichtenErfuellt: false })).toThrow(
+      'Zug kann erst beendet werden, wenn alle Zugpflichten erfüllt sind.',
+    );
+  });
+
+  it('verbietet Zugende ohne Pflichtparameter mit Domain-Fehler', () => {
+    const zustand = zustandInZugabschluss(0);
+    const beendeOhnePflichtparameter = beendeZug as unknown as (zustand: ReturnType<typeof zustandInZugabschluss>) => void;
+
+    expect(() => beendeOhnePflichtparameter(zustand)).toThrow(
+      'Zug kann erst beendet werden, wenn alle Zugpflichten erfüllt sind.',
+    );
+  });
+
+  it.each(['ja', 1])('verbietet truthy Nicht-Boolean-Wert %s für erfüllte Zugpflichten', (pflichtenErfuellt) => {
+    const zustand = zustandInZugabschluss(0);
+
+    expect(() => beendeZug(zustand, { pflichtenErfuellt: pflichtenErfuellt as unknown as boolean })).toThrow(
+      'Zug kann erst beendet werden, wenn alle Zugpflichten erfüllt sind.',
+    );
+  });
+
   it('verbietet Zugende außerhalb des Zugabschlusses', () => {
     const zustand = basisZustand();
 
-    expect(() => beendeZug(zustand)).toThrow('Zug kann nur aus dem Zugabschluss beendet werden.');
+    expect(() => beendeZug(zustand, { pflichtenErfuellt: true })).toThrow('Zug kann nur aus dem Zugabschluss beendet werden.');
   });
 });
