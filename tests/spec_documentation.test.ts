@@ -7,6 +7,7 @@
  * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, SchlangenSpass, Punktwertung und Konfliktauflösung.
  * ÄNDERUNG [31.05.2026]: R8-Wertung als dokumentierten Engine-Stand ergänzt, ohne offene Win/Loss-Regeln vorwegzunehmen.
  * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
+ * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
  */
 
 import { readFileSync } from 'node:fs'
@@ -15,14 +16,10 @@ import { describe, expect, it } from 'vitest'
 
 const SPEC_PATH = join(process.cwd(), 'docs', 'GAME_SPEC.md')
 
-function readSpec(): string {
-  return readFileSync(SPEC_PATH, 'utf8')
-}
+const spec = readFileSync(SPEC_PATH, 'utf8')
 
 describe('GAME_SPEC R0 Projektziel', () => {
   it('dokumentiert Projektziel und Zielplattform ohne ungesicherte Spielerzahl oder Spieldauer zu erfinden', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('## 1. Overview')
     expect(spec).toContain('Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild')
     expect(spec).toContain('Zielplattform ist eine browserbasierte Web-App')
@@ -35,8 +32,6 @@ describe('GAME_SPEC R0 Projektziel', () => {
 
 describe('GAME_SPEC R1 Setup-Regeln', () => {
   it('dokumentiert die Setup-Akzeptanzkriterien nach Website-Abgleich', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('Basis-Spiel: 110 Karten')
     expect(spec).toContain('78 Farbkarten')
     expect(spec).toContain('32 Sonderkarten')
@@ -51,8 +46,6 @@ describe('GAME_SPEC R1 Setup-Regeln', () => {
 
 describe('GAME_SPEC R2 Zugstruktur', () => {
   it('dokumentiert die aus Dart übernommenen Zugphasen und Pflichtregeln', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('R2 Zugstruktur')
     expect(spec).toContain('Zugphasen sind verbindlich in dieser Reihenfolge')
     expect(spec).toContain('Nachziehphase')
@@ -72,8 +65,6 @@ describe('GAME_SPEC R2 Zugstruktur', () => {
 
 describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
   it('dokumentiert die aus Dart übernommenen Schlangenbau- und Farbkarten-Akzeptanzkriterien', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('Eine neue Schlange kann nur mit einer Farbkarte gestartet werden')
     expect(spec).toContain('maximal 2 Schlangen pro Spieler')
     expect(spec).toContain('Farbkarten können an beide Enden einer Schlange angelegt werden')
@@ -89,8 +80,6 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
 
 describe('GAME_SPEC R6 Aufgabenkarten', () => {
   it('dokumentiert die allgemeinen Aufgabenregeln der Website', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('R6 Aufgabenkarten')
     expect(spec).toContain('https://schlangentanz.ch/rules')
     expect(spec).toContain('genau 14 Aufgabenkarten')
@@ -105,8 +94,6 @@ describe('GAME_SPEC R6 Aufgabenkarten', () => {
   })
 
   it('dokumentiert die konkret auf der Website veröffentlichten Aufgaben mit Punktwerten', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('Farbenpracht | 8 | Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen')
     expect(spec).toContain('Farbharmonie | 10 | Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe')
     expect(spec).toContain('Farbkombination | 5 | Habe 5 oder mehr Karten der gleichen Farbe in einer Schlange')
@@ -153,8 +140,6 @@ describe('GAME_SPEC R6 Aufgabenkarten', () => {
   })
 
   it('dokumentiert Endspurt-Verdopplung und die aufgelösten Quellenkonflikte', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist')
     expect(spec).toContain('Nur offene Aufgabenkarten werden im Endspurt verdoppelt')
     expect(spec).toContain('Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht')
@@ -175,8 +160,6 @@ describe('GAME_SPEC R6 Aufgabenkarten', () => {
 
 describe('GAME_SPEC R8 Wertung', () => {
   it('dokumentiert die implementierte Punktwertung ohne offene Win/Loss-Regeln vorwegzunehmen', () => {
-    const spec = readSpec()
-
     expect(spec).toContain('## 8. Scoring & Win/Loss')
     expect(spec).toContain('R8.4 Punktwertung')
     expect(spec).toContain('Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet')
@@ -186,5 +169,17 @@ describe('GAME_SPEC R8 Wertung', () => {
     expect(spec).toContain('Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet')
     expect(spec).toContain('Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten')
     expect(spec).not.toContain('TODO: Define scoring, game-end conditions, win/loss/draw logic.')
+  })
+})
+
+describe('GAME_SPEC R10 Nicht-Ziele', () => {
+  it('dokumentiert unabhängige Nicht-Ziele aus README und Workflow ohne Spielregeln zu erfinden', () => {
+    expect(spec).toContain('## 10. Non-Goals')
+    expect(spec).toContain('Kein Wiederverwenden des alten `schlangentanz-game`-Repositorys')
+    expect(spec).toContain('Kein Paperclip-Implementierungspfad')
+    expect(spec).toContain('Kein blindes Kopieren von altem Code, alten Build-Artefakten oder alten Vercel-Projektständen')
+    expect(spec).toContain('Dart-Aufgaben sind Backlog-Input und keine automatische Wahrheit')
+    expect(spec).toContain('Nicht-Ziele ändern keine offenen Spielregeln')
+    expect(spec).not.toContain('TODO: Explicitly list what is out of scope for v2 initial release.')
   })
 })

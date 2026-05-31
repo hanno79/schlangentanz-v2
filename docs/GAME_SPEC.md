@@ -294,7 +294,11 @@ TODO: Define minimum playable UI: visible state, legal action affordances, feedb
 
 ## 10. Non-Goals
 
-TODO: Explicitly list what is out of scope for v2 initial release.
+- Kein Wiederverwenden des alten `schlangentanz-game`-Repositorys.
+- Kein Paperclip-Implementierungspfad.
+- Kein blindes Kopieren von altem Code, alten Build-Artefakten oder alten Vercel-Projektständen.
+- Dart-Aufgaben sind Backlog-Input und keine automatische Wahrheit.
+- Nicht-Ziele ändern keine offenen Spielregeln.
 
 ## 11. Acceptance Sign-Off
 
