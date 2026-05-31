@@ -6,7 +6,16 @@ Beschreibung: TDD-Tests für die Zugphasen-State-Machine im Schlangentanz-Engine
 */
 
 import { describe, it, expect } from 'vitest';
-import { beendeAusspielphase, erstelleSpielzustand, starteAusspielphase } from '../index';
+import {
+  beendeAufgabenpruefung,
+  beendeAusspielphase,
+  erstelleSpielzustand,
+  starteAusspielphase,
+} from '../index';
+
+function basisZustand() {
+  return erstelleSpielzustand(2, () => 0.999999);
+}
 
 describe('Turn State Machine — R2 Nachziehphase', () => {
   it('zieht Pflichtkarten bis zur Mindesthand und wechselt in die Ausspielphase', () => {
@@ -87,9 +96,6 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
 });
 
 describe('Turn State Machine — R2.3 Ausspielphase', () => {
-  function basisZustand() {
-    return erstelleSpielzustand(2, () => 0.999999);
-  }
   function zustandInAusspielphase() {
     return { ...basisZustand(), zugphase: 'Ausspielphase' as const };
   }
@@ -135,6 +141,45 @@ describe('Turn State Machine — R2.3 Ausspielphase', () => {
 
     expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 1 })).toThrow(
       'Ausspielphase kann nur aus der Ausspielphase beendet werden.',
+    );
+  });
+});
+
+describe('Turn State Machine — R2.4 Aufgabenprüfung', () => {
+  function zustandInAufgabenpruefung() {
+    return { ...basisZustand(), zugphase: 'Aufgabenpruefung' as const };
+  }
+
+  it('wechselt nach geprüften Aufgaben in den Zugabschluss', () => {
+    const zustand = zustandInAufgabenpruefung();
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.zugphase).toBe('Zugabschluss');
+    expect(zustand.zugphase).toBe('Aufgabenpruefung');
+  });
+
+  it('verbietet Abschluss ohne geprüfte Aufgaben', () => {
+    const zustand = zustandInAufgabenpruefung();
+
+    expect(() => beendeAufgabenpruefung(zustand, { aufgabenGeprueft: false })).toThrow(
+      'Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.',
+    );
+  });
+
+  it.each(['ja', 1])('verbietet truthy Nicht-Boolean-Wert %s für geprüfte Aufgaben', (aufgabenGeprueft) => {
+    const zustand = zustandInAufgabenpruefung();
+
+    expect(() =>
+      beendeAufgabenpruefung(zustand, { aufgabenGeprueft: aufgabenGeprueft as unknown as boolean }),
+    ).toThrow('Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.');
+  });
+
+  it('verbietet Abschluss außerhalb der Aufgabenprüfung', () => {
+    const zustand = basisZustand();
+
+    expect(() => beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true })).toThrow(
+      'Aufgabenprüfung kann nur aus der Aufgabenprüfung beendet werden.',
     );
   });
 });
