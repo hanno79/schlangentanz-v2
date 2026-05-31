@@ -274,7 +274,15 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 
 ## 8. Scoring & Win/Loss
 
-TODO: Define scoring, game-end conditions, win/loss/draw logic.
+### R8.4 Punktwertung
+
+- Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet.
+- Spieler-Farbgruppenpunkte sind die Summe aller Farbgruppenpunkte über beide Schlangen eines Spielers.
+- Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben.
+- Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte.
+- Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet.
+
+Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten.
 
 ## 9. UI Requirements
 

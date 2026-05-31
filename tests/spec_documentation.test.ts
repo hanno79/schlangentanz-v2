@@ -2,9 +2,10 @@
  * Author: rahn
  * Datum: 31.05.2026
  * Version: 1.4
- * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Setup-, Zugstruktur-, Schlangenbau-, Farbkarten- und Aufgabenkarten-Regeln dokumentiert.
+ * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Setup-, Zugstruktur-, Schlangenbau-, Farbkarten-, Aufgabenkarten- und Wertungsregeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten gegen https://schlangentanz.ch/rules als verbindliche Quelle aktualisiert.
  * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, SchlangenSpass, Punktwertung und Konfliktauflösung.
+ * ÄNDERUNG [31.05.2026]: R8-Wertung als dokumentierten Engine-Stand ergänzt, ohne offene Win/Loss-Regeln vorwegzunehmen.
  */
 
 import { readFileSync } from 'node:fs'
@@ -154,5 +155,21 @@ describe('GAME_SPEC R6 Aufgabenkarten', () => {
     expect(spec).not.toContain('Aufgabe durch Gegner-Aktion erfüllt')
     expect(spec).not.toContain('R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5')
     expect(spec).not.toContain('Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst')
+  })
+})
+
+describe('GAME_SPEC R8 Wertung', () => {
+  it('dokumentiert die implementierte Punktwertung ohne offene Win/Loss-Regeln vorwegzunehmen', () => {
+    const spec = readSpec()
+
+    expect(spec).toContain('## 8. Scoring & Win/Loss')
+    expect(spec).toContain('R8.4 Punktwertung')
+    expect(spec).toContain('Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet')
+    expect(spec).toContain('Spieler-Farbgruppenpunkte sind die Summe aller Farbgruppenpunkte über beide Schlangen eines Spielers')
+    expect(spec).toContain('Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben')
+    expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte')
+    expect(spec).toContain('Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet')
+    expect(spec).toContain('Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten')
+    expect(spec).not.toContain('TODO: Define scoring, game-end conditions, win/loss/draw logic.')
   })
 })
