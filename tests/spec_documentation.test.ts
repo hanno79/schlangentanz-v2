@@ -2,10 +2,11 @@
  * Author: rahn
  * Datum: 31.05.2026
  * Version: 1.4
- * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Setup-, Zugstruktur-, Schlangenbau-, Farbkarten-, Aufgabenkarten- und Wertungsregeln dokumentiert.
+ * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Projektziel-, Setup-, Zugstruktur-, Schlangenbau-, Farbkarten-, Aufgabenkarten- und Wertungsregeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten gegen https://schlangentanz.ch/rules als verbindliche Quelle aktualisiert.
  * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, SchlangenSpass, Punktwertung und Konfliktauflösung.
  * ÄNDERUNG [31.05.2026]: R8-Wertung als dokumentierten Engine-Stand ergänzt, ohne offene Win/Loss-Regeln vorwegzunehmen.
+ * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
  */
 
 import { readFileSync } from 'node:fs'
@@ -17,6 +18,20 @@ const SPEC_PATH = join(process.cwd(), 'docs', 'GAME_SPEC.md')
 function readSpec(): string {
   return readFileSync(SPEC_PATH, 'utf8')
 }
+
+describe('GAME_SPEC R0 Projektziel', () => {
+  it('dokumentiert Projektziel und Zielplattform ohne ungesicherte Spielerzahl oder Spieldauer zu erfinden', () => {
+    const spec = readSpec()
+
+    expect(spec).toContain('## 1. Overview')
+    expect(spec).toContain('Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild')
+    expect(spec).toContain('Zielplattform ist eine browserbasierte Web-App')
+    expect(spec).toContain('Produktionsbereitstellung erfolgt über Vercel')
+    expect(spec).toContain('Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial')
+    expect(spec).toContain('Noch offen: Spieleranzahl und erwartete Sitzungsdauer')
+    expect(spec).not.toContain('TODO: Describe objective, player count, target platform, and expected session duration.')
+  })
+})
 
 describe('GAME_SPEC R1 Setup-Regeln', () => {
   it('dokumentiert die Setup-Akzeptanzkriterien nach Website-Abgleich', () => {

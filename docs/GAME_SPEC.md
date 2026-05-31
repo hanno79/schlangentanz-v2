@@ -6,7 +6,11 @@ No real game implementation should begin until this document is filled and accep
 
 ## 1. Overview
 
-TODO: Describe objective, player count, target platform, and expected session duration.
+- Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild des Brettspiels Schlangentanz.
+- Zielplattform ist eine browserbasierte Web-App.
+- Produktionsbereitstellung erfolgt über Vercel.
+- Workflow: Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial.
+- Noch offen: Spieleranzahl und erwartete Sitzungsdauer.
 
 ## 2. Entities
 
