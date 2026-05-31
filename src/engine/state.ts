@@ -36,6 +36,7 @@ export function erstelleSpielzustand(
     spieler,
     aktiverSpielerIndex: 0,
     zugphase: 'Nachziehphase',
+    zugpflichten: { gespielteKarten: 0 },
     spielphase: 'Normal',
     nachziehstapel: hauptdeck,
     ablagestapel: [],

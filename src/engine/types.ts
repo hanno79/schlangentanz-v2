@@ -60,6 +60,9 @@ export interface Spielzustand {
   spieler: Spieler[];
   aktiverSpielerIndex: number;
   zugphase: Zugphase;
+  zugpflichten: {
+    gespielteKarten: number;
+  };
   spielphase: Spielphase;
   nachziehstapel: Spielkarte[];
   ablagestapel: Spielkarte[];

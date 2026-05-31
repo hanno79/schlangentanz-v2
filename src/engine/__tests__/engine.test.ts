@@ -264,6 +264,21 @@ describe('Serialisierung', () => {
     expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/aktiver spieler/i);
   });
 
+  it('wirft deutschen Fehler bei fehlenden Zugpflichten', () => {
+    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    delete zustand['zugpflichten'];
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/zugpflichten/i);
+  });
+
+  it.each([-1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, 3])(
+    'wirft deutschen Fehler bei ungültiger gespielter Kartenanzahl %s',
+    (gespielteKarten) => {
+      const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+      zustand['zugpflichten'] = { gespielteKarten };
+      expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/gespielte karten/i);
+    },
+  );
+
   it('wirft deutschen Fehler bei fehlender geheimer Aufgabe', () => {
     const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
     const spieler = zustand['spieler'] as Array<Record<string, unknown>>;

@@ -90,6 +90,7 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   if (!SPIELPHASEN.has(obj['spielphase'] as Spielphase)) {
     throw new Error('Ungültiger Spielzustand: spielphase ist ungültig.');
   }
+  validiereZugpflichten(obj['zugpflichten']);
 
   const verwendeteIds = new Set<string>();
   for (const einSpieler of spieler) {
@@ -101,6 +102,14 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   validiereAufgabenArray(obj['offeneAufgaben'], 'offeneAufgaben', verwendeteIds);
   validiereAufgabenArray(obj['aufgabenStapel'], 'aufgabenStapel', verwendeteIds);
   validiereKanonischesMaterial(obj as unknown as Spielzustand);
+}
+
+function validiereZugpflichten(wert: unknown): void {
+  const zugpflichten = erwarteObjekt(wert, 'zugpflichten');
+  const gespielteKarten = zugpflichten['gespielteKarten'] as number;
+  if (!Number.isInteger(gespielteKarten) || gespielteKarten < 0 || gespielteKarten > 2) {
+    throw new Error('Ungültiger Spielzustand: gespielte Karten in Zugpflichten sind ungültig.');
+  }
 }
 
 function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts wert is Spieler {

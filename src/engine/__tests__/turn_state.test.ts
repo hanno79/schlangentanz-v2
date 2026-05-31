@@ -12,11 +12,21 @@ import {
   beendeZug,
   erstelleSpielzustand,
   starteAusspielphase,
+  werfeKarteMangelsSpielbarerAktionAb,
   werfeUeberzaehligeHandkartenAb,
 } from '../index';
 
 function basisZustand() {
   return erstelleSpielzustand(2, () => 0.999999);
+}
+
+function zustandInAusspielphase() {
+  return { ...basisZustand(), zugphase: 'Ausspielphase' as const };
+}
+
+function zustandInAusspielphaseMitGespieltenKarten(gespielteKarten: number) {
+  const zustand = zustandInAusspielphase();
+  return { ...zustand, zugpflichten: { ...zustand.zugpflichten, gespielteKarten } };
 }
 
 describe('Turn State Machine — R2 Nachziehphase', () => {
@@ -98,14 +108,10 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
 });
 
 describe('Turn State Machine — R2.3 Ausspielphase', () => {
-  function zustandInAusspielphase() {
-    return { ...basisZustand(), zugphase: 'Ausspielphase' as const };
-  }
-
   it.each([1, 2])('wechselt nach %i ausgespielten Karten in die Aufgabenprüfung', (n) => {
-    const zustand = zustandInAusspielphase();
+    const zustand = zustandInAusspielphaseMitGespieltenKarten(n);
 
-    const aktualisiert = beendeAusspielphase(zustand, { ausgespielteKarten: n });
+    const aktualisiert = beendeAusspielphase(zustand);
 
     expect(aktualisiert.zugphase).toBe('Aufgabenpruefung');
     expect(zustand.zugphase).toBe('Ausspielphase');
@@ -114,7 +120,7 @@ describe('Turn State Machine — R2.3 Ausspielphase', () => {
   it('verbietet Abschluss ohne ausgespielte Karte', () => {
     const zustand = zustandInAusspielphase();
 
-    expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 0 })).toThrow(
+    expect(() => beendeAusspielphase(zustand)).toThrow(
       'Die Ausspielphase darf erst nach mindestens einer gespielten Karte beendet werden.',
     );
   });
@@ -122,28 +128,121 @@ describe('Turn State Machine — R2.3 Ausspielphase', () => {
   it.each([1.5, Number.NaN, Number.POSITIVE_INFINITY])(
     'verbietet nicht-ganzzahlige oder ungültige Kartenanzahl %s',
     (ausgespielteKarten) => {
-      const zustand = zustandInAusspielphase();
+      const zustand = zustandInAusspielphaseMitGespieltenKarten(ausgespielteKarten);
 
-      expect(() => beendeAusspielphase(zustand, { ausgespielteKarten })).toThrow(
+      expect(() => beendeAusspielphase(zustand)).toThrow(
         'Die Anzahl ausgespielter Karten muss eine ganze Zahl sein.',
       );
     },
   );
 
   it('verbietet Abschluss nach mehr als zwei ausgespielten Karten', () => {
-    const zustand = zustandInAusspielphase();
+    const zustand = zustandInAusspielphaseMitGespieltenKarten(3);
 
-    expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 3 })).toThrow(
+    expect(() => beendeAusspielphase(zustand)).toThrow(
       'Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.',
     );
   });
 
   it('verbietet Abschluss außerhalb der Ausspielphase', () => {
     const zustand = basisZustand();
+    zustand.zugpflichten.gespielteKarten = 1;
 
-    expect(() => beendeAusspielphase(zustand, { ausgespielteKarten: 1 })).toThrow(
+    expect(() => beendeAusspielphase(zustand)).toThrow(
       'Ausspielphase kann nur aus der Ausspielphase beendet werden.',
     );
+  });
+});
+
+describe('Turn State Machine — R2.6 Pflicht-Abwurf ohne spielbare Karte', () => {
+  it('wirft eine aktive Handkarte ab und lässt den Abwurf als gespielte Karte zählen', () => {
+    const zustand = zustandInAusspielphase();
+    const abzuwerfendeKarte = zustand.spieler[0].hand[0];
+    const aktiveHandVorher = zustand.spieler[0].hand.map((karte) => karte.id);
+
+    const aktualisiert = werfeKarteMangelsSpielbarerAktionAb(zustand, {
+      kartenId: abzuwerfendeKarte.id,
+      keineSpielbareKarte: true,
+    });
+    const nachAusspielphase = beendeAusspielphase(aktualisiert);
+
+    expect(aktualisiert.spieler[0].hand.map((karte) => karte.id)).toEqual(aktiveHandVorher.slice(1));
+    expect(aktualisiert.ablagestapel.at(-1)?.id).toBe(abzuwerfendeKarte.id);
+    expect(aktualisiert.zugpflichten.gespielteKarten).toBe(1);
+    expect(zustand.zugpflichten.gespielteKarten).toBe(0);
+    expect(aktualisiert.zugphase).toBe('Ausspielphase');
+    expect(nachAusspielphase.zugphase).toBe('Aufgabenpruefung');
+  });
+
+  it('mutiert den Eingabezustand und inaktive Spieler nicht', () => {
+    const zustand = zustandInAusspielphase();
+    const aktiveHandVorher = zustand.spieler[0].hand.map((karte) => karte.id);
+    const inaktiveHandVorher = zustand.spieler[1].hand.map((karte) => karte.id);
+
+    const aktualisiert = werfeKarteMangelsSpielbarerAktionAb(zustand, {
+      kartenId: aktiveHandVorher[0],
+      keineSpielbareKarte: true,
+    });
+
+    expect(zustand.spieler[0].hand.map((karte) => karte.id)).toEqual(aktiveHandVorher);
+    expect(zustand.spieler[1].hand.map((karte) => karte.id)).toEqual(inaktiveHandVorher);
+    expect(zustand.ablagestapel).toHaveLength(0);
+    expect(aktualisiert.spieler[1].hand.map((karte) => karte.id)).toEqual(inaktiveHandVorher);
+  });
+
+  it('verbietet Pflicht-Abwurf außerhalb der Ausspielphase', () => {
+    const zustand = basisZustand();
+    const kartenId = zustand.spieler[0].hand[0].id;
+
+    expect(() => werfeKarteMangelsSpielbarerAktionAb(zustand, { kartenId, keineSpielbareKarte: true })).toThrow(
+      'Pflicht-Abwurf ohne spielbare Karte ist nur in der Ausspielphase erlaubt.',
+    );
+  });
+
+  it.each([false, 'ja', 1])(
+    'verbietet Pflicht-Abwurf ohne bestätigte fehlende Spielbarkeit %s',
+    (keineSpielbareKarte) => {
+      const zustand = zustandInAusspielphase();
+      const kartenId = zustand.spieler[0].hand[0].id;
+
+      expect(() =>
+        werfeKarteMangelsSpielbarerAktionAb(zustand, {
+          kartenId,
+          keineSpielbareKarte: keineSpielbareKarte as unknown as boolean,
+        }),
+      ).toThrow('Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.');
+    },
+  );
+
+  it('verbietet Pflicht-Abwurf fremder oder unbekannter Karten', () => {
+    const zustand = zustandInAusspielphase();
+    const fremdeKarte = zustand.spieler[1].hand[0];
+
+    expect(() =>
+      werfeKarteMangelsSpielbarerAktionAb(zustand, { kartenId: fremdeKarte.id, keineSpielbareKarte: true }),
+    ).toThrow(
+      'Es kann nur eine Handkarte des aktiven Spielers abgeworfen werden.',
+    );
+  });
+
+  it('verbietet Pflicht-Abwurf ohne Kartenparameter mit Domain-Fehler', () => {
+    const zustand = zustandInAusspielphase();
+    const werfeOhneParameter = werfeKarteMangelsSpielbarerAktionAb as unknown as (
+      zustand: ReturnType<typeof zustandInAusspielphase>,
+    ) => void;
+
+    expect(() => werfeOhneParameter(zustand)).toThrow('Es muss genau eine abzuwerfende Handkarte gewählt werden.');
+  });
+
+  it.each(['', 1, null])('verbietet ungültigen Kartenparameter %s', (kartenId) => {
+    const zustand = zustandInAusspielphase();
+
+    expect(() =>
+      werfeKarteMangelsSpielbarerAktionAb(zustand, {
+        kartenId: kartenId as unknown as string,
+        keineSpielbareKarte: true,
+      }),
+    ).toThrow('Es muss genau eine abzuwerfende Handkarte gewählt werden.');
   });
 });
 
@@ -165,6 +264,17 @@ describe('Turn State Machine — R2.4 Aufgabenprüfung', () => {
     const zustand = zustandInAufgabenpruefung();
 
     expect(() => beendeAufgabenpruefung(zustand, { aufgabenGeprueft: false })).toThrow(
+      'Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.',
+    );
+  });
+
+  it('verbietet Abschluss ohne Aufgabenparameter mit Domain-Fehler', () => {
+    const zustand = zustandInAufgabenpruefung();
+    const beendeOhneAufgabenparameter = beendeAufgabenpruefung as unknown as (
+      zustand: ReturnType<typeof zustandInAufgabenpruefung>,
+    ) => void;
+
+    expect(() => beendeOhneAufgabenparameter(zustand)).toThrow(
       'Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.',
     );
   });
@@ -210,6 +320,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
 
     expect(aktualisiert.aktiverSpielerIndex).toBe(1);
     expect(aktualisiert.zugphase).toBe('Nachziehphase');
+    expect(aktualisiert.zugpflichten.gespielteKarten).toBe(0);
     expect(aktualisiert.spieler).toBe(zustand.spieler);
     expect(zustand.aktiverSpielerIndex).toBe(0);
     expect(zustand.zugphase).toBe('Zugabschluss');
@@ -262,6 +373,17 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     const zustand = zustandMitUeberhand();
 
     expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [] })).toThrow(
+      'Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.',
+    );
+  });
+
+  it('verbietet Überhand-Abwurf ohne Kartenparameter mit Domain-Fehler', () => {
+    const zustand = zustandMitUeberhand();
+    const werfeOhneKartenparameter = werfeUeberzaehligeHandkartenAb as unknown as (
+      zustand: ReturnType<typeof zustandMitUeberhand>,
+    ) => void;
+
+    expect(() => werfeOhneKartenparameter(zustand)).toThrow(
       'Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.',
     );
   });
@@ -322,3 +444,4 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     expect(() => beendeZug(zustand, { pflichtenErfuellt: true })).toThrow('Zug kann nur aus dem Zugabschluss beendet werden.');
   });
 });
+

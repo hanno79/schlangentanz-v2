@@ -8,6 +8,15 @@ Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwische
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN } from './constants';
 import type { Spielzustand, Spielphase } from './types';
 
+function aktualisiereAktiveHand(
+  zustand: Spielzustand,
+  neueHand: Spielzustand['spieler'][number]['hand'],
+): Spielzustand['spieler'] {
+  return zustand.spieler.map((spieler, index) =>
+    index === zustand.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
+  );
+}
+
 export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
   if (zustand.zugphase !== 'Nachziehphase') {
     throw new Error('Ausspielphase kann nur aus der Nachziehphase gestartet werden.');
@@ -30,9 +39,7 @@ export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
       ? 'Endspurt'
       : zustand.spielphase;
 
-  const neueSpieler = zustand.spieler.map((spieler, index) =>
-    index === zustand.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
-  );
+  const neueSpieler = aktualisiereAktiveHand(zustand, neueHand);
 
   return {
     ...zustand,
@@ -45,11 +52,11 @@ export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
 
 export function beendeAusspielphase(
   zustand: Spielzustand,
-  { ausgespielteKarten }: { ausgespielteKarten: number },
 ): Spielzustand {
   if (zustand.zugphase !== 'Ausspielphase') {
     throw new Error('Ausspielphase kann nur aus der Ausspielphase beendet werden.');
   }
+  const ausgespielteKarten = zustand.zugpflichten.gespielteKarten;
   if (!Number.isInteger(ausgespielteKarten)) {
     throw new Error('Die Anzahl ausgespielter Karten muss eine ganze Zahl sein.');
   }
@@ -64,7 +71,7 @@ export function beendeAusspielphase(
 
 export function beendeAufgabenpruefung(
   zustand: Spielzustand,
-  { aufgabenGeprueft }: { aufgabenGeprueft: boolean },
+  { aufgabenGeprueft }: { aufgabenGeprueft: boolean } = { aufgabenGeprueft: false },
 ): Spielzustand {
   if (zustand.zugphase !== 'Aufgabenpruefung') {
     throw new Error('Aufgabenprüfung kann nur aus der Aufgabenprüfung beendet werden.');
@@ -77,7 +84,7 @@ export function beendeAufgabenpruefung(
 
 export function werfeUeberzaehligeHandkartenAb(
   zustand: Spielzustand,
-  { kartenIds }: { kartenIds: string[] },
+  { kartenIds }: { kartenIds?: string[] } = {},
 ): Spielzustand {
   if (zustand.zugphase !== 'Zugabschluss') {
     throw new Error('Überzählige Handkarten können nur im Zugabschluss abgeworfen werden.');
@@ -90,7 +97,7 @@ export function werfeUeberzaehligeHandkartenAb(
     throw new Error('Überzählige Handkarten können nur abgeworfen werden, wenn die Hand das Handkartenlimit überschreitet.');
   }
 
-  if (kartenIds.length !== ueberzaehlig) {
+  if (!Array.isArray(kartenIds) || kartenIds.length !== ueberzaehlig) {
     throw new Error('Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.');
   }
 
@@ -101,14 +108,43 @@ export function werfeUeberzaehligeHandkartenAb(
   }
   const neueHand = aktiverSpieler.hand.filter((karte) => !abzuwerfenSet.has(karte.id));
 
-  const neueSpieler = zustand.spieler.map((spieler, index) =>
-    index === zustand.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
-  );
+  const neueSpieler = aktualisiereAktiveHand(zustand, neueHand);
 
   return {
     ...zustand,
     spieler: neueSpieler,
     ablagestapel: [...zustand.ablagestapel, ...abgeworfeneKarten],
+  };
+}
+
+export function werfeKarteMangelsSpielbarerAktionAb(
+  zustand: Spielzustand,
+  { kartenId, keineSpielbareKarte }: { kartenId?: string; keineSpielbareKarte?: boolean } = {},
+): Spielzustand {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    throw new Error('Pflicht-Abwurf ohne spielbare Karte ist nur in der Ausspielphase erlaubt.');
+  }
+  if (typeof kartenId !== 'string' || kartenId === '') {
+    throw new Error('Es muss genau eine abzuwerfende Handkarte gewählt werden.');
+  }
+  if (keineSpielbareKarte !== true) {
+    throw new Error('Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.');
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const abzuwerfendeKarte = aktiverSpieler.hand.find((karte) => karte.id === kartenId);
+  if (!abzuwerfendeKarte) {
+    throw new Error('Es kann nur eine Handkarte des aktiven Spielers abgeworfen werden.');
+  }
+
+  const neueHand = aktiverSpieler.hand.filter((karte) => karte.id !== kartenId);
+  const neueSpieler = aktualisiereAktiveHand(zustand, neueHand);
+
+  return {
+    ...zustand,
+    spieler: neueSpieler,
+    ablagestapel: [...zustand.ablagestapel, abzuwerfendeKarte],
+    zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
   };
 }
 
@@ -129,6 +165,7 @@ export function beendeZug(
   return {
     ...zustand,
     aktiverSpielerIndex: naechsterSpielerIndex,
+    zugpflichten: { gespielteKarten: 0 },
     zugphase: 'Nachziehphase',
   };
 }
