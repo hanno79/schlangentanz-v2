@@ -1,11 +1,11 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.2
+Version: 1.3
 Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss.
 */
 
-import { MINDESTHANDKARTEN } from './constants';
+import { HANDKARTENLIMIT, MINDESTHANDKARTEN } from './constants';
 import type { Spielzustand, Spielphase } from './types';
 
 export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
@@ -73,4 +73,19 @@ export function beendeAufgabenpruefung(
     throw new Error('Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.');
   }
   return { ...zustand, zugphase: 'Zugabschluss' };
+}
+
+export function beendeZug(zustand: Spielzustand): Spielzustand {
+  if (zustand.zugphase !== 'Zugabschluss') {
+    throw new Error('Zug kann nur aus dem Zugabschluss beendet werden.');
+  }
+  if (zustand.spieler[zustand.aktiverSpielerIndex].hand.length > HANDKARTENLIMIT) {
+    throw new Error('Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.');
+  }
+  const naechsterSpielerIndex = (zustand.aktiverSpielerIndex + 1) % zustand.spieler.length;
+  return {
+    ...zustand,
+    aktiverSpielerIndex: naechsterSpielerIndex,
+    zugphase: 'Nachziehphase',
+  };
 }

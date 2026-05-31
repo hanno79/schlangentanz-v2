@@ -9,6 +9,7 @@ import { describe, it, expect } from 'vitest';
 import {
   beendeAufgabenpruefung,
   beendeAusspielphase,
+  beendeZug,
   erstelleSpielzustand,
   starteAusspielphase,
 } from '../index';
@@ -181,5 +182,50 @@ describe('Turn State Machine — R2.4 Aufgabenprüfung', () => {
     expect(() => beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true })).toThrow(
       'Aufgabenprüfung kann nur aus der Aufgabenprüfung beendet werden.',
     );
+  });
+});
+
+describe('Turn State Machine — R2.5 Zugabschluss', () => {
+  function zustandInZugabschluss(aktiverSpielerIndex = 0, anzahlSpieler = 2) {
+    return { ...erstelleSpielzustand(anzahlSpieler, () => 0.999999), aktiverSpielerIndex, zugphase: 'Zugabschluss' as const };
+  }
+
+  it('beendet den Zug ohne Überhand und aktiviert den nächsten Spieler in der Nachziehphase', () => {
+    const zustand = zustandInZugabschluss(0);
+
+    const aktualisiert = beendeZug(zustand);
+
+    expect(aktualisiert.aktiverSpielerIndex).toBe(1);
+    expect(aktualisiert.zugphase).toBe('Nachziehphase');
+    expect(aktualisiert.spieler).toBe(zustand.spieler);
+    expect(zustand.aktiverSpielerIndex).toBe(0);
+    expect(zustand.zugphase).toBe('Zugabschluss');
+  });
+
+  it('wechselt nach dem letzten Spieler wieder zum ersten Spieler', () => {
+    const zustand = zustandInZugabschluss(3, 4);
+
+    const aktualisiert = beendeZug(zustand);
+
+    expect(aktualisiert.aktiverSpielerIndex).toBe(0);
+    expect(aktualisiert.zugphase).toBe('Nachziehphase');
+  });
+
+  it('verbietet Zugende mit mehr als zehn Handkarten beim aktiven Spieler', () => {
+    const zustand = zustandInZugabschluss(0);
+    zustand.spieler[0].hand = [
+      ...zustand.spieler[0].hand,
+      ...zustand.nachziehstapel.slice(0, 6),
+    ];
+
+    expect(() => beendeZug(zustand)).toThrow(
+      'Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.',
+    );
+  });
+
+  it('verbietet Zugende außerhalb des Zugabschlusses', () => {
+    const zustand = basisZustand();
+
+    expect(() => beendeZug(zustand)).toThrow('Zug kann nur aus dem Zugabschluss beendet werden.');
   });
 });
