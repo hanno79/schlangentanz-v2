@@ -20,3 +20,6 @@ export const KARTEN_GESAMT = BASIS_KARTEN_GESAMT + ERWEITERUNG_KARTEN;
 
 // Offene Aufgabenkarten zu Spielbeginn
 export const OFFENE_AUFGABEN_START = 3;
+
+// Farbgruppen (R3.3)
+export const MINDEST_FARBGRUPPEN_LAENGE = 3;

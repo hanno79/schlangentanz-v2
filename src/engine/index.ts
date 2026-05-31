@@ -14,3 +14,5 @@ export { serialisiere, deserialisiere } from './serialization';
 export { pruefeAktion } from './legalActions';
 export type { AktionErgebnis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion } from './legalActions';
 export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn } from './turnState';
+export { ermittleFarbgruppen } from './colorGroups';
+export type { Farbgruppe } from './colorGroups';
