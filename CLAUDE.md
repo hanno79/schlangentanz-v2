@@ -21,9 +21,10 @@ Old work may be read only as historical reference after explicit Hermes approval
 1. Lock `docs/GAME_SPEC.md` before real game implementation.
 2. Write acceptance tests before production game logic.
 3. Implement in small slices.
-4. Run tests, typecheck, and build after each slice.
-5. Codex reviews every rules/engine slice before merge/release.
-6. No release without `docs/PLAYABILITY_GATE.md` evidence.
+4. After every coding pass, run Claude Code `/simplify` once as a simplification pre-check.
+5. Run tests, typecheck, and build after each slice.
+6. Codex reviews every rules/engine slice after the `/simplify` pre-check and before merge/release.
+7. No release without `docs/PLAYABILITY_GATE.md` evidence.
 
 ## Commands
 - `npm test -- --run`
