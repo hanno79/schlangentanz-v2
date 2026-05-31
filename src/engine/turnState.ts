@@ -1,8 +1,8 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.5
-Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf und Pflichtprüfung im Zugabschluss (R2.5).
+Version: 1.6
+Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf, Pflichtprüfung im Zugabschluss (R2.5), Neue Schlange starten (R3.1) und Farbkarte anlegen (R3.2).
 */
 
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER } from './constants';
@@ -19,6 +19,24 @@ function aktualisiereAktivenSpieler(
 
 function erstelleSchlangenId(spielerId: string, nummer: number): string {
   return `schlange-${spielerId}-${nummer}`;
+}
+
+function istGueltigeId(wert: unknown): wert is string {
+  return typeof wert === 'string' && wert.trim() !== '';
+}
+
+function pruefeSpielkartenLimit(zustand: Spielzustand): void {
+  if (zustand.zugpflichten.gespielteKarten >= 2) {
+    throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
+  }
+}
+
+function inkrementiereSpieleKarten(zustand: Spielzustand, neueSpieler: Spielzustand['spieler']): Spielzustand {
+  return {
+    ...zustand,
+    spieler: neueSpieler,
+    zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
+  };
 }
 
 function ermittleNaechsteFreieSchlangenNummer(spieler: Spielzustand['spieler'][number]): number {
@@ -173,12 +191,10 @@ export function starteNeueSchlange(
   }
 
   const kartenId = optionen?.kartenId;
-  if (typeof kartenId !== 'string' || kartenId.trim() === '') {
+  if (!istGueltigeId(kartenId)) {
     throw new Error('Es muss genau eine Handkarte zum Starten gewählt werden.');
   }
-  if (zustand.zugpflichten.gespielteKarten >= 2) {
-    throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
-  }
+  pruefeSpielkartenLimit(zustand);
 
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   if (aktiverSpieler.schlangen.length >= MAX_SCHLANGEN_PRO_SPIELER) {
@@ -204,11 +220,55 @@ export function starteNeueSchlange(
     schlangen: [...aktiverSpieler.schlangen, neueSchlange],
   });
 
-  return {
-    ...zustand,
-    spieler: neueSpieler,
-    zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
-  };
+  return inkrementiereSpieleKarten(zustand, neueSpieler);
+}
+
+export function legeKarteAnSchlangeAn(
+  zustand: Spielzustand,
+  optionen: { kartenId?: string; schlangenId?: string; position?: string } | null = {},
+): Spielzustand {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    throw new Error('Karten können nur in der Ausspielphase angelegt werden.');
+  }
+
+  const { kartenId, schlangenId, position } = optionen ?? {};
+
+  if (!istGueltigeId(kartenId) || !istGueltigeId(schlangenId) || !istGueltigeId(position)) {
+    throw new Error('Es müssen Handkarte, Schlange und Anlegeposition gewählt werden.');
+  }
+
+  if (position !== 'links' && position !== 'rechts') {
+    throw new Error('Karten können nur links oder rechts angelegt werden.');
+  }
+
+  pruefeSpielkartenLimit(zustand);
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+
+  const karte = aktiverSpieler.hand.find((k) => k.id === kartenId);
+  if (!karte) {
+    throw new Error('Die Karte befindet sich nicht auf der Hand des aktiven Spielers.');
+  }
+  if (karte.typ !== 'Farbkarte') {
+    throw new Error('An eine Schlange kann nur eine Farbkarte angelegt werden.');
+  }
+
+  const schlange = aktiverSpieler.schlangen.find((s) => s.id === schlangenId);
+  if (!schlange) {
+    throw new Error('Schlange nicht gefunden.');
+  }
+  if (schlange.zustand === 'blockiert') {
+    throw new Error('Eine blockierte Schlange kann nicht erweitert werden.');
+  }
+
+  const neueKarten = position === 'links' ? [karte, ...schlange.karten] : [...schlange.karten, karte];
+  const neueHand = aktiverSpieler.hand.filter((k) => k.id !== kartenId);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, {
+    hand: neueHand,
+    schlangen: aktiverSpieler.schlangen.map((s) => (s.id === schlangenId ? { ...s, karten: neueKarten } : s)),
+  });
+
+  return inkrementiereSpieleKarten(zustand, neueSpieler);
 }
 
 export function beendeZug(
