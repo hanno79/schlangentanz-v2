@@ -1,10 +1,11 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.1
+Version: 1.2
 Beschreibung: Punktwertung gültiger Farbgruppen nach R4.2/R4.4 und R8.4.
               Gruppen < 3 Karten zählen 0. Sonderkarten unterbrechen Gruppen.
               R8.4c: Erfüllte Aufgabenpunkte eines Spielers summieren.
+              R8.4d: Spieler-Gesamtpunkte aus Farbgruppen + erfüllten Aufgaben aggregieren.
 */
 
 import type { Schlange, Spieler } from './types';
@@ -52,6 +53,22 @@ export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgaben
   }));
   const gesamtPunkte = aufgaben.reduce((sum, a) => sum + a.punkte, 0);
   return { gesamtPunkte, aufgaben };
+}
+
+export interface SpielerGesamtPunkteErgebnis {
+  gesamtPunkte: number;
+  farbgruppenPunkte: SpielerFarbgruppenPunkteErgebnis;
+  aufgabenPunkte: SpielerAufgabenPunkteErgebnis;
+}
+
+export function berechneSpielerGesamtPunkte(spieler: Spieler): SpielerGesamtPunkteErgebnis {
+  const farbgruppenPunkte = berechneSpielerFarbgruppenPunkte(spieler);
+  const aufgabenPunkte = berechneSpielerAufgabenPunkte(spieler);
+  return {
+    gesamtPunkte: farbgruppenPunkte.gesamtPunkte + aufgabenPunkte.gesamtPunkte,
+    farbgruppenPunkte,
+    aufgabenPunkte,
+  };
 }
 
 export function berechneFarbgruppenPunkte(schlange: Schlange): FarbgruppenPunkteErgebnis {

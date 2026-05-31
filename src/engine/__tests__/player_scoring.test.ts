@@ -6,28 +6,12 @@ Beschreibung: TDD-Tests für die Farbgruppen-Punktwertung über alle Schlangen e
 */
 
 import { describe, expect, it } from 'vitest';
-import { berechneSpielerAufgabenPunkte, berechneSpielerFarbgruppenPunkte } from '../index';
-import type { AufgabenkarteInfo, Spieler } from '../types';
-import { farbkarte, schlange, sonderkarte } from './testHelpers';
-
-const geheimeAufgabe: AufgabenkarteInfo = {
-  typ: 'Aufgabenkarte',
-  id: 'test-aufgabe-geheim',
-  name: 'Testaufgabe',
-  punkte: 1,
-  bedingung: 'Testbedingung',
-};
-
-function spielerMitSchlangen(schlangen: Spieler['schlangen']): Spieler {
-  return {
-    id: 'spieler-wertung-1',
-    name: 'Wertungsspieler',
-    hand: [],
-    schlangen,
-    erfuellteAufgaben: [],
-    geheimeAufgabe,
-  };
-}
+import {
+  berechneSpielerAufgabenPunkte,
+  berechneSpielerFarbgruppenPunkte,
+  berechneSpielerGesamtPunkte,
+} from '../index';
+import { farbkarte, schlange, sonderkarte, spielerMitSchlangen } from './testHelpers';
 
 describe('Spieler-Farbgruppen-Punktwertung — R4.2/R4.4', () => {
   it('summiert Farbgruppen-Punkte über mehrere Schlangen eines Spielers', () => {
@@ -37,12 +21,12 @@ describe('Spieler-Farbgruppen-Punktwertung — R4.2/R4.4', () => {
         farbkarte('blau-2', 'Blau', 1),
         farbkarte('blau-3', 'Blau', 1),
       ]),
-      { ...schlange([
+      schlange([
         farbkarte('gruen-1', 'Grün', 3),
         farbkarte('gruen-2', 'Grün', 3),
         farbkarte('gruen-3', 'Grün', 3),
         farbkarte('gruen-4', 'Grün', 3),
-      ]), id: 'test-schlange-2' },
+      ], 'test-schlange-2'),
     ]);
 
     const wertung = berechneSpielerFarbgruppenPunkte(spieler);
@@ -143,6 +127,51 @@ describe('Spieler-Aufgaben-Punktwertung — R8.4c', () => {
     const vorher = JSON.parse(JSON.stringify(spieler));
 
     berechneSpielerAufgabenPunkte(spieler);
+
+    expect(spieler).toEqual(vorher);
+  });
+});
+
+describe('Spieler-Gesamtpunktwertung — R8.4d', () => {
+  it('aggregiert Farbgruppen- und erfüllte Aufgabenpunkte eines Spielers', () => {
+    const spieler = spielerMitSchlangen([
+      schlange([farbkarte('blau-1', 'Blau', 1), farbkarte('blau-2', 'Blau', 1), farbkarte('blau-3', 'Blau', 1)]),
+      schlange([farbkarte('violett-1', 'Violett', 2), farbkarte('violett-2', 'Violett', 2), farbkarte('violett-3', 'Violett', 2)], 'test-schlange-2'),
+    ]);
+    spieler.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'aufgabe-gesamt-1', name: 'Farbenpracht', punkte: 8, bedingung: 'Test' },
+      { typ: 'Aufgabenkarte', id: 'aufgabe-gesamt-2', name: 'Gelber Schatz', punkte: 5, bedingung: 'Test' },
+    ];
+
+    const ergebnis = berechneSpielerGesamtPunkte(spieler);
+
+    expect(ergebnis.gesamtPunkte).toBe(22);           // 9 Farbgruppen + 13 Aufgaben
+    expect(ergebnis.farbgruppenPunkte.gesamtPunkte).toBe(9);
+    expect(ergebnis.aufgabenPunkte.gesamtPunkte).toBe(13);
+  });
+
+  it('wertet Spieler ohne Farbgruppen und erfüllte Aufgaben mit 0 Gesamtpunkten', () => {
+    expect(berechneSpielerGesamtPunkte(spielerMitSchlangen([]))).toEqual({
+      gesamtPunkte: 0,
+      farbgruppenPunkte: { gesamtPunkte: 0, schlangen: [] },
+      aufgabenPunkte: { gesamtPunkte: 0, aufgaben: [] },
+    });
+  });
+
+  it('mutiert Spieler, Schlangen, Karten und Aufgaben nicht', () => {
+    const spieler = spielerMitSchlangen([
+      schlange([
+        farbkarte('gruen-gesamt-1', 'Grün', 3),
+        farbkarte('gruen-gesamt-2', 'Grün', 3),
+        farbkarte('gruen-gesamt-3', 'Grün', 3),
+      ]),
+    ]);
+    spieler.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'aufgabe-gesamt-3', name: 'Farbvielfalt', punkte: 9, bedingung: 'Test' },
+    ];
+    const vorher = JSON.parse(JSON.stringify(spieler));
+
+    berechneSpielerGesamtPunkte(spieler);
 
     expect(spieler).toEqual(vorher);
   });
