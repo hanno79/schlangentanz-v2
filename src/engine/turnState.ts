@@ -1,8 +1,8 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.3
-Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss.
+Version: 1.4
+Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf im Zugabschluss (R2.5).
 */
 
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN } from './constants';
@@ -73,6 +73,43 @@ export function beendeAufgabenpruefung(
     throw new Error('Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.');
   }
   return { ...zustand, zugphase: 'Zugabschluss' };
+}
+
+export function werfeUeberzaehligeHandkartenAb(
+  zustand: Spielzustand,
+  { kartenIds }: { kartenIds: string[] },
+): Spielzustand {
+  if (zustand.zugphase !== 'Zugabschluss') {
+    throw new Error('Überzählige Handkarten können nur im Zugabschluss abgeworfen werden.');
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const ueberzaehlig = aktiverSpieler.hand.length - HANDKARTENLIMIT;
+
+  if (ueberzaehlig <= 0) {
+    throw new Error('Überzählige Handkarten können nur abgeworfen werden, wenn die Hand das Handkartenlimit überschreitet.');
+  }
+
+  if (kartenIds.length !== ueberzaehlig) {
+    throw new Error('Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.');
+  }
+
+  const abzuwerfenSet = new Set(kartenIds);
+  const abgeworfeneKarten = aktiverSpieler.hand.filter((karte) => abzuwerfenSet.has(karte.id));
+  if (abgeworfeneKarten.length !== kartenIds.length) {
+    throw new Error('Es können nur Handkarten des aktiven Spielers abgeworfen werden.');
+  }
+  const neueHand = aktiverSpieler.hand.filter((karte) => !abzuwerfenSet.has(karte.id));
+
+  const neueSpieler = zustand.spieler.map((spieler, index) =>
+    index === zustand.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
+  );
+
+  return {
+    ...zustand,
+    spieler: neueSpieler,
+    ablagestapel: [...zustand.ablagestapel, ...abgeworfeneKarten],
+  };
 }
 
 export function beendeZug(zustand: Spielzustand): Spielzustand {

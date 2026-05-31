@@ -12,6 +12,7 @@ import {
   beendeZug,
   erstelleSpielzustand,
   starteAusspielphase,
+  werfeUeberzaehligeHandkartenAb,
 } from '../index';
 
 function basisZustand() {
@@ -190,6 +191,18 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     return { ...erstelleSpielzustand(anzahlSpieler, () => 0.999999), aktiverSpielerIndex, zugphase: 'Zugabschluss' as const };
   }
 
+  function zustandMitUeberhand() {
+    const zustand = zustandInZugabschluss(0);
+    const zusatzHandkarten = zustand.nachziehstapel.slice(0, 6);
+    zustand.spieler[0].hand = [...zustand.spieler[0].hand, ...zusatzHandkarten];
+    zustand.nachziehstapel = zustand.nachziehstapel.slice(6);
+    return zustand;
+  }
+
+  function ueberhandIds(zustand: ReturnType<typeof zustandMitUeberhand>) {
+    return zustand.spieler[0].hand.slice(-1).map((karte) => karte.id);
+  }
+
   it('beendet den Zug ohne Überhand und aktiviert den nächsten Spieler in der Nachziehphase', () => {
     const zustand = zustandInZugabschluss(0);
 
@@ -212,14 +225,69 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
   });
 
   it('verbietet Zugende mit mehr als zehn Handkarten beim aktiven Spieler', () => {
-    const zustand = zustandInZugabschluss(0);
-    zustand.spieler[0].hand = [
-      ...zustand.spieler[0].hand,
-      ...zustand.nachziehstapel.slice(0, 6),
-    ];
+    const zustand = zustandMitUeberhand();
 
     expect(() => beendeZug(zustand)).toThrow(
       'Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.',
+    );
+  });
+
+  it('wirft selbst gewählte überzählige Handkarten ab und bleibt im Zugabschluss', () => {
+    const zustand = zustandMitUeberhand();
+    const abzuwerfendeIds = ueberhandIds(zustand);
+
+    const aktualisiert = werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: abzuwerfendeIds });
+
+    expect(aktualisiert.spieler[0].hand).toHaveLength(10);
+    expect(aktualisiert.spieler[0].hand.map((karte) => karte.id)).not.toContain(abzuwerfendeIds[0]);
+    expect(aktualisiert.ablagestapel.at(-1)?.id).toBe(abzuwerfendeIds[0]);
+    expect(aktualisiert.zugphase).toBe('Zugabschluss');
+    expect(zustand.spieler[0].hand).toHaveLength(11);
+    expect(zustand.ablagestapel).toHaveLength(0);
+  });
+
+  it('erlaubt Zugende nach korrekt abgeworfener Überhand', () => {
+    const zustand = zustandMitUeberhand();
+    const nachAbwurf = werfeUeberzaehligeHandkartenAb(zustand, {
+      kartenIds: ueberhandIds(zustand),
+    });
+
+    const beendet = beendeZug(nachAbwurf);
+
+    expect(beendet.aktiverSpielerIndex).toBe(1);
+    expect(beendet.zugphase).toBe('Nachziehphase');
+  });
+
+  it('verbietet Abwurf, wenn nicht exakt die überzählige Kartenanzahl gewählt wurde', () => {
+    const zustand = zustandMitUeberhand();
+
+    expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [] })).toThrow(
+      'Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.',
+    );
+  });
+
+  it('verbietet Überhand-Abwurf, wenn die aktive Hand das Limit nicht überschreitet', () => {
+    const zustand = zustandInZugabschluss(0);
+
+    expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [] })).toThrow(
+      'Überzählige Handkarten können nur abgeworfen werden, wenn die Hand das Handkartenlimit überschreitet.',
+    );
+  });
+
+  it('verbietet Abwurf fremder oder unbekannter Karten', () => {
+    const zustand = zustandMitUeberhand();
+    const fremdeKarte = zustand.spieler[1].hand[0];
+
+    expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [fremdeKarte.id] })).toThrow(
+      'Es können nur Handkarten des aktiven Spielers abgeworfen werden.',
+    );
+  });
+
+  it('verbietet Überhand-Abwurf außerhalb des Zugabschlusses', () => {
+    const zustand = basisZustand();
+
+    expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [] })).toThrow(
+      'Überzählige Handkarten können nur im Zugabschluss abgeworfen werden.',
     );
   });
 
