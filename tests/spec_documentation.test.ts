@@ -1,10 +1,10 @@
 /**
  * Author: rahn
  * Datum: 31.05.2026
- * Version: 1.3
+ * Version: 1.4
  * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Setup-, Zugstruktur-, Schlangenbau-, Farbkarten- und Aufgabenkarten-Regeln dokumentiert.
- * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten-Dokumentation ergänzt.
- * Der Test erzwingt die Übernahme der Dart-Regeln zu offenen/geheimen Aufgaben, SchlangenSpass, Punktwertung und Klärungspunkten.
+ * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten gegen https://schlangentanz.ch/rules als verbindliche Quelle aktualisiert.
+ * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, SchlangenSpass, Punktwertung und Konfliktauflösung.
  */
 
 import { readFileSync } from 'node:fs'
@@ -18,17 +18,18 @@ function readSpec(): string {
 }
 
 describe('GAME_SPEC R1 Setup-Regeln', () => {
-  it('dokumentiert die aus Dart übernommenen Setup-Akzeptanzkriterien', () => {
+  it('dokumentiert die Setup-Akzeptanzkriterien nach Website-Abgleich', () => {
     const spec = readSpec()
 
-    expect(spec).toContain('Nachziehstapel enthält exakt 111 Karten')
+    expect(spec).toContain('Basis-Spiel: 110 Karten')
     expect(spec).toContain('78 Farbkarten')
-    expect(spec).toContain('33 Sonderkarten')
-    expect(spec).toContain('8 offene Aufgabenkarten')
-    expect(spec).toContain('7 geheime Aufgabenkarten')
+    expect(spec).toContain('32 Sonderkarten')
+    expect(spec).toContain('Erweiterung "Schlangenkorb des Glücks": 31 zusätzliche Karten')
+    expect(spec).toContain('genau 14 Aufgabenkarten')
+    expect(spec).toContain('Website-Angabe von 15 Aufgabenkarten ist ein Fehler')
     expect(spec).toContain('5 Startkarten')
-    expect(spec).toContain('3 offene Aufgaben')
-    expect(spec).toContain('1 geheime Aufgabe')
+    expect(spec).toContain('3 offene Aufgabenkarten')
+    expect(spec).toContain('1 geheime Aufgabenkarte')
   })
 })
 
@@ -71,53 +72,87 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
 })
 
 describe('GAME_SPEC R6 Aufgabenkarten', () => {
-  it('dokumentiert die allgemeinen Aufgabenregeln aus Dart', () => {
+  it('dokumentiert die allgemeinen Aufgabenregeln der Website', () => {
     const spec = readSpec()
 
     expect(spec).toContain('R6 Aufgabenkarten')
-    expect(spec).toContain('15 Aufgabenkarten')
-    expect(spec).toContain('8 offene Aufgabenkarten')
-    expect(spec).toContain('7 geheime Aufgabenkarten')
-    expect(spec).toContain('3 offene Aufgaben werden sichtbar in die Tischmitte gelegt')
-    expect(spec).toContain('Jeder Spieler erhält 1 geheime Aufgabe')
-    expect(spec).toContain('Aufgabenprüfung erfolgt automatisch nach jeder relevanten Spielaktion')
+    expect(spec).toContain('https://schlangentanz.ch/rules')
+    expect(spec).toContain('genau 14 Aufgabenkarten')
+    expect(spec).toContain('Website-Angabe von 15 Aufgabenkarten ist ein Fehler')
+    expect(spec).toContain('3 offene Aufgabenkarten werden neben den Spielbereich gelegt')
+    expect(spec).toContain('Jeder Spieler erhält 1 geheime Aufgabenkarte')
+    expect(spec).toContain('Alle Aufgaben funktionieren nach dem gleichen Prinzip - egal ob offen oder geheim')
+    expect(spec).toContain('Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist')
     expect(spec).toContain('SchlangenSpass!')
-    expect(spec).toContain('Ein Spieler kann mehrere Aufgaben im selben Zug erfüllen')
-    expect(spec).toContain('Offene Aufgaben werden nach Erfüllung ersetzt, solange der Stapel nicht leer ist')
+    expect(spec).toContain('Jede Aufgabe kann nur einmal erfüllt werden')
+    expect(spec).toContain('Offene Aufgaben werden nach Erfüllung ersetzt, solange der Aufgabenkartenstapel nicht leer ist')
   })
 
-  it('dokumentiert offene und geheime Aufgabenlisten mit Punktwerten', () => {
+  it('dokumentiert die konkret auf der Website veröffentlichten Aufgaben mit Punktwerten', () => {
     const spec = readSpec()
 
-    expect(spec).toContain('Farbvielfalt')
-    expect(spec).toContain('Farbkombination')
-    expect(spec).toContain('Schlangentanz')
-    expect(spec).toContain('Fusionsexperte')
-    expect(spec).toContain('Langschlange')
-    expect(spec).toContain('Doppelschlange')
-    expect(spec).toContain('Grünmeister')
-    expect(spec).toContain('Defensivprofi')
-    expect(spec).toContain('Heimlicher Sammler')
-    expect(spec).toContain('Farbenfavorit')
-    expect(spec).toContain('Schlangenkönig')
-    expect(spec).toContain('Doppelganger')
-    expect(spec).toContain('Gruppenführer')
-    expect(spec).toContain('Stiller Angreifer')
-    expect(spec).toContain('Punktejäger')
-    expect(spec).toContain('Geheime Aufgaben zählen in der Endspurt-Phase nicht doppelt')
+    expect(spec).toContain('Farbenpracht | 8 | Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen')
+    expect(spec).toContain('Farbharmonie | 10 | Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe')
+    expect(spec).toContain('Farbkombination | 5 | Habe 5 oder mehr Karten der gleichen Farbe in einer Schlange')
+    expect(spec).toContain('Farbvielfalt | 9 | Bilde eine Kette aus je einer Karte aller 6 Farben')
+    expect(spec).toContain('Farbwechsler | 6 | Habe in einer Schlange mindestens 4 verschiedene Farben, die direkt aufeinander folgen')
+    expect(spec).toContain('Fusionsexperte | 6 | Habe eine Schlange mit mindestens 2 Farbfusionen')
+    expect(spec).toContain('Schlangenbeschwörer | 7 | Habe min. 4 Sonderkarten in deinen Schlangen')
+    expect(spec).toContain('Schlangenmeister | 4 | Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus')
+    expect(spec).toContain('Schlangenrepertoire | 4 | Spiele min. 5 versch. Arten von Sonderkarten aus')
+    expect(spec).toContain('Schlangenbändiger | 7 | Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben')
+    expect(spec).toContain('Schlangentanz | 7 | Bilde durch Schlangenhäutung 2 neue Dreiergruppen')
+    expect(spec).toContain('Symmetriemeister | 10 | Habe eine Schlange mit min. 8 Karten, bei der die erste Hälfte das Spiegelbild der zweiten ist')
+    expect(spec).toContain('Gelber Schatz | 5 | Bilde eine Gruppe aus min. 6 gelben Karten')
+    expect(spec).toContain('Lila Riese | 5 | Bilde die längste ununterbrochene Kette violetter Karten')
+    const obsoleteDartTaskNames = [
+      'Langschlange',
+      'Doppelschlange',
+      'Grünmeister',
+      'Defensivprofi',
+      'Heimlicher Sammler',
+      'Farbenfavorit',
+      'Schlangenkönig',
+      'Doppelganger',
+      'Gruppenführer',
+      'Stiller Angreifer',
+      'Punktejäger',
+      'Doppelte Farbgruppe',
+      'Lange Schlange',
+      'Schlangenhäutungs-Meister',
+      'Premium-Sammler',
+      'Doppelschlangen-Meister',
+      'Farben-Spezialist',
+      'Defensive Strategie',
+      'Kurze Schlangen',
+      'Diebstahl-König',
+      'Joker-Sammler',
+      'Punktekönig',
+      'Comeback-Held',
+    ]
+
+    obsoleteDartTaskNames.forEach((name) => {
+      expect(spec).not.toContain(name)
+    })
   })
 
-  it('dokumentiert Endspurt-Verdopplung und offene Klärungspunkte', () => {
+  it('dokumentiert Endspurt-Verdopplung und die aufgelösten Quellenkonflikte', () => {
     const spec = readSpec()
 
     expect(spec).toContain('Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist')
     expect(spec).toContain('Nur offene Aufgabenkarten werden im Endspurt verdoppelt')
     expect(spec).toContain('Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht')
-    expect(spec).toContain('R6 Signoff-Klärung')
-    expect(spec).toContain('Dart-Konflikt')
-    expect(spec).toContain('R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5')
-    expect(spec).toContain('Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst')
-    expect(spec).not.toContain('R6.2/R6.3 sind normativ')
-    expect(spec).not.toContain('R6.5-Abweichungen werden nicht implementiert')
+    expect(spec).toContain('R6 Konfliktauflösung')
+    expect(spec).toContain('Die Website-Regeln sind verbindlich')
+    expect(spec).toContain('Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt')
+    expect(spec).toContain('Es gibt korrekt genau 14 Aufgabenkarten')
+    expect(spec).not.toContain('Die 15. Karte')
+    expect(spec).not.toContain('15. Karte')
+    expect(spec).toContain('Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt')
+    expect(spec).toContain('keine sofortige Gutschrift')
+    expect(spec).not.toContain('Geheime Aufgaben werden bei Erfüllung aufgedeckt')
+    expect(spec).not.toContain('Aufgabe durch Gegner-Aktion erfüllt')
+    expect(spec).not.toContain('R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5')
+    expect(spec).not.toContain('Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst')
   })
 })

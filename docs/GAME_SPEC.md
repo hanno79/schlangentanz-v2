@@ -38,15 +38,17 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 ## 3. Setup
 
-> **Draft — Signoff ausstehend.** Die folgenden Regeln wurden aus dem Dart-Backlog (R1.1/R1.2/R1.3/R1.4) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+> **Normquelle aktualisiert.** Für Kartenmengen und Aufgabenkarten gilt die geprüfte Korrektur: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler; frühere Dart-Abweichungen werden nur noch als überholte Importquelle behandelt.
 
 ### R1.1/R1.2 Kartenstapel vorbereiten
 
 - Alle Karten werden vor Spielbeginn nach Kartentyp sortiert.
-- Haupt-/Nachziehstapel: 78 Farbkarten + 33 Sonderkarten = **Nachziehstapel enthält exakt 111 Karten**.
-- Aufgabenkarten: 15 Stück gesamt, unterteilt in 8 offene Aufgabenkarten und 7 geheime Aufgabenkarten. Diese liegen getrennt bereit.
-- Comeback-Karten: je 1 pro Spieler.
-- Risiko-Belohnungs-Karten: je 2 pro Spieler.
+- Basis-Spiel: 110 Karten = 78 Farbkarten + 32 Sonderkarten.
+- Erweiterung "Schlangenkorb des Glücks": 31 zusätzliche Karten = 4 Schlangenhäutung + 1 Schlangenkorb des Glücks + genau 14 Aufgabenkarten + 4 Comeback-Karten + 8 Risiko-Belohnungs-Karten.
+- Gesamtanzahl mit Erweiterung: 141 Karten.
+- Aufgabenkarten: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler; maßgeblich ist die vollständige Liste der 14 veröffentlichten Aufgabenkarten mit Name, Punktwert und Bedingung.
+- Comeback-Karten: 4 Stück, je 1 pro Spieler.
+- Risiko-Belohnungs-Karten: 8 Stück, je 2 pro Spieler.
 - Digital: Hauptstapel wird per Fisher-Yates oder gleichwertigem Zufallsalgorithmus gemischt.
 
 ### R1.3 Startkarten verteilen
@@ -59,11 +61,12 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 ### R1.4 Aufgabenkarten auslegen
 
-- Zu Spielbeginn werden 3 offene Aufgaben offen ausgelegt und sind für alle sichtbar.
-- Die restlichen 5 offenen Aufgabenkarten bilden einen verdeckten Aufgaben-Nachziehstapel.
-- Jeder Spieler erhält genau 1 geheime Aufgabe; übrige geheime Aufgaben werden aus dem Spiel entfernt.
-- Offene Aufgaben können von jedem Spieler erfüllt werden; nach Erfüllung werden sie ersetzt und zählen in der Endspurt-Phase doppelt.
-- Geheime Aufgaben sind nur dem jeweiligen Spieler sichtbar und bringen Bonuspunkte bei Erfüllung.
+- Zu Spielbeginn werden 3 offene Aufgabenkarten neben den Spielbereich gelegt und sind für alle sichtbar.
+- Jeder Spieler erhält genau 1 geheime Aufgabenkarte, die verdeckt vor dem Spieler liegt.
+- Die Aufgabenkarten werden separat gemischt und nicht mit anderen Karten gemischt.
+- Offene und geheime Aufgaben verwenden denselben Aufgabenpool; es gibt laut Website keine getrennten festen 8/7-Namenslisten.
+- Offene Aufgaben können von jedem Spieler erfüllt werden; nach Erfüllung werden sie ersetzt, solange der Aufgabenkartenstapel nicht leer ist.
+- Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt und geben nur Punkte, wenn sie erfüllt wurden.
 
 ## 4. Turn Structure
 
@@ -123,7 +126,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Aufgaben müssen im aktuellen Zustand der Schlange(n) vollständig erfüllt sein.
 - Erfüllte Aufgaben werden sofort abgehandelt.
 - Offene Aufgaben werden nach Erfüllung ersetzt, falls der Aufgaben-Nachziehstapel nicht leer ist.
-- Geheime Aufgaben werden bei Erfüllung aufgedeckt.
+- Geheime Aufgaben werden im Zug nur intern als erfüllt markiert; sie bleiben verdeckt und werden erst bei der Punktezählung aufgedeckt.
 - Mehrere Aufgaben können in einem Zug erfüllt werden.
 - Vergessenes „SchlangenSpass!“-Rufen verhindert die Erfüllung digital nicht.
 
@@ -143,7 +146,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Keine spielbare Karte: Spieler muss eine Karte abwerfen; das gilt als Karte gespielt für die Zugpflicht.
 - Nachziehstapel wird leer: Spieler zieht alle verbleibenden Karten, Endspurt wird aktiviert, der Zug wird normal beendet.
 - Sonderkarte würde ungültigen Zustand erzeugen: Die Sonderkarte darf nicht gespielt werden; das System verhindert die Aktion.
-- Aufgabe durch Gegner-Aktion erfüllt: Die Aufgabe gilt sofort als erfüllt und wird dem betroffenen Spieler gutgeschrieben.
+- Aufgabe durch Gegner-Aktion möglich erfüllt: keine sofortige Gutschrift; die Aufgabe wird spätestens in der Aufgabenprüfung des betroffenen Spielers gegen dessen eigene Schlangen geprüft.
 - Mehrere Spieler erfüllen gleichzeitig dieselbe offene Aufgabe: Der aktive Spieler hat Vorrang.
 - Kein Sonderfall darf zu Absturz oder Deadlock führen.
 
@@ -199,66 +202,62 @@ TODO: List forbidden actions, expected UI behavior, and engine errors.
 
 TODO: Define timing, resolution order, modifiers, edge cases, and conflicts.
 
-> **Draft — Signoff ausstehend.** Die folgenden Aufgabenkarten-Regeln wurden aus dem Dart-Backlog (R6) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+> **Normquelle aktualisiert.** Für R6 gilt die geprüfte Korrektur zur Website: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt und dürfen nicht als Implementierungsgrundlage verwendet werden.
 
 ### R6 Aufgabenkarten
 
-Das Spiel enthält 15 Aufgabenkarten, unterteilt in 8 offene Aufgabenkarten (für alle sichtbar) und 7 geheime Aufgabenkarten (nur für den Besitzer sichtbar).
+Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Verbindlich ist die veröffentlichte Liste der 14 Aufgabenkarten mit Name, Punktwert und Bedingung.
 
 #### R6.1 Allgemeine Aufgaben-Regeln
 
 **Spielvorbereitung:**
-- 8 offene Aufgabenkarten werden gemischt; 3 offene Aufgaben werden sichtbar in die Tischmitte gelegt.
-- Die restlichen 5 offenen Aufgabenkarten bilden einen verdeckten Nachziehstapel.
-- 7 geheime Aufgabenkarten werden gemischt; Jeder Spieler erhält 1 geheime Aufgabe; übrige geheime Aufgaben werden aus dem Spiel entfernt.
+- Aufgabenkarten werden separat gemischt und nicht mit anderen Karten gemischt.
+- Zu Beginn des Spiels: 3 offene Aufgabenkarten werden neben den Spielbereich gelegt.
+- Jeder Spieler erhält 1 geheime Aufgabenkarte, die verdeckt vor dem Spieler liegt.
+- Alle Aufgaben funktionieren nach dem gleichen Prinzip - egal ob offen oder geheim.
 
 **Aufgaben erfüllen:**
-- Aufgaben können nur während des eigenen Zuges erfüllt werden.
-- Aufgabenprüfung erfolgt automatisch nach jeder relevanten Spielaktion: nach Farbkarte, nach Sonderkarte, nach Abschluss eines Karteneffekts.
-- Bei Erfüllung wird „SchlangenSpass!" angezeigt; der Spieler erhält Punkte und die Karte.
-- Ein Spieler kann mehrere Aufgaben im selben Zug erfüllen; Punkte addieren sich; Mehrfach-Erfüllungen werden nacheinander angezeigt.
-- Offene Aufgaben werden nach Erfüllung ersetzt, solange der Stapel nicht leer ist.
-- Geheime Aufgaben werden bei Erfüllung enthüllt und geben Bonuspunkte.
-- Nicht erfüllte geheime Aufgaben geben keine Punkte.
+- Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist.
+- Die Bedingungen dürfen im selben Zug geschaffen und die Aufgabe direkt erfüllt werden.
+- Bei offenen Aufgaben ruft der Spieler „SchlangenSpass!", wenn er eine Aufgabe erfüllt.
+- Offene Aufgaben werden nach Erfüllung ersetzt, solange der Aufgabenkartenstapel nicht leer ist; die erfüllte offene Aufgabe wandert zum Spieler.
+- Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt.
+- Jede Aufgabe kann nur einmal erfüllt werden - wer zuerst die Bedingungen erfüllt und am Zug ist, bekommt die Punkte.
+- Wenn der Aufgabenkartenstapel leer ist, werden keine neuen Aufgaben mehr aufgedeckt.
+
+**Wichtig für Sonderkarten:** Wenn in den Aufgabenbeschreibungen nicht anders erwähnt, gelten Sonderkarten (wie Regenbogenschlange oder Farbenfusion) als Unterbrechung bei Farbreihen in Aufgaben. Sonderkarten zählen nicht für die Erfüllung von Aufgaben, es sei denn, die Aufgabe verlangt explizit nach Sonderkarten.
 
 **SchlangenSpass!-Sequenz:** Erkennung → Animation „SchlangenSpass!" → Soundeffekt → Aufgabe hervorheben → Punkte gutschreiben → Karte zum Spieler → offene Aufgabe nachziehen (falls verfügbar).
 
-#### R6.2 Offene Aufgaben (8 Karten)
+#### R6.2 Veröffentlichte Aufgabenkarten laut Website
 
 | # | Name | Punkte | Bedingung |
 |---|------|--------|-----------|
-| 1 | Farbvielfalt | 9 | Kette aus je einer Karte aller 6 Farben direkt hintereinander |
-| 2 | Farbkombination | 5 | Mindestens 2 verschiedene Farbgruppen mit je mindestens 3 Karten in einer Schlange |
-| 3 | Schlangentanz | 7 | Schlange während des Spiels mit Schlangenhäutung umordnen |
-| 4 | Fusionsexperte | 6 | Mindestens 2 Farbenfusionen in einer Schlange durchführen |
-| 5 | Langschlange | 8 | Schlange mit mindestens 12 Karten |
-| 6 | Doppelschlange | 6 | Beide Schlangen jeweils mindestens 5 Karten |
-| 7 | Grünmeister | 7 | Mindestens 4 grüne Karten in eigenen Schlangen |
-| 8 | Defensivprofi | 5 | 3 Angriffe mit Farbenschutz erfolgreich abwehren |
+| 1 | Farbenpracht | 8 | Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen. |
+| 2 | Farbharmonie | 10 | Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe. |
+| 3 | Farbkombination | 5 | Habe 5 oder mehr Karten der gleichen Farbe in einer Schlange. |
+| 4 | Farbvielfalt | 9 | Bilde eine Kette aus je einer Karte aller 6 Farben. |
+| 5 | Farbwechsler | 6 | Habe in einer Schlange mindestens 4 verschiedene Farben, die direkt aufeinander folgen. |
+| 6 | Fusionsexperte | 6 | Habe eine Schlange mit mindestens 2 Farbfusionen. |
+| 7 | Schlangenbeschwörer | 7 | Habe min. 4 Sonderkarten in deinen Schlangen. |
+| 8 | Schlangenmeister | 4 | Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus. |
+| 9 | Schlangenrepertoire | 4 | Spiele min. 5 versch. Arten von Sonderkarten aus. |
+| 10 | Schlangenbändiger | 7 | Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben. |
+| 11 | Schlangentanz | 7 | Bilde durch Schlangenhäutung 2 neue Dreiergruppen. |
+| 12 | Symmetriemeister | 10 | Habe eine Schlange mit min. 8 Karten, bei der die erste Hälfte das Spiegelbild der zweiten ist. |
+| 13 | Gelber Schatz | 5 | Bilde eine Gruppe aus min. 6 gelben Karten. |
+| 14 | Lila Riese | 5 | Bilde die längste ununterbrochene Kette violetter Karten (mindestens 3). |
 
-Hinweise: Eindeutig prüfbar; Erfüllungszeitpunkt nach Ausspielen-Phase; mehrere Spieler können nicht dieselbe offene Aufgabe gleichzeitig erfüllen (aktiver Spieler hat Vorrang).
+Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenkarten" und „7 geheime Aufgabenkarten". Offen/geheim ist nach Website-Regel eine Auslage-/Sichtbarkeitsform, keine getrennte Namenskategorie.
 
-#### R6.3 Geheime Aufgaben (7 Karten)
+#### R6.3 SchlangenSpass!-Mechanik
 
-| # | Name | Punkte | Bedingung |
-|---|------|--------|-----------|
-| 1 | Heimlicher Sammler | 8 | Am Spielende mehr Sonderkarten gespielt als jeder andere Spieler |
-| 2 | Farbenfavorit | 6 | Die meisten Karten einer beim Kartenziehen festgelegten Farbe |
-| 3 | Schlangenkönig | 7 | Längste Schlange im Spiel |
-| 4 | Doppelganger | 5 | Beide Schlangen exakt gleich lang, mindestens 4 Karten je Schlange |
-| 5 | Gruppenführer | 6 | Die meisten Farbgruppen im Spiel (Anzahl, nicht Länge) |
-| 6 | Stiller Angreifer | 5 | Mindestens 4 Angriffskarten gegen Gegner einsetzen |
-| 7 | Punktejäger | 7 | Mindestens 25 Punkte nur durch Farbgruppen, ohne Aufgaben |
-
-Besonderheiten: Bleiben bis Erfüllung oder Spielende verborgen; Vergleichsaufgaben (Schlangenkönig, Gruppenführer, Heimlicher Sammler) werden erst am Spielende ausgewertet; Geheime Aufgaben zählen in der Endspurt-Phase nicht doppelt.
-
-#### R6.4 SchlangenSpass!-Mechanik
-
-- Aufgabenprüfung erfolgt automatisch nach jeder relevanten Spielaktion: nach dem Anlegen einer Farbkarte, nach Abschluss eines Sonderkarten-Effekts (z.B. Schlangenhäutung).
-- Geprüft werden alle offenen Aufgaben sowie die geheime Aufgabe des aktiven Spielers gegen den aktuellen Zustand aller eigenen Schlangen.
+- Aufgabenprüfung erfolgt nach relevanten Spielaktionen und spätestens vor Zugabschluss.
+- Geprüft werden alle offenen Aufgaben sowie die geheime Aufgabe des aktiven Spielers gegen den aktuellen Zustand der eigenen Schlangen.
 - Mehrfach-Erfüllungen werden nacheinander angezeigt, jede mit eigener Sequenz; offene Aufgaben werden einzeln nachgezogen.
+- Vergessenes manuelles „SchlangenSpass!"-Rufen verhindert die digitale Erfüllung nicht, wenn die Bedingung eindeutig erfüllt ist.
 
-#### R6.6 Endspurt-Verdopplung
+#### R6.4 Endspurt-Verdopplung
 
 - Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist (ein Spieler kann nicht mehr nachziehen).
 - Nur offene Aufgabenkarten werden im Endspurt verdoppelt; Berechnung: normaler Punktwert × 2 (Beispiel: Farbvielfalt 9 → 18).
@@ -266,39 +265,12 @@ Besonderheiten: Bleiben bis Erfüllung oder Spielende verborgen; Vergleichsaufga
 - Nicht verdoppelt: geheime Aufgaben, bereits vor dem Endspurt erfüllte Aufgaben, Farbgruppen-Punkte, Risiko-Belohnungs-Punkte.
 - Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht; es gilt nur eine Verdopplung.
 
----
+#### R6 Konfliktauflösung
 
-#### R6 Signoff-Klärung
-
-> **Dart-Konflikt — Klärung erforderlich vor Implementierung**
->
-> R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5.
->
-> In R6.5 (Punktwerte-Tabelle) erscheinen folgende abweichende Einträge, die sich nicht mit R6.2/R6.3 decken:
->
-> **Offene Aufgaben laut R6.5 (vs. R6.2):**
-> - „Doppelte Farbgruppe" (7 Punkte) statt „Schlangentanz" (7 Punkte)
-> - „Lange Schlange" (6 Punkte) statt „Langschlange" (8 Punkte)
-> - „Fusionsexperte" (8 Punkte) statt (6 Punkte)
-> - „Schlangenhäutungs-Meister" (6 Punkte) — kein Gegenstück in R6.2
-> - „Premium-Sammler" (10 Punkte) — kein Gegenstück in R6.2
-> - „Doppelschlangen-Meister" (7 Punkte) statt „Doppelschlange" (6 Punkte)
->
-> **Geheime Aufgaben laut R6.5 (vs. R6.3):**
-> - „Farben-Spezialist" (8 Punkte) statt „Heimlicher Sammler" (8 Punkte)
-> - „Defensive Strategie" (6 Punkte) statt „Stiller Angreifer" (5 Punkte)
-> - „Kurze Schlangen" (7 Punkte) — kein Gegenstück in R6.3
-> - „Diebstahl-König" (9 Punkte) — kein Gegenstück in R6.3
-> - „Joker-Sammler" (6 Punkte) — kein Gegenstück in R6.3
-> - „Punktekönig" (10 Punkte) statt „Punktejäger" (7 Punkte)
-> - „Comeback-Held" (5 Punkte) — kein Gegenstück in R6.3
->
-> **Signoff-Fragen:**
-> 1. Welche Namensliste ist verbindlich — R6.2/R6.3 oder R6.5?
-> 2. Welche Punktwerte gelten bei Abweichungen?
-> 3. Sind R6.5-Karten (z.B. „Premium-Sammler", „Comeback-Held") Ersatz oder Ergänzung zu R6.2/R6.3?
->
-> Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst; aus diesem Block darf keine Implementierungsentscheidung abgeleitet werden.
+- Die Website-Regeln sind verbindlich: https://schlangentanz.ch/rules.
+- Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt.
+- Nicht mehr gültige Dart-Namen/Punktwerte werden nicht implementiert; maßgeblich ist ausschließlich die veröffentlichte Aufgabenliste der Website.
+- Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler und darf nicht als Material- oder Implementierungsregel übernommen werden.
 
 ## 8. Scoring & Win/Loss
 
