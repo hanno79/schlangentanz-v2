@@ -199,6 +199,107 @@ TODO: List forbidden actions, expected UI behavior, and engine errors.
 
 TODO: Define timing, resolution order, modifiers, edge cases, and conflicts.
 
+> **Draft — Signoff ausstehend.** Die folgenden Aufgabenkarten-Regeln wurden aus dem Dart-Backlog (R6) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+
+### R6 Aufgabenkarten
+
+Das Spiel enthält 15 Aufgabenkarten, unterteilt in 8 offene Aufgabenkarten (für alle sichtbar) und 7 geheime Aufgabenkarten (nur für den Besitzer sichtbar).
+
+#### R6.1 Allgemeine Aufgaben-Regeln
+
+**Spielvorbereitung:**
+- 8 offene Aufgabenkarten werden gemischt; 3 offene Aufgaben werden sichtbar in die Tischmitte gelegt.
+- Die restlichen 5 offenen Aufgabenkarten bilden einen verdeckten Nachziehstapel.
+- 7 geheime Aufgabenkarten werden gemischt; Jeder Spieler erhält 1 geheime Aufgabe; übrige geheime Aufgaben werden aus dem Spiel entfernt.
+
+**Aufgaben erfüllen:**
+- Aufgaben können nur während des eigenen Zuges erfüllt werden.
+- Aufgabenprüfung erfolgt automatisch nach jeder relevanten Spielaktion: nach Farbkarte, nach Sonderkarte, nach Abschluss eines Karteneffekts.
+- Bei Erfüllung wird „SchlangenSpass!" angezeigt; der Spieler erhält Punkte und die Karte.
+- Ein Spieler kann mehrere Aufgaben im selben Zug erfüllen; Punkte addieren sich; Mehrfach-Erfüllungen werden nacheinander angezeigt.
+- Offene Aufgaben werden nach Erfüllung ersetzt, solange der Stapel nicht leer ist.
+- Geheime Aufgaben werden bei Erfüllung enthüllt und geben Bonuspunkte.
+- Nicht erfüllte geheime Aufgaben geben keine Punkte.
+
+**SchlangenSpass!-Sequenz:** Erkennung → Animation „SchlangenSpass!" → Soundeffekt → Aufgabe hervorheben → Punkte gutschreiben → Karte zum Spieler → offene Aufgabe nachziehen (falls verfügbar).
+
+#### R6.2 Offene Aufgaben (8 Karten)
+
+| # | Name | Punkte | Bedingung |
+|---|------|--------|-----------|
+| 1 | Farbvielfalt | 9 | Kette aus je einer Karte aller 6 Farben direkt hintereinander |
+| 2 | Farbkombination | 5 | Mindestens 2 verschiedene Farbgruppen mit je mindestens 3 Karten in einer Schlange |
+| 3 | Schlangentanz | 7 | Schlange während des Spiels mit Schlangenhäutung umordnen |
+| 4 | Fusionsexperte | 6 | Mindestens 2 Farbenfusionen in einer Schlange durchführen |
+| 5 | Langschlange | 8 | Schlange mit mindestens 12 Karten |
+| 6 | Doppelschlange | 6 | Beide Schlangen jeweils mindestens 5 Karten |
+| 7 | Grünmeister | 7 | Mindestens 4 grüne Karten in eigenen Schlangen |
+| 8 | Defensivprofi | 5 | 3 Angriffe mit Farbenschutz erfolgreich abwehren |
+
+Hinweise: Eindeutig prüfbar; Erfüllungszeitpunkt nach Ausspielen-Phase; mehrere Spieler können nicht dieselbe offene Aufgabe gleichzeitig erfüllen (aktiver Spieler hat Vorrang).
+
+#### R6.3 Geheime Aufgaben (7 Karten)
+
+| # | Name | Punkte | Bedingung |
+|---|------|--------|-----------|
+| 1 | Heimlicher Sammler | 8 | Am Spielende mehr Sonderkarten gespielt als jeder andere Spieler |
+| 2 | Farbenfavorit | 6 | Die meisten Karten einer beim Kartenziehen festgelegten Farbe |
+| 3 | Schlangenkönig | 7 | Längste Schlange im Spiel |
+| 4 | Doppelganger | 5 | Beide Schlangen exakt gleich lang, mindestens 4 Karten je Schlange |
+| 5 | Gruppenführer | 6 | Die meisten Farbgruppen im Spiel (Anzahl, nicht Länge) |
+| 6 | Stiller Angreifer | 5 | Mindestens 4 Angriffskarten gegen Gegner einsetzen |
+| 7 | Punktejäger | 7 | Mindestens 25 Punkte nur durch Farbgruppen, ohne Aufgaben |
+
+Besonderheiten: Bleiben bis Erfüllung oder Spielende verborgen; Vergleichsaufgaben (Schlangenkönig, Gruppenführer, Heimlicher Sammler) werden erst am Spielende ausgewertet; Geheime Aufgaben zählen in der Endspurt-Phase nicht doppelt.
+
+#### R6.4 SchlangenSpass!-Mechanik
+
+- Aufgabenprüfung erfolgt automatisch nach jeder relevanten Spielaktion: nach dem Anlegen einer Farbkarte, nach Abschluss eines Sonderkarten-Effekts (z.B. Schlangenhäutung).
+- Geprüft werden alle offenen Aufgaben sowie die geheime Aufgabe des aktiven Spielers gegen den aktuellen Zustand aller eigenen Schlangen.
+- Mehrfach-Erfüllungen werden nacheinander angezeigt, jede mit eigener Sequenz; offene Aufgaben werden einzeln nachgezogen.
+
+#### R6.6 Endspurt-Verdopplung
+
+- Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist (ein Spieler kann nicht mehr nachziehen).
+- Nur offene Aufgabenkarten werden im Endspurt verdoppelt; Berechnung: normaler Punktwert × 2 (Beispiel: Farbvielfalt 9 → 18).
+- Offene Aufgaben zeigen im Endspurt den verdoppelten Wert mit ×2-Anzeige und ursprünglichem Wert.
+- Nicht verdoppelt: geheime Aufgaben, bereits vor dem Endspurt erfüllte Aufgaben, Farbgruppen-Punkte, Risiko-Belohnungs-Punkte.
+- Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht; es gilt nur eine Verdopplung.
+
+---
+
+#### R6 Signoff-Klärung
+
+> **Dart-Konflikt — Klärung erforderlich vor Implementierung**
+>
+> R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5.
+>
+> In R6.5 (Punktwerte-Tabelle) erscheinen folgende abweichende Einträge, die sich nicht mit R6.2/R6.3 decken:
+>
+> **Offene Aufgaben laut R6.5 (vs. R6.2):**
+> - „Doppelte Farbgruppe" (7 Punkte) statt „Schlangentanz" (7 Punkte)
+> - „Lange Schlange" (6 Punkte) statt „Langschlange" (8 Punkte)
+> - „Fusionsexperte" (8 Punkte) statt (6 Punkte)
+> - „Schlangenhäutungs-Meister" (6 Punkte) — kein Gegenstück in R6.2
+> - „Premium-Sammler" (10 Punkte) — kein Gegenstück in R6.2
+> - „Doppelschlangen-Meister" (7 Punkte) statt „Doppelschlange" (6 Punkte)
+>
+> **Geheime Aufgaben laut R6.5 (vs. R6.3):**
+> - „Farben-Spezialist" (8 Punkte) statt „Heimlicher Sammler" (8 Punkte)
+> - „Defensive Strategie" (6 Punkte) statt „Stiller Angreifer" (5 Punkte)
+> - „Kurze Schlangen" (7 Punkte) — kein Gegenstück in R6.3
+> - „Diebstahl-König" (9 Punkte) — kein Gegenstück in R6.3
+> - „Joker-Sammler" (6 Punkte) — kein Gegenstück in R6.3
+> - „Punktekönig" (10 Punkte) statt „Punktejäger" (7 Punkte)
+> - „Comeback-Held" (5 Punkte) — kein Gegenstück in R6.3
+>
+> **Signoff-Fragen:**
+> 1. Welche Namensliste ist verbindlich — R6.2/R6.3 oder R6.5?
+> 2. Welche Punktwerte gelten bei Abweichungen?
+> 3. Sind R6.5-Karten (z.B. „Premium-Sammler", „Comeback-Held") Ersatz oder Ergänzung zu R6.2/R6.3?
+>
+> Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst; aus diesem Block darf keine Implementierungsentscheidung abgeleitet werden.
+
 ## 8. Scoring & Win/Loss
 
 TODO: Define scoring, game-end conditions, win/loss/draw logic.

@@ -1,8 +1,10 @@
 /**
  * Author: rahn
  * Datum: 31.05.2026
- * Version: 1.2
- * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Setup-, Zugstruktur-, Schlangenbau- und Farbkarten-Regeln dokumentiert.
+ * Version: 1.3
+ * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Setup-, Zugstruktur-, Schlangenbau-, Farbkarten- und Aufgabenkarten-Regeln dokumentiert.
+ * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten-Dokumentation ergänzt.
+ * Der Test erzwingt die Übernahme der Dart-Regeln zu offenen/geheimen Aufgaben, SchlangenSpass, Punktwertung und Klärungspunkten.
  */
 
 import { readFileSync } from 'node:fs'
@@ -65,5 +67,57 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
     expect(spec).toContain('Violett: 12 Karten, 2 Punkte pro Karte')
     expect(spec).toContain('Grün: 9 Karten, 3 Punkte pro Karte')
     expect(spec).toContain('Einzelne Karten und 2er-Kombinationen zählen 0 Punkte')
+  })
+})
+
+describe('GAME_SPEC R6 Aufgabenkarten', () => {
+  it('dokumentiert die allgemeinen Aufgabenregeln aus Dart', () => {
+    const spec = readSpec()
+
+    expect(spec).toContain('R6 Aufgabenkarten')
+    expect(spec).toContain('15 Aufgabenkarten')
+    expect(spec).toContain('8 offene Aufgabenkarten')
+    expect(spec).toContain('7 geheime Aufgabenkarten')
+    expect(spec).toContain('3 offene Aufgaben werden sichtbar in die Tischmitte gelegt')
+    expect(spec).toContain('Jeder Spieler erhält 1 geheime Aufgabe')
+    expect(spec).toContain('Aufgabenprüfung erfolgt automatisch nach jeder relevanten Spielaktion')
+    expect(spec).toContain('SchlangenSpass!')
+    expect(spec).toContain('Ein Spieler kann mehrere Aufgaben im selben Zug erfüllen')
+    expect(spec).toContain('Offene Aufgaben werden nach Erfüllung ersetzt, solange der Stapel nicht leer ist')
+  })
+
+  it('dokumentiert offene und geheime Aufgabenlisten mit Punktwerten', () => {
+    const spec = readSpec()
+
+    expect(spec).toContain('Farbvielfalt')
+    expect(spec).toContain('Farbkombination')
+    expect(spec).toContain('Schlangentanz')
+    expect(spec).toContain('Fusionsexperte')
+    expect(spec).toContain('Langschlange')
+    expect(spec).toContain('Doppelschlange')
+    expect(spec).toContain('Grünmeister')
+    expect(spec).toContain('Defensivprofi')
+    expect(spec).toContain('Heimlicher Sammler')
+    expect(spec).toContain('Farbenfavorit')
+    expect(spec).toContain('Schlangenkönig')
+    expect(spec).toContain('Doppelganger')
+    expect(spec).toContain('Gruppenführer')
+    expect(spec).toContain('Stiller Angreifer')
+    expect(spec).toContain('Punktejäger')
+    expect(spec).toContain('Geheime Aufgaben zählen in der Endspurt-Phase nicht doppelt')
+  })
+
+  it('dokumentiert Endspurt-Verdopplung und offene Klärungspunkte', () => {
+    const spec = readSpec()
+
+    expect(spec).toContain('Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist')
+    expect(spec).toContain('Nur offene Aufgabenkarten werden im Endspurt verdoppelt')
+    expect(spec).toContain('Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht')
+    expect(spec).toContain('R6 Signoff-Klärung')
+    expect(spec).toContain('Dart-Konflikt')
+    expect(spec).toContain('R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5')
+    expect(spec).toContain('Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst')
+    expect(spec).not.toContain('R6.2/R6.3 sind normativ')
+    expect(spec).not.toContain('R6.5-Abweichungen werden nicht implementiert')
   })
 })
