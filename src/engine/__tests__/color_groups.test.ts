@@ -7,19 +7,7 @@ Beschreibung: TDD-Tests für Farbgruppen-Erkennung in Schlangentanz-Schlangen na
 
 import { describe, expect, it } from 'vitest';
 import { ermittleFarbgruppen } from '../index';
-import type { Farbe, Schlange, Spielkarte } from '../types';
-
-function farbkarte(id: string, farbe: Farbe): Spielkarte {
-  return { typ: 'Farbkarte', id, farbe, punkte: 1 };
-}
-
-function sonderkarte(id: string): Spielkarte {
-  return { typ: 'Sonderkarte', id, name: 'Test-Sonderkarte' };
-}
-
-function schlange(karten: Spielkarte[]): Schlange {
-  return { id: 'schlange-test-1', zustand: 'aktiv', karten };
-}
+import { farbkarte, sonderkarte, schlange } from './testHelpers';
 
 describe('Farbgruppen-Erkennung — R3.3', () => {
   it('erkennt eine direkt zusammenhängende Dreiergruppe derselben Farbe', () => {

@@ -16,3 +16,5 @@ export type { AktionErgebnis, SpielAktion, NeueSchlangeStartenAktion, KarteAnleg
 export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn } from './turnState';
 export { ermittleFarbgruppen } from './colorGroups';
 export type { Farbgruppe } from './colorGroups';
+export { berechneFarbgruppenPunkte } from './scoring';
+export type { FarbgruppenWertung, FarbgruppenPunkteErgebnis } from './scoring';
