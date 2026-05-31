@@ -67,7 +67,85 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 ## 4. Turn Structure
 
-TODO: Define ordered phases, mandatory/optional actions, and transition conditions.
+> **Draft — Signoff ausstehend.** Die folgenden Zugstruktur-Regeln wurden aus dem Dart-Backlog (R2) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+
+### R2 Zugstruktur
+
+- R2 Zugstruktur beschreibt den Ablauf eines einzelnen Spielzugs.
+- Zugphasen sind verbindlich in dieser Reihenfolge:
+  1. Nachziehphase
+  2. Ausspielphase
+  3. Aufgabenprüfung
+  4. Zugabschluss und Spielerwechsel
+- Jede Zugphase muss eindeutig beschrieben sein.
+- Ausnahmen und Sonderfälle müssen dokumentiert sein.
+- Übergänge zwischen Phasen müssen klar sein.
+
+### R2.1 Zugbeginn und Zugreihenfolge
+
+- Der aktive Spieler wird nach Uhrzeigersinn-Reihenfolge ermittelt.
+- Reihenfolge: Startspieler, dann im Uhrzeigersinn.
+- Nach dem letzten Spieler beginnt wieder der erste Spieler.
+- Die Reihenfolge ändert sich nicht während des Spiels.
+- Nur der aktive Spieler kann Spielaktionen durchführen.
+- Andere Spieler sind während des Zuges blockiert, außer Reaktionskarten erlauben etwas anderes.
+- Der aktive Spieler muss visuell erkennbar sein.
+
+### R2.2 Nachziehphase
+
+- Zu Beginn jedes Zuges prüft der aktive Spieler seine Handkartenanzahl.
+- Hat er weniger als 5 Karten, muss er nachziehen.
+- Nachziehen endet, wenn exakt 5 Handkarten erreicht sind oder der Nachziehstapel leer ist.
+- Hat der Spieler bereits 5 oder mehr Karten, wird die Nachziehphase übersprungen.
+- Mindest-Handkarten nach Nachziehen: 5 Karten.
+- Maximale Handkarten am Zugende: 10 Karten.
+- Nachziehen ist Pflicht, nicht optional.
+- Gezogene Karten sind nur für den Spieler sichtbar.
+- Endspurt-Phase wird aktiviert, wenn der Nachziehstapel leer wird.
+
+### R2.3 Ausspielphase
+
+- Nach dem Nachziehen spielt der aktive Spieler Karten aus seiner Hand.
+- Der aktive Spieler muss mindestens 1 Karte spielen.
+- Der aktive Spieler darf maximal 2 Karten spielen.
+- Die Reihenfolge ausgespielter Karten ist frei wählbar.
+- Jede Karte wird einzeln ausgeführt und deren Effekt abgehandelt.
+- Farbkarten können an eigene Schlangen angelegt oder zum Starten neuer Schlangen genutzt werden.
+- Sonderkarten führen ihren Kartentext aus.
+- Sonderkarten erhöhen das 2-Karten-Limit nicht, außer Kartentext sagt ausdrücklich etwas anderes.
+- Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
+- Abwerfen gilt als Karte gespielt für die Zugpflicht.
+- Abgeworfene Karten kommen offen auf den Ablagestapel.
+
+### R2.4 Aufgabenprüfung
+
+- Nach dem Ausspielen prüft der Spieler offene Aufgaben und seine geheime Aufgabe.
+- Aufgaben müssen im aktuellen Zustand der Schlange(n) vollständig erfüllt sein.
+- Erfüllte Aufgaben werden sofort abgehandelt.
+- Offene Aufgaben werden nach Erfüllung ersetzt, falls der Aufgaben-Nachziehstapel nicht leer ist.
+- Geheime Aufgaben werden bei Erfüllung aufgedeckt.
+- Mehrere Aufgaben können in einem Zug erfüllt werden.
+- Vergessenes „SchlangenSpass!“-Rufen verhindert die Erfüllung digital nicht.
+
+### R2.5 Zugabschluss und Spielerwechsel
+
+- Der Zug kann nur beendet werden, wenn alle Pflichten erfüllt sind.
+- Vor Zugende wird geprüft, ob mindestens 1 Karte gespielt wurde.
+- Alle Karteneffekte müssen abgehandelt sein.
+- Erfüllte Aufgaben müssen geprüft sein.
+- Bei mehr als 10 Handkarten muss der Spieler überzählige Karten abwerfen.
+- Der Spieler wählt selbst, welche Karten abgeworfen werden.
+- Danach wird der nächste Spieler im Uhrzeigersinn aktiviert.
+- Spielende-Bedingungen werden geprüft.
+
+### R2.6 Sonderfälle
+
+- Keine spielbare Karte: Spieler muss eine Karte abwerfen; das gilt als Karte gespielt für die Zugpflicht.
+- Nachziehstapel wird leer: Spieler zieht alle verbleibenden Karten, Endspurt wird aktiviert, der Zug wird normal beendet.
+- Sonderkarte würde ungültigen Zustand erzeugen: Die Sonderkarte darf nicht gespielt werden; das System verhindert die Aktion.
+- Aufgabe durch Gegner-Aktion erfüllt: Die Aufgabe gilt sofort als erfüllt und wird dem betroffenen Spieler gutgeschrieben.
+- Mehrere Spieler erfüllen gleichzeitig dieselbe offene Aufgabe: Der aktive Spieler hat Vorrang.
+- Kein Sonderfall darf zu Absturz oder Deadlock führen.
 
 ## 5. Legal Actions
 
