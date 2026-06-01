@@ -464,6 +464,6 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
-- [x] Codex Review: initialer Blocker war nur `src/App.r47.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, R38-Textvertrag, Post-Action-Refresh, Header oder Dateigrößen.
-- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
-- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [x] Codex Review: initialer Blocker war nur `src/App.r47.test.tsx` untracked; wurde vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, R38-Textvertrag, Post-Action-Refresh, Header oder Dateigrößen.
+- [x] Production URL returns HTTP 200 — R47 Deploy `dpl_2GqxjT8rvLpFz71o3LDoSxDtosRe`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
+- [x] Game route loads without console errors — R47 Playwright-Smoke: `Ablagestapel: keine` initial und nach erstem Engine-Klick weiterhin sichtbar, keine Console/Page/Request-Fehler.
