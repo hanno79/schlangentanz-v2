@@ -45,7 +45,8 @@ describe('R17 UI-Aktionsausführung über die Engine', () => {
 
     expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /neue schlange starten mit karte blau-01/i })).toBeNull()
-    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
+    expect(within(bereich).queryByRole('button', { name: /karte blau-03/i })).toBeNull()
+    expect(within(bereich).getByRole('button', { name: /ausspielphase beenden/i })).toBeInTheDocument()
   })
 })
 
@@ -71,6 +72,18 @@ function zustandMitPflichtAbwurf(): Spielzustand {
     ...zustand,
     nachziehstapel: zustand.nachziehstapel.filter(karte => karte.id !== sonderkarte.id),
     spieler: zustand.spieler.with(0, { ...zustand.spieler[0], hand: [sonderkarte], schlangen: [] }),
+  }
+}
+
+function zustandNachEinerSonderkarteMitWeitererLegalerAktion(): Spielzustand {
+  const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  const farbkarte = [...zustand.nachziehstapel, ...zustand.spieler[0].hand].find(k => k.id === 'blau-01')
+  if (!farbkarte) throw new Error('Testsetup erwartet blau-01 im Spielzustand.')
+
+  return {
+    ...zustand,
+    zugpflichten: { gespielteKarten: 1, gespielteFarbkarten: 0, gespielteSonderkarten: 1 },
+    spieler: zustand.spieler.with(0, { ...zustand.spieler[0], hand: [farbkarte], schlangen: [] }),
   }
 }
 
@@ -110,5 +123,38 @@ describe('R23 UI-Zugpflichtenanzeige', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
+  })
+})
+
+describe('R25 UI-Ausspielphase beenden', () => {
+  it('beendet nach einer gespielten Karte die Ausspielphase über die Engine', () => {
+    render(<App />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/zugphase: ausspielphase/i)).toBeInTheDocument()
+    expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
+    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
+  })
+
+  it('erlaubt das Beenden nach einer Karte auch wenn weitere legale Aktionen möglich sind', () => {
+    render(<App initialZustand={zustandNachEinerSonderkarteMitWeitererLegalerAktion()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
+    expect(
+      within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
+    ).toBeInTheDocument()
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
   })
 })

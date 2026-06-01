@@ -5,6 +5,7 @@ import {
   starteAusspielphase,
   ermittleLegaleAktionen,
   anwendeAktion,
+  beendeAusspielphase,
   MAX_KARTEN_PRO_ZUG,
 } from './engine'
 import type { SpielAktion, Spielzustand } from './engine'
@@ -57,6 +58,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
       </section>
       <section aria-label="Legale Aktionen">
         <p>Engine-Demo: Ausspielphase</p>
+        <p>Zugphase: {zustand.zugphase}</p>
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>
@@ -79,6 +81,11 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         </div>
         <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
         {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
+        {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
+          <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
+            Ausspielphase beenden
+          </button>
+        )}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
       </section>
     </main>
