@@ -212,3 +212,18 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, Index-zu-Spieler-ID-Mapping, stale Display nach Zugabschluss, Normal/Endspurt/Beendet-Pfade, Fixtures und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R33 UI-Material- und Aufgabenübersicht
+
+- [x] Scope: Vorhandene Engine-State-Felder `nachziehstapel.length`, `aufgabenStapel.length` und `offeneAufgaben[].name` in der UI sichtbar machen; keine Deck-, Zieh- oder Aufgabenregel in React.
+- [x] RED: `npm test -- --run src/App.test.tsx -t 'R33 UI-Material- und Aufgabenübersicht'` schlug erwartungsgemäß fehl, weil Material-/Aufgabenübersicht in der UI fehlte.
+- [x] GREEN: `src/App.tsx` rendert `Nachziehstapel: X Karten`, `Aufgabenstapel: X Karten` und `Offene Aufgaben: ...` direkt aus `zustand` mit Fallback `keine`.
+- [x] Test-Härtung: Nachziehstapel-Aktualisierung nach Engine-`beendeZug(...)` mit realem Nachziehen geprüft; Codex-Blocker zu hardcodierten `100/99`-Zählern behoben, erwartete Werte werden aus Engine-State abgeleitet.
+- [x] Targeted: `npm test -- --run src/App.test.tsx -t 'R33 UI-Material- und Aufgabenübersicht'` → 2 R33-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 14 Testfiles, 241 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Re-Review: keine Blocker; geprüft wurden reine State-Anzeige, stale Display nach `beendeZug`, keine hardcodierten Deck-Zähler, Default-UI, Imports/Typecheck und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

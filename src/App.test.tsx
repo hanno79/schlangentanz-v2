@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { beendeZug, erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { Spielzustand } from './engine'
@@ -388,5 +388,40 @@ describe('R32 UI-Spielphase und Endrunde', () => {
 
     expect(within(bereich).getByText(/spielphase: beendet/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/verbleibende endrunde: keine/i)).toBeInTheDocument()
+  })
+})
+
+describe('R33 UI-Material- und Aufgabenübersicht', () => {
+  let zustand: ReturnType<typeof starteAusspielphase>
+  beforeEach(() => {
+    zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  })
+
+  it('zeigt Nachziehstapel, offene Aufgaben und Aufgabenstapel aus dem Engine-State an', () => {
+    render(<App initialZustand={zustand} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(`Nachziehstapel: ${zustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
+    expect(within(bereich).getByText(`Aufgabenstapel: ${zustand.aufgabenStapel.length} Karten`)).toBeInTheDocument()
+    expect(
+      within(bereich).getByText(`Offene Aufgaben: ${zustand.offeneAufgaben.map(a => a.name).join(', ')}`),
+    ).toBeInTheDocument()
+  })
+
+  it('aktualisiert den Nachziehstapel-Zähler nach einem Engine-Zugwechsel mit Nachziehen', () => {
+    const startzustand = {
+      ...zustand,
+      zugphase: 'Zugabschluss' as const,
+      spieler: zustand.spieler.with(1, { ...zustand.spieler[1], hand: zustand.spieler[1].hand.slice(0, 4) }),
+    }
+    const erwarteterZustand = beendeZug(startzustand, { pflichtenErfuellt: true })
+
+    render(<App initialZustand={startzustand} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(`Nachziehstapel: ${startzustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
+    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+
+    expect(within(bereich).getByText(`Nachziehstapel: ${erwarteterZustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
   })
 })

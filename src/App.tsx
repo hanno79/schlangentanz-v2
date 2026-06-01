@@ -122,6 +122,9 @@ function App({ initialZustand = defaultZustand }: AppProps) {
             Ausspielphase starten
           </button>
         )}
+        <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
+        <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
+        <p>Offene Aufgaben: {zustand.offeneAufgaben.map(a => a.name).join(', ') || 'keine'}</p>
         {gesamtwertung.spielerwertungen.map(eintrag => (
           <p key={eintrag.spielerId}>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
         ))}
