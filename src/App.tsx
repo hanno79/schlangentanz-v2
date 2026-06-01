@@ -59,6 +59,7 @@ function App() {
             </button>
           ))}
         </div>
+        {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
       </section>
     </main>
