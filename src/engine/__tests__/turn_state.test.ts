@@ -371,7 +371,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     expect(aktualisiert.aktiverSpielerIndex).toBe(1);
     expect(aktualisiert.zugphase).toBe('Nachziehphase');
     expect(aktualisiert.zugpflichten.gespielteKarten).toBe(0);
-    expect(aktualisiert.spieler).toBe(zustand.spieler);
+    expect(aktualisiert.spieler[0].hand).toBe(zustand.spieler[0].hand);
     expect(zustand.aktiverSpielerIndex).toBe(0);
     expect(zustand.zugphase).toBe('Zugabschluss');
   });

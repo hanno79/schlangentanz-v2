@@ -92,6 +92,26 @@ function berechneEndrundenSpieler(ausloeserIndex: number, spielerAnzahl: number)
   return indizes;
 }
 
+function zieheAufMindesthand(
+  zustand: Spielzustand,
+  spielerIndex: number,
+): { neueHand: Spielkarte[]; neuerNachziehstapel: Spielkarte[]; spielphase: Spielphase; endrunde: Spielzustand['endrunde'] } {
+  const neuerNachziehstapel = [...zustand.nachziehstapel];
+  const neueHand = [...zustand.spieler[spielerIndex].hand];
+  while (neueHand.length < MINDESTHANDKARTEN && neuerNachziehstapel.length > 0) {
+    neueHand.push(neuerNachziehstapel.shift()!);
+  }
+  const wirdEndspurt = zustand.nachziehstapel.length > 0 && neuerNachziehstapel.length === 0;
+  const spielphase: Spielphase = wirdEndspurt ? 'Endspurt' : zustand.spielphase;
+  const endrunde = wirdEndspurt
+    ? {
+        ausloeserSpielerIndex: spielerIndex,
+        verbleibendeSpielerIndizes: berechneEndrundenSpieler(spielerIndex, zustand.spieler.length),
+      }
+    : zustand.endrunde;
+  return { neueHand, neuerNachziehstapel, spielphase, endrunde };
+}
+
 export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
   if (zustand.zugphase !== 'Nachziehphase') {
     throw new Error('Ausspielphase kann nur aus der Nachziehphase gestartet werden.');
@@ -101,30 +121,15 @@ export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
     return { ...zustand, zugphase: 'Ausspielphase' };
   }
 
-  const neuerNachziehstapel = [...zustand.nachziehstapel];
-  const neueHand = [...zustand.spieler[zustand.aktiverSpielerIndex].hand];
-
-  while (neueHand.length < MINDESTHANDKARTEN && neuerNachziehstapel.length > 0) {
-    neueHand.push(neuerNachziehstapel.shift()!);
-  }
-
-  const wirdEndspurt = zustand.nachziehstapel.length > 0 && neuerNachziehstapel.length === 0;
-  const finaleSpielphase: Spielphase = wirdEndspurt ? 'Endspurt' : zustand.spielphase;
-  const finaleEndrunde = wirdEndspurt
-    ? {
-        ausloeserSpielerIndex: zustand.aktiverSpielerIndex,
-        verbleibendeSpielerIndizes: berechneEndrundenSpieler(zustand.aktiverSpielerIndex, zustand.spieler.length),
-      }
-    : zustand.endrunde;
-
+  const { neueHand, neuerNachziehstapel, spielphase, endrunde } = zieheAufMindesthand(zustand, zustand.aktiverSpielerIndex);
   const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
 
   return {
     ...zustand,
     spieler: neueSpieler,
     nachziehstapel: neuerNachziehstapel,
-    spielphase: finaleSpielphase,
-    endrunde: finaleEndrunde,
+    spielphase,
+    endrunde,
     zugphase: 'Ausspielphase',
   };
 }
@@ -335,8 +340,17 @@ export function beendeZug(
   }
 
   const naechsterSpielerIndex = (zustand.aktiverSpielerIndex + 1) % zustand.spieler.length;
+  const { neueHand, neuerNachziehstapel, spielphase, endrunde } = zieheAufMindesthand(zustand, naechsterSpielerIndex);
+  const neueSpieler = zustand.spieler.map((spieler, index) =>
+    index === naechsterSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
+  );
+
   return {
     ...zustand,
+    spieler: neueSpieler,
+    nachziehstapel: neuerNachziehstapel,
+    spielphase,
+    endrunde,
     aktiverSpielerIndex: naechsterSpielerIndex,
     zugpflichten: erstelleLeereZugpflichten(),
     zugphase: 'Nachziehphase',

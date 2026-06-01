@@ -209,3 +209,23 @@ describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
     expect(within(bereich).queryByRole('button', { name: /zug beenden/i })).toBeNull()
   })
 })
+
+describe('R29 UI-Nachziehen beim nächsten Zug', () => {
+  it('zeigt Spieler 1 zu Beginn seines zweiten Zuges wieder mit fünf Handkarten', () => {
+    const bereich = starteErsteSchlange()
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase starten/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktiver spieler: spieler-1/i)).toBeInTheDocument()
+    expect(
+      within(bereich).getByText(/handkarten: blau-03, blau-05, blau-07, blau-09, blau-11/i),
+    ).toBeInTheDocument()
+  })
+})
