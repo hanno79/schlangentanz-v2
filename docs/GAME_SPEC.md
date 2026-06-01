@@ -10,7 +10,9 @@ No real game implementation should begin until this document is filled and accep
 - Zielplattform ist eine browserbasierte Web-App.
 - Produktionsbereitstellung erfolgt über Vercel.
 - Workflow: Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial.
-- Noch offen: Spieleranzahl und erwartete Sitzungsdauer.
+- Einzelspieler-Spiel gegen KI-Gegner.
+- Der menschliche Spieler wählt zu Spielstart 1, 2 oder 3 KI-Gegner.
+- Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn alle Karten verbraucht sind.
 
 ## 2. Entities
 
@@ -286,7 +288,10 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 - Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte.
 - Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet.
 
-Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten.
+- Eine Partie endet, wenn alle Karten verbraucht sind.
+- Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt.
+- Wer die meisten Punkte hat, gewinnt.
+- Gleichstand ist erlaubt, wenn zwei oder mehr Spieler dieselbe höchste Punktzahl haben.
 
 ## 9. UI Requirements
 

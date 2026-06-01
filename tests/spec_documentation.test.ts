@@ -5,9 +5,10 @@
  * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Projektziel-, Setup-, Zugstruktur-, Schlangenbau-, Farbkarten-, Aufgabenkarten- und Wertungsregeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten gegen https://schlangentanz.ch/rules als verbindliche Quelle aktualisiert.
  * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, SchlangenSpass, Punktwertung und Konfliktauflösung.
- * ÄNDERUNG [31.05.2026]: R8-Wertung als dokumentierten Engine-Stand ergänzt, ohne offene Win/Loss-Regeln vorwegzunehmen.
+ * ÄNDERUNG [31.05.2026]: R8-Wertung und geklärte Partieende-/Win-Loss-Regeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
  * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
+ * ÄNDERUNG [01.06.2026]: Geklärte Regeln zu Spieleranzahl, Partieende und Gewinnerermittlung abgesichert.
  */
 
 import { readFileSync } from 'node:fs'
@@ -19,13 +20,16 @@ const SPEC_PATH = join(process.cwd(), 'docs', 'GAME_SPEC.md')
 const spec = readFileSync(SPEC_PATH, 'utf8')
 
 describe('GAME_SPEC R0 Projektziel', () => {
-  it('dokumentiert Projektziel und Zielplattform ohne ungesicherte Spielerzahl oder Spieldauer zu erfinden', () => {
+  it('dokumentiert Projektziel, Zielplattform, Einzelspieler-Ausrichtung und KI-Gegnerauswahl', () => {
     expect(spec).toContain('## 1. Overview')
     expect(spec).toContain('Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild')
     expect(spec).toContain('Zielplattform ist eine browserbasierte Web-App')
     expect(spec).toContain('Produktionsbereitstellung erfolgt über Vercel')
     expect(spec).toContain('Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial')
-    expect(spec).toContain('Noch offen: Spieleranzahl und erwartete Sitzungsdauer')
+    expect(spec).toContain('Einzelspieler-Spiel gegen KI-Gegner')
+    expect(spec).toContain('Der menschliche Spieler wählt zu Spielstart 1, 2 oder 3 KI-Gegner')
+    expect(spec).toContain('Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn alle Karten verbraucht sind')
+    expect(spec).not.toContain('Noch offen: Spieleranzahl und erwartete Sitzungsdauer')
     expect(spec).not.toContain('TODO: Describe objective, player count, target platform, and expected session duration.')
   })
 })
@@ -159,7 +163,7 @@ describe('GAME_SPEC R6 Aufgabenkarten', () => {
 })
 
 describe('GAME_SPEC R8 Wertung', () => {
-  it('dokumentiert die implementierte Punktwertung ohne offene Win/Loss-Regeln vorwegzunehmen', () => {
+  it('dokumentiert die implementierte Punktwertung', () => {
     expect(spec).toContain('## 8. Scoring & Win/Loss')
     expect(spec).toContain('R8.4 Punktwertung')
     expect(spec).toContain('Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet')
@@ -167,8 +171,15 @@ describe('GAME_SPEC R8 Wertung', () => {
     expect(spec).toContain('Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben')
     expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte')
     expect(spec).toContain('Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet')
-    expect(spec).toContain('Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten')
     expect(spec).not.toContain('TODO: Define scoring, game-end conditions, win/loss/draw logic.')
+  })
+
+  it('dokumentiert geklärte Partieende- und Gewinnerermittlungsregeln', () => {
+    expect(spec).toContain('Eine Partie endet, wenn alle Karten verbraucht sind')
+    expect(spec).toContain('Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt')
+    expect(spec).toContain('Wer die meisten Punkte hat, gewinnt')
+    expect(spec).toContain('Gleichstand ist erlaubt, wenn zwei oder mehr Spieler dieselbe höchste Punktzahl haben')
+    expect(spec).not.toContain('Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten')
   })
 })
 
