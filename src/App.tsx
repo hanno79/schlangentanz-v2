@@ -136,9 +136,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
                 .join(', ')}
         </p>
         <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
-        {zustand.ablagestapel.length > 0 && (
-          <p>Ablagestapel: {kartenIds(zustand.ablagestapel)}</p>
-        )}
+        <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
         <div>
           {legaleAktionen.map((aktion, i) => (
             <button key={i} onClick={() => fuhreAktionAus(aktion)}>

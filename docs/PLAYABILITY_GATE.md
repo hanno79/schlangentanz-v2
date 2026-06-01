@@ -449,3 +449,21 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: initialer Blocker war nur `src/App.r46.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, Post-Action-Refresh, Header oder Dateigrößen.
 - [x] Production URL returns HTTP 200 — R46 Deploy `8vz7AvEYp2b2H1krpWywbHok5sDt`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
 - [x] Game route loads without console errors — R46 Playwright-Smoke: `Handkarten gesamt: 10` initial, nach Klick `Handkarten gesamt: 9`, keine Console/Page/Request-Fehler.
+
+
+## Evidence — 01.06.2026 R47 Ablagestapel-Details leer sichtbar
+
+- [x] Scope: Vorhandene Engine-State-Collection `zustand.ablagestapel` immer als Detailzeile sichtbar machen; leer als `Ablagestapel: keine`, nicht leer weiterhin als Karten-IDs. Keine neue Ablage-, Turn-, Legalitäts-, Scoring- oder Engine-Logik in React.
+- [x] RED: `npm test -- --run src/App.r47.test.tsx` schlug erwartungsgemäß fehl, weil `Ablagestapel: keine` bei leerem Stapel noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Ablagestapel: X` nun immer; `X` kommt direkt aus `zustand.ablagestapel` oder aus dem leeren Fallback `keine`.
+- [x] Refresh: R47-Test klickt eine vorhandene Engine-Pflicht-Abwurf-Aktion und prüft, dass die Detailzeile nach dem aus `anwendeAktion(...)` abgeleiteten Engine-Folgezustand aktualisiert wird.
+- [x] `/simplify`: Export-Kopplung aus `App.tsx` wurde wegen Lint (`react-refresh/only-export-components`) zurückgenommen; Header und engine-derived Post-Action-Erwartung blieben erhalten.
+- [x] Targeted: `npm test -- --run src/App.r47.test.tsx` → 1 R47-Test bestanden.
+- [x] Related targeted: `npm test -- --run src/App.r38.test.tsx src/App.r47.test.tsx` → 3 Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 27 Testfiles, 261 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: initialer Blocker war nur `src/App.r47.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, R38-Textvertrag, Post-Action-Refresh, Header oder Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
