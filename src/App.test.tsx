@@ -85,3 +85,17 @@ describe('R21 UI-Pflicht-Abwurf', () => {
     expect(within(bereich).getByText(/keine weiteren legalen aktionen/i)).toBeInTheDocument()
   })
 })
+
+describe('R22 UI-Handkartenanzeige', () => {
+  it('zeigt aktive Handkarten und aktualisiert sie nach Pflicht-Abwurf', () => {
+    render(<App initialZustand={zustandMitPflichtAbwurf()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/handkarten: sonderkarte-01/i)).toBeInTheDocument()
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /karte sonderkarte-01 abwerfen/i }))
+
+    expect(within(bereich).getByText(/handkarten: keine/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/ablagestapel: sonderkarte-01/i)).toBeInTheDocument()
+  })
+})

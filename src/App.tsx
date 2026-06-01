@@ -10,6 +10,10 @@ import type { SpielAktion, Spielzustand } from './engine'
 
 const defaultZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
+function kartenIds(karten: { id: string }[]): string {
+  return karten.map(k => k.id).join(', ')
+}
+
 function aktionsLabel(aktion: SpielAktion): string {
   switch (aktion.typ) {
     case 'NeueSchlangeStarten':
@@ -55,11 +59,15 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>
-            Schlange {schlange.id}: {schlange.karten.map(k => k.id).join(', ')}
+            Schlange {schlange.id}: {kartenIds(schlange.karten)}
           </p>
         ))}
+        <p>
+          Handkarten:{' '}
+          {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
+        </p>
         {zustand.ablagestapel.length > 0 && (
-          <p>Ablagestapel: {zustand.ablagestapel.map(k => k.id).join(', ')}</p>
+          <p>Ablagestapel: {kartenIds(zustand.ablagestapel)}</p>
         )}
         <div>
           {legaleAktionen.map((aktion, i) => (
