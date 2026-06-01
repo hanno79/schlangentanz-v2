@@ -85,6 +85,7 @@ function erstelleSpielzustandVonDefinitionen(
     ablagestapel: [],
     offeneAufgaben: aufgabenStapel.splice(0, OFFENE_AUFGABEN_START),
     aufgabenStapel,
+    endrunde: { ausloeserSpielerIndex: null, verbleibendeSpielerIndizes: [] },
   };
 }
 

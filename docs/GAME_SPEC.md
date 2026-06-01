@@ -12,7 +12,7 @@ No real game implementation should begin until this document is filled and accep
 - Workflow: Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial.
 - Einzelspieler-Spiel gegen KI-Gegner.
 - Der menschliche Spieler wählt zu Spielstart 1, 2 oder 3 KI-Gegner.
-- Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn alle Karten verbraucht sind.
+- Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist.
 
 ## 2. Entities
 
@@ -110,7 +110,9 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Maximale Handkarten am Zugende: 10 Karten.
 - Nachziehen ist Pflicht, nicht optional.
 - Gezogene Karten sind nur für den Spieler sichtbar.
-- Endspurt-Phase wird aktiviert, wenn der Nachziehstapel leer wird.
+- Endspurt-Phase wird aktiviert, wenn der Nachziehstapel durch das Nachziehen leer wird.
+- Maßgeblich für das Spielende ist nur der Nachziehstapel.
+- In der Endspurt-/Endrunde wird nicht mehr nachgezogen, weil der Nachziehstapel leer ist.
 
 ### R2.3 Ausspielphase
 
@@ -145,12 +147,15 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Bei mehr als 10 Handkarten muss der Spieler überzählige Karten abwerfen.
 - Der Spieler wählt selbst, welche Karten abgeworfen werden.
 - Danach wird der nächste Spieler im Uhrzeigersinn aktiviert.
-- Spielende-Bedingungen werden geprüft.
+- Wenn der aktive Spieler in seinem Zug die letzte Karte vom Nachziehstapel gezogen hat, beendet er seinen laufenden Zug normal; danach erhalten alle anderen Spieler in Zugreihenfolge noch genau einen Zug.
+- Der Spieler, der die letzte Nachziehkarte gezogen hat, wird in dieser Endrunde nicht erneut aktiviert.
+- Nach dem letzten Endrunden-Zug wird die Spielphase auf beendet gesetzt und es folgt die Wertung.
+- Spielende-Bedingung ist ausschließlich der leere Nachziehstapel; danach steuert die Endrunde den Übergang zur Wertung.
 
 ### R2.6 Sonderfälle
 
 - Keine spielbare Karte: Spieler muss eine Karte abwerfen; das gilt als Karte gespielt für die Zugpflicht.
-- Nachziehstapel wird leer: Spieler zieht alle verbleibenden Karten, Endspurt wird aktiviert, der Zug wird normal beendet.
+- Nachziehstapel wird leer: Spieler zieht alle verbleibenden Karten, Endspurt wird aktiviert, der Zug wird normal beendet; anschließend spielen alle anderen Spieler genau einen Zug ohne Nachziehen, der Auslöser nicht erneut.
 - Sonderkarte würde ungültigen Zustand erzeugen: Die Sonderkarte darf nicht gespielt werden; das System verhindert die Aktion.
 - Aufgabe durch Gegner-Aktion möglich erfüllt: keine sofortige Gutschrift; die Aufgabe wird spätestens in der Aufgabenprüfung des betroffenen Spielers gegen dessen eigene Schlangen geprüft.
 - Mehrere Spieler erfüllen gleichzeitig dieselbe offene Aufgabe: Der aktive Spieler hat Vorrang.
@@ -265,7 +270,7 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 
 #### R6.4 Endspurt-Verdopplung
 
-- Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist (ein Spieler kann nicht mehr nachziehen).
+- Endspurt-Phase beginnt, wenn der Nachziehstapel durch Nachziehen leer wird; der auslösende Spieler beendet seinen laufenden Zug normal, danach folgt die Endrunde ohne weiteres Nachziehen.
 - Nur offene Aufgabenkarten werden im Endspurt verdoppelt; Berechnung: normaler Punktwert × 2 (Beispiel: Farbvielfalt 9 → 18).
 - Offene Aufgaben zeigen im Endspurt den verdoppelten Wert mit ×2-Anzeige und ursprünglichem Wert.
 - Nicht verdoppelt: geheime Aufgaben, bereits vor dem Endspurt erfüllte Aufgaben, Farbgruppen-Punkte, Risiko-Belohnungs-Punkte.
@@ -288,7 +293,7 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 - Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte.
 - Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet.
 
-- Eine Partie endet, wenn alle Karten verbraucht sind.
+- Eine Partie endet, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist.
 - Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt.
 - Wer die meisten Punkte hat, gewinnt.
 - Gleichstand ist erlaubt, wenn zwei oder mehr Spieler dieselbe höchste Punktzahl haben.

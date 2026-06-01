@@ -402,4 +402,94 @@ describe('Serialisierung', () => {
     zustand.offeneAufgaben[0] = { ...zustand.offeneAufgaben[0], id: 'aufgabe-99' };
     expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/aufgabenmaterial/i);
   });
+
+  it('wirft deutschen Fehler bei fehlender Endrunde', () => {
+    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    delete zustand['endrunde'];
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler bei Endrunde im Normalspiel', () => {
+    const zustand = erstelleSpielzustand(3) as unknown as Record<string, unknown>;
+    zustand['endrunde'] = { ausloeserSpielerIndex: 1, verbleibendeSpielerIndizes: [2, 0] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler bei Endspurt ohne Auslöser', () => {
+    const zustand = erstelleSpielzustand(3) as unknown as Record<string, unknown>;
+    zustand['spielphase'] = 'Endspurt';
+    zustand['nachziehstapel'] = [];
+    zustand['endrunde'] = { ausloeserSpielerIndex: null, verbleibendeSpielerIndizes: [1, 2] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler bei doppelten oder ungültigen Endrunden-Spielerindizes', () => {
+    const zustand = erstelleSpielzustand(3) as unknown as Record<string, unknown>;
+    zustand['spielphase'] = 'Endspurt';
+    zustand['nachziehstapel'] = [];
+    zustand['endrunde'] = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [1, 1] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+
+    zustand['endrunde'] = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [3] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler, wenn Spielende nicht zur beendeten Spielphase passt', () => {
+    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    zustand['zugphase'] = 'Spielende';
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/spielende/i);
+  });
+
+  it('wirft deutschen Fehler bei Beendet-Phase ohne Auslöser', () => {
+    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    zustand['spielphase'] = 'Beendet';
+    zustand['zugphase'] = 'Spielende';
+    zustand['nachziehstapel'] = [];
+    zustand['endrunde'] = { ausloeserSpielerIndex: null, verbleibendeSpielerIndizes: [] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler, wenn die Endrunde den Auslöser erneut enthält', () => {
+    const zustand = erstelleSpielzustand(3) as unknown as Record<string, unknown>;
+    zustand['spielphase'] = 'Endspurt';
+    zustand['ablagestapel'] = zustand['nachziehstapel'];
+    zustand['nachziehstapel'] = [];
+    zustand['endrunde'] = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [1, 0] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler bei fehlenden oder falsch geordneten Endrunden-Spielern', () => {
+    const zustand = erstelleSpielzustand(4) as unknown as Record<string, unknown>;
+    zustand['spielphase'] = 'Endspurt';
+    zustand['aktiverSpielerIndex'] = 1;
+    zustand['ablagestapel'] = zustand['nachziehstapel'];
+    zustand['nachziehstapel'] = [];
+    zustand['endrunde'] = { ausloeserSpielerIndex: 1, verbleibendeSpielerIndizes: [2] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+
+    zustand['endrunde'] = { ausloeserSpielerIndex: 1, verbleibendeSpielerIndizes: [0, 2, 3] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler bei unpassendem aktivem Spieler in laufender Endrunde', () => {
+    const zustand = erstelleSpielzustand(3) as unknown as Record<string, unknown>;
+    zustand['spielphase'] = 'Endspurt';
+    zustand['aktiverSpielerIndex'] = 0;
+    zustand['ablagestapel'] = zustand['nachziehstapel'];
+    zustand['nachziehstapel'] = [];
+    zustand['endrunde'] = { ausloeserSpielerIndex: 1, verbleibendeSpielerIndizes: [2, 0] };
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/endrunde/i);
+  });
+
+  it('wirft deutschen Fehler, wenn Spielphase und Nachziehstapel-Ende widersprechen', () => {
+    const normalLeer = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    normalLeer['ablagestapel'] = normalLeer['nachziehstapel'];
+    normalLeer['nachziehstapel'] = [];
+    expect(() => deserialisiere(JSON.stringify(normalLeer))).toThrow(/nachziehstapel/i);
+
+    const endspurtMitStapel = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    endspurtMitStapel['spielphase'] = 'Endspurt';
+    endspurtMitStapel['endrunde'] = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [1] };
+    expect(() => deserialisiere(JSON.stringify(endspurtMitStapel))).toThrow(/nachziehstapel/i);
+  });
 });

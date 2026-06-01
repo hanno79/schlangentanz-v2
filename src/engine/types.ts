@@ -13,9 +13,10 @@ export type Zugphase =
   | 'Nachziehphase'
   | 'Ausspielphase'
   | 'Aufgabenpruefung'
-  | 'Zugabschluss';
+  | 'Zugabschluss'
+  | 'Spielende';
 
-export type Spielphase = 'Normal' | 'Endspurt';
+export type Spielphase = 'Normal' | 'Endspurt' | 'Beendet';
 
 export type SchlangenZustand = 'aktiv' | 'blockiert' | 'geschuetzt';
 
@@ -71,4 +72,8 @@ export interface Spielzustand {
   ablagestapel: Spielkarte[];
   offeneAufgaben: AufgabenkarteInfo[];
   aufgabenStapel: AufgabenkarteInfo[];
+  endrunde: {
+    ausloeserSpielerIndex: number | null;
+    verbleibendeSpielerIndizes: number[];
+  };
 }

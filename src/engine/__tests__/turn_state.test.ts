@@ -67,6 +67,10 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
     expect(aktualisiert.spieler[0].hand).toHaveLength(4);
     expect(aktualisiert.nachziehstapel).toHaveLength(0);
     expect(aktualisiert.spielphase).toBe('Endspurt');
+    expect(aktualisiert.endrunde).toEqual({
+      ausloeserSpielerIndex: 0,
+      verbleibendeSpielerIndizes: [1],
+    });
     expect(aktualisiert.zugphase).toBe('Ausspielphase');
   });
 
@@ -84,16 +88,18 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
     expect(zustand.nachziehstapel.map((karte) => karte.id)).toEqual(stapelVorher);
   });
 
-  it('ändert die Spielphase nicht, wenn der Nachziehstapel bereits leer war', () => {
+  it('überspringt Nachziehen in der Endrunde, wenn der Nachziehstapel bereits leer ist', () => {
     const zustand = erstelleSpielzustand(2, () => 0.999999);
     zustand.spieler[0].hand = zustand.spieler[0].hand.slice(0, 3);
     zustand.nachziehstapel = [];
+    zustand.spielphase = 'Endspurt';
+    zustand.endrunde = { ausloeserSpielerIndex: 1, verbleibendeSpielerIndizes: [0] };
 
     const aktualisiert = starteAusspielphase(zustand);
 
     expect(aktualisiert.spieler[0].hand).toHaveLength(3);
     expect(aktualisiert.nachziehstapel).toHaveLength(0);
-    expect(aktualisiert.spielphase).toBe('Normal');
+    expect(aktualisiert.spielphase).toBe('Endspurt');
     expect(aktualisiert.zugphase).toBe('Ausspielphase');
   });
 
@@ -444,4 +450,3 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     expect(() => beendeZug(zustand, { pflichtenErfuellt: true })).toThrow('Zug kann nur aus dem Zugabschluss beendet werden.');
   });
 });
-

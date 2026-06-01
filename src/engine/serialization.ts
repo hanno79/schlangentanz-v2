@@ -25,9 +25,10 @@ const ZUGPHASEN: ReadonlySet<Zugphase> = new Set([
   'Ausspielphase',
   'Aufgabenpruefung',
   'Zugabschluss',
+  'Spielende',
 ]);
 
-const SPIELPHASEN: ReadonlySet<Spielphase> = new Set(['Normal', 'Endspurt']);
+const SPIELPHASEN: ReadonlySet<Spielphase> = new Set(['Normal', 'Endspurt', 'Beendet']);
 const FARBEN: ReadonlySet<Farbe> = new Set(['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün']);
 const SCHLANGEN_ZUSTAENDE: ReadonlySet<SchlangenZustand> = new Set([
   'aktiv',
@@ -92,6 +93,16 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   if (!SPIELPHASEN.has(obj['spielphase'] as Spielphase)) {
     throw new Error('Ungültiger Spielzustand: spielphase ist ungültig.');
   }
+
+  const zugphase = obj['zugphase'] as Zugphase;
+  const spielphase = obj['spielphase'] as Spielphase;
+  if (zugphase === 'Spielende' && spielphase !== 'Beendet') {
+    throw new Error('Ungültiger Spielzustand: Spielende-Zugphase ist nur bei Beendet-Spielphase erlaubt.');
+  }
+  if (spielphase === 'Beendet' && zugphase !== 'Spielende') {
+    throw new Error('Ungültiger Spielzustand: Beendet-Spielphase erfordert Spielende-Zugphase.');
+  }
+
   validiereZugpflichten(obj['zugpflichten']);
 
   const verwendeteIds = new Set<string>();
@@ -101,10 +112,87 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   validiereSpielsteuerungsVerteilung(spieler as Spieler[]);
 
   validiereSpielkartenArray(obj['nachziehstapel'], 'nachziehstapel', verwendeteIds);
+  const nachziehstapel = erwarteArray(obj['nachziehstapel'], 'nachziehstapel');
+  validiereSpielphaseNachziehstapel(spielphase, nachziehstapel.length);
   validiereSpielkartenArray(obj['ablagestapel'], 'ablagestapel', verwendeteIds);
   validiereAufgabenArray(obj['offeneAufgaben'], 'offeneAufgaben', verwendeteIds);
   validiereAufgabenArray(obj['aufgabenStapel'], 'aufgabenStapel', verwendeteIds);
+  validiereEndrunde(obj['endrunde'], spielphase, spieler.length, aktiverIndex);
   validiereKanonischesMaterial(obj as unknown as Spielzustand);
+}
+
+function validiereSpielphaseNachziehstapel(spielphase: Spielphase, nachziehstapelLaenge: number): void {
+  if (spielphase === 'Normal' && nachziehstapelLaenge === 0) {
+    throw new Error('Ungültiger Spielzustand: Normal-Phase erfordert einen nicht leeren Nachziehstapel.');
+  }
+  if ((spielphase === 'Endspurt' || spielphase === 'Beendet') && nachziehstapelLaenge !== 0) {
+    throw new Error('Ungültiger Spielzustand: Endspurt und Spielende erfordern einen leeren Nachziehstapel.');
+  }
+}
+
+function berechneEndrundenSpieler(ausloeserIndex: number, spielerAnzahl: number): number[] {
+  const indizes: number[] = [];
+  for (let i = 1; i < spielerAnzahl; i++) {
+    indizes.push((ausloeserIndex + i) % spielerAnzahl);
+  }
+  return indizes;
+}
+
+function istSuffix(vollstaendig: number[], verbleibende: unknown[]): boolean {
+  const start = vollstaendig.length - verbleibende.length;
+  return start >= 0 && verbleibende.every((idx, position) => idx === vollstaendig[start + position]);
+}
+
+function validiereEndrunde(wert: unknown, spielphase: Spielphase, spielerAnzahl: number, aktiverIndex: number): void {
+  const obj = erwarteObjekt(wert, 'endrunde');
+  const ausloeser = obj['ausloeserSpielerIndex'];
+  const verbleibende = erwarteArray(obj['verbleibendeSpielerIndizes'], 'endrunde.verbleibendeSpielerIndizes');
+
+  if (ausloeser !== null) {
+    if (!Number.isInteger(ausloeser) || (ausloeser as number) < 0 || (ausloeser as number) >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: endrunde.ausloeserSpielerIndex ist kein gültiger Spielerindex.');
+    }
+  }
+
+  const indizenSet = new Set<number>();
+  for (const idx of verbleibende) {
+    if (!Number.isInteger(idx) || (idx as number) < 0 || (idx as number) >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: endrunde.verbleibendeSpielerIndizes enthält ungültigen Spielerindex.');
+    }
+    if (indizenSet.has(idx as number)) {
+      throw new Error('Ungültiger Spielzustand: endrunde.verbleibendeSpielerIndizes enthält doppelten Index.');
+    }
+    indizenSet.add(idx as number);
+  }
+
+  if (spielphase === 'Normal') {
+    if (ausloeser !== null || verbleibende.length !== 0) {
+      throw new Error('Ungültiger Spielzustand: endrunde muss in Normal-Phase leer sein.');
+    }
+  } else if (spielphase === 'Endspurt') {
+    if (ausloeser === null) {
+      throw new Error('Ungültiger Spielzustand: endrunde.ausloeserSpielerIndex muss in Endspurt gesetzt sein.');
+    }
+    const erwarteteEndrunde = berechneEndrundenSpieler(ausloeser as number, spielerAnzahl);
+    if (!istSuffix(erwarteteEndrunde, verbleibende)) {
+      throw new Error('Ungültiger Spielzustand: endrunde.verbleibendeSpielerIndizes entspricht nicht der Zugreihenfolge.');
+    }
+    if (verbleibende.length === 0) {
+      throw new Error('Ungültiger Spielzustand: endrunde darf im Endspurt nicht leer sein.');
+    }
+    if (verbleibende.length === erwarteteEndrunde.length) {
+      const ersterEndrundenSpieler = verbleibende[0] as number;
+      if (aktiverIndex !== ausloeser && aktiverIndex !== ersterEndrundenSpieler) {
+        throw new Error('Ungültiger Spielzustand: aktiver Spieler passt nicht zur Endrunde.');
+      }
+    } else if (aktiverIndex !== verbleibende[0]) {
+      throw new Error('Ungültiger Spielzustand: aktiver Spieler passt nicht zur Endrunde.');
+    }
+  } else if (spielphase === 'Beendet') {
+    if (ausloeser === null || verbleibende.length !== 0) {
+      throw new Error('Ungültiger Spielzustand: endrunde ist im Beendet-Zustand ungültig.');
+    }
+  }
 }
 
 function validiereZugpflichten(wert: unknown): void {

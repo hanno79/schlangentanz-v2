@@ -51,6 +51,18 @@ function ermittleNaechsteFreieSchlangenNummer(spieler: Spielzustand['spieler'][n
   throw new Error('Alle Schlangennummern sind belegt.');
 }
 
+function erstelleLeereZugpflichten() {
+  return { gespielteKarten: 0 } as const;
+}
+
+function berechneEndrundenSpieler(ausloeserIndex: number, spielerAnzahl: number): number[] {
+  const indizes: number[] = [];
+  for (let i = 1; i < spielerAnzahl; i++) {
+    indizes.push((ausloeserIndex + i) % spielerAnzahl);
+  }
+  return indizes;
+}
+
 export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
   if (zustand.zugphase !== 'Nachziehphase') {
     throw new Error('Ausspielphase kann nur aus der Nachziehphase gestartet werden.');
@@ -67,11 +79,14 @@ export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
     neueHand.push(neuerNachziehstapel.shift()!);
   }
 
-  // Endspurt wird ausgelöst, wenn der Stapel während des Nachziehens leer wird
-  const finaleSpielphase: Spielphase =
-    zustand.nachziehstapel.length > 0 && neuerNachziehstapel.length === 0
-      ? 'Endspurt'
-      : zustand.spielphase;
+  const wirdEndspurt = zustand.nachziehstapel.length > 0 && neuerNachziehstapel.length === 0;
+  const finaleSpielphase: Spielphase = wirdEndspurt ? 'Endspurt' : zustand.spielphase;
+  const finaleEndrunde = wirdEndspurt
+    ? {
+        ausloeserSpielerIndex: zustand.aktiverSpielerIndex,
+        verbleibendeSpielerIndizes: berechneEndrundenSpieler(zustand.aktiverSpielerIndex, zustand.spieler.length),
+      }
+    : zustand.endrunde;
 
   const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
 
@@ -80,6 +95,7 @@ export function starteAusspielphase(zustand: Spielzustand): Spielzustand {
     spieler: neueSpieler,
     nachziehstapel: neuerNachziehstapel,
     spielphase: finaleSpielphase,
+    endrunde: finaleEndrunde,
     zugphase: 'Ausspielphase',
   };
 }
@@ -284,11 +300,40 @@ export function beendeZug(
   if (zustand.spieler[zustand.aktiverSpielerIndex].hand.length > HANDKARTENLIMIT) {
     throw new Error('Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.');
   }
+
+  if (zustand.spielphase === 'Endspurt') {
+    return beendeZugInEndspurt(zustand);
+  }
+
   const naechsterSpielerIndex = (zustand.aktiverSpielerIndex + 1) % zustand.spieler.length;
   return {
     ...zustand,
     aktiverSpielerIndex: naechsterSpielerIndex,
-    zugpflichten: { gespielteKarten: 0 },
+    zugpflichten: erstelleLeereZugpflichten(),
     zugphase: 'Nachziehphase',
+  };
+}
+
+function beendeZugInEndspurt(zustand: Spielzustand): Spielzustand {
+  const neueVerbleibende = zustand.endrunde.verbleibendeSpielerIndizes.filter(
+    (idx) => idx !== zustand.aktiverSpielerIndex,
+  );
+
+  if (neueVerbleibende.length === 0) {
+    return {
+      ...zustand,
+      spielphase: 'Beendet',
+      zugphase: 'Spielende',
+      zugpflichten: erstelleLeereZugpflichten(),
+      endrunde: { ...zustand.endrunde, verbleibendeSpielerIndizes: [] },
+    };
+  }
+
+  return {
+    ...zustand,
+    aktiverSpielerIndex: neueVerbleibende[0],
+    zugpflichten: erstelleLeereZugpflichten(),
+    zugphase: 'Nachziehphase',
+    endrunde: { ...zustand.endrunde, verbleibendeSpielerIndizes: neueVerbleibende },
   };
 }

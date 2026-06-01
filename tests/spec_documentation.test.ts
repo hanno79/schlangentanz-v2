@@ -8,7 +8,7 @@
  * ÄNDERUNG [31.05.2026]: R8-Wertung und geklärte Partieende-/Win-Loss-Regeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
  * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
- * ÄNDERUNG [01.06.2026]: Geklärte Regeln zu Spieleranzahl, Partieende und Gewinnerermittlung abgesichert.
+ * ÄNDERUNG [01.06.2026]: Geklärte Nachziehstapel-Endrundenregel abgesichert.
  */
 
 import { readFileSync } from 'node:fs'
@@ -28,7 +28,7 @@ describe('GAME_SPEC R0 Projektziel', () => {
     expect(spec).toContain('Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial')
     expect(spec).toContain('Einzelspieler-Spiel gegen KI-Gegner')
     expect(spec).toContain('Der menschliche Spieler wählt zu Spielstart 1, 2 oder 3 KI-Gegner')
-    expect(spec).toContain('Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn alle Karten verbraucht sind')
+    expect(spec).toContain('Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist')
     expect(spec).not.toContain('Noch offen: Spieleranzahl und erwartete Sitzungsdauer')
     expect(spec).not.toContain('TODO: Describe objective, player count, target platform, and expected session duration.')
   })
@@ -63,7 +63,11 @@ describe('GAME_SPEC R2 Zugstruktur', () => {
     expect(spec).toContain('Der aktive Spieler darf maximal 2 Karten spielen')
     expect(spec).toContain('Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen')
     expect(spec).toContain('Abwerfen gilt als Karte gespielt für die Zugpflicht')
-    expect(spec).toContain('Endspurt-Phase wird aktiviert, wenn der Nachziehstapel leer wird')
+    expect(spec).toContain('Endspurt-Phase wird aktiviert, wenn der Nachziehstapel durch das Nachziehen leer wird')
+    expect(spec).toContain('Maßgeblich für das Spielende ist nur der Nachziehstapel')
+    expect(spec).toContain('danach erhalten alle anderen Spieler in Zugreihenfolge noch genau einen Zug')
+    expect(spec).toContain('Der Spieler, der die letzte Nachziehkarte gezogen hat, wird in dieser Endrunde nicht erneut aktiviert')
+    expect(spec).toContain('Spielende-Bedingung ist ausschließlich der leere Nachziehstapel')
   })
 })
 
@@ -144,7 +148,7 @@ describe('GAME_SPEC R6 Aufgabenkarten', () => {
   })
 
   it('dokumentiert Endspurt-Verdopplung und die aufgelösten Quellenkonflikte', () => {
-    expect(spec).toContain('Endspurt-Phase beginnt sofort, wenn der Nachziehstapel leer ist')
+    expect(spec).toContain('Endspurt-Phase beginnt, wenn der Nachziehstapel durch Nachziehen leer wird')
     expect(spec).toContain('Nur offene Aufgabenkarten werden im Endspurt verdoppelt')
     expect(spec).toContain('Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht')
     expect(spec).toContain('R6 Konfliktauflösung')
@@ -171,11 +175,14 @@ describe('GAME_SPEC R8 Wertung', () => {
     expect(spec).toContain('Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben')
     expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte')
     expect(spec).toContain('Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet')
+    expect(spec).not.toContain('Eine Partie endet, wenn alle Karten verbraucht sind')
+    expect(spec).not.toContain('Partie endet regelbasiert, wenn alle Karten verbraucht sind')
+    expect(spec).not.toContain('Spielende-Bedingungen werden geprüft')
     expect(spec).not.toContain('TODO: Define scoring, game-end conditions, win/loss/draw logic.')
   })
 
   it('dokumentiert geklärte Partieende- und Gewinnerermittlungsregeln', () => {
-    expect(spec).toContain('Eine Partie endet, wenn alle Karten verbraucht sind')
+    expect(spec).toContain('Eine Partie endet, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist')
     expect(spec).toContain('Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt')
     expect(spec).toContain('Wer die meisten Punkte hat, gewinnt')
     expect(spec).toContain('Gleichstand ist erlaubt, wenn zwei oder mehr Spieler dieselbe höchste Punktzahl haben')
