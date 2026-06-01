@@ -140,7 +140,8 @@ describe('R25 UI-Ausspielphase beenden', () => {
     expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
-    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
+    expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
+    expect(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
   })
 
   it('erlaubt das Beenden nach einer Karte auch wenn weitere legale Aktionen möglich sind', () => {
@@ -155,6 +156,20 @@ describe('R25 UI-Ausspielphase beenden', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
 
     expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
+    expect(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
+  })
+})
+
+describe('R26 UI-Aufgabenprüfung beenden', () => {
+  it('beendet nach der Ausspielphase die Aufgabenprüfung über die Engine', () => {
+    const bereich = starteErsteSchlange()
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: zugabschluss/i)).toBeInTheDocument()
     expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
   })
 })

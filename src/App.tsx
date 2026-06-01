@@ -6,6 +6,7 @@ import {
   ermittleLegaleAktionen,
   anwendeAktion,
   beendeAusspielphase,
+  beendeAufgabenpruefung,
   MAX_KARTEN_PRO_ZUG,
 } from './engine'
 import type { SpielAktion, Spielzustand } from './engine'
@@ -84,6 +85,11 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
           <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
             Ausspielphase beenden
+          </button>
+        )}
+        {zustand.zugphase === 'Aufgabenpruefung' && (
+          <button onClick={() => setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))}>
+            Aufgabenprüfung beenden
           </button>
         )}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
