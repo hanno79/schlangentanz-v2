@@ -33,6 +33,15 @@ function aktionsLabel(aktion: SpielAktion): string {
   }
 }
 
+function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung']): string {
+  switch (steuerung) {
+    case 'Mensch':
+      return 'Du bist am Zug.'
+    case 'KI':
+      return 'KI ist am Zug.'
+  }
+}
+
 interface AppProps {
   initialZustand?: Spielzustand
 }
@@ -92,6 +101,8 @@ function App({ initialZustand }: AppProps) {
           <h2>Aktiver Spieler</h2>
           <p>Aktiver Spieler: {aktiverSpieler.id}</p>
           <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+          <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
+          {aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
           <p>
             {aktiverSpieler.geheimeAufgabe
               ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe)}`
