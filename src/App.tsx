@@ -109,6 +109,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
               : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
           </p>
         ))}
+        <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
         <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
