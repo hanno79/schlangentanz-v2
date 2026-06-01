@@ -260,3 +260,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, vollständige Spieler-Collection, alle Schlangen je Spieler, Refresh nach Engine-Aktion, neue untracked Testdatei, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R36 UI-Schlangenzustände
+
+- [x] Scope: Vorhandene Engine-Schlangenzustände (`zustand.spieler[].schlangen[].zustand`) sichtbar machen; keine neue Schlangen-, Blockier-, Schutz-, Zug- oder Scoring-Regel in React.
+- [x] RED: `npm test -- --run src/App.r36.test.tsx` schlug erwartungsgemäß fehl, weil keine Schlangenzustand-Zeilen gerendert wurden.
+- [x] GREEN: `src/App.tsx` rendert für jede vorhandene Schlange `Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}` direkt aus dem Engine-State.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r36.test.tsx`; Fixture nutzt Karten von Spieler 1 und entfernt sie aus der Hand; alle drei Engine-Zustände (`aktiv`, `blockiert`, `geschuetzt`) werden geprüft.
+- [x] `/simplify`: keine Änderungen; Header und Post-Action-Refresh-Coverage blieben erhalten.
+- [x] Targeted: `npm test -- --run src/App.r36.test.tsx` → 2 R36-Tests bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx` → 30 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 16 Testfiles, 247 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, vollständige Spieler-/Schlangen-Collection, keine Zeilen für Spieler ohne Schlangen, R35-Textvertrag, realistische Fixture-Ownership, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

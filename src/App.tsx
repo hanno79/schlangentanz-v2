@@ -93,6 +93,13 @@ function App({ initialZustand = defaultZustand }: AppProps) {
               : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
           </p>
         ))}
+        {zustand.spieler.flatMap(spieler =>
+          spieler.schlangen.map(schlange => (
+            <p key={`zustand-${spieler.id}-${schlange.id}`}>
+              Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}
+            </p>
+          ))
+        )}
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>
