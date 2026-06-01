@@ -346,3 +346,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, keine Aufgaben-/Scoringlogik, kein `bedingung`-/`geheimeAufgabe`-Leak, vollständige offene Aufgaben-Collection, R33-Update, R34/R35/R36/R37/R38/R39-Textverträge, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R41 UI-Anzahl legaler Aktionen
+
+- [x] Scope: Vorhandenes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine neue Legalitätslogik, keine Aktionsfilterung und keine Engine-Änderung in React.
+- [x] RED: `npm test -- --run src/App.r41.test.tsx` schlug erwartungsgemäß fehl, weil `Legale Aktionen: 5` noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Legale Aktionen: {legaleAktionen.length}` direkt aus dem bereits memoisierten `ermittleLegaleAktionen(zustand)`-Ergebnis.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r41.test.tsx`; Test prüft Startzählung, Button-Collection und Refresh auf `Legale Aktionen: 0` nach echter Engine-Aktion.
+- [x] `/simplify`: Keine Änderungen; Zähler ist bereits minimal und nutzt vorhandenes `legaleAktionen`.
+- [x] Targeted: `npm test -- --run src/App.r41.test.tsx` → 1 R41-Test bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx src/App.r40.test.tsx src/App.r41.test.tsx` → 38 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 21 Testfiles, 255 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine Enumerator-Anzeige, kein UI-Legalitätsbranching, Refresh nach Klick, untracked Testdatei, R34/R35/R36/R37/R38/R39/R40-Textverträge, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

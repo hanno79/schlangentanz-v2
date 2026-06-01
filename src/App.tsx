@@ -66,6 +66,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         </ul>
       </section>
       <section aria-label="Legale Aktionen">
+        <p>Legale Aktionen: {legaleAktionen.length}</p>
         <p>Engine-Demo: Ausspielphase</p>
         <p>Zugphase: {zustand.zugphase}</p>
         <p>Spielphase: {zustand.spielphase}</p>
