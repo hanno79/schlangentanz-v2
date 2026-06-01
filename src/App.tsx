@@ -68,6 +68,18 @@ function App({ initialZustand = defaultZustand }: AppProps) {
       <section aria-label="Legale Aktionen">
         <p>Engine-Demo: Ausspielphase</p>
         <p>Zugphase: {zustand.zugphase}</p>
+        <p>Spielphase: {zustand.spielphase}</p>
+        {zustand.endrunde.ausloeserSpielerIndex !== null && (
+          <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
+        )}
+        {zustand.spielphase !== 'Normal' && (
+          <p>
+            Verbleibende Endrunde:{' '}
+            {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
+              ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
+              : 'keine'}
+          </p>
+        )}
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { beendeZug, erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { Spielzustand } from './engine'
 
 describe('Schlangentanz v2 placeholder', () => {
@@ -338,5 +338,55 @@ describe('R31 UI-Gewinneranzeige', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).queryByText(/gewinner spieler-/i)).toBeNull()
+  })
+})
+
+function endrundenAusloeserZustand(): Spielzustand {
+  const zustand = erstelleSpielzustand(3, () => 0.999999)
+  zustand.aktiverSpielerIndex = 1
+  zustand.spieler[1].hand = zustand.spieler[1].hand.slice(0, 3)
+  zustand.nachziehstapel = zustand.nachziehstapel.slice(0, 1)
+  return starteAusspielphase(zustand)
+}
+
+describe('R32 UI-Spielphase und Endrunde', () => {
+  it('zeigt die Engine-Spielphase im normalen Spielzustand an', () => {
+    render(<App />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/spielphase: normal/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/endrunde ausgelöst durch/i)).toBeNull()
+  })
+
+  it('zeigt Endspurt-Auslöser und verbleibende Endrunden-Spieler an', () => {
+    render(<App initialZustand={endrundenAusloeserZustand()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/spielphase: endspurt/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/endrunde ausgelöst durch: spieler-2/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/verbleibende endrunde: spieler-3, spieler-1/i)).toBeInTheDocument()
+  })
+
+  it('aktualisiert die Endrunden-Anzeige nach einem Engine-Zugabschluss', () => {
+    render(<App initialZustand={{ ...endrundenAusloeserZustand(), zugphase: 'Zugabschluss' }} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+
+    expect(within(bereich).getByText(/aktiver spieler: spieler-3/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielphase: endspurt/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/verbleibende endrunde: spieler-3, spieler-1/i)).toBeInTheDocument()
+  })
+
+  it('zeigt bei Spielende keine verbleibenden Endrunden-Spieler mehr an', () => {
+    const nachAusloeser = beendeZug({ ...endrundenAusloeserZustand(), zugphase: 'Zugabschluss' }, { pflichtenErfuellt: true })
+    const nachSpieler3 = beendeZug({ ...nachAusloeser, zugphase: 'Zugabschluss' }, { pflichtenErfuellt: true })
+    const spielende = beendeZug({ ...nachSpieler3, zugphase: 'Zugabschluss' }, { pflichtenErfuellt: true })
+
+    render(<App initialZustand={spielende} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/spielphase: beendet/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/verbleibende endrunde: keine/i)).toBeInTheDocument()
   })
 })

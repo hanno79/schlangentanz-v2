@@ -196,3 +196,19 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden Engine-only-Gewinnerermittlung, Spielende-Gating, Gleichstand, stabile Reihenfolge, Hook-Dependency, Fixture-Eigentum und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R32 UI-Spielphase und Endrunde
+
+- [x] Scope: Vorhandene Engine-State-Felder `spielphase` und `endrunde` in der UI sichtbar machen; keine Endrunden- oder Spielende-Regel in React.
+- [x] RED: `npm test -- --run src/App.test.tsx -t 'R32 UI-Spielphase und Endrunde'` schlug erwartungsgemäß fehl, weil Spielphase und Endrundenstatus in der UI fehlten.
+- [x] GREEN: `src/App.tsx` rendert `Spielphase`, Endrunden-Auslöser und verbleibende Endrunden-Spieler direkt aus `zustand`.
+- [x] Test-Härtung: Normalzustand ohne Endrunden-Auslöser, Endspurt-Auslöser mit Reihenfolge, Aktualisierung nach `Zug beenden` und Spielende mit `Verbleibende Endrunde: keine` sind geprüft.
+- [x] Targeted: `npm test -- --run src/App.test.tsx -t 'R32 UI-Spielphase und Endrunde'` → 4 R32-Tests bestanden.
+- [x] UI + Endrunde targeted: `npm test -- --run src/App.test.tsx src/engine/__tests__/turn_state_endrunde.test.ts` → 27 Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 14 Testfiles, 239 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, Index-zu-Spieler-ID-Mapping, stale Display nach Zugabschluss, Normal/Endspurt/Beendet-Pfade, Fixtures und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
