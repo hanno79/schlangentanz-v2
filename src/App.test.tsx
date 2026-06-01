@@ -425,3 +425,32 @@ describe('R33 UI-Material- und Aufgabenübersicht', () => {
     expect(within(bereich).getByText(`Nachziehstapel: ${erwarteterZustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
   })
 })
+
+describe('R34 UI-Spielerübersicht', () => {
+  it('zeigt alle Engine-Spieler mit Name, Steuerung, Handkarten- und Schlangenzahl an', () => {
+    const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
+    render(<App initialZustand={zustand} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getAllByText(/spielerübersicht spieler-/i)).toHaveLength(zustand.spieler.length)
+    for (const spieler of zustand.spieler) {
+      expect(
+        within(bereich).getByText(
+          `Spielerübersicht ${spieler.id}: ${spieler.name} (${spieler.steuerung}) — ${spieler.hand.length} Handkarten, ${spieler.schlangen.length} Schlangen`,
+        ),
+      ).toBeInTheDocument()
+    }
+  })
+
+  it('aktualisiert die Spielerübersicht nach einer Engine-Aktion', () => {
+    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+    render(<App initialZustand={zustand} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+
+    expect(
+      within(bereich).getByText(/spielerübersicht spieler-1: spieler 1 \(mensch\) — 4 handkarten, 1 schlangen/i),
+    ).toBeInTheDocument()
+  })
+})

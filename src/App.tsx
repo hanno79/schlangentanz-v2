@@ -80,6 +80,11 @@ function App({ initialZustand = defaultZustand }: AppProps) {
               : 'keine'}
           </p>
         )}
+        {zustand.spieler.map(spieler => (
+          <p key={spieler.id}>
+            Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen
+          </p>
+        ))}
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>

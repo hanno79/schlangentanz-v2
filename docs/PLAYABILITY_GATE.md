@@ -227,3 +227,19 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Re-Review: keine Blocker; geprüft wurden reine State-Anzeige, stale Display nach `beendeZug`, keine hardcodierten Deck-Zähler, Default-UI, Imports/Typecheck und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R34 UI-Spielerübersicht
+
+- [x] Scope: Vorhandene Engine-Spielerdaten (`id`, `name`, `steuerung`, `hand.length`, `schlangen.length`) für alle Spieler sichtbar machen; keine neue Spieler-, KI-, Zug- oder Scoring-Regel in React.
+- [x] RED: `npm test -- --run src/App.test.tsx -t 'R34 UI-Spielerübersicht'` schlug erwartungsgemäß fehl, weil keine Spielerübersicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert alle `zustand.spieler` als `Spielerübersicht ...` direkt aus dem Engine-State.
+- [x] Test-Härtung: Vollständige Collection-Länge wird geprüft; Anzeige aktualisiert nach Engine-Aktion `NeueSchlangeStarten` von 5/0 auf 4/1 für Spieler 1.
+- [x] `/simplify`: aggressiv entfernte Aktualisierungsprüfung wurde verworfen/restauriert, weil State-Display-Slices Refresh-Coverage benötigen.
+- [x] Targeted: `npm test -- --run src/App.test.tsx -t 'R34 UI-Spielerübersicht'` → 2 R34-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 14 Testfiles, 243 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, vollständige Spieler-Collection, Refresh nach Engine-Aktion, Fixture-Eigentum, Default-UI, Imports/Typecheck und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
