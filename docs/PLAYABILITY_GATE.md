@@ -478,5 +478,5 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] `/simplify`: Button-Wrapper entfernt und React-Key für legale Aktionen stabilisiert; keine Verhaltensänderung.
 - [x] Full Gates vor Commit: `npm test -- --run` → 28 Testfiles / 262 Tests grün; `npm run typecheck`; `npm run lint`; `npm run build`; `git diff --check`.
 - [x] Codex Review: BLOCKERS None. Staged Scope `src/App.tsx`, `src/App.r48.test.tsx`; keine entfernten UI-Textverträge, keine Gameplay-Änderung, neue Testdatei staged.
-- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
-- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [x] Production URL returns HTTP 200 — R48 Deploy `schlangentanz-v2-6834593gw-alfreds-projects-7e9df1b4.vercel.app`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
+- [x] Game route loads without console errors — R48 Playwright-Smoke: alle sechs sichtbaren Bereiche/Headings vorhanden, bisherige Aktionsbuttons sichtbar, keine Console/Page/Request-Fehler.
