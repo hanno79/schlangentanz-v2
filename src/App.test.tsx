@@ -288,3 +288,55 @@ describe('R30 UI-Wertungsanzeige', () => {
     expect(within(bereich).getByText(/wertung spieler-1: 3 punkte/i)).toBeInTheDocument()
   })
 })
+
+function mitSpielende(zustand: Spielzustand): Spielzustand {
+  return { ...zustand, zugphase: 'Spielende', spielphase: 'Beendet' }
+}
+
+function spielendeZustandMitSpieler1Sieg(): Spielzustand {
+  return mitSpielende(zustandMitBlauerDreiergruppe())
+}
+
+function spielendeZustandMitGleichstand(): Spielzustand {
+  const zustand = zustandMitBlauerDreiergruppe()
+  const SPIELER_2_GRUPPEN_IDS = ['blau-02', 'blau-04', 'blau-06']
+  const spieler2Karten = zustand.spieler[1].hand.filter(karte => SPIELER_2_GRUPPEN_IDS.includes(karte.id))
+  if (spieler2Karten.length !== 3) throw new Error('Testsetup erwartet drei blaue Karten auf Spieler-2-Hand.')
+
+  return mitSpielende({
+    ...zustand,
+    spieler: zustand.spieler.with(1, {
+      ...zustand.spieler[1],
+      hand: zustand.spieler[1].hand.filter(karte => !SPIELER_2_GRUPPEN_IDS.includes(karte.id)),
+      schlangen: [{ id: 'schlange-spieler-2-1', karten: spieler2Karten, zustand: 'aktiv' }],
+    }),
+  })
+}
+
+describe('R31 UI-Gewinneranzeige', () => {
+  it('zeigt die Engine-Gewinner bei Spielende an', () => {
+    render(<App initialZustand={spielendeZustandMitSpieler1Sieg()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/zugphase: spielende/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/gewinner spieler-1: 3 punkte/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/gewinner spieler-2/i)).toBeNull()
+  })
+
+  it('zeigt bei Gleichstand alle Engine-Gewinner in stabiler Reihenfolge an', () => {
+    render(<App initialZustand={spielendeZustandMitGleichstand()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getAllByText(/gewinner spieler-/i).map(element => element.textContent)).toEqual([
+      'Gewinner spieler-1: 3 Punkte',
+      'Gewinner spieler-2: 3 Punkte',
+    ])
+  })
+
+  it('zeigt vor Spielende noch keine Gewinner an', () => {
+    render(<App initialZustand={zustandMitBlauerDreiergruppe()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).queryByText(/gewinner spieler-/i)).toBeNull()
+  })
+})

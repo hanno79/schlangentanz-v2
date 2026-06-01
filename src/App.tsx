@@ -10,6 +10,7 @@ import {
   beendeZug,
   MAX_KARTEN_PRO_ZUG,
   berechneSpielzustandGesamtwertung,
+  berechneGewinner,
 } from './engine'
 import type { SpielAktion, Spielzustand } from './engine'
 
@@ -38,6 +39,10 @@ function App({ initialZustand = defaultZustand }: AppProps) {
   const [zustand, setZustand] = useState(initialZustand)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
+  const gewinnerErgebnis = useMemo(
+    () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
+    [zustand.zugphase, zustand.spieler],
+  )
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
 
   function fuhreAktionAus(aktion: SpielAktion) {
@@ -107,6 +112,9 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         )}
         {gesamtwertung.spielerwertungen.map(eintrag => (
           <p key={eintrag.spielerId}>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+        ))}
+        {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
+          <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
         ))}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
       </section>
