@@ -489,4 +489,4 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] GREEN: `src/App.tsx` rendert `Offene Aufgaben-Details:` mit `Name (Punkte): Bedingung`; Leerfall bleibt `keine`.
 - [x] Regression: R40-Test aktualisiert den neuen UI-Vertrag; Name/Punkte-Zeile bleibt unverändert.
 - [x] Gates: R49/R40 targeted → 3 Tests; full → 29 Testfiles / 263 Tests; Typecheck, Lint, Build, `git diff --check` grün.
-- [x] Review: Codex BLOCKERS none; staged Scope `src/App.tsx`, `src/App.r49.test.tsx`, `src/App.r40.test.tsx`, keine untracked Dateien.
+- [x] Review/Production: Codex BLOCKERS none; Deploy `schlangentanz-v2-4motjdic1-alfreds-projects-7e9df1b4.vercel.app`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200; Smoke: `Offene Aufgaben-Details` mit allen drei Bedingungen sichtbar, keine Console/Page/Request-Fehler.
