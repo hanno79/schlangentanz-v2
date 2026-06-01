@@ -480,3 +480,13 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: BLOCKERS None. Staged Scope `src/App.tsx`, `src/App.r48.test.tsx`; keine entfernten UI-Textverträge, keine Gameplay-Änderung, neue Testdatei staged.
 - [x] Production URL returns HTTP 200 — R48 Deploy `schlangentanz-v2-6834593gw-alfreds-projects-7e9df1b4.vercel.app`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
 - [x] Game route loads without console errors — R48 Playwright-Smoke: alle sechs sichtbaren Bereiche/Headings vorhanden, bisherige Aktionsbuttons sichtbar, keine Console/Page/Request-Fehler.
+
+
+## Evidence — 01.06.2026 R49 Offene Aufgaben-Details
+
+- [x] Scope: Vorhandene Engine-State-Felder `offeneAufgaben[*].name`, `punkte`, `bedingung` im Bereich `Material und Aufgaben` anzeigen; keine Engine-/Regellogik.
+- [x] RED: `npm test -- --run src/App.r49.test.tsx` fehlte korrekt wegen fehlender Zeile `Offene Aufgaben-Details:`.
+- [x] GREEN: `src/App.tsx` rendert `Offene Aufgaben-Details:` mit `Name (Punkte): Bedingung`; Leerfall bleibt `keine`.
+- [x] Regression: R40-Test aktualisiert den neuen UI-Vertrag; Name/Punkte-Zeile bleibt unverändert.
+- [x] Gates: R49/R40 targeted → 3 Tests; full → 29 Testfiles / 263 Tests; Typecheck, Lint, Build, `git diff --check` grün.
+- [x] Review: Codex BLOCKERS none; staged Scope `src/App.tsx`, `src/App.r49.test.tsx`, `src/App.r40.test.tsx`, keine untracked Dateien.

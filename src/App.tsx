@@ -155,6 +155,12 @@ function App({ initialZustand = defaultZustand }: AppProps) {
               ? zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')
               : 'keine'}
           </p>
+          <p>
+            Offene Aufgaben-Details:{' '}
+            {zustand.offeneAufgaben.length > 0
+              ? zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte): ${a.bedingung}`).join('; ')
+              : 'keine'}
+          </p>
         </section>
         <section aria-label="Wertung">
           <h2>Wertung</h2>

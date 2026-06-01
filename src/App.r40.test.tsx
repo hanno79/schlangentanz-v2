@@ -33,7 +33,9 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText(erwarteterText)).toBeInTheDocument()
-    expect(within(bereich).queryByText(/Habe am Ende des Spiels/i)).toBeNull()
+    expect(within(bereich).getByText(/Offene Aufgaben-Details:/)).toHaveTextContent(
+      'Farbenpracht (8 Punkte): Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen.'
+    )
   })
 
   it('zeigt offene Aufgaben als keine an, wenn die Engine-Liste leer ist', () => {
@@ -43,5 +45,6 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText('Offene Aufgaben: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Offene Aufgaben-Details: keine')).toBeInTheDocument()
   })
 })
