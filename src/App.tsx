@@ -66,122 +66,138 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         </ul>
       </section>
       <section aria-label="Legale Aktionen">
-        <p>Legale Aktionen: {legaleAktionen.length}</p>
-        <p>Engine-Demo: Ausspielphase</p>
-        <p>Zugphase: {zustand.zugphase}</p>
-        <p>Spielphase: {zustand.spielphase}</p>
-        {zustand.endrunde.ausloeserSpielerIndex !== null && (
-          <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
-        )}
-        {zustand.spielphase !== 'Normal' && (
+        <section aria-label="Spielstatus">
+          <h2>Spielstatus</h2>
+          <p>Engine-Demo: Ausspielphase</p>
+          <p>Zugphase: {zustand.zugphase}</p>
+          <p>Spielphase: {zustand.spielphase}</p>
+          {zustand.endrunde.ausloeserSpielerIndex !== null && (
+            <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
+          )}
+          {zustand.spielphase !== 'Normal' && (
+            <p>
+              Verbleibende Endrunde:{' '}
+              {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
+                ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
+                : 'keine'}
+            </p>
+          )}
+          <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
+        </section>
+        <section aria-label="Aktiver Spieler">
+          <h2>Aktiver Spieler</h2>
+          <p>Aktiver Spieler: {aktiverSpieler.id}</p>
+          <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+          {aktiverSpieler.schlangen.map(schlange => (
+            <p key={schlange.id}>
+              Schlange {schlange.id}: {kartenIds(schlange.karten)}
+            </p>
+          ))}
           <p>
-            Verbleibende Endrunde:{' '}
-            {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
-              ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
+            Handkarten:{' '}
+            {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
+          </p>
+          <p>
+            Handkarten-Details:{' '}
+            {aktiverSpieler.hand.length === 0
+              ? 'keine'
+              : aktiverSpieler.hand
+                  .map(k =>
+                    k.typ === 'Farbkarte'
+                      ? `${k.id} (Farbkarte ${k.farbe}, ${k.punkte} Punkte)`
+                      : `${k.id} (Sonderkarte ${k.name})`
+                  )
+                  .join(', ')}
+          </p>
+        </section>
+        <section aria-label="Spielerübersicht">
+          <h2>Spielerübersicht</h2>
+          {zustand.spieler.map(spieler => (
+            <p key={spieler.id}>
+              Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen
+            </p>
+          ))}
+          {zustand.spieler.map(spieler => (
+            <p key={`schlangen-${spieler.id}`}>
+              Schlangenübersicht {spieler.id}:{' '}
+              {spieler.schlangen.length === 0
+                ? 'keine'
+                : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
+            </p>
+          ))}
+          {zustand.spieler.flatMap(spieler =>
+            spieler.schlangen.map(schlange => (
+              <p key={`zustand-${spieler.id}-${schlange.id}`}>
+                Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}
+              </p>
+            ))
+          )}
+          {zustand.spieler.map(spieler => (
+            <p key={`aufgaben-${spieler.id}`}>
+              Erfüllte Aufgaben {spieler.id}:{' '}
+              {spieler.erfuellteAufgaben.length === 0
+                ? 'keine'
+                : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
+            </p>
+          ))}
+          <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
+          <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
+        </section>
+        <section aria-label="Material und Aufgaben">
+          <h2>Material und Aufgaben</h2>
+          <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
+          <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
+          <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
+          <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
+          <p>
+            Offene Aufgaben:{' '}
+            {zustand.offeneAufgaben.length > 0
+              ? zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')
               : 'keine'}
           </p>
-        )}
-        {zustand.spieler.map(spieler => (
-          <p key={spieler.id}>
-            Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen
-          </p>
-        ))}
-        {zustand.spieler.map(spieler => (
-          <p key={`schlangen-${spieler.id}`}>
-            Schlangenübersicht {spieler.id}:{' '}
-            {spieler.schlangen.length === 0
-              ? 'keine'
-              : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
-          </p>
-        ))}
-        {zustand.spieler.flatMap(spieler =>
-          spieler.schlangen.map(schlange => (
-            <p key={`zustand-${spieler.id}-${schlange.id}`}>
-              Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}
-            </p>
-          ))
-        )}
-        {zustand.spieler.map(spieler => (
-          <p key={`aufgaben-${spieler.id}`}>
-            Erfüllte Aufgaben {spieler.id}:{' '}
-            {spieler.erfuellteAufgaben.length === 0
-              ? 'keine'
-              : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
-          </p>
-        ))}
-        <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
-        <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
-        <p>Aktiver Spieler: {aktiverSpieler.id}</p>
-        <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
-        <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
-        {aktiverSpieler.schlangen.map(schlange => (
-          <p key={schlange.id}>
-            Schlange {schlange.id}: {kartenIds(schlange.karten)}
-          </p>
-        ))}
-        <p>
-          Handkarten:{' '}
-          {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
-        </p>
-        <p>
-          Handkarten-Details:{' '}
-          {aktiverSpieler.hand.length === 0
-            ? 'keine'
-            : aktiverSpieler.hand
-                .map(k =>
-                  k.typ === 'Farbkarte'
-                    ? `${k.id} (Farbkarte ${k.farbe}, ${k.punkte} Punkte)`
-                    : `${k.id} (Sonderkarte ${k.name})`
-                )
-                .join(', ')}
-        </p>
-        <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
-        <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
-        <div>
-          {legaleAktionen.map((aktion, i) => (
-            <button key={i} onClick={() => fuhreAktionAus(aktion)}>
+        </section>
+        <section aria-label="Wertung">
+          <h2>Wertung</h2>
+          {gesamtwertung.spielerwertungen.map(eintrag => (
+            <p key={eintrag.spielerId}>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+          ))}
+          {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
+            <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
+          ))}
+        </section>
+        <section aria-label="Aktionen">
+          <h2>Aktionen</h2>
+          <p>Legale Aktionen: {legaleAktionen.length}</p>
+          {legaleAktionen.map((aktion) => (
+            <button key={aktionsLabel(aktion)} onClick={() => fuhreAktionAus(aktion)}>
               {aktionsLabel(aktion)}
             </button>
           ))}
-        </div>
-        <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
-        <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
-        {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
-        {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
-          <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
-            Ausspielphase beenden
-          </button>
-        )}
-        {zustand.zugphase === 'Aufgabenpruefung' && (
-          <button onClick={() => setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))}>
-            Aufgabenprüfung beenden
-          </button>
-        )}
-        {zustand.zugphase === 'Zugabschluss' && (
-          <button onClick={() => setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))}>
-            Zug beenden
-          </button>
-        )}
-        {zustand.zugphase === 'Nachziehphase' && (
-          <button onClick={() => setZustand(z => starteAusspielphase(z))}>
-            Ausspielphase starten
-          </button>
-        )}
-        <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
-        <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
-        <p>
-          Offene Aufgaben:{' '}
-          {zustand.offeneAufgaben.length > 0
-            ? zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')
-            : 'keine'}
-        </p>
-        {gesamtwertung.spielerwertungen.map(eintrag => (
-          <p key={eintrag.spielerId}>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
-        ))}
-        {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
-          <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
-        ))}
-        <p>Quelle: engine.ermittleLegaleAktionen</p>
+          <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
+          <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
+          {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
+          {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
+            <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
+              Ausspielphase beenden
+            </button>
+          )}
+          {zustand.zugphase === 'Aufgabenpruefung' && (
+            <button onClick={() => setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))}>
+              Aufgabenprüfung beenden
+            </button>
+          )}
+          {zustand.zugphase === 'Zugabschluss' && (
+            <button onClick={() => setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))}>
+              Zug beenden
+            </button>
+          )}
+          {zustand.zugphase === 'Nachziehphase' && (
+            <button onClick={() => setZustand(z => starteAusspielphase(z))}>
+              Ausspielphase starten
+            </button>
+          )}
+          <p>Quelle: engine.ermittleLegaleAktionen</p>
+        </section>
       </section>
     </main>
   )

@@ -467,3 +467,16 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: initialer Blocker war nur `src/App.r47.test.tsx` untracked; wurde vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, R38-Textvertrag, Post-Action-Refresh, Header oder Dateigrößen.
 - [x] Production URL returns HTTP 200 — R47 Deploy `dpl_2GqxjT8rvLpFz71o3LDoSxDtosRe`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
 - [x] Game route loads without console errors — R47 Playwright-Smoke: `Ablagestapel: keine` initial und nach erstem Engine-Klick weiterhin sichtbar, keine Console/Page/Request-Fehler.
+
+
+## Evidence — 01.06.2026 R48 UI-Übersichtsbereiche
+
+- [x] Scope: Bestehende Debug-/Engine-State-Anzeigen bleiben erhalten und werden nur in sichtbare semantische Bereiche gegliedert.
+- [x] RED: `npm test -- --run src/App.r48.test.tsx` schlug zuerst fehl, weil `Spielstatus`-Region fehlte; zweiter RED schlug fehl, weil sichtbare Headings fehlten.
+- [x] GREEN: `src/App.tsx` enthält weiterhin die äußere Region `Legale Aktionen` und darunter sichtbare `<h2>`-/`section`-Bereiche `Spielstatus`, `Aktiver Spieler`, `Spielerübersicht`, `Material und Aufgaben`, `Wertung`, `Aktionen`.
+- [x] Debug-Hilfen bleiben erhalten: vorhandene Textverträge für Zugphase, Spieler, Schlangen, Hände, Stapel, Aufgaben, Wertung, Aktionen und Quelle wurden nicht entfernt.
+- [x] `/simplify`: Button-Wrapper entfernt und React-Key für legale Aktionen stabilisiert; keine Verhaltensänderung.
+- [x] Full Gates vor Commit: `npm test -- --run` → 28 Testfiles / 262 Tests grün; `npm run typecheck`; `npm run lint`; `npm run build`; `git diff --check`.
+- [x] Codex Review: BLOCKERS None. Staged Scope `src/App.tsx`, `src/App.r48.test.tsx`; keine entfernten UI-Textverträge, keine Gameplay-Änderung, neue Testdatei staged.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
