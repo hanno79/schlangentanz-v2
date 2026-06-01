@@ -110,6 +110,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
           </p>
         ))}
         <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
+        <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
         <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>

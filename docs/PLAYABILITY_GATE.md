@@ -432,3 +432,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: initialer Blocker war nur `src/App.r45.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, Post-Action-Refresh, Header oder Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R46 Handkarten-Gesamtzahl
+
+- [x] Scope: Vorhandene Engine-State-Collection `zustand.spieler[*].hand.length` als Gesamtzählung sichtbar machen; keine neue Handkarten-, Turn-, Legalitäts-, Scoring- oder Engine-Logik in React.
+- [x] RED: `npm test -- --run src/App.r46.test.tsx` schlug erwartungsgemäß fehl, weil `Handkarten gesamt:` noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Handkarten gesamt: X` direkt aus `zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)`.
+- [x] Refresh: R46-Test klickt eine vorhandene Engine-Aktion und prüft, dass die Gesamtzahl nach dem aus `anwendeAktion(...)` abgeleiteten Engine-Folgezustand aktualisiert wird.
+- [x] `/simplify`: keine Änderungen; Header und engine-derived Post-Action-Erwartung blieben erhalten.
+- [x] Targeted: `npm test -- --run src/App.r46.test.tsx` → 1 R46-Test bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx src/App.r40.test.tsx src/App.r41.test.tsx src/App.r42.test.tsx src/App.r43.test.tsx src/App.r44.test.tsx src/App.r45.test.tsx src/App.r46.test.tsx` → 43 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 26 Testfiles, 260 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: initialer Blocker war nur `src/App.r46.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, Post-Action-Refresh, Header oder Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
