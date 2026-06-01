@@ -110,6 +110,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
           Handkarten:{' '}
           {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
         </p>
+        <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
         {zustand.ablagestapel.length > 0 && (
           <p>Ablagestapel: {kartenIds(zustand.ablagestapel)}</p>
         )}

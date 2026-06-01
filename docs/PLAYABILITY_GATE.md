@@ -294,3 +294,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, keine versteckte UI-Regellogik, Refresh nach Engine-Aktion, R34/R35/R36-Textverträge, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R38 UI-Ablagestapelgröße
+
+- [x] Scope: Vorhandene Engine-Ablagestapelgröße (`zustand.ablagestapel.length`) immer sichtbar machen; keine neue Abwurf-, Material-, Phasen-, Aktions-, Scoring- oder Validierungsregel in React.
+- [x] RED: `npm test -- --run src/App.r38.test.tsx` schlug erwartungsgemäß fehl, weil keine Ablagestapelgrößen-Zeile gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Ablagestapelgröße: {zustand.ablagestapel.length} Karten` direkt aus dem Engine-State und behält die vorhandene Detailzeile `Ablagestapel: ...` für nicht-leere Stapel bei.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r38.test.tsx`; Fixture entfernt die verwendete Sonderkarte aus dem Nachziehstapel; Post-Action-Refresh nach Engine-Pflicht-Abwurf geprüft.
+- [x] `/simplify`: Vorschlag zur Singular-/Plural-Änderung verworfen, um den stabilen Textvertrag `N Karten` beizubehalten.
+- [x] Targeted: `npm test -- --run src/App.r38.test.tsx` → 2 R38-Tests bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx` → 34 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 18 Testfiles, 251 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, Erhalt der Ablagestapel-Detailzeile, Refresh nach Pflicht-Abwurf, Fixture-Eigentum, R34/R35/R36/R37-Textverträge, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
