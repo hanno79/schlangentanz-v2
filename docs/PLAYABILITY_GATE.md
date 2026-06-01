@@ -398,3 +398,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine Engine-State-Anzeige, sichtbarer Zugwechsel-Refresh, untracked Testdatei im Review, R34-R42-Textverträge, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R44 Spielerposition am Zug
+
+- [x] Scope: Vorhandene Engine-State-Werte `aktiverSpielerIndex` und `spieler.length` sichtbar machen; keine neue Turn-, KI-, Legalitäts-, Scoring- oder Engine-Logik in React.
+- [x] RED: `npm test -- --run src/App.r44.test.tsx` schlug erwartungsgemäß fehl, weil `Spieler am Zug:` noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Spieler am Zug: {position}/{gesamt}` direkt aus `zustand.aktiverSpielerIndex + 1` und `zustand.spieler.length`.
+- [x] Refresh: R44-Test klickt die vorhandene sichtbare Engine-Kette bis `Zug beenden` und prüft, dass die Position nach Engine-Folgezustand aktualisiert wird.
+- [x] `/simplify`: Eine zu starke Test-Vereinfachung wurde zurückgenommen; erwarteter Post-State bleibt engine-derived statt UI-seitig inferiert.
+- [x] Targeted: `npm test -- --run src/App.r44.test.tsx` → 1 R44-Test bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx src/App.r40.test.tsx src/App.r41.test.tsx src/App.r42.test.tsx src/App.r43.test.tsx src/App.r44.test.tsx` → 41 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 24 Testfiles, 258 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, sichtbarer Zugwechsel-Refresh, engine-derived Test-Erwartung, untracked Testdatei im Review, R34-R43-Textverträge, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

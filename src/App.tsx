@@ -111,6 +111,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
         ))}
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+        <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>
             Schlange {schlange.id}: {kartenIds(schlange.karten)}
