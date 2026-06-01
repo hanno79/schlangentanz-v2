@@ -277,3 +277,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, vollständige Spieler-/Schlangen-Collection, keine Zeilen für Spieler ohne Schlangen, R35-Textvertrag, realistische Fixture-Ownership, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R37 UI-Kartenarten-Zähler
+
+- [x] Scope: Vorhandene Engine-Zugpflichten-Zähler (`zustand.zugpflichten.gespielteFarbkarten` und `gespielteSonderkarten`) sichtbar machen; keine neue Kartenart-, Zuglimit-, Phasen-, Aktions-, Scoring- oder Validierungsregel in React.
+- [x] RED: `npm test -- --run src/App.r37.test.tsx` schlug erwartungsgemäß fehl, weil keine Kartenarten-Zähler-Zeile gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Gespielte Kartenarten: {gespielteFarbkarten} Farbkarten, {gespielteSonderkarten} Sonderkarten` direkt aus dem Engine-State.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r37.test.tsx`; direkter Fixture-Zähler ist intern konsistent (`2 = 1 + 1`); Post-Action-Refresh über Engine-Aktion geprüft.
+- [x] `/simplify`: Testfixture vereinfacht; Header und Post-Action-Refresh-Coverage blieben erhalten.
+- [x] Targeted: `npm test -- --run src/App.r37.test.tsx` → 2 R37-Tests bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx` → 32 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 17 Testfiles, 249 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, keine versteckte UI-Regellogik, Refresh nach Engine-Aktion, R34/R35/R36-Textverträge, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

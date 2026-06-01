@@ -121,6 +121,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
           ))}
         </div>
         <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
+        <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
         {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
         {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
           <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
