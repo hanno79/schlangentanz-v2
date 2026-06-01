@@ -170,6 +170,21 @@ describe('R26 UI-Aufgabenprüfung beenden', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
 
     expect(within(bereich).getByText(/zugphase: zugabschluss/i)).toBeInTheDocument()
+    expect(within(bereich).queryByRole('button', { name: /aufgabenprüfung beenden/i })).toBeNull()
+    expect(within(bereich).getByRole('button', { name: /zug beenden/i })).toBeInTheDocument()
+  })
+})
+
+describe('R27 UI-Zug beenden', () => {
+  it('beendet im Zugabschluss den Zug über die Engine und aktiviert den nächsten Spieler', () => {
+    const bereich = starteErsteSchlange()
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktiver spieler: spieler-2/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
     expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
   })
 })
