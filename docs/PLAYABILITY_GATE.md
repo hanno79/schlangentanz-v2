@@ -430,8 +430,8 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
 - [x] Codex Review: initialer Blocker war nur `src/App.r45.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, Post-Action-Refresh, Header oder Dateigrößen.
-- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
-- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [x] Production URL returns HTTP 200 — R45 Deploy `dpl_5xjPg1m4bgFGxXHsB9nPEo9ybPS8`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
+- [x] Game route loads without console errors — R45 Playwright-Smoke: `Schlangen gesamt: 0` initial, nach Klick `Schlangen gesamt: 1`, keine Console/Page/Request-Fehler.
 
 ## Evidence — 01.06.2026 R46 Handkarten-Gesamtzahl
 
@@ -447,5 +447,5 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
 - [x] Codex Review: initialer Blocker war nur `src/App.r46.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, Post-Action-Refresh, Header oder Dateigrößen.
-- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
-- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [x] Production URL returns HTTP 200 — R46 Deploy `8vz7AvEYp2b2H1krpWywbHok5sDt`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
+- [x] Game route loads without console errors — R46 Playwright-Smoke: `Handkarten gesamt: 10` initial, nach Klick `Handkarten gesamt: 9`, keine Console/Page/Request-Fehler.
