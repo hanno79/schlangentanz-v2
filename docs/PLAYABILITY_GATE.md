@@ -363,3 +363,21 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine Enumerator-Anzeige, kein UI-Legalitätsbranching, Refresh nach Klick, untracked Testdatei, R34/R35/R36/R37/R38/R39/R40-Textverträge, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R42 UI-Handkarten-Details
+
+- [x] Scope: Vorhandene Engine-Handkartenfelder des aktiven Spielers sichtbar machen; keine neue Karten-, Legalitäts-, Scoring- oder Engine-Logik in React.
+- [x] RED: `npm test -- --run src/App.r42.test.tsx` schlug erwartungsgemäß fehl, weil `Handkarten-Details:` noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Handkarten-Details:` aus `aktiverSpieler.hand`; Farbkarten zeigen `id`, `farbe`, `punkte`, Sonderkarten zeigen `id`, `name`, leere Hand zeigt `keine`.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r42.test.tsx`; Test leitet erwartete Punkte aus Engine-State ab statt Werte aus Karten-IDs zu erfinden.
+- [x] Refresh: R42-Test klickt eine echte Engine-Aktion und prüft, dass die ausgespielte Karte aus den Handkarten-Details verschwindet.
+- [x] `/simplify`: Keine Änderungen; Format bleibt bewusst eng am Engine-State und Testvertrag.
+- [x] Targeted: `npm test -- --run src/App.r42.test.tsx` → 1 R42-Test bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx src/App.r40.test.tsx src/App.r41.test.tsx src/App.r42.test.tsx` → 39 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 22 Testfiles, 256 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: initialer Blocker war nur `src/App.r42.test.tsx` untracked; wird vor Commit explizit gestaged und per Re-Review geprüft. Keine Blocker zu UI-Regellogik, Engine-State-Bindung, Header oder Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
