@@ -6,7 +6,7 @@ Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz
 */
 
 import type { Spielzustand } from './types';
-import { MAX_SCHLANGEN_PRO_SPIELER } from './constants';
+import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
 import { starteNeueSchlange, legeKarteAnSchlangeAn, werfeKarteMangelsSpielbarerAktionAb } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
@@ -75,7 +75,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     return verboten(PHASE_FEHLER[aktion.typ]);
   }
 
-  if (zustand.zugpflichten.gespielteKarten >= 2) {
+  if (zustand.zugpflichten.gespielteKarten >= MAX_KARTEN_PRO_ZUG) {
     return verboten('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
   }
 
@@ -167,7 +167,7 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
     }
   }
 
-  if (aktionen.length === 0 && zustand.zugpflichten.gespielteKarten < 2) {
+  if (aktionen.length === 0 && zustand.zugpflichten.gespielteKarten < MAX_KARTEN_PRO_ZUG) {
     // ÄNDERUNG 01.06.2026: Pflicht-Abwurf nur nach ausgeschlossenen Schlangenbau-Aktionen anbieten.
     // aktionen.length === 0 belegt hier bereits, dass keine Schlangenbau-Aktion legal ist.
     for (const karte of aktiverSpieler.hand) {

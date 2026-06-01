@@ -6,7 +6,7 @@ Beschreibung: R19-Tests für Zugpflichten-Migration und Kartenart-Zähler in der
 */
 
 import { describe, expect, it } from 'vitest';
-import { erstelleSpielzustand, deserialisiere } from '../index';
+import { erstelleSpielzustand, deserialisiere, MAX_KARTEN_PRO_ZUG } from '../index';
 
 describe('Serialisierung — R19 Kartenart-Zähler in Zugpflichten', () => {
   it('migriert alte ungespielte Zugpflichten ohne Kartenart-Zähler sicher auf 0/0', () => {
@@ -38,5 +38,27 @@ describe('Serialisierung — R19 Kartenart-Zähler in Zugpflichten', () => {
     zustand['zugpflichten'] = zugpflichten;
 
     expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(fehlermuster);
+  });
+
+  it('akzeptiert MAX_KARTEN_PRO_ZUG als gültige Anzahl gespielter Karten', () => {
+    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    zustand['zugpflichten'] = {
+      gespielteKarten: MAX_KARTEN_PRO_ZUG,
+      gespielteFarbkarten: 1,
+      gespielteSonderkarten: 1,
+    };
+
+    expect(() => deserialisiere(JSON.stringify(zustand))).not.toThrow();
+  });
+
+  it('lehnt mehr als MAX_KARTEN_PRO_ZUG gespielte Karten ab', () => {
+    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
+    zustand['zugpflichten'] = {
+      gespielteKarten: MAX_KARTEN_PRO_ZUG + 1,
+      gespielteFarbkarten: 1,
+      gespielteSonderkarten: 1,
+    };
+
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/gespielte karten/i);
   });
 });

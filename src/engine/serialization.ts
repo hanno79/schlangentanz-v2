@@ -16,7 +16,7 @@ import type {
   Steuerung,
   Zugphase,
 } from './types';
-import { SPIELER_MAX, SPIELER_MIN } from './constants';
+import { SPIELER_MAX, SPIELER_MIN, MAX_KARTEN_PRO_ZUG } from './constants';
 import { erstelleHauptdeck } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
@@ -211,7 +211,7 @@ function validiereEndrunde(wert: unknown, spielphase: Spielphase, spielerAnzahl:
 function validiereZugpflichten(wert: unknown): void {
   const zugpflichten = erwarteObjekt(wert, 'zugpflichten');
   const gespielteKarten = zugpflichten['gespielteKarten'] as number;
-  if (!Number.isInteger(gespielteKarten) || gespielteKarten < 0 || gespielteKarten > 2) {
+  if (!Number.isInteger(gespielteKarten) || gespielteKarten < 0 || gespielteKarten > MAX_KARTEN_PRO_ZUG) {
     throw new Error('Ungültiger Spielzustand: gespielte Karten in Zugpflichten sind ungültig.');
   }
   const gespielteFarbkarten = zugpflichten['gespielteFarbkarten'] as number;

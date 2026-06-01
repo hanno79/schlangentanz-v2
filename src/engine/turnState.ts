@@ -5,7 +5,7 @@ Version: 1.6
 Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf, Pflichtprüfung im Zugabschluss (R2.5), Neue Schlange starten (R3.1) und Farbkarte anlegen (R3.2).
 */
 
-import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER } from './constants';
+import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
 import type { Spielkarte, Spielzustand, Spielphase } from './types';
 
 function aktualisiereAktivenSpieler(
@@ -26,7 +26,7 @@ function istGueltigeId(wert: unknown): wert is string {
 }
 
 function pruefeSpielkartenLimit(zustand: Spielzustand, kartentyp: Spielkarte['typ']): void {
-  if (zustand.zugpflichten.gespielteKarten >= 2) {
+  if (zustand.zugpflichten.gespielteKarten >= MAX_KARTEN_PRO_ZUG) {
     throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
   }
   if (kartentyp === 'Farbkarte' && zustand.zugpflichten.gespielteFarbkarten >= 1) {
@@ -142,7 +142,7 @@ export function beendeAusspielphase(
   if (ausgespielteKarten < 1) {
     throw new Error('Die Ausspielphase darf erst nach mindestens einer gespielten Karte beendet werden.');
   }
-  if (ausgespielteKarten > 2) {
+  if (ausgespielteKarten > MAX_KARTEN_PRO_ZUG) {
     throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
   }
   pruefeKartenartZaehler(zustand);
