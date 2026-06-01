@@ -6,7 +6,7 @@ Beschreibung: TDD-Tests für den Legal-Action-Validator im Schlangentanz-Engine-
 */
 
 import { describe, it, expect } from 'vitest';
-import { erstelleSpielzustand, pruefeAktion } from '../index';
+import { ermittleLegaleAktionen, erstelleSpielzustand, pruefeAktion } from '../index';
 import type { Spielzustand } from '../types';
 
 function zustandInAusspielphase(): Spielzustand {
@@ -258,5 +258,92 @@ describe('Legal Action Validator — R3 Schlangenbau', () => {
       erlaubt: false,
       grund: 'Karten können nur links oder rechts angelegt werden.',
     });
+  });
+});
+
+describe('Legal Action Enumerator — R15 UI-Vertrag für bestehende R3-Aktionen', () => {
+  it('liefert nur aktuell erlaubte Schlangenbau-Aktionen des aktiven Spielers in stabiler Reihenfolge', () => {
+    const zustand = zustandInAusspielphase();
+    const [startkarte, links, rechts, neueSchlange] = zustand.spieler[0].hand;
+    zustand.spieler[0].hand = [links, rechts, neueSchlange];
+    zustand.spieler[0].schlangen = [{ id: 'schlange-1', zustand: 'aktiv', karten: [startkarte] }];
+
+    const zustandVorher = JSON.stringify(zustand);
+
+    const aktionen = ermittleLegaleAktionen(zustand);
+
+    expect(JSON.stringify(zustand)).toBe(zustandVorher);
+    expect(aktionen).toEqual([
+      {
+        typ: 'NeueSchlangeStarten',
+        spielerId: 'spieler-1',
+        handkartenId: links.id,
+      },
+      {
+        typ: 'NeueSchlangeStarten',
+        spielerId: 'spieler-1',
+        handkartenId: rechts.id,
+      },
+      {
+        typ: 'NeueSchlangeStarten',
+        spielerId: 'spieler-1',
+        handkartenId: neueSchlange.id,
+      },
+      {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: links.id,
+        schlangenId: 'schlange-1',
+        position: 'links',
+      },
+      {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: links.id,
+        schlangenId: 'schlange-1',
+        position: 'rechts',
+      },
+      {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: rechts.id,
+        schlangenId: 'schlange-1',
+        position: 'links',
+      },
+      {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: rechts.id,
+        schlangenId: 'schlange-1',
+        position: 'rechts',
+      },
+      {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: neueSchlange.id,
+        schlangenId: 'schlange-1',
+        position: 'links',
+      },
+      {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: neueSchlange.id,
+        schlangenId: 'schlange-1',
+        position: 'rechts',
+      },
+    ]);
+  });
+
+  it('liefert keine Aktionen außerhalb der Ausspielphase oder nach Spielende', () => {
+    expect(ermittleLegaleAktionen(erstelleSpielzustand(2, () => 0.999999))).toEqual([]);
+
+    const beendet = erstelleSpielzustand(2, () => 0.999999);
+    beendet.zugphase = 'Spielende';
+    beendet.spielphase = 'Beendet';
+    beendet.ablagestapel = beendet.nachziehstapel;
+    beendet.nachziehstapel = [];
+    beendet.endrunde = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [] };
+
+    expect(ermittleLegaleAktionen(beendet)).toEqual([]);
   });
 });

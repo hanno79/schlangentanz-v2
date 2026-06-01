@@ -1,8 +1,8 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.0
-Beschreibung: Legal-Action-Validator für erlaubte Schlangentanz-Spielaktionen.
+Version: 1.1
+Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz-Spielaktionen.
 */
 
 import type { Spielzustand } from './types';
@@ -25,6 +25,8 @@ export interface KarteAnlegenAktion {
 }
 
 export type SpielAktion = NeueSchlangeStartenAktion | KarteAnlegenAktion;
+
+const POSITIONEN = ['links', 'rechts'] as const;
 
 function verboten(grund: string): AktionErgebnis {
   return { erlaubt: false, grund };
@@ -79,4 +81,42 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
   }
 
   return { erlaubt: true };
+}
+
+export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
+  if (zustand.zugphase !== 'Ausspielphase') return [];
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const farbkarten = aktiverSpieler.hand.filter((k) => k.typ === 'Farbkarte');
+  const aktionen: SpielAktion[] = [];
+
+  for (const karte of farbkarten) {
+    const kandidat: NeueSchlangeStartenAktion = {
+      typ: 'NeueSchlangeStarten',
+      spielerId: aktiverSpieler.id,
+      handkartenId: karte.id,
+    };
+    if (pruefeAktion(zustand, kandidat).erlaubt) {
+      aktionen.push(kandidat);
+    }
+  }
+
+  for (const karte of farbkarten) {
+    for (const schlange of aktiverSpieler.schlangen) {
+      for (const position of POSITIONEN) {
+        const kandidat: KarteAnlegenAktion = {
+          typ: 'KarteAnlegen',
+          spielerId: aktiverSpieler.id,
+          handkartenId: karte.id,
+          schlangenId: schlange.id,
+          position,
+        };
+        if (pruefeAktion(zustand, kandidat).erlaubt) {
+          aktionen.push(kandidat);
+        }
+      }
+    }
+  }
+
+  return aktionen;
 }
