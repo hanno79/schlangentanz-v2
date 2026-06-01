@@ -328,3 +328,21 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, keine versteckte Aufgaben-/Scoringlogik, kein `geheimeAufgabe`-Leak, vollständige Spieler-Collection, R34/R35/R36/R37/R38-Textverträge, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R40 UI-offene Aufgabenpunkte
+
+- [x] Scope: Vorhandene Engine-Felder `zustand.offeneAufgaben[].name` und `.punkte` sichtbar machen; keine neue Aufgabenprüfung, Scoring-, Phasen-, Aktions- oder Validierungsregel in React.
+- [x] RED: `npm test -- --run src/App.r40.test.tsx` schlug erwartungsgemäß fehl, weil offene Aufgaben noch ohne Punkte gerendert wurden.
+- [x] GREEN: `src/App.tsx` rendert `Offene Aufgaben: {name} ({punkte} Punkte), ...`; leere Listen bleiben `Offene Aufgaben: keine`.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r40.test.tsx`; Test prüft vollständige offene Aufgaben-Collection, leere Liste und dass `bedingung` nicht sichtbar wird.
+- [x] R33-Testvertrag aktualisiert: `src/App.test.tsx` erwartet offene Aufgaben nun ebenfalls mit Punkten.
+- [x] `/simplify`: Nur JSX-Zeilenumbruch; Header und stabiler Textvertrag blieben erhalten.
+- [x] Targeted: `npm test -- --run src/App.r40.test.tsx` → 2 R40-Tests bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx src/App.r40.test.tsx` → 37 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 20 Testfiles, 254 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, keine Aufgaben-/Scoringlogik, kein `bedingung`-/`geheimeAufgabe`-Leak, vollständige offene Aufgaben-Collection, R33-Update, R34/R35/R36/R37/R38/R39-Textverträge, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

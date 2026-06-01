@@ -404,7 +404,9 @@ describe('R33 UI-Material- und Aufgabenübersicht', () => {
     expect(within(bereich).getByText(`Nachziehstapel: ${zustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
     expect(within(bereich).getByText(`Aufgabenstapel: ${zustand.aufgabenStapel.length} Karten`)).toBeInTheDocument()
     expect(
-      within(bereich).getByText(`Offene Aufgaben: ${zustand.offeneAufgaben.map(a => a.name).join(', ')}`),
+      within(bereich).getByText(
+        `Offene Aufgaben: ${zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
+      ),
     ).toBeInTheDocument()
   })
 
