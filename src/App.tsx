@@ -6,9 +6,9 @@ import {
   ermittleLegaleAktionen,
   anwendeAktion,
 } from './engine'
-import type { SpielAktion } from './engine'
+import type { SpielAktion, Spielzustand } from './engine'
 
-const initialZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+const defaultZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
 function aktionsLabel(aktion: SpielAktion): string {
   switch (aktion.typ) {
@@ -21,7 +21,11 @@ function aktionsLabel(aktion: SpielAktion): string {
   }
 }
 
-function App() {
+interface AppProps {
+  initialZustand?: Spielzustand
+}
+
+function App({ initialZustand = defaultZustand }: AppProps) {
   const [zustand, setZustand] = useState(initialZustand)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
@@ -54,6 +58,9 @@ function App() {
             Schlange {schlange.id}: {schlange.karten.map(k => k.id).join(', ')}
           </p>
         ))}
+        {zustand.ablagestapel.length > 0 && (
+          <p>Ablagestapel: {zustand.ablagestapel.map(k => k.id).join(', ')}</p>
+        )}
         <div>
           {legaleAktionen.map((aktion, i) => (
             <button key={i} onClick={() => fuhreAktionAus(aktion)}>

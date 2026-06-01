@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
+import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import type { Spielzustand } from './engine'
 
 describe('Schlangentanz v2 placeholder', () => {
   it('identifies the app as a greenfield rebuild', () => {
@@ -56,6 +58,30 @@ describe('R19 UI-Grundregel für Kartenarten pro Zug', () => {
         name: /karte blau-03 an schlange schlange-spieler-1-1 rechts anlegen/i,
       }),
     ).toBeNull()
+    expect(within(bereich).getByText(/keine weiteren legalen aktionen/i)).toBeInTheDocument()
+  })
+})
+
+function zustandMitPflichtAbwurf(): Spielzustand {
+  const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  const sonderkarte = zustand.nachziehstapel.find(karte => karte.typ === 'Sonderkarte')
+  if (!sonderkarte) throw new Error('Testsetup erwartet Sonderkarte im Nachziehstapel.')
+
+  return {
+    ...zustand,
+    nachziehstapel: zustand.nachziehstapel.filter(karte => karte.id !== sonderkarte.id),
+    spieler: zustand.spieler.with(0, { ...zustand.spieler[0], hand: [sonderkarte], schlangen: [] }),
+  }
+}
+
+describe('R21 UI-Pflicht-Abwurf', () => {
+  it('führt Pflicht-Abwurf per Klick aus und zeigt den Ablagestapel', () => {
+    render(<App initialZustand={zustandMitPflichtAbwurf()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /karte sonderkarte-01 abwerfen/i }))
+
+    expect(within(bereich).getByText(/ablagestapel: sonderkarte-01/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/keine weiteren legalen aktionen/i)).toBeInTheDocument()
   })
 })
