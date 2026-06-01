@@ -100,6 +100,14 @@ function App({ initialZustand = defaultZustand }: AppProps) {
             </p>
           ))
         )}
+        {zustand.spieler.map(spieler => (
+          <p key={`aufgaben-${spieler.id}`}>
+            Erfüllte Aufgaben {spieler.id}:{' '}
+            {spieler.erfuellteAufgaben.length === 0
+              ? 'keine'
+              : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
+          </p>
+        ))}
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
         {aktiverSpieler.schlangen.map(schlange => (
           <p key={schlange.id}>

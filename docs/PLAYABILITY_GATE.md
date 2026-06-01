@@ -311,3 +311,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, Erhalt der Ablagestapel-Detailzeile, Refresh nach Pflicht-Abwurf, Fixture-Eigentum, R34/R35/R36/R37-Textverträge, Header-Konvention und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R39 UI-erfüllte Aufgaben
+
+- [x] Scope: Vorhandene Engine-Spieleraufgaben (`spieler.erfuellteAufgaben`) pro Spieler sichtbar machen; keine neue Aufgabenprüfung, Scoring-, Phasen-, Aktions- oder Validierungsregel in React.
+- [x] RED: `npm test -- --run src/App.r39.test.tsx` schlug erwartungsgemäß fehl, weil keine Zeile `Erfüllte Aufgaben ...` gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert pro Spieler `Erfüllte Aufgaben {spieler.id}: ...` direkt aus `spieler.erfuellteAufgaben`; leere Listen werden als `keine` angezeigt.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r39.test.tsx`; Test prüft alle Spieler-Zeilen und dynamisch aus dem Engine-Fixture abgeleitete Aufgaben-Texte.
+- [x] `/simplify`: Testfixture robuster gemacht; Header und stabiler Textvertrag blieben erhalten.
+- [x] Targeted: `npm test -- --run src/App.r39.test.tsx` → 1 R39-Test bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx` → 35 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 19 Testfiles, 252 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, keine versteckte Aufgaben-/Scoringlogik, kein `geheimeAufgabe`-Leak, vollständige Spieler-Collection, R34/R35/R36/R37/R38-Textverträge, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
