@@ -185,6 +185,27 @@ describe('R27 UI-Zug beenden', () => {
     expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler-2/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
-    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
+    expect(within(bereich).getByRole('button', { name: /ausspielphase starten/i })).toBeInTheDocument()
+  })
+})
+
+describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
+  it('startet nach Zugende die Ausspielphase des nächsten Spielers über die Engine', () => {
+    const bereich = starteErsteSchlange()
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+
+    expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktiver spieler: spieler-2/i)).toBeInTheDocument()
+    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase starten/i }))
+
+    expect(within(bereich).getByText(/zugphase: ausspielphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktiver spieler: spieler-2/i)).toBeInTheDocument()
+    expect(within(bereich).getAllByRole('button')).toHaveLength(5)
+    expect(
+      within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }),
+    ).toBeInTheDocument()
+    expect(within(bereich).queryByRole('button', { name: /zug beenden/i })).toBeNull()
   })
 })

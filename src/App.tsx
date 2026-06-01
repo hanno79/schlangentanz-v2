@@ -98,6 +98,11 @@ function App({ initialZustand = defaultZustand }: AppProps) {
             Zug beenden
           </button>
         )}
+        {zustand.zugphase === 'Nachziehphase' && (
+          <button onClick={() => setZustand(z => starteAusspielphase(z))}>
+            Ausspielphase starten
+          </button>
+        )}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
       </section>
     </main>
