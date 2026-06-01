@@ -243,3 +243,20 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, vollständige Spieler-Collection, Refresh nach Engine-Aktion, Fixture-Eigentum, Default-UI, Imports/Typecheck und Dateigrößen.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R35 UI-Spieler-Schlangenübersicht
+
+- [x] Scope: Vorhandene Engine-Schlangen je Spieler (`zustand.spieler[].schlangen`) für alle Spieler sichtbar machen; keine neue Schlangen-, Spieler-, Zug- oder Scoring-Regel in React.
+- [x] RED: `npm test -- --run src/App.r35.test.tsx` schlug erwartungsgemäß fehl, weil keine Spieler-Schlangenübersicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert für jeden Spieler `Schlangenübersicht ...` mit `keine` oder allen Schlangen in Engine-Reihenfolge.
+- [x] Test-Härtung: Neue eigene Testdatei `src/App.r35.test.tsx`, damit `src/App.test.tsx` unter 500 Zeilen bleibt; vollständige Spieler-Collection und Refresh nach `NeueSchlangeStarten` geprüft.
+- [x] `/simplify`: Header wurde wegen Projektregel 8 wiederhergestellt; Post-Action-Refresh-Coverage blieb erhalten.
+- [x] Targeted: `npm test -- --run src/App.r35.test.tsx` → 2 R35-Tests bestanden.
+- [x] UI targeted: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx` → 28 UI-Tests bestanden.
+- [x] Full tests: `npm test -- --run` → 15 Testfiles, 245 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden reine State-Anzeige, vollständige Spieler-Collection, alle Schlangen je Spieler, Refresh nach Engine-Aktion, neue untracked Testdatei, Header-Konvention und Dateigrößen.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
