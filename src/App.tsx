@@ -12,12 +12,16 @@ import {
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
 } from './engine'
-import type { SpielAktion, Spielzustand } from './engine'
+import type { AufgabenkarteInfo, SpielAktion, Spielzustand } from './engine'
 
 const defaultZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
+}
+
+function aufgabeLabel(a: AufgabenkarteInfo): string {
+  return `${a.name} (${a.punkte} Punkte): ${a.bedingung}`
 }
 
 function aktionsLabel(aktion: SpielAktion): string {
@@ -88,6 +92,11 @@ function App({ initialZustand = defaultZustand }: AppProps) {
           <h2>Aktiver Spieler</h2>
           <p>Aktiver Spieler: {aktiverSpieler.id}</p>
           <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+          <p>
+            {aktiverSpieler.geheimeAufgabe
+              ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe)}`
+              : 'Geheime Aufgabe: keine'}
+          </p>
           {aktiverSpieler.schlangen.map(schlange => (
             <p key={schlange.id}>
               Schlange {schlange.id}: {kartenIds(schlange.karten)}
@@ -158,7 +167,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
           <p>
             Offene Aufgaben-Details:{' '}
             {zustand.offeneAufgaben.length > 0
-              ? zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte): ${a.bedingung}`).join('; ')
+              ? zustand.offeneAufgaben.map(aufgabeLabel).join('; ')
               : 'keine'}
           </p>
         </section>
