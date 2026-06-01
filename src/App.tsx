@@ -5,6 +5,7 @@ import {
   starteAusspielphase,
   ermittleLegaleAktionen,
   anwendeAktion,
+  MAX_KARTEN_PRO_ZUG,
 } from './engine'
 import type { SpielAktion, Spielzustand } from './engine'
 
@@ -76,6 +77,7 @@ function App({ initialZustand = defaultZustand }: AppProps) {
             </button>
           ))}
         </div>
+        <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
         {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
       </section>

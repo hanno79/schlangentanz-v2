@@ -13,6 +13,7 @@ export const MINDESTHANDKARTEN = 5;
 
 // Schlangen
 export const MAX_SCHLANGEN_PRO_SPIELER = 2;
+export const MAX_KARTEN_PRO_ZUG = 2;
 
 // Kartenmaterial laut Spec (R1.1)
 export const FARBKARTEN_GESAMT = 78;

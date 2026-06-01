@@ -62,3 +62,15 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: keine Blocker.
 - [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
 - [ ] Game route loads without console errors — nach Deploy zu prüfen.
+
+## Evidence — 01.06.2026 R23 UI-Zugpflichtenanzeige
+
+- [x] RED: `src/App.test.tsx -t 'R23 UI-Zugpflichtenanzeige'` schlug vor Implementierung fehl.
+- [x] Targeted: `npm test -- --run src/App.test.tsx src/engine/__tests__/legal_actions_discard.test.ts src/engine/__tests__/legal_actions.test.ts` bestanden.
+- [x] Full tests: `npm test -- --run` → 13 Testfiles, 221 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Codex Review: keine Blocker; Nachzug: `MAX_KARTEN_PRO_ZUG` ist noch nicht vollständig Engine-Single-Source-of-Truth.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.

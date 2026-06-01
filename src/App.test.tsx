@@ -99,3 +99,16 @@ describe('R22 UI-Handkartenanzeige', () => {
     expect(within(bereich).getByText(/ablagestapel: sonderkarte-01/i)).toBeInTheDocument()
   })
 })
+
+describe('R23 UI-Zugpflichtenanzeige', () => {
+  it('zeigt gespielte Karten im Zug und aktualisiert sie nach einer Engine-Aktion', () => {
+    render(<App />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
+
+    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+
+    expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
+  })
+})
