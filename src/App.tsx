@@ -1,10 +1,14 @@
+import { useMemo, useState } from 'react'
 import './App.css'
-import { erstelleSpielzustand, starteAusspielphase, ermittleLegaleAktionen } from './engine'
+import {
+  erstelleSpielzustand,
+  starteAusspielphase,
+  ermittleLegaleAktionen,
+  anwendeAktion,
+} from './engine'
 import type { SpielAktion } from './engine'
 
-const demoZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
-const legaleAktionen = ermittleLegaleAktionen(demoZustand)
-const aktiverSpieler = demoZustand.spieler[demoZustand.aktiverSpielerIndex]
+const initialZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
 function aktionsLabel(aktion: SpielAktion): string {
   switch (aktion.typ) {
@@ -16,6 +20,14 @@ function aktionsLabel(aktion: SpielAktion): string {
 }
 
 function App() {
+  const [zustand, setZustand] = useState(initialZustand)
+  const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
+
+  function fuhreAktionAus(aktion: SpielAktion) {
+    setZustand(z => anwendeAktion(z, aktion))
+  }
+
   return (
     <main className="app-shell">
       <section className="hero" aria-labelledby="title">
@@ -35,9 +47,16 @@ function App() {
       <section aria-label="Legale Aktionen">
         <p>Engine-Demo: Ausspielphase</p>
         <p>Aktiver Spieler: {aktiverSpieler.id}</p>
+        {aktiverSpieler.schlangen.map(schlange => (
+          <p key={schlange.id}>
+            Schlange {schlange.id}: {schlange.karten.map(k => k.id).join(', ')}
+          </p>
+        ))}
         <div>
           {legaleAktionen.map((aktion, i) => (
-            <button key={i}>{aktionsLabel(aktion)}</button>
+            <button key={i} onClick={() => fuhreAktionAus(aktion)}>
+              {aktionsLabel(aktion)}
+            </button>
           ))}
         </div>
         <p>Quelle: engine.ermittleLegaleAktionen</p>

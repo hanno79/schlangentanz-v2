@@ -11,7 +11,7 @@ export { aufgabenPool, erstelleAufgabenStapel } from './aufgabenKarten';
 export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, mischeDeck } from './deck';
 export { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from './state';
 export { serialisiere, deserialisiere } from './serialization';
-export { pruefeAktion, ermittleLegaleAktionen } from './legalActions';
+export { pruefeAktion, ermittleLegaleAktionen, anwendeAktion } from './legalActions';
 export type { AktionErgebnis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion } from './legalActions';
 export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn } from './turnState';
 export { ermittleFarbgruppen } from './colorGroups';

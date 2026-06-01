@@ -7,6 +7,7 @@ Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz
 
 import type { Spielzustand } from './types';
 import { MAX_SCHLANGEN_PRO_SPIELER } from './constants';
+import { starteNeueSchlange, legeKarteAnSchlangeAn } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
@@ -45,6 +46,10 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
         ? 'Neue Schlangen können nur in der Ausspielphase gestartet werden.'
         : 'Karten können nur in der Ausspielphase angelegt werden.',
     );
+  }
+
+  if (zustand.zugpflichten.gespielteKarten >= 2) {
+    return verboten('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
   }
 
   const karte = aktiverSpieler.hand.find((k) => k.id === aktion.handkartenId);
@@ -119,4 +124,22 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
   }
 
   return aktionen;
+}
+
+export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
+  const pruefung = pruefeAktion(zustand, aktion);
+  if (!pruefung.erlaubt) {
+    throw new Error(pruefung.grund);
+  }
+
+  switch (aktion.typ) {
+    case 'NeueSchlangeStarten':
+      return starteNeueSchlange(zustand, { kartenId: aktion.handkartenId });
+    case 'KarteAnlegen':
+      return legeKarteAnSchlangeAn(zustand, {
+        kartenId: aktion.handkartenId,
+        schlangenId: aktion.schlangenId,
+        position: aktion.position,
+      });
+  }
 }

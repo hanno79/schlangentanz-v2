@@ -6,7 +6,7 @@ Beschreibung: TDD-Tests für den Legal-Action-Validator im Schlangentanz-Engine-
 */
 
 import { describe, it, expect } from 'vitest';
-import { ermittleLegaleAktionen, erstelleSpielzustand, pruefeAktion } from '../index';
+import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, pruefeAktion } from '../index';
 import type { Spielzustand } from '../types';
 
 function zustandInAusspielphase(): Spielzustand {
@@ -258,6 +258,77 @@ describe('Legal Action Validator — R3 Schlangenbau', () => {
       erlaubt: false,
       grund: 'Karten können nur links oder rechts angelegt werden.',
     });
+  });
+  it('verbietet weitere legale Aktionen nach erfülltem Zwei-Karten-Limit', () => {
+    const zustand = { ...zustandInAusspielphase(), zugpflichten: { gespielteKarten: 2 } };
+    const karte = zustand.spieler[0].hand[0];
+
+    expect(
+      pruefeAktion(zustand, {
+        typ: 'NeueSchlangeStarten',
+        spielerId: 'spieler-1',
+        handkartenId: karte.id,
+      }),
+    ).toEqual({
+      erlaubt: false,
+      grund: 'Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.',
+    });
+    expect(ermittleLegaleAktionen(zustand)).toEqual([]);
+  });
+});
+
+describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () => {
+  it('wendet NeueSchlangeStarten über den zentralen Engine-Export an', () => {
+    const zustand = zustandInAusspielphase();
+    const karte = zustand.spieler[0].hand[0];
+
+    const aktualisiert = anwendeAktion(zustand, {
+      typ: 'NeueSchlangeStarten',
+      spielerId: 'spieler-1',
+      handkartenId: karte.id,
+    });
+
+    expect(aktualisiert.spieler[0].hand.map((handkarte) => handkarte.id)).not.toContain(karte.id);
+    expect(aktualisiert.spieler[0].schlangen).toEqual([
+      { id: 'schlange-spieler-1-1', zustand: 'aktiv', karten: [karte] },
+    ]);
+    expect(zustand.spieler[0].schlangen).toEqual([]);
+  });
+
+  it('wendet KarteAnlegen über den zentralen Engine-Export an', () => {
+    const zustand = zustandInAusspielphase();
+    const [startkarte, anlegekarte] = zustand.spieler[0].hand;
+    zustand.spieler[0].schlangen = [
+      { id: 'schlange-spieler-1-1', zustand: 'aktiv', karten: [startkarte] },
+    ];
+
+    const aktualisiert = anwendeAktion(zustand, {
+      typ: 'KarteAnlegen',
+      spielerId: 'spieler-1',
+      handkartenId: anlegekarte.id,
+      schlangenId: 'schlange-spieler-1-1',
+      position: 'rechts',
+    });
+
+    expect(aktualisiert.spieler[0].hand.map((handkarte) => handkarte.id)).not.toContain(anlegekarte.id);
+    expect(aktualisiert.spieler[0].schlangen[0].karten.map((karte) => karte.id)).toEqual([
+      startkarte.id,
+      anlegekarte.id,
+    ]);
+    expect(zustand.spieler[0].schlangen[0].karten.map((karte) => karte.id)).toEqual([startkarte.id]);
+  });
+
+  it('weist manuell konstruierte Aktionen mit falscher Spieler-ID zurück', () => {
+    const zustand = zustandInAusspielphase();
+    const karte = zustand.spieler[0].hand[0];
+
+    expect(() =>
+      anwendeAktion(zustand, {
+        typ: 'NeueSchlangeStarten',
+        spielerId: 'spieler-2',
+        handkartenId: karte.id,
+      }),
+    ).toThrow('Nur der aktive Spieler darf diese Aktion ausführen.');
   });
 });
 
