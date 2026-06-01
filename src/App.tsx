@@ -16,6 +16,8 @@ function aktionsLabel(aktion: SpielAktion): string {
       return `Neue Schlange starten mit Karte ${aktion.handkartenId}`
     case 'KarteAnlegen':
       return `Karte ${aktion.handkartenId} an Schlange ${aktion.schlangenId} ${aktion.position} anlegen`
+    case 'PflichtAbwurf':
+      return `Karte ${aktion.handkartenId} abwerfen`
   }
 }
 

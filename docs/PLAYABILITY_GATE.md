@@ -26,3 +26,15 @@ A route loading successfully is not enough. A green smoke test is not enough.
 ## Human gate
 
 - [ ] User confirms the game is actually playable according to the locked spec
+
+## Evidence — 01.06.2026 R20 Pflicht-Abwurf als Legal Action
+
+- [x] Unit/Rule/State/UI tests: `npm test -- --run` → 13 Testfiles, 218 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Production build: `npm run build` bestanden.
+- [x] Diff hygiene: `git diff --check` bestanden.
+- [x] Codex Review: keine Blocker nach R19-Pflicht-Abwurf-Fix.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [ ] Legal actions are available only when legal — nach Deploy zu prüfen.
