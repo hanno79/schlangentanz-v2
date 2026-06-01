@@ -229,3 +229,62 @@ describe('R29 UI-Nachziehen beim nächsten Zug', () => {
     ).toBeInTheDocument()
   })
 })
+
+function zustandMitBlauerDreiergruppe(): Spielzustand {
+  const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  const GRUPPEN_IDS = ['blau-01', 'blau-03', 'blau-05']
+  const gruppenKarten = zustand.spieler[0].hand.filter(karte => GRUPPEN_IDS.includes(karte.id))
+  if (gruppenKarten.length !== 3) throw new Error('Testsetup erwartet drei blaue Karten auf Spieler-1-Hand.')
+
+  return {
+    ...zustand,
+    spieler: zustand.spieler.with(0, {
+      ...zustand.spieler[0],
+      hand: zustand.spieler[0].hand.filter(karte => !GRUPPEN_IDS.includes(karte.id)),
+      schlangen: [{ id: 'schlange-spieler-1-1', karten: gruppenKarten, zustand: 'aktiv' }],
+    }),
+  }
+}
+
+function zustandMitBlauerZweiergruppeUndDritterHandkarte(): Spielzustand {
+  const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  const SCHLANGEN_IDS = ['blau-01', 'blau-03']
+  const schlangenKarten = zustand.spieler[0].hand.filter(karte => SCHLANGEN_IDS.includes(karte.id))
+  if (schlangenKarten.length !== 2) throw new Error('Testsetup erwartet zwei blaue Karten auf Spieler-1-Hand.')
+
+  return {
+    ...zustand,
+    spieler: zustand.spieler.with(0, {
+      ...zustand.spieler[0],
+      hand: zustand.spieler[0].hand.filter(karte => !SCHLANGEN_IDS.includes(karte.id)),
+      schlangen: [{ id: 'schlange-spieler-1-1', karten: schlangenKarten, zustand: 'aktiv' }],
+    }),
+  }
+}
+
+describe('R30 UI-Wertungsanzeige', () => {
+  it('zeigt die Engine-Gesamtwertung für Spieler in stabiler Reihenfolge an', () => {
+    render(<App initialZustand={zustandMitBlauerDreiergruppe()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getAllByText(/wertung spieler-/i).map(element => element.textContent)).toEqual([
+      'Wertung spieler-1: 3 Punkte',
+      'Wertung spieler-2: 0 Punkte',
+    ])
+  })
+
+  it('aktualisiert die Wertung nach einer Engine-Aktion in der UI', () => {
+    render(<App initialZustand={zustandMitBlauerZweiergruppeUndDritterHandkarte()} />)
+    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+
+    expect(within(bereich).getByText(/wertung spieler-1: 0 punkte/i)).toBeInTheDocument()
+    fireEvent.click(
+      within(bereich).getByRole('button', {
+        name: /karte blau-05 an schlange schlange-spieler-1-1 rechts anlegen/i,
+      }),
+    )
+
+    expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01, blau-03, blau-05/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/wertung spieler-1: 3 punkte/i)).toBeInTheDocument()
+  })
+})

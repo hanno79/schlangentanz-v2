@@ -9,6 +9,7 @@ import {
   beendeAufgabenpruefung,
   beendeZug,
   MAX_KARTEN_PRO_ZUG,
+  berechneSpielzustandGesamtwertung,
 } from './engine'
 import type { SpielAktion, Spielzustand } from './engine'
 
@@ -36,6 +37,7 @@ interface AppProps {
 function App({ initialZustand = defaultZustand }: AppProps) {
   const [zustand, setZustand] = useState(initialZustand)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
+  const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
 
   function fuhreAktionAus(aktion: SpielAktion) {
@@ -103,6 +105,9 @@ function App({ initialZustand = defaultZustand }: AppProps) {
             Ausspielphase starten
           </button>
         )}
+        {gesamtwertung.spielerwertungen.map(eintrag => (
+          <p key={eintrag.spielerId}>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+        ))}
         <p>Quelle: engine.ermittleLegaleAktionen</p>
       </section>
     </main>
