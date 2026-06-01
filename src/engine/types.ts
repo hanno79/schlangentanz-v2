@@ -66,6 +66,8 @@ export interface Spielzustand {
   zugphase: Zugphase;
   zugpflichten: {
     gespielteKarten: number;
+    gespielteFarbkarten: number;
+    gespielteSonderkarten: number;
   };
   spielphase: Spielphase;
   nachziehstapel: Spielkarte[];

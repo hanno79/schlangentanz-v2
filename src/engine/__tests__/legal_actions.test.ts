@@ -260,7 +260,10 @@ describe('Legal Action Validator — R3 Schlangenbau', () => {
     });
   });
   it('verbietet weitere legale Aktionen nach erfülltem Zwei-Karten-Limit', () => {
-    const zustand = { ...zustandInAusspielphase(), zugpflichten: { gespielteKarten: 2 } };
+    const zustand = {
+      ...zustandInAusspielphase(),
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 1, gespielteSonderkarten: 1 },
+    };
     const karte = zustand.spieler[0].hand[0];
 
     expect(
@@ -272,6 +275,31 @@ describe('Legal Action Validator — R3 Schlangenbau', () => {
     ).toEqual({
       erlaubt: false,
       grund: 'Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.',
+    });
+    expect(ermittleLegaleAktionen(zustand)).toEqual([]);
+  });
+
+  it('verbietet eine zweite Farbkarte im selben Zug', () => {
+    const zustand = {
+      ...zustandInAusspielphase(),
+      zugpflichten: { gespielteKarten: 1, gespielteFarbkarten: 1, gespielteSonderkarten: 0 },
+    };
+    const [startkarte, weitereFarbkarte] = zustand.spieler[0].hand;
+    zustand.spieler[0].schlangen = [
+      { id: 'schlange-1', zustand: 'aktiv', karten: [startkarte] },
+    ];
+
+    expect(
+      pruefeAktion(zustand, {
+        typ: 'KarteAnlegen',
+        spielerId: 'spieler-1',
+        handkartenId: weitereFarbkarte.id,
+        schlangenId: 'schlange-1',
+        position: 'rechts',
+      }),
+    ).toEqual({
+      erlaubt: false,
+      grund: 'Pro Zug darf höchstens eine Farbkarte gespielt werden.',
     });
     expect(ermittleLegaleAktionen(zustand)).toEqual([]);
   });

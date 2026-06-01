@@ -49,8 +49,21 @@ export function deserialisiere(json: string): Spielzustand {
     throw new Error('Ungültiger Spielzustand: JSON konnte nicht geparst werden.');
   }
 
+  migriereZugpflichtenVorR19(parsed);
   validiereSpielzustand(parsed);
   return parsed;
+}
+
+function migriereZugpflichtenVorR19(wert: unknown): void {
+  if (!istObjekt(wert) || !istObjekt(wert['zugpflichten'])) return;
+
+  const zugpflichten = wert['zugpflichten'];
+  const hatFarbkarten = Object.prototype.hasOwnProperty.call(zugpflichten, 'gespielteFarbkarten');
+  const hatSonderkarten = Object.prototype.hasOwnProperty.call(zugpflichten, 'gespielteSonderkarten');
+  if (!hatFarbkarten && !hatSonderkarten && zugpflichten['gespielteKarten'] === 0) {
+    zugpflichten['gespielteFarbkarten'] = 0;
+    zugpflichten['gespielteSonderkarten'] = 0;
+  }
 }
 
 function sortiereStabil(wert: unknown): unknown {
@@ -200,6 +213,17 @@ function validiereZugpflichten(wert: unknown): void {
   const gespielteKarten = zugpflichten['gespielteKarten'] as number;
   if (!Number.isInteger(gespielteKarten) || gespielteKarten < 0 || gespielteKarten > 2) {
     throw new Error('Ungültiger Spielzustand: gespielte Karten in Zugpflichten sind ungültig.');
+  }
+  const gespielteFarbkarten = zugpflichten['gespielteFarbkarten'] as number;
+  if (!Number.isInteger(gespielteFarbkarten) || gespielteFarbkarten < 0 || gespielteFarbkarten > 1) {
+    throw new Error('Ungültiger Spielzustand: gespielte Farbkarten in Zugpflichten sind ungültig.');
+  }
+  const gespielteSonderkarten = zugpflichten['gespielteSonderkarten'] as number;
+  if (!Number.isInteger(gespielteSonderkarten) || gespielteSonderkarten < 0 || gespielteSonderkarten > 1) {
+    throw new Error('Ungültiger Spielzustand: gespielte Sonderkarten in Zugpflichten sind ungültig.');
+  }
+  if (gespielteFarbkarten + gespielteSonderkarten !== gespielteKarten) {
+    throw new Error('Ungültiger Spielzustand: gespielte Kartenarten passen nicht zur Anzahl gespielter Karten.');
   }
 }
 

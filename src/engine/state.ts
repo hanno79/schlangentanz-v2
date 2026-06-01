@@ -79,7 +79,7 @@ function erstelleSpielzustandVonDefinitionen(
     spieler,
     aktiverSpielerIndex: 0,
     zugphase: 'Nachziehphase',
-    zugpflichten: { gespielteKarten: 0 },
+    zugpflichten: { gespielteKarten: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0 },
     spielphase: 'Normal',
     nachziehstapel: hauptdeck,
     ablagestapel: [],

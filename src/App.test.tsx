@@ -43,22 +43,19 @@ describe('R17 UI-Aktionsausführung über die Engine', () => {
 
     expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /neue schlange starten mit karte blau-01/i })).toBeNull()
-    expect(within(bereich).getAllByRole('button')).toHaveLength(12)
+    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
   })
 })
 
-describe('R18 UI-Zwei-Karten-Limit nach zweitem Engine-Klick', () => {
-  it('legt per Klick eine zweite Karte an und zeigt danach keine weiteren Aktionen', () => {
+describe('R19 UI-Grundregel für Kartenarten pro Zug', () => {
+  it('zeigt nach einer gespielten Farbkarte keine zweite Farbkarte als legale Aktion an', () => {
     const bereich = starteErsteSchlange()
 
-    fireEvent.click(
-      within(bereich).getByRole('button', {
+    expect(
+      within(bereich).queryByRole('button', {
         name: /karte blau-03 an schlange schlange-spieler-1-1 rechts anlegen/i,
       }),
-    )
-
-    expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01, blau-03/i)).toBeInTheDocument()
-    expect(within(bereich).queryAllByRole('button')).toHaveLength(0)
+    ).toBeNull()
     expect(within(bereich).getByText(/keine weiteren legalen aktionen/i)).toBeInTheDocument()
   })
 })

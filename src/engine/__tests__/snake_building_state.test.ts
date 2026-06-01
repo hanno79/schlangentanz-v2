@@ -31,10 +31,22 @@ function verschiebeSonderkarteAufAktiveHand(zustand: Spielzustand): { zustand: S
 function zustandMitAktiverSchlange(): { zustand: Spielzustand; schlangenId: string; anlegeKartenId: string } {
   const startzustand = zustandInAusspielphase();
   const [startkarte, anlegekarte] = startzustand.spieler[0].hand;
-  const mitSchlange = starteNeueSchlange(startzustand, { kartenId: startkarte.id });
+  const schlangenId = 'schlange-spieler-1-1';
+  const zustand = {
+    ...startzustand,
+    spieler: startzustand.spieler.map((spieler, index) =>
+      index === 0
+        ? {
+            ...spieler,
+            hand: spieler.hand.filter((karte) => karte.id !== startkarte.id),
+            schlangen: [{ id: schlangenId, zustand: 'aktiv' as const, karten: [startkarte] }],
+          }
+        : spieler,
+    ),
+  };
   return {
-    zustand: mitSchlange,
-    schlangenId: mitSchlange.spieler[0].schlangen[0].id,
+    zustand,
+    schlangenId,
     anlegeKartenId: anlegekarte.id,
   };
 }
@@ -186,7 +198,10 @@ describe('Schlangenbau State Machine — R3.1 Neue Schlange starten', () => {
   });
 
   it('verbietet eine weitere gespielte Karte nach erfülltem Zwei-Karten-Limit', () => {
-    const zustand = { ...zustandInAusspielphase(), zugpflichten: { gespielteKarten: 2 } };
+    const zustand = {
+      ...zustandInAusspielphase(),
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 1, gespielteSonderkarten: 1 },
+    };
     const kartenId = zustand.spieler[0].hand[0].id;
 
     expect(() => starteNeueSchlange(zustand, { kartenId })).toThrow(
@@ -211,7 +226,8 @@ describe('Schlangenbau State Machine — R3.2 Schlange erweitern', () => {
     expect(aktualisiert.spieler[0].hand.map((karte) => karte.id)).toEqual(
       handVorher.filter((id) => id !== anlegeKartenId),
     );
-    expect(aktualisiert.zugpflichten.gespielteKarten).toBe(2);
+    expect(aktualisiert.zugpflichten.gespielteKarten).toBe(1);
+    expect(aktualisiert.zugpflichten.gespielteFarbkarten).toBe(1);
     expect(nachAusspielphase.zugphase).toBe('Aufgabenpruefung');
   });
 
@@ -315,7 +331,10 @@ describe('Schlangenbau State Machine — R3.2 Schlange erweitern', () => {
 
   it('verbietet Anlegen nach erfülltem Zwei-Karten-Limit', () => {
     const { zustand, schlangenId, anlegeKartenId } = zustandMitAktiverSchlange();
-    const limitErreicht = { ...zustand, zugpflichten: { gespielteKarten: 2 } };
+    const limitErreicht = {
+      ...zustand,
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 1, gespielteSonderkarten: 1 },
+    };
 
     expect(() => legeKarteAnSchlangeAn(limitErreicht, { kartenId: anlegeKartenId, schlangenId, position: 'links' })).toThrow(
       'Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.',

@@ -26,7 +26,9 @@ function zustandInAusspielphase() {
 
 function zustandInAusspielphaseMitGespieltenKarten(gespielteKarten: number) {
   const zustand = zustandInAusspielphase();
-  return { ...zustand, zugpflichten: { ...zustand.zugpflichten, gespielteKarten } };
+  const gespielteFarbkarten = gespielteKarten >= 1 ? 1 : 0;
+  const gespielteSonderkarten = gespielteKarten === 2 ? 1 : 0;
+  return { ...zustand, zugpflichten: { ...zustand.zugpflichten, gespielteKarten, gespielteFarbkarten, gespielteSonderkarten } };
 }
 
 describe('Turn State Machine — R2 Nachziehphase', () => {
@@ -147,6 +149,48 @@ describe('Turn State Machine — R2.3 Ausspielphase', () => {
 
     expect(() => beendeAusspielphase(zustand)).toThrow(
       'Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.',
+    );
+  });
+
+  it('verbietet Abschluss nach zwei Farbkarten im selben Zug', () => {
+    const zustand = {
+      ...zustandInAusspielphaseMitGespieltenKarten(2),
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 2, gespielteSonderkarten: 0 },
+    };
+
+    expect(() => beendeAusspielphase(zustand)).toThrow(
+      'Pro Zug darf höchstens eine Farbkarte gespielt werden.',
+    );
+  });
+
+  it('erlaubt Abschluss nach einer Farbkarte und einer Sonderkarte', () => {
+    const zustand = {
+      ...zustandInAusspielphaseMitGespieltenKarten(2),
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 1, gespielteSonderkarten: 1 },
+    };
+
+    expect(beendeAusspielphase(zustand).zugphase).toBe('Aufgabenpruefung');
+  });
+
+  it('verbietet Abschluss nach zwei Sonderkarten im selben Zug', () => {
+    const zustand = {
+      ...zustandInAusspielphaseMitGespieltenKarten(2),
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 0, gespielteSonderkarten: 2 },
+    };
+
+    expect(() => beendeAusspielphase(zustand)).toThrow(
+      'Pro Zug darf höchstens eine Sonderkarte gespielt werden.',
+    );
+  });
+
+  it('verbietet Abschluss, wenn die Kartenart-Zähler nicht zur Gesamtanzahl passen', () => {
+    const zustand = {
+      ...zustandInAusspielphaseMitGespieltenKarten(2),
+      zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 1, gespielteSonderkarten: 0 },
+    };
+
+    expect(() => beendeAusspielphase(zustand)).toThrow(
+      'Die gespielten Kartenarten müssen zur Anzahl gespielter Karten passen.',
     );
   });
 

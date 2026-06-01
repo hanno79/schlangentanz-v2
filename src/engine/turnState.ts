@@ -6,7 +6,7 @@ Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwische
 */
 
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER } from './constants';
-import type { Spielzustand, Spielphase } from './types';
+import type { Spielkarte, Spielzustand, Spielphase } from './types';
 
 function aktualisiereAktivenSpieler(
   zustand: Spielzustand,
@@ -25,17 +25,33 @@ function istGueltigeId(wert: unknown): wert is string {
   return typeof wert === 'string' && wert.trim() !== '';
 }
 
-function pruefeSpielkartenLimit(zustand: Spielzustand): void {
+function pruefeSpielkartenLimit(zustand: Spielzustand, kartentyp: Spielkarte['typ']): void {
   if (zustand.zugpflichten.gespielteKarten >= 2) {
     throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
   }
+  if (kartentyp === 'Farbkarte' && zustand.zugpflichten.gespielteFarbkarten >= 1) {
+    throw new Error('Pro Zug darf höchstens eine Farbkarte gespielt werden.');
+  }
+  if (kartentyp === 'Sonderkarte' && zustand.zugpflichten.gespielteSonderkarten >= 1) {
+    throw new Error('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
+  }
 }
 
-function inkrementiereSpieleKarten(zustand: Spielzustand, neueSpieler: Spielzustand['spieler']): Spielzustand {
+function inkrementiereSpieleKarten(
+  zustand: Spielzustand,
+  neueSpieler: Spielzustand['spieler'],
+  kartentyp: Spielkarte['typ'],
+): Spielzustand {
   return {
     ...zustand,
     spieler: neueSpieler,
-    zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
+    zugpflichten: {
+      ...zustand.zugpflichten,
+      gespielteKarten: zustand.zugpflichten.gespielteKarten + 1,
+      gespielteFarbkarten: zustand.zugpflichten.gespielteFarbkarten + (kartentyp === 'Farbkarte' ? 1 : 0),
+      gespielteSonderkarten:
+        zustand.zugpflichten.gespielteSonderkarten + (kartentyp === 'Sonderkarte' ? 1 : 0),
+    },
   };
 }
 
@@ -52,7 +68,20 @@ function ermittleNaechsteFreieSchlangenNummer(spieler: Spielzustand['spieler'][n
 }
 
 function erstelleLeereZugpflichten() {
-  return { gespielteKarten: 0 } as const;
+  return { gespielteKarten: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0 } as const;
+}
+
+function pruefeKartenartZaehler(zustand: Spielzustand): void {
+  const { gespielteKarten, gespielteFarbkarten, gespielteSonderkarten } = zustand.zugpflichten;
+  if (gespielteFarbkarten > 1) {
+    throw new Error('Pro Zug darf höchstens eine Farbkarte gespielt werden.');
+  }
+  if (gespielteSonderkarten > 1) {
+    throw new Error('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
+  }
+  if (gespielteFarbkarten + gespielteSonderkarten !== gespielteKarten) {
+    throw new Error('Die gespielten Kartenarten müssen zur Anzahl gespielter Karten passen.');
+  }
 }
 
 function berechneEndrundenSpieler(ausloeserIndex: number, spielerAnzahl: number): number[] {
@@ -116,6 +145,7 @@ export function beendeAusspielphase(
   if (ausgespielteKarten > 2) {
     throw new Error('Die Ausspielphase darf höchstens zwei gespielte Karten enthalten.');
   }
+  pruefeKartenartZaehler(zustand);
   return { ...zustand, zugphase: 'Aufgabenpruefung' };
 }
 
@@ -186,16 +216,16 @@ export function werfeKarteMangelsSpielbarerAktionAb(
   if (!abzuwerfendeKarte) {
     throw new Error('Es kann nur eine Handkarte des aktiven Spielers abgeworfen werden.');
   }
+  pruefeSpielkartenLimit(zustand, abzuwerfendeKarte.typ);
 
   const neueHand = aktiverSpieler.hand.filter((karte) => karte.id !== kartenId);
   const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
 
-  return {
-    ...zustand,
-    spieler: neueSpieler,
-    ablagestapel: [...zustand.ablagestapel, abzuwerfendeKarte],
-    zugpflichten: { ...zustand.zugpflichten, gespielteKarten: zustand.zugpflichten.gespielteKarten + 1 },
-  };
+  return inkrementiereSpieleKarten(
+    { ...zustand, ablagestapel: [...zustand.ablagestapel, abzuwerfendeKarte] },
+    neueSpieler,
+    abzuwerfendeKarte.typ,
+  );
 }
 
 export function starteNeueSchlange(
@@ -210,7 +240,6 @@ export function starteNeueSchlange(
   if (!istGueltigeId(kartenId)) {
     throw new Error('Es muss genau eine Handkarte zum Starten gewählt werden.');
   }
-  pruefeSpielkartenLimit(zustand);
 
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   if (aktiverSpieler.schlangen.length >= MAX_SCHLANGEN_PRO_SPIELER) {
@@ -224,6 +253,7 @@ export function starteNeueSchlange(
   if (karte.typ !== 'Farbkarte') {
     throw new Error('Eine neue Schlange kann nur mit einer Farbkarte gestartet werden.');
   }
+  pruefeSpielkartenLimit(zustand, karte.typ);
 
   const neueSchlange = {
     id: erstelleSchlangenId(aktiverSpieler.id, ermittleNaechsteFreieSchlangenNummer(aktiverSpieler)),
@@ -236,7 +266,7 @@ export function starteNeueSchlange(
     schlangen: [...aktiverSpieler.schlangen, neueSchlange],
   });
 
-  return inkrementiereSpieleKarten(zustand, neueSpieler);
+  return inkrementiereSpieleKarten(zustand, neueSpieler, karte.typ);
 }
 
 export function legeKarteAnSchlangeAn(
@@ -257,8 +287,6 @@ export function legeKarteAnSchlangeAn(
     throw new Error('Karten können nur links oder rechts angelegt werden.');
   }
 
-  pruefeSpielkartenLimit(zustand);
-
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
 
   const karte = aktiverSpieler.hand.find((k) => k.id === kartenId);
@@ -268,6 +296,7 @@ export function legeKarteAnSchlangeAn(
   if (karte.typ !== 'Farbkarte') {
     throw new Error('An eine Schlange kann nur eine Farbkarte angelegt werden.');
   }
+  pruefeSpielkartenLimit(zustand, karte.typ);
 
   const schlange = aktiverSpieler.schlangen.find((s) => s.id === schlangenId);
   if (!schlange) {
@@ -284,7 +313,7 @@ export function legeKarteAnSchlangeAn(
     schlangen: aktiverSpieler.schlangen.map((s) => (s.id === schlangenId ? { ...s, karten: neueKarten } : s)),
   });
 
-  return inkrementiereSpieleKarten(zustand, neueSpieler);
+  return inkrementiereSpieleKarten(zustand, neueSpieler, karte.typ);
 }
 
 export function beendeZug(

@@ -56,6 +56,9 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
   if (!karte) {
     return verboten('Die Karte befindet sich nicht auf der Hand des aktiven Spielers.');
   }
+  if (karte.typ === 'Farbkarte' && zustand.zugpflichten.gespielteFarbkarten >= 1) {
+    return verboten('Pro Zug darf höchstens eine Farbkarte gespielt werden.');
+  }
 
   if (aktion.typ === 'NeueSchlangeStarten') {
     if (karte.typ !== 'Farbkarte') {

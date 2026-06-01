@@ -119,11 +119,14 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Nach dem Nachziehen spielt der aktive Spieler Karten aus seiner Hand.
 - Der aktive Spieler muss mindestens 1 Karte spielen.
 - Der aktive Spieler darf maximal 2 Karten spielen.
+- Pro Zug darf höchstens 1 Farbkarte und höchstens 1 Sonderkarte gespielt werden.
+- Zulässig sind damit: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte.
+- Nicht zulässig sind zwei Farbkarten oder zwei Sonderkarten im selben Zug.
 - Die Reihenfolge ausgespielter Karten ist frei wählbar.
 - Jede Karte wird einzeln ausgeführt und deren Effekt abgehandelt.
 - Farbkarten können an eigene Schlangen angelegt oder zum Starten neuer Schlangen genutzt werden.
 - Sonderkarten führen ihren Kartentext aus.
-- Sonderkarten erhöhen das 2-Karten-Limit nicht, außer Kartentext sagt ausdrücklich etwas anderes.
+- Sonderkarten zählen für das 2-Karten-Limit; Kartentexte können später ausdrücklich zusätzliche Sonderregeln definieren.
 - Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
 - Abwerfen gilt als Karte gespielt für die Zugpflicht.
 - Abgeworfene Karten kommen offen auf den Ablagestapel.
