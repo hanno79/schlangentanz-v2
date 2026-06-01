@@ -13,6 +13,7 @@ import type {
   Spielphase,
   Spieler,
   Spielzustand,
+  Steuerung,
   Zugphase,
 } from './types';
 import { SPIELER_MAX, SPIELER_MIN } from './constants';
@@ -33,6 +34,7 @@ const SCHLANGEN_ZUSTAENDE: ReadonlySet<SchlangenZustand> = new Set([
   'blockiert',
   'geschuetzt',
 ]);
+const STEUERUNGEN: ReadonlySet<Steuerung> = new Set(['Mensch', 'KI']);
 
 export function serialisiere(zustand: Spielzustand): string {
   return serialisiereMaterial(zustand);
@@ -96,6 +98,7 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   for (const einSpieler of spieler) {
     validiereSpieler(einSpieler, verwendeteIds);
   }
+  validiereSpielsteuerungsVerteilung(spieler as Spieler[]);
 
   validiereSpielkartenArray(obj['nachziehstapel'], 'nachziehstapel', verwendeteIds);
   validiereSpielkartenArray(obj['ablagestapel'], 'ablagestapel', verwendeteIds);
@@ -112,10 +115,26 @@ function validiereZugpflichten(wert: unknown): void {
   }
 }
 
+function validiereSpielsteuerung(wert: unknown): void {
+  if (!STEUERUNGEN.has(wert as Steuerung)) {
+    throw new Error(
+      `Ungültiger Spielzustand: spieler.steuerung fehlt oder ist ungültig (erlaubt: 'Mensch' oder 'KI').`,
+    );
+  }
+}
+
+function validiereSpielsteuerungsVerteilung(spieler: Spieler[]): void {
+  const menschen = spieler.filter((einSpieler) => einSpieler.steuerung === 'Mensch');
+  if (menschen.length !== 1) {
+    throw new Error('Ungültiger Spielzustand: Es muss genau ein menschlicher Spieler vorhanden sein.');
+  }
+}
+
 function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts wert is Spieler {
   const spieler = erwarteObjekt(wert, 'spieler-Eintrag');
   registriereId(erwarteString(spieler['id'], 'spieler.id'), verwendeteIds);
   erwarteString(spieler['name'], 'spieler.name');
+  validiereSpielsteuerung(spieler['steuerung']);
   validiereSpielkartenArray(spieler['hand'], 'spieler.hand', verwendeteIds);
   validiereAufgabenArray(spieler['erfuellteAufgaben'], 'spieler.erfuellteAufgaben', verwendeteIds);
 

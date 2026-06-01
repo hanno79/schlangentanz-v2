@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   SPIELER_MIN,
   SPIELER_MAX,
+  KI_GEGNER_MIN,
+  KI_GEGNER_MAX,
   STARTHANDKARTEN,
   HANDKARTENLIMIT,
   MINDESTHANDKARTEN,
@@ -15,14 +17,20 @@ import {
 } from '../constants';
 import { aufgabenPool } from '../aufgabenKarten';
 import { erstelleFarbkarten, erstelleHauptdeck, erstelleSonderkarten } from '../deck';
-import { erstelleSpielzustand } from '../state';
+import { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from '../state';
 import { serialisiere, deserialisiere } from '../serialization';
+import { erstelleEinzelspielerSpielzustand as exportierteEinzelspielerFactory } from '../index';
 import type { Spielzustand } from '../types';
 
 describe('Spielkonstanten', () => {
   it('Mindest- und Maximalspielerzahl', () => {
     expect(SPIELER_MIN).toBe(2);
     expect(SPIELER_MAX).toBe(4);
+  });
+
+  it('KI-Gegnerauswahl erlaubt 1 bis 3 Gegner', () => {
+    expect(KI_GEGNER_MIN).toBe(1);
+    expect(KI_GEGNER_MAX).toBe(3);
   });
 
   it('Handkartenlimits sind korrekt', () => {
@@ -118,6 +126,39 @@ describe('Aufgabenpool', () => {
 });
 
 describe('Spielzustand erstellen', () => {
+  it('erzeugt Einzelspieler-Zustand mit 1 menschlichem Spieler und 1 bis 3 KI-Gegnern', () => {
+    for (const kiGegnerAnzahl of [1, 2, 3]) {
+      const zustand = erstelleEinzelspielerSpielzustand(kiGegnerAnzahl);
+
+      expect(zustand.spieler).toHaveLength(1 + kiGegnerAnzahl);
+      expect(zustand.spieler[0]).toMatchObject({
+        id: 'spieler-mensch',
+        name: 'Spieler',
+        steuerung: 'Mensch',
+      });
+      expect(zustand.spieler.slice(1).map((spieler) => spieler.steuerung)).toEqual(
+        Array.from({ length: kiGegnerAnzahl }, () => 'KI'),
+      );
+    }
+  });
+
+  it('exportiert die Einzelspieler-Factory über den zentralen Engine-Einstieg', () => {
+    expect(exportierteEinzelspielerFactory(1).spieler.map((spieler) => spieler.steuerung)).toEqual(['Mensch', 'KI']);
+  });
+
+  it('wirft Fehler bei ungültiger KI-Gegneranzahl', () => {
+    expect(() => erstelleEinzelspielerSpielzustand(0)).toThrow(/ki-gegner/i);
+    expect(() => erstelleEinzelspielerSpielzustand(4)).toThrow(/ki-gegner/i);
+    expect(() => erstelleEinzelspielerSpielzustand(Number.NaN)).toThrow(/ki-gegner/i);
+    expect(() => erstelleEinzelspielerSpielzustand(1.5)).toThrow(/ki-gegner/i);
+  });
+
+  it('markiert auch im Totalspieler-Pfad Spieler 1 als Mensch und die übrigen als KI', () => {
+    const zustand = erstelleSpielzustand(3);
+
+    expect(zustand.spieler.map((spieler) => spieler.steuerung)).toEqual(['Mensch', 'KI', 'KI']);
+  });
+
   it('erzeugt gültigen Zustand für 2 Spieler', () => {
     const zustand = erstelleSpielzustand(2);
     expect(zustand.spieler).toHaveLength(2);
@@ -208,6 +249,12 @@ describe('Spielzustand erstellen', () => {
   });
 });
 
+function spielerAlsRoh(anzahl = 2): { zustand: Record<string, unknown>; spieler: Array<Record<string, unknown>> } {
+  const zustand = erstelleSpielzustand(anzahl) as unknown as Record<string, unknown>;
+  const spieler = zustand['spieler'] as Array<Record<string, unknown>>;
+  return { zustand, spieler };
+}
+
 describe('Serialisierung', () => {
   it('Roundtrip serialize -> deserialize ergibt strukturell gleichen Zustand', () => {
     let counter = 0;
@@ -280,16 +327,39 @@ describe('Serialisierung', () => {
   );
 
   it('wirft deutschen Fehler bei fehlender geheimer Aufgabe', () => {
-    const zustand = erstelleSpielzustand(2) as unknown as Record<string, unknown>;
-    const spieler = zustand['spieler'] as Array<Record<string, unknown>>;
+    const { zustand, spieler } = spielerAlsRoh();
     delete spieler[0]['geheimeAufgabe'];
     expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/geheimeaufgabe/i);
   });
 
   it('wirft deutschen Fehler bei geheimer Aufgabe null', () => {
-    const zustand = erstelleSpielzustand(2);
-    zustand.spieler[0].geheimeAufgabe = null;
+    const { zustand, spieler } = spielerAlsRoh();
+    spieler[0]['geheimeAufgabe'] = null;
     expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/geheimeaufgabe/i);
+  });
+
+  it('wirft deutschen Fehler bei fehlender Spielersteuerung', () => {
+    const { zustand, spieler } = spielerAlsRoh();
+    delete spieler[0]['steuerung'];
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/steuerung/i);
+  });
+
+  it('wirft deutschen Fehler bei ungültiger Spielersteuerung', () => {
+    const { zustand, spieler } = spielerAlsRoh();
+    spieler[1]['steuerung'] = 'Roboter';
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/steuerung/i);
+  });
+
+  it('wirft deutschen Fehler bei Spielzustand ohne menschlichen Spieler', () => {
+    const { zustand, spieler } = spielerAlsRoh();
+    spieler[0]['steuerung'] = 'KI';
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/genau ein mensch/i);
+  });
+
+  it('wirft deutschen Fehler bei Spielzustand mit mehreren menschlichen Spielern', () => {
+    const { zustand, spieler } = spielerAlsRoh();
+    spieler[1]['steuerung'] = 'Mensch';
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/genau ein mensch/i);
   });
 
   it('wirft deutschen Fehler bei Aufgabenkarte in der Spielerhand', () => {

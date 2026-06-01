@@ -7,6 +7,8 @@ Beschreibung: Gemeinsame Typen für den Schlangentanz-Spielzustand.
 
 export type Farbe = 'Blau' | 'Rot' | 'Gelb' | 'Violett' | 'Braun' | 'Grün';
 
+export type Steuerung = 'Mensch' | 'KI';
+
 export type Zugphase =
   | 'Nachziehphase'
   | 'Ausspielphase'
@@ -49,6 +51,7 @@ export interface Schlange {
 export interface Spieler {
   id: string;
   name: string;
+  steuerung: Steuerung;
   hand: Spielkarte[];
   schlangen: Schlange[];
   erfuellteAufgaben: AufgabenkarteInfo[];

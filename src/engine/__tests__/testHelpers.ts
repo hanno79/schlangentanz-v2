@@ -5,7 +5,7 @@ Version: 1.2
 Beschreibung: Gemeinsame Test-Builder für Engine-Unit-Tests.
 */
 
-import type { Farbe, Schlange, Spieler, Spielkarte } from '../types';
+import type { Farbe, Schlange, Spieler, Spielkarte, Steuerung } from '../types';
 
 export function farbkarte(id: string, farbe: Farbe, punkte = 1): Spielkarte {
   return { typ: 'Farbkarte', id, farbe, punkte };
@@ -19,10 +19,11 @@ export function schlange(karten: Spielkarte[], id = 'test-schlange'): Schlange {
   return { id, zustand: 'aktiv', karten };
 }
 
-export function spielerMitSchlangen(schlangen: Spieler['schlangen']): Spieler {
+export function spielerMitSchlangen(schlangen: Spieler['schlangen'], steuerung: Steuerung = 'KI'): Spieler {
   return {
     id: 'spieler-wertung-1',
     name: 'Wertungsspieler',
+    steuerung,
     hand: [],
     schlangen,
     erfuellteAufgaben: [],

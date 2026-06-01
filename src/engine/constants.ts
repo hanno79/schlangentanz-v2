@@ -2,6 +2,10 @@
 export const SPIELER_MIN = 2;
 export const SPIELER_MAX = 4;
 
+// KI-Gegner-Grenzen (Einzelspieler-Modus): exakt ein Mensch-Platz weniger als Gesamtgrenzen
+export const KI_GEGNER_MIN = SPIELER_MIN - 1;
+export const KI_GEGNER_MAX = SPIELER_MAX - 1;
+
 // Handkarten
 export const STARTHANDKARTEN = 5;
 export const HANDKARTENLIMIT = 10;
