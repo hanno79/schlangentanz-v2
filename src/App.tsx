@@ -14,8 +14,6 @@ import {
 } from './engine'
 import type { AufgabenkarteInfo, SpielAktion, Spielzustand } from './engine'
 
-const defaultZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
-
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
@@ -39,8 +37,10 @@ interface AppProps {
   initialZustand?: Spielzustand
 }
 
-function App({ initialZustand = defaultZustand }: AppProps) {
-  const [zustand, setZustand] = useState(initialZustand)
+function App({ initialZustand }: AppProps) {
+  const [zustand, setZustand] = useState(() =>
+    initialZustand ?? starteAusspielphase(erstelleSpielzustand(2))
+  )
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(

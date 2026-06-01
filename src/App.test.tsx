@@ -4,9 +4,13 @@ import App from './App'
 import { beendeZug, erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { Spielzustand } from './engine'
 
+function deterministischerAppZustand(): Spielzustand {
+  return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+}
+
 describe('Schlangentanz v2 placeholder', () => {
   it('identifies the app as a greenfield rebuild', () => {
-    render(<App />)
+    render(<App initialZustand={deterministischerAppZustand()} />)
 
     expect(
       screen.getByRole('heading', { name: /schlangentanz v2 greenfield rebuild/i }),
@@ -18,7 +22,7 @@ describe('Schlangentanz v2 placeholder', () => {
 
 describe('R16 UI-Binding für legale Engine-Aktionen', () => {
   it('zeigt legale Aktionen aus der Engine als UI-Auswahl an', () => {
-    render(<App />)
+    render(<App initialZustand={deterministischerAppZustand()} />)
 
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
@@ -33,7 +37,7 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
 })
 
 function starteErsteSchlange() {
-  render(<App />)
+  render(<App initialZustand={deterministischerAppZustand()} />)
   const bereich = screen.getByRole('region', { name: /legale aktionen/i })
   fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
   return bereich
@@ -115,7 +119,7 @@ describe('R22 UI-Handkartenanzeige', () => {
 
 describe('R23 UI-Zugpflichtenanzeige', () => {
   it('zeigt gespielte Karten im Zug und aktualisiert sie nach einer Engine-Aktion', () => {
-    render(<App />)
+    render(<App initialZustand={deterministischerAppZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
@@ -128,7 +132,7 @@ describe('R23 UI-Zugpflichtenanzeige', () => {
 
 describe('R25 UI-Ausspielphase beenden', () => {
   it('beendet nach einer gespielten Karte die Ausspielphase über die Engine', () => {
-    render(<App />)
+    render(<App initialZustand={deterministischerAppZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText(/zugphase: ausspielphase/i)).toBeInTheDocument()
@@ -351,7 +355,7 @@ function endrundenAusloeserZustand(): Spielzustand {
 
 describe('R32 UI-Spielphase und Endrunde', () => {
   it('zeigt die Engine-Spielphase im normalen Spielzustand an', () => {
-    render(<App />)
+    render(<App initialZustand={deterministischerAppZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText(/spielphase: normal/i)).toBeInTheDocument()

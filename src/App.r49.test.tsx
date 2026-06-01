@@ -8,10 +8,11 @@ Beschreibung: R49 UI-Test für erklärbare offene Aufgaben inklusive Bedingungen
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
+import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 describe('R49 Offene Aufgaben-Details', () => {
   it('zeigt zu offenen Aufgaben neben Name und Punkten auch die Bedingung an', () => {
-    render(<App />)
+    render(<App initialZustand={starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))} />)
 
     const materialBereich = screen.getByRole('region', { name: 'Material und Aufgaben' })
 
