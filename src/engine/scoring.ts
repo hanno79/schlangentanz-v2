@@ -97,6 +97,29 @@ export function berechneSpielzustandGesamtwertung(zustand: Pick<Spielzustand, 's
   return berechneSpielGesamtwertung(zustand.spieler);
 }
 
+export interface GewinnerEintrag {
+  spielerId: string;
+  name: string;
+  gesamtPunkte: number;
+}
+
+export interface GewinnerErgebnis {
+  hoechstePunktzahl: number | null;
+  gewinner: GewinnerEintrag[];
+}
+
+export function berechneGewinner(spieler: Spieler[]): GewinnerErgebnis {
+  if (spieler.length === 0) return { hoechstePunktzahl: null, gewinner: [] };
+
+  const wertungen = berechneSpielGesamtwertung(spieler).spielerwertungen;
+  const hoechstePunktzahl = Math.max(...wertungen.map((w) => w.gesamtPunkte));
+  const gewinner = wertungen
+    .filter((w) => w.gesamtPunkte === hoechstePunktzahl)
+    .map(({ spielerId, name, gesamtPunkte }) => ({ spielerId, name, gesamtPunkte }));
+
+  return { hoechstePunktzahl, gewinner };
+}
+
 export function berechneFarbgruppenPunkte(schlange: Schlange): FarbgruppenPunkteErgebnis {
   const gruppen: FarbgruppenWertung[] = ermittleFarbgruppen(schlange).map((gruppe) => {
     const punkte = schlange.karten

@@ -6,7 +6,7 @@ Beschreibung: TDD-Tests für die Spiel-Gesamtwertung über alle Spieler nach R8.
 */
 
 import { describe, expect, it } from 'vitest';
-import { berechneSpielGesamtwertung, berechneSpielzustandGesamtwertung } from '../index';
+import { berechneGewinner, berechneSpielGesamtwertung, berechneSpielzustandGesamtwertung } from '../index';
 import { farbkarte, schlange, spielerMitId } from './testHelpers';
 
 describe('Spiel-Gesamtwertung — R8.4e', () => {
@@ -79,6 +79,51 @@ describe('Spiel-Gesamtwertung — R8.4e', () => {
     berechneSpielGesamtwertung([spieler]);
 
     expect(spieler).toEqual(vorher);
+  });
+});
+
+describe('Gewinnerermittlung — R13', () => {
+  it('liefert den Spieler mit der höchsten Gesamtpunktzahl als alleinigen Gewinner', () => {
+    const anna = spielerMitId('spieler-anna', 'Anna', []);
+    anna.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'anna-aufgabe-1', name: 'Farbenpracht', punkte: 8, bedingung: 'Test' },
+    ];
+    const ben = spielerMitId('spieler-ben', 'Ben', []);
+    ben.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'ben-aufgabe-1', name: 'Symmetriemeister', punkte: 10, bedingung: 'Test' },
+    ];
+
+    expect(berechneGewinner([anna, ben])).toEqual({
+      hoechstePunktzahl: 10,
+      gewinner: [{ spielerId: 'spieler-ben', name: 'Ben', gesamtPunkte: 10 }],
+    });
+  });
+
+  it('liefert alle Spieler mit höchster Punktzahl bei Gleichstand', () => {
+    const anna = spielerMitId('spieler-anna', 'Anna', []);
+    anna.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'anna-aufgabe-1', name: 'Farbenpracht', punkte: 8, bedingung: 'Test' },
+    ];
+    const ben = spielerMitId('spieler-ben', 'Ben', []);
+    ben.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'ben-aufgabe-1', name: 'Farbenpracht', punkte: 8, bedingung: 'Test' },
+    ];
+    const caro = spielerMitId('spieler-caro', 'Caro', []);
+    caro.erfuellteAufgaben = [
+      { typ: 'Aufgabenkarte', id: 'caro-aufgabe-1', name: 'Gelber Schatz', punkte: 5, bedingung: 'Test' },
+    ];
+
+    expect(berechneGewinner([anna, ben, caro])).toEqual({
+      hoechstePunktzahl: 8,
+      gewinner: [
+        { spielerId: 'spieler-anna', name: 'Anna', gesamtPunkte: 8 },
+        { spielerId: 'spieler-ben', name: 'Ben', gesamtPunkte: 8 },
+      ],
+    });
+  });
+
+  it('liefert bei leerer Spielerliste keine Gewinner und keine Punktzahl', () => {
+    expect(berechneGewinner([])).toEqual({ hoechstePunktzahl: null, gewinner: [] });
   });
 });
 
