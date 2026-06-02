@@ -13,10 +13,12 @@ import {
   beendeZug,
   ermittleLegaleAktionen,
   erstelleSpielzustand,
+  spieleFarbenschutz,
   starteAusspielphase,
   werfeKarteMangelsSpielbarerAktionAb,
   werfeUeberzaehligeHandkartenAb,
 } from '../index';
+import { zustandMitFarbenschutzUndEigenerSchlange } from './testHelpers';
 
 function basisZustand() {
   return erstelleSpielzustand(2, () => 0.999999);
@@ -521,5 +523,68 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     const zustand = basisZustand();
 
     expect(() => beendeZug(zustand, { pflichtenErfuellt: true })).toThrow('Zug kann nur aus dem Zugabschluss beendet werden.');
+  });
+});
+
+describe('Turn State Machine — R75 Farbenschutz', () => {
+  it('setzt Zustand der Zielschlange auf geschuetzt', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+
+    const nachAktion = spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' });
+
+    expect(nachAktion.spieler[0].schlangen[0].zustand).toBe('geschuetzt');
+  });
+
+  it('entfernt Farbenschutz-Karte von der Hand', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+
+    const nachAktion = spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' });
+
+    expect(nachAktion.spieler[0].hand.map((k) => k.id)).not.toContain(farbenschutz.id);
+  });
+
+  it('legt Farbenschutz-Karte auf den Ablagestapel', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+
+    const nachAktion = spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' });
+
+    expect(nachAktion.ablagestapel.map((k) => k.id)).toContain(farbenschutz.id);
+  });
+
+  it('inkrementiert gespielteSonderkarten', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+
+    const nachAktion = spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' });
+
+    expect(nachAktion.zugpflichten.gespielteSonderkarten).toBe(1);
+  });
+
+  it('verbietet Schutz auf bereits geschützte Schlange', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.spieler[0].schlangen[0].zustand = 'geschuetzt';
+
+    expect(() =>
+      spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' }),
+    ).toThrow('Eine bereits geschützte Schlange kann nicht erneut geschützt werden.');
+  });
+
+  // Designentscheidung R75: Farbenschutz schützt nur aktive Schlangen.
+  // Blockierte Schlangen befinden sich bereits in einem Sonderzustand; überschreiben wäre semantisch unklar.
+  it('verbietet Schutz auf blockierte Schlange (nur aktive erlaubt)', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.spieler[0].schlangen[0].zustand = 'blockiert';
+
+    expect(() =>
+      spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' }),
+    ).toThrow('Farbenschutz kann nur auf aktive Schlangen angewendet werden.');
+  });
+
+  it('verbietet Spielen außerhalb der Ausspielphase', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.zugphase = 'Zugabschluss';
+
+    expect(() =>
+      spieleFarbenschutz(zustand, { kartenId: farbenschutz.id, zielSchlangenId: 'schlange-spieler-1-1' }),
+    ).toThrow('Farbenschutz kann nur in der Ausspielphase gespielt werden.');
   });
 });

@@ -1,13 +1,13 @@
 /*
 Author: rahn
 Datum: 01.06.2026
-Version: 1.2
-Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz-Spielaktionen. Inkl. R20 Pflicht-Abwurf mangels spielbarer Aktion.
+Version: 1.3
+Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz-Spielaktionen. Inkl. R20 Pflicht-Abwurf mangels spielbarer Aktion, R75 Farbenschutz.
 */
 
 import type { Spielzustand } from './types';
 import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
-import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, werfeKarteMangelsSpielbarerAktionAb } from './turnState';
+import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleFarbenschutz, werfeKarteMangelsSpielbarerAktionAb } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
@@ -38,7 +38,14 @@ export interface SonderkarteSpielenAktion {
   zielSpielerId: string;
 }
 
-export type SpielAktion = NeueSchlangeStartenAktion | KarteAnlegenAktion | PflichtAbwurfAktion | SonderkarteSpielenAktion;
+export interface FarbenschutzSpielenAktion {
+  typ: 'FarbenschutzSpielen';
+  spielerId: string;
+  handkartenId: string;
+  zielSchlangenId: string;
+}
+
+export type SpielAktion = NeueSchlangeStartenAktion | KarteAnlegenAktion | PflichtAbwurfAktion | SonderkarteSpielenAktion | FarbenschutzSpielenAktion;
 
 const POSITIONEN = ['links', 'rechts'] as const;
 
@@ -69,6 +76,17 @@ function hatLegaleSchlangenbauAktionen(zustand: Spielzustand): boolean {
   return false;
 }
 
+function hatLegaleFarbenschutzAktionen(zustand: Spielzustand): boolean {
+  if (zustand.zugpflichten.gespielteSonderkarten >= 1) {
+    return false;
+  }
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  if (!aktiverSpieler.hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz')) {
+    return false;
+  }
+  return aktiverSpieler.schlangen.some((schlange) => schlange.zustand === 'aktiv');
+}
+
 function hatLegaleSchlangengrubeAktionen(zustand: Spielzustand): boolean {
   if (zustand.zugpflichten.gespielteSonderkarten >= 1) {
     return false;
@@ -88,11 +106,14 @@ function hatLegaleSchlangengrubeAktionen(zustand: Spielzustand): boolean {
   });
 }
 
+const SONDERKARTE_PHASE_FEHLER = 'Sonderkarten können nur in der Ausspielphase gespielt werden.';
+
 const PHASE_FEHLER: Record<SpielAktion['typ'], string> = {
   NeueSchlangeStarten: 'Neue Schlangen können nur in der Ausspielphase gestartet werden.',
   KarteAnlegen: 'Karten können nur in der Ausspielphase angelegt werden.',
   PflichtAbwurf: 'Pflicht-Abwurf ist nur in der Ausspielphase erlaubt.',
-  SonderkarteSpielen: 'Sonderkarten können nur in der Ausspielphase gespielt werden.',
+  SonderkarteSpielen: SONDERKARTE_PHASE_FEHLER,
+  FarbenschutzSpielen: SONDERKARTE_PHASE_FEHLER,
 };
 
 export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): AktionErgebnis {
@@ -122,7 +143,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     if (karte.typ === 'Sonderkarte' && zustand.zugpflichten.gespielteSonderkarten >= 1) {
       return verboten('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
     }
-    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand)) {
+    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand) || hatLegaleFarbenschutzAktionen(zustand)) {
       return verboten('Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.');
     }
     return { erlaubt: true };
@@ -144,6 +165,26 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     }
     if (zustand.spielphase === 'Endspurt' && !zustand.endrunde.verbleibendeSpielerIndizes.includes(zielSpielerIndex)) {
       return verboten('Der gewählte Zielspieler hat in der Endrunde keinen verbleibenden Zug mehr.');
+    }
+    return { erlaubt: true };
+  }
+
+  if (aktion.typ === 'FarbenschutzSpielen') {
+    if (karte.typ !== 'Sonderkarte' || karte.name !== 'Farbenschutz') {
+      return verboten('Farbenschutz kann nur mit der Farbenschutz-Sonderkarte gespielt werden.');
+    }
+    if (zustand.zugpflichten.gespielteSonderkarten >= 1) {
+      return verboten('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
+    }
+    const zielSchlange = aktiverSpieler.schlangen.find((s) => s.id === aktion.zielSchlangenId);
+    if (!zielSchlange) {
+      return verboten('Zielschlange nicht gefunden oder gehört nicht dem aktiven Spieler.');
+    }
+    if (zielSchlange.zustand === 'geschuetzt') {
+      return verboten('Eine bereits geschützte Schlange kann nicht erneut geschützt werden.');
+    }
+    if (zielSchlange.zustand !== 'aktiv') {
+      return verboten('Farbenschutz kann nur auf aktive Schlangen angewendet werden.');
     }
     return { erlaubt: true };
   }
@@ -240,9 +281,26 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
     }
   }
 
+  const farbenschutzkarten = aktiverSpieler.hand.filter(
+    (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz',
+  );
+  for (const karte of farbenschutzkarten) {
+    for (const schlange of aktiverSpieler.schlangen) {
+      const kandidat: FarbenschutzSpielenAktion = {
+        typ: 'FarbenschutzSpielen',
+        spielerId: aktiverSpieler.id,
+        handkartenId: karte.id,
+        zielSchlangenId: schlange.id,
+      };
+      if (pruefeAktion(zustand, kandidat).erlaubt) {
+        aktionen.push(kandidat);
+      }
+    }
+  }
+
   if (aktionen.length === 0 && zustand.zugpflichten.gespielteKarten < MAX_KARTEN_PRO_ZUG) {
-    // ÄNDERUNG 01.06.2026: Pflicht-Abwurf nur nach ausgeschlossenen Schlangenbau-Aktionen anbieten.
-    // aktionen.length === 0 belegt hier bereits, dass keine Schlangenbau-Aktion legal ist.
+    // ÄNDERUNG 02.06.2026: Pflicht-Abwurf nur anbieten, wenn keine reguläre Spielaktion legal ist.
+    // aktionen.length === 0 belegt hier bereits, dass weder Schlangenbau- noch Sonderkarten-Aktionen legal sind.
     for (const karte of aktiverSpieler.hand) {
       if (karte.typ === 'Farbkarte' && zustand.zugpflichten.gespielteFarbkarten >= 1) continue;
       if (karte.typ === 'Sonderkarte' && zustand.zugpflichten.gespielteSonderkarten >= 1) continue;
@@ -272,6 +330,11 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Spiel
       return spieleSchlangengrube(zustand, {
         kartenId: aktion.handkartenId,
         zielSpielerIndex: findeSpielerIndex(zustand, aktion.zielSpielerId),
+      });
+    case 'FarbenschutzSpielen':
+      return spieleFarbenschutz(zustand, {
+        kartenId: aktion.handkartenId,
+        zielSchlangenId: aktion.zielSchlangenId,
       });
     case 'PflichtAbwurf':
       return werfeKarteMangelsSpielbarerAktionAb(zustand, {

@@ -5,7 +5,8 @@ Version: 1.2
 Beschreibung: Gemeinsame Test-Builder für Engine-Unit-Tests.
 */
 
-import type { Farbe, Schlange, Spieler, Spielkarte, Steuerung } from '../types';
+import { erstelleSpielzustand } from '../index';
+import type { Farbe, Schlange, Spieler, Spielkarte, Spielzustand, Steuerung } from '../types';
 
 export function farbkarte(id: string, farbe: Farbe, punkte = 1): Spielkarte {
   return { typ: 'Farbkarte', id, farbe, punkte };
@@ -33,4 +34,22 @@ export function spielerMitSchlangen(schlangen: Spieler['schlangen'], steuerung: 
 
 export function spielerMitId(id: string, name: string, schlangen: Spieler['schlangen']): Spieler {
   return { ...spielerMitSchlangen(schlangen), id, name };
+}
+
+export function zustandMitFarbenschutzUndEigenerSchlange(): {
+  zustand: Spielzustand;
+  farbenschutz: Extract<Spielkarte, { typ: 'Sonderkarte' }>;
+} {
+  const zustand = erstelleSpielzustand(2, () => 0.999999);
+  const farbenschutz = zustand.nachziehstapel.find(
+    (karte): karte is Extract<Spielkarte, { typ: 'Sonderkarte' }> =>
+      karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz',
+  );
+  if (!farbenschutz) throw new Error('Testsetup erwartet Farbenschutz.');
+
+  zustand.spieler[0].hand[0] = farbenschutz;
+  zustand.zugphase = 'Ausspielphase';
+  zustand.spieler[0].schlangen = [{ id: 'schlange-spieler-1-1', karten: [], zustand: 'aktiv' }];
+
+  return { zustand, farbenschutz };
 }

@@ -1,8 +1,8 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.6
-Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf, Pflichtprüfung im Zugabschluss (R2.5), Neue Schlange starten (R3.1) und Farbkarte anlegen (R3.2).
+Version: 1.7
+Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf, Pflichtprüfung im Zugabschluss (R2.5), Neue Schlange starten (R3.1), Farbkarte anlegen (R3.2), Farbenschutz (R75).
 */
 
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
@@ -398,6 +398,61 @@ export function spieleSchlangengrube(
       spieler: neueSpieler,
       ablagestapel: [...zustand.ablagestapel, karte],
       aussetzenSpielerIndizes: [...zustand.aussetzenSpielerIndizes, zielSpielerIndex],
+    },
+    neueSpieler,
+    karte.typ,
+  );
+}
+
+export function spieleFarbenschutz(
+  zustand: Spielzustand,
+  optionen: { kartenId?: string; zielSchlangenId?: string } | null = {},
+): Spielzustand {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    throw new Error('Farbenschutz kann nur in der Ausspielphase gespielt werden.');
+  }
+
+  const { kartenId, zielSchlangenId } = optionen ?? {};
+  if (!istGueltigeId(kartenId)) {
+    throw new Error('Es muss genau eine Handkarte zum Spielen gewählt werden.');
+  }
+  if (!istGueltigeId(zielSchlangenId)) {
+    throw new Error('Für Farbenschutz muss eine eigene Schlange gewählt werden.');
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const karte = aktiverSpieler.hand.find((k) => k.id === kartenId);
+  if (!karte) {
+    throw new Error('Die Karte befindet sich nicht auf der Hand des aktiven Spielers.');
+  }
+  if (karte.typ !== 'Sonderkarte' || karte.name !== 'Farbenschutz') {
+    throw new Error('Farbenschutz kann nur mit der Farbenschutz-Sonderkarte gespielt werden.');
+  }
+
+  const zielSchlange = aktiverSpieler.schlangen.find((s) => s.id === zielSchlangenId);
+  if (!zielSchlange) {
+    throw new Error('Zielschlange nicht gefunden oder gehört nicht dem aktiven Spieler.');
+  }
+  if (zielSchlange.zustand === 'geschuetzt') {
+    throw new Error('Eine bereits geschützte Schlange kann nicht erneut geschützt werden.');
+  }
+  if (zielSchlange.zustand !== 'aktiv') {
+    throw new Error('Farbenschutz kann nur auf aktive Schlangen angewendet werden.');
+  }
+
+  pruefeSpielkartenLimit(zustand, karte.typ);
+
+  const neueHand = aktiverSpieler.hand.filter((k) => k.id !== kartenId);
+  const neueSchlangen = aktiverSpieler.schlangen.map((s) =>
+    s.id === zielSchlangenId ? { ...s, zustand: 'geschuetzt' as const } : s,
+  );
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand, schlangen: neueSchlangen });
+
+  return inkrementiereSpieleKarten(
+    {
+      ...zustand,
+      spieler: neueSpieler,
+      ablagestapel: [...zustand.ablagestapel, karte],
     },
     neueSpieler,
     karte.typ,

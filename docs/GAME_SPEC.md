@@ -128,6 +128,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Farbkarten können an eigene Schlangen angelegt oder zum Starten neuer Schlangen genutzt werden.
 - Sonderkarten führen ihren Kartentext aus.
 - Sonderkarten zählen für das 2-Karten-Limit; Kartentexte können später ausdrücklich zusätzliche Sonderregeln definieren.
+- Farbenschutz schützt eine eigene aktive Schlange, indem deren Zustand auf `geschuetzt` gesetzt wird; der spätere Schutz gegen gegnerische Sonderkarten wird in einem eigenen Folgeslice konkretisiert.
 - Schlangengrube lässt einen anderen Spieler seinen nächsten Zug aussetzen; bei 3 oder mehr Spielern wählt der aktive Spieler den Zielspieler, bei 2 Spielern ist automatisch der andere Spieler betroffen.
 - Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
 - Abwerfen gilt als Karte gespielt für die Zugpflicht.
@@ -188,7 +189,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
     - Nur für den aktiven Spieler.
     - Nur solange pro Zug noch keine Farbkarte gespielt wurde.
   - `PflichtAbwurf`
-    - Nur wenn keine spielbare Schlangenbau-Aktion verfügbar ist.
+    - Nur wenn keine spielbare Aktion verfügbar ist.
     - Nur für den aktiven Spieler.
     - Nur mit einer Karte auf der Hand des aktiven Spielers.
     - Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
@@ -197,6 +198,11 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
     - Nur für den aktiven Spieler.
     - Nur auf einen anderen Spieler.
     - Markiert den gewählten Spieler für seinen nächsten Zug als ausgesetzt.
+  - `FarbenschutzSpielen`
+    - Nur mit `Farbenschutz`.
+    - Nur für den aktiven Spieler.
+    - Nur auf eine eigene aktive Schlange.
+    - Setzt den Zustand der gewählten Schlange auf `geschuetzt`.
 
 - **Aufgabenprüfung**
   - Spieleraktionen sind nicht erlaubt.
@@ -271,7 +277,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Sonderkarten dürfen pro Zug nur im erlaubten Umfang gespielt werden.
 - Neue Schlangen sind nur mit einer Farbkarte und nur bis zum Schlangenlimit erlaubt.
 - Karten können nur an eigene, existente und nicht blockierte Schlangen angelegt werden.
-- `PflichtAbwurf` ist nur erlaubt, wenn keine spielbare Schlangenbau-Aktion verfügbar ist.
+- `PflichtAbwurf` ist nur erlaubt, wenn keine spielbare Aktion verfügbar ist.
 - Nach dem Erreichen des Zuglimits sind weitere Aktionen im selben Zug verboten.
 
 **Erwartetes UI-Verhalten:**

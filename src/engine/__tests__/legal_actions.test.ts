@@ -8,6 +8,7 @@ Beschreibung: TDD-Tests für den Legal-Action-Validator im Schlangentanz-Engine-
 import { describe, it, expect } from 'vitest';
 import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, pruefeAktion } from '../index';
 import type { Spielzustand } from '../types';
+import { zustandMitFarbenschutzUndEigenerSchlange } from './testHelpers';
 
 function zustandInAusspielphase(): Spielzustand {
   const zustand = erstelleSpielzustand(2, () => 0.999999);
@@ -526,5 +527,82 @@ describe('Legal Action Enumerator — R15 UI-Vertrag für bestehende R3-Aktionen
     beendet.endrunde = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [] };
 
     expect(ermittleLegaleAktionen(beendet)).toEqual([]);
+  });
+});
+
+describe('Legal Action Validator — R75 Farbenschutz', () => {
+  it('bietet Farbenschutz als auswählbare Aktion mit eigener aktiver Schlange an', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+
+    const farbenschutzAktionen = ermittleLegaleAktionen(zustand).filter((a) => a.typ === 'FarbenschutzSpielen');
+
+    expect(farbenschutzAktionen).toEqual([
+      {
+        typ: 'FarbenschutzSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: farbenschutz.id,
+        zielSchlangenId: 'schlange-spieler-1-1',
+      },
+    ]);
+  });
+
+  it('verbietet Pflicht-Abwurf, solange Farbenschutz spielbar ist', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.spieler[0].hand = [farbenschutz];
+
+    expect(ermittleLegaleAktionen(zustand).filter((a) => a.typ === 'PflichtAbwurf')).toEqual([]);
+    expect(
+      pruefeAktion(zustand, {
+        typ: 'PflichtAbwurf',
+        spielerId: 'spieler-1',
+        handkartenId: farbenschutz.id,
+      }),
+    ).toEqual({ erlaubt: false, grund: 'Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.' });
+  });
+
+  it('bietet Farbenschutz nach bereits gespielter Sonderkarte nicht mehr an', () => {
+    const { zustand } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.zugpflichten.gespielteKarten = 1;
+    zustand.zugpflichten.gespielteSonderkarten = 1;
+
+    const farbenschutzAktionen = ermittleLegaleAktionen(zustand).filter((a) => a.typ === 'FarbenschutzSpielen');
+
+    expect(farbenschutzAktionen).toHaveLength(0);
+  });
+
+  it('bietet Farbenschutz nicht an, wenn keine eigene aktive Schlange vorhanden', () => {
+    const { zustand } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.spieler[0].schlangen = [];
+
+    const farbenschutzAktionen = ermittleLegaleAktionen(zustand).filter((a) => a.typ === 'FarbenschutzSpielen');
+
+    expect(farbenschutzAktionen).toHaveLength(0);
+  });
+
+  it('verbietet Farbenschutz auf bereits geschützte Schlange', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+    zustand.spieler[0].schlangen[0].zustand = 'geschuetzt';
+
+    const ergebnis = pruefeAktion(zustand, {
+      typ: 'FarbenschutzSpielen',
+      spielerId: 'spieler-1',
+      handkartenId: farbenschutz.id,
+      zielSchlangenId: 'schlange-spieler-1-1',
+    });
+
+    expect(ergebnis).toEqual({ erlaubt: false, grund: 'Eine bereits geschützte Schlange kann nicht erneut geschützt werden.' });
+  });
+
+  it('verbietet Farbenschutz durch nicht-aktiven Spieler', () => {
+    const { zustand, farbenschutz } = zustandMitFarbenschutzUndEigenerSchlange();
+
+    const ergebnis = pruefeAktion(zustand, {
+      typ: 'FarbenschutzSpielen',
+      spielerId: 'spieler-2',
+      handkartenId: farbenschutz.id,
+      zielSchlangenId: 'schlange-spieler-1-1',
+    });
+
+    expect(ergebnis).toEqual({ erlaubt: false, grund: 'Nur der aktive Spieler darf diese Aktion ausführen.' });
   });
 });

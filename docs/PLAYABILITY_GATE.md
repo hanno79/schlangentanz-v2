@@ -585,3 +585,18 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Production URL returns HTTP 200 — `https://schlangentanz-v2.vercel.app` geladen.
 - [x] Game route loads without console errors — Browser-Smoketest ohne Console-/Page-Errors.
 - [x] Legal actions are available only when legal — `SonderkarteSpielen` wird im Endspurt nur für verbleibende Zielspieler angeboten und nach bereits gespielter Sonderkarte nicht mehr angeboten.
+
+## Evidence — 02.06.2026 R75 Farbenschutz als Schutzmarker spielen
+
+- [x] Scope: Die Sonderkarte `Farbenschutz` schützt in diesem kleinen Slice genau eine eigene aktive Schlange, indem deren Zustand auf `geschuetzt` gesetzt wird.
+- [x] GREEN: `src/engine/legalActions.ts` bietet `FarbenschutzSpielen` nur für eigene aktive Schlangen und nur innerhalb des Sonderkartenlimits an.
+- [x] GREEN: `src/engine/turnState.ts` entfernt die Farbenschutz-Karte von der Hand, legt sie auf den Ablagestapel und markiert die Zielschlange als geschützt.
+- [x] GREEN: `src/App.tsx` zeigt die Farbenschutz-Aktion als eindeutigen Button; `src/App.r75.test.tsx` prüft Klick und sichtbaren Schlangenzustand.
+- [x] GREEN: `docs/GAME_SPEC.md` beschreibt den R75-Scope und grenzt die spätere Schutzwirkung bewusst aus.
+- [x] Targeted R75: `npm test -- --run src/App.r75.test.tsx src/engine/__tests__/legal_actions.test.ts src/engine/__tests__/turn_state.test.ts` → 3 Testfiles, 88 Tests bestanden.
+- [x] Review-Fix: Pflicht-Abwurf ist laut Spec nur ohne spielbare Aktion erlaubt; `legal_actions.test.ts` prüft jetzt, dass spielbarer Farbenschutz Pflicht-Abwurf sperrt.
+- [x] Review: Codex-Abschlussreview ohne blockierende Findings nach DRY-Fix der R75-Testfixture.
+- [x] Full tests: `npm test -- --run` → 51 Testfiles, 313 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.

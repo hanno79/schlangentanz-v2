@@ -12,8 +12,8 @@ export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, erstelleEr
 export { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from './state';
 export { serialisiere, deserialisiere } from './serialization';
 export { pruefeAktion, ermittleLegaleAktionen, anwendeAktion } from './legalActions';
-export type { AktionErgebnis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion, PflichtAbwurfAktion, SonderkarteSpielenAktion } from './legalActions';
-export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube } from './turnState';
+export type { AktionErgebnis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion, PflichtAbwurfAktion, SonderkarteSpielenAktion, FarbenschutzSpielenAktion } from './legalActions';
+export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleFarbenschutz } from './turnState';
 export { ermittleFarbgruppen } from './colorGroups';
 export type { Farbgruppe } from './colorGroups';
 export { berechneFarbgruppenPunkte, berechneSpielerFarbgruppenPunkte, berechneSpielerAufgabenPunkte, berechneSpielerGesamtPunkte, berechneSpielGesamtwertung, berechneSpielzustandGesamtwertung, berechneGewinner } from './scoring';
