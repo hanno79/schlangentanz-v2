@@ -81,7 +81,7 @@ function App({ initialZustand }: AppProps) {
       <section aria-label="Legale Aktionen">
         <section aria-label="Spielstatus">
           <h2>Spielstatus</h2>
-          <p>Engine-Demo: Ausspielphase</p>
+          <p>Engine-Demo: {zustand.zugphase}</p>
           <p>Zugphase: {zustand.zugphase}</p>
           <p>Spielphase: {zustand.spielphase}</p>
           {zustand.endrunde.ausloeserSpielerIndex !== null && (
@@ -102,6 +102,9 @@ function App({ initialZustand }: AppProps) {
           <p>Aktiver Spieler: {aktiverSpieler.id}</p>
           <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
           <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
+          {legaleAktionen.length > 0 && (
+            <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
+          )}
           {aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
           <p>
             {aktiverSpieler.geheimeAufgabe

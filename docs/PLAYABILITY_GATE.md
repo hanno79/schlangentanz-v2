@@ -500,3 +500,14 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Codex Review: BLOCKERS none; Non-Blocker Mensch-Zug-Negativtest wurde ergänzt und erneut verifiziert.
 - [x] Production URL returns HTTP 200 — R53 Deploy `schlangentanz-v2-fha0kjmfr-alfreds-projects-7e9df1b4.vercel.app`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
 - [x] Game route loads without console errors — R53 Playwright-Smoke: Mensch-Zug ohne KI-Button, nach Zugwechsel `KI-Aktion ausführen` sichtbar, Klick setzt `Gespielte Karten: 1/2` und reduziert KI-Handkarten; keine Console/Page/Request-Fehler.
+
+## Evidence — 02.06.2026 R54 UI-Nächste legale Aktion
+
+- [x] Scope: Die erste legale Engine-Aktion des aktiven Spielers als sichtbaren Hinweis im Bereich `Aktiver Spieler` anzeigen; keine neue Spielregel, nur UI-Anzeige.
+- [x] RED: `npm test -- --run src/App.r54.test.tsx` fehlte initial wegen fehlendem Hinweis `Nächste legale Aktion:`.
+- [x] GREEN: `src/App.tsx` rendert `Nächste legale Aktion: ...` direkt aus `legaleAktionen[0]`; der alte statische Text `Engine-Demo: Ausspielphase` wurde auf `zustand.zugphase` umgestellt.
+- [x] Test-Härtung: Der neue Test prüft sowohl das Entfernen des alten Hinweises als auch die Synchronität mit der jeweils ersten verbleibenden legalen Aktion, falls nach dem Klick noch eine vorhanden ist.
+- [x] Targeted: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx` → 27 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Codex Review: keine Blocker; geprüft wurden stale wording in `App.tsx`, Hint-Synchronität mit `legaleAktionen[0]`, und der UI-Refresh nach einer Aktion.
