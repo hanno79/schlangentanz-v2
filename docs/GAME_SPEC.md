@@ -40,7 +40,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Einzelne Karten und 2er-Kombinationen zählen 0 Punkte.
 - Jede Karte in einer gültigen Gruppe zählt ihren Punktwert.
 - Nach jedem Anlegen muss geprüft werden, ob neue Farbgruppen entstanden sind.
-- Sonderkarten unterbrechen Farbgruppen korrekt.
+- Sonderkarten unterbrechen Farbgruppen korrekt, außer wenn eine Regel ausdrücklich etwas anderes vorgibt (z. B. Regenbogenschlange als Wildcard mit 0 Punkten).
 
 ## 3. Setup
 
@@ -238,7 +238,8 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 - Eine Farbgruppe besteht aus mindestens 3 direkt nebeneinander liegenden Karten derselben Farbe.
 - Keine anderen Karten dürfen dazwischen liegen.
-- Sonderkarten unterbrechen Farbgruppen.
+- Sonderkarten unterbrechen Farbgruppen, außer wenn eine Regel ausdrücklich etwas anderes vorgibt (z. B. Regenbogenschlange als Wildcard mit 0 Punkten).
+- Regenbogenschlangen werden von der Wertungslogik so zugeordnet, dass die Gesamtpunktzahl der betroffenen Schlange maximal wird; bei Gleichstand ist jede gleich gute Zuordnung zulässig.
 - Eine Schlange kann mehrere Farbgruppen enthalten.
 - Jede Gruppe wird separat gewertet.
 - Gruppen müssen nicht zusammenhängen.

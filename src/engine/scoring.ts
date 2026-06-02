@@ -1,17 +1,26 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.4
+Version: 1.5
 Beschreibung: Punktwertung gültiger Farbgruppen nach R4.2/R4.4 und R8.4.
-              Gruppen < 3 Karten zählen 0. Sonderkarten unterbrechen Gruppen.
+              Gruppen < 3 Karten zählen 0. Sonderkarten unterbrechen Gruppen,
+              außer Regenbogenschlangen, die als beste Farbe gewertet werden.
               R8.4c: Erfüllte Aufgabenpunkte eines Spielers summieren.
               R8.4d: Spieler-Gesamtpunkte aus Farbgruppen + erfüllten Aufgaben aggregieren.
               R8.4e: Spiel-Gesamtwertung über alle Spieler berechnen.
               R8.4f: Spiel-Gesamtwertung aus Spielzustand berechnen.
 */
 
-import type { Schlange, Spieler, Spielzustand } from './types';
+import type { Farbe, Schlange, Spielzustand, Spielkarte, Spieler } from './types';
 import { ermittleFarbgruppen, type Farbgruppe } from './colorGroups';
+
+const FARBEN: Farbe[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'];
+const REGENBOGEN_NAME = 'Regenbogenschlange';
+
+type RegenbogenEntscheidung =
+  | { art: 'weiter' }
+  | { art: 'wechsel'; farbeIndex: number }
+  | { art: 'reset' };
 
 export type FarbgruppenWertung = Farbgruppe & { punkte: number };
 
@@ -25,6 +34,148 @@ export type SchlangenFarbgruppenPunkteErgebnis = FarbgruppenPunkteErgebnis & { s
 export interface SpielerFarbgruppenPunkteErgebnis {
   gesamtPunkte: number;
   schlangen: SchlangenFarbgruppenPunkteErgebnis[];
+}
+
+function farbeZuIndex(farbe: Farbe): number {
+  const index = FARBEN.indexOf(farbe);
+  if (index < 0) {
+    throw new Error(`Unbekannte Farbe: ${farbe}`);
+  }
+  return index;
+}
+
+function laufendeGruppePunkte(laenge: number, punkte: number): number {
+  return laenge >= 3 ? punkte : 0;
+}
+
+function istRegenbogenschlange(karte: Spielkarte): boolean {
+  return karte.typ === 'Sonderkarte' && karte.name === REGENBOGEN_NAME;
+}
+
+function transformiereRegenbogenschlangen(schlange: Schlange): Schlange {
+  const regenbogenZuordnung = bestimmeRegenbogenZuordnung(schlange);
+  const transformierteKarten = schlange.karten.map((karte, index) => {
+    if (!istRegenbogenschlange(karte)) return karte;
+    const farbe = regenbogenZuordnung.get(index);
+    if (!farbe) {
+      throw new Error('Regenbogenschlange konnte keiner Farbe zugeordnet werden.');
+    }
+    return { typ: 'Farbkarte', id: karte.id, farbe, punkte: 0 } as Spielkarte;
+  });
+
+  return { ...schlange, karten: transformierteKarten };
+}
+
+function bestimmeRegenbogenZuordnung(schlange: Schlange): Map<number, Farbe> {
+  const memo = new Map<string, number>();
+  const entscheidungen = new Map<string, RegenbogenEntscheidung>();
+  const karten = schlange.karten;
+
+  function schluessel(position: number, farbeIndex: number, laenge: number, punkte: number): string {
+    return `${position}|${farbeIndex}|${laenge}|${punkte}`;
+  }
+
+  function maxPunkte(position: number, farbeIndex: number, laenge: number, punkte: number): number {
+    const key = schluessel(position, farbeIndex, laenge, punkte);
+    const zwischengespeichert = memo.get(key);
+    if (zwischengespeichert !== undefined) return zwischengespeichert;
+
+    if (position >= karten.length) {
+      const ergebnis = laufendeGruppePunkte(laenge, punkte);
+      memo.set(key, ergebnis);
+      return ergebnis;
+    }
+
+    const karte: Spielkarte = karten[position] as Spielkarte;
+    let bestePunkte = Number.NEGATIVE_INFINITY;
+    let besteEntscheidung: RegenbogenEntscheidung | null = null;
+
+    if (karte.typ === 'Farbkarte') {
+      const karteFarbeIndex = farbeZuIndex(karte.farbe);
+      if (farbeIndex === -1 || farbeIndex === karteFarbeIndex) {
+        const naechsteLaenge = farbeIndex === -1 ? 1 : laenge + 1;
+        const naechstePunkte = farbeIndex === -1 ? karte.punkte : punkte + karte.punkte;
+        bestePunkte = maxPunkte(position + 1, karteFarbeIndex, naechsteLaenge, naechstePunkte);
+        besteEntscheidung = { art: 'weiter' };
+      } else {
+        const ergebnis = laufendeGruppePunkte(laenge, punkte) + maxPunkte(position + 1, karteFarbeIndex, 1, karte.punkte);
+        bestePunkte = ergebnis;
+        besteEntscheidung = { art: 'wechsel', farbeIndex: karteFarbeIndex };
+      }
+    } else if (istRegenbogenschlange(karte)) {
+      if (farbeIndex !== -1) {
+        const weiterPunkte = maxPunkte(position + 1, farbeIndex, laenge + 1, punkte);
+        bestePunkte = weiterPunkte;
+        besteEntscheidung = { art: 'weiter' };
+      }
+
+      const startFarben = farbeIndex === -1 ? FARBEN : FARBEN.filter((_, index) => index !== farbeIndex);
+      for (const farbe of startFarben) {
+        const karteFarbeIndex = farbeZuIndex(farbe);
+        const ergebnis = laufendeGruppePunkte(laenge, punkte) + maxPunkte(position + 1, karteFarbeIndex, 1, 0);
+        if (ergebnis > bestePunkte) {
+          bestePunkte = ergebnis;
+          besteEntscheidung = { art: 'wechsel', farbeIndex: karteFarbeIndex };
+        }
+      }
+    } else {
+      const ergebnis = laufendeGruppePunkte(laenge, punkte) + maxPunkte(position + 1, -1, 0, 0);
+      bestePunkte = ergebnis;
+      besteEntscheidung = { art: 'reset' };
+    }
+
+    memo.set(key, bestePunkte);
+    if (besteEntscheidung) entscheidungen.set(key, besteEntscheidung);
+    return bestePunkte;
+  }
+
+  function rekonstruiere(position: number, farbeIndex: number, laenge: number, punkte: number, zuordnung: Map<number, Farbe>): void {
+    if (position >= karten.length) return;
+
+    const key = schluessel(position, farbeIndex, laenge, punkte);
+    const entscheidung = entscheidungen.get(key);
+    if (!entscheidung) return;
+
+    const karte: Spielkarte = karten[position] as Spielkarte;
+    if (karte.typ === 'Farbkarte') {
+      const karteFarbeIndex = farbeZuIndex(karte.farbe);
+      if (farbeIndex === -1 || farbeIndex === karteFarbeIndex) {
+        const naechsteLaenge = farbeIndex === -1 ? 1 : laenge + 1;
+        const naechstePunkte = farbeIndex === -1 ? karte.punkte : punkte + karte.punkte;
+        rekonstruiere(position + 1, karteFarbeIndex, naechsteLaenge, naechstePunkte, zuordnung);
+      } else {
+        rekonstruiere(position + 1, karteFarbeIndex, 1, karte.punkte, zuordnung);
+      }
+      return;
+    }
+
+    if (istRegenbogenschlange(karte)) {
+      if (entscheidung.art === 'weiter') {
+        if (farbeIndex < 0) throw new Error('Regenbogenschlange kann nicht ohne aktive Farbe fortgesetzt werden.');
+        zuordnung.set(position, FARBEN[farbeIndex]);
+        rekonstruiere(position + 1, farbeIndex, laenge + 1, punkte, zuordnung);
+        return;
+      } else if (entscheidung.art === 'reset') {
+        throw new Error('Unreachable: reset for Regenbogenschlange');
+      } else {
+        zuordnung.set(position, FARBEN[entscheidung.farbeIndex]);
+        rekonstruiere(position + 1, entscheidung.farbeIndex, 1, 0, zuordnung);
+        return;
+      }
+    }
+
+    if (karte.typ === 'Sonderkarte') {
+      rekonstruiere(position + 1, -1, 0, 0, zuordnung);
+      return;
+    }
+
+    throw new Error('Unbekannte Kartenart in der Wertung.');
+  }
+
+  maxPunkte(0, -1, 0, 0);
+  const zuordnung = new Map<number, Farbe>();
+  rekonstruiere(0, -1, 0, 0, zuordnung);
+  return zuordnung;
 }
 
 export function berechneSpielerFarbgruppenPunkte(spieler: Spieler): SpielerFarbgruppenPunkteErgebnis {
@@ -121,8 +272,9 @@ export function berechneGewinner(spieler: Spieler[]): GewinnerErgebnis {
 }
 
 export function berechneFarbgruppenPunkte(schlange: Schlange): FarbgruppenPunkteErgebnis {
-  const gruppen: FarbgruppenWertung[] = ermittleFarbgruppen(schlange).map((gruppe) => {
-    const punkte = schlange.karten
+  const transformierteSchlange = transformiereRegenbogenschlangen(schlange);
+  const gruppen: FarbgruppenWertung[] = ermittleFarbgruppen(transformierteSchlange).map((gruppe) => {
+    const punkte = transformierteSchlange.karten
       .slice(gruppe.startIndex, gruppe.endIndex + 1)
       .reduce((sum, karte) => sum + (karte.typ === 'Farbkarte' ? karte.punkte : 0), 0);
 

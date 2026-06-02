@@ -10,6 +10,32 @@ import { berechneFarbgruppenPunkte } from '../index';
 import { farbkarte, sonderkarte, schlange } from './testHelpers';
 
 describe('Farbgruppen-Punktwertung — R4.2/R4.4 und R8.4', () => {
+  it('wertet Regenbogenschlangen als Wildcard in der direkten Farbgruppenwertung', () => {
+    const wertung = berechneFarbgruppenPunkte(
+      schlange([
+        farbkarte('blau-1', 'Blau', 1),
+        farbkarte('blau-2', 'Blau', 1),
+        sonderkarte('regen-1', 'Regenbogenschlange'),
+        farbkarte('gruen-1', 'Grün', 3),
+        farbkarte('gruen-2', 'Grün', 3),
+      ]),
+    );
+
+    expect(wertung).toEqual({
+      gesamtPunkte: 6,
+      gruppen: [
+        {
+          farbe: 'Grün',
+          startIndex: 2,
+          endIndex: 4,
+          laenge: 3,
+          kartenIds: ['regen-1', 'gruen-1', 'gruen-2'],
+          punkte: 6,
+        },
+      ],
+    });
+  });
+
   it('summiert die Punktwerte aller Karten einer gültigen Farbgruppe', () => {
     const wertung = berechneFarbgruppenPunkte(
       schlange([

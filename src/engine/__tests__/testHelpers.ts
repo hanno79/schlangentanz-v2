@@ -11,8 +11,8 @@ export function farbkarte(id: string, farbe: Farbe, punkte = 1): Spielkarte {
   return { typ: 'Farbkarte', id, farbe, punkte };
 }
 
-export function sonderkarte(id: string): Spielkarte {
-  return { typ: 'Sonderkarte', id, name: 'Test-Sonderkarte' };
+export function sonderkarte(id: string, name = 'Test-Sonderkarte'): Spielkarte {
+  return { typ: 'Sonderkarte', id, name };
 }
 
 export function schlange(karten: Spielkarte[], id = 'test-schlange'): Schlange {

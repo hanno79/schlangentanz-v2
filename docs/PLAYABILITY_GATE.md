@@ -623,3 +623,15 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R70 Regenbogenschlange als Wildcard in der Farbgruppenwertung
+
+- [x] Scope: Die Regenbogenschlange als erste Sonderkarte gezielt in der Wertungslogik abbilden; andere Sonderkarten sollen weiterhin normale Unterbrechungen bleiben.
+- [x] GREEN: `src/engine/scoring.ts` rekonstruiert Regenbogenschlangen als beste mögliche Farbe je Schlange und wertet sie mit 0 Punkten als Wildcard.
+- [x] GREEN: `docs/GAME_SPEC.md` präzisiert, dass Sonderkarten Farbgruppen unterbrechen, außer wenn eine Regel ausdrücklich etwas anderes vorgibt.
+- [x] Test-Härtung: `src/engine/__tests__/player_scoring.test.ts` enthält den Regenbogenschlangen-Fall sowie eine bestehende Sonderkarten-Robustheitsprüfung.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/player_scoring.test.ts` bestanden.
+- [x] Targeted+Regression: `npm test -- --run` → 49 Testfiles, 293 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
