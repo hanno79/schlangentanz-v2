@@ -107,7 +107,7 @@ function App({ initialZustand }: AppProps) {
           )}
           <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
         </section>
-        <section aria-label="Aktiver Spieler">
+        <section aria-label="Aktiver Spieler" aria-live="polite">
           <h2>Aktiver Spieler</h2>
           <p>Aktiver Spieler: {aktiverSpieler.id}</p>
           <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>

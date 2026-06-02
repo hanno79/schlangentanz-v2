@@ -554,3 +554,15 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
 - [x] Live Smoke: Production alias `https://schlangentanz-v2.vercel.app` liefert HTTP 200 und zeigt die aktive-Spieler-Kennzeichnung `— am Zug`; `Nächste legale Aktion` aktualisiert sich nach einem Klick, keine Console-/Page-/Request-Fehler.
+
+## Evidence — 02.06.2026 R58 Live-Region für den aktiven Spieler
+
+- [x] Scope: Den aktiven Spielerbereich als polite Live-Region markieren.
+- [x] RED: `npm test -- --run src/App.r58.test.tsx` schlug initial fehl, weil der aktive Spielerbereich noch kein `aria-live="polite"` hatte.
+- [x] GREEN: `src/App.tsx` setzt am Bereich `Aktiver Spieler` jetzt `aria-live="polite"`.
+- [x] Test-Härtung: Der neue Test prüft das `aria-live`-Attribut direkt.
+- [x] Targeted: `npm test -- --run src/App.r58.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx` → 31 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
