@@ -145,8 +145,11 @@ function App({ initialZustand }: AppProps) {
           <p>Engine-Demo: {zustand.zugphase}</p>
           <p>Zugphase: {zustand.zugphase}</p>
           <p>Spielphase: {zustand.spielphase}</p>
-          {zustand.endrunde.ausloeserSpielerIndex !== null && (
-            <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
+          {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
+            <>
+              <p>Endrunde aktiv: ja</p>
+              <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
+            </>
           )}
           {zustand.spielphase !== 'Normal' && (
             <p>

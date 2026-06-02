@@ -548,3 +548,14 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R63 Endrunde sichtbar im Spielstatus
+
+- [x] Scope: Den Übergang in die Endrunde im Spielstatus sichtbar markieren, damit der leere Nachziehstapel und die Restzüge nachvollziehbar sind.
+- [x] GREEN: `src/App.tsx` zeigt im Endspurt-Fall `Endrunde aktiv: ja` zusätzlich zu Auslöser und verbleibenden Endrunden-Spielern.
+- [x] Test-Härtung: `src/App.r63.test.tsx` prüft Endrunde, Auslöser und verbleibende Spieler im Spielstatus.
+- [x] Targeted: `npm test -- --run src/App.r63.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx src/App.r62.test.tsx src/App.r63.test.tsx` → 37 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
