@@ -635,3 +635,15 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R72 Erweiterungssonderkarten im Materialbereich sichtbar
+
+- [x] Scope: Die benannten Erweiterungssonderkarten als sichtbaren Materialhinweis im UI-Materialbereich anzeigen, ohne die bestehende Kartenlogik oder den Basisspielstapel zu ändern.
+- [x] GREEN: `src/App.tsx` rendert zusätzlich die Zeile `Erweiterungssonderkarten: 4 Schlangenhäutung, 1 Schlangenkorb des Glücks, 4 Comeback, 8 Risiko-Belohnung` im Bereich `Material und Aufgaben`.
+- [x] GREEN: `src/App.r72.test.tsx` prüft die Materialanzeige auf den vollständigen benannten Erweiterungskarten-Hinweis.
+- [x] GREEN: `src/engine/index.ts` exportiert die neue Factory `erstelleErweiterungsSonderkarten()` weiterhin über den Public Barrel.
+- [x] Targeted: `npm test -- --run src/App.r72.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run` → 50 Testfiles, 295 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.

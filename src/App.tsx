@@ -14,6 +14,7 @@ import {
   MAX_KARTEN_PRO_ZUG,
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
+  erstelleErweiterungsSonderkarten,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 
@@ -28,6 +29,17 @@ function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): stri
 
 function aufgabeLabel(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   return `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)}): ${a.bedingung}`
+}
+
+function erweiterungsSonderkartenLabel(): string {
+  const gruppen = new Map<string, number>()
+  for (const karte of erstelleErweiterungsSonderkarten()) {
+    gruppen.set(karte.name, (gruppen.get(karte.name) ?? 0) + 1)
+  }
+
+  return Array.from(gruppen.entries())
+    .map(([name, anzahl]) => `${anzahl} ${name}`)
+    .join(', ')
 }
 
 function aktionsLabel(aktion: SpielAktion): string {
@@ -261,6 +273,7 @@ function App({ initialZustand }: AppProps) {
           <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
           <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
           <p>Materialstapel gesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
+          <p>Erweiterungssonderkarten: {erweiterungsSonderkartenLabel()}</p>
           <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
           <p>
             Offene Aufgaben:{' '}
