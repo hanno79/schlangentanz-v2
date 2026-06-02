@@ -194,6 +194,11 @@ function App({ initialZustand }: AppProps) {
         <section aria-label="Aktionen">
           <h2>Aktionen</h2>
           <p>Legale Aktionen: {legaleAktionen.length}</p>
+          {aktiverSpieler.steuerung === 'KI' && legaleAktionen.length > 0 && (
+            <button onClick={() => fuhreAktionAus(legaleAktionen[0])}>
+              KI-Aktion ausführen
+            </button>
+          )}
           {legaleAktionen.map((aktion) => (
             <button key={aktionsLabel(aktion)} onClick={() => fuhreAktionAus(aktion)}>
               {aktionsLabel(aktion)}

@@ -206,7 +206,7 @@ describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
 
     expect(within(bereich).getByText(/zugphase: ausspielphase/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler-2/i)).toBeInTheDocument()
-    expect(within(bereich).getAllByRole('button')).toHaveLength(5)
+    expect(within(bereich).getByRole('button', { name: /ki-aktion ausführen/i })).toBeInTheDocument()
     expect(
       within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }),
     ).toBeInTheDocument()

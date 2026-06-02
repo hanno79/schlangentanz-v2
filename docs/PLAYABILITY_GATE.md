@@ -490,3 +490,13 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Regression: R40-Test aktualisiert den neuen UI-Vertrag; Name/Punkte-Zeile bleibt unverändert.
 - [x] Gates: R49/R40 targeted → 3 Tests; full → 29 Testfiles / 263 Tests; Typecheck, Lint, Build, `git diff --check` grün.
 - [x] Review/Production: Codex BLOCKERS none; Deploy `schlangentanz-v2-4motjdic1-alfreds-projects-7e9df1b4.vercel.app`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200; Smoke: `Offene Aufgaben-Details` mit allen drei Bedingungen sichtbar, keine Console/Page/Request-Fehler.
+
+## Evidence — 02.06.2026 R53 manueller KI-Aktionsbutton
+
+- [x] Scope: Im KI-Zug wird ein manueller Button `KI-Aktion ausführen` an die erste vorhandene Engine-Aktion `legaleAktionen[0]` gebunden; keine KI-Strategie, kein Autoplay, keine Engine-Änderung.
+- [x] RED: `npm test -- --run src/App.r53.test.tsx` fehlte korrekt wegen fehlendem KI-Aktionsbutton.
+- [x] GREEN/Simplify: `src/App.tsx` nutzt weiter `ermittleLegaleAktionen` und `anwendeAktion`; `/simplify` meldete keine Änderungen.
+- [x] Gates: targeted R53/App grün; full `npm test -- --run` → 33 Testfiles / 269 Tests; Typecheck, Lint, Build, `git diff --check` grün.
+- [x] Codex Review: BLOCKERS none; Non-Blocker Mensch-Zug-Negativtest wurde ergänzt und erneut verifiziert.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
