@@ -74,7 +74,18 @@ describe('Kartenmaterial', () => {
   });
 
   it('erzeugt tatsächlich 32 Sonderkarten', () => {
-    expect(erstelleSonderkarten()).toHaveLength(32);
+    const sonderkarten = erstelleSonderkarten();
+    const namen = sonderkarten.map((karte) => karte.name);
+
+    expect(sonderkarten).toHaveLength(32);
+    expect(namen.filter((name) => name === 'Farbenschutz')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Regenbogenschlange')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Schlangenfrass')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Schlangenblockade')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Farbendieb')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Schlangengrube')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Farbenfusion')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Verdoppler')).toHaveLength(4);
   });
 
   it('enthält die 17 benannten Erweiterungssonderkarten', () => {

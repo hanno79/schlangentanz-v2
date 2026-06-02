@@ -50,6 +50,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 - Alle Karten werden vor Spielbeginn nach Kartentyp sortiert.
 - Basis-Spiel: 110 Karten = 78 Farbkarten + 32 Sonderkarten.
+- Basis-Sonderkarten: 8 benannte Typen mit je 4 Karten — Farbenschutz, Regenbogenschlange, Schlangenfrass, Schlangenblockade, Farbendieb, Schlangengrube, Farbenfusion, Verdoppler.
 - Erweiterung "Schlangenkorb des Glücks": 31 zusätzliche Karten = 4 Schlangenhäutung + 1 Schlangenkorb des Glücks + genau 14 Aufgabenkarten + 4 Comeback-Karten + 8 Risiko-Belohnungs-Karten.
 - Gesamtanzahl mit Erweiterung: 141 Karten.
 - Aufgabenkarten: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler; maßgeblich ist die vollständige Liste der 14 veröffentlichten Aufgabenkarten mit Name, Punktwert und Bedingung.

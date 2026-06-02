@@ -6,7 +6,6 @@ Beschreibung: Erzeugt Farbkarten, Sonderkarten und gemischte Decks.
 */
 
 import type { FarbkarteInfo, Farbe, SonderkarteInfo, Spielkarte } from './types';
-import { SONDERKARTEN_GESAMT } from './constants';
 
 const FARB_KONFIGURATION: ReadonlyArray<{
   farbe: Farbe;
@@ -19,6 +18,21 @@ const FARB_KONFIGURATION: ReadonlyArray<{
   { farbe: 'Violett', anzahl: 12, punkte: 2 },
   { farbe: 'Braun', anzahl: 12, punkte: 2 },
   { farbe: 'Grün', anzahl: 9, punkte: 3 },
+];
+
+const BASIS_SONDERKARTEN: ReadonlyArray<{
+  name: string;
+  anzahl: number;
+  idPrefix: string;
+}> = [
+  { name: 'Farbenschutz', anzahl: 4, idPrefix: 'farbenschutz' },
+  { name: 'Regenbogenschlange', anzahl: 4, idPrefix: 'regenbogenschlange' },
+  { name: 'Schlangenfrass', anzahl: 4, idPrefix: 'schlangenfrass' },
+  { name: 'Schlangenblockade', anzahl: 4, idPrefix: 'schlangenblockade' },
+  { name: 'Farbendieb', anzahl: 4, idPrefix: 'farbendieb' },
+  { name: 'Schlangengrube', anzahl: 4, idPrefix: 'schlangengrube' },
+  { name: 'Farbenfusion', anzahl: 4, idPrefix: 'farbenfusion' },
+  { name: 'Verdoppler', anzahl: 4, idPrefix: 'verdoppler' },
 ];
 
 const ERWEITERUNGS_SONDERKARTEN: ReadonlyArray<{
@@ -48,11 +62,19 @@ export function erstelleFarbkarten(): FarbkarteInfo[] {
 }
 
 export function erstelleSonderkarten(): SonderkarteInfo[] {
-  return Array.from({ length: SONDERKARTEN_GESAMT }, (_, index) => ({
-    typ: 'Sonderkarte',
-    id: `sonderkarte-${String(index + 1).padStart(2, '0')}`,
-    name: 'Sonderkarte',
-  }));
+  const karten: SonderkarteInfo[] = [];
+
+  for (const { name, anzahl, idPrefix } of BASIS_SONDERKARTEN) {
+    for (let i = 1; i <= anzahl; i++) {
+      karten.push({
+        typ: 'Sonderkarte',
+        id: `${idPrefix}-${String(i).padStart(2, '0')}`,
+        name,
+      });
+    }
+  }
+
+  return karten;
 }
 
 export function erstelleErweiterungsSonderkarten(): SonderkarteInfo[] {

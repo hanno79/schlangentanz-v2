@@ -24,7 +24,10 @@ describe('R51 Zufällige Startkarten im App-Standardzustand', () => {
 
     expect(handkartenDetails).toHaveTextContent('rot-15 (Farbkarte Rot, 1 Punkte)')
     expect(handkartenDetails).toHaveTextContent('violett-05 (Farbkarte Violett, 2 Punkte)')
-    expect(handkartenDetails).toHaveTextContent('sonderkarte-12 (Sonderkarte Sonderkarte)')
+    expect(handkartenDetails).not.toHaveTextContent('Sonderkarte Sonderkarte')
+    expect(handkartenDetails).toHaveTextContent(
+      /Sonderkarte (Farbenschutz|Regenbogenschlange|Schlangenfrass|Schlangenblockade|Farbendieb|Schlangengrube|Farbenfusion|Verdoppler)/i
+    )
     expect(handkartenDetails).not.toHaveTextContent('blau-01, blau-03, blau-05, blau-07, blau-09')
 
     const zufallsaufrufeNachStart = randomSpy.mock.calls.length
