@@ -346,8 +346,10 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
     expect(zustand.spieler[0].schlangen[0].karten.map((karte) => karte.id)).toEqual([startkarte.id]);
   });
 
-  it('bietet Schlangengrube als auswählbare Sonderkartenaktion mit Zielspieler an', () => {
-    const zustand = erstelleSpielzustand(3, () => 0.999999);
+  const istSonderkarteSpielen = (aktion: { typ: string }) => aktion.typ === 'SonderkarteSpielen';
+
+  function zustandMitSchlangengrubeAufDerHand(spielerAnzahl = 3) {
+    const zustand = erstelleSpielzustand(spielerAnzahl, () => 0.999999);
     const schlangengrube = zustand.nachziehstapel.find(
       (karte): karte is Extract<typeof karte, { typ: 'Sonderkarte' }> =>
         karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
@@ -358,9 +360,13 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
     zustand.spieler[0].hand[0] = schlangengrube;
     zustand.zugphase = 'Ausspielphase';
 
-    const schlangengrubenAktionen = ermittleLegaleAktionen(zustand).filter(
-      (aktion) => (aktion as { typ: string }).typ === 'SonderkarteSpielen',
-    );
+    return { zustand, schlangengrube };
+  }
+
+  it('bietet Schlangengrube als auswählbare Sonderkartenaktion mit Zielspieler an', () => {
+    const { zustand, schlangengrube } = zustandMitSchlangengrubeAufDerHand();
+
+    const schlangengrubenAktionen = ermittleLegaleAktionen(zustand).filter(istSonderkarteSpielen);
 
     expect(schlangengrubenAktionen).toEqual([
       {
@@ -376,6 +382,50 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
         zielSpielerId: 'spieler-3',
       },
     ]);
+  });
+
+  it('bietet Schlangengrube nur für legal erreichbare Zielspieler an', () => {
+    // ÄNDERUNG 02.06.2026: R74-Abschluss prüft, dass der Enumerator keine illegalen Schlangengrube-Ziele anbietet.
+    const { zustand, schlangengrube } = zustandMitSchlangengrubeAufDerHand();
+    zustand.spielphase = 'Endspurt';
+    zustand.endrunde = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [1] };
+
+    const schlangengrubenAktionen = ermittleLegaleAktionen(zustand).filter(istSonderkarteSpielen);
+
+    expect(schlangengrubenAktionen).toEqual([
+      {
+        typ: 'SonderkarteSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: schlangengrube.id,
+        zielSpielerId: 'spieler-2',
+      },
+    ]);
+    expect(
+      pruefeAktion(zustand, {
+        typ: 'SonderkarteSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: schlangengrube.id,
+        zielSpielerId: 'spieler-3',
+      }),
+    ).toEqual({ erlaubt: false, grund: 'Der gewählte Zielspieler hat in der Endrunde keinen verbleibenden Zug mehr.' });
+  });
+
+  it('bietet Schlangengrube nach bereits gespielter Sonderkarte nicht mehr an', () => {
+    const { zustand, schlangengrube } = zustandMitSchlangengrubeAufDerHand();
+    zustand.zugpflichten.gespielteKarten = 1;
+    zustand.zugpflichten.gespielteSonderkarten = 1;
+
+    const schlangengrubenAktionen = ermittleLegaleAktionen(zustand).filter(istSonderkarteSpielen);
+
+    expect(schlangengrubenAktionen).toEqual([]);
+    expect(
+      pruefeAktion(zustand, {
+        typ: 'SonderkarteSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: schlangengrube.id,
+        zielSpielerId: 'spieler-2',
+      }),
+    ).toEqual({ erlaubt: false, grund: 'Pro Zug darf höchstens eine Sonderkarte gespielt werden.' });
   });
 
   it('weist manuell konstruierte Aktionen mit falscher Spieler-ID zurück', () => {
