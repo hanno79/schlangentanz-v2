@@ -36,4 +36,7 @@ Beschreibung: Release-Status für den kleinen Farbenschutz-Slice.
 - Build: `npm run build` ✅
 - Diff-Check: `git diff --check` ✅
 - Review: Codex-Abschlussreview ✅ — keine blockierenden Findings nach Pflicht-Abwurf-Fix und DRY-Fix.
-- Push / Deploy / Smoke: folgen in der R75-Gate-Kette.
+- Commit: `ad1b47a — R75: Farbenschutz spielbar machen` ✅
+- Push: `origin/main` auf `ad1b47a` ✅
+- Deploy: `vercel deploy --prod --yes --token=…` ✅ — Production-Alias `https://schlangentanz-v2.vercel.app`
+- Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading, Farbenschutz-Materialzeile und Ausspielphase ohne Console-/Page-Errors ✅
