@@ -191,7 +191,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
     - Nur mit einer Karte auf der Hand des aktiven Spielers.
     - Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
 
-- **Aufgabenpruefung**
+- **Aufgabenprüfung**
   - Spieleraktionen sind nicht erlaubt.
   - Die Engine prüft offene Aufgaben und die geheime Aufgabe des aktiven Spielers automatisch.
   - Die UI darf nur Status, Ergebnis und Phasenfortschritt anzeigen; keine neue Spielaktion starten.
