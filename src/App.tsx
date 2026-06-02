@@ -10,6 +10,7 @@ import {
   beendeZug,
   werfeUeberzaehligeHandkartenAb,
   HANDKARTENLIMIT,
+  MINDESTHANDKARTEN,
   MAX_KARTEN_PRO_ZUG,
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
@@ -67,6 +68,26 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
   return 'Keine Aktion verfügbar.'
+}
+
+function phasenregeln(zugphase: Spielzustand['zugphase'], ueberhand: number): string[] {
+  switch (zugphase) {
+    case 'Nachziehphase':
+      return [`Nachziehphase: Auf ${MINDESTHANDKARTEN} Handkarten nachziehen, falls unter ${MINDESTHANDKARTEN} und der Stapel noch Karten hat.`]
+    case 'Ausspielphase':
+      return [
+        `Ausspielphase: Mindestens 1 Karte spielen oder abwerfen, höchstens ${MAX_KARTEN_PRO_ZUG} Karten insgesamt.`,
+        'Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.',
+      ]
+    case 'Aufgabenpruefung':
+      return ['Aufgabenprüfung: Offene und geheime Aufgaben prüfen.']
+    case 'Zugabschluss':
+      return ueberhand > 0
+        ? ['Zugabschluss: Zuerst überzählige Karten abwerfen, dann Zug beenden.']
+        : ['Zugabschluss: Zug beenden und Spielerwechsel durchführen.']
+    case 'Spielende':
+      return ['Spielende: Keine weiteren Aktionen.']
+  }
 }
 
 interface AppProps {
@@ -322,6 +343,14 @@ function App({ initialZustand }: AppProps) {
               {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
             </>
           )}
+          <section aria-label="Phasenregeln">
+            <h3>Phasenregeln</h3>
+            <ul>
+              {phasenregeln(zustand.zugphase, ueberhand).map(regel => (
+                <li key={regel}>{regel}</li>
+              ))}
+            </ul>
+          </section>
           <p>Quelle: engine.ermittleLegaleAktionen</p>
         </section>
       </section>

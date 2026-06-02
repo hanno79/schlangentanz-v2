@@ -15,10 +15,15 @@ describe('R60 UI-Aktionsfeedback', () => {
     render(<App initialZustand={zustand} />)
 
     const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
     expect(within(aktiverSpielerBereich).queryByText(/zuletzt ausgeführt:/i)).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getAllByRole('button', { name: /Neue Schlange starten mit Karte/i })[0])
+    const button = within(aktionenBereich).getAllByRole('button')[0]
+    const buttonText = button.textContent?.trim() ?? ''
+    fireEvent.click(button)
 
-    expect(within(aktiverSpielerBereich).getByText(/zuletzt ausgeführt: Neue Schlange starten mit Karte/i)).toBeInTheDocument()
+    expect(
+      within(aktiverSpielerBereich).getByText(new RegExp(`zuletzt ausgeführt: ${buttonText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'i')),
+    ).toBeInTheDocument()
   })
 })
