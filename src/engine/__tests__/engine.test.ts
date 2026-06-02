@@ -16,7 +16,7 @@ import {
   KARTEN_GESAMT,
 } from '../constants';
 import { aufgabenPool } from '../aufgabenKarten';
-import { erstelleFarbkarten, erstelleHauptdeck, erstelleSonderkarten } from '../deck';
+import { erstelleFarbkarten, erstelleHauptdeck, erstelleSonderkarten, erstelleErweiterungsSonderkarten } from '../deck';
 import { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from '../state';
 import { serialisiere, deserialisiere } from '../serialization';
 import { erstelleEinzelspielerSpielzustand as exportierteEinzelspielerFactory } from '../index';
@@ -75,6 +75,17 @@ describe('Kartenmaterial', () => {
 
   it('erzeugt tatsächlich 32 Sonderkarten', () => {
     expect(erstelleSonderkarten()).toHaveLength(32);
+  });
+
+  it('enthält die 17 benannten Erweiterungssonderkarten', () => {
+    const sonderkarten = erstelleErweiterungsSonderkarten();
+    const namen = sonderkarten.map((karte) => karte.name);
+
+    expect(sonderkarten).toHaveLength(17);
+    expect(namen.filter((name) => name === 'Schlangenhäutung')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Schlangenkorb des Glücks')).toHaveLength(1);
+    expect(namen.filter((name) => name === 'Comeback')).toHaveLength(4);
+    expect(namen.filter((name) => name === 'Risiko-Belohnung')).toHaveLength(8);
   });
 
   it('erzeugt ein Hauptdeck mit 110 Basis-Spielkarten ohne Aufgaben', () => {

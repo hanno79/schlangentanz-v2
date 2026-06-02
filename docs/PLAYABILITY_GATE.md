@@ -624,14 +624,14 @@
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
 
-## Evidence — 02.06.2026 R70 Regenbogenschlange als Wildcard in der Farbgruppenwertung
+## Evidence — 02.06.2026 R71 Benannte Erweiterungssonderkarten im Materialstapel
 
-- [x] Scope: Die Regenbogenschlange als erste Sonderkarte gezielt in der Wertungslogik abbilden; andere Sonderkarten sollen weiterhin normale Unterbrechungen bleiben.
-- [x] GREEN: `src/engine/scoring.ts` rekonstruiert Regenbogenschlangen als beste mögliche Farbe je Schlange und wertet sie mit 0 Punkten als Wildcard.
-- [x] GREEN: `docs/GAME_SPEC.md` präzisiert, dass Sonderkarten Farbgruppen unterbrechen, außer wenn eine Regel ausdrücklich etwas anderes vorgibt.
-- [x] Test-Härtung: `src/engine/__tests__/player_scoring.test.ts` enthält den Regenbogenschlangen-Fall sowie eine bestehende Sonderkarten-Robustheitsprüfung.
-- [x] Targeted: `npm test -- --run src/engine/__tests__/player_scoring.test.ts` bestanden.
-- [x] Targeted+Regression: `npm test -- --run` → 49 Testfiles, 293 Tests bestanden.
+- [x] Scope: Die vier Schlangenhäutung-Karten und die weiteren benannten Erweiterungssonderkarten als separat abrufbares Material sichtbar machen, ohne den bestehenden 32er-Basis-Sonderkartenstapel zu verändern.
+- [x] GREEN: `src/engine/deck.ts` stellt zusätzlich zu `erstelleSonderkarten()` die neue `erstelleErweiterungsSonderkarten()`-Factory bereit und lässt den Basiskartenstapel unverändert bei 32 generischen Sonderkarten.
+- [x] GREEN: `src/engine/__tests__/engine.test.ts` prüft die 17 benannten Erweiterungssonderkarten mit 4 Schlangenhäutung, 1 Schlangenkorb des Glücks, 4 Comeback und 8 Risiko-Belohnung.
+- [x] Test-Härtung: `src/App.test.tsx` und `src/App.r51.test.tsx` wurden auf die jetzt wieder generischen Basis-Sonderkarten bzw. die unveränderte Zufallsverteilung gehärtet.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/engine.test.ts src/App.test.tsx src/App.r51.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run` → 49 Testfiles, 294 Tests bestanden.
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.

@@ -21,6 +21,17 @@ const FARB_KONFIGURATION: ReadonlyArray<{
   { farbe: 'Grün', anzahl: 9, punkte: 3 },
 ];
 
+const ERWEITERUNGS_SONDERKARTEN: ReadonlyArray<{
+  name: string;
+  anzahl: number;
+  idPrefix: string;
+}> = [
+  { name: 'Schlangenhäutung', anzahl: 4, idPrefix: 'schlangenhaeutung' },
+  { name: 'Schlangenkorb des Glücks', anzahl: 1, idPrefix: 'schlangenkorb-des-gluecks' },
+  { name: 'Comeback', anzahl: 4, idPrefix: 'comeback' },
+  { name: 'Risiko-Belohnung', anzahl: 8, idPrefix: 'risiko-belohnung' },
+];
+
 export function erstelleFarbkarten(): FarbkarteInfo[] {
   const karten: FarbkarteInfo[] = [];
   for (const { farbe, anzahl, punkte } of FARB_KONFIGURATION) {
@@ -42,6 +53,22 @@ export function erstelleSonderkarten(): SonderkarteInfo[] {
     id: `sonderkarte-${String(index + 1).padStart(2, '0')}`,
     name: 'Sonderkarte',
   }));
+}
+
+export function erstelleErweiterungsSonderkarten(): SonderkarteInfo[] {
+  const karten: SonderkarteInfo[] = [];
+
+  for (const { name, anzahl, idPrefix } of ERWEITERUNGS_SONDERKARTEN) {
+    for (let i = 1; i <= anzahl; i++) {
+      karten.push({
+        typ: 'Sonderkarte',
+        id: `${idPrefix}-${String(i).padStart(2, '0')}`,
+        name,
+      });
+    }
+  }
+
+  return karten;
 }
 
 export function erstelleHauptdeck(): Spielkarte[] {

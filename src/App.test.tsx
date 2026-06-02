@@ -67,15 +67,18 @@ describe('R19 UI-Grundregel für Kartenarten pro Zug', () => {
   })
 })
 
-function zustandMitPflichtAbwurf(): Spielzustand {
+function zustandMitPflichtAbwurf(): { zustand: Spielzustand; sonderkarteId: string } {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
   const sonderkarte = zustand.nachziehstapel.find(karte => karte.typ === 'Sonderkarte')
   if (!sonderkarte) throw new Error('Testsetup erwartet Sonderkarte im Nachziehstapel.')
 
   return {
-    ...zustand,
-    nachziehstapel: zustand.nachziehstapel.filter(karte => karte.id !== sonderkarte.id),
-    spieler: zustand.spieler.with(0, { ...zustand.spieler[0], hand: [sonderkarte], schlangen: [] }),
+    zustand: {
+      ...zustand,
+      nachziehstapel: zustand.nachziehstapel.filter(karte => karte.id !== sonderkarte.id),
+      spieler: zustand.spieler.with(0, { ...zustand.spieler[0], hand: [sonderkarte], schlangen: [] }),
+    },
+    sonderkarteId: sonderkarte.id,
   }
 }
 
@@ -93,27 +96,29 @@ function zustandNachEinerSonderkarteMitWeitererLegalerAktion(): Spielzustand {
 
 describe('R21 UI-Pflicht-Abwurf', () => {
   it('führt Pflicht-Abwurf per Klick aus und zeigt den Ablagestapel', () => {
-    render(<App initialZustand={zustandMitPflichtAbwurf()} />)
+    const { zustand, sonderkarteId } = zustandMitPflichtAbwurf()
+    render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /karte sonderkarte-01 abwerfen/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
 
-    expect(within(bereich).getByText(/ablagestapel: sonderkarte-01/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(new RegExp(`ablagestapel: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
     expect(within(bereich).getByText(/keine weiteren legalen aktionen/i, { selector: 'p' })).toBeInTheDocument()
   })
 })
 
 describe('R22 UI-Handkartenanzeige', () => {
   it('zeigt aktive Handkarten und aktualisiert sie nach Pflicht-Abwurf', () => {
-    render(<App initialZustand={zustandMitPflichtAbwurf()} />)
+    const { zustand, sonderkarteId } = zustandMitPflichtAbwurf()
+    render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/handkarten: sonderkarte-01/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(new RegExp(`handkarten: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /karte sonderkarte-01 abwerfen/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
 
     expect(within(bereich).getByText(/handkarten: keine/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/ablagestapel: sonderkarte-01/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(new RegExp(`ablagestapel: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
   })
 })
 

@@ -8,7 +8,7 @@ Beschreibung: Zentrale Exporte für die Schlangentanz-Engine.
 export * from './types';
 export * from './constants';
 export { aufgabenPool, erstelleAufgabenStapel } from './aufgabenKarten';
-export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, mischeDeck } from './deck';
+export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, erstelleErweiterungsSonderkarten, mischeDeck } from './deck';
 export { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from './state';
 export { serialisiere, deserialisiere } from './serialization';
 export { pruefeAktion, ermittleLegaleAktionen, anwendeAktion } from './legalActions';
