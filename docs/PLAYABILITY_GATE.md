@@ -512,3 +512,15 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R60 unmittelbares Aktionsfeedback
+
+- [x] Scope: Nach jeder sichtbaren Aktion im UI ein unmittelbares Feedback `Zuletzt ausgeführt:` im Bereich **Aktiver Spieler** anzeigen.
+- [x] RED: `npm test -- --run src/App.r60.test.tsx` schlug zunächst fehl, weil der Feedback-Text noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` speichert das zuletzt ausgeführte Label und zeigt es im aktiven Spielerbereich an; auch die phasenbezogenen Steuerbuttons aktualisieren dieses Feedback.
+- [x] Test-Härtung: Der neue Test prüft, dass das Feedback direkt nach einem Klick im aktiven Spielerbereich sichtbar wird.
+- [x] Targeted: `npm test -- --run src/App.r60.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx` → 33 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.

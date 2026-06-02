@@ -62,6 +62,7 @@ function App({ initialZustand }: AppProps) {
   const [zustand, setZustand] = useState(() =>
     initialZustand ?? starteAusspielphase(erstelleSpielzustand(2))
   )
+  const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
@@ -81,6 +82,7 @@ function App({ initialZustand }: AppProps) {
     : 'keine'
 
   function fuhreAktionAus(aktion: SpielAktion) {
+    setLetzteAktion(aktionsLabel(aktion))
     setZustand(z => anwendeAktion(z, aktion))
   }
 
@@ -128,6 +130,7 @@ function App({ initialZustand }: AppProps) {
             Aktuelle Wertung:{' '}
             {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
           </p>
+          {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
           {istSpielende && (
             <>
               <p>Spielende erreicht.</p>
@@ -251,22 +254,34 @@ function App({ initialZustand }: AppProps) {
                   </button>
                 ))}
                 {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
-                  <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
+                  <button onClick={() => {
+                    setLetzteAktion('Ausspielphase beenden')
+                    setZustand(z => beendeAusspielphase(z))
+                  }}>
                     Ausspielphase beenden
                   </button>
                 )}
                 {zustand.zugphase === 'Aufgabenpruefung' && (
-                  <button onClick={() => setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))}>
+                  <button onClick={() => {
+                    setLetzteAktion('Aufgabenprüfung beenden')
+                    setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))
+                  }}>
                     Aufgabenprüfung beenden
                   </button>
                 )}
                 {zustand.zugphase === 'Zugabschluss' && (
-                  <button onClick={() => setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))}>
+                  <button onClick={() => {
+                    setLetzteAktion('Zug beenden')
+                    setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))
+                  }}>
                     Zug beenden
                   </button>
                 )}
                 {zustand.zugphase === 'Nachziehphase' && (
-                  <button onClick={() => setZustand(z => starteAusspielphase(z))}>
+                  <button onClick={() => {
+                    setLetzteAktion('Ausspielphase starten')
+                    setZustand(z => starteAusspielphase(z))
+                  }}>
                     Ausspielphase starten
                   </button>
                 )}
