@@ -32,7 +32,6 @@ Der nächste kleine Schritt war bewusst keine neue, geratene Kartenmechanik. Sta
 - Typecheck: `npm run typecheck` bestanden.
 - Lint: `npm run lint` bestanden.
 - Build: `npm run build` bestanden.
-
-## Noch auszuführen
-
-- Commit / Push / Deploy / Smoke
+- Commit/Push: `46e15b1 — R76: Sonderkarten-Regelstatus absichern` auf `origin/main`.
+- Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-Errors und findet keine geratenen Effekttexte.
