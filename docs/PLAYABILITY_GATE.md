@@ -511,3 +511,6 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Codex Review: keine Blocker; geprüft wurden stale wording in `App.tsx`, Hint-Synchronität mit `legaleAktionen[0]`, und der UI-Refresh nach einer Aktion.
+- [x] GitHub main: Commit `cb32015` gepusht, `HEAD == origin/main` verifiziert.
+- [x] Vercel Deploy: `https://schlangentanz-v2-7gyunmjft-alfreds-projects-7e9df1b4.vercel.app` — `Ready`, alias `https://schlangentanz-v2.vercel.app` zugewiesen.
+- [x] Live Smoke: Production alias rendert Heading `Schlangentanz v2 Greenfield Rebuild`, zeigt `Nächste legale Aktion: Neue Schlange starten mit Karte braun-11`, Klick aktualisiert auf `Nächste legale Aktion: Karte sonderkarte-11 abwerfen`; keine Console-/Page-/Request-Fehler.
