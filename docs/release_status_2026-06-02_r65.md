@@ -14,3 +14,4 @@ Im Endspurt zeigt die UI offene Aufgabenkarten mit verdoppelten Punkten und eine
 - Offene Aufgaben werden im Endspurt mit `×2` und dem verdoppelten Punktwert angezeigt.
 - Die Bedingung der Aufgabe bleibt sichtbar.
 - Die Anzeige für geheime Aufgaben bleibt unverändert.
+- Zusätzlich ist der Normalzustand ohne Endspurt gegen `×2` abgesichert.

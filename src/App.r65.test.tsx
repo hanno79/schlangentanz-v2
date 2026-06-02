@@ -7,7 +7,7 @@ Beschreibung: R65 UI-Test für verdoppelte offene Aufgaben im Endspurt.
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { erstelleSpielzustand, type Spielzustand } from './engine'
+import { erstelleSpielzustand, starteAusspielphase, type Spielzustand } from './engine'
 
 function zustandImEndspurtMitOffenenAufgaben(): Spielzustand {
   const zustand = erstelleSpielzustand(2, () => 0.999999)
@@ -47,5 +47,23 @@ describe('R65 Endspurt verdoppelt offene Aufgaben in der UI', () => {
     expect(within(aktiverSpielerBereich).getByText(/Geheime Aufgabe:/)).toHaveTextContent(
       `${geheimeAufgabe?.name} (${geheimeAufgabe?.punkte} Punkte): ${geheimeAufgabe?.bedingung}`,
     )
+  })
+
+  it('zeigt außerhalb des Endspurts offene Aufgaben ohne ×2-Anzeige an', () => {
+    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+
+    expect(zustand.spielphase).toBe('Normal')
+    render(<App initialZustand={zustand} />)
+
+    const materialBereich = screen.getByRole('region', { name: 'Material und Aufgaben' })
+
+    zustand.offeneAufgaben.forEach(aufgabe => {
+      const erwarteteAnzeige = `${aufgabe.name} (${aufgabe.punkte} Punkte)`
+      const erwarteteDetails = `${aufgabe.name} (${aufgabe.punkte} Punkte): ${aufgabe.bedingung}`
+
+      expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
+      expect(within(materialBereich).getByText(/Offene Aufgaben-Details:/)).toHaveTextContent(erwarteteDetails)
+    })
+    expect(within(materialBereich).queryByText(/×2/)).toBeNull()
   })
 })
