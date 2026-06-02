@@ -528,3 +528,16 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] GitHub main: Commit `44e027f` gepusht, `HEAD == origin/main` verifiziert.
 - [x] Vercel Deploy: `https://schlangentanz-v2-objwxoow7-alfreds-projects-7e9df1b4.vercel.app` — `Ready`, alias `https://schlangentanz-v2.vercel.app` zugewiesen.
 - [x] Live Smoke: Production alias rendert Heading `Schlangentanz v2 Greenfield Rebuild`, zeigt `Aktuelle Wertung: 0 Punkte` und `Nächste legale Aktion: Neue Schlange starten mit Karte gelb-05`; Klick aktualisiert den Hinweis zu `Karte sonderkarte-14 abwerfen`; keine Console-/Page-/Request-Fehler.
+
+## Evidence — 02.06.2026 R56 UI-Spielende und Gewinneranzeige
+
+- [x] Scope: Im Spielende-Zustand den klaren Endstand-Hinweis und die Gewinnerübersicht im UI sichtbar machen; keine neue Engine-Logik, nur Anzeige vorhandener Daten.
+- [x] RED: `npm test -- --run src/App.r56.test.tsx` fehlte initial, weil weder `Spielende erreicht.` noch die Gewinnerübersicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` blendet im Spielende-Zustand `Spielende erreicht.` und `Gewinner: ...` ein und unterdrückt weitere Aktionsbuttons.
+- [x] Test-Härtung: Der neue Test vergleicht die sichtbare Gewinneranzahl mit `berechneGewinner(zustand.spieler)` und prüft, dass im Endzustand keine weiteren Aktionsbuttons angezeigt werden.
+- [x] Targeted: `npm test -- --run src/App.r56.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx` → 29 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Live Smoke: Production alias `https://schlangentanz-v2.vercel.app` lädt mit HTTP 200, zeigt Heading `Schlangentanz v2 Greenfield Rebuild`, `Aktuelle Wertung` und `Nächste legale Aktion`; nach einem Klick aktualisiert sich der Hinweis auf die nächste legale Aktion, keine Console-/Page-/Request-Fehler.

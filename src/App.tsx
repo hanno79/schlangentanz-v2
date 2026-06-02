@@ -12,7 +12,7 @@ import {
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
 } from './engine'
-import type { AufgabenkarteInfo, SpielAktion, Spielzustand } from './engine'
+import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
@@ -57,10 +57,16 @@ function App({ initialZustand }: AppProps) {
     [zustand.zugphase, zustand.spieler],
   )
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
+  const spielerwertungen: SpielerWertungsEintrag[] = gesamtwertung.spielerwertungen
+  const gewinnerListe: GewinnerEintrag[] = gewinnerErgebnis?.gewinner ?? []
   const aktiverSpielerWertung = useMemo(
-    () => gesamtwertung.spielerwertungen.find(eintrag => eintrag.spielerId === aktiverSpieler.id) ?? null,
-    [gesamtwertung.spielerwertungen, aktiverSpieler.id],
+    () => spielerwertungen.find((eintrag: SpielerWertungsEintrag) => eintrag.spielerId === aktiverSpieler.id) ?? null,
+    [spielerwertungen, aktiverSpieler.id],
   )
+  const istSpielende = zustand.zugphase === 'Spielende'
+  const gewinnerText = gewinnerListe.length > 0
+    ? gewinnerListe.map(g => `${g.spielerId} (${g.gesamtPunkte} Punkte)`).join(', ')
+    : 'keine'
 
   function fuhreAktionAus(aktion: SpielAktion) {
     setZustand(z => anwendeAktion(z, aktion))
@@ -110,10 +116,16 @@ function App({ initialZustand }: AppProps) {
             Aktuelle Wertung:{' '}
             {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
           </p>
-          {legaleAktionen.length > 0 && (
+          {istSpielende && (
+            <>
+              <p>Spielende erreicht.</p>
+              <p>Gewinner: {gewinnerText}</p>
+            </>
+          )}
+          {!istSpielende && legaleAktionen.length > 0 && (
             <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
           )}
-          {aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
+          {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
           <p>
             {aktiverSpieler.geheimeAufgabe
               ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe)}`
@@ -205,38 +217,44 @@ function App({ initialZustand }: AppProps) {
         <section aria-label="Aktionen">
           <h2>Aktionen</h2>
           <p>Legale Aktionen: {legaleAktionen.length}</p>
-          {aktiverSpieler.steuerung === 'KI' && legaleAktionen.length > 0 && (
-            <button onClick={() => fuhreAktionAus(legaleAktionen[0])}>
-              KI-Aktion ausführen
-            </button>
-          )}
-          {legaleAktionen.map((aktion) => (
-            <button key={aktionsLabel(aktion)} onClick={() => fuhreAktionAus(aktion)}>
-              {aktionsLabel(aktion)}
-            </button>
-          ))}
-          <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
-          <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
-          {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
-          {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
-            <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
-              Ausspielphase beenden
-            </button>
-          )}
-          {zustand.zugphase === 'Aufgabenpruefung' && (
-            <button onClick={() => setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))}>
-              Aufgabenprüfung beenden
-            </button>
-          )}
-          {zustand.zugphase === 'Zugabschluss' && (
-            <button onClick={() => setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))}>
-              Zug beenden
-            </button>
-          )}
-          {zustand.zugphase === 'Nachziehphase' && (
-            <button onClick={() => setZustand(z => starteAusspielphase(z))}>
-              Ausspielphase starten
-            </button>
+          {istSpielende ? (
+            <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
+          ) : (
+            <>
+              {aktiverSpieler.steuerung === 'KI' && legaleAktionen.length > 0 && (
+                <button onClick={() => fuhreAktionAus(legaleAktionen[0])}>
+                  KI-Aktion ausführen
+                </button>
+              )}
+              {legaleAktionen.map((aktion: SpielAktion) => (
+                <button key={aktionsLabel(aktion)} onClick={() => fuhreAktionAus(aktion)}>
+                  {aktionsLabel(aktion)}
+                </button>
+              ))}
+              <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
+              <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
+              {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
+              {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
+                <button onClick={() => setZustand(z => beendeAusspielphase(z))}>
+                  Ausspielphase beenden
+                </button>
+              )}
+              {zustand.zugphase === 'Aufgabenpruefung' && (
+                <button onClick={() => setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))}>
+                  Aufgabenprüfung beenden
+                </button>
+              )}
+              {zustand.zugphase === 'Zugabschluss' && (
+                <button onClick={() => setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))}>
+                  Zug beenden
+                </button>
+              )}
+              {zustand.zugphase === 'Nachziehphase' && (
+                <button onClick={() => setZustand(z => starteAusspielphase(z))}>
+                  Ausspielphase starten
+                </button>
+              )}
+            </>
           )}
           <p>Quelle: engine.ermittleLegaleAktionen</p>
         </section>
