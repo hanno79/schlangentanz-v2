@@ -8,6 +8,8 @@ import {
   beendeAusspielphase,
   beendeAufgabenpruefung,
   beendeZug,
+  werfeUeberzaehligeHandkartenAb,
+  HANDKARTENLIMIT,
   MAX_KARTEN_PRO_ZUG,
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
@@ -33,6 +35,16 @@ function aktionsLabel(aktion: SpielAktion): string {
   }
 }
 
+function ueberhandAnzahl(zustand: Spielzustand): number {
+  return Math.max(0, zustand.spieler[zustand.aktiverSpielerIndex].hand.length - HANDKARTENLIMIT)
+}
+
+function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
+  const anzahl = ueberhandAnzahl(zustand)
+  if (anzahl === 0) return []
+  return zustand.spieler[zustand.aktiverSpielerIndex].hand.slice(-anzahl).map(k => k.id)
+}
+
 function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung']): string {
   switch (steuerung) {
     case 'Mensch':
@@ -42,8 +54,11 @@ function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung'
   }
 }
 
-function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: SpielAktion[]): string {
+function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: SpielAktion[], ueberhand: number): string {
   if (zustand.zugphase === 'Spielende') return 'Partie beendet.'
+  if (zustand.zugphase === 'Zugabschluss' && ueberhand > 0) {
+    return 'Überzählige Karten abwerfen.'
+  }
   if (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) {
     return 'Ausspielphase beenden.'
   }
@@ -77,6 +92,7 @@ function App({ initialZustand }: AppProps) {
     [spielerwertungen, aktiverSpieler.id],
   )
   const istSpielende = zustand.zugphase === 'Spielende'
+  const ueberhand = ueberhandAnzahl(zustand)
   const gewinnerText = gewinnerListe.length > 0
     ? gewinnerListe.map(g => `${g.spielerId} (${g.gesamtPunkte} Punkte)`).join(', ')
     : 'keine'
@@ -130,6 +146,9 @@ function App({ initialZustand }: AppProps) {
             Aktuelle Wertung:{' '}
             {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
           </p>
+          {ueberhand > 0 && (
+            <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>
+          )}
           {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
           {istSpielende && (
             <>
@@ -140,7 +159,7 @@ function App({ initialZustand }: AppProps) {
           {!istSpielende && legaleAktionen.length > 0 && (
             <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
           )}
-          <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen)}</p>
+          <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
           {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
           <p>
             {aktiverSpieler.geheimeAufgabe
@@ -241,7 +260,7 @@ function App({ initialZustand }: AppProps) {
             <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
           ) : (
             <>
-              <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen)}</p>
+              <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
               <div className="aktions-liste">
                 {aktiverSpieler.steuerung === 'KI' && legaleAktionen.length > 0 && (
                   <button onClick={() => fuhreAktionAus(legaleAktionen[0])}>
@@ -269,7 +288,19 @@ function App({ initialZustand }: AppProps) {
                     Aufgabenprüfung beenden
                   </button>
                 )}
-                {zustand.zugphase === 'Zugabschluss' && (
+                {zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && (
+                  <button
+                    onClick={() => {
+                      setLetzteAktion('Überzählige Karten abwerfen')
+                      setZustand(z =>
+                        werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })
+                      )
+                    }}
+                  >
+                    Überzählige Karten abwerfen
+                  </button>
+                )}
+                {zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && (
                   <button onClick={() => {
                     setLetzteAktion('Zug beenden')
                     setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))

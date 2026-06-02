@@ -524,3 +524,15 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R61 Überhand-Abwurf im Zugabschluss
+
+- [x] Scope: Im Zugabschluss einen sichtbaren Überhand-Hinweis zeigen und einen direkten UI-Pfad zum Abwurf überzähliger Karten anbieten, bevor `Zug beenden` wieder aktiv wird.
+- [x] RED: `npm test -- --run src/App.r61.test.tsx` schlug zunächst fehl, weil der neue Hinweis nur Text war und der Interaktionspfad zum Abwurf fehlte.
+- [x] GREEN: `src/App.tsx` zeigt im Überhand-Fall `Überzählige Karten abwerfen`, ruft `werfeUeberzaehligeHandkartenAb(...)` auf und blendet `Zug beenden` erst nach dem Abwurf wieder ein.
+- [x] Test-Härtung: Der neue Test prüft Hinweis, Button-Wechsel und den nächsten Pflichtschritt nach dem Abwurf.
+- [x] Targeted: `npm test -- --run src/App.r61.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx` → 34 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
