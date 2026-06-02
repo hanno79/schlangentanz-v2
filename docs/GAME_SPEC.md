@@ -166,7 +166,53 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 ## 5. Legal Actions
 
-TODO: List every legal action per phase and its preconditions.
+### 5.1 Action matrix by phase
+
+- **Nachziehphase**
+  - Spieleraktionen sind nicht erlaubt.
+  - Wenn die Mindesthandkarten erreicht sind, darf die UI die Phase mit `Ausspielphase starten` fortsetzen.
+  - Voraussetzung: Der aktive Spieler hat mindestens die geforderte Mindesthand und die Nachziehphase ist abgeschlossen.
+
+- **Ausspielphase**
+  - `NeueSchlangeStarten`
+    - Nur mit einer Farbkarte.
+    - Nur für den aktiven Spieler.
+    - Nur solange der Spieler weniger als 2 Schlangen besitzt.
+    - Nur solange pro Zug noch keine Farbkarte gespielt wurde.
+  - `KarteAnlegen`
+    - Nur mit einer Farbkarte.
+    - Nur an eine existierende, nicht blockierte eigene Schlange.
+    - Nur links oder rechts.
+    - Nur für den aktiven Spieler.
+    - Nur solange pro Zug noch keine Farbkarte gespielt wurde.
+  - `PflichtAbwurf`
+    - Nur wenn keine spielbare Schlangenbau-Aktion verfügbar ist.
+    - Nur für den aktiven Spieler.
+    - Nur mit einer Karte auf der Hand des aktiven Spielers.
+    - Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
+
+- **Aufgabenpruefung**
+  - Spieleraktionen sind nicht erlaubt.
+  - Die Engine prüft offene Aufgaben und die geheime Aufgabe des aktiven Spielers automatisch.
+  - Die UI darf nur Status, Ergebnis und Phasenfortschritt anzeigen; keine neue Spielaktion starten.
+
+- **Zugabschluss**
+  - Wenn überzählige Handkarten vorhanden sind: `Überzählige Karten abwerfen`.
+  - Andernfalls: `Zug beenden`.
+  - Voraussetzung für `Zug beenden`: Die Pflichtaktionen des Zuges sind erfüllt.
+  - In der Endrunde werden nach `Zug beenden` die verbleibenden Spieler automatisch weitergeführt.
+
+- **Spielende**
+  - Keine Spieleraktionen mehr.
+  - Nur Wertung, Ergebnis und Rückblick sind erlaubt.
+
+### 5.2 Gemeinsame Voraussetzungen
+
+- Nur der aktive Spieler darf eine Aktion ausführen.
+- Aktionen außerhalb der passenden Zugphase sind verboten.
+- Eine Karte muss sich auf der Hand des aktiven Spielers befinden, bevor sie gespielt oder abgeworfen werden kann.
+- Die Engine lässt pro Zug höchstens 2 gespielte Karten zu.
+- Nach dem letzten Zug der Endrunde wird automatisch in die Spielende-Phase gewechselt.
 
 > **Draft — Signoff ausstehend.** Die folgenden Schlangenbau-Regeln wurden aus dem Dart-Backlog (R3) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
 
@@ -210,11 +256,48 @@ TODO: List every legal action per phase and its preconditions.
 
 ## 6. Illegal Actions
 
-TODO: List forbidden actions, expected UI behavior, and engine errors.
+- Aktionen in der falschen Zugphase sind verboten.
+- Aktionen eines nicht aktiven Spielers sind verboten.
+- Karten, die nicht auf der Hand des aktiven Spielers liegen, können nicht gespielt oder abgeworfen werden.
+- Farbkarten dürfen pro Zug nur im erlaubten Umfang gespielt werden.
+- Sonderkarten dürfen pro Zug nur im erlaubten Umfang gespielt werden.
+- Neue Schlangen sind nur mit einer Farbkarte und nur bis zum Schlangenlimit erlaubt.
+- Karten können nur an eigene, existente und nicht blockierte Schlangen angelegt werden.
+- `PflichtAbwurf` ist nur erlaubt, wenn keine spielbare Schlangenbau-Aktion verfügbar ist.
+- Nach dem Erreichen des Zuglimits sind weitere Aktionen im selben Zug verboten.
+
+**Erwartetes UI-Verhalten:**
+- Nicht legale Aktionen werden gar nicht als Button angeboten.
+- Wenn keine Aktion mehr möglich ist, zeigt die UI einen klaren Hinweis wie `Keine weiteren legalen Aktionen.` im Aktionsbereich oder `Aktuell keine legalen Aktionen in dieser Phase.` in den Phasenregeln.
+- Pflichtaktionen werden vor Abschluss des Zuges sichtbar gemacht.
+- Bei einem Verstoß soll die UI die deutsche Engine-Meldung sichtbar machen, statt still zu scheitern.
+
+**Typische Engine-Fehler:**
+- falsche Zugphase
+- nicht aktiver Spieler
+- Karte nicht auf der Hand
+- Schlangenlimit erreicht
+- blockierte Schlange
+- Pflichtabwurf ohne tatsächlichen Zwang
+- Zuglimit überschritten
 
 ## 7. Effects & Special Rules
 
-TODO: Define timing, resolution order, modifiers, edge cases, and conflicts.
+- Reihenfolge im Zug: Nachziehphase → Ausspielphase → Aufgabenprüfung → Zugabschluss.
+- Der Zugabschluss entscheidet, ob der Zug normal endet oder ob die Endrunde fortgesetzt wird.
+- Wenn der Nachziehstapel während des Nachziehens leer wird, startet die Endspurt-/Endrunde.
+- In der Endrunde wird nicht mehr nachgezogen; die verbleibenden Spieler werden nur noch einmal nacheinander aktiv.
+- Der Auslöser der Endrunde spielt seinen begonnenen Zug normal zu Ende und wird danach nicht erneut aktiviert.
+- Offene Aufgaben werden nach Erfüllung ersetzt, solange der Aufgabenkartenstapel noch Karten enthält.
+- Geheime Aufgaben werden erst in der Wertung sichtbar.
+- Wenn mehrere Spieler dieselbe offene Aufgabe gleichzeitig erfüllen könnten, hat der aktive Spieler Vorrang.
+- Sonderkarten unterbrechen Farbreihen in Aufgaben, sofern die Aufgabe nichts anderes verlangt.
+- Eine Partie endet erst, wenn die Endrunde abgeschlossen ist und anschließend die Wertung erfolgt.
+
+**Konfliktregeln:**
+- Explizite Zugregeln schlagen allgemeine Hinweise.
+- Engine-Validierung schlägt UI-Hinweise.
+- Wenn zwei Regeln im Widerspruch stehen, gilt die engere, aktuellere Spezifikation.
 
 > **Normquelle aktualisiert.** Für R6 gilt die geprüfte Korrektur zur Website: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt und dürfen nicht als Implementierungsgrundlage verwendet werden.
 

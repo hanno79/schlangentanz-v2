@@ -63,7 +63,7 @@ describe('R19 UI-Grundregel für Kartenarten pro Zug', () => {
         name: /karte blau-03 an schlange schlange-spieler-1-1 rechts anlegen/i,
       }),
     ).toBeNull()
-    expect(within(bereich).getByText(/keine weiteren legalen aktionen/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/keine weiteren legalen aktionen/i, { selector: 'p' })).toBeInTheDocument()
   })
 })
 
@@ -99,7 +99,7 @@ describe('R21 UI-Pflicht-Abwurf', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /karte sonderkarte-01 abwerfen/i }))
 
     expect(within(bereich).getByText(/ablagestapel: sonderkarte-01/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/keine weiteren legalen aktionen/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/keine weiteren legalen aktionen/i, { selector: 'p' })).toBeInTheDocument()
   })
 })
 

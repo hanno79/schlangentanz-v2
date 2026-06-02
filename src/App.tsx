@@ -353,6 +353,14 @@ function App({ initialZustand }: AppProps) {
                 <li key={regel}>{regel}</li>
               ))}
             </ul>
+            <h4>Legale Aktionen dieser Phase</h4>
+            <ul>
+              {legaleAktionen.length > 0 ? (
+                legaleAktionen.map(aktion => <li key={JSON.stringify(aktion)}>{aktionsLabel(aktion)}</li>)
+              ) : (
+                <li>Aktuell keine legalen Aktionen in dieser Phase.</li>
+              )}
+            </ul>
           </section>
           <p>Quelle: engine.ermittleLegaleAktionen</p>
         </section>

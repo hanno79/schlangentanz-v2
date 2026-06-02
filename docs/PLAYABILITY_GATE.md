@@ -557,5 +557,14 @@
 - [x] Targeted: `npm test -- --run src/App.r63.test.tsx` bestanden.
 - [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx src/App.r62.test.tsx src/App.r63.test.tsx` → 37 UI-Tests bestanden.
 - [x] Typecheck: `npm run typecheck` bestanden.
+
+## Evidence — 02.06.2026 R64 Legale Aktionen im Phasenregeln-Bereich
+
+- [x] Scope: Die aktuellen legalen Aktionen im Phasenregeln-Bereich sichtbar machen, damit Spieler auf einen Blick sehen, welche Aktionen in der laufenden Phase noch möglich sind.
+- [x] GREEN: `src/App.tsx` zeigt im Phasenregeln-Bereich eine eigene Liste `Legale Aktionen dieser Phase` und stellt den leeren Zustand klar dar.
+- [x] Test-Härtung: `src/App.r64.test.tsx` prüft den leeren Aktionszustand im Phasenregeln-Bereich.
+- [x] Targeted: `npm test -- --run src/App.r64.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx src/App.r62.test.tsx src/App.r63.test.tsx src/App.r64.test.tsx` → 39 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
