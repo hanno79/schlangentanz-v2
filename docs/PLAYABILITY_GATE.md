@@ -514,3 +514,14 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] GitHub main: Commit `cb32015` gepusht, `HEAD == origin/main` verifiziert.
 - [x] Vercel Deploy: `https://schlangentanz-v2-7gyunmjft-alfreds-projects-7e9df1b4.vercel.app` — `Ready`, alias `https://schlangentanz-v2.vercel.app` zugewiesen.
 - [x] Live Smoke: Production alias rendert Heading `Schlangentanz v2 Greenfield Rebuild`, zeigt `Nächste legale Aktion: Neue Schlange starten mit Karte braun-11`, Klick aktualisiert auf `Nächste legale Aktion: Karte sonderkarte-11 abwerfen`; keine Console-/Page-/Request-Fehler.
+
+## Evidence — 02.06.2026 R55 UI-Aktuelle Wertung des aktiven Spielers
+
+- [x] Scope: Die aktuelle Gesamtwertung des aktiven Spielers im Bereich `Aktiver Spieler` anzeigen; keine neue Regel, nur UI-Anzeige aus vorhandenem Engine-Scoring.
+- [x] RED: `npm test -- --run src/App.r55.test.tsx` fehlte initial, weil die neue Wertung im UI noch nicht gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert `Aktuelle Wertung: ...` direkt aus `berechneSpielzustandGesamtwertung(zustand)` für den aktiven Spieler.
+- [x] Test-Härtung: Der neue Test prüft den Startwert des aktiven Spielers und die Aktualisierung nach einer Engine-Aktion.
+- [x] Targeted: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx` → 28 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.

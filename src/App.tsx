@@ -57,6 +57,10 @@ function App({ initialZustand }: AppProps) {
     [zustand.zugphase, zustand.spieler],
   )
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
+  const aktiverSpielerWertung = useMemo(
+    () => gesamtwertung.spielerwertungen.find(eintrag => eintrag.spielerId === aktiverSpieler.id) ?? null,
+    [gesamtwertung.spielerwertungen, aktiverSpieler.id],
+  )
 
   function fuhreAktionAus(aktion: SpielAktion) {
     setZustand(z => anwendeAktion(z, aktion))
@@ -102,6 +106,10 @@ function App({ initialZustand }: AppProps) {
           <p>Aktiver Spieler: {aktiverSpieler.id}</p>
           <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
           <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
+          <p>
+            Aktuelle Wertung:{' '}
+            {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
+          </p>
           {legaleAktionen.length > 0 && (
             <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
           )}
