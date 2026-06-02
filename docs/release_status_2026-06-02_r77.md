@@ -21,3 +21,6 @@ Die Spezifikation sollte von veraltetem Draft-/Template-Wording bereinigt werden
 - Review-RED: verschärfter Test gegen `Draft — Signoff ausstehend` schlug erwartungsgemäß fehl.
 - GREEN: `npm test -- --run tests/spec_documentation.test.ts` → 13 Tests bestanden.
 - Full Gates: `npm test -- --run` → 51 Testfiles / 316 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- Commit/Push: `6e3ca5f — R77: Spec-Status bereinigen` auf `origin/main`.
+- Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-Errors und ohne altes Draft-/Template-Wording.

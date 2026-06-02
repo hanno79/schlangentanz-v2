@@ -630,3 +630,6 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] GREEN: `tests/spec_documentation.test.ts` sichert ab, dass altes Template-Wording nicht zurückkehrt; nach Codex-Review zusätzlich gegen verbliebene `Draft — Signoff ausstehend`-Hinweise gehärtet.
 - [x] Targeted: `npm test -- --run tests/spec_documentation.test.ts` → 13 Tests bestanden.
 - [x] Full Gates: `npm test -- --run` → 51 Testfiles / 316 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `6e3ca5f — R77: Spec-Status bereinigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-Errors und ohne altes Draft-/Template-Wording.
