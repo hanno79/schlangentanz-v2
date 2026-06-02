@@ -9,6 +9,7 @@
  * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
  * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
  * ÄNDERUNG [01.06.2026]: Geklärte Nachziehstapel-Endrundenregel abgesichert.
+ * ÄNDERUNG [02.06.2026]: R76-Sonderkarten-Regelstatus abgesichert, damit offene Kartenwirkungen nicht geraten werden.
  */
 
 import { readFileSync } from 'node:fs'
@@ -88,6 +89,35 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
     expect(spec).toContain('Violett: 12 Karten, 2 Punkte pro Karte')
     expect(spec).toContain('Grün: 9 Karten, 3 Punkte pro Karte')
     expect(spec).toContain('Einzelne Karten und 2er-Kombinationen zählen 0 Punkte')
+  })
+})
+
+describe('GAME_SPEC R7 Sonderkarten-Regelstatus', () => {
+  it('trennt implementierte Sonderkartenwirkungen von noch offenen Kartenregeln', () => {
+    expect(spec).toContain('### R7.1 Umgesetzte Sonderkartenwirkungen')
+    expect(spec).toContain('Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt')
+    expect(spec).toContain('Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler')
+    expect(spec).toContain('Farbenschutz: Der aktive Spieler markiert eine eigene aktive Schlange als `geschuetzt`; die konkrete Schutzwirkung gegen gegnerische Sonderkarten bleibt offen')
+    expect(spec).toContain('Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet')
+  })
+
+  it('markiert offene normale Sonderkartenwirkungen ausdrücklich als nicht implementierbar ohne User-Signoff', () => {
+    expect(spec).toContain('### R7.2 Offene normale Sonderkartenwirkungen')
+    const offeneKarten = ['Schlangenfrass', 'Schlangenblockade', 'Farbendieb', 'Farbenfusion', 'Verdoppler']
+    offeneKarten.forEach((karte) => {
+      expect(spec).toContain(`${karte}: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt`)
+    })
+    expect(spec).toContain('Keine offene Sonderkartenwirkung darf aus dem Kartennamen geraten werden')
+    const gerateneEffekte = [
+      'Schlangenfrass frisst',
+      'Schlangenblockade blockiert',
+      'Farbendieb stiehlt',
+      'Farbenfusion fusioniert',
+      'Verdoppler verdoppelt',
+    ]
+    gerateneEffekte.forEach((effekt) => {
+      expect(spec).not.toContain(effekt)
+    })
   })
 })
 

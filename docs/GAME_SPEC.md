@@ -313,6 +313,22 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Engine-Validierung schlägt UI-Hinweise.
 - Wenn zwei Regeln im Widerspruch stehen, gilt die engere, aktuellere Spezifikation.
 
+### R7.1 Umgesetzte Sonderkartenwirkungen
+
+- Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt.
+- Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
+- Farbenschutz: Der aktive Spieler markiert eine eigene aktive Schlange als `geschuetzt`; die konkrete Schutzwirkung gegen gegnerische Sonderkarten bleibt offen.
+- Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet.
+
+### R7.2 Offene normale Sonderkartenwirkungen
+
+- Schlangenfrass: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
+- Schlangenblockade: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
+- Farbendieb: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
+- Farbenfusion: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
+- Verdoppler: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
+- Keine offene Sonderkartenwirkung darf aus dem Kartennamen geraten werden.
+
 > **Normquelle aktualisiert.** Für R6 gilt die geprüfte Korrektur zur Website: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt und dürfen nicht als Implementierungsgrundlage verwendet werden.
 
 ### R6 Aufgabenkarten

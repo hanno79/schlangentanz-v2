@@ -603,3 +603,18 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `ad1b47a — R75: Farbenschutz spielbar machen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
 - [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading, Farbenschutz-Materialzeile und Ausspielphase ohne Console-/Page-Errors.
+
+## Evidence — 02.06.2026 R76 Sonderkarten-Regelstatus ohne geratene Effekte
+
+- [x] Scope: Kein neuer Karten-Effekt ohne bestätigte Regel; stattdessen klare Trennung zwischen implementierten Sonderkartenwirkungen und offenen normalen Sonderkartenwirkungen.
+- [x] RED: `npm test -- --run tests/spec_documentation.test.ts` → 2 erwartete Fehlschläge wegen fehlendem R7.1/R7.2-Regelstatus.
+- [x] GREEN: `docs/GAME_SPEC.md` dokumentiert `R7.1 Umgesetzte Sonderkartenwirkungen` für Schlangengrube, Farbenschutz und Regenbogenschlange.
+- [x] GREEN: `docs/GAME_SPEC.md` dokumentiert `R7.2 Offene normale Sonderkartenwirkungen` für Schlangenfrass, Schlangenblockade, Farbendieb, Farbenfusion und Verdoppler.
+- [x] GREEN: `tests/spec_documentation.test.ts` erzwingt, dass offene Sonderkartenwirkungen nicht aus dem Kartennamen geraten werden.
+- [x] Targeted: `npm test -- --run tests/spec_documentation.test.ts` → 12 Tests bestanden.
+- [x] `/simplify`: keine weiteren Dateiänderungen nötig.
+- [x] Review: Codex-Re-Review ohne Blocker und ohne handlungsrelevante Non-Blocker.
+- [x] Full tests: `npm test -- --run` → 51 Testfiles, 315 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
