@@ -37,6 +37,21 @@ body {
   text-transform: uppercase;
 }
 
+.aktions-liste {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.aktions-liste button {
+  width: 100%;
+}
+
+@media (min-width: 720px) {
+  .aktions-liste {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
 h1 {
   margin: 0.25rem 0 1rem;
   font-size: clamp(2.25rem, 7vw, 4.75rem);

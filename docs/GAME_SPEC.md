@@ -303,7 +303,12 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 
 ## 9. UI Requirements
 
-TODO: Define minimum playable UI: visible state, legal action affordances, feedback, accessibility, mobile expectations.
+- Sichtbare Zustandsanzeige für Phase, aktiven Spieler, Wertung, Handkarten, Schlangen, offene Aufgaben und Materialstapel.
+- Legale Aktionen werden als klickbare, textuell eindeutige UI-Affordances angezeigt.
+- Ein klarer Hinweis auf die nächste legale bzw. verpflichtende Aktion ist sichtbar.
+- Rückmeldungen nach Aktionen aktualisieren sich unmittelbar im aktiven Spielerbereich.
+- Accessibility: semantische Bereiche, aussagekräftige Beschriftungen, `aria-current` für den aktiven Spieler und `aria-live="polite"` für den aktiven Spielerbereich.
+- Mobile Mindestanforderung: einspaltiges Layout, gut lesbare Textblöcke und vollbreite Aktionsbuttons auf kleinen Viewports.
 
 ## 10. Non-Goals
 
