@@ -21,8 +21,13 @@ function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
 
-function aufgabeLabel(a: AufgabenkarteInfo): string {
-  return `${a.name} (${a.punkte} Punkte): ${a.bedingung}`
+function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
+  if (!istEndspurt) return `${a.punkte} Punkte`
+  return `${a.punkte} Punkte ×2 = ${a.punkte * 2} Punkte`
+}
+
+function aufgabeLabel(a: AufgabenkarteInfo, istEndspurt: boolean): string {
+  return `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)}): ${a.bedingung}`
 }
 
 function aktionsLabel(aktion: SpielAktion): string {
@@ -114,6 +119,7 @@ function App({ initialZustand }: AppProps) {
   )
   const istSpielende = zustand.zugphase === 'Spielende'
   const ueberhand = ueberhandAnzahl(zustand)
+  const istEndspurt = zustand.spielphase === 'Endspurt'
   const gewinnerText = gewinnerListe.length > 0
     ? gewinnerListe.map(g => `${g.spielerId} (${g.gesamtPunkte} Punkte)`).join(', ')
     : 'keine'
@@ -187,7 +193,7 @@ function App({ initialZustand }: AppProps) {
           {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
           <p>
             {aktiverSpieler.geheimeAufgabe
-              ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe)}`
+              ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
               : 'Geheime Aufgabe: keine'}
           </p>
           {aktiverSpieler.schlangen.map(schlange => (
@@ -258,13 +264,13 @@ function App({ initialZustand }: AppProps) {
           <p>
             Offene Aufgaben:{' '}
             {zustand.offeneAufgaben.length > 0
-              ? zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')
+              ? zustand.offeneAufgaben.map(a => `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)})`).join(', ')
               : 'keine'}
           </p>
           <p>
             Offene Aufgaben-Details:{' '}
             {zustand.offeneAufgaben.length > 0
-              ? zustand.offeneAufgaben.map(aufgabeLabel).join('; ')
+              ? zustand.offeneAufgaben.map(a => aufgabeLabel(a, istEndspurt)).join('; ')
               : 'keine'}
           </p>
         </section>

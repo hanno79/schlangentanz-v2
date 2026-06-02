@@ -568,3 +568,14 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R65 Endspurt verdoppelte offene Aufgaben
+
+- [x] Scope: Offene Aufgaben im Endspurt mit verdoppeltem Wert und klarer ×2-Anzeige sichtbar machen.
+- [x] GREEN: `src/App.tsx` zeigt offene Aufgaben im Endspurt mit `×2 = ...` und verdoppeltem Punktwert an; die geheime Aufgabe bleibt unverändert.
+- [x] Test-Härtung: `src/App.r65.test.tsx` prüft die Endspurt-Anzeige der offenen Aufgaben im Bereich `Material und Aufgaben`.
+- [x] Targeted: `npm test -- --run src/App.r65.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r49.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx src/App.r62.test.tsx src/App.r63.test.tsx src/App.r64.test.tsx src/App.r65.test.tsx` → 41 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
