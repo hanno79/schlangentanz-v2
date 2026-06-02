@@ -377,6 +377,7 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 - Spieler-Farbgruppenpunkte sind die Summe aller Farbgruppenpunkte über beide Schlangen eines Spielers.
 - Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben.
 - Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte.
+- Die UI darf die Wertung pro Spieler zusätzlich in Farbgruppen- und Aufgabenpunkte aufschlüsseln.
 - Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet.
 
 - Eine Partie endet, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist.

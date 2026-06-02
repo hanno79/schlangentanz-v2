@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -277,7 +277,12 @@ function App({ initialZustand }: AppProps) {
         <section aria-label="Wertung">
           <h2>Wertung</h2>
           {gesamtwertung.spielerwertungen.map(eintrag => (
-            <p key={eintrag.spielerId}>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+            <Fragment key={eintrag.spielerId}>
+              <p>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+              <p>
+                Wertungsdetails {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
+              </p>
+            </Fragment>
           ))}
           {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
             <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>

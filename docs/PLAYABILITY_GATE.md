@@ -579,3 +579,14 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R66 Wertungsdetails getrennt anzeigen
+
+- [x] Scope: Die Wertung pro Spieler zusätzlich in Farbgruppen- und Aufgabenpunkte aufschlüsseln.
+- [x] GREEN: `src/App.tsx` zeigt im Bereich `Wertung` neben der Gesamtsumme zusätzlich `Wertungsdetails ...` an.
+- [x] Test-Härtung: `src/App.r66.test.tsx` prüft die Detailzeilen für beide Spieler und leitet Erwartungswerte aus der Engine-Wertung ab.
+- [x] Targeted: `npm test -- --run src/App.r66.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r49.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx src/App.r62.test.tsx src/App.r63.test.tsx src/App.r64.test.tsx src/App.r65.test.tsx src/App.r66.test.tsx` → 43 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
