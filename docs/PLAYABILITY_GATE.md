@@ -581,6 +581,6 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
-- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
-- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [x] Production URL returns HTTP 200 — `https://schlangentanz-v2.vercel.app` geladen.
+- [x] Game route loads without console errors — Browser-Smoketest ohne Console-/Page-Errors.
 - [ ] Legal actions are available only when legal — nach Deploy zu prüfen.

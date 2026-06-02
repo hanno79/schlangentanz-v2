@@ -11,4 +11,4 @@
   - `npm run lint` ✅
   - `npm run build` ✅
 - Hinweis: Die Spezifikation in `docs/GAME_SPEC.md` wurde um die `Schlangengrube`-Aussetzregel und den neuen Sonderkartenaktionstyp ergänzt.
-- Live-Deploy/Smoke: folgt nach dem Commit/Pull/Deploy-Run.
+- Live-Deploy/Smoke: `https://schlangentanz-v2.vercel.app` ✅; Browser-Check liefert `heading=Schlangentanz v2 Greenfield Rebuild`, `material` mit `Schlangengrube` und keine Console-/Page-Errors.
