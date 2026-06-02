@@ -439,10 +439,12 @@ describe('R34 UI-Spielerübersicht', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getAllByText(/spielerübersicht spieler-/i)).toHaveLength(zustand.spieler.length)
-    for (const spieler of zustand.spieler) {
+    for (const [index, spieler] of zustand.spieler.entries()) {
+      const amZugSuffix = index === zustand.aktiverSpielerIndex ? ' — am Zug' : ''
+
       expect(
         within(bereich).getByText(
-          `Spielerübersicht ${spieler.id}: ${spieler.name} (${spieler.steuerung}) — ${spieler.hand.length} Handkarten, ${spieler.schlangen.length} Schlangen`,
+          `Spielerübersicht ${spieler.id}: ${spieler.name} (${spieler.steuerung}) — ${spieler.hand.length} Handkarten, ${spieler.schlangen.length} Schlangen${amZugSuffix}`,
         ),
       ).toBeInTheDocument()
     }
@@ -456,7 +458,7 @@ describe('R34 UI-Spielerübersicht', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(
-      within(bereich).getByText(/spielerübersicht spieler-1: spieler 1 \(mensch\) — 4 handkarten, 1 schlangen/i),
+      within(bereich).getByText(/spielerübersicht spieler-1: spieler 1 \(mensch\) — 4 handkarten, 1 schlangen — am zug/i),
     ).toBeInTheDocument()
   })
 })

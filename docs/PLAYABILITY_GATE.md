@@ -541,3 +541,16 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
 - [x] Live Smoke: Production alias `https://schlangentanz-v2.vercel.app` lädt mit HTTP 200, zeigt Heading `Schlangentanz v2 Greenfield Rebuild`, `Aktuelle Wertung` und `Nächste legale Aktion`; nach einem Klick aktualisiert sich der Hinweis auf die nächste legale Aktion, keine Console-/Page-/Request-Fehler.
+
+## Evidence — 02.06.2026 R57 Aktive-Spieler-Kennzeichnung
+
+- [x] Scope: Den aktiven Spieler in der Spielerübersicht sichtbar als `am Zug` kennzeichnen und per `aria-current` zugänglich machen.
+- [x] RED: `npm test -- --run src/App.r57.test.tsx` schlug initial fehl, weil in der Spielerübersicht noch kein expliziter `am Zug`-Hinweis vorhanden war.
+- [x] GREEN: `src/App.tsx` ergänzt in der Spielerübersicht den aktiven Eintrag um `— am Zug` und setzt `aria-current="true"`.
+- [x] Test-Härtung: Der neue Test prüft sowohl die sichtbare Kennzeichnung als auch die Nicht-Kennzeichnung der anderen Spieler.
+- [x] Targeted: `npm test -- --run src/App.r57.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx` → 30 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [x] Live Smoke: Production alias `https://schlangentanz-v2.vercel.app` liefert HTTP 200 und zeigt die aktive-Spieler-Kennzeichnung `— am Zug`; `Nächste legale Aktion` aktualisiert sich nach einem Klick, keine Console-/Page-/Request-Fehler.

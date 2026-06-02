@@ -155,11 +155,15 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>
-          {zustand.spieler.map(spieler => (
-            <p key={spieler.id}>
-              Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen
-            </p>
-          ))}
+          {zustand.spieler.map(spieler => {
+            const istAktiv = spieler.id === aktiverSpieler.id
+
+            return (
+              <p key={spieler.id} aria-current={istAktiv ? 'true' : undefined}>
+                Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen{istAktiv ? ' — am Zug' : ''}
+              </p>
+            )
+          })}
           {zustand.spieler.map(spieler => (
             <p key={`schlangen-${spieler.id}`}>
               Schlangenübersicht {spieler.id}:{' '}
