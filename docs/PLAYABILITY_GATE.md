@@ -621,3 +621,12 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `46e15b1 — R76: Sonderkarten-Regelstatus absichern` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
 - [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-Errors und findet keine geratenen Effekttexte.
+
+## Evidence — 02.06.2026 R77 Spec-Status bereinigt
+
+- [x] Scope: Veralteten Draft-/Template-Status bereinigen, ohne Spielregeln oder Sonderkartenwirkungen zu ändern.
+- [x] RED: `npm test -- --run tests/spec_documentation.test.ts` → 1 erwarteter Fehlschlag wegen altem Draft-/Template-Status.
+- [x] GREEN: `docs/GAME_SPEC.md` beschreibt sich als aktive inkrementelle Projektspezifikation und ersetzt generische TODO-/Acceptance-Signoff-Blöcke.
+- [x] GREEN: `tests/spec_documentation.test.ts` sichert ab, dass altes Template-Wording nicht zurückkehrt; nach Codex-Review zusätzlich gegen verbliebene `Draft — Signoff ausstehend`-Hinweise gehärtet.
+- [x] Targeted: `npm test -- --run tests/spec_documentation.test.ts` → 13 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 51 Testfiles / 316 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.

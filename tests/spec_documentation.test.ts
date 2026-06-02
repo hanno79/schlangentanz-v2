@@ -10,6 +10,7 @@
  * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
  * ÄNDERUNG [01.06.2026]: Geklärte Nachziehstapel-Endrundenregel abgesichert.
  * ÄNDERUNG [02.06.2026]: R76-Sonderkarten-Regelstatus abgesichert, damit offene Kartenwirkungen nicht geraten werden.
+ * ÄNDERUNG [02.06.2026]: R77 veralteten Draft-/Template-Status der Spezifikation bereinigt.
  */
 
 import { readFileSync } from 'node:fs'
@@ -21,6 +22,19 @@ const SPEC_PATH = join(process.cwd(), 'docs', 'GAME_SPEC.md')
 const spec = readFileSync(SPEC_PATH, 'utf8')
 
 describe('GAME_SPEC R0 Projektziel', () => {
+  it('hat aktiven Arbeitsstatus und kein veraltetes Draft-/Template-Wording', () => {
+    expect(spec).toContain('Status: **Aktive Projektspezifikation — inkrementell versioniert und noch nicht final gesperrt.**')
+    expect(spec).toContain('Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und verifiziert')
+    expect(spec).not.toContain('Draft — Signoff ausstehend')
+    expect(spec).not.toContain('bevor Implementierung beginnen darf')
+    expect(spec).not.toContain('Status: **Draft template — not locked**')
+    expect(spec).not.toContain('No real game implementation should begin until this document is filled and accepted.')
+    expect(spec).not.toContain('TODO: Define cards, tokens, board/positions if any, players, resources, effects, and persistent state.')
+    expect(spec).not.toContain('## 11. Acceptance Sign-Off')
+    expect(spec).not.toContain('Accepted by: TODO')
+    expect(spec).toContain('## 11. Status und offene Regelfragen')
+  })
+
   it('dokumentiert Projektziel, Zielplattform, Einzelspieler-Ausrichtung und KI-Gegnerauswahl', () => {
     expect(spec).toContain('## 1. Overview')
     expect(spec).toContain('Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild')

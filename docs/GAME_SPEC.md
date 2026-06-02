@@ -1,8 +1,8 @@
 # Schlangentanz Game Spec
 
-Status: **Draft template — not locked**
+Status: **Aktive Projektspezifikation — inkrementell versioniert und noch nicht final gesperrt.**
 
-No real game implementation should begin until this document is filled and accepted.
+Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und verifiziert. Nicht bestätigte Regeln bleiben ausdrücklich offen und werden nicht geraten.
 
 ## 1. Overview
 
@@ -16,9 +16,11 @@ No real game implementation should begin until this document is filled and accep
 
 ## 2. Entities
 
-TODO: Define cards, tokens, board/positions if any, players, resources, effects, and persistent state.
+Die zentralen Spielobjekte sind im aktuellen Projektstand konkretisiert und werden in den folgenden Abschnitten weiter präzisiert: Spieler, Handkarten, Nachziehstapel, Ablagestapel, Farbkarten, Sonderkarten, Aufgaben, Schlangen, Schlangen-Zustände, Zugphasen, legale Aktionen und Wertung.
 
-> **Draft — Signoff ausstehend.** Die folgenden Karten-Regeln wurden aus dem Dart-Backlog (R4) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie sind keine Implementierungsfreigabe.
+
+> **Arbeitsstatus.** Die folgenden Karten-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
 
 ### R4.1 Farbkarten-Übersicht
 
@@ -77,7 +79,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 
 ## 4. Turn Structure
 
-> **Draft — Signoff ausstehend.** Die folgenden Zugstruktur-Regeln wurden aus dem Dart-Backlog (R2) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+> **Arbeitsstatus.** Die folgenden Zugstruktur-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
 
 ### R2 Zugstruktur
 
@@ -227,7 +229,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Die Engine lässt pro Zug höchstens 2 gespielte Karten zu.
 - Nach dem letzten Zug der Endrunde wird automatisch in die Spielende-Phase gewechselt.
 
-> **Draft — Signoff ausstehend.** Die folgenden Schlangenbau-Regeln wurden aus dem Dart-Backlog (R3) übernommen und benötigen noch User-Signoff, bevor Implementierung beginnen darf.
+> **Arbeitsstatus.** Die folgenden Schlangenbau-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
 
 ### R3.1 Neue Schlange starten
 
@@ -432,12 +434,9 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 - Dart-Aufgaben sind Backlog-Input und keine automatische Wahrheit.
 - Nicht-Ziele ändern keine offenen Spielregeln.
 
-## 11. Acceptance Sign-Off
+## 11. Status und offene Regelfragen
 
-- [ ] User reviewed this spec
-- [ ] Ambiguous rules resolved
-- [ ] Acceptance tests derived from this spec
-- [ ] Implementation may begin
-
-Accepted by: TODO
-Date: TODO
+- Die Spezifikation ist die aktive Arbeitsgrundlage für die digitale Umsetzung.
+- Bereits implementierte Regeln sind über Tests und Release-Gates abgesichert.
+- Offene Regelfragen werden erst nach User-Signoff oder verlässlicher Normquelle implementiert.
+- Aktuell offen sind insbesondere die konkreten Wirkungen der noch nicht umgesetzten normalen Sonderkarten sowie die endgültige Schutzwirkung von Farbenschutz.
