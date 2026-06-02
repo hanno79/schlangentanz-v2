@@ -498,5 +498,5 @@ A route loading successfully is not enough. A green smoke test is not enough.
 - [x] GREEN/Simplify: `src/App.tsx` nutzt weiter `ermittleLegaleAktionen` und `anwendeAktion`; `/simplify` meldete keine Änderungen.
 - [x] Gates: targeted R53/App grün; full `npm test -- --run` → 33 Testfiles / 269 Tests; Typecheck, Lint, Build, `git diff --check` grün.
 - [x] Codex Review: BLOCKERS none; Non-Blocker Mensch-Zug-Negativtest wurde ergänzt und erneut verifiziert.
-- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
-- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [x] Production URL returns HTTP 200 — R53 Deploy `schlangentanz-v2-fha0kjmfr-alfreds-projects-7e9df1b4.vercel.app`, Alias `https://schlangentanz-v2.vercel.app`, HTTP 200.
+- [x] Game route loads without console errors — R53 Playwright-Smoke: Mensch-Zug ohne KI-Button, nach Zugwechsel `KI-Aktion ausführen` sichtbar, Klick setzt `Gespielte Karten: 1/2` und reduziert KI-Handkarten; keine Console/Page/Request-Fehler.
