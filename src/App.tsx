@@ -303,8 +303,12 @@ function App({ initialZustand }: AppProps) {
                     KI-Aktion ausführen
                   </button>
                 )}
-                {legaleAktionen.map((aktion: SpielAktion) => (
-                  <button key={aktionsLabel(aktion)} onClick={() => fuhreAktionAus(aktion)}>
+                {legaleAktionen.map((aktion: SpielAktion, index) => (
+                  <button
+                    key={aktionsLabel(aktion)}
+                    className={index === 0 ? 'aktions-button--empfohlen' : undefined}
+                    onClick={() => fuhreAktionAus(aktion)}
+                  >
                     {aktionsLabel(aktion)}
                   </button>
                 ))}

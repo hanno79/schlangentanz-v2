@@ -601,3 +601,14 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R68 Hervorhebung der empfohlenen legalen Aktion
+
+- [x] Scope: Den ersten legalen Aktionsbutton im Bereich `Legale Aktionen` visuell hervorheben; keine neue Regel-, Phasen- oder Engine-Logik.
+- [x] GREEN: `src/App.tsx` markiert den ersten legalen Aktionsbutton mit `aktions-button--empfohlen`.
+- [x] Test-Härtung: `src/App.r68.test.tsx` prüft, dass der erste legale Aktionsbutton hervorgehoben ist und die zweite Aktion nicht dieselbe Markierung trägt.
+- [x] Targeted: `npm test -- --run src/App.r68.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App*.test.tsx` → 35 Testfiles, 70 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
