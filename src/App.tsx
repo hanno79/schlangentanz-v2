@@ -260,6 +260,7 @@ function App({ initialZustand }: AppProps) {
           <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
           <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
           <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
+          <p>Materialstapel gesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
           <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
           <p>
             Offene Aufgaben:{' '}

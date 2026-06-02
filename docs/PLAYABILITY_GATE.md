@@ -590,3 +590,14 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R67 Materialstapel gesamt anzeigen
+
+- [x] Scope: Die zusammengefasste Materialmenge aus Nachzieh- und Ablagestapel sichtbar machen.
+- [x] GREEN: `src/App.tsx` zeigt im Bereich `Material und Aufgaben` zusätzlich `Materialstapel gesamt: ... Karten` an.
+- [x] Test-Härtung: `src/App.r67.test.tsx` prüft die berechnete Gesamtzahl aus Nachzieh- und Ablagestapel gegen den Engine-State.
+- [x] Targeted: `npm test -- --run src/App.r67.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App.test.tsx src/App.r35.test.tsx src/App.r36.test.tsx src/App.r37.test.tsx src/App.r38.test.tsx src/App.r39.test.tsx src/App.r40.test.tsx src/App.r41.test.tsx src/App.r42.test.tsx src/App.r43.test.tsx src/App.r44.test.tsx src/App.r45.test.tsx src/App.r46.test.tsx src/App.r47.test.tsx src/App.r48.test.tsx src/App.r49.test.tsx src/App.r50.test.tsx src/App.r51.test.tsx src/App.r52.test.tsx src/App.r53.test.tsx src/App.r54.test.tsx src/App.r55.test.tsx src/App.r56.test.tsx src/App.r57.test.tsx src/App.r58.test.tsx src/App.r59.test.tsx src/App.r60.test.tsx src/App.r61.test.tsx src/App.r62.test.tsx src/App.r63.test.tsx src/App.r64.test.tsx src/App.r65.test.tsx src/App.r66.test.tsx src/App.r67.test.tsx` → 69 UI-Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
