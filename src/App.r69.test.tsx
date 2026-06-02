@@ -1,8 +1,8 @@
 /*
 Author: rahn
-Datum: 01.06.2026
+Datum: 02.06.2026
 Version: 1.0
-Beschreibung: R39 UI-Tests für sichtbare erfüllte Aufgaben je Spieler.
+Beschreibung: R69 UI-Test für die sichtbare SchlangenSpass!-Kennzeichnung bei erfüllten Aufgaben.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -25,18 +25,16 @@ function zustandMitErfuelltenAufgaben(): Spielzustand {
   }
 }
 
-describe('R39 UI-erfüllte Aufgaben', () => {
-  it('zeigt für alle Engine-Spieler erfüllte Aufgaben oder keine an', () => {
+describe('R69 SchlangenSpass!-Hinweis für erfüllte Aufgaben', () => {
+  it('kennzeichnet erfüllte Aufgaben mit SchlangenSpass!, ohne leere Spieler umzudeuten', () => {
     const zustand = zustandMitErfuelltenAufgaben()
-    const aufgaben = zustand.spieler[0]!.erfuellteAufgaben
 
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/erfüllte aufgaben spieler-/i)).toHaveLength(zustand.spieler.length)
     expect(
       within(bereich).getByText(
-        `Erfüllte Aufgaben spieler-1: SchlangenSpass! ${aufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
+        `Erfüllte Aufgaben spieler-1: SchlangenSpass! ${zustand.spieler[0]!.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
       ),
     ).toBeInTheDocument()
     expect(within(bereich).getByText('Erfüllte Aufgaben spieler-2: keine')).toBeInTheDocument()

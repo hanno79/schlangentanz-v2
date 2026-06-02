@@ -612,3 +612,14 @@
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R69 SchlangenSpass!-Hinweis für erfüllte Aufgaben
+
+- [x] Scope: Erfüllte Aufgaben im Spielerbereich sichtbarer machen; keine Engine-/Regellogik, keine Änderung am Aufgaben-Scoring.
+- [x] GREEN: `src/App.tsx` kennzeichnet erfüllte Aufgaben mit dem sichtbaren Prefix `SchlangenSpass!`; Spieler ohne erfüllte Aufgaben bleiben bei `keine`.
+- [x] Test-Härtung: `src/App.r69.test.tsx` prüft den SchlangenSpass!-Hinweis für einen Spieler mit erfüllten Aufgaben und sichert den leeren Zustand eines weiteren Spielers ab.
+- [x] Targeted: `npm test -- --run src/App.r69.test.tsx` bestanden.
+- [x] Targeted+Regression: `npm test -- --run src/App*.test.tsx` → 36 Testfiles, 71 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.

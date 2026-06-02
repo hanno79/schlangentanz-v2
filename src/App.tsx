@@ -249,7 +249,7 @@ function App({ initialZustand }: AppProps) {
               Erfüllte Aufgaben {spieler.id}:{' '}
               {spieler.erfuellteAufgaben.length === 0
                 ? 'keine'
-                : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
+                : `SchlangenSpass! ${spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`}
             </p>
           ))}
           <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
