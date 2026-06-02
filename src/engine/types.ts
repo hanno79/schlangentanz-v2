@@ -72,6 +72,7 @@ export interface Spielzustand {
   spielphase: Spielphase;
   nachziehstapel: Spielkarte[];
   ablagestapel: Spielkarte[];
+  aussetzenSpielerIndizes: number[];
   offeneAufgaben: AufgabenkarteInfo[];
   aufgabenStapel: AufgabenkarteInfo[];
   endrunde: {

@@ -7,7 +7,7 @@ Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz
 
 import type { Spielzustand } from './types';
 import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
-import { starteNeueSchlange, legeKarteAnSchlangeAn, werfeKarteMangelsSpielbarerAktionAb } from './turnState';
+import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, werfeKarteMangelsSpielbarerAktionAb } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
@@ -31,12 +31,23 @@ export interface PflichtAbwurfAktion {
   handkartenId: string;
 }
 
-export type SpielAktion = NeueSchlangeStartenAktion | KarteAnlegenAktion | PflichtAbwurfAktion;
+export interface SonderkarteSpielenAktion {
+  typ: 'SonderkarteSpielen';
+  spielerId: string;
+  handkartenId: string;
+  zielSpielerId: string;
+}
+
+export type SpielAktion = NeueSchlangeStartenAktion | KarteAnlegenAktion | PflichtAbwurfAktion | SonderkarteSpielenAktion;
 
 const POSITIONEN = ['links', 'rechts'] as const;
 
 function verboten(grund: string): AktionErgebnis {
   return { erlaubt: false, grund };
+}
+
+function findeSpielerIndex(zustand: Spielzustand, spielerId: string): number {
+  return zustand.spieler.findIndex((spieler) => spieler.id === spielerId);
 }
 
 function hatLegaleSchlangenbauAktionen(zustand: Spielzustand): boolean {
@@ -58,10 +69,30 @@ function hatLegaleSchlangenbauAktionen(zustand: Spielzustand): boolean {
   return false;
 }
 
+function hatLegaleSchlangengrubeAktionen(zustand: Spielzustand): boolean {
+  if (zustand.zugpflichten.gespielteSonderkarten >= 1) {
+    return false;
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  if (!aktiverSpieler.hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube')) {
+    return false;
+  }
+
+  return zustand.spieler.some((_, index) => {
+    if (index === zustand.aktiverSpielerIndex) return false;
+    if (zustand.spielphase === 'Endspurt') {
+      return zustand.endrunde.verbleibendeSpielerIndizes.includes(index);
+    }
+    return true;
+  });
+}
+
 const PHASE_FEHLER: Record<SpielAktion['typ'], string> = {
   NeueSchlangeStarten: 'Neue Schlangen können nur in der Ausspielphase gestartet werden.',
   KarteAnlegen: 'Karten können nur in der Ausspielphase angelegt werden.',
   PflichtAbwurf: 'Pflicht-Abwurf ist nur in der Ausspielphase erlaubt.',
+  SonderkarteSpielen: 'Sonderkarten können nur in der Ausspielphase gespielt werden.',
 };
 
 export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): AktionErgebnis {
@@ -91,8 +122,28 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     if (karte.typ === 'Sonderkarte' && zustand.zugpflichten.gespielteSonderkarten >= 1) {
       return verboten('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
     }
-    if (hatLegaleSchlangenbauAktionen(zustand)) {
+    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand)) {
       return verboten('Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.');
+    }
+    return { erlaubt: true };
+  }
+
+  if (aktion.typ === 'SonderkarteSpielen') {
+    if (karte.typ !== 'Sonderkarte' || karte.name !== 'Schlangengrube') {
+      return verboten('Schlangengrube kann nur mit der Schlangengrube-Sonderkarte gespielt werden.');
+    }
+    if (zustand.zugpflichten.gespielteSonderkarten >= 1) {
+      return verboten('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
+    }
+    const zielSpielerIndex = findeSpielerIndex(zustand, aktion.zielSpielerId);
+    if (zielSpielerIndex < 0) {
+      return verboten('Der ausgewählte Zielspieler ist ungültig.');
+    }
+    if (zielSpielerIndex === zustand.aktiverSpielerIndex) {
+      return verboten('Der aktive Spieler kann sich nicht selbst aussetzen.');
+    }
+    if (zustand.spielphase === 'Endspurt' && !zustand.endrunde.verbleibendeSpielerIndizes.includes(zielSpielerIndex)) {
+      return verboten('Der gewählte Zielspieler hat in der Endrunde keinen verbleibenden Zug mehr.');
     }
     return { erlaubt: true };
   }
@@ -109,6 +160,10 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
       return verboten(`Ein Spieler darf maximal ${MAX_SCHLANGEN_PRO_SPIELER} Schlangen haben.`);
     }
     return { erlaubt: true };
+  }
+
+  if (aktion.typ !== 'KarteAnlegen') {
+    return verboten('Karten können nur an Schlangen angelegt werden.');
   }
 
   // KarteAnlegen
@@ -167,6 +222,24 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
     }
   }
 
+  const schlangengruben = aktiverSpieler.hand.filter(
+    (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+  );
+  for (const karte of schlangengruben) {
+    for (const spieler of zustand.spieler) {
+      if (spieler.id === aktiverSpieler.id) continue;
+      const kandidat: SonderkarteSpielenAktion = {
+        typ: 'SonderkarteSpielen',
+        spielerId: aktiverSpieler.id,
+        handkartenId: karte.id,
+        zielSpielerId: spieler.id,
+      };
+      if (pruefeAktion(zustand, kandidat).erlaubt) {
+        aktionen.push(kandidat);
+      }
+    }
+  }
+
   if (aktionen.length === 0 && zustand.zugpflichten.gespielteKarten < MAX_KARTEN_PRO_ZUG) {
     // ÄNDERUNG 01.06.2026: Pflicht-Abwurf nur nach ausgeschlossenen Schlangenbau-Aktionen anbieten.
     // aktionen.length === 0 belegt hier bereits, dass keine Schlangenbau-Aktion legal ist.
@@ -195,10 +268,17 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Spiel
         schlangenId: aktion.schlangenId,
         position: aktion.position,
       });
+    case 'SonderkarteSpielen':
+      return spieleSchlangengrube(zustand, {
+        kartenId: aktion.handkartenId,
+        zielSpielerIndex: findeSpielerIndex(zustand, aktion.zielSpielerId),
+      });
     case 'PflichtAbwurf':
       return werfeKarteMangelsSpielbarerAktionAb(zustand, {
         kartenId: aktion.handkartenId,
         keineSpielbareKarte: true,
       });
+    default:
+      throw new Error('Unbekannte Aktion.');
   }
 }

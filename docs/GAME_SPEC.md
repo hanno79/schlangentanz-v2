@@ -128,6 +128,7 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
 - Farbkarten können an eigene Schlangen angelegt oder zum Starten neuer Schlangen genutzt werden.
 - Sonderkarten führen ihren Kartentext aus.
 - Sonderkarten zählen für das 2-Karten-Limit; Kartentexte können später ausdrücklich zusätzliche Sonderregeln definieren.
+- Schlangengrube lässt einen anderen Spieler seinen nächsten Zug aussetzen; bei 3 oder mehr Spielern wählt der aktive Spieler den Zielspieler, bei 2 Spielern ist automatisch der andere Spieler betroffen.
 - Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
 - Abwerfen gilt als Karte gespielt für die Zugpflicht.
 - Abgeworfene Karten kommen offen auf den Ablagestapel.
@@ -191,6 +192,11 @@ TODO: Define cards, tokens, board/positions if any, players, resources, effects,
     - Nur für den aktiven Spieler.
     - Nur mit einer Karte auf der Hand des aktiven Spielers.
     - Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
+  - `SonderkarteSpielen`
+    - Nur mit `Schlangengrube`.
+    - Nur für den aktiven Spieler.
+    - Nur auf einen anderen Spieler.
+    - Markiert den gewählten Spieler für seinen nächsten Zug als ausgesetzt.
 
 - **Aufgabenprüfung**
   - Spieleraktionen sind nicht erlaubt.

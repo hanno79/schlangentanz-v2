@@ -50,6 +50,7 @@ export function deserialisiere(json: string): Spielzustand {
   }
 
   migriereZugpflichtenVorR19(parsed);
+  migriereAussetzenVorR74(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -63,6 +64,13 @@ function migriereZugpflichtenVorR19(wert: unknown): void {
   if (!hatFarbkarten && !hatSonderkarten && zugpflichten['gespielteKarten'] === 0) {
     zugpflichten['gespielteFarbkarten'] = 0;
     zugpflichten['gespielteSonderkarten'] = 0;
+  }
+}
+
+function migriereAussetzenVorR74(wert: unknown): void {
+  if (!istObjekt(wert)) return;
+  if (!Object.prototype.hasOwnProperty.call(wert, 'aussetzenSpielerIndizes')) {
+    wert['aussetzenSpielerIndizes'] = [];
   }
 }
 
@@ -117,6 +125,7 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   }
 
   validiereZugpflichten(obj['zugpflichten']);
+  validiereAussetzen(obj['aussetzenSpielerIndizes'], spieler.length);
 
   const verwendeteIds = new Set<string>();
   for (const einSpieler of spieler) {
@@ -224,6 +233,15 @@ function validiereZugpflichten(wert: unknown): void {
   }
   if (gespielteFarbkarten + gespielteSonderkarten !== gespielteKarten) {
     throw new Error('Ungültiger Spielzustand: gespielte Kartenarten passen nicht zur Anzahl gespielter Karten.');
+  }
+}
+
+function validiereAussetzen(wert: unknown, spielerAnzahl: number): void {
+  const aussetzenSpielerIndizes = erwarteArray(wert, 'aussetzenSpielerIndizes');
+  for (const idx of aussetzenSpielerIndizes as number[]) {
+    if (!Number.isInteger(idx) || idx < 0 || idx >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: aussetzenSpielerIndizes enthält ungültigen Spielerindex.');
+    }
   }
 }
 

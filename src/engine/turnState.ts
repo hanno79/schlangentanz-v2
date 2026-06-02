@@ -37,6 +37,38 @@ function pruefeSpielkartenLimit(zustand: Spielzustand, kartentyp: Spielkarte['ty
   }
 }
 
+function ermittleNaechsteSpielerReihenfolge(aktiverSpielerIndex: number, spielerAnzahl: number): number[] {
+  const reihenfolge: number[] = [];
+  for (let verschiebung = 1; verschiebung <= spielerAnzahl; verschiebung += 1) {
+    reihenfolge.push((aktiverSpielerIndex + verschiebung) % spielerAnzahl);
+  }
+  return reihenfolge;
+}
+
+function findeNaechstenAktivenSpieler(
+  kandidaten: number[],
+  aussetzenSpielerIndizes: number[],
+): { aktiverSpielerIndex: number; aussetzenSpielerIndizes: number[]; verbleibendeSpielerIndizes: number[] } | null {
+  const neueAussetzenSpielerIndizes = [...aussetzenSpielerIndizes];
+
+  for (let index = 0; index < kandidaten.length; index += 1) {
+    const kandidat = kandidaten[index];
+    const gesperrterIndex = neueAussetzenSpielerIndizes.indexOf(kandidat);
+    if (gesperrterIndex >= 0) {
+      neueAussetzenSpielerIndizes.splice(gesperrterIndex, 1);
+      continue;
+    }
+
+    return {
+      aktiverSpielerIndex: kandidat,
+      aussetzenSpielerIndizes: neueAussetzenSpielerIndizes,
+      verbleibendeSpielerIndizes: kandidaten.slice(index),
+    };
+  }
+
+  return null;
+}
+
 function inkrementiereSpieleKarten(
   zustand: Spielzustand,
   neueSpieler: Spielzustand['spieler'],
@@ -321,6 +353,57 @@ export function legeKarteAnSchlangeAn(
   return inkrementiereSpieleKarten(zustand, neueSpieler, karte.typ);
 }
 
+export function spieleSchlangengrube(
+  zustand: Spielzustand,
+  optionen: { kartenId?: string; zielSpielerIndex?: number } | null = {},
+): Spielzustand {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    throw new Error('Schlangengrube kann nur in der Ausspielphase gespielt werden.');
+  }
+
+  const { kartenId, zielSpielerIndex } = optionen ?? {};
+  if (!istGueltigeId(kartenId)) {
+    throw new Error('Es muss genau eine Handkarte zum Spielen gewählt werden.');
+  }
+  if (typeof zielSpielerIndex !== 'number' || !Number.isInteger(zielSpielerIndex)) {
+    throw new Error('Für Schlangengrube muss ein Zielspieler gewählt werden.');
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const karte = aktiverSpieler.hand.find((k) => k.id === kartenId);
+  if (!karte) {
+    throw new Error('Die Karte befindet sich nicht auf der Hand des aktiven Spielers.');
+  }
+  if (karte.typ !== 'Sonderkarte' || karte.name !== 'Schlangengrube') {
+    throw new Error('Schlangengrube kann nur mit der Schlangengrube-Sonderkarte gespielt werden.');
+  }
+  if (zielSpielerIndex < 0 || zielSpielerIndex >= zustand.spieler.length) {
+    throw new Error('Der ausgewählte Zielspieler ist ungültig.');
+  }
+  if (zielSpielerIndex === zustand.aktiverSpielerIndex) {
+    throw new Error('Der aktive Spieler kann sich nicht selbst aussetzen.');
+  }
+  if (zustand.spielphase === 'Endspurt' && !zustand.endrunde.verbleibendeSpielerIndizes.includes(zielSpielerIndex)) {
+    throw new Error('Der gewählte Zielspieler hat in der Endrunde keinen verbleibenden Zug mehr.');
+  }
+
+  pruefeSpielkartenLimit(zustand, karte.typ);
+
+  const neueHand = aktiverSpieler.hand.filter((k) => k.id !== kartenId);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, { hand: neueHand });
+
+  return inkrementiereSpieleKarten(
+    {
+      ...zustand,
+      spieler: neueSpieler,
+      ablagestapel: [...zustand.ablagestapel, karte],
+      aussetzenSpielerIndizes: [...zustand.aussetzenSpielerIndizes, zielSpielerIndex],
+    },
+    neueSpieler,
+    karte.typ,
+  );
+}
+
 export function beendeZug(
   zustand: Spielzustand,
   { pflichtenErfuellt }: { pflichtenErfuellt: boolean } = { pflichtenErfuellt: false },
@@ -339,10 +422,18 @@ export function beendeZug(
     return beendeZugInEndspurt(zustand);
   }
 
-  const naechsterSpielerIndex = (zustand.aktiverSpielerIndex + 1) % zustand.spieler.length;
-  const { neueHand, neuerNachziehstapel, spielphase, endrunde } = zieheAufMindesthand(zustand, naechsterSpielerIndex);
+  const kandidaten = ermittleNaechsteSpielerReihenfolge(zustand.aktiverSpielerIndex, zustand.spieler.length);
+  const naechster = findeNaechstenAktivenSpieler(kandidaten, zustand.aussetzenSpielerIndizes);
+  if (!naechster) {
+    throw new Error('Ungültiger Spielzustand: Kein aktiver Spieler für den nächsten Zug gefunden.');
+  }
+
+  const { neueHand, neuerNachziehstapel, spielphase, endrunde } = zieheAufMindesthand(
+    { ...zustand, aussetzenSpielerIndizes: naechster.aussetzenSpielerIndizes },
+    naechster.aktiverSpielerIndex,
+  );
   const neueSpieler = zustand.spieler.map((spieler, index) =>
-    index === naechsterSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
+    index === naechster.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
   );
 
   return {
@@ -351,32 +442,46 @@ export function beendeZug(
     nachziehstapel: neuerNachziehstapel,
     spielphase,
     endrunde,
-    aktiverSpielerIndex: naechsterSpielerIndex,
+    aussetzenSpielerIndizes: naechster.aussetzenSpielerIndizes,
+    aktiverSpielerIndex: naechster.aktiverSpielerIndex,
     zugpflichten: erstelleLeereZugpflichten(),
     zugphase: 'Nachziehphase',
   };
 }
 
 function beendeZugInEndspurt(zustand: Spielzustand): Spielzustand {
-  const neueVerbleibende = zustand.endrunde.verbleibendeSpielerIndizes.filter(
+  const restlicheSpieler = zustand.endrunde.verbleibendeSpielerIndizes.filter(
     (idx) => idx !== zustand.aktiverSpielerIndex,
   );
+  const naechster = findeNaechstenAktivenSpieler(restlicheSpieler, zustand.aussetzenSpielerIndizes);
 
-  if (neueVerbleibende.length === 0) {
+  if (!naechster) {
     return {
       ...zustand,
       spielphase: 'Beendet',
       zugphase: 'Spielende',
       zugpflichten: erstelleLeereZugpflichten(),
       endrunde: { ...zustand.endrunde, verbleibendeSpielerIndizes: [] },
+      aussetzenSpielerIndizes: [],
     };
   }
 
+  const { neueHand, neuerNachziehstapel, spielphase } = zieheAufMindesthand(
+    { ...zustand, aussetzenSpielerIndizes: naechster.aussetzenSpielerIndizes },
+    naechster.aktiverSpielerIndex,
+  );
+
   return {
     ...zustand,
-    aktiverSpielerIndex: neueVerbleibende[0],
+    aktiverSpielerIndex: naechster.aktiverSpielerIndex,
+    spieler: zustand.spieler.map((spieler, index) =>
+      index === naechster.aktiverSpielerIndex ? { ...spieler, hand: neueHand } : spieler,
+    ),
+    nachziehstapel: neuerNachziehstapel,
+    spielphase,
     zugpflichten: erstelleLeereZugpflichten(),
     zugphase: 'Nachziehphase',
-    endrunde: { ...zustand.endrunde, verbleibendeSpielerIndizes: neueVerbleibende },
+    endrunde: { ...zustand.endrunde, verbleibendeSpielerIndizes: naechster.verbleibendeSpielerIndizes },
+    aussetzenSpielerIndizes: naechster.aussetzenSpielerIndizes,
   };
 }

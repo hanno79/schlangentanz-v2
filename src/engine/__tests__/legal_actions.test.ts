@@ -346,6 +346,38 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
     expect(zustand.spieler[0].schlangen[0].karten.map((karte) => karte.id)).toEqual([startkarte.id]);
   });
 
+  it('bietet Schlangengrube als auswählbare Sonderkartenaktion mit Zielspieler an', () => {
+    const zustand = erstelleSpielzustand(3, () => 0.999999);
+    const schlangengrube = zustand.nachziehstapel.find(
+      (karte): karte is Extract<typeof karte, { typ: 'Sonderkarte' }> =>
+        karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+    );
+
+    if (!schlangengrube) throw new Error('Testsetup erwartet Schlangengrube.');
+
+    zustand.spieler[0].hand[0] = schlangengrube;
+    zustand.zugphase = 'Ausspielphase';
+
+    const schlangengrubenAktionen = ermittleLegaleAktionen(zustand).filter(
+      (aktion) => (aktion as { typ: string }).typ === 'SonderkarteSpielen',
+    );
+
+    expect(schlangengrubenAktionen).toEqual([
+      {
+        typ: 'SonderkarteSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: schlangengrube.id,
+        zielSpielerId: 'spieler-2',
+      },
+      {
+        typ: 'SonderkarteSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: schlangengrube.id,
+        zielSpielerId: 'spieler-3',
+      },
+    ]);
+  });
+
   it('weist manuell konstruierte Aktionen mit falscher Spieler-ID zurück', () => {
     const zustand = zustandInAusspielphase();
     const karte = zustand.spieler[0].hand[0];

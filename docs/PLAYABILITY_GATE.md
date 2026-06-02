@@ -567,3 +567,20 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Typecheck: `npm run typecheck` bestanden.
 - [x] Lint: `npm run lint` bestanden.
 - [x] Build: `npm run build` bestanden.
+
+## Evidence — 02.06.2026 R74 Schlangengrube lässt einen gewählten Spieler aussetzen
+
+- [x] Scope: Die Sonderkarte `Schlangengrube` soll einen anderen Spieler gezielt für seinen nächsten Zug aussetzen lassen; bei 2 Spielern ist automatisch der andere Spieler betroffen.
+- [x] GREEN: `src/engine/turnState.ts` führt `aussetzenSpielerIndizes` ein und konsumiert den Marker beim Zugwechsel.
+- [x] GREEN: `src/engine/legalActions.ts` bietet `SonderkarteSpielen` für `Schlangengrube` mit auswählbaren Zielspielern an.
+- [x] GREEN: `src/App.tsx` zeigt die neue Sonderkartenaktion im UI mit Zielspieler an.
+- [x] GREEN: `docs/GAME_SPEC.md` beschreibt die Schlangengrube-Regel und den neuen Sonderkartenaktionstyp.
+- [x] Test-Härtung: `src/engine/__tests__/turn_state.test.ts` prüft das Aussetzen beim Zugwechsel; `src/engine/__tests__/legal_actions.test.ts` prüft die auswählbaren Zielspieler.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/legal_actions.test.ts src/engine/__tests__/turn_state.test.ts src/App.r53.test.tsx` bestanden.
+- [x] Full tests: `npm test -- --run` → 50 Testfiles, 297 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] Lint: `npm run lint` bestanden.
+- [x] Build: `npm run build` bestanden.
+- [ ] Production URL returns HTTP 200 — nach Deploy zu prüfen.
+- [ ] Game route loads without console errors — nach Deploy zu prüfen.
+- [ ] Legal actions are available only when legal — nach Deploy zu prüfen.

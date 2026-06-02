@@ -7,9 +7,11 @@ Beschreibung: TDD-Tests für die Zugphasen-State-Machine im Schlangentanz-Engine
 
 import { describe, it, expect } from 'vitest';
 import {
+  anwendeAktion,
   beendeAufgabenpruefung,
   beendeAusspielphase,
   beendeZug,
+  ermittleLegaleAktionen,
   erstelleSpielzustand,
   starteAusspielphase,
   werfeKarteMangelsSpielbarerAktionAb,
@@ -112,6 +114,33 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
     expect(() => starteAusspielphase(zustand)).toThrow(
       'Ausspielphase kann nur aus der Nachziehphase gestartet werden.',
     );
+  });
+
+  it('lässt Schlangengrube den gewählten Spieler beim Zugwechsel aussetzen', () => {
+    const zustand = erstelleSpielzustand(3, () => 0.999999);
+    const schlangengrube = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+    );
+    if (!schlangengrube) throw new Error('Testsetup erwartet Schlangengrube.');
+
+    zustand.spieler[0].hand[0] = schlangengrube;
+    zustand.zugphase = 'Ausspielphase';
+
+    const schlangengrubeAktion = ermittleLegaleAktionen(zustand).find(
+      (aktion) => aktion.typ === 'SonderkarteSpielen' && aktion.zielSpielerId === 'spieler-2',
+    );
+    if (!schlangengrubeAktion) throw new Error('Testsetup erwartet eine Schlangengrube-Aktion.');
+
+    const nachAktion = anwendeAktion(zustand, schlangengrubeAktion);
+    expect(nachAktion.aussetzenSpielerIndizes).toEqual([1]);
+
+    const beendeterZug = beendeZug({
+      ...nachAktion,
+      zugphase: 'Zugabschluss',
+    }, { pflichtenErfuellt: true });
+
+    expect(beendeterZug.aktiverSpielerIndex).toBe(2);
+    expect(beendeterZug.aussetzenSpielerIndizes).toEqual([]);
   });
 });
 

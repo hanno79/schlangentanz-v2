@@ -60,8 +60,12 @@ function aktionsLabel(aktion: SpielAktion): string {
       return `Neue Schlange starten mit Karte ${aktion.handkartenId}`
     case 'KarteAnlegen':
       return `Karte ${aktion.handkartenId} an Schlange ${aktion.schlangenId} ${aktion.position} anlegen`
+    case 'SonderkarteSpielen':
+      return `Schlangengrube mit Karte ${aktion.handkartenId} auf ${aktion.zielSpielerId.replace(/^spieler-/, 'Spieler ')} spielen`
     case 'PflichtAbwurf':
       return `Karte ${aktion.handkartenId} abwerfen`
+    default:
+      return 'Unbekannte Aktion'
   }
 }
 

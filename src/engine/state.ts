@@ -83,6 +83,7 @@ function erstelleSpielzustandVonDefinitionen(
     spielphase: 'Normal',
     nachziehstapel: hauptdeck,
     ablagestapel: [],
+    aussetzenSpielerIndizes: [],
     offeneAufgaben: aufgabenStapel.splice(0, OFFENE_AUFGABEN_START),
     aufgabenStapel,
     endrunde: { ausloeserSpielerIndex: null, verbleibendeSpielerIndizes: [] },
