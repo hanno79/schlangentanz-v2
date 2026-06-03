@@ -1,9 +1,10 @@
 /*
 Author: rahn
 Datum: 03.06.2026
-Version: 1.0
-Beschreibung: R82-Regressionstests — Aufgabenprüfung Fusionsexperte: beendeAufgabenpruefung erkennt
-  mindestens 2 farbenfusionen in einer Spielerschlange und erfüllt die offene Aufgabe.
+Version: 1.1
+Beschreibung: R82/R83-Regressionstests — Aufgabenprüfung:
+  R82: beendeAufgabenpruefung erkennt mindestens 2 Farbfusionen in einer Spielerschlange (Fusionsexperte).
+  R83: beendeAufgabenpruefung erkennt mindestens 4 Sonderkarten in eigenen Schlangen (Schlangenbeschwörer).
 */
 
 import { describe, it, expect } from 'vitest';
@@ -24,6 +25,14 @@ const ersatzAufgabe: AufgabenkarteInfo = {
   name: 'Gelber Schatz',
   punkte: 5,
   bedingung: 'Bilde eine Gruppe aus min. 6 gelben Karten.',
+};
+
+const zweiteErsatzAufgabe: AufgabenkarteInfo = {
+  typ: 'Aufgabenkarte',
+  id: 'aufgabe-14',
+  name: 'Lila Riese',
+  punkte: 5,
+  bedingung: 'Bilde die längste ununterbrochene Kette violetter Karten (mindestens 3).',
 };
 
 function schlangeM(anzahlFusionen: number): Schlange {
@@ -148,5 +157,145 @@ describe('R82 Aufgabenprüfung — Fusionsexperte', () => {
     expect(aktualisiert.spieler[0].erfuellteAufgaben).toHaveLength(1);
     expect(aktualisiert.offeneAufgaben).toHaveLength(0);
     expect(aktualisiert.aufgabenStapel).toHaveLength(0);
+  });
+});
+
+// ─── R83 Schlangenbeschwörer ───────────────────────────────────────────────
+
+const schlangenbeschwörer: AufgabenkarteInfo = {
+  typ: 'Aufgabenkarte',
+  id: 'aufgabe-07',
+  name: 'Schlangenbeschwörer',
+  punkte: 7,
+  bedingung: 'Habe min. 4 Sonderkarten in deinen Schlangen.',
+};
+
+function schlangeNSonderkarten(schlangenId: string, anzahl: number): Schlange {
+  return {
+    id: schlangenId,
+    karten: Array.from({ length: anzahl }, (_, i): SonderkarteInfo => ({
+      typ: 'Sonderkarte',
+      id: `sonder-${schlangenId}-${i + 1}`,
+      name: 'Schlangenfrass',
+    })),
+    zustand: 'aktiv',
+  };
+}
+
+function zustandFuerSchlangenbeschwörer(anzahlSonderkarten: number, aktiverSpielerIndex = 0) {
+  const base = erstelleSpielzustand(2, () => 0.999999);
+  return {
+    ...base,
+    aktiverSpielerIndex,
+    zugphase: 'Aufgabenpruefung' as const,
+    spieler: base.spieler.map((s, i) =>
+      i === aktiverSpielerIndex
+        ? { ...s, schlangen: [schlangeNSonderkarten('schlange-test', anzahlSonderkarten)], erfuellteAufgaben: [] }
+        : s,
+    ),
+    offeneAufgaben: [schlangenbeschwörer],
+    aufgabenStapel: [ersatzAufgabe],
+  };
+}
+
+describe('R83 Aufgabenprüfung — Schlangenbeschwörer', () => {
+  it('verschiebt Schlangenbeschwörer zu erfuellteAufgaben, wenn aktiver Spieler 4 Sonderkarten in eigenen Schlangen hat', () => {
+    const zustand = zustandFuerSchlangenbeschwörer(4);
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.spieler[0].erfuellteAufgaben).toHaveLength(1);
+    expect(aktualisiert.spieler[0].erfuellteAufgaben[0].name).toBe('Schlangenbeschwörer');
+    expect(aktualisiert.offeneAufgaben.some((a) => a.name === 'Schlangenbeschwörer')).toBe(false);
+    expect(aktualisiert.zugphase).toBe('Zugabschluss');
+  });
+
+  it('erfüllt Schlangenbeschwörer nicht, wenn aktiver Spieler nur 3 Sonderkarten hat', () => {
+    const zustand = zustandFuerSchlangenbeschwörer(3);
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.spieler[0].erfuellteAufgaben).toHaveLength(0);
+    expect(aktualisiert.offeneAufgaben.some((a) => a.name === 'Schlangenbeschwörer')).toBe(true);
+  });
+
+  it('erfüllt Schlangenbeschwörer auch mit 4 Sonderkarten verteilt über beide eigenen Schlangen', () => {
+    const basis = zustandFuerSchlangenbeschwörer(0);
+    const zustand = {
+      ...basis,
+      spieler: basis.spieler.map((s, i) =>
+        i === 0
+          ? {
+              ...s,
+              schlangen: [
+                schlangeNSonderkarten('schlange-links', 2),
+                schlangeNSonderkarten('schlange-rechts', 2),
+              ],
+              erfuellteAufgaben: [],
+            }
+          : s,
+      ),
+    };
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.spieler[0].erfuellteAufgaben).toHaveLength(1);
+    expect(aktualisiert.spieler[0].erfuellteAufgaben[0].name).toBe('Schlangenbeschwörer');
+  });
+
+  it('zählt gegnerische Sonderkarten nicht für den aktiven Spieler', () => {
+    const basis = zustandFuerSchlangenbeschwörer(3);
+    const zustand = {
+      ...basis,
+      spieler: basis.spieler.map((s, i) =>
+        i !== 0 ? { ...s, schlangen: [schlangeNSonderkarten('schlange-gegner', 4)], erfuellteAufgaben: [] } : s,
+      ),
+    };
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.spieler[0].erfuellteAufgaben).toHaveLength(0);
+    expect(aktualisiert.offeneAufgaben.some((a) => a.name === 'Schlangenbeschwörer')).toBe(true);
+  });
+
+  it('erfüllt Schlangenbeschwörer für aktiverSpielerIndex 1', () => {
+    const zustand = zustandFuerSchlangenbeschwörer(4, 1);
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.spieler[0].erfuellteAufgaben).toHaveLength(0);
+    expect(aktualisiert.spieler[1].erfuellteAufgaben).toHaveLength(1);
+    expect(aktualisiert.spieler[1].erfuellteAufgaben[0].name).toBe('Schlangenbeschwörer');
+    expect(aktualisiert.zugphase).toBe('Zugabschluss');
+  });
+
+  it('erfüllt Fusionsexperte und Schlangenbeschwörer in derselben Aufgabenprüfung', () => {
+    const basis = zustandFuerAufgabenpruefung(2, [ersatzAufgabe, zweiteErsatzAufgabe]);
+    const m2 = schlangeM(2);
+    const zustand = {
+      ...basis,
+      offeneAufgaben: [fusionsexperte, schlangenbeschwörer],
+      spieler: basis.spieler.map((s, i) =>
+        i === 0
+          ? {
+              ...s,
+              schlangen: [
+                { ...m2, karten: [...m2.karten, ...schlangeNSonderkarten('schlange-zusatz', 2).karten] },
+              ],
+              erfuellteAufgaben: [],
+            }
+          : s,
+      ),
+    };
+
+    const aktualisiert = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
+
+    expect(aktualisiert.spieler[0].erfuellteAufgaben.map((a) => a.name)).toEqual([
+      'Fusionsexperte',
+      'Schlangenbeschwörer',
+    ]);
+    expect(aktualisiert.offeneAufgaben.map((a) => a.name)).toEqual(['Gelber Schatz', 'Lila Riese']);
+    expect(aktualisiert.aufgabenStapel).toHaveLength(0);
+    expect(aktualisiert.zugphase).toBe('Zugabschluss');
   });
 });
