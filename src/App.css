@@ -1,4 +1,15 @@
+/* Stitch-inspirierte Wald-Palette (F1) */
 :root {
+  --st-color-background: #ecffe3;
+  --st-color-primary: #4b6700;
+  --st-color-primary-container: #a4de02;
+  --st-color-secondary-container: #fecb00;
+  --st-color-tertiary: #b12d00;
+  --st-color-border-strong: #063907;
+  --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
+  --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
+  --st-border-width-chunky: 3px;
+  --st-shadow-hard: 0 4px 0 #063907;
   color: #f4f0e8;
   background: #12100d;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
