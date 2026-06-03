@@ -380,6 +380,29 @@ export function beendeAusspielphase(
   return { ...zustand, zugphase: 'Aufgabenpruefung' };
 }
 
+function pruefeFusionsexperte(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some(
+    (schlange) => schlange.karten.filter(istFarbenfusionkarte).length >= 2,
+  );
+}
+
+function erfuelleAufgabe(zustand: Spielzustand, aufgabeIndex: number): Spielzustand {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const erfuellteAufgabe = zustand.offeneAufgaben[aufgabeIndex];
+  const neueOffeneAufgaben = zustand.offeneAufgaben.filter((_, i) => i !== aufgabeIndex);
+  const [nachgezogeneAufgabe, ...neuerStapel] = zustand.aufgabenStapel;
+  return {
+    ...zustand,
+    zugphase: 'Zugabschluss',
+    offeneAufgaben: nachgezogeneAufgabe ? [...neueOffeneAufgaben, nachgezogeneAufgabe] : neueOffeneAufgaben,
+    aufgabenStapel: neuerStapel,
+    spieler: aktualisiereAktivenSpieler(zustand, {
+      erfuellteAufgaben: [...aktiverSpieler.erfuellteAufgaben, erfuellteAufgabe],
+    }),
+  };
+}
+
 export function beendeAufgabenpruefung(
   zustand: Spielzustand,
   { aufgabenGeprueft }: { aufgabenGeprueft: boolean } = { aufgabenGeprueft: false },
@@ -390,6 +413,12 @@ export function beendeAufgabenpruefung(
   if (aufgabenGeprueft !== true) {
     throw new Error('Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.');
   }
+
+  const fusionsexperteIndex = zustand.offeneAufgaben.findIndex((a) => a.name === 'Fusionsexperte');
+  if (fusionsexperteIndex >= 0 && pruefeFusionsexperte(zustand)) {
+    return erfuelleAufgabe(zustand, fusionsexperteIndex);
+  }
+
   return { ...zustand, zugphase: 'Zugabschluss' };
 }
 

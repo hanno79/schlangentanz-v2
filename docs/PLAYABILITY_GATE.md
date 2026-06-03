@@ -673,3 +673,13 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `0e323f4 — R81: Serialization und Reaktionsvalidierung härten` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
 - [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-/Request-Errors.
+
+## Evidence — 03.06.2026 R82 Fusionsexperte-Aufgabenprüfung
+
+- [x] Scope: Erster engine-seitiger Aufgabenprüfungs-Durchstich für `Fusionsexperte` umgesetzt.
+- [x] GREEN: `beendeAufgabenpruefung` erfüllt `Fusionsexperte`, wenn der aktive Spieler eine eigene Schlange mit mindestens zwei echten `Farbenfusion`-Sonderkarten in `schlange.karten` besitzt.
+- [x] GREEN: Verwaiste `farbenfusionen`-Metadaten ohne echte Karten erfüllen die Aufgabe nicht.
+- [x] GREEN: Erfüllung verschiebt die offene Aufgabe zum aktiven Spieler, zieht bei vorhandenem Aufgabenstapel eine neue offene Aufgabe nach und erfindet bei leerem Stapel keine Aufgabe.
+- [x] Codex: Finaler Re-Review meldete `BLOCKERS: keine` und `NON-BLOCKERS: keine`.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/turn_state_r82_aufgaben.test.ts src/engine/__tests__/farbenfusion.test.ts src/engine/__tests__/turn_state.test.ts` → 3 Testfiles / 74 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 57 Testfiles / 401 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
