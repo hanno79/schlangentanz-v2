@@ -683,3 +683,6 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Codex: Finaler Re-Review meldete `BLOCKERS: keine` und `NON-BLOCKERS: keine`.
 - [x] Targeted: `npm test -- --run src/engine/__tests__/turn_state_r82_aufgaben.test.ts src/engine/__tests__/farbenfusion.test.ts src/engine/__tests__/turn_state.test.ts` → 3 Testfiles / 74 Tests bestanden.
 - [x] Full Gates: `npm test -- --run` → 57 Testfiles / 401 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `77e2478 — R82: Fusionsexperte-Aufgabenprüfung umsetzen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading, Engine-/Karten-Copy und meldet keine Console-/Page-/Request-Errors.

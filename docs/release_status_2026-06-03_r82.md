@@ -29,4 +29,6 @@ Beschreibung: Release-Status für den R82-Slice zur ersten engine-seitigen Aufga
 
 ## Release-Status
 
-- Bereit für Commit, Push, Production-Deploy und Live-Smoke.
+- Commit/Push: `77e2478 — R82: Fusionsexperte-Aufgabenprüfung umsetzen` auf `origin/main`.
+- Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading `Schlangentanz v2 Greenfield Rebuild`, Engine-/Karten-Copy und meldet keine Console-/Page-/Request-Errors.
