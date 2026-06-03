@@ -608,8 +608,8 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 
 - [x] Scope: Kein neuer Karten-Effekt ohne bestätigte Regel; stattdessen klare Trennung zwischen implementierten Sonderkartenwirkungen und offenen normalen Sonderkartenwirkungen.
 - [x] RED: `npm test -- --run tests/spec_documentation.test.ts` → 2 erwartete Fehlschläge wegen fehlendem R7.1/R7.2-Regelstatus.
-- [x] GREEN: `docs/GAME_SPEC.md` dokumentiert `R7.1 Umgesetzte Sonderkartenwirkungen` für Schlangengrube, Farbenschutz und Regenbogenschlange.
-- [x] GREEN: `docs/GAME_SPEC.md` dokumentiert `R7.2 Offene normale Sonderkartenwirkungen` für Schlangenfrass, Schlangenblockade, Farbendieb, Farbenfusion und Verdoppler.
+- [x] GREEN: `docs/GAME_SPEC.md` dokumentiert `R7.1 Umgesetzte Sonderkartenwirkungen` für Schlangengrube, Schlangenblockade, Farbenschutz und Regenbogenschlange.
+- [x] GREEN: `docs/GAME_SPEC.md` dokumentiert `R7.2 Offene normale Sonderkartenwirkungen` für Schlangenfrass, Farbendieb, Farbenfusion und Verdoppler.
 - [x] GREEN: `tests/spec_documentation.test.ts` erzwingt, dass offene Sonderkartenwirkungen nicht aus dem Kartennamen geraten werden.
 - [x] Targeted: `npm test -- --run tests/spec_documentation.test.ts` → 12 Tests bestanden.
 - [x] `/simplify`: keine weiteren Dateiänderungen nötig.
@@ -633,3 +633,31 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `6e3ca5f — R77: Spec-Status bereinigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
 - [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-Errors und ohne altes Draft-/Template-Wording.
+
+## Evidence — 02.06.2026 R78 Farbenschutz-Abwehr gegen Schlangengrube
+
+- [x] Quelle: `https://schlangentanz.ch/rules` per Playwright geprüft; relevante Timing-/Sonderkartenregeln in `docs/rules_source_2026-06-02_r78.md` extrahiert.
+- [x] Scope: Farbenschutz darf als einmalige Reaktion des Zielspielers gegnerische Angriffe abwehren; R78 setzt dies für die bereits implementierte `Schlangengrube` um.
+- [x] RED: `npm test -- --run src/engine/__tests__/legal_actions.test.ts src/engine/__tests__/turn_state.test.ts` → 2 erwartete Fehlschläge vor Implementierung.
+- [x] GREEN: `SonderkarteSpielen.abwehrHandkartenId` ist nur mit Farbenschutz des Zielspielers legal; bei Anwendung werden Schlangengrube und Farbenschutz abgelegt und kein Aussetzen gesetzt.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/legal_actions.test.ts src/engine/__tests__/turn_state.test.ts tests/spec_documentation.test.ts` → 3 Testfiles / 103 Tests bestanden.
+- [x] Typecheck: `npm run typecheck` bestanden.
+- [x] `/simplify`: Claude Code Opusplan prüfte den Slice; zwei kleine DRY-/Predicate-Vereinfachungen angewendet.
+- [x] Full Gates: `npm run typecheck`, `npm test -- --run` → 51 Testfiles / 319 Tests bestanden, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+
+## Evidence — 03.06.2026 R79 Schlangenfrass dokumentiert
+
+- [x] Scope: Schlangenfrass ist als implementierte Sonderkarte dokumentiert; die alte offene Formulierung wurde aus der Spezifikation entfernt.
+- [x] GREEN: `docs/GAME_SPEC.md` führt Schlangenfrass jetzt in `R7.1 Umgesetzte Sonderkartenwirkungen` und nicht mehr als offene Sonderkarte.
+- [x] GREEN: `tests/spec_documentation.test.ts` prüft die neue Implementierungsschreibung und verhindert die alte offene Schlangenfrass-Formulierung.
+- [x] Targeted: `npm test -- --run tests/spec_documentation.test.ts src/engine/__tests__/schlangenfrass.test.ts` → 2 Testfiles / 28 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 55 Testfiles / 370 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+
+## Evidence — 03.06.2026 R80 Farbenfusion dokumentiert und testabgesichert
+
+- [x] Scope: Farbenfusion ist als implementierte normale Sonderkarte dokumentiert; die offene Sonderkartenliste enthält dafür keinen offenen Rest mehr.
+- [x] GREEN: `docs/GAME_SPEC.md` führt Farbenfusion in `R7.1 Umgesetzte Sonderkartenwirkungen` und nicht mehr als offene normale Sonderkartenwirkung.
+- [x] GREEN: `src/engine/__tests__/farbenfusion.test.ts` prüft das Fusionieren zweier nebeneinanderliegender gleichfarbiger Karten sowie die Ablehnung ungültiger Kandidaten.
+- [x] GREEN: `tests/spec_documentation.test.ts` prüft die neue Implementierungszuordnung und das Entfernen der alten offenen Farbenfusion-Formulierung.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/farbenfusion.test.ts tests/spec_documentation.test.ts` → 2 Testfiles / 15 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 56 Testfiles / 372 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.

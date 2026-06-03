@@ -18,7 +18,8 @@ import {
   werfeKarteMangelsSpielbarerAktionAb,
   werfeUeberzaehligeHandkartenAb,
 } from '../index';
-import { zustandMitFarbenschutzUndEigenerSchlange } from './testHelpers';
+
+import { sonderkarte, zustandMitFarbenschutzUndEigenerSchlange } from './testHelpers';
 
 function basisZustand() {
   return erstelleSpielzustand(2, () => 0.999999);
@@ -34,6 +35,7 @@ function zustandInAusspielphaseMitGespieltenKarten(gespielteKarten: number) {
   const gespielteSonderkarten = gespielteKarten === 2 ? 1 : 0;
   return { ...zustand, zugpflichten: { ...zustand.zugpflichten, gespielteKarten, gespielteFarbkarten, gespielteSonderkarten } };
 }
+
 
 describe('Turn State Machine — R2 Nachziehphase', () => {
   it('zieht Pflichtkarten bis zur Mindesthand und wechselt in die Ausspielphase', () => {
@@ -118,6 +120,164 @@ describe('Turn State Machine — R2 Nachziehphase', () => {
     );
   });
 
+  it('setzt pendingReaktion wenn Schlangengrube gegen Zielspieler mit Farbenschutz gespielt wird', () => {
+    // R78 Blocker 1: Abwehr ist Zielspieler-Entscheidung. Schlangengrube setzt pendingReaktion statt sofort auszusetzen.
+    const zustand = erstelleSpielzustand(3, () => 0.999999);
+    const schlangengrube = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+    );
+    const farbenschutz = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz',
+    );
+    if (!schlangengrube || !farbenschutz) throw new Error('Testsetup erwartet Schlangengrube und Farbenschutz.');
+
+    zustand.spieler[0].hand[0] = schlangengrube;
+    zustand.spieler[1].hand[0] = farbenschutz;
+    zustand.zugphase = 'Ausspielphase';
+
+    const nachAngriff = anwendeAktion(zustand, {
+      typ: 'SonderkarteSpielen',
+      spielerId: 'spieler-1',
+      handkartenId: schlangengrube.id,
+      zielSpielerId: 'spieler-2',
+    });
+
+    // Schlangengrube abgelegt, aber kein Aussetzen — Farbenschutz noch auf Hand, pendingReaktion gesetzt
+    expect(nachAngriff.aussetzenSpielerIndizes).toEqual([]);
+    expect(nachAngriff.ablagestapel.map((k) => k.id)).toContain(schlangengrube.id);
+    expect(nachAngriff.spieler[1].hand.map((k) => k.id)).toContain(farbenschutz.id);
+    expect(nachAngriff.pendingReaktion).toEqual({
+      typ: 'SchlangengrubeAbwehr',
+      angreifenderSpielerIndex: 0,
+      zielSpielerIndex: 1,
+    });
+    expect(nachAngriff.zugpflichten.gespielteSonderkarten).toBe(1);
+  });
+
+  it('neutralisiert Schlangengrube wenn Zielspieler explizit SchlangengrubeAbwehren wählt', () => {
+    // R78: Zielspieler entscheidet Abwehren → beide Karten abgelegt, kein Aussetzen.
+    const zustand = erstelleSpielzustand(3, () => 0.999999);
+    const schlangengrube = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+    );
+    const farbenschutz = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz',
+    );
+    if (!schlangengrube || !farbenschutz) throw new Error('Testsetup erwartet Schlangengrube und Farbenschutz.');
+
+    zustand.spieler[0].hand[0] = schlangengrube;
+    zustand.spieler[1].hand[0] = farbenschutz;
+    zustand.zugphase = 'Ausspielphase';
+
+    const nachAngriff = anwendeAktion(zustand, {
+      typ: 'SonderkarteSpielen',
+      spielerId: 'spieler-1',
+      handkartenId: schlangengrube.id,
+      zielSpielerId: 'spieler-2',
+    });
+    const nachAbwehr = anwendeAktion(nachAngriff, {
+      typ: 'SchlangengrubeAbwehren',
+      spielerId: 'spieler-2',
+      abwehrHandkartenId: farbenschutz.id,
+    });
+
+    expect(nachAbwehr.aussetzenSpielerIndizes).toEqual([]);
+    expect(nachAbwehr.ablagestapel.map((k) => k.id)).toContain(schlangengrube.id);
+    expect(nachAbwehr.ablagestapel.map((k) => k.id)).toContain(farbenschutz.id);
+    expect(nachAbwehr.spieler[1].hand.map((k) => k.id)).not.toContain(farbenschutz.id);
+    expect(nachAbwehr.pendingReaktion).toBeNull();
+  });
+
+  it('lässt Schlangengrube durchlassen wenn Zielspieler SchlangengrubeDurchlassen wählt', () => {
+    // R78: Zielspieler entscheidet Durchlassen → Aussetzen-Effekt tritt ein.
+    const zustand = erstelleSpielzustand(3, () => 0.999999);
+    const schlangengrube = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+    );
+    const farbenschutz = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz',
+    );
+    if (!schlangengrube || !farbenschutz) throw new Error('Testsetup erwartet Schlangengrube und Farbenschutz.');
+
+    zustand.spieler[0].hand[0] = schlangengrube;
+    zustand.spieler[1].hand[0] = farbenschutz;
+    zustand.zugphase = 'Ausspielphase';
+
+    const nachAngriff = anwendeAktion(zustand, {
+      typ: 'SonderkarteSpielen',
+      spielerId: 'spieler-1',
+      handkartenId: schlangengrube.id,
+      zielSpielerId: 'spieler-2',
+    });
+    const nachDurchlassen = anwendeAktion(nachAngriff, {
+      typ: 'SchlangengrubeDurchlassen',
+      spielerId: 'spieler-2',
+    });
+
+    expect(nachDurchlassen.aussetzenSpielerIndizes).toContain(1);
+    expect(nachDurchlassen.pendingReaktion).toBeNull();
+    expect(nachDurchlassen.spieler[1].hand.map((k) => k.id)).toContain(farbenschutz.id);
+  });
+
+  it('Schlangengrube ohne Farbenschutz beim Zielspieler setzt sofort aus (kein pendingReaktion)', () => {
+    // Kein Farbenschutz beim Ziel → Auto-Resolve, kein pending-Schritt nötig.
+    const zustand = erstelleSpielzustand(3, () => 0.999999);
+    const schlangengrube = zustand.nachziehstapel.find(
+      (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube',
+    );
+    if (!schlangengrube) throw new Error('Testsetup erwartet Schlangengrube.');
+
+    zustand.spieler[0].hand[0] = schlangengrube;
+    // Sicherstellen: kein Farbenschutz auf Spieler-2-Hand
+    zustand.spieler[1].hand = zustand.spieler[1].hand.filter(
+      (k) => !(k.typ === 'Sonderkarte' && k.name === 'Farbenschutz'),
+    );
+    zustand.zugphase = 'Ausspielphase';
+
+    const nachAngriff = anwendeAktion(zustand, {
+      typ: 'SonderkarteSpielen',
+      spielerId: 'spieler-1',
+      handkartenId: schlangengrube.id,
+      zielSpielerId: 'spieler-2',
+    });
+
+    expect(nachAngriff.aussetzenSpielerIndizes).toContain(1);
+    expect(nachAngriff.pendingReaktion).toBeNull();
+  });
+
+  it('ermöglicht Verdoppler-Abwehr durch den Reaktionsspieler und verhindert den Bonus', () => {
+    const zustand = erstelleSpielzustand(2, () => 0.999999);
+    const verdoppler = sonderkarte('verdoppler-test', 'Verdoppler');
+    const farbenschutz = sonderkarte('farbenschutz-test', 'Farbenschutz');
+
+    zustand.spieler[0].hand[0] = verdoppler;
+    zustand.spieler[1].hand[0] = farbenschutz;
+    zustand.zugphase = 'Ausspielphase';
+
+    const nachVerdoppler = anwendeAktion(zustand, {
+      typ: 'VerdopplerSpielen',
+      spielerId: 'spieler-1',
+      handkartenId: verdoppler.id,
+    });
+
+    expect(nachVerdoppler.pendingReaktion).toEqual({
+      typ: 'VerdopplerAbwehr',
+      angreifenderSpielerIndex: 0,
+      verbleibendeSpielerIndizes: [1],
+    });
+
+    const nachAbwehr = anwendeAktion(nachVerdoppler, {
+      typ: 'VerdopplerAbwehren',
+      spielerId: 'spieler-2',
+      abwehrHandkartenId: farbenschutz.id,
+    });
+
+    expect(nachAbwehr.pendingReaktion).toBeNull();
+    expect(nachAbwehr.zugpflichten.verdopplerBonusAktiv).toBe(false);
+    expect(nachAbwehr.spieler[1].hand.map((karte) => karte.id)).not.toContain(farbenschutz.id);
+    expect(nachAbwehr.ablagestapel.map((karte) => karte.id)).toContain(farbenschutz.id);
+  });
+
   it('lässt Schlangengrube den gewählten Spieler beim Zugwechsel aussetzen', () => {
     const zustand = erstelleSpielzustand(3, () => 0.999999);
     const schlangengrube = zustand.nachziehstapel.find(
@@ -190,7 +350,7 @@ describe('Turn State Machine — R2.3 Ausspielphase', () => {
     };
 
     expect(() => beendeAusspielphase(zustand)).toThrow(
-      'Pro Zug darf höchstens eine Farbkarte gespielt werden.',
+      'Pro Zug darf höchstens 1 Farbkarte gespielt werden.',
     );
   });
 

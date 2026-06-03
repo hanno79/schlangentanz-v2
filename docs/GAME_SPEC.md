@@ -121,16 +121,23 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 
 - Nach dem Nachziehen spielt der aktive Spieler Karten aus seiner Hand.
 - Der aktive Spieler muss mindestens 1 Karte spielen.
-- Der aktive Spieler darf maximal 2 Karten spielen.
-- Pro Zug darf höchstens 1 Farbkarte und höchstens 1 Sonderkarte gespielt werden.
-- Zulässig sind damit: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte.
-- Nicht zulässig sind zwei Farbkarten oder zwei Sonderkarten im selben Zug.
+- Der aktive Spieler darf ohne Verdoppler maximal 2 Karten spielen.
+- Grundsätzlich gilt pro Zug: höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
+- Wird zu Beginn des Zuges ein Verdoppler gespielt, erhöht sich das Limit für diesen Zug auf höchstens 2 Farbkarten und höchstens 2 Sonderkarten; die zusätzliche Karte darf frei eine Farbkarte oder eine Sonderkarte sein.
+- In einem Verdoppler-Zug sind insgesamt höchstens 3 Karten zulässig.
+- Zulässig sind ohne Verdoppler: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte.
+- Zulässig sind mit aktivem Verdoppler: zwei Farbkarten, zwei Sonderkarten oder gemischte Kombinationen bis insgesamt 3 Karten.
 - Die Reihenfolge ausgespielter Karten ist frei wählbar.
 - Jede Karte wird einzeln ausgeführt und deren Effekt abgehandelt.
 - Farbkarten können an eigene Schlangen angelegt oder zum Starten neuer Schlangen genutzt werden.
 - Sonderkarten führen ihren Kartentext aus.
 - Sonderkarten zählen für das 2-Karten-Limit; Kartentexte können später ausdrücklich zusätzliche Sonderregeln definieren.
-- Farbenschutz schützt eine eigene aktive Schlange, indem deren Zustand auf `geschuetzt` gesetzt wird; der spätere Schutz gegen gegnerische Sonderkarten wird in einem eigenen Folgeslice konkretisiert.
+- Farbenschutz kann als eigene Karte auf eine eigene aktive Schlange gespielt werden und deren Zustand auf `geschuetzt` setzen.
+- Farbenschutz kann außerdem als einmalige Reaktion des betroffenen Zielspielers gegen gegnerische Angriffe eingesetzt werden: Die angesagte gegnerische Sonderkarte wird wirkungslos, die Angriffskarte und der Farbenschutz kommen auf den Ablagestapel, und der Angreifer darf denselben Angriff nicht auf ein anderes Ziel umlegen.
+- R78 konkretisiert diese Reaktion zunächst für die bereits implementierte Angriffskarte `Schlangengrube`: Wird sie mit Farbenschutz abgewehrt, wird der Zielspieler nicht zum Aussetzen markiert.
+- Verdoppler kann zu Beginn der Ausspielphase mit einer Verdopplerkarte gespielt werden und aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte.
+- Der aktuelle Reaktionsspieler kann den Verdoppler-Bonus mit Farbenschutz abwehren oder durchlassen.
+- Verdoppler selbst zählt als Sonderkarte.
 - Schlangengrube lässt einen anderen Spieler seinen nächsten Zug aussetzen; bei 3 oder mehr Spielern wählt der aktive Spieler den Zielspieler, bei 2 Spielern ist automatisch der andere Spieler betroffen.
 - Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
 - Abwerfen gilt als Karte gespielt für die Zugpflicht.
@@ -183,28 +190,76 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
     - Nur mit einer Farbkarte.
     - Nur für den aktiven Spieler.
     - Nur solange der Spieler weniger als 2 Schlangen besitzt.
-    - Nur solange pro Zug noch keine Farbkarte gespielt wurde.
+    - Nur solange pro Zug die Farbkartenbegrenzung noch nicht erreicht ist.
   - `KarteAnlegen`
     - Nur mit einer Farbkarte.
     - Nur an eine existierende, nicht blockierte eigene Schlange.
     - Nur links oder rechts.
     - Nur für den aktiven Spieler.
-    - Nur solange pro Zug noch keine Farbkarte gespielt wurde.
+    - Nur solange pro Zug die Farbkartenbegrenzung noch nicht erreicht ist.
   - `PflichtAbwurf`
     - Nur wenn keine spielbare Aktion verfügbar ist.
     - Nur für den aktiven Spieler.
     - Nur mit einer Karte auf der Hand des aktiven Spielers.
-    - Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
+    - Pro Zug gelten die Kartenlimits der Ausspielphase; bei aktivem Verdoppler-Bonus sind bis zu 2 Farbkarten und bis zu 2 Sonderkarten möglich.
   - `SonderkarteSpielen`
     - Nur mit `Schlangengrube`.
     - Nur für den aktiven Spieler.
     - Nur auf einen anderen Spieler.
-    - Markiert den gewählten Spieler für seinen nächsten Zug als ausgesetzt.
+    - Ohne Farbenschutz-Abwehr markiert sie den gewählten Spieler für seinen nächsten Zug als ausgesetzt.
+    - Mit `abwehrHandkartenId` darf genau der Zielspieler eine eigene `Farbenschutz`-Handkarte als Abwehr einsetzen; dann werden Schlangengrube und Farbenschutz abgelegt und der Aussetzen-Effekt entfällt.
+  - `VerdopplerSpielen`
+    - Nur mit `Verdoppler`.
+    - Nur für den aktiven Spieler.
+    - Nur zu Beginn der Ausspielphase.
+    - Aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte.
+  - `VerdopplerAbwehren`
+    - Nur während einer ausstehenden Verdoppler-Reaktion.
+    - Nur mit `Farbenschutz`.
+    - Nur durch den aktuellen Reaktionsspieler.
+  - `VerdopplerDurchlassen`
+    - Nur während einer ausstehenden Verdoppler-Reaktion.
+    - Nur durch den aktuellen Reaktionsspieler.
+    - Beendet die Reaktionsentscheidung ohne Abwehr.
   - `FarbenschutzSpielen`
     - Nur mit `Farbenschutz`.
     - Nur für den aktiven Spieler.
     - Nur auf eine eigene aktive Schlange.
     - Setzt den Zustand der gewählten Schlange auf `geschuetzt`.
+  - `FarbendiebSpielen`
+    - Nur mit `Farbendieb`.
+    - Nur für den aktiven Spieler.
+    - Nur auf eine gegnerische Schlange und eine Karte daraus.
+    - Die gestohlene Karte kann an einer beliebigen Position in eine eigene Schlange eingefügt werden, auch zwischen bestehende Karten.
+    - Der Angriff kann durch den Zielspieler mit Farbenschutz abgewehrt werden.
+  - `SchlangenblockadeSpielen`
+    - Nur mit `Schlangenblockade`.
+    - Nur für den aktiven Spieler.
+    - Nur auf eine konkrete Zielschlange eines anderen Spielers.
+    - Der Angriff kann durch den Zielspieler mit Farbenschutz abgewehrt werden.
+  - `SchlangenblockadeAbwehren`
+    - Nur während einer ausstehenden Schlangenblockade-Reaktion.
+    - Nur mit `Farbenschutz`.
+    - Nur durch den aktuellen Zielspieler.
+  - `SchlangenblockadeDurchlassen`
+    - Nur während einer ausstehenden Schlangenblockade-Reaktion.
+    - Nur durch den aktuellen Zielspieler.
+  - `SchlangenfrassSpielen`
+    - Nur mit `Schlangenfrass`.
+    - Nur für den aktiven Spieler.
+    - Wählt 1 oder 2 Karten aus beliebigen Schlangen.
+    - Geschützte Ziele werden per Farbenschutz-Reaktionskette im Uhrzeigersinn abgewickelt.
+  - `SchlangenfrassAbwehren`
+    - Nur während einer ausstehenden Schlangenfrass-Reaktion.
+    - Nur mit `Farbenschutz`.
+    - Nur durch den aktuellen Reaktionsspieler.
+  - `SchlangenfrassDurchlassen`
+    - Nur während einer ausstehenden Schlangenfrass-Reaktion.
+    - Nur durch den aktuellen Reaktionsspieler.
+  - `FarbenfusionSpielen`
+    - Nur mit `Farbenfusion`.
+    - Nur für den aktiven Spieler.
+    - Nur auf zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange.
 
 - **Aufgabenprüfung**
   - Spieleraktionen sind nicht erlaubt.
@@ -226,7 +281,7 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Nur der aktive Spieler darf eine Aktion ausführen.
 - Aktionen außerhalb der passenden Zugphase sind verboten.
 - Eine Karte muss sich auf der Hand des aktiven Spielers befinden, bevor sie gespielt oder abgeworfen werden kann.
-- Die Engine lässt pro Zug höchstens 2 gespielte Karten zu.
+- Die Engine lässt ohne Verdoppler pro Zug höchstens 2 gespielte Karten zu; mit aktivem Verdoppler sind bis zu 3 gespielte Karten zulässig.
 - Nach dem letzten Zug der Endrunde wird automatisch in die Spielende-Phase gewechselt.
 
 > **Arbeitsstatus.** Die folgenden Schlangenbau-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
@@ -317,19 +372,20 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 
 ### R7.1 Umgesetzte Sonderkartenwirkungen
 
-- Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt.
+- Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
 - Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
-- Farbenschutz: Der aktive Spieler markiert eine eigene aktive Schlange als `geschuetzt`; die konkrete Schutzwirkung gegen gegnerische Sonderkarten bleibt offen.
+- Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
+- Farbendieb: Der aktive Spieler wählt eine Karte aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
+- Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt.
+- Schlangenfrass: Der aktive Spieler wählt 1 oder 2 Karten aus beliebigen Schlangen. Geschützte Ziele werden per Farbenschutz-Reaktionskette im Uhrzeigersinn abgewickelt.
+- Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte. Die Fusion zählt als eine Punkteeinheit; für den Vielfaltbonus wird sie ignoriert.
+- Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen. Die Karte aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte. Die zusätzliche Karte darf eine weitere Farbkarte oder eine weitere Sonderkarte sein; insgesamt sind dann bis zu 3 Karten möglich. Der Bonus gilt nur für den aktuellen Zug, und Verdoppler selbst zählt als Sonderkarte. Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren.
 - Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet.
 
-### R7.2 Offene normale Sonderkartenwirkungen
+### R7.2 Keine offenen normalen Sonderkartenwirkungen
 
-- Schlangenfrass: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
-- Schlangenblockade: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
-- Farbendieb: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
-- Farbenfusion: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
-- Verdoppler: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt.
-- Keine offene Sonderkartenwirkung darf aus dem Kartennamen geraten werden.
+- Aktuell sind keine normalen Sonderkartenwirkungen offen.
+- Neue offene Sonderkartenwirkungen werden nur mit bestätigter Normquelle ergänzt; sie dürfen nicht aus dem Kartennamen geraten werden.
 
 > **Normquelle aktualisiert.** Für R6 gilt die geprüfte Korrektur zur Website: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt und dürfen nicht als Implementierungsgrundlage verwendet werden.
 
@@ -439,4 +495,4 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 - Die Spezifikation ist die aktive Arbeitsgrundlage für die digitale Umsetzung.
 - Bereits implementierte Regeln sind über Tests und Release-Gates abgesichert.
 - Offene Regelfragen werden erst nach User-Signoff oder verlässlicher Normquelle implementiert.
-- Aktuell offen sind insbesondere die konkreten Wirkungen der noch nicht umgesetzten normalen Sonderkarten sowie die endgültige Schutzwirkung von Farbenschutz.
+- Aktuell sind keine offenen normalen Sonderkartenwirkungen mehr vermerkt; weitere offene Regelfragen betreffen andere Bereiche.

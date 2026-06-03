@@ -16,6 +16,7 @@ import { ermittleFarbgruppen, type Farbgruppe } from './colorGroups';
 
 const FARBEN: Farbe[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'];
 const REGENBOGEN_NAME = 'Regenbogenschlange';
+const FARBENFUSION_NAME = 'Farbenfusion';
 
 type RegenbogenEntscheidung =
   | { art: 'weiter' }
@@ -52,18 +53,51 @@ function istRegenbogenschlange(karte: Spielkarte): boolean {
   return karte.typ === 'Sonderkarte' && karte.name === REGENBOGEN_NAME;
 }
 
+function istFarbenfusion(karte: Spielkarte): boolean {
+  return karte.typ === 'Sonderkarte' && karte.name === FARBENFUSION_NAME;
+}
+
+function findeFarbenfusionPunkte(schlange: Schlange, karteId: string): number {
+  const eintrag = schlange.farbenfusionen?.find((fusion) => fusion.kartenId === karteId);
+  if (!eintrag) {
+    throw new Error('Farbenfusion konnte nicht den fusionierten Punkten zugeordnet werden.');
+  }
+  return eintrag.punkte;
+}
+
 function transformiereRegenbogenschlangen(schlange: Schlange): Schlange {
   const regenbogenZuordnung = bestimmeRegenbogenZuordnung(schlange);
   const transformierteKarten = schlange.karten.map((karte, index) => {
-    if (!istRegenbogenschlange(karte)) return karte;
-    const farbe = regenbogenZuordnung.get(index);
-    if (!farbe) {
-      throw new Error('Regenbogenschlange konnte keiner Farbe zugeordnet werden.');
+    if (istRegenbogenschlange(karte)) {
+      const farbe = regenbogenZuordnung.get(index);
+      if (!farbe) {
+        throw new Error('Regenbogenschlange konnte keiner Farbe zugeordnet werden.');
+      }
+      return { typ: 'Farbkarte', id: karte.id, farbe, punkte: 0 } as Spielkarte;
     }
-    return { typ: 'Farbkarte', id: karte.id, farbe, punkte: 0 } as Spielkarte;
+
+    if (istFarbenfusion(karte)) {
+      const farbe = regenbogenZuordnung.get(index);
+      if (!farbe) {
+        throw new Error('Farbenfusion konnte keiner Farbe zugeordnet werden.');
+      }
+      return { typ: 'Farbkarte', id: karte.id, farbe, punkte: findeFarbenfusionPunkte(schlange, karte.id), vielfaltbonusIgnorieren: true } as Spielkarte;
+    }
+
+    return karte;
   });
 
   return { ...schlange, karten: transformierteKarten };
+}
+
+export function ermittleFarbenFuerFarbvielfalt(schlange: Schlange): Farbe[] {
+  const farben = new Set<Farbe>();
+  const transformierteSchlange = transformiereRegenbogenschlangen(schlange);
+  for (const karte of transformierteSchlange.karten) {
+    if (karte.typ !== 'Farbkarte' || karte.vielfaltbonusIgnorieren === true) continue;
+    farben.add(karte.farbe);
+  }
+  return [...farben];
 }
 
 function bestimmeRegenbogenZuordnung(schlange: Schlange): Map<number, Farbe> {
@@ -102,9 +136,10 @@ function bestimmeRegenbogenZuordnung(schlange: Schlange): Map<number, Farbe> {
         bestePunkte = ergebnis;
         besteEntscheidung = { art: 'wechsel', farbeIndex: karteFarbeIndex };
       }
-    } else if (istRegenbogenschlange(karte)) {
+    } else if (istRegenbogenschlange(karte) || istFarbenfusion(karte)) {
+      const wildcardPunkte = istFarbenfusion(karte) ? findeFarbenfusionPunkte(schlange, karte.id) : 0;
       if (farbeIndex !== -1) {
-        const weiterPunkte = maxPunkte(position + 1, farbeIndex, laenge + 1, punkte);
+        const weiterPunkte = maxPunkte(position + 1, farbeIndex, laenge + 1, punkte + wildcardPunkte);
         bestePunkte = weiterPunkte;
         besteEntscheidung = { art: 'weiter' };
       }
@@ -112,7 +147,7 @@ function bestimmeRegenbogenZuordnung(schlange: Schlange): Map<number, Farbe> {
       const startFarben = farbeIndex === -1 ? FARBEN : FARBEN.filter((_, index) => index !== farbeIndex);
       for (const farbe of startFarben) {
         const karteFarbeIndex = farbeZuIndex(farbe);
-        const ergebnis = laufendeGruppePunkte(laenge, punkte) + maxPunkte(position + 1, karteFarbeIndex, 1, 0);
+        const ergebnis = laufendeGruppePunkte(laenge, punkte) + maxPunkte(position + 1, karteFarbeIndex, 1, wildcardPunkte);
         if (ergebnis > bestePunkte) {
           bestePunkte = ergebnis;
           besteEntscheidung = { art: 'wechsel', farbeIndex: karteFarbeIndex };
@@ -149,17 +184,17 @@ function bestimmeRegenbogenZuordnung(schlange: Schlange): Map<number, Farbe> {
       return;
     }
 
-    if (istRegenbogenschlange(karte)) {
+    if (istRegenbogenschlange(karte) || istFarbenfusion(karte)) {
       if (entscheidung.art === 'weiter') {
         if (farbeIndex < 0) throw new Error('Regenbogenschlange kann nicht ohne aktive Farbe fortgesetzt werden.');
         zuordnung.set(position, FARBEN[farbeIndex]);
-        rekonstruiere(position + 1, farbeIndex, laenge + 1, punkte, zuordnung);
+        rekonstruiere(position + 1, farbeIndex, laenge + 1, punkte + (istFarbenfusion(karte) ? findeFarbenfusionPunkte(schlange, karte.id) : 0), zuordnung);
         return;
       } else if (entscheidung.art === 'reset') {
         throw new Error('Unreachable: reset for Regenbogenschlange');
       } else {
         zuordnung.set(position, FARBEN[entscheidung.farbeIndex]);
-        rekonstruiere(position + 1, entscheidung.farbeIndex, 1, 0, zuordnung);
+        rekonstruiere(position + 1, entscheidung.farbeIndex, 1, istFarbenfusion(karte) ? findeFarbenfusionPunkte(schlange, karte.id) : 0, zuordnung);
         return;
       }
     }

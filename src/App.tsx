@@ -4,6 +4,7 @@ import {
   erstelleSpielzustand,
   starteAusspielphase,
   ermittleLegaleAktionen,
+  ermittleReaktionsAktionen,
   anwendeAktion,
   beendeAusspielphase,
   beendeAufgabenpruefung,
@@ -62,8 +63,34 @@ function aktionsLabel(aktion: SpielAktion): string {
       return `Karte ${aktion.handkartenId} an Schlange ${aktion.schlangenId} ${aktion.position} anlegen`
     case 'SonderkarteSpielen':
       return `Schlangengrube mit Karte ${aktion.handkartenId} auf ${aktion.zielSpielerId.replace(/^spieler-/, 'Spieler ')} spielen`
+    case 'VerdopplerSpielen':
+      return `Verdoppler mit Karte ${aktion.handkartenId} spielen`
+    case 'SchlangenblockadeSpielen':
+      return `Schlangenblockade mit Karte ${aktion.handkartenId} auf ${aktion.zielSpielerId.replace(/^spieler-/, 'Spieler ')} / Schlange ${aktion.zielSchlangenId} spielen`
+    case 'SchlangenblockadeAbwehren':
+      return `Schlangenblockade mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
+    case 'SchlangenblockadeDurchlassen':
+      return 'Schlangenblockade durchlassen'
+    case 'SchlangengrubeAbwehren':
+      return `Schlangengrube mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
+    case 'SchlangengrubeDurchlassen':
+      return 'Schlangengrube durchlassen'
+    case 'VerdopplerAbwehren':
+      return `Verdoppler mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
+    case 'VerdopplerDurchlassen':
+      return 'Verdoppler durchlassen'
     case 'FarbenschutzSpielen':
       return `Farbenschutz mit Karte ${aktion.handkartenId} auf Schlange ${aktion.zielSchlangenId} spielen`
+    case 'FarbendiebSpielen':
+      return `Farbendieb mit Karte ${aktion.handkartenId} von ${aktion.zielSpielerId.replace(/^spieler-/, 'Spieler ')} / Schlange ${aktion.zielSchlangenId} Karte ${aktion.zielKartenId} auf Schlange ${aktion.eigeneSchlangenId} an Position ${aktion.einfügeIndex + 1} spielen`
+    case 'FarbendiebAbwehren':
+      return `Farbendieb mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
+    case 'FarbendiebDurchlassen':
+      return 'Farbendieb durchlassen'
+    case 'SchlangenfrassAbwehren':
+      return `Schlangenfrass mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
+    case 'SchlangenfrassDurchlassen':
+      return 'Schlangenfrass durchlassen'
     case 'PflichtAbwurf':
       return `Karte ${aktion.handkartenId} abwerfen`
     default:
@@ -81,6 +108,18 @@ function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
   return zustand.spieler[zustand.aktiverSpielerIndex].hand.slice(-anzahl).map(k => k.id)
 }
 
+function erlaubteKartenProZug(zustand: Spielzustand): number {
+  return MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv === true ? 1 : 0)
+}
+
+function maxSonderkartenProZug(zustand: Spielzustand): number {
+  return zustand.zugpflichten.verdopplerBonusAktiv === true ? 2 : 1
+}
+
+function maxFarbkartenProZug(zustand: Spielzustand): number {
+  return zustand.zugpflichten.verdopplerBonusAktiv === true ? 2 : 1
+}
+
 function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung']): string {
   switch (steuerung) {
     case 'Mensch':
@@ -92,6 +131,7 @@ function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung'
 
 function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: SpielAktion[], ueberhand: number): string {
   if (zustand.zugphase === 'Spielende') return 'Partie beendet.'
+  if (zustand.pendingReaktion) return 'Reaktionsaktion auswählen.'
   if (zustand.zugphase === 'Zugabschluss' && ueberhand > 0) {
     return 'Überzählige Karten abwerfen.'
   }
@@ -105,14 +145,14 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   return 'Keine Aktion verfügbar.'
 }
 
-function phasenregeln(zugphase: Spielzustand['zugphase'], ueberhand: number): string[] {
-  switch (zugphase) {
+function phasenregeln(zustand: Spielzustand, ueberhand: number): string[] {
+  switch (zustand.zugphase) {
     case 'Nachziehphase':
       return [`Nachziehphase: Auf ${MINDESTHANDKARTEN} Handkarten nachziehen, falls unter ${MINDESTHANDKARTEN} und der Stapel noch Karten hat.`]
     case 'Ausspielphase':
       return [
-        `Ausspielphase: Mindestens 1 Karte spielen oder abwerfen, höchstens ${MAX_KARTEN_PRO_ZUG} Karten insgesamt.`,
-        'Pro Zug höchstens 1 Farbkarte und höchstens 1 Sonderkarte.',
+        `Ausspielphase: Mindestens 1 Karte spielen oder abwerfen, höchstens ${erlaubteKartenProZug(zustand)} Karten insgesamt.`,
+        `Pro Zug höchstens ${maxFarbkartenProZug(zustand)} Farbkarten und höchstens ${maxSonderkartenProZug(zustand)} Sonderkarten.`,
       ]
     case 'Aufgabenpruefung':
       return ['Aufgabenprüfung: Offene und geheime Aufgaben prüfen.']
@@ -135,6 +175,7 @@ function App({ initialZustand }: AppProps) {
   )
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
+  const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
     () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
@@ -218,6 +259,9 @@ function App({ initialZustand }: AppProps) {
           )}
           {!istSpielende && legaleAktionen.length > 0 && (
             <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
+          )}
+          {reaktionsAktionen.length > 0 && (
+            <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>
           )}
           <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
           {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
@@ -344,6 +388,20 @@ function App({ initialZustand }: AppProps) {
                     {aktionsLabel(aktion)}
                   </button>
                 ))}
+                {reaktionsAktionen.length > 0 && (
+                  <>
+                    <p className="aktions-hinweis">Reaktionsaktion auswählen:</p>
+                    {reaktionsAktionen.map((aktion: SpielAktion) => (
+                      <button
+                        key={aktionsLabel(aktion)}
+                        className="aktions-button--reaktion"
+                        onClick={() => fuhreAktionAus(aktion)}
+                      >
+                        {aktionsLabel(aktion)}
+                      </button>
+                    ))}
+                  </>
+                )}
                 {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
                   <button onClick={() => {
                     setLetzteAktion('Ausspielphase beenden')
@@ -389,7 +447,7 @@ function App({ initialZustand }: AppProps) {
                   </button>
                 )}
               </div>
-              <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{MAX_KARTEN_PRO_ZUG}</p>
+              <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{erlaubteKartenProZug(zustand)}</p>
               <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
               {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
             </>
@@ -397,7 +455,7 @@ function App({ initialZustand }: AppProps) {
           <section aria-label="Phasenregeln">
             <h3>Phasenregeln</h3>
             <ul>
-              {phasenregeln(zustand.zugphase, ueberhand).map(regel => (
+              {phasenregeln(zustand, ueberhand).map(regel => (
                 <li key={regel}>{regel}</li>
               ))}
             </ul>

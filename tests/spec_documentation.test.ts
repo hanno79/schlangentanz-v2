@@ -1,16 +1,22 @@
 /**
  * Author: rahn
  * Datum: 31.05.2026
- * Version: 1.4
+ * Version: 1.6
  * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Projektziel-, Setup-, Zugstruktur-, Schlangenbau-, Farbkarten-, Aufgabenkarten- und Wertungsregeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten gegen https://schlangentanz.ch/rules als verbindliche Quelle aktualisiert.
- * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, SchlangenSpass, Punktwertung und Konfliktauflösung.
+ * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, Schlangenspass, Punktwertung und Konfliktauflösung.
  * ÄNDERUNG [31.05.2026]: R8-Wertung und geklärte Partieende-/Win-Loss-Regeln dokumentiert.
  * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
  * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
  * ÄNDERUNG [01.06.2026]: Geklärte Nachziehstapel-Endrundenregel abgesichert.
  * ÄNDERUNG [02.06.2026]: R76-Sonderkarten-Regelstatus abgesichert, damit offene Kartenwirkungen nicht geraten werden.
  * ÄNDERUNG [02.06.2026]: R77 veralteten Draft-/Template-Status der Spezifikation bereinigt.
+ * ÄNDERUNG [03.06.2026]: Verdoppler-Regel und Ausspielphasen-Limits an die implementierte 2/2/3-Logik angepasst.
+ * ÄNDERUNG [03.06.2026]: Schlangenfrass als implementierte Sonderkarte dokumentiert und aus den offenen Sonderkarten entfernt.
+ * ÄNDERUNG [03.06.2026]: Farbenfusion als implementierte Sonderkarte dokumentiert und aus den offenen Sonderkarten entfernt.
+ * ÄNDERUNG [03.06.2026]: Letzte offene Sonderkarten-Formulierung in der Spezifikation konsolidiert.
+ * ÄNDERUNG [03.06.2026]: Legal-Aktionsmatrix um die implementierten Sonderkartenaktionen ergänzt.
+ * ÄNDERUNG [03.06.2026]: Verdoppler-Limits in der Spezifikation an die 2/2/3-Logik geschärft.
  */
 
 import { readFileSync } from 'node:fs'
@@ -75,10 +81,12 @@ describe('GAME_SPEC R2 Zugstruktur', () => {
     expect(spec).toContain('Mindest-Handkarten nach Nachziehen: 5 Karten')
     expect(spec).toContain('Maximale Handkarten am Zugende: 10 Karten')
     expect(spec).toContain('Der aktive Spieler muss mindestens 1 Karte spielen')
-    expect(spec).toContain('Der aktive Spieler darf maximal 2 Karten spielen')
-    expect(spec).toContain('Pro Zug darf höchstens 1 Farbkarte und höchstens 1 Sonderkarte gespielt werden')
-    expect(spec).toContain('Zulässig sind damit: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte')
-    expect(spec).toContain('Nicht zulässig sind zwei Farbkarten oder zwei Sonderkarten im selben Zug')
+    expect(spec).toContain('Der aktive Spieler darf ohne Verdoppler maximal 2 Karten spielen')
+    expect(spec).toContain('Grundsätzlich gilt pro Zug: höchstens 1 Farbkarte und höchstens 1 Sonderkarte')
+    expect(spec).toContain('Wird zu Beginn des Zuges ein Verdoppler gespielt, erhöht sich das Limit für diesen Zug auf höchstens 2 Farbkarten und höchstens 2 Sonderkarten')
+    expect(spec).toContain('In einem Verdoppler-Zug sind insgesamt höchstens 3 Karten zulässig')
+    expect(spec).toContain('Zulässig sind ohne Verdoppler: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte')
+    expect(spec).toContain('Zulässig sind mit aktivem Verdoppler: zwei Farbkarten, zwei Sonderkarten oder gemischte Kombinationen bis insgesamt 3 Karten')
     expect(spec).toContain('Sonderkarten zählen für das 2-Karten-Limit')
     expect(spec).not.toContain('Sonderkarten erhöhen das 2-Karten-Limit nicht')
     expect(spec).toContain('Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen')
@@ -111,22 +119,37 @@ describe('GAME_SPEC R7 Sonderkarten-Regelstatus', () => {
     expect(spec).toContain('### R7.1 Umgesetzte Sonderkartenwirkungen')
     expect(spec).toContain('Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt')
     expect(spec).toContain('Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler')
-    expect(spec).toContain('Farbenschutz: Der aktive Spieler markiert eine eigene aktive Schlange als `geschuetzt`; die konkrete Schutzwirkung gegen gegnerische Sonderkarten bleibt offen')
+    expect(spec).toContain('Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu')
+    expect(spec).toContain('Farbendieb: Der aktive Spieler wählt eine Karte aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.')
+    expect(spec).toContain('Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden')
+    expect(spec).toContain('Schlangenfrass: Der aktive Spieler wählt 1 oder 2 Karten aus beliebigen Schlangen. Geschützte Ziele werden per Farbenschutz-Reaktionskette im Uhrzeigersinn abgewickelt.')
+    expect(spec).toContain('Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte.')
+    expect(spec).toContain('`SchlangenblockadeSpielen`')
+    expect(spec).toContain('`SchlangenblockadeAbwehren`')
+    expect(spec).toContain('`SchlangenblockadeDurchlassen`')
+    expect(spec).toContain('`SchlangenfrassSpielen`')
+    expect(spec).toContain('`SchlangenfrassAbwehren`')
+    expect(spec).toContain('`SchlangenfrassDurchlassen`')
+    expect(spec).toContain('`FarbenfusionSpielen`')
+    expect(spec).toContain('Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren')
+    expect(spec).toContain('Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen')
+    expect(spec).toContain('im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt')
+    expect(spec).toContain('Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen')
+    expect(spec).toContain('Der Bonus gilt nur für den aktuellen Zug')
+    expect(spec).toContain('Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren')
     expect(spec).toContain('Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet')
   })
 
-  it('markiert offene normale Sonderkartenwirkungen ausdrücklich als nicht implementierbar ohne User-Signoff', () => {
-    expect(spec).toContain('### R7.2 Offene normale Sonderkartenwirkungen')
-    const offeneKarten = ['Schlangenfrass', 'Schlangenblockade', 'Farbendieb', 'Farbenfusion', 'Verdoppler']
-    offeneKarten.forEach((karte) => {
-      expect(spec).toContain(`${karte}: Wirkung offen — nicht implementieren, bis User-Signoff oder verlässliche Normquelle vorliegt`)
-    })
-    expect(spec).toContain('Keine offene Sonderkartenwirkung darf aus dem Kartennamen geraten werden')
+  it('markiert offene normale Sonderkartenwirkungen ausdrücklich als nicht implementiert', () => {
+    expect(spec).toContain('### R7.2 Keine offenen normalen Sonderkartenwirkungen')
+    expect(spec).toContain('Aktuell sind keine normalen Sonderkartenwirkungen offen.')
+    expect(spec).toContain('Neue offene Sonderkartenwirkungen werden nur mit bestätigter Normquelle ergänzt; sie dürfen nicht aus dem Kartennamen geraten werden.')
+    expect(spec).not.toContain('Aktuell offen sind insbesondere noch die letzten Spezifikationsdetails der übrigen normalen Sonderkarten')
+    expect(spec).not.toContain('### R7.2 Offene normale Sonderkartenwirkungen')
     const gerateneEffekte = [
       'Schlangenfrass frisst',
       'Schlangenblockade blockiert',
       'Farbendieb stiehlt',
-      'Farbenfusion fusioniert',
       'Verdoppler verdoppelt',
     ]
     gerateneEffekte.forEach((effekt) => {

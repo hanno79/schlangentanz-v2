@@ -10,6 +10,7 @@ import {
   berechneSpielerAufgabenPunkte,
   berechneSpielerFarbgruppenPunkte,
   berechneSpielerGesamtPunkte,
+  ermittleFarbenFuerFarbvielfalt,
 } from '../index';
 import { farbkarte, schlange, sonderkarte, spielerMitSchlangen } from './testHelpers';
 
@@ -224,6 +225,21 @@ describe('Spieler-Farbgruppen-Punktwertung — R4.2/R4.4', () => {
     berechneSpielerFarbgruppenPunkte(spieler);
 
     expect(spieler).toEqual(vorher);
+  });
+});
+
+describe('Farbenvielfalt-Helfer', () => {
+  it('ignoriert Farbenfusionen beim Ermitteln der Farben für den Vielfaltbonus', () => {
+    const schlangeMitFusion = schlange([
+      farbkarte('blau-1', 'Blau', 1),
+      farbkarte('blau-2', 'Blau', 1),
+      sonderkarte('farbenfusion-1', 'Farbenfusion'),
+      farbkarte('gruen-1', 'Grün', 3),
+      farbkarte('gruen-2', 'Grün', 3),
+    ]);
+    schlangeMitFusion.farbenfusionen = [{ kartenId: 'farbenfusion-1', punkte: 4 }];
+
+    expect(ermittleFarbenFuerFarbvielfalt(schlangeMitFusion)).toEqual(['Blau', 'Grün']);
   });
 });
 

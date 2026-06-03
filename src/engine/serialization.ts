@@ -36,6 +36,13 @@ const SCHLANGEN_ZUSTAENDE: ReadonlySet<SchlangenZustand> = new Set([
   'geschuetzt',
 ]);
 const STEUERUNGEN: ReadonlySet<Steuerung> = new Set(['Mensch', 'KI']);
+const REAKTIONS_TYPEN: ReadonlySet<string> = new Set([
+  'SchlangengrubeAbwehr',
+  'SchlangenblockadeAbwehr',
+  'FarbendiebAbwehr',
+  'SchlangenfrassAbwehr',
+  'VerdopplerAbwehr',
+]);
 
 export function serialisiere(zustand: Spielzustand): string {
   return serialisiereMaterial(zustand);
@@ -51,6 +58,7 @@ export function deserialisiere(json: string): Spielzustand {
 
   migriereZugpflichtenVorR19(parsed);
   migriereAussetzenVorR74(parsed);
+  migrierePendingReaktionVorR78(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -65,12 +73,25 @@ function migriereZugpflichtenVorR19(wert: unknown): void {
     zugpflichten['gespielteFarbkarten'] = 0;
     zugpflichten['gespielteSonderkarten'] = 0;
   }
+  if (!Object.prototype.hasOwnProperty.call(zugpflichten, 'verdopplerBonusAktiv')) {
+    zugpflichten['verdopplerBonusAktiv'] = false;
+  }
+  if (!Object.prototype.hasOwnProperty.call(zugpflichten, 'farbenfusionGespielt')) {
+    zugpflichten['farbenfusionGespielt'] = false;
+  }
 }
 
 function migriereAussetzenVorR74(wert: unknown): void {
   if (!istObjekt(wert)) return;
   if (!Object.prototype.hasOwnProperty.call(wert, 'aussetzenSpielerIndizes')) {
     wert['aussetzenSpielerIndizes'] = [];
+  }
+}
+
+function migrierePendingReaktionVorR78(wert: unknown): void {
+  if (!istObjekt(wert)) return;
+  if (!Object.prototype.hasOwnProperty.call(wert, 'pendingReaktion')) {
+    wert['pendingReaktion'] = null;
   }
 }
 
@@ -137,6 +158,7 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
   const nachziehstapel = erwarteArray(obj['nachziehstapel'], 'nachziehstapel');
   validiereSpielphaseNachziehstapel(spielphase, nachziehstapel.length);
   validiereSpielkartenArray(obj['ablagestapel'], 'ablagestapel', verwendeteIds);
+  validierePendingReaktion(obj['pendingReaktion'], spieler as Spieler[], obj['ablagestapel']);
   validiereAufgabenArray(obj['offeneAufgaben'], 'offeneAufgaben', verwendeteIds);
   validiereAufgabenArray(obj['aufgabenStapel'], 'aufgabenStapel', verwendeteIds);
   validiereEndrunde(obj['endrunde'], spielphase, spieler.length, aktiverIndex);
@@ -220,19 +242,128 @@ function validiereEndrunde(wert: unknown, spielphase: Spielphase, spielerAnzahl:
 function validiereZugpflichten(wert: unknown): void {
   const zugpflichten = erwarteObjekt(wert, 'zugpflichten');
   const gespielteKarten = zugpflichten['gespielteKarten'] as number;
-  if (!Number.isInteger(gespielteKarten) || gespielteKarten < 0 || gespielteKarten > MAX_KARTEN_PRO_ZUG) {
+  const verdopplerBonusAktiv = zugpflichten['verdopplerBonusAktiv'];
+  if (!Number.isInteger(gespielteKarten) || gespielteKarten < 0 || gespielteKarten > MAX_KARTEN_PRO_ZUG + (verdopplerBonusAktiv === true ? 1 : 0)) {
     throw new Error('Ungültiger Spielzustand: gespielte Karten in Zugpflichten sind ungültig.');
   }
   const gespielteFarbkarten = zugpflichten['gespielteFarbkarten'] as number;
-  if (!Number.isInteger(gespielteFarbkarten) || gespielteFarbkarten < 0 || gespielteFarbkarten > 1) {
+  const maxKartenProTyp = verdopplerBonusAktiv === true ? 2 : 1;
+  if (!Number.isInteger(gespielteFarbkarten) || gespielteFarbkarten < 0 || gespielteFarbkarten > maxKartenProTyp) {
     throw new Error('Ungültiger Spielzustand: gespielte Farbkarten in Zugpflichten sind ungültig.');
   }
   const gespielteSonderkarten = zugpflichten['gespielteSonderkarten'] as number;
-  if (!Number.isInteger(gespielteSonderkarten) || gespielteSonderkarten < 0 || gespielteSonderkarten > 1) {
+  if (!Number.isInteger(gespielteSonderkarten) || gespielteSonderkarten < 0 || gespielteSonderkarten > maxKartenProTyp) {
     throw new Error('Ungültiger Spielzustand: gespielte Sonderkarten in Zugpflichten sind ungültig.');
   }
   if (gespielteFarbkarten + gespielteSonderkarten !== gespielteKarten) {
     throw new Error('Ungültiger Spielzustand: gespielte Kartenarten passen nicht zur Anzahl gespielter Karten.');
+  }
+  const farbenfusionGespielt = zugpflichten['farbenfusionGespielt'];
+  if (typeof farbenfusionGespielt !== 'boolean') {
+    throw new Error('Ungültiger Spielzustand: zugpflichten.farbenfusionGespielt muss ein Boolean sein.');
+  }
+}
+
+function validierePendingReaktion(wert: unknown, spieler: Spieler[], ablagestapelRaw: unknown): void {
+  if (wert === null) return;
+  const spielerAnzahl = spieler.length;
+  const obj = erwarteObjekt(wert, 'pendingReaktion');
+  const typ = obj['typ'];
+  if (!REAKTIONS_TYPEN.has(typ as string)) {
+    throw new Error('Ungültiger Spielzustand: pendingReaktion.typ ist ungültig.');
+  }
+  const angreifer = obj['angreifenderSpielerIndex'];
+  if (!Number.isInteger(angreifer) || (angreifer as number) < 0 || (angreifer as number) >= spielerAnzahl) {
+    throw new Error('Ungültiger Spielzustand: pendingReaktion.angreifenderSpielerIndex ist ungültig.');
+  }
+  if (typ === 'SchlangengrubeAbwehr' || typ === 'SchlangenblockadeAbwehr') {
+    const ziel = obj['zielSpielerIndex'];
+    if (!Number.isInteger(ziel) || (ziel as number) < 0 || (ziel as number) >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.zielSpielerIndex ist ungültig.');
+    }
+    if (typ === 'SchlangenblockadeAbwehr') {
+      const zielSchlangenId = erwarteString(obj['zielSchlangenId'], 'pendingReaktion.zielSchlangenId');
+      const blockadeKartenId = erwarteString(obj['blockadeKartenId'], 'pendingReaktion.blockadeKartenId');
+      // Referenzprüfung: zielSchlangenId muss in spieler[ziel].schlangen existieren
+      const zielSpieler = spieler[ziel as number];
+      if (!zielSpieler.schlangen.some((s) => s.id === zielSchlangenId)) {
+        throw new Error('Ungültiger Spielzustand: pendingReaktion.zielSchlangenId existiert nicht in den Schlangen des Zielspielers.');
+      }
+      // Referenzprüfung: blockadeKartenId muss im Ablagestapel liegen
+      if (!Array.isArray(ablagestapelRaw) || !ablagestapelRaw.some((k) => istObjekt(k) && k['id'] === blockadeKartenId)) {
+        throw new Error('Ungültiger Spielzustand: pendingReaktion.blockadeKartenId existiert nicht im Ablagestapel.');
+      }
+    }
+    return;
+  }
+
+  if (typ === 'FarbendiebAbwehr') {
+    const ziel = obj['zielSpielerIndex'];
+    if (!Number.isInteger(ziel) || (ziel as number) < 0 || (ziel as number) >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.zielSpielerIndex ist ungültig.');
+    }
+    const zielSchlangenId = erwarteString(obj['zielSchlangenId'], 'pendingReaktion.zielSchlangenId');
+    const zielKartenId = erwarteString(obj['zielKartenId'], 'pendingReaktion.zielKartenId');
+    const eigeneSchlangenId = erwarteString(obj['eigeneSchlangenId'], 'pendingReaktion.eigeneSchlangenId');
+    const einfügeIndex = obj['einfügeIndex'];
+    if (!Number.isInteger(einfügeIndex) || (einfügeIndex as number) < 0) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.einfügeIndex ist ungültig.');
+    }
+    // Referenzprüfung: zielSchlangenId muss in spieler[ziel].schlangen mit zielKartenId existieren
+    const zielSpieler = spieler[ziel as number];
+    const zielSchlange = zielSpieler.schlangen.find((s) => s.id === zielSchlangenId);
+    if (!zielSchlange) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.zielSchlangenId existiert nicht in den Schlangen des Zielspielers.');
+    }
+    if (!zielSchlange.karten.some((k) => k.id === zielKartenId)) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.zielKartenId existiert nicht in der Zielschlange.');
+    }
+    // Referenzprüfung: eigeneSchlangenId beim Angreifer
+    const angreiferSpieler = spieler[angreifer as number];
+    const eigenSchlange = angreiferSpieler.schlangen.find((s) => s.id === eigeneSchlangenId);
+    if (!eigenSchlange) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.eigeneSchlangenId existiert nicht in den Schlangen des Angreifers.');
+    }
+    if ((einfügeIndex as number) > eigenSchlange.karten.length) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.einfügeIndex liegt außerhalb der eigenen Schlange.');
+    }
+    return;
+  }
+
+  if (typ === 'SchlangenfrassAbwehr') {
+    const verbleibendeZiele = erwarteArray(obj['verbleibendeZiele'], 'pendingReaktion.verbleibendeZiele');
+    if (verbleibendeZiele.length < 1) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.verbleibendeZiele darf nicht leer sein.');
+    }
+    for (const ziel of verbleibendeZiele as unknown[]) {
+      const zielObjekt = erwarteObjekt(ziel, 'pendingReaktion.verbleibendeZiele[]');
+      const spielerIndex = zielObjekt['spielerIndex'];
+      if (!Number.isInteger(spielerIndex) || (spielerIndex as number) < 0 || (spielerIndex as number) >= spielerAnzahl) {
+        throw new Error('Ungültiger Spielzustand: pendingReaktion.verbleibendeZiele[].spielerIndex ist ungültig.');
+      }
+      const schlangenId = erwarteString(zielObjekt['schlangenId'], 'pendingReaktion.verbleibendeZiele[].schlangenId');
+      const kartenId = erwarteString(zielObjekt['kartenId'], 'pendingReaktion.verbleibendeZiele[].kartenId');
+      // Referenzprüfung: schlangenId und kartenId müssen im Zustand existieren
+      const zielSpieler = spieler[spielerIndex as number];
+      const zielSchlange = zielSpieler.schlangen.find((s) => s.id === schlangenId);
+      if (!zielSchlange) {
+        throw new Error('Ungültiger Spielzustand: pendingReaktion.verbleibendeZiele[].schlangenId existiert nicht.');
+      }
+      if (!zielSchlange.karten.some((k) => k.id === kartenId)) {
+        throw new Error('Ungültiger Spielzustand: pendingReaktion.verbleibendeZiele[].kartenId existiert nicht in der Zielschlange.');
+      }
+    }
+    return;
+  }
+
+  const verbleibendeSpielerIndizes = erwarteArray(obj['verbleibendeSpielerIndizes'], 'pendingReaktion.verbleibendeSpielerIndizes');
+  if (verbleibendeSpielerIndizes.length === 0) {
+    throw new Error('Ungültiger Spielzustand: pendingReaktion.verbleibendeSpielerIndizes darf nicht leer sein.');
+  }
+  for (const idx of verbleibendeSpielerIndizes as number[]) {
+    if (!Number.isInteger(idx) || idx < 0 || idx >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: pendingReaktion.verbleibendeSpielerIndizes enthält ungültige Spielerindizes.');
+    }
   }
 }
 
@@ -281,6 +412,49 @@ function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts we
       throw new Error('Ungültiger Spielzustand: Schlangenzustand ist ungültig.');
     }
     validiereSpielkartenArray(schlange['karten'], 'schlange.karten', verwendeteIds);
+    validiereFarbenfusionen(schlange);
+  }
+}
+
+function validiereFarbenfusionen(schlange: Record<string, unknown>): void {
+  const karten = erwarteArray(schlange['karten'], 'schlange.karten') as Record<string, unknown>[];
+  const farbenfusionsIds = new Set<string>(
+    karten
+      .filter((k) => k['typ'] === 'Sonderkarte' && k['name'] === 'Farbenfusion')
+      .map((k) => k['id'] as string),
+  );
+
+  const farbenfusionen = schlange['farbenfusionen'];
+  if (farbenfusionen === undefined || farbenfusionen === null) {
+    if (farbenfusionsIds.size > 0) {
+      throw new Error('Ungültiger Spielzustand: Farbenfusion-Karte in schlange.karten ohne farbenfusionen-Eintrag.');
+    }
+    return;
+  }
+
+  const eintraege = erwarteArray(farbenfusionen, 'schlange.farbenfusionen');
+  const geseheneIds = new Set<string>();
+
+  for (const eintrag of eintraege) {
+    const e = erwarteObjekt(eintrag, 'schlange.farbenfusionen[]');
+    const kartenId = erwarteString(e['kartenId'], 'schlange.farbenfusionen[].kartenId');
+    if (!farbenfusionsIds.has(kartenId)) {
+      throw new Error('Ungültiger Spielzustand: farbenfusionen-Eintrag ohne zugehörige Farbenfusion-Karte in schlange.karten.');
+    }
+    if (geseheneIds.has(kartenId)) {
+      throw new Error('Ungültiger Spielzustand: Doppelte kartenId in schlange.farbenfusionen.');
+    }
+    geseheneIds.add(kartenId);
+    const punkte = e['punkte'];
+    if (!Number.isInteger(punkte) || (punkte as number) <= 0) {
+      throw new Error('Ungültiger Spielzustand: farbenfusionen[].punkte muss eine positive ganze Zahl sein.');
+    }
+  }
+
+  for (const kartenId of farbenfusionsIds) {
+    if (!geseheneIds.has(kartenId)) {
+      throw new Error('Ungültiger Spielzustand: Farbenfusion-Karte in schlange.karten ohne farbenfusionen-Eintrag.');
+    }
   }
 }
 

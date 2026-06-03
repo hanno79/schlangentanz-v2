@@ -19,7 +19,9 @@ describe('R45 UI-Schlangen-Gesamtzahl', () => {
   it('zeigt die Gesamtzahl aller Schlangen und aktualisiert sie nach einer Engine-Aktion', () => {
     const startZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     const [ersteAktion] = ermittleLegaleAktionen(startZustand)
-    expect(ersteAktion.typ).toBe('NeueSchlangeStarten')
+    if (ersteAktion.typ !== 'NeueSchlangeStarten') {
+      throw new Error('Testsetup erwartet eine NeueSchlangeStarten-Aktion.')
+    }
     const erwarteterFolgezustand = anwendeAktion(startZustand, ersteAktion)
 
     render(<App initialZustand={startZustand} />)

@@ -79,7 +79,7 @@ function erstelleSpielzustandVonDefinitionen(
     spieler,
     aktiverSpielerIndex: 0,
     zugphase: 'Nachziehphase',
-    zugpflichten: { gespielteKarten: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0 },
+    zugpflichten: { gespielteKarten: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0, verdopplerBonusAktiv: false, farbenfusionGespielt: false },
     spielphase: 'Normal',
     nachziehstapel: hauptdeck,
     ablagestapel: [],
@@ -87,6 +87,7 @@ function erstelleSpielzustandVonDefinitionen(
     offeneAufgaben: aufgabenStapel.splice(0, OFFENE_AUFGABEN_START),
     aufgabenStapel,
     endrunde: { ausloeserSpielerIndex: null, verbleibendeSpielerIndizes: [] },
+    pendingReaktion: null,
   };
 }
 

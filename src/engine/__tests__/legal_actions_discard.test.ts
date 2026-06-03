@@ -63,6 +63,8 @@ describe('Legal Action Validator — R20 Pflicht-Abwurf mangels spielbarer Aktio
       gespielteKarten: 1,
       gespielteFarbkarten: 0,
       gespielteSonderkarten: 1,
+      verdopplerBonusAktiv: false,
+      farbenfusionGespielt: false,
     });
     expect(zustand.spieler[0].hand).toEqual([sonderkarte]);
   });
@@ -85,13 +87,38 @@ describe('Legal Action Validator — R20 Pflicht-Abwurf mangels spielbarer Aktio
       }),
     ).toEqual({
       erlaubt: false,
-      grund: 'Pro Zug darf höchstens eine Farbkarte gespielt werden.',
+      grund: 'Pro Zug darf höchstens 1 Farbkarte gespielt werden.',
     });
     expect(ermittleLegaleAktionen(zustand)).toEqual([
       {
         typ: 'PflichtAbwurf',
         spielerId: 'spieler-1',
         handkartenId: sonderkarte.id,
+      },
+    ]);
+  });
+
+  it('bietet Pflicht-Abwurf im Verdoppler-Zug auch als dritte Karte an', () => {
+    const zustand = {
+      ...zustandInAusspielphase(),
+      zugpflichten: {
+        gespielteKarten: 2,
+        gespielteFarbkarten: 1,
+        gespielteSonderkarten: 1,
+        verdopplerBonusAktiv: true,
+        farbenfusionGespielt: false,
+      },
+    };
+    const schlangenfrass = zustand.nachziehstapel.find((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenfrass');
+    if (!schlangenfrass) throw new Error('Testsetup erwartet eine Schlangenfrass-Sonderkarte.');
+    zustand.spieler[0].hand = [schlangenfrass];
+    zustand.spieler[1].schlangen = [];
+
+    expect(ermittleLegaleAktionen(zustand)).toEqual([
+      {
+        typ: 'PflichtAbwurf',
+        spielerId: 'spieler-1',
+        handkartenId: schlangenfrass.id,
       },
     ]);
   });
