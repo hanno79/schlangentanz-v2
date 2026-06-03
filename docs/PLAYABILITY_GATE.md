@@ -686,3 +686,18 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `77e2478 — R82: Fusionsexperte-Aufgabenprüfung umsetzen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
 - [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading, Engine-/Karten-Copy und meldet keine Console-/Page-/Request-Errors.
+
+## Evidence — 03.06.2026 R83 Schlangenbeschwörer-Aufgabenprüfung
+
+- [x] Scope: Engine-seitige Aufgabenprüfung für `Schlangenbeschwörer` umgesetzt.
+- [x] GREEN: `beendeAufgabenpruefung` erfüllt `Schlangenbeschwörer`, wenn der aktive Spieler insgesamt mindestens 4 echte Sonderkarten in eigenen Schlangen besitzt.
+- [x] GREEN: Nur 3 Sonderkarten erfüllen die Aufgabe nicht; gegnerische Sonderkarten zählen nicht; aktiver Spielerindex 1 ist abgesichert.
+- [x] GREEN: Über zwei eigene Schlangen verteilte Sonderkarten zählen gemeinsam.
+- [x] Codex-Blocker behoben: Mehrere gleichzeitig erfüllte offene Aufgaben werden in derselben Aufgabenprüfung gemeinsam erfüllt und entsprechend viele Ersatzaufgaben nachgezogen.
+- [x] Codex: Finaler Re-Review meldete `BLOCKERS: keine` und `NON-BLOCKERS: keine`.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/turn_state_r82_aufgaben.test.ts` → 1 Testfile / 14 Tests bestanden.
+- [x] Targeted angrenzend: `npm test -- --run src/engine/__tests__/turn_state_r82_aufgaben.test.ts src/engine/__tests__/farbenfusion.test.ts src/engine/__tests__/serialization_r19.test.ts` → 3 Testfiles / 41 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 57 Testfiles / 407 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Code-Commit/Push: `44b39eb — R83: Schlangenbeschwörer-Aufgabenprüfung umsetzen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading, Engine-/Karten-Copy und meldet keine Console-/Page-/Request-Errors.
