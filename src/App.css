@@ -29,19 +29,22 @@ body {
   display: grid;
   place-items: center;
   padding: 2rem;
+  background: var(--st-color-background);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-body);
 }
 
 .hero {
   max-width: 760px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 28px;
   padding: clamp(1.5rem, 4vw, 3rem);
-  background: rgba(18, 16, 13, 0.78);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  background: var(--st-color-primary-container);
+  box-shadow: var(--st-shadow-hard);
 }
 
 .eyebrow {
-  color: #f5b971;
+  color: var(--st-color-border-strong);
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -74,14 +77,20 @@ h1 {
   margin: 0.25rem 0 1rem;
   font-size: clamp(2.25rem, 7vw, 4.75rem);
   line-height: 0.95;
+  font-family: var(--st-font-headline);
+}
+
+h1, h2 {
+  color: var(--st-color-border-strong);
 }
 
 p, li {
-  color: #e9ddcf;
+  color: var(--st-color-border-strong);
   font-size: 1.1rem;
   line-height: 1.65;
 }
 
 code {
-  color: #ffd28a;
+  color: var(--st-color-border-strong);
+  background: var(--st-color-background);
 }
