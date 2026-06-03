@@ -661,3 +661,15 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] GREEN: `tests/spec_documentation.test.ts` prüft die neue Implementierungszuordnung und das Entfernen der alten offenen Farbenfusion-Formulierung.
 - [x] Targeted: `npm test -- --run src/engine/__tests__/farbenfusion.test.ts tests/spec_documentation.test.ts` → 2 Testfiles / 15 Tests bestanden.
 - [x] Full Gates: `npm test -- --run` → 56 Testfiles / 372 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+
+## Evidence — 03.06.2026 R81 Serialization-Hardening und Reaktionsvalidierung
+
+- [x] Scope: Farbenfusion-Metadaten und Pending-Reaktionen werden beim Deserialisieren kanonisch gegen echtes Kartenmaterial validiert.
+- [x] GREEN: `src/engine/serialization.ts` prüft Farbenfusion-Einträge, reale Pending-Ziele, Blockadekarten im Ablagestapel, Farbendieb-Einfügepositionen und nicht-leere Verdoppler-Reaktionslisten.
+- [x] GREEN: `src/engine/__tests__/serialization_r19.test.ts` enthält Regressionen für die neuen Serialisierungsinvarianten.
+- [x] Codex: Re-Review nach Rest-Fix meldete `BLOCKERS: keine` und `NON-BLOCKERS: keine`.
+- [x] Targeted: `npm test -- --run src/engine/__tests__/serialization_r19.test.ts src/engine/__tests__/farbenfusion.test.ts src/engine/__tests__/turn_state_r78_reactions.test.ts src/engine/__tests__/schlangenblockade.test.ts src/engine/__tests__/schlangenfrass.test.ts` → 5 Testfiles / 52 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 56 Testfiles / 393 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `0e323f4 — R81: Serialization und Reaktionsvalidierung härten` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
+- [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading und Sonderkarten-Materialzeile ohne Console-/Page-/Request-Errors.
