@@ -182,6 +182,7 @@ function App({ initialZustand }: AppProps) {
     [zustand.zugphase, zustand.spieler],
   )
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
+  const gegnerSpieler = zustand.spieler.filter((spieler) => spieler.id !== aktiverSpieler.id)
   const spielerwertungen: SpielerWertungsEintrag[] = gesamtwertung.spielerwertungen
   const gewinnerListe: GewinnerEintrag[] = gewinnerErgebnis?.gewinner ?? []
   const aktiverSpielerWertung = useMemo(
@@ -347,6 +348,48 @@ function App({ initialZustand }: AppProps) {
           ))}
           <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
           <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
+          <section className="schlangenbereich" aria-labelledby="schlangenbereich-titel">
+            <h2 id="schlangenbereich-titel">Schlangenbereich</h2>
+            <section className="schlangen-gruppe" aria-labelledby="eigene-schlangen-titel">
+              <h3 id="eigene-schlangen-titel">Eigene Schlangen</h3>
+              {aktiverSpieler.schlangen.length > 0 ? (
+                <ul className="schlangenleiste">
+                  {aktiverSpieler.schlangen.map((schlange) => (
+                    <li key={schlange.id} className="schlangekarte schlangekarte--eigene">
+                      <strong>{schlange.id}</strong>
+                      <span>
+                        {schlange.karten.length > 0 ? kartenIds(schlange.karten) : 'keine Karten'}
+                      </span>
+                      <span>Zustand: {schlange.zustand}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Keine eigenen Schlangen.</p>
+              )}
+            </section>
+            <section className="schlangen-gruppe" aria-labelledby="gegnerische-schlangen-titel">
+              <h3 id="gegnerische-schlangen-titel">Gegnerische Schlangen</h3>
+              {gegnerSpieler.some((spieler) => spieler.schlangen.length > 0) ? (
+                <ul className="schlangenleiste">
+                  {gegnerSpieler.flatMap((spieler) =>
+                    spieler.schlangen.map((schlange) => (
+                      <li key={schlange.id} className="schlangekarte schlangekarte--gegner">
+                        <strong>{schlange.id}</strong>
+                        <span>Spieler: {spieler.id}</span>
+                        <span>
+                          {schlange.karten.length > 0 ? kartenIds(schlange.karten) : 'keine Karten'}
+                        </span>
+                        <span>Zustand: {schlange.zustand}</span>
+                      </li>
+                    )),
+                  )}
+                </ul>
+              ) : (
+                <p>Keine gegnerischen Schlangen.</p>
+              )}
+            </section>
+          </section>
         </section>
         <section className="info-panel" aria-label="Material und Aufgaben">
           <h2>Material und Aufgaben</h2>
