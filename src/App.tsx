@@ -284,13 +284,32 @@ function App({ initialZustand }: AppProps) {
             {aktiverSpieler.hand.length === 0
               ? 'keine'
               : aktiverSpieler.hand
-                  .map(k =>
+                  .map((k) =>
                     k.typ === 'Farbkarte'
                       ? `${k.id} (Farbkarte ${k.farbe}, ${k.punkte} Punkte)`
-                      : `${k.id} (Sonderkarte ${k.name})`
+                      : `${k.id} (Sonderkarte ${k.name})`,
                   )
                   .join(', ')}
           </p>
+          <section className="handkarten-panel" aria-label="Handkarten">
+            <h3>Handkarten als Kartenleiste</h3>
+            <ul className="handkartenleiste">
+              {aktiverSpieler.hand.map((karte) => {
+                const istFarbkarte = karte.typ === 'Farbkarte'
+
+                return (
+                  <li
+                    key={karte.id}
+                    className={`handkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}`}
+                  >
+                    <strong>{karte.id}</strong>
+                    <span>{istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`}</span>
+                    <span>{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
         </section>
         <section className="info-panel" aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>

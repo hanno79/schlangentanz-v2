@@ -107,3 +107,52 @@ code {
   padding: 1rem;
   border-radius: 12px;
 }
+
+.handkarten-panel {
+  margin-top: 1rem;
+  border: 2px dashed rgba(6, 57, 7, 0.55);
+  border-radius: 18px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.handkarten-panel h3 {
+  margin-top: 0;
+  font-family: var(--st-font-headline);
+}
+
+.handkartenleiste {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.handkarte {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem;
+  border-radius: 16px;
+  border: 2px solid var(--st-color-border-strong);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.18));
+  box-shadow: 0 3px 0 rgba(6, 57, 7, 0.45);
+}
+
+.handkarte strong {
+  font-size: 0.95rem;
+}
+
+.handkarte span {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.handkarte--farbkarte {
+  background: linear-gradient(180deg, rgba(164, 222, 2, 0.55), rgba(255, 255, 255, 0.16));
+}
+
+.handkarte--sonderkarte {
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.7), rgba(255, 255, 255, 0.16));
+}
