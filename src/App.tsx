@@ -216,8 +216,8 @@ function App({ initialZustand }: AppProps) {
           <li>Codex reviewed adversarial gegen Spec und Tests.</li>
         </ul>
       </section>
-      <section aria-label="Legale Aktionen">
-        <section aria-label="Spielstatus">
+      <section className="spielbereich" aria-label="Legale Aktionen">
+        <section className="info-panel" aria-label="Spielstatus">
           <h2>Spielstatus</h2>
           <p>Engine-Demo: {zustand.zugphase}</p>
           <p>Zugphase: {zustand.zugphase}</p>
@@ -238,7 +238,7 @@ function App({ initialZustand }: AppProps) {
           )}
           <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
         </section>
-        <section aria-label="Aktiver Spieler" aria-live="polite">
+        <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
           <h2>Aktiver Spieler</h2>
           <p>Aktiver Spieler: {aktiverSpieler.id}</p>
           <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
@@ -292,7 +292,7 @@ function App({ initialZustand }: AppProps) {
                   .join(', ')}
           </p>
         </section>
-        <section aria-label="Spielerübersicht">
+        <section className="info-panel" aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>
           {zustand.spieler.map(spieler => {
             const istAktiv = spieler.id === aktiverSpieler.id
@@ -329,7 +329,7 @@ function App({ initialZustand }: AppProps) {
           <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
           <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
         </section>
-        <section aria-label="Material und Aufgaben">
+        <section className="info-panel" aria-label="Material und Aufgaben">
           <h2>Material und Aufgaben</h2>
           <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
           <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
@@ -351,7 +351,7 @@ function App({ initialZustand }: AppProps) {
               : 'keine'}
           </p>
         </section>
-        <section aria-label="Wertung">
+        <section className="info-panel" aria-label="Wertung">
           <h2>Wertung</h2>
           {gesamtwertung.spielerwertungen.map(eintrag => (
             <Fragment key={eintrag.spielerId}>
@@ -365,7 +365,7 @@ function App({ initialZustand }: AppProps) {
             <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
           ))}
         </section>
-        <section aria-label="Aktionen">
+        <section className="info-panel" aria-label="Aktionen">
           <h2>Aktionen</h2>
           <p>Legale Aktionen: {legaleAktionen.length}</p>
           {istSpielende ? (

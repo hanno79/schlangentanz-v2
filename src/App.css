@@ -94,3 +94,16 @@ code {
   color: var(--st-color-border-strong);
   background: var(--st-color-background);
 }
+
+.spielbereich {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.info-panel {
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  background: var(--st-color-secondary-container);
+  box-shadow: var(--st-shadow-hard);
+  padding: 1rem;
+  border-radius: 12px;
+}
