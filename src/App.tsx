@@ -18,6 +18,7 @@ import {
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import AktionenPanel from './components/AktionenPanel'
+import Zugfortschritt from './components/Zugfortschritt'
 
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
@@ -230,6 +231,7 @@ function App({ initialZustand }: AppProps) {
             </p>
           )}
           <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
+          <Zugfortschritt zugphase={zustand.zugphase} />
         </section>
         <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
           <h2>Aktiver Spieler</h2>

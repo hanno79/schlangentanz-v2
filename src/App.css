@@ -136,7 +136,8 @@ code {
 
 .handkarten-panel,
 .aufgabenkarten-bereich,
-.scoreboard-bereich {
+.scoreboard-bereich,
+.zugfortschritt {
   margin-top: 1rem;
   border: 2px dashed rgba(6, 57, 7, 0.55);
   border-radius: 18px;
@@ -146,7 +147,8 @@ code {
 
 .handkarten-panel h3,
 .aufgabenkarten-bereich h3,
-.scoreboard-bereich h3 {
+.scoreboard-bereich h3,
+.zugfortschritt h3 {
   margin-top: 0;
   font-family: var(--st-font-headline);
 }
@@ -265,4 +267,28 @@ code {
 
 .scoreboard-karte {
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.48), rgba(255, 255, 255, 0.18));
+}
+
+.zugfortschritt-liste {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.75rem;
+}
+
+.zugfortschritt-schritt {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border-radius: 14px;
+  border: 2px solid rgba(6, 57, 7, 0.45);
+  background: rgba(236, 255, 227, 0.6);
+}
+
+.zugfortschritt-schritt--aktiv {
+  border-color: var(--st-color-tertiary);
+  background: linear-gradient(180deg, rgba(177, 45, 0, 0.22), rgba(255, 255, 255, 0.18));
+  box-shadow: 0 3px 0 rgba(6, 57, 7, 0.35);
 }
