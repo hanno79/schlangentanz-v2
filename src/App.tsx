@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, type ReactNode, useMemo, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -54,6 +54,9 @@ function basisSonderkartenLabel(): string {
     .map(([name, anzahl]) => `${anzahl} ${name}`)
     .join(', ')
 }
+
+const BASIS_SONDERKARTEN_LABEL = basisSonderkartenLabel()
+const ERWEITERUNGS_SONDERKARTEN_LABEL = erweiterungsSonderkartenLabel()
 
 function aktionsLabel(aktion: SpielAktion): string {
   switch (aktion.typ) {
@@ -131,6 +134,10 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
   return 'Keine Aktion verfügbar.'
+}
+
+function DebugGruppe({ titel, children }: { titel: string; children: ReactNode }) {
+  return <details open className="debug-gruppe"><summary>{titel}</summary>{children}</details>
 }
 
 interface AppProps {
@@ -213,79 +220,83 @@ function App({ initialZustand }: AppProps) {
       <section className="spielbereich" aria-label="Legale Aktionen">
         <section className="info-panel" aria-label="Spielstatus">
           <h2>Spielstatus</h2>
-          <p>Engine-Demo: {zustand.zugphase}</p>
-          <p>Zugphase: {zustand.zugphase}</p>
-          <p>Spielphase: {zustand.spielphase}</p>
-          {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
-            <>
-              <p>Endrunde aktiv: ja</p>
-              <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
-            </>
-          )}
-          {zustand.spielphase !== 'Normal' && (
-            <p>
-              Verbleibende Endrunde:{' '}
-              {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
-                ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
-                : 'keine'}
-            </p>
-          )}
-          <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
+          <DebugGruppe titel="Debug: Phasenstatus">
+            <p>Engine-Demo: {zustand.zugphase}</p>
+            <p>Zugphase: {zustand.zugphase}</p>
+            <p>Spielphase: {zustand.spielphase}</p>
+            {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
+              <>
+                <p>Endrunde aktiv: ja</p>
+                <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
+              </>
+            )}
+            {zustand.spielphase !== 'Normal' && (
+              <p>
+                Verbleibende Endrunde:{' '}
+                {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
+                  ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
+                  : 'keine'}
+              </p>
+            )}
+            <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
+          </DebugGruppe>
           <Zugfortschritt zugphase={zustand.zugphase} />
         </section>
         <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
           <h2>Aktiver Spieler</h2>
-          <p>Aktiver Spieler: {aktiverSpieler.id}</p>
-          <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
-          <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
-          <p>
-            Aktuelle Wertung:{' '}
-            {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
-          </p>
-          {ueberhand > 0 && (
-            <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>
-          )}
-          {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
-          {istSpielende && (
-            <>
-              <p>Spielende erreicht.</p>
-              <p>Gewinner: {gewinnerText}</p>
-            </>
-          )}
-          {!istSpielende && legaleAktionen.length > 0 && (
-            <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
-          )}
-          {reaktionsAktionen.length > 0 && (
-            <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>
-          )}
-          <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
-          {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
-          <p>
-            {aktiverSpieler.geheimeAufgabe
-              ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
-              : 'Geheime Aufgabe: keine'}
-          </p>
-          {aktiverSpieler.schlangen.map(schlange => (
-            <p key={schlange.id}>
-              Schlange {schlange.id}: {kartenIds(schlange.karten)}
+          <DebugGruppe titel="Debug: Aktiver Spieler">
+            <p>Aktiver Spieler: {aktiverSpieler.id}</p>
+            <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+            <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
+            <p>
+              Aktuelle Wertung:{' '}
+              {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
             </p>
-          ))}
-          <p>
-            Handkarten:{' '}
-            {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
-          </p>
-          <p>
-            Handkarten-Details:{' '}
-            {aktiverSpieler.hand.length === 0
-              ? 'keine'
-              : aktiverSpieler.hand
-                  .map((k) =>
-                    k.typ === 'Farbkarte'
-                      ? `${k.id} (Farbkarte ${k.farbe}, ${k.punkte} Punkte)`
-                      : `${k.id} (Sonderkarte ${k.name})`,
-                  )
-                  .join(', ')}
-          </p>
+            {ueberhand > 0 && (
+              <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>
+            )}
+            {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
+            {istSpielende && (
+              <>
+                <p>Spielende erreicht.</p>
+                <p>Gewinner: {gewinnerText}</p>
+              </>
+            )}
+            {!istSpielende && legaleAktionen.length > 0 && (
+              <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
+            )}
+            {reaktionsAktionen.length > 0 && (
+              <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>
+            )}
+            <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
+            {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
+            <p>
+              {aktiverSpieler.geheimeAufgabe
+                ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
+                : 'Geheime Aufgabe: keine'}
+            </p>
+            {aktiverSpieler.schlangen.map(schlange => (
+              <p key={schlange.id}>
+                Schlange {schlange.id}: {kartenIds(schlange.karten)}
+              </p>
+            ))}
+            <p>
+              Handkarten:{' '}
+              {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
+            </p>
+            <p>
+              Handkarten-Details:{' '}
+              {aktiverSpieler.hand.length === 0
+                ? 'keine'
+                : aktiverSpieler.hand
+                    .map((k) =>
+                      k.typ === 'Farbkarte'
+                        ? `${k.id} (Farbkarte ${k.farbe}, ${k.punkte} Punkte)`
+                        : `${k.id} (Sonderkarte ${k.name})`,
+                    )
+                    .join(', ')}
+            </p>
+          </DebugGruppe>
           <section className="handkarten-panel" aria-label="Handkarten">
             <h3>Handkarten als Kartenleiste</h3>
             <ul className="handkartenleiste">
@@ -308,40 +319,42 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section className="info-panel" aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>
-          {zustand.spieler.map(spieler => {
-            const istAktiv = spieler.id === aktiverSpieler.id
+          <DebugGruppe titel="Debug: Spielerzustände">
+            {zustand.spieler.map(spieler => {
+              const istAktiv = spieler.id === aktiverSpieler.id
 
-            return (
-              <p key={spieler.id} aria-current={istAktiv ? 'true' : undefined}>
-                Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen{istAktiv ? ' — am Zug' : ''}
+              return (
+                <p key={spieler.id} aria-current={istAktiv ? 'true' : undefined}>
+                  Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen{istAktiv ? ' — am Zug' : ''}
+                </p>
+              )
+            })}
+            {zustand.spieler.map(spieler => (
+              <p key={`schlangen-${spieler.id}`}>
+                Schlangenübersicht {spieler.id}:{' '}
+                {spieler.schlangen.length === 0
+                  ? 'keine'
+                  : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
               </p>
-            )
-          })}
-          {zustand.spieler.map(spieler => (
-            <p key={`schlangen-${spieler.id}`}>
-              Schlangenübersicht {spieler.id}:{' '}
-              {spieler.schlangen.length === 0
-                ? 'keine'
-                : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
-            </p>
-          ))}
-          {zustand.spieler.flatMap(spieler =>
-            spieler.schlangen.map(schlange => (
-              <p key={`zustand-${spieler.id}-${schlange.id}`}>
-                Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}
+            ))}
+            {zustand.spieler.flatMap(spieler =>
+              spieler.schlangen.map(schlange => (
+                <p key={`zustand-${spieler.id}-${schlange.id}`}>
+                  Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}
+                </p>
+              ))
+            )}
+            {zustand.spieler.map(spieler => (
+              <p key={`aufgaben-${spieler.id}`}>
+                Erfüllte Aufgaben {spieler.id}:{' '}
+                {spieler.erfuellteAufgaben.length === 0
+                  ? 'keine'
+                  : `SchlangenSpass! ${spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`}
               </p>
-            ))
-          )}
-          {zustand.spieler.map(spieler => (
-            <p key={`aufgaben-${spieler.id}`}>
-              Erfüllte Aufgaben {spieler.id}:{' '}
-              {spieler.erfuellteAufgaben.length === 0
-                ? 'keine'
-                : `SchlangenSpass! ${spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`}
-            </p>
-          ))}
-          <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
-          <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
+            ))}
+            <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
+            <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
+          </DebugGruppe>
           <section className="schlangenbereich" aria-labelledby="schlangenbereich-titel">
             <h2 id="schlangenbereich-titel">Schlangenbereich</h2>
             <section className="schlangen-gruppe" aria-labelledby="eigene-schlangen-titel">
@@ -387,25 +400,27 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section className="info-panel" aria-label="Material und Aufgaben">
           <h2>Material und Aufgaben</h2>
-          <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
-          <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
-          <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
-          <p>Materialstapel gesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
-          <p>Sonderkarten: {basisSonderkartenLabel()}</p>
-          <p>Erweiterungssonderkarten: {erweiterungsSonderkartenLabel()}</p>
-          <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
-          <p>
-            Offene Aufgaben:{' '}
-            {zustand.offeneAufgaben.length > 0
-              ? zustand.offeneAufgaben.map(a => `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)})`).join(', ')
-              : 'keine'}
-          </p>
-          <p>
-            Offene Aufgaben-Details:{' '}
-            {zustand.offeneAufgaben.length > 0
-              ? zustand.offeneAufgaben.map(a => aufgabeLabel(a, istEndspurt)).join('; ')
-              : 'keine'}
-          </p>
+          <DebugGruppe titel="Debug: Materialstatus">
+            <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
+            <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
+            <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
+            <p>Materialstapel gesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
+            <p>Sonderkarten: {BASIS_SONDERKARTEN_LABEL}</p>
+            <p>Erweiterungssonderkarten: {ERWEITERUNGS_SONDERKARTEN_LABEL}</p>
+            <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
+            <p>
+              Offene Aufgaben:{' '}
+              {zustand.offeneAufgaben.length > 0
+                ? zustand.offeneAufgaben.map(a => `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)})`).join(', ')
+                : 'keine'}
+            </p>
+            <p>
+              Offene Aufgaben-Details:{' '}
+              {zustand.offeneAufgaben.length > 0
+                ? zustand.offeneAufgaben.map(a => aufgabeLabel(a, istEndspurt)).join('; ')
+                : 'keine'}
+            </p>
+          </DebugGruppe>
           <section className="aufgabenkarten-bereich" aria-label="Aufgabenkarten">
             <h3>Aufgabenkarten</h3>
             {zustand.offeneAufgaben.length === 0 ? (
@@ -425,14 +440,16 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section className="info-panel" aria-label="Wertung">
           <h2>Wertung</h2>
-          {gesamtwertung.spielerwertungen.map(eintrag => (
-            <Fragment key={eintrag.spielerId}>
-              <p>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
-              <p>
-                Wertungsdetails {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
-              </p>
-            </Fragment>
-          ))}
+          <DebugGruppe titel="Debug: Wertungsdetails">
+            {gesamtwertung.spielerwertungen.map(eintrag => (
+              <Fragment key={eintrag.spielerId}>
+                <p>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+                <p>
+                  Wertungsdetails {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
+                </p>
+              </Fragment>
+            ))}
+          </DebugGruppe>
           <section className="scoreboard-bereich" aria-label="Scoreboard">
             <h3>Scoreboard</h3>
             <ul className="scoreboard-liste">

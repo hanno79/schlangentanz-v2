@@ -134,6 +134,24 @@ code {
   border-radius: 12px;
 }
 
+.debug-gruppe {
+  margin-top: 0.75rem;
+  border: 2px solid rgba(6, 57, 7, 0.38);
+  border-radius: 14px;
+  padding: 0.75rem;
+  background: rgba(236, 255, 227, 0.55);
+}
+
+.debug-gruppe summary {
+  cursor: pointer;
+  font-family: var(--st-font-headline);
+  font-weight: 700;
+}
+
+.debug-gruppe p:last-child {
+  margin-bottom: 0;
+}
+
 .handkarten-panel,
 .aufgabenkarten-bereich,
 .scoreboard-bereich,
