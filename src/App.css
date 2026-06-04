@@ -264,12 +264,18 @@ code {
   padding: 1rem;
   display: grid;
   gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  align-items: stretch;
 }
 
 .schlangenbereich h2,
 .schlangen-gruppe h3 {
   margin-top: 0;
   font-family: var(--st-font-headline);
+}
+
+.schlangenbereich > h2 {
+  grid-column: 1 / -1;
 }
 
 .schlangen-gruppe {
@@ -279,6 +285,7 @@ code {
   border-radius: 16px;
   border: 2px solid rgba(6, 57, 7, 0.45);
   background: rgba(236, 255, 227, 0.72);
+  align-content: start;
 }
 
 .schlangenleiste {
@@ -286,7 +293,7 @@ code {
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: 1fr;
   gap: 0.75rem;
 }
 
@@ -297,6 +304,8 @@ code {
   border-radius: 16px;
   border: 2px solid var(--st-color-border-strong);
   box-shadow: 0 3px 0 rgba(6, 57, 7, 0.45);
+  min-height: 8rem;
+  align-content: start;
 }
 
 .schlangekarte--eigene {
