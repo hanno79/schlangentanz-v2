@@ -141,10 +141,9 @@ interface AppProps {
 }
 
 function App({ initialZustand }: AppProps) {
-  const [zustand, setZustand] = useState(() =>
-    initialZustand ?? starteAusspielphase(erstelleSpielzustand(2))
-  )
+  const [zustand, setZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
+  const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
@@ -173,35 +172,12 @@ function App({ initialZustand }: AppProps) {
   const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
 
-  function fuhreAktionAus(aktion: SpielAktion) {
-    setLetzteAktion(aktionsLabel(aktion))
-    setZustand(z => anwendeAktion(z, aktion))
-  }
-
-  function handleAusspielphaseBeenden() {
-    setLetzteAktion('Ausspielphase beenden')
-    setZustand(z => beendeAusspielphase(z))
-  }
-
-  function handleAufgabenpruefungBeenden() {
-    setLetzteAktion('Aufgabenprüfung beenden')
-    setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))
-  }
-
-  function handleUeberzaehligeKartenAbwerfen() {
-    setLetzteAktion('Überzählige Karten abwerfen')
-    setZustand(z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) }))
-  }
-
-  function handleZugBeenden() {
-    setLetzteAktion('Zug beenden')
-    setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))
-  }
-
-  function handleAusspielphaseStarten() {
-    setLetzteAktion('Ausspielphase starten')
-    setZustand(z => starteAusspielphase(z))
-  }
+  function fuhreAktionAus(aktion: SpielAktion) { setLetzteAktion(aktionsLabel(aktion)); setHervorgehobenesAktionszielId(null); setZustand(z => anwendeAktion(z, aktion)) }
+  function handleAusspielphaseBeenden() { setLetzteAktion('Ausspielphase beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeAusspielphase(z)) }
+  function handleAufgabenpruefungBeenden() { setLetzteAktion('Aufgabenprüfung beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true })) }
+  function handleUeberzaehligeKartenAbwerfen() { setLetzteAktion('Überzählige Karten abwerfen'); setHervorgehobenesAktionszielId(null); setZustand(z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
+  function handleZugBeenden() { setLetzteAktion('Zug beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeZug(z, { pflichtenErfuellt: true })) }
+  function handleAusspielphaseStarten() { setLetzteAktion('Ausspielphase starten'); setHervorgehobenesAktionszielId(null); setZustand(z => starteAusspielphase(z)) }
 
   return (
     <main className="app-shell">
@@ -300,7 +276,7 @@ function App({ initialZustand }: AppProps) {
             </p>
           </DebugGruppe>
           {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && pflichtschrittLabel !== 'Keine Aktion verfügbar.' && (
-            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} aktionszielId={spielerfuehrungAktionszielId} aktionszielSatzText={spielerfuehrungAktionszielSatzText} aktionszielLinkText={spielerfuehrungAktionszielLinkText} />
+            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} aktionszielId={spielerfuehrungAktionszielId} aktionszielSatzText={spielerfuehrungAktionszielSatzText} aktionszielLinkText={spielerfuehrungAktionszielLinkText} onAktionszielHervorheben={setHervorgehobenesAktionszielId} />
           )}
           <section className="handkarten-panel" aria-label="Handkarten">
             <h3>Handkarten als Kartenleiste</h3>
@@ -485,6 +461,7 @@ function App({ initialZustand }: AppProps) {
           steuerung={aktiverSpieler.steuerung}
           aktionsLabel={aktionsLabel}
           pflichtschrittLabel={pflichtschrittLabel}
+          hervorgehobenesAktionszielId={hervorgehobenesAktionszielId}
           onAktionAusfuehren={fuhreAktionAus}
           onAusspielphaseBeenden={handleAusspielphaseBeenden}
           onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}

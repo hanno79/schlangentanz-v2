@@ -15,6 +15,7 @@ interface SpielerfuehrungProps {
   aktionszielId?: string
   aktionszielSatzText?: string
   aktionszielLinkText?: string
+  onAktionszielHervorheben?: (zielId: string) => void
 }
 
 export default function Spielerfuehrung({
@@ -23,6 +24,7 @@ export default function Spielerfuehrung({
   aktionszielId = EMPFOHLENE_AKTION_ID,
   aktionszielSatzText = 'empfohlene Aktion',
   aktionszielLinkText = 'empfohlenen Aktion',
+  onAktionszielHervorheben,
 }: SpielerfuehrungProps) {
   const aktionsHinweis = empfohleneAktionLabel || pflichtschrittLabel.replace(/\.$/, '')
   const checklisteUeberschriftId = useId()
@@ -41,7 +43,7 @@ export default function Spielerfuehrung({
         <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
       </ul>
       <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
-      <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink">Zur {aktionszielLinkText} im Aktionsbereich</a>
+      <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
     </section>
   )
 }

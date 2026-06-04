@@ -440,3 +440,8 @@ code {
   display: inline-block;
   margin-top: 0.5rem;
 }
+
+.aktionen-gruppe--sprungziel {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 2px;
+}

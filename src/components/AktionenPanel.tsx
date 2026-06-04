@@ -59,6 +59,7 @@ interface AktionenPanelProps {
   steuerung: Spielzustand['spieler'][number]['steuerung']
   aktionsLabel: (aktion: SpielAktion) => string
   pflichtschrittLabel: string
+  hervorgehobenesAktionszielId: string | null
   onAktionAusfuehren: (aktion: SpielAktion) => void
   onAusspielphaseBeenden: () => void
   onAufgabenpruefungBeenden: () => void
@@ -76,6 +77,7 @@ export default function AktionenPanel({
   steuerung,
   aktionsLabel,
   pflichtschrittLabel,
+  hervorgehobenesAktionszielId,
   onAktionAusfuehren,
   onAusspielphaseBeenden,
   onAufgabenpruefungBeenden,
@@ -98,7 +100,7 @@ export default function AktionenPanel({
               KI-Aktion ausführen
             </button>
           )}
-          <section id={EMPFOHLENE_AKTION_ID} className="aktionen-gruppe aktionen-gruppe--empfohlen" aria-label="Empfohlene Aktion">
+          <section id={EMPFOHLENE_AKTION_ID} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === EMPFOHLENE_AKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Empfohlene Aktion">
             <h3>Empfohlene Aktion</h3>
             {legaleAktionen.length > 0 ? (
               <button
@@ -147,7 +149,7 @@ export default function AktionenPanel({
             )}
             <p>Quelle: engine.ermittleLegaleAktionen</p>
           </section>
-          <section id={PHASENAKTION_ID} className="aktionen-gruppe aktionen-gruppe--phasenaktion" aria-label="Phasenaktion">
+          <section id={PHASENAKTION_ID} className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === PHASENAKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Phasenaktion">
             <h3>Phasenaktion</h3>
             {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
               <button onClick={onAusspielphaseBeenden}>
