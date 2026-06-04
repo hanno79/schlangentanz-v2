@@ -404,6 +404,22 @@ function App({ initialZustand }: AppProps) {
               ? zustand.offeneAufgaben.map(a => aufgabeLabel(a, istEndspurt)).join('; ')
               : 'keine'}
           </p>
+          <section className="aufgabenkarten-bereich" aria-label="Aufgabenkarten">
+            <h3>Aufgabenkarten</h3>
+            {zustand.offeneAufgaben.length === 0 ? (
+              <p>Keine offenen Aufgabenkarten.</p>
+            ) : (
+              <ul className="aufgabenkarten-liste">
+                {zustand.offeneAufgaben.map(a => (
+                  <li key={a.id} className="aufgabenkarte">
+                    <strong>{a.name}</strong>
+                    <span>{aufgabenPunkteAnzeige(a, istEndspurt)}</span>
+                    <span>{a.bedingung}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         </section>
         <section className="info-panel" aria-label="Wertung">
           <h2>Wertung</h2>

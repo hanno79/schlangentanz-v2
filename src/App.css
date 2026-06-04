@@ -134,7 +134,8 @@ code {
   border-radius: 12px;
 }
 
-.handkarten-panel {
+.handkarten-panel,
+.aufgabenkarten-bereich {
   margin-top: 1rem;
   border: 2px dashed rgba(6, 57, 7, 0.55);
   border-radius: 18px;
@@ -142,7 +143,8 @@ code {
   background: rgba(255, 255, 255, 0.22);
 }
 
-.handkarten-panel h3 {
+.handkarten-panel h3,
+.aufgabenkarten-bereich h3 {
   margin-top: 0;
   font-family: var(--st-font-headline);
 }
@@ -166,11 +168,13 @@ code {
   box-shadow: 0 3px 0 rgba(6, 57, 7, 0.45);
 }
 
-.handkarte strong {
+.handkarte strong,
+.aufgabenkarte strong {
   font-size: 0.95rem;
 }
 
-.handkarte span {
+.handkarte span,
+.aufgabenkarte span {
   font-size: 0.88rem;
   line-height: 1.4;
 }
@@ -232,4 +236,23 @@ code {
 
 .schlangekarte--gegner {
   background: linear-gradient(180deg, rgba(177, 45, 0, 0.22), rgba(255, 255, 255, 0.18));
+}
+
+.aufgabenkarten-liste {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.aufgabenkarte {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem;
+  border-radius: 16px;
+  border: 2px solid var(--st-color-border-strong);
+  background: linear-gradient(180deg, rgba(164, 222, 2, 0.28), rgba(255, 255, 255, 0.18));
+  box-shadow: 0 3px 0 rgba(6, 57, 7, 0.35);
 }
