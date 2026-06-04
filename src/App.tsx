@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode, useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -18,6 +18,7 @@ import {
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import AktionenPanel from './components/AktionenPanel'
+import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import Zugfortschritt from './components/Zugfortschritt'
 function kartenIds(karten: { id: string }[]): string {
@@ -133,10 +134,6 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
   return 'Keine Aktion verfügbar.'
-}
-
-function DebugGruppe({ titel, children }: { titel: string; children: ReactNode }) {
-  return <details open className="debug-gruppe"><summary>{titel}</summary>{children}</details>
 }
 
 interface AppProps {
