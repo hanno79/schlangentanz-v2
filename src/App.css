@@ -364,3 +364,24 @@ code {
   background: linear-gradient(180deg, rgba(177, 45, 0, 0.22), rgba(255, 255, 255, 0.18));
   box-shadow: 0 3px 0 rgba(6, 57, 7, 0.35);
 }
+
+.spielerfuehrung {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 14px;
+  border: 2px solid rgba(75, 103, 0, 0.6);
+  background: rgba(164, 222, 2, 0.18);
+}
+
+.spielerfuehrung h3 {
+  margin-top: 0;
+  font-family: var(--st-font-headline);
+}
+
+.spielerfuehrung__karte {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 2px solid rgba(75, 103, 0, 0.45);
+  background: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}

@@ -18,12 +18,11 @@ import {
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import AktionenPanel from './components/AktionenPanel'
+import Spielerfuehrung from './components/Spielerfuehrung'
 import Zugfortschritt from './components/Zugfortschritt'
-
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
-
 function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   if (!istEndspurt) return `${a.punkte} Punkte`
   return `${a.punkte} Punkte ×2 = ${a.punkte * 2} Punkte`
@@ -170,6 +169,8 @@ function App({ initialZustand }: AppProps) {
   const gewinnerText = gewinnerListe.length > 0
     ? gewinnerListe.map(g => `${g.spielerId} (${g.gesamtPunkte} Punkte)`).join(', ')
     : 'keine'
+  const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)
+  const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
 
   function fuhreAktionAus(aktion: SpielAktion) {
     setLetzteAktion(aktionsLabel(aktion))
@@ -263,12 +264,12 @@ function App({ initialZustand }: AppProps) {
               </>
             )}
             {!istSpielende && legaleAktionen.length > 0 && (
-              <p>Nächste legale Aktion: {aktionsLabel(legaleAktionen[0])}</p>
+              <p>Nächste legale Aktion: {empfohleneAktionLabel}</p>
             )}
             {reaktionsAktionen.length > 0 && (
               <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>
             )}
-            <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
+            <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
             {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
             <p>
               {aktiverSpieler.geheimeAufgabe
@@ -297,6 +298,9 @@ function App({ initialZustand }: AppProps) {
                     .join(', ')}
             </p>
           </DebugGruppe>
+          {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && pflichtschrittLabel !== 'Keine Aktion verfügbar.' && (
+            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} />
+          )}
           <section className="handkarten-panel" aria-label="Handkarten">
             <h3>Handkarten als Kartenleiste</h3>
             <ul className="handkartenleiste">
@@ -479,7 +483,7 @@ function App({ initialZustand }: AppProps) {
           istSpielende={istSpielende}
           steuerung={aktiverSpieler.steuerung}
           aktionsLabel={aktionsLabel}
-          pflichtschrittLabel={naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}
+          pflichtschrittLabel={pflichtschrittLabel}
           onAktionAusfuehren={fuhreAktionAus}
           onAusspielphaseBeenden={handleAusspielphaseBeenden}
           onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
