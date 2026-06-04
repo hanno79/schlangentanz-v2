@@ -60,11 +60,37 @@ body {
   width: 100%;
 }
 
-.aktions-liste button.aktions-button--empfohlen {
+.aktionen-gruppe--empfohlen button.aktions-button--empfohlen {
   border: 2px solid #f5b971;
   background: linear-gradient(180deg, rgba(245, 185, 113, 0.22), rgba(36, 27, 18, 0.96));
   box-shadow: 0 0 0 1px rgba(245, 185, 113, 0.28), 0 10px 22px rgba(0, 0, 0, 0.18);
   font-weight: 700;
+}
+
+.aktionen-gruppe {
+  margin-top: 0.75rem;
+  padding: 0.9rem;
+  border-radius: 14px;
+  border: 2px solid rgba(6, 57, 7, 0.45);
+  background: rgba(236, 255, 227, 0.55);
+}
+
+.aktionen-gruppe h3 {
+  margin-top: 0;
+  font-family: var(--st-font-headline);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.aktionen-gruppe--empfohlen {
+  border-color: rgba(245, 185, 113, 0.7);
+  background: rgba(245, 185, 113, 0.12);
+}
+
+.aktionen-gruppe--phasenaktion {
+  border-color: rgba(75, 103, 0, 0.6);
+  background: rgba(164, 222, 2, 0.15);
 }
 
 @media (min-width: 720px) {

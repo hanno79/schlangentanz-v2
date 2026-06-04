@@ -11,14 +11,13 @@ import {
   beendeZug,
   werfeUeberzaehligeHandkartenAb,
   HANDKARTENLIMIT,
-  MINDESTHANDKARTEN,
-  MAX_KARTEN_PRO_ZUG,
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
   erstelleSonderkarten,
   erstelleErweiterungsSonderkarten,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
+import AktionenPanel from './components/AktionenPanel'
 
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
@@ -108,18 +107,6 @@ function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
   return zustand.spieler[zustand.aktiverSpielerIndex].hand.slice(-anzahl).map(k => k.id)
 }
 
-function erlaubteKartenProZug(zustand: Spielzustand): number {
-  return MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv === true ? 1 : 0)
-}
-
-function maxSonderkartenProZug(zustand: Spielzustand): number {
-  return zustand.zugpflichten.verdopplerBonusAktiv === true ? 2 : 1
-}
-
-function maxFarbkartenProZug(zustand: Spielzustand): number {
-  return zustand.zugpflichten.verdopplerBonusAktiv === true ? 2 : 1
-}
-
 function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung']): string {
   switch (steuerung) {
     case 'Mensch':
@@ -143,26 +130,6 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
   return 'Keine Aktion verfügbar.'
-}
-
-function phasenregeln(zustand: Spielzustand, ueberhand: number): string[] {
-  switch (zustand.zugphase) {
-    case 'Nachziehphase':
-      return [`Nachziehphase: Auf ${MINDESTHANDKARTEN} Handkarten nachziehen, falls unter ${MINDESTHANDKARTEN} und der Stapel noch Karten hat.`]
-    case 'Ausspielphase':
-      return [
-        `Ausspielphase: Mindestens 1 Karte spielen oder abwerfen, höchstens ${erlaubteKartenProZug(zustand)} Karten insgesamt.`,
-        `Pro Zug höchstens ${maxFarbkartenProZug(zustand)} Farbkarten und höchstens ${maxSonderkartenProZug(zustand)} Sonderkarten.`,
-      ]
-    case 'Aufgabenpruefung':
-      return ['Aufgabenprüfung: Offene und geheime Aufgaben prüfen.']
-    case 'Zugabschluss':
-      return ueberhand > 0
-        ? ['Zugabschluss: Zuerst überzählige Karten abwerfen, dann Zug beenden.']
-        : ['Zugabschluss: Zug beenden und Spielerwechsel durchführen.']
-    case 'Spielende':
-      return ['Spielende: Keine weiteren Aktionen.']
-  }
 }
 
 interface AppProps {
@@ -199,6 +166,31 @@ function App({ initialZustand }: AppProps) {
   function fuhreAktionAus(aktion: SpielAktion) {
     setLetzteAktion(aktionsLabel(aktion))
     setZustand(z => anwendeAktion(z, aktion))
+  }
+
+  function handleAusspielphaseBeenden() {
+    setLetzteAktion('Ausspielphase beenden')
+    setZustand(z => beendeAusspielphase(z))
+  }
+
+  function handleAufgabenpruefungBeenden() {
+    setLetzteAktion('Aufgabenprüfung beenden')
+    setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))
+  }
+
+  function handleUeberzaehligeKartenAbwerfen() {
+    setLetzteAktion('Überzählige Karten abwerfen')
+    setZustand(z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) }))
+  }
+
+  function handleZugBeenden() {
+    setLetzteAktion('Zug beenden')
+    setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))
+  }
+
+  function handleAusspielphaseStarten() {
+    setLetzteAktion('Ausspielphase starten')
+    setZustand(z => starteAusspielphase(z))
   }
 
   return (
@@ -427,111 +419,22 @@ function App({ initialZustand }: AppProps) {
             <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
           ))}
         </section>
-        <section className="info-panel" aria-label="Aktionen">
-          <h2>Aktionen</h2>
-          <p>Legale Aktionen: {legaleAktionen.length}</p>
-          {istSpielende ? (
-            <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
-          ) : (
-            <>
-              <p>Nächster Pflichtschritt: {naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}</p>
-              <div className="aktions-liste">
-                {aktiverSpieler.steuerung === 'KI' && legaleAktionen.length > 0 && (
-                  <button onClick={() => fuhreAktionAus(legaleAktionen[0])}>
-                    KI-Aktion ausführen
-                  </button>
-                )}
-                {legaleAktionen.map((aktion: SpielAktion, index) => (
-                  <button
-                    key={aktionsLabel(aktion)}
-                    className={index === 0 ? 'aktions-button--empfohlen' : undefined}
-                    onClick={() => fuhreAktionAus(aktion)}
-                  >
-                    {aktionsLabel(aktion)}
-                  </button>
-                ))}
-                {reaktionsAktionen.length > 0 && (
-                  <>
-                    <p className="aktions-hinweis">Reaktionsaktion auswählen:</p>
-                    {reaktionsAktionen.map((aktion: SpielAktion) => (
-                      <button
-                        key={aktionsLabel(aktion)}
-                        className="aktions-button--reaktion"
-                        onClick={() => fuhreAktionAus(aktion)}
-                      >
-                        {aktionsLabel(aktion)}
-                      </button>
-                    ))}
-                  </>
-                )}
-                {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
-                  <button onClick={() => {
-                    setLetzteAktion('Ausspielphase beenden')
-                    setZustand(z => beendeAusspielphase(z))
-                  }}>
-                    Ausspielphase beenden
-                  </button>
-                )}
-                {zustand.zugphase === 'Aufgabenpruefung' && (
-                  <button onClick={() => {
-                    setLetzteAktion('Aufgabenprüfung beenden')
-                    setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))
-                  }}>
-                    Aufgabenprüfung beenden
-                  </button>
-                )}
-                {zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && (
-                  <button
-                    onClick={() => {
-                      setLetzteAktion('Überzählige Karten abwerfen')
-                      setZustand(z =>
-                        werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })
-                      )
-                    }}
-                  >
-                    Überzählige Karten abwerfen
-                  </button>
-                )}
-                {zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && (
-                  <button onClick={() => {
-                    setLetzteAktion('Zug beenden')
-                    setZustand(z => beendeZug(z, { pflichtenErfuellt: true }))
-                  }}>
-                    Zug beenden
-                  </button>
-                )}
-                {zustand.zugphase === 'Nachziehphase' && (
-                  <button onClick={() => {
-                    setLetzteAktion('Ausspielphase starten')
-                    setZustand(z => starteAusspielphase(z))
-                  }}>
-                    Ausspielphase starten
-                  </button>
-                )}
-              </div>
-              <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{erlaubteKartenProZug(zustand)}</p>
-              <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
-              {legaleAktionen.length === 0 && <p>Keine weiteren legalen Aktionen.</p>}
-            </>
-          )}
-          <section aria-label="Phasenregeln">
-            <h3>Phasenregeln</h3>
-            <ul>
-              {phasenregeln(zustand, ueberhand).map(regel => (
-                <li key={regel}>{regel}</li>
-              ))}
-            </ul>
-            <h4>Legale Aktionen dieser Phase</h4>
-            <ul>
-              {legaleAktionen.length > 0 ? (
-                legaleAktionen.map(aktion => <li key={JSON.stringify(aktion)}>{aktionsLabel(aktion)}</li>)
-              ) : (
-                <li>Aktuell keine legalen Aktionen in dieser Phase.</li>
-              )}
-            </ul>
-          </section>
-          <p>Quelle: engine.ermittleLegaleAktionen</p>
-        </section>
+        <AktionenPanel
+          zustand={zustand}
+          legaleAktionen={legaleAktionen}
+          reaktionsAktionen={reaktionsAktionen}
+          ueberhand={ueberhand}
+          istSpielende={istSpielende}
+          steuerung={aktiverSpieler.steuerung}
+          aktionsLabel={aktionsLabel}
+          pflichtschrittLabel={naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)}
+          onAktionAusfuehren={fuhreAktionAus}
+          onAusspielphaseBeenden={handleAusspielphaseBeenden}
+          onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
+          onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
+          onZugBeenden={handleZugBeenden}
+          onAusspielphaseStarten={handleAusspielphaseStarten}
+        />
       </section>
     </main>
   )
