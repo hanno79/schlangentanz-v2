@@ -7,13 +7,23 @@ Beschreibung: F14 Spielerführung – bündelt Pflichtschritt und empfohlene Akt
 */
 
 import { useId } from 'react'
+import { EMPFOHLENE_AKTION_ID } from './AktionenPanel'
 
 interface SpielerfuehrungProps {
   pflichtschrittLabel: string
   empfohleneAktionLabel: string
+  aktionszielId?: string
+  aktionszielSatzText?: string
+  aktionszielLinkText?: string
 }
 
-export default function Spielerfuehrung({ pflichtschrittLabel, empfohleneAktionLabel }: SpielerfuehrungProps) {
+export default function Spielerfuehrung({
+  pflichtschrittLabel,
+  empfohleneAktionLabel,
+  aktionszielId = EMPFOHLENE_AKTION_ID,
+  aktionszielSatzText = 'empfohlene Aktion',
+  aktionszielLinkText = 'empfohlenen Aktion',
+}: SpielerfuehrungProps) {
   const aktionsHinweis = empfohleneAktionLabel || pflichtschrittLabel.replace(/\.$/, '')
   const checklisteUeberschriftId = useId()
 
@@ -30,7 +40,8 @@ export default function Spielerfuehrung({ pflichtschrittLabel, empfohleneAktionL
         <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>
         <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
       </ul>
-      <p>Klicke unten auf die empfohlene Aktion, um deinen Zug fortzusetzen.</p>
+      <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
+      <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink">Zur {aktionszielLinkText} im Aktionsbereich</a>
     </section>
   )
 }

@@ -17,7 +17,7 @@ import {
   erstelleErweiterungsSonderkarten,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
-import AktionenPanel from './components/AktionenPanel'
+import AktionenPanel, { EMPFOHLENE_AKTION_ID, PHASENAKTION_ID } from './components/AktionenPanel'
 import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import Zugfortschritt from './components/Zugfortschritt'
@@ -168,6 +168,10 @@ function App({ initialZustand }: AppProps) {
     : 'keine'
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
+  const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
+  const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? PHASENAKTION_ID : EMPFOHLENE_AKTION_ID
+  const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
+  const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
 
   function fuhreAktionAus(aktion: SpielAktion) {
     setLetzteAktion(aktionsLabel(aktion))
@@ -296,7 +300,7 @@ function App({ initialZustand }: AppProps) {
             </p>
           </DebugGruppe>
           {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && pflichtschrittLabel !== 'Keine Aktion verfügbar.' && (
-            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} />
+            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} aktionszielId={spielerfuehrungAktionszielId} aktionszielSatzText={spielerfuehrungAktionszielSatzText} aktionszielLinkText={spielerfuehrungAktionszielLinkText} />
           )}
           <section className="handkarten-panel" aria-label="Handkarten">
             <h3>Handkarten als Kartenleiste</h3>

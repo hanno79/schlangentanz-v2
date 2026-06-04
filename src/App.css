@@ -435,3 +435,8 @@ code {
 .spielerfuehrung__checkschritt {
   margin-bottom: 0.25rem;
 }
+
+.spielerfuehrung__aktionslink {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
