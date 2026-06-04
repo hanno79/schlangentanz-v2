@@ -100,9 +100,10 @@ export default function AktionenPanel({
             {legaleAktionen.length > 0 ? (
               <button
                 aria-label={empfohlenLabel}
-                className="aktions-button aktions-button--empfohlen"
+                className="aktions-button aktions-button--empfohlen aktions-button--hervorgehoben"
                 onClick={() => onAktionAusfuehren(legaleAktionen[0])}
               >
+                <span className="aktions-button__badge" aria-hidden="true">Empfohlen</span>
                 {aktionsButtonInhalt(empfohlenLabel, 1, legaleAktionen.length)}
               </button>
             ) : (
