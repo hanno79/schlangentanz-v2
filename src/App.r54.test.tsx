@@ -9,6 +9,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { aktionsName } from './testUtils'
 
 function deterministischerZustand() {
   return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -26,7 +27,7 @@ describe('R54 UI-nächste legale Aktion', () => {
     )
     if (!ersteAktion) throw new Error('Erwartete mindestens eine legale Startaktion im UI.')
 
-    const ersteHinweis = `Nächste legale Aktion: ${ersteAktion.textContent}`
+    const ersteHinweis = `Nächste legale Aktion: ${aktionsName(ersteAktion)}`
     expect(
       within(aktiverSpielerBereich).getByText(ersteHinweis),
     ).toBeInTheDocument()
@@ -40,7 +41,7 @@ describe('R54 UI-nächste legale Aktion', () => {
     if (aktualisierteAktion) {
       expect(
         within(aktiverSpielerBereich).getByText(
-          `Nächste legale Aktion: ${aktualisierteAktion.textContent}`,
+          `Nächste legale Aktion: ${aktionsName(aktualisierteAktion)}`,
         ),
       ).toBeInTheDocument()
     } else {

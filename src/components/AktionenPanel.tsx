@@ -37,6 +37,16 @@ function phasenregeln(zustand: Spielzustand, ueberhand: number): string[] {
   }
 }
 
+function aktionsButtonInhalt(label: string, index: number, total: number) {
+  return (
+    <>
+      <span aria-hidden="true">Jetzt ausführen</span>
+      <span aria-hidden="true" className="aktions-button__meta">Aktion {index} von {total}</span>
+      <span className="aktions-button__label">{label}</span>
+    </>
+  )
+}
+
 interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
@@ -70,6 +80,7 @@ export default function AktionenPanel({
   onZugBeenden,
   onAusspielphaseStarten,
 }: AktionenPanelProps) {
+  const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
     <section className="info-panel" aria-label="Aktionen">
       <h2>Aktionen</h2>
@@ -88,10 +99,11 @@ export default function AktionenPanel({
             <h3>Empfohlene Aktion</h3>
             {legaleAktionen.length > 0 ? (
               <button
-                className="aktions-button--empfohlen"
+                aria-label={empfohlenLabel}
+                className="aktions-button aktions-button--empfohlen"
                 onClick={() => onAktionAusfuehren(legaleAktionen[0])}
               >
-                {aktionsLabel(legaleAktionen[0])}
+                {aktionsButtonInhalt(empfohlenLabel, 1, legaleAktionen.length)}
               </button>
             ) : (
               <p>Keine empfohlene Aktion verfügbar.</p>
@@ -100,14 +112,19 @@ export default function AktionenPanel({
           <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-label="Weitere Aktionen">
             <h3>Weitere legale Aktionen</h3>
             <div className="aktions-liste">
-              {legaleAktionen.slice(1).map((aktion: SpielAktion) => (
-                <button
-                  key={aktionsLabel(aktion)}
-                  onClick={() => onAktionAusfuehren(aktion)}
-                >
-                  {aktionsLabel(aktion)}
-                </button>
-              ))}
+              {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
+                const label = aktionsLabel(aktion)
+                return (
+                  <button
+                    key={`${label}-${i}`}
+                    aria-label={label}
+                    className="aktions-button"
+                    onClick={() => onAktionAusfuehren(aktion)}
+                  >
+                    {aktionsButtonInhalt(label, i + 2, legaleAktionen.length)}
+                  </button>
+                )
+              })}
               {legaleAktionen.length <= 1 && <p>Keine weiteren legalen Aktionen.</p>}
             </div>
             {reaktionsAktionen.length > 0 && (

@@ -56,8 +56,31 @@ body {
   gap: 0.75rem;
 }
 
-.aktions-liste button {
+.aktions-button {
+  min-height: 4.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
   width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(6, 57, 7, 0.45);
+  background: rgba(236, 255, 227, 0.55);
+  cursor: pointer;
+  text-align: left;
+}
+
+.aktions-button__meta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.aktions-button__label {
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .aktionen-gruppe--empfohlen button.aktions-button--empfohlen {

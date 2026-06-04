@@ -8,6 +8,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { aktionsName } from './testUtils'
 
 describe('R60 UI-Aktionsfeedback', () => {
   it('zeigt nach einer Aktion das zuletzt ausgeführte Feedback im aktiven Spielerbereich an', () => {
@@ -19,7 +20,7 @@ describe('R60 UI-Aktionsfeedback', () => {
     expect(within(aktiverSpielerBereich).queryByText(/zuletzt ausgeführt:/i)).not.toBeInTheDocument()
 
     const button = within(aktionenBereich).getAllByRole('button')[0]
-    const buttonText = button.textContent?.trim() ?? ''
+    const buttonText = aktionsName(button)
     fireEvent.click(button)
 
     expect(
