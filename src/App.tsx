@@ -431,6 +431,23 @@ function App({ initialZustand }: AppProps) {
               </p>
             </Fragment>
           ))}
+          <section className="scoreboard-bereich" aria-label="Scoreboard">
+            <h3>Scoreboard</h3>
+            <ul className="scoreboard-liste">
+              {spielerwertungen.map(eintrag => {
+                const spieler = zustand.spieler.find(s => s.id === eintrag.spielerId)
+
+                return (
+                  <li key={eintrag.spielerId} className="scoreboard-karte">
+                    <strong>{spieler ? `${spieler.name} (${spieler.id})` : eintrag.spielerId}</strong>
+                    <span>Gesamt: {eintrag.gesamtPunkte} Punkte</span>
+                    <span>Farbgruppen: {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte</span>
+                    <span>Aufgaben: {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte</span>
+                  </li>
+                )
+              })}
+            </ul>
+          </section>
           {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
             <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
           ))}
