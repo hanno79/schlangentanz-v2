@@ -1,9 +1,9 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.0
+Version: 1.2
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
-weitere legale Aktionen, Phasenaktion und Phasenregeln.
+weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 */
 
 import type { SpielAktion, Spielzustand } from '../engine'
@@ -149,7 +149,11 @@ export default function AktionenPanel({
             )}
             <p>Quelle: engine.ermittleLegaleAktionen</p>
           </section>
-          <section id={PHASENAKTION_ID} className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === PHASENAKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Phasenaktion">
+          <section
+            id={PHASENAKTION_ID}
+            className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === PHASENAKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`}
+            aria-label="Phasenaktion"
+          >
             <h3>Phasenaktion</h3>
             {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
               <button onClick={onAusspielphaseBeenden}>
@@ -177,8 +181,19 @@ export default function AktionenPanel({
               </button>
             )}
           </section>
+          {zustand.spielphase === 'Endspurt' && (
+            <section className="aktionen-gruppe aktionen-gruppe--endphase" aria-label="Endphase">
+              <h3>Endphase</h3>
+              <p>
+                Der letzte Zieher hat den Nachziehstapel geleert. Danach erhält jeder verbleibende Spieler genau
+                noch einen Zug ohne Nachziehen.
+              </p>
+            </section>
+          )}
           <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{erlaubteKartenProZug(zustand)}</p>
-          <p>Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten</p>
+          <p>
+            Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten
+          </p>
         </>
       )}
       <section aria-label="Phasenregeln">

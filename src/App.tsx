@@ -165,6 +165,9 @@ function App({ initialZustand }: AppProps) {
   const gewinnerText = gewinnerListe.length > 0
     ? gewinnerListe.map(g => `${g.spielerId} (${g.gesamtPunkte} Punkte)`).join(', ')
     : 'keine'
+  const ergebnisText = gewinnerListe.length > 1
+    ? 'Gleichstand'
+    : `Sieg für ${gewinnerListe[0]?.spielerId ?? 'unbekannt'}`
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
@@ -202,6 +205,7 @@ function App({ initialZustand }: AppProps) {
             <p>Engine-Demo: {zustand.zugphase}</p>
             <p>Zugphase: {zustand.zugphase}</p>
             <p>Spielphase: {zustand.spielphase}</p>
+            {istSpielende && <p>Spielende erreicht.</p>}
             {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
               <>
                 <p>Endrunde aktiv: ja</p>
@@ -215,6 +219,12 @@ function App({ initialZustand }: AppProps) {
                   ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
                   : 'keine'}
               </p>
+            )}
+            {istEndspurt && (
+              <>
+                <p>Nachziehen in der Endrunde: aus</p>
+                <p>Verbleibende Züge ohne Nachziehen: {zustand.endrunde.verbleibendeSpielerIndizes.length}</p>
+              </>
             )}
             <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
           </DebugGruppe>
@@ -421,6 +431,12 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section className="info-panel" aria-label="Wertung">
           <h2>Wertung</h2>
+          {istSpielende && (
+            <>
+              <p>Spielende erreicht.</p>
+              <p>Ergebnis: {ergebnisText}</p>
+            </>
+          )}
           <DebugGruppe titel="Debug: Wertungsdetails">
             {gesamtwertung.spielerwertungen.map(eintrag => (
               <Fragment key={eintrag.spielerId}>
