@@ -134,7 +134,7 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   if (zustand.zugphase === 'Zugabschluss') return 'Zug beenden.'
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
-  return 'Keine Aktion verfügbar.'
+  return 'Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
 }
 
 interface AppProps {
@@ -175,6 +175,7 @@ function App({ initialZustand }: AppProps) {
   const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? PHASENAKTION_ID : EMPFOHLENE_AKTION_ID
   const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
+  const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
@@ -288,8 +289,8 @@ function App({ initialZustand }: AppProps) {
                     .join(', ')}
             </p>
           </DebugGruppe>
-          {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && pflichtschrittLabel !== 'Keine Aktion verfügbar.' && (
-            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} aktionszielId={spielerfuehrungAktionszielId} aktionszielSatzText={spielerfuehrungAktionszielSatzText} aktionszielLinkText={spielerfuehrungAktionszielLinkText} onAktionszielHervorheben={setHervorgehobenesAktionszielId} />
+          {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
+            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} aktionszielId={spielerfuehrungAktionszielId} aktionszielSatzText={spielerfuehrungAktionszielSatzText} aktionszielLinkText={spielerfuehrungAktionszielLinkText} onAktionszielHervorheben={setHervorgehobenesAktionszielId} zeigtAktionslink={zeigtSpielerfuehrungAktionslink} />
           )}
           <section className="handkarten-panel" aria-label="Handkarten">
             <h3>Handkarten als Kartenleiste</h3>
