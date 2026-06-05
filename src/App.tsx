@@ -20,6 +20,7 @@ import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEi
 import AktionenPanel, { EMPFOHLENE_AKTION_ID, PHASENAKTION_ID } from './components/AktionenPanel'
 import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
+import useAktionszielFokus from './hooks/useAktionszielFokus'
 import Zugfortschritt from './components/Zugfortschritt'
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
@@ -174,6 +175,8 @@ function App({ initialZustand }: AppProps) {
   const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? PHASENAKTION_ID : EMPFOHLENE_AKTION_ID
   const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
+
+  useAktionszielFokus(hervorgehobenesAktionszielId)
 
   function fuhreAktionAus(aktion: SpielAktion) { setLetzteAktion(aktionsLabel(aktion)); setHervorgehobenesAktionszielId(null); setZustand(z => anwendeAktion(z, aktion)) }
   function handleAusspielphaseBeenden() { setLetzteAktion('Ausspielphase beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeAusspielphase(z)) }

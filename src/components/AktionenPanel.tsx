@@ -100,7 +100,7 @@ export default function AktionenPanel({
               KI-Aktion ausführen
             </button>
           )}
-          <section id={EMPFOHLENE_AKTION_ID} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === EMPFOHLENE_AKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Empfohlene Aktion">
+          <section id={EMPFOHLENE_AKTION_ID} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === EMPFOHLENE_AKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Empfohlene Aktion" tabIndex={-1}>
             <h3>Empfohlene Aktion</h3>
             {legaleAktionen.length > 0 ? (
               <button
@@ -153,6 +153,7 @@ export default function AktionenPanel({
             id={PHASENAKTION_ID}
             className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === PHASENAKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`}
             aria-label="Phasenaktion"
+            tabIndex={-1}
           >
             <h3>Phasenaktion</h3>
             {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
