@@ -1,9 +1,10 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.2
+Version: 1.3
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
+Änderung v1.3: Weitere legale Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
 */
 
 import type { SpielAktion, Spielzustand } from '../engine'
@@ -117,22 +118,26 @@ export default function AktionenPanel({
           </section>
           <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-label="Weitere Aktionen">
             <h3>Weitere legale Aktionen</h3>
-            <div className="aktions-liste">
-              {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
-                const label = aktionsLabel(aktion)
-                return (
-                  <button
-                    key={`${label}-${i}`}
-                    aria-label={label}
-                    className="aktions-button"
-                    onClick={() => onAktionAusfuehren(aktion)}
-                  >
-                    {aktionsButtonInhalt(label, i + 2, legaleAktionen.length)}
-                  </button>
-                )
-              })}
-              {legaleAktionen.length <= 1 && <p>Keine weiteren legalen Aktionen.</p>}
-            </div>
+            {legaleAktionen.length > 1 ? (
+              <ol className="aktions-liste" start={2}>
+                {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
+                  const label = aktionsLabel(aktion)
+                  return (
+                    <li key={`${label}-${i}`}>
+                      <button
+                        aria-label={label}
+                        className="aktions-button"
+                        onClick={() => onAktionAusfuehren(aktion)}
+                      >
+                        {aktionsButtonInhalt(label, i + 2, legaleAktionen.length)}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ol>
+            ) : (
+              <p>Keine weiteren legalen Aktionen.</p>
+            )}
             {reaktionsAktionen.length > 0 && (
               <>
                 <p className="aktions-hinweis">Reaktionsaktion auswählen:</p>
