@@ -52,7 +52,7 @@ function erwarteVerbindungZurAktion(
   if (zielButtonName) {
     expect(within(zielRegion).getByRole('button', { name: zielButtonName })).toBeInTheDocument()
   }
-  expect(within(spielerfuehrung).getByText('Mini-Checkliste für deinen Zug')).toBeInTheDocument()
+  expect(within(spielerfuehrung).getByRole('heading', { name: 'Mini-Checkliste für deinen Zug', level: 4 })).toBeInTheDocument()
 }
 
 describe('F18 Spielerführung und Aktionsbereich verbinden', () => {

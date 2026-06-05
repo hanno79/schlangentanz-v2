@@ -1,9 +1,9 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.2
-Beschreibung: F25 Spielerführung – stellt die Mini-Checkliste als geordnete
-              Schrittfolge für den aktiven Spieler dar.
+Version: 1.3
+Beschreibung: F26 Spielerführung – verwendet für die Mini-Checkliste eine
+              semantische Überschrift statt eines reinen Absatzes.
 */
 
 import { useId } from 'react'
@@ -36,7 +36,7 @@ export default function Spielerfuehrung({
       <p>{pflichtschrittLabel}</p>
       <p>Empfohlene Aktion</p>
       <p className="spielerfuehrung__karte">{aktionsHinweis}</p>
-      <p id={checklisteUeberschriftId}>Mini-Checkliste für deinen Zug</p>
+      <h4 id={checklisteUeberschriftId}>Mini-Checkliste für deinen Zug</h4>
       <ol aria-labelledby={checklisteUeberschriftId} className="spielerfuehrung__checkliste">
         <li className="spielerfuehrung__checkschritt">Pflichtschritt prüfen: {pflichtschrittLabel}</li>
         <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>

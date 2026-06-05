@@ -17,7 +17,7 @@ function deterministischerZustand() {
 }
 
 function erwarteMiniCheckliste(spielerfuehrung: HTMLElement, pflichtschritt: string, aktion: string) {
-  expect(within(spielerfuehrung).getByText('Mini-Checkliste für deinen Zug')).toBeInTheDocument()
+  within(spielerfuehrung).getByRole('heading', { name: 'Mini-Checkliste für deinen Zug', level: 4 })
 
   const checkliste = within(spielerfuehrung).getByRole('list', { name: 'Mini-Checkliste für deinen Zug' })
   expect(checkliste.tagName).toBe('OL')
