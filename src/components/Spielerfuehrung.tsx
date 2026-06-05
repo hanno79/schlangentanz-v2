@@ -1,9 +1,10 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.3
+Version: 1.4
 Beschreibung: F26 Spielerführung – verwendet für die Mini-Checkliste eine
-              semantische Überschrift statt eines reinen Absatzes.
+              semantische Überschrift und blendet die Klickführung bei fehlendem
+              Springziel explizit aus.
 */
 
 import { useId } from 'react'
@@ -44,9 +45,11 @@ export default function Spielerfuehrung({
         <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>
         <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
       </ol>
-      <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
       {zeigtAktionslink ? (
-        <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
+        <>
+          <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
+          <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
+        </>
       ) : (
         <p>Im Aktionsbereich gibt es aktuell kein Springziel.</p>
       )}
