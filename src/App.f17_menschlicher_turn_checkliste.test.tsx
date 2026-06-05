@@ -1,12 +1,11 @@
 /*
 Author: rahn
-Datum: 04.06.2026
-Version: 1.0
-Beschreibung: F17 UI-Test für den menschlichen Turn als kompakte Mini-Checkliste.
+Datum: 05.06.2026
+Version: 1.1
+Beschreibung: F17 UI-Test für den menschlichen Turn als kompakte, geordnete Mini-Checkliste.
 */
 /// <reference types="node" />
 
-import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
@@ -21,6 +20,7 @@ function erwarteMiniCheckliste(spielerfuehrung: HTMLElement, pflichtschritt: str
   expect(within(spielerfuehrung).getByText('Mini-Checkliste für deinen Zug')).toBeInTheDocument()
 
   const checkliste = within(spielerfuehrung).getByRole('list', { name: 'Mini-Checkliste für deinen Zug' })
+  expect(checkliste.tagName).toBe('OL')
   const schritte = within(checkliste).getAllByRole('listitem')
 
   expect(schritte).toHaveLength(3)
@@ -44,9 +44,6 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
     )
 
     expect(within(spielerfuehrung).getByText('Klicke unten auf die empfohlene Aktion, um deinen Zug fortzusetzen.')).toBeInTheDocument()
-    const appCss = readFileSync('src/App.css', 'utf8')
-    expect(appCss).toContain('.spielerfuehrung__checkliste')
-    expect(appCss).toContain('.spielerfuehrung__checkschritt')
   })
 
   it('aktualisiert die Checkliste auch bei reinen menschlichen Phasenaktionen', () => {

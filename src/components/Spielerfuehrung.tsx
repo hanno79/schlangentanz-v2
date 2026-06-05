@@ -1,9 +1,9 @@
 /*
 Author: rahn
-Datum: 04.06.2026
-Version: 1.0
-Beschreibung: F14 Spielerführung – bündelt Pflichtschritt und empfohlene Aktion
-              in einer verständlichen Handlungsanweisung für den aktiven Spieler.
+Datum: 05.06.2026
+Version: 1.2
+Beschreibung: F25 Spielerführung – stellt die Mini-Checkliste als geordnete
+              Schrittfolge für den aktiven Spieler dar.
 */
 
 import { useId } from 'react'
@@ -37,11 +37,11 @@ export default function Spielerfuehrung({
       <p>Empfohlene Aktion</p>
       <p className="spielerfuehrung__karte">{aktionsHinweis}</p>
       <p id={checklisteUeberschriftId}>Mini-Checkliste für deinen Zug</p>
-      <ul aria-labelledby={checklisteUeberschriftId} className="spielerfuehrung__checkliste">
+      <ol aria-labelledby={checklisteUeberschriftId} className="spielerfuehrung__checkliste">
         <li className="spielerfuehrung__checkschritt">Pflichtschritt prüfen: {pflichtschrittLabel}</li>
         <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>
         <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
-      </ul>
+      </ol>
       <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
       <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
     </section>
