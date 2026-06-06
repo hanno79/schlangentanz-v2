@@ -1,8 +1,10 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: TDD-Tests für die Punktwertung gültiger Farbgruppen nach R4.2/R4.4 und R8.4.
+              v1.1: Regressionsabsicherung Regenbogenschlange an Außenpositionen und
+              mehrere Regenbogenschlangen mit unterschiedlichen optimalen Farben.
 */
 
 import { describe, expect, it } from 'vitest';
@@ -143,5 +145,97 @@ describe('Farbgruppen-Punktwertung — R4.2/R4.4 und R8.4', () => {
     berechneFarbgruppenPunkte(eingabe);
 
     expect(eingabe.karten).toEqual(vorher);
+  });
+
+  describe('Regenbogenschlange an Außenpositionen', () => {
+    it('Regenbogenschlange an erster Position ermöglicht außenliegende Dreiergruppe', () => {
+      // [Regen, Grün 3, Grün 3] — Regen übernimmt Grün, bildet Dreiergruppe ab Index 0
+      const wertung = berechneFarbgruppenPunkte(
+        schlange([
+          sonderkarte('regen-1', 'Regenbogenschlange'),
+          farbkarte('gruen-1', 'Grün', 3),
+          farbkarte('gruen-2', 'Grün', 3),
+        ]),
+      );
+
+      expect(wertung).toEqual({
+        gesamtPunkte: 6,
+        gruppen: [
+          {
+            farbe: 'Grün',
+            startIndex: 0,
+            endIndex: 2,
+            laenge: 3,
+            kartenIds: ['regen-1', 'gruen-1', 'gruen-2'],
+            punkte: 6,
+          },
+        ],
+      });
+    });
+
+    it('Regenbogenschlange an letzter Position ermöglicht außenliegende Dreiergruppe', () => {
+      // [Blau 3, Blau 3, Regen] — Regen verlängert bestehende Blau-Gruppe auf Länge 3
+      const wertung = berechneFarbgruppenPunkte(
+        schlange([
+          farbkarte('blau-1', 'Blau', 3),
+          farbkarte('blau-2', 'Blau', 3),
+          sonderkarte('regen-1', 'Regenbogenschlange'),
+        ]),
+      );
+
+      expect(wertung).toEqual({
+        gesamtPunkte: 6,
+        gruppen: [
+          {
+            farbe: 'Blau',
+            startIndex: 0,
+            endIndex: 2,
+            laenge: 3,
+            kartenIds: ['blau-1', 'blau-2', 'regen-1'],
+            punkte: 6,
+          },
+        ],
+      });
+    });
+  });
+
+  describe('Mehrere Regenbogenschlangen', () => {
+    it('mehrere Regenbogenschlangen tragen in derselben Schlange unterschiedliche beste Farben', () => {
+      // [Blau 3, Blau 3, Regen A, Regen B, Grün 2, Grün 2]
+      // Optimale Zuordnung: Regen A → Blau (schließt Dreiergruppe), Regen B → Grün (eröffnet Dreiergruppe)
+      // Blau-Gruppe [0..2] = 3+3+0 = 6, Grün-Gruppe [3..5] = 0+2+2 = 4, Gesamt = 10
+      const wertung = berechneFarbgruppenPunkte(
+        schlange([
+          farbkarte('blau-1', 'Blau', 3),
+          farbkarte('blau-2', 'Blau', 3),
+          sonderkarte('regen-a', 'Regenbogenschlange'),
+          sonderkarte('regen-b', 'Regenbogenschlange'),
+          farbkarte('gruen-1', 'Grün', 2),
+          farbkarte('gruen-2', 'Grün', 2),
+        ]),
+      );
+
+      expect(wertung).toEqual({
+        gesamtPunkte: 10,
+        gruppen: [
+          {
+            farbe: 'Blau',
+            startIndex: 0,
+            endIndex: 2,
+            laenge: 3,
+            kartenIds: ['blau-1', 'blau-2', 'regen-a'],
+            punkte: 6,
+          },
+          {
+            farbe: 'Grün',
+            startIndex: 3,
+            endIndex: 5,
+            laenge: 3,
+            kartenIds: ['regen-b', 'gruen-1', 'gruen-2'],
+            punkte: 4,
+          },
+        ],
+      });
+    });
   });
 });
