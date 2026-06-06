@@ -32,6 +32,13 @@ export function spielerMitSchlangen(schlangen: Spieler['schlangen'], steuerung: 
   };
 }
 
+export function schlangeMitFarben(id: string, farben: Farbe[]): Schlange {
+  return schlange(
+    farben.map((farbe, i) => farbkarte(`${id}-${farbe.toLowerCase()}-${i + 1}`, farbe)),
+    id,
+  );
+}
+
 export function spielerMitId(id: string, name: string, schlangen: Spieler['schlangen']): Spieler {
   return { ...spielerMitSchlangen(schlangen), id, name };
 }

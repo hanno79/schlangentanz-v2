@@ -57,11 +57,19 @@ function pruefeGelberSchatz(zustand: Spielzustand): boolean {
   );
 }
 
+function pruefeLilaRiese(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some((schlange) =>
+    ermittleFarbgruppen(schlange).some((gruppe) => gruppe.farbe === 'Violett'),
+  );
+}
+
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-03': pruefeFarbkombination,
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
   'aufgabe-13': pruefeGelberSchatz,
+  'aufgabe-14': pruefeLilaRiese,
 };
 
 export function ermittleErfuellteOffeneAufgaben(zustand: Spielzustand): AufgabenkarteInfo[] {
