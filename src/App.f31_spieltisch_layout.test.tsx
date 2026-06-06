@@ -33,16 +33,19 @@ describe('F31 Spieltisch-Ansicht', () => {
   it('ordnet Handkarten und Schlangen in einer gemeinsamen Spieltisch-Bühne an', () => {
     render(<App initialZustand={zustandMitSpieltisch()} />)
 
-    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
+    const spieltisch = within(aktiverSpielerBereich).getByRole('region', { name: 'Spieltisch' })
     const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
-    const debugAktiverSpieler = screen.getByText('Debug: Aktiver Spieler')
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
+    const debugAktiverSpieler = screen.getAllByText(/Aktiver Spieler-Details:/)[0]
 
     expect(within(handBereich).getByText('Handkarten als Kartenleiste')).toBeInTheDocument()
     expect(within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })).toBeInTheDocument()
     expect(within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })).toBeInTheDocument()
     expect(within(schlangenbereich).getByText('schlange-spieler-1-f31')).toBeInTheDocument()
     expect(within(schlangenbereich).getByText('schlange-spieler-2-f31')).toBeInTheDocument()
+    expect(spieltisch.nextElementSibling).toBe(aktionenBereich)
     expect(spieltisch.compareDocumentPosition(debugAktiverSpieler) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )

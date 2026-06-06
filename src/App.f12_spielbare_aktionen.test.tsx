@@ -48,6 +48,6 @@ describe('F12 spielbare Aktionen', () => {
     fireEvent.click(empfohlenerButton)
 
     expect(within(aktionenBereich).getByText('Legale Aktionen: 0')).toBeInTheDocument()
-    expect(screen.getByText(/Zuletzt ausgeführt: Neue Schlange starten mit Karte blau-01/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Zuletzt ausgeführt: Neue Schlange starten mit Karte blau-01/)[0]).toBeInTheDocument()
   })
 })

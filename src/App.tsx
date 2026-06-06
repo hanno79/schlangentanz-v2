@@ -261,75 +261,92 @@ function App({ initialZustand }: AppProps) {
           </DebugGruppe>
           <Zugfortschritt zugphase={zustand.zugphase} />
         </section>
-        <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
-          <h2>Aktiver Spieler</h2>
-          <section className="spielbrett" aria-labelledby="spieltisch-titel">
-            <h3 id="spieltisch-titel">Spieltisch</h3>
-            <HandkartenPanel
-              handkarten={aktiverSpieler.hand}
-              ausgewaehlteHandkarte={ausgewaehlteHandkarte}
-              onKarteWaehlen={(karteId) => setAusgewaehlteHandkarteAuswahl((aktuell) => aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId })}
-              onKarteDragStart={(karteId) => {
-                gezogeneHandkarteIdRef.current = karteId
-              }}
-              onKarteDragEnd={() => {
-                gezogeneHandkarteIdRef.current = null
-              }}
-            />
-            <Schlangenbereich
-              aktiverSpieler={aktiverSpieler}
-              gegnerSpieler={gegnerSpieler}
-              karteAnlegenAktionen={karteAnlegenAktionen}
-              neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
-              gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
-              ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
-              onAktion={fuhreAktionAus}
+        <div className="spieltisch-gruppe">
+          <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
+            <h2>Aktiver Spieler</h2>
+            <section className="spielbrett" aria-labelledby="spieltisch-titel">
+              <h3 id="spieltisch-titel">Spieltisch</h3>
+              <HandkartenPanel
+                handkarten={aktiverSpieler.hand}
+                ausgewaehlteHandkarte={ausgewaehlteHandkarte}
+                onKarteWaehlen={(karteId) =>
+                  setAusgewaehlteHandkarteAuswahl((aktuell) =>
+                    aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },
+                  )
+                }
+                onKarteDragStart={(karteId) => {
+                  gezogeneHandkarteIdRef.current = karteId
+                }}
+                onKarteDragEnd={() => {
+                  gezogeneHandkarteIdRef.current = null
+                }}
+              />
+              <Schlangenbereich
+                aktiverSpieler={aktiverSpieler}
+                gegnerSpieler={gegnerSpieler}
+                karteAnlegenAktionen={karteAnlegenAktionen}
+                neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+                gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
+                ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+                onAktion={fuhreAktionAus}
+                aktionsLabel={aktionsLabel}
+              />
+            </section>
+            <AktionenPanel
+              zustand={zustand}
+              legaleAktionen={legaleAktionen}
+              reaktionsAktionen={reaktionsAktionen}
+              ueberhand={ueberhand}
+              istSpielende={istSpielende}
+              steuerung={aktiverSpieler.steuerung}
               aktionsLabel={aktionsLabel}
-            />
-          </section>
-          <DebugGruppe titel="Debug: Aktiver Spieler">
-            <p>Aktiver Spieler: {aktiverSpieler.id}</p>
-            <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
-            <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
-            <p>
-              Aktuelle Wertung:{' '}
-              {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
-            </p>
-            {ueberhand > 0 && (
-              <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>
-            )}
-            {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
-            {istSpielende && (
-              <>
-                <p>Spielende erreicht.</p>
-                <p>Gewinner: {gewinnerText}</p>
-              </>
-            )}
-            {!istSpielende && legaleAktionen.length > 0 && (
-              <p>Nächste legale Aktion: {empfohleneAktionLabel}</p>
-            )}
-            {reaktionsAktionen.length > 0 && (
-              <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>
-            )}
-            <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
-            <p>
-              {aktiverSpieler.geheimeAufgabe
-                ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
-                : 'Geheime Aufgabe: keine'}
-            </p>
-          </DebugGruppe>
-          {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
-            <Spielerfuehrung
               pflichtschrittLabel={pflichtschrittLabel}
-              empfohleneAktionLabel={empfohleneAktionLabel}
-              aktionszielId={spielerfuehrungAktionszielId}
-              aktionszielSatzText={spielerfuehrungAktionszielSatzText}
-              aktionszielLinkText={spielerfuehrungAktionszielLinkText}
-              onAktionszielHervorheben={setHervorgehobenesAktionszielId}
-              zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
+              hervorgehobenesAktionszielId={hervorgehobenesAktionszielId}
+              onAktionAusfuehren={fuhreAktionAus}
+              onAusspielphaseBeenden={handleAusspielphaseBeenden}
+              onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
+              onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
+              onZugBeenden={handleZugBeenden}
+              onAusspielphaseStarten={handleAusspielphaseStarten}
             />
-          )}
-        </section>
+            <DebugGruppe titel="Debug: Aktiver Spieler">
+              <p>Aktiver Spieler: {aktiverSpieler.id}</p>
+              <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+              <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
+              <p>
+                Aktuelle Wertung:{' '}
+                {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
+              </p>
+              {ueberhand > 0 && <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>}
+              {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
+              {istSpielende && (
+                <>
+                  <p>Spielende erreicht.</p>
+                  <p>Gewinner: {gewinnerText}</p>
+                </>
+              )}
+              {!istSpielende && legaleAktionen.length > 0 && <p>Nächste legale Aktion: {empfohleneAktionLabel}</p>}
+              {reaktionsAktionen.length > 0 && <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>}
+              <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
+              <p>
+                {aktiverSpieler.geheimeAufgabe
+                  ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
+                  : 'Geheime Aufgabe: keine'}
+              </p>
+            </DebugGruppe>
+            {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
+              <Spielerfuehrung
+                pflichtschrittLabel={pflichtschrittLabel}
+                empfohleneAktionLabel={empfohleneAktionLabel}
+                aktionszielId={spielerfuehrungAktionszielId}
+                aktionszielSatzText={spielerfuehrungAktionszielSatzText}
+                aktionszielLinkText={spielerfuehrungAktionszielLinkText}
+                onAktionszielHervorheben={setHervorgehobenesAktionszielId}
+                zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
+              />
+            )}
+          </section>
+        </div>
         <section className="info-panel" aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>
           <DebugGruppe titel="Debug: Spielerzustände">
@@ -448,23 +465,6 @@ function App({ initialZustand }: AppProps) {
             <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
           ))}
         </section>
-        <AktionenPanel
-          zustand={zustand}
-          legaleAktionen={legaleAktionen}
-          reaktionsAktionen={reaktionsAktionen}
-          ueberhand={ueberhand}
-          istSpielende={istSpielende}
-          steuerung={aktiverSpieler.steuerung}
-          aktionsLabel={aktionsLabel}
-          pflichtschrittLabel={pflichtschrittLabel}
-          hervorgehobenesAktionszielId={hervorgehobenesAktionszielId}
-          onAktionAusfuehren={fuhreAktionAus}
-          onAusspielphaseBeenden={handleAusspielphaseBeenden}
-          onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
-          onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
-          onZugBeenden={handleZugBeenden}
-          onAusspielphaseStarten={handleAusspielphaseStarten}
-        />
       </section>
     </main>
   )

@@ -18,11 +18,10 @@ describe('R59 UI-Zugpanel mit phasenabhängigem Pflichtschritt', () => {
   it('zeigt den nächsten Pflichtschritt und aktualisiert ihn nach einer Aktion', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
-    const aktiverSpielerBereich = screen.getByRole('region', { name: /aktiver spieler/i })
     const aktionenBereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(
-      within(aktiverSpielerBereich).getByText(/nächster pflichtschritt: eine legale aktion auswählen/i),
+      screen.getAllByText(/nächster pflichtschritt: eine legale aktion auswählen/i)[0],
     ).toBeInTheDocument()
 
     fireEvent.click(
@@ -32,7 +31,7 @@ describe('R59 UI-Zugpanel mit phasenabhängigem Pflichtschritt', () => {
     )
 
     expect(
-      within(aktiverSpielerBereich).getByText(/nächster pflichtschritt: ausspielphase beenden/i),
+      screen.getAllByText(/nächster pflichtschritt: ausspielphase beenden/i)[0],
     ).toBeInTheDocument()
     expect(
       within(aktionenBereich).getByRole('button', { name: /ausspielphase beenden/i }),

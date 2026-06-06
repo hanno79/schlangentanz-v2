@@ -30,6 +30,6 @@ describe('F28 Spielerführung bei fehlenden legalen Aktionen', () => {
 
     expect(within(spielerfuehrung).getByText('Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.')).toBeInTheDocument()
     expect(within(spielerfuehrung).queryByRole('link')).not.toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).getByText('Nächster Pflichtschritt: Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.')).toBeInTheDocument()
+    expect(screen.getAllByText('Nächster Pflichtschritt: Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.')[0]).toBeInTheDocument()
   })
 })

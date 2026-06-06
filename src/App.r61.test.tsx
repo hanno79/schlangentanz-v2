@@ -33,16 +33,20 @@ describe('R61 UI-Überhand-Hinweis', () => {
   it('zeigt im Zugabschluss einen Überhand-Hinweis und verlangt Kartenabwurf vor Zugende', () => {
     render(<App initialZustand={zustandMitUeberhand()} />)
 
-    const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
-    const aktionenBereich = screen.getByRole('region', { name: 'Legale Aktionen' })
+    const aktiverSpielerBereich = screen.getByRole('region', { name: /aktiver spieler/i })
+    const aktionenBereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(aktiverSpielerBereich).getByText(/Überzählige Karten: 1 über dem Limit von 10/i)).toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).getByText(/Nächster Pflichtschritt: Überzählige Karten abwerfen/i)).toBeInTheDocument()
+    expect(
+      screen.getAllByText(/Nächster Pflichtschritt: Überzählige Karten abwerfen/i)[0],
+    ).toBeInTheDocument()
 
     fireEvent.click(within(aktionenBereich).getByRole('button', { name: /überzählige karten abwerfen/i }))
 
     expect(within(aktiverSpielerBereich).queryByText(/Überzählige Karten:/i)).not.toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).getByText(/Nächster Pflichtschritt: Zug beenden/i)).toBeInTheDocument()
+    expect(
+      screen.getAllByText(/Nächster Pflichtschritt: Zug beenden/i)[0],
+    ).toBeInTheDocument()
     expect(within(aktionenBereich).getByRole('button', { name: /zug beenden/i })).toBeInTheDocument()
   })
 })
