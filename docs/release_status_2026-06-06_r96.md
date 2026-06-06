@@ -86,10 +86,39 @@ build: erfolgreich
 
 ## Commit / Push / Deploy / Smoke
 
-Commit erstellt:
+Implementierungs-Commit erstellt und gepusht:
 
 ```text
-83b01a4 R96 Schlangenmeister-Aufgabe pruefen
+1895a6f R96 Schlangenmeister-Aufgabe pruefen
 ```
 
-Push, Production-Deploy und Smoke sind zum Zeitpunkt dieses Doku-Updates noch ausstehend und werden nach Abschluss ergänzt.
+Production-Deploy:
+
+```text
+Production: https://schlangentanz-v2-qzchii7zk-alfreds-projects-7e9df1b4.vercel.app
+Alias: https://schlangentanz-v2.vercel.app
+Ready in 14s
+```
+
+HTTP-Smoke:
+
+```text
+200 https://schlangentanz-v2.vercel.app/game
+```
+
+Playwright-Smoke:
+
+```json
+{
+  "url": "https://schlangentanz-v2.vercel.app/game",
+  "status": 200,
+  "title": "schlangentanz-v2",
+  "hasGameHeading": true,
+  "hasActionsRegion": true,
+  "actionButtonsBefore": 13,
+  "firstActionClicked": true,
+  "textChangedAfterFirstAction": true,
+  "consoleErrors": [],
+  "pageErrors": []
+}
+```
