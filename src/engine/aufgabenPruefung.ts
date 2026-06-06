@@ -36,7 +36,21 @@ function pruefeSchlangenbeschwörer(zustand: Spielzustand): boolean {
   return aktiverSpieler.schlangen.flatMap((s) => s.karten).filter(istSonderkarte).length >= 4;
 }
 
+function pruefeFarbkombination(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some((schlange) => {
+    const farbzaehler: Record<string, number> = {};
+    for (const karte of schlange.karten) {
+      if (karte.typ !== 'Farbkarte') continue;
+      farbzaehler[karte.farbe] = (farbzaehler[karte.farbe] ?? 0) + 1;
+      if (farbzaehler[karte.farbe] >= 5) return true;
+    }
+    return false;
+  });
+}
+
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
+  'aufgabe-03': pruefeFarbkombination,
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
 };
