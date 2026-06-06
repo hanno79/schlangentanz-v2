@@ -109,12 +109,12 @@ Build erfolgreich.
 ## Commit
 
 ```text
-Wird nach Commit ergänzt.
+edfe891 R92 Symmetriemeister-Aufgabe pruefen
 ```
 
 ## Deployment
 
-Auszuführen nach Commit:
+Ausgeführt:
 
 ```text
 bash -ic 'vercel deploy --prod --yes --token="$VERCEL_TOKEN"'
@@ -123,7 +123,9 @@ bash -ic 'vercel deploy --prod --yes --token="$VERCEL_TOKEN"'
 Ergebnis:
 
 ```text
-Wird nach Deployment ergänzt.
+Production  https://schlangentanz-v2-ay458gz5g-alfreds-projects-7e9df1b4.vercel.app
+Aliased     https://schlangentanz-v2.vercel.app
+Ready in 16s
 ```
 
 ## Live-Smoke
@@ -131,18 +133,28 @@ Wird nach Deployment ergänzt.
 HTTP-Smoke:
 
 ```text
-Wird nach Deployment ergänzt.
+200 https://schlangentanz-v2.vercel.app/game
 ```
 
 Playwright-Smoke gegen `/game`:
 
 ```json
-Wird nach Deployment ergänzt.
+{
+  "status": 200,
+  "title": "schlangentanz-v2",
+  "hasGameHeading": true,
+  "hasActionsRegion": true,
+  "actionButtonsBefore": 16,
+  "firstActionClicked": true,
+  "textChangedAfterFirstAction": true,
+  "consoleErrors": [],
+  "pageErrors": []
+}
 ```
 
 ## Release-Gate-Status
 
 - Code/Test: erledigt
 - Full Gates lokal: grün
-- Dokumentation: vorbereitet
-- Deployment/Live-Smoke: ausstehend
+- Dokumentation: erledigt
+- Deployment/Live-Smoke: grün
