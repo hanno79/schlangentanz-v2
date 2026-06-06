@@ -103,9 +103,49 @@ Build erfolgreich.
 5666dce R91 Farbenpracht-Aufgabe pruefen
 ```
 
+## Deployment
+
+Ausgeführt:
+
+```text
+bash -ic 'vercel deploy --prod --yes --token="$VERCEL_TOKEN"'
+```
+
+Ergebnis:
+
+```text
+Production  https://schlangentanz-v2-h8of67z5h-alfreds-projects-7e9df1b4.vercel.app
+Aliased     https://schlangentanz-v2.vercel.app
+Ready in 14s
+```
+
+## Live-Smoke
+
+HTTP-Smoke:
+
+```text
+200 https://schlangentanz-v2.vercel.app/game
+```
+
+Playwright-Smoke gegen `/game`:
+
+```json
+{
+  "status": 200,
+  "title": "schlangentanz-v2",
+  "hasGameHeading": true,
+  "hasActionsRegion": true,
+  "actionButtonsBefore": 4,
+  "firstActionClicked": true,
+  "textChangedAfterFirstAction": true,
+  "consoleErrors": [],
+  "pageErrors": []
+}
+```
+
 ## Release-Gate-Status
 
 - Code/Test: erledigt
 - Full Gates lokal: grün
-- Dokumentation: dieser Nachweis
-- Deployment/Live-Smoke: nachfolgender Schritt
+- Dokumentation: erledigt
+- Deployment/Live-Smoke: grün
