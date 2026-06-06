@@ -38,11 +38,11 @@ Beschreibung: Release-Status für den R89-Feature-Slice zur offenen Aufgabenprü
 
 ## Release
 
-- Code-Commit/Push: folgt nach Doku-Erstellung.
-- Production-Deploy: folgt nach Commit/Push.
-- HTTP-Smoke: folgt nach Deploy.
-- Browser-Smoke `/game`: folgt nach Deploy.
-- First-Turn-Smoke `/game`: folgt nach Deploy.
+- Code-Commit/Push: `da4f2a4 — R89 Farbvielfalt-Aufgabe pruefen` auf `origin/main`.
+- Production-Deploy: `https://schlangentanz-v2-b0yjn4t3z-alfreds-projects-7e9df1b4.vercel.app` bereitgestellt und auf `https://schlangentanz-v2.vercel.app` aliasiert.
+- HTTP-Smoke: `https://schlangentanz-v2.vercel.app/game` → 200.
+- Browser-Smoke `/game`: Playwright lädt die App ohne Console-/Page-Errors; `Schlangentanz` und der Aufgabenbereich sind sichtbar.
+- First-Turn-Smoke `/game`: empfohlene erste Aktion im Bereich `Aktionen` ausgeführt; DOM-Zustand geändert; keine Console-/Page-Errors.
 
 ## Offene Hinweise
 
