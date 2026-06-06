@@ -1,8 +1,9 @@
 /*
 Author: rahn
 Datum: 06.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfüllung offener Aufgaben im Zug.
+Änderung v1.1: pruefeFarbharmonie (aufgabe-02) hinzugefügt.
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
@@ -88,7 +89,19 @@ function pruefeFarbwechsler(zustand: Spielzustand): boolean {
   return pruefeFensterVielfalt(zustand, 4);
 }
 
+function pruefeFarbharmonie(zustand: Spielzustand): boolean {
+  const ALLE_FARBEN = ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett', 'Braun'] as const;
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const farbenMitDreiergruppe = new Set(
+    aktiverSpieler.schlangen
+      .flatMap((schlange) => ermittleFarbgruppen(schlange))
+      .map((gruppe) => gruppe.farbe),
+  );
+  return ALLE_FARBEN.every((farbe) => farbenMitDreiergruppe.has(farbe));
+}
+
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
+  'aufgabe-02': pruefeFarbharmonie,
   'aufgabe-03': pruefeFarbkombination,
   'aufgabe-04': pruefeFarbvielfalt,
   'aufgabe-05': pruefeFarbwechsler,
