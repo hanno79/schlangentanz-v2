@@ -1,10 +1,11 @@
 /*
 Author: rahn
-Datum: 05.06.2026
-Version: 1.3
+Datum: 06.06.2026
+Version: 1.4
 Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, expliziten Start-/Anlegeaktionen und Drop-/Klick-Fallback auf der gesamten Schlange.
 */
 
+import { useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
 import type { SpielAktion, Spieler, Spielkarte } from '../engine'
 
@@ -46,6 +47,8 @@ export default function Schlangenbereich({
   onAktion,
   aktionsLabel,
 }: SchlangenbereichProps) {
+  const [dragOverZone, setDragOverZone] = useState<string | null>(null)
+
   function findeAktionFuerKarte(schlangeId: string, handkartenId: string | null) {
     if (!handkartenId) return null
     return karteAnlegenAktionen.find(
@@ -89,10 +92,16 @@ export default function Schlangenbereich({
     fuehreAktionAus(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
   }
 
+  function handleSchlangeDragOver(event: DragEvent<HTMLElement>, schlangeId: string) {
+    erlaubeDrop(event)
+    setDragOverZone(schlangeId)
+  }
+
   function handleSchlangeDrop(event: DragEvent<HTMLElement>, schlangeId: string) {
     event.preventDefault()
     const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
     fuehreAktionAus(findeAktionFuerKarte(schlangeId, kartenId))
+    setDragOverZone(null)
   }
 
   function handleNeueSchlangeZoneClick(event: MouseEvent<HTMLElement>) {
@@ -113,10 +122,16 @@ export default function Schlangenbereich({
     fuehreNeueSchlangeAktionAus(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
   }
 
+  function handleNeueSchlangeZoneDragOver(event: DragEvent<HTMLElement>) {
+    erlaubeDrop(event)
+    setDragOverZone('startzone')
+  }
+
   function handleNeueSchlangeZoneDrop(event: DragEvent<HTMLElement>) {
     event.preventDefault()
     const startButton = (event.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('.schlangekarte__anlegebutton--start')
     startButton?.click()
+    setDragOverZone(null)
   }
 
   const hatEigeneSchlangen = aktiverSpieler.schlangen.length > 0
@@ -136,14 +151,14 @@ export default function Schlangenbereich({
           Ziehe eine Handkarte auf die gewünschte Schlange oder nutze die Startzone, um eine neue Schlange zu beginnen.
         </p>
         <div
-          className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}`}
+          className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${dragOverZone === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
           role="button"
           tabIndex={0}
           aria-label="Neue Schlange starten"
           aria-describedby={`schlange-startzone-hinweis-${aktiverSpieler.id}`}
           onClick={handleNeueSchlangeZoneClick}
           onKeyDown={handleNeueSchlangeZoneKeyDown}
-          onDragOver={erlaubeDrop}
+          onDragOver={handleNeueSchlangeZoneDragOver}
           onDrop={handleNeueSchlangeZoneDrop}
         >
           <strong>Neue Schlange starten</strong>
@@ -187,14 +202,14 @@ export default function Schlangenbereich({
               return (
                 <li
                   key={schlange.id}
-                  className="schlangekarte schlangekarte--eigene"
+                  className={`schlangekarte schlangekarte--eigene${dragOverZone === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-label={`Schlange ${schlange.id}`}
                   aria-describedby={`schlange-${schlange.id}-anlegehilfe`}
                   onClick={(event) => handleSchlangeClick(event, schlange.id)}
                   onKeyDown={(event) => handleSchlangeKeyDown(event, schlange.id)}
-                  onDragOver={erlaubeDrop}
+                  onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
                   onDrop={(event) => handleSchlangeDrop(event, schlange.id)}
                 >
                   <strong>{schlange.id}</strong>

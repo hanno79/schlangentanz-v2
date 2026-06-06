@@ -1,7 +1,7 @@
 /*
  * Author: rahn
- * Datum: 05.06.2026
- * Version: 1.0
+ * Datum: 06.06.2026
+ * Version: 1.1
  * Beschreibung: F36 UI-Test für das erste Drag-and-Drop-Ausspielen einer Handkarte auf eine eigene Schlange.
  */
 
@@ -189,5 +189,33 @@ describe('F36 Drag-and-Drop für Schlangen', () => {
     expect(within(handBereich).queryByText(anlegekarteId)).toBeNull()
     expect(within(schlangenKarte).getByText(anlegekarteId)).toBeInTheDocument()
     expect(within(schlangenKarte).getByText(startkarte.id)).toBeInTheDocument()
+  })
+
+  it('markiert eine Schlange sichtbar beim Überfahren mit einer gezogenen Karte', () => {
+    const { zustand, anlegekarteId } = erstelleSpieltischMitEineSchlange()
+    render(<App initialZustand={zustand} />)
+
+    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
+    const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
+    const handkartenButton = within(handBereich).getByRole('button', {
+      name: new RegExp(anlegekarteId),
+    })
+    const schlangenKarte = within(schlangenbereich).getByText('schlange-spieler-1-f36').closest('li')
+
+    if (!schlangenKarte) {
+      throw new Error('Testsetup erwartet eine sichtbare eigene Schlange.')
+    }
+
+    const dataTransfer = erstelleDataTransfer()
+    fireEvent.dragStart(handkartenButton, { dataTransfer })
+    fireEvent.dragOver(schlangenKarte, { dataTransfer })
+
+    expect(schlangenKarte).toHaveClass('schlangekarte--dragover')
+
+    fireEvent.drop(schlangenKarte, { dataTransfer })
+    fireEvent.dragEnd(handkartenButton, { dataTransfer })
+
+    expect(schlangenKarte).not.toHaveClass('schlangekarte--dragover')
   })
 })

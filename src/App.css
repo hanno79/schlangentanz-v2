@@ -375,8 +375,26 @@ code {
   background: linear-gradient(180deg, rgba(164, 222, 2, 0.45), rgba(255, 255, 255, 0.5));
 }
 
-.schlangekarte__karte--sonderkarte {
-  background: linear-gradient(180deg, rgba(254, 203, 0, 0.55), rgba(255, 255, 255, 0.5));
+.schlangekarte--dragover {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.22), 0 12px 22px rgba(6, 57, 7, 0.18);
+  transform: translateY(-3px) scale(1.01);
+}
+
+.schlangekarte--dragover .schlangekarte__badge {
+  background: rgba(177, 45, 0, 0.12);
+}
+
+.schlangen-startzone--dragover {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.16), 0 12px 22px rgba(6, 57, 7, 0.15);
+}
+
+.schlangekarte--eigene,
+.schlangen-startzone {
+  transition: box-shadow 120ms ease, transform 120ms ease, outline-color 120ms ease;
 }
 
 .schlangekarte__karte strong,

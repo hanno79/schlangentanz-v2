@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 06.06.2026 – F36 Drag-over-Feedback für Schlangen
+- Beim Überfahren einer eigenen Schlange während des Drag-and-Drop wird die Zielschlange jetzt visuell hervorgehoben.
+- Auch die leere Startzone zeigt ein klares Drag-over-Feedback, damit der Einstieg in eine neue Schlange verständlicher ist.
+- Der F36-Drag-Test wurde um diese Rückmeldung ergänzt.
+
 ## 05.06.2026 – F31 Spieltisch-Ansicht
 - Neue `Spieltisch`-Bühne im Bereich "Aktiver Spieler" eingeführt.
 - Handkarten und Schlangen sind jetzt gemeinsam als visuelle Spielzone angeordnet.
