@@ -38,9 +38,11 @@ Beschreibung: Release-Status für den R85-Feature-Slice zur offenen Aufgabenprü
 
 ## Release
 
-- Code-Commit/Push: folgt nach finalem Staging-Check.
-- Production-Deploy: folgt nach Push.
-- HTTP-/Browser-Smoke: folgt nach Production-Deploy.
+- Code-Commit/Push: `078ef34 — R85 Farbkombination-Aufgabe pruefen` auf `origin/main`.
+- Production-Deploy: `https://schlangentanz-v2-2k21q7upy-alfreds-projects-7e9df1b4.vercel.app` bereitgestellt und auf `https://schlangentanz-v2.vercel.app` aliasiert.
+- HTTP-Smoke: `https://schlangentanz-v2.vercel.app/game` → 200.
+- Browser-Smoke `/game`: Playwright lädt die App ohne Console-/Page-Errors; `Schlangentanz` und der Aufgabenbereich sind sichtbar.
+- First-Turn-Smoke `/game`: empfohlene erste Aktion ausgeführt; DOM-Zustand geändert; keine Console-/Page-Errors.
 
 ## Offene Hinweise
 
