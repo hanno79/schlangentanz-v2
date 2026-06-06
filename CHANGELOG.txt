@@ -5,6 +5,11 @@
 - Auch die leere Startzone zeigt ein klares Drag-over-Feedback, damit der Einstieg in eine neue Schlange verständlicher ist.
 - Der F36-Drag-Test wurde um diese Rückmeldung ergänzt.
 
+## 06.06.2026 – F36 Neue-Schlange-Ziel wählt die gezogene Karte
+- Das leere Startfeld startet jetzt die tatsächlich gezogene Handkarte statt nur die erste verfügbare Startaktion.
+- Damit funktioniert Drag-and-Drop auf dem "Neue Schlange starten"-Feld auch bei mehreren legalen Startkarten korrekt.
+- Der F36-Regressionstest prüft jetzt ausdrücklich, dass die gezogene Karte aus der Hand verschwindet.
+
 ## 05.06.2026 – F31 Spieltisch-Ansicht
 - Neue `Spieltisch`-Bühne im Bereich "Aktiver Spieler" eingeführt.
 - Handkarten und Schlangen sind jetzt gemeinsam als visuelle Spielzone angeordnet.

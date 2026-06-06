@@ -105,12 +105,10 @@ export default function Schlangenbereich({
   }
 
   function handleNeueSchlangeZoneClick(event: MouseEvent<HTMLElement>) {
-    if ((event.target as HTMLElement).closest('button')) {
-      return
-    }
+    event.stopPropagation()
 
-    const startButton = (event.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('.schlangekarte__anlegebutton--start')
-    startButton?.click()
+    const aktion = findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? neueSchlangeStartenAktionen[0] ?? null
+    fuehreNeueSchlangeAktionAus(aktion)
   }
 
   function handleNeueSchlangeZoneKeyDown(event: KeyboardEvent<HTMLElement>) {
@@ -129,8 +127,9 @@ export default function Schlangenbereich({
 
   function handleNeueSchlangeZoneDrop(event: DragEvent<HTMLElement>) {
     event.preventDefault()
-    const startButton = (event.currentTarget as HTMLElement).querySelector<HTMLButtonElement>('.schlangekarte__anlegebutton--start')
-    startButton?.click()
+    event.stopPropagation()
+    const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
+    fuehreNeueSchlangeAktionAus(findeNeueSchlangeAktion(kartenId))
     setDragOverZone(null)
   }
 

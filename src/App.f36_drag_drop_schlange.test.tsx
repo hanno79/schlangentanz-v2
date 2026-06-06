@@ -141,29 +141,37 @@ describe('F36 Drag-and-Drop für Schlangen', () => {
     expect(eigeneGruppe.querySelectorAll('li')).toHaveLength(1)
   })
 
-  it('startet im leeren eigenen Schlangenbereich per Drag-and-drop eine neue Schlange', () => {
-    const { zustand, legaleStartaktion } = erstelleSpieltischOhneEigeneSchlangen()
+  it('startet im leeren eigenen Schlangenbereich per Drag-and-drop die gezogene Karte', () => {
+    const { zustand } = erstelleSpieltischOhneEigeneSchlangen()
+    const legaleStartaktionen = ermittleLegaleAktionen(zustand).filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }> => aktion.typ === 'NeueSchlangeStarten',
+    )
+    const alternativeStartaktion = legaleStartaktionen.at(-1)
+
+    if (!alternativeStartaktion) {
+      throw new Error('Testsetup erwartet mindestens eine legale Startaktion für eine neue Schlange.')
+    }
+
     render(<App initialZustand={zustand} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
     const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
-    const handkartenButton = within(handBereich).getByText(legaleStartaktion.handkartenId).closest('button')
+    const handkartenButton = within(handBereich).getByText(alternativeStartaktion.handkartenId).closest('button')
     const startzone = within(eigeneGruppe).getByRole('button', { name: 'Neue Schlange starten' })
 
     if (!handkartenButton) {
       throw new Error('Testsetup erwartet eine sichtbare Handkarte für die Startaktion.')
     }
 
-    const handkartenVorher = within(handBereich).getAllByRole('button').length
     const dataTransfer = erstelleDataTransfer()
     fireEvent.dragStart(handkartenButton, { dataTransfer })
     fireEvent.dragOver(startzone, { dataTransfer })
     fireEvent.drop(startzone, { dataTransfer })
     fireEvent.dragEnd(handkartenButton, { dataTransfer })
 
-    expect(within(handBereich).getAllByRole('button').length).toBe(handkartenVorher - 1)
+    expect(within(handBereich).queryByText(alternativeStartaktion.handkartenId)).toBeNull()
     expect(eigeneGruppe.querySelectorAll('li')).toHaveLength(1)
   })
 
