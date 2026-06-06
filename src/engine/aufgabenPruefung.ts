@@ -1,11 +1,12 @@
 /*
 Author: rahn
 Datum: 06.06.2026
-Version: 1.3
+Version: 1.4
 Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfüllung offener Aufgaben im Zug.
 Änderung v1.1: pruefeFarbharmonie (aufgabe-02) hinzugefügt.
 Änderung v1.2: pruefeFarbenpracht (aufgabe-01) hinzugefügt.
 Änderung v1.3: pruefeSymmetriemeister (aufgabe-12) hinzugefügt.
+Änderung v1.4: pruefeSchlangenbaendiger (aufgabe-10) hinzugefügt.
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
@@ -121,6 +122,33 @@ function pruefeSymmetriemeister(zustand: Spielzustand): boolean {
   });
 }
 
+function hatWiederholendesMuster(farben: string[]): boolean {
+  const n = farben.length;
+  for (let L = 3; L <= Math.floor(n / 2); L++) {
+    for (let i = 0; i + 2 * L <= n; i++) {
+      const muster = farben.slice(i, i + L);
+      if (muster.every((f, j) => f === farben[i + L + j]) && new Set(muster).size >= 3) return true;
+    }
+  }
+  return false;
+}
+
+function pruefeSchlangenbaendiger(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some((schlange) => {
+    let laufend: string[] = [];
+    for (const karte of schlange.karten) {
+      if (karte.typ === 'Farbkarte') {
+        laufend.push(karte.farbe);
+      } else {
+        if (hatWiederholendesMuster(laufend)) return true;
+        laufend = [];
+      }
+    }
+    return hatWiederholendesMuster(laufend);
+  });
+}
+
 function pruefeFarbharmonie(zustand: Spielzustand): boolean {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   const farbenMitDreiergruppe = new Set(
@@ -134,6 +162,7 @@ function pruefeFarbharmonie(zustand: Spielzustand): boolean {
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-01': pruefeFarbenpracht,
   'aufgabe-02': pruefeFarbharmonie,
+  'aufgabe-10': pruefeSchlangenbaendiger,
   'aufgabe-12': pruefeSymmetriemeister,
   'aufgabe-03': pruefeFarbkombination,
   'aufgabe-04': pruefeFarbvielfalt,
