@@ -31,9 +31,11 @@ Beschreibung: Release-Status für den R84-Refactor-Slice zur Auslagerung der Auf
 
 ## Release
 
-- Code-Commit/Push: folgt nach finalem Staging-Check.
-- Production-Deploy: folgt nach Push.
-- HTTP-/Browser-Smoke: folgt nach Production-Deploy.
+- Code-Commit/Push: `a17aa66 — R84 Aufgabenpruefung aus turnState extrahieren` auf `origin/main`.
+- Production-Deploy: `https://schlangentanz-v2.vercel.app` bereitgestellt; Vercel-Alias zeigt auf das Production-Deployment `https://schlangentanz-v2-akh6kmlyl-alfreds-projects-7e9df1b4.vercel.app`.
+- HTTP-Smoke: `https://schlangentanz-v2.vercel.app/game` → 200.
+- Browser-Smoke `/game`: Playwright lädt die App ohne Console-/Page-Errors; `Schlangentanz` ist sichtbar.
+- First-Turn-Smoke `/game`: empfohlene Aktion `Neue Schlange starten mit Karte rot-13` ausgeführt; DOM-Zustand geändert; plausibles Zug-/Feedbacksignal gefunden.
 
 ## Offene Hinweise
 
