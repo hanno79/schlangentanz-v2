@@ -17,7 +17,7 @@ import type {
   Zugphase,
 } from './types';
 import { SPIELER_MAX, SPIELER_MIN, MAX_KARTEN_PRO_ZUG } from './constants';
-import { erstelleHauptdeck } from './deck';
+import { erstelleErweiterungsSonderkarten, erstelleHauptdeck, erstelleSonderkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
 const ZUGPHASEN: ReadonlySet<Zugphase> = new Set([
@@ -36,6 +36,11 @@ const SCHLANGEN_ZUSTAENDE: ReadonlySet<SchlangenZustand> = new Set([
   'geschuetzt',
 ]);
 const STEUERUNGEN: ReadonlySet<Steuerung> = new Set(['Mensch', 'KI']);
+const BEKANNTE_SONDERKARTENNAMEN: ReadonlySet<string> = new Set([
+  ...erstelleSonderkarten().map((k) => k.name),
+  ...erstelleErweiterungsSonderkarten().map((k) => k.name),
+]);
+
 const REAKTIONS_TYPEN: ReadonlySet<string> = new Set([
   'SchlangengrubeAbwehr',
   'SchlangenblockadeAbwehr',
@@ -432,6 +437,9 @@ function validiereSonderkartenHistorie(wert: unknown): void {
   for (const eintrag of erwarteArray(wert, 'Sonderkartenhistorie')) {
     if (typeof eintrag !== 'string' || eintrag.trim() === '') {
       throw new Error('Ungültiger Spielzustand: Sonderkartenhistorie darf nur nicht-leere Textwerte enthalten.');
+    }
+    if (!BEKANNTE_SONDERKARTENNAMEN.has(eintrag)) {
+      throw new Error('Ungültiger Spielzustand: Sonderkartenhistorie enthält unbekannten Sonderkartennamen.');
     }
   }
 }

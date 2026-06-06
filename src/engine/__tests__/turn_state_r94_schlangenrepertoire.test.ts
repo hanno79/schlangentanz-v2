@@ -147,6 +147,27 @@ describe('R94 Serialisierung — ausgespielte Sonderkartenhistorie', () => {
 
     expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/sonderkartenhistorie/i);
   });
+
+  it('akzeptiert Erweiterungs-Sonderkartennamen in der ausgespielten Sonderkartenhistorie', () => {
+    const zustand = erstelleSpielzustand(2, () => 0.999999) as unknown as Record<string, unknown>;
+    const spieler = zustand['spieler'] as Record<string, unknown>[];
+    spieler[0]['ausgespielteSonderkartenNamen'] = ['Verdoppler', 'Schlangenhäutung'];
+
+    const deserialisiert = deserialisiere(JSON.stringify(zustand));
+
+    expect(deserialisiert.spieler[0].ausgespielteSonderkartenNamen).toEqual([
+      'Verdoppler',
+      'Schlangenhäutung',
+    ]);
+  });
+
+  it('lehnt unbekannte Sonderkartennamen in der ausgespielten Sonderkartenhistorie ab', () => {
+    const zustand = erstelleSpielzustand(2, () => 0.999999) as unknown as Record<string, unknown>;
+    const spieler = zustand['spieler'] as Record<string, unknown>[];
+    spieler[0]['ausgespielteSonderkartenNamen'] = ['Verdoppler', 'Hausregelkarte'];
+
+    expect(() => deserialisiere(JSON.stringify(zustand))).toThrow(/sonderkartenhistorie/i);
+  });
 });
 
 describe('R94 Reaktionen — Farbenschutz zählt als ausgespielte Sonderkarte', () => {
