@@ -89,6 +89,10 @@ function aktualisiereSchlangenfrassPending(
       ...spieler,
       hand: neueHand,
       schlangen: neueSchlangen,
+      ausgespielteSonderkartenNamen:
+        abwehrt && abwehrkarte
+          ? [...spieler.ausgespielteSonderkartenNamen, abwehrkarte.name]
+          : spieler.ausgespielteSonderkartenNamen,
     };
   });
 
@@ -147,7 +151,13 @@ function entferneFarbenschutzAusHand(
 
   return {
     neueSpieler: zustand.spieler.map((sp, i) =>
-      i === spielerIndex ? { ...sp, hand: sp.hand.filter((k) => k.id !== abwehrKartenId) } : sp,
+      i === spielerIndex
+        ? {
+            ...sp,
+            hand: sp.hand.filter((k) => k.id !== abwehrKartenId),
+            ausgespielteSonderkartenNamen: [...sp.ausgespielteSonderkartenNamen, abwehrkarte.name],
+          }
+        : sp,
     ),
     abwehrkarte,
   };
@@ -260,10 +270,21 @@ function inkrementiereSpieleKarten(
   zustand: Spielzustand,
   neueSpieler: Spielzustand['spieler'],
   kartentyp: Spielkarte['typ'],
+  sonderkartenName?: string,
 ): Spielzustand {
+  const spielerMitHistorie =
+    kartentyp === 'Sonderkarte' && sonderkartenName
+      ? aktualisiereAktivenSpieler({ ...zustand, spieler: neueSpieler }, {
+          ausgespielteSonderkartenNamen: [
+            ...neueSpieler[zustand.aktiverSpielerIndex].ausgespielteSonderkartenNamen,
+            sonderkartenName,
+          ],
+        })
+      : neueSpieler;
+
   return {
     ...zustand,
-    spieler: neueSpieler,
+    spieler: spielerMitHistorie,
     zugpflichten: {
       ...zustand.zugpflichten,
       gespielteKarten: zustand.zugpflichten.gespielteKarten + 1,
@@ -604,6 +625,7 @@ export function spieleSchlangengrube(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 
   // R78: Wenn Zielspieler Farbenschutz hat, bekommt er eine explizite Reaktionsentscheidung.
@@ -680,6 +702,7 @@ export function spieleSchlangenblockade(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 
   const hatFarbenschutz = zielSpieler.hand.some((k) => istFarbenschutzkarte(k));
@@ -807,6 +830,7 @@ export function spieleFarbendieb(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 
   const hatFarbenschutz = zielSpieler.hand.some((k) => istFarbenschutzkarte(k));
@@ -896,6 +920,7 @@ export function spieleFarbenfusion(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 
   const fusionPunkte = ersteKarte.punkte + zweiteKarte.punkte;
@@ -968,6 +993,7 @@ export function spieleVerdoppler(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 
   return {
@@ -1301,6 +1327,7 @@ export function spieleSchlangenfrass(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 }
 
@@ -1357,6 +1384,7 @@ export function spieleFarbenschutz(
     },
     neueSpieler,
     karte.typ,
+    karte.name,
   );
 }
 

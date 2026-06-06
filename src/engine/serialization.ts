@@ -59,6 +59,7 @@ export function deserialisiere(json: string): Spielzustand {
   migriereZugpflichtenVorR19(parsed);
   migriereAussetzenVorR74(parsed);
   migrierePendingReaktionVorR78(parsed);
+  migriereSonderkartenHistorieVorR94(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -92,6 +93,16 @@ function migrierePendingReaktionVorR78(wert: unknown): void {
   if (!istObjekt(wert)) return;
   if (!Object.prototype.hasOwnProperty.call(wert, 'pendingReaktion')) {
     wert['pendingReaktion'] = null;
+  }
+}
+
+function migriereSonderkartenHistorieVorR94(wert: unknown): void {
+  if (!istObjekt(wert) || !Array.isArray(wert['spieler'])) return;
+  for (const spieler of wert['spieler']) {
+    if (!istObjekt(spieler)) continue;
+    if (!Object.prototype.hasOwnProperty.call(spieler, 'ausgespielteSonderkartenNamen')) {
+      spieler['ausgespielteSonderkartenNamen'] = [];
+    }
   }
 }
 
@@ -397,6 +408,7 @@ function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts we
   erwarteString(spieler['name'], 'spieler.name');
   validiereSpielsteuerung(spieler['steuerung']);
   validiereSpielkartenArray(spieler['hand'], 'spieler.hand', verwendeteIds);
+  validiereSonderkartenHistorie(spieler['ausgespielteSonderkartenNamen']);
   validiereAufgabenArray(spieler['erfuellteAufgaben'], 'spieler.erfuellteAufgaben', verwendeteIds);
 
   if (spieler['geheimeAufgabe'] === null) {
@@ -413,6 +425,14 @@ function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts we
     }
     validiereSpielkartenArray(schlange['karten'], 'schlange.karten', verwendeteIds);
     validiereFarbenfusionen(schlange);
+  }
+}
+
+function validiereSonderkartenHistorie(wert: unknown): void {
+  for (const eintrag of erwarteArray(wert, 'Sonderkartenhistorie')) {
+    if (typeof eintrag !== 'string' || eintrag.trim() === '') {
+      throw new Error('Ungültiger Spielzustand: Sonderkartenhistorie darf nur nicht-leere Textwerte enthalten.');
+    }
   }
 }
 

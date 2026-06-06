@@ -7,6 +7,7 @@ Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfü
 Änderung v1.2: pruefeFarbenpracht (aufgabe-01) hinzugefügt.
 Änderung v1.3: pruefeSymmetriemeister (aufgabe-12) hinzugefügt.
 Änderung v1.4: pruefeSchlangenbaendiger (aufgabe-10) hinzugefügt.
+Änderung v1.5: pruefeSchlangenrepertoire (aufgabe-09) hinzugefügt.
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
@@ -41,6 +42,11 @@ function pruefeFusionsexperte(zustand: Spielzustand): boolean {
 function pruefeSchlangenbeschwörer(zustand: Spielzustand): boolean {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   return aktiverSpieler.schlangen.flatMap((s) => s.karten).filter(istSonderkarte).length >= 4;
+}
+
+function pruefeSchlangenrepertoire(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return new Set(aktiverSpieler.ausgespielteSonderkartenNamen).size >= 5;
 }
 
 function pruefeFarbkombination(zustand: Spielzustand): boolean {
@@ -169,6 +175,7 @@ const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-05': pruefeFarbwechsler,
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
+  'aufgabe-09': pruefeSchlangenrepertoire,
   'aufgabe-13': pruefeGelberSchatz,
   'aufgabe-14': pruefeLilaRiese,
 };

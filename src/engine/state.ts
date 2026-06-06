@@ -101,6 +101,7 @@ function erstelleSpielerListe(
     steuerung,
     hand: [],
     schlangen: [],
+    ausgespielteSonderkartenNamen: [],
     erfuellteAufgaben: [],
     geheimeAufgabe: aufgabenStapel.shift() ?? null,
   }));

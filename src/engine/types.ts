@@ -57,6 +57,7 @@ export interface Spieler {
   steuerung: Steuerung;
   hand: Spielkarte[];
   schlangen: Schlange[];
+  ausgespielteSonderkartenNamen: string[];
   erfuellteAufgaben: AufgabenkarteInfo[];
   geheimeAufgabe: AufgabenkarteInfo | null;
 }
