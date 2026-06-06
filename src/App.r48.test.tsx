@@ -29,7 +29,7 @@ describe('R48 UI-Übersichtsbereiche', () => {
     }
 
     expect(within(screen.getByRole('region', { name: 'Spielstatus' })).getByText(/Zugphase:/)).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: 'Aktiver Spieler' })).getByText(/Handkarten:/)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByRole('region', { name: 'Handkarten' })).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Spielerübersicht' })).getByText(/Spielerübersicht spieler-1:/)).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Material und Aufgaben' })).getByText(/Ablagestapel:/)).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Wertung' })).getByText(/Wertung spieler-1:/)).toBeInTheDocument()

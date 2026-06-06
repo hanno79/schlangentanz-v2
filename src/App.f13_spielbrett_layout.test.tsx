@@ -39,13 +39,14 @@ describe('F13 Spielbrett-/Layout-Polish', () => {
 
     expect(within(eigeneGruppe).getByText('schlange-spieler-1-f13')).toBeInTheDocument()
     expect(within(gegnerGruppe).getByText('schlange-spieler-2-f13')).toBeInTheDocument()
-
+    expect(within(eigeneGruppe).getByRole('list', { name: 'Kartenreihe schlange-spieler-1-f13' })).toBeInTheDocument()
+    expect(within(gegnerGruppe).getByRole('list', { name: 'Kartenreihe schlange-spieler-2-f13' })).toBeInTheDocument()
     expect(cssBlock('schlangenbereich')).toMatch(/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(min\(100%,\s*280px\),\s*1fr\)\)/)
     expect(cssBlock('schlangenbereich')).toMatch(/align-items:\s*stretch/)
     expect(cssBlock('schlangen-gruppe')).toMatch(/align-content:\s*start/)
     expect(cssBlock('schlangenleiste')).toMatch(/grid-template-columns:\s*1fr/)
     expect(cssBlock('schlangekarte')).toMatch(/min-height:\s*8rem/)
     expect(cssBlock('schlangekarte')).toMatch(/align-content:\s*start/)
-    expect(appCss).toMatch(/\.schlangenbereich\s*>\s*h2\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s)
+    expect(appCss).toMatch(/\.schlangenbereich\s*>\s*h4\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s)
   })
 })

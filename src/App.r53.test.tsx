@@ -1,8 +1,8 @@
 /*
 Author: rahn
 Datum: 02.06.2026
-Version: 1.0
-Beschreibung: R53 UI-Test für einen manuellen KI-Aktionsbutton ohne neue KI-Strategie.
+Version: 1.1
+Beschreibung: R53 UI-Test für den manuellen KI-Aktionsbutton ohne neue KI-Strategie.
 */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
@@ -28,6 +28,10 @@ function aktionsLabel(aktion: SpielAktion): string {
     default:
       return 'Unbekannte Aktion'
   }
+}
+
+function hatHandkartenId(aktion: SpielAktion): aktion is Extract<SpielAktion, { handkartenId: string }> {
+  return 'handkartenId' in aktion
 }
 
 function wechsleZumKiZug(zustand: Spielzustand): Spielzustand {
@@ -58,12 +62,16 @@ describe('R53 manueller KI-Aktionsbutton', () => {
   it('führt im KI-Zug die nächste legale Engine-Aktion aus und aktualisiert sichtbaren Zustand', () => {
     const kiZustand = wechsleZumKiZug(deterministischerZustand())
     const naechsteKiAktion = ermittleLegaleAktionen(kiZustand)[0]
-    const erwarteterZustand = anwendeAktion(kiZustand, naechsteKiAktion)
+    if (!naechsteKiAktion || !hatHandkartenId(naechsteKiAktion)) {
+      throw new Error('Testsetup erwartet eine KI-Aktion mit handkartenId.')
+    }
 
     render(<App initialZustand={kiZustand} />)
 
     const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
+    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
 
     expect(within(aktiverSpielerBereich).getByText('Zugführung: KI ist am Zug.')).toBeInTheDocument()
     expect(within(aktionsBereich).getByRole('button', { name: 'KI-Aktion ausführen' })).toBeInTheDocument()
@@ -72,7 +80,7 @@ describe('R53 manueller KI-Aktionsbutton', () => {
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: 'KI-Aktion ausführen' }))
 
     expect(within(aktionsBereich).getByText('Gespielte Karten: 1/2')).toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).getByText(`Handkarten: ${erwarteterZustand.spieler[1].hand.map(k => k.id).join(', ')}`)).toBeInTheDocument()
     expect(within(aktionsBereich).queryByRole('button', { name: aktionsLabel(naechsteKiAktion) })).not.toBeInTheDocument()
+    expect(within(handBereich).queryByText(naechsteKiAktion.handkartenId)).not.toBeInTheDocument()
   })
 })

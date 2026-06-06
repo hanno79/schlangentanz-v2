@@ -1,0 +1,29 @@
+# CHANGELOG
+
+## 05.06.2026 – F31 Spieltisch-Ansicht
+- Neue `Spieltisch`-Bühne im Bereich "Aktiver Spieler" eingeführt.
+- Handkarten und Schlangen sind jetzt gemeinsam als visuelle Spielzone angeordnet.
+- Bestehende Schlangen-Darstellung im Spielerübersicht-Panel entfernt, damit es nur noch eine klare Schlangenregion gibt.
+- Debug-Gruppen-Test an das neue Layout angepasst.
+- Neue UI-Regressionstests für die Spieltisch-Ansicht ergänzt.
+
+## 05.06.2026 – F32 Ausgewählte Handkarte deutlicher
+- Die gewählte Handkarte zeigt jetzt im Spieltisch eine kompakte Detailanzeige mit ID, Kartentyp und Punkten.
+- Die Auswahl bleibt visuell hervorgehoben und ist weiterhin per Button-Klick steuerbar.
+- Der neue Auswahl-Detailtext ist per UI-Test abgesichert.
+
+## 05.06.2026 – F33 Handkarten-Detailkarte
+- Die Handkartenanzeige wurde in ein eigenes Panel ausgelagert, damit die Spieltisch-Logik in `App.tsx` schlanker bleibt.
+- Die Spieltisch-Überschrift nutzt jetzt eine saubere `aria-labelledby`-Verknüpfung.
+- Der Handkartenbereich zeigt bei Auswahl eine kleine Detailkarte statt nur einer Statuszeile.
+
+## 05.06.2026 – F36 Erste Drag-and-Drop-Aktion auf die Schlange
+- Handkarten sind jetzt als `draggable` markiert und starten einen Drag-Flow mit `text/plain`-Payload.
+- Eigene Schlangen nehmen Handkarten per Drop an, sofern dafür eine legale Karten-Anlegeaktion existiert.
+- Ein neuer UI-Test deckt den ersten Drag-and-Drop-Slice ab und hält die bestehende Handkarten- und Spieltisch-Basis grün.
+
+## 06.06.2026 – F36 Startzone und Drag-Fallback für leere Schlangen
+- Der eigene Schlangenbereich akzeptiert jetzt auch im Leerzustand Klicks und Drops als Einstieg über die lokale Startzone.
+- Die Startaktionen werden in der leeren Schlangenregion zusätzlich als sichtbare Buttons angeboten und per Klick ausgelöst.
+- Drag-Start nutzt jetzt einen synchronen Ref-Fallback, damit der Handkarten-Drag im Browser zuverlässig ankommt.
+- Ein neuer UI-Test prüft das Starten einer neuen Schlange per Klick und Drag auf dem leeren Schlangenbereich.

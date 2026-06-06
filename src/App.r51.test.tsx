@@ -19,11 +19,10 @@ describe('R51 Zufällige Startkarten im App-Standardzustand', () => {
 
     render(<App />)
 
-    const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
-    const handkartenDetails = within(aktiverSpielerBereich).getByText(/Handkarten-Details:/)
+    const handkartenDetails = within(screen.getByRole('region', { name: 'Spieltisch' })).getByRole('region', { name: 'Handkarten' })
 
-    expect(handkartenDetails).toHaveTextContent('rot-15 (Farbkarte Rot, 1 Punkte)')
-    expect(handkartenDetails).toHaveTextContent('violett-05 (Farbkarte Violett, 2 Punkte)')
+    expect(handkartenDetails).toHaveTextContent('rot-15')
+    expect(handkartenDetails).toHaveTextContent('violett-05')
     expect(handkartenDetails).not.toHaveTextContent('Sonderkarte Sonderkarte')
     expect(handkartenDetails).toHaveTextContent(
       /Sonderkarte (Farbenschutz|Regenbogenschlange|Schlangenfrass|Schlangenblockade|Farbendieb|Schlangengrube|Farbenfusion|Verdoppler)/i

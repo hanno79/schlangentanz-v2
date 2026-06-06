@@ -17,8 +17,8 @@ describe('R68 Hervorhebung der empfohlenen legalen Aktion', () => {
   it('markiert den ersten legalen Aktionsbutton als empfohlen', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
 
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
-    const buttons = within(bereich).getAllByRole('button')
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
+    const buttons = within(aktionenBereich).getAllByRole('button')
     const empfohlenerButton = buttons.find(button => button.classList.contains('aktions-button--empfohlen'))
 
     expect(empfohlenerButton).toBe(buttons[0])

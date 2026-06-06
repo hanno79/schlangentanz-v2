@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, useMemo, useRef, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -22,9 +22,12 @@ import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
 import Zugfortschritt from './components/Zugfortschritt'
+import HandkartenPanel from './components/HandkartenPanel'
+import Schlangenbereich from './components/Schlangenbereich'
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
+
 function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   if (!istEndspurt) return `${a.punkte} Punkte`
   return `${a.punkte} Punkte ×2 = ${a.punkte * 2} Punkte`
@@ -145,8 +148,22 @@ function App({ initialZustand }: AppProps) {
   const [zustand, setZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
+  const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
+  const gezogeneHandkarteIdRef = useRef<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
+  const karteAnlegenAktionen = useMemo(
+    () => legaleAktionen.filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'KarteAnlegen' }> => aktion.typ === 'KarteAnlegen',
+    ),
+    [legaleAktionen],
+  )
+  const neueSchlangeStartenAktionen = useMemo(
+    () => legaleAktionen.filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }> => aktion.typ === 'NeueSchlangeStarten',
+    ),
+    [legaleAktionen],
+  )
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
     () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
@@ -154,6 +171,9 @@ function App({ initialZustand }: AppProps) {
   )
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
   const gegnerSpieler = zustand.spieler.filter((spieler) => spieler.id !== aktiverSpieler.id)
+  const ausgewaehlteHandkarte = ausgewaehlteHandkarteAuswahl?.spielerId === aktiverSpieler.id
+    ? aktiverSpieler.hand.find((karte) => karte.id === ausgewaehlteHandkarteAuswahl.karteId) ?? null
+    : null
   const spielerwertungen: SpielerWertungsEintrag[] = gesamtwertung.spielerwertungen
   const gewinnerListe: GewinnerEintrag[] = gewinnerErgebnis?.gewinner ?? []
   const aktiverSpielerWertung = useMemo(
@@ -179,12 +199,19 @@ function App({ initialZustand }: AppProps) {
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
-  function fuhreAktionAus(aktion: SpielAktion) { setLetzteAktion(aktionsLabel(aktion)); setHervorgehobenesAktionszielId(null); setZustand(z => anwendeAktion(z, aktion)) }
-  function handleAusspielphaseBeenden() { setLetzteAktion('Ausspielphase beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeAusspielphase(z)) }
-  function handleAufgabenpruefungBeenden() { setLetzteAktion('Aufgabenprüfung beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true })) }
-  function handleUeberzaehligeKartenAbwerfen() { setLetzteAktion('Überzählige Karten abwerfen'); setHervorgehobenesAktionszielId(null); setZustand(z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
-  function handleZugBeenden() { setLetzteAktion('Zug beenden'); setHervorgehobenesAktionszielId(null); setZustand(z => beendeZug(z, { pflichtenErfuellt: true })) }
-  function handleAusspielphaseStarten() { setLetzteAktion('Ausspielphase starten'); setHervorgehobenesAktionszielId(null); setZustand(z => starteAusspielphase(z)) }
+  function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand) {
+    setLetzteAktion(label)
+    setHervorgehobenesAktionszielId(null)
+    setAusgewaehlteHandkarteAuswahl(null)
+    setZustand(updater)
+  }
+
+  function fuhreAktionAus(aktion: SpielAktion) { wechsleZustand(aktionsLabel(aktion), z => anwendeAktion(z, aktion)) }
+  function handleAusspielphaseBeenden() { wechsleZustand('Ausspielphase beenden', z => beendeAusspielphase(z)) }
+  function handleAufgabenpruefungBeenden() { wechsleZustand('Aufgabenprüfung beenden', z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true })) }
+  function handleUeberzaehligeKartenAbwerfen() { wechsleZustand('Überzählige Karten abwerfen', z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
+  function handleZugBeenden() { wechsleZustand('Zug beenden', z => beendeZug(z, { pflichtenErfuellt: true })) }
+  function handleAusspielphaseStarten() { wechsleZustand('Ausspielphase starten', z => starteAusspielphase(z)) }
 
   return (
     <main className="app-shell">
@@ -236,6 +263,30 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
           <h2>Aktiver Spieler</h2>
+          <section className="spielbrett" aria-labelledby="spieltisch-titel">
+            <h3 id="spieltisch-titel">Spieltisch</h3>
+            <HandkartenPanel
+              handkarten={aktiverSpieler.hand}
+              ausgewaehlteHandkarte={ausgewaehlteHandkarte}
+              onKarteWaehlen={(karteId) => setAusgewaehlteHandkarteAuswahl((aktuell) => aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId })}
+              onKarteDragStart={(karteId) => {
+                gezogeneHandkarteIdRef.current = karteId
+              }}
+              onKarteDragEnd={() => {
+                gezogeneHandkarteIdRef.current = null
+              }}
+            />
+            <Schlangenbereich
+              aktiverSpieler={aktiverSpieler}
+              gegnerSpieler={gegnerSpieler}
+              karteAnlegenAktionen={karteAnlegenAktionen}
+              neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+              gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
+              ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+              onAktion={fuhreAktionAus}
+              aktionsLabel={aktionsLabel}
+            />
+          </section>
           <DebugGruppe titel="Debug: Aktiver Spieler">
             <p>Aktiver Spieler: {aktiverSpieler.id}</p>
             <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
@@ -261,56 +312,23 @@ function App({ initialZustand }: AppProps) {
               <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>
             )}
             <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
-            {!istSpielende && aktiverSpieler.steuerung === 'KI' && <p>Nächster Schritt: KI-Aktion ausführen.</p>}
             <p>
               {aktiverSpieler.geheimeAufgabe
                 ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
                 : 'Geheime Aufgabe: keine'}
             </p>
-            {aktiverSpieler.schlangen.map(schlange => (
-              <p key={schlange.id}>
-                Schlange {schlange.id}: {kartenIds(schlange.karten)}
-              </p>
-            ))}
-            <p>
-              Handkarten:{' '}
-              {aktiverSpieler.hand.length > 0 ? kartenIds(aktiverSpieler.hand) : 'keine'}
-            </p>
-            <p>
-              Handkarten-Details:{' '}
-              {aktiverSpieler.hand.length === 0
-                ? 'keine'
-                : aktiverSpieler.hand
-                    .map((k) =>
-                      k.typ === 'Farbkarte'
-                        ? `${k.id} (Farbkarte ${k.farbe}, ${k.punkte} Punkte)`
-                        : `${k.id} (Sonderkarte ${k.name})`,
-                    )
-                    .join(', ')}
-            </p>
           </DebugGruppe>
           {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
-            <Spielerfuehrung pflichtschrittLabel={pflichtschrittLabel} empfohleneAktionLabel={empfohleneAktionLabel} aktionszielId={spielerfuehrungAktionszielId} aktionszielSatzText={spielerfuehrungAktionszielSatzText} aktionszielLinkText={spielerfuehrungAktionszielLinkText} onAktionszielHervorheben={setHervorgehobenesAktionszielId} zeigtAktionslink={zeigtSpielerfuehrungAktionslink} />
+            <Spielerfuehrung
+              pflichtschrittLabel={pflichtschrittLabel}
+              empfohleneAktionLabel={empfohleneAktionLabel}
+              aktionszielId={spielerfuehrungAktionszielId}
+              aktionszielSatzText={spielerfuehrungAktionszielSatzText}
+              aktionszielLinkText={spielerfuehrungAktionszielLinkText}
+              onAktionszielHervorheben={setHervorgehobenesAktionszielId}
+              zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
+            />
           )}
-          <section className="handkarten-panel" aria-label="Handkarten">
-            <h3>Handkarten als Kartenleiste</h3>
-            <ul className="handkartenleiste">
-              {aktiverSpieler.hand.map((karte) => {
-                const istFarbkarte = karte.typ === 'Farbkarte'
-
-                return (
-                  <li
-                    key={karte.id}
-                    className={`handkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}`}
-                  >
-                    <strong>{karte.id}</strong>
-                    <span>{istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`}</span>
-                    <span>{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
         </section>
         <section className="info-panel" aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>
@@ -350,48 +368,6 @@ function App({ initialZustand }: AppProps) {
             <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
             <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
-          <section className="schlangenbereich" aria-labelledby="schlangenbereich-titel">
-            <h2 id="schlangenbereich-titel">Schlangenbereich</h2>
-            <section className="schlangen-gruppe" aria-labelledby="eigene-schlangen-titel">
-              <h3 id="eigene-schlangen-titel">Eigene Schlangen</h3>
-              {aktiverSpieler.schlangen.length > 0 ? (
-                <ul className="schlangenleiste">
-                  {aktiverSpieler.schlangen.map((schlange) => (
-                    <li key={schlange.id} className="schlangekarte schlangekarte--eigene">
-                      <strong>{schlange.id}</strong>
-                      <span>
-                        {schlange.karten.length > 0 ? kartenIds(schlange.karten) : 'keine Karten'}
-                      </span>
-                      <span>Zustand: {schlange.zustand}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Keine eigenen Schlangen.</p>
-              )}
-            </section>
-            <section className="schlangen-gruppe" aria-labelledby="gegnerische-schlangen-titel">
-              <h3 id="gegnerische-schlangen-titel">Gegnerische Schlangen</h3>
-              {gegnerSpieler.some((spieler) => spieler.schlangen.length > 0) ? (
-                <ul className="schlangenleiste">
-                  {gegnerSpieler.flatMap((spieler) =>
-                    spieler.schlangen.map((schlange) => (
-                      <li key={schlange.id} className="schlangekarte schlangekarte--gegner">
-                        <strong>{schlange.id}</strong>
-                        <span>Spieler: {spieler.id}</span>
-                        <span>
-                          {schlange.karten.length > 0 ? kartenIds(schlange.karten) : 'keine Karten'}
-                        </span>
-                        <span>Zustand: {schlange.zustand}</span>
-                      </li>
-                    )),
-                  )}
-                </ul>
-              ) : (
-                <p>Keine gegnerischen Schlangen.</p>
-              )}
-            </section>
-          </section>
         </section>
         <section className="info-panel" aria-label="Material und Aufgaben">
           <h2>Material und Aufgaben</h2>

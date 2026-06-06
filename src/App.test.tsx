@@ -25,12 +25,13 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
 
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(bereich).getByText(/engine-demo: ausspielphase/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler-1/i)).toBeInTheDocument()
-    expect(within(bereich).getAllByRole('button')).toHaveLength(5)
+    expect(within(aktionenBereich).getAllByRole('button')).toHaveLength(5)
     expect(
-      within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
+      within(aktionenBereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
     ).toBeInTheDocument()
     expect(within(bereich).getByText(/quelle: engine\.ermittlelegaleaktionen/i)).toBeInTheDocument()
   })
@@ -47,7 +48,9 @@ describe('R17 UI-Aktionsausführung über die Engine', () => {
   it('startet per Klick eine neue Schlange und aktualisiert die legalen Aktionen', () => {
     const bereich = starteErsteSchlange()
 
-    expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01/i)).toBeInTheDocument()
+    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    expect(within(spieltisch).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
+    expect(within(spieltisch).getByLabelText(/Farbkarte blau-01:/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /neue schlange starten mit karte blau-01/i })).toBeNull()
     expect(within(bereich).queryByRole('button', { name: /karte blau-03/i })).toBeNull()
     expect(within(bereich).getByRole('button', { name: /ausspielphase beenden/i })).toBeInTheDocument()
@@ -112,12 +115,15 @@ describe('R22 UI-Handkartenanzeige', () => {
     const { zustand, sonderkarteId } = zustandMitPflichtAbwurf()
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
 
-    expect(within(bereich).getByText(new RegExp(`handkarten: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
+    expect(within(handBereich).getByText(sonderkarteId)).toBeInTheDocument()
 
     fireEvent.click(within(bereich).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
 
-    expect(within(bereich).getByText(/handkarten: keine/i)).toBeInTheDocument()
+    expect(within(handBereich).queryByText(sonderkarteId)).toBeNull()
+    expect(within(handBereich).queryAllByRole('listitem')).toHaveLength(0)
     expect(within(bereich).getByText(new RegExp(`ablagestapel: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
   })
 })
@@ -147,7 +153,7 @@ describe('R25 UI-Ausspielphase beenden', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
 
     expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01/i)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
     expect(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
@@ -233,9 +239,12 @@ describe('R29 UI-Nachziehen beim nächsten Zug', () => {
 
     expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler-1/i)).toBeInTheDocument()
-    expect(
-      within(bereich).getByText(/handkarten: blau-03, blau-05, blau-07, blau-09, blau-11/i),
-    ).toBeInTheDocument()
+    const handBereich = within(screen.getByRole('region', { name: 'Spieltisch' })).getByRole('region', { name: 'Handkarten' })
+    expect(within(handBereich).getByText(/blau-03/i)).toBeInTheDocument()
+    expect(within(handBereich).getByText(/blau-05/i)).toBeInTheDocument()
+    expect(within(handBereich).getByText(/blau-07/i)).toBeInTheDocument()
+    expect(within(handBereich).getByText(/blau-09/i)).toBeInTheDocument()
+    expect(within(handBereich).getByText(/blau-11/i)).toBeInTheDocument()
   })
 })
 
@@ -293,7 +302,7 @@ describe('R30 UI-Wertungsanzeige', () => {
       }),
     )
 
-    expect(within(bereich).getByText(/schlange schlange-spieler-1-1: blau-01, blau-03, blau-05/i)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/wertung spieler-1: 3 punkte/i)).toBeInTheDocument()
   })
 })

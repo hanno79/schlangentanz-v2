@@ -250,6 +250,7 @@ code {
 }
 
 .handkarten-panel h3,
+.handkarten-panel h4,
 .aufgabenkarten-bereich h3,
 .scoreboard-bereich h3,
 .zugfortschritt h3 {
@@ -257,6 +258,26 @@ code {
   font-family: var(--st-font-headline);
 }
 
+.handkarten-status,
+.handkarten-detail {
+  margin: 0.25rem 0 0.75rem;
+  font-weight: 700;
+}
+
+.handkarten-detail {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(177, 45, 0, 0.22);
+  background: linear-gradient(180deg, rgba(177, 45, 0, 0.1), rgba(255, 255, 255, 0.3));
+  box-shadow: 0 6px 14px rgba(6, 57, 7, 0.08);
+}
+
+.handkarten-detail__titel {
+  margin: 0;
+  font-weight: 800;
+}
 .handkartenleiste {
   list-style: none;
   padding: 0;
@@ -269,11 +290,40 @@ code {
 .handkarte {
   display: grid;
   gap: 0.35rem;
-  padding: 0.85rem;
   border-radius: 16px;
   border: 2px solid var(--st-color-border-strong);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.18));
   box-shadow: 0 3px 0 rgba(6, 57, 7, 0.45);
+  overflow: visible;
+}
+
+.handkarte__button {
+  display: grid;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.85rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: grab;
+}
+
+.handkarte__button:focus-visible {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 2px;
+}
+
+.handkarte__button:active {
+  cursor: grabbing;
+}
+
+.handkarte--ausgewaehlt {
+  border-color: var(--st-color-tertiary);
+  background: linear-gradient(180deg, rgba(177, 45, 0, 0.14), rgba(255, 255, 255, 0.2));
+  box-shadow: 0 0 0 3px rgba(177, 45, 0, 0.38), 0 8px 18px rgba(6, 57, 7, 0.18), 0 3px 0 rgba(6, 57, 7, 0.45);
+  transform: translateY(-2px) scale(1.01);
 }
 
 .handkarte strong,
@@ -282,7 +332,55 @@ code {
   font-size: 0.95rem;
 }
 
-.handkarte span,
+.schlangekarte__badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(6, 57, 7, 0.24);
+  background: rgba(255, 255, 255, 0.42);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.schlangekarte__kartenreihe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: flex-start;
+}
+
+.schlangekarte__karte {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 5.75rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid rgba(6, 57, 7, 0.32);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 2px 0 rgba(6, 57, 7, 0.2);
+}
+
+.schlangekarte__karte:nth-child(2n) {
+  transform: translateY(0.12rem);
+}
+
+.schlangekarte__karte:nth-child(3n) {
+  transform: translateY(-0.08rem);
+}
+
+.schlangekarte__karte--farbkarte {
+  background: linear-gradient(180deg, rgba(164, 222, 2, 0.45), rgba(255, 255, 255, 0.5));
+}
+
+.schlangekarte__karte--sonderkarte {
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.55), rgba(255, 255, 255, 0.5));
+}
+
+.schlangekarte__karte strong,
+.schlangekarte__karte span,
 .aufgabenkarte span,
 .scoreboard-karte span {
   font-size: 0.88rem;
@@ -297,8 +395,34 @@ code {
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.7), rgba(255, 255, 255, 0.16));
 }
 
+.spielbrett {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: stretch;
+  gap: 1rem;
+  border: var(--st-border-width-chunky) solid rgba(6, 57, 7, 0.7);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 1rem;
+}
+
+.spielbrett > h3,
+.spielbrett h4,
+.spielbrett h5,
+.schlangen-gruppe h3 {
+  margin-top: 0;
+  font-family: var(--st-font-headline);
+}
+
+.spielbrett > h3 {
+  grid-column: 1 / -1;
+}
+
+.schlangenbereich > h4 {
+  grid-column: 1 / -1;
+}
+
 .schlangenbereich {
-  margin-top: 1rem;
   border: var(--st-border-width-chunky) solid rgba(6, 57, 7, 0.7);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.2);
@@ -307,12 +431,6 @@ code {
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   align-items: stretch;
-}
-
-.schlangenbereich h2,
-.schlangen-gruppe h3 {
-  margin-top: 0;
-  font-family: var(--st-font-headline);
 }
 
 .schlangenbereich > h2 {
@@ -327,6 +445,60 @@ code {
   border: 2px solid rgba(6, 57, 7, 0.45);
   background: rgba(236, 255, 227, 0.72);
   align-content: start;
+}
+
+.schlangen-drop-hinweis {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.schlangen-startzone {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem;
+  border-radius: 16px;
+  border: 2px dashed rgba(75, 103, 0, 0.55);
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.schlangen-startzone--leer {
+  background: linear-gradient(180deg, rgba(164, 222, 2, 0.18), rgba(255, 255, 255, 0.45));
+}
+
+.schlangen-startzone:focus-visible {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 3px;
+}
+
+.schlangen-startzone strong {
+  font-size: 0.95rem;
+}
+
+.schlangekarte__anlegeaktionen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.schlangekarte__anlegebutton {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 2px solid rgba(6, 57, 7, 0.5);
+  background: rgba(236, 255, 227, 0.78);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.schlangekarte__anlegebutton--links {
+  border-color: rgba(75, 103, 0, 0.7);
+}
+
+.schlangekarte__anlegebutton--rechts {
+  border-color: rgba(177, 45, 0, 0.6);
 }
 
 .schlangenleiste {
@@ -349,8 +521,18 @@ code {
   align-content: start;
 }
 
+.schlangekarte[role='button'] {
+  cursor: pointer;
+}
+
+.schlangekarte[role='button']:focus-visible {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 3px;
+}
+
 .schlangekarte--eigene {
   background: linear-gradient(180deg, rgba(164, 222, 2, 0.35), rgba(255, 255, 255, 0.18));
+  cursor: copy;
 }
 
 .schlangekarte--gegner {
