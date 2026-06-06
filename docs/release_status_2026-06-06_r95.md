@@ -130,20 +130,35 @@ R95 Sonderkartenhistorie validieren
 ## Deployment
 
 ```text
-Wird nach Deployment ergänzt.
+Vercel Production: https://schlangentanz-v2-mi98y27ku-alfreds-projects-7e9df1b4.vercel.app
+Alias: https://schlangentanz-v2.vercel.app
+Ready in 15s
 ```
 
 ## Live-Smoke
 
 ```text
-Wird nach Live-Smoke ergänzt.
+HTTP_STATUS 200
+{
+  "status": 200,
+  "title": "schlangentanz-v2",
+  "hasGameHeading": true,
+  "hasActionsRegion": true,
+  "actionButtonsBefore": 14,
+  "firstActionClicked": true,
+  "textChangedAfterFirstAction": true,
+  "consoleErrors": [],
+  "pageErrors": []
+}
 ```
+
+Hinweis: Der erste Playwright-Aufruf aus `/tmp` scheiterte an Node-Modulauflösung (`ERR_MODULE_NOT_FOUND: playwright`). Der Smoke wurde anschließend erfolgreich aus dem Projektverzeichnis ausgeführt.
 
 ## Release-Gate-Status
 
 - Code/Test: erledigt
 - Full Gates lokal: grün
 - Review: grün
-- Dokumentation: erstellt
-- Commit/Push: offen
-- Deployment/Live-Smoke: offen
+- Dokumentation: aktualisiert
+- Commit/Push: erledigt
+- Deployment/Live-Smoke: grün
