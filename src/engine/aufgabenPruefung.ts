@@ -64,14 +64,14 @@ function pruefeLilaRiese(zustand: Spielzustand): boolean {
   );
 }
 
-function pruefeFarbwechsler(zustand: Spielzustand): boolean {
+function pruefeFensterVielfalt(zustand: Spielzustand, fenster: number): boolean {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   return aktiverSpieler.schlangen.some((schlange) => {
     const laufend: string[] = [];
     for (const karte of schlange.karten) {
       if (karte.typ === 'Farbkarte') {
         laufend.push(karte.farbe);
-        if (laufend.length >= 4 && new Set(laufend.slice(-4)).size === 4) return true;
+        if (laufend.length >= fenster && new Set(laufend.slice(-fenster)).size === fenster) return true;
       } else {
         laufend.length = 0;
       }
@@ -80,8 +80,17 @@ function pruefeFarbwechsler(zustand: Spielzustand): boolean {
   });
 }
 
+function pruefeFarbvielfalt(zustand: Spielzustand): boolean {
+  return pruefeFensterVielfalt(zustand, 6);
+}
+
+function pruefeFarbwechsler(zustand: Spielzustand): boolean {
+  return pruefeFensterVielfalt(zustand, 4);
+}
+
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-03': pruefeFarbkombination,
+  'aufgabe-04': pruefeFarbvielfalt,
   'aufgabe-05': pruefeFarbwechsler,
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
