@@ -6,7 +6,8 @@ Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwische
 */
 
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
-import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand, Spielphase, PendingFarbendiebAbwehr, PendingSchlangenfrassAbwehr } from './types';
+import type { Spielkarte, SonderkarteInfo, Spielzustand, Spielphase, PendingFarbendiebAbwehr, PendingSchlangenfrassAbwehr } from './types';
+import { ermittleErfuellteOffeneAufgaben, erfuelleOffeneAufgaben } from './aufgabenPruefung';
 
 export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenschutz';
@@ -14,10 +15,6 @@ export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is So
 
 function istFarbenfusionkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenfusion';
-}
-
-function istSonderkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
-  return karte?.typ === 'Sonderkarte';
 }
 
 function aktualisiereAktivenSpieler(
@@ -384,44 +381,6 @@ export function beendeAusspielphase(
   return { ...zustand, zugphase: 'Aufgabenpruefung' };
 }
 
-function pruefeFusionsexperte(zustand: Spielzustand): boolean {
-  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
-  return aktiverSpieler.schlangen.some(
-    (schlange) => schlange.karten.filter(istFarbenfusionkarte).length >= 2,
-  );
-}
-
-function pruefeSchlangenbeschwörer(zustand: Spielzustand): boolean {
-  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
-  return aktiverSpieler.schlangen.flatMap((s) => s.karten).filter(istSonderkarte).length >= 4;
-}
-
-const aufgabePruefungen: Partial<Record<string, (zustand: Spielzustand) => boolean>> = {
-  'aufgabe-06': pruefeFusionsexperte,
-  'aufgabe-07': pruefeSchlangenbeschwörer,
-};
-
-function istAufgabeErfuellt(zustand: Spielzustand, aufgabe: AufgabenkarteInfo): boolean {
-  return aufgabePruefungen[aufgabe.id]?.(zustand) ?? false;
-}
-
-function erfuelleAufgaben(zustand: Spielzustand, erfuellteAufgaben: AufgabenkarteInfo[]): Spielzustand {
-  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
-  const erfuellteIds = new Set(erfuellteAufgaben.map((aufgabe) => aufgabe.id));
-  const offeneAufgaben = zustand.offeneAufgaben.filter((aufgabe) => !erfuellteIds.has(aufgabe.id));
-  const nachgezogeneAufgaben = zustand.aufgabenStapel.slice(0, erfuellteAufgaben.length);
-
-  return {
-    ...zustand,
-    zugphase: 'Zugabschluss',
-    offeneAufgaben: [...offeneAufgaben, ...nachgezogeneAufgaben],
-    aufgabenStapel: zustand.aufgabenStapel.slice(erfuellteAufgaben.length),
-    spieler: aktualisiereAktivenSpieler(zustand, {
-      erfuellteAufgaben: [...aktiverSpieler.erfuellteAufgaben, ...erfuellteAufgaben],
-    }),
-  };
-}
-
 export function beendeAufgabenpruefung(
   zustand: Spielzustand,
   { aufgabenGeprueft }: { aufgabenGeprueft: boolean } = { aufgabenGeprueft: false },
@@ -433,9 +392,9 @@ export function beendeAufgabenpruefung(
     throw new Error('Die Aufgabenprüfung darf erst nach geprüften Aufgaben beendet werden.');
   }
 
-  const erfuellteAufgaben = zustand.offeneAufgaben.filter((aufgabe) => istAufgabeErfuellt(zustand, aufgabe));
+  const erfuellteAufgaben = ermittleErfuellteOffeneAufgaben(zustand);
   if (erfuellteAufgaben.length > 0) {
-    return erfuelleAufgaben(zustand, erfuellteAufgaben);
+    return { ...erfuelleOffeneAufgaben(zustand, erfuellteAufgaben), zugphase: 'Zugabschluss' };
   }
 
   return { ...zustand, zugphase: 'Zugabschluss' };
