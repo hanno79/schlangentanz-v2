@@ -64,8 +64,25 @@ function pruefeLilaRiese(zustand: Spielzustand): boolean {
   );
 }
 
+function pruefeFarbwechsler(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some((schlange) => {
+    const laufend: string[] = [];
+    for (const karte of schlange.karten) {
+      if (karte.typ === 'Farbkarte') {
+        laufend.push(karte.farbe);
+        if (laufend.length >= 4 && new Set(laufend.slice(-4)).size === 4) return true;
+      } else {
+        laufend.length = 0;
+      }
+    }
+    return false;
+  });
+}
+
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-03': pruefeFarbkombination,
+  'aufgabe-05': pruefeFarbwechsler,
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
   'aufgabe-13': pruefeGelberSchatz,
