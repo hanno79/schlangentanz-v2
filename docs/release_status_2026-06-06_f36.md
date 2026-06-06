@@ -37,11 +37,11 @@ Beschreibung: Release-Status für den F36-Slice zur stabileren Drag-and-Drop-Bed
 
 - Code-Commit/Push: `51689fe — F36 Dragstatus und Drop-Feedback stabilisieren` auf `origin/main`.
 - Routing-Fix-Commit/Push: `c82fb94 — F36 /game-Route fuer Vercel-Smoke freischalten` auf `origin/main`.
-- Production-Deploy: `https://schlangentanz-v2.vercel.app` bereitgestellt.
-- Deploy-Inspect: `https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/Gw1dEep19jP6WxDLUyMKW6S1NGH2`.
+- Doku-Commit/Push: `f543713 — F36 Release-Nachweis dokumentieren` auf `origin/main`.
+- Production-Deploy: `https://schlangentanz-v2.vercel.app` bereitgestellt und nach dem Doku-Commit erneut deployt.
 - HTTP-Smoke: `https://schlangentanz-v2.vercel.app/game` → 200.
 - Browser-Smoke `/game`: Playwright lädt die App ohne Console-/Page-Errors.
-- F36-Live-Smoke `/game`: echte Handkarte per Drag&Drop auf Startzone abgelegt; eigene Schlangen von 0 auf 1; Handkarte entfernt; Status nach Drop leer.
+- F36-Live-Smoke `/game`: startbare echte Handkarte per Drag&Drop auf Startzone abgelegt; eigene Schlangen von 0 auf 1; Handkarte entfernt; Status nach Drop leer.
 - Invalid-Feedback-Smoke `/game`: illegale Karten-ID zeigt `Karte kann hier nicht abgelegt werden.` und wird nach `dragleave` wieder geleert.
 
 ## Offene Hinweise
