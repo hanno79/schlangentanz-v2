@@ -1,10 +1,11 @@
 /*
 Author: rahn
 Datum: 06.06.2026
-Version: 1.2
+Version: 1.3
 Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfüllung offener Aufgaben im Zug.
 Änderung v1.1: pruefeFarbharmonie (aufgabe-02) hinzugefügt.
 Änderung v1.2: pruefeFarbenpracht (aufgabe-01) hinzugefügt.
+Änderung v1.3: pruefeSymmetriemeister (aufgabe-12) hinzugefügt.
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
@@ -104,6 +105,22 @@ function pruefeFarbenpracht(zustand: Spielzustand): boolean {
   return ALLE_FARBEN.every((farbe) => (farbzaehler[farbe] ?? 0) >= 2);
 }
 
+function pruefeSymmetriemeister(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some((schlange) => {
+    const n = schlange.karten.length;
+    if (n < 8 || n % 2 !== 0) return false;
+    return schlange.karten.slice(0, n / 2).every((karte, i) => {
+      const spiegelkarte = schlange.karten[n - 1 - i];
+      return (
+        karte.typ === 'Farbkarte' &&
+        spiegelkarte.typ === 'Farbkarte' &&
+        karte.farbe === spiegelkarte.farbe
+      );
+    });
+  });
+}
+
 function pruefeFarbharmonie(zustand: Spielzustand): boolean {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   const farbenMitDreiergruppe = new Set(
@@ -117,6 +134,7 @@ function pruefeFarbharmonie(zustand: Spielzustand): boolean {
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-01': pruefeFarbenpracht,
   'aufgabe-02': pruefeFarbharmonie,
+  'aufgabe-12': pruefeSymmetriemeister,
   'aufgabe-03': pruefeFarbkombination,
   'aufgabe-04': pruefeFarbvielfalt,
   'aufgabe-05': pruefeFarbwechsler,
