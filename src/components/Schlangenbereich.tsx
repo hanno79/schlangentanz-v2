@@ -1,11 +1,10 @@
 /*
 Author: rahn
 Datum: 06.06.2026
-Version: 1.4
-Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, expliziten Start-/Anlegeaktionen und Drop-/Klick-Fallback auf der gesamten Schlange.
+Version: 1.9
+Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zugänglichem Drag-Status und legalen Start-/Anlegeaktionen.
 */
-
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
 import type { SpielAktion, Spieler, Spielkarte } from '../engine'
 
@@ -37,6 +36,12 @@ function erlaubeDrop(event: DragEvent<HTMLElement>) {
   event.dataTransfer.dropEffect = 'move'
 }
 
+type DragTarget = { kind: 'startzone' } | { kind: 'schlange'; id: string } | { kind: 'ungueltig' }
+
+function leseGezogeneKarteId(event: DragEvent<HTMLElement>, gezogeneHandkarteIdRef: MutableRefObject<string | null>) {
+  return event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
+}
+
 export default function Schlangenbereich({
   aktiverSpieler,
   gegnerSpieler,
@@ -47,7 +52,7 @@ export default function Schlangenbereich({
   onAktion,
   aktionsLabel,
 }: SchlangenbereichProps) {
-  const [dragOverZone, setDragOverZone] = useState<string | null>(null)
+  const [dragOverZone, setDragOverZone] = useState<DragTarget | null>(null)
 
   function findeAktionFuerKarte(schlangeId: string, handkartenId: string | null) {
     if (!handkartenId) return null
@@ -61,18 +66,8 @@ export default function Schlangenbereich({
     return neueSchlangeStartenAktionen.find((aktion) => aktion.handkartenId === handkartenId) ?? neueSchlangeStartenAktionen[0] ?? null
   }
 
-  function fuehreAktionAus(
-    aktion: Extract<SpielAktion, { typ: 'KarteAnlegen' }> | null,
-  ) {
-    if (!aktion) return
-    onAktion(aktion)
-  }
-
-  function fuehreNeueSchlangeAktionAus(
-    aktion: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }> | null,
-  ) {
-    if (!aktion) return
-    onAktion(aktion)
+  function fuehreAktion(aktion: SpielAktion | null) {
+    if (aktion) onAktion(aktion)
   }
 
   function handleSchlangeClick(event: MouseEvent<HTMLElement>, schlangeId: string) {
@@ -80,7 +75,7 @@ export default function Schlangenbereich({
       return
     }
 
-    fuehreAktionAus(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
+    fuehreAktion(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
   }
 
   function handleSchlangeKeyDown(event: KeyboardEvent<HTMLElement>, schlangeId: string) {
@@ -89,19 +84,28 @@ export default function Schlangenbereich({
     }
 
     event.preventDefault()
-    fuehreAktionAus(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
+    fuehreAktion(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
   }
 
   function handleSchlangeDragOver(event: DragEvent<HTMLElement>, schlangeId: string) {
+    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
+    if (!findeAktionFuerKarte(schlangeId, kartenId)) {
+      if (dragOverZone?.kind !== 'ungueltig') setDragOverZone({ kind: 'ungueltig' })
+      return
+    }
+
     erlaubeDrop(event)
-    setDragOverZone(schlangeId)
+    if (dragOverZone?.kind !== 'schlange' || dragOverZone.id !== schlangeId) {
+      setDragOverZone({ kind: 'schlange', id: schlangeId })
+    }
   }
 
   function handleSchlangeDrop(event: DragEvent<HTMLElement>, schlangeId: string) {
     event.preventDefault()
-    const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
-    fuehreAktionAus(findeAktionFuerKarte(schlangeId, kartenId))
-    setDragOverZone(null)
+    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
+    const aktion = findeAktionFuerKarte(schlangeId, kartenId)
+    fuehreAktion(aktion)
+    setDragOverZone(aktion ? null : { kind: 'ungueltig' })
   }
 
   function handleNeueSchlangeZoneClick(event: MouseEvent<HTMLElement>) {
@@ -109,8 +113,7 @@ export default function Schlangenbereich({
       return
     }
 
-    const aktion = findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? neueSchlangeStartenAktionen[0] ?? null
-    fuehreNeueSchlangeAktionAus(aktion)
+    fuehreAktion(findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? neueSchlangeStartenAktionen[0] ?? null)
   }
 
   function handleNeueSchlangeZoneKeyDown(event: KeyboardEvent<HTMLElement>) {
@@ -119,7 +122,7 @@ export default function Schlangenbereich({
     }
 
     event.preventDefault()
-    fuehreNeueSchlangeAktionAus(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
+    fuehreAktion(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
   }
 
   function handleNeueSchlangeZoneDragOver(event: DragEvent<HTMLElement>) {
@@ -127,8 +130,14 @@ export default function Schlangenbereich({
       return
     }
 
+    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
+    if (!neueSchlangeStartenAktionen.some((aktion) => aktion.handkartenId === kartenId)) {
+      if (dragOverZone?.kind !== 'ungueltig') setDragOverZone({ kind: 'ungueltig' })
+      return
+    }
+
     erlaubeDrop(event)
-    setDragOverZone('startzone')
+    if (dragOverZone?.kind !== 'startzone') setDragOverZone({ kind: 'startzone' })
   }
 
   function handleNeueSchlangeZoneDrop(event: DragEvent<HTMLElement>) {
@@ -138,21 +147,66 @@ export default function Schlangenbereich({
 
     event.preventDefault()
     event.stopPropagation()
-    const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
-    fuehreNeueSchlangeAktionAus(findeNeueSchlangeAktion(kartenId))
-    setDragOverZone(null)
+    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
+    const aktion = neueSchlangeStartenAktionen.find((eintrag) => eintrag.handkartenId === kartenId) ?? null
+    fuehreAktion(aktion)
+    setDragOverZone(aktion ? null : { kind: 'ungueltig' })
+  }
+
+  function handleDragLeave(event: DragEvent<HTMLElement>) {
+    if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) {
+      setDragOverZone(null)
+    }
+  }
+
+  function makeAktionsButtonDragOver(aktionsKartenId: string, zone: DragTarget) {
+    return (event: DragEvent<HTMLElement>) => {
+      event.stopPropagation()
+      const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
+      if (kartenId !== aktionsKartenId) {
+        setDragOverZone({ kind: 'ungueltig' })
+        return
+      }
+      erlaubeDrop(event)
+      setDragOverZone(zone)
+    }
+  }
+
+  function makeAktionsButtonDrop(findeAktion: (kartenId: string | null) => SpielAktion | null) {
+    return (event: DragEvent<HTMLElement>) => {
+      event.preventDefault()
+      event.stopPropagation()
+      const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
+      const zielAktion = findeAktion(kartenId)
+      fuehreAktion(zielAktion)
+      setDragOverZone(zielAktion ? null : { kind: 'ungueltig' })
+    }
   }
 
   const hatEigeneSchlangen = aktiverSpieler.schlangen.length > 0
 
+  const dragOverStatus =
+    dragOverZone === null ? '' :
+    dragOverZone.kind === 'startzone' ? 'Karte kann als neue Schlange gestartet werden.' :
+    dragOverZone.kind === 'schlange' ? `Karte kann auf Schlange ${dragOverZone.id} abgelegt werden.` :
+    'Karte kann hier nicht abgelegt werden.'
+
+  useEffect(() => {
+    const handleDragEnd = () => setDragOverZone(null)
+    document.addEventListener('dragend', handleDragEnd)
+    return () => document.removeEventListener('dragend', handleDragEnd)
+  }, [])
+
   return (
     <section className="schlangenbereich" aria-labelledby="schlangenbereich-titel">
       <h4 id="schlangenbereich-titel">Schlangenbereich</h4>
+      <p className="schlangen-dragstatus" role="status">{dragOverStatus}</p>
       <section
         className="schlangen-gruppe"
         aria-labelledby="eigene-schlangen-titel"
         onClick={handleNeueSchlangeZoneClick}
         onDragOver={handleNeueSchlangeZoneDragOver}
+        onDragLeave={handleDragLeave}
         onDrop={handleNeueSchlangeZoneDrop}
       >
         <h5 id="eigene-schlangen-titel">Eigene Schlangen</h5>
@@ -160,7 +214,7 @@ export default function Schlangenbereich({
           Ziehe eine Handkarte auf die gewünschte Schlange oder nutze die Startzone, um eine neue Schlange zu beginnen.
         </p>
         <div
-          className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${dragOverZone === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
+          className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${dragOverZone?.kind === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
           role="button"
           tabIndex={0}
           aria-label="Neue Schlange starten"
@@ -197,15 +251,8 @@ export default function Schlangenbereich({
                   event.stopPropagation()
                   onAktion(aktion)
                 }}
-                onDragOver={erlaubeDrop}
-                onDrop={(event) => {
-                  event.preventDefault()
-                  event.stopPropagation()
-                  const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
-                  if (kartenId === aktion.handkartenId) {
-                    onAktion(aktion)
-                  }
-                }}
+                onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'startzone' })}
+                onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
               >
                 {aktionsLabel(aktion)}
               </button>
@@ -220,7 +267,7 @@ export default function Schlangenbereich({
               return (
                 <li
                   key={schlange.id}
-                  className={`schlangekarte schlangekarte--eigene${dragOverZone === schlange.id ? ' schlangekarte--dragover' : ''}`}
+                  className={`schlangekarte schlangekarte--eigene${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-label={`Schlange ${schlange.id}`}
@@ -261,15 +308,8 @@ export default function Schlangenbereich({
                             event.stopPropagation()
                             onAktion(aktion)
                           }}
-                          onDragOver={erlaubeDrop}
-                          onDrop={(event) => {
-                            event.preventDefault()
-                            event.stopPropagation()
-                            const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
-                            if (kartenId === aktion.handkartenId) {
-                              onAktion(aktion)
-                            }
-                          }}
+                          onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'schlange', id: schlange.id })}
+                          onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
                         >
                           {aktion.position === 'links' ? 'Links anlegen' : 'Rechts anlegen'}
                         </button>

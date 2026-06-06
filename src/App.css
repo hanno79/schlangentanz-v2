@@ -460,6 +460,14 @@ code {
   grid-column: 1 / -1;
 }
 
+.schlangen-dragstatus {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  min-height: 1.2em;
+  grid-column: 1 / -1;
+}
+
 .schlangen-gruppe {
   display: grid;
   gap: 0.75rem;

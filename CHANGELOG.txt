@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 06.06.2026 – F36 Dragstatus, Startzonen-Feedback und robustere Drop-Ränder
+- Der Schlangenbereich zeigt jetzt eine sichtbare Drag-Statuszeile, die legale Zielzonen beim Ziehen einer Handkarte live benennt.
+- Die Startzone und die expliziten Anlege-Buttons melden Drag-Over-Zustände jetzt konsistent und räumen ihren Status bei Abbruch oder Drop sauber zurück.
+- Direkte Drops auf Schlange und Startzone löschen pending Fehlfeedback-Timeouts, damit ein alter ungültiger Button-Drop keinen erfolgreichen Drop überschreibt.
+- Ungültige Drop-Ziele melden jetzt klar, dass die Karte dort nicht abgelegt werden kann, statt stillschweigend zu verschwinden.
+- Neue Regressionstests decken den Wechsel zwischen eigener Schlange und Startzone, direkte Drops nach Fehlfeedback sowie die gewählte Links-/Rechts-Position expliziter Anlegebuttons ab.
+- Die F36-Drag-and-Drop-Tests sowie zu große Engine-Testdateien sind aufgeteilt; gemeinsame Testhelfer liegen in `src/testUtils.ts`, damit alle Testdateien unter 500 Zeilen bleiben.
+
 ## 06.06.2026 – F36 Startfeld akzeptiert Drag&Drop auch mit vorhandener Schlange
 - Das "Neue Schlange starten"-Feld reagiert jetzt auch dann auf Drag&Drop, wenn bereits eigene Schlangen auf dem Tisch liegen.
 - Dadurch kann eine zweite Schlange im nächsten Zug nun auch über den größeren Feldbereich begonnen werden, nicht nur exakt über der inneren Zielzone.

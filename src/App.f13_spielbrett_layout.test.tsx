@@ -1,8 +1,8 @@
 /**
  * Author: rahn
  * Datum: 04.06.2026
- * Version: 1.0
- * Beschreibung: F13 UI-Test für ein ruhigeres zweispaltiges Spielbrett-/Schlangenlayout.
+ * Version: 1.2
+ * Beschreibung: F13 UI-Test für ein ruhigeres zweispaltiges Spielbrett-/Schlangenlayout und die Statusleiste.
  */
 /// <reference types="node" />
 
@@ -48,5 +48,6 @@ describe('F13 Spielbrett-/Layout-Polish', () => {
     expect(cssBlock('schlangekarte')).toMatch(/min-height:\s*8rem/)
     expect(cssBlock('schlangekarte')).toMatch(/align-content:\s*start/)
     expect(appCss).toMatch(/\.schlangenbereich\s*>\s*h4\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s)
+    expect(appCss).toMatch(/\.schlangen-dragstatus\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/s)
   })
 })
