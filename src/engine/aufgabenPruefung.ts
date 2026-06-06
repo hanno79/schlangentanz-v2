@@ -1,13 +1,16 @@
 /*
 Author: rahn
 Datum: 06.06.2026
-Version: 1.1
+Version: 1.2
 Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfüllung offener Aufgaben im Zug.
 Änderung v1.1: pruefeFarbharmonie (aufgabe-02) hinzugefügt.
+Änderung v1.2: pruefeFarbenpracht (aufgabe-01) hinzugefügt.
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
 import { ermittleFarbgruppen } from './colorGroups';
+
+const ALLE_FARBEN = ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett', 'Braun'] as const;
 
 function istFarbenfusionkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenfusion';
@@ -89,8 +92,19 @@ function pruefeFarbwechsler(zustand: Spielzustand): boolean {
   return pruefeFensterVielfalt(zustand, 4);
 }
 
+function pruefeFarbenpracht(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const farbzaehler: Record<string, number> = {};
+  for (const schlange of aktiverSpieler.schlangen) {
+    for (const karte of schlange.karten) {
+      if (karte.typ !== 'Farbkarte') continue;
+      farbzaehler[karte.farbe] = (farbzaehler[karte.farbe] ?? 0) + 1;
+    }
+  }
+  return ALLE_FARBEN.every((farbe) => (farbzaehler[farbe] ?? 0) >= 2);
+}
+
 function pruefeFarbharmonie(zustand: Spielzustand): boolean {
-  const ALLE_FARBEN = ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett', 'Braun'] as const;
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   const farbenMitDreiergruppe = new Set(
     aktiverSpieler.schlangen
@@ -101,6 +115,7 @@ function pruefeFarbharmonie(zustand: Spielzustand): boolean {
 }
 
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
+  'aufgabe-01': pruefeFarbenpracht,
   'aufgabe-02': pruefeFarbharmonie,
   'aufgabe-03': pruefeFarbkombination,
   'aufgabe-04': pruefeFarbvielfalt,
