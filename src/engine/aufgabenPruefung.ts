@@ -6,6 +6,7 @@ Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfü
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
+import { ermittleFarbgruppen } from './colorGroups';
 
 function istFarbenfusionkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenfusion';
@@ -49,10 +50,18 @@ function pruefeFarbkombination(zustand: Spielzustand): boolean {
   });
 }
 
+function pruefeGelberSchatz(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aktiverSpieler.schlangen.some((schlange) =>
+    ermittleFarbgruppen(schlange).some((gruppe) => gruppe.farbe === 'Gelb' && gruppe.laenge >= 6),
+  );
+}
+
 const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-03': pruefeFarbkombination,
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
+  'aufgabe-13': pruefeGelberSchatz,
 };
 
 export function ermittleErfuellteOffeneAufgaben(zustand: Spielzustand): AufgabenkarteInfo[] {
