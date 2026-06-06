@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 06.06.2026 – F36 Startfeld akzeptiert Drag&Drop auch mit vorhandener Schlange
+- Das "Neue Schlange starten"-Feld reagiert jetzt auch dann auf Drag&Drop, wenn bereits eigene Schlangen auf dem Tisch liegen.
+- Dadurch kann eine zweite Schlange im nächsten Zug nun auch über den größeren Feldbereich begonnen werden, nicht nur exakt über der inneren Zielzone.
+- Der F36-Regressionstest deckt jetzt beide Fälle ab: leeres Feld und Feld mit bereits vorhandener Schlange.
+
 ## 06.06.2026 – F36 Drag-over-Feedback für Schlangen
 - Beim Überfahren einer eigenen Schlange während des Drag-and-Drop wird die Zielschlange jetzt visuell hervorgehoben.
 - Auch die leere Startzone zeigt ein klares Drag-over-Feedback, damit der Einstieg in eine neue Schlange verständlicher ist.

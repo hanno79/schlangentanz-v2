@@ -105,7 +105,9 @@ export default function Schlangenbereich({
   }
 
   function handleNeueSchlangeZoneClick(event: MouseEvent<HTMLElement>) {
-    event.stopPropagation()
+    if ((event.target as HTMLElement).closest('button, li.schlangekarte--eigene')) {
+      return
+    }
 
     const aktion = findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? neueSchlangeStartenAktionen[0] ?? null
     fuehreNeueSchlangeAktionAus(aktion)
@@ -121,11 +123,19 @@ export default function Schlangenbereich({
   }
 
   function handleNeueSchlangeZoneDragOver(event: DragEvent<HTMLElement>) {
+    if ((event.target as HTMLElement).closest('li.schlangekarte--eigene')) {
+      return
+    }
+
     erlaubeDrop(event)
     setDragOverZone('startzone')
   }
 
   function handleNeueSchlangeZoneDrop(event: DragEvent<HTMLElement>) {
+    if ((event.target as HTMLElement).closest('li.schlangekarte--eigene')) {
+      return
+    }
+
     event.preventDefault()
     event.stopPropagation()
     const kartenId = event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
@@ -141,9 +151,9 @@ export default function Schlangenbereich({
       <section
         className="schlangen-gruppe"
         aria-labelledby="eigene-schlangen-titel"
-        onClick={!hatEigeneSchlangen ? handleNeueSchlangeZoneClick : undefined}
-        onDragOver={!hatEigeneSchlangen ? erlaubeDrop : undefined}
-        onDrop={!hatEigeneSchlangen ? handleNeueSchlangeZoneDrop : undefined}
+        onClick={handleNeueSchlangeZoneClick}
+        onDragOver={handleNeueSchlangeZoneDragOver}
+        onDrop={handleNeueSchlangeZoneDrop}
       >
         <h5 id="eigene-schlangen-titel">Eigene Schlangen</h5>
         <p className="schlangen-drop-hinweis">
@@ -155,10 +165,19 @@ export default function Schlangenbereich({
           tabIndex={0}
           aria-label="Neue Schlange starten"
           aria-describedby={`schlange-startzone-hinweis-${aktiverSpieler.id}`}
-          onClick={handleNeueSchlangeZoneClick}
+          onClick={(event) => {
+            event.stopPropagation()
+            handleNeueSchlangeZoneClick(event)
+          }}
           onKeyDown={handleNeueSchlangeZoneKeyDown}
-          onDragOver={handleNeueSchlangeZoneDragOver}
-          onDrop={handleNeueSchlangeZoneDrop}
+          onDragOver={(event) => {
+            event.stopPropagation()
+            handleNeueSchlangeZoneDragOver(event)
+          }}
+          onDrop={(event) => {
+            event.stopPropagation()
+            handleNeueSchlangeZoneDrop(event)
+          }}
         >
           <strong>Neue Schlange starten</strong>
           <p id={`schlange-startzone-hinweis-${aktiverSpieler.id}`} className="schlangen-drop-hinweis">

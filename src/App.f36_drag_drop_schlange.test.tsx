@@ -35,6 +35,25 @@ function erstelleSpieltischMitEineSchlange() {
   return { zustand, startkarte, anlegekarteId: legaleKarteAnlegen.handkartenId, legaleKarteAnlegen }
 }
 
+function erstelleSpieltischMitVorhandenerSchlangeUndStartaktion() {
+  const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  const [startkarte] = zustand.spieler[0].hand
+
+  zustand.spieler[0].schlangen = [
+    { id: 'schlange-spieler-1-f36-2', zustand: 'aktiv', karten: [startkarte] },
+  ]
+
+  const legaleStartaktion = ermittleLegaleAktionen(zustand).find(
+    (aktion): aktion is Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }> => aktion.typ === 'NeueSchlangeStarten',
+  )
+
+  if (!legaleStartaktion) {
+    throw new Error('Testsetup erwartet eine legale Startaktion trotz vorhandener Schlange.')
+  }
+
+  return { zustand, legaleStartaktion, startkarte }
+}
+
 function erstelleSpieltischOhneEigeneSchlangen() {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
   const legaleStartaktion = ermittleLegaleAktionen(zustand).find(
@@ -173,6 +192,30 @@ describe('F36 Drag-and-Drop für Schlangen', () => {
 
     expect(within(handBereich).queryByText(alternativeStartaktion.handkartenId)).toBeNull()
     expect(eigeneGruppe.querySelectorAll('li')).toHaveLength(1)
+  })
+
+  it('startet trotz vorhandener Schlange per Drag-and-drop eine zweite neue Schlange', () => {
+    const { zustand, legaleStartaktion } = erstelleSpieltischMitVorhandenerSchlangeUndStartaktion()
+    render(<App initialZustand={zustand} />)
+
+    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
+    const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
+    const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
+    const handkartenButton = within(handBereich).getByText(legaleStartaktion.handkartenId).closest('button')
+
+    if (!handkartenButton) {
+      throw new Error('Testsetup erwartet eine sichtbare Handkarte für die zweite Schlange.')
+    }
+
+    const dataTransfer = erstelleDataTransfer()
+    fireEvent.dragStart(handkartenButton, { dataTransfer })
+    fireEvent.dragOver(eigeneGruppe, { dataTransfer })
+    fireEvent.drop(eigeneGruppe, { dataTransfer })
+    fireEvent.dragEnd(handkartenButton, { dataTransfer })
+
+    expect(within(handBereich).queryByText(legaleStartaktion.handkartenId)).toBeNull()
+    expect(eigeneGruppe.querySelectorAll('li')).toHaveLength(2)
   })
 
   it('zeigt und bedient die explizite Anlege-Schaltfläche für die legale Position', () => {
