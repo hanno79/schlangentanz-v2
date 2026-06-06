@@ -98,24 +98,52 @@ Build erfolgreich.
 ## Commit
 
 ```text
-Noch ausstehend — wird nach Commit ergänzt.
+f125f1e R93 Schlangenbaendiger-Aufgabe pruefen
 ```
 
 ## Deployment
 
+Ausgeführt:
+
 ```text
-Noch ausstehend — wird nach Deployment ergänzt.
+bash -ic 'vercel deploy --prod --yes --token="$VERCEL_TOKEN"'
+```
+
+Ergebnis:
+
+```text
+Production  https://schlangentanz-v2-5loq5mgsn-alfreds-projects-7e9df1b4.vercel.app
+Aliased     https://schlangentanz-v2.vercel.app
+Ready in 15s
 ```
 
 ## Live-Smoke
 
+HTTP-Smoke:
+
 ```text
-Noch ausstehend — wird nach Live-Smoke ergänzt.
+200 https://schlangentanz-v2.vercel.app/game
+```
+
+Playwright-Smoke gegen `/game`:
+
+```json
+{
+  "status": 200,
+  "title": "schlangentanz-v2",
+  "hasGameHeading": true,
+  "hasActionsRegion": true,
+  "actionButtonsBefore": 14,
+  "firstActionClicked": true,
+  "textChangedAfterFirstAction": true,
+  "consoleErrors": [],
+  "pageErrors": []
+}
 ```
 
 ## Release-Gate-Status
 
 - Code/Test: erledigt
 - Full Gates lokal: grün
-- Dokumentation: erstellt
-- Deployment/Live-Smoke: ausstehend
+- Dokumentation: erledigt
+- Deployment/Live-Smoke: grün
