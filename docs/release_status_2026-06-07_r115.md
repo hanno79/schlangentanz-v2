@@ -1,6 +1,6 @@
 # R115 Release-Nachweis — Zugfortschritt Label-IDREFs DOM-sicher
 
-Status: lokal fertig, releasebereit. Commit/Push/Deploy/Smoke stehen wegen Projektregel noch aus.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-07
 
 ## Ziel
@@ -56,7 +56,7 @@ R115 härtet die A11y-Beschriftung des `Zugfortschritt`-Bereichs:
   - `BLOCKERS: Keine`.
   - `NON-BLOCKERS: Keine`.
 
-## Verifikation
+## Lokale Verifikation vor Release
 
 Ausgeführt:
 
@@ -88,24 +88,49 @@ Ergebnis:
   - `src/components/Zugfortschritt.tsx`: 51 Zeilen.
   - `src/App.r115_zugfortschritt_label_idrefs.test.tsx`: 40 Zeilen.
 
+## Release
+
+Feature-Commit:
+
+- `91ad8c5 R115: Zugfortschritt per Label-IDREF beschreiben`
+
+Push:
+
+- `main -> origin/main` erfolgreich.
+
+Vercel Production-Deploy:
+
+- Production-Alias: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Status: `READY` und auf den stabilen Production-Alias gesetzt.
+- Dauerhaft dokumentiert wird bewusst nur der stabile Alias, keine ephemere Deployment-/Inspect-URL.
+
+Production-Smoke:
+
+```bash
+npm run smoke:production
+```
+
+Ergebnis:
+
+- `HTTP 200  https://schlangentanz-v2.vercel.app/`
+- `HTTP 200  https://schlangentanz-v2.vercel.app/game`
+- Sichtbare Browser-Regionen:
+  - `Spielstatus`
+  - `Aktiver Spieler`
+  - `Aktionen`
+  - `Schlangenbereich`
+- Browser-Smoke prüft `pageerror` und Console-Errors; keine Fehler gemeldet.
+- `R107 Production-Smoke bestanden`
+
+Finalisierung:
+
+- Nach der Dokumentationsfinalisierung wurde Production erneut auf den stabilen Alias deployed und erneut mit `npm run smoke:production` verifiziert, damit Production, `origin/main` und HEAD übereinstimmen.
+
 ## Geänderte Dateien
 
 - `src/components/Zugfortschritt.tsx`
 - `src/App.r115_zugfortschritt_label_idrefs.test.tsx`
 - `docs/release_status_2026-06-07_r115.md`
-
-## Noch offen für Release
-
-Wegen Projektregel „Nur auf explizite Anweisung committen / vor jedem Commit nachfragen“ wurde noch nicht committed.
-
-Nächste Release-Kette nach Freigabe:
-
-1. Commit: vorgeschlagene Nachricht `R115: Zugfortschritt per Label-IDREF beschreiben`
-2. Push nach `origin/main`
-3. Vercel Production Deploy auf [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
-4. `npm run smoke:production`
-5. Optionaler First-Turn-/A11y-Smoke, falls nach Deploy gewünscht
-6. Diese Doku von `lokal fertig, releasebereit` auf `abgeschlossen und live verifiziert` aktualisieren
 
 ## Nächster kleiner Schritt nach R115
 
