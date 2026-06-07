@@ -1,9 +1,10 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 1.1
+Version: 1.2
 Beschreibung: R100/R101 Helper-Regressionstests für sichere Schlangenhäutung-UI-Aktionskandidaten.
 # ÄNDERUNG 07.06.2026: R101 prüft zusätzlich die kleine Auswahloption "erste Karte ans Ende" und Deduplizierung.
+# ÄNDERUNG 07.06.2026: R103 entfernt den R101-Test für "erste Karte ans Ende" – diese Option ist aus der Funktion entfernt worden.
 */
 
 import { describe, expect, it } from 'vitest'
@@ -41,22 +42,8 @@ describe('R100/R101 Schlangenhäutung-UI-Aktionshelper', () => {
     expect(erstelleSchlangenhaeutungUmkehrAktionen(zustand)).toEqual([])
   })
 
-  it('erzeugt eine legale Auswahloption, die die erste Karte ans Ende setzt', () => {
+  it('liefert nur die Umkehr-Quick-Option, weil Karte-ans-Ende über die lokale Auswahl läuft', () => {
     const optionen = erstelleSchlangenhaeutungUiOptionen(zustandMitSchlangenhaeutung())
-
-    expect(optionen).toEqual(expect.arrayContaining([
-      expect.objectContaining({
-        ariaLabel: 'Schlangenhäutung: Schlange schlange-r101-helper erste Karte ans Ende setzen',
-        label: 'Schlange schlange-r101-helper: erste Karte ans Ende',
-        aktion: expect.objectContaining({
-          kartenIdsInNeuerReihenfolge: ['blau-r101-helper', 'gruen-r101-helper', 'rot-r101-helper'],
-        }),
-      }),
-    ]))
-  })
-
-  it('dedupliziert identische Zwei-Karten-Reihenfolgen zwischen Umkehren und erster Karte ans Ende', () => {
-    const optionen = erstelleSchlangenhaeutungUiOptionen(zustandMitSchlangenhaeutung(['rot-r101-helper', 'blau-r101-helper']))
 
     expect(optionen).toHaveLength(1)
     expect(optionen[0].ariaLabel).toBe('Schlangenhäutung: Schlange schlange-r101-helper umkehren')
