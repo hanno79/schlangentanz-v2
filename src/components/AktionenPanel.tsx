@@ -10,6 +10,7 @@ weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phas
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
 import type { SchlangenhaeutungUiOption } from '../ui/schlangenhaeutungUiAktionen'
+import SchlangenhaeutungReihenfolgeAuswahl from './SchlangenhaeutungReihenfolgeAuswahl'
 
 export const EMPFOHLENE_AKTION_ID = 'empfohlene-aktion'
 export const PHASENAKTION_ID = 'phasenaktion'
@@ -195,6 +196,12 @@ export default function AktionenPanel({
                           </button>
                         ))}
                       </div>
+                    )}
+                    {hinweis.typ === 'Schlangenhaeutung' && (
+                      <SchlangenhaeutungReihenfolgeAuswahl
+                        zustand={zustand}
+                        onAktionAusfuehren={onAktionAusfuehren}
+                      />
                     )}
                   </li>
                 ))}
