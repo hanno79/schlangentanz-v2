@@ -1,10 +1,11 @@
 /*
 Author: rahn
-Datum: 06.06.2026
-Version: 1.9
+Datum: 07.06.2026
+Version: 2.0
 Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zugänglichem Drag-Status und legalen Start-/Anlegeaktionen.
+# ÄNDERUNG 07.06.2026: R109 nutzt komponentenlokale DOM-IDs für aria-describedby statt fachlicher Spieler-/Schlangen-IDs.
 */
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
 import type { SpielAktion, Spieler, Spielkarte } from '../engine'
 
@@ -52,6 +53,7 @@ export default function Schlangenbereich({
   onAktion,
   aktionsLabel,
 }: SchlangenbereichProps) {
+  const komponentenId = useId()
   const [dragOverZone, setDragOverZone] = useState<DragTarget | null>(null)
 
   function findeAktionFuerKarte(schlangeId: string, handkartenId: string | null) {
@@ -218,7 +220,7 @@ export default function Schlangenbereich({
           role="button"
           tabIndex={0}
           aria-label="Neue Schlange starten"
-          aria-describedby={`schlange-startzone-hinweis-${aktiverSpieler.id}`}
+          aria-describedby={`${komponentenId}-startzone-hinweis`}
           onClick={(event) => {
             event.stopPropagation()
             handleNeueSchlangeZoneClick(event)
@@ -234,7 +236,7 @@ export default function Schlangenbereich({
           }}
         >
           <strong>Neue Schlange starten</strong>
-          <p id={`schlange-startzone-hinweis-${aktiverSpieler.id}`} className="schlangen-drop-hinweis">
+          <p id={`${komponentenId}-startzone-hinweis`} className="schlangen-drop-hinweis">
             Ziehe eine Farbkarte hierher oder klicke die passende Start-Schaltfläche.
           </p>
         </div>
@@ -261,7 +263,7 @@ export default function Schlangenbereich({
         )}
         {hatEigeneSchlangen ? (
           <ul className="schlangenleiste">
-            {aktiverSpieler.schlangen.map((schlange) => {
+            {aktiverSpieler.schlangen.map((schlange, schlangeIndex) => {
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
 
               return (
@@ -271,7 +273,7 @@ export default function Schlangenbereich({
                   tabIndex={0}
                   role="button"
                   aria-label={`Schlange ${schlange.id}`}
-                  aria-describedby={`schlange-${schlange.id}-anlegehilfe`}
+                  aria-describedby={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe`}
                   onClick={(event) => handleSchlangeClick(event, schlange.id)}
                   onKeyDown={(event) => handleSchlangeKeyDown(event, schlange.id)}
                   onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
@@ -292,7 +294,7 @@ export default function Schlangenbereich({
                       </div>
                     ))}
                   </div>
-                  <p id={`schlange-${schlange.id}-anlegehilfe`} className="schlangen-drop-hinweis">
+                  <p id={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe`} className="schlangen-drop-hinweis">
                     Klicke auf eine Anlege-Schaltfläche oder lege die ausgewählte Karte direkt auf die Schlange.
                   </p>
                   {anlegeAktionen.length > 0 && (
