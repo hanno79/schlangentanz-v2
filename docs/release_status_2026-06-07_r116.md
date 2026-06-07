@@ -127,7 +127,7 @@ Ergebnis:
 
 Finalisierung:
 
-- Nach dieser Dokumentationsfinalisierung wird Production erneut auf den stabilen Alias deployed und erneut mit `npm run smoke:production` verifiziert, damit Production, `origin/main` und HEAD übereinstimmen.
+- Dieser Release-Nachweis wird als finaler Doku-Stand mit auf den stabilen Production-Alias deployed; der nachgelagerte Production-Smoke muss grün sein, bevor R116 als abgeschlossen gilt.
 
 ## Nächster kleiner Schritt nach R116
 
