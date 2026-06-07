@@ -1,6 +1,6 @@
 # R114 Release-Nachweis — Schlangenhäutung-Umkehrbutton semantisch beschrieben
 
-Status: lokal fertig und releasebereit; Commit/Push/Deploy/Smoke warten auf explizite Freigabe.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-07
 
 ## Ziel
@@ -64,16 +64,27 @@ Ergebnis:
 - `src/App.r114_schlangenhaeutung_umkehr_a11y.test.tsx`
 - `docs/release_status_2026-06-07_r114.md`
 
-## Noch nicht released
-- Noch kein Implementierungscommit.
-- Noch kein Push.
-- Noch kein Vercel-Deploy.
-- Noch kein Production-Smoke.
+## Release abgeschlossen
+- Implementierungscommit: `12da596 R114: Schlangenhaeutung-Umkehrbutton semantisch beschreiben`.
+- Push: `main -> origin/main`.
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Vercel Production-Deploy: READY und auf den stabilen Production-Alias gesetzt.
+- Ephemere Deployment-/Inspect-URLs werden hier bewusst nicht festgeschrieben, damit der Release-Nachweis nach Doku-only-Commits nicht wieder veraltet.
 
-## Nächster Schritt
-Nach Freigabe:
-1. Commit mit deutscher Nachricht.
-2. Push nach `origin/main`.
-3. Vercel Production-Deploy auf den stabilen Alias [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app).
-4. Production-Smoke und First-Turn-Browser-Smoke.
-5. Release-Nachweis und Dart-Status auf final released aktualisieren.
+## Live-Smoke
+- `npm run smoke:production` grün:
+  - `/game` HTTP 200
+  - `/` HTTP 200
+  - sichtbar: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`
+  - `R107 Production-Smoke bestanden`
+- First-Turn-Browser-Smoke grün:
+  - URL: `https://schlangentanz-v2.vercel.app/game`
+  - ein erster Zug über `Neue Schlange starten mit Karte ...` wurde ausgeführt.
+  - `Schlangenbereich` änderte sich sichtbar.
+  - `Zuletzt ausgeführt` war sichtbar.
+  - `consoleErrors: []`
+  - `pageErrors: []`
+
+## Nächster kleiner Schritt nach Release
+- Nach R114 Release erneut klein weiterarbeiten: entweder weitere DOM-IDREF-Audits oder ein regel-/engine-naher Regressionstest.
+- Vor jeder späteren Regel-/Engine-Änderung weiterhin [https://schlangentanz.ch/rules](https://schlangentanz.ch/rules) prüfen.
