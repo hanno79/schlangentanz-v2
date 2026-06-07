@@ -1,12 +1,13 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 1.3
+Version: 1.4
 Beschreibung: R102 UI-Komponente für eine lokale Schlangenhäutung-Reihenfolge-Auswahl ohne Drag-and-Drop.
 # ÄNDERUNG 07.06.2026: Lokale Auswahl ergänzt, um eine gewählte Karte einer eigenen aktiven Schlange ans Ende zu setzen.
 # ÄNDERUNG 07.06.2026: R104 integriert den Umkehr-Button in diese Komponente, statt ihn als separate Quick-Option zu rendern.
 # ÄNDERUNG 07.06.2026: R105 zeigt aktuelle und neue Reihenfolge als Vorschau vor der Ausführung.
 # ÄNDERUNG 07.06.2026: R108 semantische Gruppen pro Schlange, Tastaturhinweis und Live-Vorschau als role=status mit aria-describedby.
+# ÄNDERUNG 07.06.2026: R114 verknüpft auch den Umkehrbutton mit Tastaturhilfe und Umkehr-Vorschau.
 */
 
 import { useId, useState } from 'react'
@@ -115,7 +116,9 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
         const domIdBasis = `${komponentenId}-schlange-${schlangenIndex}`
         const tastaturHilfeId = `${domIdBasis}-tastatur-hilfe`
         const vorschauId = `${domIdBasis}-vorschau`
+        const umkehrVorschauId = `${domIdBasis}-umkehr-vorschau`
         const beschreibungsIds = `${tastaturHilfeId} ${vorschauId}`
+        const umkehrBeschreibungsIds = `${tastaturHilfeId} ${umkehrVorschauId}`
 
         return (
           <div key={schlange.id} role="group" aria-label={`Schlangenhäutung für Schlange ${schlange.id}`} className="aktions-hinweis-aktionen">
@@ -128,7 +131,13 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
               Neue Reihenfolge nach Karte ans Ende: {karteAnsEndeReihenfolge}
             </p>
             <p>Diese Aktion setzt die gewählte Karte ans Ende.</p>
-            <p>Neue Reihenfolge nach Umkehr: {umkehrReihenfolge}</p>
+            <p
+              id={umkehrVorschauId}
+              role="status"
+              aria-label={`Vorschau Umkehr für Schlange ${schlange.id}`}
+            >
+              Neue Reihenfolge nach Umkehr: {umkehrReihenfolge}
+            </p>
             <p>Diese Aktion kehrt die Schlange um.</p>
             <p>Die Regelprüfung bleibt beim Ausführen in der Engine.</p>
             <p id={tastaturHilfeId}>
@@ -165,6 +174,7 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
               type="button"
               className="aktions-button"
               aria-label={`Schlangenhäutung: Schlange ${schlange.id} umkehren`}
+              aria-describedby={umkehrBeschreibungsIds}
               disabled={!umkehrErlaubt || !umkehrAktion}
               onClick={() => {
                 if (umkehrAktion && umkehrErlaubt) onAktionAusfuehren(umkehrAktion)
