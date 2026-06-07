@@ -104,7 +104,7 @@ Ergebnis:
 - Commit: `b419cc0 R99: Schlangenhäutung-Hinweis anzeigen`
 - Push: `main -> origin/main`
 - Production: https://schlangentanz-v2.vercel.app
-- Vercel Deployment: https://schlangentanz-v2-imif8doix-alfreds-projects-7e9df1b4.vercel.app
+- Vercel Deployment: https://schlangentanz-v2-ktoxp5zpr-alfreds-projects-7e9df1b4.vercel.app
 - Live Smoke:
   - `/` HTTP 200
   - `/game` HTTP 200
