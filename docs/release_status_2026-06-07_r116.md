@@ -1,6 +1,6 @@
 # R116 Release-Nachweis — Spielerführung Label-IDREF DOM-sicher
 
-Status: lokal fertig, releasebereit — noch nicht committed, nicht gepusht, nicht deployed.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-07
 
 ## Ziel
@@ -92,17 +92,42 @@ Ergebnis:
 - `src/App.f17_menschlicher_turn_checkliste.test.tsx`
 - `docs/release_status_2026-06-07_r116.md`
 
-## Release-Status
+## Release
 
-R116 ist lokal fertig und releasebereit.
+Feature-/Doku-Commit:
 
-Noch ausstehend nach expliziter Commit-Freigabe:
+- `16bcea7 R116: Spielerfuehrung per Label-IDREF beschreiben`
 
-1. Feature-/Doku-Commit erstellen.
-2. Push auf `origin/main`.
-3. Vercel Production-Deploy auf stabilen Alias ausführen.
-4. `npm run smoke:production` gegen `https://schlangentanz-v2.vercel.app` ausführen.
-5. Release-Nachweis und Dart-Status von `lokal fertig` auf `abgeschlossen und live verifiziert` aktualisieren.
+Push:
+
+- `main -> origin/main` erfolgreich.
+
+Vercel Production-Deploy:
+
+- Production-Alias: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Status: `READY` und auf den stabilen Production-Alias gesetzt.
+- Dauerhaft dokumentiert wird bewusst nur der stabile Alias, keine ephemere Deployment-/Inspect-URL.
+
+Production-Smoke:
+
+```bash
+npm run smoke:production
+```
+
+Ergebnis:
+
+- `HTTP 200  https://schlangentanz-v2.vercel.app/`
+- `HTTP 200  https://schlangentanz-v2.vercel.app/game`
+- Sichtbare Browser-Regionen:
+  - `Spielstatus`
+  - `Aktiver Spieler`
+  - `Aktionen`
+  - `Schlangenbereich`
+- `R107 Production-Smoke bestanden`
+
+Finalisierung:
+
+- Nach dieser Dokumentationsfinalisierung wird Production erneut auf den stabilen Alias deployed und erneut mit `npm run smoke:production` verifiziert, damit Production, `origin/main` und HEAD übereinstimmen.
 
 ## Nächster kleiner Schritt nach R116
 
