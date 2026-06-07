@@ -79,12 +79,20 @@ Ergebnis:
 - Keine neue Sonderkarten-Architektur.
 - Keine Permutations-Enumeration in `ermittleLegaleAktionen`.
 
-## Release
+## Release abgeschlossen — 2026-06-07
 
-Noch auszuführen:
-
-- Commit
-- Push
-- Vercel Production Deploy
-- Production Smoke
-- Status-Sync auf Release abgeschlossen aktualisieren
+- Commit Feature: `fccdfce R104: Schlangenhäutung-Umkehr integrieren`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Vercel Deployment: [https://schlangentanz-v2-fas0tr8b1-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-fas0tr8b1-alfreds-projects-7e9df1b4.vercel.app)
+- Production Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - Bundle enthält `Schlangenhäutung-Reihenfolge-Auswahl`
+  - Bundle enthält `gewählte Karte aus Schlange`
+  - Bundle enthält `Schlange umkehren`
+  - Bundle enthält nicht mehr `Schlangenhäutung-Optionen`
+  - Playwright GUI-Smoke erfolgreich
+  - Geprüfte Regionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`
+  - Keine Console Errors
+  - Keine Page Errors
