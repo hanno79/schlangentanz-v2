@@ -128,7 +128,7 @@ Ergebnis:
 - Commit Feature: `49342e8 R101: Schlangenhäutung-Auswahloption ergänzen`
 - Push: `main -> origin/main`
 - Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
-- Vercel Deployment: [https://schlangentanz-v2-lizetm2ny-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-lizetm2ny-alfreds-projects-7e9df1b4.vercel.app)
+- Vercel Production-Alias: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
 - Live Smoke:
   - `/` HTTP 200
   - `/game` HTTP 200
