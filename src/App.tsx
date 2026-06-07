@@ -25,6 +25,7 @@ import useAktionszielFokus from './hooks/useAktionszielFokus'
 import Zugfortschritt from './components/Zugfortschritt'
 import HandkartenPanel from './components/HandkartenPanel'
 import Schlangenbereich from './components/Schlangenbereich'
+import { erstelleSchlangenhaeutungUmkehrAktionen } from './ui/schlangenhaeutungUiAktionen'
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
@@ -95,6 +96,8 @@ function aktionsLabel(aktion: SpielAktion): string {
       return `Farbendieb mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
     case 'FarbendiebDurchlassen':
       return 'Farbendieb durchlassen'
+    case 'SchlangenhaeutungSpielen':
+      return `Schlangenhäutung mit Karte ${aktion.handkartenId} auf Schlange ${aktion.schlangenId} spielen`
     case 'SchlangenfrassAbwehren':
       return `Schlangenfrass mit Farbenschutzkarte ${aktion.abwehrHandkartenId} abwehren`
     case 'SchlangenfrassDurchlassen':
@@ -159,6 +162,7 @@ function App({ initialZustand }: AppProps) {
   const gezogeneHandkarteIdRef = useRef<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const nichtEnumerierteAktionenHinweise = useMemo(() => ermittleNichtEnumerierteAktionenHinweise(zustand), [zustand])
+  const schlangenhaeutungUmkehrAktionen = useMemo(() => erstelleSchlangenhaeutungUmkehrAktionen(zustand), [zustand])
   const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
   const karteAnlegenAktionen = useMemo(
     () => legaleAktionen.filter(
@@ -304,6 +308,7 @@ function App({ initialZustand }: AppProps) {
               zustand={zustand}
               legaleAktionen={legaleAktionen}
               nichtEnumerierteAktionenHinweise={nichtEnumerierteAktionenHinweise}
+              schlangenhaeutungUmkehrAktionen={schlangenhaeutungUmkehrAktionen}
               reaktionsAktionen={reaktionsAktionen}
               ueberhand={ueberhand}
               istSpielende={istSpielende}

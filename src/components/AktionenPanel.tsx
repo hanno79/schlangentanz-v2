@@ -69,6 +69,7 @@ interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
   nichtEnumerierteAktionenHinweise: NichtEnumerierteAktionHinweis[]
+  schlangenhaeutungUmkehrAktionen?: Extract<SpielAktion, { typ: 'SchlangenhaeutungSpielen' }>[]
   reaktionsAktionen: SpielAktion[]
   ueberhand: number
   istSpielende: boolean
@@ -88,6 +89,7 @@ export default function AktionenPanel({
   zustand,
   legaleAktionen,
   nichtEnumerierteAktionenHinweise,
+  schlangenhaeutungUmkehrAktionen = [],
   reaktionsAktionen,
   ueberhand,
   istSpielende,
@@ -178,6 +180,21 @@ export default function AktionenPanel({
                   <li key={hinweis.typ}>
                     <strong>{aktionsHinweisTitel(hinweis)}</strong>
                     <p>{aktionsHinweisBeschreibung(hinweis)}</p>
+                    {hinweis.typ === 'Schlangenhaeutung' && schlangenhaeutungUmkehrAktionen.length > 0 && (
+                      <div className="aktions-hinweis-aktionen" role="group" aria-label="Schlangenhäutung-Fallbacks">
+                        {schlangenhaeutungUmkehrAktionen.map((aktion) => (
+                          <button
+                            key={`${aktion.handkartenId}-${aktion.schlangenId}`}
+                            type="button"
+                            className="aktions-button"
+                            aria-label={`Schlangenhäutung: Schlange ${aktion.schlangenId} umkehren`}
+                            onClick={() => onAktionAusfuehren(aktion)}
+                          >
+                            Schlange {aktion.schlangenId} umkehren
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
