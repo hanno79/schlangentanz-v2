@@ -1,6 +1,6 @@
 # R113 Release-Nachweis — AktionenPanel-Sprungziel-IDs DOM-sicher
 
-Status: lokal fertig und releasebereit; Commit/Push/Deploy/Live-Smoke stehen wegen Commit-Freigabe noch aus.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-07
 
 ## Ziel
@@ -73,15 +73,27 @@ Ergebnis:
 - `src/App.f27_sprungziel_fokus.test.tsx`
 - `docs/release_status_2026-06-07_r113.md`
 
-## Release ausstehend
-- Commit ausstehend wegen Projektregel: Vor jedem Commit nachfragen.
-- Danach auszuführen:
-  1. Commit R113 Implementierung und Release-Nachweis.
-  2. Push `main -> origin/main`.
-  3. Vercel Production Deploy.
-  4. Production-Smoke gegen `https://schlangentanz-v2.vercel.app`.
-  5. First-Turn-Browser-Smoke gegen `/game`.
-  6. Dart-Statusdokument und Projektkommentar final auf R113 Release abgeschlossen synchronisieren.
+## Release abgeschlossen
+- Implementierungscommit: `882dcb7 R113: AktionenPanel-Sprungziele DOM-sicher machen`.
+- Push: `main -> origin/main`.
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Feature-Deploy: `https://schlangentanz-v2-pkqaz0v4v-alfreds-projects-7e9df1b4.vercel.app`
+- Vercel Inspect: `https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/GXX4xiwRuFinSiE5SuUAh41eCgYo`
+- Deploy-Status: READY und auf Production-Alias gesetzt.
+
+## Live-Smoke
+- `npm run smoke:production` grün:
+  - `/game` HTTP 200
+  - `/` HTTP 200
+  - sichtbar: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`
+  - `R107 Production-Smoke bestanden`
+- First-Turn-Browser-Smoke grün:
+  - URL: `https://schlangentanz-v2.vercel.app/game`
+  - erster Zug ausgeführt: `Neue Schlange starten mit Karte rot-13`
+  - `Schlangenbereich` änderte sich sichtbar
+  - `Zuletzt ausgeführt: Neue Schlange starten mit Karte rot-13`
+  - `consoleErrors: []`
+  - `pageErrors: []`
 
 ## Nächster kleiner Schritt nach Release
 - Nach R113 Release erneut klein weiterarbeiten: entweder weitere DOM-IDREF-Audits oder ein regel-/engine-naher Regressionstest.
