@@ -84,7 +84,7 @@ Ergebnis:
 - Commit Feature: `fccdfce R104: Schlangenhäutung-Umkehr integrieren`
 - Push: `main -> origin/main`
 - Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
-- Vercel Deployment: [https://schlangentanz-v2-fas0tr8b1-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-fas0tr8b1-alfreds-projects-7e9df1b4.vercel.app)
+- Finaler Production-Alias-Deploy nach Doku-Stabilisierung: READY
 - Production Smoke:
   - `/` HTTP 200
   - `/game` HTTP 200
