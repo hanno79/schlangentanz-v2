@@ -1,10 +1,12 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: Zeigt den aktuellen Zugfortschritt als Schrittleiste an.
+# ÄNDERUNG 07.06.2026: R115 labelt die Region über eine komponentenlokale Überschriften-ID.
 */
 
+import { useId } from 'react'
 import type { Zugphase } from '../engine'
 
 const ZUGPHASEN: Zugphase[] = [
@@ -20,9 +22,11 @@ function zugphaseLabel(phase: Zugphase): string {
 }
 
 function Zugfortschritt({ zugphase }: ZugfortschrittProps) {
+  const titelId = useId()
+
   return (
-    <section className="zugfortschritt" aria-label="Zugfortschritt">
-      <h3>Zugfortschritt</h3>
+    <section className="zugfortschritt" aria-labelledby={titelId}>
+      <h3 id={titelId}>Zugfortschritt</h3>
       <p>Aktuelle Phase: {zugphaseLabel(zugphase)}</p>
       <ol className="zugfortschritt-liste">
         {ZUGPHASEN.map((phase, index) => {
