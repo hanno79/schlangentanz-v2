@@ -25,7 +25,7 @@ import useAktionszielFokus from './hooks/useAktionszielFokus'
 import Zugfortschritt from './components/Zugfortschritt'
 import HandkartenPanel from './components/HandkartenPanel'
 import Schlangenbereich from './components/Schlangenbereich'
-import { erstelleSchlangenhaeutungUmkehrAktionen } from './ui/schlangenhaeutungUiAktionen'
+import { erstelleSchlangenhaeutungUiOptionen } from './ui/schlangenhaeutungUiAktionen'
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
@@ -162,7 +162,7 @@ function App({ initialZustand }: AppProps) {
   const gezogeneHandkarteIdRef = useRef<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const nichtEnumerierteAktionenHinweise = useMemo(() => ermittleNichtEnumerierteAktionenHinweise(zustand), [zustand])
-  const schlangenhaeutungUmkehrAktionen = useMemo(() => erstelleSchlangenhaeutungUmkehrAktionen(zustand), [zustand])
+  const schlangenhaeutungUiOptionen = useMemo(() => erstelleSchlangenhaeutungUiOptionen(zustand), [zustand])
   const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
   const karteAnlegenAktionen = useMemo(
     () => legaleAktionen.filter(
@@ -308,7 +308,7 @@ function App({ initialZustand }: AppProps) {
               zustand={zustand}
               legaleAktionen={legaleAktionen}
               nichtEnumerierteAktionenHinweise={nichtEnumerierteAktionenHinweise}
-              schlangenhaeutungUmkehrAktionen={schlangenhaeutungUmkehrAktionen}
+              schlangenhaeutungUiOptionen={schlangenhaeutungUiOptionen}
               reaktionsAktionen={reaktionsAktionen}
               ueberhand={ueberhand}
               istSpielende={istSpielende}

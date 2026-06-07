@@ -1,8 +1,9 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 1.0
-Beschreibung: R99 UI-Regressionstest — nicht enumerierte Schlangenhäutung wird als verfügbarer Engine-Hinweis angezeigt.
+Version: 1.1
+Beschreibung: R99 UI-Regressionstest — nicht enumerierte Schlangenhäutung wird als verfügbarer Engine-Hinweis mit R101-Auswahlcopy angezeigt.
+# ÄNDERUNG 07.06.2026: Erwartung an R101-Copy und Optionsgruppe angepasst, ohne die R99-Hinweis-Absicherung zu schwächen.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -47,8 +48,10 @@ describe('R99 Schlangenhäutung-Hinweis', () => {
     expect(within(sonderhinweise).getByText('Schlangenhäutung verfügbar')).toBeInTheDocument()
     expect(
       within(sonderhinweise).getByText(
-        'Du hast eine Schlangenhäutung und mindestens eine eigene aktive Schlange zum Neuordnen. Die konkrete Reihenfolge wählst du in einem folgenden UI-Slice.',
+        'Du hast eine Schlangenhäutung und mindestens eine eigene aktive Schlange zum Neuordnen. Wähle eine verfügbare Neuordnung und führe sie über die Schlangenhäutung aus.',
       ),
     ).toBeInTheDocument()
+    expect(within(sonderhinweise).getByRole('group', { name: 'Schlangenhäutung-Optionen' })).toBeInTheDocument()
+    expect(within(sonderhinweise).queryByText('Die konkrete Reihenfolge wählst du in einem folgenden UI-Slice.')).not.toBeInTheDocument()
   })
 })

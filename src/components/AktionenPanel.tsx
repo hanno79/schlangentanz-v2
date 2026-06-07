@@ -9,6 +9,7 @@ weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phas
 
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
+import type { SchlangenhaeutungUiOption } from '../ui/schlangenhaeutungUiAktionen'
 
 export const EMPFOHLENE_AKTION_ID = 'empfohlene-aktion'
 export const PHASENAKTION_ID = 'phasenaktion'
@@ -61,7 +62,7 @@ function aktionsHinweisTitel(hinweis: NichtEnumerierteAktionHinweis): string {
 function aktionsHinweisBeschreibung(hinweis: NichtEnumerierteAktionHinweis): string {
   switch (hinweis.typ) {
     case 'Schlangenhaeutung':
-      return 'Du hast eine Schlangenhäutung und mindestens eine eigene aktive Schlange zum Neuordnen. Die konkrete Reihenfolge wählst du in einem folgenden UI-Slice.'
+      return 'Du hast eine Schlangenhäutung und mindestens eine eigene aktive Schlange zum Neuordnen. Wähle eine verfügbare Neuordnung und führe sie über die Schlangenhäutung aus.'
   }
 }
 
@@ -69,7 +70,7 @@ interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
   nichtEnumerierteAktionenHinweise: NichtEnumerierteAktionHinweis[]
-  schlangenhaeutungUmkehrAktionen?: Extract<SpielAktion, { typ: 'SchlangenhaeutungSpielen' }>[]
+  schlangenhaeutungUiOptionen?: SchlangenhaeutungUiOption[]
   reaktionsAktionen: SpielAktion[]
   ueberhand: number
   istSpielende: boolean
@@ -89,7 +90,7 @@ export default function AktionenPanel({
   zustand,
   legaleAktionen,
   nichtEnumerierteAktionenHinweise,
-  schlangenhaeutungUmkehrAktionen = [],
+  schlangenhaeutungUiOptionen = [],
   reaktionsAktionen,
   ueberhand,
   istSpielende,
@@ -180,17 +181,17 @@ export default function AktionenPanel({
                   <li key={hinweis.typ}>
                     <strong>{aktionsHinweisTitel(hinweis)}</strong>
                     <p>{aktionsHinweisBeschreibung(hinweis)}</p>
-                    {hinweis.typ === 'Schlangenhaeutung' && schlangenhaeutungUmkehrAktionen.length > 0 && (
-                      <div className="aktions-hinweis-aktionen" role="group" aria-label="Schlangenhäutung-Fallbacks">
-                        {schlangenhaeutungUmkehrAktionen.map((aktion) => (
+                    {hinweis.typ === 'Schlangenhaeutung' && schlangenhaeutungUiOptionen.length > 0 && (
+                      <div className="aktions-hinweis-aktionen" role="group" aria-label="Schlangenhäutung-Optionen">
+                        {schlangenhaeutungUiOptionen.map((option) => (
                           <button
-                            key={`${aktion.handkartenId}-${aktion.schlangenId}`}
+                            key={option.key}
                             type="button"
                             className="aktions-button"
-                            aria-label={`Schlangenhäutung: Schlange ${aktion.schlangenId} umkehren`}
-                            onClick={() => onAktionAusfuehren(aktion)}
+                            aria-label={option.ariaLabel}
+                            onClick={() => onAktionAusfuehren(option.aktion)}
                           >
-                            Schlange {aktion.schlangenId} umkehren
+                            {option.label}
                           </button>
                         ))}
                       </div>
