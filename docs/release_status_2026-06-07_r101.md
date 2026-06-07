@@ -123,6 +123,21 @@ Ergebnis:
 - Keine Permutations-Enumeration in `ermittleLegaleAktionen`.
 - Keine neue Engine-Regelmechanik gegenüber R98.
 
+## R101 Release abgeschlossen — 2026-06-07
+
+- Commit Feature: `49342e8 R101: Schlangenhäutung-Auswahloption ergänzen`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Vercel Deployment: [https://schlangentanz-v2-lizetm2ny-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-lizetm2ny-alfreds-projects-7e9df1b4.vercel.app)
+- Live Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - R101-Bundle-Strings `erste Karte ans Ende` und `Schlangenhäutung-Optionen` im Production-Asset gefunden.
+  - Playwright GUI Smoke auf Production erfolgreich.
+  - Geprüfte Regionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`.
+  - Keine Console Errors.
+  - Keine Page Errors.
+
 ## Nächster sinnvoller kleiner Schritt
 
 Die Schlangenhäutung-Auswahl kann im nächsten Slice von zwei festen Optionen zu einer kleinen, lokalen Kartenreihenfolge-Auswahl ausgebaut werden. Erst danach sollte Drag&Drop-Polish folgen.
