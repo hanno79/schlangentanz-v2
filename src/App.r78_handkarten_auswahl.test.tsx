@@ -1,15 +1,21 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: R78 UI-Test für die auswählbare Handkartenleiste im Bereich des aktiven Spielers.
 Änderung v1.0: Klick auf eine Handkarte markiert sie als ausgewählt und zeigt die Auswahl im Spieltisch an.
+# ÄNDERUNG 07.06.2026: R110 ergänzt Regression gegen doppelte Detail-Titel-IDs bei mehrfach gerendertem Panel.
 */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
+import HandkartenPanel from './components/HandkartenPanel'
 import { erstelleSpielzustand } from './engine'
+import { farbkarte } from './engine/__tests__/testHelpers'
+
+const TEST_KARTE = farbkarte('karte r110 mit leerzeichen', 'Rot', 3)
+const ZWEITE_KARTE = farbkarte('zweite karte r110 mit leerzeichen', 'Rot', 3)
 
 describe('R78 Handkarten-Auswahl', () => {
   it('markiert eine angeklickte Handkarte als ausgewählt und zeigt die Auswahl an', () => {
@@ -52,5 +58,35 @@ describe('R78 Handkarten-Auswahl', () => {
 
     expect(ersteKarte).toHaveAttribute('aria-pressed', 'false')
     expect(within(aktiverSpielerBereich).queryByRole('region', { name: /Ausgewählte Handkarte/i })).toBeNull()
+  })
+
+  it('erzeugt eindeutige Detail-Titel-IDs, wenn mehrere HandkartenPanels gerendert werden', () => {
+    render(
+      <>
+        <HandkartenPanel
+          handkarten={[TEST_KARTE]}
+          ausgewaehlteHandkarte={TEST_KARTE}
+          onKarteWaehlen={() => undefined}
+          onKarteDragStart={() => undefined}
+          onKarteDragEnd={() => undefined}
+        />
+        <HandkartenPanel
+          handkarten={[ZWEITE_KARTE]}
+          ausgewaehlteHandkarte={ZWEITE_KARTE}
+          onKarteWaehlen={() => undefined}
+          onKarteDragStart={() => undefined}
+          onKarteDragEnd={() => undefined}
+        />
+      </>,
+    )
+
+    const details = screen.getAllByRole('region', { name: /Ausgewählte Handkarte:/ })
+    const titleIds = details.map((detail) => detail.getAttribute('aria-labelledby'))
+
+    expect(new Set(titleIds).size).toBe(2)
+    titleIds.forEach((titleId) => {
+      expect(titleId?.trim().split(/\s+/)).toHaveLength(1)
+      expect(document.getElementById(titleId as string)).toBeInTheDocument()
+    })
   })
 })

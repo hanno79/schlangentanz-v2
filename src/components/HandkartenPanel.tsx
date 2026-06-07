@@ -1,10 +1,13 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit auswählbarer Detailkarte.
+# ÄNDERUNG 07.06.2026: R110 erzeugt die Detail-Titel-ID komponentenlokal per useId(),
+# damit mehrfach gerenderte Panels keine doppelten DOM-IDs erzeugen.
 */
 
+import { useId } from 'react'
 import type { Spielkarte } from '../engine/types'
 
 interface HandkartenPanelProps {
@@ -28,12 +31,16 @@ export default function HandkartenPanel({
   onKarteDragStart,
   onKarteDragEnd,
 }: HandkartenPanelProps) {
+  const detailTitelId = useId()
+
   return (
     <section className="handkarten-panel" aria-label="Handkarten">
       <h4>Handkarten als Kartenleiste</h4>
       {ausgewaehlteHandkarte ? (
-        <section className="handkarten-detail" aria-labelledby="handkarten-detail-titel">
-          <h5 className="handkarten-detail__titel" id="handkarten-detail-titel">Ausgewählte Handkarte: {ausgewaehlteHandkarte.id}</h5>
+        <section className="handkarten-detail" aria-labelledby={detailTitelId}>
+          <h5 className="handkarten-detail__titel" id={detailTitelId}>
+            Ausgewählte Handkarte: {ausgewaehlteHandkarte.id}
+          </h5>
           <p>{karteKurzLabel(ausgewaehlteHandkarte)}</p>
           <p>Klicke dieselbe Karte erneut, um sie wieder abzuwählen.</p>
         </section>
