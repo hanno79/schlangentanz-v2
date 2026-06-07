@@ -229,6 +229,60 @@ describe('R98 Schlangenhäutung', () => {
     ).toEqual({ erlaubt: false, grund: 'Pro Zug darf höchstens 1 Sonderkarte gespielt werden.' });
   });
 
+  it('zählt eine verschobene Bestandsgruppe nicht, aber eine gleichzeitig neu gebildete Dreiergruppe schon', () => {
+    // Vorher: Rot-Dreiergruppe an Positionen 2–4 bereits vorhanden; Grün-Karten getrennt (0, 1, 6).
+    // Nachher: Rot-Gruppe an Positionen 0–2 (verschoben, nicht neu); Grün-Gruppe erstmals beisammen (3–5).
+    const basis = zustandMitSchlangenhaeutung();
+    const zustand: Spielzustand = {
+      ...basis,
+      spieler: basis.spieler.map((spieler, index) =>
+        index === 0
+          ? {
+              ...spieler,
+              schlangen: [
+                schlange(
+                  [
+                    farbkarte('gruen-r98-1', 'Grün'),
+                    farbkarte('gruen-r98-2', 'Grün'),
+                    farbkarte('rot-r98-1', 'Rot'),
+                    farbkarte('rot-r98-2', 'Rot'),
+                    farbkarte('rot-r98-3', 'Rot'),
+                    farbkarte('blau-r98-1', 'Blau'),
+                    farbkarte('gruen-r98-3', 'Grün'),
+                  ],
+                  'schlange-spieler-1-r98',
+                ),
+              ],
+            }
+          : spieler,
+      ),
+    };
+
+    const aktualisiert = spieleSchlangenhaeutung(zustand, {
+      kartenId: 'schlangenhaeutung-r98',
+      schlangenId: 'schlange-spieler-1-r98',
+      kartenIdsInNeuerReihenfolge: [
+        'rot-r98-1',
+        'rot-r98-2',
+        'rot-r98-3',
+        'gruen-r98-1',
+        'gruen-r98-2',
+        'gruen-r98-3',
+        'blau-r98-1',
+      ],
+    });
+
+    expect(aktualisiert.spieler[0].schlangenhaeutungDreiergruppen).toBe(1);
+
+    const nachAufgabenpruefung = beendeAufgabenpruefung(
+      { ...aktualisiert, zugphase: 'Aufgabenpruefung' },
+      { aufgabenGeprueft: true },
+    );
+    expect(nachAufgabenpruefung.spieler[0].erfuellteAufgaben.map((aufgabe) => aufgabe.name)).not.toContain(
+      'Schlangentanz',
+    );
+  });
+
   it('bietet keinen Pflicht-Abwurf an, wenn Schlangenhäutung spielbar aber nicht enumeriert ist', () => {
     const zustand = zustandMitSchlangenhaeutung();
 
