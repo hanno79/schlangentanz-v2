@@ -1,14 +1,15 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 1.2
+Version: 1.3
 Beschreibung: R102 UI-Komponente für eine lokale Schlangenhäutung-Reihenfolge-Auswahl ohne Drag-and-Drop.
 # ÄNDERUNG 07.06.2026: Lokale Auswahl ergänzt, um eine gewählte Karte einer eigenen aktiven Schlange ans Ende zu setzen.
 # ÄNDERUNG 07.06.2026: R104 integriert den Umkehr-Button in diese Komponente, statt ihn als separate Quick-Option zu rendern.
 # ÄNDERUNG 07.06.2026: R105 zeigt aktuelle und neue Reihenfolge als Vorschau vor der Ausführung.
+# ÄNDERUNG 07.06.2026: R108 semantische Gruppen pro Schlange, Tastaturhinweis und Live-Vorschau als role=status mit aria-describedby.
 */
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { SpielAktion, Spielzustand } from '../engine'
 import { pruefeAktion } from '../engine'
 
@@ -87,6 +88,7 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
   const schlangen = hatSchlangenhaeutung
     ? aktiverSpieler.schlangen.filter((schlange) => schlange.zustand === 'aktiv' && schlange.karten.length > 1)
     : []
+  const komponentenId = useId()
   const [auswahlNachSchlange, setAuswahlNachSchlange] = useState<Record<string, string>>({})
 
   if (schlangen.length === 0) return null
@@ -94,7 +96,7 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
   return (
     <div className="aktions-hinweis-aktionen" role="group" aria-label="Schlangenhäutung-Reihenfolge-Auswahl">
       <p>Wähle lokal eine Karte, die ans Ende dieser Schlange gesetzt wird.</p>
-      {schlangen.map((schlange) => {
+      {schlangen.map((schlange, schlangenIndex) => {
         const ausgewaehlteKarteId = auswahlNachSchlange[schlange.id] ?? schlange.karten[0].id
         const aktion = baueKarteAnsEndeAktion(zustand, schlange.id, ausgewaehlteKarteId)
         const istErlaubt = aktion ? pruefeAktion(zustand, aktion).erlaubt : false
@@ -110,18 +112,33 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
           ? umkehrAktion.kartenIdsInNeuerReihenfolge.join(' → ')
           : ''
 
+        const domIdBasis = `${komponentenId}-schlange-${schlangenIndex}`
+        const tastaturHilfeId = `${domIdBasis}-tastatur-hilfe`
+        const vorschauId = `${domIdBasis}-vorschau`
+        const beschreibungsIds = `${tastaturHilfeId} ${vorschauId}`
+
         return (
-          <div key={schlange.id} className="aktions-hinweis-aktionen">
+          <div key={schlange.id} role="group" aria-label={`Schlangenhäutung für Schlange ${schlange.id}`} className="aktions-hinweis-aktionen">
             <p>Aktuelle Reihenfolge: {aktuelleReihenfolge}</p>
-            <p>Neue Reihenfolge nach Karte ans Ende: {karteAnsEndeReihenfolge}</p>
+            <p
+              id={vorschauId}
+              role="status"
+              aria-label={`Vorschau Karte ans Ende für Schlange ${schlange.id}`}
+            >
+              Neue Reihenfolge nach Karte ans Ende: {karteAnsEndeReihenfolge}
+            </p>
             <p>Diese Aktion setzt die gewählte Karte ans Ende.</p>
             <p>Neue Reihenfolge nach Umkehr: {umkehrReihenfolge}</p>
             <p>Diese Aktion kehrt die Schlange um.</p>
             <p>Die Regelprüfung bleibt beim Ausführen in der Engine.</p>
+            <p id={tastaturHilfeId}>
+              Tastatur: Mit Tab zur Kartenauswahl wechseln, mit Pfeiltasten eine Karte wählen und danach den Ausführen-Button aktivieren.
+            </p>
             <label>
               Karte aus Schlange {schlange.id} ans Ende setzen
               <select
                 aria-label={`Karte aus Schlange ${schlange.id} ans Ende setzen`}
+                aria-describedby={beschreibungsIds}
                 value={ausgewaehlteKarteId}
                 onChange={(event) =>
                   setAuswahlNachSchlange((aktuell) => ({ ...aktuell, [schlange.id]: event.target.value }))
@@ -136,6 +153,7 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
               type="button"
               className="aktions-button"
               aria-label={`Schlangenhäutung: gewählte Karte aus Schlange ${schlange.id} ans Ende setzen`}
+              aria-describedby={beschreibungsIds}
               disabled={!istErlaubt || !aktion}
               onClick={() => {
                 if (aktion && istErlaubt) onAktionAusfuehren(aktion)
