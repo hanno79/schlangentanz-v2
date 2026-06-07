@@ -1,9 +1,10 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 2.0
+Version: 3.0
 Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zugänglichem Drag-Status und legalen Start-/Anlegeaktionen.
 # ÄNDERUNG 07.06.2026: R109 nutzt komponentenlokale DOM-IDs für aria-describedby statt fachlicher Spieler-/Schlangen-IDs.
+# ÄNDERUNG 07.06.2026: R111 nutzt komponentenlokale DOM-IDs auch für aria-labelledby (Haupttitel und Untergruppentitel).
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
@@ -199,19 +200,23 @@ export default function Schlangenbereich({
     return () => document.removeEventListener('dragend', handleDragEnd)
   }, [])
 
+  const titelId = `${komponentenId}-schlangenbereich-titel`
+  const eigeneTitelId = `${komponentenId}-eigene-schlangen-titel`
+  const gegnerTitelId = `${komponentenId}-gegnerische-schlangen-titel`
+
   return (
-    <section className="schlangenbereich" aria-labelledby="schlangenbereich-titel">
-      <h4 id="schlangenbereich-titel">Schlangenbereich</h4>
+    <section className="schlangenbereich" aria-labelledby={titelId}>
+      <h4 id={titelId}>Schlangenbereich</h4>
       <p className="schlangen-dragstatus" role="status">{dragOverStatus}</p>
       <section
         className="schlangen-gruppe"
-        aria-labelledby="eigene-schlangen-titel"
+        aria-labelledby={eigeneTitelId}
         onClick={handleNeueSchlangeZoneClick}
         onDragOver={handleNeueSchlangeZoneDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleNeueSchlangeZoneDrop}
       >
-        <h5 id="eigene-schlangen-titel">Eigene Schlangen</h5>
+        <h5 id={eigeneTitelId}>Eigene Schlangen</h5>
         <p className="schlangen-drop-hinweis">
           Ziehe eine Handkarte auf die gewünschte Schlange oder nutze die Startzone, um eine neue Schlange zu beginnen.
         </p>
@@ -327,8 +332,8 @@ export default function Schlangenbereich({
           <p>Keine eigenen Schlangen.</p>
         )}
       </section>
-      <section className="schlangen-gruppe" aria-labelledby="gegnerische-schlangen-titel">
-        <h5 id="gegnerische-schlangen-titel">Gegnerische Schlangen</h5>
+      <section className="schlangen-gruppe" aria-labelledby={gegnerTitelId}>
+        <h5 id={gegnerTitelId}>Gegnerische Schlangen</h5>
         {gegnerSpieler.some((spieler) => spieler.schlangen.length > 0) ? (
           <ul className="schlangenleiste">
             {gegnerSpieler.flatMap((spieler) =>
