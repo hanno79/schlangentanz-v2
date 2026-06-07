@@ -98,6 +98,21 @@ Ergebnis:
 - Keine Permutations-Enumeration in `ermittleLegaleAktionen`.
 - Keine neue Engine-Regelmechanik gegenüber R98.
 
+## R100 Release abgeschlossen — 2026-06-07
+
+- Commit Feature: `2ff0bca R100: Schlangenhäutung-UI-Fallback auslösen`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Vercel Deployment: [https://schlangentanz-v2-4vamw32ls-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-4vamw32ls-alfreds-projects-7e9df1b4.vercel.app)
+- Live Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - R100-Bundle-String `Schlangenhäutung:` in Production-Asset gefunden.
+  - Playwright GUI Smoke auf Production erfolgreich.
+  - Geprüfte Regionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`.
+  - Keine Console Errors.
+  - Keine Page Errors.
+
 ## Nächster sinnvoller kleiner Schritt
 
 Die Umkehr-Fallback-Aktion zu einer echten Reihenfolge-Auswahl ausbauen: zunächst eine lokale, testbare Kartenreihenfolge-Auswahl für eine ausgewählte eigene Schlange, danach erst Drag&Drop-Polish.
