@@ -88,19 +88,45 @@ Ergebnis:
 - Keine neue Schlangenhäutung-Mechanik.
 - Kein Drag&Drop-/Sortiermodell.
 - Keine Änderung an Schlangenhäutung-Regelprüfung.
-- Kein Commit, Push oder Deploy ohne explizite Freigabe.
 - Nicht im R108-Scope: ähnliche IDREF-Härtung in anderen Komponenten wie `Schlangenbereich.tsx`; das wäre ein separater kleiner Slice.
 
-## Lokaler Stand — releasebereit, noch nicht released
+## Release-Status — abgeschlossen
 
-R108 ist lokal fertig und releasebereit:
+# ÄNDERUNG 07.06.2026: Nach Commit, Push, Production-Deploy und Live-Smoke wurde der Release-Nachweis auf den verifizierten Produktionsstand aktualisiert.
 
-- Lokale Tests und Build sind grün.
-- Codex Re-Review ist blockerfrei.
-- Worktree enthält noch uncommitted Änderungen.
-- Noch offen nach deiner Freigabe:
-  1. Commit,
-  2. Push,
-  3. Deploy,
-  4. Production-Smoke auf `https://schlangentanz-v2.vercel.app`,
-  5. finaler Doku-Sync von „lokal releasebereit“ auf „Release abgeschlossen“.
+R108 ist committed, gepusht, deployed und live verifiziert.
+
+- R108-Implementierungscommit: `ba8041d947ce2db4d31a9fa173d0860999835736`
+- Branch: `main`
+- GitHub-Remote: `origin/main`
+- Verifizierter Production-Alias: `https://schlangentanz-v2.vercel.app`
+- Vercel-Ergebnis beim Release-Deploy: `READY`
+- Hinweis: Dieser Release-Nachweis ist Teil des anschließenden Doku-Sync-Commits; nach dem Doku-Sync wird `main` erneut deployed und der Production-Alias erneut gesmoked.
+
+## Production-Smoke
+
+Ausgeführt gegen `https://schlangentanz-v2.vercel.app`:
+
+```bash
+node scripts/live_smoke.mjs
+```
+
+Ergebnis:
+
+- `/` liefert HTTP 200.
+- `/game` liefert HTTP 200.
+- Browser-Kernregionen sichtbar:
+  - `Spielstatus`
+  - `Aktiver Spieler`
+  - `Aktionen`
+  - `Schlangenbereich`
+- Keine `pageerror`- oder `console.error`-Meldungen im Browser-Smoke.
+
+Zusätzlicher dynamischer First-Turn-Production-Smoke:
+
+- Route: `https://schlangentanz-v2.vercel.app/game`
+- Titel: `schlangentanz-v2`
+- Ausgeführte Live-Aktion: `Neue Schlange starten mit Karte rot-11`
+- `Zuletzt ausgeführt` sichtbar: ja
+- Eigene Schlange mit gespielter Karte sichtbar: ja
+- Browserfehler: `[]`
