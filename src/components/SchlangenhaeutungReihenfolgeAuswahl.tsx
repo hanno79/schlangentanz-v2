@@ -1,9 +1,10 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: R102 UI-Komponente für eine lokale Schlangenhäutung-Reihenfolge-Auswahl ohne Drag-and-Drop.
 # ÄNDERUNG 07.06.2026: Lokale Auswahl ergänzt, um eine gewählte Karte einer eigenen aktiven Schlange ans Ende zu setzen.
+# ÄNDERUNG 07.06.2026: R104 integriert den Umkehr-Button in diese Komponente, statt ihn als separate Quick-Option zu rendern.
 */
 
 import { useState } from 'react'
@@ -12,11 +13,13 @@ import { pruefeAktion } from '../engine'
 
 type SchlangenhaeutungAktion = Extract<SpielAktion, { typ: 'SchlangenhaeutungSpielen' }>
 
-function baueKarteAnsEndeAktion(
-  zustand: Spielzustand,
-  schlangenId: string,
-  kartenId: string,
-): SchlangenhaeutungAktion | null {
+type AktionsKontext = {
+  aktiverSpieler: Spielzustand['spieler'][number]
+  schlangenhaeutung: Spielzustand['spieler'][number]['hand'][number]
+  schlange: Spielzustand['spieler'][number]['schlangen'][number]
+}
+
+function loesAktionsKontext(zustand: Spielzustand, schlangenId: string): AktionsKontext | null {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
   const schlangenhaeutung = aktiverSpieler.hand.find(
     (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenhäutung',
@@ -25,6 +28,34 @@ function baueKarteAnsEndeAktion(
     (kandidat) => kandidat.id === schlangenId && kandidat.zustand === 'aktiv',
   )
   if (!schlangenhaeutung || !schlange || schlange.karten.length < 2) return null
+  return { aktiverSpieler, schlangenhaeutung, schlange }
+}
+
+function baueUmkehrAktion(
+  zustand: Spielzustand,
+  schlangenId: string,
+): SchlangenhaeutungAktion | null {
+  const kontext = loesAktionsKontext(zustand, schlangenId)
+  if (!kontext) return null
+  const { aktiverSpieler, schlangenhaeutung, schlange } = kontext
+
+  return {
+    typ: 'SchlangenhaeutungSpielen',
+    spielerId: aktiverSpieler.id,
+    handkartenId: schlangenhaeutung.id,
+    schlangenId: schlange.id,
+    kartenIdsInNeuerReihenfolge: schlange.karten.map((karte) => karte.id).reverse(),
+  }
+}
+
+function baueKarteAnsEndeAktion(
+  zustand: Spielzustand,
+  schlangenId: string,
+  kartenId: string,
+): SchlangenhaeutungAktion | null {
+  const kontext = loesAktionsKontext(zustand, schlangenId)
+  if (!kontext) return null
+  const { aktiverSpieler, schlangenhaeutung, schlange } = kontext
   if (!schlange.karten.some((karte) => karte.id === kartenId)) return null
 
   return {
@@ -67,6 +98,9 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
         const aktion = baueKarteAnsEndeAktion(zustand, schlange.id, ausgewaehlteKarteId)
         const istErlaubt = aktion ? pruefeAktion(zustand, aktion).erlaubt : false
 
+        const umkehrAktion = baueUmkehrAktion(zustand, schlange.id)
+        const umkehrErlaubt = umkehrAktion ? pruefeAktion(zustand, umkehrAktion).erlaubt : false
+
         return (
           <div key={schlange.id} className="aktions-hinweis-aktionen">
             <label>
@@ -93,6 +127,17 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
               }}
             >
               Gewählte Karte ans Ende setzen
+            </button>
+            <button
+              type="button"
+              className="aktions-button"
+              aria-label={`Schlangenhäutung: Schlange ${schlange.id} umkehren`}
+              disabled={!umkehrErlaubt || !umkehrAktion}
+              onClick={() => {
+                if (umkehrAktion && umkehrErlaubt) onAktionAusfuehren(umkehrAktion)
+              }}
+            >
+              Schlange umkehren
             </button>
           </div>
         )

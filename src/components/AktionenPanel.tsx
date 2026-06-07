@@ -9,7 +9,6 @@ weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phas
 
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
-import type { SchlangenhaeutungUiOption } from '../ui/schlangenhaeutungUiAktionen'
 import SchlangenhaeutungReihenfolgeAuswahl from './SchlangenhaeutungReihenfolgeAuswahl'
 
 export const EMPFOHLENE_AKTION_ID = 'empfohlene-aktion'
@@ -71,7 +70,6 @@ interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
   nichtEnumerierteAktionenHinweise: NichtEnumerierteAktionHinweis[]
-  schlangenhaeutungUiOptionen?: SchlangenhaeutungUiOption[]
   reaktionsAktionen: SpielAktion[]
   ueberhand: number
   istSpielende: boolean
@@ -91,7 +89,6 @@ export default function AktionenPanel({
   zustand,
   legaleAktionen,
   nichtEnumerierteAktionenHinweise,
-  schlangenhaeutungUiOptionen = [],
   reaktionsAktionen,
   ueberhand,
   istSpielende,
@@ -182,21 +179,6 @@ export default function AktionenPanel({
                   <li key={hinweis.typ}>
                     <strong>{aktionsHinweisTitel(hinweis)}</strong>
                     <p>{aktionsHinweisBeschreibung(hinweis)}</p>
-                    {hinweis.typ === 'Schlangenhaeutung' && schlangenhaeutungUiOptionen.length > 0 && (
-                      <div className="aktions-hinweis-aktionen" role="group" aria-label="Schlangenhäutung-Optionen">
-                        {schlangenhaeutungUiOptionen.map((option) => (
-                          <button
-                            key={option.key}
-                            type="button"
-                            className="aktions-button"
-                            aria-label={option.ariaLabel}
-                            onClick={() => onAktionAusfuehren(option.aktion)}
-                          >
-                            {option.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
                     {hinweis.typ === 'Schlangenhaeutung' && (
                       <SchlangenhaeutungReihenfolgeAuswahl
                         zustand={zustand}
