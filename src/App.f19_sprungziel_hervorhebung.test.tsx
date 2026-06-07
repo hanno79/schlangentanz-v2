@@ -1,13 +1,13 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: F19 UI-Test für die sichtbare Hervorhebung des Sprungziels im Aktionsbereich.
+Änderung v1.1: R113 – Prüfung auf statische ID durch Link-Ziel == tatsächliche Region-ID ersetzt.
 */
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { EMPFOHLENE_AKTION_ID, PHASENAKTION_ID } from './components/AktionenPanel'
 import { farbkarte, sonderkarte } from './engine/__tests__/testHelpers'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
@@ -35,7 +35,6 @@ function zustandMitPhasenaktionUndWeitererLegalerAktion() {
 function erwarteSichtbareSprungzielHervorhebung(
   zielRegionName: 'Empfohlene Aktion' | 'Phasenaktion',
   linkName: 'Zur empfohlenen Aktion im Aktionsbereich' | 'Zur Phasenaktion im Aktionsbereich',
-  zielId: string,
 ) {
   const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
   const spielerfuehrung = within(aktiverSpielerBereich).getByRole('region', { name: 'Spielerführung' })
@@ -43,7 +42,7 @@ function erwarteSichtbareSprungzielHervorhebung(
   const zielRegion = within(aktionenBereich).getByRole('region', { name: zielRegionName })
   const sprunglink = within(spielerfuehrung).getByRole('link', { name: linkName })
 
-  expect(zielRegion).toHaveAttribute('id', zielId)
+  expect(sprunglink).toHaveAttribute('href', `#${zielRegion.id}`)
   expect(zielRegion).not.toHaveClass('aktionen-gruppe--sprungziel')
 
   fireEvent.click(sprunglink)
@@ -55,7 +54,7 @@ describe('F19 Sprungziel im Aktionsbereich sichtbar hervorheben', () => {
   it('hebt die empfohlene Aktion nach Klick auf den Sprunglink sichtbar hervor', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
-    erwarteSichtbareSprungzielHervorhebung('Empfohlene Aktion', 'Zur empfohlenen Aktion im Aktionsbereich', EMPFOHLENE_AKTION_ID)
+    erwarteSichtbareSprungzielHervorhebung('Empfohlene Aktion', 'Zur empfohlenen Aktion im Aktionsbereich')
   })
 
   it('entfernt die alte Hervorhebung beim Wechsel von empfohlener Aktion zu Phasenaktion', () => {
@@ -81,6 +80,6 @@ describe('F19 Sprungziel im Aktionsbereich sichtbar hervorheben', () => {
   it('hebt im Phasenaktionsfall die Phasenaktion statt der empfohlenen Aktion hervor', () => {
     render(<App initialZustand={zustandMitPhasenaktionUndWeitererLegalerAktion()} />)
 
-    erwarteSichtbareSprungzielHervorhebung('Phasenaktion', 'Zur Phasenaktion im Aktionsbereich', PHASENAKTION_ID)
+    erwarteSichtbareSprungzielHervorhebung('Phasenaktion', 'Zur Phasenaktion im Aktionsbereich')
   })
 })

@@ -1,8 +1,9 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.1
+Version: 1.2
 Beschreibung: F17 UI-Test für den menschlichen Turn als kompakte, geordnete Mini-Checkliste.
+Änderung v1.2: R113 Review – standalone Spielerführung ohne Ziel-ID rendert keinen Link auf ein Fantasieziel.
 */
 /// <reference types="node" />
 
@@ -71,5 +72,7 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
 
     expect(new Set(labelledByWerte).size).toBe(2)
     expect(labelledByWerte).not.toContain('checkliste-ueberschrift')
+    expect(screen.getAllByText('Im Aktionsbereich gibt es aktuell kein Springziel.')).toHaveLength(2)
+    expect(screen.queryByRole('link', { name: /Zur .* im Aktionsbereich/i })).toBeNull()
   })
 })

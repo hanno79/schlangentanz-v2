@@ -1,13 +1,13 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: F18 UI-Test für die direkte Verbindung zwischen Spielerführung und empfohlener Aktion im Aktionsbereich.
+Änderung v1.1: R113 – Sprungziel-Verbindung gegen tatsächliche DOM-ID statt statischer ID geprüft.
 */
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { EMPFOHLENE_AKTION_ID, PHASENAKTION_ID } from './components/AktionenPanel'
 import { farbkarte, sonderkarte } from './engine/__tests__/testHelpers'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
@@ -34,7 +34,6 @@ function zustandMitPhasenaktionUndWeitererLegalerAktion() {
 
 function erwarteVerbindungZurAktion(
   zielRegionName: 'Empfohlene Aktion' | 'Phasenaktion',
-  zielId: string,
   sprungzielText: 'empfohlenen Aktion' | 'Phasenaktion',
   zielButtonName?: RegExp,
 ) {
@@ -46,9 +45,9 @@ function erwarteVerbindungZurAktion(
     name: `Zur ${sprungzielText} im Aktionsbereich`,
   })
 
-  expect(sprunglink).toHaveAttribute('href', `#${zielId}`)
+  expect(sprunglink).toHaveAttribute('href', `#${zielRegion.id}`)
   expect(sprunglink).toHaveClass('spielerfuehrung__aktionslink')
-  expect(zielRegion).toHaveAttribute('id', zielId)
+  expect(zielRegion.id).not.toBe('')
   if (zielButtonName) {
     expect(within(zielRegion).getByRole('button', { name: zielButtonName })).toBeInTheDocument()
   }
@@ -59,7 +58,7 @@ describe('F18 Spielerführung und Aktionsbereich verbinden', () => {
   it('verlinkt die Spielerführung sichtbar zur empfohlenen Aktion im Aktionsbereich', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
-    erwarteVerbindungZurAktion('Empfohlene Aktion', EMPFOHLENE_AKTION_ID, 'empfohlenen Aktion', /Neue Schlange starten mit Karte blau-01/i)
+    erwarteVerbindungZurAktion('Empfohlene Aktion', 'empfohlenen Aktion', /Neue Schlange starten mit Karte blau-01/i)
   })
 
   it('priorisiert im gemischten Zustand die sichtbare Phasenaktion als Sprungziel', () => {
@@ -68,6 +67,6 @@ describe('F18 Spielerführung und Aktionsbereich verbinden', () => {
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(aktionenBereich).getByRole('button', { name: /Farbenschutz mit Karte f18-farbenschutz/i })).toBeInTheDocument()
-    erwarteVerbindungZurAktion('Phasenaktion', PHASENAKTION_ID, 'Phasenaktion', /Ausspielphase beenden/i)
+    erwarteVerbindungZurAktion('Phasenaktion', 'Phasenaktion', /Ausspielphase beenden/i)
   })
 })

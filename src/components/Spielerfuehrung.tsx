@@ -1,14 +1,15 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.4
+Version: 1.6
 Beschreibung: F26 Spielerführung – verwendet für die Mini-Checkliste eine
               semantische Überschrift und blendet die Klickführung bei fehlendem
               Springziel explizit aus.
+Änderung v1.5: R113 – statischen Aktionsziel-Fallback durch DOM-sichere React-ID ersetzt.
+Änderung v1.6: R113 Review – ohne echte Ziel-ID keinen Link auf ein nicht vorhandenes DOM-Ziel rendern.
 */
 
 import { useId } from 'react'
-import { EMPFOHLENE_AKTION_ID } from './AktionenPanel'
 
 interface SpielerfuehrungProps {
   pflichtschrittLabel: string
@@ -23,13 +24,15 @@ interface SpielerfuehrungProps {
 export default function Spielerfuehrung({
   pflichtschrittLabel,
   empfohleneAktionLabel,
-  aktionszielId = EMPFOHLENE_AKTION_ID,
+  aktionszielId,
   aktionszielSatzText = 'empfohlene Aktion',
   aktionszielLinkText = 'empfohlenen Aktion',
   onAktionszielHervorheben,
   zeigtAktionslink = true,
 }: SpielerfuehrungProps) {
   const aktionsHinweis = empfohleneAktionLabel || pflichtschrittLabel.replace(/\.$/, '')
+  const aktionszielLinkId = aktionszielId?.trim() ? aktionszielId : null
+  const zeigtAktionslinkEffektiv = zeigtAktionslink && aktionszielLinkId !== null
   const checklisteUeberschriftId = useId()
 
   return (
@@ -45,10 +48,10 @@ export default function Spielerfuehrung({
         <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>
         <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
       </ol>
-      {zeigtAktionslink ? (
+      {zeigtAktionslinkEffektiv ? (
         <>
           <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
-          <a href={`#${aktionszielId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
+          <a href={`#${aktionszielLinkId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielLinkId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
         </>
       ) : (
         <p>Im Aktionsbereich gibt es aktuell kein Springziel.</p>

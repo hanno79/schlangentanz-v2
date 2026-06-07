@@ -1,18 +1,17 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.3
+Version: 1.4
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 Änderung v1.3: Weitere legale Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
+Änderung v1.4: R113 – empfohleneAktionId/phasenaktionId als Props; DOM-sichere IDs bei parallelen App-Instanzen.
 */
 
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
 import SchlangenhaeutungReihenfolgeAuswahl from './SchlangenhaeutungReihenfolgeAuswahl'
 
-export const EMPFOHLENE_AKTION_ID = 'empfohlene-aktion'
-export const PHASENAKTION_ID = 'phasenaktion'
 
 function erlaubteKartenProZug(zustand: Spielzustand): number {
   return MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv === true ? 1 : 0)
@@ -77,6 +76,8 @@ interface AktionenPanelProps {
   aktionsLabel: (aktion: SpielAktion) => string
   pflichtschrittLabel: string
   hervorgehobenesAktionszielId: string | null
+  empfohleneAktionId: string
+  phasenaktionId: string
   onAktionAusfuehren: (aktion: SpielAktion) => void
   onAusspielphaseBeenden: () => void
   onAufgabenpruefungBeenden: () => void
@@ -96,6 +97,8 @@ export default function AktionenPanel({
   aktionsLabel,
   pflichtschrittLabel,
   hervorgehobenesAktionszielId,
+  empfohleneAktionId,
+  phasenaktionId,
   onAktionAusfuehren,
   onAusspielphaseBeenden,
   onAufgabenpruefungBeenden,
@@ -118,7 +121,7 @@ export default function AktionenPanel({
               KI-Aktion ausführen
             </button>
           )}
-          <section id={EMPFOHLENE_AKTION_ID} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === EMPFOHLENE_AKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Empfohlene Aktion" tabIndex={-1}>
+          <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Empfohlene Aktion" tabIndex={-1}>
             <h3>Empfohlene Aktion</h3>
             {legaleAktionen.length > 0 ? (
               <button
@@ -191,8 +194,8 @@ export default function AktionenPanel({
             </section>
           )}
           <section
-            id={PHASENAKTION_ID}
-            className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === PHASENAKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`}
+            id={phasenaktionId}
+            className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === phasenaktionId ? ' aktionen-gruppe--sprungziel' : ''}`}
             aria-label="Phasenaktion"
             tabIndex={-1}
           >

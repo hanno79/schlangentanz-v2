@@ -1,15 +1,15 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: F27 UI-Test für das Sprungziel der Spielerführung mit Sichtbarkeit und Fokus.
+Änderung v1.1: R113 – Fokusziel gegen tatsächliche Link-ID statt statischer ID geprüft.
 */
 /// <reference types="node" />
 
 import { fireEvent, render, screen, within, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import App from './App'
-import { EMPFOHLENE_AKTION_ID } from './components/AktionenPanel'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 function deterministischerZustand() {
@@ -33,7 +33,8 @@ describe('F27 Sprungziel der Spielerführung sichtbar und fokussiert machen', ()
     })
     const zielRegion = screen.getByRole('region', { name: 'Empfohlene Aktion' })
 
-    expect(zielRegion).toHaveAttribute('id', EMPFOHLENE_AKTION_ID)
+    expect(sprunglink).toHaveAttribute('href', `#${zielRegion.id}`)
+    expect(zielRegion.id).not.toBe('')
     expect(zielRegion).not.toHaveFocus()
 
     fireEvent.click(sprunglink)

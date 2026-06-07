@@ -18,7 +18,7 @@ import {
   erstelleErweiterungsSonderkarten,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
-import AktionenPanel, { EMPFOHLENE_AKTION_ID, PHASENAKTION_ID } from './components/AktionenPanel'
+import AktionenPanel from './components/AktionenPanel'
 import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
@@ -199,16 +199,17 @@ function App({ initialZustand }: AppProps) {
   const ergebnisText = gewinnerListe.length > 1
     ? 'Gleichstand'
     : `Sieg für ${gewinnerListe[0]?.spielerId ?? 'unbekannt'}`
+  const empfohleneAktionId = useId()
+  const phasenaktionId = useId()
+  const heroTitelId = useId()
+  const spieltischTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
-  const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? PHASENAKTION_ID : EMPFOHLENE_AKTION_ID
+  const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? phasenaktionId : empfohleneAktionId
   const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
-
-  const heroTitelId = useId()
-  const spieltischTitelId = useId()
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
@@ -316,6 +317,8 @@ function App({ initialZustand }: AppProps) {
               aktionsLabel={aktionsLabel}
               pflichtschrittLabel={pflichtschrittLabel}
               hervorgehobenesAktionszielId={hervorgehobenesAktionszielId}
+              empfohleneAktionId={empfohleneAktionId}
+              phasenaktionId={phasenaktionId}
               onAktionAusfuehren={fuhreAktionAus}
               onAusspielphaseBeenden={handleAusspielphaseBeenden}
               onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
