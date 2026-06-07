@@ -99,9 +99,20 @@ Ergebnis:
 - Keine neue Engine-Regelmechanik.
 - Keine Entfernung der R100/R101-Quick-Optionen.
 
-## Release-Status
+## R102 Release abgeschlossen — 2026-06-07
 
-Noch offen bis Commit/Push/Deploy/Smoke abgeschlossen sind.
+- Commit Feature: `f219d84 R102: Schlangenhäutung-Reihenfolge-Auswahl ergänzen`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Vercel Production-Alias: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Live Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - R102-Bundle-Strings `Schlangenhäutung-Reihenfolge-Auswahl`, `gewählte Karte aus Schlange` und `Wähle lokal eine Karte` im Production-Asset gefunden.
+  - Playwright GUI Smoke auf Production erfolgreich.
+  - Geprüfte Regionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`.
+  - Keine Console Errors.
+  - Keine Page Errors.
 
 ## Nächster sinnvoller kleiner Schritt
 
