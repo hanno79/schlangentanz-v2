@@ -3,7 +3,7 @@
 Author: rahn
 Datum: 07.06.2026
 Version: 1.0
-Beschreibung: Lokaler Release-Nachweis für R107 — reproduzierbarer Production-Smoke über npm-Skript, HTTP-Checks und exakte Browser-Regionen.
+Beschreibung: Release-Nachweis für R107 — reproduzierbarer Production-Smoke über npm-Skript, HTTP-Checks und exakte Browser-Regionen.
 
 # ÄNDERUNG 07.06.2026: R107 dokumentiert einen kleinen Tooling-/Smoke-Slice für Schlangentanz.
 
@@ -109,16 +109,18 @@ Ergebnis:
 - Keine neue Playwright-Konfigurationsdatei.
 - Kein Commit, Push oder Deploy ohne explizite Freigabe.
 
-## Lokaler Status — releasebereit, noch nicht committed
+## Release abgeschlossen — 2026-06-07
 
-- Status: lokal fertig und releasebereit.
-- Commit: noch offen; Projektregel verlangt explizite Freigabe vor Commit.
-- Push: noch offen.
-- Deploy: noch offen.
-- Finaler Release-Smoke nach Deploy: noch offen.
-
-Vorgeschlagene Commit-Nachricht nach Freigabe:
-
-```text
-R107: Production-Smoke-Skript robust machen
-```
+- Feature-Commit: `b8ceb83 R107: Production-Smoke-Skript robust machen`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Deploy-Status: READY, Alias aktiv.
+- Finaler Production-Smoke nach Deploy:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - Region sichtbar: `Spielstatus`
+  - Region sichtbar: `Aktiver Spieler`
+  - Region sichtbar: `Aktionen`
+  - Region sichtbar: `Schlangenbereich`
+  - Keine Console Errors
+  - Keine Page Errors
