@@ -1,10 +1,11 @@
 /*
 Author: rahn
 Datum: 07.06.2026
-Version: 1.1
+Version: 1.2
 Beschreibung: R102 UI-Komponente für eine lokale Schlangenhäutung-Reihenfolge-Auswahl ohne Drag-and-Drop.
 # ÄNDERUNG 07.06.2026: Lokale Auswahl ergänzt, um eine gewählte Karte einer eigenen aktiven Schlange ans Ende zu setzen.
 # ÄNDERUNG 07.06.2026: R104 integriert den Umkehr-Button in diese Komponente, statt ihn als separate Quick-Option zu rendern.
+# ÄNDERUNG 07.06.2026: R105 zeigt aktuelle und neue Reihenfolge als Vorschau vor der Ausführung.
 */
 
 import { useState } from 'react'
@@ -101,8 +102,22 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
         const umkehrAktion = baueUmkehrAktion(zustand, schlange.id)
         const umkehrErlaubt = umkehrAktion ? pruefeAktion(zustand, umkehrAktion).erlaubt : false
 
+        const aktuelleReihenfolge = schlange.karten.map((k) => k.id).join(' → ')
+        const karteAnsEndeReihenfolge = aktion
+          ? aktion.kartenIdsInNeuerReihenfolge.join(' → ')
+          : ''
+        const umkehrReihenfolge = umkehrAktion
+          ? umkehrAktion.kartenIdsInNeuerReihenfolge.join(' → ')
+          : ''
+
         return (
           <div key={schlange.id} className="aktions-hinweis-aktionen">
+            <p>Aktuelle Reihenfolge: {aktuelleReihenfolge}</p>
+            <p>Neue Reihenfolge nach Karte ans Ende: {karteAnsEndeReihenfolge}</p>
+            <p>Diese Aktion setzt die gewählte Karte ans Ende.</p>
+            <p>Neue Reihenfolge nach Umkehr: {umkehrReihenfolge}</p>
+            <p>Diese Aktion kehrt die Schlange um.</p>
+            <p>Die Regelprüfung bleibt beim Ausführen in der Engine.</p>
             <label>
               Karte aus Schlange {schlange.id} ans Ende setzen
               <select
