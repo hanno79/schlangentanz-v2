@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef, useState } from 'react'
+import { Fragment, useId, useMemo, useRef, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -207,6 +207,9 @@ function App({ initialZustand }: AppProps) {
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
 
+  const heroTitelId = useId()
+  const spieltischTitelId = useId()
+
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
   function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand) {
@@ -225,9 +228,9 @@ function App({ initialZustand }: AppProps) {
 
   return (
     <main className="app-shell">
-      <section className="hero" aria-labelledby="title">
+      <section className="hero" aria-labelledby={heroTitelId}>
         <p className="eyebrow">Neues Projekt · neues GitHub-Repo · neues Vercel-Projekt</p>
-        <h1 id="title">Schlangentanz v2 Greenfield Rebuild</h1>
+        <h1 id={heroTitelId}>Schlangentanz v2 Greenfield Rebuild</h1>
         <p>
           Dieses Repository ist der saubere Neustart. Es übernimmt keinen alten
           Paperclip- oder Schlangentanz-v1-Code. Die Umsetzung beginnt erst nach
@@ -274,8 +277,8 @@ function App({ initialZustand }: AppProps) {
         <div className="spieltisch-gruppe">
           <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
             <h2>Aktiver Spieler</h2>
-            <section className="spielbrett" aria-labelledby="spieltisch-titel">
-              <h3 id="spieltisch-titel">Spieltisch</h3>
+            <section className="spielbrett" aria-labelledby={spieltischTitelId}>
+              <h3 id={spieltischTitelId}>Spieltisch</h3>
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}
