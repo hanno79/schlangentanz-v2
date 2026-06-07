@@ -99,6 +99,19 @@ Ergebnis:
 - Keine Permutations-Enumeration in `ermittleLegaleAktionen`.
 - Keine neue Regelmechanik gegenüber R98.
 
+## R99 Release abgeschlossen — 2026-06-07
+
+- Commit: `b419cc0 R99: Schlangenhäutung-Hinweis anzeigen`
+- Push: `main -> origin/main`
+- Production: https://schlangentanz-v2.vercel.app
+- Vercel Deployment: https://schlangentanz-v2-imif8doix-alfreds-projects-7e9df1b4.vercel.app
+- Live Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - Playwright GUI Smoke auf Production erfolgreich
+  - Keine Console Errors
+  - Keine Page Errors
+
 ## Nächster sinnvoller kleiner Schritt
 
 Ein echter UI-Auswahlslice für `Schlangenhäutung`: aktive eigene Schlange auswählen, neue Reihenfolge sicher erfassen und dann `SchlangenhaeutungSpielen` über den bestehenden Engine-Pfad ausführen.
