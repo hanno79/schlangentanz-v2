@@ -76,10 +76,25 @@ Ergebnis:
 - Keine Permutations-Enumeration in `ermittleLegaleAktionen`.
 - Keine neue Parallelkomponente.
 
-## Status vor Release
+## Release abgeschlossen — 2026-06-07
 
-- Lokal fertig.
-- Releasebereit nach Commit, Push, Production-Deploy und Production-Smoke.
+- Commit Feature: `c515194 R105: Schlangenhäutung-Vorschau anzeigen`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Production-Alias-Deploy nach Feature-Commit: READY
+- Production Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - Bundle enthält `Schlangenhäutung-Reihenfolge-Auswahl`
+  - Bundle enthält `Aktuelle Reihenfolge:`
+  - Bundle enthält `Neue Reihenfolge nach Karte ans Ende:`
+  - Bundle enthält `Neue Reihenfolge nach Umkehr:`
+  - Bundle enthält `Die Regelprüfung bleibt beim Ausführen in der Engine.`
+  - Bundle enthält nicht mehr `Schlangenhäutung-Optionen`
+  - Playwright GUI-Smoke erfolgreich
+  - Geprüfte Regionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`
+  - Keine Console Errors
+  - Keine Page Errors
 
 ## Geplante Folgeslices
 
