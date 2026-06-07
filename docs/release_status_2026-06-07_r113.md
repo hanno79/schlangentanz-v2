@@ -77,9 +77,8 @@ Ergebnis:
 - Implementierungscommit: `882dcb7 R113: AktionenPanel-Sprungziele DOM-sicher machen`.
 - Push: `main -> origin/main`.
 - Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
-- Feature-Deploy: `https://schlangentanz-v2-pkqaz0v4v-alfreds-projects-7e9df1b4.vercel.app`
-- Vercel Inspect: `https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/GXX4xiwRuFinSiE5SuUAh41eCgYo`
-- Deploy-Status: READY und auf Production-Alias gesetzt.
+- Vercel Production-Deploy: READY und auf den stabilen Production-Alias gesetzt.
+- Ephemere Deployment-/Inspect-URLs werden hier bewusst nicht festgeschrieben, damit der Release-Nachweis nach Doku-only-Commits nicht wieder veraltet.
 
 ## Live-Smoke
 - `npm run smoke:production` grün:
