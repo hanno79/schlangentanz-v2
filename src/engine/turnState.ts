@@ -8,6 +8,7 @@ Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwische
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
 import type { Spielkarte, SonderkarteInfo, Spielzustand, Spielphase, PendingFarbendiebAbwehr, PendingSchlangenfrassAbwehr } from './types';
 import { ermittleErfuellteOffeneAufgaben, erfuelleOffeneAufgaben } from './aufgabenPruefung';
+import { ermittleFarbgruppen } from './colorGroups';
 
 export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenschutz';
@@ -15,6 +16,10 @@ export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is So
 
 function istFarbenfusionkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenfusion';
+}
+
+function istSchlangenhaeutungkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
+  return karte?.typ === 'Sonderkarte' && karte.name === 'Schlangenhäutung';
 }
 
 function aktualisiereAktivenSpieler(
@@ -309,6 +314,26 @@ function ermittleNaechsteFreieSchlangenNummer(spieler: Spielzustand['spieler'][n
 
 function erstelleLeereZugpflichten() {
   return { gespielteKarten: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0, verdopplerBonusAktiv: false, farbenfusionGespielt: false } as const;
+}
+
+function erstelleFarbgruppenSignatur(gruppe: ReturnType<typeof ermittleFarbgruppen>[number]): string {
+  // ÄNDERUNG [07.06.2026]: Dreiergruppen anhand ihrer Kartenidentität statt Position vergleichen.
+  const kartenIdentitaet = [...gruppe.kartenIds].sort().join(',');
+  return `${gruppe.farbe}:${kartenIdentitaet}`;
+}
+
+function erstelleFarbgruppenSignaturen(schlange: Spielzustand['spieler'][number]['schlangen'][number]): Set<string> {
+  return new Set(ermittleFarbgruppen(schlange).map(erstelleFarbgruppenSignatur));
+}
+
+function zaehleNeueDreiergruppen(
+  vorher: Spielzustand['spieler'][number]['schlangen'][number],
+  nachher: Spielzustand['spieler'][number]['schlangen'][number],
+): number {
+  const vorherSignaturen = erstelleFarbgruppenSignaturen(vorher);
+  return ermittleFarbgruppen(nachher).filter((gruppe) =>
+    !vorherSignaturen.has(erstelleFarbgruppenSignatur(gruppe)),
+  ).length;
 }
 
 function pruefeKartenartZaehler(zustand: Spielzustand): void {
@@ -953,6 +978,87 @@ export function spieleFarbenfusion(
       farbenfusionGespielt: true,
     },
   };
+}
+
+export function spieleSchlangenhaeutung(
+  zustand: Spielzustand,
+  optionen: { kartenId?: string; schlangenId?: string; kartenIdsInNeuerReihenfolge?: string[] } | null = {},
+): Spielzustand {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    throw new Error('Schlangenhäutung kann nur in der Ausspielphase gespielt werden.');
+  }
+  pruefeKeineAusstehendeReaktion(zustand);
+
+  const { kartenId, schlangenId, kartenIdsInNeuerReihenfolge } = optionen ?? {};
+  if (!istGueltigeId(kartenId)) {
+    throw new Error('Es muss genau eine Handkarte zum Spielen gewählt werden.');
+  }
+  if (!istGueltigeId(schlangenId)) {
+    throw new Error('Für Schlangenhäutung muss eine eigene Schlange gewählt werden.');
+  }
+  if (!Array.isArray(kartenIdsInNeuerReihenfolge)) {
+    throw new Error('Für Schlangenhäutung muss eine neue Kartenreihenfolge gewählt werden.');
+  }
+
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const karte = aktiverSpieler.hand.find((eintrag) => eintrag.id === kartenId);
+  if (!karte) {
+    throw new Error('Die Karte befindet sich nicht auf der Hand des aktiven Spielers.');
+  }
+  if (!istSchlangenhaeutungkarte(karte)) {
+    throw new Error('Schlangenhäutung kann nur mit der Schlangenhäutung-Sonderkarte gespielt werden.');
+  }
+
+  const zielSchlange = aktiverSpieler.schlangen.find((schlange) => schlange.id === schlangenId);
+  if (!zielSchlange) {
+    throw new Error('Die ausgewählte Zielschlange ist ungültig.');
+  }
+  if (zielSchlange.zustand !== 'aktiv') {
+    throw new Error('Schlangenhäutung kann nur auf aktive eigene Schlangen angewendet werden.');
+  }
+
+  const alteReihenfolge = zielSchlange.karten.map((eintrag) => eintrag.id);
+  if (kartenIdsInNeuerReihenfolge.length !== alteReihenfolge.length) {
+    throw new Error('Die neue Reihenfolge muss exakt alle Karten der ausgewählten Schlange enthalten.');
+  }
+  const neueIds = new Set(kartenIdsInNeuerReihenfolge);
+  if (neueIds.size !== kartenIdsInNeuerReihenfolge.length) {
+    throw new Error('Die neue Reihenfolge darf keine doppelten Karten enthalten.');
+  }
+  const alteIds = new Set(alteReihenfolge);
+  if (kartenIdsInNeuerReihenfolge.some((id) => !alteIds.has(id))) {
+    throw new Error('Die neue Reihenfolge darf nur Karten der ausgewählten Schlange enthalten.');
+  }
+  if (alteReihenfolge.every((id, index) => id === kartenIdsInNeuerReihenfolge[index])) {
+    throw new Error('Schlangenhäutung muss die Reihenfolge der Schlange verändern.');
+  }
+
+  pruefeSpielkartenLimit(zustand, karte.typ);
+
+  const kartenNachId = new Map(zielSchlange.karten.map((eintrag) => [eintrag.id, eintrag]));
+  const neuGeordneteKarten = kartenIdsInNeuerReihenfolge.map((id) => kartenNachId.get(id)!);
+  const neuGeordneteSchlange = { ...zielSchlange, karten: neuGeordneteKarten };
+  const neueDreiergruppen = zaehleNeueDreiergruppen(zielSchlange, neuGeordneteSchlange);
+  const neueHand = aktiverSpieler.hand.filter((eintrag) => eintrag.id !== kartenId);
+  const neueSpieler = aktualisiereAktivenSpieler(zustand, {
+    hand: neueHand,
+    schlangen: aktiverSpieler.schlangen.map((schlange) =>
+      schlange.id === schlangenId ? neuGeordneteSchlange : schlange,
+    ),
+    schlangenhaeutungDreiergruppen: aktiverSpieler.schlangenhaeutungDreiergruppen + neueDreiergruppen,
+  });
+
+  // ÄNDERUNG [07.06.2026]: R98 spielt Schlangenhäutung regelkonform als Neuordnung statt als Zieh-Effekt.
+  return inkrementiereSpieleKarten(
+    {
+      ...zustand,
+      spieler: neueSpieler,
+      ablagestapel: [...zustand.ablagestapel, karte],
+    },
+    neueSpieler,
+    karte.typ,
+    karte.name,
+  );
 }
 
 export function spieleVerdoppler(

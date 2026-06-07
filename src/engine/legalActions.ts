@@ -7,7 +7,7 @@ Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz
 
 import type { Spielzustand } from './types';
 import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
-import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenfrass, werfeKarteMangelsSpielbarerAktionAb, istFarbenschutzkarte, loesePendingReaktionAbwehr, loesePendingReaktionDurchlassen } from './turnState';
+import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenfrass, spieleSchlangenhaeutung, werfeKarteMangelsSpielbarerAktionAb, istFarbenschutzkarte, loesePendingReaktionAbwehr, loesePendingReaktionDurchlassen } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
@@ -140,6 +140,14 @@ export interface SchlangenfrassSpielenAktion {
   ziele: { spielerId: string; schlangenId: string; kartenId: string }[];
 }
 
+export interface SchlangenhaeutungSpielenAktion {
+  typ: 'SchlangenhaeutungSpielen';
+  spielerId: string;
+  handkartenId: string;
+  schlangenId: string;
+  kartenIdsInNeuerReihenfolge: string[];
+}
+
 export type SpielAktion =
   | NeueSchlangeStartenAktion
   | KarteAnlegenAktion
@@ -149,6 +157,7 @@ export type SpielAktion =
   | FarbenfusionSpielenAktion
   | FarbendiebSpielenAktion
   | SchlangenfrassSpielenAktion
+  | SchlangenhaeutungSpielenAktion
   | SchlangenblockadeSpielenAktion
   | SchlangenblockadeAbwehrenAktion
   | SchlangenblockadeDurchlassenAktion
@@ -218,6 +227,18 @@ function hatLegaleFarbenfusionAktionen(zustand: Spielzustand): boolean {
       return karte.typ === 'Farbkarte' && naechsteKarte?.typ === 'Farbkarte' && karte.farbe === naechsteKarte.farbe;
     }),
   );
+}
+
+function hatLegaleSchlangenhaeutungAktionen(zustand: Spielzustand): boolean {
+  const erlaubteSonderkarten = maxSonderkartenProZug(zustand);
+  if (zustand.zugpflichten.gespielteSonderkarten >= erlaubteSonderkarten) {
+    return false;
+  }
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  if (!aktiverSpieler.hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenhäutung')) {
+    return false;
+  }
+  return aktiverSpieler.schlangen.some((schlange) => schlange.zustand === 'aktiv' && schlange.karten.length > 1);
 }
 
 function hatLegaleSchlangenblockadeAktionen(zustand: Spielzustand): boolean {
@@ -297,6 +318,7 @@ const PHASE_FEHLER: Record<AusspielphasenAktionTyp, string> = {
   VerdopplerSpielen: SONDERKARTE_PHASE_FEHLER,
   FarbenschutzSpielen: SONDERKARTE_PHASE_FEHLER,
   FarbenfusionSpielen: SONDERKARTE_PHASE_FEHLER,
+  SchlangenhaeutungSpielen: SONDERKARTE_PHASE_FEHLER,
   FarbendiebSpielen: SONDERKARTE_PHASE_FEHLER,
   SchlangenfrassSpielen: SONDERKARTE_PHASE_FEHLER,
 };
@@ -452,7 +474,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     if (karte.typ === 'Sonderkarte' && zustand.zugpflichten.gespielteSonderkarten >= erlaubteSonderkarten) {
       return verboten('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
     }
-    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangenblockadeAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand) || hatLegaleFarbenschutzAktionen(zustand) || hatLegaleFarbenfusionAktionen(zustand) || hatLegaleSchlangenfrassAktionen(zustand) || hatLegaleVerdopplerAktionen(zustand)) {
+    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangenblockadeAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand) || hatLegaleFarbenschutzAktionen(zustand) || hatLegaleFarbenfusionAktionen(zustand) || hatLegaleSchlangenhaeutungAktionen(zustand) || hatLegaleSchlangenfrassAktionen(zustand) || hatLegaleVerdopplerAktionen(zustand)) {
       return verboten('Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.');
     }
     return { erlaubt: true };
@@ -594,6 +616,19 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
       return verboten('Farbenfusion kann nur auf zwei nebeneinanderliegenden Karten gleicher Farbe gespielt werden.');
     }
     return { erlaubt: true };
+  }
+
+  if (aktion.typ === 'SchlangenhaeutungSpielen') {
+    try {
+      spieleSchlangenhaeutung(zustand, {
+        kartenId: aktion.handkartenId,
+        schlangenId: aktion.schlangenId,
+        kartenIdsInNeuerReihenfolge: aktion.kartenIdsInNeuerReihenfolge,
+      });
+      return { erlaubt: true };
+    } catch (fehler) {
+      return verboten(fehler instanceof Error ? fehler.message : 'Schlangenhäutung ist ungültig.');
+    }
   }
 
   if (aktion.typ === 'FarbenschutzSpielen') {
@@ -948,7 +983,9 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
   }
 
   const erlaubteKarten = MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv === true ? 1 : 0);
-  if (aktionen.length === 0 && zustand.zugpflichten.gespielteKarten < erlaubteKarten) {
+  const hatNichtEnumerierteSonderkartenAktion = hatLegaleSchlangenhaeutungAktionen(zustand);
+  if (aktionen.length === 0 && !hatNichtEnumerierteSonderkartenAktion && zustand.zugpflichten.gespielteKarten < erlaubteKarten) {
+    // ÄNDERUNG [07.06.2026]: Pflicht-Abwurf bleibt auch bei nicht enumerierter Schlangenhäutung gesperrt.
     // ÄNDERUNG 02.06.2026: Pflicht-Abwurf nur anbieten, wenn keine reguläre Spielaktion legal ist.
     // aktionen.length === 0 belegt hier bereits, dass weder Schlangenbau- noch Sonderkarten-Aktionen legal sind.
     const erlaubteFarbkarten = maxFarbkartenProZug(zustand);
@@ -1001,6 +1038,12 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Spiel
         kartenId: aktion.handkartenId,
         zielSchlangenId: aktion.zielSchlangenId,
         zielKartenId: aktion.zielKartenId,
+      });
+    case 'SchlangenhaeutungSpielen':
+      return spieleSchlangenhaeutung(zustand, {
+        kartenId: aktion.handkartenId,
+        schlangenId: aktion.schlangenId,
+        kartenIdsInNeuerReihenfolge: aktion.kartenIdsInNeuerReihenfolge,
       });
     case 'SchlangenfrassSpielen':
       return spieleSchlangenfrass(zustand, {
