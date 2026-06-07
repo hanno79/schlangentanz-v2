@@ -28,6 +28,7 @@ export function spielerMitSchlangen(schlangen: Spieler['schlangen'], steuerung: 
     hand: [],
     schlangen,
     ausgespielteSonderkartenNamen: [],
+    schlangenhaeutungDreiergruppen: 0,
     erfuellteAufgaben: [],
     geheimeAufgabe: { typ: 'Aufgabenkarte', id: 'test-aufgabe-geheim', name: 'Testaufgabe', punkte: 1, bedingung: 'Testbedingung' },
   };

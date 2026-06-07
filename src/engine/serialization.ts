@@ -65,6 +65,7 @@ export function deserialisiere(json: string): Spielzustand {
   migriereAussetzenVorR74(parsed);
   migrierePendingReaktionVorR78(parsed);
   migriereSonderkartenHistorieVorR94(parsed);
+  migriereSchlangentanzHistorieVorR97(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -107,6 +108,17 @@ function migriereSonderkartenHistorieVorR94(wert: unknown): void {
     if (!istObjekt(spieler)) continue;
     if (!Object.prototype.hasOwnProperty.call(spieler, 'ausgespielteSonderkartenNamen')) {
       spieler['ausgespielteSonderkartenNamen'] = [];
+    }
+  }
+}
+
+function migriereSchlangentanzHistorieVorR97(wert: unknown): void {
+  if (!istObjekt(wert) || !Array.isArray(wert['spieler'])) return;
+  for (const spieler of wert['spieler']) {
+    if (!istObjekt(spieler)) continue;
+    if (!Object.prototype.hasOwnProperty.call(spieler, 'schlangenhaeutungDreiergruppen')) {
+      // ÄNDERUNG [07.06.2026]: R97 migriert Altstände ohne Schlangentanz-Historie auf 0.
+      spieler['schlangenhaeutungDreiergruppen'] = 0;
     }
   }
 }
@@ -414,6 +426,7 @@ function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts we
   validiereSpielsteuerung(spieler['steuerung']);
   validiereSpielkartenArray(spieler['hand'], 'spieler.hand', verwendeteIds);
   validiereSonderkartenHistorie(spieler['ausgespielteSonderkartenNamen']);
+  validiereSchlangentanzHistorie(spieler['schlangenhaeutungDreiergruppen']);
   validiereAufgabenArray(spieler['erfuellteAufgaben'], 'spieler.erfuellteAufgaben', verwendeteIds);
 
   if (spieler['geheimeAufgabe'] === null) {
@@ -441,6 +454,14 @@ function validiereSonderkartenHistorie(wert: unknown): void {
     if (!BEKANNTE_SONDERKARTENNAMEN.has(eintrag)) {
       throw new Error('Ungültiger Spielzustand: Sonderkartenhistorie enthält unbekannten Sonderkartennamen.');
     }
+  }
+}
+
+function validiereSchlangentanzHistorie(wert: unknown): void {
+  if (!Number.isInteger(wert) || (wert as number) < 0) {
+    throw new Error(
+      'Ungültiger Spielzustand: spieler.schlangenhaeutungDreiergruppen muss eine nicht-negative ganze Zahl sein.',
+    );
   }
 }
 

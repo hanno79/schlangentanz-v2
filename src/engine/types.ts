@@ -58,6 +58,9 @@ export interface Spieler {
   hand: Spielkarte[];
   schlangen: Schlange[];
   ausgespielteSonderkartenNamen: string[];
+  // ÄNDERUNG [07.06.2026]: R97 Schlangentanz-Aufgabe benötigt eine Historie der durch Schlangenhäutung neu gebildeten Dreiergruppen.
+  // Zählt ausschließlich erfolgreich durch Schlangenhäutung erzeugte neue Dreiergruppen für die Aufgabenprüfung.
+  schlangenhaeutungDreiergruppen: number;
   erfuellteAufgaben: AufgabenkarteInfo[];
   geheimeAufgabe: AufgabenkarteInfo | null;
 }

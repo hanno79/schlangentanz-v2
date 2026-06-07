@@ -9,6 +9,7 @@ Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfü
 Änderung v1.4: pruefeSchlangenbaendiger (aufgabe-10) hinzugefügt.
 Änderung v1.5: pruefeSchlangenrepertoire (aufgabe-09) hinzugefügt.
 Änderung v1.6: pruefeSchlangenmeister (aufgabe-08) hinzugefügt.
+Änderung v1.7: pruefeSchlangentanz (aufgabe-11) über Schlangenhäutung-Dreiergruppen-Historie hinzugefügt.
 */
 
 import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
@@ -166,6 +167,12 @@ function pruefeSchlangenmeister(zustand: Spielzustand): boolean {
   return verschiedeneSonderkarten.size >= 2;
 }
 
+function pruefeSchlangentanz(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  // ÄNDERUNG [07.06.2026]: R97 prüft die neue Historie statt aktuelle Farbreihenfolge zu interpretieren.
+  return aktiverSpieler.schlangenhaeutungDreiergruppen >= 2;
+}
+
 function pruefeFarbharmonie(zustand: Spielzustand): boolean {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   const farbenMitDreiergruppe = new Set(
@@ -188,6 +195,7 @@ const aufgabePruefungen: Record<string, (zustand: Spielzustand) => boolean> = {
   'aufgabe-06': pruefeFusionsexperte,
   'aufgabe-07': pruefeSchlangenbeschwörer,
   'aufgabe-09': pruefeSchlangenrepertoire,
+  'aufgabe-11': pruefeSchlangentanz,
   'aufgabe-13': pruefeGelberSchatz,
   'aufgabe-14': pruefeLilaRiese,
 };

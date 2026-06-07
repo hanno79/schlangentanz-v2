@@ -102,6 +102,8 @@ function erstelleSpielerListe(
     hand: [],
     schlangen: [],
     ausgespielteSonderkartenNamen: [],
+    // ÄNDERUNG [07.06.2026]: R97 initialisiert die Schlangentanz-Historie für neue Spielstände.
+    schlangenhaeutungDreiergruppen: 0,
     erfuellteAufgaben: [],
     geheimeAufgabe: aufgabenStapel.shift() ?? null,
   }));
