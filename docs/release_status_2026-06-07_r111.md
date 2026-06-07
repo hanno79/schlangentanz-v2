@@ -1,6 +1,6 @@
 # R111 Release-Nachweis — Schlangenbereich eindeutige Label-IDREFs
 
-Status: lokal releasebereit, noch nicht committed/gepusht/deployed.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-07
 
 ## Ziel
@@ -61,11 +61,25 @@ Ergebnis:
 - `src/App.r111_schlangenbereich_label_idrefs.test.tsx`
 - `docs/release_status_2026-06-07_r111.md`
 
-## Noch offen
-- Commit nach Nutzerfreigabe.
-- Push nach Nutzerfreigabe.
-- Vercel Production Deploy nach Commit/Push.
-- Production- und First-Turn-Smoke nach Deploy.
+## Release abgeschlossen
+- Implementierungscommit: `a9db006 R111: Schlangenbereich-Label-IDREFs DOM-sicher machen`.
+- Push: `main -> origin/main`.
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Vercel Deployment: [https://schlangentanz-v2-nfs0cinbk-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-nfs0cinbk-alfreds-projects-7e9df1b4.vercel.app)
+- Vercel Inspect: [8pTUH6igDX2BDUq6WpGv2oDM17Sy](https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/8pTUH6igDX2BDUq6WpGv2oDM17Sy)
 
-## Vorgeschlagene Commit-Nachricht
-`R111: Schlangenbereich-Label-IDREFs DOM-sicher machen`
+## Live-Smoke
+- `npm run smoke:production` grün:
+  - `/game` HTTP 200
+  - `/` HTTP 200
+  - sichtbar: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`
+  - `R107 Production-Smoke bestanden`
+- First-Turn-Browser-Smoke grün:
+  - URL: `https://schlangentanz-v2.vercel.app/game`
+  - erster Zug ausgeführt: `Neue Schlange starten mit Karte grün-06`
+  - `Zuletzt ausgeführt` sichtbar
+  - `consoleErrors: []`
+  - `pageErrors: []`
+
+## Nachtrag
+- Der erste First-Turn-Smoke-Versuch scheiterte am Smoke-Skript-Selektor, weil `Aktionen` ohne `exact: true` auch `Legale Aktionen` und `Weitere Aktionen` matchte. Der temporäre Smoke wurde auf exakten Regionsnamen korrigiert und danach erfolgreich ausgeführt; Produktionscode war davon nicht betroffen.
