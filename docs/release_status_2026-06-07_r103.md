@@ -63,8 +63,8 @@ Ergebnis:
 ## Production-Deploy
 
 - Production-Alias: https://schlangentanz-v2.vercel.app
-- Deployment: https://schlangentanz-v2-hlfke3bnx-alfreds-projects-7e9df1b4.vercel.app
 - Vercel Status: READY
+- Hinweis: Durable Doku verweist bewusst auf den stabilen Production-Alias statt auf kurzlebige Deployment-URLs.
 
 ## Smoke-Test Production
 
