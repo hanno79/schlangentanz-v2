@@ -91,28 +91,46 @@ Ergebnis:
 - Keine Änderung an sichtbaren fachlichen Labels.
 - Keine Härtung anderer Komponenten außerhalb von `Schlangenbereich.tsx`.
 
-## Release-Status — lokal fertig, releasebereit
+## Release-Status — abgeschlossen und live verifiziert
 
-R109 ist lokal implementiert, reviewed und durch Full Gates verifiziert.
+R109 ist committed, nach `origin/main` gepusht, produktiv deployed und live verifiziert.
 
-Noch nicht ausgeführt:
+Release-Daten:
 
-- Commit
-- Push nach `origin/main`
-- Production-Deploy
-- Production-Smoke
-- finaler Doku-Sync nach Live-Smoke
+- Implementierungscommit: `a2ce9eb R109: Schlangenbereich-IDREFs DOM-sicher machen`
+- Push: `origin/main` erfolgreich aktualisiert.
+- Production-URL: `https://schlangentanz-v2.vercel.app`
+- Vercel-Deployment: `https://schlangentanz-v2-h2jlqqxo2-alfreds-projects-7e9df1b4.vercel.app`
+- Vercel Inspect: `https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/C3UGi2R2X3tisDAMu5qVxtAzfBzb`
+- Deploy-Status: `READY`, Build auf Vercel grün.
 
-Grund: Projektregel verlangt Commit-Freigabe vor Versionierung.
+## Live-Smoke 07.06.2026
 
-## Nächster Release-Schritt
+Ausgeführt gegen `https://schlangentanz-v2.vercel.app`:
 
-Nach Freigabe:
+```bash
+SMOKE_BASE_URL=https://schlangentanz-v2.vercel.app npm run smoke:production
+SMOKE_BASE_URL=https://schlangentanz-v2.vercel.app node .tmp_r109_first_turn_smoke.mjs
+```
 
-1. R109-Dateien stagen.
-2. Commit mit deutscher Nachricht erstellen.
-3. Nach `origin/main` pushen.
-4. Production-Deploy über Vercel mit Token aus Shell-Umgebung ausführen.
-5. `npm run smoke:production` gegen `https://schlangentanz-v2.vercel.app` ausführen.
-6. Einen dynamischen First-Turn-Smoke gegen `/game` ausführen.
-7. Release-Nachweis von `lokal fertig, releasebereit` auf `abgeschlossen` aktualisieren.
+Ergebnis Production-Smoke:
+
+- HTTP 200 für `/`.
+- HTTP 200 für `/game`.
+- Sichtbare Kernregionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`.
+- Keine Browser-/Console-Fehler.
+- `R107 Production-Smoke bestanden`.
+
+Ergebnis First-Turn-Smoke:
+
+- HTTP 200 für `/game`.
+- Erster Zug erfolgreich geklickt: `Neue Schlange starten mit Karte rot-01`.
+- `Schlangenbereich` änderte sich nach dem Zug sichtbar.
+- Keine Browser-/Console-Fehler.
+- `R109 First-Turn-Smoke bestanden`.
+
+Hinweis: Das temporäre Smoke-Skript `.tmp_r109_first_turn_smoke.mjs` wurde nach der Ausführung wieder entfernt; der Worktree war danach sauber.
+
+## Abschluss
+
+R109 ist abgeschlossen. Keine offenen Release-Schritte.
