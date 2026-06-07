@@ -1,12 +1,13 @@
 /*
 Author: rahn
 Datum: 05.06.2026
-Version: 1.6
+Version: 1.7
 Beschreibung: F26 Spielerführung – verwendet für die Mini-Checkliste eine
               semantische Überschrift und blendet die Klickführung bei fehlendem
               Springziel explizit aus.
 Änderung v1.5: R113 – statischen Aktionsziel-Fallback durch DOM-sichere React-ID ersetzt.
 Änderung v1.6: R113 Review – ohne echte Ziel-ID keinen Link auf ein nicht vorhandenes DOM-Ziel rendern.
+Änderung v1.7: R116 – Haupt-Section per aria-labelledby über sichtbare h3 labeln (eindeutige React-ID).
 */
 
 import { useId } from 'react'
@@ -33,11 +34,12 @@ export default function Spielerfuehrung({
   const aktionsHinweis = empfohleneAktionLabel || pflichtschrittLabel.replace(/\.$/, '')
   const aktionszielLinkId = aktionszielId?.trim() ? aktionszielId : null
   const zeigtAktionslinkEffektiv = zeigtAktionslink && aktionszielLinkId !== null
+  const spielerfuehrungUeberschriftId = useId()
   const checklisteUeberschriftId = useId()
 
   return (
-    <section aria-label="Spielerführung" className="spielerfuehrung">
-      <h3>Spielerführung</h3>
+    <section aria-labelledby={spielerfuehrungUeberschriftId} className="spielerfuehrung">
+      <h3 id={spielerfuehrungUeberschriftId}>Spielerführung</h3>
       <p>Dein nächster Schritt</p>
       <p>{pflichtschrittLabel}</p>
       <p>Empfohlene Aktion</p>

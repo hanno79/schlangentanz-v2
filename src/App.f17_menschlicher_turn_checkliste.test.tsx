@@ -75,4 +75,29 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
     expect(screen.getAllByText('Im Aktionsbereich gibt es aktuell kein Springziel.')).toHaveLength(2)
     expect(screen.queryByRole('link', { name: /Zur .* im Aktionsbereich/i })).toBeNull()
   })
+
+  it('labelt jede Spielerführung-Region über eine eigene sichtbare Überschrift', () => {
+    render(
+      <>
+        <Spielerfuehrung pflichtschrittLabel="Eine legale Aktion auswählen." empfohleneAktionLabel="Aktion A" />
+        <Spielerfuehrung pflichtschrittLabel="Ausspielphase beenden." empfohleneAktionLabel="Aktion B" />
+      </>,
+    )
+
+    const regionen = screen.getAllByRole('region', { name: 'Spielerführung' })
+    const labelIds = regionen.map((region) => region.getAttribute('aria-labelledby'))
+
+    expect(regionen).toHaveLength(2)
+    expect(new Set(labelIds).size).toBe(2)
+
+    for (const [index, region] of regionen.entries()) {
+      const labelId = labelIds[index]
+      const labelTokens = labelId?.trim().split(/\s+/) ?? []
+
+      expect(labelTokens).toHaveLength(1)
+      expect(document.querySelectorAll(`#${CSS.escape(labelTokens[0] ?? '')}`)).toHaveLength(1)
+      expect(region.querySelector(`#${CSS.escape(labelTokens[0] ?? '')}`)).toBeTruthy()
+      expect(within(region).getByRole('heading', { name: 'Spielerführung', level: 3 })).toBeInTheDocument()
+    }
+  })
 })
