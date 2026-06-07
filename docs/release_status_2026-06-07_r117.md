@@ -1,6 +1,6 @@
 # R117 Release-Nachweis — Spielerorientierter Hero
 
-Status: lokal verifiziert, Review abgeschlossen; Release/Production-Smoke ausstehend.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-07
 
 ## Ziel
@@ -121,16 +121,16 @@ Ergebnis:
 
 Feature-/Doku-Commit:
 
-- ausstehend
+- `f91d114 R117: Hero spielerorientiert ausrichten`
 
 Push:
 
-- ausstehend
+- `main -> origin/main` erfolgreich.
 
 Vercel Production-Deploy:
 
-- ausstehend
 - Production-Alias: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Status: `READY` und auf den stabilen Production-Alias gesetzt.
 - Dauerhaft dokumentiert wird bewusst nur der stabile Alias, keine ephemere Deployment-/Inspect-URL.
 
 Production-Smoke:
@@ -141,11 +141,18 @@ npm run smoke:production
 
 Ergebnis:
 
-- ausstehend
+- `HTTP 200  https://schlangentanz-v2.vercel.app/`
+- `HTTP 200  https://schlangentanz-v2.vercel.app/game`
+- Sichtbare Browser-Regionen:
+  - `Spielstatus`
+  - `Aktiver Spieler`
+  - `Aktionen`
+  - `Schlangenbereich`
+- `R107 Production-Smoke bestanden`
 
 Finalisierung:
 
-- Dieser Release-Nachweis wird nach Commit, Push, Vercel-Production-Deploy und grünem Production-Smoke finalisiert.
+- Dieser Release-Nachweis wird als finaler Doku-Stand mit auf den stabilen Production-Alias deployed; der nachgelagerte Production-Smoke muss grün sein, bevor R117 als abgeschlossen gilt.
 
 ## Nächster kleiner Schritt nach R117
 
