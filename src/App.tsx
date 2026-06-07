@@ -4,6 +4,7 @@ import {
   erstelleSpielzustand,
   starteAusspielphase,
   ermittleLegaleAktionen,
+  ermittleNichtEnumerierteAktionenHinweise,
   ermittleReaktionsAktionen,
   anwendeAktion,
   beendeAusspielphase,
@@ -124,7 +125,12 @@ function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung'
   }
 }
 
-function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: SpielAktion[], ueberhand: number): string {
+function naechsterPflichtschrittLabel(
+  zustand: Spielzustand,
+  legaleAktionen: SpielAktion[],
+  nichtEnumerierteAktionenHinweise: unknown[],
+  ueberhand: number,
+): string {
   if (zustand.zugphase === 'Spielende') return 'Partie beendet.'
   if (zustand.pendingReaktion) return 'Reaktionsaktion auswählen.'
   if (zustand.zugphase === 'Zugabschluss' && ueberhand > 0) {
@@ -137,6 +143,7 @@ function naechsterPflichtschrittLabel(zustand: Spielzustand, legaleAktionen: Spi
   if (zustand.zugphase === 'Zugabschluss') return 'Zug beenden.'
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
+  if (nichtEnumerierteAktionenHinweise.length > 0) return 'Schlangenhäutung vorbereiten.'
   return 'Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
 }
 
@@ -151,6 +158,7 @@ function App({ initialZustand }: AppProps) {
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
   const gezogeneHandkarteIdRef = useRef<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
+  const nichtEnumerierteAktionenHinweise = useMemo(() => ermittleNichtEnumerierteAktionenHinweise(zustand), [zustand])
   const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
   const karteAnlegenAktionen = useMemo(
     () => legaleAktionen.filter(
@@ -189,7 +197,7 @@ function App({ initialZustand }: AppProps) {
   const ergebnisText = gewinnerListe.length > 1
     ? 'Gleichstand'
     : `Sieg für ${gewinnerListe[0]?.spielerId ?? 'unbekannt'}`
-  const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, ueberhand)
+  const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
   const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? PHASENAKTION_ID : EMPFOHLENE_AKTION_ID
@@ -295,6 +303,7 @@ function App({ initialZustand }: AppProps) {
             <AktionenPanel
               zustand={zustand}
               legaleAktionen={legaleAktionen}
+              nichtEnumerierteAktionenHinweise={nichtEnumerierteAktionenHinweise}
               reaktionsAktionen={reaktionsAktionen}
               ueberhand={ueberhand}
               istSpielende={istSpielende}

@@ -6,7 +6,7 @@ Beschreibung: Ausgelagerte Legal-Action-Tests zur Einhaltung der 500-Zeilen-Rege
 */
 
 import { describe, it, expect } from 'vitest';
-import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, pruefeAktion } from '../index';
+import { anwendeAktion, ermittleLegaleAktionen, ermittleNichtEnumerierteAktionenHinweise, erstelleSpielzustand, pruefeAktion } from '../index';
 import type { Spielzustand } from '../types';
 import { farbkarte, schlange, sonderkarte, zustandMitFarbenschutzUndEigenerSchlange } from './testHelpers';
 
@@ -382,5 +382,44 @@ describe('Legal Action Validator — R75 Farbenschutz', () => {
     });
 
     expect(ergebnis).toEqual({ erlaubt: false, grund: 'Nur der aktive Spieler darf diese Aktion ausführen.' });
+  });
+});
+
+describe('R99 nicht enumerierte Engine-Aktionshinweise', () => {
+  function zustandMitSchlangenhaeutungHinweis(): Spielzustand {
+    const zustand = zustandInAusspielphase();
+    zustand.spieler[0].hand = [sonderkarte('schlangenhaeutung-r99-engine', 'Schlangenhäutung')];
+    zustand.spieler[0].schlangen = [
+      schlange([
+        farbkarte('rot-r99-engine', 'Rot'),
+        farbkarte('blau-r99-engine', 'Blau'),
+      ], 'schlange-r99-engine'),
+    ];
+    return zustand;
+  }
+
+  it('meldet Schlangenhäutung als fachlichen Hinweis, wenn sie legal aber nicht enumeriert ist', () => {
+    const zustand = zustandMitSchlangenhaeutungHinweis();
+
+    expect(ermittleNichtEnumerierteAktionenHinweise(zustand)).toEqual([{ typ: 'Schlangenhaeutung' }]);
+  });
+
+  it('meldet keinen Hinweis außerhalb der Ausspielphase', () => {
+    const zustand = zustandMitSchlangenhaeutungHinweis();
+    zustand.zugphase = 'Aufgabenpruefung';
+
+    expect(ermittleNichtEnumerierteAktionenHinweise(zustand)).toEqual([]);
+  });
+
+  it('meldet keinen Hinweis bei offener Reaktion oder ausgeschöpftem Kartenlimit', () => {
+    const mitReaktion = zustandMitSchlangenhaeutungHinweis();
+    mitReaktion.pendingReaktion = { typ: 'SchlangengrubeAbwehr', angreifenderSpielerIndex: 0, zielSpielerIndex: 1 };
+
+    expect(ermittleNichtEnumerierteAktionenHinweise(mitReaktion)).toEqual([]);
+
+    const mitKartenlimit = zustandMitSchlangenhaeutungHinweis();
+    mitKartenlimit.zugpflichten.gespielteKarten = 2;
+
+    expect(ermittleNichtEnumerierteAktionenHinweise(mitKartenlimit)).toEqual([]);
   });
 });

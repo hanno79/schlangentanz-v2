@@ -11,6 +11,10 @@ import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spiele
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
+export interface NichtEnumerierteAktionHinweis {
+  typ: 'Schlangenhaeutung';
+}
+
 export interface NeueSchlangeStartenAktion {
   typ: 'NeueSchlangeStarten';
   spielerId: string;
@@ -239,6 +243,24 @@ function hatLegaleSchlangenhaeutungAktionen(zustand: Spielzustand): boolean {
     return false;
   }
   return aktiverSpieler.schlangen.some((schlange) => schlange.zustand === 'aktiv' && schlange.karten.length > 1);
+}
+
+function istAusspielaktionAllgemeinMoeglich(zustand: Spielzustand): boolean {
+  if (zustand.zugphase !== 'Ausspielphase') {
+    return false;
+  }
+  if (zustand.pendingReaktion !== null) {
+    return false;
+  }
+  const erlaubteKarten = MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv === true ? 1 : 0);
+  return zustand.zugpflichten.gespielteKarten < erlaubteKarten;
+}
+
+export function ermittleNichtEnumerierteAktionenHinweise(zustand: Spielzustand): NichtEnumerierteAktionHinweis[] {
+  if (!istAusspielaktionAllgemeinMoeglich(zustand) || !hatLegaleSchlangenhaeutungAktionen(zustand)) {
+    return [];
+  }
+  return [{ typ: 'Schlangenhaeutung' }];
 }
 
 function hatLegaleSchlangenblockadeAktionen(zustand: Spielzustand): boolean {

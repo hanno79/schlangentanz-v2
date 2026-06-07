@@ -7,7 +7,7 @@ weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phas
 Änderung v1.3: Weitere legale Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
 */
 
-import type { SpielAktion, Spielzustand } from '../engine'
+import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
 
 export const EMPFOHLENE_AKTION_ID = 'empfohlene-aktion'
@@ -51,9 +51,24 @@ function aktionsButtonInhalt(label: string, index: number, total: number) {
   )
 }
 
+function aktionsHinweisTitel(hinweis: NichtEnumerierteAktionHinweis): string {
+  switch (hinweis.typ) {
+    case 'Schlangenhaeutung':
+      return 'Schlangenhäutung verfügbar'
+  }
+}
+
+function aktionsHinweisBeschreibung(hinweis: NichtEnumerierteAktionHinweis): string {
+  switch (hinweis.typ) {
+    case 'Schlangenhaeutung':
+      return 'Du hast eine Schlangenhäutung und mindestens eine eigene aktive Schlange zum Neuordnen. Die konkrete Reihenfolge wählst du in einem folgenden UI-Slice.'
+  }
+}
+
 interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
+  nichtEnumerierteAktionenHinweise: NichtEnumerierteAktionHinweis[]
   reaktionsAktionen: SpielAktion[]
   ueberhand: number
   istSpielende: boolean
@@ -72,6 +87,7 @@ interface AktionenPanelProps {
 export default function AktionenPanel({
   zustand,
   legaleAktionen,
+  nichtEnumerierteAktionenHinweise,
   reaktionsAktionen,
   ueberhand,
   istSpielende,
@@ -154,6 +170,19 @@ export default function AktionenPanel({
             )}
             <p>Quelle: engine.ermittleLegaleAktionen</p>
           </section>
+          {nichtEnumerierteAktionenHinweise.length > 0 && (
+            <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-label="Weitere verfügbare Aktionen">
+              <h3>Weitere verfügbare Aktionen</h3>
+              <ul>
+                {nichtEnumerierteAktionenHinweise.map((hinweis) => (
+                  <li key={hinweis.typ}>
+                    <strong>{aktionsHinweisTitel(hinweis)}</strong>
+                    <p>{aktionsHinweisBeschreibung(hinweis)}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
           <section
             id={PHASENAKTION_ID}
             className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === PHASENAKTION_ID ? ' aktionen-gruppe--sprungziel' : ''}`}
