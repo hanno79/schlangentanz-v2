@@ -33,7 +33,6 @@ describe('F1 Stitch Design Tokens', () => {
     expect(appCss).toContain('--st-border-width-chunky: 3px;')
     expect(appCss).toContain('--st-shadow-hard: 0 4px 0 #063907;')
 
-    expect(screen.getByRole('heading', { name: /schlangentanz v2 greenfield rebuild/i })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: /spielstatus/i })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: /legale aktionen/i })).toBeInTheDocument()
   })

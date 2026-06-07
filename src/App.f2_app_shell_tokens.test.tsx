@@ -35,7 +35,6 @@ describe('F2 tokenverdrahtete App-Shell', () => {
     expect(appCss).toMatch(/code\s*{[^}]*color:\s*var\(--st-color-border-strong\)/s)
     expect(appCss).toMatch(/code\s*{[^}]*background:\s*var\(--st-color-background\)/s)
 
-    expect(screen.getByRole('heading', { name: /schlangentanz v2 greenfield rebuild/i })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: /spielstatus/i })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: /legale aktionen/i })).toBeInTheDocument()
   })

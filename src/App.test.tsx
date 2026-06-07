@@ -1,3 +1,10 @@
+/**
+ * Author: rahn
+ * Datum: 07.06.2026
+ * Version: 1.1
+ * Beschreibung: App-Integrationstests für Hero, UI-Binding und Engine-Aktionsflüsse.
+ */
+
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
@@ -8,15 +15,18 @@ function deterministischerAppZustand(): Spielzustand {
   return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 }
 
-describe('Schlangentanz v2 placeholder', () => {
-  it('identifies the app as a greenfield rebuild', () => {
+describe('Schlangentanz Hero', () => {
+  it('identifiziert die App als spielbares Kartenspiel', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
 
-    expect(
-      screen.getByRole('heading', { name: /schlangentanz v2 greenfield rebuild/i }),
-    ).toBeInTheDocument()
-    expect(screen.getByText(/neues projekt/i)).toBeInTheDocument()
-    expect(screen.getByText(/keinen alten paperclip/i)).toBeInTheDocument()
+    const heroTitel = screen.getByRole('heading', { level: 1, name: /^schlangentanz$/i })
+    const hero = heroTitel.closest('section')
+
+    expect(hero).not.toBeNull()
+    const withinHero = within(hero as HTMLElement)
+    expect(withinHero.getByText(/das kartenspiel/i)).toBeInTheDocument()
+    expect(withinHero.getByText(/bereit für deine nächste schlange/i)).toBeInTheDocument()
+    expect(withinHero.getByText(/baue farbige schlangen/i)).toBeInTheDocument()
   })
 })
 
