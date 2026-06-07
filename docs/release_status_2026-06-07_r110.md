@@ -85,19 +85,25 @@ Ergebnis:
 - Keine Änderung sichtbarer fachlicher Labels.
 - Keine Härtung weiterer Komponenten außerhalb von `HandkartenPanel.tsx`.
 
-## Release-Status — lokal fertig, releasebereit
+## Release-Status — abgeschlossen und live verifiziert
 
-R110 ist lokal umgesetzt, reviewt und durch lokale Gates verifiziert.
+R110 ist auf `main` committed, nach `origin/main` gepusht, auf Vercel Production deployed und gegen den stabilen Production-Alias live verifiziert.
 
-Noch offen bis Release-Abschluss:
+Release-Kette:
 
-1. Commit-Freigabe durch Nutzer.
-2. Commit auf `main`.
-3. Push nach `origin/main`.
-4. Production-Deploy auf Vercel.
-5. Production-Smoke gegen `https://schlangentanz-v2.vercel.app` inklusive `/game` und Browser-Fehlerfreiheit.
-6. Finaler Doku-/Dart-Sync von „lokal fertig“ auf „abgeschlossen und live verifiziert“.
+1. Commit-Freigabe durch Nutzer erhalten.
+2. Commit auf `main`: `7ac3040` (`R110: HandkartenPanel-IDREFs DOM-sicher machen`).
+3. Push nach `origin/main`: erfolgreich.
+4. Production-Deploy auf Vercel: erfolgreich, `READY`.
+5. Production-Alias: `https://schlangentanz-v2.vercel.app`.
+6. Production-Smoke:
+   - `/`: HTTP 200.
+   - `/game`: HTTP 200.
+   - Browser-Kernregionen sichtbar: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`.
+   - First-Turn-Smoke: Aktion `Neue Schlange starten mit Karte gelb-08` ausgeführt.
+   - Semantischer Delta im `Schlangenbereich` bestätigt.
+   - Console-/Page-Errors: 0.
 
-## Abschluss lokal
+## Abschluss live
 
-Stand 07.06.2026 15:07 UTC: R110 ist lokal releasebereit. Keine offenen lokalen Gate-Blocker.
+Stand 07.06.2026 15:18 UTC: R110 ist abgeschlossen und live verifiziert. Keine offenen Release-Blocker.
