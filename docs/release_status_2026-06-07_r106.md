@@ -79,6 +79,22 @@ Ergebnis:
 - Keine freie Sortierung oder Drag&Drop-Mechanik.
 - Keine Änderung an `zaehleNeueDreiergruppen`, weil bestehende Implementierung korrekt nach Kartenidentität zählt.
 
-## Release-Status
+## Release abgeschlossen — 2026-06-07
 
-Lokal releasebereit am 07.06.2026. Commit, Push, Production-Deploy und Smoke folgen in diesem R106-Slice.
+- Commit: `b8b658c R106: Schlangenhäutung-Dreiergruppen absichern`
+- Push: `main -> origin/main`
+- Production: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
+- Production-Deploy: [https://schlangentanz-v2-1fc3ata3z-alfreds-projects-7e9df1b4.vercel.app](https://schlangentanz-v2-1fc3ata3z-alfreds-projects-7e9df1b4.vercel.app)
+- Vercel Inspect: [https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/Ci1Y3m3uyNwgX45Ya78Dpw2e4o92](https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/Ci1Y3m3uyNwgX45Ya78Dpw2e4o92)
+- Deploy-Status: READY, Alias aktiv.
+- Production Smoke:
+  - `/` HTTP 200
+  - `/game` HTTP 200
+  - Bundle enthält `Schlangenhäutung-Reihenfolge-Auswahl`
+  - Bundle enthält `Aktuelle Reihenfolge:`
+  - Bundle enthält `Neue Reihenfolge nach Karte ans Ende:`
+  - Bundle enthält `Neue Reihenfolge nach Umkehr:`
+  - Playwright GUI-Smoke erfolgreich
+  - Geprüfte Regionen: `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich`
+  - Keine Console Errors
+  - Keine Page Errors
