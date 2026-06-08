@@ -451,9 +451,9 @@ function App({ initialZustand }: AppProps) {
           <DebugGruppe titel="Punkteübersicht">
             {gesamtwertung.spielerwertungen.map(eintrag => (
               <Fragment key={eintrag.spielerId}>
-                <p>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
+                <p>Punktestand von {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
                 <p>
-                  Punkteaufteilung {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
+                  Punktequellen von {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
                 </p>
               </Fragment>
             ))}
