@@ -113,7 +113,7 @@ R125-spezifischer Browser-Smoke:
 
 R125 ist umgesetzt, getestet, reviewed, committed, gepusht, deployed und live verifiziert.
 
-Dieser Release-Nachweis wird als Doku-Sync-Commit auf `main` übernommen. Danach wird der aktuelle `main` erneut nach Production deployed und final live gesmoked, damit GitHub, Doku und Production synchron sind.
+Der Release-Nachweis ist als Doku-Sync-Stand auf `main` übernommen. Der stabile Production-Alias [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app) bleibt die belastbare Release-Referenz; der nächste Resume-Lauf prüft vor einem neuen Slice wieder zuerst Hänger, lokale Änderungen, Push-/Deploy-Stand und Smoke-Evidenz.
 
 ## Nächster kleiner Schritt nach R125
 
