@@ -39,8 +39,8 @@ describe('F10 Debuggruppen', () => {
     const spielstatus = screen.getByRole('region', { name: 'Spielstatus' })
     const statusDebug = erwarteOffeneDebugGruppe(spielstatus, 'Spielphase')
     expect(within(statusDebug).getByText(/Aktueller Spielschritt:/)).toBeInTheDocument()
-    expect(within(statusDebug).getByText(/Zugphase:/)).toBeInTheDocument()
-    expect(within(statusDebug).getByText(/Spieler am Zug:/)).toBeInTheDocument()
+    expect(within(statusDebug).getByText(/Spielschritt im Zug:/)).toBeInTheDocument()
+    expect(within(statusDebug).getByText(/Am Zug:/)).toBeInTheDocument()
     erwarteAusserhalbVonDebuggruppe(within(spielstatus).getByRole('region', { name: 'Zugfortschritt' }))
 
     const aktiverSpieler = screen.getByRole('region', { name: 'Aktiver Spieler' })

@@ -156,13 +156,13 @@ describe('R25 UI-Ausspielphase beenden', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/zugphase: ausspielphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: ausspielphase/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: aufgabenpruefung/i)).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
@@ -180,7 +180,7 @@ describe('R25 UI-Ausspielphase beenden', () => {
 
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: aufgabenpruefung/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
     expect(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
   })
@@ -191,10 +191,10 @@ describe('R26 UI-Aufgabenprüfung beenden', () => {
     const bereich = starteErsteSchlange()
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: aufgabenpruefung/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: aufgabenpruefung/i)).toBeInTheDocument()
     fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: zugabschluss/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: zugabschluss/i)).toBeInTheDocument()
     expect(within(bereich).queryByRole('button', { name: /aufgabenprüfung beenden/i })).toBeNull()
     expect(within(bereich).getByRole('button', { name: /zug beenden/i })).toBeInTheDocument()
   })
@@ -207,7 +207,7 @@ describe('R27 UI-Zug beenden', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: nachziehphase/i)).toBeInTheDocument()
     expect(within(bereich).getAllByText(/aktiver spieler: spieler-2/i)[0]).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
     expect(within(bereich).getByRole('button', { name: /ausspielphase starten/i })).toBeInTheDocument()
@@ -221,11 +221,11 @@ describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: nachziehphase/i)).toBeInTheDocument()
     expect(within(bereich).getAllByText(/aktiver spieler: spieler-2/i)[0]).toBeInTheDocument()
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase starten/i }))
 
-    expect(within(bereich).getByText(/zugphase: ausspielphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: ausspielphase/i)).toBeInTheDocument()
     expect(within(bereich).getAllByText(/aktiver spieler: spieler-2/i)[0]).toBeInTheDocument()
     expect(within(bereich).getByRole('button', { name: /ki-aktion ausführen/i })).toBeInTheDocument()
     expect(
@@ -247,7 +247,7 @@ describe('R29 UI-Nachziehen beim nächsten Zug', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
 
-    expect(within(bereich).getByText(/zugphase: nachziehphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: nachziehphase/i)).toBeInTheDocument()
     expect(within(bereich).getAllByText(/aktiver spieler: spieler-1/i)[0]).toBeInTheDocument()
     const handBereich = within(screen.getByRole('region', { name: 'Spieltisch' })).getByRole('region', { name: 'Handkarten' })
     expect(within(handBereich).getByText(/blau-03/i)).toBeInTheDocument()
@@ -346,7 +346,7 @@ describe('R31 UI-Gewinneranzeige', () => {
     render(<App initialZustand={spielendeZustandMitSpieler1Sieg()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/zugphase: spielende/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/spielschritt im zug: spielende/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gewinner spieler-1: 3 punkte/i)).toBeInTheDocument()
     expect(within(bereich).queryByText(/gewinner spieler-2/i)).toBeNull()
   })
@@ -382,7 +382,7 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/spielphase: normal/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: normal/i)).toBeInTheDocument()
     expect(within(bereich).queryByText(/endrunde ausgelöst durch/i)).toBeNull()
   })
 
@@ -390,7 +390,7 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     render(<App initialZustand={endrundenAusloeserZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/spielphase: endspurt/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: endspurt/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/endrunde ausgelöst durch: spieler-2/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/verbleibende endrunde: spieler-3, spieler-1/i)).toBeInTheDocument()
   })
@@ -402,7 +402,7 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
 
     expect(within(bereich).getAllByText(/aktiver spieler: spieler-3/i)[0]).toBeInTheDocument()
-    expect(within(bereich).getByText(/spielphase: endspurt/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: endspurt/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/verbleibende endrunde: spieler-3, spieler-1/i)).toBeInTheDocument()
   })
 
@@ -414,7 +414,7 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     render(<App initialZustand={spielende} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/spielphase: beendet/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: beendet/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/verbleibende endrunde: keine/i)).toBeInTheDocument()
   })
 })

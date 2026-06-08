@@ -245,8 +245,8 @@ function App({ initialZustand }: AppProps) {
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
           <DebugGruppe titel="Spielphase">
             <p>Aktueller Spielschritt: {zustand.zugphase}</p>
-            <p>Zugphase: {zustand.zugphase}</p>
-            <p>Spielphase: {zustand.spielphase}</p>
+            <p>Spielschritt im Zug: {zustand.zugphase}</p>
+            <p>Partiestatus: {zustand.spielphase}</p>
             {istSpielende && <p>Spielende erreicht.</p>}
             {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
               <>
@@ -268,7 +268,7 @@ function App({ initialZustand }: AppProps) {
                 <p>Verbleibende Züge ohne Nachziehen: {zustand.endrunde.verbleibendeSpielerIndizes.length}</p>
               </>
             )}
-            <p>Spieler am Zug: {zustand.aktiverSpielerIndex + 1}/{zustand.spieler.length}</p>
+            <p>Am Zug: Spieler {zustand.aktiverSpielerIndex + 1} von {zustand.spieler.length}</p>
           </DebugGruppe>
           <Zugfortschritt zugphase={zustand.zugphase} />
         </section>

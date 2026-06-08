@@ -25,7 +25,7 @@ describe('F22 Spielende-Statusanzeige', () => {
     const spielstatus = screen.getByRole('region', { name: 'Spielstatus' })
 
     expect(within(spielstatus).getByText(/Spielende erreicht\.?/i)).toBeInTheDocument()
-    expect(within(spielstatus).getByText(/Spielphase: Beendet/i)).toBeInTheDocument()
+    expect(within(spielstatus).getByText(/Partiestatus: Beendet/i)).toBeInTheDocument()
   })
 
   it('zeigt die Spielende-Kennzeichnung im Normalspiel nicht an', () => {

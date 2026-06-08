@@ -25,7 +25,7 @@ describe('R44 UI-Spielerposition am Zug', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(`Spieler am Zug: ${zustand.aktiverSpielerIndex + 1}/${zustand.spieler.length}`)).toBeInTheDocument()
+    expect(within(bereich).getByText(`Am Zug: Spieler ${zustand.aktiverSpielerIndex + 1} von ${zustand.spieler.length}`)).toBeInTheDocument()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
@@ -34,7 +34,7 @@ describe('R44 UI-Spielerposition am Zug', () => {
 
     expect(
       within(bereich).getByText(
-        `Spieler am Zug: ${erwarteterFolgezustand.aktiverSpielerIndex + 1}/${erwarteterFolgezustand.spieler.length}`,
+        `Am Zug: Spieler ${erwarteterFolgezustand.aktiverSpielerIndex + 1} von ${erwarteterFolgezustand.spieler.length}`,
       ),
     ).toBeInTheDocument()
   })
