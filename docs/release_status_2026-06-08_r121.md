@@ -1,6 +1,6 @@
 # R121 Release-Nachweis — Spielerstatus-Copy spielerfreundlicher
 
-Status: lokal verifiziert, Release läuft.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-08
 
 ## Ziel
@@ -62,7 +62,7 @@ Ergebnis:
 - Lint grün.
 - Build grün.
 - Testdateilängencheck grün: Alle Testdateien bleiben unter 500 Zeilen.
-- `git diff --check`: wird vor Commit final ausgeführt.
+- `git diff --check` grün.
 
 ## Geänderte Dateien
 
@@ -87,26 +87,50 @@ Ergebnis:
 
 Feature-Commit:
 
-- Wird nach finalem `git diff --check` gesetzt.
+- `e79f84a R121: Spielerstatus-Copy spielerfreundlicher machen`
 
 Push:
 
-- Ausstehend.
+- `main -> origin/main` erfolgreich.
 
 Vercel Production-Deploy:
 
 - Production-Alias: [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app)
-- Status: ausstehend.
+- Status: `READY` und auf den stabilen Production-Alias gesetzt.
+- Ephemere Deploy-URL: `https://schlangentanz-v2-axnqxv2h8-alfreds-projects-7e9df1b4.vercel.app`
 
 Production-Smoke:
 
-- Ausstehend.
+```bash
+npm run smoke:production
+node .tmp_r121_live_smoke.mjs
+```
+
+Ergebnis:
+
+- `/`: HTTP 200.
+- `/game`: HTTP 200.
+- Sichtbare Browser-Regionen:
+  - `Spielstatus`
+  - `Aktiver Spieler`
+  - `Aktionen`
+  - `Schlangenbereich`
+- R121-spezifischer Browser-Smoke:
+  - `Entwicklungsdaten: Spielerstatus` sichtbar.
+  - neue Spielerstatus-Copy sichtbar: `Spieler spieler-1:`, `Schlangen von spieler-1:`, `Schlangen insgesamt:`, `Handkarten insgesamt:`.
+  - alte Spielerstatus-Copy nicht sichtbar: `Spielerübersicht spieler-1:`, `Schlangenübersicht spieler-1:`, `Schlangenzustand spieler-1/`, `Schlangen gesamt:`, `Handkarten gesamt:`.
+  - First-turn E2E klickte eine echte Aktion: `Neue Schlange starten mit Karte blau-03`.
+  - `Schlangenbereich` änderte sich sichtbar.
+  - `consoleErrors: []`.
+  - `pageErrors: []`.
+- `R107 Production-Smoke bestanden`.
+- `R121 Production-Smoke bestanden`.
 
 ## Finalisierung
 
-- Nach Commit/Push wird Production deployed und live gesmoked.
-- Danach wird dieser Release-Nachweis mit Commit, Deploy- und Smoke-Ergebnis final synchronisiert.
-- Falls die Doku-Synchronisierung einen neuen `main`-Commit erzeugt, wird der aktuelle `main` erneut deployed und final gesmoked.
+- Release-Dokumentation nach Feature-Deploy und Smoke erstellt.
+- Diese Dokumentation ist Teil des finalen Doku-Sync-Commits.
+- Nach Doku-Synchronisierung wird erneut gepusht, Production deployed und live gesmoked, damit `origin/main`, `HEAD` und Production denselben finalen Stand abbilden.
 
 ## Nächster kleiner Schritt nach R121
 
