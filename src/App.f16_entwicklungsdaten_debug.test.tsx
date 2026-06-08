@@ -1,8 +1,9 @@
 /*
 Author: rahn
-Datum: 04.06.2026
-Version: 1.0
+Datum: 08.06.2026
+Version: 2.0
 Beschreibung: F16 UI-Test für klar als Entwicklungsdaten ausgelagerte Debug-Informationen.
+Änderung R118: Titel-Array und Accessible-Names ohne "Debug:"-Präfix; keine sichtbaren "Debug:"-Texte mehr.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -11,11 +12,11 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 const DEBUG_TITEL = [
-  'Debug: Phasenstatus',
-  'Debug: Aktiver Spieler',
-  'Debug: Spielerzustände',
-  'Debug: Materialstatus',
-  'Debug: Wertungsdetails',
+  'Phasenstatus',
+  'Aktiver Spieler',
+  'Spielerzustände',
+  'Materialstatus',
+  'Wertungsdetails',
 ]
 
 function deterministischerZustand() {
@@ -35,6 +36,6 @@ describe('F16 Entwicklungsdaten-Debugbereiche', () => {
       expect(within(entwicklungsdaten).getByText(titel)).toBeInTheDocument()
     }
 
-    expect(screen.getAllByText(/^Debug:/)).toHaveLength(5)
+    expect(screen.queryAllByText(/^Debug:/)).toHaveLength(0)
   })
 })

@@ -242,7 +242,8 @@ function App({ initialZustand }: AppProps) {
       <section className="spielbereich" aria-label="Legale Aktionen">
         <section className="info-panel" aria-label="Spielstatus">
           <h2>Spielstatus</h2>
-          <DebugGruppe titel="Debug: Phasenstatus">
+          {/* ÄNDERUNG 08.06.2026: R118 stellt die Entwicklungsdaten-Summary ohne sichtbare Debug-Copy dar. */}
+          <DebugGruppe titel="Phasenstatus">
             <p>Engine-Demo: {zustand.zugphase}</p>
             <p>Zugphase: {zustand.zugphase}</p>
             <p>Spielphase: {zustand.spielphase}</p>
@@ -322,7 +323,7 @@ function App({ initialZustand }: AppProps) {
               onZugBeenden={handleZugBeenden}
               onAusspielphaseStarten={handleAusspielphaseStarten}
             />
-            <DebugGruppe titel="Debug: Aktiver Spieler">
+            <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.id}</p>
               <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
               <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
@@ -362,7 +363,7 @@ function App({ initialZustand }: AppProps) {
         </div>
         <section className="info-panel" aria-label="Spielerübersicht">
           <h2>Spielerübersicht</h2>
-          <DebugGruppe titel="Debug: Spielerzustände">
+          <DebugGruppe titel="Spielerzustände">
             {zustand.spieler.map(spieler => {
               const istAktiv = spieler.id === aktiverSpieler.id
 
@@ -401,7 +402,7 @@ function App({ initialZustand }: AppProps) {
         </section>
         <section className="info-panel" aria-label="Material und Aufgaben">
           <h2>Material und Aufgaben</h2>
-          <DebugGruppe titel="Debug: Materialstatus">
+          <DebugGruppe titel="Materialstatus">
             <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
             <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
             <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
@@ -447,7 +448,7 @@ function App({ initialZustand }: AppProps) {
               <p>Ergebnis: {ergebnisText}</p>
             </>
           )}
-          <DebugGruppe titel="Debug: Wertungsdetails">
+          <DebugGruppe titel="Wertungsdetails">
             {gesamtwertung.spielerwertungen.map(eintrag => (
               <Fragment key={eintrag.spielerId}>
                 <p>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>

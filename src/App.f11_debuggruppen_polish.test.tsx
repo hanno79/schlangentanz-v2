@@ -1,8 +1,9 @@
 /**
  * Author: rahn
- * Datum: 04.06.2026
- * Version: 1.0
+ * Datum: 08.06.2026
+ * Version: 2.0
  * Beschreibung: F11 UI-Test für visuell aufgeräumte Debuggruppen.
+ * Änderung R118: Debug-Summary-Copy entfernt; Assertion auf 0 sichtbare "Debug:"-Texte aktualisiert.
  */
 /// <reference types="node" />
 
@@ -64,7 +65,7 @@ describe('F11 Debuggruppen-Polish', () => {
       'display: none;',
     ])
 
-    expect(screen.getAllByText(/^Debug:/)).toHaveLength(5)
+    expect(screen.queryAllByText(/^Debug:/)).toHaveLength(0)
     expect(screen.getByText(/Engine-Demo:/)).toBeVisible()
     expect(screen.getByRole('region', { name: 'Zugfortschritt' })).toBeVisible()
   })
