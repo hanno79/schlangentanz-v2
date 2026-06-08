@@ -153,8 +153,9 @@ Ergebnis:
 
 Finalisierung:
 
-- Dieser Release-Nachweis wird als finaler Doku-Stand mit auf den stabilen Production-Alias deployed.
-- Nach dem Doku-Commit wird der Production-Smoke erneut ausgeführt, damit `origin/main`, `HEAD` und Production-Alias denselben finalen Stand abbilden.
+- Finaler Doku-Commit: `53096fb docs: dokumentiere R118 Release-Nachweis`.
+- Finaler Production-Deploy nach Doku-Commit erfolgreich und auf den stabilen Alias gesetzt.
+- Erneuter Production-Smoke nach finalem Doku-Deploy erfolgreich, damit `origin/main`, `HEAD` und Production-Alias denselben finalen Stand abbilden.
 
 ## Nächster kleiner Schritt nach R118
 
