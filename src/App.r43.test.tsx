@@ -25,7 +25,7 @@ describe('R43 UI-Details des aktiven Spielers', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText('Aktiver Spieler-Details: spieler-1 — Spieler 1 (Mensch)')).toBeInTheDocument()
+    expect(within(bereich).getByText('Spielerprofil: spieler-1 — Spieler 1 (Mensch)')).toBeInTheDocument()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
@@ -34,7 +34,7 @@ describe('R43 UI-Details des aktiven Spielers', () => {
 
     const aktiverSpieler = erwarteterFolgezustand.spieler[erwarteterFolgezustand.aktiverSpielerIndex]!
     expect(
-      within(bereich).getByText(`Aktiver Spieler-Details: ${aktiverSpieler.id} — ${aktiverSpieler.name} (${aktiverSpieler.steuerung})`),
+      within(bereich).getByText(`Spielerprofil: ${aktiverSpieler.id} — ${aktiverSpieler.name} (${aktiverSpieler.steuerung})`),
     ).toBeInTheDocument()
   })
 })

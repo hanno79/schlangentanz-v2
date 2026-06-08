@@ -38,7 +38,7 @@ describe('F31 Spieltisch-Ansicht', () => {
     const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
-    const debugAktiverSpieler = screen.getAllByText(/Aktiver Spieler-Details:/)[0]
+    const debugAktiverSpieler = screen.getAllByText(/Spielerprofil:/)[0]
 
     expect(within(handBereich).getByText('Handkarten als Kartenleiste')).toBeInTheDocument()
     expect(within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })).toBeInTheDocument()

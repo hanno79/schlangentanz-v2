@@ -60,6 +60,6 @@ describe('F8 Scoreboard', () => {
     })
 
     expect(within(wertungBereich).getByText(/Wertung spieler-1:/)).toBeInTheDocument()
-    expect(within(wertungBereich).getByText(/Wertungsdetails spieler-1:/)).toBeInTheDocument()
+    expect(within(wertungBereich).getByText(/Punkteaufteilung spieler-1:/)).toBeInTheDocument()
   })
 })

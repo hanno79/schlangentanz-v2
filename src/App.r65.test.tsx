@@ -41,7 +41,7 @@ describe('R65 Endspurt verdoppelt offene Aufgaben in der UI', () => {
       const erwarteteDetails = `${erwarteteAnzeige}: ${aufgabe.bedingung}`
 
       expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
-      expect(within(materialBereich).getByText(/Offene Aufgaben-Details:/)).toHaveTextContent(erwarteteDetails)
+      expect(within(materialBereich).getByText(/Aufgabenziele:/)).toHaveTextContent(erwarteteDetails)
     })
 
     expect(within(aktiverSpielerBereich).getByText(/Geheime Aufgabe:/)).toHaveTextContent(
@@ -62,7 +62,7 @@ describe('R65 Endspurt verdoppelt offene Aufgaben in der UI', () => {
       const erwarteteDetails = `${aufgabe.name} (${aufgabe.punkte} Punkte): ${aufgabe.bedingung}`
 
       expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
-      expect(within(materialBereich).getByText(/Offene Aufgaben-Details:/)).toHaveTextContent(erwarteteDetails)
+      expect(within(materialBereich).getByText(/Aufgabenziele:/)).toHaveTextContent(erwarteteDetails)
     })
     expect(within(materialBereich).queryByText(/×2/)).toBeNull()
   })

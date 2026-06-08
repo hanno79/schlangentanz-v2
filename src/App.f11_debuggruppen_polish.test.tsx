@@ -66,7 +66,7 @@ describe('F11 Debuggruppen-Polish', () => {
     ])
 
     expect(screen.queryAllByText(/^Debug:/)).toHaveLength(0)
-    expect(screen.getByText(/Engine-Demo:/)).toBeVisible()
+    expect(screen.getByText(/Aktueller Spielschritt:/)).toBeVisible()
     expect(screen.getByRole('region', { name: 'Zugfortschritt' })).toBeVisible()
   })
 })

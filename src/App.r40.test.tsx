@@ -33,7 +33,7 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText(erwarteterText)).toBeInTheDocument()
-    expect(within(bereich).getByText(/Offene Aufgaben-Details:/)).toHaveTextContent(
+    expect(within(bereich).getByText(/Aufgabenziele:/)).toHaveTextContent(
       'Farbenpracht (8 Punkte): Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen.'
     )
   })
@@ -45,6 +45,6 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText('Offene Aufgaben: keine')).toBeInTheDocument()
-    expect(within(bereich).getByText('Offene Aufgaben-Details: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Aufgabenziele: keine')).toBeInTheDocument()
   })
 })

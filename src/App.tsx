@@ -244,7 +244,7 @@ function App({ initialZustand }: AppProps) {
           <h2>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R118 stellt die Entwicklungsdaten-Summary ohne sichtbare Debug-Copy dar. */}
           <DebugGruppe titel="Phasenstatus">
-            <p>Engine-Demo: {zustand.zugphase}</p>
+            <p>Aktueller Spielschritt: {zustand.zugphase}</p>
             <p>Zugphase: {zustand.zugphase}</p>
             <p>Spielphase: {zustand.spielphase}</p>
             {istSpielende && <p>Spielende erreicht.</p>}
@@ -325,7 +325,7 @@ function App({ initialZustand }: AppProps) {
             />
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.id}</p>
-              <p>Aktiver Spieler-Details: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+              <p>Spielerprofil: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
               <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
               <p>
                 Aktuelle Wertung:{' '}
@@ -417,7 +417,7 @@ function App({ initialZustand }: AppProps) {
                 : 'keine'}
             </p>
             <p>
-              Offene Aufgaben-Details:{' '}
+              Aufgabenziele:{' '}
               {zustand.offeneAufgaben.length > 0
                 ? zustand.offeneAufgaben.map(a => aufgabeLabel(a, istEndspurt)).join('; ')
                 : 'keine'}
@@ -453,7 +453,7 @@ function App({ initialZustand }: AppProps) {
               <Fragment key={eintrag.spielerId}>
                 <p>Wertung {eintrag.spielerId}: {eintrag.gesamtPunkte} Punkte</p>
                 <p>
-                  Wertungsdetails {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
+                  Punkteaufteilung {eintrag.spielerId}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
                 </p>
               </Fragment>
             ))}

@@ -46,7 +46,7 @@ describe('R66 Wertungsdetails in der UI', () => {
       expect(within(wertungBereich).getByText(`Wertung ${eintrag.spielerId}: ${eintrag.gesamtPunkte} Punkte`)).toBeInTheDocument()
       expect(
         within(wertungBereich).getByText(
-          `Wertungsdetails ${eintrag.spielerId}: Farbgruppen ${eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben ${eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte`,
+          `Punkteaufteilung ${eintrag.spielerId}: Farbgruppen ${eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben ${eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte`,
         ),
       ).toBeInTheDocument()
     })

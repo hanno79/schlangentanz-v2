@@ -25,6 +25,6 @@ describe('F7 Aufgabenkarten', () => {
     expect(karten[0]).toHaveTextContent('5 Punkte')
     expect(karten[0]).toHaveTextContent('Habe 5 oder mehr Karten der gleichen Farbe in einer Schlange.')
     expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toBeInTheDocument()
-    expect(within(materialBereich).getByText(/Offene Aufgaben-Details:/)).toBeInTheDocument()
+    expect(within(materialBereich).getByText(/Aufgabenziele:/)).toBeInTheDocument()
   })
 })
