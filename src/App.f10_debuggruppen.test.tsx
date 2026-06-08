@@ -65,8 +65,8 @@ describe('F10 Debuggruppen', () => {
 
     const material = screen.getByRole('region', { name: 'Material und Aufgaben' })
     const materialDebug = erwarteOffeneDebugGruppe(material, 'Karten und Aufgaben')
-    expect(within(materialDebug).getByText(/Ablagestapel:/)).toBeInTheDocument()
-    expect(within(materialDebug).getByText(/Nachziehstapel:/)).toBeInTheDocument()
+    expect(within(materialDebug).getByText(/Karten auf dem Ablagestapel:/)).toBeInTheDocument()
+    expect(within(materialDebug).getByText(/Karten im Nachziehstapel:/)).toBeInTheDocument()
     expect(within(materialDebug).getByText(/Aufgabenziele:/)).toBeInTheDocument()
     erwarteAusserhalbVonDebuggruppe(within(material).getByRole('region', { name: 'Aufgabenkarten' }))
 

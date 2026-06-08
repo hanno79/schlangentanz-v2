@@ -403,15 +403,15 @@ function App({ initialZustand }: AppProps) {
         <section className="info-panel" aria-label="Material und Aufgaben">
           <h2>Material und Aufgaben</h2>
           <DebugGruppe titel="Karten und Aufgaben">
-            <p>Ablagestapelgröße: {zustand.ablagestapel.length} Karten</p>
-            <p>Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
-            <p>Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
-            <p>Materialstapel gesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
-            <p>Sonderkarten: {BASIS_SONDERKARTEN_LABEL}</p>
-            <p>Erweiterungssonderkarten: {ERWEITERUNGS_SONDERKARTEN_LABEL}</p>
-            <p>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</p>
+            <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
+            <p>Karten auf dem Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
+            <p>Karten im Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
+            <p>Spielmaterial insgesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
+            <p>Basis-Sonderkarten: {BASIS_SONDERKARTEN_LABEL}</p>
+            <p>Erweiterungs-Sonderkarten: {ERWEITERUNGS_SONDERKARTEN_LABEL}</p>
+            <p>Aufgaben im Stapel: {zustand.aufgabenStapel.length} Karten</p>
             <p>
-              Offene Aufgaben:{' '}
+              Aktuelle Aufgaben:{' '}
               {zustand.offeneAufgaben.length > 0
                 ? zustand.offeneAufgaben.map(a => `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)})`).join(', ')
                 : 'keine'}

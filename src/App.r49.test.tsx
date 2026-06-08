@@ -16,7 +16,7 @@ describe('R49 Offene Aufgaben-Details', () => {
 
     const materialBereich = screen.getByRole('region', { name: 'Material und Aufgaben' })
 
-    expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toHaveTextContent(
+    expect(within(materialBereich).getByText(/Aktuelle Aufgaben:/)).toHaveTextContent(
       'Farbkombination (5 Punkte)'
     )
     expect(within(materialBereich).getByText(/Aufgabenziele:/)).toHaveTextContent(

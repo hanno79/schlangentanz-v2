@@ -60,7 +60,7 @@ describe('R103 Schlangenhäutung-Redundanzreduktion', () => {
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
 
     expect(within(aktiverSpieler).getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-r103 auf Schlange schlange-r103-1 spielen')).toBeInTheDocument()
-    expect(within(material).getByText('Ablagestapel: schlangenhaeutung-r103')).toBeInTheDocument()
+    expect(within(material).getByText('Karten auf dem Ablagestapel: schlangenhaeutung-r103')).toBeInTheDocument()
     expect(within(spieleruebersicht).getByText('Schlangen von spieler-1: schlange-r103-1 (blau-r103-1, gruen-r103-1, rot-r103-1)')).toBeInTheDocument()
   })
 })

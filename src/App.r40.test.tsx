@@ -25,7 +25,7 @@ function zustandMitOffenenAufgaben(): Spielzustand {
 describe('R40 UI-offene Aufgabenpunkte', () => {
   it('zeigt alle offenen Engine-Aufgaben mit Namen und Punkten an', () => {
     const zustand = zustandMitOffenenAufgaben()
-    const erwarteterText = `Offene Aufgaben: ${zustand.offeneAufgaben
+    const erwarteterText = `Aktuelle Aufgaben: ${zustand.offeneAufgaben
       .map(aufgabe => `${aufgabe.name} (${aufgabe.punkte} Punkte)`)
       .join(', ')}`
 
@@ -44,7 +44,7 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText('Offene Aufgaben: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Aktuelle Aufgaben: keine')).toBeInTheDocument()
     expect(within(bereich).getByText('Aufgabenziele: keine')).toBeInTheDocument()
   })
 })

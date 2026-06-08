@@ -40,7 +40,7 @@ describe('R65 Endspurt verdoppelt offene Aufgaben in der UI', () => {
       const erwarteteAnzeige = `${aufgabe.name} (${aufgabe.punkte} Punkte ×2 = ${aufgabe.punkte * 2} Punkte)`
       const erwarteteDetails = `${erwarteteAnzeige}: ${aufgabe.bedingung}`
 
-      expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
+      expect(within(materialBereich).getByText(/Aktuelle Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
       expect(within(materialBereich).getByText(/Aufgabenziele:/)).toHaveTextContent(erwarteteDetails)
     })
 
@@ -61,7 +61,7 @@ describe('R65 Endspurt verdoppelt offene Aufgaben in der UI', () => {
       const erwarteteAnzeige = `${aufgabe.name} (${aufgabe.punkte} Punkte)`
       const erwarteteDetails = `${aufgabe.name} (${aufgabe.punkte} Punkte): ${aufgabe.bedingung}`
 
-      expect(within(materialBereich).getByText(/Offene Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
+      expect(within(materialBereich).getByText(/Aktuelle Aufgaben:/)).toHaveTextContent(erwarteteAnzeige)
       expect(within(materialBereich).getByText(/Aufgabenziele:/)).toHaveTextContent(erwarteteDetails)
     })
     expect(within(materialBereich).queryByText(/×2/)).toBeNull()

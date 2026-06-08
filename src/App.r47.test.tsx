@@ -27,7 +27,7 @@ function zustandMitPflichtAbwurf(): Spielzustand {
 }
 
 function ablagestapelText(zustand: Spielzustand): string {
-  return `Ablagestapel: ${zustand.ablagestapel.length > 0 ? zustand.ablagestapel.map(karte => karte.id).join(', ') : 'keine'}`
+  return `Karten auf dem Ablagestapel: ${zustand.ablagestapel.length > 0 ? zustand.ablagestapel.map(karte => karte.id).join(', ') : 'keine'}`
 }
 
 describe('R47 UI-Ablagestapel-Details', () => {

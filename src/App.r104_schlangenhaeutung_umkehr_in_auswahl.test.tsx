@@ -57,7 +57,7 @@ describe('R104 Schlangenhäutung-Umkehr in Reihenfolge-Auswahl', () => {
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
 
     expect(within(aktiverSpieler).getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-r104 auf Schlange schlange-r104-1 spielen')).toBeInTheDocument()
-    expect(within(material).getByText('Ablagestapel: schlangenhaeutung-r104')).toBeInTheDocument()
+    expect(within(material).getByText('Karten auf dem Ablagestapel: schlangenhaeutung-r104')).toBeInTheDocument()
     expect(within(spieleruebersicht).getByText('Schlangen von spieler-1: schlange-r104-1 (gruen-r104-1, blau-r104-1, rot-r104-1)')).toBeInTheDocument()
   })
 })

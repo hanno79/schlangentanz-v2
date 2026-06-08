@@ -53,7 +53,7 @@ describe('R100 Schlangenhäutung-UI-Fallback', () => {
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
 
     expect(within(aktiverSpieler).getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-r100 auf Schlange schlange-r100-1 spielen')).toBeInTheDocument()
-    expect(within(material).getByText('Ablagestapel: schlangenhaeutung-r100')).toBeInTheDocument()
+    expect(within(material).getByText('Karten auf dem Ablagestapel: schlangenhaeutung-r100')).toBeInTheDocument()
     expect(within(spieleruebersicht).getByText('Schlangen von spieler-1: schlange-r100-1 (gruen-r100-1, blau-r100-1, rot-r100-1)')).toBeInTheDocument()
   })
 })

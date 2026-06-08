@@ -19,7 +19,7 @@ describe('R67 Materialstapel-Summe in der UI', () => {
     const materialBereich = screen.getByRole('region', { name: 'Material und Aufgaben' })
 
     expect(
-      within(materialBereich).getByText(`Materialstapel gesamt: ${erwarteteGesamtzahl} Karten`),
+      within(materialBereich).getByText(`Spielmaterial insgesamt: ${erwarteteGesamtzahl} Karten`),
     ).toBeInTheDocument()
   })
 })

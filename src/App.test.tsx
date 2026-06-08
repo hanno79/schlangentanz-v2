@@ -429,11 +429,11 @@ describe('R33 UI-Material- und Aufgabenübersicht', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(`Nachziehstapel: ${zustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
-    expect(within(bereich).getByText(`Aufgabenstapel: ${zustand.aufgabenStapel.length} Karten`)).toBeInTheDocument()
+    expect(within(bereich).getByText(`Karten im Nachziehstapel: ${zustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
+    expect(within(bereich).getByText(`Aufgaben im Stapel: ${zustand.aufgabenStapel.length} Karten`)).toBeInTheDocument()
     expect(
       within(bereich).getByText(
-        `Offene Aufgaben: ${zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
+        `Aktuelle Aufgaben: ${zustand.offeneAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
       ),
     ).toBeInTheDocument()
   })
@@ -449,10 +449,10 @@ describe('R33 UI-Material- und Aufgabenübersicht', () => {
     render(<App initialZustand={startzustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(`Nachziehstapel: ${startzustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
+    expect(within(bereich).getByText(`Karten im Nachziehstapel: ${startzustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
     fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
 
-    expect(within(bereich).getByText(`Nachziehstapel: ${erwarteterZustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
+    expect(within(bereich).getByText(`Karten im Nachziehstapel: ${erwarteterZustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
   })
 })
 
