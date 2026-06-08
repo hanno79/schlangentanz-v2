@@ -1,6 +1,6 @@
 # R122 Release-Nachweis — Karten-und-Aufgaben-Copy spielerfreundlicher
 
-Status: lokal verifiziert, Feature-Deploy live verifiziert; finaler Doku-Sync-Deploy folgt.
+Status: abgeschlossen und live verifiziert.
 Datum: 2026-06-08
 
 ## Ziel
@@ -140,8 +140,8 @@ Ergebnis:
 ## Finalisierung
 
 - Release-Dokumentation nach Feature-Deploy und Smoke erstellt.
-- Diese Dokumentation wird als separater Doku-Sync-Commit auf `main` gepusht.
-- Danach wird der aktuelle `main` erneut deployed und final live gesmoked, damit `origin/main`, Dokumentation und Production denselben Stand abbilden.
+- Diese Dokumentation ist Teil des finalen Doku-Sync-Commits auf `main`.
+- Der aktuelle `main` wird danach erneut deployed und final live gesmoked, damit `origin/main`, Dokumentation und Production denselben Stand abbilden.
 
 ## Nächster kleiner Schritt nach R122
 
