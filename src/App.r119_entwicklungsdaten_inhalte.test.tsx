@@ -25,16 +25,16 @@ describe('R119 spielerfreundliche Entwicklungsdaten-Inhalte', () => {
   it('ersetzt interne Demo- und Detail-Labels durch verständliche Spielbegriffe', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
-    const phasenstatus = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Phasenstatus' })
+    const phasenstatus = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Spielphase' })
     expect(within(phasenstatus).getByText(/Aktueller Spielschritt:/)).toBeVisible()
 
     const aktiverSpieler = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Aktiver Spieler' })
     expect(within(aktiverSpieler).getByText(/Spielerprofil:/)).toBeVisible()
 
-    const materialstatus = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Materialstatus' })
+    const materialstatus = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Karten und Aufgaben' })
     expect(within(materialstatus).getByText(/Aufgabenziele:/)).toBeVisible()
 
-    const wertung = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Wertungsdetails' })
+    const wertung = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Punkteübersicht' })
     expect(within(wertung).getByText(/Punkteaufteilung spieler-1:/)).toBeVisible()
 
     const entwicklungsdatenText = screen

@@ -36,7 +36,7 @@ describe('F10 Debuggruppen', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
     const spielstatus = screen.getByRole('region', { name: 'Spielstatus' })
-    const statusDebug = erwarteOffeneDebugGruppe(spielstatus, 'Phasenstatus')
+    const statusDebug = erwarteOffeneDebugGruppe(spielstatus, 'Spielphase')
     expect(within(statusDebug).getByText(/Aktueller Spielschritt:/)).toBeInTheDocument()
     expect(within(statusDebug).getByText(/Zugphase:/)).toBeInTheDocument()
     expect(within(statusDebug).getByText(/Spieler am Zug:/)).toBeInTheDocument()
@@ -54,7 +54,7 @@ describe('F10 Debuggruppen', () => {
     erwarteAusserhalbVonDebuggruppe(handBereich)
 
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
-    const spielerDebug = erwarteOffeneDebugGruppe(spieleruebersicht, 'Spielerzustände')
+    const spielerDebug = erwarteOffeneDebugGruppe(spieleruebersicht, 'Spielerstatus')
     expect(within(spielerDebug).getByText(/Spielerübersicht spieler-1:/)).toBeInTheDocument()
     expect(within(spielerDebug).getByText(/Schlangenübersicht spieler-1:/)).toBeInTheDocument()
     expect(within(spielerDebug).getByText(/Handkarten gesamt:/)).toBeInTheDocument()
@@ -63,14 +63,14 @@ describe('F10 Debuggruppen', () => {
     erwarteAusserhalbVonDebuggruppe(within(spieltischBereich).getByRole('region', { name: 'Schlangenbereich' }))
 
     const material = screen.getByRole('region', { name: 'Material und Aufgaben' })
-    const materialDebug = erwarteOffeneDebugGruppe(material, 'Materialstatus')
+    const materialDebug = erwarteOffeneDebugGruppe(material, 'Karten und Aufgaben')
     expect(within(materialDebug).getByText(/Ablagestapel:/)).toBeInTheDocument()
     expect(within(materialDebug).getByText(/Nachziehstapel:/)).toBeInTheDocument()
     expect(within(materialDebug).getByText(/Aufgabenziele:/)).toBeInTheDocument()
     erwarteAusserhalbVonDebuggruppe(within(material).getByRole('region', { name: 'Aufgabenkarten' }))
 
     const wertung = screen.getByRole('region', { name: 'Wertung' })
-    const wertungDebug = erwarteOffeneDebugGruppe(wertung, 'Wertungsdetails')
+    const wertungDebug = erwarteOffeneDebugGruppe(wertung, 'Punkteübersicht')
     expect(within(wertungDebug).getByText(/Wertung spieler-1:/)).toBeInTheDocument()
     expect(within(wertungDebug).getByText(/Punkteaufteilung spieler-1:/)).toBeInTheDocument()
     erwarteAusserhalbVonDebuggruppe(within(wertung).getByRole('region', { name: 'Scoreboard' }))

@@ -4,6 +4,7 @@ Datum: 08.06.2026
 Version: 2.0
 Beschreibung: F16 UI-Test für klar als Entwicklungsdaten ausgelagerte Debug-Informationen.
 Änderung R118: Titel-Array und Accessible-Names ohne "Debug:"-Präfix; keine sichtbaren "Debug:"-Texte mehr.
+Änderung R120: Titel-Array nutzt spielerfreundliche Summary-Titel statt technischer Statusdetails.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -12,11 +13,11 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 const DEBUG_TITEL = [
-  'Phasenstatus',
+  'Spielphase',
   'Aktiver Spieler',
-  'Spielerzustände',
-  'Materialstatus',
-  'Wertungsdetails',
+  'Spielerstatus',
+  'Karten und Aufgaben',
+  'Punkteübersicht',
 ]
 
 function deterministischerZustand() {
