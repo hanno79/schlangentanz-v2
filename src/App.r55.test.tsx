@@ -2,7 +2,7 @@
 Author: rahn
 Datum: 02.06.2026
 Version: 1.0
-Beschreibung: R55 UI-Test für die aktuelle Gesamtwertung des aktiven Spielers.
+Beschreibung: R55 UI-Test für den aktuellen Punktestand des aktiven Spielers.
 */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
@@ -21,8 +21,8 @@ function deterministischerZustand(): Spielzustand {
   return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 }
 
-describe('R55 UI-aktuelle Wertung des aktiven Spielers', () => {
-  it('zeigt die aktuelle Wertung des aktiven Spielers und aktualisiert sie nach einer Aktion', () => {
+describe('R55 UI-Punktestand des aktiven Spielers', () => {
+  it('zeigt den aktuellen Punktestand des aktiven Spielers und aktualisiert ihn nach einer Aktion', () => {
     const startZustand = deterministischerZustand()
     const ersteLegaleAktion = ermittleLegaleAktionen(startZustand)[0]
     if (!ersteLegaleAktion) throw new Error('Erwartete mindestens eine legale Startaktion im UI.')
@@ -38,7 +38,9 @@ describe('R55 UI-aktuelle Wertung des aktiven Spielers', () => {
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(
-      within(aktiverSpielerBereich).getByText(`Aktuelle Wertung: ${startWertung.gesamtPunkte} Punkte`),
+      within(aktiverSpielerBereich).getByText(
+        new RegExp(`Aktueller Punktestand:\\s+${startWertung.gesamtPunkte} Punkte`),
+      ),
     ).toBeInTheDocument()
 
     const ersteAktionSchaltflaeche = within(aktionsBereich).getAllByRole('button').find(button =>
@@ -56,7 +58,9 @@ describe('R55 UI-aktuelle Wertung des aktiven Spielers', () => {
     if (!nachWertung) throw new Error('Erwartete eine Wertung für den aktiven Folgespieler.')
 
     expect(
-      within(aktiverSpielerBereich).getByText(`Aktuelle Wertung: ${nachWertung.gesamtPunkte} Punkte`),
+      within(aktiverSpielerBereich).getByText(
+        new RegExp(`Aktueller Punktestand:\\s+${nachWertung.gesamtPunkte} Punkte`),
+      ),
     ).toBeInTheDocument()
   })
 })

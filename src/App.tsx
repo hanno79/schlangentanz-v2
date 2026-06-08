@@ -327,10 +327,8 @@ function App({ initialZustand }: AppProps) {
               <p>Aktiver Spieler: {aktiverSpieler.id}</p>
               <p>Spielerprofil: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
               <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
-              <p>
-                Aktuelle Wertung:{' '}
-                {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}
-              </p>
+              {/* ÄNDERUNG 08.06.2026: R125 benennt die aktive Spielerwertung als spielerfreundlichen Punktestand. */}
+              <p>Aktueller Punktestand: {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}</p>
               {ueberhand > 0 && <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>}
               {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
               {istSpielende && (
