@@ -26,7 +26,7 @@ describe('R57 UI-aktive-Spieler-Kennzeichnung', () => {
     )
 
     expect(aktiverEintrag).toBeInTheDocument()
-    expect(aktiverEintrag).toHaveTextContent('Spielerübersicht spieler-1: Spieler 1 (Mensch)')
-    expect(within(spielerUebersichtBereich).getByText(/Spielerübersicht spieler-2:/)).not.toHaveTextContent('— am Zug')
+    expect(aktiverEintrag).toHaveTextContent('Spieler spieler-1: Spieler 1 (Mensch)')
+    expect(within(spielerUebersichtBereich).getByText(/Spieler spieler-2:/)).not.toHaveTextContent('— am Zug')
   })
 })

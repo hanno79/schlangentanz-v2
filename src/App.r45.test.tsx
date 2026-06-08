@@ -12,7 +12,7 @@ import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, starteAuss
 
 function schlangenGesamtText(zustand: ReturnType<typeof erstelleSpielzustand>): string {
   const gesamt = zustand.spieler.reduce((summe, spieler) => summe + spieler.schlangen.length, 0)
-  return `Schlangen gesamt: ${gesamt}`
+  return `Schlangen insgesamt: ${gesamt}`
 }
 
 describe('R45 UI-Schlangen-Gesamtzahl', () => {

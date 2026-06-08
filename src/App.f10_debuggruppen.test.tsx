@@ -4,6 +4,7 @@ Datum: 08.06.2026
 Version: 2.0
 Beschreibung: F10 UI-Test für gruppierte und einklappbare Debug-/State-Anzeigen.
 Änderung R118: Summary-Titel ohne "Debug:"-Präfix; getByText mit selector:'summary' für Eindeutigkeit.
+Änderung R121: Spielerstatus-Zeilen mit spielerfreundlicher Copy.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -55,9 +56,9 @@ describe('F10 Debuggruppen', () => {
 
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
     const spielerDebug = erwarteOffeneDebugGruppe(spieleruebersicht, 'Spielerstatus')
-    expect(within(spielerDebug).getByText(/Spielerübersicht spieler-1:/)).toBeInTheDocument()
-    expect(within(spielerDebug).getByText(/Schlangenübersicht spieler-1:/)).toBeInTheDocument()
-    expect(within(spielerDebug).getByText(/Handkarten gesamt:/)).toBeInTheDocument()
+    expect(within(spielerDebug).getByText(/Spieler spieler-1:/)).toBeInTheDocument()
+    expect(within(spielerDebug).getByText(/Schlangen von spieler-1:/)).toBeInTheDocument()
+    expect(within(spielerDebug).getByText(/Handkarten insgesamt:/)).toBeInTheDocument()
 
     const spieltischBereich = screen.getByRole('region', { name: 'Spieltisch' })
     erwarteAusserhalbVonDebuggruppe(within(spieltischBereich).getByRole('region', { name: 'Schlangenbereich' }))

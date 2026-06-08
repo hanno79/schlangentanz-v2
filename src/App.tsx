@@ -369,13 +369,13 @@ function App({ initialZustand }: AppProps) {
 
               return (
                 <p key={spieler.id} aria-current={istAktiv ? 'true' : undefined}>
-                  Spielerübersicht {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen{istAktiv ? ' — am Zug' : ''}
+                  Spieler {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen{istAktiv ? ' — am Zug' : ''}
                 </p>
               )
             })}
             {zustand.spieler.map(spieler => (
               <p key={`schlangen-${spieler.id}`}>
-                Schlangenübersicht {spieler.id}:{' '}
+                Schlangen von {spieler.id}:{' '}
                 {spieler.schlangen.length === 0
                   ? 'keine'
                   : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
@@ -384,7 +384,7 @@ function App({ initialZustand }: AppProps) {
             {zustand.spieler.flatMap(spieler =>
               spieler.schlangen.map(schlange => (
                 <p key={`zustand-${spieler.id}-${schlange.id}`}>
-                  Schlangenzustand {spieler.id}/{schlange.id}: {schlange.zustand}
+                  Status von Schlange {spieler.id}/{schlange.id}: {schlange.zustand}
                 </p>
               ))
             )}
@@ -396,8 +396,8 @@ function App({ initialZustand }: AppProps) {
                   : `SchlangenSpass! ${spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`}
               </p>
             ))}
-            <p>Schlangen gesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
-            <p>Handkarten gesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
+            <p>Schlangen insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
+            <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
         </section>
         <section className="info-panel" aria-label="Material und Aufgaben">

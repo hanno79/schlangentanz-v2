@@ -39,25 +39,25 @@ describe('R36 UI-Schlangenzustände', () => {
     render(<App initialZustand={zustandMitSchlangenzustaenden()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/Schlangenzustand spieler-1\//)).toHaveLength(3)
-    expect(within(bereich).getByText('Schlangenzustand spieler-1/schlange-aktiv: aktiv')).toBeInTheDocument()
-    expect(within(bereich).getByText('Schlangenzustand spieler-1/schlange-blockiert: blockiert')).toBeInTheDocument()
-    expect(within(bereich).getByText('Schlangenzustand spieler-1/schlange-geschuetzt: geschuetzt')).toBeInTheDocument()
-    expect(within(bereich).queryByText(/Schlangenzustand spieler-2\//)).toBeNull()
+    expect(within(bereich).getAllByText(/Status von Schlange spieler-1\//)).toHaveLength(3)
+    expect(within(bereich).getByText('Status von Schlange spieler-1/schlange-aktiv: aktiv')).toBeInTheDocument()
+    expect(within(bereich).getByText('Status von Schlange spieler-1/schlange-blockiert: blockiert')).toBeInTheDocument()
+    expect(within(bereich).getByText('Status von Schlange spieler-1/schlange-geschuetzt: geschuetzt')).toBeInTheDocument()
+    expect(within(bereich).queryByText(/Status von Schlange spieler-2\//)).toBeNull()
   })
 
-  it('aktualisiert den Schlangenzustand nach einer Engine-Aktion', () => {
+  it('aktualisiert den Status der Schlange nach einer Engine-Aktion', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).queryByText(/Schlangenzustand spieler-1\//)).toBeNull()
+    expect(within(bereich).queryByText(/Status von Schlange spieler-1\//)).toBeNull()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(
-      within(bereich).getByText('Schlangenzustand spieler-1/schlange-spieler-1-1: aktiv'),
+      within(bereich).getByText('Status von Schlange spieler-1/schlange-spieler-1-1: aktiv'),
     ).toBeInTheDocument()
   })
 })

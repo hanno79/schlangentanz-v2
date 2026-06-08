@@ -61,6 +61,6 @@ describe('R102 Schlangenhäutung-Reihenfolge-Auswahl', () => {
 
     expect(within(aktiverSpieler).getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-r102 auf Schlange schlange-r102-1 spielen')).toBeInTheDocument()
     expect(within(material).getByText('Ablagestapel: schlangenhaeutung-r102')).toBeInTheDocument()
-    expect(within(spieleruebersicht).getByText('Schlangenübersicht spieler-1: schlange-r102-1 (rot-r102-1, gruen-r102-1, blau-r102-1)')).toBeInTheDocument()
+    expect(within(spieleruebersicht).getByText('Schlangen von spieler-1: schlange-r102-1 (rot-r102-1, gruen-r102-1, blau-r102-1)')).toBeInTheDocument()
   })
 })

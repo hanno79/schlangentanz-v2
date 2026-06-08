@@ -12,7 +12,7 @@ import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, starteAuss
 
 function handkartenGesamtText(zustand: ReturnType<typeof erstelleSpielzustand>): string {
   const gesamt = zustand.spieler.reduce((summe, spieler) => summe + spieler.hand.length, 0)
-  return `Handkarten gesamt: ${gesamt}`
+  return `Handkarten insgesamt: ${gesamt}`
 }
 
 describe('R46 UI-Handkarten-Gesamtzahl', () => {

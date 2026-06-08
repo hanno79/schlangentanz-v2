@@ -17,25 +17,25 @@ describe('R35 UI-Spieler-Schlangenübersicht', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/schlangenübersicht spieler-/i)).toHaveLength(zustand.spieler.length)
+    expect(within(bereich).getAllByText(/schlangen von spieler-/i)).toHaveLength(zustand.spieler.length)
     for (const spieler of zustand.spieler) {
-      expect(within(bereich).getByText(`Schlangenübersicht ${spieler.id}: keine`)).toBeInTheDocument()
+      expect(within(bereich).getByText(`Schlangen von ${spieler.id}: keine`)).toBeInTheDocument()
     }
   })
 
-  it('aktualisiert die Schlangenübersicht nach einer Engine-Aktion', () => {
+  it('aktualisiert die Schlangenanzeige nach einer Engine-Aktion', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText('Schlangenübersicht spieler-1: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Schlangen von spieler-1: keine')).toBeInTheDocument()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(
-      within(bereich).getByText('Schlangenübersicht spieler-1: schlange-spieler-1-1 (blau-01)'),
+      within(bereich).getByText('Schlangen von spieler-1: schlange-spieler-1-1 (blau-01)'),
     ).toBeInTheDocument()
-    expect(within(bereich).getByText('Schlangenübersicht spieler-2: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Schlangen von spieler-2: keine')).toBeInTheDocument()
   })
 })
