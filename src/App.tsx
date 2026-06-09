@@ -17,7 +17,7 @@ import {
   erstelleSonderkarten,
   erstelleErweiterungsSonderkarten,
 } from './engine'
-import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
+import type { AufgabenkarteInfo, GewinnerEintrag, SchlangenZustand, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import AktionenPanel from './components/AktionenPanel'
 import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
@@ -147,6 +147,12 @@ function naechsterPflichtschrittLabel(
   if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
   if (nichtEnumerierteAktionenHinweise.length > 0) return 'Schlangenhäutung vorbereiten.'
   return 'Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
+}
+
+function schlangenZustandLabel(zustand: SchlangenZustand): string {
+  if (zustand === 'aktiv') return 'spielbereit'
+  if (zustand === 'blockiert') return 'gerade blockiert'
+  return 'geschützt'
 }
 
 interface AppProps {
@@ -380,9 +386,9 @@ function App({ initialZustand }: AppProps) {
               </p>
             ))}
             {zustand.spieler.flatMap(spieler =>
-              spieler.schlangen.map(schlange => (
+              spieler.schlangen.map((schlange, index) => (
                 <p key={`zustand-${spieler.id}-${schlange.id}`}>
-                  Status von Schlange {spieler.id}/{schlange.id}: {schlange.zustand}
+                  Schlange {index + 1} von {spieler.name}: {schlangenZustandLabel(schlange.zustand)}.
                 </p>
               ))
             )}

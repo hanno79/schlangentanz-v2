@@ -39,6 +39,6 @@ describe('R75 Farbenschutz UI', () => {
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: aktionsName }))
 
     expect(within(aktionsBereich).getByText('Gespielte Karten: 1/2')).toBeInTheDocument()
-    expect(within(spieleruebersichtBereich).getByText('Status von Schlange spieler-1/schlange-spieler-1-1: geschuetzt')).toBeInTheDocument()
+    expect(within(spieleruebersichtBereich).getByText('Schlange 1 von Spieler 1: geschützt.')).toBeInTheDocument()
   })
 })

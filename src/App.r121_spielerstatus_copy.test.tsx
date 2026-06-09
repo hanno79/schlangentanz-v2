@@ -33,7 +33,7 @@ describe('R121 spielerfreundliche Spielerstatus-Inhalte', () => {
 
     expect(within(spielerstatus).getByText(/Spieler spieler-1:/)).toBeVisible()
     expect(within(spielerstatus).getByText(/Schlangen von spieler-1:/)).toBeVisible()
-    expect(within(spielerstatus).getByText(new RegExp('Status von Schlange spieler-1/'))).toBeVisible()
+    expect(within(spielerstatus).getByText(/Schlange 1 von Spieler 1: spielbereit\./)).toBeVisible()
     expect(within(spielerstatus).getByText(/Schlangen insgesamt:/)).toBeVisible()
     expect(within(spielerstatus).getByText(/Handkarten insgesamt:/)).toBeVisible()
 

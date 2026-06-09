@@ -39,11 +39,10 @@ describe('R36 UI-Schlangenzustände', () => {
     render(<App initialZustand={zustandMitSchlangenzustaenden()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/Status von Schlange spieler-1\//)).toHaveLength(3)
-    expect(within(bereich).getByText('Status von Schlange spieler-1/schlange-aktiv: aktiv')).toBeInTheDocument()
-    expect(within(bereich).getByText('Status von Schlange spieler-1/schlange-blockiert: blockiert')).toBeInTheDocument()
-    expect(within(bereich).getByText('Status von Schlange spieler-1/schlange-geschuetzt: geschuetzt')).toBeInTheDocument()
-    expect(within(bereich).queryByText(/Status von Schlange spieler-2\//)).toBeNull()
+    expect(within(bereich).getByText('Schlange 1 von Spieler 1: spielbereit.')).toBeInTheDocument()
+    expect(within(bereich).getByText('Schlange 2 von Spieler 1: gerade blockiert.')).toBeInTheDocument()
+    expect(within(bereich).getByText('Schlange 3 von Spieler 1: geschützt.')).toBeInTheDocument()
+    expect(within(bereich).queryByText(/Schlange 1 von Spieler 2:/)).toBeNull()
   })
 
   it('aktualisiert den Status der Schlange nach einer Engine-Aktion', () => {
@@ -52,12 +51,12 @@ describe('R36 UI-Schlangenzustände', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).queryByText(/Status von Schlange spieler-1\//)).toBeNull()
+    expect(within(bereich).queryByText(/Schlange 1 von Spieler 1:/)).toBeNull()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(
-      within(bereich).getByText('Status von Schlange spieler-1/schlange-spieler-1-1: aktiv'),
+      within(bereich).getByText('Schlange 1 von Spieler 1: spielbereit.'),
     ).toBeInTheDocument()
   })
 })
