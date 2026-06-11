@@ -999,3 +999,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `48eda42 — R153: Weitere Aktionen per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R153-Browser-Smoke bestätigt `Weitere Aktionen`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R154 Phasenaktion per Überschrift labeln
+
+- [x] Scope: Die `Phasenaktion`-Unterregion im `Aktionen`-Bereich wird über ihre sichtbare `h3` per `aria-labelledby` gelabelt; bestehende Sprungziel-ID `phasenaktionId`, `tabIndex`, Highlight-/Fokus-Verhalten, CSS-Klasse, Button-Labels/-Handler, sichtbare Copy, `Empfohlene Aktion`, `Weitere Aktionen`, Spielerführung/Sprungziele, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r154_phasenaktion_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Phasenaktion"` gesetzt war.
+- [x] GREEN: `src/components/AktionenPanel.tsx` nutzt `useId()` für `phasenaktionTitelId` und labelt die Unterregion per `aria-labelledby`; `src/App.r154_phasenaktion_idref.test.tsx` prüft zwei App-Instanzen, kein `aria-label`, Single-Token-IDREF, documentweit eindeutige Label-IDs, genau ein Ziel, Ziel innerhalb der Region, Heading `Phasenaktion` mit Level 3 sowie erhaltene Klasse, ID und `tabIndex`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: initiale Testhärtungs-Non-Blocker behoben; Re-Review final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r154_phasenaktion_idref.test.tsx src/App.r153_weitere_aktionen_idref.test.tsx src/App.f6_aktionenbereich.test.tsx src/App.f18_spielerfuehrung_aktionsbereich_verbindung.test.tsx src/App.f19_sprungziel_hervorhebung.test.tsx src/App.f27_sprungziel_fokus.test.tsx src/App.r113_aktionenpanel_idrefs.test.tsx` → 7 Testdateien / 11 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 160 Testdateien / 648 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `35acb8b — R154: Phasenaktion per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R154-Browser-Smoke bestätigt `Phasenaktion`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label`, erhaltene ID und `tabIndex=-1` sowie keine Console-/Page-Errors.
