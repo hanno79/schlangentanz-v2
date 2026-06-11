@@ -144,7 +144,7 @@ R128-spezifischer Browser-Smoke:
 
 R128 ist umgesetzt, getestet, reviewed, committed, gepusht, deployed und live gegen den stabilen Production-Alias verifiziert.
 
-Dieser Release-Nachweis wird mit dem Doku-Sync-Commit auf `main` übernommen. Der stabile Production-Alias [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app) bleibt die belastbare Release-Referenz; der finale Cron-Bericht nennt den nach Doku-Sync erneut verifizierten `HEAD`.
+Der Release-Nachweis ist final synchronisiert. Die stabile Production-Alias [https://schlangentanz-v2.vercel.app](https://schlangentanz-v2.vercel.app) bleibt die belastbare Release-Referenz; der jeweilige Cron-Bericht nennt den final verifizierten `HEAD` nach Deploy und Smoke.
 
 ## Nächster kleiner Schritt nach R128
 
