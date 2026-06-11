@@ -804,3 +804,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `ee478c2 — R138: Zugdiagnose spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R138-Browser-Smoke bestätigt `Spielschritt im Zug: Karten ausspielen`, keine sichtbare stale `Spielschritt im Zug: Ausspielphase`-Copy im erreichten Startzustand und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R139 Gegnerische Schlangen mit Spielernamen benennen
+
+- [x] Scope: Gegnerische Schlangenkarten im `Spieltisch` zeigen Besitzer-Copy über Spielernamen statt roher `spieler-*`-IDs; Engine, Regeln, Drag&Drop, Schlangen-/Karten-IDs und Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r139_gegnerische_schlangen_spieler_copy.test.tsx` schlug erwartungsgemäß fehl, weil noch `Spieler: spieler-2` statt `Gehört zu: Spieler 2` sichtbar war.
+- [x] GREEN: `src/components/Schlangenbereich.tsx` rendert für gegnerische Schlangenkarten `Gehört zu: {spieler.name}`; `src/App.r139_gegnerische_schlangen_spieler_copy.test.tsx` prüft die neue Copy und negativ die stale ID-Copy im Bereich `Gegnerische Schlangen`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`; Codex verifizierte den neuen R139-Test direkt erfolgreich.
+- [x] Targeted: `npm test -- --run src/App.r139_gegnerische_schlangen_spieler_copy.test.tsx src/App.f13_spielbrett_layout.test.tsx src/App.r136_spieltisch_schlangenstatus_copy.test.tsx` → 3 Testdateien / 3 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 145 Testdateien / 633 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Dateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `c1d32a5 — R139: Gegnerische Schlangen mit Spielernamen benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R139-Browser-Smoke spielt bis Spieler 2 aktiv ist und bestätigt `Gehört zu: Spieler 1`, keine sichtbare stale `Spieler: spieler-1`-Copy im Bereich `Gegnerische Schlangen` und keine Console-/Page-Errors.
