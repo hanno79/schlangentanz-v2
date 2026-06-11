@@ -221,6 +221,7 @@ function App({ initialZustand }: AppProps) {
   const empfohleneAktionId = useId()
   const phasenaktionId = useId()
   const heroTitelId = useId()
+  const spielstatusTitelId = useId()
   const spieltischTitelId = useId()
   const punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
@@ -260,8 +261,8 @@ function App({ initialZustand }: AppProps) {
         </ul>
       </section>
       <section className="spielbereich" aria-label="Spielbereich">
-        <section className="info-panel" aria-label="Spielstatus">
-          <h2>Spielstatus</h2>
+        <section className="info-panel" aria-labelledby={spielstatusTitelId}>
+          <h2 id={spielstatusTitelId}>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
           <DebugGruppe titel="Spielphase">
             <p>Aktueller Spielschritt: {zugphaseLabel(zustand.zugphase)}</p>
