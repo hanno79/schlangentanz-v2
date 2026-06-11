@@ -222,6 +222,7 @@ function App({ initialZustand }: AppProps) {
   const phasenaktionId = useId()
   const heroTitelId = useId()
   const spieltischTitelId = useId()
+  const punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
@@ -467,8 +468,8 @@ function App({ initialZustand }: AppProps) {
               </Fragment>
             ))}
           </DebugGruppe>
-          <section className="scoreboard-bereich" aria-label="Punktetafel">
-            <h3>Punktetafel</h3>
+          <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId}>
+            <h3 id={punktetafelTitelId}>Punktetafel</h3>
             <ul className="scoreboard-liste">
               {spielerwertungen.map(eintrag => {
                 const spieler = zustand.spieler.find(s => s.id === eintrag.spielerId)
