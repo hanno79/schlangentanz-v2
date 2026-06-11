@@ -713,3 +713,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `96ce7c2 — R129: Gewinner-Copy spielerfreundlicher machen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; zusätzlicher Playwright-Flow auf `/game` ohne Console-/Page-Errors. Die Spielende-Gewinner-Copy wurde lokal per DOM-Regression abgesichert; ein vollständiger Live-Endzustand wurde in diesem Lauf nicht erzwungen.
+
+## Evidence — 11.06.2026 R130 Punkteübersicht-Copy spielerfreundlicher
+
+- [x] Scope: Entwicklungsdaten-Punkteübersicht zeigt Spielernamen statt roher `spieler-*`-IDs; Engine/Scoring/Scoreboard/Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r130_punkteuebersicht_spielernamen.test.tsx` schlug erwartungsgemäß fehl, weil noch `Punktestand/Punktequellen von spieler-*` gerendert wurde.
+- [x] GREEN: `src/App.tsx` nutzt den bestehenden `spielerNameFuerId(...)`-Mapper für `Punktestand von …` und `Punktequellen von …`; bestehende UI-Regressionen wurden auf Spielernamen nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initialer stale-Test-Copy-Blocker behoben; final `BLOCKERS: Keine`.
+- [x] Targeted: 9 betroffene App-Testdateien / 35 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 137 Testdateien / 618 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `af6d38a — R130: Punkteübersicht-Copy spielerfreundlicher machen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R130-Browser-Smoke bestätigt `Punktestand von Spieler 1` / `Punktequellen von Spieler 1` und keine stale `Punktestand/Punktequellen von spieler-*`-Copy im erreichten Live-DOM.
