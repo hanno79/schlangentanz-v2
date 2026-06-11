@@ -224,6 +224,7 @@ function App({ initialZustand }: AppProps) {
   const spielstatusTitelId = useId()
   const aktiverSpielerTitelId = useId()
   const spieltischTitelId = useId()
+  const spieleruebersichtTitelId = useId()
   const punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
@@ -381,8 +382,8 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </div>
-        <section className="info-panel" aria-label="Spielerübersicht">
-          <h2>Spielerübersicht</h2>
+        <section className="info-panel" aria-labelledby={spieleruebersichtTitelId}>
+          <h2 id={spieleruebersichtTitelId}>Spielerübersicht</h2>
           <DebugGruppe titel="Spielerstatus">
             {zustand.spieler.map(spieler => {
               const istAktiv = spieler.id === aktiverSpieler.id
