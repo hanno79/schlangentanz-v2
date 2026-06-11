@@ -869,3 +869,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `3cd1288 — R143: Punktetafel deutsch benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R143-Browser-Smoke bestätigt Region/Heading `Punktetafel`, keine `Scoreboard`-Region, keinen `Scoreboard`-Heading, keine sichtbare `Scoreboard`-Copy im `Wertung`-Bereich und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R144 Punktetafel per Überschrift labeln
+
+- [x] Scope: Die `Punktetafel`-Region im Bereich `Wertung` wird über ihre sichtbare Überschrift per `aria-labelledby` gelabelt; sichtbare Copy, CSS-Klassen `scoreboard-*`, Wertungslogik, Listeninhalt, Reihenfolge und Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r144_punktetafel_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Punktetafel"` gesetzt war.
+- [x] GREEN: `src/App.tsx` nutzt `useId()` für `punktetafelTitelId` und labelt die Region per `aria-labelledby`; `src/App.r144_punktetafel_idref.test.tsx` prüft kein `aria-label`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region, Heading `Punktetafel` und Listeneinträge.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R144-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r144_punktetafel_idref.test.tsx src/App.r143_punktetafel_label.test.tsx src/App.f8_scoreboard.test.tsx src/App.r128_scoreboard_copy.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 150 Testdateien / 638 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `5573dac — R144: Punktetafel per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R144-Browser-Smoke bestätigt `Punktetafel`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label`, keine sichtbare `Scoreboard`-Copy im `Wertung`-Bereich und keine Console-/Page-Errors.
