@@ -13,13 +13,14 @@ import { erstelleSpielzustand, starteAusspielphase } from './engine'
 const SPIELERFREUNDLICHE_SPIELPHASE_LABELS = [
   /Aktueller Spielschritt: Karten ausspielen/,
   /Spielschritt im Zug: Ausspielphase/,
-  /Partiestatus: Normal/,
+  /Partiestatus: Laufende Partie/,
   /Am Zug: Spieler 1 von 2/,
 ]
 
 const VERALTETE_SPIELPHASE_LABELS = [
   'Zugphase:',
   'Spielphase:',
+  'Partiestatus: Normal',
   'Spieler am Zug:',
   'Aktueller Spielschritt: Ausspielphase',
 ]

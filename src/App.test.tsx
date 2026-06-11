@@ -384,7 +384,8 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/partiestatus: normal/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: laufende partie/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/partiestatus: normal\b/i)).toBeNull()
     expect(within(bereich).queryByText(/endrunde ausgelöst durch/i)).toBeNull()
   })
 
@@ -393,7 +394,8 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
     const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
-    expect(within(bereich).getByText(/partiestatus: endspurt/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: endrunde läuft/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/partiestatus: endspurt\b/i)).toBeNull()
     expect(within(bereich).getByText(/endrunde ausgelöst durch: Spieler 2/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/verbleibende endrunde: Spieler 3, Spieler 1/i)).toBeInTheDocument()
     expect(spielstatusText).not.toMatch(/\bspieler-\d\b/i)
@@ -407,7 +409,8 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
     expect(within(bereich).getByText(/aktiver spieler: spieler 3/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/partiestatus: endspurt/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: endrunde läuft/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/partiestatus: endspurt\b/i)).toBeNull()
     expect(within(bereich).getByText(/verbleibende endrunde: Spieler 3, Spieler 1/i)).toBeInTheDocument()
     expect(spielstatusText).not.toMatch(/\bspieler-\d\b/i)
   })
@@ -420,7 +423,8 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     render(<App initialZustand={spielende} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/partiestatus: beendet/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/partiestatus: partie beendet/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/partiestatus: beendet\b/i)).toBeNull()
     expect(within(bereich).getByText(/verbleibende endrunde: keine/i)).toBeInTheDocument()
   })
 })

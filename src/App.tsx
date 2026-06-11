@@ -128,6 +128,17 @@ function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung'
   }
 }
 
+function spielphaseLabel(spielphase: Spielzustand['spielphase']): string {
+  switch (spielphase) {
+    case 'Normal':
+      return 'Laufende Partie'
+    case 'Endspurt':
+      return 'Endrunde läuft'
+    case 'Beendet':
+      return 'Partie beendet'
+  }
+}
+
 function naechsterPflichtschrittLabel(
   zustand: Spielzustand,
   legaleAktionen: SpielAktion[],
@@ -254,7 +265,7 @@ function App({ initialZustand }: AppProps) {
           <DebugGruppe titel="Spielphase">
             <p>Aktueller Spielschritt: {zugphaseLabel(zustand.zugphase)}</p>
             <p>Spielschritt im Zug: {zustand.zugphase}</p>
-            <p>Partiestatus: {zustand.spielphase}</p>
+            <p>Partiestatus: {spielphaseLabel(zustand.spielphase)}</p>
             {istSpielende && <p>Spielende erreicht.</p>}
             {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
               <>
