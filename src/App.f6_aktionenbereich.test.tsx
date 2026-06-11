@@ -30,8 +30,10 @@ describe('F6 Aktionenbereich', () => {
     expect(within(weitereAktionen).getByRole('heading', { name: 'Weitere legale Aktionen' })).toBeInTheDocument()
 
     expect(within(empfohleneAktion).getByRole('button')).toHaveClass('aktions-button--empfohlen')
-    expect(within(weitereAktionen).getByText(/Quelle: engine\.ermittleLegaleAktionen/i)).toBeInTheDocument()
     expect(within(weitereAktionen).getAllByRole('button').length).toBeGreaterThan(0)
+    expect(within(weitereAktionen).getByText('Spielregeln prüfen jede Aktion vor dem Ausführen.')).toBeVisible()
+    expect(within(weitereAktionen).queryByText(/engine\.ermittleLegaleAktionen/i)).not.toBeInTheDocument()
+    expect(within(weitereAktionen).queryByText(/^Quelle:/i)).not.toBeInTheDocument()
   })
 
   it('gruppiert Phasenaktionen getrennt von legalen Engine-Aktionen', () => {

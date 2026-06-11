@@ -172,7 +172,7 @@ export default function AktionenPanel({
                 ))}
               </>
             )}
-            <p>Quelle: engine.ermittleLegaleAktionen</p>
+            <p>Spielregeln prüfen jede Aktion vor dem Ausführen.</p>
           </section>
           {nichtEnumerierteAktionenHinweise.length > 0 && (
             <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-label="Weitere verfügbare Aktionen">

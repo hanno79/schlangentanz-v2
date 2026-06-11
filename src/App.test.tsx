@@ -43,7 +43,9 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
     expect(
       within(aktionenBereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
     ).toBeInTheDocument()
-    expect(within(bereich).getByText(/quelle: engine\.ermittlelegaleaktionen/i)).toBeInTheDocument()
+    expect(within(aktionenBereich).getByText('Spielregeln prüfen jede Aktion vor dem Ausführen.')).toBeInTheDocument()
+    expect(within(aktionenBereich).queryByText(/engine\.ermittlelegaleaktionen/i)).not.toBeInTheDocument()
+    expect(within(aktionenBereich).queryByText(/^quelle:/i)).not.toBeInTheDocument()
   })
 })
 
