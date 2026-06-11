@@ -8,6 +8,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.4: R113 – empfohleneAktionId/phasenaktionId als Props; DOM-sichere IDs bei parallelen App-Instanzen.
 Änderung v1.5: R141 – sichtbare Aktionen-Copy spielerfreundlich ohne Legalitätsjargon.
 Änderung v1.6: R145 – Aktionenbereich per sichtbarer Überschrift labeln.
+Änderung v1.7: R153 – Weitere Aktionen per sichtbarer Überschrift labeln.
 */
 
 import { useId } from 'react'
@@ -111,6 +112,7 @@ export default function AktionenPanel({
 }: AktionenPanelProps) {
   const aktionenTitelId = useId()
   const empfohleneAktionTitelId = useId()
+  const weitereAktionenTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
     <section className="info-panel" aria-labelledby={aktionenTitelId}>
@@ -141,8 +143,8 @@ export default function AktionenPanel({
               <p>Keine empfohlene Aktion verfügbar.</p>
             )}
           </section>
-          <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-label="Weitere Aktionen">
-            <h3>Weitere Aktionen</h3>
+          <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId}>
+            <h3 id={weitereAktionenTitelId}>Weitere Aktionen</h3>
             {legaleAktionen.length > 1 ? (
               <ol className="aktions-liste" start={2}>
                 {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
