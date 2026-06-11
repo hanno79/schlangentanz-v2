@@ -1025,3 +1025,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `15c0e97 — R155: Weitere verfügbare Aktionen per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar und keine Console-/Page-Errors. Die R155-Zielregion ist in der aktuellen Produktionsdeck-Konfiguration ohne injizierten Fixture-Zustand nicht zuverlässig live erreichbar; der exakte IDREF-Vertrag ist lokal per DOM-Regression gegen den betroffenen Spielzustand abgesichert.
+
+## Evidence — 11.06.2026 R156 Endphase per Überschrift labeln
+
+- [x] Scope: Die bedingt gerenderte `Endphase`-Unterregion im `Aktionen`-Bereich wird über ihre sichtbare `h3` per `aria-labelledby` gelabelt; Endphase-Copy, No-Draw-Hinweis, Endspurt-Gating, Aktions-/Phasenlogik, Engine-/Regelverhalten, Layout und andere Regionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r156_endphase_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Endphase"` gesetzt war.
+- [x] GREEN: `src/components/AktionenPanel.tsx` nutzt `useId()` für `endphaseTitelId` und labelt die Endphase-Unterregion per `aria-labelledby`; `src/App.r156_endphase_idref.test.tsx` prüft zwei App-Instanzen, kein `aria-label`, Single-Token-IDREF, dokumentweit eindeutige Label-IDs, genau ein Ziel, Ziel innerhalb der Region, Heading `Endphase` mit Level 3 sowie erhaltene CSS-Klasse.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: initialer Testhärtungs-Non-Blocker behoben; Re-Review final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r156_endphase_idref.test.tsx src/App.f20_endphase_hinweis.test.tsx src/App.r154_phasenaktion_idref.test.tsx src/App.r155_weitere_verfuegbare_aktionen_idref.test.tsx` → 4 Testdateien / 5 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 162 Testdateien / 650 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen; unveränderte Legacy-Engine-Dateien über 500 Zeilen bleiben als bestehende Debt außerhalb dieses UI-Slices dokumentiert.
+- [x] Commit/Push: `dabb562 — R156: Endphase per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar und keine Console-/Page-Errors. Die R156-Zielregion ist ein bedingt gerenderter Endspurt-/Endphase-Zustand und ohne injizierten Fixture-Zustand nicht zuverlässig live erreichbar; der exakte IDREF-Vertrag ist lokal per DOM-Regression gegen den betroffenen Endspurt-Spielzustand abgesichert.
