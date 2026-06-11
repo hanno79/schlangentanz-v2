@@ -921,3 +921,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `d950a90 — R147: Aktiven Spieler per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R147-Browser-Smoke bestätigt `Aktiver Spieler`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, `aria-live="polite"`, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R148 Spielerübersicht per Überschrift labeln
+
+- [x] Scope: Die `Spielerübersicht`-Region im `Spielbereich` wird über ihre sichtbare Überschrift per `aria-labelledby` gelabelt; sichtbare Copy, DebugGruppe `Spielerstatus`, `aria-current`, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r148_spieleruebersicht_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Spielerübersicht"` gesetzt war.
+- [x] GREEN: `src/App.tsx` nutzt `useId()` für `spieleruebersichtTitelId` und labelt die Region per `aria-labelledby`; `src/App.r148_spieleruebersicht_idref.test.tsx` prüft kein `aria-label`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region und Heading `Spielerübersicht`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R148-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r148_spieleruebersicht_idref.test.tsx src/App.r147_aktiver_spieler_idref.test.tsx src/App.r146_spielstatus_idref.test.tsx src/App.r144_punktetafel_idref.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 154 Testdateien / 642 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `90b92aa — R148: Spielerübersicht per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R148-Browser-Smoke bestätigt `Spielerübersicht`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
