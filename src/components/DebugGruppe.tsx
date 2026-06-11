@@ -12,7 +12,7 @@ interface DebugGruppeProps {
   children: ReactNode
 }
 
-const BADGE_LABEL = 'Entwicklungsdaten'
+const BADGE_LABEL = 'Entwicklungsdaten:'
 
 export default function DebugGruppe({ titel, children }: DebugGruppeProps) {
   const badgeId = useId()
@@ -20,7 +20,7 @@ export default function DebugGruppe({ titel, children }: DebugGruppeProps) {
 
   return (
     <aside className="debug-gruppe-entwicklungsdaten" aria-labelledby={`${badgeId} ${summaryId}`}>
-      <span id={badgeId} className="debug-gruppe__badge" aria-label={`${BADGE_LABEL}:`}>{BADGE_LABEL}</span>
+      <span id={badgeId} className="debug-gruppe__badge">{BADGE_LABEL}</span>
       <details open className="debug-gruppe">
         <summary id={summaryId}>{titel}</summary>
         {children}

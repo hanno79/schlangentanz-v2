@@ -41,8 +41,8 @@ describe('R161 Debuggruppen aria-labelledby', () => {
       }
 
       expect(labelZiele[0][0]).toHaveClass('debug-gruppe__badge')
-      expect(labelZiele[0][0]).toHaveTextContent('Entwicklungsdaten')
-      expect(labelZiele[0][0]).toHaveAttribute('aria-label', 'Entwicklungsdaten:')
+      expect(labelZiele[0][0]).toHaveTextContent('Entwicklungsdaten:')
+      expect(labelZiele[0][0]).not.toHaveAttribute('aria-label')
       expect(labelZiele[1][0].tagName).toBe('SUMMARY')
       expect(labelZiele[1][0]).toHaveTextContent(/\S/)
       expect(debugGruppe).toHaveAccessibleName(`Entwicklungsdaten: ${labelZiele[1][0].textContent}`)

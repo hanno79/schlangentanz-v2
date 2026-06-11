@@ -31,7 +31,7 @@ describe('F16 Entwicklungsdaten-Debugbereiche', () => {
     for (const titel of DEBUG_TITEL) {
       const entwicklungsdaten = screen.getByRole('complementary', { name: `Entwicklungsdaten: ${titel}` })
       expect(entwicklungsdaten).toHaveClass('debug-gruppe-entwicklungsdaten')
-      const badge = within(entwicklungsdaten).getByText('Entwicklungsdaten')
+      const badge = within(entwicklungsdaten).getByText('Entwicklungsdaten:')
       expect(badge).toBeInTheDocument()
       expect(badge).toHaveClass('debug-gruppe__badge')
       expect(within(entwicklungsdaten).getByText(titel)).toBeInTheDocument()
