@@ -222,6 +222,7 @@ function App({ initialZustand }: AppProps) {
   const phasenaktionId = useId()
   const heroTitelId = useId()
   const spielstatusTitelId = useId()
+  const aktiverSpielerTitelId = useId()
   const spieltischTitelId = useId()
   const punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
@@ -294,8 +295,8 @@ function App({ initialZustand }: AppProps) {
           <Zugfortschritt zugphase={zustand.zugphase} />
         </section>
         <div className="spieltisch-gruppe">
-          <section className="info-panel" aria-label="Aktiver Spieler" aria-live="polite">
-            <h2>Aktiver Spieler</h2>
+          <section className="info-panel" aria-labelledby={aktiverSpielerTitelId} aria-live="polite">
+            <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
             <section className="spielbrett" aria-labelledby={spieltischTitelId}>
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <HandkartenPanel
