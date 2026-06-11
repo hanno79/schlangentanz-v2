@@ -225,7 +225,7 @@ function App({ initialZustand }: AppProps) {
   const aktiverSpielerTitelId = useId()
   const spieltischTitelId = useId()
   const spieleruebersichtTitelId = useId()
-  const punktetafelTitelId = useId()
+  const materialUndAufgabenTitelId = useId(), punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
@@ -413,8 +413,8 @@ function App({ initialZustand }: AppProps) {
             <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
         </section>
-        <section className="info-panel" aria-label="Material und Aufgaben">
-          <h2>Material und Aufgaben</h2>
+        <section className="info-panel" aria-labelledby={materialUndAufgabenTitelId}>
+          <h2 id={materialUndAufgabenTitelId}>Material und Aufgaben</h2>
           <DebugGruppe titel="Karten und Aufgaben">
             <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
             <p>Karten auf dem Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
