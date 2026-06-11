@@ -752,3 +752,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `255615d — R132: Aktiven Spieler spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R132-Browser-Smoke bestätigt `Aktiver Spieler: Spieler 1` / `Spielerprofil: Spieler 1 — Du bist am Zug.` und keine rohe `spieler-*`-/`(Mensch|KI)`-Copy im erreichten Aktiver-Spieler-Entwicklungsdatenbereich.
+
+## Evidence — 11.06.2026 R135 Aktionenquelle spielerfreundlich benennen
+
+- [x] Scope: Aktionenbereich `Weitere Aktionen` zeigt einen spielerfreundlichen Regelprüfhinweis statt sichtbarer interner Implementierungsquelle; Engine/Regeln/Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r135_aktionenquelle_copy.test.tsx` schlug erwartungsgemäß fehl, weil `Spielregeln prüfen jede Aktion vor dem Ausführen.` noch fehlte und `Quelle: engine.ermittleLegaleAktionen` sichtbar war.
+- [x] GREEN: `src/components/AktionenPanel.tsx` ersetzt die Quelle-Zeile durch die Spieler-Copy; `src/App.f6_aktionenbereich.test.tsx`, `src/App.test.tsx` und `src/App.r135_aktionenquelle_copy.test.tsx` sichern Copy, negative stale Quelle und erhaltene Button-Coverage ab.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initial `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`; nach Full-Suite-Fund und `App.test.tsx`-Nachzug Re-Review ebenfalls `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.test.tsx src/App.r135_aktionenquelle_copy.test.tsx src/App.f6_aktionenbereich.test.tsx` → 3 Testdateien / 29 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 141 Testdateien / 623 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `4f0cd8f — R135: Aktionenquelle spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R135-Browser-Smoke bestätigt die neue Regelprüf-Copy, keine sichtbare `Quelle:`-/`engine.ermittleLegaleAktionen`-Copy im erreichten `Weitere Aktionen`-Bereich und keine Console-/Page-Errors.
