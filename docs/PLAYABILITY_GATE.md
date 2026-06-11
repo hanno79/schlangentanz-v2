@@ -778,3 +778,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `c308608 — R136: Schlangenstatus am Spieltisch spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R136-Browser-Smoke führt eine `Neue Schlange starten`-Aktion aus, bestätigt `Status: spielbereit` im `Spieltisch`, keine sichtbare stale `Zustand: aktiv|blockiert|geschuetzt`-Copy und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R137 Partiestatus spielerfreundlich benennen
+
+- [x] Scope: Entwicklungsdaten-Zeile `Partiestatus` zeigt spielerfreundliche Copy (`Laufende Partie`, `Endrunde läuft`, `Partie beendet`) statt roher interner `spielphase`-Werte; Engine, Regeln, Layout und Interaktionen unverändert.
+- [x] RED: `npm test -- --run src/App.r137_partiestatus_copy.test.tsx` schlug erwartungsgemäß mit 3 Fehlschlägen fehl, weil noch `Partiestatus: Normal/Endspurt/Beendet` sichtbar war.
+- [x] GREEN: `src/App.tsx` mappt `Normal`, `Endspurt`, `Beendet` über `spielphaseLabel(...)`; `src/App.r123_spielphase_copy.test.tsx`, `src/App.f22_spielende_status.test.tsx` und stale R32-Erwartungen in `src/App.test.tsx` wurden nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: redundante Teststil-Non-Blocker und späterer Full-Suite-Fund in `App.test.tsx` behoben; finales Re-Review `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r137_partiestatus_copy.test.tsx src/App.r123_spielphase_copy.test.tsx src/App.f22_spielende_status.test.tsx src/App.f21_endspurt_status.test.tsx src/App.test.tsx` → 5 Testdateien / 34 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 143 Testdateien / 627 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `b871c91 — R137: Partiestatus spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R137-Browser-Smoke bestätigt `Partiestatus: Laufende Partie`, keine sichtbare stale `Partiestatus: Normal`-Copy im erreichten Startzustand und keine Console-/Page-Errors.
