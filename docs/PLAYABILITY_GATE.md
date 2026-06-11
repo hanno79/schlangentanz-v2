@@ -817,3 +817,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `c1d32a5 — R139: Gegnerische Schlangen mit Spielernamen benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R139-Browser-Smoke spielt bis Spieler 2 aktiv ist und bestätigt `Gehört zu: Spieler 1`, keine sichtbare stale `Spieler: spieler-1`-Copy im Bereich `Gegnerische Schlangen` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R140 Empfohlene Aktion spielerfreundlich benennen
+
+- [x] Scope: Aktiver-Spieler-Entwicklungsdaten zeigen die nächste spielbare Aktion als `Empfohlene Aktion` statt als technische Legalitätsdiagnose `Nächste legale Aktion`; Engine, Regeln, Aktionslabels, Aktionenpanel, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r140_empfohlene_aktion_copy.test.tsx` schlug erwartungsgemäß fehl, weil noch die alte `Nächste legale Aktion`-Copy gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert die Zeile als `Empfohlene Aktion: ...`; `src/App.r52.test.tsx`, `src/App.r54.test.tsx` und `src/App.f14_spielerfuehrung.test.tsx` wurden auf neue positive Copy plus negative stale-Copy-Assertions nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initialer stale-Test-Blocker in `src/App.f14_spielerfuehrung.test.tsx` behoben; final `BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r140_empfohlene_aktion_copy.test.tsx src/App.r52.test.tsx src/App.r54.test.tsx src/App.f14_spielerfuehrung.test.tsx` → 4 Testdateien / 6 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 146 Testdateien / 634 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Dateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `629b2f2 — R140: Empfohlene Aktion spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R140-Browser-Smoke bestätigt `Empfohlene Aktion: Neue Schlange starten mit Karte ...`, keine sichtbare stale `Nächste legale Aktion:`-Copy im Bereich `Aktiver Spieler` und keine Console-/Page-Errors.
