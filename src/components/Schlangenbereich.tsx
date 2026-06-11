@@ -354,7 +354,7 @@ export default function Schlangenbereich({
               spieler.schlangen.map((schlange) => (
                 <li key={schlange.id} className="schlangekarte schlangekarte--gegner">
                   <strong>{schlange.id}</strong>
-                  <span>Spieler: {spieler.id}</span>
+                  <span>Gehört zu: {spieler.name}</span>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
                     {schlange.karten.map((karte) => (
