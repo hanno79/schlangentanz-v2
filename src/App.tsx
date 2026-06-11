@@ -225,7 +225,7 @@ function App({ initialZustand }: AppProps) {
   const aktiverSpielerTitelId = useId()
   const spieltischTitelId = useId()
   const spieleruebersichtTitelId = useId()
-  const materialUndAufgabenTitelId = useId(), punktetafelTitelId = useId()
+  const materialUndAufgabenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
@@ -453,8 +453,8 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </section>
-        <section className="info-panel" aria-label="Wertung">
-          <h2>Wertung</h2>
+        <section className="info-panel" aria-labelledby={wertungTitelId}>
+          <h2 id={wertungTitelId}>Wertung</h2>
           {istSpielende && (
             <>
               <p>Spielende erreicht.</p>
