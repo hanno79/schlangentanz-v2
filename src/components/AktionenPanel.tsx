@@ -1,14 +1,16 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.5
+Version: 1.6
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 Änderung v1.3: Weitere Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
 Änderung v1.4: R113 – empfohleneAktionId/phasenaktionId als Props; DOM-sichere IDs bei parallelen App-Instanzen.
 Änderung v1.5: R141 – sichtbare Aktionen-Copy spielerfreundlich ohne Legalitätsjargon.
+Änderung v1.6: R145 – Aktionenbereich per sichtbarer Überschrift labeln.
 */
 
+import { useId } from 'react'
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
 import SchlangenhaeutungReihenfolgeAuswahl from './SchlangenhaeutungReihenfolgeAuswahl'
@@ -107,10 +109,11 @@ export default function AktionenPanel({
   onZugBeenden,
   onAusspielphaseStarten,
 }: AktionenPanelProps) {
+  const aktionenTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
-    <section className="info-panel" aria-label="Aktionen">
-      <h2>Aktionen</h2>
+    <section className="info-panel" aria-labelledby={aktionenTitelId}>
+      <h2 id={aktionenTitelId}>Aktionen</h2>
       <p>Spielbare Aktionen: {legaleAktionen.length}</p>
       {istSpielende ? (
         <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
