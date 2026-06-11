@@ -1064,3 +1064,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `a334f8b — R158: Startzone per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R158-Browser-Smoke bestätigt die Startzone mit `aria-labelledby` auf genau einen sichtbaren Text innerhalb der Startzone, kein separates `aria-label`, erhaltenes `aria-describedby` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R159 Handkarten per sichtbarem Text labeln
+
+- [x] Scope: Das `Handkarten`-Panel im `Spieltisch` wird über sichtbaren Text `Handkarten` innerhalb der bestehenden Überschrift per `aria-labelledby` gelabelt; sichtbare Überschrift `Handkarten als Kartenleiste`, Landmark-Name `Handkarten`, Kartenliste, Auswahlstatus, Drag-and-drop-Handler, Layout/CSS, Engine-/Regelverhalten und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r159_handkarten_idref.test.tsx` schlug erwartungsgemäß fehl, weil beide Handkarten-Panels noch kein eigenes `aria-labelledby` hatten und die Label-ID-Liste zu `null` kollabierte.
+- [x] GREEN: `src/components/HandkartenPanel.tsx` nutzt `useId()` für `handkartenTitelId`, labelt die äußere Handkarten-`section` per `aria-labelledby`, und der sichtbare Text `Handkarten` innerhalb der bestehenden Überschrift ist das Labelziel; `src/App.r159_handkarten_idref.test.tsx` prüft zwei App-Instanzen, kein `aria-label`, Single-Token-IDREF, dokumentweit eindeutige Label-IDs, genau ein Ziel, Ziel innerhalb des Panels, Zieltext `Handkarten` und sichtbare Überschrift `Handkarten als Kartenleiste`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R159-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r159_handkarten_idref.test.tsx` → 1 Testdatei / 1 Test bestanden; angrenzende Handkarten-/Layout-/DragDrop-Suite R77/R78/F10/F31/F36 → 7 Testdateien / 22 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 165 Testdateien / 653 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `706ca8a — R159: Handkarten per sichtbarem Text labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R159-Browser-Smoke bestätigt das `Handkarten`-Panel mit `aria-labelledby` auf genau einen sichtbaren Text innerhalb des Panels, kein separates `aria-label`, sichtbare Überschrift `Handkarten als Kartenleiste` sowie keine Console-/Page-Errors.
