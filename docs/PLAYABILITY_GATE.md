@@ -856,3 +856,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `8d6205e — R142: Spielbereich-Landmark spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R142-Browser-Smoke bestätigt den Landmark `Spielbereich` mit `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Spielerübersicht`, keinen Landmark `Legale Aktionen` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R143 Punktetafel deutsch benennen
+
+- [x] Scope: Die sichtbare und semantische Wertungs-Kartenliste im Bereich `Wertung` heißt `Punktetafel` statt englisch `Scoreboard`; CSS-Klassen `scoreboard-*` bleiben technische Styling-Hooks; Engine, Wertungslogik, Layout und Interaktionen unverändert.
+- [x] RED: `npm test -- --run src/App.r143_punktetafel_label.test.tsx` schlug erwartungsgemäß fehl, weil noch `Scoreboard` als Region/Heading sichtbar war.
+- [x] GREEN: `src/App.tsx` rendert die Wertungs-Kartenliste als `aria-label="Punktetafel"` mit Heading `Punktetafel`; `src/App.r143_punktetafel_label.test.tsx` prüft neue Semantik und negativ alte `Scoreboard`-Copy; F8/F10/R128-Tests wurden nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initial `BLOCKERS: Keine` plus Non-Blocker für stärkere negative Textprüfung; Nachzug ergänzt `not.toHaveTextContent(/scoreboard/i)`; Re-Review final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r143_punktetafel_label.test.tsx src/App.f8_scoreboard.test.tsx src/App.f10_debuggruppen.test.tsx src/App.r128_scoreboard_copy.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 149 Testdateien / 637 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `3cd1288 — R143: Punktetafel deutsch benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R143-Browser-Smoke bestätigt Region/Heading `Punktetafel`, keine `Scoreboard`-Region, keinen `Scoreboard`-Heading, keine sichtbare `Scoreboard`-Copy im `Wertung`-Bereich und keine Console-/Page-Errors.
