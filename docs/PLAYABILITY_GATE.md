@@ -701,3 +701,15 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Code-Commit/Push: `44b39eb — R83: Schlangenbeschwörer-Aufgabenprüfung umsetzen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt.
 - [x] Smoke: Production-Alias liefert HTTP 200; Playwright lädt Heading, Engine-/Karten-Copy und meldet keine Console-/Page-/Request-Errors.
+
+## Evidence — 11.06.2026 R129 Gewinner-Copy spielerfreundlicher
+
+- [x] Scope: Gewinner-/Ergebnis-Copy im Spielende zeigt Spielernamen statt roher `spieler-*`-IDs; Engine/Scoring/Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r129_gewinner_copy.test.tsx` schlug erwartungsgemäß fehl, weil noch `Sieg für spieler-1` / `Gewinner spieler-1` gerendert wurde.
+- [x] GREEN: `src/App.tsx` mappt Gewinner-IDs über `zustand.spieler[].name` mit ID-Fallback; R31/R56-Gewinnerregressionen wurden auf Spielernamen aktualisiert.
+- [x] Codex Review: `BLOCKERS: Keine gefunden`; Non-Blockers nur Verifikationsnotizen.
+- [x] Targeted: `npm test -- --run src/App.r129_gewinner_copy.test.tsx src/App.r56.test.tsx src/App.test.tsx` → 3 Testdateien / 28 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 136 Testdateien / 617 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `96ce7c2 — R129: Gewinner-Copy spielerfreundlicher machen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; zusätzlicher Playwright-Flow auf `/game` ohne Console-/Page-Errors. Die Spielende-Gewinner-Copy wurde lokal per DOM-Regression abgesichert; ein vollständiger Live-Endzustand wurde in diesem Lauf nicht erzwungen.
