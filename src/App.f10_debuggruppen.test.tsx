@@ -51,7 +51,7 @@ describe('F10 Debuggruppen', () => {
 
     const spieltisch = within(aktiverSpieler).getByRole('region', { name: 'Spieltisch' })
     const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
-    expect(within(handBereich).getByText(/Handkarten als Kartenleiste/)).toBeInTheDocument()
+    expect(within(handBereich).getByRole('heading', { name: 'Handkarten als Kartenleiste' })).toBeInTheDocument()
     erwarteAusserhalbVonDebuggruppe(handBereich)
 
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
