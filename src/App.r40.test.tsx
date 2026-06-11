@@ -30,7 +30,7 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
       .join(', ')}`
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(erwarteterText)).toBeInTheDocument()
     expect(within(bereich).getByText(/Aufgabenziele:/)).toHaveTextContent(
@@ -42,7 +42,7 @@ describe('R40 UI-offene Aufgabenpunkte', () => {
     const zustand = { ...zustandMitOffenenAufgaben(), offeneAufgaben: [] }
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText('Aktuelle Aufgaben: keine')).toBeInTheDocument()
     expect(within(bereich).getByText('Aufgabenziele: keine')).toBeInTheDocument()

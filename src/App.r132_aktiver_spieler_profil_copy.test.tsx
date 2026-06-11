@@ -42,7 +42,7 @@ describe('R132 spielerfreundliche Aktiver-Spieler-Entwicklungsdaten', () => {
     const erwarteterAktiverSpieler = erwarteterFolgezustand.spieler[erwarteterFolgezustand.aktiverSpielerIndex]!
     render(<App initialZustand={deterministischerZustand()} />)
 
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Aktionen' })
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))

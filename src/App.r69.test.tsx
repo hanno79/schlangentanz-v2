@@ -30,7 +30,7 @@ describe('R69 erfüllte Aufgaben in der Spielerübersicht', () => {
     const zustand = zustandMitErfuelltenAufgaben()
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(
       within(bereich).getByText(

@@ -21,7 +21,7 @@ const BEREICHE = [
 describe('R48 UI-Übersichtsbereiche', () => {
   it('gliedert die bestehenden Engine- und Debug-Anzeigen in semantische Bereiche', () => {
     render(<App />)
-    const dashboard = screen.getByRole('region', { name: /legale aktionen/i })
+    const dashboard = screen.getByRole('region', { name: 'Spielbereich' })
 
     for (const bereich of BEREICHE) {
       expect(within(dashboard).getByRole('region', { name: bereich })).toBeInTheDocument()

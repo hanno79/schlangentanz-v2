@@ -38,11 +38,11 @@ describe('R47 UI-Ablagestapel-Details', () => {
     const erwarteterFolgezustand = anwendeAktion(startZustand, abwurfAktion)
 
     render(<App initialZustand={startZustand} />)
-    const region = screen.getByRole('region', { name: /Legale Aktionen/i })
+    const region = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(region).getByText(ablagestapelText(startZustand))).toBeInTheDocument()
 
-    fireEvent.click(within(region).getByRole('button', { name: `Karte ${abwurfAktion.handkartenId} abwerfen` }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: `Karte ${abwurfAktion.handkartenId} abwerfen` }))
 
     expect(within(region).getByText(ablagestapelText(erwarteterFolgezustand))).toBeInTheDocument()
   })

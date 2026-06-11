@@ -41,7 +41,7 @@ describe('R62 UI-Phasenregeln', () => {
   it('zeigt im Zugabschluss die aktuelle Phasenregel passend zur Überhand-Situation', () => {
     render(<App initialZustand={zustandMitUeberhand()} />)
 
-    const aktionenBereich = screen.getByRole('region', { name: 'Legale Aktionen' })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(aktionenBereich).getByText('Phasenregeln')).toBeInTheDocument()
     expect(
@@ -52,7 +52,7 @@ describe('R62 UI-Phasenregeln', () => {
   it('zeigt im Spielende die nicht mehr erreichbaren Phasenregeln trotzdem an', () => {
     render(<App initialZustand={zustandImSpielende()} />)
 
-    const aktionenBereich = screen.getByRole('region', { name: 'Legale Aktionen' })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(aktionenBereich).getByText(/Spielende: Keine weiteren Aktionen\./i)).toBeInTheDocument()
   })

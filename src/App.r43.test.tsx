@@ -23,14 +23,14 @@ describe('R43 UI-Details des aktiven Spielers', () => {
     )
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText('Spielerprofil: Spieler 1 — Du bist am Zug.')).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
 
     const aktiverSpieler = erwarteterFolgezustand.spieler[erwarteterFolgezustand.aktiverSpielerIndex]!
     expect(

@@ -31,7 +31,7 @@ describe('R39 UI-erfüllte Aufgaben', () => {
     const aufgaben = zustand.spieler[0]!.erfuellteAufgaben
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getAllByText(/— erfüllte Aufgaben:/)).toHaveLength(zustand.spieler.length)
     expect(

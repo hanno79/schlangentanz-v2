@@ -258,7 +258,7 @@ function App({ initialZustand }: AppProps) {
           <li>Nutze Sonderkarten</li>
         </ul>
       </section>
-      <section className="spielbereich" aria-label="Legale Aktionen">
+      <section className="spielbereich" aria-label="Spielbereich">
         <section className="info-panel" aria-label="Spielstatus">
           <h2>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}

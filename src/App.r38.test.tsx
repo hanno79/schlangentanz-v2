@@ -31,7 +31,7 @@ describe('R38 UI-Ablagestapel-Anzeige', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(`Karten im Ablagestapel: ${zustand.ablagestapel.length} Karten`)).toBeInTheDocument()
   })
@@ -40,10 +40,10 @@ describe('R38 UI-Ablagestapel-Anzeige', () => {
     const zustand = zustandMitPflichtAbwurf()
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText('Karten im Ablagestapel: 0 Karten')).toBeInTheDocument()
-    fireEvent.click(within(bereich).getByRole('button', { name: /karte .+ abwerfen/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /karte .+ abwerfen/i }))
 
     expect(within(bereich).getByText('Karten im Ablagestapel: 1 Karten')).toBeInTheDocument()
     expect(within(bereich).getByText(/Karten auf dem Ablagestapel: /)).toBeInTheDocument()

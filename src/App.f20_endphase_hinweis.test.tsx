@@ -27,7 +27,7 @@ describe('F20 Nachziehstapel-Endphase', () => {
   it('zeigt im Aktionsbereich eine sichtbare Endphase mit der No-Draw-Regel', () => {
     render(<App initialZustand={zustandImEndspurt()} />)
 
-    const aktionenBereich = screen.getByRole('region', { name: 'Legale Aktionen' })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
     const endphaseBereich = within(aktionenBereich).getByRole('region', { name: 'Endphase' })
 
     expect(within(endphaseBereich).getByText('Endphase')).toBeInTheDocument()
@@ -40,7 +40,7 @@ describe('F20 Nachziehstapel-Endphase', () => {
   it('zeigt den Endphase-Hinweis im Normalspiel nicht an', () => {
     render(<App initialZustand={erstelleSpielzustand(2, () => 0.999999)} />)
 
-    const aktionenBereich = screen.getByRole('region', { name: 'Legale Aktionen' })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(aktionenBereich).queryByRole('region', { name: 'Endphase' })).toBeNull()
   })

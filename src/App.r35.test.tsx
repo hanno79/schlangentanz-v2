@@ -27,12 +27,12 @@ describe('R35 UI-Spieler-Schlangenübersicht', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     // Vorher: Spieler 1 hat 0 Schlangen
     expect(within(bereich).getByText(/Spieler 1: 5 Handkarten, 0 Schlangen/)).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     // Nachher: Spieler 1 hat 1 Schlange
     expect(within(bereich).getByText(/Spieler 1: 4 Handkarten, 1 Schlange/)).toBeInTheDocument()

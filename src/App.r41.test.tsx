@@ -13,7 +13,7 @@ import { erstelleSpielzustand, starteAusspielphase } from './engine'
 describe('R41 UI-Anzahl legaler Aktionen', () => {
   it('zeigt die Anzahl der legalen Engine-Aktionen an und aktualisiert sie nach einer Aktion', () => {
     render(<App initialZustand={starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(bereich).getByText('Spielbare Aktionen: 5')).toBeInTheDocument()
     expect(within(bereich).getAllByRole('button', { name: /neue schlange starten mit karte/i })).toHaveLength(5)

@@ -36,6 +36,6 @@ describe('F2 tokenverdrahtete App-Shell', () => {
     expect(appCss).toMatch(/code\s*{[^}]*background:\s*var\(--st-color-background\)/s)
 
     expect(screen.getByRole('region', { name: /spielstatus/i })).toBeInTheDocument()
-    expect(screen.getByRole('region', { name: /legale aktionen/i })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Aktionen' })).toBeInTheDocument()
   })
 })

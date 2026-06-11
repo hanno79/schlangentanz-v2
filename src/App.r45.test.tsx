@@ -25,12 +25,12 @@ describe('R45 UI-Schlangen-Gesamtzahl', () => {
     const erwarteterFolgezustand = anwendeAktion(startZustand, ersteAktion)
 
     render(<App initialZustand={startZustand} />)
-    const region = screen.getByRole('region', { name: /Legale Aktionen/i })
+    const region = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(region).getByText(schlangenGesamtText(startZustand))).toBeInTheDocument()
 
     fireEvent.click(
-      within(region).getByRole('button', { name: `Neue Schlange starten mit Karte ${ersteAktion.handkartenId}` }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: `Neue Schlange starten mit Karte ${ersteAktion.handkartenId}` }),
     )
 
     expect(within(region).getByText(schlangenGesamtText(erwarteterFolgezustand))).toBeInTheDocument()

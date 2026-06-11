@@ -34,7 +34,7 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
   it('zeigt legale Aktionen aus der Engine als UI-Auswahl an', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
 
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(bereich).getByText(/aktueller spielschritt: karten ausspielen/i)).toBeInTheDocument()
@@ -51,21 +51,21 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
 
 function starteErsteSchlange() {
   render(<App initialZustand={deterministischerAppZustand()} />)
-  const bereich = screen.getByRole('region', { name: /legale aktionen/i })
-  fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+  const bereich = screen.getByRole('region', { name: 'Spielbereich' })
+  fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
   return bereich
 }
 
 describe('R17 UI-Aktionsausführung über die Engine', () => {
   it('startet per Klick eine neue Schlange und aktualisiert die legalen Aktionen', () => {
-    const bereich = starteErsteSchlange()
+    starteErsteSchlange()
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     expect(within(spieltisch).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
     expect(within(spieltisch).getByLabelText(/Farbkarte blau-01:/i)).toBeInTheDocument()
-    expect(within(bereich).queryByRole('button', { name: /neue schlange starten mit karte blau-01/i })).toBeNull()
-    expect(within(bereich).queryByRole('button', { name: /karte blau-03/i })).toBeNull()
-    expect(within(bereich).getByRole('button', { name: /ausspielphase beenden/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /neue schlange starten mit karte blau-01/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /karte blau-03/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i })).toBeInTheDocument()
   })
 })
 
@@ -74,7 +74,7 @@ describe('R19 UI-Grundregel für Kartenarten pro Zug', () => {
     const bereich = starteErsteSchlange()
 
     expect(
-      within(bereich).queryByRole('button', {
+      within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', {
         name: /karte blau-03 an schlange schlange-spieler-1-1 rechts anlegen/i,
       }),
     ).toBeNull()
@@ -113,9 +113,9 @@ describe('R21 UI-Pflicht-Abwurf', () => {
   it('führt Pflicht-Abwurf per Klick aus und zeigt den Ablagestapel', () => {
     const { zustand, sonderkarteId } = zustandMitPflichtAbwurf()
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
-    fireEvent.click(within(bereich).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
 
     expect(within(bereich).getByText(new RegExp(`ablagestapel: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
     expect(within(bereich).getByText(/keine weiteren aktionen/i, { selector: 'p' })).toBeInTheDocument()
@@ -126,13 +126,13 @@ describe('R22 UI-Handkartenanzeige', () => {
   it('zeigt aktive Handkarten und aktualisiert sie nach Pflicht-Abwurf', () => {
     const { zustand, sonderkarteId } = zustandMitPflichtAbwurf()
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
 
     expect(within(handBereich).getByText(sonderkarteId)).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
 
     expect(within(handBereich).queryByText(sonderkarteId)).toBeNull()
     expect(within(handBereich).queryAllByRole('listitem')).toHaveLength(0)
@@ -143,11 +143,11 @@ describe('R22 UI-Handkartenanzeige', () => {
 describe('R23 UI-Zugpflichtenanzeige', () => {
   it('zeigt gespielte Karten im Zug und aktualisiert sie nach einer Engine-Aktion', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
   })
@@ -156,98 +156,98 @@ describe('R23 UI-Zugpflichtenanzeige', () => {
 describe('R25 UI-Ausspielphase beenden', () => {
   it('beendet nach einer gespielten Karte die Ausspielphase über die Engine', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/spielschritt im zug: karten ausspielen/i)).toBeInTheDocument()
-    expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: aufgaben prüfen/i)).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
-    expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
-    expect(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
   })
 
   it('erlaubt das Beenden nach einer Karte auch wenn weitere legale Aktionen möglich sind', () => {
     render(<App initialZustand={zustandNachEinerSonderkarteMitWeitererLegalerAktion()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
     expect(
-      within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
     ).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: aufgaben prüfen/i)).toBeInTheDocument()
-    expect(within(bereich).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
-    expect(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i })).toBeInTheDocument()
   })
 })
 
 describe('R26 UI-Aufgabenprüfung beenden', () => {
   it('beendet nach der Ausspielphase die Aufgabenprüfung über die Engine', () => {
     const bereich = starteErsteSchlange()
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: aufgaben prüfen/i)).toBeInTheDocument()
-    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: zug abschließen/i)).toBeInTheDocument()
-    expect(within(bereich).queryByRole('button', { name: /aufgabenprüfung beenden/i })).toBeNull()
-    expect(within(bereich).getByRole('button', { name: /zug beenden/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /aufgabenprüfung beenden/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i })).toBeInTheDocument()
   })
 })
 
 describe('R27 UI-Zug beenden', () => {
   it('beendet im Zugabschluss den Zug über die Engine und aktiviert den nächsten Spieler', () => {
     const bereich = starteErsteSchlange()
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 2/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
-    expect(within(bereich).getByRole('button', { name: /ausspielphase starten/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase starten/i })).toBeInTheDocument()
   })
 })
 
 describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
   it('startet nach Zugende die Ausspielphase des nächsten Spielers über die Engine', () => {
     const bereich = starteErsteSchlange()
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 2/i)).toBeInTheDocument()
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase starten/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase starten/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: karten ausspielen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 2/i)).toBeInTheDocument()
-    expect(within(bereich).getByRole('button', { name: /ki-aktion ausführen/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ki-aktion ausführen/i })).toBeInTheDocument()
     expect(
-      within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }),
     ).toBeInTheDocument()
-    expect(within(bereich).queryByRole('button', { name: /zug beenden/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /zug beenden/i })).toBeNull()
   })
 })
 
 describe('R29 UI-Nachziehen beim nächsten Zug', () => {
   it('zeigt Spieler 1 zu Beginn seines zweiten Zuges wieder mit fünf Handkarten', () => {
     const bereich = starteErsteSchlange()
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase starten/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /aufgabenprüfung beenden/i }))
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase starten/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
@@ -295,7 +295,7 @@ function zustandMitBlauerZweiergruppeUndDritterHandkarte(): Spielzustand {
 describe('R30 UI-Wertungsanzeige', () => {
   it('zeigt die Engine-Gesamtwertung für Spieler in stabiler Reihenfolge an', () => {
     render(<App initialZustand={zustandMitBlauerDreiergruppe()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getAllByText(/punktestand von spieler \d/i).map(element => element.textContent)).toEqual([
       'Punktestand von Spieler 1: 3 Punkte',
@@ -305,11 +305,11 @@ describe('R30 UI-Wertungsanzeige', () => {
 
   it('aktualisiert die Wertung nach einer Engine-Aktion in der UI', () => {
     render(<App initialZustand={zustandMitBlauerZweiergruppeUndDritterHandkarte()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/punktestand von spieler 1: 0 punkte/i)).toBeInTheDocument()
     fireEvent.click(
-      within(bereich).getByRole('button', {
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', {
         name: /karte blau-05 an schlange schlange-spieler-1-1 rechts anlegen/i,
       }),
     )
@@ -346,7 +346,7 @@ function spielendeZustandMitGleichstand(): Spielzustand {
 describe('R31 UI-Gewinneranzeige', () => {
   it('zeigt die Engine-Gewinner bei Spielende an', () => {
     render(<App initialZustand={spielendeZustandMitSpieler1Sieg()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/spielschritt im zug: spiel beendet/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gewinner spieler 1: 3 punkte/i)).toBeInTheDocument()
@@ -355,7 +355,7 @@ describe('R31 UI-Gewinneranzeige', () => {
 
   it('zeigt bei Gleichstand alle Engine-Gewinner in stabiler Reihenfolge an', () => {
     render(<App initialZustand={spielendeZustandMitGleichstand()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getAllByText(/gewinner spieler \d/i).map(element => element.textContent)).toEqual([
       'Gewinner Spieler 1: 3 Punkte',
@@ -365,7 +365,7 @@ describe('R31 UI-Gewinneranzeige', () => {
 
   it('zeigt vor Spielende noch keine Gewinner an', () => {
     render(<App initialZustand={zustandMitBlauerDreiergruppe()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).queryByText(/gewinner spieler \d/i)).toBeNull()
   })
@@ -382,7 +382,7 @@ function endrundenAusloeserZustand(): Spielzustand {
 describe('R32 UI-Spielphase und Endrunde', () => {
   it('zeigt die Engine-Spielphase im normalen Spielzustand an', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/partiestatus: laufende partie/i)).toBeInTheDocument()
     expect(within(bereich).queryByText(/partiestatus: normal\b/i)).toBeNull()
@@ -391,7 +391,7 @@ describe('R32 UI-Spielphase und Endrunde', () => {
 
   it('zeigt Endspurt-Auslöser und verbleibende Endrunden-Spieler an', () => {
     render(<App initialZustand={endrundenAusloeserZustand()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
     const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
     expect(within(bereich).getByText(/partiestatus: endrunde läuft/i)).toBeInTheDocument()
@@ -403,9 +403,9 @@ describe('R32 UI-Spielphase und Endrunde', () => {
 
   it('aktualisiert die Endrunden-Anzeige nach einem Engine-Zugabschluss', () => {
     render(<App initialZustand={{ ...endrundenAusloeserZustand(), zugphase: 'Zugabschluss' }} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
     const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
     expect(within(bereich).getByText(/aktiver spieler: spieler 3/i)).toBeInTheDocument()
@@ -421,7 +421,7 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     const spielende = beendeZug({ ...nachSpieler3, zugphase: 'Zugabschluss' }, { pflichtenErfuellt: true })
 
     render(<App initialZustand={spielende} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(/partiestatus: partie beendet/i)).toBeInTheDocument()
     expect(within(bereich).queryByText(/partiestatus: beendet\b/i)).toBeNull()
@@ -437,7 +437,7 @@ describe('R33 UI-Material- und Aufgabenübersicht', () => {
 
   it('zeigt Nachziehstapel, offene Aufgaben und Aufgabenstapel aus dem Engine-State an', () => {
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(`Karten im Nachziehstapel: ${zustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
     expect(within(bereich).getByText(`Aufgaben im Stapel: ${zustand.aufgabenStapel.length} Karten`)).toBeInTheDocument()
@@ -457,10 +457,10 @@ describe('R33 UI-Material- und Aufgabenübersicht', () => {
     const erwarteterZustand = beendeZug(startzustand, { pflichtenErfuellt: true })
 
     render(<App initialZustand={startzustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText(`Karten im Nachziehstapel: ${startzustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
-    fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
 
     expect(within(bereich).getByText(`Karten im Nachziehstapel: ${erwarteterZustand.nachziehstapel.length} Karten`)).toBeInTheDocument()
   })
@@ -470,7 +470,7 @@ describe('R34 UI-Spielerübersicht', () => {
   it('zeigt alle Engine-Spieler mit Name, Handkarten- und Schlangenzahl an', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     for (const [index, spieler] of zustand.spieler.entries()) {
       const amZugSuffix = index === zustand.aktiverSpielerIndex ? ' — am Zug' : ''
@@ -487,9 +487,9 @@ describe('R34 UI-Spielerübersicht', () => {
   it('aktualisiert die Spielerübersicht nach einer Engine-Aktion', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(
       within(bereich).getByText(/Spieler 1: 4 Handkarten, 1 Schlange — am Zug/i),

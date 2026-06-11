@@ -34,7 +34,7 @@ describe('R61 UI-Überhand-Hinweis', () => {
     render(<App initialZustand={zustandMitUeberhand()} />)
 
     const aktiverSpielerBereich = screen.getByRole('region', { name: /aktiver spieler/i })
-    const aktionenBereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(aktiverSpielerBereich).getByText(/Überzählige Karten: 1 über dem Limit von 10/i)).toBeInTheDocument()
     expect(

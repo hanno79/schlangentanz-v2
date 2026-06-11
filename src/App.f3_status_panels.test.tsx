@@ -26,7 +26,7 @@ describe('F3 tokenverdrahtete Status-Panels', () => {
   it('gruppiert die Spielbereiche als kontraststarke Stitch-Panels, ohne Debuganzeigen zu entfernen', () => {
     render(<App initialZustand={deterministischerAppZustand()} />)
 
-    const spielbereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const spielbereich = screen.getByRole('region', { name: 'Spielbereich' })
     expect(spielbereich).toHaveClass('spielbereich')
 
     for (const name of [

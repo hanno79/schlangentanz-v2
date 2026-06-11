@@ -15,14 +15,14 @@ const basisZustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999)
 describe('R37 UI-Kartenarten-Zähler', () => {
   it('zeigt vorhandene Engine-Zähler für gespielte Farbkarten und Sonderkarten an', () => {
     render(<App initialZustand={{ ...basisZustand, zugpflichten: { gespielteKarten: 2, gespielteFarbkarten: 1, gespielteSonderkarten: 1 } }} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(bereich).getByText('Gespielte Kartenarten: 1 Farbkarten, 1 Sonderkarten')).toBeInTheDocument()
   })
 
   it('aktualisiert die Kartenarten-Zähler nach einer Engine-Aktion', () => {
     render(<App initialZustand={basisZustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Aktionen' })
 
     expect(within(bereich).getByText('Gespielte Kartenarten: 0 Farbkarten, 0 Sonderkarten')).toBeInTheDocument()
 

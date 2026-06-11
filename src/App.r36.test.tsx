@@ -37,7 +37,7 @@ function zustandMitSchlangenzustaenden(): Spielzustand {
 describe('R36 UI-Schlangenzustände', () => {
   it('zeigt vorhandene Engine-Schlangenzustände für alle Schlangen an', () => {
     render(<App initialZustand={zustandMitSchlangenzustaenden()} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText('Schlange 1 von Spieler 1: spielbereit.')).toBeInTheDocument()
     expect(within(bereich).getByText('Schlange 2 von Spieler 1: gerade blockiert.')).toBeInTheDocument()
@@ -49,11 +49,11 @@ describe('R36 UI-Schlangenzustände', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).queryByText(/Schlange 1 von Spieler 1:/)).toBeNull()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
     expect(
       within(bereich).getByText('Schlange 1 von Spieler 1: spielbereit.'),

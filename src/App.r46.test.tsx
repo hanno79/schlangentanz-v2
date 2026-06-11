@@ -23,12 +23,12 @@ describe('R46 UI-Handkarten-Gesamtzahl', () => {
     const erwarteterFolgezustand = anwendeAktion(startZustand, ersteAktion)
 
     render(<App initialZustand={startZustand} />)
-    const region = screen.getByRole('region', { name: /Legale Aktionen/i })
+    const region = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(region).getByText(handkartenGesamtText(startZustand))).toBeInTheDocument()
 
     fireEvent.click(
-      within(region).getByRole('button', { name: `Neue Schlange starten mit Karte ${ersteAktion.handkartenId}` }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: `Neue Schlange starten mit Karte ${ersteAktion.handkartenId}` }),
     )
 
     expect(within(region).getByText(handkartenGesamtText(erwarteterFolgezustand))).toBeInTheDocument()
