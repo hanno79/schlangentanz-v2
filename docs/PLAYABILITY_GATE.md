@@ -1051,3 +1051,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `8d42300 — R157: Phasenregeln per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R157-Browser-Smoke bestätigt `Phasenregeln`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label`, sichtbare `h4` `Spielbare Aktionen in dieser Phase` sowie keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R158 Startzone per sichtbarem Text labeln
+
+- [x] Scope: Die `role="button"`-Startzone im `Schlangenbereich` wird über ihren sichtbaren Text `Neue Schlange starten` per `aria-labelledby` gelabelt; `aria-describedby`, Startzonen-Hinweistext, Klick-, Tastatur-, Drag-and-drop-Verhalten, Startaktions-Buttons, Engine-/Regelverhalten und Layout bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r158_startzone_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Neue Schlange starten"` gesetzt war und kein eindeutiges `aria-labelledby`.
+- [x] GREEN: `src/components/Schlangenbereich.tsx` nutzt das bestehende komponentenlokale `useId()`-Präfix für `startzoneTitelId`; die Startzone nutzt `aria-labelledby`, und der sichtbare `<strong>`-Text `Neue Schlange starten` ist das Labelziel innerhalb der Startzone.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R158-Test; `BLOCKERS: Keine`, `NON-BLOCKERS` nur bestätigende Verifikationsnotizen.
+- [x] Targeted: `npm test -- --run src/App.r158_startzone_idref.test.tsx` → 1 Testdatei / 1 Test bestanden; angrenzende IDREF-/DragDrop-Suite R109/R111/F36 → 5 Testdateien / 24 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 164 Testdateien / 652 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `a334f8b — R158: Startzone per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R158-Browser-Smoke bestätigt die Startzone mit `aria-labelledby` auf genau einen sichtbaren Text innerhalb der Startzone, kein separates `aria-label`, erhaltenes `aria-describedby` und keine Console-/Page-Errors.
