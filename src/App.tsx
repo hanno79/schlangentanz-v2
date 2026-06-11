@@ -331,8 +331,8 @@ function App({ initialZustand }: AppProps) {
               onAusspielphaseStarten={handleAusspielphaseStarten}
             />
             <DebugGruppe titel="Aktiver Spieler">
-              <p>Aktiver Spieler: {aktiverSpieler.id}</p>
-              <p>Spielerprofil: {aktiverSpieler.id} — {aktiverSpieler.name} ({aktiverSpieler.steuerung})</p>
+              <p>Aktiver Spieler: {aktiverSpieler.name}</p>
+              <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
               <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
               {/* ÄNDERUNG 08.06.2026: R125 benennt die aktive Spielerwertung als spielerfreundlichen Punktestand. */}
               <p>Aktueller Punktestand: {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}</p>

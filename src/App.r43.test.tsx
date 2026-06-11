@@ -11,7 +11,7 @@ import App from './App'
 import { beendeAufgabenpruefung, beendeAusspielphase, beendeZug, erstelleSpielzustand, starteAusspielphase } from './engine'
 
 describe('R43 UI-Details des aktiven Spielers', () => {
-  it('zeigt Name und Steuerung des aktiven Engine-Spielers und aktualisiert sie nach Zugwechsel', () => {
+  it('zeigt den aktiven Spieler mit spielerfreundlichem Profil und aktualisiert ihn nach Zugwechsel', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     const nachAusspielen = beendeAusspielphase({
       ...zustand,
@@ -25,7 +25,7 @@ describe('R43 UI-Details des aktiven Spielers', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText('Spielerprofil: spieler-1 — Spieler 1 (Mensch)')).toBeInTheDocument()
+    expect(within(bereich).getByText('Spielerprofil: Spieler 1 — Du bist am Zug.')).toBeInTheDocument()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
     fireEvent.click(within(bereich).getByRole('button', { name: /ausspielphase beenden/i }))
@@ -34,7 +34,7 @@ describe('R43 UI-Details des aktiven Spielers', () => {
 
     const aktiverSpieler = erwarteterFolgezustand.spieler[erwarteterFolgezustand.aktiverSpielerIndex]!
     expect(
-      within(bereich).getByText(`Spielerprofil: ${aktiverSpieler.id} — ${aktiverSpieler.name} (${aktiverSpieler.steuerung})`),
+      within(bereich).getByText(`Spielerprofil: ${aktiverSpieler.name} — KI ist am Zug.`),
     ).toBeInTheDocument()
   })
 })
