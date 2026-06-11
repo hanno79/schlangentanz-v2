@@ -44,7 +44,7 @@ describe('R99 Schlangenhäutung-Hinweis', () => {
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
     const sonderhinweise = within(aktionenBereich).getByRole('region', { name: 'Weitere verfügbare Aktionen' })
 
-    expect(within(aktionenBereich).getByText('Legale Aktionen: 0')).toBeInTheDocument()
+    expect(within(aktionenBereich).getByText('Spielbare Aktionen: 0')).toBeInTheDocument()
     expect(within(aktionenBereich).getByText('Nächster Pflichtschritt: Schlangenhäutung vorbereiten.')).toBeInTheDocument()
     expect(within(sonderhinweise).getByText('Schlangenhäutung verfügbar')).toBeInTheDocument()
     expect(

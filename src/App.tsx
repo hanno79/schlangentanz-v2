@@ -156,9 +156,9 @@ function naechsterPflichtschrittLabel(
   if (zustand.zugphase === 'Aufgabenpruefung') return 'Aufgabenprüfung beenden.'
   if (zustand.zugphase === 'Zugabschluss') return 'Zug beenden.'
   if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
-  if (legaleAktionen.length > 0) return 'Eine legale Aktion auswählen.'
+  if (legaleAktionen.length > 0) return 'Eine spielbare Aktion auswählen.'
   if (nichtEnumerierteAktionenHinweise.length > 0) return 'Schlangenhäutung vorbereiten.'
-  return 'Derzeit keine legale Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
+  return 'Derzeit keine spielbare Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
 }
 
 function schlangenZustandLabel(zustand: SchlangenZustand): string {

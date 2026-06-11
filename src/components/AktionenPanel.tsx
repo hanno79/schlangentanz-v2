@@ -1,11 +1,12 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.4
+Version: 1.5
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
-weitere legale Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
-Änderung v1.3: Weitere legale Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
+weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
+Änderung v1.3: Weitere Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
 Änderung v1.4: R113 – empfohleneAktionId/phasenaktionId als Props; DOM-sichere IDs bei parallelen App-Instanzen.
+Änderung v1.5: R141 – sichtbare Aktionen-Copy spielerfreundlich ohne Legalitätsjargon.
 */
 
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
@@ -110,7 +111,7 @@ export default function AktionenPanel({
   return (
     <section className="info-panel" aria-label="Aktionen">
       <h2>Aktionen</h2>
-      <p>Legale Aktionen: {legaleAktionen.length}</p>
+      <p>Spielbare Aktionen: {legaleAktionen.length}</p>
       {istSpielende ? (
         <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
       ) : (
@@ -137,7 +138,7 @@ export default function AktionenPanel({
             )}
           </section>
           <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-label="Weitere Aktionen">
-            <h3>Weitere legale Aktionen</h3>
+            <h3>Weitere Aktionen</h3>
             {legaleAktionen.length > 1 ? (
               <ol className="aktions-liste" start={2}>
                 {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
@@ -156,7 +157,7 @@ export default function AktionenPanel({
                 })}
               </ol>
             ) : (
-              <p>Keine weiteren legalen Aktionen.</p>
+              <p>Keine weiteren Aktionen.</p>
             )}
             {reaktionsAktionen.length > 0 && (
               <>
@@ -248,12 +249,12 @@ export default function AktionenPanel({
             <li key={regel}>{regel}</li>
           ))}
         </ul>
-        <h4>Legale Aktionen dieser Phase</h4>
+        <h4>Spielbare Aktionen in dieser Phase</h4>
         <ul>
           {legaleAktionen.length > 0 ? (
             legaleAktionen.map(aktion => <li key={JSON.stringify(aktion)}>{aktionsLabel(aktion)}</li>)
           ) : (
-            <li>Aktuell keine legalen Aktionen in dieser Phase.</li>
+            <li>Aktuell keine spielbaren Aktionen in dieser Phase.</li>
           )}
         </ul>
       </section>

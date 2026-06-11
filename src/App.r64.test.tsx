@@ -30,7 +30,7 @@ describe('R64 UI-Phasenregeln und legale Aktionen', () => {
     const phasenregeln = screen.getByRole('region', { name: 'Phasenregeln' })
 
     expect(
-      within(phasenregeln).getByText('Aktuell keine legalen Aktionen in dieser Phase.', { selector: 'li' }),
+      within(phasenregeln).getByText('Aktuell keine spielbaren Aktionen in dieser Phase.', { selector: 'li' }),
     ).toBeInTheDocument()
   })
 })

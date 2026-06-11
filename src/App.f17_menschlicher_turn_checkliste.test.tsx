@@ -40,7 +40,7 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
 
     erwarteMiniCheckliste(
       spielerfuehrung,
-      'Eine legale Aktion auswählen.',
+      'Eine spielbare Aktion auswählen.',
       'Neue Schlange starten mit Karte blau-01',
     )
 
@@ -62,7 +62,7 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
   it('verwendet pro Spielerführung eine eindeutige Checklisten-Überschrift ohne statische ID-Kollision', () => {
     render(
       <>
-        <Spielerfuehrung pflichtschrittLabel="Eine legale Aktion auswählen." empfohleneAktionLabel="Aktion A" />
+        <Spielerfuehrung pflichtschrittLabel="Eine spielbare Aktion auswählen." empfohleneAktionLabel="Aktion A" />
         <Spielerfuehrung pflichtschrittLabel="Ausspielphase beenden." empfohleneAktionLabel="Aktion B" />
       </>,
     )
@@ -79,7 +79,7 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
   it('labelt jede Spielerführung-Region über eine eigene sichtbare Überschrift', () => {
     render(
       <>
-        <Spielerfuehrung pflichtschrittLabel="Eine legale Aktion auswählen." empfohleneAktionLabel="Aktion A" />
+        <Spielerfuehrung pflichtschrittLabel="Eine spielbare Aktion auswählen." empfohleneAktionLabel="Aktion A" />
         <Spielerfuehrung pflichtschrittLabel="Ausspielphase beenden." empfohleneAktionLabel="Aktion B" />
       </>,
     )

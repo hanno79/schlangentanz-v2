@@ -41,7 +41,7 @@ describe('F3 tokenverdrahtete Status-Panels', () => {
     }
 
     expect(within(screen.getByRole('region', { name: /^Spielstatus$/i })).getByText(/Aktueller Spielschritt:/i)).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: /^Aktionen$/i })).getByText(/Legale Aktionen:/i)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: /^Aktionen$/i })).getByText(/Spielbare Aktionen:/i)).toBeInTheDocument()
 
     const spielbereichBlock = appCss.match(/\.spielbereich\s*\{([^}]*)\}/s)?.[1] ?? ''
     const infoPanelBlock = appCss.match(/\.info-panel\s*\{([^}]*)\}/s)?.[1] ?? ''

@@ -21,7 +21,7 @@ describe('R59 UI-Zugpanel mit phasenabhängigem Pflichtschritt', () => {
     const aktionenBereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(
-      screen.getAllByText(/nächster pflichtschritt: eine legale aktion auswählen/i)[0],
+      screen.getAllByText(/nächster pflichtschritt: eine spielbare aktion auswählen/i)[0],
     ).toBeInTheDocument()
 
     fireEvent.click(

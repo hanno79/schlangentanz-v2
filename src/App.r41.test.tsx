@@ -15,13 +15,13 @@ describe('R41 UI-Anzahl legaler Aktionen', () => {
     render(<App initialZustand={starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText('Legale Aktionen: 5')).toBeInTheDocument()
+    expect(within(bereich).getByText('Spielbare Aktionen: 5')).toBeInTheDocument()
     expect(within(bereich).getAllByRole('button', { name: /neue schlange starten mit karte/i })).toHaveLength(5)
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
-    expect(within(bereich).getByText('Legale Aktionen: 0')).toBeInTheDocument()
-    expect(within(bereich).getByText('Keine weiteren legalen Aktionen.')).toBeInTheDocument()
+    expect(within(bereich).getByText('Spielbare Aktionen: 0')).toBeInTheDocument()
+    expect(within(bereich).getByText('Keine weiteren Aktionen.')).toBeInTheDocument()
     expect(within(bereich).getByRole('button', { name: /ausspielphase beenden/i })).toBeInTheDocument()
   })
 })

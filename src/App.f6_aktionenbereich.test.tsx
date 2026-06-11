@@ -27,7 +27,7 @@ describe('F6 Aktionenbereich', () => {
     const empfohleneAktion = within(aktionenBereich).getByRole('region', { name: 'Empfohlene Aktion' })
     const weitereAktionen = within(aktionenBereich).getByRole('region', { name: 'Weitere Aktionen' })
 
-    expect(within(weitereAktionen).getByRole('heading', { name: 'Weitere legale Aktionen' })).toBeInTheDocument()
+    expect(within(weitereAktionen).getByRole('heading', { name: 'Weitere Aktionen' })).toBeInTheDocument()
 
     expect(within(empfohleneAktion).getByRole('button')).toHaveClass('aktions-button--empfohlen')
     expect(within(weitereAktionen).getAllByRole('button').length).toBeGreaterThan(0)
