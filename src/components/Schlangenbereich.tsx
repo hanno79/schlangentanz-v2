@@ -33,6 +33,20 @@ function schlangenKartenAriaLabel(karte: Spielkarte): string {
     : `Sonderkarte ${karte.id}: ${karte.name}`
 }
 
+function schlangenStatusLabel(zustand: Spieler['schlangen'][number]['zustand']): string {
+  switch (zustand) {
+    case 'aktiv':
+      return 'spielbereit'
+    case 'blockiert':
+      return 'gerade blockiert'
+    case 'geschuetzt':
+      return 'geschützt'
+  }
+
+  const nichtErfassterZustand: never = zustand
+  return nichtErfassterZustand
+}
+
 function erlaubeDrop(event: DragEvent<HTMLElement>) {
   event.preventDefault()
   event.dataTransfer.dropEffect = 'move'
@@ -323,7 +337,7 @@ export default function Schlangenbereich({
                       ))}
                     </div>
                   )}
-                  <span>Zustand: {schlange.zustand}</span>
+                  <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>
                 </li>
               )
             })}
@@ -355,7 +369,7 @@ export default function Schlangenbereich({
                       </div>
                     ))}
                   </div>
-                  <span>Zustand: {schlange.zustand}</span>
+                  <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>
                 </li>
               )),
             )}
