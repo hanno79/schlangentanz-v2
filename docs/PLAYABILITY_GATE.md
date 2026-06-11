@@ -895,3 +895,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `75ac353 — R145: Aktionenbereich per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R145-Browser-Smoke bestätigt `Aktionen`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R146 Spielstatus per Überschrift labeln
+
+- [x] Scope: Der `Spielstatus`-Bereich wird über seine sichtbare Überschrift per `aria-labelledby` gelabelt; sichtbare Copy, Debuggruppen, `Zugfortschritt`, Engine-/Regelverhalten, Layout und Interaktionen unverändert.
+- [x] RED: `npm test -- --run src/App.r146_spielstatus_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Spielstatus"` gesetzt war.
+- [x] GREEN: `src/App.tsx` nutzt `useId()` für `spielstatusTitelId` und labelt die Region per `aria-labelledby`; `src/App.r146_spielstatus_idref.test.tsx` prüft kein `aria-label`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region und Heading `Spielstatus`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R146-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine fachlichen Einwände`.
+- [x] Targeted: `npm test -- --run src/App.r146_spielstatus_idref.test.tsx src/App.f3_status_panels.test.tsx src/App.f22_spielende_status.test.tsx src/App.r123_spielphase_copy.test.tsx src/App.r137_partiestatus_copy.test.tsx src/App.r138_zugdiagnose_copy.test.tsx` → 6 Testdateien / 13 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 152 Testdateien / 640 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `eecb8cf — R146: Spielstatus per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R146-Browser-Smoke bestätigt `Spielstatus`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
