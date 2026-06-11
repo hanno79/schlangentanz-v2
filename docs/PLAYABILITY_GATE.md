@@ -726,3 +726,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `af6d38a — R130: Punkteübersicht-Copy spielerfreundlicher machen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R130-Browser-Smoke bestätigt `Punktestand von Spieler 1` / `Punktequellen von Spieler 1` und keine stale `Punktestand/Punktequellen von spieler-*`-Copy im erreichten Live-DOM.
+
+## Evidence — 11.06.2026 R131 Endrunden-Copy spielerfreundlicher
+
+- [x] Scope: Endrunden-Auslöser und verbleibende Endrunden-Spieler im `Spielstatus` zeigen Spielernamen statt roher `spieler-*`-IDs; Engine/No-Draw/Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r131_endrunde_spielernamen.test.tsx` schlug erwartungsgemäß fehl, weil noch `Endrunde ausgelöst durch: spieler-2` gerendert wurde.
+- [x] GREEN: `src/App.tsx` rendert Endrunden-Indizes über `zustand.spieler[index].name`; `src/App.f21_endspurt_status.test.tsx`, `src/App.r63.test.tsx` und `src/App.test.tsx` wurden auf die neue Copy nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initiale Testhärtungs-Non-Blocker und ein späterer Full-Gate-Fund in `App.r63.test.tsx` behoben; final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r63.test.tsx src/App.r131_endrunde_spielernamen.test.tsx src/App.f21_endspurt_status.test.tsx src/App.test.tsx` → 4 Testdateien / 31 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 138 Testdateien / 619 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `1dea7eb — R131: Endrunden-Copy spielerfreundlicher machen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; keine Console-/Page-Errors. Die R131-Endrunden-Copy wurde lokal per DOM-Regression gegen gezielte Endspurt-Zustände abgesichert; ein vollständiger Live-Endrunden-Zustand wurde in diesem Lauf nicht erzwungen.
