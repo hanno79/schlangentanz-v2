@@ -110,6 +110,7 @@ export default function AktionenPanel({
   onAusspielphaseStarten,
 }: AktionenPanelProps) {
   const aktionenTitelId = useId()
+  const empfohleneAktionTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
     <section className="info-panel" aria-labelledby={aktionenTitelId}>
@@ -125,8 +126,8 @@ export default function AktionenPanel({
               KI-Aktion ausführen
             </button>
           )}
-          <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-label="Empfohlene Aktion" tabIndex={-1}>
-            <h3>Empfohlene Aktion</h3>
+          <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} tabIndex={-1}>
+            <h3 id={empfohleneAktionTitelId}>Empfohlene Aktion</h3>
             {legaleAktionen.length > 0 ? (
               <button
                 aria-label={empfohlenLabel}
