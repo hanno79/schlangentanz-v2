@@ -830,3 +830,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `629b2f2 — R140: Empfohlene Aktion spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R140-Browser-Smoke bestätigt `Empfohlene Aktion: Neue Schlange starten mit Karte ...`, keine sichtbare stale `Nächste legale Aktion:`-Copy im Bereich `Aktiver Spieler` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R141 Aktionen spielerfreundlich benennen
+
+- [x] Scope: Sichtbare UI-Copy im `Aktionen`-Panel und in der Spielerführung nutzt `spielbar` statt technischem Legalitätsjargon; Engine, Regeln, Aktionslabels, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r141_aktionen_copy.test.tsx` schlug erwartungsgemäß fehl, weil noch `Legale Aktionen: 5`, `Weitere legale Aktionen` und `Legale Aktionen dieser Phase` sichtbar waren.
+- [x] GREEN: `src/components/AktionenPanel.tsx` rendert `Spielbare Aktionen`, `Weitere Aktionen`, `Spielbare Aktionen in dieser Phase`; `src/App.tsx` liefert `Eine spielbare Aktion auswählen.` / `Derzeit keine spielbare Aktion verfügbar...`; stale breite Tests wurden nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initiale Blocker in `src/App.tsx`/`src/App.test.tsx` und später `src/App.r59.test.tsx` behoben; finaler Re-Review `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: final `npm test -- --run src/App.r141_aktionen_copy.test.tsx src/App.r59.test.tsx src/App.test.tsx src/App.f14_spielerfuehrung.test.tsx src/App.f28_no_action_hinweis.test.tsx src/App.r41.test.tsx src/App.r64.test.tsx` → 7 Testdateien / 34 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 147 Testdateien / 635 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `b0cd08b — R141: Aktionen spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R141-Browser-Smoke bestätigt `Spielbare Aktionen: <Zahl>`, `Eine spielbare Aktion auswählen`, `Weitere Aktionen`, `Spielbare Aktionen in dieser Phase`, keine sichtbare stale Legalitäts-Copy im Bereich `Aktionen` und keine Console-/Page-Errors.
