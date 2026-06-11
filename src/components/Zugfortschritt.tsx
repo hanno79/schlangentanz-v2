@@ -18,7 +18,18 @@ interface ZugfortschrittProps {
 }
 
 function zugphaseLabel(phase: Zugphase): string {
-  return phase === 'Aufgabenpruefung' ? 'Aufgabenprüfung' : phase
+  switch (phase) {
+    case 'Nachziehphase':
+      return 'Karte ziehen'
+    case 'Ausspielphase':
+      return 'Karten ausspielen'
+    case 'Aufgabenpruefung':
+      return 'Aufgaben prüfen'
+    case 'Zugabschluss':
+      return 'Zug abschließen'
+    case 'Spielende':
+      return 'Spiel beendet'
+  }
 }
 
 function Zugfortschritt({ zugphase }: ZugfortschrittProps) {

@@ -11,11 +11,11 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase, type Spielzustand } from './engine'
 
 const SCHRITTE = [
-  { phase: 'Nachziehphase', label: 'Nachziehphase' },
-  { phase: 'Ausspielphase', label: 'Ausspielphase' },
-  { phase: 'Aufgabenpruefung', label: 'Aufgabenprüfung' },
-  { phase: 'Zugabschluss', label: 'Zugabschluss' },
-  { phase: 'Spielende', label: 'Spielende' },
+  { phase: 'Nachziehphase', label: 'Karte ziehen' },
+  { phase: 'Ausspielphase', label: 'Karten ausspielen' },
+  { phase: 'Aufgabenpruefung', label: 'Aufgaben prüfen' },
+  { phase: 'Zugabschluss', label: 'Zug abschließen' },
+  { phase: 'Spielende', label: 'Spiel beendet' },
 ] as const
 
 function zustandInPhase(phase: Spielzustand['zugphase']): Spielzustand {
@@ -43,6 +43,7 @@ describe('F9 Zugfortschritt', () => {
     const aktiveSchritte = schritte.filter(schritt => schritt.getAttribute('aria-current') === 'step')
     expect(aktiveSchritte).toHaveLength(1)
     expect(within(zugfortschritt).getByText(`Aktuelle Phase: ${label}`)).toBeInTheDocument()
+    expect(zugfortschritt).not.toHaveTextContent(phase)
     expect(aktiveSchritte[0]).toHaveTextContent(label)
     expect(aktiveSchritte[0]).toHaveTextContent('Aktiv')
     expect(within(spielstatus).getByText(`Spielschritt im Zug: ${phase}`)).toBeInTheDocument()
