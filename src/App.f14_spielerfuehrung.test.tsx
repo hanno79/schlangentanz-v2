@@ -33,7 +33,8 @@ describe('F14 Spielerführung', () => {
     expect(within(spielerfuehrung).getByText('Klicke unten auf die empfohlene Aktion, um deinen Zug fortzusetzen.')).toBeInTheDocument()
 
     expect(screen.getAllByText('Nächster Pflichtschritt: Eine legale Aktion auswählen.')[0]).toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).getByText('Nächste legale Aktion: Neue Schlange starten mit Karte blau-01')).toBeInTheDocument()
+    expect(within(aktiverSpielerBereich).getByText('Empfohlene Aktion: Neue Schlange starten mit Karte blau-01')).toBeInTheDocument()
+    expect(within(aktiverSpielerBereich).queryByText(/Nächste legale Aktion:/)).not.toBeInTheDocument()
     expect(appCss).toContain('.spielerfuehrung')
     expect(appCss).toContain('.spielerfuehrung__karte')
   })

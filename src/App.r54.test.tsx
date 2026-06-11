@@ -27,7 +27,7 @@ describe('R54 UI-nächste legale Aktion', () => {
     )
     if (!ersteAktion) throw new Error('Erwartete mindestens eine legale Startaktion im UI.')
 
-    const ersteHinweis = `Nächste legale Aktion: ${aktionsName(ersteAktion)}`
+    const ersteHinweis = `Empfohlene Aktion: ${aktionsName(ersteAktion)}`
     expect(
       within(aktiverSpielerBereich).getByText(ersteHinweis),
     ).toBeInTheDocument()
@@ -41,11 +41,13 @@ describe('R54 UI-nächste legale Aktion', () => {
     if (aktualisierteAktion) {
       expect(
         within(aktiverSpielerBereich).getByText(
-          `Nächste legale Aktion: ${aktionsName(aktualisierteAktion)}`,
+          `Empfohlene Aktion: ${aktionsName(aktualisierteAktion)}`,
         ),
       ).toBeInTheDocument()
     } else {
       expect(within(aktiverSpielerBereich).queryByText(ersteHinweis)).not.toBeInTheDocument()
     }
+
+    expect(within(aktiverSpielerBereich).queryByText(/Nächste legale Aktion:/)).not.toBeInTheDocument()
   })
 })

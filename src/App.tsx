@@ -356,7 +356,7 @@ function App({ initialZustand }: AppProps) {
                   <p>Gewinner: {gewinnerText}</p>
                 </>
               )}
-              {!istSpielende && legaleAktionen.length > 0 && <p>Nächste legale Aktion: {empfohleneAktionLabel}</p>}
+              {!istSpielende && legaleAktionen.length > 0 && <p>Empfohlene Aktion: {empfohleneAktionLabel}</p>}
               {reaktionsAktionen.length > 0 && <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>}
               <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
               <p>
