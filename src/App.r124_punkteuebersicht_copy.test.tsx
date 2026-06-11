@@ -11,13 +11,15 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 const SPIELERFREUNDLICHE_PUNKTE_LABELS = [
-  /Punktestand von spieler-1: 0 Punkte/,
-  /Punktequellen von spieler-1: Farbgruppen 0 Punkte, Aufgaben 0 Punkte/,
+  /Punktestand von Spieler 1: 0 Punkte/,
+  /Punktequellen von Spieler 1: Farbgruppen 0 Punkte, Aufgaben 0 Punkte/,
 ]
 
 const VERALTETE_PUNKTE_LABELS = [
   'Wertung spieler-1:',
   'Punkteaufteilung spieler-1:',
+  'Punktestand von spieler-1:',
+  'Punktequellen von spieler-1:',
 ]
 
 function deterministischerZustand() {

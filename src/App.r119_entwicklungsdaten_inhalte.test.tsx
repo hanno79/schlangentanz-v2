@@ -35,7 +35,7 @@ describe('R119 spielerfreundliche Entwicklungsdaten-Inhalte', () => {
     expect(within(materialstatus).getByText(/Aufgabenziele:/)).toBeVisible()
 
     const wertung = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Punkteübersicht' })
-    expect(within(wertung).getByText(/Punktequellen von spieler-1:/)).toBeVisible()
+    expect(within(wertung).getByText(/Punktequellen von Spieler 1:/)).toBeVisible()
 
     const entwicklungsdatenText = screen
       .getAllByRole('complementary', { name: /^Entwicklungsdaten:/ })

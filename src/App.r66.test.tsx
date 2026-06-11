@@ -43,10 +43,12 @@ describe('R66 Wertungsdetails in der UI', () => {
     const wertungBereich = screen.getByRole('region', { name: 'Wertung' })
 
     erwarteteWertung.spielerwertungen.forEach(eintrag => {
-      expect(within(wertungBereich).getByText(`Punktestand von ${eintrag.spielerId}: ${eintrag.gesamtPunkte} Punkte`)).toBeInTheDocument()
+      const spielerName = zustand.spieler.find(spieler => spieler.id === eintrag.spielerId)?.name ?? eintrag.spielerId
+
+      expect(within(wertungBereich).getByText(`Punktestand von ${spielerName}: ${eintrag.gesamtPunkte} Punkte`)).toBeInTheDocument()
       expect(
         within(wertungBereich).getByText(
-          `Punktequellen von ${eintrag.spielerId}: Farbgruppen ${eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben ${eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte`,
+          `Punktequellen von ${spielerName}: Farbgruppen ${eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben ${eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte`,
         ),
       ).toBeInTheDocument()
     })

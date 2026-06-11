@@ -295,9 +295,9 @@ describe('R30 UI-Wertungsanzeige', () => {
     render(<App initialZustand={zustandMitBlauerDreiergruppe()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/punktestand von spieler-/i).map(element => element.textContent)).toEqual([
-      'Punktestand von spieler-1: 3 Punkte',
-      'Punktestand von spieler-2: 0 Punkte',
+    expect(within(bereich).getAllByText(/punktestand von spieler \d/i).map(element => element.textContent)).toEqual([
+      'Punktestand von Spieler 1: 3 Punkte',
+      'Punktestand von Spieler 2: 0 Punkte',
     ])
   })
 
@@ -305,7 +305,7 @@ describe('R30 UI-Wertungsanzeige', () => {
     render(<App initialZustand={zustandMitBlauerZweiergruppeUndDritterHandkarte()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText(/punktestand von spieler-1: 0 punkte/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/punktestand von spieler 1: 0 punkte/i)).toBeInTheDocument()
     fireEvent.click(
       within(bereich).getByRole('button', {
         name: /karte blau-05 an schlange schlange-spieler-1-1 rechts anlegen/i,
@@ -313,7 +313,7 @@ describe('R30 UI-Wertungsanzeige', () => {
     )
 
     expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/punktestand von spieler-1: 3 punkte/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/punktestand von spieler 1: 3 punkte/i)).toBeInTheDocument()
   })
 })
 

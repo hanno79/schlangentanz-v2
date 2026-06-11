@@ -16,10 +16,10 @@ describe('R35 UI-Spieler-Schlangenübersicht', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
 
     render(<App initialZustand={zustand} />)
-    const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const bereich = screen.getByRole('region', { name: 'Spielerübersicht' })
 
     for (const spieler of zustand.spieler) {
-      expect(within(bereich).getAllByText(new RegExp(`${spieler.name}:`))).toHaveLength(1)
+      expect(within(bereich).getAllByText(new RegExp(`^${spieler.name}:`))).toHaveLength(1)
     }
   })
 

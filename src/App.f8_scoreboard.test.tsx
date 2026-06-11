@@ -60,7 +60,7 @@ describe('F8 Scoreboard', () => {
       expect(eintraege[index]).toHaveTextContent(`Aufgaben: ${eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte`)
     })
 
-    expect(within(wertungBereich).getByText(/Punktestand von spieler-1:/)).toBeInTheDocument()
-    expect(within(wertungBereich).getByText(/Punktequellen von spieler-1:/)).toBeInTheDocument()
+    expect(within(wertungBereich).getByText(/Punktestand von Spieler 1:/)).toBeInTheDocument()
+    expect(within(wertungBereich).getByText(/Punktequellen von Spieler 1:/)).toBeInTheDocument()
   })
 })
