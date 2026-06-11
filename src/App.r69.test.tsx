@@ -1,8 +1,8 @@
 /*
 Author: rahn
 Datum: 02.06.2026
-Version: 1.0
-Beschreibung: R69 UI-Test für die sichtbare SchlangenSpass!-Kennzeichnung bei erfüllten Aufgaben.
+Version: 1.1
+Beschreibung: R69 UI-Test für spielerfreundliche Copy bei erfüllten Aufgaben.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -25,8 +25,8 @@ function zustandMitErfuelltenAufgaben(): Spielzustand {
   }
 }
 
-describe('R69 SchlangenSpass!-Hinweis für erfüllte Aufgaben', () => {
-  it('kennzeichnet erfüllte Aufgaben mit SchlangenSpass!, ohne leere Spieler umzudeuten', () => {
+describe('R69 erfüllte Aufgaben in der Spielerübersicht', () => {
+  it('zeigt erfüllte offene Aufgaben in der Spielerübersicht mit spielerfreundlicher Copy an', () => {
     const zustand = zustandMitErfuelltenAufgaben()
 
     render(<App initialZustand={zustand} />)
@@ -34,9 +34,9 @@ describe('R69 SchlangenSpass!-Hinweis für erfüllte Aufgaben', () => {
 
     expect(
       within(bereich).getByText(
-        `Erfüllte Aufgaben spieler-1: SchlangenSpass! ${zustand.spieler[0]!.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
+        `Spieler 1 — erfüllte Aufgaben: ${zustand.spieler[0]!.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
       ),
     ).toBeInTheDocument()
-    expect(within(bereich).getByText('Erfüllte Aufgaben spieler-2: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Spieler 2 — erfüllte Aufgaben: keine')).toBeInTheDocument()
   })
 })

@@ -33,12 +33,12 @@ describe('R39 UI-erfüllte Aufgaben', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/erfüllte aufgaben spieler-/i)).toHaveLength(zustand.spieler.length)
+    expect(within(bereich).getAllByText(/— erfüllte Aufgaben:/)).toHaveLength(zustand.spieler.length)
     expect(
       within(bereich).getByText(
-        `Erfüllte Aufgaben spieler-1: SchlangenSpass! ${aufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
+        `Spieler 1 — erfüllte Aufgaben: ${aufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`,
       ),
     ).toBeInTheDocument()
-    expect(within(bereich).getByText('Erfüllte Aufgaben spieler-2: keine')).toBeInTheDocument()
+    expect(within(bereich).getByText('Spieler 2 — erfüllte Aufgaben: keine')).toBeInTheDocument()
   })
 })

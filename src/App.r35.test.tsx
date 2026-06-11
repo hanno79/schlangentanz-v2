@@ -1,8 +1,9 @@
 /*
 Author: rahn
 Datum: 01.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: R35 UI-Tests für die Spieler-Schlangenübersicht in Schlangentanz v2.
+              v1.1: Angepasst an R127 spielerfreundliche Copy (Name statt ID).
 */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
@@ -17,9 +18,8 @@ describe('R35 UI-Spieler-Schlangenübersicht', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/schlangen von spieler-/i)).toHaveLength(zustand.spieler.length)
     for (const spieler of zustand.spieler) {
-      expect(within(bereich).getByText(`Schlangen von ${spieler.id}: keine`)).toBeInTheDocument()
+      expect(within(bereich).getAllByText(new RegExp(`${spieler.name}:`))).toHaveLength(1)
     }
   })
 
@@ -29,13 +29,14 @@ describe('R35 UI-Spieler-Schlangenübersicht', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getByText('Schlangen von spieler-1: keine')).toBeInTheDocument()
+    // Vorher: Spieler 1 hat 0 Schlangen
+    expect(within(bereich).getByText(/Spieler 1: 5 Handkarten, 0 Schlangen/)).toBeInTheDocument()
 
     fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
 
-    expect(
-      within(bereich).getByText('Schlangen von spieler-1: schlange-spieler-1-1 (blau-01)'),
-    ).toBeInTheDocument()
-    expect(within(bereich).getByText('Schlangen von spieler-2: keine')).toBeInTheDocument()
+    // Nachher: Spieler 1 hat 1 Schlange
+    expect(within(bereich).getByText(/Spieler 1: 4 Handkarten, 1 Schlange/)).toBeInTheDocument()
+    // Schlange 1 von Spieler 1 sichtbar
+    expect(within(bereich).getByText(/Schlange 1 von Spieler 1: spielbereit/)).toBeInTheDocument()
   })
 })

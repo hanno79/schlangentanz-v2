@@ -56,8 +56,8 @@ describe('F10 Debuggruppen', () => {
 
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
     const spielerDebug = erwarteOffeneDebugGruppe(spieleruebersicht, 'Spielerstatus')
-    expect(within(spielerDebug).getByText(/Spieler spieler-1:/)).toBeInTheDocument()
-    expect(within(spielerDebug).getByText(/Schlangen von spieler-1:/)).toBeInTheDocument()
+    expect(within(spielerDebug).getByText(/Spieler 1:/)).toBeInTheDocument()
+    expect(within(spielerDebug).getByText(/Spieler 1 — erfüllte Aufgaben:/)).toBeInTheDocument()
     expect(within(spielerDebug).getByText(/Handkarten insgesamt:/)).toBeInTheDocument()
 
     const spieltischBereich = screen.getByRole('region', { name: 'Spieltisch' })

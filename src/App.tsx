@@ -373,18 +373,10 @@ function App({ initialZustand }: AppProps) {
 
               return (
                 <p key={spieler.id} aria-current={istAktiv ? 'true' : undefined}>
-                  Spieler {spieler.id}: {spieler.name} ({spieler.steuerung}) — {spieler.hand.length} Handkarten, {spieler.schlangen.length} Schlangen{istAktiv ? ' — am Zug' : ''}
+                  {spieler.name}: {spieler.hand.length} Handkarten, {spieler.schlangen.length} {spieler.schlangen.length === 1 ? 'Schlange' : 'Schlangen'}{istAktiv ? ' — am Zug' : ''}
                 </p>
               )
             })}
-            {zustand.spieler.map(spieler => (
-              <p key={`schlangen-${spieler.id}`}>
-                Schlangen von {spieler.id}:{' '}
-                {spieler.schlangen.length === 0
-                  ? 'keine'
-                  : spieler.schlangen.map(s => `${s.id} (${kartenIds(s.karten)})`).join('; ')}
-              </p>
-            ))}
             {zustand.spieler.flatMap(spieler =>
               spieler.schlangen.map((schlange, index) => (
                 <p key={`zustand-${spieler.id}-${schlange.id}`}>
@@ -394,10 +386,10 @@ function App({ initialZustand }: AppProps) {
             )}
             {zustand.spieler.map(spieler => (
               <p key={`aufgaben-${spieler.id}`}>
-                Erfüllte Aufgaben {spieler.id}:{' '}
+                {spieler.name} — erfüllte Aufgaben:{' '}
                 {spieler.erfuellteAufgaben.length === 0
                   ? 'keine'
-                  : `SchlangenSpass! ${spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}`}
+                  : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
               </p>
             ))}
             <p>Schlangen insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>

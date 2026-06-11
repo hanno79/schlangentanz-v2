@@ -1,8 +1,9 @@
 /**
  * Author: rahn
  * Datum: 08.06.2026
- * Version: 1.0
+ * Version: 1.1
  * Beschreibung: R121 UI-Test für spielerfreundliche Spielerstatus-Inhalte ohne interne Übersichts- und Zustands-Copy.
+ *               v1.1: Angepasst an R127 spielerfreundliche Copy (Name statt ID, keine rohen Schlangen-IDs).
  */
 
 import { render, screen, within } from '@testing-library/react'
@@ -15,8 +16,9 @@ const ALTE_SPIELERSTATUS_BEGRIFFE = [
   /Spielerübersicht spieler-1:/,
   /Schlangenübersicht spieler-1:/,
   new RegExp('Schlangenzustand spieler-1/'),
-  /Schlangen gesamt:/,
-  /Handkarten gesamt:/,
+  /Spieler spieler-\d:.*\((Mensch|KI)\)/,
+  /Schlangen von spieler-\d/,
+  /Erfüllte Aufgaben spieler-\d/,
 ]
 
 function deterministischerZustand() {
@@ -31,15 +33,19 @@ describe('R121 spielerfreundliche Spielerstatus-Inhalte', () => {
 
     const spielerstatus = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Spielerstatus' })
 
-    expect(within(spielerstatus).getByText(/Spieler spieler-1:/)).toBeVisible()
-    expect(within(spielerstatus).getByText(/Schlangen von spieler-1:/)).toBeVisible()
+    // Spieler mit Name statt ID, keine Steuerung in Klammern
+    expect(within(spielerstatus).getByText(/^Spieler 1:/)).toBeVisible()
+    // Schlangenstatus spielerfreundlich
     expect(within(spielerstatus).getByText(/Schlange 1 von Spieler 1: spielbereit\./)).toBeVisible()
     expect(within(spielerstatus).getByText(/Schlangen insgesamt:/)).toBeVisible()
     expect(within(spielerstatus).getByText(/Handkarten insgesamt:/)).toBeVisible()
 
     const spielerstatusText = spielerstatus.textContent ?? ''
-    for (const alterBegriff of ALTE_SPIELERSTATUS_BEGRIFFE) {
-      expect(spielerstatusText).not.toMatch(alterBegriff)
+    expect(spielerstatusText).not.toMatch(/\bspieler-\d\b/)
+    expect(spielerstatusText).not.toMatch(/schlange-r121-\d/)
+    for (const begriff of ALTE_SPIELERSTATUS_BEGRIFFE) {
+      expect(spielerstatusText).not.toMatch(begriff)
     }
+    expect(spielerstatusText).not.toMatch(/\((Mensch|KI)\)/)
   })
 })
