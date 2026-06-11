@@ -960,3 +960,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `a968e87 — R150: Wertung per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R150-Browser-Smoke bestätigt `Wertung`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R151 Aufgabenkarten per Überschrift labeln
+
+- [x] Scope: Die `Aufgabenkarten`-Unterregion im Bereich `Material und Aufgaben` wird über ihre sichtbare `h3` per `aria-labelledby` gelabelt; sichtbare Copy, Karten-/Aufgabenanzeige, Material-Region, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r151_aufgabenkarten_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Aufgabenkarten"` gesetzt war.
+- [x] GREEN: `src/App.tsx` nutzt `useId()` für `aufgabenkartenTitelId` und labelt die Unterregion per `aria-labelledby`; `src/App.r151_aufgabenkarten_idref.test.tsx` prüft kein `aria-label`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region und Heading `Aufgabenkarten`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R151-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r151_aufgabenkarten_idref.test.tsx src/App.f7_aufgabenkarten.test.tsx src/App.r149_material_aufgaben_idref.test.tsx src/App.r150_wertung_idref.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 157 Testdateien / 645 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `78573a4 — R151: Aufgabenkarten per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R151-Browser-Smoke bestätigt `Aufgabenkarten`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
