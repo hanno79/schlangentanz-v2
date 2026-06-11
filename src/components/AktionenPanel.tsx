@@ -1,7 +1,7 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.6
+Version: 1.11
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 Änderung v1.3: Weitere Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
@@ -12,6 +12,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.8: R154 – Phasenaktion per sichtbarer Überschrift labeln.
 Änderung v1.9: R155 – Weitere verfügbare Aktionen per sichtbarer Überschrift labeln.
 Änderung v1.10: R156 – Endphase per sichtbarer Überschrift labeln.
+Änderung v1.11: R157 – Phasenregeln per sichtbarer Überschrift labeln.
 */
 
 import { useId } from 'react'
@@ -119,6 +120,7 @@ export default function AktionenPanel({
   const weitereVerfuegbareAktionenTitelId = useId()
   const phasenaktionTitelId = useId()
   const endphaseTitelId = useId()
+  const phasenregelnTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
     <section className="info-panel" aria-labelledby={aktionenTitelId}>
@@ -254,8 +256,8 @@ export default function AktionenPanel({
           </p>
         </>
       )}
-      <section aria-label="Phasenregeln">
-        <h3>Phasenregeln</h3>
+      <section aria-labelledby={phasenregelnTitelId}>
+        <h3 id={phasenregelnTitelId}>Phasenregeln</h3>
         <ul>
           {phasenregeln(zustand, ueberhand).map(regel => (
             <li key={regel}>{regel}</li>
