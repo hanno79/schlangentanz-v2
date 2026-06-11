@@ -10,6 +10,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.6: R145 – Aktionenbereich per sichtbarer Überschrift labeln.
 Änderung v1.7: R153 – Weitere Aktionen per sichtbarer Überschrift labeln.
 Änderung v1.8: R154 – Phasenaktion per sichtbarer Überschrift labeln.
+Änderung v1.9: R155 – Weitere verfügbare Aktionen per sichtbarer Überschrift labeln.
 */
 
 import { useId } from 'react'
@@ -114,6 +115,7 @@ export default function AktionenPanel({
   const aktionenTitelId = useId()
   const empfohleneAktionTitelId = useId()
   const weitereAktionenTitelId = useId()
+  const weitereVerfuegbareAktionenTitelId = useId()
   const phasenaktionTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
@@ -184,8 +186,8 @@ export default function AktionenPanel({
             <p>Spielregeln prüfen jede Aktion vor dem Ausführen.</p>
           </section>
           {nichtEnumerierteAktionenHinweise.length > 0 && (
-            <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-label="Weitere verfügbare Aktionen">
-              <h3>Weitere verfügbare Aktionen</h3>
+            <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-labelledby={weitereVerfuegbareAktionenTitelId}>
+              <h3 id={weitereVerfuegbareAktionenTitelId}>Weitere verfügbare Aktionen</h3>
               <ul>
                 {nichtEnumerierteAktionenHinweise.map((hinweis) => (
                   <li key={hinweis.typ}>
