@@ -2,7 +2,7 @@
 Author: rahn
 Datum: 04.06.2026
 Version: 1.0
-Beschreibung: F8 UI-Test für den Wertungsbereich als lesbares Scoreboard.
+Beschreibung: F8 UI-Test für den Wertungsbereich als lesbare Punktetafel.
 */
 
 import { render, screen, within } from '@testing-library/react'
@@ -34,18 +34,18 @@ function zustandMitScoreboardWerten(): Spielzustand {
   }
 }
 
-describe('F8 Scoreboard', () => {
-  it('zeigt die Wertung zusätzlich als Scoreboard mit Gesamt-, Farbgruppen- und Aufgabenpunkten pro Spieler', () => {
+describe('F8 Punktetafel', () => {
+  it('zeigt die Wertung zusätzlich als Punktetafel mit Gesamt-, Farbgruppen- und Aufgabenpunkten pro Spieler', () => {
     const zustand = zustandMitScoreboardWerten()
     const erwarteteWertung = berechneSpielzustandGesamtwertung(zustand)
 
     render(<App initialZustand={zustand} />)
 
     const wertungBereich = screen.getByRole('region', { name: 'Wertung' })
-    const scoreboard = within(wertungBereich).getByRole('region', { name: 'Scoreboard' })
+    const scoreboard = within(wertungBereich).getByRole('region', { name: 'Punktetafel' })
     const eintraege = within(scoreboard).getAllByRole('listitem')
 
-    expect(within(scoreboard).getByRole('heading', { name: 'Scoreboard' })).toBeInTheDocument()
+    expect(within(scoreboard).getByRole('heading', { name: 'Punktetafel' })).toBeInTheDocument()
     expect(eintraege).toHaveLength(erwarteteWertung.spielerwertungen.length)
 
     erwarteteWertung.spielerwertungen.forEach((eintrag, index) => {

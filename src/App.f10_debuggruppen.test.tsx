@@ -74,6 +74,6 @@ describe('F10 Debuggruppen', () => {
     const wertungDebug = erwarteOffeneDebugGruppe(wertung, 'Punkteübersicht')
     expect(within(wertungDebug).getByText(/Punktestand von Spieler 1:/)).toBeInTheDocument()
     expect(within(wertungDebug).getByText(/Punktequellen von Spieler 1:/)).toBeInTheDocument()
-    erwarteAusserhalbVonDebuggruppe(within(wertung).getByRole('region', { name: 'Scoreboard' }))
+    erwarteAusserhalbVonDebuggruppe(within(wertung).getByRole('region', { name: 'Punktetafel' }))
   })
 })

@@ -467,8 +467,8 @@ function App({ initialZustand }: AppProps) {
               </Fragment>
             ))}
           </DebugGruppe>
-          <section className="scoreboard-bereich" aria-label="Scoreboard">
-            <h3>Scoreboard</h3>
+          <section className="scoreboard-bereich" aria-label="Punktetafel">
+            <h3>Punktetafel</h3>
             <ul className="scoreboard-liste">
               {spielerwertungen.map(eintrag => {
                 const spieler = zustand.spieler.find(s => s.id === eintrag.spielerId)
