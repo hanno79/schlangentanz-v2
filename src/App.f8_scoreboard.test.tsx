@@ -53,7 +53,8 @@ describe('F8 Scoreboard', () => {
       if (!spieler) throw new Error(`Testsetup erwartet Spieler ${eintrag.spielerId}.`)
 
       expect(eintraege[index]).toHaveClass('scoreboard-karte')
-      expect(eintraege[index]).toHaveTextContent(`${spieler.name} (${spieler.id})`)
+      expect(eintraege[index]).toHaveTextContent(spieler.name)
+      expect(eintraege[index]).not.toHaveTextContent(new RegExp(`\\b${spieler.id}\\b`))
       expect(eintraege[index]).toHaveTextContent(`Gesamt: ${eintrag.gesamtPunkte} Punkte`)
       expect(eintraege[index]).toHaveTextContent(`Farbgruppen: ${eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte`)
       expect(eintraege[index]).toHaveTextContent(`Aufgaben: ${eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte`)

@@ -462,7 +462,7 @@ function App({ initialZustand }: AppProps) {
 
                 return (
                   <li key={eintrag.spielerId} className="scoreboard-karte">
-                    <strong>{spieler ? `${spieler.name} (${spieler.id})` : eintrag.spielerId}</strong>
+                    <strong>{spieler?.name ?? eintrag.spielerId}</strong>
                     <span>Gesamt: {eintrag.gesamtPunkte} Punkte</span>
                     <span>Farbgruppen: {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte</span>
                     <span>Aufgaben: {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte</span>
