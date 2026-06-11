@@ -739,3 +739,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `1dea7eb — R131: Endrunden-Copy spielerfreundlicher machen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; keine Console-/Page-Errors. Die R131-Endrunden-Copy wurde lokal per DOM-Regression gegen gezielte Endspurt-Zustände abgesichert; ein vollständiger Live-Endrunden-Zustand wurde in diesem Lauf nicht erzwungen.
+
+## Evidence — 11.06.2026 R132 Aktiven Spieler spielerfreundlich benennen
+
+- [x] Scope: Entwicklungsdatenbereich `Aktiver Spieler` zeigt Namen und verständlichen Zughinweis statt roher `spieler-*`-IDs oder technischer Steuerungswerte; Engine/Zugwechsel/Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r132_aktiver_spieler_profil_copy.test.tsx` schlug erwartungsgemäß fehl, weil noch `Aktiver Spieler: spieler-1` und `Spielerprofil: spieler-1 — Spieler 1 (Mensch)` gerendert wurden.
+- [x] GREEN: `src/App.tsx` nutzt `aktiverSpieler.name` und `zugfuehrungLabel(...)`; `src/App.r132_aktiver_spieler_profil_copy.test.tsx` prüft Mensch- und KI-Zug im konkreten `complementary`-Bereich mit negativen raw-ID-/Steuerungswert-Assertions.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initiale Testhärtungs-Non-Blocker und stale `App.test.tsx`-Assertions behoben; final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine review-relevanten Hinweise im Scope`.
+- [x] Targeted: `npm test -- --run src/App.test.tsx src/App.r132_aktiver_spieler_profil_copy.test.tsx src/App.r43.test.tsx` → 3 Testdateien / 29 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 139 Testdateien / 621 Tests bestanden; `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `255615d — R132: Aktiven Spieler spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R132-Browser-Smoke bestätigt `Aktiver Spieler: Spieler 1` / `Spielerprofil: Spieler 1 — Du bist am Zug.` und keine rohe `spieler-*`-/`(Mensch|KI)`-Copy im erreichten Aktiver-Spieler-Entwicklungsdatenbereich.
