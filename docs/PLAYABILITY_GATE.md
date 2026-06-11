@@ -843,3 +843,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `b0cd08b — R141: Aktionen spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R141-Browser-Smoke bestätigt `Spielbare Aktionen: <Zahl>`, `Eine spielbare Aktion auswählen`, `Weitere Aktionen`, `Spielbare Aktionen in dieser Phase`, keine sichtbare stale Legalitäts-Copy im Bereich `Aktionen` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R142 Spielbereich-Landmark spielerfreundlich benennen
+
+- [x] Scope: Der äußere Kompositions-Landmark heißt `Spielbereich` statt technisch/falsch `Legale Aktionen`; das innere Aktionen-Panel bleibt `Aktionen`; Engine, Regeln, Layout, Drag&Drop und Interaktionen unverändert.
+- [x] RED: `npm test -- --run src/App.r142_spielbereich_landmark_copy.test.tsx` schlug vor der Produktionsänderung erwartungsgemäß fehl, weil der äußere Bereich noch als `Legale Aktionen` benannt war.
+- [x] GREEN: `src/App.tsx` rendert den äußeren Bereich als `aria-label="Spielbereich"`; der R142-Test prüft die enthaltenen Kernregionen und negativ den alten Landmark; breite Tests wurden auf `Spielbereich` bzw. für Buttons auf das innere `Aktionen`-Panel nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initiale Scoping-Blocker in breiten Tests und ein Re-Review-Blocker zu Action-Button-Queries behoben; finaler Re-Review `BLOCKERS: Keine`.
+- [x] Targeted: final `npm test -- --run src/App.test.tsx src/App.r142_spielbereich_landmark_copy.test.tsx` → 2 Testdateien / 27 Tests bestanden; Codex-Review-Testlauf → 24 betroffene Testdateien / 57 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 148 Testdateien / 636 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `8d6205e — R142: Spielbereich-Landmark spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R142-Browser-Smoke bestätigt den Landmark `Spielbereich` mit `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Spielerübersicht`, keinen Landmark `Legale Aktionen` und keine Console-/Page-Errors.
