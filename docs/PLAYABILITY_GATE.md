@@ -908,3 +908,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `eecb8cf — R146: Spielstatus per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R146-Browser-Smoke bestätigt `Spielstatus`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R147 Aktiven Spieler per Überschrift labeln
+
+- [x] Scope: Der `Aktiver Spieler`-Bereich wird über seine sichtbare Überschrift per `aria-labelledby` gelabelt; `aria-live="polite"`, sichtbare Copy, Spieltisch, Aktionenpanel, Spielerführung, Debuggruppen, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r147_aktiver_spieler_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Aktiver Spieler"` gesetzt war.
+- [x] GREEN: `src/App.tsx` nutzt `useId()` für `aktiverSpielerTitelId` und labelt die Region per `aria-labelledby`; `src/App.r147_aktiver_spieler_idref.test.tsx` prüft kein `aria-label`, erhaltenes `aria-live="polite"`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region und Heading `Aktiver Spieler`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initialer Non-Blocker zur `aria-live`-Testhärtung behoben; Re-Review final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r147_aktiver_spieler_idref.test.tsx src/App.r132_aktiver_spieler_profil_copy.test.tsx src/App.r140_empfohlene_aktion_copy.test.tsx src/App.f31_spieltisch_layout.test.tsx` → 4 Testdateien / 5 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 153 Testdateien / 641 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `d950a90 — R147: Aktiven Spieler per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R147-Browser-Smoke bestätigt `Aktiver Spieler`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, `aria-live="polite"`, kein separates `aria-label` und keine Console-/Page-Errors.
