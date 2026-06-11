@@ -216,6 +216,7 @@ export default function Schlangenbereich({
 
   const titelId = `${komponentenId}-schlangenbereich-titel`
   const eigeneTitelId = `${komponentenId}-eigene-schlangen-titel`
+  const startzoneTitelId = `${komponentenId}-startzone-titel`
   const gegnerTitelId = `${komponentenId}-gegnerische-schlangen-titel`
 
   return (
@@ -238,7 +239,7 @@ export default function Schlangenbereich({
           className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${dragOverZone?.kind === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
           role="button"
           tabIndex={0}
-          aria-label="Neue Schlange starten"
+          aria-labelledby={startzoneTitelId}
           aria-describedby={`${komponentenId}-startzone-hinweis`}
           onClick={(event) => {
             event.stopPropagation()
@@ -254,7 +255,7 @@ export default function Schlangenbereich({
             handleNeueSchlangeZoneDrop(event)
           }}
         >
-          <strong>Neue Schlange starten</strong>
+          <strong id={startzoneTitelId}>Neue Schlange starten</strong>
           <p id={`${komponentenId}-startzone-hinweis`} className="schlangen-drop-hinweis">
             Ziehe eine Farbkarte hierher oder klicke die passende Start-Schaltfläche.
           </p>
