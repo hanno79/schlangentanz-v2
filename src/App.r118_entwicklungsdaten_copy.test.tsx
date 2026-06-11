@@ -33,7 +33,7 @@ describe('R118 spielerfreundliche Entwicklungsdaten-Copy', () => {
     for (const [index, bereich] of entwicklungsdatenBereiche.entries()) {
       expect(bereich).toHaveAccessibleName(`Entwicklungsdaten: ${ENTWICKLUNGSDATEN_TITEL[index]}`)
       expect(within(bereich).getByText('Entwicklungsdaten:')).toBeInTheDocument()
-      expect(within(bereich).getByText(ENTWICKLUNGSDATEN_TITEL[index], { selector: 'summary' })).toBeVisible()
+      expect(within(bereich).getByText(ENTWICKLUNGSDATEN_TITEL[index], { selector: 'summary span' })).toBeVisible()
     }
 
     expect(screen.queryAllByText(/^Debug:/)).toHaveLength(0)

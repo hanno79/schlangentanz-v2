@@ -16,13 +16,13 @@ const BADGE_LABEL = 'Entwicklungsdaten:'
 
 export default function DebugGruppe({ titel, children }: DebugGruppeProps) {
   const badgeId = useId()
-  const summaryId = useId()
+  const summaryTextId = useId()
 
   return (
-    <aside className="debug-gruppe-entwicklungsdaten" aria-labelledby={`${badgeId} ${summaryId}`}>
+    <aside className="debug-gruppe-entwicklungsdaten" aria-labelledby={`${badgeId} ${summaryTextId}`}>
       <span id={badgeId} className="debug-gruppe__badge">{BADGE_LABEL}</span>
       <details open className="debug-gruppe">
-        <summary id={summaryId}>{titel}</summary>
+        <summary><span id={summaryTextId}>{titel}</span></summary>
         {children}
       </details>
     </aside>

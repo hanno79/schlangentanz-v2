@@ -17,10 +17,11 @@ function deterministischerZustand() {
 }
 
 function erwarteOffeneDebugGruppe(bereich: HTMLElement, titel: string): HTMLElement {
-  const summary = within(bereich).getByText(titel, { selector: 'summary' })
+  const summary = within(bereich).getByText(titel, { selector: 'summary span' })
   const details = summary.closest('details')
 
-  expect(summary.tagName).toBe('SUMMARY')
+  expect(summary.tagName).toBe('SPAN')
+  expect(summary.closest('summary')).not.toBeNull()
   expect(details).not.toBeNull()
   expect(details).toHaveAttribute('open')
   expect(details).toHaveClass('debug-gruppe')
