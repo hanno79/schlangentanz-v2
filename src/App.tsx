@@ -225,7 +225,7 @@ function App({ initialZustand }: AppProps) {
   const aktiverSpielerTitelId = useId()
   const spieltischTitelId = useId()
   const spieleruebersichtTitelId = useId()
-  const materialUndAufgabenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
+  const materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
@@ -436,8 +436,8 @@ function App({ initialZustand }: AppProps) {
                 : 'keine'}
             </p>
           </DebugGruppe>
-          <section className="aufgabenkarten-bereich" aria-label="Aufgabenkarten">
-            <h3>Aufgabenkarten</h3>
+          <section className="aufgabenkarten-bereich" aria-labelledby={aufgabenkartenTitelId}>
+            <h3 id={aufgabenkartenTitelId}>Aufgabenkarten</h3>
             {zustand.offeneAufgaben.length === 0 ? (
               <p>Keine offenen Aufgabenkarten.</p>
             ) : (
