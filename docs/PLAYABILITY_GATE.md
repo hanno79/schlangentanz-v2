@@ -1077,3 +1077,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `706ca8a — R159: Handkarten per sichtbarem Text labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R159-Browser-Smoke bestätigt das `Handkarten`-Panel mit `aria-labelledby` auf genau einen sichtbaren Text innerhalb des Panels, kein separates `aria-label`, sichtbare Überschrift `Handkarten als Kartenleiste` sowie keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R160 Zugfortschritt als Live-Region kennzeichnen
+
+- [x] Scope: Der sichtbare `Zugfortschritt` im `Spielstatus` bleibt über die sichtbare lokale Überschrift `Zugfortschritt` per Single-Token-`aria-labelledby` gelabelt und erhält zusätzlich `aria-live="polite"`; sichtbare Copy, Zugphasenlabels, Engine-/Regelverhalten, Aktionen und Layout bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r160_zugfortschritt_live_region.test.tsx` fiel erwartungsgemäß fehl, weil die `Zugfortschritt`-Region noch kein `aria-live="polite"` hatte.
+- [x] GREEN: `src/components/Zugfortschritt.tsx` setzt `aria-live="polite"`; `src/App.r160_zugfortschritt_live_region.test.tsx` prüft kein separates `aria-label`, Single-Token-IDREF, dokumentweit eindeutiges Labelziel, Ziel innerhalb der Region, sichtbare Überschrift und aktuellen sichtbaren Phasentext.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R160-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r160_zugfortschritt_live_region.test.tsx src/App.r115_zugfortschritt_label_idrefs.test.tsx src/App.f9_zugfortschritt.test.tsx src/App.f10_debuggruppen.test.tsx` → 4 Testdateien / 8 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 166 Testdateien / 654 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `fd56b24 — R160: Zugfortschritt als Live-Region kennzeichnen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R160-Browser-Smoke bestätigt den `Zugfortschritt` mit `aria-live="polite"`, Single-Token-`aria-labelledby` auf genau ein sichtbares Labelziel innerhalb der Region, kein separates `aria-label`, aktuellen Phasentext sowie keine Console-/Page-Errors.
