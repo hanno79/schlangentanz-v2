@@ -347,17 +347,17 @@ describe('R31 UI-Gewinneranzeige', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     expect(within(bereich).getByText(/spielschritt im zug: spielende/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/gewinner spieler-1: 3 punkte/i)).toBeInTheDocument()
-    expect(within(bereich).queryByText(/gewinner spieler-2/i)).toBeNull()
+    expect(within(bereich).getByText(/gewinner spieler 1: 3 punkte/i)).toBeInTheDocument()
+    expect(within(bereich).queryByText(/gewinner spieler 2/i)).toBeNull()
   })
 
   it('zeigt bei Gleichstand alle Engine-Gewinner in stabiler Reihenfolge an', () => {
     render(<App initialZustand={spielendeZustandMitGleichstand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).getAllByText(/gewinner spieler-/i).map(element => element.textContent)).toEqual([
-      'Gewinner spieler-1: 3 Punkte',
-      'Gewinner spieler-2: 3 Punkte',
+    expect(within(bereich).getAllByText(/gewinner spieler \d/i).map(element => element.textContent)).toEqual([
+      'Gewinner Spieler 1: 3 Punkte',
+      'Gewinner Spieler 2: 3 Punkte',
     ])
   })
 
@@ -365,7 +365,7 @@ describe('R31 UI-Gewinneranzeige', () => {
     render(<App initialZustand={zustandMitBlauerDreiergruppe()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
-    expect(within(bereich).queryByText(/gewinner spieler-/i)).toBeNull()
+    expect(within(bereich).queryByText(/gewinner spieler \d/i)).toBeNull()
   })
 })
 

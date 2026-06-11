@@ -37,7 +37,7 @@ describe('R56 UI-Spielende und Gewinneranzeige', () => {
     const angezeigteGewinner = within(wertungBereich).getAllByText(/^Gewinner /)
     expect(angezeigteGewinner).toHaveLength(erwartung.gewinner.length)
     expect(angezeigteGewinner[0]).toHaveTextContent(
-      `Gewinner ${erwartung.gewinner[0].spielerId}: ${erwartung.gewinner[0].gesamtPunkte} Punkte`,
+      `Gewinner ${zustand.spieler[0].name}: ${erwartung.gewinner[0].gesamtPunkte} Punkte`,
     )
   })
 })

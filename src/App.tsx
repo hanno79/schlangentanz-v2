@@ -199,12 +199,13 @@ function App({ initialZustand }: AppProps) {
   const istSpielende = zustand.zugphase === 'Spielende'
   const ueberhand = ueberhandAnzahl(zustand)
   const istEndspurt = zustand.spielphase === 'Endspurt'
+  const spielerNameFuerId = (spielerId: string) => zustand.spieler.find(spieler => spieler.id === spielerId)?.name ?? spielerId
   const gewinnerText = gewinnerListe.length > 0
-    ? gewinnerListe.map(g => `${g.spielerId} (${g.gesamtPunkte} Punkte)`).join(', ')
+    ? gewinnerListe.map(g => `${spielerNameFuerId(g.spielerId)} (${g.gesamtPunkte} Punkte)`).join(', ')
     : 'keine'
   const ergebnisText = gewinnerListe.length > 1
     ? 'Gleichstand'
-    : `Sieg für ${gewinnerListe[0]?.spielerId ?? 'unbekannt'}`
+    : `Sieg für ${gewinnerListe[0] ? spielerNameFuerId(gewinnerListe[0].spielerId) : 'unbekannt'}`
   const empfohleneAktionId = useId()
   const phasenaktionId = useId()
   const heroTitelId = useId()
@@ -472,7 +473,7 @@ function App({ initialZustand }: AppProps) {
             </ul>
           </section>
           {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
-            <p key={g.spielerId}>Gewinner {g.spielerId}: {g.gesamtPunkte} Punkte</p>
+            <p key={g.spielerId}>Gewinner {spielerNameFuerId(g.spielerId)}: {g.gesamtPunkte} Punkte</p>
           ))}
         </section>
       </section>
