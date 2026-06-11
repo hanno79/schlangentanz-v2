@@ -37,7 +37,7 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
-    expect(within(bereich).getByText(/aktueller spielschritt: ausspielphase/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktueller spielschritt: karten ausspielen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
     expect(within(aktionenBereich).getAllByRole('button')).toHaveLength(5)
     expect(

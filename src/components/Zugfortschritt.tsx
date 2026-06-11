@@ -8,6 +8,7 @@ Beschreibung: Zeigt den aktuellen Zugfortschritt als Schrittleiste an.
 
 import { useId } from 'react'
 import type { Zugphase } from '../engine'
+import { zugphaseLabel } from '../zugphaseLabels'
 
 const ZUGPHASEN: Zugphase[] = [
   'Nachziehphase', 'Ausspielphase', 'Aufgabenpruefung', 'Zugabschluss', 'Spielende',
@@ -15,21 +16,6 @@ const ZUGPHASEN: Zugphase[] = [
 
 interface ZugfortschrittProps {
   zugphase: Zugphase
-}
-
-function zugphaseLabel(phase: Zugphase): string {
-  switch (phase) {
-    case 'Nachziehphase':
-      return 'Karte ziehen'
-    case 'Ausspielphase':
-      return 'Karten ausspielen'
-    case 'Aufgabenpruefung':
-      return 'Aufgaben prüfen'
-    case 'Zugabschluss':
-      return 'Zug abschließen'
-    case 'Spielende':
-      return 'Spiel beendet'
-  }
 }
 
 function Zugfortschritt({ zugphase }: ZugfortschrittProps) {

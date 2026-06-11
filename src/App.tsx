@@ -25,6 +25,7 @@ import useAktionszielFokus from './hooks/useAktionszielFokus'
 import Zugfortschritt from './components/Zugfortschritt'
 import HandkartenPanel from './components/HandkartenPanel'
 import Schlangenbereich from './components/Schlangenbereich'
+import { zugphaseLabel } from './zugphaseLabels'
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
@@ -251,7 +252,7 @@ function App({ initialZustand }: AppProps) {
           <h2>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
           <DebugGruppe titel="Spielphase">
-            <p>Aktueller Spielschritt: {zustand.zugphase}</p>
+            <p>Aktueller Spielschritt: {zugphaseLabel(zustand.zugphase)}</p>
             <p>Spielschritt im Zug: {zustand.zugphase}</p>
             <p>Partiestatus: {zustand.spielphase}</p>
             {istSpielende && <p>Spielende erreicht.</p>}
