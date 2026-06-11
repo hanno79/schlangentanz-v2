@@ -934,3 +934,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `90b92aa — R148: Spielerübersicht per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R148-Browser-Smoke bestätigt `Spielerübersicht`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R149 Material und Aufgaben per Überschrift labeln
+
+- [x] Scope: Die `Material und Aufgaben`-Region im `Spielbereich` wird über ihre sichtbare Überschrift per `aria-labelledby` gelabelt; sichtbare Copy, DebugGruppe `Karten und Aufgaben`, `Aufgabenkarten`-Unterregion, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r149_material_aufgaben_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Material und Aufgaben"` gesetzt war.
+- [x] GREEN: `src/App.tsx` nutzt `useId()` für `materialUndAufgabenTitelId` und labelt die Region per `aria-labelledby`; `src/App.r149_material_aufgaben_idref.test.tsx` prüft kein `aria-label`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region und Heading `Material und Aufgaben`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R149-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine review-relevanten Non-Blocker gefunden`.
+- [x] Targeted: `npm test -- --run src/App.r149_material_aufgaben_idref.test.tsx src/App.r148_spieleruebersicht_idref.test.tsx` → 2 Testdateien / 2 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 155 Testdateien / 643 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `c447da9 — R149: Material und Aufgaben per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R149-Browser-Smoke bestätigt `Material und Aufgaben`-Region mit `aria-labelledby` auf genau eine sichtbare Überschrift innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
