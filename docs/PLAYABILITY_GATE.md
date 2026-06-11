@@ -1090,3 +1090,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `fd56b24 — R160: Zugfortschritt als Live-Region kennzeichnen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R160-Browser-Smoke bestätigt den `Zugfortschritt` mit `aria-live="polite"`, Single-Token-`aria-labelledby` auf genau ein sichtbares Labelziel innerhalb der Region, kein separates `aria-label`, aktuellen Phasentext sowie keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R161 Debuggruppen per sichtbaren lokalen Labels benennen
+
+- [x] Scope: `DebugGruppe` benennt `aside.debug-gruppe-entwicklungsdaten` nicht mehr per separatem `aria-label`, sondern per `aria-labelledby` auf sichtbaren Badge-Span `Entwicklungsdaten:` und einen sichtbaren Text-Span innerhalb des `summary`; bestehende zugängliche Namen `Entwicklungsdaten: <Titel>`, Details/Summary-Verhalten, CSS-Klassen und Inhalte bleiben erhalten.
+- [x] RED: `npm test -- --run src/App.r161_debuggruppen_idref.test.tsx` fiel erwartungsgemäß fehl, weil das `aside` noch `aria-label="Entwicklungsdaten: Spielphase"` hatte.
+- [x] GREEN: `src/components/DebugGruppe.tsx` nutzt `useId()` für Badge- und Summary-Textziel; `src/App.r161_debuggruppen_idref.test.tsx` prüft kein `aria-label` am `aside`, zwei lokale eindeutige IDREF-Ziele, sichtbaren Badge `Entwicklungsdaten:`, kein Badge-`aria-label`, Summary-Textspan und erhaltenen accessible name.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only inklusive untracked R161-Test und browser-smoke-getriebener Korrekturen; finales Ergebnis `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r161_debuggruppen_idref.test.tsx src/App.r118_entwicklungsdaten_copy.test.tsx src/App.f16_entwicklungsdaten_debug.test.tsx src/App.f10_debuggruppen.test.tsx src/App.f11_debuggruppen_polish.test.tsx src/App.r120_entwicklungsdaten_summary_titel.test.tsx` → 6 Testdateien / 6 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 167 Testdateien / 655 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `a00cfe7`, `5db6e9f`, `a9052b1` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R161-Browser-Smoke bestätigt 5 Debuggruppen ohne `aria-label` am `aside`, lokale `aria-labelledby`-Ziele, sichtbaren Badge `Entwicklungsdaten:`, Summary-Textziel ohne CSS-Pfeil im Labelziel und keine Console-/Page-Errors.
