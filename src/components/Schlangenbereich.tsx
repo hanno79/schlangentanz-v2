@@ -285,6 +285,8 @@ export default function Schlangenbereich({
           <ul className="schlangenleiste">
             {aktiverSpieler.schlangen.map((schlange, schlangeIndex) => {
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
+              const schlangenLabelTypId = `${komponentenId}-schlange-${schlangeIndex}-label`
+              const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
 
               return (
                 <li
@@ -292,14 +294,15 @@ export default function Schlangenbereich({
                   className={`schlangekarte schlangekarte--eigene${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
-                  aria-label={`Schlange ${schlange.id}`}
+                  aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
                   aria-describedby={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe`}
                   onClick={(event) => handleSchlangeClick(event, schlange.id)}
                   onKeyDown={(event) => handleSchlangeKeyDown(event, schlange.id)}
                   onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
                   onDrop={(event) => handleSchlangeDrop(event, schlange.id)}
                 >
-                  <strong>{schlange.id}</strong>
+                  <span id={schlangenLabelTypId}>Schlange</span>
+                  <strong id={schlangenLabelNameId}>{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
                     {schlange.karten.map((karte) => (
