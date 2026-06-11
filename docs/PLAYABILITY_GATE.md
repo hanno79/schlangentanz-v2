@@ -765,3 +765,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `4f0cd8f — R135: Aktionenquelle spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R135-Browser-Smoke bestätigt die neue Regelprüf-Copy, keine sichtbare `Quelle:`-/`engine.ermittleLegaleAktionen`-Copy im erreichten `Weitere Aktionen`-Bereich und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R136 Schlangenstatus am Spieltisch spielerfreundlich benennen
+
+- [x] Scope: Schlangenkarten im `Spieltisch` zeigen ihren Zustand als spielerfreundlichen Status; Engine, Regeln, Layout und Interaktionen unverändert.
+- [x] RED: `npm test -- --run src/App.r136_spieltisch_schlangenstatus_copy.test.tsx` schlug erwartungsgemäß fehl, weil noch keine `Status: spielbereit`-Copy im Spieltisch sichtbar war.
+- [x] GREEN: `src/components/Schlangenbereich.tsx` mappt eigene und gegnerische Schlangenstatuswerte über einen exhaustiven `switch` auf `spielbereit`, `gerade blockiert`, `geschützt`; `src/App.r136_spieltisch_schlangenstatus_copy.test.tsx` prüft eigene und gegnerische Schlangen sowie negative stale `Zustand:`-Copy.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initiale Non-Blocker (gegnerische Schlangen direkt testen, exhaustives Mapping) behoben; Re-Review final `BLOCKERS: keine`, `NON-BLOCKERS: keine`.
+- [x] Targeted: `npm test -- --run src/App.r136_spieltisch_schlangenstatus_copy.test.tsx src/App.r126_schlangenstatus_copy.test.tsx src/App.f31_spieltisch_layout.test.tsx` → 3 Testdateien / 3 Tests bestanden; zusätzlich `npm run typecheck` grün.
+- [x] Full Gates: `npm test -- --run` → 142 Testdateien / 624 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `c308608 — R136: Schlangenstatus am Spieltisch spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R136-Browser-Smoke führt eine `Neue Schlange starten`-Aktion aus, bestätigt `Status: spielbereit` im `Spieltisch`, keine sichtbare stale `Zustand: aktiv|blockiert|geschuetzt`-Copy und keine Console-/Page-Errors.
