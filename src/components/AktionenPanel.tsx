@@ -11,6 +11,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.7: R153 – Weitere Aktionen per sichtbarer Überschrift labeln.
 Änderung v1.8: R154 – Phasenaktion per sichtbarer Überschrift labeln.
 Änderung v1.9: R155 – Weitere verfügbare Aktionen per sichtbarer Überschrift labeln.
+Änderung v1.10: R156 – Endphase per sichtbarer Überschrift labeln.
 */
 
 import { useId } from 'react'
@@ -117,6 +118,7 @@ export default function AktionenPanel({
   const weitereAktionenTitelId = useId()
   const weitereVerfuegbareAktionenTitelId = useId()
   const phasenaktionTitelId = useId()
+  const endphaseTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
     <section className="info-panel" aria-labelledby={aktionenTitelId}>
@@ -238,8 +240,8 @@ export default function AktionenPanel({
             )}
           </section>
           {zustand.spielphase === 'Endspurt' && (
-            <section className="aktionen-gruppe aktionen-gruppe--endphase" aria-label="Endphase">
-              <h3>Endphase</h3>
+            <section className="aktionen-gruppe aktionen-gruppe--endphase" aria-labelledby={endphaseTitelId}>
+              <h3 id={endphaseTitelId}>Endphase</h3>
               <p>
                 Der letzte Zieher hat den Nachziehstapel geleert. Danach erhält jeder verbleibende Spieler genau
                 noch einen Zug ohne Nachziehen.
