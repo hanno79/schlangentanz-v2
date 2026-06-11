@@ -9,6 +9,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.5: R141 – sichtbare Aktionen-Copy spielerfreundlich ohne Legalitätsjargon.
 Änderung v1.6: R145 – Aktionenbereich per sichtbarer Überschrift labeln.
 Änderung v1.7: R153 – Weitere Aktionen per sichtbarer Überschrift labeln.
+Änderung v1.8: R154 – Phasenaktion per sichtbarer Überschrift labeln.
 */
 
 import { useId } from 'react'
@@ -113,6 +114,7 @@ export default function AktionenPanel({
   const aktionenTitelId = useId()
   const empfohleneAktionTitelId = useId()
   const weitereAktionenTitelId = useId()
+  const phasenaktionTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
     <section className="info-panel" aria-labelledby={aktionenTitelId}>
@@ -203,10 +205,10 @@ export default function AktionenPanel({
           <section
             id={phasenaktionId}
             className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === phasenaktionId ? ' aktionen-gruppe--sprungziel' : ''}`}
-            aria-label="Phasenaktion"
+            aria-labelledby={phasenaktionTitelId}
             tabIndex={-1}
           >
-            <h3>Phasenaktion</h3>
+            <h3 id={phasenaktionTitelId}>Phasenaktion</h3>
             {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
               <button onClick={onAusspielphaseBeenden}>
                 Ausspielphase beenden
