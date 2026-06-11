@@ -986,3 +986,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `3bd12e6 — R152: Empfohlene Aktion per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R152-Browser-Smoke bestätigt `Empfohlene Aktion`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R153 Weitere Aktionen per Überschrift labeln
+
+- [x] Scope: Die `Weitere Aktionen`-Unterregion im `Aktionen`-Bereich wird über ihre sichtbare `h3` per `aria-labelledby` gelabelt; Button-Labels, Reihenfolge, Reaktionsaktionen, Aktionshandler, sichtbare Copy, `Empfohlene Aktion`, `Phasenaktion`, Spielerführung/Sprungziele, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r153_weitere_aktionen_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Weitere Aktionen"` gesetzt war.
+- [x] GREEN: `src/components/AktionenPanel.tsx` nutzt `useId()` für `weitereAktionenTitelId` und labelt die Unterregion per `aria-labelledby`; `src/App.r153_weitere_aktionen_idref.test.tsx` prüft kein `aria-label`, Single-Token-IDREF, genau ein Ziel, Ziel innerhalb der Region und Heading `Weitere Aktionen`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R153-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r153_weitere_aktionen_idref.test.tsx src/App.r152_empfohlene_aktion_idref.test.tsx src/App.f12_spielbare_aktionen.test.tsx src/App.f6_aktionenbereich.test.tsx src/App.f18_spielerfuehrung_aktionsbereich_verbindung.test.tsx src/App.f19_sprungziel_hervorhebung.test.tsx src/App.f27_sprungziel_fokus.test.tsx src/App.r113_aktionenpanel_idrefs.test.tsx src/App.r145_aktionen_idref.test.tsx` → 9 Testdateien / 13 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 159 Testdateien / 647 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `48eda42 — R153: Weitere Aktionen per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R153-Browser-Smoke bestätigt `Weitere Aktionen`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label` und keine Console-/Page-Errors.
