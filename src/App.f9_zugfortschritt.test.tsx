@@ -46,6 +46,7 @@ describe('F9 Zugfortschritt', () => {
     expect(zugfortschritt).not.toHaveTextContent(phase)
     expect(aktiveSchritte[0]).toHaveTextContent(label)
     expect(aktiveSchritte[0]).toHaveTextContent('Aktiv')
-    expect(within(spielstatus).getByText(`Spielschritt im Zug: ${phase}`)).toBeInTheDocument()
+    expect(spielstatus).toHaveTextContent(`Spielschritt im Zug: ${label}`)
+    expect(spielstatus).not.toHaveTextContent(`Spielschritt im Zug: ${phase}`)
   })
 })

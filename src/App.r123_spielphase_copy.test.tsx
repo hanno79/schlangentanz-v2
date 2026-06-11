@@ -12,7 +12,7 @@ import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 const SPIELERFREUNDLICHE_SPIELPHASE_LABELS = [
   /Aktueller Spielschritt: Karten ausspielen/,
-  /Spielschritt im Zug: Ausspielphase/,
+  /Spielschritt im Zug: Karten ausspielen/,
   /Partiestatus: Laufende Partie/,
   /Am Zug: Spieler 1 von 2/,
 ]
@@ -23,6 +23,7 @@ const VERALTETE_SPIELPHASE_LABELS = [
   'Partiestatus: Normal',
   'Spieler am Zug:',
   'Aktueller Spielschritt: Ausspielphase',
+  'Spielschritt im Zug: Ausspielphase',
 ]
 
 function deterministischerZustand() {

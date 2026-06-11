@@ -15,13 +15,14 @@ function deterministischerZustand() {
 }
 
 describe('R134 aktuelle Spielschritt-Copy', () => {
-  it('zeigt den aktuellen Spielschritt spielerfreundlich und behält die interne Zugphase nur in der Diagnosezeile', () => {
+  it('zeigt den aktuellen Spielschritt und die Zugdiagnose spielerfreundlich', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
     const spielphase = screen.getByRole('complementary', { name: 'Entwicklungsdaten: Spielphase' })
 
     expect(within(spielphase).getByText('Aktueller Spielschritt: Karten ausspielen')).toBeVisible()
-    expect(within(spielphase).getByText('Spielschritt im Zug: Ausspielphase')).toBeVisible()
+    expect(spielphase).toHaveTextContent('Spielschritt im Zug: Karten ausspielen')
     expect(spielphase).not.toHaveTextContent('Aktueller Spielschritt: Ausspielphase')
+    expect(spielphase).not.toHaveTextContent('Spielschritt im Zug: Ausspielphase')
   })
 })
