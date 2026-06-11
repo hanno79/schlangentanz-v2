@@ -791,3 +791,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `b871c91 — R137: Partiestatus spielerfreundlich benennen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R137-Browser-Smoke bestätigt `Partiestatus: Laufende Partie`, keine sichtbare stale `Partiestatus: Normal`-Copy im erreichten Startzustand und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R138 Zugdiagnose spielerfreundlich benennen
+
+- [x] Scope: Entwicklungsdaten-Zeile `Spielschritt im Zug` zeigt spielerfreundliche `zugphaseLabel(...)`-Copy statt roher interner Zugphasenwerte; Engine/Regeln/Layout unverändert.
+- [x] RED: `npm test -- --run src/App.r138_zugdiagnose_copy.test.tsx` schlug erwartungsgemäß mit 5 Fehlschlägen fehl, weil noch `Spielschritt im Zug: Nachziehphase/Ausspielphase/Aufgabenpruefung/Zugabschluss/Spielende` sichtbar war.
+- [x] GREEN: `src/App.tsx` nutzt `zugphaseLabel(zustand.zugphase)` für `Spielschritt im Zug`; stale positive Erwartungen in `src/App.f9_zugfortschritt.test.tsx`, `src/App.r123_spielphase_copy.test.tsx`, `src/App.r134_aktueller_spielschritt_copy.test.tsx` und `src/App.test.tsx` wurden nachgezogen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet.
+- [x] Codex Review: initial `BLOCKERS: Keine`; nach Full-Suite-Fund und `App.test.tsx`-Nachzug Re-Review ebenfalls `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.test.tsx src/App.r138_zugdiagnose_copy.test.tsx src/App.f9_zugfortschritt.test.tsx src/App.r134_aktueller_spielschritt_copy.test.tsx src/App.r123_spielphase_copy.test.tsx` → 5 Testdateien / 38 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 144 Testdateien / 632 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run check:test-lines`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `ee478c2 — R138: Zugdiagnose spielerfreundlich benennen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar; R138-Browser-Smoke bestätigt `Spielschritt im Zug: Karten ausspielen`, keine sichtbare stale `Spielschritt im Zug: Ausspielphase`-Copy im erreichten Startzustand und keine Console-/Page-Errors.
