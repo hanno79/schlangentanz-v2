@@ -1038,3 +1038,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `dabb562 — R156: Endphase per Überschrift labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar und keine Console-/Page-Errors. Die R156-Zielregion ist ein bedingt gerenderter Endspurt-/Endphase-Zustand und ohne injizierten Fixture-Zustand nicht zuverlässig live erreichbar; der exakte IDREF-Vertrag ist lokal per DOM-Regression gegen den betroffenen Endspurt-Spielzustand abgesichert.
+
+## Evidence — 11.06.2026 R157 Phasenregeln per Überschrift labeln
+
+- [x] Scope: Die dauerhaft sichtbare `Phasenregeln`-Unterregion im `Aktionen`-Bereich wird über ihre sichtbare `h3` per `aria-labelledby` gelabelt; Phasenregeln-Copy, Liste `Spielbare Aktionen in dieser Phase`, andere Aktionsgruppen, Engine-/Regelverhalten, Layout und Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r157_phasenregeln_idref.test.tsx` schlug erwartungsgemäß fehl, weil noch ein separates `aria-label="Phasenregeln"` gesetzt war und kein komponentenlokales `aria-labelledby`.
+- [x] GREEN: `src/components/AktionenPanel.tsx` nutzt `useId()` für `phasenregelnTitelId` und labelt die Region per `aria-labelledby`; `src/App.r157_phasenregeln_idref.test.tsx` prüft zwei App-Instanzen, kein `aria-label`, Single-Token-IDREF, dokumentweit eindeutige Label-IDs, genau ein Ziel, Ziel innerhalb der Region, Heading `Phasenregeln` mit Level 3 sowie die erhaltene `h4` `Spielbare Aktionen in dieser Phase`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R157-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r157_phasenregeln_idref.test.tsx` → 1 Testdatei / 1 Test bestanden; angrenzende IDREF-Suite R145/R153/R154/R155/R156 → 5 Testdateien / 5 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 163 Testdateien / 651 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `8d42300 — R157: Phasenregeln per Überschrift labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R157-Browser-Smoke bestätigt `Phasenregeln`-Region mit `aria-labelledby` auf genau eine sichtbare `h3` innerhalb der Region, kein separates `aria-label`, sichtbare `h4` `Spielbare Aktionen in dieser Phase` sowie keine Console-/Page-Errors.
