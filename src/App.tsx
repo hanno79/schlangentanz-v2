@@ -258,14 +258,14 @@ function App({ initialZustand }: AppProps) {
             {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
               <>
                 <p>Endrunde aktiv: ja</p>
-                <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].id}</p>
+                <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].name}</p>
               </>
             )}
             {zustand.spielphase !== 'Normal' && (
               <p>
                 Verbleibende Endrunde:{' '}
                 {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
-                  ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].id).join(', ')
+                  ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].name).join(', ')
                   : 'keine'}
               </p>
             )}

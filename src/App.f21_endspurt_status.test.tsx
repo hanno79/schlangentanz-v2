@@ -34,7 +34,7 @@ describe('F21 Endspurt-Statusanzeige', () => {
       within(spielstatus).getByText(/Verbleibende Züge ohne Nachziehen: 1/i),
     ).toBeInTheDocument()
     expect(
-      within(spielstatus).getByText(/Verbleibende Endrunde: spieler-1/i),
+      within(spielstatus).getByText(/Verbleibende Endrunde: Spieler 1/i),
     ).toBeInTheDocument()
   })
 

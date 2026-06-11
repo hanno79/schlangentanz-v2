@@ -28,9 +28,12 @@ describe('R63 UI-Endrunde', () => {
 
     const spielstatus = screen.getByRole('region', { name: 'Spielstatus' })
 
+    const text = spielstatus.textContent ?? ''
+
     expect(within(spielstatus).getByText(/Endrunde aktiv: ja/i)).toBeInTheDocument()
-    expect(within(spielstatus).getByText(/Endrunde ausgelöst durch: spieler-2/i)).toBeInTheDocument()
-    expect(within(spielstatus).getByText(/Verbleibende Endrunde: spieler-1/i)).toBeInTheDocument()
+    expect(within(spielstatus).getByText(/Endrunde ausgelöst durch: Spieler 2/i)).toBeInTheDocument()
+    expect(within(spielstatus).getByText(/Verbleibende Endrunde: Spieler 1/i)).toBeInTheDocument()
+    expect(text).not.toMatch(/\bspieler-\d\b/i)
   })
 
   it('zeigt bei beendetem Spiel keine aktive Endrunde mehr an', () => {

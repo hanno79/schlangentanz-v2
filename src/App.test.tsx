@@ -389,10 +389,12 @@ describe('R32 UI-Spielphase und Endrunde', () => {
   it('zeigt Endspurt-Auslöser und verbleibende Endrunden-Spieler an', () => {
     render(<App initialZustand={endrundenAusloeserZustand()} />)
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
+    const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
     expect(within(bereich).getByText(/partiestatus: endspurt/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/endrunde ausgelöst durch: spieler-2/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/verbleibende endrunde: spieler-3, spieler-1/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/endrunde ausgelöst durch: Spieler 2/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/verbleibende endrunde: Spieler 3, Spieler 1/i)).toBeInTheDocument()
+    expect(spielstatusText).not.toMatch(/\bspieler-\d\b/i)
   })
 
   it('aktualisiert die Endrunden-Anzeige nach einem Engine-Zugabschluss', () => {
@@ -400,10 +402,12 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     const bereich = screen.getByRole('region', { name: /legale aktionen/i })
 
     fireEvent.click(within(bereich).getByRole('button', { name: /zug beenden/i }))
+    const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
     expect(within(bereich).getAllByText(/aktiver spieler: spieler-3/i)[0]).toBeInTheDocument()
     expect(within(bereich).getByText(/partiestatus: endspurt/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/verbleibende endrunde: spieler-3, spieler-1/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/verbleibende endrunde: Spieler 3, Spieler 1/i)).toBeInTheDocument()
+    expect(spielstatusText).not.toMatch(/\bspieler-\d\b/i)
   })
 
   it('zeigt bei Spielende keine verbleibenden Endrunden-Spieler mehr an', () => {
