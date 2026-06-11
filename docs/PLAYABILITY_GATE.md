@@ -1103,3 +1103,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `a00cfe7`, `5db6e9f`, `a9052b1` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R161-Browser-Smoke bestätigt 5 Debuggruppen ohne `aria-label` am `aside`, lokale `aria-labelledby`-Ziele, sichtbaren Badge `Entwicklungsdaten:`, Summary-Textziel ohne CSS-Pfeil im Labelziel und keine Console-/Page-Errors.
+
+## Evidence — 11.06.2026 R162 Eigene Schlangen sichtbar labeln
+
+- [x] Scope: Eigene Schlangen-Buttons im `Schlangenbereich` werden nicht mehr per separatem `aria-label`, sondern per `aria-labelledby` auf sichtbare lokale Ziele `Schlange` + `<id>` innerhalb des Buttons benannt; `aria-describedby`, Klick-, Tastatur-, Drag-and-drop-Verhalten, Startzone, Gegner-Schlangen, Kartenreihen, Engine-/Regelverhalten und Layout bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r162_eigene_schlange_idref.test.tsx` fiel erwartungsgemäß fehl, weil die eigenen Schlangen-Buttons noch kein `aria-labelledby` hatten.
+- [x] GREEN: `src/components/Schlangenbereich.tsx` nutzt das vorhandene komponentenlokale `useId()`-Präfix plus Schlangen-Index für zwei DOM-sichere Labelziele; `src/App.r162_eigene_schlange_idref.test.tsx` prüft zwei App-Instanzen, kein `aria-label`, zwei eindeutige IDREF-Tokens, dokumentweit eindeutige Ziele, Region- und Button-Containment, sichtbare Zieltexte und erhaltenen Accessible Name `Schlange <id>`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: initialer Testhärtungs-Non-Blocker behoben; Re-Review final `BLOCKERS: Keine`, `NON-BLOCKERS: Keine offenen Non-Blocker`.
+- [x] Targeted: `npm test -- --run src/App.r162_eigene_schlange_idref.test.tsx src/App.r109_schlangenbereich_dom_sichere_idrefs.test.tsx src/App.r158_startzone_idref.test.tsx src/App.f36_drag_drop_schlange_status.test.tsx` → 4 Testdateien / 14 Tests bestanden; Codex-Re-Review-Verifikation mit R111/F35 zusätzlich → 5 Testdateien / 15 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 168 Testdateien / 656 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `d353e76 — R162: Eigene Schlangen sichtbar labeln` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R162-Browser-Smoke klickt eine neue Schlange in Produktion an und bestätigt den eigenen Schlangen-Button ohne `aria-label`, mit zwei lokalen `aria-labelledby`-Zielen, Name `Schlange schlange-spieler-1-1` und keine Console-/Page-Errors.
