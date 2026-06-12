@@ -1327,3 +1327,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `3aa62e5 — R181: Schlangenfrass boardnah spielbar machen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; deterministischer Playwright-Smoke mit `Math.random = 0.1` startet eine eigene Schlange mit `rot-15`, wählt `schlangenfrass-04`, bestätigt den board-lokalen Zielbutton mit `schlangekarte__karte--schlangenfrass-ziel`, führt ihn aus, sieht `rot-15` entfernt und meldet keine Console-/Page-Errors.
+
+## Evidence — 12.06.2026 M1a Waldtanz-Arena-Spielbrett
+
+- [x] Scope: Erster mittlerer Google-Stitch-Vertical innerhalb `M1 Waldtanz Game Board`: zentrale Waldarena, Handkarten im Spieltisch board-nah unten, Schlangenbereich als primäre Spielfläche, Status/Spieler/Material/Wertung als Grid-führbare Nebenbereiche. Engine-Regeln, Aktionshandler, Debugdetails und bestehende Board-Interaktionen bleiben erhalten.
+- [x] RED: `npm test -- --run src/App.m1a_waldtanz_arena_layout.test.tsx` fiel zunächst fehl, weil Waldtanz-Klassen/Layoutvertrag und board-nahe Handstruktur fehlten.
+- [x] GREEN: `src/App.tsx` ergänzt die Waldtanz-/Arena-Klassen und ordnet `Schlangenbereich` vor `Handkarten`; `src/App.css` zentriert Shell/Spielbereich, ergänzt dotted forest background, Grid-Areas, Arena-Gradient, großen Pill-Radius und board-nahe Handposition; `src/App.m1a_waldtanz_arena_layout.test.tsx` prüft DOM- und CSS-Vertrag.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger manueller Fallback wurde offen dokumentiert.
+- [x] Codex Review/Re-Review: initiale CSS-/Regression-Blocker behoben (`justify-items: center`, Selector-Reihenfolge für `.schlangenbereich`, direkter Token-Background-Vertrag); final `BLOCKERS: None`, `NON-BLOCKERS: None`.
+- [x] Targeted: `npm test -- --run src/App.m1a_waldtanz_arena_layout.test.tsx src/App.f31_spieltisch_layout.test.tsx src/App.f13_spielbrett_layout.test.tsx src/App.r172_spieltisch_live_region_atomic.test.tsx src/App.r159_handkarten_idref.test.tsx src/App.r180_farbenfusion_boardziel.test.tsx src/App.r181_schlangenfrass_boardziel.test.tsx src/App.f36_drag_drop_schlange.test.tsx src/App.f36_drag_drop_schlange_status.test.tsx src/App.f36_drag_drop_timeout_reset.test.tsx` → 10 Testdateien / 34 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 188 Testdateien / 679 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `2236659 — M1a: Waldtanz-Arena-Spielbrett anlegen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Browser-Smoke bestätigt `Spielbereich`, `Aktiver Spieler`, `Spieltisch`, `Schlangenbereich`, `Handkarten`, `Aktionen`, die Klassen `spielbereich--waldtanz`/`info-panel--waldtanz-arena`/`spielbrett--waldtanz`, Arena-Gradient, Schlangenbereich vor Handkarten, Handkarten visuell unter der Schlangenfläche, Aktionen direkt nach dem Spieltisch und keine Console-/Page-Errors.
