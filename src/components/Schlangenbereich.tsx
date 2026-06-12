@@ -7,6 +7,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug�
 # ÄNDERUNG 07.06.2026: R111 nutzt komponentenlokale DOM-IDs auch für aria-labelledby (Haupttitel und Untergruppentitel).
 # ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für sichtbare Karten in Schlangenreihen.
 # ÄNDERUNG 12.06.2026: R178 markiert board-lokale Ziele für die ausgewählte Handkarte sichtbar.
+# ÄNDERUNG 12.06.2026: R180 macht Farbenfusion-Zielpaare nach Auswahl board-nah spielbar.
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
@@ -16,8 +17,9 @@ import { farbeCssKlasse } from '../kartenfarben'
 interface SchlangenbereichProps {
   aktiverSpieler: Spieler
   gegnerSpieler: Spieler[]
-  karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }> []
-  neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }> []
+  karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
+  neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }>[]
+  farbenfusionAktionen?: Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }>[]
   gezogeneHandkarteIdRef: MutableRefObject<string | null>
   ausgewaehlteHandkarteId: string | null
   onAktion: (aktion: SpielAktion) => void
@@ -66,6 +68,7 @@ export default function Schlangenbereich({
   gegnerSpieler,
   karteAnlegenAktionen,
   neueSchlangeStartenAktionen,
+  farbenfusionAktionen = [],
   gezogeneHandkarteIdRef,
   ausgewaehlteHandkarteId,
   onAktion,
@@ -86,6 +89,13 @@ export default function Schlangenbereich({
     return neueSchlangeStartenAktionen.find((aktion) => aktion.handkartenId === handkartenId) ?? null
   }
 
+  function findeFarbenfusionAktion(schlangeId: string, zielKartenId: string, handkartenId: string | null) {
+    if (!handkartenId) return null
+    return farbenfusionAktionen.find(
+      (aktion) => aktion.handkartenId === handkartenId && aktion.zielSchlangenId === schlangeId && aktion.zielKartenId === zielKartenId,
+    ) ?? null
+  }
+
   function fuehreAktion(aktion: SpielAktion | null) {
     if (aktion) onAktion(aktion)
   }
@@ -99,6 +109,9 @@ export default function Schlangenbereich({
   }
 
   function handleSchlangeKeyDown(event: KeyboardEvent<HTMLElement>, schlangeId: string) {
+    if ((event.target as HTMLElement).closest('button')) {
+      return
+    }
     if (event.key !== 'Enter' && event.key !== ' ') {
       return
     }
@@ -313,17 +326,35 @@ export default function Schlangenbereich({
                   <strong id={schlangenLabelNameId}>{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
-                    {schlange.karten.map((karte) => (
-                      <div
-                        key={karte.id}
-                        className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}`}
-                        role="listitem"
-                        aria-label={schlangenKartenAriaLabel(karte)}
-                      >
-                        <strong>{karte.id}</strong>
-                        <span>{schlangenKartenKurzlabel(karte)}</span>
-                      </div>
-                    ))}
+                    {schlange.karten.map((karte) => {
+                      const farbenfusionAktion = findeFarbenfusionAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
+
+                      return (
+                        <div
+                          key={karte.id}
+                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}`}
+                          role="listitem"
+                          aria-label={schlangenKartenAriaLabel(karte)}
+                        >
+                          <strong>{karte.id}</strong>
+                          <span>{schlangenKartenKurzlabel(karte)}</span>
+                          {farbenfusionAktion && (
+                            <button
+                              type="button"
+                              className="schlangekarte__sonderaktion-button"
+                              aria-label={`Farbenfusion im Schlangenbereich mit Karte ${farbenfusionAktion.handkartenId} bei Karte ${farbenfusionAktion.zielKartenId}`}
+                              title={aktionsLabel(farbenfusionAktion)}
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                onAktion(farbenfusionAktion)
+                              }}
+                            >
+                              Farbenfusion hier spielen
+                            </button>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
                   <p id={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe`} className="schlangen-drop-hinweis">
                     Klicke auf eine Anlege-Schaltfläche oder lege die ausgewählte Karte direkt auf die Schlange.

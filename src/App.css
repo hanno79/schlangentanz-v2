@@ -664,6 +664,24 @@ code {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.18), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
 }
 
+.schlangekarte__karte--farbenfusion-ziel {
+  /* ÄNDERUNG 12.06.2026: R180 macht das konkrete Farbenfusion-Zielpaar direkt auf der Kartenfläche sichtbar. */
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(254, 203, 0, 0.42), 0 2px 0 rgba(6, 57, 7, 0.2);
+}
+
+.schlangekarte__sonderaktion-button {
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  border: 2px solid var(--st-color-border-strong);
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-border-strong);
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .schlangekarte--gegner {
   background: linear-gradient(180deg, rgba(177, 45, 0, 0.22), rgba(255, 255, 255, 0.18));
 }
