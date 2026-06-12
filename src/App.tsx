@@ -296,7 +296,7 @@ function App({ initialZustand }: AppProps) {
           <Zugfortschritt zugphase={zustand.zugphase} />
         </section>
         <div className="spieltisch-gruppe">
-          <section className="info-panel" aria-labelledby={aktiverSpielerTitelId} aria-live="polite">
+          <section className="info-panel" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
             <section className="spielbrett" aria-labelledby={spieltischTitelId}>
               <h3 id={spieltischTitelId}>Spieltisch</h3>
