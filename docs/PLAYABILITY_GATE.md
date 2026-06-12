@@ -1220,3 +1220,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `218ca46 — R170: Punktetafel atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R170-Browser-Smoke bestätigt `Punktetafel` innerhalb `Wertung` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Punktetafel`, 2 Listeneinträgen, Score-Copy und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R171 Aufgabenkarten atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende `Aufgabenkarten`-Unterregion innerhalb `Material und Aufgaben` behält das sichtbare lokale Überschriftenlabel via `aria-labelledby` und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`. Sichtbare Aufgabenkarten-Copy, `aria-label`-Abwesenheit, Listenstruktur, Layout, Handler und Engine-/Regelverhalten bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r171_aufgabenkarten_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/App.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Aufgabenkarten`-Region; `src/App.r171_aufgabenkarten_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, single-token `aria-labelledby`, dokumentweit genau ein Labelziel, Ziel innerhalb der Region, sichtbare Überschrift, 3 Listeneinträge und bestehende Aufgabenkarten-Copy.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R171-Test; erster Review fand eine Testlücke (Labelziel nur containerweit). Nach Testhärtung auf `document.querySelectorAll` bestätigte der Re-Review: `BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r171_aufgabenkarten_live_region_atomic.test.tsx src/App.r151_aufgabenkarten_idref.test.tsx src/App.r168_material_aufgaben_live_region_atomic.test.tsx src/App.f7_aufgabenkarten.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 177 Testdateien / 665 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` exakt 500, neuer Test 43).
+- [x] Commit/Push: `e740188 — R171: Aufgabenkarten atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R171-Browser-Smoke bestätigt `Aufgabenkarten` innerhalb `Material und Aufgaben` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Aufgabenkarten`, 3 Listeneinträgen, Aufgabenkarten-Copy und ohne Console-/Page-Errors.
