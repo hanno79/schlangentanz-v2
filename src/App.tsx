@@ -263,7 +263,7 @@ function App({ initialZustand }: AppProps) {
         </ul>
       </section>
       <section className="spielbereich" aria-label="Spielbereich">
-        <section className="info-panel" aria-labelledby={spielstatusTitelId}>
+        <section className="info-panel" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spielstatusTitelId}>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
           <DebugGruppe titel="Spielphase">
