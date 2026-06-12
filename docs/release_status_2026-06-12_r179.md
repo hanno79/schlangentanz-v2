@@ -93,4 +93,44 @@ NON-BLOCKERS: Targeted Vitest passed: `npm test -- --run src/App.r179_sonderkart
 
 ## Release
 
-Wird nach Commit, Push, Production-Deploy und Production-Smoke ergänzt.
+Feature-Commit:
+
+```text
+5fd91e6 R179 Sonderkarten-Aktionslabels
+```
+
+Push:
+
+```text
+e4b7779..5fd91e6  main -> main
+```
+
+Production-Deploy:
+
+```text
+Inspect: https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/7xT2vFLEV9hEreDxtFpqE79bChHm
+Production: https://schlangentanz-v2-ou7kcdq88-alfreds-projects-7e9df1b4.vercel.app
+Alias: https://schlangentanz-v2.vercel.app
+✓ Ready in 15s
+```
+
+Production-Smoke:
+
+```text
+HTTP 200  https://schlangentanz-v2.vercel.app/
+HTTP 200  https://schlangentanz-v2.vercel.app/game
+Sichtbar: "Spielstatus"
+Sichtbar: "Aktiver Spieler"
+Sichtbar: "Aktionen"
+Sichtbar: "Schlangenbereich"
+R107 Production-Smoke bestanden
+```
+
+Zusätzlicher R179-Bundle-/GUI-Smoke:
+
+```text
+Production R179 Bundle-Smoke bestanden: {"farbenfusionLabel":true,"schlangenfrassLabel":true,"engineFallbackError":true}
+Production GUI: Spielstatus=true, Aktionen=true, Unbekannte-Aktion-Buttons=0, console/page errors=0
+```
+
+Hinweis: `engineFallbackError=true` bezieht sich auf den weiterhin korrekten Engine-Fehlerpfad `Unbekannte Aktion.` im Validator, nicht auf UI-Buttons. Die UI zeigte im Smoke keine `Unbekannte Aktion`-Buttons.
