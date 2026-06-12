@@ -471,7 +471,7 @@ function App({ initialZustand }: AppProps) {
               </Fragment>
             ))}
           </DebugGruppe>
-          <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId}>
+          <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId} aria-live="polite" aria-atomic="true">
             <h3 id={punktetafelTitelId}>Punktetafel</h3>
             <ul className="scoreboard-liste">
               {spielerwertungen.map(eintrag => {
