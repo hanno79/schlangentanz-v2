@@ -54,6 +54,16 @@ R178 beendet die mechanische A11y-Mikroslice-Schleife weiter und stärkt die ech
   - Startzonen-Zielmarkierung nach Handkartenauswahl sichtbar.
   - Keine Console-/Page-Fehler.
 
+## Production-Release
+
+- Commit: `723a89f R178: Markiere Board-Ziele nach Kartenauswahl`
+- Production-Deploy: `https://schlangentanz-v2.vercel.app`
+- Vercel-Status: `Ready` und auf die Production-Alias-URL aliased.
+- Production-Smoke:
+  - HTTP 200 für `/` und `/game`.
+  - Kernregionen sichtbar: Spielstatus, Aktiver Spieler, Aktionen, Schlangenbereich.
+  - R178-spezifisch: Nach Auswahl einer Farbkarte ist die Startzonen-Zielmarkierung sichtbar.
+
 ## Bekannter Blocker außerhalb R178
 
 Claude Code `/simplify`/Coding-Pass bleibt wegen `401 Invalid authentication credentials` blockiert. R178 wurde deshalb mit engem manuellem TDD-Fallback plus Codex Review umgesetzt.
