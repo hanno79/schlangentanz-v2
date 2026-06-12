@@ -298,7 +298,7 @@ function App({ initialZustand }: AppProps) {
         <div className="spieltisch-gruppe">
           <section className="info-panel" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
-            <section className="spielbrett" aria-labelledby={spieltischTitelId}>
+            <section className="spielbrett" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
