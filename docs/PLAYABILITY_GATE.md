@@ -1181,3 +1181,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `a07cf83 — R167: Spielerübersicht atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R167-Browser-Smoke bestätigt `Spielerübersicht` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Spielerübersicht`, vorhandener Spielerstatus-Copy, `Schlangen insgesamt: 0` und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R168 Material und Aufgaben atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende Region `Material und Aufgaben` behält das sichtbare lokale Überschriftenlabel via `aria-labelledby` und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`. Sichtbare Material-/Aufgaben-Copy, `aria-label`-Abwesenheit, innere `Aufgabenkarten`-Region, Layout, Handler und Engine-/Regelverhalten bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r168_material_aufgaben_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/App.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Material und Aufgaben`-Region; `src/App.r168_material_aufgaben_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, eindeutiges lokales Label-Ziel, sichtbare Überschrift, sichtbare `Aufgabenkarten`-Region und bestehende Material-/Aufgaben-Copy.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R168-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine wesentlichen`.
+- [x] Targeted: `npm test -- --run src/App.r168_material_aufgaben_live_region_atomic.test.tsx src/App.r149_material_aufgaben_idref.test.tsx src/App.r166_spielstatus_live_region_atomic.test.tsx src/App.r167_spieleruebersicht_live_region_atomic.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 174 Testdateien / 662 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` exakt 500, neuer Test 42).
+- [x] Commit/Push: `c5a1fb7 — R168: Material und Aufgaben atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R168-Browser-Smoke bestätigt `Material und Aufgaben` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Material und Aufgaben`, vorhandener `Aufgabenkarten`-Unterregion, Material-/Aufgaben-Copy und ohne Console-/Page-Errors.
