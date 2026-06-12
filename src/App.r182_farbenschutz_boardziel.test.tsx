@@ -70,7 +70,12 @@ describe('R182 Farbenschutz-Boardziel', () => {
     expect(zielBlock).toContain('background: linear-gradient')
     expect(zielBlock).toContain('rgba(164, 222, 2')
     const handButtonBlock = css.match(/\.handkarte__button \{[^}]+\}/)?.[0] ?? ''
+    const dockBlock = css.match(/\.aktionen-panel--waldtanz-dock \{[^}]+\}/)?.[0] ?? ''
+    const dockInteractiveBlock = css.match(/\.aktionen-panel--waldtanz-dock button,\n\.aktionen-panel--waldtanz-dock a,\n\.aktionen-panel--waldtanz-dock summary \{[^}]+\}/)?.[0] ?? ''
 
     expect(handButtonBlock).toContain('scroll-margin-bottom: 18rem')
+    expect(dockBlock).toContain('position: sticky')
+    expect(dockBlock).toContain('pointer-events: none')
+    expect(dockInteractiveBlock).toContain('pointer-events: auto')
   })
 })

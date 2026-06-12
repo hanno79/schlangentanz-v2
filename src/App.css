@@ -66,6 +66,13 @@ body {
   z-index: 2;
   border-radius: 2rem;
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.92), rgba(236, 255, 227, 0.9));
+  pointer-events: none;
+}
+
+.aktionen-panel--waldtanz-dock button,
+.aktionen-panel--waldtanz-dock a,
+.aktionen-panel--waldtanz-dock summary {
+  pointer-events: auto;
 }
 
 .aktionen-dock__kopf {
