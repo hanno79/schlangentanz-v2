@@ -1246,3 +1246,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `46cca3f — R172: Spieltisch atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R172-Browser-Smoke bestätigt `Spieltisch` innerhalb `Aktiver Spieler` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Spieltisch`, vorhandenen Unterregionen `Handkarten`/`Schlangenbereich` und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R173 Aktionen atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende `Aktionen`-Region innerhalb `Aktiver Spieler` behält ihr sichtbares lokales Überschriftenlabel via `aria-labelledby` und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`. Sichtbare Copy, Button-Reihenfolge, Handler, Sprungziel-/Fokusverhalten, Unterregionen und Engine-/Regelverhalten bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r173_aktionen_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/components/AktionenPanel.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Aktionen`-Region; `src/App.r173_aktionen_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, single-token `aria-labelledby`, dokumentweit genau ein Labelziel, Ziel innerhalb der Region, sichtbare Überschrift sowie sichtbare Unterregionen `Empfohlene Aktion` und `Weitere Aktionen`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R173-Test; `BLOCKERS: Keine`. Ein Doku-Konsistenz-Non-Blocker (`Version: 1.12`) wurde behoben; Codex bestätigte den engen Scope und die dokumentweite Labelziel-Prüfung.
+- [x] Targeted: `npm test -- --run src/App.r173_aktionen_live_region_atomic.test.tsx src/App.r153_weitere_aktionen_idref.test.tsx src/App.f19_sprungziel_hervorhebung.test.tsx src/App.f27_sprungziel_fokus.test.tsx src/App.r172_spieltisch_live_region_atomic.test.tsx` → 5 Testdateien / 7 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 179 Testdateien / 667 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` exakt 500, `src/components/AktionenPanel.tsx` 278, neuer Test 42).
+- [x] Commit/Push: `82783d1 — R173: Aktionen atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R173-Browser-Smoke bestätigt `Aktionen` innerhalb `Aktiver Spieler` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Aktionen`, vorhandenen Unterregionen `Empfohlene Aktion`/`Weitere Aktionen` und ohne Console-/Page-Errors.
