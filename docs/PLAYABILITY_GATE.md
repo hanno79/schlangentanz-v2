@@ -1313,3 +1313,17 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `9a7f46e — R180: Farbenfusion boardnah spielbar machen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; deterministischer Playwright-Smoke spielt in Produktion bis zur Farbenfusion, bestätigt den board-lokalen Zielbutton mit `schlangekarte__karte--farbenfusion-ziel`, führt ihn aus, sieht `farbenfusion-02` in der Schlange und meldet keine Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R181 Schlangenfrass boardnah spielbar machen
+
+- [x] Scope: Bereits enumerierte `SchlangenfrassSpielen`-Aktionen werden nach Auswahl der Schlangenfrass-Handkarte direkt im `Schlangenbereich` auf eigenen Zielkarten sichtbar und ausführbar. Die Zwei-Gegner-Zielauswahl bleibt bewusst ausgeschlossen, weil sie eine eigene Mehrfachziel-Interaktion braucht.
+- [x] RED: `npm test -- --run src/App.r181_schlangenfrass_boardziel.test.tsx` fiel erwartungsgemäß fehl, weil Zielklasse und board-lokaler Schlangenfrass-Button fehlten.
+- [x] GREEN: `src/App.tsx` reicht `SchlangenfrassSpielen`-Aktionen an `Schlangenbereich`; `src/components/Schlangenbereich.tsx` matcht ausgewählte Handkarte + eigene Zielschlange + Zielkarte exakt gegen die Engine-Aktion, rendert `Schlangenfrass hier spielen`, und `src/App.css` markiert das Ziel sichtbar.
+- [x] Test-Härtung: Der R181-Test prüft zusätzlich, dass die spätere Zwei-Gegner-Zielauswahl nicht als falscher Einzelkarten-Boardbutton erscheint.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger manueller Fallback wurde offen dokumentiert.
+- [x] Codex Review/Re-Review: final `BLOCKERS: none`; Codex bestätigte keine Exposition des Zwei-Gegner-Flows und keine R180-Regression.
+- [x] Targeted: `npm test -- --run src/App.r181_schlangenfrass_boardziel.test.tsx src/App.r180_farbenfusion_boardziel.test.tsx src/App.r178_board_zielmarkierungen.test.tsx src/App.r111_schlangenbereich_label_idrefs.test.tsx src/App.f36_drag_drop_schlange.test.tsx src/App.f36_drag_drop_schlange_status.test.tsx` → 6 Testdateien / 27 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 187 Testdateien / 678 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` 470, `src/components/Schlangenbereich.tsx` 456, neuer Test 81).
+- [x] Commit/Push: `3aa62e5 — R181: Schlangenfrass boardnah spielbar machen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; deterministischer Playwright-Smoke mit `Math.random = 0.1` startet eine eigene Schlange mit `rot-15`, wählt `schlangenfrass-04`, bestätigt den board-lokalen Zielbutton mit `schlangekarte__karte--schlangenfrass-ziel`, führt ihn aus, sieht `rot-15` entfernt und meldet keine Console-/Page-Errors.
