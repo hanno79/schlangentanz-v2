@@ -777,6 +777,7 @@ code {
 }
 
 .schlangekarte--zielbereit,
+.schlangekarte--farbenschutz-ziel,
 .schlangen-startzone--zielbereit {
   /* ÄNDERUNG 12.06.2026: R178 macht nach Kartenauswahl direkte Board-Ziele sichtbar und überschreibt Basisflächen. */
   border-color: var(--st-color-tertiary);
@@ -795,6 +796,13 @@ code {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.26), 0 2px 0 rgba(6, 57, 7, 0.2);
 }
 
+.schlangekarte--farbenschutz-ziel {
+  /* ÄNDERUNG 12.06.2026: R182 hebt Farbenschutz-Ziele als geschützte Waldlichtung hervor. */
+  border-color: var(--st-color-primary);
+  background: linear-gradient(180deg, rgba(164, 222, 2, 0.42), rgba(236, 255, 227, 0.68));
+  box-shadow: 0 0 0 4px rgba(164, 222, 2, 0.36), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
+}
+
 .schlangekarte__sonderaktion-button {
   margin-top: 0.35rem;
   padding: 0.35rem 0.55rem;
@@ -809,6 +817,10 @@ code {
 .schlangekarte__sonderaktion-button--frass {
   background: var(--st-color-tertiary);
   color: #fff8dc;
+}
+
+.schlangekarte__sonderaktion-button--schutz {
+  background: var(--st-color-primary-container);
 }
 
 .schlangekarte--gegner {

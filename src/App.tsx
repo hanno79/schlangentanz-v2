@@ -148,6 +148,12 @@ function App({ initialZustand }: AppProps) {
     ),
     [legaleAktionen],
   )
+  const farbenschutzAktionen = useMemo(
+    () => legaleAktionen.filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }> => aktion.typ === 'FarbenschutzSpielen',
+    ),
+    [legaleAktionen],
+  )
   const farbenfusionAktionen = useMemo(
     () => legaleAktionen.filter(
       (aktion): aktion is Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }> => aktion.typ === 'FarbenfusionSpielen',
@@ -273,6 +279,7 @@ function App({ initialZustand }: AppProps) {
                 gegnerSpieler={gegnerSpieler}
                 karteAnlegenAktionen={karteAnlegenAktionen}
                 neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+                farbenschutzAktionen={farbenschutzAktionen}
                 farbenfusionAktionen={farbenfusionAktionen}
                 schlangenfrassAktionen={schlangenfrassAktionen}
                 gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}

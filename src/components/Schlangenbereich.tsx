@@ -9,6 +9,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug�
 # ÄNDERUNG 12.06.2026: R178 markiert board-lokale Ziele für die ausgewählte Handkarte sichtbar.
 # ÄNDERUNG 12.06.2026: R180 macht Farbenfusion-Zielpaare nach Auswahl board-nah spielbar.
 # ÄNDERUNG 12.06.2026: R181 macht eigene Schlangenfrass-Zielkarten nach Auswahl board-nah spielbar.
+# ÄNDERUNG 12.06.2026: R182 macht Farbenschutz-Zielschlangen nach Auswahl board-nah spielbar.
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
@@ -20,6 +21,7 @@ interface SchlangenbereichProps {
   gegnerSpieler: Spieler[]
   karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
   neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }>[]
+  farbenschutzAktionen?: Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }>[]
   farbenfusionAktionen?: Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }>[]
   schlangenfrassAktionen?: Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }>[]
   gezogeneHandkarteIdRef: MutableRefObject<string | null>
@@ -70,6 +72,7 @@ export default function Schlangenbereich({
   gegnerSpieler,
   karteAnlegenAktionen,
   neueSchlangeStartenAktionen,
+  farbenschutzAktionen = [],
   farbenfusionAktionen = [],
   schlangenfrassAktionen = [],
   gezogeneHandkarteIdRef,
@@ -90,6 +93,13 @@ export default function Schlangenbereich({
   function findeNeueSchlangeAktion(handkartenId: string | null) {
     if (!handkartenId) return null
     return neueSchlangeStartenAktionen.find((aktion) => aktion.handkartenId === handkartenId) ?? null
+  }
+
+  function findeFarbenschutzAktion(schlangeId: string, handkartenId: string | null) {
+    if (!handkartenId) return null
+    return farbenschutzAktionen.find(
+      (aktion) => aktion.handkartenId === handkartenId && aktion.zielSchlangenId === schlangeId,
+    ) ?? null
   }
 
   function findeFarbenfusionAktion(schlangeId: string, zielKartenId: string, handkartenId: string | null) {
@@ -317,13 +327,14 @@ export default function Schlangenbereich({
             {aktiverSpieler.schlangen.map((schlange, schlangeIndex) => {
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
               const istBoardZiel = Boolean(findeAktionFuerKarte(schlange.id, ausgewaehlteHandkarteId))
+              const farbenschutzAktion = findeFarbenschutzAktion(schlange.id, ausgewaehlteHandkarteId)
               const schlangenLabelTypId = `${komponentenId}-schlange-${schlangeIndex}-label`
               const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
 
               return (
                 <li
                   key={schlange.id}
-                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
+                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
@@ -388,6 +399,20 @@ export default function Schlangenbereich({
                   </p>
                   {istBoardZiel && (
                     <span className="schlangen-zielhinweis">Ausgewählte Karte hier anlegen.</span>
+                  )}
+                  {farbenschutzAktion && (
+                    <button
+                      type="button"
+                      className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--schutz"
+                      aria-label={`Farbenschutz im Schlangenbereich mit Karte ${farbenschutzAktion.handkartenId} auf Schlange ${farbenschutzAktion.zielSchlangenId}`}
+                      title={aktionsLabel(farbenschutzAktion)}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        onAktion(farbenschutzAktion)
+                      }}
+                    >
+                      Farbenschutz hier spielen
+                    </button>
                   )}
                   {anlegeAktionen.length > 0 && (
                     <div className="schlangekarte__anlegeaktionen" aria-label={`Anlegeaktionen für ${schlange.id}`}>
