@@ -1285,3 +1285,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `1053d7b — R175: Weitere Aktionen atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R175-Browser-Smoke bestätigt `Weitere Aktionen` innerhalb `Aktionen` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Weitere Aktionen`, vorhandener Regelprüfungs-Copy und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R176 Phasenaktion atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende `Phasenaktion`-Unterregion innerhalb `Aktionen` behält sichtbares lokales Label, `aria-labelledby`, `id`, `tabIndex`, Highlight-Klasse, Buttons und Handler unverändert und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`.
+- [x] RED: `npm test -- --run src/App.r176_phasenaktion_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/components/AktionenPanel.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Phasenaktion`-Region; `src/App.r176_phasenaktion_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, single-token `aria-labelledby`, dokumentweit genau ein Labelziel, Ziel innerhalb der Region, sichtbare Überschrift und eine sichtbare Phasenaktion im Nachziehphasen-Fixture.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R176-Test; `BLOCKERS: Keine`. Codex bestätigte den engen Scope, unverändertes sichtbares Label/`aria-labelledby`/`id`/`tabIndex`/Buttons/Handler/Highlight und grünen gezielten Test.
+- [x] Targeted: `npm test -- --run src/App.r176_phasenaktion_live_region_atomic.test.tsx src/App.r154_phasenaktion_idref.test.tsx` → 2 Testdateien / 2 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 182 Testdateien / 670 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/components/AktionenPanel.tsx` 283, neuer Test 40); unveränderte legacy Engine-Dateien über 500 Zeilen wurden nicht berührt.
+- [x] Commit/Push: `ba58092 — R176: Phasenaktion atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R176-Browser-Smoke bestätigt `Phasenaktion` innerhalb `Aktionen` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Phasenaktion`, sichtbarer Überschrift und ohne Console-/Page-Errors.
