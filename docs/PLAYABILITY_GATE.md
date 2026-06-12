@@ -1298,3 +1298,18 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `ba58092 — R176: Phasenaktion atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R176-Browser-Smoke bestätigt `Phasenaktion` innerhalb `Aktionen` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Phasenaktion`, sichtbarer Überschrift und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R180 Farbenfusion boardnah spielbar machen
+
+- [x] Scope: Bereits enumerierte `FarbenfusionSpielen`-Aktionen werden nach Auswahl der Farbenfusion-Handkarte direkt im `Schlangenbereich` am passenden eigenen Kartenpaar sichtbar und ausführbar; Engine-Regel, Aktionenliste, Farbkarten-Start-/Anlegepfade, Drag-and-drop und bestehende Labels bleiben erhalten.
+- [x] Normquelle: `docs/GAME_SPEC.md` R7.1 geprüft; externer Fetch von `https://schlangentanz.ch/rules` war wegen HTTP 403 blockiert, daher keine neue Regelableitung.
+- [x] RED: `npm test -- --run src/App.r180_farbenfusion_boardziel.test.tsx` fiel erwartungsgemäß fehl, weil Zielklasse und board-lokaler Farbenfusion-Button fehlten.
+- [x] GREEN: `src/App.tsx` reicht `FarbenfusionSpielen`-Aktionen an `Schlangenbereich`; `src/components/Schlangenbereich.tsx` matcht ausgewählte Handkarte + eigene Zielschlange + Zielkarte, rendert `Farbenfusion hier spielen`, und `src/App.css` markiert das Ziel sichtbar.
+- [x] Review-Fix: Codex fand einen Keyboard-Blocker durch den Eltern-`li role="button"`; ein zusätzlicher RED-Nachweis (`fireEvent.keyDown(...)` durfte nicht `defaultPrevented` werden) wurde ergänzt und mit frühem Return für verschachtelte Buttons behoben.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger manueller Fallback wurde offen dokumentiert.
+- [x] Codex Review/Re-Review: initialer Keyboard-Blocker behoben; final `BLOCKERS: None`.
+- [x] Targeted: `npm test -- --run src/App.r180_farbenfusion_boardziel.test.tsx src/App.r178_board_zielmarkierungen.test.tsx src/App.r179_sonderkarten_aktionslabels.test.tsx src/App.r111_schlangenbereich_label_idrefs.test.tsx src/App.f36_drag_drop_schlange.test.tsx src/App.f36_drag_drop_schlange_status.test.tsx` → 6 Testdateien / 26 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 186 Testdateien / 676 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` 463, `src/components/Schlangenbereich.tsx` 429, neuer Test 68).
+- [x] Commit/Push: `9a7f46e — R180: Farbenfusion boardnah spielbar machen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; deterministischer Playwright-Smoke spielt in Produktion bis zur Farbenfusion, bestätigt den board-lokalen Zielbutton mit `schlangekarte__karte--farbenfusion-ziel`, führt ihn aus, sieht `farbenfusion-02` in der Schlange und meldet keine Console-/Page-Errors.
