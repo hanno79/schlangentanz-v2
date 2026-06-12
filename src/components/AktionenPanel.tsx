@@ -1,7 +1,7 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.13
+Version: 1.16
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 Änderung v1.3: Weitere Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
@@ -17,6 +17,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.13: R174 – Empfohlene Aktion als höfliche atomare Live-Region angekündigt.
 Änderung v1.14: R175 – Weitere Aktionen als höfliche atomare Live-Region angekündigt.
 Änderung v1.15: R176 – Phasenaktion als höfliche atomare Live-Region angekündigt.
+Änderung v1.16: M1b – Aktionsdock gruppiert schnelle Kontextaktionen board-nah vor der Fallback-Liste.
 */
 
 import { useId } from 'react'
@@ -127,34 +128,73 @@ export default function AktionenPanel({
   const phasenregelnTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
-    <section className="info-panel" aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
+    <section className="info-panel aktionen-panel--waldtanz-dock" aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={aktionenTitelId}>Aktionen</h2>
-      <p>Spielbare Aktionen: {legaleAktionen.length}</p>
+      <div className="aktionen-dock__kopf">
+        <p>Spielbare Aktionen: {legaleAktionen.length}</p>
+        {!istSpielende && <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>}
+      </div>
       {istSpielende ? (
         <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
       ) : (
         <>
-          <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
           {steuerung === 'KI' && legaleAktionen.length > 0 && (
             <button onClick={() => onAktionAusfuehren(legaleAktionen[0])}>
               KI-Aktion ausführen
             </button>
           )}
-          <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} aria-live="polite" aria-atomic="true" tabIndex={-1}>
-            <h3 id={empfohleneAktionTitelId}>Empfohlene Aktion</h3>
-            {legaleAktionen.length > 0 ? (
-              <button
-                aria-label={empfohlenLabel}
-                className="aktions-button aktions-button--empfohlen aktions-button--hervorgehoben"
-                onClick={() => onAktionAusfuehren(legaleAktionen[0])}
-              >
-                <span className="aktions-button__badge" aria-hidden="true">Empfohlen</span>
-                {aktionsButtonInhalt(empfohlenLabel, 1, legaleAktionen.length)}
-              </button>
-            ) : (
-              <p>Keine empfohlene Aktion verfügbar.</p>
-            )}
-          </section>
+          <div className="aktionen-dock__schnellzug">
+            <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} aria-live="polite" aria-atomic="true" tabIndex={-1}>
+              <h3 id={empfohleneAktionTitelId}>Empfohlene Aktion</h3>
+              {legaleAktionen.length > 0 ? (
+                <button
+                  aria-label={empfohlenLabel}
+                  className="aktions-button aktions-button--empfohlen aktions-button--hervorgehoben"
+                  onClick={() => onAktionAusfuehren(legaleAktionen[0])}
+                >
+                  <span className="aktions-button__badge" aria-hidden="true">Empfohlen</span>
+                  {aktionsButtonInhalt(empfohlenLabel, 1, legaleAktionen.length)}
+                </button>
+              ) : (
+                <p>Keine empfohlene Aktion verfügbar.</p>
+              )}
+            </section>
+            <section
+              id={phasenaktionId}
+              className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === phasenaktionId ? ' aktionen-gruppe--sprungziel' : ''}`}
+              aria-labelledby={phasenaktionTitelId}
+              aria-live="polite"
+              aria-atomic="true"
+              tabIndex={-1}
+            >
+              <h3 id={phasenaktionTitelId}>Phasenaktion</h3>
+              {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
+                <button onClick={onAusspielphaseBeenden}>
+                  Ausspielphase beenden
+                </button>
+              )}
+              {zustand.zugphase === 'Aufgabenpruefung' && (
+                <button onClick={onAufgabenpruefungBeenden}>
+                  Aufgabenprüfung beenden
+                </button>
+              )}
+              {zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && (
+                <button onClick={onUeberzaehligeKartenAbwerfen}>
+                  Überzählige Karten abwerfen
+                </button>
+              )}
+              {zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && (
+                <button onClick={onZugBeenden}>
+                  Zug beenden
+                </button>
+              )}
+              {zustand.zugphase === 'Nachziehphase' && (
+                <button onClick={onAusspielphaseStarten}>
+                  Ausspielphase starten
+                </button>
+              )}
+            </section>
+          </div>
           <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId} aria-live="polite" aria-atomic="true">
             <h3 id={weitereAktionenTitelId}>Weitere Aktionen</h3>
             {legaleAktionen.length > 1 ? (
@@ -212,41 +252,6 @@ export default function AktionenPanel({
               </ul>
             </section>
           )}
-          <section
-            id={phasenaktionId}
-            className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === phasenaktionId ? ' aktionen-gruppe--sprungziel' : ''}`}
-            aria-labelledby={phasenaktionTitelId}
-            aria-live="polite"
-            aria-atomic="true"
-            tabIndex={-1}
-          >
-            <h3 id={phasenaktionTitelId}>Phasenaktion</h3>
-            {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
-              <button onClick={onAusspielphaseBeenden}>
-                Ausspielphase beenden
-              </button>
-            )}
-            {zustand.zugphase === 'Aufgabenpruefung' && (
-              <button onClick={onAufgabenpruefungBeenden}>
-                Aufgabenprüfung beenden
-              </button>
-            )}
-            {zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && (
-              <button onClick={onUeberzaehligeKartenAbwerfen}>
-                Überzählige Karten abwerfen
-              </button>
-            )}
-            {zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && (
-              <button onClick={onZugBeenden}>
-                Zug beenden
-              </button>
-            )}
-            {zustand.zugphase === 'Nachziehphase' && (
-              <button onClick={onAusspielphaseStarten}>
-                Ausspielphase starten
-              </button>
-            )}
-          </section>
           {zustand.spielphase === 'Endspurt' && (
             <section className="aktionen-gruppe aktionen-gruppe--endphase" aria-labelledby={endphaseTitelId}>
               <h3 id={endphaseTitelId}>Endphase</h3>

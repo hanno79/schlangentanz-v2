@@ -56,6 +56,34 @@ body {
 
 .aktions-liste {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 0.75rem;
+}
+
+.aktionen-panel--waldtanz-dock {
+  position: sticky;
+  bottom: 0.75rem;
+  z-index: 2;
+  border-radius: 2rem;
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.92), rgba(236, 255, 227, 0.9));
+}
+
+.aktionen-dock__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aktionen-dock__kopf p {
+  margin: 0;
+  font-weight: 800;
+}
+
+.aktionen-dock__schnellzug {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 0.75rem;
 }
 
@@ -135,15 +163,14 @@ body {
   background: rgba(245, 185, 113, 0.12);
 }
 
+.aktionen-gruppe--weitere {
+  max-height: clamp(10rem, 26vh, 18rem);
+  overflow: auto;
+}
+
 .aktionen-gruppe--phasenaktion {
   border-color: rgba(75, 103, 0, 0.6);
   background: rgba(164, 222, 2, 0.15);
-}
-
-@media (min-width: 720px) {
-  .aktions-liste {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
 }
 
 h1 {
