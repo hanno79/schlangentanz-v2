@@ -69,5 +69,8 @@ describe('R182 Farbenschutz-Boardziel', () => {
     expect(zielBlock).toContain('Farbenschutz-Ziele')
     expect(zielBlock).toContain('background: linear-gradient')
     expect(zielBlock).toContain('rgba(164, 222, 2')
+    const handButtonBlock = css.match(/\.handkarte__button \{[^}]+\}/)?.[0] ?? ''
+
+    expect(handButtonBlock).toContain('scroll-margin-bottom: 18rem')
   })
 })

@@ -417,6 +417,7 @@ code {
   font: inherit;
   text-align: left;
   cursor: grab;
+  scroll-margin-bottom: 18rem;
 }
 
 .handkarte__button:focus-visible {
