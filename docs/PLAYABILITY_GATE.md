@@ -1129,3 +1129,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `e19f091 — R163: Schlangen-Dragstatus live ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R163-Browser-Smoke bestätigt den Schlangen-Dragstatus mit `class="schlangen-dragstatus"`, `role="status"`, `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label` und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R164 Schlangenhäutung-Vorschauen als Live-Regionen kennzeichnen
+
+- [x] Scope: Die beiden bestehenden Schlangenhäutung-Vorschauen `Neue Reihenfolge nach Karte ans Ende` und `Neue Reihenfolge nach Umkehr` bleiben `role="status"` und erhalten explizit `aria-live="polite"` sowie `aria-atomic="true"`; sichtbare Vorschau-Copy, `aria-label`s, `aria-describedby`, Kartenauswahl-Verhalten, Button-/Select-Handling, Engine-/Regelverhalten und Layout bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r164_schlangenhaeutung_vorschau_live_region.test.tsx` fiel erwartungsgemäß fehl, weil die Vorschau-Statuszeilen noch kein `aria-live="polite"` hatten.
+- [x] GREEN: `src/components/SchlangenhaeutungReihenfolgeAuswahl.tsx` ergänzt die beiden Live-Region-Attribute an beiden bestehenden Vorschau-Statuszeilen; `src/App.r164_schlangenhaeutung_vorschau_live_region.test.tsx` prüft die bedingte Schlangenhäutung-Region mit sichtbarer Copy, bestehenden Accessible Names, erhaltenen `aria-describedby`-Verknüpfungen, Auswahlwechsel-Verhalten und beiden Live-Region-Attributen.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: initialer Testabdeckungs-Blocker behoben; Re-Review final `BLOCKERS: Keine`.
+- [x] Targeted: `npm test -- --run src/App.r164_schlangenhaeutung_vorschau_live_region.test.tsx src/App.r108_schlangenhaeutung_tastatur_a11y.test.tsx src/App.r114_schlangenhaeutung_umkehr_a11y.test.tsx` → 3 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 170 Testdateien / 658 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `a750893 — R164: Schlangenhäutung-Vorschauen live ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar und keine Console-/Page-Errors. Die R164-Zielregion ist ein bedingt gerenderter Schlangenhäutung-Zustand und ohne injizierten Fixture-Zustand nicht zuverlässig live erreichbar; der exakte Live-Region-Vertrag ist lokal per DOM-Regression gegen den betroffenen Spielzustand abgesichert.
