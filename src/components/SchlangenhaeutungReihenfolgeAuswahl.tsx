@@ -126,6 +126,8 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
             <p
               id={vorschauId}
               role="status"
+              aria-live="polite"
+              aria-atomic="true"
               aria-label={`Vorschau Karte ans Ende für Schlange ${schlange.id}`}
             >
               Neue Reihenfolge nach Karte ans Ende: {karteAnsEndeReihenfolge}
@@ -134,6 +136,8 @@ export default function SchlangenhaeutungReihenfolgeAuswahl({
             <p
               id={umkehrVorschauId}
               role="status"
+              aria-live="polite"
+              aria-atomic="true"
               aria-label={`Vorschau Umkehr für Schlange ${schlange.id}`}
             >
               Neue Reihenfolge nach Umkehr: {umkehrReihenfolge}
