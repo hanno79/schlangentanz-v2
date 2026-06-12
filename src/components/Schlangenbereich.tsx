@@ -8,6 +8,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug�
 # ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für sichtbare Karten in Schlangenreihen.
 # ÄNDERUNG 12.06.2026: R178 markiert board-lokale Ziele für die ausgewählte Handkarte sichtbar.
 # ÄNDERUNG 12.06.2026: R180 macht Farbenfusion-Zielpaare nach Auswahl board-nah spielbar.
+# ÄNDERUNG 12.06.2026: R181 macht eigene Schlangenfrass-Zielkarten nach Auswahl board-nah spielbar.
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
@@ -20,6 +21,7 @@ interface SchlangenbereichProps {
   karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
   neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }>[]
   farbenfusionAktionen?: Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }>[]
+  schlangenfrassAktionen?: Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }>[]
   gezogeneHandkarteIdRef: MutableRefObject<string | null>
   ausgewaehlteHandkarteId: string | null
   onAktion: (aktion: SpielAktion) => void
@@ -69,6 +71,7 @@ export default function Schlangenbereich({
   karteAnlegenAktionen,
   neueSchlangeStartenAktionen,
   farbenfusionAktionen = [],
+  schlangenfrassAktionen = [],
   gezogeneHandkarteIdRef,
   ausgewaehlteHandkarteId,
   onAktion,
@@ -94,6 +97,14 @@ export default function Schlangenbereich({
     return farbenfusionAktionen.find(
       (aktion) => aktion.handkartenId === handkartenId && aktion.zielSchlangenId === schlangeId && aktion.zielKartenId === zielKartenId,
     ) ?? null
+  }
+
+  function findeSchlangenfrassAktion(schlangeId: string, zielKartenId: string, handkartenId: string | null) {
+    if (!handkartenId) return null
+    return schlangenfrassAktionen.find((aktion) => {
+      const [ziel] = aktion.ziele
+      return aktion.handkartenId === handkartenId && aktion.ziele.length === 1 && ziel.schlangenId === schlangeId && ziel.kartenId === zielKartenId
+    }) ?? null
   }
 
   function fuehreAktion(aktion: SpielAktion | null) {
@@ -328,11 +339,13 @@ export default function Schlangenbereich({
                   <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
                     {schlange.karten.map((karte) => {
                       const farbenfusionAktion = findeFarbenfusionAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
+                      const schlangenfrassAktion = findeSchlangenfrassAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
+                      const istSonderaktionZiel = Boolean(farbenfusionAktion ?? schlangenfrassAktion)
 
                       return (
                         <div
                           key={karte.id}
-                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}`}
+                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                           role="listitem"
                           aria-label={schlangenKartenAriaLabel(karte)}
                         >
@@ -350,6 +363,20 @@ export default function Schlangenbereich({
                               }}
                             >
                               Farbenfusion hier spielen
+                            </button>
+                          )}
+                          {schlangenfrassAktion && (
+                            <button
+                              type="button"
+                              className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--frass"
+                              aria-label={`Schlangenfrass im Schlangenbereich mit Karte ${schlangenfrassAktion.handkartenId} auf Karte ${karte.id}`}
+                              title={aktionsLabel(schlangenfrassAktion)}
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                onAktion(schlangenfrassAktion)
+                              }}
+                            >
+                              Schlangenfrass hier spielen
                             </button>
                           )}
                         </div>

@@ -154,6 +154,12 @@ function App({ initialZustand }: AppProps) {
     ),
     [legaleAktionen],
   )
+  const schlangenfrassAktionen = useMemo(
+    () => legaleAktionen.filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }> => aktion.typ === 'SchlangenfrassSpielen',
+    ),
+    [legaleAktionen],
+  )
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
     () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
@@ -283,6 +289,7 @@ function App({ initialZustand }: AppProps) {
                 karteAnlegenAktionen={karteAnlegenAktionen}
                 neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
                 farbenfusionAktionen={farbenfusionAktionen}
+                schlangenfrassAktionen={schlangenfrassAktionen}
                 gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
                 ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                 onAktion={fuhreAktionAus}
