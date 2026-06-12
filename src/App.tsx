@@ -382,7 +382,7 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </div>
-        <section className="info-panel" aria-labelledby={spieleruebersichtTitelId}>
+        <section className="info-panel" aria-labelledby={spieleruebersichtTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spieleruebersichtTitelId}>Spielerübersicht</h2>
           <DebugGruppe titel="Spielerstatus">
             {zustand.spieler.map(spieler => {
