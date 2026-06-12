@@ -1168,3 +1168,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `e6715cd — R166: Spielstatus atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R166-Browser-Smoke bestätigt `Spielstatus` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Spielstatus`, sichtbarem `Zugfortschritt`, erwarteter Copy `Aktueller Spielschritt: Karten ausspielen` und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R167 Spielerübersicht atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende Region `Spielerübersicht` behält das sichtbare lokale Überschriftenlabel via `aria-labelledby` und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`. Sichtbare Spielerstatus-Copy, `aria-label`-Abwesenheit, Summenzeilen, Layout, Handler und Engine-/Regelverhalten bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r167_spieleruebersicht_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/App.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Spielerübersicht`-Region; `src/App.r167_spieleruebersicht_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, eindeutiges lokales Label-Ziel, sichtbare Überschrift und bestehende Spielerstatus-/Summen-Copy.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R167-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine Findings`.
+- [x] Targeted: `npm test -- --run src/App.r167_spieleruebersicht_live_region_atomic.test.tsx src/App.r148_spieleruebersicht_idref.test.tsx src/App.r165_aktiver_spieler_live_region_atomic.test.tsx` → 3 Testdateien / 3 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 173 Testdateien / 661 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` exakt 500, neuer Test 42).
+- [x] Commit/Push: `a07cf83 — R167: Spielerübersicht atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R167-Browser-Smoke bestätigt `Spielerübersicht` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Spielerübersicht`, vorhandener Spielerstatus-Copy, `Schlangen insgesamt: 0` und ohne Console-/Page-Errors.
