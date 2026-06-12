@@ -230,8 +230,8 @@ function App({ initialZustand }: AppProps) {
           <li>Nutze Sonderkarten</li>
         </ul>
       </section>
-      <section className="spielbereich" aria-label="Spielbereich">
-        <section className="info-panel" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
+      <section className="spielbereich spielbereich--waldtanz" aria-label="Spielbereich">
+        <section className="info-panel info-panel--spielstatus" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spielstatusTitelId}>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
           <DebugGruppe titel="Spielphase">
@@ -264,10 +264,22 @@ function App({ initialZustand }: AppProps) {
           <Zugfortschritt zugphase={zustand.zugphase} />
         </section>
         <div className="spieltisch-gruppe">
-          <section className="info-panel" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
+          <section className="info-panel info-panel--waldtanz-arena" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
-            <section className="spielbrett" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
+            <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
+              <Schlangenbereich
+                aktiverSpieler={aktiverSpieler}
+                gegnerSpieler={gegnerSpieler}
+                karteAnlegenAktionen={karteAnlegenAktionen}
+                neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+                farbenfusionAktionen={farbenfusionAktionen}
+                schlangenfrassAktionen={schlangenfrassAktionen}
+                gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
+                ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+                onAktion={fuhreAktionAus}
+                aktionsLabel={aktionsLabel}
+              />
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}
@@ -282,18 +294,6 @@ function App({ initialZustand }: AppProps) {
                 onKarteDragEnd={() => {
                   gezogeneHandkarteIdRef.current = null
                 }}
-              />
-              <Schlangenbereich
-                aktiverSpieler={aktiverSpieler}
-                gegnerSpieler={gegnerSpieler}
-                karteAnlegenAktionen={karteAnlegenAktionen}
-                neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
-                farbenfusionAktionen={farbenfusionAktionen}
-                schlangenfrassAktionen={schlangenfrassAktionen}
-                gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
-                ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
-                onAktion={fuhreAktionAus}
-                aktionsLabel={aktionsLabel}
               />
             </section>
             <AktionenPanel
@@ -352,7 +352,7 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </div>
-        <section className="info-panel" aria-labelledby={spieleruebersichtTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--spieleruebersicht" aria-labelledby={spieleruebersichtTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spieleruebersichtTitelId}>Spielerübersicht</h2>
           <DebugGruppe titel="Spielerstatus">
             {zustand.spieler.map(spieler => {
@@ -383,7 +383,7 @@ function App({ initialZustand }: AppProps) {
             <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
         </section>
-        <section className="info-panel" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--material" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={materialUndAufgabenTitelId}>Material und Aufgaben</h2>
           <DebugGruppe titel="Karten und Aufgaben">
             <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
@@ -423,7 +423,7 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </section>
-        <section className="info-panel" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--wertung" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={wertungTitelId}>Wertung</h2>
           {istSpielende && (
             <>
