@@ -1116,3 +1116,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `d353e76 — R162: Eigene Schlangen sichtbar labeln` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R162-Browser-Smoke klickt eine neue Schlange in Produktion an und bestätigt den eigenen Schlangen-Button ohne `aria-label`, mit zwei lokalen `aria-labelledby`-Zielen, Name `Schlange schlange-spieler-1-1` und keine Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R163 Schlangen-Dragstatus als Live-Region kennzeichnen
+
+- [x] Scope: Der permanente Dragstatus im `Schlangenbereich` bleibt `role="status"` und erhält explizit `aria-live="polite"` sowie `aria-atomic="true"`; sichtbare Copy, leerer Initialstatus, Drag-and-drop-Statusmeldungen, Interaktionen, Engine-/Regelverhalten und Layout bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r163_schlangen_dragstatus_live_region.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/components/Schlangenbereich.tsx` ergänzt die beiden Live-Region-Attribute am bestehenden Status; `src/App.r163_schlangen_dragstatus_live_region.test.tsx` prüft zwei App-Instanzen, Region-Scoping, Klasse, `role="status"`, `aria-live="polite"`, `aria-atomic="true"`, kein `aria-label` und den leeren Initialstatus.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R163-Test; `BLOCKERS: keine`, `NON-BLOCKERS: keine`.
+- [x] Targeted: `npm test -- --run src/App.r163_schlangen_dragstatus_live_region.test.tsx src/App.f36_drag_drop_schlange_status.test.tsx` → 2 Testdateien / 12 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 169 Testdateien / 657 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen.
+- [x] Commit/Push: `e19f091 — R163: Schlangen-Dragstatus live ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R163-Browser-Smoke bestätigt den Schlangen-Dragstatus mit `class="schlangen-dragstatus"`, `role="status"`, `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label` und ohne Console-/Page-Errors.
