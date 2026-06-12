@@ -16,6 +16,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.12: R173 – Aktionenbereich als höfliche atomare Live-Region angekündigt.
 Änderung v1.13: R174 – Empfohlene Aktion als höfliche atomare Live-Region angekündigt.
 Änderung v1.14: R175 – Weitere Aktionen als höfliche atomare Live-Region angekündigt.
+Änderung v1.15: R176 – Phasenaktion als höfliche atomare Live-Region angekündigt.
 */
 
 import { useId } from 'react'
@@ -215,6 +216,8 @@ export default function AktionenPanel({
             id={phasenaktionId}
             className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === phasenaktionId ? ' aktionen-gruppe--sprungziel' : ''}`}
             aria-labelledby={phasenaktionTitelId}
+            aria-live="polite"
+            aria-atomic="true"
             tabIndex={-1}
           >
             <h3 id={phasenaktionTitelId}>Phasenaktion</h3>
