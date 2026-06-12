@@ -453,7 +453,7 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </section>
-        <section className="info-panel" aria-labelledby={wertungTitelId}>
+        <section className="info-panel" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={wertungTitelId}>Wertung</h2>
           {istSpielende && (
             <>
