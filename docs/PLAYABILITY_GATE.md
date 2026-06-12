@@ -1207,3 +1207,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `cb44356 — R169: Wertung atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R169-Browser-Smoke bestätigt `Wertung` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Wertung`, vorhandener `Punktetafel`-Unterregion, Punktestand-/Gesamt-Copy und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R170 Punktetafel atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende `Punktetafel`-Unterregion innerhalb `Wertung` behält das sichtbare lokale Überschriftenlabel via `aria-labelledby` und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`. Sichtbare Score-Copy, `aria-label`-Abwesenheit, Listenstruktur, Layout, Handler und Engine-/Regelverhalten bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r170_punktetafel_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/App.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Punktetafel`-Region; `src/App.r170_punktetafel_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, eindeutiges lokales Label-Ziel, sichtbare Überschrift, 2 Listeneinträge und bestehende Score-Copy.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R170-Test; `BLOCKERS: Keine`, `NON-BLOCKERS`: bestätigende Hinweise ohne Handlungsbedarf.
+- [x] Targeted: `npm test -- --run src/App.r170_punktetafel_live_region_atomic.test.tsx src/App.r143_punktetafel_label.test.tsx src/App.r144_punktetafel_idref.test.tsx src/App.r169_wertung_live_region_atomic.test.tsx` → 4 Testdateien / 4 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 176 Testdateien / 664 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` exakt 500, neuer Test 39).
+- [x] Commit/Push: `218ca46 — R170: Punktetafel atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R170-Browser-Smoke bestätigt `Punktetafel` innerhalb `Wertung` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Punktetafel`, 2 Listeneinträgen, Score-Copy und ohne Console-/Page-Errors.
