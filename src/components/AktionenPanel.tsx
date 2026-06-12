@@ -1,7 +1,7 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.12
+Version: 1.13
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 Änderung v1.3: Weitere Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
@@ -14,6 +14,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.10: R156 – Endphase per sichtbarer Überschrift labeln.
 Änderung v1.11: R157 – Phasenregeln per sichtbarer Überschrift labeln.
 Änderung v1.12: R173 – Aktionenbereich als höfliche atomare Live-Region angekündigt.
+Änderung v1.13: R174 – Empfohlene Aktion als höfliche atomare Live-Region angekündigt.
 */
 
 import { useId } from 'react'
@@ -137,7 +138,7 @@ export default function AktionenPanel({
               KI-Aktion ausführen
             </button>
           )}
-          <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} tabIndex={-1}>
+          <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} aria-live="polite" aria-atomic="true" tabIndex={-1}>
             <h3 id={empfohleneAktionTitelId}>Empfohlene Aktion</h3>
             {legaleAktionen.length > 0 ? (
               <button
