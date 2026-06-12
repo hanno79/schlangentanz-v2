@@ -1,7 +1,7 @@
 /*
 Author: rahn
 Datum: 04.06.2026
-Version: 1.11
+Version: 1.12
 Beschreibung: Aktionenbereich-Komponente für Schlangentanz v2 – empfohlene Aktion,
 weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregeln.
 Änderung v1.3: Weitere Aktionen als semantische geordnete Liste (ol/li) dargestellt (F30).
@@ -13,6 +13,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.9: R155 – Weitere verfügbare Aktionen per sichtbarer Überschrift labeln.
 Änderung v1.10: R156 – Endphase per sichtbarer Überschrift labeln.
 Änderung v1.11: R157 – Phasenregeln per sichtbarer Überschrift labeln.
+Änderung v1.12: R173 – Aktionenbereich als höfliche atomare Live-Region angekündigt.
 */
 
 import { useId } from 'react'
@@ -123,7 +124,7 @@ export default function AktionenPanel({
   const phasenregelnTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   return (
-    <section className="info-panel" aria-labelledby={aktionenTitelId}>
+    <section className="info-panel" aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={aktionenTitelId}>Aktionen</h2>
       <p>Spielbare Aktionen: {legaleAktionen.length}</p>
       {istSpielende ? (
