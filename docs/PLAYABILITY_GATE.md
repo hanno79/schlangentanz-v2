@@ -1340,3 +1340,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `2236659 — M1a: Waldtanz-Arena-Spielbrett anlegen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Browser-Smoke bestätigt `Spielbereich`, `Aktiver Spieler`, `Spieltisch`, `Schlangenbereich`, `Handkarten`, `Aktionen`, die Klassen `spielbereich--waldtanz`/`info-panel--waldtanz-arena`/`spielbrett--waldtanz`, Arena-Gradient, Schlangenbereich vor Handkarten, Handkarten visuell unter der Schlangenfläche, Aktionen direkt nach dem Spieltisch und keine Console-/Page-Errors.
+
+## Evidence — 12.06.2026 M1b Waldtanz-Aktionsdock
+
+- [x] Scope: Zweiter mittlerer Google-Stitch-Vertical innerhalb `M1 Waldtanz Game Board`: schnelle Kontextaktionen als board-naher Dock (`Empfohlene Aktion` + `Phasenaktion`), lange Fallback-Liste `Weitere Aktionen` sichtbar erhalten, aber nachgeordnet und scroll-contained. Engine-Regeln, Handler, Sonderkarten-Ziele und bestehende Board-Interaktionen bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.m1b_aktionsdock_layout.test.tsx` fiel erwartungsgemäß fehl, weil Dock-Klasse, Schnellzug-Container und Reihenfolge `Empfohlen → Phasenaktion → Weitere Aktionen` fehlten.
+- [x] GREEN: `src/components/AktionenPanel.tsx` gruppiert `Empfohlene Aktion` und `Phasenaktion` in `.aktionen-dock__schnellzug`, setzt `aktionen-panel--waldtanz-dock` am Aktionenbereich und lässt `Weitere Aktionen` danach als Fallback-Region stehen. `src/App.css` ergänzt sticky Dock, kompakte Schnellzug-/Aktionslisten-Spalten und begrenzt die Fallback-Liste.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger manueller Fallback wurde offen dokumentiert.
+- [x] Codex Review: `BLOCKERS: None`; Codex bestätigte erhaltene Labels, Handler, IDREF-/Fokus-Ziele, Live-Region-Attribute, mittleren sichtbaren Scope und gezielte Regressionen.
+- [x] Targeted: `npm test -- --run src/App.m1b_aktionsdock_layout.test.tsx src/App.r173_aktionen_live_region_atomic.test.tsx src/App.r174_empfohlene_aktion_live_region_atomic.test.tsx src/App.r175_weitere_aktionen_live_region_atomic.test.tsx src/App.r176_phasenaktion_live_region_atomic.test.tsx src/App.f27_sprungziel_fokus.test.tsx` → 6 Testdateien / 6 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 189 Testdateien / 680 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `92c380c — M1b: Waldtanz-Aktionsdock verdichten` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Browser-Smoke bestätigt `aktionen-panel--waldtanz-dock`, `position: sticky`, `Aktionen` direkt nach `Spieltisch`, Schnellzug mit `Empfohlene Aktion`/`Phasenaktion`, Reihenfolge vor `Weitere Aktionen`, Fallback-Copy, scroll-contained `Weitere Aktionen` und keine Console-/Page-Errors.
