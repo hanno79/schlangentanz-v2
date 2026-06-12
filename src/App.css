@@ -220,11 +220,14 @@ code {
 .info-panel--spieleruebersicht { grid-area: spieler; }
 .info-panel--material { grid-area: material; }
 .info-panel--wertung { grid-area: wertung; }
-.info-panel--waldtanz-arena { grid-area: arena; }
+.info-panel--waldtanz-arena {
+  grid-area: arena;
+  min-height: min(78vh, 820px);
+}
 
 @media (min-width: 980px) {
   .spielbereich--waldtanz {
-    grid-template-columns: minmax(210px, 0.72fr) minmax(520px, 1.8fr) minmax(210px, 0.72fr);
+    grid-template-columns: minmax(180px, 0.62fr) minmax(560px, 2.1fr) minmax(180px, 0.62fr);
     grid-template-areas:
       "status arena spieler"
       "material arena wertung";
@@ -238,6 +241,46 @@ code {
   box-shadow: var(--st-shadow-hard);
   padding: 1rem;
   border-radius: 12px;
+}
+
+.waldtanz-hud {
+  max-height: clamp(14rem, 34vh, 24rem);
+  overflow: auto;
+  border-radius: 2rem;
+  background: linear-gradient(180deg, rgba(255, 224, 139, 0.96), rgba(236, 255, 227, 0.82));
+  scrollbar-color: rgba(6, 57, 7, 0.62) transparent;
+}
+
+.waldtanz-hud h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0;
+  font-family: var(--st-font-headline);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+}
+
+.waldtanz-hud h2::before {
+  content: '✦';
+  display: inline-grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-size: 0.9rem;
+}
+
+.waldtanz-hud--status h2::before { content: '🌿'; }
+.waldtanz-hud--spieler h2::before { content: '🐍'; }
+.waldtanz-hud--material h2::before { content: '🎒'; }
+.waldtanz-hud--wertung h2::before { content: '⭐'; }
+
+.waldtanz-hud .debug-gruppe-entwicklungsdaten {
+  opacity: 0.72;
+  font-size: 0.88rem;
 }
 
 .debug-gruppe {

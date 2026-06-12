@@ -231,7 +231,7 @@ function App({ initialZustand }: AppProps) {
         </ul>
       </section>
       <section className="spielbereich spielbereich--waldtanz" aria-label="Spielbereich">
-        <section className="info-panel info-panel--spielstatus" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--spielstatus waldtanz-hud waldtanz-hud--status" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spielstatusTitelId}>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
           <DebugGruppe titel="Spielphase">
@@ -352,7 +352,7 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </div>
-        <section className="info-panel info-panel--spieleruebersicht" aria-labelledby={spieleruebersichtTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--spieleruebersicht waldtanz-hud waldtanz-hud--spieler" aria-labelledby={spieleruebersichtTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spieleruebersichtTitelId}>Spielerübersicht</h2>
           <DebugGruppe titel="Spielerstatus">
             {zustand.spieler.map(spieler => {
@@ -383,8 +383,24 @@ function App({ initialZustand }: AppProps) {
             <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
         </section>
-        <section className="info-panel info-panel--material" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--material waldtanz-hud waldtanz-hud--material" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={materialUndAufgabenTitelId}>Material und Aufgaben</h2>
+          <section className="aufgabenkarten-bereich" aria-labelledby={aufgabenkartenTitelId} aria-live="polite" aria-atomic="true">
+            <h3 id={aufgabenkartenTitelId}>Aufgabenkarten</h3>
+            {zustand.offeneAufgaben.length === 0 ? (
+              <p>Keine offenen Aufgabenkarten.</p>
+            ) : (
+              <ul className="aufgabenkarten-liste">
+                {zustand.offeneAufgaben.map(a => (
+                  <li key={a.id} className="aufgabenkarte">
+                    <strong>{a.name}</strong>
+                    <span>{aufgabenPunkteAnzeige(a, istEndspurt)}</span>
+                    <span>{a.bedingung}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
           <DebugGruppe titel="Karten und Aufgaben">
             <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
             <p>Karten auf dem Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
@@ -406,24 +422,8 @@ function App({ initialZustand }: AppProps) {
                 : 'keine'}
             </p>
           </DebugGruppe>
-          <section className="aufgabenkarten-bereich" aria-labelledby={aufgabenkartenTitelId} aria-live="polite" aria-atomic="true">
-            <h3 id={aufgabenkartenTitelId}>Aufgabenkarten</h3>
-            {zustand.offeneAufgaben.length === 0 ? (
-              <p>Keine offenen Aufgabenkarten.</p>
-            ) : (
-              <ul className="aufgabenkarten-liste">
-                {zustand.offeneAufgaben.map(a => (
-                  <li key={a.id} className="aufgabenkarte">
-                    <strong>{a.name}</strong>
-                    <span>{aufgabenPunkteAnzeige(a, istEndspurt)}</span>
-                    <span>{a.bedingung}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
         </section>
-        <section className="info-panel info-panel--wertung" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
+        <section className="info-panel info-panel--wertung waldtanz-hud waldtanz-hud--wertung" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={wertungTitelId}>Wertung</h2>
           {istSpielende && (
             <>
@@ -431,16 +431,6 @@ function App({ initialZustand }: AppProps) {
               <p>Ergebnis: {ergebnisText}</p>
             </>
           )}
-          <DebugGruppe titel="Punkteübersicht">
-            {gesamtwertung.spielerwertungen.map(eintrag => (
-              <Fragment key={eintrag.spielerId}>
-                <p>Punktestand von {spielerNameFuerId(eintrag.spielerId)}: {eintrag.gesamtPunkte} Punkte</p>
-                <p>
-                  Punktequellen von {spielerNameFuerId(eintrag.spielerId)}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
-                </p>
-              </Fragment>
-            ))}
-          </DebugGruppe>
           <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId} aria-live="polite" aria-atomic="true">
             <h3 id={punktetafelTitelId}>Punktetafel</h3>
             <ul className="scoreboard-liste">
@@ -458,6 +448,16 @@ function App({ initialZustand }: AppProps) {
               })}
             </ul>
           </section>
+          <DebugGruppe titel="Punkteübersicht">
+            {gesamtwertung.spielerwertungen.map(eintrag => (
+              <Fragment key={eintrag.spielerId}>
+                <p>Punktestand von {spielerNameFuerId(eintrag.spielerId)}: {eintrag.gesamtPunkte} Punkte</p>
+                <p>
+                  Punktequellen von {spielerNameFuerId(eintrag.spielerId)}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
+                </p>
+              </Fragment>
+            ))}
+          </DebugGruppe>
           {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
             <p key={g.spielerId}>Gewinner {spielerNameFuerId(g.spielerId)}: {g.gesamtPunkte} Punkte</p>
           ))}
