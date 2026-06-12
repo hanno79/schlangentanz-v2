@@ -5,11 +5,13 @@ Version: 1.1
 Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit auswählbarer Detailkarte.
 # ÄNDERUNG 07.06.2026: R110 erzeugt die Detail-Titel-ID komponentenlokal per useId(),
 # damit mehrfach gerenderte Panels keine doppelten DOM-IDs erzeugen.
-# ÄNDERUNG 11.06.2026: R159 labelt das Panel per sichtbarem Handkarten-Text statt aria-label.
+# ÄNDERUNG 07.06.2026: R159 entfernt das separate aria-label und benennt das Panel über sichtbaren Handkarten-Text.
+# ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für echte Kartenflächen statt generischer Klickkarten.
 */
 
 import { useId } from 'react'
 import type { Spielkarte } from '../engine/types'
+import { farbeCssKlasse } from '../kartenfarben'
 
 interface HandkartenPanelProps {
   handkarten: Spielkarte[]
@@ -57,7 +59,7 @@ export default function HandkartenPanel({
           return (
             <li
               key={karte.id}
-              className={`handkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}`}
+              className={`handkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}`}
             >
               <button
                 type="button"

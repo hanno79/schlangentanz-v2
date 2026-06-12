@@ -5,10 +5,12 @@ Version: 3.0
 Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zugänglichem Drag-Status und legalen Start-/Anlegeaktionen.
 # ÄNDERUNG 07.06.2026: R109 nutzt komponentenlokale DOM-IDs für aria-describedby statt fachlicher Spieler-/Schlangen-IDs.
 # ÄNDERUNG 07.06.2026: R111 nutzt komponentenlokale DOM-IDs auch für aria-labelledby (Haupttitel und Untergruppentitel).
+# ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für sichtbare Karten in Schlangenreihen.
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
 import type { SpielAktion, Spieler, Spielkarte } from '../engine'
+import { farbeCssKlasse } from '../kartenfarben'
 
 interface SchlangenbereichProps {
   aktiverSpieler: Spieler
@@ -308,7 +310,7 @@ export default function Schlangenbereich({
                     {schlange.karten.map((karte) => (
                       <div
                         key={karte.id}
-                        className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? 'farbkarte' : 'sonderkarte'}`}
+                        className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}`}
                         role="listitem"
                         aria-label={schlangenKartenAriaLabel(karte)}
                       >
@@ -364,7 +366,7 @@ export default function Schlangenbereich({
                     {schlange.karten.map((karte) => (
                       <div
                         key={karte.id}
-                        className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? 'farbkarte' : 'sonderkarte'}`}
+                        className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}`}
                         role="listitem"
                         aria-label={schlangenKartenAriaLabel(karte)}
                       >

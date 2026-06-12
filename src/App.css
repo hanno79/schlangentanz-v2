@@ -377,7 +377,46 @@ code {
 }
 
 .schlangekarte__karte--farbkarte {
-  background: linear-gradient(180deg, rgba(164, 222, 2, 0.45), rgba(255, 255, 255, 0.5));
+  /* ÄNDERUNG 12.06.2026: R177 macht Schlangenkarten als farbige Spielflächen erkennbar. */
+  border-color: var(--kartenfarbe-rand, rgba(6, 57, 7, 0.32));
+  background: linear-gradient(160deg, var(--kartenfarbe, rgba(164, 222, 2, 0.45)) 0%, rgba(255, 255, 255, 0.68) 100%);
+  color: var(--kartenfarbe-text, inherit);
+}
+
+.schlangekarte__karte--farbe-blau {
+  --kartenfarbe: #3b82f6;
+  --kartenfarbe-rand: #1d4ed8;
+  --kartenfarbe-text: #061b3f;
+}
+
+.schlangekarte__karte--farbe-rot {
+  --kartenfarbe: #ef4444;
+  --kartenfarbe-rand: #b91c1c;
+  --kartenfarbe-text: #3f0505;
+}
+
+.schlangekarte__karte--farbe-gelb {
+  --kartenfarbe: #fde047;
+  --kartenfarbe-rand: #ca8a04;
+  --kartenfarbe-text: #352300;
+}
+
+.schlangekarte__karte--farbe-violett {
+  --kartenfarbe: #a855f7;
+  --kartenfarbe-rand: #7e22ce;
+  --kartenfarbe-text: #2e0b4f;
+}
+
+.schlangekarte__karte--farbe-braun {
+  --kartenfarbe: #a16207;
+  --kartenfarbe-rand: #713f12;
+  --kartenfarbe-text: #261403;
+}
+
+.schlangekarte__karte--farbe-gruen {
+  --kartenfarbe: #22c55e;
+  --kartenfarbe-rand: #15803d;
+  --kartenfarbe-text: #052e16;
 }
 
 .schlangekarte--dragover {
@@ -411,11 +450,50 @@ code {
 }
 
 .handkarte--farbkarte {
-  background: linear-gradient(180deg, rgba(164, 222, 2, 0.55), rgba(255, 255, 255, 0.16));
+  /* ÄNDERUNG 12.06.2026: R177 macht Handkarten als farbige Kartenflächen statt generischer Buttons erkennbar. */
+  border-color: var(--kartenfarbe-rand, var(--st-color-border-strong));
+  background: linear-gradient(160deg, var(--kartenfarbe, rgba(164, 222, 2, 0.55)) 0%, rgba(255, 255, 255, 0.72) 100%);
+  color: var(--kartenfarbe-text, inherit);
 }
 
 .handkarte--sonderkarte {
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.7), rgba(255, 255, 255, 0.16));
+}
+
+.handkarte--farbe-blau {
+  --kartenfarbe: #3b82f6;
+  --kartenfarbe-rand: #1d4ed8;
+  --kartenfarbe-text: #061b3f;
+}
+
+.handkarte--farbe-rot {
+  --kartenfarbe: #ef4444;
+  --kartenfarbe-rand: #b91c1c;
+  --kartenfarbe-text: #3f0505;
+}
+
+.handkarte--farbe-gelb {
+  --kartenfarbe: #fde047;
+  --kartenfarbe-rand: #ca8a04;
+  --kartenfarbe-text: #352300;
+}
+
+.handkarte--farbe-violett {
+  --kartenfarbe: #a855f7;
+  --kartenfarbe-rand: #7e22ce;
+  --kartenfarbe-text: #2e0b4f;
+}
+
+.handkarte--farbe-braun {
+  --kartenfarbe: #a16207;
+  --kartenfarbe-rand: #713f12;
+  --kartenfarbe-text: #261403;
+}
+
+.handkarte--farbe-gruen {
+  --kartenfarbe: #22c55e;
+  --kartenfarbe-rand: #15803d;
+  --kartenfarbe-text: #052e16;
 }
 
 .spielbrett {
