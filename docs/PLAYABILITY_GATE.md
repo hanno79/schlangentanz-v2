@@ -1353,3 +1353,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `92c380c — M1b: Waldtanz-Aktionsdock verdichten` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Browser-Smoke bestätigt `aktionen-panel--waldtanz-dock`, `position: sticky`, `Aktionen` direkt nach `Spieltisch`, Schnellzug mit `Empfohlene Aktion`/`Phasenaktion`, Reihenfolge vor `Weitere Aktionen`, Fallback-Copy, scroll-contained `Weitere Aktionen` und keine Console-/Page-Errors.
+
+## Evidence — 12.06.2026 M1c Stitch-Sidebar-HUD
+
+- [x] Scope: Dritter mittlerer Google-Stitch-Vertical innerhalb `M1 Waldtanz Game Board`: `Spielstatus`, `Spielerübersicht`, `Material und Aufgaben` und `Wertung` rahmen die zentrale Arena als kompakte Wald-HUD-Plaketten. Engine-Regeln, Handler, Aktionsdock, Board-Ziele und Debug-Inhalte bleiben erhalten.
+- [x] RED: `npm test -- --run src/App.m1c_stitch_sidebars.test.tsx` fiel erwartungsgemäß fehl, weil `waldtanz-hud`-Klassen, kompakte HUD-CSS-Verträge und stärkere Arena-Gewichtung fehlten.
+- [x] GREEN: `src/App.tsx` ergänzt die HUD-Klassen und ordnet `Aufgabenkarten`/`Punktetafel` vor die jeweiligen Entwicklungsdaten; `src/App.css` macht die Sidebars scroll-contained, rund/chunky, mit Icon-Plaketten und gewichtet die Arena stärker.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger manueller Fallback wurde offen dokumentiert.
+- [x] Codex Review/Re-Review: initialer Blocker zur Debug-Dominanz in Material-/Wertungs-HUDs wurde test-first reproduziert und behoben; final `BLOCKERS: None`, `NON-BLOCKERS: None`.
+- [x] Targeted: `npm test -- --run src/App.m1c_stitch_sidebars.test.tsx src/App.f10_debuggruppen.test.tsx src/App.m1a_waldtanz_arena_layout.test.tsx src/App.m1b_aktionsdock_layout.test.tsx src/App.r168_material_aufgaben_live_region_atomic.test.tsx src/App.r169_wertung_live_region_atomic.test.tsx src/App.r170_punktetafel_live_region_atomic.test.tsx src/App.r171_aufgabenkarten_live_region_atomic.test.tsx` → 8 Testdateien / 8 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 190 Testdateien / 681 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
+- [x] Commit/Push: `fa2a33b — M1c: Waldtanz-Sidebars als HUD verdichten` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Browser-Smoke bestätigt Desktop-Grid `"status arena spieler" / "material arena wertung"`, `spielbrett--waldtanz`, vier `waldtanz-hud`-Sidebars mit `overflow: auto`, Icon-Plaketten (`🌿`, `🐍`, `🎒`, `⭐`), Entwicklungsdaten-Opacity `0.72`, `Aufgabenkarten` vor Material-Entwicklungsdaten, `Punktetafel` vor Wertungs-Entwicklungsdaten und keine Console-/Page-Errors.
