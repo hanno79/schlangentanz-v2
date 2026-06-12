@@ -15,6 +15,7 @@ weitere Aktionen, Phasenaktion, Endphase-Hinweis, No-Draw-Status und Phasenregel
 Änderung v1.11: R157 – Phasenregeln per sichtbarer Überschrift labeln.
 Änderung v1.12: R173 – Aktionenbereich als höfliche atomare Live-Region angekündigt.
 Änderung v1.13: R174 – Empfohlene Aktion als höfliche atomare Live-Region angekündigt.
+Änderung v1.14: R175 – Weitere Aktionen als höfliche atomare Live-Region angekündigt.
 */
 
 import { useId } from 'react'
@@ -153,7 +154,7 @@ export default function AktionenPanel({
               <p>Keine empfohlene Aktion verfügbar.</p>
             )}
           </section>
-          <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId}>
+          <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId} aria-live="polite" aria-atomic="true">
             <h3 id={weitereAktionenTitelId}>Weitere Aktionen</h3>
             {legaleAktionen.length > 1 ? (
               <ol className="aktions-liste" start={2}>
