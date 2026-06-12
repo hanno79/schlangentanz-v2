@@ -1233,3 +1233,16 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `e740188 — R171: Aufgabenkarten atomar ankündigen` auf `origin/main`.
 - [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
 - [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R171-Browser-Smoke bestätigt `Aufgabenkarten` innerhalb `Material und Aufgaben` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Aufgabenkarten`, 3 Listeneinträgen, Aufgabenkarten-Copy und ohne Console-/Page-Errors.
+
+## Evidence — 12.06.2026 R172 Spieltisch atomar als Live-Region ankündigen
+
+- [x] Scope: Die bestehende `Spieltisch`-Region innerhalb `Aktiver Spieler` behält das sichtbare lokale Überschriftenlabel via `aria-labelledby` und erhält zusätzlich `aria-live="polite"` sowie `aria-atomic="true"`. Sichtbare Spieltisch-Copy, `aria-label`-Abwesenheit, `Handkarten`-/`Schlangenbereich`-Unterregionen, Layout, Handler und Engine-/Regelverhalten bleiben unverändert.
+- [x] RED: `npm test -- --run src/App.r172_spieltisch_live_region_atomic.test.tsx` fiel erwartungsgemäß fehl, weil `aria-live="polite"` noch fehlte.
+- [x] GREEN: `src/App.tsx` ergänzt die Live-Region-Attribute an der bestehenden `Spieltisch`-Region; `src/App.r172_spieltisch_live_region_atomic.test.tsx` prüft Live-/Atomic-Vertrag, fehlendes separates `aria-label`, single-token `aria-labelledby`, dokumentweit genau ein Labelziel, Ziel innerhalb der Region, sichtbare Überschrift sowie sichtbare Unterregionen `Handkarten` und `Schlangenbereich`.
+- [x] Claude Code / `/simplify`: Wegen `401 Invalid authentication credentials` blockiert; enger mechanischer Slice wurde gemäß Fallback manuell umgesetzt und objektiv getestet. Separate Claude-`/simplify`-Vorprüfung war wegen desselben Auth-Blockers nicht verfügbar.
+- [x] Codex Review: Review-only auf Worktree inklusive untracked R172-Test; `BLOCKERS: Keine`, `NON-BLOCKERS: Keine`. Codex bestätigte den engen Scope, fehlendes `aria-label` und `src/App.tsx` exakt 500 Zeilen.
+- [x] Targeted: `npm test -- --run src/App.r172_spieltisch_live_region_atomic.test.tsx src/App.r112_app_shell_label_idrefs.test.tsx src/App.f31_spieltisch_layout.test.tsx` → 3 Testdateien / 3 Tests bestanden.
+- [x] Full Gates: `npm test -- --run` → 178 Testdateien / 666 Tests bestanden; `npm run typecheck`, `npm run lint`, `npm run build`, `npm run check:test-lines`, `git diff --check` jeweils grün. Geänderte Skriptdateien bleiben unter 500 Zeilen (`src/App.tsx` exakt 500, neuer Test 41).
+- [x] Commit/Push: `46cca3f — R172: Spieltisch atomar ankündigen` auf `origin/main`.
+- [x] Deploy: `vercel deploy --prod --yes --token=…` auf `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- [x] Smoke: Production-Alias `/` und `/game` liefern HTTP 200; Kernregionen sichtbar. R172-Browser-Smoke bestätigt `Spieltisch` innerhalb `Aktiver Spieler` mit `aria-live="polite"`, `aria-atomic="true"`, ohne `aria-label`, eindeutigem lokalem `aria-labelledby`-Ziel `Spieltisch`, vorhandenen Unterregionen `Handkarten`/`Schlangenbereich` und ohne Console-/Page-Errors.
