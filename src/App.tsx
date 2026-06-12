@@ -413,7 +413,7 @@ function App({ initialZustand }: AppProps) {
             <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
         </section>
-        <section className="info-panel" aria-labelledby={materialUndAufgabenTitelId}>
+        <section className="info-panel" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={materialUndAufgabenTitelId}>Material und Aufgaben</h2>
           <DebugGruppe titel="Karten und Aufgaben">
             <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
