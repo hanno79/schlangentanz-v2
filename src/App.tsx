@@ -436,7 +436,7 @@ function App({ initialZustand }: AppProps) {
                 : 'keine'}
             </p>
           </DebugGruppe>
-          <section className="aufgabenkarten-bereich" aria-labelledby={aufgabenkartenTitelId}>
+          <section className="aufgabenkarten-bereich" aria-labelledby={aufgabenkartenTitelId} aria-live="polite" aria-atomic="true">
             <h3 id={aufgabenkartenTitelId}>Aufgabenkarten</h3>
             {zustand.offeneAufgaben.length === 0 ? (
               <p>Keine offenen Aufgabenkarten.</p>
