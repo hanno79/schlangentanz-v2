@@ -436,6 +436,18 @@ code {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.16), 0 12px 22px rgba(6, 57, 7, 0.15);
 }
 
+.schlangen-zielhinweis {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(177, 45, 0, 0.36);
+  background: rgba(254, 203, 0, 0.54);
+  color: var(--st-color-border-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
 .schlangekarte--eigene,
 .schlangen-startzone {
   transition: box-shadow 120ms ease, transform 120ms ease, outline-color 120ms ease;
@@ -642,6 +654,14 @@ code {
 .schlangekarte--eigene {
   background: linear-gradient(180deg, rgba(164, 222, 2, 0.35), rgba(255, 255, 255, 0.18));
   cursor: copy;
+}
+
+.schlangekarte--zielbereit,
+.schlangen-startzone--zielbereit {
+  /* ÄNDERUNG 12.06.2026: R178 macht nach Kartenauswahl direkte Board-Ziele sichtbar und überschreibt Basisflächen. */
+  border-color: var(--st-color-tertiary);
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.32), rgba(255, 255, 255, 0.56));
+  box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.18), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
 }
 
 .schlangekarte--gegner {

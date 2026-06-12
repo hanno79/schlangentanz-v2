@@ -6,6 +6,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug�
 # ÄNDERUNG 07.06.2026: R109 nutzt komponentenlokale DOM-IDs für aria-describedby statt fachlicher Spieler-/Schlangen-IDs.
 # ÄNDERUNG 07.06.2026: R111 nutzt komponentenlokale DOM-IDs auch für aria-labelledby (Haupttitel und Untergruppentitel).
 # ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für sichtbare Karten in Schlangenreihen.
+# ÄNDERUNG 12.06.2026: R178 markiert board-lokale Ziele für die ausgewählte Handkarte sichtbar.
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
@@ -82,7 +83,7 @@ export default function Schlangenbereich({
 
   function findeNeueSchlangeAktion(handkartenId: string | null) {
     if (!handkartenId) return null
-    return neueSchlangeStartenAktionen.find((aktion) => aktion.handkartenId === handkartenId) ?? neueSchlangeStartenAktionen[0] ?? null
+    return neueSchlangeStartenAktionen.find((aktion) => aktion.handkartenId === handkartenId) ?? null
   }
 
   function fuehreAktion(aktion: SpielAktion | null) {
@@ -132,7 +133,7 @@ export default function Schlangenbereich({
       return
     }
 
-    fuehreAktion(findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? neueSchlangeStartenAktionen[0] ?? null)
+    fuehreAktion(findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? (ausgewaehlteHandkarteId ? null : neueSchlangeStartenAktionen[0] ?? null))
   }
 
   function handleNeueSchlangeZoneKeyDown(event: KeyboardEvent<HTMLElement>) {
@@ -220,6 +221,7 @@ export default function Schlangenbereich({
   const eigeneTitelId = `${komponentenId}-eigene-schlangen-titel`
   const startzoneTitelId = `${komponentenId}-startzone-titel`
   const gegnerTitelId = `${komponentenId}-gegnerische-schlangen-titel`
+  const startzoneIstZielbereit = Boolean(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
 
   return (
     <section className="schlangenbereich" aria-labelledby={titelId}>
@@ -238,7 +240,7 @@ export default function Schlangenbereich({
           Ziehe eine Handkarte auf die gewünschte Schlange oder nutze die Startzone, um eine neue Schlange zu beginnen.
         </p>
         <div
-          className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${dragOverZone?.kind === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
+          className={`schlangen-startzone${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${startzoneIstZielbereit ? ' schlangen-startzone--zielbereit' : ''}${dragOverZone?.kind === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
           role="button"
           tabIndex={0}
           aria-labelledby={startzoneTitelId}
@@ -261,6 +263,9 @@ export default function Schlangenbereich({
           <p id={`${komponentenId}-startzone-hinweis`} className="schlangen-drop-hinweis">
             Ziehe eine Farbkarte hierher oder klicke die passende Start-Schaltfläche.
           </p>
+          {startzoneIstZielbereit && (
+            <span className="schlangen-zielhinweis">Ausgewählte Karte hier als neue Schlange starten.</span>
+          )}
         </div>
         {neueSchlangeStartenAktionen.length > 0 && (
           <div className="schlangekarte__anlegeaktionen schlangekarte__anlegeaktionen--starten" aria-label={`Startaktionen für ${aktiverSpieler.id}`}>
@@ -287,13 +292,14 @@ export default function Schlangenbereich({
           <ul className="schlangenleiste">
             {aktiverSpieler.schlangen.map((schlange, schlangeIndex) => {
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
+              const istBoardZiel = Boolean(findeAktionFuerKarte(schlange.id, ausgewaehlteHandkarteId))
               const schlangenLabelTypId = `${komponentenId}-schlange-${schlangeIndex}-label`
               const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
 
               return (
                 <li
                   key={schlange.id}
-                  className={`schlangekarte schlangekarte--eigene${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
+                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
@@ -322,6 +328,9 @@ export default function Schlangenbereich({
                   <p id={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe`} className="schlangen-drop-hinweis">
                     Klicke auf eine Anlege-Schaltfläche oder lege die ausgewählte Karte direkt auf die Schlange.
                   </p>
+                  {istBoardZiel && (
+                    <span className="schlangen-zielhinweis">Ausgewählte Karte hier anlegen.</span>
+                  )}
                   {anlegeAktionen.length > 0 && (
                     <div className="schlangekarte__anlegeaktionen" aria-label={`Anlegeaktionen für ${schlange.id}`}>
                       {anlegeAktionen.map((aktion) => (
