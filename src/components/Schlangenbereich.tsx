@@ -222,7 +222,7 @@ export default function Schlangenbereich({
   return (
     <section className="schlangenbereich" aria-labelledby={titelId}>
       <h4 id={titelId}>Schlangenbereich</h4>
-      <p className="schlangen-dragstatus" role="status">{dragOverStatus}</p>
+      <p className="schlangen-dragstatus" role="status" aria-live="polite" aria-atomic="true">{dragOverStatus}</p>
       <section
         className="schlangen-gruppe"
         aria-labelledby={eigeneTitelId}
