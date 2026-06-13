@@ -166,6 +166,12 @@ function App({ initialZustand }: AppProps) {
     ),
     [legaleAktionen],
   )
+  const schlangenblockadeAktionen = useMemo(
+    () => legaleAktionen.filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'SchlangenblockadeSpielen' }> => aktion.typ === 'SchlangenblockadeSpielen',
+    ),
+    [legaleAktionen],
+  )
   const farbendiebAktionen = useMemo(
     () => legaleAktionen.filter(
       (aktion): aktion is Extract<SpielAktion, { typ: 'FarbendiebSpielen' }> => aktion.typ === 'FarbendiebSpielen',
@@ -288,6 +294,7 @@ function App({ initialZustand }: AppProps) {
                 farbenschutzAktionen={farbenschutzAktionen}
                 farbenfusionAktionen={farbenfusionAktionen}
                 schlangenfrassAktionen={schlangenfrassAktionen}
+                schlangenblockadeAktionen={schlangenblockadeAktionen}
                 farbendiebAktionen={farbendiebAktionen}
                 gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
                 ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}

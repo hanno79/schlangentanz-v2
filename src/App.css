@@ -817,6 +817,13 @@ code {
   box-shadow: 0 0 0 4px rgba(164, 222, 2, 0.36), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
 }
 
+.schlangekarte--blockade-ziel {
+  /* ÄNDERUNG 13.06.2026: M2c hebt Schlangenblockade-Ziele als warnende Waldtanz-Gegnerschlangen hervor. */
+  border-color: var(--st-color-tertiary);
+  background: linear-gradient(180deg, rgba(177, 45, 0, 0.34), rgba(255, 188, 170, 0.36));
+  box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.3), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
+}
+
 .schlangekarte__sonderaktion-button {
   margin-top: 0.35rem;
   padding: 0.35rem 0.55rem;
