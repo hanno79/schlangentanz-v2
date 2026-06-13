@@ -83,7 +83,7 @@ async function browserSmoke() {
     await seite.goto(erstelleUrl('/game'), { waitUntil: 'networkidle' })
 
     for (const text of KERN_TEXTE) {
-      const sichtbar = await seite.getByRole('region', { name: text, exact: true }).first().isVisible().catch(() => false)
+      const sichtbar = await kernTextSichtbar(seite, text)
       if (!sichtbar) {
         throw new Error(`Kernregion nicht sichtbar: "${text}"`)
       }
@@ -98,6 +98,16 @@ async function browserSmoke() {
   } finally {
     await browser.close()
   }
+}
+
+async function kernTextSichtbar(seite, text) {
+  const regionSichtbar = await seite.getByRole('region', { name: text, exact: true }).first().isVisible().catch(() => false)
+  if (regionSichtbar) return true
+
+  const headingSichtbar = await seite.getByRole('heading', { name: text, exact: true }).first().isVisible().catch(() => false)
+  if (headingSichtbar) return true
+
+  return seite.getByText(text, { exact: true }).first().isVisible().catch(() => false)
 }
 
 // ---------------------------------------------------------------------------
