@@ -212,12 +212,13 @@ describe('R27 UI-Zug beenden', () => {
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 2/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase starten/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /gegnerzüge bis zu deinem zug abspielen/i })).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /ausspielphase starten/i })).toBeNull()
   })
 })
 
-describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
-  it('startet nach Zugende die Ausspielphase des nächsten Spielers über die Engine', () => {
+describe('R28 UI-Gegnerzug vorspulen', () => {
+  it('spult nach Zugende den KI-Gegner über die Engine bis zum Menschenzug vor', () => {
     const bereich = starteErsteSchlange()
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
@@ -225,15 +226,13 @@ describe('R28 UI-Ausspielphase für nächsten Spieler starten', () => {
 
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 2/i)).toBeInTheDocument()
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase starten/i }))
+    const aktionen = screen.getByRole('region', { name: 'Aktionen' })
+    expect(within(aktionen).queryByRole('button', { name: /neue schlange starten mit karte blau-02/i })).toBeNull()
+    fireEvent.click(within(aktionen).getByRole('button', { name: /gegnerzüge bis zu deinem zug abspielen/i }))
 
-    expect(within(bereich).getByText(/spielschritt im zug: karten ausspielen/i)).toBeInTheDocument()
-    expect(within(bereich).getByText(/aktiver spieler: spieler 2/i)).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ki-aktion ausführen/i })).toBeInTheDocument()
-    expect(
-      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }),
-    ).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /zug beenden/i })).toBeNull()
+    expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Gegnerzug' })).getByText(/Spieler 2: Neue Schlange starten mit Karte blau-02/i)).toBeInTheDocument()
   })
 })
 
@@ -243,11 +242,7 @@ describe('R29 UI-Nachziehen beim nächsten Zug', () => {
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase starten/i }))
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-02/i }))
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /gegnerzüge bis zu deinem zug abspielen/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
@@ -405,13 +400,13 @@ describe('R32 UI-Spielphase und Endrunde', () => {
     render(<App initialZustand={{ ...endrundenAusloeserZustand(), zugphase: 'Zugabschluss' }} />)
     const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /gegnerzüge bis zu deinem zug abspielen/i }))
     const spielstatusText = screen.getByRole('region', { name: 'Spielstatus' }).textContent ?? ''
 
-    expect(within(bereich).getByText(/aktiver spieler: spieler 3/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/partiestatus: endrunde läuft/i)).toBeInTheDocument()
     expect(within(bereich).queryByText(/partiestatus: endspurt\b/i)).toBeNull()
-    expect(within(bereich).getByText(/verbleibende endrunde: Spieler 3, Spieler 1/i)).toBeInTheDocument()
+    expect(within(bereich).getByText(/verbleibende endrunde: Spieler 1/i)).toBeInTheDocument()
     expect(spielstatusText).not.toMatch(/\bspieler-\d\b/i)
   })
 

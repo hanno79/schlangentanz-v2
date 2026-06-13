@@ -97,6 +97,7 @@ interface AktionenPanelProps {
   onUeberzaehligeKartenAbwerfen: () => void
   onZugBeenden: () => void
   onAusspielphaseStarten: () => void
+  onKiZugVorspulen: () => void
 }
 
 export default function AktionenPanel({
@@ -118,6 +119,7 @@ export default function AktionenPanel({
   onUeberzaehligeKartenAbwerfen,
   onZugBeenden,
   onAusspielphaseStarten,
+  onKiZugVorspulen,
 }: AktionenPanelProps) {
   const aktionenTitelId = useId()
   const empfohleneAktionTitelId = useId()
@@ -138,12 +140,19 @@ export default function AktionenPanel({
         <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
       ) : (
         <>
-          {steuerung === 'KI' && legaleAktionen.length > 0 && (
-            <button onClick={() => onAktionAusfuehren(legaleAktionen[0])}>
-              KI-Aktion ausführen
-            </button>
+          {steuerung === 'KI' && (
+            <section className="aktionen-gruppe aktionen-gruppe--ki-zug" aria-label="Gegnerzug-Steuerung">
+              <p>Die KI spielt ihren Zug automatisch über die Engine.</p>
+              <button onClick={onKiZugVorspulen}>
+                Gegnerzüge bis zu deinem Zug abspielen
+              </button>
+            </section>
           )}
-          <div className="aktionen-dock__schnellzug">
+          {steuerung === 'KI' && reaktionsAktionen.length === 0 ? (
+            <p className="aktionen-dock__ki-hinweis">Einzelne KI-Aktionsbuttons sind ausgeblendet. Nutze den Gegnerzug, damit das Spiel bis zu deinem nächsten Zug weiterläuft.</p>
+          ) : (
+            <>
+              <div className="aktionen-dock__schnellzug">
             <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} aria-live="polite" aria-atomic="true" tabIndex={-1}>
               <h3 id={empfohleneAktionTitelId}>Empfohlene Aktion</h3>
               {legaleAktionen.length > 0 ? (
@@ -233,6 +242,8 @@ export default function AktionenPanel({
             )}
             <p>Spielregeln prüfen jede Aktion vor dem Ausführen.</p>
           </section>
+            </>
+          )}
           {nichtEnumerierteAktionenHinweise.length > 0 && (
             <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-labelledby={weitereVerfuegbareAktionenTitelId}>
               <h3 id={weitereVerfuegbareAktionenTitelId}>Weitere verfügbare Aktionen</h3>

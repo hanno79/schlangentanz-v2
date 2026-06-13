@@ -49,7 +49,6 @@ describe('F14 Spielerführung', () => {
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Ausspielphase beenden/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Aufgabenprüfung beenden/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Zug beenden/i }))
-    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Ausspielphase starten/i }))
 
     expect(within(aktiverSpielerBereich).getByText('Zugführung: KI ist am Zug.')).toBeInTheDocument()
     expect(within(aktiverSpielerBereich).queryByRole('region', { name: 'Spielerführung' })).not.toBeInTheDocument()

@@ -22,14 +22,15 @@ import AktionenPanel from './components/AktionenPanel'
 import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
-import Zugfortschritt from './components/Zugfortschritt'
 import HandkartenPanel from './components/HandkartenPanel'
 import Schlangenbereich from './components/Schlangenbereich'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
+import KiZugBuehne from './components/KiZugBuehne'
+import SpielstatusPanel from './components/SpielstatusPanel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
-import { zugphaseLabel } from './zugphaseLabels'
 import { aktionsLabel } from './aktionsLabel'
+import { spieleKiZuegeBisZumMenschen } from './kiZug'
 function kartenIds(karten: { id: string }[]): string {
   return karten.map(k => k.id).join(', ')
 }
@@ -87,17 +88,6 @@ function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung'
   }
 }
 
-function spielphaseLabel(spielphase: Spielzustand['spielphase']): string {
-  switch (spielphase) {
-    case 'Normal':
-      return 'Laufende Partie'
-    case 'Endspurt':
-      return 'Endrunde läuft'
-    case 'Beendet':
-      return 'Partie beendet'
-  }
-}
-
 function naechsterPflichtschrittLabel(
   zustand: Spielzustand,
   legaleAktionen: SpielAktion[],
@@ -135,6 +125,7 @@ function App({ initialZustand }: AppProps) {
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
+  const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
   const gezogeneHandkarteIdRef = useRef<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const nichtEnumerierteAktionenHinweise = useMemo(() => ermittleNichtEnumerierteAktionenHinweise(zustand), [zustand])
@@ -188,6 +179,7 @@ function App({ initialZustand }: AppProps) {
   )
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
   const gegnerSpieler = zustand.spieler.filter((spieler) => spieler.id !== aktiverSpieler.id)
+  const versteckeKiEinzelaktionen = aktiverSpieler.steuerung === 'KI' && reaktionsAktionen.length === 0
   const ausgewaehlteHandkarte = ausgewaehlteHandkarteAuswahl?.spielerId === aktiverSpieler.id
     ? aktiverSpieler.hand.find((karte) => karte.id === ausgewaehlteHandkarteAuswahl.karteId) ?? null
     : null
@@ -227,6 +219,7 @@ function App({ initialZustand }: AppProps) {
 
   function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand) {
     setLetzteAktion(label)
+    setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     setZustand(updater)
@@ -238,8 +231,18 @@ function App({ initialZustand }: AppProps) {
   function handleUeberzaehligeKartenAbwerfen() { wechsleZustand('Überzählige Karten abwerfen', z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
   function handleZugBeenden() { wechsleZustand('Zug beenden', z => beendeZug(z, { pflichtenErfuellt: true })) }
   function handleAusspielphaseStarten() { wechsleZustand('Ausspielphase starten', z => starteAusspielphase(z)) }
+  function handleKiZugVorspulen() {
+    const ergebnis = spieleKiZuegeBisZumMenschen(zustand)
+    setLetzteAktion('Gegnerzüge vorgespult')
+    setKiZugProtokoll(ergebnis.protokoll)
+    setHervorgehobenesAktionszielId(null)
+    setAusgewaehlteHandkarteAuswahl(null)
+    gezogeneHandkarteIdRef.current = null
+    setZustand(ergebnis.zustand)
+  }
   function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl) {
     setLetzteAktion(`Neues Spiel: Du + ${kiGegner} KI`)
+    setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     gezogeneHandkarteIdRef.current = null
@@ -257,38 +260,7 @@ function App({ initialZustand }: AppProps) {
       <SonnigesNestLobby aktiveKiGegner={zustand.spieler.filter(spieler => spieler.steuerung === 'KI').length} onNeuesSpiel={handleNeuesLobbySpiel} />
       <section className={`spielbereich spielbereich--waldtanz${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
         <SiegerParty zustand={zustand} onNeuesSpiel={handleNeuesLobbySpiel} />
-        <section className="info-panel info-panel--spielstatus waldtanz-hud waldtanz-hud--status" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
-          <h2 id={spielstatusTitelId}>Spielstatus</h2>
-          {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
-          <DebugGruppe titel="Spielphase">
-            <p>Aktueller Spielschritt: {zugphaseLabel(zustand.zugphase)}</p>
-            <p>Spielschritt im Zug: {zugphaseLabel(zustand.zugphase)}</p>
-            <p>Partiestatus: {spielphaseLabel(zustand.spielphase)}</p>
-            {istSpielende && <p>Spielende erreicht.</p>}
-            {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
-              <>
-                <p>Endrunde aktiv: ja</p>
-                <p>Endrunde ausgelöst durch: {zustand.spieler[zustand.endrunde.ausloeserSpielerIndex].name}</p>
-              </>
-            )}
-            {zustand.spielphase !== 'Normal' && (
-              <p>
-                Verbleibende Endrunde:{' '}
-                {zustand.endrunde.verbleibendeSpielerIndizes.length > 0
-                  ? zustand.endrunde.verbleibendeSpielerIndizes.map(i => zustand.spieler[i].name).join(', ')
-                  : 'keine'}
-              </p>
-            )}
-            {istEndspurt && (
-              <>
-                <p>Nachziehen in der Endrunde: aus</p>
-                <p>Verbleibende Züge ohne Nachziehen: {zustand.endrunde.verbleibendeSpielerIndizes.length}</p>
-              </>
-            )}
-            <p>Am Zug: Spieler {zustand.aktiverSpielerIndex + 1} von {zustand.spieler.length}</p>
-          </DebugGruppe>
-          <Zugfortschritt zugphase={zustand.zugphase} />
-        </section>
+        <SpielstatusPanel zustand={zustand} titelId={spielstatusTitelId} istSpielende={istSpielende} istEndspurt={istEndspurt} />
         <div className="spieltisch-gruppe">
           <section className="info-panel info-panel--waldtanz-arena" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
@@ -297,13 +269,13 @@ function App({ initialZustand }: AppProps) {
               <Schlangenbereich
                 aktiverSpieler={aktiverSpieler}
                 gegnerSpieler={gegnerSpieler}
-                karteAnlegenAktionen={karteAnlegenAktionen}
-                neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
-                farbenschutzAktionen={farbenschutzAktionen}
-                farbenfusionAktionen={farbenfusionAktionen}
-                schlangenfrassAktionen={schlangenfrassAktionen}
-                schlangenblockadeAktionen={schlangenblockadeAktionen}
-                farbendiebAktionen={farbendiebAktionen}
+                karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
+                neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
+                farbenschutzAktionen={versteckeKiEinzelaktionen ? [] : farbenschutzAktionen}
+                farbenfusionAktionen={versteckeKiEinzelaktionen ? [] : farbenfusionAktionen}
+                schlangenfrassAktionen={versteckeKiEinzelaktionen ? [] : schlangenfrassAktionen}
+                schlangenblockadeAktionen={versteckeKiEinzelaktionen ? [] : schlangenblockadeAktionen}
+                farbendiebAktionen={versteckeKiEinzelaktionen ? [] : farbendiebAktionen}
                 gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
                 ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                 onAktion={fuhreAktionAus}
@@ -344,7 +316,9 @@ function App({ initialZustand }: AppProps) {
               onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
               onZugBeenden={handleZugBeenden}
               onAusspielphaseStarten={handleAusspielphaseStarten}
+              onKiZugVorspulen={handleKiZugVorspulen}
             />
+            <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} />
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>
               <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>

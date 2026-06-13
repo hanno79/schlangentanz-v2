@@ -423,6 +423,15 @@ body {
   font-weight: 800;
 }
 
+.aktionen-dock__ki-hinweis {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 1rem;
+  border: 2px dashed #063907;
+  border-radius: 999px;
+  background: rgba(236, 255, 227, 0.72);
+  font-weight: 800;
+}
+
 .aktionen-dock__schnellzug {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
@@ -513,6 +522,35 @@ body {
 .aktionen-gruppe--phasenaktion {
   border-color: rgba(75, 103, 0, 0.6);
   background: rgba(164, 222, 2, 0.15);
+}
+
+.aktionen-gruppe--ki-zug {
+  border-color: #063907;
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.42), rgba(255, 188, 170, 0.35));
+  box-shadow: 0 4px 0 #063907;
+}
+
+.ki-zug-buehne {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 3px solid #063907;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, rgba(255, 224, 139, 0.85), rgba(236, 255, 227, 0.92));
+  box-shadow: 0 4px 0 #063907;
+}
+
+.ki-zug-buehne--aktiv {
+  background: radial-gradient(circle at 20% 20%, rgba(255, 188, 170, 0.9), rgba(254, 203, 0, 0.82));
+}
+
+.ki-zug-buehne h3 {
+  margin: 0 0 0.5rem;
+  font-family: var(--st-font-headline);
+}
+
+.ki-zug-buehne__protokoll {
+  margin: 0.75rem 0 0;
+  padding-left: 1.4rem;
 }
 
 h1 {
