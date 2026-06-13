@@ -26,6 +26,7 @@ import Zugfortschritt from './components/Zugfortschritt'
 import HandkartenPanel from './components/HandkartenPanel'
 import Schlangenbereich from './components/Schlangenbereich'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
+import SiegerParty from './components/SiegerParty'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { zugphaseLabel } from './zugphaseLabels'
 import { aktionsLabel } from './aktionsLabel'
@@ -254,7 +255,8 @@ function App({ initialZustand }: AppProps) {
         <ul><li>Baue farbige Schlangen</li><li>Erfülle Aufgaben</li><li>Nutze Sonderkarten</li></ul>
       </section>
       <SonnigesNestLobby aktiveKiGegner={zustand.spieler.filter(spieler => spieler.steuerung === 'KI').length} onNeuesSpiel={handleNeuesLobbySpiel} />
-      <section className="spielbereich spielbereich--waldtanz" aria-label="Spielbereich">
+      <section className={`spielbereich spielbereich--waldtanz${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
+        <SiegerParty zustand={zustand} onNeuesSpiel={handleNeuesLobbySpiel} />
         <section className="info-panel info-panel--spielstatus waldtanz-hud waldtanz-hud--status" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spielstatusTitelId}>Spielstatus</h2>
           {/* ÄNDERUNG 08.06.2026: R120 benennt Entwicklungsdaten-Summaries nach Spielbereichen statt Statusdetails. */}
