@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import Schlangenbuch from './Schlangenbuch'
 
 export type KiGegnerAnzahl = 1 | 2 | 3
 
@@ -55,6 +56,7 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
           </button>
         ))}
       </div>
+      <Schlangenbuch />
     </section>
   )
 }
