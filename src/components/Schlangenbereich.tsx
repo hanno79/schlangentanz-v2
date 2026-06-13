@@ -8,8 +8,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug�
 # ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für sichtbare Karten in Schlangenreihen.
 # ÄNDERUNG 12.06.2026: R178 markiert board-lokale Ziele für die ausgewählte Handkarte sichtbar.
 # ÄNDERUNG 12.06.2026: R180 macht Farbenfusion-Zielpaare nach Auswahl board-nah spielbar.
-# ÄNDERUNG 12.06.2026: R181 macht eigene Schlangenfrass-Zielkarten nach Auswahl board-nah spielbar.
-# ÄNDERUNG 12.06.2026: R182 macht Farbenschutz-Zielschlangen nach Auswahl board-nah spielbar.
+# ÄNDERUNG 12./13.06.2026: R181-R183 machen Schlangenfrass, Farbenschutz und Farbendieb board-nah spielbar.
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
@@ -23,7 +22,7 @@ interface SchlangenbereichProps {
   neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }>[]
   farbenschutzAktionen?: Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }>[]
   farbenfusionAktionen?: Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }>[]
-  schlangenfrassAktionen?: Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }>[]
+  schlangenfrassAktionen?: Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }>[]; farbendiebAktionen?: Extract<SpielAktion, { typ: 'FarbendiebSpielen' }>[]
   gezogeneHandkarteIdRef: MutableRefObject<string | null>
   ausgewaehlteHandkarteId: string | null
   onAktion: (aktion: SpielAktion) => void
@@ -73,8 +72,7 @@ export default function Schlangenbereich({
   karteAnlegenAktionen,
   neueSchlangeStartenAktionen,
   farbenschutzAktionen = [],
-  farbenfusionAktionen = [],
-  schlangenfrassAktionen = [],
+  farbenfusionAktionen = [], schlangenfrassAktionen = [], farbendiebAktionen = [],
   gezogeneHandkarteIdRef,
   ausgewaehlteHandkarteId,
   onAktion,
@@ -115,6 +113,11 @@ export default function Schlangenbereich({
       const [ziel] = aktion.ziele
       return aktion.handkartenId === handkartenId && aktion.ziele.length === 1 && ziel.schlangenId === schlangeId && ziel.kartenId === zielKartenId
     }) ?? null
+  }
+
+  function findeFarbendiebAktionen(zielSpielerId: string, zielSchlangenId: string, zielKartenId: string, handkartenId: string | null) {
+    if (!handkartenId) return []
+    return farbendiebAktionen.filter((aktion) => aktion.handkartenId === handkartenId && aktion.zielSpielerId === zielSpielerId && aktion.zielSchlangenId === zielSchlangenId && aktion.zielKartenId === zielKartenId)
   }
 
   function fuehreAktion(aktion: SpielAktion | null) {
@@ -455,17 +458,32 @@ export default function Schlangenbereich({
                   <span>Gehört zu: {spieler.name}</span>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
-                    {schlange.karten.map((karte) => (
-                      <div
-                        key={karte.id}
-                        className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}`}
-                        role="listitem"
-                        aria-label={schlangenKartenAriaLabel(karte)}
-                      >
-                        <strong>{karte.id}</strong>
-                        <span>{schlangenKartenKurzlabel(karte)}</span>
-                      </div>
-                    ))}
+                    {schlange.karten.map((karte) => {
+                      const diebAktionen = findeFarbendiebAktionen(spieler.id, schlange.id, karte.id, ausgewaehlteHandkarteId)
+                      return (
+                        <div
+                          key={karte.id}
+                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${diebAktionen.length > 0 ? ' schlangekarte__karte--sonderaktion-ziel schlangekarte__karte--farbendieb-ziel' : ''}`}
+                          role="listitem"
+                          aria-label={schlangenKartenAriaLabel(karte)}
+                        >
+                          <strong>{karte.id}</strong>
+                          <span>{schlangenKartenKurzlabel(karte)}</span>
+                          {diebAktionen.map((aktion) => (
+                            <button
+                              key={`${aktion.handkartenId}-${aktion.eigeneSchlangenId}-${aktion.einfügeIndex}`}
+                              type="button"
+                              className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--dieb"
+                              aria-label={`Farbendieb im Schlangenbereich mit Karte ${aktion.handkartenId} von Schlange ${aktion.zielSchlangenId} Karte ${aktion.zielKartenId} auf Schlange ${aktion.eigeneSchlangenId} an Position ${aktion.einfügeIndex + 1}`}
+                              title={aktionsLabel(aktion)}
+                              onClick={() => onAktion(aktion)}
+                            >
+                              Farbendieb auf Position {aktion.einfügeIndex + 1}
+                            </button>
+                          ))}
+                        </div>
+                      )
+                    })}
                   </div>
                   <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>
                 </li>

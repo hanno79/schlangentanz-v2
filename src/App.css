@@ -804,6 +804,12 @@ code {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.26), 0 2px 0 rgba(6, 57, 7, 0.2);
 }
 
+.schlangekarte__karte--farbendieb-ziel {
+  /* ÄNDERUNG 13.06.2026: R183 hebt Farbendieb-Ziele als Beutekarten im Waldtanz hervor. */
+  background: linear-gradient(180deg, rgba(255, 188, 170, 0.72), rgba(254, 203, 0, 0.38));
+  box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.3), 0 2px 0 rgba(6, 57, 7, 0.2);
+}
+
 .schlangekarte--farbenschutz-ziel {
   /* ÄNDERUNG 12.06.2026: R182 hebt Farbenschutz-Ziele als geschützte Waldlichtung hervor. */
   border-color: var(--st-color-primary);

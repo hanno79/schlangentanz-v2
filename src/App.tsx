@@ -166,6 +166,12 @@ function App({ initialZustand }: AppProps) {
     ),
     [legaleAktionen],
   )
+  const farbendiebAktionen = useMemo(
+    () => legaleAktionen.filter(
+      (aktion): aktion is Extract<SpielAktion, { typ: 'FarbendiebSpielen' }> => aktion.typ === 'FarbendiebSpielen',
+    ),
+    [legaleAktionen],
+  )
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
     () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
@@ -282,6 +288,7 @@ function App({ initialZustand }: AppProps) {
                 farbenschutzAktionen={farbenschutzAktionen}
                 farbenfusionAktionen={farbenfusionAktionen}
                 schlangenfrassAktionen={schlangenfrassAktionen}
+                farbendiebAktionen={farbendiebAktionen}
                 gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
                 ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                 onAktion={fuhreAktionAus}
