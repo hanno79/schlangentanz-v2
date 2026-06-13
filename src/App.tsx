@@ -25,6 +25,8 @@ import useAktionszielFokus from './hooks/useAktionszielFokus'
 import Zugfortschritt from './components/Zugfortschritt'
 import HandkartenPanel from './components/HandkartenPanel'
 import Schlangenbereich from './components/Schlangenbereich'
+import SonnigesNestLobby from './components/SonnigesNestLobby'
+import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { zugphaseLabel } from './zugphaseLabels'
 import { aktionsLabel } from './aktionsLabel'
 function kartenIds(karten: { id: string }[]): string {
@@ -235,19 +237,23 @@ function App({ initialZustand }: AppProps) {
   function handleUeberzaehligeKartenAbwerfen() { wechsleZustand('Überzählige Karten abwerfen', z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
   function handleZugBeenden() { wechsleZustand('Zug beenden', z => beendeZug(z, { pflichtenErfuellt: true })) }
   function handleAusspielphaseStarten() { wechsleZustand('Ausspielphase starten', z => starteAusspielphase(z)) }
+  function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl) {
+    setLetzteAktion(`Neues Spiel: Du + ${kiGegner} KI`)
+    setHervorgehobenesAktionszielId(null)
+    setAusgewaehlteHandkarteAuswahl(null)
+    gezogeneHandkarteIdRef.current = null
+    setZustand(starteAusspielphase(erstelleSpielzustand(kiGegner + 1)))
+  }
 
   return (
     <main className="app-shell">
       <section className="hero" aria-labelledby={heroTitelId}>
         <p className="eyebrow">Das Kartenspiel</p>
-        <h1 id={heroTitelId}>Schlangentanz</h1>
+        <h1 className="app-title" id={heroTitelId}>Schlangentanz</h1>
         <p>Bereit für deine nächste Schlange</p>
-        <ul>
-          <li>Baue farbige Schlangen</li>
-          <li>Erfülle Aufgaben</li>
-          <li>Nutze Sonderkarten</li>
-        </ul>
+        <ul><li>Baue farbige Schlangen</li><li>Erfülle Aufgaben</li><li>Nutze Sonderkarten</li></ul>
       </section>
+      <SonnigesNestLobby aktiveKiGegner={zustand.spieler.filter(spieler => spieler.steuerung === 'KI').length} onNeuesSpiel={handleNeuesLobbySpiel} />
       <section className="spielbereich spielbereich--waldtanz" aria-label="Spielbereich">
         <section className="info-panel info-panel--spielstatus waldtanz-hud waldtanz-hud--status" aria-labelledby={spielstatusTitelId} aria-live="polite" aria-atomic="true">
           <h2 id={spielstatusTitelId}>Spielstatus</h2>
