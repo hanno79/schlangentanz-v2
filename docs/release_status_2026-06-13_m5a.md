@@ -29,7 +29,7 @@ Mittlerer Playability-Vertical nach M4b: Beim echten Browser-Durchspielen blocki
 - Targeted: `npm test -- --run src/App.m5a_board_targets_dock_clearance.test.tsx src/App.r182_farbenschutz_boardziel.test.tsx src/App.m1b_aktionsdock_layout.test.tsx` → 3 Testdateien / 4 Tests bestanden.
 - Smoke-Script Targeted: `npm test -- --run tests/r107_live_smoke_script.test.ts src/App.m5a_board_targets_dock_clearance.test.tsx` → 2 Testdateien / 4 Tests bestanden.
 - Full Gates: `npm test -- --run` → 197 Testdateien / 696 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` grün.
-- Production Deploy/Smoke: Feature-Commit wurde per Vercel Production auf die stabile Alias bereitgestellt; nach Smoke-Skript-/Doku-Finalisierung wird der finale HEAD erneut deployt und gesmoked.
+- Production Deploy/Smoke: Feature-Commit und anschließender Smoke-Skript-/Doku-Finalisierungsstand wurden per Vercel Production auf die stabile Alias bereitgestellt und erneut gesmoked; `origin/main`, Release-Dokumentation und Production-Alias zeigen denselben Stand.
 - Production Board-Smoke: `/` und `/game` HTTP 200; Playwright klickt ein sichtbares `Schlangenbereich-Start`-Boardziel auf der Production-Alias, sieht `Zuletzt ausgeführt: Neue Schlange starten`, eine neue eigene Schlange, `dockPointerEvents: none`, `dockButtonPointerEvents: auto`, `boardPosition: relative`, `boardZIndex: 3`, `startScrollMarginBottom: 324px`, keine Console-/Page-Errors.
 
 ## Was spielbarer wurde
