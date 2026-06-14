@@ -15,6 +15,7 @@ import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'rea
 import type { SpielAktion, Spieler, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 import GegnerSchlangenListe from './GegnerSchlangenListe'
+import WaldtanzZielkompass from './WaldtanzZielkompass'
 
 interface SchlangenbereichProps {
   aktiverSpieler: Spieler
@@ -265,6 +266,16 @@ export default function Schlangenbereich({
     <section className="schlangenbereich schlangenbereich--waldlichtung" aria-labelledby={titelId}>
       <h4 id={titelId}>Schlangenbereich</h4>
       <p className="schlangen-dragstatus" role="status" aria-live="polite" aria-atomic="true">{dragOverStatus}</p>
+      <WaldtanzZielkompass
+        ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
+        karteAnlegenAktionen={karteAnlegenAktionen}
+        neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+        farbenschutzAktionen={farbenschutzAktionen}
+        farbenfusionAktionen={farbenfusionAktionen}
+        schlangenfrassAktionen={schlangenfrassAktionen}
+        schlangenblockadeAktionen={schlangenblockadeAktionen}
+        farbendiebAktionen={farbendiebAktionen}
+      />
       <section
         className="schlangen-gruppe"
         aria-labelledby={eigeneTitelId}
