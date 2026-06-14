@@ -2432,6 +2432,24 @@ code {
   font-weight: 900;
 }
 
+.waldtanz-questkarte__sammelbutton {
+  width: fit-content;
+  padding: 0.5rem 0.9rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.waldtanz-questkarte__sammelbutton:active {
+  transform: translateY(4px);
+  box-shadow: none;
+}
+
 .schlangenbereich--waldlichtung {
   position: relative;
   overflow: hidden;

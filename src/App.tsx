@@ -296,7 +296,7 @@ function App({ initialZustand }: AppProps) {
               <WaldtanzAblage zustand={zustand} />
               <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
               <WaldtanzKartenpop aktionLabel={letzteAktion} />
-              <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} />
+              <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} />
               <Schlangenbereich
                 zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
                 aktiverSpieler={aktiverSpieler}

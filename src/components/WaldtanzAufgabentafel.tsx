@@ -11,15 +11,17 @@ import type { CSSProperties } from 'react'
 interface WaldtanzAufgabentafelProps {
   zustand: Spielzustand
   istEndspurt: boolean
+  onAufgabenpruefungBeenden: () => void
 }
 
 function aufgabenPunkte(aufgabe: AufgabenkarteInfo, istEndspurt: boolean): string {
   return istEndspurt ? `${aufgabe.punkte} Punkte ×2` : `${aufgabe.punkte} Punkte`
 }
 
-export default function WaldtanzAufgabentafel({ zustand, istEndspurt }: WaldtanzAufgabentafelProps) {
+export default function WaldtanzAufgabentafel({ zustand, istEndspurt, onAufgabenpruefungBeenden }: WaldtanzAufgabentafelProps) {
   const erfuellteIds = new Set(ermittleErfuellteOffeneAufgaben(zustand).map(aufgabe => aufgabe.id))
   const bereiteQuests = erfuellteIds.size
+  const kannQuestsEinsammeln = zustand.zugphase === 'Aufgabenpruefung' && zustand.spieler[zustand.aktiverSpielerIndex]?.steuerung === 'Mensch' && !zustand.pendingReaktion
 
   return (
     <section className="waldtanz-aufgabentafel" aria-label="Waldtanz-Aufgabentafel">
@@ -52,6 +54,11 @@ export default function WaldtanzAufgabentafel({ zustand, istEndspurt }: Waldtanz
                 </span>
                 <p>{aufgabe.bedingung}</p>
                 {istErfuellbar && <p className="waldtanz-questkarte__sammelhinweis">In der nächsten Aufgabenprüfung kassierst du diese Punkte.</p>}
+                {istErfuellbar && kannQuestsEinsammeln && (
+                  <button type="button" className="waldtanz-questkarte__sammelbutton" onClick={onAufgabenpruefungBeenden}>
+                    Questkarte {aufgabe.name} einsammeln
+                  </button>
+                )}
               </li>
             )
           })}
