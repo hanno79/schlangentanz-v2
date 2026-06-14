@@ -39,6 +39,10 @@ function karteSymbol(karte: Spielkarte): string {
   }
 }
 
+function karteFarbklasse(karte: Spielkarte): string {
+  return karte.typ === 'Farbkarte' ? ` handkarten-preview--farbe-${farbeCssKlasse(karte.farbe)}` : ' handkarten-preview--sonderkarte'
+}
+
 export default function HandkartenPanel({
   handkarten,
   ausgewaehlteHandkarte,
@@ -53,13 +57,28 @@ export default function HandkartenPanel({
     <section className="handkarten-panel" aria-labelledby={handkartenTitelId}>
       <h4><span id={handkartenTitelId}>Handkarten</span> als Kartenleiste</h4>
       {ausgewaehlteHandkarte ? (
-        <section className="handkarten-detail" aria-labelledby={detailTitelId}>
-          <h5 className="handkarten-detail__titel" id={detailTitelId}>
-            Ausgewählte Handkarte: {ausgewaehlteHandkarte.id}
-          </h5>
-          <p>{karteKurzLabel(ausgewaehlteHandkarte)}</p>
-          <p>Ausgewählte Karte schwebt über dem Fächer.</p>
-          <p>Klicke dieselbe Karte erneut, um sie wieder abzuwählen.</p>
+        <section className={`handkarten-detail handkarten-preview${karteFarbklasse(ausgewaehlteHandkarte)}`} aria-labelledby={detailTitelId}>
+          <article className="handkarten-preview__karte" aria-label={`Vorschau ${ausgewaehlteHandkarte.id}`}>
+            <span className="handkarten-preview__eyebrow">Zugkarte bereit</span>
+            <span className="handkarten-preview__symbol" aria-hidden="true">{karteSymbol(ausgewaehlteHandkarte)}</span>
+            <strong>{ausgewaehlteHandkarte.id}</strong>
+            <span className="handkarten-preview__typ">
+              {ausgewaehlteHandkarte.typ === 'Farbkarte'
+                ? `Farbkarte ${ausgewaehlteHandkarte.farbe}`
+                : `Sonderkarte ${ausgewaehlteHandkarte.name}`}
+            </span>
+            <span className="handkarten-preview__werteplakette">
+              {ausgewaehlteHandkarte.typ === 'Farbkarte' ? `${ausgewaehlteHandkarte.punkte} Punkte` : 'Sonderaktion'}
+            </span>
+          </article>
+          <div className="handkarten-preview__text">
+            <h5 className="handkarten-detail__titel" id={detailTitelId}>Ausgewählte Handkarte: {ausgewaehlteHandkarte.id}</h5>
+            <p className="handkarten-preview__headline">Aktuelle Karte am Waldtanz-Tisch</p>
+            <p>{karteKurzLabel(ausgewaehlteHandkarte)}</p>
+            <p>Ausgewählte Karte schwebt über dem Fächer.</p>
+            <p>Ziehe sie auf eine leuchtende Brettzone oder klicke ein Ziel im Schlangenbereich.</p>
+            <p>Klicke dieselbe Karte erneut, um sie wieder abzuwählen.</p>
+          </div>
         </section>
       ) : (
         <p className="handkarten-status">Keine Handkarte ausgewählt.</p>

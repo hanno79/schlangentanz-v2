@@ -1475,6 +1475,103 @@ code {
   box-shadow: 0 6px 14px rgba(6, 57, 7, 0.08);
 }
 
+.handkarten-preview {
+  display: grid;
+  grid-template-columns: minmax(6rem, 9rem) minmax(0, 1fr);
+  align-items: center;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.75rem;
+  background: linear-gradient(135deg, rgba(255, 224, 139, 0.92), rgba(236, 255, 227, 0.86));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.handkarten-preview__karte {
+  display: grid;
+  gap: 0.35rem;
+  aspect-ratio: 2 / 3;
+  align-content: space-between;
+  padding: 0.75rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 8px 0 var(--st-color-border-strong);
+  transform: rotate(-3deg) translateY(-0.2rem);
+}
+
+.handkarten-preview__eyebrow,
+.handkarten-preview__typ,
+.handkarten-preview__werteplakette {
+  width: fit-content;
+  padding: 0.16rem 0.5rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  font-family: var(--st-font-headline);
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.handkarten-preview__eyebrow {
+  background: var(--st-color-secondary-container);
+  text-transform: uppercase;
+}
+
+.handkarten-preview__symbol {
+  display: grid;
+  place-items: center;
+  min-height: 3rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 1rem;
+  font-size: 2rem;
+}
+
+.handkarten-preview--farbe-blau .handkarten-preview__symbol {
+  background: linear-gradient(160deg, #cfe8ff, #7bbcff);
+}
+
+.handkarten-preview--farbe-rot .handkarten-preview__symbol {
+  background: linear-gradient(160deg, #ffd2c9, #ff8b6b);
+}
+
+.handkarten-preview--farbe-gelb .handkarten-preview__symbol {
+  background: linear-gradient(160deg, #fff4a8, #fecb00);
+}
+
+.handkarten-preview--farbe-violett .handkarten-preview__symbol {
+  background: linear-gradient(160deg, #ead7ff, #b586ff);
+}
+
+.handkarten-preview--farbe-braun .handkarten-preview__symbol {
+  background: linear-gradient(160deg, #f0d2a8, #b47835);
+}
+
+.handkarten-preview--farbe-gruen .handkarten-preview__symbol,
+.handkarten-preview--sonderkarte .handkarten-preview__symbol {
+  background: linear-gradient(160deg, #d6ffc9, #a4de02);
+}
+
+.handkarten-preview__text {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.handkarten-preview__headline {
+  margin: 0;
+  font-family: var(--st-font-headline);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+@media (max-width: 520px) {
+  .handkarten-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .handkarten-preview__karte {
+    max-width: 9rem;
+  }
+}
+
 .handkarten-detail__titel {
   margin: 0;
   font-weight: 800;
