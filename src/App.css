@@ -698,6 +698,66 @@ body {
   gap: 0.65rem;
 }
 
+.partiefortschritt {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(164, 222, 2, 0.82), transparent 7rem),
+    linear-gradient(135deg, rgba(236, 255, 227, 0.95), rgba(255, 188, 170, 0.62));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.partiefortschritt__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.partiefortschritt__kopf h4,
+.partiefortschritt p {
+  margin: 0;
+}
+
+.partiefortschritt__kopf h4 {
+  margin-right: auto;
+  font-family: var(--st-font-headline);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.partiefortschritt__status,
+.partiefortschritt__endrunde {
+  padding: 0.25rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  font-weight: 900;
+}
+
+.partiefortschritt__spur {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 0.65rem;
+}
+
+.partiefortschritt__spur p {
+  padding: 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 3px 0 rgba(6, 57, 7, 0.72);
+  font-weight: 900;
+}
+
+.partiefortschritt__endrunde {
+  justify-self: start;
+  background: rgba(254, 203, 0, 0.72);
+}
+
 h1 {
   margin: 0.25rem 0 1rem;
   font-size: clamp(2.25rem, 7vw, 4.75rem);

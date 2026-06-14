@@ -30,6 +30,7 @@ import KiZugBuehne from './components/KiZugBuehne'
 import SpielstatusPanel from './components/SpielstatusPanel'
 import Zugpfad from './components/Zugpfad'
 import ZugKompass from './components/ZugKompass'
+import Partiefortschritt from './components/Partiefortschritt'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -281,6 +282,7 @@ function App({ initialZustand }: AppProps) {
                 onAusspielphaseStarten={handleAusspielphaseStarten}
                 onKiZugVorspulen={handleKiZugVorspulen}
               />
+              <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
               <Schlangenbereich
                 aktiverSpieler={aktiverSpieler}
                 gegnerSpieler={gegnerSpieler}
