@@ -33,6 +33,7 @@ import ZugKompass from './components/ZugKompass'
 import Partiefortschritt from './components/Partiefortschritt'
 import WaldtanzSpielerrahmen from './components/WaldtanzSpielerrahmen'
 import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
+import WaldtanzAblage from './components/WaldtanzAblage'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -287,6 +288,7 @@ function App({ initialZustand }: AppProps) {
                 onKiZugVorspulen={handleKiZugVorspulen}
               />
               <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
+              <WaldtanzAblage zustand={zustand} />
               <Schlangenbereich
                 aktiverSpieler={aktiverSpieler}
                 gegnerSpieler={gegnerSpieler}
