@@ -32,6 +32,7 @@ import Zugpfad from './components/Zugpfad'
 import ZugKompass from './components/ZugKompass'
 import Partiefortschritt from './components/Partiefortschritt'
 import WaldtanzSpielerrahmen from './components/WaldtanzSpielerrahmen'
+import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -262,8 +263,9 @@ function App({ initialZustand }: AppProps) {
         <ul><li>Baue farbige Schlangen</li><li>Erfülle Aufgaben</li><li>Nutze Sonderkarten</li></ul>
       </section>
       <SonnigesNestLobby aktiveKiGegner={zustand.spieler.filter(spieler => spieler.steuerung === 'KI').length} onNeuesSpiel={handleNeuesLobbySpiel} />
-      <section className={`spielbereich spielbereich--waldtanz${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
+      <section id="spielbereich" className={`spielbereich spielbereich--waldtanz${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
         <SiegerParty zustand={zustand} onNeuesSpiel={handleNeuesLobbySpiel} />
+        <WaldtanzSeitenmenue />
         <SpielstatusPanel zustand={zustand} titelId={spielstatusTitelId} istSpielende={istSpielende} istEndspurt={istEndspurt} />
         <div className="spieltisch-gruppe">
           <section className="info-panel info-panel--waldtanz-arena" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
