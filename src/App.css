@@ -406,6 +406,8 @@ body {
   position: sticky;
   bottom: 0.75rem;
   z-index: 4;
+  max-height: clamp(18rem, 46vh, 30rem);
+  overflow: auto;
   border-radius: 2rem;
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.92), rgba(236, 255, 227, 0.9));
   pointer-events: none;

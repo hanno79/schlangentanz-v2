@@ -40,6 +40,8 @@ describe('M1b Waldtanz-Aktionsdock', () => {
     expect(within(weitereAktionen).getByText('Spielregeln prüfen jede Aktion vor dem Ausführen.')).toBeInTheDocument()
 
     expect(cssBlock('aktionen-panel--waldtanz-dock')).toMatch(/position:\s*sticky/)
+    expect(cssBlock('aktionen-panel--waldtanz-dock')).toMatch(/max-height:\s*clamp\(18rem,\s*46vh,\s*30rem\)/)
+    expect(cssBlock('aktionen-panel--waldtanz-dock')).toMatch(/overflow:\s*auto/)
     expect(cssBlock('aktionen-dock__schnellzug')).toMatch(/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(min\(100%,\s*220px\),\s*1fr\)\)/)
     expect(cssBlock('aktionen-gruppe--weitere')).toMatch(/max-height:\s*clamp\(10rem,\s*26vh,\s*18rem\)/)
     expect(cssBlock('aktions-liste')).toMatch(/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(min\(100%,\s*180px\),\s*1fr\)\)/)
