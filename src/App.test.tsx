@@ -309,7 +309,8 @@ describe('R30 UI-Wertungsanzeige', () => {
       }),
     )
 
-    expect(within(screen.getByRole('region', { name: 'Spieltisch' })).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
+    const schlangenbereich = within(screen.getByRole('region', { name: 'Spieltisch' })).getByRole('region', { name: 'Schlangenbereich' })
+    expect(within(schlangenbereich).getByRole('button', { name: /Schlange schlange-spieler-1-1/i })).toBeInTheDocument()
     expect(within(bereich).getByText(/punktestand von spieler 1: 3 punkte/i)).toBeInTheDocument()
   })
 })

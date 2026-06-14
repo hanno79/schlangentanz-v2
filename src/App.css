@@ -1867,6 +1867,50 @@ code {
   margin: 0;
 }
 
+.waldtanz-zugspur {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.55rem;
+  padding: clamp(0.85rem, 2vw, 1.15rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.86), rgba(236, 255, 227, 0.9));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-zugspur__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.waldtanz-zugspur h4,
+.waldtanz-zugspur p {
+  margin: 0;
+}
+
+.waldtanz-zugspur__label,
+.waldtanz-zugspur__ablage {
+  width: fit-content;
+  padding: 0.16rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 900;
+}
+
+.waldtanz-zugspur__aktion {
+  font-family: var(--st-font-headline);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 900;
+}
+
+.waldtanz-zugspur__naechster-schritt {
+  font-weight: 800;
+}
+
 .schlangenbereich--waldlichtung {
   position: relative;
   overflow: hidden;
