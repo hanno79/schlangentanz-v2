@@ -316,12 +316,8 @@ function App({ initialZustand }: AppProps) {
                     aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },
                   )
                 }
-                onKarteDragStart={(karteId) => {
-                  gezogeneHandkarteIdRef.current = karteId
-                }}
-                onKarteDragEnd={() => {
-                  gezogeneHandkarteIdRef.current = null
-                }}
+                onKarteDragStart={(karteId) => { gezogeneHandkarteIdRef.current = karteId; setAusgewaehlteHandkarteAuswahl({ spielerId: aktiverSpieler.id, karteId }) }}
+                onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null) }}
               />
             </section>
             <AktionenPanel

@@ -1542,8 +1542,14 @@ code {
   cursor: grabbing;
 }
 
+@keyframes handkarte-wackelt {
+  0%, 100% { transform: translateY(-0.9rem) rotate(-1.5deg) scale(1.08); }
+  50% { transform: translateY(-1.15rem) rotate(1.5deg) scale(1.1); }
+}
+
 .handkarte--ausgewaehlt .handkarte__button--karte {
   border-color: var(--st-color-tertiary);
+  animation: handkarte-wackelt 900ms ease-in-out infinite;
   box-shadow: 0 0 0 3px rgba(177, 45, 0, 0.38), 0 9px 0 var(--st-color-border-strong);
   transform: translateY(-0.75rem) scale(1.05);
 }
@@ -2311,7 +2317,27 @@ code {
   /* ÄNDERUNG 12.06.2026: R178 macht nach Kartenauswahl direkte Board-Ziele sichtbar und überschreibt Basisflächen. */
   border-color: var(--st-color-tertiary);
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.32), rgba(255, 255, 255, 0.56));
-  box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.18), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
+  animation: zielkreis-pulsiert 1.1s ease-in-out infinite;
+  box-shadow: 0 0 0 6px rgba(254, 203, 0, 0.42), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
+}
+
+@keyframes zielkreis-pulsiert {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handkarte--ausgewaehlt .handkarte__button--karte {
+    /* handkarte-wackelt */
+    animation: none;
+  }
+
+  .schlangekarte--zielbereit,
+  .schlangekarte--farbenschutz-ziel,
+  .schlangekarte--haeutung-ziel,
+  .schlangen-startzone--zielbereit {
+    animation: none;
+  }
 }
 
 .schlangekarte__karte--sonderaktion-ziel {
