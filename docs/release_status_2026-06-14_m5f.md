@@ -33,6 +33,12 @@ Warum weder Mikro-Slice noch Big-Bang:
 
 Der Waldtanz-Tisch liest sich jetzt stärker wie ein Mehrspieler-Brettspiel: Bei 3 KI-Gegnern liegen alle verdeckten Gegnerhände als eigene Tischplätze aus, der nächste Halt ist direkt im Spielerrahmen sichtbar, und nach dem KI-Vorspulen meldet der Rahmen die Rückkehr zum Menschen. Spieler müssen dafür nicht mehr in Spielerübersicht oder Debugstatus schauen.
 
+## Commit / Deploy / Smoke
+
+- Feature-Commit/Push: `9b2ec96 — M5f: Waldtanz-Tischrunde sichtbar machen` auf `origin/main`.
+- Deploy: Vercel Production auf stabile Alias `https://schlangentanz-v2.vercel.app` bereitgestellt (`READY`).
+- Smoke: `npm run smoke:production` grün mit `/` und `/game` HTTP 200. M5f-Browser-Smoke: `/` und `/game` HTTP 200; 3-KI-Lobby → `Waldtanz-Spielerrahmen` mit `Tischrunde: 4 Spieler`, 3 Gegnerplätzen, 15 Kartenrücken, transformierter nächster-Zug-Plakette, aktiver Plaketten-Outline; erster Menschenzug → `Aktiv — Spieler 2`/`Nächster Zug: Spieler 3`; KI-Vorspulen → `Gegnerzug zurück bei dir`/`Du — Spieler 1`; keine Console-/Page-Errors.
+
 ## Nächste mittlere Lücke
 
 M5g sollte den bounded Mehrzug-/Endspurt-Pfad weiter anheben: entweder ein Browser-Flow, der Partiefortschritt/Tischrunde über mehrere komplette Runden bis kurz vor Endspurt beweist, oder ein kleiner Engine-/Fixture-Hebel für zuverlässige Endspurt-Smokes, ohne neue dominante Buttonlisten einzubauen.
