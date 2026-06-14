@@ -1628,6 +1628,49 @@ code {
   transform: translateY(-0.08rem);
 }
 
+.schlangekarte__kartenreihe--pfad {
+  position: relative;
+  isolation: isolate;
+  padding-block: 0.35rem;
+}
+
+.schlangekarte__kartenreihe--pfad::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 1rem;
+  right: 1rem;
+  top: 50%;
+  height: 0.55rem;
+  border: 2px solid rgba(6, 57, 7, 0.24);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(164, 222, 2, 0.6), rgba(254, 203, 0, 0.55), rgba(177, 45, 0, 0.26));
+}
+
+.schlangekarte__pfadmarke {
+  width: fit-content;
+  padding: 0.08rem 0.45rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.schlangekarte__karte.schlangekarte__karte--kopf {
+  transform: translateY(-0.25rem) rotate(-2deg);
+}
+
+.schlangekarte__karte.schlangekarte__karte--schwanz {
+  transform: translateY(0.25rem) rotate(2deg);
+}
+
+.schlangekarte__karte.schlangekarte__karte--koerper {
+  transform: translateY(0);
+}
+
 .schlangekarte__karte--farbkarte {
   /* ÄNDERUNG 12.06.2026: R177 macht Schlangenkarten als farbige Spielflächen erkennbar. */
   border-color: var(--kartenfarbe-rand, rgba(6, 57, 7, 0.32));

@@ -364,22 +364,28 @@ export default function Schlangenbereich({
                   <span id={schlangenLabelTypId}>Schlange</span>
                   <strong id={schlangenLabelNameId}>{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
-                  <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
+                  <div className="schlangekarte__kartenreihe schlangekarte__kartenreihe--pfad" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
                     {schlange.karten.map((karte, kartenIndex) => {
                       const farbenfusionPaar = ermittleFarbenfusionPaarInfo(schlange.karten, kartenIndex, schlange.id, ausgewaehlteHandkarteId, farbenfusionAktionen)
                       const farbenfusionAktion = farbenfusionPaar?.istStartkarte ? farbenfusionPaar.aktion : null
                       const schlangenfrassAktion = findeSchlangenfrassAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
                       const istFarbenfusionPaar = Boolean(farbenfusionPaar)
                       const istSonderaktionZiel = Boolean(farbenfusionAktion || istFarbenfusionPaar || schlangenfrassAktion)
+                      const istKopf = kartenIndex === 0
+                      const istSchwanz = kartenIndex === schlange.karten.length - 1
+                      const pfadKlasse = `${istKopf ? ' schlangekarte__karte--kopf' : ''}${istSchwanz ? ' schlangekarte__karte--schwanz' : ''}${!istKopf && !istSchwanz ? ' schlangekarte__karte--koerper' : ''}`
 
                       return (
                         <div
                           key={karte.id}
-                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
+                          className={`schlangekarte__karte${pfadKlasse} schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                           role="listitem"
                           aria-label={schlangenKartenAriaLabel(karte)}
                         >
                           <strong>{karte.id}</strong>
+                          {istKopf && istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf & Schwanz</span> : null}
+                          {istKopf && !istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf</span> : null}
+                          {istSchwanz && !istKopf ? <span className="schlangekarte__pfadmarke">Schwanz</span> : null}
                           <span>{schlangenKartenKurzlabel(karte)}</span>
                           <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} />
                           {schlangenfrassAktion && (
