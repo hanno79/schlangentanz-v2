@@ -4,6 +4,7 @@ Datum: 14.06.2026
 Version: 1.1
 Beschreibung: Stitch-Spielerrahmen für den Waldtanz-Spieltisch mit kompletter Tischrunde, Gegnerhänden und Zugstatus.
 */
+import { useEffect, useRef } from 'react'
 import type { SpielAktion, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
 
 interface WaldtanzSpielerrahmenProps {
@@ -44,6 +45,15 @@ export default function WaldtanzSpielerrahmen({
   const naechsterSpieler = zustand.spieler[naechsterIndex]
   const gegnerSpieler = zustand.spieler.filter((_, index) => index !== aktiverIndex)
   const hatAbgeschlossenenGegnerzug = aktiverSpieler.steuerung === 'Mensch' && kiZugProtokoll.length > 0
+  const erstesGrubenziel = schlangengrubeAktionen.find(
+    (aktion) => aktion.handkartenId === ausgewaehlteHandkarteId,
+  ) ?? null
+  const erstesGrubenzielRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    if (!erstesGrubenziel) return
+    erstesGrubenzielRef.current?.scrollIntoView?.({ block: 'center', inline: 'nearest' })
+  }, [erstesGrubenziel])
 
   return (
     <section className="waldtanz-spielerrahmen" aria-label="Waldtanz-Spielerrahmen">
@@ -75,6 +85,7 @@ export default function WaldtanzSpielerrahmen({
               <span className="waldtanz-spielerrahmen__handzahl">{spieler.hand.length} verdeckte Karten</span>
               {grubenAktion && onAktion && (
                 <button
+                  ref={grubenAktion === erstesGrubenziel ? erstesGrubenzielRef : undefined}
                   className="waldtanz-spielerrahmen__grubenbutton"
                   aria-label={`Schlangengrube im Spielerrahmen mit Karte ${grubenAktion.handkartenId} auf ${spieler.name}`}
                   onClick={() => onAktion(grubenAktion)}

@@ -7,7 +7,7 @@
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { readFileSync } from 'node:fs'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { SonderkarteInfo } from './engine'
@@ -26,6 +26,11 @@ function cssBlock(selektor: string) {
 
 describe('M2e Schlangengrube-Spielerziel', () => {
   it('macht eine ausgewählte Schlangengrube direkt auf Gegnerplaketten im Spielerrahmen ausführbar', () => {
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: vi.fn(),
+    })
+    const scrollIntoViewSpy = vi.spyOn(HTMLElement.prototype, 'scrollIntoView')
     const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
     const schlangengrube = sonderkarte('schlangengrube-m2e', 'Schlangengrube')
     zustand.spieler[0].hand = [schlangengrube]
@@ -48,6 +53,7 @@ describe('M2e Schlangengrube-Spielerziel', () => {
     expect(gegnerSpieler2).toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
     expect(gegnerSpieler3).toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
     expect(within(gegnerSpieler2).getByText('Schlangengrube hier spielen')).toBeVisible()
+    expect(scrollIntoViewSpy).toHaveBeenCalledWith({ block: 'center', inline: 'nearest' })
     const zielButton = within(gegnerSpieler2).getByRole('button', {
       name: 'Schlangengrube im Spielerrahmen mit Karte schlangengrube-m2e auf Spieler 2',
     })
@@ -56,6 +62,7 @@ describe('M2e Schlangengrube-Spielerziel', () => {
 
     expect(screen.getByText('Zuletzt ausgeführt: Schlangengrube mit Karte schlangengrube-m2e auf Spieler 2 spielen')).toBeVisible()
     expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: 'Ausspielphase beenden' })).toBeVisible()
+    scrollIntoViewSpy.mockRestore()
   })
 
   it('blendet Schlangengrube-Spielerziele während eines KI-Zugs aus', () => {
