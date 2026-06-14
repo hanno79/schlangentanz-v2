@@ -5,7 +5,8 @@ Version: 1.0
 Beschreibung: Board-naher Zugkompass fuer gefuehrte Phasenwechsel im Waldtanz-Spieltisch.
 */
 
-import type { Spielzustand } from '../engine'
+import { ermittleReaktionsAktionen, type SpielAktion, type Spielzustand } from '../engine'
+import { aktionsLabel } from '../aktionsLabel'
 import { zugphaseLabel } from '../zugphaseLabels'
 
 interface ZugKompassProps {
@@ -19,6 +20,7 @@ interface ZugKompassProps {
   onZugBeenden: () => void
   onAusspielphaseStarten: () => void
   onKiZugVorspulen: () => void
+  onReaktionsAktion: (aktion: SpielAktion) => void
 }
 
 function statusLabel(zustand: Spielzustand, zeigtKiVorspulen: boolean): string {
@@ -59,6 +61,43 @@ function zugknopf(label: string, onClick: () => void) {
   )
 }
 
+function spielerName(zustand: Spielzustand, index: number): string {
+  return zustand.spieler[index]?.name ?? `Spieler ${index + 1}`
+}
+
+function reaktionsText(zustand: Spielzustand): string {
+  const pending = zustand.pendingReaktion
+  if (!pending) return ''
+  switch (pending.typ) {
+    case 'SchlangenblockadeAbwehr':
+      return `${spielerName(zustand, pending.zielSpielerIndex)} verteidigt ${pending.zielSchlangenId} gegen Schlangenblockade.`
+    case 'FarbendiebAbwehr':
+      return `${spielerName(zustand, pending.zielSpielerIndex)} verteidigt ${pending.zielKartenId} gegen Farbendieb.`
+    case 'SchlangenfrassAbwehr': {
+      const ziel = pending.verbleibendeZiele[0]
+      return ziel ? `${spielerName(zustand, ziel.spielerIndex)} verteidigt ${ziel.kartenId} gegen Schlangenfrass.` : 'Schlangenfrass-Reaktion offen.'
+    }
+    case 'SchlangengrubeAbwehr':
+      return `${spielerName(zustand, pending.zielSpielerIndex)} verteidigt sich gegen Schlangengrube.`
+    case 'VerdopplerAbwehr':
+      return `${spielerName(zustand, pending.verbleibendeSpielerIndizes[0] ?? pending.angreifenderSpielerIndex)} entscheidet über Verdoppler.`
+  }
+}
+
+function abwehrKartenId(aktionen: SpielAktion[]): string | null {
+  const abwehr = aktionen.find((aktion) => 'abwehrHandkartenId' in aktion)
+  return abwehr && 'abwehrHandkartenId' in abwehr ? abwehr.abwehrHandkartenId : null
+}
+
+function reaktionsButtonLabel(aktion: SpielAktion): string {
+  const label = aktionsLabel(aktion)
+  return 'abwehrHandkartenId' in aktion ? `Farbenschutz-Schild einsetzen: ${label}` : `Treffer zulassen: ${label}`
+}
+
+function reaktionsButtonKlasse(aktion: SpielAktion): string {
+  return 'abwehrHandkartenId' in aktion ? 'reaktionsschild__button reaktionsschild__button--abwehr' : 'reaktionsschild__button reaktionsschild__button--durchlassen'
+}
+
 export default function ZugKompass({
   zustand,
   ueberhand,
@@ -70,8 +109,11 @@ export default function ZugKompass({
   onZugBeenden,
   onAusspielphaseStarten,
   onKiZugVorspulen,
+  onReaktionsAktion,
 }: ZugKompassProps) {
   const blockiertDurchReaktion = zustand.pendingReaktion !== null
+  const reaktionsAktionen = blockiertDurchReaktion ? ermittleReaktionsAktionen(zustand) : []
+  const farbenschutzId = abwehrKartenId(reaktionsAktionen)
   const zeigtWeiterZurAufgabenpruefung = !blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0
   const zeigtGegnerzugStatus = !zeigtKiVorspulen && kiZugProtokoll.length > 0 && zustand.spieler[zustand.aktiverSpielerIndex].steuerung === 'Mensch'
 
@@ -83,6 +125,27 @@ export default function ZugKompass({
         <span className="zugkompass__phase">{zugphaseLabel(zustand.zugphase)}</span>
       </div>
       <p>{hinweisLabel(zustand, ueberhand, zeigtKiVorspulen)}</p>
+      {blockiertDurchReaktion && (
+        <section className="zugkompass__reaktionsschild" aria-label="Waldtanz-Reaktionsschild">
+          <div className="reaktionsschild__kopf">
+            <strong>{farbenschutzId ? 'Farbenschutz bereit' : 'Reaktion entscheiden'}</strong>
+            <span>Reaktionsfenster</span>
+          </div>
+          <p>{reaktionsText(zustand)}</p>
+          {farbenschutzId ? <p className="reaktionsschild__karte">Farbenschutzkarte: {farbenschutzId}</p> : <p className="reaktionsschild__karte">Kein Farbenschutz auf der Hand. Du kannst den Treffer nur zulassen.</p>}
+          <div className="reaktionsschild__aktionen">
+            {reaktionsAktionen.map((aktion) => {
+              const buttonLabel = reaktionsButtonLabel(aktion)
+              return (
+                <button key={buttonLabel} type="button" className={reaktionsButtonKlasse(aktion)} aria-label={buttonLabel} onClick={() => onReaktionsAktion(aktion)}>
+                  <span aria-hidden="true">{'abwehrHandkartenId' in aktion ? 'Schild einsetzen' : 'Treffer zulassen'}</span>
+                  <span aria-hidden="true" className="reaktionsschild__button-label">{aktionsLabel(aktion)}</span>
+                </button>
+              )
+            })}
+          </div>
+        </section>
+      )}
       {zeigtGegnerzugStatus && <p className="zugkompass__feedback">Gegnerzug abgeschlossen. Du bist wieder dran.</p>}
       <div className="zugkompass__aktionen">
         {!blockiertDurchReaktion && zeigtKiVorspulen && zugknopf('Gegnerzüge bis zu deinem Zug abspielen', onKiZugVorspulen)}

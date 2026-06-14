@@ -699,6 +699,61 @@ body {
   background: rgba(164, 222, 2, 0.72);
 }
 
+.zugkompass__reaktionsschild {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.75rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(164, 222, 2, 0.86), rgba(255, 224, 139, 0.82));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.reaktionsschild__kopf,
+.reaktionsschild__aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.reaktionsschild__kopf strong,
+.reaktionsschild__karte {
+  padding: 0.25rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  font-weight: 900;
+}
+
+.reaktionsschild__button {
+  display: inline-grid;
+  gap: 0.2rem;
+  min-height: 3rem;
+  padding: 0.55rem 0.8rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.25rem;
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  cursor: pointer;
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.reaktionsschild__button--abwehr {
+  background: var(--st-color-primary-container);
+}
+
+.reaktionsschild__button--durchlassen {
+  background: var(--st-color-tertiary-container, #ffbcaa);
+}
+
+.reaktionsschild__button-label {
+  font-family: var(--st-font-body);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
 .zugkompass__aktionen {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));

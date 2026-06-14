@@ -289,6 +289,7 @@ function App({ initialZustand }: AppProps) {
                 onZugBeenden={handleZugBeenden}
                 onAusspielphaseStarten={handleAusspielphaseStarten}
                 onKiZugVorspulen={handleKiZugVorspulen}
+                onReaktionsAktion={fuhreAktionAus}
               />
               <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
               <WaldtanzAblage zustand={zustand} />
