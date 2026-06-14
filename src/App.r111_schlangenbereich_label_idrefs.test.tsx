@@ -16,6 +16,7 @@ function basisProps() {
   const { zustand } = erstelleSpieltischMitEineSchlange('schlange-r111')
 
   return {
+    zustand,
     aktiverSpieler: zustand.spieler[0],
     gegnerSpieler: [zustand.spieler[1]],
     karteAnlegenAktionen: [] as Extract<SpielAktion, { typ: 'KarteAnlegen' }>[],

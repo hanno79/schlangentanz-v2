@@ -2194,6 +2194,7 @@ code {
 
 .schlangekarte--zielbereit,
 .schlangekarte--farbenschutz-ziel,
+.schlangekarte--haeutung-ziel,
 .schlangen-startzone--zielbereit {
   /* ÄNDERUNG 12.06.2026: R178 macht nach Kartenauswahl direkte Board-Ziele sichtbar und überschreibt Basisflächen. */
   border-color: var(--st-color-tertiary);
@@ -2223,6 +2224,26 @@ code {
   border-color: var(--st-color-primary);
   background: linear-gradient(180deg, rgba(164, 222, 2, 0.42), rgba(236, 255, 227, 0.68));
   box-shadow: 0 0 0 4px rgba(164, 222, 2, 0.36), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
+}
+
+.schlangekarte--haeutung-ziel {
+  /* ÄNDERUNG 14.06.2026: M2d macht Schlangenhäutung als direkte Brettaktion greifbar. */
+  border-color: var(--st-color-secondary-container);
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.44), rgba(164, 222, 2, 0.28));
+}
+
+.schlangenhaeutung-brettziel {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.7rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: rgba(255, 224, 139, 0.72);
+  box-shadow: 0 4px 0 rgba(6, 57, 7, 0.88);
+}
+
+.schlangenhaeutung-brettziel__button {
+  justify-self: start;
 }
 
 .schlangekarte--blockade-ziel {

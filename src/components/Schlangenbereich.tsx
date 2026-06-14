@@ -12,12 +12,16 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug√
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
-import type { SpielAktion, Spieler, Spielkarte } from '../engine'
+import type { SpielAktion, Spieler, Spielkarte, Spielzustand } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 import GegnerSchlangenListe from './GegnerSchlangenListe'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
+import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
+import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 
 interface SchlangenbereichProps {
+  zustand: Spielzustand
+  zeigeSchlangenhaeutungBrettziel?: boolean
   aktiverSpieler: Spieler
   gegnerSpieler: Spieler[]
   karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
@@ -71,6 +75,8 @@ function leseGezogeneKarteId(event: DragEvent<HTMLElement>, gezogeneHandkarteIdR
 }
 
 export default function Schlangenbereich({
+  zustand,
+  zeigeSchlangenhaeutungBrettziel = true,
   aktiverSpieler,
   gegnerSpieler,
   karteAnlegenAktionen,
@@ -343,13 +349,14 @@ export default function Schlangenbereich({
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
               const istBoardZiel = Boolean(findeAktionFuerKarte(schlange.id, ausgewaehlteHandkarteId))
               const farbenschutzAktion = findeFarbenschutzAktion(schlange.id, ausgewaehlteHandkarteId)
+              const istHaeutungZiel = zeigeSchlangenhaeutungBrettziel && hatSchlangenhaeutungBrettziel(zustand, schlange, ausgewaehlteHandkarteId)
               const schlangenLabelTypId = `${komponentenId}-schlange-${schlangeIndex}-label`
               const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
 
               return (
                 <li
                   key={schlange.id}
-                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
+                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${istHaeutungZiel ? ' schlangekarte--haeutung-ziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
@@ -428,6 +435,14 @@ export default function Schlangenbereich({
                     >
                       Farbenschutz hier spielen
                     </button>
+                  )}
+                  {zeigeSchlangenhaeutungBrettziel && (
+                    <SchlangenhaeutungBrettziel
+                      zustand={zustand}
+                      schlange={schlange}
+                      ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
+                      onAktion={onAktion}
+                    />
                   )}
                   {anlegeAktionen.length > 0 && (
                     <div className="schlangekarte__anlegeaktionen" aria-label={`Anlegeaktionen f√ºr ${schlange.id}`}>

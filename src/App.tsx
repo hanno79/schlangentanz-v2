@@ -294,6 +294,7 @@ function App({ initialZustand }: AppProps) {
               <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
               <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} />
               <Schlangenbereich
+                zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
                 aktiverSpieler={aktiverSpieler}
                 gegnerSpieler={gegnerSpieler}
                 karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
@@ -305,8 +306,7 @@ function App({ initialZustand }: AppProps) {
                 farbendiebAktionen={versteckeKiEinzelaktionen ? [] : farbendiebAktionen}
                 gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
                 ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
-                onAktion={fuhreAktionAus}
-                aktionsLabel={aktionsLabel}
+                onAktion={fuhreAktionAus} aktionsLabel={aktionsLabel}
               />
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
