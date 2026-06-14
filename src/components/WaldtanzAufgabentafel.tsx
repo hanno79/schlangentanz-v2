@@ -5,7 +5,7 @@ Version: 1.0
 Beschreibung: Board-nahe Waldtanz-Aufgabentafel für offene Questkarten und Aufgabenstapel-Status.
 */
 
-import type { AufgabenkarteInfo, Spielzustand } from '../engine'
+import { ermittleErfuellteOffeneAufgaben, type AufgabenkarteInfo, type Spielzustand } from '../engine'
 import type { CSSProperties } from 'react'
 
 interface WaldtanzAufgabentafelProps {
@@ -18,6 +18,9 @@ function aufgabenPunkte(aufgabe: AufgabenkarteInfo, istEndspurt: boolean): strin
 }
 
 export default function WaldtanzAufgabentafel({ zustand, istEndspurt }: WaldtanzAufgabentafelProps) {
+  const erfuellteIds = new Set(ermittleErfuellteOffeneAufgaben(zustand).map(aufgabe => aufgabe.id))
+  const bereiteQuests = erfuellteIds.size
+
   return (
     <section className="waldtanz-aufgabentafel" aria-label="Waldtanz-Aufgabentafel">
       <div className="waldtanz-aufgabentafel__kopf">
@@ -25,20 +28,33 @@ export default function WaldtanzAufgabentafel({ zustand, istEndspurt }: Waldtanz
         <span className="waldtanz-aufgabentafel__zaehler">
           {zustand.offeneAufgaben.length} offene {zustand.offeneAufgaben.length === 1 ? 'Aufgabe' : 'Aufgaben'}
         </span>
+        {bereiteQuests > 0 && (
+          <span className="waldtanz-aufgabentafel__bereit">
+            {bereiteQuests} {bereiteQuests === 1 ? 'Quest' : 'Quests'} bereit
+          </span>
+        )}
         <span>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</span>
       </div>
       {zustand.offeneAufgaben.length === 0 ? (
         <p className="waldtanz-aufgabentafel__leer">Keine Questkarten offen. Die Lichtung wartet auf neue Aufgaben.</p>
       ) : (
         <ul className="waldtanz-aufgabentafel__liste">
-          {zustand.offeneAufgaben.map((aufgabe, index) => (
-            <li key={aufgabe.id} className="waldtanz-questkarte" style={{ '--quest-rotation': `${(index - 1) * 1.5}deg` } as CSSProperties}>
-              <span className="waldtanz-questkarte__label">Questkarte</span>
-              <strong>{aufgabe.name}</strong>
-              <span className="waldtanz-questkarte__punkte">{aufgabenPunkte(aufgabe, istEndspurt)}</span>
-              <p>{aufgabe.bedingung}</p>
-            </li>
-          ))}
+          {zustand.offeneAufgaben.map((aufgabe, index) => {
+            const istErfuellbar = erfuellteIds.has(aufgabe.id)
+
+            return (
+              <li key={aufgabe.id} className={`waldtanz-questkarte${istErfuellbar ? ' waldtanz-questkarte--erfuellbar' : ''}`} style={{ '--quest-rotation': `${(index - 1) * 1.5}deg` } as CSSProperties}>
+                <span className="waldtanz-questkarte__label">Questkarte</span>
+                <strong>{aufgabe.name}</strong>
+                <span className="waldtanz-questkarte__punkte">{aufgabenPunkte(aufgabe, istEndspurt)}</span>
+                <span className={`waldtanz-questkarte__status${istErfuellbar ? ' waldtanz-questkarte__status--bereit' : ''}`}>
+                  {istErfuellbar ? 'Bereit zum Einsammeln' : 'Noch offen'}
+                </span>
+                <p>{aufgabe.bedingung}</p>
+                {istErfuellbar && <p className="waldtanz-questkarte__sammelhinweis">In der nächsten Aufgabenprüfung kassierst du diese Punkte.</p>}
+              </li>
+            )
+          })}
         </ul>
       )}
       <p className="waldtanz-aufgabentafel__hinweis">Baue deine Schlangen gezielt auf diese Questkarten hin.</p>

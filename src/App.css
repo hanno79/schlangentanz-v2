@@ -2404,8 +2404,15 @@ code {
   transform: rotate(var(--quest-rotation, 0deg));
 }
 
+.waldtanz-questkarte--erfuellbar {
+  border-color: var(--st-color-tertiary);
+  background: radial-gradient(circle at 16% 20%, rgba(254, 203, 0, 0.72), transparent 3.8rem), linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 224, 139, 0.82));
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
+}
+
 .waldtanz-questkarte__label,
-.waldtanz-questkarte__punkte {
+.waldtanz-questkarte__punkte,
+.waldtanz-questkarte__status {
   width: fit-content;
   padding: 0.12rem 0.55rem;
   border: 2px solid var(--st-color-border-strong);
@@ -2416,8 +2423,13 @@ code {
   font-weight: 900;
 }
 
-.waldtanz-questkarte__punkte {
+.waldtanz-questkarte__punkte,
+.waldtanz-questkarte__status--bereit {
   background: var(--st-color-secondary-container);
+}
+
+.waldtanz-questkarte__sammelhinweis {
+  font-weight: 900;
 }
 
 .schlangenbereich--waldlichtung {
