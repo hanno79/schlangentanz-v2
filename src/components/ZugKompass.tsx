@@ -49,6 +49,16 @@ function hinweisLabel(zustand: Spielzustand, ueberhand: number, zeigtKiVorspulen
   }
 }
 
+function zugknopf(label: string, onClick: () => void) {
+  return (
+    <button type="button" className="zugkompass__hauptaktion" aria-label={label} onClick={onClick}>
+      <span aria-hidden="true" className="zugkompass__hauptaktion-kicker">Zugknopf</span>
+      <span aria-hidden="true" className="zugkompass__hauptaktion-label">{label}</span>
+      <span aria-hidden="true" className="zugkompass__hauptaktion-pfeil">→</span>
+    </button>
+  )
+}
+
 export default function ZugKompass({
   zustand,
   ueberhand,
@@ -75,12 +85,12 @@ export default function ZugKompass({
       <p>{hinweisLabel(zustand, ueberhand, zeigtKiVorspulen)}</p>
       {zeigtGegnerzugStatus && <p className="zugkompass__feedback">Gegnerzug abgeschlossen. Du bist wieder dran.</p>}
       <div className="zugkompass__aktionen">
-        {!blockiertDurchReaktion && zeigtKiVorspulen && <button type="button" onClick={onKiZugVorspulen}>Gegnerzüge bis zu deinem Zug abspielen</button>}
-        {zeigtWeiterZurAufgabenpruefung && <button type="button" onClick={onAusspielphaseBeenden}>Weiter zur Aufgabenprüfung</button>}
-        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Aufgabenpruefung' && <button type="button" onClick={onAufgabenpruefungBeenden}>Weiter zum Zugabschluss</button>}
-        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && <button type="button" onClick={onUeberzaehligeKartenAbwerfen}>Überzählige Karten abwerfen</button>}
-        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && <button type="button" onClick={onZugBeenden}>Zug an nächsten Spieler geben</button>}
-        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Nachziehphase' && <button type="button" onClick={onAusspielphaseStarten}>Ausspielphase starten</button>}
+        {!blockiertDurchReaktion && zeigtKiVorspulen && zugknopf('Gegnerzüge bis zu deinem Zug abspielen', onKiZugVorspulen)}
+        {zeigtWeiterZurAufgabenpruefung && zugknopf('Weiter zur Aufgabenprüfung', onAusspielphaseBeenden)}
+        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Aufgabenpruefung' && zugknopf('Weiter zum Zugabschluss', onAufgabenpruefungBeenden)}
+        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && zugknopf('Überzählige Karten abwerfen', onUeberzaehligeKartenAbwerfen)}
+        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && zugknopf('Zug an nächsten Spieler geben', onZugBeenden)}
+        {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Nachziehphase' && zugknopf('Ausspielphase starten', onAusspielphaseStarten)}
       </div>
     </section>
   )
