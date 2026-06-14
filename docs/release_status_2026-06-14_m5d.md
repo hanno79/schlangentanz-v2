@@ -34,7 +34,7 @@ M5d ist ein mittlerer Playability-Vertical nach M5c: Der `Spieltisch` bekommt ei
 ## Release
 
 - Commit/Push: `670811e M5d: Zugkompass boardnah führen` wurde nach `origin/main` gepusht.
-- Deploy: Vercel Production wurde auf `https://schlangentanz-v2.vercel.app` bereitgestellt; Deployment-URL `https://schlangentanz-v2-be0xpqvob-alfreds-projects-7e9df1b4.vercel.app`, final aliasiert auf die stabile Production-Alias.
+- Deploy: Vercel Production wurde auf die stabile Alias `https://schlangentanz-v2.vercel.app` bereitgestellt; der finale Dokumentations-HEAD wurde nach der Doku-Synchronisation erneut deployed und auf dieselbe Alias gemappt.
 - Smoke: `npm run smoke:production` meldete `/game` und `/` HTTP 200 sowie die Kernregionen `Spielstatus`, `Aktiver Spieler`, `Aktionen`, `Schlangenbereich` sichtbar.
 - M5d-Browser-Smoke: `/` und `/game` HTTP 200, 3-KI-Lobby gestartet, `Zugkompass` zwischen `Zugpfad` und `Schlangenbereich` gefunden, 3px Dark-Forest-Border/hard shadow/radiale Waldlichtung bestätigt, board-nah eine Startkarte gespielt, per Zugkompass zur Aufgabenprüfung und zum Zugabschluss gewechselt, Zug an KI übergeben, Gegnerzüge zurück zum Menschen vorgespult, keine Console-/Page-Errors.
 
