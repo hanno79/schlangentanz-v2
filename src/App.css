@@ -45,6 +45,12 @@ body {
   font-family: var(--st-font-body);
 }
 
+.app-shell--game {
+  align-content: start;
+  gap: clamp(0.75rem, 1.4vw, 1rem);
+  padding-block-start: clamp(0.75rem, 1.6vw, 1.25rem);
+}
+
 .app-title {
   width: min(100%, 1180px);
   margin: 0;
@@ -1051,6 +1057,10 @@ code {
   display: grid;
   gap: clamp(1rem, 2vw, 1.5rem);
   width: min(100%, 1180px);
+}
+
+.spielbereich--game-route {
+  margin-block-start: 0;
 }
 
 .spielbereich--waldtanz {

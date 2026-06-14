@@ -131,6 +131,7 @@ interface AppProps {
 }
 
 function App({ initialZustand }: AppProps) {
+  const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
   const [zustand, setZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
@@ -185,10 +186,7 @@ function App({ initialZustand }: AppProps) {
   const verdopplerAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'VerdopplerSpielen' }> => aktion.typ === 'VerdopplerSpielen'), [legaleAktionen])
   const schlangengrubeAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'SonderkarteSpielen' }> => aktion.typ === 'SonderkarteSpielen'), [legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
-  const gewinnerErgebnis = useMemo(
-    () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
-    [zustand.zugphase, zustand.spieler],
-  )
+  const gewinnerErgebnis = useMemo(() => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null, [zustand.zugphase, zustand.spieler])
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
   const gegnerSpieler = zustand.spieler.filter((spieler) => spieler.id !== aktiverSpieler.id)
   const versteckeKiEinzelaktionen = aktiverSpieler.steuerung === 'KI' && reaktionsAktionen.length === 0
@@ -256,15 +254,19 @@ function App({ initialZustand }: AppProps) {
   }
 
   return (
-    <main className="app-shell">
-      <section className="hero" aria-labelledby={heroTitelId}>
-        <p className="eyebrow">Das Kartenspiel</p>
-        <h1 className="app-title" id={heroTitelId}>Schlangentanz</h1>
-        <p>Bereit für deine nächste Schlange</p>
-        <ul><li>Baue farbige Schlangen</li><li>Erfülle Aufgaben</li><li>Nutze Sonderkarten</li></ul>
-      </section>
-      <SonnigesNestLobby aktiveKiGegner={zustand.spieler.filter(spieler => spieler.steuerung === 'KI').length} onNeuesSpiel={handleNeuesLobbySpiel} />
-      <section id="spielbereich" className={`spielbereich spielbereich--waldtanz${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
+    <main className={`app-shell${istGameRoute ? ' app-shell--game' : ''}`}>
+      {!istGameRoute && (
+        <>
+          <section className="hero" aria-labelledby={heroTitelId}>
+            <p className="eyebrow">Das Kartenspiel</p>
+            <h1 className="app-title" id={heroTitelId}>Schlangentanz</h1>
+            <p>Bereit für deine nächste Schlange</p>
+            <ul><li>Baue farbige Schlangen</li><li>Erfülle Aufgaben</li><li>Nutze Sonderkarten</li></ul>
+          </section>
+          <SonnigesNestLobby aktiveKiGegner={zustand.spieler.filter(spieler => spieler.steuerung === 'KI').length} onNeuesSpiel={handleNeuesLobbySpiel} />
+        </>
+      )}
+      <section id="spielbereich" className={`spielbereich spielbereich--waldtanz${istGameRoute ? ' spielbereich--game-route' : ''}${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
         <SiegerParty zustand={zustand} onNeuesSpiel={handleNeuesLobbySpiel} />
         <WaldtanzSeitenmenue />
         <SpielstatusPanel zustand={zustand} titelId={spielstatusTitelId} istSpielende={istSpielende} istEndspurt={istEndspurt} />
