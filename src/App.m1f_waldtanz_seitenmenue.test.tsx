@@ -39,9 +39,11 @@ describe('M1f Waldtanz-Seitenmenü', () => {
     expect(menue.compareDocumentPosition(status) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(status.compareDocumentPosition(spieltisch) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
 
+    const seitenmenueLayoutBlock = appCss.match(/\.waldtanz-seitenmenue\s*\{[^}]*position:\s*sticky[^}]*\}/)?.[0] ?? ''
     expect(cssBlock('waldtanz-seitenmenue')).toMatch(/grid-area:\s*nav/)
-    expect(appCss).toMatch(/\.waldtanz-seitenmenue\s*\{[\s\S]*position:\s*sticky/)
-    expect(appCss).toMatch(/\.waldtanz-seitenmenue\s*\{[\s\S]*border-right:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
+    expect(seitenmenueLayoutBlock).toMatch(/position:\s*sticky/)
+    expect(seitenmenueLayoutBlock).toMatch(/border-right:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
+    expect(seitenmenueLayoutBlock).toMatch(/pointer-events:\s*none/)
     expect(appCss).toMatch(/\.app-shell\s*\{[\s\S]*overflow-x:\s*clip/)
     expect(appCss).toMatch(/@media \(min-width: 980px\)[\s\S]*grid-template-columns:\s*minmax\(160px,\s*0\.62fr\) minmax\(500px,\s*2\.1fr\) minmax\(160px,\s*0\.62fr\)/)
     expect(appCss).toMatch(/#root\s*\{[\s\S]*width:\s*100%[\s\S]*max-width:\s*none[\s\S]*border-inline:\s*0/)

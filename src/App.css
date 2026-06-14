@@ -977,6 +977,7 @@ code {
   border-radius: 2rem;
   background: linear-gradient(180deg, rgba(196, 253, 182, 0.96), rgba(185, 241, 172, 0.9));
   box-shadow: 4px 0 0 var(--st-color-border-strong), 0 5px 0 var(--st-color-border-strong);
+  pointer-events: none;
 }
 
 .waldtanz-seitenmenue__marke h2 {
