@@ -276,6 +276,7 @@ function App({ initialZustand }: AppProps) {
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} schlangengrubeAktionen={versteckeKiEinzelaktionen ? [] : schlangengrubeAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
+              <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
               <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
               <ZugKompass
                 zustand={zustand}
@@ -344,7 +345,6 @@ function App({ initialZustand }: AppProps) {
               onAusspielphaseStarten={handleAusspielphaseStarten}
               onKiZugVorspulen={handleKiZugVorspulen}
             />
-            <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} />
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>
               <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>

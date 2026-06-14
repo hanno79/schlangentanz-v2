@@ -555,6 +555,16 @@ body {
   box-shadow: 0 4px 0 #063907;
 }
 
+.ki-zug-buehne--brettnah {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 0;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
 .ki-zug-buehne--aktiv {
   background: radial-gradient(circle at 20% 20%, rgba(255, 188, 170, 0.9), rgba(254, 203, 0, 0.82));
 }
@@ -562,6 +572,26 @@ body {
 .ki-zug-buehne h3 {
   margin: 0 0 0.5rem;
   font-family: var(--st-font-headline);
+}
+
+.ki-zug-buehne__text {
+  min-width: 0;
+}
+
+.ki-zug-buehne__button {
+  padding: 0.75rem 1rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.ki-zug-buehne__button:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--st-color-border-strong);
 }
 
 .ki-zug-buehne__protokoll {
