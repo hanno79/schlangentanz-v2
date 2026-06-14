@@ -272,7 +272,7 @@ function App({ initialZustand }: AppProps) {
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
-              <WaldtanzSpielerrahmen aktiverSpieler={aktiverSpieler} gegnerSpieler={gegnerSpieler} spielerwertungen={spielerwertungen} />
+              <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} />
               <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
               <ZugKompass
                 zustand={zustand}

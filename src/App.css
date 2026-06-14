@@ -775,15 +775,39 @@ body {
   box-shadow: 0 4px 0 var(--st-color-border-strong);
 }
 
+.waldtanz-spielerrahmen__statusband {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 0.35rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  font-weight: 900;
+}
+
+.waldtanz-spielerrahmen__gegnerliste {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.waldtanz-spielerrahmen__gegnerplatz {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: center;
+}
+
 .waldtanz-spielerrahmen__reihe {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
-}
-
-.waldtanz-spielerrahmen__reihe--gegner {
-  justify-content: space-between;
 }
 
 .waldtanz-spielerrahmen__reihe--du {
@@ -819,9 +843,18 @@ body {
   transform: rotate(2deg);
 }
 
+.waldtanz-spielerrahmen__plakette--naechster {
+  transform: translateY(-3px) rotate(1deg);
+  background: var(--st-color-tertiary-container, #ffbcaa);
+}
+
 .waldtanz-spielerrahmen__plakette--du {
   background: var(--st-color-primary-container);
   transform: rotate(-2deg);
+}
+
+.waldtanz-spielerrahmen__plakette--aktiv {
+  outline: 3px solid var(--st-color-tertiary);
 }
 
 .waldtanz-spielerrahmen__avatar {

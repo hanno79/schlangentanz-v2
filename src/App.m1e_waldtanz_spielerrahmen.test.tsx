@@ -31,10 +31,10 @@ describe('M1e Waldtanz-Spielerrahmen', () => {
 
     expect(spielerrahmen).toHaveClass('waldtanz-spielerrahmen')
     expect(within(spielerrahmen).getByText('Gegner: Spieler 2')).toBeInTheDocument()
-    expect(within(spielerrahmen).getByText('5 verdeckte Karten')).toBeInTheDocument()
+    expect(within(spielerrahmen).getAllByText('5 verdeckte Karten')).toHaveLength(3)
     expect(within(spielerrahmen).getByText('Du — Spieler 1')).toBeInTheDocument()
     expect(within(spielerrahmen).getByText('5 Handkarten bereit')).toBeInTheDocument()
-    expect(spielerrahmen.querySelectorAll('.waldtanz-spielerrahmen__kartenruecken')).toHaveLength(5)
+    expect(spielerrahmen.querySelectorAll('.waldtanz-spielerrahmen__kartenruecken')).toHaveLength(15)
     expect(spielerrahmen.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )
