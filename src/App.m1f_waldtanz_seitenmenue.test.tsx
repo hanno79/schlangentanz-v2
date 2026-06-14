@@ -42,6 +42,7 @@ describe('M1f Waldtanz-Seitenmenü', () => {
     expect(cssBlock('waldtanz-seitenmenue')).toMatch(/grid-area:\s*nav/)
     expect(appCss).toMatch(/\.waldtanz-seitenmenue\s*\{[\s\S]*position:\s*sticky/)
     expect(appCss).toMatch(/\.waldtanz-seitenmenue\s*\{[\s\S]*border-right:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
+    expect(appCss).toMatch(/\.app-shell\s*\{[\s\S]*overflow-x:\s*clip/)
     expect(appCss).toMatch(/@media \(min-width: 980px\)[\s\S]*grid-template-columns:\s*minmax\(160px,\s*0\.62fr\) minmax\(500px,\s*2\.1fr\) minmax\(160px,\s*0\.62fr\)/)
     expect(appCss).toMatch(/#root\s*\{[\s\S]*width:\s*100%[\s\S]*max-width:\s*none[\s\S]*border-inline:\s*0/)
     expect(appCss).toMatch(/@media \(min-width: 1360px\)[\s\S]*\.spielbereich--waldtanz[\s\S]*"nav\s+status\s+arena\s+spieler"/)
