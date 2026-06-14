@@ -435,12 +435,12 @@ export default function Schlangenbereich({
                     />
                   )}
                   {anlegeAktionen.length > 0 && (
-                    <div className="schlangekarte__anlegeaktionen" aria-label={`Anlegeaktionen für ${schlange.id}`}>
+                    <div className="schlangekarte__anlegeaktionen schlangekarte__anlegeplaetze" aria-label={`Waldtanz-Anlegeplätze für ${schlange.id}`}>
                       {anlegeAktionen.map((aktion) => (
                         <button
                           key={`${aktion.handkartenId}-${aktion.schlangenId}-${aktion.position}`}
                           type="button"
-                          className={`schlangekarte__anlegebutton schlangekarte__anlegebutton--${aktion.position}`}
+                          className={`schlangekarte__anlegebutton schlangekarte__anlegebutton--${aktion.position} schlangekarte__anlegeplatz schlangekarte__anlegeplatz--${aktion.position}`}
                           aria-label={`Schlangenbereich: Karte ${aktion.handkartenId} ${aktion.position} anlegen`}
                           title={aktionsLabel(aktion)}
                           onClick={(event) => {
@@ -450,7 +450,11 @@ export default function Schlangenbereich({
                           onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'schlange', id: schlange.id })}
                           onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
                         >
-                          {aktion.position === 'links' ? 'Links anlegen' : 'Rechts anlegen'}
+                          <span className="schlangekarte__anlegeplatz-richtung">
+                            {aktion.position === 'links' ? 'Linkes Ende' : 'Rechtes Ende'}
+                          </span>
+                          <span className="schlangekarte__anlegeplatz-karte">{aktion.handkartenId}</span>
+                          <span className="schlangekarte__anlegeplatz-hinweis">Karte dort anlegen</span>
                         </button>
                       ))}
                     </div>

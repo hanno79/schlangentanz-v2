@@ -2225,6 +2225,51 @@ code {
   border-color: rgba(177, 45, 0, 0.6);
 }
 
+.schlangekarte__anlegeplaetze {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.schlangekarte__anlegeplatz {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  min-height: 5.5rem;
+  padding: 0.65rem 0.8rem;
+  border: var(--st-border-width-chunky) dashed var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.28), rgba(236, 255, 227, 0.88));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+}
+
+.schlangekarte__anlegeplatz--links {
+  transform: rotate(-2deg);
+}
+
+.schlangekarte__anlegeplatz--rechts {
+  transform: rotate(2deg);
+}
+
+.schlangekarte__anlegeplatz-richtung,
+.schlangekarte__anlegeplatz-karte {
+  font-family: var(--st-font-heading);
+  font-weight: 900;
+}
+
+.schlangekarte__anlegeplatz-karte {
+  padding: 0.1rem 0.45rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+}
+
+.schlangekarte__anlegeplatz-hinweis {
+  font-size: 0.78rem;
+}
+
 .schlangenleiste {
   list-style: none;
   padding: 0;
