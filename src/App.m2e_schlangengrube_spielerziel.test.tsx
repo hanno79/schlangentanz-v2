@@ -1,0 +1,88 @@
+/*
+ * Author: rahn
+ * Datum: 14.06.2026
+ * Version: 1.0
+ * Beschreibung: M2e macht Schlangengrube nach Handkarten-Auswahl direkt am Spielerrahmen spielbar.
+ */
+
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { readFileSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
+import App from './App'
+import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import type { SonderkarteInfo } from './engine'
+import { ermittleSpielbereiche } from './testUtils'
+
+const sonderkarte = (id: string, name: string): SonderkarteInfo => ({
+  typ: 'Sonderkarte',
+  id,
+  name,
+})
+
+function cssBlock(selektor: string) {
+  const css = readFileSync('src/App.css', 'utf8')
+  return css.match(new RegExp(`${selektor.replaceAll('.', '\\.') }\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
+}
+
+describe('M2e Schlangengrube-Spielerziel', () => {
+  it('macht eine ausgewählte Schlangengrube direkt auf Gegnerplaketten im Spielerrahmen ausführbar', () => {
+    const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
+    const schlangengrube = sonderkarte('schlangengrube-m2e', 'Schlangengrube')
+    zustand.spieler[0].hand = [schlangengrube]
+    zustand.spieler[1].hand = []
+    zustand.spieler[2].hand = []
+
+    render(<App initialZustand={zustand} />)
+
+    const { handBereich, spieltisch } = ermittleSpielbereiche()
+    const spielerrahmen = within(spieltisch).getByRole('region', { name: 'Waldtanz-Spielerrahmen' })
+    const gegnerliste = within(spielerrahmen).getByRole('list', { name: 'Gegner am Tisch' })
+    const gegnerSpieler2 = within(gegnerliste).getByText('Gegner: Spieler 2').closest('li') as HTMLElement
+    const gegnerSpieler3 = within(gegnerliste).getByText('Gegner: Spieler 3').closest('li') as HTMLElement
+
+    expect(gegnerSpieler2).not.toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
+    expect(within(gegnerSpieler2).queryByRole('button', { name: /Schlangengrube im Spielerrahmen/ })).toBeNull()
+
+    fireEvent.click(within(handBereich).getByRole('button', { name: /schlangengrube-m2e/ }))
+
+    expect(gegnerSpieler2).toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
+    expect(gegnerSpieler3).toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
+    expect(within(gegnerSpieler2).getByText('Schlangengrube hier spielen')).toBeVisible()
+    const zielButton = within(gegnerSpieler2).getByRole('button', {
+      name: 'Schlangengrube im Spielerrahmen mit Karte schlangengrube-m2e auf Spieler 2',
+    })
+
+    fireEvent.click(zielButton)
+
+    expect(screen.getByText('Zuletzt ausgeführt: Schlangengrube mit Karte schlangengrube-m2e auf Spieler 2 spielen')).toBeVisible()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: 'Ausspielphase beenden' })).toBeVisible()
+  })
+
+  it('blendet Schlangengrube-Spielerziele während eines KI-Zugs aus', () => {
+    const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
+    zustand.spieler[0].steuerung = 'KI'
+    zustand.spieler[0].hand = [sonderkarte('schlangengrube-m2e-ki', 'Schlangengrube')]
+
+    render(<App initialZustand={zustand} />)
+
+    const { handBereich, spieltisch } = ermittleSpielbereiche()
+    const spielerrahmen = within(spieltisch).getByRole('region', { name: 'Waldtanz-Spielerrahmen' })
+    const gegnerliste = within(spielerrahmen).getByRole('list', { name: 'Gegner am Tisch' })
+    const gegnerSpieler2 = within(gegnerliste).getByText('Gegner: Spieler 2').closest('li') as HTMLElement
+
+    fireEvent.click(within(handBereich).getByRole('button', { name: /schlangengrube-m2e-ki/ }))
+
+    expect(gegnerSpieler2).not.toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
+    expect(within(gegnerSpieler2).queryByRole('button', { name: /Schlangengrube im Spielerrahmen/ })).toBeNull()
+  })
+
+  it('legt den sichtbaren Waldtanz-Zielstil für Grubenziele im Spielerrahmen ab', () => {
+    const platzBlock = cssBlock('.waldtanz-spielerrahmen__gegnerplatz--grubenziel')
+    const buttonBlock = cssBlock('.waldtanz-spielerrahmen__grubenbutton')
+
+    expect(platzBlock).toContain('Schlangengrube-Spielerziel')
+    expect(platzBlock).toContain('background: linear-gradient')
+    expect(buttonBlock).toContain('border: var(--st-border-width-chunky) solid var(--st-color-border-strong)')
+    expect(buttonBlock).toContain('box-shadow: 0 4px 0 var(--st-color-border-strong)')
+  })
+})

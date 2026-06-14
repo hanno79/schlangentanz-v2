@@ -180,6 +180,7 @@ function App({ initialZustand }: AppProps) {
     ),
     [legaleAktionen],
   )
+  const schlangengrubeAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'SonderkarteSpielen' }> => aktion.typ === 'SonderkarteSpielen'), [legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
     () => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null,
@@ -207,8 +208,7 @@ function App({ initialZustand }: AppProps) {
   const ergebnisText = gewinnerListe.length > 1
     ? 'Gleichstand'
     : `Sieg für ${gewinnerListe[0] ? spielerNameFuerId(gewinnerListe[0].spielerId) : 'unbekannt'}`
-  const empfohleneAktionId = useId()
-  const phasenaktionId = useId()
+  const empfohleneAktionId = useId(), phasenaktionId = useId()
   const heroTitelId = useId()
   const spielstatusTitelId = useId()
   const aktiverSpielerTitelId = useId()
@@ -275,7 +275,7 @@ function App({ initialZustand }: AppProps) {
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
-              <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} />
+              <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} schlangengrubeAktionen={versteckeKiEinzelaktionen ? [] : schlangengrubeAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
               <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
               <ZugKompass
                 zustand={zustand}

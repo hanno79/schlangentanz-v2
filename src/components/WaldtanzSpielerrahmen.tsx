@@ -4,12 +4,15 @@ Datum: 14.06.2026
 Version: 1.1
 Beschreibung: Stitch-Spielerrahmen für den Waldtanz-Spieltisch mit kompletter Tischrunde, Gegnerhänden und Zugstatus.
 */
-import type { Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
+import type { SpielAktion, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
 
 interface WaldtanzSpielerrahmenProps {
   zustand: Spielzustand
   spielerwertungen: SpielerWertungsEintrag[]
   kiZugProtokoll: string[]
+  schlangengrubeAktionen?: Extract<SpielAktion, { typ: 'SonderkarteSpielen' }>[]
+  ausgewaehlteHandkarteId?: string | null
+  onAktion?: (aktion: SpielAktion) => void
 }
 
 function punkteFuer(spielerId: string, wertungen: SpielerWertungsEintrag[]): number {
@@ -31,6 +34,9 @@ export default function WaldtanzSpielerrahmen({
   zustand,
   spielerwertungen,
   kiZugProtokoll,
+  schlangengrubeAktionen = [],
+  ausgewaehlteHandkarteId = null,
+  onAktion,
 }: WaldtanzSpielerrahmenProps) {
   const aktiverIndex = zustand.aktiverSpielerIndex
   const aktiverSpieler = zustand.spieler[aktiverIndex]
@@ -49,9 +55,12 @@ export default function WaldtanzSpielerrahmen({
       <ol className="waldtanz-spielerrahmen__gegnerliste" aria-label="Gegner am Tisch">
         {gegnerSpieler.map((spieler) => {
           const istNaechster = spieler.id === naechsterSpieler.id
+          const grubenAktion = schlangengrubeAktionen.find(
+            (aktion) => aktion.handkartenId === ausgewaehlteHandkarteId && aktion.zielSpielerId === spieler.id,
+          ) ?? null
 
           return (
-            <li key={spieler.id} className="waldtanz-spielerrahmen__gegnerplatz">
+            <li key={spieler.id} className={`waldtanz-spielerrahmen__gegnerplatz${grubenAktion ? ' waldtanz-spielerrahmen__gegnerplatz--grubenziel' : ''}`}>
               <article className={`waldtanz-spielerrahmen__plakette waldtanz-spielerrahmen__plakette--gegner${istNaechster ? ' waldtanz-spielerrahmen__plakette--naechster' : ''}`}>
                 <span className="waldtanz-spielerrahmen__avatar" aria-hidden="true">🐸</span>
                 <div>
@@ -64,6 +73,15 @@ export default function WaldtanzSpielerrahmen({
                 {kartenruecken(spieler)}
               </div>
               <span className="waldtanz-spielerrahmen__handzahl">{spieler.hand.length} verdeckte Karten</span>
+              {grubenAktion && onAktion && (
+                <button
+                  className="waldtanz-spielerrahmen__grubenbutton"
+                  aria-label={`Schlangengrube im Spielerrahmen mit Karte ${grubenAktion.handkartenId} auf ${spieler.name}`}
+                  onClick={() => onAktion(grubenAktion)}
+                >
+                  Schlangengrube hier spielen
+                </button>
+              )}
             </li>
           )
         })}
