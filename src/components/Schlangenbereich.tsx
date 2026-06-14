@@ -262,7 +262,7 @@ export default function Schlangenbereich({
   const startzoneIstZielbereit = Boolean(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
 
   return (
-    <section className="schlangenbereich" aria-labelledby={titelId}>
+    <section className="schlangenbereich schlangenbereich--waldlichtung" aria-labelledby={titelId}>
       <h4 id={titelId}>Schlangenbereich</h4>
       <p className="schlangen-dragstatus" role="status" aria-live="polite" aria-atomic="true">{dragOverStatus}</p>
       <section
