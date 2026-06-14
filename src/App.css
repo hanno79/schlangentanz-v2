@@ -9,6 +9,7 @@
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
+  --st-radius-lg: 2rem;
   --st-shadow-hard: 0 4px 0 #063907;
   color: #f4f0e8;
   background: #12100d;
@@ -2062,6 +2063,65 @@ code {
 
 .spielbrett--waldtanz .schlangenbereich {
   min-height: 22rem;
+}
+
+.waldtanz-bonuszauber {
+  display: grid;
+  gap: 0.75rem;
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(100%, 34rem);
+  padding: 1rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.72), rgba(164, 222, 2, 0.62));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-bonuszauber__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.waldtanz-bonuszauber p {
+  margin: 0;
+  font-weight: 800;
+}
+
+.waldtanz-bonuszauber__karte {
+  padding: 0.16rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-bonuszauber__button {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-bonuszauber__button:active {
+  transform: translateY(4px);
+  box-shadow: none;
 }
 
 .waldtanz-ablage {

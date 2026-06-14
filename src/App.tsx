@@ -37,6 +37,7 @@ import WaldtanzAblage from './components/WaldtanzAblage'
 import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
 import WaldtanzKartenpop from './components/WaldtanzKartenpop'
+import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -181,6 +182,7 @@ function App({ initialZustand }: AppProps) {
     ),
     [legaleAktionen],
   )
+  const verdopplerAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'VerdopplerSpielen' }> => aktion.typ === 'VerdopplerSpielen'), [legaleAktionen])
   const schlangengrubeAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'SonderkarteSpielen' }> => aktion.typ === 'SonderkarteSpielen'), [legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(
@@ -209,13 +211,8 @@ function App({ initialZustand }: AppProps) {
   const ergebnisText = gewinnerListe.length > 1
     ? 'Gleichstand'
     : `Sieg für ${gewinnerListe[0] ? spielerNameFuerId(gewinnerListe[0].spielerId) : 'unbekannt'}`
-  const empfohleneAktionId = useId(), phasenaktionId = useId()
-  const heroTitelId = useId()
-  const spielstatusTitelId = useId()
-  const aktiverSpielerTitelId = useId()
-  const spieltischTitelId = useId()
-  const spieleruebersichtTitelId = useId()
-  const materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
+  const empfohleneAktionId = useId(), phasenaktionId = useId(), heroTitelId = useId(), spielstatusTitelId = useId(), aktiverSpielerTitelId = useId(), spieltischTitelId = useId()
+  const spieleruebersichtTitelId = useId(), materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = reaktionsAktionen.length === 0 && ((zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase')
@@ -292,6 +289,7 @@ function App({ initialZustand }: AppProps) {
                 onReaktionsAktion={fuhreAktionAus}
               />
               <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
+              <WaldtanzBonuszauber aktionen={versteckeKiEinzelaktionen ? [] : verdopplerAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
               <WaldtanzAblage zustand={zustand} />
               <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
               <WaldtanzKartenpop aktionLabel={letzteAktion} />
