@@ -28,6 +28,7 @@ import SonnigesNestLobby from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
 import KiZugBuehne from './components/KiZugBuehne'
 import SpielstatusPanel from './components/SpielstatusPanel'
+import Zugpfad from './components/Zugpfad'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -266,6 +267,7 @@ function App({ initialZustand }: AppProps) {
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
+              <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
               <Schlangenbereich
                 aktiverSpieler={aktiverSpieler}
                 gegnerSpieler={gegnerSpieler}

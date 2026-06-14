@@ -553,6 +553,101 @@ body {
   padding-left: 1.4rem;
 }
 
+.zugpfad {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background: linear-gradient(135deg, rgba(236, 255, 227, 0.92), rgba(255, 224, 139, 0.68));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.zugpfad__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.zugpfad__kopf h4,
+.zugpfad__kopf p {
+  margin: 0;
+}
+
+.zugpfad__kopf h4 {
+  font-family: var(--st-font-headline);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.zugpfad__kopf p,
+.zugpfad__status {
+  padding: 0.25rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  font-weight: 900;
+}
+
+.zugpfad__strecke {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.zugpfad__station {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  padding: 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 3px 0 rgba(6, 57, 7, 0.72);
+  text-align: center;
+}
+
+.zugpfad__station--aktiv {
+  transform: translateY(-3px);
+  border-width: var(--st-border-width-chunky);
+  background: var(--st-color-primary-container);
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
+}
+
+.zugpfad__avatar,
+.zugpfad__badge,
+.zugpfad__phase {
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.zugpfad__avatar {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+}
+
+.zugpfad__badge,
+.zugpfad__phase {
+  padding: 0.15rem 0.55rem;
+  background: rgba(236, 255, 227, 0.72);
+}
+
+.zugpfad__status {
+  justify-self: start;
+  margin: 0;
+  background: rgba(164, 222, 2, 0.72);
+}
+
 h1 {
   margin: 0.25rem 0 1rem;
   font-size: clamp(2.25rem, 7vw, 4.75rem);
