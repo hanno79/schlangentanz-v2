@@ -83,5 +83,6 @@ describe('M2h Waldtanz-Reaktionsschild', () => {
     expect(cssBlock('zugkompass__reaktionsschild')).toContain('box-shadow: 0 4px 0 var(--st-color-border-strong)')
     expect(cssBlock('reaktionsschild__button--abwehr')).toContain('background: var(--st-color-primary-container)')
     expect(cssBlock('reaktionsschild__button--durchlassen')).toContain('background: var(--st-color-tertiary-container, #ffbcaa)')
+    expect(cssBlock('waldtanz-spielerrahmen__grubenbutton')).toMatch(/scroll-margin-bottom:\s*18rem/)
   })
 })

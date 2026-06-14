@@ -919,6 +919,7 @@ body {
   cursor: pointer;
   font-family: var(--st-font-headline);
   font-weight: 900;
+  scroll-margin-bottom: 18rem;
 }
 
 .waldtanz-spielerrahmen__grubenbutton:active {
