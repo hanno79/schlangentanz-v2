@@ -129,6 +129,7 @@ export default function AktionenPanel({
   const endphaseTitelId = useId()
   const phasenregelnTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
+  const hatReaktionsaktion = reaktionsAktionen.length > 0
   return (
     <section className="info-panel aktionen-panel--waldtanz-dock" aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={aktionenTitelId}>Aktionen</h2>
@@ -140,7 +141,7 @@ export default function AktionenPanel({
         <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
       ) : (
         <>
-          {steuerung === 'KI' && (
+          {steuerung === 'KI' && !hatReaktionsaktion && (
             <section className="aktionen-gruppe aktionen-gruppe--ki-zug" aria-label="Gegnerzug-Steuerung">
               <p>Die KI spielt ihren Zug automatisch über die Engine.</p>
               <button onClick={onKiZugVorspulen}>
@@ -177,27 +178,27 @@ export default function AktionenPanel({
               tabIndex={-1}
             >
               <h3 id={phasenaktionTitelId}>Phasenaktion</h3>
-              {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && (
+              {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && !hatReaktionsaktion && (
                 <button onClick={onAusspielphaseBeenden}>
                   Ausspielphase beenden
                 </button>
               )}
-              {zustand.zugphase === 'Aufgabenpruefung' && (
+              {zustand.zugphase === 'Aufgabenpruefung' && !hatReaktionsaktion && (
                 <button onClick={onAufgabenpruefungBeenden}>
                   Aufgabenprüfung beenden
                 </button>
               )}
-              {zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && (
+              {zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && !hatReaktionsaktion && (
                 <button onClick={onUeberzaehligeKartenAbwerfen}>
                   Überzählige Karten abwerfen
                 </button>
               )}
-              {zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && (
+              {zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && !hatReaktionsaktion && (
                 <button onClick={onZugBeenden}>
                   Zug beenden
                 </button>
               )}
-              {zustand.zugphase === 'Nachziehphase' && (
+              {zustand.zugphase === 'Nachziehphase' && !hatReaktionsaktion && (
                 <button onClick={onAusspielphaseStarten}>
                   Ausspielphase starten
                 </button>

@@ -29,6 +29,7 @@ import SiegerParty from './components/SiegerParty'
 import KiZugBuehne from './components/KiZugBuehne'
 import SpielstatusPanel from './components/SpielstatusPanel'
 import Zugpfad from './components/Zugpfad'
+import ZugKompass from './components/ZugKompass'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -210,7 +211,7 @@ function App({ initialZustand }: AppProps) {
   const materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
-  const hatSichtbarePhasenaktion = (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase'
+  const hatSichtbarePhasenaktion = reaktionsAktionen.length === 0 && ((zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase')
   const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? phasenaktionId : empfohleneAktionId
   const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
@@ -268,6 +269,18 @@ function App({ initialZustand }: AppProps) {
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
+              <ZugKompass
+                zustand={zustand}
+                ueberhand={ueberhand}
+                zeigtKiVorspulen={versteckeKiEinzelaktionen}
+                kiZugProtokoll={kiZugProtokoll}
+                onAusspielphaseBeenden={handleAusspielphaseBeenden}
+                onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
+                onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
+                onZugBeenden={handleZugBeenden}
+                onAusspielphaseStarten={handleAusspielphaseStarten}
+                onKiZugVorspulen={handleKiZugVorspulen}
+              />
               <Schlangenbereich
                 aktiverSpieler={aktiverSpieler}
                 gegnerSpieler={gegnerSpieler}

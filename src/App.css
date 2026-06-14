@@ -648,6 +648,56 @@ body {
   background: rgba(164, 222, 2, 0.72);
 }
 
+.zugkompass {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background: radial-gradient(circle at 12% 18%, rgba(254, 203, 0, 0.78), rgba(236, 255, 227, 0.92));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.zugkompass__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.zugkompass__kopf h4,
+.zugkompass p {
+  margin: 0;
+}
+
+.zugkompass__kopf h4 {
+  margin-right: auto;
+  font-family: var(--st-font-headline);
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.zugkompass__status,
+.zugkompass__phase,
+.zugkompass__feedback {
+  padding: 0.25rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  font-weight: 900;
+}
+
+.zugkompass__feedback {
+  justify-self: start;
+  background: rgba(164, 222, 2, 0.72);
+}
+
+.zugkompass__aktionen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.65rem;
+}
+
 h1 {
   margin: 0.25rem 0 1rem;
   font-size: clamp(2.25rem, 7vw, 4.75rem);
