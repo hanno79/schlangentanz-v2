@@ -27,6 +27,18 @@ function karteKurzLabel(karte: Spielkarte): string {
     : `Sonderkarte ${karte.name} · Sonderaktion`
 }
 
+function karteSymbol(karte: Spielkarte): string {
+  if (karte.typ !== 'Farbkarte') return '✨'
+  switch (karte.farbe) {
+    case 'Blau': return '💧'
+    case 'Rot': return '🔥'
+    case 'Gelb': return '☀️'
+    case 'Violett': return '🌙'
+    case 'Braun': return '🌰'
+    case 'Grün': return '🌿'
+  }
+}
+
 export default function HandkartenPanel({
   handkarten,
   ausgewaehlteHandkarte,
@@ -46,12 +58,13 @@ export default function HandkartenPanel({
             Ausgewählte Handkarte: {ausgewaehlteHandkarte.id}
           </h5>
           <p>{karteKurzLabel(ausgewaehlteHandkarte)}</p>
+          <p>Ausgewählte Karte schwebt über dem Fächer.</p>
           <p>Klicke dieselbe Karte erneut, um sie wieder abzuwählen.</p>
         </section>
       ) : (
         <p className="handkarten-status">Keine Handkarte ausgewählt.</p>
       )}
-      <ul className="handkartenleiste">
+      <ul className="handkartenleiste handkartenleiste--waldtanz-faecher">
         {handkarten.map((karte) => {
           const istFarbkarte = karte.typ === 'Farbkarte'
           const istAusgewaehlt = ausgewaehlteHandkarte?.id === karte.id
@@ -59,12 +72,13 @@ export default function HandkartenPanel({
           return (
             <li
               key={karte.id}
-              className={`handkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}`}
+              className={`handkarte handkarte--spielkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}`}
             >
               <button
                 type="button"
-                className="handkarte__button"
+                className="handkarte__button handkarte__button--karte"
                 draggable="true"
+                aria-label={`${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}`}
                 aria-pressed={istAusgewaehlt}
                 onClick={() => onKarteWaehlen(karte.id)}
                 onDragStart={(event) => {
@@ -74,9 +88,13 @@ export default function HandkartenPanel({
                 }}
                 onDragEnd={onKarteDragEnd}
               >
+                <span className="handkarte__eyebrow">Waldtanzkarte</span>
+                <span className="handkarte__symbol" aria-hidden="true">{karteSymbol(karte)}</span>
                 <strong>{karte.id}</strong>
-                <span>{istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`}</span>
-                <span>{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
+                <span className="handkarte__typ">{istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`}</span>
+                <span className="handkarte__farbe">{istFarbkarte ? karte.farbe : karte.name}</span>
+                <span className="handkarte__punkte">{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
+                <span className="handkarte__spielhinweis">Auswählen oder ziehen</span>
               </button>
             </li>
           )

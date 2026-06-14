@@ -1464,6 +1464,13 @@ code {
   align-items: end;
 }
 
+.handkartenleiste--waldtanz-faecher {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5rem), 8.5rem));
+  justify-content: center;
+  gap: clamp(0.45rem, 1.6vw, 1rem);
+  padding-block: 0.5rem 0.25rem;
+}
+
 .handkartenleiste .handkarte:nth-child(2n + 1) {
   transform: rotate(-4deg);
 }
@@ -1476,9 +1483,6 @@ code {
   display: grid;
   gap: 0.35rem;
   border-radius: 16px;
-  border: 2px solid var(--st-color-border-strong);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.18));
-  box-shadow: 0 3px 0 rgba(6, 57, 7, 0.45);
   overflow: visible;
 }
 
@@ -1487,13 +1491,21 @@ code {
   gap: 0.35rem;
   width: 100%;
   padding: 0.85rem;
-  border: 0;
-  background: transparent;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: grab;
   scroll-margin-bottom: 18rem;
+}
+
+.handkarte__button--karte {
+  aspect-ratio: 2 / 3;
+  align-content: space-between;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.15rem;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.78), rgba(236, 255, 227, 0.44));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
 .handkarte__button:focus-visible {
@@ -1505,11 +1517,45 @@ code {
   cursor: grabbing;
 }
 
-.handkarte--ausgewaehlt {
+.handkarte--ausgewaehlt .handkarte__button--karte {
   border-color: var(--st-color-tertiary);
-  background: linear-gradient(180deg, rgba(177, 45, 0, 0.14), rgba(255, 255, 255, 0.2));
-  box-shadow: 0 0 0 3px rgba(177, 45, 0, 0.38), 0 8px 18px rgba(6, 57, 7, 0.18), 0 3px 0 rgba(6, 57, 7, 0.45);
-  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 0 0 3px rgba(177, 45, 0, 0.38), 0 9px 0 var(--st-color-border-strong);
+  transform: translateY(-0.75rem) scale(1.05);
+}
+
+.handkarte__eyebrow,
+.handkarte__spielhinweis {
+  font-family: var(--st-font-headline);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.handkarte__symbol {
+  display: grid;
+  place-items: center;
+  min-height: 2.6rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.52);
+  font-size: 1.8rem;
+}
+
+.handkarte__farbe,
+.handkarte__punkte,
+.handkarte__typ {
+  width: fit-content;
+  padding: 0.14rem 0.5rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.66);
+  font-weight: 900;
+}
+
+.handkarte__typ {
+  font-size: 0.78rem;
+  background: rgba(236, 255, 227, 0.78);
 }
 
 .handkarte strong,
