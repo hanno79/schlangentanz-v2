@@ -1984,6 +1984,65 @@ code {
   font-weight: 800;
 }
 
+.waldtanz-kartenpop {
+  grid-column: 1 / -1;
+  justify-self: center;
+  display: grid;
+  gap: 0.3rem;
+  justify-items: center;
+  width: min(100%, 30rem);
+  padding: 0.75rem 1rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.92), rgba(255, 188, 170, 0.76), rgba(236, 255, 227, 0.9));
+  box-shadow: 0 8px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  text-align: center;
+  animation: waldtanz-kartenpop-springt 720ms ease-out both;
+}
+
+.waldtanz-kartenpop strong,
+.waldtanz-kartenpop__karte {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-kartenpop p {
+  margin: 0;
+  font-weight: 800;
+}
+
+.waldtanz-kartenpop__karte {
+  padding: 0.1rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+}
+
+.waldtanz-kartenpop__sterne {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.waldtanz-kartenpop__stern {
+  color: var(--st-color-tertiary);
+  animation: waldtanz-stern-funkelt 900ms ease-in-out infinite;
+}
+
+.waldtanz-kartenpop__stern:nth-child(2) { animation-delay: 120ms; }
+.waldtanz-kartenpop__stern:nth-child(3) { animation-delay: 240ms; }
+
+@keyframes waldtanz-kartenpop-springt {
+  0% { transform: translateY(0.8rem) scale(0.92); opacity: 0; }
+  62% { transform: translateY(-0.25rem) scale(1.04); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes waldtanz-stern-funkelt {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-0.18rem) rotate(12deg) scale(1.18); }
+}
+
 .waldtanz-aufgabentafel {
   grid-column: 1 / -1;
   display: grid;
@@ -2261,7 +2320,7 @@ code {
 
 .schlangekarte__anlegeplatz-richtung,
 .schlangekarte__anlegeplatz-karte {
-  font-family: var(--st-font-heading);
+  font-family: var(--st-font-headline);
   font-weight: 900;
 }
 
@@ -2335,7 +2394,9 @@ code {
   .schlangekarte--zielbereit,
   .schlangekarte--farbenschutz-ziel,
   .schlangekarte--haeutung-ziel,
-  .schlangen-startzone--zielbereit {
+  .schlangen-startzone--zielbereit,
+  .waldtanz-kartenpop,
+  .waldtanz-kartenpop__stern {
     animation: none;
   }
 }

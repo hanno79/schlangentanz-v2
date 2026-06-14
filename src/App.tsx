@@ -36,6 +36,7 @@ import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
 import WaldtanzAblage from './components/WaldtanzAblage'
 import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
+import WaldtanzKartenpop from './components/WaldtanzKartenpop'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -292,6 +293,7 @@ function App({ initialZustand }: AppProps) {
               <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
               <WaldtanzAblage zustand={zustand} />
               <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
+              <WaldtanzKartenpop aktionLabel={letzteAktion} />
               <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} />
               <Schlangenbereich
                 zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
