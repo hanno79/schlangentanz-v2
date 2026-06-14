@@ -18,6 +18,8 @@ import GegnerSchlangenListe from './GegnerSchlangenListe'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
 import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
+import FarbenfusionPaarziel from './FarbenfusionPaarziel'
+import { ermittleFarbenfusionPaarInfo } from './farbenfusionPaarInfo'
 
 interface SchlangenbereichProps {
   zustand: Spielzustand
@@ -110,13 +112,6 @@ export default function Schlangenbereich({
     if (!handkartenId) return null
     return farbenschutzAktionen.find(
       (aktion) => aktion.handkartenId === handkartenId && aktion.zielSchlangenId === schlangeId,
-    ) ?? null
-  }
-
-  function findeFarbenfusionAktion(schlangeId: string, zielKartenId: string, handkartenId: string | null) {
-    if (!handkartenId) return null
-    return farbenfusionAktionen.find(
-      (aktion) => aktion.handkartenId === handkartenId && aktion.zielSchlangenId === schlangeId && aktion.zielKartenId === zielKartenId,
     ) ?? null
   }
 
@@ -370,34 +365,23 @@ export default function Schlangenbereich({
                   <strong id={schlangenLabelNameId}>{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <div className="schlangekarte__kartenreihe" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
-                    {schlange.karten.map((karte) => {
-                      const farbenfusionAktion = findeFarbenfusionAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
+                    {schlange.karten.map((karte, kartenIndex) => {
+                      const farbenfusionPaar = ermittleFarbenfusionPaarInfo(schlange.karten, kartenIndex, schlange.id, ausgewaehlteHandkarteId, farbenfusionAktionen)
+                      const farbenfusionAktion = farbenfusionPaar?.istStartkarte ? farbenfusionPaar.aktion : null
                       const schlangenfrassAktion = findeSchlangenfrassAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
-                      const istSonderaktionZiel = Boolean(farbenfusionAktion ?? schlangenfrassAktion)
+                      const istFarbenfusionPaar = Boolean(farbenfusionPaar)
+                      const istSonderaktionZiel = Boolean(farbenfusionAktion || istFarbenfusionPaar || schlangenfrassAktion)
 
                       return (
                         <div
                           key={karte.id}
-                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
+                          className={`schlangekarte__karte schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                           role="listitem"
                           aria-label={schlangenKartenAriaLabel(karte)}
                         >
                           <strong>{karte.id}</strong>
                           <span>{schlangenKartenKurzlabel(karte)}</span>
-                          {farbenfusionAktion && (
-                            <button
-                              type="button"
-                              className="schlangekarte__sonderaktion-button"
-                              aria-label={`Farbenfusion im Schlangenbereich mit Karte ${farbenfusionAktion.handkartenId} bei Karte ${farbenfusionAktion.zielKartenId}`}
-                              title={aktionsLabel(farbenfusionAktion)}
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                onAktion(farbenfusionAktion)
-                              }}
-                            >
-                              Farbenfusion hier spielen
-                            </button>
-                          )}
+                          <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} />
                           {schlangenfrassAktion && (
                             <button
                               type="button"

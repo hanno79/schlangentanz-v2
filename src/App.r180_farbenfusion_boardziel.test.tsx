@@ -53,7 +53,7 @@ describe('R180 Farbenfusion-Boardziel', () => {
 
     expect(zielkarte).toHaveClass('schlangekarte__karte--farbenfusion-ziel')
     const boardAktion = within(zielkarte as HTMLElement).getByRole('button', {
-      name: 'Farbenfusion im Schlangenbereich mit Karte farbenfusion-r180 bei Karte blau-r180-a',
+      name: 'Farbenfusion-Paar im Schlangenbereich mit Karte farbenfusion-r180: blau-r180-a und blau-r180-b fusionieren',
     })
     expect(boardAktion).toBeVisible()
     expect(fireEvent.keyDown(boardAktion, { key: 'Enter' })).toBe(true)

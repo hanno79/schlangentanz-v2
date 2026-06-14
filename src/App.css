@@ -2233,6 +2233,35 @@ code {
   box-shadow: 0 0 0 4px rgba(254, 203, 0, 0.42), 0 2px 0 rgba(6, 57, 7, 0.2);
 }
 
+.schlangekarte__karte--farbenfusion-paar {
+  /* ÄNDERUNG 14.06.2026: M2g macht das komplette Farbenfusion-Paar als Brettobjekt sichtbar. */
+  outline: var(--st-border-width-chunky) solid var(--st-color-secondary-container);
+  outline-offset: 3px;
+  background: linear-gradient(180deg, rgba(164, 222, 2, 0.42), rgba(254, 203, 0, 0.34));
+  box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 5px rgba(164, 222, 2, 0.24);
+}
+
+.schlangekarte__karte--farbenfusion-ziel {
+  border-color: var(--st-color-border-strong);
+}
+
+.farbenfusion-paarziel__plakette,
+.farbenfusion-paarziel__partner {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.25rem 0.45rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  color: var(--st-color-border-strong);
+  font-weight: 900;
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.farbenfusion-paarziel__partner {
+  background: var(--st-color-secondary-container);
+}
+
 .schlangekarte__karte--schlangenfrass-ziel {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.26), 0 2px 0 rgba(6, 57, 7, 0.2);
 }
@@ -2315,6 +2344,11 @@ code {
 .schlangekarte__sonderaktion-button--frass {
   background: var(--st-color-tertiary);
   color: #fff8dc;
+}
+
+.schlangekarte__sonderaktion-button--fusion {
+  background: var(--st-color-primary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
 }
 
 .schlangekarte__sonderaktion-button--schutz {
