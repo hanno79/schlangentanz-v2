@@ -481,6 +481,7 @@ export default function Schlangenbereich({
           ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
           schlangenblockadeAktionen={schlangenblockadeAktionen}
           farbendiebAktionen={farbendiebAktionen}
+          schlangenfrassAktionen={schlangenfrassAktionen}
           onAktion={onAktion}
           aktionsLabel={aktionsLabel}
         />

@@ -63,7 +63,7 @@ describe('R181 Schlangenfrass-Boardziel', () => {
     expect(within(schlangenbereich).getByText('blau-r181-bleibt')).toBeVisible()
   })
 
-  it('bietet die spätere Zwei-Gegner-Zielauswahl noch nicht als Einzelkarten-Boardbutton an', () => {
+  it('bietet Zwei-Gegner-Zielauswahl als vorbereitende Boardauswahl statt Einzelkarten-Sofortaktion an', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
     zustand.spieler[0].hand = [sonderkarte('schlangenfrass-r181-zwei-ziele', 'Schlangenfrass')]
     zustand.spieler[0].schlangen = []
@@ -75,7 +75,9 @@ describe('R181 Schlangenfrass-Boardziel', () => {
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-r181-zwei-ziele/ }))
 
-    expect(within(schlangenbereich).queryByRole('button', { name: /Schlangenfrass im Schlangenbereich/ })).toBeNull()
-    expect(within(schlangenbereich).queryAllByText('Schlangenfrass hier spielen')).toHaveLength(0)
+    expect(within(schlangenbereich).getAllByRole('button', { name: /Schlangenfrass-Ziel 1 im Schlangenbereich wählen/ })).toHaveLength(2)
+    expect(within(schlangenbereich).queryByRole('button', { name: /Schlangenfrass im Schlangenbereich mit Karte/ })).toBeNull()
+    fireEvent.click(within(schlangenbereich).getByRole('button', { name: /rot-gegner-r181/ }))
+    expect(within(schlangenbereich).getByRole('button', { name: /auf Karten rot-gegner-r181 und blau-gegner-r181/ })).toBeVisible()
   })
 })

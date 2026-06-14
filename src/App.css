@@ -2237,6 +2237,30 @@ code {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.26), 0 2px 0 rgba(6, 57, 7, 0.2);
 }
 
+.schlangekarte__karte--schlangenfrass-ausgewaehlt {
+  /* ÄNDERUNG 14.06.2026: M2f markiert das erste Schlangenfrass-Ziel für die Zwei-Karten-Auswahl. */
+  outline: 4px solid var(--st-color-secondary-container);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px rgba(254, 203, 0, 0.42), 0 4px 0 rgba(6, 57, 7, 0.28);
+}
+
+.schlangenfrass-zweiziel-kompass {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 188, 170, 0.72), rgba(254, 203, 0, 0.42));
+  box-shadow: var(--st-shadow-hard);
+}
+
+.schlangenfrass-zweiziel-kompass p {
+  margin: 0;
+  font-weight: 800;
+}
+
 .schlangekarte__karte--farbendieb-ziel {
   /* ÄNDERUNG 13.06.2026: R183 hebt Farbendieb-Ziele als Beutekarten im Waldtanz hervor. */
   background: linear-gradient(180deg, rgba(255, 188, 170, 0.72), rgba(254, 203, 0, 0.38));
