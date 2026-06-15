@@ -93,6 +93,7 @@ async function browserSmoke() {
     await pruefeM1asErstzugLichtung(seite)
     await pruefeM1awHandkante(seite)
     await pruefeM1axFreieLichtung(seite)
+    await pruefeM1ayWaldkulisse(seite)
 
     await seite.waitForTimeout(500)
 
@@ -221,6 +222,50 @@ async function pruefeM1axFreieLichtung(seite) {
   }
 
   console.log(`M1ax Freie Lichtung: ${Math.round(freieLichtungsHoehe)}px Schlangenlichtung frei, Karte bei ${Math.round(ersteHandkarteBox.y)}px/${Math.round(ersteHandkarteBox.height)}px`)
+}
+
+async function pruefeM1ayWaldkulisse(seite) {
+  const spielbereich = seite.locator('.spielbereich--game-route').first()
+  const handkarte = seite.locator('.handkartenleiste--tiefenfaecher .handkarte__button--karte').first()
+  const handkarteBox = await handkarte.boundingBox()
+
+  if (!handkarteBox) {
+    throw new Error('M1ay Waldkulisse: erste Handkarte fehlt')
+  }
+
+  const kulisse = await spielbereich.evaluate((element) => {
+    const style = getComputedStyle(element)
+    const before = getComputedStyle(element, '::before')
+    const after = getComputedStyle(element, '::after')
+    return {
+      backgroundImage: style.backgroundImage,
+      isolation: style.isolation,
+      overflow: style.overflow,
+      beforePointer: before.pointerEvents,
+      beforeBackground: before.backgroundImage,
+      afterPointer: after.pointerEvents,
+      afterBackground: after.backgroundImage,
+      afterRadius: after.borderTopLeftRadius,
+    }
+  })
+
+  if (!kulisse.backgroundImage.includes('135, 206, 235') || kulisse.isolation !== 'isolate' || kulisse.overflow !== 'clip') {
+    throw new Error(`M1ay Waldkulisse: Spielbereich ist keine sonnige Waldlichtung (${JSON.stringify(kulisse)})`)
+  }
+  if (kulisse.beforePointer !== 'none' || !kulisse.beforeBackground.includes('radial-gradient')) {
+    throw new Error(`M1ay Waldkulisse: Baumkronen-Deko blockiert oder fehlt (${JSON.stringify(kulisse)})`)
+  }
+  if (kulisse.afterPointer !== 'none' || !kulisse.afterBackground.includes('repeating-radial-gradient') || Number.parseFloat(kulisse.afterRadius) < 40) {
+    throw new Error(`M1ay Waldkulisse: Waldboden-Deko blockiert oder fehlt (${JSON.stringify(kulisse)})`)
+  }
+
+  const center = { x: handkarteBox.x + handkarteBox.width / 2, y: handkarteBox.y + handkarteBox.height / 2 }
+  const hitTest = await seite.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('button')?.className ?? '', center)
+  if (!String(hitTest).includes('handkarte__button--karte')) {
+    throw new Error(`M1ay Waldkulisse: Kulisse blockiert Handkarten-Klicks (${hitTest})`)
+  }
+
+  console.log('M1ay Waldkulisse: sonniger Waldhintergrund sichtbar, Dekoration klicksicher')
 }
 
 async function kernTextSichtbar(seite, text) {
