@@ -2226,6 +2226,57 @@ code {
   background: linear-gradient(90deg, rgba(164, 222, 2, 0.6), rgba(254, 203, 0, 0.55), rgba(177, 45, 0, 0.26));
 }
 
+.waldtanz-farbgruppenband {
+  display: grid;
+  gap: 0.45rem;
+  margin-block: 0.35rem 0.15rem;
+  padding: 0.65rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(135deg, rgba(236, 255, 227, 0.94), rgba(196, 253, 182, 0.76));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-farbgruppenband__label {
+  font-family: var(--st-font-headline);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.waldtanz-farbgruppenband__gruppen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.waldtanz-farbgruppenband__chip,
+.waldtanz-farbgruppenband__quest,
+.waldtanz-farbgruppenband__leer {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  padding: 0.35rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.waldtanz-farbgruppenband__quest {
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+}
+
+.waldtanz-farbgruppenband__chip {
+  border-radius: 999px;
+}
+
 .schlangekarte__pfadmarke {
   width: fit-content;
   padding: 0.08rem 0.45rem;

@@ -18,6 +18,7 @@ import WaldtanzZielkompass from './WaldtanzZielkompass'
 import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
 import WaldtanzZielspur from './WaldtanzZielspur'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
+import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
@@ -338,6 +339,7 @@ export default function Schlangenbereich({
           </div>
         )}
         {hatEigeneSchlangen ? (
+          <>
           <ul className="schlangenleiste">
             {aktiverSpieler.schlangen.map((schlange, schlangeIndex) => {
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
@@ -460,6 +462,12 @@ export default function Schlangenbereich({
               )
             })}
           </ul>
+          <div className="waldtanz-farbgruppenband-ablage" aria-label="Farbgruppenbänder eigener Schlangen">
+            {aktiverSpieler.schlangen.map((schlange) => (
+              <WaldtanzFarbgruppenband key={schlange.id} schlange={schlange} offeneAufgaben={zustand.offeneAufgaben} />
+            ))}
+          </div>
+          </>
         ) : (
           <p>Keine eigenen Schlangen.</p>
         )}

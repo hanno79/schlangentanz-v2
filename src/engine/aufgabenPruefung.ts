@@ -12,7 +12,7 @@ Beschreibung: Aufgabenprüfungsregeln für Schlangentanz – Erkennung und Erfü
 Änderung v1.7: pruefeSchlangentanz (aufgabe-11) über Schlangenhäutung-Dreiergruppen-Historie hinzugefügt.
 */
 
-import type { AufgabenkarteInfo, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
+import type { AufgabenkarteInfo, Farbe, Schlange, Spielkarte, SonderkarteInfo, Spielzustand } from './types';
 import { ermittleFarbgruppen } from './colorGroups';
 
 const ALLE_FARBEN = ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett', 'Braun'] as const;
@@ -51,17 +51,28 @@ function pruefeSchlangenrepertoire(zustand: Spielzustand): boolean {
   return new Set(aktiverSpieler.ausgespielteSonderkartenNamen).size >= 5;
 }
 
+export interface FarbkombinationFortschritt {
+  farbe: Farbe | null;
+  anzahl: number;
+  fehlendeKarten: number;
+  bereit: boolean;
+}
+
+export function ermittleFarbkombinationFortschritt(schlange: Schlange): FarbkombinationFortschritt {
+  const farbzaehler = new Map<Farbe, number>();
+  for (const karte of schlange.karten) {
+    if (karte.typ !== 'Farbkarte') continue;
+    farbzaehler.set(karte.farbe, (farbzaehler.get(karte.farbe) ?? 0) + 1);
+  }
+
+  const [farbe, anzahl] = Array.from(farbzaehler.entries()).sort((a, b) => b[1] - a[1])[0] ?? [null, 0];
+  const fehlendeKarten = Math.max(0, 5 - anzahl);
+  return { farbe, anzahl, fehlendeKarten, bereit: fehlendeKarten === 0 };
+}
+
 function pruefeFarbkombination(zustand: Spielzustand): boolean {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
-  return aktiverSpieler.schlangen.some((schlange) => {
-    const farbzaehler: Record<string, number> = {};
-    for (const karte of schlange.karten) {
-      if (karte.typ !== 'Farbkarte') continue;
-      farbzaehler[karte.farbe] = (farbzaehler[karte.farbe] ?? 0) + 1;
-      if (farbzaehler[karte.farbe] >= 5) return true;
-    }
-    return false;
-  });
+  return aktiverSpieler.schlangen.some((schlange) => ermittleFarbkombinationFortschritt(schlange).bereit);
 }
 
 function pruefeGelberSchatz(zustand: Spielzustand): boolean {
