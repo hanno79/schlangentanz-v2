@@ -9,7 +9,7 @@ Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit ausw
 # ÄNDERUNG 12.06.2026: R177 ergänzt farbspezifische Klassen für echte Kartenflächen statt generischer Klickkarten.
 */
 
-import { useId } from 'react'
+import { useId, type CSSProperties } from 'react'
 import type { QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 
@@ -90,6 +90,21 @@ function zielartLabel(aktion: SpielAktion): string | null {
 
 function zielartenFuerAktionen(aktionen: SpielAktion[]): string[] {
   return Array.from(new Set(aktionen.map(zielartLabel).filter((label): label is string => label !== null)))
+}
+
+function tiefenfaecherStyle(index: number, anzahl: number, istAusgewaehlt: boolean): CSSProperties {
+  const maxAbstand = Math.max(1, (anzahl - 1) / 2)
+  const abstand = index - (anzahl - 1) / 2
+  const rotationsSchritt = Math.min(4, 16 / Math.max(1, anzahl - 1))
+  const rotation = Number((abstand * rotationsSchritt).toFixed(2))
+  const y = Number(((Math.abs(abstand) - maxAbstand) * 0.32).toFixed(2))
+  const z = istAusgewaehlt ? 99 : Math.round((maxAbstand - Math.abs(abstand)) * 10) + 1
+
+  return {
+    '--hand-faecher-rotation': `${rotation}deg`,
+    '--hand-faecher-y': `${y}rem`,
+    '--hand-faecher-z': z,
+  } as CSSProperties
 }
 
 export default function HandkartenPanel({
@@ -180,8 +195,8 @@ export default function HandkartenPanel({
       ) : (
         <p className="handkarten-status">Keine Handkarte ausgewählt.</p>
       )}
-      <ul className="handkartenleiste handkartenleiste--waldtanz-faecher">
-        {handkarten.map((karte) => {
+      <ul className="handkartenleiste handkartenleiste--waldtanz-faecher handkartenleiste--tiefenfaecher">
+        {handkarten.map((karte, index) => {
           const istFarbkarte = karte.typ === 'Farbkarte'
           const istAusgewaehlt = ausgewaehlteHandkarte?.id === karte.id
           const alleKartenAktionen = aktionenFuerHandkarte(legaleAktionen, karte.id)
@@ -197,6 +212,7 @@ export default function HandkartenPanel({
             <li
               key={karte.id}
               className={`handkarte handkarte--spielkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}${istSpielbar ? ' handkarte--spielbar' : hatPflichtAbwurf ? ' handkarte--pflichtabwurf' : ' handkarte--wartet'}`}
+              style={tiefenfaecherStyle(index, handkarten.length, istAusgewaehlt)}
             >
               <button
                 type="button"

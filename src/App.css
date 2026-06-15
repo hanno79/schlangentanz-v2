@@ -2167,12 +2167,64 @@ code {
   padding-block: 0.5rem 0.25rem;
 }
 
+.handkartenleiste--tiefenfaecher {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: end;
+  justify-content: center;
+  gap: 0;
+  padding-block: 0.75rem 0.35rem;
+  perspective: 900px;
+}
+
+.handkartenleiste--tiefenfaecher .handkarte {
+  width: clamp(6.35rem, 10vw, 8.25rem);
+  margin-inline: clamp(-1.2rem, -1.2vw, -0.35rem);
+  transform: translateY(var(--hand-faecher-y, 0)) rotate(var(--hand-faecher-rotation, 0deg));
+  transform-origin: 50% 100%;
+  z-index: var(--hand-faecher-z, 1);
+}
+
+.handkartenleiste--tiefenfaecher .handkarte:first-child,
+.handkartenleiste--tiefenfaecher .handkarte:last-child {
+  margin-inline: 0;
+}
+
+[class~="handkartenleiste--tiefenfaecher"] [class~="handkarte__button--karte"]:hover {
+  transform: translateY(-1.25rem) scale(1.08);
+  box-shadow: 0 11px 0 var(--st-color-border-strong), 0 0 0 5px rgba(254, 203, 0, 0.42);
+}
+
+[class~="handkartenleiste--tiefenfaecher"] [class~="handkarte--ausgewaehlt"] [class~="handkarte__button--karte"] {
+  animation: handkarte-tiefenfaecher-wackelt 900ms ease-in-out infinite;
+}
+
+@keyframes handkarte-tiefenfaecher-wackelt {
+  0%, 100% { transform: translateY(-1.6rem) rotate(-1.5deg) scale(1.12); }
+  50% { transform: translateY(-1.85rem) rotate(1.5deg) scale(1.14); }
+}
+
+@media (max-width: 720px) {
+  .handkartenleiste--tiefenfaecher {
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .handkartenleiste--tiefenfaecher .handkarte {
+    margin-inline: 0;
+  }
+}
+
 .handkartenleiste .handkarte:nth-child(2n + 1) {
   transform: rotate(-4deg);
 }
 
 .handkartenleiste .handkarte:nth-child(2n) {
   transform: rotate(4deg);
+}
+
+.handkartenleiste--tiefenfaecher .handkarte {
+  transform: translateY(var(--hand-faecher-y, 0)) rotate(var(--hand-faecher-rotation, 0deg));
 }
 
 .handkarte {
