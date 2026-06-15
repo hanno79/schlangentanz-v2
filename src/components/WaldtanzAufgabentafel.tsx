@@ -7,6 +7,7 @@ Beschreibung: Board-nahe Waldtanz-Aufgabentafel für offene Questkarten und Aufg
 
 import { ermittleErfuellteOffeneAufgaben, type AufgabenkarteInfo, type Spielzustand } from '../engine'
 import type { CSSProperties } from 'react'
+import { ermittleQuestFaehrte } from './questFaehrte'
 
 interface WaldtanzAufgabentafelProps {
   zustand: Spielzustand
@@ -43,6 +44,7 @@ export default function WaldtanzAufgabentafel({ zustand, istEndspurt, onAufgaben
         <ul className="waldtanz-aufgabentafel__liste">
           {zustand.offeneAufgaben.map((aufgabe, index) => {
             const istErfuellbar = erfuellteIds.has(aufgabe.id)
+            const faehrte = ermittleQuestFaehrte(aufgabe, zustand)
 
             return (
               <li key={aufgabe.id} className={`waldtanz-questkarte${istErfuellbar ? ' waldtanz-questkarte--erfuellbar' : ''}`} style={{ '--quest-rotation': `${(index - 1) * 1.5}deg` } as CSSProperties}>
@@ -52,6 +54,15 @@ export default function WaldtanzAufgabentafel({ zustand, istEndspurt, onAufgaben
                 <span className={`waldtanz-questkarte__status${istErfuellbar ? ' waldtanz-questkarte__status--bereit' : ''}`}>
                   {istErfuellbar ? 'Bereit zum Einsammeln' : 'Noch offen'}
                 </span>
+                <div className="waldtanz-questkarte__faehrte" aria-label={`Quest-Fährte ${aufgabe.name}`}>
+                  <span className="waldtanz-questkarte__faehrte-label">Quest-Fährte</span>
+                  <strong className="waldtanz-questkarte__faehrte-hauptwert">{faehrte.hauptwert}</strong>
+                  <span className="waldtanz-questkarte__faehrte-chips">
+                    {faehrte.chips.map((chip) => (
+                      <span className="waldtanz-questkarte__faehrte-chip" key={chip}>{chip}</span>
+                    ))}
+                  </span>
+                </div>
                 <p>{aufgabe.bedingung}</p>
                 {istErfuellbar && <p className="waldtanz-questkarte__sammelhinweis">In der nächsten Aufgabenprüfung kassierst du diese Punkte.</p>}
                 {istErfuellbar && kannQuestsEinsammeln && (

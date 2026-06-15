@@ -3281,6 +3281,44 @@ code {
   background: var(--st-color-secondary-container);
 }
 
+.waldtanz-questkarte__faehrte {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.55rem;
+  border: 2px dashed var(--st-color-border-strong);
+  border-radius: 1.25rem;
+  background: rgba(236, 255, 227, 0.72);
+}
+
+.waldtanz-questkarte__faehrte-label {
+  font-family: var(--st-font-headline);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.waldtanz-questkarte__faehrte-hauptwert {
+  font-family: var(--st-font-headline);
+  font-size: 0.95rem;
+}
+
+.waldtanz-questkarte__faehrte-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.waldtanz-questkarte__faehrte-chip {
+  width: fit-content;
+  padding: 0.12rem 0.5rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
 .waldtanz-questkarte__sammelhinweis {
   font-weight: 900;
 }
