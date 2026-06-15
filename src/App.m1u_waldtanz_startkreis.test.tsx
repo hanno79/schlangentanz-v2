@@ -49,6 +49,7 @@ describe('M1u Waldtanz-Startkreis', () => {
     expect(cssBlock('schlangen-startzone__badge')).toMatch(/font-family:\s*var\(--st-font-headline\)/)
     expect(cssBlock('schlangen-startkreis-button')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('schlangen-startkreis-button')).toMatch(/box-shadow:\s*0 4px 0 var\(--st-color-border-strong\)/)
+    expect(appCss).toMatch(/\.schlangekarte__anlegebutton\.schlangen-startkreis-button\s*\{[^}]*border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)[^}]*box-shadow:\s*0 4px 0 var\(--st-color-border-strong\)/s)
     expect(appCss).toMatch(/\.schlangen-startzone--magiekreis\.schlangen-startzone--zielbereit\s*\{[^}]*background:\s*radial-gradient/s)
     expect(appCss).toMatch(/\.schlangen-startzone--magiekreis\.schlangen-startzone--zielbereit\s*\{[^}]*box-shadow:\s*inset 0 0 0 6px rgba\(164, 222, 2, 0\.24\), 0 0 0 6px rgba\(254, 203, 0, 0\.42\), var\(--st-shadow-hard\)/s)
     expect(appCss).not.toMatch(/--st-color-startkreis/)

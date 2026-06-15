@@ -2649,6 +2649,11 @@ code {
   scroll-margin-bottom: 18rem;
 }
 
+.schlangekarte__anlegebutton.schlangen-startkreis-button {
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
 .schlangekarte__anlegebutton--links {
   border-color: rgba(75, 103, 0, 0.7);
 }
