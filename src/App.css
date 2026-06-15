@@ -420,6 +420,14 @@ body {
   pointer-events: none;
 }
 
+.spielbereich--game-route .aktionen-panel--waldtanz-dock {
+  position: static;
+  max-height: none;
+  overflow: visible;
+  pointer-events: auto;
+  margin-top: 1rem;
+}
+
 .aktionen-panel--waldtanz-dock button,
 .aktionen-panel--waldtanz-dock a,
 .aktionen-panel--waldtanz-dock summary {
