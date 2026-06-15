@@ -44,6 +44,22 @@ function karteSymbol(karte: Spielkarte): string {
   }
 }
 
+function karteAnzeigename(karte: Spielkarte): string {
+  if (karte.typ !== 'Farbkarte') return karte.name
+  switch (karte.farbe) {
+    case 'Blau': return 'Wasserwirbel'
+    case 'Rot': return 'Feuerkeim'
+    case 'Gelb': return 'Sonnenblatt'
+    case 'Violett': return 'Mondranke'
+    case 'Braun': return 'Wurzelpfad'
+    case 'Grün': return 'Waldspross'
+  }
+}
+
+function karteWertLabel(karte: Spielkarte): string {
+  return karte.typ === 'Farbkarte' ? `${karte.punkte} Pkt` : 'Zauber'
+}
+
 function karteFarbklasse(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? ` handkarten-preview--farbe-${farbeCssKlasse(karte.farbe)}` : ' handkarten-preview--sonderkarte'
 }
@@ -229,10 +245,14 @@ export default function HandkartenPanel({
                 onDragEnd={onKarteDragEnd}
               >
                 <span className="handkarte__eyebrow">Waldtanzkarte</span>
-                <span className="handkarte__symbol" aria-hidden="true">{karteSymbol(karte)}</span>
-                <strong>{karte.id}</strong>
+                <span className="handkarte__art" aria-hidden="true">
+                  <span className="handkarte__symbol">{karteSymbol(karte)}</span>
+                </span>
+                <strong className="handkarte__titel">{karteAnzeigename(karte)}</strong>
+                <span className="handkarte__idplakette">{karte.id}</span>
                 <span className="handkarte__typ">{istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`}</span>
                 <span className="handkarte__farbe">{istFarbkarte ? karte.farbe : karte.name}</span>
+                <span className="handkarte__wertechip">{karteWertLabel(karte)}</span>
                 <span className="handkarte__punkte">{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
                 <span className="handkarte__spielhinweis">Auswählen oder ziehen</span>
                 <span className="handkarte__spielstatus">{spielStatusText}</span>
