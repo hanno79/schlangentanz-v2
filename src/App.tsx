@@ -281,23 +281,25 @@ function App({ initialZustand }: AppProps) {
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} schlangengrubeAktionen={versteckeKiEinzelaktionen ? [] : schlangengrubeAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
-              <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
-              <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
-              <ZugKompass
-                zustand={zustand}
-                ueberhand={ueberhand}
-                zeigtKiVorspulen={versteckeKiEinzelaktionen}
-                kiZugProtokoll={kiZugProtokoll}
-                onAusspielphaseBeenden={handleAusspielphaseBeenden}
-                onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
-                onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
-                onZugBeenden={handleZugBeenden}
-                onAusspielphaseStarten={handleAusspielphaseStarten}
-                onKiZugVorspulen={handleKiZugVorspulen}
-                onReaktionsAktion={fuhreAktionAus}
-              />
-              <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
-              <WaldtanzBonuszauber aktionen={versteckeKiEinzelaktionen ? [] : verdopplerAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
+              <aside className="waldtanz-zugseitenleiste" aria-label="Zugleiste">
+                <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
+                <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
+                <ZugKompass
+                  zustand={zustand}
+                  ueberhand={ueberhand}
+                  zeigtKiVorspulen={versteckeKiEinzelaktionen}
+                  kiZugProtokoll={kiZugProtokoll}
+                  onAusspielphaseBeenden={handleAusspielphaseBeenden}
+                  onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
+                  onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
+                  onZugBeenden={handleZugBeenden}
+                  onAusspielphaseStarten={handleAusspielphaseStarten}
+                  onKiZugVorspulen={handleKiZugVorspulen}
+                  onReaktionsAktion={fuhreAktionAus}
+                />
+                <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
+                <WaldtanzBonuszauber aktionen={versteckeKiEinzelaktionen ? [] : verdopplerAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
+              </aside>
               <section className="waldtanz-arenastein" aria-label="Waldtanz-Arenastein">
                 <div className="waldtanz-arenastein__kopf">
                   <h4>Leuchtender Waldstein</h4>
