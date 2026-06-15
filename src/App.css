@@ -2621,6 +2621,8 @@ code {
 .waldtanz-arenastein__schlangenlichtung {
   min-height: clamp(26rem, 48vh, 38rem);
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(0.7rem, 1.4vw, 1rem);
   align-content: stretch;
   padding: clamp(0.7rem, 1.4vw, 1rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
@@ -2633,8 +2635,111 @@ code {
 }
 
 .waldtanz-arenastein__schlangenlichtung .schlangenbereich {
-  min-height: 100%;
+  min-height: 0;
   background: rgba(255, 255, 255, 0.32);
+}
+
+.waldtanz-tischkarte {
+  display: grid;
+  gap: 0.65rem;
+  justify-items: center;
+  justify-self: center;
+  width: min(100%, 30rem);
+  padding: clamp(0.8rem, 1.8vw, 1.05rem);
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(254, 203, 0, 0.46) 0 4.2rem, transparent 4.35rem),
+    radial-gradient(circle at 50% 50%, rgba(164, 222, 2, 0.32), rgba(236, 255, 227, 0.78) 68%);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  text-align: center;
+}
+
+.waldtanz-tischkarte__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.65rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.waldtanz-tischkarte__kopf h4,
+.waldtanz-tischkarte__leer p,
+.waldtanz-tischkarte__darunter {
+  margin: 0;
+}
+
+.waldtanz-tischkarte__badge,
+.waldtanz-tischkarte__label,
+.waldtanz-tischkarte__darunter {
+  width: fit-content;
+  padding: 0.16rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  font-family: var(--st-font-headline);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.waldtanz-tischkarte__karte {
+  display: grid;
+  gap: 0.38rem;
+  width: min(8.5rem, 58vw);
+  aspect-ratio: 2 / 3;
+  align-content: space-between;
+  justify-items: center;
+  padding: 0.65rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 1.2rem;
+  background: linear-gradient(160deg, var(--kartenfarbe, var(--st-color-surface-container-highest)) 0%, rgba(255, 255, 255, 0.86) 100%);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  color: var(--kartenfarbe-text, var(--st-color-border-strong));
+  transform: rotate(3deg);
+}
+
+.waldtanz-tischkarte__karte--sonderkarte {
+  --kartenfarbe: var(--st-color-tertiary-container, #ffbcaa);
+  --kartenfarbe-text: var(--st-color-border-strong);
+}
+
+.waldtanz-tischkarte__symbol {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 2.4rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 0.85rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(254, 203, 0, 0.52));
+  font-size: 1.75rem;
+}
+
+.waldtanz-tischkarte__typ {
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.waldtanz-tischkarte__wert {
+  padding: 0.13rem 0.52rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+  font-size: 0.68rem;
+  font-weight: 900;
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-tischkarte__leer {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 25rem;
+  padding: 0.75rem 1rem;
+  border: 2px dashed rgba(6, 57, 7, 0.48);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.56);
+  font-weight: 800;
 }
 
 .waldtanz-arenastein__waldobjekte {
