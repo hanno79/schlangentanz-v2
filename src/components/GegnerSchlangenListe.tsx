@@ -5,8 +5,8 @@ Version: 1.0
 Beschreibung: Gegnerische Schlangenreihe mit board-nahen Sonderkarten-Zielen für Waldtanz-Interaktionen.
 */
 import { useState } from 'react'
-import type { SpielAktion, Spieler, Spielkarte } from '../engine'
-import { farbeCssKlasse } from '../kartenfarben'
+import type { SpielAktion, Spieler } from '../engine'
+import SchlangenPfadKarte from './SchlangenPfadKarte'
 
 interface GegnerSchlangenListeProps {
   spieler: Spieler[]
@@ -27,16 +27,6 @@ function istGleichesFrassZiel(a: FrassZiel, b: FrassZiel) {
 
 function enthaeltFrassZiel(aktion: Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }>, ziel: FrassZiel) {
   return aktion.ziele.some((eintrag) => istGleichesFrassZiel(eintrag, ziel))
-}
-
-function schlangenKartenKurzlabel(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte' ? `${karte.farbe} · ${karte.punkte} Punkte` : `Sonderkarte ${karte.name}`
-}
-
-function schlangenKartenAriaLabel(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte'
-    ? `Farbkarte ${karte.id}: ${karte.farbe} mit ${karte.punkte} Punkten`
-    : `Sonderkarte ${karte.id}: ${karte.name}`
 }
 
 function schlangenStatusLabel(zustand: Spieler['schlangen'][number]['zustand']): string {
@@ -114,19 +104,14 @@ export default function GegnerSchlangenListe({
                     : null
                   const istKopf = kartenIndex === 0
                   const istSchwanz = kartenIndex === schlange.karten.length - 1
-                  const pfadKlasse = `${istKopf ? ' schlangekarte__karte--kopf' : ''}${istSchwanz ? ' schlangekarte__karte--schwanz' : ''}${!istKopf && !istSchwanz ? ' schlangekarte__karte--koerper' : ''}`
                   return (
-                    <div
+                    <SchlangenPfadKarte
                       key={karte.id}
-                      className={`schlangekarte__karte${pfadKlasse} schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${diebAktionen.length > 0 || istFrassZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${diebAktionen.length > 0 ? ' schlangekarte__karte--farbendieb-ziel' : ''}${istFrassZiel ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}${istFrassAusgewaehlt ? ' schlangekarte__karte--schlangenfrass-ausgewaehlt' : ''}`}
-                      role="listitem"
-                      aria-label={schlangenKartenAriaLabel(karte)}
+                      karte={karte}
+                      istKopf={istKopf}
+                      istSchwanz={istSchwanz}
+                      className={`${diebAktionen.length > 0 || istFrassZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${diebAktionen.length > 0 ? ' schlangekarte__karte--farbendieb-ziel' : ''}${istFrassZiel ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}${istFrassAusgewaehlt ? ' schlangekarte__karte--schlangenfrass-ausgewaehlt' : ''}`}
                     >
-                      <strong>{karte.id}</strong>
-                      {istKopf && istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf & Schwanz</span> : null}
-                      {istKopf && !istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf</span> : null}
-                      {istSchwanz && !istKopf ? <span className="schlangekarte__pfadmarke">Schwanz</span> : null}
-                      <span>{schlangenKartenKurzlabel(karte)}</span>
                       {diebAktionen.map((aktion) => (
                         <button
                           key={`${aktion.handkartenId}-${aktion.eigeneSchlangenId}-${aktion.einfügeIndex}`}
@@ -163,7 +148,7 @@ export default function GegnerSchlangenListe({
                           Schlangenfrass mit 2 Zielen ausführen
                         </button>
                       )}
-                    </div>
+                    </SchlangenPfadKarte>
                   )
                 })}
               </div>

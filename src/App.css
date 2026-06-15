@@ -2256,6 +2256,88 @@ code {
   color: var(--kartenfarbe-text, inherit);
 }
 
+.schlangekarte__karte--spielkarte {
+  /* ÄNDERUNG 15.06.2026: M1af macht Schlangenpfad-Karten als greifbare Mini-Spielkarten sichtbar. */
+  grid-template-rows: auto minmax(2rem, 1fr) auto auto auto;
+  justify-items: center;
+  align-content: start;
+  min-width: 5.9rem;
+  max-width: 7.1rem;
+  aspect-ratio: 2 / 3;
+  padding: 0.45rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 1.1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(236, 255, 227, 0.72));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  text-align: center;
+}
+
+.schlangekarte__karte-eyebrow {
+  font-family: var(--st-font-headline);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.schlangekarte__karte-symbol {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 2.15rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 0.8rem;
+  background: linear-gradient(135deg, rgba(164, 222, 2, 0.42), rgba(254, 203, 0, 0.36));
+  font-size: 1.55rem;
+  box-shadow: inset 0 -2px 0 rgba(6, 57, 7, 0.16);
+}
+
+.schlangekarte__karte-typ {
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.schlangekarte__karte-wert {
+  padding: 0.12rem 0.45rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+  font-size: 0.66rem;
+  font-weight: 900;
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.schlangekarte__karte--farbe-blau .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, #dbeafe, #60a5fa);
+}
+
+.schlangekarte__karte--farbe-rot .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, #fee2e2, #f87171);
+}
+
+.schlangekarte__karte--farbe-gelb .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, #fef9c3, #fde047);
+}
+
+.schlangekarte__karte--farbe-violett .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, #f3e8ff, #c084fc);
+}
+
+.schlangekarte__karte--farbe-braun .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, #fef3c7, #a16207);
+}
+
+.schlangekarte__karte--farbe-gruen .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, #dcfce7, #4ade80);
+}
+
+.schlangekarte__karte--sonderkarte .schlangekarte__karte-symbol {
+  background: linear-gradient(135deg, rgba(255, 188, 170, 0.82), rgba(254, 203, 0, 0.72));
+}
+
 .schlangekarte__karte--farbe-blau {
   --kartenfarbe: #3b82f6;
   --kartenfarbe-rand: #1d4ed8;
@@ -2332,6 +2414,26 @@ code {
 .scoreboard-karte span {
   font-size: 0.88rem;
   line-height: 1.4;
+}
+
+.schlangekarte__karte--spielkarte .schlangekarte__karte-eyebrow {
+  font-size: 0.58rem;
+  line-height: 1;
+}
+
+.schlangekarte__karte--spielkarte .schlangekarte__karte-symbol {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.schlangekarte__karte--spielkarte .schlangekarte__karte-typ {
+  font-size: 0.68rem;
+  line-height: 1.05;
+}
+
+.schlangekarte__karte--spielkarte .schlangekarte__karte-wert {
+  font-size: 0.66rem;
+  line-height: 1.05;
 }
 
 .handkarte--farbkarte {

@@ -12,12 +12,12 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zugÃ
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
-import type { SpielAktion, Spieler, Spielkarte, Spielzustand } from '../engine'
-import { farbeCssKlasse } from '../kartenfarben'
+import type { SpielAktion, Spieler, Spielzustand } from '../engine'
 import GegnerSchlangenListe from './GegnerSchlangenListe'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
 import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
 import WaldtanzZielspur from './WaldtanzZielspur'
+import SchlangenPfadKarte from './SchlangenPfadKarte'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
@@ -39,18 +39,6 @@ interface SchlangenbereichProps {
   ausgewaehlteHandkarteId: string | null
   onAktion: (aktion: SpielAktion) => void
   aktionsLabel: (aktion: SpielAktion) => string
-}
-
-function schlangenKartenKurzlabel(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte'
-    ? `${karte.farbe} Â· ${karte.punkte} Punkte`
-    : `Sonderkarte ${karte.name}`
-}
-
-function schlangenKartenAriaLabel(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte'
-    ? `Farbkarte ${karte.id}: ${karte.farbe} mit ${karte.punkte} Punkten`
-    : `Sonderkarte ${karte.id}: ${karte.name}`
 }
 
 function schlangenStatusLabel(zustand: Spieler['schlangen'][number]['zustand']): string {
@@ -386,20 +374,15 @@ export default function Schlangenbereich({
                       const istSonderaktionZiel = Boolean(farbenfusionAktion || istFarbenfusionPaar || schlangenfrassAktion)
                       const istKopf = kartenIndex === 0
                       const istSchwanz = kartenIndex === schlange.karten.length - 1
-                      const pfadKlasse = `${istKopf ? ' schlangekarte__karte--kopf' : ''}${istSchwanz ? ' schlangekarte__karte--schwanz' : ''}${!istKopf && !istSchwanz ? ' schlangekarte__karte--koerper' : ''}`
 
                       return (
-                        <div
+                        <SchlangenPfadKarte
                           key={karte.id}
-                          className={`schlangekarte__karte${pfadKlasse} schlangekarte__karte--${karte.typ === 'Farbkarte' ? `farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}` : 'sonderkarte'}${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
-                          role="listitem"
-                          aria-label={schlangenKartenAriaLabel(karte)}
+                          karte={karte}
+                          istKopf={istKopf}
+                          istSchwanz={istSchwanz}
+                          className={`${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                         >
-                          <strong>{karte.id}</strong>
-                          {istKopf && istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf & Schwanz</span> : null}
-                          {istKopf && !istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf</span> : null}
-                          {istSchwanz && !istKopf ? <span className="schlangekarte__pfadmarke">Schwanz</span> : null}
-                          <span>{schlangenKartenKurzlabel(karte)}</span>
                           <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} />
                           {schlangenfrassAktion && (
                             <button
@@ -415,7 +398,7 @@ export default function Schlangenbereich({
                               Schlangenfrass hier spielen
                             </button>
                           )}
-                        </div>
+                        </SchlangenPfadKarte>
                       )
                     })}
                   </div>
