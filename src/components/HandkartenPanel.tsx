@@ -18,6 +18,9 @@ interface HandkartenPanelProps {
   ausgewaehlteHandkarte: Spielkarte | null
   legaleAktionen?: SpielAktion[]
   questHinweise?: QuestZugHinweis[]
+  spielerName?: string
+  punkte?: number
+  zugphase?: string
   onKarteWaehlen: (karteId: string) => void
   onKarteDragStart: (karteId: string) => void
   onKarteDragEnd: () => void
@@ -94,6 +97,9 @@ export default function HandkartenPanel({
   ausgewaehlteHandkarte,
   legaleAktionen = [],
   questHinweise = [],
+  spielerName = 'Spieler',
+  punkte = 0,
+  zugphase = 'Zugphase',
   onKarteWaehlen,
   onKarteDragStart,
   onKarteDragEnd,
@@ -107,7 +113,21 @@ export default function HandkartenPanel({
   const ausgewaehlteQuestLabels = ausgewaehlteHandkarte ? questHinweiseNachKarte.get(ausgewaehlteHandkarte.id) ?? [] : []
 
   return (
-    <section className="handkarten-panel" aria-labelledby={handkartenTitelId}>
+    <section className="handkarten-panel handkarten-panel--waldtanz-handbuehne" aria-labelledby={handkartenTitelId}>
+      <div className="handkarten-buehne" role="group" aria-label="Waldtanz-Handbühne">
+        <div className="handkarten-buehne__spielerplakette">
+          <span className="handkarten-buehne__avatar" aria-hidden="true">🧙</span>
+          <div>
+            <strong>Deine Hand — {spielerName}</strong>
+            <span>{punkte} Punkte</span>
+          </div>
+        </div>
+        <span className="handkarten-buehne__statuschip">{zugphase}</span>
+        <span className="handkarten-buehne__statuschip">{handkarten.length} Handkarten bereit</span>
+        <span className="handkarten-buehne__statuschip handkarten-buehne__statuschip--spielbar">
+          Spielbar: {spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'}
+        </span>
+      </div>
       <h4><span id={handkartenTitelId}>Handkarten</span> als Kartenleiste</h4>
       <p className="handkarten-spielbarkeit">{spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'} sofort spielbar</p>
       {ausgewaehlteHandkarte ? (

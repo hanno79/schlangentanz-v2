@@ -1917,6 +1917,74 @@ code {
   align-self: end;
 }
 
+.handkarten-panel--waldtanz-handbuehne {
+  display: grid;
+  gap: 0.85rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2.5rem;
+  background:
+    radial-gradient(circle at 10% 15%, rgba(254, 203, 0, 0.36), transparent 7rem),
+    linear-gradient(180deg, rgba(196, 253, 182, 0.9), rgba(236, 255, 227, 0.92));
+  box-shadow: 0 7px 0 var(--st-color-border-strong);
+}
+
+.handkarten-buehne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.handkarten-buehne__spielerplakette {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-right: auto;
+  padding: 0.5rem 0.85rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  transform: rotate(-1.5deg);
+}
+
+.handkarten-buehne__spielerplakette div {
+  display: grid;
+  line-height: 1.1;
+}
+
+.handkarten-buehne__spielerplakette strong {
+  font-family: var(--st-font-headline);
+}
+
+.handkarten-buehne__avatar {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  aspect-ratio: 1;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: inset 0 -3px 0 rgba(6, 57, 7, 0.18);
+}
+
+.handkarten-buehne__statuschip {
+  width: fit-content;
+  padding: 0.28rem 0.75rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  font-family: var(--st-font-headline);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.handkarten-buehne__statuschip--spielbar {
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
 .handkarten-detail {
   display: grid;
   gap: 0.35rem;

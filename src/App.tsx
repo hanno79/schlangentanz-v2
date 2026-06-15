@@ -345,6 +345,9 @@ function App({ initialZustand }: AppProps) {
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}
                 legaleAktionen={legaleAktionen}
                 questHinweise={questZugHinweise}
+                spielerName={aktiverSpieler.name}
+                punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+                zugphase={zustand.zugphase}
                 onKarteWaehlen={(karteId) =>
                   setAusgewaehlteHandkarteAuswahl((aktuell) =>
                     aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },
