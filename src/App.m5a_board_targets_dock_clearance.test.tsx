@@ -22,7 +22,7 @@ describe('M5a Waldtanz-Boardziele bleiben trotz sticky Aktionsdock klickbar', ()
     const spielbereich = screen.getByRole('region', { name: 'Spielbereich' })
     const spieltisch = within(spielbereich).getByRole('region', { name: 'Spieltisch' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
-    const startZiel = within(schlangenbereich).getAllByRole('button', { name: /Schlangenbereich-Start mit Karte/ })[0]
+    const startZiel = within(schlangenbereich).getAllByRole('button', { name: /Startkreis mit Karte/ })[0]
     const aktionen = within(spielbereich).getByRole('region', { name: 'Aktionen' })
 
     expect(startZiel).toHaveClass('schlangekarte__anlegebutton')

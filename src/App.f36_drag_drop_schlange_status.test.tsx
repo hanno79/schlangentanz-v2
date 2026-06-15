@@ -90,11 +90,11 @@ describe('F36 Drag-and-Drop-Status für Schlangen', () => {
     const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
     const handkartenButton = within(handBereich).getByText(legaleStartaktion.handkartenId).closest('button')!
     const startbutton = within(eigeneGruppe).getByRole('button', {
-      name: new RegExp(`Schlangenbereich-Start mit Karte ${legaleStartaktion.handkartenId}`),
+      name: new RegExp(`Startkreis mit Karte ${legaleStartaktion.handkartenId}`),
     })
     const falscherButton = within(eigeneGruppe)
       .getAllByRole('button')
-      .find((button) => aktionsName(button).startsWith('Schlangenbereich-Start mit Karte') && !aktionsName(button).includes(legaleStartaktion.handkartenId))
+      .find((button) => aktionsName(button).startsWith('Startkreis mit Karte') && !aktionsName(button).includes(legaleStartaktion.handkartenId))
 
     if (!falscherButton) {
       throw new Error('Testsetup erwartet mindestens einen zweiten Startbutton.')
@@ -154,7 +154,7 @@ describe('F36 Drag-and-Drop-Status für Schlangen', () => {
     const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
     const handkartenButton = within(handBereich).getByText(legaleStartaktion.handkartenId).closest('button')!
     const startbutton = within(eigeneGruppe).getByRole('button', {
-      name: new RegExp(`Schlangenbereich-Start mit Karte ${legaleStartaktion.handkartenId}`),
+      name: new RegExp(`Startkreis mit Karte ${legaleStartaktion.handkartenId}`),
     })
 
     const dataTransfer = erstelleDataTransfer()

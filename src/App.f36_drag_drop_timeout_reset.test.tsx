@@ -101,7 +101,7 @@ describe('F36 Drag-and-Drop Timeout-Reset', () => {
 
     const falscherButton = within(eigeneGruppe).getAllByRole('button').find((button) => {
       const ariaLabel = button.getAttribute('aria-label') ?? ''
-      return ariaLabel.startsWith('Schlangenbereich-Start mit Karte') && !ariaLabel.includes(legaleStartaktion.handkartenId)
+      return ariaLabel.startsWith('Startkreis mit Karte') && !ariaLabel.includes(legaleStartaktion.handkartenId)
     })
 
     if (!falscherButton) {

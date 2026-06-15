@@ -2584,6 +2584,44 @@ code {
   background: linear-gradient(180deg, rgba(164, 222, 2, 0.18), rgba(255, 255, 255, 0.45));
 }
 
+.schlangen-startzone--magiekreis {
+  border: var(--st-border-width-chunky) dashed var(--st-color-border-strong);
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(254, 203, 0, 0.34) 0 18%, rgba(164, 222, 2, 0.24) 19% 54%, rgba(236, 255, 227, 0.78) 55%);
+  box-shadow: inset 0 0 0 6px rgba(164, 222, 2, 0.24), var(--st-shadow-hard);
+}
+
+.schlangen-startzone__badge {
+  padding: 0.16rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.schlangen-startzone__titel,
+.schlangen-startzone__karte {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.schlangen-startzone__karte {
+  padding: 0.16rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+}
+
+.schlangen-startkreis-button {
+  display: grid;
+  justify-items: center;
+  gap: 0.18rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  background: linear-gradient(180deg, var(--st-color-primary-container), rgba(236, 255, 227, 0.88));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
 .schlangen-startzone:focus-visible {
   outline: 3px solid var(--st-color-tertiary);
   outline-offset: 3px;
@@ -2707,6 +2745,11 @@ code {
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.32), rgba(255, 255, 255, 0.56));
   animation: zielkreis-pulsiert 1.1s ease-in-out infinite;
   box-shadow: 0 0 0 6px rgba(254, 203, 0, 0.42), 0 10px 22px rgba(6, 57, 7, 0.16), 0 3px 0 rgba(6, 57, 7, 0.45);
+}
+
+.schlangen-startzone--magiekreis.schlangen-startzone--zielbereit {
+  background: radial-gradient(circle, rgba(254, 203, 0, 0.42) 0 18%, rgba(164, 222, 2, 0.34) 19% 54%, rgba(236, 255, 227, 0.84) 55%);
+  box-shadow: inset 0 0 0 6px rgba(164, 222, 2, 0.24), 0 0 0 6px rgba(254, 203, 0, 0.42), var(--st-shadow-hard);
 }
 
 @keyframes zielkreis-pulsiert {

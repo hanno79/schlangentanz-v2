@@ -75,7 +75,7 @@ describe('R53 Gegnerzug-Vorspulbutton', () => {
     expect(within(aktiverSpielerBereich).getByText('Zugführung: KI ist am Zug.')).toBeInTheDocument()
     expect(within(aktionsBereich).getByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen' })).toBeInTheDocument()
     expect(within(aktionsBereich).queryByRole('button', { name: aktionsLabel(naechsteKiAktion) })).not.toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /Schlangenbereich-Start mit Karte blau-02/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Startkreis mit Karte blau-02/i })).not.toBeInTheDocument()
 
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen' }))
 
