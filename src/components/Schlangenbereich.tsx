@@ -24,6 +24,7 @@ import SchlangenStartzone from './SchlangenStartzone'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
+import FarbenschutzSchild from './FarbenschutzSchild'
 import { ermittleFarbenfusionPaarInfo } from './farbenfusionPaarInfo'
 
 interface SchlangenbereichProps {
@@ -383,18 +384,11 @@ export default function Schlangenbereich({
                     <span className="schlangen-zielhinweis">Ausgewählte Karte hier anlegen.</span>
                   )}
                   {farbenschutzAktion && (
-                    <button
-                      type="button"
-                      className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--schutz"
-                      aria-label={`Farbenschutz im Schlangenbereich mit Karte ${farbenschutzAktion.handkartenId} auf Schlange ${farbenschutzAktion.zielSchlangenId}`}
-                      title={aktionsLabel(farbenschutzAktion)}
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        onAktion(farbenschutzAktion)
-                      }}
-                    >
-                      Farbenschutz hier spielen
-                    </button>
+                    <FarbenschutzSchild
+                      aktion={farbenschutzAktion}
+                      label={aktionsLabel(farbenschutzAktion)}
+                      onAktion={onAktion}
+                    />
                   )}
                   {zeigeSchlangenhaeutungBrettziel && (
                     <SchlangenhaeutungBrettziel

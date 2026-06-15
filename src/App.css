@@ -11,6 +11,7 @@
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
   --st-radius-lg: 2rem;
+  --st-radius-xl: 3rem;
   --st-shadow-hard: 0 4px 0 #063907;
   color: #f4f0e8;
   background: #12100d;
@@ -4562,6 +4563,64 @@ code {
 
 .schlangekarte__sonderaktion-button--schutz {
   background: var(--st-color-primary-container);
+}
+
+.schlangekarte__schutzschild {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: center;
+  width: min(100%, 19rem);
+  margin-top: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background: radial-gradient(circle at 18% 18%, rgba(255, 224, 139, 0.95), rgba(164, 222, 2, 0.86) 48%, rgba(236, 255, 227, 0.92));
+  color: var(--st-color-border-strong);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  text-align: left;
+}
+
+.schlangekarte__schutzschild:hover,
+.schlangekarte__schutzschild:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 var(--st-color-border-strong);
+}
+
+.schlangekarte__schutzschild-card {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3.6rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 1rem;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  font-size: 1.45rem;
+}
+
+.schlangekarte__schutzschild-text {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.schlangekarte__schutzschild-label {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.schlangekarte__schutzschild-chip {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0.2rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .schlangekarte--gegner {
