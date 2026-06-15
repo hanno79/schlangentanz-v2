@@ -10,13 +10,14 @@ Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit ausw
 */
 
 import { useId } from 'react'
-import type { SpielAktion, Spielkarte } from '../engine'
+import type { QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 
 interface HandkartenPanelProps {
   handkarten: Spielkarte[]
   ausgewaehlteHandkarte: Spielkarte | null
   legaleAktionen?: SpielAktion[]
+  questHinweise?: QuestZugHinweis[]
   onKarteWaehlen: (karteId: string) => void
   onKarteDragStart: (karteId: string) => void
   onKarteDragEnd: () => void
@@ -92,6 +93,7 @@ export default function HandkartenPanel({
   handkarten,
   ausgewaehlteHandkarte,
   legaleAktionen = [],
+  questHinweise = [],
   onKarteWaehlen,
   onKarteDragStart,
   onKarteDragEnd,
@@ -101,6 +103,8 @@ export default function HandkartenPanel({
   const spielbareHandkarten = handkarten.filter((karte) => boardAktionenFuerHandkarte(legaleAktionen, karte.id).length > 0).length
   const ausgewaehlteZielAktionen = ausgewaehlteHandkarte ? boardAktionenFuerHandkarte(legaleAktionen, ausgewaehlteHandkarte.id) : []
   const ausgewaehlteZielarten = zielartenFuerAktionen(ausgewaehlteZielAktionen)
+  const questHinweiseNachKarte = new Map(questHinweise.map((hinweis) => [hinweis.karteId, hinweis.labels]))
+  const ausgewaehlteQuestLabels = ausgewaehlteHandkarte ? questHinweiseNachKarte.get(ausgewaehlteHandkarte.id) ?? [] : []
 
   return (
     <section className="handkarten-panel" aria-labelledby={handkartenTitelId}>
@@ -138,6 +142,17 @@ export default function HandkartenPanel({
               )}
               <p>Folge den leuchtenden Zielen im Spielbrett.</p>
             </div>
+            {ausgewaehlteQuestLabels.length > 0 && (
+              <div className="handkarten-preview__questkarte" role="note" aria-label="Questziele der ausgewählten Karte">
+                <span className="handkarten-preview__questkarte-label">Questzielkarte</span>
+                <ul className="handkarten-preview__questliste" aria-label="Quest-Fährten dieser Karte">
+                  {ausgewaehlteQuestLabels.map((label) => (
+                    <li key={label} className="handkarten-preview__questchip">{label}</li>
+                  ))}
+                </ul>
+                <p>Diese Karte bringt offene Quest-Fährten direkt am Spielbrett näher.</p>
+              </div>
+            )}
             <p>Ziehe sie auf eine leuchtende Brettzone oder klicke ein Ziel im Schlangenbereich.</p>
             <p>Klicke dieselbe Karte erneut, um sie wieder abzuwählen.</p>
           </div>
@@ -155,6 +170,8 @@ export default function HandkartenPanel({
           const hatPflichtAbwurf = !istSpielbar && alleKartenAktionen.some((aktion) => aktion.typ === 'PflichtAbwurf')
           const spielStatusText = istSpielbar ? 'Spielbar jetzt' : hatPflichtAbwurf ? 'Muss abgeworfen werden' : 'Wartet auf nächsten Schritt'
           const zielText = istSpielbar ? `${zielAnzahl} ${zielAnzahl === 1 ? 'Brettziel' : 'Brettziele'}` : hatPflichtAbwurf ? 'Abwurfpflicht' : ''
+          const questLabels = questHinweiseNachKarte.get(karte.id) ?? []
+          const questText = questLabels.length > 0 ? ` Questzug ${questLabels.join(', ')}` : ''
 
           return (
             <li
@@ -165,7 +182,7 @@ export default function HandkartenPanel({
                 type="button"
                 className="handkarte__button handkarte__button--karte"
                 draggable="true"
-                aria-label={`${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'} ${spielStatusText}${zielText ? ` ${zielText}` : ''}`}
+                aria-label={`${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'} ${spielStatusText}${zielText ? ` ${zielText}` : ''}${questText}`}
                 aria-pressed={istAusgewaehlt}
                 onClick={() => onKarteWaehlen(karte.id)}
                 onDragStart={(event) => {
@@ -184,6 +201,12 @@ export default function HandkartenPanel({
                 <span className="handkarte__spielhinweis">Auswählen oder ziehen</span>
                 <span className="handkarte__spielstatus">{spielStatusText}</span>
                 {zielText && <span className="handkarte__spielziele">{zielText}</span>}
+                {questLabels.length > 0 && (
+                  <span className="handkarte__questzug">
+                    <span>Quest-Zug</span>
+                    {questLabels.map((label) => <strong key={label}>{label}</strong>)}
+                  </span>
+                )}
               </button>
             </li>
           )

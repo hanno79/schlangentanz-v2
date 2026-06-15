@@ -1977,12 +1977,16 @@ code {
 }
 
 .handkarten-preview__zielkarte p,
-.handkarten-preview__zielliste {
+.handkarten-preview__questkarte p,
+.handkarten-preview__zielliste,
+.handkarten-preview__questliste {
   margin: 0;
 }
 
 .handkarten-preview__zielkarte-label,
-.handkarten-preview__zielchip {
+.handkarten-preview__questkarte-label,
+.handkarten-preview__zielchip,
+.handkarten-preview__questchip {
   width: fit-content;
   padding: 0.12rem 0.55rem;
   border: 2px solid var(--st-color-border-strong);
@@ -1992,7 +1996,23 @@ code {
   font-weight: 900;
 }
 
-.handkarten-preview__zielliste {
+.handkarten-preview__zielchip {
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+}
+
+.handkarten-preview__questkarte {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.65rem 0.75rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(186, 246, 45, 0.82), rgba(255, 224, 139, 0.88));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.handkarten-preview__zielliste,
+.handkarten-preview__questliste {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
@@ -2118,7 +2138,8 @@ code {
 .handkarte__eyebrow,
 .handkarte__spielhinweis,
 .handkarte__spielstatus,
-.handkarte__spielziele {
+.handkarte__spielziele,
+.handkarte__questzug {
   font-family: var(--st-font-headline);
   font-size: 0.66rem;
   font-weight: 900;
@@ -2140,7 +2161,8 @@ code {
 .handkarte__punkte,
 .handkarte__typ,
 .handkarte__spielstatus,
-.handkarte__spielziele {
+.handkarte__spielziele,
+.handkarte__questzug {
   width: fit-content;
   padding: 0.14rem 0.5rem;
   border: 2px solid var(--st-color-border-strong);
@@ -2160,6 +2182,19 @@ code {
 
 .handkarte__spielziele {
   background: var(--st-color-secondary-container);
+}
+
+.handkarte__questzug {
+  display: grid;
+  gap: 0.15rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.handkarte__questzug strong {
+  font-size: 0.72rem;
 }
 
 .handkarte strong,

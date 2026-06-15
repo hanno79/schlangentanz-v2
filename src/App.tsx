@@ -16,6 +16,7 @@ import {
   berechneGewinner,
   erstelleSonderkarten,
   erstelleErweiterungsSonderkarten,
+  ermittleQuestZugHinweise,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SchlangenZustand, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import AktionenPanel from './components/AktionenPanel'
@@ -188,6 +189,7 @@ function App({ initialZustand }: AppProps) {
   )
   const verdopplerAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'VerdopplerSpielen' }> => aktion.typ === 'VerdopplerSpielen'), [legaleAktionen])
   const schlangengrubeAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'SonderkarteSpielen' }> => aktion.typ === 'SonderkarteSpielen'), [legaleAktionen])
+  const questZugHinweise = useMemo(() => ermittleQuestZugHinweise(zustand, legaleAktionen), [zustand, legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(() => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null, [zustand.zugphase, zustand.spieler])
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
@@ -340,6 +342,7 @@ function App({ initialZustand }: AppProps) {
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}
                 legaleAktionen={legaleAktionen}
+                questHinweise={questZugHinweise}
                 onKarteWaehlen={(karteId) =>
                   setAusgewaehlteHandkarteAuswahl((aktuell) =>
                     aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },
