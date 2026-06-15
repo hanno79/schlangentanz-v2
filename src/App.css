@@ -2267,6 +2267,78 @@ code {
   min-height: 22rem;
 }
 
+.waldtanz-arenastein {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: clamp(0.85rem, 1.6vw, 1.2rem);
+  padding: clamp(0.9rem, 2vw, 1.35rem);
+  border: 4px solid var(--st-color-border-strong);
+  border-radius: min(4rem, 12vw);
+  background:
+    radial-gradient(circle at 18% 24%, rgba(164, 222, 2, 0.45) 0 4.6rem, transparent 4.75rem),
+    radial-gradient(circle at 82% 72%, rgba(254, 203, 0, 0.38) 0 5.2rem, transparent 5.35rem),
+    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.45), transparent 15rem),
+    linear-gradient(145deg, rgba(236, 255, 227, 0.96), rgba(177, 232, 164, 0.84));
+  box-shadow: 0 8px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-arenastein::before,
+.waldtanz-arenastein::after {
+  content: '';
+  position: absolute;
+  width: clamp(5rem, 14vw, 9rem);
+  aspect-ratio: 1;
+  border: 3px dashed var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  opacity: 0.52;
+  pointer-events: none;
+}
+
+.waldtanz-arenastein::before {
+  top: clamp(4rem, 18%, 8rem);
+  left: clamp(0.8rem, 8%, 4rem);
+}
+
+.waldtanz-arenastein::after {
+  right: clamp(0.8rem, 8%, 4rem);
+  bottom: clamp(5rem, 14%, 8rem);
+}
+
+.waldtanz-arenastein > * {
+  position: relative;
+  z-index: 1;
+}
+
+.waldtanz-arenastein__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.85rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.85rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-arenastein__kopf h4,
+.waldtanz-arenastein__kopf p {
+  margin: 0;
+}
+
+.waldtanz-arenastein__kopf h4 {
+  font-family: var(--st-font-headline);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  text-transform: uppercase;
+}
+
+.waldtanz-arenastein__kopf p {
+  font-weight: 900;
+}
+
 .waldtanz-bonuszauber {
   display: grid;
   gap: 0.75rem;
