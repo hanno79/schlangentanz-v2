@@ -35,8 +35,12 @@ describe('M1ac Waldtanz-Arenastein', () => {
     expect(arenastein).toHaveClass('waldtanz-arenastein')
     expect(within(arenastein).getByText('Leuchtender Waldstein')).toBeInTheDocument()
     expect(within(arenastein).getByText('Magische Zielkreise leuchten im Brett.')).toBeInTheDocument()
+    const schlangenlichtung = within(arenastein).getByRole('region', { name: 'Schlangenlichtung' })
+    const waldobjekte = within(arenastein).getByRole('complementary', { name: 'Waldobjekte' })
+    expect(schlangenlichtung).toContainElement(schlangenbereich)
+    expect(waldobjekte).toContainElement(ablage)
+    expect(waldobjekte).toContainElement(aufgabentafel)
     expect(ablage.compareDocumentPosition(aufgabentafel) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(aufgabentafel.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(arenastein.compareDocumentPosition(handkarten) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
 
     const steinCss = cssBlock('waldtanz-arenastein')

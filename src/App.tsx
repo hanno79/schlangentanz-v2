@@ -299,25 +299,31 @@ function App({ initialZustand }: AppProps) {
                   <h4>Leuchtender Waldstein</h4>
                   <p>Magische Zielkreise leuchten im Brett.</p>
                 </div>
-                <WaldtanzAblage zustand={zustand} />
-                <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
-                <WaldtanzKartenpop aktionLabel={letzteAktion} />
-                <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} />
-                <Schlangenbereich
-                  zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
-                  aktiverSpieler={aktiverSpieler}
-                  gegnerSpieler={gegnerSpieler}
-                  karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
-                  neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
-                  farbenschutzAktionen={versteckeKiEinzelaktionen ? [] : farbenschutzAktionen}
-                  farbenfusionAktionen={versteckeKiEinzelaktionen ? [] : farbenfusionAktionen}
-                  schlangenfrassAktionen={versteckeKiEinzelaktionen ? [] : schlangenfrassAktionen}
-                  schlangenblockadeAktionen={versteckeKiEinzelaktionen ? [] : schlangenblockadeAktionen}
-                  farbendiebAktionen={versteckeKiEinzelaktionen ? [] : farbendiebAktionen}
-                  gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
-                  ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
-                  onAktion={fuhreAktionAus} aktionsLabel={aktionsLabel}
-                />
+                <div className="waldtanz-arenastein__spielfeld">
+                  <section className="waldtanz-arenastein__schlangenlichtung" aria-label="Schlangenlichtung">
+                    <Schlangenbereich
+                      zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
+                      aktiverSpieler={aktiverSpieler}
+                      gegnerSpieler={gegnerSpieler}
+                      karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
+                      neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
+                      farbenschutzAktionen={versteckeKiEinzelaktionen ? [] : farbenschutzAktionen}
+                      farbenfusionAktionen={versteckeKiEinzelaktionen ? [] : farbenfusionAktionen}
+                      schlangenfrassAktionen={versteckeKiEinzelaktionen ? [] : schlangenfrassAktionen}
+                      schlangenblockadeAktionen={versteckeKiEinzelaktionen ? [] : schlangenblockadeAktionen}
+                      farbendiebAktionen={versteckeKiEinzelaktionen ? [] : farbendiebAktionen}
+                      gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
+                      ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+                      onAktion={fuhreAktionAus} aktionsLabel={aktionsLabel}
+                    />
+                  </section>
+                  <aside className="waldtanz-arenastein__waldobjekte" aria-label="Waldobjekte">
+                    <WaldtanzAblage zustand={zustand} />
+                    <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
+                    <WaldtanzKartenpop aktionLabel={letzteAktion} />
+                    <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} />
+                  </aside>
+                </div>
               </section>
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}

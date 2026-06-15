@@ -7,7 +7,7 @@
 /// <reference types="node" />
 
 import { readFileSync } from 'node:fs'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -17,25 +17,24 @@ const appCss = readFileSync('src/App.css', 'utf8')
 const cssBlock = (selektor: string) =>
   appCss.match(new RegExp(`\\.${selektor}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
 
-function zugspurRegion() {
-  const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-  return within(spieltisch).getByRole('region', { name: 'Waldtanz-Zugspur' })
-}
-
 describe('M1j Waldtanz-Zugspur', () => {
-  it('zeigt den letzten board-nahen Spielzug direkt zwischen Ablage und Schlangenbereich', () => {
+  it('zeigt den letzten board-nahen Spielzug als kompaktes Waldobjekt neben der Schlangenlichtung', () => {
     render(<App initialZustand={starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))} />)
 
     const { spieltisch, handBereich, schlangenbereich } = ermittleSpielbereiche()
-    const ablage = within(spieltisch).getByRole('region', { name: 'Waldtanz-Ablage' })
-    const zugspur = zugspurRegion()
+    const arenastein = within(spieltisch).getByRole('region', { name: 'Waldtanz-Arenastein' })
+    const waldobjekte = within(arenastein).getByRole('complementary', { name: 'Waldobjekte' })
+    const schlangenlichtung = within(arenastein).getByRole('region', { name: 'Schlangenlichtung' })
+    const ablage = within(waldobjekte).getByRole('region', { name: 'Waldtanz-Ablage' })
+    const zugspur = within(waldobjekte).getByRole('region', { name: 'Waldtanz-Zugspur' })
 
     expect(zugspur).toHaveClass('waldtanz-zugspur')
     expect(within(zugspur).getByRole('heading', { name: 'Waldtanz-Zugspur' })).toBeInTheDocument()
     expect(within(zugspur).getByText('Noch keine Aktion auf der Lichtung.')).toBeVisible()
     expect(within(zugspur).getByText('Ablage wartet auf Sonderkarten oder Abwürfe.')).toBeVisible()
     expect(ablage.compareDocumentPosition(zugspur) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(zugspur.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(waldobjekte).toContainElement(zugspur)
+    expect(schlangenlichtung).toContainElement(schlangenbereich)
 
     fireEvent.click(within(handBereich).getByRole('button', { name: /blau-01/ }))
     fireEvent.click(within(schlangenbereich).getByRole('button', { name: 'Neue Schlange starten' }))

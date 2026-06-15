@@ -26,12 +26,15 @@ function zustandMitAufgabentafel(): Spielzustand {
 }
 
 describe('M1k Waldtanz-Aufgabentafel', () => {
-  it('zeigt offene Questkarten board-nah zwischen Zugspur und Schlangenbereich', () => {
+  it('zeigt offene Questkarten board-nah als kompaktes Waldobjekt neben der Schlangenlichtung', () => {
     render(<App initialZustand={zustandMitAufgabentafel()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-    const zugspur = within(spieltisch).getByRole('region', { name: 'Waldtanz-Zugspur' })
-    const aufgabentafel = within(spieltisch).getByRole('region', { name: 'Waldtanz-Aufgabentafel' })
+    const arenastein = within(spieltisch).getByRole('region', { name: 'Waldtanz-Arenastein' })
+    const waldobjekte = within(arenastein).getByRole('complementary', { name: 'Waldobjekte' })
+    const schlangenlichtung = within(arenastein).getByRole('region', { name: 'Schlangenlichtung' })
+    const zugspur = within(waldobjekte).getByRole('region', { name: 'Waldtanz-Zugspur' })
+    const aufgabentafel = within(waldobjekte).getByRole('region', { name: 'Waldtanz-Aufgabentafel' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
     const material = screen.getByRole('region', { name: 'Material und Aufgaben' })
 
@@ -50,7 +53,8 @@ describe('M1k Waldtanz-Aufgabentafel', () => {
     expect(within(aufgabentafel).getByText('Baue deine Schlangen gezielt auf diese Questkarten hin.')).toBeVisible()
 
     expect(zugspur.compareDocumentPosition(aufgabentafel) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(aufgabentafel.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(waldobjekte).toContainElement(aufgabentafel)
+    expect(schlangenlichtung).toContainElement(schlangenbereich)
     expect(within(material).getByRole('region', { name: 'Aufgabenkarten' })).toBeInTheDocument()
 
     expect(cssBlock('waldtanz-aufgabentafel')).toMatch(/grid-column:\s*1\s*\/\s*-1/)

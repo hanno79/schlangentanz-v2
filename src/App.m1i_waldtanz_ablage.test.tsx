@@ -33,12 +33,15 @@ function ablageRegion() {
 }
 
 describe('M1i Waldtanz-Ablage', () => {
-  it('zeigt den Ablagestapel als zentrale gespielte Karte zwischen Fortschritt und Schlangenbereich', () => {
+  it('zeigt den Ablagestapel als kompaktes Waldobjekt neben der Schlangenlichtung', () => {
     render(<App initialZustand={zustandMitAblage()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const fortschritt = within(spieltisch).getByRole('region', { name: 'Partiefortschritt' })
-    const ablage = ablageRegion()
+    const arenastein = within(spieltisch).getByRole('region', { name: 'Waldtanz-Arenastein' })
+    const waldobjekte = within(arenastein).getByRole('complementary', { name: 'Waldobjekte' })
+    const schlangenlichtung = within(arenastein).getByRole('region', { name: 'Schlangenlichtung' })
+    const ablage = within(waldobjekte).getByRole('region', { name: 'Waldtanz-Ablage' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
 
     expect(ablage).toHaveClass('waldtanz-ablage')
@@ -49,7 +52,8 @@ describe('M1i Waldtanz-Ablage', () => {
     expect(within(ablage).getByText('Sonderkarte Farbenfusion')).toBeVisible()
     expect(within(ablage).getByText('Darunter: rot-m1i-ablage')).toBeVisible()
     expect(fortschritt.compareDocumentPosition(ablage) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(ablage.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(waldobjekte).toContainElement(ablage)
+    expect(schlangenlichtung).toContainElement(schlangenbereich)
 
     expect(cssBlock('waldtanz-ablage')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('waldtanz-ablage')).toMatch(/border-radius:\s*2rem/)
