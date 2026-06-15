@@ -33,6 +33,7 @@ export default function Spielerfuehrung({
 }: SpielerfuehrungProps) {
   const aktionsHinweis = empfohleneAktionLabel || pflichtschrittLabel.replace(/\.$/, '')
   const aktionszielLinkId = aktionszielId?.trim() ? aktionszielId : null
+  const aktionszielOrtText = aktionszielLinkText === 'Brett-Zugaktion' ? 'am Spieltisch' : 'im Aktionsbereich'
   const zeigtAktionslinkEffektiv = zeigtAktionslink && aktionszielLinkId !== null
   const spielerfuehrungUeberschriftId = useId()
   const checklisteUeberschriftId = useId()
@@ -53,7 +54,7 @@ export default function Spielerfuehrung({
       {zeigtAktionslinkEffektiv ? (
         <>
           <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
-          <a href={`#${aktionszielLinkId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielLinkId)}>Zur {aktionszielLinkText} im Aktionsbereich</a>
+          <a href={`#${aktionszielLinkId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielLinkId)}>Zur {aktionszielLinkText} {aktionszielOrtText}</a>
         </>
       ) : (
         <p>Im Aktionsbereich gibt es aktuell kein Springziel.</p>

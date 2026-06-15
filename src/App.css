@@ -827,6 +827,74 @@ body {
   gap: 0.65rem;
 }
 
+.waldtanz-arenazug {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: -0.15rem;
+}
+
+.waldtanz-arenazug__schild {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.45rem 0.75rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: color-mix(in srgb, var(--st-color-surface, #ecffe3) 82%, white 18%);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-arenazug__kicker {
+  font-family: var(--st-font-headline);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--st-color-tertiary);
+}
+
+.waldtanz-arenazug__hauptknopf {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: min(100%, 22rem);
+  min-width: 0;
+  padding: 0.85rem 1.2rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.waldtanz-arenazug__hauptknopf:active {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-arenazug__knopftext {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.waldtanz-arenazug__pfeil {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.waldtanz-arenazug__wartehinweis {
+  max-width: 18rem;
+  margin: 0;
+  font-weight: 700;
+}
+
 .zugkompass__hauptaktion {
   justify-self: end;
   display: inline-grid;
@@ -1485,6 +1553,12 @@ code {
     grid-column: 1 / -1;
     grid-row: 4;
     margin-top: 0;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenazug"] {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    justify-self: end;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"] {

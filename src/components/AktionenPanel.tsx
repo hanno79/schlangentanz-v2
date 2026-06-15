@@ -132,6 +132,7 @@ interface AktionenPanelProps {
   onAusspielphaseStarten: () => void
   onKiZugVorspulen: () => void
   kompakterBrettFallback?: boolean
+  zeigePhasenaktion?: boolean
 }
 
 export default function AktionenPanel({
@@ -155,6 +156,7 @@ export default function AktionenPanel({
   onAusspielphaseStarten,
   onKiZugVorspulen,
   kompakterBrettFallback = false,
+  zeigePhasenaktion = true,
 }: AktionenPanelProps) {
   const aktionenTitelId = useId()
   const empfohleneAktionTitelId = useId()
@@ -275,7 +277,7 @@ export default function AktionenPanel({
         </>
       ) : (
         <>
-          {steuerung === 'KI' && !hatReaktionsaktion && (
+          {steuerung === 'KI' && !hatReaktionsaktion && !kompakterBrettFallback && (
             <section className="aktionen-gruppe aktionen-gruppe--ki-zug" aria-label="Gegnerzug-Steuerung">
               <p>Die KI spielt ihren Zug automatisch über die Engine.</p>
               <button onClick={onKiZugVorspulen}>
@@ -306,6 +308,7 @@ export default function AktionenPanel({
                 <p>Keine empfohlene Aktion verfügbar.</p>
               )}
             </section>
+            {zeigePhasenaktion && (
             <section
               id={phasenaktionId}
               className={`aktionen-gruppe aktionen-gruppe--phasenaktion${hervorgehobenesAktionszielId === phasenaktionId ? ' aktionen-gruppe--sprungziel' : ''}`}
@@ -341,6 +344,7 @@ export default function AktionenPanel({
                 </button>
               )}
             </section>
+            )}
           </div>
           {kompakterBrettFallback ? (
             <details className="aktionen-fallback">

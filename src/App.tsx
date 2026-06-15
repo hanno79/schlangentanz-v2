@@ -41,6 +41,7 @@ import WaldtanzKartenpop from './components/WaldtanzKartenpop'
 import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzTischkarte from './components/WaldtanzTischkarte'
 import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
+import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import WertungPanel from './components/WertungPanel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
@@ -220,8 +221,8 @@ function App({ initialZustand }: AppProps) {
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = reaktionsAktionen.length === 0 && ((zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase')
   const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? phasenaktionId : empfohleneAktionId
-  const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlene Aktion'
-  const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? 'Phasenaktion' : 'empfohlenen Aktion'
+  const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlene Aktion'
+  const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
@@ -289,6 +290,7 @@ function App({ initialZustand }: AppProps) {
                   ueberhand={ueberhand}
                   zeigtKiVorspulen={versteckeKiEinzelaktionen}
                   kiZugProtokoll={kiZugProtokoll}
+                  zeigeHauptaktionen={!istGameRoute}
                   onAusspielphaseBeenden={handleAusspielphaseBeenden}
                   onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
                   onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
@@ -336,7 +338,7 @@ function App({ initialZustand }: AppProps) {
                   <aside className="waldtanz-arenastein__waldobjekte" aria-label="Waldobjekte">
                     <WaldtanzAblage zustand={zustand} />
                     <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
-                    <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} />
+                    <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} zeigeDirektesEinsammeln={!istGameRoute} />
                   </aside>
                 </div>
               </section>
@@ -356,6 +358,7 @@ function App({ initialZustand }: AppProps) {
                 onKarteDragStart={(karteId) => { gezogeneHandkarteIdRef.current = karteId; setAusgewaehlteHandkarteAuswahl({ spielerId: aktiverSpieler.id, karteId }) }}
                 onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null) }}
               />
+              {istGameRoute && <WaldtanzArenazugknopf id={phasenaktionId} hervorgehoben={hervorgehobenesAktionszielId === phasenaktionId} zustand={zustand} ueberhand={ueberhand} zeigtKiVorspulen={versteckeKiEinzelaktionen} onAusspielphaseBeenden={handleAusspielphaseBeenden} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen} onZugBeenden={handleZugBeenden} onAusspielphaseStarten={handleAusspielphaseStarten} />}
             </section>
             <AktionenPanel
               zustand={zustand}
@@ -378,6 +381,7 @@ function App({ initialZustand }: AppProps) {
               onAusspielphaseStarten={handleAusspielphaseStarten}
               onKiZugVorspulen={handleKiZugVorspulen}
               kompakterBrettFallback={istGameRoute}
+              zeigePhasenaktion={!istGameRoute}
             />
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>

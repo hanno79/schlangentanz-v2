@@ -19,7 +19,7 @@ function cssBlockForSelector(selector: string) {
 }
 
 describe('M1ap Aktionsfallback unter dem Brett', () => {
-  it('macht auf /game nur Schnellzug und Phase primär und klappt die lange Aktionsliste als Fallback ein', () => {
+  it('macht auf /game nur Schnellzug und die Brett-Zugaktion primär und klappt die lange Aktionsliste als Fallback ein', () => {
     window.history.pushState({}, '', '/game')
     render(<App />)
 
@@ -30,7 +30,8 @@ describe('M1ap Aktionsfallback unter dem Brett', () => {
 
     expect(aktionen).toHaveClass('aktionen-panel--brettfallback')
     expect(within(schnellzug).getByRole('region', { name: 'Empfohlene Aktion' })).toBeVisible()
-    expect(within(schnellzug).getByRole('region', { name: 'Phasenaktion' })).toBeVisible()
+    expect(within(schnellzug).queryByRole('region', { name: 'Phasenaktion' })).toBeNull()
+    expect(screen.getByRole('region', { name: 'Waldtanz-Zugaktion' })).toBeVisible()
     expect(fallback).toBeInTheDocument()
     expect(fallback.open).toBe(false)
     expect(within(fallback).getByText('Brett-Fallback: weitere Aktionen und Regeln')).toBeVisible()

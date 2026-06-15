@@ -13,16 +13,17 @@ interface WaldtanzAufgabentafelProps {
   zustand: Spielzustand
   istEndspurt: boolean
   onAufgabenpruefungBeenden: () => void
+  zeigeDirektesEinsammeln?: boolean
 }
 
 function aufgabenPunkte(aufgabe: AufgabenkarteInfo, istEndspurt: boolean): string {
   return istEndspurt ? `${aufgabe.punkte} Punkte ×2` : `${aufgabe.punkte} Punkte`
 }
 
-export default function WaldtanzAufgabentafel({ zustand, istEndspurt, onAufgabenpruefungBeenden }: WaldtanzAufgabentafelProps) {
+export default function WaldtanzAufgabentafel({ zustand, istEndspurt, onAufgabenpruefungBeenden, zeigeDirektesEinsammeln = true }: WaldtanzAufgabentafelProps) {
   const erfuellteIds = new Set(ermittleErfuellteOffeneAufgaben(zustand).map(aufgabe => aufgabe.id))
   const bereiteQuests = erfuellteIds.size
-  const kannQuestsEinsammeln = zustand.zugphase === 'Aufgabenpruefung' && zustand.spieler[zustand.aktiverSpielerIndex]?.steuerung === 'Mensch' && !zustand.pendingReaktion
+  const kannQuestsEinsammeln = zeigeDirektesEinsammeln && zustand.zugphase === 'Aufgabenpruefung' && zustand.spieler[zustand.aktiverSpielerIndex]?.steuerung === 'Mensch' && !zustand.pendingReaktion
 
   return (
     <section className="waldtanz-aufgabentafel" aria-label="Waldtanz-Aufgabentafel">
