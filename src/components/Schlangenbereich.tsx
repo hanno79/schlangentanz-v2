@@ -405,28 +405,45 @@ export default function Schlangenbereich({
                     />
                   )}
                   {anlegeAktionen.length > 0 && (
-                    <div className="schlangekarte__anlegeaktionen schlangekarte__anlegeplaetze" aria-label={`Waldtanz-Anlegeplätze für ${schlange.id}`}>
-                      {anlegeAktionen.map((aktion) => (
-                        <button
-                          key={`${aktion.handkartenId}-${aktion.schlangenId}-${aktion.position}`}
-                          type="button"
-                          className={`schlangekarte__anlegebutton schlangekarte__anlegebutton--${aktion.position} schlangekarte__anlegeplatz schlangekarte__anlegeplatz--${aktion.position}`}
-                          aria-label={`Schlangenbereich: Karte ${aktion.handkartenId} ${aktion.position} anlegen`}
-                          title={aktionsLabel(aktion)}
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            onAktion(aktion)
-                          }}
-                          onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'schlange', id: schlange.id })}
-                          onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
-                        >
-                          <span className="schlangekarte__anlegeplatz-richtung">
-                            {aktion.position === 'links' ? 'Linkes Ende' : 'Rechtes Ende'}
-                          </span>
-                          <span className="schlangekarte__anlegeplatz-karte">{aktion.handkartenId}</span>
-                          <span className="schlangekarte__anlegeplatz-hinweis">Karte dort anlegen</span>
-                        </button>
-                      ))}
+                    <div className={`schlangekarte__anlegeaktionen schlangekarte__anlegeplaetze${ausgewaehlteHandkarteId ? ' schlangekarte__anlegeplaetze--vorschau' : ''}`} aria-label={`Waldtanz-Anlegeplätze für ${schlange.id}`}>
+                      {anlegeAktionen.map((aktion, anlegeIndex) => {
+                        const istAusgewaehlterAnlegeplatz = aktion.handkartenId === ausgewaehlteHandkarteId
+                        const anlegeVorschauId = `${komponentenId}-schlange-${schlangeIndex}-anlege-${anlegeIndex}-vorschau`
+                        const richtung = aktion.position === 'links' ? 'links' : 'rechts'
+
+                        return (
+                          <button
+                            key={`${aktion.handkartenId}-${aktion.schlangenId}-${aktion.position}`}
+                            type="button"
+                            className={`schlangekarte__anlegebutton schlangekarte__anlegebutton--${aktion.position} schlangekarte__anlegeplatz schlangekarte__anlegeplatz--${aktion.position}${istAusgewaehlterAnlegeplatz ? ' schlangekarte__anlegeplatz--ausgewaehlt' : ''}`}
+                            aria-label={`Schlangenbereich: Karte ${aktion.handkartenId} ${aktion.position} anlegen`}
+                            aria-describedby={istAusgewaehlterAnlegeplatz ? anlegeVorschauId : undefined}
+                            title={aktionsLabel(aktion)}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              onAktion(aktion)
+                            }}
+                            onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'schlange', id: schlange.id })}
+                            onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
+                          >
+                            <span className="schlangekarte__anlegeplatz-richtung">
+                              {aktion.position === 'links' ? 'Linkes Ende' : 'Rechtes Ende'}
+                            </span>
+                            {istAusgewaehlterAnlegeplatz ? (
+                              <span id={anlegeVorschauId} className="schlangekarte__anlegeplatz-vorschau">
+                                <span className="schlangekarte__anlegeplatz-vorschau-label">Anlegekarte</span>
+                                <strong className="schlangekarte__anlegeplatz-karte schlangekarte__anlegeplatz-vorschau-id">{aktion.handkartenId}</strong>
+                                <span>Klick auf dieses Schlangenende legt die Karte {richtung} an.</span>
+                              </span>
+                            ) : (
+                              <>
+                                <span className="schlangekarte__anlegeplatz-karte">{aktion.handkartenId}</span>
+                                <span className="schlangekarte__anlegeplatz-hinweis">Karte dort anlegen</span>
+                              </>
+                            )}
+                          </button>
+                        )
+                      })}
                     </div>
                   )}
                   <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>

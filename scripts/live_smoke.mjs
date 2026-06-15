@@ -96,6 +96,7 @@ async function browserSmoke() {
     await pruefeM1axFreieLichtung(seite)
     await pruefeM1ayWaldkulisse(seite)
     await pruefeM1baStartkreisVorschau(seite)
+    await pruefeM1bbSchlangenendeVorschau(seite)
 
     await seite.waitForTimeout(500)
 
@@ -326,6 +327,89 @@ async function pruefeM1baStartkreisVorschau(seite) {
   }
 
   console.log(`M1ba Startkreis-Vorschau: ${kartenId} im Startkreis sichtbar und per Brettfläche gestartet`)
+}
+
+async function pruefeM1bbSchlangenendeVorschau(seite) {
+  let handkarte = null
+  for (let schritt = 0; schritt < 8; schritt += 1) {
+    const handRegion = seite.getByRole('region', { name: 'Handkarten' })
+    const kandidat = handRegion.getByRole('button', { name: /Farbkarte.*Brettziel/ }).first()
+    if (await kandidat.isVisible().catch(() => false)) {
+      handkarte = kandidat
+      break
+    }
+
+    const naechsterSchritt = [
+      /Weiter zur Aufgabenprüfung/,
+      /Weiter zum Zugabschluss/,
+      /Zug an nächsten Spieler geben/,
+      /Ausspielphase starten/,
+      /Gegnerzug am Brett abspielen/,
+    ]
+    let fortgesetzt = false
+    for (const name of naechsterSchritt) {
+      const knopf = seite.locator('button').filter({ hasText: name }).first()
+      if (await knopf.isVisible().catch(() => false)) {
+        await knopf.click()
+        await seite.waitForTimeout(350)
+        fortgesetzt = true
+        break
+      }
+    }
+    if (!fortgesetzt) break
+  }
+
+  if (!handkarte) {
+    throw new Error('M1bb Schlangenende-Vorschau: kein spielbares Schlangenende in bounded Live-Flow erreicht')
+  }
+
+  const handkartenName = await handkarte.getAttribute('aria-label')
+  const kartenId = handkartenName?.split(/\s+/)[0]
+
+  if (!kartenId) {
+    throw new Error('M1bb Schlangenende-Vorschau: keine zweite Farb-Handkarte gefunden')
+  }
+
+  await handkarte.click()
+
+  const anlegeplaetze = seite.locator('.schlangekarte__anlegeplaetze--vorschau').first()
+  const ziel = anlegeplaetze.locator('.schlangekarte__anlegeplatz--ausgewaehlt').first()
+  const vorschau = ziel.locator('.schlangekarte__anlegeplatz-vorschau').first()
+  const zielName = await ziel.getAttribute('aria-label')
+  const position = zielName?.includes(' rechts ') ? 'rechts' : 'links'
+  const positionsLabel = position === 'rechts' ? 'rechten' : 'linken'
+  const vorschauText = await vorschau.innerText()
+  const vorschauId = await vorschau.getAttribute('id')
+  const beschriebenDurch = await ziel.getAttribute('aria-describedby')
+
+  if (!zielName?.includes(kartenId) || !vorschauText.includes('Anlegekarte') || !vorschauText.includes(kartenId) || !vorschauText.includes('Klick auf dieses Schlangenende')) {
+    throw new Error(`M1bb Schlangenende-Vorschau: Zielvorschau fehlt oder passt nicht (${zielName} / ${vorschauText})`)
+  }
+  if (!vorschauId || !beschriebenDurch?.split(/\s+/).includes(vorschauId)) {
+    throw new Error(`M1bb Schlangenende-Vorschau: aria-describedby zeigt nicht auf sichtbare Vorschau (${beschriebenDurch}, ${vorschauId})`)
+  }
+
+  const stil = await vorschau.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return { borderWidth: style.borderTopWidth, boxShadow: style.boxShadow, borderRadius: style.borderTopLeftRadius }
+  })
+  if (stil.borderWidth !== '3px' || !stil.boxShadow.includes('rgb(6, 57, 7)') || Number.parseFloat(stil.borderRadius) < 20) {
+    throw new Error(`M1bb Schlangenende-Vorschau: Vorschau ist kein chunky Endplatz (${JSON.stringify(stil)})`)
+  }
+
+  const fremdeDisplays = await anlegeplaetze.locator('.schlangekarte__anlegeplatz:not(.schlangekarte__anlegeplatz--ausgewaehlt)').evaluateAll((elements) => elements.map((element) => getComputedStyle(element).display))
+  if (fremdeDisplays.some((display) => display !== 'none')) {
+    throw new Error(`M1bb Schlangenende-Vorschau: fremde Endlisten bleiben auf /game primär sichtbar (${fremdeDisplays.join(',')})`)
+  }
+
+  await ziel.click()
+  await seite.getByText(new RegExp(`Zuletzt ausgeführt: Karte ${kartenId} an Schlange .* ${position} anlegen`)).waitFor({ state: 'visible' })
+  const gelegteKarteSichtbar = await seite.getByRole('listitem', { name: new RegExp(kartenId) }).first().isVisible().catch(() => false)
+  if (!gelegteKarteSichtbar) {
+    throw new Error(`M1bb Schlangenende-Vorschau: angelegte Karte ${kartenId} liegt nicht sichtbar in der Schlange`)
+  }
+
+  console.log(`M1bb Schlangenende-Vorschau: ${kartenId} am ${positionsLabel} Schlangenende sichtbar und per Brettfläche angelegt`)
 }
 
 async function kernTextSichtbar(seite, text) {

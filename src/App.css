@@ -4291,6 +4291,15 @@ code {
   align-items: stretch;
 }
 
+.schlangekarte__anlegeplaetze--vorschau {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.spielbereich--game-route [class~="schlangenbereich--karte-ausgewaehlt"] .schlangekarte__anlegeplatz:not(.schlangekarte__anlegeplatz--ausgewaehlt) {
+  display: none;
+}
+
 .schlangekarte__anlegeplatz {
   display: grid;
   gap: 0.25rem;
@@ -4304,6 +4313,11 @@ code {
   color: var(--st-color-border-strong);
 }
 
+.schlangekarte__anlegeplatz--ausgewaehlt {
+  border-style: solid;
+  background: linear-gradient(180deg, rgba(254, 203, 0, 0.58), rgba(236, 255, 227, 0.96));
+}
+
 .schlangekarte__anlegeplatz--links {
   transform: rotate(-2deg);
 }
@@ -4313,7 +4327,8 @@ code {
 }
 
 .schlangekarte__anlegeplatz-richtung,
-.schlangekarte__anlegeplatz-karte {
+.schlangekarte__anlegeplatz-karte,
+.schlangekarte__anlegeplatz-vorschau-id {
   font-family: var(--st-font-headline);
   font-weight: 900;
 }
@@ -4325,8 +4340,28 @@ code {
   background: var(--st-color-primary-container);
 }
 
+.schlangekarte__anlegeplatz-vorschau {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: var(--st-color-sunny-gold);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.schlangekarte__anlegeplatz-vorschau-label,
 .schlangekarte__anlegeplatz-hinweis {
   font-size: 0.78rem;
+}
+
+.schlangekarte__anlegeplatz-vorschau-id {
+  padding: 0.1rem 0.45rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
 }
 
 .schlangenleiste {
