@@ -26,8 +26,10 @@ M1ba ergänzt im Waldtanz-Game-Board eine körperliche Startkreis-Vorschau: Nach
 ## Release-Kette
 
 - Feature-Commit: `38ecc32 — M1ba: Startkreis-Vorschau als Brettobjekt zeigen`.
-- Dieser Status nutzt die stabile Production-Alias `https://schlangentanz-v2.vercel.app`; ephemere Deploy-/Inspect-URLs werden nicht dauerhaft festgeschrieben.
-- Finaler Push/Production-Deploy/Smoke erfolgt mit dem Dokumentations-HEAD dieses Release-Status.
+- Release-Dokumentation und Feature-Commit wurden nach `origin/main` gepusht.
+- Vercel Production ist auf die stabile Alias `https://schlangentanz-v2.vercel.app` deployt (`READY`).
+- Production-Smoke bestätigt `/` und `/game` HTTP 200, Kernregionen, M1as/M1aw/M1ax/M1ay-Verträge sowie `M1ba Startkreis-Vorschau: gelb-04 im Startkreis sichtbar und per Brettfläche gestartet`; keine Console-/Page-Errors.
+- Ephemere Deploy-/Inspect-URLs werden nicht dauerhaft festgeschrieben.
 
 ## Nächste mittlere Lücke
 
