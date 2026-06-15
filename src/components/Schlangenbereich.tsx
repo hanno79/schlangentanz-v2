@@ -19,6 +19,7 @@ import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
 import WaldtanzZielspur from './WaldtanzZielspur'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
 import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
+import SchlangenWertungsplakette from './SchlangenWertungsplakette'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
@@ -339,6 +340,7 @@ export default function Schlangenbereich({
               const istNichtZiel = Boolean(ausgewaehlteHandkarteId) && !istBoardZiel && !farbenschutzAktion && !istHaeutungZiel && !hatSonderkartenZiel
               const schlangenLabelTypId = `${komponentenId}-schlange-${schlangeIndex}-label`
               const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
+              const schlangenWertungId = `${komponentenId}-schlange-${schlangeIndex}-wertung`
 
               return (
                 <li
@@ -347,7 +349,7 @@ export default function Schlangenbereich({
                   tabIndex={0}
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
-                  aria-describedby={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe`}
+                  aria-describedby={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe ${schlangenWertungId}`}
                   onClick={(event) => handleSchlangeClick(event, schlange.id)}
                   onKeyDown={(event) => handleSchlangeKeyDown(event, schlange.id)}
                   onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
@@ -356,6 +358,7 @@ export default function Schlangenbereich({
                   <span id={schlangenLabelTypId}>Schlange</span>
                   <strong id={schlangenLabelNameId}>{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
+                  <SchlangenWertungsplakette id={schlangenWertungId} schlange={schlange} />
                   <div className="schlangekarte__kartenreihe schlangekarte__kartenreihe--pfad" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
                     {schlange.karten.map((karte, kartenIndex) => {
                       const farbenfusionPaar = ermittleFarbenfusionPaarInfo(schlange.karten, kartenIndex, schlange.id, ausgewaehlteHandkarteId, farbenfusionAktionen)

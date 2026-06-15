@@ -29,17 +29,19 @@ function zustandMitLeerzeichenIdsImSchlangenbereich(): Spielzustand {
   }
 }
 
-function erwarteEinDomSicheresBeschreibungsziel(element: HTMLElement, erwarteterText: string) {
+function erwarteDomSichereBeschreibungsziele(element: HTMLElement, erwarteterText: string) {
   const beschreibungsIds = element.getAttribute('aria-describedby')?.split(/\s+/) ?? []
 
-  expect(beschreibungsIds).toHaveLength(1)
-  const beschreibung = document.getElementById(beschreibungsIds[0])
-  expect(beschreibung).not.toBeNull()
+  expect(beschreibungsIds.length).toBeGreaterThanOrEqual(1)
+  for (const id of beschreibungsIds) {
+    expect(id).not.toMatch(/\s/)
+    expect(document.getElementById(id)).not.toBeNull()
+  }
   expect(element).toHaveAccessibleDescription(expect.stringContaining(erwarteterText))
 }
 
 describe('R109 Schlangenbereich DOM-sichere IDREFs', () => {
-  it('verknüpft Startzone und eigene Schlange auch bei Leerzeichen-IDs mit je einem echten Beschreibungselement', () => {
+  it('verknüpft Startzone und eigene Schlange auch bei Leerzeichen-IDs mit echten Beschreibungselementen', () => {
     render(<App initialZustand={zustandMitLeerzeichenIdsImSchlangenbereich()} />)
 
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
@@ -49,11 +51,11 @@ describe('R109 Schlangenbereich DOM-sichere IDREFs', () => {
       name: 'Schlange schlange r109 mit leerzeichen',
     })
 
-    erwarteEinDomSicheresBeschreibungsziel(
+    erwarteDomSichereBeschreibungsziele(
       startzone,
       'Ziehe eine Farbkarte hierher oder klicke die passende Start-Schaltfläche.',
     )
-    erwarteEinDomSicheresBeschreibungsziel(
+    erwarteDomSichereBeschreibungsziele(
       eigeneSchlange,
       'Klicke auf eine Anlege-Schaltfläche oder lege die ausgewählte Karte direkt auf die Schlange.',
     )
