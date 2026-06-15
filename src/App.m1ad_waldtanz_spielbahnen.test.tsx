@@ -47,7 +47,7 @@ describe('M1ad Waldtanz-Spielbahnen', () => {
   })
 
   it('liefert den Stitch-CSS-Vertrag für breite Lichtung und kompakte Nebenobjekte', () => {
-    expect(cssBlock('waldtanz-arenastein__spielfeld')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1\.45fr\)\s*minmax\(16rem,\s*0\.75fr\)/)
+    expect(cssBlock('waldtanz-arenastein__spielfeld')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1\.7fr\)\s*minmax\(12rem,\s*0\.6fr\)/)
     expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/min-height:\s*clamp\(26rem,\s*48vh,\s*38rem\)/)
     expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/radial-gradient/)
     expect(cssBlock('waldtanz-arenastein__waldobjekte')).toMatch(/align-content:\s*start/)
