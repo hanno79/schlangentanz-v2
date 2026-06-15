@@ -315,6 +315,7 @@ function App({ initialZustand }: AppProps) {
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}
+                legaleAktionen={legaleAktionen}
                 onKarteWaehlen={(karteId) =>
                   setAusgewaehlteHandkarteAuswahl((aktuell) =>
                     aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },

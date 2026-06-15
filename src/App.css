@@ -1884,8 +1884,36 @@ code {
   transform: translateY(-0.75rem) scale(1.05);
 }
 
+.handkarten-spielbarkeit {
+  width: fit-content;
+  margin: 0;
+  padding: 0.18rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.handkarte--spielbar .handkarte__button--karte {
+  border-color: var(--st-color-tertiary);
+  background: radial-gradient(circle at 18% 16%, rgba(254, 203, 0, 0.74), transparent 3rem), linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(186, 246, 45, 0.38));
+  box-shadow: 0 8px 0 var(--st-color-border-strong), 0 0 0 5px rgba(254, 203, 0, 0.32);
+}
+
+.handkarte--wartet .handkarte__button--karte {
+  opacity: 0.72;
+}
+
+.handkarte--pflichtabwurf .handkarte__button--karte {
+  border-color: var(--st-color-tertiary);
+  background: linear-gradient(165deg, rgba(255, 188, 170, 0.82), rgba(255, 255, 255, 0.72));
+}
+
 .handkarte__eyebrow,
-.handkarte__spielhinweis {
+.handkarte__spielhinweis,
+.handkarte__spielstatus,
+.handkarte__spielziele {
   font-family: var(--st-font-headline);
   font-size: 0.66rem;
   font-weight: 900;
@@ -1905,7 +1933,9 @@ code {
 
 .handkarte__farbe,
 .handkarte__punkte,
-.handkarte__typ {
+.handkarte__typ,
+.handkarte__spielstatus,
+.handkarte__spielziele {
   width: fit-content;
   padding: 0.14rem 0.5rem;
   border: 2px solid var(--st-color-border-strong);
@@ -1917,6 +1947,14 @@ code {
 .handkarte__typ {
   font-size: 0.78rem;
   background: rgba(236, 255, 227, 0.78);
+}
+
+.handkarte__spielstatus {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.handkarte__spielziele {
+  background: var(--st-color-secondary-container);
 }
 
 .handkarte strong,

@@ -10,12 +10,13 @@ Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit ausw
 */
 
 import { useId } from 'react'
-import type { Spielkarte } from '../engine/types'
+import type { SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 
 interface HandkartenPanelProps {
   handkarten: Spielkarte[]
   ausgewaehlteHandkarte: Spielkarte | null
+  legaleAktionen?: SpielAktion[]
   onKarteWaehlen: (karteId: string) => void
   onKarteDragStart: (karteId: string) => void
   onKarteDragEnd: () => void
@@ -43,19 +44,35 @@ function karteFarbklasse(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? ` handkarten-preview--farbe-${farbeCssKlasse(karte.farbe)}` : ' handkarten-preview--sonderkarte'
 }
 
+function nutztHandkarte(aktion: SpielAktion, karteId: string): boolean {
+  if ('handkartenId' in aktion && aktion.handkartenId === karteId) return true
+  return 'abwehrHandkartenId' in aktion && aktion.abwehrHandkartenId === karteId
+}
+
+function aktionenFuerHandkarte(legaleAktionen: SpielAktion[], karteId: string): SpielAktion[] {
+  return legaleAktionen.filter((aktion) => nutztHandkarte(aktion, karteId))
+}
+
+function boardAktionenFuerHandkarte(legaleAktionen: SpielAktion[], karteId: string): SpielAktion[] {
+  return aktionenFuerHandkarte(legaleAktionen, karteId).filter((aktion) => aktion.typ !== 'PflichtAbwurf')
+}
+
 export default function HandkartenPanel({
   handkarten,
   ausgewaehlteHandkarte,
+  legaleAktionen = [],
   onKarteWaehlen,
   onKarteDragStart,
   onKarteDragEnd,
 }: HandkartenPanelProps) {
   const handkartenTitelId = useId()
   const detailTitelId = useId()
+  const spielbareHandkarten = handkarten.filter((karte) => boardAktionenFuerHandkarte(legaleAktionen, karte.id).length > 0).length
 
   return (
     <section className="handkarten-panel" aria-labelledby={handkartenTitelId}>
       <h4><span id={handkartenTitelId}>Handkarten</span> als Kartenleiste</h4>
+      <p className="handkarten-spielbarkeit">{spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'} sofort spielbar</p>
       {ausgewaehlteHandkarte ? (
         <section className={`handkarten-detail handkarten-preview${karteFarbklasse(ausgewaehlteHandkarte)}`} aria-labelledby={detailTitelId}>
           <article className="handkarten-preview__karte" aria-label={`Vorschau ${ausgewaehlteHandkarte.id}`}>
@@ -87,17 +104,23 @@ export default function HandkartenPanel({
         {handkarten.map((karte) => {
           const istFarbkarte = karte.typ === 'Farbkarte'
           const istAusgewaehlt = ausgewaehlteHandkarte?.id === karte.id
+          const alleKartenAktionen = aktionenFuerHandkarte(legaleAktionen, karte.id)
+          const zielAnzahl = alleKartenAktionen.filter((aktion) => aktion.typ !== 'PflichtAbwurf').length
+          const istSpielbar = zielAnzahl > 0
+          const hatPflichtAbwurf = !istSpielbar && alleKartenAktionen.some((aktion) => aktion.typ === 'PflichtAbwurf')
+          const spielStatusText = istSpielbar ? 'Spielbar jetzt' : hatPflichtAbwurf ? 'Muss abgeworfen werden' : 'Wartet auf nächsten Schritt'
+          const zielText = istSpielbar ? `${zielAnzahl} ${zielAnzahl === 1 ? 'Brettziel' : 'Brettziele'}` : hatPflichtAbwurf ? 'Abwurfpflicht' : ''
 
           return (
             <li
               key={karte.id}
-              className={`handkarte handkarte--spielkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}`}
+              className={`handkarte handkarte--spielkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}${istSpielbar ? ' handkarte--spielbar' : hatPflichtAbwurf ? ' handkarte--pflichtabwurf' : ' handkarte--wartet'}`}
             >
               <button
                 type="button"
                 className="handkarte__button handkarte__button--karte"
                 draggable="true"
-                aria-label={`${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}`}
+                aria-label={`${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'} ${spielStatusText}${zielText ? ` ${zielText}` : ''}`}
                 aria-pressed={istAusgewaehlt}
                 onClick={() => onKarteWaehlen(karte.id)}
                 onDragStart={(event) => {
@@ -114,6 +137,8 @@ export default function HandkartenPanel({
                 <span className="handkarte__farbe">{istFarbkarte ? karte.farbe : karte.name}</span>
                 <span className="handkarte__punkte">{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
                 <span className="handkarte__spielhinweis">Auswählen oder ziehen</span>
+                <span className="handkarte__spielstatus">{spielStatusText}</span>
+                {zielText && <span className="handkarte__spielziele">{zielText}</span>}
               </button>
             </li>
           )
