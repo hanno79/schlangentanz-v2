@@ -2640,6 +2640,10 @@ code {
   background: rgba(255, 255, 255, 0.32);
 }
 
+.waldtanz-arenastein__schlangenlichtung:has(.waldtanz-kartenpop) {
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+}
+
 .waldtanz-magiekreise {
   display: grid;
   gap: 0.65rem;
@@ -3090,6 +3094,12 @@ code {
   color: var(--st-color-border-strong);
   text-align: center;
   animation: waldtanz-kartenpop-springt 720ms ease-out both;
+}
+
+.waldtanz-arenastein__schlangenlichtung .waldtanz-kartenpop {
+  width: min(100%, 24rem);
+  padding-block: 0.6rem;
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
 }
 
 .waldtanz-kartenpop strong,

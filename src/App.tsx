@@ -304,6 +304,7 @@ function App({ initialZustand }: AppProps) {
                 <div className="waldtanz-arenastein__spielfeld">
                   <section className="waldtanz-arenastein__schlangenlichtung" aria-label="Schlangenlichtung">
                     <WaldtanzTischkarte zustand={zustand} />
+                    <WaldtanzKartenpop aktionLabel={letzteAktion} />
                     <WaldtanzMagiekreise
                       ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                       neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
@@ -331,7 +332,6 @@ function App({ initialZustand }: AppProps) {
                   <aside className="waldtanz-arenastein__waldobjekte" aria-label="Waldobjekte">
                     <WaldtanzAblage zustand={zustand} />
                     <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
-                    <WaldtanzKartenpop aktionLabel={letzteAktion} />
                     <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} />
                   </aside>
                 </div>
