@@ -8,6 +8,7 @@ import { useState } from 'react'
 import type { SpielAktion, Spieler } from '../engine'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
 import FarbendiebBeutekorb from './FarbendiebBeutekorb'
+import SchlangenblockadeFessel from './SchlangenblockadeFessel'
 
 interface GegnerSchlangenListeProps {
   spieler: Spieler[]
@@ -148,15 +149,12 @@ export default function GegnerSchlangenListe({
                 })}
               </div>
               {blockadeAktion && (
-                <button
-                  type="button"
-                  className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--blockade"
-                  aria-label={`Schlangenblockade im Schlangenbereich mit Karte ${blockadeAktion.handkartenId} auf Schlange ${blockadeAktion.zielSchlangenId}`}
-                  title={aktionsLabel(blockadeAktion)}
-                  onClick={() => onAktion(blockadeAktion)}
-                >
-                  Schlangenblockade hier spielen
-                </button>
+                <SchlangenblockadeFessel
+                  aktion={blockadeAktion}
+                  zielSchlangenId={schlange.id}
+                  onAktion={onAktion}
+                  aktionsLabel={aktionsLabel}
+                />
               )}
               <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>
             </li>

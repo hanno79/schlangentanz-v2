@@ -58,8 +58,15 @@ describe('M2c Schlangenblockade-Boardziel', () => {
 
     expect(zielschlange).toHaveClass('schlangekarte--blockade-ziel')
     expect(within(eigeneSchlangen).getByText('eigene-schlange-m2c').closest('.schlangekarte')).not.toHaveClass('schlangekarte--blockade-ziel')
-    const boardAktion = within(zielschlange as HTMLElement).getByRole('button', {
-      name: 'Schlangenblockade im Schlangenbereich mit Karte schlangenblockade-m2c auf Schlange gegner-schlange-m2c',
+    const blockadeFessel = within(zielschlange as HTMLElement).getByRole('group', {
+      name: 'Schlangenblockade-Fessel für gegner-schlange-m2c',
+    })
+    expect(within(blockadeFessel).getByText('Blockade-Fessel')).toBeVisible()
+    expect(within(blockadeFessel).getByText('schlangenblockade-m2c')).toBeVisible()
+    expect(within(blockadeFessel).getByText('Ziel: gegner-schlange-m2c')).toBeVisible()
+    expect(within(blockadeFessel).getByText('Klick legt die Ranken um diese Schlange.')).toBeVisible()
+    const boardAktion = within(blockadeFessel).getByRole('button', {
+      name: 'Schlangenblockade-Fessel mit Karte schlangenblockade-m2c um Schlange gegner-schlange-m2c legen',
     })
     expect(boardAktion).toBeVisible()
 
@@ -77,5 +84,10 @@ describe('M2c Schlangenblockade-Boardziel', () => {
     expect(zielBlock).toContain('Schlangenblockade-Ziele')
     expect(zielBlock).toContain('background: linear-gradient')
     expect(zielBlock).toContain('rgba(177, 45, 0')
+    expect(css).toContain('.schlangenblockade-fessel {')
+    expect(css).toContain('border: var(--st-border-width-chunky) solid var(--st-color-border-strong)')
+    expect(css).toContain('border-radius: var(--st-radius-xl)')
+    expect(css).toContain('box-shadow: 0 6px 0 var(--st-color-border-strong)')
+    expect(css).not.toContain('--st-font-heading')
   })
 })
