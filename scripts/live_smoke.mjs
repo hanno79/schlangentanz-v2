@@ -71,7 +71,7 @@ async function httpPruefen(route) {
 
 async function browserSmoke() {
   const browser = await chromium.launch()
-  const seite = await browser.newPage()
+  const seite = await browser.newPage({ viewport: { width: 1280, height: 900 } })
   const errors = []
 
   seite.on('pageerror', (err) => errors.push(`Page-Fehler: ${err.message}`))
@@ -90,6 +90,8 @@ async function browserSmoke() {
       console.log(`Sichtbar: "${text}"`)
     }
 
+    await pruefeM1asErstzugLichtung(seite)
+
     await seite.waitForTimeout(500)
 
     if (errors.length > 0) {
@@ -98,6 +100,28 @@ async function browserSmoke() {
   } finally {
     await browser.close()
   }
+}
+
+async function pruefeM1asErstzugLichtung(seite) {
+  const arenaBox = await seite.getByRole('region', { name: 'Waldtanz-Arenastein' }).boundingBox()
+  const schlangenBox = await seite.getByRole('region', { name: 'Schlangenbereich' }).boundingBox()
+  const handBox = await seite.getByRole('region', { name: 'Handkarten' }).boundingBox()
+
+  if (!arenaBox || !schlangenBox || !handBox) {
+    throw new Error('M1as Layout-Smoke: Arena, Schlangenbereich oder Handkarten fehlen')
+  }
+
+  const sichtbareSchlangenHoehe = Math.min(900, schlangenBox.y + schlangenBox.height) - Math.max(0, schlangenBox.y)
+  if (sichtbareSchlangenHoehe < 220) {
+    throw new Error(`M1as Layout-Smoke: Schlangenbereich zu wenig im Erstbild sichtbar (${Math.round(sichtbareSchlangenHoehe)}px)`)
+  }
+
+  const handAbstandZurArena = handBox.y - (arenaBox.y + arenaBox.height)
+  if (handAbstandZurArena < 0 || handAbstandZurArena > 40) {
+    throw new Error(`M1as Layout-Smoke: Handkarten nicht board-nah zur Arena (${Math.round(handAbstandZurArena)}px Abstand)`)
+  }
+
+  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar, Hand ${Math.round(handAbstandZurArena)}px nach Arena`)
 }
 
 async function kernTextSichtbar(seite, text) {

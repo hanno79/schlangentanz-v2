@@ -1434,7 +1434,7 @@ code {
     grid-column: 1;
     grid-row: 3;
     align-self: start;
-    max-height: clamp(24rem, 46vh, 30rem);
+    max-height: clamp(29rem, 58vh, 36rem);
     overflow: auto;
     scrollbar-gutter: stable;
   }
@@ -1451,6 +1451,7 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"] {
+    grid-template-columns: minmax(0, 3fr) minmax(7rem, 0.4fr);
     min-height: 0;
   }
 
@@ -1487,7 +1488,11 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"] {
-    min-height: min(21rem, 40vh);
+    min-height: min(22rem, 48vh);
+    grid-template-columns: minmax(8rem, 0.6fr) minmax(12rem, 1.4fr);
+    grid-template-rows: auto auto;
+    gap: 0.45rem;
+    padding: 0.6rem;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"] {
@@ -1560,8 +1565,58 @@ code {
   }
 
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    max-height: min(20rem, 42vh);
+    overflow: auto;
+    min-height: 7.5rem;
     gap: 0.5rem;
     padding: 0.65rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-tischkarte"] {
+    grid-column: 1;
+    grid-row: 1;
+    width: min(100%, 22rem);
+    gap: 0.38rem;
+    padding: 0.55rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise"] {
+    grid-column: 1;
+    grid-row: 2;
+    gap: 0.35rem;
+    padding: 0.55rem;
+    border-radius: 1.6rem;
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-kartenpop"] {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]:has(.waldtanz-kartenpop) [class~="waldtanz-magiekreise"] {
+    grid-row: 3;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]:has(.waldtanz-kartenpop) [class~="schlangenbereich--waldlichtung"] {
+    grid-row: 1 / span 3;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise__kopf"] {
+    gap: 0.28rem 0.45rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise__liste"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise__kreis"] {
+    min-height: 4rem;
+    aspect-ratio: auto;
+    padding: 0.35rem;
   }
 
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone"] {
