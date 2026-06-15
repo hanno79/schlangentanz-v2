@@ -22,7 +22,10 @@ M1u ist ein mittlerer sichtbarer Google-Stitch/Waldtanz-Vertical innerhalb `M1 W
 - Full Gates: `npm test -- --run` → 228 Dateien / 749 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` grün.
 
 ## Release
-Status vor Commit: lokal verifiziert; Release erfolgt über den stabilen Production-Alias `https://schlangentanz-v2.vercel.app` mit finalem Smoke nach Deploy.
+- Feature-Commit: `251cf88 — M1u: Waldtanz-Startkreis sichtbar machen`.
+- Production-Smoke-Blocker: Der erste Alias-Smoke fand live, dass der Startkreis-Button durch die generische `.schlangekarte__anlegebutton`-Kaskade computed nur `2px` Border hatte. Fix-Commit: `1385ac4 — M1u: Startkreis-Button-Kaskade absichern`.
+- Finaler Production-Deploy: Vercel Production auf stabilem Alias `https://schlangentanz-v2.vercel.app` (`READY`).
+- Finaler Smoke: `npm run smoke:production -- --url https://schlangentanz-v2.vercel.app` grün mit `/` und `/game` HTTP 200; M1u-Browser-Smoke bestätigt `schlangen-startzone--magiekreis`, `schlangen-startzone--leer`, `schlangen-startzone--zielbereit`, sichtbare Copy `Startkreis`, `Leuchtender Startplatz`, `Bereit: ...`, `Karte loslassen oder klicken...`, Buttonklasse `schlangen-startkreis-button`, computed `buttonBorderTopWidth: 3px`, Hard Shadow, erfolgreiche Aktion `Neue Schlange starten` und keine Console-/Page-Errors.
 
 ## Nächste mittlere Lücke
 Weiter in M1/M2: das Startkreis-Gefühl ist jetzt klarer; als nächstes sollte eine weitere Board-Interaktion oder die Schlangen-/Startkreis-Drop-Erfahrung vertieft werden, nicht wieder eine reine A11y-/IDREF-Mikroserie.
