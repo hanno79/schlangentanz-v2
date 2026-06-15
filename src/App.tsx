@@ -308,6 +308,7 @@ function App({ initialZustand }: AppProps) {
                       ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                       neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
                       karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
+                      onAktion={fuhreAktionAus}
                     />
                     <Schlangenbereich
                       zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}

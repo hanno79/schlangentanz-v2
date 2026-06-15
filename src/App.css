@@ -2687,6 +2687,7 @@ code {
 }
 
 .waldtanz-magiekreise__kreis {
+  position: relative;
   display: grid;
   place-items: center;
   align-content: center;
@@ -2701,6 +2702,33 @@ code {
   font-family: var(--st-font-headline);
   font-weight: 900;
   text-align: center;
+}
+
+.waldtanz-magiekreise__aktion {
+  box-sizing: border-box;
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  min-width: min(100%, 8.5rem);
+  padding: 0.35rem 0.65rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  cursor: pointer;
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.waldtanz-magiekreise__aktion:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.waldtanz-magiekreise__aktion:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 var(--st-color-border-strong);
 }
 
 .waldtanz-magiekreise__kreis--aktiv {
