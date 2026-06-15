@@ -20,6 +20,7 @@ interface WertungPanelProps {
 }
 
 function rangStatus(index: number, istAktiv: boolean): string {
+  if (index === 0 && istAktiv) return 'führt · am Zug'
   if (index === 0) return 'führt'
   if (istAktiv) return 'am Zug'
   return 'wartet'

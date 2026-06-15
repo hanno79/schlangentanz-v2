@@ -65,6 +65,17 @@ describe('M1ab Waldtanz-Rangtafel', () => {
     expect(within(wertung).getByRole('region', { name: 'Punktetafel' })).toBeVisible()
   })
 
+  it('nennt den aktiven führenden Spieler weiterhin am Zug', () => {
+    render(<App />)
+
+    const rangtafel = within(screen.getByRole('region', { name: 'Wertung' })).getByRole('region', { name: 'Waldtanz-Rangtafel' })
+    const aktiveKarte = within(rangtafel).getAllByRole('listitem').find((platz) => platz.getAttribute('aria-current') === 'true')
+
+    expect(aktiveKarte).toBeTruthy()
+    expect(aktiveKarte).toHaveTextContent('führt')
+    expect(aktiveKarte).toHaveTextContent('am Zug')
+  })
+
   it('verankert die Rangtafel visuell als chunky Google-Stitch-Waldschild', () => {
     expect(cssBlock('waldtanz-rangtafel')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('waldtanz-rangtafel')).toMatch(/border-radius:\s*var\(--st-radius-lg\)/)
