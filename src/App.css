@@ -1609,7 +1609,9 @@ code {
     grid-column: 1;
     grid-row: 3;
     align-self: start;
-    max-height: clamp(29rem, 58vh, 36rem);
+    box-sizing: border-box;
+    max-height: clamp(24rem, 52vh, 30.5rem);
+    padding-bottom: clamp(6rem, 17vh, 8.5rem);
     overflow: auto;
     scrollbar-gutter: stable;
   }
@@ -1657,9 +1659,82 @@ code {
   }
 
   .spielbereich--game-route [class~="handkarten-panel"] {
-    grid-column: 1 / -1;
-    grid-row: 4;
+    grid-column: 1;
+    grid-row: 3;
+    align-self: end;
+    justify-self: center;
+    z-index: 4;
+    width: min(100%, 55rem);
+    max-height: clamp(15rem, 31vh, 18rem);
     margin-top: 0;
+    padding: clamp(0.45rem, 0.8vw, 0.65rem);
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .spielbereich--game-route [class~="handkarten-panel"] button {
+    pointer-events: auto;
+  }
+
+  .spielbereich--game-route [class~="handkarten-panel"] h4 {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne"] {
+    gap: 0.35rem;
+    justify-content: flex-start;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {
+    padding: 0.35rem 0.65rem;
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__avatar"] {
+    width: 1.9rem;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__statuschip"] {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .spielbereich--game-route [class~="handkarten-spielbarkeit"],
+  .spielbereich--game-route [class~="handkarten-status"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"] {
+    padding-block: 0.2rem;
+  }
+
+  .spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"] [class~="handkarte"] {
+    width: clamp(5.9rem, 8vw, 7.1rem);
+  }
+
+  .spielbereich--game-route [class~="handkarte__button--karte"] {
+    min-height: clamp(10.5rem, 22vh, 13.25rem);
+    overflow: hidden;
+    padding: 0.55rem;
+    gap: 0.2rem;
+  }
+
+  .spielbereich--game-route [class~="handkarte__art"] {
+    min-height: 31%;
+  }
+
+  .spielbereich--game-route [class~="handkarte__symbol"] {
+    min-height: 2rem;
+    font-size: 1.35rem;
+  }
+
+  .spielbereich--game-route [class~="handkarte__typ"],
+  .spielbereich--game-route [class~="handkarte__farbe"],
+  .spielbereich--game-route [class~="handkarte__punkte"],
+  .spielbereich--game-route [class~="handkarte__spielhinweis"] {
+    display: none;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenazug"] {

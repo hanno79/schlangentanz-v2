@@ -91,6 +91,7 @@ async function browserSmoke() {
     }
 
     await pruefeM1asErstzugLichtung(seite)
+    await pruefeM1awHandkante(seite)
 
     await seite.waitForTimeout(500)
 
@@ -117,11 +118,72 @@ async function pruefeM1asErstzugLichtung(seite) {
   }
 
   const handAbstandZurArena = handBox.y - (arenaBox.y + arenaBox.height)
-  if (handAbstandZurArena < 0 || handAbstandZurArena > 40) {
+  if (handAbstandZurArena < -330 || handAbstandZurArena > 40) {
     throw new Error(`M1as Layout-Smoke: Handkarten nicht board-nah zur Arena (${Math.round(handAbstandZurArena)}px Abstand)`)
   }
 
-  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar, Hand ${Math.round(handAbstandZurArena)}px nach Arena`)
+  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar, Handkante ${Math.round(handAbstandZurArena)}px zur Arena`)
+}
+
+async function pruefeM1awHandkante(seite) {
+  const arenaBox = await seite.getByRole('region', { name: 'Waldtanz-Arenastein' }).boundingBox()
+  const handBox = await seite.getByRole('region', { name: 'Handkarten' }).boundingBox()
+  const ersteHandkarte = seite.locator('.handkartenleiste--tiefenfaecher .handkarte__button--karte').first()
+  const ersteHandkarteBox = await ersteHandkarte.boundingBox()
+
+  if (!arenaBox || !handBox || !ersteHandkarteBox) {
+    throw new Error('M1aw Handkante: Arena, Handregion oder erste Handkarte fehlt')
+  }
+
+  if (handBox.y < arenaBox.y + 100) {
+    throw new Error(`M1aw Handkante: Hand liegt zu hoch über dem Brett (${Math.round(handBox.y)}px)`)
+  }
+  if (handBox.y > 835) {
+    throw new Error(`M1aw Handkante: Handbühne beginnt zu tief im Erstbild (${Math.round(handBox.y)}px)`)
+  }
+  if (ersteHandkarteBox.y > 875) {
+    throw new Error(`M1aw Handkante: erste Spielkarte ist nicht am unteren Erstbildrand sichtbar (${Math.round(ersteHandkarteBox.y)}px)`)
+  }
+
+  const kartenStil = await ersteHandkarte.evaluate((element) => {
+    const style = getComputedStyle(element)
+    return {
+      borderWidth: style.borderTopWidth,
+      overflow: style.overflow,
+      height: element.getBoundingClientRect().height,
+    }
+  })
+
+  if (kartenStil.borderWidth !== '3px' || kartenStil.overflow !== 'hidden') {
+    throw new Error(`M1aw Handkante: Kartenfläche nicht kompakt/chunky genug (${JSON.stringify(kartenStil)})`)
+  }
+
+  const center = {
+    x: ersteHandkarteBox.x + ersteHandkarteBox.width / 2,
+    y: ersteHandkarteBox.y + ersteHandkarteBox.height / 2,
+  }
+  const hitTest = await seite.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('button')?.className ?? '', center)
+  if (!String(hitTest).includes('handkarte__button--karte')) {
+    throw new Error(`M1aw Handkante: Handkarte ist am Mittelpunkt nicht klickbar (${hitTest})`)
+  }
+
+  const blankHandPoint = {
+    x: handBox.x + Math.min(24, Math.max(8, handBox.width * 0.06)),
+    y: handBox.y + Math.min(24, Math.max(8, handBox.height * 0.08)),
+  }
+  const blankHit = await seite.evaluate(({ x, y }) => {
+    const element = document.elementFromPoint(x, y)
+    return {
+      hand: Boolean(element?.closest('.handkarten-panel')),
+      board: Boolean(element?.closest('.waldtanz-arenastein')),
+      klasse: element?.className ?? '',
+    }
+  }, blankHandPoint)
+  if (blankHit.hand && !blankHit.board) {
+    throw new Error(`M1aw Handkante: leere Handbühne blockiert das Brett (${JSON.stringify(blankHit)})`)
+  }
+
+  console.log(`M1aw Handkante: Hand bei ${Math.round(handBox.y)}px, erste Karte bei ${Math.round(ersteHandkarteBox.y)}px, Kartenhöhe ${Math.round(kartenStil.height)}px`)
 }
 
 async function kernTextSichtbar(seite, text) {

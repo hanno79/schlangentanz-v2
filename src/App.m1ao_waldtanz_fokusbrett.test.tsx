@@ -49,7 +49,8 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(waldobjekte).toBeVisible()
 
     const routeArenaBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(routeArenaBlock).toMatch(/max-height:\s*clamp\(29rem,\s*58vh,\s*36rem\)/)
+    expect(routeArenaBlock).toMatch(/max-height:\s*clamp\(24rem,\s*52vh,\s*30\.5rem\)/)
+    expect(routeArenaBlock).toMatch(/padding-bottom:\s*clamp\(6rem,\s*17vh,\s*8\.5rem\)/)
     expect(routeArenaBlock).toMatch(/overflow:\s*auto/)
     expect(routeArenaBlock).toMatch(/scrollbar-gutter:\s*stable/)
 
@@ -79,7 +80,8 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeWaldobjekteBlock).toMatch(/overflow:\s*auto/)
 
     const routeHandBlock = cssBlockForSelector('.spielbereich--game-route [class~="handkarten-panel"]')
-    expect(routeHandBlock).toMatch(/grid-row:\s*4/)
+    expect(routeHandBlock).toMatch(/grid-row:\s*3/)
+    expect(routeHandBlock).toMatch(/align-self:\s*end/)
     expect(routeHandBlock).toMatch(/margin-top:\s*0/)
   })
 })
