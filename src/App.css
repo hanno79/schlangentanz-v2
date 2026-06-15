@@ -4213,6 +4213,28 @@ code {
   background: var(--st-color-secondary-container);
 }
 
+.schlangen-startzone__vorschau {
+  display: grid;
+  gap: 0.18rem;
+  justify-items: center;
+  padding: 0.42rem 0.8rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(180deg, var(--st-color-secondary-container), var(--st-color-background));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  transform: rotate(-1deg);
+}
+
+.schlangen-startzone__vorschau-label,
+.schlangen-startzone__vorschau-id {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.spielbereich--game-route [class~="schlangenbereich--karte-ausgewaehlt"] [class~="schlangekarte__anlegeaktionen--starten"] {
+  display: none;
+}
+
 .schlangen-startkreis-button {
   display: grid;
   justify-items: center;

@@ -71,7 +71,8 @@ async function httpPruefen(route) {
 
 async function browserSmoke() {
   const browser = await chromium.launch()
-  const seite = await browser.newPage({ viewport: { width: 1280, height: 900 } })
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' })
+  const seite = await context.newPage()
   const errors = []
 
   seite.on('pageerror', (err) => errors.push(`Page-Fehler: ${err.message}`))
@@ -94,6 +95,7 @@ async function browserSmoke() {
     await pruefeM1awHandkante(seite)
     await pruefeM1axFreieLichtung(seite)
     await pruefeM1ayWaldkulisse(seite)
+    await pruefeM1baStartkreisVorschau(seite)
 
     await seite.waitForTimeout(500)
 
@@ -101,6 +103,7 @@ async function browserSmoke() {
       throw new Error(errors.join('\n'))
     }
   } finally {
+    await context.close()
     await browser.close()
   }
 }
@@ -266,6 +269,63 @@ async function pruefeM1ayWaldkulisse(seite) {
   }
 
   console.log('M1ay Waldkulisse: sonniger Waldhintergrund sichtbar, Dekoration klicksicher')
+}
+
+async function pruefeM1baStartkreisVorschau(seite) {
+  const handRegion = seite.getByRole('region', { name: 'Handkarten' })
+  const handkarte = handRegion.getByRole('button', { name: /Farbkarte/ }).first()
+  const handkartenName = await handkarte.getAttribute('aria-label')
+  const kartenId = handkartenName?.split(/\s+/)[0]
+
+  if (!kartenId) {
+    throw new Error('M1ba Startkreis-Vorschau: keine sichtbare Farb-Handkarte gefunden')
+  }
+
+  await handkarte.click()
+
+  const startzone = seite.getByRole('button', { name: 'Neue Schlange starten', exact: true }).first()
+  const vorschau = startzone.locator('.schlangen-startzone__vorschau').first()
+  const vorschauText = await vorschau.innerText()
+  const vorschauId = await vorschau.getAttribute('id')
+  const vorschauLabel = await vorschau.getAttribute('aria-label')
+  const beschriebenDurch = await startzone.getAttribute('aria-describedby')
+  const startzoneBeschreibung = await startzone.evaluate((element) => element.textContent ?? '')
+
+  if (!vorschauText.includes('Startkarte') || !vorschauText.includes(kartenId) || !vorschauText.includes('Klick auf den Startkreis')) {
+    throw new Error(`M1ba Startkreis-Vorschau: Vorschau fehlt oder ist unvollständig (${vorschauText})`)
+  }
+  if (vorschauLabel !== null) {
+    throw new Error(`M1ba Startkreis-Vorschau: Vorschau überschreibt sichtbare Beschreibung per aria-label (${vorschauLabel})`)
+  }
+  if (!vorschauId || !beschriebenDurch?.split(/\s+/).includes(vorschauId) || !startzoneBeschreibung.includes('Klick auf den Startkreis')) {
+    throw new Error(`M1ba Startkreis-Vorschau: aria-describedby zeigt nicht auf sichtbare Vorschau (${beschriebenDurch}, ${vorschauId})`)
+  }
+
+  const startlisteDisplay = await seite.locator('.schlangekarte__anlegeaktionen--starten').first().evaluate((element) => getComputedStyle(element).display)
+  if (startlisteDisplay !== 'none') {
+    throw new Error(`M1ba Startkreis-Vorschau: Startlisten-Fallback bleibt auf /game primär sichtbar (${startlisteDisplay})`)
+  }
+
+  const startzoneBox = await startzone.boundingBox()
+  if (!startzoneBox) {
+    throw new Error('M1ba Startkreis-Vorschau: Startkreis hat keine sichtbare Browser-Box')
+  }
+  const startzoneHit = await seite.evaluate(({ x, y }) => Boolean(document.elementFromPoint(x, y)?.closest('.schlangen-startzone')), {
+    x: startzoneBox.x + startzoneBox.width / 2,
+    y: startzoneBox.y + Math.min(startzoneBox.height - 4, Math.max(4, startzoneBox.height * 0.45)),
+  })
+  if (!startzoneHit) {
+    throw new Error('M1ba Startkreis-Vorschau: Startkreis-Mittelpunkt ist nicht direkt als Brettfläche klickbar')
+  }
+
+  await startzone.click()
+  await seite.getByText(`Zuletzt ausgeführt: Neue Schlange starten mit Karte ${kartenId}`).waitFor({ state: 'visible' })
+  const gelegteKarteSichtbar = await seite.getByRole('listitem', { name: new RegExp(kartenId) }).first().isVisible().catch(() => false)
+  if (!gelegteKarteSichtbar) {
+    throw new Error(`M1ba Startkreis-Vorschau: gestartete Karte ${kartenId} liegt nicht sichtbar in der Schlange`)
+  }
+
+  console.log(`M1ba Startkreis-Vorschau: ${kartenId} im Startkreis sichtbar und per Brettfläche gestartet`)
 }
 
 async function kernTextSichtbar(seite, text) {

@@ -20,6 +20,7 @@ import WaldtanzZielspur from './WaldtanzZielspur'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
 import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import SchlangenWertungsplakette from './SchlangenWertungsplakette'
+import SchlangenStartzone from './SchlangenStartzone'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
@@ -273,39 +274,18 @@ export default function Schlangenbereich({
         <p className="schlangen-drop-hinweis">
           Ziehe eine Handkarte auf die gewünschte Schlange oder nutze die Startzone, um eine neue Schlange zu beginnen.
         </p>
-        <div
-          className={`schlangen-startzone schlangen-startzone--magiekreis${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${startzoneIstZielbereit ? ' schlangen-startzone--zielbereit' : ''}${dragOverZone?.kind === 'startzone' ? ' schlangen-startzone--dragover' : ''}`}
-          role="button"
-          tabIndex={0}
-          aria-labelledby={startzoneTitelId}
-          aria-describedby={`${komponentenId}-startzone-hinweis`}
-          onClick={(event) => {
-            event.stopPropagation()
-            handleNeueSchlangeZoneClick(event)
-          }}
+        <SchlangenStartzone
+          komponentenId={komponentenId}
+          startzoneTitelId={startzoneTitelId}
+          hatEigeneSchlangen={hatEigeneSchlangen}
+          startzoneIstZielbereit={startzoneIstZielbereit}
+          dragOverStartzone={dragOverZone?.kind === 'startzone'}
+          ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
+          onClick={(event) => { event.stopPropagation(); handleNeueSchlangeZoneClick(event) }}
           onKeyDown={handleNeueSchlangeZoneKeyDown}
-          onDragOver={(event) => {
-            event.stopPropagation()
-            handleNeueSchlangeZoneDragOver(event)
-          }}
-          onDrop={(event) => {
-            event.stopPropagation()
-            handleNeueSchlangeZoneDrop(event)
-          }}
-        >
-          <span className="schlangen-startzone__badge">Startkreis</span>
-          <strong id={startzoneTitelId} className="schlangen-startzone__titel">Neue Schlange starten</strong>
-          <span className="schlangen-startzone__titel">Leuchtender Startplatz</span>
-          <p id={`${komponentenId}-startzone-hinweis`} className="schlangen-drop-hinweis">
-            Ziehe eine Farbkarte hierher oder klicke die passende Start-Schaltfläche.
-          </p>
-          {startzoneIstZielbereit && (
-            <>
-              <span className="schlangen-startzone__karte">Bereit: {ausgewaehlteHandkarteId}</span>
-              <span className="schlangen-zielhinweis">Karte loslassen oder klicken, um die erste Schlange zu legen.</span>
-            </>
-          )}
-        </div>
+          onDragOver={(event) => { event.stopPropagation(); handleNeueSchlangeZoneDragOver(event) }}
+          onDrop={(event) => { event.stopPropagation(); handleNeueSchlangeZoneDrop(event) }}
+        />
         {neueSchlangeStartenAktionen.length > 0 && (
           <div className="schlangekarte__anlegeaktionen schlangekarte__anlegeaktionen--starten" aria-label="Waldtanz-Startkreise">
             {neueSchlangeStartenAktionen.map((aktion) => (

@@ -28,8 +28,11 @@ describe('M1u Waldtanz-Startkreis', () => {
     expect(startzone).toHaveClass('schlangen-startzone--magiekreis', 'schlangen-startzone--leer', 'schlangen-startzone--zielbereit')
     expect(within(startzone).getByText('Startkreis')).toHaveClass('schlangen-startzone__badge')
     expect(within(startzone).getByText('Leuchtender Startplatz')).toHaveClass('schlangen-startzone__titel')
-    expect(within(startzone).getByText(`Bereit: ${legaleStartaktion.handkartenId}`)).toHaveClass('schlangen-startzone__karte')
-    expect(within(startzone).getByText('Karte loslassen oder klicken, um die erste Schlange zu legen.')).toBeVisible()
+    const vorschau = within(startzone).getByText('Startkarte').closest('.schlangen-startzone__vorschau')
+    expect(vorschau).not.toBeNull()
+    expect(vorschau).toHaveClass('schlangen-startzone__vorschau')
+    expect(within(vorschau as HTMLElement).getByText(legaleStartaktion.handkartenId)).toHaveClass('schlangen-startzone__vorschau-id')
+    expect(within(vorschau as HTMLElement).getByText('Klick auf den Startkreis legt diese Karte als neue Schlange.')).toBeVisible()
 
     const startaktionen = within(schlangenbereich).getByLabelText('Waldtanz-Startkreise')
     const startbutton = within(startaktionen).getByRole('button', { name: `Startkreis mit Karte ${legaleStartaktion.handkartenId}` })

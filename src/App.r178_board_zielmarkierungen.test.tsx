@@ -28,8 +28,10 @@ describe('R178 Board-Zielmarkierungen', () => {
 
     expect(startzone).toHaveClass('schlangen-startzone--zielbereit')
     expect(schlangenKarte).toHaveClass('schlangekarte--zielbereit')
-    expect(within(startzone).getByText(`Bereit: ${anlegekarteId}`)).toBeVisible()
-    expect(within(startzone).getByText('Karte loslassen oder klicken, um die erste Schlange zu legen.')).toBeVisible()
+    const startVorschau = within(startzone).getByText('Startkarte').closest('.schlangen-startzone__vorschau')
+    expect(startVorschau).not.toBeNull()
+    expect(within(startVorschau as HTMLElement).getByText(anlegekarteId)).toHaveClass('schlangen-startzone__vorschau-id')
+    expect(within(startVorschau as HTMLElement).getByText('Klick auf den Startkreis legt diese Karte als neue Schlange.')).toBeVisible()
     expect(within(schlangenKarte).getByText('Ausgewählte Karte hier anlegen.')).toBeVisible()
   })
 
@@ -51,8 +53,8 @@ describe('R178 Board-Zielmarkierungen', () => {
 
     expect(startzone).not.toHaveClass('schlangen-startzone--zielbereit')
     expect(schlangenKarte).not.toHaveClass('schlangekarte--zielbereit')
-    expect(within(startzone).queryByText(/Bereit:/)).toBeNull()
-    expect(within(startzone).queryByText('Karte loslassen oder klicken, um die erste Schlange zu legen.')).toBeNull()
+    expect(within(startzone).queryByText('Startkarte')).toBeNull()
+    expect(within(startzone).queryByText('Klick auf den Startkreis legt diese Karte als neue Schlange.')).toBeNull()
     expect(within(schlangenKarte).queryByText('Ausgewählte Karte hier anlegen.')).toBeNull()
   })
 })
