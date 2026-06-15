@@ -54,18 +54,18 @@ describe('R183 Farbendieb-Boardziel', () => {
 
     expect(zielkarte).not.toHaveClass('schlangekarte__karte--farbendieb-ziel')
     expect(eigeneKarte).not.toHaveClass('schlangekarte__karte--farbendieb-ziel')
-    expect(within(zielkarte).queryByRole('button', { name: /Farbendieb im Schlangenbereich/ })).toBeNull()
+    expect(within(zielkarte).queryByRole('group', { name: 'Farbendieb-Beutekorb für rot-r183-beute' })).toBeNull()
 
     fireEvent.click(handkarte)
 
     expect(zielkarte).toHaveClass('schlangekarte__karte--farbendieb-ziel')
     expect(eigeneKarte).not.toHaveClass('schlangekarte__karte--farbendieb-ziel')
-    const boardAktionen = within(zielkarte).getAllByRole('button', { name: /Farbendieb im Schlangenbereich/ })
-    expect(boardAktionen).toHaveLength(2)
-    expect(within(zielkarte).getByText('Farbendieb auf Position 1')).toBeVisible()
-    expect(within(zielkarte).getByText('Farbendieb auf Position 2')).toBeVisible()
-    const boardAktion = within(zielkarte).getByRole('button', {
-      name: 'Farbendieb im Schlangenbereich mit Karte farbendieb-r183 von Schlange gegner-schlange-r183 Karte rot-r183-beute auf Schlange eigene-schlange-r183 an Position 2',
+    const beutekorb = within(zielkarte).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-r183-beute' })
+    expect(within(beutekorb).getAllByRole('button', { name: /Farbendieb-Beutekorb/ })).toHaveLength(2)
+    expect(within(beutekorb).getByText('Platz 1')).toBeVisible()
+    expect(within(beutekorb).getByText('Platz 2')).toBeVisible()
+    const boardAktion = within(beutekorb).getByRole('button', {
+      name: 'Farbendieb-Beutekorb mit Karte farbendieb-r183: rot-r183-beute in eigene-schlange-r183 an Platz 2 legen',
     })
     expect(boardAktion).toBeVisible()
 

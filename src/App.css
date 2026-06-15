@@ -4506,6 +4506,80 @@ code {
   box-shadow: 0 0 0 4px rgba(177, 45, 0, 0.3), 0 2px 0 rgba(6, 57, 7, 0.2);
 }
 
+.farbendieb-beutekorb {
+  display: grid;
+  gap: 0.55rem;
+  width: min(100%, 19rem);
+  margin-top: 0.6rem;
+  padding: 0.7rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background: radial-gradient(circle at 20% 12%, rgba(254, 203, 0, 0.94), rgba(255, 188, 170, 0.86) 48%, rgba(236, 255, 227, 0.9));
+  color: var(--st-color-border-strong);
+  box-shadow: var(--st-shadow-hard);
+}
+
+.farbendieb-beutekorb__kopf {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.farbendieb-beutekorb__kopf div,
+.farbendieb-beutekorb__plaetze {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.farbendieb-beutekorb__kopf strong {
+  font-family: var(--st-font-headline);
+  font-size: 1rem;
+}
+
+.farbendieb-beutekorb__kopf span:not(.farbendieb-beutekorb__icon) {
+  font-weight: 800;
+}
+
+.farbendieb-beutekorb__icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.farbendieb-beutekorb__plaetze {
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+}
+
+.farbendieb-beutekorb__platz {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-border-strong);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  cursor: pointer;
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.farbendieb-beutekorb__platz:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--st-color-border-strong);
+}
+
+.farbendieb-beutekorb__platz small {
+  font-family: var(--st-font-body);
+  font-weight: 800;
+}
+
 .schlangekarte--farbenschutz-ziel {
   /* ÄNDERUNG 12.06.2026: R182 hebt Farbenschutz-Ziele als geschützte Waldlichtung hervor. */
   border-color: var(--st-color-primary);

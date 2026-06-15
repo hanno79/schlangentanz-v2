@@ -7,6 +7,7 @@ Beschreibung: Gegnerische Schlangenreihe mit board-nahen Sonderkarten-Zielen fü
 import { useState } from 'react'
 import type { SpielAktion, Spieler } from '../engine'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
+import FarbendiebBeutekorb from './FarbendiebBeutekorb'
 
 interface GegnerSchlangenListeProps {
   spieler: Spieler[]
@@ -112,18 +113,12 @@ export default function GegnerSchlangenListe({
                       istSchwanz={istSchwanz}
                       className={`${diebAktionen.length > 0 || istFrassZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${diebAktionen.length > 0 ? ' schlangekarte__karte--farbendieb-ziel' : ''}${istFrassZiel ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}${istFrassAusgewaehlt ? ' schlangekarte__karte--schlangenfrass-ausgewaehlt' : ''}`}
                     >
-                      {diebAktionen.map((aktion) => (
-                        <button
-                          key={`${aktion.handkartenId}-${aktion.eigeneSchlangenId}-${aktion.einfügeIndex}`}
-                          type="button"
-                          className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--dieb"
-                          aria-label={`Farbendieb im Schlangenbereich mit Karte ${aktion.handkartenId} von Schlange ${aktion.zielSchlangenId} Karte ${aktion.zielKartenId} auf Schlange ${aktion.eigeneSchlangenId} an Position ${aktion.einfügeIndex + 1}`}
-                          title={aktionsLabel(aktion)}
-                          onClick={() => onAktion(aktion)}
-                        >
-                          Farbendieb auf Position {aktion.einfügeIndex + 1}
-                        </button>
-                      ))}
+                      <FarbendiebBeutekorb
+                        aktionen={diebAktionen}
+                        beuteKartenId={karte.id}
+                        onAktion={onAktion}
+                        aktionsLabel={aktionsLabel}
+                      />
                       {istFrassZiel && !aktivesErstesFrassZiel && ausgewaehlteHandkarteId && (
                         <button
                           type="button"
