@@ -429,6 +429,25 @@ body {
   margin-top: 1rem;
 }
 
+.spielbereich--game-route [class~="aktionen-panel--brettfallback"] {
+  margin-top: 0;
+  padding: 0.75rem;
+}
+
+.aktionen-panel--brettfallback [class~="aktionen-fallback"] {
+  margin-top: 0.75rem;
+  padding: 0.65rem;
+  border: 2px dashed var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: rgba(236, 255, 227, 0.72);
+}
+
+.aktionen-panel--brettfallback [class~="aktionen-fallback"] > summary {
+  cursor: pointer;
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
 .aktionen-panel--waldtanz-dock button,
 .aktionen-panel--waldtanz-dock a,
 .aktionen-panel--waldtanz-dock summary {

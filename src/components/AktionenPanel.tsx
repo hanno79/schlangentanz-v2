@@ -78,6 +78,39 @@ function aktionsHinweisBeschreibung(hinweis: NichtEnumerierteAktionHinweis): str
   }
 }
 
+function PhasenregelnBereich({
+  titelId,
+  zustand,
+  ueberhand,
+  legaleAktionen,
+  aktionsLabel,
+}: {
+  titelId: string
+  zustand: Spielzustand
+  ueberhand: number
+  legaleAktionen: SpielAktion[]
+  aktionsLabel: (aktion: SpielAktion) => string
+}) {
+  return (
+    <section aria-labelledby={titelId}>
+      <h3 id={titelId}>Phasenregeln</h3>
+      <ul>
+        {phasenregeln(zustand, ueberhand).map(regel => (
+          <li key={regel}>{regel}</li>
+        ))}
+      </ul>
+      <h4>Spielbare Aktionen in dieser Phase</h4>
+      <ul>
+        {legaleAktionen.length > 0 ? (
+          legaleAktionen.map(aktion => <li key={JSON.stringify(aktion)}>{aktionsLabel(aktion)}</li>)
+        ) : (
+          <li>Aktuell keine spielbaren Aktionen in dieser Phase.</li>
+        )}
+      </ul>
+    </section>
+  )
+}
+
 interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
@@ -98,6 +131,7 @@ interface AktionenPanelProps {
   onZugBeenden: () => void
   onAusspielphaseStarten: () => void
   onKiZugVorspulen: () => void
+  kompakterBrettFallback?: boolean
 }
 
 export default function AktionenPanel({
@@ -120,6 +154,7 @@ export default function AktionenPanel({
   onZugBeenden,
   onAusspielphaseStarten,
   onKiZugVorspulen,
+  kompakterBrettFallback = false,
 }: AktionenPanelProps) {
   const aktionenTitelId = useId()
   const empfohleneAktionTitelId = useId()
@@ -130,15 +165,114 @@ export default function AktionenPanel({
   const phasenregelnTitelId = useId()
   const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatReaktionsaktion = reaktionsAktionen.length > 0
+  const weitereAktionenBereich = (
+    <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId} aria-live="polite" aria-atomic="true">
+      <h3 id={weitereAktionenTitelId}>Weitere Aktionen</h3>
+      {legaleAktionen.length > 1 ? (
+        <ol className="aktions-liste" start={2}>
+          {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
+            const label = aktionsLabel(aktion)
+            return (
+              <li key={`${label}-${i}`}>
+                <button
+                  aria-label={label}
+                  className="aktions-button"
+                  onClick={() => onAktionAusfuehren(aktion)}
+                >
+                  {aktionsButtonInhalt(label, i + 2, legaleAktionen.length)}
+                </button>
+              </li>
+            )
+          })}
+        </ol>
+      ) : (
+        <p>Keine weiteren Aktionen.</p>
+      )}
+      {reaktionsAktionen.length > 0 && (
+        <>
+          <p className="aktions-hinweis">Reaktionsaktion auswählen:</p>
+          {reaktionsAktionen.map((aktion: SpielAktion) => (
+            <button
+              key={aktionsLabel(aktion)}
+              className="aktions-button--reaktion"
+              onClick={() => onAktionAusfuehren(aktion)}
+            >
+              {aktionsLabel(aktion)}
+            </button>
+          ))}
+        </>
+      )}
+      <p>Spielregeln prüfen jede Aktion vor dem Ausführen.</p>
+    </section>
+  )
+  const statusUndRegelnInhalt = (
+    <>
+      {nichtEnumerierteAktionenHinweise.length > 0 && (
+        <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-labelledby={weitereVerfuegbareAktionenTitelId}>
+          <h3 id={weitereVerfuegbareAktionenTitelId}>Weitere verfügbare Aktionen</h3>
+          <ul>
+            {nichtEnumerierteAktionenHinweise.map((hinweis) => (
+              <li key={hinweis.typ}>
+                <strong>{aktionsHinweisTitel(hinweis)}</strong>
+                <p>{aktionsHinweisBeschreibung(hinweis)}</p>
+                {hinweis.typ === 'Schlangenhaeutung' && (
+                  <SchlangenhaeutungReihenfolgeAuswahl
+                    zustand={zustand}
+                    onAktionAusfuehren={onAktionAusfuehren}
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {zustand.spielphase === 'Endspurt' && (
+        <section className="aktionen-gruppe aktionen-gruppe--endphase" aria-labelledby={endphaseTitelId}>
+          <h3 id={endphaseTitelId}>Endphase</h3>
+          <p>
+            Der letzte Zieher hat den Nachziehstapel geleert. Danach erhält jeder verbleibende Spieler genau
+            noch einen Zug ohne Nachziehen.
+          </p>
+        </section>
+      )}
+      <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{erlaubteKartenProZug(zustand)}</p>
+      <p>
+        Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten
+      </p>
+      <PhasenregelnBereich
+        titelId={phasenregelnTitelId}
+        zustand={zustand}
+        ueberhand={ueberhand}
+        legaleAktionen={legaleAktionen}
+        aktionsLabel={aktionsLabel}
+      />
+    </>
+  )
+  const fallbackInhalt = (
+    <>
+      {weitereAktionenBereich}
+      {statusUndRegelnInhalt}
+    </>
+  )
+
   return (
-    <section className="info-panel aktionen-panel--waldtanz-dock" aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
+    <section className={`info-panel aktionen-panel--waldtanz-dock${kompakterBrettFallback ? ' aktionen-panel--brettfallback' : ''}`} aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={aktionenTitelId}>Aktionen</h2>
       <div className="aktionen-dock__kopf">
         <p>Spielbare Aktionen: {legaleAktionen.length}</p>
         {!istSpielende && <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>}
       </div>
       {istSpielende ? (
-        <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
+        <>
+          <p>Keine weiteren Aktionen. Die Partie ist beendet.</p>
+          <PhasenregelnBereich
+            titelId={phasenregelnTitelId}
+            zustand={zustand}
+            ueberhand={ueberhand}
+            legaleAktionen={legaleAktionen}
+            aktionsLabel={aktionsLabel}
+          />
+        </>
       ) : (
         <>
           {steuerung === 'KI' && !hatReaktionsaktion && (
@@ -150,7 +284,10 @@ export default function AktionenPanel({
             </section>
           )}
           {steuerung === 'KI' && reaktionsAktionen.length === 0 ? (
-            <p className="aktionen-dock__ki-hinweis">Einzelne KI-Aktionsbuttons sind ausgeblendet. Nutze den Gegnerzug, damit das Spiel bis zu deinem nächsten Zug weiterläuft.</p>
+            <>
+              <p className="aktionen-dock__ki-hinweis">Einzelne KI-Aktionsbuttons sind ausgeblendet. Nutze den Gegnerzug, damit das Spiel bis zu deinem nächsten Zug weiterläuft.</p>
+              {statusUndRegelnInhalt}
+            </>
           ) : (
             <>
               <div className="aktionen-dock__schnellzug">
@@ -205,96 +342,16 @@ export default function AktionenPanel({
               )}
             </section>
           </div>
-          <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId} aria-live="polite" aria-atomic="true">
-            <h3 id={weitereAktionenTitelId}>Weitere Aktionen</h3>
-            {legaleAktionen.length > 1 ? (
-              <ol className="aktions-liste" start={2}>
-                {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
-                  const label = aktionsLabel(aktion)
-                  return (
-                    <li key={`${label}-${i}`}>
-                      <button
-                        aria-label={label}
-                        className="aktions-button"
-                        onClick={() => onAktionAusfuehren(aktion)}
-                      >
-                        {aktionsButtonInhalt(label, i + 2, legaleAktionen.length)}
-                      </button>
-                    </li>
-                  )
-                })}
-              </ol>
-            ) : (
-              <p>Keine weiteren Aktionen.</p>
-            )}
-            {reaktionsAktionen.length > 0 && (
-              <>
-                <p className="aktions-hinweis">Reaktionsaktion auswählen:</p>
-                {reaktionsAktionen.map((aktion: SpielAktion) => (
-                  <button
-                    key={aktionsLabel(aktion)}
-                    className="aktions-button--reaktion"
-                    onClick={() => onAktionAusfuehren(aktion)}
-                  >
-                    {aktionsLabel(aktion)}
-                  </button>
-                ))}
-              </>
-            )}
-            <p>Spielregeln prüfen jede Aktion vor dem Ausführen.</p>
-          </section>
+          {kompakterBrettFallback ? (
+            <details className="aktionen-fallback">
+              <summary>Brett-Fallback: weitere Aktionen und Regeln</summary>
+              {fallbackInhalt}
+            </details>
+          ) : fallbackInhalt}
             </>
           )}
-          {nichtEnumerierteAktionenHinweise.length > 0 && (
-            <section className="aktionen-gruppe aktionen-gruppe--hinweise" aria-labelledby={weitereVerfuegbareAktionenTitelId}>
-              <h3 id={weitereVerfuegbareAktionenTitelId}>Weitere verfügbare Aktionen</h3>
-              <ul>
-                {nichtEnumerierteAktionenHinweise.map((hinweis) => (
-                  <li key={hinweis.typ}>
-                    <strong>{aktionsHinweisTitel(hinweis)}</strong>
-                    <p>{aktionsHinweisBeschreibung(hinweis)}</p>
-                    {hinweis.typ === 'Schlangenhaeutung' && (
-                      <SchlangenhaeutungReihenfolgeAuswahl
-                        zustand={zustand}
-                        onAktionAusfuehren={onAktionAusfuehren}
-                      />
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {zustand.spielphase === 'Endspurt' && (
-            <section className="aktionen-gruppe aktionen-gruppe--endphase" aria-labelledby={endphaseTitelId}>
-              <h3 id={endphaseTitelId}>Endphase</h3>
-              <p>
-                Der letzte Zieher hat den Nachziehstapel geleert. Danach erhält jeder verbleibende Spieler genau
-                noch einen Zug ohne Nachziehen.
-              </p>
-            </section>
-          )}
-          <p>Gespielte Karten: {zustand.zugpflichten.gespielteKarten}/{erlaubteKartenProZug(zustand)}</p>
-          <p>
-            Gespielte Kartenarten: {zustand.zugpflichten.gespielteFarbkarten} Farbkarten, {zustand.zugpflichten.gespielteSonderkarten} Sonderkarten
-          </p>
         </>
       )}
-      <section aria-labelledby={phasenregelnTitelId}>
-        <h3 id={phasenregelnTitelId}>Phasenregeln</h3>
-        <ul>
-          {phasenregeln(zustand, ueberhand).map(regel => (
-            <li key={regel}>{regel}</li>
-          ))}
-        </ul>
-        <h4>Spielbare Aktionen in dieser Phase</h4>
-        <ul>
-          {legaleAktionen.length > 0 ? (
-            legaleAktionen.map(aktion => <li key={JSON.stringify(aktion)}>{aktionsLabel(aktion)}</li>)
-          ) : (
-            <li>Aktuell keine spielbaren Aktionen in dieser Phase.</li>
-          )}
-        </ul>
-      </section>
     </section>
   )
 }

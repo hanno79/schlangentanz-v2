@@ -374,6 +374,7 @@ function App({ initialZustand }: AppProps) {
               onZugBeenden={handleZugBeenden}
               onAusspielphaseStarten={handleAusspielphaseStarten}
               onKiZugVorspulen={handleKiZugVorspulen}
+              kompakterBrettFallback={istGameRoute}
             />
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>
