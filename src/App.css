@@ -1795,6 +1795,40 @@ code {
   font-weight: 900;
 }
 
+.handkarten-preview__zielkarte {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.65rem 0.75rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.72), rgba(236, 255, 227, 0.92));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.handkarten-preview__zielkarte p,
+.handkarten-preview__zielliste {
+  margin: 0;
+}
+
+.handkarten-preview__zielkarte-label,
+.handkarten-preview__zielchip {
+  width: fit-content;
+  padding: 0.12rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.handkarten-preview__zielliste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0;
+  list-style: none;
+}
+
 @media (max-width: 520px) {
   .handkarten-preview {
     grid-template-columns: 1fr;

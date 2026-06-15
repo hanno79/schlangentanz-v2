@@ -57,6 +57,37 @@ function boardAktionenFuerHandkarte(legaleAktionen: SpielAktion[], karteId: stri
   return aktionenFuerHandkarte(legaleAktionen, karteId).filter((aktion) => aktion.typ !== 'PflichtAbwurf')
 }
 
+function zielartLabel(aktion: SpielAktion): string | null {
+  switch (aktion.typ) {
+    case 'NeueSchlangeStarten': return 'Startkreis'
+    case 'KarteAnlegen': return 'Schlangenende'
+    case 'FarbenschutzSpielen': return 'Schutzring'
+    case 'FarbenfusionSpielen': return 'Fusionspaar'
+    case 'SchlangenhaeutungSpielen': return 'Häutungspfad'
+    case 'SchlangenfrassSpielen': return 'Frass-Ziel'
+    case 'SchlangenblockadeSpielen': return 'Blockadeziel'
+    case 'FarbendiebSpielen': return 'Beutekarte'
+    case 'SonderkarteSpielen': return 'Spielerziel'
+    case 'VerdopplerSpielen': return 'Bonuszauber'
+    case 'PflichtAbwurf':
+    case 'SchlangengrubeAbwehren':
+    case 'SchlangengrubeDurchlassen':
+    case 'SchlangenblockadeAbwehren':
+    case 'SchlangenblockadeDurchlassen':
+    case 'FarbendiebAbwehren':
+    case 'FarbendiebDurchlassen':
+    case 'SchlangenfrassAbwehren':
+    case 'SchlangenfrassDurchlassen':
+    case 'VerdopplerAbwehren':
+    case 'VerdopplerDurchlassen':
+      return null
+  }
+}
+
+function zielartenFuerAktionen(aktionen: SpielAktion[]): string[] {
+  return Array.from(new Set(aktionen.map(zielartLabel).filter((label): label is string => label !== null)))
+}
+
 export default function HandkartenPanel({
   handkarten,
   ausgewaehlteHandkarte,
@@ -68,6 +99,8 @@ export default function HandkartenPanel({
   const handkartenTitelId = useId()
   const detailTitelId = useId()
   const spielbareHandkarten = handkarten.filter((karte) => boardAktionenFuerHandkarte(legaleAktionen, karte.id).length > 0).length
+  const ausgewaehlteZielAktionen = ausgewaehlteHandkarte ? boardAktionenFuerHandkarte(legaleAktionen, ausgewaehlteHandkarte.id) : []
+  const ausgewaehlteZielarten = zielartenFuerAktionen(ausgewaehlteZielAktionen)
 
   return (
     <section className="handkarten-panel" aria-labelledby={handkartenTitelId}>
@@ -93,6 +126,18 @@ export default function HandkartenPanel({
             <p className="handkarten-preview__headline">Aktuelle Karte am Waldtanz-Tisch</p>
             <p>{karteKurzLabel(ausgewaehlteHandkarte)}</p>
             <p>Ausgewählte Karte schwebt über dem Fächer.</p>
+            <div className="handkarten-preview__zielkarte" role="note" aria-label="Brettziele der ausgewählten Karte">
+              <span className="handkarten-preview__zielkarte-label">Brettzielkarte</span>
+              <strong>{ausgewaehlteZielAktionen.length} {ausgewaehlteZielAktionen.length === 1 ? 'Brettziel' : 'Brettziele'} bereit</strong>
+              {ausgewaehlteZielarten.length > 0 && (
+                <ul className="handkarten-preview__zielliste" aria-label="Zielarten der ausgewählten Karte">
+                  {ausgewaehlteZielarten.map((zielart) => (
+                    <li key={zielart} className="handkarten-preview__zielchip">{zielart}</li>
+                  ))}
+                </ul>
+              )}
+              <p>Folge den leuchtenden Zielen im Spielbrett.</p>
+            </div>
             <p>Ziehe sie auf eine leuchtende Brettzone oder klicke ein Ziel im Schlangenbereich.</p>
             <p>Klicke dieselbe Karte erneut, um sie wieder abzuwählen.</p>
           </div>
