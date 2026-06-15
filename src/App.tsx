@@ -1,4 +1,4 @@
-import { Fragment, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -38,6 +38,7 @@ import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
 import WaldtanzKartenpop from './components/WaldtanzKartenpop'
 import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
+import WertungPanel from './components/WertungPanel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -210,7 +211,7 @@ function App({ initialZustand }: AppProps) {
     ? 'Gleichstand'
     : `Sieg für ${gewinnerListe[0] ? spielerNameFuerId(gewinnerListe[0].spielerId) : 'unbekannt'}`
   const empfohleneAktionId = useId(), phasenaktionId = useId(), heroTitelId = useId(), spielstatusTitelId = useId(), aktiverSpielerTitelId = useId(), spieltischTitelId = useId()
-  const spieleruebersichtTitelId = useId(), materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId(), wertungTitelId = useId(), punktetafelTitelId = useId()
+  const spieleruebersichtTitelId = useId(), materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = reaktionsAktionen.length === 0 && ((zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase')
@@ -453,45 +454,7 @@ function App({ initialZustand }: AppProps) {
             </p>
           </DebugGruppe>
         </section>
-        <section className="info-panel info-panel--wertung waldtanz-hud waldtanz-hud--wertung" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
-          <h2 id={wertungTitelId}>Wertung</h2>
-          {istSpielende && (
-            <>
-              <p>Spielende erreicht.</p>
-              <p>Ergebnis: {ergebnisText}</p>
-            </>
-          )}
-          <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId} aria-live="polite" aria-atomic="true">
-            <h3 id={punktetafelTitelId}>Punktetafel</h3>
-            <ul className="scoreboard-liste">
-              {spielerwertungen.map(eintrag => {
-                const spieler = zustand.spieler.find(s => s.id === eintrag.spielerId)
-
-                return (
-                  <li key={eintrag.spielerId} className="scoreboard-karte">
-                    <strong>{spieler?.name ?? eintrag.spielerId}</strong>
-                    <span>Gesamt: {eintrag.gesamtPunkte} Punkte</span>
-                    <span>Farbgruppen: {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte</span>
-                    <span>Aufgaben: {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte</span>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
-          <DebugGruppe titel="Punkteübersicht">
-            {gesamtwertung.spielerwertungen.map(eintrag => (
-              <Fragment key={eintrag.spielerId}>
-                <p>Punktestand von {spielerNameFuerId(eintrag.spielerId)}: {eintrag.gesamtPunkte} Punkte</p>
-                <p>
-                  Punktequellen von {spielerNameFuerId(eintrag.spielerId)}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
-                </p>
-              </Fragment>
-            ))}
-          </DebugGruppe>
-          {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
-            <p key={g.spielerId}>Gewinner {spielerNameFuerId(g.spielerId)}: {g.gesamtPunkte} Punkte</p>
-          ))}
-        </section>
+        <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} />
       </section>
     </main>
   )
