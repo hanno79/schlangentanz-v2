@@ -25,6 +25,7 @@ import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
 import FarbenschutzSchild from './FarbenschutzSchild'
+import SchlangenfrassBissspur from './SchlangenfrassBissspur'
 import { ermittleFarbenfusionPaarInfo } from './farbenfusionPaarInfo'
 
 interface SchlangenbereichProps {
@@ -360,18 +361,14 @@ export default function Schlangenbereich({
                         >
                           <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} />
                           {schlangenfrassAktion && (
-                            <button
-                              type="button"
-                              className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--frass"
-                              aria-label={`Schlangenfrass im Schlangenbereich mit Karte ${schlangenfrassAktion.handkartenId} auf Karte ${karte.id}`}
+                            <SchlangenfrassBissspur
+                              zielKartenId={karte.id}
+                              handkartenId={schlangenfrassAktion.handkartenId}
+                              modus="einzelziel"
+                              ariaLabel={`Schlangenfrass im Schlangenbereich mit Karte ${schlangenfrassAktion.handkartenId} auf Karte ${karte.id}`}
                               title={aktionsLabel(schlangenfrassAktion)}
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                onAktion(schlangenfrassAktion)
-                              }}
-                            >
-                              Schlangenfrass hier spielen
-                            </button>
+                              onClick={() => onAktion(schlangenfrassAktion)}
+                            />
                           )}
                         </SchlangenPfadKarte>
                       )

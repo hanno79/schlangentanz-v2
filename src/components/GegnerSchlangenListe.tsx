@@ -9,6 +9,7 @@ import type { SpielAktion, Spieler } from '../engine'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
 import FarbendiebBeutekorb from './FarbendiebBeutekorb'
 import SchlangenblockadeFessel from './SchlangenblockadeFessel'
+import SchlangenfrassBissspur from './SchlangenfrassBissspur'
 
 interface GegnerSchlangenListeProps {
   spieler: Spieler[]
@@ -121,28 +122,26 @@ export default function GegnerSchlangenListe({
                         aktionsLabel={aktionsLabel}
                       />
                       {istFrassZiel && !aktivesErstesFrassZiel && ausgewaehlteHandkarteId && (
-                        <button
-                          type="button"
-                          className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--frass"
-                          aria-label={`Schlangenfrass-Ziel 1 im Schlangenbereich wählen: ${karte.id}`}
+                        <SchlangenfrassBissspur
+                          zielKartenId={karte.id}
+                          handkartenId={ausgewaehlteHandkarteId}
+                          modus="erstes-ziel"
+                          ariaLabel={`Schlangenfrass-Ziel 1 im Schlangenbereich wählen: ${karte.id}`}
                           onClick={() => setErstesFrassZiel({ ...frassZiel, handkartenId: ausgewaehlteHandkarteId })}
-                        >
-                          Ziel 1 wählen
-                        </button>
+                        />
                       )}
                       {frassAusfuehrenAktion && aktivesErstesFrassZiel && (
-                        <button
-                          type="button"
-                          className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--frass"
-                          aria-label={`Schlangenfrass im Schlangenbereich mit Karte ${frassAusfuehrenAktion.handkartenId} auf Karten ${aktivesErstesFrassZiel.kartenId} und ${karte.id}`}
+                        <SchlangenfrassBissspur
+                          zielKartenId={karte.id}
+                          handkartenId={frassAusfuehrenAktion.handkartenId}
+                          modus="zweites-ziel"
+                          ariaLabel={`Schlangenfrass im Schlangenbereich mit Karte ${frassAusfuehrenAktion.handkartenId} auf Karten ${aktivesErstesFrassZiel.kartenId} und ${karte.id}`}
                           title={aktionsLabel(frassAusfuehrenAktion)}
                           onClick={() => {
                             setErstesFrassZiel(null)
                             onAktion(frassAusfuehrenAktion)
                           }}
-                        >
-                          Schlangenfrass mit 2 Zielen ausführen
-                        </button>
+                        />
                       )}
                     </SchlangenPfadKarte>
                   )
