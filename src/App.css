@@ -1665,9 +1665,9 @@ code {
     justify-self: center;
     z-index: 4;
     width: min(100%, 55rem);
-    max-height: clamp(15rem, 31vh, 18rem);
+    max-height: clamp(11.5rem, 24vh, 13rem);
     margin-top: 0;
-    padding: clamp(0.45rem, 0.8vw, 0.65rem);
+    padding: 0.35rem 0.55rem;
     overflow: visible;
     pointer-events: none;
   }
@@ -1685,6 +1685,8 @@ code {
   .spielbereich--game-route [class~="handkarten-buehne"] {
     gap: 0.35rem;
     justify-content: flex-start;
+    min-height: auto;
+    padding: 0.25rem 0.4rem;
   }
 
   .spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {
@@ -1699,6 +1701,7 @@ code {
   .spielbereich--game-route [class~="handkarten-buehne__statuschip"] {
     padding: 0.25rem 0.5rem;
     font-size: 0.72rem;
+    display: none;
   }
 
   .spielbereich--game-route [class~="handkarten-spielbarkeit"],
@@ -1707,22 +1710,26 @@ code {
   }
 
   .spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"] {
-    padding-block: 0.2rem;
+    padding-block: 0;
   }
 
   .spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"] [class~="handkarte"] {
-    width: clamp(5.9rem, 8vw, 7.1rem);
+    width: clamp(5rem, 6.2vw, 5.8rem);
   }
 
   .spielbereich--game-route [class~="handkarte__button--karte"] {
-    min-height: clamp(10.5rem, 22vh, 13.25rem);
+    min-height: clamp(8rem, 16vh, 9.75rem);
     overflow: hidden;
-    padding: 0.55rem;
+    padding: 0.45rem;
     gap: 0.2rem;
   }
 
   .spielbereich--game-route [class~="handkarte__art"] {
-    min-height: 31%;
+    min-height: 28%;
+  }
+
+  .spielbereich--game-route [class~="handkarte__idplakette"] {
+    display: none;
   }
 
   .spielbereich--game-route [class~="handkarte__symbol"] {
@@ -4079,6 +4086,31 @@ code {
   border-radius: 999px;
   background: radial-gradient(circle, rgba(254, 203, 0, 0.34) 0 18%, rgba(164, 222, 2, 0.24) 19% 54%, rgba(236, 255, 227, 0.78) 55%);
   box-shadow: inset 0 0 0 6px rgba(164, 222, 2, 0.24), var(--st-shadow-hard);
+}
+
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-gruppe"] {
+  gap: 0.35rem;
+  padding: 0.45rem;
+}
+
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone"] {
+  min-height: 5.5rem;
+  aspect-ratio: auto;
+  gap: 0.25rem;
+  padding: 0.55rem;
+}
+
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-gruppe"] > h5 {
+  margin: 0;
+}
+
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-gruppe"] > [class~="schlangen-drop-hinweis"] {
+  display: none;
+}
+
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone"] > [class~="schlangen-drop-hinweis"],
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone__titel"] + [class~="schlangen-startzone__titel"] {
+  display: none;
 }
 
 .schlangen-startzone__badge {

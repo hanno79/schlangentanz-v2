@@ -92,6 +92,7 @@ async function browserSmoke() {
 
     await pruefeM1asErstzugLichtung(seite)
     await pruefeM1awHandkante(seite)
+    await pruefeM1axFreieLichtung(seite)
 
     await seite.waitForTimeout(500)
 
@@ -184,6 +185,42 @@ async function pruefeM1awHandkante(seite) {
   }
 
   console.log(`M1aw Handkante: Hand bei ${Math.round(handBox.y)}px, erste Karte bei ${Math.round(ersteHandkarteBox.y)}px, Kartenhöhe ${Math.round(kartenStil.height)}px`)
+}
+
+async function pruefeM1axFreieLichtung(seite) {
+  const schlangenBox = await seite.getByRole('region', { name: 'Schlangenbereich' }).boundingBox()
+  const handBox = await seite.getByRole('region', { name: 'Handkarten' }).boundingBox()
+  const ersteHandkarteBox = await seite.locator('.handkartenleiste--tiefenfaecher .handkarte__button--karte').first().boundingBox()
+  const startkreisBox = await seite.locator('.schlangen-startzone--magiekreis').first().boundingBox()
+
+  if (!schlangenBox || !handBox || !ersteHandkarteBox || !startkreisBox) {
+    throw new Error('M1ax Freie Lichtung: Schlangenbereich, Handkante, Startkreis oder erste Karte fehlt')
+  }
+
+  const freieLichtungsHoehe = handBox.y - schlangenBox.y
+  if (freieLichtungsHoehe < 70) {
+    throw new Error(`M1ax Freie Lichtung: Handkante verdeckt zu viel Schlangenlichtung (${Math.round(freieLichtungsHoehe)}px frei)`)
+  }
+  if (ersteHandkarteBox.y > 790) {
+    throw new Error(`M1ax Freie Lichtung: Kartenfächer rutscht zu tief (${Math.round(ersteHandkarteBox.y)}px)`)
+  }
+  if (ersteHandkarteBox.height > 175) {
+    throw new Error(`M1ax Freie Lichtung: Karten bleiben zu groß für die freie Lichtung (${Math.round(ersteHandkarteBox.height)}px)`)
+  }
+  if (startkreisBox.y > 760 || startkreisBox.y >= ersteHandkarteBox.y) {
+    throw new Error(`M1ax Freie Lichtung: Startkreis bleibt zu tief unter der Handkante (${Math.round(startkreisBox.y)}px, Karte ${Math.round(ersteHandkarteBox.y)}px)`)
+  }
+
+  const startkreisMitte = {
+    x: startkreisBox.x + startkreisBox.width / 2,
+    y: startkreisBox.y + Math.min(24, startkreisBox.height * 0.22),
+  }
+  const startkreisHit = await seite.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('.schlangen-startzone--magiekreis') !== null, startkreisMitte)
+  if (!startkreisHit) {
+    throw new Error(`M1ax Freie Lichtung: Startkreis ist im ersten Lichtungsbereich nicht direkt erreichbar (${JSON.stringify(startkreisMitte)})`)
+  }
+
+  console.log(`M1ax Freie Lichtung: ${Math.round(freieLichtungsHoehe)}px Schlangenlichtung frei, Karte bei ${Math.round(ersteHandkarteBox.y)}px/${Math.round(ersteHandkarteBox.height)}px`)
 }
 
 async function kernTextSichtbar(seite, text) {

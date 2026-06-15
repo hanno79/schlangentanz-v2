@@ -260,17 +260,6 @@ export default function Schlangenbereich({
     <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>
       <h4 id={titelId}>Schlangenbereich</h4>
       <p className="schlangen-dragstatus" role="status" aria-live="polite" aria-atomic="true">{dragOverStatus}</p>
-      <WaldtanzZielspur karteId={ausgewaehlteHandkarteId} zielAnzahl={zielspurAnzahl} />
-      <WaldtanzZielkompass
-        ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
-        karteAnlegenAktionen={karteAnlegenAktionen}
-        neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
-        farbenschutzAktionen={farbenschutzAktionen}
-        farbenfusionAktionen={farbenfusionAktionen}
-        schlangenfrassAktionen={schlangenfrassAktionen}
-        schlangenblockadeAktionen={schlangenblockadeAktionen}
-        farbendiebAktionen={farbendiebAktionen}
-      />
       <section
         className="schlangen-gruppe"
         aria-labelledby={eigeneTitelId}
@@ -472,6 +461,17 @@ export default function Schlangenbereich({
           <p>Keine eigenen Schlangen.</p>
         )}
       </section>
+      <WaldtanzZielspur karteId={ausgewaehlteHandkarteId} zielAnzahl={zielspurAnzahl} />
+      <WaldtanzZielkompass
+        ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
+        karteAnlegenAktionen={karteAnlegenAktionen}
+        neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+        farbenschutzAktionen={farbenschutzAktionen}
+        farbenfusionAktionen={farbenfusionAktionen}
+        schlangenfrassAktionen={schlangenfrassAktionen}
+        schlangenblockadeAktionen={schlangenblockadeAktionen}
+        farbendiebAktionen={farbendiebAktionen}
+      />
       <section className="schlangen-gruppe" aria-labelledby={gegnerTitelId}>
         <h5 id={gegnerTitelId}>Gegnerische Schlangen</h5>
         <GegnerSchlangenListe
