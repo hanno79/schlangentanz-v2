@@ -2621,7 +2621,7 @@ code {
 .waldtanz-arenastein__schlangenlichtung {
   min-height: clamp(26rem, 48vh, 38rem);
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: clamp(0.7rem, 1.4vw, 1rem);
   align-content: stretch;
   padding: clamp(0.7rem, 1.4vw, 1rem);
@@ -2637,6 +2637,98 @@ code {
 .waldtanz-arenastein__schlangenlichtung .schlangenbereich {
   min-height: 0;
   background: rgba(255, 255, 255, 0.32);
+}
+
+.waldtanz-magiekreise {
+  display: grid;
+  gap: 0.65rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
+  border: 3px dashed var(--st-color-border-strong);
+  border-radius: 2.25rem;
+  background:
+    radial-gradient(circle at 24% 42%, rgba(164, 222, 2, 0.48) 0 3.8rem, transparent 3.95rem),
+    radial-gradient(circle at 76% 52%, rgba(254, 203, 0, 0.44) 0 3.6rem, transparent 3.75rem),
+    rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-magiekreise__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.65rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.waldtanz-magiekreise__badge,
+.waldtanz-magiekreise__zaehler {
+  width: fit-content;
+  padding: 0.18rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.waldtanz-magiekreise__zaehler {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.waldtanz-magiekreise__liste {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(7rem, 1fr));
+  gap: clamp(0.55rem, 1.4vw, 0.9rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.waldtanz-magiekreise__kreis {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.16rem;
+  aspect-ratio: 1;
+  min-height: 5.7rem;
+  padding: 0.5rem;
+  border: 3px dashed rgba(6, 57, 7, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  text-align: center;
+}
+
+.waldtanz-magiekreise__kreis--aktiv {
+  border-style: solid;
+  background: linear-gradient(145deg, var(--st-color-primary-container), var(--st-color-secondary-container));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  animation: waldtanz-zielkreis-puls 1.7s ease-in-out infinite;
+}
+
+.waldtanz-magiekreise__kreis span {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.waldtanz-magiekreise__kreis small,
+.waldtanz-magiekreise p {
+  margin: 0;
+  font-family: var(--st-font-body);
+  font-weight: 900;
+}
+
+.waldtanz-magiekreise p {
+  text-align: center;
+}
+
+@keyframes waldtanz-zielkreis-puls {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
 }
 
 .waldtanz-tischkarte {

@@ -61,7 +61,7 @@ describe('M1ag Waldtanz-Tischkarte', () => {
   })
 
   it('legt den zentralen Stitch-Kartenplatz mit 3px-Rand, 2:3-Karte, Hard Shadow und Waldkreis-Glow ab', () => {
-    expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/grid-template-rows:\s*auto minmax\(0,\s*1fr\)/)
+    expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/grid-template-rows:\s*auto auto minmax\(0,\s*1fr\)/)
     expect(appCss).toMatch(/\.waldtanz-arenastein__schlangenlichtung \.schlangenbereich\s*\{[\s\S]*min-height:\s*0/)
     expect(cssBlock('waldtanz-tischkarte')).toMatch(/border:\s*3px solid var\(--st-color-border-strong\)/)
     expect(cssBlock('waldtanz-tischkarte')).toMatch(/box-shadow:\s*0 5px 0 var\(--st-color-border-strong\)/)

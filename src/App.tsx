@@ -39,6 +39,7 @@ import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
 import WaldtanzKartenpop from './components/WaldtanzKartenpop'
 import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzTischkarte from './components/WaldtanzTischkarte'
+import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
 import WertungPanel from './components/WertungPanel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
@@ -303,6 +304,11 @@ function App({ initialZustand }: AppProps) {
                 <div className="waldtanz-arenastein__spielfeld">
                   <section className="waldtanz-arenastein__schlangenlichtung" aria-label="Schlangenlichtung">
                     <WaldtanzTischkarte zustand={zustand} />
+                    <WaldtanzMagiekreise
+                      ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+                      neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
+                      karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
+                    />
                     <Schlangenbereich
                       zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
                       aktiverSpieler={aktiverSpieler}
