@@ -17,7 +17,9 @@ import { farbeCssKlasse } from '../kartenfarben'
 import GegnerSchlangenListe from './GegnerSchlangenListe'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
 import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
+import WaldtanzZielspur from './WaldtanzZielspur'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
+import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
 import { ermittleFarbenfusionPaarInfo } from './farbenfusionPaarInfo'
 
@@ -262,11 +264,14 @@ export default function Schlangenbereich({
   const startzoneTitelId = `${komponentenId}-startzone-titel`
   const gegnerTitelId = `${komponentenId}-gegnerische-schlangen-titel`
   const startzoneIstZielbereit = Boolean(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
+  const haeutungZielAnzahl = zeigeSchlangenhaeutungBrettziel ? aktiverSpieler.schlangen.filter(schlange => hatSchlangenhaeutungBrettziel(zustand, schlange, ausgewaehlteHandkarteId)).length : 0
+  const zielspurAnzahl = zaehleZielspurBrettziele({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
 
   return (
-    <section className="schlangenbereich schlangenbereich--waldlichtung" aria-labelledby={titelId}>
+    <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>
       <h4 id={titelId}>Schlangenbereich</h4>
       <p className="schlangen-dragstatus" role="status" aria-live="polite" aria-atomic="true">{dragOverStatus}</p>
+      <WaldtanzZielspur karteId={ausgewaehlteHandkarteId} zielAnzahl={zielspurAnzahl} />
       <WaldtanzZielkompass
         ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
         karteAnlegenAktionen={karteAnlegenAktionen}
@@ -351,13 +356,15 @@ export default function Schlangenbereich({
               const istBoardZiel = Boolean(findeAktionFuerKarte(schlange.id, ausgewaehlteHandkarteId))
               const farbenschutzAktion = findeFarbenschutzAktion(schlange.id, ausgewaehlteHandkarteId)
               const istHaeutungZiel = zeigeSchlangenhaeutungBrettziel && hatSchlangenhaeutungBrettziel(zustand, schlange, ausgewaehlteHandkarteId)
+              const hatSonderkartenZiel = hatSichtbaresEigenesSchlangenziel({ handkartenId: ausgewaehlteHandkarteId, spielerId: aktiverSpieler.id, schlangenId: schlange.id, farbenfusionAktionen, schlangenfrassAktionen })
+              const istNichtZiel = Boolean(ausgewaehlteHandkarteId) && !istBoardZiel && !farbenschutzAktion && !istHaeutungZiel && !hatSonderkartenZiel
               const schlangenLabelTypId = `${komponentenId}-schlange-${schlangeIndex}-label`
               const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
 
               return (
                 <li
                   key={schlange.id}
-                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${istHaeutungZiel ? ' schlangekarte--haeutung-ziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
+                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${istHaeutungZiel ? ' schlangekarte--haeutung-ziel' : ''}${istNichtZiel ? ' schlangekarte--nichtziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}

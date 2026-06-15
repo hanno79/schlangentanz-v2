@@ -2589,6 +2589,48 @@ code {
   box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.32), 0 5px 0 var(--st-color-border-strong);
 }
 
+.schlangenbereich--karte-ausgewaehlt {
+  background:
+    radial-gradient(circle at 50% 52%, rgba(254, 203, 0, 0.46), transparent 13rem),
+    linear-gradient(180deg, rgba(236, 255, 227, 0.9), rgba(185, 241, 172, 0.76));
+}
+
+.waldtanz-zielspur {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.65rem 1rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.88), rgba(164, 222, 2, 0.62));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  text-align: center;
+}
+
+.waldtanz-zielspur p {
+  flex-basis: 100%;
+  margin: 0;
+  font-weight: 800;
+}
+
+.waldtanz-zielspur__badge,
+.waldtanz-zielspur__zaehler {
+  padding: 0.16rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.schlangekarte--nichtziel {
+  opacity: 0.58;
+  filter: saturate(0.75);
+}
+
 .schlangenbereich--waldlichtung::before,
 .schlangenbereich--waldlichtung::after {
   content: '';
