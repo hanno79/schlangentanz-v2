@@ -5,6 +5,17 @@ Version: 1.0
 Beschreibung: Google-Stitch-inspiriertes Seitenmenü als spielnaher Rahmen für die Waldtanz-Arena.
 */
 
+interface WaldtanzSeitenmenueProps {
+  spielerName: string
+  punkte: number
+  zugphase: string
+  handkarten: number
+  eigeneSchlangen: number
+  nachziehstapel: number
+  offeneAufgaben: number
+  pflichtschritt: string
+}
+
 const navigation = [
   { label: 'Karte', icon: '🗺️' },
   { label: 'Quest', icon: '⛰️', current: true },
@@ -12,7 +23,16 @@ const navigation = [
   { label: 'Zauber', icon: '🪄' },
 ]
 
-export default function WaldtanzSeitenmenue() {
+export default function WaldtanzSeitenmenue({
+  spielerName,
+  punkte,
+  zugphase,
+  handkarten,
+  eigeneSchlangen,
+  nachziehstapel,
+  offeneAufgaben,
+  pflichtschritt,
+}: WaldtanzSeitenmenueProps) {
   return (
     <aside className="waldtanz-seitenmenue" aria-label="Waldtanz-Spielrahmen">
       <div className="waldtanz-seitenmenue__marke">
@@ -21,9 +41,21 @@ export default function WaldtanzSeitenmenue() {
       <section className="waldtanz-seitenmenue__profil" aria-label="Spielprofil">
         <span className="waldtanz-seitenmenue__avatar" aria-hidden="true">🧝</span>
         <div>
-          <strong>Stats</strong>
+          <strong>Spielprofil</strong>
+          <span>{spielerName} · {punkte} Punkte</span>
           <span>Forest Spirit</span>
         </div>
+      </section>
+      <section className="waldtanz-seitenmenue__kompass" aria-label="Waldtanz-Kompass">
+        <strong>Waldtanz-Kompass</strong>
+        <div className="waldtanz-seitenmenue__statgitter">
+          <span className="waldtanz-seitenmenue__statkarte">Phase: {zugphase}</span>
+          <span className="waldtanz-seitenmenue__statkarte">Handkarten: {handkarten}</span>
+          <span className="waldtanz-seitenmenue__statkarte">Eigene Schlangen: {eigeneSchlangen}</span>
+          <span className="waldtanz-seitenmenue__statkarte">Nachziehstapel: {nachziehstapel}</span>
+          <span className="waldtanz-seitenmenue__statkarte">Offene Quests: {offeneAufgaben}</span>
+        </div>
+        <p>Nächster Schritt: {pflichtschritt}</p>
       </section>
       <ul className="waldtanz-seitenmenue__liste">
         {navigation.map((item) => (

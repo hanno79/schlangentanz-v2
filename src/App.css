@@ -1238,6 +1238,39 @@ code {
   gap: 0.15rem;
 }
 
+.waldtanz-seitenmenue__kompass {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.8rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: rgba(236, 255, 227, 0.78);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-seitenmenue__kompass strong {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-seitenmenue__statgitter {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.waldtanz-seitenmenue__statkarte {
+  padding: 0.25rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-weight: 900;
+}
+
+.waldtanz-seitenmenue__kompass p {
+  margin: 0;
+  font-weight: 800;
+}
+
 .waldtanz-seitenmenue__liste {
   display: grid;
   gap: 0.75rem;
