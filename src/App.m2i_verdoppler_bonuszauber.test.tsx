@@ -64,6 +64,6 @@ describe('M2i Verdoppler-Bonuszauber', () => {
     expect(cssBlock('waldtanz-bonuszauber')).toMatch(/border-radius:\s*var\(--st-radius-lg\)/)
     expect(cssBlock('waldtanz-bonuszauber__button')).toContain('background: var(--st-color-secondary-container)')
     expect(cssBlock('waldtanz-bonuszauber__button:active')).toMatch(/transform:\s*translateY\(4px\)/)
-    expect(appCss).not.toMatch(/--st-color-tertiary-container\)/)
+    expect(appCss).toMatch(/--st-color-tertiary-container:\s*#ffbcaa/)
   })
 })

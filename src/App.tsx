@@ -308,6 +308,8 @@ function App({ initialZustand }: AppProps) {
                       ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                       neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
                       karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
+                      sonderzauberAktionen={versteckeKiEinzelaktionen ? [] : [...farbenschutzAktionen, ...farbenfusionAktionen, ...farbendiebAktionen, ...schlangenfrassAktionen, ...schlangenblockadeAktionen, ...schlangengrubeAktionen]}
+                      aktionsLabel={aktionsLabel}
                       onAktion={fuhreAktionAus}
                     />
                     <Schlangenbereich
