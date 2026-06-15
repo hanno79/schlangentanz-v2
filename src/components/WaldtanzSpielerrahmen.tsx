@@ -31,6 +31,12 @@ function kartenruecken(spieler: Spieler) {
   ))
 }
 
+function topKartenruecken(spieler: Spieler) {
+  return Array.from({ length: Math.min(3, spieler.hand.length) }, (_, index) => (
+    <li key={index} className="waldtanz-spielerrahmen__topkarte" aria-label={`Top-Karte ${index + 1} von ${spieler.name}`} />
+  ))
+}
+
 export default function WaldtanzSpielerrahmen({
   zustand,
   spielerwertungen,
@@ -45,6 +51,7 @@ export default function WaldtanzSpielerrahmen({
   const naechsterSpieler = zustand.spieler[naechsterIndex]
   const gegnerSpieler = zustand.spieler.filter((_, index) => index !== aktiverIndex)
   const hatAbgeschlossenenGegnerzug = aktiverSpieler.steuerung === 'Mensch' && kiZugProtokoll.length > 0
+  const fokusSpieler = naechsterSpieler.id === aktiverSpieler.id ? gegnerSpieler[0] ?? aktiverSpieler : naechsterSpieler
   const erstesGrubenziel = schlangengrubeAktionen.find(
     (aktion) => aktion.handkartenId === ausgewaehlteHandkarteId,
   ) ?? null
@@ -57,6 +64,27 @@ export default function WaldtanzSpielerrahmen({
 
   return (
     <section className="waldtanz-spielerrahmen" aria-label="Waldtanz-Spielerrahmen">
+      <div className="waldtanz-spielerrahmen__gartenkopf" role="group" aria-label="Waldtanz-Gartenkopf">
+        <article className="waldtanz-spielerrahmen__fokusplakette">
+          <span className="waldtanz-spielerrahmen__avatar" aria-hidden="true">🐸</span>
+          <div>
+            <span className="waldtanz-spielerrahmen__eyebrow">Gegnerfokus</span>
+            <strong>{fokusSpieler.name}</strong>
+            <span>{punkteFuer(fokusSpieler.id, spielerwertungen)} Punkte</span>
+          </div>
+        </article>
+        <div className="waldtanz-spielerrahmen__tophandwrap">
+          <ol className="waldtanz-spielerrahmen__tophand" aria-label={`Top-Kartenfächer von ${fokusSpieler.name}`}>
+            {topKartenruecken(fokusSpieler)}
+          </ol>
+          <span className="waldtanz-spielerrahmen__handzahl">{fokusSpieler.hand.length} verdeckte Karten</span>
+        </div>
+        <div className="waldtanz-spielerrahmen__tempo" aria-label="Zugtempo">
+          <span>Zugtempo</span>
+          <strong>{zustand.zugphase}</strong>
+          <span>Nächster Halt: {naechsterSpieler.name}</span>
+        </div>
+      </div>
       <div className="waldtanz-spielerrahmen__statusband">
         <span>Tischrunde: {zustand.spieler.length} Spieler</span>
         <span>Nächster Zug: {naechsterSpieler.name}</span>

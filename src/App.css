@@ -1009,6 +1009,113 @@ body {
   box-shadow: 0 4px 0 var(--st-color-border-strong);
 }
 
+.waldtanz-spielerrahmen__gartenkopf {
+  display: grid;
+  grid-template-columns: minmax(11rem, 0.8fr) minmax(13rem, 1fr) max-content;
+  gap: clamp(0.75rem, 1.7vw, 1.2rem);
+  align-items: center;
+  padding: clamp(0.65rem, 1.5vw, 0.95rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2.75rem;
+  background:
+    radial-gradient(circle at 18% 35%, rgba(254, 203, 0, 0.56) 0 3.4rem, transparent 3.55rem),
+    radial-gradient(circle at 78% 28%, rgba(164, 222, 2, 0.4) 0 4.4rem, transparent 4.55rem),
+    linear-gradient(135deg, rgba(236, 255, 227, 0.92), rgba(196, 253, 182, 0.78));
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-spielerrahmen__fokusplakette {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.42rem 0.7rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-spielerrahmen__fokusplakette div {
+  display: grid;
+  line-height: 1.05;
+}
+
+.waldtanz-spielerrahmen__eyebrow,
+.waldtanz-spielerrahmen__tempo span {
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.waldtanz-spielerrahmen__fokusplakette strong,
+.waldtanz-spielerrahmen__tempo strong {
+  font-family: var(--st-font-headline);
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+}
+
+.waldtanz-spielerrahmen__tophandwrap {
+  display: grid;
+  justify-items: center;
+  gap: 0.32rem;
+}
+
+.waldtanz-spielerrahmen__tophand {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: clamp(0.4rem, 1vw, 0.8rem);
+  min-height: 4.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.waldtanz-spielerrahmen__topkarte {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(3.3rem, 5.6vw, 4.7rem);
+  aspect-ratio: 0.72;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, #b9f1ac, #ecffe3);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  transform: translateY(-0.25rem) rotate(-4deg);
+}
+
+.waldtanz-spielerrahmen__topkarte:nth-child(2) {
+  transform: translateY(-0.65rem) rotate(3deg);
+}
+
+.waldtanz-spielerrahmen__topkarte::before {
+  content: '🍃';
+  font-size: clamp(1.2rem, 2.6vw, 1.75rem);
+}
+
+.waldtanz-spielerrahmen__tempo {
+  display: grid;
+  line-height: 1.05;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.55rem 0.9rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  white-space: nowrap;
+}
+
+@media (max-width: 780px) {
+  .waldtanz-spielerrahmen__gartenkopf {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .waldtanz-spielerrahmen__tempo {
+    justify-self: center;
+  }
+}
+
 .waldtanz-spielerrahmen__statusband {
   display: flex;
   flex-wrap: wrap;
