@@ -2179,7 +2179,7 @@ code {
 
 .handkartenleiste--tiefenfaecher .handkarte {
   width: clamp(6.35rem, 10vw, 8.25rem);
-  margin-inline: clamp(-1.2rem, -1.2vw, -0.35rem);
+  margin-inline: clamp(-0.35rem, -0.4vw, -0.12rem);
   transform: translateY(var(--hand-faecher-y, 0)) rotate(var(--hand-faecher-rotation, 0deg));
   transform-origin: 50% 100%;
   z-index: var(--hand-faecher-z, 1);
