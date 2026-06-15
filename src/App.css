@@ -935,10 +935,18 @@ body {
   list-style: none;
 }
 
+.waldtanz-spielerrahmen__gegnerliste--kartenfaecher {
+  align-items: start;
+}
+
 .waldtanz-spielerrahmen__gegnerplatz {
   display: grid;
   gap: 0.45rem;
   justify-items: center;
+}
+
+.waldtanz-spielerrahmen__gegnerplatz--kartenfaecher {
+  transform: rotate(-1deg);
 }
 
 .waldtanz-spielerrahmen__gegnerplatz--grubenziel {
@@ -1036,6 +1044,27 @@ body {
   justify-content: center;
   gap: clamp(0.3rem, 1vw, 0.6rem);
   flex: 1 1 12rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.waldtanz-spielerrahmen__handruecken--faecher {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  min-height: clamp(4.8rem, 9vw, 7rem);
+  padding-inline: 0.35rem;
+}
+
+.waldtanz-spielerrahmen__faecherlabel {
+  padding: 0.2rem 0.6rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  font-family: var(--st-font-headline);
+  font-size: 0.78rem;
+  font-weight: 900;
 }
 
 .waldtanz-spielerrahmen__kartenruecken {
@@ -1052,6 +1081,26 @@ body {
 
 .waldtanz-spielerrahmen__kartenruecken:nth-child(2n) {
   transform: rotate(4deg) translateY(0.35rem);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--stitch {
+  position: relative;
+  width: clamp(2.5rem, 5.8vw, 4rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(254, 203, 0, 0.45) 0 26%, transparent 27%),
+    linear-gradient(145deg, var(--st-color-primary-container), #d6ffc9);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  transform: translateY(-0.55rem) rotate(-6deg);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--stitch:nth-child(2n) {
+  transform: translateY(-0.95rem) rotate(4deg);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--stitch::before {
+  content: '🍃';
+  font-size: clamp(1.1rem, 3vw, 1.65rem);
 }
 
 .waldtanz-spielerrahmen__handzahl {

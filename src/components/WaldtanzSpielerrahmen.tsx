@@ -27,7 +27,7 @@ function spielerLabel(spieler: Spieler, istAktiv: boolean): string {
 
 function kartenruecken(spieler: Spieler) {
   return Array.from({ length: spieler.hand.length }, (_, index) => (
-    <span key={index} className="waldtanz-spielerrahmen__kartenruecken" aria-hidden="true">🍃</span>
+    <li key={index} className="waldtanz-spielerrahmen__kartenruecken waldtanz-spielerrahmen__kartenruecken--stitch" aria-label={`verdeckte Karte ${index + 1} von ${spieler.name}`} />
   ))
 }
 
@@ -62,7 +62,7 @@ export default function WaldtanzSpielerrahmen({
         <span>Nächster Zug: {naechsterSpieler.name}</span>
         {hatAbgeschlossenenGegnerzug && <span>Gegnerzug zurück bei dir</span>}
       </div>
-      <ol className="waldtanz-spielerrahmen__gegnerliste" aria-label="Gegner am Tisch">
+      <ol className="waldtanz-spielerrahmen__gegnerliste waldtanz-spielerrahmen__gegnerliste--kartenfaecher" aria-label="Gegner am Tisch">
         {gegnerSpieler.map((spieler) => {
           const istNaechster = spieler.id === naechsterSpieler.id
           const grubenAktion = schlangengrubeAktionen.find(
@@ -70,7 +70,7 @@ export default function WaldtanzSpielerrahmen({
           ) ?? null
 
           return (
-            <li key={spieler.id} className={`waldtanz-spielerrahmen__gegnerplatz${grubenAktion ? ' waldtanz-spielerrahmen__gegnerplatz--grubenziel' : ''}`}>
+            <li key={spieler.id} className={`waldtanz-spielerrahmen__gegnerplatz waldtanz-spielerrahmen__gegnerplatz--kartenfaecher${grubenAktion ? ' waldtanz-spielerrahmen__gegnerplatz--grubenziel' : ''}`}>
               <article className={`waldtanz-spielerrahmen__plakette waldtanz-spielerrahmen__plakette--gegner${istNaechster ? ' waldtanz-spielerrahmen__plakette--naechster' : ''}`}>
                 <span className="waldtanz-spielerrahmen__avatar" aria-hidden="true">🐸</span>
                 <div>
@@ -79,9 +79,10 @@ export default function WaldtanzSpielerrahmen({
                   {istNaechster && <span>nächster Zug</span>}
                 </div>
               </article>
-              <div className="waldtanz-spielerrahmen__handruecken" aria-label={`${spieler.hand.length} verdeckte Karten von ${spieler.name}`}>
+              <span className="waldtanz-spielerrahmen__faecherlabel">verdeckter Kartenfächer</span>
+              <ol className="waldtanz-spielerrahmen__handruecken waldtanz-spielerrahmen__handruecken--faecher" aria-label={`Verdeckter Kartenfächer von ${spieler.name}`}>
                 {kartenruecken(spieler)}
-              </div>
+              </ol>
               <span className="waldtanz-spielerrahmen__handzahl">{spieler.hand.length} verdeckte Karten</span>
               {grubenAktion && onAktion && (
                 <button

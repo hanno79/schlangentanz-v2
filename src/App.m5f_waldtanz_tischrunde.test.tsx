@@ -38,7 +38,7 @@ describe('M5f Waldtanz-Tischrunde', () => {
 
     let rahmen = spielerrahmen()
     const gegnerliste = within(rahmen).getByRole('list', { name: 'Gegner am Tisch' })
-    const gegner = within(gegnerliste).getAllByRole('listitem')
+    const gegner = Array.from(gegnerliste.children) as HTMLElement[]
 
     expect(within(rahmen).getByText('Tischrunde: 4 Spieler')).toBeInTheDocument()
     expect(within(rahmen).getByText('Nächster Zug: Spieler 2')).toBeInTheDocument()
