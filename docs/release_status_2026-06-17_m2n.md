@@ -25,9 +25,11 @@ M2n ist ein mittlerer, sichtbarer Board-Interaktions-Vertical im `M1/M2 Waldtanz
 
 ## Deploy und Smoke
 
-- Feature-Commit: `<PLACEHOLDER_COMMIT>`.
-- Production-Deploy: `<PLACEHOLDER_DEPLOY>`.
-- Slice-Smoke: `<PLACEHOLDER_SMOKE>`.
+- Feature-Commit: `5e2920c — M2n: Farbenfusion als körperlichen Rankenring zeigen`.
+- Docs-Commits: `3376efa docs: M2n Release-Evidence festhalten (Platzhalter)`, `b1a9e43 docs: CHANGELOG.txt auf aktuellen Stand bringen (M2n + Backfill 06.06.-15.06.)`.
+- Production-Deploy: Vercel `READY` in 18s, stabiler Alias `https://schlangentanz-v2.vercel.app`; Deploy-Inspektion `https://vercel.com/alfreds-projects-7e9df1b4/schlangentanz-v2/BdcwTmWXRyGcPNW9ZLaoeDnJ5LtD`.
+- Generic Production-Smoke: `npm run smoke:production` bestätigt `/` und `/game` HTTP 200, alle Kernregionen (Spielstatus, Aktiver Spieler, Aktionen, Schlangenbereich) sichtbar, M1as/M1aw/M1ax/M1ay/M1ba/M1bb-Verträge weiter grün, keine Console-/Page-Errors.
+- Slice-Smoke (Bundle-Vertrag statt Browser-Flow): Production-CSS-Bundle `dist/assets/index-7lDV5o_J.css` enthält alle Rankenring-Klassen (`.farbenfusion-rankenring`, `__button`, `__partner`, `__icon`, `__text`, `__eyebrow`) und Stitch-Tokens (`--st-border-width-chunky`, `--st-radius-xl`, `--st-shadow-hard`, `--st-color-secondary-container`, `--st-color-border-strong`). Production-JS-Bundle `dist/assets/index-CqQG1qY9.js` enthält die Texte `Farbenfusion-Rankenring`, `Rankenpartner`, `Rankenpaar verschmelzen` und das Template-Literal ` Punkte werden verschmolzen`. Der vollständige Klick-/Engine-Flow ist zusätzlich durch `src/App.m2n_farbenfusion_rankenring.test.tsx` und `src/App.m2g_farbenfusion_paarziel.test.tsx` (Regression) bewiesen.
 
 ## Nächste mittlere Lücke
 
