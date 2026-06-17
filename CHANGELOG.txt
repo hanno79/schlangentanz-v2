@@ -1,5 +1,86 @@
 # CHANGELOG
 
+## 17.06.2026 – M2n Farbenfusion als körperlichen Rankenring zeigen
+- Die Sonderkarte „Farbenfusion" erscheint auf dem Schlangenpfad nicht mehr als flacher Textbutton, sondern als körperliches Spielobjekt `farbenfusion-rankenring` mit Icon, Eyebrow, Zauberkarten-Name, Karten-Paar und Punkten.
+- Die Partner-Karte des Paares erhält einen klaren `Rankenpartner`-Chip statt der bisherigen generischen Plakette.
+- `src/App.m2n_farbenfusion_rankenring.test.tsx` beweist sichtbaren Rankenring, eindeutigen Partner-Chip und echte Engine-Ausführung und schützt den Stitch-CSS-Vertrag gegen flache Textplaketten.
+- `src/App.m2g_farbenfusion_paarziel.test.tsx` wurde auf den neuen Rankenring-Vertrag aktualisiert und bleibt als Nachbarschaftsregression erhalten.
+
+## 15.06.2026 – Waldtanz-Brett visuell ausformen und Sonderkarten als Spielobjekte zeigen
+— M1u, M1v, M1w und M1x etablieren Startkreis, Gegnerfächer, live Spielrahmen und das unter dem Brett platzierte Aktionsdock.
+— M1y, M1z und M1aa machen Handkarten-Spielbarkeit, Zielspur und Zielkarte in der Handvorschau sichtbar.
+— M1ab, M1ac, M1ad und M1ae verdichten Erstbild, Rangtafel, Arenastein und Spielbahnen der Waldtanz-Arena.
+— M1af, M1ag, M1ah, M1ai und M1aj zeigen Schlangenkarten, Tischkarte, Magiekreise, klickbare Brettwege und Magiekreis-Sonderzauber.
+— M1ak, M1al, M1am und M1an platzieren Kartenpop, Farbgruppenband, Questfährten und Questzug-Hinweise.
+— M1ao, M1ap, M1aq und M1ar komprimieren Fokusbrett, ordnen Aktionsfallback unter, zeigen die Handbühne und staffeln Handkarten als Tiefenfächer.
+— M1as, M1at, M1au, M1ba und M1bb gestalten Erstzug-Lichtung, Arenazugknopf, Gartenkopf, Startkreis-Vorschau und Schlangenenden-Anlegevorschau.
+— M1av, M1aw, M1ax und M1ay verwandeln Handkarten in Spielkarten, verankern sie am Waldstein, öffnen die Lichtung und zeigen die Waldkulisse.
+— M1az zeigt die Schlangenwertung auf der Lichtung; M1ab hebt zusätzlich den aktiven Ranglistenführer hervor.
+— M2j, M2k, M2l und M2m zeigen Farbenschutz, Farbendieb, Schlangenblockade und Schlangenfrass als Schutzschild, Beutekorb, Fessel und Bissspur.
+
+## 14.06.2026 – Waldtanz-Spielbrett und Sonderkarten boardnah spielbar
+— M5c, M5d, M5e, M5f und M5g bringen Waldpfad-Zugleiste, Zugkompass, Partiefortschritt, Tischrunde und Gegnerzug ans Spielbrett.
+— M1d, M1e und M1f legen Waldtanz-Steinplatte, Spielerrahmen und Seitenmenü mit Overflow-Begrenzung an.
+— M1g, M1h, M1i, M1j und M1k machen Handkartenfächer, Zielkompass, Ablage, Zugspur und Aufgabentafel sichtbar.
+— M2d, M2e, M2f und M2g machen Schlangenhäutung, Schlangengrube, Schlangenfrass-Zweiziel und Farbenfusion als Kartenpaar boardnah spielbar.
+— M1l, M1m, M1n und M1o zeigen Schlangenpfad, Anlegeplätze, Drag-Vorschau und Kartenpop.
+— M1p, M1q und M1r greifen Kartenvorschau, heben den Zugknopf hervor und fokussieren die Spielroute auf dem Brett.
+— M2h und M2i zeigen Reaktionsschild und Verdoppler boardnah; dabei bleiben Spielerrahmenziele vor dem Aktionsdock sichtbar und klickbar.
+— M1s und M1t zeigen Questfortschritt auf der Aufgabentafel und lassen Questkarten am Brett einsammeln.
+
+## 13.06.2026 – Lobby, Regelbuch, Ergebnisansicht und boardnahe Sonderkarten
+— M3 macht die Sonniges-Nest-Lobby spielbar.
+— M4 macht das Schlangenbuch-Regelwerk spielbar.
+— M4b macht die Sieger-Party-Ergebnisansicht spielbar.
+— M2c und R183 machen Schlangenblockade und Farbendieb boardnah spielbar.
+— M5a schützt Boardziele vor Überdeckung durch das Aktionsdock.
+— M5b lässt Gegnerzüge vorspulen und sichert Aktionsdock-Klicks vor Brett-Überlagerungen ab.
+
+## 12.06.2026 – Screenreader-Live-Regionen, Sonderkarten boardnah und Waldtanz-Grundgerüst
+— R163–R166 kennzeichnen Schlangen-Dragstatus, Schlangenhäutungs-Vorschauen, aktiven Spieler und Spielstatus als atomare Live-Regionen.
+— R167–R171 kennzeichnen Spielerübersicht, Material/Aufgaben, Wertung, Punktetafel und Aufgabenkarten als atomare Live-Regionen.
+— R172–R176 kennzeichnen Spieltisch, Aktionen, empfohlene Aktion, weitere Aktionen und Phasenaktion als atomare Live-Regionen.
+— R177 färbt Farbkarten sichtbar ein.
+— R178 markiert Board-Ziele nach Kartenauswahl.
+— R179 fügt Sonderkarten-Aktionslabels hinzu.
+— R180, R181 und R182 machen Farbenfusion, Schlangenfrass und Farbenschutz boardnah spielbar; R182 hält Handkarten vor dem Aktionsdock klickbar.
+— M1a, M1b und M1c legen das Waldtanz-Arena-Spielbrett, das verdichtete Aktionsdock und die Sidebars als HUD an.
+
+## 11.06.2026 – Spielerfreundliche Copy und A11y-Label-Konsolidierung
+— R127–R139 übersetzen Spielerübersicht, Scoreboard, Gewinner, Punkteübersicht, Endrunde, aktiven Spieler, Zugfortschritt, Spielschritt, Aktionenquelle, Schlangenstatus am Spieltisch, Partiestatus, Zugdiagnose, gegnerische Schlangen, empfohlene Aktion und Aktionen in spielerfreundliche Copy.
+— R140–R143 benennen empfohlene Aktion, Aktionen, Spielbereich-Landmark, Punktetafel und Scoreboard spielerfreundlich.
+— R144–R159 labeln Punktetafel, Aktionenbereich, Spielstatus, aktiven Spieler, Spielerübersicht, Material/Aufgaben, Wertung, Aufgabenkarten, empfohlene Aktion, weitere Aktionen, Phasenaktion, weitere verfügbare Aktionen, Endphase, Phasenregeln, Startzone und Handkarten per Überschrift oder sichtbarem Text.
+— R160 kennzeichnet den Zugfortschritt als Live-Region.
+— R161 benennt Debuggruppen per sichtbaren Labels.
+— R162 labelt eigene Schlangen sichtbar.
+
+## 09.06.2026 – Spielerfreundliche Copy fortgesetzt
+— R126 macht den Schlangenstatus-Copy spielerfreundlicher.
+
+## 08.06.2026 – Spielerfreundliche Copy in Status und Übersichten
+— R118 und R119 überarbeiten Entwicklungsdaten-Copy und -Inhalte spielerfreundlich.
+— R120 poliert den Entwicklungsdaten-Summary-Titel.
+— R121 und R122 verbessern Spielerstatus-Copy sowie Karten- und Aufgaben-Copy.
+— R123, R124 und R125 feilen an Spielphase-Copy, Punkteübersicht-Copy und aktivem-Spieler-Punktestand.
+
+## 07.06.2026 – Schlangenhäutung als neue Engine-Mechanik und A11y-Grundlage
+— R97 bereitet die Schlangentanz-Aufgabe vor; R98 implementiert Schlangenhäutung als Neuordnung der Karten.
+— R99, R100 und R101 fügen Schlangenhäutung-Hinweis, UI-Fallback und Auswahloption hinzu.
+— R102 und R103 ergänzen Reihenfolge-Auswahl und reduzieren Redundanz in der Schlangenhäutung.
+— R104, R105 und R106 integrieren Umkehr, Vorschau und sichern Dreiergruppen ab.
+— R107 macht das Production-Smoke-Skript robust.
+— R108 poliert die Tastatur-A11y der Schlangenhäutung.
+— R109–R116 machen IDREFs in Schlangenbereich, HandkartenPanel, Schlangenbereich-Labels, App-Shell, AktionenPanel-Sprungzielen, Umkehrbutton, Zugfortschritt und Spielerführung DOM-sicher.
+— R117 richtet den Hero spielerorientiert aus.
+
+## 06.06.2026 – Aufgabenprüfung entkoppelt und Regenbogen-Wertung abgesichert
+— R84 extrahiert die Aufgabenprüfung aus dem turnState.
+— R85–R94 prüfen die Aufgaben Farbkombination, Gelber Schatz, Lila Riese, Farbwechsler, Farbvielfalt, Farbharmonie, Farbenpracht, Symmetriemeister, Schlangenbändiger und Schlangenrepertoire.
+— R95 validiert die Sonderkartenhistorie.
+— R96 prüft die Schlangenmeister-Aufgabe.
+— F36 schaltet die /game-Route für den Vercel-Smoke-Test frei.
+— Die Regenbogenschlange-Wertung wird regressiv abgesichert.
+
 ## 06.06.2026 – F36 Dragstatus, Startzonen-Feedback und robustere Drop-Ränder
 - Der Schlangenbereich zeigt jetzt eine sichtbare Drag-Statuszeile, die legale Zielzonen beim Ziehen einer Handkarte live benennt.
 - Die Startzone und die expliziten Anlege-Buttons melden Drag-Over-Zustände jetzt konsistent und räumen ihren Status bei Abbruch oder Drop sauber zurück.
