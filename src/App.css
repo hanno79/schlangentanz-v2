@@ -4455,21 +4455,69 @@ code {
   border-color: var(--st-color-border-strong);
 }
 
-.farbenfusion-paarziel__plakette,
-.farbenfusion-paarziel__partner {
-  display: inline-block;
-  margin-top: 0.35rem;
-  padding: 0.25rem 0.45rem;
+.farbenfusion-rankenring {
+  /* ÄNDERUNG 15.06.2026: M2n macht Farbenfusion als körperlichen Rankenring statt flacher Textplakette sichtbar. */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 0.45rem;
+  padding: 0.55rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background:
+    radial-gradient(circle at 16% 14%, rgba(255, 255, 255, 0.62) 0 0.7rem, transparent 0.75rem),
+    linear-gradient(135deg, rgba(164, 222, 2, 0.92), rgba(254, 203, 0, 0.72));
+  box-shadow: var(--st-shadow-hard);
+  color: var(--st-color-border-strong);
+}
+
+.farbenfusion-rankenring__icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 2px solid var(--st-color-border-strong);
   border-radius: 999px;
-  background: var(--st-color-primary-container);
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.farbenfusion-rankenring__text {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+  font-weight: 850;
+}
+
+.farbenfusion-rankenring__eyebrow,
+.farbenfusion-rankenring__text strong {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.farbenfusion-rankenring__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.farbenfusion-rankenring__button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.farbenfusion-rankenring__partner {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
   color: var(--st-color-border-strong);
   font-weight: 900;
   box-shadow: 0 2px 0 var(--st-color-border-strong);
-}
-
-.farbenfusion-paarziel__partner {
-  background: var(--st-color-secondary-container);
 }
 
 .schlangekarte__karte--schlangenfrass-ziel {

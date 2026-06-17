@@ -55,10 +55,12 @@ describe('M2g Farbenfusion-Paarziel', () => {
     expect(erstePaarKarte).toHaveClass('schlangekarte__karte--farbenfusion-paar')
     expect(zweitePaarKarte).toHaveClass('schlangekarte__karte--farbenfusion-paar')
     expect(nichtPaarKarte).not.toHaveClass('schlangekarte__karte--farbenfusion-paar')
-    expect(within(erstePaarKarte).getByText('Fusion: blau-m2g-a + blau-m2g-b · 5 Punkte')).toBeVisible()
-    expect(within(zweitePaarKarte).getByText('Paarpartner für Farbenfusion')).toBeVisible()
+    const rankenring = within(erstePaarKarte).getByRole('group', { name: 'Farbenfusion-Rankenring für blau-m2g-a und blau-m2g-b' })
+    expect(rankenring).toHaveClass('farbenfusion-rankenring')
+    expect(within(rankenring).getByText('5 Punkte werden verschmolzen')).toBeVisible()
+    expect(within(zweitePaarKarte).getByText('Rankenpartner')).toBeVisible()
 
-    fireEvent.click(within(erstePaarKarte).getByRole('button', {
+    fireEvent.click(within(rankenring).getByRole('button', {
       name: 'Farbenfusion-Paar im Schlangenbereich mit Karte farbenfusion-m2g: blau-m2g-a und blau-m2g-b fusionieren',
     }))
 

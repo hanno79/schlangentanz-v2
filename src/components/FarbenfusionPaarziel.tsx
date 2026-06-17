@@ -15,17 +15,21 @@ interface FarbenfusionPaarzielProps {
 export default function FarbenfusionPaarziel({ paar, onAktion }: FarbenfusionPaarzielProps) {
   if (!paar) return null
   if (!paar.istStartkarte) {
-    return <span className="farbenfusion-paarziel__partner">Paarpartner für Farbenfusion</span>
+    return <span className="farbenfusion-rankenring__partner">Rankenpartner</span>
   }
 
   return (
-    <>
-      <span className="farbenfusion-paarziel__plakette">
-        Fusion: {paar.ersteKartenId} + {paar.zweiteKartenId} · {paar.punkte} Punkte
+    <span className="farbenfusion-rankenring" role="group" aria-label={`Farbenfusion-Rankenring für ${paar.ersteKartenId} und ${paar.zweiteKartenId}`}>
+      <span className="farbenfusion-rankenring__icon" aria-hidden="true">🌿</span>
+      <span className="farbenfusion-rankenring__text">
+        <span className="farbenfusion-rankenring__eyebrow">Farbenfusion-Rankenring</span>
+        <span>Zauberkarte {paar.aktion.handkartenId}</span>
+        <strong>{paar.ersteKartenId} + {paar.zweiteKartenId}</strong>
+        <span>{paar.punkte} Punkte werden verschmolzen</span>
       </span>
       <button
         type="button"
-        className="schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--fusion"
+        className="farbenfusion-rankenring__button schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--fusion"
         aria-label={`Farbenfusion-Paar im Schlangenbereich mit Karte ${paar.aktion.handkartenId}: ${paar.ersteKartenId} und ${paar.zweiteKartenId} fusionieren`}
         title={`Farbenfusion mit Karte ${paar.aktion.handkartenId} auf Schlange ${paar.aktion.zielSchlangenId} bei Karte ${paar.aktion.zielKartenId} spielen`}
         onClick={(event) => {
@@ -33,8 +37,8 @@ export default function FarbenfusionPaarziel({ paar, onAktion }: FarbenfusionPaa
           onAktion(paar.aktion)
         }}
       >
-        Paar fusionieren
+        Rankenpaar verschmelzen
       </button>
-    </>
+    </span>
   )
 }
