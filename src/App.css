@@ -2478,6 +2478,91 @@ code {
   font-weight: 900;
 }
 
+.materialrucksack {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background:
+    radial-gradient(circle at 88% 18%, rgba(254, 203, 0, 0.76) 0 2.6rem, transparent 2.75rem),
+    linear-gradient(145deg, rgba(196, 253, 182, 0.96), rgba(255, 224, 139, 0.82));
+  box-shadow: var(--st-shadow-hard);
+}
+
+.materialrucksack__kopf {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.materialrucksack__icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  font-size: 1.55rem;
+}
+
+.materialrucksack h3,
+.materialrucksack p {
+  margin: 0;
+}
+
+.materialrucksack h3 {
+  font-family: var(--st-font-headline);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1;
+}
+
+.materialrucksack p {
+  font-weight: 800;
+}
+
+.materialrucksack__chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.materialrucksack__chip {
+  display: grid;
+  gap: 0.15rem;
+  min-height: 3.65rem;
+  padding: 0.55rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.materialrucksack__chip--gold {
+  background: var(--st-color-secondary-container);
+}
+
+.materialrucksack__chip--zauber {
+  background: var(--st-color-tertiary-container);
+}
+
+.materialrucksack__chip dt {
+  font-family: var(--st-font-headline);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.materialrucksack__chip dd {
+  margin: 0;
+  font-weight: 900;
+}
+
 .waldtanz-hud .debug-gruppe-entwicklungsdaten {
   opacity: 0.72;
   font-size: 0.88rem;

@@ -17,10 +17,6 @@ const ROUTEN = [...PFLICHT_ROUTEN]
 const KERN_TEXTE = [...PFLICHT_KERN_TEXTE]
 const HTTP_TIMEOUT_MS = 15_000
 
-// ---------------------------------------------------------------------------
-// Selbsttest
-// ---------------------------------------------------------------------------
-
 function arraysSindGleich(links, rechts) {
   return JSON.stringify(links) === JSON.stringify(rechts)
 }
@@ -49,10 +45,6 @@ export function erstelleSelbsttestAusgabe() {
     'R107 Selbsttest bestanden',
   ].join('\n')
 }
-
-// ---------------------------------------------------------------------------
-// Production-Smoke
-// ---------------------------------------------------------------------------
 
 function erstelleUrl(route) {
   return new URL(route, BASE_URL).toString()
@@ -100,6 +92,7 @@ async function browserSmoke() {
     await pruefeM1bdLichtungsbrett(seite)
     await pruefeM1bfNachziehstapel(seite)
     await pruefeM1bgSonnenstand(seite)
+    await pruefeM1biMaterialrucksack(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
 
@@ -470,6 +463,12 @@ async function pruefeM1bgSonnenstand(seite) {
   console.log('M1bg Sonnenstand: Spielstatus als sonniges 3px-HUD vor Debugdetails sichtbar')
 }
 
+async function pruefeM1biMaterialrucksack(seite) {
+  const d = await seite.evaluate(() => { const r = document.querySelector('.materialrucksack'), c = document.querySelector('.materialrucksack__chip'), i = document.querySelector('.materialrucksack__icon'), a = document.querySelector('.aufgabenkarten-bereich'), dbg = document.querySelector('.info-panel--material .debug-gruppe-entwicklungsdaten'); for (const e of [r, c, i, a, dbg]) if (!(e instanceof HTMLElement)) throw new Error('M1bi Materialrucksack: Material-HUD-Element fehlt'); const rs = getComputedStyle(r), cs = getComputedStyle(c), is = getComputedStyle(i); return { text: r.textContent ?? '', border: rs.borderTopWidth, radius: rs.borderTopLeftRadius, shadow: rs.boxShadow, chipBorder: cs.borderTopWidth, iconBg: is.backgroundColor, order: [r, a, dbg].map((e) => Array.from(e.parentElement.children).indexOf(e)).join(',') } })
+  if (!d.text.includes('Materialrucksack') || !d.text.includes('Nachziehstapel') || !d.text.includes('Sonderkarten-Zauber') || d.border !== '3px' || Number.parseFloat(d.radius) < 40 || !d.shadow.includes('rgb(6, 57, 7)') || d.chipBorder !== '2px' || !d.iconBg.includes('254, 203, 0') || d.order !== '1,2,3') throw new Error(`M1bi Materialrucksack: kein körperlicher Rucksack vor Aufgaben/Debug (${JSON.stringify(d)})`)
+  console.log('M1bi Materialrucksack: Rucksack-Chips vor Aufgabenkarten mit 3px-Rand und Hard Shadow sichtbar')
+}
+
 async function kernTextSichtbar(seite, text) {
   const regionSichtbar = await seite.getByRole('region', { name: text, exact: true }).first().isVisible().catch(() => false)
   if (regionSichtbar) return true
@@ -479,10 +478,6 @@ async function kernTextSichtbar(seite, text) {
 
   return seite.getByText(text, { exact: true }).first().isVisible().catch(() => false)
 }
-
-// ---------------------------------------------------------------------------
-// Einstiegspunkt
-// ---------------------------------------------------------------------------
 
 async function main() {
   if (process.argv.includes('--self-test')) return console.log(erstelleSelbsttestAusgabe())

@@ -14,8 +14,6 @@ import {
   HANDKARTENLIMIT,
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
-  erstelleSonderkarten,
-  erstelleErweiterungsSonderkarten,
   ermittleQuestZugHinweise,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SchlangenZustand, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
@@ -44,12 +42,10 @@ import WaldtanzTischkarte from './components/WaldtanzTischkarte'
 import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import WertungPanel from './components/WertungPanel'
+import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
-function kartenIds(karten: { id: string }[]): string {
-  return karten.map(k => k.id).join(', ')
-}
 
 function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   if (!istEndspurt) return `${a.punkte} Punkte`
@@ -59,31 +55,6 @@ function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): stri
 function aufgabeLabel(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   return `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)}): ${a.bedingung}`
 }
-
-function erweiterungsSonderkartenLabel(): string {
-  const gruppen = new Map<string, number>()
-  for (const karte of erstelleErweiterungsSonderkarten()) {
-    gruppen.set(karte.name, (gruppen.get(karte.name) ?? 0) + 1)
-  }
-
-  return Array.from(gruppen.entries())
-    .map(([name, anzahl]) => `${anzahl} ${name}`)
-    .join(', ')
-}
-
-function basisSonderkartenLabel(): string {
-  const gruppen = new Map<string, number>()
-  for (const karte of erstelleSonderkarten()) {
-    gruppen.set(karte.name, (gruppen.get(karte.name) ?? 0) + 1)
-  }
-
-  return Array.from(gruppen.entries())
-    .map(([name, anzahl]) => `${anzahl} ${name}`)
-    .join(', ')
-}
-
-const BASIS_SONDERKARTEN_LABEL = basisSonderkartenLabel()
-const ERWEITERUNGS_SONDERKARTEN_LABEL = erweiterungsSonderkartenLabel()
 
 function ueberhandAnzahl(zustand: Spielzustand): number {
   return Math.max(0, zustand.spieler[zustand.aktiverSpielerIndex].hand.length - HANDKARTENLIMIT)
@@ -217,7 +188,7 @@ function App({ initialZustand }: AppProps) {
     ? 'Gleichstand'
     : `Sieg für ${gewinnerListe[0] ? spielerNameFuerId(gewinnerListe[0].spielerId) : 'unbekannt'}`
   const empfohleneAktionId = useId(), phasenaktionId = useId(), heroTitelId = useId(), spielstatusTitelId = useId(), aktiverSpielerTitelId = useId(), spieltischTitelId = useId()
-  const spieleruebersichtTitelId = useId(), materialUndAufgabenTitelId = useId(), aufgabenkartenTitelId = useId()
+  const spieleruebersichtTitelId = useId()
   const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
   const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
   const hatSichtbarePhasenaktion = reaktionsAktionen.length === 0 && ((zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase')
@@ -451,46 +422,7 @@ function App({ initialZustand }: AppProps) {
             <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
           </DebugGruppe>
         </section>
-        <section className="info-panel info-panel--material waldtanz-hud waldtanz-hud--material" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
-          <h2 id={materialUndAufgabenTitelId}>Material und Aufgaben</h2>
-          <section className="aufgabenkarten-bereich" aria-labelledby={aufgabenkartenTitelId} aria-live="polite" aria-atomic="true">
-            <h3 id={aufgabenkartenTitelId}>Aufgabenkarten</h3>
-            {zustand.offeneAufgaben.length === 0 ? (
-              <p>Keine offenen Aufgabenkarten.</p>
-            ) : (
-              <ul className="aufgabenkarten-liste">
-                {zustand.offeneAufgaben.map(a => (
-                  <li key={a.id} className="aufgabenkarte">
-                    <strong>{a.name}</strong>
-                    <span>{aufgabenPunkteAnzeige(a, istEndspurt)}</span>
-                    <span>{a.bedingung}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-          <DebugGruppe titel="Karten und Aufgaben">
-            <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
-            <p>Karten auf dem Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
-            <p>Karten im Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>
-            <p>Spielmaterial insgesamt: {zustand.nachziehstapel.length + zustand.ablagestapel.length} Karten</p>
-            <p>Basis-Sonderkarten: {BASIS_SONDERKARTEN_LABEL}</p>
-            <p>Erweiterungs-Sonderkarten: {ERWEITERUNGS_SONDERKARTEN_LABEL}</p>
-            <p>Aufgaben im Stapel: {zustand.aufgabenStapel.length} Karten</p>
-            <p>
-              Aktuelle Aufgaben:{' '}
-              {zustand.offeneAufgaben.length > 0
-                ? zustand.offeneAufgaben.map(a => `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)})`).join(', ')
-                : 'keine'}
-            </p>
-            <p>
-              Aufgabenziele:{' '}
-              {zustand.offeneAufgaben.length > 0
-                ? zustand.offeneAufgaben.map(a => aufgabeLabel(a, istEndspurt)).join('; ')
-                : 'keine'}
-            </p>
-          </DebugGruppe>
-        </section>
+        <MaterialUndAufgabenPanel zustand={zustand} istEndspurt={istEndspurt} />
         <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} />
       </section>
     </main>
