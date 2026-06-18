@@ -37,40 +37,40 @@ export default function SchlangenhaeutungBrettziel({
   if (!umkehrAktion && !ersteAnsEndeAktion) return null
 
   return (
-    <div className="schlangenhaeutung-brettziel" role="group" aria-label={`Schlangenhäutung am Brett für Schlange ${schlange.id}`}>
-      <strong>Schlangenhäutung am Brett</strong>
-      <span>Aktuell: {reihenfolgeLabel(aktuelleIds)}</span>
+    <div className="schlangenhaeutung-brettziel schlangenhaeutung-haeutungsring" role="group" aria-label={`Schlangenhäutung am Brett für Schlange ${schlange.id}`}>
+      <span className="schlangenhaeutung-haeutungsring__icon" aria-hidden="true">🌀</span>
+      <div className="schlangenhaeutung-haeutungsring__text">
+        <strong>Schlangenhäutung-Häutungsring</strong>
+        <span className="schlangenhaeutung-haeutungsring__chip">Kartenhaut lösen</span>
+        <span>Aktuell: {reihenfolgeLabel(aktuelleIds)}</span>
+        {umkehrAktion && <span>Umkehr: {reihenfolgeLabel(umkehrIds)}</span>}
+        {ersteAnsEndeAktion && <span>Erste Karte ans Ende: {reihenfolgeLabel(ersteAnsEndeIds)}</span>}
+      </div>
       {umkehrAktion && (
-        <>
-          <span>Umkehr: {reihenfolgeLabel(umkehrIds)}</span>
-          <button
-            type="button"
-            className="schlangekarte__sonderaktion-button schlangenhaeutung-brettziel__button"
-            aria-label={`Schlangenhäutung am Brett mit Karte ${schlangenhaeutung.id}: Schlange ${schlange.id} umkehren`}
-            onClick={(event) => {
-              event.stopPropagation()
-              onAktion(umkehrAktion)
-            }}
-          >
-            Schlange umkehren
-          </button>
-        </>
+        <button
+          type="button"
+          className="schlangekarte__sonderaktion-button schlangenhaeutung-brettziel__button schlangenhaeutung-haeutungsring__button"
+          aria-label={`Schlangenhäutung am Brett mit Karte ${schlangenhaeutung.id}: Schlange ${schlange.id} umkehren`}
+          onClick={(event) => {
+            event.stopPropagation()
+            onAktion(umkehrAktion)
+          }}
+        >
+          Schlange umkehren
+        </button>
       )}
       {ersteAnsEndeAktion && (
-        <>
-          <span>Erste Karte ans Ende: {reihenfolgeLabel(ersteAnsEndeIds)}</span>
-          <button
-            type="button"
-            className="schlangekarte__sonderaktion-button schlangenhaeutung-brettziel__button"
-            aria-label={`Schlangenhäutung am Brett mit Karte ${schlangenhaeutung.id}: erste Karte von Schlange ${schlange.id} ans Ende setzen`}
-            onClick={(event) => {
-              event.stopPropagation()
-              onAktion(ersteAnsEndeAktion)
-            }}
-          >
-            Erste Karte ans Ende
-          </button>
-        </>
+        <button
+          type="button"
+          className="schlangekarte__sonderaktion-button schlangenhaeutung-brettziel__button schlangenhaeutung-haeutungsring__button"
+          aria-label={`Schlangenhäutung am Brett mit Karte ${schlangenhaeutung.id}: erste Karte von Schlange ${schlange.id} ans Ende setzen`}
+          onClick={(event) => {
+            event.stopPropagation()
+            onAktion(ersteAnsEndeAktion)
+          }}
+        >
+          Erste Karte ans Ende
+        </button>
       )}
     </div>
   )
