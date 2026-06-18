@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 18.06.2026 – M1bc Handkante als Waldtanz-Handbank freilegen
+- Die `/game`-Handkante verdeckt den Waldstein nicht mehr mit einer milchigen Panel-Fläche; das Handkartenpanel ist route-scoped transparent und klicksicher.
+- Spielerplakette und Karten schweben jetzt auf einer chunky Waldtanz-Handbank mit 3px-Dark-Forest-Border, Pill-Form, grün-goldenem Verlauf und Hard Shadow.
+- Der sichtbare Text „Handkarten als Kartenleiste" verschwindet aus der Brettfläche, bleibt aber als Label/Region-Name erhalten.
+- `src/App.m1bc_waldtanz_handbank.test.tsx` und der Production-Smoke `pruefeM1bcWaldtanzHandbank` beweisen den sichtbaren CSS-/Browser-Vertrag inklusive `elementFromPoint` und Handkarten-Klickbarkeit.
+
 ## 17.06.2026 – M2n Farbenfusion als körperlichen Rankenring zeigen
 - Die Sonderkarte „Farbenfusion" erscheint auf dem Schlangenpfad nicht mehr als flacher Textbutton, sondern als körperliches Spielobjekt `farbenfusion-rankenring` mit Icon, Eyebrow, Zauberkarten-Name, Karten-Paar und Punkten.
 - Die Partner-Karte des Paares erhält einen klaren `Rankenpartner`-Chip statt der bisherigen generischen Plakette.
