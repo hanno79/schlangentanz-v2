@@ -1160,6 +1160,21 @@ body {
   background: linear-gradient(180deg, rgba(255, 188, 170, 0.84), rgba(254, 203, 0, 0.45));
 }
 
+.waldtanz-spielerrahmen__laubfaecher {
+  display: grid;
+  justify-items: center;
+  gap: 0.42rem;
+  width: min(100%, 17rem);
+  padding: 0.65rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background:
+    radial-gradient(circle at 18% 16%, rgba(254, 203, 0, 0.56) 0 2.6rem, transparent 2.75rem),
+    radial-gradient(circle at 84% 8%, rgba(75, 103, 0, 0.28) 0 2.8rem, transparent 2.95rem),
+    linear-gradient(160deg, rgba(236, 255, 227, 0.96), rgba(185, 241, 172, 0.82));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
 .schlangengrube-grubenfalle {
   /* ÄNDERUNG 18.06.2026: M2o ersetzt den flachen Schlangengrube-Button durch ein körperliches Spielerziel. */
   display: grid;
@@ -1311,6 +1326,15 @@ body {
   padding-inline: 0.35rem;
 }
 
+.waldtanz-spielerrahmen__handruecken--laubfaecher {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  min-height: clamp(5.4rem, 9vw, 7.4rem);
+  margin-left: clamp(-1.05rem, -1.8vw, -0.55rem);
+  padding-inline: 1rem 0.35rem;
+}
+
 .waldtanz-spielerrahmen__faecherlabel {
   padding: 0.2rem 0.6rem;
   border: 2px solid var(--st-color-border-strong);
@@ -1355,6 +1379,36 @@ body {
 .waldtanz-spielerrahmen__kartenruecken--stitch::before {
   content: '🍃';
   font-size: clamp(1.1rem, 3vw, 1.65rem);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--laubkarte {
+  width: clamp(2.65rem, 5.8vw, 4.2rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.55rem;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(254, 203, 0, 0.42) 0 24%, transparent 25%),
+    linear-gradient(145deg, var(--st-color-primary-container), var(--st-color-surface-container-low, #d6ffc9));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--laubkarte + .waldtanz-spielerrahmen__kartenruecken--laubkarte {
+  margin-left: clamp(-1.05rem, -1.8vw, -0.55rem);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--laubkarte:nth-child(2) {
+  transform: translateY(-0.95rem) rotate(-4deg);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--laubkarte:nth-child(3) {
+  transform: translateY(-1.2rem) rotate(2deg);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--laubkarte:nth-child(4) {
+  transform: translateY(-0.8rem) rotate(5deg);
+}
+
+.waldtanz-spielerrahmen__kartenruecken--laubkarte:nth-child(5) {
+  transform: translateY(-0.45rem) rotate(7deg);
 }
 
 .waldtanz-spielerrahmen__handzahl {
@@ -1996,6 +2050,14 @@ code {
 
   .spielbereich--game-route [class~="waldtanz-spielerrahmen__kartenruecken--stitch"] {
     width: clamp(2rem, 3.2vw, 2.6rem);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielerrahmen__handruecken--laubfaecher"] {
+    min-height: clamp(5.4rem, 9vw, 7.4rem);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielerrahmen__kartenruecken--laubkarte"] {
+    width: clamp(2.65rem, 5.8vw, 4.2rem);
   }
 
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > * {

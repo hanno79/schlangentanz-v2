@@ -35,13 +35,15 @@ describe('M1v Waldtanz-Gegnerfächer', () => {
     expect(within(gegner[0]).getByText('Gegner: Spieler 2')).toBeVisible()
     expect(within(gegner[0]).getByText('0 Punkte')).toBeVisible()
 
-    const faecher = within(gegner[0]).getByRole('list', { name: 'Verdeckter Kartenfächer von Spieler 2' })
+    const faecher = within(gegner[0]).getByRole('list', { name: 'Verdeckter Laubfächer von Spieler 2' })
     expect(faecher).toHaveClass('waldtanz-spielerrahmen__handruecken--faecher')
+    expect(faecher).toHaveClass('waldtanz-spielerrahmen__handruecken--laubfaecher')
     const verdeckteKarten = within(faecher).getAllByRole('listitem')
     expect(verdeckteKarten).toHaveLength(vierSpielerZustand().spieler[1].hand.length)
     expect(verdeckteKarten[0]).toHaveClass('waldtanz-spielerrahmen__kartenruecken--stitch')
-    expect(within(gegner[0]).getByText('verdeckter Kartenfächer')).toHaveClass('waldtanz-spielerrahmen__faecherlabel')
-    expect(within(gegner[0]).getByText('5 verdeckte Karten')).toHaveClass('waldtanz-spielerrahmen__handzahl')
+    expect(verdeckteKarten[0]).toHaveClass('waldtanz-spielerrahmen__kartenruecken--laubkarte')
+    expect(within(gegner[0]).getByText('Spieler 2 beobachtet den Tanz')).toHaveClass('waldtanz-spielerrahmen__faecherlabel')
+    expect(within(gegner[0]).getByText('5 verdeckte Karten im Laub')).toHaveClass('waldtanz-spielerrahmen__handzahl')
   })
 
   it('legt die Stitch-Kartenrücken-Optik mit Peeking-Layout, 3px-Rand und Hard Shadow ab', () => {
