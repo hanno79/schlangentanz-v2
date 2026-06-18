@@ -96,6 +96,7 @@ async function browserSmoke() {
     await pruefeM1axFreieLichtung(seite)
     await pruefeM1ayWaldkulisse(seite)
     await pruefeM1bcWaldtanzHandbank(seite)
+    await pruefeM1bdLichtungsbrett(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
 
@@ -302,6 +303,18 @@ async function pruefeM1bcWaldtanzHandbank(seite) {
 
   await handPanel.locator('.handkarte__button--karte').first().click({ trial: true })
   console.log(`M1bc Waldtanz-Handbank: Panel frei, Handbank ${Math.round(Number.parseFloat(stil.bankHeight))}px und Karten klickbar`)
+}
+
+async function pruefeM1bdLichtungsbrett(seite) {
+  const d = await seite.evaluate(() => {
+    const q = (s) => document.querySelector(s), l = q('.waldtanz-lichtungsbrett'), t = q('.waldtanz-tischkarte'), m = q('.waldtanz-magiekreise'), s = q('.schlangenbereich--waldlichtung'), h = q('.handkarten-panel')
+    for (const e of [l, t, m, s, h]) if (!(e instanceof HTMLElement)) throw new Error('M1bd Lichtungsbrett: Brettobjekt fehlt')
+    const b = (e) => e.getBoundingClientRect()
+    return { template: getComputedStyle(l).gridTemplateAreas, t: getComputedStyle(t).gridArea, m: getComputedStyle(m).gridArea, s: getComputedStyle(s).gridArea, sb: b(s), top: Math.max(b(t).width, b(m).width), handY: b(h).y }
+  })
+  if (!d.template.includes('"tisch magiekreise"') || !d.template.includes('"schlangen schlangen"') || d.t !== 'tisch' || d.m !== 'magiekreise' || d.s !== 'schlangen') throw new Error(`M1bd Lichtungsbrett: Named-Area-Cascade gebrochen (${JSON.stringify(d)})`)
+  if (d.sb.width < d.top * 1.45 || d.handY - d.sb.y < 70) throw new Error(`M1bd Lichtungsbrett: Schlangenbrett nicht offen sichtbar (${JSON.stringify(d)})`)
+  console.log(`M1bd Lichtungsbrett: ${d.template}; ${Math.round(d.handY - d.sb.y)}px vor der Hand sichtbar`)
 }
 
 async function pruefeM1baStartkreisVorschau(seite) {
