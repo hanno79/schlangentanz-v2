@@ -28,7 +28,7 @@ Der Slice ist mehr als eine Mikro-A11y-/Copy-Änderung, weil ein dauerhaft sicht
 
 ## Release
 
-Der finale Stand wird per Commit/Push auf `main` und Vercel Production auf die stabile Alias `https://schlangentanz-v2.vercel.app` ausgeliefert. Der Alias-Smoke `node scripts/live_smoke.mjs` ist der dauerhafte Nachweis für den M1bg-Vertrag; diese Datei hält bewusst den stabilen Alias statt ephemerer Deploy-URLs fest.
+Der finale Stand ist per Commit/Push auf `main` und Vercel Production auf die stabile Alias `https://schlangentanz-v2.vercel.app` ausgeliefert. Der Alias-Smoke `node scripts/live_smoke.mjs` ist der dauerhafte Nachweis für den M1bg-Vertrag; diese Datei hält bewusst den stabilen Alias statt ephemerer Deploy-URLs fest.
 
 ## Nächste mittlere Lücke
 
