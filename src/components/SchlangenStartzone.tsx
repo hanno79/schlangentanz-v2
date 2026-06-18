@@ -13,6 +13,7 @@ interface SchlangenStartzoneProps {
   startzoneIstZielbereit: boolean
   dragOverStartzone: boolean
   ausgewaehlteHandkarteId: string | null
+  startfaehrtenIds?: string[]
   onClick: MouseEventHandler<HTMLElement>
   onKeyDown: KeyboardEventHandler<HTMLElement>
   onDragOver: DragEventHandler<HTMLElement>
@@ -26,11 +27,14 @@ export default function SchlangenStartzone({
   startzoneIstZielbereit,
   dragOverStartzone,
   ausgewaehlteHandkarteId,
+  startfaehrtenIds = [],
   onClick,
   onKeyDown,
   onDragOver,
   onDrop,
 }: SchlangenStartzoneProps) {
+  const zeigeStartfaehrten = !ausgewaehlteHandkarteId && startfaehrtenIds.length > 0
+
   return (
     <div
       className={`schlangen-startzone schlangen-startzone--magiekreis${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${startzoneIstZielbereit ? ' schlangen-startzone--zielbereit' : ''}${dragOverStartzone ? ' schlangen-startzone--dragover' : ''}`}
@@ -49,6 +53,16 @@ export default function SchlangenStartzone({
       <p id={`${komponentenId}-startzone-hinweis`} className="schlangen-drop-hinweis">
         Ziehe eine Farbkarte hierher oder klicke die passende Start-Schaltfläche.
       </p>
+      {zeigeStartfaehrten && (
+        <ol className="schlangen-startzone__faehrten" aria-label="Startfährten im Startkreis">
+          {startfaehrtenIds.map((kartenId) => (
+            <li key={kartenId} className="schlangen-startzone__faehrte">
+              <span>Startfährte</span>
+              <strong className="schlangen-startzone__faehrte-id">{kartenId}</strong>
+            </li>
+          ))}
+        </ol>
+      )}
       {startzoneIstZielbereit && ausgewaehlteHandkarteId && (
         <div id={`${komponentenId}-startzone-vorschau`} className="schlangen-startzone__vorschau">
           <span className="schlangen-startzone__vorschau-label">Startkarte</span>

@@ -258,6 +258,7 @@ export default function Schlangenbereich({
   const startzoneTitelId = `${komponentenId}-startzone-titel`
   const gegnerTitelId = `${komponentenId}-gegnerische-schlangen-titel`
   const startzoneIstZielbereit = Boolean(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
+  const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
   const haeutungZielAnzahl = zeigeSchlangenhaeutungBrettziel ? aktiverSpieler.schlangen.filter(schlange => hatSchlangenhaeutungBrettziel(zustand, schlange, ausgewaehlteHandkarteId)).length : 0
   const zielspurAnzahl = zaehleZielspurBrettziele({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
 
@@ -284,12 +285,13 @@ export default function Schlangenbereich({
           startzoneIstZielbereit={startzoneIstZielbereit}
           dragOverStartzone={dragOverZone?.kind === 'startzone'}
           ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
+          startfaehrtenIds={istGameRoute ? neueSchlangeStartenAktionen.map((aktion) => aktion.handkartenId) : []}
           onClick={(event) => { event.stopPropagation(); handleNeueSchlangeZoneClick(event) }}
           onKeyDown={handleNeueSchlangeZoneKeyDown}
           onDragOver={(event) => { event.stopPropagation(); handleNeueSchlangeZoneDragOver(event) }}
           onDrop={(event) => { event.stopPropagation(); handleNeueSchlangeZoneDrop(event) }}
         />
-        {neueSchlangeStartenAktionen.length > 0 && (
+        {!istGameRoute && neueSchlangeStartenAktionen.length > 0 && (
           <div className="schlangekarte__anlegeaktionen schlangekarte__anlegeaktionen--starten" aria-label="Waldtanz-Startkreise">
             {neueSchlangeStartenAktionen.map((aktion) => (
               <button

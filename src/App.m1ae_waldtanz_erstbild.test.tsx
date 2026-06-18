@@ -53,7 +53,7 @@ describe('M1ae Waldtanz-Erstbild', () => {
     expect(cssBlock('.spielbereich--game-route [class~="zugpfad__strecke"]')).toMatch(/max-height:\s*10rem/)
     expect(cssBlock('.spielbereich--game-route [class~="zugpfad__strecke"]')).toMatch(/overflow:\s*auto/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-spielerrahmen__kartenruecken--stitch"]')).toMatch(/width:\s*clamp\(2rem,\s*3\.2vw,\s*2\.6rem\)/)
-    expect(cssBlock('.spielbereich--game-route [class~="schlangekarte__anlegeaktionen--starten"]')).toMatch(/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(5\.8rem,\s*1fr\)\)/)
+    expect(cssBlock('.spielbereich--game-route [class~="schlangekarte__anlegeaktionen--starten"]')).toMatch(/display:\s*none/)
     expect(cssBlock('.spielbereich--game-route [class~="schlangen-startkreis-button"]')).toMatch(/min-height:\s*2rem/)
   })
 })

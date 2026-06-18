@@ -2125,9 +2125,7 @@ code {
   }
 
   .spielbereich--game-route [class~="schlangekarte__anlegeaktionen--starten"] {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5.8rem, 1fr));
-    gap: 0.35rem;
+    display: none;
   }
 
   .spielbereich--game-route [class~="schlangen-startkreis-button"] {
@@ -4433,6 +4431,37 @@ code {
   border: 2px solid var(--st-color-border-strong);
   border-radius: 999px;
   background: var(--st-color-secondary-container);
+}
+
+.schlangen-startzone__faehrten {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.schlangen-startzone__faehrte {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 5.4rem;
+  padding: 0.22rem 0.5rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--st-color-primary-container), var(--st-color-secondary-container));
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  transform: rotate(-1deg);
+}
+
+.schlangen-startzone__faehrte:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.schlangen-startzone__faehrte-id {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
 }
 
 .schlangen-startzone__vorschau {
