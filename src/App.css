@@ -1160,20 +1160,70 @@ body {
   background: linear-gradient(180deg, rgba(255, 188, 170, 0.84), rgba(254, 203, 0, 0.45));
 }
 
-.waldtanz-spielerrahmen__grubenbutton {
+.schlangengrube-grubenfalle {
+  /* ÄNDERUNG 18.06.2026: M2o ersetzt den flachen Schlangengrube-Button durch ein körperliches Spielerziel. */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: center;
+  width: min(100%, 19rem);
+  padding: 0.65rem 0.75rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(6, 57, 7, 0.88) 0 1.15rem, rgba(177, 45, 0, 0.58) 1.25rem 2.2rem, transparent 2.3rem),
+    linear-gradient(135deg, rgba(255, 188, 170, 0.92), rgba(254, 203, 0, 0.66));
+  box-shadow: var(--st-shadow-hard);
+  color: var(--st-color-border-strong);
+}
+
+.schlangengrube-grubenfalle__icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.schlangengrube-grubenfalle__text {
+  display: grid;
+  gap: 0.1rem;
+  font-weight: 850;
+}
+
+.schlangengrube-grubenfalle__eyebrow,
+.schlangengrube-grubenfalle__text strong,
+.schlangengrube-grubenfalle__button {
+  font-family: var(--st-font-headline);
+}
+
+.schlangengrube-grubenfalle__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.schlangengrube-grubenfalle__button {
+  grid-column: 1 / -1;
+  justify-self: start;
   padding: 0.45rem 0.8rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 999px;
-  background: var(--st-color-primary-container);
+  background: var(--st-color-tertiary-container);
   box-shadow: 0 4px 0 var(--st-color-border-strong);
   color: var(--st-color-border-strong);
   cursor: pointer;
-  font-family: var(--st-font-headline);
   font-weight: 900;
   scroll-margin-bottom: 18rem;
 }
 
-.waldtanz-spielerrahmen__grubenbutton:active {
+.schlangengrube-grubenfalle .schlangengrube-grubenfalle__button {
+  background: var(--st-color-tertiary-container);
+}
+
+.schlangengrube-grubenfalle__button:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 var(--st-color-border-strong);
 }

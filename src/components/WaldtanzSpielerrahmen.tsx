@@ -6,6 +6,7 @@ Beschreibung: Stitch-Spielerrahmen für den Waldtanz-Spieltisch mit kompletter T
 */
 import { useEffect, useRef } from 'react'
 import type { SpielAktion, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
+import SchlangengrubeGrubenfalle from './SchlangengrubeGrubenfalle'
 
 interface WaldtanzSpielerrahmenProps {
   zustand: Spielzustand
@@ -113,14 +114,12 @@ export default function WaldtanzSpielerrahmen({
               </ol>
               <span className="waldtanz-spielerrahmen__handzahl">{spieler.hand.length} verdeckte Karten</span>
               {grubenAktion && onAktion && (
-                <button
-                  ref={grubenAktion === erstesGrubenziel ? erstesGrubenzielRef : undefined}
-                  className="waldtanz-spielerrahmen__grubenbutton"
-                  aria-label={`Schlangengrube im Spielerrahmen mit Karte ${grubenAktion.handkartenId} auf ${spieler.name}`}
-                  onClick={() => onAktion(grubenAktion)}
-                >
-                  Schlangengrube hier spielen
-                </button>
+                <SchlangengrubeGrubenfalle
+                  aktion={grubenAktion}
+                  zielSpielerName={spieler.name}
+                  buttonRef={grubenAktion === erstesGrubenziel ? erstesGrubenzielRef : undefined}
+                  onAktion={onAktion}
+                />
               )}
             </li>
           )

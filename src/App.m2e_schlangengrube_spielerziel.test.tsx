@@ -52,9 +52,12 @@ describe('M2e Schlangengrube-Spielerziel', () => {
 
     expect(gegnerSpieler2).toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
     expect(gegnerSpieler3).toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
-    expect(within(gegnerSpieler2).getByText('Schlangengrube hier spielen')).toBeVisible()
+    const grubenfalle = within(gegnerSpieler2).getByRole('group', {
+      name: 'Schlangengrube-Grubenfalle für Spieler 2 mit Karte schlangengrube-m2e',
+    })
+    expect(within(grubenfalle).getByText('Grubenfalle')).toBeVisible()
     expect(scrollIntoViewSpy).toHaveBeenCalledWith({ block: 'center', inline: 'nearest' })
-    const zielButton = within(gegnerSpieler2).getByRole('button', {
+    const zielButton = within(grubenfalle).getByRole('button', {
       name: 'Schlangengrube im Spielerrahmen mit Karte schlangengrube-m2e auf Spieler 2',
     })
 
@@ -85,11 +88,12 @@ describe('M2e Schlangengrube-Spielerziel', () => {
 
   it('legt den sichtbaren Waldtanz-Zielstil für Grubenziele im Spielerrahmen ab', () => {
     const platzBlock = cssBlock('.waldtanz-spielerrahmen__gegnerplatz--grubenziel')
-    const buttonBlock = cssBlock('.waldtanz-spielerrahmen__grubenbutton')
+    const quelle = readFileSync('src/App.css', 'utf8')
 
     expect(platzBlock).toContain('Schlangengrube-Spielerziel')
     expect(platzBlock).toContain('background: linear-gradient')
-    expect(buttonBlock).toContain('border: var(--st-border-width-chunky) solid var(--st-color-border-strong)')
-    expect(buttonBlock).toContain('box-shadow: 0 4px 0 var(--st-color-border-strong)')
+    expect(quelle).toContain('.schlangengrube-grubenfalle {')
+    expect(quelle).toContain('border: var(--st-border-width-chunky) solid var(--st-color-border-strong)')
+    expect(quelle).toContain('box-shadow: var(--st-shadow-hard)')
   })
 })
