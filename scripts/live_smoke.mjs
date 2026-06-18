@@ -348,10 +348,8 @@ async function pruefeM1baStartkreisVorschau(seite) {
     throw new Error(`M1ba Startkreis-Vorschau: aria-describedby zeigt nicht auf sichtbare Vorschau (${beschriebenDurch}, ${vorschauId})`)
   }
 
-  const startlisteDisplay = await seite.locator('.schlangekarte__anlegeaktionen--starten').first().evaluate((element) => getComputedStyle(element).display)
-  if (startlisteDisplay !== 'none') {
-    throw new Error(`M1ba Startkreis-Vorschau: Startlisten-Fallback bleibt auf /game primär sichtbar (${startlisteDisplay})`)
-  }
+  const startlistenAnzahl = await seite.locator('.schlangekarte__anlegeaktionen--starten').count()
+  if (startlistenAnzahl !== 0) throw new Error(`M1ba Startkreis-Vorschau: Startlisten-Fallback bleibt auf /game im DOM (${startlistenAnzahl})`)
 
   const startzoneBox = await startzone.boundingBox()
   if (!startzoneBox) {
