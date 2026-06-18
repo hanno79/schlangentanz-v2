@@ -100,6 +100,18 @@ export function ermittleFarbenFuerFarbvielfalt(schlange: Schlange): Farbe[] {
   return [...farben];
 }
 
+export function ermittleRegenbogenWildfarben(schlange: Schlange): Map<string, Farbe> {
+  const zuordnung = bestimmeRegenbogenZuordnung(schlange);
+  const wildfarben = new Map<string, Farbe>();
+  schlange.karten.forEach((karte, index) => {
+    if (istRegenbogenschlange(karte)) {
+      const farbe = zuordnung.get(index);
+      if (farbe) wildfarben.set(karte.id, farbe);
+    }
+  });
+  return wildfarben;
+}
+
 function bestimmeRegenbogenZuordnung(schlange: Schlange): Map<number, Farbe> {
   const memo = new Map<string, number>();
   const entscheidungen = new Map<string, RegenbogenEntscheidung>();

@@ -12,6 +12,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug√
 */
 import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
+import { ermittleRegenbogenWildfarben } from '../engine'
 import type { SpielAktion, Spieler, Spielzustand } from '../engine'
 import GegnerSchlangenListe from './GegnerSchlangenListe'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
@@ -314,6 +315,7 @@ export default function Schlangenbereich({
           <>
           <ul className="schlangenleiste">
             {aktiverSpieler.schlangen.map((schlange, schlangeIndex) => {
+              const regenbogenWildfarben = ermittleRegenbogenWildfarben(schlange)
               const anlegeAktionen = karteAnlegenAktionen.filter((aktion) => aktion.schlangenId === schlange.id)
               const istBoardZiel = Boolean(findeAktionFuerKarte(schlange.id, ausgewaehlteHandkarteId))
               const farbenschutzAktion = findeFarbenschutzAktion(schlange.id, ausgewaehlteHandkarteId)
@@ -357,6 +359,7 @@ export default function Schlangenbereich({
                           karte={karte}
                           istKopf={istKopf}
                           istSchwanz={istSchwanz}
+                          regenbogenWildfarbe={regenbogenWildfarben.get(karte.id)}
                           className={`${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                         >
                           <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} />

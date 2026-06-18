@@ -5,18 +5,20 @@ Version: 1.0
 Beschreibung: Greifbare Waldtanz-Mini-Spielkarte für Karten in Schlangenpfaden.
 */
 import type { ReactNode } from 'react'
-import type { Spielkarte } from '../engine'
+import type { Farbe, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 
 interface SchlangenPfadKarteProps {
   karte: Spielkarte
   istKopf: boolean
   istSchwanz: boolean
+  regenbogenWildfarbe?: Farbe
   className?: string
   children?: ReactNode
 }
 
 function karteSymbol(karte: Spielkarte): string {
+  if (karte.typ === 'Sonderkarte' && karte.name === 'Regenbogenschlange') return '🌈'
   if (karte.typ !== 'Farbkarte') return '✨'
   switch (karte.farbe) {
     case 'Blau': return '💧'
@@ -32,7 +34,10 @@ function kartenTypLabel(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`
 }
 
-function kartenWertLabel(karte: Spielkarte): string {
+function kartenWertLabel(karte: Spielkarte, regenbogenWildfarbe?: Farbe): string {
+  if (karte.typ === 'Sonderkarte' && karte.name === 'Regenbogenschlange' && regenbogenWildfarbe) {
+    return `0 Punkte · verbindet ${regenbogenWildfarbe}`
+  }
   return karte.typ === 'Farbkarte' ? `${karte.punkte} Punkte` : 'Sonderaktion'
 }
 
@@ -42,15 +47,17 @@ function schlangenKartenAriaLabel(karte: Spielkarte): string {
     : `Sonderkarte ${karte.id}: ${karte.name}`
 }
 
-export default function SchlangenPfadKarte({ karte, istKopf, istSchwanz, className = '', children }: SchlangenPfadKarteProps) {
+export default function SchlangenPfadKarte({ karte, istKopf, istSchwanz, regenbogenWildfarbe, className = '', children }: SchlangenPfadKarteProps) {
   const pfadKlasse = `${istKopf ? ' schlangekarte__karte--kopf' : ''}${istSchwanz ? ' schlangekarte__karte--schwanz' : ''}${!istKopf && !istSchwanz ? ' schlangekarte__karte--koerper' : ''}`
   const typKlasse = karte.typ === 'Farbkarte'
     ? `schlangekarte__karte--farbkarte schlangekarte__karte--farbe-${farbeCssKlasse(karte.farbe)}`
     : 'schlangekarte__karte--sonderkarte'
+  const istRegenbogenWildkarte = karte.typ === 'Sonderkarte' && karte.name === 'Regenbogenschlange' && Boolean(regenbogenWildfarbe)
+  const regenbogenKlasse = istRegenbogenWildkarte ? ' schlangekarte__karte--regenbogenpfad' : ''
 
   return (
     <div
-      className={`schlangekarte__karte schlangekarte__karte--spielkarte${pfadKlasse} ${typKlasse}${className}`}
+      className={`schlangekarte__karte schlangekarte__karte--spielkarte${pfadKlasse} ${typKlasse}${regenbogenKlasse}${className}`}
       role="listitem"
       aria-label={schlangenKartenAriaLabel(karte)}
     >
@@ -61,7 +68,9 @@ export default function SchlangenPfadKarte({ karte, istKopf, istSchwanz, classNa
       {istKopf && !istSchwanz ? <span className="schlangekarte__pfadmarke">Kopf</span> : null}
       {istSchwanz && !istKopf ? <span className="schlangekarte__pfadmarke">Schwanz</span> : null}
       <span className="schlangekarte__karte-typ">{kartenTypLabel(karte)}</span>
-      <span className="schlangekarte__karte-wert">{kartenWertLabel(karte)}</span>
+      {istRegenbogenWildkarte ? <span className="regenbogenpfad-chip">Wildfarbe {regenbogenWildfarbe}</span> : null}
+      <span className="schlangekarte__karte-wert">{kartenWertLabel(karte, regenbogenWildfarbe)}</span>
+      {istRegenbogenWildkarte ? <span className="regenbogenpfad-hinweis">Farbgruppen-Joker</span> : null}
       {children}
     </div>
   )

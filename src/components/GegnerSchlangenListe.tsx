@@ -5,6 +5,7 @@ Version: 1.0
 Beschreibung: Gegnerische Schlangenreihe mit board-nahen Sonderkarten-Zielen für Waldtanz-Interaktionen.
 */
 import { useState } from 'react'
+import { ermittleRegenbogenWildfarben } from '../engine'
 import type { SpielAktion, Spieler } from '../engine'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
 import FarbendiebBeutekorb from './FarbendiebBeutekorb'
@@ -88,6 +89,7 @@ export default function GegnerSchlangenListe({
       <ul className="schlangenleiste">
       {spieler.flatMap((eintrag) =>
         eintrag.schlangen.map((schlange) => {
+          const regenbogenWildfarben = ermittleRegenbogenWildfarben(schlange)
           const blockadeAktion = findeBlockadeAktion(eintrag.id, schlange.id)
 
           return (
@@ -113,6 +115,7 @@ export default function GegnerSchlangenListe({
                       karte={karte}
                       istKopf={istKopf}
                       istSchwanz={istSchwanz}
+                      regenbogenWildfarbe={regenbogenWildfarben.get(karte.id)}
                       className={`${diebAktionen.length > 0 || istFrassZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${diebAktionen.length > 0 ? ' schlangekarte__karte--farbendieb-ziel' : ''}${istFrassZiel ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}${istFrassAusgewaehlt ? ' schlangekarte__karte--schlangenfrass-ausgewaehlt' : ''}`}
                     >
                       <FarbendiebBeutekorb
