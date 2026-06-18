@@ -2367,6 +2367,55 @@ code {
 .waldtanz-hud--material h2::before { content: '🎒'; }
 .waldtanz-hud--wertung h2::before { content: '⭐'; }
 
+.waldtanz-sonnenstand {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background:
+    radial-gradient(circle at 14% 18%, rgba(254, 203, 0, 0.9) 0 2.3rem, transparent 2.45rem),
+    linear-gradient(135deg, rgba(255, 224, 139, 0.98), rgba(196, 253, 182, 0.86));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-sonnenstand__hauptkarte {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.waldtanz-sonnenstand__eyebrow {
+  font-family: var(--st-font-headline);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.waldtanz-sonnenstand__phase {
+  font-family: var(--st-font-headline);
+  font-size: clamp(1.18rem, 2.4vw, 1.65rem);
+  line-height: 1;
+}
+
+.waldtanz-sonnenstand__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.waldtanz-sonnenstand__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.9rem;
+  padding: 0.25rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-weight: 900;
+}
+
 .waldtanz-hud .debug-gruppe-entwicklungsdaten {
   opacity: 0.72;
   font-size: 0.88rem;

@@ -99,6 +99,7 @@ async function browserSmoke() {
     await pruefeM1bcWaldtanzHandbank(seite)
     await pruefeM1bdLichtungsbrett(seite)
     await pruefeM1bfNachziehstapel(seite)
+    await pruefeM1bgSonnenstand(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
 
@@ -463,6 +464,12 @@ async function pruefeM1bfNachziehstapel(seite) {
   console.log('M1bf Nachziehstapel: Deckobjekt vor Ablage mit 3px-Rand und Hard Shadow sichtbar')
 }
 
+async function pruefeM1bgSonnenstand(seite) {
+  const d = await seite.evaluate(() => { const s = document.querySelector('.waldtanz-sonnenstand'), p = document.querySelector('.waldtanz-sonnenstand__phase'), c = document.querySelector('.waldtanz-sonnenstand__chip'); for (const e of [s, p, c]) if (!(e instanceof HTMLElement)) throw new Error('M1bg Sonnenstand: HUD-Element fehlt'); const st = getComputedStyle(s), ps = getComputedStyle(p), cs = getComputedStyle(c); return { text: s.textContent ?? '', border: st.borderTopWidth, shadow: st.boxShadow, radius: st.borderTopLeftRadius, phaseFont: ps.fontFamily, chipBorder: cs.borderTopWidth } })
+  if (!d.text.includes('Sonnenstand') || !d.text.includes('am Zug') || !d.text.includes('Zugkarten:') || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || Number.parseFloat(d.radius) < 28 || !d.phaseFont.toLowerCase().includes('rubik') || d.chipBorder !== '2px') throw new Error(`M1bg Sonnenstand: kein chunky Status-HUD (${JSON.stringify(d)})`)
+  console.log('M1bg Sonnenstand: Spielstatus als sonniges 3px-HUD vor Debugdetails sichtbar')
+}
+
 async function kernTextSichtbar(seite, text) {
   const regionSichtbar = await seite.getByRole('region', { name: text, exact: true }).first().isVisible().catch(() => false)
   if (regionSichtbar) return true
@@ -478,21 +485,15 @@ async function kernTextSichtbar(seite, text) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-  if (process.argv.includes('--self-test')) {
-    console.log(erstelleSelbsttestAusgabe())
-  } else {
-    validiereBasisUrl()
-    await Promise.all(ROUTEN.map(httpPruefen))
-    await browserSmoke()
-    console.log('R107 Production-Smoke bestanden')
-  }
+  if (process.argv.includes('--self-test')) return console.log(erstelleSelbsttestAusgabe())
+  validiereBasisUrl()
+  await Promise.all(ROUTEN.map(httpPruefen))
+  await browserSmoke()
+  console.log('R107 Production-Smoke bestanden')
 }
 
 try {
-  const istDirekterCliAufruf = process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href
-  if (istDirekterCliAufruf) {
-    await main()
-  }
+  if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) await main()
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error))
   process.exit(1)

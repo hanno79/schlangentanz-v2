@@ -6,6 +6,7 @@ Beschreibung: Kompakter Spielstatus-HUD fuer Zugphase, Partiephase und Zugfortsc
 */
 
 import type { Spielzustand } from '../engine'
+import { MAX_KARTEN_PRO_ZUG } from '../engine'
 import DebugGruppe from './DebugGruppe'
 import Zugfortschritt from './Zugfortschritt'
 import { zugphaseLabel } from '../zugphaseLabels'
@@ -29,13 +30,30 @@ function spielphaseLabel(spielphase: Spielzustand['spielphase']): string {
 }
 
 export default function SpielstatusPanel({ zustand, titelId, istSpielende, istEndspurt }: SpielstatusPanelProps) {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
+  const phaseText = zugphaseLabel(zustand.zugphase)
+  const spielphaseText = spielphaseLabel(zustand.spielphase)
+  const kartenzugMaximum = MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv ? 1 : 0)
+
   return (
     <section className="info-panel info-panel--spielstatus waldtanz-hud waldtanz-hud--status" aria-labelledby={titelId} aria-live="polite" aria-atomic="true">
       <h2 id={titelId}>Spielstatus</h2>
+      <div className="waldtanz-sonnenstand" role="group" aria-label="Waldtanz-Sonnenstand">
+        <div className="waldtanz-sonnenstand__hauptkarte">
+          <span className="waldtanz-sonnenstand__eyebrow">Sonnenstand</span>
+          <strong className="waldtanz-sonnenstand__phase">{phaseText}</strong>
+          <span>{aktiverSpieler.name} am Zug</span>
+        </div>
+        <div className="waldtanz-sonnenstand__chips" aria-label="Sonnenstand-Werte">
+          <span className="waldtanz-sonnenstand__chip">{zustand.spieler.length} Spieler am Tisch</span>
+          <span className="waldtanz-sonnenstand__chip">Zugkarten: {zustand.zugpflichten.gespielteKarten}/{kartenzugMaximum}</span>
+          <span className="waldtanz-sonnenstand__chip">{spielphaseText}</span>
+        </div>
+      </div>
       <DebugGruppe titel="Spielphase">
-        <p>Aktueller Spielschritt: {zugphaseLabel(zustand.zugphase)}</p>
-        <p>Spielschritt im Zug: {zugphaseLabel(zustand.zugphase)}</p>
-        <p>Partiestatus: {spielphaseLabel(zustand.spielphase)}</p>
+        <p>Aktueller Spielschritt: {phaseText}</p>
+        <p>Spielschritt im Zug: {phaseText}</p>
+        <p>Partiestatus: {spielphaseText}</p>
         {istSpielende && <p>Spielende erreicht.</p>}
         {zustand.spielphase === 'Endspurt' && zustand.endrunde.ausloeserSpielerIndex !== null && (
           <>
