@@ -95,6 +95,7 @@ async function browserSmoke() {
     await pruefeM1awHandkante(seite)
     await pruefeM1axFreieLichtung(seite)
     await pruefeM1ayWaldkulisse(seite)
+    await pruefeM1bcWaldtanzHandbank(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
 
@@ -270,6 +271,37 @@ async function pruefeM1ayWaldkulisse(seite) {
   }
 
   console.log('M1ay Waldkulisse: sonniger Waldhintergrund sichtbar, Dekoration klicksicher')
+}
+
+async function pruefeM1bcWaldtanzHandbank(seite) {
+  const handPanel = seite.locator('.handkarten-panel--waldtanz-handbuehne').first()
+  const arena = seite.getByRole('region', { name: 'Waldtanz-Arenastein' })
+  const handBox = await handPanel.boundingBox()
+  const arenaBox = await arena.boundingBox()
+  if (!handBox || !arenaBox) throw new Error('M1bc Waldtanz-Handbank: Handpanel oder Waldstein fehlt')
+
+  const stil = await handPanel.evaluate((element) => {
+    const panel = getComputedStyle(element)
+    const bank = getComputedStyle(element.querySelector('.handkarten-buehne'), '::before')
+    return { background: panel.backgroundImage, border: panel.borderTopColor, shadow: panel.boxShadow, bankPointer: bank.pointerEvents, bankHeight: bank.height, bankShadow: bank.boxShadow }
+  })
+  if (stil.background !== 'none' || stil.shadow !== 'none' || stil.border !== 'rgba(0, 0, 0, 0)') {
+    throw new Error(`M1bc Waldtanz-Handbank: Panel verdeckt noch den Waldstein (${JSON.stringify(stil)})`)
+  }
+  if (stil.bankPointer !== 'none' || Number.parseFloat(stil.bankHeight) < 45 || !stil.bankShadow.includes('rgb(6, 57, 7)')) {
+    throw new Error(`M1bc Waldtanz-Handbank: Handbank ist kein klicksicheres Spielobjekt (${JSON.stringify(stil)})`)
+  }
+
+  const blankTreffer = await seite.evaluate(({ x, y }) => {
+    const element = document.elementFromPoint(x, y)
+    return { arena: Boolean(element?.closest('.waldtanz-arenastein')), hand: Boolean(element?.closest('.handkarten-panel')) }
+  }, { x: handBox.x + 20, y: handBox.y + 20 })
+  if (!blankTreffer.arena || blankTreffer.hand) {
+    throw new Error(`M1bc Waldtanz-Handbank: freie Handbank-Fläche trifft nicht den Waldstein (${JSON.stringify(blankTreffer)})`)
+  }
+
+  await handPanel.locator('.handkarte__button--karte').first().click({ trial: true })
+  console.log(`M1bc Waldtanz-Handbank: Panel frei, Handbank ${Math.round(Number.parseFloat(stil.bankHeight))}px und Karten klickbar`)
 }
 
 async function pruefeM1baStartkreisVorschau(seite) {

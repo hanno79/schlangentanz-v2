@@ -1717,21 +1717,57 @@ code {
     pointer-events: none;
   }
 
+  .spielbereich--game-route [class~="handkarten-panel--waldtanz-handbuehne"] {
+    /* ÄNDERUNG 18.06.2026: M1bc lässt keine milchige Panel-Fläche mehr über dem Waldstein liegen. */
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
   .spielbereich--game-route [class~="handkarten-panel"] button {
     pointer-events: auto;
   }
 
   .spielbereich--game-route [class~="handkarten-panel"] h4 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     margin: 0;
-    font-size: 0.92rem;
-    line-height: 1;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .spielbereich--game-route [class~="handkarten-buehne"] {
+    position: relative;
+    isolation: isolate;
     gap: 0.35rem;
     justify-content: flex-start;
     min-height: auto;
     padding: 0.25rem 0.4rem;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne"]::before {
+    content: '';
+    position: absolute;
+    left: 0.25rem;
+    right: 0.25rem;
+    bottom: 0;
+    z-index: 0;
+    height: clamp(3.8rem, 8vh, 5.2rem);
+    pointer-events: none;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 16% 25%, rgba(254, 203, 0, 0.5) 0 1.4rem, transparent 1.5rem),
+      linear-gradient(180deg, rgba(196, 253, 182, 0.88), rgba(164, 222, 2, 0.72));
+    box-shadow: var(--st-shadow-hard);
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne"] > * {
+    position: relative;
+    z-index: 1;
   }
 
   .spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {
