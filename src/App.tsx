@@ -16,7 +16,7 @@ import {
   berechneGewinner,
   ermittleQuestZugHinweise,
 } from './engine'
-import type { AufgabenkarteInfo, GewinnerEintrag, SchlangenZustand, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
+import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import AktionenPanel from './components/AktionenPanel'
 import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
@@ -43,6 +43,7 @@ import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
+import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -95,12 +96,6 @@ function naechsterPflichtschrittLabel(
   if (legaleAktionen.length > 0) return 'Eine spielbare Aktion auswählen.'
   if (nichtEnumerierteAktionenHinweise.length > 0) return 'Schlangenhäutung vorbereiten.'
   return 'Derzeit keine spielbare Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
-}
-
-function schlangenZustandLabel(zustand: SchlangenZustand): string {
-  if (zustand === 'aktiv') return 'spielbereit'
-  if (zustand === 'blockiert') return 'gerade blockiert'
-  return 'geschützt'
 }
 
 interface AppProps {
@@ -391,37 +386,7 @@ function App({ initialZustand }: AppProps) {
             )}
           </section>
         </div>
-        <section className="info-panel info-panel--spieleruebersicht waldtanz-hud waldtanz-hud--spieler" aria-labelledby={spieleruebersichtTitelId} aria-live="polite" aria-atomic="true">
-          <h2 id={spieleruebersichtTitelId}>Spielerübersicht</h2>
-          <DebugGruppe titel="Spielerstatus">
-            {zustand.spieler.map(spieler => {
-              const istAktiv = spieler.id === aktiverSpieler.id
-
-              return (
-                <p key={spieler.id} aria-current={istAktiv ? 'true' : undefined}>
-                  {spieler.name}: {spieler.hand.length} Handkarten, {spieler.schlangen.length} {spieler.schlangen.length === 1 ? 'Schlange' : 'Schlangen'}{istAktiv ? ' — am Zug' : ''}
-                </p>
-              )
-            })}
-            {zustand.spieler.flatMap(spieler =>
-              spieler.schlangen.map((schlange, index) => (
-                <p key={`zustand-${spieler.id}-${schlange.id}`}>
-                  Schlange {index + 1} von {spieler.name}: {schlangenZustandLabel(schlange.zustand)}.
-                </p>
-              ))
-            )}
-            {zustand.spieler.map(spieler => (
-              <p key={`aufgaben-${spieler.id}`}>
-                {spieler.name} — erfüllte Aufgaben:{' '}
-                {spieler.erfuellteAufgaben.length === 0
-                  ? 'keine'
-                  : spieler.erfuellteAufgaben.map(a => `${a.name} (${a.punkte} Punkte)`).join(', ')}
-              </p>
-            ))}
-            <p>Schlangen insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)}</p>
-            <p>Handkarten insgesamt: {zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)}</p>
-          </DebugGruppe>
-        </section>
+        <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} />
         <MaterialUndAufgabenPanel zustand={zustand} istEndspurt={istEndspurt} />
         <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} />
       </section>

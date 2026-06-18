@@ -10,12 +10,9 @@ Beschreibung: R107 Production-Smoke — prüft / und /game per HTTP sowie sichtb
 import { chromium } from 'playwright'
 import { pathToFileURL } from 'node:url'
 
-const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app'
-const PFLICHT_ROUTEN = ['/', '/game']
-const PFLICHT_KERN_TEXTE = ['Spielstatus', 'Aktiver Spieler', 'Aktionen', 'Schlangenbereich']
-const ROUTEN = [...PFLICHT_ROUTEN]
-const KERN_TEXTE = [...PFLICHT_KERN_TEXTE]
-const HTTP_TIMEOUT_MS = 15_000
+const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app', HTTP_TIMEOUT_MS = 15_000
+const PFLICHT_ROUTEN = ['/', '/game'], ROUTEN = [...PFLICHT_ROUTEN]
+const PFLICHT_KERN_TEXTE = ['Spielstatus', 'Aktiver Spieler', 'Aktionen', 'Schlangenbereich'], KERN_TEXTE = [...PFLICHT_KERN_TEXTE]
 
 function arraysSindGleich(links, rechts) {
   return JSON.stringify(links) === JSON.stringify(rechts)
@@ -93,6 +90,7 @@ async function browserSmoke() {
     await pruefeM1bfNachziehstapel(seite)
     await pruefeM1bgSonnenstand(seite)
     await pruefeM1biMaterialrucksack(seite)
+    await pruefeM1bjSpielerbaenke(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
 
@@ -467,6 +465,12 @@ async function pruefeM1biMaterialrucksack(seite) {
   const d = await seite.evaluate(() => { const r = document.querySelector('.materialrucksack'), c = document.querySelector('.materialrucksack__chip'), i = document.querySelector('.materialrucksack__icon'), a = document.querySelector('.aufgabenkarten-bereich'), dbg = document.querySelector('.info-panel--material .debug-gruppe-entwicklungsdaten'); for (const e of [r, c, i, a, dbg]) if (!(e instanceof HTMLElement)) throw new Error('M1bi Materialrucksack: Material-HUD-Element fehlt'); const rs = getComputedStyle(r), cs = getComputedStyle(c), is = getComputedStyle(i); return { text: r.textContent ?? '', border: rs.borderTopWidth, radius: rs.borderTopLeftRadius, shadow: rs.boxShadow, chipBorder: cs.borderTopWidth, iconBg: is.backgroundColor, order: [r, a, dbg].map((e) => Array.from(e.parentElement.children).indexOf(e)).join(',') } })
   if (!d.text.includes('Materialrucksack') || !d.text.includes('Nachziehstapel') || !d.text.includes('Sonderkarten-Zauber') || d.border !== '3px' || Number.parseFloat(d.radius) < 40 || !d.shadow.includes('rgb(6, 57, 7)') || d.chipBorder !== '2px' || !d.iconBg.includes('254, 203, 0') || d.order !== '1,2,3') throw new Error(`M1bi Materialrucksack: kein körperlicher Rucksack vor Aufgaben/Debug (${JSON.stringify(d)})`)
   console.log('M1bi Materialrucksack: Rucksack-Chips vor Aufgabenkarten mit 3px-Rand und Hard Shadow sichtbar')
+}
+
+async function pruefeM1bjSpielerbaenke(seite) {
+  const d = await seite.evaluate(() => { const b = document.querySelector('.spielerbaenke'), s = document.querySelector('.spielerbaenke__sitz--aktiv'), dbg = document.querySelector('.info-panel--spieleruebersicht .debug-gruppe-entwicklungsdaten'); for (const e of [b, s, dbg]) if (!(e instanceof HTMLElement)) throw new Error('M1bj Spielerbänke: Spieler-HUD-Element fehlt'); const bs = getComputedStyle(b), ss = getComputedStyle(s); return { text: b.textContent ?? '', sitze: b.querySelectorAll('.spielerbaenke__sitz').length, border: bs.borderTopWidth, radius: bs.borderTopLeftRadius, shadow: bs.boxShadow, aktiv: ss.transform, order: [b, dbg].map((e) => Array.from(e.parentElement.children).indexOf(e)).join(',') } })
+  if (!d.text.includes('Tischrunde bereit') || !d.text.includes('Spieler 1 ist am Zug') || d.sitze < 2 || d.border !== '3px' || Number.parseFloat(d.radius) < 40 || !d.shadow.includes('rgb(6, 57, 7)') || d.aktiv === 'none' || d.order !== '1,2') throw new Error(`M1bj Spielerbänke: kein körperliches Spieler-HUD vor Debugdaten (${JSON.stringify(d)})`)
+  console.log(`M1bj Spielerbänke: ${d.sitze} Sitzplätze vor Debugdaten mit 3px-Rand und aktivem Sitz sichtbar`)
 }
 
 async function kernTextSichtbar(seite, text) {
