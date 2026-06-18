@@ -35,6 +35,7 @@ import Partiefortschritt from './components/Partiefortschritt'
 import WaldtanzSpielerrahmen from './components/WaldtanzSpielerrahmen'
 import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
 import WaldtanzAblage from './components/WaldtanzAblage'
+import WaldtanzNachziehstapel from './components/WaldtanzNachziehstapel'
 import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
 import WaldtanzKartenpop from './components/WaldtanzKartenpop'
@@ -336,6 +337,7 @@ function App({ initialZustand }: AppProps) {
                     />
                   </section>
                   <aside className="waldtanz-arenastein__waldobjekte" aria-label="Waldobjekte">
+                    <WaldtanzNachziehstapel zustand={zustand} />
                     <WaldtanzAblage zustand={zustand} />
                     <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
                     <WaldtanzAufgabentafel zustand={zustand} istEndspurt={istEndspurt} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} zeigeDirektesEinsammeln={!istGameRoute} />
@@ -387,7 +389,6 @@ function App({ initialZustand }: AppProps) {
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>
               <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
               <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
-              {/* ÄNDERUNG 08.06.2026: R125 benennt die aktive Spielerwertung als spielerfreundlichen Punktestand. */}
               <p>Aktueller Punktestand: {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}</p>
               {ueberhand > 0 && <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>}
               {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}

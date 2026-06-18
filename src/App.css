@@ -3865,6 +3865,91 @@ code {
   box-shadow: none;
 }
 
+.waldtanz-nachziehstapel {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  padding: clamp(0.85rem, 2vw, 1.2rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: radial-gradient(circle at 24% 18%, rgba(186, 246, 45, 0.55), transparent 3.4rem), linear-gradient(135deg, rgba(236, 255, 227, 0.94), rgba(196, 253, 182, 0.76));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  text-align: center;
+}
+
+.waldtanz-nachziehstapel__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.waldtanz-nachziehstapel__kopf h4,
+.waldtanz-nachziehstapel__deckreihe p {
+  margin: 0;
+}
+
+.waldtanz-nachziehstapel__zaehler,
+.waldtanz-nachziehstapel__badge {
+  width: fit-content;
+  padding: 0.16rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-nachziehstapel__deckreihe {
+  display: grid;
+  grid-template-columns: minmax(5rem, 7rem) minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: center;
+  width: 100%;
+}
+
+.waldtanz-nachziehstapel__kartenruecken {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  width: min(7rem, 100%);
+  aspect-ratio: 2 / 3;
+  align-content: center;
+  justify-items: center;
+  padding: 0.65rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.15rem;
+  background: repeating-linear-gradient(135deg, rgba(164, 222, 2, 0.88) 0 0.85rem, rgba(254, 203, 0, 0.88) 0.85rem 1.7rem);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  overflow: hidden;
+  transform: rotate(2deg);
+}
+
+.waldtanz-nachziehstapel__kartenruecken::before {
+  content: '🍃';
+  position: absolute;
+  inset: auto 0.35rem 0.25rem auto;
+  font-size: 1.55rem;
+}
+
+.waldtanz-nachziehstapel__kartenruecken::after {
+  content: '';
+  position: absolute;
+  inset: 0.35rem auto auto 0.35rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(236, 255, 227, 0.78);
+}
+
+.waldtanz-nachziehstapel__kartenruecken strong {
+  font-family: var(--st-font-headline);
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
 .waldtanz-ablage {
   display: grid;
   gap: 0.75rem;
