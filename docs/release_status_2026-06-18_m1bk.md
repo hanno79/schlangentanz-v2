@@ -27,7 +27,7 @@ Warum kein Mikro-Slice: Die Änderung macht eine bisher debuglastige Kerninforma
 
 ## Release
 
-Finaler HEAD wird per Vercel Production auf die stabile Alias `https://schlangentanz-v2.vercel.app` deployt und dort per Browser-Smoke geprüft. Die dauerhafte Release-Referenz ist die stabile Alias, nicht eine ephemere Deployment-URL.
+Finaler HEAD wurde per Vercel Production auf die stabile Alias `https://schlangentanz-v2.vercel.app` deployt und dort per Browser-Smoke geprüft. Die dauerhafte Release-Referenz ist die stabile Alias, nicht eine ephemere Deployment-URL. Der getrackte Production-Smoke `npm run smoke:production` enthält jetzt den M1bk-Vertrag: `/` und `/game` HTTP 200, `Waldtanz-Zugtafel` vor `Entwicklungsdaten: Aktiver Spieler`, `Persönliche Quest:`, 3px-Rand, Hard Shadow und Aktionsupdate nach `Neue Schlange starten` auf `1 Schlange`.
 
 ## Nächste mittlere Lücke
 

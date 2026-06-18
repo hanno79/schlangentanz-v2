@@ -14,16 +14,10 @@ const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.
 const PFLICHT_ROUTEN = ['/', '/game'], ROUTEN = [...PFLICHT_ROUTEN]
 const PFLICHT_KERN_TEXTE = ['Spielstatus', 'Aktiver Spieler', 'Aktionen', 'Schlangenbereich'], KERN_TEXTE = [...PFLICHT_KERN_TEXTE]
 
-function arraysSindGleich(links, rechts) {
-  return JSON.stringify(links) === JSON.stringify(rechts)
-}
+function arraysSindGleich(links, rechts) { return JSON.stringify(links) === JSON.stringify(rechts) }
 
 function validiereBasisUrl() {
-  try {
-    new URL(BASE_URL)
-  } catch {
-    throw new Error(`BASE_URL ungültig — ${BASE_URL}`)
-  }
+  try { new URL(BASE_URL) } catch { throw new Error(`BASE_URL ungültig — ${BASE_URL}`) }
 }
 
 export function erstelleSelbsttestAusgabe() {
@@ -93,6 +87,7 @@ async function browserSmoke() {
     await pruefeM1bjSpielerbaenke(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
+    await pruefeM1bkZugtafel(seite)
 
     await seite.waitForTimeout(500)
 
@@ -473,6 +468,12 @@ async function pruefeM1bjSpielerbaenke(seite) {
   console.log(`M1bj Spielerbänke: ${d.sitze} Sitzplätze vor Debugdaten mit 3px-Rand und aktivem Sitz sichtbar`)
 }
 
+async function pruefeM1bkZugtafel(seite) {
+  await seite.goto(erstelleUrl('/game'), { waitUntil: 'networkidle' })
+  const d = await seite.evaluate(() => { const z = document.querySelector('.waldtanz-zugtafel'), dbg = [...document.querySelectorAll('aside.debug-gruppe-entwicklungsdaten')].find((e) => e.textContent?.includes('Aktiver Spieler')); if (!(z instanceof HTMLElement) || !(dbg instanceof HTMLElement)) throw new Error('M1bk Zugtafel: Zugtafel oder Aktiver-Spieler-Entwicklungsdaten fehlen'); const s = getComputedStyle(z), b = z.getBoundingClientRect(); return { text: z.textContent ?? '', order: Boolean(z.compareDocumentPosition(dbg) & Node.DOCUMENT_POSITION_FOLLOWING), border: s.borderTopWidth, shadow: s.boxShadow, width: b.width, height: b.height } })
+  if (!d.text.includes('Waldtanz-Zugtafel') || !d.text.includes('Persönliche Quest:') || !d.text.includes('Noch keine Aktion ausgeführt.') || !d.order || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || d.width < 150 || d.height < 100) throw new Error(`M1bk Zugtafel: kein körperlicher Aktiver-Zug vor Debugdaten (${JSON.stringify(d)})`)
+  await seite.getByRole('region', { name: 'Empfohlene Aktion' }).getByRole('button', { name: /Neue Schlange starten/ }).click(); await seite.getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText(/Letzte Aktion:/).waitFor(); await seite.getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText('1 Schlange').waitFor(); console.log('M1bk Zugtafel: Aktiver Zug vor Debugdaten mit Persönlicher Quest, 3px-Rand und Aktionsupdate sichtbar')
+}
 async function kernTextSichtbar(seite, text) {
   const regionSichtbar = await seite.getByRole('region', { name: text, exact: true }).first().isVisible().catch(() => false)
   if (regionSichtbar) return true
