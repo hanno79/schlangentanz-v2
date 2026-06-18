@@ -44,6 +44,7 @@ import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
+import AktiverSpielerZugtafel from './components/AktiverSpielerZugtafel'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -191,6 +192,7 @@ function App({ initialZustand }: AppProps) {
   const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlene Aktion'
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
+  const geheimeAufgabeText = aktiverSpieler.geheimeAufgabe ? aufgabeLabel(aktiverSpieler.geheimeAufgabe, false) : 'keine'
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
@@ -350,6 +352,14 @@ function App({ initialZustand }: AppProps) {
               onKiZugVorspulen={handleKiZugVorspulen}
               kompakterBrettFallback={istGameRoute}
               zeigePhasenaktion={!istGameRoute}
+            />
+            <AktiverSpielerZugtafel
+              spieler={aktiverSpieler}
+              punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+              pflichtschrittLabel={pflichtschrittLabel}
+              zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
+              letzteAktion={letzteAktion}
+              geheimeAufgabeText={geheimeAufgabeText}
             />
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>

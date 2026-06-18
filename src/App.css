@@ -2653,6 +2653,94 @@ code {
   font-weight: 900;
 }
 
+.waldtanz-zugtafel {
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(0.85rem, 1.4vw, 1.1rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background: linear-gradient(135deg, var(--st-color-background), var(--st-color-primary-container));
+  box-shadow: var(--st-shadow-hard);
+}
+
+.waldtanz-zugtafel__kopf {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.waldtanz-zugtafel__kopf h3,
+.waldtanz-zugtafel__kopf strong,
+.waldtanz-zugtafel__pflicht strong {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-zugtafel__kopf h3,
+.waldtanz-zugtafel__aktion,
+.waldtanz-zugtafel__quest {
+  margin: 0;
+}
+
+.waldtanz-zugtafel__kopf > div {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.waldtanz-zugtafel__avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 3.15rem;
+  height: 3.15rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  font-size: 1.45rem;
+}
+
+.waldtanz-zugtafel__pflicht {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: var(--st-color-secondary-container);
+}
+
+.waldtanz-zugtafel__pflicht span,
+.waldtanz-zugtafel__chips span {
+  font-family: var(--st-font-headline);
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.waldtanz-zugtafel__chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
+  gap: 0.5rem;
+}
+
+.waldtanz-zugtafel__chips span {
+  display: inline-flex;
+  justify-content: center;
+  padding: 0.4rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-background);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-zugtafel__aktion,
+.waldtanz-zugtafel__quest {
+  font-weight: 800;
+}
+
+.waldtanz-zugtafel__aktion strong {
+  font-family: var(--st-font-headline);
+}
+
 .waldtanz-hud .debug-gruppe-entwicklungsdaten {
   opacity: 0.72;
   font-size: 0.88rem;
