@@ -73,6 +73,7 @@ async function browserSmoke() {
   const browser = await chromium.launch()
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' })
   const seite = await context.newPage()
+  await seite.addInitScript(() => { Math.random = () => 0.999999 })
   const errors = []
 
   seite.on('pageerror', (err) => errors.push(`Page-Fehler: ${err.message}`))
