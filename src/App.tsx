@@ -308,7 +308,7 @@ function App({ initialZustand }: AppProps) {
                   <p>Magische Zielkreise leuchten im Brett.</p>
                 </div>
                 <div className="waldtanz-arenastein__spielfeld">
-                  <section className="waldtanz-arenastein__schlangenlichtung" aria-label="Schlangenlichtung">
+                  <section className="waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett" aria-label="Schlangenlichtung">
                     <WaldtanzTischkarte zustand={zustand} />
                     <WaldtanzKartenpop aktionLabel={letzteAktion} />
                     <WaldtanzMagiekreise

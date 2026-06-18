@@ -1889,6 +1889,44 @@ code {
     padding: 0.6rem;
   }
 
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] {
+    /* ÄNDERUNG 18.06.2026: M1bd öffnet die zentrale Schlangenlichtung zu einem echten Spielfeld statt Panel-Stapel. */
+    min-height: min(22rem, 48vh);
+    grid-template-columns: minmax(9rem, 0.52fr) minmax(13rem, 0.78fr);
+    grid-template-areas:
+      "tisch magiekreise"
+      "schlangen schlangen";
+    align-items: start;
+    background:
+      radial-gradient(ellipse at 50% 62%, rgba(236, 255, 227, 0.74) 0 58%, transparent 59%),
+      radial-gradient(circle at 18% 20%, rgba(254, 203, 0, 0.34) 0 4.2rem, transparent 4.35rem),
+      radial-gradient(circle at 82% 24%, rgba(164, 222, 2, 0.38) 0 4.8rem, transparent 4.95rem),
+      linear-gradient(180deg, rgba(196, 253, 182, 0.76), rgba(185, 241, 172, 0.5));
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-tischkarte"] {
+    grid-area: tisch;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-magiekreise"] {
+    grid-area: magiekreise;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangenbereich--waldlichtung"] {
+    grid-area: schlangen;
+    padding: clamp(0.25rem, 0.8vw, 0.5rem);
+    overflow: auto;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangen-gruppe"] {
+    background: rgba(236, 255, 227, 0.58);
+    border: 2px solid rgba(6, 57, 7, 0.32);
+    box-shadow: 0 3px 0 rgba(6, 57, 7, 0.28);
+  }
+
   .spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"] {
     max-height: min(21rem, 40vh);
     overflow: auto;
@@ -1996,6 +2034,30 @@ code {
 
   .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]:has(.waldtanz-kartenpop) [class~="schlangenbereich--waldlichtung"] {
     grid-row: 1 / span 3;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"]:has(.waldtanz-kartenpop) {
+    grid-template-areas:
+      "tisch pop"
+      "magiekreise pop"
+      "schlangen schlangen";
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-kartenpop"] {
+    grid-area: pop;
+    grid-column: auto;
+    grid-row: auto;
+    align-self: center;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"]:has(.waldtanz-kartenpop) [class~="waldtanz-magiekreise"] {
+    grid-area: magiekreise;
+    grid-row: auto;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"]:has(.waldtanz-kartenpop) [class~="schlangenbereich--waldlichtung"] {
+    grid-area: schlangen;
+    grid-row: auto;
   }
 
   .spielbereich--game-route [class~="waldtanz-magiekreise__kopf"] {
