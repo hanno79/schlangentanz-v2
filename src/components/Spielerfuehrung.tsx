@@ -39,26 +39,29 @@ export default function Spielerfuehrung({
   const checklisteUeberschriftId = useId()
 
   return (
-    <section aria-labelledby={spielerfuehrungUeberschriftId} className="spielerfuehrung">
+    <section aria-labelledby={spielerfuehrungUeberschriftId} className="spielerfuehrung spielerfuehrung--waldtanz-wegweiser">
       <h3 id={spielerfuehrungUeberschriftId}>Spielerführung</h3>
-      <p>Dein nächster Schritt</p>
-      <p>{pflichtschrittLabel}</p>
-      <p>Empfohlene Aktion</p>
-      <p className="spielerfuehrung__karte">{aktionsHinweis}</p>
-      <h4 id={checklisteUeberschriftId}>Mini-Checkliste für deinen Zug</h4>
-      <ol aria-labelledby={checklisteUeberschriftId} className="spielerfuehrung__checkliste">
-        <li className="spielerfuehrung__checkschritt">Pflichtschritt prüfen: {pflichtschrittLabel}</li>
-        <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>
-        <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
-      </ol>
-      {zeigtAktionslinkEffektiv ? (
-        <>
-          <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
-          <a href={`#${aktionszielLinkId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielLinkId)}>Zur {aktionszielLinkText} {aktionszielOrtText}</a>
-        </>
-      ) : (
-        <p>Im Aktionsbereich gibt es aktuell kein Springziel.</p>
-      )}
+      <div className="spielerfuehrung__wegweiser">
+        <p className="spielerfuehrung__kicker">Waldtanz-Wegweiser</p>
+        <p className="spielerfuehrung__pfadchip">Dein nächster Schritt</p>
+        <p>{pflichtschrittLabel}</p>
+        <p className="spielerfuehrung__pfadchip">Empfohlene Aktion</p>
+        <p className="spielerfuehrung__karte">{aktionsHinweis}</p>
+        <h4 id={checklisteUeberschriftId}>Mini-Checkliste für deinen Zug</h4>
+        <ol aria-labelledby={checklisteUeberschriftId} className="spielerfuehrung__checkliste">
+          <li className="spielerfuehrung__checkschritt">Pflichtschritt prüfen: {pflichtschrittLabel}</li>
+          <li className="spielerfuehrung__checkschritt">Empfohlene Aktion wählen: {aktionsHinweis}</li>
+          <li className="spielerfuehrung__checkschritt">Unten im Aktionenbereich ausführen</li>
+        </ol>
+        {zeigtAktionslinkEffektiv ? (
+          <>
+            <p>Klicke unten auf die {aktionszielSatzText}, um deinen Zug fortzusetzen.</p>
+            <a href={`#${aktionszielLinkId}`} className="spielerfuehrung__aktionslink" onClick={() => onAktionszielHervorheben?.(aktionszielLinkId)}>Zur {aktionszielLinkText} {aktionszielOrtText}</a>
+          </>
+        ) : (
+          <p>Im Aktionsbereich gibt es aktuell kein Springziel.</p>
+        )}
+      </div>
     </section>
   )
 }

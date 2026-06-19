@@ -361,6 +361,17 @@ function App({ initialZustand }: AppProps) {
               letzteAktion={letzteAktion}
               geheimeAufgabeText={geheimeAufgabeText}
             />
+            {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
+              <Spielerfuehrung
+                pflichtschrittLabel={pflichtschrittLabel}
+                empfohleneAktionLabel={empfohleneAktionLabel}
+                aktionszielId={spielerfuehrungAktionszielId}
+                aktionszielSatzText={spielerfuehrungAktionszielSatzText}
+                aktionszielLinkText={spielerfuehrungAktionszielLinkText}
+                onAktionszielHervorheben={setHervorgehobenesAktionszielId}
+                zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
+              />
+            )}
             <DebugGruppe titel="Aktiver Spieler">
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>
               <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
@@ -383,17 +394,6 @@ function App({ initialZustand }: AppProps) {
                   : 'Geheime Aufgabe: keine'}
               </p>
             </DebugGruppe>
-            {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
-              <Spielerfuehrung
-                pflichtschrittLabel={pflichtschrittLabel}
-                empfohleneAktionLabel={empfohleneAktionLabel}
-                aktionszielId={spielerfuehrungAktionszielId}
-                aktionszielSatzText={spielerfuehrungAktionszielSatzText}
-                aktionszielLinkText={spielerfuehrungAktionszielLinkText}
-                onAktionszielHervorheben={setHervorgehobenesAktionszielId}
-                zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
-              />
-            )}
           </section>
         </div>
         <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} />

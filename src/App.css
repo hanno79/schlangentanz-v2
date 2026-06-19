@@ -5768,6 +5768,39 @@ code {
   background: rgba(164, 222, 2, 0.18);
 }
 
+.spielerfuehrung--waldtanz-wegweiser {
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-xl);
+  background: var(--st-color-surface-container-high, #bff7b1);
+  box-shadow: var(--st-shadow-hard);
+}
+
+.spielerfuehrung__wegweiser {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border-radius: 2rem;
+  background: radial-gradient(circle at 10% 15%, rgba(254, 203, 0, 0.72), rgba(236, 255, 227, 0.95));
+}
+
+.spielerfuehrung__kicker {
+  margin: 0;
+  color: var(--st-color-primary);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.spielerfuehrung__pfadchip {
+  justify-self: start;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  font-weight: 900;
+}
+
 .spielerfuehrung h3 {
   margin-top: 0;
   font-family: var(--st-font-headline);
@@ -5793,6 +5826,15 @@ code {
 .spielerfuehrung__aktionslink {
   display: inline-block;
   margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  text-decoration: none;
 }
 
 .aktionen-gruppe--sprungziel {
