@@ -2531,7 +2531,10 @@ code {
 
   .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] {
     display: grid;
-    grid-template-columns: minmax(7.5rem, 0.38fr) minmax(0, 1fr);
+    grid-template-columns: minmax(8.25rem, 0.34fr) minmax(13rem, 1fr);
+    grid-template-areas:
+      "titel titel"
+      "startgarten startzone";
     align-items: start;
     gap: 0.45rem 0.65rem;
     min-height: clamp(7.2rem, 18vh, 10rem);
@@ -2545,6 +2548,7 @@ code {
   }
 
   .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > h5 {
+    grid-area: titel;
     grid-column: 1 / -1;
     justify-self: start;
     margin: 0;
@@ -2569,8 +2573,15 @@ code {
   }
 
   .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangen-startzone"] {
-    grid-column: 1;
+    grid-area: startzone;
+    grid-column: 2;
+    justify-self: end;
     align-self: start;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangen-startgarten"] {
+    grid-area: startgarten;
+    align-self: stretch;
   }
 
   .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangenleiste"] {
@@ -5432,6 +5443,7 @@ code {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem 0.75rem;
+  margin-top: 0.5rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 2.2rem;
   background:
@@ -5635,6 +5647,32 @@ code {
   overflow: visible;
 }
 
+.spielbereich--game-route [class~="schlangen-startgarten"] {
+  display: grid;
+  align-content: center;
+  gap: 0.25rem;
+  min-height: clamp(5.4rem, 13vh, 7.2rem);
+  padding: 0.65rem 0.8rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.75rem;
+  background:
+    radial-gradient(circle at 22% 28%, rgba(254, 203, 0, 0.42) 0 1.55rem, transparent 1.65rem),
+    linear-gradient(150deg, rgba(236, 255, 227, 0.9), rgba(196, 253, 182, 0.64));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  font-weight: 800;
+}
+
+.spielbereich--game-route [class~="schlangen-startgarten"] strong {
+  font-family: var(--st-font-headline);
+  font-size: clamp(0.92rem, 1.4vw, 1.1rem);
+  line-height: 1.05;
+}
+
+.spielbereich--game-route [class~="schlangen-startgarten"] span {
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
 .spielbereich--game-route [class~="schlangen-startzone__faehrten"] {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -5651,6 +5689,20 @@ code {
 
 .spielbereich--game-route [class~="schlangen-startzone__faehrte"] span {
   font-size: 0.48rem;
+}
+
+@media (max-width: 1099px) {
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] {
+    grid-template-columns: minmax(7rem, 0.42fr) minmax(10rem, 1fr);
+    grid-template-areas:
+      "titel titel"
+      "startgarten startzone";
+    gap: 0.45rem 0.55rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > h5 { grid-area: titel; }
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangen-startzone"] { grid-area: startzone; justify-self: end; }
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangen-startgarten"] { grid-area: startgarten; }
 }
 
 @media (min-width: 1100px) {

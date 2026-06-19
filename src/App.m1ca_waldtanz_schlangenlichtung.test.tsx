@@ -76,7 +76,8 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
     const spaeteEigeneLichtung = cssBlock('.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-gruppe"][class~="schlangen-gruppe--eigene-lichtung"]:first-of-type')
 
     expect(eigeneLichtung).toMatch(/display:\s*grid/)
-    expect(eigeneLichtung).toMatch(/grid-template-columns:\s*minmax\(7\.5rem,\s*0\.38fr\) minmax\(0,\s*1fr\)/)
+    expect(eigeneLichtung).toMatch(/grid-template-columns:\s*minmax\(8\.25rem,\s*0\.34fr\) minmax\(13rem,\s*1fr\)/)
+    expect(eigeneLichtung).toMatch(/grid-template-areas:\s*"titel titel"\s*"startgarten startzone"/)
     expect(eigeneLichtung).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(spaeteEigeneLichtung).toMatch(/gap:\s*0\.45rem 0\.65rem/)
     expect(spaeteEigeneLichtung).toMatch(/padding:\s*0\.55rem 0\.65rem/)
