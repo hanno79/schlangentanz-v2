@@ -1862,10 +1862,10 @@ code {
     align-self: start;
     box-sizing: border-box;
     width: 100%;
-    max-height: clamp(26rem, 60vh, 34rem);
-    padding-bottom: clamp(5.6rem, 15vh, 8rem);
-    overflow: auto;
-    scrollbar-gutter: stable;
+    height: clamp(26rem, 60vh, 34rem);
+    max-height: none;
+    padding-bottom: clamp(5.2rem, 13vh, 7.2rem);
+    overflow: visible;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {

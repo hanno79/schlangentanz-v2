@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "typecheck": "tsc -b",
-    "smoke:production": "node scripts/live_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs && node scripts/m1by_spielbrettweite_smoke.mjs && node scripts/m1bz_gegner_hud_smoke.mjs && node scripts/m1ca_schlangenlichtung_smoke.mjs && node scripts/m1cb_zielranken_smoke.mjs && node scripts/m1cc_handsteg_smoke.mjs && node scripts/m1cd_startgarten_smoke.mjs"
+    "smoke:production": "node scripts/live_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs && node scripts/m1by_spielbrettweite_smoke.mjs && node scripts/m1bz_gegner_hud_smoke.mjs && node scripts/m1ca_schlangenlichtung_smoke.mjs && node scripts/m1cb_zielranken_smoke.mjs && node scripts/m1cc_handsteg_smoke.mjs && node scripts/m1cd_startgarten_smoke.mjs && node scripts/m1ce_waldstein_spielbrett_smoke.mjs"
   },
   "dependencies": {
     "react": "^19.2.6",

@@ -19,7 +19,7 @@ function cssBlockForSelector(selector: string) {
 }
 
 describe('M1ao Waldtanz-Fokusbrett', () => {
-  it('begrenzt den /game-Arenastein als scrollbare Spielbrettfläche und hält die Hand direkt danach board-nah', () => {
+  it('begrenzt den /game-Arenastein als sichtbare Spielbrettfläche und hält die Hand direkt danach board-nah', () => {
     window.history.pushState({}, '', '/game')
     render(<App />)
 
@@ -49,10 +49,11 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(waldobjekte).toBeVisible()
 
     const routeArenaBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(routeArenaBlock).toMatch(/max-height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
-    expect(routeArenaBlock).toMatch(/padding-bottom:\s*clamp\(5\.6rem,\s*15vh,\s*8rem\)/)
-    expect(routeArenaBlock).toMatch(/overflow:\s*auto/)
-    expect(routeArenaBlock).toMatch(/scrollbar-gutter:\s*stable/)
+    expect(routeArenaBlock).toMatch(/height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
+    expect(routeArenaBlock).toMatch(/max-height:\s*none/)
+    expect(routeArenaBlock).toMatch(/padding-bottom:\s*clamp\(5\.2rem,\s*13vh,\s*7\.2rem\)/)
+    expect(routeArenaBlock).toMatch(/overflow:\s*visible/)
+    expect(routeArenaBlock).not.toMatch(/scrollbar-gutter:\s*stable/)
 
     const routeZugleisteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
     expect(routeZugleisteBlock).toMatch(/grid-row:\s*4/)
