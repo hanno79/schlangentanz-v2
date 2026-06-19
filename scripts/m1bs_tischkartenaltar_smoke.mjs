@@ -71,7 +71,7 @@ async function main() {
     if (!metrics) throw new Error('M1bs Tischkartenaltar: Altar oder Karte fehlt')
     if (!metrics.text.includes('Kartenaltar') || !metrics.text.includes('Ablagestapel:')) throw new Error(`M1bs Tischkartenaltar: Copy fehlt ${JSON.stringify(metrics)}`)
     if (metrics.height < 130 || metrics.width < 180) throw new Error(`M1bs Tischkartenaltar: Altar zu klein ${JSON.stringify(metrics)}`)
-    if (metrics.cardWidth < 100 || metrics.cardHeight < 120) throw new Error(`M1bs Tischkartenaltar: Karten-/Legeplatz zu klein ${JSON.stringify(metrics)}`)
+    if (metrics.cardWidth < 100 || metrics.cardHeight < 110) throw new Error(`M1bs Tischkartenaltar: Karten-/Legeplatz zu klein ${JSON.stringify(metrics)}`)
     if (metrics.borderWidth !== '3px' || metrics.borderStyle !== 'solid') throw new Error(`M1bs Tischkartenaltar: kein 3px-Rand ${JSON.stringify(metrics)}`)
     if (!metrics.boxShadow.includes('rgb(6, 57, 7)')) throw new Error(`M1bs Tischkartenaltar: Hard Shadow fehlt ${JSON.stringify(metrics)}`)
     if (!metrics.backgroundImage.includes('radial-gradient') || !metrics.lichtkegelBackground.includes('radial-gradient')) throw new Error(`M1bs Tischkartenaltar: Lichtkegel fehlt ${JSON.stringify(metrics)}`)

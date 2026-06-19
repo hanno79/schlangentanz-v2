@@ -50,6 +50,7 @@ describe('M1br Waldtanz-Magiekreise in der Lichtung', () => {
     const liste = cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__liste"]')
     const kreis = cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__kreis"]')
     const kopf = cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__kopf"]')
+    const hinweis = cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-magiekreise"] p')
 
     expect(lichtung).toMatch(/grid-template-areas:[\s\S]*"tisch magiekreise"[\s\S]*"schlangen schlangen"/)
     expect(magiekreise).toMatch(/background:\s*transparent/)
@@ -65,6 +66,7 @@ describe('M1br Waldtanz-Magiekreise in der Lichtung', () => {
     expect(kreis).toMatch(/border-radius:\s*999px/)
     expect(kopf).toMatch(/position:\s*absolute/)
     expect(kopf).toMatch(/clip-path:\s*inset\(50%\)/)
+    expect(hinweis).toMatch(/display:\s*none/)
     expect(smokeScript).toContain('M1br Magiekreise')
     expect(smokeScript).toContain('aspectDelta > 0.18')
     expect(smokeScript).toContain('elementFromPoint')
