@@ -16,6 +16,7 @@ interface SpielstatusPanelProps {
   titelId: string
   istSpielende: boolean
   istEndspurt: boolean
+  entwicklungsdatenOffen?: boolean
 }
 
 function spielphaseLabel(spielphase: Spielzustand['spielphase']): string {
@@ -29,7 +30,7 @@ function spielphaseLabel(spielphase: Spielzustand['spielphase']): string {
   }
 }
 
-export default function SpielstatusPanel({ zustand, titelId, istSpielende, istEndspurt }: SpielstatusPanelProps) {
+export default function SpielstatusPanel({ zustand, titelId, istSpielende, istEndspurt, entwicklungsdatenOffen = true }: SpielstatusPanelProps) {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
   const phaseText = zugphaseLabel(zustand.zugphase)
   const spielphaseText = spielphaseLabel(zustand.spielphase)
@@ -50,7 +51,7 @@ export default function SpielstatusPanel({ zustand, titelId, istSpielende, istEn
           <span className="waldtanz-sonnenstand__chip">{spielphaseText}</span>
         </div>
       </div>
-      <DebugGruppe titel="Spielphase">
+      <DebugGruppe titel="Spielphase" standardOffen={entwicklungsdatenOffen} kompakteSchublade={!entwicklungsdatenOffen}>
         <p>Aktueller Spielschritt: {phaseText}</p>
         <p>Spielschritt im Zug: {phaseText}</p>
         <p>Partiestatus: {spielphaseText}</p>

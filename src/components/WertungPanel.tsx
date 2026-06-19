@@ -17,6 +17,7 @@ interface WertungPanelProps {
   istSpielende: boolean
   ergebnisText: string
   spielerNameFuerId: (spielerId: string) => string
+  entwicklungsdatenOffen?: boolean
 }
 
 function rangStatus(index: number, istAktiv: boolean): string {
@@ -34,6 +35,7 @@ export default function WertungPanel({
   istSpielende,
   ergebnisText,
   spielerNameFuerId,
+  entwicklungsdatenOffen = true,
 }: WertungPanelProps) {
   const wertungTitelId = useId()
   const rangtafelTitelId = useId()
@@ -98,7 +100,7 @@ export default function WertungPanel({
           })}
         </ul>
       </section>
-      <DebugGruppe titel="Punkteübersicht">
+      <DebugGruppe titel="Punkteübersicht" standardOffen={entwicklungsdatenOffen} kompakteSchublade={!entwicklungsdatenOffen}>
         {gesamtwertung.spielerwertungen.map(eintrag => (
           <div key={eintrag.spielerId}>
             <p>Punktestand von {spielerNameFuerId(eintrag.spielerId)}: {eintrag.gesamtPunkte} Punkte</p>

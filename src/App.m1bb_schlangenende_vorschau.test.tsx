@@ -54,7 +54,9 @@ describe('M1bb Schlangenende-Vorschau', () => {
 
     fireEvent.click(rechts)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Karte gelb-ende-m1bb an Schlange pfad-m1bb rechts anlegen')).toBeVisible()
+    const zugtafel = within(screen.getByRole('complementary', { name: 'Waldtanz-Spielhilfe' })).getByRole('region', { name: 'Waldtanz-Zugtafel' })
+    expect(within(zugtafel).getByText(/Letzte Aktion:/)).toBeVisible()
+    expect(within(zugtafel).getByText('Karte gelb-ende-m1bb an Schlange pfad-m1bb rechts anlegen')).toBeVisible()
     const kartenreihe = within(eigeneSchlange).getByRole('list', { name: 'Kartenreihe pfad-m1bb' })
     expect(within(kartenreihe).getByLabelText(/Farbkarte gelb-ende-m1bb/)).toBeVisible()
   })

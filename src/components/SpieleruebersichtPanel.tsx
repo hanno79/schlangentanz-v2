@@ -12,6 +12,7 @@ interface SpieleruebersichtPanelProps {
   spielerwertungen: SpielerWertungsEintrag[]
   aktiverSpielerId: string
   titelId: string
+  entwicklungsdatenOffen?: boolean
 }
 
 function schlangenZustandLabel(zustand: SchlangenZustand): string {
@@ -24,7 +25,7 @@ function punkteFuer(spielerId: string, wertungen: SpielerWertungsEintrag[]): num
   return wertungen.find((wertung) => wertung.spielerId === spielerId)?.gesamtPunkte ?? 0
 }
 
-export default function SpieleruebersichtPanel({ zustand, spielerwertungen, aktiverSpielerId, titelId }: SpieleruebersichtPanelProps) {
+export default function SpieleruebersichtPanel({ zustand, spielerwertungen, aktiverSpielerId, titelId, entwicklungsdatenOffen = true }: SpieleruebersichtPanelProps) {
   const aktiverSpieler = zustand.spieler.find(spieler => spieler.id === aktiverSpielerId) ?? zustand.spieler[zustand.aktiverSpielerIndex]
   const schlangenGesamt = zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)
   const handkartenGesamt = zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)
@@ -58,7 +59,7 @@ export default function SpieleruebersichtPanel({ zustand, spielerwertungen, akti
           })}
         </ol>
       </div>
-      <DebugGruppe titel="Spielerstatus">
+      <DebugGruppe titel="Spielerstatus" standardOffen={entwicklungsdatenOffen} kompakteSchublade={!entwicklungsdatenOffen}>
         {zustand.spieler.map(spieler => {
           const istAktiv = spieler.id === aktiverSpielerId
           return (

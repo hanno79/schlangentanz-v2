@@ -16,6 +16,7 @@ import DebugGruppe from './DebugGruppe'
 interface MaterialUndAufgabenPanelProps {
   zustand: Spielzustand
   istEndspurt: boolean
+  entwicklungsdatenOffen?: boolean
 }
 
 function kartenIds(karten: { id: string }[]): string {
@@ -48,7 +49,7 @@ const BASIS_SONDERKARTEN_LABEL = sonderkartenLabel(BASIS_SONDERKARTEN)
 const ERWEITERUNGS_SONDERKARTEN_LABEL = sonderkartenLabel(ERWEITERUNGS_SONDERKARTEN)
 const SONDERKARTEN_ZAUBER_ANZAHL = BASIS_SONDERKARTEN.length + ERWEITERUNGS_SONDERKARTEN.length
 
-export default function MaterialUndAufgabenPanel({ zustand, istEndspurt }: MaterialUndAufgabenPanelProps) {
+export default function MaterialUndAufgabenPanel({ zustand, istEndspurt, entwicklungsdatenOffen = true }: MaterialUndAufgabenPanelProps) {
   const materialUndAufgabenTitelId = useId()
   const aufgabenkartenTitelId = useId()
 
@@ -102,7 +103,7 @@ export default function MaterialUndAufgabenPanel({ zustand, istEndspurt }: Mater
           </ul>
         )}
       </section>
-      <DebugGruppe titel="Karten und Aufgaben">
+      <DebugGruppe titel="Karten und Aufgaben" standardOffen={entwicklungsdatenOffen} kompakteSchublade={!entwicklungsdatenOffen}>
         <p>Karten im Ablagestapel: {zustand.ablagestapel.length} Karten</p>
         <p>Karten auf dem Ablagestapel: {zustand.ablagestapel.length > 0 ? kartenIds(zustand.ablagestapel) : 'keine'}</p>
         <p>Karten im Nachziehstapel: {zustand.nachziehstapel.length} Karten</p>

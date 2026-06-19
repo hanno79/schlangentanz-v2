@@ -452,9 +452,9 @@ async function pruefeM1bfNachziehstapel(seite) {
 }
 
 async function pruefeM1bgSonnenstand(seite) {
-  const d = await seite.evaluate(() => { const s = document.querySelector('.waldtanz-sonnenstand'), p = document.querySelector('.waldtanz-sonnenstand__phase'), c = document.querySelector('.waldtanz-sonnenstand__chip'); for (const e of [s, p, c]) if (!(e instanceof HTMLElement)) throw new Error('M1bg Sonnenstand: HUD-Element fehlt'); const st = getComputedStyle(s), ps = getComputedStyle(p), cs = getComputedStyle(c); return { text: s.textContent ?? '', border: st.borderTopWidth, shadow: st.boxShadow, radius: st.borderTopLeftRadius, phaseFont: ps.fontFamily, chipBorder: cs.borderTopWidth } })
-  if (!d.text.includes('Sonnenstand') || !d.text.includes('am Zug') || !d.text.includes('Zugkarten:') || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || Number.parseFloat(d.radius) < 28 || !d.phaseFont.toLowerCase().includes('rubik') || d.chipBorder !== '2px') throw new Error(`M1bg Sonnenstand: kein chunky Status-HUD (${JSON.stringify(d)})`)
-  console.log('M1bg Sonnenstand: Spielstatus als sonniges 3px-HUD vor Debugdetails sichtbar')
+  const d = await seite.evaluate(() => { const s = document.querySelector('.waldtanz-sonnenstand'), p = document.querySelector('.waldtanz-sonnenstand__phase'), c = document.querySelector('.waldtanz-sonnenstand__chip'), dbg = [...document.querySelectorAll('.debug-gruppe-entwicklungsdaten--spielschublade .debug-gruppe')]; for (const e of [s, p, c]) if (!(e instanceof HTMLElement)) throw new Error('M1bg Sonnenstand: HUD-Element fehlt'); const st = getComputedStyle(s), ps = getComputedStyle(p), cs = getComputedStyle(c); return { text: s.textContent ?? '', border: st.borderTopWidth, shadow: st.boxShadow, radius: st.borderTopLeftRadius, phaseFont: ps.fontFamily, chipBorder: cs.borderTopWidth, schubladen: dbg.length, offene: dbg.filter((e) => e.hasAttribute('open')).length } })
+  if (!d.text.includes('Sonnenstand') || !d.text.includes('am Zug') || !d.text.includes('Zugkarten:') || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || Number.parseFloat(d.radius) < 28 || !d.phaseFont.toLowerCase().includes('rubik') || d.chipBorder !== '2px' || d.schubladen < 5 || d.offene !== 0) throw new Error(`M1bg/M1bo: kein chunky Status-HUD oder Debug-Schubladen offen (${JSON.stringify(d)})`)
+  console.log(`M1bg/M1bo: Spielstatus-HUD sichtbar, ${d.schubladen} Entwicklungsdaten-Schubladen eingeklappt`)
 }
 
 async function pruefeM1biMaterialrucksack(seite) {

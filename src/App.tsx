@@ -244,7 +244,7 @@ function App({ initialZustand }: AppProps) {
       <section id="spielbereich" className={`spielbereich spielbereich--waldtanz${istGameRoute ? ' spielbereich--game-route' : ''}${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
         <SiegerParty zustand={zustand} onNeuesSpiel={handleNeuesLobbySpiel} />
         <WaldtanzSeitenmenue spielerName={aktiverSpieler.name} punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0} zugphase={zustand.zugphase} handkarten={aktiverSpieler.hand.length} eigeneSchlangen={aktiverSpieler.schlangen.length} nachziehstapel={zustand.nachziehstapel.length} offeneAufgaben={zustand.offeneAufgaben.length} pflichtschritt={pflichtschrittLabel} />
-        <SpielstatusPanel zustand={zustand} titelId={spielstatusTitelId} istSpielende={istSpielende} istEndspurt={istEndspurt} />
+        <SpielstatusPanel zustand={zustand} titelId={spielstatusTitelId} istSpielende={istSpielende} istEndspurt={istEndspurt} entwicklungsdatenOffen={!istGameRoute} />
         <div className="spieltisch-gruppe">
           <section className="info-panel info-panel--waldtanz-arena" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">
             <h2 id={aktiverSpielerTitelId}>Aktiver Spieler</h2>
@@ -397,7 +397,7 @@ function App({ initialZustand }: AppProps) {
                 zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
               />
             )}
-            <DebugGruppe titel="Aktiver Spieler">
+            <DebugGruppe titel="Aktiver Spieler" standardOffen={!istGameRoute} kompakteSchublade={istGameRoute}>
               <p>Aktiver Spieler: {aktiverSpieler.name}</p>
               <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
               <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
@@ -421,9 +421,9 @@ function App({ initialZustand }: AppProps) {
             </DebugGruppe>
           </section>
         </div>
-        <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} />
-        <MaterialUndAufgabenPanel zustand={zustand} istEndspurt={istEndspurt} />
-        <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} />
+        <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} entwicklungsdatenOffen={!istGameRoute} />
+        <MaterialUndAufgabenPanel zustand={zustand} istEndspurt={istEndspurt} entwicklungsdatenOffen={!istGameRoute} />
+        <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} entwicklungsdatenOffen={!istGameRoute} />
       </section>
     </main>
   )
