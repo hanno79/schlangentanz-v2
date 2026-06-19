@@ -1836,6 +1836,33 @@ code {
     scrollbar-gutter: stable;
   }
 
+  .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {
+    justify-self: start;
+    width: fit-content;
+    max-width: min(100%, 24rem);
+    padding: 0.25rem 0.7rem;
+    pointer-events: none;
+    transform: rotate(-1deg);
+    background: var(--st-color-secondary-container);
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] h4 {
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] p {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] {
     grid-column: 2;
     grid-row: 3;
@@ -1849,6 +1876,7 @@ code {
 
   .spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"] {
     grid-template-columns: minmax(0, 3fr) minmax(7rem, 0.4fr);
+    margin-top: -0.35rem;
     min-height: 0;
   }
 
@@ -2015,6 +2043,7 @@ code {
     grid-template-rows: auto auto;
     gap: 0.45rem;
     padding: 0.6rem;
+    padding-top: clamp(0.35rem, 0.8vw, 0.55rem);
   }
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] {
