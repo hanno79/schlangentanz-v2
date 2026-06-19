@@ -2505,6 +2505,145 @@ code {
     padding: 0.5rem 0.65rem;
   }
 
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 0.38fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.45rem 0.65rem;
+    min-height: clamp(7.2rem, 18vh, 10rem);
+    padding: 0.55rem 0.65rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 2rem;
+    background:
+      radial-gradient(ellipse at 24% 48%, rgba(254, 203, 0, 0.32) 0 3.4rem, transparent 3.5rem),
+      linear-gradient(135deg, rgba(236, 255, 227, 0.82), rgba(164, 222, 2, 0.34));
+    box-shadow: 0 5px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > h5 {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin: 0;
+    padding: 0.18rem 0.7rem;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 2px 0 var(--st-color-border-strong);
+    font-family: var(--st-font-headline);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > [class~="schlangen-drop-hinweis"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangen-startzone"] {
+    grid-column: 1;
+    align-self: start;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangenleiste"] {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    transform: translateY(-6.3rem);
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte__anlegeplaetze"]:not([class~="schlangekarte__anlegeplaetze--vorschau"]) {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] {
+    grid-template-columns: minmax(6.5rem, 0.32fr) minmax(0, 1fr) minmax(5.2rem, 0.22fr);
+    grid-template-areas:
+      "typ pfad wertung"
+      "name pfad status";
+    align-items: center;
+    gap: 0.22rem 0.55rem;
+    min-height: 0;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__typ"] {
+    grid-area: typ;
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__name"] {
+    grid-area: name;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__badge"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__wertung"] {
+    grid-area: wertung;
+    grid-template-columns: 1fr;
+    gap: 0.08rem;
+    padding: 0.24rem 0.38rem;
+    box-shadow: 0 2px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__kartenreihe"] {
+    grid-area: pfad;
+    justify-content: center;
+    align-items: center;
+    padding-block: 0.1rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] [class~="schlangekarte__karte--spielkarte"] {
+    width: clamp(2.8rem, 3.9vw, 3.35rem);
+    min-width: 0;
+    max-width: 3.35rem;
+    padding: 0.18rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] [class~="schlangekarte__karte-eyebrow"],
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] [class~="schlangekarte__karte-typ"],
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] [class~="schlangekarte__pfadmarke"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangen-drop-hinweis"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__status"] {
+    grid-area: status;
+    font-size: 0.62rem;
+    line-height: 1;
+    font-weight: 900;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerfelder"]:not(:has(button)) {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerfelder"]:has(button) {
+    display: grid;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] > h4 {
     position: absolute;
     width: 1px;
@@ -5441,6 +5580,16 @@ code {
     border-radius: 2rem;
     background: linear-gradient(180deg, rgba(236, 255, 227, 0.78), rgba(185, 241, 172, 0.58));
     box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-gruppe"][class~="schlangen-gruppe--eigene-lichtung"]:first-of-type {
+    gap: 0.45rem 0.65rem;
+    padding: 0.55rem 0.65rem;
+    background:
+      radial-gradient(ellipse at 24% 48%, rgba(254, 203, 0, 0.32) 0 3.4rem, transparent 3.5rem),
+      linear-gradient(135deg, rgba(236, 255, 227, 0.82), rgba(164, 222, 2, 0.34));
+    box-shadow: 0 5px 0 var(--st-color-border-strong);
+    transform: translateY(-8rem);
   }
 }
 

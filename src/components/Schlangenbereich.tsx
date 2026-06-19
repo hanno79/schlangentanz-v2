@@ -267,7 +267,7 @@ export default function Schlangenbereich({
       <h4 id={titelId}>Schlangenbereich</h4>
       <p className="schlangen-dragstatus" role="status" aria-live="polite" aria-atomic="true">{dragOverStatus}</p>
       <section
-        className="schlangen-gruppe"
+        className="schlangen-gruppe schlangen-gruppe--eigene-lichtung"
         aria-labelledby={eigeneTitelId}
         onClick={handleNeueSchlangeZoneClick}
         onDragOver={handleNeueSchlangeZoneDragOver}
@@ -341,8 +341,8 @@ export default function Schlangenbereich({
                   onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
                   onDrop={(event) => handleSchlangeDrop(event, schlange.id)}
                 >
-                  <span id={schlangenLabelTypId}>Schlange</span>
-                  <strong id={schlangenLabelNameId}>{schlange.id}</strong>
+                  <span id={schlangenLabelTypId} className="schlangekarte__typ">Schlange</span>
+                  <strong id={schlangenLabelNameId} className="schlangekarte__name">{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <SchlangenWertungsplakette id={schlangenWertungId} schlange={schlange} />
                   <div className="schlangekarte__kartenreihe schlangekarte__kartenreihe--pfad" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
@@ -442,7 +442,7 @@ export default function Schlangenbereich({
                       })}
                     </div>
                   )}
-                  <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>
+                  <span className="schlangekarte__status">Status: {schlangenStatusLabel(schlange.zustand)}</span>
                 </li>
               )
             })}
@@ -468,7 +468,7 @@ export default function Schlangenbereich({
         schlangenblockadeAktionen={schlangenblockadeAktionen}
         farbendiebAktionen={farbendiebAktionen}
       />
-      <section className="schlangen-gruppe" aria-labelledby={gegnerTitelId}>
+      <section className="schlangen-gruppe schlangen-gruppe--gegnerfelder" aria-labelledby={gegnerTitelId}>
         <h5 id={gegnerTitelId}>Gegnerische Schlangen</h5>
         <GegnerSchlangenListe
           spieler={gegnerSpieler}
