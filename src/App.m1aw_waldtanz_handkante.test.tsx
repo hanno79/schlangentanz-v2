@@ -34,7 +34,7 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(handGridBlock).toMatch(/grid-row:\s*3/)
     expect(handGridBlock).toMatch(/align-self:\s*end/)
     expect(handGridBlock).toMatch(/z-index:\s*4/)
-    expect(handGridBlock).toMatch(/max-height:\s*clamp\(11\.5rem,\s*24vh,\s*13rem\)/)
+    expect(handGridBlock).toMatch(/max-height:\s*clamp\(9\.25rem,\s*20vh,\s*10\.5rem\)/)
     expect(handGridBlock).toMatch(/pointer-events:\s*none/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"] button')).toMatch(/pointer-events:\s*auto/)
 
@@ -43,7 +43,8 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(arenaBlock).toMatch(/padding-bottom:\s*clamp\(6rem,\s*17vh,\s*8\.5rem\)/)
 
     const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
-    expect(kartenBlock).toMatch(/min-height:\s*clamp\(8rem,\s*16vh,\s*9\.75rem\)/)
+    expect(kartenBlock).toMatch(/height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
+    expect(kartenBlock).toMatch(/min-height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
     expect(kartenBlock).toMatch(/overflow:\s*hidden/)
 
     expect(cssBlock('.spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"]')).toMatch(/padding-block:\s*0/)

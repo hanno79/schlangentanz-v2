@@ -1825,12 +1825,12 @@ code {
     justify-self: center;
     z-index: 4;
     width: min(100%, 55rem);
-    max-height: clamp(11.5rem, 24vh, 13rem);
+    max-height: clamp(9.25rem, 20vh, 10.5rem);
     margin-top: 0;
-    padding: 0.35rem 0.55rem;
+    padding: 0.2rem 0.45rem;
     overflow: visible;
     pointer-events: none;
-    transform: translateY(3.5rem);
+    transform: translateY(1.25rem);
   }
 
   .spielbereich--game-route [class~="handkarten-panel--waldtanz-handbuehne"] {
@@ -1858,7 +1858,7 @@ code {
   .spielbereich--game-route [class~="handkarten-buehne"] {
     position: relative;
     isolation: isolate;
-    gap: 0.35rem;
+    gap: 0.25rem;
     justify-content: flex-start;
     min-height: auto;
     padding: 0.25rem 0.4rem;
@@ -1915,9 +1915,11 @@ code {
   }
 
   .spielbereich--game-route [class~="handkarte__button--karte"] {
-    min-height: clamp(8rem, 16vh, 9.75rem);
+    box-sizing: border-box;
+    height: clamp(5.8rem, 10vh, 6.1rem);
+    min-height: clamp(5.8rem, 10vh, 6.1rem);
     overflow: hidden;
-    padding: 0.45rem;
+    padding: 0.35rem;
     gap: 0.2rem;
   }
 

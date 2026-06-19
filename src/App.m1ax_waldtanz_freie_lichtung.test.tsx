@@ -35,8 +35,8 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     expect(handkarten).toHaveClass('handkarten-panel--waldtanz-handbuehne')
 
     const handBlock = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
-    expect(handBlock).toMatch(/max-height:\s*clamp\(11\.5rem,\s*24vh,\s*13rem\)/)
-    expect(handBlock).toMatch(/padding:\s*0\.35rem\s+0\.55rem/)
+    expect(handBlock).toMatch(/max-height:\s*clamp\(9\.25rem,\s*20vh,\s*10\.5rem\)/)
+    expect(handBlock).toMatch(/padding:\s*0\.2rem\s+0\.45rem/)
     expect(handBlock).toMatch(/pointer-events:\s*none/)
 
     const buehneBlock = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]')
@@ -45,7 +45,8 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-buehne__statuschip"]')).toMatch(/display:\s*none/)
 
     const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
-    expect(kartenBlock).toMatch(/min-height:\s*clamp\(8rem,\s*16vh,\s*9\.75rem\)/)
+    expect(kartenBlock).toMatch(/height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
+    expect(kartenBlock).toMatch(/min-height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarte__idplakette"]')).toMatch(/display:\s*none/)
 
     expect(smokeScript).toContain('pruefeM1axFreieLichtung')
