@@ -49,14 +49,14 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(waldobjekte).toBeVisible()
 
     const routeArenaBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(routeArenaBlock).toMatch(/max-height:\s*clamp\(24rem,\s*52vh,\s*30\.5rem\)/)
-    expect(routeArenaBlock).toMatch(/padding-bottom:\s*clamp\(6rem,\s*17vh,\s*8\.5rem\)/)
+    expect(routeArenaBlock).toMatch(/max-height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
+    expect(routeArenaBlock).toMatch(/padding-bottom:\s*clamp\(5\.6rem,\s*15vh,\s*8rem\)/)
     expect(routeArenaBlock).toMatch(/overflow:\s*auto/)
     expect(routeArenaBlock).toMatch(/scrollbar-gutter:\s*stable/)
 
     const routeZugleisteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
     expect(routeZugleisteBlock).toMatch(/grid-row:\s*3/)
-    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(28rem,\s*62vh,\s*35rem\)/)
+    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
     expect(routeZugleisteBlock).toMatch(/overflow:\s*auto/)
 
     const routeZugleistenKinderBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > *')

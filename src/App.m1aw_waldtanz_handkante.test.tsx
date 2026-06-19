@@ -39,8 +39,8 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"] button')).toMatch(/pointer-events:\s*auto/)
 
     const arenaBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(arenaBlock).toMatch(/max-height:\s*clamp\(24rem,\s*52vh,\s*30\.5rem\)/)
-    expect(arenaBlock).toMatch(/padding-bottom:\s*clamp\(6rem,\s*17vh,\s*8\.5rem\)/)
+    expect(arenaBlock).toMatch(/max-height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
+    expect(arenaBlock).toMatch(/padding-bottom:\s*clamp\(5\.6rem,\s*15vh,\s*8rem\)/)
 
     const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
     expect(kartenBlock).toMatch(/height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)

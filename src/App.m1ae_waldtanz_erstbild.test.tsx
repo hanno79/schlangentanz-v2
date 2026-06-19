@@ -41,7 +41,7 @@ describe('M1ae Waldtanz-Erstbild', () => {
     expect(zugpfad.compareDocumentPosition(zugkompass) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(zugkompass.compareDocumentPosition(partiefortschritt) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
 
-    expect(cssBlock('.spielbereich--game-route [class~="spielbrett--waldtanz"]')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1\.65fr\)\s*minmax\(16rem,\s*0\.7fr\)/)
+    expect(cssBlock('.spielbereich--game-route [class~="spielbrett--waldtanz"]')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1\.9fr\)\s*minmax\(14rem,\s*0\.58fr\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-spielerrahmen"]')).toMatch(/grid-column:\s*1\s*\/\s*-1/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')).toMatch(/grid-column:\s*1/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')).toMatch(/grid-row:\s*3/)

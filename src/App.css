@@ -1718,13 +1718,73 @@ code {
 @media (min-width: 1100px) {
   .spielbereich--waldtanz.spielbereich--game-route {
     width: min(100%, 1500px);
-    grid-template-columns: minmax(220px, 0.48fr) minmax(0, 2.15fr);
+    grid-template-columns: minmax(9.5rem, 0.34fr) minmax(0, 2.66fr);
     grid-template-areas:
       "nav arena"
       "status arena"
       "spieler arena"
       "material wertung";
     align-items: start;
+    gap: clamp(0.65rem, 1vw, 0.9rem);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue"] {
+    top: 0.75rem;
+    gap: 0.65rem;
+    max-height: min(88vh, 48rem);
+    overflow: auto;
+    padding: 0.65rem;
+    scrollbar-gutter: stable;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__marke"] h2 {
+    font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+    line-height: 0.95;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__profil"] {
+    width: auto;
+    gap: 0.4rem;
+    padding: 0.45rem 0.55rem;
+    border-radius: 1.5rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__avatar"] {
+    width: 2.1rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__profil"] span,
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__kompass"] p {
+    font-size: 0.82rem;
+    line-height: 1.25;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__kompass"] {
+    gap: 0.45rem;
+    padding: 0.55rem;
+    border-radius: 1.4rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__statgitter"] {
+    gap: 0.3rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__statkarte"] {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.82rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__liste"] li:not(:has([class~="waldtanz-seitenmenue__punkt--aktiv"])) {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__punkt"] {
+    min-height: 2.35rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__hilfen"] {
+    display: none;
   }
 
   .spielbereich--game-route .info-panel--waldtanz-arena {
@@ -1736,7 +1796,7 @@ code {
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] {
-    grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 0.7fr);
+    grid-template-columns: minmax(0, 1.9fr) minmax(14rem, 0.58fr);
     grid-auto-rows: min-content;
     align-content: start;
     gap: clamp(0.65rem, 1.2vw, 0.9rem);
@@ -1770,8 +1830,8 @@ code {
     grid-row: 3;
     align-self: start;
     box-sizing: border-box;
-    max-height: clamp(24rem, 52vh, 30.5rem);
-    padding-bottom: clamp(6rem, 17vh, 8.5rem);
+    max-height: clamp(26rem, 60vh, 34rem);
+    padding-bottom: clamp(5.6rem, 15vh, 8rem);
     overflow: auto;
     scrollbar-gutter: stable;
   }
@@ -1782,7 +1842,7 @@ code {
     display: grid;
     gap: 0.65rem;
     align-self: start;
-    max-height: clamp(28rem, 62vh, 35rem);
+    max-height: clamp(26rem, 60vh, 34rem);
     overflow: auto;
     scrollbar-gutter: stable;
   }
