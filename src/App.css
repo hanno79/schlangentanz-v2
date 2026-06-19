@@ -1796,7 +1796,7 @@ code {
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] {
-    grid-template-columns: minmax(0, 1.9fr) minmax(14rem, 0.58fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: min-content;
     align-content: start;
     gap: clamp(0.65rem, 1.2vw, 0.9rem);
@@ -1820,9 +1820,12 @@ code {
     grid-column: 1 / -1;
     grid-row: 2;
     gap: 0.55rem;
-    max-height: clamp(11rem, 22vh, 13.5rem);
+    max-height: clamp(8rem, 16vh, 10rem);
     overflow: auto;
     scrollbar-gutter: stable;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein"] {
@@ -1830,6 +1833,7 @@ code {
     grid-row: 3;
     align-self: start;
     box-sizing: border-box;
+    width: 100%;
     max-height: clamp(26rem, 60vh, 34rem);
     padding-bottom: clamp(5.6rem, 15vh, 8rem);
     overflow: auto;
@@ -1864,12 +1868,14 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] {
-    grid-column: 2;
-    grid-row: 3;
+    grid-column: 1;
+    grid-row: 4;
     display: grid;
+    grid-template-columns: repeat(4, minmax(min(100%, 11rem), 1fr));
     gap: 0.65rem;
     align-self: start;
-    max-height: clamp(26rem, 60vh, 34rem);
+    align-items: start;
+    max-height: clamp(6.5rem, 18vh, 9rem);
     overflow: auto;
     scrollbar-gutter: stable;
   }

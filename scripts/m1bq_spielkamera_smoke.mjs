@@ -65,8 +65,10 @@ async function main() {
     const waldsteinWidth = m.waldstein.width
     if (seitenrahmenWidth > 190 || seitenrahmenWidth < 130) throw new Error(`M1bq Spielkamera: Seitenrahmen nicht kompakt (${JSON.stringify(m.seitenrahmen)})`)
     if (brettWidth < 980) throw new Error(`M1bq Spielkamera: Spieltisch zu schmal (${JSON.stringify(m.brett)})`)
-    if (waldsteinWidth < 660) throw new Error(`M1bq Spielkamera: Waldstein zu schmal (${JSON.stringify(m.waldstein)})`)
-    if (m.zugleiste.right > m.brett.right + 2 || m.waldstein.right > m.zugleiste.x - 8) throw new Error(`M1bq Spielkamera: Waldstein/Zugleiste kollidieren oder laufen aus dem Brett (${JSON.stringify(m)})`)
+    const waldstein = m.waldstein
+    const zugleiste = m.zugleiste
+    if (waldsteinWidth < 820) throw new Error(`M1bq Spielkamera: Waldstein zu schmal (${JSON.stringify(m.waldstein)})`)
+    if (zugleiste.y < waldstein.bottom || zugleiste.right > m.brett.right + 2) throw new Error(`M1bq Spielkamera: Waldstein/Zugleiste kollidieren oder laufen aus dem Brett (${JSON.stringify(m)})`)
     if (m.bodyScrollWidth > m.viewport.width + 2 || m.brett.right > m.spielbereich.right + 2) throw new Error(`M1bq Spielkamera: horizontales Clipping (${JSON.stringify(m)})`)
     if (m.handkarte.bottom > 900 || !m.handkarte.hit) throw new Error(`M1bq Spielkamera: Handkarte nicht im Erstbild klickbar (${JSON.stringify(m.handkarte)})`)
     if (errors.length > 0) throw new Error(errors.join('\n'))

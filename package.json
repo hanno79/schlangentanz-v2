@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "typecheck": "tsc -b",
-    "smoke:production": "node scripts/live_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs"
+    "smoke:production": "node scripts/live_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs && node scripts/m1by_spielbrettweite_smoke.mjs"
   },
   "dependencies": {
     "react": "^19.2.6",
