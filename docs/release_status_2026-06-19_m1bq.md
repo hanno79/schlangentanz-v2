@@ -2,7 +2,7 @@
 
 ## Status
 
-Feature-Commit `b3e6cd5 — M1bq: Waldtanz-Spielkamera verbreitern` ist auf `origin/main` und per Vercel Production auf der stabilen Alias <https://schlangentanz-v2.vercel.app> bereitgestellt. Dieser Dokumentationsstand wird als finaler Release-Nachweis ebenfalls auf die stabile Alias deployt.
+Feature-Commit `b3e6cd5 — M1bq: Waldtanz-Spielkamera verbreitern` ist auf `origin/main` und per Vercel Production auf der stabilen Alias <https://schlangentanz-v2.vercel.app> bereitgestellt. Dieser Dokumentationsstand ist als finaler Release-Nachweis ebenfalls auf die stabile Alias deployt.
 
 ## Slice
 
