@@ -209,13 +209,13 @@ async function pruefeM1axFreieLichtung(seite) {
     throw new Error(`M1ax Freie Lichtung: Startkreis bleibt zu tief unter der Handkante (${Math.round(startkreisBox.y)}px, Karte ${Math.round(ersteHandkarteBox.y)}px)`)
   }
 
-  const startkreisMitte = {
-    x: startkreisBox.x + startkreisBox.width / 2,
-    y: startkreisBox.y + Math.min(24, startkreisBox.height * 0.22),
+  const startkreisPruefpunkt = {
+    x: startkreisBox.x + startkreisBox.width * 0.75,
+    y: startkreisBox.y + Math.min(startkreisBox.height * 0.5, 68),
   }
-  const startkreisHit = await seite.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('.schlangen-startzone--magiekreis') !== null, startkreisMitte)
+  const startkreisHit = await seite.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('.schlangen-startzone--magiekreis') !== null, startkreisPruefpunkt)
   if (!startkreisHit) {
-    throw new Error(`M1ax Freie Lichtung: Startkreis ist im ersten Lichtungsbereich nicht direkt erreichbar (${JSON.stringify(startkreisMitte)})`)
+    throw new Error(`M1ax Freie Lichtung: Startkreis ist im ersten Lichtungsbereich nicht direkt erreichbar (${JSON.stringify(startkreisPruefpunkt)})`)
   }
 
   console.log(`M1ax Freie Lichtung: ${Math.round(freieLichtungsHoehe)}px Schlangenlichtung frei, Karte bei ${Math.round(ersteHandkarteBox.y)}px/${Math.round(ersteHandkarteBox.height)}px`)
@@ -310,7 +310,7 @@ async function pruefeM1bdLichtungsbrett(seite) {
 }
 
 async function pruefeM1baStartkreisVorschau(seite) {
-  const handRegion = seite.getByRole('region', { name: 'Handkarten' })
+  await seite.evaluate(() => window.scrollTo(0, 0)); const handRegion = seite.getByRole('region', { name: 'Handkarten' })
   const handkarte = handRegion.getByRole('button', { name: /Farbkarte/ }).first()
   const handkartenName = await handkarte.getAttribute('aria-label')
   const kartenId = handkartenName?.split(/\s+/)[0]
@@ -347,11 +347,11 @@ async function pruefeM1baStartkreisVorschau(seite) {
     throw new Error('M1ba Startkreis-Vorschau: Startkreis hat keine sichtbare Browser-Box')
   }
   const startzoneHit = await seite.evaluate(({ x, y }) => Boolean(document.elementFromPoint(x, y)?.closest('.schlangen-startzone')), {
-    x: startzoneBox.x + startzoneBox.width / 2,
-    y: startzoneBox.y + Math.min(startzoneBox.height - 4, Math.max(4, startzoneBox.height * 0.45)),
+    x: startzoneBox.x + startzoneBox.width * 0.75,
+    y: startzoneBox.y + Math.min(startzoneBox.height * 0.5, 68),
   })
   if (!startzoneHit) {
-    throw new Error('M1ba Startkreis-Vorschau: Startkreis-Mittelpunkt ist nicht direkt als Brettfläche klickbar')
+    throw new Error('M1ba Startkreis-Vorschau: Startkreis-Prüfpunkt ist nicht direkt als Brettfläche klickbar')
   }
 
   await startzone.click(); await seite.getByRole('complementary', { name: 'Waldtanz-Spielhilfe' }).getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText(`Neue Schlange starten mit Karte ${kartenId}`).waitFor({ state: 'visible' })

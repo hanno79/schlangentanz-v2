@@ -5192,7 +5192,7 @@ code {
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-gruppe"]:first-of-type {
     position: relative;
     z-index: 8;
-    transform: translateY(-6.1rem);
+    transform: translateY(-5.6rem);
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     border-radius: 2rem;
     background: linear-gradient(180deg, rgba(236, 255, 227, 0.78), rgba(185, 241, 172, 0.58));
