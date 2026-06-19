@@ -253,6 +253,29 @@ function App({ initialZustand }: AppProps) {
               <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} schlangengrubeAktionen={versteckeKiEinzelaktionen ? [] : schlangengrubeAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
               <aside className="waldtanz-zugseitenleiste" aria-label="Zugleiste">
                 <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
+                {istGameRoute && !istSpielende && (
+                  <aside className="waldtanz-spielhilfe" aria-label="Waldtanz-Spielhilfe">
+                    <AktiverSpielerZugtafel
+                      spieler={aktiverSpieler}
+                      punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+                      pflichtschrittLabel={pflichtschrittLabel}
+                      zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
+                      letzteAktion={letzteAktion}
+                      geheimeAufgabeText={geheimeAufgabeText}
+                    />
+                    {aktiverSpieler.steuerung === 'Mensch' && (
+                      <Spielerfuehrung
+                        pflichtschrittLabel={pflichtschrittLabel}
+                        empfohleneAktionLabel={empfohleneAktionLabel}
+                        aktionszielId={spielerfuehrungAktionszielId}
+                        aktionszielSatzText={spielerfuehrungAktionszielSatzText}
+                        aktionszielLinkText={spielerfuehrungAktionszielLinkText}
+                        onAktionszielHervorheben={setHervorgehobenesAktionszielId}
+                        zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
+                      />
+                    )}
+                  </aside>
+                )}
                 <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
                 <ZugKompass
                   zustand={zustand}
@@ -353,15 +376,17 @@ function App({ initialZustand }: AppProps) {
               kompakterBrettFallback={istGameRoute}
               zeigePhasenaktion={!istGameRoute}
             />
-            <AktiverSpielerZugtafel
-              spieler={aktiverSpieler}
-              punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
-              pflichtschrittLabel={pflichtschrittLabel}
-              zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
-              letzteAktion={letzteAktion}
-              geheimeAufgabeText={geheimeAufgabeText}
-            />
-            {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
+            {!istGameRoute && (
+              <AktiverSpielerZugtafel
+                spieler={aktiverSpieler}
+                punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+                pflichtschrittLabel={pflichtschrittLabel}
+                zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
+                letzteAktion={letzteAktion}
+                geheimeAufgabeText={geheimeAufgabeText}
+              />
+            )}
+            {!istGameRoute && !istSpielende && aktiverSpieler.steuerung === 'Mensch' && (
               <Spielerfuehrung
                 pflichtschrittLabel={pflichtschrittLabel}
                 empfohleneAktionLabel={empfohleneAktionLabel}

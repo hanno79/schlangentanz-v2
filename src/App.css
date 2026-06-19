@@ -1782,7 +1782,7 @@ code {
     display: grid;
     gap: 0.65rem;
     align-self: start;
-    max-height: clamp(24rem, 46vh, 30rem);
+    max-height: clamp(28rem, 62vh, 35rem);
     overflow: auto;
     scrollbar-gutter: stable;
   }
@@ -1830,7 +1830,7 @@ code {
     padding: 0.35rem 0.55rem;
     overflow: visible;
     pointer-events: none;
-    transform: translateY(4rem);
+    transform: translateY(3.5rem);
   }
 
   .spielbereich--game-route [class~="handkarten-panel--waldtanz-handbuehne"] {
@@ -2075,6 +2075,74 @@ code {
     grid-column: auto;
     grid-row: auto;
     width: 100%;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] {
+    max-height: clamp(12rem, 30vh, 18rem);
+    overflow: auto;
+    scrollbar-gutter: stable;
+    padding: 0.55rem;
+    gap: 0.5rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel"],
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="spielerfuehrung--waldtanz-wegweiser"] {
+    margin-top: 0;
+    padding: 0.55rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="spielerfuehrung--waldtanz-wegweiser"] {
+    order: -1;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__kopf"] {
+    gap: 0.45rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__avatar"] {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="spielerfuehrung__checkliste"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__pflicht"],
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__chips"],
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__aktion"],
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__quest"] {
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__kopf"] h3 {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__kopf"] strong,
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="waldtanz-zugtafel__kopf"] span {
+    font-size: 0.82rem;
+    line-height: 1.15;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="spielerfuehrung__wegweiser"] {
+    gap: 0.35rem;
+    padding: 0.55rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="spielerfuehrung__karte"] {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-spielhilfe"] [class~="spielerfuehrung__aktionslink"] {
+    margin-top: 0.2rem;
+    padding: 0.5rem 0.7rem;
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
   }
 
   .spielbereich--game-route [class~="zugpfad"],
@@ -2750,6 +2818,16 @@ code {
 
 .waldtanz-zugtafel__aktion strong {
   font-family: var(--st-font-headline);
+}
+
+.waldtanz-spielhilfe {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(180deg, rgba(236, 255, 227, 0.94), rgba(196, 253, 182, 0.78));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
 }
 
 .waldtanz-hud .debug-gruppe-entwicklungsdaten {

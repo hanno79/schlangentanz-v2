@@ -56,7 +56,7 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
 
     const routeZugleisteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
     expect(routeZugleisteBlock).toMatch(/grid-row:\s*3/)
-    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(24rem,\s*46vh,\s*30rem\)/)
+    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(28rem,\s*62vh,\s*35rem\)/)
     expect(routeZugleisteBlock).toMatch(/overflow:\s*auto/)
 
     const routeZugleistenKinderBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > *')
