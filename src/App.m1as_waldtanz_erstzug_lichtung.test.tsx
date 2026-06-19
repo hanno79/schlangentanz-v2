@@ -34,7 +34,7 @@ describe('M1as Waldtanz-Erstzug-Lichtung', () => {
   })
 
   it('kompaktiert die /game-Lichtung, damit Startkreis und Hand ohne innere Scrollsuche im Erstbild liegen', () => {
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"]')).toMatch(/grid-template-columns:\s*minmax\(0,\s*3fr\) minmax\(7rem,\s*0\.4fr\)/)
+    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"]')).toMatch(/grid-template-columns:\s*minmax\(0,\s*2\.55fr\) minmax\(9\.5rem,\s*0\.65fr\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')).toMatch(/grid-template-columns:\s*minmax\(8rem,\s*0\.6fr\) minmax\(12rem,\s*1\.4fr\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')).toMatch(/grid-template-rows:\s*auto auto/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__liste"]')).toMatch(/grid-template-columns:\s*repeat\(3,\s*minmax\(4\.8rem,\s*1fr\)\)/)

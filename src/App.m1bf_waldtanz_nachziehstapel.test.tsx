@@ -35,7 +35,10 @@ describe('M1bf Waldtanz-Nachziehstapel', () => {
     expect(within(nachziehstapel).getByRole('img', { name: 'Verdeckter Nachziehstapel als Kartenrücken' })).toHaveClass('waldtanz-nachziehstapel__kartenruecken')
     expect(within(nachziehstapel).getByText('Ziehstapel')).toHaveClass('waldtanz-nachziehstapel__badge')
     expect(within(nachziehstapel).getByText('Neue Handkarten warten als Waldkarten-Stapel.')).toBeVisible()
-    expect(waldobjekte.firstElementChild).toBe(nachziehstapel)
+    const taschenkopf = waldobjekte.firstElementChild as HTMLElement
+    expect(taschenkopf).toHaveClass('waldtanz-waldtaschen__kopf')
+    expect(within(taschenkopf).getByRole('heading', { name: 'Waldtaschen' })).toBeVisible()
+    expect(waldobjekte.children[1]).toBe(nachziehstapel)
     expect(nachziehstapel.compareDocumentPosition(ablage) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(ablage.compareDocumentPosition(zugspur) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(zugspur.compareDocumentPosition(aufgabentafel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()

@@ -1875,7 +1875,7 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"] {
-    grid-template-columns: minmax(0, 3fr) minmax(7rem, 0.4fr);
+    grid-template-columns: minmax(0, 2.55fr) minmax(9.5rem, 0.65fr);
     margin-top: -0.35rem;
     min-height: 0;
   }
@@ -2143,6 +2143,148 @@ code {
   .spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"] {
     max-height: min(21rem, 40vh);
     overflow: auto;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] {
+    width: min(100%, 11.5rem);
+    position: relative;
+    z-index: 8;
+    justify-self: end;
+    gap: 0.38rem;
+    max-height: min(23rem, 43vh);
+    padding: 0.05rem 0.15rem 0.35rem 0;
+    overflow: visible;
+    overflow-x: visible;
+    scroll-padding-block: 0.35rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] > :is(section, .waldtanz-waldtaschen__kopf) {
+    box-sizing: border-box;
+    min-width: 0;
+    max-height: 8.8rem;
+    overflow: hidden;
+    padding: 0.42rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 1.35rem;
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] {
+    display: grid;
+    gap: 0.12rem;
+    background: var(--st-color-secondary-container);
+    text-align: center;
+    transform: rotate(1deg);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] h4,
+  .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] p {
+    margin: 0;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] h4 {
+    font-family: var(--st-font-headline);
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] p {
+    font-size: 0.68rem;
+    font-weight: 900;
+    line-height: 1.15;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-ablage"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-aufgabentafel"] {
+    gap: 0.28rem;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] h4 {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__kopf"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-ablage__kopf"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur__kopf"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-aufgabentafel__kopf"] {
+    display: grid;
+    justify-items: center;
+    gap: 0.22rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__deckreihe"] {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.16rem;
+    justify-items: center;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__kartenruecken"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-ablage__karte"] {
+    width: min(4.2rem, 100%);
+    padding: 0.32rem;
+    border-radius: 0.9rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__kartenruecken"] strong {
+    font-size: 1.15rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-ablage__leer"] {
+    display: none;
+    padding: 0.4rem 0.5rem;
+    border-radius: 1rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur__naechster-schritt"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur__aktion"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur__naechster-schritt"] {
+    font-size: 0.72rem;
+    line-height: 1.15;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-aufgabentafel__liste"] {
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 0.32rem;
+    max-height: 4.7rem;
+    overflow: hidden;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-questkarte"] {
+    min-height: auto;
+    gap: 0.18rem;
+    padding: 0.35rem;
+    border-radius: 0.9rem;
+    transform: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-questkarte"] p,
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-questkarte__faehrte"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-questkarte__status"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__deckreihe"] p,
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-ablage__leer"] p + p,
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur__ablage"],
+  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-aufgabentafel__hinweis"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .spielbereich--game-route [class~="waldtanz-spielerrahmen__statusband"] {

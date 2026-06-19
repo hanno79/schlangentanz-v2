@@ -327,7 +327,13 @@ function App({ initialZustand }: AppProps) {
                       onAktion={fuhreAktionAus} aktionsLabel={aktionsLabel}
                     />
                   </section>
-                  <aside className="waldtanz-arenastein__waldobjekte" aria-label="Waldobjekte">
+                  <aside className="waldtanz-arenastein__waldobjekte waldtanz-waldtaschen" aria-label="Waldobjekte">
+                    {istGameRoute && (
+                      <div className="waldtanz-waldtaschen__kopf">
+                        <h4>Waldtaschen</h4>
+                        <p>Ziehstapel · Ablage · Zugspur · Quests</p>
+                      </div>
+                    )}
                     <WaldtanzNachziehstapel zustand={zustand} />
                     <WaldtanzAblage zustand={zustand} />
                     <WaldtanzZugspur zustand={zustand} letzteAktion={letzteAktion} pflichtschrittLabel={pflichtschrittLabel} />
