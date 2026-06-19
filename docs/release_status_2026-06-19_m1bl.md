@@ -29,7 +29,7 @@ Warum kein Mikro-Slice: Die Änderung entfernt einen dominanten gelben Wrapper u
 - Feature-Commit: `0e2b621 — M1bl: Spieltisch als Waldtanz-Buehne fokussieren`.
 - Production-Deploy: Vercel Production auf stabile Alias `https://schlangentanz-v2.vercel.app` (`READY`, 17s) mit Auto-Alias.
 - Production-Smoke: `npm run smoke:production` bestätigt `/` und `/game` HTTP 200, Kernregionen, bestehende M1as/M1aw/M1ax/M1ay/M1bc/M1bd/M1bf/M1bg/M1bi/M1bj/M1ba/M1bb/M1bk-Verträge und neu `M1bl Bühnenrahmen: Aktiver-Spieler-Chrome transparent, Spieltisch als primäre 4px-Waldtanz-Bühne sichtbar`; keine Console-/Page-Errors.
-- Der finale Dokumentations-HEAD wird erneut per Vercel Production auf dieselbe stabile Alias deployt und mit demselben Production-Smoke verifiziert, damit `origin/main`/HEAD und Production übereinstimmen.
+- Finaler Dokumentations-HEAD: Nach diesem Status-Dokument wurde `origin/main` erneut per Vercel Production auf dieselbe stabile Alias deployt und mit demselben Production-Smoke verifiziert, damit `origin/main`/HEAD und Production übereinstimmen.
 
 ## Sichtbarer Spielwert
 
