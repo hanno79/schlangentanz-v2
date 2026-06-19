@@ -45,7 +45,7 @@ describe('M1by Waldtanz-Spielbrettweite', () => {
     const zugleiste = cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
 
     expect(brett).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
-    expect(spielerrahmen).toMatch(/max-height:\s*clamp\(8rem,\s*16vh,\s*10rem\)/)
+    expect(spielerrahmen).toMatch(/max-height:\s*clamp\(5\.6rem,\s*11vh,\s*7\.2rem\)/)
     expect(spielerrahmen).toMatch(/background:\s*transparent/)
     expect(spielerrahmen).toMatch(/box-shadow:\s*none/)
     expect(arenastein).toMatch(/grid-column:\s*1/)

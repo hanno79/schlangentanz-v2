@@ -65,8 +65,8 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeZugleistenKinderBlock).toMatch(/grid-row:\s*auto/)
 
     const routeSpielerrahmenBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-spielerrahmen"]')
-    expect(routeSpielerrahmenBlock).toMatch(/max-height:\s*clamp\(8rem,\s*16vh,\s*10rem\)/)
-    expect(routeSpielerrahmenBlock).toMatch(/overflow:\s*auto/)
+    expect(routeSpielerrahmenBlock).toMatch(/max-height:\s*clamp\(5\.6rem,\s*11vh,\s*7\.2rem\)/)
+    expect(routeSpielerrahmenBlock).toMatch(/overflow:\s*visible/)
 
     const routeSpielfeldBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"]')
     expect(routeSpielfeldBlock).toMatch(/grid-template-columns:\s*minmax\(0,\s*2\.55fr\) minmax\(9\.5rem,\s*0\.65fr\)/)
