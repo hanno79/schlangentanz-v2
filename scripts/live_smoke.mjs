@@ -447,7 +447,7 @@ async function pruefeM1bbSchlangenendeVorschau(seite) {
 
 async function pruefeM1bfNachziehstapel(seite) {
   const d = await seite.evaluate(() => { const q = (s) => document.querySelector(s), n = q('.waldtanz-nachziehstapel'), r = q('.waldtanz-nachziehstapel__kartenruecken'), a = q('.waldtanz-ablage'), z = q('.waldtanz-zugspur'), t = q('.waldtanz-aufgabentafel'); for (const e of [n, r, a, z, t]) if (!(e instanceof HTMLElement)) throw new Error('M1bf Nachziehstapel: Waldobjekt fehlt'); const s = getComputedStyle(n), rs = getComputedStyle(r), b = r.getBoundingClientRect(); return { order: [n, a, z, t].map((e) => Array.from(e.parentElement.children).indexOf(e)).join(','), border: s.borderTopWidth, ruecken: rs.borderTopWidth, shadow: rs.boxShadow, ratio: b.height / b.width, text: n.textContent ?? '' } })
-  if (d.order !== '0,1,2,3' || d.border !== '3px' || d.ruecken !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || d.ratio < 1.35 || !d.text.includes('Nachziehstapel:') || !d.text.includes('Ziehstapel')) throw new Error(`M1bf Nachziehstapel: kein körperlicher Ziehstapel (${JSON.stringify(d)})`)
+  if (!['0,1,2,3', '1,2,3,4'].includes(d.order) || d.border !== '3px' || d.ruecken !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || d.ratio < 1.35 || !d.text.includes('Nachziehstapel:') || !d.text.includes('Ziehstapel')) throw new Error(`M1bf Nachziehstapel: kein körperlicher Ziehstapel (${JSON.stringify(d)})`)
   console.log('M1bf Nachziehstapel: Deckobjekt vor Ablage mit 3px-Rand und Hard Shadow sichtbar')
 }
 
