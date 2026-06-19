@@ -5403,6 +5403,64 @@ code {
   font-weight: 900;
 }
 
+.spielbereich--game-route [class~="waldtanz-zielspur--rankenpfad"] {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2.2rem;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.74), transparent 52%),
+    linear-gradient(135deg, rgba(254, 203, 0, 0.92), rgba(164, 222, 2, 0.7));
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
+}
+
+.spielbereich--game-route [class~="waldtanz-zielranken"] {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielranke"] {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 2.1rem;
+  padding: 0.25rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielranke"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 0.2rem);
+  width: 0.55rem;
+  height: var(--st-border-width-chunky);
+  border-radius: 999px;
+  background: var(--st-color-border-strong);
+}
+
+.spielbereich--game-route [class~="waldtanz-zielranke"]:last-child::after {
+  display: none;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur--rankenpfad"] p {
+  grid-column: 1 / -1;
+}
+
 .schlangekarte--nichtziel {
   opacity: 0.58;
   filter: saturate(0.75);

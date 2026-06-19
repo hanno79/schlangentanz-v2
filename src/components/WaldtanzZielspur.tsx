@@ -16,11 +16,16 @@ export default function WaldtanzZielspur({ karteId, zielAnzahl }: WaldtanzZielsp
   const zielText = `${zielAnzahl} ${zielAnzahl === 1 ? 'Brettziel leuchtet' : 'Brettziele leuchten'}`
 
   return (
-    <div className="waldtanz-zielspur" role="note" aria-label="Waldtanz-Zielspur">
-      <span className="waldtanz-zielspur__badge">Zielspur aktiv</span>
+    <div className="waldtanz-zielspur waldtanz-zielspur--rankenpfad" role="note" aria-label="Waldtanz-Zielspur">
+      <span className="waldtanz-zielspur__badge">Rankenpfad aktiv</span>
       <strong>Zielkarte: {karteId}</strong>
       <span className="waldtanz-zielspur__zaehler">{zielText}</span>
-      <p>Folge den sonnigen Ringen: leuchtende Startkreise, Schlangenenden und Zauberziele nehmen deine Karte direkt am Brett an.</p>
+      <ol className="waldtanz-zielranken" aria-label="Waldtanz-Zielranken">
+        <li className="waldtanz-zielranke">Handkarte</li>
+        <li className="waldtanz-zielranke">Waldlichtung</li>
+        <li className="waldtanz-zielranke">Brettziel</li>
+      </ol>
+      <p>Folge den sonnigen Ranken: leuchtende Startkreise, Schlangenenden und Zauberziele nehmen deine Karte direkt am Brett an.</p>
     </div>
   )
 }

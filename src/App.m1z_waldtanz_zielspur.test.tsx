@@ -39,7 +39,8 @@ describe('M1z Waldtanz-Zielspur', () => {
 
     expect(schlangenbereich).toHaveClass('schlangenbereich--karte-ausgewaehlt')
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
-    expect(within(zielspur).getByText('Zielspur aktiv')).toBeVisible()
+    expect(within(zielspur).getByText('Rankenpfad aktiv')).toBeVisible()
+    expect(within(zielspur).getByRole('list', { name: 'Waldtanz-Zielranken' })).toBeVisible()
     expect(within(zielspur).getByText(`Zielkarte: ${anlegekarteId}`)).toBeVisible()
     expect(within(zielspur).getByText(`${zielAnzahl} Brettziele leuchten`)).toBeVisible()
 
