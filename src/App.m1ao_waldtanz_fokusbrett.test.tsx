@@ -57,13 +57,16 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
 
     const routeZugleisteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
     expect(routeZugleisteBlock).toMatch(/grid-row:\s*4/)
-    expect(routeZugleisteBlock).toMatch(/grid-template-columns:\s*repeat\(4,\s*minmax\(min\(100%,\s*11rem\),\s*1fr\)\)/)
-    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(6\.5rem,\s*18vh,\s*9rem\)/)
-    expect(routeZugleisteBlock).toMatch(/overflow:\s*auto/)
+    expect(routeZugleisteBlock).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
+    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
+    expect(routeZugleisteBlock).toMatch(/margin-top:\s*clamp\(1\.2rem,\s*3vh,\s*1\.9rem\)/)
+    expect(routeZugleisteBlock).toMatch(/overflow:\s*visible/)
 
     const routeZugleistenKinderBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > *')
     expect(routeZugleistenKinderBlock).toMatch(/grid-column:\s*auto/)
     expect(routeZugleistenKinderBlock).toMatch(/grid-row:\s*auto/)
+    expect(routeZugleistenKinderBlock).toMatch(/max-height:\s*clamp\(4\.8rem,\s*10vh,\s*5\.8rem\)/)
+    expect(routeZugleistenKinderBlock).toMatch(/overflow:\s*hidden/)
 
     const routeSpielerrahmenBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-spielerrahmen"]')
     expect(routeSpielerrahmenBlock).toMatch(/max-height:\s*clamp\(5\.6rem,\s*11vh,\s*7\.2rem\)/)

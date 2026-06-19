@@ -252,6 +252,12 @@ function App({ initialZustand }: AppProps) {
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} schlangengrubeAktionen={versteckeKiEinzelaktionen ? [] : schlangengrubeAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
               <aside className="waldtanz-zugseitenleiste" aria-label="Zugleiste">
+                {istGameRoute && (
+                  <div className="waldtanz-unterholzleiste" role="group" aria-label="Waldtanz-Unterholzleiste">
+                    <strong>Unterholzleiste</strong>
+                    <span>{pflichtschrittLabel}</span>
+                  </div>
+                )}
                 <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
                 {istGameRoute && !istSpielende && (
                   <aside className="waldtanz-spielhilfe" aria-label="Waldtanz-Spielhilfe">

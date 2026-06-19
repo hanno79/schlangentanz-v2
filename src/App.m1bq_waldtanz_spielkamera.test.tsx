@@ -67,7 +67,7 @@ describe('M1bq Waldtanz-Spielkamera', () => {
     expect(routeWaldstein).toMatch(/overflow:\s*visible/)
     expect(routeWaldstein).toMatch(/width:\s*100%/)
     expect(routeZugleiste).toMatch(/grid-row:\s*4/)
-    expect(routeZugleiste).toMatch(/max-height:\s*clamp\(6\.5rem,\s*18vh,\s*9rem\)/)
+    expect(routeZugleiste).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
     expect(smokeScript).toContain('M1bq Spielkamera')
     expect(smokeScript).toContain('brettWidth < 980')
     expect(smokeScript).toContain('waldsteinWidth < 820')
