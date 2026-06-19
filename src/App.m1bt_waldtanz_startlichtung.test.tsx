@@ -65,7 +65,7 @@ describe('M1bt Waldtanz-Startlichtung', () => {
     expect(appCss).toMatch(/@media\s*\(min-width:\s*1100px\)\s*\{[\s\S]*\.spielbereich--game-route \[class~="schlangenbereich--waldlichtung"\] \[class~="schlangen-gruppe"\]:first-of-type\s*\{[\s\S]*transform:\s*translateY\(-2\.8rem\)/)
     expect(routeEigene).toMatch(/transform:\s*translateY\(-2\.8rem\)/)
     expect(routeEigene).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
-    expect(routeStartzone).toMatch(/min-height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.4rem\)/)
+    expect(routeStartzone).toMatch(/min-height:\s*clamp\(4\.9rem,\s*8vh,\s*5\.5rem\)/)
     expect(routeStartzone).toMatch(/overflow:\s*visible/)
     expect(routeFaehrten).toMatch(/display:\s*grid/)
     expect(routeFaehrten).toMatch(/grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/)

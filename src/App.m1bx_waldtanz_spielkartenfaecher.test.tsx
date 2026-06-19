@@ -61,6 +61,6 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     expect(smokeScript).toContain('elementFromPoint')
     expect(smokeScript).toContain('bottom > 900')
     expect(smokeScript).toContain('selectedAfter')
-    expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs')
+    expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bw_lichtung_entflechtung_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs')
   })
 })

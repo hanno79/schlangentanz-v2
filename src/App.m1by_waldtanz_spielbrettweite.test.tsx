@@ -59,6 +59,6 @@ describe('M1by Waldtanz-Spielbrettweite', () => {
     expect(smokeScript).toContain('daten.gartenkopf.height > 185')
     expect(smokeScript).toContain('waldsteinWidth < 820')
     expect(smokeScript).toContain('zugleiste.y < waldstein.bottom')
-    expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs && node scripts/m1by_spielbrettweite_smoke.mjs')
+    expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bw_lichtung_entflechtung_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs && node scripts/m1by_spielbrettweite_smoke.mjs')
   })
 })
