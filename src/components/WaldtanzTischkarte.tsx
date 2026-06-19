@@ -49,20 +49,29 @@ export default function WaldtanzTischkarte({ zustand }: WaldtanzTischkarteProps)
         <span className="waldtanz-tischkarte__badge">Waldkreis</span>
         <h4>Tischkarte im Waldkreis</h4>
       </div>
-      {letzteKarte ? (
-        <article className={kartenKlasse(letzteKarte)} aria-label={`Zuletzt ausgespielte Tischkarte ${letzteKarte.id}`}>
-          <span className="waldtanz-tischkarte__label">Zuletzt ausgespielt</span>
-          <span className="waldtanz-tischkarte__symbol" aria-hidden="true">{kartenSymbol(letzteKarte)}</span>
-          <strong>{letzteKarte.id}</strong>
-          <span className="waldtanz-tischkarte__typ">{kartenTypLabel(letzteKarte)}</span>
-          <span className="waldtanz-tischkarte__wert">{kartenWertLabel(letzteKarte)}</span>
-        </article>
-      ) : (
-        <div className="waldtanz-tischkarte__leer">
-          <strong>Noch keine Tischkarte</strong>
-          <p>Die nächste ausgespielte Sonder- oder Abwurfkarte landet hier im Blickfeld.</p>
+      <div className="waldtanz-tischkarte__altar" role="group" aria-label="Waldtanz-Kartenaltar">
+        <div className="waldtanz-tischkarte__altar-kopf">
+          <span className="waldtanz-tischkarte__altar-label">Kartenaltar</span>
+          <span className="waldtanz-tischkarte__stapel">Ablagestapel: {anzahl} Karten</span>
         </div>
-      )}
+        <div className="waldtanz-tischkarte__lichtkegel" aria-hidden="true" />
+        {letzteKarte ? (
+          <article className={`${kartenKlasse(letzteKarte)} waldtanz-tischkarte__karte--altar`} aria-label={`Zuletzt ausgespielte Tischkarte ${letzteKarte.id}`}>
+            <span className="waldtanz-tischkarte__label">Zuletzt ausgespielt</span>
+            <span className="waldtanz-tischkarte__lichttext">Spielkarte im Lichtkegel</span>
+            <span className="waldtanz-tischkarte__symbol" aria-hidden="true">{kartenSymbol(letzteKarte)}</span>
+            <strong>{letzteKarte.id}</strong>
+            <span className="waldtanz-tischkarte__typ">{kartenTypLabel(letzteKarte)}</span>
+            <span className="waldtanz-tischkarte__wert">{kartenWertLabel(letzteKarte)}</span>
+          </article>
+        ) : (
+          <div className="waldtanz-tischkarte__leer">
+            <span className="waldtanz-tischkarte__label">Freier Lichtkegel</span>
+            <strong>Noch keine Tischkarte</strong>
+            <p>Die nächste ausgespielte Sonder- oder Abwurfkarte landet hier im Blickfeld.</p>
+          </div>
+        )}
+      </div>
       {darunterKarte && <p className="waldtanz-tischkarte__darunter">Darunter wartet {darunterKarte.id}</p>}
     </section>
   )
