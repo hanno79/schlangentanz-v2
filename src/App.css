@@ -5876,6 +5876,31 @@ code {
   overflow: visible;
 }
 
+.schlangen-startzone__hauptflaeche {
+  display: grid;
+  justify-items: center;
+  gap: inherit;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.schlangen-startzone__hauptflaeche.schlangen-startzone--magiekreis {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.schlangen-startzone__hauptflaeche:focus-visible {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
 .spielbereich--game-route [class~="schlangen-startgarten"] {
   display: grid;
   align-content: center;
@@ -5911,9 +5936,14 @@ code {
 
 .spielbereich--game-route [class~="schlangen-startzone__faehrte"] {
   min-width: 0;
-  padding: 0.04rem 0.12rem;
   font-size: 0.52rem;
   line-height: 1;
+}
+
+.spielbereich--game-route [class~="schlangen-startzone__faehrte-button"] {
+  min-width: 0;
+  min-height: 1.55rem;
+  padding: 0.04rem 0.12rem;
 }
 
 .spielbereich--game-route [class~="schlangen-startzone__badge"] {
@@ -5985,6 +6015,7 @@ code {
 }
 
 .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone"] > [class~="schlangen-drop-hinweis"],
+.spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone__hauptflaeche"] > [class~="schlangen-drop-hinweis"],
 .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] [class~="schlangen-startzone__titel"] + [class~="schlangen-startzone__titel"] {
   display: none;
 }
@@ -6022,19 +6053,36 @@ code {
 }
 
 .schlangen-startzone__faehrte {
-  display: grid;
-  gap: 0.08rem;
-  min-width: 5.4rem;
-  padding: 0.22rem 0.5rem;
-  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
-  border-radius: 999px;
-  background: linear-gradient(180deg, var(--st-color-primary-container), var(--st-color-secondary-container));
-  box-shadow: 0 3px 0 var(--st-color-border-strong);
   transform: rotate(-1deg);
 }
 
 .schlangen-startzone__faehrte:nth-child(even) {
   transform: rotate(1deg);
+}
+
+.schlangen-startzone__faehrte-button {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 5.4rem;
+  min-height: 2.15rem;
+  padding: 0.22rem 0.5rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--st-color-primary-container), var(--st-color-secondary-container));
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  color: var(--st-color-text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.schlangen-startzone__faehrte-button:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.schlangen-startzone__faehrte-button:focus-visible {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 2px;
 }
 
 .schlangen-startzone__faehrte-id {

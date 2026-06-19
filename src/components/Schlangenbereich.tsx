@@ -165,7 +165,8 @@ export default function Schlangenbereich({
   }
 
   function handleNeueSchlangeZoneClick(event: MouseEvent<HTMLElement>) {
-    if ((event.target as HTMLElement).closest('button, li.schlangekarte--eigene')) {
+    const ziel = event.target as HTMLElement
+    if (ziel.closest('.schlangen-startzone__faehrte-button') || ziel.closest('li.schlangekarte--eigene')) {
       return
     }
 
@@ -285,7 +286,10 @@ export default function Schlangenbereich({
           startzoneIstZielbereit={startzoneIstZielbereit}
           dragOverStartzone={dragOverZone?.kind === 'startzone'}
           ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
-          startfaehrtenIds={istGameRoute ? neueSchlangeStartenAktionen.map((aktion) => aktion.handkartenId) : []}
+          startfaehrten={istGameRoute ? neueSchlangeStartenAktionen.map((aktion) => ({
+            kartenId: aktion.handkartenId,
+            onAuswaehlen: () => onAktion(aktion),
+          })) : []}
           onClick={(event) => { event.stopPropagation(); handleNeueSchlangeZoneClick(event) }}
           onKeyDown={handleNeueSchlangeZoneKeyDown}
           onDragOver={(event) => { event.stopPropagation(); handleNeueSchlangeZoneDragOver(event) }}

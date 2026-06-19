@@ -42,8 +42,8 @@ describe('M1bt Waldtanz-Startlichtung', () => {
     expect(startkreis.compareDocumentPosition(hand) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(within(startkreis).getByText('Startkreis')).toHaveClass('schlangen-startzone__badge')
     expect(within(startkreis).getByText('Leuchtender Startplatz')).toBeVisible()
-    expect(within(startkreis).getAllByText(/Startfährte/)).toHaveLength(5)
-    expect(within(startkreis).getByText('blau-01')).toBeVisible()
+    expect(within(startkreis.closest('.schlangen-startzone') as HTMLElement).getAllByText(/Startfährte/)).toHaveLength(5)
+    expect(within(startkreis.closest('.schlangen-startzone') as HTMLElement).getByText('blau-01')).toBeVisible()
   })
 
   it('legt CSS- und Browser-Smoke-Vertrag ab, damit der Startkreis nicht von der Handbank überdeckt wird', () => {

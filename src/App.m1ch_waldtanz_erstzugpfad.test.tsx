@@ -35,7 +35,7 @@ describe('M1ch Waldtanz-Erstzugpfad', () => {
     expect(within(tischkarte).getByText('Kartenaltar')).toBeVisible()
     expect(within(startkreis).getByText('Startkreis')).toBeVisible()
     expect(within(startgarten).getByText('Noch keine eigene Schlange')).toBeVisible()
-    expect(within(startkreis).getAllByText('Startfährte').length).toBeGreaterThanOrEqual(3)
+    expect(within(startkreis.closest('.schlangen-startzone') as HTMLElement).getAllByText('Startfährte').length).toBeGreaterThanOrEqual(3)
     expect(within(handbank).getByText(/Deine Hand/)).toBeVisible()
     expect(tischkarte.compareDocumentPosition(startkreis) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(startkreis.compareDocumentPosition(handbank) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()

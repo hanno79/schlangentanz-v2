@@ -38,7 +38,8 @@ describe('M1be Waldtanz-Startfährten', () => {
 
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
     const startkreis = within(schlangenbereich).getByRole('button', { name: 'Neue Schlange starten' })
-    const startfaehrten = within(startkreis).getByRole('list', { name: 'Startfährten im Startkreis' })
+    const startzone = startkreis.closest('.schlangen-startzone') as HTMLElement
+    const startfaehrten = within(startzone).getByRole('list', { name: 'Startfährten im Startkreis' })
 
     expect(within(startfaehrten).getAllByText('Startfährte')).toHaveLength(2)
     expect(within(startfaehrten).getByText('gelb-start-m1be')).toHaveClass('schlangen-startzone__faehrte-id')
@@ -56,8 +57,8 @@ describe('M1be Waldtanz-Startfährten', () => {
   it('legt den Stitch-Vertrag für Startfährten und die untergeordnete Startliste CSS-seitig ab', () => {
     expect(cssBlock('.schlangen-startzone__faehrten')).toMatch(/display:\s*flex/)
     expect(cssBlock('.schlangen-startzone__faehrten')).toMatch(/list-style:\s*none/)
-    expect(cssBlock('.schlangen-startzone__faehrte')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
-    expect(cssBlock('.schlangen-startzone__faehrte')).toMatch(/box-shadow:\s*0 3px 0 var\(--st-color-border-strong\)/)
+    expect(cssBlock('.schlangen-startzone__faehrte-button')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
+    expect(cssBlock('.schlangen-startzone__faehrte-button')).toMatch(/box-shadow:\s*0 3px 0 var\(--st-color-border-strong\)/)
     expect(cssBlock('.schlangen-startzone__faehrte-id')).toMatch(/font-family:\s*var\(--st-font-headline\)/)
     expect(cssBlock('.spielbereich--game-route [class~="schlangekarte__anlegeaktionen--starten"]')).toMatch(/display:\s*none/)
   })

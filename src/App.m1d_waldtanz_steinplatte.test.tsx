@@ -40,7 +40,7 @@ describe('M1d Waldtanz-Steinplatte', () => {
     const startzone = within(schlangenbereich).getByRole('button', { name: 'Neue Schlange starten' })
 
     expect(schlangenbereich).toHaveClass('schlangenbereich--waldlichtung')
-    expect(startzone).toHaveClass('schlangen-startzone')
+    expect(startzone.closest('.schlangen-startzone')).toHaveClass('schlangen-startzone')
     expect(within(schlangenbereich).getByText('steinplatte-du')).toBeInTheDocument()
     expect(within(schlangenbereich).getByText('steinplatte-gegner')).toBeInTheDocument()
     expect(schlangenbereich.compareDocumentPosition(handkarten) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
