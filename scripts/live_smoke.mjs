@@ -88,6 +88,7 @@ async function browserSmoke() {
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
     await pruefeM1bkZugtafel(seite)
+    await pruefeM1blBuehnenrahmen(seite)
 
     await seite.waitForTimeout(500)
 
@@ -474,22 +475,21 @@ async function pruefeM1bkZugtafel(seite) {
   if (!d.text.includes('Waldtanz-Zugtafel') || !d.text.includes('Persönliche Quest:') || !d.text.includes('Noch keine Aktion ausgeführt.') || !d.order || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || d.width < 150 || d.height < 100) throw new Error(`M1bk Zugtafel: kein körperlicher Aktiver-Zug vor Debugdaten (${JSON.stringify(d)})`)
   await seite.getByRole('region', { name: 'Empfohlene Aktion' }).getByRole('button', { name: /Neue Schlange starten/ }).click(); await seite.getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText(/Letzte Aktion:/).waitFor(); await seite.getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText('1 Schlange').waitFor(); console.log('M1bk Zugtafel: Aktiver Zug vor Debugdaten mit Persönlicher Quest, 3px-Rand und Aktionsupdate sichtbar')
 }
+async function pruefeM1blBuehnenrahmen(seite) {
+  await seite.goto(erstelleUrl('/game'), { waitUntil: 'networkidle' })
+  const d = await seite.evaluate(() => { const a = document.querySelector('.info-panel--waldtanz-arena'), b = document.querySelector('.spielbrett--waldtanz'), h2 = a?.querySelector('h2'), h3 = b?.querySelector('h3'); for (const e of [a, b, h2, h3]) if (!(e instanceof HTMLElement)) throw new Error('M1bl Bühnenrahmen: Arena, Spielbrett oder Wrapper-Titel fehlen'); const as = getComputedStyle(a), bs = getComputedStyle(b), h2s = getComputedStyle(h2), h3s = getComputedStyle(h3); return { arenaBg: as.backgroundColor, arenaBorder: as.borderTopColor, arenaShadow: as.boxShadow, arenaPad: as.paddingTop, brettBorder: bs.borderTopWidth, brettShadow: bs.boxShadow, h2Clip: h2s.clipPath, h3Clip: h3s.clipPath, h2Box: h2.getBoundingClientRect().width, h3Box: h3.getBoundingClientRect().width } })
+  if (d.arenaBg !== 'rgba(0, 0, 0, 0)' || d.arenaBorder !== 'rgba(0, 0, 0, 0)' || d.arenaShadow !== 'none' || d.arenaPad !== '0px' || d.brettBorder !== '4px' || !d.brettShadow.includes('rgb(6, 57, 7)') || d.h2Clip !== 'inset(50%)' || d.h3Clip !== 'inset(50%)' || d.h2Box > 2 || d.h3Box > 2) throw new Error(`M1bl Bühnenrahmen: Wrapper-Chrome verdrängt noch den Spieltisch (${JSON.stringify(d)})`)
+  console.log('M1bl Bühnenrahmen: Aktiver-Spieler-Chrome transparent, Spieltisch als primäre 4px-Waldtanz-Bühne sichtbar')
+}
 async function kernTextSichtbar(seite, text) {
-  const regionSichtbar = await seite.getByRole('region', { name: text, exact: true }).first().isVisible().catch(() => false)
-  if (regionSichtbar) return true
-
-  const headingSichtbar = await seite.getByRole('heading', { name: text, exact: true }).first().isVisible().catch(() => false)
-  if (headingSichtbar) return true
-
-  return seite.getByText(text, { exact: true }).first().isVisible().catch(() => false)
+  const kandidaten = [seite.getByRole('region', { name: text, exact: true }), seite.getByRole('heading', { name: text, exact: true }), seite.getByText(text, { exact: true })]
+  for (const kandidat of kandidaten) if (await kandidat.first().isVisible().catch(() => false)) return true
+  return false
 }
 
 async function main() {
   if (process.argv.includes('--self-test')) return console.log(erstelleSelbsttestAusgabe())
-  validiereBasisUrl()
-  await Promise.all(ROUTEN.map(httpPruefen))
-  await browserSmoke()
-  console.log('R107 Production-Smoke bestanden')
+  validiereBasisUrl(); await Promise.all(ROUTEN.map(httpPruefen)); await browserSmoke(); console.log('R107 Production-Smoke bestanden')
 }
 
 try {

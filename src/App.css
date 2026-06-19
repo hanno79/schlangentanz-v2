@@ -1729,7 +1729,10 @@ code {
 
   .spielbereich--game-route .info-panel--waldtanz-arena {
     min-height: 0;
-    padding: clamp(0.75rem, 1.2vw, 1rem);
+    padding: 0;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] {
@@ -1738,11 +1741,19 @@ code {
     align-content: start;
     gap: clamp(0.65rem, 1.2vw, 0.9rem);
     min-height: 0;
+    border: 4px solid var(--st-color-border-strong);
+    box-shadow: 0 8px 0 var(--st-color-border-strong), inset 0 0 0 2px rgba(255, 255, 255, 0.35);
   }
 
+  .spielbereich--game-route .info-panel--waldtanz-arena > h2,
   .spielbereich--game-route [class~="spielbrett--waldtanz"] > h3 {
-    grid-column: 1 / -1;
-    margin-bottom: -0.15rem;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .spielbereich--game-route [class~="waldtanz-spielerrahmen"] {
