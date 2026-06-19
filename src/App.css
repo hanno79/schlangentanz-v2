@@ -1890,7 +1890,7 @@ code {
     padding: 0.2rem 0.45rem;
     overflow: visible;
     pointer-events: none;
-    transform: translateY(1.25rem);
+    transform: translateY(2rem);
   }
 
   .spielbereich--game-route [class~="handkarten-panel--waldtanz-handbuehne"] {
@@ -2089,7 +2089,7 @@ code {
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangenbereich--waldlichtung"] {
     grid-area: schlangen;
-    margin-top: -2.6rem;
+    margin-top: -3.2rem;
     position: relative;
     z-index: 6;
     padding: clamp(0.25rem, 0.8vw, 0.5rem);

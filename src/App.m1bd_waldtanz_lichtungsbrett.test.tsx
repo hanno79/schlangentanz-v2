@@ -46,7 +46,7 @@ describe('M1bd Waldtanz-Lichtungsbrett', () => {
     expect(lichtungsBlock).toMatch(/align-content:\s*start/)
     expect(lichtungsBlock).toMatch(/background:[\s\S]*radial-gradient\(ellipse at 50% 62%/)
     expect(lichtungsBlock).toMatch(/align-items:\s*start/)
-    expect(schlangenBlock).toMatch(/margin-top:\s*-2\.6rem/)
+    expect(schlangenBlock).toMatch(/margin-top:\s*-3\.2rem/)
     expect(schlangenBlock).toMatch(/position:\s*relative/)
     expect(schlangenBlock).toMatch(/z-index:\s*6/)
     expect(schlangenBlock).toMatch(/background:\s*transparent/)
