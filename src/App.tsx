@@ -243,7 +243,7 @@ function App({ initialZustand }: AppProps) {
       )}
       <section id="spielbereich" className={`spielbereich spielbereich--waldtanz${istGameRoute ? ' spielbereich--game-route' : ''}${istSpielende ? ' spielbereich--mit-sieger-party' : ''}`} aria-label="Spielbereich">
         <SiegerParty zustand={zustand} onNeuesSpiel={handleNeuesLobbySpiel} />
-        <WaldtanzSeitenmenue spielerName={aktiverSpieler.name} punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0} zugphase={zustand.zugphase} handkarten={aktiverSpieler.hand.length} eigeneSchlangen={aktiverSpieler.schlangen.length} nachziehstapel={zustand.nachziehstapel.length} offeneAufgaben={zustand.offeneAufgaben.length} pflichtschritt={pflichtschrittLabel} />
+        <WaldtanzSeitenmenue spielerName={aktiverSpieler.name} punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0} zugphase={zustand.zugphase} handkarten={aktiverSpieler.hand.length} eigeneSchlangen={aktiverSpieler.schlangen.length} nachziehstapel={zustand.nachziehstapel.length} offeneAufgaben={zustand.offeneAufgaben.length} pflichtschritt={pflichtschrittLabel} kompakteRanke={istGameRoute} />
         <SpielstatusPanel zustand={zustand} titelId={spielstatusTitelId} istSpielende={istSpielende} istEndspurt={istEndspurt} entwicklungsdatenOffen={!istGameRoute} />
         <div className="spieltisch-gruppe">
           <section className="info-panel info-panel--waldtanz-arena" aria-labelledby={aktiverSpielerTitelId} aria-live="polite" aria-atomic="true">

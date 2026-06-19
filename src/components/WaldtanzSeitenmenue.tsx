@@ -14,6 +14,7 @@ interface WaldtanzSeitenmenueProps {
   nachziehstapel: number
   offeneAufgaben: number
   pflichtschritt: string
+  kompakteRanke?: boolean
 }
 
 const navigation = [
@@ -32,9 +33,10 @@ export default function WaldtanzSeitenmenue({
   nachziehstapel,
   offeneAufgaben,
   pflichtschritt,
+  kompakteRanke = false,
 }: WaldtanzSeitenmenueProps) {
   return (
-    <aside className="waldtanz-seitenmenue" aria-label="Waldtanz-Spielrahmen">
+    <aside className={`waldtanz-seitenmenue${kompakteRanke ? ' waldtanz-seitenmenue--seitenranke' : ''}`} aria-label="Waldtanz-Spielrahmen">
       <div className="waldtanz-seitenmenue__marke">
         <h2>Schlangentanz</h2>
       </div>
@@ -48,6 +50,13 @@ export default function WaldtanzSeitenmenue({
       </section>
       <section className="waldtanz-seitenmenue__kompass" aria-label="Waldtanz-Kompass">
         <strong>Waldtanz-Kompass</strong>
+        {kompakteRanke && (
+          <div className="waldtanz-seitenmenue__rankenwerte" aria-label="Seitenranken-Werte">
+            <span className="waldtanz-seitenmenue__rankenchip" aria-label={`Phase: ${zugphase}`}>Phase<br />{zugphase}</span>
+            <span className="waldtanz-seitenmenue__rankenchip" aria-label={`Handkarten: ${handkarten}`}>Hand<br />{handkarten}</span>
+            <span className="waldtanz-seitenmenue__rankenchip" aria-label={`Offene Quests: ${offeneAufgaben}`}>Quest<br />{offeneAufgaben}</span>
+          </div>
+        )}
         <div className="waldtanz-seitenmenue__statgitter">
           <span className="waldtanz-seitenmenue__statkarte">Phase: {zugphase}</span>
           <span className="waldtanz-seitenmenue__statkarte">Handkarten: {handkarten}</span>

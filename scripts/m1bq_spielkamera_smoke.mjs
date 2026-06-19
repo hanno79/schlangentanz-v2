@@ -2,7 +2,7 @@
 Author: rahn
 Datum: 19.06.2026
 Version: 1.0
-Beschreibung: M1bq Browser-Smoke fuer die breite Waldtanz-Spielkamera auf /game.
+Beschreibung: M1bq Browser-Smoke fuer die rankenschmale Waldtanz-Spielkamera auf /game.
 */
 
 import { chromium } from 'playwright'
@@ -63,7 +63,7 @@ async function main() {
     const seitenrahmenWidth = m.seitenrahmen.width
     const brettWidth = m.brett.width
     const waldsteinWidth = m.waldstein.width
-    if (seitenrahmenWidth > 190 || seitenrahmenWidth < 130) throw new Error(`M1bq Spielkamera: Seitenrahmen nicht kompakt (${JSON.stringify(m.seitenrahmen)})`)
+    if (seitenrahmenWidth > 128 || seitenrahmenWidth < 90) throw new Error(`M1bq Spielkamera: Seitenrahmen nicht rankenschmal (${JSON.stringify(m.seitenrahmen)})`)
     if (brettWidth < 980) throw new Error(`M1bq Spielkamera: Spieltisch zu schmal (${JSON.stringify(m.brett)})`)
     const waldstein = m.waldstein
     const zugleiste = m.zugleiste
