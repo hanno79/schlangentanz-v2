@@ -52,7 +52,7 @@ describe('M1bd Waldtanz-Lichtungsbrett', () => {
     expect(schlangenBlock).toMatch(/background:\s*transparent/)
     expect(schlangenBlock).toMatch(/border-color:\s*transparent/)
     expect(schlangenBlock).toMatch(/box-shadow:\s*none/)
-    expect(schlangenBlock).toMatch(/overflow:\s*auto/)
+    expect(schlangenBlock).toMatch(/overflow:\s*visible/)
     expect(gruppenBlock).toMatch(/background:\s*rgba\(236, 255, 227, 0\.58\)/)
     expect(gruppenBlock).toMatch(/border:\s*2px solid rgba\(6, 57, 7, 0\.32\)/)
   })

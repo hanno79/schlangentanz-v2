@@ -44,6 +44,6 @@ describe('M1as Waldtanz-Erstzug-Lichtung', () => {
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise"]')).toMatch(/grid-area:\s*magiekreise/)
     expect(cssBlock('.spielbereich--game-route [class~="schlangenbereich--waldlichtung"]')).toMatch(/min-height:\s*7\.5rem/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangenbereich--waldlichtung"]')).toMatch(/grid-area:\s*schlangen/)
-    expect(cssBlock('.spielbereich--game-route [class~="schlangenbereich--waldlichtung"]')).toMatch(/overflow:\s*auto/)
+    expect(cssBlock('.spielbereich--game-route [class~="schlangenbereich--waldlichtung"]')).toMatch(/overflow:\s*visible/)
   })
 })
