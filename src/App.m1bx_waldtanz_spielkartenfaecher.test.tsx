@@ -50,7 +50,7 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     const statuschip = cssBlock('.spielbereich--game-route [class~="handkarten-buehne__statuschip--spielbar"]')
 
     expect(panel).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
-    expect(panel).toMatch(/transform:\s*translateY\(2rem\)/)
+    expect(panel).toMatch(/transform:\s*translateY\(1rem\)/)
     expect(liste).toMatch(/align-items:\s*end/)
     expect(liste).toMatch(/perspective:\s*1100px/)
     expect(handkarte).toMatch(/width:\s*clamp\(5\.8rem,\s*7\.4vw,\s*6\.9rem\)/)

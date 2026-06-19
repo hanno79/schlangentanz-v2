@@ -1999,7 +1999,7 @@ code {
     padding: 0.2rem 0.45rem;
     overflow: visible;
     pointer-events: none;
-    transform: translateY(2rem);
+    transform: translateY(1rem);
   }
 
   .spielbereich--game-route [class~="handkarten-panel--waldtanz-handbuehne"] {
@@ -2171,6 +2171,10 @@ code {
     width: min(100%, 22rem);
     z-index: 14;
     margin-top: clamp(-5.8rem, -9vh, -5rem);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenazug--wartet"] {
+    pointer-events: none;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenazug__schild"] {
@@ -5708,7 +5712,7 @@ code {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem 0.75rem;
-  margin-top: 4.25rem;
+  margin-top: 6rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 2.2rem;
   background:

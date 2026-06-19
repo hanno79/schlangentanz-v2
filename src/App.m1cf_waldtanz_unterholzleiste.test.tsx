@@ -77,6 +77,7 @@ describe('M1cf Waldtanz-Unterholzleiste', () => {
     const kinder = cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > *')
     const interaktiveKinder = cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > :has(button)')
     const unterholz = cssBlock('.spielbereich--game-route [class~="waldtanz-unterholzleiste"]')
+    const wartenderArenazug = cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug--wartet"]')
 
     expect(zugleiste).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
     expect(zugleiste).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
@@ -87,6 +88,7 @@ describe('M1cf Waldtanz-Unterholzleiste', () => {
     expect(interaktiveKinder).toMatch(/max-height:\s*none/)
     expect(interaktiveKinder).toMatch(/overflow:\s*visible/)
     expect(unterholz).toMatch(/background:\s*var\(--st-color-secondary-container\)/)
+    expect(wartenderArenazug).toMatch(/pointer-events:\s*none/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > [class~="waldtanz-bonuszauber"]')).toMatch(/overflow:\s*hidden/)
     expect(packageJson).toContain('node scripts/m1cf_unterholzleiste_smoke.mjs')
     expect(smokeScript).toContain('M1cf Unterholzleiste')
