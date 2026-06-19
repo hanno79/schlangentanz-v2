@@ -62,7 +62,7 @@ describe('M1bq Waldtanz-Spielkamera', () => {
     expect(routeRahmen).toMatch(/overflow:\s*auto/)
     expect(routeNichtAktiveNav).toMatch(/display:\s*none/)
     expect(routeBrett).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
-    expect(routeWaldstein).toMatch(/height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
+    expect(routeWaldstein).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
     expect(routeWaldstein).toMatch(/max-height:\s*none/)
     expect(routeWaldstein).toMatch(/overflow:\s*visible/)
     expect(routeWaldstein).toMatch(/width:\s*100%/)

@@ -1866,7 +1866,7 @@ code {
     grid-column: 1 / -1;
     grid-row: 2;
     gap: 0;
-    max-height: clamp(5.6rem, 11vh, 7.2rem);
+    max-height: clamp(4.8rem, 9vh, 5.8rem);
     overflow: visible;
     padding: 0;
     background: transparent;
@@ -1908,7 +1908,7 @@ code {
     align-self: start;
     box-sizing: border-box;
     width: 100%;
-    height: clamp(26rem, 60vh, 34rem);
+    height: clamp(32.5rem, 58vh, 33rem);
     max-height: none;
     padding-bottom: clamp(5.2rem, 13vh, 7.2rem);
     overflow: visible;
@@ -1950,7 +1950,7 @@ code {
     align-self: start;
     align-items: start;
     max-height: clamp(5.4rem, 12vh, 6.6rem);
-    margin-top: clamp(1.2rem, 3vh, 1.9rem);
+    margin-top: clamp(0.25rem, 0.8vh, 0.55rem);
     overflow: visible;
   }
 
@@ -2168,6 +2168,25 @@ code {
     grid-column: 1 / -1;
     grid-row: 5;
     justify-self: end;
+    width: min(100%, 22rem);
+    z-index: 14;
+    margin-top: clamp(-5.8rem, -9vh, -5rem);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenazug__schild"] {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.45rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenazug__wartehinweis"] {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenazug__hauptknopf"] {
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"] {

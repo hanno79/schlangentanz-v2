@@ -37,7 +37,7 @@ describe('M1ce Waldstein-Spielbrett', () => {
     expect(within(lichtung).getByRole('button', { name: 'Neue Schlange starten' })).toBeVisible()
 
     const routeArena = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(routeArena).toMatch(/height:\s*clamp\(26rem,\s*60vh,\s*34rem\)/)
+    expect(routeArena).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
     expect(routeArena).toMatch(/overflow:\s*visible/)
     expect(routeArena).not.toMatch(/overflow:\s*auto/)
     expect(routeArena).not.toMatch(/scrollbar-gutter:\s*stable/)

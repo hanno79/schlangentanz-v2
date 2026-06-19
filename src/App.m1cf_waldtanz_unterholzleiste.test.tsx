@@ -80,7 +80,7 @@ describe('M1cf Waldtanz-Unterholzleiste', () => {
 
     expect(zugleiste).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
     expect(zugleiste).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
-    expect(zugleiste).toMatch(/margin-top:\s*clamp\(1\.2rem,\s*3vh,\s*1\.9rem\)/)
+    expect(zugleiste).toMatch(/margin-top:\s*clamp\(0\.25rem,\s*0\.8vh,\s*0\.55rem\)/)
     expect(zugleiste).toMatch(/overflow:\s*visible/)
     expect(kinder).toMatch(/max-height:\s*clamp\(4\.8rem,\s*10vh,\s*5\.8rem\)/)
     expect(kinder).toMatch(/overflow:\s*hidden/)

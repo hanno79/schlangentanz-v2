@@ -51,7 +51,7 @@ describe('M1bz Waldtanz-Gegner-HUD', () => {
     const topkarte = cssBlock('.spielbereich--game-route [class~="waldtanz-spielerrahmen__topkarte"]')
     const tempo = cssBlock('.spielbereich--game-route [class~="waldtanz-spielerrahmen__tempo"]')
 
-    expect(rahmen).toMatch(/max-height:\s*clamp\(5\.6rem,\s*11vh,\s*7\.2rem\)/)
+    expect(rahmen).toMatch(/max-height:\s*clamp\(4\.8rem,\s*9vh,\s*5\.8rem\)/)
     expect(rahmen).toMatch(/overflow:\s*visible/)
     expect(rahmen).toMatch(/padding:\s*0/)
     expect(gartenkopf).toMatch(/background:\s*transparent/)
