@@ -46,7 +46,7 @@ describe('M1bp Waldtanz-Handfläche', () => {
     const karte = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
     const buehne = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]')
 
-    expect(panel).toMatch(/max-height:\s*clamp\(9\.25rem, 20vh, 10\.5rem\)/)
+    expect(panel).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
     expect(panel).toMatch(/transform:\s*translateY\(2rem\)/)
     expect(panel).toMatch(/padding:\s*0\.2rem 0\.45rem/)
     expect(karte).toMatch(/box-sizing:\s*border-box/)
@@ -57,7 +57,7 @@ describe('M1bp Waldtanz-Handfläche', () => {
     expect(smokeScript).toContain('pruefeM1bpHandflaeche')
     expect(smokeScript.indexOf('pruefeM1bpHandflaeche(seite)')).toBeLessThan(smokeScript.indexOf('pruefeM1bcWaldtanzHandbank(seite)'))
     expect(smokeScript).toContain('bottom > 900')
-    expect(smokeScript).toContain('height > 112')
+    expect(smokeScript).toContain('height > 124')
     expect(smokeScript).toContain('elementFromPoint')
     expect(smokeScript).toContain('erste Handkarte vollständig im Erstbild')
   })

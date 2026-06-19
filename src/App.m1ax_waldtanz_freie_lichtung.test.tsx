@@ -35,13 +35,14 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     expect(handkarten).toHaveClass('handkarten-panel--waldtanz-handbuehne')
 
     const handBlock = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
-    expect(handBlock).toMatch(/max-height:\s*clamp\(9\.25rem,\s*20vh,\s*10\.5rem\)/)
+    expect(handBlock).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
     expect(handBlock).toMatch(/padding:\s*0\.2rem\s+0\.45rem/)
     expect(handBlock).toMatch(/pointer-events:\s*none/)
 
     const buehneBlock = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]')
-    expect(buehneBlock).toMatch(/min-height:\s*auto/)
-    expect(buehneBlock).toMatch(/padding:\s*0\.25rem\s+0\.4rem/)
+    expect(buehneBlock).toMatch(/min-height:\s*0/)
+    expect(buehneBlock).toMatch(/height:\s*0/)
+    expect(buehneBlock).toMatch(/padding:\s*0/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-buehne__statuschip"]')).toMatch(/display:\s*none/)
 
     const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')

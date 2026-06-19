@@ -16,7 +16,8 @@ describe('R107 Production-Smoke-Skript', () => {
   it('stellt einen npm-Skriptpfad für den Production-Smoke bereit', () => {
     const packageJson = JSON.parse(readFileSync(join(PROJEKTWURZEL, 'package.json'), 'utf8')) as { scripts?: Record<string, string> }
 
-    expect(packageJson.scripts?.['smoke:production']).toBe('node scripts/live_smoke.mjs')
+    expect(packageJson.scripts?.['smoke:production']).toContain('node scripts/live_smoke.mjs')
+    expect(packageJson.scripts?.['smoke:production']).toContain('node scripts/m1bx_spielkartenfaecher_smoke.mjs')
   })
 
   it('hat einen schnellen Selbsttest für die exakte Smoke-Konfiguration', async () => {

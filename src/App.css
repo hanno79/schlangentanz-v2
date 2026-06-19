@@ -1913,7 +1913,7 @@ code {
     justify-self: center;
     z-index: 4;
     width: min(100%, 55rem);
-    max-height: clamp(9.25rem, 20vh, 10.5rem);
+    max-height: clamp(10.25rem, 23vh, 12.1rem);
     margin-top: 0;
     padding: 0.2rem 0.45rem;
     overflow: visible;
@@ -1948,8 +1948,9 @@ code {
     isolation: isolate;
     gap: 0.25rem;
     justify-content: flex-start;
-    min-height: auto;
-    padding: 0.25rem 0.4rem;
+    min-height: 0;
+    height: 0;
+    padding: 0;
   }
 
   .spielbereich--game-route [class~="handkarten-buehne"]::before {
@@ -1975,6 +1976,9 @@ code {
   }
 
   .spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.1rem;
     padding: 0.35rem 0.65rem;
     box-shadow: 0 3px 0 var(--st-color-border-strong);
   }
@@ -1987,6 +1991,13 @@ code {
     padding: 0.25rem 0.5rem;
     font-size: 0.72rem;
     display: none;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__statuschip--spielbar"] {
+    display: inline-grid;
+    position: absolute;
+    top: 0.35rem;
+    right: 0.75rem;
   }
 
   .spielbereich--game-route [class~="handkarten-spielbarkeit"],
@@ -2009,6 +2020,24 @@ code {
     overflow: hidden;
     padding: 0.35rem;
     gap: 0.2rem;
+  }
+
+  .spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] {
+    align-items: end;
+    perspective: 1100px;
+    padding-block: 0.1rem 0;
+  }
+
+  .spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte"] {
+    width: clamp(5.8rem, 7.4vw, 6.9rem);
+  }
+
+  .spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"] {
+    height: clamp(6.5rem, 12.2vh, 7.15rem);
+    min-height: clamp(6.5rem, 12.2vh, 7.15rem);
+    border-width: var(--st-border-width-chunky);
+    border-radius: 1.45rem;
+    box-shadow: 0 7px 0 var(--st-color-border-strong);
   }
 
   .spielbereich--game-route [class~="handkarte__art"] {

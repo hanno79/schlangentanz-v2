@@ -34,7 +34,7 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(handGridBlock).toMatch(/grid-row:\s*3/)
     expect(handGridBlock).toMatch(/align-self:\s*end/)
     expect(handGridBlock).toMatch(/z-index:\s*4/)
-    expect(handGridBlock).toMatch(/max-height:\s*clamp\(9\.25rem,\s*20vh,\s*10\.5rem\)/)
+    expect(handGridBlock).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
     expect(handGridBlock).toMatch(/pointer-events:\s*none/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"] button')).toMatch(/pointer-events:\s*auto/)
 
