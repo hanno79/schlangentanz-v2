@@ -2,7 +2,7 @@
 
 ## Status
 
-M1bv ist als mittlerer Google-Stitch/Waldtanz-Vertical für `M1 Waldtanz Game Board` lokal umgesetzt und releasebereit vorbereitet. Nach Commit, Push, Vercel-Production-Deploy und finalem Alias-Smoke wird dieser Status auf den final bereitgestellten Stand unter <https://schlangentanz-v2.vercel.app> aktualisiert. Die dauerhafte Release-Dokumentation verwendet bewusst die stabile Alias statt ephemerer Deployment-URLs.
+M1bv ist als mittlerer Google-Stitch/Waldtanz-Vertical für `M1 Waldtanz Game Board` nach `origin/main` gebracht und per Vercel Production auf der stabilen Alias <https://schlangentanz-v2.vercel.app> bereitgestellt. Die dauerhafte Release-Dokumentation verwendet bewusst die stabile Alias statt ephemerer Deployment-URLs.
 
 ## Slice
 
@@ -30,11 +30,11 @@ Auf `/game` werden die bisherigen `Waldobjekte` rechts neben der Lichtung zu kom
 - Targeted/Adjacent: `npm test -- --run src/App.m1bv_waldtanz_waldtaschen.test.tsx src/App.m1as_waldtanz_erstzug_lichtung.test.tsx src/App.m1ao_waldtanz_fokusbrett.test.tsx src/App.m1bf_waldtanz_nachziehstapel.test.tsx src/App.m1bu_waldtanz_steinplakette.test.tsx src/App.m1bt_waldtanz_startlichtung.test.tsx src/App.m1bs_waldtanz_tischkartenaltar.test.tsx src/App.m1br_waldtanz_magiekreise_lichtung.test.tsx src/App.m1bd_waldtanz_lichtungsbrett.test.tsx` → 9 Testdateien / 19 Tests bestanden.
 - Full Gates: `npm test -- --run` → 287 Testdateien / 879 Tests bestanden; `npm run check:test-lines`; `npm run typecheck`; `npm run lint`; `npm run build`; `git diff --check`; `node scripts/live_smoke.mjs --self-test` jeweils grün.
 - Lokaler Browser-Smoke: `SMOKE_BASE_URL=http://127.0.0.1:4179 node scripts/m1bv_waldtaschen_smoke.mjs` → `M1bv Waldtaschen: 174px rechts neben Lichtung, Kartenhoehen 73/73/73/73px, hit-testbar`.
-- Line Budget: `src/App.tsx` 438 Zeilen, `scripts/m1bv_waldtaschen_smoke.mjs` 93 Zeilen, neue Testdatei 61 Zeilen; `npm run check:test-lines` bestätigt alle Testdateien unter 500 Zeilen.
+- Production-Smoke-Blocker: Der erste Alias-Smoke nach `b97081c` deckte auf, dass `scripts/live_smoke.mjs` für M1bf noch die alte Waldobjekte-Kindposition `0,1,2,3` erwartete; seit dem Waldtaschen-Kopf ist `1,2,3,4` korrekt. Fix-Commit `f041df8` akzeptiert beide strukturellen Verträge, ohne den 3px-/Hard-Shadow-/Kartenrücken-Nachweis abzuschwächen.
 
 ## Release
 
-Der M1bv-Stand ist lokal gate-/releasebereit vorbereitet. Finalisierung: Commit/Push nach `origin/main`, Vercel Production Deploy auf die stabile Alias <https://schlangentanz-v2.vercel.app>, danach Alias-Smoke für `/`, `/game`, generische Waldtanz-Verträge und den exakten M1bv-Waldtaschen-Vertrag ohne Console-/Page-Errors. Nach erfolgreichem finalem Smoke wird diese Passage auf den tatsächlich bereitgestellten HEAD aktualisiert.
+Der finale M1bv-Stand ist über Feature-Commit `b97081c — M1bv: Waldobjekte als Waldtaschen verdichten` plus Smoke-Fix `f041df8 — M1bv: Production-Smoke an Waldtaschen anpassen` nach `origin/main` gepusht und per Vercel Production auf die stabile Alias <https://schlangentanz-v2.vercel.app> bereitgestellt. Finaler Alias-Smoke bestätigt `/` und `/game` HTTP 200, `R107 Production-Smoke bestanden`, den M1bf-Nachziehstapel mit Waldtaschen-Kopf und den exakten M1bv-Vertrag: `M1bv Waldtaschen: 174px rechts neben Lichtung, Kartenhoehen 73/73/73/73px, hit-testbar`.
 
 ## Nächste mittlere Lücke
 
