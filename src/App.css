@@ -5443,7 +5443,7 @@ code {
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 1.75rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 2.2rem;
   background:

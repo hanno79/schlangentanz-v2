@@ -62,7 +62,7 @@ describe('M1cb Waldtanz-Zielranken', () => {
     expect(zielspur).toMatch(/display:\s*grid/)
     expect(zielspur).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(zielspur).toMatch(/box-shadow:\s*0 6px 0 var\(--st-color-border-strong\)/)
-    expect(zielspur).toMatch(/margin-top:\s*0\.5rem/)
+    expect(zielspur).toMatch(/margin-top:\s*1\.75rem/)
     expect(zielranken).toMatch(/grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/)
     expect(zielranken).toMatch(/list-style:\s*none/)
     expect(zielranke).toMatch(/border-radius:\s*999px/)
