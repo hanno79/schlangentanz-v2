@@ -1946,9 +1946,10 @@ code {
     align-self: end;
     justify-self: center;
     z-index: 4;
-    width: min(100%, 55rem);
+    width: min(100%, 34rem);
     max-height: clamp(10.25rem, 23vh, 12.1rem);
     margin-top: 0;
+    margin-right: clamp(10rem, 25vw, 18rem);
     padding: 0.2rem 0.45rem;
     overflow: visible;
     pointer-events: none;
@@ -1989,6 +1990,7 @@ code {
 
   .spielbereich--game-route [class~="handkarten-buehne"]::before {
     content: '';
+    display: none;
     position: absolute;
     left: 0.25rem;
     right: 0.25rem;
@@ -2004,9 +2006,31 @@ code {
     box-shadow: var(--st-shadow-hard);
   }
 
+  .spielbereich--game-route [class~="handkarten-buehne__handsteg"] {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    z-index: 0;
+    width: min(100%, 34rem);
+    height: clamp(3.8rem, 8vh, 5.2rem);
+    pointer-events: none;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 16% 25%, rgba(254, 203, 0, 0.5) 0 1.4rem, transparent 1.5rem),
+      linear-gradient(180deg, rgba(196, 253, 182, 0.88), rgba(164, 222, 2, 0.72));
+    box-shadow: var(--st-shadow-hard);
+    transform: translateX(-50%);
+  }
+
   .spielbereich--game-route [class~="handkarten-buehne"] > * {
     position: relative;
     z-index: 1;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne"] > [class~="handkarten-buehne__handsteg"] {
+    position: absolute;
+    z-index: 0;
   }
 
   .spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {

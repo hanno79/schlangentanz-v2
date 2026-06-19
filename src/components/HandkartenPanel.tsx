@@ -146,6 +146,7 @@ export default function HandkartenPanel({
   return (
     <section className="handkarten-panel handkarten-panel--waldtanz-handbuehne" aria-labelledby={handkartenTitelId}>
       <div className="handkarten-buehne" role="group" aria-label="Waldtanz-Handbühne">
+        <span className="handkarten-buehne__handsteg" aria-hidden="true" />
         <div className="handkarten-buehne__spielerplakette">
           <span className="handkarten-buehne__avatar" aria-hidden="true">🧙</span>
           <div>
