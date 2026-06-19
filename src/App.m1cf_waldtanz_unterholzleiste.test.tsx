@@ -63,7 +63,7 @@ describe('M1cf Waldtanz-Unterholzleiste', () => {
     expect(within(bonuszauber).getByRole('button', { name: 'Verdoppler-Bonuszauber mit Karte verdoppler-m1cf aktivieren' })).toBeVisible()
     expect(Array.from(zugleiste.children).map((kind) => (kind as HTMLElement).className)).toEqual(expect.arrayContaining([
       'waldtanz-unterholzleiste',
-      'zugpfad',
+      'zugpfad zugpfad--waldsteine',
       'waldtanz-spielhilfe',
       'ki-zug-buehne ki-zug-buehne--brettnah',
       'zugkompass',

@@ -28,19 +28,19 @@ export default function Zugpfad({ zustand, kiZugProtokoll }: ZugpfadProps) {
   const hatAbgeschlossenenGegnerzug = zustand.spieler[aktiverIndex].steuerung === 'Mensch' && kiZugProtokoll.length > 0
 
   return (
-    <section className="zugpfad" aria-label="Zugpfad">
+    <section className="zugpfad zugpfad--waldsteine" aria-label="Zugpfad">
       <div className="zugpfad__kopf">
         <h4>Zugpfad</h4>
         <p>Nächster Halt: {naechsterSpieler.name}</p>
       </div>
-      <ol className="zugpfad__strecke">
+      <ol className="zugpfad__strecke zugpfad__strecke--waldsteine">
         {zustand.spieler.map((spieler, index) => {
           const istAktiv = index === aktiverIndex
 
           return (
             <li
               key={spieler.id}
-              className={`zugpfad__station${istAktiv ? ' zugpfad__station--aktiv' : ''}`}
+              className={`zugpfad__station zugpfad__station--waldstein${istAktiv ? ' zugpfad__station--aktiv' : ''}`}
               aria-current={istAktiv ? 'step' : undefined}
             >
               <span className="zugpfad__avatar" aria-hidden="true">{index + 1}</span>

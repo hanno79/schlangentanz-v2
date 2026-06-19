@@ -2643,6 +2643,65 @@ code {
     grid-column: 1 / -1;
   }
 
+  .spielbereich--game-route [class~="zugpfad--waldsteine"] {
+    gap: 0.22rem;
+    padding: 0.32rem;
+    background: linear-gradient(135deg, rgba(236, 255, 227, 0.94), rgba(255, 224, 139, 0.78));
+  }
+
+  .spielbereich--game-route [class~="zugpfad--waldsteine"] [class~="zugpfad__kopf"] {
+    gap: 0.18rem;
+  }
+
+  .spielbereich--game-route [class~="zugpfad--waldsteine"] [class~="zugpfad__kopf"] h4,
+  .spielbereich--game-route [class~="zugpfad--waldsteine"] [class~="zugpfad__kopf"] p {
+    font-size: 0.6rem;
+    line-height: 0.9;
+  }
+
+  .spielbereich--game-route [class~="zugpfad--waldsteine"] [class~="zugpfad__kopf"] p {
+    padding: 0.08rem 0.24rem;
+  }
+
+  .spielbereich--game-route [class~="zugpfad__strecke--waldsteine"] {
+    grid-template-columns: repeat(auto-fit, minmax(2.25rem, 1fr));
+    max-height: none;
+    overflow: visible;
+    gap: 0.2rem;
+    padding-right: 0;
+  }
+
+  .spielbereich--game-route [class~="zugpfad__station--waldstein"] {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 2.1rem;
+    border-radius: 999px;
+    align-content: center;
+    padding: 0.15rem 0.12rem;
+    overflow: hidden;
+  }
+
+  .spielbereich--game-route [class~="zugpfad__station--waldstein"] [class~="zugpfad__avatar"] {
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 0.72rem;
+  }
+
+  .spielbereich--game-route [class~="zugpfad__station--waldstein"] [class~="zugpfad__badge"] {
+    padding: 0.02rem 0.22rem;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="zugpfad__station--waldstein"] > strong,
+  .spielbereich--game-route [class~="zugpfad__station--waldstein"] > span:not([class~="zugpfad__avatar"]):not([class~="zugpfad__badge"]) {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="zugpfad__station--aktiv"][class~="zugpfad__station--waldstein"] {
+    transform: translateY(-0.35rem);
+  }
+
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] {
     grid-template-columns: 1fr;
     align-content: start;
