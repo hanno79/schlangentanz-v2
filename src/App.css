@@ -2828,7 +2828,8 @@ code {
     grid-template-columns: minmax(6.5rem, 0.32fr) minmax(0, 1fr) minmax(5.2rem, 0.22fr);
     grid-template-areas:
       "typ pfad wertung"
-      "name pfad status";
+      "name pfad status"
+      "faehrten faehrten faehrten";
     align-items: center;
     gap: 0.22rem 0.55rem;
     min-height: 0;
@@ -2896,6 +2897,22 @@ code {
     font-size: 0.62rem;
     line-height: 1;
     font-weight: 900;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__wachstumsfaehrten"] {
+    grid-area: faehrten;
+    grid-template-columns: repeat(auto-fit, minmax(4.2rem, 1fr));
+    gap: 0.3rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte__wachstumsfaehrte-button"] {
+    min-height: 2.6rem;
+    padding: 0.18rem 0.28rem;
+    font-size: 0.55rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte__wachstumsfaehrte-button"] strong {
+    font-size: 0.58rem;
   }
 
   .spielbereich--game-route [class~="schlangen-gruppe--gegnerfelder"]:not(:has(button)) {
@@ -6159,6 +6176,66 @@ code {
 
 .schlangekarte__anlegebutton--rechts {
   border-color: rgba(177, 45, 0, 0.6);
+}
+
+.schlangekarte__wachstumsfaehrten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.38rem;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.schlangekarte__wachstumsfaehrte {
+  min-width: 0;
+}
+
+.schlangekarte__wachstumsfaehrte-button {
+  display: grid;
+  justify-items: center;
+  gap: 0.12rem;
+  width: 100%;
+  min-height: 3.15rem;
+  padding: 0.28rem 0.35rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(180deg, var(--st-color-primary-container), var(--st-color-surface-container-lowest, #ffffff));
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  cursor: pointer;
+  font-size: 0.62rem;
+  line-height: 1;
+}
+
+.schlangekarte__wachstumsfaehrte-button strong {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--st-font-headline);
+  font-size: 0.68rem;
+}
+
+.schlangekarte__wachstumsfaehrte-button--links {
+  transform: rotate(-1.5deg);
+}
+
+.schlangekarte__wachstumsfaehrte-button--rechts {
+  transform: rotate(1.5deg);
+}
+
+.schlangekarte__wachstumsfaehrte-button:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.schlangekarte__wachstumsfaehrte-button--links:active {
+  transform: translateY(3px) rotate(-1.5deg);
+}
+
+.schlangekarte__wachstumsfaehrte-button--rechts:active {
+  transform: translateY(3px) rotate(1.5deg);
 }
 
 .schlangekarte__anlegeplaetze {

@@ -404,7 +404,31 @@ export default function Schlangenbereich({
                       onAktion={onAktion}
                     />
                   )}
-                  {anlegeAktionen.length > 0 && (
+                  {istGameRoute && !ausgewaehlteHandkarteId && anlegeAktionen.length > 0 && (
+                    <ol className="schlangekarte__wachstumsfaehrten" aria-label={`Wachstumsfährten für ${schlange.id}`}>
+                      {anlegeAktionen.map((aktion) => (
+                        <li key={`${aktion.handkartenId}-${aktion.schlangenId}-${aktion.position}`} className="schlangekarte__wachstumsfaehrte">
+                          <button
+                            type="button"
+                            className={`schlangekarte__wachstumsfaehrte-button schlangekarte__wachstumsfaehrte-button--${aktion.position}`}
+                            aria-label={`Wachstumsfährte ${aktion.handkartenId} für Pfad ${schlange.id} ${aktion.position} anlegen`}
+                            title={aktionsLabel(aktion)}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              onAktion(aktion)
+                            }}
+                            onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'schlange', id: schlange.id })}
+                            onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
+                          >
+                            <span>Wachstumsfährte</span>
+                            <strong>{aktion.handkartenId}</strong>
+                            <span>{aktion.position === 'links' ? 'Linkes Ende' : 'Rechtes Ende'}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                  {(!istGameRoute || ausgewaehlteHandkarteId) && anlegeAktionen.length > 0 && (
                     <div className={`schlangekarte__anlegeaktionen schlangekarte__anlegeplaetze${ausgewaehlteHandkarteId ? ' schlangekarte__anlegeplaetze--vorschau' : ''}`} aria-label={`Waldtanz-Anlegeplätze für ${schlange.id}`}>
                       {anlegeAktionen.map((aktion, anlegeIndex) => {
                         const istAusgewaehlterAnlegeplatz = aktion.handkartenId === ausgewaehlteHandkarteId
