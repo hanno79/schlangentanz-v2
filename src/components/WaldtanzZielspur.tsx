@@ -4,15 +4,16 @@ Datum: 20.06.2026
 Version: 1.1
 Beschreibung: Board-nahe Zielspur für ausgewählte Handkarten mit sichtbaren Zielwahl-Fährten.
 */
-import type { ZielspurFamilie } from './waldtanzZielspurLogik'
+import type { ZielspurFamilie, ZielspurObjekt } from './waldtanzZielspurLogik'
 
 interface WaldtanzZielspurProps {
   karteId: string | null
   zielAnzahl: number
   familien?: ZielspurFamilie[]
+  objekte?: ZielspurObjekt[]
 }
 
-export default function WaldtanzZielspur({ karteId, zielAnzahl, familien = [] }: WaldtanzZielspurProps) {
+export default function WaldtanzZielspur({ karteId, zielAnzahl, familien = [], objekte = [] }: WaldtanzZielspurProps) {
   if (!karteId) return null
 
   const zielText = `${zielAnzahl} ${zielAnzahl === 1 ? 'Brettziel leuchtet' : 'Brettziele leuchten'}`
@@ -36,6 +37,21 @@ export default function WaldtanzZielspur({ karteId, zielAnzahl, familien = [] }:
                 <span className="waldtanz-zielspur__weg-label">{familie.label}</span>
                 <strong className="waldtanz-zielspur__weg-anzahl">{familie.anzahl}</strong>
                 <span className="waldtanz-zielspur__weg-hilfe">{familie.hilfe}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {objekte.length > 0 && (
+        <section className="waldtanz-zielspur__zauberwahl" aria-label="Zauberpfad am Brett">
+          <h5>Zauberpfad am Brett</h5>
+          <ol className="waldtanz-zielspur__zauberpfade" aria-label="Konkrete Zauberpfade">
+            {objekte.map((objekt) => (
+              <li key={objekt.key} className="waldtanz-zielspur__zauberpfad" aria-label={`${objekt.typ}-Zauberpfad`}>
+                <span className="waldtanz-zielspur__zauberpfad-typ">{objekt.typ}</span>
+                <strong>{objekt.ziel}</strong>
+                <span>{objekt.ort}</span>
+                <small>{objekt.hilfe}</small>
               </li>
             ))}
           </ol>

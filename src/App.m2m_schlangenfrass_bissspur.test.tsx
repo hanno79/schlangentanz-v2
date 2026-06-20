@@ -53,7 +53,7 @@ describe('M2m Schlangenfrass-Bissspur', () => {
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-m2m/ }))
 
-    const zielkarte = within(schlangenbereich).getByText('rot-bissspur-m2m').closest('.schlangekarte__karte') as HTMLElement
+    const zielkarte = within(schlangenbereich).getByRole('listitem', { name: /Farbkarte rot-bissspur-m2m/ }) as HTMLElement
     const bissspur = within(zielkarte).getByRole('group', { name: 'Schlangenfrass-Bissspur für rot-bissspur-m2m' })
 
     expect(bissspur).toHaveClass('schlangenfrass-bissspur')

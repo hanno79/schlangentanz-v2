@@ -23,7 +23,7 @@ import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import SchlangenWertungsplakette from './SchlangenWertungsplakette'
 import SchlangenStartzone from './SchlangenStartzone'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
-import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele, ermittleZielspurFamilien } from './waldtanzZielspurLogik'
+import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele, ermittleZielspurFamilien, ermittleZielspurObjekte } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
 import FarbenschutzSchild from './FarbenschutzSchild'
 import SchlangenfrassBissspur from './SchlangenfrassBissspur'
@@ -263,6 +263,7 @@ export default function Schlangenbereich({
   const haeutungZielAnzahl = zeigeSchlangenhaeutungBrettziel ? aktiverSpieler.schlangen.filter(schlange => hatSchlangenhaeutungBrettziel(zustand, schlange, ausgewaehlteHandkarteId)).length : 0
   const zielspurAnzahl = zaehleZielspurBrettziele({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurFamilien = ermittleZielspurFamilien({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
+  const zielspurObjekte = ermittleZielspurObjekte({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
 
   return (
     <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>
@@ -491,7 +492,7 @@ export default function Schlangenbereich({
           <p>Keine eigenen Schlangen.</p>
         )}
       </section>
-      <WaldtanzZielspur karteId={ausgewaehlteHandkarteId} zielAnzahl={zielspurAnzahl} familien={zielspurFamilien} />
+      <WaldtanzZielspur karteId={ausgewaehlteHandkarteId} zielAnzahl={zielspurAnzahl} familien={zielspurFamilien} objekte={zielspurObjekte} />
       <WaldtanzZielkompass
         ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
         karteAnlegenAktionen={karteAnlegenAktionen}

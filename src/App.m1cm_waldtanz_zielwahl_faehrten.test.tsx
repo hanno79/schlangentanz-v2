@@ -74,7 +74,7 @@ describe('M1cm Waldtanz-Zielwahl-Fährten', () => {
   it('legt den Google-Stitch-Spielobjekt- und Smoke-Vertrag fuer die Zielwahl-Fährten ab', () => {
     const zielspur = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur--zielwahl-faehrten"]')
     const wege = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__wege"]')
-    const weg = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__weg"]')
+    const weg = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__weg"],\n.spielbereich--game-route [class~="waldtanz-zielspur__zauberpfad"]')
     const anzahl = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__weg-anzahl"]')
 
     expect(zielspur).toMatch(/background:\s*linear-gradient/)
