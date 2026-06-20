@@ -111,7 +111,12 @@ describe('M1cn Waldtanz-Zauberpfad', () => {
     const pfade = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__zauberpfade"]')
     const pfad = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__zauberpfad"]')
     const typ = cssBlock('.spielbereich--game-route [class~="waldtanz-zielspur__zauberpfad-typ"]')
+    const arena = cssBlock('.spielbereich--game-route .info-panel--waldtanz-arena')
+    const spieltischGruppe = cssBlock('.spielbereich--game-route > [class~="spieltisch-gruppe"]')
 
+    expect(spieltischGruppe).toMatch(/z-index:\s*20/)
+    expect(arena).toMatch(/position:\s*relative/)
+    expect(arena).toMatch(/z-index:\s*20/)
     expect(pfade).toMatch(/display:\s*grid/)
     expect(pfade).toMatch(/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(10rem,\s*1fr\)\)/)
     expect(pfad).toMatch(/border:\s*2px solid var\(--st-color-border-strong\)/)

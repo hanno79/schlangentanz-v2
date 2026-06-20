@@ -1517,8 +1517,13 @@ code {
 
 .spieltisch-gruppe {
   display: grid;
+  position: relative;
   grid-area: arena;
   gap: 0.5rem;
+}
+
+.spielbereich--game-route > [class~="spieltisch-gruppe"] {
+  z-index: 20;
 }
 
 .sieger-party { grid-area: party; }
@@ -1834,6 +1839,8 @@ code {
   }
 
   .spielbereich--game-route .info-panel--waldtanz-arena {
+    position: relative;
+    z-index: 20;
     min-height: 0;
     padding: 0;
     background: transparent;
