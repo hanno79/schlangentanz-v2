@@ -5839,6 +5839,44 @@ code {
   background: linear-gradient(135deg, rgba(255, 219, 209, 0.9), rgba(255, 255, 255, 0.72));
 }
 
+.spielbereich--game-route [class~="waldtanz-zielspur__zauberpfad--aktiv"] {
+  border-style: solid;
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.96), rgba(255, 219, 209, 0.9));
+  box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 5px rgba(254, 203, 0, 0.34);
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__sprung"] {
+  justify-self: start;
+  margin-top: 0.18rem;
+  padding: 0.28rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  color: var(--st-color-border-strong);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  cursor: pointer;
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.waldtanz-zielspur-ziel--aktiv {
+  animation: waldtanz-zielspur-puls 1s ease-in-out infinite;
+  outline: 4px solid var(--st-color-secondary-container);
+  outline-offset: 4px;
+  box-shadow: var(--st-shadow-hard), 0 0 0 7px rgba(254, 203, 0, 0.38);
+}
+
+@keyframes waldtanz-zielspur-puls {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-zielspur-ziel--aktiv {
+    animation: none;
+  }
+}
+
 .spielbereich--game-route [class~="waldtanz-zielspur__weg-anzahl"] {
   grid-row: 1 / 3;
   justify-self: end;

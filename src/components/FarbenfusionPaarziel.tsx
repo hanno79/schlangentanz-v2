@@ -10,16 +10,18 @@ import type { FarbenfusionPaarInfo } from './farbenfusionPaarInfo'
 interface FarbenfusionPaarzielProps {
   paar: FarbenfusionPaarInfo | null
   onAktion: (aktion: SpielAktion) => void
+  zielspurKey?: string
+  hervorgehoben?: boolean
 }
 
-export default function FarbenfusionPaarziel({ paar, onAktion }: FarbenfusionPaarzielProps) {
+export default function FarbenfusionPaarziel({ paar, onAktion, zielspurKey, hervorgehoben = false }: FarbenfusionPaarzielProps) {
   if (!paar) return null
   if (!paar.istStartkarte) {
     return <span className="farbenfusion-rankenring__partner">Rankenpartner</span>
   }
 
   return (
-    <span className="farbenfusion-rankenring" role="group" aria-label={`Farbenfusion-Rankenring für ${paar.ersteKartenId} und ${paar.zweiteKartenId}`}>
+    <span className={`farbenfusion-rankenring${hervorgehoben ? ' waldtanz-zielspur-ziel--aktiv' : ''}`} role="group" aria-label={`Farbenfusion-Rankenring für ${paar.ersteKartenId} und ${paar.zweiteKartenId}`} data-zielspur-key={zielspurKey}>
       <span className="farbenfusion-rankenring__icon" aria-hidden="true">🌿</span>
       <span className="farbenfusion-rankenring__text">
         <span className="farbenfusion-rankenring__eyebrow">Farbenfusion-Rankenring</span>

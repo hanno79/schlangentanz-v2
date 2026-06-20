@@ -35,6 +35,7 @@ export interface ZielspurObjekt {
   ziel: string
   ort: string
   hilfe: string
+  sprungMoeglich?: boolean
 }
 
 function passt(aktion: { handkartenId: string }, handkartenId: string) {
@@ -135,17 +136,18 @@ export function ermittleZielspurObjekte({
   const objekte = new Map<string, ZielspurObjekt>()
 
   for (const aktion of farbenschutzAktionen) if (passt(aktion, handkartenId)) {
-    objekte.set(`schutz:${aktion.zielSchlangenId}`, { key: `schutz:${aktion.zielSchlangenId}`, typ: 'Schutzschild', ziel: aktion.zielSchlangenId, ort: 'Eigene Lichtung', hilfe: 'Schlange schützen' })
+    objekte.set(`schutz:${aktion.zielSchlangenId}`, { key: `schutz:${aktion.zielSchlangenId}`, typ: 'Schutzschild', ziel: aktion.zielSchlangenId, ort: 'Eigene Lichtung', hilfe: 'Schlange schützen', sprungMoeglich: true })
   }
   for (const aktion of farbenfusionAktionen) if (passt(aktion, handkartenId)) {
     const ziel = findeFusionsPartner(aktiverSpielerSchlangen, aktion)
-    objekte.set(`fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`, { key: `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`, typ: 'Rankenring', ziel, ort: 'Eigene Lichtung', hilfe: 'Farbpaar verschmelzen' })
+    objekte.set(`fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`, { key: `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`, typ: 'Rankenring', ziel, ort: 'Eigene Lichtung', hilfe: 'Farbpaar verschmelzen', sprungMoeglich: true })
   }
   for (const aktion of schlangenfrassAktionen) if (passt(aktion, handkartenId)) {
     const zielKey = aktion.ziele.map(ziel => `${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`).join('|')
     const zielText = aktion.ziele.map(ziel => ziel.kartenId).join(' + ')
     const trifftEigen = aktion.ziele.some(ziel => ziel.spielerId === aktiverSpielerId)
-    objekte.set(`frass:${zielKey}`, { key: `frass:${zielKey}`, typ: 'Bissspur', ziel: zielText, ort: trifftEigen ? 'Eigene Lichtung' : 'Gegnerische Tischrunde', hilfe: aktion.ziele.length > 1 ? 'Doppelbiss schließen' : 'Karte lösen' })
+    const sprungMoeglich = aktion.ziele.length === 1 && aktion.ziele[0].spielerId === aktiverSpielerId
+    objekte.set(`frass:${zielKey}`, { key: `frass:${zielKey}`, typ: 'Bissspur', ziel: zielText, ort: trifftEigen ? 'Eigene Lichtung' : 'Gegnerische Tischrunde', hilfe: aktion.ziele.length > 1 ? 'Doppelbiss schließen' : 'Karte lösen', sprungMoeglich })
   }
   for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) {
     objekte.set(`blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, { key: `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, typ: 'Fessel', ziel: aktion.zielSchlangenId, ort: 'Gegnerische Tischrunde', hilfe: 'Schlange blockieren' })

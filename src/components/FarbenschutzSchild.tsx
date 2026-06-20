@@ -12,9 +12,11 @@ interface FarbenschutzSchildProps {
   aktion: Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }>
   label: string
   onAktion: (aktion: SpielAktion) => void
+  zielspurKey?: string
+  hervorgehoben?: boolean
 }
 
-export default function FarbenschutzSchild({ aktion, label, onAktion }: FarbenschutzSchildProps) {
+export default function FarbenschutzSchild({ aktion, label, onAktion, zielspurKey, hervorgehoben = false }: FarbenschutzSchildProps) {
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation()
     onAktion(aktion)
@@ -23,8 +25,9 @@ export default function FarbenschutzSchild({ aktion, label, onAktion }: Farbensc
   return (
     <button
       type="button"
-      className="schlangekarte__schutzschild schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--schutz"
+      className={`schlangekarte__schutzschild schlangekarte__sonderaktion-button schlangekarte__sonderaktion-button--schutz${hervorgehoben ? ' waldtanz-zielspur-ziel--aktiv' : ''}`}
       aria-label={`Farbenschutz im Schlangenbereich mit Karte ${aktion.handkartenId} auf Schlange ${aktion.zielSchlangenId}`}
+      data-zielspur-key={zielspurKey}
       title={label}
       onClick={handleClick}
     >

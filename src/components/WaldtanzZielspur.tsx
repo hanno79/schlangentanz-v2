@@ -11,9 +11,11 @@ interface WaldtanzZielspurProps {
   zielAnzahl: number
   familien?: ZielspurFamilie[]
   objekte?: ZielspurObjekt[]
+  aktiverZielKey?: string | null
+  onZielAktivieren?: (key: string) => void
 }
 
-export default function WaldtanzZielspur({ karteId, zielAnzahl, familien = [], objekte = [] }: WaldtanzZielspurProps) {
+export default function WaldtanzZielspur({ karteId, zielAnzahl, familien = [], objekte = [], aktiverZielKey = null, onZielAktivieren }: WaldtanzZielspurProps) {
   if (!karteId) return null
 
   const zielText = `${zielAnzahl} ${zielAnzahl === 1 ? 'Brettziel leuchtet' : 'Brettziele leuchten'}`
@@ -46,12 +48,23 @@ export default function WaldtanzZielspur({ karteId, zielAnzahl, familien = [], o
         <section className="waldtanz-zielspur__zauberwahl" aria-label="Zauberpfad am Brett">
           <h5>Zauberpfad am Brett</h5>
           <ol className="waldtanz-zielspur__zauberpfade" aria-label="Konkrete Zauberpfade">
-            {objekte.map((objekt) => (
-              <li key={objekt.key} className="waldtanz-zielspur__zauberpfad" aria-label={`${objekt.typ}-Zauberpfad`}>
+            {objekte.map((objekt, objektIndex) => (
+              <li key={objekt.key} className={`waldtanz-zielspur__zauberpfad${aktiverZielKey === objekt.key ? ' waldtanz-zielspur__zauberpfad--aktiv' : ''}`} aria-label={`${objekt.typ}-Zauberpfad ${objekt.ziel}`}>
                 <span className="waldtanz-zielspur__zauberpfad-typ">{objekt.typ}</span>
                 <strong>{objekt.ziel}</strong>
                 <span>{objekt.ort}</span>
                 <small>{objekt.hilfe}</small>
+                {objekt.sprungMoeglich && (
+                  <button
+                    type="button"
+                    className="waldtanz-zielspur__sprung"
+                    aria-label={`Zum ${objektIndex + 1}. ${objekt.typ}-Brettobjekt springen`}
+                    title={`Zum Zauberpfad ${objekt.typ} ${objekt.ziel} springen`}
+                    onClick={() => onZielAktivieren?.(objekt.key)}
+                  >
+                    Zum Brettobjekt
+                  </button>
+                )}
               </li>
             ))}
           </ol>

@@ -11,6 +11,8 @@ interface SchlangenfrassBissspurProps {
   modus: 'einzelziel' | 'erstes-ziel' | 'zweites-ziel'
   ariaLabel: string
   title?: string
+  zielspurKey?: string
+  hervorgehoben?: boolean
   onClick: () => void
 }
 
@@ -42,10 +44,12 @@ export default function SchlangenfrassBissspur({
   modus,
   ariaLabel,
   title,
+  zielspurKey,
+  hervorgehoben = false,
   onClick,
 }: SchlangenfrassBissspurProps) {
   return (
-    <span className="schlangenfrass-bissspur" role="group" aria-label={`Schlangenfrass-Bissspur für ${zielKartenId}`}>
+    <span className={`schlangenfrass-bissspur${hervorgehoben ? ' waldtanz-zielspur-ziel--aktiv' : ''}`} role="group" aria-label={`Schlangenfrass-Bissspur für ${zielKartenId}`} data-zielspur-key={zielspurKey}>
       <span className="schlangenfrass-bissspur__eyebrow">Schlangenfrass-Bissspur</span>
       <strong className="schlangenfrass-bissspur__ziel">Ziel: {zielKartenId}</strong>
       <span className="schlangenfrass-bissspur__karte">Zauberkarte {handkartenId}</span>
