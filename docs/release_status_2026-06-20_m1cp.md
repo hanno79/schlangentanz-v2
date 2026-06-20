@@ -2,7 +2,7 @@
 
 ## Status
 
-Releasebereit lokal verifiziert; finale Production-Alias bleibt <https://schlangentanz-v2.vercel.app>. Nach Commit/Push wird derselbe HEAD per Vercel Production auf diese stabile Alias deployt und erneut gesmoked.
+Released auf der stabilen Production-Alias: <https://schlangentanz-v2.vercel.app>
 
 ## Slice
 
@@ -34,7 +34,7 @@ M1cp ist ein mittlerer sichtbarer Google-Stitch/Waldtanz-Vertical im Milestone `
 - Targeted/Adjacent: `npm test -- --run src/App.m1cp_waldtanz_gegner_zauberpfad_sprung.test.tsx src/App.m1co_waldtanz_zauberpfad_sprung.test.tsx src/App.m2k_farbendieb_beutekorb.test.tsx src/App.m2c_schlangenblockade_boardziel.test.tsx` → 4 Testdateien / 10 Tests bestanden.
 - Lokaler Browser-Smoke: `SMOKE_BASE_URL=http://127.0.0.1:5173 node scripts/m1cp_gegner_zauberpfad_sprung_smoke.mjs` → `M1cp Gegner-Zauberpfad-Sprung: dieb:spieler-2:schlange-spieler-2-1:gelb-15, Fokus=true.`
 - Full Gates: `npm test -- --run` → 306 Testdateien / 925 Tests bestanden; `npm run check:test-lines`, `npm run typecheck`, `npm run lint`, `npm run build`, `git diff --check` jeweils grün.
-- Production Deploy/Smoke: nach Commit/Push wird der finale `origin/main`-HEAD per Vercel Production deployed und `npm run smoke:production` auf der stabilen Alias ausgeführt.
+- Production Deploy/Smoke: Commit `7242bb7 — M1cp Gegner-Zauberpfade verdrahten` wurde nach `origin/main` gepusht und per Vercel Production auf die stabile Alias deployed (`READY`). `SMOKE_BASE_URL=https://schlangentanz-v2.vercel.app npm run smoke:production` bestätigt `/` und `/game` HTTP 200, bestehende Waldtanz-Verträge M1bw–M1co und neu `M1cp Gegner-Zauberpfad-Sprung: dieb:spieler-2:schlange-spieler-2-1:gelb-15, Fokus=true.`; keine Console-/Page-Errors.
 
 ## Sichtbar spielbarer
 
@@ -42,4 +42,4 @@ Die Zielspur ist jetzt nicht mehr nur eine Beschreibung von Gegnerzielen: Der Be
 
 ## Nächste mittlere Lücke
 
-Der nächste spielwertige Vertical sollte die Gegner-Zauberobjekte räumlich kompakter/hit-testbarer in die Waldtanz-Lichtung einpassen: Nach dem Sprung sind Beutekorb/Fessel zwar fokussiert und aktiv markiert, aber die gegnerische Zielzone kann in längeren Zuständen noch unter der Kamerakante liegen. Eine Folge-Slice sollte daher Gegner-Zauberpfade und Gegnerfeld-Geometrie zusammenbringen, ohne Drag-and-drop oder Engine-Regeln zu ändern.
+Der nächste spielwertige Vertical sollte die Gegner-Zauberobjekte räumlich kompakter/hit-testbarer in die Waldtanz-Lichtung einpassen: Nach dem Sprung sind Beutekorb/Fessel fokussiert und aktiv markiert; als nächster Spielwert-Schritt sollten Gegner-Zauberpfade und Gegnerfeld-Geometrie enger zusammenrücken, ohne Drag-and-drop oder Engine-Regeln zu ändern.
