@@ -5866,6 +5866,13 @@ code {
   box-shadow: var(--st-shadow-hard), 0 0 0 7px rgba(254, 203, 0, 0.38);
 }
 
+.spielbereich--game-route [class~="farbendieb-beutekorb"].waldtanz-zielspur-ziel--aktiv,
+.spielbereich--game-route [class~="schlangenblockade-fessel"].waldtanz-zielspur-ziel--aktiv {
+  outline: 4px solid var(--st-color-secondary-container);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 7px rgba(254, 203, 0, 0.42), var(--st-shadow-hard);
+}
+
 @keyframes waldtanz-zielspur-puls {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.035); }

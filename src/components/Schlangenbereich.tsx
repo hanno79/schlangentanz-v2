@@ -534,6 +534,7 @@ export default function Schlangenbereich({
           schlangenfrassAktionen={schlangenfrassAktionen}
           onAktion={onAktion}
           aktionsLabel={aktionsLabel}
+          aktiverZielspurKey={aktiverZielspurKey}
         />
       </section>
     </section>

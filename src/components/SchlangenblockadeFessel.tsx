@@ -11,11 +11,13 @@ interface SchlangenblockadeFesselProps {
   zielSchlangenId: string
   onAktion: (aktion: SpielAktion) => void
   aktionsLabel: (aktion: SpielAktion) => string
+  zielspurKey?: string
+  hervorgehoben?: boolean
 }
 
-export default function SchlangenblockadeFessel({ aktion, zielSchlangenId, onAktion, aktionsLabel }: SchlangenblockadeFesselProps) {
+export default function SchlangenblockadeFessel({ aktion, zielSchlangenId, onAktion, aktionsLabel, zielspurKey, hervorgehoben = false }: SchlangenblockadeFesselProps) {
   return (
-    <div className="schlangenblockade-fessel" role="group" aria-label={`Schlangenblockade-Fessel für ${zielSchlangenId}`}>
+    <div className={`schlangenblockade-fessel${hervorgehoben ? ' waldtanz-zielspur-ziel--aktiv' : ''}`} role="group" aria-label={`Schlangenblockade-Fessel für ${zielSchlangenId}`} data-zielspur-key={zielspurKey}>
       <span className="schlangenblockade-fessel__icon" aria-hidden="true">🌿</span>
       <div className="schlangenblockade-fessel__text">
         <strong>Blockade-Fessel</strong>

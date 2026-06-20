@@ -11,16 +11,18 @@ interface FarbendiebBeutekorbProps {
   beuteKartenId: string
   onAktion: (aktion: SpielAktion) => void
   aktionsLabel: (aktion: SpielAktion) => string
+  zielspurKey?: string
+  hervorgehoben?: boolean
 }
 
-export default function FarbendiebBeutekorb({ aktionen, beuteKartenId, onAktion, aktionsLabel }: FarbendiebBeutekorbProps) {
+export default function FarbendiebBeutekorb({ aktionen, beuteKartenId, onAktion, aktionsLabel, zielspurKey, hervorgehoben = false }: FarbendiebBeutekorbProps) {
   if (aktionen.length === 0) return null
 
   const zielSchlangenIds = Array.from(new Set(aktionen.map((aktion) => aktion.eigeneSchlangenId)))
   const zielLabel = zielSchlangenIds.join(', ')
 
   return (
-    <div className="farbendieb-beutekorb" role="group" aria-label={`Farbendieb-Beutekorb für ${beuteKartenId}`}>
+    <div className={`farbendieb-beutekorb${hervorgehoben ? ' waldtanz-zielspur-ziel--aktiv' : ''}`} role="group" aria-label={`Farbendieb-Beutekorb für ${beuteKartenId}`} data-zielspur-key={zielspurKey}>
       <div className="farbendieb-beutekorb__kopf">
         <span className="farbendieb-beutekorb__icon" aria-hidden="true">🧺</span>
         <div>

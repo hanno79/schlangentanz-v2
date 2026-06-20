@@ -150,12 +150,12 @@ export function ermittleZielspurObjekte({
     objekte.set(`frass:${zielKey}`, { key: `frass:${zielKey}`, typ: 'Bissspur', ziel: zielText, ort: trifftEigen ? 'Eigene Lichtung' : 'Gegnerische Tischrunde', hilfe: aktion.ziele.length > 1 ? 'Doppelbiss schließen' : 'Karte lösen', sprungMoeglich })
   }
   for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) {
-    objekte.set(`blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, { key: `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, typ: 'Fessel', ziel: aktion.zielSchlangenId, ort: 'Gegnerische Tischrunde', hilfe: 'Schlange blockieren' })
+    objekte.set(`blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, { key: `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, typ: 'Fessel', ziel: aktion.zielSchlangenId, ort: 'Gegnerische Tischrunde', hilfe: 'Schlange blockieren', sprungMoeglich: true })
   }
   for (const aktion of farbendiebAktionen) if (passt(aktion, handkartenId)) {
     const key = `dieb:${aktion.zielSpielerId}:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
     const anzahl = farbendiebAktionen.filter(eintrag => passt(eintrag, handkartenId) && eintrag.zielSpielerId === aktion.zielSpielerId && eintrag.zielSchlangenId === aktion.zielSchlangenId && eintrag.zielKartenId === aktion.zielKartenId).length
-    objekte.set(key, { key, typ: 'Beutekorb', ziel: aktion.zielKartenId, ort: 'Gegnerische Tischrunde', hilfe: `${anzahl} ${anzahl === 1 ? 'Einfügeplatz' : 'Einfügeplätze'}` })
+    objekte.set(key, { key, typ: 'Beutekorb', ziel: aktion.zielKartenId, ort: 'Gegnerische Tischrunde', hilfe: `${anzahl} ${anzahl === 1 ? 'Einfügeplatz' : 'Einfügeplätze'}`, sprungMoeglich: true })
   }
 
   return [...objekte.values()]
