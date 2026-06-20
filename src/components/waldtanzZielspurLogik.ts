@@ -22,6 +22,13 @@ interface ZielspurOptionen {
   haeutungZielAnzahl: number
 }
 
+export interface ZielspurFamilie {
+  key: string
+  label: string
+  anzahl: number
+  hilfe: string
+}
+
 function passt(aktion: { handkartenId: string }, handkartenId: string) {
   return aktion.handkartenId === handkartenId
 }
@@ -48,7 +55,7 @@ export function hatSichtbaresEigenesSchlangenziel({
     schlangenfrassAktionen.some(aktion => passt(aktion, handkartenId) && aktion.ziele.some(ziel => ziel.spielerId === spielerId && ziel.schlangenId === schlangenId))
 }
 
-export function zaehleZielspurBrettziele({
+function sammleZielspurBrettziele({
   handkartenId,
   aktiverSpielerId,
   aktiverSpielerSchlangen,
@@ -61,15 +68,37 @@ export function zaehleZielspurBrettziele({
   farbendiebAktionen,
   haeutungZielAnzahl,
 }: ZielspurOptionen) {
-  if (!handkartenId) return 0
-  const ziele = new Set<string>()
-  for (const aktion of karteAnlegenAktionen) if (passt(aktion, handkartenId)) add(ziele, `anlegen:${aktion.schlangenId}:${aktion.position}`)
-  for (const aktion of neueSchlangeStartenAktionen) if (passt(aktion, handkartenId)) add(ziele, 'startkreis')
-  for (const aktion of farbenschutzAktionen) if (passt(aktion, handkartenId)) add(ziele, `schutz:${aktion.zielSchlangenId}`)
-  for (const aktion of farbenfusionAktionen) if (passt(aktion, handkartenId)) add(ziele, `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`)
-  for (const aktion of schlangenfrassAktionen) if (passt(aktion, handkartenId)) for (const ziel of aktion.ziele) add(ziele, `frass:${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`)
-  for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) add(ziele, `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`)
-  for (const aktion of farbendiebAktionen) if (passt(aktion, handkartenId)) add(ziele, `dieb:${aktion.zielSpielerId}:${aktion.zielSchlangenId}:${aktion.zielKartenId}:${aktion.eigeneSchlangenId}:${aktion.einfügeIndex}`)
-  for (const schlange of aktiverSpielerSchlangen.slice(0, haeutungZielAnzahl)) add(ziele, `haeutung:${aktiverSpielerId}:${schlange.id}`)
-  return ziele.size
+  if (!handkartenId) return { alle: new Set<string>(), start: new Set<string>(), wachstum: new Set<string>(), eigene: new Set<string>(), gegner: new Set<string>() }
+  const alle = new Set<string>(), start = new Set<string>(), wachstum = new Set<string>(), eigene = new Set<string>(), gegner = new Set<string>()
+  for (const aktion of karteAnlegenAktionen) if (passt(aktion, handkartenId)) { add(wachstum, `${aktion.schlangenId}:${aktion.position}`); add(alle, `anlegen:${aktion.schlangenId}:${aktion.position}`) }
+  for (const aktion of neueSchlangeStartenAktionen) if (passt(aktion, handkartenId)) { add(start, 'startkreis'); add(alle, 'startkreis') }
+  for (const aktion of farbenschutzAktionen) if (passt(aktion, handkartenId)) { add(eigene, `schutz:${aktion.zielSchlangenId}`); add(alle, `schutz:${aktion.zielSchlangenId}`) }
+  for (const aktion of farbenfusionAktionen) if (passt(aktion, handkartenId)) { add(eigene, `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`); add(alle, `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`) }
+  for (const aktion of schlangenfrassAktionen) if (passt(aktion, handkartenId)) for (const ziel of aktion.ziele) {
+    const key = `frass:${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`
+    add(ziel.spielerId === aktiverSpielerId ? eigene : gegner, key)
+    add(alle, key)
+  }
+  for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) { add(gegner, `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`); add(alle, `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`) }
+  for (const aktion of farbendiebAktionen) if (passt(aktion, handkartenId)) {
+    const key = `dieb:${aktion.zielSpielerId}:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+    add(gegner, key)
+    add(alle, key)
+  }
+  for (const schlange of aktiverSpielerSchlangen.slice(0, haeutungZielAnzahl)) { add(eigene, `haeutung:${aktiverSpielerId}:${schlange.id}`); add(alle, `haeutung:${aktiverSpielerId}:${schlange.id}`) }
+  return { alle, start, wachstum, eigene, gegner }
+}
+
+export function ermittleZielspurFamilien(optionen: ZielspurOptionen): ZielspurFamilie[] {
+  const { start, wachstum, eigene, gegner } = sammleZielspurBrettziele(optionen)
+  return [
+    { key: 'startkreis', label: 'Startkreis', anzahl: start.size, hilfe: 'neue Schlange' },
+    { key: 'wachstum', label: 'Wachstumsenden', anzahl: wachstum.size, hilfe: 'Schlangenpfad' },
+    { key: 'eigene-zauber', label: 'Eigene Zauberziele', anzahl: eigene.size, hilfe: 'Lichtung' },
+    { key: 'gegner-zauber', label: 'Gegnerziele', anzahl: gegner.size, hilfe: 'Tischrunde' },
+  ].filter((familie) => familie.anzahl > 0)
+}
+
+export function zaehleZielspurBrettziele(optionen: ZielspurOptionen) {
+  return sammleZielspurBrettziele(optionen).alle.size
 }

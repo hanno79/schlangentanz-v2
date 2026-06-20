@@ -5766,6 +5766,75 @@ code {
   grid-column: 1 / -1;
 }
 
+.spielbereich--game-route [class~="waldtanz-zielspur--zielwahl-faehrten"] {
+  background:
+    linear-gradient(135deg, rgba(254, 203, 0, 0.94), rgba(164, 222, 2, 0.78)),
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.72), transparent 38%);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: 0 6px 0 var(--st-color-border-strong);
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__zielwahl"] {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__zielwahl"] h5 {
+  margin: 0;
+  font-family: var(--st-font-headline);
+  font-size: 0.94rem;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__wege"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.55rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__weg"] {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.12rem 0.45rem;
+  min-height: 2.5rem;
+  padding: 0.32rem 0.65rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  text-align: left;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__weg-anzahl"] {
+  grid-row: 1 / 3;
+  justify-self: end;
+  font-family: var(--st-font-headline);
+  font-size: 1.35rem;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__weg-label"],
+.spielbereich--game-route [class~="waldtanz-zielspur__weg-hilfe"] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__weg-label"] {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+}
+
+.spielbereich--game-route [class~="waldtanz-zielspur__weg-hilfe"] {
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
 .schlangekarte--nichtziel {
   opacity: 0.58;
   filter: saturate(0.75);
