@@ -2955,6 +2955,155 @@ code {
     box-shadow: 0 4px 0 var(--st-color-border-strong);
   }
 
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"]:has(button) {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(7rem, 0.42fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.35rem;
+    max-height: clamp(7.4rem, 18vh, 10.2rem);
+    margin-top: -0.15rem;
+    padding: 0.42rem;
+    overflow: visible;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 2rem;
+    background:
+      radial-gradient(circle at 14% 22%, rgba(254, 203, 0, 0.54) 0 2.4rem, transparent 2.5rem),
+      linear-gradient(135deg, rgba(255, 188, 170, 0.72), rgba(236, 255, 227, 0.78));
+    box-shadow: 0 5px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] > h5 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .spielbereich--game-route [class~="gegnerzauberfeld-hinweis"] {
+    display: grid;
+    gap: 0.18rem;
+    align-self: stretch;
+    padding: 0.5rem;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 1.35rem;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+    font-size: 0.72rem;
+    font-weight: 900;
+    line-height: 1.12;
+  }
+
+  .spielbereich--game-route [class~="gegnerzauberfeld-hinweis"] strong {
+    font-family: var(--st-font-headline);
+    font-size: 0.86rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="schlangenleiste--gegnerzauber"] {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    align-items: start;
+    gap: 0.35rem;
+    margin: 0;
+    max-height: 8.7rem;
+    overflow: visible;
+  }
+
+  .spielbereich--game-route [class~="schlangekarte--gegnerzauber"] {
+    display: grid;
+    grid-template-columns: minmax(5rem, 0.36fr) minmax(0, 1fr);
+    gap: 0.22rem 0.38rem;
+    align-items: start;
+    min-height: 0;
+    padding: 0.4rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 1.45rem;
+    background: rgba(255, 255, 255, 0.62);
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="schlangekarte--gegnerzauber"] > strong,
+  .spielbereich--game-route [class~="schlangekarte--gegnerzauber"] > span:not([class~="schlangekarte__badge"]) {
+    font-size: 0.64rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="schlangekarte--gegnerzauber"] > [class~="schlangekarte__badge"] {
+    justify-self: start;
+    padding: 0.08rem 0.34rem;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="schlangekarte--gegnerzauber"] [class~="schlangekarte__kartenreihe"] {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    grid-template-columns: repeat(auto-fit, minmax(4.8rem, 1fr));
+    align-items: start;
+    gap: 0.28rem;
+  }
+
+  .spielbereich--game-route [class~="schlangekarte--gegnerzauber"] [class~="schlangekarte__karte"] {
+    min-height: 4.8rem;
+    padding: 0.35rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel"] {
+    width: min(100%, 12.5rem);
+    margin-top: 0.22rem;
+    padding: 0.42rem;
+    gap: 0.24rem;
+    border-radius: 1.25rem;
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__kopf"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel"] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__icon"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__icon"] {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__kopf"] strong,
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur__ziel"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__text"] strong {
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__kopf"] span:not([class~="farbendieb-beutekorb__icon"]),
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur"] span,
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__text"] span,
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__chip"] {
+    font-size: 0.58rem;
+    line-height: 1.05;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__plaetze"] {
+    grid-template-columns: repeat(auto-fit, minmax(4.3rem, 1fr));
+    gap: 0.18rem;
+  }
+
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__platz"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur__button"],
+  .spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__button"] {
+    min-height: 1.8rem;
+    padding: 0.24rem 0.42rem;
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] > h4 {
     position: absolute;
     width: 1px;
@@ -7242,4 +7391,106 @@ code {
 .aktionen-gruppe--sprungziel {
   outline: 3px solid var(--st-color-tertiary);
   outline-offset: 2px;
+}
+
+/* M1cq: late cascade guard so the compact Gegner-Zauberfeld wins over base card/object rules. */
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"]:has(button) {
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong) !important;
+  max-height: clamp(7.4rem, 18vh, 10.2rem);
+  overflow: visible;
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte--gegnerzauber"] {
+  min-height: 0;
+  padding: 0.35rem;
+  overflow: visible;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.45rem;
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__karte"] {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.12rem 0.22rem;
+  min-height: 4.1rem;
+  padding: 0.25rem;
+  overflow: visible;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__karte-eyebrow"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__pfadmarke"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__karte-typ"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__karte-wert"] {
+  display: none;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__karte-symbol"] {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangekarte__karte"] > strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6rem;
+  line-height: 1;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel"] {
+  display: grid;
+  width: min(100%, 11.5rem);
+  margin-top: 0.18rem;
+  padding: 0.28rem;
+  gap: 0.16rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.1rem;
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__kopf"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel"] {
+  grid-template-columns: 1.65rem minmax(0, 1fr);
+  gap: 0.18rem;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__icon"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__icon"] {
+  width: 1.55rem;
+  height: 1.55rem;
+  font-size: 0.88rem;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__kopf"] strong,
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur__ziel"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__text"] strong {
+  font-size: 0.68rem;
+  line-height: 0.95;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__kopf"] span:not([class~="farbendieb-beutekorb__icon"]),
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur"] span,
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__text"] span,
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__chip"] {
+  font-size: 0.52rem;
+  line-height: 0.98;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__plaetze"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.12rem;
+}
+
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="farbendieb-beutekorb__platz"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenfrass-bissspur__button"],
+.spielbereich--game-route [class~="schlangen-gruppe--gegnerzauberfeld"] [class~="schlangenblockade-fessel__button"] {
+  min-height: 1.55rem;
+  padding: 0.16rem 0.28rem;
+  font-size: 0.56rem;
+  line-height: 0.96;
 }

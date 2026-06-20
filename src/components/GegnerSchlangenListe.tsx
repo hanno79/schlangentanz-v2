@@ -76,6 +76,12 @@ export default function GegnerSchlangenListe({
     )
   }
 
+  const hatGegnerZauberziel = Boolean(ausgewaehlteHandkarteId) && (
+    schlangenblockadeAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId) ||
+    farbendiebAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId) ||
+    schlangenfrassAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId)
+  )
+
   if (!spieler.some((eintrag) => eintrag.schlangen.length > 0)) {
     return <p>Keine gegnerischen Schlangen.</p>
   }
@@ -88,14 +94,19 @@ export default function GegnerSchlangenListe({
           <button type="button" onClick={() => setErstesFrassZiel(null)}>Zielauswahl zurücksetzen</button>
         </div>
       )}
-      <ul className="schlangenleiste">
+      <ul className={`schlangenleiste${hatGegnerZauberziel ? ' schlangenleiste--gegnerzauber' : ''}`} aria-label={hatGegnerZauberziel ? 'Gegner-Zauberziele' : undefined}>
       {spieler.flatMap((eintrag) =>
         eintrag.schlangen.map((schlange) => {
           const regenbogenWildfarben = ermittleRegenbogenWildfarben(schlange)
           const blockadeAktion = findeBlockadeAktion(eintrag.id, schlange.id)
+          const hatKartenZauberziel = schlange.karten.some((karte) => {
+            const frassZiel = { spielerId: eintrag.id, schlangenId: schlange.id, kartenId: karte.id }
+            return findeFarbendiebAktionen(eintrag.id, schlange.id, karte.id).length > 0 || findeSchlangenfrassZweiZielAktionen(frassZiel).length > 0
+          })
+          const istGegnerZauberziel = Boolean(blockadeAktion || hatKartenZauberziel)
 
           return (
-            <li key={schlange.id} className={`schlangekarte schlangekarte--gegner${blockadeAktion ? ' schlangekarte--blockade-ziel' : ''}`}>
+            <li key={schlange.id} className={`schlangekarte schlangekarte--gegner${blockadeAktion ? ' schlangekarte--blockade-ziel' : ''}${istGegnerZauberziel ? ' schlangekarte--gegnerzauber' : ''}`}>
               <strong>{schlange.id}</strong>
               <span>Gehört zu: {eintrag.name}</span>
               <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>

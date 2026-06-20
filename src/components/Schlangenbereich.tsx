@@ -279,6 +279,11 @@ export default function Schlangenbereich({
   const zielspurAnzahl = zaehleZielspurBrettziele({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurFamilien = ermittleZielspurFamilien({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurObjekte = ermittleZielspurObjekte({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
+  const gegnerZauberfeldAktiv = Boolean(ausgewaehlteHandkarteId) && (
+    schlangenblockadeAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId) ||
+    farbendiebAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId) ||
+    schlangenfrassAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId)
+  )
 
   return (
     <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>
@@ -524,8 +529,14 @@ export default function Schlangenbereich({
         schlangenblockadeAktionen={schlangenblockadeAktionen}
         farbendiebAktionen={farbendiebAktionen}
       />
-      <section className="schlangen-gruppe schlangen-gruppe--gegnerfelder" aria-labelledby={gegnerTitelId}>
+      <section className={`schlangen-gruppe schlangen-gruppe--gegnerfelder${gegnerZauberfeldAktiv ? ' schlangen-gruppe--gegnerzauberfeld' : ''}`} aria-labelledby={gegnerTitelId}>
         <h5 id={gegnerTitelId}>Gegnerische Schlangen</h5>
+        {gegnerZauberfeldAktiv && (
+          <div className="gegnerzauberfeld-hinweis" role="note" aria-label="Gegner-Zauberfeld">
+            <strong>Gegner-Zauberfeld</strong>
+            <span>Beutekorb, Fessel oder Bissspur direkt am Gegnerfeld auslösen.</span>
+          </div>
+        )}
         <GegnerSchlangenListe
           spieler={gegnerSpieler}
           ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
