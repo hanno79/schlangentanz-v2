@@ -42,6 +42,8 @@ import WaldtanzTischkarte from './components/WaldtanzTischkarte'
 import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import WaldtanzBrettschrittStempel from './components/WaldtanzBrettschrittStempel'
+import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
+import WaldtanzAktiverTanzSchritt from './components/WaldtanzAktiverTanzSchritt'
 import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
@@ -106,11 +108,21 @@ interface AppProps {
 
 function App({ initialZustand }: AppProps) {
   const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
-  const [zustand, setZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
+  const [startZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
+  const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
   const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
+  const [brettschrittEintraege, setBrettschrittEintraege] = useState<BrettschrittEintrag[]>(() => {
+    const aktiverIndex = startZustand.aktiverSpielerIndex
+    return startZustand.ablagestapel.slice(-3).map((karte) => ({
+      karteId: karte.id,
+      spielerId: startZustand.spieler[aktiverIndex]?.id ?? 'unbekannt',
+      spielerIndex: aktiverIndex,
+      phase: startZustand.zugphase,
+    }))
+  })
   const gezogeneHandkarteIdRef = useRef<string | null>(null)
   const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
   const nichtEnumerierteAktionenHinweise = useMemo(() => ermittleNichtEnumerierteAktionenHinweise(zustand), [zustand])
@@ -205,7 +217,33 @@ function App({ initialZustand }: AppProps) {
     setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
-    setZustand(updater)
+    // Naechsten Zustand synchron aus dem Closure ableiten, damit wir die
+    // Brettschritt-Eintraege ausserhalb eines setState-Updaters pflegen koennen
+    // und kein setState-during-render Anti-Pattern entsteht.
+    const vorherAb = zustand.ablagestapel
+    const phaseVorher = zustand.zugphase
+    const aktiverIndexVorher = zustand.aktiverSpielerIndex
+    const aktiverVorher = zustand.spieler[aktiverIndexVorher]
+    const naechster = updater(zustand)
+    setZustand(naechster)
+    const nachherAb = naechster.ablagestapel
+    if (nachherAb.length > vorherAb.length) {
+      const neueKarten = nachherAb.slice(vorherAb.length)
+      const phase = phaseVorher
+      const eintraege: BrettschrittEintrag[] = []
+      for (const karte of neueKarten) {
+        eintraege.push({
+          karteId: karte.id,
+          spielerId: naechster.spieler[aktiverIndexVorher]?.id ?? aktiverVorher.id,
+          spielerIndex: aktiverIndexVorher,
+          phase,
+        })
+      }
+      setBrettschrittEintraege((bisher) => [...bisher, ...eintraege].slice(-3))
+    } else if (nachherAb.length < vorherAb.length) {
+      const entfernteIds = new Set(vorherAb.filter((k) => !nachherAb.some((n) => n.id === k.id)).map((k) => k.id))
+      setBrettschrittEintraege((bisher) => bisher.filter((eintrag) => !entfernteIds.has(eintrag.karteId)))
+    }
   }
 
   function fuhreAktionAus(aktion: SpielAktion) { wechsleZustand(aktionsLabel(aktion), z => anwendeAktion(z, aktion)) }
@@ -222,6 +260,18 @@ function App({ initialZustand }: AppProps) {
     setAusgewaehlteHandkarteAuswahl(null)
     gezogeneHandkarteIdRef.current = null
     setZustand(ergebnis.zustand)
+    // Brettschritt-Historie nach KI-Vorspulen neu aus dem sichtbaren ablagestapel aufbauen,
+    // damit die naechsten 3 Stempel die aktuelle Lage wiedergeben. Spieler-Index wird auf den
+    // aktiven Spieler gesetzt, weil die genaue Zuordnung im Vorspulen nicht rekonstruierbar ist.
+    const aktiverIndex = ergebnis.zustand.spieler.findIndex((s) => s.steuerung === 'Mensch')
+    const fallbackIndex = aktiverIndex >= 0 ? aktiverIndex : 0
+    const eintraege: BrettschrittEintrag[] = ergebnis.zustand.ablagestapel.slice(-3).map((karte) => ({
+      karteId: karte.id,
+      spielerId: ergebnis.zustand.spieler[fallbackIndex]?.id ?? 'unbekannt',
+      spielerIndex: fallbackIndex,
+      phase: 'Zugabschluss',
+    }))
+    setBrettschrittEintraege(eintraege)
   }
   function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl) {
     setLetzteAktion(`Neues Spiel: Du + ${kiGegner} KI`)
@@ -229,6 +279,7 @@ function App({ initialZustand }: AppProps) {
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     gezogeneHandkarteIdRef.current = null
+    setBrettschrittEintraege([])
     setZustand(starteAusspielphase(erstelleSpielzustand(kiGegner + 1)))
   }
 
@@ -309,7 +360,22 @@ function App({ initialZustand }: AppProps) {
                   <h4>Leuchtender Waldstein</h4>
                   <p>Magische Zielkreise leuchten im Brett.</p>
                 </div>
-                {istGameRoute && <WaldtanzBrettschrittStempel zustand={zustand} />}
+                {istGameRoute && <WaldtanzBrettschrittStempel zustand={zustand} eintraege={brettschrittEintraege} />}
+                {istGameRoute && (
+                  <WaldtanzAktiverTanzSchritt
+                    istSichtbar
+                    daten={{
+                      aktiverSpielerName: aktiverSpieler.name,
+                      istMensch: aktiverSpieler.steuerung === 'Mensch',
+                      spielerIndex: zustand.aktiverSpielerIndex,
+                      phase: zustand.zugphase,
+                      naechsterSchritt: pflichtschrittLabel,
+                      ueberhand,
+                      istSpielende,
+                      kiZugLaeuft: versteckeKiEinzelaktionen,
+                    }}
+                  />
+                )}
                 <div className="waldtanz-arenastein__spielfeld">
                   <section className="waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett" aria-label="Schlangenlichtung">
                     <WaldtanzTischkarte zustand={zustand} />

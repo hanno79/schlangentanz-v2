@@ -5149,6 +5149,161 @@ code {
   color: var(--st-color-text-soft);
 }
 
+/* M1cu Brettschritt-Lebensader: Spieler-Farbstreifen und Phasen-Badge pro Stempel */
+.brettschritt-stempel {
+  position: relative;
+  overflow: hidden;
+}
+
+.brettschritt-stempel::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: clamp(0.28rem, 0.6vw, 0.42rem);
+  background: var(--st-color-primary);
+  border-right: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+}
+
+.brettschritt-stempel--spieler-0::before { background: var(--st-color-primary); }
+.brettschritt-stempel--spieler-1::before { background: var(--st-color-secondary); }
+.brettschritt-stempel--spieler-2::before { background: var(--st-color-tertiary); }
+.brettschritt-stempel--spieler-3::before { background: #3b82c4; }
+
+.brettschritt-stempel--aktuell.brettschritt-stempel--spieler-0 {
+  box-shadow: 0 5px 0 var(--st-color-border-strong), 0 0 0 3px var(--st-color-primary) inset;
+}
+.brettschritt-stempel--aktuell.brettschritt-stempel--spieler-1 {
+  box-shadow: 0 5px 0 var(--st-color-border-strong), 0 0 0 3px var(--st-color-secondary) inset;
+}
+.brettschritt-stempel--aktuell.brettschritt-stempel--spieler-2 {
+  box-shadow: 0 5px 0 var(--st-color-border-strong), 0 0 0 3px var(--st-color-tertiary) inset;
+}
+.brettschritt-stempel--aktuell.brettschritt-stempel--spieler-3 {
+  box-shadow: 0 5px 0 var(--st-color-border-strong), 0 0 0 3px #3b82c4 inset;
+}
+
+.brettschritt-stempel__phase {
+  display: inline-block;
+  font-family: var(--st-font-headline);
+  font-size: clamp(0.55rem, 0.85vw, 0.7rem);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 2px solid var(--st-color-border-strong);
+  background: rgba(255, 224, 139, 0.85);
+  color: var(--st-color-text);
+  align-self: flex-start;
+}
+
+.brettschritt-stempel--aktuell .brettschritt-stempel__phase {
+  background: var(--st-color-secondary);
+  color: var(--st-color-text);
+}
+
+.brettschritt-stempel--vergangen .brettschritt-stempel__phase {
+  background: rgba(196, 253, 182, 0.5);
+  color: var(--st-color-text-soft);
+}
+
+/* M1cu Aktiver Tanz-Schritt Pill */
+.waldtanz-aktiver-tanz-schritt {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.55rem, 1.1vw, 0.85rem);
+  padding: clamp(0.55rem, 1.1vw, 0.85rem) clamp(0.85rem, 1.8vw, 1.2rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(135deg, rgba(164, 222, 2, 0.18), rgba(254, 203, 0, 0.16));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--st-font-body);
+}
+
+.waldtanz-aktiver-tanz-schritt__streif {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: clamp(0.4rem, 0.9vw, 0.6rem);
+  background: var(--st-color-primary);
+  border-right: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+}
+
+.waldtanz-aktiver-tanz-schritt--spieler-0 .waldtanz-aktiver-tanz-schritt__streif { background: var(--st-color-primary); }
+.waldtanz-aktiver-tanz-schritt--spieler-1 .waldtanz-aktiver-tanz-schritt__streif { background: var(--st-color-secondary); }
+.waldtanz-aktiver-tanz-schritt--spieler-2 .waldtanz-aktiver-tanz-schritt__streif { background: var(--st-color-tertiary); }
+.waldtanz-aktiver-tanz-schritt--spieler-3 .waldtanz-aktiver-tanz-schritt__streif { background: #3b82c4; }
+
+.waldtanz-aktiver-tanz-schritt__phase {
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 2px solid var(--st-color-border-strong);
+  background: var(--st-color-primary);
+  color: var(--st-color-text);
+  flex-shrink: 0;
+}
+
+.waldtanz-aktiver-tanz-schritt--mensch .waldtanz-aktiver-tanz-schritt__phase {
+  background: var(--st-color-primary);
+}
+
+.waldtanz-aktiver-tanz-schritt--ki .waldtanz-aktiver-tanz-schritt__phase {
+  background: var(--st-color-secondary);
+  color: var(--st-color-text);
+  animation: waldtanz-tanzschritt-puls 1.6s ease-in-out infinite;
+}
+
+.waldtanz-aktiver-tanz-schritt--abwurf .waldtanz-aktiver-tanz-schritt__phase {
+  background: var(--st-color-tertiary);
+  color: #fff;
+}
+
+.waldtanz-aktiver-tanz-schritt--spielende .waldtanz-aktiver-tanz-schritt__phase {
+  background: var(--st-color-secondary);
+  color: var(--st-color-text);
+}
+
+.waldtanz-aktiver-tanz-schritt__text {
+  font-family: var(--st-font-headline);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  color: var(--st-color-text);
+  flex: 1;
+}
+
+.waldtanz-aktiver-tanz-schritt__pflicht {
+  font-family: var(--st-font-body);
+  font-weight: 700;
+  font-size: clamp(0.7rem, 1vw, 0.82rem);
+  color: var(--st-color-text-soft);
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.waldtanz-aktiver-tanz-schritt--mensch {
+  animation: waldtanz-tanzschritt-puls 2.6s ease-in-out infinite;
+}
+
+.waldtanz-aktiver-tanz-schritt--abwurf {
+  animation: waldtanz-tanzschritt-warn 1.4s ease-in-out infinite;
+}
+
+@keyframes waldtanz-tanzschritt-puls {
+  0%, 100% { box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 0 rgba(164, 222, 2, 0.0); }
+  50% { box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 6px rgba(164, 222, 2, 0.18); }
+}
+
+@keyframes waldtanz-tanzschritt-warn {
+  0%, 100% { box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 0 rgba(177, 45, 0, 0.0); }
+  50% { box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 6px rgba(177, 45, 0, 0.22); }
+}
+
 .waldtanz-arenastein__schlangenlichtung {
   min-height: clamp(26rem, 48vh, 38rem);
   display: grid;
