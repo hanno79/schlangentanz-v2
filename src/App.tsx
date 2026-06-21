@@ -194,6 +194,9 @@ function App({ initialZustand }: AppProps) {
   const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
   const geheimeAufgabeText = aktiverSpieler.geheimeAufgabe ? aufgabeLabel(aktiverSpieler.geheimeAufgabe, false) : 'keine'
+  const wertungBrettFokus = istGameRoute
+  const materialBrettFokus = istGameRoute
+  const spieleruebersichtBrettFokus = istGameRoute
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
@@ -435,9 +438,9 @@ function App({ initialZustand }: AppProps) {
             </DebugGruppe>
           </section>
         </div>
-        <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} entwicklungsdatenOffen={!istGameRoute} />
-        <MaterialUndAufgabenPanel zustand={zustand} istEndspurt={istEndspurt} entwicklungsdatenOffen={!istGameRoute} />
-        <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} entwicklungsdatenOffen={!istGameRoute} />
+        <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} entwicklungsdatenOffen={!istGameRoute} brettFokus={spieleruebersichtBrettFokus} />
+        <MaterialUndAufgabenPanel zustand={zustand} istEndspurt={istEndspurt} entwicklungsdatenOffen={!istGameRoute} brettFokus={materialBrettFokus} />
+        <WertungPanel zustand={zustand} spielerwertungen={spielerwertungen} gesamtwertung={gesamtwertung} gewinnerErgebnis={gewinnerErgebnis} istSpielende={istSpielende} ergebnisText={ergebnisText} spielerNameFuerId={spielerNameFuerId} entwicklungsdatenOffen={!istGameRoute} brettFokus={wertungBrettFokus} />
       </section>
     </main>
   )

@@ -17,6 +17,7 @@ interface MaterialUndAufgabenPanelProps {
   zustand: Spielzustand
   istEndspurt: boolean
   entwicklungsdatenOffen?: boolean
+  brettFokus?: boolean
 }
 
 function kartenIds(karten: { id: string }[]): string {
@@ -49,12 +50,13 @@ const BASIS_SONDERKARTEN_LABEL = sonderkartenLabel(BASIS_SONDERKARTEN)
 const ERWEITERUNGS_SONDERKARTEN_LABEL = sonderkartenLabel(ERWEITERUNGS_SONDERKARTEN)
 const SONDERKARTEN_ZAUBER_ANZAHL = BASIS_SONDERKARTEN.length + ERWEITERUNGS_SONDERKARTEN.length
 
-export default function MaterialUndAufgabenPanel({ zustand, istEndspurt, entwicklungsdatenOffen = true }: MaterialUndAufgabenPanelProps) {
+export default function MaterialUndAufgabenPanel({ zustand, istEndspurt, entwicklungsdatenOffen = true, brettFokus = false }: MaterialUndAufgabenPanelProps) {
   const materialUndAufgabenTitelId = useId()
   const aufgabenkartenTitelId = useId()
+  if (brettFokus) return null
 
   return (
-    <section className="info-panel info-panel--material waldtanz-hud waldtanz-hud--material" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
+    <section className="info-panel info-panel--material waldtanz-hud waldtanz-hud--material material-aufgaben-panel--brettfokus" aria-labelledby={materialUndAufgabenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={materialUndAufgabenTitelId}>Material und Aufgaben</h2>
       <section className="materialrucksack" aria-label="Waldtanz-Materialrucksack">
         <div className="materialrucksack__kopf">

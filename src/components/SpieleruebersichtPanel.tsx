@@ -13,6 +13,7 @@ interface SpieleruebersichtPanelProps {
   aktiverSpielerId: string
   titelId: string
   entwicklungsdatenOffen?: boolean
+  brettFokus?: boolean
 }
 
 function schlangenZustandLabel(zustand: SchlangenZustand): string {
@@ -25,13 +26,14 @@ function punkteFuer(spielerId: string, wertungen: SpielerWertungsEintrag[]): num
   return wertungen.find((wertung) => wertung.spielerId === spielerId)?.gesamtPunkte ?? 0
 }
 
-export default function SpieleruebersichtPanel({ zustand, spielerwertungen, aktiverSpielerId, titelId, entwicklungsdatenOffen = true }: SpieleruebersichtPanelProps) {
+export default function SpieleruebersichtPanel({ zustand, spielerwertungen, aktiverSpielerId, titelId, entwicklungsdatenOffen = true, brettFokus = false }: SpieleruebersichtPanelProps) {
+  if (brettFokus) return null
   const aktiverSpieler = zustand.spieler.find(spieler => spieler.id === aktiverSpielerId) ?? zustand.spieler[zustand.aktiverSpielerIndex]
   const schlangenGesamt = zustand.spieler.reduce((sum, s) => sum + s.schlangen.length, 0)
   const handkartenGesamt = zustand.spieler.reduce((sum, s) => sum + s.hand.length, 0)
 
   return (
-    <section className="info-panel info-panel--spieleruebersicht waldtanz-hud waldtanz-hud--spieler" aria-labelledby={titelId} aria-live="polite" aria-atomic="true">
+    <section className="info-panel info-panel--spieleruebersicht waldtanz-hud waldtanz-hud--spieler spieleruebersicht-panel--brettfokus" aria-labelledby={titelId} aria-live="polite" aria-atomic="true">
       <h2 id={titelId}>Spielerübersicht</h2>
       <div className="spielerbaenke" role="group" aria-label="Waldtanz-Spielerbänke">
         <div className="spielerbaenke__kopf">

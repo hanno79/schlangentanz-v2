@@ -36,18 +36,17 @@ describe('M1bo Waldtanz-Entwicklungsdaten-Schublade', () => {
     window.history.pushState({}, '', '/game')
     render(<App initialZustand={startZustand()} />)
 
+    // M1cs: Auf /game sind Spielerübersicht und Material und Aufgaben ganz ausgeblendet,
+    // der Brettfokus liegt auf Spieltisch, Spielstatus, Aktiver Spieler und der kompakten Wertung-Rangtafel.
     const spielstatus = screen.getByRole('region', { name: 'Spielstatus' })
     const aktiverSpieler = screen.getByRole('region', { name: 'Aktiver Spieler' })
-    const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
-    const material = screen.getByRole('region', { name: 'Material und Aufgaben' })
     const wertung = screen.getByRole('region', { name: 'Wertung' })
+    expect(() => screen.getByRole('region', { name: 'Spielerübersicht' })).toThrow()
+    expect(() => screen.getByRole('region', { name: 'Material und Aufgaben' })).toThrow()
 
     const debugSchubladen = [
       detailsZu(spielstatus, 'Spielphase'),
       detailsZu(aktiverSpieler, 'Aktiver Spieler'),
-      detailsZu(spieleruebersicht, 'Spielerstatus'),
-      detailsZu(material, 'Karten und Aufgaben'),
-      detailsZu(wertung, 'Punkteübersicht'),
     ]
 
     for (const details of debugSchubladen) {
@@ -55,14 +54,12 @@ describe('M1bo Waldtanz-Entwicklungsdaten-Schublade', () => {
       expect(details.closest('.debug-gruppe-entwicklungsdaten')).toHaveClass('debug-gruppe-entwicklungsdaten--spielschublade')
       const summary = details.querySelector('summary')
       expect(summary).not.toBeNull()
-      expect(within(summary as HTMLElement).getByText(/Spielphase|Aktiver Spieler|Spielerstatus|Karten und Aufgaben|Punkteübersicht/)).toBeVisible()
+      expect(within(summary as HTMLElement).getByText(/Spielphase|Aktiver Spieler/)).toBeVisible()
     }
 
     expect(within(spielstatus).getByRole('group', { name: 'Waldtanz-Sonnenstand' })).toBeVisible()
     expect(within(aktiverSpieler).getByRole('complementary', { name: 'Waldtanz-Spielhilfe' })).toBeVisible()
     expect(within(aktiverSpieler).getByRole('region', { name: 'Schlangenbereich' })).toBeVisible()
-    expect(within(spieleruebersicht).getByRole('group', { name: 'Waldtanz-Spielerbänke' })).toBeVisible()
-    expect(within(material).getByRole('region', { name: 'Waldtanz-Materialrucksack' })).toBeVisible()
     expect(within(wertung).getByRole('region', { name: 'Waldtanz-Rangtafel' })).toBeVisible()
   })
 

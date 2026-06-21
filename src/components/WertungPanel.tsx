@@ -18,6 +18,7 @@ interface WertungPanelProps {
   ergebnisText: string
   spielerNameFuerId: (spielerId: string) => string
   entwicklungsdatenOffen?: boolean
+  brettFokus?: boolean
 }
 
 function rangStatus(index: number, istAktiv: boolean): string {
@@ -36,6 +37,7 @@ export default function WertungPanel({
   ergebnisText,
   spielerNameFuerId,
   entwicklungsdatenOffen = true,
+  brettFokus = false,
 }: WertungPanelProps) {
   const wertungTitelId = useId()
   const rangtafelTitelId = useId()
@@ -50,7 +52,7 @@ export default function WertungPanel({
     .sort((a, b) => b.eintrag.gesamtPunkte - a.eintrag.gesamtPunkte || a.originalIndex - b.originalIndex)
 
   return (
-    <section className="info-panel info-panel--wertung waldtanz-hud waldtanz-hud--wertung" aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
+    <section className={`info-panel info-panel--wertung waldtanz-hud waldtanz-hud--wertung${brettFokus ? ' wertung-panel--brettfokus' : ''}`} aria-labelledby={wertungTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={wertungTitelId}>Wertung</h2>
       {istSpielende && (
         <>
@@ -83,34 +85,38 @@ export default function WertungPanel({
           })}
         </ol>
       </section>
-      <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId} aria-live="polite" aria-atomic="true">
-        <h3 id={punktetafelTitelId}>Punktetafel</h3>
-        <ul className="scoreboard-liste">
-          {spielerwertungen.map(eintrag => {
-            const spieler = zustand.spieler.find(s => s.id === eintrag.spielerId)
+      {!brettFokus && (
+        <section className="scoreboard-bereich" aria-labelledby={punktetafelTitelId} aria-live="polite" aria-atomic="true">
+          <h3 id={punktetafelTitelId}>Punktetafel</h3>
+          <ul className="scoreboard-liste">
+            {spielerwertungen.map(eintrag => {
+              const spieler = zustand.spieler.find(s => s.id === eintrag.spielerId)
 
-            return (
-              <li key={eintrag.spielerId} className="scoreboard-karte">
-                <strong>{spieler?.name ?? eintrag.spielerId}</strong>
-                <span>Gesamt: {eintrag.gesamtPunkte} Punkte</span>
-                <span>Farbgruppen: {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte</span>
-                <span>Aufgaben: {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte</span>
-              </li>
-            )
-          })}
-        </ul>
-      </section>
-      <DebugGruppe titel="Punkteübersicht" standardOffen={entwicklungsdatenOffen} kompakteSchublade={!entwicklungsdatenOffen}>
-        {gesamtwertung.spielerwertungen.map(eintrag => (
-          <div key={eintrag.spielerId}>
-            <p>Punktestand von {spielerNameFuerId(eintrag.spielerId)}: {eintrag.gesamtPunkte} Punkte</p>
-            <p>
-              Punktequellen von {spielerNameFuerId(eintrag.spielerId)}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
-            </p>
-          </div>
-        ))}
-      </DebugGruppe>
-      {gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
+              return (
+                <li key={eintrag.spielerId} className="scoreboard-karte">
+                  <strong>{spieler?.name ?? eintrag.spielerId}</strong>
+                  <span>Gesamt: {eintrag.gesamtPunkte} Punkte</span>
+                  <span>Farbgruppen: {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte</span>
+                  <span>Aufgaben: {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte</span>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+      )}
+      {!brettFokus && (
+        <DebugGruppe titel="Punkteübersicht" standardOffen={entwicklungsdatenOffen} kompakteSchublade={!entwicklungsdatenOffen}>
+          {gesamtwertung.spielerwertungen.map(eintrag => (
+            <div key={eintrag.spielerId}>
+              <p>Punktestand von {spielerNameFuerId(eintrag.spielerId)}: {eintrag.gesamtPunkte} Punkte</p>
+              <p>
+                Punktequellen von {spielerNameFuerId(eintrag.spielerId)}: Farbgruppen {eintrag.wertung.farbgruppenPunkte.gesamtPunkte} Punkte, Aufgaben {eintrag.wertung.aufgabenPunkte.gesamtPunkte} Punkte
+              </p>
+            </div>
+          ))}
+        </DebugGruppe>
+      )}
+      {!brettFokus && gewinnerErgebnis && gewinnerErgebnis.gewinner.map(g => (
         <p key={g.spielerId}>Gewinner {spielerNameFuerId(g.spielerId)}: {g.gesamtPunkte} Punkte</p>
       ))}
     </section>
