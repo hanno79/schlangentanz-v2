@@ -2203,8 +2203,7 @@ code {
 
   .spielbereich--game-route [class~="handkarte__typ"],
   .spielbereich--game-route [class~="handkarte__farbe"],
-  .spielbereich--game-route [class~="handkarte__punkte"],
-  .spielbereich--game-route [class~="handkarte__spielhinweis"] {
+  .spielbereich--game-route [class~="handkarte__punkte"] {
     display: none;
   }
 
@@ -4369,7 +4368,6 @@ code {
 }
 
 .handkarte__eyebrow,
-.handkarte__spielhinweis,
 .handkarte__spielstatus,
 .handkarte__spielziele,
 .handkarte__questzug {
@@ -4378,6 +4376,30 @@ code {
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.handkarte__spielhinweis {
+  font-family: var(--st-font-headline);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
+  padding: 0.18rem 0.6rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-border-strong);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  opacity: 0;
+  transform: translateY(0.3rem);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.handkarte__button--karte:hover .handkarte__spielhinweis,
+.handkarte__button--karte:focus-visible .handkarte__spielhinweis {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .handkarte__art {
@@ -4393,16 +4415,17 @@ code {
 .handkarte__symbol {
   display: grid;
   place-items: center;
-  min-height: 2.6rem;
+  min-height: 3.2rem;
   border: 2px solid var(--st-color-border-strong);
-  border-radius: 0.9rem;
-  background: rgba(255, 255, 255, 0.52);
-  font-size: 1.8rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 2.4rem;
+  line-height: 1;
 }
 
 .handkarte__titel {
   font-family: var(--st-font-headline);
-  font-size: clamp(0.86rem, 1.35vw, 1.05rem);
+  font-size: clamp(0.95rem, 1.55vw, 1.25rem);
   font-weight: 900;
   line-height: 1.05;
   text-align: center;
@@ -4423,14 +4446,15 @@ code {
 
 .handkarte__wertechip {
   width: fit-content;
-  padding: 0.12rem 0.5rem;
+  padding: 0.18rem 0.6rem;
   border: 2px solid var(--st-color-border-strong);
   border-radius: 999px;
   background: var(--st-color-secondary-container);
   box-shadow: 0 2px 0 var(--st-color-border-strong);
   font-family: var(--st-font-headline);
-  font-size: 0.76rem;
+  font-size: 0.86rem;
   font-weight: 900;
+  color: var(--st-color-border-strong);
 }
 
 .handkarte__farbe,
@@ -4477,6 +4501,18 @@ code {
 .aufgabenkarte strong,
 .scoreboard-karte strong {
   font-size: 0.95rem;
+}
+
+.handkarte .handkarte__titel {
+  font-size: clamp(0.95rem, 1.55vw, 1.25rem);
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.handkarte .handkarte__wertechip {
+  font-size: 0.86rem;
+  font-weight: 900;
+  color: var(--st-color-border-strong);
 }
 
 .schlangekarte__badge {

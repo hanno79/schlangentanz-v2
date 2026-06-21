@@ -255,7 +255,7 @@ export default function HandkartenPanel({
                 <span className="handkarte__farbe">{istFarbkarte ? karte.farbe : karte.name}</span>
                 <span className="handkarte__wertechip">{karteWertLabel(karte)}</span>
                 <span className="handkarte__punkte">{istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'}</span>
-                <span className="handkarte__spielhinweis">Auswählen oder ziehen</span>
+                <span className="handkarte__spielhinweis">Spielen</span>
                 <span className="handkarte__spielstatus">{spielStatusText}</span>
                 {zielText && <span className="handkarte__spielziele">{zielText}</span>}
                 {questLabels.length > 0 && (

@@ -36,7 +36,7 @@ describe('M1g Waldtanz-Handkartenfächer', () => {
     expect(within(ersterButton).getByText('Waldtanzkarte')).toBeInTheDocument()
     expect(within(ersterButton).getByText('Blau')).toHaveClass('handkarte__farbe')
     expect(within(ersterButton).getByText('1 Punkte')).toHaveClass('handkarte__punkte')
-    expect(within(ersterButton).getByText('Auswählen oder ziehen')).toHaveClass('handkarte__spielhinweis')
+    expect(within(ersterButton).getByText('Spielen')).toHaveClass('handkarte__spielhinweis')
 
     fireEvent.click(ersterButton)
 
