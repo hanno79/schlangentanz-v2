@@ -41,6 +41,7 @@ import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzTischkarte from './components/WaldtanzTischkarte'
 import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
+import WaldtanzBrettschrittStempel from './components/WaldtanzBrettschrittStempel'
 import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
@@ -305,6 +306,7 @@ function App({ initialZustand }: AppProps) {
                   <h4>Leuchtender Waldstein</h4>
                   <p>Magische Zielkreise leuchten im Brett.</p>
                 </div>
+                {istGameRoute && <WaldtanzBrettschrittStempel zustand={zustand} />}
                 <div className="waldtanz-arenastein__spielfeld">
                   <section className="waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett" aria-label="Schlangenlichtung">
                     <WaldtanzTischkarte zustand={zustand} />

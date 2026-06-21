@@ -1967,6 +1967,43 @@ code {
     min-height: 0;
   }
 
+  .spielbereich--game-route [class~="waldtanz-arenastein__stempel"] {
+    padding: 0.35rem 0.55rem;
+    border-radius: 1.1rem;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel-reihe"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel"] {
+    padding: 0.32rem 0.45rem;
+    border-radius: 0.7rem;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel__rolle"] {
+    font-size: 0.52rem;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel__id"] {
+    font-size: 0.72rem;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel__label"] {
+    font-size: 0.58rem;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel--aktuell"] {
+    outline: var(--st-border-width-chunky) solid var(--st-color-secondary);
+    outline-offset: -1px;
+  }
+
+  .spielbereich--game-route [class~="brettschritt-stempel--vergangen"] {
+    opacity: 0.62;
+    filter: saturate(0.7);
+  }
+
   .spielbereich--game-route [class~="zugpfad"] {
     grid-column: 2;
     grid-row: 3;
@@ -5005,6 +5042,75 @@ code {
   grid-template-columns: minmax(0, 1.7fr) minmax(12rem, 0.6fr);
   gap: clamp(0.85rem, 1.6vw, 1.2rem);
   align-items: stretch;
+}
+
+.waldtanz-arenastein__stempel {
+  display: grid;
+  gap: clamp(0.45rem, 1vw, 0.75rem);
+  padding: clamp(0.55rem, 1.2vw, 0.85rem) clamp(0.7rem, 1.6vw, 1.1rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.42), rgba(164, 222, 2, 0.28));
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.brettschritt-stempel-reihe {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.45rem, 1vw, 0.75rem);
+}
+
+.brettschritt-stempel {
+  display: grid;
+  gap: 0.18rem;
+  padding: clamp(0.45rem, 1vw, 0.7rem) clamp(0.5rem, 1.2vw, 0.85rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-body);
+  color: var(--st-color-text);
+}
+
+.brettschritt-stempel--vergangen {
+  opacity: 0.62;
+  filter: saturate(0.7);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.brettschritt-stempel--aktuell {
+  background: linear-gradient(135deg, rgba(254, 203, 0, 0.55), rgba(255, 255, 255, 0.9));
+  outline: var(--st-border-width-chunky) solid var(--st-color-secondary);
+  outline-offset: -1px;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.brettschritt-stempel__rolle {
+  font-size: clamp(0.5rem, 0.8vw, 0.62rem);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 900;
+  color: var(--st-color-text-soft);
+}
+
+.brettschritt-stempel--aktuell .brettschritt-stempel__rolle {
+  color: var(--st-color-secondary);
+}
+
+.brettschritt-stempel__id {
+  font-family: var(--st-font-headline);
+  font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+  letter-spacing: 0.02em;
+}
+
+.brettschritt-stempel__label {
+  font-size: clamp(0.62rem, 0.95vw, 0.78rem);
+  line-height: 1.15;
+  color: var(--st-color-text-soft);
 }
 
 .waldtanz-arenastein__schlangenlichtung {
