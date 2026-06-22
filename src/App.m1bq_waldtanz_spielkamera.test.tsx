@@ -61,13 +61,18 @@ describe('M1bq Waldtanz-Spielkamera', () => {
     expect(routeRahmen).toMatch(/max-height:\s*min\(88vh,\s*48rem\)/)
     expect(routeRahmen).toMatch(/overflow:\s*auto/)
     expect(routeNichtAktiveNav).toMatch(/display:\s*none/)
-    expect(routeBrett).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
-    expect(routeWaldstein).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
-    expect(routeWaldstein).toMatch(/max-height:\s*none/)
-    expect(routeWaldstein).toMatch(/overflow:\s*visible/)
+    // M1d0 22.06.2026: Der Spieltisch hat jetzt grid-template-areas mit
+    // benannten Zeilen statt einer 1-Spalten-Grid + per-Component grid-row-
+    // Nummerierung. Arenastein, Zugseitenleiste und Schlangenlichtung folgen
+    // dem benannten Schema; explizite Hoehen und row-Properties entfallen.
+    expect(routeBrett).toMatch(/grid-template-areas:/)
+    expect(routeWaldstein).toMatch(/grid-area:\s*arenastein/)
+    expect(routeWaldstein).not.toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
+    expect(routeWaldstein).toMatch(/overflow:\s*hidden/)
     expect(routeWaldstein).toMatch(/width:\s*100%/)
-    expect(routeZugleiste).toMatch(/grid-row:\s*4/)
-    expect(routeZugleiste).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
+    expect(routeZugleiste).toMatch(/grid-area:\s*zugseitenleiste/)
+    // M1d0 22.06.2026: Zugseitenleiste auf 7vh komprimiert (vorher 12vh).
+    expect(routeZugleiste).toMatch(/max-height:\s*clamp\(4rem,\s*7vh,\s*5rem\)/)
     expect(smokeScript).toContain('M1bq Spielkamera')
     expect(smokeScript).toContain('brettWidth < 980')
     expect(smokeScript).toContain('waldsteinWidth < 820')

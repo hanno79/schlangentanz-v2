@@ -45,7 +45,10 @@ describe('M5c Waldpfad-Zugleiste', () => {
     expect(within(stationen[0]).getByText('Karten ausspielen')).toBeInTheDocument()
     expect(within(stationen[1]).getByText('KI')).toBeInTheDocument()
     expect(within(zugpfad).getByText('Nächster Halt: Spieler 2')).toBeInTheDocument()
-    expect(zugpfad.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+    // M1d0 22.06.2026: Zugseitenleiste sitzt visuell UNTER dem Arenastein.
+    // DOM-Reihenfolge folgt jetzt der visuellen Lesereihenfolge — Schlangenbereich
+    // (im Arenastein) kommt VOR Zugpfad (in der Zugseitenleiste).
+    expect(schlangenbereich.compareDocumentPosition(zugpfad) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )
 

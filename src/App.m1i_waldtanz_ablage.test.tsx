@@ -51,7 +51,11 @@ describe('M1i Waldtanz-Ablage', () => {
     expect(within(ablage).getByText('farbenfusion-m1i')).toBeVisible()
     expect(within(ablage).getByText('Sonderkarte Farbenfusion')).toBeVisible()
     expect(within(ablage).getByText('Darunter: rot-m1i-ablage')).toBeVisible()
-    expect(fortschritt.compareDocumentPosition(ablage) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    // M1d0 22.06.2026: Ablage sitzt visuell im Arenastein (Waldobjekte rechts,
+    // Reihe 3). Fortschritt sitzt in der Zugseitenleiste (Reihe 4, unter dem
+    // Arenastein). DOM-Reihenfolge folgt der visuellen Reihenfolge — Ablage
+    // kommt daher ZUERST, Fortschritt danach.
+    expect(ablage.compareDocumentPosition(fortschritt) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(waldobjekte).toContainElement(ablage)
     expect(schlangenlichtung).toContainElement(schlangenbereich)
 

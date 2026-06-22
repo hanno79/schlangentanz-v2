@@ -36,12 +36,19 @@ describe('M1ce Waldstein-Spielbrett', () => {
     expect(waldobjekte).toBeVisible()
     expect(within(lichtung).getByRole('button', { name: 'Neue Schlange starten' })).toBeVisible()
 
+    // M1d0 22.06.2026: Arenastein hat jetzt grid-area: arenastein statt
+    // expliziter Hoehen-Pin. Die feste Hoehe clamp(28rem, 50vh, 30rem) +
+    // overflow:hidden ermoeglicht es, dass die Schlangenlichtung visuell
+    // geclippt wird und nicht in die Bottom-Row hineinragt. Die alte
+    // explizite Hoehe clamp(32.5rem, 58vh, 33rem) und das bottom-Padding
+    // sind obsolet.
     const routeArena = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(routeArena).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
-    expect(routeArena).toMatch(/overflow:\s*visible/)
+    expect(routeArena).toMatch(/grid-area:\s*arenastein/)
+    expect(routeArena).not.toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
+    expect(routeArena).toMatch(/overflow:\s*hidden/)
     expect(routeArena).not.toMatch(/overflow:\s*auto/)
     expect(routeArena).not.toMatch(/scrollbar-gutter:\s*stable/)
-    expect(routeArena).toMatch(/padding-bottom:\s*clamp\(5\.2rem,\s*13vh,\s*7\.2rem\)/)
+    expect(routeArena).not.toMatch(/padding-bottom:\s*clamp\(5\.2rem,\s*13vh,\s*7\.2rem\)/)
 
     expect(packageJson).toContain('node scripts/m1ce_waldstein_spielbrett_smoke.mjs')
     expect(smokeScript).toContain("width: 1100")

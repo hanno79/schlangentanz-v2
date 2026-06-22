@@ -158,11 +158,18 @@ describe('M1cy Waldtanz-Gegnerplakette', () => {
     // Position: right (rechts) — M1cy spiegelt M1cx-Spielerplakette horizontal.
     // Position: top (oben) — gewaehlt weil rechts unten bereits der Arenazugknopf sitzt.
     // Begruendung im AENDERUNG-Kommentar oberhalb der Plakette-Regel.
+    // M1d0 22.06.2026: Gegnerplakette ist NICHT mehr position: absolute mit
+    // right/top-Properties. Sie sitzt jetzt in der benannten Grid-Zelle
+    // "gegner-plakette" mit grid-area: gegner-plakette und position: static.
+    // Die Kollision mit dem Arenazugknopf ist damit strukturell ausgeschlossen,
+    // weil Arenazug und Gegnerplakette jetzt in getrennten Grid-Zeilen liegen.
     const gegnerplaketteBlock = appCss.match(/(\.spielbereich--game-route[^}]*\[class~="waldtanz-gegnerplakette"\][^{]*\{)([^}]*)\}/s)?.[2] ?? ''
     const cleanedBlock = gegnerplaketteBlock.replace(/\/\*[\s\S]*?\*\//g, '')
-    expect(cleanedBlock).toMatch(/right:\s*clamp\(/)
-    // top: muss gesetzt sein, bottom: darf NICHT gesetzt sein (sonst Konflikt mit Arenazugknopf)
-    expect(cleanedBlock).toMatch(/top:\s*clamp\(/)
+    expect(cleanedBlock).toMatch(/grid-area:\s*gegner-plakette/)
+    expect(cleanedBlock).toMatch(/position:\s*static/)
+    expect(cleanedBlock).not.toMatch(/position:\s*absolute/)
+    expect(cleanedBlock).not.toMatch(/right:\s*clamp\(/)
+    expect(cleanedBlock).not.toMatch(/top:\s*clamp\(/)
     expect(cleanedBlock).not.toMatch(/bottom:\s*clamp\(/)
 
     // Reihenfolge: Gegnerplakette-Block kommt NACH Spielerplakette-Block (Source-Order-Guard)

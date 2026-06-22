@@ -48,7 +48,11 @@ describe('M1ad Waldtanz-Spielbahnen', () => {
 
   it('liefert den Stitch-CSS-Vertrag für breite Lichtung und kompakte Nebenobjekte', () => {
     expect(cssBlock('waldtanz-arenastein__spielfeld')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1\.7fr\)\s*minmax\(12rem,\s*0\.6fr\)/)
-    expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/min-height:\s*clamp\(26rem,\s*48vh,\s*38rem\)/)
+    // M1d0 22.06.2026: Schlangenlichtung wurde von 26rem/48vh/38rem auf
+    // 20rem/36vh/24rem reduziert, damit sie in das Arenastein mit
+    // fester Hoehe und overflow:hidden passt und nicht in die Bottom-Row
+    // hineinragt.
+    expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/min-height:\s*clamp\(20rem,\s*36vh,\s*24rem\)/)
     expect(cssBlock('waldtanz-arenastein__schlangenlichtung')).toMatch(/radial-gradient/)
     expect(cssBlock('waldtanz-arenastein__waldobjekte')).toMatch(/align-content:\s*start/)
     expect(cssBlock('waldtanz-arenastein__waldobjekte')).toMatch(/max-height:\s*clamp\(26rem,\s*48vh,\s*38rem\)/)

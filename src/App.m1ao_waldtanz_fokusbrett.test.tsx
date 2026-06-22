@@ -49,18 +49,25 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(waldobjekte).toBeVisible()
 
     const routeArenaBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(routeArenaBlock).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
-    expect(routeArenaBlock).toMatch(/max-height:\s*none/)
-    expect(routeArenaBlock).toMatch(/padding-bottom:\s*clamp\(5\.2rem,\s*13vh,\s*7\.2rem\)/)
-    expect(routeArenaBlock).toMatch(/overflow:\s*visible/)
-    expect(routeArenaBlock).not.toMatch(/scrollbar-gutter:\s*stable/)
+    // M1d0 22.06.2026: Arenastein-Hoehe wird nicht mehr per expliziter
+    // height-clamp gepinnt; sie ergibt sich aus dem benannten Grid-Auto-Flow
+    // (Grid-Zeile "arenastein") in Verbindung mit fester Arenastein-Hoehe
+    // (clamp(28rem, 50vh, 30rem)). overflow:hidden statt visible, weil der
+    // Schlangenbereich visuell geclippt wird.
+    expect(routeArenaBlock).toMatch(/grid-area:\s*arenastein/)
+    expect(routeArenaBlock).not.toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
+    expect(routeArenaBlock).toMatch(/overflow:\s*hidden/)
 
     const routeZugleisteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
-    expect(routeZugleisteBlock).toMatch(/grid-row:\s*4/)
+    // M1d0: Zugseitenleiste hat jetzt grid-area: zugseitenleiste statt
+    // grid-row: 4. Die uebrigen Vertrags-Constraints (grid-template-columns,
+    // max-height, overflow) bleiben unveraendert.
+    expect(routeZugleisteBlock).toMatch(/grid-area:\s*zugseitenleiste/)
     expect(routeZugleisteBlock).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
-    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
-    expect(routeZugleisteBlock).toMatch(/margin-top:\s*clamp\(0\.25rem,\s*0\.8vh,\s*0\.55rem\)/)
-    expect(routeZugleisteBlock).toMatch(/overflow:\s*visible/)
+    // M1d0 22.06.2026: Zugseitenleiste auf 7vh komprimiert (vorher 12vh),
+    // damit Arenastein und Bottom-Row in den 900-px-Viewport passen.
+    expect(routeZugleisteBlock).toMatch(/max-height:\s*clamp\(4rem,\s*7vh,\s*5rem\)/)
+    expect(routeZugleisteBlock).toMatch(/overflow:\s*hidden/)
 
     const routeZugleistenKinderBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > *')
     expect(routeZugleistenKinderBlock).toMatch(/grid-column:\s*auto/)
@@ -69,7 +76,11 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeZugleistenKinderBlock).toMatch(/overflow:\s*hidden/)
 
     const routeSpielerrahmenBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-spielerrahmen"]')
-    expect(routeSpielerrahmenBlock).toMatch(/max-height:\s*clamp\(4\.8rem,\s*9vh,\s*5\.8rem\)/)
+    expect(routeSpielerrahmenBlock).toMatch(/grid-area:\s*spielerrahmen/)
+    // M1d0 22.06.2026: Spielerrahmen auf 6vh komprimiert (vorher 9vh),
+    // damit Spielerrahmen + Gegnerplakette + Arenastein + Bottom-Row
+    // zusammen in den 900-px-Viewport passen.
+    expect(routeSpielerrahmenBlock).toMatch(/max-height:\s*clamp\(3\.6rem,\s*6vh,\s*4\.6rem\)/)
     expect(routeSpielerrahmenBlock).toMatch(/overflow:\s*visible/)
 
     const routeSpielfeldBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"]')
@@ -88,11 +99,12 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeWaldobjekteBlock).toMatch(/overflow:\s*auto/)
 
     const routeHandBlock = cssBlockForSelector('.spielbereich--game-route [class~="handkarten-panel"]')
-    // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
-    // mit waldtanz-arenastein, das ebenfalls grid-row: 3 hat) auf grid-row 4,
-    // damit sie UNTER dem Arenastein liegt. Mit align-self: end landet sie
-    // am Boden des Spieltisches und ueberlappt nicht mehr mit dem Schlangenbereich.
-    expect(routeHandBlock).toMatch(/grid-row:\s*4/)
-    expect(routeHandBlock).toMatch(/align-self:\s*end/)
+    // M1d0 22.06.2026: Handkarten-Panel ist jetzt Teil der benannten
+    // Bottom-Row "sp-plakette hand arenazug" mit grid-area: hand statt
+    // grid-row: 4 + align-self: end. Die explizite Positionierung entfaellt,
+    // weil die benannten Grid-Areas die Lage strukturieren.
+    expect(routeHandBlock).toMatch(/grid-area:\s*hand/)
+    expect(routeHandBlock).not.toMatch(/grid-row:\s*4/)
+    expect(routeHandBlock).not.toMatch(/align-self:\s*end/)
   })
 })

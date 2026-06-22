@@ -44,17 +44,21 @@ describe('M1by Waldtanz-Spielbrettweite', () => {
     const arenastein = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')
     const zugleiste = cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
 
-    expect(brett).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
-    expect(spielerrahmen).toMatch(/max-height:\s*clamp\(4\.8rem,\s*9vh,\s*5\.8rem\)/)
+    // M1d0 22.06.2026: Der Spieltisch hat jetzt grid-template-areas mit
+    // benannten Zeilen. Spielerrahmen, Arenastein und Zugseitenleiste sind
+    // benannte Grid-Zeilen statt numerischer grid-row/grid-column.
+    expect(brett).toMatch(/grid-template-areas:/)
+    expect(spielerrahmen).toMatch(/grid-area:\s*spielerrahmen/)
+    // M1d0 22.06.2026: Spielerrahmen auf 6vh komprimiert (vorher 9vh).
+    expect(spielerrahmen).toMatch(/max-height:\s*clamp\(3\.6rem,\s*6vh,\s*4\.6rem\)/)
     expect(spielerrahmen).toMatch(/background:\s*transparent/)
     expect(spielerrahmen).toMatch(/box-shadow:\s*none/)
-    expect(arenastein).toMatch(/grid-column:\s*1/)
+    expect(arenastein).toMatch(/grid-area:\s*arenastein/)
     expect(arenastein).toMatch(/width:\s*100%/)
-    expect(zugleiste).toMatch(/grid-column:\s*1/)
-    expect(zugleiste).toMatch(/grid-row:\s*4/)
+    expect(zugleiste).toMatch(/grid-area:\s*zugseitenleiste/)
     expect(zugleiste).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
-    expect(zugleiste).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
-    expect(zugleiste).toMatch(/overflow:\s*visible/)
+    // M1d0 22.06.2026: Zugseitenleiste auf 7vh komprimiert (vorher 12vh).
+    expect(zugleiste).toMatch(/max-height:\s*clamp\(4rem,\s*7vh,\s*5rem\)/)
     expect(smokeScript).toContain('M1by Spielbrettweite')
     expect(smokeScript).toContain('daten.gartenkopf.height > 185')
     expect(smokeScript).toContain('waldsteinWidth < 820')

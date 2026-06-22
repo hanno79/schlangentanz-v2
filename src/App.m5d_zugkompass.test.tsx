@@ -73,8 +73,13 @@ describe('M5d Zugkompass', () => {
     expect(within(kompass).getByText('Karten ausspielen')).toBeInTheDocument()
     expect(within(kompass).getByText(/Wähle eine Handkarte und spiele sie direkt im Schlangenbereich/i)).toBeInTheDocument()
     expect(within(kompass).queryByRole('button', { name: /Weiter/ })).toBeNull()
+    // M1d0 22.06.2026: Visuelle Reihenfolge = DOM-Reihenfolge. Pfad und Kompass
+    // sitzen beide in der Zugseitenleiste (unter Arenastein). Schlangenbereich
+    // sitzt im Arenastein (ueber Zugseitenleiste) und kommt daher im DOM ZUERST.
+    expect(schlangenbereich.compareDocumentPosition(pfad) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(schlangenbereich.compareDocumentPosition(kompass) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    // Pfad und Kompass: in Zugseitenleiste, Pfad kommt visuell vor Kompass.
     expect(pfad.compareDocumentPosition(kompass) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(kompass.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i })).toBeVisible()
 
     fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))

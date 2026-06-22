@@ -101,7 +101,11 @@ describe('M1at Waldtanz-Arenazugknopf', () => {
     expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/border-radius:\s*999px/)
     expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/box-shadow:\s*0 6px 0 var\(--st-color-border-strong\)/)
     expect(cssBlock('.waldtanz-arenazug__hauptknopf:active')).toMatch(/transform:\s*translateY\(5px\)/)
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug"]')).toMatch(/grid-row:\s*5/)
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug"]')).toMatch(/justify-self:\s*end/)
+    // M1d0 22.06.2026: Arenazugknopf ist jetzt Teil der benannten Grid-Areas-
+    // Bottom-Row "sp-plakette hand arenazug" mit grid-area: arenazug statt
+    // grid-row: 5 + justify-self: end. Die Positionierung ergibt sich aus
+    // dem Grid-Flow; die volle Breite/Zentrierung ersetzt das end-Alignment.
+    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug"]')).toMatch(/grid-area:\s*arenazug/)
+    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug"]')).toMatch(/justify-self:\s*stretch/)
   })
 })

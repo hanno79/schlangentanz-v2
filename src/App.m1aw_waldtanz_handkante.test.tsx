@@ -31,28 +31,31 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(ersteKarte).toHaveClass('handkarte__button--karte')
 
     const handGridBlock = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
-    // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 auf grid-row 4,
-    // damit sie UNTER dem Arenastein sitzt (keine Collision mehr). Wichtig: dieser
-    // Test muss die echte Deklaration pruefen, NICHT das Kommentar-Match. Der Block
-    // enthaelt im Kommentar den String "grid-row 3", was ein falsches Positiv liefern
-    // wuerde. Wir matchen daher auf die Kommentar-bereinigte Form (Semikolon-getrennte
-    // Deklarationszeilen) statt auf den rohen Block.
+    // M1d0 22.06.2026: Handkarten-Panel hat jetzt grid-area: hand in der
+    // benannten Bottom-Row "sp-plakette hand arenazug" statt grid-row: 4 +
+    // align-self: end. Die expliziten Positions-Properties entfallen,
+    // weil das benannte Grid-Areas-Schema die Lage explizit beschreibt.
+    // Kommentare muessen vorher entfernt werden, weil der AENDERUNG-Kommentar
+    // noch "pointer-events:none" als veraltet beschreibt.
     const handGridDeklarationen = handGridBlock
       .replace(/\/\*[\s\S]*?\*\//g, '')
       .replace(/\s+/g, ' ')
-    expect(handGridDeklarationen).toMatch(/grid-row:\s*4\s*;/)
-    expect(handGridDeklarationen).not.toMatch(/grid-row:\s*3/)
-    expect(handGridBlock).toMatch(/align-self:\s*end/)
+    expect(handGridDeklarationen).toMatch(/grid-area:\s*hand\b/)
+    expect(handGridDeklarationen).not.toMatch(/grid-row:\s*[34]/)
+    expect(handGridDeklarationen).not.toMatch(/align-self:\s*end/)
+    expect(handGridDeklarationen).not.toMatch(/pointer-events:\s*none/)
     expect(handGridBlock).toMatch(/z-index:\s*4/)
-    expect(handGridBlock).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
-    expect(handGridBlock).toMatch(/pointer-events:\s*none/)
+    expect(handGridBlock).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"] button')).toMatch(/pointer-events:\s*auto/)
 
     const arenaBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(arenaBlock).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
-    expect(arenaBlock).toMatch(/max-height:\s*none/)
-    expect(arenaBlock).toMatch(/padding-bottom:\s*clamp\(5\.2rem,\s*13vh,\s*7\.2rem\)/)
-    expect(arenaBlock).toMatch(/overflow:\s*visible/)
+    // M1d0 22.06.2026: Arenastein-Hoehe ergibt sich jetzt aus dem
+    // benannten Grid-Auto-Flow + fester Arenastein-Hoehe clamp(28rem,
+    // 50vh, 30rem). Die alte explizite Pin-Hoehe 32.5rem/58vh/33rem und
+    // das bottom-Padding sind obsolet.
+    expect(arenaBlock).toMatch(/grid-area:\s*arenastein/)
+    expect(arenaBlock).not.toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
+    expect(arenaBlock).toMatch(/overflow:\s*hidden/)
 
     const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
     expect(kartenBlock).toMatch(/height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)

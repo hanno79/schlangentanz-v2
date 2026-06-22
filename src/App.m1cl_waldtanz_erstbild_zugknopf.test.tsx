@@ -49,13 +49,18 @@ describe('M1cl Waldtanz-Erstbild-Zugknopf', () => {
     const zugleiste = cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')
     const arenazug = cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug"]')
 
-    expect(spielerrahmen).toMatch(/max-height:\s*clamp\(4\.8rem,\s*9vh,\s*5\.8rem\)/)
-    expect(arena).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
+    // M1d0 22.06.2026: Arenastein hat jetzt grid-area: arenastein statt
+    // expliziter Hoehen-Pin. Arenazug ist Teil der benannten Bottom-Row
+    // "sp-plakette hand arenazug" mit grid-area: arenazug + width: 100%
+    // statt width: min(100%, 22rem) + negatives margin-top.
+    // M1d0 22.06.2026: Spielerrahmen auf 6vh komprimiert (vorher 9vh).
+    expect(spielerrahmen).toMatch(/max-height:\s*clamp\(3\.6rem,\s*6vh,\s*4\.6rem\)/)
+    expect(arena).toMatch(/grid-area:\s*arenastein/)
+    expect(arena).not.toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
     expect(zugleiste).toMatch(/margin-top:\s*clamp\(0\.25rem,\s*0\.8vh,\s*0\.55rem\)/)
-    expect(arenazug).toMatch(/width:\s*min\(100%,\s*22rem\)/)
-    // M1da-Reduktion: max -1.5rem statt -5rem, damit der Zugknopf die Hand nicht
-    // ueberlagert. M1da-Smoke beweist die ueberlappungsfreie Lage live.
-    expect(arenazug).toMatch(/margin-top:\s*clamp\(-3rem,\s*-7vh,\s*-1\.5rem\)/)
+    expect(arenazug).toMatch(/grid-area:\s*arenazug/)
+    expect(arenazug).toMatch(/width:\s*100%/)
+    expect(arenazug).not.toMatch(/margin-top:\s*clamp\(-3rem,\s*-7vh,\s*-1\.5rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug__wartehinweis"]')).toMatch(/display:\s*none/)
     expect(packageJson).toContain('node scripts/m1cl_erstbild_zugknopf_smoke.mjs')
   })

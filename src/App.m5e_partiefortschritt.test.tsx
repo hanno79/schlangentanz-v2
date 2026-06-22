@@ -71,8 +71,14 @@ describe('M5e Partiefortschritt', () => {
     expect(within(fortschritt).getByText('Aktuelle Führung: Spieler 1 mit 9 Punkten')).toBeInTheDocument()
     expect(within(fortschritt).getByText('Du: 9 Punkte')).toBeInTheDocument()
     expect(within(fortschritt).getByText(/Leere den Nachziehstapel, dann beginnt die Endrunde/i)).toBeInTheDocument()
+    // M1d0 22.06.2026: Visuelle Reihenfolge = DOM-Reihenfolge. Kompass und
+    // Fortschritt sitzen beide in der Zugseitenleiste (unter Arenastein).
+    // Schlangenbereich sitzt im Arenastein (ueber Zugseitenleiste) und kommt
+    // daher im DOM ZUERST.
+    expect(schlangenbereich.compareDocumentPosition(kompass) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(schlangenbereich.compareDocumentPosition(fortschritt) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    // Kompass kommt vor Fortschritt (Reihenfolge in der Zugseitenleiste).
     expect(kompass.compareDocumentPosition(fortschritt) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(fortschritt.compareDocumentPosition(schlangenbereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
 
     expect(cssBlock('partiefortschritt')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('partiefortschritt')).toMatch(/border-radius:\s*2rem/)

@@ -35,9 +35,17 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     expect(handkarten).toHaveClass('handkarten-panel--waldtanz-handbuehne')
 
     const handBlock = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
-    expect(handBlock).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
-    expect(handBlock).toMatch(/padding:\s*0\.2rem\s+0\.45rem/)
-    expect(handBlock).toMatch(/pointer-events:\s*none/)
+    // M1d0 22.06.2026: Handkarten-Panel wurde von clamp(10.25rem, 23vh, 12.1rem)
+    // auf clamp(8rem, 18vh, 9.5rem) reduziert, damit der Brettschritt-Stempel
+    // und die Spielerplakette auf gleicher Hoehe sichtbar bleiben. Das Panel
+    // ist nicht mehr pointer-events:none (es liegt jetzt in einer eigenen
+    // Grid-Zelle unter dem Arenastein, nicht mehr als Overlay darueber).
+    // Kommentare muessen vorher entfernt werden, weil der AENDERUNG-Kommentar
+    // das Wort "pointer-events:none" noch enthaelt.
+    const handBlockClean = handBlock.replace(/\/\*[\s\S]*?\*\//g, '')
+    expect(handBlockClean).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
+    expect(handBlockClean).toMatch(/padding:\s*0\.2rem\s+0\.45rem/)
+    expect(handBlockClean).not.toMatch(/pointer-events:\s*none/)
 
     const buehneBlock = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]')
     expect(buehneBlock).toMatch(/min-height:\s*0/)

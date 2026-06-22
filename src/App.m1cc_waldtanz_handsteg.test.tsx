@@ -43,8 +43,13 @@ describe('M1cc Waldtanz-Handsteg', () => {
     const alterPseudoSteg = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]::before')
     const handsteg = cssBlock('.spielbereich--game-route [class~="handkarten-buehne__handsteg"]')
 
-    expect(routeHandPanel).toMatch(/width:\s*min\(100%,\s*34rem\)/)
-    expect(routeHandPanel).toMatch(/margin-right:\s*clamp\(10rem,\s*25vw,\s*18rem\)/)
+    // M1d0 22.06.2026: Handkarten-Panel hat jetzt grid-area: hand in der
+    // benannten Bottom-Row. width: 100% ersetzt die alte min(100%, 34rem)-
+    // Begrenzung; margin-right: clamp(10rem, 25vw, 18rem) ist obsolet,
+    // weil die Gegnerplakette nicht mehr rechts daneben sitzt, sondern
+    // in einer eigenen Grid-Zeile darueber.
+    expect(routeHandPanel).toMatch(/width:\s*100%/)
+    expect(routeHandPanel).not.toMatch(/margin-right:\s*clamp\(10rem,\s*25vw,\s*18rem\)/)
     expect(alterPseudoSteg).toMatch(/display:\s*none/)
     expect(handsteg).toMatch(/width:\s*min\(100%,\s*34rem\)/)
     expect(handsteg).toMatch(/left:\s*50%/)

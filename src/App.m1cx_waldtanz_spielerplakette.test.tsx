@@ -128,10 +128,22 @@ describe('M1cx Waldtanz-Spielerplakette', () => {
     expect(plaketteIdx).toBeGreaterThan(0)
     expect(handkarteIdx).toBeGreaterThan(plaketteIdx)
 
-    // Plakette bekommt eigene Grid-Spalte im Spieltisch-Grid auf /game
-    expect(appCss).toMatch(/\.spielbereich--game-route[^}]*(\.waldtanz-spielerplakette|\[class~="waldtanz-spielerplakette"\])/)
-    // Plakette liegt innerhalb des Spieltisch-Containers (gleicher Container wie Handkarten-Panel)
-    expect(appCss).toMatch(/(\.spielbrett--waldtanz|\[class~="spielbrett--waldtanz"\])([^}]|\n)*(\.waldtanz-spielerplakette|\[class~="waldtanz-spielerplakette"\])/)
+    // Plakette bekommt eigene Grid-Spalte im Spieltisch-Grid auf /game.
+    // Hinweis: Eine echte Greedy-Regex mit ([^}]|\n)* auf einer 235K-CSS-Datei
+    // produziert katastrophales Backtracking (14s+ pro Test). Wir ersetzen das
+    // durch einen schnellen Selector-Pairing-Check.
+    const spielerplaketteContainerPrefix = /\.spielbereich--game-route \[class~="spielbrett--waldtanz"\] \[class~="waldtanz-spielerplakette"\]/
+    expect(appCss).toMatch(spielerplaketteContainerPrefix)
+    // Plakette hat eine eigene grid-area: sp-plakette-Regel innerhalb des Spieltisch-Kontexts.
+    const gridAreaSpPlakette = /\.spielbereich--game-route \[class~="spielbrett--waldtanz"\] \[class~="waldtanz-spielerplakette"\][^{]*\{[^}]*grid-area:\s*sp-plakette/
+    expect(appCss).toMatch(gridAreaSpPlakette)
+    // Plakette liegt innerhalb des Spieltisch-Containers (gleicher Container wie Handkarten-Panel).
+    const plaketteVorHand = (() => {
+      const plaketteIdx = appCss.search(/(\.waldtanz-spielerplakette\b|\[class~="waldtanz-spielerplakette"\])(?=[^{]*\{)/)
+      const handIdx = appCss.indexOf('.handkarten-panel')
+      return plaketteIdx > 0 && handIdx > plaketteIdx
+    })()
+    expect(plaketteVorHand).toBe(true)
   })
 
   it('CSS-Source: Handkarten-Panel liegt UNTER dem Arenastein (M1ax-Fix, grid-row 4 statt Collision in grid-row 3)', () => {
@@ -140,14 +152,16 @@ describe('M1cx Waldtanz-Spielerplakette', () => {
     // teilweise darunter lag. Der Bug: handBox.y (633) lag 39px UEBER schlangenBox.y (672).
     //
     // Konkreter Reparatur-Vertrag: handkarten-panel hat grid-row >= 4 (nicht 3).
+    // M1d0 22.06.2026: Handkarten-Panel hat jetzt grid-area: hand in der
+    // benannten Bottom-Row statt grid-row >= 4 + align-self: end. Der Bug
+    // aus M1ax (Hand auf gleicher Hoehe wie Arenastein) ist damit strukturell
+    // ausgeschlossen, weil Arenastein und Bottom-Row eigene benannte Grid-
+    // Zeilen sind. Die explizite grid-row >= 4-Bedingung pruefen wir daher
+    // nicht mehr — der neue Vertrag ist grid-area: hand.
     const handkartenBlock = appCss.match(/(\.spielbereich--game-route[^}]*\[class~="handkarten-panel"\][^{]*\{)([^}]*)\}/s)?.[2] ?? ''
-
-    // Kommentare (vor jeder echten Deklaration) ignorieren, damit der erste
-    // Treffer nicht aus dem AENDERUNG-Kommentar "grid-row 3" stammt.
     const cleanedBlock = handkartenBlock.replace(/\/\*[\s\S]*?\*\//g, '')
-    const gridRowMatch = cleanedBlock.match(/grid-row:\s*(\d+)\s*;/)
-    const gridRowValue = gridRowMatch ? parseInt(gridRowMatch[1], 10) : 0
-    expect(gridRowValue).toBeGreaterThanOrEqual(4)
+    expect(cleanedBlock).toMatch(/grid-area:\s*hand\b/)
+    expect(cleanedBlock).not.toMatch(/grid-row:\s*[34]/)
   })
 
   it('Smoke-Wiring: package.json npm run smoke:production enthaelt das M1cx-Smoke-Script', () => {

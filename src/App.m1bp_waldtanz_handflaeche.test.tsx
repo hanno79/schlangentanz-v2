@@ -46,8 +46,8 @@ describe('M1bp Waldtanz-Handfläche', () => {
     const karte = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
     const buehne = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]')
 
-    expect(panel).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
-    expect(panel).toMatch(/transform:\s*translateY\(1rem\)/)
+    expect(panel).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
+    expect(panel).toMatch(/transform:\s*none/)
     expect(panel).toMatch(/padding:\s*0\.2rem 0\.45rem/)
     expect(karte).toMatch(/box-sizing:\s*border-box/)
     expect(karte).toMatch(/height:\s*clamp\(5\.8rem, 10vh, 6\.1rem\)/)

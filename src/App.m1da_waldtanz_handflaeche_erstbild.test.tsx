@@ -104,19 +104,21 @@ describe('M1da Waldtanz-Handfläche und Spielerplakette im Erstbild', () => {
     expect(parseFloat(heightMatch[3].trim())).toBeLessThanOrEqual(7.2)
   })
 
-  it('verhindert dass der Arenazugknopf die Handkarten überlagert (M1da-Margin-Reduktion)', () => {
+  it('verhindert dass der Arenazugknopf die Handkarten überlagert (M1d0 Grid-Areas-Vertrag)', () => {
     const cleaned = cleanedBlock('.spielbereich--game-route [class~="waldtanz-arenazug"]')
-    // M1cl pinnt grid-row 5; M1da reduziert margin-top, damit der Knopf
-    // die Hand nicht ueber die Panel-Unterkante schiebt.
-    expect(cleaned).toMatch(/grid-row:\s*5/)
-    const marginMatch = cleaned.match(/margin-top:\s*clamp\(([^,]+),\s*([^,]+),\s*([^)]+)\)/)
-    expect(marginMatch).not.toBeNull()
-    if (!marginMatch) return
-    // Negativ-Spannweite, deren Obergrenze (3. Wert) nicht ueber -1.5 rem liegt
-    // (vorher -5 rem, von M1cl auf -1.5 rem reduziert).
-    const remMax = parseFloat(marginMatch[3].trim())
-    expect(remMax).toBeGreaterThanOrEqual(-3)
-    expect(remMax).toBeLessThanOrEqual(-1)
+    // M1d0 22.06.2026: Arenazug ist Teil der benannten Bottom-Row
+    // "sp-plakette hand arenazug" mit grid-area: arenazug statt grid-row: 5
+    // + negatives margin-top. Die Lage ergibt sich aus dem Grid-Areas-
+    // Schema, kein negativer margin-top noetig.
+    expect(cleaned).toMatch(/grid-area:\s*arenazug/)
+    expect(cleaned).not.toMatch(/grid-row:\s*5/)
+    // margin-top ist 0 (kein negativer Span mehr), nicht im clamp(...)-Bereich.
+    const marginMatch = cleaned.match(/margin-top:\s*([^;]+)/)
+    if (marginMatch) {
+      const value = marginMatch[1].trim()
+      // Akzeptiere "0" oder "0px"; ein negativer clamp-Wert waere ein Regress.
+      expect(value).not.toMatch(/^clamp\(-\d/)
+    }
   })
 
   it('verdrahtet das M1da-Smoke-Skript in der kanonischen npm-Smoke-Kette', () => {

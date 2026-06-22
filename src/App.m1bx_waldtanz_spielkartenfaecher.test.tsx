@@ -49,8 +49,11 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     const button = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
     const statuschip = cssBlock('.spielbereich--game-route [class~="handkarten-buehne__statuschip--spielbar"]')
 
-    expect(panel).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
-    expect(panel).toMatch(/transform:\s*translateY\(1rem\)/)
+    // M1d0 22.06.2026: Handkarten-Panel hat jetzt max-height 8rem/18vh/9.5rem
+    // statt 10.25rem/23vh/12.1rem und keinen translateY-Spacer mehr
+    // (das Panel ist jetzt eine Grid-Zelle im Grid-Flow, kein Overlay).
+    expect(panel).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
+    expect(panel).toMatch(/transform:\s*none/)
     expect(liste).toMatch(/align-items:\s*end/)
     expect(liste).toMatch(/perspective:\s*1100px/)
     expect(handkarte).toMatch(/width:\s*clamp\(5\.8rem,\s*7\.4vw,\s*6\.9rem\)/)

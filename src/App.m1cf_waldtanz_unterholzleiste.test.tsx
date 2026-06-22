@@ -79,10 +79,16 @@ describe('M1cf Waldtanz-Unterholzleiste', () => {
     const unterholz = cssBlock('.spielbereich--game-route [class~="waldtanz-unterholzleiste"]')
     const wartenderArenazug = cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug--wartet"]')
 
+    // M1d0 22.06.2026: Zugseitenleiste hat jetzt grid-area: zugseitenleiste.
+    // overflow ist jetzt hidden statt visible (Schlangenlichtung clippt
+    // visuell auf die Arenastein-Box), margin-top bleibt erhalten.
+    expect(zugleiste).toMatch(/grid-area:\s*zugseitenleiste/)
     expect(zugleiste).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
-    expect(zugleiste).toMatch(/max-height:\s*clamp\(5\.4rem,\s*12vh,\s*6\.6rem\)/)
+    // M1d0 22.06.2026: Zugseitenleiste auf 7vh komprimiert (vorher 12vh),
+    // damit Arenastein und Bottom-Row in den 900-px-Viewport passen.
+    expect(zugleiste).toMatch(/max-height:\s*clamp\(4rem,\s*7vh,\s*5rem\)/)
     expect(zugleiste).toMatch(/margin-top:\s*clamp\(0\.25rem,\s*0\.8vh,\s*0\.55rem\)/)
-    expect(zugleiste).toMatch(/overflow:\s*visible/)
+    expect(zugleiste).toMatch(/overflow:\s*hidden/)
     expect(kinder).toMatch(/max-height:\s*clamp\(4\.8rem,\s*10vh,\s*5\.8rem\)/)
     expect(kinder).toMatch(/overflow:\s*hidden/)
     expect(interaktiveKinder).toMatch(/max-height:\s*none/)

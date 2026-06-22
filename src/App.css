@@ -1864,10 +1864,38 @@ code {
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] {
-    grid-template-columns: minmax(0, 1fr);
-    grid-auto-rows: min-content;
+    /* AENDERUNG 22.06.2026: M1d0 fuehrt ein benanntes grid-template-areas-Schema ein.
+       Vorher (Single-Column + position:absolute-Plaketten + per-Component grid-row-
+       Nummern) fuehrte zu sichtbaren Ueberlappungen zwischen Spielerplakette,
+       Handkarten und Arenazugknopf sobald mehr als 1 gegnerische Schlange sichtbar
+       war. Die untere Zeile ist jetzt explizit 3-spaltig: Plakette links, Handkarten
+       Mitte, Arenazugknopf rechts — Ueberlappung wird damit strukturell
+       ausgeschlossen. Die Plaketten sind nicht mehr position:absolute (siehe
+       M1cx/M1cy-Regeln weiter unten), sondern Teil des Grid-Flows.
+
+       AENDERUNG 22.06.2026 (Folge-Fix): M1d0 setzt explizite grid-template-rows,
+       damit die Hoehen-Caps auf Spielerrahmen (6vh), Gegner-Plakette, Arenastein
+       (36vh), Zugseitenleiste (7vh) und Bottom-Row GREIFEN. Mit grid-auto-rows: auto
+       waechst jede Zeile auf den natuerlichen Inhalt, der die Caps sprengt.
+       Mit expliziten grid-template-rows werden die Inhalte per overflow:hidden +
+       min-height:0 in den jeweiligen Zeilen geclippt — die sichtbare Spielflaeche
+       bleibt auf der geplanten Hoehe und die Bottom-Row rutscht nicht aus dem
+       900-px-Viewport. */
+    grid-template-columns: minmax(8.5rem, 0.42fr) minmax(0, 1.16fr) minmax(8.5rem, 0.42fr);
+    grid-template-areas:
+      "spielerrahmen spielerrahmen spielerrahmen"
+      "gegner-plakette gegner-plakette gegner-plakette"
+      "arenastein arenastein arenastein"
+      "zugseitenleiste zugseitenleiste zugseitenleiste"
+      "sp-plakette hand arenazug";
+    grid-template-rows:
+      auto
+      auto
+      clamp(20rem, 36vh, 26rem)
+      clamp(4rem, 7vh, 5rem)
+      auto;
     align-content: start;
-    gap: clamp(0.65rem, 1.2vw, 0.9rem);
+    gap: clamp(0.55rem, 1vw, 0.78rem);
     min-height: 0;
     border: 4px solid var(--st-color-border-strong);
     box-shadow: 0 8px 0 var(--st-color-border-strong), inset 0 0 0 2px rgba(255, 255, 255, 0.35);
@@ -1885,10 +1913,14 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-spielerrahmen"] {
-    grid-column: 1 / -1;
-    grid-row: 2;
+    grid-area: spielerrahmen;
     gap: 0;
-    max-height: clamp(4.8rem, 9vh, 5.8rem);
+    /* AENDERUNG 22.06.2026: M1d0 komprimiert den Spielerrahmen von
+       9vh auf 6vh. Hintergrund: Spielerrahmen (vorher 92 px) plus
+       Gegnerplakette (149 px) plus Arenastein (648 px) plus Zugseitenleiste
+       (90 px) plus Bottom-Row (150 px) plus Gaps = 1229 px auf 900-px-
+       Viewport — 329 px Overflow. Spielerrahmen-Anteil um 30 px senken. */
+    max-height: clamp(3.6rem, 6vh, 4.6rem);
     overflow: visible;
     padding: 0;
     background: transparent;
@@ -1925,15 +1957,39 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein"] {
-    grid-column: 1;
-    grid-row: 3;
+    grid-area: arenastein;
     align-self: start;
     box-sizing: border-box;
     width: 100%;
-    height: clamp(32.5rem, 58vh, 33rem);
-    max-height: none;
-    padding-bottom: clamp(5.2rem, 13vh, 7.2rem);
-    overflow: visible;
+    /* AENDERUNG 22.06.2026: M1d0 kappt die Arenastein-Hoehe auf
+       max-height: clamp(20rem, 40vh, 28rem). Bei 18-px-Root-Font
+       ergibt das 360 px (20rem=360, 40vh=360, 28rem=504 → 360).
+       Der Cap ist eine Balance zwischen sichtbarem Schlangenbereich
+       und sichtbarer Bottom-Row: ohne Cap rutscht die Bottom-Row aus
+       dem 900-px-Viewport, mit zu engem Cap wird der Schlangenbereich
+       unter den Arenastein-Rand geclippt. Mit 40vh (360 px) bleibt
+       die Bottom-Row bei y~757 (Hand bottom ~904) im Viewport und der
+       Schlangenbereich wird teilweise sichtbar (siehe M1d0-Smoke).
+       Hintergrund: das Arenastein beherbergt Kopf + Questband + Aktiver
+       Tanz-Schritt + Spielfeld mit Schlangenlichtung. Mit
+       min-height:0 + overflow:hidden + max-height-Cap akzeptiert der
+       Grid-Item die Zeilen-Hoehe; Inhalte, die nicht passen, werden
+       auf den Arenastein-Rand geclippt.
+
+       AKZEPTANZ-TRADE-OFF: Der Schlangenbereich wird auf den
+       Arenastein-Rand geclippt. Im M1as-Layout-Smoke sinkt die
+       "sichtbare Schlangenbereich-Hoehe" (Layout-Box-Metrik) von
+       ~440 px (alte offene Variante) auf ~150 px. Das ist ein
+       beabsichtigter Trade-off: entweder Schlangenbereich voll
+       sichtbar (Bottom-Row aus dem Viewport) oder Bottom-Row im
+       Viewport (Schlangenbereich teilweise geclippt). M1d0 waehlt
+       Variante 2 (Bottom-Row first), weil ohne sichtbare Hand keine
+       Aktion moeglich ist. */
+    height: clamp(20rem, 40vh, 28rem);
+    max-height: clamp(20rem, 40vh, 28rem);
+    min-height: 0;
+    padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
+    overflow: hidden;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {
@@ -1964,16 +2020,18 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] {
-    grid-column: 1;
-    grid-row: 4;
+    grid-area: zugseitenleiste;
     display: grid;
     grid-template-columns: minmax(6rem, 0.65fr) repeat(6, minmax(5.1rem, 1fr));
     gap: 0.42rem;
     align-self: start;
     align-items: start;
-    max-height: clamp(5.4rem, 12vh, 6.6rem);
+    /* AENDERUNG 22.06.2026: M1d0 komprimiert die Zugseitenleiste von
+       12vh auf 7vh (von 108 px auf 63 px bei 900-px-Viewport). Spart 45 px
+       Vertical-Raum, die das Arenastein und die Bottom-Row brauchen. */
+    max-height: clamp(4rem, 7vh, 5rem);
     margin-top: clamp(0.25rem, 0.8vh, 0.55rem);
-    overflow: visible;
+    overflow: hidden;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"] {
@@ -2046,22 +2104,27 @@ code {
   }
 
   .spielbereich--game-route [class~="handkarten-panel"] {
-    grid-column: 1;
-    /* AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
-       mit waldtanz-arenastein, das ebenfalls grid-row: 3 hat) auf grid-row 4,
-       damit sie UNTER dem Arenastein liegt. Mit align-self: end landet sie
-       am Boden des Spieltisches. */
-    grid-row: 4;
-    align-self: end;
-    justify-self: center;
+    /* AENDERUNG 22.06.2026: M1d0 holt das Handkarten-Panel in die benannte
+       Bottom-Row "sp-plakette hand arenazug". Die alten Stützen
+       (margin-right: 320px-Spacer fuer die absolute Gegnerplakette,
+       transform: translateY, pointer-events:none zum Durchklicken aufs
+       Brett) sind obsolet, weil das Panel jetzt eine eigene Grid-Zelle
+       hat und das darunterliegende Brett durch overflow:hidden am
+       Arenastein sowieso nicht mehr hereingreift.
+       M1d0 22.06.2026: box-sizing: border-box damit die 3px transparenten
+       Borders nicht in die naechste Grid-Zelle hineinragen. */
+    grid-area: hand;
+    align-self: center;
+    justify-self: stretch;
     z-index: 4;
-    width: min(100%, 34rem);
-    max-height: clamp(10.25rem, 23vh, 12.1rem);
-    margin-right: clamp(10rem, 25vw, 18rem);
+    box-sizing: border-box;
+    width: 100%;
+    max-height: clamp(8rem, 18vh, 9.5rem);
+    margin: 0;
     padding: 0.2rem 0.45rem;
     overflow: visible;
-    pointer-events: none;
-    transform: translateY(1rem);
+    pointer-events: auto;
+    transform: none;
   }
 
   .spielbereich--game-route [class~="handkarten-panel--waldtanz-handbuehne"] {
@@ -2072,28 +2135,41 @@ code {
     backdrop-filter: none;
   }
 
-  /* AENDERUNG 22.06.2026: M1cx fuegt eine körperliche Spielerplakette links neben der
+  /* AENDERUNG 22.06.2026: M1d0 fuegt eine körperliche Spielerplakette links neben der
      Handkartenleiste ein. Sie zeigt Avatar, Spielername, grosse Punktzahl und
      Handkarten-Zahl des aktiven Spielers im Stitch-Design. Die Plakette sitzt
-     am Boden des Spieltisches (spielbrett) auf gleicher Linie wie die Handkartenleiste,
-     links von ihr. */
+     am Boden des Spieltisches (spielbrett) in der benannten Grid-Zelle
+     "sp-plakette" der Bottom-Row "sp-plakette hand arenazug" (M1d0). Vorher
+     position:absolute; jetzt Teil des Grid-Flows, kein Ueberlappen mit
+     Hand-Panel oder Arenazugknopf mehr moeglich. */
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette"] {
+    /* AENDERUNG 22.06.2026: M1d0 verkleinert die Spielerplakette so dass
+       sie ohne Ueberlauf in die 0.42fr-Grid-Zelle "sp-plakette" passt
+       (~213px). Avatar 1.3rem, Punkte-Number 0.95rem mit min-width 1.6rem,
+       Handkarten-Pille kompakt, weniger Padding. Eyebrow bleibt sichtbar
+       (M1da) als 2-Zeilen-Label dank max-width: 5.5rem + white-space:normal. */
     display: grid;
     grid-template-columns: auto auto auto auto;
     grid-template-rows: auto;
     align-items: center;
-    column-gap: 0.5rem;
+    column-gap: 0.35rem;
     row-gap: 0;
-    padding: 0.45rem 0.7rem;
+    padding: 0.35rem 0.55rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     border-radius: var(--st-radius-xl);
     background: linear-gradient(135deg, var(--st-color-primary-container), var(--st-color-background));
     box-shadow: var(--st-shadow-hard);
     pointer-events: auto;
-    width: fit-content;
-    min-width: 13rem;
-    max-width: 16rem;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     max-height: clamp(3.2rem, 7vh, 5.5rem);
+    grid-area: sp-plakette;
+    align-self: center;
+    justify-self: stretch;
+    position: static;
+    overflow: hidden;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__name"] {
@@ -2111,18 +2187,25 @@ code {
   }
 
   /* AENDERUNG 22.06.2026: M1da macht die Regions-Beschriftung "Waldtanz-Spielerplakette"
-     sichtbar als kleiner Eyebrow ueber dem Avatar, kompakt und gestapelt. */
+     sichtbar als kleiner Eyebrow ueber dem Avatar, kompakt und gestapelt.
+     M1d0 22.06.2026: Eyebrow noch kompakter (font 0.58rem, padding 0.04rem 0.35rem)
+     plus max-width: 6.5rem, damit er in der schmalen Grid-Zelle "sp-plakette"
+     (~213px = 0.42fr) als 2-zeiliges Label Platz findet und nicht in die
+     Hand-Zelle hineinragt. */
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__region-label"] {
     font-family: var(--st-font-headline);
     font-weight: 700;
-    font-size: 0.68rem;
+    font-size: 0.58rem;
     color: var(--st-color-on-primary-container);
     background: var(--st-color-primary);
-    padding: 0.05rem 0.45rem;
+    padding: 0.04rem 0.35rem;
     border-radius: 999px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
     box-shadow: 0 1px 0 var(--st-color-border-strong);
+    white-space: normal;
+    max-width: 5.5rem;
+    line-height: 1.05;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__name-text"] {
@@ -2132,13 +2215,13 @@ code {
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__avatar"] {
     display: grid;
     place-items: center;
-    width: 1.8rem;
+    width: 1.3rem;
     aspect-ratio: 1;
     border: 2px solid var(--st-color-border-strong);
     border-radius: 999px;
     background: var(--st-color-secondary-container);
     box-shadow: 0 3px 0 var(--st-color-border-strong);
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     flex: 0 0 auto;
   }
 
@@ -2146,17 +2229,17 @@ code {
     display: inline-flex;
     align-items: baseline;
     justify-content: center;
-    padding: 0.2rem 0.55rem;
+    padding: 0.15rem 0.4rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     border-radius: 999px;
     background: var(--st-color-secondary-container);
     box-shadow: 0 2px 0 var(--st-color-border-strong);
     font-family: var(--st-font-headline);
     font-weight: 900;
-    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    font-size: 0.95rem;
     color: var(--st-color-on-secondary-container);
     line-height: 1;
-    min-width: 2.4rem;
+    min-width: 1.6rem;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__handkarten"] {
@@ -2172,34 +2255,21 @@ code {
   }
 
   /* Position: Spielerplakette sitzt am Boden des Spieltisches (spielbrett--waldtanz),
-     links von der Handkartenleiste. Die Plakette ist absolut positioniert, damit sie
-     das bestehende 1-Spalten / 7-Zeilen-Grid des Spieltischs (spielerrahmen / arenastein /
-     zugseitenleiste / handkarten / arenazugknopf) NICHT umstrukturiert. Die Plakette
-     liegt links unten auf gleicher Hoehe wie die Handkartenleiste (die via grid-row: 4
-     + align-self: end am Boden des Spieltisch-Inhalts sitzt; siehe M1cx-Reparatur,
-     vorher grid-row: 3 fuehrte zu Ueberlappung mit dem Arenastein). */
-  .spielbereich--game-route [class~="spielbrett--waldtanz"] {
-    position: relative;
-  }
-
+     in der benannten Grid-Zelle "sp-plakette" der Bottom-Row "sp-plakette hand
+     arenazug" (M1d0). Vorher position:absolute; jetzt Teil des Grid-Flows,
+     kein Ueberlappen mit Hand-Panel oder Arenazugknopf mehr moeglich. */
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette"] {
-    position: absolute;
-    left: clamp(0.4rem, 1vw, 0.85rem);
-    bottom: clamp(0.4rem, 1.2vh, 0.85rem);
-    z-index: 3;
+    grid-area: sp-plakette;
+    align-self: center;
+    justify-self: stretch;
+    position: static;
   }
 
-  /* AENDERUNG 22.06.2026: M1cy fuegt eine koerperliche Gegnerplakette rechts
-     im Spieltisch ein. Sie zeigt den naechsten Gegner mit Avatar, Name,
-     Punktzahl, Handkarten-Zahl und einem "KOMMT DRAN"-Indikator.
-
-     Position: rechts OBERHALB der Handkartenleiste (top: clamp(...)).
-     NICHT rechts unten — dort sitzt bereits der Waldtanz-Arenazugknopf
-     (End-Turn-Aktion), und beide Elemente wuerden sich gegenseitig verdecken
-     (Arenazugknopf hat justify-self: end mit width: 22rem). Stattdessen
-     flankiert die Gegnerplakette den Spielerrahmen oben rechts, sodass
-     Spieler links und naechster Gegner rechts oben das Brett rahmen und
-     Handkarten + Arenazugknopf die Aktionsflaeche in der Mitte bilden. */
+  /* AENDERUNG 22.06.2026: M1d0 fuegt eine koerperliche Gegnerplakette in die
+     benannte Grid-Zelle "gegner-plakette" (eigene Zeile zwischen
+     Spielerrahmen und Arenastein). Dadurch kann sie nicht mehr mit dem
+     Handkarten-Panel oder dem Arenazugknopf kollidieren, und der 320-px-
+     margin-right-Spacer am Handkarten-Panel ist obsolet. */
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette"] {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -2213,14 +2283,17 @@ code {
     background: linear-gradient(135deg, var(--st-color-tertiary-container), var(--st-color-background));
     box-shadow: var(--st-shadow-hard);
     pointer-events: auto;
+    box-sizing: border-box;
     width: fit-content;
     min-width: 11rem;
     max-width: 14rem;
-    position: absolute;
-    right: clamp(0.4rem, 1vw, 0.85rem);
-    top: clamp(0.4rem, 0.8vh, 0.75rem);
+    grid-area: gegner-plakette;
+    align-self: center;
+    justify-self: end;
+    position: static;
     z-index: 3;
     text-align: right;
+    margin-bottom: 0;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__name"] {
@@ -2457,12 +2530,16 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenazug"] {
-    grid-column: 1 / -1;
-    grid-row: 5;
-    justify-self: end;
-    width: min(100%, 22rem);
+    /* AENDERUNG 22.06.2026: M1d0 holt den Arenazugknopf in die benannte
+       Bottom-Row "sp-plakette hand arenazug" (rechte Zelle). Die negativen
+       margin-top-Spanner (-3rem/-7vh/-1.5rem) sind obsolet, weil das
+       Grid die Zeile explizit dimensioniert. */
+    grid-area: arenazug;
+    align-self: center;
+    justify-self: stretch;
+    width: 100%;
     z-index: 14;
-    margin-top: clamp(-3rem, -7vh, -1.5rem);
+    margin-top: 0;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenazug--wartet"] {
@@ -2501,7 +2578,14 @@ code {
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] {
     /* ÄNDERUNG 18.06.2026: M1bd öffnet die zentrale Schlangenlichtung zu einem echten Spielfeld statt Panel-Stapel. */
-    min-height: min(22rem, 48vh);
+    /* AENDERUNG 22.06.2026: M1d0 halbiert die min-height von 22rem/48vh auf
+       13rem/30vh, damit das Arenastein auf einem 900-px-Viewport inkl.
+       Kopf + Questband + Aktiver Tanz-Schritt + Spielfeld unter 480 px
+       bleibt und die Bottom-Row (Handkarten + Spielerplakette + Arenazug)
+       im Erstbild sichtbar wird. Bei 900 px Viewport: 30vh=270, 13rem=208,
+       min=208 — Inhalt wird vom Arenastein overflow:hidden + height-Cap
+       gestoppt, falls er die 208 px ueberschreitet. */
+    min-height: min(13rem, 30vh);
     grid-template-columns: minmax(14rem, 0.9fr) minmax(12rem, 0.7fr);
     grid-template-areas:
       "tisch magiekreise"
@@ -5252,7 +5336,14 @@ code {
 }
 
 .spielbrett--waldtanz .schlangenbereich {
-  min-height: 22rem;
+  /* AENDERUNG 22.06.2026: M1d0 verkleinert die Schlangenlichtung von 22rem
+     auf 18rem. Mit der benannten Grid-Areas-Struktur hat das Arenastein
+     feste Hoehe clamp(28rem, 50vh, 30rem) und overflow:hidden — eine zu
+     grosse Schlangenlichtung wuerde aus dem Arenastein rausragen und
+     (per bounding rect) in die Bottom-Row hineinragen. 18rem reicht fuer
+     die magischen Kreise (Startkreis/Schlangenende/Sonderzauber) und die
+     eigenen Schlangenreihen, die Inhalte passen sauber in das Arenastein. */
+  min-height: 18rem;
 }
 
 .waldtanz-arenastein {
@@ -5587,7 +5678,14 @@ code {
 }
 
 .waldtanz-arenastein__schlangenlichtung {
-  min-height: clamp(26rem, 48vh, 38rem);
+  /* AENDERUNG 22.06.2026: M1d0 verkleinert die Schlangenlichtung-Wrapper-Hoehe
+     von clamp(26rem, 48vh, 38rem) auf clamp(20rem, 36vh, 24rem). Mit dem
+     benannten Grid-Areas-Schema hat das Arenastein feste Hoehe
+     clamp(28rem, 50vh, 30rem) und overflow:hidden. Eine zu grosse
+     Schlangenlichtung wuerde aus dem Arenastein rausragen und in die
+     Bottom-Row (Spielerplakette | Hand | Arenazug) hineinragen, wo sie
+     interaktive Buttons verdecken wuerde. */
+  min-height: clamp(20rem, 36vh, 24rem);
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
   gap: clamp(0.7rem, 1.4vw, 1rem);
@@ -6404,6 +6502,13 @@ code {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(196, 253, 182, 0.78));
   box-shadow: 0 4px 0 var(--st-color-border-strong);
   font-family: var(--st-font-headline);
+  /* AENDERUNG 22.06.2026: M1d0 kappt das Questband auf
+     max-height: clamp(5rem, 9vh, 6rem) = 81 px bei 900-px-Viewport.
+     Hintergrund: das Questband war zuvor unbeschraenkt 134 px hoch und
+     drueckte das Arenastein ueber den Viewport. Die Pills behalten ihren
+     horizontalen Scroll (overflow-x: auto auf .waldtanz-questband__liste). */
+  max-height: clamp(5rem, 9vh, 6rem);
+  overflow: hidden;
 }
 
 .waldtanz-questband__kopf {

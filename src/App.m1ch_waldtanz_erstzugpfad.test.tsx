@@ -51,7 +51,12 @@ describe('M1ch Waldtanz-Erstzugpfad', () => {
     expect(eigeneRoute).toMatch(/grid-template-areas:/)
     expect(eigeneRoute).toMatch(/startgarten startzone/)
     expect(startzoneRoute).toMatch(/grid-area:\s*startzone/)
-    expect(handRoute).toMatch(/align-self:\s*end/)
+    // M1d0 22.06.2026: Handkarten-Panel hat jetzt grid-area: hand in der
+    // benannten Bottom-Row statt align-self: end. Die Lage ergibt sich
+    // aus dem Grid-Areas-Schema, nicht mehr aus individueller Alignment-
+    // Konfiguration.
+    expect(handRoute).toMatch(/grid-area:\s*hand/)
+    expect(handRoute).not.toMatch(/align-self:\s*end/)
     expect(packageJson).toContain('node scripts/m1bw_lichtung_entflechtung_smoke.mjs')
     expect(smokeScript).toContain('Tischkarte ueberlappt Startkreis')
     expect(smokeScript).toContain('Startkreis laeuft in die Handbank')

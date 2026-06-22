@@ -260,55 +260,14 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
             <section className="spielbrett spielbrett--waldtanz" aria-labelledby={spieltischTitelId} aria-live="polite" aria-atomic="true">
               <h3 id={spieltischTitelId}>Spieltisch</h3>
               <WaldtanzSpielerrahmen zustand={zustand} spielerwertungen={spielerwertungen} kiZugProtokoll={kiZugProtokoll} schlangengrubeAktionen={versteckeKiEinzelaktionen ? [] : schlangengrubeAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
-              <aside className="waldtanz-zugseitenleiste" aria-label="Zugleiste">
-                {istGameRoute && (
-                  <div className="waldtanz-unterholzleiste" role="group" aria-label="Waldtanz-Unterholzleiste">
-                    <strong>Unterholzleiste</strong>
-                    <span>{pflichtschrittLabel}</span>
-                  </div>
-                )}
-                <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
-                {istGameRoute && !istSpielende && (
-                  <aside className="waldtanz-spielhilfe" aria-label="Waldtanz-Spielhilfe">
-                    <AktiverSpielerZugtafel
-                      spieler={aktiverSpieler}
-                      punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
-                      pflichtschrittLabel={pflichtschrittLabel}
-                      zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
-                      letzteAktion={letzteAktion}
-                      geheimeAufgabeText={geheimeAufgabeText}
-                    />
-                    {aktiverSpieler.steuerung === 'Mensch' && (
-                      <Spielerfuehrung
-                        pflichtschrittLabel={pflichtschrittLabel}
-                        empfohleneAktionLabel={empfohleneAktionLabel}
-                        aktionszielId={spielerfuehrungAktionszielId}
-                        aktionszielSatzText={spielerfuehrungAktionszielSatzText}
-                        aktionszielLinkText={spielerfuehrungAktionszielLinkText}
-                        onAktionszielHervorheben={setHervorgehobenesAktionszielId}
-                        zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
-                      />
-                    )}
-                  </aside>
-                )}
-                <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
-                <ZugKompass
-                  zustand={zustand}
-                  ueberhand={ueberhand}
-                  zeigtKiVorspulen={versteckeKiEinzelaktionen}
-                  kiZugProtokoll={kiZugProtokoll}
-                  zeigeHauptaktionen={!istGameRoute}
-                  onAusspielphaseBeenden={handleAusspielphaseBeenden}
-                  onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
-                  onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
-                  onZugBeenden={handleZugBeenden}
-                  onAusspielphaseStarten={handleAusspielphaseStarten}
-                  onKiZugVorspulen={handleKiZugVorspulen}
-                  onReaktionsAktion={fuhreAktionAus}
+              {istGameRoute && !istSpielende && zustand.spieler.length > 1 && (
+                <WaldtanzGegnerplakette
+                  spielerName={naechsterGegner.name}
+                  istMensch={naechsterGegner.steuerung === 'Mensch'}
+                  punkte={spielerwertungen.find((wertung) => wertung.spielerId === naechsterGegner.id)?.gesamtPunkte ?? 0}
+                  handkarten={naechsterGegner.hand.length}
                 />
-                <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
-                <WaldtanzBonuszauber aktionen={versteckeKiEinzelaktionen ? [] : verdopplerAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
-              </aside>
+              )}
               <section className="waldtanz-arenastein" aria-label="Waldtanz-Arenastein">
                 <div className="waldtanz-arenastein__kopf">
                   <h4>Leuchtender Waldstein</h4>
@@ -386,14 +345,55 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   handkarten={aktiverSpieler.hand.length}
                 />
               )}
-              {istGameRoute && !istSpielende && zustand.spieler.length > 1 && (
-                <WaldtanzGegnerplakette
-                  spielerName={naechsterGegner.name}
-                  istMensch={naechsterGegner.steuerung === 'Mensch'}
-                  punkte={spielerwertungen.find((wertung) => wertung.spielerId === naechsterGegner.id)?.gesamtPunkte ?? 0}
-                  handkarten={naechsterGegner.hand.length}
+              <aside className="waldtanz-zugseitenleiste" aria-label="Zugleiste">
+                {istGameRoute && (
+                  <div className="waldtanz-unterholzleiste" role="group" aria-label="Waldtanz-Unterholzleiste">
+                    <strong>Unterholzleiste</strong>
+                    <span>{pflichtschrittLabel}</span>
+                  </div>
+                )}
+                <Zugpfad zustand={zustand} kiZugProtokoll={kiZugProtokoll} />
+                {istGameRoute && !istSpielende && (
+                  <aside className="waldtanz-spielhilfe" aria-label="Waldtanz-Spielhilfe">
+                    <AktiverSpielerZugtafel
+                      spieler={aktiverSpieler}
+                      punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+                      pflichtschrittLabel={pflichtschrittLabel}
+                      zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
+                      letzteAktion={letzteAktion}
+                      geheimeAufgabeText={geheimeAufgabeText}
+                    />
+                    {aktiverSpieler.steuerung === 'Mensch' && (
+                      <Spielerfuehrung
+                        pflichtschrittLabel={pflichtschrittLabel}
+                        empfohleneAktionLabel={empfohleneAktionLabel}
+                        aktionszielId={spielerfuehrungAktionszielId}
+                        aktionszielSatzText={spielerfuehrungAktionszielSatzText}
+                        aktionszielLinkText={spielerfuehrungAktionszielLinkText}
+                        onAktionszielHervorheben={setHervorgehobenesAktionszielId}
+                        zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
+                      />
+                    )}
+                  </aside>
+                )}
+                <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
+                <ZugKompass
+                  zustand={zustand}
+                  ueberhand={ueberhand}
+                  zeigtKiVorspulen={versteckeKiEinzelaktionen}
+                  kiZugProtokoll={kiZugProtokoll}
+                  zeigeHauptaktionen={!istGameRoute}
+                  onAusspielphaseBeenden={handleAusspielphaseBeenden}
+                  onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
+                  onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
+                  onZugBeenden={handleZugBeenden}
+                  onAusspielphaseStarten={handleAusspielphaseStarten}
+                  onKiZugVorspulen={handleKiZugVorspulen}
+                  onReaktionsAktion={fuhreAktionAus}
                 />
-              )}
+                <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
+                <WaldtanzBonuszauber aktionen={versteckeKiEinzelaktionen ? [] : verdopplerAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
+              </aside>
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}

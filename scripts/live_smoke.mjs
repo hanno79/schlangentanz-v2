@@ -111,8 +111,22 @@ async function pruefeM1asErstzugLichtung(seite) {
     throw new Error('M1as Layout-Smoke: Arena, Schlangenbereich oder Handkarten fehlen')
   }
 
+  // AENDERUNG 22.06.2026: M1d0 fuehrt eine Arenastein-Hoehen-Cap ein
+  // (clamp(20rem, 40vh, 28rem) = 360 px bei 18-px-Root und 900-Viewport),
+  // damit die Bottom-Row (Handkarten + Spielerplakette + Arenazugknopf)
+  // im 900-px-Erstbild sichtbar bleibt. Die Layout-Box des
+  // Schlangenbereichs erstreckt sich unter den Arenastein-Clip und damit
+  // unter das Viewport-Ende. Wir messen weiterhin die "sichtbare Hoehe"
+  // relativ zum Viewport-Boden (Layout-Box-Konvention) und akzeptieren
+  // >=130 px als Trade-off-Markierung. Vor M1d0 waren es >=220 px, weil
+  // die Arenastein-Hoehe nicht geclippt war. Der Wegfall von ~70 px
+  // Schlangen-Sichtbarkeit ist ein beabsichtigter Trade-off: Bottom-Row
+  // first (sonst keine Hand-Aktion moeglich). Eine vollstaendige
+  // Schlangen-Sichtbarkeit wird in einem Folge-Slice (M1d1
+  // Schlangen-Erstbild) angestrebt, der die Bottom-Row-Kompaktifizierung
+  // und eine explizite Schlangen-Reihe oberhalb der Hand vorsieht.
   const sichtbareSchlangenHoehe = Math.min(900, schlangenBox.y + schlangenBox.height) - Math.max(0, schlangenBox.y)
-  if (sichtbareSchlangenHoehe < 220) {
+  if (sichtbareSchlangenHoehe < 130) {
     throw new Error(`M1as Layout-Smoke: Schlangenbereich zu wenig im Erstbild sichtbar (${Math.round(sichtbareSchlangenHoehe)}px)`)
   }
 
@@ -120,13 +134,13 @@ async function pruefeM1asErstzugLichtung(seite) {
   // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
   // mit Arenastein) auf grid-row 4, damit sie sauber UNTER dem Arenastein
   // liegt. Der sichtbare Abstand Hand-Top zu Arena-Bottom waechst daher von
-  // ~12px auf ~50-80px. Schlangenbereich muss weiterhin >=220px im Erstbild
-  // sichtbar sein, daher bleibt die obere Grenze bei 80px.
+  // ~12px auf ~50-80px. Schlangenbereich muss weiterhin >=130 px im
+  // Erstbild sichtbar sein, daher bleibt die obere Grenze bei 80 px.
   if (handAbstandZurArena < -330 || handAbstandZurArena > 80) {
     throw new Error(`M1as Layout-Smoke: Handkarten nicht board-nah zur Arena (${Math.round(handAbstandZurArena)}px Abstand)`)
   }
 
-  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar, Handkante ${Math.round(handAbstandZurArena)}px zur Arena`)
+  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar (M1d0-Trade-off, vorher 220px), Handkante ${Math.round(handAbstandZurArena)}px zur Arena`)
 }
 
 async function pruefeM1awHandkante(seite) {
