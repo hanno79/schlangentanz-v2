@@ -103,9 +103,10 @@ function naechsterPflichtschrittLabel(
 
 interface AppProps {
   initialZustand?: Spielzustand
+  initialBrettschrittEintraege?: BrettschrittEintrag[]
 }
 
-function App({ initialZustand }: AppProps) {
+function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
   const [startZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
   const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
@@ -114,6 +115,7 @@ function App({ initialZustand }: AppProps) {
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
   const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
   const [brettschrittEintraege, setBrettschrittEintraege] = useState<BrettschrittEintrag[]>(() => {
+    if (initialBrettschrittEintraege !== undefined) return initialBrettschrittEintraege
     const aktiverIndex = startZustand.aktiverSpielerIndex
     return startZustand.ablagestapel.slice(-3).map((karte) => ({
       karteId: karte.id,
@@ -203,6 +205,7 @@ function App({ initialZustand }: AppProps) {
           spielerId: naechster.spieler[aktiverIndexVorher]?.id ?? aktiverVorher.id,
           spielerIndex: aktiverIndexVorher,
           phase,
+          konsequenz: label,
         })
       }
       setBrettschrittEintraege((bisher) => [...bisher, ...eintraege].slice(-3))
@@ -236,6 +239,7 @@ function App({ initialZustand }: AppProps) {
       spielerId: ergebnis.zustand.spieler[fallbackIndex]?.id ?? 'unbekannt',
       spielerIndex: fallbackIndex,
       phase: 'Zugabschluss',
+      konsequenz: 'Gegnerzüge vorgespult',
     }))
     setBrettschrittEintraege(eintraege)
   }

@@ -7,6 +7,9 @@
   --st-color-tertiary: #b12d00;
   --st-color-tertiary-container: #ffbcaa;
   --st-color-border-strong: #063907;
+  --st-color-text: #063907;
+  --st-color-text-soft: rgba(6, 57, 7, 0.6);
+  --st-color-secondary: #fecb00;
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
@@ -5205,6 +5208,34 @@ code {
 .brettschritt-stempel--vergangen .brettschritt-stempel__phase {
   background: rgba(196, 253, 182, 0.5);
   color: var(--st-color-text-soft);
+}
+
+/* M1cw Brettschritt-Aktions-Konsequenz: zweite Zeile pro Stempel zeigt, was die
+   Handlung bewirkt hat (z. B. "Karte blau-09 an Schlange spieler-1-1 rechts anlegen"). */
+.brettschritt-stempel__konsequenz {
+  display: block;
+  font-family: var(--st-font-body);
+  font-size: clamp(0.55rem, 0.85vw, 0.7rem);
+  line-height: 1.2;
+  color: var(--st-color-text-soft);
+  font-style: italic;
+  margin-top: 0.1rem;
+  padding: 0.05rem 0.35rem;
+  border-left: 2px solid var(--st-color-secondary);
+  background: rgba(196, 253, 182, 0.35);
+  border-radius: 0 6px 6px 0;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.brettschritt-stempel--aktuell .brettschritt-stempel__konsequenz {
+  color: var(--st-color-text);
+  background: rgba(254, 203, 0, 0.25);
+  border-left-color: var(--st-color-primary);
+}
+
+.brettschritt-stempel--vergangen .brettschritt-stempel__konsequenz {
+  opacity: 0.85;
 }
 
 /* M1cu Aktiver Tanz-Schritt Pill */
