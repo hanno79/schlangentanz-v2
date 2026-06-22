@@ -98,10 +98,52 @@ bilden die Aktionsflaeche in der Mitte.
 1. RED-Tests geschrieben → RED bestaetigt (1 Test schlug fehl vor Single-Player-Guard).
 2. Code-Implementierung + Kimi-Review + 2 Non-Blocker-Fixes → GREEN.
 3. Full Gates (Tests, Typecheck, Lint, Build, Test-Lines, Diff-Check) gruen.
-4. Commit auf `main`, Push zu `origin/main`.
+4. Commit auf `main`, Push zu `origin/main` (Commit `c1de641`).
 5. Vercel Production Deploy via `vercel deploy --prod --token="$VERCEL_TOKEN"`.
 6. Live-Smoke auf `https://schlangentanz-v2.vercel.app/game` (Playwright).
 7. Smoke-Wiring verifiziert (M1cy-Smoke in npm-Script eingebunden, Position nach M1cx).
+
+## Live-Smoke-Ergebnis (Slice-spezifisch)
+
+```
+$ node scripts/m1cy_waldtanz_gegnerplakette_smoke.mjs
+M1cy Gegnerplakette: 237x149px rechts im Spieltisch,
+  Name="Gegner — Spieler 2", Punkte=0, Avatar=🐸,
+  Handkarten=5 🃏, Indikator="▶ kommt dran",
+  Symmetrie: Spieler links=188, Gegner rechts=1229
+M1cy Gegnerplakette: OK
+```
+
+## Pre-Existing Smoke-Staleness (in-scope)
+
+Die kanonische `npm run smoke:production`-Kette bricht weiterhin in
+`live_smoke.mjs` bei der Pruefung `M1bp Handflaeche`:
+
+```
+M1bp Handflaeche: erste Handkarte nicht vollstaendig/klickbar
+  im 900px-Erstbild ({"bottom":958.27,"height":123.997,"hit":true})
+```
+
+**Diagnose:** Die erste Handkarte beginnt bei y=834 px, ist 124 px hoch und
+endet bei y=958 px — 58 px unterhalb des 900-px-Viewports. Die Karte ist
+weiterhin klickbar (`hit: true`), nur visuell nicht vollstaendig im Erstbild.
+
+**Pre-Existing-Verifikation:** Mit `git checkout HEAD~1 -- src/App.tsx src/App.css package.json`
+(ohne M1cy-Aenderungen) liefert derselbe Live-Smoke **denselben Output** mit
+denselben Messwerten (bottom=958.27, height=124). Der Blocker existierte
+bereits vor M1cy.
+
+**In-Scope-Aufnahme:** Der Blocker ist die Kernmotivation fuer den bereits
+geplanten M1d0-Slice (Waldtanz-Layout-Konsolidierung,
+`docs/slices/M1d0_waldtanz_layout_konsolidierung.md`). M1cy fuehrt **keine**
+Layout-Aenderung am Spieltisch-Grid durch, die M1bp beruehren wuerde, und
+loest das Problem daher nicht. Der Blocker bleibt dokumentiert bis M1d0
+landet.
+
+**Slice-spezifischer Live-Smoke ist gruen**, der Blocker ist auf den M1bp-
+Handflaechen-Assert der `live_smoke.mjs` lokalisiert. M1cy kann daher als
+release-complete gemeldet werden; die kanonische Kette ist bis M1d0
+eingeschraenkt.
 
 ## Naechster geplanter Vertical
 
