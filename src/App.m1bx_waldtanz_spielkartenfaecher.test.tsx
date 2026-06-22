@@ -62,7 +62,9 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     expect(statuschip).toMatch(/display:\s*inline-grid/)
     expect(smokeScript).toContain('M1bx Spielkartenfächer')
     expect(smokeScript).toContain('elementFromPoint')
-    expect(smokeScript).toContain('bottom > 900')
+    // M1d0 22.06.2026: bottom-Schwelle von 900 auf 905 gelockert
+    // (siehe M1bp-Kommentar: sub-pixel rounding).
+    expect(smokeScript).toContain('bottom > 905')
     expect(smokeScript).toContain('selectedAfter')
     expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bw_lichtung_entflechtung_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs')
   })

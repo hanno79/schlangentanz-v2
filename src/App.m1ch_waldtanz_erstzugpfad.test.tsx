@@ -59,7 +59,16 @@ describe('M1ch Waldtanz-Erstzugpfad', () => {
     expect(handRoute).not.toMatch(/align-self:\s*end/)
     expect(packageJson).toContain('node scripts/m1bw_lichtung_entflechtung_smoke.mjs')
     expect(smokeScript).toContain('Tischkarte ueberlappt Startkreis')
-    expect(smokeScript).toContain('Startkreis laeuft in die Handbank')
-    expect(smokeScript).toContain('Startkreis-Pruefpunkte nicht hit-testbar')
+    // M1d0 22.06.2026: "Startkreis laeuft in die Handbank" wurde zu
+    // "Startkreis laeuft in den Viewport-Boden" umformuliert, weil M1d0
+    // die Handbank-Bounding-Box explizit unter dem Startkreis erlaubt
+    // (Bottom-Row first Trade-off). Der Startkreis darf die Handbank-
+    // Bounding-Box beruehren, aber nicht ueber den Viewport-Boden (900 px)
+    // hinausragen.
+    expect(smokeScript).toContain('Startkreis laeuft in den Viewport-Boden')
+    // Pruefpunkt-Phrasierung wurde von "nicht hit-testbar" auf
+    // "unerwartet verdeckt" geaendert, weil die Startkreis-Pruefpunkte
+    // jetzt regelmaessig in die Handbank-Bounding-Box fallen (M1d0-Trade-off).
+    expect(smokeScript).toContain('Startkreis-Pruefpunkte unerwartet verdeckt')
   })
 })

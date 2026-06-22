@@ -60,6 +60,12 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
 
     expect(smokeScript).toContain('pruefeM1axFreieLichtung')
     expect(smokeScript).toContain('M1ax Freie Lichtung')
-    expect(smokeScript).toContain('Handkante verdeckt zu viel Schlangenlichtung')
+    // M1d0 22.06.2026: "Handkante verdeckt zu viel Schlangenlichtung"
+    // wurde zu "Handkante ueberlappt Schlangenlichtungs-Top komplett"
+    // umformuliert, weil M1d0 die Schlangenlichtung unter den
+    // Arenastein-Rand clippt. Die neue Pruefung akzeptiert 5-130 px
+    // freie Schlangenlichtungs-Hoehe (vorher >=220 px) als bewussten
+    // Trade-off fuer Arenastein-Cap und Bottom-Row-Sichtbarkeit.
+    expect(smokeScript).toContain('Handkante ueberlappt Schlangenlichtungs-Top')
   })
 })

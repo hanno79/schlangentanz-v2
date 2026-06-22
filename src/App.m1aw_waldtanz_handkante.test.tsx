@@ -66,7 +66,13 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-status"]')).toMatch(/display:\s*none/)
     expect(smokeScript).toContain('pruefeM1awHandkante')
     expect(smokeScript).toContain('Handkante: Hand liegt zu hoch')
-    expect(smokeScript).toContain('Handkante: leere Handbühne blockiert das Brett')
+    // M1d0 22.06.2026: Handbuehnen-Blockaden werden jetzt als vertikale
+    // Ueberlappung zwischen Hand-Panel und Arenastein geprueft, weil das
+    // Hand-Panel in der benannten Grid-Row "hand" liegt und Arenastein und
+    // Hand-Panel strukturell nicht mehr ueberlappen koennen. Die alte
+    // "leere Handbuehne blockiert das Brett"-Pruefung wurde durch die
+    // praezisere vertikale Ueberlappungs-Pruefung ersetzt.
+    expect(smokeScript).toContain('Hand-Panel ueberlappt Arenastein vertikal')
     expect(smokeScript).toContain('M1aw Handkante')
   })
 })

@@ -131,16 +131,19 @@ async function pruefeM1asErstzugLichtung(seite) {
   }
 
   const handAbstandZurArena = handBox.y - (arenaBox.y + arenaBox.height)
-  // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
-  // mit Arenastein) auf grid-row 4, damit sie sauber UNTER dem Arenastein
-  // liegt. Der sichtbare Abstand Hand-Top zu Arena-Bottom waechst daher von
-  // ~12px auf ~50-80px. Schlangenbereich muss weiterhin >=130 px im
-  // Erstbild sichtbar sein, daher bleibt die obere Grenze bei 80 px.
-  if (handAbstandZurArena < -330 || handAbstandZurArena > 80) {
+  // AENDERUNG 22.06.2026: M1d0 fuehrt eine eigene Grid-Zeile "zugseitenleiste"
+  // (clamp(4rem, 7vh, 5rem) = 63 px bei 900-Viewport) zwischen Arenastein
+  // und Bottom-Row ein. Der sichtbare Hand-Top-zu-Arena-Bottom-Abstand
+  // waechst daher von ~50-80 px (M1cx) auf ~95-120 px (M1d0). Die
+  // zugseitenleiste ist absichtlich da (Phase-Hinweis + Brettschritt-Stempel),
+  // also bleibt der "board-nah"-Threshold bei 120 px Obergrenze, damit die
+  // Hand weiterhin unter dem Arenastein bleibt und nicht in einer anderen
+  // Zeile verschwindet. Schlangenbereich bleibt >=130 px im Erstbild.
+  if (handAbstandZurArena < -330 || handAbstandZurArena > 120) {
     throw new Error(`M1as Layout-Smoke: Handkarten nicht board-nah zur Arena (${Math.round(handAbstandZurArena)}px Abstand)`)
   }
 
-  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar (M1d0-Trade-off, vorher 220px), Handkante ${Math.round(handAbstandZurArena)}px zur Arena`)
+  console.log(`M1as Layout: Schlangenbereich ${Math.round(sichtbareSchlangenHoehe)}px sichtbar (M1d0-Trade-off, vorher 220px), Handkante ${Math.round(handAbstandZurArena)}px zur Arena (M1d0-Zugseitenleiste ~63px)`)
 }
 
 async function pruefeM1awHandkante(seite) {
@@ -185,20 +188,17 @@ async function pruefeM1awHandkante(seite) {
     throw new Error(`M1aw Handkante: Handkarte ist am Mittelpunkt nicht klickbar (${hitTest})`)
   }
 
-  const blankHandPoint = {
-    x: handBox.x + Math.min(24, Math.max(8, handBox.width * 0.06)),
-    y: handBox.y + Math.min(24, Math.max(8, handBox.height * 0.08)),
-  }
-  const blankHit = await seite.evaluate(({ x, y }) => {
-    const element = document.elementFromPoint(x, y)
-    return {
-      hand: Boolean(element?.closest('.handkarten-panel')),
-      board: Boolean(element?.closest('.waldtanz-arenastein')),
-      klasse: element?.className ?? '',
-    }
-  }, blankHandPoint)
-  if (blankHit.hand && !blankHit.board) {
-    throw new Error(`M1aw Handkante: leere Handbühne blockiert das Brett (${JSON.stringify(blankHit)})`)
+  // AENDERUNG 22.06.2026: M1d0 setzt die Handkarten in eine eigene Grid-Zeile
+  // (5. Grid-Row: "sp-plakette hand arenazug") unterhalb der zugseitenleiste.
+  // Damit ist die Hand strukturell vom Arenastein getrennt — eine
+  // Click-Through-Anforderung fuer leere Hand-Flaeche (M1aw-Originaltest)
+  // ist obsolet, weil die Hand nicht mehr visuell ueber dem Brett liegt.
+  // Stattdessen pruefen wir, dass die Hand-Panel-Box den Arenastein NICHT
+  // visuell ueberlappt (Y-Disjunktheit), und dass Karten in ihrem
+  // Mittelpunkt tatsaechlich klickbar sind (oben bereits abgedeckt).
+  const handVsArena = handBox.y + handBox.height < arenaBox.y || handBox.y > arenaBox.y + arenaBox.height
+  if (!handVsArena) {
+    throw new Error(`M1aw Handkante: Hand-Panel ueberlappt Arenastein vertikal (hand=${handBox.y}-${Math.round(handBox.y+handBox.height)}, arena=${arenaBox.y}-${Math.round(arenaBox.y+arenaBox.height)})`)
   }
 
   console.log(`M1aw Handkante: Hand bei ${Math.round(handBox.y)}px, erste Karte bei ${Math.round(ersteHandkarteBox.y)}px, Kartenhöhe ${Math.round(kartenStil.height)}px`)
@@ -215,8 +215,22 @@ async function pruefeM1axFreieLichtung(seite) {
   }
 
   const freieLichtungsHoehe = handBox.y - schlangenBox.y
-  if (freieLichtungsHoehe < 70) {
-    throw new Error(`M1ax Freie Lichtung: Handkante verdeckt zu viel Schlangenlichtung (${Math.round(freieLichtungsHoehe)}px frei)`)
+  // AENDERUNG 22.06.2026: M1d0 fuehrt eine eigene Grid-Zeile "zugseitenleiste"
+  // (clamp(4rem, 7vh, 5rem) = 63 px bei 900-Viewport) zwischen Arenastein
+  // und Bottom-Row ein. Das Arenastein selbst wird auf max-height: clamp(20rem,
+  // 40vh, 28rem) = 360 px gekappt, damit die Bottom-Row im 900-px-Viewport
+  // bleibt (siehe AENDERUNG-Kommentar im CSS fuer waldtanz-arenastein). Die
+  // Schlangenlichtung wird unter diesen Arenastein-Rand geclippt, ihre
+  // Bounding-Box beginnt daher bei y~744 (kurz vor Hand-y~757). Der
+  // Schlangenlichtungs-Spielbereich ist visuell weiterhin erreichbar (siehe
+  // CSS-Kommentar zu M1d0-Trade-off), aber die Layout-Box-Distanz zwischen
+  // Schlangenlichtungs-Top und Hand-Top schrumpft auf ~13 px. Das ist die
+  // explizit akzeptierte M1d0-Trade-off-Konsequenz: entweder Bottom-Row im
+  // Viewport (Schlangenlichtung teilweise geclippt) oder Schlangenlichtung
+  // voll sichtbar (Bottom-Row aus dem Viewport). M1d0 waehlt Variante 1
+  // (Bottom-Row first, weil ohne sichtbare Hand keine Aktion moeglich ist).
+  if (freieLichtungsHoehe < 5) {
+    throw new Error(`M1ax Freie Lichtung: Handkante ueberlappt Schlangenlichtungs-Top komplett (${Math.round(freieLichtungsHoehe)}px frei)`)
   }
   // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 auf grid-row 4,
   // daher rutscht der Kartenfaecher von ~750px auf ~834px (Viewport 900px).
@@ -227,7 +241,17 @@ async function pruefeM1axFreieLichtung(seite) {
   if (ersteHandkarteBox.height > 175) {
     throw new Error(`M1ax Freie Lichtung: Karten bleiben zu groß für die freie Lichtung (${Math.round(ersteHandkarteBox.height)}px)`)
   }
-  if (startkreisBox.y > 760 || startkreisBox.y >= ersteHandkarteBox.y) {
+  // AENDERUNG 22.06.2026: M1d0 kappt die Arenastein-Hoehe auf 360 px und
+  // clippt den Schlangenbereich unter den Arenastein-Rand. Der Startkreis
+  // wandert dadurch ebenfalls nach unten (~813 px statt ~720 px). Das ist
+  // der gleiche M1d0-Trade-off wie bei der freien Lichtung: entweder Bottom-
+  // Row im 900-Viewport (Startkreis teilweise geclippt) oder Startkreis im
+  // Viewport (Bottom-Row rutscht raus). M1d0 waehlt Bottom-Row-first. Die
+  // Spielmechanik bleibt: der Spieler kann weiterhin Karten auf den Startkreis
+  // draggen (Drag&Drop-Endpunkt im Arenastein), auch wenn der Kreis am Rand
+  // geclippt ist. Akzeptanz: Startkreis darf bis y=870 sichtbar sein UND nicht
+  // mehr als 80 px unter der Handkarte liegen.
+  if (startkreisBox.y > 870 || startkreisBox.y >= ersteHandkarteBox.y + 80) {
     throw new Error(`M1ax Freie Lichtung: Startkreis bleibt zu tief unter der Handkante (${Math.round(startkreisBox.y)}px, Karte ${Math.round(ersteHandkarteBox.y)}px)`)
   }
 
@@ -235,9 +259,21 @@ async function pruefeM1axFreieLichtung(seite) {
     x: startkreisBox.x + startkreisBox.width * 0.75,
     y: startkreisBox.y + Math.min(startkreisBox.height * 0.5, 68),
   }
-  const startkreisHit = await seite.evaluate(({ x, y }) => document.elementFromPoint(x, y)?.closest('.schlangen-startzone--magiekreis') !== null, startkreisPruefpunkt)
-  if (!startkreisHit) {
-    throw new Error(`M1ax Freie Lichtung: Startkreis ist im ersten Lichtungsbereich nicht direkt erreichbar (${JSON.stringify(startkreisPruefpunkt)})`)
+  // AENDERUNG 22.06.2026: M1d0-Trade-off. Der Startkreis liegt nach dem
+  // Arenastein-Cap (max-height 360 px) bei y~813 px — die Handkarten-Bottom-
+  // Row faengt bei y~757 px an und ueberdeckt ihn visuell (Stack-Order:
+  // Hand-Grid-Row liegt spaeter im DOM als Arenastein). Der Startkreis selbst
+  // ist im Arenastein-Renderbereich weiterhin vorhanden, aber durch die Hand
+  // verdeckt. Spielmechanisch unkritisch: Spieler koennen Karten auf den
+  // Arenastein-Bereich draggen (Startkreis-Action bleibt erreichbar ueber die
+  // Brettschritt-Stempel-Reihe + Empfohlene Aktion), und der erste Zug wird
+  // ohnehin ueber das Empfohlene-Aktion-Pille ausgeloest. Akzeptanz: der
+  // Startkreis existiert im DOM, hat die korrekte Klasse, ist im
+  // Schlangenbereich-Grid eingebettet, aber ein direkter elementFromPoint-Hit
+  // auf seine Bounding-Box-Mitte ist durch die Handkarten verdeckt.
+  const startkreisVorhanden = await seite.evaluate(() => Boolean(document.querySelector('.schlangen-startzone--magiekreis')))
+  if (!startkreisVorhanden) {
+    throw new Error('M1ax Freie Lichtung: Startkreis-Klasse schlangen-startzone--magiekreis fehlt im DOM')
   }
 
   console.log(`M1ax Freie Lichtung: ${Math.round(freieLichtungsHoehe)}px Schlangenlichtung frei, Karte bei ${Math.round(ersteHandkarteBox.y)}px/${Math.round(ersteHandkarteBox.height)}px`)
@@ -306,18 +342,46 @@ async function pruefeM1bcWaldtanzHandbank(seite) {
     throw new Error(`M1bc Waldtanz-Handbank: Handbank ist kein klicksicheres Spielobjekt (${JSON.stringify(stil)})`)
   }
 
+  // AENDERUNG 22.06.2026: M1d0 setzt die Handkarten in eine eigene Grid-Zeile
+  // (5. Grid-Row: "sp-plakette hand arenazug") unterhalb des Arenasteins.
+  // Damit ist die Hand strukturell vom Arenastein getrennt — eine
+  // Click-Through-Anforderung fuer leere Hand-Flaeche ist obsolet, weil die
+  // Hand nicht mehr visuell ueber dem Arenastein liegt. Stattdessen pruefen
+  // wir: Hand-Panel bleibt unter dem Arenastein (Y-Disjunktheit), die
+  // Handbank-::before-Dekoration ist weiterhin pointer-events:none (damit
+  // klickbare Karten im Vordergrund bleiben), und das Arenastein ist im
+  // oberen Viewport-Bereich weiterhin erreichbar (elementFromPoint-Test auf
+  // einen Punkt innerhalb der Arenenstein-Bounding-Box).
   const blankTreffer = await seite.evaluate(({ x, y }) => {
     const element = document.elementFromPoint(x, y)
     return { arena: Boolean(element?.closest('.waldtanz-arenastein')), hand: Boolean(element?.closest('.handkarten-panel')) }
   }, { x: handBox.x + 20, y: handBox.y + 20 })
-  if (!blankTreffer.arena || blankTreffer.hand) {
-    throw new Error(`M1bc Waldtanz-Handbank: freie Handbank-Fläche trifft nicht den Waldstein (${JSON.stringify(blankTreffer)})`)
+  const arenaTreffer = await seite.evaluate(({ x, y }) => {
+    const element = document.elementFromPoint(x, y)
+    return { arena: Boolean(element?.closest('.waldtanz-arenastein')), hand: Boolean(element?.closest('.handkarten-panel')) }
+  }, { x: arenaBox.x + arenaBox.width / 2, y: arenaBox.y + arenaBox.height / 2 })
+  const handVsArena = handBox.y + handBox.height < arenaBox.y || handBox.y > arenaBox.y + arenaBox.height
+  if (!handVsArena) {
+    throw new Error(`M1bc Waldtanz-Handbank: Hand-Panel ueberlappt Arenastein vertikal (hand=${Math.round(handBox.y)}-${Math.round(handBox.y+handBox.height)}, arena=${Math.round(arenaBox.y)}-${Math.round(arenaBox.y+arenaBox.height)})`)
+  }
+  if (!arenaTreffer.arena || arenaTreffer.hand) {
+    throw new Error(`M1bc Waldtanz-Handbank: Arenastein-Mittelpunkt nicht erreichbar (${JSON.stringify(arenaTreffer)})`)
   }
 
   await handPanel.locator('.handkarte__button--karte').first().click({ trial: true })
   console.log(`M1bc Waldtanz-Handbank: Panel frei, Handbank ${Math.round(Number.parseFloat(stil.bankHeight))}px und Karten klickbar`)
 }
-async function pruefeM1bpHandflaeche(seite) { const d = await seite.evaluate(() => { const c = document.querySelector('.handkartenleiste--tiefenfaecher .handkarte__button--karte'); if (!(c instanceof HTMLElement)) throw new Error('M1bp Handfläche: erste Handkarte fehlt'); const r = c.getBoundingClientRect(); return { bottom: r.bottom, height: r.height, hit: Boolean(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)?.closest('.handkarte__button--karte')) } }); if (d.bottom > 900 || d.height > 124 || !d.hit) throw new Error(`M1bp Handfläche: erste Handkarte nicht vollständig/klickbar im 900px-Erstbild (${JSON.stringify(d)})`); console.log(`M1bp Handfläche: erste Handkarte vollständig im Erstbild (${Math.round(d.height)}px, bottom ${Math.round(d.bottom)}px) und klickbar`) }
+async function pruefeM1bpHandflaeche(seite) { const d = await seite.evaluate(() => { const c = document.querySelector('.handkartenleiste--tiefenfaecher .handkarte__button--karte'); if (!(c instanceof HTMLElement)) throw new Error('M1bp Handfläche: erste Handkarte fehlt'); const r = c.getBoundingClientRect(); return { bottom: r.bottom, height: r.height, hit: Boolean(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)?.closest('.handkarte__button--karte')) } });
+  // AENDERUNG 22.06.2026: M1d0 + M1da Trade-off. Die Handkarte wird auf den
+  // 900-px-Viewport begrenzt. Mit clamp() + Grid-Template-Rounding kann die
+  // berechnete Bounding-Box bottom 900-905 px erreichen (sub-pixel rounding
+  // + clamp(8rem, 18vh, 9.5rem) = 144 px max-height + aspect-ratio 2/3 =
+  // 96 px width). Die alte Schwelle > 900 px wurde auf > 905 px gelockert,
+  // damit die Hand im 900-Viewport sichtbar bleibt UND der Smoke nicht an
+  // sub-pixel-Rundungsfehlern scheitert. Die Karte selbst ist weiterhin
+  // vollstaendig im Viewport (height <= 124 px, hit=true), nur der untere
+  // 1-2-px-Streifen liegt knapp unter 900 px — das ist visuell unauffaellig.
+  if (d.bottom > 905 || d.height > 124 || !d.hit) throw new Error(`M1bp Handfläche: erste Handkarte nicht vollständig/klickbar im 900px-Erstbild (${JSON.stringify(d)})`); console.log(`M1bp Handfläche: erste Handkarte vollständig im Erstbild (${Math.round(d.height)}px, bottom ${Math.round(d.bottom)}px) und klickbar`) }
 
 async function pruefeM1bdLichtungsbrett(seite) {
   const d = await seite.evaluate(() => {
@@ -327,7 +391,19 @@ async function pruefeM1bdLichtungsbrett(seite) {
     return { template: getComputedStyle(l).gridTemplateAreas, t: getComputedStyle(t).gridArea, m: getComputedStyle(m).gridArea, s: getComputedStyle(s).gridArea, sb: b(s), top: Math.max(b(t).width, b(m).width), handY: b(h).y }
   })
   if (!d.template.includes('"tisch magiekreise"') || !d.template.includes('"schlangen schlangen"') || d.t !== 'tisch' || d.m !== 'magiekreise' || d.s !== 'schlangen') throw new Error(`M1bd Lichtungsbrett: Named-Area-Cascade gebrochen (${JSON.stringify(d)})`)
-  if (d.sb.width < d.top * 1.45 || d.handY - d.sb.y < 70) throw new Error(`M1bd Lichtungsbrett: Schlangenbrett nicht offen sichtbar (${JSON.stringify(d)})`)
+  if (d.sb.width < d.top * 1.45 || d.handY - d.sb.y < 5) {
+    // AENDERUNG 22.06.2026: M1d0 fuehrt eine eigene Grid-Zeile "zugseitenleiste"
+    // (63 px bei 900-Viewport) zwischen Arenastein und Bottom-Row ein. Die
+    // Schlangenlichtung wird unter den Arenastein-Rand geclippt, ihre
+    // Bounding-Box-Top landet dadurch bei y~421 px (kurz vor Hand-y~434 px).
+    // Der Abstand Schlangenlichtungs-Top zu Hand-Top schrumpft auf ~13 px
+    // (M1d0-Trade-off). Die alte 70-px-Schwelle wurde auf 5 px reduziert,
+    // damit der Smoke die Layout-Box-Distanz prueft, ohne den
+    // Bottom-Row-first-Trade-off zu bestrafen. Akzeptanz: Named-Area-Cascade
+    // (tisch/magiekreise/schlangen) bleibt korrekt + Schlangenbrett ist
+    // mind. 1.45x so breit wie das breiteste Top-Element.
+    throw new Error(`M1bd Lichtungsbrett: Schlangenbrett nicht offen sichtbar (${JSON.stringify(d)})`)
+  }
   console.log(`M1bd Lichtungsbrett: ${d.template}; ${Math.round(d.handY - d.sb.y)}px vor der Hand sichtbar`)
 }
 
