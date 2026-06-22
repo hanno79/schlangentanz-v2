@@ -2079,33 +2079,50 @@ code {
      links von ihr. */
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette"] {
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto;
     align-items: center;
-    column-gap: 0.6rem;
-    row-gap: 0.35rem;
-    padding: 0.65rem 0.85rem;
+    column-gap: 0.5rem;
+    row-gap: 0;
+    padding: 0.45rem 0.7rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     border-radius: var(--st-radius-xl);
     background: linear-gradient(135deg, var(--st-color-primary-container), var(--st-color-background));
     box-shadow: var(--st-shadow-hard);
     pointer-events: auto;
     width: fit-content;
-    min-width: 11rem;
-    max-width: 14rem;
+    min-width: 13rem;
+    max-width: 16rem;
+    max-height: clamp(3.2rem, 7vh, 5.5rem);
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__name"] {
-    grid-column: 1 / -1;
+    grid-column: auto;
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.4rem;
     margin: 0;
     font-family: var(--st-font-headline);
     font-weight: 900;
-    font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    font-size: clamp(0.82rem, 1.15vw, 0.95rem);
     color: var(--st-color-on-surface);
     letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  /* AENDERUNG 22.06.2026: M1da macht die Regions-Beschriftung "Waldtanz-Spielerplakette"
+     sichtbar als kleiner Eyebrow ueber dem Avatar, kompakt und gestapelt. */
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__region-label"] {
+    font-family: var(--st-font-headline);
+    font-weight: 700;
+    font-size: 0.68rem;
+    color: var(--st-color-on-primary-container);
+    background: var(--st-color-primary);
+    padding: 0.05rem 0.45rem;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 1px 0 var(--st-color-border-strong);
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__name-text"] {
@@ -2115,13 +2132,13 @@ code {
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__avatar"] {
     display: grid;
     place-items: center;
-    width: 2.4rem;
+    width: 1.8rem;
     aspect-ratio: 1;
     border: 2px solid var(--st-color-border-strong);
     border-radius: 999px;
     background: var(--st-color-secondary-container);
     box-shadow: 0 3px 0 var(--st-color-border-strong);
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     flex: 0 0 auto;
   }
 
@@ -2129,27 +2146,27 @@ code {
     display: inline-flex;
     align-items: baseline;
     justify-content: center;
-    padding: 0.35rem 0.75rem;
+    padding: 0.2rem 0.55rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     border-radius: 999px;
     background: var(--st-color-secondary-container);
     box-shadow: 0 2px 0 var(--st-color-border-strong);
     font-family: var(--st-font-headline);
     font-weight: 900;
-    font-size: clamp(1.45rem, 2.4vw, 2.05rem);
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
     color: var(--st-color-on-secondary-container);
     line-height: 1;
-    min-width: 3.2rem;
+    min-width: 2.4rem;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__handkarten"] {
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 0.3rem;
+    gap: 0.25rem;
     font-family: var(--st-font-headline);
     font-weight: 900;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     color: var(--st-color-on-surface);
     white-space: nowrap;
   }
@@ -2445,7 +2462,7 @@ code {
     justify-self: end;
     width: min(100%, 22rem);
     z-index: 14;
-    margin-top: clamp(-5.8rem, -9vh, -5rem);
+    margin-top: clamp(-3rem, -7vh, -1.5rem);
   }
 
   .spielbereich--game-route [class~="waldtanz-arenazug--wartet"] {

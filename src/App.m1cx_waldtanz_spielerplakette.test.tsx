@@ -1,7 +1,7 @@
 /**
  * Author: rahn
  * Datum: 22.06.2026
- * Version: 1.0
+ * Version: 1.1
  * Beschreibung: M1cx macht den aktiven Spieler am Waldtanz-Spielbrett als
  * körperliche Stitch-Spielerplakette sichtbar: links neben der Handkartenleiste
  * sitzt eine chunky Pill-Karte mit 3px-Waldgrün-Border, Hard-Shadow und
@@ -11,6 +11,12 @@
  * Schlangenlichtung wird auf ≥70px geräumt), damit das erste /game-Bild
  * wieder eine freie Schlangenlichtung zeigt. Engine, Legal-Aktionen und
  * Ausführungspfade bleiben unangetastet.
+ *
+ * # AENDERUNG 22.06.2026: M1da — Region-Lookup auf stabile semantische
+ *   Beschriftung "Waldtanz-Spielerplakette" umgestellt (vorher Spieler-Name
+ *   als Proxy). Spieler-Name bleibt sichtbar in __name-text und weiterhin
+ *   testbar via CSS-Selektor. Negative Assertion, dass die Region NICHT mehr
+ *   den reinen Spieler-Namen als accessible name hat, schuetzt gegen Drift.
  */
 /// <reference types="node" />
 
@@ -41,7 +47,7 @@ describe('M1cx Waldtanz-Spielerplakette', () => {
     render(<App initialZustand={zustandMitAktivemSpieler()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-    const plakette = within(spieltisch).getByRole('region', { name: /Spieler 1/ })
+    const plakette = within(spieltisch).getByRole('region', { name: 'Waldtanz-Spielerplakette' })
 
     expect(plakette).toBeInTheDocument()
     expect(plakette.tagName).toBe('SECTION')
@@ -49,6 +55,9 @@ describe('M1cx Waldtanz-Spielerplakette', () => {
     // Punkte-Pille und Handkarten-Span existieren als sichtbare Elemente
     expect(within(plakette).getByLabelText(/Punktzahl/i)).toBeInTheDocument()
     expect(within(plakette).getByLabelText(/Handkarten/i)).toBeInTheDocument()
+    // M1da: Region darf NICHT mehr unter dem reinen Spielernamen ansprechbar sein
+    // (Stale-Assertion-Schutz). Spielername bleibt sichtbar in __name-text.
+    expect(within(spieltisch).queryByRole('region', { name: 'Spieler 1' })).not.toBeInTheDocument()
   })
 
   it('rendert die Spielerplakette NICHT auf / (Lobby bleibt ohne Spielerplakette)', () => {
@@ -62,7 +71,7 @@ describe('M1cx Waldtanz-Spielerplakette', () => {
     render(<App initialZustand={zustandMitAktivemSpieler()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-    const plakette = within(spieltisch).getByRole('region', { name: /Spieler 1/ })
+    const plakette = within(spieltisch).getByRole('region', { name: 'Waldtanz-Spielerplakette' })
     const punktePille = plakette.querySelector('.waldtanz-spielerplakette__punkte')
 
     expect(punktePille).not.toBeNull()
@@ -79,12 +88,15 @@ describe('M1cx Waldtanz-Spielerplakette', () => {
     render(<App initialZustand={zustandMitAktivemSpieler()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-    const plakette = within(spieltisch).getByRole('region', { name: /Spieler 1/ })
+    const plakette = within(spieltisch).getByRole('region', { name: 'Waldtanz-Spielerplakette' })
     const avatar = plakette.querySelector('.waldtanz-spielerplakette__avatar')
     const handkarten = plakette.querySelector('.waldtanz-spielerplakette__handkarten')
+    const nameText = plakette.querySelector('.waldtanz-spielerplakette__name-text')
 
     expect(avatar).not.toBeNull()
     expect(avatar?.textContent).toMatch(/[🧙🐸]/u)
+    // Spieler-Name bleibt sichtbar in der Plakette (visible label, nicht region-name).
+    expect(nameText?.textContent?.trim()).toBe('Spieler 1')
     // Handkarten-Span hat aria-label und enthaelt sichtbar die Zahl
     expect(handkarten?.getAttribute('aria-label')).toMatch(/2\s*Handkarten/)
     expect(handkarten?.textContent).toMatch(/2/)

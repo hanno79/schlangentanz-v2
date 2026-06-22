@@ -1,8 +1,14 @@
 /**
  * Author: rahn
  * Datum: 19.06.2026
- * Version: 1.0
+ * Version: 1.1
  * Beschreibung: M1cl hält den board-nahen End-Turn-Zugknopf im ersten /game-Spielbild sichtbar statt ihn unter die Falz zu drücken.
+ *
+ * # AENDERUNG 22.06.2026: M1da — margin-top des Arenazugs von
+ *   clamp(-5.8rem, -9vh, -5rem) auf clamp(-3rem, -7vh, -1.5rem) reduziert,
+ *   weil die Hand jetzt max-height 12.1rem hat und ein groesseres negatives
+ *   margin-top den Zugknopf ueber die Hand-Unterkante schiebt. Stale-Copy
+ *   hier auf den neuen Wert mitgewandert; M1da-Smoke beweist das live.
  */
 /// <reference types="node" />
 
@@ -47,7 +53,9 @@ describe('M1cl Waldtanz-Erstbild-Zugknopf', () => {
     expect(arena).toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
     expect(zugleiste).toMatch(/margin-top:\s*clamp\(0\.25rem,\s*0\.8vh,\s*0\.55rem\)/)
     expect(arenazug).toMatch(/width:\s*min\(100%,\s*22rem\)/)
-    expect(arenazug).toMatch(/margin-top:\s*clamp\(-5\.8rem,\s*-9vh,\s*-5rem\)/)
+    // M1da-Reduktion: max -1.5rem statt -5rem, damit der Zugknopf die Hand nicht
+    // ueberlagert. M1da-Smoke beweist die ueberlappungsfreie Lage live.
+    expect(arenazug).toMatch(/margin-top:\s*clamp\(-3rem,\s*-7vh,\s*-1\.5rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug__wartehinweis"]')).toMatch(/display:\s*none/)
     expect(packageJson).toContain('node scripts/m1cl_erstbild_zugknopf_smoke.mjs')
   })
