@@ -6112,6 +6112,172 @@ code {
   box-shadow: none;
 }
 
+.waldtanz-questband {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.32rem 0.5rem;
+  margin: 0;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 1.15rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(196, 253, 182, 0.78));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+}
+
+.waldtanz-questband__kopf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.waldtanz-questband__kopf h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+
+.waldtanz-questband__zaehler,
+.waldtanz-questband__bereit {
+  width: fit-content;
+  padding: 0.12rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 9999px;
+  background: var(--st-color-primary-container);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.waldtanz-questband__bereit {
+  background: var(--st-color-secondary-container);
+}
+
+.waldtanz-questband__leer {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.waldtanz-questband__liste {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.waldtanz-questband-pille {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.32rem;
+  flex: 1 1 0;
+  min-width: 7.5rem;
+  padding: 0.22rem 0.4rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  font-size: 0.68rem;
+  font-weight: 700;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.waldtanz-questband-pille--bereit {
+  background: radial-gradient(circle at 20% 18%, rgba(254, 203, 0, 0.78), transparent 3.5rem), rgba(255, 244, 198, 0.92);
+  box-shadow: 0 5px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-questband-pille--offen {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(196, 253, 182, 0.62));
+}
+
+.waldtanz-questband-pille__label {
+  grid-area: label;
+  width: fit-content;
+  padding: 0.05rem 0.4rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 9999px;
+  background: var(--st-color-primary-container);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.waldtanz-questband-pille__name {
+  grid-area: name;
+  font-family: var(--st-font-headline);
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--st-color-border-strong);
+  align-self: center;
+}
+
+.waldtanz-questband-pille__punkte {
+  grid-area: punkte;
+  width: fit-content;
+  padding: 0.05rem 0.4rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 9999px;
+  background: var(--st-color-secondary-container);
+  font-size: 0.68rem;
+  font-weight: 900;
+  justify-self: end;
+  align-self: center;
+}
+
+.waldtanz-questband-pille__status {
+  grid-area: status;
+  width: fit-content;
+  padding: 0.04rem 0.35rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 9999px;
+  background: rgba(196, 253, 182, 0.72);
+  font-size: 0.6rem;
+  font-weight: 900;
+  align-self: center;
+}
+
+.waldtanz-questband-pille__status--bereit {
+  background: var(--st-color-secondary-container);
+}
+
+.waldtanz-questband-pille__hauptwert {
+  grid-area: hauptwert;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--st-color-border-strong);
+  opacity: 0.78;
+  align-self: center;
+}
+
+.waldtanz-questband-pille__chips {
+  grid-area: chips;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.2rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.waldtanz-questband-pille__chip {
+  width: fit-content;
+  padding: 0.04rem 0.35rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 9999px;
+  background: var(--st-color-secondary-container);
+  font-family: var(--st-font-headline);
+  font-size: 0.62rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
 .schlangenbereich--waldlichtung {
   position: relative;
   overflow: hidden;

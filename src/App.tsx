@@ -3,9 +3,6 @@ import './App.css'
 import {
   erstelleSpielzustand,
   starteAusspielphase,
-  ermittleLegaleAktionen,
-  ermittleNichtEnumerierteAktionenHinweise,
-  ermittleReaktionsAktionen,
   anwendeAktion,
   beendeAusspielphase,
   beendeAufgabenpruefung,
@@ -17,8 +14,8 @@ import {
   ermittleQuestZugHinweise,
 } from './engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
+import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
 import AktionenPanel from './components/AktionenPanel'
-import DebugGruppe from './components/DebugGruppe'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
 import HandkartenPanel from './components/HandkartenPanel'
@@ -36,6 +33,7 @@ import WaldtanzAblage from './components/WaldtanzAblage'
 import WaldtanzNachziehstapel from './components/WaldtanzNachziehstapel'
 import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
+import WaldtanzQuestband from './components/WaldtanzQuestband'
 import WaldtanzKartenpop from './components/WaldtanzKartenpop'
 import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzTischkarte from './components/WaldtanzTischkarte'
@@ -48,6 +46,7 @@ import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
 import AktiverSpielerZugtafel from './components/AktiverSpielerZugtafel'
+import WaldtanzAktiverSpielerDebug from './components/WaldtanzAktiverSpielerDebug'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -124,53 +123,20 @@ function App({ initialZustand }: AppProps) {
     }))
   })
   const gezogeneHandkarteIdRef = useRef<string | null>(null)
-  const legaleAktionen = useMemo(() => ermittleLegaleAktionen(zustand), [zustand])
-  const nichtEnumerierteAktionenHinweise = useMemo(() => ermittleNichtEnumerierteAktionenHinweise(zustand), [zustand])
-  const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
-  const karteAnlegenAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'KarteAnlegen' }> => aktion.typ === 'KarteAnlegen',
-    ),
-    [legaleAktionen],
-  )
-  const neueSchlangeStartenAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }> => aktion.typ === 'NeueSchlangeStarten',
-    ),
-    [legaleAktionen],
-  )
-  const farbenschutzAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }> => aktion.typ === 'FarbenschutzSpielen',
-    ),
-    [legaleAktionen],
-  )
-  const farbenfusionAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }> => aktion.typ === 'FarbenfusionSpielen',
-    ),
-    [legaleAktionen],
-  )
-  const schlangenfrassAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }> => aktion.typ === 'SchlangenfrassSpielen',
-    ),
-    [legaleAktionen],
-  )
-  const schlangenblockadeAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'SchlangenblockadeSpielen' }> => aktion.typ === 'SchlangenblockadeSpielen',
-    ),
-    [legaleAktionen],
-  )
-  const farbendiebAktionen = useMemo(
-    () => legaleAktionen.filter(
-      (aktion): aktion is Extract<SpielAktion, { typ: 'FarbendiebSpielen' }> => aktion.typ === 'FarbendiebSpielen',
-    ),
-    [legaleAktionen],
-  )
-  const verdopplerAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'VerdopplerSpielen' }> => aktion.typ === 'VerdopplerSpielen'), [legaleAktionen])
-  const schlangengrubeAktionen = useMemo(() => legaleAktionen.filter((aktion): aktion is Extract<SpielAktion, { typ: 'SonderkarteSpielen' }> => aktion.typ === 'SonderkarteSpielen'), [legaleAktionen])
+  const {
+    legaleAktionen,
+    nichtEnumerierteAktionenHinweise,
+    reaktionsAktionen,
+    karteAnlegenAktionen,
+    neueSchlangeStartenAktionen,
+    farbenschutzAktionen,
+    farbenfusionAktionen,
+    schlangenfrassAktionen,
+    schlangenblockadeAktionen,
+    farbendiebAktionen,
+    verdopplerAktionen,
+    schlangengrubeAktionen,
+  } = useLegaleAktionenNachTyp(zustand)
   const questZugHinweise = useMemo(() => ermittleQuestZugHinweise(zustand, legaleAktionen), [zustand, legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(() => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null, [zustand.zugphase, zustand.spieler])
@@ -362,6 +328,12 @@ function App({ initialZustand }: AppProps) {
                 </div>
                 {istGameRoute && <WaldtanzBrettschrittStempel zustand={zustand} eintraege={brettschrittEintraege} />}
                 {istGameRoute && (
+                  <WaldtanzQuestband
+                    zustand={zustand}
+                    istEndspurt={istEndspurt}
+                  />
+                )}
+                {istGameRoute && (
                   <WaldtanzAktiverTanzSchritt
                     istSichtbar
                     daten={{
@@ -480,28 +452,22 @@ function App({ initialZustand }: AppProps) {
                 zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
               />
             )}
-            <DebugGruppe titel="Aktiver Spieler" standardOffen={!istGameRoute} kompakteSchublade={istGameRoute}>
-              <p>Aktiver Spieler: {aktiverSpieler.name}</p>
-              <p>Spielerprofil: {aktiverSpieler.name} — {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
-              <p>Zugführung: {zugfuehrungLabel(aktiverSpieler.steuerung)}</p>
-              <p>Aktueller Punktestand: {aktiverSpielerWertung ? `${aktiverSpielerWertung.gesamtPunkte} Punkte` : 'keine'}</p>
-              {ueberhand > 0 && <p>Überzählige Karten: {ueberhand} über dem Limit von {HANDKARTENLIMIT}.</p>}
-              {letzteAktion && <p>Zuletzt ausgeführt: {letzteAktion}</p>}
-              {istSpielende && (
-                <>
-                  <p>Spielende erreicht.</p>
-                  <p>Gewinner: {gewinnerText}</p>
-                </>
-              )}
-              {!istSpielende && legaleAktionen.length > 0 && <p>Empfohlene Aktion: {empfohleneAktionLabel}</p>}
-              {reaktionsAktionen.length > 0 && <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>}
-              <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
-              <p>
-                {aktiverSpieler.geheimeAufgabe
-                  ? `Geheime Aufgabe: ${aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)}`
-                  : 'Geheime Aufgabe: keine'}
-              </p>
-            </DebugGruppe>
+            <WaldtanzAktiverSpielerDebug
+              aktiverSpieler={aktiverSpieler}
+              aktiverSpielerWertung={aktiverSpielerWertung}
+              legaleAktionen={legaleAktionen}
+              reaktionsAktionen={reaktionsAktionen}
+              letzteAktion={letzteAktion}
+              istSpielende={istSpielende}
+              gewinnerText={gewinnerText}
+              empfohleneAktionLabel={empfohleneAktionLabel}
+              ueberhand={ueberhand}
+              pflichtschrittLabel={pflichtschrittLabel}
+              zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
+              geheimerAufgabeLabel={geheimeAufgabeText}
+              standardOffen={!istGameRoute}
+              kompakteSchublade={istGameRoute}
+            />
           </section>
         </div>
         <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} entwicklungsdatenOffen={!istGameRoute} brettFokus={spieleruebersichtBrettFokus} />
