@@ -10,6 +10,12 @@
   --st-color-text: #063907;
   --st-color-text-soft: rgba(6, 57, 7, 0.6);
   --st-color-secondary: #fecb00;
+  /* AENDERUNG 22.06.2026: M1cx fuegt die Spielerplakette ein, deren Punkte-Pille
+     var(--st-color-on-secondary-container) als Schrift auf dem Sekundaer-Container-Hintergrund
+     nutzt. Token war vorher unbenutzt und fiel still auf inherited black zurueck. */
+  --st-color-on-secondary-container: #063907;
+  --st-color-on-primary-container: #063907;
+  --st-color-on-surface: #063907;
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
@@ -2035,13 +2041,16 @@ code {
 
   .spielbereich--game-route [class~="handkarten-panel"] {
     grid-column: 1;
-    grid-row: 3;
+    /* AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
+       mit waldtanz-arenastein, das ebenfalls grid-row: 3 hat) auf grid-row 4,
+       damit sie UNTER dem Arenastein liegt. Mit align-self: end landet sie
+       am Boden des Spieltisches. */
+    grid-row: 4;
     align-self: end;
     justify-self: center;
     z-index: 4;
     width: min(100%, 34rem);
     max-height: clamp(10.25rem, 23vh, 12.1rem);
-    margin-top: 0;
     margin-right: clamp(10rem, 25vw, 18rem);
     padding: 0.2rem 0.45rem;
     overflow: visible;
@@ -2055,6 +2064,106 @@ code {
     border-color: transparent;
     box-shadow: none;
     backdrop-filter: none;
+  }
+
+  /* AENDERUNG 22.06.2026: M1cx fuegt eine körperliche Spielerplakette links neben der
+     Handkartenleiste ein. Sie zeigt Avatar, Spielername, grosse Punktzahl und
+     Handkarten-Zahl des aktiven Spielers im Stitch-Design. Die Plakette sitzt
+     am Boden des Spieltisches (spielbrett) auf gleicher Linie wie die Handkartenleiste,
+     links von ihr. */
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette"] {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 0.6rem;
+    row-gap: 0.35rem;
+    padding: 0.65rem 0.85rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: var(--st-radius-xl);
+    background: linear-gradient(135deg, var(--st-color-primary-container), var(--st-color-background));
+    box-shadow: var(--st-shadow-hard);
+    pointer-events: auto;
+    width: fit-content;
+    min-width: 11rem;
+    max-width: 14rem;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__name"] {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    color: var(--st-color-on-surface);
+    letter-spacing: -0.01em;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__name-text"] {
+    line-height: 1.05;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__avatar"] {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    aspect-ratio: 1;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+    font-size: 1.4rem;
+    flex: 0 0 auto;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__punkte"] {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    padding: 0.35rem 0.75rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 2px 0 var(--st-color-border-strong);
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: clamp(1.45rem, 2.4vw, 2.05rem);
+    color: var(--st-color-on-secondary-container);
+    line-height: 1;
+    min-width: 3.2rem;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette__handkarten"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.3rem;
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: var(--st-color-on-surface);
+    white-space: nowrap;
+  }
+
+  /* Position: Spielerplakette sitzt am Boden des Spieltisches (spielbrett--waldtanz),
+     links von der Handkartenleiste. Die Plakette ist absolut positioniert, damit sie
+     das bestehende 1-Spalten / 7-Zeilen-Grid des Spieltischs (spielerrahmen / arenastein /
+     zugseitenleiste / handkarten / arenazugknopf) NICHT umstrukturiert. Die Plakette
+     liegt links unten auf gleicher Hoehe wie die Handkartenleiste (die via grid-row: 4
+     + align-self: end am Boden des Spieltisch-Inhalts sitzt; siehe M1cx-Reparatur,
+     vorher grid-row: 3 fuehrte zu Ueberlappung mit dem Arenastein). */
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] {
+    position: relative;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-spielerplakette"] {
+    position: absolute;
+    left: clamp(0.4rem, 1vw, 0.85rem);
+    bottom: clamp(0.4rem, 1.2vh, 0.85rem);
+    z-index: 3;
   }
 
   .spielbereich--game-route [class~="handkarten-panel"] button {
@@ -2240,7 +2349,12 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"] {
-    min-height: min(22rem, 48vh);
+    /* AENDERUNG 22.06.2026: M1cx reduziert die Schlangenlichtung-Mindesthoehe
+       von min(22rem, 48vh) auf min(18rem, 40vh), damit das Arenastein zusammen
+       mit Hand und Brettschritt-Stempel in das 900px-Erstbild passt. Vorher
+       (mit grid-row: 4 fuer die Hand) reichte 22rem nicht mehr; Hand rutschte
+       unter die Viewport-Kante. */
+    min-height: min(18rem, 40vh);
     grid-template-columns: minmax(8rem, 0.6fr) minmax(12rem, 1.4fr);
     grid-template-rows: auto auto;
     gap: 0.45rem;

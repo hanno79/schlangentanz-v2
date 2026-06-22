@@ -42,6 +42,7 @@ import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import WaldtanzBrettschrittStempel from './components/WaldtanzBrettschrittStempel'
 import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
 import WaldtanzAktiverTanzSchritt from './components/WaldtanzAktiverTanzSchritt'
+import WaldtanzSpielerplakette from './components/WaldtanzSpielerplakette'
 import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
@@ -394,6 +395,14 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   </aside>
                 </div>
               </section>
+              {istGameRoute && (
+                <WaldtanzSpielerplakette
+                  spielerName={aktiverSpieler.name}
+                  istMensch={aktiverSpieler.steuerung === 'Mensch'}
+                  punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+                  handkarten={aktiverSpieler.hand.length}
+                />
+              )}
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}

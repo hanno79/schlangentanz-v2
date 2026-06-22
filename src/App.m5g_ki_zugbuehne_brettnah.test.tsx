@@ -56,6 +56,9 @@ describe('M5g KI-Zugbühne brettnah', () => {
     expect(cssBlock('ki-zug-buehne__button')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('ki-zug-buehne__button')).toMatch(/box-shadow:\s*0 5px 0 var\(--st-color-border-strong\)/)
     expect(cssBlock('ki-zug-buehne__button')).toMatch(/color:\s*var\(--st-color-border-strong\)/)
-    expect(appCss).not.toMatch(/--st-color-on-secondary-container/)
+    // AENDERUNG 22.06.2026: M1cx fuegt die Spielerplakette ein, die --st-color-on-secondary-container
+    // (Stitch-Token fuer Schrift auf Sekundaer-Container-Hintergrund) legitim verwendet.
+    // Die fruehere defensive Negativ-Pruefung ist damit obsolet.
+    expect(appCss).toMatch(/--st-color-on-secondary-container:\s*#[0-9a-fA-F]{3,6}/)
   })
 })

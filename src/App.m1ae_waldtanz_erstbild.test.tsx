@@ -49,8 +49,17 @@ describe('M1ae Waldtanz-Erstbild', () => {
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')).toMatch(/grid-row:\s*4/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"]')).toMatch(/grid-template-columns:\s*minmax\(6rem,\s*0\.65fr\)\s+repeat\(6,\s*minmax\(5\.1rem,\s*1fr\)\)/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')).toMatch(/grid-column:\s*1/)
-    expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')).toMatch(/grid-row:\s*3/)
-    expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')).toMatch(/align-self:\s*end/)
+    // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 auf grid-row 4,
+    // damit sie UNTER dem Arenastein sitzt. Wichtig: dieser Test muss die echte
+    // Deklaration pruefen, NICHT das Kommentar-Match. Der Block enthaelt im Kommentar
+    // den String "grid-row 3", was ein falsches Positiv liefern wuerde.
+    const handGridBlockM1ae = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
+    const handGridDeklarationen = handGridBlockM1ae
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s+/g, ' ')
+    expect(handGridDeklarationen).toMatch(/grid-row:\s*4\s*;/)
+    expect(handGridDeklarationen).not.toMatch(/grid-row:\s*3/)
+    expect(handGridBlockM1ae).toMatch(/align-self:\s*end/)
     expect(cssBlock('.spielbereich--game-route [class~="zugpfad__strecke"]')).toMatch(/max-height:\s*10rem/)
     expect(cssBlock('.spielbereich--game-route [class~="zugpfad__strecke"]')).toMatch(/overflow:\s*auto/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-spielerrahmen__kartenruecken--stitch"]')).toMatch(/width:\s*clamp\(2rem,\s*3\.2vw,\s*2\.6rem\)/)

@@ -117,7 +117,12 @@ async function pruefeM1asErstzugLichtung(seite) {
   }
 
   const handAbstandZurArena = handBox.y - (arenaBox.y + arenaBox.height)
-  if (handAbstandZurArena < -330 || handAbstandZurArena > 40) {
+  // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
+  // mit Arenastein) auf grid-row 4, damit sie sauber UNTER dem Arenastein
+  // liegt. Der sichtbare Abstand Hand-Top zu Arena-Bottom waechst daher von
+  // ~12px auf ~50-80px. Schlangenbereich muss weiterhin >=220px im Erstbild
+  // sichtbar sein, daher bleibt die obere Grenze bei 80px.
+  if (handAbstandZurArena < -330 || handAbstandZurArena > 80) {
     throw new Error(`M1as Layout-Smoke: Handkarten nicht board-nah zur Arena (${Math.round(handAbstandZurArena)}px Abstand)`)
   }
 
@@ -199,7 +204,10 @@ async function pruefeM1axFreieLichtung(seite) {
   if (freieLichtungsHoehe < 70) {
     throw new Error(`M1ax Freie Lichtung: Handkante verdeckt zu viel Schlangenlichtung (${Math.round(freieLichtungsHoehe)}px frei)`)
   }
-  if (ersteHandkarteBox.y > 790) {
+  // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 auf grid-row 4,
+  // daher rutscht der Kartenfaecher von ~750px auf ~834px (Viewport 900px).
+  // 870px ist die neue Obergrenze; M1aw akzeptiert bereits bis 875px.
+  if (ersteHandkarteBox.y > 870) {
     throw new Error(`M1ax Freie Lichtung: Kartenfächer rutscht zu tief (${Math.round(ersteHandkarteBox.y)}px)`)
   }
   if (ersteHandkarteBox.height > 175) {

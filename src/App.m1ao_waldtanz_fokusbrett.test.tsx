@@ -77,7 +77,10 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeSpielfeldBlock).toMatch(/min-height:\s*0/)
 
     const routeLichtungBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')
-    expect(routeLichtungBlock).toMatch(/min-height:\s*min\(22rem,\s*48vh\)/)
+    // AENDERUNG 22.06.2026: M1cx reduziert die Schlangenlichtung-Mindesthoehe
+    // von min(22rem, 48vh) auf min(18rem, 40vh), damit das Arenastein zusammen
+    // mit Hand, Brettschritt-Stempel und Spielerplakette in das 900px-Erstbild passt.
+    expect(routeLichtungBlock).toMatch(/min-height:\s*min\(18rem,\s*40vh\)/)
     expect(routeLichtungBlock).toMatch(/grid-template-rows:\s*auto auto/)
 
     const routeWaldobjekteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"]')
@@ -85,8 +88,11 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeWaldobjekteBlock).toMatch(/overflow:\s*auto/)
 
     const routeHandBlock = cssBlockForSelector('.spielbereich--game-route [class~="handkarten-panel"]')
-    expect(routeHandBlock).toMatch(/grid-row:\s*3/)
+    // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 (Collision
+    // mit waldtanz-arenastein, das ebenfalls grid-row: 3 hat) auf grid-row 4,
+    // damit sie UNTER dem Arenastein liegt. Mit align-self: end landet sie
+    // am Boden des Spieltisches und ueberlappt nicht mehr mit dem Schlangenbereich.
+    expect(routeHandBlock).toMatch(/grid-row:\s*4/)
     expect(routeHandBlock).toMatch(/align-self:\s*end/)
-    expect(routeHandBlock).toMatch(/margin-top:\s*0/)
   })
 })

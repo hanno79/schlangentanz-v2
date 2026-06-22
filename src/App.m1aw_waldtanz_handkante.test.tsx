@@ -31,7 +31,17 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(ersteKarte).toHaveClass('handkarte__button--karte')
 
     const handGridBlock = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
-    expect(handGridBlock).toMatch(/grid-row:\s*3/)
+    // AENDERUNG 22.06.2026: M1cx verschiebt die Hand von grid-row 3 auf grid-row 4,
+    // damit sie UNTER dem Arenastein sitzt (keine Collision mehr). Wichtig: dieser
+    // Test muss die echte Deklaration pruefen, NICHT das Kommentar-Match. Der Block
+    // enthaelt im Kommentar den String "grid-row 3", was ein falsches Positiv liefern
+    // wuerde. Wir matchen daher auf die Kommentar-bereinigte Form (Semikolon-getrennte
+    // Deklarationszeilen) statt auf den rohen Block.
+    const handGridDeklarationen = handGridBlock
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s+/g, ' ')
+    expect(handGridDeklarationen).toMatch(/grid-row:\s*4\s*;/)
+    expect(handGridDeklarationen).not.toMatch(/grid-row:\s*3/)
     expect(handGridBlock).toMatch(/align-self:\s*end/)
     expect(handGridBlock).toMatch(/z-index:\s*4/)
     expect(handGridBlock).toMatch(/max-height:\s*clamp\(10\.25rem,\s*23vh,\s*12\.1rem\)/)
