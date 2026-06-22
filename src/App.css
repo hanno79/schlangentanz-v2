@@ -16,6 +16,12 @@
   --st-color-on-secondary-container: #063907;
   --st-color-on-primary-container: #063907;
   --st-color-on-surface: #063907;
+  /* AENDERUNG 22.06.2026: M1cy fuegt die Gegnerplakette ein, deren Name-Text
+     und Punkte-Pille var(--st-color-on-tertiary-container) als Schrift auf
+     dem Tertiary-Container-Hintergrund nutzt. Token war vorher unbenutzt
+     und fiel still auf inherited black zurueck — Kimi-Review-Regression
+     aus M1cw/M1cx wiederholt. */
+  --st-color-on-tertiary-container: #a22900;
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
@@ -2164,6 +2170,120 @@ code {
     left: clamp(0.4rem, 1vw, 0.85rem);
     bottom: clamp(0.4rem, 1.2vh, 0.85rem);
     z-index: 3;
+  }
+
+  /* AENDERUNG 22.06.2026: M1cy fuegt eine koerperliche Gegnerplakette rechts
+     im Spieltisch ein. Sie zeigt den naechsten Gegner mit Avatar, Name,
+     Punktzahl, Handkarten-Zahl und einem "KOMMT DRAN"-Indikator.
+
+     Position: rechts OBERHALB der Handkartenleiste (top: clamp(...)).
+     NICHT rechts unten — dort sitzt bereits der Waldtanz-Arenazugknopf
+     (End-Turn-Aktion), und beide Elemente wuerden sich gegenseitig verdecken
+     (Arenazugknopf hat justify-self: end mit width: 22rem). Stattdessen
+     flankiert die Gegnerplakette den Spielerrahmen oben rechts, sodass
+     Spieler links und naechster Gegner rechts oben das Brett rahmen und
+     Handkarten + Arenazugknopf die Aktionsflaeche in der Mitte bilden. */
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette"] {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    column-gap: 0.55rem;
+    row-gap: 0.3rem;
+    padding: 0.55rem 0.75rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: var(--st-radius-xl);
+    background: linear-gradient(135deg, var(--st-color-tertiary-container), var(--st-color-background));
+    box-shadow: var(--st-shadow-hard);
+    pointer-events: auto;
+    width: fit-content;
+    min-width: 11rem;
+    max-width: 14rem;
+    position: absolute;
+    right: clamp(0.4rem, 1vw, 0.85rem);
+    top: clamp(0.4rem, 0.8vh, 0.75rem);
+    z-index: 3;
+    text-align: right;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__name"] {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.55rem;
+    margin: 0;
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+    color: var(--st-color-on-tertiary-container);
+    letter-spacing: -0.01em;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__name-text"] {
+    line-height: 1.05;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__avatar"] {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    aspect-ratio: 1;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 3px 0 var(--st-color-border-strong);
+    font-size: 1.3rem;
+    flex: 0 0 auto;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__indikator"] {
+    grid-column: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 2px 0 var(--st-color-border-strong);
+    font-family: var(--st-font-headline);
+    font-weight: 800;
+    font-size: 0.72rem;
+    color: var(--st-color-on-secondary-container);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__punkte"] {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    padding: 0.3rem 0.65rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container);
+    box-shadow: 0 2px 0 var(--st-color-border-strong);
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+    color: var(--st-color-on-tertiary-container);
+    line-height: 1;
+    min-width: 3rem;
+  }
+
+  .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__handkarten"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.3rem;
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: 0.8rem;
+    color: var(--st-color-on-tertiary-container);
+    white-space: nowrap;
   }
 
   .spielbereich--game-route [class~="handkarten-panel"] button {

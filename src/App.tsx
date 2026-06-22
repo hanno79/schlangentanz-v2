@@ -13,8 +13,9 @@ import {
   berechneGewinner,
   ermittleQuestZugHinweise,
 } from './engine'
-import type { AufgabenkarteInfo, GewinnerEintrag, SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
+import type { SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
+import { useSpielLabels } from './hooks/useSpielLabels'
 import AktionenPanel from './components/AktionenPanel'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
@@ -43,6 +44,7 @@ import WaldtanzBrettschrittStempel from './components/WaldtanzBrettschrittStempe
 import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
 import WaldtanzAktiverTanzSchritt from './components/WaldtanzAktiverTanzSchritt'
 import WaldtanzSpielerplakette from './components/WaldtanzSpielerplakette'
+import WaldtanzGegnerplakette from './components/WaldtanzGegnerplakette'
 import WertungPanel from './components/WertungPanel'
 import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
@@ -51,15 +53,6 @@ import WaldtanzAktiverSpielerDebug from './components/WaldtanzAktiverSpielerDebu
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
-
-function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
-  if (!istEndspurt) return `${a.punkte} Punkte`
-  return `${a.punkte} Punkte ×2 = ${a.punkte * 2} Punkte`
-}
-
-function aufgabeLabel(a: AufgabenkarteInfo, istEndspurt: boolean): string {
-  return `${a.name} (${aufgabenPunkteAnzeige(a, istEndspurt)}): ${a.bedingung}`
-}
 
 function ueberhandAnzahl(zustand: Spielzustand): number {
   return Math.max(0, zustand.spieler[zustand.aktiverSpielerIndex].hand.length - HANDKARTENLIMIT)
@@ -78,28 +71,6 @@ function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung'
     case 'KI':
       return 'KI ist am Zug.'
   }
-}
-
-function naechsterPflichtschrittLabel(
-  zustand: Spielzustand,
-  legaleAktionen: SpielAktion[],
-  nichtEnumerierteAktionenHinweise: unknown[],
-  ueberhand: number,
-): string {
-  if (zustand.zugphase === 'Spielende') return 'Partie beendet.'
-  if (zustand.pendingReaktion) return 'Reaktionsaktion auswählen.'
-  if (zustand.zugphase === 'Zugabschluss' && ueberhand > 0) {
-    return 'Überzählige Karten abwerfen.'
-  }
-  if (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) {
-    return 'Ausspielphase beenden.'
-  }
-  if (zustand.zugphase === 'Aufgabenpruefung') return 'Aufgabenprüfung beenden.'
-  if (zustand.zugphase === 'Zugabschluss') return 'Zug beenden.'
-  if (zustand.zugphase === 'Nachziehphase') return 'Ausspielphase starten.'
-  if (legaleAktionen.length > 0) return 'Eine spielbare Aktion auswählen.'
-  if (nichtEnumerierteAktionenHinweise.length > 0) return 'Schlangenhäutung vorbereiten.'
-  return 'Derzeit keine spielbare Aktion verfügbar. Prüfe Phasenregeln oder Zugabschluss.'
 }
 
 interface AppProps {
@@ -145,12 +116,16 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const gewinnerErgebnis = useMemo(() => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null, [zustand.zugphase, zustand.spieler])
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex]
   const gegnerSpieler = zustand.spieler.filter((spieler) => spieler.id !== aktiverSpieler.id)
+  // M1cy: naechster Gegner im Uhrzeigersinn (aktiverIndex+1) mod spieler.length.
+  // Bei 2 Spielern ist das der einzige Gegner; bei 3-4 Spielern ist es der naechste
+  // kommende Gegner — Spieler sieht auf einen Blick, wer als naechstes an der Reihe ist.
+  const naechsterGegnerIndex = (zustand.aktiverSpielerIndex + 1) % zustand.spieler.length
+  const naechsterGegner = zustand.spieler[naechsterGegnerIndex]
   const versteckeKiEinzelaktionen = aktiverSpieler.steuerung === 'KI' && reaktionsAktionen.length === 0
   const ausgewaehlteHandkarte = ausgewaehlteHandkarteAuswahl?.spielerId === aktiverSpieler.id
     ? aktiverSpieler.hand.find((karte) => karte.id === ausgewaehlteHandkarteAuswahl.karteId) ?? null
     : null
   const spielerwertungen: SpielerWertungsEintrag[] = gesamtwertung.spielerwertungen
-  const gewinnerListe: GewinnerEintrag[] = gewinnerErgebnis?.gewinner ?? []
   const aktiverSpielerWertung = useMemo(
     () => spielerwertungen.find((eintrag: SpielerWertungsEintrag) => eintrag.spielerId === aktiverSpieler.id) ?? null,
     [spielerwertungen, aktiverSpieler.id],
@@ -159,22 +134,30 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const ueberhand = ueberhandAnzahl(zustand)
   const istEndspurt = zustand.spielphase === 'Endspurt'
   const spielerNameFuerId = (spielerId: string) => zustand.spieler.find(spieler => spieler.id === spielerId)?.name ?? spielerId
-  const gewinnerText = gewinnerListe.length > 0
-    ? gewinnerListe.map(g => `${spielerNameFuerId(g.spielerId)} (${g.gesamtPunkte} Punkte)`).join(', ')
-    : 'keine'
-  const ergebnisText = gewinnerListe.length > 1
-    ? 'Gleichstand'
-    : `Sieg für ${gewinnerListe[0] ? spielerNameFuerId(gewinnerListe[0].spielerId) : 'unbekannt'}`
   const empfohleneAktionId = useId(), phasenaktionId = useId(), heroTitelId = useId(), spielstatusTitelId = useId(), aktiverSpielerTitelId = useId(), spieltischTitelId = useId()
   const spieleruebersichtTitelId = useId()
-  const pflichtschrittLabel = naechsterPflichtschrittLabel(zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, ueberhand)
-  const empfohleneAktionLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
-  const hatSichtbarePhasenaktion = reaktionsAktionen.length === 0 && ((zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) || zustand.zugphase === 'Aufgabenpruefung' || zustand.zugphase === 'Zugabschluss' || zustand.zugphase === 'Nachziehphase')
-  const spielerfuehrungAktionszielId = hatSichtbarePhasenaktion ? phasenaktionId : empfohleneAktionId
-  const spielerfuehrungAktionszielSatzText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlene Aktion'
-  const spielerfuehrungAktionszielLinkText = hatSichtbarePhasenaktion ? (istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion') : 'empfohlenen Aktion'
-  const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
-  const geheimeAufgabeText = aktiverSpieler.geheimeAufgabe ? aufgabeLabel(aktiverSpieler.geheimeAufgabe, false) : 'keine'
+  const {
+    pflichtschrittLabel,
+    empfohleneAktionLabel,
+    geheimeAufgabeText,
+    gewinnerText,
+    ergebnisText,
+    zeigtSpielerfuehrungAktionslink,
+    spielerfuehrungAktionszielId,
+    spielerfuehrungAktionszielSatzText,
+    spielerfuehrungAktionszielLinkText,
+  } = useSpielLabels(
+    zustand,
+    aktiverSpieler,
+    legaleAktionen,
+    reaktionsAktionen,
+    nichtEnumerierteAktionenHinweise,
+    ueberhand,
+    gewinnerErgebnis,
+    istGameRoute,
+    empfohleneAktionId,
+    phasenaktionId,
+  )
   const wertungBrettFokus = istGameRoute
   const materialBrettFokus = istGameRoute
   const spieleruebersichtBrettFokus = istGameRoute
@@ -401,6 +384,14 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   istMensch={aktiverSpieler.steuerung === 'Mensch'}
                   punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
                   handkarten={aktiverSpieler.hand.length}
+                />
+              )}
+              {istGameRoute && !istSpielende && zustand.spieler.length > 1 && (
+                <WaldtanzGegnerplakette
+                  spielerName={naechsterGegner.name}
+                  istMensch={naechsterGegner.steuerung === 'Mensch'}
+                  punkte={spielerwertungen.find((wertung) => wertung.spielerId === naechsterGegner.id)?.gesamtPunkte ?? 0}
+                  handkarten={naechsterGegner.hand.length}
                 />
               )}
               <HandkartenPanel
