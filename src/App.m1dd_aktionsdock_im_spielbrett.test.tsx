@@ -69,16 +69,25 @@ describe('M1dd Waldtanz-Aktionsdock im Spielbrett', () => {
     expect(block).toMatch(/overflow:\s*auto/)
   })
 
-  it('nimmt aktionsdock in das grid-template-areas des spielbrett--waldtantz auf', () => {
+  it('ordnet aktionsdock zwischen gegner-plakette und arenastein an (Empfohlene Aktion vor dem Brett)', () => {
     const block = cssBlockForSelector('.spielbereich--game-route [class~="spielbrett--waldtanz"]')
     expect(block).toMatch(/aktionsdock/)
-    // Reihenfolge: arenastein kommt vor aktionsdock, aktionsdock vor zugseitenleiste.
-    const arenaIdx = block.indexOf('arenastein')
+    // Reihenfolge: gegner-plakette kommt vor aktionsdock, aktionsdock vor
+    // arenastein, arenastein vor zugseitenleiste. M1dd hat die Position
+    // nach dem M1d0+M1dd-Smoke-Blocker revidiert: der Aktionsdock sitzt
+    // zwischen Gegnerplakette und Arenastein, damit der Arenastein-Cap
+    // bei 360 px bleiben kann und die Tischkarte (Brettschritt-Stempel)
+    // wieder vollstaendig im Arenastein sichtbar ist. Vorher (cap 324 px
+    // + aktionsdock unter arenastein) ueberlappte die Tischkarte mit
+    // dem Aktionsdock und der M1bw-Hit-Test schlug fehl.
+    const gegnerIdx = block.indexOf('gegner-plakette')
     const dockIdx = block.indexOf('aktionsdock')
+    const arenaIdx = block.indexOf('arenastein')
     const zugleisteIdx = block.indexOf('zugseitenleiste')
-    expect(arenaIdx).toBeGreaterThan(-1)
-    expect(dockIdx).toBeGreaterThan(arenaIdx)
-    expect(zugleisteIdx).toBeGreaterThan(dockIdx)
+    expect(gegnerIdx).toBeGreaterThan(-1)
+    expect(dockIdx).toBeGreaterThan(gegnerIdx)
+    expect(arenaIdx).toBeGreaterThan(dockIdx)
+    expect(zugleisteIdx).toBeGreaterThan(arenaIdx)
   })
 
   it('nimmt die aktionsdock-Hoehe in das grid-template-rows des spielbrett--waldtantz auf', () => {

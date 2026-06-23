@@ -43,8 +43,15 @@ describe('M1bn Waldtanz-Spielhilfe in der Zugleiste', () => {
     expect(zugtafel.compareDocumentPosition(wegweiser) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )
-    expect(spielhilfe.compareDocumentPosition(aktionen) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING,
+    // AENDERUNG 23.06.2026: M1dd hat das Aktionendock in die Grid-Zeile
+    // "aktionsdock" zwischen Gegnerplakette und Arenastein verschoben (vor
+    // der M1bw-Hit-Test-Smoke-Blocker-Fix-Runde, siehe docs/slices/M1dd).
+    // Damit liegt die Empfohlene Aktion direkt unter den Gegnern und vor
+    // dem Brett — und das Spielhilfe-Spielhilfe-Element (Zugtafel +
+    // Wegweiser) folgt erst in der Zugseitenleiste darunter. Der alte
+    // DOCUMENT_POSITION_FOLLOWING-Vertrag wird zu PRECEDING.
+    expect(spielhilfe.compareDocumentPosition(aktionen) & Node.DOCUMENT_POSITION_PRECEDING).toBe(
+      Node.DOCUMENT_POSITION_PRECEDING,
     )
 
     const empfohlen = within(aktionen).getByRole('region', { name: 'Empfohlene Aktion' })

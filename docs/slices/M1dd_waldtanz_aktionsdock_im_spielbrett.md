@@ -1,6 +1,12 @@
 # M1dd — Waldtanz-Aktionsdock-im-Spielbrett
 
-> **Status:** Geplant. Startet nach M1dc-Release (Commit `2a29a4f`).
+> **Status:** Smoke-Blocker-Fix in-scope. Erst-Commit `91c6774` (M1dd-Aktionsdock
+> in der Grid-Reihenfolge `arenastein → aktionsdock → zugseitenleiste`) wurde
+> nach Production-Deploy revidiert, weil der M1bw-Hit-Test im Production-Alias
+> fehlschlug (Tischkarte-DOM-Rect-Mittelpunkt lag im geclippten Arenastein-
+> Bereich). Fix: Aktionsdock wandert **vor** den Arenastein, Arenastein-Cap
+> zurück auf M1d0-Originalwert. Release-Status: `docs/release_status_2026-06-23_m1dd.md`
+> wird nach Deploy geschrieben.
 > **Typ:** Mittlerer Vertical (UI/UX, Erstbild-Spielbarkeit), kein Engine-Touchpoint.
 > **Vorgänger:** M1d0 (Layout-Konsolidierung) + M1dc (Spielmoment-Puls).
 > **Nachfolger:** offen.
@@ -71,18 +77,26 @@ Erstbild** liegen.
 ### Rein
 
 1. **AktionenPanel wird strukturelles Kind des `spielbrett--waldtanz`-Grids**:
-   in `src/App.tsx` zwischen `</HandkartenPanel>` und `</WaldtanzArenazugknopf>`
-   ziehen, sodass es als neue Grid-Zeile `aktionsdock` am Brettrand sitzt.
+   in `src/App.tsx` zwischen `</HandkartenPanel>` und `</WaldtanzArenazugknopf>` ist
+   es nicht mehr — nach dem M1bw-Hit-Test-Smoke-Blocker (Tischkarte ragte in
+   die aktionsdock-Row) wurde die Position auf zwischen `</Gegnerplakette>`
+   und `<Arenastein>` verlegt. Die Renderposition bleibt innerhalb des
+   spielbrett--waldtanz-Containers, aber die Grid-Zeile `aktionsdock` sitzt
+   jetzt VOR der `arenastein`-Zeile, damit der Arenastein-Cap bei 360 px
+   bleiben kann und die Tischkarte (Brettschritt-Stempel) wieder
+   vollstaendig im Arenastein-Renderbereich sichtbar ist.
 2. **Neue Grid-Row `aktionsdock`** in `src/App.css` (`.spielbereich--game-route
    [class~="spielbrett--waldtanz"]`): `grid-template-areas` bekommt die Zeile
-   zwischen `arenastein` und `zugseitenleiste`; `grid-template-rows` bekommt
-   `clamp(3.5rem, 8vh, 4.5rem)` als zusätzliche Row. Damit ist der Aktionsdock
-   im Erstbild sichtbar und überlappt weder Handkarten noch Arenazugknopf.
-   (Erste Plan-Skizze war `clamp(5rem, 12vh, 8rem)`; während der RED-/GREEN-
-   Schleife hat die Höhenbudget-Rechnung (Arenastein-Cap 360→288 px + Aktionsdock
-   + Handbank + Zugseitenleiste in 900 px) gezeigt, dass 56-72 px robuster
-   gegen Trade-offs sind. Kimi hat diese Straffung als NON-BLOCKER #1
-   markiert.)
+   **zwischen `gegner-plakette` und `arenastein`** (revidiert nach Smoke-Blocker,
+   s. Punkt 1 oben); `grid-template-rows` bekommt `clamp(3.5rem, 8vh, 4.5rem)`
+   als zusätzliche Row. Damit ist der Aktionsdock im Erstbild sichtbar und
+   überlappt weder Handkarten noch Arenazugknopf. Der Arenastein-Cap bleibt
+   bei `clamp(20rem, 40vh, 28rem)` (M1d0-Originalwert).
+   (Erste Plan-Skizze war `clamp(5rem, 12vh, 8rem)` und Reihenfolge
+   `arenastein` VOR `aktionsdock`; die Geometrie-Probe 23.06.2026 12:38 UTC
+   hat gezeigt, dass die Tischkarte dann in die Aktionsdock-Row ragt und der
+   M1bw-Hit-Test bricht. Kimi hat die Straffung auf 56-72 px als NON-BLOCKER
+   #1 markiert.)
 3. **Neue CSS-Klasse `.aktionen-panel--brettinline`**: definiert das kompakte
    Aussehen des Docks innerhalb des Spielbrett-Grids (`max-height:
    clamp(3.5rem, 8vh, 4.5rem); overflow: auto; gap: 0.35rem; padding: 0.4rem
@@ -101,12 +115,21 @@ Erstbild** liegen.
 6. **M1dc Smoke-Blocker-Fix finalisieren**: der uncommitted Fix in
    `scripts/m1dc_spielmoment_pulse_smoke.mjs` (reducedMotion + Selector-Korrektur)
    wird mit übernommen.
-7. **Probe-Skripte aufräumen**: die fünf `_probe_*.mjs` / `_screenshot_*.mjs`
+7. **Probe-Skripte aufräumen**: die `_probe_*.mjs` / `_screenshot_*.mjs`
    Skripte aus der M1dc-Finalisierung werden gelöscht (sie waren temporär
    und sind nicht für die Reproduktion nötig).
 8. **Neuer Browser-Smoke** `scripts/m1dd_aktionsdock_im_spielbrett_smoke.mjs`:
    beweist im echten Browser, dass das Aktionendock im Erstbild 1280×900
    sichtbar ist (Element-Rect.bottom ≤ 900, kein `position: absolute`).
+9. **M1bw Hit-Test-Härtung (Smoke-Blocker-Fix-Revision)**: nach dem ersten
+   M1dd-Deploy schlug der M1bw-Lichtungs-Smoke fehl, weil der Aktionsdock
+   zwischen Arenastein und Zugseitenleiste saß, der Arenastein aber
+   `overflow:hidden` mit Cap hat und der DOM-Rect-Mittelpunkt der Tischkarte
+   im geclippten Bereich liegt. Fix: `sichtbarerRect()`-Helper in
+   `scripts/m1bw_lichtung_entflechtung_smoke.mjs`, der auf den sichtbaren
+   Schnittpunkt des Elements mit seinem nächsten `overflow:hidden`-Vorfahren
+   klickt, nicht blind auf den DOM-Rect-Mittelpunkt. Documented as
+   in-scope Pre-Existing Smoke-Staleness fix.
 
 ### Raus (explizit)
 

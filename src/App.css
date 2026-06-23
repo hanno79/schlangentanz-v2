@@ -1929,15 +1929,15 @@ code {
     grid-template-areas:
       "spielerrahmen spielerrahmen spielerrahmen"
       "gegner-plakette gegner-plakette gegner-plakette"
-      "arenastein arenastein arenastein"
       "aktionsdock aktionsdock aktionsdock"
+      "arenastein arenastein arenastein"
       "zugseitenleiste zugseitenleiste zugseitenleiste"
       "sp-plakette hand arenazug";
     grid-template-rows:
       auto
       auto
-      clamp(18rem, 36vh, 24rem)
       clamp(3.5rem, 8vh, 4.5rem)
+      clamp(20rem, 40vh, 28rem)
       clamp(4rem, 7vh, 5rem)
       auto;
     align-content: start;
@@ -2031,8 +2031,8 @@ code {
        Viewport (Schlangenbereich teilweise geclippt). M1d0 waehlt
        Variante 2 (Bottom-Row first), weil ohne sichtbare Hand keine
        Aktion moeglich ist. */
-    height: clamp(18rem, 36vh, 24rem);
-    max-height: clamp(18rem, 36vh, 24rem);
+    height: clamp(20rem, 40vh, 28rem);
+    max-height: clamp(20rem, 40vh, 28rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;

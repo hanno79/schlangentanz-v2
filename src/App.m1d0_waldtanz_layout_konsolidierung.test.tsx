@@ -178,13 +178,14 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     expect(cleaned).not.toMatch(/grid-auto-rows:\s*auto/)
 
     // Mindestens eine der Zeilen referenziert den Arenastein-Cap.
-    // M1d0 hatte urspruenglich clamp(20rem, 36vh, 26rem) notiert; M1dd
-    // hat die Zeile "aktionsdock" (clamp(3.5rem, 8vh, 4.5rem)) zwischen
-    // Arenastein und Zugseitenleiste eingefuegt und dafuer den Arenastein-
-    // Cap auf clamp(18rem, 36vh, 24rem) gestrafft, damit die Bottom-Row
-    // nicht aus dem 900-px-Viewport faellt. Beide Werte gehoeren zum
-    // selben M1d0-Vertrag (explizite grid-template-rows + clamp-Caps).
-    expect(cleaned).toMatch(/clamp\(\s*(18|20)rem,\s*36vh,\s*(2[46])rem\s*\)/)
+    // M1d0 hat urspruenglich clamp(20rem, 40vh, 28rem) gewaehlt; M1dd hat
+    // zunaechst auf clamp(18rem, 36vh, 24rem) gestrafft, um Platz fuer
+    // die aktionsdock-Row zu schaffen. Nach dem M1bw-Hit-Test-Blocker
+    // (Tischkarte ragte in die aktionsdock-Row) wurde der Cap auf den
+    // M1d0-Wert zurueckgesetzt und der aktionsdock stattdessen zwischen
+    // Gegnerplakette und Arenastein positioniert. Beide Werte gehoeren
+    // zum selben M1d0-Vertrag (explizite grid-template-rows + clamp-Caps).
+    expect(cleaned).toMatch(/clamp\(\s*(18|20)rem,\s*(36|40)vh,\s*(2[46]|28)rem\s*\)/)
     // Und die Zugseitenleiste-Cap clamp(4rem, 7vh, 5rem).
     expect(cleaned).toMatch(/clamp\(\s*4rem,\s*7vh,\s*5rem\s*\)/)
   })

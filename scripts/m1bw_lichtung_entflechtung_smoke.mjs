@@ -1,8 +1,21 @@
 /*
 Author: rahn
 Datum: 19.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: M1bw Smoke fuer entflechtete Waldtanz-Lichtung: Tischkarte, Startkreis und Handbank bleiben sichtbar getrennt und hit-testbar.
+
+  AENDERUNG 23.06.2026 (M1dd Pre-Existing Smoke-Staleness in-scope):
+  hitWithin() trifft nicht mehr blind auf den DOM-Rect-Mittelpunkt, sondern
+  auf den sichtbaren Schnittpunkt des Elements mit seinem naechsten
+  overflow:hidden-Vorfahren. Hintergrund: nach M1dd sitzt das Aktionendock
+  als eigene Grid-Row unter dem Arenastein, das Arenastein hat
+  overflow:hidden bei einem Cap von 324 px, der Schlangenlichtung-Inhalt
+  ist 394 px hoch (Tischkarte-DOM-Rect endet bei y~718), der sichtbare
+  Anteil der Tischkarte endet bei y~623 — der DOM-Rect-Mittelpunkt
+  (y~641) liegt im geclippten Bereich, wo jetzt das Aktionendock sitzt.
+  Der Spieler klickt aber auf den sichtbaren Bereich (y~565–623), dort
+  ist die Tischkarte weiterhin hit-testbar. Der Smoke prueft jetzt
+  genau diesen sichtbaren Klickpunkt, nicht den DOM-Rect-Mittelpunkt.
 */
 
 import { chromium } from 'playwright'
@@ -37,11 +50,37 @@ async function main() {
         const rect = element?.getBoundingClientRect()
         return rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height, bottom: rect.bottom, right: rect.right } : null
       }
+      // M1dd (AENDERUNG 23.06.2026): hit-testet auf den sichtbaren Schnitt-
+      // punkt des Elements mit seinem naechsten overflow:hidden-Vorfahren,
+      // nicht blind auf den DOM-Rect-Mittelpunkt. Das Arenastein clippt die
+      // Schlangenlichtung bei 324 px; der DOM-Rect der Tischkarte endet
+      // bei y~718, der sichtbare Anteil endet bei y~623. Ohne diesen Fix
+      // landet der Klick auf dem Aktionendock (y~641), das jetzt unter
+      // dem Arenastein in einer eigenen Grid-Row sitzt.
+      const sichtbarerRect = (element) => {
+        const r = element.getBoundingClientRect()
+        let top = r.top
+        let bottom = r.bottom
+        let ancestor = element.parentElement
+        while (ancestor && ancestor !== document.body) {
+          const cs = getComputedStyle(ancestor)
+          if (cs.overflow === 'hidden' || cs.overflow === 'clip' || cs.overflowY === 'hidden' || cs.overflowY === 'clip') {
+            const ar = ancestor.getBoundingClientRect()
+            top = Math.max(top, ar.top)
+            bottom = Math.min(bottom, ar.bottom)
+          }
+          ancestor = ancestor.parentElement
+        }
+        return { x: r.x, y: top, width: r.width, height: Math.max(0, bottom - top), bottom, right: r.right }
+      }
       const hitWithin = (selector) => {
         const element = document.querySelector(selector)
-        const rect = element?.getBoundingClientRect()
-        if (!element || !rect) return false
-        return document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)?.closest(selector) === element
+        if (!element) return false
+        const r = sichtbarerRect(element)
+        if (r.height < 4) return false
+        const cx = r.x + r.width / 2
+        const cy = r.y + r.height / 2
+        return document.elementFromPoint(cx, cy)?.closest(selector) === element
       }
       const startzone = document.querySelector('.schlangen-startzone')
       const startRect = startzone?.getBoundingClientRect() ?? null

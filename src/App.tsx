@@ -297,6 +297,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   handkarten={naechsterGegner.hand.length}
                 />
               )}
+              {istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
               <section className="waldtanz-arenastein" aria-label="Waldtanz-Arenastein">
                 <div className="waldtanz-arenastein__kopf">
                   <h4>Leuchtender Waldstein</h4>
@@ -441,7 +442,6 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null) }}
               />
               {istGameRoute && <WaldtanzArenazugknopf id={phasenaktionId} hervorgehoben={hervorgehobenesAktionszielId === phasenaktionId} zustand={zustand} ueberhand={ueberhand} zeigtKiVorspulen={versteckeKiEinzelaktionen} onAusspielphaseBeenden={handleAusspielphaseBeenden} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen} onZugBeenden={handleZugBeenden} onAusspielphaseStarten={handleAusspielphaseStarten} />}
-              {istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
             </section>
             {!istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
             {!istGameRoute && (
