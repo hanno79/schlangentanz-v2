@@ -37,11 +37,16 @@ try {
     const beweis = await page.evaluate(() => {
       const spieltisch = document.querySelector('[class~="spielbereich"], [class~="waldtanz-spieltisch"]')
       const spieltischRegion = Array.from(document.querySelectorAll('section, [role="region"]'))
-        .find(el => el.getAttribute('aria-label') === 'Spieltisch' || el.querySelector('[aria-label="Handkarten"]'))
-      const handkartenRegion = Array.from(document.querySelectorAll('[role="region"]'))
+        .find(el => el.getAttribute('aria-label') === 'Spieltisch' || el.querySelector('[aria-label="Waldtanz-Spielkartenfächer"]'))
+      // M1db-Update 22.06.2026: Handkarten-Bereich ist jetzt ein UL mit
+      // aria-label "Waldtanz-Spielkartenfächer", nicht mehr eine region/Handkarten.
+      // Wir finden ihn via aria-label-Match statt role-Suche.
+      const handkartenListe = Array.from(document.querySelectorAll('ul, [role="list"]'))
+        .find(el => el.getAttribute('aria-label') === 'Waldtanz-Spielkartenfächer')
+      const handkartenRegion = handkartenListe ?? Array.from(document.querySelectorAll('[role="region"]'))
         .find(el => el.getAttribute('aria-label') === 'Handkarten')
       const karten = handkartenRegion
-        ? Array.from(handkartenRegion.querySelectorAll('[role="button"]')).filter(b => /Farbkarte|Sonderkarte/.test(b.getAttribute('aria-label') || ''))
+        ? Array.from(handkartenRegion.querySelectorAll('button, [role="button"]')).filter(b => /Farbkarte|Sonderkarte/.test(b.getAttribute('aria-label') || ''))
         : []
       const erste = karten[0]
       if (!(erste instanceof HTMLElement)) throw new Error('M1ct Spielkarten-Stil: keine Handkarten gefunden')
