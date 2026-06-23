@@ -15,6 +15,7 @@ import {
 } from './engine'
 import type { SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
 import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
+import useAktionenPanelProps from './hooks/useAktionenPanelProps'
 import { useSpielLabels } from './hooks/useSpielLabels'
 import AktionenPanel from './components/AktionenPanel'
 import Spielerfuehrung from './components/Spielerfuehrung'
@@ -250,6 +251,21 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     setZustand(starteAusspielphase(erstelleSpielzustand(kiGegner + 1)))
   }
 
+  const aktionenPanelProps = useAktionenPanelProps({
+    zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, reaktionsAktionen,
+    ueberhand, istSpielende, steuerung: aktiverSpieler.steuerung,
+    aktionsLabel, pflichtschrittLabel, hervorgehobenesAktionszielId,
+    empfohleneAktionId, phasenaktionId,
+    onAktionAusfuehren: fuhreAktionAus,
+    onAusspielphaseBeenden: handleAusspielphaseBeenden,
+    onAufgabenpruefungBeenden: handleAufgabenpruefungBeenden,
+    onUeberzaehligeKartenAbwerfen: handleUeberzaehligeKartenAbwerfen,
+    onZugBeenden: handleZugBeenden,
+    onAusspielphaseStarten: handleAusspielphaseStarten,
+    onKiZugVorspulen: handleKiZugVorspulen,
+    istGameRoute,
+  })
+
   return (
     <main className={`app-shell${istGameRoute ? ' app-shell--game' : ''}`}>
       {!istGameRoute && (
@@ -425,30 +441,9 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null) }}
               />
               {istGameRoute && <WaldtanzArenazugknopf id={phasenaktionId} hervorgehoben={hervorgehobenesAktionszielId === phasenaktionId} zustand={zustand} ueberhand={ueberhand} zeigtKiVorspulen={versteckeKiEinzelaktionen} onAusspielphaseBeenden={handleAusspielphaseBeenden} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen} onZugBeenden={handleZugBeenden} onAusspielphaseStarten={handleAusspielphaseStarten} />}
+              {istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
             </section>
-            <AktionenPanel
-              zustand={zustand}
-              legaleAktionen={legaleAktionen}
-              nichtEnumerierteAktionenHinweise={nichtEnumerierteAktionenHinweise}
-              reaktionsAktionen={reaktionsAktionen}
-              ueberhand={ueberhand}
-              istSpielende={istSpielende}
-              steuerung={aktiverSpieler.steuerung}
-              aktionsLabel={aktionsLabel}
-              pflichtschrittLabel={pflichtschrittLabel}
-              hervorgehobenesAktionszielId={hervorgehobenesAktionszielId}
-              empfohleneAktionId={empfohleneAktionId}
-              phasenaktionId={phasenaktionId}
-              onAktionAusfuehren={fuhreAktionAus}
-              onAusspielphaseBeenden={handleAusspielphaseBeenden}
-              onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden}
-              onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen}
-              onZugBeenden={handleZugBeenden}
-              onAusspielphaseStarten={handleAusspielphaseStarten}
-              onKiZugVorspulen={handleKiZugVorspulen}
-              kompakterBrettFallback={istGameRoute}
-              zeigePhasenaktion={!istGameRoute}
-            />
+            {!istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
             {!istGameRoute && (
               <AktiverSpielerZugtafel
                 spieler={aktiverSpieler}

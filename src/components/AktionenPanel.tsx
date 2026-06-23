@@ -111,7 +111,7 @@ function PhasenregelnBereich({
   )
 }
 
-interface AktionenPanelProps {
+export interface AktionenPanelProps {
   zustand: Spielzustand
   legaleAktionen: SpielAktion[]
   nichtEnumerierteAktionenHinweise: NichtEnumerierteAktionHinweis[]
@@ -132,6 +132,7 @@ interface AktionenPanelProps {
   onAusspielphaseStarten: () => void
   onKiZugVorspulen: () => void
   kompakterBrettFallback?: boolean
+  brettinline?: boolean
   zeigePhasenaktion?: boolean
 }
 
@@ -156,6 +157,7 @@ export default function AktionenPanel({
   onAusspielphaseStarten,
   onKiZugVorspulen,
   kompakterBrettFallback = false,
+  brettinline = false,
   zeigePhasenaktion = true,
 }: AktionenPanelProps) {
   const aktionenTitelId = useId()
@@ -258,7 +260,7 @@ export default function AktionenPanel({
   )
 
   return (
-    <section className={`info-panel aktionen-panel--waldtanz-dock${kompakterBrettFallback ? ' aktionen-panel--brettfallback' : ''}`} aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
+    <section className={`info-panel aktionen-panel--waldtanz-dock${kompakterBrettFallback ? ' aktionen-panel--brettfallback' : ''}${brettinline ? ' aktionen-panel--brettinline' : ''}`} aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={aktionenTitelId}>Aktionen</h2>
       <div className="aktionen-dock__kopf">
         <p>Spielbare Aktionen: {legaleAktionen.length}</p>

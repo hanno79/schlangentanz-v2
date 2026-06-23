@@ -39,7 +39,10 @@ async function ersteHandkarte(page) {
 }
 
 async function klickeHandkarte(page, labelSubstring) {
-  const button = page.locator('[class~="handkarte__button--karte"]').filter({ has: page.locator(`[aria-label*="${labelSubstring}"]`) }).first()
+  // Die Handkarten-Buttons tragen den aria-label direkt. Wir waehlen den
+  // ersten, der das labelSubstring enthaelt.
+  const button = page.locator(`[class~="handkarte__button--karte"][aria-label*="${labelSubstring}"]`).first()
+  await button.waitFor({ timeout: 5000 })
   await button.click({ force: false })
 }
 
@@ -62,7 +65,12 @@ async function schlangenAttribute(page) {
 
 async function main() {
   const browser = await chromium.launch()
-  const context = await browser.newContext({ viewport: VIEWPORT, reducedMotion: 'no-preference' })
+  // reducedMotion: 'reduce' ist noetig, weil der Startkreis nach der Aktion
+  // mit --spielmoment-pulse-dauer pulsiert. Ein normaler Playwright-Click
+  // wartet sonst 30s auf "stable" und schlaegt fehl. Das Daten-Attribut
+  // data-letzte-aktion-ziel ist von der Animation unabhaengig und wird
+  // auch unter reducedMotion korrekt gesetzt (siehe M1db/M1ct/M1cx-Smokes).
+  const context = await browser.newContext({ viewport: VIEWPORT, reducedMotion: 'reduce' })
   const page = await context.newPage()
   page.on('pageerror', (error) => { throw new Error(`M1dc: pageerror — ${error.message}`) })
   page.on('console', (msg) => {
@@ -79,12 +87,28 @@ async function main() {
     // Phase 1: Startfaehrte klicken -> NeueSchlangeStarten -> Startzone muss reagieren
     await klickeHandkarte(page, erstesLabel.split(' ')[0])
 
-    // Auf den Magiekreis-Startfaehrte-Button warten.
-    await page.waitForSelector('[class~="schlangen-startzone__faehrte-button"]', { timeout: 5000 })
-    const startfaehrteCount = await page.locator('[class~="schlangen-startzone__faehrte-button"]').count()
-    if (startfaehrteCount === 0) throw new Error('M1dc: keine Startfaehrten sichtbar nach Kartenauswahl')
+    // Nach der Kartenauswahl erscheinen Startfährten-Buttons am Magiekreis oder
+    // im Aktionen-Bereich. Wir klicken die erste "Neue Schlange starten"-Aktion
+    // — entweder als Faehrte am Startkreis oder im Aktionspanel.
+    await page.waitForTimeout(300)
+    const startButtons = await page.locator('button').filter({ hasText: /Neue Schlange starten/ }).all()
+    if (startButtons.length === 0) throw new Error('M1dc: keine "Neue Schlange starten"-Buttons sichtbar nach Kartenauswahl')
 
-    await page.locator('[class~="schlangen-startzone__faehrte-button"]').first().click({ force: false })
+    // Wenn ein Faehrte-Button direkt am Startkreis sitzt, bevorzugen wir
+    // diesen (er sitzt am Brettziel). Sonst nehmen wir den ersten.
+    let gewaehlterStartButton = null
+    for (const btn of startButtons) {
+      const inStartzone = await btn.evaluate((el) => {
+        const sz = el.closest('[class~="schlangen-startzone"]')
+        return !!sz
+      })
+      if (inStartzone) {
+        gewaehlterStartButton = btn
+        break
+      }
+    }
+    if (!gewaehlterStartButton) gewaehlterStartButton = startButtons[0]
+    await gewaehlterStartButton.click({ force: false })
     await page.waitForTimeout(150)
 
     const startAttr1 = await startzoneAttribut(page)
@@ -92,12 +116,12 @@ async function main() {
       throw new Error(`M1dc: Startzone data-letzte-aktion-ziel="${startAttr1}" statt "true" nach NeueSchlangeStarten`)
     }
 
-    // Phase 2: KarteAnlegen auf der neuen Schlange
-    await page.waitForTimeout(800) // kurze Verschnaufpause
+    // Phase 2: Auto-Clear nach 1500 ms (siehe App.tsx: setTimeout(setLetzteAktionZiel(null), 1500))
+    await page.waitForTimeout(1700) // etwas mehr als die 1500 ms Auto-Clear-Schwelle
     // Karte im Spielzug suchen, die jetzt an die Schlange angelegt werden kann
     const neueStartAttr = await startzoneAttribut(page)
     if (neueStartAttr !== null) {
-      throw new Error(`M1dc: Startzone-Attribut haengt nach 950 ms fest ("${neueStartAttr}"); Auto-Clear fehlt`)
+      throw new Error(`M1dc: Startzone-Attribut haengt nach 1700 ms fest ("${neueStartAttr}"); Auto-Clear fehlt`)
     }
 
     // Phase 3: Daten-Landmark auf existierender Schlange pruefen, wenn KarteAnlegen moeglich ist

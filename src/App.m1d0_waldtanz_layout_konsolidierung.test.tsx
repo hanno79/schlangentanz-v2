@@ -177,9 +177,14 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     expect(cleaned).toMatch(/grid-template-rows:/)
     expect(cleaned).not.toMatch(/grid-auto-rows:\s*auto/)
 
-    // Mindestens eine der Zeilen referenziert den Arenastein-Cap
-    // clamp(20rem, 36vh, 26rem).
-    expect(cleaned).toMatch(/clamp\(\s*20rem,\s*36vh,\s*26rem\s*\)/)
+    // Mindestens eine der Zeilen referenziert den Arenastein-Cap.
+    // M1d0 hatte urspruenglich clamp(20rem, 36vh, 26rem) notiert; M1dd
+    // hat die Zeile "aktionsdock" (clamp(3.5rem, 8vh, 4.5rem)) zwischen
+    // Arenastein und Zugseitenleiste eingefuegt und dafuer den Arenastein-
+    // Cap auf clamp(18rem, 36vh, 24rem) gestrafft, damit die Bottom-Row
+    // nicht aus dem 900-px-Viewport faellt. Beide Werte gehoeren zum
+    // selben M1d0-Vertrag (explizite grid-template-rows + clamp-Caps).
+    expect(cleaned).toMatch(/clamp\(\s*(18|20)rem,\s*36vh,\s*(2[46])rem\s*\)/)
     // Und die Zugseitenleiste-Cap clamp(4rem, 7vh, 5rem).
     expect(cleaned).toMatch(/clamp\(\s*4rem,\s*7vh,\s*5rem\s*\)/)
   })

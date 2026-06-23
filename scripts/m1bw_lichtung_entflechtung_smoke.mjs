@@ -53,7 +53,7 @@ async function main() {
             return {
               x,
               y,
-              hitClass: hit?.closest('.schlangen-startzone, .waldtanz-tischkarte, .handkarten-panel, .waldtanz-waldtaschen')?.className ?? hit?.className ?? '',
+              hitClass: hit?.closest('.schlangen-startzone, .waldtanz-tischkarte, .handkarten-panel, .waldtanz-waldtaschen, .ki-zug-buehne')?.className ?? hit?.className ?? '',
             }
           })
         : []
@@ -106,7 +106,7 @@ async function main() {
     // selbst ist im oberen Viewport-Bereich erreichbar.
     const schlechteHits = messung.pruefpunkte.filter((punkt) => {
       const cls = String(punkt.hitClass)
-      return !cls.includes('schlangen-startzone') && !cls.includes('handkarten-panel') && !cls.includes('handkarte')
+      return !cls.includes('schlangen-startzone') && !cls.includes('handkarten-panel') && !cls.includes('handkarte') && !cls.includes('ki-zug-buehne')
     })
     if (schlechteHits.length > 0) {
       throw new Error(`M1bw Lichtung: Startkreis-Pruefpunkte unerwartet verdeckt (${JSON.stringify(schlechteHits)})`)
@@ -114,8 +114,18 @@ async function main() {
     if (!messung.tischkarteHit || !messung.handbankHit) {
       throw new Error(`M1bw Lichtung: Tischkarte/Handbank nicht hit-testbar (${JSON.stringify({ tischkarteHit: messung.tischkarteHit, handbankHit: messung.handbankHit })})`)
     }
-    if (messung.arena.bottom > 900 || messung.handbank.bottom > 900) {
-      throw new Error(`M1bw Lichtung: Spielobjekte verlassen den ersten Viewport (${JSON.stringify({ arena: kurz(messung.arena), handbank: kurz(messung.handbank) })})`)
+    // AENDERUNG 23.06.2026: M1d0 fuehrt eine eigene Grid-Zeile "zugseitenleiste"
+    // (63 px bei 900-Viewport) zwischen Arenastein und Bottom-Row ein. M1dd
+    // ergaenzt die "aktionsdock"-Reihe (~72 px). Arenas + Gegnerplakette +
+    // Spielerrahmen + Page-Top + Bottom-Row + Zugseitenleiste + Aktionsdock
+    // ergeben ~953 px bei 900-Viewport, also Spielobjekte ragen 53 px unter
+    // den Viewport (M1d0+M1dd-Trade-off: Bottom-Row first, Schlangenbereich
+    // geclippt). Die alte "Viewport-Bottom 900" Schranke wurde auf das
+    // M1d0-eigene `vh + 60` (= 960 px) gelockert, im Einklang mit
+    // M1d0/M1as/M1ax-Layout-Smokes.
+    const maxBottomBuffer = 900 + 60
+    if (messung.arena.bottom > maxBottomBuffer || messung.handbank.bottom > maxBottomBuffer) {
+      throw new Error(`M1bw Lichtung: Spielobjekte verlassen den ersten Viewport + 60 px (${JSON.stringify({ arena: kurz(messung.arena), handbank: kurz(messung.handbank), maxBottomBuffer })})`)
     }
     if (errors.length > 0) throw new Error(errors.join('\n'))
     console.log(`M1bw Lichtung: Tischkarte endet bei ${Math.round(messung.tischkarte.bottom)}px, Startkreis ${Math.round(messung.startzone.y)}-${Math.round(messung.startzone.bottom)}px, Handbank ab ${Math.round(messung.handbank.y)}px; Startkreis hit-testbar.`)

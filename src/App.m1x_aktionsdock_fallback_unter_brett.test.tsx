@@ -34,7 +34,11 @@ describe('M1x Aktionsdock als Fallback unter dem Waldtanz-Brett', () => {
 
     expect(spielbereich).toHaveClass('spielbereich--game-route')
     expect(aktionen).toHaveClass('aktionen-panel--waldtanz-dock')
-    expect(spieltisch.nextElementSibling).toBe(aktionen)
+    // AENDERUNG 23.06.2026 (M1dd): Das Aktionsdock ist jetzt Teil des
+    // spielbrett--waldtanz-Grids (innerhalb der aktionsdock-Row), nicht mehr
+    // dessen naechstes Geschwister-Element. Der Brett-zuerst-Vertrag bleibt
+    // erhalten: Spielerinnen sehen zuerst das Brett + Hand, dann das Dock.
+    expect(spieltisch).toContainElement(aktionen)
     expect(spieltisch).toContainElement(schlangenbereich)
     expect(spieltisch).toContainElement(handkarten)
 
