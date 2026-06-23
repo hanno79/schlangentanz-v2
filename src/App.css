@@ -1937,7 +1937,7 @@ code {
       auto
       auto
       clamp(3.5rem, 8vh, 4.5rem)
-      clamp(20rem, 40vh, 28rem)
+      clamp(17rem, 30vh, 20rem)
       clamp(4rem, 7vh, 5rem)
       auto;
     align-content: start;
@@ -2030,9 +2030,22 @@ code {
        sichtbar (Bottom-Row aus dem Viewport) oder Bottom-Row im
        Viewport (Schlangenbereich teilweise geclippt). M1d0 waehlt
        Variante 2 (Bottom-Row first), weil ohne sichtbare Hand keine
-       Aktion moeglich ist. */
-    height: clamp(20rem, 40vh, 28rem);
-    max-height: clamp(20rem, 40vh, 28rem);
+       Aktion moeglich ist.
+
+       AENDERUNG 23.06.2026 (M1dd): Cap auf clamp(17rem, 30vh, 20rem)
+       gestrafft, damit die zusaetzliche aktionsdock-Row (72 px) und
+       die Bottom-Row (147-160 px) zusammen mit Spielerrahmen (71) +
+       Gegnerplakette (149) + Zugseitenleiste (72) wieder in den
+       900-px-Viewport passen. Bei 18-px-Root-Font und 900-px-Viewport:
+       17rem=272, 30vh=270, 20rem=320 → 272 px. Das Arenastein
+       verliert ~88 px sichtbare Hoehe gg. M1d0-Original; die Tischkarte
+       bleibt im Arenastein sichtbar (M1bw-Hit-Test nutzt sichtbarerRect(),
+       damit der Klick auch im geclippten Bereich landet). Die unteren
+       30-50 px des Schlangenbereichs werden auf den Arenastein-Rand
+       geclippt — beabsichtigter M1dd-Trade-off, dokumentiert im
+       M1d0-Smoke (Spielbrett-Bottom <= Viewport + 60 px). */
+    height: clamp(17rem, 30vh, 20rem);
+    max-height: clamp(17rem, 30vh, 20rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;

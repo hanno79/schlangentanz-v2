@@ -183,9 +183,13 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     // die aktionsdock-Row zu schaffen. Nach dem M1bw-Hit-Test-Blocker
     // (Tischkarte ragte in die aktionsdock-Row) wurde der Cap auf den
     // M1d0-Wert zurueckgesetzt und der aktionsdock stattdessen zwischen
-    // Gegnerplakette und Arenastein positioniert. Beide Werte gehoeren
-    // zum selben M1d0-Vertrag (explizite grid-template-rows + clamp-Caps).
-    expect(cleaned).toMatch(/clamp\(\s*(18|20)rem,\s*(36|40)vh,\s*(2[46]|28)rem\s*\)/)
+    // Gegnerplakette und Arenasstein positioniert. Das reichte noch nicht
+    // fuer die 900-px-Viewport-Balance, daher hat M1dd-Finalisierung den
+    // Cap zunaechst auf clamp(18rem, 32vh, 22rem) = 288 px und nach der
+    // Live-Smoke-Messung auf clamp(17rem, 30vh, 20rem) = 272 px gestrafft.
+    // Alle vier Werte gehoeren zum selben M1d0-Vertrag (explizite
+    // grid-template-rows + clamp-Caps).
+    expect(cleaned).toMatch(/clamp\(\s*(17|18|20)rem,\s*(30|32|36|40)vh,\s*(20|2[246]|28)rem\s*\)/)
     // Und die Zugseitenleiste-Cap clamp(4rem, 7vh, 5rem).
     expect(cleaned).toMatch(/clamp\(\s*4rem,\s*7vh,\s*5rem\s*\)/)
   })
