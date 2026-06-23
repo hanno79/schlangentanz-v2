@@ -40,12 +40,20 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
   const aufgabenPunkte = finaleWertung?.wertung.aufgabenPunkte.gesamtPunkte ?? 0
   const gesamtPunkte = finaleWertung?.gesamtPunkte ?? 0
 
+  const konfettiStuecke = Array.from({ length: 10 }, (_, i) => i)
+  const ballonStuecke = Array.from({ length: 6 }, (_, i) => i)
+
   return (
     <section className="sieger-party" aria-label="Sieger-Party">
       <div className="sieger-party__konfetti" aria-hidden="true">
-        <span />
-        <span />
-        <span />
+        {konfettiStuecke.map(i => (
+          <span key={i} className={`sieger-party__konfetti-stueck sieger-party__konfetti-stueck--${i % 4}`} />
+        ))}
+      </div>
+      <div className="sieger-party__ballons" aria-hidden="true">
+        {ballonStuecke.map(i => (
+          <span key={i} className={`sieger-party__ballon sieger-party__ballon--${i % 3}`} />
+        ))}
       </div>
       <div className="sieger-party__kopf">
         <p className="sieger-party__eyebrow">Finale Waldlichtung</p>
@@ -53,8 +61,10 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
         <p className="sieger-party__ergebnis">{ergebnisLabel}</p>
       </div>
       <div className="sieger-party__portrait" aria-hidden="true">
+        <span className="sieger-party__korona" />
         <span className="sieger-party__krone">👑</span>
         <span className="sieger-party__schlange">🐍</span>
+        <span className="sieger-party__pokal">🏆</span>
       </div>
       <div className="sieger-party__scorekarte">
         <h3>Finale Punktetafel</h3>

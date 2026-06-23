@@ -3753,7 +3753,7 @@ code {
   pointer-events: none;
 }
 
-.sieger-party__konfetti span {
+.sieger-party__konfetti-stueck {
   position: absolute;
   width: 0.9rem;
   height: 0.9rem;
@@ -3763,9 +3763,56 @@ code {
   animation: party-float 3s ease-in-out infinite;
 }
 
-.sieger-party__konfetti span:nth-child(1) { left: 7%; top: 18%; }
-.sieger-party__konfetti span:nth-child(2) { right: 12%; top: 16%; animation-delay: 0.4s; background: var(--st-color-primary-container); }
-.sieger-party__konfetti span:nth-child(3) { right: 24%; bottom: 18%; animation-delay: 0.8s; background: #ffbcaa; }
+.sieger-party__konfetti-stueck--0 { background: var(--st-color-secondary-container); }
+.sieger-party__konfetti-stueck--1 { background: var(--st-color-primary-container); }
+.sieger-party__konfetti-stueck--2 { background: #ffbcaa; }
+.sieger-party__konfetti-stueck--3 { background: var(--st-color-surface-container); }
+
+.sieger-party__konfetti-stueck:nth-of-type(1)  { left: 6%;  top: 12%; }
+.sieger-party__konfetti-stueck:nth-of-type(2)  { right: 10%; top: 10%; animation-delay: 0.3s; }
+.sieger-party__konfetti-stueck:nth-of-type(3)  { left: 22%; top: 22%; animation-delay: 0.6s; }
+.sieger-party__konfetti-stueck:nth-of-type(4)  { right: 24%; bottom: 14%; animation-delay: 0.9s; }
+.sieger-party__konfetti-stueck:nth-of-type(5)  { left: 40%; top: 8%; animation-delay: 1.2s; }
+.sieger-party__konfetti-stueck:nth-of-type(6)  { right: 38%; bottom: 10%; animation-delay: 0.15s; }
+.sieger-party__konfetti-stueck:nth-of-type(7)  { left: 58%; top: 18%; animation-delay: 0.45s; }
+.sieger-party__konfetti-stueck:nth-of-type(8)  { right: 56%; bottom: 20%; animation-delay: 0.75s; }
+.sieger-party__konfetti-stueck:nth-of-type(9)  { left: 76%; top: 6%; animation-delay: 1.05s; }
+.sieger-party__konfetti-stueck:nth-of-type(10) { right: 72%; bottom: 6%; animation-delay: 1.35s; }
+
+.sieger-party__ballons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sieger-party__ballon {
+  position: absolute;
+  width: 2.2rem;
+  height: 2.7rem;
+  border-radius: 50% 50% 48% 48%;
+  border: 2px solid var(--st-color-border-strong);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  animation: party-balloon 6s ease-in-out infinite;
+  opacity: 0.82;
+}
+
+.sieger-party__ballon::after {
+  content: '';
+  position: absolute;
+  bottom: -0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid var(--st-color-border-strong);
+}
+
+.sieger-party__ballon--0 { background: #ffbcaa; left: 3%;  animation-delay: 0s; }
+.sieger-party__ballon--1 { background: var(--st-color-secondary-container); right: 5%; animation-delay: 1.5s; }
+.sieger-party__ballon--2 { background: var(--st-color-primary-container); left: 88%; top: 40%; animation-delay: 3s; }
 
 .sieger-party__kopf,
 .sieger-party__scorekarte,
@@ -3831,6 +3878,25 @@ code {
 .sieger-party__schlange {
   font-size: clamp(4rem, 10vw, 7rem);
   filter: drop-shadow(0 4px 0 rgba(6, 57, 7, 0.28));
+}
+
+.sieger-party__korona {
+  position: absolute;
+  inset: -12%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(254, 203, 0, 0.5) 0 35%, rgba(164, 222, 2, 0.3) 36% 60%, transparent 61%);
+  filter: blur(6px);
+  animation: party-pulse 3.5s ease-in-out infinite;
+  z-index: -1;
+}
+
+.sieger-party__pokal {
+  position: absolute;
+  bottom: -0.3rem;
+  right: -0.3rem;
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  filter: drop-shadow(0 3px 0 rgba(6, 57, 7, 0.3));
+  animation: party-wiggle 2.5s ease-in-out infinite;
 }
 
 .sieger-party__scorekarte {
@@ -3908,6 +3974,33 @@ code {
 @keyframes party-float {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(-0.55rem) rotate(2deg); }
+}
+
+@keyframes party-balloon {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-1.5rem) rotate(3deg); }
+}
+
+@keyframes party-wiggle {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  25% { transform: rotate(6deg) scale(1.08); }
+  75% { transform: rotate(-4deg) scale(0.96); }
+}
+
+@keyframes party-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.92); }
+  50% { opacity: 0.85; transform: scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sieger-party,
+  .sieger-party__konfetti-stueck,
+  .sieger-party__ballon,
+  .sieger-party__portrait,
+  .sieger-party__korona,
+  .sieger-party__pokal {
+    animation: none !important;
+  }
 }
 
 @media (max-width: 840px) {
