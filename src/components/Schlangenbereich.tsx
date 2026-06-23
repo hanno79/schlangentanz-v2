@@ -28,6 +28,7 @@ import FarbenfusionPaarziel from './FarbenfusionPaarziel'
 import FarbenschutzSchild from './FarbenschutzSchild'
 import SchlangenfrassBissspur from './SchlangenfrassBissspur'
 import { ermittleFarbenfusionPaarInfo } from './farbenfusionPaarInfo'
+import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 
 interface SchlangenbereichProps {
   zustand: Spielzustand
@@ -45,6 +46,8 @@ interface SchlangenbereichProps {
   ausgewaehlteHandkarteId: string | null
   onAktion: (aktion: SpielAktion) => void
   aktionsLabel: (aktion: SpielAktion) => string
+  // M1dc: Spielmoment-Puls-Ziel, das aus der letzten Aktion abgeleitet wurde.
+  letzteAktionZiel?: LetzteAktionZiel | null
 }
 
 function schlangenStatusLabel(zustand: Spieler['schlangen'][number]['zustand']): string {
@@ -93,6 +96,7 @@ export default function Schlangenbereich({
   ausgewaehlteHandkarteId,
   onAktion,
   aktionsLabel,
+  letzteAktionZiel = null,
 }: SchlangenbereichProps) {
   const komponentenId = useId()
   const [dragOverZone, setDragOverZone] = useState<DragTarget | null>(null)
@@ -308,6 +312,7 @@ export default function Schlangenbereich({
           startzoneIstZielbereit={startzoneIstZielbereit}
           dragOverStartzone={dragOverZone?.kind === 'startzone'}
           ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
+          letzteAktionZiel={letzteAktionZiel}
           startfaehrten={istGameRoute ? neueSchlangeStartenAktionen.map((aktion) => ({
             kartenId: aktion.handkartenId,
             onAuswaehlen: () => onAktion(aktion),
@@ -362,6 +367,7 @@ export default function Schlangenbereich({
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
                   aria-describedby={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe ${schlangenWertungId}`}
+                  data-letzte-aktion-ziel={letzteAktionZiel?.typ === 'schlange' && letzteAktionZiel.id === schlange.id ? `schlange-${schlange.id}` : undefined}
                   onClick={(event) => handleSchlangeClick(event, schlange.id)}
                   onKeyDown={(event) => handleSchlangeKeyDown(event, schlange.id)}
                   onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
@@ -546,6 +552,7 @@ export default function Schlangenbereich({
           onAktion={onAktion}
           aktionsLabel={aktionsLabel}
           aktiverZielspurKey={aktiverZielspurKey}
+          letzteAktionZiel={letzteAktionZiel}
         />
       </section>
     </section>

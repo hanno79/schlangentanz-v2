@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
@@ -52,6 +52,8 @@ import AktiverSpielerZugtafel from './components/AktiverSpielerZugtafel'
 import WaldtanzAktiverSpielerDebug from './components/WaldtanzAktiverSpielerDebug'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import { aktionsLabel } from './aktionsLabel'
+import type { LetzteAktionZiel } from './aktionsziel/extrahiereAktionZiel'
+import { extrahiereAktionZiel } from './aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
 
 function ueberhandAnzahl(zustand: Spielzustand): number {
@@ -83,6 +85,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const [startZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
   const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
+  const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
   const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
@@ -164,8 +167,18 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
-  function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand) {
+  // M1dc: Auto-Clear des Spielmoment-Pulses nach 1500 ms, damit der
+  // data-letzte-aktion-ziel-Stil nicht permanent auf der Startzone oder
+  // einer Schlange haengt.
+  useEffect(() => {
+    if (letzteAktionZiel === null) return
+    const timer = window.setTimeout(() => setLetzteAktionZiel(null), 1500)
+    return () => window.clearTimeout(timer)
+  }, [letzteAktionZiel])
+
+  function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand, aktionZiel: LetzteAktionZiel | null = null) {
     setLetzteAktion(label)
+    setLetzteAktionZiel(aktionZiel)
     setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
@@ -199,7 +212,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     }
   }
 
-  function fuhreAktionAus(aktion: SpielAktion) { wechsleZustand(aktionsLabel(aktion), z => anwendeAktion(z, aktion)) }
+  function fuhreAktionAus(aktion: SpielAktion) { wechsleZustand(aktionsLabel(aktion), z => anwendeAktion(z, aktion), extrahiereAktionZiel(aktion)) }
   function handleAusspielphaseBeenden() { wechsleZustand('Ausspielphase beenden', z => beendeAusspielphase(z)) }
   function handleAufgabenpruefungBeenden() { wechsleZustand('Aufgabenprüfung beenden', z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true })) }
   function handleUeberzaehligeKartenAbwerfen() { wechsleZustand('Überzählige Karten abwerfen', z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
@@ -321,6 +334,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                       gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
                       ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                       onAktion={fuhreAktionAus} aktionsLabel={aktionsLabel}
+                      letzteAktionZiel={letzteAktionZiel}
                     />
                   </section>
                   <aside className="waldtanz-arenastein__waldobjekte waldtanz-waldtaschen" aria-label="Waldobjekte">

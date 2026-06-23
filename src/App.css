@@ -29,6 +29,14 @@
   --handkarte-lift-y: -1.4rem;
   --handkarte-selected-glow: 0 0 0 4px rgba(164, 222, 2, 0.62), 0 6px 0 var(--st-color-border-strong);
   --handkarte-dim-opacity: 0.86;
+  /* AENDERUNG 23.06.2026: M1dc macht den Spielmoment sichtbar — die letzte
+     Aktion pulsiert kurz auf dem gewaehlten Brettziel (Startzone oder
+     eigene/Gegner-Schlange). Dauer, Glow und Skalierung sind getrennt
+     tokenisiert, damit der Reduced-Motion-Override den Glow statisch als
+     Outline-Ring nutzen kann. */
+  --spielmoment-pulse-dauer: 1.2s;
+  --spielmoment-pulse-glow: 0 0 0 4px var(--st-color-primary-container), 0 0 24px 6px var(--st-color-primary);
+  --spielmoment-pulse-scale: 1.04;
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
@@ -6945,6 +6953,40 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .waldtanz-zielspur-ziel--aktiv {
     animation: none;
+  }
+}
+
+/* AENDERUNG 23.06.2026: M1dc — Waldtanz-Spielmoment-Puls. Wenn eine Karte
+   gespielt wird, reagiert das gewaehlte Brettziel (Startkreis oder
+   eigene/Gegner-Schlange) kurz mit einem forest-gruenen Licht-Puls, der nach
+   1,2 s abklingt. So wird der Moment des Spielens sichtbar, statt nur in der
+   Brettschritt-Stempel-Zeile zu verschwinden. */
+.schlangen-startzone[data-letzte-aktion-ziel="true"],
+li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
+  animation: waldtanz-spielmoment-pulse var(--spielmoment-pulse-dauer) ease-out 1;
+}
+
+@keyframes waldtanz-spielmoment-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: var(--st-shadow-hard);
+  }
+  35% {
+    transform: scale(var(--spielmoment-pulse-scale));
+    box-shadow: var(--spielmoment-pulse-glow), var(--st-shadow-hard);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: var(--st-shadow-hard);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schlangen-startzone[data-letzte-aktion-ziel="true"],
+  li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
+    animation: none;
+    outline: 4px solid var(--st-color-primary-container);
+    outline-offset: 2px;
   }
 }
 

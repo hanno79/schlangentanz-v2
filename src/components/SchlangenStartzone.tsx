@@ -3,8 +3,11 @@ Author: rahn
 Datum: 15.06.2026
 Version: 1.0
 Beschreibung: Brettnahe Startkreis-Fläche mit ausgewählter Handkarten-Vorschau.
+# ÄNDERUNG 23.06.2026: M1dc setzt data-letzte-aktion-ziel="true" auf der
+Startzone-Wurzel, wenn die letzte Aktion NeueSchlangeStarten war.
 */
 import type { DragEventHandler, KeyboardEventHandler, MouseEventHandler } from 'react'
+import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 
 interface SchlangenStartzoneProps {
   komponentenId: string
@@ -13,6 +16,9 @@ interface SchlangenStartzoneProps {
   startzoneIstZielbereit: boolean
   dragOverStartzone: boolean
   ausgewaehlteHandkarteId: string | null
+  // M1dc: Wenn die letzte Aktion NeueSchlangeStarten war, markiert die
+  // Startzone sich selbst als Spielmoment-Ziel.
+  letzteAktionZiel?: LetzteAktionZiel | null
   startfaehrten?: Array<{ kartenId: string; onAuswaehlen: () => void }>
   onClick: MouseEventHandler<HTMLElement>
   onKeyDown: KeyboardEventHandler<HTMLElement>
@@ -27,6 +33,7 @@ export default function SchlangenStartzone({
   startzoneIstZielbereit,
   dragOverStartzone,
   ausgewaehlteHandkarteId,
+  letzteAktionZiel = null,
   startfaehrten = [],
   onClick,
   onKeyDown,
@@ -38,6 +45,7 @@ export default function SchlangenStartzone({
   return (
     <div
       className={`schlangen-startzone schlangen-startzone--magiekreis${hatEigeneSchlangen ? '' : ' schlangen-startzone--leer'}${startzoneIstZielbereit ? ' schlangen-startzone--zielbereit' : ''}${dragOverStartzone ? ' schlangen-startzone--dragover' : ''}`}
+      data-letzte-aktion-ziel={letzteAktionZiel?.typ === 'startzone' ? 'true' : undefined}
       onDragOver={onDragOver}
       onDrop={onDrop}
     >

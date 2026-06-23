@@ -11,6 +11,7 @@ import SchlangenPfadKarte from './SchlangenPfadKarte'
 import FarbendiebBeutekorb from './FarbendiebBeutekorb'
 import SchlangenblockadeFessel from './SchlangenblockadeFessel'
 import SchlangenfrassBissspur from './SchlangenfrassBissspur'
+import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 
 interface GegnerSchlangenListeProps {
   spieler: Spieler[]
@@ -21,6 +22,10 @@ interface GegnerSchlangenListeProps {
   onAktion: (aktion: SpielAktion) => void
   aktionsLabel: (aktion: SpielAktion) => string
   aktiverZielspurKey?: string | null
+  // M1dc: Spielmoment-Puls-Ziel, das aus der letzten Aktion abgeleitet wurde.
+  // Wird benoetigt, weil Schlangenblockade/Farbendieb/Schlangenfrass auf
+  // gegnerische Schlangen zielen — diese sollen dann ebenfalls kurz pulsieren.
+  letzteAktionZiel?: LetzteAktionZiel | null
 }
 
 type FrassZiel = { spielerId: string; schlangenId: string; kartenId: string }
@@ -53,6 +58,7 @@ export default function GegnerSchlangenListe({
   onAktion,
   aktionsLabel,
   aktiverZielspurKey = null,
+  letzteAktionZiel = null,
 }: GegnerSchlangenListeProps) {
   const [erstesFrassZiel, setErstesFrassZiel] = useState<FrassAuswahl | null>(null)
   const aktivesErstesFrassZiel = erstesFrassZiel?.handkartenId === ausgewaehlteHandkarteId ? erstesFrassZiel : null
@@ -106,7 +112,9 @@ export default function GegnerSchlangenListe({
           const istGegnerZauberziel = Boolean(blockadeAktion || hatKartenZauberziel)
 
           return (
-            <li key={schlange.id} className={`schlangekarte schlangekarte--gegner${blockadeAktion ? ' schlangekarte--blockade-ziel' : ''}${istGegnerZauberziel ? ' schlangekarte--gegnerzauber' : ''}`}>
+            <li key={schlange.id} className={`schlangekarte schlangekarte--gegner${blockadeAktion ? ' schlangekarte--blockade-ziel' : ''}${istGegnerZauberziel ? ' schlangekarte--gegnerzauber' : ''}`}
+              data-letzte-aktion-ziel={letzteAktionZiel?.typ === 'schlange' && letzteAktionZiel.id === schlange.id ? `schlange-${schlange.id}` : undefined}
+            >
               <strong>{schlange.id}</strong>
               <span>Gehört zu: {eintrag.name}</span>
               <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
