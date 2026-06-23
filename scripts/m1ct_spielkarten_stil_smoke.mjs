@@ -95,7 +95,11 @@ try {
     if (!beweis.symbolSichtbar) throw new Error(`M1ct Spielkarten-Stil: Symbol-Element fehlt (${JSON.stringify(beweis)})`)
     if (!beweis.titelSichtbar) throw new Error(`M1ct Spielkarten-Stil: Titel-Element fehlt (${JSON.stringify(beweis)})`)
     if (!beweis.wertechipSichtbar) throw new Error(`M1ct Spielkarten-Stil: Werteplakett fehlt (${JSON.stringify(beweis)})`)
-    if (beweis.symbolFontSizePx < 28) throw new Error(`M1ct Spielkarten-Stil: Symbol-Schrift zu klein (${beweis.symbolFontSizePx}px)`)
+    // M1d0 22.06.2026: Auf /game wird das Handkarten-Symbol im Bottom-Row-Grid
+    // bewusst auf 1.35rem (~24px) reduziert. Der M1ct-Schwellwert ist daher
+    // auf 22px gesenkt (Original-Anspruch "grosses Symbol" bleibt erfuellt,
+    // aber kompakt genug fuer das neue Layout).
+    if (beweis.symbolFontSizePx < 22) throw new Error(`M1ct Spielkarten-Stil: Symbol-Schrift zu klein (${beweis.symbolFontSizePx}px)`)
     if (beweis.titelFontSizePx < 13) throw new Error(`M1ct Spielkarten-Stil: Titel-Schrift zu klein (${beweis.titelFontSizePx}px)`)
     if (beweis.wertechipFontSizePx < 11) throw new Error(`M1ct Spielkarten-Stil: Werteplakett-Schrift zu klein (${beweis.wertechipFontSizePx}px)`)
     if (beweis.spielhinweisVorhanden && beweis.spielhinweisOpacity > 0.5) {
@@ -103,7 +107,10 @@ try {
     }
 
     // Auswahl-Lift verifizieren
-    const ersteKarte = page.locator('[role="region"][aria-label="Handkarten"] [role="button"]').filter({ hasText: /Farbkarte|Sonderkarte/ }).first()
+    const ersteKarte = page
+      .locator('ul[aria-label="Waldtanz-Spielkartenfächer"] button, [role="region"][aria-label="Handkarten"] [role="button"]')
+      .filter({ hasText: /Farbkarte|Sonderkarte/ })
+      .first()
     await ersteKarte.click({ force: true })
     const auswahlBeweis = await page.evaluate(() => {
       const li = document.querySelector('li.handkarte--ausgewaehlt')
