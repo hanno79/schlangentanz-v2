@@ -48,6 +48,6 @@ describe('M1g Waldtanz-Handkartenfächer', () => {
     expect(cssBlock('handkarte__button--karte')).toMatch(/aspect-ratio:\s*2\s*\/\s*3/)
     expect(cssBlock('handkarte__button--karte')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('handkarte__button--karte')).toMatch(/box-shadow:\s*0 5px 0 var\(--st-color-border-strong\)/)
-    expect(appCss).toMatch(/\.handkarte--ausgewaehlt \.handkarte__button--karte\s*\{[\s\S]*transform:\s*translateY\(-0\.75rem\) scale\(1\.05\)/)
+    expect(appCss).toMatch(/\.handkarte--ausgewaehlt \.handkarte__button--karte\s*\{[\s\S]*transform:\s*translateY\((?:var\(--handkarte-lift-y\)|-0\.75rem)\) scale\(1\.05\)/)
   })
 })

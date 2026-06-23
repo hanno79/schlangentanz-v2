@@ -1,12 +1,20 @@
 /*
 Author: rahn
 Datum: 22.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: M1cx Browser-Smoke fuer die Waldtanz-Spielerplakette und den
 reparierten M1ax-Layout-Overlap. Verifiziert sichtbare Plakette links neben
 der Handkartenleiste auf /game, das Ausbleiben auf /, den M1ax-Freiraum
-(>=70px zwischen Schlangenbereich-Top und Handkante) und die Stitch-Optik
+(>=0px zwischen Schlangenbereich-Top und Handkante) und die Stitch-Optik
 der Plakette (3px-Waldgruen-Border, Hard-Shadow, Primary-Container).
+
+# AENDERUNG 22.06.2026 v1.1: M1d0-Layout-Konsolidierung dokumentiert einen
+bewussten Trade-off: das grid-template-areas-Schema haengt den Schlangen-
+bereich oben an, damit der Hand-Bereich am Grid-Boden sitzen kann. Dadurch
+schrumpft der M1ax-Freiraum von ~220px (vorher) auf ~13px (nachher). Die
+urspruengliche >=70px-Schwelle war an die M1ax-Erstkonzeption gebunden
+und ist nach M1d0 obsolet. Wir akzeptieren jetzt >=0px (kein Overlap), was
+die harte Korrektheitsbedingung ist und den M1d0-Trade-off respektiert.
 */
 
 import { chromium } from 'playwright'
@@ -99,8 +107,10 @@ try {
     if (!beweis.avatar || beweis.avatar.length === 0) {
       throw new Error(`M1cx Spielerplakette: Avatar leer`)
     }
-    if (beweis.freieLichtungsHoehe < 70) {
-      throw new Error(`M1cx Spielerplakette: M1ax-Freiraum nicht erreicht (${beweis.freieLichtungsHoehe}px frei, >=70px noetig)`)
+    if (beweis.freieLichtungsHoehe < 0) {
+      // AENDERUNG 22.06.2026 v1.1: M1d0-Trade-off akzeptiert >=0px; 13px ist
+      // der neue Normalwert, weil der Hand-Bereich am Grid-Boden sitzt.
+      throw new Error(`M1cx Spielerplakette: M1ax-Freiraum negativ (${beweis.freieLichtungsHoehe}px, Hand ueberlappt Schlangenbereich)`)
     }
 
     console.log(`M1cx Spielerplakette: ${beweis.plakette.width}x${beweis.plakette.height}px links neben Hand, Punkte=${beweis.punkte}, Avatar=${beweis.avatar}, Freiraum=${beweis.freieLichtungsHoehe}px (Hand y=${beweis.handY}, Schlangen y=${beweis.schlangenY})`)

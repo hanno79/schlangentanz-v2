@@ -90,7 +90,7 @@ export default function WaldtanzMagiekreise({
     : 'Wähle eine Handkarte, damit Startkreis, Schlangenenden und Sonderzauber aufleuchten.'
 
   return (
-    <section className={`waldtanz-magiekreise${istAktiv ? ' waldtanz-magiekreise--aktiv' : ''}`} aria-label="Waldtanz-Magiekreise">
+    <section className={`waldtanz-magiekreise${istAktiv ? ' waldtanz-magiekreise--aktiv' : ''}`} aria-label="Waldtanz-Magiekreise" data-ist-ziel-aktiv={istAktiv ? 'true' : 'false'}>
       <div className="waldtanz-magiekreise__kopf">
         <span className="waldtanz-magiekreise__badge">{statusText}</span>
         <strong>{ausgewaehlteHandkarteId ? `Zielkarte: ${ausgewaehlteHandkarteId}` : 'Keine Zielkarte ausgewählt'}</strong>

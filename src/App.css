@@ -22,6 +22,13 @@
      und fiel still auf inherited black zurueck — Kimi-Review-Regression
      aus M1cw/M1cx wiederholt. */
   --st-color-on-tertiary-container: #a22900;
+  /* AENDERUNG 22.06.2026: M1db macht den Moment des Spielens sichtbar:
+     --handkarte-lift-y hebt die ausgewaehlte Handkarte aus dem Faecher,
+     --handkarte-selected-glow legt einen weichen lime-gruenen Schein um
+     sie herum, der die Stitch-Spielkarte als Spielmoment markiert. */
+  --handkarte-lift-y: -1.4rem;
+  --handkarte-selected-glow: 0 0 0 4px rgba(164, 222, 2, 0.62), 0 6px 0 var(--st-color-border-strong);
+  --handkarte-dim-opacity: 0.86;
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
@@ -2585,6 +2592,10 @@ code {
        im Erstbild sichtbar wird. Bei 900 px Viewport: 30vh=270, 13rem=208,
        min=208 — Inhalt wird vom Arenastein overflow:hidden + height-Cap
        gestoppt, falls er die 208 px ueberschreitet. */
+    /* AENDERUNG 22.06.2026: M1db ergaenzt zwei dekorative Pseudo-Elemente,
+       die einen sanften Sonnenschein oben-links und einen Laub-Tupfer
+       unten-rechts hinterlegen. Beide sind pointer-events: none, damit
+       Handkarten und Magiekreise klickbar bleiben. */
     min-height: min(13rem, 30vh);
     grid-template-columns: minmax(14rem, 0.9fr) minmax(12rem, 0.7fr);
     grid-template-areas:
@@ -2598,6 +2609,26 @@ code {
       radial-gradient(circle at 18% 20%, rgba(254, 203, 0, 0.34) 0 4.2rem, transparent 4.35rem),
       radial-gradient(circle at 82% 24%, rgba(164, 222, 2, 0.38) 0 4.8rem, transparent 4.95rem),
       linear-gradient(180deg, rgba(196, 253, 182, 0.76), rgba(185, 241, 172, 0.5));
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"]::before {
+    content: "";
+    position: absolute;
+    inset: 0.4rem 60% 50% 0.4rem;
+    border-radius: 50% 60% 40% 50%;
+    background: radial-gradient(circle at 32% 32%, rgba(255, 255, 180, 0.55) 0 22%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsbrett"]::after {
+    content: "";
+    position: absolute;
+    inset: 55% 0.4rem 0.4rem 60%;
+    border-radius: 60% 40% 50% 50%;
+    background: radial-gradient(circle at 60% 60%, rgba(196, 253, 182, 0.5) 0 30%, transparent 75%);
+    pointer-events: none;
+    z-index: 0;
   }
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-tischkarte"] {
@@ -4676,7 +4707,29 @@ code {
   border-color: var(--st-color-tertiary);
   animation: handkarte-wackelt 900ms ease-in-out infinite;
   box-shadow: 0 0 0 3px rgba(177, 45, 0, 0.38), 0 9px 0 var(--st-color-border-strong);
-  transform: translateY(-0.75rem) scale(1.05);
+  /* AENDERUNG 22.06.2026: M1db --handkarte-lift-y wird hier konsumiert.
+     Wirkt im reduced-motion-Modus (Animation pausiert) als statischer Lift,
+     sonst ueberschreibt das handkarte-wackelt-Keyframe den Transform. */
+  transform: translateY(var(--handkarte-lift-y)) scale(1.05);
+}
+
+/* AENDERUNG 22.06.2026: M1db macht den Moment des Spielens sichtbar.
+   Wenn irgendeine Handkarte im Faecher ausgewaehlt ist (Daten-Attribut
+   data-hat-ausgewaehlt="true" auf der UL), werden die nicht ausgewaehlten
+   Karten sichtbar zurueckgenommen (dim-Token) und die ausgewaehlte Karte
+   bekommt einen lime-gruenen Stitch-Glow zusaetzlich zu ihrem Wackel-Lift.
+   Die Tokens --handkarte-dim-opacity und --handkarte-selected-glow sind
+   im :root-Block deklariert; der Selector-Trick mit dem Attribut-Selector
+   matched sowohl das Klassen- als auch das class~-Pendant und sorgt fuer
+   einen robusten visuellen Vertrag, ohne Engine-Logik anzufassen. */
+.handkartenleiste[data-hat-ausgewaehlt="true"] [class~="handkarte"]:not([class~="handkarte--ausgewaehlt"]) {
+  opacity: var(--handkarte-dim-opacity);
+  filter: saturate(0.78);
+  transition: opacity 180ms ease-out, filter 180ms ease-out;
+}
+
+.handkartenleiste[data-hat-ausgewaehlt="true"] [class~="handkarte--ausgewaehlt"] [class~="handkarte__button--karte"] {
+  box-shadow: var(--handkarte-selected-glow), 0 9px 0 var(--st-color-border-strong);
 }
 
 .handkarten-spielbarkeit {
@@ -4698,6 +4751,18 @@ code {
 
 .handkarte--wartet .handkarte__button--karte {
   opacity: 0.72;
+}
+
+/* AENDERUNG 22.06.2026: M1db-Hardening — eine ausgewaehlte (wartende)
+   Karte darf nicht mehr gedimmt wirken, weil der Spieler sie bewusst
+   anvisiert hat. Ohne diese Regel bleibt der wartet-Opacity (0.72) auf
+   dem Button aktiv und macht die Auswahl visuell inkonsistent. Quelle:
+   Kimi-Review-NB4. Wird NACH der wartet-Regel platziert, damit der
+   M1y-Test-cssBlock-Helper die wartet-Regel zuerst matcht (er benutzt
+   einen Substring-Match ohne Lookbehind); die Cascade selbst haengt
+   nur an Specificity (0,2,0 > 0,1,0), nicht an Quellreihenfolge. */
+.handkarte--ausgewaehlt.handkarte--wartet .handkarte__button--karte {
+  opacity: 1;
 }
 
 .handkarte--pflichtabwurf .handkarte__button--karte {

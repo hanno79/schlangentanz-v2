@@ -212,7 +212,7 @@ export default function HandkartenPanel({
       ) : (
         <p className="handkarten-status">Keine Handkarte ausgewählt.</p>
       )}
-      <ul className="handkartenleiste handkartenleiste--waldtanz-faecher handkartenleiste--tiefenfaecher handkartenleiste--spielkartenfaecher" aria-label="Waldtanz-Spielkartenfächer">
+      <ul className="handkartenleiste handkartenleiste--waldtanz-faecher handkartenleiste--tiefenfaecher handkartenleiste--spielkartenfaecher" aria-label="Waldtanz-Spielkartenfächer" data-hat-ausgewaehlt={ausgewaehlteHandkarte ? 'true' : 'false'}>
         {handkarten.map((karte, index) => {
           const istFarbkarte = karte.typ === 'Farbkarte'
           const istAusgewaehlt = ausgewaehlteHandkarte?.id === karte.id
