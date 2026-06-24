@@ -57,13 +57,18 @@ export default function WaldtanzSeitenmenue({
             <span className="waldtanz-seitenmenue__rankenchip" aria-label={`Offene Quests: ${offeneAufgaben}`}>Quest<br />{offeneAufgaben}</span>
           </div>
         )}
-        <div className="waldtanz-seitenmenue__statgitter">
-          <span className="waldtanz-seitenmenue__statkarte">Phase: {zugphase}</span>
-          <span className="waldtanz-seitenmenue__statkarte">Handkarten: {handkarten}</span>
-          <span className="waldtanz-seitenmenue__statkarte">Eigene Schlangen: {eigeneSchlangen}</span>
-          <span className="waldtanz-seitenmenue__statkarte">Nachziehstapel: {nachziehstapel}</span>
-          <span className="waldtanz-seitenmenue__statkarte">Offene Quests: {offeneAufgaben}</span>
-        </div>
+        {/* M1d3: Auf /game (kompakteRanke) bleiben die kompakten Ranken-Chips die einzige
+            Statusquelle. Die verbose Statgitter-Liste verbleibt nur auf / als
+            Entwicklungsdatenquelle, damit /game nicht dieselben Werte doppelt zeigt. */}
+        {!kompakteRanke && (
+          <div className="waldtanz-seitenmenue__statgitter">
+            <span className="waldtanz-seitenmenue__statkarte">Phase: {zugphase}</span>
+            <span className="waldtanz-seitenmenue__statkarte">Handkarten: {handkarten}</span>
+            <span className="waldtanz-seitenmenue__statkarte">Eigene Schlangen: {eigeneSchlangen}</span>
+            <span className="waldtanz-seitenmenue__statkarte">Nachziehstapel: {nachziehstapel}</span>
+            <span className="waldtanz-seitenmenue__statkarte">Offene Quests: {offeneAufgaben}</span>
+          </div>
+        )}
         <p>Nächster Schritt: {pflichtschritt}</p>
       </section>
       <ul className="waldtanz-seitenmenue__liste">

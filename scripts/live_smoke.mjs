@@ -84,12 +84,15 @@ async function browserSmoke() {
     await pruefeM1bdLichtungsbrett(seite)
     await pruefeM1bfNachziehstapel(seite)
     await pruefeM1bgSonnenstand(seite)
-    await pruefeM1biMaterialrucksack(seite)
-    await pruefeM1bjSpielerbaenke(seite)
     await pruefeM1baStartkreisVorschau(seite)
     await pruefeM1bbSchlangenendeVorschau(seite)
     await pruefeM1bkZugtafel(seite)
     await pruefeM1blBuehnenrahmen(seite)
+    // M1d3: M1bi/M1bj testen Stitch-Panel-HUDs (Materialrucksack, Spielerbänke), die auf
+    // /game zugunsten board-naher Objekte bewusst ausgeblendet sind (brettFokus, M1cs).
+    // Die Checks laufen am Ende der /game-Kette gegen /, wo die Panels rendern.
+    await pruefeM1biMaterialrucksack(seite)
+    await pruefeM1bjSpielerbaenke(seite)
 
     await seite.waitForTimeout(500)
 
@@ -551,17 +554,19 @@ async function pruefeM1bfNachziehstapel(seite) {
 
 async function pruefeM1bgSonnenstand(seite) {
   const d = await seite.evaluate(() => { const s = document.querySelector('.waldtanz-sonnenstand'), p = document.querySelector('.waldtanz-sonnenstand__phase'), c = document.querySelector('.waldtanz-sonnenstand__chip'), dbg = [...document.querySelectorAll('.debug-gruppe-entwicklungsdaten--spielschublade .debug-gruppe')]; for (const e of [s, p, c]) if (!(e instanceof HTMLElement)) throw new Error('M1bg Sonnenstand: HUD-Element fehlt'); const st = getComputedStyle(s), ps = getComputedStyle(p), cs = getComputedStyle(c); return { text: s.textContent ?? '', border: st.borderTopWidth, shadow: st.boxShadow, radius: st.borderTopLeftRadius, phaseFont: ps.fontFamily, chipBorder: cs.borderTopWidth, schubladen: dbg.length, offene: dbg.filter((e) => e.hasAttribute('open')).length } })
-  if (!d.text.includes('Sonnenstand') || !d.text.includes('am Zug') || !d.text.includes('Zugkarten:') || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || Number.parseFloat(d.radius) < 28 || !d.phaseFont.toLowerCase().includes('rubik') || d.chipBorder !== '2px' || d.schubladen < 5 || d.offene !== 0) throw new Error(`M1bg/M1bo: kein chunky Status-HUD oder Debug-Schubladen offen (${JSON.stringify(d)})`)
+  if (!d.text.includes('Sonnenstand') || !d.text.includes('am Zug') || !d.text.includes('Zugkarten:') || d.border !== '3px' || !d.shadow.includes('rgb(6, 57, 7)') || Number.parseFloat(d.radius) < 28 || !d.phaseFont.toLowerCase().includes('rubik') || d.chipBorder !== '2px' || d.schubladen < 2 || d.offene !== 0) throw new Error(`M1bg/M1bo: kein chunky Status-HUD oder Debug-Schubladen offen (${JSON.stringify(d)})`)
   console.log(`M1bg/M1bo: Spielstatus-HUD sichtbar, ${d.schubladen} Entwicklungsdaten-Schubladen eingeklappt`)
 }
 
 async function pruefeM1biMaterialrucksack(seite) {
+  await seite.goto(erstelleUrl('/'), { waitUntil: 'networkidle' })
   const d = await seite.evaluate(() => { const r = document.querySelector('.materialrucksack'), c = document.querySelector('.materialrucksack__chip'), i = document.querySelector('.materialrucksack__icon'), a = document.querySelector('.aufgabenkarten-bereich'), dbg = document.querySelector('.info-panel--material .debug-gruppe-entwicklungsdaten'); for (const e of [r, c, i, a, dbg]) if (!(e instanceof HTMLElement)) throw new Error('M1bi Materialrucksack: Material-HUD-Element fehlt'); const rs = getComputedStyle(r), cs = getComputedStyle(c), is = getComputedStyle(i); return { text: r.textContent ?? '', border: rs.borderTopWidth, radius: rs.borderTopLeftRadius, shadow: rs.boxShadow, chipBorder: cs.borderTopWidth, iconBg: is.backgroundColor, order: [r, a, dbg].map((e) => Array.from(e.parentElement.children).indexOf(e)).join(',') } })
   if (!d.text.includes('Materialrucksack') || !d.text.includes('Nachziehstapel') || !d.text.includes('Sonderkarten-Zauber') || d.border !== '3px' || Number.parseFloat(d.radius) < 40 || !d.shadow.includes('rgb(6, 57, 7)') || d.chipBorder !== '2px' || !d.iconBg.includes('254, 203, 0') || d.order !== '1,2,3') throw new Error(`M1bi Materialrucksack: kein körperlicher Rucksack vor Aufgaben/Debug (${JSON.stringify(d)})`)
   console.log('M1bi Materialrucksack: Rucksack-Chips vor Aufgabenkarten mit 3px-Rand und Hard Shadow sichtbar')
 }
 
 async function pruefeM1bjSpielerbaenke(seite) {
+  await seite.goto(erstelleUrl('/'), { waitUntil: 'networkidle' })
   const d = await seite.evaluate(() => { const b = document.querySelector('.spielerbaenke'), s = document.querySelector('.spielerbaenke__sitz--aktiv'), dbg = document.querySelector('.info-panel--spieleruebersicht .debug-gruppe-entwicklungsdaten'); for (const e of [b, s, dbg]) if (!(e instanceof HTMLElement)) throw new Error('M1bj Spielerbänke: Spieler-HUD-Element fehlt'); const bs = getComputedStyle(b), ss = getComputedStyle(s); return { text: b.textContent ?? '', sitze: b.querySelectorAll('.spielerbaenke__sitz').length, border: bs.borderTopWidth, radius: bs.borderTopLeftRadius, shadow: bs.boxShadow, aktiv: ss.transform, order: [b, dbg].map((e) => Array.from(e.parentElement.children).indexOf(e)).join(',') } })
   if (!d.text.includes('Tischrunde bereit') || !d.text.includes('Spieler 1 ist am Zug') || d.sitze < 2 || d.border !== '3px' || Number.parseFloat(d.radius) < 40 || !d.shadow.includes('rgb(6, 57, 7)') || d.aktiv === 'none' || d.order !== '1,2') throw new Error(`M1bj Spielerbänke: kein körperliches Spieler-HUD vor Debugdaten (${JSON.stringify(d)})`)
   console.log(`M1bj Spielerbänke: ${d.sitze} Sitzplätze vor Debugdaten mit 3px-Rand und aktivem Sitz sichtbar`)

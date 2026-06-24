@@ -1933,8 +1933,7 @@ code {
     line-height: 1.25;
   }
 
-  .spielbereich--game-route [class~="waldtanz-seitenmenue--seitenranke"] [class~="waldtanz-seitenmenue__profil"] div,
-  .spielbereich--game-route [class~="waldtanz-seitenmenue--seitenranke"] [class~="waldtanz-seitenmenue__statgitter"] {
+  .spielbereich--game-route [class~="waldtanz-seitenmenue--seitenranke"] [class~="waldtanz-seitenmenue__profil"] div {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -1955,15 +1954,6 @@ code {
 
   .spielbereich--game-route [class~="waldtanz-seitenmenue--seitenranke"] [class~="waldtanz-seitenmenue__rankenwerte"] {
     display: grid;
-  }
-
-  .spielbereich--game-route [class~="waldtanz-seitenmenue__statgitter"] {
-    gap: 0.3rem;
-  }
-
-  .spielbereich--game-route [class~="waldtanz-seitenmenue__statkarte"] {
-    padding: 0.2rem 0.45rem;
-    font-size: 0.82rem;
   }
 
   .spielbereich--game-route [class~="waldtanz-seitenmenue__liste"] li:not(:has([class~="waldtanz-seitenmenue__punkt--aktiv"])) {
