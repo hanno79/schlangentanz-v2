@@ -95,11 +95,46 @@ body {
 
 .hero {
   width: min(100%, 1180px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
   border-radius: 28px;
-  padding: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(0.6rem, 1.4vw, 1rem) clamp(1rem, 2vw, 1.5rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   background: var(--st-color-primary-container);
   box-shadow: var(--st-shadow-hard);
+}
+
+.hero .app-title {
+  width: auto;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin: 0;
+}
+
+.hero > p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.hero > ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero > ul > li {
+  padding: 0.15rem 0.6rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 .sonniges-nest {
@@ -130,6 +165,8 @@ body {
     repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(116, 91, 0, 0.12) 10px, rgba(116, 91, 0, 0.12) 20px),
     repeating-linear-gradient(-45deg, transparent, transparent 14px, rgba(255, 255, 255, 0.2) 14px, rgba(255, 255, 255, 0.2) 28px);
   box-shadow: 0 8px 0 var(--st-color-border-strong);
+  animation: lobby-sway 6s ease-in-out infinite;
+  transform-origin: top center;
 }
 
 .lobby-code-schild__label {
@@ -240,6 +277,7 @@ body {
 .lobby-slot--wartet .lobby-slot__hoehle {
   background: radial-gradient(circle, rgba(236, 255, 227, 0.58) 0 48%, rgba(6, 57, 7, 0.28) 50% 70%, rgba(6, 57, 7, 0.18) 72%);
   color: rgba(6, 57, 7, 0.62);
+  animation: lobby-pulse 3s ease-in-out infinite;
 }
 
 .lobby-slot strong {
@@ -278,6 +316,50 @@ body {
 .lobby-startbutton:active {
   transform: translateY(3px);
   box-shadow: 0 2px 0 var(--st-color-border-strong);
+}
+
+.lobby-startbutton__icon {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.lobby-slot__badge {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-size: 0.9rem;
+}
+
+.lobby-slot--host {
+  position: relative;
+}
+
+@keyframes lobby-sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
+}
+
+@keyframes lobby-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lobby-code-schild {
+    animation: none;
+  }
+
+  .lobby-slot--wartet .lobby-slot__hoehle {
+    animation: none;
+  }
 }
 
 .schlangenbuch {

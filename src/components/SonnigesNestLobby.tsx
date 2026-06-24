@@ -36,6 +36,7 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
         <ul className="lobby-slots" aria-label="Spielerplätze">
           <li className="lobby-slot lobby-slot--host">
             <span className="lobby-slot__hoehle" aria-hidden="true">🐍</span>
+            <span className="lobby-slot__badge" aria-hidden="true" title="Host">★</span>
             <strong>Slippy Host</strong>
           </li>
           {kiSlots.map((slot, index) => {
@@ -52,6 +53,7 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
       <div className="lobby-startreihe" aria-label="KI-Gegner wählen">
         {([1, 2, 3] as const).map(kiGegner => (
           <button className="lobby-startbutton" key={kiGegner} type="button" onClick={() => onNeuesSpiel(kiGegner)}>
+            <span className="lobby-startbutton__icon" aria-hidden="true">▶</span>
             {kiStartLabel(kiGegner)}
           </button>
         ))}

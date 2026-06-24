@@ -27,7 +27,7 @@ describe('M3 Sonniges Nest Lobby', () => {
     expect(within(lobby).getAllByText('wartet auf KI-Schlange')).toHaveLength(2)
 
     const startButtons = within(lobby).getAllByRole('button', { name: /starten/i })
-    expect(startButtons.map(button => button.textContent)).toEqual([
+    expect(startButtons.map(button => button.textContent?.replace(/▶/g, '').trim())).toEqual([
       'Duell starten (1 KI)',
       'Waldparty starten (2 KI)',
       'Große Runde starten (3 KI)',
