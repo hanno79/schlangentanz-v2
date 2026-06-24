@@ -1943,7 +1943,7 @@ code {
       auto
       auto
       clamp(2rem, 4vh, 2.5rem)
-      clamp(24rem, 46vh, 28rem)
+      clamp(22.5rem, 43vh, 26.5rem)
       clamp(2rem, 4vh, 2.5rem)
       auto;
     align-content: start;
@@ -2063,8 +2063,8 @@ code {
        Gegnerplakette-Kompaktierung (~68 px Ersparnis). */
     display: flex;
     flex-direction: column;
-    height: clamp(24rem, 46vh, 28rem);
-    max-height: clamp(24rem, 46vh, 28rem);
+    height: clamp(22.5rem, 43vh, 26.5rem);
+    max-height: clamp(22.5rem, 43vh, 26.5rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;
@@ -2152,17 +2152,23 @@ code {
   .spielbereich--game-route [class~="waldtanz-aktiver-tanz-schritt"] {
     /* AENDERUNG 24.06.2026 (M1d1-Fix): Statt max-height:3rem (das bei
        Grid-/Flex-Kindern mit min-content-Inhalt nicht greift — Element
-       blieb bei 72px statt 48px) wird flex:0 0 2.5rem verwendet. Das
-       setzt die Flex-Basis explizit auf 40px, sodass der Flex-Algorithmus
-       das Element verlaesslich auf 40px festsetzt statt am min-content
-       zu haengen. overflow:hidden clippt den Inhalt. */
-    flex: 0 0 2.5rem;
+       blieb bei 72px statt 48px) wird flex:0 0 2rem verwendet. Das
+ setzt die Flex-Basis explizit auf 36px, sodass der Flex-Algorithmus
+ das Element verlaesslich auf 36px festsetzt statt am min-content
+ zu haengen. overflow:hidden clippt den Inhalt.
+ + AENDERUNG 24.06.2026 (M1d2-Fix): Basis von 2.5rem auf 1.75rem gesenkt,
+ + damit die Arena-Gesamt-Hoehe (clamp 22.5rem) ohne Spielfeld-Verlust
+ + in den Viewport passt — Handkarten-Bottom <= 905px (M1bp-Vertrag)
+ + und Schlangenlichtung >= 70px sichtbar auch bei 1440px Breite. */
+     flex: 0 0 1.75rem;
     min-height: 0;
     overflow: hidden;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__stempel"] {
-    max-height: 3.5rem;
+    /* AENDERUNG 24.06.2026 (M1d2-Fix): max-height von 3.5rem auf 2.8rem
+       gesenkt, gleiche Begründung wie questband flex-Basis-Senkung. */
+    max-height: 2.8rem;
   }
 
   .spielbereich--game-route [class~="brettschritt-stempel"] {
@@ -2762,7 +2768,7 @@ code {
     overflow: visible;
     /* AENDERUNG 24.06.2026 (M1d1-Fix): Magiekreis-Spalte auf max 4rem begrenzen
        (vorher 6rem), damit die Schlangenbereich-Grid-Row in der Lichtung
-       sichtbar wird. Die Arena ist jetzt 432px (clamp(24rem,46vh,28rem)),
+       sichtbar wird. M1d2-Fix: Arena ist jetzt 405px (clamp(22.5rem,43vh,26.5rem)),
        aber Tischkarte+Magiekreise brauchen zusammen weniger Platz damit
        der Schlangenbereich mindestens 70px sichtbar bleibt. */
     max-height: 4rem;
