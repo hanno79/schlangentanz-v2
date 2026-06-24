@@ -1924,7 +1924,13 @@ code {
        Mit expliziten grid-template-rows werden die Inhalte per overflow:hidden +
        min-height:0 in den jeweiligen Zeilen geclippt — die sichtbare Spielflaeche
        bleibt auf der geplanten Hoehe und die Bottom-Row rutscht nicht aus dem
-       900-px-Viewport. */
+       900-px-Viewport.
+
+       AENDERUNG 23.06.2026 (M1d1): Arena-Clamp von clamp(17rem, 30vh, 20rem) auf
+       clamp(24rem, 46vh, 28rem) angehoben. Gegnerplakette wird in M1d1 auf
+       max-height: clamp(4.5rem, 9vh, 6rem) begrenzt (vorher auto = 149 px).
+       Die Ersparnis (~68 px) fliesst in das Arena-Clamp, sodass das Arena mit
+       Flex-Column-Layout dem Spielfeld ausreichend Resthoehe gibt. */
     grid-template-columns: minmax(8.5rem, 0.42fr) minmax(0, 1.16fr) minmax(8.5rem, 0.42fr);
     grid-template-areas:
       "spielerrahmen spielerrahmen spielerrahmen"
@@ -1936,9 +1942,9 @@ code {
     grid-template-rows:
       auto
       auto
-      clamp(3.5rem, 8vh, 4.5rem)
-      clamp(17rem, 30vh, 20rem)
-      clamp(4rem, 7vh, 5rem)
+      clamp(2rem, 4vh, 2.5rem)
+      clamp(24rem, 46vh, 28rem)
+      clamp(2rem, 4vh, 2.5rem)
       auto;
     align-content: start;
     gap: clamp(0.55rem, 1vw, 0.78rem);
@@ -2043,9 +2049,22 @@ code {
        damit der Klick auch im geclippten Bereich landet). Die unteren
        30-50 px des Schlangenbereichs werden auf den Arenastein-Rand
        geclippt — beabsichtigter M1dd-Trade-off, dokumentiert im
-       M1d0-Smoke (Spielbrett-Bottom <= Viewport + 60 px). */
-    height: clamp(17rem, 30vh, 20rem);
-    max-height: clamp(17rem, 30vh, 20rem);
+       M1d0-Smoke (Spielbrett-Bottom <= Viewport + 60 px).
+
+       AENDERUNG 23.06.2026 (M1d1): Das Arena wird von normalen Block-Flow
+       auf display:flex; flex-direction:column umgestellt. Die Kopf-Elemente
+       (Kopf, Brettschritt-Stempel, Questband, Aktiver-Tanz-Schritt) behalten
+       ihre natuerliche Hoehe per flex-shrink:0. Das Spielfeld bekommt
+       flex:1 1 auto und fuellt den Restplatz. Dadurch wird der Schlangenbereich
+       im Arena-Clip sichtbar, statt unter den Kopf-Elementen vergraben zu
+       werden. Hoehe von clamp(17rem, 30vh, 20rem) auf clamp(24rem, 46vh, 28rem)
+       angehoben. Bei 900-px-Viewport: 34vh=306, 19rem=342, 22rem=396 → 342 px
+       (vorher 272-306 px). Die zusaetzlichen ~56 px kommen von der
+       Gegnerplakette-Kompaktierung (~68 px Ersparnis). */
+    display: flex;
+    flex-direction: column;
+    height: clamp(24rem, 46vh, 28rem);
+    max-height: clamp(24rem, 46vh, 28rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;
@@ -2061,6 +2080,7 @@ code {
     background: var(--st-color-secondary-container);
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     box-shadow: 0 4px 0 var(--st-color-border-strong);
+    flex-shrink: 0;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] h4 {
@@ -2097,16 +2117,52 @@ code {
     grid-template-columns: minmax(0, 2.55fr) minmax(9.5rem, 0.65fr);
     margin-top: -0.35rem;
     min-height: 0;
+    /* AENDERUNG 23.06.2026 (M1d1): flex:1 damit das Spielfeld den
+       Restplatz nach den Kopf-Elementen im Flex-Column-Arena fuellt.
+       Vorher wurde das Spielfeld vom natuerlichen Block-Flow nach unten
+       gedrueckt und vom Arena-Clip verschluckt. */
+    flex: 1 1 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__stempel"] {
     padding: 0.35rem 0.55rem;
     border-radius: 1.1rem;
+    flex-shrink: 0;
   }
 
   .spielbereich--game-route [class~="brettschritt-stempel-reihe"] {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.45rem;
+  }
+
+  /* AENDERUNG 23.06.2026 (M1d1): Questband und Aktiver-Tanz-Schritt
+     brauchen flex-shrink:0 im Flex-Column-Arena, damit sie ihre
+     natuerliche Hoehe behalten und nicht vom Spielfeld zusammengedrueckt
+     werden.
+     AENDERUNG 23.06.2026 (M1d1-Fix): max-height-Cap auf alle Kopf-Elemente,
+     damit das Spielfeld im Flex-Column ausreichend Resthoehe bekommt.
+     Vor dem Fix verbrauchten die Kopf-Elemente 294 px der 342 px Arena;
+     das Spielfeld bekam nur 48 px. Mit max-height + overflow:hidden
+     werden die Kopf-Elemente auf ~150 px begrenzt, das Spielfeld bekommt
+     ~190 px. */
+  .spielbereich--game-route [class~="waldtanz-questband"],
+  .spielbereich--game-route [class~="waldtanz-aktiver-tanz-schritt"] {
+    /* AENDERUNG 24.06.2026 (M1d1-Fix): Statt max-height:3rem (das bei
+       Grid-/Flex-Kindern mit min-content-Inhalt nicht greift — Element
+       blieb bei 72px statt 48px) wird flex:0 0 2.5rem verwendet. Das
+       setzt die Flex-Basis explizit auf 40px, sodass der Flex-Algorithmus
+       das Element verlaesslich auf 40px festsetzt statt am min-content
+       zu haengen. overflow:hidden clippt den Inhalt. */
+    flex: 0 0 2.5rem;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-arenastein__stempel"] {
+    max-height: 3.5rem;
   }
 
   .spielbereich--game-route [class~="brettschritt-stempel"] {
@@ -2353,6 +2409,12 @@ code {
     z-index: 3;
     text-align: right;
     margin-bottom: 0;
+    /* AENDERUNG 23.06.2026 (M1d1): max-height-Cap damit die Gegnerplakette
+       nicht 149 px vertikalen Platz verbraucht (gemessen vor M1d1).
+       clamp(4.5rem, 9vh, 6rem) = 81-108 px bei 900-px-Viewport.
+       Die Ersparnis fliesst in das Arena-Clamp. */
+    max-height: clamp(4.5rem, 9vh, 6rem);
+    overflow: hidden;
   }
 
   .spielbereich--game-route [class~="spielbrett--waldtanz"] [class~="waldtanz-gegnerplakette__name"] {
@@ -2626,8 +2688,13 @@ code {
        von min(22rem, 48vh) auf min(18rem, 40vh), damit das Arenastein zusammen
        mit Hand und Brettschritt-Stempel in das 900px-Erstbild passt. Vorher
        (mit grid-row: 4 fuer die Hand) reichte 22rem nicht mehr; Hand rutschte
-       unter die Viewport-Kante. */
-    min-height: min(18rem, 40vh);
+       unter die Viewport-Kante.
+       AENDERUNG 23.06.2026 (M1d1): flex:1 1 auto damit die Schlangenlichtung
+       im Flex-Spielfeld den verfuegbaren Platz fuellt und der Schlangenbereich
+       in der zweiten Grid-Row sichtbar wird, statt vom Arena-Clip verschluckt
+       zu werden. */
+    flex: 1 1 auto;
+    min-height: min(10rem, 24vh);
     grid-template-columns: minmax(8rem, 0.6fr) minmax(12rem, 1.4fr);
     grid-template-rows: auto auto;
     gap: 0.45rem;
@@ -2693,6 +2760,12 @@ code {
     align-self: start;
     max-height: none;
     overflow: visible;
+    /* AENDERUNG 24.06.2026 (M1d1-Fix): Magiekreis-Spalte auf max 4rem begrenzen
+       (vorher 6rem), damit die Schlangenbereich-Grid-Row in der Lichtung
+       sichtbar wird. Die Arena ist jetzt 432px (clamp(24rem,46vh,28rem)),
+       aber Tischkarte+Magiekreise brauchen zusammen weniger Platz damit
+       der Schlangenbereich mindestens 70px sichtbar bleibt. */
+    max-height: 4rem;
   }
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-tischkarte"] {
@@ -2700,6 +2773,11 @@ code {
     align-self: start;
     max-height: none;
     overflow: visible;
+    /* AENDERUNG 24.06.2026 (M1d1-Fix): Tischkarte auf max 4rem begrenzen
+       (vorher 6rem), damit die Schlangenbereich-Grid-Row in der Lichtung
+       sichtbar wird. 4rem=72px statt 6rem=108px spart 36px, die dem
+       Schlangenbereich als sichtbare Hoehe zugutekommen. */
+    max-height: 4rem;
   }
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-tischkarte__karte"] {

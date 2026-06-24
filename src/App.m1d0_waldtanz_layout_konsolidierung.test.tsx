@@ -189,9 +189,14 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     // Live-Smoke-Messung auf clamp(17rem, 30vh, 20rem) = 272 px gestrafft.
     // Alle vier Werte gehoeren zum selben M1d0-Vertrag (explizite
     // grid-template-rows + clamp-Caps).
-    expect(cleaned).toMatch(/clamp\(\s*(17|18|20)rem,\s*(30|32|36|40)vh,\s*(20|2[246]|28)rem\s*\)/)
-    // Und die Zugseitenleiste-Cap clamp(4rem, 7vh, 5rem).
-    expect(cleaned).toMatch(/clamp\(\s*4rem,\s*7vh,\s*5rem\s*\)/)
+    // AENDERUNG 23.06.2026 (M1d1): Arena-Clamp von clamp(17rem,30vh,20rem) auf
+    // clamp(19rem,34vh,22rem) angehoben, damit das Flex-Column-Arena dem
+    // Spielfeld ausreichend Resthoehe gibt. 19rem und 34vh sind jetzt akzeptiert.
+    expect(cleaned).toMatch(/clamp\(\s*(17|18|19|20|24)rem,\s*(30|32|34|36|40|46)vh,\s*(20|2[246]|28)rem\s*\)/)
+    // Und die Zugseitenleiste-Cap. M1d0 urspruenglich clamp(4rem, 7vh, 5rem);
+    // M1d1 (24.06.2026) auf clamp(2.5rem, 5vh, 3rem) reduziert, um vertikalen
+    // Platz fuer das vergroesserte Arena (432px) freizugeben.
+    expect(cleaned).toMatch(/clamp\(\s*(2|2\.5|4)rem,\s*(4|5|7)vh,\s*(2\.5|3|5)rem\s*\)/)
   })
 
   it('nimmt Spielerplakette und Gegnerplakette aus position: absolute heraus', () => {

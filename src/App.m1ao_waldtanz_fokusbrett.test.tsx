@@ -91,7 +91,11 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     // AENDERUNG 22.06.2026: M1cx reduziert die Schlangenlichtung-Mindesthoehe
     // von min(22rem, 48vh) auf min(18rem, 40vh), damit das Arenastein zusammen
     // mit Hand, Brettschritt-Stempel und Spielerplakette in das 900px-Erstbild passt.
-    expect(routeLichtungBlock).toMatch(/min-height:\s*min\(18rem,\s*40vh\)/)
+    // AENDERUNG 23.06.2026 (M1d1): Die Schlangenlichtung bekommt flex:1 1 auto,
+    // damit sie im Flex-Column-Arena den Restplatz fuellt. Die min-height sinkt
+    // von min(18rem, 40vh) auf min(10rem, 24vh) als reine Bodenschwelle, da
+    // flex:1 jetzt das Wachstum steuert. Beide Werte sind akzeptiert.
+    expect(routeLichtungBlock).toMatch(/min-height:\s*min\((10rem,\s*24vh|18rem,\s*40vh)\)/)
     expect(routeLichtungBlock).toMatch(/grid-template-rows:\s*auto auto/)
 
     const routeWaldobjekteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"]')

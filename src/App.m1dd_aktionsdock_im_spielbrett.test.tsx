@@ -92,7 +92,10 @@ describe('M1dd Waldtanz-Aktionsdock im Spielbrett', () => {
 
   it('nimmt die aktionsdock-Hoehe in das grid-template-rows des spielbrett--waldtantz auf', () => {
     const block = cssBlockForSelector('.spielbereich--game-route [class~="spielbrett--waldtanz"]')
-    expect(block).toMatch(/clamp\(3\.5rem,\s*8vh,\s*4\.5rem\)/)
+    // M1dd urspruenglich clamp(3.5rem, 8vh, 4.5rem); M1d1 (24.06.2026) auf
+    // clamp(2rem, 4vh, 2.5rem) reduziert, um vertikalen Platz fuer das
+    // vergroesserte Arena (432px) und sichtbare Schlangen freizugeben.
+    expect(block).toMatch(/clamp\(\s*(2|3\.5)rem,\s*(4|8)vh,\s*(2\.5|4\.5)rem\s*\)/)
   })
 
   it('bewahrt ausserhalb von /game die volle Aktionsliste ohne brettinline-Override', () => {
