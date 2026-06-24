@@ -94,11 +94,38 @@ Nest zu einem lebendigen Stitch-Eingang**:
 
 ## Deploy / Smoke
 
-*(wird nach Deploy ergänzt)*
+- [x] **Commit:** `226587e — M3a: Sonniges Nest beleben`
+- [x] **Push:** `origin/main` aktualisiert (`294150d..226587e`)
+- [x] **Vercel Production Deploy:** `READY` in 19s, aliased to
+  `https://schlangentanz-v2.vercel.app`
+- [x] **M3a Lobby-Vertrag (produktionsverifiziert):**
+  Repo-lokaler Playwright-Probe bestätigt auf der Live-Alias:
+  - `heroFlex: "row"` (kompakter Horizontal-Hero)
+  - `titleWidth: "219px"` (Titel nicht mehr vollbreit — `width:auto`-Fix wirkt)
+  - `badgePresent: true`, `badgeAriaHidden: "true"` (Host-Badge dekorativ)
+  - `iconPresent: true` (Play-Icon auf Start-Buttons)
+  - `schildAnim: "lobby-sway"` (schwingendes Codeschild)
+  - Console-/Page-Errors: keine
+- [ ] **Kanonische `npm run smoke:production`-Kette:** **pre-existing rot**
+  (nicht durch M3a verursacht). Siehe „Bekannte Pre-Existing-Schulden".
+
+## Bekannte Pre-Existing-Schulden (nicht durch M3a verursacht)
+
+- **`pruefeM1bgSonnenstand` schlägt fehl (`schubladen: 2 < 5`):** Die kanonische
+  `/game`-Smoke-Kette bricht seit den M1d1/M1d2-Arena-Refactor-Commits
+  (bereits auf `origin/main` vor dieser Session) ab, weil nur noch 2
+  `.debug-gruppe-entwicklungsdaten--spielschublade`-Schubladen gerendert werden
+  statt der erwarteten ≥5. M3a hat ausschließlich die Lobby `/` berührt
+  (`App.css` Hero/Lobby-Animationen, `SonnigesNestLobby.tsx` Badge/Icon, Tests);
+  die `kompakteSchublade`-Renderlogik in `App.tsx`/Panels ist von M3a unangetastet.
+  Die M3a-Lobby-Verträge sind davon unbeeinträchtigt und produktionsgrün.
+  Sollte in einem Folge-Slice (Schwellenwert anpassen oder fehlende
+  Debug-Schubladen wiederherstellen) behoben werden.
 
 ## Commits
 
-- *(wird nach Commit ergänzt)*
+- `226587e` M3a: Sonniges Nest beleben — schwingendes Codeschild, pulsierende
+  Slots, Host-Badge, Play-Icons, kompakter Hero
 
 ## Nächster mittlerer Slice
 
