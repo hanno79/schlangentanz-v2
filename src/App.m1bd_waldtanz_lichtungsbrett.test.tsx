@@ -41,18 +41,22 @@ describe('M1bd Waldtanz-Lichtungsbrett', () => {
     const schlangenBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangenbereich--waldlichtung"]')
     const gruppenBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangen-gruppe"]')
 
-    expect(lichtungsBlock).toMatch(/grid-template-areas:[\s\S]*"tisch magiekreise"[\s\S]*"schlangen schlangen"/)
-    expect(lichtungsBlock).toMatch(/grid-template-rows:\s*auto minmax\(8rem,\s*1fr\)/)
-    expect(lichtungsBlock).toMatch(/align-content:\s*start/)
+    // AENDERUNG 25.06.2026 (M1dj): Section .waldtanz-lichtungsbrett ist jetzt
+    // eine single-column Spielfeldhuell-Klasse mit grid-template-rows statt
+    // der frueheren 2x2-Areas. Die alte named-area-Konfiguration
+    // ("tisch magiekreise / schlangen schlangen") ist in die innere
+    // .waldtanz-schlangenlichtung__schlangen gewandert.
+    expect(lichtungsBlock).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
+    expect(lichtungsBlock).toMatch(/grid-template-rows:\s*auto minmax\(0,\s*1fr\)/)
     expect(lichtungsBlock).toMatch(/background:[\s\S]*radial-gradient\(ellipse at 50% 62%/)
-    expect(lichtungsBlock).toMatch(/align-items:\s*start/)
-    expect(schlangenBlock).toMatch(/margin-top:\s*0/)
-    expect(schlangenBlock).toMatch(/position:\s*relative/)
-    expect(schlangenBlock).toMatch(/z-index:\s*6/)
-    expect(schlangenBlock).toMatch(/background:\s*transparent/)
-    expect(schlangenBlock).toMatch(/border-color:\s*transparent/)
-    expect(schlangenBlock).toMatch(/box-shadow:\s*none/)
-    expect(schlangenBlock).toMatch(/overflow:\s*visible/)
+    expect(lichtungsBlock).not.toMatch(/grid-template-areas:\s*"tisch\s+magiekreise/)
+    // Schlangen-in-Lichtungsbrett ist nur noch width:100% + min-height:0;
+    // die alte grid-area / margin-top / position-Verkabelung ist obsolet,
+    // weil der Schlangenbereich heute ueber .__schlangen Grid-Areas seine
+    // Brettmitte bekommt.
+    expect(schlangenBlock).toMatch(/width:\s*100%/)
+    expect(schlangenBlock).toMatch(/min-height:\s*0/)
+    expect(schlangenBlock).not.toMatch(/grid-area:\s*schlangen/)
     expect(gruppenBlock).toMatch(/background:\s*rgba\(236, 255, 227, 0\.58\)/)
     expect(gruppenBlock).toMatch(/border:\s*2px solid rgba\(6, 57, 7, 0\.32\)/)
   })

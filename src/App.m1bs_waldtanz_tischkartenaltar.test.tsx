@@ -76,7 +76,12 @@ describe('M1bs Waldtanz-Tischkartenaltar', () => {
     const routeLeerText = cssBlock('.spielbereich--game-route [class~="waldtanz-tischkarte__leer"] p')
     const lichtkegel = cssBlock('.waldtanz-tischkarte__lichtkegel')
 
-    expect(routeLichtungsbrett).toMatch(/grid-template-columns:\s*minmax\(14rem,\s*0\.9fr\) minmax\(12rem,\s*0\.7fr\)/)
+    // AENDERUNG 25.06.2026 (M1dj): Section .waldtanz-lichtungsbrett ist jetzt
+    // eine single-column Brett-Huelle ohne benannte Areas. Die innere
+    // .waldtanz-schlangenlichtung__schlangen traegt jetzt die benannten Areas
+    // (tischkarte | magiekreise | schlangen) als 3-Column-Layout.
+    expect(routeLichtungsbrett).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
+    expect(routeLichtungsbrett).not.toMatch(/grid-template-columns:\s*minmax\(14rem,\s*0\.9fr\)\s+minmax\(12rem,\s*0\.7fr\)/)
     expect(routeTischkarte).toMatch(/position:\s*relative/)
     expect(routeTischkarte).toMatch(/z-index:\s*7/)
     expect(routeTischkarte).toMatch(/align-self:\s*start/)

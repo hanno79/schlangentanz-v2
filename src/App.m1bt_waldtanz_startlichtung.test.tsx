@@ -59,7 +59,12 @@ describe('M1bt Waldtanz-Startlichtung', () => {
     expect(routeSchlangenbereich).toMatch(/grid-template-columns:\s*1fr/)
     expect(routeSchlangenbereich).toMatch(/align-content:\s*start/)
     expect(routeSchlangenbereich).toMatch(/overflow:\s*visible/)
-    expect(routeLichtungsSchlangen).toMatch(/overflow:\s*visible/)
+    // AENDERUNG 25.06.2026 (M1dj): Der Schlangenbereich-in-Lichtungsbrett-
+    // Overrides hat nur noch width:100% + min-height:0. Die alte
+    // overflow:visible-Verkabelung ist obsolet, weil die Positionierung
+    // jetzt ueber die innere .__schlangen-Areas läuft.
+    expect(routeLichtungsSchlangen).toMatch(/width:\s*100%/)
+    expect(routeLichtungsSchlangen).toMatch(/min-height:\s*0/)
     expect(routeTitel).toMatch(/clip-path:\s*inset\(50%\)/)
     expect(routeLeererStatus).toMatch(/display:\s*none/)
     expect(appCss).toMatch(/@media\s*\(min-width:\s*1100px\)\s*\{[\s\S]*\.spielbereich--game-route \[class~="schlangenbereich--waldlichtung"\] \[class~="schlangen-gruppe"\]:first-of-type\s*\{[\s\S]*transform:\s*translateY\(-2\.8rem\)/)

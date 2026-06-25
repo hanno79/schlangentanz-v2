@@ -35,25 +35,45 @@ describe('M1as Waldtanz-Erstzug-Lichtung', () => {
 
   it('kompaktiert die /game-Lichtung, damit Startkreis und Hand ohne innere Scrollsuche im Erstbild liegen', () => {
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"]')).toMatch(/grid-template-columns:\s*minmax\(0,\s*2\.55fr\) minmax\(9\.5rem,\s*0\.65fr\)/)
-    // AENDERUNG 25.06.2026 (M1di): Schlangenlichtung ist als primary board surface
-    // umstrukturiert — die innere Spalten-Aufteilung (Tischkarte + Magiekreise +
-    // Schlangen) ist jetzt in .waldtanz-schlangenlichtung__schlangen verankert.
-    // Die uebergeordnete .waldtanz-arenastein__schlangenlichtung hat grid-template-rows
-    // weiterhin, aber keine grid-template-columns mehr. Wir akzeptieren entweder die
-    // alte contract-form (Vor-M1di) oder die neue M1di-Form (grid-template-rows alleine
-    // auf der Section + Schlangen-Grid-Areas auf der inneren Container-Klasse).
-    const lichtungBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')
-    const lichtungColsOk = lichtungBlock.match(/grid-template-columns:\s*minmax\(8rem,\s*0\.6fr\) minmax\(12rem,\s*1\.4fr\)/)
-    const schlangenInnerOk = cssBlock('.waldtanz-schlangenlichtung__schlangen').match(/grid-template-areas/)
-    expect(lichtungColsOk || schlangenInnerOk).toBeTruthy()
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')).toMatch(/grid-template-rows:\s*auto auto/)
+    // AENDERUNG 25.06.2026 (M1dj): Schlangenlichtung ist jetzt eine Brettlandschaft
+    // mit EIGENER Spalten-Aufteilung. Die uebergeordnete Section
+    // .waldtanz-lichtungsbrett ist single-column (1fr) und traegt nur
+    // grid-template-rows. Die innere Brett-Aufteilung
+    // (Tischkarte | Magiekreise | Schlangen) lebt jetzt in
+    // .waldtanz-schlangenlichtung__schlangen als 3-Column-Grid mit benannten
+    // Areas (tischkarte/magiekreise/schlangen).
+    const lichtungBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"]')
+    expect(lichtungBlock).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
+    expect(lichtungBlock).not.toMatch(/grid-template-areas:\s*"tisch\s+magiekreise/)
+    expect(lichtungBlock).not.toMatch(/grid-template-areas:\s*"schlangen\s+schlangen"/)
+    // Innere Brett-Aufteilung ist eine 3-Column-Area mit tischkarte/magiekreise/schlangen.
+    // Der cssBlock-Helper im M1as-Test ist eine Single-Selector-Regex; wir
+    // lesen die innere __schlangen-Regel-Bloecke direkt mit einem Descendant-Helper.
+    const schlangenInner = (() => {
+      const match = appCss.match(/\.waldtanz-schlangenlichtung__schlangen\s*\{([^}]*)\}/)
+      return match?.[1] ?? ''
+    })()
+    expect(schlangenInner).toMatch(/grid-template-columns:\s*minmax\(7rem,\s*1fr\)\s+minmax\(14rem,\s*2fr\)\s+minmax\(7rem,\s*1fr\)/)
+    expect(schlangenInner).toMatch(/grid-template-areas:\s*"tischkarte magiekreise magiekreise"/)
+    expect(schlangenInner).toMatch(/"tischkarte schlangen schlangen"/)
+    // Die Schlangen-Element-Areas sitzen in der inneren __schlangen-Klasse,
+    // nicht mehr in der uebergeordneten Section-Lichtungsbrett-Regel.
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__liste"]')).toMatch(/grid-template-columns:\s*repeat\(3,\s*minmax\(4\.8rem,\s*1fr\)\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__kreis"]')).toMatch(/min-height:\s*clamp\(4\.9rem,\s*9vw,\s*6\.75rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-tischkarte"]')).toMatch(/width:\s*min\(100%,\s*16rem\)/)
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-tischkarte"]')).toMatch(/grid-area:\s*tisch/)
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise"]')).toMatch(/grid-area:\s*magiekreise/)
+    // Descendant-Asserts: wir suchen die letzte top-level Regel mit dem vollen
+    // Selector-Pfad via Direkt-Regex, weil der Single-Selector cssBlock-Helper
+    // Descendants nicht unterstuetzt.
+    const tischkarteInSchlangen = appCss.match(/\.waldtanz-schlangenlichtung__schlangen\s+\.waldtanz-tischkarte\s*\{([^}]*)\}/)
+    expect(tischkarteInSchlangen, 'Regel .__schlangen .waldtanz-tischkarte muss existieren').toBeTruthy()
+    expect(tischkarteInSchlangen![1]).toMatch(/grid-area:\s*tischkarte/)
+    const magiekreiseInSchlangen = appCss.match(/\.waldtanz-schlangenlichtung__schlangen\s+\.waldtanz-magiekreise\s*\{([^}]*)\}/)
+    expect(magiekreiseInSchlangen, 'Regel .__schlangen .waldtanz-magiekreise muss existieren').toBeTruthy()
+    expect(magiekreiseInSchlangen![1]).toMatch(/grid-area:\s*magiekreise/)
     expect(cssBlock('.spielbereich--game-route [class~="schlangenbereich--waldlichtung"]')).toMatch(/min-height:\s*7\.5rem/)
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="schlangenbereich--waldlichtung"]')).toMatch(/grid-area:\s*schlangen/)
+    const schlangenInSchlangen = appCss.match(/\.waldtanz-schlangenlichtung__schlangen\s+\.schlangenbereich\s*\{([^}]*)\}/)
+    expect(schlangenInSchlangen, 'Regel .__schlangen .schlangenbereich muss existieren').toBeTruthy()
+    expect(schlangenInSchlangen![1]).toMatch(/grid-area:\s*schlangen/)
     expect(cssBlock('.spielbereich--game-route [class~="schlangenbereich--waldlichtung"]')).toMatch(/overflow:\s*visible/)
   })
 })

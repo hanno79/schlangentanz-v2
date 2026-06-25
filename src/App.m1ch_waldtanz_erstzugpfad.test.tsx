@@ -42,12 +42,20 @@ describe('M1ch Waldtanz-Erstzugpfad', () => {
   })
 
   it('sichert den sichtbaren Geometrie-Vertrag und den dauerhaften Production-Smoke', () => {
+    // AENDERUNG 25.06.2026 (M1dj): Die Section .waldtanz-lichtungsbrett
+    // traegt heute keine benannten Areas mehr. Die Brett-Aufteilung
+    // (Tischkarte | Magiekreise | Schlangen) lebt jetzt in der inneren
+    // .waldtanz-schlangenlichtung__schlangen-Klasse. Die eigene-Schlangen-
+    // und Hand-Pfade behalten ihre benannten Areas aus M1d0.
     const lichtungRoute = cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"]')
     const eigeneRoute = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"]')
     const startzoneRoute = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangen-startzone"]')
     const handRoute = cssBlock('.spielbereich--game-route [class~="handkarten-panel"]')
 
-    expect(lichtungRoute).toMatch(/grid-template-areas:/)
+    expect(lichtungRoute).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
+    expect(lichtungRoute).not.toMatch(/grid-template-areas:/)
+    // Die innere Brett-Aufteilung muss die 3-Spalten-Areas-Konfiguration tragen.
+    expect(cssBlock('.waldtanz-schlangenlichtung__schlangen')).toMatch(/grid-template-areas:\s*"tischkarte magiekreise magiekreise"/)
     expect(eigeneRoute).toMatch(/grid-template-areas:/)
     expect(eigeneRoute).toMatch(/startgarten startzone/)
     expect(startzoneRoute).toMatch(/grid-area:\s*startzone/)

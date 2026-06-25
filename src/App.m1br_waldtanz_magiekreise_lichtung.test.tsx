@@ -52,7 +52,12 @@ describe('M1br Waldtanz-Magiekreise in der Lichtung', () => {
     const kopf = cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__kopf"]')
     const hinweis = cssBlock('.spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-magiekreise"] p')
 
-    expect(lichtung).toMatch(/grid-template-areas:[\s\S]*"tisch magiekreise"[\s\S]*"schlangen schlangen"/)
+    // AENDERUNG 25.06.2026 (M1dj): Magiekreise sitzen jetzt im inneren
+    // .waldtanz-schlangenlichtung__schlangen-Grid (Area: magiekreise),
+    // nicht mehr in der Section .waldtanz-lichtungsbrett-Area. Die Section
+    // selbst hat keine grid-template-areas mehr.
+    expect(lichtung).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/)
+    expect(lichtung).not.toMatch(/grid-template-areas:\s*"tisch\s+magiekreise/)
     expect(magiekreise).toMatch(/background:\s*transparent/)
     expect(magiekreise).toMatch(/border-color:\s*transparent/)
     expect(magiekreise).toMatch(/box-shadow:\s*none/)
