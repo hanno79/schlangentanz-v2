@@ -287,6 +287,12 @@ body {
   animation: lobby-pulse 3s ease-in-out infinite;
 }
 
+/* M3b: Aktive KI-Slots gleiten sichtbar als Schlange ins Baumhaus (Stitch-Pattern). */
+.lobby-slot--ki {
+  transform-origin: bottom center;
+  animation: lobby-snake-slide 1.4s ease-out forwards;
+}
+
 .lobby-slot strong {
   padding: 0.25rem 0.65rem;
   border: 2px solid var(--st-color-border-strong);
@@ -304,10 +310,10 @@ body {
 .lobby-startbutton {
   min-height: 3.4rem;
   padding: 0.7rem 1.15rem;
-  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border: 3px solid var(--st-color-border-strong);
   border-radius: 999px;
   background: var(--st-color-secondary-container);
-  box-shadow: 0 5px 0 var(--st-color-border-strong);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
   color: var(--st-color-border-strong);
   cursor: pointer;
   font-family: var(--st-font-headline);
@@ -359,6 +365,13 @@ body {
   50% { opacity: 0.45; }
 }
 
+/* M3b: Schlangen-Slide-In fuer aktive KI-Slots. */
+@keyframes lobby-snake-slide {
+  0% { transform: translateY(-0.6rem) scale(0.92); opacity: 0.4; }
+  60% { transform: translateY(0.1rem) scale(1.05); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lobby-code-schild {
     animation: none;
@@ -366,6 +379,18 @@ body {
 
   .lobby-slot--wartet .lobby-slot__hoehle {
     animation: none;
+  }
+
+  /* M3b: Auch die neuen Spielstart-Animationen respektieren reduced-motion. */
+  .lobby-slot--ki,
+  .lobby-startbutton {
+    animation: none;
+  }
+
+  /* M3b-Review: Auch die transition des Hover-Lifts unter reduced-motion stoppen,
+     damit kein "springt auf hover" mehr passiert. */
+  .lobby-startbutton {
+    transition: none;
   }
 }
 
