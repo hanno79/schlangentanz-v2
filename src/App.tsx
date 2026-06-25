@@ -328,7 +328,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   />
                 )}
                 <div className="waldtanz-arenastein__spielfeld">
-                  <section className="waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett" aria-label="Schlangenlichtung">
+                  <section className="waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett waldtanz-lichtungsstein" aria-label="Schlangenlichtung" data-waldtanz-spielplatz="waldlichtung">
                     <WaldtanzTischkarte zustand={zustand} />
                     <WaldtanzKartenpop aktionLabel={letzteAktion} />
                     <WaldtanzMagiekreise

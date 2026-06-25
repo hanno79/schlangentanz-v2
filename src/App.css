@@ -3022,6 +3022,40 @@ code {
     box-shadow: 0 3px 0 rgba(6, 57, 7, 0.28);
   }
 
+  .spielbereich--game-route [class~="waldtanz-lichtungsstein"] {
+    /* AENDERUNG 25.06.2026: M1dg macht die innere Schlangenlichtung zum
+       sichtbaren Waldstein-Spielplatz. 3px-Dark-Forest-Border, Hard-Shadow,
+       kompaktes Padding und clamp-Border-Radius geben der zentralen
+       Spielflaeche taktile Kanten, ohne den M1d1-Clip-Spielraum fuer
+       den Schlangenbereich unter 70 px zu druecken. */
+    position: relative;
+    border: 3px solid var(--st-color-border-strong);
+    border-radius: clamp(1.4rem, 2.4vw, 2.2rem);
+    padding: clamp(0.4rem, 0.85vw, 0.7rem);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255, 224, 139, 0.34) 0 26%, transparent 64%),
+      radial-gradient(circle at 16% 78%, rgba(186, 246, 45, 0.32) 0 4rem, transparent 4.18rem),
+      radial-gradient(circle at 84% 22%, rgba(254, 203, 0, 0.36) 0 4.4rem, transparent 4.55rem),
+      linear-gradient(160deg, rgba(236, 255, 227, 0.96), rgba(177, 232, 164, 0.86));
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsstein"]::before {
+    content: "";
+    position: absolute;
+    inset: clamp(0.15rem, 0.4vw, 0.3rem);
+    border-radius: clamp(1.1rem, 2vw, 1.85rem);
+    border: 2px dashed rgba(6, 57, 7, 0.22);
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.34) 0 22%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-lichtungsstein"] > * {
+    position: relative;
+    z-index: 1;
+  }
+
   .spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"] {
     max-height: min(21rem, 40vh);
     overflow: auto;
@@ -9064,4 +9098,33 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .spielbereich--game-route [class~="material-aufgaben-panel--brettfokus"],
 .spielbereich--game-route [class~="spieleruebersicht-panel--brettfokus"] {
   display: none;
+}
+
+/* AENDERUNG 25.06.2026: M1dg — Waldtanz-Lichtungsstein (zentraler Spielplatz).
+   Basisregel ohne Route-Scope, damit der Klassen-Token in beliebigen
+   Brettobjekten wiederverwendet werden kann. Die /game-spezifische
+   Stitch-Lichtung (3px Forest-Border, Hard-Shadow, Stein-Gradient) lebt
+   in der .spielbereich--game-route-Section weiter oben (Specificity
+   0,2,0 vs 0,1,0). */
+.waldtanz-lichtungsstein {
+  position: relative;
+  border: 3px solid var(--st-color-border-strong);
+  padding: clamp(0.4rem, 0.85vw, 0.7rem);
+  border-radius: clamp(1.4rem, 2.4vw, 2.2rem);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-lichtungsstein::before {
+  content: "";
+  position: absolute;
+  inset: clamp(0.15rem, 0.4vw, 0.3rem);
+  border-radius: clamp(1.1rem, 2vw, 1.85rem);
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.34) 0 22%, transparent 70%);
+}
+
+.waldtanz-lichtungsstein > * {
+  position: relative;
+  z-index: 1;
 }
