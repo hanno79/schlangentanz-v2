@@ -21,7 +21,6 @@ import AktionenPanel from './components/AktionenPanel'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
 import HandkartenPanel from './components/HandkartenPanel'
-import Schlangenbereich from './components/Schlangenbereich'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
 import KiZugBuehne from './components/KiZugBuehne'
@@ -37,15 +36,10 @@ import WaldtanzAblage from './components/WaldtanzAblage'
 import WaldtanzNachziehstapel from './components/WaldtanzNachziehstapel'
 import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
-import WaldtanzQuestband from './components/WaldtanzQuestband'
-import WaldtanzKartenpop from './components/WaldtanzKartenpop'
 import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
-import WaldtanzTischkarte from './components/WaldtanzTischkarte'
-import WaldtanzMagiekreise from './components/WaldtanzMagiekreise'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
-import WaldtanzBrettschrittStempel from './components/WaldtanzBrettschrittStempel'
 import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
-import WaldtanzAktiverTanzSchritt from './components/WaldtanzAktiverTanzSchritt'
+import WaldtanzSchlangenlichtung from './components/WaldtanzSchlangenlichtung'
 import WaldtanzSpielerplakette from './components/WaldtanzSpielerplakette'
 import WaldtanzGegnerplakette from './components/WaldtanzGegnerplakette'
 import WertungPanel from './components/WertungPanel'
@@ -305,57 +299,34 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   <h4>Leuchtender Waldstein</h4>
                   <p>Magische Zielkreise leuchten im Brett.</p>
                 </div>
-                {istGameRoute && <WaldtanzBrettschrittStempel zustand={zustand} eintraege={brettschrittEintraege} />}
-                {istGameRoute && (
-                  <WaldtanzQuestband
-                    zustand={zustand}
-                    istEndspurt={istEndspurt}
-                  />
-                )}
-                {istGameRoute && (
-                  <WaldtanzAktiverTanzSchritt
-                    istSichtbar
-                    daten={{
-                      aktiverSpielerName: aktiverSpieler.name,
-                      istMensch: aktiverSpieler.steuerung === 'Mensch',
-                      spielerIndex: zustand.aktiverSpielerIndex,
-                      phase: zustand.zugphase,
-                      naechsterSchritt: pflichtschrittLabel,
-                      ueberhand,
-                      istSpielende,
-                      kiZugLaeuft: versteckeKiEinzelaktionen,
-                    }}
-                  />
-                )}
                 <div className="waldtanz-arenastein__spielfeld">
-                  <section className="waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett waldtanz-lichtungsstein" aria-label="Schlangenlichtung" data-waldtanz-spielplatz="waldlichtung">
-                    <WaldtanzTischkarte zustand={zustand} />
-                    <WaldtanzKartenpop aktionLabel={letzteAktion} />
-                    <WaldtanzMagiekreise
-                      ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
-                      neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
-                      karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
-                      sonderzauberAktionen={versteckeKiEinzelaktionen ? [] : [...farbenschutzAktionen, ...farbenfusionAktionen, ...farbendiebAktionen, ...schlangenfrassAktionen, ...schlangenblockadeAktionen, ...schlangengrubeAktionen]}
-                      aktionsLabel={aktionsLabel}
-                      onAktion={fuhreAktionAus}
-                    />
-                    <Schlangenbereich
-                      zustand={zustand} zeigeSchlangenhaeutungBrettziel={!versteckeKiEinzelaktionen}
-                      aktiverSpieler={aktiverSpieler}
-                      gegnerSpieler={gegnerSpieler}
-                      karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
-                      neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
-                      farbenschutzAktionen={versteckeKiEinzelaktionen ? [] : farbenschutzAktionen}
-                      farbenfusionAktionen={versteckeKiEinzelaktionen ? [] : farbenfusionAktionen}
-                      schlangenfrassAktionen={versteckeKiEinzelaktionen ? [] : schlangenfrassAktionen}
-                      schlangenblockadeAktionen={versteckeKiEinzelaktionen ? [] : schlangenblockadeAktionen}
-                      farbendiebAktionen={versteckeKiEinzelaktionen ? [] : farbendiebAktionen}
-                      gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
-                      ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
-                      onAktion={fuhreAktionAus} aktionsLabel={aktionsLabel}
-                      letzteAktionZiel={letzteAktionZiel}
-                    />
-                  </section>
+                  <WaldtanzSchlangenlichtung
+                    zustand={zustand}
+                    aktiverSpieler={aktiverSpieler}
+                    gegnerSpieler={gegnerSpieler}
+                    ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+                    istGameRoute={istGameRoute}
+                    versteckeKiEinzelaktionen={versteckeKiEinzelaktionen}
+                    karteAnlegenAktionen={karteAnlegenAktionen}
+                    neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
+                    farbenschutzAktionen={farbenschutzAktionen}
+                    farbenfusionAktionen={farbenfusionAktionen}
+                    schlangenfrassAktionen={schlangenfrassAktionen}
+                    schlangenblockadeAktionen={schlangenblockadeAktionen}
+                    schlangengrubeAktionen={schlangengrubeAktionen}
+                    farbendiebAktionen={farbendiebAktionen}
+                    gezogeneHandkarteIdRef={gezogeneHandkarteIdRef}
+                    onAktion={fuhreAktionAus}
+                    aktionsLabel={aktionsLabel}
+                    letzteAktion={letzteAktion}
+                    letzteAktionZiel={letzteAktionZiel}
+                    istEndspurt={istEndspurt}
+                    ueberhand={ueberhand}
+                    istSpielende={istSpielende}
+                    kiZugLaeuft={versteckeKiEinzelaktionen}
+                    brettschrittEintraege={brettschrittEintraege}
+                    pflichtschrittLabel={pflichtschrittLabel}
+                  />
                   <aside className="waldtanz-arenastein__waldobjekte waldtanz-waldtaschen" aria-label="Waldobjekte">
                     {istGameRoute && (
                       <div className="waldtanz-waldtaschen__kopf">

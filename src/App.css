@@ -2267,11 +2267,23 @@ code {
        werden. Hoehe von clamp(17rem, 30vh, 20rem) auf clamp(24rem, 46vh, 28rem)
        angehoben. Bei 900-px-Viewport: 34vh=306, 19rem=342, 22rem=396 → 342 px
        (vorher 272-306 px). Die zusaetzlichen ~56 px kommen von der
-       Gegnerplakette-Kompaktierung (~68 px Ersparnis). */
+       Gegnerplakette-Kompaktierung (~68 px Ersparnis).
+
+       AENDERUNG 25.06.2026 (M1di): Seit M1di sind Questband, Aktiver Tanz
+       Schritt, Brettschritt-Stempel, Tischkarte und Magiekreise INNERHALB der
+       Schlangenlichtung als Overlays/sub-container verankert (nicht mehr
+       eigene Top-Level-Panels). Damit entfaellt die zusaetzliche Hoehe fuer
+       diese Sub-Panels; die Arenastein-Cap wird auf clamp(26rem, 50vh, 30rem)
+       angehoben, damit die Schlangenlichtung als primary surface mit
+       min-height: clamp(14rem, 32vh, 20rem) (= ~32% Viewport-Hoehe auf 900 px)
+       sichtbar wird. Bottom-Row bleibt im Viewport, weil die Bottom-Row-Top
+       bei 900-px-Viewport + 30-px-Hand-Bottom < 905 px bleibt (siehe M1d2-Fix).
+       Die Schlangenlichtung selbst hat min-height: clamp(14rem, 32vh, 20rem),
+       damit sie mind. ~32% der Viewport-Hoehe auf 1280x900 erreicht. */
     display: flex;
     flex-direction: column;
-    height: clamp(22.5rem, 43vh, 26.5rem);
-    max-height: clamp(22.5rem, 43vh, 26.5rem);
+    height: clamp(26rem, 50vh, 30rem);
+    max-height: clamp(26rem, 50vh, 30rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;
@@ -2905,10 +2917,14 @@ code {
        AENDERUNG 23.06.2026 (M1d1): flex:1 1 auto damit die Schlangenlichtung
        im Flex-Spielfeld den verfuegbaren Platz fuellt und der Schlangenbereich
        in der zweiten Grid-Row sichtbar wird, statt vom Arena-Clip verschluckt
-       zu werden. */
+       zu werden.
+       AENDERUNG 25.06.2026 (M1di): Schlangenlichtung als primary board surface
+       — min-height auf clamp(14rem, 32vh, 20rem) reduziert, damit sie im
+       Arenastein-Clip (~387-477 px je nach Viewport) sichtbar bleibt und
+       mind. 32% der Viewport-Hoehe einnimmt. grid-template-columns entfernt,
+       weil die innere Struktur jetzt vom M1di-Container uebernommen wird. */
     flex: 1 1 auto;
-    min-height: min(10rem, 24vh);
-    grid-template-columns: minmax(8rem, 0.6fr) minmax(12rem, 1.4fr);
+    min-height: clamp(14rem, 32vh, 20rem);
     grid-template-rows: auto auto;
     gap: 0.45rem;
     padding: 0.6rem;
@@ -9259,4 +9275,147 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   .handkarten-buehne__spielhandlung:active {
     transform: none;
   }
+}
+
+/* M1di — Waldtanz-Schlangenlichtung als primary board surface. */
+.waldtanz-schlangenlichtung {
+  /* M1di: Section-Wrapper ergaenzt nur Struktur (Grid + Head-Reihe + Body-Reihe).
+     Visuelle Outer-Props (min-height, border, background, box-shadow der
+     Section-Box) bleiben auf der bestehenden .waldtanz-arenastein__schlangenlichtung-Regel,
+     damit die primary-Surface-Optik konsistent zur M1dg-Lichtungsstein-Pattern bleibt
+     und Cascade-Konflikte vermieden werden. Die INNERE Spielflaeche
+     (.waldtanz-schlangenlichtung__spielflaeche) traegt zusaetzlich border + background +
+     box-shadow als primary Stein-Flaeche. */
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(0.55rem, 1.1vw, 0.85rem);
+  padding: 0;
+}
+
+.waldtanz-schlangenlichtung__kopf {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 2px dashed rgba(6, 57, 7, 0.22);
+}
+
+.waldtanz-schlangenlichtung__kopf h3 {
+  margin: 0;
+  font-family: var(--st-font-headline, 'Rubik', sans-serif);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  color: var(--st-color-primary, #4b6700);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.waldtanz-schlangenlichtung__kopf p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgba(6, 57, 7, 0.72);
+}
+
+.waldtanz-schlangenlichtung__spielflaeche {
+  /* M1di: Spielflaeche als primary visual innerhalb der Schlangenlichtung.
+     Die min-height ist bewusst klein gehalten (clamp(12rem, 28vh, 18rem)),
+     weil die Section-Schlangenlichtung selbst min-height clamp(20rem,36vh,24rem)
+     hat und das Arenastein clamp(20rem,38vh,24rem) cappt. Zu grosse
+     min-height hier wuerde das Arenastein-Clip ausloesen. */
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+  min-height: clamp(12rem, 28vh, 18rem);
+  padding: clamp(0.6rem, 1.2vw, 0.85rem);
+  border: 3px solid var(--st-color-border-strong, #063907);
+  border-radius: clamp(1.5rem, 3vw, 2.5rem);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(254, 203, 0, 0.32) 0 5rem, transparent 5.1rem),
+    radial-gradient(circle at 82% 26%, rgba(164, 222, 2, 0.38) 0 5.4rem, transparent 5.5rem),
+    linear-gradient(180deg, rgba(236, 255, 227, 0.86) 0%, rgba(196, 253, 182, 0.66) 60%, rgba(185, 241, 172, 0.5) 100%);
+  box-shadow:
+    0 6px 0 var(--st-color-border-strong, #063907),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+}
+
+.waldtanz-schlangenlichtung__overlays {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+
+.waldtanz-schlangenlichtung__overlays > * {
+  pointer-events: auto;
+}
+
+.waldtanz-schlangenlichtung__overlays .waldtanz-questband {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+
+.waldtanz-schlangenlichtung__overlays .waldtanz-aktiver-tanz-schritt {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.waldtanz-schlangenlichtung__overlays .waldtanz-brettschritt-stempel {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.waldtanz-schlangenlichtung__schlangen {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.6fr) minmax(12rem, 1.4fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    "tischkarte magiekreise"
+    "tischkarte schlangen";
+  gap: clamp(0.45rem, 0.9vw, 0.7rem);
+  min-height: 0;
+}
+
+.waldtanz-schlangenlichtung__schlangen .waldtanz-tischkarte {
+  grid-area: tischkarte;
+}
+
+.waldtanz-schlangenlichtung__schlangen .schlangenbereich {
+  grid-area: schlangen;
+  min-height: 0;
+}
+
+.waldtanz-schlangenlichtung__schlangen .waldtanz-magiekreise {
+  grid-area: magiekreise;
+  align-self: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-schlangenlichtung__spielflaeche {
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45);
+  }
+}
+
+/* M1di — auf der /game-Route sind die Sub-Kopf-Boxen der Overlays visuelle Redundanz
+   (Questband, Aktiver Tanz Schritt, Brettschritt-Stempel, Magiekreise, Tischkarte,
+   Schlangen-Bereich h5). Sie bleiben im DOM fuer Screenreader, werden aber visuell
+   versteckt, damit die Schlangenlichtung als primary surface mit EINER sichtbaren
+   Kopf-Box erscheint. */
+.waldtanz-schlangenlichtung .waldtanz-questband__kopf,
+.waldtanz-schlangenlichtung .waldtanz-tischkarte__kopf,
+.waldtanz-schlangenlichtung .waldtanz-magiekreise__kopf,
+.waldtanz-schlangenlichtung .schlangenbereich--waldlichtung h5 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

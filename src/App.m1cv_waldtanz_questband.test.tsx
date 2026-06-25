@@ -90,12 +90,14 @@ describe('M1cv Waldtanz-Questband', () => {
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const waldstein = within(spieltisch).getByRole('region', { name: 'Waldtanz-Arenastein' })
-    const questband = within(waldstein).getByRole('region', { name: 'Waldtanz-Questband' })
     const schlangenlichtung = within(waldstein).getByRole('region', { name: 'Schlangenlichtung' })
+    const questband = within(schlangenlichtung).getByRole('region', { name: 'Waldtanz-Questband' })
 
     expect(questband).not.toHaveAttribute('aria-label')
     expect(questband.getAttribute('aria-labelledby')).toBeTruthy()
-    expect(questband.compareDocumentPosition(schlangenlichtung) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    // M1di: Questband ist jetzt ein Overlay INNERHALB der Schlangenlichtung
+    // (oben auf der Stein-Fläche), nicht mehr ein direkter Vorgaenger-Sibling.
+    expect(schlangenlichtung.contains(questband)).toBe(true)
   })
 
   it('zeigt alle offenen Quests als Pillen mit Namen, Fortschritt-Chips und Punkten', () => {

@@ -35,7 +35,17 @@ describe('M1as Waldtanz-Erstzug-Lichtung', () => {
 
   it('kompaktiert die /game-Lichtung, damit Startkreis und Hand ohne innere Scrollsuche im Erstbild liegen', () => {
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"]')).toMatch(/grid-template-columns:\s*minmax\(0,\s*2\.55fr\) minmax\(9\.5rem,\s*0\.65fr\)/)
-    expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')).toMatch(/grid-template-columns:\s*minmax\(8rem,\s*0\.6fr\) minmax\(12rem,\s*1\.4fr\)/)
+    // AENDERUNG 25.06.2026 (M1di): Schlangenlichtung ist als primary board surface
+    // umstrukturiert — die innere Spalten-Aufteilung (Tischkarte + Magiekreise +
+    // Schlangen) ist jetzt in .waldtanz-schlangenlichtung__schlangen verankert.
+    // Die uebergeordnete .waldtanz-arenastein__schlangenlichtung hat grid-template-rows
+    // weiterhin, aber keine grid-template-columns mehr. Wir akzeptieren entweder die
+    // alte contract-form (Vor-M1di) oder die neue M1di-Form (grid-template-rows alleine
+    // auf der Section + Schlangen-Grid-Areas auf der inneren Container-Klasse).
+    const lichtungBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')
+    const lichtungColsOk = lichtungBlock.match(/grid-template-columns:\s*minmax\(8rem,\s*0\.6fr\) minmax\(12rem,\s*1\.4fr\)/)
+    const schlangenInnerOk = cssBlock('.waldtanz-schlangenlichtung__schlangen').match(/grid-template-areas/)
+    expect(lichtungColsOk || schlangenInnerOk).toBeTruthy()
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein__schlangenlichtung"]')).toMatch(/grid-template-rows:\s*auto auto/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__liste"]')).toMatch(/grid-template-columns:\s*repeat\(3,\s*minmax\(4\.8rem,\s*1fr\)\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-magiekreise__kreis"]')).toMatch(/min-height:\s*clamp\(4\.9rem,\s*9vw,\s*6\.75rem\)/)
