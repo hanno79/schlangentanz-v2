@@ -37,6 +37,13 @@
   --spielmoment-pulse-dauer: 1.2s;
   --spielmoment-pulse-glow: 0 0 0 4px var(--st-color-primary-container), 0 0 24px 6px var(--st-color-primary);
   --spielmoment-pulse-scale: 1.04;
+  /* AENDERUNG 24.06.2026: M1e fuegt die Waldtanz-Spieluhr ein. Drei Token
+     waren im Slice-CSS verwendet, aber nirgends in :root definiert und
+     fielen still auf inherited black zurueck. Kimi-Review-Blocker. Werte
+     spiegeln bestehende Container-Token-Familie. */
+  --st-color-on-surface-variant: rgba(6, 57, 7, 0.62);
+  --st-color-inverse-surface: #063907;
+  --st-color-secondary-fixed-dim: #b27400;
   --st-font-headline: 'Rubik', ui-sans-serif, sans-serif;
   --st-font-body: 'Plus Jakarta Sans', ui-sans-serif, sans-serif;
   --st-border-width-chunky: 3px;
@@ -1079,6 +1086,105 @@ body {
 .zugkompass__hauptaktion-pfeil {
   font-size: 1.5rem;
   line-height: 1;
+}
+
+.waldtanz-partie-uhr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(164, 222, 2, 0.78), transparent 5rem),
+    linear-gradient(135deg, rgba(255, 236, 179, 0.95), rgba(170, 240, 156, 0.72));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-body);
+}
+
+.waldtanz-partie-uhr__kopf {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.waldtanz-partie-uhr__label {
+  font-family: var(--st-font-headline);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--st-color-on-surface-variant);
+}
+
+.waldtanz-partie-uhr__text {
+  font-family: var(--st-font-headline);
+  font-size: 1.05rem;
+  color: var(--st-color-inverse-surface);
+}
+
+.waldtanz-partie-uhr__svg {
+  width: 4.5rem;
+  height: 4.5rem;
+  display: block;
+}
+
+.waldtanz-partie-uhr__kreis-hintergrund {
+  fill: none;
+  stroke: rgba(6, 57, 7, 0.18);
+  stroke-width: 8;
+}
+
+.waldtanz-partie-uhr__kreis-fortschritt {
+  fill: none;
+  stroke: var(--st-color-primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease-in-out;
+}
+
+.waldtanz-partie-uhr__zahl {
+  font-family: var(--st-font-headline);
+  font-size: 0.95rem;
+  fill: var(--st-color-inverse-surface);
+}
+
+.waldtanz-partie-uhr__stern {
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--st-color-secondary-fixed-dim);
+  background: radial-gradient(circle, rgba(255, 236, 179, 0.92), rgba(255, 207, 102, 0.6));
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-partie-uhr__hinweis {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--st-color-on-surface-variant);
+}
+
+.waldtanz-partie-uhr--puls .waldtanz-partie-uhr__kreis-fortschritt {
+  animation: partie-uhr-puls 1.6s ease-in-out infinite;
+}
+
+@keyframes partie-uhr-puls {
+  0% { stroke-width: 8; filter: drop-shadow(0 0 0 rgba(164, 222, 2, 0)); }
+  50% { stroke-width: 11; filter: drop-shadow(0 0 6px rgba(164, 222, 2, 0.7)); }
+  100% { stroke-width: 8; filter: drop-shadow(0 0 0 rgba(164, 222, 2, 0)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-partie-uhr--puls .waldtanz-partie-uhr__kreis-fortschritt {
+    animation: none;
+  }
 }
 
 .partiefortschritt {

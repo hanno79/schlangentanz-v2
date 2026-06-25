@@ -29,6 +29,8 @@ import SpielstatusPanel from './components/SpielstatusPanel'
 import Zugpfad from './components/Zugpfad'
 import ZugKompass from './components/ZugKompass'
 import Partiefortschritt from './components/Partiefortschritt'
+import { leseTestPhaseAusUrl } from './testPhaseHook'
+import WaldtanzPartieUhr from './components/WaldtanzPartieUhr'
 import WaldtanzSpielerrahmen from './components/WaldtanzSpielerrahmen'
 import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
 import WaldtanzAblage from './components/WaldtanzAblage'
@@ -83,7 +85,7 @@ interface AppProps {
 
 function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
-  const [startZustand] = useState(() => initialZustand ?? starteAusspielphase(erstelleSpielzustand(2)))
+  const [startZustand] = useState(() => initialZustand ?? leseTestPhaseAusUrl() ?? starteAusspielphase(erstelleSpielzustand(2)))
   const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
@@ -407,6 +409,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                     )}
                   </aside>
                 )}
+                {istGameRoute && <WaldtanzPartieUhr zustand={zustand} />}
                 <KiZugBuehne spielerName={aktiverSpieler.name} steuerung={aktiverSpieler.steuerung} protokoll={kiZugProtokoll} onKiZugVorspulen={handleKiZugVorspulen} />
                 <ZugKompass
                   zustand={zustand}
