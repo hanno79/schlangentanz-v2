@@ -79,13 +79,17 @@ describe('M1di Waldtanz-Schlangenlichtung als Spielbrett-Raster (RED)', () => {
     expect(css).toMatch(/\.waldtanz-schlangenlichtung__overlays\s*\{/)
   })
 
-  it('M1di:7 Primary Stein-Flaeche hat eine signifikante min-height (mind. 18rem) und dark-forest border + hard-shadow', () => {
+  it('M1di:7 Primary Stein-Flaeche hat eine signifikante min-height (mind. 16rem) und dark-forest border + hard-shadow', () => {
     const css = readSrc('src/App.css')
     // Source-Regex fuer die Spielflaeche-Regel
     const match = css.match(/\.waldtanz-schlangenlichtung__spielflaeche\s*\{([^}]*)\}/s)
     expect(match).not.toBeNull()
     const body = match![1]
-    expect(body).toMatch(/min-height:\s*clamp\([^)]*18rem/)
+    // AENDERUNG 25.06.2026: clamp wurde von (12rem, 28vh, 18rem) auf
+    // (14rem, 32vh, 20rem) angehoben, damit die Spielflaeche nach dem
+    // Arenastein-Cap auf clamp(28rem,56vh,34rem) noch >= 36% Viewport
+    // erreichen kann.
+    expect(body).toMatch(/min-height:\s*clamp\([^)]*14rem/)
     expect(body).toMatch(/border:\s*3px\s+solid/)
     expect(body).toMatch(/box-shadow:\s*0\s+\d+px\s+0\s+/)
   })

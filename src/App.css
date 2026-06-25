@@ -2273,17 +2273,18 @@ code {
        Schritt, Brettschritt-Stempel, Tischkarte und Magiekreise INNERHALB der
        Schlangenlichtung als Overlays/sub-container verankert (nicht mehr
        eigene Top-Level-Panels). Damit entfaellt die zusaetzliche Hoehe fuer
-       diese Sub-Panels; die Arenastein-Cap wird auf clamp(26rem, 50vh, 30rem)
+       diese Sub-Panels; die Arenastein-Cap wird auf clamp(28rem, 56vh, 34rem)
        angehoben, damit die Schlangenlichtung als primary surface mit
-       min-height: clamp(14rem, 32vh, 20rem) (= ~32% Viewport-Hoehe auf 900 px)
+       min-height: clamp(16rem, 38vh, 22rem) (= ~38% Viewport-Hoehe auf 900 px)
        sichtbar wird. Bottom-Row bleibt im Viewport, weil die Bottom-Row-Top
        bei 900-px-Viewport + 30-px-Hand-Bottom < 905 px bleibt (siehe M1d2-Fix).
-       Die Schlangenlichtung selbst hat min-height: clamp(14rem, 32vh, 20rem),
-       damit sie mind. ~32% der Viewport-Hoehe auf 1280x900 erreicht. */
+       Die Schlangenlichtung selbst hat min-height: clamp(16rem, 38vh, 22rem),
+       damit sie mind. ~36% der Viewport-Hoehe auf 1280x900 erreicht (gemessen
+       vs. 32%-Smoke-Threshold). */
     display: flex;
     flex-direction: column;
-    height: clamp(26rem, 50vh, 30rem);
-    max-height: clamp(26rem, 50vh, 30rem);
+    height: clamp(28rem, 56vh, 34rem);
+    max-height: clamp(28rem, 56vh, 34rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;
@@ -2919,12 +2920,12 @@ code {
        in der zweiten Grid-Row sichtbar wird, statt vom Arena-Clip verschluckt
        zu werden.
        AENDERUNG 25.06.2026 (M1di): Schlangenlichtung als primary board surface
-       — min-height auf clamp(14rem, 32vh, 20rem) reduziert, damit sie im
+       — min-height auf clamp(16rem, 38vh, 22rem) angehoben, damit sie im
        Arenastein-Clip (~387-477 px je nach Viewport) sichtbar bleibt und
-       mind. 32% der Viewport-Hoehe einnimmt. grid-template-columns entfernt,
+       mind. 36% der Viewport-Hoehe einnimmt. grid-template-columns entfernt,
        weil die innere Struktur jetzt vom M1di-Container uebernommen wird. */
     flex: 1 1 auto;
-    min-height: clamp(14rem, 32vh, 20rem);
+    min-height: clamp(16rem, 38vh, 22rem);
     grid-template-rows: auto auto;
     gap: 0.45rem;
     padding: 0.6rem;
@@ -9319,15 +9320,15 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 
 .waldtanz-schlangenlichtung__spielflaeche {
   /* M1di: Spielflaeche als primary visual innerhalb der Schlangenlichtung.
-     Die min-height ist bewusst klein gehalten (clamp(12rem, 28vh, 18rem)),
-     weil die Section-Schlangenlichtung selbst min-height clamp(20rem,36vh,24rem)
-     hat und das Arenastein clamp(20rem,38vh,24rem) cappt. Zu grosse
+     Die min-height ist bewusst klein gehalten (clamp(14rem, 32vh, 20rem)),
+     weil die Section-Schlangenlichtung selbst min-height clamp(16rem,38vh,22rem)
+     hat und das Arenastein clamp(28rem,56vh,34rem) cappt. Zu grosse
      min-height hier wuerde das Arenastein-Clip ausloesen. */
   position: relative;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(0.5rem, 1vw, 0.75rem);
-  min-height: clamp(12rem, 28vh, 18rem);
+  min-height: clamp(14rem, 32vh, 20rem);
   padding: clamp(0.6rem, 1.2vw, 0.85rem);
   border: 3px solid var(--st-color-border-strong, #063907);
   border-radius: clamp(1.5rem, 3vw, 2.5rem);

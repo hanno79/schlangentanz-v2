@@ -96,10 +96,11 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     // von min(18rem, 40vh) auf min(10rem, 24vh) als reine Bodenschwelle, da
     // flex:1 jetzt das Wachstum steuert. Beide Werte sind akzeptiert.
     // AENDERUNG 25.06.2026 (M1di): Schlangenlichtung als primary board surface —
-    // min-height auf clamp(14rem, 32vh, 20rem) angehoben, grid-template-columns
-    // entfernt (innere Struktur uebernimmt der neue M1di-Container). Akzeptiert
-    // werden alle drei Werte aus der Evolutions-Kette.
-    expect(routeLichtungBlock).toMatch(/min-height:\s*(min\((10rem,\s*24vh|18rem,\s*40vh)\)|clamp\(14rem,\s*32vh,\s*20rem\))/)
+    // min-height auf clamp(16rem, 38vh, 22rem) angehoben (Arenastein-Cap auf
+    // clamp(28rem, 56vh, 34rem)), grid-template-columns entfernt (innere Struktur
+    // uebernimmt der neue M1di-Container). Akzeptiert werden alle drei Werte aus
+    // der Evolutions-Kette.
+    expect(routeLichtungBlock).toMatch(/min-height:\s*(min\((10rem,\s*24vh|18rem,\s*40vh)\)|clamp\(14rem,\s*32vh,\s*20rem\)|clamp\(16rem,\s*38vh,\s*22rem\))/)
     expect(routeLichtungBlock).toMatch(/grid-template-rows:\s*auto auto/)
 
     const routeWaldobjekteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"]')
