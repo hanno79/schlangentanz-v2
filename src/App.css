@@ -9411,10 +9411,17 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    (Questband, Aktiver Tanz Schritt, Brettschritt-Stempel, Magiekreise, Tischkarte,
    Schlangen-Bereich h5). Sie bleiben im DOM fuer Screenreader, werden aber visuell
    versteckt, damit die Schlangenlichtung als primary surface mit EINER sichtbaren
-   Kopf-Box erscheint. */
+   Kopf-Box erscheint. Wir verstecken die Sub-Kopf-Box + alle ihre h4/h5-Children,
+   damit der CSS-Clip auch fuer die h-Tags im DOM greift. */
 .waldtanz-schlangenlichtung .waldtanz-questband__kopf,
+.waldtanz-schlangenlichtung .waldtanz-questband__kopf h4,
+.waldtanz-schlangenlichtung .waldtanz-questband__kopf span,
 .waldtanz-schlangenlichtung .waldtanz-tischkarte__kopf,
+.waldtanz-schlangenlichtung .waldtanz-tischkarte__kopf h4,
+.waldtanz-schlangenlichtung .waldtanz-tischkarte__kopf span,
 .waldtanz-schlangenlichtung .waldtanz-magiekreise__kopf,
+.waldtanz-schlangenlichtung .waldtanz-magiekreise__kopf h4,
+.waldtanz-schlangenlichtung .schlangenbereich--waldlichtung h4,
 .waldtanz-schlangenlichtung .schlangenbereich--waldlichtung h5 {
   position: absolute;
   width: 1px;
@@ -9423,6 +9430,7 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }

@@ -44,11 +44,22 @@ export async function pruefeM1diSchlangenlichtung(seite) {
     throw new Error(`Schlangenlichtung zu klein: ${(heightRatio * 100).toFixed(1)}% < 32% Viewport-Hoehe`)
   }
 
-  // Nur EINE Header-Box auf der Schlangenlichtung
-  const headerCount = await lichtung.locator('h1, h2, h3, h4, h5').count()
-  console.log(`Header-Boxen in Schlangenlichtung: ${headerCount}`)
-  if (headerCount > 2) {
-    throw new Error(`Zu viele Header-Boxen: ${headerCount} (erwartet <= 2)`)
+  // Nur EINE visuelle Header-Box auf der Schlangenlichtung. Sub-Component-Header
+  // (Questband__kopf, Tischkarte__kopf, Magiekreise__kopf, Schlangenbereich h5)
+  // bleiben im DOM fuer Screenreader, werden aber per CSS visuell versteckt
+  // (position:absolute, clip, width:1px). Wir zaehlen daher nur Header, die
+  // visuell sichtbar sind (boundingBox >= 2px in beiden Dimensionen).
+  const headerLocators = await lichtung.locator('h1, h2, h3, h4, h5').all()
+  const visibleHeaders = []
+  for (const h of headerLocators) {
+    const box = await h.boundingBox()
+    if (!box) continue
+    if (box.width < 2 || box.height < 2) continue
+    visibleHeaders.push(h)
+  }
+  console.log(`Header-Boxen in Schlangenlichtung (sichtbar): ${visibleHeaders.length}`)
+  if (visibleHeaders.length > 2) {
+    throw new Error(`Zu viele sichtbare Header-Boxen: ${visibleHeaders.length} (erwartet <= 2)`)
   }
 
   // Schlangen-Reihen sind visuell praesent
