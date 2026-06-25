@@ -53,7 +53,6 @@ function phasenStatusIcon(schluessel: Spielzustand['zugphase'], aktuellePhase: S
 export default function WaldtanzPhasenBanner({ zugphase, istSpielende }: WaldtanzPhasenBannerProps) {
   return (
     <div className="waldtanz-phasen-banner" role="navigation" aria-label="Waldtanz-Spielphasen">
-      <span className="waldtanz-phasen-banner__label" aria-hidden="true">Spielzug</span>
       <ol className="waldtanz-phasen-banner__liste" aria-label="Aktuelle und naechste Spielphasen">
         {PHASEN.map((phase) => (
           <li

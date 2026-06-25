@@ -38,8 +38,9 @@ describe('M1dk Waldtanz-Phasen-Banner (RED)', () => {
     const block = bannerMatch![1]
     // Sichtbares Layout: muss Grid/Flex sein.
     expect(block).toMatch(/display:\s*(grid|flex)/)
-    // Mindestens eine Mindest-Hoehe, damit das Banner als sichtbare Brettrand-Reihe wirkt.
-    expect(block).toMatch(/min-height:\s*\d+/)
+    // Banner ist in den Arenakopf integriert — keine eigene min-height,
+// damit der Schlangenbereich nicht aus dem Erstbild gedrueckt wird.
+    expect(block).not.toMatch(/min-height:\s*(?!0)\d+/)
   })
 
   it('M1dk:2 Phasen-Pille-Basis-Regel traegt Stitch-Optik (3px border, pill-radius, hard-shadow)', () => {

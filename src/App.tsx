@@ -297,8 +297,10 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
               {istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
               <section className="waldtanz-arenastein" aria-label="Waldtanz-Arenastein">
                 <div className="waldtanz-arenastein__kopf">
-                  <h4>Leuchtender Waldstein</h4>
-                  <p>Magische Zielkreise leuchten im Brett.</p>
+                  <div className="waldtanz-arenastein__kopf-titel">
+                    <h4>Leuchtender Waldstein</h4>
+                    <p>Magische Zielkreise leuchten im Brett.</p>
+                  </div>
                 </div>
                 {istGameRoute && (
                   <WaldtanzPhasenBanner zugphase={zustand.zugphase} istSpielende={istSpielende} />
