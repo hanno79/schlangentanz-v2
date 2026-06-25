@@ -40,6 +40,7 @@ import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
 import WaldtanzSchlangenlichtung from './components/WaldtanzSchlangenlichtung'
+import WaldtanzPhasenBanner from './components/WaldtanzPhasenBanner'
 import WaldtanzSpielerplakette from './components/WaldtanzSpielerplakette'
 import WaldtanzGegnerplakette from './components/WaldtanzGegnerplakette'
 import WertungPanel from './components/WertungPanel'
@@ -299,6 +300,9 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   <h4>Leuchtender Waldstein</h4>
                   <p>Magische Zielkreise leuchten im Brett.</p>
                 </div>
+                {istGameRoute && (
+                  <WaldtanzPhasenBanner zugphase={zustand.zugphase} istSpielende={istSpielende} />
+                )}
                 <div className="waldtanz-arenastein__spielfeld">
                   <WaldtanzSchlangenlichtung
                     zustand={zustand}
@@ -450,22 +454,24 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 zeigtAktionslink={zeigtSpielerfuehrungAktionslink}
               />
             )}
-            <WaldtanzAktiverSpielerDebug
-              aktiverSpieler={aktiverSpieler}
-              aktiverSpielerWertung={aktiverSpielerWertung}
-              legaleAktionen={legaleAktionen}
-              reaktionsAktionen={reaktionsAktionen}
-              letzteAktion={letzteAktion}
-              istSpielende={istSpielende}
-              gewinnerText={gewinnerText}
-              empfohleneAktionLabel={empfohleneAktionLabel}
-              ueberhand={ueberhand}
-              pflichtschrittLabel={pflichtschrittLabel}
-              zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
-              geheimerAufgabeLabel={geheimeAufgabeText}
-              standardOffen={!istGameRoute}
-              kompakteSchublade={istGameRoute}
-            />
+            {!istGameRoute && (
+              <WaldtanzAktiverSpielerDebug
+                aktiverSpieler={aktiverSpieler}
+                aktiverSpielerWertung={aktiverSpielerWertung}
+                legaleAktionen={legaleAktionen}
+                reaktionsAktionen={reaktionsAktionen}
+                letzteAktion={letzteAktion}
+                istSpielende={istSpielende}
+                gewinnerText={gewinnerText}
+                empfohleneAktionLabel={empfohleneAktionLabel}
+                ueberhand={ueberhand}
+                pflichtschrittLabel={pflichtschrittLabel}
+                zugfuehrungLabel={zugfuehrungLabel(aktiverSpieler.steuerung)}
+                geheimerAufgabeLabel={geheimeAufgabeText}
+                standardOffen={!istGameRoute}
+                kompakteSchublade={istGameRoute}
+              />
+            )}
           </section>
         </div>
         <SpieleruebersichtPanel zustand={zustand} spielerwertungen={spielerwertungen} aktiverSpielerId={aktiverSpieler.id} titelId={spieleruebersichtTitelId} entwicklungsdatenOffen={!istGameRoute} brettFokus={spieleruebersichtBrettFokus} />

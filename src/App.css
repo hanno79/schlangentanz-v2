@@ -15,6 +15,13 @@
      nutzt. Token war vorher unbenutzt und fiel still auf inherited black zurueck. */
   --st-color-on-secondary-container: #063907;
   --st-color-on-primary-container: #063907;
+  /* M1dk: Waldtanz-Phasen-Banner nutzt --st-color-on-primary als Schrift auf
+     --st-color-primary-Hintergrund (aktive/abgeschlossene Phasen-Pille +
+     Phasen-Status-Icon). Token war vorher unbenutzt und fiel still auf
+     inherited --st-color-on-primary-container (#063907, dunkelgruen)
+     zurueck — schlechter Kontrast auf dem dunkel-oliven --st-color-primary.
+     Wert spiegelt das helle lime-Hintergrund-Token. */
+  --st-color-on-primary: #ecffe3;
   --st-color-on-surface: #063907;
   /* AENDERUNG 22.06.2026: M1cy fuegt die Gegnerplakette ein, deren Name-Text
      und Punkte-Pille var(--st-color-on-tertiary-container) als Schrift auf
@@ -3003,12 +3010,11 @@ code {
     align-self: start;
     max-height: none;
     overflow: visible;
-    /* AENDERUNG 24.06.2026 (M1d1-Fix): Magiekreis-Spalte auf max 4rem begrenzen
-       (vorher 6rem), damit die Schlangenbereich-Grid-Row in der Lichtung
-       sichtbar wird. M1d2-Fix: Arena ist jetzt 405px (clamp(22.5rem,43vh,26.5rem)),
-       aber Tischkarte+Magiekreise brauchen zusammen weniger Platz damit
-       der Schlangenbereich mindestens 70px sichtbar bleibt. */
-    max-height: 4rem;
+    /* AENDERUNG 25.06.2026 (M1dj): max-height: 4rem-Cap entfernt.
+       Magiekreise sitzen jetzt in der oberen Row der inneren
+       .waldtanz-schlangenlichtung__schlangen-Brettlandschaft und duerfen
+       die volle Row-Hoehe einnehmen (M1d1-Cap war fuer das alte
+       Bottom-Row-Layout gedacht, das nicht mehr existiert). */
   }
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-tischkarte"] {
@@ -3016,11 +3022,11 @@ code {
     align-self: start;
     max-height: none;
     overflow: visible;
-    /* AENDERUNG 24.06.2026 (M1d1-Fix): Tischkarte auf max 4rem begrenzen
-       (vorher 6rem), damit die Schlangenbereich-Grid-Row in der Lichtung
-       sichtbar wird. 4rem=72px statt 6rem=108px spart 36px, die dem
-       Schlangenbereich als sichtbare Hoehe zugutekommen. */
-    max-height: 4rem;
+    /* AENDERUNG 25.06.2026 (M1dj): max-height: 4rem-Cap entfernt.
+       Tischkarte spannt jetzt beide Rows der inneren
+       .waldtanz-schlangenlichtung__schlangen-Brettlandschaft (linke Spalte)
+       und muss die volle Schlangenlichtung-Row-Hoehe ausfuellen koennen,
+       nicht nur 64 px. */
   }
 
   .spielbereich--game-route [class~="waldtanz-lichtungsbrett"] [class~="waldtanz-tischkarte__karte"] {
@@ -3590,11 +3596,17 @@ code {
   .spielbereich--game-route [class~="schlangenbereich--waldlichtung"] {
     grid-template-columns: 1fr;
     align-content: start;
-    max-height: min(20rem, 42vh);
+    /* AENDERUNG 25.06.2026 (M1dj): max-height-Cap entfernt. Der Schlangenbereich
+       ist jetzt die mittlere 2fr-Spalte der Brettlandschaft und soll die
+       verfuegbare Hoehe der Schlangenlichtung-Row ausfuellen, nicht durch
+       einen M1d0-Bottom-Row-Cap (min(20rem, 42vh)) auf 320 px beschraenkt
+       sein. Overflow-visible bleibt erhalten, damit die Schlange-Reihen
+       nicht abgeschnitten werden. */
     overflow: visible;
     min-height: 7.5rem;
     gap: 0.35rem;
     padding: 0.5rem 0.65rem;
+    height: 100%;
   }
 
   .spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] {
@@ -5998,6 +6010,156 @@ code {
 
 .waldtanz-arenastein__kopf p {
   font-weight: 900;
+}
+
+/* M1dk — Sichtbarer Spielphasen-Beschilderungs-Banner am Brettrand.
+   Eine horizontale Pillen-Reihe, die jederzeit zeigt, in welcher Phase
+   der Spieler sich befindet. Reihenfolge: Nachziehphase → Ausspielphase →
+   Aufgabenpruefung → Zugabschluss. */
+.waldtanz-phasen-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.45rem, 0.9vw, 0.7rem);
+  align-items: center;
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.7rem, 1.4vw, 1rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: var(--st-radius-lg);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--st-shadow-hard);
+  min-height: 56px;
+}
+
+.waldtanz-phasen-banner__label {
+  font-family: var(--st-font-headline);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--st-color-border-strong);
+  background: var(--st-color-secondary-container);
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 2px solid var(--st-color-border-strong);
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+}
+
+.waldtanz-phasen-banner__liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.4rem, 0.8vw, 0.6rem);
+  flex: 1 1 auto;
+  align-items: center;
+}
+
+.waldtanz-phasen-banner__phase {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: clamp(0.7rem, 1.1vw, 0.85rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.waldtanz-phasen-banner__phase:hover,
+.waldtanz-phasen-banner__phase:focus-visible {
+  transform: translateY(-1px);
+}
+
+.waldtanz-phasen-banner__phase-nummer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--st-color-border-strong);
+  color: var(--st-color-surface);
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.waldtanz-phasen-banner__phase-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--st-color-surface);
+  color: var(--st-color-border-strong);
+  font-weight: 900;
+  font-size: 0.85rem;
+  border: 2px solid var(--st-color-border-strong);
+}
+
+.waldtanz-phasen-banner__phase-label {
+  white-space: nowrap;
+}
+
+.waldtanz-phasen-banner__phase--aktiv {
+  background: var(--st-color-primary-container);
+  color: var(--st-color-on-primary-container);
+  transform: scale(1.06);
+  box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 4px var(--st-color-primary-container);
+  animation: waldtanz-phasen-banner-puls 1.8s ease-in-out infinite;
+}
+
+.waldtanz-phasen-banner__phase--aktiv .waldtanz-phasen-banner__phase-nummer {
+  background: var(--st-color-primary);
+  color: var(--st-color-on-primary);
+}
+
+.waldtanz-phasen-banner__phase--aktiv .waldtanz-phasen-banner__phase-status {
+  background: var(--st-color-primary);
+  color: var(--st-color-on-primary);
+}
+
+.waldtanz-phasen-banner__phase--abgeschlossen {
+  background: var(--st-color-primary-container);
+  color: var(--st-color-on-primary-container);
+  opacity: 0.85;
+}
+
+.waldtanz-phasen-banner__phase--abgeschlossen .waldtanz-phasen-banner__phase-status {
+  background: var(--st-color-primary);
+  color: var(--st-color-on-primary);
+}
+
+.waldtanz-phasen-banner__phase--wartend {
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--st-color-border-strong);
+  opacity: 0.7;
+}
+
+.waldtanz-phasen-banner__phase--wartend .waldtanz-phasen-banner__phase-status {
+  background: transparent;
+}
+
+@keyframes waldtanz-phasen-banner-puls {
+  0%, 100% {
+    box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 4px var(--st-color-primary-container);
+  }
+  50% {
+    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 8px var(--st-color-primary-container);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-phasen-banner__phase--aktiv {
+    animation: none;
+  }
 }
 
 .waldtanz-arenastein__spielfeld {
@@ -9338,15 +9500,23 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 
 .waldtanz-schlangenlichtung__spielflaeche {
   /* M1di: Spielflaeche als primary visual innerhalb der Schlangenlichtung.
-     Die min-height ist bewusst klein gehalten (clamp(14rem, 32vh, 20rem)),
-     weil die Section-Schlangenlichtung selbst min-height clamp(16rem,38vh,22rem)
-     hat und das Arenastein clamp(28rem,56vh,34rem) cappt. Zu grosse
-     min-height hier wuerde das Arenastein-Clip ausloesen. */
+     Die min-height bleibt bewusst klein (clamp(14rem, 32vh, 20rem)),
+     damit das Arenastein auf einem 900-px-Viewport inkl. Kopf + Questband
+     + Aktiver Tanz-Schritt + Spielfeld unter 480 px bleibt und die
+     Bottom-Row (Handkarten + Spielerplakette + Arenazug) im Erstbild
+     sichtbar wird. Bei 900 px Viewport: 32vh=288, min=224 — Inhalt wird
+     vom Arenastein overflow:hidden + height-Cap gestoppt, falls er
+     groesser werden sollte.
+     M1dj: position: relative bleibt; die height: 100% sorgt dafuer, dass
+     die Spielflaeche die volle Row 2 der Section-Lichtungsbrett-Hoehe
+     ausfuellt, damit das innere .__schlangen-Subgrid die volle
+     Schlangen-Mitte rendern kann. */
   position: relative;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(0.5rem, 1vw, 0.75rem);
   min-height: clamp(14rem, 32vh, 20rem);
+  height: 100%;
   padding: clamp(0.6rem, 1.2vw, 0.85rem);
   border: 3px solid var(--st-color-border-strong, #063907);
   border-radius: clamp(1.5rem, 3vw, 2.5rem);
@@ -9391,10 +9561,15 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .waldtanz-schlangenlichtung__schlangen {
   /* AENDERUNG 25.06.2026 (M1dj): Brettlandschaft-Layout statt Mini-Panels.
      Schlangenbereich bekommt jetzt die dominierende Mitte (2fr), die
-     Tischkarte (Altar) liegt links daneben (1fr) als kompakte Ablage-
-     Anzeige, Magiekreise liegen oben als schmale Drop-Ziel-Reihe (1fr).
-     Drei Grid-Columns statt zwei (vorher 0.6fr + 1.4fr), damit keine
-     Element-Spalte vom Schlangen-Bereich verschluckt wird. */
+     Tischkarte (Altar) spannt beide Rows als linke Spalte (1fr), die
+     Magiekreise sitzen oben als schmale Drop-Ziel-Reihe (1fr). Drei
+     Grid-Columns statt zwei (vorher 0.6fr + 1.4fr), damit keine
+     Element-Spalte vom Schlangen-Bereich verschluckt wird.
+     M1dj-Row-Layout: Magiekreise-Reihe ist auto (kompakte Drop-Ziel-
+     Banner, ~72 px), Schlangen-Reihe ist minmax(0, 1fr) (nimmt den
+     gesamten Rest der Spielflaechen-Hoehe ein). Damit wird die
+     Schlangen-Mitte garantiert die groesste sichtbare Flaeche der
+     Schlangenlichtung. */
   display: grid;
   grid-template-columns: minmax(7rem, 1fr) minmax(14rem, 2fr) minmax(7rem, 1fr);
   grid-template-rows: auto minmax(0, 1fr);

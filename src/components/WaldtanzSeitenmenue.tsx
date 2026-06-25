@@ -71,23 +71,27 @@ export default function WaldtanzSeitenmenue({
         )}
         <p>Nächster Schritt: {pflichtschritt}</p>
       </section>
-      <ul className="waldtanz-seitenmenue__liste">
-        {navigation.map((item) => (
-          <li key={item.label}>
-            <span
-              className={item.current ? 'waldtanz-seitenmenue__punkt waldtanz-seitenmenue__punkt--aktiv' : 'waldtanz-seitenmenue__punkt'}
-              aria-current={item.current ? 'true' : undefined}
-            >
-              <span aria-hidden="true">{item.icon}</span>
-              <span>{item.label}</span>
-            </span>
-          </li>
-        ))}
-      </ul>
-      <div className="waldtanz-seitenmenue__hilfen" aria-label="Spielhilfen">
-        <span className="waldtanz-seitenmenue__hilfe">⚙️<span>Einstellungen</span></span>
-        <span className="waldtanz-seitenmenue__hilfe">?<span>Hilfe</span></span>
-      </div>
+      {!kompakteRanke && (
+        <>
+          <ul className="waldtanz-seitenmenue__liste">
+            {navigation.map((item) => (
+              <li key={item.label}>
+                <span
+                  className={item.current ? 'waldtanz-seitenmenue__punkt waldtanz-seitenmenue__punkt--aktiv' : 'waldtanz-seitenmenue__punkt'}
+                  aria-current={item.current ? 'true' : undefined}
+                >
+                  <span aria-hidden="true">{item.icon}</span>
+                  <span>{item.label}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="waldtanz-seitenmenue__hilfen" aria-label="Spielhilfen">
+            <span className="waldtanz-seitenmenue__hilfe">⚙️<span>Einstellungen</span></span>
+            <span className="waldtanz-seitenmenue__hilfe">?<span>Hilfe</span></span>
+          </div>
+        </>
+      )}
     </aside>
   )
 }

@@ -43,6 +43,8 @@ describe('M1bq Waldtanz-Spielkamera', () => {
     expect(spieltisch).toContainElement(zugleiste)
     expect(waldstein.compareDocumentPosition(handkarten) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     expect(within(spielrahmen).getByText('Waldtanz-Kompass')).toBeVisible()
+    expect(within(spielrahmen).queryByRole('list')).toBeNull()
+    expect(screen.queryByRole('complementary', { name: 'Entwicklungsdaten: Aktiver Spieler' })).toBeNull()
     expect(within(waldstein).getByText('Leuchtender Waldstein')).toBeVisible()
     expect(within(zugleiste).getByRole('complementary', { name: 'Waldtanz-Spielhilfe' })).toBeVisible()
     expect(within(handkarten).getAllByRole('button', { name: /Farbkarte|Sonderkarte/ })).toHaveLength(5)

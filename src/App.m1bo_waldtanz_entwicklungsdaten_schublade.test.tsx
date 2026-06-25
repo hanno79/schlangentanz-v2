@@ -1,8 +1,10 @@
 /**
  * Author: rahn
  * Datum: 19.06.2026
- * Version: 1.0
+ * Version: 1.1 (M1dk-Update: Debug-Schubladen auf /game durch Phasen-Banner ersetzt)
  * Beschreibung: M1bo demotet Entwicklungsdaten auf /game zur kompakten Schublade, damit das Spielbrett dominiert.
+ *              M1dk: Auf /game sind die Debug-Schubladen weg — das Brettrand-Phasen-Banner uebernimmt
+ *              die Phasen-Beschilderung sichtbar am Arenakopf.
  */
 /// <reference types="node" />
 
@@ -32,30 +34,28 @@ afterEach(() => {
 })
 
 describe('M1bo Waldtanz-Entwicklungsdaten-Schublade', () => {
-  it('klappt Entwicklungsdaten auf /game ein und lässt die körperlichen Spielflächen sichtbar', () => {
+  it('laesst die körperlichen Spielflächen auf /game sichtbar und ersetzt die Aktiver-Spieler-Debug-Schublade durch das Brettrand-Phasen-Banner', () => {
     window.history.pushState({}, '', '/game')
     render(<App initialZustand={startZustand()} />)
 
     // M1cs: Auf /game sind Spielerübersicht und Material und Aufgaben ganz ausgeblendet,
     // der Brettfokus liegt auf Spieltisch, Spielstatus, Aktiver Spieler und der kompakten Wertung-Rangtafel.
+    // M1dk: Die alte 'Aktiver Spieler'-Debug-Schublade (Spielerfuehrung-Wegweiser-Details) ist auf /game weg —
+    // das Brettrand-Phasen-Banner uebernimmt die Phasen-Beschilderung am Arenakopf.
     const spielstatus = screen.getByRole('region', { name: 'Spielstatus' })
     const aktiverSpieler = screen.getByRole('region', { name: 'Aktiver Spieler' })
     const wertung = screen.getByRole('region', { name: 'Wertung' })
     expect(() => screen.getByRole('region', { name: 'Spielerübersicht' })).toThrow()
     expect(() => screen.getByRole('region', { name: 'Material und Aufgaben' })).toThrow()
 
-    const debugSchubladen = [
-      detailsZu(spielstatus, 'Spielphase'),
-      detailsZu(aktiverSpieler, 'Aktiver Spieler'),
-    ]
+    const spielphaseDetails = detailsZu(spielstatus, 'Spielphase')
+    expect(spielphaseDetails).not.toHaveAttribute('open')
 
-    for (const details of debugSchubladen) {
-      expect(details).not.toHaveAttribute('open')
-      expect(details.closest('.debug-gruppe-entwicklungsdaten')).toHaveClass('debug-gruppe-entwicklungsdaten--spielschublade')
-      const summary = details.querySelector('summary')
-      expect(summary).not.toBeNull()
-      expect(within(summary as HTMLElement).getByText(/Spielphase|Aktiver Spieler/)).toBeVisible()
-    }
+    // Phasen-Banner sichtbar in der Aktiver-Spieler-Region (M1dk).
+    expect(within(aktiverSpieler).getByRole('navigation', { name: 'Waldtanz-Spielphasen' })).toBeVisible()
+    // Die alte WaldtanzAktiverSpielerDebug-Detail-Schublade ist auf /game weg (M1dk).
+    expect(within(aktiverSpieler).queryByText('Nächster Pflichtschritt:')).toBeNull()
+    expect(within(aktiverSpieler).queryByText('Geheime Aufgabe:')).toBeNull()
 
     expect(within(spielstatus).getByRole('group', { name: 'Waldtanz-Sonnenstand' })).toBeVisible()
     expect(within(aktiverSpieler).getByRole('complementary', { name: 'Waldtanz-Spielhilfe' })).toBeVisible()

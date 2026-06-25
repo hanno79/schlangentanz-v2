@@ -1,8 +1,10 @@
 /**
  * Author: rahn
  * Datum: 19.06.2026
- * Version: 1.0
+ * Version: 1.1 (M1dk-Update: Aktiver-Spieler-Region auf /game durch Phasen-Banner ersetzt)
  * Beschreibung: M1bm hebt die Spielerführung als körperlichen Waldtanz-Wegweiser vor die Entwicklungsdaten.
+ *              M1dk: Auf /game wird die 'Aktiver Spieler'-Region zugunsten des Brettrand-Phasen-Banners
+ *              ausgeblendet; dieser Test verifiziert die Spielerfuehrung jetzt auf / (Standardansicht).
  */
 /// <reference types="node" />
 
@@ -25,8 +27,9 @@ afterEach(() => {
 })
 
 describe('M1bm Waldtanz-Wegweiser', () => {
-  it('zeigt die Spielerführung auf /game als Wegweiser zwischen Zugtafel und Entwicklungsdaten', () => {
-    window.history.pushState({}, '', '/game')
+  it('zeigt die Spielerführung auf / als Wegweiser zwischen Zugtafel und Entwicklungsdaten', () => {
+    // M1dk: Auf /game ist die 'Aktiver Spieler'-Region weg — der Brettrand-Phasen-Banner
+    // ersetzt sie. Die Spielerfuehrung verifizieren wir auf /.
     render(<App initialZustand={startZustand()} />)
 
     const aktiverSpieler = screen.getByRole('region', { name: 'Aktiver Spieler' })
