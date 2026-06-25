@@ -13,7 +13,7 @@ import {
   berechneGewinner,
   ermittleQuestZugHinweise,
 } from './engine'
-import type { SpielAktion, SpielerWertungsEintrag, Spielzustand } from './engine'
+import type { SpielAktion, SpielerWertungsEintrag, Spielzustand, PflichtAbwurfAktion } from './engine'
 import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
 import useAktionenPanelProps from './hooks/useAktionenPanelProps'
 import { useSpielLabels } from './hooks/useSpielLabels'
@@ -436,6 +436,17 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 spielerName={aktiverSpieler.name}
                 punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
                 zugphase={zustand.zugphase}
+                endTurnVerfuegbar={
+                  zustand.zugphase === 'Zugabschluss'
+                  && ueberhand === 0
+                  && aktiverSpieler.steuerung === 'Mensch'
+                  && reaktionsAktionen.length === 0
+                }
+                pflichtAbwurfAktionen={legaleAktionen.filter((aktion): aktion is PflichtAbwurfAktion => aktion.typ === 'PflichtAbwurf')}
+                onEndTurn={handleZugBeenden}
+                onPflichtAbwurf={(karteId) => {
+                  if (karteId) fuhreAktionAus({ typ: 'PflichtAbwurf', spielerId: aktiverSpieler.id, handkartenId: karteId })
+                }}
                 onKarteWaehlen={(karteId) =>
                   setAusgewaehlteHandkarteAuswahl((aktuell) =>
                     aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },

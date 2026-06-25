@@ -33,5 +33,14 @@ export function leseTestPhaseAusUrl(): Spielzustand | null {
     z.endrunde = { ausloeserSpielerIndex: 0, verbleibendeSpielerIndizes: [1] }
     return z
   }
+  if (phase === 'zugabschluss') {
+    // M1dh: Test-Hook fuer die End-Turn-Pille am Brettrand. Setzt den aktiven
+    // menschlichen Spieler (Index 0) in die Zugabschluss-Phase, ohne Ueberhand
+    // (Handlaenge unter HANDKARTENLIMIT). Die App rendert dann die
+    // End-Turn-Spielpille in der Handbuehne.
+    const z = starteAusspielphase(erstelleSpielzustand(2))
+    z.zugphase = 'Zugabschluss'
+    return z
+  }
   return null
 }

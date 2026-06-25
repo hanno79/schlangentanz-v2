@@ -22,6 +22,10 @@
      und fiel still auf inherited black zurueck — Kimi-Review-Regression
      aus M1cw/M1cx wiederholt. */
   --st-color-on-tertiary-container: #a22900;
+  /* M1dh: Waldtanz-Spielhandlung am Brettrand. --st-color-surface wird als
+     Schriftfarbe der invertierten Stitch-Hover-Hint-Pille (schwarz auf lime)
+     benoetigt; Wert spiegelt das bestehende Hintergrund-Token. */
+  --st-color-surface: #ecffe3;
   /* AENDERUNG 22.06.2026: M1db macht den Moment des Spielens sichtbar:
      --handkarte-lift-y hebt die ausgewaehlte Handkarte aus dem Faecher,
      --handkarte-selected-glow legt einen weichen lime-gruenen Schein um
@@ -5269,8 +5273,8 @@ code {
   padding: 0.18rem 0.6rem;
   border: 2px solid var(--st-color-border-strong);
   border-radius: 999px;
-  background: var(--st-color-secondary-container);
-  color: var(--st-color-border-strong);
+  background: var(--st-color-inverse-surface);
+  color: var(--st-color-surface);
   box-shadow: 0 2px 0 var(--st-color-border-strong);
   opacity: 0;
   transform: translateY(0.3rem);
@@ -9152,4 +9156,107 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .waldtanz-lichtungsstein > * {
   position: relative;
   z-index: 1;
+}
+
+/* M1dh: Waldtanz-Spielhandlung am Brettrand — Stitch-Pillen in der Handbühne.
+   Die End-Turn-Pille (sekundaer-container = sonniges Gelb) und die
+   Pflicht-Abwurf-Pille (tertiaer-container = Korallenrosa) ersetzen die
+   bisherige unsichtbare Phase-End-Aktion in der AktionenPanel-Buttonliste.
+   Chunky 3px Border + hard-shadow + 999px Radius = Stitch-Spielkarten-Look. */
+.handkarten-buehne__spielhandlung {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  font-family: var(--st-font-headline);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.handkarten-buehne__spielhandlung:hover {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.handkarten-buehne__spielhandlung:active {
+  transform: translateY(2px) scale(0.98);
+}
+
+.handkarten-buehne__spielhandlung:focus-visible {
+  outline: 3px solid var(--st-color-tertiary);
+  outline-offset: 2px;
+}
+
+.handkarten-buehne__spielhandlung--endturn {
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-on-secondary-container);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: var(--st-shadow-hard);
+}
+
+.handkarten-buehne__spielhandlung--endturn:hover {
+  background: #ffd84a;
+}
+
+.handkarten-buehne__spielhandlung--pflichtabwurf {
+  background: var(--st-color-tertiary-container);
+  color: var(--st-color-on-tertiary-container);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: var(--st-shadow-hard);
+}
+
+.handkarten-buehne__spielhandlung--pflichtabwurf:hover {
+  background: #ffd3c5;
+}
+
+.handkarten-buehne__endturn-icon {
+  font-weight: 900;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.handkarten-buehne__pflichtabwurf-icon {
+  font-weight: 900;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Spielhandlungs-Pille nur auf /game prominent sichtbar; auf / versteckt,
+   weil dort der AktionenPanel bereits die volle Phasenliste rendert. */
+.spielbereich--game-route [class~="handkarten-buehne__endturn"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.spielbereich--game-route [class~="handkarten-buehne__pflichtabwurf"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.spielbereich:not(.spielbereich--game-route) [class~="handkarten-buehne__endturn"],
+.spielbereich:not(.spielbereich--game-route) [class~="handkarten-buehne__pflichtabwurf"] {
+  display: none;
+}
+
+/* Spielerplakette in der Handbuehne: Stitch-Rotation als tactile Plakette. */
+.spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {
+  transform: rotate(-2deg);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: var(--st-shadow-hard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handkarten-buehne__spielhandlung {
+    transition: none;
+  }
+  .handkarten-buehne__spielhandlung:hover,
+  .handkarten-buehne__spielhandlung:active {
+    transform: none;
+  }
 }

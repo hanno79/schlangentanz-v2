@@ -10,7 +10,7 @@ Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit ausw
 */
 
 import { useId, type CSSProperties } from 'react'
-import type { QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
+import type { PflichtAbwurfAktion, QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 
 interface HandkartenPanelProps {
@@ -21,9 +21,13 @@ interface HandkartenPanelProps {
   spielerName?: string
   punkte?: number
   zugphase?: string
+  endTurnVerfuegbar?: boolean
+  pflichtAbwurfAktionen?: PflichtAbwurfAktion[]
   onKarteWaehlen: (karteId: string) => void
   onKarteDragStart: (karteId: string) => void
   onKarteDragEnd: () => void
+  onEndTurn?: () => void
+  onPflichtAbwurf?: (karteId: string) => void
 }
 
 function karteKurzLabel(karte: Spielkarte): string {
@@ -131,9 +135,13 @@ export default function HandkartenPanel({
   spielerName = 'Spieler',
   punkte = 0,
   zugphase = 'Zugphase',
+  endTurnVerfuegbar = false,
+  pflichtAbwurfAktionen = [],
   onKarteWaehlen,
   onKarteDragStart,
   onKarteDragEnd,
+  onEndTurn,
+  onPflichtAbwurf,
 }: HandkartenPanelProps) {
   const handkartenTitelId = useId()
   const detailTitelId = useId()
@@ -142,6 +150,12 @@ export default function HandkartenPanel({
   const ausgewaehlteZielarten = zielartenFuerAktionen(ausgewaehlteZielAktionen)
   const questHinweiseNachKarte = new Map(questHinweise.map((hinweis) => [hinweis.karteId, hinweis.labels]))
   const ausgewaehlteQuestLabels = ausgewaehlteHandkarte ? questHinweiseNachKarte.get(ausgewaehlteHandkarte.id) ?? [] : []
+  // M1dh: Wenn Pflicht-Abwurf anliegt (legaleAktionen enthält PflichtAbwurf-Aktionen
+  // und keine Brettziele mehr spielbar sind), ist die prominente Pille sichtbar.
+  const hatPflichtAbwurf = pflichtAbwurfAktionen.length > 0
+  // M1dh: End-Turn nur sichtbar, wenn die End-Turn-Phase anliegt
+  // (typisch: Phase === Zugabschluss, keine Pflicht-Abwurf-Schuld).
+  const hatEndTurn = endTurnVerfuegbar === true
 
   return (
     <section className="handkarten-panel handkarten-panel--waldtanz-handbuehne" aria-labelledby={handkartenTitelId}>
@@ -159,6 +173,30 @@ export default function HandkartenPanel({
         <span className="handkarten-buehne__statuschip handkarten-buehne__statuschip--spielbar">
           Spielbar: {spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'}
         </span>
+        {/* M1dh: Prominente Spielhandlungs-Pillen am Brettrand.
+            Pflicht-Abwurf hat Vorrang (rot, dringend), End-Turn ist Standard-Abschluss. */}
+        {hatPflichtAbwurf && (
+          <button
+            type="button"
+            className="handkarten-buehne__spielhandlung handkarten-buehne__spielhandlung--pflichtabwurf handkarten-buehne__pflichtabwurf"
+            aria-label={`Pflicht-Abwurf: noch ${pflichtAbwurfAktionen.length} Karte${pflichtAbwurfAktionen.length === 1 ? '' : 'n'} abwerfen (eine pro Klick)`}
+            onClick={() => onPflichtAbwurf?.(pflichtAbwurfAktionen[0]?.handkartenId ?? '')}
+          >
+            <span className="handkarten-buehne__pflichtabwurf-icon" aria-hidden="true">!</span>
+            <span>Abwerfen · noch {pflichtAbwurfAktionen.length}</span>
+          </button>
+        )}
+        {hatEndTurn && (
+          <button
+            type="button"
+            className="handkarten-buehne__spielhandlung handkarten-buehne__spielhandlung--endturn handkarten-buehne__endturn"
+            aria-label="Zug an nächsten Spieler geben"
+            onClick={() => onEndTurn?.()}
+          >
+            <span>Zug beenden</span>
+            <span className="handkarten-buehne__endturn-icon" aria-hidden="true">→</span>
+          </button>
+        )}
       </div>
       <h4><span id={handkartenTitelId}>Handkarten</span> als Kartenleiste</h4>
       <p className="handkarten-spielbarkeit">{spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'} sofort spielbar</p>
