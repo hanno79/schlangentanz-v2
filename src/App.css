@@ -2945,7 +2945,13 @@ code {
        die einen sanften Sonnenschein oben-links und einen Laub-Tupfer
        unten-rechts hinterlegen. Beide sind pointer-events: none, damit
        Handkarten und Magiekreise klickbar bleiben. */
-    min-height: min(13rem, 30vh);
+    /* AENDERUNG 25.06.2026 (M1di): min-height angehoben auf clamp(16rem, 38vh, 22rem),
+       damit die Schlangenlichtung als primary board surface mind. 36% der
+       Viewport-Hoehe einnimmt (gemessen vs. 32%-Smoke-Threshold). Das Arenastein-
+       Cap wurde ebenfalls auf clamp(28rem, 56vh, 34rem) angehoben, damit genug
+       Platz fuer die primary surface bleibt ohne Bottom-Row aus dem Viewport zu
+       schieben. */
+    min-height: clamp(16rem, 38vh, 22rem);
     grid-template-columns: minmax(14rem, 0.9fr) minmax(12rem, 0.7fr);
     grid-template-areas:
       "tisch magiekreise"
