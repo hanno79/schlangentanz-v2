@@ -3974,6 +3974,18 @@ code {
     border-radius: 999px;
   }
 
+  /* M1df: Stein­kreis-Kreisel — gleiche Specificity (0,2,0), spaeter im
+     Source, also Override. min-height/padding/border/border-radius des
+     generischen M1d3-Magiekreise-Blocks wuerden sonst den runden
+     Drop-Stein-Pfad optisch aufbrechen (min-height > width = Oval statt
+     Kreis). */
+  .spielbereich--game-route [class~="waldtanz-magiekreise__kreis"][class~="waldtanz-steinkreis__kreisel"] {
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
   .spielbereich--game-route [class~="schlangen-drop-hinweis"] {
     margin: 0.15rem 0;
     font-size: 0.86rem;
@@ -6307,6 +6319,176 @@ code {
 
 .waldtanz-magiekreise p {
   text-align: center;
+}
+
+/* M1df 25.06.2026: Magiekreise werden zu drei visuell runden Drop-Steinen
+   auf einem gemeinsamen Waldstein-Hintergrund, nicht zur Buttonliste. */
+.waldtanz-steinkreis {
+  position: relative;
+  isolation: isolate;
+}
+
+.waldtanz-steinkreis::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(196, 253, 182, 0.42) 0 14%, transparent 38%),
+    radial-gradient(circle at 82% 78%, rgba(254, 203, 0, 0.28) 0 12%, transparent 42%),
+    linear-gradient(140deg, #f6ffe9 0%, #c4fdb6 100%);
+  border: 3px solid var(--st-color-border-strong, #063907);
+  border-radius: 2rem;
+  box-shadow: 0 4px 0 var(--st-color-border-strong, #063907);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.waldtanz-steinkreis__liste {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0.6rem;
+  padding: 0.4rem;
+  flex-wrap: nowrap;
+}
+
+.waldtanz-steinkreis__kreisel {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: clamp(4.2rem, 9vw, 5.6rem);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.waldtanz-steinkreis__kreisel-stein {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 28%, #ffffff 0 10%, rgba(255,255,255,0) 22%),
+    radial-gradient(circle at 60% 70%, #c4fdb6 0 22%, #b9f1ac 60%, #a4de02 100%);
+  border: 3px solid var(--st-color-border-strong, #063907);
+  box-shadow: 0 3px 0 var(--st-color-border-strong, #063907);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.waldtanz-steinkreis__kreisel-slot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  text-align: center;
+  font-family: var(--st-font-body, 'Plus Jakarta Sans', system-ui, sans-serif);
+  color: var(--st-color-on-surface, #002201);
+  pointer-events: none;
+}
+
+.waldtanz-steinkreis__kreisel-slot strong {
+  font-size: 0.62rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.waldtanz-steinkreis__kreisel-slot small {
+  font-size: 0.55rem;
+  font-weight: 700;
+  opacity: 0.78;
+}
+
+.waldtanz-steinkreis__kreisel-symbol {
+  font-size: 1.15rem;
+  line-height: 1;
+  font-weight: 900;
+  color: var(--st-color-primary, #4b6700);
+}
+
+.waldtanz-steinkreis__kreisel--sonderzauber .waldtanz-steinkreis__kreisel-stein {
+  background:
+    radial-gradient(circle at 30% 28%, #ffffff 0 10%, rgba(255,255,255,0) 22%),
+    radial-gradient(circle at 60% 70%, #ffbcaa 0 22%, #fecb00 60%, #ffe08b 100%);
+}
+
+.waldtanz-steinkreis__kreisel--aktiv .waldtanz-steinkreis__kreisel-stein {
+  animation: waldtanz-steinkreis-atmen 1.7s ease-in-out infinite;
+}
+
+.waldtanz-steinkreis__kreisel--aktiv {
+  animation: waldtanz-steinkreis-pulse 1.7s ease-in-out infinite;
+}
+
+.waldtanz-steinkreis__kreisel .waldtanz-magiekreise__aktion {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.05rem;
+  background: transparent;
+  border: 0;
+  padding: 0.2rem;
+  text-align: center;
+  cursor: pointer;
+  z-index: 2;
+  color: var(--st-color-on-surface, #002201);
+}
+
+.waldtanz-steinkreis__kreisel .waldtanz-magiekreise__aktion > span {
+  font-size: 0.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--st-color-on-surface, #002201);
+  opacity: 0.7;
+}
+
+.waldtanz-steinkreis__kreisel .waldtanz-magiekreise__aktion > strong {
+  font-size: 0.68rem;
+  font-weight: 900;
+  color: var(--st-color-on-surface, #002201);
+}
+
+.waldtanz-steinkreis--wartend .waldtanz-steinkreis__kreisel-stein {
+  filter: saturate(0.6) brightness(0.94);
+}
+
+@keyframes waldtanz-steinkreis-atmen {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes waldtanz-steinkreis-pulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* M1df: aktive Kreisel-LI bleibt visuell unsichtbar — Stone rendert sich
+   selbst. Ohne diesen Override wuerde der generische M1d3-active-Block
+   border-style:solid + linear-gradient setzen und einen weissen Ring
+   um den Stein erzeugen. */
+.waldtanz-steinkreis__kreisel.waldtanz-magiekreise__kreis--aktiv {
+  background: transparent;
+  border-style: solid;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-steinkreis__kreisel--aktiv,
+  .waldtanz-steinkreis__kreisel--aktiv .waldtanz-steinkreis__kreisel-stein {
+    animation: none;
+  }
 }
 
 @keyframes waldtanz-zielkreis-puls {
