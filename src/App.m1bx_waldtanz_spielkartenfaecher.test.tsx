@@ -57,7 +57,10 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     expect(liste).toMatch(/align-items:\s*end/)
     expect(liste).toMatch(/perspective:\s*1100px/)
     expect(handkarte).toMatch(/width:\s*clamp\(5\.8rem,\s*7\.4vw,\s*6\.9rem\)/)
-    expect(button).toMatch(/height:\s*clamp\(6\.5rem,\s*12\.2vh,\s*7\.15rem\)/)
+    // AENDERUNG 26.06.2026 (M1f): Karten-Hoehe von 12.2vh auf 11vh
+    // reduziert, damit 5 Karten + Buehnen-Padding im 900er Viewport
+    // bleiben. M1bx-Smoke wurde ebenfalls angepasst.
+    expect(button).toMatch(/height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
     expect(button).toMatch(/box-shadow:\s*0 7px 0 var\(--st-color-border-strong\)/)
     expect(statuschip).toMatch(/display:\s*inline-grid/)
     expect(smokeScript).toContain('M1bx Spielkartenfächer')

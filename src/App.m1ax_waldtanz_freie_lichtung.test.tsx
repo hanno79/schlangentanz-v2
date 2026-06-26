@@ -47,15 +47,24 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     expect(handBlockClean).toMatch(/padding:\s*0\.2rem\s+0\.45rem/)
     expect(handBlockClean).not.toMatch(/pointer-events:\s*none/)
 
+    // AENDERUNG 26.06.2026 (M1f): Die Handkarten-Buehne ist jetzt eine
+    // sichtbare Stitch-Brettzone (M1f hat height:0/padding:0/min-height:0
+    // entfernt und stattdessen Border+Shadow+Innenhoehe gegeben).
     const buehneBlock = cssBlock('.spielbereich--game-route [class~="handkarten-buehne"]')
-    expect(buehneBlock).toMatch(/min-height:\s*0/)
-    expect(buehneBlock).toMatch(/height:\s*0/)
-    expect(buehneBlock).toMatch(/padding:\s*0/)
+    expect(buehneBlock).toMatch(/border:\s*var\(--st-border-width-chunky\)\s+solid\s+var\(--st-color-border-strong\)/)
+    expect(buehneBlock).toMatch(/box-shadow:\s*var\(--st-shadow-hard\)/)
+    expect(buehneBlock).toMatch(/min-height:\s*clamp\(/)
+    expect(buehneBlock).toMatch(/height:\s*auto/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-buehne__statuschip"]')).toMatch(/display:\s*none/)
 
-    const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
-    expect(kartenBlock).toMatch(/height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
-    expect(kartenBlock).toMatch(/min-height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
+    // AENDERUNG 26.06.2026 (M1f): Karten-Hoehe im spielkartenfaecher
+    // von clamp(6.5rem, 12.2vh, 7.15rem) auf clamp(6rem, 11vh, 7rem)
+    // reduziert, damit 5 Karten + Buehnen-Padding im 900-Viewport bleiben.
+    // Selektor zielt auf den spezifischeren spielkartenfaecher-Selector,
+    // der die sichtbaren 5 Handkarten formt (siehe M1bp-Begruendung).
+    const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
+    expect(kartenBlock).toMatch(/height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
+    expect(kartenBlock).toMatch(/min-height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarte__idplakette"]')).toMatch(/display:\s*none/)
 
     expect(smokeScript).toContain('pruefeM1axFreieLichtung')

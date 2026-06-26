@@ -2747,14 +2747,29 @@ code {
     white-space: nowrap;
   }
 
+  /* AENDERUNG 26.06.2026 (M1f): Handkarten-Buehne wird zur sichtbaren
+     Stitch-Brettzone. M1d0 hatte die Buehne auf height: 0 / padding: 0
+     kollabiert, weil die Handkarten in der benannten Grid-Zelle "hand"
+     leben und die Buehne nur als dekorativer Wrapper gedacht war. Die
+     Folge war, dass die Karten aus dem 900-px-Viewport herausrutschten
+     und die Buehne selbst keine Stitch-Identitaet bekam. M1f stellt
+     die Buehne als sichtbare Zone her: 3-px-Stitch-Border + Hard-Shadow,
+     echte Innenhoehe (kein height: 0), klares Padding fuer Karten + Handsteg. */
   .spielbereich--game-route [class~="handkarten-buehne"] {
     position: relative;
     isolation: isolate;
-    gap: 0.25rem;
-    justify-content: flex-start;
-    min-height: 0;
-    height: 0;
-    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: clamp(6.5rem, 12vh, 7.4rem);
+    height: auto;
+    padding: 0.25rem 0.55rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: var(--st-radius-xl);
+    background:
+      radial-gradient(circle at 14% 30%, rgba(254, 203, 0, 0.4) 0 1.2rem, transparent 1.3rem),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(196, 253, 182, 0.72));
+    box-shadow: var(--st-shadow-hard);
   }
 
   .spielbereich--game-route [class~="handkarten-buehne"]::before {
@@ -2860,8 +2875,13 @@ code {
   }
 
   .spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"] {
-    height: clamp(6.5rem, 12.2vh, 7.15rem);
-    min-height: clamp(6.5rem, 12.2vh, 7.15rem);
+    /* AENDERUNG 26.06.2026 (M1f): Karten-Hoehe von 12.2vh auf 11vh
+       reduziert, damit 5 Karten + Buehnen-Padding + Spielerplakette im
+       900-px-Viewport bleiben. Bei 11vh = 99 px + 2x3 px Border = 105 px,
+       Buehnen-Padding 0.25 rem (4 px) oben+unten + Buehnen-Border 3 px
+       oben+unten = 122 px Bottom-Row-Tiefe — bleibt unter 900 px. */
+    height: clamp(6rem, 11vh, 7rem);
+    min-height: clamp(6rem, 11vh, 7rem);
     border-width: var(--st-border-width-chunky);
     border-radius: 1.45rem;
     box-shadow: 0 7px 0 var(--st-color-border-strong);

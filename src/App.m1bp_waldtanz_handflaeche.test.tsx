@@ -50,10 +50,19 @@ describe('M1bp Waldtanz-Handfläche', () => {
     expect(panel).toMatch(/transform:\s*none/)
     expect(panel).toMatch(/padding:\s*0\.2rem 0\.45rem/)
     expect(karte).toMatch(/box-sizing:\s*border-box/)
-    expect(karte).toMatch(/height:\s*clamp\(5\.8rem, 10vh, 6\.1rem\)/)
-    expect(karte).toMatch(/min-height:\s*clamp\(5\.8rem, 10vh, 6\.1rem\)/)
+    // AENDERUNG 26.06.2026 (M1f): Die flachere Karten-Hoehe (11vh)
+    // wird jetzt am spezifischeren spielkartenfaecher-Selector
+    // ausgeloest, weil der allgemeine Selector fuer Deck-Stapel/
+    // Handbank bleibt. M1bp testet auf den Selector, der tatsaechlich
+    // fuer die sichtbaren 5 Handkarten in der Buehne gewinnt.
+    const karteFaech = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
+    expect(karteFaech).toMatch(/height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
+    expect(karteFaech).toMatch(/min-height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
     expect(karte).toMatch(/padding:\s*0\.35rem/)
-    expect(buehne).toMatch(/gap:\s*0\.25rem/)
+    // AENDERUNG 26.06.2026 (M1f): Buehne ist jetzt eine echte Stitch-Zone
+    // (gap 0.4 rem statt 0.25, plus Border + Shadow + Innenhoehe).
+    expect(buehne).toMatch(/gap:\s*0\.4rem/)
+    expect(buehne).toMatch(/box-shadow:\s*var\(--st-shadow-hard\)/)
     expect(smokeScript).toContain('pruefeM1bpHandflaeche')
     expect(smokeScript.indexOf('pruefeM1bpHandflaeche(seite)')).toBeLessThan(smokeScript.indexOf('pruefeM1bcWaldtanzHandbank(seite)'))
     // M1d0 22.06.2026: bottom-Schwelle von 900 auf 905 gelockert, weil
