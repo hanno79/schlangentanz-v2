@@ -2883,6 +2883,112 @@ code {
     right: 0.75rem;
   }
 
+  /* AENDERUNG 26.06.2026 (M1dq): Sichtbares Sonderkarten-Spielmoment in der Handbuehne.
+     Wird sichtbar, wenn eine Sonderkarte mit legaler Aktion ausgewaehlt ist.
+     Stitch-Pill-Style: 3-px-Border, Hard-Shadow, Chunky-Headline-Font, lime-Glow.
+     Ersetzt den Wand-an-Text-Effekt der generischen Spielerfuehrung im Seitenmenue
+     durch eine kontextuelle, am Handkarten-Bereich verankerte Empfehlung. */
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    position: absolute;
+    top: 0.35rem;
+    right: 7.5rem;
+    z-index: 2;
+    padding: 0.25rem 0.7rem;
+    border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 16% 25%, rgba(254, 203, 0, 0.55) 0 1.3rem, transparent 1.4rem),
+      linear-gradient(180deg, rgba(196, 253, 182, 0.92), rgba(254, 203, 0, 0.68));
+    box-shadow: var(--st-shadow-hard);
+    font-family: var(--st-font-headline);
+    font-weight: 800;
+    font-size: 0.82rem;
+    line-height: 1.1;
+    color: var(--st-color-on-primary-container);
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-region-label"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-kicker"] {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--st-color-tertiary);
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-titel"] {
+    margin: 0;
+    font-family: var(--st-font-headline);
+    font-weight: 900;
+    font-size: 0.92rem;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-zielart"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-pfeil"] {
+    display: inline-block;
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--st-color-tertiary);
+    animation: handkarten-buehne__spielmoment-puls 1.4s ease-in-out infinite;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-link"] {
+    display: inline-block;
+    padding: 0.18rem 0.55rem;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-tertiary);
+    color: var(--st-color-on-tertiary);
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 140ms ease-out, background 140ms ease-out;
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-link"]:hover,
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-link"]:focus-visible {
+    transform: translateY(-2px);
+    background: var(--st-color-primary);
+    color: var(--st-color-on-primary);
+  }
+
+  .spielbereich--game-route [class~="handkarten-buehne__spielmoment-link--inaktiv"] {
+    background: var(--st-color-surface-container-high);
+    color: var(--st-color-on-surface);
+    cursor: default;
+  }
+
+  @keyframes handkarten-buehne__spielmoment-puls {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spielbereich--game-route [class~="handkarten-buehne__spielmoment-pfeil"] {
+      animation: none;
+    }
+  }
+
   .spielbereich--game-route [class~="handkarten-spielbarkeit"],
   .spielbereich--game-route [class~="handkarten-status"] {
     display: none;

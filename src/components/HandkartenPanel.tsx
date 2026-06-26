@@ -12,6 +12,7 @@ Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit ausw
 import { useId, type CSSProperties } from 'react'
 import type { PflichtAbwurfAktion, QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
+import WaldtanzSonderkartenSpielmoment from './WaldtanzSonderkartenSpielmoment'
 
 interface HandkartenPanelProps {
   handkarten: Spielkarte[]
@@ -19,6 +20,7 @@ interface HandkartenPanelProps {
   legaleAktionen?: SpielAktion[]
   questHinweise?: QuestZugHinweis[]
   spielerName?: string
+  aktiverSpielerId?: string
   punkte?: number
   zugphase?: string
   endTurnVerfuegbar?: boolean
@@ -133,6 +135,7 @@ export default function HandkartenPanel({
   legaleAktionen = [],
   questHinweise = [],
   spielerName = 'Spieler',
+  aktiverSpielerId,
   // M1g: Punkte werden in der linken Grid-Spielerplakette angezeigt
   // (Single Source of Truth), nicht mehr in der Handbuehnen-Spielerplakette.
   // Der Prop bleibt fuer Aufrufer-Kompatibilitaet erhalten.
@@ -173,6 +176,18 @@ export default function HandkartenPanel({
         <span className="handkarten-buehne__statuschip handkarten-buehne__statuschip--spielbar">
           Spielbar: {spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'}
         </span>
+        {/* M1dq: Sichtbarer Spielmoment-Bubble in der Handbuehne.
+            Wird NUR sichtbar, wenn eine Sonderkarte mit mindestens einer
+            legalen Sonderkarten-Aktion ausgewaehlt ist. Liefert dem Spieler
+            den konkreten Zielort direkt in der Handbuehne — kein Wechsel
+            ins Seitenmenue noetig. */}
+        {ausgewaehlteHandkarte && ausgewaehlteHandkarte.typ === 'Sonderkarte' && aktiverSpielerId && (
+          <WaldtanzSonderkartenSpielmoment
+            ausgewaehlteHandkarte={ausgewaehlteHandkarte}
+            legaleAktionen={legaleAktionen ?? []}
+            aktiverSpielerId={aktiverSpielerId}
+          />
+        )}
         {/* M1dh: Prominente Spielhandlungs-Pillen am Brettrand.
             Pflicht-Abwurf hat Vorrang (rot, dringend), End-Turn ist Standard-Abschluss. */}
         {hatPflichtAbwurf && (

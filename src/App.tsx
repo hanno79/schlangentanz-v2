@@ -425,6 +425,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 legaleAktionen={legaleAktionen}
                 questHinweise={questZugHinweise}
                 spielerName={aktiverSpieler.name}
+                aktiverSpielerId={aktiverSpieler.id}
                 punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
                 zugphase={zustand.zugphase}
                 endTurnVerfuegbar={

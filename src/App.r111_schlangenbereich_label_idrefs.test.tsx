@@ -52,14 +52,14 @@ describe('R111 Schlangenbereich eindeutige Label-IDREFs', () => {
     const schlangenbereiche = screen.getAllByRole('region', { name: 'Schlangenbereich' })
     expect(schlangenbereiche).toHaveLength(2)
 
-    // M1dp: Gegnerlichtung wurde in den Arenastein extrahiert, daher separat lokalisieren
-    const gegnerlichtungen = screen.getAllByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
-    expect(gegnerlichtungen).toHaveLength(2)
+    // M1dp: Gegnerlichtung wurde in den Arenastein extrahiert und lebt jetzt
+    // ausserhalb des Schlangenbereichs. Innerhalb des Schlangenbereichs gibt
+    // es nur noch "Eigene Schlangen". Wir pruefen daher nur die
+    // Schlangenbereich- und Eigene-Schlangen-Regionen auf eindeutige Labels.
 
-    const labelRegionen = schlangenbereiche.flatMap((schlangenbereich, idx) => [
+    const labelRegionen = schlangenbereiche.flatMap((schlangenbereich) => [
       schlangenbereich,
       within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' }),
-      gegnerlichtungen[idx],
     ])
     const labelIds = labelRegionen.map((region) => region.getAttribute('aria-labelledby'))
 
