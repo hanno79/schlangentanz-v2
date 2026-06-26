@@ -48,8 +48,10 @@ describe('M1bp Waldtanz-Handfläche', () => {
 
     // AENDERUNG 26.06.2026 (M1f): max-height/min-height auf das Panel
     // angehoben, damit Buehne + Handkartenleiste im 900er Viewport passen.
-    expect(panel).toMatch(/max-height:\s*clamp\(15rem,\s*25vh,\s*17rem\)/)
-    expect(panel).toMatch(/min-height:\s*clamp\(14rem,\s*22vh,\s*16rem\)/)
+    expect(panel).toMatch(/max-height:\s*clamp\(13rem,\s*24vh,\s*15rem\)/)
+    expect(panel).toMatch(/min-height:\s*clamp\(12rem,\s*20vh,\s*14rem\)/)
+    expect(panel).toMatch(/display:\s*flex/)
+    expect(panel).toMatch(/flex-direction:\s*column/)
     expect(panel).toMatch(/transform:\s*none/)
     expect(panel).toMatch(/padding:\s*0\.2rem 0\.45rem/)
     expect(karte).toMatch(/box-sizing:\s*border-box/)
