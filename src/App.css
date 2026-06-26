@@ -4941,11 +4941,11 @@ code {
 }
 
 .handkarten-buehne__spielerplakette {
-  display: flex;
+  /* M1g: Heading-Box ohne Avatar - Avatar lebt in der linken Grid-Spielerplakette (M1cx). */
+  display: grid;
   align-items: center;
-  gap: 0.65rem;
   margin-right: auto;
-  padding: 0.5rem 0.85rem;
+  padding: 0.4rem 0.85rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 999px;
   background: var(--st-color-primary-container);
@@ -4953,13 +4953,9 @@ code {
   transform: rotate(-1.5deg);
 }
 
-.handkarten-buehne__spielerplakette div {
-  display: grid;
-  line-height: 1.1;
-}
-
-.handkarten-buehne__spielerplakette strong {
+.handkarten-buehne__spielerplakette-titel {
   font-family: var(--st-font-headline);
+  line-height: 1.1;
 }
 
 .handkarten-buehne__avatar {

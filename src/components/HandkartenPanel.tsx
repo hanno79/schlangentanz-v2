@@ -133,7 +133,11 @@ export default function HandkartenPanel({
   legaleAktionen = [],
   questHinweise = [],
   spielerName = 'Spieler',
-  punkte = 0,
+  // M1g: Punkte werden in der linken Grid-Spielerplakette angezeigt
+  // (Single Source of Truth), nicht mehr in der Handbuehnen-Spielerplakette.
+  // Der Prop bleibt fuer Aufrufer-Kompatibilitaet erhalten.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  punkte: _punkte = 0,
   zugphase = 'Zugphase',
   endTurnVerfuegbar = false,
   pflichtAbwurfAktionen = [],
@@ -162,11 +166,7 @@ export default function HandkartenPanel({
       <div className="handkarten-buehne" role="group" aria-label="Waldtanz-Handbühne">
         <span className="handkarten-buehne__handsteg" aria-hidden="true" />
         <div className="handkarten-buehne__spielerplakette">
-          <span className="handkarten-buehne__avatar" aria-hidden="true">🧙</span>
-          <div>
-            <strong>Deine Hand — {spielerName}</strong>
-            <span>{punkte} Punkte</span>
-          </div>
+          <strong className="handkarten-buehne__spielerplakette-titel">Deine Hand — {spielerName}</strong>
         </div>
         <span className="handkarten-buehne__statuschip">{zugphase}</span>
         <span className="handkarten-buehne__statuschip">{handkarten.length} Handkarten bereit</span>

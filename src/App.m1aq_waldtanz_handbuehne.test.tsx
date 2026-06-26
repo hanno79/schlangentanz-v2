@@ -34,7 +34,12 @@ describe('M1aq Waldtanz-Handbühne', () => {
     expect(arenastein.compareDocumentPosition(handkarten) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(handbuehne.compareDocumentPosition(kartenleiste) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     expect(within(handbuehne).getByText('Deine Hand — Spieler 1')).toBeVisible()
-    expect(within(handbuehne).getByText('0 Punkte')).toBeVisible()
+    // M1g: Avatar + Punkte-Anzeige sind aus der Handbuehnen-Spielerplakette
+    // in die linke Grid-Spielerplakette gewandert. "0 Punkte" lebt jetzt dort,
+    // nicht mehr in der Handbuehne.
+    expect(handbuehne.querySelector('.handkarten-buehne__avatar')).toBeNull()
+    const spielerplakette = within(spieltisch).getByRole('region', { name: 'Waldtanz-Spielerplakette' })
+    expect(within(spielerplakette).getByLabelText(/Punktzahl:/)).toBeVisible()
     expect(within(handbuehne).getByText('Ausspielphase')).toBeVisible()
     expect(within(handbuehne).getByText('5 Handkarten bereit')).toBeVisible()
     expect(within(handbuehne).getByText(/Spielbar: \d Karten/)).toBeVisible()
