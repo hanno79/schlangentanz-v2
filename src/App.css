@@ -9565,6 +9565,13 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   box-shadow: var(--st-shadow-hard);
 }
 
+/* M1do — Sonnenstand-HUD auf /game visuell reduziert (3. Click-Simulator-Liste weg).
+   Phasen-Info lebt jetzt in Phasen-Banner + Brettrand-Arenazug + Spielerplakette.
+   Section bleibt im React-Tree fuer a11y/aria-labelledby-Pfade; nur visuell versteckt. */
+.spielbereich--game-route [class~="waldtanz-sonnenstand"] {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .handkarten-buehne__spielhandlung {
     transition: none;
