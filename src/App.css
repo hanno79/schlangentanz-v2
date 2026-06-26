@@ -37,7 +37,7 @@
      --handkarte-lift-y hebt die ausgewaehlte Handkarte aus dem Faecher,
      --handkarte-selected-glow legt einen weichen lime-gruenen Schein um
      sie herum, der die Stitch-Spielkarte als Spielmoment markiert. */
-  --handkarte-lift-y: -1.4rem;
+  --handkarte-lift-y: -3.5rem;
   --handkarte-selected-glow: 0 0 0 4px rgba(164, 222, 2, 0.62), 0 6px 0 var(--st-color-border-strong);
   --handkarte-dim-opacity: 0.86;
   /* AENDERUNG 23.06.2026: M1dc macht den Spielmoment sichtbar — die letzte
@@ -5319,8 +5319,12 @@ code {
 }
 
 [class~="handkartenleiste--tiefenfaecher"] [class~="handkarte__button--karte"]:hover {
-  transform: translateY(-1.25rem) scale(1.08);
-  box-shadow: 0 11px 0 var(--st-color-border-strong), 0 0 0 5px rgba(254, 203, 0, 0.42);
+  /* AENDERUNG 26.06.2026: M1ds — Stitch-Spielmoment: Hover hebt deutlich
+     an (-2.5rem scale 1.12 statt -1.25rem scale 1.08) und gibt einen
+     goldenen Stitch-Glow, damit der "nimm-mich"-Affordance-Moment sichtbar
+     wird, sobald die Maus ueber die Handkarte faehrt. */
+  transform: translateY(-2.5rem) scale(1.12);
+  box-shadow: 0 12px 0 var(--st-color-border-strong), 0 0 0 5px rgba(254, 203, 0, 0.42);
 }
 
 [class~="handkartenleiste--tiefenfaecher"] [class~="handkarte--ausgewaehlt"] [class~="handkarte__button--karte"] {
@@ -5360,6 +5364,7 @@ code {
   gap: 0.35rem;
   border-radius: 16px;
   overflow: visible;
+  position: relative;
 }
 
 .handkarte__button {
@@ -5394,18 +5399,23 @@ code {
 }
 
 @keyframes handkarte-wackelt {
-  0%, 100% { transform: translateY(-0.9rem) rotate(-1.5deg) scale(1.08); }
-  50% { transform: translateY(-1.15rem) rotate(1.5deg) scale(1.1); }
+  /* AENDERUNG 26.06.2026: M1ds — Stitch-Spielmoment: ausgewaehlte Handkarte
+     hebt sich deutlich hoeher (-2.7rem statt -0.9rem base, peak -3.0rem)
+     und wird groesser (scale 1.18 statt 1.10), damit der "bereit zum
+     Ablegen"-Moment klar sichtbar ist. */
+  0%, 100% { transform: translateY(-2.7rem) rotate(-1.5deg) scale(1.18); }
+  50% { transform: translateY(-3.0rem) rotate(1.5deg) scale(1.2); }
 }
 
 .handkarte--ausgewaehlt .handkarte__button--karte {
   border-color: var(--st-color-tertiary);
   animation: handkarte-wackelt 900ms ease-in-out infinite;
-  box-shadow: 0 0 0 3px rgba(177, 45, 0, 0.38), 0 9px 0 var(--st-color-border-strong);
+  box-shadow: 0 0 0 4px rgba(164, 222, 2, 0.62), 0 12px 0 var(--st-color-border-strong);
   /* AENDERUNG 22.06.2026: M1db --handkarte-lift-y wird hier konsumiert.
      Wirkt im reduced-motion-Modus (Animation pausiert) als statischer Lift,
-     sonst ueberschreibt das handkarte-wackelt-Keyframe den Transform. */
-  transform: translateY(var(--handkarte-lift-y)) scale(1.05);
+     sonst ueberschreibt das handkarte-wackelt-Keyframe den Transform.
+     AENDERUNG 26.06.2026: M1ds — scale(1.18) statt 1.05 fuer Stitch-Lift. */
+  transform: translateY(var(--handkarte-lift-y)) scale(1.18);
 }
 
 /* AENDERUNG 22.06.2026: M1db macht den Moment des Spielens sichtbar.
@@ -5477,27 +5487,62 @@ code {
 }
 
 .handkarte__spielhinweis {
+  position: absolute;
+  top: -2.4rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(0.3rem);
   font-family: var(--st-font-headline);
   font-size: 0.72rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 60;
   width: fit-content;
-  padding: 0.18rem 0.6rem;
+  padding: 0.22rem 0.7rem;
   border: 2px solid var(--st-color-border-strong);
   border-radius: 999px;
   background: var(--st-color-inverse-surface);
   color: var(--st-color-surface);
   box-shadow: 0 2px 0 var(--st-color-border-strong);
   opacity: 0;
-  transform: translateY(0.3rem);
+  pointer-events: none;
   transition: opacity 160ms ease, transform 160ms ease;
 }
 
 .handkarte__button--karte:hover .handkarte__spielhinweis,
 .handkarte__button--karte:focus-visible .handkarte__spielhinweis {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
+}
+
+/* M1ds: sichtbares "BEREIT"-Badge an ausgewaehlten Handkarten.
+   Stitch-Pattern: coral-tertiaer-Container, Chunky-Headline-Font,
+   hard-shadow, 999px-Radius, sitzt unten-rechts an der Karten-Unterkante. */
+.handkarte__bereit-badge {
+  position: absolute;
+  bottom: -0.7rem;
+  right: -0.4rem;
+  z-index: 55;
+  width: fit-content;
+  padding: 0.18rem 0.62rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-tertiary-container);
+  color: var(--st-color-on-tertiary-container);
+  font-family: var(--st-font-headline);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  transform: rotate(-6deg);
+  animation: handkarte-bereit-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes handkarte-bereit-pulse {
+  0%, 100% { transform: rotate(-6deg) scale(1); }
+  50% { transform: rotate(-6deg) scale(1.08); }
 }
 
 .handkarte__art {
@@ -6326,6 +6371,16 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .waldtanz-phasen-banner__phase--aktiv {
     animation: none;
+  }
+  /* AENDERUNG 26.06.2026: M1ds — Stitch-Spielmoment-Lift bleibt statisch
+     sichtbar, aber die Wackel-Animation wird im reduced-motion-Modus
+     deaktiviert (sonst wuerde der Spieler die Affordance-Lift nicht sehen). */
+  .handkarte--ausgewaehlt .handkarte__button--karte {
+    animation: none;
+  }
+  .handkarte__bereit-badge {
+    animation: none;
+    transform: rotate(-6deg);
   }
 }
 

@@ -36,7 +36,9 @@ describe('M1g Waldtanz-Handkartenfächer', () => {
     expect(within(ersterButton).getByText('Waldtanzkarte')).toBeInTheDocument()
     expect(within(ersterButton).getByText('Blau')).toHaveClass('handkarte__farbe')
     expect(within(ersterButton).getByText('1 Punkte')).toHaveClass('handkarte__punkte')
-    expect(within(ersterButton).getByText('Spielen')).toHaveClass('handkarte__spielhinweis')
+    // AENDERUNG 26.06.2026: M1ds hat den Tooltip-Text auf "Karte spielen →" erweitert
+    // (Stitch-Pattern: schwarze Pille mit Pfeil-Hint, vorher nur "Spielen").
+    expect(within(ersterButton).getByText('Karte spielen →')).toHaveClass('handkarte__spielhinweis')
 
     fireEvent.click(ersterButton)
 
@@ -48,6 +50,9 @@ describe('M1g Waldtanz-Handkartenfächer', () => {
     expect(cssBlock('handkarte__button--karte')).toMatch(/aspect-ratio:\s*2\s*\/\s*3/)
     expect(cssBlock('handkarte__button--karte')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('handkarte__button--karte')).toMatch(/box-shadow:\s*0 5px 0 var\(--st-color-border-strong\)/)
-    expect(appCss).toMatch(/\.handkarte--ausgewaehlt \.handkarte__button--karte\s*\{[\s\S]*transform:\s*translateY\((?:var\(--handkarte-lift-y\)|-0\.75rem)\) scale\(1\.05\)/)
+    // AENDERUNG 26.06.2026: M1ds hat den Selected-Lift auf den Stitch-Pattern-Wert
+    // -3.5rem (Token --handkarte-lift-y) und scale(1.18) angehoben (vorher
+    // var(--handkarte-lift-y)=-0.75rem bzw. scale(1.05) im M1g-Vertrag).
+    expect(appCss).toMatch(/\.handkarte--ausgewaehlt \.handkarte__button--karte\s*\{[\s\S]*transform:\s*translateY\(var\(--handkarte-lift-y\)\) scale\(1\.18\)/)
   })
 })

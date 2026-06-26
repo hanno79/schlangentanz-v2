@@ -57,7 +57,7 @@ describe('M1ct Waldtanz-Spielkarten-Stil', () => {
     expect(wertechipRule).toMatch(/border:\s*2px solid var\(--st-color-border-strong\)/)
   })
 
-  it('zeigt einen sichtbaren Stitch-Spielen-Hinweis im Karteninneren fuer spielbare Handkarten', () => {
+  it('zeigt einen sichtbaren Stitch-Karte-spielen-Hinweis ueber der Karte fuer spielbare Handkarten (M1ds Floating-Tooltip)', () => {
     window.history.pushState({}, '', '/game')
     render(<App initialZustand={startZustand()} />)
 
@@ -69,7 +69,7 @@ describe('M1ct Waldtanz-Spielkarten-Stil', () => {
     const erste = spielbareKarten[0]
     const spielhinweis = erste.querySelector('.handkarte__spielhinweis') as HTMLElement | null
     expect(spielhinweis).toBeTruthy()
-    expect(spielhinweis?.textContent ?? '').toMatch(/Spielen/)
+    expect(spielhinweis?.textContent ?? '').toMatch(/Karte spielen/)
 
     const spielhinweisRule = cssBlock('.handkarte__spielhinweis')
     expect(spielhinweisRule).toMatch(/opacity:\s*0/)

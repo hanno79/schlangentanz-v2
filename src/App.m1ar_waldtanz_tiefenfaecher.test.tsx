@@ -45,7 +45,10 @@ describe('M1ar Waldtanz-Tiefenfächer', () => {
     expect(cssBlock('.handkartenleiste--tiefenfaecher')).toMatch(/display:\s*flex/)
     expect(cssBlock('.handkartenleiste--tiefenfaecher')).toMatch(/perspective:\s*900px/)
     expect(cssBlock('.handkartenleiste--tiefenfaecher .handkarte')).toMatch(/margin-inline:\s*clamp\(-0\.35rem,\s*-0\.4vw,\s*-0\.12rem\)/)
-    expect(appCss).toMatch(/\[class~="handkartenleiste--tiefenfaecher"\] \[class~="handkarte__button--karte"\]:hover[\s\S]*translateY\(-1\.25rem\)/)
+    // AENDERUNG 26.06.2026: M1ds hat den Hover-Lift auf den Stitch-Pattern-Wert
+    // -2.5rem angehoben (vorher -1.25rem) und die Tiefenfaecher-Wackel-Animation
+    // behaelt ihre eigenen Werte (siehe handkarte-tiefenfaecher-wackelt-Keyframe).
+    expect(appCss).toMatch(/\[class~="handkartenleiste--tiefenfaecher"\] \[class~="handkarte__button--karte"\]:hover[\s\S]*translateY\(-2\.5rem\)/)
     expect(appCss).toMatch(/\[class~="handkartenleiste--tiefenfaecher"\] \[class~="handkarte--ausgewaehlt"\] \[class~="handkarte__button--karte"\][\s\S]*animation:\s*handkarte-tiefenfaecher-wackelt/)
     expect(appCss).toMatch(/@keyframes\s+handkarte-tiefenfaecher-wackelt[\s\S]*translateY\(-1\.6rem\)[\s\S]*translateY\(-1\.85rem\)/)
   })
