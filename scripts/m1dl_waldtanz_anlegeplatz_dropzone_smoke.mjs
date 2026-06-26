@@ -116,6 +116,13 @@ async function fuehreLiveSmokeAus() {
       await seite.goto(`${BASE_URL}/game`, { waitUntil: 'networkidle', timeout: 15_000 })
 
       // Handkarte auswaehlen, damit Anlegeplaetze erscheinen.
+      // Vorbedingung: Spielerin muss eine eigene Schlange haben. Auf /game
+      // muss sie zunaechst eine Startfaehrte anklicken, um die erste Schlange
+      // zu starten (M1cj-Pattern).
+      const startfaehrte = seite.locator('.schlangen-startzone__faehrte-button').first()
+      await startfaehrte.waitFor({ state: 'visible', timeout: 5_000 })
+      await startfaehrte.click({ force: true })
+      await seite.waitForTimeout(400)
       // force: true toleriert pre-existing Layout-Themen (z.B. Karten ragen
       // leicht unter den 900-px-Fold), die nicht im M1dl-Scope liegen.
       const handkarte = seite.locator('.handkartenleiste--spielkartenfaecher .handkarte__button--karte').first()
