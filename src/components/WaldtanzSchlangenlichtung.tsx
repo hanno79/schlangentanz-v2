@@ -27,7 +27,6 @@ import WaldtanzKartenpop from './WaldtanzKartenpop'
 export interface WaldtanzSchlangenlichtungProps {
   zustand: Spielzustand
   aktiverSpieler: Spieler
-  gegnerSpieler: Spieler[]
   ausgewaehlteHandkarteId: string | null
   istGameRoute: boolean
   zeigeSchlangenhaeutungBrettziel?: boolean
@@ -57,7 +56,6 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
   const {
     zustand,
     aktiverSpieler,
-    gegnerSpieler,
     ausgewaehlteHandkarteId,
     istGameRoute,
     versteckeKiEinzelaktionen,
@@ -142,7 +140,6 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
             zustand={zustand}
             zeigeSchlangenhaeutungBrettziel={zeigeSchlangenhaeutungBrettziel}
             aktiverSpieler={aktiverSpieler}
-            gegnerSpieler={gegnerSpieler}
             karteAnlegenAktionen={versteckeKiEinzelaktionen ? [] : karteAnlegenAktionen}
             neueSchlangeStartenAktionen={versteckeKiEinzelaktionen ? [] : neueSchlangeStartenAktionen}
             farbenschutzAktionen={versteckeKiEinzelaktionen ? [] : farbenschutzAktionen}

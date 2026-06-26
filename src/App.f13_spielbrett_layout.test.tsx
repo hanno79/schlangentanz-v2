@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand } from './engine'
 
@@ -30,12 +30,17 @@ function zustandMitSpielbrettSchlangen() {
 }
 
 describe('F13 Spielbrett-/Layout-Polish', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/game')
+  })
+
   it('ordnet eigene und gegnerische Schlangen als ruhige Spielfeld-Spalten an', () => {
     render(<App initialZustand={zustandMitSpielbrettSchlangen()} />)
 
+    // M1dp: Gegnerlichtung wurde aus dem Schlangenbereich in den Arenastein extrahiert.
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
     const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
-    const gegnerGruppe = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerGruppe = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
 
     expect(within(eigeneGruppe).getByText('schlange-spieler-1-f13')).toBeInTheDocument()
     expect(within(gegnerGruppe).getByText('schlange-spieler-2-f13')).toBeInTheDocument()

@@ -6,7 +6,7 @@ Beschreibung: F5 UI-Test für einen visuell gruppierten Schlangenbereich mit eig
 */
 
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand } from './engine'
 
@@ -26,12 +26,17 @@ function zustandMitSchlangenbereich() {
 }
 
 describe('F5 Schlangenbereich', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/game')
+  })
+
   it('zeigt eigene und gegnerische Schlangen in getrennten visuellen Gruppen an', () => {
     render(<App initialZustand={zustandMitSchlangenbereich()} />)
 
+    // M1dp: Gegnerlichtung wurde in den Arenastein extrahiert
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
     const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
-    const gegnerGruppe = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerGruppe = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
 
     expect(within(eigeneGruppe).getByText('schlange-spieler-1-1')).toBeInTheDocument()
     expect(within(gegnerGruppe).getByText('schlange-spieler-2-1')).toBeInTheDocument()

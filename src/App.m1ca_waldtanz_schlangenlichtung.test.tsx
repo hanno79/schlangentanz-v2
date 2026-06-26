@@ -53,12 +53,11 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const handkarten = within(spieltisch).getByRole('region', { name: 'Handkarten' })
-    const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerlichtung = within(spieltisch).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
 
-    expect(gegnerischeSchlangen).toHaveClass('schlangen-gruppe--gegnerfelder')
+    expect(gegnerlichtung).toHaveClass('waldtanz-gegnerlichtung')
     fireEvent.click(within(handkarten).getByRole('button', { name: /schlangenblockade-m1ca/ }))
-    expect(within(gegnerischeSchlangen).getByRole('button', {
+    expect(within(gegnerlichtung).getByRole('button', {
       name: 'Schlangenblockade-Fessel mit Karte schlangenblockade-m1ca um Schlange gegner-schlange-m1ca legen',
     })).toBeVisible()
   })
@@ -68,8 +67,8 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
     const eigeneTitel = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > h5')
     const eigeneHinweise = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > [class~="schlangen-drop-hinweis"]')
     const eigeneLeiste = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangenleiste"]')
-    const leereGegner = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--gegnerfelder"]:not(:has(button))')
-    const zielGegner = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--gegnerfelder"]:has(button)')
+    const leereGegner = cssBlock('.spielbereich--game-route [class~="waldtanz-gegnerlichtung"] [class~="waldtanz-gegnerlichtung__leertext"]')
+    const zielGegner = cssBlock('.spielbereich--game-route [class~="waldtanz-gegnerlichtung"] [class~="waldtanz-gegnerlichtung__gegnerkarte"]:has(button)')
     const kompakteAnlegeplaetze = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte__anlegeplaetze"]:not([class~="schlangekarte__anlegeplaetze--vorschau"])')
     const kompakteSchlange = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"]')
     const kompakteKartenreihe = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__kartenreihe"]')
@@ -96,7 +95,10 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
     expect(kompakteSchlange).toMatch(/"typ pfad wertung"/)
     expect(kompakteSchlange).toMatch(/min-height:\s*0/)
     expect(kompakteKartenreihe).toMatch(/grid-area:\s*pfad/)
-    expect(leereGegner).toMatch(/display:\s*none/)
+    // M1dp: Waldtanz-Gegnerlichtung ist IMMER sichtbar (kein display:none toggle mehr)
+    // Die leere-Text-Markerung erscheint nur bei 0 Gegnerschlangen, die Gegnerkarten
+    // erscheinen als grid sobald ein Gegner eine Schlange hat.
+    expect(leereGegner).toBe('')
     expect(zielGegner).toMatch(/display:\s*grid/)
     expect(smokeScript).toContain('M1ca Schlangenlichtung')
     expect(smokeScript).toContain('gegnerDisplay !== \'none\'')

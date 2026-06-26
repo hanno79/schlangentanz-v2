@@ -9759,3 +9759,115 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   white-space: nowrap;
   border: 0;
 }
+
+/* M1dp — Waldtanz-Gegnerlichtung als eigenes oberes Brettobjekt im Arenastein.
+   Bewusst gleichberechtigt zur Schlangenlichtung: 3px Waldtanz-Border, harter
+   Block-Shadow, chunky-Radius. Per-Gegner-Karte als Grid mit Avatar | Meta |
+   Punkte/Schlangen-Pillen, dann darunter die eigentlichen gegnerischen
+   Schlangen-Brettobjekte (gerendert via GegnerSchlangenListe). */
+.waldtanz-gegnerlichtung {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 3px solid var(--st-color-border-strong, #063907);
+  border-radius: 1.75rem;
+  background: var(--st-color-surface, #ecffe3);
+  box-shadow: 0 4px 0 0 var(--st-color-border-strong, #063907);
+  box-sizing: border-box;
+  color: var(--st-color-on-surface, #063907);
+}
+.waldtanz-gegnerlichtung__kopf {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.waldtanz-gegnerlichtung__titel {
+  margin: 0;
+  font-family: 'Rubik', system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.waldtanz-gegnerlichtung__hinweis {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--st-color-text-soft, rgba(6, 57, 7, 0.6));
+  font-weight: 500;
+}
+.waldtanz-gegnerlichtung__leertext {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--st-color-text-soft, rgba(6, 57, 7, 0.6));
+  font-style: italic;
+}
+.waldtanz-gegnerlichtung__liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.waldtanz-gegnerlichtung__gegnerkarte {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem 0.85rem;
+  border: 3px solid var(--st-color-border-strong, #063907);
+  border-radius: 1.5rem;
+  background: var(--st-color-surface-container-low, #d6ffc9);
+  box-shadow: 0 2px 0 0 rgba(6, 57, 7, 0.25);
+}
+.waldtanz-gegnerlichtung__gegnerkarte-kopf {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+.waldtanz-gegnerlichtung__avatar {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.waldtanz-gegnerlichtung__gegnerkarte-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.waldtanz-gegnerlichtung__eyebrow {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-color-text-soft, rgba(6, 57, 7, 0.6));
+  font-weight: 700;
+}
+.waldtanz-gegnerlichtung__gegner-name {
+  font-family: 'Rubik', system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--st-color-on-surface, #063907);
+}
+.waldtanz-gegnerlichtung__gegnerkarte-pillen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-end;
+}
+.waldtanz-gegnerlichtung__punkte,
+.waldtanz-gegnerlichtung__schlangenanzahl {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 2px solid var(--st-color-border-strong, #063907);
+  border-radius: 999px;
+  font-family: 'Rubik', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: var(--st-color-surface, #ecffe3);
+  color: var(--st-color-on-surface, #063907);
+  white-space: nowrap;
+}

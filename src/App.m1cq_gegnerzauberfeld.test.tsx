@@ -57,7 +57,7 @@ describe('M1cq Waldtanz-Gegnerzauberfeld', () => {
     fireEvent.click(within(handBereich).getByRole('button', { name: /farbendieb-m1cq/ }))
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
-    const gegnerfeld = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerfeld = within(schlangenbereich).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const zauberHinweis = within(gegnerfeld).getByRole('note', { name: 'Gegner-Zauberfeld' })
     const liste = within(gegnerfeld).getByRole('list', { name: 'Gegner-Zauberziele' })
     const zielschlange = within(liste).getByText('gegner-schlange-m1cq').closest('li')!
@@ -78,7 +78,7 @@ describe('M1cq Waldtanz-Gegnerzauberfeld', () => {
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /blockade-m1cq/ }))
 
-    const gegnerfeld = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerfeld = within(schlangenbereich).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const fessel = within(gegnerfeld).getByRole('group', { name: 'Schlangenblockade-Fessel für blockade-ziel-m1cq' })
 
     expect(gegnerfeld).toHaveClass('schlangen-gruppe--gegnerzauberfeld')
@@ -93,7 +93,7 @@ describe('M1cq Waldtanz-Gegnerzauberfeld', () => {
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-m1cq/ }))
 
-    const gegnerfeld = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerfeld = within(schlangenbereich).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const bissspur = within(gegnerfeld).getByRole('group', { name: 'Schlangenfrass-Bissspur für rot-frass-m1cq' })
 
     expect(gegnerfeld).toHaveClass('schlangen-gruppe--gegnerzauberfeld')

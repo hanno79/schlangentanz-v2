@@ -6,7 +6,7 @@
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -27,6 +27,8 @@ const sonderkarte = (id: string, name: string): SonderkarteInfo => ({
 })
 
 describe('R183 Farbendieb-Boardziel', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('markiert gegnerische Zielkarten und stiehlt eine Karte direkt aus dem Schlangenbereich', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     const farbendieb = sonderkarte('farbendieb-r183', 'Farbendieb')
@@ -47,7 +49,7 @@ describe('R183 Farbendieb-Boardziel', () => {
 
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     const handkarte = within(handBereich).getByRole('button', { name: /farbendieb-r183/ })
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const zielkarte = within(gegnerischeSchlangen).getByRole('listitem', { name: /rot-r183-beute/ })
     const eigeneSchlangen = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
     const eigeneKarte = within(eigeneSchlangen).getByRole('listitem', { name: /gruen-r183-eigen/ })

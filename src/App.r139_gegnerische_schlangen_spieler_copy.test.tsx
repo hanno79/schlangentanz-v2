@@ -6,7 +6,7 @@
  */
 
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte } from './engine/__tests__/testHelpers'
@@ -20,11 +20,15 @@ function zustandMitGegnerischerSchlange() {
 }
 
 describe('R139 Besitzer-Copy gegnerischer Schlangen', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/game')
+  })
+
   it('zeigt den Spielernamen statt der rohen Spieler-ID auf gegnerischen Schlangenkarten', () => {
     render(<App initialZustand={zustandMitGegnerischerSchlange()} />)
 
-    const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-    const gegnerischeSchlangen = within(spieltisch).getByRole('region', { name: 'Gegnerische Schlangen' })
+    // M1dp: Gegnerlichtung ist jetzt im Arenastein, nicht mehr im Spieltisch
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
 
     expect(within(gegnerischeSchlangen).getByText('Gehört zu: Spieler 2')).toBeVisible()
     expect(within(gegnerischeSchlangen).queryByText('Spieler: spieler-2')).toBeNull()

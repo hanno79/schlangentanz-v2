@@ -6,7 +6,7 @@
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -27,6 +27,8 @@ const sonderkarte = (id: string, name: string): SonderkarteInfo => ({
 })
 
 describe('M2c Schlangenblockade-Boardziel', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('markiert gegnerische Zielschlangen und blockiert direkt im Schlangenbereich', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     const blockade = sonderkarte('schlangenblockade-m2c', 'Schlangenblockade')
@@ -47,7 +49,7 @@ describe('M2c Schlangenblockade-Boardziel', () => {
 
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     const handkarte = within(handBereich).getByRole('button', { name: /schlangenblockade-m2c/ })
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const zielschlange = within(gegnerischeSchlangen).getByText('gegner-schlange-m2c').closest('.schlangekarte')!
     const eigeneSchlangen = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
 

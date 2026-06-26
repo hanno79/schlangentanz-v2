@@ -6,7 +6,7 @@
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -47,6 +47,8 @@ function zweiGegnerFrassZustand() {
 }
 
 describe('M2m Schlangenfrass-Bissspur', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('ersetzt das eigene Einzelziel durch eine körperliche Bissspur und nutzt weiter die Engine-Aktion', () => {
     render(<App initialZustand={eigenesFrassZielZustand()} />)
 
@@ -73,10 +75,10 @@ describe('M2m Schlangenfrass-Bissspur', () => {
   it('führt die Zwei-Gegner-Auswahl über erste und zweite Bissspur statt über generische Zielbuttons', () => {
     render(<App initialZustand={zweiGegnerFrassZustand()} />)
 
-    const { handBereich, schlangenbereich } = ermittleSpielbereiche()
+    const { handBereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-zwei-m2m/ }))
 
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const erstesZiel = within(gegnerischeSchlangen).getByText('rot-gegner-bissspur-m2m').closest('.schlangekarte__karte') as HTMLElement
     const zweitesZiel = within(gegnerischeSchlangen).getByText('blau-gegner-bissspur-m2m').closest('.schlangekarte__karte') as HTMLElement
     const ersteBissspur = within(erstesZiel).getByRole('group', { name: 'Schlangenfrass-Bissspur für rot-gegner-bissspur-m2m' })

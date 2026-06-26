@@ -7,7 +7,7 @@
 
 import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { FarbkarteInfo, SonderkarteInfo } from './engine'
@@ -41,6 +41,8 @@ function farbendiebZauberkreisZustand() {
 }
 
 describe('M1aj Magiekreis-Sonderzauber', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('führt eine ausgewählte Farbenfusion direkt über den Zauberkreis im Arenastein aus', () => {
     render(<App initialZustand={farbenfusionZauberkreisZustand()} />)
 
@@ -79,7 +81,7 @@ describe('M1aj Magiekreis-Sonderzauber', () => {
     fireEvent.click(zauberButton)
 
     const eigeneSchlangen = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     expect(within(eigeneSchlangen).getByText('rot-m1aj-beute')).toBeVisible()
     expect(within(gegnerischeSchlangen).queryByText('rot-m1aj-beute')).toBeNull()
   })

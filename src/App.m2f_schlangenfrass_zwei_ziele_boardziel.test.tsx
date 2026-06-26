@@ -6,7 +6,7 @@
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -27,6 +27,8 @@ const sonderkarte = (id: string, name: string): SonderkarteInfo => ({
 })
 
 describe('M2f Schlangenfrass-Zwei-Ziele-Boardziel', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('wählt zwei gegnerische Karten direkt im Schlangenbereich und führt Schlangenfrass aus', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(3, () => 0.999999))
     zustand.spieler[0].hand = [sonderkarte('schlangenfrass-m2f', 'Schlangenfrass')]
@@ -39,7 +41,7 @@ describe('M2f Schlangenfrass-Zwei-Ziele-Boardziel', () => {
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-m2f/ }))
 
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const erstesZiel = within(gegnerischeSchlangen).getByText('rot-gegner-m2f').closest('.schlangekarte__karte')!
     const zweitesZiel = within(gegnerischeSchlangen).getByText('blau-gegner-m2f').closest('.schlangekarte__karte')!
 

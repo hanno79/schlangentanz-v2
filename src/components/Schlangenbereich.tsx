@@ -14,7 +14,6 @@ import { useEffect, useId, useState } from 'react'
 import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
 import { ermittleRegenbogenWildfarben } from '../engine'
 import type { SpielAktion, Spieler, Spielzustand } from '../engine'
-import GegnerSchlangenListe from './GegnerSchlangenListe'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
 import SchlangenhaeutungBrettziel from './SchlangenhaeutungBrettziel'
 import WaldtanzZielspur from './WaldtanzZielspur'
@@ -34,7 +33,6 @@ interface SchlangenbereichProps {
   zustand: Spielzustand
   zeigeSchlangenhaeutungBrettziel?: boolean
   aktiverSpieler: Spieler
-  gegnerSpieler: Spieler[]
   karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
   neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }>[]
   farbenschutzAktionen?: Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }>[]
@@ -84,7 +82,6 @@ export default function Schlangenbereich({
   zustand,
   zeigeSchlangenhaeutungBrettziel = true,
   aktiverSpieler,
-  gegnerSpieler,
   karteAnlegenAktionen,
   neueSchlangeStartenAktionen,
   farbenschutzAktionen = [],
@@ -276,18 +273,12 @@ export default function Schlangenbereich({
   const titelId = `${komponentenId}-schlangenbereich-titel`
   const eigeneTitelId = `${komponentenId}-eigene-schlangen-titel`
   const startzoneTitelId = `${komponentenId}-startzone-titel`
-  const gegnerTitelId = `${komponentenId}-gegnerische-schlangen-titel`
   const startzoneIstZielbereit = Boolean(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
   const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
   const haeutungZielAnzahl = zeigeSchlangenhaeutungBrettziel ? aktiverSpieler.schlangen.filter(schlange => hatSchlangenhaeutungBrettziel(zustand, schlange, ausgewaehlteHandkarteId)).length : 0
   const zielspurAnzahl = zaehleZielspurBrettziele({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurFamilien = ermittleZielspurFamilien({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurObjekte = ermittleZielspurObjekte({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
-  const gegnerZauberfeldAktiv = Boolean(ausgewaehlteHandkarteId) && (
-    schlangenblockadeAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId) ||
-    farbendiebAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId) ||
-    schlangenfrassAktionen.some((aktion) => aktion.handkartenId === ausgewaehlteHandkarteId)
-  )
 
   return (
     <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>
@@ -545,26 +536,8 @@ export default function Schlangenbereich({
         schlangenblockadeAktionen={schlangenblockadeAktionen}
         farbendiebAktionen={farbendiebAktionen}
       />
-      <section className={`schlangen-gruppe schlangen-gruppe--gegnerfelder${gegnerZauberfeldAktiv ? ' schlangen-gruppe--gegnerzauberfeld' : ''}`} aria-labelledby={gegnerTitelId}>
-        <h5 id={gegnerTitelId}>Gegnerische Schlangen</h5>
-        {gegnerZauberfeldAktiv && (
-          <div className="gegnerzauberfeld-hinweis" role="note" aria-label="Gegner-Zauberfeld">
-            <strong>Gegner-Zauberfeld</strong>
-            <span>Beutekorb, Fessel oder Bissspur direkt am Gegnerfeld auslösen.</span>
-          </div>
-        )}
-        <GegnerSchlangenListe
-          spieler={gegnerSpieler}
-          ausgewaehlteHandkarteId={ausgewaehlteHandkarteId}
-          schlangenblockadeAktionen={schlangenblockadeAktionen}
-          farbendiebAktionen={farbendiebAktionen}
-          schlangenfrassAktionen={schlangenfrassAktionen}
-          onAktion={onAktion}
-          aktionsLabel={aktionsLabel}
-          aktiverZielspurKey={aktiverZielspurKey}
-          letzteAktionZiel={letzteAktionZiel}
-        />
-      </section>
+      {/* M1dp: gegnerische Schlangen sind in die neue WaldtanzGegnerlichtung
+          im Arenastein gewandert und werden hier nicht mehr gerendert. */}
     </section>
   )
 }

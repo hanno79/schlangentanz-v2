@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand } from './engine'
 
@@ -30,6 +30,10 @@ function zustandMitSpieltisch() {
 }
 
 describe('F31 Spieltisch-Ansicht', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/game')
+  })
+
   it('ordnet Handkarten und Schlangen in einer gemeinsamen Spieltisch-Bühne an', () => {
     render(<App initialZustand={zustandMitSpieltisch()} />)
 
@@ -38,17 +42,14 @@ describe('F31 Spieltisch-Ansicht', () => {
     const handBereich = within(spieltisch).getByRole('region', { name: 'Handkarten' })
     const schlangenbereich = within(spieltisch).getByRole('region', { name: 'Schlangenbereich' })
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
-    const debugAktiverSpieler = screen.getAllByText(/Spielerprofil:/)[0]
-
     expect(within(handBereich).getByRole('heading', { name: 'Handkarten als Kartenleiste' })).toBeInTheDocument()
     expect(within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })).toBeInTheDocument()
-    expect(within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })).toBeInTheDocument()
+    // M1dp: Gegnerlichtung liegt jetzt im Arenastein, nicht mehr im Schlangenbereich
+    expect(screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })).toBeInTheDocument()
     expect(within(schlangenbereich).getByText('schlange-spieler-1-f31')).toBeInTheDocument()
-    expect(within(schlangenbereich).getByText('schlange-spieler-2-f31')).toBeInTheDocument()
-    expect(spieltisch.nextElementSibling).toBe(aktionenBereich)
-    expect(spieltisch.compareDocumentPosition(debugAktiverSpieler) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
-      Node.DOCUMENT_POSITION_FOLLOWING,
-    )
+    expect(screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })).toHaveTextContent('schlange-spieler-2-f31')
+    // M1dp: auf /game ist das AktionenPanel innerhalb des Spieltisch situiert (Zeile 298)
+    expect(within(spieltisch).getByRole('region', { name: 'Aktionen' })).toBe(aktionenBereich)
 
     expect(cssBlock('spielbrett')).toMatch(/display:\s*grid/)
     expect(cssBlock('spielbrett')).toMatch(/grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(min\(100%,\s*320px\),\s*1fr\)\)/)

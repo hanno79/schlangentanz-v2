@@ -40,6 +40,7 @@ import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
 import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
 import WaldtanzSchlangenlichtung from './components/WaldtanzSchlangenlichtung'
+import WaldtanzGegnerlichtung from './components/WaldtanzGegnerlichtung'
 import WaldtanzPhasenBanner from './components/WaldtanzPhasenBanner'
 import WaldtanzSpielerplakette from './components/WaldtanzSpielerplakette'
 import WaldtanzGegnerplakette from './components/WaldtanzGegnerplakette'
@@ -306,10 +307,23 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   <WaldtanzPhasenBanner zugphase={zustand.zugphase} istSpielende={istSpielende} />
                 )}
                 <div className="waldtanz-arenastein__spielfeld">
+                  {istGameRoute && zustand.spieler.length > 1 && (
+                    <WaldtanzGegnerlichtung
+                      spieler={gegnerSpieler}
+                      spielerwertungen={spielerwertungen}
+                      ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
+                      schlangenblockadeAktionen={schlangenblockadeAktionen}
+                      farbendiebAktionen={farbendiebAktionen}
+                      schlangenfrassAktionen={schlangenfrassAktionen}
+                      onAktion={fuhreAktionAus}
+                      aktionsLabel={aktionsLabel}
+                      aktiverZielspurKey={undefined}
+                      letzteAktionZiel={letzteAktionZiel}
+                    />
+                  )}
                   <WaldtanzSchlangenlichtung
                     zustand={zustand}
                     aktiverSpieler={aktiverSpieler}
-                    gegnerSpieler={gegnerSpieler}
                     ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                     istGameRoute={istGameRoute}
                     versteckeKiEinzelaktionen={versteckeKiEinzelaktionen}

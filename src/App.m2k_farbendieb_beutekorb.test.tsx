@@ -6,7 +6,7 @@
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -44,12 +44,14 @@ function farbendiebBeuteZustand() {
 }
 
 describe('M2k Farbendieb-Beutekorb', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('macht die gegnerische Beutekarte als Beutekorb mit Einfügeplätzen spielbar', () => {
     render(<App initialZustand={farbendiebBeuteZustand()} />)
 
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
     const handkarte = within(handBereich).getByRole('button', { name: /farbendieb-m2k/ })
-    const gegnerischeSchlangen = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerischeSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const zielkarte = within(gegnerischeSchlangen).getByRole('listitem', { name: /rot-m2k-beute/ })
 
     expect(within(zielkarte).queryByRole('group', { name: 'Farbendieb-Beutekorb für rot-m2k-beute' })).toBeNull()

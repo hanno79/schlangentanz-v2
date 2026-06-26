@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand } from './engine'
 
@@ -30,14 +30,19 @@ function zustandMitKartenreihen() {
 }
 
 describe('F35 Schlangen-Kartenreihe', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/game')
+  })
+
   it('zeigt jede Schlange als sichtbare Kartenreihe mit allen Karten nebeneinander', () => {
     const { zustand, eigeneKarten, gegnerKarten } = zustandMitKartenreihen()
 
     render(<App initialZustand={zustand} />)
 
+    // M1dp: Gegnerlichtung wurde in den Arenastein extrahiert
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
     const eigeneGruppe = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
-    const gegnerGruppe = within(schlangenbereich).getByRole('region', { name: 'Gegnerische Schlangen' })
+    const gegnerGruppe = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const eigeneReihe = within(eigeneGruppe).getByRole('list', { name: 'Kartenreihe schlange-spieler-1-f35' })
     const gegnerReihe = within(gegnerGruppe).getByRole('list', { name: 'Kartenreihe schlange-spieler-2-f35' })
 
