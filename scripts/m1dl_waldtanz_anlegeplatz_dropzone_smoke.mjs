@@ -116,9 +116,11 @@ async function fuehreLiveSmokeAus() {
       await seite.goto(`${BASE_URL}/game`, { waitUntil: 'networkidle', timeout: 15_000 })
 
       // Handkarte auswaehlen, damit Anlegeplaetze erscheinen.
+      // force: true toleriert pre-existing Layout-Themen (z.B. Karten ragen
+      // leicht unter den 900-px-Fold), die nicht im M1dl-Scope liegen.
       const handkarte = seite.locator('.handkartenleiste--spielkartenfaecher .handkarte__button--karte').first()
       await handkarte.waitFor({ state: 'visible', timeout: 5_000 })
-      await handkarte.click()
+      await handkarte.click({ force: true })
       await seite.waitForSelector('.schlangekarte__anlegeplatz', { timeout: 5_000 })
 
       await pruefeM1dlAnlegeplatzDropzone(seite, viewport)
