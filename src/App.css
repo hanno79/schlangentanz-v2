@@ -577,12 +577,20 @@ body {
   pointer-events: none;
 }
 
+/* AENDERUNG 26.06.2026 (M1dm): auf /game visuell ausgeblendet, damit die
+   Schlangenlichtung das dominante Zentrum wird. Das React-Element bleibt
+   im Tree, weil die M1dd-Grid-Area 'aktionsdock' ein Kind braucht, um
+   die expliziten grid-template-rows-Hoehen stabil zu halten. Visuelle
+   Reduktion folgt dem Nutzer-Feedback "weg vom Button-geklickt-/Debug-
+   listen-Gefuehl hin zu echtem Spielerlebnis" — der Brettrand-End-Turn-
+   Knopf (Waldtanz-Arenazugknopf) uebernimmt die sichtbare Zugsteuerung. */
 .spielbereich--game-route .aktionen-panel--waldtanz-dock {
   position: static;
   max-height: none;
   overflow: visible;
   pointer-events: auto;
   margin-top: 1rem;
+  display: none;
 }
 
 .spielbereich--game-route [class~="aktionen-panel--brettfallback"] {
