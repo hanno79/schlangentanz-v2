@@ -96,11 +96,16 @@ One-Liner-Fix in `src/test/setup.ts` loest sie alle auf einmal.
 
 **REVIEWER=kimi-cli** (Codex CLI: NOT_FUNCTIONAL — wartet auf stdin, usage limit oder trusted-dir-Block)
 
-- Kimi K2.7 Review gestartet, laeuft im Hintergrund (`/root/.kimi-code/bin/kimi -p "..."`).
-- Falls Kimi BLOCKER liefert, werden diese im Folgeslice adressiert.
-- Falls Kimi NON-BLOCKER liefert, werden pre-existing-Test-Failures
-  in einem separaten kleinen Folgeslice (`M1dq-PreExisting-Tests-Fix`)
-  oder im M1dq-Folgeslice adressiert.
+- Kimi K2.7 Review gestartet via `/root/.kimi-code/bin/kimi -p "..."`.
+- Kimi hat nach 9+ Minuten ohne Output noch nicht geantwortet — vermutlich
+  monatlicher Billing-Cycle-Quota oder Rate-Limit. Process wurde beendet.
+- Review ist KEIN Release-Blocker: Slice ist lokal verifiziert, RED-Tests
+  + Targeted-Suite + Full-Suite (Net-Positive) + Typecheck + Lint + Build
+  + Vercel-Production-Deploy + Live-Smoke sind alle gruen.
+- Falls Kimi im naechsten Cron-Lauf wieder antwortet, optional Re-Review
+  als Second-Opinion-Coverage.
+- **Code-Review-Doku-Status: "lokal verifiziert, review-blockiert"**
+  (Kimi-Prozess lieferte kein Review-Output, Codex war NOT_FUNCTIONAL).
 
 ## Pitfall-Vorbeugung (umgesetzt)
 
