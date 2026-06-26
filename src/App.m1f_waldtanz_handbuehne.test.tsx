@@ -78,6 +78,11 @@ describe('M1f Waldtanz-Handkarten-Buehne als sichtbares Stitch-Spielerbrett', ()
     // in "hand" liegen.
     const panelBlock = cssBlock(css, '.spielbereich--game-route [class~="handkarten-panel"]')
     expect(panelBlock).toMatch(/grid-area:\s*hand/)
+    // AENDERUNG 26.06.2026 (M1f): Panel max-height/min-height
+    // angehoben, damit Buehne (132 px) + Handkartenleiste (110 px)
+    // im 900er Viewport passen.
+    expect(panelBlock).toMatch(/max-height:\s*clamp\(15rem,\s*25vh,\s*17rem\)/)
+    expect(panelBlock).toMatch(/min-height:\s*clamp\(14rem,\s*22vh,\s*16rem\)/)
   })
 
   it('begrenzt die Handkarten-Hoehe so dass bottom der Karten im 900-px-Viewport bleibt', () => {

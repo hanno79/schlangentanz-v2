@@ -43,7 +43,10 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     // Kommentare muessen vorher entfernt werden, weil der AENDERUNG-Kommentar
     // das Wort "pointer-events:none" noch enthaelt.
     const handBlockClean = handBlock.replace(/\/\*[\s\S]*?\*\//g, '')
-    expect(handBlockClean).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
+    // AENDERUNG 26.06.2026 (M1f): max-height/min-height auf das Panel
+    // angehoben, damit Buehne + Handkartenleiste im 900er Viewport passen.
+    expect(handBlockClean).toMatch(/max-height:\s*clamp\(15rem,\s*25vh,\s*17rem\)/)
+    expect(handBlockClean).toMatch(/min-height:\s*clamp\(14rem,\s*22vh,\s*16rem\)/)
     expect(handBlockClean).toMatch(/padding:\s*0\.2rem\s+0\.45rem/)
     expect(handBlockClean).not.toMatch(/pointer-events:\s*none/)
 

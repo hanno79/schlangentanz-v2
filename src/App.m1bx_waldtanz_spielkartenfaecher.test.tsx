@@ -52,7 +52,10 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     // M1d0 22.06.2026: Handkarten-Panel hat jetzt max-height 8rem/18vh/9.5rem
     // statt 10.25rem/23vh/12.1rem und keinen translateY-Spacer mehr
     // (das Panel ist jetzt eine Grid-Zelle im Grid-Flow, kein Overlay).
-    expect(panel).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
+    // AENDERUNG 26.06.2026 (M1f): max-height/min-height angehoben, damit
+    // Buehne + Handkartenleiste im 900er Viewport passen.
+    expect(panel).toMatch(/max-height:\s*clamp\(15rem,\s*25vh,\s*17rem\)/)
+    expect(panel).toMatch(/min-height:\s*clamp\(14rem,\s*22vh,\s*16rem\)/)
     expect(panel).toMatch(/transform:\s*none/)
     expect(liste).toMatch(/align-items:\s*end/)
     expect(liste).toMatch(/perspective:\s*1100px/)

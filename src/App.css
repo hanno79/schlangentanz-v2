@@ -2463,14 +2463,23 @@ code {
        hat und das darunterliegende Brett durch overflow:hidden am
        Arenastein sowieso nicht mehr hereingreift.
        M1d0 22.06.2026: box-sizing: border-box damit die 3px transparenten
-       Borders nicht in die naechste Grid-Zelle hineinragen. */
+       Borders nicht in die naechste Grid-Zelle hineinragen.
+       AENDERUNG 26.06.2026 (M1f): max-height von clamp(8rem, 18vh, 9.5rem)
+       auf clamp(15rem, 25vh, 17rem) angehoben, damit das Panel sowohl
+       die sichtbare Buehne (132 px = Border + Padding + Inneres) als
+       auch die Handkartenleiste (110 px Karten + Padding) aufnehmen
+       kann. Mit 17 rem = 272 px bleibt das Panel bei 900-px-Viewport
+       (25vh = 225 px) kompakt, bietet aber 200+ px Innenraum.
+       Im 1280x900-Viewport bedeutet das: Panel ~225 px hoch, Buehne
+       oben (132 px), Karten darunter (110 px), Gesamttiefe <900 px. */
     grid-area: hand;
     align-self: center;
     justify-self: stretch;
     z-index: 4;
     box-sizing: border-box;
     width: 100%;
-    max-height: clamp(8rem, 18vh, 9.5rem);
+    min-height: clamp(14rem, 22vh, 16rem);
+    max-height: clamp(15rem, 25vh, 17rem);
     margin: 0;
     padding: 0.2rem 0.45rem;
     overflow: visible;
