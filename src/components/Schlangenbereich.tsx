@@ -473,7 +473,7 @@ export default function Schlangenbereich({
                           <button
                             key={`${aktion.handkartenId}-${aktion.schlangenId}-${aktion.position}`}
                             type="button"
-                            className={`schlangekarte__anlegebutton schlangekarte__anlegebutton--${aktion.position} schlangekarte__anlegeplatz schlangekarte__anlegeplatz--${aktion.position}${istAusgewaehlterAnlegeplatz ? ' schlangekarte__anlegeplatz--ausgewaehlt' : ''}`}
+                            className={`schlangekarte__anlegebutton schlangekarte__anlegebutton--${aktion.position} schlangekarte__anlegeplatz schlangekarte__anlegeplatz--${aktion.position}${istAusgewaehlterAnlegeplatz ? ' schlangekarte__anlegeplatz--ausgewaehlt schlangekarte__anlegeplatz--ziel-puls' : ''}`}
                             aria-label={`Schlangenbereich: Karte ${aktion.handkartenId} ${aktion.position} anlegen`}
                             aria-describedby={istAusgewaehlterAnlegeplatz ? anlegeVorschauId : undefined}
                             title={aktionsLabel(aktion)}
@@ -484,14 +484,24 @@ export default function Schlangenbereich({
                             onDragOver={makeAktionsButtonDragOver(aktion.handkartenId, { kind: 'schlange', id: schlange.id })}
                             onDrop={makeAktionsButtonDrop((kartenId) => (kartenId === aktion.handkartenId ? aktion : null))}
                           >
-                            <span className="schlangekarte__anlegeplatz-richtung">
-                              {aktion.position === 'links' ? 'Linkes Ende' : 'Rechtes Ende'}
+                            <span className="schlangekarte__anlegeplatz-kopfzeile">
+                              <span className="schlangekarte__anlegeplatz-pfeil" aria-hidden="true">
+                                {aktion.position === 'links' ? '←' : '→'}
+                              </span>
+                              <span className="schlangekarte__anlegeplatz-richtung">
+                                {aktion.position === 'links' ? 'Linkes Ende' : 'Rechtes Ende'}
+                              </span>
                             </span>
                             {istAusgewaehlterAnlegeplatz ? (
                               <span id={anlegeVorschauId} className="schlangekarte__anlegeplatz-vorschau">
                                 <span className="schlangekarte__anlegeplatz-vorschau-label">Anlegekarte</span>
                                 <strong className="schlangekarte__anlegeplatz-karte schlangekarte__anlegeplatz-vorschau-id">{aktion.handkartenId}</strong>
-                                <span>Klick auf dieses Schlangenende legt die Karte {richtung} an.</span>
+                                <span className="schlangekarte__anlegeplatz-vorschau-hinweis">
+                                  <span className="schlangekarte__anlegeplatz-pfeil" aria-hidden="true">
+                                    {aktion.position === 'links' ? '←' : '→'}
+                                  </span>
+                                  Klick legt die Karte {richtung} an.
+                                </span>
                               </span>
                             ) : (
                               <>

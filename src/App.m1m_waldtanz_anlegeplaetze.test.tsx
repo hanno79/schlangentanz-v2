@@ -44,7 +44,7 @@ describe('M1m Waldtanz-Anlegeplätze', () => {
     expect(within(rechts).getByText('Rechtes Ende')).toBeVisible()
     expect(within(links).getByText('blau-m1m')).toHaveClass('schlangekarte__anlegeplatz-karte')
     expect(within(rechts).getByText('Anlegekarte')).toBeVisible()
-    expect(within(rechts).getByText('Klick auf dieses Schlangenende legt die Karte rechts an.')).toBeVisible()
+    expect(within(rechts).getByText('Klick legt die Karte rechts an.')).toBeVisible()
 
     fireEvent.click(rechts)
 

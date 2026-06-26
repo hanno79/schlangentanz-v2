@@ -8420,6 +8420,35 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   background: linear-gradient(180deg, rgba(254, 203, 0, 0.28), rgba(236, 255, 227, 0.88));
   box-shadow: 0 4px 0 var(--st-color-border-strong);
   color: var(--st-color-border-strong);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.schlangekarte__anlegeplatz-kopfzeile {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.schlangekarte__anlegeplatz-pfeil {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.65rem;
+  min-height: 1.65rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  border: 2px solid var(--st-color-border-strong);
+  background: var(--st-color-primary-container);
+  font-family: var(--st-font-headline);
+  font-size: 1.05rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--st-color-border-strong);
+}
+
+.schlangekarte__anlegeplatz-vorschau-hinweis {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .schlangekarte__anlegeplatz--ausgewaehlt {
@@ -8428,11 +8457,35 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 }
 
 .schlangekarte__anlegeplatz--links {
+  --anlegeplatz-rotate: -2deg;
   transform: rotate(-2deg);
 }
 
 .schlangekarte__anlegeplatz--rechts {
+  --anlegeplatz-rotate: 2deg;
   transform: rotate(2deg);
+}
+
+.schlangekarte__anlegeplatz--ziel-puls {
+  animation: anlegeplatz-puls 1.4s ease-in-out infinite;
+}
+
+.schlangekarte__anlegeplatz:hover,
+.schlangekarte__anlegeplatz:focus-visible {
+  transform: rotate(var(--anlegeplatz-rotate, 0deg)) translateY(-3px) scale(1.04);
+  box-shadow: 0 8px 0 var(--st-color-border-strong), 0 0 0 5px rgba(164, 222, 2, 0.34);
+  outline: none;
+}
+
+@keyframes anlegeplatz-puls {
+  0%, 100% {
+    transform: rotate(var(--anlegeplatz-rotate, 0deg)) scale(1);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+  50% {
+    transform: rotate(var(--anlegeplatz-rotate, 0deg)) scale(1.04);
+    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 6px rgba(254, 203, 0, 0.32);
+  }
 }
 
 .schlangekarte__anlegeplatz-richtung,
@@ -8457,7 +8510,7 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   padding: 0.45rem 0.55rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: var(--st-radius-lg);
-  background: var(--st-color-sunny-gold);
+  background: var(--st-color-secondary-container);
   box-shadow: 0 5px 0 var(--st-color-border-strong);
 }
 
@@ -8539,8 +8592,11 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   .schlangekarte--haeutung-ziel,
   .schlangen-startzone--zielbereit,
   .waldtanz-kartenpop,
-  .waldtanz-kartenpop__stern {
+  .waldtanz-kartenpop__stern,
+  .schlangekarte__anlegeplatz,
+  .schlangekarte__anlegeplatz--ziel-puls {
     animation: none;
+    transition: none;
   }
 }
 

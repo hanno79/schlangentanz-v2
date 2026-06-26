@@ -49,7 +49,7 @@ describe('M1bb Schlangenende-Vorschau', () => {
     expect(vorschau).not.toHaveAttribute('aria-label')
     expect(rechts.getAttribute('aria-describedby')?.split(/\s+/)).toContain((vorschau as HTMLElement).id)
     expect(within(vorschau as HTMLElement).getByText('gelb-ende-m1bb')).toHaveClass('schlangekarte__anlegeplatz-vorschau-id')
-    expect(within(vorschau as HTMLElement).getByText('Klick auf dieses Schlangenende legt die Karte rechts an.')).toBeVisible()
+    expect(within(vorschau as HTMLElement).getByText('Klick legt die Karte rechts an.')).toBeVisible()
     expect(within(rechts).queryByText('Karte dort anlegen')).toBeNull()
 
     fireEvent.click(rechts)
