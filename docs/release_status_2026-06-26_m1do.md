@@ -19,7 +19,7 @@ Auf / (Lobby) ist sie weiterhin voll sichtbar (kein route-scope-Leak).
 
 ## Commits
 
-- (wird beim Push ergaenzt)
+- `bb2ac15 M1do: Waldtanz-Sonnenstand-HUD auf /game visuell reduziert (3. Click-Simulator-Liste weg)` — pushed to main, Vercel Production deployed (Ready in 25s, Aliased to https://schlangentanz-v2.vercel.app)
 
 ## Geaenderte / neue Dateien
 
@@ -40,7 +40,9 @@ Auf / (Lobby) ist sie weiterhin voll sichtbar (kein route-scope-Leak).
 | Lint | gruen |
 | Build | gruen (212.63 KB CSS, 407.23 KB JS) |
 | Kimi-Review | BLOCKERS: keine, NON-BLOCKERS: 9 (alle adressierbar, keine release-blockierend) |
-| Production-Smoke | wird nach Deploy verifiziert (Sektion im DOM, NICHT sichtbar) |
+| Production-Smoke (M1do) | gruen — 1280x900 + 1100x800: Sektion im DOM, display=none, 0x0px, Spielstatus-Heading + Zugfortschritt + Brettrand-Arenazug sichtbar |
+| M1dm Brettrand-Zentrum Smoke (Regression-Check) | gruen — Aktionen-Panel display=none, Arenazugknopf sichtbar, Schlangenlichtung 974x370 px @1280x900 |
+| M1dn Kompass-Flach Smoke (Regression-Check) | gruen — Heading + Nächster-Schritt display=none, Brettrand-Arenazug + End-Turn-Kicker sichtbar |
 
 ## Pre-existing Failures (von M1do unberuehrt)
 
@@ -50,9 +52,10 @@ M1do hat sie weder verursacht noch veraendert. Sie bleiben als bekannte Issue-Li
 - `m1ak_waldtanz_kartenpop_lichtung` — Reduced-Motion-Schutz-Regex-Aenderung
 - `m1aw_waldtanz_handkante` — max-height-clamp-Constraint
 - `m1da_waldtanz_handflaeche_erstbild` — Panel-Hoehe 15rem > erwartet 12.1rem
+- `m1cl_erstbild_zugknopf` (Smoke, 1100x800) — Handbereich fällt bei 1100x800 unter 900-px-Fold (M1f-Panel-Cap-Konsequenz)
+- `m1dh_spielhandlung` (Smoke) — Hover-Hint-Opacity auf erster Handkarte
 
-Diese stammen aus einer AERA VOR M1do (M1f-Panel-Cap-Aenderung) und werden in einem separaten Slice
-adressiert — nicht im M1do-Scope, weil sie mit Section-Visual-Removal nichts zu tun haben.
+Diese stammen aus der M1f-Panel-Cap-Aenderung (Bühne + Leiste brauchen 220px) und werden in einem separaten Layout-Slice (M1dp Kandidat) adressiert — nicht im M1do-Scope, weil sie mit Section-Visual-Removal nichts zu tun haben.
 
 ## Kimi Review — Details
 
