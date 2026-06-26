@@ -2098,6 +2098,20 @@ code {
     border-radius: 1.4rem;
   }
 
+  /* AENDERUNG 26.06.2026 (M1dn): auf /game visuell ausgeblendet, damit der
+     Kompass als flache Stitch-Indikator-Pillen-Reihe rendert (kein doppelter
+     Section-Heading, kein zweiter "Nächster Schritt"-Text). Die phase-
+     spezifische Handlungsanweisung lebt jetzt am Brettrand-End-Turn-Knopf
+     (Waldtanz-Arenazug) als single source of truth. Auf / (Lobby) bleiben
+     Heading + Paragraph sichtbar fuer die Spielvorbereitung. */
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__kompass"] strong {
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-seitenmenue__kompass"] p {
+    display: none;
+  }
+
   .spielbereich--game-route [class~="waldtanz-seitenmenue--seitenranke"] [class~="waldtanz-seitenmenue__kompass"] {
     padding: 0.45rem;
   }
