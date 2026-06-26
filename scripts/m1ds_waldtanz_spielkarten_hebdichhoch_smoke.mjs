@@ -133,8 +133,10 @@ async function pruefeSpielkartenHebDichHoch(page, viewport, label) {
   }
   // Hover-Lift: Card-Transform muss translateY-Komponente enthalten
   // jsdom kann matrix(1, 0, 0, 1, 0, -40) liefern (40px = 2.5rem bei 16px root)
-  if (!/matrix\([^)]*,\s*0,\s*0,\s*1,\s*0,\s*-/.test(phase1.cardTransform) &&
-      !/translate/.test(phase1.cardTransform)) {
+  // Chromium liefert matrix(1.12, 0, 0, 1.12, 0, -45) — -45px translateY
+  // Akzeptiere sowohl translate3d als auch matrix mit negativem Y-Wert
+  if (!/matrix\([^)]*,\s*0,\s*0,\s*1\.?\d*,\s*0,\s*-\d+/.test(phase1.cardTransform) &&
+      !/translate3d?\(/.test(phase1.cardTransform)) {
     throw new Error(`M1ds ${label}: Card-Hover-Transform "${phase1.cardTransform}" enthaelt keine translateY-Komponente`)
   }
 
