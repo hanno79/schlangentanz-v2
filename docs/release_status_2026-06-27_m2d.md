@@ -112,11 +112,23 @@ Die 27 pre-existing Failures sind unabhaengig von M2d (sie testen `Zuletzt ausge
 - [x] M2a-Smoke Self-Test: `node scripts/m2a_waldtanz_sonderkarten_brettziel_highlight_smoke.mjs --self-test` → config ok
 - [x] **Full suite**: 27 failed (pre-existing), 1218 passed → Net-Positive +8
 - [x] **Code-Review**: Kimi k2p7 → 2 BLOCKER gefunden und in derselben Slice gefixt + 2 Regressions-RED-Tests
-- [ ] Production URL 200 + Live-Smoke (nach Deploy)
+- [x] **Production URL 200** + **M2d-Live-Smoke PASS** auf https://schlangentanz-v2.vercel.app/game:
+  - `HOOK: window.__schlangentanzFixture verfuegbar`
+  - `FIXTURE: Schlangenfrass in Hand injiziert`
+  - `ACCEPTANCE: Hand/Sonderkarte nach Fixture sichtbar`
+  - Screenshot: `/tmp/m2d_fixture_helper_production.png`
+- [x] **M1dq-Live-Smoke PASS** (positiver Pfad jetzt beweisbar): Sonderkarten-Spielmoment-Bubble rendert mit Heading, Ziel-Art-Span, Anker-Link, Spielerfuehrung. Sichtbar an 1280x900 und 1100x800.
+- [ ] M2a-Positive-Acceptance fehlt auf Production: `data-zielspur-key` Selector findet 0 Elemente weil **Schlangenbereich-Container auf 24px collapsed ist** (`boundingBox.height: 24`). Das ist ein Layout-Bug (M2b+/M3+-Folgeslice), NICHT M2d-verursacht.
 
 ## Naechste mittlere Luecke Richtung echtes Spiel
 
-Nach M2d: Sonderkarten-Erlebnis ist end-to-end live-smoke-verifizierbar. Naechste Schritte:
+Nach M2d: Sonderkarten-Erlebnis ist end-to-end live-smoke-verifizierbar. **Aktueller visueller Engpass:**
+- Schlangenlichtung-Container ist auf 24px Höhe collapsed (Production-Layout-Bug, Smoke gemessen)
+- Folge: M2a-Positive-Acceptance schlägt fehl, Sonderkarten-Brett-Ziel-Anker nicht sichtbar
+- Der Spieler sieht aktuell linke Seitenleiste (mit Status + Debug-Chrome), obere Gegner-Pillen und eine Phasen-Leiste — die **eigene Schlange fehlt visuell als Brettobjekt**
+
+**Naechste Schritte (Priorität):**
+- **M1a+/M1b+ Schlangenlichtung-Reparatur**: Container-Mindesthöhe + sichtbare Brettobjekte. Der Spieler MUSS seine eigene Schlange sehen, sonst ist es ein Click-Simulator ohne Spielwert. Mittlerer Vertical-Slice: ~80–120 Zeilen CSS + 4–6 RED-Tests + Live-Smoke der misst `boundingBox.height >= 200px` für Schlangenlichtung.
 - **M2b — Gegnerlichtung-Brettziel-Prop-Federung** (eliminiert 2 weitere Kimi-Blocker aus M2a): State-Hebung + Prop-Pass-Through
 - **M2c — Schlangenhaeutung-Brettziel mit data-zielspur-key** (eliminiert letzten Kimi-Blocker): Komponenten-Erweiterung
 - **M3a — Lobby-Stitch-Stil (1-3 KI-Gegner)**: Sonniges-Nest-Lobby auf Stitch-Referenz umstellen
