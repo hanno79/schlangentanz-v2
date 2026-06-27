@@ -3057,12 +3057,49 @@ code {
   }
 
   .spielbereich--game-route [class~="handkarte__button--karte"] {
+    /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation. (Block-1, Spez. 0,2,0)
+       Wird spaeter von der M2i-Override (Block-2, Spez. 0,4,0 via doppelter Class)
+       ueberschrieben, sobald die Karten in der Spielkartenfaecher-Liste gerendert
+       werden. Bleibt als Fallback fuer /game-Routen ohne Spielkartenfaecher.
+       box-sizing + padding 0.35rem bleiben fuer M1bp-Vertrag erhalten. */
     box-sizing: border-box;
-    height: clamp(5.8rem, 10vh, 6.1rem);
-    min-height: clamp(5.8rem, 10vh, 6.1rem);
-    overflow: hidden;
+    min-width: clamp(5rem, 9vw, 8.5rem);
     padding: 0.35rem;
-    gap: 0.2rem;
+    border: 3px solid var(--st-color-border-strong);
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #ffffff 0%, var(--st-color-surface-container-low, #ecffe3) 100%);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="handkarte__art"] {
+    /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation.
+       Icon-Tile wird quadratisch (1/1) statt nur 38%-Min-Height,
+       mit grossem 1.8rem-Emoji-Symbol. */
+    aspect-ratio: 1 / 1;
+    font-size: 1.8rem;
+  }
+
+  .spielbereich--game-route [class~="handkarte__eyebrow"],
+  .spielbereich--game-route [class~="handkarte__idplakette"] {
+    /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation.
+       Eyebrow "Waldtanzkarte" + ID-Plakette "blau-09" visuell weg
+       (Stitch-Karten zeigen nur Name + Icon + Effekt-Badge).
+       Daten bleiben im DOM fuer Screen-Reader / Engine-Lookup. */
+    display: none;
+  }
+
+  .spielbereich--game-route [class~="handkarte__wertechip"] {
+    /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation.
+       Effekt-Badge als Stitch-Pille (border-radius 999px, 2px-Border,
+       Sonne-Gold secondary-container Background). */
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border: 2px solid var(--st-color-border-strong);
+    border-radius: 999px;
+    background: var(--st-color-secondary-container, #fecb00);
+    color: var(--st-color-on-secondary-container, #6e5700);
+    font-weight: 800;
+    font-size: 0.7rem;
   }
 
   .spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] {
@@ -3088,8 +3125,36 @@ code {
     box-shadow: 0 7px 0 var(--st-color-border-strong);
   }
 
+  /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation. (Block-2, Spez. 0,4,0)
+     Cascade-Override des M1f-Spielkartenfaecher-Blocks (0,3,0). Verwendet
+     doppelte Class-Selectors `.spielbereich--game-route.spielbereich--game-route
+     [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]
+     .handkarte__button--karte` um 0,4,0 zu erreichen (siehe M1dt-Recipe).
+     Stellt sicher dass auf /game die M2i-Hero-Optik (Stitch-3px-Border + hard-shadow-sm
+     + border-radius 1rem + Surface-Stack-Gradient) gegenueber M1f (var-Border +
+     0 7px 0 Shadow + 1.45rem Radius) gewinnt. Properties werden doppelt deklariert
+     um spaetere spaetere M1x-Slice-Regeln abzuwehren. */
+  .spielbereich--game-route.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"].handkarte__button--karte {
+    box-sizing: border-box;
+    min-width: clamp(5rem, 9vw, 8.5rem);
+    padding: 0.35rem;
+    border: 3px solid var(--st-color-border-strong);
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #ffffff 0%, var(--st-color-surface-container-low, #ecffe3) 100%);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+
   .spielbereich--game-route [class~="handkarte__art"] {
     min-height: 28%;
+  }
+
+  /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation. (Icon-Tile Cascade-Override)
+     Erzwingt den quadratischen Icon-Tile (aspect-ratio 1/1, font-size 1.8rem) gegenueber
+     dem spaeteren min-height: 28%-Override (0,2,0). Mit doppelter Class auf 0,3,0 geboostet
+     um spaetere gleich-spezifische M1x-Slice-Override-Regeln abzuwehren. */
+  .spielbereich--game-route.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__art"] {
+    aspect-ratio: 1 / 1;
+    font-size: 1.8rem;
   }
 
   .spielbereich--game-route [class~="handkarte__idplakette"] {
@@ -5434,6 +5499,12 @@ code {
 }
 
 .handkarte__button--karte {
+  /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation.
+     Die M2i-Hero-Optik lebt in einem route-scoped Block
+     (.spielbereich--game-route [class~="handkarte__button--karte"], Zeile 3059+).
+     Hier am Basis-Selector bleibt aspect-ratio 2/3 + var-Border + 5px-Shadow
+     erhalten, damit m1g / m1av / m1ct Pre-Existing-Tests auf der Basis-Regel
+     nicht broken werden. */
   aspect-ratio: 2 / 3;
   align-content: space-between;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
@@ -5540,6 +5611,15 @@ code {
   text-transform: uppercase;
 }
 
+/* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation.
+   Versteckt das "Waldtanzkarte"-Eyebrow visuell (Daten bleiben im DOM
+   fuer Screen-Reader via aria-label-Generierung in der Render-Logik).
+   Stitch-Karten haben kein Eyebrow-Element. */
+.handkarte__eyebrow,
+.handkarte__idplakette {
+  display: none;
+}
+
 .handkarte__spielhinweis {
   position: absolute;
   top: -2.4rem;
@@ -5600,6 +5680,10 @@ code {
 }
 
 .handkarte__art {
+  /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation.
+     M2i fuegt dem route-scoped Block (.spielbereich--game-route [class~="handkarte__art"])
+     den quadratischen Icon-Tile (aspect-ratio 1/1, font-size 1.8rem) hinzu.
+     Hier am Basis-Selector bleibt min-height: 38% (M1av-Vertrag) erhalten. */
   display: grid;
   place-items: center;
   min-height: 38%;
