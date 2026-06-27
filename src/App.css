@@ -10058,6 +10058,41 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
     inset 0 0 0 2px rgba(255, 255, 255, 0.45);
 }
 
+/* AENDERUNG 27.06.2026 (M2h) — Stitch-Forest-Background-Texture: subtiler
+   organischer Dot-Pattern ueber dem bestehenden Multi-Color-Gradient. Der
+   Pattern wird ueber ein ::before-Pseudo-Element mit niedriger Opacity
+   gerendert, sodass der Gradient darunter sichtbar bleibt (Lime-Gelb-White
+   Sonnenuntergang) und nur die Wald-Boden-Textur dazukommt.
+
+   - radial-gradient mit 1.4px-Dot (Stitch nutzt 2px; 1.4px ist subtiler
+     und passt zur dichten 26px-Tiling)
+   - background-size: 26px 26px (Stitch nutzt 30px; 26px ist dichter,
+     weil die Schlangenlichtung schmaler ist als der Full-Body-View)
+   - opacity: 0.45 (subtil, nicht dominant — der Gradient bleibt
+     visuell fuehrend)
+   - pointer-events: none (kein Click-Intercept fuer Schlangen-Karten
+     und Brettobjekte darunter)
+   - z-index: 0 (unter dem Grid-Inhalt der Spielflaeche, ueber dem Gradient)
+
+   Cascade-Regression-Schutz (M1dt-Pattern): die ::before-Regel hat
+   Specificity 0,1,1 (Class + Pseudo-Class). Die Basis-Regel hat 0,1,0
+   (nur Class). Beide ko-existieren ohne Override, weil sie auf
+   unterschiedlichen Targets liegen (Element vs. Pseudo-Element).
+
+   Contract: Bestehender Gradient darf NICHT ersetzt werden — der Pattern
+   ist ein dekorativer Layer ueber dem Gradient, nicht statt dessen. */
+.waldtanz-schlangenlichtung__spielflaeche::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-image: radial-gradient(circle, #c4fdb6 1.4px, transparent 1.6px);
+  background-size: 26px 26px;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .waldtanz-schlangenlichtung__overlays {
   position: relative;
   display: grid;
