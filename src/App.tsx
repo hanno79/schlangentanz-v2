@@ -21,6 +21,7 @@ import AktionenPanel from './components/AktionenPanel'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
 import HandkartenPanel from './components/HandkartenPanel'
+import { baueFixtureZustand } from './components/waldtanzFixtureLogik'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
 import KiZugBuehne from './components/KiZugBuehne'
@@ -174,6 +175,28 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     const timer = window.setTimeout(() => setLetzteAktionZiel(null), 1500)
     return () => window.clearTimeout(timer)
   }, [letzteAktionZiel])
+
+  // M2d — window.__schlangentanzFixture-Hook: erlaubt Live-Smokes (M1dq, M2a,
+  // M2c, M2b+) deterministische Sonderkarten-Spielzustaende herzustellen,
+  // ohne die UI-Klick-Ketten manuell durchlaufen zu muessen. Defensive
+  // Installation: ueberschreibt kein bereits gesetztes Helper-Symbol und
+  // entfernt den Hook nur, wenn er selbst Installateur war (sauberer
+  // Unmount-Pfad in Tests).
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const w = window as unknown as { __schlangentanzFixture?: (fixture: unknown) => void }
+    if (typeof w.__schlangentanzFixture === 'function') return
+    const installierterHook = (fixture: unknown): void => {
+      const zustandNeu = baueFixtureZustand(zustand, fixture as Parameters<typeof baueFixtureZustand>[1])
+      setZustand(zustandNeu)
+    }
+    w.__schlangentanzFixture = installierterHook
+    return () => {
+      if ((window as unknown as { __schlangentanzFixture?: unknown }).__schlangentanzFixture === installierterHook) {
+        delete (window as unknown as { __schlangentanzFixture?: (fixture: unknown) => void }).__schlangentanzFixture
+      }
+    }
+  }, [zustand])
 
   function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand, aktionZiel: LetzteAktionZiel | null = null) {
     setLetzteAktion(label)
