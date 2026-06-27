@@ -41,13 +41,16 @@ describe('M1co Waldtanz-Zauberpfad-Sprungfaehrten', () => {
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
     const bissspur = within(schlangenbereich).getByRole('group', { name: 'Schlangenfrass-Bissspur für rot-sprung-m1co' })
-    expect(bissspur).not.toHaveClass('waldtanz-zielspur-ziel--aktiv')
+    // M2a: Sonderkarten-Selektion aktiviert das passende Brett-Ziel automatisch.
+    // Vor dem Sprung-Klick ist die Bissspur also bereits auto-aktiv.
+    expect(bissspur).toHaveClass('waldtanz-zielspur-ziel--aktiv')
 
     const pfad = within(zielspur).getByRole('listitem', { name: 'Bissspur-Zauberpfad rot-sprung-m1co' })
     const sprung = within(pfad).getByRole('button', { name: 'Zum 1. Bissspur-Brettobjekt springen' })
     expect(within(zielspur).getByRole('button', { name: 'Zum 2. Bissspur-Brettobjekt springen' })).toBeVisible()
     fireEvent.click(sprung)
 
+    // Nach manuellem Sprung bleibt die Bissspur aktiv (manueller Key = Auto-Key).
     expect(bissspur).toHaveClass('waldtanz-zielspur-ziel--aktiv')
     expect(bissspur).toHaveAttribute('data-zielspur-key', 'frass:spieler-1:eigene-sprungschlange-m1co:rot-sprung-m1co')
     expect(bissspur.querySelector('button')).toBe(document.activeElement)

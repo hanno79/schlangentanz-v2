@@ -22,7 +22,7 @@ import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import SchlangenWertungsplakette from './SchlangenWertungsplakette'
 import SchlangenStartzone from './SchlangenStartzone'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
-import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele, ermittleZielspurFamilien, ermittleZielspurObjekte } from './waldtanzZielspurLogik'
+import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele, ermittleZielspurFamilien, ermittleZielspurObjekte, ermittleAutoHighlightZielspurKey } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
 import FarbenschutzSchild from './FarbenschutzSchild'
 import SchlangenfrassBissspur from './SchlangenfrassBissspur'
@@ -261,15 +261,6 @@ export default function Schlangenbereich({
     return () => document.removeEventListener('dragend', handleDragEnd)
   }, [])
 
-  useEffect(() => {
-    if (!aktiverZielspurKey) return
-    const ziel = document.querySelector(zielspurKeySelector(aktiverZielspurKey))
-    if (!(ziel instanceof HTMLElement)) return
-    ziel.scrollIntoView?.({ block: 'center', inline: 'nearest' })
-    const fokus = ziel.querySelector('button') ?? ziel
-    if (fokus instanceof HTMLElement) fokus.focus({ preventScroll: true })
-  }, [aktiverZielspurKey])
-
   const titelId = `${komponentenId}-schlangenbereich-titel`
   const eigeneTitelId = `${komponentenId}-eigene-schlangen-titel`
   const startzoneTitelId = `${komponentenId}-startzone-titel`
@@ -279,6 +270,44 @@ export default function Schlangenbereich({
   const zielspurAnzahl = zaehleZielspurBrettziele({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurFamilien = ermittleZielspurFamilien({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
   const zielspurObjekte = ermittleZielspurObjekte({ handkartenId: ausgewaehlteHandkarteId, aktiverSpielerId: aktiverSpieler.id, aktiverSpielerSchlangen: aktiverSpieler.schlangen, karteAnlegenAktionen, neueSchlangeStartenAktionen, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, schlangenblockadeAktionen, farbendiebAktionen, haeutungZielAnzahl })
+
+  // M2a: Auto-Highlight fuer Sonderkarten-Brettziele. Wenn der Spieler
+  // eine Sonderkarte auswaehlt und ein legales Ziel existiert, wird
+  // das passende Brett-Ziel automatisch aktiv hervorgehoben. Bei
+  // Farbkarten-Auswahl KEIN Auto-Highlight (die nutzen den Anlegeplatz-Pfad).
+  // Wir berechnen den Auto-Key als derived value und mergen ihn mit dem
+  // manuellen Highlight-State (M1dq-Spielmoment-Klick).
+  const ausgewaehlteKarte = ausgewaehlteHandkarteId
+    ? aktiverSpieler.hand.find((karte) => karte.id === ausgewaehlteHandkarteId) ?? null
+    : null
+  const istSonderkarte = ausgewaehlteKarte?.typ === 'Sonderkarte'
+  const autoHighlightKey = istSonderkarte && ausgewaehlteHandkarteId
+    ? ermittleAutoHighlightZielspurKey({
+        ausgewaehlteHandkarteId,
+        aktiverSpielerId: aktiverSpieler.id,
+        aktiverSpielerSchlangen: aktiverSpieler.schlangen,
+        farbenschutzAktionen: farbenschutzAktionen ?? [],
+        farbenfusionAktionen: farbenfusionAktionen ?? [],
+        schlangenfrassAktionen: schlangenfrassAktionen ?? [],
+      })
+    : null
+  // Kimi-Review-Blocker 4: Ghost-Highlight-Bereinigung. Statt eines
+  // useEffect+setState nutzen wir Auto-Highlight-Vorrang, wenn der
+  // User eine Sonderkarte explizit selektiert. Der manuelle Key
+  // (M1dq-Bubble) bleibt nur sichtbar, wenn der User explizit auf
+  // die Bubble klickt; sobald die Sonderkarte gewechselt wird,
+  // ueberschreibt autoHighlightKey den M1dq-Key.
+  const effektiverZielspurKey = autoHighlightKey ?? aktiverZielspurKey
+
+  // Scroll-into-view fuer effektiven Highlight-Key (manuell M1dq ODER auto M2a).
+  useEffect(() => {
+    if (!effektiverZielspurKey) return
+    const ziel = document.querySelector(zielspurKeySelector(effektiverZielspurKey))
+    if (!(ziel instanceof HTMLElement)) return
+    ziel.scrollIntoView?.({ block: 'center', inline: 'nearest' })
+    const fokus = ziel.querySelector('button') ?? ziel
+    if (fokus instanceof HTMLElement) fokus.focus({ preventScroll: true })
+  }, [effektiverZielspurKey])
 
   return (
     <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>
@@ -404,7 +433,7 @@ export default function Schlangenbereich({
                           zeigeSchwanzCurl={istEigeneSchlange}
                           className={`${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                         >
-                          <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} zielspurKey={farbenfusionZielspurKey} hervorgehoben={aktiverZielspurKey === farbenfusionZielspurKey} />
+                          <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} zielspurKey={farbenfusionZielspurKey} hervorgehoben={effektiverZielspurKey === farbenfusionZielspurKey} />
                           {schlangenfrassAktion && (
                             <SchlangenfrassBissspur
                               zielKartenId={karte.id}
@@ -413,7 +442,7 @@ export default function Schlangenbereich({
                               ariaLabel={`Schlangenfrass im Schlangenbereich mit Karte ${schlangenfrassAktion.handkartenId} auf Karte ${karte.id}`}
                               title={aktionsLabel(schlangenfrassAktion)}
                               zielspurKey={schlangenfrassZielspurKey}
-                              hervorgehoben={aktiverZielspurKey === schlangenfrassZielspurKey}
+                              hervorgehoben={effektiverZielspurKey === schlangenfrassZielspurKey}
                               onClick={() => onAktion(schlangenfrassAktion)}
                             />
                           )}
@@ -433,7 +462,7 @@ export default function Schlangenbereich({
                       label={aktionsLabel(farbenschutzAktion)}
                       onAktion={onAktion}
                       zielspurKey={`schutz:${schlange.id}`}
-                      hervorgehoben={aktiverZielspurKey === `schutz:${schlange.id}`}
+                      hervorgehoben={effektiverZielspurKey === `schutz:${schlange.id}`}
                     />
                   )}
                   {zeigeSchlangenhaeutungBrettziel && (

@@ -46,7 +46,8 @@ describe('M1cp Waldtanz-Gegner-Zauberpfad-Sprungfaehrten', () => {
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
     const beutekorb = within(schlangenbereich).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-beute-m1cp' })
-    expect(beutekorb).not.toHaveClass('waldtanz-zielspur-ziel--aktiv')
+    // M2a: Sonderkarten-Selektion aktiviert das passende Brett-Ziel automatisch.
+    expect(beutekorb).toHaveClass('waldtanz-zielspur-ziel--aktiv')
 
     const pfad = within(zielspur).getByRole('listitem', { name: 'Beutekorb-Zauberpfad rot-beute-m1cp' })
     fireEvent.click(within(pfad).getByRole('button', { name: 'Zum 1. Beutekorb-Brettobjekt springen' }))

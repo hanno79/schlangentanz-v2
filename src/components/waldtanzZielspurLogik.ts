@@ -46,6 +46,64 @@ function add(set: Set<string>, key: string) {
   set.add(key)
 }
 
+/**
+ * M2a: Auto-Highlight-Key fuer eine ausgewaehlte Sonderkarte.
+ *
+ * Scope (bewusst reduziert — Kimi-Review-Blocker 3 beachtet):
+ * Liefert den ersten zielspurKey, der zu einem DOM-Anker mit
+ * `data-zielspur-key="..."` fuehrt, in dieser Reihenfolge:
+ * 1. Schlangenfrass  (eigene Schlange hat Karte — Bissspur im Schlangenbereich)
+ * 2. Farbenschutz    (eigene Schlange — Schild im Schlangenbereich)
+ * 3. Farbenfusion    (eigenes Kartenpaar — Paarziel im Schlangenbereich)
+ *
+ * Bewusst NICHT enthalten (M2b+):
+ * 4. Schlangenblockade + 5. Farbendieb: Diese sind in der Gegnerlichtung
+ *    verankert, die in App.tsx mit `aktiverZielspurKey={undefined}`
+ *    aufgerufen wird. State-Anhebung in den App-Scope ist ein
+ *    separater Architektur-Slice (M2b: App-State-Prop-Federung fuer
+ *    Gegnerlichtung-Highlight). Bis dahin wuerde Auto-Highlight fuer
+ *    diese Ziele stumm im State liegen.
+ * 6. Schlangenhaeutung: rendert KEIN `data-zielspur-key`-Element,
+ *    daher kein DOM-Anker fuer den Highlight moeglich. Bleibt
+ *    explizit ein Folgeslice (M2c: Schlangenhaeutung-Brettziel
+ *    mit data-zielspur-key + Highlight-System anbinden).
+ *
+ * Liefert `null` wenn die Auswahl keine Sonderkarte ist, kein
+ * legales Ziel existiert, oder keine Handkarte ausgewaehlt ist.
+ */
+export interface AutoHighlightOptionen {
+  ausgewaehlteHandkarteId: string | null
+  aktiverSpielerId: string
+  aktiverSpielerSchlangen: Spieler['schlangen']
+  farbenschutzAktionen: Aktion<'FarbenschutzSpielen'>[]
+  farbenfusionAktionen: Aktion<'FarbenfusionSpielen'>[]
+  schlangenfrassAktionen: Aktion<'SchlangenfrassSpielen'>[]
+}
+
+export function ermittleAutoHighlightZielspurKey(optionen: AutoHighlightOptionen): string | null {
+  const { ausgewaehlteHandkarteId, aktiverSpielerId, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen } = optionen
+  if (!ausgewaehlteHandkarteId) return null
+
+  // 1. Schlangenfrass (eigene Schlange mit Karte bevorzugt) — Bissspur.
+  for (const aktion of schlangenfrassAktionen) {
+    if (!passt(aktion, ausgewaehlteHandkarteId)) continue
+    const ziel = aktion.ziele.find((z) => z.spielerId === aktiverSpielerId) ?? aktion.ziele[0]
+    if (ziel) return `frass:${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`
+  }
+  // 2. Farbenschutz — Schild.
+  for (const aktion of farbenschutzAktionen) {
+    if (!passt(aktion, ausgewaehlteHandkarteId)) continue
+    return `schutz:${aktion.zielSchlangenId}`
+  }
+  // 3. Farbenfusion — Paarziel.
+  for (const aktion of farbenfusionAktionen) {
+    if (!passt(aktion, ausgewaehlteHandkarteId)) continue
+    return `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+  }
+
+  return null
+}
+
 export function hatSichtbaresEigenesSchlangenziel({
   handkartenId,
   spielerId,
