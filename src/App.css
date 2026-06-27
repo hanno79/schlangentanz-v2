@@ -10211,3 +10211,25 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   color: var(--st-color-on-surface, #063907);
   white-space: nowrap;
 }
+
+/* AENDERUNG 27.06.2026: M2e Schlangenlichtung-Brettwald-Befreiung.
+   Auf /game wird die linke Zugfortschritt-Sidebar (.info-panel--spielstatus
+   mit 1.Karte ziehen/2.Karten ausspielen/3.Aufgaben pruefen/4.Zug abschliessen/
+   5.Spiel beendet) und die untere Drei-Panel-Reihe (.waldtanz-hud = Wertung +
+   MaterialUndAufgaben + Spieleruebersicht) ausgeblendet, damit die Schlangenlichtung
+   zur visuellen Buehne wird. Auf / (Lobby-Default) bleiben beide sichtbar — die
+   Phase/Status-Information ist dort noch noetig. Die .spielbrett--waldtanz-Region
+   dehnt sich mit flex: 1 1 auto auf die freigewordene Hoehe aus, damit die
+   HandkartenPanel nicht ueber den Fold rutscht. */
+.spielbereich--game-route [class~="info-panel--spielstatus"] {
+  display: none !important;
+}
+
+.spielbereich--game-route [class~="waldtanz-hud"] {
+  display: none !important;
+}
+
+.spielbereich--game-route [class~="spielbrett--waldtanz"] {
+  flex: 1 1 auto;
+  min-height: 0;
+}
