@@ -5721,6 +5721,10 @@ code {
   border: 1px solid rgba(6, 57, 7, 0.32);
   background: rgba(255, 255, 255, 0.55);
   box-shadow: 0 2px 0 rgba(6, 57, 7, 0.2);
+  /* M1dt: position:relative macht die Karte zum containing block für
+     .schlangekarte__gesicht (Augen) und .schlangekarte__mund (Lächeln),
+     damit sie auf der Kopf-Karte und nicht auf der Kartenreihe sitzen. */
+  position: relative;
 }
 
 .schlangekarte__karte:nth-child(2n) {
@@ -5748,6 +5752,127 @@ code {
   border: 2px solid rgba(6, 57, 7, 0.24);
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(164, 222, 2, 0.6), rgba(254, 203, 0, 0.55), rgba(177, 45, 0, 0.26));
+}
+
+/* ÄNDERUNG 27.06.2026: M1dt — Schlangenwurm-Körper-Brücke (::after) hinter der Kartenreihe.
+   Die wellenförmige dashed-Linie verbindet die Karten zu einem sichtbaren Schlange-Körper. */
+.schlangekarte__kartenreihe--pfad::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0.6rem;
+  right: 0.6rem;
+  top: 62%;
+  height: 0.4rem;
+  border-top: 2px dashed rgba(6, 57, 7, 0.42);
+  border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+  pointer-events: none;
+}
+
+/* ÄNDERUNG 27.06.2026: M1dt — Schlangen-Augen (zwei weisse Punkte mit dunkler Pupille). */
+.schlangekarte__gesicht {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.18rem;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.schlangekarte__auge {
+  width: 0.36rem;
+  height: 0.36rem;
+  background: #ffffff;
+  border: 1.5px solid var(--st-color-border-strong, #063907);
+  border-radius: 50%;
+  position: relative;
+  display: inline-block;
+}
+
+.schlangekarte__auge--links {
+  transform: translateY(-0.04rem);
+}
+
+.schlangekarte__auge--rechts {
+  transform: translateY(-0.04rem);
+}
+
+.schlangekarte__pupille {
+  position: absolute;
+  width: 0.18rem;
+  height: 0.18rem;
+  background: var(--st-color-border-strong, #063907);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ÄNDERUNG 27.06.2026: M1dt — Schlangen-Mund (kleines Lächeln). */
+.schlangekarte__mund {
+  position: absolute;
+  top: 0.95rem;
+  right: 0.55rem;
+  width: 0.7rem;
+  height: 0.32rem;
+  border-bottom: 2px solid var(--st-color-border-strong, #063907);
+  border-left: 1.5px solid transparent;
+  border-right: 1.5px solid transparent;
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ÄNDERUNG 27.06.2026: M1dt — Schwanz-Curl. Asymmetrisches Border-Radius formt den
+   Schwanz zu einer eingerollten Spitze (curl nach links). Spezifitaet 0,2,0 schlaegt
+   die spaetere Spielkarte-Regel mit border-radius 1.1rem (0,1,0). */
+.schlangekarte__karte--schwanz-curl.schlangekarte__karte--schwanz-curl {
+  border-radius: 1.1rem 0.5rem 0.5rem 0.3rem;
+  position: relative;
+}
+
+.schlangekarte__karte--schwanz-curl::before {
+  content: '';
+  position: absolute;
+  right: -0.18rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 0.35rem solid transparent;
+  border-bottom: 0.35rem solid transparent;
+  border-left: 0.42rem solid var(--st-color-border-strong, #063907);
+  pointer-events: none;
+}
+
+/* ÄNDERUNG 27.06.2026: M1dt — Solo-Karte (1-Karten-Schlange) ist Embryo und größer.
+   Spezifitaet 0,3,0 schlaegt die spaetere Spielkarte-Regel mit min-width 5.9rem (0,1,0). */
+.schlangekarte--solo.schlangekarte--solo .schlangekarte__karte {
+  min-width: 7.5rem;
+  min-height: 6.4rem;
+}
+
+/* ÄNDERUNG 27.06.2026: M1dt — Wriggle-Animation für eigene Schlangen in der Ausspielphase.
+   Sanftes, wellenförmiges Schaukeln vermittelt Lebendigkeit. */
+@keyframes wriggle {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-0.12rem) rotate(0.4deg); }
+  50% { transform: translateY(-0.18rem) rotate(0deg); }
+  75% { transform: translateY(-0.12rem) rotate(-0.4deg); }
+}
+
+.schlangekarte--wriggle {
+  animation: wriggle 2.6s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schlangekarte--wriggle {
+    animation: none;
+  }
 }
 
 .waldtanz-farbgruppenband {

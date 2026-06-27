@@ -350,15 +350,24 @@ export default function Schlangenbereich({
               const schlangenLabelNameId = `${komponentenId}-schlange-${schlangeIndex}-name`
               const schlangenWertungId = `${komponentenId}-schlange-${schlangeIndex}-wertung`
 
+              const istSolo = schlange.karten.length === 1
+              // M1dt: Eigene Schlange = Schlange des aktiven Spielers. Nur eigene Schlangen
+              // bekommen Augen/Mund (Stitch-Stil) und werden in der Ausspielphase gewriggelt.
+              const istEigeneSchlange = aktiverSpieler.schlangen.includes(schlange)
+              // M1dt: Wriggle nur in der Ausspielphase, nicht in Aufgabenprüfung oder Nachziehphase.
+              const istAusspielphase = zustand.zugphase === 'Ausspielphase'
+              const sollWriggeln = istEigeneSchlange && istAusspielphase
+
               return (
                 <li
                   key={schlange.id}
-                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${istHaeutungZiel ? ' schlangekarte--haeutung-ziel' : ''}${istNichtZiel ? ' schlangekarte--nichtziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}`}
+                  className={`schlangekarte schlangekarte--eigene${istBoardZiel ? ' schlangekarte--zielbereit' : ''}${farbenschutzAktion ? ' schlangekarte--farbenschutz-ziel' : ''}${istHaeutungZiel ? ' schlangekarte--haeutung-ziel' : ''}${istNichtZiel ? ' schlangekarte--nichtziel' : ''}${dragOverZone?.kind === 'schlange' && dragOverZone.id === schlange.id ? ' schlangekarte--dragover' : ''}${istSolo ? ' schlangekarte--solo' : ''}`}
                   tabIndex={0}
                   role="button"
                   aria-labelledby={`${schlangenLabelTypId} ${schlangenLabelNameId}`}
                   aria-describedby={`${komponentenId}-schlange-${schlangeIndex}-anlegehilfe ${schlangenWertungId}`}
                   data-letzte-aktion-ziel={letzteAktionZiel?.typ === 'schlange' && letzteAktionZiel.id === schlange.id ? `schlange-${schlange.id}` : undefined}
+                  data-wriggle-aktiv={sollWriggeln ? 'true' : undefined}
                   onClick={(event) => handleSchlangeClick(event, schlange.id)}
                   onKeyDown={(event) => handleSchlangeKeyDown(event, schlange.id)}
                   onDragOver={(event) => handleSchlangeDragOver(event, schlange.id)}
@@ -368,7 +377,11 @@ export default function Schlangenbereich({
                   <strong id={schlangenLabelNameId} className="schlangekarte__name">{schlange.id}</strong>
                   <span className="schlangekarte__badge">{schlange.karten.length} Karten</span>
                   <SchlangenWertungsplakette id={schlangenWertungId} schlange={schlange} />
-                  <div className="schlangekarte__kartenreihe schlangekarte__kartenreihe--pfad" role="list" aria-label={`Kartenreihe ${schlange.id}`}>
+                  <div
+                    className={`schlangekarte__kartenreihe schlangekarte__kartenreihe--pfad${sollWriggeln ? ' schlangekarte--wriggle' : ''}`}
+                    role="list"
+                    aria-label={`Kartenreihe ${schlange.id}`}
+                  >
                     {schlange.karten.map((karte, kartenIndex) => {
                       const farbenfusionPaar = ermittleFarbenfusionPaarInfo(schlange.karten, kartenIndex, schlange.id, ausgewaehlteHandkarteId, farbenfusionAktionen)
                       const farbenfusionAktion = farbenfusionPaar?.istStartkarte ? farbenfusionPaar.aktion : null
@@ -387,6 +400,8 @@ export default function Schlangenbereich({
                           istKopf={istKopf}
                           istSchwanz={istSchwanz}
                           regenbogenWildfarbe={regenbogenWildfarben.get(karte.id)}
+                          zeigeKopfGesicht={istEigeneSchlange}
+                          zeigeSchwanzCurl={istEigeneSchlange}
                           className={`${istSonderaktionZiel ? ' schlangekarte__karte--sonderaktion-ziel' : ''}${farbenfusionAktion ? ' schlangekarte__karte--farbenfusion-ziel' : ''}${istFarbenfusionPaar ? ' schlangekarte__karte--farbenfusion-paar' : ''}${schlangenfrassAktion ? ' schlangekarte__karte--schlangenfrass-ziel' : ''}`}
                         >
                           <FarbenfusionPaarziel paar={farbenfusionPaar} onAktion={onAktion} zielspurKey={farbenfusionZielspurKey} hervorgehoben={aktiverZielspurKey === farbenfusionZielspurKey} />
