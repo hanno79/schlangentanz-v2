@@ -43,6 +43,7 @@ import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStemp
 import WaldtanzSchlangenlichtung from './components/WaldtanzSchlangenlichtung'
 import WaldtanzGegnerlichtung from './components/WaldtanzGegnerlichtung'
 import WaldtanzPhasenBanner from './components/WaldtanzPhasenBanner'
+import WaldtanzBrettrandQuestpille from './components/WaldtanzBrettrandQuestpille'
 import WaldtanzSpielerplakette from './components/WaldtanzSpielerplakette'
 import WaldtanzGegnerplakette from './components/WaldtanzGegnerplakette'
 import WertungPanel from './components/WertungPanel'
@@ -332,6 +333,9 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 </div>
                 {istGameRoute && (
                   <WaldtanzPhasenBanner zugphase={zustand.zugphase} istSpielende={istSpielende} />
+                )}
+                {istGameRoute && (
+                  <WaldtanzBrettrandQuestpille geheimeAufgabeText={geheimeAufgabeText} />
                 )}
                 <div className="waldtanz-arenastein__spielfeld">
                   {istGameRoute && zustand.spieler.length > 1 && (
