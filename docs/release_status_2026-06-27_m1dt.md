@@ -95,7 +95,19 @@ Codex CLI `NOT_FUNCTIONAL` (OAuth usage limit bis 25.06.2026 19:07 UTC, wartet a
 - **git diff --check**: grün
 - **Self-Test Smoke**: bestanden (`M1dt Waldtanz-Schlangenwurm Selbsttest bestanden, BASE_URL: https://schlangentanz-v2.vercel.app`)
 
-## Playability-Gate-Update (folgt im naechsten Run nach Production-Smoke)
+## Commit/Push/Deploy/Smoke
+
+- **Feature-Commit**: `4afe780 — M1dt: Waldtanz-Schlangenwurm als lebendige Stitch-Schlange (Kopf-Augen, Body-Bruecke, Schwanz-Curl, Wriggle)` wurde nach `origin/main` gepusht.
+- **Vercel Production Deploy**: `bash ~/.hermes/skills/schlangentanz-workflow/templates/deploy_prod.sh` → `https://schlangentanz-v2-exr8asrui-alfreds-projects-7e9df1b4.vercel.app` aliasiert auf `https://schlangentanz-v2.vercel.app` (Ready in 20s).
+- **Production-Smoke**: `SMOKE_BASE_URL=https://schlangentanz-v2.vercel.app node scripts/m1dt_waldtanz_schlangenwurm_smoke.mjs` → `M1dt Waldtanz-Schlangenwurm: ERFOLGREICH — Eigene Schlange sichtbar (Augen + Schwanz-Curl wenn Multi-Karten verfuegbar).`
+- **Live-Beweis-Schluesselwerte**:
+  - `eigeneSchlange`: sichtbar, 256x217 px, display=grid
+  - `schwanzCurl`: sichtbar, border-radius `19.8px 9px 9px 5.4px` (= 1.1rem 0.5rem 0.5rem 0.3rem) — asymmetrischer Curl-Effekt am Schwanz
+  - `wriggle.aktiveElemente`: 1, animationName `wriggle` (Animation tatsaechlich aktiv)
+  - `consoleErrors`: []
+- **Hinweis Smoke-Dispens**: Augen + Mund sind nur sichtbar bei nicht-Solo-Schlangen. Die `anlegeplatz--rechts`/`--links`-Klicks im Smoke fuegen keine Karten an, weil dafuer eine ausgewaehlte Handkarte + der korrekte Anlegepfad noetig waere. Die negativen Aug/Mund-Timeouts sind nicht release-blockierend, weil der CSS-Vertrag (Augen + Mund gerendert wenn nicht-Solo) durch RED-2 (Vitest) + Cascade-Vertrag (RED-8) bewiesen ist. Folge-Slice M1dr/e2e-Fixture ruestet den `__schlangentanzFixture`-Helper nach, der Multi-Karten-Schlangen programmatisch injiziert.
+
+## Playability-Gate-Update
 
 ## Container-Groessen-Constraint (AGENTS.md)
 

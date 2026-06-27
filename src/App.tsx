@@ -13,7 +13,7 @@ import {
   berechneGewinner,
   ermittleQuestZugHinweise,
 } from './engine'
-import type { SpielAktion, SpielerWertungsEintrag, Spielzustand, PflichtAbwurfAktion } from './engine'
+import type { FarbkarteInfo, SpielAktion, SpielerWertungsEintrag, Spielzustand, PflichtAbwurfAktion } from './engine'
 import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
 import useAktionenPanelProps from './hooks/useAktionenPanelProps'
 import { useSpielLabels } from './hooks/useSpielLabels'
@@ -293,6 +293,10 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   istMensch={naechsterGegner.steuerung === 'Mensch'}
                   punkte={spielerwertungen.find((wertung) => wertung.spielerId === naechsterGegner.id)?.gesamtPunkte ?? 0}
                   handkarten={naechsterGegner.hand.length}
+                  gegnerHandFarben={naechsterGegner.hand
+                    .filter((karte): karte is FarbkarteInfo => karte.typ === 'Farbkarte')
+                    .slice(0, 3)
+                    .map((karte) => karte.farbe)}
                 />
               )}
               {istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
