@@ -6599,10 +6599,11 @@ code {
 }
 
 .waldtanz-brettrand-questpille__text {
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
+  max-width: 28ch;
 }
 
 .waldtanz-brettrand-questpille__status {
