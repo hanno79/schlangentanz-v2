@@ -151,7 +151,7 @@ async function pruefeM2iHandkartenHero(page, viewport) {
     throw new Error(`M2i @${breite}x${hoehe}: ${pageErrors.length} page errors: ${pageErrors.slice(0, 3).join(' | ')}`)
   }
 
-  console.log(`  --- M2i @ ${breite}x${hoehe}: ALLE 8 ASSERTIONS GRUEN ---`)
+  console.log(`  --- M2i @ ${breite}x${hoehe}: ALLE 9 ASSERTIONS GRUEN ---`)
 }
 
 async function selfTest() {

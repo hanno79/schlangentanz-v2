@@ -3125,11 +3125,12 @@ code {
     box-shadow: 0 7px 0 var(--st-color-border-strong);
   }
 
-  /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation. (Block-2, Spez. 0,4,0)
+  /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation. (Block-2, Spez. 0,5,0)
      Cascade-Override des M1f-Spielkartenfaecher-Blocks (0,3,0). Verwendet
      doppelte Class-Selectors `.spielbereich--game-route.spielbereich--game-route
      [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]
-     .handkarte__button--karte` um 0,4,0 zu erreichen (siehe M1dt-Recipe).
+     .handkarte__button--karte` um 0,5,0 zu erreichen (siehe M1dt-Recipe).
+     (CSS-Specificity B-Level: 2 Classes + 2 Attribute-Selectors + 1 Class = 0,5,0)
      Stellt sicher dass auf /game die M2i-Hero-Optik (Stitch-3px-Border + hard-shadow-sm
      + border-radius 1rem + Surface-Stack-Gradient) gegenueber M1f (var-Border +
      0 7px 0 Shadow + 1.45rem Radius) gewinnt. Properties werden doppelt deklariert
@@ -3150,8 +3151,9 @@ code {
 
   /* AENDERUNG 27.06.2026: M2i — Stitch-Hero-Transformation. (Icon-Tile Cascade-Override)
      Erzwingt den quadratischen Icon-Tile (aspect-ratio 1/1, font-size 1.8rem) gegenueber
-     dem spaeteren min-height: 28%-Override (0,2,0). Mit doppelter Class auf 0,3,0 geboostet
-     um spaetere gleich-spezifische M1x-Slice-Override-Regeln abzuwehren. */
+     dem spaeteren min-height: 28%-Override (0,2,0). Mit doppelter Class auf 0,4,0 geboostet
+     um spaetere gleich-spezifische M1x-Slice-Override-Regeln abzuwehren.
+     (CSS-Specificity B-Level: 2 Classes + 2 Attribute-Selectors = 0,4,0) */
   .spielbereich--game-route.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__art"] {
     aspect-ratio: 1 / 1;
     font-size: 1.8rem;
