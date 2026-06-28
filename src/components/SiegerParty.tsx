@@ -60,11 +60,12 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
         <h2>Schlangentanz!</h2>
         <p className="sieger-party__ergebnis">{ergebnisLabel}</p>
       </div>
-      <div className="sieger-party__portrait" aria-hidden="true">
-        <span className="sieger-party__korona" />
-        <span className="sieger-party__krone">👑</span>
-        <span className="sieger-party__schlange">🐍</span>
-        <span className="sieger-party__pokal">🏆</span>
+      <div className="sieger-party__portrait" role="region" aria-label="Gewinner-Portrait">
+        <span className="sieger-party__korona" aria-hidden="true" />
+        <span className="sieger-party__krone" aria-hidden="true">👑</span>
+        <span className="sieger-party__schlange" aria-hidden="true">🐍</span>
+        <span className="sieger-party__pokal" aria-hidden="true">🏆</span>
+        <span className="sieger-party__leaderboard-badge" aria-hidden="true">🏅</span>
       </div>
       <div className="sieger-party__scorekarte">
         <h3>Finale Punktetafel</h3>
@@ -85,6 +86,7 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
         </dl>
       </div>
       <button className="sieger-party__neustart" type="button" onClick={() => onNeuesSpiel(aktiveKiGegner(zustand))}>
+        <span className="sieger-party__neustart-icon" aria-hidden="true">↻</span>
         Noch einmal spielen
       </button>
     </section>

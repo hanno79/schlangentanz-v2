@@ -4745,6 +4745,123 @@ code {
   }
 }
 
+/* M5a: Stitch-Waldlichtung-Forest-Hero Transformation der Sieger-Party.
+   Diese Regeln ergänzen den bestehenden M4c-Sieger-Party-Block (Konfetti,
+   Ballons, Korona, Pokal, Headline bleiben unangetastet) durch:
+   Sunset-Forest-Backdrop, groesseres Portrait, Leaderboard-Badge,
+   Holzplakette-Scorekarte mit Tilt, Stitch-Hero-Nochmal-Button.
+   Spätere-Position-Regel gewinnt bei gleicher Spezifität. */
+.sieger-party {
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(6, 57, 7, 0.18) 100%),
+    linear-gradient(180deg,
+      var(--st-color-tertiary-container) 0%,
+      var(--st-color-secondary-container) 38%,
+      var(--st-color-surface-dim) 100%);
+}
+
+.sieger-party__kopf h2 {
+  color: var(--st-color-secondary-container);
+  -webkit-text-stroke: 3px var(--st-color-border-strong);
+  text-shadow:
+    0 6px 0 var(--st-color-border-strong),
+    0 8px 0 rgba(6, 57, 7, 0.18);
+  animation: party-wiggle 2s ease-in-out infinite;
+}
+
+.sieger-party__portrait {
+  width: clamp(13rem, 28vw, 20rem);
+  position: relative;
+}
+
+.sieger-party__leaderboard-badge {
+  position: absolute;
+  bottom: -0.8rem;
+  right: -0.8rem;
+  width: 3.2rem;
+  height: 3.2rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-tertiary-container);
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  transform: rotate(12deg);
+  animation: party-wiggle 2.5s ease-in-out infinite;
+  z-index: 3;
+}
+
+.sieger-party__scorekarte {
+  display: grid;
+  gap: 0.75rem;
+  padding: clamp(1rem, 2vw, 1.35rem);
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 2rem;
+  background: var(--st-color-secondary-container);
+  box-shadow: 0 8px 0 var(--st-color-border-strong);
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease;
+}
+
+.sieger-party__scorekarte:hover {
+  transform: rotate(0deg);
+}
+
+.sieger-party__stats div {
+  border-radius: 999px;
+  background: rgba(236, 255, 227, 0.95);
+  box-shadow: 3px 3px 0 var(--st-color-border-strong);
+}
+
+.sieger-party__scorewert {
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  font-family: var(--st-font-headline);
+  font-weight: 900;
+  padding: 0.15rem 0.85rem;
+}
+
+.sieger-party__neustart {
+  grid-column: 1 / -1;
+  justify-self: center;
+  min-height: 3.8rem;
+  padding: 0.85rem 2.5rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  box-shadow: 0 8px 0 var(--st-color-border-strong);
+  color: var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.sieger-party__neustart:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 0 var(--st-color-border-strong);
+}
+
+.sieger-party__neustart:active {
+  transform: translateY(8px);
+  box-shadow: 0 0 0 var(--st-color-border-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sieger-party__kopf h2,
+  .sieger-party__leaderboard-badge,
+  .sieger-party__portrait,
+  .sieger-party__scorekarte,
+  .sieger-party__neustart {
+    animation: none;
+  }
+  .sieger-party__leaderboard-badge { transform: rotate(12deg); }
+  .sieger-party__scorekarte { transform: rotate(-2deg); }
+}
+
 .info-panel {
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   background: var(--st-color-secondary-container);
