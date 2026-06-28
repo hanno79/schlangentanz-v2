@@ -21,6 +21,7 @@ import SchlangenPfadKarte from './SchlangenPfadKarte'
 import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import SchlangenWertungsplakette from './SchlangenWertungsplakette'
 import SchlangenStartzone from './SchlangenStartzone'
+import WaldtanzErsteSchlangeOnboarding from './WaldtanzErsteSchlangeOnboarding'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
 import { hatSichtbaresEigenesSchlangenziel, zaehleZielspurBrettziele, ermittleZielspurFamilien, ermittleZielspurObjekte, ermittleAutoHighlightZielspurKey } from './waldtanzZielspurLogik'
 import FarbenfusionPaarziel from './FarbenfusionPaarziel'
@@ -561,10 +562,7 @@ export default function Schlangenbereich({
           </div>
           </>
         ) : istGameRoute ? (
-          <div className="schlangen-startgarten" role="note" aria-label="Leerer Startgarten">
-            <strong>Noch keine eigene Schlange</strong>
-            <span>Wähle eine Handkarte und nutze den Startkreis rechts, um deinen ersten Schlangenpfad zu legen.</span>
-          </div>
+          <WaldtanzErsteSchlangeOnboarding />
         ) : (
           <p>Keine eigenen Schlangen.</p>
         )}
