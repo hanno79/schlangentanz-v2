@@ -102,8 +102,12 @@ const kiSlots = [
 
 function SchlangeAvatar({ name, svg, hostBadge }: { name: string; svg: ReactNode; hostBadge?: boolean }) {
   return (
-    <div className="lobby-avatar" aria-hidden="true">
-      {svg}
+    <div className="lobby-avatar">
+      {/* SVG-Dekoration ist aria-hidden — der Spielername steht in
+          der .lobby-slot__name-Pille, die fuer Screenreader lesbar ist. */}
+      <span className="lobby-avatar__bild" aria-hidden="true">
+        {svg}
+      </span>
       {hostBadge ? (
         <span className="lobby-slot__badge" title="Host">
           <span aria-hidden="true">★</span>

@@ -310,7 +310,14 @@ body {
   overflow: hidden;
 }
 
-.lobby-avatar svg {
+.lobby-avatar__bild {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.lobby-avatar__bild svg {
   width: 78%;
   height: 78%;
 }

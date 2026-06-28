@@ -69,6 +69,9 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
   it('M3c:3 — Vier Avatare sichtbar: Host + 3 KI-Slots, alle als SVG (kein Emoji)', () => {
     // SUT: <SonnigesNestLobby> rendert 4 .lobby-avatar mit <svg> darin,
     // Namen Slippy Host + Orange Crush + Lime Loop + Berry Boa.
+    // Accessibility: SVG-Dekoration MUSS fuer Screenreader versteckt sein
+    // (entweder aria-hidden am SVG selbst oder am Parent-Wrapper), aber
+    // der .lobby-slot__name MUSS lesbar bleiben.
     const { container } = render(
       <SonnigesNestLobby aktiveKiGegner={3} onNeuesSpiel={() => undefined} />,
     )
@@ -78,7 +81,12 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
       // Avatar-Content MUSS eine SVG sein (kein Emoji mehr).
       const svg = avatar.querySelector('svg')
       expect(svg).not.toBeNull()
-      expect(svg?.getAttribute('aria-hidden')).toBe('true')
+      // SVG-Dekoration ist fuer Screenreader versteckt — entweder
+      // direkt am SVG oder am Parent-Span.
+      const svgAria = svg?.getAttribute('aria-hidden')
+      const wrapperAria = avatar.querySelector('.lobby-avatar__bild')?.getAttribute('aria-hidden')
+      const isHidden = svgAria === 'true' || wrapperAria === 'true'
+      expect(isHidden).toBe(true)
     })
     const namen = Array.from(avatars).map((avatar) =>
       avatar.querySelector('.lobby-slot__name')?.textContent?.trim() ?? '',
@@ -87,6 +95,11 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
     expect(namen).toContain('Orange Crush')
     expect(namen).toContain('Lime Loop')
     expect(namen).toContain('Berry Boa')
+    // Accessibility-Hardening (Kimi-Blocker 2026-06-28): Avatar-Wrapper
+    // selbst darf NICHT aria-hidden sein, sonst ist der Name unsichtbar.
+    avatars.forEach((avatar) => {
+      expect(avatar.getAttribute('aria-hidden')).not.toBe('true')
+    })
   })
 
   it('M3c:4 — SVG-Avatare haben Schlange-typische fill-Farben je Slot', () => {

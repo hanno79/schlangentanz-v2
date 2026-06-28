@@ -81,6 +81,14 @@ async function main() {
   await page.goto(`${BASE_URL}/`, { waitUntil: 'networkidle' })
   // Warten bis die Lobby gerendert ist.
   await page.locator('.lobby-avatar').first().waitFor({ state: 'visible', timeout: 5000 })
+  // Initial sind 0 KI aktiv (Default-Lobby). Erst auf "Waldparty starten
+  // (2 KI)" klicken, damit 2 KI-Slots aktiviert werden und alle
+  // Schwierigkeiten sichtbar werden.
+  await page.click('button.lobby-startbutton:has-text("Waldparty")')
+  await page.locator('.lobby-slot--ki').nth(1).waitFor({ state: 'visible', timeout: 5000 })
+  // Auf 3 KI hochklicken, damit alle 3 Schwierigkeiten gezeigt werden.
+  await page.click('button.lobby-startbutton:has-text("Große Runde")')
+  await page.locator('.lobby-slot--ki').nth(2).waitFor({ state: 'visible', timeout: 5000 })
   const daten = await messeLobby(page)
   console.log('M3c Avatar-Count:', daten.avatarCount)
   console.log('M3c grid-template-columns:', daten.gridColumns)
