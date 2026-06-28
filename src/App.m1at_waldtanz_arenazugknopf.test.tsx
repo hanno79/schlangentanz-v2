@@ -96,7 +96,7 @@ describe('M1at Waldtanz-Arenazugknopf', () => {
   it('schuetzt den Stitch-Brettkanten-Vertrag fuer den prominenten Zugknopf', () => {
     expect(cssBlock('.waldtanz-arenazug')).toMatch(/display:\s*flex/)
     expect(cssBlock('.waldtanz-arenazug')).toMatch(/justify-content:\s*flex-end/)
-    expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/background:\s*var\(--st-color-secondary-container\)/)
+    expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/background:\s*var\(--st-color-tertiary-container\)/)
     expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)
     expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/border-radius:\s*999px/)
     expect(cssBlock('.waldtanz-arenazug__hauptknopf')).toMatch(/box-shadow:\s*0 6px 0 var\(--st-color-border-strong\)/)
