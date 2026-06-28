@@ -10504,3 +10504,42 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   min-height: clamp(34rem, 60vh, 42rem);
   height: auto;
 }
+
+/* M2s (27.06.2026): Schlangenlichtung-Empty-State als ruhige Forest-Lichtung.
+   Im leeren Anfangszustand auf /game (kein Karte gewaehlt, keine eigene
+   Schlange) sollen drei Notification-Bubbles visuell verschwinden, weil
+   sie das "Click-Simulator-Gefuehl" verstaerken.
+
+   Versteckte Elemente auf /game:
+   1. .waldtanz-aktiver-tanz-schritt — 894 px breite Info-Bubble ("Spieler 1 ist am Zug").
+      Info lebt bereits in der Spieleruebersicht-Sidebar + Brettrand-End-Turn-Bereich.
+   2. .schlangen-zielkompass — Text-Bubble ("Waehle oder ziehe eine Handkarte").
+      Info lebt bereits in der Spielerfuehrung-Sidebar. Sobald eine Karte gewaehlt
+      wird, kommt die Bubble zurueck (Override-Regel unten).
+   3. .schlangen-startgarten — Text-Bubble ("Noch keine eigene Schlange").
+      Info lebt in Spielerfuehrung + die Magiekreise sind der sichtbare Hinweis.
+
+   Schaden null: Auf / (Lobby) bleiben alle drei sichtbar (route-scoped Hide greift
+   nicht). Wenn der Spieler eine Handkarte waehlt, kommt der Zielkompass zurueck.
+
+   Cascade-Schutz (M1dt-Pattern): doubled-class + !important damit spaetere
+   pre-existing Regeln (.schlangen-zielkompass mit display:flex aus M1h) nicht
+   still ueberschreiben. Specificity 0,3,0 + !important gewinnt gegen 0,1,0. */
+.spielbereich--game-route [class~="waldtanz-aktiver-tanz-schritt"] {
+  display: none !important;
+}
+
+.spielbereich--game-route [class~="schlangen-zielkompass"] {
+  display: none !important;
+}
+
+.spielbereich--game-route [class~="schlangen-startgarten"] {
+  display: none !important;
+}
+
+/* M2s Override: Sobald eine Handkarte gewaehlt ist, kommt der Zielkompass zurueck
+   (Information "X Brettziele bereit" ist spielrelevant). Specificity 0,3,0 + !important
+   gewinnt gegen die Hide-Regel oben. */
+.spielbereich--game-route [class~="schlangenbereich"][class~="schlangenbereich--karte-ausgewaehlt"] [class~="schlangen-zielkompass"] {
+  display: flex !important;
+}
