@@ -10081,7 +10081,11 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
      damit die primary-Surface-Optik konsistent zur M1dg-Lichtungsstein-Pattern bleibt
      und Cascade-Konflikte vermieden werden. Die INNERE Spielflaeche
      (.waldtanz-schlangenlichtung__spielflaeche) traegt zusaetzlich border + background +
-     box-shadow als primary Stein-Flaeche. */
+     box-shadow als primary Stein-Flaeche.
+     M2u: position: relative als containing block fuer zukuenftige absolute
+     Drop-Indikator-Children (z.B. zentrales Drop-Icon) und fuer den aktuellen
+     outline-offset-Rim, der auf diesem Element rechnet. */
+  position: relative;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(0.55rem, 1.1vw, 0.85rem);
@@ -10542,4 +10546,42 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    gewinnt gegen die Hide-Regel oben. */
 .spielbereich--game-route [class~="schlangenbereich"][class~="schlangenbereich--karte-ausgewaehlt"] [class~="schlangen-zielkompass"] {
   display: flex !important;
+}
+
+/* M2u (28.06.2026): Handkarten-Drag-Glow auf der Schlangenlichtung. Wenn der
+   Spieler eine Handkarte per Drag aus der Handbuehne zieht (data-drag-aktiv="true"),
+   bekommt die ganze Schlangenlichtung einen sichtbaren Drop-Glow-Rim (forest-gruene
+   dashed-border + scale-Pulse). Das Brettobjekt signalisiert "hier wird gespielt"
+   und reagiert auf den drag-state aus dem HandkartenPanel (M2u-Prop handkarteDragAktiv).
+
+   Cascade-Schutz: die Rule liegt am Ende der Datei, specificity 0,2,0 (Class +
+   Attribut). Sie setzt KEINE border-Color auf der Basis-Lichtung, sondern nur
+   einen zusaetzlichen outline + box-shadow Rim, damit die M1dg-Lichtungsstein-
+   Optik (border + background) unveraendert bleibt.
+
+   Forest-gruen aus dem Stitch-Palette: --st-color-primary (#3f6f1a) bzw.
+   #4b6700 als Fallback-Hex (M1dq-Pattern). */
+.waldtanz-schlangenlichtung[data-drag-aktiv="true"] {
+  animation: waldtanz-lichtung-drag-glow 1.2s ease-in-out infinite;
+  outline: 3px dashed #4b6700;
+  outline-offset: 4px;
+  border-radius: 1.2rem;
+}
+
+@keyframes waldtanz-lichtung-drag-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(75, 103, 0, 0.0);
+  }
+  50% {
+    transform: scale(1.012);
+    box-shadow: 0 0 0 6px rgba(75, 103, 0, 0.18);
+  }
+}
+
+/* Reduced-Motion-Override: Animation aus, Outline bleibt (statisches Drop-Signal). */
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-schlangenlichtung[data-drag-aktiv="true"] {
+    animation: none;
+  }
 }

@@ -89,6 +89,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
+  const [handkarteDragAktiv, setHandkarteDragAktiv] = useState(false)
   const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
   const [brettschrittEintraege, setBrettschrittEintraege] = useState<BrettschrittEintrag[]>(() => {
     if (initialBrettschrittEintraege !== undefined) return initialBrettschrittEintraege
@@ -357,6 +358,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                     aktiverSpieler={aktiverSpieler}
                     ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null}
                     istGameRoute={istGameRoute}
+                    handkarteDragAktiv={handkarteDragAktiv}
                     versteckeKiEinzelaktionen={versteckeKiEinzelaktionen}
                     karteAnlegenAktionen={karteAnlegenAktionen}
                     neueSchlangeStartenAktionen={neueSchlangeStartenAktionen}
@@ -475,8 +477,8 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                     aktuell?.spielerId === aktiverSpieler.id && aktuell.karteId === karteId ? null : { spielerId: aktiverSpieler.id, karteId },
                   )
                 }
-                onKarteDragStart={(karteId) => { gezogeneHandkarteIdRef.current = karteId; setAusgewaehlteHandkarteAuswahl({ spielerId: aktiverSpieler.id, karteId }) }}
-                onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null) }}
+                onKarteDragStart={(karteId) => { gezogeneHandkarteIdRef.current = karteId; setAusgewaehlteHandkarteAuswahl({ spielerId: aktiverSpieler.id, karteId }); setHandkarteDragAktiv(true) }}
+                onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null); setHandkarteDragAktiv(false) }}
               />
               {istGameRoute && <WaldtanzArenazugknopf id={phasenaktionId} hervorgehoben={hervorgehobenesAktionszielId === phasenaktionId} zustand={zustand} ueberhand={ueberhand} zeigtKiVorspulen={versteckeKiEinzelaktionen} onAusspielphaseBeenden={handleAusspielphaseBeenden} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen} onZugBeenden={handleZugBeenden} onAusspielphaseStarten={handleAusspielphaseStarten} />}
             </section>

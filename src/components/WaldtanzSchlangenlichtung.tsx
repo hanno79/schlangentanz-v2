@@ -29,6 +29,7 @@ export interface WaldtanzSchlangenlichtungProps {
   aktiverSpieler: Spieler
   ausgewaehlteHandkarteId: string | null
   istGameRoute: boolean
+  handkarteDragAktiv?: boolean
   zeigeSchlangenhaeutungBrettziel?: boolean
   versteckeKiEinzelaktionen: boolean
   karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
@@ -58,6 +59,7 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
     aktiverSpieler,
     ausgewaehlteHandkarteId,
     istGameRoute,
+    handkarteDragAktiv = false,
     versteckeKiEinzelaktionen,
     karteAnlegenAktionen,
     neueSchlangeStartenAktionen,
@@ -96,6 +98,7 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
       className="waldtanz-schlangenlichtung waldtanz-arenastein__schlangenlichtung waldtanz-lichtungsbrett waldtanz-lichtungsstein"
       aria-label="Schlangenlichtung"
       data-waldtanz-spielplatz="waldlichtung"
+      data-drag-aktiv={handkarteDragAktiv ? 'true' : 'false'}
     >
       <header className="waldtanz-schlangenlichtung__kopf">
         <h3>Schlangenlichtung</h3>
