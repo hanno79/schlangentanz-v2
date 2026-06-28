@@ -74,9 +74,10 @@ describe('M2v Brettrand-Zugknopf als Stitch-Hero-Bubble', () => {
     expect(block).toMatch(/box-shadow:\s*0\s+9px\s+0\s+var\(--st-color-border-strong\)/)
   })
 
-  it('RED-5: Focus-Visible hat gestrichelte Outline mit 4px Offset', () => {
+  it('RED-5: Focus-Visible hat gestrichelte forest-green Outline mit 4px Offset', () => {
+    // M2v-Kimi-Fix: --st-color-primary statt primary-fixed (M1k-Verbot).
     const block = cssBlock('waldtanz-arenazug__hauptknopf:focus-visible')
-    expect(block).toMatch(/outline:\s*3px\s+dashed\s+var\(--st-color-primary-fixed\)/)
+    expect(block).toMatch(/outline:\s*3px\s+dashed\s+var\(--st-color-primary\)/)
     expect(block).toMatch(/outline-offset:\s*4px/)
   })
 

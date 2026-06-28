@@ -1076,7 +1076,12 @@ body {
 }
 
 .waldtanz-arenazug__hauptknopf:focus-visible {
-  outline: 3px dashed var(--st-color-primary-fixed);
+  /* M2v: forest-green Outline statt M1k-Verbot-Token forest-green-fixed
+     (M1k file-scoped verbietet forest-green-fixed als Background, aber
+     Outline-Color ist hier der erlaubte Waldgruen-Vollerton
+     --st-color-primary #4b6700 — beide forest-green, aber das ist die
+     M1k-konforme Variante). */
+  outline: 3px dashed var(--st-color-primary);
   outline-offset: 4px;
 }
 
@@ -1104,16 +1109,18 @@ body {
   line-height: 1;
 }
 
-/* M2v: Idle-Pulsing-Aura signalisiert "naechster Schritt ist bereit". */
+/* M2v: Idle-Pulsing-Aura signalisiert "naechster Schritt ist bereit".
+   Forest-green Glow via --st-color-primary-container (#a4de02 Stitch-lime)
+   statt M1k-Verbot-Token forest-green-fixed. */
 @keyframes waldtanz-arenazug-pulse {
   0% {
-    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 0 var(--st-color-primary-fixed);
+    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 0 var(--st-color-primary-container);
   }
   60% {
-    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 12px rgba(186, 246, 45, 0);
+    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 12px rgba(164, 222, 2, 0);
   }
   100% {
-    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 0 rgba(186, 246, 45, 0);
+    box-shadow: 0 6px 0 var(--st-color-border-strong), 0 0 0 0 rgba(164, 222, 2, 0);
   }
 }
 
