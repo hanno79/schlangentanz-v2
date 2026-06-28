@@ -2182,7 +2182,7 @@ code {
       auto
       auto
       clamp(2rem, 4vh, 2.5rem)
-      clamp(22.5rem, 43vh, 26.5rem)
+      clamp(34rem, 72vh, 46rem)
       clamp(2rem, 4vh, 2.5rem)
       auto;
     align-content: start;
@@ -10418,4 +10418,89 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .spielbereich--game-route [class~="spielbrett--waldtanz"] {
   flex: 1 1 auto;
   min-height: 0;
+}
+
+/* AENDERUNG 27.06.2026: M2r Schlangenlichtung als Forest-Arena.
+   Auf /game wird das redundante Brettrand-Chrome oberhalb der Schlangenlichtung
+   visuell reduziert (Arenakopf-Titel + Phasen-Banner-4-Pillen-Reihe + 6-Pillen-
+   Questband), damit die Schlangenlichtung von 370 px auf ~620 px Hoehe wachsen
+   kann und als zentrale Forest-Arena optisch atmet.
+
+   Die React-Elemente bleiben im DOM (display:none, nicht removeChild) —
+   m1di/m1cv/m1dk/m1d0/m2g-Pre-Existing-Tests erwarten sie weiterhin.
+
+   Versteckte Elemente:
+   1. .waldtanz-arenastein__kopf (LEUCHTENDER WALDSTEIN-Titel + Subtitle, 39 px)
+   2. .waldtanz-phasen-banner (4-Phasen-Pillen-Reihe, 25 px — Info lebt im
+      WaldtanzAktiverTanzSchritt-Pill + Phasen-Beschilderung der Brettschritt-Stempel)
+   3. .waldtanz-questband (6 offene-Quest-Pillen, 94 px — Info lebt in der
+      M2g-Brettrand-Questpille + WaldtanzAufgabentafel)
+   4. .waldtanz-brettrand-questpille wird auf max-height 4.2rem komprimiert
+      (statt 149 px Volltext-Bubble), damit sie als Title-Element der
+      Schlangenlichtung dient statt die Spielflaeche zu blockieren.
+
+   Die Schlangenlichtung selbst bekommt flex: 1 1 auto + min-height: 0, damit
+   sie den freigewordenen Platz innerhalb des Arenastein flex-fill ausfuellt.
+   Auf / (Lobby-Default) bleiben alle Elemente unveraendert sichtbar — der
+   M2r-Hide gilt ausschliesslich auf /game.
+
+   AENDERUNG 27.06.2026 (M2r Arenastein-Cap-Raise, Kimi-Review B2):
+   Die pre-existing M1d1-Regel kappt das Arenastein auf height:
+   clamp(34rem, 64vh, 40rem) = max 576 px auf 900-px-Viewport. Das reicht
+   nicht fuer die angestrebte ≥55% Viewport-Sichtbarkeit der Schlangenlichtung
+   (mind. 495 px). Wir heben das Cap route-scoped auf clamp(40rem, 72vh, 46rem)
+   = max 736 px auf 900-px-Viewport an, damit die Schlangenlichtung
+   tatsaechlich atmen kann. Bottom-Row bleibt im Viewport, weil das
+   Spielfeld-Layout auf der gleichen Grid-Template-Achse sitzt und der
+   Schlangenbereich jetzt die volle Verfuegbare Hoehe ausfuellt. */
+
+/* M2r — Arenastein-Cap route-scoped anheben (Kimi-Review B2) */
+.spielbereich--game-route [class~="waldtanz-arenastein"] {
+  height: clamp(40rem, 72vh, 46rem);
+  max-height: clamp(40rem, 72vh, 46rem);
+}
+.spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {
+  display: none !important;
+}
+
+.spielbereich--game-route [class~="waldtanz-phasen-banner"] {
+  display: none !important;
+}
+
+.spielbereich--game-route [class~="waldtanz-questband"] {
+  display: none !important;
+}
+
+/* M2r — Questpille als Title kompakt halten, damit sie nicht 149 px hoch
+   wird. M2g behielt sie als Lime-Bubble mit freiem Text-Wrap; auf /game
+   wird sie auf max-height 4.2rem (~67 px) komprimiert, sodass nur Icon +
+   1-Zeilen-Titel + Status sichtbar bleiben. Der Quest-Text wird in der
+   M2g-Text-Logik per CSS-Text-Overflow ellipsiert. */
+.spielbereich--game-route [class~="waldtanz-brettrand-questpille"] {
+  max-height: 4.2rem;
+  overflow: hidden;
+  align-self: flex-start;
+}
+
+/* M2r — Schlangenlichtung flex-fill innerhalb des Arenastein. Die
+   basis-Regel .waldtanz-schlangenlichtung hat display:grid mit fester
+   Header-Hoehe; durch flex:1 1 auto wachsen die Inhalte
+   (WaldtanzTischkarte + Magiekreise + Schlangenbereich) auf den
+   freigewordenen Platz. min-height:0 verhindert Flex-Column-Arithmetic-
+   Collapse (siehe M1dj-Inner-Grid-Pitfall).
+
+   AENDERUNG 27.06.2026 (Kimi-Review B1 + Live-Smoke-Verifikation):
+   height:100% allein reicht NICHT, weil der Flex-Parent Arenastein nur
+   eine indefinite Container-Hoehe hat (definite Grid-Row, aber Flex-Items
+   koennen ohne explizite min-height auf 0 schrumpfen). min-height:0 ist
+   noetig damit der Flex-Parent die Verteilung an das innere Grid
+   weitergeben kann, aber min-height MUSS auch einen sinnvollen Floor haben,
+   damit die Schlangenlichtung nicht auf content-Hoehe kollabiert (27 px
+   gemessen im Live-Smoke). Wir setzen min-height: clamp(34rem, 60vh, 42rem)
+   als route-scoped Override, damit die Schlangenlichtung mindestens 60% der
+   Viewport-Hoehe einnimmt (auf 900-px-Viewport = 540 px). */
+.spielbereich--game-route [class~="waldtanz-schlangenlichtung"] {
+  flex: 1 1 auto;
+  min-height: clamp(34rem, 60vh, 42rem);
+  height: auto;
 }

@@ -195,7 +195,11 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     // AENDERUNG 24.06.2026 (M1d2-Fix): Arena-Clamp von clamp(24rem,46vh,28rem)
     // auf clamp(22.5rem,43vh,26.5rem) gesenkt, damit Handkarten-Bottom <= 905px
     // (M1bp-Vertrag) bei erhaltener Schlangenlichtung-Sichtbarkeit >= 70px.
-    expect(cleaned).toMatch(/clamp\(\s*(17|18|19|20|22\.5|24)rem,\s*(30|32|34|36|40|43|46)vh,\s*(20|2[246]|2[26]\.5|28)rem\s*\)/)
+    // AENDERUNG 27.06.2026 (M2r Arenastein-Cap-Raise, Kimi-Review B2):
+    // Arena-Clamp auf clamp(34rem, 72vh, 46rem) angehoben, damit die
+    // Schlangenlichtung >=55% Viewport erreichen kann. 34rem/72vh/46rem
+    // sind jetzt akzeptiert.
+    expect(cleaned).toMatch(/clamp\(\s*(17|18|19|20|22\.5|24|34)rem,\s*(30|32|34|36|40|43|46|72)vh,\s*(20|2[246]|2[26]\.5|28|46)rem\s*\)/)
     // Und die Zugseitenleiste-Cap. M1d0 urspruenglich clamp(4rem, 7vh, 5rem);
     // M1d1 (24.06.2026) auf clamp(2.5rem, 5vh, 3rem) reduziert, um vertikalen
     // Platz fuer das vergroesserte Arena (432px) freizugeben.
