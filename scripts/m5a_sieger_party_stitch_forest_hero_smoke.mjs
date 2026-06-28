@@ -4,7 +4,7 @@ Datum: 28.06.2026
 Version: 1.0
 Beschreibung: M5a Browser-Smoke fuer Stitch-Waldlichtung-Forest-Hero-Transformation
 der Sieger-Party. Verifiziert auf Production: Sunset-Gradient auf .sieger-party,
-Leaderboard-Badge mit 12deg-Rotation und coral-Tertiaercontainer, Scorekarte mit
+Leaderboard-Badge mit 12deg-Rotation und coral-Tertiärcontainer, Scorekarte mit
 -gelbem secondary-container und -2deg-Tilt, Nochmal-spielen-Knopf mit
 lime-primary-container, 8px-Hard-Shadow und Hover-Scale. Kein Page-Error.
 */
@@ -51,10 +51,33 @@ async function main() {
       return combined
     })
 
+    // sichtRegel: depth-tracked { } damit @media-Inner-Regeln uebersprungen werden.
     function sichtRegel(css, selektor) {
       const escaped = selektor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      const m = css.match(new RegExp(`(^|[\\s,>.])${escaped}\\s*\\{([^}]*)\\}`, 's'))
-      return m ? m[2] : ''
+      const matches = Array.from(css.matchAll(new RegExp(`(^|[\\s,>.}\\]])${escaped}\\s*\\{`, 'g')))
+      if (matches.length === 0) return ''
+      // Iteriere rueckwaerts: nimm den letzten Match, dessen Klammer-Scope
+      // auf Top-Level-Ebene liegt (depth = 0 vor der Match-Brace).
+      for (let i = matches.length - 1; i >= 0; i--) {
+        const matchIndex = matches[i].index
+        let depth = 0
+        for (let j = 0; j < matchIndex; j++) {
+          const ch = css[j]
+          if (ch === '{') depth++
+          else if (ch === '}') depth--
+        }
+        if (depth !== 0) continue
+        const braceStart = matchIndex + matches[i][0].length - 1
+        let innerDepth = 1
+        let end = braceStart + 1
+        while (innerDepth > 0 && end < css.length) {
+          if (css[end] === '{') innerDepth++
+          else if (css[end] === '}') innerDepth--
+          end++
+        }
+        return css.slice(braceStart + 1, end - 1)
+      }
+      return ''
     }
 
     const siegerParty = sichtRegel(cssText, '.sieger-party')
@@ -71,12 +94,12 @@ async function main() {
       ['tertiary-container im Backdrop', siegerParty.includes('--st-color-tertiary-container')],
       ['secondary-container im Backdrop', siegerParty.includes('--st-color-secondary-container')],
       ['surface-dim im Backdrop', siegerParty.includes('--st-color-surface-dim')],
-      ['Hero-Headline traegt party-wiggle-Animation', /animation:\s*party-wiggle/.test(kopfH2)],
+      ['Hero-Headline traegt party-wiggle-Animation', /\bparty-wiggle\b/.test(kopfH2)],
       ['Hero-Headline hat -webkit-text-stroke 3px', /-webkit-text-stroke:\s*3px\s+var\(--st-color-border-strong\)/.test(kopfH2)],
       ['Portrait hat clamp 13-20rem', /width:\s*clamp\(13rem,\s*28vw,\s*20rem\)/.test(portrait)],
       ['Leaderboard-Badge hat tertiary-container', /var\(--st-color-tertiary-container\)/.test(leaderboard)],
       ['Leaderboard-Badge hat rotate(12deg)', /rotate\(12deg\)/.test(leaderboard)],
-      ['Leaderboard-Badge hat wiggle-Animation', /animation:\s*party-wiggle/.test(leaderboard)],
+      ['Leaderboard-Badge hat wiggle-Animation', /\bparty-wiggle\b/.test(leaderboard)],
       ['Scorekarte hat secondary-container', /var\(--st-color-secondary-container\)/.test(scorekarte)],
       ['Scorekarte hat 8px-Hard-Shadow', /box-shadow:\s*0 8px 0 var\(--st-color-border-strong\)/.test(scorekarte)],
       ['Scorekarte hat rotate(-2deg)', /rotate\(-2deg\)/.test(scorekarte)],

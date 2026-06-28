@@ -104,7 +104,7 @@ describe('M5a Sieger-Party als Stitch-Waldlichtung-Forest-Hero', () => {
     expect(body).toMatch(/width:\s*clamp\(13rem,\s*28vw,\s*20rem\)/)
   })
 
-  it('RED-5: Leaderboard-Badge als Stitch-Hero-Pille mit coral-Teritärcontainer und Wiggle', () => {
+  it('RED-5: Leaderboard-Badge als Stitch-Hero-Pille mit coral-Tertiärcontainer und Wiggle', () => {
     render(<App initialZustand={spielendeZustand()} />)
     const party = screen.getByRole('region', { name: 'Sieger-Party' })
     const portrait = within(party).getByRole('region', { name: 'Gewinner-Portrait' })
@@ -144,12 +144,27 @@ describe('M5a Sieger-Party als Stitch-Waldlichtung-Forest-Hero', () => {
     expect(body).toMatch(/box-shadow:\s*0 8px 0 var\(--st-color-border-strong\)/)
     expect(body).toMatch(/border-radius:\s*999px/)
 
-    const allHoverMatches = Array.from(appCss.matchAll(/\.sieger-party__neustart:hover\s*\{([^}]*)\}/gs))
-    const hoverBody = allHoverMatches.length > 0 ? allHoverMatches[allHoverMatches.length - 1][1] : ''
+    // last-top-level-match (depth-tracked um @media-Inner-Regeln zu ueberspringen)
+    function lastTopLevelBody(css: string, regex: RegExp): string {
+      const matches = Array.from(css.matchAll(regex))
+      for (let i = matches.length - 1; i >= 0; i--) {
+        const matchIndex = matches[i].index
+        if (matchIndex === undefined) continue
+        let depth = 0
+        for (let j = 0; j < matchIndex; j++) {
+          if (css[j] === '{') depth++
+          else if (css[j] === '}') depth--
+        }
+        if (depth !== 0) continue
+        const captured = matches[i][1]
+        return captured ?? ''
+      }
+      return ''
+    }
+    const hoverBody = lastTopLevelBody(appCss, /\.sieger-party__neustart:hover\s*\{([^}]*)\}/gs)
     expect(hoverBody).toMatch(/scale\(/)
 
-    const allActiveMatches = Array.from(appCss.matchAll(/\.sieger-party__neustart:active\s*\{([^}]*)\}/gs))
-    const activeBody = allActiveMatches.length > 0 ? allActiveMatches[allActiveMatches.length - 1][1] : ''
+    const activeBody = lastTopLevelBody(appCss, /\.sieger-party__neustart:active\s*\{([^}]*)\}/gs)
     expect(activeBody).toMatch(/translateY\(/)
     expect(activeBody).toMatch(/box-shadow:\s*0 0 0/)
   })
