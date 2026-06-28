@@ -97,8 +97,9 @@ describe('M3b Sonniges Nest Spielstart-Tanz', () => {
     // M3a: Code-Schild hat animation
     const schild = regelBody(css, '.lobby-code-schild')
     expect(schild).toMatch(/animation\s*:/)
-    // M3a: wartende Slots pulsen
-    const wartend = regelBody(css, '.lobby-slot--wartet .lobby-slot__hoehle')
+    // M3a: wartende Slots pulsen. M3c-Migration: wartender Slot
+    // animiert jetzt .lobby-avatar (nicht mehr .lobby-slot__hoehle).
+    const wartend = regelBody(css, '.lobby-slot--wartet .lobby-avatar')
     expect(wartend).toMatch(/animation\s*:/)
   })
 
@@ -118,7 +119,8 @@ describe('M3b Sonniges Nest Spielstart-Tanz', () => {
   it('zeigt das Host-Badge im Host-Slot (M3a-Vertrag)', () => {
     render(<App initialZustand={deterministischerZustand()} />)
     const lobby = screen.getByRole('region', { name: 'Das sonnige Nest' })
-    const hostSlot = within(lobby).getByText('Slippy Host').closest('li')
+    // M3c-Migration: Slot-Container ist jetzt <div> (vorher <li>).
+    const hostSlot = within(lobby).getByText('Slippy Host').closest('.lobby-slot')
     expect(hostSlot).not.toBeNull()
     const badge = hostSlot!.querySelector('.lobby-slot__badge')
     expect(badge).not.toBeNull()

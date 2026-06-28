@@ -45,14 +45,17 @@ describe('M3a Sonniges Nest beleben', () => {
 
   it('lässt wartende Slots pulsieren (CSS animation auf .lobby-slot--wartet)', () => {
     const css = leseCss()
-    const body = regelBody(css, '.lobby-slot--wartet .lobby-slot__hoehle')
+    // M3c-Migration: wartende Slots animieren jetzt .lobby-avatar
+    // (vorher .lobby-slot__hoehle).
+    const body = regelBody(css, '.lobby-slot--wartet .lobby-avatar')
     expect(body).toMatch(/animation\s*:/)
   })
 
   it('zeigt ein Host-Badge im Host-Slot', () => {
     render(<App initialZustand={deterministischerZustand()} />)
     const lobby = screen.getByRole('region', { name: 'Das sonnige Nest' })
-    const hostSlot = within(lobby).getByText('Slippy Host').closest('li')
+    // M3c-Migration: Slot-Container ist jetzt <div> (vorher <li>).
+    const hostSlot = within(lobby).getByText('Slippy Host').closest('.lobby-slot')
     expect(hostSlot).not.toBeNull()
     const badge = hostSlot!.querySelector('.lobby-slot__badge')
     expect(badge).not.toBeNull()

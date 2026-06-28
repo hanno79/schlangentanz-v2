@@ -57,8 +57,9 @@ describe('M3 Sonniges Nest Lobby', () => {
     expect(appCss).toMatch(/\.sonniges-nest\s*\{[^}]*border-radius:\s*3rem/s)
     expect(appCss).toMatch(/\.lobby-code-schild\s*\{[^}]*repeating-linear-gradient/s)
     expect(appCss).toMatch(/\.lobby-code-schild\s*\{[^}]*box-shadow:\s*0 8px 0 var\(--st-color-border-strong\)/s)
-    expect(appCss).toMatch(/\.lobby-slot__hoehle\s*\{[^}]*border-radius:\s*999px/s)
-    expect(appCss).toMatch(/\.lobby-slot--wartet \.lobby-slot__hoehle/s)
+    // M3c-Migration: Slot-Container heisst jetzt .lobby-avatar (vorher .lobby-slot__hoehle).
+    expect(appCss).toMatch(/\.lobby-avatar\s*\{[^}]*border-radius:\s*999px/s)
+    expect(appCss).toMatch(/\.lobby-slot--wartet \.lobby-avatar/s)
     expect(appCss).toMatch(/\.lobby-startbutton:hover\s*\{[^}]*transform:\s*translateY\(-2px\) scale\(1\.04\)/s)
   })
 })

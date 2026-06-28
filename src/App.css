@@ -217,36 +217,37 @@ body {
   justify-items: center;
   padding: clamp(1.2rem, 3vw, 2.4rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
-  border-radius: 3rem;
+  border-radius: 4rem;
   background: rgba(196, 253, 182, 0.82);
-  box-shadow: 0 10px 0 var(--st-color-border-strong);
+  box-shadow: 0 12px 0 var(--st-color-border-strong);
 }
 
 .lobby-baumhaus::before,
 .lobby-baumhaus::after {
   content: '';
   position: absolute;
-  width: 9rem;
-  height: 9rem;
+  width: 12rem;
+  height: 12rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   background: var(--st-color-primary-container);
 }
 
 .lobby-baumhaus::before {
-  top: -3rem;
-  left: -3rem;
+  top: -4rem;
+  left: -4rem;
   border-radius: 0 0 999px 0;
 }
 
 .lobby-baumhaus::after {
-  right: -3rem;
-  bottom: -3rem;
+  right: -4rem;
+  bottom: -4rem;
+  background: rgba(191, 247, 177, 0.86);
   border-radius: 999px 0 0 0;
 }
 
 .lobby-baumhaus h2,
 .lobby-status,
-.lobby-slots {
+.lobby-spieler-grid {
   position: relative;
   z-index: 1;
 }
@@ -266,39 +267,84 @@ body {
   font-weight: 900;
 }
 
-.lobby-slots {
-  width: min(100%, 640px);
+.lobby-spieler-grid {
+  width: min(100%, 720px);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
-  padding: 0;
-  margin: 0;
-  list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 540px) {
+  .lobby-spieler-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .lobby-slot {
   display: grid;
   justify-items: center;
+  align-items: start;
   gap: 0.55rem;
   text-align: center;
+  position: relative;
+  padding-top: 0.5rem;
 }
 
-.lobby-slot__hoehle {
+.lobby-slot--wartet .lobby-avatar {
+  background: radial-gradient(circle, rgba(236, 255, 227, 0.58) 0 48%, rgba(6, 57, 7, 0.28) 50% 70%, rgba(6, 57, 7, 0.18) 72%);
+  animation: lobby-pulse 3s ease-in-out infinite;
+}
+
+.lobby-avatar {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 6rem;
-  height: 6rem;
+  width: 8rem;
+  height: 8rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 999px;
   background: radial-gradient(circle, #173d18 0 43%, #6f4a18 45% 70%, #1f1207 72%);
   box-shadow: inset 0 8px 0 rgba(0, 0, 0, 0.34), 0 4px 0 var(--st-color-border-strong);
-  font-size: 2.2rem;
+  overflow: hidden;
 }
 
-.lobby-slot--wartet .lobby-slot__hoehle {
-  background: radial-gradient(circle, rgba(236, 255, 227, 0.58) 0 48%, rgba(6, 57, 7, 0.28) 50% 70%, rgba(6, 57, 7, 0.18) 72%);
-  color: rgba(6, 57, 7, 0.62);
-  animation: lobby-pulse 3s ease-in-out infinite;
+.lobby-avatar svg {
+  width: 78%;
+  height: 78%;
+}
+
+.lobby-slot__name {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-surface);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--st-color-text);
+  letter-spacing: 0.02em;
+}
+
+.lobby-slot__difficulty {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.4rem;
+  display: inline-block;
+  padding: 0.18rem 0.6rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: rgba(255, 224, 139, 0.92);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--st-color-on-secondary-container);
 }
 
 /* M3b: Aktive KI-Slots gleiten sichtbar als Schlange ins Baumhaus (Stitch-Pattern). */
@@ -391,7 +437,7 @@ body {
     animation: none;
   }
 
-  .lobby-slot--wartet .lobby-slot__hoehle {
+  .lobby-slot--wartet .lobby-avatar {
     animation: none;
   }
 
@@ -405,6 +451,12 @@ body {
      damit kein "springt auf hover" mehr passiert. */
   .lobby-startbutton {
     transition: none;
+  }
+
+  /* M3c: Auch die Avatar-Animation und den Difficulty-Pillen-Lift unter
+     reduced-motion stillstellen, damit kein Avatar "pumpt". */
+  .lobby-avatar {
+    animation: none;
   }
 }
 
