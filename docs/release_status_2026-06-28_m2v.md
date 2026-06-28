@@ -173,6 +173,35 @@ Alternative kleinere Schwestern-Slices:
 **Empfehlung M3a** als groesster UX-Wert fuer den Erst-Spieler-Moment.
 M2w/M2x koennten in derselben Session als zwei Micro-Slices folgen.
 
-## Kimi-Disclosure (folgt nach Review-Rueckkehr)
+## Kimi-Disclosure
 
-Wird ergaenzt sobald Kimi-Review zurueck ist.
+**REVIEWER=kimi-cli** (Codex `NOT_FUNCTIONAL` per Watchdog — codex wartet auf
+stdin, Kimi ist der funktionierende Fallback). Watchdog-Output:
+```
+{"name":"codex","status":"NOT_FUNCTIONAL","detail":"codex wartet auf stdin"},
+{"name":"kimi-cli","status":"OK","detail":"kimi -p antwortet"}
+```
+
+**1 BLOCKER gefunden und im selben Slice gefixt (commit 56b663c):**
+
+| Kimi-Blocker | Klassifikation | Hermes-Resolution |
+|---|---|---|
+| `var(--st-color-primary-fixed)` ist M1k-Verbot-Token, M2v nutzt es 2× (Focus + Pulse) → M1k-Test failed | **Echter Blocker** | Fix: ersetzt mit `--st-color-primary` (Focus) und `--st-color-primary-container` (Pulse-Glow); Kommentare umformuliert ohne Literal-Form (M1dt-Pitfall #8) |
+
+**NON-BLOCKERS (alle bestätigt durch Kimi):**
+- Cascade-Override: route-scoped Block (Spez. 0,2,0) überschreibt nur padding,
+  nicht background/transform/box-shadow/outline. Keine spätere 0,1,0/0,2,0-Regel
+  überschreibt coral/Hover/Focus/Pulse.
+- Reduced-Motion-Override: vorhanden am Dateiende.
+- Pseudo-Klassen-Test: cssBlock() im M2v-Test behandelt `:` korrekt via direktem Match.
+- M1k Token-Drift: `tertiary-container` als Background ist erlaubt (verboten sind nur
+  primary-fixed, surface-container-high, surface-container-lowest).
+- Accessibility/Semantik: Coral-Pille liegt in eigener Grid-Area `arenazug`,
+  getrennt von `hand`; visuell über Farbe (coral vs. lime) und Größe abgesetzt.
+
+**SUGGESTIONS (zur Kenntnis genommen, nicht im M2v-Slice umgesetzt):**
+- Pulse-Animation-Lokalisierung dokumentieren: AURA um `.waldtanz-arenazug`
+  Container (nicht direkt auf Button) — gewollt, dokumentiert im RED-3-Kommentar.
+- `@media (min-width: 1100px)` Klarstellung: route-scoped Override gilt nur
+  oberhalb 1100px, unterhalb nutzt `/game`-Layout anderen Codepfad — passt
+  zum M2r Cap-Raise-Coupling-Pattern.
