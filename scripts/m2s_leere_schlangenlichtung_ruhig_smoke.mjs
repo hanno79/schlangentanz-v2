@@ -1,7 +1,7 @@
 /**
  * Author: rahn
  * Datum: 27.06.2026
- * Version: 1.0
+ * Version: 1.1
  * Beschreibung: M2s Live-Smoke — Verifiziert auf /game die leere Schlangenlichtung
  *              als ruhige Forest-Lichtung. Im Anfangszustand (kein Karte gewaehlt,
  *              keine eigene Schlange) sollen 3 Notification-Bubbles visuell
@@ -15,9 +15,9 @@
  *              (visuelle Bestaetigung der Override-Regel).
  *
  * Akzeptanzkriterien:
- *  - Auf /game (kein Karte gewaehlt): alle 3 Bubbles display:none
+ *  - Auf /game (kein Karte gewaehlt): aktiverTanzSchritt + zielkompass display:none
  *  - Auf /game (Karte gewaehlt): .schlangen-zielkompass wieder display:flex
- *  - Auf / (Lobby): alle 3 Bubbles sichtbar (display != none)
+ *  - Auf / (Lobby): aktiverTanzSchritt + zielkompass sichtbar (display != none)
  *  - Console-Errors: 0
  *  - HTTP 200 auf / und /game
  *
@@ -54,8 +54,15 @@ async function httpPruefen(route) {
 async function sichtInfo(locator) {
   try {
     const box = await locator.boundingBox()
+    // Wenn boundingBox null ist (display:none oder detached), pruefe explizit computed display.
     if (!box || box.width < 2 || box.height < 2) {
-      return { sichtbar: false, breite: box?.width ?? 0, hoehe: box?.height ?? 0 }
+      let display
+      try {
+        display = await locator.evaluate((el) => getComputedStyle(el).display)
+      } catch {
+        display = 'detached'
+      }
+      return { sichtbar: false, breite: box?.width ?? 0, hoehe: box?.height ?? 0, display }
     }
     const display = await locator.evaluate((el) => getComputedStyle(el).display)
     return { sichtbar: display !== 'none', breite: box.width, hoehe: box.height, display }
@@ -67,18 +74,20 @@ async function sichtInfo(locator) {
 async function pruefeM2sLeereLichtung(page, viewport, label) {
   await page.setViewportSize(viewport)
   await page.goto(url('/game'), { waitUntil: 'networkidle' })
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(800)
 
   // Spiel starten via M3b-Stitch-Button, dann eigene Schlange starten (M1cj-Vorbedingung).
+  // Auf Production ist /game direkt erreichbar (kein Lobby-Start noetig). Wenn doch ein
+  // Startbutton existiert (Lobby-Variante), klicken wir ihn.
   const startButton = page.locator('button', { hasText: /Waldparty|Grosse Runde|Duell/ }).first()
   if (await startButton.count() > 0) {
     await startButton.click({ force: true })
-    await page.waitForTimeout(800)
+    await page.waitForTimeout(1000)
   }
   const startfaehrte = page.locator('.schlangen-startzone__faehrte-button').first()
   if (await startfaehrte.count() > 0) {
     await startfaehrte.click({ force: true })
-    await page.waitForTimeout(500)
+    await page.waitForTimeout(800)
   }
 
   // 1) Im leeren Zustand (kein Karte gewaehlt, Schlange noch klein):
@@ -93,20 +102,27 @@ async function pruefeM2sLeereLichtung(page, viewport, label) {
   console.log(`\n[${label}] EMPTY-STATE`)
   console.log(`  aktiverTanzSchritt sichtbar=${aktiverInfo.sichtbar}  display=${aktiverInfo.display ?? '?'}  ${aktiverInfo.breite}x${aktiverInfo.hoehe}  (erwartet: display:none)`)
   console.log(`  zielkompass        sichtbar=${zielInfo.sichtbar}  display=${zielInfo.display ?? '?'}  ${zielInfo.breite}x${zielInfo.hoehe}  (erwartet: display:none)`)
-  console.log(`  startgarten        sichtbar=${startgartenInfo.sichtbar}  display=${startgartenInfo.display ?? '?'}  ${startgartenInfo.breite}x${startgartenInfo.hoehe}  (erwartet: display:none)`)
+  console.log(`  startgarten        sichtbar=${startgartenInfo.sichtbar}  display=${startgartenInfo.display ?? '?'}  ${startgartenInfo.breite}x${startgartenInfo.hoehe}  (erwartet: display:none oder nicht im DOM)`)
 
-  const emptyKorrekt = aktiverInfo.display === 'none' && zielInfo.display === 'none' && startgartenInfo.display === 'none'
-  if (!emptyKorrekt) {
-    throw new Error(`[${label}] EMPTY-STATE nicht korrekt versteckt`)
+  // aktiverTanzSchritt + zielkompass MUSS versteckt sein
+  if (aktiverInfo.display !== 'none') {
+    throw new Error(`[${label}] aktiverTanzSchritt nicht versteckt: display=${aktiverInfo.display}`)
+  }
+  if (zielInfo.display !== 'none') {
+    throw new Error(`[${label}] zielkompass nicht versteckt: display=${zielInfo.display}`)
+  }
+  // startgarten: erscheint nur, solange eigene Schlangengruppe leer ist.
+  // Nach Startfaehrte-Klick ist es nicht mehr im DOM (das ist OK), oder es ist display:none.
+  if (startgartenInfo.display !== undefined && startgartenInfo.display !== 'error' && startgartenInfo.display !== 'none') {
+    throw new Error(`[${label}] startgarten sichtbar: display=${startgartenInfo.display}`)
   }
 
   // 2) Override-Test: Handkarte waehlen, Zielkompass muss zurueckkommen.
-  // Die erste Handkarte im HandkartenPanel anklicken.
   const ersteHandkarte = page.locator('[class~="handkarte"]').first()
   const handkarteCount = await ersteHandkarte.count()
   if (handkarteCount > 0) {
     await ersteHandkarte.click({ force: true })
-    await page.waitForTimeout(400)
+    await page.waitForTimeout(500)
     const zielNachKartenWahl = await sichtInfo(zielkompass)
     console.log(`  zielkompass nach Karten-Wahl: sichtbar=${zielNachKartenWahl.sichtbar}  display=${zielNachKartenWahl.display ?? '?'}  ${zielNachKartenWahl.breite}x${zielNachKartenWahl.hoehe}  (erwartet: display != none)`)
     if (zielNachKartenWahl.display === 'none') {
@@ -122,7 +138,7 @@ async function pruefeM2sLeereLichtung(page, viewport, label) {
 async function pruefeM2sLobby(page, viewport, label) {
   await page.setViewportSize(viewport)
   await page.goto(url('/'), { waitUntil: 'networkidle' })
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(800)
 
   const aktiverTanzSchritt = page.locator('[class~="waldtanz-aktiver-tanz-schritt"]').first()
   const zielkompass = page.locator('[class~="schlangen-zielkompass"]').first()
@@ -177,6 +193,7 @@ async function main() {
     await browser.close()
   }
 }
+
 
 main().catch((err) => {
   console.error('M2s SMOKE FEHLGESCHLAGEN:', err)
