@@ -22,7 +22,7 @@ interface WaldtanzWaldtischHolzplaketteProps {
 function phaseLabel(zugphase: Zugphase): string {
   switch (zugphase) {
     case 'Ausspielphase': return 'Ausspielphase'
-    case 'Aufgabenpruefung': return 'Aufgabenpruefung'
+    case 'Aufgabenpruefung': return 'Aufgabenprüfung'
     case 'Nachziehphase': return 'Nachziehphase'
     case 'Zugabschluss': return 'Zugabschluss'
     case 'Spielende': return 'Spielende'
@@ -32,7 +32,7 @@ function phaseLabel(zugphase: Zugphase): string {
 function phaseKurzLabel(zugphase: Zugphase): string {
   switch (zugphase) {
     case 'Ausspielphase': return 'Ausspielen'
-    case 'Aufgabenpruefung': return 'Pruefen'
+    case 'Aufgabenpruefung': return 'Prüfen'
     case 'Nachziehphase': return 'Nachziehen'
     case 'Zugabschluss': return 'Abschluss'
     case 'Spielende': return 'Ende'
