@@ -107,12 +107,21 @@ async function pruefeM6bWaldtischHolzwimpel(page) {
 
   // 8. Reduced-Motion Override
   const reducedMotion = await page.evaluate(() => {
+    // Chromium postcss-preset-env reordered animation shorthand:
+    // `animation: none` wird zu `animation: auto ease 0s 1 normal none running none`.
+    // Akzeptiere beide Formen.
+    const animNoneRegex = /(?:animation:\s*(?:none|auto\s+ease\s+0s\s+1\s+normal\s+none\s+running\s+none))/
     for (const sheet of Array.from(document.styleSheets)) {
       try {
         for (const rule of Array.from(sheet.cssRules ?? [])) {
-          if (rule.type === CSSRule.MEDIA_RULE && rule.media?.mediaText?.includes('prefers-reduced-motion')) {
-            for (const sub of Array.from(rule.cssRules)) {
-              if (sub.cssText?.includes('waldtanz-waldtisch-plakette__herz') && sub.cssText?.includes('animation: none')) {
+          if (rule.type === 4 /* MEDIA_RULE */ && rule.media?.mediaText?.includes('prefers-reduced-motion')) {
+            const mediaText = rule.cssText ?? ''
+            if (mediaText.includes('waldtanz-waldtisch-plakette__herz') && animNoneRegex.test(mediaText)) {
+              return true
+            }
+            for (const sub of Array.from(rule.cssRules ?? [])) {
+              const subText = sub.cssText ?? ''
+              if (subText.includes('waldtanz-waldtisch-plakette__herz') && animNoneRegex.test(subText)) {
                 return true
               }
             }
@@ -120,6 +129,15 @@ async function pruefeM6bWaldtischHolzwimpel(page) {
         }
       } catch { /* cross-origin */ }
     }
+    // Variante 2: full stylesheet textContent (inline-style fallback)
+    try {
+      const allCss = Array.from(document.styleSheets).map((s) => {
+        try { return Array.from(s.cssRules).map((r) => r.cssText).join('\n') } catch { return '' }
+      }).join('\n')
+      if (/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.waldtanz-waldtisch-plakette__herz[^}]*(?:animation:\s*(?:none|auto\s+ease\s+0s\s+1\s+normal\s+none\s+running\s+none))/.test(allCss)) {
+        return true
+      }
+    } catch { /* ignore */ }
     return false
   })
   allesOk = ok('Reduced-motion Override schaltet herz-pulse ab', reducedMotion) && allesOk
