@@ -10924,3 +10924,89 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
     transform: scale(1.05);
   }
 }
+
+/* M6b: Waldtisch-Holzplakette als Forest-Welcome-Banner.
+   Sichtbar im Schlangenlichtung-Kopf auf /game. Stitch-Forest-Container
+   mit 3px Forest-Border, 4px Hard-Shadow, Lebens-Pulse fuer "dein
+   Wald lebt". Cascade-Override-Prevention (M1dt Pattern 6):
+   doubled-class Selector (.waldtanz-waldtisch-plakette.waldtanz-waldtisch-plakette)
+   gewinnt 0,2,0 Spezifitaet gegenueber spaeteren 0,1,0 Regeln. */
+.waldtanz-waldtisch-plakette.waldtanz-waldtisch-plakette {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem 0.4rem 0.55rem;
+  background: var(--st-color-primary-container);
+  color: var(--st-color-on-primary-container);
+  border: 3px solid var(--st-color-primary, #4b6700);
+  border-radius: 1.1rem;
+  box-shadow: 4px 4px 0 0 var(--st-color-primary, #4b6700);
+  font-family: var(--st-font-body, 'Plus Jakarta Sans', sans-serif);
+  flex-shrink: 0;
+}
+
+.waldtanz-waldtisch-plakette__name {
+  font-family: var(--st-font-headline, 'Rubik', sans-serif);
+  font-weight: 900;
+  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+  letter-spacing: 0.01em;
+  color: var(--st-color-on-primary-container);
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.waldtanz-waldtisch-plakette__phase-pille {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.65rem;
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-on-secondary-container);
+  border: 2px solid var(--st-color-secondary, #b58a00);
+  border-radius: 9999px;
+  box-shadow: 2px 2px 0 0 var(--st-color-secondary, #b58a00);
+  font-family: var(--st-font-body, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.waldtanz-waldtisch-plakette__zaehler {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.55rem;
+  background: var(--st-color-surface-container-highest, #f0eadf);
+  color: var(--st-color-on-surface, #2a2010);
+  border: 2px solid var(--st-color-primary, #4b6700);
+  border-radius: 9999px;
+  font-family: var(--st-font-body, 'Plus Jakarta Sans', sans-serif);
+  font-weight: 800;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.waldtanz-waldtisch-plakette__herz {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--st-color-primary, #4b6700);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: herz-pulse 1.6s ease-in-out infinite;
+  box-shadow: 0 0 0 3px rgba(75, 103, 0, 0.18);
+}
+
+@keyframes herz-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  35% { transform: scale(1.28); opacity: 0.85; }
+  60% { transform: scale(0.95); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-waldtisch-plakette__herz {
+    animation: none;
+    transform: scale(1);
+  }
+}

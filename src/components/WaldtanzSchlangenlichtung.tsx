@@ -23,6 +23,7 @@ import WaldtanzQuestband from './WaldtanzQuestband'
 import WaldtanzAktiverTanzSchritt from './WaldtanzAktiverTanzSchritt'
 import WaldtanzBrettschrittStempel from './WaldtanzBrettschrittStempel'
 import WaldtanzKartenpop from './WaldtanzKartenpop'
+import WaldtanzWaldtischHolzplakette from './WaldtanzWaldtischHolzplakette'
 
 export interface WaldtanzSchlangenlichtungProps {
   zustand: Spielzustand
@@ -101,8 +102,18 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
       data-drag-aktiv={handkarteDragAktiv ? 'true' : 'false'}
     >
       <header className="waldtanz-schlangenlichtung__kopf">
-        <h3>Schlangenlichtung</h3>
-        <p>Eigene Schlange, Gegner und Brett-Ziele auf einem Stein.</p>
+        <div className="waldtanz-schlangenlichtung__kopf-text">
+          <h3>Schlangenlichtung</h3>
+          <p>Eigene Schlange, Gegner und Brett-Ziele auf einem Stein.</p>
+        </div>
+        <WaldtanzWaldtischHolzplakette
+          spielerName={aktiverSpielerName}
+          zugphase={zustand.zugphase}
+          gespielteKarten={zustand.zugpflichten.gespielteKarten}
+          handkarten={zustand.spieler[zustand.aktiverSpielerIndex]?.hand.length ?? 0}
+          eigeneSchlangen={zustand.spieler[zustand.aktiverSpielerIndex]?.schlangen.length ?? 0}
+          istGameRoute={istGameRoute}
+        />
       </header>
       <div className="waldtanz-schlangenlichtung__spielflaeche">
         <div className="waldtanz-schlangenlichtung__overlays">
