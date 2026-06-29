@@ -2280,12 +2280,20 @@ code {
       "arenastein arenastein arenastein"
       "zugseitenleiste zugseitenleiste zugseitenleiste"
       "sp-plakette hand arenazug";
+    /* AENDERUNG 29.06.2026 (M9): grid-template-rows gestrafft, damit die
+       Handkarten-Bühne im 1440x900 Erstbild sichtbar bleibt. Vorher war die
+       Arenastein-Zeile clamp(34rem, 72vh, 46rem) = 720 px im 900-Viewport;
+       zusammen mit Spielerrahmen + Gegnerplakette + Aktionen + Zugseitenleiste
+       landete die Hand bei y=998-1226 (100-300 px unter Falz). M9 reduziert
+       die Arenastein-Zeile auf clamp(24rem, 50vh, 32rem) = 480 px im
+       900-Viewport, Aktionen + Zugseitenleiste auf clamp(1.6rem, 3vh, 2rem).
+       Neue Math: 60 + 70 + 30 + 480 + 30 + 230 = 900 px (genau im Falz). */
     grid-template-rows:
       auto
       auto
-      clamp(2rem, 4vh, 2.5rem)
-      clamp(34rem, 72vh, 46rem)
-      clamp(2rem, 4vh, 2.5rem)
+      clamp(1.6rem, 3vh, 2rem)
+      clamp(24rem, 50vh, 32rem)
+      clamp(1.6rem, 3vh, 2rem)
       auto;
     align-content: start;
     gap: clamp(0.55rem, 1vw, 0.78rem);

@@ -199,11 +199,17 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     // Arena-Clamp auf clamp(34rem, 72vh, 46rem) angehoben, damit die
     // Schlangenlichtung >=55% Viewport erreichen kann. 34rem/72vh/46rem
     // sind jetzt akzeptiert.
-    expect(cleaned).toMatch(/clamp\(\s*(17|18|19|20|22\.5|24|34)rem,\s*(30|32|34|36|40|43|46|72)vh,\s*(20|2[246]|2[26]\.5|28|46)rem\s*\)/)
+    // AENDERUNG 29.06.2026 (M9 Hand-Erstbild): Arena-Clamp auf
+    // clamp(24rem, 50vh, 32rem) reduziert, damit Hand-Bottom im
+    // 1440x900 Erstbild sichtbar ist. 24rem/50vh/32rem ist jetzt akzeptiert.
+    expect(cleaned).toMatch(/clamp\(\s*(17|18|19|20|22\.5|24|34)rem,\s*(30|32|34|36|40|43|46|50|72)vh,\s*(20|2[246]|2[26]\.5|28|32|46)rem\s*\)/)
     // Und die Zugseitenleiste-Cap. M1d0 urspruenglich clamp(4rem, 7vh, 5rem);
     // M1d1 (24.06.2026) auf clamp(2.5rem, 5vh, 3rem) reduziert, um vertikalen
     // Platz fuer das vergroesserte Arena (432px) freizugeben.
-    expect(cleaned).toMatch(/clamp\(\s*(2|2\.5|4)rem,\s*(4|5|7)vh,\s*(2\.5|3|5)rem\s*\)/)
+    // AENDERUNG 29.06.2026 (M9 Hand-Erstbild): zugseitenleiste-Cap auf
+    // clamp(1.6rem, 3vh, 2rem) gestrafft, damit Hand im 1440x900 Erstbild
+    // sichtbar bleibt. 1.6/3vh/2rem ist jetzt akzeptiert.
+    expect(cleaned).toMatch(/clamp\(\s*(1\.6|2|2\.5|4)rem,\s*(3|4|5|7)vh,\s*(2|2\.5|3|5)rem\s*\)/)
   })
 
   it('nimmt Spielerplakette und Gegnerplakette aus position: absolute heraus', () => {

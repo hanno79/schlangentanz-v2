@@ -95,7 +95,10 @@ describe('M1dd Waldtanz-Aktionsdock im Spielbrett', () => {
     // M1dd urspruenglich clamp(3.5rem, 8vh, 4.5rem); M1d1 (24.06.2026) auf
     // clamp(2rem, 4vh, 2.5rem) reduziert, um vertikalen Platz fuer das
     // vergroesserte Arena (432px) und sichtbare Schlangen freizugeben.
-    expect(block).toMatch(/clamp\(\s*(2|3\.5)rem,\s*(4|8)vh,\s*(2\.5|4\.5)rem\s*\)/)
+    // AENDERUNG 29.06.2026 (M9 Hand-Erstbild): aktionsdock-Hoehe auf
+    // clamp(1.6rem, 3vh, 2rem) gestrafft, damit Hand im 1440x900
+    // Erstbild sichtbar bleibt. 1.6/3vh/2rem ist jetzt akzeptiert.
+    expect(block).toMatch(/clamp\(\s*(1\.6|2|3\.5)rem,\s*(3|4|8)vh,\s*(2|2\.5|4\.5)rem\s*\)/)
   })
 
   it('bewahrt ausserhalb von /game die volle Aktionsliste ohne brettinline-Override', () => {

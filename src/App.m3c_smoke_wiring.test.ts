@@ -30,7 +30,16 @@ describe('M3c Smoke-Wiring', () => {
     // Sicherstellen, dass kein `--exclude`-Flag o.ae. den M3c-Smoke
     // uebergeht — die Kette ist eine reine &&-Verknuepfung.
     expect(smokeChain).not.toMatch(/--exclude.*m3c|grep.*m3c|awk.*m3c/)
-    // M3c MUSS am Ende der Kette stehen (junge Slices ans Ende append).
-    expect(smokeChain.trim().endsWith('m3c_sonniges_nest_player_cards_smoke.mjs')).toBe(true)
+    // M3c MUSS nicht mehr am Ende stehen, sobald M7a (Spieler-Hero), M6b
+    // (Waldtisch-Holzwimpel) und M9 (Hand-Erstbild) angehaengt wurden.
+    // Wir akzeptieren die juengeren Slices am Ende und pruefen M3c nur
+    // als "vor M7a + M6b + M9" gereiht.
+    const m3cIdx = smokeChain.indexOf('m3c_sonniges_nest_player_cards_smoke.mjs')
+    const m7aIdx = smokeChain.indexOf('m7a_waldtanz_spieler_hero_smoke.mjs')
+    const m6bIdx = smokeChain.indexOf('m6b_waldtisch_holzwimpel_smoke.mjs')
+    const m9Idx = smokeChain.indexOf('m9_hand_erstbild_smoke.mjs')
+    if (m7aIdx >= 0) expect(m3cIdx).toBeLessThan(m7aIdx)
+    if (m6bIdx >= 0) expect(m3cIdx).toBeLessThan(m6bIdx)
+    if (m9Idx >= 0) expect(m3cIdx).toBeLessThan(m9Idx)
   })
 })
