@@ -11010,3 +11010,104 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
     transform: scale(1);
   }
 }
+
+/* M7a: Waldtanz-Spieler-Hero als Stitch-Stats-Card.
+   Additiver grosser Charakter-Block mit Avatar 64×64, Forest-Spirit-Tag
+   und Punkte-Zahl. M7a belegt KEIN bestehendes Klassen-Property der
+   pre-existing Profil-/Kompass-Container (M1ci/M1d3/M1dn-Vertraege),
+   sondern fuegt eine neue Hero-Region hinzu. */
+.waldtanz-seitenmenue__stats-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 0.95rem;
+  margin: 0.6rem 0.45rem 0.85rem;
+  background: var(--st-color-forest-container, #c4fdb6);
+  border: 3px solid var(--st-color-border-strong, #063907);
+  border-radius: 1rem;
+  box-shadow: var(--st-shadow-hard-sm, 0 2px 0 #063907);
+  font-family: var(--st-font-body, 'Plus Jakarta Sans', sans-serif);
+}
+
+.waldtanz-seitenmenue__stats-hero-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 999px;
+  border: 3px solid var(--st-color-border-strong, #063907);
+  background: var(--st-color-surface, #f7fbf2);
+  font-size: 2rem;
+  line-height: 1;
+  box-shadow: 0 2px 0 var(--st-color-border-strong, #063907);
+  flex-shrink: 0;
+}
+
+.waldtanz-seitenmenue__stats-hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.waldtanz-seitenmenue__stats-hero-name {
+  font-family: var(--st-font-heading, 'Rubik', sans-serif);
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--st-color-border-strong, #063907);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.waldtanz-seitenmenue__stats-hero-tag {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 0.12rem 0.55rem;
+  background: var(--st-color-primary, #4b6700);
+  color: var(--st-color-on-primary, #ffffff);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border: 2px solid var(--st-color-border-strong, #063907);
+  text-transform: uppercase;
+}
+
+.waldtanz-seitenmenue__stats-hero-punkte {
+  margin-top: 0.18rem;
+  font-family: var(--st-font-heading, 'Rubik', sans-serif);
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: var(--st-color-primary, #4b6700);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* M7a: Auf /game bekommt der Stats-Hero etwas kompaktere Padding,
+   damit die pre-existing M1ci-Rankenchips darunter Platz haben
+   (siehe Waldtanz-Spielrahmen max-height cap). */
+.spielbereich--game-route [class~="waldtanz-seitenmenue__stats-hero"] {
+  padding: 0.6rem 0.7rem;
+  margin: 0.45rem 0.4rem 0.55rem;
+  gap: 0.65rem;
+}
+.spielbereich--game-route [class~="waldtanz-seitenmenue__stats-hero-avatar"] {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  font-size: 1.6rem;
+}
+.spielbereich--game-route [class~="waldtanz-seitenmenue__stats-hero-name"] {
+  font-size: 0.92rem;
+}
+.spielbereich--game-route [class~="waldtanz-seitenmenue__stats-hero-punkte"] {
+  font-size: 1.25rem;
+}

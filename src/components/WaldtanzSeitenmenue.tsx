@@ -40,6 +40,18 @@ export default function WaldtanzSeitenmenue({
       <div className="waldtanz-seitenmenue__marke">
         <h2>Schlangentanz</h2>
       </div>
+      {/* M7a: Stitch-Stats-Hero — additiver grosser Charakter-Block auf /game und /
+           mit Avatar 64×64, Forest-Spirit-Tag und Punkte-Zahl. M7a ist additiv:
+           Waldtanz-Kompass und Rankenchips bleiben fuer M1ci/M1d3/M1dn-Vertraege
+           unveraendert. */}
+      <section className="waldtanz-seitenmenue__stats-hero" aria-label="Spieler-Stats">
+        <span className="waldtanz-seitenmenue__stats-hero-avatar" aria-hidden="true">🧝</span>
+        <div className="waldtanz-seitenmenue__stats-hero-meta">
+          <strong className="waldtanz-seitenmenue__stats-hero-name">{spielerName}</strong>
+          <span className="waldtanz-seitenmenue__stats-hero-tag">Forest Spirit</span>
+          <span className="waldtanz-seitenmenue__stats-hero-punkte">{punkte} Punkte</span>
+        </div>
+      </section>
       <section className="waldtanz-seitenmenue__profil" aria-label="Spielprofil">
         <span className="waldtanz-seitenmenue__avatar" aria-hidden="true">🧝</span>
         <div>
