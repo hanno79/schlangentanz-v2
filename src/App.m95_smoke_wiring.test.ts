@@ -30,15 +30,22 @@ describe('M9.5 Smoke-Wiring', () => {
     expect(src).toMatch(/pruefeM95ArenaCap/)
   })
 
-  it('M9.5-W4: M9.5-Smoke steht am Ende der Kette (junge Slices ans Ende append)', () => {
-    expect(smokeChain.trim().endsWith('m95_arena_cap_smoke.mjs')).toBe(true)
+  it('M9.5-W4: M9.5-Smoke ist in der Kette enthalten (junge Slices werden angehaengt)', () => {
+    // AENDERUNG 29.06.2026 (M8a-Migration): M9.5 ist nicht mehr das letzte
+    // Glied der Kette — M8a wurde angehaengt. Test prüft jetzt nur die
+    // Mitgliedschaft (contains + indexOf >= 0), nicht mehr endsWith.
+    expect(smokeChain).toContain('m95_arena_cap_smoke.mjs')
     expect(smokeChain).not.toMatch(/--exclude.*m95|grep.*m95|awk.*m95/)
+    const steps = smokeChain.split(/\s*&&\s*/)
+    const m95Index = steps.findIndex((s) => s.includes('m95_arena_cap_smoke.mjs'))
+    expect(m95Index).toBeGreaterThanOrEqual(0)
   })
 
-  it('M9.5-W5: Kette ist reine &&-Verknuepfung ohne bedingte Verzweigungen', () => {
+  it('M9.5-W5: Kette ist reine &&-Verknuepfung und endet mit dem juengsten M-Slice (M8a)', () => {
     const chain = smokeChain
     const steps = chain.split(/\s*&&\s*/)
     expect(steps.length).toBeGreaterThanOrEqual(8)
-    expect(steps[steps.length - 1].trim()).toBe('node scripts/m95_arena_cap_smoke.mjs')
+    // AENDERUNG 29.06.2026 (M8a-Migration): Kette endet jetzt mit m8a.
+    expect(steps[steps.length - 1].trim()).toBe('node scripts/m8a_aktions_hinweis_smoke.mjs')
   })
 })

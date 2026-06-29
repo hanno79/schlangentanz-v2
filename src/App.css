@@ -6955,6 +6955,71 @@ code {
   font-weight: 700;
 }
 
+/* M8a — Sichtbares "Zuletzt ausgefuehrt"-Feedback am Brettrand. Stitch-Pille
+   mit forest-border, lime-container, hard-shadow-sm. Wird auf /game gerendert
+   (im Arenastein neben Questpille), auf / (Lobby) ist sie unsichtbar, weil das
+   Feedback-Element nur innerhalb des aktiven Brettspiels sinnvoll ist.
+   AENDERUNG 29.06.2026: M8a Sonderkarten-Board-Aktions-Hinweis. */
+.waldtanz-letzte-aktion-hinweis {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.4rem 0.9rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 0.9rem;
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-on-secondary-container);
+  font-family: var(--st-font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 0 0 var(--st-color-border-strong);
+  max-width: 100%;
+  flex-shrink: 0;
+  min-width: 200px;
+  align-self: flex-start;
+  animation: waldtanz-letzte-aktion-hinweis--pulse 0.4s ease-out;
+}
+
+.waldtanz-letzte-aktion-hinweis__eyebrow {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 800;
+  opacity: 0.75;
+  line-height: 1;
+}
+
+.waldtanz-letzte-aktion-hinweis__text {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  max-width: 36ch;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+@keyframes waldtanz-letzte-aktion-hinweis--pulse {
+  0% { transform: scale(0.92); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-letzte-aktion-hinweis {
+    animation: none;
+  }
+}
+
+/* Auf / (Lobby) ist das Feedback ohne aktives Brettspiel sinnlos — daher
+   explizit versteckt. Das rendert die Komponente auf der Lobby-Route nicht,
+   weil der App.tsx-Aufruf ohnehin in {istGameRoute && ...} steht, aber die
+   Route-Scope-Regel dokumentiert die Designabsicht. */
+.spielbereich:not(.spielbereich--game-route) .waldtanz-letzte-aktion-hinweis {
+  display: none;
+}
+
 /* Auf /game visuell weg, auf / (Lobby) sichtbar — Pille ist auf /game die
    kanonische Quest-Source (Single-Source-of-Truth-Konsolidierung).
    AENDERUNG 27.06.2026 (M2g Kimi-B1): Spezifitaet 0,2,0 verliert gegen die
