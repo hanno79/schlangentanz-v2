@@ -11111,3 +11111,17 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .spielbereich--game-route [class~="waldtanz-seitenmenue__stats-hero-punkte"] {
   font-size: 1.25rem;
 }
+/* M7a: auf /game wird das alte schmale Spielprofil visuell durch den
+   grossen Stats-Hero ersetzt. DOM-Knoten bleibt fuer A11y-Tree und
+   aria-label="Spielprofil"-Migration erhalten. */
+.spielbereich--game-route [class~="waldtanz-seitenmenue__profil"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
