@@ -62,7 +62,10 @@ export interface Spieler {
   // Zählt ausschließlich erfolgreich durch Schlangenhäutung erzeugte neue Dreiergruppen für die Aufgabenprüfung.
   schlangenhaeutungDreiergruppen: number;
   erfuellteAufgaben: AufgabenkarteInfo[];
-  geheimeAufgabe: AufgabenkarteInfo | null;
+  // ÄNDERUNG [29.06.2026]: R181 — Spec sagt "jeder Spieler erhält genau eine geheime Aufgabenkarte".
+  // Vorher: `| null` mit Factory `?? null` und Validation-Throw → Typ-Inkonsistenz.
+  // Jetzt: non-nullable, Factory wirft Exception bei leerem Aufgabenstapel statt stille Inkonsistenz.
+  geheimeAufgabe: AufgabenkarteInfo;
 }
 
 export interface PendingSchlangengrubeAbwehr {

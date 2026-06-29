@@ -77,9 +77,8 @@ export function useSpielLabels(
     ? istGameRoute ? 'Brett-Zugaktion' : 'Phasenaktion'
     : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
-  const geheimeAufgabeText = aktiverSpieler.geheimeAufgabe
-    ? aufgabeLabel(aktiverSpieler.geheimeAufgabe, false)
-    : 'keine'
+  // ÄNDERUNG [29.06.2026]: R181 — geheimeAufgabe ist non-nullable, daher direkter Zugriff.
+  const geheimeAufgabeText = aufgabeLabel(aktiverSpieler.geheimeAufgabe, false);
 
   return {
     pflichtschrittLabel,

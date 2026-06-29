@@ -105,8 +105,14 @@ function erstelleSpielerListe(
     // ÄNDERUNG [07.06.2026]: R97 initialisiert die Schlangentanz-Historie für neue Spielstände.
     schlangenhaeutungDreiergruppen: 0,
     erfuellteAufgaben: [],
-    geheimeAufgabe: aufgabenStapel.shift() ?? null,
+    // ÄNDERUNG [29.06.2026]: R181 — Spec: jeder Spieler hat genau eine geheime Aufgabenkarte.
+    // Factory wirft Exception wenn der Aufgabenstapel leer ist (statt stille `null`-Inkonsistenz).
+    geheimeAufgabe: aufgabenStapel.shift() ?? throwEmptyAufgabenStapel(),
   }));
+}
+
+function throwEmptyAufgabenStapel(): never {
+  throw new Error('Ungültiger Spielzustand: Aufgabenstapel leer beim Anlegen der Spieler.');
 }
 
 function verteileStartkartenReihum(

@@ -429,8 +429,9 @@ function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts we
   validiereSchlangentanzHistorie(spieler['schlangenhaeutungDreiergruppen']);
   validiereAufgabenArray(spieler['erfuellteAufgaben'], 'spieler.erfuellteAufgaben', verwendeteIds);
 
-  if (spieler['geheimeAufgabe'] === null) {
-    throw new Error('Ungültiger Spielzustand: spieler.geheimeAufgabe darf nicht null sein.');
+  // ÄNDERUNG [29.06.2026]: R181 — geheimeAufgabe ist non-nullable, daher kein Null-Check mehr nötig.
+  if (spieler['geheimeAufgabe'] === null || spieler['geheimeAufgabe'] === undefined) {
+    throw new Error('Ungültiger Spielzustand: spieler.geheimeAufgabe fehlt.');
   }
   validiereAufgabenkarte(spieler['geheimeAufgabe'], 'spieler.geheimeAufgabe', verwendeteIds);
 
@@ -603,7 +604,7 @@ function sammleSpielkarten(zustand: Spielzustand): Spielkarte[] {
 function sammleAufgaben(zustand: Spielzustand): AufgabenkarteInfo[] {
   return [
     ...zustand.spieler.flatMap((spieler) => [
-      spieler.geheimeAufgabe as AufgabenkarteInfo,
+      spieler.geheimeAufgabe,
       ...spieler.erfuellteAufgaben,
     ]),
     ...zustand.offeneAufgaben,
