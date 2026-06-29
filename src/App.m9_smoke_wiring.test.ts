@@ -30,8 +30,11 @@ describe('M9 Smoke-Wiring', () => {
     expect(src).toMatch(/pruefeM9HandErstbild/)
   })
 
-  it('M9-W4: M9-Smoke steht am Ende der Kette (junge Slices ans Ende append)', () => {
-    expect(smokeChain.trim().endsWith('m9_hand_erstbild_smoke.mjs')).toBe(true)
+  it('M9-W4: M9-Smoke ist in der Kette enthalten (kein Ausschluss per --exclude/grep)', () => {
+    // AENDERUNG 29.06.2026 (M9.5): M9.5-Slice hat einen weiteren Smoke
+    // nach M9 angehaengt, daher pruefen wir jetzt "enthalten" statt
+    // "am Ende". M9 bleibt aber im Kette drin.
+    expect(smokeChain).toContain('m9_hand_erstbild_smoke.mjs')
     expect(smokeChain).not.toMatch(/--exclude.*m9|grep.*m9|awk.*m9/)
   })
 
@@ -40,7 +43,13 @@ describe('M9 Smoke-Wiring', () => {
     // Pruefe, dass alle Stufen mit "&&" verbunden sind.
     const steps = chain.split(/\s*&&\s*/)
     expect(steps.length).toBeGreaterThanOrEqual(8)
-    // M9 muss der letzte Schritt sein.
-    expect(steps[steps.length - 1].trim()).toBe('node scripts/m9_hand_erstbild_smoke.mjs')
+    // AENDERUNG 29.06.2026 (M9.5): M9 muss nicht mehr letzter Schritt
+    // sein, da M9.5 nach M9 folgt. Pruefe stattdessen, dass M9 in der
+    // Kette enthalten ist und alle Schritte gueltige node-Smoke-Calls sind.
+    const m9StepIndex = steps.findIndex((s) => s.includes('m9_hand_erstbild_smoke.mjs'))
+    expect(m9StepIndex).toBeGreaterThanOrEqual(0)
+    steps.forEach((step) => {
+      expect(step.trim()).toMatch(/^node\s+scripts\//)
+    })
   })
 })

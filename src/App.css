@@ -2425,11 +2425,19 @@ code {
        vs. 32%-Smoke-Threshold). */
     display: flex;
     flex-direction: column;
-    /* M1dk: Phasen-Banner am Brettrand eingefuehrt (~28 px) — Arenastein
+    /* M1dk: Phasen-Banner am Brettrand eingefuehrt (~28 px) — Arenasstein
        wird deutlich angehoben, damit Schlangenlichtung sichtbar bleibt.
-       Bottom-Row bleibt im 900-px-Viewport (Hand bottom ~894 px). */
-    height: clamp(34rem, 64vh, 40rem);
-    max-height: clamp(34rem, 64vh, 40rem);
+       Bottom-Row bleibt im 900-px-Viewport (Hand bottom ~894 px).
+
+       AENDERUNG 29.06.2026 (M9.5 Arenasstein-Cap-Senkung): Cap von
+       34rem/64vh/40rem auf 24rem/50vh/32rem reduziert, damit die
+       M9-Grid-Row (480 px im 900-Viewport) tatsaechlich greift.
+       Vorher wuchs Arenasstein auf 720 px (kind-height schlug parent-row),
+       Hand lag bei y=988 (88 px unter Falz). Nachher: Arenasstein = 450 px,
+       Hand im 900-Viewport sichtbar. Trade-off: Schlangenlichtung-Anteil
+       sinkt von 71% auf 50% (M2r-Smoke-Threshold angepasst). */
+    height: clamp(24rem, 50vh, 32rem);
+    max-height: clamp(24rem, 50vh, 32rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;
@@ -10701,10 +10709,14 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    Spielfeld-Layout auf der gleichen Grid-Template-Achse sitzt und der
    Schlangenbereich jetzt die volle Verfuegbare Hoehe ausfuellt. */
 
-/* M2r — Arenastein-Cap route-scoped anheben (Kimi-Review B2) */
+/* M2r — Arenasstein-Cap route-scoped anheben (Kimi-Review B2).
+   AENDERUNG 29.06.2026 (M9.5): Cap rueckgaengig gemacht und auf
+   24rem/50vh/32rem gesenkt, damit die M9-Grid-Row tatsaechlich greift
+   und die Hand im 900-Viewport sichtbar wird. Vorher: 40rem/72vh/46rem
+   = 720 px Arenasstein → Hand bei y=988 (88 px unter Falz). */
 .spielbereich--game-route [class~="waldtanz-arenastein"] {
-  height: clamp(40rem, 72vh, 46rem);
-  max-height: clamp(40rem, 72vh, 46rem);
+  height: clamp(24rem, 50vh, 32rem);
+  max-height: clamp(24rem, 50vh, 32rem);
 }
 .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {
   display: none !important;

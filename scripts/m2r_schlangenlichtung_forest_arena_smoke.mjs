@@ -151,8 +151,17 @@ function akzeptanzPruefen(ergebnis) {
   if (!ergebnis.lichtung.sichtbar) {
     fehler.push(`Schlangenlichtung fehlt (Forest-Arena nicht befreit)`)
   }
-  if (ergebnis.lichtung.anteil < 0.55) {
-    fehler.push(`Schlangenlichtung zu niedrig: ${Math.round(ergebnis.lichtung.anteil * 100)}% < 55% Viewport-Hoehe`)
+  if (ergebnis.lichtung.sichtbar && ergebnis.lichtung.anteil < 0.5) {
+    // AENDERUNG 29.06.2026 (M9.5 Arenasstein-Cap-Senkung):
+    // Schwellenwert von 55% auf 50% reduziert. M9.5 senkt die
+    // Arenasstein-Cap-Max von 40rem auf 32rem, damit die M9-Grid-Row
+    // (480 px im 900-Viewport) tatsaechlich greift und die Hand im
+    // 900-Viewport sichtbar wird. Bei 900vh ist 50% (450 px) die
+    // physikalische Obergrenze fuer die Schlangenlichtung, wenn die
+    // Hand ebenfalls sichtbar bleiben soll. Trade-off: Schlangenlichtung
+    // wird kleiner, dafuer wird der User-Refrain "Hand im Erstbild
+    // sichtbar" erfuellt.
+    fehler.push(`Schlangenlichtung zu niedrig: ${Math.round(ergebnis.lichtung.anteil * 100)}% < 50% Viewport-Hoehe (M9.5-Schwelle)`)
   }
   if (!ergebnis.hand.sichtbar) {
     fehler.push(`Handkartenleiste fehlt`)

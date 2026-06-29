@@ -113,8 +113,14 @@ describe('M2r Schlangenlichtung als Forest-Arena (RED)', () => {
         const remMatch = upper.match(/(\d+(?:\.\d+)?)\s*rem/)
         if (remMatch) {
           const remValue = parseFloat(remMatch[1])
-          // 38rem ≈ 608px > 36rem (576px) altes M1d1-Max
-          return remValue >= 38
+          // AENDERUNG 29.06.2026 (M9.5 Arenasstein-Cap-Senkung):
+          // Schwellenwert von 38rem auf 30rem reduziert. M9.5 senkt
+          // die Arenasstein-Cap-Max von 40rem (M2r) auf 32rem, damit
+          // die M9-Grid-Row (480 px) tatsaechlich greift und die Hand
+          // im 900-Viewport sichtbar wird. Trade-off: Schlangenlichtung-
+          // Anteil sinkt von 71% auf 50% bei 1280x900 (M2r-Smoke-
+          // Threshold ebenfalls angepasst). 30rem ist die neue Grenze.
+          return remValue >= 30
         }
       }
       return false
