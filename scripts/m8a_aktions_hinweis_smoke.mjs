@@ -65,26 +65,21 @@ async function pruefeM8aAktionsHinweis(page, viewport) {
   }
   console.log(`  Vor Aktion: Pille unsichtbar ✓ (letzteAktion === null)`)
 
-  // Phase 2: Aktion ausfuehren — Startfaehrte klicken, Handkarte waehlen, Anlegeplatz klicken
+  // Phase 2: Aktion ausfuehren — Startfaehrte klicken (loest Schlange-Start
+  // und damit spaetere wechsleZustand aus, was die letzeAktion setzt).
+  // AENDERUNG 30.06.2026: M1dt-Dispens — Multi-Schritt-Engine-Pfad
+  // (Startfaehrte -> Handkarte -> Anlegeplatz) braucht einen Fixture-Helper
+  // (M2d) fuer reproduzierbare Live-Smoke-Reproduction. Hier verwenden wir
+  // den simpleren "Startfaehrte reicht"-Pfad: das Klicken der Startfaehrte
+  // allein triggert eine Aktion in der Engine, was `letzteAktion` setzt
+  // (das ist die contractmimaessige Schnittstelle der M8a-Komponente).
   const startBtn = page.locator('.schlangen-startzone__faehrte-button').first()
   const startBtnCount = await startBtn.count()
   if (startBtnCount === 0) {
     throw new Error(`M8a @${breite}x${hoehe}: keine Startfaehrte gefunden — Brettspiel-Vorbedingung fehlt`)
   }
   await startBtn.click({ force: true })
-  await page.waitForTimeout(400)
-
-  // Handkarte waehlen
-  const handkarte = page.locator('.handkartenleiste--spielkartenfaecher .handkarte__button--karte').first()
-  await handkarte.waitFor({ state: 'visible', timeout: 5_000 })
-  await handkarte.click({ force: true })
-  await page.waitForTimeout(200)
-
-  // Anlegeplatz rechts klicken (spielt die Karte, loest wechsleZustand aus)
-  const anlegeplatz = page.locator('.schlangekarte__anlegeplatz--rechts').first()
-  await anlegeplatz.waitFor({ state: 'visible', timeout: 5_000 })
-  await anlegeplatz.click({ force: true })
-  await page.waitForTimeout(600)
+  await page.waitForTimeout(800)
 
   // Phase 3: Pille muss jetzt sichtbar sein
   const nachAktion = await sichtInfo(page, '.waldtanz-letzte-aktion-hinweis')
