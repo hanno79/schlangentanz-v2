@@ -127,16 +127,21 @@ function routeScopedBody(selector: string): string {
 }
 
 describe('M2x Brettrand-Bottom-Hero: Hand + End-Turn + Pflicht-Abwurf + Spielbarkeit', () => {
-  it('M2x:1 Handkarten-Buehne hat route-scoped min-height >= 100px (Hero-Prominenz)', () => {
+  it('M2x:1 Handkarten-Buehne hat route-scoped min-height mit rem-Wert (Hero-Prominenz)', () => {
+    // AENDERUNG 30.06.2026 (M3a): M3a reduziert die M2x-Mindesthoehe von
+    // 6.5rem (104 px) auf 3.2rem (51 px), damit die 5 Handkarten in
+    // den 900er Viewport passen. Die Hero-Prominenz wird durch den
+    // prominenten Border + Box-Shadow + die Spielerplakette-Titel
+    // (font-size 1.05rem, font-weight 800) erhalten, nicht durch die
+    // Buehnen-Hoehe. Threshold daher auf >= 3rem (48 px) gesenkt.
     const body = routeScopedBody('.spielbereich--game-route [class~="handkarten-buehne"]')
     const minHeightMatch = body.match(/min-height:\s*([^;]+)/)
     expect(minHeightMatch).not.toBeNull()
-    // Wir erwarten einen rem-Wert >= 6rem (= 96px @ 16px root, oder 108px @ 18px)
     const value = minHeightMatch?.[1]?.trim() ?? ''
     const remMatch = value.match(/([\d.]+)rem/)
     expect(remMatch).not.toBeNull()
     const remValue = Number(remMatch?.[1] ?? 0)
-    expect(remValue).toBeGreaterThanOrEqual(6.0)
+    expect(remValue).toBeGreaterThanOrEqual(3.0)
   })
 
   it('M2x:2 Handkarten-Spielbarkeit-Pille ist eine Stitch-Pille (3px Border + border-radius 999px)', () => {

@@ -2973,10 +2973,17 @@ code {
        Viewport unter 900 px bleiben. Mit 88 px + 110 px + 8 px gap +
        14 px Padding = 220 px Panel-Tiefe, in der Bottom-Row ~153 px
        bleiben -> die Bottom-Row expandiert jetzt dynamisch, der
-       Arenastein komprimiert um ~67 px. */
-    min-height: clamp(4.5rem, 9vh, 5.5rem);
+       Arenastein komprimiert um ~67 px.
+       AENDERUNG 30.06.2026 (M3a): Buehnen-Hoehe weiter auf
+       clamp(2.6rem, 5.5vh, 3.2rem) reduziert (52 px @900vh), damit
+       Buehne (52 px) + Handkartenleiste (110 px) + 4 px gap = 166 px
+       Panel-Tiefe in den 900er Viewport passt. Vor M3a war die
+       Kartenleiste bei y=985 (85 px unter Falz) — Spieler scrollte,
+       um seine Karten zu sehen. Nach M3a ist die Kartenleiste bei
+       y~873, voll sichtbar. */
+    min-height: clamp(2.6rem, 5.5vh, 3.2rem);
     height: auto;
-    padding: 0.25rem 0.55rem;
+    padding: 0.18rem 0.45rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
     border-radius: var(--st-radius-xl);
     background:
@@ -3032,9 +3039,12 @@ code {
 
   .spielbereich--game-route [class~="handkarten-buehne__spielerplakette"] {
     position: absolute;
-    left: 0.5rem;
-    bottom: 0.1rem;
-    padding: 0.35rem 0.65rem;
+    left: 0.4rem;
+    bottom: 0;
+    /* AENDERUNG 30.06.2026 (M3a): padding 0.35rem 0.65rem -> 0.18rem 0.55rem
+       + bottom 0.1rem -> 0rem, damit die Spielerplakette in der jetzt
+       kompakteren Buehne (52 px statt 88 px) nicht ueber den Rand ragt. */
+    padding: 0.18rem 0.55rem;
     box-shadow: 0 3px 0 var(--st-color-border-strong);
   }
 
@@ -3051,8 +3061,11 @@ code {
   .spielbereich--game-route [class~="handkarten-buehne__statuschip--spielbar"] {
     display: inline-grid;
     position: absolute;
-    top: 0.35rem;
-    right: 0.75rem;
+    /* AENDERUNG 30.06.2026 (M3a): top 0.35rem -> 0.25rem + right 0.75rem -> 0.55rem,
+       damit der Spielbar-Chip in der jetzt 52 px hohen Buehne oben-rechts
+       sichtbar bleibt ohne die Aktions-Buttons zu ueberlappen. */
+    top: 0.25rem;
+    right: 0.55rem;
   }
 
   /* AENDERUNG 26.06.2026 (M1dq): Sichtbares Sonderkarten-Spielmoment in der Handbuehne.
@@ -11383,9 +11396,15 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    18px root) anheben, damit Eyebrow + Statuschips + Spielhandlungen
    in einer Zeile Platz haben und der Spieler die Brettrand-Hero-Zone
    als eine zusammengehoerige Stitch-Pille wahrnimmt. M2x reichert die
-   M1f-Basis (Stitch-Border + Hard-Shadow auf der Buehne selbst) an. */
+   M1f-Basis (Stitch-Border + Hard-Shadow auf der Buehne selbst) an.
+   AENDERUNG 30.06.2026 (M3a): Buehnen-Hoehe von 6.5rem (104 px) auf
+   3.2rem (51 px) reduziert, damit die 5 Handkarten in den 900er
+   Viewport passen. Vorher war die Kartenleiste bei y=985 (85 px unter
+   Falz), Spieler scrollte um seine Karten zu sehen. Nach M3a ist die
+   Kartenleiste bei y~873, voll sichtbar. Border + Box-Shadow bleiben
+   (Stitch-Identitaet erhalten). */
 .spielbereich--game-route [class~="handkarten-buehne"] {
-  min-height: 6.5rem;
+  min-height: 3.2rem;
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   box-shadow: var(--st-shadow-hard);
 }
@@ -11477,4 +11496,14 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   .spielbereich--game-route [class~="handkarten-buehne__endturn"]:hover {
     transform: none;
   }
+}
+
+/* AENDERUNG 30.06.2026 (M3a): Handkarten-Kartenleiste enger an die
+   Buehne anlegen, damit die 5 Karten in den 900er Viewport ruecken.
+   Vor M3a: margin-top 0 (Default). Nach M3a: margin-top -0.4rem, was
+   die Luecke zwischen Buehne und Kartenleiste auf ~0.4rem reduziert
+   und die Kartenleiste um 6-10 px nach oben holt. M1ds-Tiefenfaecher-
+   Transform bleibt unveraendert. */
+.spielbereich--game-route [class~="handkartenleiste"] {
+  margin-top: -0.4rem;
 }
