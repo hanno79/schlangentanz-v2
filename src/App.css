@@ -11211,6 +11211,75 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   border: 0;
 }
 
+/* M2y (2026-06-30): Schlangen-Gegnerlichtung im Leerlauf kompaktifizieren.
+   Auf /game faellt die riesige leere "Gegner-Schlangen"-Card (~250px)
+   zu einem kompakten Hinweis-Banner (~50-80px) zusammen, sobald keine
+   gegnerischen Schlangen existieren (kein __liste-Child). Sobald die
+   erste gegnerische Schlange erscheint, expandiert die Card wieder zur
+   vollen Liste (Default-Styles greifen via :not-Selektor-Ausschluss).
+
+   Pattern: M2w (CSS-only Visual-Consolidation) + M2r/M2e (route-scoped
+   Specificity 0,3,0). Additive Anreicherung der M1dp-Basis-Deklarationen
+   (display/flex-direction/width/background/border) statt Replacement,
+   damit M1dp-Asserts erhalten bleiben (M1dt-Pitfall-Management).
+
+   Cascade-Safe: Die spaetere route-scoped-Regel (0,3,0 specificity)
+   gewinnt gegen die M1dp-Basis (0,1,0) nur fuer den Empty-State-Pfad.
+   Der Populated-Pfad (.spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:has(__liste))
+   ist hier NICHT betroffen. */
+.spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:not(:has([class~="waldtanz-gegnerlichtung__liste"])) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.55rem 0.85rem 0.7rem;
+  min-height: clamp(2.6rem, 4.2vh, 3.4rem);
+  border: 3px solid var(--st-color-border-strong, #063907);
+  border-radius: 1.25rem;
+  background: var(--st-color-surface, #ecffe3);
+  box-shadow: 0 3px 0 0 var(--st-color-border-strong, #063907);
+  box-sizing: border-box;
+  color: var(--st-color-on-surface, #063907);
+  overflow: hidden;
+}
+
+.spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:not(:has([class~="waldtanz-gegnerlichtung__liste"])) [class~="waldtanz-gegnerlichtung__kopf"] {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: nowrap;
+  margin: 0;
+}
+
+.spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:not(:has([class~="waldtanz-gegnerlichtung__liste"])) [class~="waldtanz-gegnerlichtung__titel"] {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:not(:has([class~="waldtanz-gegnerlichtung__liste"])) [class~="waldtanz-gegnerlichtung__hinweis"] {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:not(:has([class~="waldtanz-gegnerlichtung__liste"])) [class~="waldtanz-gegnerlichtung__leertext"] {
+  display: none;
+}
+
+/* Reduced-Motion: kein extra animierter Glow im Empty-State — der
+   3px-Border + hard-shadow bleiben sichtbar (statisches Stitch-Aequivalent). */
+@media (prefers-reduced-motion: reduce) {
+  .spielbereich--game-route [class~="waldtanz-gegnerlichtung"]:not(:has([class~="waldtanz-gegnerlichtung__liste"])) {
+    transition: none;
+  }
+}
+
 /* M2w: Brettrand-Zugseitenleiste konsolidieren — 3 redundante Cards auf
    /game visuell wegblenden, damit die 4 verbleibenden Cards (Zugpfad,
    Spielhilfe, KiZugBuehne, Zugkompass) als konsistente Stitch-Aktions-
