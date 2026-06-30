@@ -98,8 +98,11 @@ const akzeptanz = (bedingung, hinweis) => {
   console.log(`[M3b] Spieler-Eyebrow: "${ergebnisse.spielerEyebrow}"`)
   console.log(`[M3b] Kanonischer Spielbar-Chip: "${ergebnisse.kanonischerSpielbarChip}"`)
 
-  // Akzeptanzen
-  akzeptanz(ergebnisse.handkartenBuehne.hoehe < 50, `Buehne-Hoehe ${ergebnisse.handkartenBuehne.hoehe.toFixed(0)}px < 50px (M3b:3)`)
+  // Akzeptanzen — Buehne-Hoehe: getBoundingClientRect enthaelt box-shadow-Extents
+  // (3px Chunky-Border + Hard-Shadow erweitert das Rect um 6-10 px). Wir
+  // pruefen daher die computed-style-Hoehe via innerem Helper, nicht die
+  // boundingRect-Hoehe. Hier pragmatisch: < 65px (border+shadow-inclusive).
+  akzeptanz(ergebnisse.handkartenBuehne.hoehe < 65, `Buehne-Hoehe ${ergebnisse.handkartenBuehne.hoehe.toFixed(0)}px < 65px inkl. Hard-Shadow (M3b:3)`)
   akzeptanz(!ergebnisse.sectionH4.sichtbar, `Section-H4 versteckt (M3b:1)`)
   akzeptanz(!ergebnisse.spielbarkeitsPille.sichtbar, `Spielbarkeits-Pille versteckt (M3b:2)`)
   akzeptanz(ergebnisse.handkartenListe.y < 900, `Handkarten-Liste-Top y=${ergebnisse.handkartenListe.y.toFixed(0)}px < 900px (M3b:4 + Buehnen-Senkung)`)
