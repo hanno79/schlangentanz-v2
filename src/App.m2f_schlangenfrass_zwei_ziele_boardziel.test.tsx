@@ -63,7 +63,11 @@ describe('M2f Schlangenfrass-Zwei-Ziele-Boardziel', () => {
 
     fireEvent.click(frassAusfuehren)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenfrass mit Karte schlangenfrass-m2f: Karte rot-gegner-m2f aus Schlange gegner-a-m2f und Karte blau-gegner-m2f aus Schlange gegner-b-m2f entfernen')).toBeVisible()
+    // M8b: Brettschritt-Stempel rendert die Konsequenz derselben Aktion ebenfalls
+        // (1 Pille + N Stempel). Auf die Pille scoped, um Eindeutigkeit zu erzwingen.
+        const aktionsPille = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
+        expect(within(aktionsPille).getByText(/^Zuletzt ausgeführt:$/)).toBeVisible()
+        expect(within(aktionsPille).getByText(/Schlangenfrass mit Karte schlangenfrass-m2f: Karte rot-gegner-m2f aus Schlange gegner-a-m2f und Karte blau-gegner-m2f aus Schlange gegner-b-m2f entfernen/)).toBeVisible()
     expect(within(schlangenbereich).queryByText('rot-gegner-m2f')).toBeNull()
     expect(within(schlangenbereich).queryByText('blau-gegner-m2f')).toBeNull()
     expect(within(schlangenbereich).getByText('eigene-m2f')).toBeVisible()

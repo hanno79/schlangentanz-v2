@@ -73,7 +73,11 @@ describe('R183 Farbendieb-Boardziel', () => {
 
     fireEvent.click(boardAktion)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbendieb mit Karte farbendieb-r183 von Spieler 2 / Schlange gegner-schlange-r183 Karte rot-r183-beute auf Schlange eigene-schlange-r183 an Position 2 spielen')).toBeVisible()
+    // M8b: Brettschritt-Stempel rendert die Konsequenz derselben Aktion ebenfalls
+    // (1 Pille + N Stempel). Auf die Pille scoped, um Eindeutigkeit zu erzwingen.
+    const aktionsPille = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
+    expect(within(aktionsPille).getByText(/^Zuletzt ausgeführt:$/)).toBeVisible()
+    expect(within(aktionsPille).getByText(/Farbendieb mit Karte farbendieb-r183 von Spieler 2 \/ Schlange gegner-schlange-r183 Karte rot-r183-beute auf Schlange eigene-schlange-r183 an Position 2 spielen/)).toBeVisible()
     expect(within(gegnerischeSchlangen).queryByText('rot-r183-beute')).toBeNull()
     expect(within(eigeneSchlangen).getByText('rot-r183-beute')).toBeVisible()
     expect(within(gegnerischeSchlangen).getByText('blau-r183-bleibt')).toBeVisible()

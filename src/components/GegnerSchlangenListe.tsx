@@ -1,10 +1,12 @@
 /*
 Author: rahn
 Datum: 13.06.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: Gegnerische Schlangenreihe mit board-nahen Sonderkarten-Zielen für Waldtanz-Interaktionen.
+              M8b: `erstesFrassZiel`/`setErstesFrassZiel` werden von der Parent-Komponente
+              `WaldtanzGegnerlichtung` als Props geliefert, damit mehrere
+              `GegnerSchlangenListe`-Instanzen den 2-Ziel-Schlangenfrass-State teilen.
 */
-import { useState } from 'react'
 import { ermittleRegenbogenWildfarben } from '../engine'
 import type { SpielAktion, Spieler } from '../engine'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
@@ -12,6 +14,9 @@ import FarbendiebBeutekorb from './FarbendiebBeutekorb'
 import SchlangenblockadeFessel from './SchlangenblockadeFessel'
 import SchlangenfrassBissspur from './SchlangenfrassBissspur'
 import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
+
+export type FrassZiel = { spielerId: string; schlangenId: string; kartenId: string }
+export type FrassAuswahl = FrassZiel & { handkartenId: string }
 
 interface GegnerSchlangenListeProps {
   spieler: Spieler[]
@@ -26,10 +31,12 @@ interface GegnerSchlangenListeProps {
   // Wird benoetigt, weil Schlangenblockade/Farbendieb/Schlangenfrass auf
   // gegnerische Schlangen zielen — diese sollen dann ebenfalls kurz pulsieren.
   letzteAktionZiel?: LetzteAktionZiel | null
+  // M8b: Extern koordinierter 2-Ziel-Schlangenfrass-State. Wird in der
+  // Parent-Komponente `WaldtanzGegnerlichtung` gehalten, damit alle
+  // Listen das Ziel-1 sehen und die Sofortaktion anbieten koennen.
+  erstesFrassZiel: FrassAuswahl | null
+  setErstesFrassZiel: (ziel: FrassAuswahl | null) => void
 }
-
-type FrassZiel = { spielerId: string; schlangenId: string; kartenId: string }
-type FrassAuswahl = FrassZiel & { handkartenId: string }
 
 function istGleichesFrassZiel(a: FrassZiel, b: FrassZiel) {
   return a.spielerId === b.spielerId && a.schlangenId === b.schlangenId && a.kartenId === b.kartenId
@@ -59,8 +66,9 @@ export default function GegnerSchlangenListe({
   aktionsLabel,
   aktiverZielspurKey = null,
   letzteAktionZiel = null,
+  erstesFrassZiel,
+  setErstesFrassZiel,
 }: GegnerSchlangenListeProps) {
-  const [erstesFrassZiel, setErstesFrassZiel] = useState<FrassAuswahl | null>(null)
   const aktivesErstesFrassZiel = erstesFrassZiel?.handkartenId === ausgewaehlteHandkarteId ? erstesFrassZiel : null
 
   function findeBlockadeAktion(zielSpielerId: string, zielSchlangenId: string) {
@@ -92,9 +100,15 @@ export default function GegnerSchlangenListe({
     return <p>Keine gegnerischen Schlangen.</p>
   }
 
+  // M8b: Kompass nur in der Liste anzeigen, die das aktive Ziel-1 besitzt,
+  // damit der Hinweis nicht in jeder gegner-Liste dupliziert wird.
+  const kompassSpielerId = aktivesErstesFrassZiel?.spielerId
+  const kompassGehoertZuDieserListe = kompassSpielerId !== undefined
+    && spieler.some((eintrag) => eintrag.id === kompassSpielerId)
+
   return (
     <>
-      {aktivesErstesFrassZiel && (
+      {aktivesErstesFrassZiel && kompassGehoertZuDieserListe && (
         <div className="schlangenfrass-zweiziel-kompass">
           <p>Erstes Ziel: {aktivesErstesFrassZiel.kartenId}. Wähle eine zweite gegnerische Karte.</p>
           <button type="button" onClick={() => setErstesFrassZiel(null)}>Zielauswahl zurücksetzen</button>

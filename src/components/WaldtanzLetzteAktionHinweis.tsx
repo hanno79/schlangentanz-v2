@@ -26,7 +26,7 @@ export default function WaldtanzLetzteAktionHinweis({ letzteAktion }: WaldtanzLe
       aria-live="polite"
       data-testid="waldtanz-letzte-aktion-hinweis"
     >
-      <span className="waldtanz-letzte-aktion-hinweis__eyebrow">Zuletzt ausgeführt</span>
+      <span className="waldtanz-letzte-aktion-hinweis__eyebrow">Zuletzt ausgeführt:</span>
       <p className="waldtanz-letzte-aktion-hinweis__text">{letzteAktion}</p>
     </aside>
   )

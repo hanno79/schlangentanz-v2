@@ -1,16 +1,20 @@
 /*
- * Author: rahn
- * Datum: 26.06.2026
- * Version: 1.0
- * Beschreibung: M1dp — Waldtanz-Gegnerlichtung als sichtbares oberes
- *              Brett-Cluster im Arenastein. Bündelt pro Gegner eine
- *              eigene Karte-Reihe mit Name, Punkten und Snake-Count
- *              und rendert die gegnerischen Schlangen als kartenartige
- *              Brettobjekte. Engine-Aktionen (Schlangenblockade, Fessel,
- *              Beutekorb, Bissspur) bleiben unverändert nutzbar.
- */
+Author: rahn
+Datum: 26.06.2026
+Version: 1.1
+Beschreibung: M1dp — Waldtanz-Gegnerlichtung als sichtbares oberes
+              Brett-Cluster im Arenastein. Bündelt pro Gegner eine
+              eigene Karte-Reihe mit Name, Punkten und Snake-Count
+              und rendert die gegnerischen Schlangen als kartenartige
+              Brettobjekte. Engine-Aktionen (Schlangenblockade, Fessel,
+              Beutekorb, Bissspur) bleiben unverändert nutzbar.
+              M8b: Hält den 2-Ziel-Schlangenfrass-State im Parent,
+              damit alle GegnerSchlangenListe-Instanzen das Ziel-1 teilen.
+*/
+import { useState } from 'react'
 import type { SpielAktion, Spieler, SpielerWertungsEintrag } from '../engine'
 import GegnerSchlangenListe from './GegnerSchlangenListe'
+import type { FrassAuswahl } from './GegnerSchlangenListe'
 import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 
 interface WaldtanzGegnerlichtungProps {
@@ -47,6 +51,11 @@ export default function WaldtanzGegnerlichtung({
     (summe, gegner) => summe + gegner.schlangen.length,
     0,
   )
+
+  // M8b: Parent-State für die 2-Ziel-Schlangenfrass-Auswahl, damit alle
+  // GegnerSchlangenListe-Instanzen das Ziel-1 teilen und die Sofortaktion
+  // auf der zweiten Liste erscheint.
+  const [erstesFrassZiel, setErstesFrassZiel] = useState<FrassAuswahl | null>(null)
 
   return (
     <section
@@ -99,6 +108,8 @@ export default function WaldtanzGegnerlichtung({
                 aktionsLabel={aktionsLabel}
                 aktiverZielspurKey={aktiverZielspurKey}
                 letzteAktionZiel={letzteAktionZiel}
+                erstesFrassZiel={erstesFrassZiel}
+                setErstesFrassZiel={setErstesFrassZiel}
               />
             </li>
           ))}

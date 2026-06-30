@@ -6,7 +6,7 @@
  */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { FarbkarteInfo, SonderkarteInfo } from './engine'
@@ -26,6 +26,8 @@ const sonderkarte = (id: string, name: string): SonderkarteInfo => ({
 })
 
 describe('R181 Schlangenfrass-Boardziel', () => {
+  beforeEach(() => { window.history.pushState({}, '', '/game') })
+
   it('markiert eigene Zielkarten und führt Schlangenfrass direkt im Schlangenbereich aus', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     const schlangenfrass = sonderkarte('schlangenfrass-r181', 'Schlangenfrass')
@@ -58,7 +60,11 @@ describe('R181 Schlangenfrass-Boardziel', () => {
 
     fireEvent.click(boardAktion)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenfrass mit Karte schlangenfrass-r181: Karte rot-r181-ziel aus Schlange schlange-r181-frass entfernen')).toBeVisible()
+    // M8b: Brettschritt-Stempel rendert die Konsequenz derselben Aktion ebenfalls
+    // (1 Pille + N Stempel). Auf die Pille scoped, um Eindeutigkeit zu erzwingen.
+    const aktionsPille = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
+    expect(within(aktionsPille).getByText(/^Zuletzt ausgeführt:$/)).toBeVisible()
+    expect(within(aktionsPille).getByText(/Schlangenfrass mit Karte schlangenfrass-r181: Karte rot-r181-ziel aus Schlange schlange-r181-frass entfernen/)).toBeVisible()
     expect(within(schlangenbereich).queryByText('rot-r181-ziel')).toBeNull()
     expect(within(schlangenbereich).getByText('blau-r181-bleibt')).toBeVisible()
   })
@@ -72,12 +78,18 @@ describe('R181 Schlangenfrass-Boardziel', () => {
 
     render(<App initialZustand={zustand} />)
 
-    const { handBereich, schlangenbereich } = ermittleSpielbereiche()
+    const { handBereich } = ermittleSpielbereiche()
+    const gegnerlicheSchlangen = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-r181-zwei-ziele/ }))
 
-    expect(within(schlangenbereich).getAllByRole('button', { name: /Schlangenfrass-Ziel 1 im Schlangenbereich wählen/ })).toHaveLength(2)
-    expect(within(schlangenbereich).queryByRole('button', { name: /Schlangenfrass im Schlangenbereich mit Karte/ })).toBeNull()
-    fireEvent.click(within(schlangenbereich).getByRole('button', { name: /rot-gegner-r181/ }))
-    expect(within(schlangenbereich).getByRole('button', { name: /auf Karten rot-gegner-r181 und blau-gegner-r181/ })).toBeVisible()
+    // M8b: Mit State-Lift in WaldtanzGegnerlichtung sieht BEIDE
+    // GegnerSchlangenListe-Instanzen das ausgewaehlte Ziel. Vor Klick:
+    // beide Listen zeigen je 1 erstes-Ziel-Bissspur = 2 total.
+    expect(within(gegnerlicheSchlangen).getAllByRole('button', { name: /Schlangenfrass-Ziel 1 im Schlangenbereich wählen/ })).toHaveLength(2)
+    expect(within(gegnerlicheSchlangen).queryByRole('button', { name: /Schlangenfrass im Schlangenbereich mit Karte/ })).toBeNull()
+    fireEvent.click(within(gegnerlicheSchlangen).getByRole('button', { name: /rot-gegner-r181/ }))
+    // M8b: Nach Klick auf Spieler-1-Ziel sieht Spieler-2-Liste das aktive
+    // Ziel-1 und bietet die Sofortaktion an.
+    expect(within(gegnerlicheSchlangen).getByRole('button', { name: /auf Karten rot-gegner-r181 und blau-gegner-r181/ })).toBeVisible()
   })
 })
