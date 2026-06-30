@@ -41,13 +41,12 @@ describe('M9.5 Smoke-Wiring', () => {
     expect(m95Index).toBeGreaterThanOrEqual(0)
   })
 
-  it('M9.5-W5: Kette ist reine &&-Verknuepfung und endet mit dem juengsten M-Slice (M2y)', () => {
+  it('M9.5-W5: Kette ist reine &&-Verknuepfung und endet mit dem juengsten M-Slice (M2z)', () => {
     const chain = smokeChain
     const steps = chain.split(/\s*&&\s*/)
     expect(steps.length).toBeGreaterThanOrEqual(8)
-    // AENDERUNG 30.06.2026 (M2y-Migration): Kette endet jetzt mit m2y.
-    // Vorher M8a (29.06.2026), dann M2w (30.06.2026 morgens),
-    // M2x (30.06.2026 mittags), jetzt M2y.
-    expect(steps[steps.length - 1].trim()).toBe('node scripts/m2y_gegnerlichtung_leerlauf_smoke.mjs')
+    // AENDERUNG 30.06.2026 (M2z-Migration): Kette endet jetzt mit m2z.
+    // Vorher M2y (30.06.2026 morgens).
+    expect(steps[steps.length - 1].trim()).toBe('node scripts/m2z_magiekreise_arena_spielobjekte_smoke.mjs')
   })
 })

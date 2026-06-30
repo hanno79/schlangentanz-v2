@@ -146,10 +146,13 @@ describe('M2y Gegnerlichtung-Leerlauf kompaktifizieren', () => {
     expect(gegnerLichtung.querySelector('.waldtanz-gegnerlichtung__liste')).toBeNull()
   })
 
-  it('M2y:7 — package.json smoke:production enthaelt M2y als Last-In-Chain', () => {
+  it('M2y:7 — package.json smoke:production enthaelt M2y in der Kette', () => {
+    // AENDERUNG 30.06.2026 (M2z-Migration): M2y ist nicht mehr letzter Schritt
+    // (M2z haengt jetzt dahinter). Per Pitfall #14 migrate to member+index.
     expect(smokeChain).toContain('m2y_gegnerlichtung_leerlauf_smoke.mjs')
     const steps = smokeChain.split(/\s*&&\s*/)
-    expect(steps[steps.length - 1].trim()).toBe('node scripts/m2y_gegnerlichtung_leerlauf_smoke.mjs')
+    const m2yIndex = steps.findIndex((s) => s.includes('m2y_gegnerlichtung_leerlauf_smoke.mjs'))
+    expect(m2yIndex).toBeGreaterThanOrEqual(0)
   })
 
   it('M2y:8 — Smoke-Script existiert und enthaelt die richtigen Asserts', () => {

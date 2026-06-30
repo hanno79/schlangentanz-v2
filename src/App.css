@@ -4536,6 +4536,59 @@ code {
     padding: 0.25rem 0.45rem;
     font-size: 0.78rem;
   }
+
+  /* M2z 30.06.2026: Magiekreise als grosse, lebendige Forest-Arena-Spielobjekte
+     im Stitch-Stil. Override auf .waldtanz-magiekreise (Container, 0,2,0) +
+     .__liste (Slots, 0,2,0) + .__kreis (Kreisel, 0,2,0). M1df-Override auf
+     [class~="waldtanz-magiekreise__kreis"][class~="waldtanz-steinkreis__kreisel"]
+     (0,3,0, zwei Klassen) gewinnt weiterhin gegen diese 0,2,0-Regel fuer den
+     runden Drop-Stein-Pfad. */
+  .spielbereich--game-route [class~="waldtanz-magiekreise"] {
+    min-height: clamp(11rem, 22vh, 15rem);
+    padding: 0.45rem 0.55rem;
+    gap: 0.55rem;
+    border: 3px solid var(--st-color-border-strong);
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(circle at 22% 36%, rgba(164, 222, 2, 0.42) 0 3.4rem, transparent 3.55rem),
+      radial-gradient(circle at 78% 60%, rgba(254, 203, 0, 0.36) 0 3.2rem, transparent 3.35rem),
+      rgba(255, 255, 255, 0.62);
+    box-shadow: 0 4px 0 var(--st-color-border-strong);
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise__liste"] {
+    grid-template-columns: repeat(3, minmax(6.5rem, 1fr));
+    gap: 0.7rem;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise__kreis"] {
+    min-height: clamp(7.5rem, 14vh, 9.5rem);
+    padding: 0.55rem;
+    border-style: solid;
+    border-width: 3px;
+  }
+
+  .spielbereich--game-route [class~="waldtanz-magiekreise__kreis--aktiv"] {
+    animation: waldtanz-magiekreis-glow 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes waldtanz-magiekreis-glow {
+  0% {
+    box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 0 var(--st-color-primary-container);
+  }
+  60% {
+    box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 14px rgba(164, 222, 2, 0);
+  }
+  100% {
+    box-shadow: 0 4px 0 var(--st-color-border-strong), 0 0 0 0 rgba(164, 222, 2, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spielbereich--game-route [class~="waldtanz-magiekreise__kreis--aktiv"] {
+    animation: none;
+  }
 }
 
 .sieger-party {
