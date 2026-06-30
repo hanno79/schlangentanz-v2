@@ -11210,3 +11210,34 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   white-space: nowrap;
   border: 0;
 }
+
+/* M2w: Brettrand-Zugseitenleiste konsolidieren — 3 redundante Cards auf
+   /game visuell wegblenden, damit die 4 verbleibenden Cards (Zugpfad,
+   Spielhilfe, KiZugBuehne, Zugkompass) als konsistente Stitch-Aktions-
+   reihe atmen koennen. Pattern: M1dm/M1dn/M1do (CSS-only-Visual-Removal)
+   + M2r (route-scoped overrides mit hoher Specificity 0,2,0 + !important).
+   - .waldtanz-unterholzleiste: "Eine spielbare Aktion auswaehlen" dupliziert
+     in der .waldtanz-spielhilfe (AktiverSpielerZugtafel + Spielerfuehrung).
+   - .waldtanz-partie-uhr: identische Info "100 Karten bis Sieger-Party" wie
+     .partiefortschritt — eine reicht auf /game.
+   - .partiefortschritt: Lobby-Statistik, nicht Brettrand-Aktion. */
+.spielbereich--game-route [class~="waldtanz-unterholzleiste"],
+.spielbereich--game-route [class~="waldtanz-partie-uhr"],
+.spielbereich--game-route [class~="partiefortschritt"] {
+  display: none !important;
+}
+
+/* M2w: konsistente Card-Container-Styles fuer die 4 verbleibenden
+   Brettrand-Cards (Zugpfad, Spielhilfe, KiZugBuehne, Zugkompass).
+   Pattern: M2r-Schlangenlichtung + M2v-Brettrand-Zugknopf (Stitch-Card-
+   Family: 3px forest-green-border, hard-shadow-sm, surface-container-low).
+   Die Inhalts-Styles (z.B. .zugpfad__kopf h4) bleiben unveraendert. */
+.spielbereich--game-route [class~="zugpfad"],
+.spielbereich--game-route [class~="waldtanz-spielhilfe"],
+.spielbereich--game-route [class~="zugkompass"],
+.spielbereich--game-route [class~="ki-zug-buehne--brettnah"] {
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 1.15rem;
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  background: var(--st-color-surface-container-low);
+}
