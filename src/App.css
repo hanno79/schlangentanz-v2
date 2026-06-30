@@ -11241,3 +11241,118 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
   box-shadow: 0 3px 0 var(--st-color-border-strong);
   background: var(--st-color-surface-container-low);
 }
+
+/* M2x (2026-06-30): Brettrand-Bottom-Hero — Handkarten-Buehne + End-Turn +
+   Pflicht-Abwurf + Handkarten-Spielbarkeit als prominente Stitch-
+   Spielobjekte auf /game.
+
+   Pattern: M2i (route-scoped Additive-Override der Handkarten-Buehne),
+   M1ds (Token-driven Hero-Styles fuer ausgewaehlte Handkarte), M1db
+   (Lift y via Token). M2x erhoeht die Prominenz der Brettrand-Hero-Zone
+   (Buehne + Spielbarkeit-Pille + End-Turn + Pflicht-Abwurf) durch
+   3px-Border + Hard-Shadow auf den Pillen — Pattern: M2r/M2v/M2w.
+
+   Die Aenderungen liegen ausschliesslich in route-scoped Bloecken
+   (Specificity 0,2,0), um pre-existing Base-Regeln (z.B. M1ct
+   `.handkarte--ausgewaehlt .handkarte__button--karte`) nicht zu
+   brechen (M2i-Pitfall: Cascade-Override auf Base-Rule). */
+
+/* M2x-1: Buehnen-Mindesthoehe auf 6.5rem (104 px @ 16px root, 117 px @
+   18px root) anheben, damit Eyebrow + Statuschips + Spielhandlungen
+   in einer Zeile Platz haben und der Spieler die Brettrand-Hero-Zone
+   als eine zusammengehoerige Stitch-Pille wahrnimmt. M2x reichert die
+   M1f-Basis (Stitch-Border + Hard-Shadow auf der Buehne selbst) an. */
+.spielbereich--game-route [class~="handkarten-buehne"] {
+  min-height: 6.5rem;
+  border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
+  box-shadow: var(--st-shadow-hard);
+}
+
+/* M2x-2: Handkarten-Spielbarkeit als Stitch-Pille (3px-Border + 999px-
+   Radius + Hard-Shadow) — der Spieler sieht auf einen Blick "X Karten
+   sofort spielbar". Loest den nackten <p>-Text aus M1a-Zeiten ab. */
+.spielbereich--game-route [class~="handkarten-spielbarkeit"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-secondary-container);
+  color: var(--st-color-on-surface);
+  font-weight: 800;
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  width: fit-content;
+  max-width: 100%;
+}
+
+/* M2x-3: End-Turn-Pille (`.handkarten-buehne__endturn`) bekommt 3px
+   Stitch-Border + Hard-Shadow — Hero-Prominenz fuer die wichtigste
+   Zug-Aktion. Farbe: lime-gruen (Stitch-Primary). M2x reichert die
+   M1dh-Basis (display:inline-flex + align-items + gap) an, ohne sie
+   zu ersetzen (M1dt-Pitfall: spaetere Route-Scoped-Regel verliert
+   display/align/gap gegenueber M1dh-Tests die cssBlock-last-match lesen). */
+.spielbereich--game-route [class~="handkarten-buehne__endturn"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 3px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-primary-container);
+  color: var(--st-color-on-primary-container);
+  font-weight: 800;
+  padding: 0.4rem 0.95rem;
+  box-shadow: 0 3px 0 var(--st-color-border-strong);
+  transition: transform 120ms ease-out;
+}
+
+.spielbereich--game-route [class~="handkarten-buehne__endturn"]:hover {
+  transform: translateY(-2px);
+}
+
+/* M2x-4: Pflicht-Abwurf-Pille bekommt 3px orange-roten Border + Hard-
+   Shadow — dringende Stitch-Warn-Pille. Farbe: orange-red (#c43c1d)
+   als Stitch-Akzent fuer "dringend abwerfen". M2x reichert M1dh-Basis an. */
+.spielbereich--game-route [class~="handkarten-buehne__pflichtabwurf"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 3px solid #c43c1d;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #7a1c0a;
+  font-weight: 800;
+  padding: 0.4rem 0.95rem;
+  box-shadow: 0 3px 0 #c43c1d;
+}
+
+.spielbereich--game-route [class~="handkarten-buehne__pflichtabwurf"]:hover {
+  background: #fde68a;
+}
+
+/* M2x-5: End-Turn-Icon (Pfeil) wird bold (font-weight 900) und etwas
+   groesser — sichtbarer "Weiter"-Afford. */
+.spielbereich--game-route [class~="handkarten-buehne__endturn-icon"] {
+  font-weight: 900;
+  font-size: 1.1rem;
+  margin-left: 0.25rem;
+}
+
+/* M2x-6: Eyebrow-Titel der Spielerplakette in der Buehne bekommt
+   eine deutlich groessere Schrift (1.05rem statt 0.85rem) — Hero-
+   Schrift, damit "Deine Hand — Spieler 1" als Stitch-Brett-Hero
+   lesbar ist. Pattern: M1ds Handkarte-Hero. */
+.spielbereich--game-route [class~="handkarten-buehne__spielerplakette-titel"] {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* M2x-Reduced-Motion-Override: Hover-Transform auf End-Turn-Pille
+   deaktivieren im reduced-motion-Modus (Static-State reicht als
+   Hero-Afford). Pattern: M1ds reduced-motion-block. */
+@media (prefers-reduced-motion: reduce) {
+  .spielbereich--game-route [class~="handkarten-buehne__endturn"]:hover {
+    transform: none;
+  }
+}

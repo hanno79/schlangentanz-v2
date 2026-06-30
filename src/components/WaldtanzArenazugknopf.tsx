@@ -45,7 +45,12 @@ function statusText(zustand: Spielzustand, hatAktion: boolean, zeigtKiVorspulen:
   if (zeigtKiVorspulen) return 'Gegnerzug läuft über die Zugbühne.'
   if (zustand.pendingReaktion) return 'Reaktion zuerst im Zugkompass entscheiden.'
   if (zustand.zugphase === 'Spielende') return 'Die Sieger-Party läuft.'
-  return 'Spiele zuerst eine Handkarte auf dem Brett.'
+  // M2x (2026-06-30): Default-Hinweis wechselt von "Spiele zuerst eine
+  // Handkarte auf dem Brett." zu einem dezenten "Wähle eine Karte"-Hinweis
+  // — die Handkarten-Bühne ist jetzt selbst der sichtbare Hinweis (mit
+  // ihren 3 Karten, Eyebrow + Spielbarkeit-Pille). Der alte "Spiele
+  // zuerst"-Satz war redundant und klang nach Click-Simulator-Belehrung.
+  return 'Wähle eine Karte und nutze die leuchtenden Brettziele.'
 }
 
 export default function WaldtanzArenazugknopf(props: WaldtanzArenazugknopfProps) {
