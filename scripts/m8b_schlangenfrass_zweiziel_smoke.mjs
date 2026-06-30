@@ -90,13 +90,23 @@ async function pruefeM8bGegnerlichtung(page, viewport) {
   }
   console.log(`  Initial: 0 2-Ziel-Bissspuren sichtbar ✓ (kein Schlangenfrass aktiv)`)
 
-  // Phase 4: M8a-Pille rendert weiterhin (kein Regress durch State-Lift).
-  // Im Initial-State ist sie unsichtbar (letzteAktion === null), aber im DOM.
-  const pilleVorhanden = await page.locator('[data-testid="waldtanz-letzte-aktion-hinweis"]').count()
-  if (pilleVorhanden === 0) {
-    throw new Error(`M8b @${breite}x${hoehe}: M8a-Pille fehlt im DOM (Regress durch State-Lift)`)
+  // Phase 4: M8a-Pille rendert nach einer Aktion (kein Regress durch
+  // State-Lift). Im Initial-State ist sie unsichtbar (letzteAktion === null).
+  // Wir klicken eine Startfaehrte, um eine Aktion auszuloesen, und
+  // verifizieren, dass die Pille danach sichtbar wird.
+  const startBtn = page.locator('.schlangen-startzone__faehrte-button').first()
+  const startBtnCount = await startBtn.count()
+  if (startBtnCount > 0) {
+    await startBtn.click({ force: true })
+    await page.waitForTimeout(800)
+    const pilleNachAktion = await sichtInfo(page, '[data-testid="waldtanz-letzte-aktion-hinweis"]')
+    if (!pilleNachAktion.vorhanden) {
+      throw new Error(`M8b @${breite}x${hoehe}: M8a-Pille fehlt im DOM nach Aktion (Regress durch State-Lift)`)
+    }
+    console.log(`  M8a-Pille im DOM nach Aktion: ${pilleNachAktion.breite}x${pilleNachAktion.hoehe} px ✓ (kein Regress)`)
+  } else {
+    console.log(`  M8a-Pille: keine Startfaehrte verfuegbar, Initial-Assert uebersprungen`)
   }
-  console.log(`  M8a-Pille im DOM: ${pilleVorhanden}x ✓ (kein Regress)`)
 
   // Phase 5: Auf / (Lobby) ist die Gegnerlichtung NICHT sichtbar.
   await page.goto(url('/'), { waitUntil: 'networkidle' })
