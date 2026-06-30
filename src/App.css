@@ -2980,8 +2980,12 @@ code {
        Panel-Tiefe in den 900er Viewport passt. Vor M3a war die
        Kartenleiste bei y=985 (85 px unter Falz) — Spieler scrollte,
        um seine Karten zu sehen. Nach M3a ist die Kartenleiste bei
-       y~873, voll sichtbar. */
-    min-height: clamp(2.6rem, 5.5vh, 3.2rem);
+       y~873, voll sichtbar.
+       AENDERUNG 30.06.2026 (M3b): Buehnen-Hoehe auf
+       clamp(2.2rem, 4.5vh, 2.6rem) reduziert (35-42 px @900vh), damit
+       die H4-Heading + Spielbarkeits-Pille weggeschnitten werden
+       koennen und die Karten-Top bei y~852 landet. */
+    min-height: clamp(2.2rem, 4.5vh, 2.6rem);
     height: auto;
     padding: 0.18rem 0.45rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
@@ -11402,9 +11406,14 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    Viewport passen. Vorher war die Kartenleiste bei y=985 (85 px unter
    Falz), Spieler scrollte um seine Karten zu sehen. Nach M3a ist die
    Kartenleiste bei y~873, voll sichtbar. Border + Box-Shadow bleiben
-   (Stitch-Identitaet erhalten). */
+   (Stitch-Identitaet erhalten).
+   AENDERUNG 30.06.2026 (M3b): Buehnen-Hoehe weiter auf
+   clamp(2.2rem, 4.5vh, 2.6rem) reduziert (35-42 px @900vh), damit
+   die H4-Heading + Spielbarkeits-Pille weggeschnitten werden koennen
+   und die Karten-Top bei y~852 landet (statt y=914). 51 px Buehne
+   waere jetzt zu hoch; cap senken auf 42 px max erlaubt das. */
 .spielbereich--game-route [class~="handkarten-buehne"] {
-  min-height: 3.2rem;
+  min-height: clamp(2.2rem, 4.5vh, 2.6rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   box-shadow: var(--st-shadow-hard);
 }
@@ -11503,7 +11512,31 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    Vor M3a: margin-top 0 (Default). Nach M3a: margin-top -0.4rem, was
    die Luecke zwischen Buehne und Kartenleiste auf ~0.4rem reduziert
    und die Kartenleiste um 6-10 px nach oben holt. M1ds-Tiefenfaecher-
-   Transform bleibt unveraendert. */
+   Transform bleibt unveraendert.
+   AENDERUNG 30.06.2026 (M3b): margin-top auf -0.8rem verschaerft,
+   bringt weitere ~6 px und ueberbrueckt die Luecke zur Buehne komplett
+   (vorher noch ein Hauch Padding, jetzt bündig). */
 .spielbereich--game-route [class~="handkartenleiste"] {
-  margin-top: -0.4rem;
+  margin-top: -0.8rem;
+}
+
+/* M3b-1: Section-Heading "Handkarten als Kartenleiste" auf /game
+   ausblenden. Das <h4> unter der Buehne ist redundant — die
+   Spielerplakette-Titel "Deine Hand — Spieler 1" in der Buehne
+   (M2x-6 Eyebrow, 1.05rem) trägt die Heading-Info kanonisch.
+   Specificity 0,3,0 (.spielbereich--game-route [class~="panel"] > h4)
+   gewinnt gegen spaetere M3b-Descendant-Regeln. */
+.spielbereich--game-route [class~="handkarten-panel"] > h4 {
+  display: none;
+}
+
+/* M3b-2: Redundante "Spielbarkeit"-Pille (.handkarten-spielbarkeit)
+   auf /game ausblenden. Die M2x-2-Stitch-Pille zeigt "X Karten sofort
+   spielbar", der M2x-Spielbar-Statuschip in der Buehne zeigt
+   "Spielbar: 5 Karten" — beide tragen dieselbe Info. M3b-2 versteckt
+   den unteren Pille, damit die Karten ~51 px nach oben ruecken.
+   Specificity 0,2,0 (route-scoped) gewinnt gegen spaetere M2x-2-Regel
+   per later-source-wins. */
+.spielbereich--game-route [class~="handkarten-spielbarkeit"] {
+  display: none;
 }

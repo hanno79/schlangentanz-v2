@@ -45,22 +45,25 @@ describe('M3a Handkarten im Sichtbereich auf /game', () => {
     }
   })
 
-  it('M3a:1 CSS-Source: handkarten-buehne min-height gesenkt auf 3.2rem (Stitch-Hand-im-Sichtbereich)', () => {
+  it('M3a:1 CSS-Source: handkarten-buehne min-height auf M3b-clamp migriert (Stitch-Hand-im-Sichtbereich)', () => {
     // Es gibt 2 route-scoped-Blocks:
-    // (a) M1f-Block (Zeile 2964) mit min-height: clamp(2.6rem, 5.5vh, 3.2rem)
+    // (a) M1f-Block (Zeile 2964) mit min-height: clamp(2.2rem, 4.5vh, 2.6rem) (M3b-migriert)
     //     — wird spaeter vom M2x-Block ueberschrieben.
-    // (b) M2x-Block (Zeile 11401) mit min-height: 3.2rem (von M3a reduziert).
-    // Wir matchen den letzten M3a-Override-Block (M2x-Block nach M3a-Aenderung).
-    // Akzeptanz: min-height = 3.2rem (51 px @ 16px root, 57 px @ 18px root).
+    // (b) M2x-Block (Zeile 11415) mit min-height: clamp(2.2rem, 4.5vh, 2.6rem) (M3b-migriert).
+    // Wir matchen den letzten Block (M2x nach M3b-Migration).
+    // Akzeptanz: min-height = clamp(2.2rem, 4.5vh, 2.6rem) (35-42 px @ 900vh).
+    // AENDERUNG 30.06.2026 (M3b): M3b senkt M3a-Wert von 3.2rem auf
+    // clamp(2.2rem, 4.5vh, 2.6rem), weil H4-Heading + Spielbarkeits-Pille
+    // wegfallen und 51 px Buehne sonst zu hoch waeren.
     const matches = Array.from(
       appCss.matchAll(
         /\.spielbereich--game-route\s+\[class~="handkarten-buehne"\][^{]*\{([^}]*)\}/g
       )
     )
     expect(matches.length, 'mindestens 1 route-scoped handkarten-buehne-Block').toBeGreaterThanOrEqual(1)
-    // Letzter (spaetester) Block muss 3.2rem enthalten
+    // Letzter (spaetester) Block muss den M3b-clamp enthalten
     const last = matches[matches.length - 1]
-    expect(last[1], 'letzter handkarten-buehne-Block enthaelt min-height 3.2rem').toMatch(/min-height:\s*3\.2rem/)
+    expect(last[1], 'letzter handkarten-buehne-Block enthaelt min-height clamp(2.2rem, 4.5vh, 2.6rem)').toMatch(/min-height:\s*clamp\(2\.2rem,\s*4\.5vh,\s*2\.6rem\)/)
   })
 
   it('M3a:2 CSS-Source: handkarten-buehne__spielerplakette padding 0.18rem 0.55rem + bottom 0rem', () => {
@@ -87,13 +90,16 @@ describe('M3a Handkarten im Sichtbereich auf /game', () => {
     expect(m3aOverride![1]).toMatch(/right:\s*0\.55rem/)
   })
 
-  it('M3a:4 CSS-Source: handkartenliste margin-top -0.4rem (enger an Buehne)', () => {
-    // Suche eine route-scoped-Regel auf .handkartenleiste mit margin-top: -0.4rem.
+  it('M3a:4 CSS-Source: handkartenliste margin-top -0.8rem (enger an Buehne, M3b-verschaerft)', () => {
+    // Suche eine route-scoped-Regel auf .handkartenleiste mit margin-top: -0.8rem.
     // (Kann auch als generische .handkartenleiste ohne route-scoping sein.)
+    // AENDERUNG 30.06.2026 (M3b): M3b verschaerft das M3a-margin-top
+    // von -0.4rem auf -0.8rem, um die Luecke zur Buehne komplett zu
+    // schliessen (vorher noch ein Hauch Padding, jetzt bündig).
     const matches = Array.from(
-      appCss.matchAll(/[^{]*handkartenleiste[^{]*\{([^}]*margin-top:\s*-0\.4rem[^}]*)\}/g)
+      appCss.matchAll(/[^{]*handkartenleiste[^{]*\{([^}]*margin-top:\s*-0\.8rem[^}]*)\}/g)
     )
-    expect(matches.length, 'mindestens 1 Regel mit handkartenliste margin-top -0.4rem').toBeGreaterThanOrEqual(1)
+    expect(matches.length, 'mindestens 1 Regel mit handkartenliste margin-top -0.8rem').toBeGreaterThanOrEqual(1)
   })
 
   it('M3a:5 CSS-Source: Brettrand-Arenazugknopf hat Spieler-Eyebrow-Klasse auf /game', () => {

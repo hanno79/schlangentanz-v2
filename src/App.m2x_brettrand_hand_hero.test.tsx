@@ -134,6 +134,10 @@ describe('M2x Brettrand-Bottom-Hero: Hand + End-Turn + Pflicht-Abwurf + Spielbar
     // prominenten Border + Box-Shadow + die Spielerplakette-Titel
     // (font-size 1.05rem, font-weight 800) erhalten, nicht durch die
     // Buehnen-Hoehe. Threshold daher auf >= 3rem (48 px) gesenkt.
+    // AENDERUNG 30.06.2026 (M3b): M3b senkt weiter auf
+    // clamp(2.2rem, 4.5vh, 2.6rem) (35-42 px). Die Hero-Prominenz wird
+    // jetzt durch Border + Shadow + die Eyebrow-Schrift getragen.
+    // Threshold daher auf >= 2rem (32 px) gesenkt.
     const body = routeScopedBody('.spielbereich--game-route [class~="handkarten-buehne"]')
     const minHeightMatch = body.match(/min-height:\s*([^;]+)/)
     expect(minHeightMatch).not.toBeNull()
@@ -141,17 +145,27 @@ describe('M2x Brettrand-Bottom-Hero: Hand + End-Turn + Pflicht-Abwurf + Spielbar
     const remMatch = value.match(/([\d.]+)rem/)
     expect(remMatch).not.toBeNull()
     const remValue = Number(remMatch?.[1] ?? 0)
-    expect(remValue).toBeGreaterThanOrEqual(3.0)
+    expect(remValue).toBeGreaterThanOrEqual(2.0)
   })
 
-  it('M2x:2 Handkarten-Spielbarkeit-Pille ist eine Stitch-Pille (3px Border + border-radius 999px)', () => {
+  it('M2x:2 Handkarten-Spielbarkeit-Pille ist eine Stitch-Pille [M3b-auf-display:none migriert]', () => {
+    // AENDERUNG 30.06.2026 (M3b): M3b versteckt die M2x-2-Spielbarkeits-Pille
+    // auf /game via display:none, weil sie redundant zum M2x-Spielbar-Statuschip
+    // in der Handkarten-Buehne ist. Die Pille bleibt im DOM (nicht entfernt),
+    // aber auf /game unsichtbar. Akzeptanz migriert von "Pille sichtbar mit
+    // Stitch-Stil" zu "Pille display:none auf /game, Basis-Stil bleibt".
     const selector = '.spielbereich--game-route [class~="handkarten-spielbarkeit"]'
     const bodies = alleRegelBloecksFuer(selector)
     expect(bodies.length).toBeGreaterThan(0)
     const last = bodies[bodies.length - 1] ?? ''
-    expect(last).toMatch(/border:\s*3px\s+solid\s+var\(--st-color-border-strong\)/)
-    expect(last).toMatch(/border-radius:\s*999px/)
-    expect(last).toMatch(/box-shadow:\s*[^;]*var\(--st-color-border-strong\)/)
+    // M3b-2 setzt display: none als letzte Regel
+    expect(last).toMatch(/display:\s*none/)
+    // Pruefe dass die Basis-Regel .handkarten-spielbarkeit noch im Code
+    // existiert (Stitch-Stil bleibt fuer Rueckfall erhalten)
+    const basisRegel = appCss.match(/\.handkarten-spielbarkeit\s*\{([^}]*)\}/)
+    expect(basisRegel, 'M2x-2-Basis-Regel .handkarten-spielbarkeit muss existieren').not.toBeNull()
+    expect(basisRegel![1]).toMatch(/border-radius:\s*999px/)
+    expect(basisRegel![1]).toMatch(/background:\s*var\(--st-color-primary-container\)/)
   })
 
   it('M2x:3 End-Turn-Pille ist Hero (3px Border + Hard-Shadow)', () => {
