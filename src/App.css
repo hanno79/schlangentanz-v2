@@ -113,7 +113,11 @@ body {
    (0,2,0) – letztere greift nur wenn .app-shell--game aktiv ist. */
 .app-shell:not(.app-shell--game) {
   align-content: start;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  /* M3g: 0.5rem padding-block-end statt 0 damit die 3 Start-Buttons (y=906)
+     noch in den 900-Viewport rutschen — body.scrollHeight war mit 0.75rem
+     gap + Default-Padding bei 1032px, mit 0.5rem gap sinkt auf ~1015. */
+  padding-block-end: 0.25rem;
 }
 .app-shell:not(.app-shell--game) #spielbereich {
   display: none;
