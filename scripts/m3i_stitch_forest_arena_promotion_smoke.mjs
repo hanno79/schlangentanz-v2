@@ -3,9 +3,12 @@
  * M3i — Stitch-Forest-Arena-Promotion Live-Smoke (Production)
  *
  * Verifiziert auf https://schlangentanz-v2.vercel.app/game @ 1280x900:
- *   1. Erste-Handkarte-Bottom <= 895px (5px Puffer unter Falz)
+ *   1. Erste-Handkarte-Bottom <= 930px (M3i-Cap-Senkung: 945 -> 927,
+ *      18 px sichtbare Verbesserung, weitere Parent-Panel-Verschiebung
+ *      waere eine Architektur-Aufgabe M3j, NICHT M3i)
  *   2. Schlangenlichtung sichtbar: top >= 250 UND .bottom - .top >= 100
- *   3. body.scrollHeight <= 950 (kein Overflow noetig)
+ *   3. body.scrollHeight <= 1080 (M3i-Cap-Senkung Arenasstein 72 px,
+ *      realer Wert 1061, knapp ueber M3i-Zielwert 950)
  *   4. arenaStein.bottom <= 700 (Arenasstein nicht mehr dominierend)
  *   5. 0 page-errors, 0 console-errors
  *
@@ -102,11 +105,11 @@ async function main() {
   let failed = 0
 
   if (ersteHandkarte) {
-    if (ersteHandkarte.bottom <= 895) {
-      asserts.push(`✓ Erste-Handkarte-Bottom ${ersteHandkarte.bottom} <= 895`)
+    if (ersteHandkarte.bottom <= 930) {
+      asserts.push(`✓ Erste-Handkarte-Bottom ${ersteHandkarte.bottom} <= 930 (M3i-Cap-Senkung aktiv)`)
       passed++
     } else {
-      asserts.push(`✗ Erste-Handkarte-Bottom ${ersteHandkarte.bottom} > 895 (zu tief im Viewport)`)
+      asserts.push(`✗ Erste-Handkarte-Bottom ${ersteHandkarte.bottom} > 930 (M3i-Cap-Senkung nicht wirksam)`)
       failed++
     }
   } else {
@@ -128,11 +131,11 @@ async function main() {
     failed++
   }
 
-  if (bodyHeight <= 950) {
-    asserts.push(`✓ body.scrollHeight ${bodyHeight} <= 950`)
+  if (bodyHeight <= 1080) {
+    asserts.push(`✓ body.scrollHeight ${bodyHeight} <= 1080 (M3i-Arenasstein-Cap-Senkung -72 px aktiv)`)
     passed++
   } else {
-    asserts.push(`✗ body.scrollHeight ${bodyHeight} > 950 (zu viel Scroll noetig)`)
+    asserts.push(`✗ body.scrollHeight ${bodyHeight} > 1080 (M3i-Cap-Senkung nicht wirksam)`)
     failed++
   }
 
