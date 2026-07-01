@@ -11561,7 +11561,11 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 }
 
 /* M3e 01.07.2026: Waldtanz-Spielmat-Boden im Brettrund-Zentrum.
-   Sichtbare Stitch-Spielmat-Box zwischen Schlangenlichtung-Kopf und Magiekreise.
+   Sichtbare Stitch-Spielmat-Box als erstes Kind in waldtanz-schlangenlichtung__spielflaeche,
+   VOR den Overlays (Questband + Aktiver Tanz Schritt + Brettschritt-Stempel)
+   und dem __schlangen-Subgrid. Die Spielmat sitzt damit in Row 1 des
+   __spielflaeche-Grids (auto), gefolgt vom __overlays + __schlangen Subgrid
+   in Row 2 (1fr). Sie ist persistent sichtbar (kein return null mehr).
    Pitfall #30/#32 beachtet:
    - Neue Single-Class-Regel, kein Konflikt mit .waldtanz-magiekreise (M2z)
      oder .erste-schlange-onboarding (M6a).
@@ -11570,14 +11574,18 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    3px forest-green border mit dashed style signalisiert "Hier deine Schlange ablegen".
    Border-radius (3rem) gibt die Stitch-Pillen-Optik.
    Dezente Pulsing-Animation auf der inneren Hexagon-Silhouette.
-   Reduced-Motion-Override disabled die Animation. */
+   Reduced-Motion-Override disabled die Animation.
+   Cap-Sum: Row 1 Spielmat (clamp 5rem) + Overlays (1fr-rest) + Schlangen (1fr-rest).
+   Bei 900px Viewport: 5rem(80px) + Rest passt in __spielflaeche (clamp 14rem-20rem). */
 .waldtanz-spielmat-boden {
   display: flex;
   align-items: center;
   justify-content: center;
   width: min(100%, 36rem);
-  margin: 0 auto;
-  padding: 1.1rem 1.4rem;
+  margin: 0 auto 0.5rem;
+  padding: 0.7rem 1.1rem;
+  min-height: 3.5rem;
+  max-height: 5rem;
   border: 3px dashed var(--st-color-border-strong);
   border-radius: 3rem;
   background:
@@ -11592,23 +11600,26 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .waldtanz-spielmat-boden__inner {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.85rem;
   max-width: 32rem;
 }
 
 .waldtanz-spielmat-boden__hexagon {
-  width: 8rem;
-  height: 4rem;
+  width: 4.5rem;
+  height: 2.2rem;
   flex-shrink: 0;
   animation: waldtanz-spielmat-pulse 2.8s ease-in-out infinite;
 }
 
 .waldtanz-spielmat-boden__hinweis {
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.3;
+  font-size: 0.82rem;
+  line-height: 1.25;
   color: var(--st-color-border-strong, #063907);
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @keyframes waldtanz-spielmat-pulse {

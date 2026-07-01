@@ -117,6 +117,11 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
         />
       </header>
       <div className="waldtanz-schlangenlichtung__spielflaeche">
+        {istGameRoute ? (
+          <WaldtanzSpielmatBoden
+            anzahlEigenerSchlangen={aktiverSpieler.schlangen.length}
+          />
+        ) : null}
         <div className="waldtanz-schlangenlichtung__overlays">
           {istGameRoute && !istEndspurt ? (
             <WaldtanzQuestband zustand={zustand} istEndspurt={istEndspurt} />
@@ -141,9 +146,6 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
           ) : null}
         </div>
         <div className="waldtanz-schlangenlichtung__schlangen">
-          <WaldtanzSpielmatBoden
-            anzahlEigenerSchlangen={aktiverSpieler.schlangen.length}
-          />
           <WaldtanzTischkarte zustand={zustand} />
           <WaldtanzKartenpop aktionLabel={letzteAktion} />
           <WaldtanzMagiekreise
