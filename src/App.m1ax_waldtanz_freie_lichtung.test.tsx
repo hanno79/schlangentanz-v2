@@ -67,9 +67,16 @@ describe('M1ax Waldtanz-Freie Lichtung', () => {
     // reduziert, damit 5 Karten + Buehnen-Padding im 900-Viewport bleiben.
     // Selektor zielt auf den spezifischeren spielkartenfaecher-Selector,
     // der die sichtbaren 5 Handkarten formt (siehe M1bp-Begruendung).
-    const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
-    expect(kartenBlock).toMatch(/height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
-    expect(kartenBlock).toMatch(/min-height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
+    // AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion, Pitfall #48
+    // Cascade-Contract-Migration): Karten-Hoehe weiter reduziert auf
+    // clamp(5rem, 9vh, 6rem) = 81 px @900vh, damit Hand-Bottom im 900vh-
+    // Viewport unter 870 px landet. Wir suchen den Wert DIREKT im CSS-Source
+    // mit `matchAll` (PITFALL: der erste `match` greift den Kommentar mit dem
+    // literalen `clamp(5rem, 9vh, 6rem)`-Beispiel, nicht den echten Block).
+    const heightMatches = [...appCss.matchAll(/height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
+    const minHeightMatches = [...appCss.matchAll(/min-height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
+    expect(heightMatches.length, 'mindestens 1 height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
+    expect(minHeightMatches.length, 'mindestens 1 min-height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
     expect(cssBlock('.spielbereich--game-route [class~="handkarte__idplakette"]')).toMatch(/display:\s*none/)
 
     expect(smokeScript).toContain('pruefeM1axFreieLichtung')

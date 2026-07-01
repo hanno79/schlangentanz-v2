@@ -101,7 +101,7 @@ describe('M2r Schlangenlichtung als Forest-Arena (RED)', () => {
     const routeScopedArenastein = appCss.match(/\.spielbereich--game-route\s+\[class~="waldtanz-arenastein"\][^{]*\{([^}]*)\}/g)
     expect(routeScopedArenastein, 'mindestens eine route-scoped Regel fuer .waldtanz-arenastein muss existieren').not.toBeNull()
 
-    // Mindestens eine route-scoped Regel MUSS height ODER max-height mit einem rem-Wert >= 38rem enthalten
+    // Mindestens eine route-scoped Regel MUSS height ODER max-height mit einem rem-Wert >= 24rem enthalten
     const hasCapRaise = (routeScopedArenastein || []).some(rule => {
       const heightMatch = rule.match(/(?:^|[\s;])(?:height|max-height):\s*[^;]*(?:rem|vh|%)/)
       if (!heightMatch) return false
@@ -113,19 +113,19 @@ describe('M2r Schlangenlichtung als Forest-Arena (RED)', () => {
         const remMatch = upper.match(/(\d+(?:\.\d+)?)\s*rem/)
         if (remMatch) {
           const remValue = parseFloat(remMatch[1])
-          // AENDERUNG 29.06.2026 (M9.5 Arenasstein-Cap-Senkung):
-          // Schwellenwert von 38rem auf 30rem reduziert. M9.5 senkt
-          // die Arenasstein-Cap-Max von 40rem (M2r) auf 32rem, damit
-          // die M9-Grid-Row (480 px) tatsaechlich greift und die Hand
-          // im 900-Viewport sichtbar wird. Trade-off: Schlangenlichtung-
-          // Anteil sinkt von 71% auf 50% bei 1280x900 (M2r-Smoke-
-          // Threshold ebenfalls angepasst). 30rem ist die neue Grenze.
-          return remValue >= 30
+          // AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion, Pitfall #48
+          // Cascade-Contract-Migration): Schwellenwert von 30rem (M9.5) auf 24rem
+          // reduziert. M3i senkt die Arenasstein-Cap-Max von 32rem (M9.5) auf 26rem,
+          // damit die Hand + Schlangenlichtung im 900-Viewport sichtbar werden.
+          // Trade-off: Schlangenlichtung-Anteil sinkt weiter von 50% auf 35% bei
+          // 1280x900. 24rem ist die neue Grenze. Cap ist noch route-scoped angehoben
+          // (M2r-Kimi-B2-Anforderung), nur niedriger als M9.5.
+          return remValue >= 24
         }
       }
       return false
     })
-    expect(hasCapRaise, 'Arenastein-Cap muss route-scoped angehoben werden (Cap-Max >= 38rem) fuer ≥55% Viewport-Schlangenlichtung').toBe(true)
+    expect(hasCapRaise, 'Arenastein-Cap muss route-scoped angehoben werden (Cap-Max >= 24rem) fuer sichtbares Arenasstein + Schlangenlichtung').toBe(true)
   })
 
   it('M2r:5 Schlangenlichtung ist im DOM auf /game (Pre-Existing-Test-Kompatibilitaet)', () => {

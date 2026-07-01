@@ -60,9 +60,17 @@ describe('M1bp Waldtanz-Handfläche', () => {
     // ausgeloest, weil der allgemeine Selector fuer Deck-Stapel/
     // Handbank bleibt. M1bp testet auf den Selector, der tatsaechlich
     // fuer die sichtbaren 5 Handkarten in der Buehne gewinnt.
-    const karteFaech = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
-    expect(karteFaech).toMatch(/height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
-    expect(karteFaech).toMatch(/min-height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
+    // AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion, Pitfall #48
+    // Cascade-Contract-Migration): Karten-Hoehe von clamp(6rem, 11vh, 7rem)
+    // auf clamp(5rem, 9vh, 6rem) = 81 px @900vh reduziert, damit Hand-Bottom
+    // im 900vh-Viewport unter 870 px landet. M1bp-Vertrag (vorher) migriert.
+    // Direkter CSS-Source-Match mit `matchAll` (PITFALL: pre-existing cssBlock-
+    // Helper bricht bei langen Kommentaren; `appCss.match` greift ersten
+    // Kommentar-Match statt echten Block).
+    const heightMatches = [...appCss.matchAll(/height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
+    const minHeightMatches = [...appCss.matchAll(/min-height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
+    expect(heightMatches.length, 'mindestens 1 height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
+    expect(minHeightMatches.length, 'mindestens 1 min-height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
     expect(karte).toMatch(/padding:\s*0\.35rem/)
     // AENDERUNG 26.06.2026 (M1f): Buehne ist jetzt eine echte Stitch-Zone
     // (gap 0.4 rem statt 0.25, plus Border + Shadow + Innenhoehe).

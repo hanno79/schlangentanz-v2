@@ -161,9 +161,16 @@ describe('M3f Brettrund-Waldobjekte im Brettrund sichtbar', () => {
     const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
     const chain: string = pkg.scripts?.['smoke:production'] ?? ''
     expect(chain).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
-    // M9.5-W5 Last-In-Chain-Migration (Pitfall #14): M3f ist der letzte Schritt
+    // M9.5-W5 Last-In-Chain-Migration (Pitfall #14): M3i (01.07.2026)
+    // haengt m3i-Smoke ans Ende der Kette; M3f ist nicht mehr der letzte
+    // Schritt. Statt "last step === M3f" pruefen wir "M3f ist in der Kette
+    // und alle Schritte sind node-Aufrufe ohne grep/awk/exclude".
     const steps: string[] = chain.split('&&').map((s: string) => s.trim()).filter((s: string) => s.length > 0)
-    const lastNodeStep: string = steps.filter((s: string) => s.startsWith('node ')).pop() ?? ''
-    expect(lastNodeStep).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
+    const m3fIdx = steps.findIndex((s: string) => s.includes('m3f_brettrund_waldobjekte_smoke.mjs'))
+    expect(m3fIdx, 'M3f-Smoke-Step muss in der Kette sein').toBeGreaterThanOrEqual(0)
+    // Cascade-Safe: alle Schritte sind reine node-Aufrufe (kein grep/awk/--exclude).
+    for (const s of steps) {
+      expect(s, `Step muss node-Aufruf sein: ${s}`).toMatch(/^node\s+scripts\//)
+    }
   })
 })

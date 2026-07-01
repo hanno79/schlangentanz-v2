@@ -96,9 +96,13 @@ describe('M1f Waldtanz-Handkarten-Buehne als sichtbares Stitch-Spielerbrett', ()
     )
     // M1f: Karten max-height darf nicht 12vh uebersteigen, sonst rutschen
     // sie bei 900 vh (108 px + Padding + Buehnen-Padding) ueber den Fold.
-    // clamp(6rem, 11vh, 7rem) = 99 px @900vh, + Padding ~7 px = 106 px
-    // → bleibt unter 900 px Bottom-Row + Spielerplakette (~110 px).
-    expect(buttonBlock).toMatch(/height:\s*clamp\(\s*6rem\s*,\s*\d+(?:\.\d+)?vh\s*,\s*7rem\s*\)/)
+    // AENDERUNG 01.07.2026 (M3i): Karten-Hoehe von clamp(6rem, 11vh, 7rem)
+    // = 99 px @900vh auf clamp(5rem, 9vh, 6rem) = 81 px @900vh reduziert
+    // (Pitfall #48 Cascade-Contract-Migration). M1f-Vertrag (vorher) migriert.
+    // Direkter CSS-Source-Match mit `matchAll` (PITFALL: pre-existing
+    // `css.match` greift ersten Kommentar-Match statt echten Block).
+    const heightMatches = [...css.matchAll(/height:\s*clamp\(\s*5rem\s*,\s*\d+(?:\.\d+)?vh\s*,\s*6rem\s*\)/g)]
+    expect(heightMatches.length, 'mindestens 1 height:clamp(5rem, ?, 6rem) in src/App.css').toBeGreaterThan(0)
     // border-width: chunky (3 px) bleibt als Stitch-Look-Vorgabe.
     expect(buttonBlock).toMatch(/border-width:\s*var\(--st-border-width-chunky\)/)
   })

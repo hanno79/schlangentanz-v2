@@ -2499,9 +2499,20 @@ code {
        Vorher wuchs Arenasstein auf 720 px (kind-height schlug parent-row),
        Hand lag bei y=988 (88 px unter Falz). Nachher: Arenasstein = 450 px,
        Hand im 900-Viewport sichtbar. Trade-off: Schlangenlichtung-Anteil
-       sinkt von 71% auf 50% (M2r-Smoke-Threshold angepasst). */
-    height: clamp(24rem, 50vh, 32rem);
-    max-height: clamp(24rem, 50vh, 32rem);
+       sinkt von 71% auf 50% (M2r-Smoke-Threshold angepasst).
+
+       AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion): Cap von
+       24rem/50vh/32rem auf 20rem/42vh/26rem reduziert, damit die
+       Spielerhand + Schlangenlichtung im 1280x900-Erstbild sichtbar
+       werden. Mit 20rem/42vh/26rem = 360-378 px verliert das Arenasstein
+       ~72 px gegenueber M9.5, dafuer rutscht die Hand von y=945 (45 px
+       unter 900-Falz) auf y~873 (27 px ueber Falz). Schlangenlichtung
+       bleibt als primary surface sichtbar (M1di:3-Kontrakt:
+       min-height: clamp(16rem, 38vh, 22rem) bleibt unveraendert).
+       Schlangenlichtung-Spielflaeche-min-height (M3i:2) wird separat
+       in M3i-Block gesenkt auf clamp(10rem, 22vh, 14rem). */
+    height: clamp(20rem, 42vh, 26rem);
+    max-height: clamp(20rem, 42vh, 26rem);
     min-height: 0;
     padding-bottom: clamp(0.4rem, 1vw, 0.7rem);
     overflow: hidden;
@@ -3324,9 +3335,18 @@ code {
        reduziert, damit 5 Karten + Buehnen-Padding + Spielerplakette im
        900-px-Viewport bleiben. Bei 11vh = 99 px + 2x3 px Border = 105 px,
        Buehnen-Padding 0.25 rem (4 px) oben+unten + Buehnen-Border 3 px
-       oben+unten = 122 px Bottom-Row-Tiefe — bleibt unter 900 px. */
-    height: clamp(6rem, 11vh, 7rem);
-    min-height: clamp(6rem, 11vh, 7rem);
+       oben+unten = 122 px Bottom-Row-Tiefe — bleibt unter 900 px.
+
+       AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion):
+       Karten-Hoehe von clamp(6rem, 11vh, 7rem) auf clamp(5rem, 9vh, 6rem)
+       reduziert (Pitfall #48 Cascade-Contract-Migration). Bei 900vh =
+       81 px + 2x3 px Border = 87 px, mit Buehnen-Padding + Buehnen-Border
+       ~96 px Bottom-Row-Tiefe statt 122 px (M1f-Wert). Die 26-px-Ersparnis
+       ermoeglicht es, dass die Hand-Bottom im 900-Viewport unter 870 px
+       landet (vorher 945 px = 45 px unter Falz). M1f-RED-Test (RED-1) wird
+       in M3i auf den neuen Wert migriert. */
+    height: clamp(5rem, 9vh, 6rem);
+    min-height: clamp(5rem, 9vh, 6rem);
     border-width: var(--st-border-width-chunky);
     border-radius: 1.45rem;
     box-shadow: 0 7px 0 var(--st-color-border-strong);
@@ -10630,22 +10650,32 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 
 .waldtanz-schlangenlichtung__spielflaeche {
   /* M1di: Spielflaeche als primary visual innerhalb der Schlangenlichtung.
-     Die min-height bleibt bewusst klein (clamp(14rem, 32vh, 20rem)),
+     Die min-height bleibt bewusst klein (clamp(10rem, 22vh, 14rem)),
      damit das Arenastein auf einem 900-px-Viewport inkl. Kopf + Questband
      + Aktiver Tanz-Schritt + Spielfeld unter 480 px bleibt und die
      Bottom-Row (Handkarten + Spielerplakette + Arenazug) im Erstbild
-     sichtbar wird. Bei 900 px Viewport: 32vh=288, min=224 — Inhalt wird
+     sichtbar wird. Bei 900 px Viewport: 22vh=198, min=180 — Inhalt wird
      vom Arenastein overflow:hidden + height-Cap gestoppt, falls er
      groesser werden sollte.
      M1dj: position: relative bleibt; die height: 100% sorgt dafuer, dass
      die Spielflaeche die volle Row 2 der Section-Lichtungsbrett-Hoehe
      ausfuellt, damit das innere .__schlangen-Subgrid die volle
-     Schlangen-Mitte rendern kann. */
+     Schlangen-Mitte rendern kann.
+
+     AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion):
+     min-height von clamp(14rem, 32vh, 20rem) auf clamp(10rem, 22vh, 14rem)
+     gesenkt (Pitfall #11 Inter-Slice-Contract-Shift). M3i:1-Arenasstein-Cap-
+     Senkung auf 20rem/42vh/26rem reduziert das Arenasstein-Container von
+     ~450 px auf ~360 px; die Schlangenlichtung-Spielflaeche teilt sich
+     diese Verringerung mit der Spielflaeche-min-height-Senkung 288->198.
+     Trade-off: sichtbarer Schlangenbereich-Anteil sinkt von 71% auf
+     55% (M2r-Smoke-Threshold), dafuer wird die Spielerhand + Buehne im
+     900vh-Viewport mit ~30 px Bottom-Reserve sichtbar. */
   position: relative;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: clamp(0.5rem, 1vw, 0.75rem);
-  min-height: clamp(14rem, 32vh, 20rem);
+  min-height: clamp(10rem, 22vh, 14rem);
   height: 100%;
   padding: clamp(0.6rem, 1.2vw, 0.85rem);
   border: 3px solid var(--st-color-border-strong, #063907);
@@ -10975,8 +11005,8 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    und die Hand im 900-Viewport sichtbar wird. Vorher: 40rem/72vh/46rem
    = 720 px Arenasstein → Hand bei y=988 (88 px unter Falz). */
 .spielbereich--game-route [class~="waldtanz-arenastein"] {
-  height: clamp(24rem, 50vh, 32rem);
-  max-height: clamp(24rem, 50vh, 32rem);
+  height: clamp(20rem, 42vh, 26rem);
+  max-height: clamp(20rem, 42vh, 26rem);
 }
 .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {
   display: none !important;

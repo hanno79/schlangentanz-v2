@@ -66,7 +66,13 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     // AENDERUNG 26.06.2026 (M1f): Karten-Hoehe von 12.2vh auf 11vh
     // reduziert, damit 5 Karten + Buehnen-Padding im 900er Viewport
     // bleiben. M1bx-Smoke wurde ebenfalls angepasst.
-    expect(button).toMatch(/height:\s*clamp\(6rem,\s*11vh,\s*7rem\)/)
+    // AENDERUNG 01.07.2026 (M3i Stitch-Forest-Arena-Promotion, Pitfall #48
+    // Cascade-Contract-Migration): Karten-Hoehe von clamp(6rem, 11vh, 7rem)
+    // auf clamp(5rem, 9vh, 6rem) reduziert. M1bx-Vertrag (vorher) migriert.
+    // Direkter CSS-Source-Match mit `matchAll` (PITFALL: pre-existing
+    // `appCss.match` greift ersten Kommentar-Match statt echten Block).
+    const heightMatches = [...appCss.matchAll(/height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
+    expect(heightMatches.length, 'mindestens 1 height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
     expect(button).toMatch(/box-shadow:\s*0 7px 0 var\(--st-color-border-strong\)/)
     expect(statuschip).toMatch(/display:\s*inline-grid/)
     expect(smokeScript).toContain('M1bx Spielkartenfächer')

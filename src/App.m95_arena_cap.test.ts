@@ -9,6 +9,12 @@
  *
  *   M9.5 senkt die Arenasstein-Cap auf clamp(24rem, 50vh, 32rem) =
  *   450-512 px, sodass die M9-Grid-Row tatsaechlich greift.
+ *
+ *   M3i (01.07.2026) migriert M9.5: Cap von 24rem/50vh/32rem auf
+ *   20rem/42vh/26rem = 360-378 px (Pitfall #48 Cascade-Contract-
+ *   Migration), damit Hand + Schlangenlichtung im 1280x900-Erstbild
+ *   sichtbar bleiben. Die M9.5-Red-Tests werden hier auf den M3i-Wert
+ *   migriert.
  */
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
@@ -34,21 +40,22 @@ function cssBlockAll(selector: string): string[] {
 }
 
 describe('M9.5 Arenasstein-Cap-Senkung', () => {
-  it('M9.5:1 Alle Arenasstein-height-Regeln (M1dk + M2r-Override) sind auf 24rem/50vh/32rem gesenkt', () => {
+  it('M9.5:1 Alle Arenasstein-height-Regeln (M1dk + M2r-Override) sind auf 20rem/42vh/26rem gesenkt (M3i-Migration)', () => {
     // Es gibt ZWEI Arenasstein-Regeln im aktuellen CSS: M1dk-Base und M2r-Override.
-    // M9.5 senkt BEIDE auf 24rem/50vh/32rem, damit die Cascade tatsaechlich greift.
+    // M9.5 senkte BEIDE auf 24rem/50vh/32rem, M3i (01.07.2026) senkt weiter
+    // auf 20rem/42vh/26rem (Pitfall #48 Cascade-Contract-Migration).
     const allBlocks = cssBlockAll('.spielbereich--game-route [class~="waldtanz-arenastein"]')
     expect(allBlocks.length).toBeGreaterThanOrEqual(2)
     allBlocks.forEach((block, i) => {
-      expect(block, `Arenasstein-Regel #${i + 1} muss die neue Cap haben`).toMatch(/height:\s*clamp\(\s*24rem\s*,\s*50vh\s*,\s*32rem\s*\)/)
+      expect(block, `Arenasstein-Regel #${i + 1} muss die M3i-Cap haben`).toMatch(/height:\s*clamp\(\s*20rem\s*,\s*42vh\s*,\s*26rem\s*\)/)
       expect(block, `Arenasstein-Regel #${i + 1} darf die alte 40rem-Cap NICHT mehr haben`).not.toMatch(/clamp\(\s*40rem\s*,\s*72vh\s*,\s*46rem\s*\)/)
     })
   })
 
-  it('M9.5:2 Alle Arenasstein-max-height-Regeln entsprechen der neuen height', () => {
+  it('M9.5:2 Alle Arenasstein-max-height-Regeln entsprechen der neuen height (M3i-Migration)', () => {
     const allBlocks = cssBlockAll('.spielbereich--game-route [class~="waldtanz-arenastein"]')
     allBlocks.forEach((block, i) => {
-      expect(block, `Arenasstein-Regel #${i + 1} max-height muss der neuen Cap entsprechen`).toMatch(/max-height:\s*clamp\(\s*24rem\s*,\s*50vh\s*,\s*32rem\s*\)/)
+      expect(block, `Arenasstein-Regel #${i + 1} max-height muss der M3i-Cap entsprechen`).toMatch(/max-height:\s*clamp\(\s*20rem\s*,\s*42vh\s*,\s*26rem\s*\)/)
     })
   })
 
@@ -80,10 +87,11 @@ describe('M9.5 Arenasstein-Cap-Senkung', () => {
     expect(baseBlock).toMatch(/overflow:\s*hidden/)
   })
 
-  it('M9.5:7 Geometrie-Bonus: 60+70+30+450+30+220+30 = 890 px <= 900 px (Viewport-Budget)', () => {
+  it('M9.5:7 Geometrie-Bonus: 60+70+30+360+30+220+30 = 800 px <= 900 px (Viewport-Budget, M3i-Migration)', () => {
     // Dokumentarischer Bonus-Test: die neue Geometrie-Arithmetik muss
-    // im 900vh-Viewport aufgehen.
-    const SLOTS = 60 + 70 + 30 + 450 + 30 + 220 + 30
+    // im 900vh-Viewport aufgehen. M3i (01.07.2026) senkt Arenasstein-
+    // Cap von 450 auf 360 px (Pitfall #48).
+    const SLOTS = 60 + 70 + 30 + 360 + 30 + 220 + 30
     expect(SLOTS).toBeLessThanOrEqual(900)
   })
 })
