@@ -3574,15 +3574,18 @@ code {
        Brettrund-Zentrum sichtbar. Vorher war der Container 394px hoch und
        rutschte unter den 900-Viewport-Falz (alle 4 Brettrund-Stapel unsichtbar).
        Jetzt: display:flex mit flex-direction:row (HORIZONTAL entgegen der
-       vorherigen Column-Annahme), align-self:center, max-height clamp
-       (5rem/10vh/6.5rem = 65-90px @ 900vh), 3px forest-green Border +
+       vorherigen Column-Annahme), order:-1 damit die Pill-Reihe OBERHALB
+       der Schlangenlichtung sitzt (Source-Order ist Gegnerlichtung →
+       Schlangenlichtung → Waldobjekte, mit order:-1 wandert sie visuell
+       nach oben), align-self:stretch (volle Spielfeld-Breite), max-height
+       clamp(5rem/10vh/6.5rem = 65-90px @ 900vh), 3px forest-green Border +
        Hard-Shadow als sichtbarer Container. Pitfall #30 Additive-Override
        (alle pre-existing Deklarationen re-inkludiert). */
     max-height: min(21rem, 40vh);
     overflow: visible;
     display: flex;
     flex-direction: row;
-    align-self: center;
+    align-self: stretch;
     max-height: clamp(5rem, 10vh, 6.5rem);
     width: min(100%, 56rem);
     margin: 0.3rem 0;
@@ -3593,6 +3596,7 @@ code {
     background: var(--st-color-surface-container-low);
     box-shadow: 0 5px 0 var(--st-color-border-strong);
     flex-shrink: 0;
+    order: -1;
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen"] {

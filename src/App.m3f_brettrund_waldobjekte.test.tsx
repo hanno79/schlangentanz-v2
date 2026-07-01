@@ -6,7 +6,7 @@
  * Zugspur, Aufgabentafel) als kompakte 4-in-1-Stitch-Pill-Reihe im Brettrund-
  * Zentrum sichtbar. Vertrag: Auf /game ist der .waldtanz-arenasstein__waldobjekte-
  * Container eine horizontale Pill-Reihe mit display:flex + flex-direction:row,
- * align-self:center, max-height:clamp(5rem, 10vh, 6.5rem), jeder Pill-Children-
+ * align-self:stretch, order:-1, max-height:clamp(5rem, 10vh, 6.5rem), jeder Pill-Children-
  * Section ist 1fr-breit mit 3px forest-green Border + Hard-Shadow. Auf / (Lobby)
  * bleibt das Verhalten unveraendert (route-scoped Override).
  *
@@ -14,12 +14,12 @@
  *  1. M3f:1 — DOM: Container [aria-label="Waldobjekte"] rendert, alle 4 Sections
  *              (Nachziehstapel/Ablage/Zugspur/Aufgabentafel) als direkte Children
  *  2. M3f:2 — CSS-Source: route-scoped Container hat display:flex + flex-direction:row
- *              + align-self:center + max-height:clamp(5rem, 10vh, 6.5rem)
+ *              + align-self:stretch + order:-1 + max-height:clamp(5rem, 10vh, 6.5rem)
  *  3. M3f:3 — CSS-Source: Children-Pill-Sections haben flex:1 1 0 + min-width:0
  *              + max-height:clamp(4.5rem, 9vh, 6rem) + 3px-Border + Hard-Shadow
  *  4. M3f:4 — CSS-Source: .waldtanz-waldtaschen__kopf wird auf /game versteckt
  *              (display:none, weil Pill-Reihe selbst der Label ist)
- *  5. M3f:5 — Cascade-Safe: align-self:center auf der neuen Regel steht NACH
+ *  5. M3f:5 — Cascade-Safe: align-self:stretch + order:-1 auf der neuen Regel steht NACH
  *              der min-height:clamp(34rem, 60vh, 42rem)-Schlangenlichtungs-Regel
  *  6. M3f:6 — Smoke-Wiring: smoke:production-Kette enthaelt m3f-Smoke
  *
@@ -82,17 +82,16 @@ describe('M3f Brettrund-Waldobjekte im Brettrund sichtbar', () => {
     expect(klassen).toMatch(/waldtanz-aufgabentafel/)
   })
 
-  it('M3f:2 — CSS-Source: route-scoped Container hat display:flex + flex-direction:row + align-self:center + max-height clamp', () => {
+  it('M3f:2 — CSS-Source: route-scoped Container hat display:flex + flex-direction:row + align-self:stretch + order:-1 + max-height clamp', () => {
     // Pitfall #15: Echte DOM-Klasse ist waldtanz-arenastein (ohne Doppel-s),
     // siehe App.tsx Z. 387.
     const body = cssBlockRouteScoped('spielbereich--game-route', 'waldtanz-arenastein__waldobjekte')
-    expect(body).not.toBe('')
     // Pitfall #30 Additive-Override: re-inkludiert pre-existing max-height: min(21rem, 40vh)
-    // und overflow: auto. Plus neue flex-direction:row + align-self:center.
+    // und overflow: auto. Plus neue flex-direction:row + align-self:stretch + order:-1.
     expect(body).toMatch(/display:\s*flex/)
     expect(body).toMatch(/flex-direction:\s*row/)
-    expect(body).toMatch(/align-self:\s*center/)
-    // Neue Cap-Form (horizontal-Pill-Reihe, max 6.5rem @ 900vh = 90px)
+    expect(body).toMatch(/align-self:\s*stretch/)
+    expect(body).toMatch(/order:\s*-1/)
     expect(body).toMatch(/max-height:\s*clamp\(5rem,\s*10vh,\s*6\.5rem\)/)
     // 3px Stitch-Border + Hard-Shadow + Border-Radius als visueller Container
     expect(body).toMatch(/border:\s*3px\s+solid\s+var\(--st-color-border-strong\)/)
@@ -129,7 +128,7 @@ describe('M3f Brettrund-Waldobjekte im Brettrund sichtbar', () => {
     expect(hasHide).toBe(true)
   })
 
-  it('M3f:5 — Cascade-Safe: M3f-Container-Regel (align-self:center) wird NICHT von spaeteren pre-existing-Regeln auf waldtanz-arenastein__waldobjekte ueberschrieben', () => {
+  it('M3f:5 — Cascade-Safe: M3f-Container-Regel (align-self:stretch + order:-1) wird NICHT von spaeteren pre-existing-Regeln auf waldtanz-arenastein__waldobjekte ueberschrieben', () => {
     // Pitfall #30 (Additive-Override) Verifikation: M3f setzt align-self:center +
     // 3px-Border + Hard-Shadow + flex-direction:row auf route-scoped Block.
     // Wir muessen sicherstellen, dass KEINE spaetere pre-existing-Regel auf

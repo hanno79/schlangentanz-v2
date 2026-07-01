@@ -32,6 +32,7 @@ async function sichtInfo(page, sel) {
       display: cs.display,
       flexDirection: cs.flexDirection,
       alignSelf: cs.alignSelf,
+      order: cs.order,
       maxHeight: cs.maxHeight,
       border: cs.border,
       boxShadow: cs.boxShadow,
@@ -67,9 +68,13 @@ async function main() {
     throw new Error(`M3f: Container flex-direction MUSS row sein, ist ${container.flexDirection}`);
   }
 
-  // Contract 3: align-self:center
-  if (container.alignSelf !== 'center') {
-    throw new Error(`M3f: Container align-self MUSS center sein, ist ${container.alignSelf}`);
+  // Contract 3: align-self:stretch
+  if (container.alignSelf !== 'stretch') {
+    throw new Error(`M3f: Container align-self MUSS stretch sein, ist ${container.alignSelf}`);
+  }
+  // Contract 3b: order:-1 (visuell oberhalb der Schlangenlichtung)
+  if (container.order !== '-1') {
+    throw new Error(`M3f: Container order MUSS -1 sein, ist ${container.order}`);
   }
 
   // Contract 4: y im Brettrund-Zentrum (y < 720)
