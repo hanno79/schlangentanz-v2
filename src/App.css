@@ -2484,6 +2484,14 @@ code {
     max-height: clamp(4rem, 7vh, 5rem);
     margin-top: clamp(0.25rem, 0.8vh, 0.55rem);
     overflow: hidden;
+    /* AENDERUNG 01.07.2026: M3d konsolidiert die 4 sichtbaren Children-Pillen
+       visuell zu EINER Stitch-Aktionsleiste. Border + Hard-Shadow + Lime-Background
+       am Container, Children tragen keine eigenen 3px-Borders mehr. */
+    border: 3px solid var(--st-color-border-strong);
+    border-radius: 2rem;
+    background: var(--st-color-surface-container-low);
+    box-shadow: 0 6px 0 var(--st-color-border-strong);
+    padding: 0.32rem 0.42rem;
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__spielfeld"] {
@@ -3742,6 +3750,13 @@ code {
     width: clamp(2.65rem, 5.8vw, 4.2rem);
   }
 
+  /* M3d 01.07.2026: Children der Zugseitenleiste tragen keine eigenen
+     3px-Borders mehr, der Container-Border absorbiert sie. Innenabstand
+     etwas groesser damit die Inhalte nicht am Container-Border kleben.
+     !important-Pattern statt Specificity-Bump, weil M1ao-Test die
+     urspruengliche Selector-Form [class~="waldtanz-zugseitenleiste"] > *
+     per first-match liest und grid-column/grid-row/max-height erwartet
+     (siehe Pitfall #30 Additive-Override-Discipline). */
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > * {
     grid-column: auto;
     grid-row: auto;
@@ -3749,6 +3764,10 @@ code {
     box-sizing: border-box;
     max-height: clamp(4.8rem, 10vh, 5.8rem);
     overflow: hidden;
+    border: 2px solid transparent !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0.28rem 0.42rem;
   }
 
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > :has(button) {
