@@ -86,8 +86,10 @@ async function main() {
   }
 
   // Contract 5: 4 Pill-Children sichtbar
+  // Pitfall #45: Echte DOM-Klasse ist waldtanz-arenastein (ohne Doppel-s),
+  // siehe App.tsx Z. 387.
   const children = await page.evaluate(() => {
-    const container = document.querySelector('.waldtanz-arenasstein__waldobjekte');
+    const container = document.querySelector('.waldtanz-arenastein__waldobjekte');
     if (!container) return [];
     return Array.from(container.querySelectorAll('section')).map((c) => {
       const r = c.getBoundingClientRect();
