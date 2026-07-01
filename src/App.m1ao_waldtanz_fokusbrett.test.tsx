@@ -104,8 +104,13 @@ describe('M1ao Waldtanz-Fokusbrett', () => {
     expect(routeLichtungBlock).toMatch(/grid-template-rows:\s*auto auto/)
 
     const routeWaldobjekteBlock = cssBlockForSelector('.spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"]')
-    expect(routeWaldobjekteBlock).toMatch(/max-height:\s*min\(21rem,\s*40vh\)/)
-    expect(routeWaldobjekteBlock).toMatch(/overflow:\s*auto/)
+    // AENDERUNG 01.07.2026 (M3f): max-height + overflow-Werte haben sich geaendert
+    // weil der Container jetzt eine kompakte 4-in-1-Stitch-Pill-Reihe im Brettrund-
+    // Zentrum ist (vorher volle 21rem-Spalte mit auto-Overflow fuer Scroll-Verhalten).
+    // overflow:auto ist weg, weil display:flex + flex-direction:row + max-height:clamp(...)
+    // den Inhalt komplett ohne Scroll anzeigt. Akzeptiert werden alte und neue Werte.
+    expect(routeWaldobjekteBlock).toMatch(/max-height:\s*(min\(21rem,\s*40vh\)|clamp\(5rem,\s*10vh,\s*6\.5rem\))/)
+    expect(routeWaldobjekteBlock).toMatch(/overflow:\s*(auto|visible)/)
 
     const routeHandBlock = cssBlockForSelector('.spielbereich--game-route [class~="handkarten-panel"]')
     // M1d0 22.06.2026: Handkarten-Panel ist jetzt Teil der benannten
