@@ -104,6 +104,28 @@ body {
   padding-block-start: clamp(0.75rem, 1.6vw, 1.25rem);
 }
 
+/* M3g (2026-07-01): Lobby-First-Erstbild. Auf der Default-Route (nicht /game)
+   den gesamten Spielbereich-Container ausblenden, damit der Spieler nach dem
+   Klick auf einen Start-Button einen klaren visuellen Wechsel bekommt
+   (vorher: ganzer Game-Tree rendert unter dem Lobby-Baumhaus, body.scrollHeight ~9139px).
+   Spezifitaet 0,1,1 (.app-shell:not()#spielbereich) gewinnt gegen die
+   normale #spielbereich-Regel (0,1,0) und gegen die .spielbereich--game-route-Variante
+   (0,2,0) – letztere greift nur wenn .app-shell--game aktiv ist. */
+.app-shell:not(.app-shell--game) {
+  align-content: start;
+  gap: 0.75rem;
+}
+.app-shell:not(.app-shell--game) #spielbereich {
+  display: none;
+}
+/* Schlangenbuch wuerde das Lobby-Erstbild auf das Doppelte aufblaehen.
+   Es gehoert zur Lobby-Sektion (wird vom SonnigesNestLobby gerendert),
+   aber wir wollen auf der Default-Route den vollen Fokus auf Hero + Baumhaus + Start-Buttons.
+   Auf /game bleibt .schlangenbuch sichtbar (kein Override noetig). */
+.app-shell:not(.app-shell--game) .schlangenbuch {
+  display: none;
+}
+
 .app-title {
   width: min(100%, 1180px);
   margin: 0;
@@ -271,7 +293,9 @@ body {
   width: min(100%, 720px);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  /* M3g (2026-07-01): Kompakteres Grid-Gap (0.75rem statt 1.5rem), damit die
+     4 Spieler-Slots + Start-Buttons zusammen in den 900-Viewport passen. */
+  gap: 0.75rem;
   position: relative;
   z-index: 1;
 }
@@ -372,6 +396,10 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
+  /* M3g (2026-07-01): Schiebt die Start-Buttons an den unteren Rand des
+     .sonniges-nest-Grid-Containers (display: grid), damit sie in den
+     900-Viewport rutschen statt bei y=929 unter dem Falz zu landen. */
+  margin-top: auto;
 }
 
 .lobby-startbutton {
