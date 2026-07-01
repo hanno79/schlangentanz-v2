@@ -35,10 +35,16 @@ describe('M3e Smoke-Wiring', () => {
     expect(m3eSrc).toMatch(/Waldtanz-Spielmat/)
   })
 
-  it('M3e-W5: m3e ist last-in-chain (Kette endet mit m3e-Aufruf)', () => {
+  it('M3e-W5: m3e ist last-in-chain (Kette enthaelt m3e, Pitfall #14-migriert)', () => {
+    // Pitfall #14 (Last-In-Chain-Migration 2026-06-30): M3e-W5 darf nicht mehr
+    // strikt endsWith-pruefen, weil jeder neue M-Slice die Last-Position uebernehmen
+    // kann. Stattdessen: M3e ist im Array der Smoke-Steps vorhanden, M3f ist danach.
     const steps = chain.split('&&').map(s => s.trim())
-    const last = steps[steps.length - 1]
-    expect(last).toContain('m3e_spielmat_boden_smoke.mjs')
+    const m3eIdx = steps.findIndex(s => s.includes('m3e_spielmat_boden_smoke.mjs'))
+    expect(m3eIdx).toBeGreaterThanOrEqual(0)
+    // M3f muss NACH M3e stehen (M3f ist der neuere Slice, M3e ist History).
+    const m3fIdx = steps.findIndex(s => s.includes('m3f_brettrund_waldobjekte_smoke.mjs'))
+    expect(m3fIdx).toBeGreaterThan(m3eIdx)
   })
 
   it('M3e-W6: Kette enthaelt keine Pipes/Greps/awk (pure node calls)', () => {

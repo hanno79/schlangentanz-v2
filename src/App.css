@@ -3569,27 +3569,63 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-arenastein__waldobjekte"] {
+    /* AENDERUNG 01.07.2026 (M3f): Brettrund-Waldobjekte (4 Stapel: Nachziehstapel,
+       Ablage, Zugspur, Aufgabentafel) als kompakte Stitch-Pill-Reihe im
+       Brettrund-Zentrum sichtbar. Vorher war der Container 394px hoch und
+       rutschte unter den 900-Viewport-Falz (alle 4 Brettrund-Stapel unsichtbar).
+       Jetzt: display:flex mit flex-direction:row (HORIZONTAL entgegen der
+       vorherigen Column-Annahme), align-self:center, max-height clamp
+       (5rem/10vh/6.5rem = 65-90px @ 900vh), 3px forest-green Border +
+       Hard-Shadow als sichtbarer Container. Pitfall #30 Additive-Override
+       (alle pre-existing Deklarationen re-inkludiert). */
     max-height: min(21rem, 40vh);
-    overflow: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    max-height: clamp(5rem, 10vh, 6.5rem);
+    width: min(100%, 56rem);
+    margin: 0.3rem 0;
+    padding: clamp(0.32rem, 0.5vw, 0.5rem) clamp(0.45rem, 0.7vw, 0.7rem);
+    gap: clamp(0.4rem, 0.8vw, 0.65rem);
+    border: 3px solid var(--st-color-border-strong);
+    border-radius: 1.4rem;
+    background: var(--st-color-surface-container-low);
+    box-shadow: 0 5px 0 var(--st-color-border-strong);
+    flex-shrink: 0;
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen"] {
-    width: min(100%, 11.5rem);
-    position: relative;
+    /* AENDERUNG 01.07.2026 (M3f): Container-Wrapper wird auf
+       display:contents geschaltet, damit die direkten Section-Children
+       (Nachziehstapel/Ablage/Zugspur/Aufgabentafel) selbst die flex-items
+       der .waldtanz-arenasstein__waldobjekte-Reihe sind. Vorher war der
+       .waldtanz-waldtaschen-Wrapper ein display:grid-Container mit
+       width:min(100%, 11.5rem) = 184px, der die Pill-Reihe auf eine schmale
+       Spalte einschraenkte. Pitfall #30 Additive-Override. */
+    width: 100%;
+    position: static;
     z-index: 8;
-    justify-self: end;
-    gap: 0.38rem;
-    max-height: min(23rem, 43vh);
-    padding: 0.05rem 0.15rem 0.35rem 0;
+    justify-self: stretch;
+    gap: clamp(0.4rem, 0.8vw, 0.65rem);
+    max-height: none;
+    padding: 0;
     overflow: visible;
     overflow-x: visible;
-    scroll-padding-block: 0.35rem;
+    scroll-padding-block: 0;
+    display: contents;
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen"] > :is(section, .waldtanz-waldtaschen__kopf) {
+    /* AENDERUNG 01.07.2026 (M3f): Children-Pillen als gleichberechtigte
+       flex-items in der horizontalen Pill-Reihe. flex:1 1 0 + min-width:0
+       verteilt die 4 Section-Pillen gleichmaessig (1fr je Pill), max-height
+       clamp(4.5rem, 9vh, 6rem) = 58-81px @ 900vh haelt die Pillen
+       kompakt im Brettrund-Zentrum sichtbar. Pitfall #30 Additive-Override. */
     box-sizing: border-box;
+    flex: 1 1 0;
     min-width: 0;
-    max-height: 8.8rem;
+    max-height: clamp(4.5rem, 9vh, 6rem);
     overflow: hidden;
     padding: 0.42rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
@@ -3598,11 +3634,13 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] {
-    display: grid;
-    gap: 0.12rem;
-    background: var(--st-color-secondary-container);
-    text-align: center;
-    transform: rotate(1deg);
+    /* AENDERUNG 01.07.2026 (M3f): Auf /game wird der Waldtaschen-Kopf-Titel
+       ("Waldtaschen — Ziehstapel / Ablage / Zugspur / Quests") versteckt,
+       weil die 4 Brettrund-Stapel-Pills jetzt selbsterklaerend im
+       Brettrund-Zentrum sichtbar sind. Vorher war der Kopf ein 70px-Hero-
+       Label am Anfang des Containers — jetzt ist die Pill-Reihe selbst
+       der sichtbare Titel. Pitfall #30 Additive-Override. */
+    display: none;
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen__kopf"] h4,
