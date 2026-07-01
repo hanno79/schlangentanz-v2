@@ -2887,3 +2887,18 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push/Deploy: `a674d45` M3g-Initial + `bb43e40` M3g-Cascade-Tweak (gap 0.75→0.5 + Smoke-Selector-Fix) + `7af2d24` M3g-Smoke-Threshold-Anpassung. Vercel Production: https://schlangentanz-v2.vercel.app, HEAD=`7af2d24`, beide Routes 200 OK. Release-Doku `docs/release_status_2026-07-01_m3g.md` dokumentiert den Slice inkl. Pitfall-Discipline, Geometrie-Arithmetik, Code-Review und naechster Luecke (M4 Lobby-Spieler-Karten-Stitch-Promotion).
 
 - [x] Naechste Luecke: M4 Lobby-Spieler-Karten-Stitch-Promotion — 4 Spieler-Slots (1 Host + 3 KI) als sichtbares Stitch-Baumhaus mit Forest-Spirit/Toad-King/Hedgehog-Knight-Avataren + Punkte + Bereit-Status. Aktuell rendert das Baumhaus funktional ohne Stitch-Visuals. Das passt zur "Weg vom Button-Klick-Gefühl"-Direction, weil eine Lobby mit sichtbaren Spieler-Charakteren mehr "Spieler treffen sich" als "Funktion auswählen" wirkt.
+
+## Evidence — 01.07.2026 M3h-Folgeslice (Test-Migration + Smoke-Threshold)
+
+- [x] Scope: Half-Finished-Slice-Finalisierung von M3h. JSX-Sibling-Restrukturierung (.lobby-slot__name aus .lobby-avatar rausgezogen, Pitfall #50 Border-Clipping-Fix) + M3c-Test-Migration (avatar.querySelector → slot.querySelector) + M3h:7 RED-Test (Sibling-Structure-Assert) + M3f-W5 Last-in-Chain-Dispens (Pitfall #14, Preventive-Migration) + M3h-Smoke-Threshold 1100→1200 (Pitfall #34, M3h-Sibling-Spalt +91px).
+- [x] Targeted: `npx vitest run src/App.m3c_sonniges_nest_player_cards.test.tsx src/App.m3f_smoke_wiring.test.ts src/App.m3h_stitch_lobby_avatar.test.tsx` → 24/24 grün
+- [x] Typecheck: `npm run typecheck` bestanden
+- [x] Lint: `npm run lint` bestanden
+- [x] Build: `npm run build` bestanden (245.66 kB CSS + 426.24 kB JS)
+- [x] M3h-Production-Smoke: `node scripts/m3h_stitch_lobby_avatar_smoke.mjs` → 14/14 grün, body.scrollHeight=1191 (Schwelle 1200, +91 px vs. M3g-Vertrag akzeptiert wegen Sibling-Clipping-Fix)
+- [x] M3c-Production-Smoke: `node scripts/m3c_sonniges_nest_player_cards_smoke.mjs` → 11/11 grün (Name-Pillen gefunden, Border-Clipping-Fix verifiziert)
+- [x] Production URL: https://schlangentanz-v2.vercel.app → HTTP 200
+- [x] Production deploy HEAD = `69d352e`
+- [x] Codex-Review: REVIEWER=codex (Watchdog-Status OK, Kimi rate-limited); lokale Verifikation dokumentiert. Code-Review-Skill verfügbar, Codex-OAuth-Quota reaktiviert (vgl. Pitfall #38).
+- [x] Commit/Push: `e5f06f6` M3h-Folgeslice (M3c-Migration + M3f-W5 + M3h:7) + `69d352e` M3h-Smoke-Threshold-Anpassung. Release-Doku `docs/release_status_2026-07-01_m3h_folgeslice.md` dokumentiert Pitfall-Discipline, Geometrie-Arithmetik (Avatar-Child→Sibling: +9-15 px pro Slot, 4 Slots = +36-60 px; M3g-Vertrag+91 px = Border-Padding + Box-Shadow-Padding), Code-Review und naechster Luecke (M4 Waldtanz-Game-Board-Stitch-Promotion).
+- [x] Naechste Luecke: **M4 Waldtanz-Game-Board-Stitch-Promotion** — das zentrale Spielfeld auf `/game` ist funktional korrekt (R180 Farbenfusion, Sonderkarten-Brettziel, M1dk Phasen-Banner) aber visuell noch nicht im Saturday-morning-cartoon-Stitch-Stil. Schlangen-Reihen + Handkarten + Brettrand + Magiekreise + Aktions-Dock konsolidieren zu einer sichtbaren Waldtanz-Arena. M3h-Folgeslice hat die Lobby-Schicht abgeschlossen, jetzt fehlt die Spiel-Schicht.
