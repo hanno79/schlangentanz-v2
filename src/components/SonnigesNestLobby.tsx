@@ -100,7 +100,7 @@ const kiSlots = [
   },
 ]
 
-function SchlangeAvatar({ name, svg, hostBadge }: { name: string; svg: ReactNode; hostBadge?: boolean }) {
+function SchlangeAvatar({ svg, hostBadge }: { svg: ReactNode; hostBadge?: boolean }) {
   return (
     <div className="lobby-avatar">
       {/* SVG-Dekoration ist aria-hidden — der Spielername steht in
@@ -113,7 +113,6 @@ function SchlangeAvatar({ name, svg, hostBadge }: { name: string; svg: ReactNode
           <span aria-hidden="true">★</span>
         </span>
       ) : null}
-      <span className="lobby-slot__name">{name}</span>
     </div>
   )
 }
@@ -140,7 +139,6 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
         <div className="lobby-spieler-grid" aria-label="Spielerplätze">
           <div className={`lobby-slot lobby-slot--host`}>
             <SchlangeAvatar
-              name="Slippy Host"
               hostBadge
               svg={
                 <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
@@ -162,6 +160,7 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
                 </svg>
               }
             />
+            <span className="lobby-slot__name">Slippy Host</span>
             <span className="lobby-slot__host-badge" aria-label="Du bist dieser Spieler">DU</span>
             <span className="lobby-slot__boden" aria-hidden="true" />
           </div>
@@ -172,7 +171,8 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
                 className={`lobby-slot ${istAktiv ? 'lobby-slot--ki' : 'lobby-slot--wartet'}`}
                 key={slot.name}
               >
-                <SchlangeAvatar name={istAktiv ? slot.name : 'frei'} svg={slot.svg} />
+                <SchlangeAvatar svg={slot.svg} />
+                <span className="lobby-slot__name">{istAktiv ? slot.name : 'frei'}</span>
                 {istAktiv ? (
                   <span className="lobby-slot__difficulty" aria-label={`Schwierigkeit ${slot.schwierigkeit}`}>
                     {slot.schwierigkeit}

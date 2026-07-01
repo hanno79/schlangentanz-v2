@@ -39,10 +39,18 @@ describe('M3f Smoke-Wiring', () => {
     expect(m3fSrc).toMatch(/Waldobjekte/)
   })
 
-  it('M3f-W5: m3f ist last-in-chain (Kette endet mit m3f-Aufruf)', () => {
-    const steps = chain.split('&&').map(s => s.trim())
-    const last = steps[steps.length - 1]
-    expect(last).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
+  it('M3f-W5: m3f ist in der chain enthalten (Last-in-Chain-Discipline: nur M3h danach)', () => {
+    // Migration (2026-07-01): von "ist letzter Schritt" auf
+    // "ist in der Kette enthalten" + M3h danach. Siehe Pitfall #14
+    // (Last-In-Chain-Watcher-Test) — der Test ueberlebte nur 1 Slice,
+    // muss member+index-basierte Pruefung sein.
+    const steps = chain.split('&&').map((s) => s.trim())
+    expect(chain).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
+    const m3fIndex = steps.findIndex((s) => s.includes('m3f_brettrund_waldobjekte_smoke.mjs'))
+    expect(m3fIndex).toBeGreaterThanOrEqual(0)
+    // M3h-Smoke MUSS nach M3f-Smoke in der Kette kommen.
+    const m3hIndex = steps.findIndex((s) => s.includes('m3h_stitch_lobby_avatar_smoke.mjs'))
+    expect(m3hIndex).toBeGreaterThan(m3fIndex)
   })
 
   it('M3f-W6: Kette enthaelt keine Pipes/Greps/awk (pure node calls)', () => {

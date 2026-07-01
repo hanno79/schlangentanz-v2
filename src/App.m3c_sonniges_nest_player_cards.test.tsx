@@ -88,8 +88,13 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
       const isHidden = svgAria === 'true' || wrapperAria === 'true'
       expect(isHidden).toBe(true)
     })
-    const namen = Array.from(avatars).map((avatar) =>
-      avatar.querySelector('.lobby-slot__name')?.textContent?.trim() ?? '',
+    // M3h (2026-07-01): .lobby-slot__name ist jetzt Sibling von
+    // .lobby-avatar (vorher Child), damit der Name nicht vom runden
+    // Border abgeschnitten wird. Selektiere Namen ueber die Slots,
+    // nicht ueber die Avatare.
+    const slots = container.querySelectorAll('.lobby-slot')
+    const namen = Array.from(slots).map(
+      (slot) => slot.querySelector('.lobby-slot__name')?.textContent?.trim() ?? '',
     )
     expect(namen).toContain('Slippy Host')
     expect(namen).toContain('Orange Crush')

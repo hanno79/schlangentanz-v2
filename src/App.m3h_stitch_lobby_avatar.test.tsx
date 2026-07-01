@@ -102,4 +102,23 @@ describe('M3h Stitch-Lobby-Avatar-Promotion', () => {
     const name = wartetSlots[0]?.querySelector('.lobby-slot__name')
     expect(name?.textContent?.trim()).toBe('frei')
   })
+
+  it('M3h:7 — Name-Pille ist SIBLING vom Avatar (nicht Child), damit sie nicht vom runden Border abgeschnitten wird', () => {
+    // SUT: .lobby-slot__name MUSS direkter Sibling von .lobby-avatar
+    // innerhalb von .lobby-slot sein. Im Avatar (border-radius:999px +
+    // overflow:hidden) waere die Pille abgeschnitten. Dies ist die
+    // strukturelle Grundlage fuer die Sichtbarkeit der Namen.
+    const { container } = render(
+      <SonnigesNestLobby aktiveKiGegner={3} onNeuesSpiel={() => undefined} />,
+    )
+    const slots = container.querySelectorAll('.lobby-slot')
+    slots.forEach((slot) => {
+      const avatar = slot.querySelector('.lobby-avatar')
+      const name = slot.querySelector('.lobby-slot__name')
+      expect(avatar).not.toBeNull()
+      expect(name).not.toBeNull()
+      // Die Name-Pille darf NICHT innerhalb des Avatars liegen.
+      expect(avatar?.contains(name as Node)).toBe(false)
+    })
+  })
 })
