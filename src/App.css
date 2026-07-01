@@ -3596,13 +3596,14 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen"] {
-    /* AENDERUNG 01.07.2026 (M3f): Container-Wrapper wird auf
-       display:contents geschaltet, damit die direkten Section-Children
-       (Nachziehstapel/Ablage/Zugspur/Aufgabentafel) selbst die flex-items
-       der .waldtanz-arenasstein__waldobjekte-Reihe sind. Vorher war der
-       .waldtanz-waldtaschen-Wrapper ein display:grid-Container mit
-       width:min(100%, 11.5rem) = 184px, der die Pill-Reihe auf eine schmale
-       Spalte einschraenkte. Pitfall #30 Additive-Override. */
+    /* AENDERUNG 01.07.2026 (M3f): Container-Wrapper bleibt Layout-Container
+       (kein display:contents mehr, weil dieses Element ZUSAEZLICH die Klasse
+       .waldtanz-arenastein__waldobjekte traegt und die display:contents-Regel
+       dann den Flex-Container-Inhalt aufhebt — Pitfall #30 Additive-Override
+       Caveat: zwei Klassen auf demselben Element, spaetere Regel gewinnt
+       display). Statt dessen: Wrapper-Innenabstand 0, eigene Breite 100%
+       (der Flex-Container .waldtanz-arenasstein__waldobjekte sitzt als
+       direkter Child dieses Wrappers und bekommt display:flex). */
     width: 100%;
     position: static;
     z-index: 8;
@@ -3613,7 +3614,6 @@ code {
     overflow: visible;
     overflow-x: visible;
     scroll-padding-block: 0;
-    display: contents;
   }
 
   .spielbereich--game-route [class~="waldtanz-waldtaschen"] > :is(section, .waldtanz-waldtaschen__kopf) {
