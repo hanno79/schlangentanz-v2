@@ -24,6 +24,7 @@ import WaldtanzAktiverTanzSchritt from './WaldtanzAktiverTanzSchritt'
 import WaldtanzBrettschrittStempel from './WaldtanzBrettschrittStempel'
 import WaldtanzKartenpop from './WaldtanzKartenpop'
 import WaldtanzWaldtischHolzplakette from './WaldtanzWaldtischHolzplakette'
+import WaldtanzSpielmatBoden from './WaldtanzSpielmatBoden'
 
 export interface WaldtanzSchlangenlichtungProps {
   zustand: Spielzustand
@@ -140,6 +141,9 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
           ) : null}
         </div>
         <div className="waldtanz-schlangenlichtung__schlangen">
+          <WaldtanzSpielmatBoden
+            anzahlEigenerSchlangen={aktiverSpieler.schlangen.length}
+          />
           <WaldtanzTischkarte zustand={zustand} />
           <WaldtanzKartenpop aktionLabel={letzteAktion} />
           <WaldtanzMagiekreise

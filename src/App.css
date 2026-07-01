@@ -11559,3 +11559,72 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 .spielbereich--game-route [class~="handkarten-spielbarkeit"] {
   display: none;
 }
+
+/* M3e 01.07.2026: Waldtanz-Spielmat-Boden im Brettrund-Zentrum.
+   Sichtbare Stitch-Spielmat-Box zwischen Schlangenlichtung-Kopf und Magiekreise.
+   Pitfall #30/#32 beachtet:
+   - Neue Single-Class-Regel, kein Konflikt mit .waldtanz-magiekreise (M2z)
+     oder .erste-schlange-onboarding (M6a).
+   - Cascade-Kommentar in Worten, KEINE Selector-Literal-Form mit property: value.
+   Lime/Forest-Gradient-Background passt zum Arenastein-Boden (M1dk-Spielmat).
+   3px forest-green border mit dashed style signalisiert "Hier deine Schlange ablegen".
+   Border-radius (3rem) gibt die Stitch-Pillen-Optik.
+   Dezente Pulsing-Animation auf der inneren Hexagon-Silhouette.
+   Reduced-Motion-Override disabled die Animation. */
+.waldtanz-spielmat-boden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 36rem);
+  margin: 0 auto;
+  padding: 1.1rem 1.4rem;
+  border: 3px dashed var(--st-color-border-strong);
+  border-radius: 3rem;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(164, 222, 2, 0.32) 0 4.6rem, transparent 4.75rem),
+    radial-gradient(circle at 82% 72%, rgba(254, 203, 0, 0.28) 0 5.2rem, transparent 5.35rem),
+    linear-gradient(145deg, rgba(236, 255, 227, 0.92), rgba(177, 232, 164, 0.78));
+  box-shadow: 0 4px 0 var(--st-color-border-strong);
+  position: relative;
+  z-index: 1;
+}
+
+.waldtanz-spielmat-boden__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 32rem;
+}
+
+.waldtanz-spielmat-boden__hexagon {
+  width: 8rem;
+  height: 4rem;
+  flex-shrink: 0;
+  animation: waldtanz-spielmat-pulse 2.8s ease-in-out infinite;
+}
+
+.waldtanz-spielmat-boden__hinweis {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: var(--st-color-border-strong, #063907);
+  font-weight: 600;
+}
+
+@keyframes waldtanz-spielmat-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Reduced-Motion-Override: Animation disabled, statische Optik bleibt erhalten. */
+@media (prefers-reduced-motion: reduce) {
+  .waldtanz-spielmat-boden__hexagon {
+    animation: none;
+  }
+}

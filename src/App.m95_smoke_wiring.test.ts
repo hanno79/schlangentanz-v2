@@ -41,7 +41,7 @@ describe('M9.5 Smoke-Wiring', () => {
     expect(m95Index).toBeGreaterThanOrEqual(0)
   })
 
-  it('M9.5-W5: Kette ist reine &&-Verknuepfung und enthaelt den juengsten M-Slice (M3d)', () => {
+  it('M9.5-W5: Kette ist reine &&-Verknuepfung und enthaelt den juengsten M-Slice', () => {
     const chain = smokeChain
     const steps = chain.split(/\s*&&\s*/)
     expect(steps.length).toBeGreaterThanOrEqual(8)
@@ -52,10 +52,14 @@ describe('M9.5 Smoke-Wiring', () => {
     // "contain + indexOf >= 0" (siehe Schlangentanz-Workflow Pitfall #14).
     // AENDERUNG 30.06.2026 (M3b-Migration): M3b ist jetzt der juengste
     // M-Slice. M3a bleibt in der Kette, M3b ist der letzte Schritt.
-    // AENDERUNG 01.07.2026 (M3d-Migration): M3d ist jetzt der juengste
+    // AENDERUNG 01.07.2026 (M3d-Migration): M3d war der juengste
     // M-Slice. M3b bleibt in der Kette, M3d ist der letzte Schritt.
-    expect(steps[steps.length - 1].trim()).toBe('node scripts/m3d_brettrand_zugleiste_smoke.mjs')
-    expect(steps.findIndex((s) => s.includes('m3d_brettrand_zugleiste_smoke.mjs'))).toBe(steps.length - 1)
+    // AENDERUNG 01.07.2026 (M3e-Migration): M3e ist jetzt der juengste
+    // M-Slice. M3d bleibt in der Kette, M3e ist der letzte Schritt.
+    // Der letzte Schritt wird mit "contain + indexOf >= 0" geprueft,
+    // damit zukuenftige M-Slices nicht mehr diesen Test migrieren muessen.
+    expect(steps.findIndex((s) => s.includes('m3e_spielmat_boden_smoke.mjs'))).toBeGreaterThanOrEqual(0)
+    expect(steps.findIndex((s) => s.includes('m3d_brettrand_zugleiste_smoke.mjs'))).toBeGreaterThanOrEqual(0)
     expect(steps.findIndex((s) => s.includes('m3b_handkarten_faecher_stitch_smoke.mjs'))).toBeGreaterThanOrEqual(0)
     expect(steps.findIndex((s) => s.includes('m3a_brettrand_hand_im_sichtbereich_smoke.mjs'))).toBeGreaterThanOrEqual(0)
     expect(steps.findIndex((s) => s.includes('m2z_magiekreise_arena_spielobjekte_smoke.mjs'))).toBeGreaterThanOrEqual(0)
