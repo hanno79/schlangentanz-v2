@@ -162,6 +162,8 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
                 </svg>
               }
             />
+            <span className="lobby-slot__host-badge" aria-label="Du bist dieser Spieler">DU</span>
+            <span className="lobby-slot__boden" aria-hidden="true" />
           </div>
           {kiSlots.map((slot, index) => {
             const istAktiv = index < aktiveKi
@@ -170,12 +172,13 @@ function SonnigesNestLobby({ aktiveKiGegner, onNeuesSpiel }: SonnigesNestLobbyPr
                 className={`lobby-slot ${istAktiv ? 'lobby-slot--ki' : 'lobby-slot--wartet'}`}
                 key={slot.name}
               >
-                <SchlangeAvatar name={istAktiv ? slot.name : 'wartet auf KI-Schlange'} svg={slot.svg} />
+                <SchlangeAvatar name={istAktiv ? slot.name : 'frei'} svg={slot.svg} />
                 {istAktiv ? (
                   <span className="lobby-slot__difficulty" aria-label={`Schwierigkeit ${slot.schwierigkeit}`}>
                     {slot.schwierigkeit}
                   </span>
                 ) : null}
+                <span className="lobby-slot__boden" aria-hidden="true" />
               </div>
             )
           })}

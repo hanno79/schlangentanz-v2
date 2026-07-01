@@ -24,7 +24,9 @@ describe('M3 Sonniges Nest Lobby', () => {
     expect(within(lobby).getByRole('heading', { name: 'Bereit im sonnigen Nest' })).toBeInTheDocument()
     expect(within(lobby).getByText('Slippy Host')).toBeInTheDocument()
     expect(within(lobby).getByText('Orange Crush')).toBeInTheDocument()
-    expect(within(lobby).getAllByText('wartet auf KI-Schlange')).toHaveLength(2)
+    // M3h (2026-07-01): wartende Slots rendern jetzt "frei" statt
+    // "wartet auf KI-Schlange" — kuerzerer Platzhalter-Stitch-Stil.
+    expect(within(lobby).getAllByText('frei')).toHaveLength(2)
 
     const startButtons = within(lobby).getAllByRole('button', { name: /starten/i })
     expect(startButtons.map(button => button.textContent?.replace(/▶/g, '').trim())).toEqual([

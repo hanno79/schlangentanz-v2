@@ -310,11 +310,13 @@ body {
   }
 }
 
+/* M3h: Flex-Column mit zentrierten Kindern, damit Avatar + Name +
+   Schwierigkeit + Host-Badge + Boden sauber vertikal stapeln. */
 .lobby-slot {
-  display: grid;
-  justify-items: center;
-  align-items: start;
-  gap: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
   text-align: center;
   position: relative;
   padding-top: 0.5rem;
@@ -364,10 +366,10 @@ body {
   letter-spacing: 0.02em;
 }
 
+/* M3h: Schwierigkeit-Pille ist jetzt im Flex-Flow unter dem Avatar
+   (vorher position:absolute schwebend rechts oben). M3c-Vertrag
+   (border-radius 999px, 2px solid border) bleibt unveraendert. */
 .lobby-slot__difficulty {
-  position: absolute;
-  top: 0.2rem;
-  right: 0.4rem;
   display: inline-block;
   padding: 0.18rem 0.6rem;
   border: 2px solid var(--st-color-border-strong);
@@ -380,6 +382,36 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--st-color-on-secondary-container);
+}
+
+/* M3h: Host-Badge (Stitch-Pille im Coral-Forest-Stil), nur sichtbar
+   auf .lobby-slot--host. User-Markierung "DU" — wer bin ich? */
+.lobby-slot__host-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 999px;
+  background: var(--st-color-tertiary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
+  font-family: var(--st-font-headline);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--st-color-on-tertiary-container);
+}
+
+/* M3h: Forest-Boden-Streifen unter dem Avatar — kleiner sichtbarer
+   Sun-Tile, der das "die Schlangen stehen auf einem sonnigen
+   Waldboden"-Gefuehl der Stitch-Referenz transportiert. */
+.lobby-slot__boden {
+  width: 70%;
+  height: 0.7rem;
+  margin-top: 0.15rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 0.4rem;
+  background: var(--st-color-tertiary-container);
+  box-shadow: 0 2px 0 var(--st-color-border-strong);
 }
 
 /* M3b: Aktive KI-Slots gleiten sichtbar als Schlange ins Baumhaus (Stitch-Pattern). */
