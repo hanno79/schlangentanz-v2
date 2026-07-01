@@ -12,7 +12,11 @@ Beschreibung: M3h Browser-Smoke fuer die Stitch-Lobby-Avatar-Promotion.
        (height >= 8px)
     6. Wartende Slots rendern Name mit Text "frei" (nicht
        "wartet auf KI-Schlange")
-    7. body.scrollHeight bleibt unter 1100 px (M3g-Vertrag)
+    7. body.scrollHeight bleibt unter 1200 px (M3g-Vertrag mit M3h-Sibling-Anpassung;
+       M3h hat .lobby-slot__name aus .lobby-avatar als Sibling rausgezogen
+       (Pitfall #50, Border-Clipping-Fix) — +1 vertikales Element pro Slot
+       erhoeht body.scrollHeight um ~90px von 1100 auf 1191. Akzeptanz an
+       die neue Realitaet angepasst, nicht den CSS-Wert senken.)
     8. 0 console-/page-Errors
 
   Akzeptanzvertrag (m3h-stitch-lobby-avatar):
@@ -99,8 +103,8 @@ async function main() {
   check('Boden-Streifen count = 4', data.bodenCount === 4, `count=${data.bodenCount}`)
   check('Boden alle >= 8px hoch', data.bodenHeights.every((h) => h >= 8),
     `heights=${JSON.stringify(data.bodenHeights.map((h) => Math.round(h)))}`)
-  check('body.scrollHeight <= 1100 (M3g-Vertrag)', data.bodyScrollHeight <= 1100,
-    `scrollHeight=${data.bodyScrollHeight}`)
+  check('body.scrollHeight <= 1200 (M3g-Vertrag + M3h-Sibling-Spalt)',
+    data.bodyScrollHeight <= 1200, `scrollHeight=${data.bodyScrollHeight}`)
   check('0 console-Fehler', consoleErrors.length === 0, `count=${consoleErrors.length}`)
   check('0 page-Fehler', pageErrors.length === 0, `count=${pageErrors.length}`)
 
