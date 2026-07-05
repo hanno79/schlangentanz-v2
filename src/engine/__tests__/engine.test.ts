@@ -224,7 +224,8 @@ describe('Spielzustand erstellen', () => {
 
   it('behält nach reihum Startverteilung den korrekten Hauptdeck-Rest', () => {
     const zustand = erstelleSpielzustand(4, () => 0.999999);
-    expect(zustand.nachziehstapel).toHaveLength(90);
+    // ÄNDERUNG [05.07.2026]: H1 — Spieldeck ist 114 (110 Basis + 4 Häutung); 114 - 4*5 = 94.
+    expect(zustand.nachziehstapel).toHaveLength(94);
     expect(zustand.nachziehstapel.some((karte) => karte.typ === 'Sonderkarte')).toBe(true);
   });
 

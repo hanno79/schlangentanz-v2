@@ -59,6 +59,7 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Comeback-Karten: 4 Stück, je 1 pro Spieler.
 - Risiko-Belohnungs-Karten: 8 Stück, je 2 pro Spieler.
 - Digital: Hauptstapel wird per Fisher-Yates oder gleichwertigem Zufallsalgorithmus gemischt.
+- Digitales Spieldeck: Der tatsächlich gemischte Nachziehstapel umfasst die 110 Basiskarten plus die 4 Schlangenhäutung-Karten der Erweiterung (114 Karten). Nur dadurch sind die Schlangenhäutung-Mechanik und die Aufgabe „Schlangentanz" erreichbar. Comeback, Risiko-Belohnung und „Schlangenkorb des Glücks" bleiben vorerst außerhalb des Spieldecks.
 
 ### R1.3 Startkarten verteilen
 

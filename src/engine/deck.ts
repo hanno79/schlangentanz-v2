@@ -97,6 +97,15 @@ export function erstelleHauptdeck(): Spielkarte[] {
   return [...erstelleFarbkarten(), ...erstelleSonderkarten()];
 }
 
+// ÄNDERUNG [05.07.2026]: H1 — das tatsächlich gemischte digitale Spieldeck umfasst zusätzlich
+// die 4 Schlangenhäutung-Karten der Erweiterung (110 Basis + 4 = 114). Ohne sie wären die
+// Häutungs-Mechanik und die Aufgabe "Schlangentanz" unerreichbar. Die übrigen
+// Erweiterungskarten (Comeback, Risiko-Belohnung, Schlangenkorb) bleiben vorerst außerhalb.
+export function erstelleSpieldeck(): Spielkarte[] {
+  const schlangenhaeutung = erstelleErweiterungsSonderkarten().filter((karte) => karte.name === 'Schlangenhäutung');
+  return [...erstelleHauptdeck(), ...schlangenhaeutung];
+}
+
 // Fisher-Yates-Mischung; rng-Parameter ermöglicht deterministisches Testen.
 export function mischeDeck<T>(deck: T[], rng: () => number): T[] {
   const gemischt = [...deck];

@@ -13,6 +13,7 @@ import { describe, expect, it } from 'vitest';
 import {
   erstelleSpielzustand,
   ermittleLegaleAktionen,
+  ermittleNichtEnumerierteAktionenHinweise,
   ermittleReaktionsAktionen,
   anwendeAktion,
   starteAusspielphase,
@@ -25,7 +26,27 @@ import {
   deserialisiere,
   HANDKARTENLIMIT,
 } from '../index';
+import type { SpielAktion } from '../legalActions';
 import type { Spielzustand } from '../types';
+
+// Triviale Schlangenhäutung (Rotation der längsten aktiven Schlange), analog zur KI-Logik.
+function baueSchlangenhaeutung(zustand: Spielzustand): SpielAktion | null {
+  if (!ermittleNichtEnumerierteAktionenHinweise(zustand).some((h) => h.typ === 'Schlangenhaeutung')) return null;
+  const spieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  const haeutung = spieler.hand.find((k) => k.typ === 'Sonderkarte' && k.name === 'Schlangenhäutung');
+  const schlange = [...spieler.schlangen]
+    .filter((s) => s.zustand === 'aktiv' && s.karten.length > 1)
+    .sort((a, b) => b.karten.length - a.karten.length)[0];
+  if (!haeutung || !schlange) return null;
+  const ids = schlange.karten.map((k) => k.id);
+  return {
+    typ: 'SchlangenhaeutungSpielen',
+    spielerId: spieler.id,
+    handkartenId: haeutung.id,
+    schlangenId: schlange.id,
+    kartenIdsInNeuerReihenfolge: [...ids.slice(1), ids[0]],
+  };
+}
 
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
@@ -75,8 +96,11 @@ function spieleVollpartie(seed: number): void {
         const aktionen = ermittleLegaleAktionen(zustand);
         const hand = zustand.spieler[zustand.aktiverSpielerIndex].hand;
         const beendbar = zustand.zugpflichten.gespielteKarten > 0 || hand.length === 0;
+        const haeutung = aktionen.length === 0 ? baueSchlangenhaeutung(zustand) : null;
         if (aktionen.length > 0 && (!beendbar || rng() < 0.6)) {
           zustand = anwendeAktion(zustand, waehle(aktionen));
+        } else if (haeutung !== null && (!beendbar || rng() < 0.6)) {
+          zustand = anwendeAktion(zustand, haeutung);
         } else if (beendbar) {
           zustand = beendeAusspielphase(zustand);
         } else {

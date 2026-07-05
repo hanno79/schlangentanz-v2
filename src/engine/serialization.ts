@@ -17,7 +17,7 @@ import type {
   Zugphase,
 } from './types';
 import { SPIELER_MAX, SPIELER_MIN, MAX_KARTEN_PRO_ZUG } from './constants';
-import { erstelleErweiterungsSonderkarten, erstelleHauptdeck, erstelleSonderkarten } from './deck';
+import { erstelleErweiterungsSonderkarten, erstelleSpieldeck, erstelleSonderkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
 const ZUGPHASEN: ReadonlySet<Zugphase> = new Set([
@@ -636,7 +636,7 @@ function validiereKanonischesSet<T extends { id: string }>(
 }
 
 function validiereKanonischesMaterial(zustand: Spielzustand): void {
-  validiereKanonischesSet(erstelleHauptdeck, sammleSpielkarten, 'Karten', zustand);
+  validiereKanonischesSet(erstelleSpieldeck, sammleSpielkarten, 'Karten', zustand);
   validiereKanonischesSet(erstelleAufgabenStapel, sammleAufgaben, 'Aufgaben', zustand);
 }
 

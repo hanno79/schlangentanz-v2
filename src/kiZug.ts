@@ -11,12 +11,13 @@ import {
   beendeAusspielphase,
   beendeZug,
   ermittleLegaleAktionen,
+  ermittleNichtEnumerierteAktionenHinweise,
   ermittleReaktionsAktionen,
   HANDKARTENLIMIT,
   starteAusspielphase,
   werfeUeberzaehligeHandkartenAb,
 } from './engine'
-import type { Spielzustand } from './engine'
+import type { Spielzustand, SpielAktion } from './engine'
 import { aktionsLabel } from './aktionsLabel'
 
 export interface KiZugVorspulErgebnis {
@@ -51,6 +52,29 @@ function reaktionsSpielerIndex(zustand: Spielzustand): number | null {
 function brauchtMenschlicheReaktion(zustand: Spielzustand): boolean {
   const index = reaktionsSpielerIndex(zustand)
   return index !== null && zustand.spieler[index]?.steuerung === 'Mensch'
+}
+
+// H1: Baut eine triviale, garantiert reihenfolge-ändernde Schlangenhäutung (Rotation der
+// längsten aktiven Schlange) für die KI, sofern eine Häutung die einzige Option ist.
+function baueKiSchlangenhaeutung(zustand: Spielzustand): SpielAktion | null {
+  if (!ermittleNichtEnumerierteAktionenHinweise(zustand).some((hinweis) => hinweis.typ === 'Schlangenhaeutung')) {
+    return null
+  }
+  const spieler = zustand.spieler[zustand.aktiverSpielerIndex]
+  const haeutungKarte = spieler.hand.find((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenhäutung')
+  const schlange = [...spieler.schlangen]
+    .filter((s) => s.zustand === 'aktiv' && s.karten.length > 1)
+    .sort((a, b) => b.karten.length - a.karten.length)[0]
+  if (!haeutungKarte || !schlange) return null
+  const ids = schlange.karten.map((karte) => karte.id)
+  const rotiert = [...ids.slice(1), ids[0]] // Rotation ändert bei eindeutigen Ids stets die Reihenfolge.
+  return {
+    typ: 'SchlangenhaeutungSpielen',
+    spielerId: spieler.id,
+    handkartenId: haeutungKarte.id,
+    schlangenId: schlange.id,
+    kartenIdsInNeuerReihenfolge: rotiert,
+  }
 }
 
 export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulErgebnis {
@@ -89,6 +113,14 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
       }
       const aktionen = ermittleLegaleAktionen(zustand)
       if (aktionen.length === 0) {
+        // H1: Ist die einzige spielbare Option eine (nicht enumerierte) Schlangenhäutung,
+        // spielt die KI eine triviale Neuordnung (Rotation) statt hängen zu bleiben.
+        const haeutungZug = baueKiSchlangenhaeutung(zustand)
+        if (haeutungZug !== null) {
+          protokoll.push(`${name}: Schlangenhäutung gespielt.`)
+          zustand = anwendeAktion(zustand, haeutungZug)
+          continue
+        }
         // H2: Ohne Handkarten (z. B. im Endspurt) besteht keine Zugpflicht — Phase beenden statt hängen.
         if (spieler.hand.length === 0 && zustand.zugpflichten.gespielteKarten === 0) {
           protokoll.push(`${name}: keine Handkarten — Ausspielphase beendet.`)

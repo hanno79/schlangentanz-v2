@@ -9,7 +9,7 @@ export * from './types';
 export * from './constants';
 export { aufgabenPool, erstelleAufgabenStapel } from './aufgabenKarten';
 export { ermittleErfuellteOffeneAufgaben, ermittleFarbkombinationFortschritt } from './aufgabenPruefung';
-export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, erstelleErweiterungsSonderkarten, mischeDeck } from './deck';
+export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, erstelleSpieldeck, erstelleErweiterungsSonderkarten, mischeDeck } from './deck';
 export { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from './state';
 export { serialisiere, deserialisiere } from './serialization';
 export { pruefeAktion, ermittleLegaleAktionen, ermittleReaktionsAktionen, ermittleNichtEnumerierteAktionenHinweise, anwendeAktion } from './legalActions';

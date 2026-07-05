@@ -14,7 +14,7 @@ import {
   STARTHANDKARTEN,
   OFFENE_AUFGABEN_START,
 } from './constants';
-import { erstelleHauptdeck, mischeDeck } from './deck';
+import { erstelleSpieldeck, mischeDeck } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
 type SpielerDefinition = { id: string; name: string; steuerung: Steuerung };
@@ -68,7 +68,7 @@ function erstelleSpielzustandVonDefinitionen(
   definitionen: SpielerDefinition[],
   rng: () => number,
 ): Spielzustand {
-  const hauptdeck = mischeDeck(erstelleHauptdeck(), rng);
+  const hauptdeck = mischeDeck(erstelleSpieldeck(), rng);
   const aufgabenStapel = mischeDeck(erstelleAufgabenStapel(), rng);
   const spieler = erstelleSpielerListe(definitionen, aufgabenStapel);
 
