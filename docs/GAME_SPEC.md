@@ -162,7 +162,7 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Alle Karteneffekte müssen abgehandelt sein.
 - Erfüllte Aufgaben müssen geprüft sein.
 - Bei mehr als 10 Handkarten muss der Spieler überzählige Karten abwerfen.
-- Der Spieler wählt selbst, welche Karten abgeworfen werden.
+- Der Spieler wählt selbst, welche Karten abgeworfen werden: Im Zugabschluss mit Überhand markiert der menschliche Spieler genau die überzähligen Karten und bestätigt den Abwurf. Ein automatischer Abwurf der zuletzt gehaltenen Karten dient nur als Fallback für den generischen Phasenbutton und für KI-Gegner.
 - Danach wird der nächste Spieler im Uhrzeigersinn aktiviert.
 - Wenn der aktive Spieler in seinem Zug die letzte Karte vom Nachziehstapel gezogen hat, beendet er seinen laufenden Zug normal; danach erhalten alle anderen Spieler in Zugreihenfolge noch genau einen Zug.
 - Der Spieler, der die letzte Nachziehkarte gezogen hat, wird in dieser Endrunde nicht erneut aktiviert.

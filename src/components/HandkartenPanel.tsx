@@ -26,11 +26,16 @@ interface HandkartenPanelProps {
   verdeckt?: boolean
   endTurnVerfuegbar?: boolean
   pflichtAbwurfAktionen?: PflichtAbwurfAktion[]
+  abwurfModus?: boolean
+  abwurfAuswahl?: string[]
+  abwurfAnzahl?: number
   onKarteWaehlen: (karteId: string) => void
   onKarteDragStart: (karteId: string) => void
   onKarteDragEnd: () => void
   onEndTurn?: () => void
   onPflichtAbwurf?: (karteId: string) => void
+  onAbwurfToggle?: (karteId: string) => void
+  onAbwurfBestaetigen?: () => void
 }
 
 function karteKurzLabel(karte: Spielkarte): string {
@@ -146,11 +151,16 @@ export default function HandkartenPanel({
   verdeckt = false,
   endTurnVerfuegbar = false,
   pflichtAbwurfAktionen = [],
+  abwurfModus = false,
+  abwurfAuswahl = [],
+  abwurfAnzahl = 0,
   onKarteWaehlen,
   onKarteDragStart,
   onKarteDragEnd,
   onEndTurn,
   onPflichtAbwurf,
+  onAbwurfToggle,
+  onAbwurfBestaetigen,
 }: HandkartenPanelProps) {
   const handkartenTitelId = useId()
   const detailTitelId = useId()
@@ -242,6 +252,20 @@ export default function HandkartenPanel({
       </div>
       <h4><span id={handkartenTitelId}>Handkarten</span> als Kartenleiste</h4>
       <p className="handkarten-spielbarkeit">{spielbareHandkarten} {spielbareHandkarten === 1 ? 'Karte' : 'Karten'} sofort spielbar</p>
+      {/* R2.5: Im Zugabschluss mit Überhand wählt der Spieler selbst die abzuwerfenden Karten. */}
+      {abwurfModus && (
+        <div className="handkarten-abwurf" role="group" aria-label="Überzählige Karten abwerfen">
+          <p>Wähle {abwurfAnzahl} {abwurfAnzahl === 1 ? 'Karte' : 'Karten'} zum Abwerfen ({abwurfAuswahl.length}/{abwurfAnzahl} gewählt).</p>
+          <button
+            type="button"
+            className="handkarten-abwurf__bestaetigen"
+            disabled={abwurfAuswahl.length !== abwurfAnzahl}
+            onClick={() => onAbwurfBestaetigen?.()}
+          >
+            {abwurfAnzahl} {abwurfAnzahl === 1 ? 'Karte' : 'Karten'} abwerfen
+          </button>
+        </div>
+      )}
       {ausgewaehlteHandkarte ? (
         <section className={`handkarten-detail handkarten-preview${karteFarbklasse(ausgewaehlteHandkarte)}`} aria-labelledby={detailTitelId}>
           <article className="handkarten-preview__karte" aria-label={`Vorschau ${ausgewaehlteHandkarte.id}`}>
@@ -296,6 +320,7 @@ export default function HandkartenPanel({
         {handkarten.map((karte, index) => {
           const istFarbkarte = karte.typ === 'Farbkarte'
           const istAusgewaehlt = ausgewaehlteHandkarte?.id === karte.id
+          const istAbwurfGewaehlt = abwurfModus && abwurfAuswahl.includes(karte.id)
           const alleKartenAktionen = aktionenFuerHandkarte(legaleAktionen, karte.id)
           const zielAnzahl = alleKartenAktionen.filter((aktion) => aktion.typ !== 'PflichtAbwurf').length
           const istSpielbar = zielAnzahl > 0
@@ -308,17 +333,20 @@ export default function HandkartenPanel({
           return (
             <li
               key={karte.id}
-              className={`handkarte handkarte--spielkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}${istSpielbar ? ' handkarte--spielbar' : hatPflichtAbwurf ? ' handkarte--pflichtabwurf' : ' handkarte--wartet'}`}
+              className={`handkarte handkarte--spielkarte handkarte--${istFarbkarte ? 'farbkarte' : 'sonderkarte'}${istFarbkarte ? ` handkarte--farbe-${farbeCssKlasse(karte.farbe)}` : ''}${istAusgewaehlt ? ' handkarte--ausgewaehlt' : ''}${istAbwurfGewaehlt ? ' handkarte--abwurf-gewaehlt' : ''}${istSpielbar ? ' handkarte--spielbar' : hatPflichtAbwurf ? ' handkarte--pflichtabwurf' : ' handkarte--wartet'}`}
               style={tiefenfaecherStyle(index, handkarten.length, istAusgewaehlt)}
             >
               <button
                 type="button"
                 className="handkarte__button handkarte__button--karte"
-                draggable="true"
-                aria-label={`${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'} ${spielStatusText}${zielText ? ` ${zielText}` : ''}${questText}`}
-                aria-pressed={istAusgewaehlt}
-                onClick={() => onKarteWaehlen(karte.id)}
+                draggable={abwurfModus ? false : 'true'}
+                aria-label={abwurfModus
+                  ? `${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} zum Abwerfen ${istAbwurfGewaehlt ? 'gewählt' : 'auswählen'}`
+                  : `${karte.id} ${istFarbkarte ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`} ${istFarbkarte ? `${karte.punkte} Punkte` : 'Sonderaktion'} ${spielStatusText}${zielText ? ` ${zielText}` : ''}${questText}`}
+                aria-pressed={abwurfModus ? istAbwurfGewaehlt : istAusgewaehlt}
+                onClick={() => (abwurfModus ? onAbwurfToggle?.(karte.id) : onKarteWaehlen(karte.id))}
                 onDragStart={(event) => {
+                  if (abwurfModus) return
                   event.dataTransfer.setData('text/plain', karte.id)
                   event.dataTransfer.effectAllowed = 'move'
                   onKarteDragStart(karte.id)

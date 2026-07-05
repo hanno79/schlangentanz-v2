@@ -90,6 +90,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
+  const [abwurfAuswahl, setAbwurfAuswahl] = useState<string[]>([])
   const [handkarteDragAktiv, setHandkarteDragAktiv] = useState(false)
   const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
   const [brettschrittEintraege, setBrettschrittEintraege] = useState<BrettschrittEintrag[]>(() => {
@@ -207,6 +208,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
+    setAbwurfAuswahl([])
     // Naechsten Zustand synchron aus dem Closure ableiten, damit wir die
     // Brettschritt-Eintraege ausserhalb eines setState-Updaters pflegen koennen
     // und kein setState-during-render Anti-Pattern entsteht.
@@ -240,7 +242,21 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   function fuhreAktionAus(aktion: SpielAktion) { wechsleZustand(aktionsLabel(aktion), z => anwendeAktion(z, aktion), extrahiereAktionZiel(aktion)) }
   function handleAusspielphaseBeenden() { wechsleZustand('Ausspielphase beenden', z => beendeAusspielphase(z)) }
   function handleAufgabenpruefungBeenden() { wechsleZustand('Aufgabenprüfung beenden', z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true })) }
-  function handleUeberzaehligeKartenAbwerfen() { wechsleZustand('Überzählige Karten abwerfen', z => werfeUeberzaehligeHandkartenAb(z, { kartenIds: ueberhandAbwurfKartenIds(z) })) }
+  function handleUeberzaehligeKartenAbwerfen() {
+    // R2.5: Wenn der Spieler exakt genug Karten gewählt hat, diese abwerfen; sonst
+    // Auto-Fallback auf die letzten überzähligen Karten (generischer Phasenbutton/KI-Kompatibilität).
+    wechsleZustand('Überzählige Karten abwerfen', z => {
+      const gewaehlt = abwurfAuswahl.length === ueberhandAnzahl(z) ? abwurfAuswahl : ueberhandAbwurfKartenIds(z)
+      return werfeUeberzaehligeHandkartenAb(z, { kartenIds: gewaehlt })
+    })
+  }
+  function handleAbwurfToggle(karteId: string) {
+    setAbwurfAuswahl((bisher) => {
+      if (bisher.includes(karteId)) return bisher.filter((id) => id !== karteId)
+      if (bisher.length >= ueberhand) return bisher
+      return [...bisher, karteId]
+    })
+  }
   function handleZugBeenden() { wechsleZustand('Zug beenden', z => beendeZug(z, { pflichtenErfuellt: true })) }
   function handleAusspielphaseStarten() { wechsleZustand('Ausspielphase starten', z => starteAusspielphase(z)) }
   function handleKiZugVorspulen() {
@@ -471,6 +487,11 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
                 zugphase={zustand.zugphase}
                 verdeckt={aktiverSpieler.steuerung === 'KI'}
+                abwurfModus={zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && aktiverSpieler.steuerung === 'Mensch'}
+                abwurfAuswahl={abwurfAuswahl}
+                abwurfAnzahl={ueberhand}
+                onAbwurfToggle={handleAbwurfToggle}
+                onAbwurfBestaetigen={handleUeberzaehligeKartenAbwerfen}
                 endTurnVerfuegbar={
                   zustand.zugphase === 'Zugabschluss'
                   && ueberhand === 0
