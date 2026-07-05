@@ -115,7 +115,8 @@ describe('M2d Schlangenhäutung-Brettziel', () => {
     render(<App initialZustand={zustand} />)
 
     const { handBereich, schlangenbereich } = ermittleSpielbereiche()
-    fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenhaeutung-m2d-ki/ }))
+    // H3: Die KI-Hand ist verdeckt — die Kartenschaltfläche existiert nicht, die Brett-Einzelaktion bleibt aus.
+    expect(within(handBereich).queryByRole('button', { name: /schlangenhaeutung-m2d-ki/ })).toBeNull()
 
     const eigeneSchlangen = within(schlangenbereich).getByRole('region', { name: 'Eigene Schlangen' })
     const zielSchlange = within(eigeneSchlangen).getByText('schlange-m2d-ki').closest('.schlangekarte') as HTMLElement

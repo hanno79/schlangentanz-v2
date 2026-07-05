@@ -80,7 +80,8 @@ describe('M2e Schlangengrube-Spielerziel', () => {
     const gegnerliste = within(spielerrahmen).getByRole('list', { name: 'Gegner am Tisch' })
     const gegnerSpieler2 = within(gegnerliste).getByText('Gegner: Spieler 2').closest('li') as HTMLElement
 
-    fireEvent.click(within(handBereich).getByRole('button', { name: /schlangengrube-m2e-ki/ }))
+    // H3: Die KI-Hand ist verdeckt — die Kartenschaltfläche existiert nicht, das Spielerziel bleibt aus.
+    expect(within(handBereich).queryByRole('button', { name: /schlangengrube-m2e-ki/ })).toBeNull()
 
     expect(gegnerSpieler2).not.toHaveClass('waldtanz-spielerrahmen__gegnerplatz--grubenziel')
     expect(within(gegnerSpieler2).queryByRole('button', { name: /Schlangengrube im Spielerrahmen/ })).toBeNull()

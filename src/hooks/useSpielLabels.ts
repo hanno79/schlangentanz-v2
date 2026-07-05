@@ -78,7 +78,10 @@ export function useSpielLabels(
     : 'empfohlenen Aktion'
   const zeigtSpielerfuehrungAktionslink = legaleAktionen.length > 0 || hatSichtbarePhasenaktion
   // ÄNDERUNG [29.06.2026]: R181 — geheimeAufgabe ist non-nullable, daher direkter Zugriff.
-  const geheimeAufgabeText = aufgabeLabel(aktiverSpieler.geheimeAufgabe, false);
+  // ÄNDERUNG [05.07.2026]: H3 — die geheime Aufgabe des MENSCHEN anzeigen, nie die eines
+  // aktiven KI-Gegners (verdeckte Information, R1.4). Fallback auf den aktiven Spieler.
+  const menschlicherSpieler = zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch') ?? aktiverSpieler;
+  const geheimeAufgabeText = aufgabeLabel(menschlicherSpieler.geheimeAufgabe, false);
 
   return {
     pflichtschrittLabel,

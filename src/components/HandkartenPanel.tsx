@@ -23,6 +23,7 @@ interface HandkartenPanelProps {
   aktiverSpielerId?: string
   punkte?: number
   zugphase?: string
+  verdeckt?: boolean
   endTurnVerfuegbar?: boolean
   pflichtAbwurfAktionen?: PflichtAbwurfAktion[]
   onKarteWaehlen: (karteId: string) => void
@@ -142,6 +143,7 @@ export default function HandkartenPanel({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   punkte: _punkte = 0,
   zugphase = 'Zugphase',
+  verdeckt = false,
   endTurnVerfuegbar = false,
   pflichtAbwurfAktionen = [],
   onKarteWaehlen,
@@ -152,6 +154,31 @@ export default function HandkartenPanel({
 }: HandkartenPanelProps) {
   const handkartenTitelId = useId()
   const detailTitelId = useId()
+
+  // H3: Ist ein KI-Gegner am Zug, dürfen dessen Handkarten nicht sichtbar sein.
+  // Es werden nur die Anzahl und verdeckte Kartenrücken gezeigt — keine Farbe,
+  // kein Typ, kein Name, keine Auswahl/Drag-Interaktion.
+  if (verdeckt) {
+    return (
+      <section className="handkarten-panel handkarten-panel--waldtanz-handbuehne handkarten-panel--verdeckt" aria-labelledby={handkartenTitelId}>
+        <div className="handkarten-buehne" role="group" aria-label="Waldtanz-Handbühne">
+          <div className="handkarten-buehne__spielerplakette">
+            <strong className="handkarten-buehne__spielerplakette-titel">Hand — {spielerName}</strong>
+          </div>
+          <span className="handkarten-buehne__statuschip">{zugphase}</span>
+          <span className="handkarten-buehne__statuschip">{handkarten.length} Handkarten verdeckt</span>
+        </div>
+        <h4><span id={handkartenTitelId}>Handkarten</span> verdeckt</h4>
+        <ul className="handkartenleiste handkartenleiste--verdeckt" aria-label="Verdeckte Handkarten">
+          {handkarten.map((_karte, index) => (
+            <li key={index} className="handkarte handkarte--verdeckt">
+              <span className="handkarte__ruecken" aria-hidden="true">🂠</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
   const spielbareHandkarten = handkarten.filter((karte) => boardAktionenFuerHandkarte(legaleAktionen, karte.id).length > 0).length
   const ausgewaehlteZielAktionen = ausgewaehlteHandkarte ? boardAktionenFuerHandkarte(legaleAktionen, ausgewaehlteHandkarte.id) : []
   const ausgewaehlteZielarten = zielartenFuerAktionen(ausgewaehlteZielAktionen)

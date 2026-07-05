@@ -85,12 +85,14 @@ function PhasenregelnBereich({
   ueberhand,
   legaleAktionen,
   aktionsLabel,
+  verbergeAktionsLabels = false,
 }: {
   titelId: string
   zustand: Spielzustand
   ueberhand: number
   legaleAktionen: SpielAktion[]
   aktionsLabel: (aktion: SpielAktion) => string
+  verbergeAktionsLabels?: boolean
 }) {
   return (
     <section aria-labelledby={titelId}>
@@ -102,7 +104,11 @@ function PhasenregelnBereich({
       </ul>
       <h4>Spielbare Aktionen in dieser Phase</h4>
       <ul>
-        {legaleAktionen.length > 0 ? (
+        {/* H3: Während des KI-Zuges dürfen keine konkreten Aktions-Labels (mit Kartendaten der
+            KI-Hand) angezeigt werden — nur die Anzahl. */}
+        {verbergeAktionsLabels ? (
+          <li>{legaleAktionen.length} Aktion{legaleAktionen.length === 1 ? '' : 'en'} verfügbar — Details während des Gegnerzugs verborgen.</li>
+        ) : legaleAktionen.length > 0 ? (
           legaleAktionen.map(aktion => <li key={JSON.stringify(aktion)}>{aktionsLabel(aktion)}</li>)
         ) : (
           <li>Aktuell keine spielbaren Aktionen in dieser Phase.</li>
@@ -250,6 +256,7 @@ export default function AktionenPanel({
         ueberhand={ueberhand}
         legaleAktionen={legaleAktionen}
         aktionsLabel={aktionsLabel}
+        verbergeAktionsLabels={steuerung === 'KI'}
       />
     </>
   )

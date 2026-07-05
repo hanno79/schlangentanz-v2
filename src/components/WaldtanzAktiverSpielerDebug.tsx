@@ -59,7 +59,9 @@ export default function WaldtanzAktiverSpielerDebug({
           <p>Gewinner: {gewinnerText}</p>
         </>
       )}
-      {!istSpielende && legaleAktionen.length > 0 && <p>Empfohlene Aktion: {empfohleneAktionLabel}</p>}
+      {/* H3: Die konkrete empfohlene Aktion (mit Kartendaten) nur für den Menschen zeigen,
+          nie für eine aktive KI (verdeckte Handinformation). */}
+      {!istSpielende && aktiverSpieler.steuerung === 'Mensch' && legaleAktionen.length > 0 && <p>Empfohlene Aktion: {empfohleneAktionLabel}</p>}
       {reaktionsAktionen.length > 0 && <p>Nächste Reaktionsaktion: {aktionsLabel(reaktionsAktionen[0])}</p>}
       <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>
       <p>Geheime Aufgabe: {geheimerAufgabeLabel}</p>

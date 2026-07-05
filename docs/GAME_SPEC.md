@@ -482,6 +482,7 @@ Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenk
 - Ein klarer Hinweis auf die nächste legale bzw. verpflichtende Aktion ist sichtbar.
 - Rückmeldungen nach Aktionen aktualisieren sich unmittelbar im aktiven Spielerbereich.
 - Accessibility: semantische Bereiche, aussagekräftige Beschriftungen, `aria-current` für den aktiven Spieler und `aria-live="polite"` für den aktiven Spielerbereich.
+- Verdeckte Information (R1.3/R1.4): Ist ein KI-Gegner am Zug, werden dessen Handkarten nur als verdeckte Rücken mit Anzahl gezeigt — keine Farbe, kein Typ, kein Name, keine konkreten Aktions-Labels (auch nicht in Entwicklungsdaten). Die angezeigte persönliche/geheime Aufgabe gehört stets dem menschlichen Spieler. Es gibt keine Ableitung gegnerischer Handkarten (kein „Peek").
 - Mobile Mindestanforderung: einspaltiges Layout, gut lesbare Textblöcke und vollbreite Aktionsbuttons auf kleinen Viewports.
 
 ## 10. Non-Goals
