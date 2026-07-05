@@ -5,6 +5,7 @@ Version: 1.0
 Beschreibung: Zielspur-Zählung und Dimm-Entscheidung für sichtbare Waldtanz-Brettziele.
 */
 import type { SpielAktion, Spieler } from '../engine'
+import { blockadeKey, diebKey, frassKey, fusionKey, haeutungKey, schutzKey } from './zielspurKey'
 
 type Aktion<T extends SpielAktion['typ']> = Extract<SpielAktion, { typ: T }>
 
@@ -88,17 +89,17 @@ export function ermittleAutoHighlightZielspurKey(optionen: AutoHighlightOptionen
   for (const aktion of schlangenfrassAktionen) {
     if (!passt(aktion, ausgewaehlteHandkarteId)) continue
     const ziel = aktion.ziele.find((z) => z.spielerId === aktiverSpielerId) ?? aktion.ziele[0]
-    if (ziel) return `frass:${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`
+    if (ziel) return frassKey(ziel.spielerId, ziel.schlangenId, ziel.kartenId)
   }
   // 2. Farbenschutz — Schild.
   for (const aktion of farbenschutzAktionen) {
     if (!passt(aktion, ausgewaehlteHandkarteId)) continue
-    return `schutz:${aktion.zielSchlangenId}`
+    return schutzKey(aktion.zielSchlangenId)
   }
   // 3. Farbenfusion — Paarziel.
   for (const aktion of farbenfusionAktionen) {
     if (!passt(aktion, ausgewaehlteHandkarteId)) continue
-    return `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+    return fusionKey(aktion.zielSchlangenId, aktion.zielKartenId)
   }
 
   return null
@@ -139,20 +140,20 @@ function sammleZielspurBrettziele({
   const alle = new Set<string>(), start = new Set<string>(), wachstum = new Set<string>(), eigene = new Set<string>(), gegner = new Set<string>()
   for (const aktion of karteAnlegenAktionen) if (passt(aktion, handkartenId)) { add(wachstum, `${aktion.schlangenId}:${aktion.position}`); add(alle, `anlegen:${aktion.schlangenId}:${aktion.position}`) }
   for (const aktion of neueSchlangeStartenAktionen) if (passt(aktion, handkartenId)) { add(start, 'startkreis'); add(alle, 'startkreis') }
-  for (const aktion of farbenschutzAktionen) if (passt(aktion, handkartenId)) { add(eigene, `schutz:${aktion.zielSchlangenId}`); add(alle, `schutz:${aktion.zielSchlangenId}`) }
-  for (const aktion of farbenfusionAktionen) if (passt(aktion, handkartenId)) { add(eigene, `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`); add(alle, `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`) }
+  for (const aktion of farbenschutzAktionen) if (passt(aktion, handkartenId)) { add(eigene, schutzKey(aktion.zielSchlangenId)); add(alle, schutzKey(aktion.zielSchlangenId)) }
+  for (const aktion of farbenfusionAktionen) if (passt(aktion, handkartenId)) { add(eigene, fusionKey(aktion.zielSchlangenId, aktion.zielKartenId)); add(alle, fusionKey(aktion.zielSchlangenId, aktion.zielKartenId)) }
   for (const aktion of schlangenfrassAktionen) if (passt(aktion, handkartenId)) for (const ziel of aktion.ziele) {
-    const key = `frass:${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`
+    const key = frassKey(ziel.spielerId, ziel.schlangenId, ziel.kartenId)
     add(ziel.spielerId === aktiverSpielerId ? eigene : gegner, key)
     add(alle, key)
   }
-  for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) { add(gegner, `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`); add(alle, `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`) }
+  for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) { add(gegner, blockadeKey(aktion.zielSpielerId, aktion.zielSchlangenId)); add(alle, blockadeKey(aktion.zielSpielerId, aktion.zielSchlangenId)) }
   for (const aktion of farbendiebAktionen) if (passt(aktion, handkartenId)) {
-    const key = `dieb:${aktion.zielSpielerId}:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+    const key = diebKey(aktion.zielSpielerId, aktion.zielSchlangenId, aktion.zielKartenId)
     add(gegner, key)
     add(alle, key)
   }
-  for (const schlange of aktiverSpielerSchlangen.slice(0, haeutungZielAnzahl)) { add(eigene, `haeutung:${aktiverSpielerId}:${schlange.id}`); add(alle, `haeutung:${aktiverSpielerId}:${schlange.id}`) }
+  for (const schlange of aktiverSpielerSchlangen.slice(0, haeutungZielAnzahl)) { add(eigene, haeutungKey(aktiverSpielerId, schlange.id)); add(alle, haeutungKey(aktiverSpielerId, schlange.id)) }
   return { alle, start, wachstum, eigene, gegner }
 }
 
@@ -194,11 +195,11 @@ export function ermittleZielspurObjekte({
   const objekte = new Map<string, ZielspurObjekt>()
 
   for (const aktion of farbenschutzAktionen) if (passt(aktion, handkartenId)) {
-    objekte.set(`schutz:${aktion.zielSchlangenId}`, { key: `schutz:${aktion.zielSchlangenId}`, typ: 'Schutzschild', ziel: aktion.zielSchlangenId, ort: 'Eigene Lichtung', hilfe: 'Schlange schützen', sprungMoeglich: true })
+    objekte.set(schutzKey(aktion.zielSchlangenId), { key: schutzKey(aktion.zielSchlangenId), typ: 'Schutzschild', ziel: aktion.zielSchlangenId, ort: 'Eigene Lichtung', hilfe: 'Schlange schützen', sprungMoeglich: true })
   }
   for (const aktion of farbenfusionAktionen) if (passt(aktion, handkartenId)) {
     const ziel = findeFusionsPartner(aktiverSpielerSchlangen, aktion)
-    objekte.set(`fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`, { key: `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`, typ: 'Rankenring', ziel, ort: 'Eigene Lichtung', hilfe: 'Farbpaar verschmelzen', sprungMoeglich: true })
+    objekte.set(fusionKey(aktion.zielSchlangenId, aktion.zielKartenId), { key: fusionKey(aktion.zielSchlangenId, aktion.zielKartenId), typ: 'Rankenring', ziel, ort: 'Eigene Lichtung', hilfe: 'Farbpaar verschmelzen', sprungMoeglich: true })
   }
   for (const aktion of schlangenfrassAktionen) if (passt(aktion, handkartenId)) {
     const zielKey = aktion.ziele.map(ziel => `${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`).join('|')
@@ -208,10 +209,10 @@ export function ermittleZielspurObjekte({
     objekte.set(`frass:${zielKey}`, { key: `frass:${zielKey}`, typ: 'Bissspur', ziel: zielText, ort: trifftEigen ? 'Eigene Lichtung' : 'Gegnerische Tischrunde', hilfe: aktion.ziele.length > 1 ? 'Doppelbiss schließen' : 'Karte lösen', sprungMoeglich })
   }
   for (const aktion of schlangenblockadeAktionen) if (passt(aktion, handkartenId)) {
-    objekte.set(`blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, { key: `blockade:${aktion.zielSpielerId}:${aktion.zielSchlangenId}`, typ: 'Fessel', ziel: aktion.zielSchlangenId, ort: 'Gegnerische Tischrunde', hilfe: 'Schlange blockieren', sprungMoeglich: true })
+    objekte.set(blockadeKey(aktion.zielSpielerId, aktion.zielSchlangenId), { key: blockadeKey(aktion.zielSpielerId, aktion.zielSchlangenId), typ: 'Fessel', ziel: aktion.zielSchlangenId, ort: 'Gegnerische Tischrunde', hilfe: 'Schlange blockieren', sprungMoeglich: true })
   }
   for (const aktion of farbendiebAktionen) if (passt(aktion, handkartenId)) {
-    const key = `dieb:${aktion.zielSpielerId}:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+    const key = diebKey(aktion.zielSpielerId, aktion.zielSchlangenId, aktion.zielKartenId)
     const anzahl = farbendiebAktionen.filter(eintrag => passt(eintrag, handkartenId) && eintrag.zielSpielerId === aktion.zielSpielerId && eintrag.zielSchlangenId === aktion.zielSchlangenId && eintrag.zielKartenId === aktion.zielKartenId).length
     objekte.set(key, { key, typ: 'Beutekorb', ziel: aktion.zielKartenId, ort: 'Gegnerische Tischrunde', hilfe: `${anzahl} ${anzahl === 1 ? 'Einfügeplatz' : 'Einfügeplätze'}`, sprungMoeglich: true })
   }

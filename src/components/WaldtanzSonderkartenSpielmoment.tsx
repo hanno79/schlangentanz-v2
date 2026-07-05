@@ -23,6 +23,7 @@ Beschreibung: M1dq — sichtbarer Stitch-Spielmoment-Bubble in der Handbuehne fu
 */
 import { useId } from 'react'
 import type { SpielAktion, Spielkarte } from '../engine'
+import { blockadeKey, diebKey, frassKey, fusionKey, schutzKey } from './zielspurKey'
 
 interface WaldtanzSonderkartenSpielmomentProps {
   ausgewaehlteHandkarte: Spielkarte
@@ -47,22 +48,24 @@ function zielartLabel(aktion: SpielAktion): string {
   }
 }
 
-function zielspurKeyAusAktion(aktion: SpielAktion, aktiverSpielerId: string): string | null {
-  // Spiegelt exakt die Schluessel-Generierung in Schlangenbereich.tsx.
+function zielspurKeyAusAktion(aktion: SpielAktion): string | null {
+  // ÄNDERUNG [05.07.2026]: gemeinsame Factory statt handkopierter Schlüssel. Der frühere Code
+  // verwendete für Frass die aktiverSpielerId (statt der Ziel-Spieler-Id) und ließ bei
+  // Blockade/Dieb die zielSpielerId weg — dadurch trafen die Sprung-Links die Brett-Anker nicht.
   switch (aktion.typ) {
     case 'SchlangenfrassSpielen': {
       const ziel = aktion.ziele[0]
       if (!ziel) return null
-      return `frass:${aktiverSpielerId}:${ziel.schlangenId}:${ziel.kartenId}`
+      return frassKey(ziel.spielerId, ziel.schlangenId, ziel.kartenId)
     }
     case 'FarbenschutzSpielen':
-      return `schutz:${aktion.zielSchlangenId}`
+      return schutzKey(aktion.zielSchlangenId)
     case 'FarbenfusionSpielen':
-      return `fusion:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+      return fusionKey(aktion.zielSchlangenId, aktion.zielKartenId)
     case 'SchlangenblockadeSpielen':
-      return `blockade:${aktion.zielSchlangenId}`
+      return blockadeKey(aktion.zielSpielerId, aktion.zielSchlangenId)
     case 'FarbendiebSpielen':
-      return `dieb:${aktion.zielSchlangenId}:${aktion.zielKartenId}`
+      return diebKey(aktion.zielSpielerId, aktion.zielSchlangenId, aktion.zielKartenId)
     default:
       return null
   }
@@ -71,7 +74,8 @@ function zielspurKeyAusAktion(aktion: SpielAktion, aktiverSpielerId: string): st
 export default function WaldtanzSonderkartenSpielmoment({
   ausgewaehlteHandkarte,
   legaleAktionen,
-  aktiverSpielerId,
+  // aktiverSpielerId bleibt Teil der Props (Aufrufer-Kompatibilität), wird aber seit der
+  // zielspurKey-Factory-Migration nicht mehr benötigt (Ziel-Spieler-Id kommt aus der Aktion).
   onZielspurAktivieren,
 }: WaldtanzSonderkartenSpielmomentProps) {
   const regionLabelId = useId()
@@ -89,7 +93,7 @@ export default function WaldtanzSonderkartenSpielmoment({
   if (!ersteAktion) return null
 
   const zielart = zielartLabel(ersteAktion)
-  const zielspurKey = zielspurKeyAusAktion(ersteAktion, aktiverSpielerId)
+  const zielspurKey = zielspurKeyAusAktion(ersteAktion)
   const sonderkarteName = ausgewaehlteHandkarte.name
   // Daten-attributierter Anker-Span: macht die zielspurKey zu einer echten
   // DOM-ID, sodass der Link `href="#key"` ein real existierendes Element

@@ -20,6 +20,7 @@ import WaldtanzZielspur from './WaldtanzZielspur'
 import SchlangenPfadKarte from './SchlangenPfadKarte'
 import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import SchlangenWertungsplakette from './SchlangenWertungsplakette'
+import { frassKey, fusionKey, schutzKey } from './zielspurKey'
 import SchlangenStartzone from './SchlangenStartzone'
 import WaldtanzErsteSchlangeOnboarding from './WaldtanzErsteSchlangeOnboarding'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
@@ -416,8 +417,8 @@ export default function Schlangenbereich({
                       const farbenfusionPaar = ermittleFarbenfusionPaarInfo(schlange.karten, kartenIndex, schlange.id, ausgewaehlteHandkarteId, farbenfusionAktionen)
                       const farbenfusionAktion = farbenfusionPaar?.istStartkarte ? farbenfusionPaar.aktion : null
                       const schlangenfrassAktion = findeSchlangenfrassAktion(schlange.id, karte.id, ausgewaehlteHandkarteId)
-                      const farbenfusionZielspurKey = farbenfusionAktion ? `fusion:${schlange.id}:${karte.id}` : undefined
-                      const schlangenfrassZielspurKey = schlangenfrassAktion ? `frass:${aktiverSpieler.id}:${schlange.id}:${karte.id}` : undefined
+                      const farbenfusionZielspurKey = farbenfusionAktion ? fusionKey(schlange.id, karte.id) : undefined
+                      const schlangenfrassZielspurKey = schlangenfrassAktion ? frassKey(aktiverSpieler.id, schlange.id, karte.id) : undefined
                       const istFarbenfusionPaar = Boolean(farbenfusionPaar)
                       const istSonderaktionZiel = Boolean(farbenfusionAktion || istFarbenfusionPaar || schlangenfrassAktion)
                       const istKopf = kartenIndex === 0
@@ -462,8 +463,8 @@ export default function Schlangenbereich({
                       aktion={farbenschutzAktion}
                       label={aktionsLabel(farbenschutzAktion)}
                       onAktion={onAktion}
-                      zielspurKey={`schutz:${schlange.id}`}
-                      hervorgehoben={effektiverZielspurKey === `schutz:${schlange.id}`}
+                      zielspurKey={schutzKey(schlange.id)}
+                      hervorgehoben={effektiverZielspurKey === schutzKey(schlange.id)}
                     />
                   )}
                   {zeigeSchlangenhaeutungBrettziel && (

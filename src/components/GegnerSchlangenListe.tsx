@@ -13,6 +13,7 @@ import SchlangenPfadKarte from './SchlangenPfadKarte'
 import FarbendiebBeutekorb from './FarbendiebBeutekorb'
 import SchlangenblockadeFessel from './SchlangenblockadeFessel'
 import SchlangenfrassBissspur from './SchlangenfrassBissspur'
+import { blockadeKey, diebKey } from './zielspurKey'
 import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 
 export type FrassZiel = { spielerId: string; schlangenId: string; kartenId: string }
@@ -136,7 +137,7 @@ export default function GegnerSchlangenListe({
                 {schlange.karten.map((karte, kartenIndex) => {
                   const frassZiel = { spielerId: eintrag.id, schlangenId: schlange.id, kartenId: karte.id }
                   const diebAktionen = findeFarbendiebAktionen(eintrag.id, schlange.id, karte.id)
-                  const diebZielspurKey = diebAktionen.length > 0 ? `dieb:${eintrag.id}:${schlange.id}:${karte.id}` : undefined
+                  const diebZielspurKey = diebAktionen.length > 0 ? diebKey(eintrag.id, schlange.id, karte.id) : undefined
                   const frassAktionen = findeSchlangenfrassZweiZielAktionen(frassZiel)
                   const istFrassZiel = frassAktionen.length > 0
                   const istFrassAusgewaehlt = Boolean(aktivesErstesFrassZiel && istGleichesFrassZiel(aktivesErstesFrassZiel, frassZiel))
@@ -194,8 +195,8 @@ export default function GegnerSchlangenListe({
                   zielSchlangenId={schlange.id}
                   onAktion={onAktion}
                   aktionsLabel={aktionsLabel}
-                  zielspurKey={`blockade:${eintrag.id}:${schlange.id}`}
-                  hervorgehoben={aktiverZielspurKey === `blockade:${eintrag.id}:${schlange.id}`}
+                  zielspurKey={blockadeKey(eintrag.id, schlange.id)}
+                  hervorgehoben={aktiverZielspurKey === blockadeKey(eintrag.id, schlange.id)}
                 />
               )}
               <span>Status: {schlangenStatusLabel(schlange.zustand)}</span>
