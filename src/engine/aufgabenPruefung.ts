@@ -215,18 +215,33 @@ export function ermittleErfuellteOffeneAufgaben(zustand: Spielzustand): Aufgaben
   return zustand.offeneAufgaben.filter((aufgabe) => aufgabePruefungen[aufgabe.id]?.(zustand) ?? false);
 }
 
+// ÄNDERUNG [05.07.2026]: K4 — prüft die geheime Aufgabe des aktiven Spielers gegen seine Schlangen.
+export function pruefeGeheimeAufgabe(zustand: Spielzustand): boolean {
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  return aufgabePruefungen[aktiverSpieler.geheimeAufgabe.id]?.(zustand) ?? false;
+}
+
 export function erfuelleOffeneAufgaben(zustand: Spielzustand, erfuellteAufgaben: AufgabenkarteInfo[]): Spielzustand {
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   const erfuellteIds = new Set(erfuellteAufgaben.map((aufgabe) => aufgabe.id));
   const offeneAufgaben = zustand.offeneAufgaben.filter((aufgabe) => !erfuellteIds.has(aufgabe.id));
   const nachgezogeneAufgaben = zustand.aufgabenStapel.slice(0, erfuellteAufgaben.length);
 
+  // ÄNDERUNG [05.07.2026]: K5 — im Endspurt erfüllte offene Aufgaben für die Verdopplung merken.
+  const patch: Partial<Spielzustand['spieler'][number]> = {
+    erfuellteAufgaben: [...aktiverSpieler.erfuellteAufgaben, ...erfuellteAufgaben],
+  };
+  if (zustand.spielphase === 'Endspurt') {
+    patch.endspurtVerdoppelteAufgabenIds = [
+      ...(aktiverSpieler.endspurtVerdoppelteAufgabenIds ?? []),
+      ...erfuellteAufgaben.map((aufgabe) => aufgabe.id),
+    ];
+  }
+
   return {
     ...zustand,
     offeneAufgaben: [...offeneAufgaben, ...nachgezogeneAufgaben],
     aufgabenStapel: zustand.aufgabenStapel.slice(erfuellteAufgaben.length),
-    spieler: aktualisiereAktivenSpieler(zustand, {
-      erfuellteAufgaben: [...aktiverSpieler.erfuellteAufgaben, ...erfuellteAufgaben],
-    }),
+    spieler: aktualisiereAktivenSpieler(zustand, patch),
   };
 }

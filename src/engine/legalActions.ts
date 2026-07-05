@@ -317,7 +317,38 @@ function hatLegaleSchlangenfrassAktionen(zustand: Spielzustand): boolean {
   if (!aktiverSpieler.hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenfrass')) {
     return false;
   }
-  return zustand.spieler.some((spieler) => spieler.schlangen.some((schlange) => schlange.karten.length > 0));
+  // ÄNDERUNG [05.07.2026]: K3 — exakt statt überapproximiert: 1-Ziel-Frass braucht eine
+  // eigene Kartenposition, 2-Ziel-Frass mind. zwei gegnerische Kartenpositionen.
+  const eigeneKarten = aktiverSpieler.schlangen.reduce((summe, schlange) => summe + schlange.karten.length, 0);
+  const gegnerKarten = zustand.spieler.reduce(
+    (summe, spieler, index) =>
+      index === zustand.aktiverSpielerIndex
+        ? summe
+        : summe + spieler.schlangen.reduce((s, schlange) => s + schlange.karten.length, 0),
+    0,
+  );
+  return eigeneKarten >= 1 || gegnerKarten >= 2;
+}
+
+function hatLegaleFarbendiebAktionen(zustand: Spielzustand): boolean {
+  const erlaubteSonderkarten = maxSonderkartenProZug(zustand);
+  if (zustand.zugpflichten.gespielteSonderkarten >= erlaubteSonderkarten) {
+    return false;
+  }
+  const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
+  if (!aktiverSpieler.hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbendieb')) {
+    return false;
+  }
+  // Farbendieb braucht eine eigene Schlange (Einfügeziel) und mind. eine stehlbare
+  // gegnerische Farbkarte (K1: nur Farbkarten sind stehlbar).
+  if (aktiverSpieler.schlangen.length === 0) {
+    return false;
+  }
+  return zustand.spieler.some(
+    (spieler, index) =>
+      index !== zustand.aktiverSpielerIndex &&
+      spieler.schlangen.some((schlange) => schlange.karten.some((karte) => karte.typ === 'Farbkarte')),
+  );
 }
 
 function maxFarbkartenProZug(zustand: Spielzustand): number {
@@ -496,7 +527,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     if (karte.typ === 'Sonderkarte' && zustand.zugpflichten.gespielteSonderkarten >= erlaubteSonderkarten) {
       return verboten('Pro Zug darf höchstens eine Sonderkarte gespielt werden.');
     }
-    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangenblockadeAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand) || hatLegaleFarbenschutzAktionen(zustand) || hatLegaleFarbenfusionAktionen(zustand) || hatLegaleSchlangenhaeutungAktionen(zustand) || hatLegaleSchlangenfrassAktionen(zustand) || hatLegaleVerdopplerAktionen(zustand)) {
+    if (hatLegaleSchlangenbauAktionen(zustand) || hatLegaleSchlangenblockadeAktionen(zustand) || hatLegaleSchlangengrubeAktionen(zustand) || hatLegaleFarbenschutzAktionen(zustand) || hatLegaleFarbenfusionAktionen(zustand) || hatLegaleSchlangenhaeutungAktionen(zustand) || hatLegaleSchlangenfrassAktionen(zustand) || hatLegaleFarbendiebAktionen(zustand) || hatLegaleVerdopplerAktionen(zustand)) {
       return verboten('Pflicht-Abwurf ist nur erlaubt, wenn keine spielbare Karte verfügbar ist.');
     }
     return { erlaubt: true };
@@ -692,8 +723,13 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     if (!zielSchlange) {
       return verboten('Die ausgewählte Zielschlange ist ungültig.');
     }
-    if (!zielSchlange.karten.some((eintrag) => eintrag.id === aktion.zielKartenId)) {
+    const zielKarte = zielSchlange.karten.find((eintrag) => eintrag.id === aktion.zielKartenId);
+    if (!zielKarte) {
       return verboten('Die ausgewählte Zielkarte ist ungültig.');
+    }
+    // ÄNDERUNG [05.07.2026]: K1 — nur Farbkarten sind stehlbar.
+    if (zielKarte.typ !== 'Farbkarte') {
+      return verboten('Farbendieb kann nur eine Farbkarte stehlen.');
     }
     const eigeneSchlange = aktiverSpieler.schlangen.find((s) => s.id === aktion.eigeneSchlangenId);
     if (!eigeneSchlange) {
@@ -982,6 +1018,8 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
       if (zielSpieler.id === aktiverSpieler.id) continue;
       for (const zielSchlange of zielSpieler.schlangen) {
         for (const zielKarte of zielSchlange.karten) {
+          // ÄNDERUNG [05.07.2026]: K1 — nur Farbkarten sind stehlbar.
+          if (zielKarte.typ !== 'Farbkarte') continue;
           for (const eigeneSchlange of aktiverSpieler.schlangen) {
             for (let einfügeIndex = 0; einfügeIndex <= eigeneSchlange.karten.length; einfügeIndex += 1) {
               const kandidat: FarbendiebSpielenAktion = {

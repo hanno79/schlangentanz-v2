@@ -244,7 +244,16 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   function handleZugBeenden() { wechsleZustand('Zug beenden', z => beendeZug(z, { pflichtenErfuellt: true })) }
   function handleAusspielphaseStarten() { wechsleZustand('Ausspielphase starten', z => starteAusspielphase(z)) }
   function handleKiZugVorspulen() {
-    const ergebnis = spieleKiZuegeBisZumMenschen(zustand)
+    let ergebnis
+    try {
+      ergebnis = spieleKiZuegeBisZumMenschen(zustand)
+    } catch (fehler) {
+      // Defensive: eine unerwartete Engine-Exception darf das Spiel nicht einfrieren.
+      const meldung = fehler instanceof Error ? fehler.message : 'Unbekannter Fehler'
+      setLetzteAktion('Gegnerzüge abgebrochen')
+      setKiZugProtokoll([`KI-Zug abgebrochen: ${meldung}`])
+      return
+    }
     setLetzteAktion('Gegnerzüge vorgespult')
     setKiZugProtokoll(ergebnis.protokoll)
     setHervorgehobenesAktionszielId(null)

@@ -142,6 +142,7 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
 - Abwerfen gilt als Karte gespielt für die Zugpflicht.
 - Abgeworfene Karten kommen offen auf den Ablagestapel.
+- Hat der aktive Spieler keine Handkarten (z. B. in der Endrunde, in der nicht mehr nachgezogen wird, nachdem Farbenschutz-Reaktionen außerhalb seines Zuges seine Karten verbraucht haben), entfällt die Zugpflicht: Der Zug ist ohne gespielte Karte beendbar. So kann kein Deadlock entstehen.
 
 ### R2.4 Aufgabenprüfung
 
@@ -229,7 +230,7 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
   - `FarbendiebSpielen`
     - Nur mit `Farbendieb`.
     - Nur für den aktiven Spieler.
-    - Nur auf eine gegnerische Schlange und eine Karte daraus.
+    - Nur auf eine gegnerische Schlange und eine **Farbkarte** daraus; Sonderkarten (inkl. fusionierter Farbenfusion- oder Regenbogenschlangen-Karten) sind nicht stehlbar.
     - Die gestohlene Karte kann an einer beliebigen Position in eine eigene Schlange eingefügt werden, auch zwischen bestehende Karten.
     - Der Angriff kann durch den Zielspieler mit Farbenschutz abgewehrt werden.
   - `SchlangenblockadeSpielen`
@@ -375,9 +376,9 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
 - Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
 - Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
-- Farbendieb: Der aktive Spieler wählt eine Karte aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
+- Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
 - Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt.
-- Schlangenfrass: Der aktive Spieler wählt 1 oder 2 Karten aus beliebigen Schlangen. Geschützte Ziele werden per Farbenschutz-Reaktionskette im Uhrzeigersinn abgewickelt.
+- Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).
 - Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte. Die Fusion zählt als eine Punkteeinheit; für den Vielfaltbonus wird sie ignoriert.
 - Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen. Die Karte aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte. Die zusätzliche Karte darf eine weitere Farbkarte oder eine weitere Sonderkarte sein; insgesamt sind dann bis zu 3 Karten möglich. Der Bonus gilt nur für den aktuellen Zug, und Verdoppler selbst zählt als Sonderkarte. Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren.
 - Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet.

@@ -58,6 +58,13 @@ export default function WertungPanel({
         <>
           <p>Spielende erreicht.</p>
           <p>Ergebnis: {ergebnisText}</p>
+          <ul className="wertung-geheime-aufgaben" aria-label="Aufgedeckte geheime Aufgaben">
+            {zustand.spieler.map((spieler) => (
+              <li key={spieler.id}>
+                {spielerNameFuerId(spieler.id)} — Geheime Aufgabe: {spieler.geheimeAufgabe.name} ({spieler.geheimeAufgabe.punkte} Punkte) — {spieler.geheimeAufgabeErfuellt ? 'erfüllt' : 'nicht erfüllt'}
+              </li>
+            ))}
+          </ul>
         </>
       )}
       <section className="waldtanz-rangtafel" aria-labelledby={rangtafelTitelId}>

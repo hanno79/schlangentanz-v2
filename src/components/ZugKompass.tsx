@@ -8,6 +8,7 @@ Beschreibung: Board-naher Zugkompass fuer gefuehrte Phasenwechsel im Waldtanz-Sp
 import { ermittleReaktionsAktionen, type SpielAktion, type Spielzustand } from '../engine'
 import { aktionsLabel } from '../aktionsLabel'
 import { zugphaseLabel } from '../zugphaseLabels'
+import { ausspielphaseBeendbar } from '../spielLabelHelpers'
 
 interface ZugKompassProps {
   zustand: Spielzustand
@@ -36,9 +37,9 @@ function hinweisLabel(zustand: Spielzustand, ueberhand: number, zeigtKiVorspulen
   if (zeigtKiVorspulen) return 'Spule die Gegnerzüge vor, bis der Waldpfad wieder bei dir landet.'
   switch (zustand.zugphase) {
     case 'Ausspielphase':
-      return zustand.zugpflichten.gespielteKarten > 0
-        ? 'Deine Karte liegt auf dem Brett. Führe den Zug zur Aufgabenprüfung weiter.'
-        : 'Wähle eine Handkarte und spiele sie direkt im Schlangenbereich, bevor du den Zug weiterführst.'
+      if (zustand.zugpflichten.gespielteKarten > 0) return 'Deine Karte liegt auf dem Brett. Führe den Zug zur Aufgabenprüfung weiter.'
+      if (zustand.spieler[zustand.aktiverSpielerIndex].hand.length === 0) return 'Keine Handkarten mehr — führe den Zug zur Aufgabenprüfung weiter.'
+      return 'Wähle eine Handkarte und spiele sie direkt im Schlangenbereich, bevor du den Zug weiterführst.'
     case 'Aufgabenpruefung':
       return 'Prüfe deine offenen und geheimen Aufgaben, dann geht es zum Zugabschluss.'
     case 'Zugabschluss':
@@ -116,7 +117,7 @@ export default function ZugKompass({
   const blockiertDurchReaktion = zustand.pendingReaktion !== null
   const reaktionsAktionen = blockiertDurchReaktion ? ermittleReaktionsAktionen(zustand) : []
   const farbenschutzId = abwehrKartenId(reaktionsAktionen)
-  const zeigtWeiterZurAufgabenpruefung = !blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0
+  const zeigtWeiterZurAufgabenpruefung = !blockiertDurchReaktion && !zeigtKiVorspulen && ausspielphaseBeendbar(zustand)
   const zeigtGegnerzugStatus = !zeigtKiVorspulen && kiZugProtokoll.length > 0 && zustand.spieler[zustand.aktiverSpielerIndex].steuerung === 'Mensch'
 
   return (

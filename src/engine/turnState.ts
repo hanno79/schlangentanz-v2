@@ -7,7 +7,7 @@ Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwische
 
 import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
 import type { Spielkarte, SonderkarteInfo, Spielzustand, Spielphase, PendingFarbendiebAbwehr, PendingSchlangenfrassAbwehr } from './types';
-import { ermittleErfuellteOffeneAufgaben, erfuelleOffeneAufgaben } from './aufgabenPruefung';
+import { ermittleErfuellteOffeneAufgaben, erfuelleOffeneAufgaben, pruefeGeheimeAufgabe } from './aufgabenPruefung';
 import { ermittleFarbgruppen } from './colorGroups';
 
 export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
@@ -49,6 +49,17 @@ function entferneKarteAusSchlange(schlangeKarten: Spielkarte[], kartenId: string
   return schlangeKarten.filter((karte) => karte.id !== kartenId);
 }
 
+// ÄNDERUNG [05.07.2026]: K2 — nach dem Entfernen von Karten dürfen keine farbenfusionen-Einträge
+// zurückbleiben, deren Farbenfusion-Karte nicht mehr in der Schlange liegt (sonst wirft die
+// Serialisierungs-Validierung und die Wertung).
+function bereinigeFarbenfusionen<S extends { karten: Spielkarte[]; farbenfusionen?: { kartenId: string; punkte: number }[] }>(schlange: S): S {
+  if (schlange.farbenfusionen === undefined) return schlange;
+  const vorhandeneIds = new Set(schlange.karten.map((karte) => karte.id));
+  const bereinigt = schlange.farbenfusionen.filter((eintrag) => vorhandeneIds.has(eintrag.kartenId));
+  if (bereinigt.length === schlange.farbenfusionen.length) return schlange;
+  return { ...schlange, farbenfusionen: bereinigt.length > 0 ? bereinigt : undefined };
+}
+
 function sortiereSchlangenfrassZiele(
   zustand: Spielzustand,
   ziele: { spielerIndex: number; schlangenId: string; kartenId: string }[],
@@ -87,7 +98,7 @@ function aktualisiereSchlangenfrassPending(
       ? spieler.schlangen
       : spieler.schlangen.map((schlange) =>
           schlange.id === ziel.schlangenId
-            ? { ...schlange, karten: entferneKarteAusSchlange(schlange.karten, ziel.kartenId) }
+            ? bereinigeFarbenfusionen({ ...schlange, karten: entferneKarteAusSchlange(schlange.karten, ziel.kartenId) })
             : schlange,
         );
     return {
@@ -206,7 +217,7 @@ function entferneSchlangenfrassAusSchlangen(
       }
     }
 
-    return { ...schlange, karten: verbliebeneKarten };
+    return bereinigeFarbenfusionen({ ...schlange, karten: verbliebeneKarten });
   });
 }
 
@@ -415,7 +426,10 @@ export function beendeAusspielphase(
   if (!Number.isInteger(ausgespielteKarten)) {
     throw new Error('Die Anzahl ausgespielter Karten muss eine ganze Zahl sein.');
   }
-  if (ausgespielteKarten < 1) {
+  // ÄNDERUNG [05.07.2026]: H2 — ohne Handkarten (etwa nach Farbenschutz-Reaktionen im Endspurt,
+  // wo nicht mehr nachgezogen wird) besteht keine Zugpflicht; der Zug ist regulär beendbar.
+  const handLeer = zustand.spieler[zustand.aktiverSpielerIndex].hand.length === 0;
+  if (ausgespielteKarten < 1 && !handLeer) {
     throw new Error('Die Ausspielphase darf erst nach mindestens einer gespielten Karte beendet werden.');
   }
   const erlaubtesLimit = MAX_KARTEN_PRO_ZUG + (zustand.zugpflichten.verdopplerBonusAktiv === true ? 1 : 0);
@@ -439,11 +453,16 @@ export function beendeAufgabenpruefung(
   }
 
   const erfuellteAufgaben = ermittleErfuellteOffeneAufgaben(zustand);
-  if (erfuellteAufgaben.length > 0) {
-    return { ...erfuelleOffeneAufgaben(zustand, erfuellteAufgaben), zugphase: 'Zugabschluss' };
-  }
+  const nachOffenen = erfuellteAufgaben.length > 0 ? erfuelleOffeneAufgaben(zustand, erfuellteAufgaben) : zustand;
 
-  return { ...zustand, zugphase: 'Zugabschluss' };
+  // ÄNDERUNG [05.07.2026]: K4 — geheime Aufgabe prüfen und sticky markieren.
+  const bereitsErfuellt = nachOffenen.spieler[nachOffenen.aktiverSpielerIndex].geheimeAufgabeErfuellt === true;
+  const geheimErfuellt = bereitsErfuellt || pruefeGeheimeAufgabe(nachOffenen);
+  const mitGeheim = geheimErfuellt && !bereitsErfuellt
+    ? { ...nachOffenen, spieler: aktualisiereAktivenSpieler(nachOffenen, { geheimeAufgabeErfuellt: true }) }
+    : nachOffenen;
+
+  return { ...mitGeheim, zugphase: 'Zugabschluss' };
 }
 
 export function werfeUeberzaehligeHandkartenAb(
@@ -825,6 +844,11 @@ export function spieleFarbendieb(
   const zielKarte = zielSchlange.karten.find((eintrag) => eintrag.id === zielKartenId);
   if (!zielKarte) {
     throw new Error('Die ausgewählte Zielkarte ist ungültig.');
+  }
+  // ÄNDERUNG [05.07.2026]: K1 — Farbendieb darf nur Farbkarten stehlen. Gestohlene Sonderkarten
+  // (insb. fusionierte Farbenfusion-Karten) erzeugten sonst einen Wertungs-Crash.
+  if (zielKarte.typ !== 'Farbkarte') {
+    throw new Error('Farbendieb kann nur eine Farbkarte stehlen.');
   }
   const eigeneSchlange = aktiverSpieler.schlangen.find((s) => s.id === eigeneSchlangenId);
   if (!eigeneSchlange) {
@@ -1364,7 +1388,10 @@ export function spieleSchlangenfrass(
       spielerIndex: zielSpielerIndex,
       schlangenId: ziel.schlangenId,
       kartenId: ziel.kartenId,
-      hatFarbenschutz: pruefeFarbenschutzImHaufen(zielSpieler.hand) !== null,
+      // ÄNDERUNG [05.07.2026]: A4 — die Farbenschutz-Reaktionskette gilt nur für gegnerische
+      // Ziele; eigene Ziele werden nie in eine Selbst-Reaktion überführt.
+      hatFarbenschutz:
+        zielSpielerIndex !== zustand.aktiverSpielerIndex && pruefeFarbenschutzImHaufen(zielSpieler.hand) !== null,
     });
   }
 

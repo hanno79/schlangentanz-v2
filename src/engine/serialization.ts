@@ -66,6 +66,8 @@ export function deserialisiere(json: string): Spielzustand {
   migrierePendingReaktionVorR78(parsed);
   migriereSonderkartenHistorieVorR94(parsed);
   migriereSchlangentanzHistorieVorR97(parsed);
+  migriereGeheimeAufgabeErfuelltVorK4(parsed);
+  migriereEndspurtVerdopplungVorK5(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -119,6 +121,28 @@ function migriereSchlangentanzHistorieVorR97(wert: unknown): void {
     if (!Object.prototype.hasOwnProperty.call(spieler, 'schlangenhaeutungDreiergruppen')) {
       // ÄNDERUNG [07.06.2026]: R97 migriert Altstände ohne Schlangentanz-Historie auf 0.
       spieler['schlangenhaeutungDreiergruppen'] = 0;
+    }
+  }
+}
+
+function migriereGeheimeAufgabeErfuelltVorK4(wert: unknown): void {
+  if (!istObjekt(wert) || !Array.isArray(wert['spieler'])) return;
+  for (const spieler of wert['spieler']) {
+    if (!istObjekt(spieler)) continue;
+    if (!Object.prototype.hasOwnProperty.call(spieler, 'geheimeAufgabeErfuellt')) {
+      // ÄNDERUNG [05.07.2026]: K4 — Altstände ohne Flag gelten als "nicht erfüllt".
+      spieler['geheimeAufgabeErfuellt'] = false;
+    }
+  }
+}
+
+function migriereEndspurtVerdopplungVorK5(wert: unknown): void {
+  if (!istObjekt(wert) || !Array.isArray(wert['spieler'])) return;
+  for (const spieler of wert['spieler']) {
+    if (!istObjekt(spieler)) continue;
+    if (!Object.prototype.hasOwnProperty.call(spieler, 'endspurtVerdoppelteAufgabenIds')) {
+      // ÄNDERUNG [05.07.2026]: K5 — Altstände ohne Feld haben keine verdoppelten Aufgaben.
+      spieler['endspurtVerdoppelteAufgabenIds'] = [];
     }
   }
 }
@@ -434,6 +458,32 @@ function validiereSpieler(wert: unknown, verwendeteIds: Set<string>): asserts we
     throw new Error('Ungültiger Spielzustand: spieler.geheimeAufgabe fehlt.');
   }
   validiereAufgabenkarte(spieler['geheimeAufgabe'], 'spieler.geheimeAufgabe', verwendeteIds);
+
+  // ÄNDERUNG [05.07.2026]: K4 — Flag ist optional; wenn vorhanden, muss es ein Boolean sein.
+  const geheimeAufgabeErfuellt = spieler['geheimeAufgabeErfuellt'];
+  if (geheimeAufgabeErfuellt !== undefined && typeof geheimeAufgabeErfuellt !== 'boolean') {
+    throw new Error('Ungültiger Spielzustand: spieler.geheimeAufgabeErfuellt muss ein Boolean sein.');
+  }
+
+  // ÄNDERUNG [05.07.2026]: K5 — endspurtVerdoppelteAufgabenIds ist optional; wenn vorhanden,
+  // ein String-Array, dessen Ids zu erfüllten Aufgaben des Spielers gehören müssen.
+  const endspurtIds = spieler['endspurtVerdoppelteAufgabenIds'];
+  if (endspurtIds !== undefined) {
+    const idListe = erwarteArray(endspurtIds, 'spieler.endspurtVerdoppelteAufgabenIds');
+    const erfuellteIds = new Set(
+      erwarteArray(spieler['erfuellteAufgaben'], 'spieler.erfuellteAufgaben').map((a) =>
+        istObjekt(a) ? a['id'] : undefined,
+      ),
+    );
+    for (const id of idListe) {
+      if (typeof id !== 'string' || id.trim() === '') {
+        throw new Error('Ungültiger Spielzustand: spieler.endspurtVerdoppelteAufgabenIds enthält ungültige Id.');
+      }
+      if (!erfuellteIds.has(id)) {
+        throw new Error('Ungültiger Spielzustand: endspurtVerdoppelteAufgabenIds verweist auf nicht erfüllte Aufgabe.');
+      }
+    }
+  }
 
   const schlangen = erwarteArray(spieler['schlangen'], 'spieler.schlangen');
   for (const schlangeWert of schlangen) {

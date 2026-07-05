@@ -11,6 +11,16 @@ zentral typisiert testbar ist.
 
 import type { AufgabenkarteInfo, SpielAktion, Spielzustand } from './engine'
 
+// ÄNDERUNG [05.07.2026]: H2 — die Ausspielphase ist beendbar, sobald mindestens eine Karte
+// gespielt wurde ODER der aktive Spieler keine Handkarten mehr hat (Endrunde ohne Nachziehen).
+export function ausspielphaseBeendbar(zustand: Spielzustand): boolean {
+  return (
+    zustand.zugphase === 'Ausspielphase' &&
+    (zustand.zugpflichten.gespielteKarten > 0 ||
+      zustand.spieler[zustand.aktiverSpielerIndex].hand.length === 0)
+  )
+}
+
 export function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   if (!istEndspurt) return `${a.punkte} Punkte`
   return `${a.punkte} Punkte ×2 = ${a.punkte * 2} Punkte`
@@ -33,6 +43,13 @@ export function naechsterPflichtschrittLabel(
   }
   if (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) {
     return 'Ausspielphase beenden.'
+  }
+  if (
+    zustand.zugphase === 'Ausspielphase' &&
+    zustand.zugpflichten.gespielteKarten === 0 &&
+    zustand.spieler[zustand.aktiverSpielerIndex].hand.length === 0
+  ) {
+    return 'Keine Handkarten — Ausspielphase beenden.'
   }
   if (zustand.zugphase === 'Aufgabenpruefung') return 'Aufgabenprüfung beenden.'
   if (zustand.zugphase === 'Zugabschluss') return 'Zug beenden.'

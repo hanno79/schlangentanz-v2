@@ -66,6 +66,13 @@ export interface Spieler {
   // Vorher: `| null` mit Factory `?? null` und Validation-Throw → Typ-Inkonsistenz.
   // Jetzt: non-nullable, Factory wirft Exception bei leerem Aufgabenstapel statt stille Inkonsistenz.
   geheimeAufgabe: AufgabenkarteInfo;
+  // ÄNDERUNG [05.07.2026]: K4 — sticky Flag: sobald die geheime Aufgabe einmal in einer
+  // Aufgabenprüfung erfüllt war, zählt sie in der Wertung (einfach, nie verdoppelt).
+  // Optional für Abwärtskompatibilität mit Altständen; undefined == false.
+  geheimeAufgabeErfuellt?: boolean;
+  // ÄNDERUNG [05.07.2026]: K5 — Ids der im Endspurt erfüllten OFFENEN Aufgaben; diese zählen
+  // in der Wertung doppelt (R6.4). Optional/abwärtskompatibel; undefined == keine.
+  endspurtVerdoppelteAufgabenIds?: string[];
 }
 
 export interface PendingSchlangengrubeAbwehr {

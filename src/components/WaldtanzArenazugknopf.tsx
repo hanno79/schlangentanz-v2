@@ -5,6 +5,7 @@ Version: 1.0
 Beschreibung: Prominente Waldtanz-Zugaktion an der Hand-/Brettkante fuer den naechsten Phasenschritt.
 */
 import type { Spielzustand } from '../engine'
+import { ausspielphaseBeendbar } from '../spielLabelHelpers'
 
 interface WaldtanzArenazugknopfProps {
   id?: string
@@ -32,7 +33,7 @@ function ermittleArenazugAktion({
   onAusspielphaseStarten,
 }: WaldtanzArenazugknopfProps): ArenazugAktion | null {
   if (zustand.pendingReaktion || zeigtKiVorspulen) return null
-  if (zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0) return { label: 'Weiter zur Aufgabenprüfung', onClick: onAusspielphaseBeenden }
+  if (ausspielphaseBeendbar(zustand)) return { label: 'Weiter zur Aufgabenprüfung', onClick: onAusspielphaseBeenden }
   if (zustand.zugphase === 'Aufgabenpruefung') return { label: 'Weiter zum Zugabschluss', onClick: onAufgabenpruefungBeenden }
   if (zustand.zugphase === 'Zugabschluss' && ueberhand > 0) return { label: 'Überzählige Karten abwerfen', onClick: onUeberzaehligeKartenAbwerfen }
   if (zustand.zugphase === 'Zugabschluss') return { label: 'Zug an nächsten Spieler geben', onClick: onZugBeenden }

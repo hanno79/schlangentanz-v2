@@ -246,11 +246,21 @@ export interface SpielerAufgabenPunkteErgebnis {
 }
 
 export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgabenPunkteErgebnis {
+  // ÄNDERUNG [05.07.2026]: K5 — im Endspurt erfüllte offene Aufgaben zählen doppelt (R6.4).
+  const verdoppelt = new Set(spieler.endspurtVerdoppelteAufgabenIds ?? []);
   const aufgaben = spieler.erfuellteAufgaben.map((a) => ({
     aufgabenId: a.id,
     name: a.name,
-    punkte: a.punkte,
+    punkte: verdoppelt.has(a.id) ? a.punkte * 2 : a.punkte,
   }));
+  // ÄNDERUNG [05.07.2026]: K4 — erfüllte geheime Aufgabe zählt einfach (nie verdoppelt).
+  if (spieler.geheimeAufgabeErfuellt === true) {
+    aufgaben.push({
+      aufgabenId: spieler.geheimeAufgabe.id,
+      name: spieler.geheimeAufgabe.name,
+      punkte: spieler.geheimeAufgabe.punkte,
+    });
+  }
   const gesamtPunkte = aufgaben.reduce((sum, a) => sum + a.punkte, 0);
   return { gesamtPunkte, aufgaben };
 }

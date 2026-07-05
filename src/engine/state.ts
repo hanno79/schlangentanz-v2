@@ -108,6 +108,8 @@ function erstelleSpielerListe(
     // ÄNDERUNG [29.06.2026]: R181 — Spec: jeder Spieler hat genau eine geheime Aufgabenkarte.
     // Factory wirft Exception wenn der Aufgabenstapel leer ist (statt stille `null`-Inkonsistenz).
     geheimeAufgabe: aufgabenStapel.shift() ?? throwEmptyAufgabenStapel(),
+    geheimeAufgabeErfuellt: false,
+    endspurtVerdoppelteAufgabenIds: [],
   }));
 }
 

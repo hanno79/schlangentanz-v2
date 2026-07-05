@@ -24,6 +24,7 @@ import { useId } from 'react'
 import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '../engine'
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
 import SchlangenhaeutungReihenfolgeAuswahl from './SchlangenhaeutungReihenfolgeAuswahl'
+import { ausspielphaseBeendbar } from '../spielLabelHelpers'
 
 
 function erlaubteKartenProZug(zustand: Spielzustand): number {
@@ -320,7 +321,7 @@ export default function AktionenPanel({
               tabIndex={-1}
             >
               <h3 id={phasenaktionTitelId}>Phasenaktion</h3>
-              {zustand.zugphase === 'Ausspielphase' && zustand.zugpflichten.gespielteKarten > 0 && !hatReaktionsaktion && (
+              {ausspielphaseBeendbar(zustand) && !hatReaktionsaktion && (
                 <button onClick={onAusspielphaseBeenden}>
                   Ausspielphase beenden
                 </button>

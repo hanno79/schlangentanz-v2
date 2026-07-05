@@ -89,6 +89,12 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
       }
       const aktionen = ermittleLegaleAktionen(zustand)
       if (aktionen.length === 0) {
+        // H2: Ohne Handkarten (z. B. im Endspurt) besteht keine Zugpflicht — Phase beenden statt hängen.
+        if (spieler.hand.length === 0 && zustand.zugpflichten.gespielteKarten === 0) {
+          protokoll.push(`${name}: keine Handkarten — Ausspielphase beendet.`)
+          zustand = beendeAusspielphase(zustand)
+          continue
+        }
         protokoll.push(`${name}: kann gerade keine Aktion ausführen.`)
         break
       }
