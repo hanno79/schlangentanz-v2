@@ -43,6 +43,18 @@ export type SonderkartenName =
   | 'Farbenfusion'
   | 'Schlangenhaeutung'
 
+// ÄNDERUNG [05.07.2026]: C4 — der Fixture-Schlüssel 'Schlangenhaeutung' (ohne Umlaut) muss auf
+// den echten Engine-Kartennamen 'Schlangenhäutung' abgebildet werden, sonst erkennt die Engine
+// die injizierte Karte nicht.
+const ENGINE_KARTENNAME: Record<SonderkartenName, string> = {
+  Schlangenfrass: 'Schlangenfrass',
+  Farbendieb: 'Farbendieb',
+  Schlangenblockade: 'Schlangenblockade',
+  Farbenschutz: 'Farbenschutz',
+  Farbenfusion: 'Farbenfusion',
+  Schlangenhaeutung: 'Schlangenhäutung',
+}
+
 function farbkarte(id: string, farbe: Farbe, punkte: number): FarbkarteInfo {
   return { typ: 'Farbkarte', id, farbe, punkte }
 }
@@ -103,11 +115,11 @@ export function baueFixtureZustand(
   const sonderkarte: SonderkarteInfo = {
     typ: 'Sonderkarte',
     id: eingabe.sonderkarte.id,
-    name: eingabe.sonderkarte.name,
+    name: ENGINE_KARTENNAME[eingabe.sonderkarte.name],
   }
   const neueHand = [
     sonderkarte,
-    ...entferneSonderkarteMitNamen(aktiverSpieler.hand, eingabe.sonderkarte.name),
+    ...entferneSonderkarteMitNamen(aktiverSpieler.hand, ENGINE_KARTENNAME[eingabe.sonderkarte.name]),
   ]
   const aktiverSpielerNeu: Spieler = {
     ...aktiverSpieler,

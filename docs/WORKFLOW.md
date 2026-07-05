@@ -44,3 +44,16 @@ This project starts cleanly in a new local folder, new GitHub repository, and ne
 7. Codex adversarial review gate
 8. Vercel production gate
 9. Human playability gate
+
+## Test-Hooks (ÄNDERUNG 05.07.2026, C4)
+
+Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
+seit dem Audit-Fix C4 **nur im Dev-Build oder mit gesetztem `VITE_TEST_HOOKS=1`**
+aktiv (siehe `src/testPhaseHook.ts` → `testHooksAktiv()`). In der normal
+ausgelieferten Produktions-App sind sie deaktiviert.
+
+- Die Live-Smokes (`scripts/*.mjs`) laufen gegen die Produktion und benötigen die
+  Hooks. Damit sie weiter funktionieren, muss im Vercel-Projekt die Umgebungs-
+  variable `VITE_TEST_HOOKS=1` gesetzt sein (Preview/Production nach Bedarf).
+- Vitest-Tests brauchen keine Sonderkonfiguration: im Testlauf ist `import.meta.env.DEV`
+  ohnehin `true`, sodass die Hooks dort aktiv bleiben.

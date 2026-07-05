@@ -14,8 +14,16 @@ Beschreibung: testPhaseHook liefert den /game?phase=... Test-Hook, der die App
 import type { Spielzustand } from './engine'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
+// ÄNDERUNG [05.07.2026]: C4 — Test-Hooks (URL-Phasen-Hook + window.__schlangentanzFixture)
+// sind nur im Dev-Build oder mit explizitem VITE_TEST_HOOKS=1 aktiv, damit die ausgelieferte
+// Produktions-App keine ungeschützte Test-Angriffsfläche bietet. Live-Smokes setzen das Flag.
+export function testHooksAktiv(): boolean {
+  return import.meta.env.DEV === true || import.meta.env.VITE_TEST_HOOKS === '1'
+}
+
 export function leseTestPhaseAusUrl(): Spielzustand | null {
   if (typeof window === 'undefined') return null
+  if (!testHooksAktiv()) return null
   const params = new URLSearchParams(window.location.search)
   const phase = params.get('phase')
   if (phase === 'spielende') {

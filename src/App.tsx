@@ -29,7 +29,7 @@ import SpielstatusPanel from './components/SpielstatusPanel'
 import Zugpfad from './components/Zugpfad'
 import ZugKompass from './components/ZugKompass'
 import Partiefortschritt from './components/Partiefortschritt'
-import { leseTestPhaseAusUrl } from './testPhaseHook'
+import { leseTestPhaseAusUrl, testHooksAktiv } from './testPhaseHook'
 import WaldtanzPartieUhr from './components/WaldtanzPartieUhr'
 import WaldtanzSpielerrahmen from './components/WaldtanzSpielerrahmen'
 import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
@@ -188,6 +188,8 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   // Unmount-Pfad in Tests).
   useEffect(() => {
     if (typeof window === 'undefined') return
+    // C4: Fixture-Hook nur im Dev-Build oder mit VITE_TEST_HOOKS=1 installieren.
+    if (!testHooksAktiv()) return
     const w = window as unknown as { __schlangentanzFixture?: (fixture: unknown) => void }
     if (typeof w.__schlangentanzFixture === 'function') return
     const installierterHook = (fixture: unknown): void => {
