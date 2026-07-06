@@ -11365,7 +11365,7 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 }
 
 .waldtanz-seitenmenue__stats-hero-name {
-  font-family: var(--st-font-heading, 'Rubik', sans-serif);
+  font-family: var(--st-font-headline, 'Rubik', sans-serif);
   font-weight: 800;
   font-size: 1.05rem;
   color: var(--st-color-border-strong, #063907);
@@ -11392,7 +11392,7 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 
 .waldtanz-seitenmenue__stats-hero-punkte {
   margin-top: 0.18rem;
-  font-family: var(--st-font-heading, 'Rubik', sans-serif);
+  font-family: var(--st-font-headline, 'Rubik', sans-serif);
   font-weight: 900;
   font-size: 1.6rem;
   color: var(--st-color-primary, #4b6700);
