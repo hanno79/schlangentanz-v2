@@ -91,13 +91,14 @@ describe('M1cn Waldtanz-Zauberpfad', () => {
     window.history.pushState({}, '', '/game')
     render(<App initialZustand={farbendiebZauberpfadZustand()} />)
 
-    const { handBereich, schlangenbereich } = ermittleSpielbereiche()
+    const { spieltisch, handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /farbendieb-m1cn/ }))
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
     const zauberpfade = within(zielspur).getByRole('list', { name: 'Konkrete Zauberpfade' })
     const eintraege = within(zauberpfade).getAllByRole('listitem')
-    const beutekorb = within(schlangenbereich).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-m1cn-beute' })
+    const gegnerlichtung = within(spieltisch).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
+    const beutekorb = within(gegnerlichtung).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-m1cn-beute' })
 
     expect(eintraege).toHaveLength(1)
     expect(eintraege[0]).toHaveTextContent('Beutekorb')

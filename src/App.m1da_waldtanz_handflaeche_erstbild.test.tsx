@@ -85,11 +85,16 @@ describe('M1da Waldtanz-Handfläche und Spielerplakette im Erstbild', () => {
   it('begrenzt die Handkarten-Panel-Höhe so dass die Karten unterhalb von 900 px enden', () => {
     const cleaned = cleanedBlock('.spielbereich--game-route [class~="handkarten-panel"]')
     expect(cleaned).toMatch(/max-height:\s*clamp\(/)
-    // Panel+Spielerplakette+End-Turn sollen in 900 px passen: Panel max 12.1rem.
+    // AENDERUNG (Testfix): M1f (26.06.2026) hob die Panel-Obergrenze bewusst
+    // von 12.1rem auf clamp(13rem, 24vh, 15rem) an, weil das Panel seither
+    // per flex-column zusaetzlich die Handbuehne (Spielerplakette + Status-
+    // Chips) traegt (siehe src/App.m1f_waldtanz_handbuehne.test.tsx, das
+    // exakt diesen Wert als aktuellen Vertrag prueft). Panel+Spielerplakette+
+    // End-Turn sollen weiterhin in 900 px passen: Panel max jetzt 15rem.
     const panelMax = cleaned.match(/max-height:\s*clamp\(([^,]+),\s*([^,]+),\s*([^)]+)\)/)
     expect(panelMax).not.toBeNull()
     if (!panelMax) return
-    expect(parseFloat(panelMax[3].trim())).toBeLessThanOrEqual(12.1)
+    expect(parseFloat(panelMax[3].trim())).toBeLessThanOrEqual(15)
   })
 
   it('begrenzt die Handkarten-Höhe pro Karte (chunky Stitch-Look)', () => {

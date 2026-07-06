@@ -26,7 +26,13 @@ describe('M1f Waldtanz-Seitenmenü', () => {
 
     expect(menue).toHaveClass('waldtanz-seitenmenue')
     expect(within(menue).getByRole('heading', { name: 'Schlangentanz' })).toBeInTheDocument()
-    expect(within(menue).getByText('Forest Spirit')).toBeInTheDocument()
+    // AENDERUNG (Testfix): Ein spaeterer Slice ergaenzte die
+    // ".waldtanz-seitenmenue__stats-hero"-Sektion, die den "Forest Spirit"-
+    // Tag zusaetzlich zur bestehenden ".waldtanz-seitenmenue__profil"-Sektion
+    // zeigt (siehe src/components/WaldtanzSeitenmenue.tsx). Beide Vorkommen
+    // sind sichtbar, daher pruefen wir mit getAllByText auf Praesenz statt
+    // Eindeutigkeit.
+    expect(within(menue).getAllByText('Forest Spirit').length).toBeGreaterThan(0)
     expect(within(menue).getByText('Quest').closest('.waldtanz-seitenmenue__punkt')).toHaveAttribute('aria-current', 'true')
     for (const label of ['Karte', 'Quest', 'Inventar', 'Zauber']) {
       expect(within(menue).getByText(label)).toBeInTheDocument()

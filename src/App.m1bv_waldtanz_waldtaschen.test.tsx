@@ -48,9 +48,13 @@ describe('M1bv Waldtanz-Waldtaschen', () => {
     const verborgeneTexte = cssBlock('.spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__deckreihe"] p,\n  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-ablage__leer"] p + p,\n  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-zugspur__ablage"],\n  .spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-aufgabentafel__hinweis"]')
 
     expect(spielfeld).toMatch(/grid-template-columns:\s*minmax\(0,\s*2\.55fr\)\s*minmax\(9\.5rem,\s*0\.65fr\)/)
-    expect(waldtaschen).toMatch(/width:\s*min\(100%,\s*11\.5rem\)/)
+    // M3f (Pitfall #30 Additive-Override): Wrapper traegt jetzt zusaetzlich
+    // .waldtanz-arenastein__waldobjekte und bekommt volle Breite 100% statt
+    // eines eigenen max-width-Caps; die Breitenbegrenzung liegt seither in der
+    // grid-template-columns-Spalte des Spielfelds (bereits oben geprueft).
+    expect(waldtaschen).toMatch(/width:\s*100%/)
     expect(waldtaschen).toMatch(/overflow-x:\s*visible/)
-    expect(waldtaschen).toMatch(/scroll-padding-block:\s*0\.35rem/)
+    expect(waldtaschen).toMatch(/scroll-padding-block:\s*0\b/)
     const deckreihe = cssBlock('.spielbereich--game-route [class~="waldtanz-waldtaschen"] [class~="waldtanz-nachziehstapel__deckreihe"]')
 
     expect(waldtaschenDirekt).toMatch(/border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/)

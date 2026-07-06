@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
@@ -29,8 +29,13 @@ function waldtanzZustand() {
   return zustand
 }
 
+afterEach(() => {
+  window.history.pushState({}, '', '/')
+})
+
 describe('M1a Waldtanz-Arena-Layout', () => {
   it('macht den Spieltisch zur zentralen Waldarena und schiebt die Hand board-nah nach unten', () => {
+    window.history.pushState({}, '', '/game')
     render(<App initialZustand={waldtanzZustand()} />)
 
     const spielbereich = screen.getByRole('region', { name: 'Spielbereich' })
@@ -44,11 +49,14 @@ describe('M1a Waldtanz-Arena-Layout', () => {
     expect(aktiverSpielerPanel).toHaveClass('info-panel--waldtanz-arena')
     expect(spieltisch).toHaveClass('spielbrett--waldtanz')
     expect(within(schlangenbereich).getByText('waldtanz-eigene-schlange')).toBeInTheDocument()
-    expect(within(schlangenbereich).getByText('waldtanz-gegner-schlange')).toBeInTheDocument()
+    expect(within(spieltisch).getByText('waldtanz-gegner-schlange')).toBeInTheDocument()
     expect(schlangenbereich.compareDocumentPosition(handBereich) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )
-    expect(spieltisch.nextElementSibling).toBe(aktionenBereich)
+    // Auf /game rueckt die Aktionen-Dock als board-nahes Inline-Element in den
+    // Spieltisch selbst (aktionen-panel--brettinline), statt ihm als Geschwister zu folgen.
+    expect(spieltisch.contains(aktionenBereich)).toBe(true)
+    expect(aktionenBereich).toHaveClass('aktionen-panel--brettinline')
 
     expect(cssBlock('spielbereich--waldtanz')).toMatch(/grid-template-areas:/)
     expect(cssBlock('info-panel--waldtanz-arena')).toMatch(/grid-area:\s*arena/)

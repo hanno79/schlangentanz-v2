@@ -58,17 +58,18 @@ describe('M1cm Waldtanz-Zielwahl-Fährten', () => {
     zustand.spieler[1].schlangen = [schlange([farbkarte('rot-m1cm-beute', 'Rot', 7)], 'gegner-schlange-m1cm')]
 
     render(<App initialZustand={zustand} />)
-    const { handBereich, schlangenbereich } = ermittleSpielbereiche()
+    const { spieltisch, handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /farbendieb-m1cm/ }))
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
     const brettwege = within(zielspur).getByRole('list', { name: 'Spielbare Brettwege' })
     const eintraege = within(brettwege).getAllByRole('listitem').map((eintrag) => eintrag.textContent)
+    const gegnerlichtung = within(spieltisch).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
 
     expect(within(zielspur).getByText('1 Brettziel leuchtet')).toBeVisible()
     expect(eintraege).toContain('Gegnerziele1Tischrunde')
-    expect(within(schlangenbereich).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-m1cm-beute' })).toBeVisible()
-    expect(within(schlangenbereich).getAllByRole('button', { name: /Farbendieb-Beutekorb mit Karte farbendieb-m1cm/ })).toHaveLength(2)
+    expect(within(gegnerlichtung).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-m1cm-beute' })).toBeVisible()
+    expect(within(gegnerlichtung).getAllByRole('button', { name: /Farbendieb-Beutekorb mit Karte farbendieb-m1cm/ })).toHaveLength(2)
   })
 
   it('legt den Google-Stitch-Spielobjekt- und Smoke-Vertrag fuer die Zielwahl-Fährten ab', () => {

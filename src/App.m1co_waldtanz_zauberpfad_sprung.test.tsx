@@ -66,14 +66,15 @@ describe('M1co Waldtanz-Zauberpfad-Sprungfaehrten', () => {
     zustand.spieler[2].schlangen = [schlange([farbkarte('blau-gegner-m1co', 'Blau', 1)], 'gegner-b-m1co')]
     render(<App initialZustand={zustand} />)
 
-    const { handBereich, schlangenbereich } = ermittleSpielbereiche()
+    const { spieltisch, handBereich, schlangenbereich } = ermittleSpielbereiche()
     fireEvent.click(within(handBereich).getByRole('button', { name: /schlangenfrass-gegner-m1co/ }))
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
     const pfad = within(zielspur).getByRole('listitem', { name: 'Bissspur-Zauberpfad rot-gegner-m1co + blau-gegner-m1co' })
+    const gegnerlichtung = within(spieltisch).getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
 
     expect(within(pfad).queryByRole('button')).toBeNull()
-    expect(within(schlangenbereich).getByRole('button', { name: 'Schlangenfrass-Ziel 1 im Schlangenbereich wählen: rot-gegner-m1co' })).toBeVisible()
+    expect(within(gegnerlichtung).getByRole('button', { name: 'Schlangenfrass-Ziel 1 im Schlangenbereich wählen: rot-gegner-m1co' })).toBeVisible()
   })
 
   it('schuetzt den Stitch-Stil und verdrahtet den dauerhaften Browser-Smoke', () => {

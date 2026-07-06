@@ -31,6 +31,13 @@ function steinplattenZustand() {
 
 describe('M1d Waldtanz-Steinplatte', () => {
   it('macht den Schlangenbereich zur zentralen Stein-Arena mit Magic-Circle-Zonen und Kartenfächer', () => {
+    // AENDERUNG (Testfix): M1dp verlagerte die gegnerischen Schlangen aus dem
+    // Schlangenbereich in die eigene WaldtanzGegnerlichtung im Arenastein
+    // (siehe src/components/WaldtanzGegnerlichtung.tsx). Diese Komponente
+    // wird nur auf der /game-Route gerendert, deshalb muss der Test dorthin
+    // navigieren, um die gegnerische Schlange weiterhin sichtbar auf dem
+    // Spieltisch (statt zwingend innerhalb des Schlangenbereichs) zu pruefen.
+    window.history.pushState({}, '', '/game')
     render(<App initialZustand={steinplattenZustand()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
@@ -42,7 +49,7 @@ describe('M1d Waldtanz-Steinplatte', () => {
     expect(schlangenbereich).toHaveClass('schlangenbereich--waldlichtung')
     expect(startzone.closest('.schlangen-startzone')).toHaveClass('schlangen-startzone')
     expect(within(schlangenbereich).getByText('steinplatte-du')).toBeInTheDocument()
-    expect(within(schlangenbereich).getByText('steinplatte-gegner')).toBeInTheDocument()
+    expect(within(spieltisch).getByText('steinplatte-gegner')).toBeInTheDocument()
     expect(schlangenbereich.compareDocumentPosition(handkarten) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     )

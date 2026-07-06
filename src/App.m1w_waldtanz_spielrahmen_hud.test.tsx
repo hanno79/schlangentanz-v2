@@ -39,6 +39,7 @@ describe('M1w Waldtanz-Spielrahmen-HUD', () => {
     const menue = within(spielbereich).getByRole('complementary', { name: 'Waldtanz-Spielrahmen' })
     const kompass = within(menue).getByRole('region', { name: 'Waldtanz-Kompass' })
 
+    const profil = within(menue).getByRole('region', { name: 'Spielprofil' })
     expect(within(menue).getByText('Spielprofil')).toBeVisible()
     expect(within(menue).getByText(`${zustand.spieler[0].name} · ${punkte} Punkte`)).toBeVisible()
     expect(within(kompass).getByText('Phase: Ausspielphase')).toHaveClass('waldtanz-seitenmenue__statkarte')
@@ -47,7 +48,9 @@ describe('M1w Waldtanz-Spielrahmen-HUD', () => {
     expect(within(kompass).getByText('Nachziehstapel: 12')).toHaveClass('waldtanz-seitenmenue__statkarte')
     expect(within(kompass).getByText(`Offene Quests: ${zustand.offeneAufgaben.length}`)).toHaveClass('waldtanz-seitenmenue__statkarte')
     expect(within(kompass).getByText('Nächster Schritt: Eine spielbare Aktion auswählen.')).toBeVisible()
-    expect(within(menue).getByText('Forest Spirit')).toBeVisible()
+    // M7a fügt einen zusätzlichen Stats-Hero mit eigenem "Forest Spirit"-Tag hinzu;
+    // hier bleibt gezielt der Tag innerhalb der Spielprofil-Sektion geprüft.
+    expect(within(profil).getByText('Forest Spirit')).toBeVisible()
     expect(within(menue).queryByRole('link')).not.toBeInTheDocument()
     expect(within(menue).queryByRole('button')).not.toBeInTheDocument()
   })

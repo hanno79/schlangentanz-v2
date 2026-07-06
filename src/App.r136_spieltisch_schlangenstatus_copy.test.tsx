@@ -33,10 +33,11 @@ describe('R136 spielerfreundlicher Schlangenstatus am Spieltisch', () => {
     render(<App initialZustand={zustandMitSchlangenStatusAmSpieltisch()} />)
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
+    const eigeneSchlangen = within(spieltisch).getByRole('region', { name: 'Eigene Schlangen' })
 
-    expect(within(spieltisch).getByText('Status: spielbereit')).toBeVisible()
-    expect(within(spieltisch).getByText('Status: gerade blockiert')).toBeVisible()
-    expect(within(spieltisch).getByText('Status: geschützt')).toBeVisible()
+    expect(within(eigeneSchlangen).getByText('Status: spielbereit')).toBeVisible()
+    expect(within(eigeneSchlangen).getByText('Status: gerade blockiert')).toBeVisible()
+    expect(within(eigeneSchlangen).getByText('Status: geschützt')).toBeVisible()
 
     // M1dp: Gegnerlichtung ist im Arenastein, eigene Schlangen (alle 3) sind im Spieltisch
     // Erwartung 1x blockiert-Status (eigene blockierte Schlange); gegner-Schlange ist jetzt

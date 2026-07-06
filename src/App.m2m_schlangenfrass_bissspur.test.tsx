@@ -67,7 +67,9 @@ describe('M2m Schlangenfrass-Bissspur', () => {
       name: 'Schlangenfrass im Schlangenbereich mit Karte schlangenfrass-m2m auf Karte rot-bissspur-m2m',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenfrass mit Karte schlangenfrass-m2m: Karte rot-bissspur-m2m aus Schlange eigene-bissspur-m2m entfernen')).toBeVisible()
+    const letzteAktionHinweis = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
+    expect(within(letzteAktionHinweis).getByText('Zuletzt ausgeführt:')).toBeVisible()
+    expect(within(letzteAktionHinweis).getByText('Schlangenfrass mit Karte schlangenfrass-m2m: Karte rot-bissspur-m2m aus Schlange eigene-bissspur-m2m entfernen')).toBeVisible()
     expect(within(schlangenbereich).queryByText('rot-bissspur-m2m')).toBeNull()
     expect(within(schlangenbereich).getByText('blau-bleibt-m2m')).toBeVisible()
   })
@@ -98,7 +100,9 @@ describe('M2m Schlangenfrass-Bissspur', () => {
       name: 'Schlangenfrass im Schlangenbereich mit Karte schlangenfrass-zwei-m2m auf Karten rot-gegner-bissspur-m2m und blau-gegner-bissspur-m2m',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenfrass mit Karte schlangenfrass-zwei-m2m: Karte rot-gegner-bissspur-m2m aus Schlange gegner-a-bissspur-m2m und Karte blau-gegner-bissspur-m2m aus Schlange gegner-b-bissspur-m2m entfernen')).toBeVisible()
+    const letzteAktionHinweis = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
+    expect(within(letzteAktionHinweis).getByText('Zuletzt ausgeführt:')).toBeVisible()
+    expect(within(letzteAktionHinweis).getByText('Schlangenfrass mit Karte schlangenfrass-zwei-m2m: Karte rot-gegner-bissspur-m2m aus Schlange gegner-a-bissspur-m2m und Karte blau-gegner-bissspur-m2m aus Schlange gegner-b-bissspur-m2m entfernen')).toBeVisible()
   })
 
   it('legt den Stitch-Waldtanz-Stil für Bissspuren mit 3px-Rand und Hard Shadow ab', () => {

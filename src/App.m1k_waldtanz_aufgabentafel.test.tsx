@@ -63,6 +63,21 @@ describe('M1k Waldtanz-Aufgabentafel', () => {
     expect(cssBlock('waldtanz-aufgabentafel')).toMatch(/box-shadow:\s*0 4px 0 var\(--st-color-border-strong\)/)
     expect(appCss).toMatch(/\.waldtanz-aufgabentafel__liste[\s\S]*grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(min\(13rem,\s*100%\),\s*1fr\)\)/)
     expect(appCss).toMatch(/\.waldtanz-questkarte[\s\S]*transform:\s*rotate\(var\(--quest-rotation,\s*0deg\)\)/)
-    expect(appCss).not.toMatch(/var\(--st-color-(surface-container-lowest|surface-container-high|primary-fixed)\)/)
+    // AENDERUNG (Testfix): Die urspruengliche Assertion prüfte die drei
+    // Design-Tokens global im gesamten App.css. Spaetere, mit der Aufgaben-
+    // tafel voellig unverwandte Slices (z. B. M1dq-Spielmoment-Link,
+    // Handkarte-Peek-Tiles) nutzen "surface-container-high[est]" bzw.
+    // "surface-container-lowest" legitim fuer eigene Features. Die
+    // eigentliche M1k-Absicht — die Aufgabentafel/Questkarte selbst
+    // verwendet diese Tokens nicht — bleibt bestehen; wir scopen die
+    // Pruefung deshalb auf die Aufgabentafel/Questkarte-Regelbloecke.
+    const aufgabentafelRegelbloecke = Array.from(
+      appCss.matchAll(/([^{}]*)\{([^}]*)\}/gs),
+    )
+      .filter(([, selektor]) => /waldtanz-aufgabentafel|waldtanz-questkarte/.test(selektor))
+      .map(([, , body]) => body)
+      .join('\n')
+    expect(aufgabentafelRegelbloecke.length).toBeGreaterThan(0)
+    expect(aufgabentafelRegelbloecke).not.toMatch(/var\(--st-color-(surface-container-lowest|surface-container-high|primary-fixed)\)/)
   })
 })

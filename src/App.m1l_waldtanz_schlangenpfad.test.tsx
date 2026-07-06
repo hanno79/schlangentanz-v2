@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange } from './engine/__tests__/testHelpers'
@@ -32,12 +32,17 @@ function schlangenpfadZustand() {
 }
 
 describe('M1l Waldtanz-Schlangenpfad', () => {
+  beforeEach(() => {
+    window.history.pushState({}, '', '/game')
+  })
+
   it('markiert Kopf, Körper und Schwanz in eigenen und gegnerischen Schlangenreihen als sichtbaren Pfad', () => {
     render(<App initialZustand={schlangenpfadZustand()} />)
 
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
+    const gegnerlichtung = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const eigeneReihe = within(schlangenbereich).getByRole('list', { name: 'Kartenreihe waldpfad-du' })
-    const gegnerReihe = within(schlangenbereich).getByRole('list', { name: 'Kartenreihe waldpfad-gegner' })
+    const gegnerReihe = within(gegnerlichtung).getByRole('list', { name: 'Kartenreihe waldpfad-gegner' })
     const eigeneKarten = within(eigeneReihe).getAllByRole('listitem')
     const gegnerKarten = within(gegnerReihe).getAllByRole('listitem')
 

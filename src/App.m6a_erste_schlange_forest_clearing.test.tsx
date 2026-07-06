@@ -77,12 +77,16 @@ describe('M6a — Deine erste Schlange als Stitch-Waldlichtung-Onboarding', () =
   it('M6a:6 — Cascade-Regression: Base-Regel hat Animation + Reduced-Motion schaltet aus', () => {
     const baseBlock = cssBlock('.erste-schlange-onboarding__drop-ring')
     expect(baseBlock).toMatch(/animation:\s*erste-schlange-pulse/)
-    // Reduced-Motion-Override (nach @media) muss animation:none haben.
-    // Suche im body NACH der letzten @media-Open, da es mehrere Bloecke gibt.
-    const lastIdx = appCss.lastIndexOf('@media (prefers-reduced-motion: reduce)')
-    const after = lastIdx >= 0 ? appCss.slice(lastIdx) : ''
-    const reducedRe = /\.erste-schlange-onboarding__drop-ring\s*\{([^}]*)\}/
-    const m = after.match(reducedRe)
+    // Reduced-Motion-Override muss animation:none haben. Wir suchen gezielt
+    // den @media-Block, der die Drop-Ring-Regel direkt (ohne dazwischenliegende
+    // '}') enthaelt — NICHT den zuletzt im File stehenden @media-Block, da
+    // spaetere Slices eigene reduced-motion-Bloecke fuer andere Features
+    // anhaengen, ohne die hier gepruefte Cascade-Position zu veraendern.
+    const escaped = '.erste-schlange-onboarding__drop-ring'.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const reducedRe = new RegExp(
+      `@media\\s*\\(prefers-reduced-motion:\\s*reduce\\)\\s*\\{[^}]*${escaped}\\s*\\{([^}]*)\\}`,
+    )
+    const m = appCss.match(reducedRe)
     expect(m).not.toBeNull()
     expect(m?.[1]).toMatch(/animation:\s*none/)
   })

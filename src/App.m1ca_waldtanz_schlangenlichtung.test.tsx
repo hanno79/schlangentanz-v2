@@ -68,7 +68,11 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
     const eigeneHinweise = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] > [class~="schlangen-drop-hinweis"]')
     const eigeneLeiste = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangenleiste"]')
     const leereGegner = cssBlock('.spielbereich--game-route [class~="waldtanz-gegnerlichtung"] [class~="waldtanz-gegnerlichtung__leertext"]')
-    const zielGegner = cssBlock('.spielbereich--game-route [class~="waldtanz-gegnerlichtung"] [class~="waldtanz-gegnerlichtung__gegnerkarte"]:has(button)')
+    // Die Gegnerkarte hat nie einen route-scoped Sonderfall bekommen — der
+    // display:grid-Vertrag lebt unveraendert in der universellen (nicht
+    // routen-gebundenen) .waldtanz-gegnerlichtung__gegnerkarte-Regel, die
+    // ohnehin nur rendert, sobald ein Gegner Schlangen hat (populated state).
+    const zielGegner = cssBlock('.waldtanz-gegnerlichtung__gegnerkarte')
     const kompakteAnlegeplaetze = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte__anlegeplaetze"]:not([class~="schlangekarte__anlegeplaetze--vorschau"])')
     const kompakteSchlange = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"]')
     const kompakteKartenreihe = cssBlock('.spielbereich--game-route [class~="schlangen-gruppe--eigene-lichtung"] [class~="schlangekarte--eigene"] > [class~="schlangekarte__kartenreihe"]')

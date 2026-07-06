@@ -29,12 +29,17 @@ describe('M1ch Waldtanz-Erstzugpfad', () => {
     const tischkarte = within(lichtung).getByRole('region', { name: 'Waldtanz-Tischkarte' })
     const eigeneSchlangen = within(lichtung).getByRole('region', { name: 'Eigene Schlangen' })
     const startkreis = within(eigeneSchlangen).getByRole('button', { name: 'Neue Schlange starten' })
-    const startgarten = within(eigeneSchlangen).getByRole('note', { name: 'Leerer Startgarten' })
+    // AENDERUNG (Testfix): M6a ersetzte den fruehen "Leerer Startgarten"-
+    // Hinweis durch die WaldtanzErsteSchlangeOnboarding-Sektion, die als
+    // eigene benannte Region ("Deine erste Schlange — Onboarding") den
+    // Empty-State fuer Spieler ohne eigene Schlangen zeigt (siehe
+    // src/components/WaldtanzErsteSchlangeOnboarding.tsx).
+    const startgarten = within(eigeneSchlangen).getByRole('region', { name: 'Deine erste Schlange — Onboarding' })
     const handbank = within(spieltisch).getByRole('region', { name: 'Handkarten' })
 
     expect(within(tischkarte).getByText('Kartenaltar')).toBeVisible()
     expect(within(startkreis).getByText('Startkreis')).toBeVisible()
-    expect(within(startgarten).getByText('Noch keine eigene Schlange')).toBeVisible()
+    expect(within(startgarten).getByText('Deine erste Schlange')).toBeVisible()
     expect(within(startkreis.closest('.schlangen-startzone') as HTMLElement).getAllByText('Startfährte').length).toBeGreaterThanOrEqual(3)
     expect(within(handbank).getByText(/Deine Hand/)).toBeVisible()
     expect(tischkarte.compareDocumentPosition(startkreis) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()

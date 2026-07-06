@@ -13,8 +13,16 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
 const appCss = readFileSync('src/App.css', 'utf8')
+// AENDERUNG (Testfix): Spaetere Slices (M1f/M2i/M3i) fuegten route-gescopte
+// Overrides mit Compound-Selektoren wie
+// `[class~="handkarte__button--karte"].handkarte__button--karte` hinzu.
+// Die urspruengliche Regex matchte versehentlich mitten in diesem Compound-
+// Selektor (".handkarte__button--karte {" direkt vor der Klammer), statt
+// die eigentstaendige Basis-Regel zu treffen. Die Lookbehind-Erweiterung
+// stellt sicher, dass nur ein eigenstaendiger Klassen-Selektor (nicht
+// Teil eines Attribut- oder Compound-Selektors) gematcht wird.
 const cssBlock = (selektor: string) =>
-  appCss.match(new RegExp(`\\.${selektor}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
+  appCss.match(new RegExp(`(?<![\\w"\\].])\\.${selektor}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
 
 function handkartenZustand() {
   return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))

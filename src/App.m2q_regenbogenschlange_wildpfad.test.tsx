@@ -8,7 +8,7 @@
 
 import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange, sonderkarte } from './engine/__tests__/testHelpers'
@@ -33,12 +33,16 @@ function regenbogenWildpfadZustand() {
 }
 
 describe('M2q Regenbogenschlange-Wildpfad', () => {
+  afterEach(() => { window.history.pushState({}, '', '/') })
+
   it('zeigt Regenbogenschlangen in eigenen und gegnerischen Schlangen als Wildfarben-Spielkarten statt generischer Sonderkarte', () => {
+    window.history.pushState({}, '', '/game')
     render(<App initialZustand={regenbogenWildpfadZustand()} />)
 
     const schlangenbereich = screen.getByRole('region', { name: 'Schlangenbereich' })
+    const gegnerlichtung = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
     const eigeneReihe = within(schlangenbereich).getByRole('list', { name: 'Kartenreihe regenbogen-pfad-m2q' })
-    const gegnerReihe = within(schlangenbereich).getByRole('list', { name: 'Kartenreihe gegner-regenbogen-pfad-m2q' })
+    const gegnerReihe = within(gegnerlichtung).getByRole('list', { name: 'Kartenreihe gegner-regenbogen-pfad-m2q' })
     const eigeneRegenbogenkarte = within(eigeneReihe).getByLabelText('Sonderkarte regenbogen-m2q-own: Regenbogenschlange')
     const gegnerRegenbogenkarte = within(gegnerReihe).getByLabelText('Sonderkarte regenbogen-m2q-gegner: Regenbogenschlange')
 

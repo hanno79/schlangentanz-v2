@@ -61,7 +61,7 @@ describe('M1aj Magiekreis-Sonderzauber', () => {
 
     fireEvent.click(zauberButton)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbenfusion mit Karte farbenfusion-m1aj auf Schlange fusion-pfad-m1aj bei Karte blau-m1aj-a spielen')).toBeVisible()
+    expect(screen.getByTestId('waldtanz-letzte-aktion-hinweis')).toHaveTextContent('Zuletzt ausgeführt:Farbenfusion mit Karte farbenfusion-m1aj auf Schlange fusion-pfad-m1aj bei Karte blau-m1aj-a spielen')
     expect(within(schlangenbereich).getByText('farbenfusion-m1aj')).toBeVisible()
     expect(within(schlangenbereich).queryByText('blau-m1aj-a')).toBeNull()
     expect(within(schlangenbereich).queryByText('blau-m1aj-b')).toBeNull()

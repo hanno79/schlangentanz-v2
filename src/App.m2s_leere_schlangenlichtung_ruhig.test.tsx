@@ -112,11 +112,15 @@ describe('M2s Schlangenlichtung-Empty-State als ruhige Forest-Lichtung', () => {
     // CSS-only-Visual-Removal-Pattern (M1dm/M1dn/M1do): die DOM-Struktur
     // bleibt unveraendert; nur das CSS hidet die Elemente. Pruefe daher
     // dass alle drei Klassen weiterhin im rendered DOM auf /game existieren.
+    // M6a (28.06.2026) ersetzt den nackten .schlangen-startgarten-Empty-Text
+    // durch das reichhaltigere Onboarding .erste-schlange-onboarding — dieselbe
+    // "keine eigene Schlange"-Stelle im Schlangenbereich, jetzt als eigener
+    // Stitch-Onboarding-Block (siehe App.m6a_erste_schlange_forest_clearing.test.tsx).
     window.history.pushState({}, '', '/game')
     render(<App initialZustand={starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))} />)
     expect(document.querySelector('.waldtanz-aktiver-tanz-schritt')).not.toBeNull()
     expect(document.querySelector('.schlangen-zielkompass')).not.toBeNull()
-    expect(document.querySelector('.schlangen-startgarten')).not.toBeNull()
+    expect(document.querySelector('.erste-schlange-onboarding')).not.toBeNull()
   })
 
   it('M2s:6 Cascade-Schutz: alle 3 Hide-Regeln tragen !important (gegen spaetere pre-existing Overrides)', () => {

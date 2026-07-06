@@ -45,7 +45,7 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(handGridDeklarationen).not.toMatch(/align-self:\s*end/)
     expect(handGridDeklarationen).not.toMatch(/pointer-events:\s*none/)
     expect(handGridBlock).toMatch(/z-index:\s*4/)
-    expect(handGridBlock).toMatch(/max-height:\s*clamp\(8rem,\s*18vh,\s*9\.5rem\)/)
+    expect(handGridBlock).toMatch(/max-height:\s*clamp\(13rem,\s*24vh,\s*15rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-panel"] button')).toMatch(/pointer-events:\s*auto/)
 
     const arenaBlock = cssBlock('.spielbereich--game-route [class~="waldtanz-arenastein"]')
@@ -57,10 +57,14 @@ describe('M1aw Waldtanz-Handkante', () => {
     expect(arenaBlock).not.toMatch(/height:\s*clamp\(32\.5rem,\s*58vh,\s*33rem\)/)
     expect(arenaBlock).toMatch(/overflow:\s*hidden/)
 
-    const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkarte__button--karte"]')
-    expect(kartenBlock).toMatch(/height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
-    expect(kartenBlock).toMatch(/min-height:\s*clamp\(5\.8rem,\s*10vh,\s*6\.1rem\)/)
-    expect(kartenBlock).toMatch(/overflow:\s*hidden/)
+    // M3i (Pitfall #48 Cascade-Contract-Migration): Die Karten-Hoehe lebt jetzt in der
+    // spezifischeren Spielkartenfaecher-Kaskade statt im einfachen Basis-Selector, und
+    // die Kartenreihe clippt nicht mehr per overflow:hidden, sondern der Handkarte-Wrapper
+    // erlaubt overflow:visible, damit die handkarte-wackelt-Hebeanimation nicht abgeschnitten wird.
+    const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
+    expect(kartenBlock).toMatch(/height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/)
+    expect(kartenBlock).toMatch(/min-height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/)
+    expect(appCss.match(/^\.handkarte \{([^}]*)\}/m)?.[1] ?? '').toMatch(/overflow:\s*visible/)
 
     expect(cssBlock('.spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"]')).toMatch(/padding-block:\s*0/)
     expect(cssBlock('.spielbereich--game-route [class~="handkarten-status"]')).toMatch(/display:\s*none/)

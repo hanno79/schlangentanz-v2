@@ -60,7 +60,7 @@ describe('M1ak Waldtanz-Kartenpop in der Lichtung', () => {
     expect(appCss).toMatch(/\.waldtanz-arenastein__schlangenlichtung \.waldtanz-kartenpop\s*\{[\s\S]*box-shadow:\s*0 6px 0 var\(--st-color-border-strong\)/)
     expect(cssBlock('waldtanz-kartenpop')).toMatch(/animation:\s*waldtanz-kartenpop-springt/)
     expect(cssBlock('waldtanz-kartenpop__stern')).toMatch(/animation:\s*waldtanz-stern-funkelt/)
-    expect(appCss).toMatch(/@media \(prefers-reduced-motion:\s*reduce\) \{[\s\S]*\.waldtanz-kartenpop,[\s\S]*\.waldtanz-kartenpop__stern \{[\s\S]*animation:\s*none/)
+    expect(appCss).toMatch(/@media \(prefers-reduced-motion:\s*reduce\) \{[\s\S]*\.waldtanz-kartenpop,[\s\S]*\.waldtanz-kartenpop__stern,[\s\S]*animation:\s*none/)
   })
 
   it('bewahrt auf /game die Kartenpop-Reihenfolge zwischen Tischkarte und Magiekreisen auch im kompakten Erstbild', () => {

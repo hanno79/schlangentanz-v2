@@ -149,9 +149,13 @@ describe('M1dc Waldtanz-Spielmoment-Pulse', () => {
     ]
 
     const { container } = render(<App initialZustand={zustand} />)
-    const schlangenbereich = container.querySelector('[class~="schlangenbereich"]') as HTMLElement | null
-    expect(schlangenbereich).not.toBeNull()
-    const gegnerLi = schlangenbereich!.querySelectorAll('li.schlangekarte--gegner')
+    // AENDERUNG (Testfix): M1dp zog die gegnerischen Schlangen aus dem
+    // .schlangenbereich in die eigene .waldtanz-gegnerlichtung im
+    // Arenastein (siehe src/components/WaldtanzGegnerlichtung.tsx). Wir
+    // scopen deshalb auf diese Sektion statt auf .schlangenbereich.
+    const gegnerlichtung = container.querySelector('[class~="waldtanz-gegnerlichtung"]') as HTMLElement | null
+    expect(gegnerlichtung).not.toBeNull()
+    const gegnerLi = gegnerlichtung!.querySelectorAll('li.schlangekarte--gegner')
     expect(gegnerLi.length).toBeGreaterThan(0)
     // Initial hat keine Schlange das Attribut.
     gegnerLi.forEach((li) => {

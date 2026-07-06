@@ -74,7 +74,9 @@ describe('M2c Schlangenblockade-Boardziel', () => {
 
     fireEvent.click(boardAktion)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenblockade mit Karte schlangenblockade-m2c auf Spieler 2 / Schlange gegner-schlange-m2c spielen')).toBeVisible()
+    const letzteAktionHinweis = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
+    expect(within(letzteAktionHinweis).getByText('Zuletzt ausgeführt:')).toBeVisible()
+    expect(within(letzteAktionHinweis).getByText('Schlangenblockade mit Karte schlangenblockade-m2c auf Spieler 2 / Schlange gegner-schlange-m2c spielen')).toBeVisible()
     expect(within(zielschlange as HTMLElement).getByText('schlangenblockade-m2c')).toBeVisible()
     expect(within(zielschlange as HTMLElement).getByText('Sonderkarte Schlangenblockade')).toBeVisible()
   })
