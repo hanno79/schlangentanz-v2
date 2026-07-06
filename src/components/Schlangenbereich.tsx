@@ -48,6 +48,9 @@ interface SchlangenbereichProps {
   aktionsLabel: (aktion: SpielAktion) => string
   // M1dc: Spielmoment-Puls-Ziel, das aus der letzten Aktion abgeleitet wurde.
   letzteAktionZiel?: LetzteAktionZiel | null
+  // M1dp-Fix: Meldet den effektiven Zielspur-Highlight-Key nach oben, damit
+  // die Schwester-Gegnerlichtung (App-Ebene) dasselbe Brettziel hervorhebt.
+  onZielspurKeyChange?: (key: string | null) => void
 }
 
 function schlangenStatusLabel(zustand: Spieler['schlangen'][number]['zustand']): string {
@@ -96,6 +99,7 @@ export default function Schlangenbereich({
   onAktion,
   aktionsLabel,
   letzteAktionZiel = null,
+  onZielspurKeyChange,
 }: SchlangenbereichProps) {
   const komponentenId = useId()
   const [dragOverZone, setDragOverZone] = useState<DragTarget | null>(null)
@@ -291,6 +295,8 @@ export default function Schlangenbereich({
         farbenschutzAktionen: farbenschutzAktionen ?? [],
         farbenfusionAktionen: farbenfusionAktionen ?? [],
         schlangenfrassAktionen: schlangenfrassAktionen ?? [],
+        farbendiebAktionen: farbendiebAktionen ?? [],
+        schlangenblockadeAktionen: schlangenblockadeAktionen ?? [],
       })
     : null
   // Kimi-Review-Blocker 4: Ghost-Highlight-Bereinigung. Statt eines
@@ -310,6 +316,13 @@ export default function Schlangenbereich({
     const fokus = ziel.querySelector('button') ?? ziel
     if (fokus instanceof HTMLElement) fokus.focus({ preventScroll: true })
   }, [effektiverZielspurKey])
+
+  // M1dp-Fix: Den effektiven Highlight-Key an die App-Ebene melden, damit die
+  // Schwester-Gegnerlichtung (Farbendieb-Beutekorb/Blockade-Fessel) dasselbe
+  // Brettziel hervorhebt wie der Schlangenbereich.
+  useEffect(() => {
+    onZielspurKeyChange?.(effektiverZielspurKey)
+  }, [effektiverZielspurKey, onZielspurKeyChange])
 
   return (
     <section className={`schlangenbereich schlangenbereich--waldlichtung${ausgewaehlteHandkarteId ? ' schlangenbereich--karte-ausgewaehlt' : ''}`} aria-labelledby={titelId}>

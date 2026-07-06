@@ -89,6 +89,9 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
   const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
+  // M1dp-Fix: Der Schlangenbereich meldet seinen effektiven Zielspur-Highlight-Key
+  // hier herauf, damit die Schwester-Gegnerlichtung dasselbe Brettziel hervorhebt.
+  const [gegnerZielspurKey, setGegnerZielspurKey] = useState<string | null>(null)
   const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
   const [abwurfAuswahl, setAbwurfAuswahl] = useState<string[]>([])
   const [handkarteDragAktiv, setHandkarteDragAktiv] = useState(false)
@@ -376,7 +379,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                       schlangenfrassAktionen={schlangenfrassAktionen}
                       onAktion={fuhreAktionAus}
                       aktionsLabel={aktionsLabel}
-                      aktiverZielspurKey={undefined}
+                      aktiverZielspurKey={gegnerZielspurKey}
                       letzteAktionZiel={letzteAktionZiel}
                     />
                   )}
@@ -406,6 +409,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                     kiZugLaeuft={versteckeKiEinzelaktionen}
                     brettschrittEintraege={brettschrittEintraege}
                     pflichtschrittLabel={pflichtschrittLabel}
+                    onZielspurKeyChange={setGegnerZielspurKey}
                   />
                   <aside className="waldtanz-arenastein__waldobjekte waldtanz-waldtaschen" aria-label="Waldobjekte">
                     {istGameRoute && (

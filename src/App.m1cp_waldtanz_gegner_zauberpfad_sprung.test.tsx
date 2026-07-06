@@ -7,7 +7,7 @@
 /// <reference types="node" />
 
 import { readFileSync } from 'node:fs'
-import { fireEvent, render, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
@@ -45,7 +45,10 @@ describe('M1cp Waldtanz-Gegner-Zauberpfad-Sprungfaehrten', () => {
     fireEvent.click(within(handBereich).getByRole('button', { name: /farbendieb-m1cp/ }))
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
-    const beutekorb = within(schlangenbereich).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-beute-m1cp' })
+    // Seit M1dp/Arena liegen die Gegner-Brettobjekte in der eigenen
+    // Gegnerlichtung im Spieltisch, nicht mehr im Schlangenbereich.
+    const gegnerlichtung = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
+    const beutekorb = within(gegnerlichtung).getByRole('group', { name: 'Farbendieb-Beutekorb für rot-beute-m1cp' })
     // M2a: Sonderkarten-Selektion aktiviert das passende Brett-Ziel automatisch.
     expect(beutekorb).toHaveClass('waldtanz-zielspur-ziel--aktiv')
 
@@ -66,7 +69,8 @@ describe('M1cp Waldtanz-Gegner-Zauberpfad-Sprungfaehrten', () => {
     fireEvent.click(within(handBereich).getByRole('button', { name: /blockade-m1cp/ }))
 
     const zielspur = within(schlangenbereich).getByRole('note', { name: 'Waldtanz-Zielspur' })
-    const fessel = within(schlangenbereich).getByRole('group', { name: 'Schlangenblockade-Fessel für blockade-ziel-m1cp' })
+    const gegnerlichtung = screen.getByRole('region', { name: 'Waldtanz-Gegnerlichtung' })
+    const fessel = within(gegnerlichtung).getByRole('group', { name: 'Schlangenblockade-Fessel für blockade-ziel-m1cp' })
     const pfad = within(zielspur).getByRole('listitem', { name: 'Fessel-Zauberpfad blockade-ziel-m1cp' })
 
     fireEvent.click(within(pfad).getByRole('button', { name: 'Zum 1. Fessel-Brettobjekt springen' }))

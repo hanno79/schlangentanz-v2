@@ -79,10 +79,12 @@ export interface AutoHighlightOptionen {
   farbenschutzAktionen: Aktion<'FarbenschutzSpielen'>[]
   farbenfusionAktionen: Aktion<'FarbenfusionSpielen'>[]
   schlangenfrassAktionen: Aktion<'SchlangenfrassSpielen'>[]
+  farbendiebAktionen?: Aktion<'FarbendiebSpielen'>[]
+  schlangenblockadeAktionen?: Aktion<'SchlangenblockadeSpielen'>[]
 }
 
 export function ermittleAutoHighlightZielspurKey(optionen: AutoHighlightOptionen): string | null {
-  const { ausgewaehlteHandkarteId, aktiverSpielerId, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen } = optionen
+  const { ausgewaehlteHandkarteId, aktiverSpielerId, farbenschutzAktionen, farbenfusionAktionen, schlangenfrassAktionen, farbendiebAktionen = [], schlangenblockadeAktionen = [] } = optionen
   if (!ausgewaehlteHandkarteId) return null
 
   // 1. Schlangenfrass (eigene Schlange mit Karte bevorzugt) — Bissspur.
@@ -100,6 +102,16 @@ export function ermittleAutoHighlightZielspurKey(optionen: AutoHighlightOptionen
   for (const aktion of farbenfusionAktionen) {
     if (!passt(aktion, ausgewaehlteHandkarteId)) continue
     return fusionKey(aktion.zielSchlangenId, aktion.zielKartenId)
+  }
+  // 4. Farbendieb — Beutekorb am Gegnerfeld (M1dp-Gegnerlichtung).
+  for (const aktion of farbendiebAktionen) {
+    if (!passt(aktion, ausgewaehlteHandkarteId)) continue
+    return diebKey(aktion.zielSpielerId, aktion.zielSchlangenId, aktion.zielKartenId)
+  }
+  // 5. Schlangenblockade — Fessel am Gegnerfeld.
+  for (const aktion of schlangenblockadeAktionen) {
+    if (!passt(aktion, ausgewaehlteHandkarteId)) continue
+    return blockadeKey(aktion.zielSpielerId, aktion.zielSchlangenId)
   }
 
   return null

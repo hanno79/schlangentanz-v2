@@ -53,6 +53,7 @@ export interface WaldtanzSchlangenlichtungProps {
   kiZugLaeuft: boolean
   brettschrittEintraege: BrettschrittEintrag[]
   pflichtschrittLabel: string
+  onZielspurKeyChange?: (key: string | null) => void
 }
 
 export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtungProps) {
@@ -82,6 +83,7 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
     kiZugLaeuft,
     brettschrittEintraege,
     pflichtschrittLabel,
+    onZielspurKeyChange,
   } = props
 
   const aktiverSpielerName = aktiverSpieler.name
@@ -172,6 +174,7 @@ export default function WaldtanzSchlangenlichtung(props: WaldtanzSchlangenlichtu
             onAktion={onAktion}
             aktionsLabel={aktionsLabel}
             letzteAktionZiel={letzteAktionZiel}
+            onZielspurKeyChange={onZielspurKeyChange}
           />
         </div>
       </div>
