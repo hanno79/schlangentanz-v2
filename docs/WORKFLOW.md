@@ -57,3 +57,27 @@ ausgelieferten Produktions-App sind sie deaktiviert.
   variable `VITE_TEST_HOOKS=1` gesetzt sein (Preview/Production nach Bedarf).
 - Vitest-Tests brauchen keine Sonderkonfiguration: im Testlauf ist `import.meta.env.DEV`
   ohnehin `true`, sodass die Hooks dort aktiv bleiben.
+
+## Bewusst nicht implementiert (Stand 30.07.2026)
+
+Damit diese Punkte nicht wiederholt als „toter Code" oder „vergessenes Feature"
+aufschlagen, hier die bewussten Entscheidungen:
+
+### Speichern/Laden einer Partie
+
+`src/engine/serialization.ts` (rund 700 Zeilen inkl. sieben Migrationsschritten)
+hat **keinen Produktionsaufrufer**. Es gibt kein Speichern/Laden; ein Reload
+verwirft die laufende Partie. Das Modul ist Test-Infrastruktur: der
+Vollpartie-Soak-Test prüft nach jedem Zug den Roundtrip
+`deserialisiere(serialisiere(zustand))` und fängt damit strukturelle Engine-Fehler
+früh ab. Die Migrationsschritte bleiben erhalten, weil sie ältere Testfixtures
+lauffähig halten. Persistenz wäre ein eigener Slice inkl. Fehlerpfad für ungültige
+gespeicherte Stände.
+
+### Erweiterungskarten außerhalb des Spieldecks
+
+`Comeback` (4), `Risiko-Belohnung` (8) und `Schlangenkorb des Glücks` (1) werden in
+`src/engine/deck.ts` erzeugt, gelangen aber nicht ins gemischte Spieldeck. Ihr
+einziger Zweck ist die Namensvalidierung in `serialization.ts`. Das digitale
+Spieldeck umfasst 114 Karten: 110 Basiskarten plus die 4 Schlangenhäutung-Karten
+der Erweiterung (Audit-Fix H1) — siehe `docs/GAME_SPEC.md` R1.1/R1.2.

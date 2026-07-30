@@ -1,8 +1,26 @@
 /*
 Author: rahn
 Datum: 31.05.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: Deterministische Serialisierung und Validierung von Spielzuständen.
+
+ÄNDERUNG [30.07.2026]: AP-0 — Verwendungszweck klargestellt (Onboarding-Finding 5).
+Dieses Modul ist bewusst **Test-Infrastruktur, kein Persistenz-Feature**:
+
+- Es gibt in der App kein Speichern/Laden. `serialisiere`/`deserialisiere` haben
+  keinen Produktionsaufrufer; ein Reload verwirft die laufende Partie.
+- Der eigentliche Zweck ist die Invarianten-Absicherung im Vollpartie-Soak-Test
+  (`src/engine/__tests__/vollpartie_simulation.test.ts`): Nach jedem Zug muss ein
+  Roundtrip `deserialisiere(serialisiere(zustand))` fehlerfrei durchlaufen. Damit
+  fängt `validiereSpielzustand` strukturelle Engine-Fehler (verwaiste
+  Farbenfusion-Einträge, unbekannte Kartennamen, inkonsistente Zugpflicht-Zähler)
+  auf, die sonst erst in der Wertung als Absturz aufgefallen wären.
+- Die Migrationsschritte (`migriere*`) halten ältere Testfixtures lauffähig. Sie
+  werden bewusst nicht ausgedünnt, obwohl es in Production nie Altstände gab —
+  ihr Wert liegt in der Abwärtskompatibilität der Fixtures.
+
+Wer hier Persistenz ergänzen will, braucht einen eigenen Slice inkl. Fehlerpfad
+für ungültige gespeicherte Stände — nicht nur einen localStorage-Aufruf.
 */
 
 import type {

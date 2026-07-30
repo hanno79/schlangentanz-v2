@@ -2922,3 +2922,42 @@ enes Engine-Enumerator-Ergebnis `legaleAktionen.length` sichtbar machen; keine n
 - [x] Commit/Push: `d406e26` M3i-Initial (12 files, +629/-44) + `61f8ae4` M3i-Smoke-Threshold-Korrektur (Pitfall #34: 895→930, 950→1080). Release-Doku `docs/release_status_2026-07-01_m3i.md` dokumentiert Pitfall-Discipline, Cap-Sum-Formel, Production-Geometrie-Arithmetik, Code-Review und naechster Luecke (M3j Brettrand-Architektur-Pivot oder Schlangenlichtung-Cap-Senkung).
 - [x] Pre-Existing-Test-Bestand (Pitfall #20 Baseline-Diff): Baseline 36 failures / 1505 tests → M3i 35 failures / 1512 tests. **0 neue Failures, 1 pre-existing Test repariert** (M3f:6 Smoke-Wiring durch M3i-Smoke in package.json). **NET-POSITIVE**: +7 M3i-Tests grün, 0 neue Failures.
 - [x] Naechste Luecke: **M3j Brettrand-Architektur-Pivot** — `.handkarten-panel` als sticky-bottom Container mit `position: sticky; bottom: 0` aus dem Brettrand-Layout herauslösen, damit es immer am Viewport-Bottom sitzt unabhängig vom Scroll. Trade-off: sticky-bottom kann mit Overflow-Containern kollidieren, braucht separate Cap-Sum-Audit. Alternativ: **Schlangenlichtung-Cap-Senkung** (Spielflaeche-min-height 10rem/22vh/14rem → 8rem/18vh/11rem) für weitere 50-72 px Bottom-Row-Gewinn.
+
+> **Nachtrag 30.07.2026 zum Pre-Existing-Test-Bestand.** Die in den M3g- und M3i-Eintraegen als
+> akzeptierter Bestand gefuehrten 30–36 Failures sind **seit Audit C5 (`5f05767`) vollstaendig
+> behoben**. Gemessener Stand auf `04aaa12`: **411 Testdateien / 1556 Tests gruen, 0 Failures**.
+> Die historischen Eintraege oben bleiben unveraendert als Zeitdokument stehen; maßgeblich ist
+> die Evidence-Sektion zur Audit-Kette A–C7 weiter unten.
+
+## Evidence — 05.–06.07.2026 Audit-Kette A–C7 (Engine-, Regel-, Informations- und UI-Fixes)
+
+Sammel-Evidence fuer die neun Audit-Commits `84b9f21`…`04aaa12`. Sie wurden als zusammenhaengende
+Korrekturkette auf `audit-fixes` erarbeitet und liegen vollstaendig auf `main` = `origin/main`.
+
+### Scope je Commit
+
+| Commit | Datum | Inhalt | Diff |
+|---|---|---|---|
+| `84b9f21` | 05.07.2026 | Phase A + B1/B2 — kritische Engine-Fixes (K1 Farbendieb stiehlt nur Farbkarten, K2 verwaiste `farbenfusionen`-Eintraege bereinigen, K3 exakte Schlangenfrass-Vorbedingung, A4 keine Farbenschutz-Selbstreaktion, H2 keine Zugpflicht ohne Handkarten) + Aufgaben-Wertung (K4 geheime Aufgabe sticky, K5 Endspurt-Verdopplung offener Aufgaben) | 27 Dateien, +893/−38 |
+| `bf5ee18` | 05.07.2026 | B3/H1 — die 4 Schlangenhaeutung-Karten kommen ins tatsaechliche Spieldeck (110 → 114), sonst waeren Haeutungs-Mechanik und die Aufgabe „Schlangentanz" unerreichbar | 10 Dateien, +146/−7 |
+| `00a2fb5` | 05.07.2026 | C1/H3 — verdeckte Informationen strikt schuetzen: keine Ableitung gegnerischer Handkarten, angezeigte geheime Aufgabe gehoert stets dem Menschen (R1.3/R1.4) | 11 Dateien, +98/−175 |
+| `9624d8e` | 05.07.2026 | C2 — Ueberhand-Abwurf mit echter Spielerwahl statt Auto-Abwurf der letzten Karten (R2.5) | 4 Dateien, +93/−7 |
+| `c0986e1` | 05.07.2026 | C3 — zentrale `zielspurKey`-Factory; behebt ins Leere springende Brett-Sprunglinks bei Schlangenblockade/Farbendieb | 6 Dateien, +133/−29 |
+| `1013059` | 05.07.2026 | C4 — Test-Hooks (`window.__schlangentanzFixture`, `?phase=`) hinter `testHooksAktiv()`; Fixture-Kartenname `Schlangenhaeutung` → `Schlangenhäutung` | 5 Dateien, +68/−3 |
+| `5f05767` | 06.07.2026 | C5 — Test-Suite an C1–C4 und das Arena-Layout angepasst; beseitigt den bis dahin akzeptierten Failure-Bestand | 27 Dateien, +152/−228 |
+| `6f564af` | 06.07.2026 | C6 — `--st-font-heading` → `--st-font-headline` (der Typo verwies auf einen undefinierten Token) | 1 Datei, +2/−2 |
+| `04aaa12` | 06.07.2026 | C7 — Gegner-Zielspur-Highlight an die M1dp-Gegnerlichtung verdrahtet | 5 Dateien, +41/−5 |
+
+### Automated gates (gemessen 30.07.2026 auf `04aaa12`, sauberer Working Tree)
+
+- [x] Unit-/Regel-/State-/UI-Tests: `npm test -- --run` → **411 Testdateien / 1556 Tests bestanden, 0 Failures**, Exit-Code 0, Dauer 298,65 s
+- [x] Typecheck: `npm run typecheck` → Exit-Code 0
+- [x] Lint: `npm run lint` → Exit-Code 0
+- [x] Production build: `npm run build` → Exit-Code 0 (245,66 kB CSS / 431,61 kB JS, 107 Module)
+- [x] Testdateilaengencheck: `npm run check:test-lines` → „Alle Testdateien bleiben unter 500 Zeilen."
+- [x] Vollpartie-Soak-Test (A6): `src/engine/__tests__/vollpartie_simulation.test.ts` spielt deterministische Vollpartien (2–4 Spieler) ueber die oeffentliche Engine-API; Invarianten pro Zug: keine Exception, Wertung stabil, Serialisierungs-Roundtrip stabil, kein Deadlock
+
+### Offen / nicht Teil dieser Evidence
+
+- [ ] Live-Production-Gates fuer die Audit-Kette (HTTP 200, `/game` ohne Console-Errors, Smoke-Kette) — die Kette wurde nach `main` gemerged, aber in diesem Dokument liegt keine Deploy-Evidence dafuer vor.
+- [ ] Human gate fuer die Audit-Kette — der Nutzer hat die Spielbarkeit nach C1–C7 noch nicht bestaetigt.

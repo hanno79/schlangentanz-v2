@@ -60,6 +60,7 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Risiko-Belohnungs-Karten: 8 Stück, je 2 pro Spieler.
 - Digital: Hauptstapel wird per Fisher-Yates oder gleichwertigem Zufallsalgorithmus gemischt.
 - Digitales Spieldeck: Der tatsächlich gemischte Nachziehstapel umfasst die 110 Basiskarten plus die 4 Schlangenhäutung-Karten der Erweiterung (114 Karten). Nur dadurch sind die Schlangenhäutung-Mechanik und die Aufgabe „Schlangentanz" erreichbar. Comeback, Risiko-Belohnung und „Schlangenkorb des Glücks" bleiben vorerst außerhalb des Spieldecks.
+- Materialumfang (141 Karten) und digitales Spieldeck (114 Karten) sind also bewusst verschieden. Die 13 Karten `Comeback` (4), `Risiko-Belohnung` (8) und `Schlangenkorb des Glücks` (1) werden im Code weiterhin als Kartendefinitionen erzeugt, gelangen aber nie in eine Partie; ihr einziger Zweck ist die Namensvalidierung beim Deserialisieren von Spielzuständen. Sie sind kein toter Code und auch keine halbfertige Implementierung, sondern dokumentierter Materialumfang ohne Spielwirkung.
 
 ### R1.3 Startkarten verteilen
 
@@ -436,6 +437,15 @@ Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarte
 | 14 | Lila Riese | 5 | Bilde die längste ununterbrochene Kette violetter Karten (mindestens 3). |
 
 Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenkarten" und „7 geheime Aufgabenkarten". Offen/geheim ist nach Website-Regel eine Auslage-/Sichtbarkeitsform, keine getrennte Namenskategorie.
+
+#### R6.2a Digitale Auslegung einzelner Kartentexte
+
+Die Kartentexte oben sind die verbindliche Normquelle und werden **wörtlich** so geführt, wie sie auf der Karte stehen. Zwei Formulierungen sind am Tisch eindeutig, digital aber auslegungsbedürftig; hier gilt verbindlich:
+
+- **Nr. 14 „Lila Riese" — „die längste ununterbrochene Kette violetter Karten (mindestens 3)".** Der Superlativ „längste" beschreibt am Tisch einen Vergleich zwischen den Spielern, der digital eine spielerübergreifende Auswertung mit Gleichstandsregel erfordern würde; die Karte nennt aber weder einen Auswertungszeitpunkt noch eine Gleichstandsregel dafür. Digital gilt deshalb die untere Schranke des Kartentexts als Bedingung: **mindestens eine ununterbrochene Violett-Kette aus 3 oder mehr Karten in einer eigenen Schlange.** Sonderkarten unterbrechen die Kette nach der allgemeinen Regel. Dies ist die implementierte Auslegung, keine Abweichung von der Normquelle.
+- **Nr. 6 „Fusionsexperte" und Nr. 7 „Schlangenbeschwörer"** werden gegen den aktuellen Zustand der eigenen Schlangen geprüft (Karten *in* den Schlangen), nicht gegen die Historie ausgespielter Karten. Nr. 8 „Schlangenmeister" und Nr. 9 „Schlangenrepertoire" prüfen umgekehrt ausdrücklich die Historie („spiele … aus"), weil ihr Kartentext das so verlangt.
+
+Eine Änderung dieser Auslegungen ist eine Regeländerung und braucht eine bestätigte Normquelle oder einen User-Signoff — nicht nur einen Code-Fix.
 
 #### R6.3 SchlangenSpass!-Mechanik
 
