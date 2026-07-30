@@ -26,8 +26,25 @@ Old work may be read only as historical reference after explicit Hermes approval
 6. Codex reviews every rules/engine slice after the `/simplify` pre-check and before merge/release.
 7. No release without `docs/PLAYABILITY_GATE.md` evidence.
 
+## Layout-Verträge (ÄNDERUNG 30.07.2026, AP-2)
+
+Layout-Verträge werden **gemessen, nicht im CSS-Quelltext gelesen**.
+
+- Neue Layout-Zusicherungen gehören als Playwright-Messung nach `tests/layout/`
+  und benutzen die Primitive aus `tests/layout/messung.ts`.
+- **Keine neuen CSS-Quelltext-Parser.** Es wird kein `readFileSync('src/App.css')`
+  mit selbstgebautem Klammer-Walker mehr in Testdateien eingeführt.
+  `npm run check:css-asserts` bricht ab, sobald der Bestand steigt.
+- `clamp()`-Verträge werden als **Bereich** geprüft (`erwarteHoeheImRemBereich`),
+  nie als exakter Pixelwert — sonst ist es dieselbe Brüchigkeit in neuer Verpackung.
+- Der Altbestand wird slice-weise abgebaut; die verbleibende Zahl steht in
+  `scripts/css_source_asserts_baseline.json`.
+
 ## Commands
 - `npm test -- --run`
+- `npm run test:layout` — Playwright-Layout-Verträge gegen `vite preview`
 - `npm run typecheck`
 - `npm run build`
+- `npm run check:test-lines`
+- `npm run check:css-asserts`
 - `npm run dev`

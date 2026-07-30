@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.layout.tsbuildinfo",
+    "target": "es2023",
+    /* DOM ist hier zwingend: die Callbacks in `page.evaluate(...)` werden im
+       Browser ausgefuehrt und greifen auf document/getComputedStyle/HTMLElement zu.
+       Deshalb ein eigenes Projekt statt DOM-Typen fuer alle Node-Tests. */
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["tests/layout/**/*.ts", "playwright.config.ts"]
+}

@@ -4,5 +4,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
     "types": ["node", "vitest/globals"]
   },
-  "include": ["tests/**/*.ts", "src/test/**/*.ts"]
+  "include": ["tests/**/*.ts", "src/test/**/*.ts"],
+  "//": "AENDERUNG [30.07.2026]: AP-2 — tests/layout/** hat ein eigenes Projekt (tsconfig.layout.json), weil die page.evaluate-Callbacks DOM-Typen brauchen.",
+  "exclude": ["tests/layout/**"]
 }

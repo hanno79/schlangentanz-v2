@@ -108,6 +108,46 @@ kompilierten Guard-Funktion, nicht nach dem Hook-Namen.
 Vitest-Tests brauchen keine Sonderkonfiguration: im Testlauf ist
 `import.meta.env.DEV` ohnehin `true`, sodass die Hooks dort aktiv bleiben.
 
+## Layout-Verträge (ÄNDERUNG 30.07.2026, AP-2)
+
+Layout-Zusicherungen werden im Browser **gemessen**, nicht im CSS-Quelltext gelesen.
+
+### Warum
+
+177 Testdateien lasen `src/App.css` als Text und prüften mit selbstgebauten
+Klammer-Parsern auf exakte `clamp()`-Werte — rund 740 solcher Assertions. Die
+Absicht dahinter ist fast immer geometrisch („der Arenastein darf nicht so hoch
+werden, dass die Hand aus dem 1280×900-Erstbild rutscht"). Der Umweg über den
+Quelltext hatte drei Kosten: jede Layout-Änderung erzwang eine Migration fremder
+Testdateien („Pitfall #48"), die Prüfung sagte nichts über das tatsächliche
+Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
+
+### Wie
+
+- `npm run test:layout` startet Playwright gegen `vite preview`
+  (`playwright.config.ts`, Viewport 1280×900, `reducedMotion: 'reduce'` — dieselben
+  Parameter wie die Production-Smokes, damit die Werte vergleichbar bleiben).
+- Verträge liegen unter `tests/layout/` und benutzen die Primitive aus
+  `tests/layout/messung.ts` (die einzige Quelle für Messungen).
+- `clamp()` wird als **Bereich** in `rem` geprüft, nie als exakter Pixelwert.
+- `tests/layout/**` hat ein eigenes TS-Projekt (`tsconfig.layout.json`), weil die
+  `page.evaluate`-Callbacks DOM-Typen brauchen, und ist in `vite.config.ts` von
+  Vitest ausgeschlossen.
+- Der Lauf ist **nicht** Teil von `npm test`: er braucht einen Production-Build und
+  ist um Größenordnungen langsamer.
+
+### Abbau des Altbestands
+
+`npm run check:css-asserts` zählt die verbliebenen CSS-Quelltext-Assertions und
+schlägt fehl, sobald die Zahl über `scripts/css_source_asserts_baseline.json`
+steigt. Sinkt sie, fordert der Guard das Nachziehen der Baseline ein
+(`npm run check:css-asserts -- --update-baseline`). Damit friert ein Abbruch der
+Migration den erreichten Stand ein, statt ihn zurückrollen zu lassen.
+
+Stand 30.07.2026: **737 Assertions in 183 Dateien** (Start 741/184; der Pilot
+`src/App.m95_arena_cap.test.ts` ist nach `tests/layout/arena_erstbild.spec.ts`
+migriert).
+
 ## Bewusst nicht implementiert (Stand 30.07.2026)
 
 Damit diese Punkte nicht wiederholt als „toter Code" oder „vergessenes Feature"
