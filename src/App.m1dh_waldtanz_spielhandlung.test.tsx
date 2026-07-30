@@ -14,10 +14,10 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 import HandkartenPanel from './components/HandkartenPanel'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 const appTsx = readFileSync('src/components/HandkartenPanel.tsx', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const m1dhScript = readFileSync('scripts/m1dh_waldtanz_spielhandlung_smoke.mjs', 'utf8')
 
 const cssBlock = (selektor: string) => {
@@ -161,9 +161,11 @@ describe('M1dh Waldtanz-Spielhandlung am Brettrand', () => {
     expect(appTsx).toMatch(/Abwerfen · noch \{pflichtAbwurfAktionen\.length\}/)
   })
 
-  it('verdrahtet den M1dh-Smoke in npm run smoke:production und das Slice-Skript enthaelt die pruefe-Funktion', () => {
-    const chain = packageJson.match(/"smoke:production":\s*"([^"]+)"/)?.[1] ?? ''
-    expect(chain).toContain('m1dh_waldtanz_spielhandlung_smoke.mjs')
+  // ÄNDERUNG [30.07.2026]: AP-1 — M1dh braucht den `?phase=`-Test-Hook und läuft
+  // seither in `smoke:preview` statt `smoke:production`, damit die Hooks in der
+  // ausgelieferten Production-App abgeschaltet bleiben können.
+  it('verdrahtet den M1dh-Smoke in einer der Smoke-Ketten und das Slice-Skript enthaelt die pruefe-Funktion', () => {
+    expect(istVerdrahtet('m1dh_waldtanz_spielhandlung_smoke.mjs')).toBe(true)
     // pruefeM1dhSpielhandlung lebt im Slice-Skript selbst, nicht in live_smoke.mjs.
     expect(m1dhScript).toContain('pruefeM1dhSpielhandlung')
     expect(m1dhScript).toContain('handkarten-buehne__endturn')

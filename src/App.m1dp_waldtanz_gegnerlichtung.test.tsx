@@ -19,6 +19,7 @@ import { resolve } from 'node:path'
 import { render, screen, within } from '@testing-library/react'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -45,9 +46,6 @@ function cssBlock(selector: string, css: string): string {
 
 const appCss = readFileSync(resolve(__dirname, './App.css'), 'utf8')
 const appTsx = readFileSync(resolve(__dirname, './App.tsx'), 'utf8')
-const packageJson = JSON.parse(readFileSync(resolve(__dirname, '../package.json'), 'utf8')) as {
-  scripts: Record<string, string>
-}
 
 function bauZustandMitGegnerschlange() {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -161,9 +159,12 @@ describe('M1dp Waldtanz-Gegnerlichtung auf /game', () => {
     expect(schlangenbereichTsx).not.toMatch(/schlangen-gruppe--gegnerfelder/)
   })
 
-  it('RED: npm-script-Chain enthaelt M1dp-Production-Smoke', () => {
-    const smoke = packageJson.scripts['smoke:production'] ?? ''
-    expect(smoke).toMatch(/m1dp_waldtanz_gegnerlichtung_smoke\.mjs/)
+  // ÄNDERUNG [30.07.2026]: AP-1 — M1dp injiziert die Gegnerschlange über
+  // `window.__schlangentanzFixture` und läuft seither in `smoke:preview`. Ohne Hook
+  // überspringt das Skript die Injektion still und prüft deutlich weniger; deshalb
+  // liegt die fixture-gestützte Abdeckung gebündelt in der Preview-Kette.
+  it('RED: M1dp-Smoke ist in einer der Smoke-Ketten verdrahtet', () => {
+    expect(istVerdrahtet('m1dp_waldtanz_gegnerlichtung_smoke.mjs')).toBe(true)
   })
 })
 

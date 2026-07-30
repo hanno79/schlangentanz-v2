@@ -24,6 +24,7 @@ import {
   type SonderkarteInfo,
   type Spielzustand,
 } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -41,8 +42,6 @@ function cssBodyFor(selector: string, css: string): string {
 }
 
 const appCss = readFileSync(resolve(__dirname, './App.css'), 'utf8')
-const packageJsonRaw = readFileSync(resolve(__dirname, '../package.json'), 'utf8')
-const packageJson = JSON.parse(packageJsonRaw) as { scripts: Record<string, string> }
 
 function bauZustandMitSonderkarteInHand(): Spielzustand {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.42))
@@ -169,9 +168,10 @@ describe('M1dq Waldtanz-Sonderkarten-Spielmoment', () => {
     expect(block).toMatch(/var\(--st-font-headline\)/)
   })
 
-  it('RED-8: Smoke-Wiring — package.json smoke:production chain enthaelt M1dq-Script', () => {
-    const chain = packageJson.scripts['smoke:production'] ?? ''
-    expect(chain).toMatch(/m1dq_waldtanz_sonderkarten_spielmoment_smoke\.mjs/)
+  // ÄNDERUNG [30.07.2026]: AP-1 — M1dq injiziert Sonderkarte und Gegnerschlange
+  // über `window.__schlangentanzFixture` und läuft seither in `smoke:preview`.
+  it('RED-8: Smoke-Wiring — M1dq-Script ist in einer der Smoke-Ketten verdrahtet', () => {
+    expect(istVerdrahtet('m1dq_waldtanz_sonderkarten_spielmoment_smoke.mjs')).toBe(true)
   })
 
   it('RED-9: Bubble bleibt verborgen, wenn Sonderkarte gewaehlt aber KEIN legales Ziel existiert', () => {

@@ -45,18 +45,68 @@ This project starts cleanly in a new local folder, new GitHub repository, and ne
 8. Vercel production gate
 9. Human playability gate
 
-## Test-Hooks (ÄNDERUNG 05.07.2026, C4)
+## Test-Hooks (ÄNDERUNG 05.07.2026 C4, überarbeitet 30.07.2026 AP-1)
 
 Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
-seit dem Audit-Fix C4 **nur im Dev-Build oder mit gesetztem `VITE_TEST_HOOKS=1`**
-aktiv (siehe `src/testPhaseHook.ts` → `testHooksAktiv()`). In der normal
-ausgelieferten Produktions-App sind sie deaktiviert.
+**nur im Dev-Build oder mit gesetztem `VITE_TEST_HOOKS=1`** aktiv (siehe
+`src/testPhaseHook.ts` → `testHooksAktiv()`).
 
-- Die Live-Smokes (`scripts/*.mjs`) laufen gegen die Produktion und benötigen die
-  Hooks. Damit sie weiter funktionieren, muss im Vercel-Projekt die Umgebungs-
-  variable `VITE_TEST_HOOKS=1` gesetzt sein (Preview/Production nach Bedarf).
-- Vitest-Tests brauchen keine Sonderkonfiguration: im Testlauf ist `import.meta.env.DEV`
-  ohnehin `true`, sodass die Hooks dort aktiv bleiben.
+> **`VITE_TEST_HOOKS` gehört ausschließlich in die Vercel-Preview-Umgebung —
+> ausdrücklich NICHT in Production.**
+>
+> Bis AP-1 verlangte diese Doku die Variable auch in Production, damit sechs
+> Smokes durchliefen. Damit war der Hook in der ausgelieferten App wieder
+> erreichbar und konnte beliebige Spielzustände injizieren — der Sicherheitsgewinn
+> von C4 war faktisch aufgehoben. Seit AP-1 laufen genau diese sechs Smokes in
+> einer eigenen Kette gegen ein Preview-Deployment.
+
+### Zwei Smoke-Ketten
+
+| Script | Umfang | Ziel | Test-Hooks |
+|---|---|---|---|
+| `npm run smoke:production` | 77 Smokes | Production-URL | nicht nötig |
+| `SMOKE_BASE_URL=<preview-url> npm run smoke:preview` | 6 Smokes | Preview-Deployment | erforderlich |
+
+Die Preview-Kette enthält:
+
+- `m1e_waldtanz_spieluhr_smoke.mjs` und `m1dh_waldtanz_spielhandlung_smoke.mjs` —
+  navigieren nach `/game?phase=…` und asserten auf die erzwungene Phase.
+- `m2a_…` und `m2d_…` — brechen hart ab, wenn `window.__schlangentanzFixture`
+  fehlt.
+- `m1dp_…` und `m1dq_…` — überspringen die Fixture-Injektion ohne Hook still und
+  prüfen dann deutlich weniger. Sie laufen bewusst ebenfalls in der Preview-Kette,
+  damit die fixture-gestützte Abdeckung an genau einer Stelle liegt, statt in
+  Production unbemerkt auf eine Teilprüfung zusammenzufallen.
+
+Alle sechs Skripte lesen `SMOKE_BASE_URL` bereits aus der Umgebung; ohne die
+Variable liefen sie gegen die Production-URL und würden dort scheitern.
+
+### Absicherung
+
+- `src/App.hooks_production_guard.test.ts` schlägt fehl, sobald ein hook-abhängiger
+  Smoke zurück in `smoke:production` wandert **oder** ein bestehender
+  Production-Smoke neu einen Hook benutzt. Die Prüfung liest die Skript-Quelltexte,
+  verlässt sich also nicht auf eine gepflegte Liste.
+- `src/test/smokeKetten.ts` ist die einzige Stelle, die die Ketten aus
+  `package.json` liest. Wiring-Tests fragen `istVerdrahtet(...)`, statt selbst auf
+  einer der Ketten zu suchen — sonst bricht jeder Wechsel der Kette 20 Tests.
+
+### Was im Production-Bundle steht
+
+`testHooksAktiv()` kompiliert im Production-Build zu `return false` — geprüft am
+Bundle vom 30.07.2026: `function Qr(){return!1}`. Der Installationspfad des Hooks
+ist damit **statisch unerreichbar**.
+
+Der Bezeichner `__schlangentanzFixture` ist im Bundle trotzdem noch als Zeichenkette
+zu finden: Vite entfernt den toten Zweig hinter `if (… || !testHooksAktiv()) return`
+nicht. Ein `grep` im Bundle ist deshalb **kein** taugliches Kriterium. Maßgeblich ist,
+dass die Guard-Funktion zu `false` auflöst; wer das prüfen will, sucht nach der
+kompilierten Guard-Funktion, nicht nach dem Hook-Namen.
+
+### Vitest
+
+Vitest-Tests brauchen keine Sonderkonfiguration: im Testlauf ist
+`import.meta.env.DEV` ohnehin `true`, sodass die Hooks dort aktiv bleiben.
 
 ## Bewusst nicht implementiert (Stand 30.07.2026)
 

@@ -19,9 +19,9 @@ import {
   starteAusspielphase,
   type Spielzustand,
 } from './engine'
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 // (escapeRegex-Helper nicht mehr noetig, alle Assertions nutzen direkten One-Liner.)
 
@@ -126,17 +126,16 @@ describe('M1ds Waldtanz-Spielkarten-Heb-Dich-Hoch', () => {
     expect(appCss).toMatch(/@keyframes\s+handkarte-wackelt[\s\S]*?50%\s*\{[\s\S]*?translateY\(-3\.0rem\)[\s\S]*?scale\(1\.2\)/)
   })
 
-  it('verdrahtet das M1ds-Smoke-Skript in der kanonischen smoke:production-Kette', () => {
-    expect(packageJson).toMatch(/m1ds_waldtanz_spielkarten_hebdichhoch_smoke\.mjs/)
-    // Chain-Order: M1ds kommt nach M1dq, vor M3b
-    const chain = packageJson.match(/smoke:production[\s\S]+?m3b_sonniges_nest_spielstart_smoke\.mjs/)?.[0] ?? ''
-    expect(chain).toMatch(/m1dq_waldtanz_sonderkarten_spielmoment_smoke\.mjs/)
-    const m1dqIdx = chain.indexOf('m1dq_waldtanz_sonderkarten_spielmoment_smoke.mjs')
-    const m1dsIdx = chain.indexOf('m1ds_waldtanz_spielkarten_hebdichhoch_smoke.mjs')
-    const m3bIdx = chain.indexOf('m3b_sonniges_nest_spielstart_smoke.mjs')
-    expect(m1dqIdx).toBeGreaterThan(-1)
-    expect(m1dsIdx).toBeGreaterThan(m1dqIdx)
+  // ÄNDERUNG [30.07.2026]: AP-1 — M1dq ist hook-abhängig und liegt seither in
+  // `smoke:preview`. Der frühere Anker „M1ds kommt nach M1dq" ist damit
+  // kettenübergreifend und ohne Aussage. Erhalten bleibt der prüfbare Teil des
+  // Vertrags innerhalb der Production-Kette: M1ds liegt vor M3b.
+  it('verdrahtet das M1ds-Smoke-Skript in der kanonischen smoke:production-Kette vor M3b', () => {
+    const m1dsIdx = produktionsPosition('m1ds_waldtanz_spielkarten_hebdichhoch_smoke.mjs')
+    const m3bIdx = produktionsPosition('m3b_sonniges_nest_spielstart_smoke.mjs')
+    expect(m1dsIdx).toBeGreaterThan(-1)
     expect(m3bIdx).toBeGreaterThan(m1dsIdx)
+    expect(istVerdrahtet('m1dq_waldtanz_sonderkarten_spielmoment_smoke.mjs')).toBe(true)
   })
 
   it('respektiert reduced-motion: Hover-Lift bleibt statisch ohne Wackel-Animation', () => {

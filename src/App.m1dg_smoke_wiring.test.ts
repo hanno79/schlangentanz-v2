@@ -17,6 +17,7 @@
 
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
 
 describe('M1dg Smoke-Wiring (Waldtanz-Lichtungsstein)', () => {
   it('existiert das M1dg-Browser-Smoke-Skript als kanonische Datei (nicht _probe)', () => {
@@ -39,19 +40,19 @@ describe('M1dg Smoke-Wiring (Waldtanz-Lichtungsstein)', () => {
     expect(smoke).toMatch(/m1dg_waldtanz_lichtungsstein_smoke\.mjs/)
   })
 
-  it('folgt die Reihenfolge M1e -> M1df -> M1dg -> M1d1 in der Smoke-Kette', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-    const smoke = pkg.scripts['smoke:production'] ?? ''
-    const idxM1e = smoke.search(/m1e_waldtanz_spieluhr_smoke/)
-    const idxM1df = smoke.search(/m1df_waldtanz_steinkreis_smoke/)
-    const idxM1dg = smoke.search(/m1dg_waldtanz_lichtungsstein_smoke/)
-    const idxM1d1 = smoke.search(/m1d1_arena_flex_column_smoke/)
-    expect(idxM1e).toBeGreaterThan(-1)
+  // ÄNDERUNG [30.07.2026]: AP-1 — M1e ist hook-abhängig (`/game?phase=…`) und liegt
+  // seither in `smoke:preview`. Der Kettenpositions-Vergleich gilt deshalb nur noch
+  // für die drei Smokes, die gemeinsam in `smoke:production` laufen; M1e wird auf
+  // Verdrahtung in einer der beiden Ketten geprüft.
+  it('folgt die Reihenfolge M1df -> M1dg -> M1d1 in der Production-Kette (M1e in Preview)', () => {
+    const idxM1df = produktionsPosition('m1df_waldtanz_steinkreis_smoke')
+    const idxM1dg = produktionsPosition('m1dg_waldtanz_lichtungsstein_smoke')
+    const idxM1d1 = produktionsPosition('m1d1_arena_flex_column_smoke')
     expect(idxM1df).toBeGreaterThan(-1)
     expect(idxM1dg).toBeGreaterThan(-1)
     expect(idxM1d1).toBeGreaterThan(-1)
-    expect(idxM1e).toBeLessThan(idxM1df)
     expect(idxM1df).toBeLessThan(idxM1dg)
     expect(idxM1dg).toBeLessThan(idxM1d1)
+    expect(istVerdrahtet('m1e_waldtanz_spieluhr_smoke')).toBe(true)
   })
 })

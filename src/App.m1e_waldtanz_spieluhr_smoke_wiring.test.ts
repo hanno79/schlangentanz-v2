@@ -1,12 +1,16 @@
 /**
  * Author: rahn
  * Datum: 24.06.2026
- * Version: 1.0
- * Beschreibung: M1e Smoke-Wiring-Test stellt sicher, dass der neue
- *              Waldtanz-Spieluhr-Smoke in der kanonischen
- *              `smoke:production`-Kette eingebunden ist. Verhindert, dass
- *              ein neuer Slice-Smoke stillschweigend vom Release uebergangen
- *              wird.
+ * Version: 1.1
+ * Beschreibung: M1e Smoke-Wiring-Test stellt sicher, dass der
+ *              Waldtanz-Spieluhr-Smoke in einer der kanonischen Smoke-Ketten
+ *              eingebunden ist. Verhindert, dass ein Slice-Smoke
+ *              stillschweigend vom Release uebergangen wird.
+ *
+ *  AENDERUNG [30.07.2026]: AP-1 — M1e navigiert nach `/game?phase=endspurt`
+ *  bzw. `?phase=spielende` und braucht damit den `?phase=`-Test-Hook. Seit AP-1
+ *  laufen hook-abhaengige Smokes in `smoke:preview`, damit die Hooks in der
+ *  ausgelieferten Production-App abgeschaltet bleiben koennen.
  *
  *  Zusaetzlich: M1e CSS-Token-Guard. Alle CSS-Custom-Properties, die in
  *  der Slice-CSS verwendet werden, muessen in :root definiert sein.
@@ -20,20 +24,22 @@
 
 import { readFileSync, existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-const smokeChain = packageJson.scripts?.['smoke:production'] ?? ''
+import { istVerdrahtet, previewSchritte, produktionsPosition } from './test/smokeKetten'
 
 describe('M1e Smoke-Wiring in der kanonischen Kette', () => {
   it('verweist auf den neuen Waldtanz-Spieluhr-Smoke', () => {
-    expect(smokeChain).toContain('m1e_waldtanz_spieluhr_smoke.mjs')
+    expect(istVerdrahtet('m1e_waldtanz_spieluhr_smoke.mjs')).toBe(true)
   })
 
-  it('liegt nach dem M1dd-Smoke (konsistente Slice-Reihenfolge)', () => {
-    const idxM1dd = smokeChain.indexOf('m1dd_aktionsdock_im_spielbrett_smoke.mjs')
-    const idxM1e = smokeChain.indexOf('m1e_waldtanz_spieluhr_smoke.mjs')
-    expect(idxM1dd).toBeGreaterThanOrEqual(0)
-    expect(idxM1e).toBeGreaterThan(idxM1dd)
+  // ÄNDERUNG [30.07.2026]: AP-1 — der frühere Assert „liegt nach dem M1dd-Smoke"
+  // ist mit zwei Ketten gegenstandslos: M1dd läuft in `smoke:production`, M1e in
+  // `smoke:preview`. Ein Positionsvergleich über Kettengrenzen hinweg hätte keine
+  // Aussage mehr. Der schützenswerte Kern — „M1e wird nicht stillschweigend vom
+  // Release übergangen" — bleibt über `istVerdrahtet` und den Kettenzuschnitt unten
+  // erhalten.
+  it('läuft in der Preview-Kette, weil es den ?phase=-Test-Hook braucht', () => {
+    expect(previewSchritte().some((schritt) => schritt.includes('m1e_waldtanz_spieluhr_smoke.mjs'))).toBe(true)
+    expect(produktionsPosition('m1dd_aktionsdock_im_spielbrett_smoke.mjs')).toBeGreaterThanOrEqual(0)
   })
 
   it('existiert als Smoke-Skript im Repo', () => {

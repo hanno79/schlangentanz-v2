@@ -20,8 +20,7 @@
 
 import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts: Record<string, string> }
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
 const appCss = readFileSync('src/App.css', 'utf8')
 
 describe('M1df Waldtanz-Spielmoment-Stein­kreis Smoke-Wiring', () => {
@@ -29,16 +28,18 @@ describe('M1df Waldtanz-Spielmoment-Stein­kreis Smoke-Wiring', () => {
     expect(existsSync('scripts/m1df_waldtanz_steinkreis_smoke.mjs')).toBe(true)
   })
 
-  it('M1df-Smoke ist in smoke:production-Kette zwischen M1e und M1d1 verdrahtet', () => {
-    const chain = packageJson.scripts['smoke:production'] ?? ''
-    const m1e = chain.indexOf('m1e_waldtanz_spieluhr_smoke.mjs')
-    const m1df = chain.indexOf('m1df_waldtanz_steinkreis_smoke.mjs')
-    const m1d1 = chain.indexOf('m1d1_arena_flex_column_smoke.mjs')
-    expect(m1e).toBeGreaterThan(-1)
+  // ÄNDERUNG [30.07.2026]: AP-1 — M1e ist hook-abhängig (`/game?phase=…`) und
+  // liegt seither in `smoke:preview`, nicht mehr in `smoke:production`. Ein
+  // Positionsvergleich M1e < M1df über Kettengrenzen hinweg hätte keine Aussage
+  // mehr. Erhalten bleibt der Teil des Vertrags, der innerhalb der Production-Kette
+  // prüfbar ist (M1df vor M1d1), plus die Verdrahtung von M1e in *einer* Kette.
+  it('M1df-Smoke ist in smoke:production vor M1d1 verdrahtet, M1e in einer der Ketten', () => {
+    const m1df = produktionsPosition('m1df_waldtanz_steinkreis_smoke.mjs')
+    const m1d1 = produktionsPosition('m1d1_arena_flex_column_smoke.mjs')
     expect(m1df).toBeGreaterThan(-1)
     expect(m1d1).toBeGreaterThan(-1)
-    expect(m1df).toBeGreaterThan(m1e)
     expect(m1d1).toBeGreaterThan(m1df)
+    expect(istVerdrahtet('m1e_waldtanz_spieluhr_smoke.mjs')).toBe(true)
   })
 
   it('keine temporaeren _probe.mjs Skripte im scripts/-Verzeichnis', () => {

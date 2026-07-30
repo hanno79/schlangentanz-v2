@@ -13,8 +13,6 @@
  *              - package.json smoke:production chain enthaelt M2a
  */
 import { beforeEach, describe, it, expect } from 'vitest'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { render } from '@testing-library/react'
 import App from './App'
 import { ermittleAutoHighlightZielspurKey } from './components/waldtanzZielspurLogik'
@@ -27,9 +25,8 @@ import {
   type SonderkarteInfo,
   type Spielzustand,
 } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
-const packageJsonRaw = readFileSync(resolve(__dirname, '../package.json'), 'utf8')
-const packageJson = JSON.parse(packageJsonRaw) as { scripts: Record<string, string> }
 
 function bauZustandMitSchlangenfrassInHand(): Spielzustand {
   // Schlangenfrass braucht mindestens eine gegnerische Schlange
@@ -171,8 +168,10 @@ describe('M2a Waldtanz-Sonderkarten-Brettziel-Auto-Highlight', () => {
     expect(result).toBeNull()
   })
 
-  it('RED-6: package.json smoke:production enthaelt M2a-Smoke-Skript', () => {
-    const chain = packageJson.scripts['smoke:production'] ?? ''
-    expect(chain).toMatch(/m2a_waldtanz_sonderkarten_brettziel_highlight/)
+  // ÄNDERUNG [30.07.2026]: AP-1 — M2a bricht ohne `window.__schlangentanzFixture`
+  // hart ab und läuft seither in `smoke:preview` gegen ein Preview-Deployment mit
+  // gesetztem VITE_TEST_HOOKS.
+  it('RED-6: M2a-Smoke-Skript ist in einer der Smoke-Ketten verdrahtet', () => {
+    expect(istVerdrahtet('m2a_waldtanz_sonderkarten_brettziel_highlight')).toBe(true)
   })
 })
