@@ -41,7 +41,7 @@ describe('M1bm Waldtanz-Wegweiser', () => {
     expect(within(spielerfuehrung).getByText('Waldtanz-Wegweiser')).toBeVisible()
     expect(within(spielerfuehrung).getByText('Dein nächster Schritt')).toBeVisible()
     expect(within(spielerfuehrung).getByText('Eine spielbare Aktion auswählen.')).toBeVisible()
-    expect(within(spielerfuehrung).getByText('Neue Schlange starten mit Karte blau-01')).toBeVisible()
+    expect(within(spielerfuehrung).getByText('Neue Schlange starten mit Wasserwirbel')).toBeVisible()
     expect(within(spielerfuehrung).getByRole('link', { name: 'Zur empfohlenen Aktion im Aktionsbereich' })).toBeVisible()
 
     expect(zugtafel.compareDocumentPosition(spielerfuehrung) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(

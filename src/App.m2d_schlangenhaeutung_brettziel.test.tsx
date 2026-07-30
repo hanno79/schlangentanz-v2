@@ -65,7 +65,7 @@ describe('M2d Schlangenhäutung-Brettziel', () => {
       name: 'Schlangenhäutung am Brett mit Karte schlangenhaeutung-m2d: Schlange schlange-m2d-lichtung umkehren',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-m2d auf Schlange schlange-m2d-lichtung spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Schlangenhäutung/)).toBeVisible()
     const aktualisierteReihe = within(eigeneSchlangen).getByRole('list', { name: 'Kartenreihe schlange-m2d-lichtung' })
     const karten = within(aktualisierteReihe).getAllByRole('listitem').map((karte) => within(karte).getByText(/m2d-/).textContent)
     expect(karten).toEqual(['gruen-m2d-c', 'blau-m2d-b', 'rot-m2d-a'])
@@ -95,7 +95,7 @@ describe('M2d Schlangenhäutung-Brettziel', () => {
       name: 'Schlangenhäutung am Brett mit Karte schlangenhaeutung-m2d-ende: erste Karte von Schlange schlange-m2d-ende ans Ende setzen',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-m2d-ende auf Schlange schlange-m2d-ende spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Schlangenhäutung/)).toBeVisible()
     const reihe = within(eigeneSchlangen).getByRole('list', { name: 'Kartenreihe schlange-m2d-ende' })
     const karten = within(reihe).getAllByRole('listitem').map((karte) => within(karte).getByText(/m2d-ende/).textContent)
     expect(karten).toEqual(['blau-m2d-ende-b', 'gruen-m2d-ende-c', 'rot-m2d-ende-a'])

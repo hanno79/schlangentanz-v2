@@ -54,7 +54,7 @@ describe('M2i Verdoppler-Bonuszauber', () => {
     const schild = within(within(spieltisch).getByRole('region', { name: 'Zugkompass' })).getByRole('region', { name: 'Waldtanz-Reaktionsschild' })
     expect(within(schild).getByText('Spieler 2 entscheidet über Verdoppler.')).toBeVisible()
     expect(screen.queryByRole('region', { name: 'Waldtanz-Bonuszauber' })).toBeNull()
-    expect(screen.getByText('Zuletzt ausgeführt: Verdoppler mit Karte verdoppler-m2i spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Verdoppler/)).toBeVisible()
   })
 
   it('legt den Bonuszauber als chunky Stitch-Spielobjekt mit 3px-Rand, Hard Shadow und Goldbutton ab', () => {

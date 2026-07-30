@@ -18,7 +18,6 @@ import type {
   Spielzustand,
 } from '../engine'
 import { aufgabeLabel, naechsterPflichtschrittLabel } from '../spielLabelHelpers'
-import { aktionsLabel } from '../aktionsLabel'
 
 export interface SpielLabels {
   pflichtschrittLabel: string
@@ -44,6 +43,10 @@ export function useSpielLabels(
   istGameRoute: boolean,
   empfohleneAktionId: string,
   phasenaktionId: string,
+  // ÄNDERUNG [30.07.2026]: AP-3 — aktionsLabel wird hereingereicht, weil es seit der
+  // Klartext-Umstellung aus dem Spielzustand aufgelöst wird und keine freie Funktion
+  // mehr ist.
+  aktionsLabel: (aktion: SpielAktion) => string,
 ): SpielLabels {
   const gewinnerListe = gewinnerErgebnis?.gewinner ?? []
   const spielerNameFuerId = (spielerId: string) =>

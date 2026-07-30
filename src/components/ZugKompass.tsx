@@ -6,7 +6,7 @@ Beschreibung: Board-naher Zugkompass fuer gefuehrte Phasenwechsel im Waldtanz-Sp
 */
 
 import { ermittleReaktionsAktionen, type SpielAktion, type Spielzustand } from '../engine'
-import { aktionsLabel } from '../aktionsLabel'
+import { erstelleAktionsLabel } from '../aktionsLabel'
 import { zugphaseLabel } from '../zugphaseLabels'
 import { ausspielphaseBeendbar } from '../spielLabelHelpers'
 
@@ -91,7 +91,9 @@ function abwehrKartenId(aktionen: SpielAktion[]): string | null {
   return abwehr && 'abwehrHandkartenId' in abwehr ? abwehr.abwehrHandkartenId : null
 }
 
-function reaktionsButtonLabel(aktion: SpielAktion): string {
+// ÄNDERUNG [30.07.2026]: AP-3 — aktionsLabel wird aus dem Zustand aufgeloest und
+// deshalb hereingereicht statt frei importiert.
+function reaktionsButtonLabel(aktion: SpielAktion, aktionsLabel: (aktion: SpielAktion) => string): string {
   const label = aktionsLabel(aktion)
   return 'abwehrHandkartenId' in aktion ? `Farbenschutz-Schild einsetzen: ${label}` : `Treffer zulassen: ${label}`
 }
@@ -115,6 +117,9 @@ export default function ZugKompass({
   onReaktionsAktion,
 }: ZugKompassProps) {
   const blockiertDurchReaktion = zustand.pendingReaktion !== null
+  const aktionsLabel = erstelleAktionsLabel(zustand, {
+    perspektiveSpielerId: zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch')?.id,
+  })
   const reaktionsAktionen = blockiertDurchReaktion ? ermittleReaktionsAktionen(zustand) : []
   const farbenschutzId = abwehrKartenId(reaktionsAktionen)
   const zeigtWeiterZurAufgabenpruefung = !blockiertDurchReaktion && !zeigtKiVorspulen && ausspielphaseBeendbar(zustand)
@@ -138,7 +143,7 @@ export default function ZugKompass({
           {farbenschutzId ? <p className="reaktionsschild__karte">Farbenschutzkarte: {farbenschutzId}</p> : <p className="reaktionsschild__karte">Kein Farbenschutz auf der Hand. Du kannst den Treffer nur zulassen.</p>}
           <div className="reaktionsschild__aktionen">
             {reaktionsAktionen.map((aktion) => {
-              const buttonLabel = reaktionsButtonLabel(aktion)
+              const buttonLabel = reaktionsButtonLabel(aktion, aktionsLabel)
               return (
                 <button key={buttonLabel} type="button" className={reaktionsButtonKlasse(aktion)} aria-label={buttonLabel} onClick={() => onReaktionsAktion(aktion)}>
                   <span aria-hidden="true">{'abwehrHandkartenId' in aktion ? 'Schild einsetzen' : 'Treffer zulassen'}</span>

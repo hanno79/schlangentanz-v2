@@ -40,7 +40,7 @@ describe('M1j Waldtanz-Zugspur', () => {
     fireEvent.click(within(schlangenbereich).getByRole('button', { name: 'Neue Schlange starten' }))
 
     expect(within(zugspur).getByText('Letzter Spielzug')).toHaveClass('waldtanz-zugspur__label')
-    expect(within(zugspur).getByText('Neue Schlange starten mit Karte blau-01')).toBeVisible()
+    expect(within(zugspur).getByText('Neue Schlange starten mit Wasserwirbel')).toBeVisible()
     expect(within(zugspur).getByText('Nächster Schritt: Ausspielphase beenden.')).toBeVisible()
     expect(within(zugspur).getByText('Ablage wartet auf Sonderkarten oder Abwürfe.')).toBeVisible()
 

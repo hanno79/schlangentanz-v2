@@ -9,6 +9,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, starteAusspielphase } from './engine'
+import { labelFuer } from './testUtils'
 
 function schlangenGesamtText(zustand: ReturnType<typeof erstelleSpielzustand>): string {
   const gesamt = zustand.spieler.reduce((summe, spieler) => summe + spieler.schlangen.length, 0)
@@ -30,7 +31,7 @@ describe('R45 UI-Schlangen-Gesamtzahl', () => {
     expect(within(region).getByText(schlangenGesamtText(startZustand))).toBeInTheDocument()
 
     fireEvent.click(
-      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: `Neue Schlange starten mit Karte ${ersteAktion.handkartenId}` }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: labelFuer(startZustand, ersteAktion) }),
     )
 
     expect(within(region).getByText(schlangenGesamtText(erwarteterFolgezustand))).toBeInTheDocument()

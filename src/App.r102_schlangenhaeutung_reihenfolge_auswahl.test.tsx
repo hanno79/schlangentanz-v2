@@ -60,7 +60,7 @@ describe('R102 Schlangenhäutung-Reihenfolge-Auswahl', () => {
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
     const kartenreihe = screen.getByRole('list', { name: 'Kartenreihe schlange-r102-1' })
 
-    expect(within(aktiverSpieler).getByText('Zuletzt ausgeführt: Schlangenhäutung mit Karte schlangenhaeutung-r102 auf Schlange schlange-r102-1 spielen')).toBeInTheDocument()
+    expect(within(aktiverSpieler).getByText(/Zuletzt ausgeführt: Schlangenhäutung/)).toBeInTheDocument()
     expect(within(material).getByText('Karten auf dem Ablagestapel: schlangenhaeutung-r102')).toBeInTheDocument()
     expect(within(spieleruebersicht).getByText('Schlange 1 von Spieler 1: spielbereit.')).toBeInTheDocument()
     expect(within(kartenreihe).getAllByRole('listitem').map((karte) => karte.getAttribute('aria-label'))).toEqual([

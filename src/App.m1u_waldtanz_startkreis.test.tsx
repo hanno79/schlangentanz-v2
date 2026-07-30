@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { ermittleSpielbereiche, erstelleSpieltischOhneEigeneSchlangen } from './testUtils'
+import { ermittleSpielbereiche, erstelleSpieltischOhneEigeneSchlangen, labelFuer } from './testUtils'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 const cssBlock = (selektor: string) =>
@@ -41,7 +41,7 @@ describe('M1u Waldtanz-Startkreis', () => {
 
     fireEvent.click(startbutton)
 
-    expect(screen.getByText(`Zuletzt ausgeführt: Neue Schlange starten mit Karte ${legaleStartaktion.handkartenId}`)).toBeVisible()
+    expect(screen.getByText(`Zuletzt ausgeführt: ${labelFuer(zustand, legaleStartaktion)}`)).toBeVisible()
     expect(within(screen.getByRole('region', { name: 'Schlangenbereich' })).getByRole('list', { name: new RegExp(`Kartenreihe .*`) })).toBeVisible()
   })
 

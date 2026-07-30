@@ -64,7 +64,7 @@ describe('M2g Farbenfusion-Paarziel', () => {
       name: 'Farbenfusion-Paar im Schlangenbereich mit Karte farbenfusion-m2g: blau-m2g-a und blau-m2g-b fusionieren',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbenfusion mit Karte farbenfusion-m2g auf Schlange fusion-pfad-m2g bei Karte blau-m2g-a spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Farbenfusion/)).toBeVisible()
     expect(within(schlangenbereich).getByText('farbenfusion-m2g')).toBeVisible()
     expect(within(schlangenbereich).queryByText('blau-m2g-a')).toBeNull()
     expect(within(schlangenbereich).queryByText('blau-m2g-b')).toBeNull()

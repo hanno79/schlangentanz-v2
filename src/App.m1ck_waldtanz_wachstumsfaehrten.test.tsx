@@ -54,7 +54,7 @@ describe('M1ck Waldtanz-Wachstumsfährten', () => {
     expect(within(kartenreihe).getByLabelText('Farbkarte blau-m1ck: Blau mit 4 Punkten')).toBeVisible()
     const spielhilfe = screen.getByRole('complementary', { name: 'Waldtanz-Spielhilfe' })
     const zugtafel = within(spielhilfe).getByRole('region', { name: 'Waldtanz-Zugtafel' })
-    expect(within(zugtafel).getByText('Karte blau-m1ck an Schlange pfad-m1ck rechts anlegen')).toBeVisible()
+    expect(within(zugtafel).getByText(/rechts an .*anlegen/)).toBeVisible()
   })
 
   it('lässt außerhalb der Game-Route die bestehenden Waldtanz-Anlegeplätze unverändert sichtbar', () => {

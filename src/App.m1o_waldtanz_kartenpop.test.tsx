@@ -10,7 +10,8 @@ import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { ermittleSpielbereiche, erstelleDataTransfer, erstelleSpieltischOhneEigeneSchlangen } from './testUtils'
+import { ermittleSpielbereiche, erstelleDataTransfer, erstelleSpieltischOhneEigeneSchlangen, labelFuer } from './testUtils'
+import { findeKartennameImText } from './kartenTexte'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 
@@ -32,10 +33,10 @@ describe('M1o Waldtanz-Kartenpop', () => {
     const kartenpop = within(spieltisch).getByRole('status', { name: 'Waldtanz-Kartenpop' })
     expect(within(kartenpop).getByText('Pop!')).toBeVisible()
     expect(within(kartenpop).getByText('Karte geschnappt')).toBeVisible()
-    expect(within(kartenpop).getByText(legaleStartaktion.handkartenId)).toHaveClass('waldtanz-kartenpop__karte')
-    expect(within(kartenpop).getByText(`Neue Schlange starten mit Karte ${legaleStartaktion.handkartenId}`)).toBeVisible()
+    expect(within(kartenpop).getByText(findeKartennameImText(labelFuer(zustand, legaleStartaktion))!)).toHaveClass('waldtanz-kartenpop__karte')
+    expect(within(kartenpop).getByText(labelFuer(zustand, legaleStartaktion))).toBeVisible()
     expect(within(kartenpop).getAllByText('✦')).toHaveLength(3)
-    expect(screen.getByText(`Zuletzt ausgeführt: Neue Schlange starten mit Karte ${legaleStartaktion.handkartenId}`)).toBeVisible()
+    expect(screen.getByText(`Zuletzt ausgeführt: ${labelFuer(zustand, legaleStartaktion)}`)).toBeVisible()
   })
 
   it('legt die Pop-/Sternenanimation im Google-Stitch-Stil inklusive Reduced-Motion-Fallback ab', () => {

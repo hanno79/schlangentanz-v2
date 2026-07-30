@@ -44,7 +44,7 @@ describe('R55 UI-Punktestand des aktiven Spielers', () => {
     ).toBeInTheDocument()
 
     const ersteAktionSchaltflaeche = within(aktionsBereich).getAllByRole('button').find(button =>
-      button.textContent?.includes('Neue Schlange starten mit Karte'),
+      button.textContent?.includes('Neue Schlange starten mit'),
     )
     if (!ersteAktionSchaltflaeche) throw new Error('Erwartete mindestens eine legale Startaktion im UI.')
 

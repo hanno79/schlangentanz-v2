@@ -30,7 +30,7 @@ describe('R51 Zufällige Startkarten im App-Standardzustand', () => {
     expect(handkartenDetails).not.toHaveTextContent('blau-01, blau-03, blau-05, blau-07, blau-09')
 
     const zufallsaufrufeNachStart = randomSpy.mock.calls.length
-    fireEvent.click(screen.getByRole('button', { name: /neue schlange starten mit karte rot-15/i }))
+    fireEvent.click(screen.getByRole('button', { name: /neue schlange starten mit feuerkeim/i }))
     expect(randomSpy).toHaveBeenCalledTimes(zufallsaufrufeNachStart)
   })
 })

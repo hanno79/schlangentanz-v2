@@ -26,7 +26,7 @@ describe('R37 UI-Kartenarten-Zähler', () => {
 
     expect(within(bereich).getByText('Gespielte Kartenarten: 0 Farbkarten, 0 Sonderkarten')).toBeInTheDocument()
 
-    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(bereich).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
 
     expect(within(bereich).getByText('Gespielte Kartenarten: 1 Farbkarten, 0 Sonderkarten')).toBeInTheDocument()
   })

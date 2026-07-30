@@ -41,7 +41,7 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
     erwarteMiniCheckliste(
       spielerfuehrung,
       'Eine spielbare Aktion auswählen.',
-      'Neue Schlange starten mit Karte blau-01',
+      'Neue Schlange starten mit Wasserwirbel',
     )
 
     expect(within(spielerfuehrung).getByText('Klicke unten auf die empfohlene Aktion, um deinen Zug fortzusetzen.')).toBeInTheDocument()
@@ -53,7 +53,7 @@ describe('F17 Menschlicher Turn als Mini-Checkliste', () => {
     const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
 
-    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
 
     const spielerfuehrung = within(aktiverSpielerBereich).getByRole('region', { name: 'Spielerführung' })
     erwarteMiniCheckliste(spielerfuehrung, 'Ausspielphase beenden.', 'Ausspielphase beenden')

@@ -43,7 +43,7 @@ describe('R38 UI-Ablagestapel-Anzeige', () => {
     const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
     expect(within(bereich).getByText('Karten im Ablagestapel: 0 Karten')).toBeInTheDocument()
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /karte .+ abwerfen/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /(Wasserwirbel|Feuerkeim|Sonnenblatt|Mondranke|Wurzelpfad|Waldspross|Farbenschutz|Verdoppler|Schlangengrube|Schlangenblockade|Farbendieb|Farbenfusion|Schlangenfrass|Schlangenhäutung|Regenbogenschlange) abwerfen/i }))
 
     expect(within(bereich).getByText('Karten im Ablagestapel: 1 Karten')).toBeInTheDocument()
     expect(within(bereich).getByText(/Karten auf dem Ablagestapel: /)).toBeInTheDocument()

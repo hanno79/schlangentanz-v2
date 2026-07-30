@@ -53,7 +53,7 @@ describe('R36 UI-Schlangenzustände', () => {
 
     expect(within(bereich).queryByText(/Schlange 1 von Spieler 1:/)).toBeNull()
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
 
     expect(
       within(bereich).getByText('Schlange 1 von Spieler 1: spielbereit.'),

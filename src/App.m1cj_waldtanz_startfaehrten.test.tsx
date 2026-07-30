@@ -48,7 +48,7 @@ describe('M1cj Waldtanz-Startfährten', () => {
 
     const kartenreihe = within(schlangenbereich).getByRole('list', { name: /Kartenreihe schlange-/ })
     expect(within(kartenreihe).getByLabelText('Farbkarte blau-09: Blau mit 1 Punkten')).toBeVisible()
-    expect(within(screen.getByRole('status', { name: 'Waldtanz-Kartenpop' })).getByText('blau-09')).toBeVisible()
+    expect(within(screen.getByRole('status', { name: 'Waldtanz-Kartenpop' })).getByText('Wasserwirbel')).toBeVisible()
     expect(within(schlangenbereich).queryByLabelText('Farbkarte blau-01: Blau mit 1 Punkten')).toBeNull()
   })
 

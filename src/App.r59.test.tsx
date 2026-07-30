@@ -26,7 +26,7 @@ describe('R59 UI-Zugpanel mit phasenabhängigem Pflichtschritt', () => {
 
     fireEvent.click(
       within(aktionenBereich).getByRole('button', {
-        name: /neue schlange starten mit karte blau-01/i,
+        name: /neue schlange starten mit wasserwirbel/i,
       }),
     )
 

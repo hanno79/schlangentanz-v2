@@ -46,7 +46,8 @@ describe('M1ak Waldtanz-Kartenpop in der Lichtung', () => {
     expect(kartenpop).toHaveClass('waldtanz-kartenpop')
     expect(within(kartenpop).getByText('Pop!')).toBeVisible()
     expect(within(kartenpop).getByText('Karte geschnappt')).toBeVisible()
-    expect(within(kartenpop).getByText(handkartenId as string)).toHaveClass('waldtanz-kartenpop__karte')
+    // ÄNDERUNG [30.07.2026]: AP-3 — der Kartenpop zeigt den Kartennamen statt der Id.
+    expect(within(kartenpop).getByText(/^(Wasserwirbel|Feuerkeim|Sonnenblatt|Mondranke|Wurzelpfad|Waldspross)$/)).toHaveClass('waldtanz-kartenpop__karte')
     expect(within(kartenpop).getAllByText('✦')).toHaveLength(3)
     expect(within(waldobjekte).queryByRole('status', { name: 'Waldtanz-Kartenpop' })).toBeNull()
     expect(tischkarte.compareDocumentPosition(kartenpop) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)

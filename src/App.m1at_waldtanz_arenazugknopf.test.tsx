@@ -38,7 +38,7 @@ describe('M1at Waldtanz-Arenazugknopf', () => {
     render(<App initialZustand={vierSpielerZustand()} />)
 
     const aktionen = screen.getByRole('region', { name: 'Aktionen' })
-    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const hand = within(spieltisch).getByRole('region', { name: 'Handkarten' })
@@ -64,7 +64,7 @@ describe('M1at Waldtanz-Arenazugknopf', () => {
     render(<App initialZustand={vierSpielerZustand()} />)
 
     const aktionen = screen.getByRole('region', { name: 'Aktionen' })
-    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
 
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     const arenazug = within(spieltisch).getByRole('region', { name: 'Waldtanz-Zugaktion' })

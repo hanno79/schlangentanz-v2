@@ -39,9 +39,11 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
 
     expect(within(bereich).getByText(/aktueller spielschritt: karten ausspielen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
-    expect(within(aktionenBereich).getAllByRole('button')).toHaveLength(5)
+    // ÄNDERUNG [30.07.2026]: AP-3 — fünf gleichwertige blaue Handkarten erscheinen als
+    // eine zusammengefasste Aktion.
+    expect(within(aktionenBereich).getAllByRole('button')).toHaveLength(1)
     expect(
-      within(aktionenBereich).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
+      within(aktionenBereich).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }),
     ).toBeInTheDocument()
     expect(within(aktionenBereich).getByText('Spielregeln prüfen jede Aktion vor dem Ausführen.')).toBeInTheDocument()
     expect(within(aktionenBereich).queryByText(/engine\.ermittlelegaleaktionen/i)).not.toBeInTheDocument()
@@ -52,7 +54,7 @@ describe('R16 UI-Binding für legale Engine-Aktionen', () => {
 function starteErsteSchlange() {
   render(<App initialZustand={deterministischerAppZustand()} />)
   const bereich = screen.getByRole('region', { name: 'Spielbereich' })
-  fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+  fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
   return bereich
 }
 
@@ -63,7 +65,7 @@ describe('R17 UI-Aktionsausführung über die Engine', () => {
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
     expect(within(spieltisch).getByText(/schlange-spieler-1-1/i)).toBeInTheDocument()
     expect(within(spieltisch).getByLabelText(/Farbkarte blau-01:/i)).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /neue schlange starten mit karte blau-01/i })).toBeNull()
+    expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /neue schlange starten mit wasserwirbel/i })).toBeNull()
     expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /karte blau-03/i })).toBeNull()
     expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i })).toBeInTheDocument()
   })
@@ -115,7 +117,7 @@ describe('R21 UI-Pflicht-Abwurf', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /abwerfen/i }))
 
     expect(within(bereich).getByText(new RegExp(`ablagestapel: ${sonderkarteId}`, 'i'))).toBeInTheDocument()
     expect(within(bereich).getByText(/keine weiteren aktionen/i, { selector: 'p' })).toBeInTheDocument()
@@ -132,7 +134,7 @@ describe('R22 UI-Handkartenanzeige', () => {
 
     expect(within(handBereich).getByText(sonderkarteId)).toBeInTheDocument()
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: new RegExp(`karte ${sonderkarteId} abwerfen`, 'i') }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /abwerfen/i }))
 
     expect(within(handBereich).queryByText(sonderkarteId)).toBeNull()
     expect(within(handBereich).queryAllByRole('listitem')).toHaveLength(0)
@@ -147,7 +149,7 @@ describe('R23 UI-Zugpflichtenanzeige', () => {
 
     expect(within(bereich).getByText(/gespielte karten: 0\/2/i)).toBeInTheDocument()
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
 
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
   })
@@ -161,7 +163,7 @@ describe('R25 UI-Ausspielphase beenden', () => {
     expect(within(bereich).getByText(/spielschritt im zug: karten ausspielen/i)).toBeInTheDocument()
     expect(within(screen.getByRole('region', { name: 'Aktionen' })).queryByRole('button', { name: /ausspielphase beenden/i })).toBeNull()
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
 
     expect(within(bereich).getByText(/spielschritt im zug: aufgaben prüfen/i)).toBeInTheDocument()
@@ -177,7 +179,7 @@ describe('R25 UI-Ausspielphase beenden', () => {
 
     expect(within(bereich).getByText(/gespielte karten: 1\/2/i)).toBeInTheDocument()
     expect(
-      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }),
     ).toBeInTheDocument()
 
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
@@ -232,7 +234,7 @@ describe('R28 UI-Gegnerzug vorspulen', () => {
 
     expect(within(bereich).getByText(/spielschritt im zug: karte ziehen/i)).toBeInTheDocument()
     expect(within(bereich).getByText(/aktiver spieler: spieler 1/i)).toBeInTheDocument()
-    expect(within(screen.getByRole('region', { name: 'Gegnerzug' })).getByText(/Spieler 2: Neue Schlange starten mit Karte blau-02/i)).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: 'Gegnerzug' })).getByText(/Spieler 2: Neue Schlange starten mit Wasserwirbel/i)).toBeInTheDocument()
   })
 })
 
@@ -305,7 +307,7 @@ describe('R30 UI-Wertungsanzeige', () => {
     expect(within(bereich).getByText(/punktestand von spieler 1: 0 punkte/i)).toBeInTheDocument()
     fireEvent.click(
       within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', {
-        name: /karte blau-05 an schlange schlange-spieler-1-1 rechts anlegen/i,
+        name: /wasserwirbel rechts an deine erste schlange anlegen/i,
       }),
     )
 
@@ -485,7 +487,7 @@ describe('R34 UI-Spielerübersicht', () => {
     render(<App initialZustand={zustand} />)
     const bereich = screen.getByRole('region', { name: 'Spielbereich' })
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
 
     expect(
       within(bereich).getByText(/Spieler 1: 4 Handkarten, 1 Schlange — am Zug/i),

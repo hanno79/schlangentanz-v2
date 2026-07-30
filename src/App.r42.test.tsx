@@ -24,7 +24,7 @@ describe('R42 UI-Handkarten im Spieltisch', () => {
     expect(within(handBereich).getByText(/blau-01/i)).toBeInTheDocument()
     expect(within(handBereich).getByText(/blau-03/i)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(screen.getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
 
     expect(within(handBereich).queryByText(/blau-01/i)).toBeNull()
     expect(within(handBereich).getByText(/blau-03/i)).toBeInTheDocument()

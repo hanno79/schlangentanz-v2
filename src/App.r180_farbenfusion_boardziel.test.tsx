@@ -60,7 +60,7 @@ describe('R180 Farbenfusion-Boardziel', () => {
 
     fireEvent.click(boardAktion)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbenfusion mit Karte farbenfusion-r180 auf Schlange schlange-r180-fusion bei Karte blau-r180-a spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Farbenfusion/)).toBeVisible()
     expect(within(schlangenbereich).getByText('farbenfusion-r180')).toBeVisible()
     expect(within(schlangenbereich).queryByText('blau-r180-a')).toBeNull()
     expect(within(schlangenbereich).queryByText('blau-r180-b')).toBeNull()

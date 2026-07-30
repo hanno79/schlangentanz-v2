@@ -50,7 +50,7 @@ describe('M1be Waldtanz-Startfährten', () => {
 
     const zugtafel = within(screen.getByRole('complementary', { name: 'Waldtanz-Spielhilfe' })).getByRole('region', { name: 'Waldtanz-Zugtafel' })
     expect(within(zugtafel).getByText(/Letzte Aktion:/)).toBeVisible()
-    expect(within(zugtafel).getByText('Neue Schlange starten mit Karte gelb-start-m1be')).toBeVisible()
+    expect(within(zugtafel).getByText('Neue Schlange starten mit Sonnenblatt')).toBeVisible()
     expect(within(schlangenbereich).getByRole('button', { name: /Schlange schlange-spieler-1-1/ })).toBeVisible()
   })
 

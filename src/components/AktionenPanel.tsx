@@ -25,6 +25,7 @@ import type { NichtEnumerierteAktionHinweis, SpielAktion, Spielzustand } from '.
 import { MAX_KARTEN_PRO_ZUG, MINDESTHANDKARTEN } from '../engine'
 import SchlangenhaeutungReihenfolgeAuswahl from './SchlangenhaeutungReihenfolgeAuswahl'
 import { ausspielphaseBeendbar } from '../spielLabelHelpers'
+import { gruppiereWirkungsgleicheAktionen } from '../aktionsGruppen'
 
 
 function erlaubteKartenProZug(zustand: Spielzustand): number {
@@ -55,12 +56,18 @@ function phasenregeln(zustand: Spielzustand, ueberhand: number): string[] {
   }
 }
 
-function aktionsButtonInhalt(label: string, index: number, total: number) {
+function aktionsButtonInhalt(label: string, index: number, total: number, anzahlKarten = 1) {
   return (
     <>
       <span aria-hidden="true">Jetzt ausführen</span>
       <span aria-hidden="true" className="aktions-button__meta">Aktion {index} von {total}</span>
       <span className="aktions-button__label">{label}</span>
+      {/* ÄNDERUNG [30.07.2026]: AP-3 — wirkungsgleiche Aktionen sind zu einer
+          zusammengefasst. Der Chip zeigt, wie viele gleichwertige Karten dafür
+          bereitliegen, damit die Zusammenfassung nicht wie ein Verlust wirkt. */}
+      {anzahlKarten > 1 && (
+        <span className="aktions-button__kartenzahl">{anzahlKarten} gleichwertige Karten</span>
+      )}
     </>
   )
 }
@@ -174,23 +181,34 @@ export default function AktionenPanel({
   const phasenaktionTitelId = useId()
   const endphaseTitelId = useId()
   const phasenregelnTitelId = useId()
-  const empfohlenLabel = legaleAktionen.length > 0 ? aktionsLabel(legaleAktionen[0]) : ''
+  // ÄNDERUNG [30.07.2026]: AP-3 — die Engine enumeriert eine Aktion pro Handkarte;
+  // fünf blaue Handkarten ergeben fünf wirkungsgleiche Aktionen. Für die Anzeige
+  // werden sie zusammengefasst. Bewusst NUR hier und nicht auf `legaleAktionen`
+  // insgesamt: das Handkarten-Panel leitet aus derselben Liste ab, welche Karte
+  // spielbar ist — global entdoppelt gälten vier von fünf blauen Karten als
+  // unspielbar.
+  const aktionsGruppen = gruppiereWirkungsgleicheAktionen(
+    legaleAktionen,
+    zustand.spieler[zustand.aktiverSpielerIndex].hand,
+  )
+  const empfohleneGruppe = aktionsGruppen[0]
+  const empfohlenLabel = empfohleneGruppe ? aktionsLabel(empfohleneGruppe.aktion) : ''
   const hatReaktionsaktion = reaktionsAktionen.length > 0
   const weitereAktionenBereich = (
     <section className="aktionen-gruppe aktionen-gruppe--weitere" aria-labelledby={weitereAktionenTitelId} aria-live="polite" aria-atomic="true">
       <h3 id={weitereAktionenTitelId}>Weitere Aktionen</h3>
-      {legaleAktionen.length > 1 ? (
+      {aktionsGruppen.length > 1 ? (
         <ol className="aktions-liste" start={2}>
-          {legaleAktionen.slice(1).map((aktion: SpielAktion, i: number) => {
-            const label = aktionsLabel(aktion)
+          {aktionsGruppen.slice(1).map((gruppe, i: number) => {
+            const label = aktionsLabel(gruppe.aktion)
             return (
               <li key={`${label}-${i}`}>
                 <button
                   aria-label={label}
                   className="aktions-button"
-                  onClick={() => onAktionAusfuehren(aktion)}
+                  onClick={() => onAktionAusfuehren(gruppe.aktion)}
                 >
-                  {aktionsButtonInhalt(label, i + 2, legaleAktionen.length)}
+                  {aktionsButtonInhalt(label, i + 2, aktionsGruppen.length, gruppe.anzahl)}
                 </button>
               </li>
             )
@@ -271,7 +289,10 @@ export default function AktionenPanel({
     <section className={`info-panel aktionen-panel--waldtanz-dock${kompakterBrettFallback ? ' aktionen-panel--brettfallback' : ''}${brettinline ? ' aktionen-panel--brettinline' : ''}`} aria-labelledby={aktionenTitelId} aria-live="polite" aria-atomic="true">
       <h2 id={aktionenTitelId}>Aktionen</h2>
       <div className="aktionen-dock__kopf">
-        <p>Spielbare Aktionen: {legaleAktionen.length}</p>
+        {/* ÄNDERUNG [30.07.2026]: AP-3 — gezählt werden die angezeigten Aktionen, nicht
+            die Engine-Enumeration. Sonst stünde „Spielbare Aktionen: 5" über einem
+            einzigen Knopf, weil fünf gleichwertige Handkarten zusammengefasst sind. */}
+        <p>Spielbare Aktionen: {aktionsGruppen.length}</p>
         {!istSpielende && <p>Nächster Pflichtschritt: {pflichtschrittLabel}</p>}
       </div>
       {istSpielende ? (
@@ -305,14 +326,14 @@ export default function AktionenPanel({
               <div className="aktionen-dock__schnellzug">
             <section id={empfohleneAktionId} className={`aktionen-gruppe aktionen-gruppe--empfohlen${hervorgehobenesAktionszielId === empfohleneAktionId ? ' aktionen-gruppe--sprungziel' : ''}`} aria-labelledby={empfohleneAktionTitelId} aria-live="polite" aria-atomic="true" tabIndex={-1}>
               <h3 id={empfohleneAktionTitelId}>Empfohlene Aktion</h3>
-              {legaleAktionen.length > 0 ? (
+              {empfohleneGruppe ? (
                 <button
                   aria-label={empfohlenLabel}
                   className="aktions-button aktions-button--empfohlen aktions-button--hervorgehoben"
-                  onClick={() => onAktionAusfuehren(legaleAktionen[0])}
+                  onClick={() => onAktionAusfuehren(empfohleneGruppe.aktion)}
                 >
                   <span className="aktions-button__badge" aria-hidden="true">Empfohlen</span>
-                  {aktionsButtonInhalt(empfohlenLabel, 1, legaleAktionen.length)}
+                  {aktionsButtonInhalt(empfohlenLabel, 1, aktionsGruppen.length, empfohleneGruppe.anzahl)}
                 </button>
               ) : (
                 <p>Keine empfohlene Aktion verfügbar.</p>

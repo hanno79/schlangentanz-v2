@@ -12,6 +12,7 @@ Beschreibung: Spieltisch-Panel für die Handkarten des aktiven Spielers mit ausw
 import { useId, type CSSProperties } from 'react'
 import type { PflichtAbwurfAktion, QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
+import { karteAnzeigename, karteKurzLabel, karteSymbol, karteWertLabel } from '../kartenTexte'
 import WaldtanzSonderkartenSpielmoment from './WaldtanzSonderkartenSpielmoment'
 
 interface HandkartenPanelProps {
@@ -38,39 +39,9 @@ interface HandkartenPanelProps {
   onAbwurfBestaetigen?: () => void
 }
 
-function karteKurzLabel(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte'
-    ? `Farbkarte ${karte.farbe} · ${karte.punkte} Punkte`
-    : `Sonderkarte ${karte.name} · Sonderaktion`
-}
-
-function karteSymbol(karte: Spielkarte): string {
-  if (karte.typ !== 'Farbkarte') return '✨'
-  switch (karte.farbe) {
-    case 'Blau': return '💧'
-    case 'Rot': return '🔥'
-    case 'Gelb': return '☀️'
-    case 'Violett': return '🌙'
-    case 'Braun': return '🌰'
-    case 'Grün': return '🌿'
-  }
-}
-
-function karteAnzeigename(karte: Spielkarte): string {
-  if (karte.typ !== 'Farbkarte') return karte.name
-  switch (karte.farbe) {
-    case 'Blau': return 'Wasserwirbel'
-    case 'Rot': return 'Feuerkeim'
-    case 'Gelb': return 'Sonnenblatt'
-    case 'Violett': return 'Mondranke'
-    case 'Braun': return 'Wurzelpfad'
-    case 'Grün': return 'Waldspross'
-  }
-}
-
-function karteWertLabel(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte' ? `${karte.punkte} Pkt` : 'Zauber'
-}
+// ÄNDERUNG [30.07.2026]: AP-3 — karteKurzLabel/karteSymbol/karteAnzeigename/
+// karteWertLabel liegen jetzt in src/kartenTexte.ts, damit aktionsLabel dasselbe
+// Spielervokabular benutzt statt ein zweites zu erfinden.
 
 function karteFarbklasse(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? ` handkarten-preview--farbe-${farbeCssKlasse(karte.farbe)}` : ' handkarten-preview--sonderkarte'

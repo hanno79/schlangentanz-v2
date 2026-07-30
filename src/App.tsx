@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import './App.css'
 import {
   erstelleSpielzustand,
+  erstelleEinzelspielerSpielzustand,
   starteAusspielphase,
   anwendeAktion,
   beendeAusspielphase,
@@ -53,7 +54,7 @@ import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
 import AktiverSpielerZugtafel from './components/AktiverSpielerZugtafel'
 import WaldtanzAktiverSpielerDebug from './components/WaldtanzAktiverSpielerDebug'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
-import { aktionsLabel } from './aktionsLabel'
+import { erstelleAktionsLabel } from './aktionsLabel'
 import type { LetzteAktionZiel } from './aktionsziel/extrahiereAktionZiel'
 import { extrahiereAktionZiel } from './aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from './kiZug'
@@ -121,6 +122,17 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     verdopplerAktionen,
     schlangengrubeAktionen,
   } = useLegaleAktionenNachTyp(zustand)
+  // ÄNDERUNG [30.07.2026]: AP-3 — Aktionslabels werden aus dem Zustand aufgelöst
+  // (Spieler-, Schlangen- und Kartennamen) statt aus IDs abgeleitet. Perspektive ist
+  // der menschliche Spieler, damit „deine erste Schlange" statt „eigene …" steht.
+  const menschlicherSpielerId = useMemo(
+    () => zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch')?.id,
+    [zustand.spieler],
+  )
+  const aktionsLabel = useMemo(
+    () => erstelleAktionsLabel(zustand, { perspektiveSpielerId: menschlicherSpielerId }),
+    [zustand, menschlicherSpielerId],
+  )
   const questZugHinweise = useMemo(() => ermittleQuestZugHinweise(zustand, legaleAktionen), [zustand, legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(() => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null, [zustand.zugphase, zustand.spieler])
@@ -167,6 +179,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     istGameRoute,
     empfohleneAktionId,
     phasenaktionId,
+    aktionsLabel,
   )
   const wertungBrettFokus = istGameRoute
   const materialBrettFokus = istGameRoute
@@ -302,7 +315,11 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     setAusgewaehlteHandkarteAuswahl(null)
     gezogeneHandkarteIdRef.current = null
     setBrettschrittEintraege([])
-    setZustand(starteAusspielphase(erstelleSpielzustand(kiGegner + 1)))
+    // ÄNDERUNG [30.07.2026]: AP-3 — die spec-nahe Einzelspieler-Factory benennt die
+    // Gegner „KI Gegner 1..3" statt generisch „Spieler 2..4" und validiert die
+    // KI-Anzahl gegen KI_GEGNER_MIN/MAX. Sie existierte bereits, wurde aber nur von
+    // Tests benutzt (Onboarding-Finding 4).
+    setZustand(starteAusspielphase(erstelleEinzelspielerSpielzustand(kiGegner)))
   }
 
   const aktionenPanelProps = useAktionenPanelProps({
@@ -547,6 +564,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 aktiverSpielerWertung={aktiverSpielerWertung}
                 legaleAktionen={legaleAktionen}
                 reaktionsAktionen={reaktionsAktionen}
+                aktionsLabel={aktionsLabel}
                 letzteAktion={letzteAktion}
                 istSpielende={istSpielende}
                 gewinnerText={gewinnerText}

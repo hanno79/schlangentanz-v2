@@ -31,7 +31,7 @@ describe('F15 Empfohlene Aktion Highlight', () => {
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
     const empfohleneAktion = within(aktionenBereich).getByRole('region', { name: 'Empfohlene Aktion' })
     const button = within(empfohleneAktion).getByRole('button', {
-      name: 'Neue Schlange starten mit Karte blau-01',
+      name: 'Neue Schlange starten mit Wasserwirbel',
     })
 
     expect(within(button).getByText('Empfohlen')).toBeInTheDocument()

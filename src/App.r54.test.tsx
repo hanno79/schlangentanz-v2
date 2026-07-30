@@ -23,7 +23,7 @@ describe('R54 UI-nächste legale Aktion', () => {
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
 
     const ersteAktion = within(aktionsBereich).getAllByRole('button').find(button =>
-      button.textContent?.includes('Neue Schlange starten mit Karte'),
+      button.textContent?.includes('Neue Schlange starten mit'),
     )
     if (!ersteAktion) throw new Error('Erwartete mindestens eine legale Startaktion im UI.')
 
@@ -35,7 +35,7 @@ describe('R54 UI-nächste legale Aktion', () => {
     fireEvent.click(ersteAktion)
 
     const aktualisierteAktion = within(aktionsBereich).queryByRole('button', {
-      name: /^(Neue Schlange starten mit Karte|Karte )/i,
+      name: /^(Neue Schlange starten mit|Wasserwirbel|Sonnenblatt|Feuerkeim|Mondranke|Wurzelpfad|Waldspross)/i,
     })
 
     if (aktualisierteAktion) {

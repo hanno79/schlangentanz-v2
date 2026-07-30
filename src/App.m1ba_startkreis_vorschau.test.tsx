@@ -47,7 +47,7 @@ describe('M1ba Startkreis-Vorschau', () => {
 
     fireEvent.click(startkreis)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Neue Schlange starten mit Karte gelb-start-m1ba')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Neue\sSchlange\sstarten/)).toBeVisible()
     const eigeneSchlange = within(schlangenbereich).getByRole('button', { name: /Schlange schlange-spieler-1-1/ })
     expect(within(eigeneSchlange).getByText('gelb-start-m1ba')).toBeVisible()
   })

@@ -30,7 +30,7 @@ describe('M1q Waldtanz-Zugknopf', () => {
     render(<App initialZustand={vierSpielerZustand()} />)
 
     const aktionen = screen.getByRole('region', { name: 'Aktionen' })
-    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
 
     const kompass = zugkompass()
     const hauptaktion = within(kompass).getByRole('button', { name: 'Weiter zur Aufgabenprüfung' })

@@ -8,7 +8,6 @@ Beschreibung: Eigener Debug-Block fuer "Aktiver Spieler" innerhalb des
 */
 
 import DebugGruppe from './DebugGruppe'
-import { aktionsLabel } from '../aktionsLabel'
 import { HANDKARTENLIMIT } from '../engine/constants'
 import type { SpielAktion, Spieler, SpielerWertungsEintrag } from '../engine'
 
@@ -17,6 +16,9 @@ interface WaldtanzAktiverSpielerDebugProps {
   aktiverSpielerWertung: SpielerWertungsEintrag | null | undefined
   legaleAktionen: readonly SpielAktion[]
   reaktionsAktionen: readonly SpielAktion[]
+  // ÄNDERUNG [30.07.2026]: AP-3 — aktionsLabel wird aus dem Zustand aufgelöst und
+  // deshalb als Prop hereingereicht statt frei importiert.
+  aktionsLabel: (aktion: SpielAktion) => string
   letzteAktion: string | null
   istSpielende: boolean
   gewinnerText: string
@@ -34,6 +36,7 @@ export default function WaldtanzAktiverSpielerDebug({
   aktiverSpielerWertung,
   legaleAktionen,
   reaktionsAktionen,
+  aktionsLabel,
   letzteAktion,
   istSpielende,
   gewinnerText,

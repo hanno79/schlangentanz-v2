@@ -58,7 +58,7 @@ describe('F18 Spielerführung und Aktionsbereich verbinden', () => {
   it('verlinkt die Spielerführung sichtbar zur empfohlenen Aktion im Aktionsbereich', () => {
     render(<App initialZustand={deterministischerZustand()} />)
 
-    erwarteVerbindungZurAktion('Empfohlene Aktion', 'empfohlenen Aktion', /Neue Schlange starten mit Karte blau-01/i)
+    erwarteVerbindungZurAktion('Empfohlene Aktion', 'empfohlenen Aktion', /Neue Schlange starten mit Wasserwirbel/i)
   })
 
   it('priorisiert im gemischten Zustand die sichtbare Phasenaktion als Sprungziel', () => {
@@ -66,7 +66,7 @@ describe('F18 Spielerführung und Aktionsbereich verbinden', () => {
 
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
 
-    expect(within(aktionenBereich).getByRole('button', { name: /Farbenschutz mit Karte f18-farbenschutz/i })).toBeInTheDocument()
+    expect(within(aktionenBereich).getByRole('button', { name: /Farbenschutz/i })).toBeInTheDocument()
     erwarteVerbindungZurAktion('Phasenaktion', 'Phasenaktion', /Ausspielphase beenden/i)
   })
 })

@@ -50,7 +50,7 @@ async function main() {
     await page.keyboard.press('Enter')
     await page.getByLabel('Farbkarte blau-09: Blau mit 1 Punkten').waitFor()
     const state = await page.evaluate(() => ({
-      aktion: document.body.textContent?.includes('Zuletzt ausgeführt: Neue Schlange starten mit Karte blau-09'),
+      aktion: /Zuletzt ausgeführt: Neue Schlange starten mit \S+/.test(document.body.textContent ?? ''),
       falscheKarte: Boolean(document.querySelector('.schlangenbereich--waldlichtung [aria-label="Farbkarte blau-01: Blau mit 1 Punkten"]')),
       eigeneSchlange: Boolean(document.querySelector('.schlangekarte--eigene')),
     }))

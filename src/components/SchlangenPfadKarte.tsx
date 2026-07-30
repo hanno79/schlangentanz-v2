@@ -9,6 +9,7 @@ Beschreibung: Greifbare Waldtanz-Mini-Spielkarte für Karten in Schlangenpfaden.
 import type { ReactNode } from 'react'
 import type { Farbe, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
+import { karteSymbol } from '../kartenTexte'
 
 interface SchlangenPfadKarteProps {
   karte: Spielkarte
@@ -24,18 +25,9 @@ interface SchlangenPfadKarteProps {
   zeigeSchwanzCurl?: boolean
 }
 
-function karteSymbol(karte: Spielkarte): string {
-  if (karte.typ === 'Sonderkarte' && karte.name === 'Regenbogenschlange') return '🌈'
-  if (karte.typ !== 'Farbkarte') return '✨'
-  switch (karte.farbe) {
-    case 'Blau': return '💧'
-    case 'Rot': return '🔥'
-    case 'Gelb': return '☀️'
-    case 'Violett': return '🌙'
-    case 'Braun': return '🌰'
-    case 'Grün': return '🌿'
-  }
-}
+// ÄNDERUNG [30.07.2026]: AP-3 — karteSymbol liegt jetzt zentral in
+// src/kartenTexte.ts. Die hiesige Fassung war die vollständigere (kannte 🌈 für
+// die Regenbogenschlange) und wurde als gemeinsame Variante übernommen.
 
 function kartenTypLabel(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? `Farbkarte ${karte.farbe}` : `Sonderkarte ${karte.name}`

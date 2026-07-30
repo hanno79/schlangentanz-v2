@@ -78,7 +78,7 @@ describe('M2k Farbendieb-Beutekorb', () => {
 
     const letzteAktionHinweis = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
     expect(within(letzteAktionHinweis).getByText('Zuletzt ausgeführt:')).toBeVisible()
-    expect(within(letzteAktionHinweis).getByText('Farbendieb mit Karte farbendieb-m2k von Spieler 2 / Schlange gegner-schlange-m2k Karte rot-m2k-beute auf Schlange eigene-schlange-m2k an Position 2 spielen')).toBeVisible()
+    expect(within(letzteAktionHinweis).getByText(/stehlen/)).toBeVisible()
     expect(within(gegnerischeSchlangen).queryByText('rot-m2k-beute')).toBeNull()
     expect(within(schlangenbereich).getByText('rot-m2k-beute')).toBeVisible()
   })

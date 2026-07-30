@@ -75,8 +75,8 @@ describe('M4b Sieger-Party Results', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Noch einmal spielen' }))
 
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
-    expect(within(spieleruebersicht).getByText(/Spieler 4:/)).toBeVisible()
-    expect(within(spieleruebersicht).getByText(/Spieler 4: 5 Handkarten/)).toBeVisible()
+    expect(within(spieleruebersicht).getByText(/KI Gegner 3:/)).toBeVisible()
+    expect(within(spieleruebersicht).getByText(/KI Gegner 3: 5 Handkarten/)).toBeVisible()
   })
 
   it('verankert die Ergebnisansicht visuell als Wald-Party mit Konfetti, Krone und hard-shadow Plaketten', () => {

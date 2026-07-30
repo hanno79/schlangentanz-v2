@@ -22,7 +22,7 @@ describe('R141 Aktionenbereich spielerfreundlich benennen', () => {
     const weitereAktionen = within(aktionenBereich).getByRole('region', { name: 'Weitere Aktionen' })
     const phasenregeln = within(aktionenBereich).getByRole('region', { name: 'Phasenregeln' })
 
-    expect(within(aktionenBereich).getByText('Spielbare Aktionen: 5')).toBeInTheDocument()
+    expect(within(aktionenBereich).getByText('Spielbare Aktionen: 1')).toBeInTheDocument()
     expect(within(aktionenBereich).getByText('Nächster Pflichtschritt: Eine spielbare Aktion auswählen.')).toBeInTheDocument()
     expect(within(weitereAktionen).getByRole('heading', { name: 'Weitere Aktionen' })).toBeInTheDocument()
     expect(within(phasenregeln).getByRole('heading', { name: 'Spielbare Aktionen in dieser Phase' })).toBeInTheDocument()

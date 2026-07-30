@@ -39,18 +39,18 @@ describe('M3 Sonniges Nest Lobby', () => {
 
     expect(within(lobby).getByText('Aktive Partie: Du + 2 KI')).toBeInTheDocument()
     const spieleruebersicht = screen.getByRole('region', { name: 'Spielerübersicht' })
-    expect(within(spieleruebersicht).getByText(/Spieler 3: .*Handkarten/)).toBeInTheDocument()
-    expect(within(spieleruebersicht).queryByText(/Spieler 4: .*Handkarten/)).not.toBeInTheDocument()
+    expect(within(spieleruebersicht).getByText(/KI Gegner 2: .*Handkarten/)).toBeInTheDocument()
+    expect(within(spieleruebersicht).queryByText(/KI Gegner 3: .*Handkarten/)).not.toBeInTheDocument()
 
     fireEvent.click(within(lobby).getByRole('button', { name: 'Große Runde starten (3 KI)' }))
 
     expect(within(lobby).getByText('Aktive Partie: Du + 3 KI')).toBeInTheDocument()
-    expect(within(spieleruebersicht).getByText(/Spieler 4: .*Handkarten/)).toBeInTheDocument()
+    expect(within(spieleruebersicht).getByText(/KI Gegner 3: .*Handkarten/)).toBeInTheDocument()
 
     fireEvent.click(within(lobby).getByRole('button', { name: 'Duell starten (1 KI)' }))
 
     expect(within(lobby).getByText('Aktive Partie: Du + 1 KI')).toBeInTheDocument()
-    expect(within(spieleruebersicht).queryByText(/Spieler 3: .*Handkarten/)).not.toBeInTheDocument()
+    expect(within(spieleruebersicht).queryByText(/KI Gegner 2: .*Handkarten/)).not.toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Spieltisch' })).toHaveClass('spielbrett--waldtanz')
   })
 

@@ -18,7 +18,7 @@ import {
   werfeUeberzaehligeHandkartenAb,
 } from './engine'
 import type { Spielzustand, SpielAktion } from './engine'
-import { aktionsLabel } from './aktionsLabel'
+import { erstelleAktionsLabel } from './aktionsLabel'
 
 export interface KiZugVorspulErgebnis {
   zustand: Spielzustand
@@ -94,7 +94,7 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
     const reaktionsAktionen = ermittleReaktionsAktionen(zustand)
     if (reaktionsAktionen.length > 0) {
       const aktion = reaktionsAktionen[0]
-      protokoll.push(`${name}: ${aktionsLabel(aktion)}.`)
+      protokoll.push(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`)
       zustand = anwendeAktion(zustand, aktion)
       continue
     }
@@ -131,7 +131,7 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
         break
       }
       const aktion = aktionen[0]
-      protokoll.push(`${name}: ${aktionsLabel(aktion)}.`)
+      protokoll.push(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`)
       zustand = anwendeAktion(zustand, aktion)
       continue
     }

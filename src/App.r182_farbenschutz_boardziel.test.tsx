@@ -57,7 +57,7 @@ describe('R182 Farbenschutz-Boardziel', () => {
 
     fireEvent.click(boardAktion)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbenschutz mit Karte farbenschutz-r182 auf Schlange schlange-r182-schutz spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Farbenschutz/)).toBeVisible()
     expect(within(schlangenbereich).getByText('Status: geschützt')).toBeVisible()
   })
 

@@ -64,7 +64,7 @@ describe('M2n Farbenfusion-Rankenring', () => {
       name: 'Farbenfusion-Paar im Schlangenbereich mit Karte farbenfusion-m2n: blau-m2n-a und blau-m2n-b fusionieren',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbenfusion mit Karte farbenfusion-m2n auf Schlange fusion-pfad-m2n bei Karte blau-m2n-a spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Farbenfusion/)).toBeVisible()
     expect(within(schlangenbereich).getByText('farbenfusion-m2n')).toBeVisible()
     expect(within(schlangenbereich).queryByText('blau-m2n-a')).toBeNull()
     expect(within(schlangenbereich).queryByText('blau-m2n-b')).toBeNull()

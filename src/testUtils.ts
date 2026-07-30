@@ -6,8 +6,23 @@ Beschreibung: Gemeinsame Test-Helfer für UI-Aktionsnamen und F36-Drag-Drop-Setu
 */
 
 import { screen, within } from '@testing-library/react'
-import type { SpielAktion } from './engine'
+import type { SpielAktion, Spielzustand } from './engine'
 import { erstelleSpielzustand, ermittleLegaleAktionen, starteAusspielphase } from './engine'
+import { erstelleAktionsLabel } from './aktionsLabel'
+
+/**
+ * ÄNDERUNG [30.07.2026]: AP-3 — löst das Aktionslabel genauso auf wie die App.
+ *
+ * Tests, die nur pruefen *dass* eine Aktion angeboten oder angezeigt wird, sollten
+ * den Labeltext nicht als Zeichenkette nachbauen. Sonst muss jede Formulierungs-
+ * aenderung durch Dutzende Testdateien nachgezogen werden — genau das war der
+ * Grund fuer die Migration in AP-3. Tests, die den Wortlaut selbst pruefen wollen,
+ * schreiben ihn weiterhin bewusst aus.
+ */
+export function labelFuer(zustand: Spielzustand, aktion: SpielAktion): string {
+  const mensch = zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch')
+  return erstelleAktionsLabel(zustand, { perspektiveSpielerId: mensch?.id })(aktion)
+}
 
 export function aktionsName(button: HTMLElement): string {
   return button.getAttribute('aria-label') ?? button.textContent?.trim() ?? ''

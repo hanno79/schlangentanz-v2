@@ -455,7 +455,7 @@ async function pruefeM1baStartkreisVorschau(seite) {
     throw new Error('M1ba Startkreis-Vorschau: Startkreis-Prüfpunkt ist nicht direkt als Brettfläche klickbar')
   }
 
-  await startzone.click(); await seite.getByRole('complementary', { name: 'Waldtanz-Spielhilfe' }).getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText(`Neue Schlange starten mit Karte ${kartenId}`).waitFor({ state: 'visible' })
+  await startzone.click(); await seite.getByRole('complementary', { name: 'Waldtanz-Spielhilfe' }).getByRole('region', { name: 'Waldtanz-Zugtafel' }).getByText(/Neue Schlange starten mit /).waitFor({ state: 'visible' })
   const gelegteKarteSichtbar = await seite.getByRole('listitem', { name: new RegExp(kartenId) }).first().isVisible().catch(() => false)
   if (!gelegteKarteSichtbar) {
     throw new Error(`M1ba Startkreis-Vorschau: gestartete Karte ${kartenId} liegt nicht sichtbar in der Schlange`)

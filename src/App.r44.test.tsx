@@ -27,7 +27,7 @@ describe('R44 UI-Spielerposition am Zug', () => {
 
     expect(within(bereich).getByText(`Am Zug: Spieler ${zustand.aktiverSpielerIndex + 1} von ${zustand.spieler.length}`)).toBeInTheDocument()
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit karte blau-01/i }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /neue schlange starten mit wasserwirbel/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /ausspielphase beenden/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /aufgabenprüfung beenden/i }))
     fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: /zug beenden/i }))

@@ -5,16 +5,17 @@ Version: 1.0
 Beschreibung: Board-nahes Pop-/Sternenfeedback für erfolgreiche Waldtanz-Kartenaktionen.
 */
 
+import { findeKartennameImText } from '../kartenTexte'
+
 interface WaldtanzKartenpopProps {
   aktionLabel: string | null
 }
 
-function kartenIdAusAktion(label: string): string | null {
-  return label.match(/Karte ([^\s]+)/)?.[1] ?? null
-}
-
 export default function WaldtanzKartenpop({ aktionLabel }: WaldtanzKartenpopProps) {
-  const kartenId = aktionLabel ? kartenIdAusAktion(aktionLabel) : null
+  // ÄNDERUNG [30.07.2026]: AP-3 — vorher wurde die Karten-Id per Regex aus dem
+  // Labeltext gefischt (`/Karte ([^\s]+)/`). Seit der Umstellung auf Klartext gibt
+  // es dort keine Ids mehr; die Komponente rendere dadurch still gar nicht.
+  const kartenId = aktionLabel ? findeKartennameImText(aktionLabel) : null
   if (!aktionLabel || !kartenId) return null
 
   return (

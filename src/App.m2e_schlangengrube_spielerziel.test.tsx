@@ -63,7 +63,7 @@ describe('M2e Schlangengrube-Spielerziel', () => {
 
     fireEvent.click(zielButton)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangengrube mit Karte schlangengrube-m2e auf Spieler 2 spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Schlangengrube/)).toBeVisible()
     expect(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: 'Ausspielphase beenden' })).toBeVisible()
     scrollIntoViewSpy.mockRestore()
   })

@@ -21,7 +21,14 @@ function zustandMitGespielterAktion() {
 
 describe('F6 Aktionenbereich', () => {
   it('gruppiert empfohlene und weitere legale Aktionen sichtbar getrennt', () => {
-    render(<App initialZustand={starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))} />)
+    // ÄNDERUNG [30.07.2026]: AP-3 — mit fünf gleichen blauen Karten bliebe nach der
+    // Entdopplung nur eine Aktion übrig und der Bereich „Weitere Aktionen" wäre leer.
+    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+    zustand.spieler[0].hand = [
+      { typ: 'Farbkarte', id: 'blau-f6', farbe: 'Blau', punkte: 1 },
+      { typ: 'Farbkarte', id: 'rot-f6', farbe: 'Rot', punkte: 1 },
+    ]
+    render(<App initialZustand={zustand} />)
 
     const aktionenBereich = screen.getByRole('region', { name: 'Aktionen' })
     const empfohleneAktion = within(aktionenBereich).getByRole('region', { name: 'Empfohlene Aktion' })

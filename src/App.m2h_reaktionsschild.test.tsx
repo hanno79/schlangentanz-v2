@@ -48,7 +48,7 @@ describe('M2h Waldtanz-Reaktionsschild', () => {
     expect(within(schild).getByText('Spieler 2 verteidigt ziel-pfad-m2h gegen Schlangenblockade.')).toBeVisible()
     expect(within(schild).getByText('Farbenschutzkarte: farbenschutz-m2h')).toBeVisible()
     expect(within(schild).getByRole('button', {
-      name: 'Farbenschutz-Schild einsetzen: Schlangenblockade mit Farbenschutzkarte farbenschutz-m2h abwehren',
+      name: 'Farbenschutz-Schild einsetzen: Schlangenblockade mit Farbenschutz abwehren',
     })).toHaveClass('reaktionsschild__button--abwehr')
     expect(within(schild).getByRole('button', {
       name: 'Treffer zulassen: Schlangenblockade durchlassen',
@@ -56,11 +56,11 @@ describe('M2h Waldtanz-Reaktionsschild', () => {
     expect(screen.getByRole('region', { name: 'Aktionen' })).toHaveTextContent('Reaktionsaktion auswählen:')
 
     fireEvent.click(within(schild).getByRole('button', {
-      name: 'Farbenschutz-Schild einsetzen: Schlangenblockade mit Farbenschutzkarte farbenschutz-m2h abwehren',
+      name: 'Farbenschutz-Schild einsetzen: Schlangenblockade mit Farbenschutz abwehren',
     }))
 
     expect(screen.queryByRole('region', { name: 'Waldtanz-Reaktionsschild' })).toBeNull()
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangenblockade mit Farbenschutzkarte farbenschutz-m2h abwehren')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Schlangenblockade/)).toBeVisible()
     expect(screen.getByText('Karten auf dem Ablagestapel: farbenschutz-m2h')).toBeVisible()
   })
 

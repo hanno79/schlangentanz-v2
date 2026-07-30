@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { ermittleSpielbereiche, erstelleDataTransfer, erstelleSpieltischOhneEigeneSchlangen } from './testUtils'
+import { ermittleSpielbereiche, erstelleDataTransfer, erstelleSpieltischOhneEigeneSchlangen, labelFuer } from './testUtils'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 const cssBlock = (selektor: string) =>
@@ -38,7 +38,7 @@ describe('M1n Waldtanz-Drag-Vorschau', () => {
 
     fireEvent.drop(startzone, { dataTransfer })
 
-    expect(screen.getByText(`Zuletzt ausgeführt: Neue Schlange starten mit Karte ${legaleStartaktion.handkartenId}`)).toBeVisible()
+    expect(screen.getByText(`Zuletzt ausgeführt: ${labelFuer(zustand, legaleStartaktion)}`)).toBeVisible()
   })
 
   it('räumt die reine Drag-Vorschau nach einem abgebrochenen Zug wieder zurück', () => {

@@ -22,7 +22,7 @@ function vierSpielerZustand() {
 
 function beendeErstenMenschenzug() {
   const aktionen = screen.getByRole('region', { name: 'Aktionen' })
-  fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+  fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
   fireEvent.click(within(aktionen).getByRole('button', { name: /Ausspielphase beenden/i }))
   fireEvent.click(within(aktionen).getByRole('button', { name: /Aufgabenprüfung beenden/i }))
   fireEvent.click(within(aktionen).getByRole('button', { name: /Zug beenden/i }))

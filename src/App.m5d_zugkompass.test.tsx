@@ -80,9 +80,9 @@ describe('M5d Zugkompass', () => {
     expect(schlangenbereich.compareDocumentPosition(kompass) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
     // Pfad und Kompass: in Zugseitenleiste, Pfad kommt visuell vor Kompass.
     expect(pfad.compareDocumentPosition(kompass) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
-    expect(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i })).toBeVisible()
+    expect(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i })).toBeVisible()
 
-    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
     fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Weiter zur Aufgabenprüfung' }))
     expect(within(zugkompass()).getByText('Aufgaben prüfen')).toBeInTheDocument()
 

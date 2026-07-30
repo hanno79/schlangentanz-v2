@@ -9,6 +9,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, starteAusspielphase } from './engine'
+import { labelFuer } from './testUtils'
 
 function handkartenGesamtText(zustand: ReturnType<typeof erstelleSpielzustand>): string {
   const gesamt = zustand.spieler.reduce((summe, spieler) => summe + spieler.hand.length, 0)
@@ -28,7 +29,7 @@ describe('R46 UI-Handkarten-Gesamtzahl', () => {
     expect(within(region).getByText(handkartenGesamtText(startZustand))).toBeInTheDocument()
 
     fireEvent.click(
-      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: `Neue Schlange starten mit Karte ${ersteAktion.handkartenId}` }),
+      within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: labelFuer(startZustand, ersteAktion) }),
     )
 
     expect(within(region).getByText(handkartenGesamtText(erwarteterFolgezustand))).toBeInTheDocument()

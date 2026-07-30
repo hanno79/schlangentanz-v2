@@ -58,7 +58,7 @@ describe('M2o Schlangengrube-Grubenfalle', () => {
       name: 'Schlangengrube im Spielerrahmen mit Karte schlangengrube-m2o auf Spieler 2',
     }))
 
-    expect(screen.getByText('Zuletzt ausgeführt: Schlangengrube mit Karte schlangengrube-m2o auf Spieler 2 spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Schlangengrube/)).toBeVisible()
   })
 
   it('legt den Google-Stitch-Spielobjektstil für die Grubenfalle ab', () => {

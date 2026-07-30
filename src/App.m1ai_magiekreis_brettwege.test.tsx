@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { ermittleSpielbereiche, erstelleSpieltischMitEineSchlange, erstelleSpieltischOhneEigeneSchlangen } from './testUtils'
+import { ermittleSpielbereiche, erstelleSpieltischMitEineSchlange, erstelleSpieltischOhneEigeneSchlangen, labelFuer } from './testUtils'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 const cssBlock = (selektor: string) =>
@@ -36,7 +36,7 @@ describe('M1ai Magiekreis-Brettwege', () => {
 
     fireEvent.click(startButton)
 
-    expect(screen.getByText(`Zuletzt ausgeführt: Neue Schlange starten mit Karte ${legaleStartaktion.handkartenId}`)).toBeVisible()
+    expect(screen.getByText(`Zuletzt ausgeführt: ${labelFuer(zustand, legaleStartaktion)}`)).toBeVisible()
     expect(within(screen.getByRole('region', { name: 'Schlangenbereich' })).getByRole('list', { name: /Kartenreihe/ })).toBeVisible()
   })
 
@@ -58,7 +58,7 @@ describe('M1ai Magiekreis-Brettwege', () => {
 
     fireEvent.click(anlegeButton)
 
-    expect(screen.getByText(`Zuletzt ausgeführt: Karte ${anlegekarteId} an Schlange magiekreis-aktionspfad ${legaleKarteAnlegen.position} anlegen`)).toBeVisible()
+    expect(screen.getByText(`Zuletzt ausgeführt: ${labelFuer(zustand, legaleKarteAnlegen)}`)).toBeVisible()
     expect(within(screen.getByRole('list', { name: 'Kartenreihe magiekreis-aktionspfad' })).getByLabelText(new RegExp(`Farbkarte ${anlegekarteId}`))).toBeVisible()
   })
 

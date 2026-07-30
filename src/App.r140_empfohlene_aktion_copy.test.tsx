@@ -20,7 +20,7 @@ describe('R140 empfohlene Aktion spielerfreundlich benennen', () => {
 
     const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
 
-    expect(within(aktiverSpielerBereich).getByText('Empfohlene Aktion: Neue Schlange starten mit Karte blau-01')).toBeInTheDocument()
+    expect(within(aktiverSpielerBereich).getByText('Empfohlene Aktion: Neue Schlange starten mit Wasserwirbel')).toBeInTheDocument()
     expect(within(aktiverSpielerBereich).queryByText(/Nächste legale Aktion:/)).not.toBeInTheDocument()
   })
 })

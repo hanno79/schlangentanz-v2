@@ -70,7 +70,7 @@ describe('F19 Sprungziel im Aktionsbereich sichtbar hervorheben', () => {
     expect(empfohleneAktion).toHaveClass('aktionen-gruppe--sprungziel')
     expect(phasenaktion).not.toHaveClass('aktionen-gruppe--sprungziel')
 
-    fireEvent.click(within(empfohleneAktion).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(empfohleneAktion).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
     fireEvent.click(within(spielerfuehrung).getByRole('link', { name: 'Zur Phasenaktion im Aktionsbereich' }))
 
     expect(empfohleneAktion).not.toHaveClass('aktionen-gruppe--sprungziel')

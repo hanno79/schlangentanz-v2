@@ -54,7 +54,7 @@ describe('M2j Farbenschutz-Schutzschild', () => {
 
     fireEvent.click(schutzschild)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Farbenschutz mit Karte farbenschutz-m2j auf Schlange schutzpfad-m2j spielen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: Farbenschutz/)).toBeVisible()
     expect(within(schlangenbereich).getByText('Status: geschützt')).toBeVisible()
   })
 

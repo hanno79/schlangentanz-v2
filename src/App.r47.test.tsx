@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 import { anwendeAktion, ermittleLegaleAktionen, erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { Spielzustand } from './engine'
+import { labelFuer } from './testUtils'
 
 function zustandMitPflichtAbwurf(): Spielzustand {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -42,7 +43,7 @@ describe('R47 UI-Ablagestapel-Details', () => {
 
     expect(within(region).getByText(ablagestapelText(startZustand))).toBeInTheDocument()
 
-    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: `Karte ${abwurfAktion.handkartenId} abwerfen` }))
+    fireEvent.click(within(screen.getByRole('region', { name: 'Aktionen' })).getByRole('button', { name: labelFuer(startZustand, abwurfAktion) }))
 
     expect(within(region).getByText(ablagestapelText(erwarteterFolgezustand))).toBeInTheDocument()
   })

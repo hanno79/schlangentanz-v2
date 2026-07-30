@@ -24,14 +24,14 @@ describe('R52 Zugführung für Mensch und KI', () => {
     expect(within(aktiverSpielerBereich).getByText('Zugführung: Du bist am Zug.')).toBeInTheDocument()
     expect(within(aktiverSpielerBereich).queryByText('Nächster Schritt: KI-Aktion ausführen.')).not.toBeInTheDocument()
 
-    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Ausspielphase beenden/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Aufgabenprüfung beenden/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Zug beenden/i }))
 
     expect(within(aktiverSpielerBereich).getByText('Zugführung: KI ist am Zug.')).toBeInTheDocument()
     expect(within(aktionsBereich).getByRole('button', { name: /Gegnerzüge bis zu deinem Zug abspielen/i })).toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).queryByText('Empfohlene Aktion: Neue Schlange starten mit Karte blau-02')).not.toBeInTheDocument()
+    expect(within(aktiverSpielerBereich).queryByText('Empfohlene Aktion: Neue Schlange starten mit Wasserwirbel')).not.toBeInTheDocument()
     expect(within(aktiverSpielerBereich).queryByText(/Nächste legale Aktion:/)).not.toBeInTheDocument()
   })
 })

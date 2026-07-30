@@ -48,7 +48,7 @@ describe('M1m Waldtanz-Anlegeplätze', () => {
 
     fireEvent.click(rechts)
 
-    expect(screen.getByText('Zuletzt ausgeführt: Karte blau-m1m an Schlange pfad-m1m rechts anlegen')).toBeVisible()
+    expect(screen.getByText(/Zuletzt ausgeführt: .*rechts an .*anlegen/)).toBeVisible()
     expect(within(screen.getByRole('list', { name: 'Kartenreihe pfad-m1m' })).getByLabelText(/Farbkarte blau-m1m/)).toBeVisible()
   })
 

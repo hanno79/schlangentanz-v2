@@ -26,13 +26,13 @@ function zustandMitFarbenschutz() {
 
 describe('R75 Farbenschutz UI', () => {
   it('zeigt Farbenschutz als legale Aktion und markiert die Zielschlange nach Klick als geschützt', () => {
-    const { zustand, farbenschutz } = zustandMitFarbenschutz()
+    const { zustand } = zustandMitFarbenschutz()
 
     render(<App initialZustand={zustand} />)
 
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
     const spieleruebersichtBereich = screen.getByRole('region', { name: 'Spielerübersicht' })
-    const aktionsName = `Farbenschutz mit Karte ${farbenschutz.id} auf Schlange schlange-spieler-1-1 spielen`
+    const aktionsName = 'Farbenschutz auf deine erste Schlange spielen'
 
     expect(within(aktionsBereich).getByRole('button', { name: aktionsName })).toBeInTheDocument()
 

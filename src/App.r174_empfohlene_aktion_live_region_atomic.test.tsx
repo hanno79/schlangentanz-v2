@@ -35,6 +35,6 @@ describe('R174 Empfohlene-Aktion-Live-Region', () => {
     expect(empfohleneAktion).toHaveAttribute('aria-atomic', 'true')
     erwarteEindeutigesLokalesLabel(empfohleneAktion)
     expect(within(empfohleneAktion).getByRole('heading', { name: 'Empfohlene Aktion' })).toBeVisible()
-    expect(within(empfohleneAktion).getByRole('button')).toHaveAccessibleName(/Neue Schlange starten mit Karte/)
+    expect(within(empfohleneAktion).getByRole('button')).toHaveAccessibleName(/Neue Schlange starten mit/)
   })
 })

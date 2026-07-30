@@ -28,13 +28,13 @@ function zustandMitVerdopplerUndFolgekarte() {
 
 describe('R76 Verdoppler UI', () => {
   it('zeigt nach Verdoppler den Bonus-Zugzähler 1/3 und erlaubt eine zweite Aktion', () => {
-    const { zustand, verdoppler, folgekarte } = zustandMitVerdopplerUndFolgekarte()
+    const { zustand, folgekarte } = zustandMitVerdopplerUndFolgekarte()
 
     render(<App initialZustand={zustand} />)
 
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
-    const verdopplerName = `Verdoppler mit Karte ${verdoppler.id} spielen`
-    const folgekartenName = `Neue Schlange starten mit Karte ${folgekarte.id}`
+    const verdopplerName = 'Verdoppler spielen'
+    const folgekartenName = `Neue Schlange starten mit ${folgekarte.farbe === 'Blau' ? 'Wasserwirbel' : folgekarte.farbe === 'Rot' ? 'Feuerkeim' : folgekarte.farbe === 'Gelb' ? 'Sonnenblatt' : folgekarte.farbe === 'Violett' ? 'Mondranke' : folgekarte.farbe === 'Braun' ? 'Wurzelpfad' : 'Waldspross'}`
 
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: verdopplerName }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: 'Verdoppler durchlassen' }))

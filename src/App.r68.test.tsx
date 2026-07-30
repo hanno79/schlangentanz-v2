@@ -9,8 +9,16 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 
+// ÄNDERUNG [30.07.2026]: AP-3 — fünf gleiche blaue Handkarten erzeugen fünf
+// wirkungsgleiche Aktionen, die die Anzeige zu einer zusammenfasst. Für den
+// Vergleich „erster Button ist der empfohlene" braucht es zwei verschiedene.
 function deterministischerAppZustand() {
-  return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+  zustand.spieler[0].hand = [
+    { typ: 'Farbkarte', id: 'blau-r68', farbe: 'Blau', punkte: 1 },
+    { typ: 'Farbkarte', id: 'rot-r68', farbe: 'Rot', punkte: 1 },
+  ]
+  return zustand
 }
 
 describe('R68 Hervorhebung der empfohlenen legalen Aktion', () => {

@@ -29,11 +29,11 @@ describe('F14 Spielerführung', () => {
     expect(within(spielerfuehrung).getByText('Dein nächster Schritt')).toBeInTheDocument()
     expect(within(spielerfuehrung).getByText('Eine spielbare Aktion auswählen.')).toBeInTheDocument()
     expect(within(spielerfuehrung).getByText('Empfohlene Aktion')).toBeInTheDocument()
-    expect(within(spielerfuehrung).getByText('Neue Schlange starten mit Karte blau-01')).toBeInTheDocument()
+    expect(within(spielerfuehrung).getByText('Neue Schlange starten mit Wasserwirbel')).toBeInTheDocument()
     expect(within(spielerfuehrung).getByText('Klicke unten auf die empfohlene Aktion, um deinen Zug fortzusetzen.')).toBeInTheDocument()
 
     expect(screen.getAllByText('Nächster Pflichtschritt: Eine spielbare Aktion auswählen.')[0]).toBeInTheDocument()
-    expect(within(aktiverSpielerBereich).getByText('Empfohlene Aktion: Neue Schlange starten mit Karte blau-01')).toBeInTheDocument()
+    expect(within(aktiverSpielerBereich).getByText('Empfohlene Aktion: Neue Schlange starten mit Wasserwirbel')).toBeInTheDocument()
     expect(within(aktiverSpielerBereich).queryByText(/Nächste legale Aktion:/)).not.toBeInTheDocument()
     expect(appCss).toContain('.spielerfuehrung')
     expect(appCss).toContain('.spielerfuehrung__karte')
@@ -45,7 +45,7 @@ describe('F14 Spielerführung', () => {
     const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
 
-    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Ausspielphase beenden/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Aufgabenprüfung beenden/i }))
     fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Zug beenden/i }))
@@ -60,7 +60,7 @@ describe('F14 Spielerführung', () => {
     const aktiverSpielerBereich = screen.getByRole('region', { name: 'Aktiver Spieler' })
     const aktionsBereich = screen.getByRole('region', { name: 'Aktionen' })
 
-    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Karte blau-01/i }))
+    fireEvent.click(within(aktionsBereich).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
 
     const spielerfuehrung = within(aktiverSpielerBereich).getByRole('region', { name: 'Spielerführung' })
     expect(within(spielerfuehrung).getByText('Ausspielphase beenden.')).toBeInTheDocument()

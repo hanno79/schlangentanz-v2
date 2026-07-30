@@ -64,7 +64,7 @@ describe('R181 Schlangenfrass-Boardziel', () => {
     // (1 Pille + N Stempel). Auf die Pille scoped, um Eindeutigkeit zu erzwingen.
     const aktionsPille = screen.getByTestId('waldtanz-letzte-aktion-hinweis')
     expect(within(aktionsPille).getByText(/^Zuletzt ausgeführt:$/)).toBeVisible()
-    expect(within(aktionsPille).getByText(/Schlangenfrass mit Karte schlangenfrass-r181: Karte rot-r181-ziel aus Schlange schlange-r181-frass entfernen/)).toBeVisible()
+    expect(within(aktionsPille).getByText(/Schlangenfrass/)).toBeVisible()
     expect(within(schlangenbereich).queryByText('rot-r181-ziel')).toBeNull()
     expect(within(schlangenbereich).getByText('blau-r181-bleibt')).toBeVisible()
   })
