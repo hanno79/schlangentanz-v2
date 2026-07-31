@@ -11,9 +11,9 @@ import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1by_spielbrettweite_smoke.mjs', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -63,6 +63,6 @@ describe('M1by Waldtanz-Spielbrettweite', () => {
     expect(smokeScript).toContain('daten.gartenkopf.height > 185')
     expect(smokeScript).toContain('waldsteinWidth < 820')
     expect(smokeScript).toContain('zugleiste.y < waldstein.bottom')
-    expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bw_lichtung_entflechtung_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs && node scripts/m1by_spielbrettweite_smoke.mjs')
+    expect(['live_smoke.mjs', 'm1bw_lichtung_entflechtung_smoke.mjs', 'm1bx_spielkartenfaecher_smoke.mjs', 'm1by_spielbrettweite_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

@@ -9,21 +9,20 @@
  */
 /// <reference types="node" />
 
-import { readFileSync } from 'node:fs'
-import { existsSync } from 'node:fs'
-import { describe, expect, it } from 'vitest'
 
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-const smokeChain = packageJson.scripts?.['smoke:production'] ?? ''
+import {existsSync} from 'node:fs'
+import { describe, expect, it } from 'vitest'
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
+
 
 describe('M1cv Smoke-Wiring in der kanonischen Kette', () => {
   it('verweist auf den neuen Questband-Smoke', () => {
-    expect(smokeChain).toContain('m1cv_waldtanz_questband_smoke.mjs')
+    expect(istVerdrahtet('m1cv_waldtanz_questband_smoke.mjs')).toBe(true)
   })
 
   it('liegt nach dem M1cu-Smoke (konsistente Slice-Reihenfolge)', () => {
-    const idxM1cu = smokeChain.indexOf('m1cu_brettschritt_lebensader_smoke.mjs')
-    const idxM1cv = smokeChain.indexOf('m1cv_waldtanz_questband_smoke.mjs')
+    const idxM1cu = produktionsPosition('m1cu_brettschritt_lebensader_smoke.mjs')
+    const idxM1cv = produktionsPosition('m1cv_waldtanz_questband_smoke.mjs')
     expect(idxM1cu).toBeGreaterThanOrEqual(0)
     expect(idxM1cv).toBeGreaterThan(idxM1cu)
   })

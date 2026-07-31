@@ -30,11 +30,9 @@ import { render } from '@testing-library/react'
 import { describe, expect, it, beforeEach } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
-const smokeChain = (JSON.parse(packageJson) as { scripts: Record<string, string> })
-  .scripts['smoke:production'] ?? ''
 
 function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -167,7 +165,7 @@ describe('M3i Stitch-Forest-Arena-Promotion (Cap-Senkung für 1280x900-Erstbild)
   })
 
   it('M3i:6 — package.json: smoke:production-Kette enthaelt m3i_stitch_forest_arena_promotion_smoke.mjs', () => {
-    expect(smokeChain).toContain('m3i_stitch_forest_arena_promotion_smoke.mjs')
+    expect(istVerdrahtet('m3i_stitch_forest_arena_promotion_smoke.mjs')).toBe(true)
   })
 
   it('M3i:7 — Geometrie-Bonus: 60+70+30+360+30+220+30 = 800 px <= 900 px (Viewport-Budget)', () => {

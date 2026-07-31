@@ -11,9 +11,9 @@ import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1bw_lichtung_entflechtung_smoke.mjs', 'utf8')
 
 const cssBlock = (selector: string) =>
@@ -70,7 +70,7 @@ describe('M1ch Waldtanz-Erstzugpfad', () => {
     // Konfiguration.
     expect(handRoute).toMatch(/grid-area:\s*hand/)
     expect(handRoute).not.toMatch(/align-self:\s*end/)
-    expect(packageJson).toContain('node scripts/m1bw_lichtung_entflechtung_smoke.mjs')
+    expect(istVerdrahtet('m1bw_lichtung_entflechtung_smoke.mjs')).toBe(true)
     expect(smokeScript).toContain('Tischkarte ueberlappt Startkreis')
     // M1d0 22.06.2026: "Startkreis laeuft in die Handbank" wurde zu
     // "Startkreis laeuft in den Viewport-Boden" umformuliert, weil M1d0

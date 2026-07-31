@@ -28,9 +28,9 @@ import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const cssBlock = (selektor: string) =>
   appCss.match(new RegExp(`${selektor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
 
@@ -128,9 +128,9 @@ describe('M1da Waldtanz-Handfläche und Spielerplakette im Erstbild', () => {
 
   it('verdrahtet das M1da-Smoke-Skript in der kanonischen npm-Smoke-Kette', () => {
     expect(existsSync('scripts/m1da_waldtanz_handflaeche_erstbild_smoke.mjs')).toBe(true)
-    expect(packageJson).toContain('m1da_waldtanz_handflaeche_erstbild_smoke.mjs')
-    const smokeBlock = packageJson.match(/"smoke:production":\s*"([^"]+)"/)?.[1] ?? ''
-    expect(smokeBlock).toContain('m1da_waldtanz_handflaeche_erstbild_smoke.mjs')
+    expect(istVerdrahtet('m1da_waldtanz_handflaeche_erstbild_smoke.mjs')).toBe(true)
+    const smokeBlock = produktionsKette()
+    expect(istVerdrahtet('m1da_waldtanz_handflaeche_erstbild_smoke.mjs')).toBe(true)
     const m1cyIdx = smokeBlock.indexOf('m1cy_waldtanz_gegnerplakette_smoke.mjs')
     const m1daIdx = smokeBlock.indexOf('m1da_waldtanz_handflaeche_erstbild_smoke.mjs')
     expect(m1daIdx).toBeGreaterThan(m1cyIdx)

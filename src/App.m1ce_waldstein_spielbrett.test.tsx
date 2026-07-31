@@ -10,9 +10,9 @@ import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1ce_waldstein_spielbrett_smoke.mjs', 'utf8')
 
 function cssBlock(selector: string) {
@@ -50,7 +50,7 @@ describe('M1ce Waldstein-Spielbrett', () => {
     expect(routeArena).not.toMatch(/scrollbar-gutter:\s*stable/)
     expect(routeArena).not.toMatch(/padding-bottom:\s*clamp\(5\.2rem,\s*13vh,\s*7\.2rem\)/)
 
-    expect(packageJson).toContain('node scripts/m1ce_waldstein_spielbrett_smoke.mjs')
+    expect(istVerdrahtet('m1ce_waldstein_spielbrett_smoke.mjs')).toBe(true)
     expect(smokeScript).toContain("width: 1100")
     expect(smokeScript).toContain("width: 1280")
   })

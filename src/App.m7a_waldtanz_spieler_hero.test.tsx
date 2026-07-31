@@ -15,6 +15,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { readFileSync } from 'node:fs'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function cssBlock(selector: string, source = readFileSync('src/App.css', 'utf8')): string {
   // Basis-Regel direkt matchen (single top-level rule, kein Descendant-Suffix).
@@ -98,9 +99,7 @@ describe('M7a Waldtanz-Spieler-Hero als Stitch-Stats-Card', () => {
   })
 
   it('M7a:9 — package.json smoke:production enthaelt m7a-Skript', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-    const chain: string = pkg.scripts?.['smoke:production'] ?? ''
-    expect(chain).toMatch(/m7a_waldtanz_spieler_hero_smoke/)
+    expect(istVerdrahtet('m7a_waldtanz_spieler_hero_smoke.mjs')).toBe(true)
   })
 
   it('M7a:10 — Smoke-Skript enthaelt pruefeM7aSpielerHero + stats-hero-Selector', () => {

@@ -81,6 +81,28 @@ Die Preview-Kette enthält:
 Alle sechs Skripte lesen `SMOKE_BASE_URL` bereits aus der Umgebung; ohne die
 Variable liefen sie gegen die Production-URL und würden dort scheitern.
 
+### Runner statt &&-Kette (ÄNDERUNG 30.07.2026, AP-4)
+
+Beide npm-Skripte rufen nur noch `scripts/run_smokes.mjs` auf; die Skriptlisten
+stehen in `scripts/smoke_listen.mjs`.
+
+Vorher war `smoke:production` eine Kette aus 83 mit `&&` verbundenen node-Aufrufen
+in einer einzigen `package.json`-Zeile (rund 8000 Zeichen). Das kostete zweimal:
+
+- **Fail-fast.** Fiel Smoke 3 um, liefen 74 weitere nie. Jede Korrektur bedeutete,
+  die ganze Kette neu zu starten, um den nächsten Fehler überhaupt zu sehen.
+- **Unlesbarkeit.** Über 80 Wiring-Tests zerlegten diesen String, um Mitgliedschaft
+  und Reihenfolge zu prüfen.
+
+Der Runner fährt alle Smokes einer Liste, sammelt die Ergebnisse und meldet am Ende
+**alle** Fehlschläge mit den letzten Ausgabezeilen. Der Exit-Code bleibt 1, sobald
+einer scheitert — die Gate-Semantik ist unverändert.
+
+Die Tests lesen dieselbe Liste über `src/test/smokeKetten.ts`. Für Bestandstests,
+die weiterhin auf einer Zeichenkette prüfen, liefert `produktionsKette()` die alte
+`node a.mjs && node b.mjs`-Form — aber aus der Liste erzeugt, sodass Ausführung und
+Prüfung nicht auseinanderlaufen können.
+
 ### Absicherung
 
 - `src/App.hooks_production_guard.test.ts` schlägt fehl, sobald ein hook-abhängiger

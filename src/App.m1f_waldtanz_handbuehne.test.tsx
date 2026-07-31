@@ -18,6 +18,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function readAppCss(): string {
   return readFileSync(resolve(__dirname, 'App.css'), 'utf8')
@@ -154,9 +155,7 @@ describe('M1f Waldtanz-Handkarten-Buehne als sichtbares Stitch-Spielerbrett', ()
     })
 
   it('verdrahtet den M1f Production-Smoke in die smoke:production-Kette', () => {
-    const pkg = JSON.parse(readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8'))
-    const kette: string = pkg?.scripts?.['smoke:production'] ?? ''
-    expect(kette).toContain('scripts/m1f_waldtanz_handbuehne_smoke.mjs')
+    expect(istVerdrahtet('m1f_waldtanz_handbuehne_smoke.mjs')).toBe(true)
   })
 
   it('der M1f-Smoke enthaelt pruefeM1fHandbuehne und Stitch-Klassen-Strings', () => {

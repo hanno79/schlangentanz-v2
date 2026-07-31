@@ -13,9 +13,9 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange, sonderkarte } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 afterEach(() => {
   window.history.pushState({}, '', '/')
@@ -96,6 +96,6 @@ describe('M1cr Waldtanz-Brettschritt-Stempel', () => {
     expect(appCss).toContain('[class~="brettschritt-stempel--aktuell"]')
     expect(appCss).toContain('[class~="brettschritt-stempel--vergangen"]')
     expect(appCss).toContain('grid-template-columns: repeat(3')
-    expect(packageJson).toContain('node scripts/m1cr_brettschritt_stempel_smoke.mjs')
+    expect(istVerdrahtet('m1cr_brettschritt_stempel_smoke.mjs')).toBe(true)
   })
 })

@@ -13,9 +13,9 @@ import App from './App'
 import { ermittleLegaleAktionen, erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, sonderkarte, schlange } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche, erstelleSpieltischMitEineSchlange } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cm_zielwahl_faehrten_smoke.mjs', 'utf8')
 
 const cssBlock = (selector: string) =>
@@ -88,6 +88,6 @@ describe('M1cm Waldtanz-Zielwahl-Fährten', () => {
     expect(anzahl).toMatch(/font-family:\s*var\(--st-font-headline\)/)
     expect(smokeScript).toContain('M1cm Zielwahl-Fährten')
     expect(smokeScript).toContain('Spielbare Brettwege')
-    expect(packageJson).toContain('node scripts/m1cl_erstbild_zugknopf_smoke.mjs && node scripts/m1cm_zielwahl_faehrten_smoke.mjs')
+    expect(['m1cl_erstbild_zugknopf_smoke.mjs', 'm1cm_zielwahl_faehrten_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

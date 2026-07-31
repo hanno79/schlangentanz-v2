@@ -10,20 +10,19 @@
  */
 /// <reference types="node" />
 
-import { readFileSync, existsSync } from 'node:fs'
+import {existsSync} from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
 
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-const smokeChain = packageJson.scripts?.['smoke:production'] ?? ''
 
 describe('M1dd Smoke-Wiring in der kanonischen Kette', () => {
   it('verweist auf den neuen Aktionsdock-im-Spielbrett-Smoke', () => {
-    expect(smokeChain).toContain('m1dd_aktionsdock_im_spielbrett_smoke.mjs')
+    expect(istVerdrahtet('m1dd_aktionsdock_im_spielbrett_smoke.mjs')).toBe(true)
   })
 
   it('liegt nach dem M1dc-Smoke (konsistente Slice-Reihenfolge)', () => {
-    const idxM1dc = smokeChain.indexOf('m1dc_spielmoment_pulse_smoke.mjs')
-    const idxM1dd = smokeChain.indexOf('m1dd_aktionsdock_im_spielbrett_smoke.mjs')
+    const idxM1dc = produktionsPosition('m1dc_spielmoment_pulse_smoke.mjs')
+    const idxM1dd = produktionsPosition('m1dd_aktionsdock_im_spielbrett_smoke.mjs')
     expect(idxM1dc).toBeGreaterThanOrEqual(0)
     expect(idxM1dd).toBeGreaterThan(idxM1dc)
   })

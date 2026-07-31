@@ -11,21 +11,17 @@
 
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import {produktionsPosition, istVerdrahtet} from './test/smokeKetten'
 
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as {
-  scripts: Record<string, string>
-}
 
 describe('M1dn Waldtanz-Kompass-Flach Smoke-Wiring', () => {
   it('verdrahtet das M1dn-Smoke-Skript in der smoke:production-Kette', () => {
-    const chain = packageJson.scripts['smoke:production'] ?? ''
-    expect(chain).toContain('scripts/m1dn_waldtanz_kompass_flach_smoke.mjs')
+    expect(istVerdrahtet('m1dn_waldtanz_kompass_flach_smoke.mjs')).toBe(true)
   })
 
   it('platziert das M1dn-Smoke-Skript hinter dem M1dm-Smoke (Slice-Reihenfolge)', () => {
-    const chain = packageJson.scripts['smoke:production'] ?? ''
-    const m1dmIdx = chain.indexOf('m1dm_waldtanz_arena_brettrand_smoke.mjs')
-    const m1dnIdx = chain.indexOf('m1dn_waldtanz_kompass_flach_smoke.mjs')
+    const m1dmIdx = produktionsPosition('m1dm_waldtanz_arena_brettrand_smoke.mjs')
+    const m1dnIdx = produktionsPosition('m1dn_waldtanz_kompass_flach_smoke.mjs')
     expect(m1dmIdx).toBeGreaterThan(-1)
     expect(m1dnIdx).toBeGreaterThan(m1dmIdx)
   })

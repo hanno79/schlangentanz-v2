@@ -24,6 +24,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { render, screen } from '@testing-library/react'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -153,7 +154,7 @@ describe('M2r Schlangenlichtung als Forest-Arena (RED)', () => {
   it('M2r:8 package.json smoke:production enthaelt das M2r-Smoke-Skript + Skript existiert', () => {
     const smokeKette = packageJson.scripts['smoke:production'] as string
     expect(smokeKette, 'smoke:production-Skript muss definiert sein').toBeDefined()
-    expect(smokeKette, 'smoke:production-Kette muss das M2r-Smoke-Skript enthalten').toMatch(/m2r_schlangenlichtung_forest_arena_smoke/)
+    expect(istVerdrahtet('m2r_schlangenlichtung_forest_arena_smoke.mjs'), 'Smoke-Kette muss das M2r-Smoke-Skript enthalten').toBe(true)
     // Das Skript selbst muss existieren + die Pruef-Funktion + die Slice-Klassen enthalten
     const scriptPath = resolve(process.cwd(), 'scripts/m2r_schlangenlichtung_forest_arena_smoke.mjs')
     let scriptContent = ''

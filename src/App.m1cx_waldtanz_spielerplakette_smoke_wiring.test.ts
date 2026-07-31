@@ -8,20 +8,19 @@
  */
 /// <reference types="node" />
 
-import { readFileSync, existsSync } from 'node:fs'
+import {existsSync} from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
 
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-const smokeChain = packageJson.scripts?.['smoke:production'] ?? ''
 
 describe('M1cx Smoke-Wiring in der kanonischen Kette', () => {
   it('verweist auf den neuen Spielerplakette-Smoke', () => {
-    expect(smokeChain).toContain('m1cx_waldtanz_spielerplakette_smoke.mjs')
+    expect(istVerdrahtet('m1cx_waldtanz_spielerplakette_smoke.mjs')).toBe(true)
   })
 
   it('liegt nach dem M1cw-Smoke (konsistente Slice-Reihenfolge)', () => {
-    const idxM1cw = smokeChain.indexOf('m1cw_brettschritt_konsequenz_smoke.mjs')
-    const idxM1cx = smokeChain.indexOf('m1cx_waldtanz_spielerplakette_smoke.mjs')
+    const idxM1cw = produktionsPosition('m1cw_brettschritt_konsequenz_smoke.mjs')
+    const idxM1cx = produktionsPosition('m1cx_waldtanz_spielerplakette_smoke.mjs')
     expect(idxM1cw).toBeGreaterThanOrEqual(0)
     expect(idxM1cx).toBeGreaterThan(idxM1cw)
   })

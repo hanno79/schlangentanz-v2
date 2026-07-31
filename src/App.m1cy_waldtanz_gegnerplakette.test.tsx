@@ -19,9 +19,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange } from './engine/__tests__/testHelpers'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function zustandMitAktivemSpieler() {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -200,6 +200,6 @@ describe('M1cy Waldtanz-Gegnerplakette', () => {
   })
 
   it('Smoke-Wiring: package.json npm run smoke:production enthaelt das M1cy-Smoke-Script', () => {
-    expect(packageJson).toMatch(/"smoke:production"\s*:\s*"[^"]*m1cy_waldtanz_gegnerplakette_smoke\.mjs/)
+    expect(istVerdrahtet('m1cy_waldtanz_gegnerplakette_smoke.mjs')).toBe(true)
   })
 })

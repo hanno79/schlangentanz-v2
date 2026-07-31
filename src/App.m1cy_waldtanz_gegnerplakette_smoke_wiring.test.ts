@@ -9,19 +9,18 @@
  */
 /// <reference types="node" />
 
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-
-const packageJson = readFileSync('package.json', 'utf8')
+import { istVerdrahtet, produktionsPosition } from './test/smokeKetten'
 
 describe('M1cy Waldtanz-Gegnerplakette Smoke-Wiring', () => {
   it('package.json npm run smoke:production enthaelt das M1cy-Smoke-Skript', () => {
-    expect(packageJson).toMatch(/"smoke:production"\s*:\s*"[^"]*m1cy_waldtanz_gegnerplakette_smoke\.mjs/)
+    expect(istVerdrahtet('m1cy_waldtanz_gegnerplakette_smoke.mjs')).toBe(true)
   })
 
   it('M1cy-Smoke liegt in der kanonischen Kette NACH dem M1cx-Smoke (Spielerplakette)', () => {
-    const m1cxIdx = packageJson.indexOf('m1cx_waldtanz_spielerplakette_smoke.mjs')
-    const m1cyIdx = packageJson.indexOf('m1cy_waldtanz_gegnerplakette_smoke.mjs')
+    const m1cxIdx = produktionsPosition('m1cx_waldtanz_spielerplakette_smoke.mjs')
+    const m1cyIdx = produktionsPosition('m1cy_waldtanz_gegnerplakette_smoke.mjs')
     expect(m1cxIdx).toBeGreaterThan(0)
     expect(m1cyIdx).toBeGreaterThan(m1cxIdx)
   })

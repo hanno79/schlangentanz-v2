@@ -22,6 +22,7 @@ import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 
@@ -114,8 +115,6 @@ describe('M3d Brettrand-Zugleiste Konsolidierung', () => {
   })
 
   it('M3d:7 — Smoke-Wiring: smoke:production chain enthaelt m3d_brettrand_zugleiste_smoke.mjs', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-    const chain = pkg.scripts['smoke:production'] ?? ''
-    expect(chain).toContain('m3d_brettrand_zugleiste_smoke.mjs')
+    expect(istVerdrahtet('m3d_brettrand_zugleiste_smoke.mjs')).toBe(true)
   })
 })

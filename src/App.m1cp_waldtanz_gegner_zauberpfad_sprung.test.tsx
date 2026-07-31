@@ -13,9 +13,9 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, sonderkarte, schlange } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 afterEach(() => {
   window.history.pushState({}, '', '/')
@@ -83,6 +83,6 @@ describe('M1cp Waldtanz-Gegner-Zauberpfad-Sprungfaehrten', () => {
   it('schuetzt Stil- und Smoke-Wiring-Vertrag fuer Gegner-Sprungfaehrten', () => {
     expect(appCss).toContain('.spielbereich--game-route [class~="farbendieb-beutekorb"].waldtanz-zielspur-ziel--aktiv')
     expect(appCss).toContain('.spielbereich--game-route [class~="schlangenblockade-fessel"].waldtanz-zielspur-ziel--aktiv')
-    expect(packageJson).toContain('node scripts/m1co_zauberpfad_sprung_smoke.mjs && node scripts/m1cp_gegner_zauberpfad_sprung_smoke.mjs')
+    expect(['m1co_zauberpfad_sprung_smoke.mjs', 'm1cp_gegner_zauberpfad_sprung_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

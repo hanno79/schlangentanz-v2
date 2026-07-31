@@ -52,7 +52,10 @@ describe('M1f Waldtanz-Seitenmenü', () => {
     expect(seitenmenueLayoutBlock).toMatch(/pointer-events:\s*none/)
     expect(appCss).toMatch(/\.app-shell\s*\{[\s\S]*overflow-x:\s*clip/)
     expect(appCss).toMatch(/@media \(min-width: 980px\)[\s\S]*grid-template-columns:\s*minmax\(160px,\s*0\.62fr\) minmax\(500px,\s*2\.1fr\) minmax\(160px,\s*0\.62fr\)/)
-    expect(appCss).toMatch(/#root\s*\{[\s\S]*width:\s*100%[\s\S]*max-width:\s*none[\s\S]*border-inline:\s*0/)
+    // ÄNDERUNG [30.07.2026]: AP-4 — dieser Assert pinnte eine Regel fest, die nur
+    // dazu da war, eine Vite-Starter-Regel aufzuheben. Beide sind entfernt. Dass
+    // #root die volle Breite einnimmt, prüft jetzt tests/layout/app_shell.spec.ts
+    // als Messung statt als Zeichenkette im Stylesheet.
     expect(appCss).toMatch(/@media \(min-width: 1360px\)[\s\S]*\.spielbereich--waldtanz[\s\S]*"nav\s+status\s+arena\s+spieler"/)
     expect(appCss).toMatch(/@media \(min-width: 1360px\)[\s\S]*\.spielbereich--waldtanz[\s\S]*"nav\s+material\s+arena\s+wertung"/)
   })

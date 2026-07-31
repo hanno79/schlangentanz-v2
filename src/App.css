@@ -78,11 +78,10 @@ body {
     linear-gradient(135deg, #15100b 0%, #201711 100%);
 }
 
-#root {
-  width: 100%;
-  max-width: none;
-  border-inline: 0;
-}
+/* ÄNDERUNG [30.07.2026]: AP-4 — dieser Block hob ausschließlich die
+   Vite-Starter-Regel `#root { width: 1126px; max-width: 100%; border-inline: … }`
+   aus index.css wieder auf. Die Starter-Regel ist entfernt, damit entfällt auch
+   ihre Gegenregel. Gemessen bleibt #root unverändert 1280 px breit. */
 
 .app-shell {
   min-height: 100vh;

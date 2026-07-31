@@ -34,9 +34,9 @@ import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function cssBlock(selektor: string): string {
   return (
@@ -241,9 +241,9 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
 
   it('verdrahtet das M1d0-Smoke-Skript in der kanonischen npm-Smoke-Kette', () => {
     expect(existsSync('scripts/m1d0_waldtanz_layout_konsolidierung_smoke.mjs')).toBe(true)
-    expect(packageJson).toContain('m1d0_waldtanz_layout_konsolidierung_smoke.mjs')
-    const smokeBlock = packageJson.match(/"smoke:production":\s*"([^"]+)"/)?.[1] ?? ''
-    expect(smokeBlock).toContain('m1d0_waldtanz_layout_konsolidierung_smoke.mjs')
+    expect(istVerdrahtet('m1d0_waldtanz_layout_konsolidierung_smoke.mjs')).toBe(true)
+    const smokeBlock = produktionsKette()
+    expect(istVerdrahtet('m1d0_waldtanz_layout_konsolidierung_smoke.mjs')).toBe(true)
     const m1daIdx = smokeBlock.indexOf('m1da_waldtanz_handflaeche_erstbild_smoke.mjs')
     const m1d0Idx = smokeBlock.indexOf('m1d0_waldtanz_layout_konsolidierung_smoke.mjs')
     // Direkt nach M1da weil der M1da-Smoke genau die Bottom-Row prueft,

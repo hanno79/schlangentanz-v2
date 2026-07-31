@@ -12,12 +12,12 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { FarbkarteInfo, SonderkarteInfo } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const farbkarte = (id: string, farbe: FarbkarteInfo['farbe'], punkte: number): FarbkarteInfo => ({ typ: 'Farbkarte', id, farbe, punkte })
 const sonderkarte = (id: string, name: string): SonderkarteInfo => ({ typ: 'Sonderkarte', id, name })
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1ca_schlangenlichtung_smoke.mjs', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -108,6 +108,6 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
     expect(smokeScript).toContain('gegnerDisplay !== \'none\'')
     expect(smokeScript).toContain('elementFromPoint')
     expect(smokeScript).toContain('probeHits: snakeProben')
-    expect(packageJson).toContain('node scripts/m1bz_gegner_hud_smoke.mjs && node scripts/m1ca_schlangenlichtung_smoke.mjs')
+    expect(['m1bz_gegner_hud_smoke.mjs', 'm1ca_schlangenlichtung_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

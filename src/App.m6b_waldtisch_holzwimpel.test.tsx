@@ -11,9 +11,9 @@ import { render } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function cssBlock(selector: string): string {
   // M2i/M5a-Pattern: Prefix-Anchor MUSS "." enthalten fuer flat-class selectors.
@@ -118,7 +118,7 @@ describe('M6b — Waldtisch-Holzplakette als Forest-Welcome-Banner (RED)', () =>
   })
 
   it('M6b:10 — Smoke-Wiring: package.json smoke:production enthaelt m6b-Skript', () => {
-    expect(packageJson).toContain('node scripts/m6b_waldtisch_holzwimpel_smoke.mjs')
+    expect(istVerdrahtet('m6b_waldtisch_holzwimpel_smoke.mjs')).toBe(true)
   })
 
   it('M6b:11 — Live-Smoke Skript existiert mit pruefeM6bWaldtischHolzwimpel-Funktion', () => {

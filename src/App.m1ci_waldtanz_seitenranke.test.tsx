@@ -11,9 +11,9 @@ import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1ci_seitenranke_smoke.mjs', 'utf8')
 const cssBlock = (selektor: string) =>
   appCss.match(new RegExp(`${selektor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -58,7 +58,7 @@ describe('M1ci Waldtanz-Seitenranke', () => {
     expect(routeRanke).toMatch(/scrollbar-gutter:\s*auto/)
     expect(rankenchip).toMatch(/border:\s*2px solid var\(--st-color-border-strong\)/)
     expect(rankenchip).toMatch(/box-shadow:\s*0 3px 0 var\(--st-color-border-strong\)/)
-    expect(packageJson).toContain('node scripts/m1ci_seitenranke_smoke.mjs')
+    expect(istVerdrahtet('m1ci_seitenranke_smoke.mjs')).toBe(true)
     expect(smokeScript).toContain('M1ci Seitenranke')
     expect(smokeScript).toContain('seitenranke.width > 128')
     expect(smokeScript).toContain('brett.width < 1030')

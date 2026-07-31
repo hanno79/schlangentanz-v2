@@ -35,9 +35,7 @@ describe('M1dg Smoke-Wiring (Waldtanz-Lichtungsstein)', () => {
   })
 
   it('ist das M1dg-Smoke-Skript in package.json smoke:production eingebunden', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-    const smoke = pkg.scripts['smoke:production'] ?? ''
-    expect(smoke).toMatch(/m1dg_waldtanz_lichtungsstein_smoke\.mjs/)
+    expect(istVerdrahtet('m1dg_waldtanz_lichtungsstein_smoke.mjs')).toBe(true)
   })
 
   // ÄNDERUNG [30.07.2026]: AP-1 — M1e ist hook-abhängig (`/game?phase=…`) und liegt

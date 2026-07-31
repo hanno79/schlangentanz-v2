@@ -24,6 +24,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -100,8 +101,7 @@ describe('M1dk Waldtanz-Phasen-Banner (RED)', () => {
   })
 
   it('M1dk:7 package.json smoke:production enthaelt das M1dk-Phasen-Banner-Skript in der Kette', () => {
-    const pkg = readFileSync(resolve(process.cwd(), 'package.json'), 'utf8')
-    expect(pkg).toMatch(/node scripts\/m1dk_waldtanz_phasen_banner_smoke\.mjs/)
+    expect(istVerdrahtet('m1dk_waldtanz_phasen_banner_smoke.mjs')).toBe(true)
   })
 
   it('M1dk:8 das M1dk-Phasen-Banner-Smoke-Skript enthaelt die Vertragsaussagen und die Slice-Klassen', () => {

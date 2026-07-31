@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
-const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-const chain: string = pkg.scripts?.['smoke:production'] ?? ''
+const chain: string = produktionsKette()
 
 function steps(): string[] {
   return chain.split('&&').map((s) => s.trim()).filter(Boolean)
@@ -10,8 +10,7 @@ function steps(): string[] {
 
 describe('M3h Smoke-Wiring', () => {
   it('M3h-W1: package.json smoke:production chain enthaelt M3h-Smoke-Script', () => {
-    const s = steps()
-    expect(s).toContain('node scripts/m3h_stitch_lobby_avatar_smoke.mjs')
+    expect(istVerdrahtet('m3h_stitch_lobby_avatar_smoke.mjs')).toBe(true)
   })
 
   it('M3h-W2: M3h-Smoke-Script existiert und hat M3h-Asserts', () => {

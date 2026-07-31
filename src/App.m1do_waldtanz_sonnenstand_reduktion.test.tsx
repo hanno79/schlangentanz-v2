@@ -14,6 +14,7 @@ import { resolve } from 'node:path'
 import { render, screen } from '@testing-library/react'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { produktionsKette } from './test/smokeKetten'
 
 function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -44,9 +45,6 @@ function cssBlockContains(parentSel: string, childSel: string, css: string): str
   return m ? m[2] : ''
 }
 const appCss = readFileSync(resolve(__dirname, './App.css'), 'utf8')
-const packageJson = JSON.parse(readFileSync(resolve(__dirname, '../package.json'), 'utf8')) as {
-  scripts: Record<string, string>
-}
 
 describe('M1do Sonnenstand-Reduktion auf /game', () => {
   it('RED: route-scoped display:none Regel ist im CSS vorhanden', () => {
@@ -78,7 +76,7 @@ describe('M1do Sonnenstand-Reduktion auf /game', () => {
 
 describe('M1do Smoke-Wiring', () => {
   it('RED: smoke:production script chain enthaelt M1do-Slice-Script', () => {
-    const chain = packageJson.scripts['smoke:production'] ?? ''
+    const chain = produktionsKette()
     expect(chain).toMatch(/m1do_waldtanz_sonnenstand_reduktion/)
   })
 

@@ -26,6 +26,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { render } from '@testing-library/react'
 import App from './App'
+import { produktionsKette } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -105,8 +106,7 @@ describe('M2h Waldtanz-Forest-Background-Texture (RED)', () => {
   })
 
   it('M2h:6 package.json smoke:production-Kette enthaelt M2h-Skript', () => {
-    const pkg = JSON.parse(readSrc('package.json')) as { scripts: Record<string, string> }
-    const chain = pkg.scripts['smoke:production'] ?? ''
+    const chain = produktionsKette()
     expect(chain, 'smoke:production-Script muss existieren').toContain('m2h_waldtanz_forest_texture_smoke.mjs')
   })
 

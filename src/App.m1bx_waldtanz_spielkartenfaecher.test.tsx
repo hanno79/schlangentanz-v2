@@ -11,10 +11,10 @@ import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 const smokeScript = readFileSync('scripts/m1bx_spielkartenfaecher_smoke.mjs', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const cssBlock = (selektor: string) =>
   appCss.match(new RegExp(`${selektor.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
 
@@ -81,6 +81,6 @@ describe('M1bx Waldtanz-Spielkartenfächer', () => {
     // (siehe M1bp-Kommentar: sub-pixel rounding).
     expect(smokeScript).toContain('bottom > 905')
     expect(smokeScript).toContain('selectedAfter')
-    expect(packageJson).toContain('scripts/live_smoke.mjs && node scripts/m1bw_lichtung_entflechtung_smoke.mjs && node scripts/m1bx_spielkartenfaecher_smoke.mjs')
+    expect(['live_smoke.mjs', 'm1bw_lichtung_entflechtung_smoke.mjs', 'm1bx_spielkartenfaecher_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

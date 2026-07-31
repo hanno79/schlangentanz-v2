@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 
@@ -126,9 +127,7 @@ describe('M6a — Deine erste Schlange als Stitch-Waldlichtung-Onboarding', () =
   })
 
   it('M6a:10 — Smoke-Wiring: package.json smoke:production enthaelt m6a-Skript', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts: Record<string, string> }
-    const kette = pkg.scripts['smoke:production'] ?? ''
-    expect(kette).toContain('m6a_erste_schlange_forest_clearing_smoke')
+    expect(istVerdrahtet('m6a_erste_schlange_forest_clearing_smoke.mjs')).toBe(true)
   })
 
   it('M6a:11 — Live-Smoke Skript existiert mit pruefeM6a-Funktion', () => {

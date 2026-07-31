@@ -11,7 +11,7 @@ Beschreibung: Schlangenbereich des Spieltischs mit sichtbaren Kartenreihen, zug�
 # ÄNDERUNG 12./13.06.2026: R181-R183 machen Schlangenfrass, Farbenschutz und Farbendieb board-nah spielbar.
 */
 import { useEffect, useId, useState } from 'react'
-import type { DragEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react'
+import type { MutableRefObject } from 'react'
 import { ermittleRegenbogenWildfarben } from '../engine'
 import type { SpielAktion, Spieler, Spielzustand } from '../engine'
 import WaldtanzZielkompass from './WaldtanzZielkompass'
@@ -21,6 +21,7 @@ import SchlangenPfadKarte from './SchlangenPfadKarte'
 import WaldtanzFarbgruppenband from './WaldtanzFarbgruppenband'
 import SchlangenWertungsplakette from './SchlangenWertungsplakette'
 import { frassKey, fusionKey, schutzKey } from './zielspurKey'
+import useSchlangenDragDrop from '../hooks/useSchlangenDragDrop'
 import SchlangenStartzone from './SchlangenStartzone'
 import WaldtanzErsteSchlangeOnboarding from './WaldtanzErsteSchlangeOnboarding'
 import { hatSchlangenhaeutungBrettziel } from './schlangenhaeutungBrettzielLogik'
@@ -67,17 +68,6 @@ function schlangenStatusLabel(zustand: Spieler['schlangen'][number]['zustand']):
   return nichtErfassterZustand
 }
 
-function erlaubeDrop(event: DragEvent<HTMLElement>) {
-  event.preventDefault()
-  event.dataTransfer.dropEffect = 'move'
-}
-
-type DragTarget = { kind: 'startzone' } | { kind: 'schlange'; id: string } | { kind: 'ungueltig' }
-
-function leseGezogeneKarteId(event: DragEvent<HTMLElement>, gezogeneHandkarteIdRef: MutableRefObject<string | null>) {
-  return event.dataTransfer.getData('text/plain') || gezogeneHandkarteIdRef.current
-}
-
 function zielspurKeySelector(key: string) {
   const escaped = typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(key) : key.replace(/["\\]/g, '\\$&')
   return `[data-zielspur-key="${escaped}"]`
@@ -102,7 +92,6 @@ export default function Schlangenbereich({
   onZielspurKeyChange,
 }: SchlangenbereichProps) {
   const komponentenId = useId()
-  const [dragOverZone, setDragOverZone] = useState<DragTarget | null>(null)
   const [aktiverZielspurKey, setAktiverZielspurKey] = useState<string | null>(null)
 
   function findeAktionFuerKarte(schlangeId: string, handkartenId: string | null) {
@@ -111,19 +100,16 @@ export default function Schlangenbereich({
       (aktion) => aktion.schlangenId === schlangeId && aktion.handkartenId === handkartenId,
     ) ?? null
   }
-
   function findeNeueSchlangeAktion(handkartenId: string | null) {
     if (!handkartenId) return null
     return neueSchlangeStartenAktionen.find((aktion) => aktion.handkartenId === handkartenId) ?? null
   }
-
   function findeFarbenschutzAktion(schlangeId: string, handkartenId: string | null) {
     if (!handkartenId) return null
     return farbenschutzAktionen.find(
       (aktion) => aktion.handkartenId === handkartenId && aktion.zielSchlangenId === schlangeId,
     ) ?? null
   }
-
   function findeSchlangenfrassAktion(schlangeId: string, zielKartenId: string, handkartenId: string | null) {
     if (!handkartenId) return null
     return schlangenfrassAktionen.find((aktion) => {
@@ -131,127 +117,35 @@ export default function Schlangenbereich({
       return aktion.handkartenId === handkartenId && aktion.ziele.length === 1 && ziel.schlangenId === schlangeId && ziel.kartenId === zielKartenId
     }) ?? null
   }
-
   function fuehreAktion(aktion: SpielAktion | null) {
     if (aktion) onAktion(aktion)
   }
 
-  function handleSchlangeClick(event: MouseEvent<HTMLElement>, schlangeId: string) {
-    if ((event.target as HTMLElement).closest('button')) {
-      return
-    }
-
-    fuehreAktion(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
-  }
-
-  function handleSchlangeKeyDown(event: KeyboardEvent<HTMLElement>, schlangeId: string) {
-    if ((event.target as HTMLElement).closest('button')) {
-      return
-    }
-    if (event.key !== 'Enter' && event.key !== ' ') {
-      return
-    }
-
-    event.preventDefault()
-    fuehreAktion(findeAktionFuerKarte(schlangeId, ausgewaehlteHandkarteId))
-  }
-
-  function handleSchlangeDragOver(event: DragEvent<HTMLElement>, schlangeId: string) {
-    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
-    if (!findeAktionFuerKarte(schlangeId, kartenId)) {
-      if (dragOverZone?.kind !== 'ungueltig') setDragOverZone({ kind: 'ungueltig' })
-      return
-    }
-
-    erlaubeDrop(event)
-    if (dragOverZone?.kind !== 'schlange' || dragOverZone.id !== schlangeId) {
-      setDragOverZone({ kind: 'schlange', id: schlangeId })
-    }
-  }
-
-  function handleSchlangeDrop(event: DragEvent<HTMLElement>, schlangeId: string) {
-    event.preventDefault()
-    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
-    const aktion = findeAktionFuerKarte(schlangeId, kartenId)
-    fuehreAktion(aktion)
-    setDragOverZone(aktion ? null : { kind: 'ungueltig' })
-  }
-
-  function handleNeueSchlangeZoneClick(event: MouseEvent<HTMLElement>) {
-    const ziel = event.target as HTMLElement
-    if (ziel.closest('.schlangen-startzone__faehrte-button') || ziel.closest('li.schlangekarte--eigene')) {
-      return
-    }
-
-    fuehreAktion(findeNeueSchlangeAktion(ausgewaehlteHandkarteId) ?? (ausgewaehlteHandkarteId ? null : neueSchlangeStartenAktionen[0] ?? null))
-  }
-
-  function handleNeueSchlangeZoneKeyDown(event: KeyboardEvent<HTMLElement>) {
-    if (event.key !== 'Enter' && event.key !== ' ') {
-      return
-    }
-
-    event.preventDefault()
-    fuehreAktion(findeNeueSchlangeAktion(ausgewaehlteHandkarteId))
-  }
-
-  function handleNeueSchlangeZoneDragOver(event: DragEvent<HTMLElement>) {
-    if ((event.target as HTMLElement).closest('li.schlangekarte--eigene')) {
-      return
-    }
-
-    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
-    if (!neueSchlangeStartenAktionen.some((aktion) => aktion.handkartenId === kartenId)) {
-      if (dragOverZone?.kind !== 'ungueltig') setDragOverZone({ kind: 'ungueltig' })
-      return
-    }
-
-    erlaubeDrop(event)
-    if (dragOverZone?.kind !== 'startzone') setDragOverZone({ kind: 'startzone' })
-  }
-
-  function handleNeueSchlangeZoneDrop(event: DragEvent<HTMLElement>) {
-    if ((event.target as HTMLElement).closest('li.schlangekarte--eigene')) {
-      return
-    }
-
-    event.preventDefault()
-    event.stopPropagation()
-    const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
-    const aktion = neueSchlangeStartenAktionen.find((eintrag) => eintrag.handkartenId === kartenId) ?? null
-    fuehreAktion(aktion)
-    setDragOverZone(aktion ? null : { kind: 'ungueltig' })
-  }
-
-  function handleDragLeave(event: DragEvent<HTMLElement>) {
-    if (!(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node | null)) {
-      setDragOverZone(null)
-    }
-  }
-
-  function makeAktionsButtonDragOver(aktionsKartenId: string, zone: DragTarget) {
-    return (event: DragEvent<HTMLElement>) => {
-      event.stopPropagation()
-      const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
-      if (kartenId !== aktionsKartenId) {
-        setDragOverZone({ kind: 'ungueltig' })
-        return
-      }
-      erlaubeDrop(event)
-      setDragOverZone(zone)
-    }
-  }
-
-  function makeAktionsButtonDrop(findeAktion: (kartenId: string | null) => SpielAktion | null) {
-    return (event: DragEvent<HTMLElement>) => {
-      event.preventDefault()
-      event.stopPropagation()
-      const kartenId = leseGezogeneKarteId(event, gezogeneHandkarteIdRef)
-      const zielAktion = findeAktion(kartenId)
-      fuehreAktion(zielAktion)
-      setDragOverZone(zielAktion ? null : { kind: 'ungueltig' })
-    }
-  }
+  // ÄNDERUNG [30.07.2026]: AP-4 — das Drag-&-Drop-Verhalten liegt jetzt in
+  // useSchlangenDragDrop. Reines Verschieben entlang einer vorhandenen Naht:
+  // ein Stück Zustand plus die Handler, die es setzen.
+  const {
+    dragOverZone,
+    setDragOverZone,
+    handleSchlangeClick,
+    handleSchlangeKeyDown,
+    handleSchlangeDragOver,
+    handleSchlangeDrop,
+    handleNeueSchlangeZoneClick,
+    handleNeueSchlangeZoneKeyDown,
+    handleNeueSchlangeZoneDragOver,
+    handleNeueSchlangeZoneDrop,
+    handleDragLeave,
+    makeAktionsButtonDragOver,
+    makeAktionsButtonDrop,
+  } = useSchlangenDragDrop({
+    gezogeneHandkarteIdRef,
+    ausgewaehlteHandkarteId,
+    neueSchlangeStartenAktionen,
+    findeAktionFuerKarte,
+    findeNeueSchlangeAktion,
+    fuehreAktion,
+  })
 
   const hatEigeneSchlangen = aktiverSpieler.schlangen.length > 0
 
@@ -265,7 +159,9 @@ export default function Schlangenbereich({
     const handleDragEnd = () => setDragOverZone(null)
     document.addEventListener('dragend', handleDragEnd)
     return () => document.removeEventListener('dragend', handleDragEnd)
-  }, [])
+    // setDragOverZone stammt aus useState und ist stabil; seit AP-4 kommt es aus
+    // dem Hook und muss deshalb in der Abhängigkeitsliste stehen.
+  }, [setDragOverZone])
 
   const titelId = `${komponentenId}-schlangenbereich-titel`
   const eigeneTitelId = `${komponentenId}-eigene-schlangen-titel`

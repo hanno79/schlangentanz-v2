@@ -19,9 +19,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange } from './engine/__tests__/testHelpers'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function zustandMitBefuelltemAblagestapel() {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -161,6 +161,6 @@ describe('M1cw Waldtanz-Brettschritt-Konsequenz', () => {
   })
 
   it('Smoke-Wiring: package.json npm run smoke:production enthaelt das M1cw-Smoke-Script', () => {
-    expect(packageJson).toMatch(/"smoke:production"\s*:\s*"[^"]*m1cw_brettschritt_konsequenz_smoke\.mjs/)
+    expect(istVerdrahtet('m1cw_brettschritt_konsequenz_smoke.mjs')).toBe(true)
   })
 })

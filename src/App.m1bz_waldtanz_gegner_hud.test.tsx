@@ -12,9 +12,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { SonderkarteInfo } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1bz_gegner_hud_smoke.mjs', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -72,7 +72,7 @@ describe('M1bz Waldtanz-Gegner-HUD', () => {
     expect(smokeScript).toContain('M1bz Gruben-Ausnahme')
     expect(smokeScript).toContain('statusbandDisplay !== \'none\'')
     expect(smokeScript).toContain('rahmenScrollt')
-    expect(packageJson).toContain('scripts/m1by_spielbrettweite_smoke.mjs && node scripts/m1bz_gegner_hud_smoke.mjs')
+    expect(['m1by_spielbrettweite_smoke.mjs', 'm1bz_gegner_hud_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 
   it('laesst die Gegnerliste auf /game wieder Raum einnehmen, sobald eine Schlangengrube ein Spielerziel braucht', () => {

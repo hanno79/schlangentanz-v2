@@ -24,6 +24,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { render, screen, within } from '@testing-library/react'
 import App from './App'
+import { produktionsKette } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -105,8 +106,7 @@ describe('M2g Waldtanz-Brettrand-Questpille (RED)', () => {
   })
 
   it('M2g:7 package.json smoke:production-Kette enthaelt M2g-Skript', () => {
-    const pkg = JSON.parse(readSrc('package.json')) as { scripts: Record<string, string> }
-    const chain = pkg.scripts['smoke:production'] ?? ''
+    const chain = produktionsKette()
     expect(chain, 'smoke:production-Script muss existieren').toContain('m2g_brettrand_questpille_smoke.mjs')
   })
 

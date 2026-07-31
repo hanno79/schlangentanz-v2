@@ -14,6 +14,7 @@ Beschreibung: M1di RED-Tests fuer die Konsolidierung der Schlangenlichtung zu ei
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -130,7 +131,6 @@ describe('M1di Waldtanz-Schlangenlichtung als Spielbrett-Raster (RED)', () => {
   })
 
   it('M1di:12 package.json smoke:production-Kette enthaelt das neue M1di-Smoke-Skript', () => {
-    const pkg = readSrc('package.json')
-    expect(pkg).toMatch(/scripts\/m1di_waldtanz_schlangenlichtung_smoke\.mjs/)
+    expect(istVerdrahtet('m1di_waldtanz_schlangenlichtung_smoke.mjs')).toBe(true)
   })
 })

@@ -13,9 +13,9 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, sonderkarte, schlange } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 afterEach(() => {
   window.history.pushState({}, '', '/')
@@ -81,6 +81,6 @@ describe('M1co Waldtanz-Zauberpfad-Sprungfaehrten', () => {
     expect(appCss).toContain('.spielbereich--game-route [class~="waldtanz-zielspur__sprung"]')
     expect(appCss).toContain('.waldtanz-zielspur-ziel--aktiv')
     expect(appCss).toContain('animation: waldtanz-zielspur-puls')
-    expect(packageJson).toContain('node scripts/m1cn_zauberpfad_smoke.mjs && node scripts/m1co_zauberpfad_sprung_smoke.mjs')
+    expect(['m1cn_zauberpfad_smoke.mjs', 'm1co_zauberpfad_sprung_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

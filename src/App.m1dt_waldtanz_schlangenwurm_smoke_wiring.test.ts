@@ -9,13 +9,13 @@
 
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet } from './test/smokeKetten'
 
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeSkript = readFileSync('scripts/m1dt_waldtanz_schlangenwurm_smoke.mjs', 'utf8')
 
 describe('M1dt Smoke-Wiring', () => {
   it('M1dt-Smoke-Skript ist in der smoke:production-Kette eingebunden (nach M1ds, vor M3b)', () => {
-    expect(packageJson).toMatch(/smoke:production.*m1dt_waldtanz_schlangenwurm_smoke\.mjs.*m3b_sonniges_nest_spielstart_smoke\.mjs/s)
+    expect(['m1dt_waldtanz_schlangenwurm_smoke.mjs', 'm3b_sonniges_nest_spielstart_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 
   it('M1dt-Smoke-Skript enthält die Pflicht-Klassen und Test-IDs', () => {

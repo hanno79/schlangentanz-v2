@@ -26,10 +26,10 @@
 /// <reference types="node" />
 
 import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 
@@ -157,7 +157,6 @@ describe('M2z Waldtanz-Magiekreise als Forest-Arena-Spielobjekte', () => {
   })
 
   it('M2z:8 package.json: smoke:production-Kette enthaelt m2z_magiekreise_arena_spielobjekte_smoke.mjs', () => {
-    const pkg = readFileSync(resolve(process.cwd(), 'package.json'), 'utf8')
-    expect(pkg).toMatch(/node\s+scripts\/m2z_magiekreise_arena_spielobjekte_smoke\.mjs/)
+    expect(istVerdrahtet('m2z_magiekreise_arena_spielobjekte_smoke.mjs')).toBe(true)
   })
 })

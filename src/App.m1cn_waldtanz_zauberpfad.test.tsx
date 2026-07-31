@@ -13,9 +13,9 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, sonderkarte, schlange } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cn_zauberpfad_smoke.mjs', 'utf8')
 
 const cssBlock = (selector: string) =>
@@ -125,6 +125,6 @@ describe('M1cn Waldtanz-Zauberpfad', () => {
     expect(typ).toMatch(/font-family:\s*var\(--st-font-headline\)/)
     expect(smokeScript).toContain('M1cn Zauberpfad')
     expect(smokeScript).toContain('Konkrete Zauberpfade')
-    expect(packageJson).toContain('node scripts/m1cm_zielwahl_faehrten_smoke.mjs && node scripts/m1cn_zauberpfad_smoke.mjs')
+    expect(['m1cm_zielwahl_faehrten_smoke.mjs', 'm1cn_zauberpfad_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

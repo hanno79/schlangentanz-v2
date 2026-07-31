@@ -13,9 +13,9 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
 
@@ -122,6 +122,6 @@ describe('M1ct Waldtanz-Spielkarten-Stil', () => {
     expect(spielhinweisRule).toMatch(/opacity:\s*0/)
     expect(appCss).toMatch(/\.handkarte__button--karte:hover[\s\S]{0,80}\.handkarte__spielhinweis[\s\S]{0,80}opacity:\s*1/)
 
-    expect(packageJson).toMatch(/m1ct_spielkarten_stil_smoke\.mjs/)
+    expect(istVerdrahtet('m1ct_spielkarten_stil_smoke.mjs')).toBe(true)
   })
 })

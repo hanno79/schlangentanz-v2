@@ -16,6 +16,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
+import { produktionsKette } from './test/smokeKetten'
 
 const projectRoot = join(__dirname, '..')
 
@@ -25,10 +26,7 @@ describe('M5a Smoke-Wiring', () => {
   })
 
   it('RED-W2: package.json smoke:production-Kette enthaelt den M5a-Smoke', () => {
-    const pkg = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf-8')) as {
-      scripts: Record<string, string>
-    }
-    const chain = pkg.scripts['smoke:production']
+    const chain = produktionsKette()
     expect(chain).toBeDefined()
     expect(chain).toMatch(/scripts\/m5a_sieger_party_stitch_forest_hero_smoke\.mjs/)
   })

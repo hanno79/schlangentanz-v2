@@ -8,10 +8,9 @@
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
-const packageJson = readFileSync('package.json', 'utf8')
-const smokeChain = (JSON.parse(packageJson) as { scripts: Record<string, string> })
-  .scripts['smoke:production'] ?? ''
+const smokeChain = produktionsKette()
 
 describe('M9 Smoke-Wiring', () => {
   it('M9-W1: Smoke-Script existiert in scripts/', () => {
@@ -19,7 +18,7 @@ describe('M9 Smoke-Wiring', () => {
   })
 
   it('M9-W2: package.json smoke:production-Kette enthaelt den M9-Smoke-Pfad', () => {
-    expect(smokeChain).toContain('m9_hand_erstbild_smoke.mjs')
+    expect(istVerdrahtet('m9_hand_erstbild_smoke.mjs')).toBe(true)
   })
 
   it('M9-W3: Smoke-Script referenziert Hand-Panel + Erstbild-Selectors', () => {
@@ -34,7 +33,7 @@ describe('M9 Smoke-Wiring', () => {
     // AENDERUNG 29.06.2026 (M9.5): M9.5-Slice hat einen weiteren Smoke
     // nach M9 angehaengt, daher pruefen wir jetzt "enthalten" statt
     // "am Ende". M9 bleibt aber im Kette drin.
-    expect(smokeChain).toContain('m9_hand_erstbild_smoke.mjs')
+    expect(istVerdrahtet('m9_hand_erstbild_smoke.mjs')).toBe(true)
     expect(smokeChain).not.toMatch(/--exclude.*m9|grep.*m9|awk.*m9/)
   })
 

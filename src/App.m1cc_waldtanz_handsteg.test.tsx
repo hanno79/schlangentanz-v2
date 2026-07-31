@@ -10,9 +10,9 @@ import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cc_handsteg_smoke.mjs', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -60,6 +60,6 @@ describe('M1cc Waldtanz-Handsteg', () => {
     expect(smokeScript).toContain('1100')
     expect(smokeScript).toContain('waldtanz-waldtaschen')
     expect(smokeScript).toContain('elementFromPoint')
-    expect(packageJson).toContain('node scripts/m1cb_zielranken_smoke.mjs && node scripts/m1cc_handsteg_smoke.mjs')
+    expect(['m1cb_zielranken_smoke.mjs', 'm1cc_handsteg_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

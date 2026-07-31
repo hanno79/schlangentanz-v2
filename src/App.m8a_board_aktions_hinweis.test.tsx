@@ -24,6 +24,7 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 import WaldtanzLetzteAktionHinweis from './components/WaldtanzLetzteAktionHinweis'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 describe('M8a Sonderkarten-Board-Aktions-Hinweis', () => {
   it('RED-1: WaldtanzLetzteAktionHinweis-Komponente existiert in src/components/', () => {
@@ -72,8 +73,6 @@ describe('M8a App-Integration /game vs /', () => {
   })
 
   it('M8a:7 — Smoke-Wiring: package.json smoke:production enthaelt m8a-Skript', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf-8'))
-    const chain = pkg.scripts['smoke:production'] || ''
-    expect(chain).toMatch(/m8a_aktions_hinweis_smoke/)
+    expect(istVerdrahtet('m8a_aktions_hinweis_smoke.mjs')).toBe(true)
   })
 })

@@ -11,9 +11,9 @@ import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cg_zugpfad_waldsteine_smoke.mjs', 'utf8')
 
 const cssBlock = (selector: string) =>
@@ -55,7 +55,7 @@ describe('M1cg Waldtanz-Zugpfad-Waldsteine', () => {
     expect(stationRoute).toMatch(/border-radius:\s*999px/)
     expect(stationRoute).toMatch(/min-height:\s*2\.1rem/)
     expect(aktivRoute).toMatch(/transform:\s*translateY\(-0\.35rem\)/)
-    expect(packageJson).toContain('node scripts/m1cg_zugpfad_waldsteine_smoke.mjs')
+    expect(istVerdrahtet('m1cg_zugpfad_waldsteine_smoke.mjs')).toBe(true)
     expect(smokeScript).toContain('M1cg Zugpfad-Waldsteine')
     expect(smokeScript).toContain('streckeOverflow !== \'visible\'')
     expect(smokeScript).toContain('stationen.length !== 2')

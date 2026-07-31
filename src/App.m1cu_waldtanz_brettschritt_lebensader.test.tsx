@@ -20,9 +20,9 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange, sonderkarte } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 afterEach(() => {
   window.history.pushState({}, '', '/')
@@ -109,6 +109,6 @@ describe('M1cu Waldtanz-Brettschritt-Lebensader', () => {
   })
 
   it('Smoke-Wiring: package.json npm run smoke:production enthaelt das M1cu-Smoke-Script', () => {
-    expect(packageJson).toMatch(/"smoke:production"\s*:\s*"[^"]*m1cu_brettschritt_lebensader_smoke\.mjs/)
+    expect(istVerdrahtet('m1cu_brettschritt_lebensader_smoke.mjs')).toBe(true)
   })
 })

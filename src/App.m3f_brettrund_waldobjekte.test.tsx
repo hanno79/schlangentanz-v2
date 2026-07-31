@@ -35,6 +35,7 @@ import { readFileSync } from 'node:fs'
 import { render, screen, cleanup } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 
@@ -158,9 +159,8 @@ describe('M3f Brettrund-Waldobjekte im Brettrund sichtbar', () => {
   })
 
   it('M3f:6 — Smoke-Wiring: package.json smoke:production enthaelt m3f_brettrund_waldobjekte_smoke.mjs', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-    const chain: string = pkg.scripts?.['smoke:production'] ?? ''
-    expect(chain).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
+    const chain: string = produktionsKette()
+    expect(istVerdrahtet('m3f_brettrund_waldobjekte_smoke.mjs')).toBe(true)
     // M9.5-W5 Last-In-Chain-Migration (Pitfall #14): M3i (01.07.2026)
     // haengt m3i-Smoke ans Ende der Kette; M3f ist nicht mehr der letzte
     // Schritt. Statt "last step === M3f" pruefen wir "M3f ist in der Kette

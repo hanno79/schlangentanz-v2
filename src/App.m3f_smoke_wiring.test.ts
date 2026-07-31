@@ -12,15 +12,15 @@
 
 import { describe, it, expect } from 'vitest'
 import { readFileSync, existsSync } from 'node:fs'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
-const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-const chain: string = pkg.scripts['smoke:production'] ?? ''
+const chain: string = produktionsKette()
 const m3fScript = 'scripts/m3f_brettrund_waldobjekte_smoke.mjs'
 const m3fSrc = existsSync(m3fScript) ? readFileSync(m3fScript, 'utf8') : ''
 
 describe('M3f Smoke-Wiring', () => {
   it('M3f-W1: smoke:production chain enthaelt m3f_brettrund_waldobjekte_smoke.mjs', () => {
-    expect(chain).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
+    expect(istVerdrahtet('m3f_brettrund_waldobjekte_smoke.mjs')).toBe(true)
   })
 
   it('M3f-W2: M3f-Smoke-Script existiert', () => {
@@ -45,7 +45,7 @@ describe('M3f Smoke-Wiring', () => {
     // (Last-In-Chain-Watcher-Test) — der Test ueberlebte nur 1 Slice,
     // muss member+index-basierte Pruefung sein.
     const steps = chain.split('&&').map((s) => s.trim())
-    expect(chain).toContain('m3f_brettrund_waldobjekte_smoke.mjs')
+    expect(istVerdrahtet('m3f_brettrund_waldobjekte_smoke.mjs')).toBe(true)
     const m3fIndex = steps.findIndex((s) => s.includes('m3f_brettrund_waldobjekte_smoke.mjs'))
     expect(m3fIndex).toBeGreaterThanOrEqual(0)
     // M3h-Smoke MUSS nach M3f-Smoke in der Kette kommen.

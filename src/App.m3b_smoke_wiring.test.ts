@@ -10,20 +10,16 @@
 
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet, produktionsKette } from './test/smokeKetten'
 
-function lesePackageSmokeChain(): string {
-  const pkg = JSON.parse(readFileSync('package.json', 'utf-8')) as { scripts: Record<string, string> }
-  return pkg.scripts['smoke:production'] ?? ''
-}
 
 describe('M3b Smoke-Wiring in der kanonischen Kette', () => {
   it('package.json npm run smoke:production enthaelt das M3b-Smoke-Skript', () => {
-    const kette = lesePackageSmokeChain()
-    expect(kette).toMatch(/scripts\/m3b_sonniges_nest_spielstart_smoke\.mjs/)
+    expect(istVerdrahtet('m3b_sonniges_nest_spielstart_smoke.mjs')).toBe(true)
   })
 
   it('M3b-Smoke liegt in der kanonischen Kette (smoke-Skript existiert im Repo)', () => {
-    const kette = lesePackageSmokeChain()
+    const kette = produktionsKette()
     const m3bIdx = kette.indexOf('scripts/m3b_sonniges_nest_spielstart_smoke.mjs')
     expect(m3bIdx).toBeGreaterThanOrEqual(0)
   })

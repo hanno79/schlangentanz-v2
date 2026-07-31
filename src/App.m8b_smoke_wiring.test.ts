@@ -12,17 +12,16 @@
  */
 /// <reference types="node" />
 
-import { readFileSync } from 'node:fs'
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet, produktionsKette } from './test/smokeKetten'
 
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-const smokeChain = packageJson.scripts?.['smoke:production'] ?? ''
+const smokeChain = produktionsKette()
 const steps = smokeChain.split('&&').map((s) => s.trim())
 
 describe('M8b Smoke-Wiring in der kanonischen Kette', () => {
   it('verweist auf den neuen 2-Ziel-Schlangenfrass-Smoke', () => {
-    expect(smokeChain).toContain('m8b_schlangenfrass_zweiziel_smoke.mjs')
+    expect(istVerdrahtet('m8b_schlangenfrass_zweiziel_smoke.mjs')).toBe(true)
   })
 
   it('liegt nach dem M8a-Smoke (konsistente Slice-Reihenfolge)', () => {

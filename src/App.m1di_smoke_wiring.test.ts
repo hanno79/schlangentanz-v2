@@ -9,6 +9,7 @@ Beschreibung: M1di Smoke-Wiring-Test.
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -16,8 +17,7 @@ function readSrc(relPath: string): string {
 
 describe('M1di Smoke-Wiring', () => {
   it('m1di:1 smoke:production-Kette enthaelt das neue M1di-Smoke-Skript', () => {
-    const pkg = readSrc('package.json')
-    expect(pkg).toMatch(/node scripts\/m1di_waldtanz_schlangenlichtung_smoke\.mjs/)
+    expect(istVerdrahtet('m1di_waldtanz_schlangenlichtung_smoke.mjs')).toBe(true)
   })
 
   it('m1di:2 das M1di-Smoke-Skript enthaelt die Pflicht-Funktion pruefeM1diSchlangenlichtung', () => {

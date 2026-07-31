@@ -23,9 +23,9 @@ import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 /**
  * Liefert ALLE Regel-Bodies fuer einen vollstaendigen Selector-String.
@@ -161,6 +161,6 @@ describe('M2s Schlangenlichtung-Empty-State als ruhige Forest-Lichtung', () => {
     expect(smokeScript).toContain('pruefeM2sLeereLichtung')
     expect(smokeScript).toContain('schlangen-zielkompass')
     expect(smokeScript).toContain('schlangen-startgarten')
-    expect(packageJson).toContain('node scripts/m2s_leere_schlangenlichtung_ruhig_smoke.mjs')
+    expect(istVerdrahtet('m2s_leere_schlangenlichtung_ruhig_smoke.mjs')).toBe(true)
   })
 })

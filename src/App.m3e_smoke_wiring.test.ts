@@ -12,15 +12,15 @@
 
 import { describe, it, expect } from 'vitest'
 import { readFileSync, existsSync } from 'node:fs'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
-const pkg = JSON.parse(readFileSync('package.json', 'utf8'))
-const chain: string = pkg.scripts['smoke:production'] ?? ''
+const chain: string = produktionsKette()
 const m3eScript = 'scripts/m3e_spielmat_boden_smoke.mjs'
 const m3eSrc = existsSync(m3eScript) ? readFileSync(m3eScript, 'utf8') : ''
 
 describe('M3e Smoke-Wiring', () => {
   it('M3e-W1: smoke:production chain enthaelt m3e_spielmat_boden_smoke.mjs', () => {
-    expect(chain).toContain('m3e_spielmat_boden_smoke.mjs')
+    expect(istVerdrahtet('m3e_spielmat_boden_smoke.mjs')).toBe(true)
   })
 
   it('M3e-W2: M3e-Smoke-Script existiert', () => {

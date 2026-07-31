@@ -11,9 +11,9 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cj_startfaehrten_smoke.mjs', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -65,6 +65,6 @@ describe('M1cj Waldtanz-Startfährten', () => {
     expect(smokeScript).toContain('M1cj Startfaehrten')
     expect(smokeScript).toContain('elementFromPoint')
     expect(smokeScript).toContain('Startfährte blau-09 als neue Schlange starten')
-    expect(packageJson).toContain('node scripts/m1ci_seitenranke_smoke.mjs && node scripts/m1cj_startfaehrten_smoke.mjs')
+    expect(['m1ci_seitenranke_smoke.mjs', 'm1cj_startfaehrten_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

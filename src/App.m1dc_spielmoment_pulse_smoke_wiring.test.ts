@@ -11,16 +11,13 @@
 
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet } from './test/smokeKetten'
 
-const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as {
-  scripts?: Record<string, string>
-}
 const smokeScriptPath = 'scripts/m1dc_spielmoment_pulse_smoke.mjs'
 
 describe('M1dc Smoke-Wiring', () => {
   it('enthaelt das M1dc-Smoke-Skript in smoke:production', () => {
-    const chain = packageJson.scripts?.['smoke:production'] ?? ''
-    expect(chain).toContain('m1dc_spielmoment_pulse_smoke.mjs')
+    expect(istVerdrahtet('m1dc_spielmoment_pulse_smoke.mjs')).toBe(true)
   })
 
   it('Smoke-Skript existiert und referenziert die Spielmoment-Region', () => {

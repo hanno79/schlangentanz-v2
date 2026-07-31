@@ -25,6 +25,7 @@ import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function deterministischerZustand() {
   return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -32,10 +33,6 @@ function deterministischerZustand() {
 
 function leseCss() {
   return readFileSync('src/App.css', 'utf-8')
-}
-
-function lesePackageJson() {
-  return JSON.parse(readFileSync('package.json', 'utf-8'))
 }
 
 describe('M3b Handkarten-Stitch-Fächer', () => {
@@ -99,9 +96,7 @@ describe('M3b Handkarten-Stitch-Fächer', () => {
   })
 
   it('M3b:7 package.json smoke:production-Kette enthaelt m3b-...smoke.mjs', () => {
-    const pkg = lesePackageJson()
-    const chain: string = pkg.scripts['smoke:production'] ?? ''
-    expect(chain).toContain('m3b_handkarten_faecher_stitch_smoke.mjs')
+    expect(istVerdrahtet('m3b_handkarten_faecher_stitch_smoke.mjs')).toBe(true)
   })
 
   it('M3b:8 M2x:1-Bühne-min-height-Vertrag migriert (von 2.6rem auf 2.2rem)', () => {

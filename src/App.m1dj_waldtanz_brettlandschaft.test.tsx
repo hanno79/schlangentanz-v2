@@ -26,6 +26,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { istVerdrahtet } from './test/smokeKetten'
 
 function readSrc(relPath: string): string {
   return readFileSync(resolve(process.cwd(), relPath), 'utf8')
@@ -93,8 +94,7 @@ describe('M1dj Waldtanz-Brettlandschaft (RED)', () => {
   it('M1dj:6 package.json smoke:production ruft das M1dj-Brettlandschaft-Skript in der Kette auf', () => {
     // Wir lesen die package.json direkt (nicht ueber import.meta.url), weil
     // der Test kein ESM-Root ist und das Workdir das Repo-Root ist.
-    const pkg = readFileSync(resolve(process.cwd(), 'package.json'), 'utf8')
-    expect(pkg).toMatch(/node scripts\/m1dj_waldtanz_brettlandschaft_smoke\.mjs/)
+    expect(istVerdrahtet('m1dj_waldtanz_brettlandschaft_smoke.mjs')).toBe(true)
   })
 
   it('M1dj:7 das M1dj-Brettlandschaft-Smoke-Skript enthaelt die Vertragsaussagen und die Slice-Klassen', () => {

@@ -15,6 +15,7 @@ import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
 
@@ -64,8 +65,6 @@ describe('M1g Waldtanz-Spielerplakette Konsolidierung', () => {
   })
 
   it('Smoke-Wiring: smoke:production enthaelt das M1g-Skript', () => {
-    const pkg = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-    const chain = pkg.scripts?.['smoke:production'] ?? ''
-    expect(chain).toContain('scripts/m1g_waldtanz_spielerplakette_konsolidierung_smoke.mjs')
+    expect(istVerdrahtet('m1g_waldtanz_spielerplakette_konsolidierung_smoke.mjs')).toBe(true)
   })
 })

@@ -25,11 +25,10 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import App from './App'
 import { erstelleSpielzustand } from './engine'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
-const smokeChain = (JSON.parse(packageJson) as { scripts: Record<string, string> })
-  .scripts['smoke:production'] ?? ''
+const smokeChain = produktionsKette()
 
 // cssBlock-Helper: letzte Top-Level-Regel fuer einen Selektor finden.
 // Skippt @media-reduce-Blöcke via depth-tracked {}-Zaehlung.
@@ -149,7 +148,7 @@ describe('M2y Gegnerlichtung-Leerlauf kompaktifizieren', () => {
   it('M2y:7 — package.json smoke:production enthaelt M2y in der Kette', () => {
     // AENDERUNG 30.06.2026 (M2z-Migration): M2y ist nicht mehr letzter Schritt
     // (M2z haengt jetzt dahinter). Per Pitfall #14 migrate to member+index.
-    expect(smokeChain).toContain('m2y_gegnerlichtung_leerlauf_smoke.mjs')
+    expect(istVerdrahtet('m2y_gegnerlichtung_leerlauf_smoke.mjs')).toBe(true)
     const steps = smokeChain.split(/\s*&&\s*/)
     const m2yIndex = steps.findIndex((s) => s.includes('m2y_gegnerlichtung_leerlauf_smoke.mjs'))
     expect(m2yIndex).toBeGreaterThanOrEqual(0)

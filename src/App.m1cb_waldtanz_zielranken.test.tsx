@@ -12,9 +12,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { ermittleLegaleAktionen } from './engine'
 import { ermittleSpielbereiche, erstelleSpieltischMitEineSchlange } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cb_zielranken_smoke.mjs', 'utf8')
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -72,6 +72,6 @@ describe('M1cb Waldtanz-Zielranken', () => {
     expect(smokeScript).toContain('M1cb Zielranken')
     expect(smokeScript).toContain('Waldtanz-Zielranken')
     expect(smokeScript).toContain('statusCount')
-    expect(packageJson).toContain('node scripts/m1ca_schlangenlichtung_smoke.mjs && node scripts/m1cb_zielranken_smoke.mjs')
+    expect(['m1ca_schlangenlichtung_smoke.mjs', 'm1cb_zielranken_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

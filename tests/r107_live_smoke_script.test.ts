@@ -9,6 +9,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { describe, expect, it } from 'vitest'
+import { SMOKE_LISTEN } from '../scripts/smoke_listen.mjs'
 
 const PROJEKTWURZEL = process.cwd()
 
@@ -16,8 +17,11 @@ describe('R107 Production-Smoke-Skript', () => {
   it('stellt einen npm-Skriptpfad für den Production-Smoke bereit', () => {
     const packageJson = JSON.parse(readFileSync(join(PROJEKTWURZEL, 'package.json'), 'utf8')) as { scripts?: Record<string, string> }
 
-    expect(packageJson.scripts?.['smoke:production']).toContain('node scripts/live_smoke.mjs')
-    expect(packageJson.scripts?.['smoke:production']).toContain('node scripts/m1bx_spielkartenfaecher_smoke.mjs')
+    // ÄNDERUNG [30.07.2026]: AP-4 — package.json ruft den Runner auf; die Skripte
+    // stehen als Liste in scripts/smoke_listen.mjs.
+    expect(packageJson.scripts?.['smoke:production']).toContain('node scripts/run_smokes.mjs production')
+    expect(SMOKE_LISTEN.production).toContain('scripts/live_smoke.mjs')
+    expect(SMOKE_LISTEN.production).toContain('scripts/m1bx_spielkartenfaecher_smoke.mjs')
   })
 
   it('hat einen schnellen Selbsttest für die exakte Smoke-Konfiguration', async () => {

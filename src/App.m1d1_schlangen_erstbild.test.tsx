@@ -28,9 +28,9 @@ import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function startZustand() {
   return starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -134,8 +134,8 @@ describe('M1d1 Waldtanz-Schlangen-Erstbild', () => {
 
   it('verdrahtet das M1d1-Browser-Smoke-Skript in der kanonischen npm-Smoke-Kette', () => {
     expect(existsSync('scripts/m1d1_arena_flex_column_smoke.mjs')).toBe(true)
-    const smokeBlock = packageJson.match(/"smoke:production":\s*"([^"]+)"/)?.[1] ?? ''
-    expect(smokeBlock).toContain('m1d1_arena_flex_column_smoke.mjs')
+    const smokeBlock = produktionsKette()
+    expect(istVerdrahtet('m1d1_arena_flex_column_smoke.mjs')).toBe(true)
     // M1d1-Smoke kommt direkt nach M1dd (dem bisher letzten Smoke).
     const m1ddIdx = smokeBlock.indexOf('m1dd_aktionsdock_im_spielbrett_smoke.mjs')
     const m1d1Idx = smokeBlock.indexOf('m1d1_arena_flex_column_smoke.mjs')

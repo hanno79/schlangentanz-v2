@@ -12,9 +12,9 @@ import { describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { sonderkarte } from './engine/__tests__/testHelpers'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 const smokeScript = readFileSync('scripts/m1cf_unterholzleiste_smoke.mjs', 'utf8')
 
 const cssBlock = (selector: string) =>
@@ -96,7 +96,7 @@ describe('M1cf Waldtanz-Unterholzleiste', () => {
     expect(unterholz).toMatch(/background:\s*var\(--st-color-secondary-container\)/)
     expect(wartenderArenazug).toMatch(/pointer-events:\s*none/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > [class~="waldtanz-bonuszauber"]')).toMatch(/overflow:\s*hidden/)
-    expect(packageJson).toContain('node scripts/m1cf_unterholzleiste_smoke.mjs')
+    expect(istVerdrahtet('m1cf_unterholzleiste_smoke.mjs')).toBe(true)
     expect(smokeScript).toContain('M1cf Unterholzleiste')
     expect(smokeScript).toContain('daten.zugleiste.y <= handDaten.hand.bottom')
     expect(smokeScript).toContain("'.waldtanz-bonuszauber'")

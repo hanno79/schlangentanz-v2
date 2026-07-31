@@ -32,11 +32,9 @@ import { render } from '@testing-library/react'
 import { describe, expect, it, beforeEach } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
-const smokeChain = (JSON.parse(packageJson) as { scripts: Record<string, string> })
-  .scripts['smoke:production'] ?? ''
 
 describe('M3a Handkarten im Sichtbereich auf /game', () => {
   beforeEach(() => {
@@ -126,6 +124,6 @@ describe('M3a Handkarten im Sichtbereich auf /game', () => {
   })
 
   it('M3a:7 package.json: smoke:production-Kette enthaelt m3a_brettrand_hand_im_sichtbereich_smoke.mjs', () => {
-    expect(smokeChain).toContain('m3a_brettrand_hand_im_sichtbereich_smoke.mjs')
+    expect(istVerdrahtet('m3a_brettrand_hand_im_sichtbereich_smoke.mjs')).toBe(true)
   })
 })

@@ -16,9 +16,9 @@ import { readFileSync } from 'node:fs'
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -62,6 +62,6 @@ describe('M1cl Waldtanz-Erstbild-Zugknopf', () => {
     expect(arenazug).toMatch(/width:\s*100%/)
     expect(arenazug).not.toMatch(/margin-top:\s*clamp\(-3rem,\s*-7vh,\s*-1\.5rem\)/)
     expect(cssBlock('.spielbereich--game-route [class~="waldtanz-arenazug__wartehinweis"]')).toMatch(/display:\s*none/)
-    expect(packageJson).toContain('node scripts/m1cl_erstbild_zugknopf_smoke.mjs')
+    expect(istVerdrahtet('m1cl_erstbild_zugknopf_smoke.mjs')).toBe(true)
   })
 })

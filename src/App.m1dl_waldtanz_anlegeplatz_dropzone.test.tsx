@@ -16,9 +16,9 @@ import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange } from './engine/__tests__/testHelpers'
 import { ermittleSpielbereiche } from './testUtils'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function anlegeplaetzeZustand() {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -67,6 +67,6 @@ describe('M1dl Waldtanz-Anlegeplatz-Dropzone', () => {
   })
 
   it('verdrahtet das M1dl-Smoke-Skript in der smoke:production-Kette', () => {
-    expect(packageJson).toMatch(/"smoke:production"[\s\S]*?m1dl_waldtanz_anlegeplatz_dropzone_smoke\.mjs/)
+    expect(istVerdrahtet('m1dl_waldtanz_anlegeplatz_dropzone_smoke.mjs')).toBe(true)
   })
 })

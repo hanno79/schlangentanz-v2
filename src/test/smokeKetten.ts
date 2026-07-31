@@ -21,6 +21,7 @@ Quelle dafür, analog zur `zielspurKey`-Factory in `src/components/zielspurKey.t
 /// <reference types="node" />
 
 import { readFileSync } from 'node:fs'
+import { SMOKE_LISTEN } from '../../scripts/smoke_listen.mjs'
 
 /**
  * Smokes, die ohne aktiven Test-Hook nicht aussagekräftig laufen können.
@@ -47,26 +48,36 @@ export const HOOK_ABHAENGIGE_SMOKES: readonly string[] = [
   'm2d_schlangentanz_fixture_helper_smoke.mjs',
 ]
 
-function leseSkripte(): Record<string, string> {
-  const paket = JSON.parse(readFileSync('package.json', 'utf8')) as { scripts?: Record<string, string> }
-  return paket.scripts ?? {}
-}
-
-function zerlegeKette(kette: string): string[] {
-  return kette
-    .split('&&')
-    .map((schritt) => schritt.trim())
-    .filter((schritt) => schritt !== '')
-}
+// ÄNDERUNG [30.07.2026]: AP-4 — Quelle ist jetzt scripts/smoke_listen.mjs statt
+// eines 8000 Zeichen langen &&-Strings in package.json. Dieselbe Liste benutzt der
+// Runner (scripts/run_smokes.mjs), damit Test und Ausführung nicht auseinanderlaufen.
 
 /** Schritte der Production-Kette in Quellreihenfolge. */
 export function produktionsSchritte(): string[] {
-  return zerlegeKette(leseSkripte()['smoke:production'] ?? '')
+  return [...SMOKE_LISTEN.production]
 }
 
 /** Schritte der Preview-Kette in Quellreihenfolge. */
 export function previewSchritte(): string[] {
-  return zerlegeKette(leseSkripte()['smoke:preview'] ?? '')
+  return [...SMOKE_LISTEN.preview]
+}
+
+/**
+ * Die Production-Kette in der frueheren Textform `node a.mjs && node b.mjs`.
+ *
+ * ÄNDERUNG [30.07.2026]: AP-4 — seit dem Runner steht in package.json nur noch
+ * `node scripts/run_smokes.mjs production`. Etliche Wiring-Tests pruefen
+ * Mitgliedschaft und Reihenfolge auf einer solchen Zeichenkette. Diese Ansicht
+ * bedient sie weiterhin, liest die Werte aber aus derselben Liste, die auch der
+ * Runner ausfuehrt — es kann also nichts mehr auseinanderlaufen.
+ */
+export function produktionsKette(): string {
+  return produktionsSchritte().map((schritt) => `node ${schritt}`).join(' && ')
+}
+
+/** Die Preview-Kette in derselben Textform. */
+export function previewKette(): string {
+  return previewSchritte().map((schritt) => `node ${schritt}`).join(' && ')
 }
 
 /** Alle Smoke-Schritte beider Ketten. */

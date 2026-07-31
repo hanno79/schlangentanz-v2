@@ -8,10 +8,9 @@
  */
 import { readFileSync, existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import {istVerdrahtet, produktionsKette} from './test/smokeKetten'
 
-const packageJson = readFileSync('package.json', 'utf8')
-const smokeChain = (JSON.parse(packageJson) as { scripts: Record<string, string> })
-  .scripts['smoke:production'] ?? ''
+const smokeChain = produktionsKette()
 
 describe('M9.5 Smoke-Wiring', () => {
   it('M9.5-W1: Smoke-Script existiert in scripts/', () => {
@@ -19,7 +18,7 @@ describe('M9.5 Smoke-Wiring', () => {
   })
 
   it('M9.5-W2: package.json smoke:production-Kette enthaelt den M9.5-Smoke-Pfad', () => {
-    expect(smokeChain).toContain('m95_arena_cap_smoke.mjs')
+    expect(istVerdrahtet('m95_arena_cap_smoke.mjs')).toBe(true)
   })
 
   it('M9.5-W3: Smoke-Script referenziert Arenasstein + Hand-Panel + Schlangenlichtung', () => {
@@ -34,7 +33,7 @@ describe('M9.5 Smoke-Wiring', () => {
     // AENDERUNG 29.06.2026 (M8a-Migration): M9.5 ist nicht mehr das letzte
     // Glied der Kette — M8a wurde angehaengt. Test prüft jetzt nur die
     // Mitgliedschaft (contains + indexOf >= 0), nicht mehr endsWith.
-    expect(smokeChain).toContain('m95_arena_cap_smoke.mjs')
+    expect(istVerdrahtet('m95_arena_cap_smoke.mjs')).toBe(true)
     expect(smokeChain).not.toMatch(/--exclude.*m95|grep.*m95|awk.*m95/)
     const steps = smokeChain.split(/\s*&&\s*/)
     const m95Index = steps.findIndex((s) => s.includes('m95_arena_cap_smoke.mjs'))

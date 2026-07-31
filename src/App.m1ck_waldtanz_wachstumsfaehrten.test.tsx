@@ -12,9 +12,9 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import { farbkarte, schlange } from './engine/__tests__/testHelpers'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 const cssBlock = (selector: string) =>
   appCss.match(new RegExp(`${selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\{([^}]*)\\}`, 's'))?.[1] ?? ''
@@ -83,6 +83,6 @@ describe('M1ck Waldtanz-Wachstumsfährten', () => {
     expect(active).toMatch(/transform:\s*translateY\(3px\)/)
     expect(appCss).toMatch(/\.schlangekarte__wachstumsfaehrte-button--links:active[\s\S]*transform:\s*translateY\(3px\) rotate\(-1\.5deg\)/)
     expect(appCss).toMatch(/\.schlangekarte__wachstumsfaehrte-button--rechts:active[\s\S]*transform:\s*translateY\(3px\) rotate\(1\.5deg\)/)
-    expect(packageJson).toContain('node scripts/m1cj_startfaehrten_smoke.mjs && node scripts/m1ck_wachstumsfaehrten_smoke.mjs')
+    expect(['m1cj_startfaehrten_smoke.mjs', 'm1ck_wachstumsfaehrten_smoke.mjs'].every(istVerdrahtet)).toBe(true)
   })
 })

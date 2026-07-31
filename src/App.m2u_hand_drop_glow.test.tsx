@@ -16,9 +16,9 @@ import { render, screen, fireEvent, act, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase, type Spielzustand } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 // M1ds-Pattern: eigene Schlange + Ausspielphase fuer Handkarten-Drag.
 function startZustand(): Spielzustand {
@@ -144,6 +144,6 @@ describe('M2u Hand-Drag-Glow auf Schlangenlichtung', () => {
   })
 
   it('M2u:7 Smoke-Script ist in package.json smoke:production verdrahtet', () => {
-    expect(packageJson).toContain('m2u_hand_drop_glow_smoke')
+    expect(istVerdrahtet('m2u_hand_drop_glow_smoke.mjs')).toBe(true)
   })
 })

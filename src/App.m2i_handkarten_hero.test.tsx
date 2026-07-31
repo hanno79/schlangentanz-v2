@@ -28,9 +28,9 @@ import {
   starteAusspielphase,
   type Spielzustand,
 } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 // Route-scoped Block ist das M2i-Ziel-Surface. cssBlockContains sucht den
 // Selektor ".parent .child { ... }" und gibt den Body zurueck.
@@ -120,7 +120,8 @@ describe('M2i Handkarten-Stitch-Hero-Transformation', () => {
   })
 
   it('RED-8: package.json smoke:production-Kette enthaelt m2i Handkarten-Hero Smoke', () => {
-    expect(packageJson).toMatch(/"smoke:production"[\s\S]*m2i_handkarten_hero/)
+    expect(istVerdrahtet('m2i_handkarten_hero_smoke.mjs')).toBe(true)
+
   })
 
   it('RED-9: M2i-Smoke-Skript enthaelt pruefeM2iHandkartenHero + Slice-Klassen-String + Schwellen', () => {

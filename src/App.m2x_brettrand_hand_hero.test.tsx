@@ -15,9 +15,9 @@
 
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function alleRegelBloecksFuer(selector: string): string[] {
   const results: string[] = []
@@ -233,7 +233,7 @@ describe('M2x Brettrand-Bottom-Hero: Hand + End-Turn + Pflicht-Abwurf + Spielbar
 
 describe('M2x Production-Smoke wiring', () => {
   it('M2x:9 smoke:production-Kette enthaelt das M2x-Smoke-Script', () => {
-    expect(packageJson).toContain('node scripts/m2x_brettrand_hand_hero_smoke.mjs')
+    expect(istVerdrahtet('m2x_brettrand_hand_hero_smoke.mjs')).toBe(true)
   })
 
   it('M2x:10 Smoke-Script enthaelt die M2x-Assertion + sichtInfo-Helper + Klassen-IDs', () => {

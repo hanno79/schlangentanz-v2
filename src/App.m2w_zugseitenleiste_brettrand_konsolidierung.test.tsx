@@ -21,9 +21,9 @@ import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
+import { istVerdrahtet } from './test/smokeKetten'
 
 const appCss = readFileSync('src/App.css', 'utf8')
-const packageJson = readFileSync('package.json', 'utf8')
 
 function alleRegelBloecksFuer(selector: string): string[] {
   const results: string[] = []
@@ -136,6 +136,6 @@ describe('M2w Brettrand-Zugseitenleiste konsolidieren', () => {
     expect(smokeScript).toContain('waldtanz-unterholzleiste')
     expect(smokeScript).toContain('waldtanz-partie-uhr')
     expect(smokeScript).toContain('partiefortschritt')
-    expect(packageJson).toContain('node scripts/m2w_zugseitenleiste_brettrand_konsolidierung_smoke.mjs')
+    expect(istVerdrahtet('m2w_zugseitenleiste_brettrand_konsolidierung_smoke.mjs')).toBe(true)
   })
 })
