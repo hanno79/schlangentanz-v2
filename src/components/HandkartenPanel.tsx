@@ -13,6 +13,7 @@ import { useId, type CSSProperties } from 'react'
 import type { PflichtAbwurfAktion, QuestZugHinweis, SpielAktion, Spielkarte } from '../engine'
 import { farbeCssKlasse } from '../kartenfarben'
 import { karteAnzeigename, karteKurzLabel, karteSymbol, karteWertLabel } from '../kartenTexte'
+import { phasenAktionName } from '../phasenAktionen'
 import WaldtanzSonderkartenSpielmoment from './WaldtanzSonderkartenSpielmoment'
 
 interface HandkartenPanelProps {
@@ -213,7 +214,12 @@ export default function HandkartenPanel({
           <button
             type="button"
             className="handkarten-buehne__spielhandlung handkarten-buehne__spielhandlung--endturn handkarten-buehne__endturn"
-            aria-label="Zug an nächsten Spieler geben"
+            /* ÄNDERUNG [31.07.2026]: S-1 — das frühere aria-label ueberschrieb den
+               sichtbaren Text "Zug beenden" mit einer fremden Beschriftung. Das
+               kollidierte mit dem Brettrand-Knopf und verletzte WCAG 2.5.3
+               (Label in Name). Jetzt traegt die Pille ihren eigenen Text plus
+               Bedienort. */
+            aria-label={phasenAktionName('Zug beenden', 'handleiste')}
             onClick={() => onEndTurn?.()}
           >
             <span>Zug beenden</span>

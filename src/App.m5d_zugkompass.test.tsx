@@ -83,17 +83,17 @@ describe('M5d Zugkompass', () => {
     expect(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i })).toBeVisible()
 
     fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
-    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Weiter zur Aufgabenprüfung' }))
+    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Weiter zur Aufgabenprüfung — Zugkompass' }))
     expect(within(zugkompass()).getByText('Aufgaben prüfen')).toBeInTheDocument()
 
-    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Weiter zum Zugabschluss' }))
+    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Weiter zum Zugabschluss — Zugkompass' }))
     expect(within(zugkompass()).getByText('Zug abschließen')).toBeInTheDocument()
 
-    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Zug an nächsten Spieler geben' }))
+    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Zug an nächsten Spieler geben — Zugkompass' }))
     expect(within(zugkompass()).getByText('KI ist am Zug')).toBeInTheDocument()
-    expect(within(zugkompass()).getByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen' })).toBeVisible()
+    expect(within(zugkompass()).getByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen — Zugkompass' })).toBeVisible()
 
-    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen' }))
+    fireEvent.click(within(zugkompass()).getByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen — Zugkompass' }))
     expect(within(zugkompass()).getByText('Du bist dran')).toBeInTheDocument()
     expect(within(zugkompass()).getByText('Gegnerzug abgeschlossen. Du bist wieder dran.')).toBeInTheDocument()
 
@@ -109,8 +109,8 @@ describe('M5d Zugkompass', () => {
     const kompass = zugkompass()
     expect(within(kompass).getByText('Reaktion steht aus')).toBeInTheDocument()
     expect(within(kompass).getByText(/Wähle zuerst eine Reaktionsaktion/i)).toBeInTheDocument()
-    expect(within(kompass).queryByRole('button', { name: 'Weiter zur Aufgabenprüfung' })).toBeNull()
-    expect(within(kompass).queryByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen' })).toBeNull()
+    expect(within(kompass).queryByRole('button', { name: 'Weiter zur Aufgabenprüfung — Zugkompass' })).toBeNull()
+    expect(within(kompass).queryByRole('button', { name: 'Gegnerzüge bis zu deinem Zug abspielen — Zugkompass' })).toBeNull()
 
     const aktionen = screen.getByRole('region', { name: 'Aktionen' })
     expect(within(aktionen).getByText('Reaktionsaktion auswählen:')).toBeInTheDocument()

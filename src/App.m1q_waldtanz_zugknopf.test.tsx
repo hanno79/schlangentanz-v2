@@ -33,7 +33,7 @@ describe('M1q Waldtanz-Zugknopf', () => {
     fireEvent.click(within(aktionen).getByRole('button', { name: /Neue Schlange starten mit Wasserwirbel/i }))
 
     const kompass = zugkompass()
-    const hauptaktion = within(kompass).getByRole('button', { name: 'Weiter zur Aufgabenprüfung' })
+    const hauptaktion = within(kompass).getByRole('button', { name: 'Weiter zur Aufgabenprüfung — Zugkompass' })
 
     expect(hauptaktion).toHaveClass('zugkompass__hauptaktion')
     expect(within(hauptaktion).getByText('Zugknopf')).toBeInTheDocument()
@@ -42,7 +42,7 @@ describe('M1q Waldtanz-Zugknopf', () => {
     expect(within(aktionen).getByRole('button', { name: 'Ausspielphase beenden' })).toBeVisible()
 
     fireEvent.click(hauptaktion)
-    expect(within(zugkompass()).getByRole('button', { name: 'Weiter zum Zugabschluss' })).toHaveClass('zugkompass__hauptaktion')
+    expect(within(zugkompass()).getByRole('button', { name: 'Weiter zum Zugabschluss — Zugkompass' })).toHaveClass('zugkompass__hauptaktion')
 
     expect(cssBlock('zugkompass__hauptaktion')).toMatch(/justify-self:\s*end/)
     expect(cssBlock('zugkompass__hauptaktion')).toMatch(/background:\s*var\(--st-color-secondary-container\)/)

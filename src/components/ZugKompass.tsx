@@ -7,6 +7,7 @@ Beschreibung: Board-naher Zugkompass fuer gefuehrte Phasenwechsel im Waldtanz-Sp
 
 import { ermittleReaktionsAktionen, type SpielAktion, type Spielzustand } from '../engine'
 import { erstelleAktionsLabel } from '../aktionsLabel'
+import { phasenAktionName } from '../phasenAktionen'
 import { zugphaseLabel } from '../zugphaseLabels'
 import { ausspielphaseBeendbar } from '../spielLabelHelpers'
 
@@ -53,9 +54,12 @@ function hinweisLabel(zustand: Spielzustand, ueberhand: number, zeigtKiVorspulen
   }
 }
 
+// ÄNDERUNG [31.07.2026]: S-1 — der Zugkompass ist ein Zweit-Bedienort. Sein
+// Accessible Name traegt deshalb den Ortszusatz, damit er sich vom kanonischen
+// Knopf (Brettrand bzw. Aktionsliste) unterscheidet.
 function zugknopf(label: string, onClick: () => void) {
   return (
-    <button type="button" className="zugkompass__hauptaktion" aria-label={label} onClick={onClick}>
+    <button type="button" className="zugkompass__hauptaktion" aria-label={phasenAktionName(label, 'zugkompass')} onClick={onClick}>
       <span aria-hidden="true" className="zugkompass__hauptaktion-kicker">Zugknopf</span>
       <span aria-hidden="true" className="zugkompass__hauptaktion-label">{label}</span>
       <span aria-hidden="true" className="zugkompass__hauptaktion-pfeil">→</span>
