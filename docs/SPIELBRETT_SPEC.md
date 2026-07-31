@@ -87,6 +87,19 @@ Orten.
    und wurde per CSS versteckt. Damit waren die freie Schlangenhäutung und die
    Kartenwahl beim Pflicht-Abwurf gar nicht mehr spielbar.)*
 
+7. **Ein Klick verlangt eine Entscheidung.** *(ÄNDERUNG 31.07.2026.)* Ein Knopf,
+   der nur bestätigt, dass die Engine weiterrechnen darf, gehört nicht aufs
+   Brett — er wird zum Nachlauf des Klicks, der die Entscheidung getroffen hat.
+   Übrig bleiben zwei: „Zug beenden" (bin ich fertig, oder spiele ich noch eine
+   zweite Karte?) und der Überhand-Abwurf (welche Karten gehen weg?).
+   *(Vorher: sieben Klicks pro Runde, davon zwei mit Wahl. „Weiter zum
+   Zugabschluss", „Zug an nächsten Spieler geben", „Gegnerzug abspielen" und
+   „Ausspielphase starten" fragten nichts.)*
+
+   Was ohne Klick durchläuft, muss dafür **sichtbare Spuren hinterlassen**: Der
+   Gegnerzug wird protokolliert (Region 3), und ein automatischer Schritt
+   überschreibt dieses Protokoll nicht, bevor es gelesen werden konnte.
+
 ---
 
 ## Vollständigkeitsliste
@@ -113,8 +126,8 @@ die Abnahmecheckliste des Bretts.
 | Reaktionsdialog | `…Abwehren` / `…Durchlassen`, inkl. Zustand „kein Farbenschutz" |
 | Pflicht-Abwurf **mit Kartenwahl** | `PflichtAbwurf` |
 | Überhand-Abwurf: n-aus-m mit Bestätigung | Zugabschluss |
-| fünf Phasenknöpfe | Ausspielphase starten/beenden, Aufgabenprüfung beenden, Überhand abwerfen, Zug beenden |
-| KI-Zug abspielen | mit Protokollanzeige |
+| zwei Phasenknöpfe | „Zug beenden" und Überhand-Abwurf — siehe Regel 7 |
+| KI-Zug | läuft ohne Klick durch, mit Protokollanzeige |
 | neues Spiel | 1–3 KI-Gegner |
 
 ### Dauerhaft sichtbare Zustände

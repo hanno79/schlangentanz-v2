@@ -11,7 +11,7 @@ etwas aussieht, sondern dass die Oberfläche die Engine korrekt spiegelt und
 bedient.
 */
 
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from '../App'
 import { beendeZug, erstelleSpielzustand, starteAusspielphase } from '../engine'
@@ -92,31 +92,61 @@ describe('R23 — Zugpflichten sind sichtbar und aktuell', () => {
 })
 
 describe('R25 bis R27 — die Phasen laufen über die Engine weiter', () => {
-  it('führt von der Ausspielphase bis zur Zugübergabe', () => {
+  /* ÄNDERUNG [31.07.2026]: Vorher standen hier drei Klicks — Aufgabenprüfung,
+     Zugabschluss, Zugübergabe. Keiner davon fragte den Spieler etwas; sie
+     erlaubten der Engine nur weiterzurechnen. Geprüft wird jetzt, dass *ein*
+     Klick dieselbe Strecke zurücklegt. */
+  it('gibt den Zug mit einem einzigen Klick an den nächsten Spieler weiter', () => {
     aufBrettRoute()
-    render(<App initialZustand={partie()} />)
+    const zustand = partie()
+    const ich = zustand.spieler[zustand.aktiverSpielerIndex].id
+    render(<App initialZustand={zustand} />)
 
     const start = within(aktionsliste())
       .getAllByRole('button')
       .find((knopf) => /Neue Schlange starten/.test(knopf.textContent ?? ''))
     fireEvent.click(start!)
 
-    fireEvent.click(screen.getByRole('button', { name: /Weiter zur Aufgabenprüfung/ }))
-    expect(screen.getByText('Aufgaben prüfen')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /Zug beenden/ }))
 
-    fireEvent.click(screen.getByRole('button', { name: /Weiter zum Zugabschluss/ }))
-    expect(screen.getByText('Zug abschließen')).toBeInTheDocument()
+    // Der Gegner ist dran und spielt ohne Zutun — kein Knopf mehr im Weg.
+    const zugaktion = screen.getByRole('region', { name: 'Zugaktion' })
+    expect(within(zugaktion).queryByRole('button')).toBeNull()
+    expect(screen.getByRole('region', { name: 'Gegner' })).toHaveTextContent(
+      zustand.spieler.find((spieler) => spieler.id === ich)!.name,
+    )
+  })
 
-    fireEvent.click(screen.getByRole('button', { name: /Zug an nächsten Spieler geben/ }))
-    // Der nächste Spieler ist dran — bei zwei Spielern der Gegner.
-    expect(screen.getByRole('region', { name: 'Zugaktion' })).toHaveTextContent(/Gegnerzug abspielen/)
+  it('holt den Zug nach dem Gegnerzug von selbst zurück, mit Protokoll', async () => {
+    aufBrettRoute()
+    const zustand = partie()
+    const meinName = zustand.spieler[zustand.aktiverSpielerIndex].name
+    render(<App initialZustand={zustand} />)
+
+    const start = within(aktionsliste())
+      .getAllByRole('button')
+      .find((knopf) => /Neue Schlange starten/.test(knopf.textContent ?? ''))
+    fireEvent.click(start!)
+    fireEvent.click(screen.getByRole('button', { name: /Zug beenden/ }))
+
+    /* Gegnerzug und Nachziehphase laufen als Nachlauf-Effekte durch. Am Ende
+       ist der Mensch wieder dran — ohne dass er etwas bestätigt hätte. */
+    await waitFor(
+      () => {
+        expect(screen.getByRole('button', { name: /Zug beenden/ })).toBeInTheDocument()
+      },
+      { timeout: 4000 },
+    )
+    expect(screen.getByRole('region', { name: 'Spielstand' })).toHaveTextContent(meinName)
+    // Was der Gegner getan hat, steht noch da — es ist die einzige Quelle dafür.
+    expect(screen.getByRole('list', { name: 'Was der Gegner getan hat' })).toBeInTheDocument()
   })
 
   it('sperrt das Ende der Ausspielphase, solange keine Karte gespielt ist', () => {
     aufBrettRoute()
     render(<App initialZustand={partie()} />)
 
-    expect(screen.getByRole('button', { name: /Weiter zur Aufgabenprüfung/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Zug beenden/ })).toBeDisabled()
   })
 })
 
@@ -131,27 +161,27 @@ describe('Stapel und Aufgaben kommen aus dem Engine-Zustand', () => {
     expect(status).toHaveTextContent(String(zustand.offeneAufgaben.length))
   })
 
-  it('aktualisiert den Nachziehstapel, wenn nachgezogen wird', () => {
+  it('aktualisiert den Nachziehstapel, wenn nachgezogen wird', async () => {
     aufBrettRoute()
     /* Gezogen wird beim Start der Ausspielphase (turnState.ts:394), nicht beim
        Zugwechsel. Mit halbleerer Hand ist der Nachzug garantiert. */
     const zustand = partie()
     zustand.zugphase = 'Nachziehphase'
     zustand.spieler[zustand.aktiverSpielerIndex].hand = [farbkarte('blau-a', 'Blau')]
+    const vorher = zustand.nachziehstapel.length
     render(<App initialZustand={zustand} />)
 
     /* Gelesen wird die Zahl aus der Anzeige, nicht aus dem Zustandsobjekt —
-       geprüft werden soll ja gerade, dass die Anzeige der Engine folgt. */
+       geprüft werden soll ja gerade, dass die Anzeige der Engine folgt. Die
+       Nachziehphase braucht seit dem 31.07.2026 keinen Klick mehr: Sie zieht
+       auf fünf Karten auf und fragt niemanden. */
     const stapelZahl = () => {
       const text = screen.getByRole('region', { name: 'Spielverlauf' }).textContent ?? ''
       return Number(/Nachziehstapel\s*(\d+)/.exec(text)?.[1] ?? NaN)
     }
-    const vorher = stapelZahl()
-    expect(Number.isNaN(vorher)).toBe(false)
-
-    fireEvent.click(screen.getByRole('button', { name: /Ausspielphase starten/ }))
-
-    expect(stapelZahl()).toBeLessThan(vorher)
+    await waitFor(() => {
+      expect(stapelZahl()).toBeLessThan(vorher)
+    })
   })
 })
 

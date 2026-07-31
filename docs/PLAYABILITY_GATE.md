@@ -3131,6 +3131,38 @@ Ebenso entfallen: die 27 offenen Smokes des alten Bretts — sie prüften
 Steinkreis, Lichtungsstein, Zauberpfad und Unterholzleiste und sind mit dem
 Brett gegenstandslos geworden.
 
+### Klicks pro Runde: 7 → 3 (31.07.2026)
+
+Gemessen am laufenden Spiel, `vite preview` bei 1280×900:
+
+| | vorher | nachher |
+|---|---|---|
+| Klicks für eine volle Runde | **7** | **3** |
+| davon mit echter Entscheidung | 2 | 2 |
+| Knöpfe in Region 6 (Zugaktion) | 5 | 2 |
+
+Entfallen sind die vier Klicks, die den Spieler nichts fragten: „Weiter zur
+Aufgabenprüfung", „Weiter zum Zugabschluss", „Zug an nächsten Spieler geben",
+„Gegnerzug abspielen" und „Ausspielphase starten". Sie laufen jetzt als Nachlauf
+des Klicks, der die Entscheidung getroffen hat (Regel 7 der Spezifikation).
+
+Angehalten wird weiterhin beim **Überhand-Abwurf** — welche Karten über dem
+Limit weggehen, entscheidet der Spieler (R2.5).
+
+Damit der Gegnerzug nicht unsichtbar wird, protokolliert Region 3 ihn. `kiZug.ts`
+trennt dafür Spielzüge von Buchhaltung: Von fünf Protokollzeilen trug nur eine
+Information. Ein automatischer Schritt überschreibt dieses Protokoll nicht.
+
+Belege: `scripts/brett_smoke.mjs` klickt eine Runde mit `page.mouse.click` und
+prüft, dass der Mensch ohne weiteren Klick wieder am Zug ist und der Gegnerzug
+protokolliert wurde — beides grün.
+
+**Nachgeschärfter Wächter.** Die Verdeckt-Probe traf nur die Mittellinie eines
+Bedienelements. Ein Eintrag in der scrollenden Aktionsliste, dessen untere
+Hälfte weggescrollt war, wurde dadurch als „verdeckt" gemeldet, obwohl er
+erreichbar ist. Beide Wächter (`tests/layout/messung.ts`, `brett_smoke.mjs`)
+probieren jetzt ein Raster über beide Achsen.
+
 ### Offene Punkte
 
 - **Sonderkarten-Brettziele.** Die sieben enumerierten Sonderkarten sind über die

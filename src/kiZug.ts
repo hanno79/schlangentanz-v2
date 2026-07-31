@@ -22,7 +22,18 @@ import { erstelleAktionsLabel } from './aktionsLabel'
 
 export interface KiZugVorspulErgebnis {
   zustand: Spielzustand
+  /** Jeder Schritt, auch Phasenwechsel — für Diagnose und Tests. */
   protokoll: string[]
+  /**
+   * Nur die Züge, die etwas am Brett verändert haben.
+   *
+   * ÄNDERUNG [31.07.2026]: Seit der Gegnerzug ohne Klick durchläuft, ist das
+   * Protokoll die einzige Rückmeldung darüber, was passiert ist — und dort
+   * zählt, was der Gegner *gespielt* hat. „Ausspielphase gestartet",
+   * „Aufgabenprüfung abgeschlossen" und „Zug beendet" sind Buchhaltung; sie
+   * verdrängen im Brett nur die Spielfläche.
+   */
+  spielzuege: string[]
 }
 
 function aktiverName(zustand: Spielzustand): string {
@@ -80,6 +91,12 @@ function baueKiSchlangenhaeutung(zustand: Spielzustand): SpielAktion | null {
 export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulErgebnis {
   let zustand = start
   const protokoll: string[] = []
+  const spielzuege: string[] = []
+  /** Schritt ins Protokoll — `istZug`, wenn er das Brett verändert hat. */
+  const notiere = (zeile: string, istZug = false) => {
+    protokoll.push(zeile)
+    if (istZug) spielzuege.push(zeile)
+  }
 
   for (let schritt = 0; schritt < 80; schritt += 1) {
     const spieler = zustand.spieler[zustand.aktiverSpielerIndex]
@@ -87,14 +104,14 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
     const name = aktiverName(zustand)
 
     if (brauchtMenschlicheReaktion(zustand)) {
-      protokoll.push(`${name}: wartet auf eine menschliche Reaktion.`)
+      notiere(`${name}: wartet auf eine menschliche Reaktion.`, true)
       break
     }
 
     const reaktionsAktionen = ermittleReaktionsAktionen(zustand)
     if (reaktionsAktionen.length > 0) {
       const aktion = reaktionsAktionen[0]
-      protokoll.push(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`)
+      notiere(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`, true)
       zustand = anwendeAktion(zustand, aktion)
       continue
     }
@@ -117,7 +134,7 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
         // spielt die KI eine triviale Neuordnung (Rotation) statt hängen zu bleiben.
         const haeutungZug = baueKiSchlangenhaeutung(zustand)
         if (haeutungZug !== null) {
-          protokoll.push(`${name}: Schlangenhäutung gespielt.`)
+          notiere(`${name}: Schlangenhäutung gespielt.`, true)
           zustand = anwendeAktion(zustand, haeutungZug)
           continue
         }
@@ -127,11 +144,11 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
           zustand = beendeAusspielphase(zustand)
           continue
         }
-        protokoll.push(`${name}: kann gerade keine Aktion ausführen.`)
+        notiere(`${name}: kann gerade keine Aktion ausführen.`, true)
         break
       }
       const aktion = aktionen[0]
-      protokoll.push(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`)
+      notiere(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`, true)
       zustand = anwendeAktion(zustand, aktion)
       continue
     }
@@ -145,7 +162,7 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
     if (zustand.zugphase === 'Zugabschluss') {
       const abwurfIds = ueberhandAbwurfKartenIds(zustand)
       if (abwurfIds.length > 0) {
-        protokoll.push(`${name}: ${abwurfIds.length} überzählige Karten abgeworfen.`)
+        notiere(`${name}: ${abwurfIds.length} überzählige Karten abgeworfen.`, true)
         zustand = werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: abwurfIds })
         continue
       }
@@ -155,5 +172,5 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
     }
   }
 
-  return { zustand, protokoll }
+  return { zustand, protokoll, spielzuege }
 }

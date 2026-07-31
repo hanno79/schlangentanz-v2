@@ -12,6 +12,16 @@ und Tests gleichermaßen verwirrte.
 
 Hier steht die Zuordnung einmal. Die Beschriftungen kommen aus
 `src/phasenAktionen.ts`, damit sie mit dem Rest des Projekts übereinstimmen.
+
+**ÄNDERUNG [31.07.2026]:** Aus fünf Phasenknöpfen ist einer geworden. Eine Runde
+brauchte sieben Klicks, davon nur zwei mit echter Wahl. „Weiter zum
+Zugabschluss", „Zug an nächsten Spieler geben", „Gegnerzug abspielen" und
+„Ausspielphase starten" fragten den Spieler nichts — sie bestätigten nur, dass
+die Engine weiterrechnen darf.
+
+Übrig bleiben die Klicks mit Entscheidung: „Zug beenden" (bin ich fertig, oder
+spiele ich noch eine zweite Karte?) und der Überhand-Abwurf (welche Karten
+gehen weg?).
 */
 
 import type { Spielzustand } from '../engine'
@@ -24,13 +34,7 @@ export interface PhasenSchritt {
   /** Warum der Knopf gerade nicht geht — `null`, wenn er geht. */
   gesperrtWeil: string | null
   /** Welche Handlung er auslöst. */
-  schluessel:
-    | 'ausspielphaseStarten'
-    | 'ausspielphaseBeenden'
-    | 'aufgabenpruefungBeenden'
-    | 'ueberzaehligeAbwerfen'
-    | 'zugBeenden'
-    | 'kiZugAbspielen'
+  schluessel: 'zugAbschliessen' | 'ueberzaehligeAbwerfen'
 }
 
 /**
@@ -49,44 +53,30 @@ export function ermittlePhasenSchritt(
      weiter, wenn der Verteidiger entschieden hat. */
   if (hatOffeneReaktion) return null
 
+  /* Die KI spielt ohne Zutun (siehe usePartie) — hier gibt es nichts zu
+     drücken. Dasselbe gilt für die Nachziehphase: Sie zieht nur auf fünf
+     Karten auf und fragt niemanden. */
   const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
-  if (aktiver.steuerung === 'KI') {
-    return { text: 'Gegnerzug abspielen', gesperrtWeil: null, schluessel: 'kiZugAbspielen' }
+  if (aktiver.steuerung === 'KI') return null
+  if (zustand.zugphase === 'Nachziehphase') return null
+
+  // R2.5: Überzählige Karten sind eine Entscheidung — welche weggehen, bestimmt
+  // der Spieler. Erst danach geht der Zug weiter.
+  if (zustand.zugphase === 'Zugabschluss' && ueberhand > 0) {
+    return {
+      text: PHASENAKTION.ueberzaehligeAbwerfen,
+      gesperrtWeil: null,
+      schluessel: 'ueberzaehligeAbwerfen',
+    }
   }
 
-  switch (zustand.zugphase) {
-    case 'Nachziehphase':
-      return {
-        text: PHASENAKTION.ausspielphaseStarten,
-        gesperrtWeil: null,
-        schluessel: 'ausspielphaseStarten',
-      }
-
-    case 'Ausspielphase':
-      return {
-        text: PHASENAKTION.weiterZurAufgabenpruefung,
-        // R2.3: mindestens eine Karte gespielt — oder die Hand ist leer.
-        gesperrtWeil: ausspielphaseBeendbar(zustand) ? null : 'Erst eine Karte ausspielen',
-        schluessel: 'ausspielphaseBeenden',
-      }
-
-    case 'Aufgabenpruefung':
-      return {
-        text: PHASENAKTION.weiterZumZugabschluss,
-        gesperrtWeil: null,
-        schluessel: 'aufgabenpruefungBeenden',
-      }
-
-    case 'Zugabschluss':
-      // R2.5: Überzählige Karten müssen *vor* dem Zugende abgeworfen sein —
-      // sonst wirft die Engine.
-      if (ueberhand > 0) {
-        return {
-          text: PHASENAKTION.ueberzaehligeAbwerfen,
-          gesperrtWeil: null,
-          schluessel: 'ueberzaehligeAbwerfen',
-        }
-      }
-      return { text: PHASENAKTION.zugBeenden, gesperrtWeil: null, schluessel: 'zugBeenden' }
+  return {
+    text: 'Zug beenden',
+    // R2.3: mindestens eine Karte gespielt — oder die Hand ist leer.
+    gesperrtWeil:
+      zustand.zugphase === 'Ausspielphase' && !ausspielphaseBeendbar(zustand)
+        ? 'Erst eine Karte ausspielen'
+        : null,
+    schluessel: 'zugAbschliessen',
   }
 }

@@ -50,12 +50,9 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     handleAbwurfToggle,
     aktionsLabel,
     fuhreAktionAus,
-    handleAusspielphaseStarten,
-    handleAusspielphaseBeenden,
-    handleAufgabenpruefungBeenden,
     handleUeberzaehligeKartenAbwerfen,
-    handleZugBeenden,
-    handleKiZugVorspulen,
+    handleZugAbschliessen,
+    kiZugProtokoll,
   } = partie
 
   const {
@@ -124,12 +121,8 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
   function schrittAusloesen() {
     if (schritt === null) return
     switch (schritt.schluessel) {
-      case 'ausspielphaseStarten': return handleAusspielphaseStarten()
-      case 'ausspielphaseBeenden': return handleAusspielphaseBeenden()
-      case 'aufgabenpruefungBeenden': return handleAufgabenpruefungBeenden()
       case 'ueberzaehligeAbwerfen': return handleUeberzaehligeKartenAbwerfen()
-      case 'zugBeenden': return handleZugBeenden()
-      case 'kiZugAbspielen': return handleKiZugVorspulen()
+      case 'zugAbschliessen': return handleZugAbschliessen()
     }
   }
 
@@ -278,6 +271,15 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
       {/* 3 — Gegnerstreifen. Die Schlangen der Gegner folgen in G-6. */}
       <section className="brett-gegner brett-bereich" aria-label="Gegner">
         <h2 className="brett-bereich__titel">Gegner</h2>
+        {/* Läuft der Gegnerzug ohne Klick durch, ist dieses Protokoll die
+            einzige Stelle, an der der Spieler erfährt, was passiert ist. */}
+        {kiZugProtokoll.length > 0 ? (
+          <ol className="brett-gegner__protokoll" aria-label="Was der Gegner getan hat">
+            {kiZugProtokoll.map((zeile, index) => (
+              <li key={`${index}-${zeile}`}>{zeile}</li>
+            ))}
+          </ol>
+        ) : null}
         <ul className="brett-gegner__liste">
           {zustand.spieler
             .filter((spieler) => spieler.id !== aktiver.id)
@@ -445,7 +447,11 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
           Vorrang: Sie blockiert das ganze Spiel, bis der *Verteidiger*
           entschieden hat — nicht der Spieler, der am Zug ist. */}
       <section className="brett-aktion brett-bereich" aria-label="Zugaktion">
-        {hatOffeneReaktion ? (
+        {istKiAmZug && !hatOffeneReaktion ? (
+          <p className="brett-leer" role="status" aria-live="polite">
+            {aktiver.name} spielt …
+          </p>
+        ) : hatOffeneReaktion ? (
           <div className="brett-reaktion" role="group" aria-label="Angriff abwehren">
             <span className="brett-hand__hinweis">
               {reaktionsVerteidiger ?? 'Ein Spieler'} wird angegriffen — Entscheidung nötig

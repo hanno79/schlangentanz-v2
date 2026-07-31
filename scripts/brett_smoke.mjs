@@ -124,9 +124,13 @@ async function pruefeSeitenzustand(seite, wo, mitBudget = true) {
       .filter((element) => {
         const k = element.getBoundingClientRect()
         if (k.bottom > window.innerHeight || k.top < 0) return false
-        for (let anteil = 0.05; anteil <= 0.95; anteil += 0.05) {
-          const treffer = document.elementFromPoint(k.x + k.width * anteil, k.y + k.height / 2)
-          if (treffer && (element === treffer || element.contains(treffer))) return false
+        /* Zwei Achsen, nicht nur die Mittellinie — ein Listeneintrag kann oben
+           sichtbar und unten weggescrollt sein (siehe messung.ts). */
+        for (let hoch = 0.1; hoch <= 0.9; hoch += 0.2) {
+          for (let quer = 0.05; quer <= 0.95; quer += 0.05) {
+            const treffer = document.elementFromPoint(k.x + k.width * quer, k.y + k.height * hoch)
+            if (treffer && (element === treffer || element.contains(treffer))) return false
+          }
         }
         return true
       })
@@ -182,15 +186,26 @@ try {
   const schlangen = await seite.evaluate(() => document.querySelectorAll('.brett-schlange').length)
   melde(schlangen > 0, `  Schlange entstanden (${schlangen})`)
 
-  for (const schritt of [
-    'Weiter zur Aufgabenprüfung',
-    'Weiter zum Zugabschluss',
-    'Zug an nächsten Spieler geben',
-    'Gegnerzug abspielen',
-    'Ausspielphase starten',
-  ]) {
-    await klickeWieEinMensch(seite, knopfMit(schritt), `  ${schritt}`)
-  }
+  /* Ein Klick beendet den Zug — Aufgabenprüfung, Zugabschluss, Zugübergabe,
+     Gegnerzug und Nachziehphase laufen ohne Rückfrage durch. Vorher standen
+     hier fünf Knöpfe, von denen keiner den Spieler etwas fragte. */
+  const klicksVorher = await seite.evaluate(() => document.querySelectorAll('button').length)
+  await klickeWieEinMensch(seite, knopfMit('Zug beenden'), '  Zug beenden')
+  await seite.waitForTimeout(2500)
+
+  const runde = await seite.evaluate(() => {
+    const region = (name) => document.querySelector(`[aria-label="${name}"]`)
+    return {
+      /* Gesperrt ist richtig: Der neue Zug hat noch keine Karte gespielt.
+         Geprüft wird, dass der Knopf *wieder da* ist — also der Mensch dran
+         ist, ohne dass er den Gegnerzug bestätigen musste. */
+      binDran: !!document.querySelector('.brett-aktion button'),
+      protokoll: region('Was der Gegner getan hat')?.children.length ?? 0,
+    }
+  })
+  melde(runde.binDran, '  ohne weiteren Klick wieder am Zug')
+  melde(runde.protokoll > 0, `  Gegnerzug protokolliert (${runde.protokoll} Zeile(n))`)
+  melde(klicksVorher > 0, `  Bedienelemente vor dem Zugende: ${klicksVorher}`)
   await pruefeSeitenzustand(seite, '  nach dem Zug', false)
 
   melde(seitenfehler.length === 0, `keine Browserfehler (${seitenfehler.slice(0, 2).join(' | ')})`)

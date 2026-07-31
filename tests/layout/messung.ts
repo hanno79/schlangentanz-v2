@@ -264,9 +264,19 @@ export async function findeVerdeckteBedienelemente(page: Page): Promise<Befund[]
       // Außerhalb des Bildes zählt beim anderen Wächter, nicht doppelt hier.
       if (box.bottom > window.innerHeight || box.top < 0) continue
       let frei = 0
-      for (let anteil = 0.05; anteil <= 0.95; anteil += 0.05) {
-        const treffer = document.elementFromPoint(box.x + box.width * anteil, box.y + box.height / 2)
-        if (treffer && (element === treffer || element.contains(treffer))) frei += 1
+      /* Zwei Achsen, nicht nur die Mittellinie: Ein Eintrag in einer
+         scrollenden Liste kann mit seiner oberen Hälfte sichtbar und mit der
+         unteren weggescrollt sein. Eine Probe auf halber Höhe träfe dann den
+         Inhalt *hinter* der Liste und meldete „verdeckt", obwohl der Eintrag
+         erreichbar ist. */
+      for (let hoch = 0.1; hoch <= 0.9 && frei === 0; hoch += 0.2) {
+        for (let quer = 0.05; quer <= 0.95; quer += 0.05) {
+          const treffer = document.elementFromPoint(box.x + box.width * quer, box.y + box.height * hoch)
+          if (treffer && (element === treffer || element.contains(treffer))) {
+            frei += 1
+            break
+          }
+        }
       }
       if (frei > 0) continue
       befunde.push({ element: kennung(element), detail: 'an keiner Stelle frei — vollständig überdeckt' })

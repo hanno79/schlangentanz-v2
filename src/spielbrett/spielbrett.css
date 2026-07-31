@@ -324,6 +324,18 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   gap: var(--brett-luft);
 }
 
+.brett-gegner__protokoll {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  /* Wächst der Gegnerzug einmal länger, scrollt das Protokoll in sich, statt
+     die Spielfläche zusammenzudrücken (Regel 2: nichts abschneiden). */
+  max-block-size: 4.5rem;
+  overflow-y: auto;
+  font-size: 0.78rem;
+  color: var(--brett-text-leise);
+}
+
 .brett-gegner__spieler {
   display: flex;
   flex-wrap: wrap;

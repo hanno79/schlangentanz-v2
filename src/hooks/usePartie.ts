@@ -39,6 +39,7 @@ import { erstelleAktionsLabel } from '../aktionsLabel'
 import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { extrahiereAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from '../kiZug'
+import { ermittleReaktionsAktionen } from '../engine'
 import type { KiGegnerAnzahl } from '../components/SonnigesNestLobby'
 
 /** Ein Eintrag der Zughistorie: welche Karte ging wann und wodurch in die Ablage. */
@@ -146,14 +147,52 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     }
   }, [zustand])
 
+  /* ---- Schritte ohne Entscheidung laufen von selbst --------------------
+
+     Zwei Übergänge fragen den Spieler nichts: Der Gegnerzug wird ohnehin
+     komplett in einem Aufruf durchgespielt, und die Nachziehphase zieht nur auf
+     fünf Karten auf. Beide bekamen bisher einen eigenen Bestätigungsklick.
+
+     Die kurze Verzögerung ist Absicht: Sie lässt das Brett den Zwischenstand
+     zeichnen, bevor der nächste Schritt ihn überschreibt. */
+
+  useEffect(() => {
+    const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
+    if (zustand.zugphase === 'Spielende') return
+    // Wartet die Engine auf eine menschliche Reaktion, entscheidet der Mensch.
+    if (ermittleReaktionsAktionen(zustand).length > 0) return
+
+    // Der Gegnerzug braucht länger im Blick als das stumme Nachziehen.
+    const nachlauf =
+      aktiver.steuerung === 'KI'
+        ? { tun: handleKiZugVorspulen, nachMs: 500 }
+        : zustand.zugphase === 'Nachziehphase'
+          ? { tun: handleAusspielphaseStarten, nachMs: 250 }
+          : null
+    if (nachlauf === null) return
+
+    const zeitgeber = window.setTimeout(nachlauf.tun, nachlauf.nachMs)
+    return () => window.clearTimeout(zeitgeber)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zustand])
+
   function wechsleZustand(
     label: string,
     updater: (z: Spielzustand) => Spielzustand,
     aktionZiel: LetzteAktionZiel | null = null,
+    optionen: { automatischerSchritt?: boolean } = {},
   ) {
-    setLetzteAktion(label)
+    /* Ein automatischer Schritt ist keine Handlung des Spielers: Er überschreibt
+       weder die Zuletzt-Zeile („Zuletzt: Ausspielphase starten" sagt niemandem
+       etwas) noch das Gegnerzug-Protokoll. Seit der Gegnerzug ohne Klick
+       durchläuft, ist dieses Protokoll die einzige Stelle, an der der Spieler
+       erfährt, was passiert ist — ein Folgeschritt darf es ihm nicht vor dem
+       Lesen wegnehmen. */
+    if (optionen.automatischerSchritt !== true) {
+      setLetzteAktion(label)
+      setKiZugProtokoll([])
+    }
     setLetzteAktionZiel(aktionZiel)
-    setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     setAbwurfAuswahl([])
@@ -192,12 +231,6 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
   function fuhreAktionAus(aktion: SpielAktion) {
     wechsleZustand(aktionsLabel(aktion), (z) => anwendeAktion(z, aktion), extrahiereAktionZiel(aktion))
   }
-  function handleAusspielphaseBeenden() {
-    wechsleZustand('Ausspielphase beenden', (z) => beendeAusspielphase(z))
-  }
-  function handleAufgabenpruefungBeenden() {
-    wechsleZustand('Aufgabenprüfung beenden', (z) => beendeAufgabenpruefung(z, { aufgabenGeprueft: true }))
-  }
   function handleUeberzaehligeKartenAbwerfen() {
     // R2.5: Wenn der Spieler exakt genug Karten gewählt hat, diese abwerfen; sonst
     // Auto-Fallback auf die letzten überzähligen Karten (generischer Phasenbutton/KI-Kompatibilität).
@@ -213,11 +246,37 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
       return [...bisher, karteId]
     })
   }
-  function handleZugBeenden() {
-    wechsleZustand('Zug beenden', (z) => beendeZug(z, { pflichtenErfuellt: true }))
+
+  /**
+   * Beendet den Zug so weit, wie keine Entscheidung mehr aussteht.
+   *
+   * Vorher brauchte eine Runde sieben Klicks, davon nur zwei mit echter Wahl.
+   * „Weiter zum Zugabschluss" und „Zug an nächsten Spieler geben" fragen den
+   * Spieler nichts — sie bestätigen nur, dass die Engine weiterrechnen darf.
+   * Solche Klicks kosten Zeit und lehren nichts.
+   *
+   * Angehalten wird bei **Überhand**: Welche Karten über dem Limit weggehen,
+   * entscheidet der Spieler selbst (R2.5). Danach führt derselbe Knopf weiter.
+   */
+  function handleZugAbschliessen() {
+    wechsleZustand('Zug beendet', (z) => {
+      let naechster = z
+      if (naechster.zugphase === 'Ausspielphase') naechster = beendeAusspielphase(naechster)
+      if (naechster.zugphase === 'Aufgabenpruefung') {
+        naechster = beendeAufgabenpruefung(naechster, { aufgabenGeprueft: true })
+      }
+      // Überhand ist eine Entscheidung — hier ist Schluss, bis sie gefallen ist.
+      if (naechster.zugphase === 'Zugabschluss' && ueberhandAnzahl(naechster) === 0) {
+        naechster = beendeZug(naechster, { pflichtenErfuellt: true })
+      }
+      return naechster
+    })
   }
   function handleAusspielphaseStarten() {
-    wechsleZustand('Ausspielphase starten', (z) => starteAusspielphase(z))
+    // Läuft automatisch nach dem Gegnerzug — das Protokoll muss stehen bleiben.
+    wechsleZustand('Ausspielphase starten', (z) => starteAusspielphase(z), null, {
+      automatischerSchritt: true,
+    })
   }
   function handleKiZugVorspulen() {
     let ergebnis
@@ -231,7 +290,9 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
       return
     }
     setLetzteAktion('Gegnerzüge vorgespult')
-    setKiZugProtokoll(ergebnis.protokoll)
+    /* Nur die Züge, die etwas verändert haben — Phasenbuchhaltung würde im
+       Brett bloß die Spielfläche verdrängen. */
+    setKiZugProtokoll(ergebnis.spielzuege)
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     gezogeneHandkarteIdRef.current = null
@@ -287,11 +348,9 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     ueberhand,
     // Handlungen
     fuhreAktionAus,
-    handleAusspielphaseBeenden,
-    handleAufgabenpruefungBeenden,
     handleUeberzaehligeKartenAbwerfen,
     handleAbwurfToggle,
-    handleZugBeenden,
+    handleZugAbschliessen,
     handleAusspielphaseStarten,
     handleKiZugVorspulen,
     handleNeuesLobbySpiel,
