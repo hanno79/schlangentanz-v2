@@ -32,7 +32,10 @@ describe('R107 Production-Smoke-Skript', () => {
 
     expect(smoke.erstelleSelbsttestAusgabe()).toBe([
       'Routen: /, /game',
-      'Kerntexte: Spielstatus | Aktiver Spieler | Aktionen | Schlangenbereich',
+      // ÄNDERUNG [31.07.2026]: S-3 — 'Spielstatus' und 'Aktionen' sind auf /game
+      // seit M2e/M2r bewusst per display:none ausgeblendet (Brettfokus); der Smoke
+      // prüft dort jetzt die Landmarks, die /game tatsächlich trägt.
+      'Kerntexte: Aktiver Spieler | Schlangenlichtung | Zugkompass | Waldtanz-Aufgabentafel',
       'R107 Selbsttest bestanden',
     ].join('\n'))
   })

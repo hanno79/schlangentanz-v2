@@ -105,7 +105,11 @@ describe('M1ca Waldtanz-Schlangenlichtung', () => {
     expect(leereGegner).toBe('')
     expect(zielGegner).toMatch(/display:\s*grid/)
     expect(smokeScript).toContain('M1ca Schlangenlichtung')
-    expect(smokeScript).toContain('gegnerDisplay !== \'none\'')
+    /* ÄNDERUNG [31.07.2026]: S-3 — M1dp hat die Gegnerfelder in eine eigene
+       Gegnerlichtung gezogen. Die trägt bei leerem Stand einen Leertext und ist
+       damit sichtbar; eine leere *Liste* rendert sie nicht. Der Smoke zählt
+       deshalb Listen statt display abzufragen — gleiche Absicht, richtiger Knoten. */
+    expect(smokeScript).toContain('daten.gegnerListen !== 0')
     expect(smokeScript).toContain('elementFromPoint')
     expect(smokeScript).toContain('probeHits: snakeProben')
     expect(['m1bz_gegner_hud_smoke.mjs', 'm1ca_schlangenlichtung_smoke.mjs'].every(istVerdrahtet)).toBe(true)

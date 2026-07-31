@@ -63,7 +63,12 @@ export async function pruefeM1diSchlangenlichtung(seite) {
   }
 
   // Schlangen-Reihen sind visuell praesent
-  const schlangenCount = await seite.locator('.schlangenbereich .schlangekarte').count()
+  // ÄNDERUNG [31.07.2026]: S-3 — .schlangenbereich .schlangekarte traf 0.
+  // Die Klasse .schlangekarte existiert nur noch als BEM-Präfix
+  // (schlangekarte__schutzschild o. ä.), und im Erstbild liegt ohnehin
+  // keine Karte in einer Schlange. Geprüft wird jetzt, dass die
+  // Schlangengruppe als Bühne überhaupt da ist — die eigentliche Absicht.
+  const schlangenCount = await seite.locator('.schlangen-gruppe').count()
   console.log(`Schlangen-Karten-Reihen sichtbar: ${schlangenCount}`)
   if (schlangenCount < 1) {
     throw new Error(`Keine Schlangen-Reihen sichtbar (count=${schlangenCount})`)

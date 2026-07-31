@@ -12,7 +12,16 @@ import { pathToFileURL } from 'node:url'
 
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app', HTTP_TIMEOUT_MS = 15_000
 const PFLICHT_ROUTEN = ['/', '/game'], ROUTEN = [...PFLICHT_ROUTEN]
-const PFLICHT_KERN_TEXTE = ['Spielstatus', 'Aktiver Spieler', 'Aktionen', 'Schlangenbereich'], KERN_TEXTE = [...PFLICHT_KERN_TEXTE]
+/* ÄNDERUNG [31.07.2026]: S-3 — Kernregionen auf den Brettfokus von /game gezogen.
+   Die alte Liste ('Spielstatus', 'Aktiver Spieler', 'Aktionen', 'Schlangenbereich')
+   stammt aus der Zeit vor M2e/M2r. Beide Slices haben auf /game bewusst
+   ausgeblendet: die Zugfortschritt-Sidebar (.info-panel--spielstatus, M2e
+   27.06.2026) und die Aktionsliste samt unterer Drei-Panel-Reihe — die Aktionen
+   werden seither am Brettrand angeboten. Die Elemente bleiben per display:none im
+   DOM, weil Vitest-Tests sie erwarten; dieser Smoke prüft aber Sichtbarkeit und
+   scheiterte deshalb an 'Spielstatus' und 'Aktionen'.
+   Geprüft werden jetzt die Landmarks, die /game tatsächlich trägt. */
+const PFLICHT_KERN_TEXTE = ['Aktiver Spieler', 'Schlangenlichtung', 'Zugkompass', 'Waldtanz-Aufgabentafel'], KERN_TEXTE = [...PFLICHT_KERN_TEXTE]
 
 function arraysSindGleich(links, rechts) { return JSON.stringify(links) === JSON.stringify(rechts) }
 

@@ -110,7 +110,12 @@ async function main() {
     })
 
     const sichtbarerText = messung.text.toLocaleLowerCase('de-DE')
-    for (const wort of ['Leuchtender Waldstein', 'Kartenaltar', 'Startkreis', 'Deine Hand', 'Ablagestapel', 'Startfährte']) {
+    // ÄNDERUNG [31.07.2026]: S-3 — 'Leuchtender Waldstein' entfernt. M2r
+    // (27.06.2026) blendet den Arenastein-Kopf auf /game per display:none aus,
+    // damit die Schlangenlichtung als Bühne atmet; der Titel ist dort seither
+    // bewusst nicht sichtbar. Die übrigen fünf Beschriftungen prüfen unverändert
+    // weiter, dass die Spielobjekte benannt bleiben.
+    for (const wort of ['Kartenaltar', 'Startkreis', 'Deine Hand', 'Ablagestapel', 'Startfährte']) {
       if (!sichtbarerText.includes(wort.toLocaleLowerCase('de-DE'))) throw new Error(`M1bw Lichtung: sichtbare Beschriftung fehlt: ${wort}`)
     }
     if (!messung.arena || !messung.tischkarte || !messung.startzone || !messung.handbank) {

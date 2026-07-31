@@ -77,7 +77,15 @@ export async function pruefeM1doSonnenstandReduktion(seite, viewport) {
   if (!ergebnis.sonnenstand.vorhanden) throw new Error('M1do: .waldtanz-sonnenstand fehlt im DOM — Section muss im React-Tree bleiben')
   if (ergebnis.sonnenstand.sichtbar) throw new Error('M1do: .waldtanz-sonnenstand sichtbar — display:none Pflicht gebrochen')
   if (!ergebnis.spielstatus.vorhanden) throw new Error('M1do: .info-panel--spielstatus fehlt im DOM')
-  if (!ergebnis.zugfortschritt.sichtbar) throw new Error('M1do: Zugfortschritt nicht sichtbar — Section-Header verdeckt oder entfernt')
+  /* ÄNDERUNG [31.07.2026]: S-3 — der Zugfortschritt ist auf /game im DOM, aber
+     unsichtbar. Nicht verdeckt und nicht verlorengegangen: M2e (27.06.2026)
+     blendet seine Elternsektion .info-panel--spielstatus dort per display:none
+     aus, damit die Schlangenlichtung zur Bühne wird. Das ist dasselbe
+     Präsent-aber-verborgen-Muster, das dieser Smoke direkt darüber schon für
+     .waldtanz-sonnenstand prüft — es war für den Zugfortschritt nur nie
+     nachgezogen. Geprüft wird jetzt genau das, statt Sichtbarkeit zu fordern. */
+  if (!ergebnis.zugfortschritt.vorhanden) throw new Error('M1do: Zugfortschritt fehlt im DOM — Section muss im React-Tree bleiben')
+  if (ergebnis.zugfortschritt.sichtbar) throw new Error('M1do: Zugfortschritt sichtbar — M2e-Ausblendung auf /game gebrochen')
   if (!ergebnis.arenazug.sichtbar) throw new Error('M1do: Brettrand-Arenazug nicht sichtbar')
 }
 

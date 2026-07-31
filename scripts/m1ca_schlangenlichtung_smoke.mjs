@@ -42,10 +42,16 @@ try {
     const lichtung = element('.schlangen-gruppe--eigene-lichtung')
     const startzone = element('.schlangen-startzone')
     const eigeneSchlange = element('.schlangekarte--eigene')
-    const gegner = element('.schlangen-gruppe--gegnerfelder')
+    /* ÄNDERUNG [31.07.2026]: S-3 — M1dp hat die Gegnerfelder aus der
+       Schlangengruppe in eine eigene Gegnerlichtung gezogen; der alte Selektor
+       .schlangen-gruppe--gegnerfelder trifft seither nichts. Geprüft wird
+       weiterhin dieselbe Absicht — bei leerem Stand darf keine leere
+       Gegnerliste als Rauschen auf dem Brett stehen — nur am richtigen Knoten:
+       gezählt werden die Listen *innerhalb* der Gegnerlichtung. Deren Sektion
+       selbst ist sichtbar und trägt einen Leertext; das ist gewollt. */
     const handkarte = element('.handkartenleiste--spielkartenfaecher .handkarte__button--karte')
     const lichtungStyle = getComputedStyle(lichtung)
-    const gegnerStyle = getComputedStyle(gegner)
+    const gegnerListen = document.querySelectorAll('.waldtanz-gegnerlichtung ul, .waldtanz-gegnerlichtung ol').length
     const snakeBox = eigeneSchlange.getBoundingClientRect()
     const snakeProben = [0.25, 0.38, 0.5].map((anteil) => {
       const x = snakeBox.left + snakeBox.width / 2
@@ -63,15 +69,15 @@ try {
       gridTemplateColumns: lichtungStyle.gridTemplateColumns,
       borderWidth: lichtungStyle.borderTopWidth,
       boxShadow: lichtungStyle.boxShadow,
-      gegnerDisplay: gegnerStyle.display,
+      gegnerListen,
     }
   })
 
   if (daten.display !== 'grid' || Number.parseFloat(daten.borderWidth) < 3 || daten.boxShadow === 'none') {
     throw new Error(`M1ca Schlangenlichtung: eigene Lichtung ist keine koerperliche Brettspur (${JSON.stringify({ display: daten.display, border: daten.borderWidth, shadow: daten.boxShadow })})`)
   }
-  if (daten.gegnerDisplay !== 'none') {
-    throw new Error(`M1ca Schlangenlichtung: leere Gegnerliste ist weiter sichtbar (${JSON.stringify({ gegnerDisplay: daten.gegnerDisplay })})`)
+  if (daten.gegnerListen !== 0) {
+    throw new Error(`M1ca Schlangenlichtung: leere Gegnerliste ist weiter sichtbar (${daten.gegnerListen} Listen)`)
   }
   if (daten.startzone.width < 90 || daten.startzone.height < 70) {
     throw new Error(`M1ca Schlangenlichtung: Startkreis verliert Brettflaeche (${JSON.stringify(metric(daten.startzone))})`)
