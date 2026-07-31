@@ -11,6 +11,7 @@ inklusive CSS-Spielobjekt-Vertrag (italic, border-left) und Aria-Label mit
 */
 
 import { chromium } from 'playwright'
+import { starteErsteSchlange } from './spiel_starten.mjs'
 
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app'
 
@@ -49,13 +50,7 @@ try {
       throw new Error(`M1cw Konsequenz: Initialer Brettschritt-Stempel-Container hat ${initialStempel} Eintraege, erwartet 0`)
     }
 
-    // Startfuehrte klicken, um erste eigene Schlange zu erzeugen
-    /* ÄNDERUNG [31.07.2026]: S-5 — Beschriftung nachgezogen. Die Startfährten
-       heißen seit dem Waldtanz-Umbau „Startfährte <karte> als neue Schlange
-       starten" (SchlangenStartzone.tsx); „… für Pfad … spielen" existiert nicht
-       mehr, weshalb der Klick in einen 30-Sekunden-Timeout lief. */
-    const startfährte = page.getByRole('button', { name: /Startfährte .* als neue Schlange starten/i }).first()
-    await startfährte.click()
+    await starteErsteSchlange(page)
 
     // Brettschritt-Stempel erscheint mit dem Aktions-Label als Konsequenz-Zeile
     const arenenstein = page.getByRole('region', { name: 'Waldtanz-Arenastein' })

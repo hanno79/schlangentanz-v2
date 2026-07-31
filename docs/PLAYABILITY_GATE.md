@@ -2991,3 +2991,65 @@ blieben die Tests grün, während die Wirkung verschwand.
 Messung, markiert mit `test.fail()`: Der Fehlschlag ist bekannt und dokumentiert,
 und sobald das Layout repariert ist, meldet Playwright einen unerwarteten Erfolg.
 Die Reparatur ist ein Layout-Slice und war nicht Teil der Test-Migration.
+
+---
+
+## Release-Evidenz — 31.07.2026, Fixplan S-0 bis S-2c
+
+**Deploy:** `ee256c3` auf `https://schlangentanz-v2.vercel.app`, live verifiziert.
+Vorheriger Production-Stand war `0754613`.
+
+### Smoke-Kette gegen Production
+
+| Stand | OK | FEHL |
+|---|---|---|
+| `0754613` (Ausgangslage) | 33 | 44 |
+| **`ee256c3` (live gemessen)** | **50** | **27** |
+
+Lokaler Build desselben Commits: 49 OK / 28 FEHL — die eine Abweichung ist
+`m1dc_spielmoment_pulse`, ein bekannter Flake (2/5 grün, auch auf Builds ohne die
+Änderungen dieses Blocks). Sonst deckungsgleich, keine Production-eigenen Fehler.
+
+### Gates
+
+414 Testdateien / 1554 Tests grün, typecheck, lint, build, `check:test-lines`,
+`check:css-asserts` (708 Assertions, Baseline gehalten), 41 Layout-Verträge —
+alle Exit 0. Build 246,17 kB CSS / 434,92 kB JS.
+
+### Live-Messung `/game` bei 1280×900
+
+| Größe | Wert | Vertrag |
+|---|---|---|
+| Bodenleiste | 666–900 px | am Viewport-Boden verankert |
+| Spielbrett | 32–651 px | endet über der Leiste, keine Überlappung |
+| Handbühne | 119 px | M2x fordert ≥ 95 |
+| Handkarte | 109 px | M2i fordert ≥ 100 |
+| Seitenhöhe | 900 px | kein Scrollen |
+| `window.__schlangentanzFixture` | `undefined` | AP-1: keine Test-Hooks in Production |
+
+Keine Konsolen- oder Seitenfehler.
+
+### Was in diesem Block behoben wurde
+
+Drei echte Defekte: doppelte Accessible Names bei Phasen-Aktionen (S-1), ein per
+Maus nicht auslösbarer Gegnerzug-Knopf (S-2), und eine fehlende visuelle
+Rückmeldung bei der Kartenauswahl auf `/game` (S-4). Der Rest waren nicht
+nachgezogene Erwartungen aus den Slices M2e, M2r, M2s und M3d sowie drei Tests,
+die nie grün werden konnten.
+
+S-2c hat den Erstbild-Zielkonflikt entschieden statt umgangen: Spielerplakette,
+Hand und Gegnerzug-Knopf liegen ab 1000 px Breite gemeinsam am Viewport-Boden,
+und die Hero-Größen aus M2x/M2i gelten wieder.
+
+### Offene Lücken
+
+- **27 Smokes**, überwiegend Geometrie-Schwellen derselben Familie.
+- **Erstbild unter 1000 px Breite.** Der Brettinhalt ist dort größer als der
+  Platz; die Viewport-Bindung greift deshalb erst darüber. Eigener Slice nötig,
+  der Engpass sitzt tiefer (das Spielfeld bekommt nur 109 von 263 px des
+  Arenasteins).
+- **Handkarten 3 und 4 sind nicht anklickbar** — vollständig unter der
+  Mittelkarte. Älter als dieser Block, auf dem Vorher-Build identisch gemessen.
+  Als `test.fail()` in `tests/layout/hand_am_brettrand.spec.ts`.
+- **`m1dc_spielmoment_pulse` ist flaky** (Race im Skript, nicht in der App).
+- **M3g-Lobby-Erstbild** bleibt offen (Abschnitt darüber).
