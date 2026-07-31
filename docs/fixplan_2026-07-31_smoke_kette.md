@@ -134,6 +134,43 @@ Startzone, sonst `startButtons[0]` — trifft die Vorauswahl den falschen Knopf,
 bleibt das Attribut `null`. Gehört nach S-5, ist aber kein Timeout, sondern eine
 Race im Skript.
 
+### S-2b — Brettrand-Pivot: verworfener Versuch, gemessene Zielgeometrie
+
+Umgesetzt und wieder zurückgenommen. Der Befund ist in
+`tests/layout/hand_am_brettrand.spec.ts` festgehalten, ein Punkt davon als
+`test.fail()`.
+
+**Korrektur einer früheren Annahme.** Das Brett wächst *nicht* mit dem ersten
+Zug. Die Handkarten liegen bei 1280×900 vor und nach dem Zug bei 895 px, also
+im Bild. Was übersteht, ist die Panel-Box mit 961 px — 66 px Bühne und
+Innenabstand unterhalb der Karten. Daran scheitern M9, M1f und M95, die die
+Panel-Box messen. Die Zahl „969 px nach dem ersten Zug" stammte aus der
+m95-Messung der Panel-Box bei 1440 px Breite und beschrieb nicht, was sie zu
+beschreiben schien.
+
+Der Zielkonflikt bleibt real, ist aber enger: Die Hero-Größen (Bühne +42 px,
+Karte +2 px) passen nicht über den Falz, solange die Hand im Dokumentfluss hängt.
+
+**Warum die Hand allein zu fixieren nicht reicht.** Gemessen:
+
+| Posten | px |
+|---|---|
+| Brettzeilen (Summe) | 772 |
+| Brett mit Abständen | 879 |
+| verfügbar über einer 252-px-Hand | 648 |
+| **Fehlbetrag** | **231** |
+
+Zugleiste (97 px) und Bodenzeile (145 px: Spielerplakette + Arenazug) lägen
+hinter der fixierten Hand. Die Arena müsste stattdessen von 378 px auf 214 px
+halbiert werden — das widerspricht M2r (Schlangenlichtung ≥ 55 % Viewport).
+
+**Der tragfähige Weg** ist die *ganze* Bodenzeile. Das Grid trägt sie bereits
+als eine Reihe: `"sp-plakette hand arenazug"`. Fixiert man sie gemeinsam statt
+nur die Hand, bleiben 71 + 81 + Arena + 97 für das Brett, und die Arena darf
+wachsen statt zu schrumpfen. Das braucht einen Wrapper um diese drei Elemente
+in `App.tsx` — ein Struktur-Slice, kein CSS-Detail, und deshalb nicht nebenbei
+erledigt.
+
 ### S-3 — Umbenannte und verschobene Elemente (G3, 8 Skripte) · M
 
 Pro Skript prüfen, ob die Erwartung veraltet ist oder etwas wirklich fehlt.
