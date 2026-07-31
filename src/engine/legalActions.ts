@@ -1,8 +1,42 @@
 /*
 Author: rahn
 Datum: 01.06.2026
-Version: 1.3
+Version: 1.4
 Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz-Spielaktionen. Inkl. R20 Pflicht-Abwurf mangels spielbarer Aktion, R75 Farbenschutz.
+
+ÄNDERUNG [30.07.2026]: AP-5 — Umfang der Enumeration gemessen statt geschätzt
+(Onboarding-Finding 8). Kein Codeeingriff; hier steht das Ergebnis, damit die Frage
+nicht alle paar Monate neu aufgeworfen wird.
+
+Die Enumeration bildet Kreuzprodukte: Schlangenfrass über alle Zielpaare,
+Farbendieb über gegnerische Farbkarten × eigene Schlangen × Einfügepositionen.
+Jeder Kandidat läuft zusätzlich durch `pruefeAktion`. Gemessen am 30.07.2026 mit
+vier Spielern, je zwei vollen Schlangen und einer Hand aus lauter zielsuchenden
+Sonderkarten:
+
+  Karten je Schlange | Karten im Spiel | Aktionen | ermittleLegaleAktionen
+  -------------------|-----------------|----------|-----------------------
+   6                 |  73             |  1 170   | 2,6 ms
+   9                 |  97             |  2 553   | 6,2 ms
+  11                 | 113             |  3 775   | 5,5 ms
+  15                 | 145             |  6 939   | 8,4 ms
+
+Der Ausschlag nach oben ist durch das Kartenmaterial begrenzt: **das Spieldeck hat
+114 Karten**, Board und Hände zusammen können das nie überschreiten. Die Zeile mit
+11 Karten je Schlange liegt bereits am Limit; die Zeile mit 15 beschreibt einen
+Zustand, den es im Spiel nicht geben kann. Der reale Worst Case kostet also rund
+6 ms und wird pro Zustandsänderung einmal berechnet (memoisiert in
+`useLegaleAktionenNachTyp`), nicht pro Render.
+
+Deshalb bleibt die Enumeration wie sie ist. Wer sie dennoch anfassen will, sollte
+zuerst `src/engine/__tests__/legal_actions_umfang.test.ts` lesen — dort steht die
+Messung samt Fixture, und der Test schlägt an, sobald eine weitere
+Kreuzprodukt-Dimension hinzukommt.
+
+Nebenbefund: `ermittleQuestZugHinweise` führt pro Kandidat ein volles
+`anwendeAktion` aus. Das ist nur deshalb billig, weil es ausschließlich
+Schlangenbau-Aktionen betrachtet (12 von 3 775). Wer diesen Filter aufweicht, macht
+es zum teuersten Posten der App.
 */
 
 import type { Spielzustand } from './types';
