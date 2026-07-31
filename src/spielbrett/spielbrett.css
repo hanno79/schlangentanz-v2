@@ -267,6 +267,44 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   font-size: 0.9rem;
 }
 
+/* Häutungs-Editor: liegt im Fluss der Spielfläche, nicht als Overlay — ein
+   Overlay würde die Schlange verdecken, die man gerade umsortiert. */
+.brett-haeutung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--brett-luft-eng);
+  inline-size: 100%;
+  padding: var(--brett-luft-eng);
+  border: var(--brett-rahmen) solid var(--brett-linie);
+  border-radius: var(--brett-rundung);
+  background: var(--brett-flaeche);
+}
+
+.brett-haeutung__liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.brett-haeutung__eintrag {
+  display: flex;
+  align-items: center;
+  gap: var(--brett-luft-eng);
+}
+
+.brett-haeutung__knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--brett-luft-eng);
+}
+
+.brett-reaktion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--brett-luft-eng);
+  inline-size: 100%;
+}
+
 /* ---- 3 Gegnerstreifen ------------------------------------------------ */
 
 .brett-gegner {

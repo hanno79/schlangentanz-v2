@@ -19,6 +19,7 @@ Stapel (G-6), Reaktionsdialog als eigene Fläche (G-7 — bis dahin stehen die
 Reaktionsaktionen in der Aktionsliste und sind damit erreichbar).
 */
 
+import { useState } from 'react'
 import './spielbrett.css'
 import { HANDKARTENLIMIT, MAX_KARTEN_PRO_ZUG, MAX_SCHLANGEN_PRO_SPIELER } from '../engine'
 import type { SpielAktion } from '../engine'
@@ -31,6 +32,7 @@ import { ermittlePhasenSchritt } from './phasenSchritt'
 import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
 import { ermittleHandModus, handHinweis } from './handModus'
 import { ermittleSpielerLagen, geheimeAufgabeDesMenschen } from './spielerLage'
+import Haeutungseditor from './Haeutungseditor'
 import { aufgabeLabel, naechsterPflichtschrittLabel } from '../spielLabelHelpers'
 
 interface SpielbrettProps {
@@ -67,14 +69,22 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
   const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
   const istKiAmZug = aktiver.steuerung === 'KI'
   const hatOffeneReaktion = reaktionsAktionen.length > 0
+  /* Das Reaktionsfenster gehört dem Angegriffenen: `spielerId` in der
+     Reaktionsaktion ist der Verteidiger, nicht der Zugspieler. */
+  const reaktionsVerteidiger =
+    hatOffeneReaktion && 'spielerId' in reaktionsAktionen[0]
+      ? zustand.spieler.find((spieler) => spieler.id === reaktionsAktionen[0].spielerId)?.name
+      : undefined
   const schritt = ermittlePhasenSchritt(zustand, ueberhand, hatOffeneReaktion)
 
   const ausgewaehlteKarteId =
     ausgewaehlteHandkarteAuswahl?.spielerId === aktiver.id ? ausgewaehlteHandkarteAuswahl.karteId : null
 
-  /* Solange eine Reaktion offen ist, sind das die *einzigen* zulässigen
-     Aktionen — die Engine lehnt alles andere ab. */
-  const rohAktionen: SpielAktion[] = hatOffeneReaktion ? reaktionsAktionen : legaleAktionen
+  /* Solange eine Reaktion offen ist, lehnt die Engine jede andere Aktion ab.
+     Die Reaktion selbst steht aber nicht hier, sondern in Region 6 — sie ist
+     das, was den Zug voranbringt, und würde an beiden Orten gegen Regel 1
+     verstoßen. */
+  const rohAktionen: SpielAktion[] = hatOffeneReaktion ? [] : legaleAktionen
   /* Die Engine enumeriert eine Aktion pro Handkarte. Eine Hand aus fünf blauen
      Karten erzeugt fünf identisch beschriftete Knöpfe — für Screenreader nicht
      unterscheidbar und für den Spieler kein Informationsgewinn. Gruppiert wird
@@ -98,6 +108,12 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
   const eigeneLage = lagen.find((lage) => lage.id === aktiver.id)
   const geheimeAufgabe = geheimeAufgabeDesMenschen(zustand)
   const istEndspurt = zustand.spielphase === 'Endspurt'
+  /* Die Schlangenhäutung ist die einzige Aktion, die die Engine nicht
+     enumeriert — die Reihenfolge muss die Oberfläche anbieten. */
+  const [haeutungFuerSchlange, setHaeutungFuerSchlange] = useState<string | null>(null)
+  const haeutungskarte = aktiver.hand.find(
+    (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenhäutung',
+  )
   const pflichtschritt = naechsterPflichtschrittLabel(
     zustand,
     legaleAktionen,
@@ -227,6 +243,33 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
               >
                 rechts ▶
               </button>
+
+              {/* Häutung: nur mit der Karte auf der Hand, an einer aktiven
+                  Schlange mit mindestens zwei Karten. */}
+              {haeutungskarte && schlange.zustand === 'aktiv' && schlange.karten.length > 1 ? (
+                <button
+                  type="button"
+                  className="brett-knopf brett-knopf--leise"
+                  onClick={() =>
+                    setHaeutungFuerSchlange((aktuell) => (aktuell === schlange.id ? null : schlange.id))
+                  }
+                >
+                  {haeutungFuerSchlange === schlange.id ? 'Häutung schließen' : 'Häuten'}
+                </button>
+              ) : null}
+
+              {haeutungFuerSchlange === schlange.id && haeutungskarte ? (
+                <Haeutungseditor
+                  zustand={zustand}
+                  schlange={schlange}
+                  handkartenId={haeutungskarte.id}
+                  onAusfuehren={(aktion) => {
+                    setHaeutungFuerSchlange(null)
+                    fuhreAktionAus(aktion)
+                  }}
+                  onAbbrechen={() => setHaeutungFuerSchlange(null)}
+                />
+              ) : null}
             </div>
           )
         })}
@@ -400,9 +443,31 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         ) : null}
       </section>
 
-      {/* 6 — der eine Knopf, der den Zug voranbringt */}
+      {/* 6 — der eine Knopf, der den Zug voranbringt. Eine offene Reaktion hat
+          Vorrang: Sie blockiert das ganze Spiel, bis der *Verteidiger*
+          entschieden hat — nicht der Spieler, der am Zug ist. */}
       <section className="brett-aktion brett-bereich" aria-label="Zugaktion">
-        {schritt === null ? (
+        {hatOffeneReaktion ? (
+          <div className="brett-reaktion" role="group" aria-label="Angriff abwehren">
+            <span className="brett-hand__hinweis">
+              {reaktionsVerteidiger ?? 'Ein Spieler'} wird angegriffen — Entscheidung nötig
+            </span>
+            {reaktionsAktionen.map((aktion, index) => (
+              <button
+                key={`${aktion.typ}-${index}`}
+                type="button"
+                className={`brett-knopf${index === 0 ? '' : ' brett-knopf--leise'}`}
+                onClick={() => fuhreAktionAus(aktion)}
+              >
+                {aktionsLabel(aktion)}
+              </button>
+            ))}
+            {/* Ohne Farbenschutzkarte bietet die Engine nur „durchlassen" an. */}
+            {reaktionsAktionen.length === 1 ? (
+              <span className="brett-leer">Kein Farbenschutz auf der Hand.</span>
+            ) : null}
+          </div>
+        ) : schritt === null ? (
           <p className="brett-leer">
             {zustand.zugphase === 'Spielende' ? 'Spiel beendet.' : 'Zuerst oben entscheiden.'}
           </p>
