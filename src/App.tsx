@@ -1,20 +1,13 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo } from 'react'
 import './App.css'
 import {
-  erstelleSpielzustand,
-  erstelleEinzelspielerSpielzustand,
-  starteAusspielphase,
-  anwendeAktion,
-  beendeAusspielphase,
-  beendeAufgabenpruefung,
-  beendeZug,
-  werfeUeberzaehligeHandkartenAb,
-  HANDKARTENLIMIT,
   berechneSpielzustandGesamtwertung,
   berechneGewinner,
   ermittleQuestZugHinweise,
 } from './engine'
-import type { SpielAktion, SpielerWertungsEintrag, Spielzustand, PflichtAbwurfAktion } from './engine'
+import type { SpielerWertungsEintrag, Spielzustand, PflichtAbwurfAktion } from './engine'
+import { usePartie } from './hooks/usePartie'
+import type { BrettschrittEintrag } from './hooks/usePartie'
 import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
 import useAktionenPanelProps from './hooks/useAktionenPanelProps'
 import { useSpielLabels } from './hooks/useSpielLabels'
@@ -22,7 +15,6 @@ import AktionenPanel from './components/AktionenPanel'
 import Spielerfuehrung from './components/Spielerfuehrung'
 import useAktionszielFokus from './hooks/useAktionszielFokus'
 import HandkartenPanel from './components/HandkartenPanel'
-import { baueFixtureZustand } from './components/waldtanzFixtureLogik'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
 import KiZugBuehne from './components/KiZugBuehne'
@@ -30,7 +22,6 @@ import SpielstatusPanel from './components/SpielstatusPanel'
 import Zugpfad from './components/Zugpfad'
 import ZugKompass from './components/ZugKompass'
 import Partiefortschritt from './components/Partiefortschritt'
-import { leseTestPhaseAusUrl, testHooksAktiv } from './testPhaseHook'
 import WaldtanzPartieUhr from './components/WaldtanzPartieUhr'
 import WaldtanzSpielerrahmen from './components/WaldtanzSpielerrahmen'
 import WaldtanzSeitenmenue from './components/WaldtanzSeitenmenue'
@@ -40,7 +31,6 @@ import WaldtanzZugspur from './components/WaldtanzZugspur'
 import WaldtanzAufgabentafel from './components/WaldtanzAufgabentafel'
 import WaldtanzBonuszauber from './components/WaldtanzBonuszauber'
 import WaldtanzArenazugknopf from './components/WaldtanzArenazugknopf'
-import type { BrettschrittEintrag } from './components/WaldtanzBrettschrittStempel'
 import WaldtanzSchlangenlichtung from './components/WaldtanzSchlangenlichtung'
 import WaldtanzGegnerlichtung from './components/WaldtanzGegnerlichtung'
 import WaldtanzPhasenBanner from './components/WaldtanzPhasenBanner'
@@ -53,21 +43,6 @@ import MaterialUndAufgabenPanel from './components/MaterialUndAufgabenPanel'
 import SpieleruebersichtPanel from './components/SpieleruebersichtPanel'
 import AktiverSpielerZugtafel from './components/AktiverSpielerZugtafel'
 import WaldtanzAktiverSpielerDebug from './components/WaldtanzAktiverSpielerDebug'
-import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
-import { erstelleAktionsLabel } from './aktionsLabel'
-import type { LetzteAktionZiel } from './aktionsziel/extrahiereAktionZiel'
-import { extrahiereAktionZiel } from './aktionsziel/extrahiereAktionZiel'
-import { spieleKiZuegeBisZumMenschen } from './kiZug'
-
-function ueberhandAnzahl(zustand: Spielzustand): number {
-  return Math.max(0, zustand.spieler[zustand.aktiverSpielerIndex].hand.length - HANDKARTENLIMIT)
-}
-
-function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
-  const anzahl = ueberhandAnzahl(zustand)
-  if (anzahl === 0) return []
-  return zustand.spieler[zustand.aktiverSpielerIndex].hand.slice(-anzahl).map(k => k.id)
-}
 
 function zugfuehrungLabel(steuerung: Spielzustand['spieler'][number]['steuerung']): string {
   switch (steuerung) {
@@ -85,29 +60,38 @@ interface AppProps {
 
 function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
-  const [startZustand] = useState(() => initialZustand ?? leseTestPhaseAusUrl() ?? starteAusspielphase(erstelleSpielzustand(2)))
-  const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
-  const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
-  const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
-  const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
-  // M1dp-Fix: Der Schlangenbereich meldet seinen effektiven Zielspur-Highlight-Key
-  // hier herauf, damit die Schwester-Gegnerlichtung dasselbe Brettziel hervorhebt.
-  const [gegnerZielspurKey, setGegnerZielspurKey] = useState<string | null>(null)
-  const [ausgewaehlteHandkarteAuswahl, setAusgewaehlteHandkarteAuswahl] = useState<{ spielerId: string; karteId: string } | null>(null)
-  const [abwurfAuswahl, setAbwurfAuswahl] = useState<string[]>([])
-  const [handkarteDragAktiv, setHandkarteDragAktiv] = useState(false)
-  const [kiZugProtokoll, setKiZugProtokoll] = useState<string[]>([])
-  const [brettschrittEintraege, setBrettschrittEintraege] = useState<BrettschrittEintrag[]>(() => {
-    if (initialBrettschrittEintraege !== undefined) return initialBrettschrittEintraege
-    const aktiverIndex = startZustand.aktiverSpielerIndex
-    return startZustand.ablagestapel.slice(-3).map((karte) => ({
-      karteId: karte.id,
-      spielerId: startZustand.spieler[aktiverIndex]?.id ?? 'unbekannt',
-      spielerIndex: aktiverIndex,
-      phase: startZustand.zugphase,
-    }))
-  })
-  const gezogeneHandkarteIdRef = useRef<string | null>(null)
+  /* ÄNDERUNG [31.07.2026]: G-1 — die Zustandsschicht liegt jetzt in
+     src/hooks/usePartie.ts. Sie stand vorher hier zwischen dem Markup; das neue
+     Spielbrett soll dieselbe Quelle nutzen, damit während des Umbaus keine
+     zweite Zustandsimplementierung entsteht. */
+  const {
+    zustand,
+    letzteAktion,
+    letzteAktionZiel,
+    hervorgehobenesAktionszielId,
+    setHervorgehobenesAktionszielId,
+    gegnerZielspurKey,
+    setGegnerZielspurKey,
+    ausgewaehlteHandkarteAuswahl,
+    setAusgewaehlteHandkarteAuswahl,
+    abwurfAuswahl,
+    handkarteDragAktiv,
+    setHandkarteDragAktiv,
+    kiZugProtokoll,
+    brettschrittEintraege,
+    gezogeneHandkarteIdRef,
+    aktionsLabel,
+    ueberhand,
+    fuhreAktionAus,
+    handleAusspielphaseBeenden,
+    handleAufgabenpruefungBeenden,
+    handleUeberzaehligeKartenAbwerfen,
+    handleAbwurfToggle,
+    handleZugBeenden,
+    handleAusspielphaseStarten,
+    handleKiZugVorspulen,
+    handleNeuesLobbySpiel,
+  } = usePartie({ initialZustand, initialBrettschrittEintraege })
   const {
     legaleAktionen,
     nichtEnumerierteAktionenHinweise,
@@ -122,17 +106,6 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     verdopplerAktionen,
     schlangengrubeAktionen,
   } = useLegaleAktionenNachTyp(zustand)
-  // ÄNDERUNG [30.07.2026]: AP-3 — Aktionslabels werden aus dem Zustand aufgelöst
-  // (Spieler-, Schlangen- und Kartennamen) statt aus IDs abgeleitet. Perspektive ist
-  // der menschliche Spieler, damit „deine erste Schlange" statt „eigene …" steht.
-  const menschlicherSpielerId = useMemo(
-    () => zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch')?.id,
-    [zustand.spieler],
-  )
-  const aktionsLabel = useMemo(
-    () => erstelleAktionsLabel(zustand, { perspektiveSpielerId: menschlicherSpielerId }),
-    [zustand, menschlicherSpielerId],
-  )
   const questZugHinweise = useMemo(() => ermittleQuestZugHinweise(zustand, legaleAktionen), [zustand, legaleAktionen])
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(() => zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler) : null, [zustand.zugphase, zustand.spieler])
@@ -153,7 +126,6 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     [spielerwertungen, aktiverSpieler.id],
   )
   const istSpielende = zustand.zugphase === 'Spielende'
-  const ueberhand = ueberhandAnzahl(zustand)
   const istEndspurt = zustand.spielphase === 'Endspurt'
   const spielerNameFuerId = (spielerId: string) => zustand.spieler.find(spieler => spieler.id === spielerId)?.name ?? spielerId
   const empfohleneAktionId = useId(), phasenaktionId = useId(), heroTitelId = useId(), spielstatusTitelId = useId(), aktiverSpielerTitelId = useId(), spieltischTitelId = useId()
@@ -187,140 +159,6 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
 
   useAktionszielFokus(hervorgehobenesAktionszielId)
 
-  // M1dc: Auto-Clear des Spielmoment-Pulses nach 1500 ms, damit der
-  // data-letzte-aktion-ziel-Stil nicht permanent auf der Startzone oder
-  // einer Schlange haengt.
-  useEffect(() => {
-    if (letzteAktionZiel === null) return
-    const timer = window.setTimeout(() => setLetzteAktionZiel(null), 1500)
-    return () => window.clearTimeout(timer)
-  }, [letzteAktionZiel])
-
-  // M2d — window.__schlangentanzFixture-Hook: erlaubt Live-Smokes (M1dq, M2a,
-  // M2c, M2b+) deterministische Sonderkarten-Spielzustaende herzustellen,
-  // ohne die UI-Klick-Ketten manuell durchlaufen zu muessen. Defensive
-  // Installation: ueberschreibt kein bereits gesetztes Helper-Symbol und
-  // entfernt den Hook nur, wenn er selbst Installateur war (sauberer
-  // Unmount-Pfad in Tests).
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    // C4: Fixture-Hook nur im Dev-Build oder mit VITE_TEST_HOOKS=1 installieren.
-    if (!testHooksAktiv()) return
-    const w = window as unknown as { __schlangentanzFixture?: (fixture: unknown) => void }
-    if (typeof w.__schlangentanzFixture === 'function') return
-    const installierterHook = (fixture: unknown): void => {
-      const zustandNeu = baueFixtureZustand(zustand, fixture as Parameters<typeof baueFixtureZustand>[1])
-      setZustand(zustandNeu)
-    }
-    w.__schlangentanzFixture = installierterHook
-    return () => {
-      if ((window as unknown as { __schlangentanzFixture?: unknown }).__schlangentanzFixture === installierterHook) {
-        delete (window as unknown as { __schlangentanzFixture?: (fixture: unknown) => void }).__schlangentanzFixture
-      }
-    }
-  }, [zustand])
-
-  function wechsleZustand(label: string, updater: (z: Spielzustand) => Spielzustand, aktionZiel: LetzteAktionZiel | null = null) {
-    setLetzteAktion(label)
-    setLetzteAktionZiel(aktionZiel)
-    setKiZugProtokoll([])
-    setHervorgehobenesAktionszielId(null)
-    setAusgewaehlteHandkarteAuswahl(null)
-    setAbwurfAuswahl([])
-    // Naechsten Zustand synchron aus dem Closure ableiten, damit wir die
-    // Brettschritt-Eintraege ausserhalb eines setState-Updaters pflegen koennen
-    // und kein setState-during-render Anti-Pattern entsteht.
-    const vorherAb = zustand.ablagestapel
-    const phaseVorher = zustand.zugphase
-    const aktiverIndexVorher = zustand.aktiverSpielerIndex
-    const aktiverVorher = zustand.spieler[aktiverIndexVorher]
-    const naechster = updater(zustand)
-    setZustand(naechster)
-    const nachherAb = naechster.ablagestapel
-    if (nachherAb.length > vorherAb.length) {
-      const neueKarten = nachherAb.slice(vorherAb.length)
-      const phase = phaseVorher
-      const eintraege: BrettschrittEintrag[] = []
-      for (const karte of neueKarten) {
-        eintraege.push({
-          karteId: karte.id,
-          spielerId: naechster.spieler[aktiverIndexVorher]?.id ?? aktiverVorher.id,
-          spielerIndex: aktiverIndexVorher,
-          phase,
-          konsequenz: label,
-        })
-      }
-      setBrettschrittEintraege((bisher) => [...bisher, ...eintraege].slice(-3))
-    } else if (nachherAb.length < vorherAb.length) {
-      const entfernteIds = new Set(vorherAb.filter((k) => !nachherAb.some((n) => n.id === k.id)).map((k) => k.id))
-      setBrettschrittEintraege((bisher) => bisher.filter((eintrag) => !entfernteIds.has(eintrag.karteId)))
-    }
-  }
-
-  function fuhreAktionAus(aktion: SpielAktion) { wechsleZustand(aktionsLabel(aktion), z => anwendeAktion(z, aktion), extrahiereAktionZiel(aktion)) }
-  function handleAusspielphaseBeenden() { wechsleZustand('Ausspielphase beenden', z => beendeAusspielphase(z)) }
-  function handleAufgabenpruefungBeenden() { wechsleZustand('Aufgabenprüfung beenden', z => beendeAufgabenpruefung(z, { aufgabenGeprueft: true })) }
-  function handleUeberzaehligeKartenAbwerfen() {
-    // R2.5: Wenn der Spieler exakt genug Karten gewählt hat, diese abwerfen; sonst
-    // Auto-Fallback auf die letzten überzähligen Karten (generischer Phasenbutton/KI-Kompatibilität).
-    wechsleZustand('Überzählige Karten abwerfen', z => {
-      const gewaehlt = abwurfAuswahl.length === ueberhandAnzahl(z) ? abwurfAuswahl : ueberhandAbwurfKartenIds(z)
-      return werfeUeberzaehligeHandkartenAb(z, { kartenIds: gewaehlt })
-    })
-  }
-  function handleAbwurfToggle(karteId: string) {
-    setAbwurfAuswahl((bisher) => {
-      if (bisher.includes(karteId)) return bisher.filter((id) => id !== karteId)
-      if (bisher.length >= ueberhand) return bisher
-      return [...bisher, karteId]
-    })
-  }
-  function handleZugBeenden() { wechsleZustand('Zug beenden', z => beendeZug(z, { pflichtenErfuellt: true })) }
-  function handleAusspielphaseStarten() { wechsleZustand('Ausspielphase starten', z => starteAusspielphase(z)) }
-  function handleKiZugVorspulen() {
-    let ergebnis
-    try {
-      ergebnis = spieleKiZuegeBisZumMenschen(zustand)
-    } catch (fehler) {
-      // Defensive: eine unerwartete Engine-Exception darf das Spiel nicht einfrieren.
-      const meldung = fehler instanceof Error ? fehler.message : 'Unbekannter Fehler'
-      setLetzteAktion('Gegnerzüge abgebrochen')
-      setKiZugProtokoll([`KI-Zug abgebrochen: ${meldung}`])
-      return
-    }
-    setLetzteAktion('Gegnerzüge vorgespult')
-    setKiZugProtokoll(ergebnis.protokoll)
-    setHervorgehobenesAktionszielId(null)
-    setAusgewaehlteHandkarteAuswahl(null)
-    gezogeneHandkarteIdRef.current = null
-    setZustand(ergebnis.zustand)
-    // Brettschritt-Historie nach KI-Vorspulen neu aus dem sichtbaren ablagestapel aufbauen,
-    // damit die naechsten 3 Stempel die aktuelle Lage wiedergeben. Spieler-Index wird auf den
-    // aktiven Spieler gesetzt, weil die genaue Zuordnung im Vorspulen nicht rekonstruierbar ist.
-    const aktiverIndex = ergebnis.zustand.spieler.findIndex((s) => s.steuerung === 'Mensch')
-    const fallbackIndex = aktiverIndex >= 0 ? aktiverIndex : 0
-    const eintraege: BrettschrittEintrag[] = ergebnis.zustand.ablagestapel.slice(-3).map((karte) => ({
-      karteId: karte.id,
-      spielerId: ergebnis.zustand.spieler[fallbackIndex]?.id ?? 'unbekannt',
-      spielerIndex: fallbackIndex,
-      phase: 'Zugabschluss',
-      konsequenz: 'Gegnerzüge vorgespult',
-    }))
-    setBrettschrittEintraege(eintraege)
-  }
-  function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl) {
-    setLetzteAktion(`Neues Spiel: Du + ${kiGegner} KI`)
-    setKiZugProtokoll([])
-    setHervorgehobenesAktionszielId(null)
-    setAusgewaehlteHandkarteAuswahl(null)
-    gezogeneHandkarteIdRef.current = null
-    setBrettschrittEintraege([])
-    // ÄNDERUNG [30.07.2026]: AP-3 — die spec-nahe Einzelspieler-Factory benennt die
-    // Gegner „KI Gegner 1..3" statt generisch „Spieler 2..4" und validiert die
-    // KI-Anzahl gegen KI_GEGNER_MIN/MAX. Sie existierte bereits, wurde aber nur von
-    // Tests benutzt (Onboarding-Finding 4).
-    setZustand(starteAusspielphase(erstelleEinzelspielerSpielzustand(kiGegner)))
-  }
 
   const aktionenPanelProps = useAktionenPanelProps({
     zustand, legaleAktionen, nichtEnumerierteAktionenHinweise, reaktionsAktionen,

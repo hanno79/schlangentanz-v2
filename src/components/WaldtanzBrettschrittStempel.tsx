@@ -14,15 +14,14 @@ ablagestapel mit der Spieler-/Phasen-/Konsequenz-Zuordnung.
 */
 
 import type { Spielkarte, Spielzustand } from '../engine'
+import type { BrettschrittEintrag } from '../hooks/usePartie'
 import { farbeCssKlasse } from '../kartenfarben'
 
-export interface BrettschrittEintrag {
-  karteId: string
-  spielerId: string
-  spielerIndex: number
-  phase: string
-  konsequenz?: string
-}
+/* ÄNDERUNG [31.07.2026]: G-1 — die Datenform wohnt jetzt in der Zustandsschicht
+   (src/hooks/usePartie.ts). Sie gehört dorthin und nicht in eine Ansicht, die sie
+   darstellt — zumal diese Komponente mit dem alten Brett entfällt. Der Re-Export
+   hält die bestehenden Importpfade gültig. */
+export type { BrettschrittEintrag } from '../hooks/usePartie'
 
 interface WaldtanzBrettschrittStempelProps {
   zustand: Spielzustand
