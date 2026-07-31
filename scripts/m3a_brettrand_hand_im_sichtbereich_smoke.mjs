@@ -83,10 +83,10 @@ async function pruefeM3aHandImSichtbereich(page) {
   // 2) handkartenleiste (5 Karten) muss im 900er Viewport sichtbar sein
   const leiste = await sichtInfo(page, '.handkartenleiste')
   if (!leiste.vorhanden) throw new Error('M3a: .handkartenleiste fehlt im DOM')
-  if (liste.bottom > 905) {
-    throw new Error(`M3a: handkartenleiste unter Viewport-Falz: bottom=${liste.bottom.toFixed(1)}px > 905px Schwelle (Spieler scrollt)`)
+  if (leiste.bottom > 905) {
+    throw new Error(`M3a: handkartenleiste unter Viewport-Falz: bottom=${leiste.bottom.toFixed(1)}px > 905px Schwelle (Spieler scrollt)`)
   }
-  console.log(`  handkartenleiste: top=${leiste.top.toFixed(1)}px, bottom=${liste.bottom.toFixed(1)}px, hoehe=${liste.hoehe.toFixed(1)}px`)
+  console.log(`  handkartenleiste: top=${leiste.top.toFixed(1)}px, bottom=${leiste.bottom.toFixed(1)}px, hoehe=${leiste.hoehe.toFixed(1)}px`)
 
   // 3) handkartenleiste enthaelt 5 handkarte-Buttons
   const kartenCount = await page.locator('.handkarte__button--karte').count()
@@ -124,7 +124,7 @@ async function pruefeM3aHandImSichtbereich(page) {
   }
   console.log('  keine console-/page-errors')
 
-  console.log(`M3a OK: Hand im Sichtbereich (handkartenleiste bottom=${liste.bottom.toFixed(1)}px <= 905px Falz)`)
+  console.log(`M3a OK: Hand im Sichtbereich (handkartenleiste bottom=${leiste.bottom.toFixed(1)}px <= 905px Falz)`)
 }
 
 async function main() {
