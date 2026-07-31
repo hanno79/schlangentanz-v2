@@ -19,13 +19,30 @@ interface KartenmarkeProps {
   verdeckt?: boolean
   onWaehlen?: () => void
   zusatz?: string
+  /** `abwurf` färbt die Markierung als Warnung — der Klick wirft die Karte weg,
+      er wählt sie nicht aus. Derselbe Klick darf nicht gleich aussehen. */
+  variante?: 'auswahl' | 'abwurf'
+  /** Platz in der Reihe, 1-basiert. Eine Hand aus elf blauen Karten ergäbe sonst
+      elf gleichnamige Knöpfe — für Screenreader nicht unterscheidbar. */
+  platz?: number
+  /** Länge der Reihe, für „Karte 3 von 11". */
+  vonWievielen?: number
 }
 
 function farbklasse(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? ` brett-karte--${farbeCssKlasse(karte.farbe)}` : ''
 }
 
-export default function Kartenmarke({ karte, gewaehlt, verdeckt, onWaehlen, zusatz }: KartenmarkeProps) {
+export default function Kartenmarke({
+  karte,
+  gewaehlt,
+  verdeckt,
+  onWaehlen,
+  zusatz,
+  variante = 'auswahl',
+  platz,
+  vonWievielen,
+}: KartenmarkeProps) {
   if (verdeckt) {
     return (
       <li className="brett-karte brett-karte--verdeckt" aria-label="Verdeckte Handkarte">
@@ -37,13 +54,17 @@ export default function Kartenmarke({ karte, gewaehlt, verdeckt, onWaehlen, zusa
 
   const name = karteAnzeigename(karte)
   const wert = karteWertLabel(karte)
-  const beschriftung = [name, wert, zusatz].filter(Boolean).join(', ')
+  const ortsangabe = platz !== undefined && vonWievielen !== undefined ? `Karte ${platz} von ${vonWievielen}` : null
+  const beschriftung = [name, wert, ortsangabe, zusatz].filter(Boolean).join(', ')
 
   return (
     <li>
       <button
         type="button"
-        className={`brett-karte${farbklasse(karte)}${gewaehlt ? ' brett-karte--gewaehlt' : ''}`}
+        className={
+          `brett-karte${farbklasse(karte)}` +
+          (gewaehlt ? (variante === 'abwurf' ? ' brett-karte--abwurf' : ' brett-karte--gewaehlt') : '')
+        }
         aria-pressed={onWaehlen ? Boolean(gewaehlt) : undefined}
         aria-label={beschriftung}
         onClick={onWaehlen}

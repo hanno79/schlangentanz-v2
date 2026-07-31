@@ -20,7 +20,7 @@ Reaktionsaktionen in der Aktionsliste und sind damit erreichbar).
 */
 
 import './spielbrett.css'
-import { MAX_KARTEN_PRO_ZUG, MAX_SCHLANGEN_PRO_SPIELER } from '../engine'
+import { HANDKARTENLIMIT, MAX_KARTEN_PRO_ZUG, MAX_SCHLANGEN_PRO_SPIELER } from '../engine'
 import type { SpielAktion } from '../engine'
 import { gruppiereWirkungsgleicheAktionen } from '../aktionsGruppen'
 import type { usePartie } from '../hooks/usePartie'
@@ -29,6 +29,7 @@ import { zugphaseLabel } from '../zugphaseLabels'
 import Kartenmarke from './Kartenmarke'
 import { ermittlePhasenSchritt } from './phasenSchritt'
 import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
+import { ermittleHandModus, handHinweis } from './handModus'
 
 interface SpielbrettProps {
   partie: ReturnType<typeof usePartie>
@@ -41,6 +42,8 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     ausgewaehlteHandkarteAuswahl,
     setAusgewaehlteHandkarteAuswahl,
     ueberhand,
+    abwurfAuswahl,
+    handleAbwurfToggle,
     aktionsLabel,
     fuhreAktionAus,
     handleAusspielphaseStarten,
@@ -76,6 +79,12 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
      der Spieler wählt erst die Karte, dann das Ziel. */
   const startAktion = findeStartAktion(neueSchlangeStartenAktionen, ausgewaehlteKarteId)
   const zielSchlangen = schlangenMitZiel(karteAnlegenAktionen, ausgewaehlteKarteId)
+
+  /* Pflichtabwurf-Aktionen entstehen nur, wenn sonst gar nichts legal ist —
+     die Engine garantiert das. Deshalb ist der Handmodus eindeutig. */
+  const pflichtAbwurfAktionen = legaleAktionen.filter((aktion) => aktion.typ === 'PflichtAbwurf')
+  const handModus = ermittleHandModus(zustand, ueberhand, pflichtAbwurfAktionen.length > 0)
+  const hinweis = handHinweis(handModus, ueberhand, abwurfAuswahl.length)
 
   const budget = zustand.zugpflichten
   const maxKarten = budget.verdopplerBonusAktiv ? MAX_KARTEN_PRO_ZUG + 1 : MAX_KARTEN_PRO_ZUG
@@ -243,32 +252,66 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         )}
       </section>
 
-      {/* 5 — Handleiste */}
+      {/* 5 — Handleiste. Der Klick bedeutet je nach Modus etwas anderes; der
+          Hinweis darüber sagt, was gerade gilt. */}
       <section className="brett-hand brett-bereich" aria-label="Deine Hand">
         <h2 className="brett-bereich__titel">
-          Deine Hand · {aktiver.hand.length} Karten
-          {ueberhand > 0 ? ` · ${ueberhand} zu viel` : ''}
+          Deine Hand · {aktiver.hand.length}/{HANDKARTENLIMIT} Karten
         </h2>
+        {hinweis ? <p className="brett-hand__hinweis">{hinweis}</p> : null}
         <ul className="brett-hand__karten">
-          {aktiver.hand.map((karte) => (
-            <Kartenmarke
-              key={karte.id}
-              karte={karte}
-              verdeckt={istKiAmZug}
-              gewaehlt={ausgewaehlteKarteId === karte.id}
-              onWaehlen={
-                istKiAmZug
-                  ? undefined
-                  : () =>
-                      setAusgewaehlteHandkarteAuswahl((aktuell) =>
-                        aktuell?.spielerId === aktiver.id && aktuell.karteId === karte.id
-                          ? null
-                          : { spielerId: aktiver.id, karteId: karte.id },
-                      )
-              }
-            />
-          ))}
+          {aktiver.hand.map((karte, platz) => {
+            /* Beim Pflichtabwurf ist nicht jede Karte erlaubt: Die Engine lässt
+               nur Karten zu, deren Art das Zugbudget noch hergibt. */
+            const abwurfAktion = pflichtAbwurfAktionen.find(
+              (aktion) => 'handkartenId' in aktion && aktion.handkartenId === karte.id,
+            )
+            const gewaehlt =
+              handModus === 'ueberhand'
+                ? abwurfAuswahl.includes(karte.id)
+                : ausgewaehlteKarteId === karte.id
+
+            let onWaehlen: (() => void) | undefined
+            if (handModus === 'ueberhand') onWaehlen = () => handleAbwurfToggle(karte.id)
+            else if (handModus === 'abwurfPflicht')
+              onWaehlen = abwurfAktion ? () => fuhreAktionAus(abwurfAktion) : undefined
+            else if (handModus === 'auswahl')
+              onWaehlen = () =>
+                setAusgewaehlteHandkarteAuswahl((aktuell) =>
+                  aktuell?.spielerId === aktiver.id && aktuell.karteId === karte.id
+                    ? null
+                    : { spielerId: aktiver.id, karteId: karte.id },
+                )
+
+            return (
+              <Kartenmarke
+                key={karte.id}
+                karte={karte}
+                platz={platz + 1}
+                vonWievielen={aktiver.hand.length}
+                verdeckt={handModus === 'verdeckt'}
+                gewaehlt={gewaehlt}
+                variante={handModus === 'ueberhand' ? 'abwurf' : 'auswahl'}
+                onWaehlen={onWaehlen}
+                zusatz={
+                  handModus === 'abwurfPflicht' && abwurfAktion === undefined
+                    ? 'diese Art ist im Zug schon verbraucht'
+                    : undefined
+                }
+              />
+            )
+          })}
         </ul>
+        {handModus === 'ueberhand' ? (
+          <button
+            type="button"
+            className="brett-knopf"
+            onClick={handleUeberzaehligeKartenAbwerfen}
+            disabled={abwurfAuswahl.length !== ueberhand}
+          >
+            {abwurfAuswahl.length} von {ueberhand} gewählt — abwerfen
+          </button>
+        ) : null}
       </section>
 
       {/* 6 — der eine Knopf, der den Zug voranbringt */}

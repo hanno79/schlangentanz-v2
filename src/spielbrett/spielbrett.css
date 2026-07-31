@@ -26,6 +26,7 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   --brett-akzent: #a4de02;
   --brett-akzent-warm: #fecb00;
   --brett-warnung: #b12d00;
+  --brett-tertiaer-flaeche: #ffbcaa;
   --brett-weiss: #ffffff;
 
   /* Abstände */
@@ -295,6 +296,12 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   grid-area: hand;
 }
 
+.brett-hand__hinweis {
+  color: var(--brett-warnung);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 .brett-hand__karten {
   display: flex;
   flex-wrap: wrap;
@@ -328,6 +335,14 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
 .brett-karte--gewaehlt {
   background: var(--brett-akzent);
   outline: 3px solid var(--brett-linie);
+  outline-offset: 2px;
+}
+
+/* Zum Abwerfen markiert — bewusst warnfarben, nicht wie die Auswahl. Derselbe
+   Klick darf nicht gleich aussehen, wenn er etwas anderes bedeutet. */
+.brett-karte--abwurf {
+  background: var(--brett-tertiaer-flaeche);
+  outline: 3px solid var(--brett-warnung);
   outline-offset: 2px;
 }
 
