@@ -30,6 +30,8 @@ import Kartenmarke from './Kartenmarke'
 import { ermittlePhasenSchritt } from './phasenSchritt'
 import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
 import { ermittleHandModus, handHinweis } from './handModus'
+import { ermittleSpielerLagen, geheimeAufgabeDesMenschen } from './spielerLage'
+import { naechsterPflichtschrittLabel } from '../spielLabelHelpers'
 
 interface SpielbrettProps {
   partie: ReturnType<typeof usePartie>
@@ -54,11 +56,15 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     handleKiZugVorspulen,
   } = partie
 
-  const { legaleAktionen, reaktionsAktionen, karteAnlegenAktionen, neueSchlangeStartenAktionen } =
-    useLegaleAktionenNachTyp(zustand)
+  const {
+    legaleAktionen,
+    reaktionsAktionen,
+    karteAnlegenAktionen,
+    neueSchlangeStartenAktionen,
+    nichtEnumerierteAktionenHinweise,
+  } = useLegaleAktionenNachTyp(zustand)
 
   const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
-  const gegner = zustand.spieler.filter((spieler) => spieler.id !== aktiver.id)
   const istKiAmZug = aktiver.steuerung === 'KI'
   const hatOffeneReaktion = reaktionsAktionen.length > 0
   const schritt = ermittlePhasenSchritt(zustand, ueberhand, hatOffeneReaktion)
@@ -88,6 +94,15 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
 
   const budget = zustand.zugpflichten
   const maxKarten = budget.verdopplerBonusAktiv ? MAX_KARTEN_PRO_ZUG + 1 : MAX_KARTEN_PRO_ZUG
+  const lagen = ermittleSpielerLagen(zustand)
+  const eigeneLage = lagen.find((lage) => lage.id === aktiver.id)
+  const geheimeAufgabe = geheimeAufgabeDesMenschen(zustand)
+  const pflichtschritt = naechsterPflichtschrittLabel(
+    zustand,
+    legaleAktionen,
+    nichtEnumerierteAktionenHinweise,
+    ueberhand,
+  )
 
   function schrittAusloesen() {
     if (schritt === null) return
@@ -107,34 +122,37 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
       <header className="brett-kopf brett-bereich" aria-label="Spielstand">
         <p className="brett-kopf__block">
           <span className="brett-kopf__name">{aktiver.name}</span>
+          <span className="brett-kopf__wert">{eigeneLage?.punkte ?? 0} Punkte</span>
           <span className="brett-kopf__leise">
-            {aktiver.hand.length} Karten · {aktiver.schlangen.length}/{MAX_SCHLANGEN_PRO_SPIELER} Schlangen
+            {aktiver.hand.length}/{HANDKARTENLIMIT} Karten · {aktiver.schlangen.length}/
+            {MAX_SCHLANGEN_PRO_SPIELER} Schlangen
           </span>
         </p>
         <p className="brett-kopf__block">
           <span className="brett-kopf__leise">Phase</span>
           <span className="brett-kopf__wert">{zugphaseLabel(zustand.zugphase)}</span>
         </p>
+        {/* Das Zugbudget stand vorher nirgends auf /game — der Spieler sah
+            weder, wie viel er noch darf, noch dass der Verdoppler eine Karte
+            mehr erlaubt. */}
         <p className="brett-kopf__block">
           <span className="brett-kopf__leise">Gespielt</span>
           <span className="brett-kopf__wert">
             {budget.gespielteKarten}/{maxKarten} Karten
           </span>
+          <span className="brett-kopf__leise">
+            ({budget.gespielteFarbkarten} Farb-, {budget.gespielteSonderkarten} Sonderkarten)
+          </span>
           {budget.verdopplerBonusAktiv ? (
-            <span className="brett-kopf__leise">(Verdoppler: eine mehr)</span>
+            <span className="brett-kopf__wert">Verdoppler aktiv</span>
           ) : null}
         </p>
         {zustand.spielphase === 'Endspurt' ? (
           <p className="brett-kopf__warnung">Endspurt — Aufgaben zählen doppelt</p>
         ) : null}
-        <ul className="brett-kopf__gegner">
-          {gegner.map((spieler) => (
-            <li key={spieler.id} className="brett-kopf__block">
-              <span className="brett-kopf__leise">{spieler.name}</span>
-              <span className="brett-kopf__wert">{spieler.schlangen.length} Schlangen</span>
-            </li>
-          ))}
-        </ul>
+        {eigeneLage?.setztAus ? (
+          <p className="brett-kopf__warnung">Du setzt aus — Schlangengrube</p>
+        ) : null}
       </header>
 
       {/* 2 — Spielfläche */}
@@ -213,20 +231,37 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         })}
       </section>
 
-      {/* 3 — Gegnerstreifen (Inhalt folgt in G-6) */}
-      <section className="brett-gegner brett-bereich" aria-label="Gegner-Schlangen">
+      {/* 3 — Gegnerstreifen. Die Schlangen der Gegner folgen in G-6. */}
+      <section className="brett-gegner brett-bereich" aria-label="Gegner">
         <h2 className="brett-bereich__titel">Gegner</h2>
-        <p className="brett-leer">
-          {gegner.every((spieler) => spieler.schlangen.length === 0)
-            ? 'Noch keine gegnerischen Schlangen.'
-            : gegner
-                .map((spieler) => `${spieler.name}: ${spieler.schlangen.length} Schlange(n)`)
-                .join(' · ')}
-        </p>
+        <ul className="brett-gegner__liste">
+          {lagen
+            .filter((lage) => lage.id !== aktiver.id)
+            .map((lage) => (
+              <li key={lage.id} className="brett-kopf__block">
+                <span className="brett-kopf__wert">{lage.name}</span>
+                <span className="brett-kopf__leise">
+                  {lage.punkte} Punkte · {lage.schlangen} Schlangen · {lage.handkarten} Karten
+                </span>
+                {/* Wer aussetzt, stand vor diesem Paket nirgends im Brett. */}
+                {lage.setztAus ? <span className="brett-kopf__warnung">setzt aus</span> : null}
+              </li>
+            ))}
+        </ul>
       </section>
 
-      {/* 4 — Seitenspalte: die Aktionsliste als Rückfallebene (Regel 6) */}
+      {/* 4 — Seitenspalte: geheime Aufgabe und die Aktionsliste als
+          Rückfallebene (Regel 6) */}
       <section className="brett-seite brett-bereich" aria-label="Aktionen">
+        {/* Nur die eigene geheime Aufgabe — die einer KI zu zeigen wäre kein
+            Anzeigefehler, sondern ein Regelbruch. */}
+        {geheimeAufgabe ? (
+          <p className="brett-geheimaufgabe">
+            <span className="brett-bereich__titel">Deine geheime Aufgabe</span>
+            <span>{geheimeAufgabe.text}</span>
+            {geheimeAufgabe.erfuellt ? <span className="brett-kopf__wert">✓ erfüllt</span> : null}
+          </p>
+        ) : null}
         <h2 className="brett-bereich__titel">
           {hatOffeneReaktion ? 'Du wirst angegriffen' : 'Mögliche Aktionen'}
         </h2>
@@ -238,11 +273,19 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
           <ul className="brett-aktionsliste">
             {angeboteneAktionen.map((gruppe, index) => (
               <li key={`${gruppe.aktion.typ}-${index}`}>
+                {/* Die erste Aktion ist die empfohlene — dieselbe Konvention wie
+                    im alten AktionenPanel. Dort war die Empfehlung auf /game nur
+                    Text mit einem Sprunglink, der ins versteckte Panel zeigte
+                    und damit ins Leere. Hier ist sie ein Knopf. */}
                 <button
                   type="button"
-                  className="brett-knopf brett-knopf--leise brett-aktionsliste__eintrag"
+                  className={
+                    'brett-knopf brett-aktionsliste__eintrag' +
+                    (index === 0 ? '' : ' brett-knopf--leise')
+                  }
                   onClick={() => fuhreAktionAus(gruppe.aktion)}
                 >
+                  {index === 0 ? <span className="brett-aktionsliste__marke">Empfohlen</span> : null}
                   {aktionsLabel(gruppe.aktion)}
                   {gruppe.anzahl > 1 ? ` (${gruppe.anzahl} gleichwertige Karten)` : ''}
                 </button>
@@ -335,6 +378,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
 
       {/* 7 — Statuszeile */}
       <footer className="brett-status brett-bereich" aria-label="Spielverlauf">
+        <span className="brett-status__pflicht">{pflichtschritt}</span>
         <span>
           <span className="brett-status__leise">Nachziehstapel </span>
           {zustand.nachziehstapel.length}

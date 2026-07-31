@@ -280,6 +280,25 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   overflow-y: auto;
 }
 
+.brett-gegner__liste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--brett-luft);
+}
+
+.brett-geheimaufgabe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-block-end: var(--brett-luft-eng);
+  border-block-end: 1px solid var(--brett-flaeche-tief);
+  font-size: 0.82rem;
+}
+
+.brett-status__pflicht {
+  font-weight: 700;
+}
+
 .brett-aktionsliste {
   display: flex;
   flex-direction: column;
@@ -287,7 +306,17 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
 }
 
 .brett-aktionsliste__eintrag {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
   font-size: 0.85rem;
+}
+
+.brett-aktionsliste__marke {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* ---- 5 Handleiste ---------------------------------------------------- */
