@@ -104,21 +104,17 @@ describe('M3i Stitch-Forest-Arena-Promotion (Cap-Senkung für 1280x900-Erstbild)
     }
   })
 
-  it('M3i:1 — Arenasstein-Cap auf M3i-Wert gesenkt (M9.5-Contract migriert)', () => {
-    // M9.5 hatte height: clamp(24rem, 50vh, 32rem) — M3i senkt auf
-    // clamp(20rem, 42vh, 26rem), damit 72px in die Bottom-Row wandern.
-    const capRe = /height:\s*clamp\(\s*20rem\s*,\s*42vh\s*,\s*26rem\s*\)/
-    const capMaxRe = /max-height:\s*clamp\(\s*20rem\s*,\s*42vh\s*,\s*26rem\s*\)/
-    const oldCapRe = /clamp\(\s*24rem\s*,\s*50vh\s*,\s*32rem\s*\)/
-    const allBlocks = cssBlockAll('.spielbereich--game-route [class~="waldtanz-arenastein"]')
-    expect(allBlocks.length).toBeGreaterThanOrEqual(2)
-    allBlocks.forEach((block, i) => {
-      expect(block, `Arenasstein-Regel #${i + 1} muss die M3i-Cap haben`).toMatch(capRe)
-      expect(block, `Arenasstein-Regel #${i + 1} max-height muss M3i-Cap haben`).toMatch(capMaxRe)
-      // Cascade-Safe: Alte M9.5-Cap darf NICHT mehr vorkommen.
-      expect(block, `Arenasstein-Regel #${i + 1} darf M9.5-Cap 24rem/50vh/32rem NICHT mehr haben`).not.toMatch(oldCapRe)
-    })
-  })
+  /* ÄNDERUNG [31.07.2026]: S-2c — Test entfallen: „M3i:1 — Arenasstein-Cap auf M3i-Wert gesenkt (M9.5-Contract migriert)"
+
+     Er las im CSS-Quelltext einen Wert, den der Brettrand-Pivot abgeschafft hat
+     (Bühnen-/Kartenhöhe bzw. Arena-clamp). Die Bodenleiste liegt seit S-2c am
+     Viewport-Boden, die Arenazeile nimmt `minmax(0, 1fr)` statt eines von Hand
+     gerechneten clamp(), und die Hero-Größen aus M2x/M2i gelten wieder.
+
+     Die Absicht wird gemessen statt gelesen:
+     tests/layout/hand_am_brettrand.spec.ts prüft Bühnen- und Kartenhöhe,
+     tests/layout/spielbrett_zeilen.spec.ts, dass keine Zeile ihren Inhalt
+     sprengt. */
 
   it('M3i:2 — Schlangenlichtung-Spielflaeche min-height auf M3i-Wert gesenkt (Pitfall #11)', () => {
     // M1di hatte min-height: clamp(14rem, 32vh, 20rem) — M3i senkt auf
@@ -131,16 +127,17 @@ describe('M3i Stitch-Forest-Arena-Promotion (Cap-Senkung für 1280x900-Erstbild)
     expect(m3iBlock, 'M3i-Override-Block fuer Schlangenlichtung-Spielflaeche min-height muss existieren').toBeDefined()
   })
 
-  it('M3i:3 — Handkarten-Karten-Hoehe auf M3i-Wert gesenkt (M1f-Contract migriert)', () => {
-    // M1f hatte height: clamp(6rem, 11vh, 7rem) — M3i senkt auf
-    // clamp(5rem, 9vh, 6rem), damit 5 Karten + Buehne + Spielerplakette
-    // im 900vh-Viewport bleiben.
-    const m3iKarteRe = /height:\s*clamp\(\s*5rem\s*,\s*9vh\s*,\s*6rem\s*\)/
-    const allBlocks = cssBlockAll('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
-    expect(allBlocks.length, 'mindestens 1 route-scoped Block fuer handkarte__button--karte').toBeGreaterThanOrEqual(1)
-    const m3iBlock = allBlocks.find((b) => m3iKarteRe.test(b))
-    expect(m3iBlock, 'M3i-Override-Block fuer handkarte__button--karte height muss M3i-Wert haben').toBeDefined()
-  })
+  /* ÄNDERUNG [31.07.2026]: S-2c — Test entfallen: „M3i:3 — Handkarten-Karten-Hoehe auf M3i-Wert gesenkt (M1f-Contract migriert)"
+
+     Er las im CSS-Quelltext einen Wert, den der Brettrand-Pivot abgeschafft hat
+     (Bühnen-/Kartenhöhe bzw. Arena-clamp). Die Bodenleiste liegt seit S-2c am
+     Viewport-Boden, die Arenazeile nimmt `minmax(0, 1fr)` statt eines von Hand
+     gerechneten clamp(), und die Hero-Größen aus M2x/M2i gelten wieder.
+
+     Die Absicht wird gemessen statt gelesen:
+     tests/layout/hand_am_brettrand.spec.ts prüft Bühnen- und Kartenhöhe,
+     tests/layout/spielbrett_zeilen.spec.ts, dass keine Zeile ihren Inhalt
+     sprengt. */
 
   it('M3i:4 — Cascade-Safe: Arenasstein behält display/flex-direction/overflow (Pitfall #30)', () => {
     // Additive-Override-Discipline: alle existierenden Properties der

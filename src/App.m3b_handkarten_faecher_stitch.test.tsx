@@ -63,14 +63,17 @@ describe('M3b Handkarten-Stitch-Fächer', () => {
     expect(last[1], 'letzter (cascade-winning) handkarten-spielbarkeit-Block enthaelt display:none').toMatch(/display:\s*none/)
   })
 
-  it('M3b:3 senkt die Handkarten-Bühne min-height auf clamp(2.2rem, 4.5vh, 2.6rem)', () => {
-    const css = leseCss()
-    const m = css.match(
-      /\.spielbereich--game-route[^{]*\[class~="handkarten-buehne"\][^{]*\{([^}]*)\}/,
-    )
-    expect(m).not.toBeNull()
-    expect(m![1]).toMatch(/min-height:\s*clamp\(2\.2rem,\s*4\.5vh,\s*2\.6rem\)/)
-  })
+  /* ÄNDERUNG [31.07.2026]: S-2c — Test entfallen: „M3b:3 senkt die Handkarten-Bühne min-height auf clamp(2.2rem, 4.5vh, 2.6rem)"
+
+     Er las im CSS-Quelltext einen Wert, den der Brettrand-Pivot abgeschafft hat
+     (Bühnen-/Kartenhöhe bzw. Arena-clamp). Die Bodenleiste liegt seit S-2c am
+     Viewport-Boden, die Arenazeile nimmt `minmax(0, 1fr)` statt eines von Hand
+     gerechneten clamp(), und die Hero-Größen aus M2x/M2i gelten wieder.
+
+     Die Absicht wird gemessen statt gelesen:
+     tests/layout/hand_am_brettrand.spec.ts prüft Bühnen- und Kartenhöhe,
+     tests/layout/spielbrett_zeilen.spec.ts, dass keine Zeile ihren Inhalt
+     sprengt. */
 
   it('M3b:4 engt die Handkartenleiste-Kartenleiste enger an Bühne (margin-top: -0.8rem)', () => {
     const css = leseCss()
@@ -99,25 +102,15 @@ describe('M3b Handkarten-Stitch-Fächer', () => {
     expect(istVerdrahtet('m3b_handkarten_faecher_stitch_smoke.mjs')).toBe(true)
   })
 
-  it('M3b:8 M2x:1-Bühne-min-height-Vertrag migriert (von 2.6rem auf 2.2rem)', () => {
-    const css = leseCss()
-    // Es gibt mehrere route-scoped Bloecks (M1f-Basis + M2x-Override +
-    // Descendant-Regeln). Wir lesen den LETZTEN Block — der gewinnt per
-    // later-source-wins die Cascade. M3b hat den M2x-Block auf das
-    // neue clamp-Format migriert.
-    const matches = Array.from(
-      css.matchAll(
-        /\.spielbereich--game-route\s+\[class~="handkarten-buehne"\][^{]*\{([^}]*)\}/g
-      )
-    )
-    expect(matches.length, 'mindestens 1 route-scoped handkarten-buehne-Block').toBeGreaterThanOrEqual(1)
-    // Letzter (spaetester) Block — M2x-Override nach M3b-Migration
-    const last = matches[matches.length - 1]
-    expect(last[1], 'letzter handkarten-buehne-Block enthaelt min-height clamp(2.2rem, 4.5vh, 2.6rem)').toMatch(/min-height:\s*clamp\(2\.2rem,\s*4\.5vh,\s*2\.6rem\)/)
-    // Sicherstellen, dass die letzte min-height-Deklaration NICHT die alte Form hat
-    const minHeightMatch = last[1].match(/min-height:\s*([^;]+)/)
-    expect(minHeightMatch).not.toBeNull()
-    const value = minHeightMatch?.[1]?.trim() ?? ''
-    expect(value).not.toMatch(/clamp\(2\.6rem,\s*5\.5vh,\s*3\.2rem\)/)
-  })
+  /* ÄNDERUNG [31.07.2026]: S-2c — Test entfallen: „M3b:8 M2x:1-Bühne-min-height-Vertrag migriert (von 2.6rem auf 2.2rem)"
+
+     Er las im CSS-Quelltext einen Wert, den der Brettrand-Pivot abgeschafft hat
+     (Bühnen-/Kartenhöhe bzw. Arena-clamp). Die Bodenleiste liegt seit S-2c am
+     Viewport-Boden, die Arenazeile nimmt `minmax(0, 1fr)` statt eines von Hand
+     gerechneten clamp(), und die Hero-Größen aus M2x/M2i gelten wieder.
+
+     Die Absicht wird gemessen statt gelesen:
+     tests/layout/hand_am_brettrand.spec.ts prüft Bühnen- und Kartenhöhe,
+     tests/layout/spielbrett_zeilen.spec.ts, dass keine Zeile ihren Inhalt
+     sprengt. */
 })

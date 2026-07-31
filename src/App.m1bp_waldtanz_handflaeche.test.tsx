@@ -67,10 +67,12 @@ describe('M1bp Waldtanz-Handfläche', () => {
     // Direkter CSS-Source-Match mit `matchAll` (PITFALL: pre-existing cssBlock-
     // Helper bricht bei langen Kommentaren; `appCss.match` greift ersten
     // Kommentar-Match statt echten Block).
-    const heightMatches = [...appCss.matchAll(/height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
-    const minHeightMatches = [...appCss.matchAll(/min-height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/g)]
-    expect(heightMatches.length, 'mindestens 1 height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
-    expect(minHeightMatches.length, 'mindestens 1 min-height:clamp(5rem, 9vh, 6rem) in src/App.css').toBeGreaterThan(0)
+    /* ÄNDERUNG [31.07.2026]: S-2c — CSS-Quelltext-Assert auf die M3i-Kartenhöhe
+       `clamp(5rem, 9vh, 6rem)` entfernt. M3i hatte diesen Wert gesenkt, damit die
+       Hand ins Erstbild rutscht, und dabei den M2i-Hero-Vertrag (>= 100 px)
+       unterschritten. Seit die Bodenleiste am Viewport-Boden verankert ist, gilt
+       wieder die Hero-Größe. Gemessen statt gelesen:
+       tests/layout/hand_am_brettrand.spec.ts */
     expect(karte).toMatch(/padding:\s*0\.35rem/)
     // AENDERUNG 26.06.2026 (M1f): Buehne ist jetzt eine echte Stitch-Zone
     // (gap 0.4 rem statt 0.25, plus Border + Shadow + Innenhoehe).

@@ -442,14 +442,6 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                   </aside>
                 </div>
               </section>
-              {istGameRoute && (
-                <WaldtanzSpielerplakette
-                  spielerName={aktiverSpieler.name}
-                  istMensch={aktiverSpieler.steuerung === 'Mensch'}
-                  punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
-                  handkarten={aktiverSpieler.hand.length}
-                />
-              )}
               <aside className="waldtanz-zugseitenleiste" aria-label="Zugleiste">
                 {istGameRoute && (
                   <div className="waldtanz-unterholzleiste" role="group" aria-label="Waldtanz-Unterholzleiste">
@@ -500,6 +492,23 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 <Partiefortschritt zustand={zustand} spielerwertungen={spielerwertungen} />
                 <WaldtanzBonuszauber aktionen={versteckeKiEinzelaktionen ? [] : verdopplerAktionen} ausgewaehlteHandkarteId={ausgewaehlteHandkarte?.id ?? null} onAktion={fuhreAktionAus} />
               </aside>
+              {/* ÄNDERUNG [31.07.2026]: S-2c — Spielerplakette, Hand und Gegnerzug-Knopf
+                  liegen jetzt in einer gemeinsamen Bodenleiste. Im Grid bildeten sie
+                  schon immer eine Reihe ("sp-plakette hand arenazug"), im DOM standen
+                  sie aber getrennt — die Plakette vor der Zugleiste, die anderen beiden
+                  danach. Erst als ein Element lässt sich die Reihe geschlossen am
+                  Viewport-Boden verankern; nur die Hand zu fixieren schob Plakette und
+                  Gegnerzug-Knopf hinter sie (gemessen 745-889 px unter einer Hand ab
+                  648 px). Vertrag: tests/layout/hand_am_brettrand.spec.ts */}
+              <div className="waldtanz-brettrandleiste">
+              {istGameRoute && (
+                <WaldtanzSpielerplakette
+                  spielerName={aktiverSpieler.name}
+                  istMensch={aktiverSpieler.steuerung === 'Mensch'}
+                  punkte={aktiverSpielerWertung?.gesamtPunkte ?? 0}
+                  handkarten={aktiverSpieler.hand.length}
+                />
+              )}
               <HandkartenPanel
                 handkarten={aktiverSpieler.hand}
                 ausgewaehlteHandkarte={ausgewaehlteHandkarte}
@@ -535,6 +544,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
                 onKarteDragEnd={() => { gezogeneHandkarteIdRef.current = null; setAusgewaehlteHandkarteAuswahl(null); setHandkarteDragAktiv(false) }}
               />
               {istGameRoute && <WaldtanzArenazugknopf id={phasenaktionId} hervorgehoben={hervorgehobenesAktionszielId === phasenaktionId} zustand={zustand} ueberhand={ueberhand} zeigtKiVorspulen={versteckeKiEinzelaktionen} onAusspielphaseBeenden={handleAusspielphaseBeenden} onAufgabenpruefungBeenden={handleAufgabenpruefungBeenden} onUeberzaehligeKartenAbwerfen={handleUeberzaehligeKartenAbwerfen} onZugBeenden={handleZugBeenden} onAusspielphaseStarten={handleAusspielphaseStarten} />}
+              </div>
             </section>
             {!istGameRoute && <AktionenPanel {...aktionenPanelProps} />}
             {!istGameRoute && (

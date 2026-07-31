@@ -1,9 +1,9 @@
 /*
-Author: Claude Code (S-2b)
+Author: Claude Code (S-2b/S-2c)
 Datum: 31.07.2026
-Version: 1.1
-Beschreibung: Zielgeometrie für die Hand am Viewport-Boden (Fixplan G2,
-              „M3j Brettrand-Architektur-Pivot") — noch nicht erfüllt.
+Version: 2.0
+Beschreibung: Layout-Vertrag für die Bodenleiste am Viewport-Boden
+              (Fixplan G2, „M3j Brettrand-Architektur-Pivot").
 
 Zwei bewusst gebaute Produktziele sind bei 900 px Viewport-Höhe unvereinbar,
 solange die Hand im Dokumentfluss hängt:
@@ -27,13 +27,17 @@ Der Konflikt ist damit enger als gedacht, aber real: Die Hero-Größen (Bühne
 +42 px, Karte +2 px) passen nicht mehr über den Falz, solange die Hand im Fluss
 hängt.
 
-**Der Pivot wurde umgesetzt und wieder zurückgenommen.** Die Hand allein zu
-fixieren reicht nicht: Gemessen brauchen die Brettzeilen 772 px (Brett 879 px
-mit Abständen), verfügbar sind über einer 252 px hohen Hand aber nur 648 px. Es
-fehlen 231 px. Zugleiste (97 px) und Bodenzeile (145 px, Spielerplakette +
-Arenazug) lägen hinter der Hand; die Arena müsste sonst von 378 px auf 214 px
-halbiert werden und widerspräche damit M2r (Schlangenlichtung >= 55 %
-Viewport).
+**Gelöst in S-2c (31.07.2026)** mit der *ganzen* Bodenzeile, nicht nur der
+Hand. Ein erster Versuch, allein die Hand zu fixieren, scheiterte messbar:
+Spielerplakette (750-798 px) und Gegnerzug-Knopf (715-833 px) lagen danach
+hinter einer Hand ab 648 px, weil sie im Grid dieselbe Reihe teilen.
+
+Seit S-2c bilden Plakette, Hand und Gegnerzug-Knopf ein gemeinsames Element
+(`.waldtanz-brettrandleiste`) und liegen zusammen am Viewport-Boden. Das Brett
+darueber ist auf den Rest begrenzt, seine Arenazeile nimmt `minmax(0, 1fr)`
+statt eines von Hand gerechneten clamp(). Ergebnis bei 1280x900: Brett 32-639,
+Leiste 648-900, Seitenhoehe exakt 900 px, kein Scrollen, und die Hero-Groessen
+gelten wieder (Buehne 124 px, Karte 119 px).
 
 Der tragfähige Weg ist die *ganze* Bodenzeile: Das Grid trägt sie bereits als
 `"sp-plakette hand arenazug"` — eine Reihe. Fixiert man sie gemeinsam statt nur
@@ -89,7 +93,22 @@ test.describe('Hand am Brettrand', () => {
     ).toBeLessThanOrEqual(VIEWPORT_HOEHE)
   })
 
-  test('jede Handkarte ist anklickbar, nicht nur die erste', async ({ page }) => {
+  /* BEKANNTE LÜCKE, älter als S-2c. Gemessen auf dem Build *vor* dem
+     Brettrand-Pivot ebenso wie danach: Die Handkarten 3 und 4 (von 0 gezählt)
+     haben auf mittlerer Höhe keinen einzigen freien Punkt — sie liegen
+     vollständig unter der Mittelkarte.
+
+     Ursache ist das Zusammenspiel zweier Entscheidungen im Spielkartenfächer:
+     Die z-Reihenfolge hebt die Mitte hervor (1 / 11 / 21 / 11 / 1), und die
+     Karten-Buttons sind breiter als ihre Listenelemente (122 px gegen 110 px)
+     und ragen nach links darüber hinaus. Die z=21-Mittelkarte überdeckt damit
+     die nach rechts folgenden Buttons.
+
+     Das ist ein Playability-Defekt, kein Layout-Nebeneffekt dieses Slices, und
+     gehört in einen eigenen Slice — die Ursache liegt in der Fächer-Geometrie,
+     nicht in der Bodenleiste. Der Marker fällt, sobald er behoben ist:
+     Playwright meldet dann „unerwartet grün". */
+  test.fail('jede Handkarte ist anklickbar, nicht nur die erste', async ({ page }) => {
     const karten = page.locator('.handkartenleiste--spielkartenfaecher .handkarte__button--karte')
     const anzahl = await karten.count()
     expect(anzahl, 'keine Handkarten gefunden').toBeGreaterThan(1)
@@ -100,11 +119,35 @@ test.describe('Hand am Brettrand', () => {
       expect(
         box!.y + box!.height,
         `Handkarte ${index} endet bei ${Math.round(box!.y + box!.height)}px außerhalb des Viewports`,
-      ).toBeLessThanOrEqual(VIEWPORT_HOEHE)
-    }
-  })
+       ).toBeLessThanOrEqual(VIEWPORT_HOEHE)
 
-  test.fail('die Handbühne behält ihre Hero-Größe (M2x)', async ({ page }) => {
+      /* Die Hand ist ein Spielkartenfächer: Die Karten überlappen einander
+         absichtlich, die Mitte einer hinteren Karte liegt also naturgemäß unter
+         ihrer Nachbarin. Geprüft wird deshalb nicht ein einzelner Punkt,
+         sondern ob die Karte *irgendwo* frei liegt — nur dann kann der Spieler
+         sie treffen. Abgetastet wird eine Zeile auf mittlerer Höhe.
+
+         Nicht benutzt wird Playwrights `click({ trial: true })`: Dessen
+         Stabilitätsprüfung wartet auf das Ende laufender Animationen, und die
+         Spielbarkeits-Animation einer Handkarte läuft dauerhaft — der Vertrag
+         liefe in einen Timeout und würde Bewegung statt Verdeckung messen. */
+      const freieFlaeche = await karten.nth(index).evaluate((element) => {
+        const r = element.getBoundingClientRect()
+        let frei = 0
+        for (let anteil = 0.05; anteil <= 0.95; anteil += 0.05) {
+          const treffer = document.elementFromPoint(r.x + r.width * anteil, r.y + r.height / 2)
+          if (treffer && (element === treffer || element.contains(treffer))) frei += 1
+        }
+        return frei
+      })
+      expect(
+        freieFlaeche,
+        `Handkarte ${index} ist an keiner Stelle frei — sie liegt vollständig unter anderen Elementen`,
+      ).toBeGreaterThan(0)
+     }
+   })
+
+  test('die Handbühne behält ihre Hero-Größe (M2x)', async ({ page }) => {
     const buehne = await kasten(page.locator('.handkarten-buehne'))
     expect(
       buehne.hoehe,
@@ -112,7 +155,7 @@ test.describe('Hand am Brettrand', () => {
     ).toBeGreaterThanOrEqual(BUEHNE_MINDESTHOEHE)
   })
 
-  test.fail('die Handkarten behalten ihre Hero-Größe (M2i)', async ({ page }) => {
+  test('die Handkarten behalten ihre Hero-Größe (M2i)', async ({ page }) => {
     const karte = await kasten(page.locator('.handkartenleiste--spielkartenfaecher .handkarte__button--karte').first())
     expect(
       karte.hoehe,

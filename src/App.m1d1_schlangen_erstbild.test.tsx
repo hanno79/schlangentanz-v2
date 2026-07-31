@@ -91,24 +91,17 @@ describe('M1d1 Waldtanz-Schlangen-Erstbild', () => {
     expect(maxRem).toBeLessThanOrEqual(7)
   })
 
-  it('erhöht das Arena-Grid-Row-Clamp auf mindestens 19rem', () => {
-    const block = cssBlockForSelector(
-      '.spielbereich--game-route [class~="spielbrett--waldtanz"]',
-    )
-    // Suche grid-template-rows und den Arena-Clamp.
-    const rowsMatch = block.match(/grid-template-rows\s*:\s*([^;]+)/)
-    expect(rowsMatch).toBeTruthy()
-    const rowsValue = rowsMatch![1]
-    // Finde den Arena-Clamp (enthält rem und vh).
-    const arenaClampMatch = rowsValue.match(/clamp\((\d+(?:\.\d+)?)rem[^)]+\)/g)
-    expect(arenaClampMatch).toBeTruthy()
-    // Mindestens ein clamp mit MIN >= 19rem.
-    const hasWiderClamp = arenaClampMatch!.some((clamp) => {
-      const minRem = parseFloat(clamp.match(/clamp\((\d+(?:\.\d+)?)rem/)![1])
-      return minRem >= 19
-    })
-    expect(hasWiderClamp).toBe(true)
-  })
+  /* ÄNDERUNG [31.07.2026]: S-2c — Test entfallen: „erhöht das Arena-Grid-Row-Clamp auf mindestens 19rem"
+
+     Er las im CSS-Quelltext einen Wert, den der Brettrand-Pivot abgeschafft hat
+     (Bühnen-/Kartenhöhe bzw. Arena-clamp). Die Bodenleiste liegt seit S-2c am
+     Viewport-Boden, die Arenazeile nimmt `minmax(0, 1fr)` statt eines von Hand
+     gerechneten clamp(), und die Hero-Größen aus M2x/M2i gelten wieder.
+
+     Die Absicht wird gemessen statt gelesen:
+     tests/layout/hand_am_brettrand.spec.ts prüft Bühnen- und Kartenhöhe,
+     tests/layout/spielbrett_zeilen.spec.ts, dass keine Zeile ihren Inhalt
+     sprengt. */
 
   it('behält den Schlangenbereich strukturell innerhalb des Arenastein', () => {
     window.history.pushState({}, '', '/game')

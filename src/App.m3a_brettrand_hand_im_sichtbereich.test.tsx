@@ -59,9 +59,12 @@ describe('M3a Handkarten im Sichtbereich auf /game', () => {
       )
     )
     expect(matches.length, 'mindestens 1 route-scoped handkarten-buehne-Block').toBeGreaterThanOrEqual(1)
-    // Letzter (spaetester) Block muss den M3b-clamp enthalten
-    const last = matches[matches.length - 1]
-    expect(last[1], 'letzter handkarten-buehne-Block enthaelt min-height clamp(2.2rem, 4.5vh, 2.6rem)').toMatch(/min-height:\s*clamp\(2\.2rem,\s*4\.5vh,\s*2\.6rem\)/)
+    /* ÄNDERUNG [31.07.2026]: S-2c — CSS-Quelltext-Assert auf die M3b-Bühnenhöhe
+       `clamp(2.2rem, 4.5vh, 2.6rem)` entfernt. Der Wert war die letzte von vier
+       Reduktionen (7,4rem -> 5,5rem -> 3,2rem -> 2,6rem), die alle demselben Zweck
+       dienten: die Hand in den 900-px-Viewport quetschen. Mit der verankerten
+       Bodenleiste gilt wieder der M2x-Vertrag (Bühne >= 95 px). Gemessen statt
+       gelesen: tests/layout/hand_am_brettrand.spec.ts */
   })
 
   it('M3a:2 CSS-Source: handkarten-buehne__spielerplakette padding 0.18rem 0.55rem + bottom 0rem', () => {

@@ -38,8 +38,8 @@ body.scrollHeight 1061 px, Arenastein 378 px.
 import { expect, test } from '@playwright/test'
 import {
   berechneterStil,
-  erwarteHoeheImRemBereich,
   hoeheVon,
+  kasten,
   seitenHoehe,
   unterkanteVon,
 } from './messung'
@@ -53,9 +53,24 @@ test.beforeEach(async ({ page }) => {
 })
 
 test.describe('Waldtanz-Arena im 1280×900-Erstbild', () => {
-  test('Arenastein bleibt in der M3i-Cap von 20rem bis 26rem', async ({ page }) => {
-    const arenastein = page.getByRole('region', { name: 'Waldtanz-Arenastein' })
-    await erwarteHoeheImRemBereich(page, arenastein, 20, 26, 'Arenastein-Cap (M3i)')
+  /* ÄNDERUNG [31.07.2026]: S-2c — aus einem Cap-Bereich wurde eine
+     Verhältnisprüfung. Die Arena trägt seit dem Brettrand-Pivot keinen eigenen
+     clamp() mehr, sondern nimmt als `minmax(0, 1fr)` den Raum, den Brett und
+     Bodenleiste übriglassen. Ein fester rem-Bereich wäre damit wieder eine
+     Zahl, die bei jeder Nachbaränderung nachgezogen werden müsste — genau die
+     Arithmetik, die der Pivot abgeschafft hat.
+
+     Geprüft wird stattdessen, was der Vertrag meint: Die Arena ist die
+     Hauptfläche des Bretts und muss den Löwenanteil des Brettraums bekommen. */
+  test('die Arena bekommt den Hauptteil der Bretthöhe', async ({ page }) => {
+    const arena = await kasten(page.getByRole('region', { name: 'Waldtanz-Arenastein' }))
+    const brett = await kasten(page.locator('.spielbrett--waldtanz'))
+
+    const anteil = arena.hoehe / brett.hoehe
+    expect(
+      anteil,
+      `Arena ${Math.round(arena.hoehe)}px von ${Math.round(brett.hoehe)}px Brett (${Math.round(anteil * 100)} %)`,
+    ).toBeGreaterThan(0.35)
   })
 
   test('Arenastein behält seinen Layoutmodus (Cascade-Schutz)', async ({ page }) => {

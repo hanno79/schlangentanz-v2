@@ -37,6 +37,15 @@
      --handkarte-lift-y hebt die ausgewaehlte Handkarte aus dem Faecher,
      --handkarte-selected-glow legt einen weichen lime-gruenen Schein um
      sie herum, der die Stitch-Spielkarte als Spielmoment markiert. */
+  /* ÄNDERUNG [31.07.2026]: S-2c — Höhe der am Viewport-Boden verankerten
+     Bodenleiste (Spielerplakette + Hand + Gegnerzug-Knopf). Eine Quelle für
+     zwei Stellen: Die Leiste belegt diese Höhe, das Spielbrett hält sie frei.
+     Solange beide denselben Wert lesen, kann keine Anpassung die andere Seite
+     vergessen — genau daran ist die frühere, über viele Dateien verteilte
+     Cap-Arithmetik gescheitert.
+     Bemessen für die Hero-Größen: Bühne >= 95 px (M2x) + Karte >= 100 px (M2i)
+     + Abstände. Vertrag: tests/layout/hand_am_brettrand.spec.ts */
+  --st-brettrandleiste-hoehe: clamp(13rem, 24.5vh, 15rem);
   --handkarte-lift-y: -3.5rem;
   --handkarte-selected-glow: 0 0 0 4px rgba(164, 222, 2, 0.62), 0 6px 0 var(--st-color-border-strong);
   --handkarte-dim-opacity: 0.86;
@@ -1910,6 +1919,17 @@ code {
   position: relative;
   isolation: isolate;
   overflow: clip;
+  /* ÄNDERUNG [31.07.2026]: S-2c — das Brett endet dort, wo die verankerte
+     Bodenleiste beginnt. Ein Padding als Platzhalter reicht dafür nicht: Es
+     verlängert die Seite, statt das Brett zu begrenzen, und die untere
+     Brettreihe läge weiter hinter der Leiste.
+
+     Die Rechnung sitzt bewusst an der Hülle (`.app-shell--game`) und nicht
+     hier: Der Spielbereich beginnt erst unterhalb deren Innenabstands, eine
+     Höhe von `100dvh - Leiste` ragte also genau um diesen Abstand zu weit
+     nach unten. `100%` nimmt stattdessen, was die Hülle übriglässt.
+     Vertrag: tests/layout/hand_am_brettrand.spec.ts */
+  block-size: 100%;
   border-radius: 3rem;
   background:
     radial-gradient(circle at 14% 18%, rgba(255, 215, 0, 0.56) 0 5rem, transparent 5.2rem),
@@ -2351,11 +2371,20 @@ code {
        die Arenastein-Zeile auf clamp(24rem, 50vh, 32rem) = 480 px im
        900-Viewport, Aktionen + Zugseitenleiste auf clamp(1.6rem, 3vh, 2rem).
        Neue Math: 60 + 70 + 30 + 480 + 30 + 230 = 900 px (genau im Falz). */
+    /* ÄNDERUNG [31.07.2026]: S-2c — die Arena-Zeile nimmt den Rest statt einen
+       von Hand gerechneten Cap zu tragen. Die Kommentarhistorie darüber zählt
+       sieben Nachjustierungen dieses einen clamp(), jede als Reaktion darauf,
+       dass ein anderer Slice die Zeilensumme verschoben hatte. Mit `1fr` fällt
+       die Arithmetik weg: Das Brett ist auf den Raum über der Bodenleiste
+       begrenzt, die übrigen Zeilen nehmen ihren Inhalt, die Arena den Rest.
+       `minmax(0, 1fr)` statt `1fr`, damit sie unter ihre Inhaltsgröße darf —
+       sonst greift `min-height: auto` und die Zeile sprengt das Brett.
+       Vertrag: tests/layout/hand_am_brettrand.spec.ts */
     grid-template-rows:
       auto
       auto
       auto
-      minmax(0, clamp(20rem, 42vh, 26rem))
+      minmax(0, 1fr)
       auto
       auto;
     align-content: start;
@@ -3066,8 +3095,13 @@ code {
        AENDERUNG 30.06.2026 (M3b): Buehnen-Hoehe auf
        clamp(2.2rem, 4.5vh, 2.6rem) reduziert (35-42 px @900vh), damit
        die H4-Heading + Spielbarkeits-Pille weggeschnitten werden
-       koennen und die Karten-Top bei y~852 landet. */
-    min-height: clamp(2.2rem, 4.5vh, 2.6rem);
+       koennen und die Karten-Top bei y~852 landet.
+       ÄNDERUNG [31.07.2026]: S-2c — Hero-Höhe zurückgegeben. Die Reduktionen
+       darüber (7,4rem -> 5,5rem -> 3,2rem -> 2,6rem) dienten alle demselben
+       Zweck: die Hand in den 900-px-Viewport quetschen, solange sie im
+       Dokumentfluss hing. In der verankerten Bodenleiste entfällt der Zwang,
+       und der M2x-Vertrag (Bühne >= 95 px) gilt wieder. */
+    min-height: clamp(6.2rem, 11.5vh, 7.2rem);
     height: auto;
     padding: 0.18rem 0.45rem;
     border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
@@ -3344,8 +3378,12 @@ code {
        ermoeglicht es, dass die Hand-Bottom im 900-Viewport unter 870 px
        landet (vorher 945 px = 45 px unter Falz). M1f-RED-Test (RED-1) wird
        in M3i auf den neuen Wert migriert. */
-    height: clamp(5rem, 9vh, 6rem);
-    min-height: clamp(5rem, 9vh, 6rem);
+    /* ÄNDERUNG [31.07.2026]: S-2c — M3i hatte die Kartenhöhe von
+       clamp(6rem, 11vh, 7rem) auf clamp(5rem, 9vh, 6rem) gesenkt, damit die
+       Hand ins Erstbild rutscht, und dabei den M2i-Vertrag (>= 100 px)
+       unterschritten. In der verankerten Bodenleiste ist der Platz da. */
+    height: clamp(5.6rem, 10.2vh, 6.4rem);
+    min-height: clamp(5.6rem, 10.2vh, 6.4rem);
     border-width: var(--st-border-width-chunky);
     border-radius: 1.45rem;
     box-shadow: 0 7px 0 var(--st-color-border-strong);
@@ -11045,9 +11083,16 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    24rem/50vh/32rem gesenkt, damit die M9-Grid-Row tatsaechlich greift
    und die Hand im 900-Viewport sichtbar wird. Vorher: 40rem/72vh/46rem
    = 720 px Arenasstein → Hand bei y=988 (88 px unter Falz). */
+/* ÄNDERUNG [31.07.2026]: S-2c — die Arena folgt ihrer Grid-Zeile, statt einen
+   eigenen Cap zu tragen. Der feste Wert stammt aus der Zeit, als die Zeile
+   selbst ein clamp() war; seit die Zeile `minmax(0, 1fr)` nimmt, widersprachen
+   sich beide. Gemessen sprengte die Arena ihre Zeile um 267 px (378 gegen 111)
+   und schob alles darunter aus dem Bild — im Gegnerzug lag der Zugknopf
+   dadurch hinter der Schlangenlichtung.
+   Vertrag: tests/layout/spielbrett_zeilen.spec.ts */
 .spielbereich--game-route [class~="waldtanz-arenastein"] {
-  height: clamp(20rem, 42vh, 26rem);
-  max-height: clamp(20rem, 42vh, 26rem);
+  block-size: 100%;
+  min-block-size: 0;
 }
 .spielbereich--game-route [class~="waldtanz-arenastein__kopf"] {
   display: none !important;
@@ -11608,8 +11653,12 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
    die H4-Heading + Spielbarkeits-Pille weggeschnitten werden koennen
    und die Karten-Top bei y~852 landet (statt y=914). 51 px Buehne
    waere jetzt zu hoch; cap senken auf 42 px max erlaubt das. */
+/* ÄNDERUNG [31.07.2026]: S-2c — Hero-Höhe zurückgegeben, siehe den
+   gleichlautenden Block weiter oben. Diese Regel ist die spätere und gewinnt;
+   sie muss deshalb mitgezogen werden.
+   Vertrag: tests/layout/hand_am_brettrand.spec.ts */
 .spielbereich--game-route [class~="handkarten-buehne"] {
-  min-height: clamp(2.2rem, 4.5vh, 2.6rem);
+  min-height: clamp(5.9rem, 10.9vh, 6.6rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   box-shadow: var(--st-shadow-hard);
 }
@@ -11814,5 +11863,107 @@ li.schlangekarte[data-letzte-aktion-ziel^="schlange-"] {
 @media (prefers-reduced-motion: reduce) {
   .waldtanz-spielmat-boden__hexagon {
     animation: none;
+  }
+}
+
+
+/* ================================================================
+   S-2c (31.07.2026): Brettrand-Architektur-Pivot — die Bodenleiste
+
+   Spielerplakette, Hand und Gegnerzug-Knopf bildeten im Grid schon immer eine
+   Reihe ("sp-plakette hand arenazug"), lagen im DOM aber getrennt. Seit S-2c
+   sind sie ein Element und liegen gemeinsam am Viewport-Boden.
+
+   Warum überhaupt: Zwei bewusst gebaute Produktziele waren bei 900 px
+   Viewport-Höhe unvereinbar, solange die Reihe im Dokumentfluss hing —
+   „alles im Erstbild" (M1f/M1g/M9/M3i) gegen „Hand groß und präsent"
+   (M2x: Bühne >= 95 px, M2i: Karte >= 100 px). M3i entschied das faktisch,
+   indem es die Caps senkte, bis die Hand ins Bild rutschte: Bühne 53 px statt
+   95, Karte 98 px statt 100.
+
+   Ein früherer Versuch, nur die Hand zu fixieren, scheiterte messbar: Plakette
+   (793-842 px) und Gegnerzug-Knopf (745-889 px) lagen danach hinter einer Hand
+   ab 648 px. Deshalb die ganze Reihe.
+
+   Vertrag: tests/layout/hand_am_brettrand.spec.ts
+   ================================================================ */
+
+/* Vorgabe: Die Leiste ist durchsichtig fürs Layout — ihre drei Kinder wirken
+   wie zuvor als direkte Grid-Items des Bretts. So gilt auf der Lobby-Route und
+   auf schmalen Viewports unverändert das bisherige Verhalten. Verankert wird
+   sie erst ab 1000 px Breite (siehe den Block am Dateiende). */
+[class~="waldtanz-brettrandleiste"] {
+  display: contents;
+}
+
+@media (min-width: 1000px) {
+  .spielbereich--game-route [class~="waldtanz-brettrandleiste"] {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 4;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(8.5rem, 0.42fr) minmax(0, 1.16fr) minmax(8.5rem, 0.42fr);
+    grid-template-areas: "sp-plakette hand arenazug";
+    align-items: center;
+    gap: clamp(0.55rem, 1vw, 0.78rem);
+    block-size: var(--st-brettrandleiste-hoehe);
+    padding-inline: clamp(0.6rem, 1.4vw, 1.2rem);
+  }
+}
+
+/* ================================================================
+   S-2c (31.07.2026): Brett an die Viewport-Höhe binden
+
+   Erst ab 1000 px Breite. Darunter ist der Brettinhalt schlicht größer als der
+   Platz: Bei 900 px Breite misst die Schlangenlichtung allein über 1000 px.
+   Bindet man das Brett dort an den Viewport, verschluckt `overflow: clip` den
+   Überschuss — gemessen lag der Startkreis bei y=1233 und war weder per Maus
+   noch per `scrollIntoView` erreichbar, weil es keinen Scrollbereich gibt.
+   Schmalere Viewports behalten deshalb das bisherige Verhalten: Das Brett
+   wächst, die Seite scrollt.
+
+   Die Zielgeometrie dieses Slices ist für 1280x900 festgelegt und dort geprüft
+   (tests/layout/hand_am_brettrand.spec.ts). Ein tragfähiges Erstbild bei 900 px
+   Breite braucht einen eigenen Slice — der Engpass sitzt tiefer, das Spielfeld
+   bekommt dort nur 109 von 263 px des Arenasteins.
+   ================================================================ */
+@media (min-width: 1000px) {
+  /* Die Hülle spannt genau einen Bildschirm auf und hält unten den Platz der
+     Bodenleiste frei. Alles darüber teilt sich den Rest. */
+  .app-shell--game {
+    box-sizing: border-box;
+    block-size: 100dvh;
+    padding-block-end: var(--st-brettrandleiste-hoehe);
+    /* Auf /game trägt die Hülle genau ein Kind — den Spielbereich. Es bekommt
+       die volle Restzeile statt seiner Inhaltshöhe; ohne `stretch` behält
+       `align-content: start` aus dem Basis-Block die Zeile auf Inhaltsgröße und
+       der Spielbereich wächst wieder unter die Bodenleiste. `minmax(0, 1fr)`
+       erlaubt ihm zusätzlich, unter seine Inhaltsgröße zu gehen. */
+    grid-template-rows: minmax(0, 1fr);
+    align-content: stretch;
+  }
+
+  /* Die Höhenbegrenzung muss bis zum Brett-Grid durchreichen, sonst fällt dessen
+     `1fr`-Arenazeile auf die Inhaltsgröße zurück und das Grid wächst wieder
+     unter die Bodenleiste. Zwischen beiden liegen zwei Container ohne eigene
+     Höhe. `min-block-size: 0` hebt die Grid-/Flex-Vorgabe `auto` auf — ohne sie
+     kann kein Nachkomme unter seine Inhaltsgröße.
+
+     Reihenfolge der Selektoren mit Bedacht: `[class~="spielbrett--waldtanz"]`
+     steht bewusst nicht am Ende. src/App.m2e_… liest die *letzte* Regel dieser
+     Form als M2e-Override; stünde sie hier zuletzt, wäre diese Gruppe gemeint
+     und der M2e-Vertrag (flex: 1 1 auto) läse den falschen Block.
+
+     `box-sizing: border-box`, weil das Brett sonst seine 18 px Innenabstand und
+     4 px Rahmen *zusätzlich* zu den 100 % rechnet und um 38 px übersteht. */
+  .spielbereich--game-route [class~="spielbrett--waldtanz"],
+  .spielbereich--game-route [class~="spieltisch-gruppe"],
+  .spielbereich--game-route [class~="info-panel--waldtanz-arena"] {
+    min-block-size: 0;
+    block-size: 100%;
+    box-sizing: border-box;
   }
 }

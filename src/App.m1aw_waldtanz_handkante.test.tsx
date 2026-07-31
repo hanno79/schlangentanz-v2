@@ -61,9 +61,12 @@ describe('M1aw Waldtanz-Handkante', () => {
     // spezifischeren Spielkartenfaecher-Kaskade statt im einfachen Basis-Selector, und
     // die Kartenreihe clippt nicht mehr per overflow:hidden, sondern der Handkarte-Wrapper
     // erlaubt overflow:visible, damit die handkarte-wackelt-Hebeanimation nicht abgeschnitten wird.
-    const kartenBlock = cssBlock('.spielbereich--game-route [class~="handkartenleiste--spielkartenfaecher"] [class~="handkarte__button--karte"]')
-    expect(kartenBlock).toMatch(/height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/)
-    expect(kartenBlock).toMatch(/min-height:\s*clamp\(5rem,\s*9vh,\s*6rem\)/)
+    /* ÄNDERUNG [31.07.2026]: S-2c — CSS-Quelltext-Assert auf die M3i-Kartenhöhe
+       `clamp(5rem, 9vh, 6rem)` entfernt. M3i hatte diesen Wert gesenkt, damit die
+       Hand ins Erstbild rutscht, und dabei den M2i-Hero-Vertrag (>= 100 px)
+       unterschritten. Seit die Bodenleiste am Viewport-Boden verankert ist, gilt
+       wieder die Hero-Größe. Gemessen statt gelesen:
+       tests/layout/hand_am_brettrand.spec.ts */
     expect(appCss.match(/^\.handkarte \{([^}]*)\}/m)?.[1] ?? '').toMatch(/overflow:\s*visible/)
 
     expect(cssBlock('.spielbereich--game-route [class~="handkartenleiste--tiefenfaecher"]')).toMatch(/padding-block:\s*0/)

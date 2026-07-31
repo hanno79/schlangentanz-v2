@@ -98,11 +98,21 @@ const akzeptanz = (bedingung, hinweis) => {
   console.log(`[M3b] Spieler-Eyebrow: "${ergebnisse.spielerEyebrow}"`)
   console.log(`[M3b] Kanonischer Spielbar-Chip: "${ergebnisse.kanonischerSpielbarChip}"`)
 
-  // Akzeptanzen — Buehne-Hoehe: getBoundingClientRect enthaelt box-shadow-Extents
-  // (3px Chunky-Border + Hard-Shadow erweitert das Rect um 6-10 px). Wir
-  // pruefen daher die computed-style-Hoehe via innerem Helper, nicht die
-  // boundingRect-Hoehe. Hier pragmatisch: < 65px (border+shadow-inclusive).
-  akzeptanz(ergebnisse.handkartenBuehne.hoehe < 65, `Buehne-Hoehe ${ergebnisse.handkartenBuehne.hoehe.toFixed(0)}px < 65px inkl. Hard-Shadow (M3b:3)`)
+  /* Akzeptanz — Buehne-Hoehe.
+
+     ÄNDERUNG [31.07.2026]: S-2c — Schwelle von "< 65 px" auf ">= 95 px"
+     umgedreht. Das ist keine Aufweichung, sondern das Auflösen eines
+     Widerspruchs: M3b forderte hier eine flache Buehne (< 65 px), M2x im
+     Nachbarskript eine Hero-Buehne (>= 95 px). Beide Vertraege standen
+     gleichzeitig im Repo, keiner war entschieden — M3b hatte die Buehne nur
+     deshalb gestutzt, damit die Hand in den 900-px-Viewport passt, solange sie
+     im Dokumentfluss hing.
+
+     Seit S-2c liegt die Bodenleiste am Viewport-Boden verankert; der Zwang
+     entfaellt, und die Entscheidung fiel zugunsten der Hero-Groesse. Die
+     Schwelle wird hier einmalig auf die beschlossene Ziel-Geometrie gezogen,
+     nicht nachjustiert. Gemessener Vertrag: tests/layout/hand_am_brettrand.spec.ts */
+  akzeptanz(ergebnisse.handkartenBuehne.hoehe >= 95, `Buehne-Hoehe ${ergebnisse.handkartenBuehne.hoehe.toFixed(0)}px >= 95px (M2x-Hero, S-2c)`)
   akzeptanz(!ergebnisse.sectionH4.sichtbar, `Section-H4 versteckt (M3b:1)`)
   akzeptanz(!ergebnisse.spielbarkeitsPille.sichtbar, `Spielbarkeits-Pille versteckt (M3b:2)`)
   akzeptanz(ergebnisse.handkartenListe.y < 900, `Handkarten-Liste-Top y=${ergebnisse.handkartenListe.y.toFixed(0)}px < 900px (M3b:4 + Buehnen-Senkung)`)

@@ -75,14 +75,33 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     window.history.pushState({}, '', '/game')
     render(<App initialZustand={startZustand()} />)
     const spieltisch = screen.getByRole('region', { name: 'Spieltisch' })
-    const direkteKinder = Array.from(spieltisch.children) as HTMLElement[]
+    /* ÄNDERUNG [31.07.2026]: S-2c — Spielerplakette, Hand und Gegnerzug-Knopf
+       liegen seit dem Brettrand-Pivot in einer gemeinsamen Bodenleiste
+       (`.waldtanz-brettrandleiste`) und sind damit Enkel statt Kinder des
+       Spieltischs. Der Vertrag selbst bleibt unberührt: DOM-Reihenfolge muss
+       der Leserichtung folgen, damit Tab dem Auge folgt. Geprüft wird er
+       deshalb über die Leiste hinweg — sie wird an ihrer Stelle durch ihre
+       eigenen Kinder ersetzt. */
+    const direkteKinder = Array.from(spieltisch.children).flatMap((kind) =>
+      kind.classList.contains('waldtanz-brettrandleiste')
+        ? (Array.from(kind.children) as HTMLElement[])
+        : [kind as HTMLElement],
+    )
     const klassen = direkteKinder.map(k => k.className)
+    /* ÄNDERUNG [31.07.2026]: S-2c — Spielerplakette und Zugseitenleiste
+       getauscht. Die alte Erwartung stellte die Plakette vor die Zugleiste und
+       widersprach damit dem Vertrag, den dieser Test selbst formuliert:
+       `grid-template-areas` führt die Zeile `zugseitenleiste` vor der Bodenzeile
+       `"sp-plakette hand arenazug"`. Die Plakette stand im DOM also vor einem
+       Element, das visuell über ihr liegt — genau der A11y-Regress, den der Test
+       verhindern soll, nur eine Zeile weiter. Mit der Bodenleiste aus S-2c
+       stimmen DOM- und Leserichtung wieder überein. */
     const erwarteteReihenfolge = [
       /waldtanz-spielerrahmen/,
       /waldtanz-gegnerplakette/,
       /waldtanz-arenastein/,
-      /waldtanz-spielerplakette/,
       /waldtanz-zugseitenleiste/,
+      /waldtanz-spielerplakette/,
       /handkarten-panel/,
       /waldtanz-arenazug/,
     ]
