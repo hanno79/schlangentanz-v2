@@ -41,43 +41,55 @@ import {
 /** Regel 1 und 3 aus der Spezifikation: sieben Regionen, eine Rahmenebene. */
 const ELEMENT_BUDGET = 90
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    Math.random = () => 0.999999
-  })
-  await page.goto('/game', { waitUntil: 'networkidle' })
-})
+function waechterFuer(route: string, markiere: boolean) {
+  const pruefe = markiere ? test.fail : test
 
-test.describe('Brett-Wächter auf /game', () => {
-  test.fail('kein sichtbares Element schneidet seinen Inhalt ab', async ({ page }) => {
-    const befunde = await findeAbgeschnittenes(page)
-    expect(
-      befunde,
-      `${befunde.length} Element(e) schneiden ihren Inhalt ab:${befundListe(befunde)}`,
-    ).toEqual([])
-  })
+  test.describe(`Brett-Wächter auf ${route}`, () => {
+    test.beforeEach(async ({ page }) => {
+      await page.addInitScript(() => {
+        Math.random = () => 0.999999
+      })
+      await page.goto(route, { waitUntil: 'networkidle' })
+    })
 
-  test.fail('kein Bedienelement liegt außerhalb des Bildes', async ({ page }) => {
-    const befunde = await findeAusserhalbDesBildes(page)
-    expect(
-      befunde,
-      `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`,
-    ).toEqual([])
-  })
+    pruefe('kein sichtbares Element schneidet seinen Inhalt ab', async ({ page }) => {
+      const befunde = await findeAbgeschnittenes(page)
+      expect(
+        befunde,
+        `${befunde.length} Element(e) schneiden ihren Inhalt ab:${befundListe(befunde)}`,
+      ).toEqual([])
+    })
 
-  test.fail('kein Bedienelement ist vollständig verdeckt', async ({ page }) => {
-    const befunde = await findeVerdeckteBedienelemente(page)
-    expect(
-      befunde,
-      `${befunde.length} Bedienelement(e) vollständig verdeckt:${befundListe(befunde)}`,
-    ).toEqual([])
-  })
+    pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }) => {
+      const befunde = await findeAusserhalbDesBildes(page)
+      expect(
+        befunde,
+        `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`,
+      ).toEqual([])
+    })
 
-  test.fail(`die Seite zeigt höchstens ${ELEMENT_BUDGET} Elemente`, async ({ page }) => {
-    const anzahl = await zaehleSichtbareElemente(page)
-    expect(
-      anzahl,
-      `${anzahl} sichtbare Elemente — das Budget aus docs/SPIELBRETT_SPEC.md ist ${ELEMENT_BUDGET}`,
-    ).toBeLessThanOrEqual(ELEMENT_BUDGET)
+    pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }) => {
+      const befunde = await findeVerdeckteBedienelemente(page)
+      expect(
+        befunde,
+        `${befunde.length} Bedienelement(e) vollständig verdeckt:${befundListe(befunde)}`,
+      ).toEqual([])
+    })
+
+    pruefe(`die Seite zeigt höchstens ${ELEMENT_BUDGET} Elemente`, async ({ page }) => {
+      const anzahl = await zaehleSichtbareElemente(page)
+      expect(
+        anzahl,
+        `${anzahl} sichtbare Elemente — das Budget aus docs/SPIELBRETT_SPEC.md ist ${ELEMENT_BUDGET}`,
+      ).toBeLessThanOrEqual(ELEMENT_BUDGET)
+    })
   })
-})
+}
+
+/* Das alte Brett verletzt alle vier — als bekannte Lücke markiert, damit die
+   Suite nicht rot ist, der Anspruch aber sichtbar bleibt. Fällt mit G-8. */
+waechterFuer('/game', true)
+
+/* Das neue Brett muss sie halten. Ab hier gilt: Wer eine Regel bricht, merkt es
+   sofort. */
+waechterFuer('/brett', false)

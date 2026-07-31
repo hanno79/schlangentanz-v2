@@ -7,6 +7,7 @@ import {
 } from './engine'
 import type { SpielerWertungsEintrag, Spielzustand, PflichtAbwurfAktion } from './engine'
 import { usePartie } from './hooks/usePartie'
+import Spielbrett from './spielbrett/Spielbrett'
 import type { BrettschrittEintrag } from './hooks/usePartie'
 import useLegaleAktionenNachTyp from './hooks/useLegaleAktionenNachTyp'
 import useAktionenPanelProps from './hooks/useAktionenPanelProps'
@@ -60,10 +61,16 @@ interface AppProps {
 
 function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   const istGameRoute = typeof window !== 'undefined' && (window.location.pathname === '/game' || window.location.pathname.startsWith('/game/'))
+  /* ÄNDERUNG [31.07.2026]: G-2 — `/brett` zeigt das neue Spielbrett
+     (docs/SPIELBRETT_SPEC.md). Die Route ist temporär: In Paket G-8 übernimmt
+     das neue Brett `/game` und dieser Zweig entfällt wieder. Solange laufen
+     beide Ansichten nebeneinander auf derselben Zustandsschicht. */
+  const istBrettRoute = typeof window !== 'undefined' && window.location.pathname === '/brett'
   /* ÄNDERUNG [31.07.2026]: G-1 — die Zustandsschicht liegt jetzt in
      src/hooks/usePartie.ts. Sie stand vorher hier zwischen dem Markup; das neue
      Spielbrett soll dieselbe Quelle nutzen, damit während des Umbaus keine
      zweite Zustandsimplementierung entsteht. */
+  const partie = usePartie({ initialZustand, initialBrettschrittEintraege })
   const {
     zustand,
     letzteAktion,
@@ -91,7 +98,7 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     handleAusspielphaseStarten,
     handleKiZugVorspulen,
     handleNeuesLobbySpiel,
-  } = usePartie({ initialZustand, initialBrettschrittEintraege })
+  } = partie
   const {
     legaleAktionen,
     nichtEnumerierteAktionenHinweise,
@@ -174,6 +181,11 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     onKiZugVorspulen: handleKiZugVorspulen,
     istGameRoute,
   })
+
+  /* Erst hier, nach allen Hook-Aufrufen: React verlangt, dass jeder Hook bei
+     jedem Rendern in derselben Reihenfolge läuft. Ein früherer Ausstieg würde
+     das brechen. */
+  if (istBrettRoute) return <Spielbrett partie={partie} />
 
   return (
     <main className={`app-shell${istGameRoute ? ' app-shell--game' : ''}`}>

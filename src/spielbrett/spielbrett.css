@@ -1,0 +1,356 @@
+/*
+Author: Claude Code (G-2)
+Datum: 31.07.2026
+Version: 1.0
+Beschreibung: Stylesheet des neuen Spielbretts (docs/SPIELBRETT_SPEC.md).
+
+Selbsttragend: eigene Tokens statt der `--st-*` aus App.css, damit dieses Brett
+nicht von einem Stylesheet abhängt, das in Paket G-8 auf Lobby-Größe schrumpft.
+Die Farbwerte sind dieselben — die Waldtanz-Palette bleibt.
+
+Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
+  · keine festen Höhen-Caps auf Inhaltsflächen — der Inhalt bestimmt die Höhe,
+    passt er nicht, scrollt sein Container
+  · eine Rahmenebene — ein Spielobjekt hat einen Rahmen, sein Inhalt keinen
+  · kein !important, keine [class~=]-Tricks, keine route-gescopten Overrides
+  · z-index nur aus der Skala unten
+*/
+
+.spielbrett {
+  /* Farbwelt — Werte identisch zur bisherigen Waldtanz-Palette. */
+  --brett-flaeche: #ecffe3;
+  --brett-flaeche-tief: #d8f5c8;
+  --brett-linie: #063907;
+  --brett-text: #063907;
+  --brett-text-leise: rgba(6, 57, 7, 0.62);
+  --brett-akzent: #a4de02;
+  --brett-akzent-warm: #fecb00;
+  --brett-warnung: #b12d00;
+  --brett-weiss: #ffffff;
+
+  /* Abstände */
+  --brett-luft: 0.75rem;
+  --brett-luft-eng: 0.4rem;
+  --brett-rundung: 0.75rem;
+  --brett-rahmen: 2px;
+
+  /* Ebenen — die einzige z-index-Quelle dieses Bretts (Regel 5). */
+  --ebene-brett: 1;
+  --ebene-karte: 2;
+  --ebene-overlay: 3;
+
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17rem;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  grid-template-areas:
+    'kopf    kopf'
+    'flaeche seite'
+    'gegner  gegner'
+    'hand    aktion'
+    'status  status';
+  gap: var(--brett-luft-eng);
+  block-size: 100dvh;
+  padding: var(--brett-luft-eng);
+  background: var(--brett-flaeche);
+  color: var(--brett-text);
+  font-family: system-ui, sans-serif;
+  text-align: start;
+}
+
+.spielbrett *,
+.spielbrett *::before,
+.spielbrett *::after {
+  box-sizing: border-box;
+}
+
+/* Die globalen Vorgaben aus index.css (`#root { text-align: center }`,
+   `h1 { font-size: 56px }`) und die drei Element-Selektoren in App.css würden
+   sonst ins neue Brett hineinwirken. */
+.spielbrett h1,
+.spielbrett h2,
+.spielbrett h3,
+.spielbrett p,
+.spielbrett ul,
+.spielbrett ol,
+.spielbrett li {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: normal;
+  list-style: none;
+}
+
+/* ---- Gemeinsame Bausteine ------------------------------------------- */
+
+/* Ein Brettbereich: genau *eine* Rahmenebene (Regel 3). */
+.brett-bereich {
+  display: flex;
+  flex-direction: column;
+  gap: var(--brett-luft-eng);
+  min-block-size: 0;
+  padding: var(--brett-luft-eng) var(--brett-luft);
+  border: var(--brett-rahmen) solid var(--brett-linie);
+  border-radius: var(--brett-rundung);
+  background: var(--brett-weiss);
+}
+
+.brett-bereich__titel {
+  color: var(--brett-text-leise);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.brett-knopf {
+  padding: 0.45rem 0.8rem;
+  border: var(--brett-rahmen) solid var(--brett-linie);
+  border-radius: var(--brett-rundung);
+  background: var(--brett-akzent);
+  color: var(--brett-text);
+  font: inherit;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.brett-knopf:hover:not(:disabled) {
+  background: var(--brett-akzent-warm);
+}
+
+.brett-knopf:disabled {
+  background: var(--brett-flaeche-tief);
+  color: var(--brett-text-leise);
+  cursor: not-allowed;
+}
+
+.brett-knopf--gross {
+  padding: 0.7rem 1.1rem;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.brett-knopf--leise {
+  background: var(--brett-weiss);
+  font-weight: 400;
+}
+
+.brett-knopf--leise:hover:not(:disabled) {
+  background: var(--brett-flaeche-tief);
+}
+
+/* ---- 1 Kopfleiste ---------------------------------------------------- */
+
+.brett-kopf {
+  grid-area: kopf;
+  display: flex;
+  /* Ohne diese Zeile erbt die Kopfleiste `column` von `.brett-bereich` — dann
+     stapeln sich die Blöcke, und `align-items: center` zentriert sie
+     horizontal statt vertikal. */
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--brett-luft);
+}
+
+.brett-kopf__block {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.brett-kopf__name {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.brett-kopf__wert {
+  font-weight: 700;
+}
+
+.brett-kopf__leise {
+  color: var(--brett-text-leise);
+  font-size: 0.85rem;
+}
+
+.brett-kopf__gegner {
+  display: flex;
+  gap: var(--brett-luft);
+  margin-inline-start: auto;
+}
+
+.brett-kopf__warnung {
+  color: var(--brett-warnung);
+  font-weight: 700;
+}
+
+/* ---- 2 Spielfläche --------------------------------------------------- */
+
+.brett-flaeche {
+  grid-area: flaeche;
+  /* Regel 2: Der Inhalt bestimmt die Höhe. Passt er nicht, scrollt er hier —
+     abgeschnitten wird nichts. */
+  overflow-y: auto;
+}
+
+.brett-schlange {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--brett-luft-eng);
+  padding-block: var(--brett-luft-eng);
+}
+
+.brett-schlange__marke {
+  color: var(--brett-text-leise);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.brett-leer {
+  color: var(--brett-text-leise);
+  font-size: 0.9rem;
+}
+
+/* ---- 3 Gegnerstreifen ------------------------------------------------ */
+
+.brett-gegner {
+  grid-area: gegner;
+}
+
+/* ---- 4 Seitenspalte -------------------------------------------------- */
+
+.brett-seite {
+  grid-area: seite;
+  overflow-y: auto;
+}
+
+.brett-aktionsliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--brett-luft-eng);
+}
+
+.brett-aktionsliste__eintrag {
+  font-size: 0.85rem;
+}
+
+/* ---- 5 Handleiste ---------------------------------------------------- */
+
+.brett-hand {
+  grid-area: hand;
+}
+
+.brett-hand__karten {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--brett-luft-eng);
+}
+
+/* Karten liegen nebeneinander, nicht als Fächer übereinander: Vor dem Neubau
+   lagen die Handkarten 3 und 4 vollständig unter der Mittelkarte und waren
+   nicht anklickbar. */
+.brett-karte {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  /* Mindestbreite statt fester Breite: Kartennamen wie „Sonnenblatt" sind
+     länger als 7rem und liefen sonst über den Rand ihrer Karte hinaus. */
+  min-inline-size: 7rem;
+  padding: 0.45rem;
+  border: var(--brett-rahmen) solid var(--brett-linie);
+  border-radius: var(--brett-rundung);
+  background: var(--brett-weiss);
+  color: var(--brett-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.brett-karte:hover {
+  background: var(--brett-flaeche-tief);
+}
+
+.brett-karte--gewaehlt {
+  background: var(--brett-akzent);
+  outline: 3px solid var(--brett-linie);
+  outline-offset: 2px;
+}
+
+.brett-karte--verdeckt {
+  background: var(--brett-flaeche-tief);
+  cursor: default;
+}
+
+.brett-karte__name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.brett-karte__zeile {
+  color: var(--brett-text-leise);
+  font-size: 0.78rem;
+}
+
+/* Farbmarke der Karte — eine dünne Leiste, kein zweiter Rahmen (Regel 3). */
+.brett-karte__farbe {
+  block-size: 0.35rem;
+  border-radius: 999px;
+  background: var(--brett-farbe, var(--brett-flaeche-tief));
+}
+
+.brett-karte--blau { --brett-farbe: #3b82f6; }
+.brett-karte--rot { --brett-farbe: #ef4444; }
+.brett-karte--gelb { --brett-farbe: #eab308; }
+.brett-karte--violett { --brett-farbe: #a855f7; }
+.brett-karte--braun { --brett-farbe: #92400e; }
+.brett-karte--gruen { --brett-farbe: #16a34a; }
+
+/* ---- 6 Aktionsknopf -------------------------------------------------- */
+
+.brett-aktion {
+  grid-area: aktion;
+  justify-content: center;
+}
+
+/* ---- 7 Statuszeile --------------------------------------------------- */
+
+.brett-status {
+  grid-area: status;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--brett-luft);
+  font-size: 0.85rem;
+}
+
+.brett-status__leise {
+  color: var(--brett-text-leise);
+}
+
+/* ---- Schmale Fenster ------------------------------------------------- */
+
+/* Unter 1000 px wird gestapelt und die Seite darf scrollen. Kein Deckeln:
+   Genau daran ist das alte Brett gescheitert. */
+@media (max-width: 999px) {
+  .spielbrett {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-areas:
+      'kopf'
+      'flaeche'
+      'gegner'
+      'seite'
+      'hand'
+      'aktion'
+      'status';
+    block-size: auto;
+    min-block-size: 100dvh;
+  }
+
+  .brett-flaeche,
+  .brett-seite {
+    overflow-y: visible;
+  }
+}

@@ -7,6 +7,10 @@
     {
       "source": "/game/:path*",
       "destination": "/index.html"
+    },
+    {
+      "source": "/brett",
+      "destination": "/index.html"
     }
   ]
 }
