@@ -203,6 +203,58 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   padding-block: var(--brett-luft-eng);
 }
 
+/* Startkreis und Anlegeplätze sind Brettziele: gesperrt sichtbar statt
+   verschwunden. Im alten Brett verschwand die Startzone beim Schlangenlimit
+   stumm — der Spieler erfuhr nie, warum. */
+.brett-startkreis,
+.brett-anlegeplatz {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.45rem 0.8rem;
+  border: var(--brett-rahmen) dashed var(--brett-linie);
+  border-radius: var(--brett-rundung);
+  background: var(--brett-weiss);
+  color: var(--brett-text);
+  font: inherit;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.brett-startkreis {
+  align-self: flex-start;
+}
+
+.brett-anlegeplatz {
+  padding: 0.45rem 0.6rem;
+}
+
+.brett-startkreis:disabled,
+.brett-anlegeplatz:disabled {
+  border-style: dotted;
+  color: var(--brett-text-leise);
+  cursor: not-allowed;
+}
+
+.brett-startkreis--bereit,
+.brett-anlegeplatz:not(:disabled) {
+  border-style: solid;
+  background: var(--brett-akzent);
+}
+
+.brett-startkreis:hover:not(:disabled),
+.brett-anlegeplatz:hover:not(:disabled) {
+  background: var(--brett-akzent-warm);
+}
+
+/* Eine Schlange, an der die gewählte Karte irgendwo passt. */
+.brett-schlange--ziel {
+  border-radius: var(--brett-rundung);
+  outline: 2px dashed var(--brett-akzent);
+  outline-offset: 2px;
+}
+
 .brett-schlange__marke {
   color: var(--brett-text-leise);
   font-size: 0.78rem;

@@ -28,6 +28,7 @@ import useLegaleAktionenNachTyp from '../hooks/useLegaleAktionenNachTyp'
 import { zugphaseLabel } from '../zugphaseLabels'
 import Kartenmarke from './Kartenmarke'
 import { ermittlePhasenSchritt } from './phasenSchritt'
+import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
 
 interface SpielbrettProps {
   partie: ReturnType<typeof usePartie>
@@ -50,7 +51,8 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     handleKiZugVorspulen,
   } = partie
 
-  const { legaleAktionen, reaktionsAktionen } = useLegaleAktionenNachTyp(zustand)
+  const { legaleAktionen, reaktionsAktionen, karteAnlegenAktionen, neueSchlangeStartenAktionen } =
+    useLegaleAktionenNachTyp(zustand)
 
   const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
   const gegner = zustand.spieler.filter((spieler) => spieler.id !== aktiver.id)
@@ -69,6 +71,11 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
      unterscheidbar und für den Spieler kein Informationsgewinn. Gruppiert wird
      nur die Anzeige; geklickt wird weiterhin eine konkrete Aktion. */
   const angeboteneAktionen = gruppiereWirkungsgleicheAktionen(rohAktionen, aktiver.hand)
+
+  /* Brettziele zur gerade gewählten Handkarte. Ohne Auswahl ist alles leer —
+     der Spieler wählt erst die Karte, dann das Ziel. */
+  const startAktion = findeStartAktion(neueSchlangeStartenAktionen, ausgewaehlteKarteId)
+  const zielSchlangen = schlangenMitZiel(karteAnlegenAktionen, ausgewaehlteKarteId)
 
   const budget = zustand.zugpflichten
   const maxKarten = budget.verdopplerBonusAktiv ? MAX_KARTEN_PRO_ZUG + 1 : MAX_KARTEN_PRO_ZUG
@@ -123,25 +130,78 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
 
       {/* 2 — Spielfläche */}
       <section className="brett-flaeche brett-bereich" aria-label="Deine Schlangen">
-        <h2 className="brett-bereich__titel">Deine Schlangen</h2>
-        {aktiver.schlangen.length === 0 ? (
-          <p className="brett-leer">
-            Noch keine Schlange. Wähle in der Aktionsliste „neue Schlange starten".
-          </p>
+        <h2 className="brett-bereich__titel">
+          Deine Schlangen · {aktiver.schlangen.length}/{MAX_SCHLANGEN_PRO_SPIELER}
+        </h2>
+
+        {/* Startkreis — sichtbar, solange das Schlangenlimit es zulässt. Er
+            verschwindet nicht stumm, sondern sagt, warum er gesperrt ist. */}
+        {aktiver.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? (
+          <button
+            type="button"
+            className={`brett-startkreis${startAktion ? ' brett-startkreis--bereit' : ''}`}
+            onClick={() => startAktion && fuhreAktionAus(startAktion)}
+            disabled={startAktion === null}
+          >
+            Startkreis — neue Schlange
+            <span className="brett-leer">
+              {/* Drei verschiedene Gründe, und der Spieler muss sie
+                  unterscheiden können: keine Auswahl, das Zugbudget ist
+                  aufgebraucht, oder diese eine Karte passt nicht. */}
+              {ausgewaehlteKarteId === null
+                ? 'Erst eine Handkarte wählen'
+                : startAktion
+                  ? 'Hier klicken, um zu starten'
+                  : neueSchlangeStartenAktionen.length === 0
+                    ? 'In diesem Zug nicht mehr möglich'
+                    : 'Mit dieser Karte nicht möglich'}
+            </span>
+          </button>
         ) : (
-          aktiver.schlangen.map((schlange, index) => (
-            <div key={schlange.id} className="brett-schlange">
+          <p className="brett-leer">
+            Schlangenlimit erreicht ({MAX_SCHLANGEN_PRO_SPIELER}) — keine neue Schlange möglich.
+          </p>
+        )}
+
+        {aktiver.schlangen.map((schlange, index) => {
+          const linksAktion = findeAnlegeAktion(karteAnlegenAktionen, ausgewaehlteKarteId, schlange.id, 'links')
+          const rechtsAktion = findeAnlegeAktion(karteAnlegenAktionen, ausgewaehlteKarteId, schlange.id, 'rechts')
+          return (
+            <div
+              key={schlange.id}
+              className={`brett-schlange${zielSchlangen.has(schlange.id) ? ' brett-schlange--ziel' : ''}`}
+            >
               <span className="brett-schlange__marke">
                 {index + 1}. Schlange · {schlange.zustand}
               </span>
+              {/* Links und rechts sind eigene Ziele: Dieselbe Karte ergibt je
+                  nach Seite eine andere Schlange und andere Punkte. */}
+              <button
+                type="button"
+                className="brett-anlegeplatz"
+                aria-label={`Karte links an ${index + 1}. Schlange anlegen`}
+                onClick={() => linksAktion && fuhreAktionAus(linksAktion)}
+                disabled={linksAktion === null}
+              >
+                ◀ links
+              </button>
               <ul className="brett-hand__karten">
                 {schlange.karten.map((karte) => (
                   <Kartenmarke key={karte.id} karte={karte} />
                 ))}
               </ul>
+              <button
+                type="button"
+                className="brett-anlegeplatz"
+                aria-label={`Karte rechts an ${index + 1}. Schlange anlegen`}
+                onClick={() => rechtsAktion && fuhreAktionAus(rechtsAktion)}
+                disabled={rechtsAktion === null}
+              >
+                rechts ▶
+              </button>
             </div>
-          ))
-        )}
+          )
+        })}
       </section>
 
       {/* 3 — Gegnerstreifen (Inhalt folgt in G-6) */}
