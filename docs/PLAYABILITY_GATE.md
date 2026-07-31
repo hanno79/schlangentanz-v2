@@ -3053,3 +3053,90 @@ und die Hero-Größen aus M2x/M2i gelten wieder.
   Als `test.fail()` in `tests/layout/hand_am_brettrand.spec.ts`.
 - **`m1dc_spielmoment_pulse` ist flaky** (Race im Skript, nicht in der App).
 - **M3g-Lobby-Erstbild** bleibt offen (Abschnitt darüber).
+
+---
+
+## Release-Evidenz — 31.07.2026, GUI-Neubau G-0 bis G-8
+
+**Deploy:** `60e21a2` auf `https://schlangentanz-v2.vercel.app`, live verifiziert.
+Vorheriger Production-Stand war `ee256c3`.
+
+### Anlass
+
+Ein Screenshot des Nutzers, und die Messung dahinter: Auf `/game` waren bei
+1280×900 von 12 sichtbaren Bedienelementen **8 vollständig verdeckt und 6
+außerhalb des Bildes**. Der Startfährte-Knopf — die erste Handlung im Spiel —
+saß bei y=1381, also 481 px unter dem Rand; ein Mausklick darauf bewirkte
+nichts. Das Spiel war mit einer Maus nicht spielbar.
+
+Dass das nicht auffiel, hat einen Grund: Die Prüfungen steuerten Knöpfe über
+Playwright an, dessen `click()` Elemente intern in den Blick scrollt — eine
+Hilfe, die ein Mensch nicht hat. Und 172 von 363 Testdateien lasen `src/App.css`
+als **Text**; sie prüften, ob eine Deklaration dasteht, nicht ob der Spieler
+etwas sieht.
+
+### Ergebnis
+
+| | vorher | nachher |
+|---|---|---|
+| Bedienelemente verdeckt | 8 von 12 | **0** |
+| Bedienelemente außerhalb des Bildes | 6 von 12 | **0** |
+| Elemente mit abgeschnittenem Inhalt | 14 | **0** |
+| Sichtbare Elemente (Erstbild) | 298 | **88** |
+| `src/App.tsx` | 600 Zeilen | **80** |
+| `src/App.css` | 11.994 Zeilen | **1.392** |
+| Komponenten | 60 | **3** + 8 im Spielbrett |
+| Smoke-Skripte | 91 | **1** |
+| CSS-Quelltext-Assertions | 708 | **1** |
+| Bundle CSS / JS | 246 / 435 kB | **36 / 296 kB** |
+
+### Live-Prüfung
+
+`node scripts/brett_smoke.mjs` gegen Production: **bestanden**. Er spielt per
+`page.mouse.click` auf Bildschirmkoordinaten — ohne `scrollIntoView`-Hilfe —
+eine Partie von der Lobby aus: starten, Karte wählen, Startkreis, Aufgabenprüfung,
+Zugabschluss, Zugübergabe, Gegnerzug, zweiter Zug. Dazu die vier Wächter auf
+Lobby und Brett.
+
+Ausgelieferte Assets identisch mit dem lokalen Build
+(`index-B5rGhKpq.js`, `index-BaPNQ5eG.css`). `window.__schlangentanzFixture` ist
+`undefined` — AP-1 hält. Keine Browserfehler.
+
+### Gates
+
+65 Testdateien / 575 Tests, typecheck, lint, build, `check:test-lines`,
+`check:css-asserts`, 30 Layout-Verträge — alle Exit 0.
+
+### Wiederhergestellte Fähigkeiten
+
+Diese waren auf `/game` unerreichbar, seit das `AktionenPanel` per CSS versteckt
+wurde (`App.css:721`):
+
+- die generische Aktionsliste als Rückfallebene
+- die **freie Schlangenhäutung** (am Brett gab es nur zwei Presets)
+- die **Kartenwahl beim Pflicht-Abwurf** (es wurde hart `[0]` abgeworfen)
+- das Zugbudget mit Farb-/Sonderkartenzähler und Verdoppler-Hinweis
+- **wer aussetzt** — `aussetzenSpielerIndizes` kam im gesamten `.tsx`-Code
+  nicht ein einziges Mal vor
+- das Schlangenlimit, die Aufgabenliste, die empfohlene Aktion als Knopf
+
+### Geschlossene Altlasten
+
+Der **M3g-Erstbild-Vertrag** (Abschnitt oben) ist repariert: Die vier
+Spielerplätze der Lobby stehen ab 1000 px Breite nebeneinander statt im
+2×2-Raster; die Startknöpfe liegen bei y=811–872 im Bild. Der `test.fail()`-Marker
+in `tests/layout/lobby_erstbild.spec.ts` ist entfallen.
+
+Ebenso entfallen: die 27 offenen Smokes des alten Bretts — sie prüften
+Steinkreis, Lichtungsstein, Zauberpfad und Unterholzleiste und sind mit dem
+Brett gegenstandslos geworden.
+
+### Offene Punkte
+
+- **Sonderkarten-Brettziele.** Die sieben enumerierten Sonderkarten sind über die
+  Aktionsliste erreichbar (Regel 6 der Spezifikation). Eigene Ziele direkt am
+  Brett wären Komfort, kein offener Defekt.
+- **Drag & Drop** ist im neuen Brett noch nicht verdrahtet; Klick und Tastatur
+  decken jede Aktion ab.
+- **Unter 1000 px Breite** ist das Brett gestapelt und scrollt. Geprüft und
+  entworfen ist 1280×900 und breiter.
