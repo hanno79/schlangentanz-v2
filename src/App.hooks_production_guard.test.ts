@@ -35,7 +35,12 @@ function skriptPfad(dateiname: string): string {
 describe('AP-1 Test-Hooks nicht in der Production-Smoke-Kette', () => {
   it('kennt beide Ketten', () => {
     expect(produktionsSchritte().length).toBeGreaterThan(0)
-    expect(previewSchritte().length).toBeGreaterThan(0)
+    /* ÄNDERUNG [31.07.2026]: G-8 — die Preview-Kette ist zurzeit leer. Die
+       sechs hook-abhängigen Smokes prüften das alte Brett und sind mit ihm
+       entfallen. Die Kette selbst bleibt bestehen: Sie ist der Kern der
+       AP-1-Trennung, und der nächste Smoke mit Fixture-Bedarf gehört dorthin
+       und nicht in die Production-Kette. */
+    expect(Array.isArray(previewSchritte())).toBe(true)
   })
 
   it('führt jeden hook-abhängigen Smoke ausschließlich in der Preview-Kette', () => {

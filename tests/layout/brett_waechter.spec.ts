@@ -41,7 +41,7 @@ import {
 /** Regel 1 und 3 aus der Spezifikation: sieben Regionen, eine Rahmenebene. */
 const ELEMENT_BUDGET = 90
 
-function waechterFuer(route: string, markiere: boolean) {
+function waechterFuer(route: string, markiere: boolean, optionen: { ohneBudget?: boolean } = {}) {
   const pruefe = markiere ? test.fail : test
 
   test.describe(`Brett-Wächter auf ${route}`, () => {
@@ -76,7 +76,8 @@ function waechterFuer(route: string, markiere: boolean) {
       ).toEqual([])
     })
 
-    pruefe(`die Seite zeigt höchstens ${ELEMENT_BUDGET} Elemente`, async ({ page }) => {
+    const budgetPruefe = optionen.ohneBudget ? test.skip : pruefe
+    budgetPruefe(`die Seite zeigt höchstens ${ELEMENT_BUDGET} Elemente`, async ({ page }) => {
       const anzahl = await zaehleSichtbareElemente(page)
       expect(
         anzahl,
@@ -86,10 +87,13 @@ function waechterFuer(route: string, markiere: boolean) {
   })
 }
 
-/* Das alte Brett verletzt alle vier — als bekannte Lücke markiert, damit die
-   Suite nicht rot ist, der Anspruch aber sichtbar bleibt. Fällt mit G-8. */
-waechterFuer('/game', true)
+/* Seit G-8 zeigt `/game` das neue Brett — die vier Wächter gelten dort scharf.
+   Bis dahin verletzte die alte Ansicht alle vier und war als bekannte Lücke
+   markiert; die temporäre Route `/brett` ist mit dem Umschalten entfallen. */
+waechterFuer('/game', false)
 
-/* Das neue Brett muss sie halten. Ab hier gilt: Wer eine Regel bricht, merkt es
-   sofort. */
-waechterFuer('/brett', false)
+/* Die Lobby ist der einzige Weg ins Spiel. Ein Startknopf außerhalb des Bildes
+   oder unter einem anderen Element macht das Spiel unerreichbar — genau das war
+   vor G-8 der Fall (Knopf bei y=1092). Das Elementbudget gilt hier nicht: Die
+   Lobby ist eine andere Art Seite als das Brett. */
+waechterFuer('/', false, { ohneBudget: true })

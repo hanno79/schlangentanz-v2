@@ -105,12 +105,13 @@ test.describe('Lobby-Route /', () => {
   // Mittel prüften (`gap < 1rem`, `margin-top: auto`) statt den Zweck. Genau diese
   // Lücke schließt der Vertrag hier.
   //
-  // `test.fail()` heißt: der Fehlschlag ist bekannt und dokumentiert; sobald das
-  // Layout repariert ist, meldet Playwright einen unerwarteten Erfolg und dieser
-  // Marker muss weg. Das Reparieren selbst ist ein Layout-Slice, keine
-  // Test-Migration, und gehört deshalb nicht in AP-6.
+  /* ÄNDERUNG [31.07.2026]: G-8 — `test.fail()` entfernt, der Vertrag hält wieder.
+     Er war seit M3h regrediert (Knöpfe bei y=1153) und im Playability-Gate als
+     offene Lücke notiert. Mit G-8 führt der einzige Weg ins Spiel über diese
+     Knöpfe, also war die Lücke kein Schönheitsfehler mehr: Die vier
+     Spielerplätze stehen jetzt ab 1000 px Breite nebeneinander statt im
+     2x2-Raster, das spart rund 250 px. */
   test('Start-Buttons liegen im 1280×900-Erstbild', async ({ page }) => {
-    test.fail()
     const knopf = page.locator('.lobby-startbutton').first()
     const box = await kasten(knopf)
     const hoehe = await seitenHoehe(page)
@@ -193,19 +194,22 @@ test.describe('Lobby-Spielerkarten (ersetzt M3c:1, :2, :5, :6, :7, :11)', () => 
     await page.goto('/', { waitUntil: 'networkidle' })
   })
 
-  test('ordnet die vier Spielerplätze als 2×2 an', async ({ page }) => {
-    // M3c:1 prüfte `grid-template-columns: repeat(2, minmax(…))` im Quelltext.
-    // Gemessen wird die Anordnung selbst: zwei Spalten, zwei Zeilen, vier Plätze.
+  test('stellt die vier Spielerplätze bei 1280px in eine Reihe', async ({ page }) => {
+    /* ÄNDERUNG [31.07.2026]: G-8 — vorher wurde ein 2x2-Raster erwartet. Das
+       brauchte 521 px und schob die Startknöpfe aus dem Bild; seit G-8 ist das
+       kein Schönheitsfehler mehr, sondern versperrt den einzigen Weg ins Spiel.
+       Geprüft wird weiterhin die Anordnung selbst, nicht der CSS-Quelltext. */
     const slots = page.locator('.lobby-slot')
     await expect(slots).toHaveCount(4)
 
     const kaesten = []
     for (let i = 0; i < 4; i += 1) kaesten.push(await kasten(slots.nth(i)))
 
-    const spalten = new Set(kaesten.map((box) => box.links))
     const zeilen = new Set(kaesten.map((box) => box.oben))
-    expect(spalten.size, `Spielerplätze liegen in ${spalten.size} Spalten statt 2`).toBe(2)
-    expect(zeilen.size, `Spielerplätze liegen in ${zeilen.size} Zeilen statt 2`).toBe(2)
+    expect(zeilen.size, `Die vier Plätze stehen in ${zeilen.size} Zeilen statt in einer`).toBe(1)
+
+    const spalten = new Set(kaesten.map((box) => box.links))
+    expect(spalten.size, `Spielerplätze liegen in ${spalten.size} Spalten statt 4`).toBe(4)
   })
 
   test('zeigt Avatare als runde Stitch-Scheiben mit hartem Schatten', async ({ page }) => {
@@ -296,10 +300,12 @@ test.describe('Lobby-Animationen ohne Bewegungsreduktion (ersetzt M3c:9, :10)', 
 })
 
 test.describe('Spielroute /game', () => {
-  test('zeigt den Spielbereich und trägt den Game-Modifier', async ({ page }) => {
+  /* ÄNDERUNG [31.07.2026]: G-8 — `/game` zeigt das neue Spielbrett
+     (docs/SPIELBRETT_SPEC.md). Die alte Waldtanz-Ansicht mit `#spielbereich`
+     und `app-shell--game` ist entfallen. */
+  test('zeigt das Spielbrett und nicht die Lobby', async ({ page }) => {
     await page.goto('/game', { waitUntil: 'networkidle' })
-    await expect(page.locator('#spielbereich')).toBeVisible()
-    await expect(page.locator('.app-shell')).toHaveClass(/app-shell--game/)
+    await expect(page.locator('.spielbrett')).toBeVisible()
     // Gegenprobe zur Lobby-Route: die Lobby rendert hier nicht.
     await expect(page.locator('.sonniges-nest')).toHaveCount(0)
   })

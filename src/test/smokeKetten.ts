@@ -39,14 +39,13 @@ import { SMOKE_LISTEN } from '../../scripts/smoke_listen.mjs'
  * fixture-gestützte Abdeckung an genau einer Stelle liegt statt in Production
  * still auf eine Teilprüfung zusammenzufallen.
  */
-export const HOOK_ABHAENGIGE_SMOKES: readonly string[] = [
-  'm1e_waldtanz_spieluhr_smoke.mjs',
-  'm1dh_waldtanz_spielhandlung_smoke.mjs',
-  'm1dp_waldtanz_gegnerlichtung_smoke.mjs',
-  'm1dq_waldtanz_sonderkarten_spielmoment_smoke.mjs',
-  'm2a_waldtanz_sonderkarten_brettziel_highlight_smoke.mjs',
-  'm2d_schlangentanz_fixture_helper_smoke.mjs',
-]
+/* ÄNDERUNG [31.07.2026]: G-8 — die Liste ist leer.
+
+   Die sechs hook-abhängigen Smokes prüften das alte Waldtanz-Brett und sind mit
+   ihm entfallen. Die Trennung selbst bleibt bestehen: Sie ist der Kern von AP-1
+   („keine Test-Hooks in Production"), und sobald wieder ein Smoke die
+   Fixture-Hooks braucht, gehört er hierher und nicht in die Production-Kette. */
+export const HOOK_ABHAENGIGE_SMOKES: readonly string[] = []
 
 // ÄNDERUNG [30.07.2026]: AP-4 — Quelle ist jetzt scripts/smoke_listen.mjs statt
 // eines 8000 Zeichen langen &&-Strings in package.json. Dieselbe Liste benutzt der

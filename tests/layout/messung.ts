@@ -180,6 +180,31 @@ export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
       const zuHoch = schneidetAb(stil.overflowY) && element.scrollHeight > element.clientHeight + 3
       const zuBreit = schneidetAb(stil.overflowX) && element.scrollWidth > element.clientWidth + 3
       if (!zuHoch && !zuBreit) continue
+
+      /* Regel 2 meint abgeschnittenen *Inhalt*, nicht beschnittene Zierde.
+         Hintergrundgrafik absichtlich auf die Containerform zu clippen ist
+         legitim; ein abgeschnittener Satz ist es nicht. Gezählt wird deshalb
+         nur Text, der auch vorgelesen würde — `aria-hidden`-Glyphen wie ein
+         Stern-Abzeichen tragen keine Information. */
+      const zugaenglicherText = (element: Element): string => {
+        const laeufer = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+          acceptNode: (knoten) =>
+            (knoten.parentElement?.closest('[aria-hidden="true"]') ?? null) === null
+              ? NodeFilter.FILTER_ACCEPT
+              : NodeFilter.FILTER_REJECT,
+        })
+        let text = ''
+        while (laeufer.nextNode()) text += laeufer.currentNode.nodeValue ?? ''
+        return text.trim()
+      }
+      const kasten = element.getBoundingClientRect()
+      const inhaltRagtHeraus = Array.from(element.querySelectorAll('*')).some((kind) => {
+        if (zugaenglicherText(kind) === '') return false
+        const k = kind.getBoundingClientRect()
+        return k.bottom > kasten.bottom + 3 || k.right > kasten.right + 3
+      })
+      if (!inhaltRagtHeraus) continue
+
       befunde.push({
         element: kennung(element),
         detail: `Inhalt ${element.scrollHeight}×${element.scrollWidth} in Box ${element.clientHeight}×${element.clientWidth}`,

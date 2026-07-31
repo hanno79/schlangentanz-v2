@@ -22,7 +22,7 @@ import type { Spielzustand } from '../engine'
 import { farbkarte } from '../engine/__tests__/testHelpers'
 
 function aufBrettRoute() {
-  window.history.pushState({}, '', '/brett')
+  window.history.pushState({}, '', '/game')
 }
 
 afterEach(() => {

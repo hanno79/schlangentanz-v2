@@ -21,7 +21,7 @@ import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engin
 import type { Spielzustand } from '../engine'
 
 function aufBrettRoute() {
-  window.history.pushState({}, '', '/brett')
+  window.history.pushState({}, '', '/game')
 }
 
 afterEach(() => {

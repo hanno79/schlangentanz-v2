@@ -136,7 +136,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
   return (
     <main className="spielbrett">
       {/* 1 — Kopfleiste */}
-      <header className="brett-kopf brett-bereich" aria-label="Spielstand">
+      <section className="brett-kopf brett-bereich" aria-label="Spielstand">
         <p className="brett-kopf__block">
           <span className="brett-kopf__name">{aktiver.name}</span>
           <span className="brett-kopf__wert">{eigeneLage?.punkte ?? 0} Punkte</span>
@@ -170,7 +170,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         {eigeneLage?.setztAus ? (
           <p className="brett-kopf__warnung">Du setzt aus — Schlangengrube</p>
         ) : null}
-      </header>
+      </section>
 
       {/* 2 — Spielfläche */}
       <section className="brett-flaeche brett-bereich" aria-label="Deine Schlangen">
@@ -384,9 +384,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
       {/* 5 — Handleiste. Der Klick bedeutet je nach Modus etwas anderes; der
           Hinweis darüber sagt, was gerade gilt. */}
       <section className="brett-hand brett-bereich" aria-label="Deine Hand">
-        <h2 className="brett-bereich__titel">
-          Deine Hand · {aktiver.hand.length}/{HANDKARTENLIMIT} Karten
-        </h2>
+        <h2 className="brett-bereich__titel">Deine Hand</h2>
         {hinweis ? <p className="brett-hand__hinweis">{hinweis}</p> : null}
         <ul className="brett-hand__karten">
           {aktiver.hand.map((karte, platz) => {
@@ -485,7 +483,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
       </section>
 
       {/* 7 — Statuszeile */}
-      <footer className="brett-status brett-bereich" aria-label="Spielverlauf">
+      <section className="brett-status brett-bereich" aria-label="Spielverlauf">
         <span className="brett-status__pflicht">{pflichtschritt}</span>
         <span>
           <span className="brett-status__leise">Nachziehstapel </span>
@@ -501,7 +499,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
             {letzteAktion}
           </span>
         ) : null}
-      </footer>
+      </section>
     </main>
   )
 }
