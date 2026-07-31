@@ -31,7 +31,7 @@ dasselbe Muster wie `src/components/zielspurKey.ts` in der App.
 export async function startePartie(page, basisUrl, optionen = {}) {
   const { route = '/' } = optionen
 
-  const antwort = await page.goto(new URL(route, basisUrl).toString(), { waitUntil: 'networkidle' })
+  const antwort = await page.goto(new URL(route, basisUrl).toString(), { waitUntil: 'domcontentloaded' })
   if (!antwort || antwort.status() !== 200) {
     throw new Error(`Spielstart: ${route} lieferte HTTP ${antwort?.status()}`)
   }

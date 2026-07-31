@@ -26,7 +26,7 @@
 
 import { chromium } from 'playwright'
 
-import { startePartie } from './spiel_starten.mjs'
+import { startePartie, starteErsteSchlange } from './spiel_starten.mjs'
 
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app'
 const HTTP_TIMEOUT_MS = 15_000
@@ -66,12 +66,8 @@ async function starteSpiel(page) {
      scripts/spiel_starten.mjs. */
   await startePartie(page, BASE_URL, { route: '/game' })
 
-  // Eigene Schlange starten (M1cj-Vorbedingung)
-  const startfaehrte = page.locator('.schlangen-startzone__faehrte-button').first()
-  if (await startfaehrte.count() > 0) {
-    await startfaehrte.click({ force: true })
-    await page.waitForTimeout(500)
-  }
+  await starteErsteSchlange(page)
+
   // Nachziehphase ggf. bestaetigen
   const nachzieh = page.locator('button', { hasText: /Karte ziehen|Nachziehen/ }).first()
   if (await nachzieh.count() > 0) {

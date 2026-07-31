@@ -33,6 +33,8 @@ export const PHASENAKTION = {
   zugBeenden: 'Zug an nächsten Spieler geben',
 } as const
 
+export type PhasenAktionId = keyof typeof PHASENAKTION
+
 /** Alle kanonischen Beschriftungen — für Tests und Guards. */
 export const PHASENAKTION_TEXTE: readonly string[] = Object.values(PHASENAKTION)
 
@@ -53,12 +55,23 @@ const ORT_ZUSATZ: Record<Bedienort, string> = {
   handleiste: ' — Handleiste',
 }
 
+const ORT_BASISTEXT: Record<Bedienort, Partial<Record<PhasenAktionId, string>>> = {
+  brettrand: {},
+  aktionsliste: {},
+  zugkompass: {},
+  handleiste: {
+    zugBeenden: 'Zug beenden',
+  },
+}
+
 /**
  * Accessible Name für einen Phasen-Aktions-Knopf am gegebenen Bedienort.
  *
- * Der Zusatz landet bewusst nur im Accessible Name, nicht im sichtbaren Text:
- * Der Ort ist visuell ohnehin klar, akustisch aber nicht.
+ * Ortsspezifische Basisbeschriftungen (z. B. „Zug beenden" in der Handleiste)
+ * gehen den kanonischen Texten vor. Der Zusatz landet bewusst nur im
+ * Accessible Name, nicht im sichtbaren Text.
  */
-export function phasenAktionName(text: string, ort: Bedienort): string {
-  return `${text}${ORT_ZUSATZ[ort]}`
+export function phasenAktionName(aktion: PhasenAktionId, ort: Bedienort): string {
+  const basis = ORT_BASISTEXT[ort]?.[aktion] ?? PHASENAKTION[aktion]
+  return `${basis}${ORT_ZUSATZ[ort]}`
 }

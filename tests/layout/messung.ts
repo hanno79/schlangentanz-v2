@@ -130,3 +130,138 @@ export async function erwarteHoeheImRemBereich(
     Math.ceil(maxRem * rem) + 1,
   )
 }
+
+/* ============================================================
+   ÄNDERUNG [31.07.2026]: G-0 — generische Brett-Wächter.
+
+   Die Messungen oben prüfen je *ein* benanntes Element. Genau daran ist der
+   alte Zustand vorbeigelaufen: Jede einzelne Box hielt ihren Vertrag, während
+   die Seite als Ganzes unbenutzbar war — 8 von 12 Bedienelementen verdeckt,
+   6 außerhalb des Bildes, 14 Elemente mit abgeschnittenem Inhalt.
+
+   Die folgenden Primitive fragen deshalb nicht „ist Element X richtig?",
+   sondern „ist irgendwo auf dieser Seite etwas abgeschnitten, verdeckt oder
+   außerhalb des Bildes?". Siehe docs/SPIELBRETT_SPEC.md.
+   ============================================================ */
+
+/** Ein Befund eines Wächters — Element-Kennung plus Messwerte. */
+export interface Befund {
+  element: string
+  detail: string
+}
+
+/* Die Wächter laufen vollständig im Browser: `page.evaluate` serialisiert nur
+   das Ergebnis, nicht die Funktion drumherum. Die Kennungs-Hilfe wird deshalb in
+   jedem Block lokal definiert statt von außen hereingereicht. */
+
+/**
+ * Elemente, deren Inhalt größer ist als ihre Box und die ihn abschneiden.
+ *
+ * Das ist Regel 2 aus docs/SPIELBRETT_SPEC.md: Der Inhalt bestimmt die Höhe;
+ * passt er nicht, scrollt sein Container — er wird nicht abgeschnitten.
+ * Scrollbare Container (`overflow: auto`/`scroll`) sind ausgenommen, denn dort
+ * kommt der Spieler an den Rest heran.
+ */
+export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
+  return page.evaluate(() => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+    const befunde: { element: string; detail: string }[] = []
+    for (const element of Array.from(document.querySelectorAll('*'))) {
+      const box = element.getBoundingClientRect()
+      if (box.width < 4 || box.height < 4) continue
+      if (!(element as HTMLElement).checkVisibility()) continue
+      const stil = getComputedStyle(element)
+      const schneidetAb = (achse: string) => /hidden|clip/.test(achse)
+      const zuHoch = schneidetAb(stil.overflowY) && element.scrollHeight > element.clientHeight + 3
+      const zuBreit = schneidetAb(stil.overflowX) && element.scrollWidth > element.clientWidth + 3
+      if (!zuHoch && !zuBreit) continue
+      befunde.push({
+        element: kennung(element),
+        detail: `Inhalt ${element.scrollHeight}×${element.scrollWidth} in Box ${element.clientHeight}×${element.clientWidth}`,
+      })
+    }
+    return befunde
+  })
+}
+
+/** Bedienelemente, die ganz oder teilweise außerhalb des sichtbaren Bereichs liegen. */
+export async function findeAusserhalbDesBildes(page: Page): Promise<Befund[]> {
+  return page.evaluate(() => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+    const hoehe = window.innerHeight
+    const breite = window.innerWidth
+    const befunde: { element: string; detail: string }[] = []
+    for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"], input, select'))) {
+      if (!(element as HTMLElement).checkVisibility()) continue
+      const box = element.getBoundingClientRect()
+      if (box.width < 2 || box.height < 2) continue
+      if (box.bottom <= hoehe + 1 && box.top >= -1 && box.right <= breite + 1 && box.left >= -1) continue
+      befunde.push({
+        element: kennung(element),
+        detail: `liegt bei ${Math.round(box.top)}..${Math.round(box.bottom)} (Bild ist ${hoehe}px hoch)`,
+      })
+    }
+    return befunde
+  })
+}
+
+/**
+ * Bedienelemente, die an keiner Stelle frei liegen — also von etwas anderem
+ * vollständig überdeckt werden.
+ *
+ * Abgetastet wird eine Zeile auf mittlerer Höhe. Ein einzelner Punkt reicht
+ * nicht: Überlappende Karten in einem Fächer sind gewollt, solange jede Karte
+ * *irgendwo* getroffen werden kann.
+ */
+export async function findeVerdeckteBedienelemente(page: Page): Promise<Befund[]> {
+  return page.evaluate(() => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+    const befunde: { element: string; detail: string }[] = []
+    for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"]'))) {
+      if (!(element as HTMLElement).checkVisibility()) continue
+      const box = element.getBoundingClientRect()
+      if (box.width < 2 || box.height < 2) continue
+      // Außerhalb des Bildes zählt beim anderen Wächter, nicht doppelt hier.
+      if (box.bottom > window.innerHeight || box.top < 0) continue
+      let frei = 0
+      for (let anteil = 0.05; anteil <= 0.95; anteil += 0.05) {
+        const treffer = document.elementFromPoint(box.x + box.width * anteil, box.y + box.height / 2)
+        if (treffer && (element === treffer || element.contains(treffer))) frei += 1
+      }
+      if (frei > 0) continue
+      befunde.push({ element: kennung(element), detail: 'an keiner Stelle frei — vollständig überdeckt' })
+    }
+    return befunde
+  })
+}
+
+/** Anzahl sichtbarer Elemente mit nennenswerter Fläche — das Budget aus Regel 1 und 3. */
+export async function zaehleSichtbareElemente(page: Page): Promise<number> {
+  return page.evaluate(
+    () =>
+      Array.from(document.querySelectorAll('*')).filter((element) => {
+        const box = element.getBoundingClientRect()
+        return box.width > 4 && box.height > 4 && (element as HTMLElement).checkVisibility()
+      }).length,
+  )
+}
+
+/** Formatiert Befunde für eine lesbare Fehlermeldung. */
+export function befundListe(befunde: Befund[]): string {
+  return befunde.map((b) => `\n  · ${b.element} — ${b.detail}`).join('')
+}

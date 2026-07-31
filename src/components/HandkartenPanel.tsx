@@ -219,7 +219,7 @@ export default function HandkartenPanel({
                kollidierte mit dem Brettrand-Knopf und verletzte WCAG 2.5.3
                (Label in Name). Jetzt traegt die Pille ihren eigenen Text plus
                Bedienort. */
-            aria-label={phasenAktionName('Zug beenden', 'handleiste')}
+             aria-label={phasenAktionName('zugBeenden', 'handleiste')}
             onClick={() => onEndTurn?.()}
           >
             <span>Zug beenden</span>

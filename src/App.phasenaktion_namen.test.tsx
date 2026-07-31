@@ -27,7 +27,7 @@ import { render, screen } from '@testing-library/react'
 import App from './App'
 import { erstelleSpielzustand, starteAusspielphase } from './engine'
 import type { Spielzustand } from './engine'
-import { PHASENAKTION, PHASENAKTION_TEXTE, phasenAktionName } from './phasenAktionen'
+import { PHASENAKTION_TEXTE, phasenAktionName } from './phasenAktionen'
 
 function zustandInPhase(zugphase: Spielzustand['zugphase'], mitUeberhand = false): Spielzustand {
   const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
@@ -68,10 +68,10 @@ describe('S-1 Phasen-Aktionen haben eindeutige Accessible Names', () => {
   }
 
   it('hängt an Zweit-Bedienorten den Ort an, an kanonischen nicht', () => {
-    expect(phasenAktionName(PHASENAKTION.zugBeenden, 'brettrand')).toBe('Zug an nächsten Spieler geben')
-    expect(phasenAktionName(PHASENAKTION.zugBeenden, 'aktionsliste')).toBe('Zug an nächsten Spieler geben')
-    expect(phasenAktionName(PHASENAKTION.zugBeenden, 'zugkompass')).toBe('Zug an nächsten Spieler geben — Zugkompass')
-    expect(phasenAktionName('Zug beenden', 'handleiste')).toBe('Zug beenden — Handleiste')
+    expect(phasenAktionName('zugBeenden', 'brettrand')).toBe('Zug an nächsten Spieler geben')
+    expect(phasenAktionName('zugBeenden', 'aktionsliste')).toBe('Zug an nächsten Spieler geben')
+    expect(phasenAktionName('zugBeenden', 'zugkompass')).toBe('Zug an nächsten Spieler geben — Zugkompass')
+    expect(phasenAktionName('zugBeenden', 'handleiste')).toBe('Zug beenden — Handleiste')
   })
 
   it('gibt der End-Turn-Pille einen Namen, der ihren sichtbaren Text enthält (WCAG 2.5.3)', () => {

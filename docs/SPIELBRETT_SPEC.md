@@ -1,0 +1,166 @@
+# Spielbrett-Spezifikation
+
+Dieses Dokument beschreibt, **was das Spielbrett zeigt und was der Spieler darauf
+tun kann**. `GAME_SPEC.md` beschreibt die Regeln; dieses Dokument beschreibt die
+Oberfläche.
+
+## Warum es dieses Dokument gibt
+
+Bis zum 31.07.2026 gab es keine Spezifikation der Oberfläche. Rund 250 Slices
+haben je ein Brettobjekt hinzugefügt, kaum einer hat etwas entfernt. Das Ergebnis
+war messbar unbenutzbar: 298 sichtbare Elemente, davon 8 von 12 Bedienelementen
+vollständig verdeckt und 6 außerhalb des Bildes. Der Startfährte-Knopf — die
+erste Handlung im Spiel — lag 481 px unter dem Bildrand; ein Mausklick darauf
+bewirkte nichts.
+
+Ohne ein Dokument, das sagt „so viel und nicht mehr", wächst jede Oberfläche in
+diese Richtung. Dieses Dokument ist die Bremse.
+
+---
+
+## Die sieben Regionen
+
+Mehr Regionen gibt es nicht. Wer eine achte braucht, ändert erst dieses Dokument.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ 1 KOPFLEISTE  Spieler·Punkte │ Phase · Zugbudget x/y │ Gegner │
+├──────────────────────────────────────────────┬───────────────┤
+│  2 SPIELFLÄCHE                               │ 4 SEITENSPALTE│
+│    eigene Schlangen, Startkreis,             │   Nachziehen  │
+│    Anlegeplätze links/rechts                 │   Ablage      │
+│    (füllt den Rest, scrollt in sich)         │   Aufgaben    │
+│                                              │   Aktionsliste│
+├──────────────────────────────────────────────┴───────────────┤
+│ 3 GEGNERSTREIFEN   gegnerische Schlangen, Zustand, aussetzen │
+├──────────────────────────────────────────────────────────────┤
+│ 5 HANDLEISTE   Karten nebeneinander, jede anklickbar │ 6 AKTION│
+├──────────────────────────────────────────────────────────────┤
+│ 7 STATUSZEILE   Pflichtschritt · letzte Aktion               │
+└──────────────────────────────────────────────────────────────┘
+```
+
+| # | Region | Zeigt | Der Spieler tut hier |
+|---|---|---|---|
+| 1 | **Kopfleiste** | eigener Name, Punkte, Zugphase, Zugbudget, Gegnerübersicht | nichts — reine Orientierung |
+| 2 | **Spielfläche** | eigene Schlangen, Startkreis, Anlegeplätze | legt Karten an, startet Schlangen, wählt Brettziele |
+| 3 | **Gegnerstreifen** | gegnerische Schlangen, deren Zustand, wer aussetzt | wählt gegnerische Ziele für Sonderkarten |
+| 4 | **Seitenspalte** | Nachziehstapel, Ablage, offene Aufgaben, Aktionsliste | löst Aktionen über die Liste aus (Rückfallebene) |
+| 5 | **Handleiste** | die eigenen Karten | wählt Karten aus, wirft ab |
+| 6 | **Aktionsknopf** | *ein* Knopf: der, der die Phase weiterbringt | bringt den Zug voran |
+| 7 | **Statuszeile** | nächster Pflichtschritt, letzte Aktion | nichts — reine Rückmeldung |
+
+Entworfen für **1280×900 und breiter**. Schmaler wird gestapelt und darf
+scrollen.
+
+**Region 6 ist bewusst ein einziger Knopf.** Vor dem Neubau gab es vier
+konkurrierende Implementierungen derselben Phasen-Aktionen an verschiedenen
+Orten.
+
+---
+
+## Sechs Regeln
+
+1. **Jede Information genau einmal.** Wird sie an zwei Stellen gebraucht, ist
+   eine davon die falsche Stelle. *(Vorher: Zugphase an 6 Stellen, aktiver
+   Spieler an 7, Punktestand an 5.)*
+
+2. **Keine festen Höhen-Caps auf Inhaltsflächen.** Der Inhalt bestimmt die Höhe;
+   passt er nicht, scrollt sein Container — er wird nicht abgeschnitten.
+   *(Vorher: jedes Infofeld auf ~80 px gedeckelt bei 100–230 px Inhalt.)*
+
+3. **Eine Rahmenebene.** Ein Spielobjekt hat einen Rahmen, sein Inhalt keinen.
+   *(Vorher: bis zu sechs Ebenen mit je 3–4 px Rahmen, Schatten und Verlauf
+   ineinander.)*
+
+4. **Kein `!important`, keine `[class~=]`-Specificity-Tricks, keine
+   route-gescopten Überschreibungen.** Wer eine Regel ändern will, ändert sie.
+   *(Vorher: 31 % aller Regeln route-gescopet, 27 Selektoren 3–5× über 8.000
+   Zeilen verteilt.)*
+
+5. **z-index nur aus einer benannten Skala.** `--ebene-brett`, `--ebene-karte`,
+   `--ebene-overlay`. *(Vorher: 14 Werte ohne erkennbare Ordnung.)*
+
+6. **Jede legale Aktion ist immer über mindestens einen sichtbaren Weg
+   erreichbar.** Die Aktionsliste in der Seitenspalte ist die Rückfallebene.
+   *(Vorher: Das `AktionenPanel` war der einzige Ort, der jede Aktion anbot —
+   und wurde per CSS versteckt. Damit waren die freie Schlangenhäutung und die
+   Kartenwahl beim Pflicht-Abwurf gar nicht mehr spielbar.)*
+
+---
+
+## Vollständigkeitsliste
+
+Abgeleitet aus `src/engine/legalActions.ts` und `GAME_SPEC.md`. Diese Liste ist
+die Abnahmecheckliste des Bretts.
+
+### Eingaben — je Aktion mindestens ein Klickpfad
+
+| Eingabe | Für welche Aktion |
+|---|---|
+| Handkarte auswählen/abwählen, Drag-Start | alle |
+| Startzone | `NeueSchlangeStarten` (Limit 2 sichtbar machen) |
+| Anlegeplatz **links** und **rechts**, getrennt | `KarteAnlegen` |
+| eigene Schlange | `FarbenschutzSpielen`, `SchlangenhaeutungSpielen` |
+| Kartenpaar in eigener Schlange | `FarbenfusionSpielen` (max. 1×/Zug) |
+| einzelne eigene Karte | `SchlangenfrassSpielen` (1 Ziel) |
+| gegnerische Schlange | `SchlangenblockadeSpielen` |
+| gegnerische Karte | `FarbendiebSpielen` (Beute), `SchlangenfrassSpielen` (2 Ziele, **2-Schritt-Auswahl mit Reset**) |
+| Einfügeplatz 0..n in eigener Schlange | `FarbendiebSpielen` |
+| Gegnerplakette | `SonderkarteSpielen` (Schlangengrube) |
+| Verdoppler-Auslöser | `VerdopplerSpielen` (nur bei `gespielteKarten === 0`) |
+| **freier Reihenfolge-Editor** | `SchlangenhaeutungSpielen` — nicht zwei Presets |
+| Reaktionsdialog | `…Abwehren` / `…Durchlassen`, inkl. Zustand „kein Farbenschutz" |
+| Pflicht-Abwurf **mit Kartenwahl** | `PflichtAbwurf` |
+| Überhand-Abwurf: n-aus-m mit Bestätigung | Zugabschluss |
+| fünf Phasenknöpfe | Ausspielphase starten/beenden, Aufgabenprüfung beenden, Überhand abwerfen, Zug beenden |
+| KI-Zug abspielen | mit Protokollanzeige |
+| neues Spiel | 1–3 KI-Gegner |
+
+### Dauerhaft sichtbare Zustände
+
+aktiver Spieler · Zugphase · Endspurt · **gespielte Karten x/y mit Farb- und
+Sonderkartenzähler** · **Verdoppler aktiv (2→3 Karten)** · Handkartenzahl und
+Limit 10 · **Schlangenzahl und Limit 2** · Schlangenzustände
+aktiv/blockiert/geschützt · Nachziehstapel und Ablage · offene Aufgaben (im
+Endspurt doppelt zählend) · geheime Aufgabe **nur des Menschen** · **wer
+aussetzt** · nächster Pflichtschritt · letzte Aktion · Wertung und Sieger.
+
+Fett markiert sind die Angaben, die vor dem Neubau **nirgends** sichtbar waren.
+`aussetzenSpielerIndizes` kam im gesamten `.tsx`-Code nicht ein einziges Mal vor.
+
+---
+
+## Zwei Fallen
+
+**Das Reaktionsfenster gehört dem Verteidiger**, nicht dem Zugspieler. Die
+`spielerId` in einer Reaktionsaktion ist die des Angegriffenen. Solange ein
+`pendingReaktion` offen ist, liefert `ermittleLegaleAktionen` ein **leeres
+Array**, und jede andere Aktion wird abgelehnt. Der Dialog ist zugleich der
+Wiedereinstiegspunkt aus einem KI-Zug (`src/kiZug.ts:89`).
+
+**Verdeckte Information ist harte Anforderung** (`GAME_SPEC.md`, R7-Abschnitt):
+Während eines KI-Zugs dürfen Hand und geheime Aufgabe des Gegners nicht sichtbar
+werden.
+
+---
+
+## Wie die Einhaltung geprüft wird
+
+Vier generische Wächter in `tests/layout/brett_waechter.spec.ts` prüfen nicht
+einzelne Elemente, sondern Eigenschaften der ganzen Seite:
+
+| Wächter | Regel |
+|---|---|
+| kein abgeschnittener Inhalt | 2 |
+| kein Bedienelement außerhalb des Bildes | — |
+| kein Bedienelement verdeckt | — |
+| Elementbudget | 1, 3 |
+
+Dazu bei jedem Slice zwei Prüfungen, die zuvor gefehlt haben:
+
+1. **Ein Blick auf das Bild**, nicht nur auf Zahlen.
+2. **Ein Zug mit der Maus** über `page.mouse.click()` auf die
+   Bildschirmkoordinate — ohne `scrollIntoView`-Hilfe. Playwrights `click()`
+   scrollt Elemente intern in den Blick und verdeckt damit genau den Fehler, um
+   den es hier geht.

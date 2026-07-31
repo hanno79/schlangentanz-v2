@@ -27,7 +27,7 @@ Audit-Kette“ selbst als offen.
 | **G1** Drei Buttons mit identischem Namen | 4 | echter Defekt (Barrierefreiheit) |
 | **G2** `/game` passt nicht ins 1280×900-Erstbild | 17 (+6 aus G7) | **Zielkonflikt im Produkt** |
 | **G3** Element umbenannt oder verschoben | 8 | veraltete Erwartung |
-| **G4** Timeout — Folgefehler aus G1/G3 | 4 | Folge |
+| **G4** Timeout — Folgefehler aus G1/G3 | 2 (von 4) | Folge |
 | **G5** Stil-Vertrag verletzt | 4 | zu klären |
 | **G6** Fehler im Smoke-Skript selbst | 1 | echter Defekt |
 
@@ -165,7 +165,7 @@ hinter der fixierten Hand. Die Arena müsste stattdessen von 378 px auf 214 px
 halbiert werden — das widerspricht M2r (Schlangenlichtung ≥ 55 % Viewport).
 
 **Der tragfähige Weg** ist die *ganze* Bodenzeile. Das Grid trägt sie bereits
-als eine Reihe: `"sp-plakette hand arenazug"`. Fixiert man sie gemeinsam statt
+als eine Reihe: `“sp-plakette hand arenazug“`. Fixiert man sie gemeinsam statt
 nur die Hand, bleiben 71 + 81 + Arena + 97 für das Brett, und die Arena darf
 wachsen statt zu schrumpfen. Das braucht einen Wrapper um diese drei Elemente
 in `App.tsx` — ein Struktur-Slice, kein CSS-Detail, und deshalb nicht nebenbei
@@ -236,7 +236,7 @@ RED-Test in Vitest, bevor sie repariert werden.
 
 ### S-4 — Stil-Verträge (G5, 4 Skripte) · M
 
-- `m2w`: `zugpfad` hat `box-shadow: "none"` — Schatten verloren oder bewusst entfernt?
+- `m2w`: `zugpfad` hat `box-shadow: “none“` — Schatten verloren oder bewusst entfernt?
 - `m2h`: `::before` ohne Stitch-Dot-Farbe
 - `m1db`: ausgewählte Karte ohne lime-grünen Glow
 - `m2i`: Kartenhöhe (hängt an S-2)
@@ -248,9 +248,12 @@ fällt ein verlorener Wert sofort auf, im CSS-Quelltext nicht.
 
 ### S-5 — Timeouts (G4, 4 Skripte) · S
 
-`m1cs`, `m1cw`, `m1dl`, `m95` warten auf Elemente, die durch G1/G3 nicht mehr
-erscheinen. Erst nach S-1 und S-3 erneut laufen lassen; was dann noch hängt, wird
-einzeln untersucht.
+`m1dl` wurde durch deterministische Startbedingungen behoben (fester Seed für
+`Math.random` in `m1dl_waldtanz_anlegeplatz_dropzone_smoke.mjs`). `m1cw` wurde
+durch die zentrale `starteErsteSchlange`-Routine ersetzt.
+
+Verbleibende Timeout-Fälle: `m1cs`, `m95`. Erst nach S-1 und S-3 erneut laufen
+lassen; was dann noch hängt, wird einzeln untersucht.
 
 ## Verifikation
 

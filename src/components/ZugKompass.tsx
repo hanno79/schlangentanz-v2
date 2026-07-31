@@ -7,7 +7,7 @@ Beschreibung: Board-naher Zugkompass fuer gefuehrte Phasenwechsel im Waldtanz-Sp
 
 import { ermittleReaktionsAktionen, type SpielAktion, type Spielzustand } from '../engine'
 import { erstelleAktionsLabel } from '../aktionsLabel'
-import { phasenAktionName } from '../phasenAktionen'
+import { phasenAktionName, PHASENAKTION, type PhasenAktionId } from '../phasenAktionen'
 import { zugphaseLabel } from '../zugphaseLabels'
 import { ausspielphaseBeendbar } from '../spielLabelHelpers'
 
@@ -57,9 +57,10 @@ function hinweisLabel(zustand: Spielzustand, ueberhand: number, zeigtKiVorspulen
 // ÄNDERUNG [31.07.2026]: S-1 — der Zugkompass ist ein Zweit-Bedienort. Sein
 // Accessible Name traegt deshalb den Ortszusatz, damit er sich vom kanonischen
 // Knopf (Brettrand bzw. Aktionsliste) unterscheidet.
-function zugknopf(label: string, onClick: () => void) {
+function zugknopf(aktion: PhasenAktionId, onClick: () => void) {
+  const label = PHASENAKTION[aktion]
   return (
-    <button type="button" className="zugkompass__hauptaktion" aria-label={phasenAktionName(label, 'zugkompass')} onClick={onClick}>
+    <button type="button" className="zugkompass__hauptaktion" aria-label={phasenAktionName(aktion, 'zugkompass')} onClick={onClick}>
       <span aria-hidden="true" className="zugkompass__hauptaktion-kicker">Zugknopf</span>
       <span aria-hidden="true" className="zugkompass__hauptaktion-label">{label}</span>
       <span aria-hidden="true" className="zugkompass__hauptaktion-pfeil">→</span>
@@ -161,12 +162,18 @@ export default function ZugKompass({
       {zeigtGegnerzugStatus && <p className="zugkompass__feedback">Gegnerzug abgeschlossen. Du bist wieder dran.</p>}
       {zeigeHauptaktionen && (
         <div className="zugkompass__aktionen">
-          {!blockiertDurchReaktion && zeigtKiVorspulen && zugknopf('Gegnerzüge bis zu deinem Zug abspielen', onKiZugVorspulen)}
-          {zeigtWeiterZurAufgabenpruefung && zugknopf('Weiter zur Aufgabenprüfung', onAusspielphaseBeenden)}
-          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Aufgabenpruefung' && zugknopf('Weiter zum Zugabschluss', onAufgabenpruefungBeenden)}
-          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && zugknopf('Überzählige Karten abwerfen', onUeberzaehligeKartenAbwerfen)}
-          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && zugknopf('Zug an nächsten Spieler geben', onZugBeenden)}
-          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Nachziehphase' && zugknopf('Ausspielphase starten', onAusspielphaseStarten)}
+          {!blockiertDurchReaktion && zeigtKiVorspulen && (
+            <button type="button" className="zugkompass__hauptaktion" aria-label={`Gegnerzüge bis zu deinem Zug abspielen — Zugkompass`} onClick={onKiZugVorspulen}>
+              <span aria-hidden="true" className="zugkompass__hauptaktion-kicker">Zugknopf</span>
+              <span aria-hidden="true" className="zugkompass__hauptaktion-label">Gegnerzüge bis zu deinem Zug abspielen</span>
+              <span aria-hidden="true" className="zugkompass__hauptaktion-pfeil">→</span>
+            </button>
+          )}
+          {zeigtWeiterZurAufgabenpruefung && zugknopf('weiterZurAufgabenpruefung', onAusspielphaseBeenden)}
+          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Aufgabenpruefung' && zugknopf('weiterZumZugabschluss', onAufgabenpruefungBeenden)}
+          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand > 0 && zugknopf('ueberzaehligeAbwerfen', onUeberzaehligeKartenAbwerfen)}
+          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Zugabschluss' && ueberhand === 0 && zugknopf('zugBeenden', onZugBeenden)}
+          {!blockiertDurchReaktion && !zeigtKiVorspulen && zustand.zugphase === 'Nachziehphase' && zugknopf('ausspielphaseStarten', onAusspielphaseStarten)}
         </div>
       )}
     </section>
