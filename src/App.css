@@ -2354,9 +2354,9 @@ code {
     grid-template-rows:
       auto
       auto
-      clamp(1.6rem, 3vh, 2rem)
-      clamp(24rem, 50vh, 32rem)
-      clamp(1.6rem, 3vh, 2rem)
+      auto
+      minmax(0, clamp(20rem, 42vh, 26rem))
+      auto
       auto;
     align-content: start;
     gap: clamp(0.55rem, 1vw, 0.78rem);
@@ -3896,6 +3896,27 @@ code {
   }
 
   .spielbereich--game-route [class~="waldtanz-zugseitenleiste"] > :has(button) {
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* ÄNDERUNG [31.07.2026]: S-2 — Die Notluke darüber hebt den Cap am *Kind*
+     auf, damit Bedienelemente nicht abgeschnitten werden. Sie blieb
+     wirkungslos, weil die Leiste selbst `max-height` + `overflow: hidden`
+     trägt: Die Gegnerzug-Bühne wuchs auf ihre vollen 194 px und wurde vom
+     Container trotzdem bei 90 px abgeschnitten. Ihr Knopf lag damit
+     unterhalb der Schnittkante im Kasten des Handpanels (`z-index: 4`),
+     das die Klicks abfing — `elementFromPoint` lieferte dort das Handpanel
+     statt des Knopfes. Der Gegnerzug war per Maus nicht auslösbar.
+
+     Die Notluke muss deshalb auch am Container gelten. Sie ist auf die
+     Gegnerzug-Lage begrenzt — auf `--aktiv`, nicht auf die Anwesenheit der
+     Bühne: Die Bühne steckt immer im DOM (`App.tsx`), nur die Zustandsklasse
+     wechselt. Nur im Gegnerzug ist ihr Knopf die einzige Handlung, und die
+     Hand liegt dann ohnehin verdeckt. Im Erstbild greift der Cap unverändert
+     — die Erstbild-Verträge bleiben davon unberührt.
+     Vertrag: tests/layout/spielbrett_zeilen.spec.ts */
+  .spielbereich--game-route [class~="waldtanz-zugseitenleiste"]:has([class~="ki-zug-buehne--aktiv"]) {
     max-height: none;
     overflow: visible;
   }

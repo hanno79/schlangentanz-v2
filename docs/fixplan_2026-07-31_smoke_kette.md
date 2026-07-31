@@ -116,6 +116,24 @@ Umsetzung, dann Smokes.
 
 Größter Brocken, aber ein Eingriff für über die Hälfte der Fehlschläge.
 
+**Stand nach S-2 (31.07.2026):** 36 OK / 41 FEHL. Repariert: `m1bz`, `m1ci`, `m1g`,
+`m3a`. Keine Regression.
+
+Der Zielkonflikt ist damit **nicht** entschieden, sondern umgangen: S-2 hat den
+vorhandenen Zeilenplatz umverteilt (die Arena-Zeile hatte 72 px ungenutzt), statt
+Hero-Größen oder Erstbild zu opfern. Die Handkarte liegt jetzt bei 895 px statt
+927 px. Die Optionen (a)/(b)/(c) bleiben offen für die Smokes, die harte
+Container-Schwellen fordern (`m1df` ≤ 960 px, `m1dg` ≤ 1000 px) — dort reicht
+Umverteilung nicht.
+
+**Nebenbefund: `m1dc_spielmoment_pulse` ist flaky**, nicht kaputt. Gemessen 2/5
+grün — und zwar auch auf dem Build *ohne* die S-2-Änderung, also nicht durch sie
+verursacht. Das Skript klickt einen „Neue Schlange starten"-Knopf und prüft nach
+150 ms `data-letzte-aktion-ziel`; bevorzugt wird ein Knopf innerhalb der
+Startzone, sonst `startButtons[0]` — trifft die Vorauswahl den falschen Knopf,
+bleibt das Attribut `null`. Gehört nach S-5, ist aber kein Timeout, sondern eine
+Race im Skript.
+
 ### S-3 — Umbenannte und verschobene Elemente (G3, 8 Skripte) · M
 
 Pro Skript prüfen, ob die Erwartung veraltet ist oder etwas wirklich fehlt.

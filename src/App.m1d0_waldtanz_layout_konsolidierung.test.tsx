@@ -164,53 +164,20 @@ describe('M1d0 Waldtanz-Layout-Konsolidierung', () => {
     expect(hatUntereZeile).toBe(true)
   })
 
-  it('definiert explizite grid-template-rows mit Arenastein-Cap', () => {
-    // M1d0 (Folge-Fix): Damit die Hoehen-Caps auf den einzelnen Zeilen
-    // GREIFEN (Arenastein 36vh, Zugseitenleiste 7vh), muss das
-    // Spieltisch-Grid explizite grid-template-rows definieren statt
-    // grid-auto-rows: auto. Sonst waechst jede Zeile auf den natuerlichen
-    // Inhalt, der die Caps sprengt (Schlangenlichtung waechst auf 394 px
-    // und schiebt die Bottom-Row aus dem 900-px-Viewport).
-    const cleaned = cleanedBlock(
-      '.spielbereich--game-route [class~="spielbrett--waldtanz"]',
-    )
-    expect(cleaned).toMatch(/grid-template-rows:/)
-    expect(cleaned).not.toMatch(/grid-auto-rows:\s*auto/)
+  /* ÄNDERUNG [31.07.2026]: S-2 — „definiert explizite grid-template-rows mit
+     Arenastein-Cap" ist nach tests/layout/spielbrett_zeilen.spec.ts migriert.
 
-    // Mindestens eine der Zeilen referenziert den Arenastein-Cap.
-    // M1d0 hat urspruenglich clamp(20rem, 40vh, 28rem) gewaehlt; M1dd hat
-    // zunaechst auf clamp(18rem, 36vh, 24rem) gestrafft, um Platz fuer
-    // die aktionsdock-Row zu schaffen. Nach dem M1bw-Hit-Test-Blocker
-    // (Tischkarte ragte in die aktionsdock-Row) wurde der Cap auf den
-    // M1d0-Wert zurueckgesetzt und der aktionsdock stattdessen zwischen
-    // Gegnerplakette und Arenasstein positioniert. Das reichte noch nicht
-    // fuer die 900-px-Viewport-Balance, daher hat M1dd-Finalisierung den
-    // Cap zunaechst auf clamp(18rem, 32vh, 22rem) = 288 px und nach der
-    // Live-Smoke-Messung auf clamp(17rem, 30vh, 20rem) = 272 px gestrafft.
-    // Alle vier Werte gehoeren zum selben M1d0-Vertrag (explizite
-    // grid-template-rows + clamp-Caps).
-    // AENDERUNG 23.06.2026 (M1d1): Arena-Clamp von clamp(17rem,30vh,20rem) auf
-    // clamp(19rem,34vh,22rem) angehoben, damit das Flex-Column-Arena dem
-    // Spielfeld ausreichend Resthoehe gibt. 19rem und 34vh sind jetzt akzeptiert.
-    // AENDERUNG 24.06.2026 (M1d2-Fix): Arena-Clamp von clamp(24rem,46vh,28rem)
-    // auf clamp(22.5rem,43vh,26.5rem) gesenkt, damit Handkarten-Bottom <= 905px
-    // (M1bp-Vertrag) bei erhaltener Schlangenlichtung-Sichtbarkeit >= 70px.
-    // AENDERUNG 27.06.2026 (M2r Arenastein-Cap-Raise, Kimi-Review B2):
-    // Arena-Clamp auf clamp(34rem, 72vh, 46rem) angehoben, damit die
-    // Schlangenlichtung >=55% Viewport erreichen kann. 34rem/72vh/46rem
-    // sind jetzt akzeptiert.
-    // AENDERUNG 29.06.2026 (M9 Hand-Erstbild): Arena-Clamp auf
-    // clamp(24rem, 50vh, 32rem) reduziert, damit Hand-Bottom im
-    // 1440x900 Erstbild sichtbar ist. 24rem/50vh/32rem ist jetzt akzeptiert.
-    expect(cleaned).toMatch(/clamp\(\s*(17|18|19|20|22\.5|24|34)rem,\s*(30|32|34|36|40|43|46|50|72)vh,\s*(20|2[246]|2[26]\.5|28|32|46)rem\s*\)/)
-    // Und die Zugseitenleiste-Cap. M1d0 urspruenglich clamp(4rem, 7vh, 5rem);
-    // M1d1 (24.06.2026) auf clamp(2.5rem, 5vh, 3rem) reduziert, um vertikalen
-    // Platz fuer das vergroesserte Arena (432px) freizugeben.
-    // AENDERUNG 29.06.2026 (M9 Hand-Erstbild): zugseitenleiste-Cap auf
-    // clamp(1.6rem, 3vh, 2rem) gestrafft, damit Hand im 1440x900 Erstbild
-    // sichtbar bleibt. 1.6/3vh/2rem ist jetzt akzeptiert.
-    expect(cleaned).toMatch(/clamp\(\s*(1\.6|2|2\.5|4)rem,\s*(3|4|5|7)vh,\s*(2|2\.5|3|5)rem\s*\)/)
-  })
+     Der Test prüfte, ob im Quelltext irgendeiner aus sieben erlaubten
+     clamp()-Werten steht. Die Kommentarhistorie darüber zählte sechs
+     Nachjustierungen: Jedes Mal, wenn ein Slice die Caps verschob, wurde die
+     Werteliste erweitert statt der Vertrag geprüft. Er blieb deshalb grün,
+     während das Gemeinte gebrochen war — die Zeile `zugseitenleiste` war auf
+     29 px gedeckelt bei 90 px Inhalt, lief in die Handzeile und ließ das
+     Handpanel die Klicks auf den Gegnerzug-Knopf abfangen.
+
+     Der Nachfolger misst die Wirkung: keine Zeile wird von ihrem Inhalt
+     gesprengt, Zugleiste und Hand überlappen nicht, die erste Handkarte liegt
+     im Erstbild, der Gegnerzug-Knopf nimmt Klicks entgegen. */
 
   it('nimmt Spielerplakette und Gegnerplakette aus position: absolute heraus', () => {
     // Vor M1d0 waren beide Plaketten position:absolute und damit nicht

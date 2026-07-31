@@ -95,7 +95,9 @@ async function pruefeM1dhSpielhandlung(seite) {
   if (!daten.hatEndturn) {
     throw new Error('M1dh: End-Turn-Pille fehlt im Zugabschluss-Zustand (Akzeptanzvertrag Punkt 2)')
   }
-  if (daten.endturnLabel !== 'Zug an nächsten Spieler geben') {
+  // AENDERUNG [31.07.2026]: S-1 — die Pille traegt jetzt ihren eigenen sichtbaren
+  // Text plus Bedienort; das fruehere aria-label kollidierte mit dem Brettrand-Knopf.
+  if (daten.endturnLabel !== 'Zug beenden — Handleiste') {
     throw new Error(`M1dh: End-Turn-Pille hat falsches aria-label (${daten.endturnLabel})`)
   }
 
