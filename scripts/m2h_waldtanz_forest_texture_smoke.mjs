@@ -64,11 +64,19 @@ async function pruefeM2hForestTexture(page, viewport) {
   if (!/1\.4px|1\.5px|1\.6px|2px/.test(beforeBgImage)) {
     throw new Error(`M2h @${breite}x${hoehe}: ::before hat keinen kleinen Radius (1.4-2px) im radial-gradient`)
   }
-  // Stitch-Farbe #c4fdb6 (oder eine nahe Variante)
-  if (!/c4fdb6|#c4fdb6/i.test(beforeBgImage)) {
+  /* Stitch-Dot-Farbe #c4fdb6.
+
+     ÄNDERUNG [31.07.2026]: S-4 — gegen die *berechnete* Schreibweise prüfen.
+     Vorher suchte dieser Test die Zeichenkette „c4fdb6" in
+     `getComputedStyle(...).backgroundImage`. Dort steht sie nie: Der Browser
+     normalisiert Hex-Farben zu `rgb()`, aus `#c4fdb6` wird `rgb(196, 253, 182)`.
+     Der Test konnte also gar nicht grün werden — die Farbe war die ganze Zeit
+     korrekt gesetzt (App.css: `radial-gradient(circle, #c4fdb6 1.4px, …)`). */
+  const STITCH_DOT = /rgb\(\s*196\s*,\s*253\s*,\s*182\s*\)|c4fdb6/i
+  if (!STITCH_DOT.test(beforeBgImage)) {
     // Fallback: akzeptiere auch eine Lime-Variante (surface-container o.ae.)
-    if (!/surface-container|#bff7b1|#c4fdb6/i.test(beforeBgImage)) {
-      throw new Error(`M2h @${breite}x${hoehe}: ::before hat keine Stitch-Dot-Farbe (c4fdb6 oder surface-container) im radial-gradient`)
+    if (!/surface-container|#bff7b1|rgb\(\s*191\s*,\s*247\s*,\s*177\s*\)/i.test(beforeBgImage)) {
+      throw new Error(`M2h @${breite}x${hoehe}: ::before hat keine Stitch-Dot-Farbe (rgb(196,253,182) oder surface-container) im radial-gradient: ${beforeBgImage}`)
     }
   }
   console.log(`  ::before backgroundImage: radial-gradient mit kleinem Radius + Stitch-Farbe ✓`)

@@ -144,6 +144,18 @@ async function pruefeM2wZugseitenleiste(page, viewport, label) {
     { name: 'spielhilfe', locator: spielhilfe },
     { name: 'zugkompass', locator: zugkompass },
   ]
+  /* ÄNDERUNG [31.07.2026]: S-4 — Körperlichkeit am Container prüfen, nicht an
+     jedem Kind. M3d (01.07.2026) hat den Kindern der Zugseitenleiste Border und
+     Schatten bewusst genommen — im Regelkommentar: „Children der Zugseitenleiste
+     tragen keine eigenen 3px-Borders mehr, der Container-Border absorbiert sie",
+     umgesetzt per `border: 2px solid transparent !important` und
+     `box-shadow: none !important`. Der alte Test forderte für jede Karte einen
+     eigenen Schatten und stand damit im Widerspruch zu einer bewussten
+     Gestaltungsentscheidung.
+
+     Der Vertrag dahinter — die Zugleiste ist ein körperliches Brettobjekt und
+     keine flache Fläche — gilt weiter und wird jetzt dort geprüft, wo M3d ihn
+     verortet hat: an der Leiste selbst. */
   console.log(`\n[${label}] /game CARD-STYLES`)
   for (const c of cardStyleChecks) {
     const styles = await c.locator.evaluate((el) => {
@@ -151,12 +163,18 @@ async function pruefeM2wZugseitenleiste(page, viewport, label) {
       return { borderWidth: cs.borderTopWidth, borderColor: cs.borderTopColor, boxShadow: cs.boxShadow, borderRadius: cs.borderTopLeftRadius }
     })
     console.log(`  ${c.name}: border=${styles.borderWidth} ${styles.borderColor}  shadow="${styles.boxShadow}"  radius=${styles.borderRadius}`)
-    if (parseFloat(styles.borderWidth) < 2) {
-      throw new Error(`[${label}] ${c.name} hat zu duennen Border: ${styles.borderWidth}`)
-    }
-    if (styles.boxShadow === 'none' || styles.boxShadow === '') {
-      throw new Error(`[${label}] ${c.name} hat keinen Box-Shadow: "${styles.boxShadow}"`)
-    }
+  }
+
+  const leiste = await page.locator('[class~="waldtanz-zugseitenleiste"]').first().evaluate((el) => {
+    const cs = getComputedStyle(el)
+    return { borderWidth: cs.borderTopWidth, boxShadow: cs.boxShadow }
+  })
+  console.log(`  zugseitenleiste (Container): border=${leiste.borderWidth}  shadow="${leiste.boxShadow}"`)
+  if (parseFloat(leiste.borderWidth) < 2) {
+    throw new Error(`[${label}] Zugseitenleiste hat zu duennen Border: ${leiste.borderWidth}`)
+  }
+  if (leiste.boxShadow === 'none' || leiste.boxShadow === '') {
+    throw new Error(`[${label}] Zugseitenleiste hat keinen Box-Shadow: "${leiste.boxShadow}"`)
   }
 
   console.log(`[${label}] OK`)

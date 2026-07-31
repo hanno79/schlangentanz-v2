@@ -3371,6 +3371,27 @@ code {
     box-shadow: 0 4px 0 var(--st-color-border-strong);
   }
 
+  /* ÄNDERUNG [31.07.2026]: S-4 — Auswahl-Rückmeldung auf /game wiederherstellen.
+
+     Der Block darüber deklariert `box-shadow` mit und erreicht per doppeltem
+     Klassen-Selektor 0,5,0 — laut seinem eigenen Kommentar bewusst, „um
+     spaetere M1x-Slice-Regeln abzuwehren". Getroffen hat er dabei auch
+     `.handkartenleiste[data-hat-ausgewaehlt="true"] …` (0,4,0), die den
+     lime-grünen Auswahl-Schein setzt. Folge: Auf /game trug die gewählte
+     Karte denselben flachen Rahmenschatten wie jede andere — der Spieler sah
+     seine Auswahl nicht. Gemessen `rgb(6, 57, 7) 0px 4px 0px 0px`.
+
+     Diese Regel stellt die Rangfolge her, die gelten muss: Zustand schlägt
+     Dekoration. Die Hero-Optik aus M2i bleibt vollständig erhalten — nur der
+     Schatten der *gewählten* Karte kommt wieder aus dem Auswahl-Token.
+     Vertrag: tests/layout/handkarte_auswahl.spec.ts */
+  .spielbereich--game-route.spielbereich--game-route
+    [class~="handkartenleiste--spielkartenfaecher"]
+    [class~="handkarte--ausgewaehlt"]
+    [class~="handkarte__button--karte"].handkarte__button--karte {
+    box-shadow: var(--handkarte-selected-glow), 0 4px 0 var(--st-color-border-strong);
+  }
+
   .spielbereich--game-route [class~="handkarte__art"] {
     min-height: 28%;
   }
