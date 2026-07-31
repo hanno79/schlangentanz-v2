@@ -31,7 +31,7 @@ import { ermittlePhasenSchritt } from './phasenSchritt'
 import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
 import { ermittleHandModus, handHinweis } from './handModus'
 import { ermittleSpielerLagen, geheimeAufgabeDesMenschen } from './spielerLage'
-import { naechsterPflichtschrittLabel } from '../spielLabelHelpers'
+import { aufgabeLabel, naechsterPflichtschrittLabel } from '../spielLabelHelpers'
 
 interface SpielbrettProps {
   partie: ReturnType<typeof usePartie>
@@ -97,6 +97,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
   const lagen = ermittleSpielerLagen(zustand)
   const eigeneLage = lagen.find((lage) => lage.id === aktiver.id)
   const geheimeAufgabe = geheimeAufgabeDesMenschen(zustand)
+  const istEndspurt = zustand.spielphase === 'Endspurt'
   const pflichtschritt = naechsterPflichtschrittLabel(
     zustand,
     legaleAktionen,
@@ -147,7 +148,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
             <span className="brett-kopf__wert">Verdoppler aktiv</span>
           ) : null}
         </p>
-        {zustand.spielphase === 'Endspurt' ? (
+        {istEndspurt ? (
           <p className="brett-kopf__warnung">Endspurt — Aufgaben zählen doppelt</p>
         ) : null}
         {eigeneLage?.setztAus ? (
@@ -235,33 +236,43 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
       <section className="brett-gegner brett-bereich" aria-label="Gegner">
         <h2 className="brett-bereich__titel">Gegner</h2>
         <ul className="brett-gegner__liste">
-          {lagen
-            .filter((lage) => lage.id !== aktiver.id)
-            .map((lage) => (
-              <li key={lage.id} className="brett-kopf__block">
-                <span className="brett-kopf__wert">{lage.name}</span>
-                <span className="brett-kopf__leise">
-                  {lage.punkte} Punkte · {lage.schlangen} Schlangen · {lage.handkarten} Karten
-                </span>
-                {/* Wer aussetzt, stand vor diesem Paket nirgends im Brett. */}
-                {lage.setztAus ? <span className="brett-kopf__warnung">setzt aus</span> : null}
-              </li>
-            ))}
+          {zustand.spieler
+            .filter((spieler) => spieler.id !== aktiver.id)
+            .map((spieler) => {
+              const lage = lagen.find((eintrag) => eintrag.id === spieler.id)
+              return (
+                <li key={spieler.id} className="brett-gegner__spieler">
+                  <span className="brett-kopf__block">
+                    <span className="brett-kopf__wert">{spieler.name}</span>
+                    <span className="brett-kopf__leise">
+                      {lage?.punkte ?? 0} Punkte · {spieler.hand.length} Karten
+                    </span>
+                    {/* Wer aussetzt, stand vor diesem Paket nirgends im Brett. */}
+                    {lage?.setztAus ? <span className="brett-kopf__warnung">setzt aus</span> : null}
+                  </span>
+                  {spieler.schlangen.length === 0 ? (
+                    <span className="brett-leer">noch keine Schlange</span>
+                  ) : (
+                    spieler.schlangen.map((schlange) => (
+                      <ul key={schlange.id} className="brett-hand__karten">
+                        {schlange.karten.map((karte) => (
+                          <Kartenmarke key={karte.id} karte={karte} />
+                        ))}
+                      </ul>
+                    ))
+                  )}
+                </li>
+              )
+            })}
         </ul>
       </section>
 
-      {/* 4 — Seitenspalte: geheime Aufgabe und die Aktionsliste als
-          Rückfallebene (Regel 6) */}
+      {/* 4 — Seitenspalte. Die Aktionsliste steht bewusst zuoberst: Die Spalte
+          scrollt, und der Wächter „kein Bedienelement verdeckt" hat prompt
+          gemeldet, als die empfohlene Aktion unter die Aufgabenliste rutschte
+          und damit unerreichbar wurde. Was man anklickt, kommt zuerst; was man
+          nachschlägt, danach. */}
       <section className="brett-seite brett-bereich" aria-label="Aktionen">
-        {/* Nur die eigene geheime Aufgabe — die einer KI zu zeigen wäre kein
-            Anzeigefehler, sondern ein Regelbruch. */}
-        {geheimeAufgabe ? (
-          <p className="brett-geheimaufgabe">
-            <span className="brett-bereich__titel">Deine geheime Aufgabe</span>
-            <span>{geheimeAufgabe.text}</span>
-            {geheimeAufgabe.erfuellt ? <span className="brett-kopf__wert">✓ erfüllt</span> : null}
-          </p>
-        ) : null}
         <h2 className="brett-bereich__titel">
           {hatOffeneReaktion ? 'Du wirst angegriffen' : 'Mögliche Aktionen'}
         </h2>
@@ -293,6 +304,38 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
             ))}
           </ul>
         )}
+
+        {/* Offene Aufgaben als *Liste*. Die Tafel auf /game meldete
+            „3 offene Aufgaben" und blendete ihren Inhalt per App.css:3867 aus —
+            der Spieler erfuhr nie, worum es geht. */}
+        <div className="brett-aufgaben">
+          <span className="brett-bereich__titel">
+            Offene Aufgaben · {zustand.offeneAufgaben.length}
+            {istEndspurt ? ' · zählen doppelt' : ''}
+          </span>
+          {zustand.offeneAufgaben.length === 0 ? (
+            <span className="brett-leer">keine offenen Aufgaben</span>
+          ) : (
+            <ul>
+              {zustand.offeneAufgaben.map((aufgabe) => (
+                <li key={aufgabe.id} className="brett-aufgaben__eintrag">
+                  {aufgabeLabel(aufgabe, istEndspurt)}
+                </li>
+              ))}
+            </ul>
+          )}
+          <span className="brett-leer">Aufgabenstapel: {zustand.aufgabenStapel.length}</span>
+        </div>
+
+        {/* Nur die eigene geheime Aufgabe — die einer KI zu zeigen wäre kein
+            Anzeigefehler, sondern ein Regelbruch. */}
+        {geheimeAufgabe ? (
+          <p className="brett-geheimaufgabe">
+            <span className="brett-bereich__titel">Deine geheime Aufgabe</span>
+            <span>{geheimeAufgabe.text}</span>
+            {geheimeAufgabe.erfuellt ? <span className="brett-kopf__wert">✓ erfüllt</span> : null}
+          </p>
+        ) : null}
       </section>
 
       {/* 5 — Handleiste. Der Klick bedeutet je nach Modus etwas anderes; der

@@ -286,6 +286,26 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   gap: var(--brett-luft);
 }
 
+.brett-gegner__spieler {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--brett-luft-eng);
+}
+
+.brett-aufgaben {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-block-end: var(--brett-luft-eng);
+  border-block-end: 1px solid var(--brett-flaeche-tief);
+}
+
+.brett-aufgaben__eintrag {
+  padding-block: 0.15rem;
+  font-size: 0.78rem;
+}
+
 .brett-geheimaufgabe {
   display: flex;
   flex-direction: column;

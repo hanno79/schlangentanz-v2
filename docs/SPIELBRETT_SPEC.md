@@ -27,16 +27,16 @@ Mehr Regionen gibt es nicht. Wer eine achte braucht, ändert erst dieses Dokumen
 │ 1 KOPFLEISTE  Spieler·Punkte │ Phase · Zugbudget x/y │ Gegner │
 ├──────────────────────────────────────────────┬───────────────┤
 │  2 SPIELFLÄCHE                               │ 4 SEITENSPALTE│
-│    eigene Schlangen, Startkreis,             │   Nachziehen  │
-│    Anlegeplätze links/rechts                 │   Ablage      │
-│    (füllt den Rest, scrollt in sich)         │   Aufgaben    │
-│                                              │   Aktionsliste│
+│    eigene Schlangen, Startkreis,             │   Aktionsliste│
+│    Anlegeplätze links/rechts                 │   geheime     │
+│    (füllt den Rest, scrollt in sich)         │     Aufgabe   │
+│                                              │   Aufgaben    │
 ├──────────────────────────────────────────────┴───────────────┤
 │ 3 GEGNERSTREIFEN   gegnerische Schlangen, Zustand, aussetzen │
 ├──────────────────────────────────────────────────────────────┤
 │ 5 HANDLEISTE   Karten nebeneinander, jede anklickbar │ 6 AKTION│
 ├──────────────────────────────────────────────────────────────┤
-│ 7 STATUSZEILE   Pflichtschritt · letzte Aktion               │
+│ 7 STATUSZEILE   Pflichtschritt · Stapel · letzte Aktion      │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -45,10 +45,10 @@ Mehr Regionen gibt es nicht. Wer eine achte braucht, ändert erst dieses Dokumen
 | 1 | **Kopfleiste** | eigener Name, Punkte, Zugphase, Zugbudget, Gegnerübersicht | nichts — reine Orientierung |
 | 2 | **Spielfläche** | eigene Schlangen, Startkreis, Anlegeplätze | legt Karten an, startet Schlangen, wählt Brettziele |
 | 3 | **Gegnerstreifen** | gegnerische Schlangen, deren Zustand, wer aussetzt | wählt gegnerische Ziele für Sonderkarten |
-| 4 | **Seitenspalte** | Nachziehstapel, Ablage, offene Aufgaben, Aktionsliste | löst Aktionen über die Liste aus (Rückfallebene) |
+| 4 | **Seitenspalte** | Aktionsliste, geheime Aufgabe, offene Aufgaben | löst Aktionen über die Liste aus (Rückfallebene) |
 | 5 | **Handleiste** | die eigenen Karten | wählt Karten aus, wirft ab |
 | 6 | **Aktionsknopf** | *ein* Knopf: der, der die Phase weiterbringt | bringt den Zug voran |
-| 7 | **Statuszeile** | nächster Pflichtschritt, letzte Aktion | nichts — reine Rückmeldung |
+| 7 | **Statuszeile** | nächster Pflichtschritt, Nachziehstapel, Ablage, letzte Aktion | nichts — reine Rückmeldung |
 
 Entworfen für **1280×900 und breiter**. Schmaler wird gestapelt und darf
 scrollen.
@@ -164,3 +164,21 @@ Dazu bei jedem Slice zwei Prüfungen, die zuvor gefehlt haben:
    Bildschirmkoordinate — ohne `scrollIntoView`-Hilfe. Playwrights `click()`
    scrollt Elemente intern in den Blick und verdeckt damit genau den Fehler, um
    den es hier geht.
+
+### Zwei Nachträge aus der Umsetzung
+
+**Die Stapelzahlen stehen in der Statuszeile, nicht in der Seitenspalte.** Der
+Entwurf hatte sie in Region 4. Regel 1 verlangt, dass jede Information genau
+einmal erscheint — und in der Statuszeile stehen sie neben den anderen
+Randinformationen, während die Seitenspalte den Platz für Aktionen und Aufgaben
+behält. Bewusste Abweichung vom Entwurf, kein Versehen.
+
+**In der Seitenspalte steht die Aktionsliste zuoberst.** Die Spalte scrollt.
+Als die offenen Aufgaben vor die Aktionsliste rutschten, meldete der Wächter
+„kein Bedienelement verdeckt" prompt, dass die empfohlene Aktion unerreichbar
+geworden war. Regel: Was man anklickt, kommt zuerst; was man nachschlägt,
+danach.
+
+**Zum Elementbudget:** Gemessen wird das Erstbild einer frischen Partie. Karten
+häufen sich im Spielverlauf legitim an — ein Deckel auf jeden beliebigen Zustand
+wäre irgendwann aus dem falschen Grund rot.
