@@ -50,7 +50,11 @@ try {
     }
 
     // Startfuehrte klicken, um erste eigene Schlange zu erzeugen
-    const startfährte = page.getByRole('button', { name: /Startfährte .* für Pfad .* spielen/i }).first()
+    /* ÄNDERUNG [31.07.2026]: S-5 — Beschriftung nachgezogen. Die Startfährten
+       heißen seit dem Waldtanz-Umbau „Startfährte <karte> als neue Schlange
+       starten" (SchlangenStartzone.tsx); „… für Pfad … spielen" existiert nicht
+       mehr, weshalb der Klick in einen 30-Sekunden-Timeout lief. */
+    const startfährte = page.getByRole('button', { name: /Startfährte .* als neue Schlange starten/i }).first()
     await startfährte.click()
 
     // Brettschritt-Stempel erscheint mit dem Aktions-Label als Konsequenz-Zeile

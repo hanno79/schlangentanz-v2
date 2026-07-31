@@ -7,6 +7,7 @@ Punktetafel-Liste, Material und Spieleruebersicht ausgeblendet.
 */
 
 import { chromium } from 'playwright'
+import { startePartie } from './spiel_starten.mjs'
 
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app'
 
@@ -62,8 +63,11 @@ try {
     if (!gameBeweis.spieleruebersichtUnsichtbar) throw new Error(`M1cs Spielbrett-Fokus: Spieleruebersicht-Panel sichtbar (${JSON.stringify(gameBeweis)})`)
 
     // 2) /: alle drei Panels voll sichtbar (mit Punktetafel)
-    await page.goto(url('/'), { waitUntil: 'networkidle' })
-    await page.getByRole('region', { name: 'Spieltisch' }).waitFor()
+    /* ÄNDERUNG [31.07.2026]: S-5 — `/` ist die Lobby und zeigt das Brett erst
+       nach dem Start einer Partie. Das Skript stammt aus der Zeit, als `/`
+       direkt das Spiel rendert, und lief deshalb in einen 30-Sekunden-Timeout
+       auf die Spieltisch-Region. */
+    await startePartie(page, BASE_URL, { route: '/' })
 
     const lobbyBeweis = await page.evaluate(() => {
       const wertung = document.querySelector('.info-panel--wertung')

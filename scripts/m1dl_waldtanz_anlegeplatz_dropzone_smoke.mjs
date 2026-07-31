@@ -113,6 +113,11 @@ async function fuehreLiveSmokeAus() {
       const pageErrors = []
       seite.on('console', (msg) => { if (msg.type() === 'error') consoleErrors.push(msg.text()) })
       seite.on('pageerror', (err) => pageErrors.push(err.message))
+      /* ÄNDERUNG [31.07.2026]: S-5 — deterministischer Seed. Ohne ihn ist die
+         Starthand zufällig; ist die erste Handkarte nicht legal anlegbar,
+         erscheint kein Anlegeplatz und der Selektor läuft in einen Timeout.
+         Dieselbe Init wie in den übrigen Waldtanz-Smokes. */
+      await seite.addInitScript(() => { Math.random = () => 0.999999 })
       await seite.goto(`${BASE_URL}/game`, { waitUntil: 'networkidle', timeout: 15_000 })
 
       // Handkarte auswaehlen, damit Anlegeplaetze erscheinen.

@@ -26,6 +26,8 @@
 
 import { chromium } from 'playwright'
 
+import { startePartie } from './spiel_starten.mjs'
+
 const BASE_URL = process.env.SMOKE_BASE_URL ?? 'https://schlangentanz-v2.vercel.app'
 const HTTP_TIMEOUT_MS = 15_000
 const SELF_TEST = process.argv.includes('--self-test')
@@ -57,12 +59,13 @@ async function httpPruefen(url) {
 }
 
 async function starteSpiel(page) {
-  // Startgarten-Button (M1cd-Vorbedingung fuer Brettobjekte auf /game)
-  const startButton = page.locator('button', { hasText: /Startgarten|Spiel starten|Start/i }).first()
-  if (await startButton.count() > 0) {
-    await startButton.click({ force: true })
-    await page.waitForTimeout(800)
-  }
+  /* ÄNDERUNG [31.07.2026]: S-5 — dieses Skript hat nie eine Seite geladen. Die
+     HTTP-Prüfung weiter unten arbeitet mit `fetch`, nicht mit `page.goto`, also
+     klickte die Startsequenz auf about:blank und der Arenastein-Locator lief in
+     einen 30-Sekunden-Timeout. Navigation und Lobby-Start liegen jetzt in
+     scripts/spiel_starten.mjs. */
+  await startePartie(page, BASE_URL, { route: '/game' })
+
   // Eigene Schlange starten (M1cj-Vorbedingung)
   const startfaehrte = page.locator('.schlangen-startzone__faehrte-button').first()
   if (await startfaehrte.count() > 0) {
