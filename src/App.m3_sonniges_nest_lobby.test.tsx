@@ -6,12 +6,10 @@
  */
 /// <reference types="node" />
 
-import { readFileSync } from 'node:fs'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 
-const appCss = readFileSync('src/App.css', 'utf8')
 
 describe('M3 Sonniges Nest Lobby', () => {
   it('zeigt eine Stitch-inspirierte Lobby und startet eine Partie mit 1 bis 3 KI-Gegnern', () => {
@@ -54,14 +52,9 @@ describe('M3 Sonniges Nest Lobby', () => {
     expect(screen.getByRole('region', { name: 'Spieltisch' })).toHaveClass('spielbrett--waldtanz')
   })
 
-  it('verankert die Lobby visuell als Holzschild- und Baumhöhlen-Screen statt als Debugliste', () => {
-    expect(appCss).toMatch(/\.sonniges-nest\s*\{[^}]*border:\s*var\(--st-border-width-chunky\) solid var\(--st-color-border-strong\)/s)
-    expect(appCss).toMatch(/\.sonniges-nest\s*\{[^}]*border-radius:\s*3rem/s)
-    expect(appCss).toMatch(/\.lobby-code-schild\s*\{[^}]*repeating-linear-gradient/s)
-    expect(appCss).toMatch(/\.lobby-code-schild\s*\{[^}]*box-shadow:\s*0 8px 0 var\(--st-color-border-strong\)/s)
-    // M3c-Migration: Slot-Container heisst jetzt .lobby-avatar (vorher .lobby-slot__hoehle).
-    expect(appCss).toMatch(/\.lobby-avatar\s*\{[^}]*border-radius:\s*999px/s)
-    expect(appCss).toMatch(/\.lobby-slot--wartet \.lobby-avatar/s)
-    expect(appCss).toMatch(/\.lobby-startbutton:hover\s*\{[^}]*transform:\s*translateY\(-2px\) scale\(1\.04\)/s)
-  })
+  // ÄNDERUNG [30.07.2026]: AP-6 — der Stitch-Stil der Lobby (Rahmen, Radius,
+  // Streifen-Verlauf, harter Schatten, Hover-Anhebung) wird jetzt als berechneter
+  // Stil im Browser gemessen: tests/layout/lobby_erstbild.spec.ts. Der frühere
+  // Assert las die Deklarationen im Quelltext und hätte eine überschriebene oder
+  // umbenannte Regel nicht bemerkt.
 })

@@ -2961,3 +2961,33 @@ Korrekturkette auf `audit-fixes` erarbeitet und liegen vollstaendig auf `main` =
 
 - [ ] Live-Production-Gates fuer die Audit-Kette (HTTP 200, `/game` ohne Console-Errors, Smoke-Kette) — die Kette wurde nach `main` gemerged, aber in diesem Dokument liegt keine Deploy-Evidence dafuer vor.
 - [ ] Human gate fuer die Audit-Kette — der Nutzer hat die Spielbarkeit nach C1–C7 noch nicht bestaetigt.
+
+## Befund — 30.07.2026 AP-6: M3g-Erstbild-Vertrag ist regrediert
+
+Bei der Migration der Lobby-Layout-Verträge (AP-6) ist aufgefallen, dass das Ziel
+des M3g-Slices im aktuellen Stand **nicht mehr erfüllt** ist.
+
+**Verlauf laut diesem Dokument und gemessen am 30.07.2026:**
+
+| Stand | Seitenhöhe `/` | Unterkante erster Start-Button |
+|---|---|---|
+| vor M3g | 9139 px | y=990 (90 px unter dem Falz) — Anlass für M3g |
+| nach M3g (01.07.2026) | 1001 px | y=963 |
+| nach M3h (01.07.2026) | 1191 px | nicht erneut gemessen |
+| **gemessen 30.07.2026** | **1191 px** | **y=1153** |
+
+Die Start-Buttons liegen damit **253 px unter dem 900-px-Falz** — schlechter als der
+Zustand, den M3g beheben sollte. Der M3h-Eintrag oben nennt die Ursache und hat den
+Zuwachs ausdrücklich akzeptiert („+91 px vs. M3g-Vertrag akzeptiert wegen
+Sibling-Clipping-Fix"); dass dabei das Erstbild-Ziel ganz verloren geht, ist dort
+nicht vermerkt.
+
+**Warum es niemandem aufgefallen ist.** Die M3g-Tests prüften nicht das Ziel, sondern
+die Mittel: `gap < 1rem` auf `.lobby-spieler-grid` und `margin-top: auto` auf
+`.lobby-startreihe`. Beide Deklarationen stehen unverändert im Stylesheet, also
+blieben die Tests grün, während die Wirkung verschwand.
+
+**Status.** In `tests/layout/lobby_erstbild.spec.ts` steht der Vertrag jetzt als
+Messung, markiert mit `test.fail()`: Der Fehlschlag ist bekannt und dokumentiert,
+und sobald das Layout repariert ist, meldet Playwright einen unerwarteten Erfolg.
+Die Reparatur ist ein Layout-Slice und war nicht Teil der Test-Migration.

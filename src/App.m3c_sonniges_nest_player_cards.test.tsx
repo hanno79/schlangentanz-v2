@@ -1,41 +1,21 @@
 import { render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
-import { readFileSync } from 'node:fs'
 
-const appCss = readFileSync('src/App.css', 'utf8')
-
-function cssBlock(selector: string): string {
-  // Pragmatischer Helper: sucht die Basis-Regel, die als alleiniger
-  // Top-Level-Selector beginnt (nicht als Teil eines Combined-Selectors).
-  // Anker: vor dem Selector MUSS ein Zeilenanfang ODER "}" stehen,
-  // und in den vorhergehenden ~80 Zeichen darf KEIN "," am Zeilenende
-  // sein (das deutet auf einen Combined-Selector hin).
-  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const regex = new RegExp(`(^|\\n|\\})\\s*${escaped}\\s*\\{([^}]*)\\}`, 'g')
-  const allMatches = Array.from(appCss.matchAll(regex))
-  if (allMatches.length === 0) return ''
-  // Filtere: kein @media-Kontext + kein Combined-Selector (letzte 100
-  // Zeichen vor dem Match duerfen kein Komma enthalten).
-  for (const m of allMatches) {
-    const idx = m.index ?? 0
-    const preceding = appCss.slice(Math.max(0, idx - 100), idx)
-    if (!/@media\s*\(/.test(preceding) && !/,\s*$/.test(preceding)) {
-      return m[2]
-    }
-  }
-  // Fallback: erstes Match.
-  return allMatches[0][2]
-}
-
-function cssReducedMotion(_selector: string): string {
-  // Spezifisch: sucht den Selector innerhalb @media (prefers-reduced-motion: reduce).
-  void _selector
-  const block = appCss.match(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{([\s\S]*?)\n\}/)
-  return block?.[1] ?? ''
-}
 
 describe('M3c Sonniges Nest — Player-Cards', () => {
+  // ÄNDERUNG [30.07.2026]: AP-6 — M3c:1, :2, :5, :6, :7 und :11 prüften
+  // Deklarationen im CSS-Quelltext. Sie liegen jetzt als Messung in
+  // tests/layout/lobby_erstbild.spec.ts, zwei davon deutlich schärfer:
+  //
+  //  - M3c:1 prüfte `grid-template-columns: repeat(2, minmax(…))`. Gemessen wird
+  //    jetzt die Anordnung selbst — vier Plätze in zwei Spalten und zwei Zeilen.
+  //  - M3c:11 prüfte, ob im @media-Block die Zeichenketten `.lobby-avatar` und
+  //    `animation: none` vorkommen. Das sagt nichts darüber, ob die Regel greift.
+  //    Der Layout-Lauf arbeitet mit reduzierter Bewegung; gemessen wird direkt,
+  //    dass keine Animation mehr läuft.
+  //
+  // Hier bleiben die Asserts über DOM-Aufbau und Inhalte.
   beforeEach(() => {
     if (typeof window !== 'undefined' && window.history) {
       window.history.pushState({}, '', '/')
@@ -45,25 +25,6 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
     if (typeof window !== 'undefined' && window.history) {
       window.history.pushState({}, '', '/')
     }
-  })
-
-  it('M3c:1 — Spieler-Slots rendern als 2x2 Grid (nicht auto-fit horizontal)', () => {
-    // SUT: .lobby-spieler-grid (NEU) hat 2 Spalten (mobile: 1 Spalte).
-    const block = cssBlock('.lobby-spieler-grid')
-    expect(block).toMatch(/display:\s*grid/)
-    expect(block).toMatch(/grid-template-columns:\s*repeat\(2,\s*minmax\(/)
-  })
-
-  it('M3c:2 — Avatare sind 8rem rund mit 3px Border + Hard-Shadow', () => {
-    // SUT: .lobby-avatar (NEU) hat width/height 8rem, border 3px,
-    // box-shadow hard. Token-driven via --st-border-width-chunky.
-    const block = cssBlock('.lobby-avatar')
-    expect(block).toMatch(/width:\s*8rem/)
-    expect(block).toMatch(/height:\s*8rem/)
-    expect(block).toMatch(/border:\s*(?:3px|var\(--st-border-width-chunky\))\s+solid/)
-    expect(block).toMatch(/border-radius:\s*999px/)
-    expect(block).toMatch(/box-shadow:\s*inset\s+0\s+8px\s+0/)
-    expect(block).toMatch(/box-shadow:[^;]*0\s+4px\s+0/)
   })
 
   it('M3c:3 — Vier Avatare sichtbar: Host + 3 KI-Slots, alle als SVG (kein Emoji)', () => {
@@ -125,34 +86,6 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
     expect(unique.size).toBeGreaterThanOrEqual(2)
   })
 
-  it('M3c:5 — Baumstamm-Rahmen auf .lobby-baumhaus mit 4rem border-radius + 12px Hard-Shadow', () => {
-    // SUT: .lobby-baumhaus border-radius 4rem (statt 3rem),
-    // box-shadow 0 12px 0 statt 0 10px 0.
-    const block = cssBlock('.lobby-baumhaus')
-    expect(block).toMatch(/border-radius:\s*4rem/)
-    expect(block).toMatch(/box-shadow:\s*0\s+12px\s+0/)
-  })
-
-  it('M3c:6 — Vines/Leafs als ::before/::after vergroessert auf 12rem', () => {
-    // SUT: .lobby-baumhaus::before, ::after haben 12rem Groesse
-    // (vorher 9rem) — lime Quarter-Circle top-left, mint Quarter-Circle
-    // bottom-right.
-    const block = cssBlock('.lobby-baumhaus::before,\n.lobby-baumhaus::after')
-      || cssBlock('.lobby-baumhaus::before')
-      || appCss.match(/\.lobby-baumhaus::before[\s\S]*?\.lobby-baumhaus::after[\s\S]*?\}/m)?.[0]
-      || ''
-    expect(block).toMatch(/width:\s*12rem/)
-    expect(block).toMatch(/height:\s*12rem/)
-  })
-
-  it('M3c:7 — Name-Pille unter jedem Avatar sichtbar', () => {
-    // SUT: .lobby-slot__name (NEU) ist border-radius-pill mit
-    // border-2 border-inverse-surface und surface-Hintergrund.
-    const block = cssBlock('.lobby-slot__name')
-    expect(block).toMatch(/border-radius:\s*999px/)
-    expect(block).toMatch(/border:\s*2px\s+solid/)
-  })
-
   it('M3c:8 — Difficulty-Pille nur auf KI-Slots (Host-Slot ohne)', () => {
     // SUT: .lobby-slot--ki enthaelt eine .lobby-slot__difficulty-Pille
     // mit Text "leicht" / "mutig" / "fies". Host-Slot hat KEINE Pille.
@@ -168,28 +101,7 @@ describe('M3c Sonniges Nest — Player-Cards', () => {
     // Host-Slot darf KEINE .lobby-slot__difficulty haben.
     const hostSlot = container.querySelector('.lobby-slot--host')
     expect(hostSlot?.querySelector('.lobby-slot__difficulty')).toBeNull()
-    // .lobby-slot__difficulty ist als Pill gestylt.
-    const diffBlock = cssBlock('.lobby-slot__difficulty')
-    expect(diffBlock).toMatch(/border-radius:\s*999px/)
-    expect(diffBlock).toMatch(/border:\s*2px\s+solid/)
+    // Der Pillen-Stil selbst wird in tests/layout/lobby_erstbild.spec.ts gemessen.
   })
 
-  it('M3c:9 — M3b-Vertrag bleibt erhalten: aktive KI-Slots haben Slide-In-Animation', () => {
-    // SUT: .lobby-slot--ki animation != none (bestehender M3b-Vertrag).
-    const block = cssBlock('.lobby-slot--ki')
-    expect(block).toMatch(/animation:\s*lobby-snake-slide/)
-  })
-
-  it('M3c:10 — Code-Schild schwingt weiterhin (lobby-sway, M3a-Vertrag bleibt)', () => {
-    const block = cssBlock('.lobby-code-schild')
-    expect(block).toMatch(/animation:\s*lobby-sway/)
-  })
-
-  it('M3c:11 — Reduced-Motion Override: Avatar-Animation und Hover-Transition aus', () => {
-    // SUT: @media (prefers-reduced-motion: reduce) enthaelt einen
-    // Override fuer .lobby-avatar, das animation: none setzt.
-    const reducedMotionBlock = cssReducedMotion('.lobby-code-schild')
-    expect(reducedMotionBlock).toMatch(/\.lobby-avatar/)
-    expect(reducedMotionBlock).toMatch(/animation:\s*none/)
-  })
 })

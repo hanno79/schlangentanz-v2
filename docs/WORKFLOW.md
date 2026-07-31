@@ -166,9 +166,18 @@ steigt. Sinkt sie, fordert der Guard das Nachziehen der Baseline ein
 (`npm run check:css-asserts -- --update-baseline`). Damit friert ein Abbruch der
 Migration den erreichten Stand ein, statt ihn zurückrollen zu lassen.
 
-Stand 30.07.2026: **737 Assertions in 183 Dateien** (Start 741/184; der Pilot
-`src/App.m95_arena_cap.test.ts` ist nach `tests/layout/arena_erstbild.spec.ts`
-migriert).
+Stand 30.07.2026: **713 Assertions in 180 Dateien** (Start 741/184).
+
+Migriert sind bisher:
+
+| Familie | Dateien | Vertrag |
+|---|---|---|
+| Arena-/Hand-Caps (Pilot, AP-2) | `m95_arena_cap` | `tests/layout/arena_erstbild.spec.ts` |
+| Dokumentrahmen (AP-4) | `m1f_waldtanz_seitenmenue` (teilweise) | `tests/layout/app_shell.spec.ts` |
+| Lobby (AP-6) | `m3g`, `m3`, `m3h`, `m3c` | `tests/layout/lobby_erstbild.spec.ts` |
+
+Die Lobby-Migration hat nebenbei einen regredierten Vertrag aufgedeckt — siehe
+`docs/PLAYABILITY_GATE.md`, Abschnitt „AP-6: M3g-Erstbild-Vertrag ist regrediert".
 
 ## Bewusst nicht implementiert (Stand 30.07.2026)
 

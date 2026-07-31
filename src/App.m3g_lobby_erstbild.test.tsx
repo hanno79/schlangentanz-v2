@@ -1,99 +1,23 @@
 // M3g — Sonniges-Nest-Lobby-Reinigung (Lobby-First-Erstbild)
-// RED-Tests: Beweist, dass auf `/` der Game-Tree (Spielbereich) versteckt ist,
-// die Start-Buttons in den Viewport passen, und auf `/game` alles sichtbar bleibt.
 //
-// Klassen-Audit (Pitfall #45): app-shell, sonniges-nest, lobby-baumhaus,
-// lobby-spieler-grid, lobby-startreihe, lobby-startbutton, spielbereich, schlangenbuch.
+// ÄNDERUNG [30.07.2026]: AP-6 — die CSS-Quelltext-Asserts dieser Datei sind nach
+// tests/layout/lobby_erstbild.spec.ts gewandert und werden dort im Browser
+// gemessen. Übrig bleibt der Verhaltens-Assert, der ohne Browser auskommt.
+//
+// Was dabei sichtbar wurde und im neuen Vertrag dokumentiert ist:
+//  - M3g:4 prüfte `expect(match[1].length).toBeGreaterThan(0)` — „irgendein Block
+//    mit irgendeiner Deklaration". Ersatzlos entfallen.
+//  - M3g:3 hatte einen Oder-Zweig, der lediglich prüfte, ob im Stylesheet
+//    irgendwo die Zeichenkette "lobby-schlangenbuch" vorkommt. Das machte die
+//    Prüfung praktisch unfalsifizierbar.
+//  - M3g:2 (`gap < 1rem`) und M3g:6 (`margin-top: auto`) prüften Mittel statt
+//    Zweck: Die Start-Buttons sollten dadurch ins Erstbild rücken. Gemessen liegen
+//    sie bei y=1092 — unterhalb des 900-px-Falzes und damit schlechter als der
+//    Zustand, den M3g beheben sollte. Beide Asserts waren trotzdem grün.
 
 import { describe, expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
-
-const appCss = readFileSync('src/App.css', 'utf8')
-
-/** Last-match cssBlock — gleiches Rezept wie M1dt Pattern 6.
- *  Pitfall #43-Fix: Prefix-Anchor als negative lookbehind statt character class,
- *  weil ".lobby-spieler-grid" von ". ," (Dot+Komma) eingeleitet wird und ein
- *  Char-Class-Anchor nur ein einzelnes Zeichen konsumiert.
- *  Pitfall #32-Fix: Brace-Depth-Walk sucht den letzten Top-Level-Match (depth 0),
- *  weil die @media-Block-Heuristik fuer nested Klassen unzuverlaessig ist. */
-function cssBlock(selector: string): string {
-  // Escape regex specials for class names like "lobby-startbutton"
-  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const matches = Array.from(
-    appCss.matchAll(new RegExp(`(?<![A-Za-z0-9_-])${escaped}\\s*\\{([^}]*)\\}`, 'g')),
-  )
-  if (matches.length === 0) return ''
-  // Walk from last to first, pick the last top-level (brace-depth 0) match
-  for (let i = matches.length - 1; i >= 0; i--) {
-    const preceding = appCss.slice(0, matches[i].index ?? 0)
-    let depth = 0
-    for (const ch of preceding) {
-      if (ch === '{') depth++
-      else if (ch === '}') depth--
-    }
-    if (depth === 0) return matches[i][1]
-  }
-  return matches[matches.length - 1][1]
-}
 
 describe('M3g — Sonniges-Nest-Lobby-Reinigung', () => {
-  it('M3g:1 — CSS-Source: App.css versteckt den Spielbereich auf der Lobby-Route (ohne app-shell--game Modifier)', () => {
-    // Wir suchen die exakte Regel `.app-shell:not(.app-shell--game) #spielbereich { display: none }`
-    // tolerant gegen Whitespace, mit last-match falls es mehrere Treffer gibt.
-    const matches = Array.from(
-      appCss.matchAll(/\.app-shell:not\(\.app-shell--game\)\s+#spielbereich\s*\{([^}]*)\}/g),
-    )
-    expect(matches.length).toBeGreaterThanOrEqual(1)
-    const lastBody = matches[matches.length - 1][1]
-    expect(lastBody).toMatch(/display:\s*none/)
-  })
-
-  it('M3g:2 — CSS-Source: lobby-spieler-grid hat kompakteres gap (kleiner als 1rem) damit Start-Buttons in den Viewport passen', () => {
-    const block = cssBlock('lobby-spieler-grid')
-    // Akzeptiere entweder eine direkte gap-Override auf der Basis-Regel
-    // ODER eine route-scoped @media-Regel mit gap < 1rem
-    const directGap = block.match(/gap:\s*([\d.]+rem)/)
-    if (directGap) {
-      // Wenn direkt, muss < 1rem sein
-      const gapRem = parseFloat(directGap[1])
-      expect(gapRem).toBeLessThan(1.0)
-    } else {
-      // Mindestens eine @media-Override mit gap < 1rem muss existieren
-      const mediaMatches = Array.from(
-        appCss.matchAll(/@media[^{]*\{[^}]*\.lobby-spieler-grid[^}]*\{([^}]*)\}/g),
-      )
-      expect(mediaMatches.length).toBeGreaterThan(0)
-      const allHaveSmallGap = mediaMatches.every((m) => {
-        const gap = m[1].match(/gap:\s*([\d.]+rem)/)
-        return gap && parseFloat(gap[1]) < 1.0
-      })
-      expect(allHaveSmallGap).toBe(true)
-    }
-  })
-
-  it('M3g:3 — CSS-Source: Schlangenbuch wird auf der Lobby-Route ausgeblendet (display: none) damit Erstbild fokussiert bleibt', () => {
-    // Akzeptiere entweder eine route-scoped Regel mit `:not(.app-shell--game)` Selector
-    // oder einen .lobby-schlangenbuch-vorschau Wrapper als alternative Loesung.
-    const matchRouteScoped = appCss.match(
-      /\.app-shell:not\(\.app-shell--game\)\s+\.schlangenbuch\s*\{([^}]*)\}/,
-    )
-    if (matchRouteScoped) {
-      expect(matchRouteScoped[1]).toMatch(/display:\s*none/)
-    } else {
-      // Alternative: Schlangenbuch wird in einen neuen Container gewrappt
-      const hasWrapper = appCss.includes('lobby-schlangenbuch') || appCss.includes('lobby-spiel-preview')
-      expect(hasWrapper).toBe(true)
-    }
-  })
-
-  it('M3g:4 — CSS-Source: app-shell auf der Lobby-Route hat einen Override-Block (z.B. fuer kompakteres Layout)', () => {
-    // Konkreter CSS-Check: ein `.app-shell:not(.app-shell--game) { ... }`-Block existiert
-    // mit irgendeiner Deklaration (display/grid/padding), die das Lobby-Layout unterscheidet.
-    const match = appCss.match(/\.app-shell:not\(\.app-shell--game\)\s*\{([^}]*)\}/)
-    expect(match).not.toBeNull()
-    expect(match![1].length).toBeGreaterThan(0)
-  })
-
   it('M3g:5 — DOM-Assert: SonnigesNestLobby rendert 3 Start-Buttons und 4 Spieler-Slots (Host + 3 KI)', async () => {
     const { render } = await import('@testing-library/react')
     const React = await import('react')
@@ -107,14 +31,5 @@ describe('M3g — Sonniges-Nest-Lobby-Reinigung', () => {
     // 4 Spieler-Slots: 1 Host + 3 KI
     const slots = container.querySelectorAll('.lobby-slot')
     expect(slots.length).toBe(4)
-  })
-
-  it('M3g:6 — CSS-Source: lobby-startreihe oder sonniges-nest hat einen push-Override (margin-top: auto oder padding-bottom: 0) damit die Start-Buttons in den Viewport ruecken', () => {
-    const lobbyStartreihe = cssBlock('lobby-startreihe')
-    const sonnigesNest = cssBlock('sonniges-nest')
-    const hasMarginAuto = /margin-top:\s*auto/.test(lobbyStartreihe) || /margin-block-start:\s*auto/.test(lobbyStartreihe)
-    const hasSonnigesNestPush = /padding-bottom:\s*0\s*;|padding-block-end:\s*0\s*;/.test(sonnigesNest)
-    // Mindestens EINE dieser Loesungen muss greifen
-    expect(hasMarginAuto || hasSonnigesNestPush).toBe(true)
   })
 })
