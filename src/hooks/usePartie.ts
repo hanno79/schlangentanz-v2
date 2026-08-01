@@ -39,7 +39,7 @@ import { erstelleAktionsLabel } from '../aktionsLabel'
 import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { extrahiereAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from '../kiZug'
-import { ermittleReaktionsAktionen } from '../engine'
+import { mussMenschReagieren } from '../reaktionen'
 import type { KiGegnerAnzahl } from '../components/SonnigesNestLobby'
 
 /** Ein Eintrag der Zughistorie: welche Karte ging wann und wodurch in die Ablage. */
@@ -159,16 +159,25 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
   useEffect(() => {
     const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
     if (zustand.zugphase === 'Spielende') return
-    // Wartet die Engine auf eine menschliche Reaktion, entscheidet der Mensch.
-    if (ermittleReaktionsAktionen(zustand).length > 0) return
 
-    // Der Gegnerzug braucht länger im Blick als das stumme Nachziehen.
-    const nachlauf =
-      aktiver.steuerung === 'KI'
-        ? { tun: handleKiZugVorspulen, nachMs: 500 }
-        : zustand.zugphase === 'Nachziehphase'
-          ? { tun: handleAusspielphaseStarten, nachMs: 250 }
-          : null
+    /* ÄNDERUNG [01.08.2026]: Eine offene Reaktion beendete hier den Nachlauf —
+       gleich, wem sie gehörte. Griff der Mensch eine KI an, wartete also
+       niemand auf niemanden, und das Brett bot dem Menschen die Knöpfe des
+       Gegners an. Gehört das Fenster einer KI, löst sie es jetzt selbst; nur
+       bei einem menschlichen Verteidiger wird gewartet. */
+    if (mussMenschReagieren(zustand)) return
+
+    /* Ein einziger Nachlaufbegriff: „läuft ohne den Menschen weiter". Der
+       Gegnerzug schließt die Reaktion eines KI-Verteidigers mit ein — auch
+       wenn der Mensch am Zug ist und nur der Angriff abgewehrt werden muss.
+       Ein eigener Zweig dafür wäre ein zweiter Weg mit eigener Verzögerung und
+       eigener Protokollpflege gewesen. */
+    const laeuftOhneMenschWeiter = aktiver.steuerung === 'KI' || zustand.pendingReaktion !== null
+    const nachlauf = laeuftOhneMenschWeiter
+      ? { tun: handleKiZugVorspulen, nachMs: 500 }
+      : zustand.zugphase === 'Nachziehphase'
+        ? { tun: handleAusspielphaseStarten, nachMs: 250 }
+        : null
     if (nachlauf === null) return
 
     const zeitgeber = window.setTimeout(nachlauf.tun, nachlauf.nachMs)

@@ -35,6 +35,7 @@ import { ermittlePhasenSchritt } from './phasenSchritt'
 import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
 import { ermittleHandModus, handHinweis } from './handModus'
 import { ermittleSpielerLagen, geheimeAufgabeDesMenschen } from './spielerLage'
+import { reaktionsVerteidiger } from '../reaktionen'
 import Haeutungseditor from './Haeutungseditor'
 import { aufgabeLabel, naechsterPflichtschrittLabel } from '../spielLabelHelpers'
 
@@ -76,13 +77,18 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
 
   const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
   const istKiAmZug = aktiver.steuerung === 'KI'
+  /* Eine offene Reaktion blockiert jede andere Aktion — gleich, wem sie gehört.
+     Angeboten wird sie aber nur dem Angegriffenen: Ist das eine KI, entscheidet
+     sie selbst. Vorher stand hier nur `hatOffeneReaktion`, und das Brett fragte
+     den Menschen, ob der *Gegner* seinen Farbenschutz einsetzen soll.
+
+     Name und Zuständigkeit kommen aus *einem* Aufruf — getrennt ermittelt
+     könnten sie auf verschiedene Spieler zeigen. */
   const hatOffeneReaktion = reaktionsAktionen.length > 0
+  const verteidiger = reaktionsVerteidiger(zustand)
+  const ichMussReagieren = verteidiger?.steuerung === 'Mensch'
   /* Das Reaktionsfenster gehört dem Angegriffenen: `spielerId` in der
      Reaktionsaktion ist der Verteidiger, nicht der Zugspieler. */
-  const reaktionsVerteidiger =
-    hatOffeneReaktion && 'spielerId' in reaktionsAktionen[0]
-      ? zustand.spieler.find((spieler) => spieler.id === reaktionsAktionen[0].spielerId)?.name
-      : undefined
   const schritt = ermittlePhasenSchritt(zustand, ueberhand, hatOffeneReaktion)
 
   const ausgewaehlteKarteId =
@@ -518,9 +524,15 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
           nachschlägt, danach. */}
       <section className="brett-seite brett-bereich" aria-label="Aktionen">
         <h2 className="brett-bereich__titel">
-          {hatOffeneReaktion ? 'Du wirst angegriffen' : 'Mögliche Aktionen'}
+          {ichMussReagieren ? 'Du wirst angegriffen' : 'Mögliche Aktionen'}
         </h2>
-        {istKiAmZug && !hatOffeneReaktion ? (
+        {/* Wartet das Brett auf jemand anderen, ist die leere Liste kein
+            Rätsel, sondern erklärt. Vorher stand hier nur „ist am Zug" für den
+            Gegnerzug — beim Angriff auf eine KI blieb „Mögliche Aktionen" über
+            einer leeren Liste stehen. */}
+        {hatOffeneReaktion && !ichMussReagieren ? (
+          <p className="brett-leer">{verteidiger?.name ?? 'Der Gegner'} entscheidet gerade.</p>
+        ) : istKiAmZug ? (
           <p className="brett-leer">{aktiver.name} ist am Zug.</p>
         ) : angebot.eintraege.length === 0 ? (
           <p className="brett-leer">Gerade keine Aktion möglich.</p>
@@ -665,15 +677,11 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
           Vorrang: Sie blockiert das ganze Spiel, bis der *Verteidiger*
           entschieden hat — nicht der Spieler, der am Zug ist. */}
       <section className="brett-aktion brett-bereich" aria-label="Zugaktion">
-        {istKiAmZug && !hatOffeneReaktion ? (
-          <p className="brett-leer" role="status" aria-live="polite">
-            {aktiver.name} spielt …
-          </p>
-        ) : hatOffeneReaktion ? (
+        {/* Der eigene Fall zuerst — dann braucht kein Zweig eine Negation des
+            anderen mitzudenken. Genau diese Falle hat den Fehler erzeugt. */}
+        {ichMussReagieren ? (
           <div className="brett-reaktion" role="group" aria-label="Angriff abwehren">
-            <span className="brett-hand__hinweis">
-              {reaktionsVerteidiger ?? 'Ein Spieler'} wird angegriffen — Entscheidung nötig
-            </span>
+            <span className="brett-hand__hinweis">Du wirst angegriffen — deine Entscheidung</span>
             {reaktionsAktionen.map((aktion, index) => (
               <button
                 key={`${aktion.typ}-${index}`}
@@ -689,6 +697,15 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
               <span className="brett-leer">Kein Farbenschutz auf der Hand.</span>
             ) : null}
           </div>
+        ) : hatOffeneReaktion ? (
+          /* Der Angegriffene ist eine KI — sie entscheidet gleich selbst. */
+          <p className="brett-leer" role="status" aria-live="polite">
+            {verteidiger?.name ?? 'Der Gegner'} überlegt …
+          </p>
+        ) : istKiAmZug ? (
+          <p className="brett-leer" role="status" aria-live="polite">
+            {aktiver.name} spielt …
+          </p>
         ) : schritt === null ? (
           <p className="brett-leer">
             {zustand.zugphase === 'Spielende' ? 'Spiel beendet.' : 'Zuerst oben entscheiden.'}

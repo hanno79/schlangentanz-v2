@@ -19,6 +19,7 @@ import {
 } from './engine'
 import type { Spielzustand, SpielAktion } from './engine'
 import { erstelleAktionsLabel } from './aktionsLabel'
+import { mussMenschReagieren, reaktionsVerteidiger } from './reaktionen'
 
 export interface KiZugVorspulErgebnis {
   zustand: Spielzustand
@@ -45,24 +46,48 @@ function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
   return hand.slice(HANDKARTENLIMIT).map(karte => karte.id)
 }
 
-function reaktionsSpielerIndex(zustand: Spielzustand): number | null {
-  const pending = zustand.pendingReaktion
-  if (pending === null) return null
-  switch (pending.typ) {
-    case 'SchlangengrubeAbwehr':
-    case 'SchlangenblockadeAbwehr':
-    case 'FarbendiebAbwehr':
-      return pending.zielSpielerIndex
-    case 'VerdopplerAbwehr':
-      return pending.verbleibendeSpielerIndizes[0] ?? null
-    case 'SchlangenfrassAbwehr':
-      return pending.verbleibendeZiele[0]?.spielerIndex ?? null
-  }
+export interface KiReaktionsErgebnis {
+  zustand: Spielzustand
+  protokoll: string[]
 }
 
-function brauchtMenschlicheReaktion(zustand: Spielzustand): boolean {
-  const index = reaktionsSpielerIndex(zustand)
-  return index !== null && zustand.spieler[index]?.steuerung === 'Mensch'
+/**
+ * Löst jede offene Reaktion, deren Verteidiger eine KI ist — unabhängig davon,
+ * wer gerade am Zug ist.
+ *
+ * **ÄNDERUNG [01.08.2026]:** Das Reaktionsfenster gehört dem Angegriffenen. War
+ * das eine KI und der Angreifer ein Mensch, fühlte sich niemand zuständig:
+ * `spieleKiZuegeBisZumMenschen` läuft nur, solange die KI am Zug ist, und der
+ * Nachlauf in `usePartie` sprang aus demselben Grund nicht an. Das Brett bot
+ * die Knöpfe dann dem Menschen an — der damit über den Farbenschutz auf einer
+ * fremden Hand entschieden hätte.
+ *
+ * Die Schleife ist nötig, nicht bloß Vorsicht: Schlangenfrass fragt pro Zielkarte,
+ * der Verdoppler reihum. Nacheinander können mehrere KI-Verteidiger drankommen —
+ * und ein Mensch dazwischen, bei dem hier angehalten wird.
+ *
+ * Welche Reaktion die KI wählt, ist bewusst schlicht: `ermittleReaktionsAktionen`
+ * stellt das Abwehren voran, wenn ein Farbenschutz auf der Hand liegt, sonst
+ * bleibt nur das Durchlassen. Klügeres Abwägen ist ein eigener Schritt.
+ */
+export function spieleKiReaktionenAus(start: Spielzustand): KiReaktionsErgebnis {
+  let zustand = start
+  const protokoll: string[] = []
+
+  for (let schritt = 0; schritt < 40; schritt += 1) {
+    const verteidiger = reaktionsVerteidiger(zustand)
+    // Seine Entscheidung darf ihm niemand abnehmen.
+    if (verteidiger === null || verteidiger.steuerung === 'Mensch') break
+
+    const reaktionen = ermittleReaktionsAktionen(zustand)
+    if (reaktionen.length === 0) break
+
+    const aktion = reaktionen[0]
+    protokoll.push(`${verteidiger.name}: ${erstelleAktionsLabel(zustand)(aktion)}.`)
+    zustand = anwendeAktion(zustand, aktion)
+  }
+
+  return { zustand, protokoll }
 }
 
 // H1: Baut eine triviale, garantiert reihenfolge-ändernde Schlangenhäutung (Rotation der
@@ -99,22 +124,28 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
   }
 
   for (let schritt = 0; schritt < 80; schritt += 1) {
-    const spieler = zustand.spieler[zustand.aktiverSpielerIndex]
-    if (zustand.zugphase === 'Spielende' || spieler.steuerung === 'Mensch') break
-    const name = aktiverName(zustand)
+    if (zustand.zugphase === 'Spielende') break
 
-    if (brauchtMenschlicheReaktion(zustand)) {
-      notiere(`${name}: wartet auf eine menschliche Reaktion.`, true)
-      break
-    }
-
-    const reaktionsAktionen = ermittleReaktionsAktionen(zustand)
-    if (reaktionsAktionen.length > 0) {
-      const aktion = reaktionsAktionen[0]
-      notiere(`${name}: ${erstelleAktionsLabel(zustand)(aktion)}.`, true)
-      zustand = anwendeAktion(zustand, aktion)
+    /* ÄNDERUNG [01.08.2026]: Reaktionen zuerst, und zwar *vor* dem Abbruch
+       „ein Mensch ist am Zug". Vorher stand der Abbruch davor — griff der
+       Mensch eine KI an, kam die Schleife nie an das Fenster heran, obwohl sie
+       es lösen kann. Genau in dieser Lücke bot das Brett dem Menschen die
+       Abwehrknöpfe des Gegners an. */
+    if (zustand.pendingReaktion !== null) {
+      if (mussMenschReagieren(zustand)) {
+        notiere(`${aktiverName(zustand)}: wartet auf eine menschliche Reaktion.`, true)
+        break
+      }
+      const reaktionen = spieleKiReaktionenAus(zustand)
+      if (reaktionen.protokoll.length === 0) break
+      for (const zeile of reaktionen.protokoll) notiere(zeile, true)
+      zustand = reaktionen.zustand
       continue
     }
+
+    const spieler = zustand.spieler[zustand.aktiverSpielerIndex]
+    if (spieler.steuerung === 'Mensch') break
+    const name = aktiverName(zustand)
 
     if (zustand.zugphase === 'Nachziehphase') {
       protokoll.push(`${name}: Ausspielphase gestartet.`)

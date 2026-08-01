@@ -3284,7 +3284,41 @@ größten Teil hinaus; alle Proben landeten außerhalb, und der Wächter meldete
 „verdeckt". Abgetastet wird jetzt der **sichtbare Ausschnitt** — der Schnitt aus
 Element, Scroll-Fenster und Bild.
 
+### Das Reaktionsfenster gehört dem Angegriffenen (01.08.2026)
+
+Gemeldet: Nach einem Farbendieb gegen einen KI-Gegner fragte das Brett **den
+Menschen**, ob Farbenschutz eingesetzt werden soll. Das ist die Entscheidung des
+Angegriffenen — und die Karte liegt auf *dessen* Hand.
+
+Die Lücke saß zwischen zwei für sich richtigen Annahmen: `kiZug.ts` brach seine
+Schleife ab, sobald ein Mensch **am Zug** war, und der Nachlauf in `usePartie`
+sprang nur an, wenn eine KI am Zug war. Griff der Mensch an, war er selbst am
+Zug — also fühlte sich niemand zuständig, und das Brett bot die Knöpfe dem
+Nächstbesten an.
+
+Behoben an der tieferen Stelle: Die Abbruchbedingung heißt jetzt nicht mehr
+„ein Mensch ist am Zug", sondern „ein Mensch muss entscheiden". Damit kommt die
+vorhandene Schleife an das Fenster heran, statt dass ein zweiter Weg daneben
+gebaut wird. Der Nachlauf hat wieder *einen* Begriff: was ohne den Menschen
+weiterläuft.
+
+Das Brett zeigt das Fenster nur noch dem Angegriffenen; ist es eine KI, steht da
+„{Name} überlegt …". Beides an einem Ort entschieden: `src/reaktionen.ts`
+liefert den Verteidiger als Spieler, nicht als Boolean — Name und Zuständigkeit
+kommen aus einem Aufruf und können nicht auf verschiedene Spieler zeigen.
+
+**Drei Tests hielten den Fehler fest, statt ihn zu verhindern.** In
+`Spielbrett.sonderkarten.test.tsx` verteidigte immer die KI, und geprüft wurde,
+dass der Mensch deren Knöpfe sieht. Wer verteidigt, ist jetzt Teil des Aufbaus.
+
+Nicht live reproduzierbar gewesen: Die Engine öffnet das Fenster nur, wenn der
+Verteidiger tatsächlich einen Farbenschutz hält (`turnState.ts:752`). In zwei
+Partien mit echten Mausklicks hatte die KI keinen. Belegt ist der Fall
+deterministisch durch `kiZug.reaktionen.test.ts` (Logik) und
+`Spielbrett.sonderkarten.test.tsx` (gerendertes Brett).
+
 ### Offene Punkte
+
 
 
 

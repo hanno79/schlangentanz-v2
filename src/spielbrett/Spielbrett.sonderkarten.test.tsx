@@ -115,13 +115,25 @@ describe('Schlangenhäutung — beliebige Reihenfolge', () => {
 })
 
 /**
- * Offene Schlangengruben-Abwehr: Der Angreifer ist am Zug, entscheiden muss der
- * Verteidiger. `PendingSchlangengrubeAbwehr` arbeitet mit Spieler-*Indizes*.
+ * Offene Schlangengruben-Abwehr.
+ *
+ * **ÄNDERUNG [01.08.2026]:** Vorher verteidigte hier immer die KI, und die
+ * Tests hielten fest, dass der Mensch deren Knöpfe sieht — sie beschrieben den
+ * gemeldeten Fehler, statt ihn zu verhindern. Das Reaktionsfenster gehört dem
+ * Angegriffenen; wer das ist, ist jetzt Teil des Aufbaus.
+ *
+ * `PendingSchlangengrubeAbwehr` arbeitet mit Spieler-*Indizes*.
  */
-function mitOffenerReaktion(mitFarbenschutz = false): { zustand: Spielzustand; verteidigerName: string } {
+function mitOffenerReaktion(
+  mitFarbenschutz = false,
+  verteidigt: 'mensch' | 'ki' = 'mensch',
+): { zustand: Spielzustand; verteidigerName: string } {
   const zustand = starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
-  const angreiferIndex = zustand.aktiverSpielerIndex
-  const zielIndex = zustand.spieler.findIndex((_, index) => index !== angreiferIndex)
+  const menschIndex = zustand.spieler.findIndex((spieler) => spieler.steuerung === 'Mensch')
+  const kiIndex = zustand.spieler.findIndex((spieler) => spieler.steuerung === 'KI')
+  const zielIndex = verteidigt === 'mensch' ? menschIndex : kiIndex
+  const angreiferIndex = verteidigt === 'mensch' ? kiIndex : menschIndex
+  zustand.aktiverSpielerIndex = angreiferIndex
   /* Die Hand des Verteidigers wird gesetzt statt gewürfelt: Ob er einen
      Farbenschutz hält, entscheidet, wie viele Optionen die Engine anbietet —
      mit zufälliger Hand wäre der Test mal ein-, mal zweiknöpfig. */
@@ -137,14 +149,29 @@ function mitOffenerReaktion(mitFarbenschutz = false): { zustand: Spielzustand; v
 }
 
 describe('Reaktionsfenster', () => {
-  it('zeigt die Entscheidung in der Zugaktion und nennt den Verteidiger', () => {
-    const { zustand, verteidigerName } = mitOffenerReaktion()
+  it('legt dem angegriffenen Menschen die Entscheidung vor', () => {
+    const { zustand } = mitOffenerReaktion()
 
     aufBrettRoute()
     render(<App initialZustand={zustand} />)
 
     const zugaktion = screen.getByRole('region', { name: 'Zugaktion' })
-    expect(zugaktion).toHaveTextContent(/wird angegriffen/)
+    expect(zugaktion).toHaveTextContent(/Du wirst angegriffen/)
+    expect(within(zugaktion).getAllByRole('button').length).toBeGreaterThan(0)
+  })
+
+  /* Der gemeldete Fehler vom 01.08.2026: Nach einem Farbendieb gegen die KI
+     fragte das Brett den Menschen, ob der *Gegner* seinen Farbenschutz
+     einsetzen soll. Das ist die Entscheidung des Angegriffenen — und der
+     Farbenschutz liegt auf dessen Hand. */
+  it('legt dem Menschen keine Entscheidung vor, die einem KI-Gegner gehört', () => {
+    const { zustand, verteidigerName } = mitOffenerReaktion(true, 'ki')
+
+    aufBrettRoute()
+    render(<App initialZustand={zustand} />)
+
+    const zugaktion = screen.getByRole('region', { name: 'Zugaktion' })
+    expect(within(zugaktion).queryAllByRole('button')).toHaveLength(0)
     expect(zugaktion).toHaveTextContent(verteidigerName)
   })
 
