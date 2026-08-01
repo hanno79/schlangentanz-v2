@@ -243,6 +243,12 @@ export interface AufgabenPunkteEintrag {
 export interface SpielerAufgabenPunkteErgebnis {
   gesamtPunkte: number;
   aufgaben: AufgabenPunkteEintrag[];
+  // ÄNDERUNG [01.08.2026]: Der Anteil, der aus der GEHEIMEN Aufgabe stammt.
+  // In der Schlusswertung zählt er mit; während des Spiels darf ihn niemand
+  // sehen, sonst verrät die Punktzahl eines Gegners seine geheime Aufgabe.
+  // Getrennt ausgewiesen statt von der Anzeige nachgerechnet — die
+  // Endspurt-Verdopplung gehört an genau eine Stelle.
+  geheimePunkte: number;
 }
 
 export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgabenPunkteErgebnis {
@@ -254,6 +260,7 @@ export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgaben
     punkte: verdoppelt.has(a.id) ? a.punkte * 2 : a.punkte,
   }));
   // ÄNDERUNG [05.07.2026]: K4 — erfüllte geheime Aufgabe zählt einfach (nie verdoppelt).
+  const geheimPunkte = spieler.geheimeAufgabeErfuellt === true ? spieler.geheimeAufgabe.punkte : 0;
   if (spieler.geheimeAufgabeErfuellt === true) {
     aufgaben.push({
       aufgabenId: spieler.geheimeAufgabe.id,
@@ -262,7 +269,7 @@ export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgaben
     });
   }
   const gesamtPunkte = aufgaben.reduce((sum, a) => sum + a.punkte, 0);
-  return { gesamtPunkte, aufgaben };
+  return { gesamtPunkte, aufgaben, geheimePunkte: geheimPunkte };
 }
 
 export interface SpielerGesamtPunkteErgebnis {

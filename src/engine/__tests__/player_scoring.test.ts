@@ -253,6 +253,7 @@ describe('Spieler-Aufgaben-Punktwertung — R8.4c', () => {
 
     expect(berechneSpielerAufgabenPunkte(spieler)).toEqual({
       gesamtPunkte: 15,
+      geheimePunkte: 0,
       aufgaben: [
         { aufgabenId: 'aufgabe-test-1', name: 'Farbenpracht', punkte: 8 },
         { aufgabenId: 'aufgabe-test-2', name: 'Schlangentanz', punkte: 7 },
@@ -263,6 +264,7 @@ describe('Spieler-Aufgaben-Punktwertung — R8.4c', () => {
   it('wertet Spieler ohne erfüllte Aufgaben mit 0 Punkten', () => {
     expect(berechneSpielerAufgabenPunkte(spielerMitSchlangen([]))).toEqual({
       gesamtPunkte: 0,
+      geheimePunkte: 0,
       aufgaben: [],
     });
   });
@@ -302,8 +304,30 @@ describe('Spieler-Gesamtpunktwertung — R8.4d', () => {
     expect(berechneSpielerGesamtPunkte(spielerMitSchlangen([]))).toEqual({
       gesamtPunkte: 0,
       farbgruppenPunkte: { gesamtPunkte: 0, schlangen: [] },
-      aufgabenPunkte: { gesamtPunkte: 0, aufgaben: [] },
+      aufgabenPunkte: { gesamtPunkte: 0, geheimePunkte: 0, aufgaben: [] },
     });
+  });
+
+  /* ÄNDERUNG [01.08.2026]: Der geheime Anteil wird getrennt ausgewiesen, damit
+     die laufende Anzeige ihn weglassen kann. Ohne das verriet die Punktzahl
+     eines Gegners, welche geheime Aufgabe er erfüllt hatte. In der
+     Schlusswertung zählt er weiterhin mit. */
+  it('weist den Anteil der geheimen Aufgabe getrennt aus', () => {
+    const spieler = spielerMitSchlangen([]);
+    spieler.geheimeAufgabe = {
+      typ: 'Aufgabenkarte',
+      id: 'aufgabe-geheim',
+      name: 'Farbwechsler',
+      punkte: 6,
+      bedingung: 'Test',
+    };
+    spieler.geheimeAufgabeErfuellt = true;
+
+    const ergebnis = berechneSpielerGesamtPunkte(spieler);
+
+    expect(ergebnis.aufgabenPunkte.geheimePunkte).toBe(6);
+    // In der Schlusswertung zählt sie weiterhin voll mit.
+    expect(ergebnis.gesamtPunkte).toBe(6);
   });
 
   it('mutiert Spieler, Schlangen, Karten und Aufgaben nicht', () => {

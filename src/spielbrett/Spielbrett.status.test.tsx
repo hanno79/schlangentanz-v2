@@ -108,3 +108,39 @@ describe('Brett-Status', () => {
     }
   })
 })
+
+describe('Verdeckte Information bleibt verdeckt', () => {
+  /* ÄNDERUNG [01.08.2026]: Die geheime Aufgabe eines Gegners zu verbergen
+     genügt nicht, wenn ihre Punkte sie verraten. Vorher sprang die angezeigte
+     Punktzahl eines KI-Gegners um genau den Wert seiner geheimen Aufgabe,
+     sobald er sie erfüllte. Dieser Test misst am Brett, nicht in der Logik. */
+  function gegnerPunkte(): string {
+    const text = screen.getByRole('region', { name: /^Gegner/ }).textContent ?? ''
+    return /(\d+) Punkte/.exec(text)?.[1] ?? ''
+  }
+
+  it('ändert die Punktzahl eines Gegners nicht, wenn er seine geheime Aufgabe erfüllt', () => {
+    aufBrettRoute()
+    const zustand = partie()
+    const { unmount } = render(<App initialZustand={zustand} />)
+    const vorher = gegnerPunkte()
+    unmount()
+
+    const mitErfuellter: Spielzustand = {
+      ...zustand,
+      spieler: zustand.spieler.map((spieler, index) =>
+        index === 1 ? { ...spieler, geheimeAufgabeErfuellt: true } : spieler,
+      ),
+    }
+    render(<App initialZustand={mitErfuellter} />)
+
+    expect(gegnerPunkte()).toBe(vorher)
+  })
+
+  it('sagt am Gegnerstreifen, dass die Punkte ohne geheime Aufgaben gelten', () => {
+    aufBrettRoute()
+    render(<App initialZustand={partie()} />)
+
+    expect(screen.getByRole('region', { name: /^Gegner/ })).toHaveTextContent(/ohne geheime Aufgaben/)
+  })
+})

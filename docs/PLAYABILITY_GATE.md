@@ -3210,7 +3210,41 @@ Dutzend Karten als unerreichbar. Beide Fragen stellt jetzt *eine* Messung
 (`messeErreichbarkeit` in `tests/layout/messung.ts`), die weggescrollt von
 unerreichbar unterscheidet — dieselbe Unterscheidung auch im Smoke.
 
+### KI-Aufgaben und verdeckte Information (01.08.2026)
+
+Zwei Nachfragen, zwei verschiedene Antworten.
+
+**Beanspruchen die KI-Gegner offene Aufgaben? Ja.** `kiZug.ts` durchläuft
+`beendeAufgabenpruefung`, und die Engine beansprucht dort jede erfüllte offene
+Aufgabe des aktiven Spielers, vergibt die Punkte, schließt die Aufgabe ab und
+zieht nach. Geprüft war das bisher nirgends — `kiZug.test.ts` deckte nur den
+Reaktionsstopp ab. Jetzt: `src/kiZug.aufgaben.test.ts`, fünf Fälle.
+
+Der gemeldete Verdacht („Spieler 2 hätte Farbwechsler erfüllt") bestätigt sich
+nicht. Farbwechsler verlangt **vier direkt aufeinanderfolgende Farbkarten mit
+vier verschiedenen Farben**. Die gezeigte Schlange hatte Grün, Violett, Blau,
+Violett — vier Karten, drei Farben. Eine Sonderkarte dazwischen setzt die Folge
+zusätzlich zurück. Beide Fälle stehen jetzt als Test.
+
+**Verrät die Punktanzeige die geheime Aufgabe? Sie hat es.**
+`berechneSpielerGesamtPunkte` zählt die erfüllte geheime Aufgabe mit, und genau
+diese Zahl stand am Brett neben jedem Gegner. Erfüllte eine KI ihre geheime
+Aufgabe, sprang die angezeigte Punktzahl um exakt deren Wert — daraus war
+ablesbar, welche es war. Die Aufgabe zu verbergen genügt nicht, wenn ihre Punkte
+sie verraten.
+
+Behoben: Die Engine weist den geheimen Anteil getrennt aus
+(`SpielerAufgabenPunkteErgebnis.geheimePunkte`); die laufende Anzeige lässt ihn
+weg — für **alle** Spieler, sonst wären die Zahlen nicht vergleichbar. Der
+Gegnerstreifen sagt es („Punkte ohne geheime Aufgaben"), und der Mensch sieht
+den Wert seiner eigenen geheimen Aufgabe bei der Aufgabe selbst. In der
+Schlusswertung zählt sie unverändert mit.
+
+Belegt durch zwei Ebenen: `spielerLage.test.ts` an der Logik,
+`Spielbrett.status.test.tsx` am gerenderten Brett. Beide waren ohne den Fix rot.
+
 ### Offene Punkte
+
 
 - **Die zweite eigene Schlange** liegt bei vollem Brett am unteren Rand der
   Spielfläche und wird gescrollt. Das ist Regel 2 gemäß, aber nicht schön;

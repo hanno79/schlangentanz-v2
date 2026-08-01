@@ -282,7 +282,9 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
 
       {/* 3 — Gegnerstreifen. Die Schlangen der Gegner folgen in G-6. */}
       <section className="brett-gegner brett-bereich" aria-label="Gegner">
-        <h2 className="brett-bereich__titel">Gegner</h2>
+        {/* Die Punkte hier sind die öffentlich bekannten. Ohne diesen Zusatz
+            läse man sie als Endstand — und wunderte sich in der Schlusswertung. */}
+        <h2 className="brett-bereich__titel">Gegner · Punkte ohne geheime Aufgaben</h2>
         {/* Läuft der Gegnerzug ohne Klick durch, ist dieses Protokoll die
             einzige Stelle, an der der Spieler erfährt, was passiert ist. */}
         {kiZugProtokoll.length > 0 ? (
@@ -394,12 +396,19 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         </div>
 
         {/* Nur die eigene geheime Aufgabe — die einer KI zu zeigen wäre kein
-            Anzeigefehler, sondern ein Regelbruch. */}
+            Anzeigefehler, sondern ein Regelbruch. Seit dem 01.08.2026 gilt das
+            auch für ihre Punkte: Sie stehen in keiner laufenden Punktzahl, sonst
+            verriete der Sprung, welche Aufgabe ein Gegner erfüllt hat. Deshalb
+            steht hier, was die eigene wert ist. */}
         {geheimeAufgabe ? (
           <p className="brett-geheimaufgabe">
-            <span className="brett-bereich__titel">Deine geheime Aufgabe</span>
+            <span className="brett-bereich__titel">Deine geheime Aufgabe · {geheimeAufgabe.punkte} Punkte</span>
             <span>{geheimeAufgabe.text}</span>
-            {geheimeAufgabe.erfuellt ? <span className="brett-kopf__wert">✓ erfüllt</span> : null}
+            <span className="brett-geheimaufgabe__stand">
+              {geheimeAufgabe.erfuellt
+                ? '✓ erfüllt — zählt in der Schlusswertung'
+                : 'zählt erst in der Schlusswertung'}
+            </span>
           </p>
         ) : null}
       </section>

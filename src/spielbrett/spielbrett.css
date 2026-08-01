@@ -409,6 +409,11 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   font-size: 0.85rem;
 }
 
+.brett-geheimaufgabe__stand {
+  color: var(--brett-text-leise);
+  font-size: 0.78rem;
+}
+
 .brett-aktionsliste__rest {
   padding-block-start: var(--brett-luft-eng);
   color: var(--brett-text-leise);
