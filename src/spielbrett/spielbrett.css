@@ -8,12 +8,14 @@ Selbsttragend: eigene Tokens statt der `--st-*` aus App.css, damit dieses Brett
 nicht von einem Stylesheet abhängt, das in Paket G-8 auf Lobby-Größe schrumpft.
 Die Farbwerte sind dieselben — die Waldtanz-Palette bleibt.
 
-Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
-  · keine festen Höhen-Caps auf Inhaltsflächen — der Inhalt bestimmt die Höhe,
-    passt er nicht, scrollt sein Container
+Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
+  · der Inhalt bestimmt die Höhe; passt er nicht, scrollt sein Container —
+    abgeschnitten wird nichts (Regel 2)
   · eine Rahmenebene — ein Spielobjekt hat einen Rahmen, sein Inhalt keinen
   · kein !important, keine [class~=]-Tricks, keine route-gescopten Overrides
   · z-index nur aus der Skala unten
+  · die Spielfläche hat einen Boden, die wachsenden Streifen einen Deckel
+    (Regel 8) — sonst bezahlt die Fläche für alles andere
 */
 
 .spielbrett {

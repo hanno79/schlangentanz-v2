@@ -59,7 +59,7 @@ Orten.
 
 ---
 
-## Sechs Regeln
+## Neun Regeln
 
 1. **Jede Information genau einmal.** Wird sie an zwei Stellen gebraucht, ist
    eine davon die falsche Stelle. *(Vorher: Zugphase an 6 Stellen, aktiver
