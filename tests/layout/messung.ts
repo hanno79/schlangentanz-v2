@@ -214,8 +214,20 @@ export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
   })
 }
 
-/** Bedienelemente, die ganz oder teilweise außerhalb des sichtbaren Bereichs liegen. */
-export async function findeAusserhalbDesBildes(page: Page): Promise<Befund[]> {
+/*
+Beide folgenden Wächter brauchen dieselbe Unterscheidung, und zwar dieselbe:
+**weggescrollt ist nicht unerreichbar.** Ein Eintrag in einer scrollenden Spalte
+liegt rechnerisch unter dem Bildrand — er ist trotzdem mit einem Handgriff da.
+
+Am 01.08.2026 meldeten sie ohne diese Unterscheidung 45 Aktionslisten-Einträge
+als „außerhalb des Bildes" und ein Dutzend Karten als „verdeckt", obwohl alle
+erreichbar waren. Ein Wächter, der Erreichbares anzeigt, wird bald gar nicht
+mehr gelesen — und dann übersieht er den Tag, an dem es stimmt.
+
+Gemessen wird deshalb in *einem* Durchgang im Browser: Die Unterscheidung steht
+einmal da, nicht zweimal nebeneinander.
+*/
+async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; verdeckt: Befund[] }> {
   return page.evaluate(() => {
     const kennung = (element: Element): string => {
       const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
@@ -223,66 +235,84 @@ export async function findeAusserhalbDesBildes(page: Page): Promise<Befund[]> {
       const basis = klasse || element.tagName
       return name ? `${basis} "${name}"` : basis
     }
+
+    /** Der nächste Vorfahr, der seinen Inhalt tatsächlich scrollen kann. */
+    const scrollenderVorfahr = (element: Element): Element | null => {
+      for (let eltern = element.parentElement; eltern !== null; eltern = eltern.parentElement) {
+        const stil = getComputedStyle(eltern)
+        const scrollt = (achse: string) => /auto|scroll/.test(achse)
+        if (scrollt(stil.overflowY) && eltern.scrollHeight > eltern.clientHeight + 3) return eltern
+        if (scrollt(stil.overflowX) && eltern.scrollWidth > eltern.clientWidth + 3) return eltern
+      }
+      return null
+    }
+
+    /** Liegt außerhalb des Sichtfensters seines Scrollers — also nur weggescrollt. */
+    const weggescrollt = (element: Element): boolean => {
+      const scroller = scrollenderVorfahr(element)
+      if (scroller === null) return false
+      const box = element.getBoundingClientRect()
+      const fenster = scroller.getBoundingClientRect()
+      return (
+        box.bottom <= fenster.top + 3 ||
+        box.top >= fenster.bottom - 3 ||
+        box.right <= fenster.left + 3 ||
+        box.left >= fenster.right - 3
+      )
+    }
+
     const hoehe = window.innerHeight
     const breite = window.innerWidth
-    const befunde: { element: string; detail: string }[] = []
+    const ausserhalb: { element: string; detail: string }[] = []
+    const verdeckt: { element: string; detail: string }[] = []
+
     for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"], input, select'))) {
       if (!(element as HTMLElement).checkVisibility()) continue
       const box = element.getBoundingClientRect()
       if (box.width < 2 || box.height < 2) continue
-      if (box.bottom <= hoehe + 1 && box.top >= -1 && box.right <= breite + 1 && box.left >= -1) continue
-      befunde.push({
-        element: kennung(element),
-        detail: `liegt bei ${Math.round(box.top)}..${Math.round(box.bottom)} (Bild ist ${hoehe}px hoch)`,
-      })
-    }
-    return befunde
-  })
-}
+      if (scrollenderVorfahr(element) !== null && weggescrollt(element)) continue
 
-/**
- * Bedienelemente, die an keiner Stelle frei liegen — also von etwas anderem
- * vollständig überdeckt werden.
- *
- * Abgetastet wird eine Zeile auf mittlerer Höhe. Ein einzelner Punkt reicht
- * nicht: Überlappende Karten in einem Fächer sind gewollt, solange jede Karte
- * *irgendwo* getroffen werden kann.
- */
-export async function findeVerdeckteBedienelemente(page: Page): Promise<Befund[]> {
-  return page.evaluate(() => {
-    const kennung = (element: Element): string => {
-      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
-      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
-      const basis = klasse || element.tagName
-      return name ? `${basis} "${name}"` : basis
-    }
-    const befunde: { element: string; detail: string }[] = []
-    for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"]'))) {
-      if (!(element as HTMLElement).checkVisibility()) continue
-      const box = element.getBoundingClientRect()
-      if (box.width < 2 || box.height < 2) continue
-      // Außerhalb des Bildes zählt beim anderen Wächter, nicht doppelt hier.
-      if (box.bottom > window.innerHeight || box.top < 0) continue
-      let frei = 0
-      /* Zwei Achsen, nicht nur die Mittellinie: Ein Eintrag in einer
-         scrollenden Liste kann mit seiner oberen Hälfte sichtbar und mit der
-         unteren weggescrollt sein. Eine Probe auf halber Höhe träfe dann den
-         Inhalt *hinter* der Liste und meldete „verdeckt", obwohl der Eintrag
-         erreichbar ist. */
-      for (let hoch = 0.1; hoch <= 0.9 && frei === 0; hoch += 0.2) {
+      const imBild = box.bottom <= hoehe + 1 && box.top >= -1 && box.right <= breite + 1 && box.left >= -1
+      if (!imBild) {
+        ausserhalb.push({
+          element: kennung(element),
+          detail: `liegt bei ${Math.round(box.top)}..${Math.round(box.bottom)} (Bild ist ${hoehe}px hoch)`,
+        })
+        // Was schon außerhalb liegt, wird nicht zusätzlich als verdeckt gezählt.
+        continue
+      }
+
+      /* Abgetastet wird ein Raster über beide Achsen. Ein einzelner Punkt reicht
+         nicht: Überlappende Karten in einem Fächer sind gewollt, solange jede
+         Karte *irgendwo* getroffen werden kann. Und eine Probe nur auf halber
+         Höhe verfehlt einen Eintrag, dessen untere Hälfte weggescrollt ist. */
+      let frei = false
+      for (let hoch = 0.1; hoch <= 0.9 && !frei; hoch += 0.2) {
         for (let quer = 0.05; quer <= 0.95; quer += 0.05) {
           const treffer = document.elementFromPoint(box.x + box.width * quer, box.y + box.height * hoch)
           if (treffer && (element === treffer || element.contains(treffer))) {
-            frei += 1
+            frei = true
             break
           }
         }
       }
-      if (frei > 0) continue
-      befunde.push({ element: kennung(element), detail: 'an keiner Stelle frei — vollständig überdeckt' })
+      if (!frei) {
+        verdeckt.push({ element: kennung(element), detail: 'an keiner Stelle frei — vollständig überdeckt' })
+      }
     }
-    return befunde
+
+    return { ausserhalb, verdeckt }
   })
+}
+
+/** Bedienelemente, die ganz oder teilweise außerhalb des sichtbaren Bereichs liegen. */
+export async function findeAusserhalbDesBildes(page: Page): Promise<Befund[]> {
+  return (await messeErreichbarkeit(page)).ausserhalb
+}
+
+/** Bedienelemente, die an keiner Stelle frei liegen — von etwas anderem überdeckt. */
+export async function findeVerdeckteBedienelemente(page: Page): Promise<Befund[]> {
+  return (await messeErreichbarkeit(page)).verdeckt
 }
 
 /** Anzahl sichtbarer Elemente mit nennenswerter Fläche — das Budget aus Regel 1 und 3. */

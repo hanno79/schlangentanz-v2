@@ -113,14 +113,34 @@ async function pruefeSeitenzustand(seite, wo, mitBudget = true) {
       .map(kennung)
 
     const bedienelemente = [...document.querySelectorAll('button, a[href], [role="button"]')].filter(sichtbar)
-    const ausserhalb = bedienelemente
+    /* Weggescrollt ist nicht unerreichbar: Was außerhalb des Sichtfensters
+       seiner scrollenden Spalte liegt, holt der Container mit einem Handgriff.
+       Dieselbe Unterscheidung wie in tests/layout/messung.ts. */
+    const scrollenderVorfahr = (element) => {
+      for (let eltern = element.parentElement; eltern; eltern = eltern.parentElement) {
+        const stil = getComputedStyle(eltern)
+        const scrollt = (achse) => /auto|scroll/.test(achse)
+        if (scrollt(stil.overflowY) && eltern.scrollHeight > eltern.clientHeight + 3) return eltern
+        if (scrollt(stil.overflowX) && eltern.scrollWidth > eltern.clientWidth + 3) return eltern
+      }
+      return null
+    }
+    const weggescrollt = (element) => {
+      const scroller = scrollenderVorfahr(element)
+      if (!scroller) return false
+      const k = element.getBoundingClientRect()
+      const f = scroller.getBoundingClientRect()
+      return k.bottom <= f.top + 3 || k.top >= f.bottom - 3 || k.right <= f.left + 3 || k.left >= f.right - 3
+    }
+    const erreichbar = bedienelemente.filter((element) => !weggescrollt(element))
+    const ausserhalb = erreichbar
       .filter((element) => {
         const k = element.getBoundingClientRect()
         return k.bottom > window.innerHeight + 1 || k.top < -1
       })
       .map(kennung)
 
-    const verdeckt = bedienelemente
+    const verdeckt = erreichbar
       .filter((element) => {
         const k = element.getBoundingClientRect()
         if (k.bottom > window.innerHeight || k.top < 0) return false

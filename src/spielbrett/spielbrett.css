@@ -43,7 +43,17 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 17rem;
-  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
+  /* ÄNDERUNG [01.08.2026]: Die Spielfläche hatte hier `minmax(0, 1fr)` — sie
+     war die einzige dehnbare Zeile und damit die einzige, die für das Wachstum
+     aller anderen bezahlte, bis auf null. Gemessen mit zwei KI-Gegnern:
+     384 px → 162 px bei 339 px Inhalt, während der Gegnerstreifen auf 298 px
+     wuchs. Jetzt hat die Fläche, auf der gespielt wird, einen Boden; die
+     Streifen, die mit dem Spielstand wachsen, sind gedeckelt und scrollen.
+
+     Der Boden ist `min(17rem, 34vh)`: auf dem Zielfenster 1280×900 sind das
+     17rem, auf niedrigeren Fenstern gibt er nach, statt das Brett über den
+     unteren Rand zu schieben. */
+  grid-template-rows: auto minmax(min(17rem, 34vh), 1fr) auto auto auto;
   grid-template-areas:
     'kopf    kopf'
     'flaeche seite'
@@ -309,6 +319,12 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
 
 .brett-gegner {
   grid-area: gegner;
+  /* Wächst mit jeder Karte, die ein Gegner ablegt — und mit jedem Gegner. Der
+     Deckel nimmt ihm das Recht, die Spielfläche aufzuzehren; gescrollt statt
+     abgeschnitten (Regel 2). */
+  max-block-size: 20vh;
+  min-block-size: 0;
+  overflow-y: auto;
 }
 
 /* ---- 4 Seitenspalte -------------------------------------------------- */
@@ -318,10 +334,15 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   overflow-y: auto;
 }
 
+/* ÄNDERUNG [01.08.2026]: Die Gegner standen untereinander. Bei zwei Gegnern
+   passte der zweite nicht mehr in den Streifen — man sah ihn nur, wenn man von
+   sich aus scrollte, und wusste vorher nicht, dass es etwas zu sehen gibt.
+   Nebeneinander teilen sie sich die Breite, die ohnehin da ist. */
 .brett-gegner__liste {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--brett-luft);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr));
+  gap: var(--brett-luft-eng) var(--brett-luft);
+  align-items: start;
 }
 
 .brett-gegner__protokoll {
@@ -336,11 +357,15 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   color: var(--brett-text-leise);
 }
 
+/* Ein Gegner ist ein Block: Name oben, Karten darunter. Vorher lagen beide in
+   einer Reihe — in der halben Breite umbrach das, und der Name rutschte in die
+   Mitte seiner Zelle. */
 .brett-gegner__spieler {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--brett-luft-eng);
+  flex-direction: column;
+  align-items: start;
+  gap: 0.2rem;
+  min-inline-size: 0;
 }
 
 .brett-aufgaben {
@@ -382,6 +407,12 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   font-size: 0.85rem;
 }
 
+.brett-aktionsliste__rest {
+  padding-block-start: var(--brett-luft-eng);
+  color: var(--brett-text-leise);
+  font-size: 0.78rem;
+}
+
 .brett-aktionsliste__marke {
   font-size: 0.7rem;
   font-weight: 800;
@@ -393,6 +424,11 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
 
 .brett-hand {
   grid-area: hand;
+  /* Bis zu zehn Karten — derselbe Deckel aus demselben Grund wie beim
+     Gegnerstreifen. */
+  max-block-size: 24vh;
+  min-block-size: 0;
+  overflow-y: auto;
 }
 
 .brett-hand__hinweis {
@@ -410,14 +446,24 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
 /* Karten liegen nebeneinander, nicht als Fächer übereinander: Vor dem Neubau
    lagen die Handkarten 3 und 4 vollständig unter der Mittelkarte und waren
    nicht anklickbar. */
+/* ÄNDERUNG [01.08.2026]: Die Karte war dreizeilig — Farbleiste, Name, Wert.
+   Bei drei Spielern passten damit weder der zweite Gegner noch die zweite
+   eigene Schlange in ihren Streifen; gemessen fehlten rund 100 px. Einzeilig
+   halbiert das die Höhe, ohne eine Angabe wegzunehmen (Regel 1): Die Farbleiste
+   wird zum Punkt, Name und Wert stehen nebeneinander.
+
+   Unterschieden werden Hand- und Brettkarte über Größe, nicht über Gestalt —
+   zwei Kartenformen wären zwei Dinge zum Lernen statt einer. */
 .brett-karte {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem;
   /* Mindestbreite statt fester Breite: Kartennamen wie „Sonnenblatt" sind
      länger als 7rem und liefen sonst über den Rand ihrer Karte hinaus. */
   min-inline-size: 7rem;
-  padding: 0.45rem;
+  padding: 0.3rem 0.5rem;
   border: var(--brett-rahmen) solid var(--brett-linie);
   border-radius: var(--brett-rundung);
   background: var(--brett-weiss);
@@ -460,11 +506,20 @@ Die sechs Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   font-size: 0.78rem;
 }
 
-/* Farbmarke der Karte — eine dünne Leiste, kein zweiter Rahmen (Regel 3). */
+/* Farbmarke der Karte — ein Punkt, kein zweiter Rahmen (Regel 3). */
 .brett-karte__farbe {
-  block-size: 0.35rem;
+  align-self: center;
+  flex: none;
+  inline-size: 0.55rem;
+  block-size: 0.55rem;
   border-radius: 999px;
   background: var(--brett-farbe, var(--brett-flaeche-tief));
+}
+
+/* Die Hand ist der Ort, an dem gewählt wird — dort darf die Karte größer sein. */
+.brett-hand .brett-karte {
+  padding: 0.5rem 0.7rem;
+  font-size: 1.02rem;
 }
 
 .brett-karte--blau { --brett-farbe: #3b82f6; }

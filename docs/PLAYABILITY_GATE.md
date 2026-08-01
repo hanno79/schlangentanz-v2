@@ -3163,7 +3163,59 @@ Hälfte weggescrollt war, wurde dadurch als „verdeckt" gemeldet, obwohl er
 erreichbar ist. Beide Wächter (`tests/layout/messung.ts`, `brett_smoke.mjs`)
 probieren jetzt ein Raster über beide Achsen.
 
+### Hält das Brett einer ganzen Partie stand? (01.08.2026)
+
+Gemeldet: Mit zwei KI-Gegnern wird die eigene Spielfläche im Spielverlauf so
+schmal, dass die Schlangen nicht mehr zu erkennen sind. Nachgemessen bei
+1280×900, drei Spieler, echte Mausklicks:
+
+| Runde | Spielfläche | ihr Inhalt | Gegnerstreifen |
+|---|---|---|---|
+| Start | 384 px | 380 px | 76 px |
+| 1 | 260 px | 256 px | 200 px |
+| 2 | 162 px | 285 px | 298 px |
+| 4 | **162 px** | **339 px** | 298 px |
+
+Drei Ursachen, keine davon vom bisherigen Wächtersatz erfasst:
+
+1. **Die Spielfläche war die einzige dehnbare Gitterzeile** (`minmax(0, 1fr)`)
+   und bezahlte damit für das Wachstum aller anderen — ohne Untergrenze.
+   Jetzt: Boden `min(17rem, 34vh)`, Gegnerstreifen und Hand gedeckelt (20vh /
+   24vh) und in sich scrollend.
+2. **Die Aktionsliste zählte jede Kombination aus Handkarte und Ziel auf.** Nach
+   acht Runden: 45 Einträge, 8886 px in einer 423-px-Spalte. Jetzt grenzt eine
+   gewählte Handkarte auf ihre eigenen Aktionen ein; ohne Auswahl stehen
+   höchstens acht da — mit der Zahl der übrigen daneben, nie stillschweigend.
+3. **Karten waren dreizeilig.** Bei drei Spielern fehlten dadurch rund 100 px:
+   Der zweite Gegner und die zweite eigene Schlange lagen außerhalb ihrer
+   Streifen. Jetzt einzeilig (Farbmarke als Punkt, Name und Wert nebeneinander),
+   Handkarten größer als Brettkarten. Die Gegner stehen nebeneinander statt
+   untereinander.
+
+Nachgemessen über zehn Runden:
+
+| | vorher | nachher |
+|---|---|---|
+| Spielfläche, kleinster Wert | 162 px | **345 px** |
+| Gegnerstreifen | 298 px, einer sichtbar | 180 px, **beide sichtbar** |
+| Aktionsliste | 8886 px, 45 Einträge | 1387 px, **höchstens 8** |
+
+Neu abgesichert: `tests/layout/brett_dauerlauf.spec.ts` spielt acht echte Runden
+mit drei Spielern und misst *danach* — die vier bisherigen Wächter prüften nur
+das Erstbild und waren die ganze Zeit grün.
+
+**Nachgeschärfte Wächter.** „Außerhalb des Bildes" und „verdeckt" kannten keine
+scrollenden Container und meldeten 45 erreichbare Listeneinträge sowie ein
+Dutzend Karten als unerreichbar. Beide Fragen stellt jetzt *eine* Messung
+(`messeErreichbarkeit` in `tests/layout/messung.ts`), die weggescrollt von
+unerreichbar unterscheidet — dieselbe Unterscheidung auch im Smoke.
+
 ### Offene Punkte
+
+- **Die zweite eigene Schlange** liegt bei vollem Brett am unteren Rand der
+  Spielfläche und wird gescrollt. Das ist Regel 2 gemäß, aber nicht schön;
+  mehr Platz gäbe es nur durch kleinere Karten.
+
 
 - **Sonderkarten-Brettziele.** Die sieben enumerierten Sonderkarten sind über die
   Aktionsliste erreichbar (Regel 6 der Spezifikation). Eigene Ziele direkt am

@@ -100,6 +100,22 @@ Orten.
    Gegnerzug wird protokolliert (Region 3), und ein automatischer Schritt
    überschreibt dieses Protokoll nicht, bevor es gelesen werden konnte.
 
+8. **Die Fläche, auf der gespielt wird, hat einen Boden — die Streifen, die
+   mit dem Spielstand wachsen, haben einen Deckel.** *(ÄNDERUNG 01.08.2026.)*
+   Gegnerstreifen und Hand wachsen mit jeder Karte; die Spielfläche nicht. Ist
+   sie die einzige dehnbare Zeile, bezahlt sie für alle anderen — bis auf null.
+
+   *(Vorher: `grid-template-rows: auto minmax(0, 1fr) …`. Mit zwei KI-Gegnern
+   schrumpfte die Spielfläche über vier Runden von 384 px auf 162 px bei 339 px
+   Inhalt, während der Gegnerstreifen auf 298 px wuchs. Regel 2 war dabei nie
+   verletzt — die Fläche scrollte ja. Sie war nur zu klein zum Spielen.)*
+
+9. **Ein Wächter, der Erreichbares als unerreichbar meldet, wird bald nicht mehr
+   gelesen.** *(ÄNDERUNG 01.08.2026.)* Weggescrollt ist nicht unerreichbar: Was
+   außerhalb des Sichtfensters seiner scrollenden Spalte liegt, holt der
+   Container mit einem Handgriff. Wer das nicht unterscheidet, produziert
+   Rauschen — und übersieht den Tag, an dem der Befund stimmt.
+
 ---
 
 ## Vollständigkeitsliste

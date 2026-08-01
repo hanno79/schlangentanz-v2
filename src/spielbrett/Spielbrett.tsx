@@ -24,6 +24,7 @@ import './spielbrett.css'
 import { HANDKARTENLIMIT, MAX_KARTEN_PRO_ZUG, MAX_SCHLANGEN_PRO_SPIELER } from '../engine'
 import type { SpielAktion } from '../engine'
 import { gruppiereWirkungsgleicheAktionen } from '../aktionsGruppen'
+import { waehleAngebot } from './aktionsangebot'
 import type { usePartie } from '../hooks/usePartie'
 import useLegaleAktionenNachTyp from '../hooks/useLegaleAktionenNachTyp'
 import { zugphaseLabel } from '../zugphaseLabels'
@@ -38,6 +39,14 @@ import { aufgabeLabel, naechsterPflichtschrittLabel } from '../spielLabelHelpers
 interface SpielbrettProps {
   partie: ReturnType<typeof usePartie>
 }
+
+/**
+ * Wie viele Aktionen ohne gewählte Handkarte höchstens dastehen.
+ *
+ * Acht füllen die Seitenspalte etwa einmal. Darüber hinaus ist die Liste kein
+ * Angebot mehr, sondern ein Katalog — gemessen waren es 45.
+ */
+const HOECHSTENS_ANGEBOTEN = 8
 
 export default function Spielbrett({ partie }: SpielbrettProps) {
   const {
@@ -86,7 +95,10 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
      Karten erzeugt fünf identisch beschriftete Knöpfe — für Screenreader nicht
      unterscheidbar und für den Spieler kein Informationsgewinn. Gruppiert wird
      nur die Anzeige; geklickt wird weiterhin eine konkrete Aktion. */
-  const angeboteneAktionen = gruppiereWirkungsgleicheAktionen(rohAktionen, aktiver.hand)
+  const alleGruppen = gruppiereWirkungsgleicheAktionen(rohAktionen, aktiver.hand)
+  /* Ohne Eingrenzung stand hier nach acht Runden eine 8886 px hohe Liste — jede
+     Handkarte mal jedes Ziel. Siehe `aktionsangebot.ts`. */
+  const angebot = waehleAngebot(alleGruppen, ausgewaehlteKarteId, HOECHSTENS_ANGEBOTEN)
 
   /* Brettziele zur gerade gewählten Handkarte. Ohne Auswahl ist alles leer —
      der Spieler wählt erst die Karte, dann das Ziel. */
@@ -323,11 +335,11 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         </h2>
         {istKiAmZug && !hatOffeneReaktion ? (
           <p className="brett-leer">{aktiver.name} ist am Zug.</p>
-        ) : angeboteneAktionen.length === 0 ? (
+        ) : angebot.eintraege.length === 0 ? (
           <p className="brett-leer">Gerade keine Aktion möglich.</p>
         ) : (
           <ul className="brett-aktionsliste">
-            {angeboteneAktionen.map((gruppe, index) => (
+            {angebot.eintraege.map((gruppe, index) => (
               <li key={`${gruppe.aktion.typ}-${index}`}>
                 {/* Die erste Aktion ist die empfohlene — dieselbe Konvention wie
                     im alten AktionenPanel. Dort war die Empfehlung auf /game nur
@@ -349,6 +361,15 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
             ))}
           </ul>
         )}
+        {/* Kein stiller Deckel: Wer kürzt, sagt es und sagt, wie man weiterkommt. */}
+        {angebot.weitere > 0 ? (
+          <p className="brett-aktionsliste__rest">
+            … und {angebot.weitere} weitere. Wähle eine Handkarte, um nur ihre Aktionen zu sehen.
+          </p>
+        ) : null}
+        {angebot.aufKarteGefiltert ? (
+          <p className="brett-aktionsliste__rest">Nur die Aktionen der gewählten Karte.</p>
+        ) : null}
 
         {/* Offene Aufgaben als *Liste*. Die Tafel auf /game meldete
             „3 offene Aufgaben" und blendete ihren Inhalt per App.css:3867 aus —
