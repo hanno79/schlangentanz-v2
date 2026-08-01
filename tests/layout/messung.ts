@@ -282,14 +282,32 @@ async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; 
         continue
       }
 
-      /* Abgetastet wird ein Raster über beide Achsen. Ein einzelner Punkt reicht
-         nicht: Überlappende Karten in einem Fächer sind gewollt, solange jede
-         Karte *irgendwo* getroffen werden kann. Und eine Probe nur auf halber
-         Höhe verfehlt einen Eintrag, dessen untere Hälfte weggescrollt ist. */
+      /* Abgetastet wird der **sichtbare Ausschnitt**, nicht die ganze Box.
+         Zwei Gründe, beide am 01.08.2026 als Fehlmeldung aufgetreten:
+         Überlappende Karten in einem Fächer sind gewollt, solange jede Karte
+         irgendwo getroffen werden kann — ein einzelner Punkt reicht dafür
+         nicht. Und eine Karte am Rand einer scrollenden Spalte ragt zum
+         größten Teil hinaus; Proben über die volle Höhe landen dann sämtlich
+         außerhalb, obwohl der sichtbare Streifen anklickbar ist. */
+      const scroller = scrollenderVorfahr(element)
+      const fenster = scroller === null ? null : scroller.getBoundingClientRect()
+      const sichtbar = {
+        links: Math.max(box.left, fenster?.left ?? 0, 0),
+        rechts: Math.min(box.right, fenster?.right ?? breite, breite),
+        oben: Math.max(box.top, fenster?.top ?? 0, 0),
+        unten: Math.min(box.bottom, fenster?.bottom ?? hoehe, hoehe),
+      }
+      const sichtbareBreite = sichtbar.rechts - sichtbar.links
+      const sichtbareHoehe = sichtbar.unten - sichtbar.oben
+      if (sichtbareBreite < 2 || sichtbareHoehe < 2) continue
+
       let frei = false
       for (let hoch = 0.1; hoch <= 0.9 && !frei; hoch += 0.2) {
         for (let quer = 0.05; quer <= 0.95; quer += 0.05) {
-          const treffer = document.elementFromPoint(box.x + box.width * quer, box.y + box.height * hoch)
+          const treffer = document.elementFromPoint(
+            sichtbar.links + sichtbareBreite * quer,
+            sichtbar.oben + sichtbareHoehe * hoch,
+          )
           if (treffer && (element === treffer || element.contains(treffer))) {
             frei = true
             break

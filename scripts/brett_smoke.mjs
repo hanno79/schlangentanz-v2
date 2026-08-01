@@ -144,11 +144,19 @@ async function pruefeSeitenzustand(seite, wo, mitBudget = true) {
       .filter((element) => {
         const k = element.getBoundingClientRect()
         if (k.bottom > window.innerHeight || k.top < 0) return false
-        /* Zwei Achsen, nicht nur die Mittellinie — ein Listeneintrag kann oben
-           sichtbar und unten weggescrollt sein (siehe messung.ts). */
+        /* Abgetastet wird der sichtbare Ausschnitt, nicht die ganze Box — eine
+           Karte am Rand einer scrollenden Spalte ragt zum größten Teil hinaus
+           (siehe tests/layout/messung.ts). */
+        const scroller = scrollenderVorfahr(element)
+        const f = scroller ? scroller.getBoundingClientRect() : null
+        const links = Math.max(k.left, f ? f.left : 0, 0)
+        const rechts = Math.min(k.right, f ? f.right : innerWidth, innerWidth)
+        const oben = Math.max(k.top, f ? f.top : 0, 0)
+        const unten = Math.min(k.bottom, f ? f.bottom : innerHeight, innerHeight)
+        if (rechts - links < 2 || unten - oben < 2) return false
         for (let hoch = 0.1; hoch <= 0.9; hoch += 0.2) {
           for (let quer = 0.05; quer <= 0.95; quer += 0.05) {
-            const treffer = document.elementFromPoint(k.x + k.width * quer, k.y + k.height * hoch)
+            const treffer = document.elementFromPoint(links + (rechts - links) * quer, oben + (unten - oben) * hoch)
             if (treffer && (element === treffer || element.contains(treffer))) return false
           }
         }

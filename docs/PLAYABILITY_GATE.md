@@ -3243,7 +3243,49 @@ Schlusswertung zählt sie unverändert mit.
 Belegt durch zwei Ebenen: `spielerLage.test.ts` an der Logik,
 `Spielbrett.status.test.tsx` am gerenderten Brett. Beide waren ohne den Fix rot.
 
+### Sonderkarten direkt am Brett (01.08.2026)
+
+Gemeldet: Sonderkarten ließen sich nur über die Aktionsliste spielen, Farbkarten
+dagegen am Brett. Zwei Wege für dieselbe Sache, und der unbequemere war der
+einzige — wer die Schlangengrube gegen einen bestimmten Gegner spielen wollte,
+musste den Listeneintrag heraussuchen, der genau diesen Gegner meint.
+
+Jetzt gilt für Sonderkarten dasselbe Muster: **Karte wählen, Ziel anklicken.**
+
+| Karte | Was angeklickt wird |
+|---|---|
+| Schlangengrube | die Plakette des Gegners |
+| Schlangenblockade | die gegnerische Schlange |
+| Farbenschutz | die eigene Schlange |
+| Farbenfusion | eine Karte in einer eigenen Schlange |
+| Schlangenfrass | **eine** eigene Karte **oder zwei** gegnerische |
+| Farbendieb | die gegnerische Farbkarte, dann der Einfügeplatz bei sich |
+| Verdoppler | kein Ziel — bleibt Sache der Aktionsliste |
+| Schlangenhäutung | eigener Reihenfolge-Editor, unverändert |
+
+`sonderkartenziele.ts` setzt dabei **keine Aktion zusammen**: Die Engine
+enumeriert jede legale Kombination samt Zielen, die Oberfläche filtert nur nach
+der bisherigen Auswahl. Alles andere hieße, die Regeln ein zweites Mal zu
+schreiben — und die zweite Fassung wäre die, die irgendwann abweicht. Aus
+demselben Verfahren fällt der Schlangenfrass-Sonderfall von selbst richtig
+heraus: ein eigenes Ziel ist sofort vollständig, zwei gegnerische brauchen einen
+zweiten Klick.
+
+Ein Brettziel erscheint nur, solange die gewählte Karte es anbietet. Das
+Erstbild bleibt dadurch unverändert bei 88 Elementen (Budget 90).
+
+Am laufenden Spiel mit echten Mausklicks nachgemessen: Farbendieb → gegnerische
+Karte anklicken → 7 Einfügeplätze erscheinen → Klick → eigene Karten 5 → 6, und
+der Spielverlauf nennt den Diebstahl. Keine Browserfehler.
+
+**Nachgeschärfter Wächter, zum dritten Mal.** Die Verdeckt-Probe tastete die
+ganze Elementbox ab. Eine Karte am Rand einer scrollenden Spalte ragt zum
+größten Teil hinaus; alle Proben landeten außerhalb, und der Wächter meldete
+„verdeckt". Abgetastet wird jetzt der **sichtbare Ausschnitt** — der Schnitt aus
+Element, Scroll-Fenster und Bild.
+
 ### Offene Punkte
+
 
 
 - **Die zweite eigene Schlange** liegt bei vollem Brett am unteren Rand der
@@ -3251,9 +3293,10 @@ Belegt durch zwei Ebenen: `spielerLage.test.ts` an der Logik,
   mehr Platz gäbe es nur durch kleinere Karten.
 
 
-- **Sonderkarten-Brettziele.** Die sieben enumerierten Sonderkarten sind über die
-  Aktionsliste erreichbar (Regel 6 der Spezifikation). Eigene Ziele direkt am
-  Brett wären Komfort, kein offener Defekt.
+- **Schlangenblockade ohne Einfügeposition.** Die Engine legt die Blockade auf
+  eine *ganze* gegnerische Schlange, nicht zwischen zwei Karten. Am Brett wird
+  deshalb die Schlange angeklickt. Eine Position einzuführen wäre eine
+  Regeländerung und gehört erst in `GAME_SPEC.md`.
 - **Drag & Drop** ist im neuen Brett noch nicht verdrahtet; Klick und Tastatur
   decken jede Aktion ab.
 - **Unter 1000 px Breite** ist das Brett gestapelt und scrollt. Geprüft und

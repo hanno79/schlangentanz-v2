@@ -59,7 +59,7 @@ Orten.
 
 ---
 
-## Neun Regeln
+## Zehn Regeln
 
 1. **Jede Information genau einmal.** Wird sie an zwei Stellen gebraucht, ist
    eine davon die falsche Stelle. *(Vorher: Zugphase an 6 Stellen, aktiver
@@ -110,7 +110,23 @@ Orten.
    Inhalt, während der Gegnerstreifen auf 298 px wuchs. Regel 2 war dabei nie
    verletzt — die Fläche scrollte ja. Sie war nur zu klein zum Spielen.)*
 
-9. **Ein Wächter, der Erreichbares als unerreichbar meldet, wird bald nicht mehr
+9. **Sonderkarten spielt man wie Farbkarten: Karte wählen, Ziel am Brett
+   anklicken.** *(ÄNDERUNG 01.08.2026.)* Zwei Wege für dieselbe Sache sind
+   einer zu viel, und der unbequemere darf nicht der einzige sein.
+
+   *(Vorher: Sonderkarten gingen nur über die Aktionsliste. Wer die
+   Schlangengrube gegen einen bestimmten Gegner spielen wollte, musste den
+   Eintrag heraussuchen, der genau diesen Gegner meint.)*
+
+   Die Aktionsliste bleibt die Rückfallebene (Regel 6). Ein Brettziel erscheint
+   nur, solange die gewählte Karte es anbietet — sonst stünden bei jeder
+   Schlange Knöpfe ohne Zweck herum und das Elementbudget wäre gesprengt.
+
+   Zusammengesetzt wird dabei keine Aktion: Die Engine enumeriert jede legale
+   Kombination samt Zielen, die Oberfläche filtert nur. Alles andere hieße, die
+   Regeln ein zweites Mal zu schreiben.
+
+10. **Ein Wächter, der Erreichbares als unerreichbar meldet, wird bald nicht mehr
    gelesen.** *(ÄNDERUNG 01.08.2026.)* Weggescrollt ist nicht unerreichbar: Was
    außerhalb des Sichtfensters seiner scrollenden Spalte liegt, holt der
    Container mit einem Handgriff. Wer das nicht unterscheidet, produziert
@@ -139,6 +155,11 @@ die Abnahmecheckliste des Bretts.
 | Gegnerplakette | `SonderkarteSpielen` (Schlangengrube) |
 | Verdoppler-Auslöser | `VerdopplerSpielen` (nur bei `gespielteKarten === 0`) |
 | **freier Reihenfolge-Editor** | `SchlangenhaeutungSpielen` — nicht zwei Presets |
+| Gegnerplakette anklicken | `SonderkarteSpielen` (Schlangengrube) |
+| gegnerische Schlange anklicken | `SchlangenblockadeSpielen` — **ohne** Einfügeposition |
+| gegnerische Karte anklicken | `FarbendiebSpielen` (Beute), `SchlangenfrassSpielen` (zwei Ziele) |
+| eigene Karte anklicken | `FarbenfusionSpielen`, `SchlangenfrassSpielen` (ein Ziel) |
+| Einfügeplatz in eigener Schlange | `FarbendiebSpielen` |
 | Reaktionsdialog | `…Abwehren` / `…Durchlassen`, inkl. Zustand „kein Farbenschutz" |
 | Pflicht-Abwurf **mit Kartenwahl** | `PflichtAbwurf` |
 | Überhand-Abwurf: n-aus-m mit Bestätigung | Zugabschluss |

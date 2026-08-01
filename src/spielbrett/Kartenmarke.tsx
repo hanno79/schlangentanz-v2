@@ -20,8 +20,10 @@ interface KartenmarkeProps {
   onWaehlen?: () => void
   zusatz?: string
   /** `abwurf` färbt die Markierung als Warnung — der Klick wirft die Karte weg,
-      er wählt sie nicht aus. Derselbe Klick darf nicht gleich aussehen. */
-  variante?: 'auswahl' | 'abwurf'
+      er wählt sie nicht aus. Derselbe Klick darf nicht gleich aussehen.
+      `ziel` markiert eine Karte am Brett, die gerade angeklickt werden kann
+      (Schlangenfrass, Farbenfusion, Farbendieb-Beute). */
+  variante?: 'auswahl' | 'abwurf' | 'ziel'
   /** Platz in der Reihe, 1-basiert. Eine Hand aus elf blauen Karten ergäbe sonst
       elf gleichnamige Knöpfe — für Screenreader nicht unterscheidbar. */
   platz?: number
@@ -63,6 +65,7 @@ export default function Kartenmarke({
         type="button"
         className={
           `brett-karte${farbklasse(karte)}` +
+          (variante === 'ziel' ? ' brett-karte--ziel' : '') +
           (gewaehlt ? (variante === 'abwurf' ? ' brett-karte--abwurf' : ' brett-karte--gewaehlt') : '')
         }
         aria-pressed={onWaehlen ? Boolean(gewaehlt) : undefined}

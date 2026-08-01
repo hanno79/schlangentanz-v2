@@ -19,12 +19,14 @@ Stapel (G-6), Reaktionsdialog als eigene Fläche (G-7 — bis dahin stehen die
 Reaktionsaktionen in der Aktionsliste und sind damit erreichbar).
 */
 
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import './spielbrett.css'
 import { HANDKARTENLIMIT, MAX_KARTEN_PRO_ZUG, MAX_SCHLANGEN_PRO_SPIELER } from '../engine'
 import type { SpielAktion } from '../engine'
 import { gruppiereWirkungsgleicheAktionen } from '../aktionsGruppen'
 import { waehleAngebot } from './aktionsangebot'
+import { ermittleZielangebot, zielSchluessel } from './sonderkartenziele'
+import type { Brettziel } from './sonderkartenziele'
 import type { usePartie } from '../hooks/usePartie'
 import useLegaleAktionenNachTyp from '../hooks/useLegaleAktionenNachTyp'
 import { zugphaseLabel } from '../zugphaseLabels'
@@ -104,6 +106,80 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
      der Spieler wählt erst die Karte, dann das Ziel. */
   const startAktion = findeStartAktion(neueSchlangeStartenAktionen, ausgewaehlteKarteId)
   const zielSchlangen = schlangenMitZiel(karteAnlegenAktionen, ausgewaehlteKarteId)
+
+  /* ÄNDERUNG [01.08.2026]: Sonderkarten wie Farbkarten spielen — Karte wählen,
+     Ziel am Brett anklicken. Vorher ging das nur über die Aktionsliste, wo man
+     aus vielen fast gleichlautenden Einträgen den mit dem richtigen Gegner
+     heraussuchen musste.
+
+     Mehrschrittige Karten (Schlangenfrass gegen zwei Gegner, Farbendieb mit
+     Beute und Einfügeplatz) sammeln ihre Ziele hier; `sonderkartenziele.ts`
+     sagt, was als Nächstes anklickbar ist. */
+  /* Die Teilauswahl gehört zu *einer* Handkarte. Wechselt der Spieler die
+     Karte, ist sie gegenstandslos — abgeleitet statt in einem Effekt
+     zurückgesetzt, sonst rendert das Brett erst falsch und dann richtig. */
+  const [zielauswahl, setZielauswahl] = useState<{ karteId: string; ziele: Brettziel[] }>({
+    karteId: '',
+    ziele: [],
+  })
+  const gewaehlteZiele = zielauswahl.karteId === ausgewaehlteKarteId ? zielauswahl.ziele : []
+
+  const aktionenDerKarte =
+    ausgewaehlteKarteId === null
+      ? []
+      : legaleAktionen.filter(
+          (aktion) => 'handkartenId' in aktion && aktion.handkartenId === ausgewaehlteKarteId,
+        )
+  const zielangebot = ermittleZielangebot(aktionenDerKarte, gewaehlteZiele)
+  const offeneSchluessel = new Set(zielangebot.offeneZiele.map(zielSchluessel))
+  const gewaehlteSchluessel = new Set(gewaehlteZiele.map(zielSchluessel))
+
+  /**
+   * Ein Klick auf ein Brettziel.
+   *
+   * Ist die Auswahl damit vollständig, wird sofort gespielt — ein zusätzlicher
+   * Bestätigungsklick fragt nichts (Regel 7). Sonst wartet sie auf das nächste
+   * Ziel. Entschieden wird das hier und nicht in einem Effekt: Der Klick weiß
+   * es bereits, und ein Effekt würde denselben Zustand zweimal rendern.
+   */
+  function zielAnklicken(ziel: Brettziel) {
+    if (ausgewaehlteKarteId === null) return
+    const naechste = [...gewaehlteZiele, ziel]
+    const danach = ermittleZielangebot(aktionenDerKarte, naechste)
+    if (danach.fertig !== null) {
+      setZielauswahl({ karteId: ausgewaehlteKarteId, ziele: [] })
+      fuhreAktionAus(danach.fertig)
+      return
+    }
+    setZielauswahl({ karteId: ausgewaehlteKarteId, ziele: naechste })
+  }
+
+  /**
+   * Was der nächste Klick bewirken soll.
+   *
+   * Ohne diesen Satz leuchten plötzlich Karten auf, und der Spieler rät, warum.
+   * Der Text folgt der Art des angebotenen Ziels, nicht dem Kartennamen: Es
+   * gibt weniger Zielarten als Karten, und die Zielart ist genau das, was der
+   * Klick treffen soll.
+   */
+  const zielHinweis =
+    zielangebot.offeneZiele.length === 0
+      ? null
+      : ({
+          gegnerPlakette: 'Jetzt den Gegner anklicken, den es treffen soll.',
+          gegnerSchlange: 'Jetzt die gegnerische Schlange anklicken.',
+          eigeneSchlange: 'Jetzt die eigene Schlange anklicken.',
+          karte:
+            gewaehlteZiele.length === 0
+              ? 'Jetzt eine leuchtende Karte anklicken.'
+              : 'Jetzt die zweite Karte anklicken.',
+          einfuegeplatz: 'Jetzt den Platz anklicken, an dem die Beute landen soll.',
+        }[zielangebot.offeneZiele[0].art] ?? null)
+
+  /** Ist dieses Ziel gerade anklickbar? */
+  const istOffen = (ziel: Brettziel) => offeneSchluessel.has(zielSchluessel(ziel))
+  /** Wurde es im laufenden Mehrschritt schon gewählt? */
+  const istGewaehlt = (ziel: Brettziel) => gewaehlteSchluessel.has(zielSchluessel(ziel))
 
   /* Pflichtabwurf-Aktionen entstehen nur, wenn sonst gar nichts legal ist —
      die Engine garantiert das. Deshalb ist der Handmodus eindeutig. */
@@ -215,14 +291,38 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         {aktiver.schlangen.map((schlange, index) => {
           const linksAktion = findeAnlegeAktion(karteAnlegenAktionen, ausgewaehlteKarteId, schlange.id, 'links')
           const rechtsAktion = findeAnlegeAktion(karteAnlegenAktionen, ausgewaehlteKarteId, schlange.id, 'rechts')
+          const eigeneSchlangeZiel: Brettziel = { art: 'eigeneSchlange', schlangenId: schlange.id }
+          const karteZiel = (kartenId: string): Brettziel => ({
+            art: 'karte',
+            spielerId: aktiver.id,
+            schlangenId: schlange.id,
+            kartenId,
+          })
+          const platzZiel = (position: number): Brettziel => ({
+            art: 'einfuegeplatz',
+            schlangenId: schlange.id,
+            index: position,
+          })
           return (
             <div
               key={schlange.id}
-              className={`brett-schlange${zielSchlangen.has(schlange.id) ? ' brett-schlange--ziel' : ''}`}
+              className={`brett-schlange${zielSchlangen.has(schlange.id) || istOffen(eigeneSchlangeZiel) ? ' brett-schlange--ziel' : ''}`}
             >
-              <span className="brett-schlange__marke">
-                {index + 1}. Schlange · {schlange.zustand}
-              </span>
+              {/* Die ganze Schlange als Ziel — Farbenschutz. Nur sichtbar,
+                  wenn die gewählte Karte das gerade anbietet. */}
+              {istOffen(eigeneSchlangeZiel) ? (
+                <button
+                  type="button"
+                  className="brett-anlegeplatz brett-anlegeplatz--ziel"
+                  onClick={() => zielAnklicken(eigeneSchlangeZiel)}
+                >
+                  {index + 1}. Schlange wählen
+                </button>
+              ) : (
+                <span className="brett-schlange__marke">
+                  {index + 1}. Schlange · {schlange.zustand}
+                </span>
+              )}
               {/* Links und rechts sind eigene Ziele: Dieselbe Karte ergibt je
                   nach Seite eine andere Schlange und andere Punkte. */}
               <button
@@ -235,9 +335,45 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
                 ◀ links
               </button>
               <ul className="brett-hand__karten">
-                {schlange.karten.map((karte) => (
-                  <Kartenmarke key={karte.id} karte={karte} />
+                {schlange.karten.map((karte, kartenIndex) => (
+                  <Fragment key={karte.id}>
+                    {/* Einfügeplätze erscheinen nur, wenn eine Karte sie
+                        anbietet (Farbendieb) — sonst stünden hier bei jeder
+                        Schlange n+1 Knöpfe ohne Zweck. */}
+                    {istOffen(platzZiel(kartenIndex)) ? (
+                      <li>
+                        <button
+                          type="button"
+                          className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
+                          aria-label={`Hier einfügen, vor Karte ${kartenIndex + 1}`}
+                          onClick={() => zielAnklicken(platzZiel(kartenIndex))}
+                        >
+                          ＋
+                        </button>
+                      </li>
+                    ) : null}
+                    <Kartenmarke
+                      karte={karte}
+                      platz={kartenIndex + 1}
+                      vonWievielen={schlange.karten.length}
+                      gewaehlt={istGewaehlt(karteZiel(karte.id))}
+                      variante={istOffen(karteZiel(karte.id)) ? 'ziel' : 'auswahl'}
+                      onWaehlen={istOffen(karteZiel(karte.id)) ? () => zielAnklicken(karteZiel(karte.id)) : undefined}
+                    />
+                  </Fragment>
                 ))}
+                {istOffen(platzZiel(schlange.karten.length)) ? (
+                  <li>
+                    <button
+                      type="button"
+                      className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
+                      aria-label="Hier einfügen, ans Ende"
+                      onClick={() => zielAnklicken(platzZiel(schlange.karten.length))}
+                    >
+                      ＋
+                    </button>
+                  </li>
+                ) : null}
               </ul>
               <button
                 type="button"
@@ -302,7 +438,18 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
               return (
                 <li key={spieler.id} className="brett-gegner__spieler">
                   <span className="brett-kopf__block">
-                    <span className="brett-kopf__wert">{spieler.name}</span>
+                    {/* Die Plakette des Gegners ist selbst ein Ziel — Schlangengrube. */}
+                    {istOffen({ art: 'gegnerPlakette', spielerId: spieler.id }) ? (
+                      <button
+                        type="button"
+                        className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
+                        onClick={() => zielAnklicken({ art: 'gegnerPlakette', spielerId: spieler.id })}
+                      >
+                        {spieler.name} treffen
+                      </button>
+                    ) : (
+                      <span className="brett-kopf__wert">{spieler.name}</span>
+                    )}
                     <span className="brett-kopf__leise">
                       {lage?.punkte ?? 0} Punkte · {spieler.hand.length} Karten
                     </span>
@@ -312,13 +459,51 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
                   {spieler.schlangen.length === 0 ? (
                     <span className="brett-leer">noch keine Schlange</span>
                   ) : (
-                    spieler.schlangen.map((schlange) => (
-                      <ul key={schlange.id} className="brett-hand__karten">
-                        {schlange.karten.map((karte) => (
-                          <Kartenmarke key={karte.id} karte={karte} />
-                        ))}
-                      </ul>
-                    ))
+                    spieler.schlangen.map((schlange, schlangenIndex) => {
+                      const schlangeZiel: Brettziel = {
+                        art: 'gegnerSchlange',
+                        spielerId: spieler.id,
+                        schlangenId: schlange.id,
+                      }
+                      const karteZiel = (kartenId: string): Brettziel => ({
+                        art: 'karte',
+                        spielerId: spieler.id,
+                        schlangenId: schlange.id,
+                        kartenId,
+                      })
+                      return (
+                        <Fragment key={schlange.id}>
+                          {/* Die ganze gegnerische Schlange als Ziel — Schlangenblockade.
+                              Die Engine kennt dafür keine Einfügeposition. */}
+                          {istOffen(schlangeZiel) ? (
+                            <button
+                              type="button"
+                              className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
+                              onClick={() => zielAnklicken(schlangeZiel)}
+                            >
+                              {schlangenIndex + 1}. Schlange blockieren
+                            </button>
+                          ) : null}
+                          <ul className="brett-hand__karten">
+                            {schlange.karten.map((karte, kartenIndex) => (
+                              <Kartenmarke
+                                key={karte.id}
+                                karte={karte}
+                                platz={kartenIndex + 1}
+                                vonWievielen={schlange.karten.length}
+                                gewaehlt={istGewaehlt(karteZiel(karte.id))}
+                                variante={istOffen(karteZiel(karte.id)) ? 'ziel' : 'auswahl'}
+                                onWaehlen={
+                                  istOffen(karteZiel(karte.id))
+                                    ? () => zielAnklicken(karteZiel(karte.id))
+                                    : undefined
+                                }
+                              />
+                            ))}
+                          </ul>
+                        </Fragment>
+                      )
+                    })
                   )}
                 </li>
               )
@@ -418,6 +603,9 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
       <section className="brett-hand brett-bereich" aria-label="Deine Hand">
         <h2 className="brett-bereich__titel">Deine Hand</h2>
         {hinweis ? <p className="brett-hand__hinweis">{hinweis}</p> : null}
+        {/* Mehrschrittige Sonderkarten sagen, was der nächste Klick tun soll —
+            sonst rät man, warum plötzlich Karten leuchten. */}
+        {zielHinweis ? <p className="brett-hand__hinweis">{zielHinweis}</p> : null}
         <ul className="brett-hand__karten">
           {aktiver.hand.map((karte, platz) => {
             /* Beim Pflichtabwurf ist nicht jede Karte erlaubt: Die Engine lässt

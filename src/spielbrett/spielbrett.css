@@ -16,6 +16,8 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   · z-index nur aus der Skala unten
   · die Spielfläche hat einen Boden, die wachsenden Streifen einen Deckel
     (Regel 8) — sonst bezahlt die Fläche für alles andere
+  · Brettziele erscheinen nur, solange die gewählte Karte sie anbietet
+    (Regel 9) — sonst stünden überall Knöpfe ohne Zweck
 */
 
 .spielbrett {
@@ -261,6 +263,27 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   background: var(--brett-akzent-warm);
 }
 
+/* ---- Sonderkarten-Ziele ----------------------------------------------
+
+   ÄNDERUNG [01.08.2026]: Sonderkarten waren nur über die Aktionsliste
+   spielbar. Jetzt gilt für sie dasselbe wie für Farbkarten: Karte wählen, Ziel
+   am Brett anklicken. Ein Ziel erscheint nur, solange die gewählte Karte es
+   anbietet — sonst stünden bei jeder Schlange Knöpfe ohne Zweck herum.
+
+   Die Regeln stehen bewusst *hinter* ihren Basisregeln: Gleiche Spezifität
+   entscheidet die Quelltextreihenfolge, und davor gestellt hätten sie keine
+   Wirkung gehabt. */
+
+.brett-anlegeplatz--ziel:not(:disabled) {
+  border-style: solid;
+  background: var(--brett-akzent-warm);
+}
+
+.brett-anlegeplatz--schmal {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.85rem;
+}
+
 /* Eine Schlange, an der die gewählte Karte irgendwo passt. */
 .brett-schlange--ziel {
   border-radius: var(--brett-rundung);
@@ -488,6 +511,17 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   background: var(--brett-akzent);
   outline: 3px solid var(--brett-linie);
   outline-offset: 2px;
+}
+
+/* Eine Karte am Brett, die gerade angeklickt werden kann — dieselbe warme
+   Farbe wie die übrigen Ziele, denn es ist derselbe Vorgang. */
+.brett-karte--ziel {
+  border-style: dashed;
+  background: var(--brett-akzent-warm);
+}
+
+.brett-karte--ziel:hover {
+  background: var(--brett-akzent);
 }
 
 /* Zum Abwerfen markiert — bewusst warnfarben, nicht wie die Auswahl. Derselbe
