@@ -92,6 +92,15 @@ describe('spieleKiReaktionenAus', () => {
 
     expect(zustand.pendingReaktion).toBeNull()
     expect(protokoll.join(' ')).toMatch(/durchlassen/i)
+
+    /* Durchlassen heißt nicht „nichts tun": Der Angriff wird ausgeführt. Ohne
+       diese Prüfung bliebe offen, ob die Reaktion nur geschlossen oder auch
+       gewirkt hat — die Beute muss die Schlange wechseln. */
+    const kartenIds = (spielerIndex: number) =>
+      zustand.spieler[spielerIndex].schlangen.flatMap((schlange) => schlange.karten.map((karte) => karte.id))
+    expect(kartenIds(1)).not.toContain('beute')
+    expect(kartenIds(0)).toContain('beute')
+    expect(zustand.spieler[0].schlangen[0].karten[0].id).toBe('beute')
   })
 
   it('rührt eine Reaktion nicht an, deren Verteidiger ein Mensch ist', () => {

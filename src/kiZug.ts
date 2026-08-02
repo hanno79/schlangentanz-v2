@@ -137,7 +137,15 @@ export function spieleKiZuegeBisZumMenschen(start: Spielzustand): KiZugVorspulEr
         break
       }
       const reaktionen = spieleKiReaktionenAus(zustand)
-      if (reaktionen.protokoll.length === 0) break
+      if (reaktionen.protokoll.length === 0) {
+        /* Hier bleibt das Spiel stehen: Das Fenster ist offen, gehört keinem
+           Menschen, und die Engine bietet dem Verteidiger dennoch nichts an.
+           Ohne diese Zeile bräche die Schleife stumm ab, und im Brett stünde
+           weiter „überlegt …" ohne Grund. */
+        const verteidiger = reaktionsVerteidiger(zustand)
+        notiere(`${verteidiger?.name ?? 'Ein Gegner'}: keine Reaktion möglich — Zug steht.`, true)
+        break
+      }
       for (const zeile of reaktionen.protokoll) notiere(zeile, true)
       zustand = reaktionen.zustand
       continue
