@@ -60,26 +60,33 @@ Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
 > von C4 war faktisch aufgehoben. Seit AP-1 laufen genau diese sechs Smokes in
 > einer eigenen Kette gegen ein Preview-Deployment.
 
-### Zwei Smoke-Ketten
+### Zwei Smoke-Ketten (Stand 02.08.2026)
 
 | Script | Umfang | Ziel | Test-Hooks |
 |---|---|---|---|
-| `npm run smoke:production` | 77 Smokes | Production-URL | nicht nötig |
-| `SMOKE_BASE_URL=<preview-url> npm run smoke:preview` | 6 Smokes | Preview-Deployment | erforderlich |
+| `npm run smoke:production` | 1 Smoke | Production-URL | nicht nötig |
+| `SMOKE_BASE_URL=<preview-url> npm run smoke:preview` | 0 Smokes | Preview-Deployment | erforderlich |
 
-Die Preview-Kette enthält:
+Maßgeblich ist `scripts/smoke_listen.mjs`; die Zahlen hier sind nur ihre Ansicht.
 
-- `m1e_waldtanz_spieluhr_smoke.mjs` und `m1dh_waldtanz_spielhandlung_smoke.mjs` —
-  navigieren nach `/game?phase=…` und asserten auf die erzwungene Phase.
-- `m2a_…` und `m2d_…` — brechen hart ab, wenn `window.__schlangentanzFixture`
-  fehlt.
-- `m1dp_…` und `m1dq_…` — überspringen die Fixture-Injektion ohne Hook still und
-  prüfen dann deutlich weniger. Sie laufen bewusst ebenfalls in der Preview-Kette,
-  damit die fixture-gestützte Abdeckung an genau einer Stelle liegt, statt in
-  Production unbemerkt auf eine Teilprüfung zusammenzufallen.
+**Die Production-Kette enthält genau `brett_smoke.mjs`.** Bis G-8 standen dort 91
+Skripte, die einzelne Objekte des alten Waldtanz-Bretts prüften — Steinkreis,
+Lichtungsstein, Zauberpfad, Unterholzleiste. Mit dem Brett sind sie
+gegenstandslos geworden. Der Nachfolger prüft nicht mehr einzelne Brettobjekte,
+sondern ob ein Mensch mit einer Maus spielen kann, und stellt der Seite dieselben
+vier Fragen wie `tests/layout/brett_waechter.spec.ts`. Genau das haben die 91
+zusammen nicht erwischt: Sie meldeten grün, während der Startfährte-Knopf 481 px
+unter dem Bildrand lag.
 
-Alle sechs Skripte lesen `SMOKE_BASE_URL` bereits aus der Umgebung; ohne die
-Variable liefen sie gegen die Production-URL und würden dort scheitern.
+**Die Preview-Kette ist leer — und bleibt bestehen.** Die sechs hook-abhängigen
+Smokes prüften ebenfalls das alte Brett und sind mit ihm entfallen. Die Kette
+selbst ist der Kern der AP-1-Trennung „keine Test-Hooks in Production": Sobald
+wieder ein Smoke die Fixture-Hooks braucht, gehört er dorthin und nicht in die
+Production-Kette. Die Sperre wird von `src/App.hooks_production_guard.test.ts`
+gehalten, nicht von dieser Doku.
+
+Ein Smoke der Preview-Kette liest `SMOKE_BASE_URL` aus der Umgebung; ohne die
+Variable liefe er gegen die Production-URL und würde dort scheitern.
 
 ### Runner statt &&-Kette (ÄNDERUNG 30.07.2026, AP-4)
 
@@ -109,21 +116,28 @@ Prüfung nicht auseinanderlaufen können.
   Smoke zurück in `smoke:production` wandert **oder** ein bestehender
   Production-Smoke neu einen Hook benutzt. Die Prüfung liest die Skript-Quelltexte,
   verlässt sich also nicht auf eine gepflegte Liste.
-- `src/test/smokeKetten.ts` ist die einzige Stelle, die die Ketten aus
-  `package.json` liest. Wiring-Tests fragen `istVerdrahtet(...)`, statt selbst auf
-  einer der Ketten zu suchen — sonst bricht jeder Wechsel der Kette 20 Tests.
+- `src/test/smokeKetten.ts` ist die einzige Stelle, die die Ketten liest — seit
+  AP-4 aus `scripts/smoke_listen.mjs`, nicht mehr aus `package.json`. Tests fragen
+  dort nach, statt selbst auf einer Kette zu suchen; sonst bricht jeder Wechsel
+  der Kette gleich ein Dutzend Tests.
 
 ### Was im Production-Bundle steht
 
-`testHooksAktiv()` kompiliert im Production-Build zu `return false` — geprüft am
-Bundle vom 30.07.2026: `function Qr(){return!1}`. Der Installationspfad des Hooks
-ist damit **statisch unerreichbar**.
+`testHooksAktiv()` kompiliert im Production-Build zu `return false`. Erneut
+geprüft am 02.08.2026 an `dist/assets/index-DSoCa4lI.js`: Die Guard-Funktion
+heißt dort `pn` und lautet `function pn(){return!1}`. Der Installationspfad des
+Hooks ist damit **statisch unerreichbar**.
 
 Der Bezeichner `__schlangentanzFixture` ist im Bundle trotzdem noch als Zeichenkette
 zu finden: Vite entfernt den toten Zweig hinter `if (… || !testHooksAktiv()) return`
-nicht. Ein `grep` im Bundle ist deshalb **kein** taugliches Kriterium. Maßgeblich ist,
-dass die Guard-Funktion zu `false` auflöst; wer das prüfen will, sucht nach der
-kompilierten Guard-Funktion, nicht nach dem Hook-Namen.
+nicht. Ein `grep` nach dem Hook-Namen ist deshalb **kein** taugliches Kriterium.
+
+Der Kurzname der Guard-Funktion wechselt mit jedem Build — am 30.07.2026 hieß sie
+noch `Qr`, und im selben Bundle steht mehr als eine Funktion mit dem Rumpf
+`return!1`. Verlässlich ist nur der Aufrufkontext: Wer prüfen will, sucht den
+Hook-Namen und liest die Bedingung unmittelbar davor. Dort steht heute
+`if(typeof window>"u"||!pn())return;` — der Hook wird nur installiert, wenn der
+Guard `true` liefert, und er liefert `false`.
 
 ### Vitest
 
@@ -166,15 +180,32 @@ steigt. Sinkt sie, fordert der Guard das Nachziehen der Baseline ein
 (`npm run check:css-asserts -- --update-baseline`). Damit friert ein Abbruch der
 Migration den erreichten Stand ein, statt ihn zurückrollen zu lassen.
 
-Stand 30.07.2026: **713 Assertions in 180 Dateien** (Start 741/184).
+Stand 02.08.2026: **1 Treffer in 1 Datei** (Start 741/184) — die Migration ist
+**abgeschlossen**.
 
-Migriert sind bisher:
+Der letzte Treffer ist keine Assertion mehr, sondern die Erwähnung von `appCss`
+in einem Kommentar in `tests/layout/lobby_erstbild.spec.ts`, der festhält, warum
+der frühere Oder-Zweig auf den CSS-Quelltext wirkungslos war. Das Muster in
+`scripts/check_css_source_asserts.mjs` ist bewusst zeilenweise und konservativ
+und kann Kommentar nicht von Code unterscheiden. Der Kommentar ist die
+Begründung wert; die Baseline bleibt deshalb bei 1 statt bei 0.
 
-| Familie | Dateien | Vertrag |
-|---|---|---|
-| Arena-/Hand-Caps (Pilot, AP-2) | `m95_arena_cap` | `tests/layout/arena_erstbild.spec.ts` |
-| Dokumentrahmen (AP-4) | `m1f_waldtanz_seitenmenue` (teilweise) | `tests/layout/app_shell.spec.ts` |
-| Lobby (AP-6) | `m3g`, `m3`, `m3h`, `m3c` | `tests/layout/lobby_erstbild.spec.ts` |
+Der Guard bleibt trotz abgeschlossener Migration bestehen — jetzt nicht mehr als
+Abbau-Ratsche, sondern als Sperre gegen den Rückfall: Ein neuer
+CSS-Quelltext-Vertrag in einer Testdatei lässt ihn sofort rot werden.
+
+Den Bestand abgebaut haben:
+
+| Familie | Ersetzt durch |
+|---|---|
+| Arena-/Hand-Caps (Pilot, AP-2) | in `tests/layout/brett_waechter.spec.ts` aufgegangen |
+| Dokumentrahmen (AP-4) | `tests/layout/app_shell.spec.ts` |
+| Lobby (AP-6) | `tests/layout/lobby_erstbild.spec.ts` |
+| das gesamte Waldtanz-Brett (G-8) | mit der alten Ansicht entfallen; `tests/layout/brett_waechter.spec.ts` und `tests/layout/brett_dauerlauf.spec.ts` prüfen das neue Brett |
+
+Der große Sprung kam nicht aus der Migration, sondern aus G-8: Die 177
+Testdateien, die `src/App.css` als Text lasen, prüften fast alle das alte Brett
+und sind mit ihm entfallen. Was blieb, war bereits gemessen.
 
 Die Lobby-Migration hat nebenbei einen regredierten Vertrag aufgedeckt — siehe
 `docs/PLAYABILITY_GATE.md`, Abschnitt „AP-6: M3g-Erstbild-Vertrag ist regrediert".
