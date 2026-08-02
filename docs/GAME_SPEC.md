@@ -328,6 +328,29 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Eine blockierte Schlange kann nicht erweitert werden.
 - Jede Schlange hat eine eindeutige ID.
 
+#### R3.5a Der Zustand `blockiert` wird von keiner Karte erzeugt
+
+*(Auslegung festgehalten am 02.08.2026.)*
+
+Der Zustand `blockiert` ist im Datenmodell vorhanden und wird von der Engine
+durchgesetzt — eine Schlange in diesem Zustand lässt sich nicht erweitern. Er
+wird jedoch von **keiner** aktuell umgesetzten Karte gesetzt.
+
+Insbesondere setzt ihn die Schlangenblockade nicht: Sie legt nach R7.1 eine
+neutrale, nicht farbige Karte auf die Zielschlange. Deren Wirkung ist eine
+andere, nämlich die Unterbrechung — eine Sonderkarte trennt nach R3.3 die
+Farbgruppen links und rechts von sich und kostet den Zielspieler damit Punkte.
+Die Schlange bleibt erweiterbar.
+
+Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte
+Normquelle. Bis dahin gilt R7.1 als die engere und aktuellere Angabe (siehe
+Konfliktregeln in Abschnitt 7).
+
+Der Zustand und seine Durchsetzung bleiben erhalten: Sie kosten nichts und stehen
+bereit, falls eine Erweiterungskarte sie später braucht. Wer die beiden Prüfungen
+in `legalActions.ts` und `turnState.ts` für toten Code hält, findet dort einen
+Verweis auf diesen Abschnitt.
+
 ## 6. Illegal Actions
 
 - Aktionen in der falschen Zugphase sind verboten.
@@ -509,3 +532,16 @@ Eine Änderung dieser Auslegungen ist eine Regeländerung und braucht eine best�
 - Bereits implementierte Regeln sind über Tests und Release-Gates abgesichert.
 - Offene Regelfragen werden erst nach User-Signoff oder verlässlicher Normquelle implementiert.
 - Aktuell sind keine offenen normalen Sonderkartenwirkungen mehr vermerkt; weitere offene Regelfragen betreffen andere Bereiche.
+
+### Geklärte Auslegungen
+
+Diese Punkte sind entschieden und **keine** offenen Regelfragen. Sie stehen hier,
+weil sie beim Lesen des Codes wie Lücken aussehen:
+
+- **R3.5a — der Zustand `blockiert` wird von keiner Karte erzeugt** (02.08.2026).
+  Die Schlangenblockade unterbricht die Farbgruppe, sie sperrt die Schlange
+  nicht. Eine Änderung wäre eine Regeländerung und braucht eine bestätigte
+  Normquelle.
+- **R6.2a — „Lila Riese" und die Historie-Aufgaben.** Zwei Kartentexte sind am
+  Tisch eindeutig, digital aber auslegungsbedürftig; die getroffene Auslegung
+  steht in R6.2a.

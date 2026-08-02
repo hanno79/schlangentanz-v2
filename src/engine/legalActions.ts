@@ -807,6 +807,11 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     return verboten('Schlange nicht gefunden.');
   }
 
+  // ÄNDERUNG [02.08.2026]: Diese Prüfung sieht nach totem Code aus — keine Karte
+  // setzt `blockiert`. Sie ist es nicht: Der Zustand gehört zum Datenmodell, und
+  // die Zusicherung „eine blockierte Schlange lässt sich nicht erweitern" gilt
+  // unabhängig davon, ob heute schon jemand sie auslöst. Warum die
+  // Schlangenblockade den Zustand nicht setzt, steht in GAME_SPEC.md R3.5a.
   if (schlange.zustand === 'blockiert') {
     return verboten('Eine blockierte Schlange kann nicht erweitert werden.');
   }

@@ -608,6 +608,9 @@ export function legeKarteAnSchlangeAn(
   if (!schlange) {
     throw new Error('Schlange nicht gefunden.');
   }
+  // ÄNDERUNG [02.08.2026]: Gegenstück zur Prüfung in `legalActions.ts` — siehe
+  // dort. Kein aktuell umgesetzter Karteneffekt erzeugt `blockiert`
+  // (GAME_SPEC.md R3.5a); die Zusicherung bleibt trotzdem stehen.
   if (schlange.zustand === 'blockiert') {
     throw new Error('Eine blockierte Schlange kann nicht erweitert werden.');
   }
