@@ -112,6 +112,27 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
     expect(spec).toContain('Grün: 9 Karten, 3 Punkte pro Karte')
     expect(spec).toContain('Einzelne Karten und 2er-Kombinationen zählen 0 Punkte')
   })
+
+  /*
+   * ÄNDERUNG [02.08.2026]: R3.5a — der Zustand `blockiert` steht im Datenmodell
+   * und wird von der Engine durchgesetzt, aber keine umgesetzte Karte erzeugt
+   * ihn. Ohne diesen Absatz liest sich R3.5 wie ein unfertiges Feature, und die
+   * beiden Guards in legalActions.ts und turnState.ts wie toter Code.
+   *
+   * Der Test hält die Auslegung fest, nicht bloß ihre Existenz: Wer die
+   * Schlangenblockade doch sperren lässt, muss hier vorbei — und das ist genau
+   * die Stelle, an der auffällt, dass dafür eine Normquelle fehlt.
+   */
+  it('hält fest, dass keine umgesetzte Karte den Zustand blockiert erzeugt', () => {
+    expect(spec).toContain('#### R3.5a Der Zustand `blockiert` wird von keiner Karte erzeugt')
+    expect(spec).toContain('Er\nwird jedoch von **keiner** aktuell umgesetzten Karte gesetzt.')
+    expect(spec).toContain('Insbesondere setzt ihn die Schlangenblockade nicht')
+    expect(spec).toContain('Die Schlange bleibt erweiterbar.')
+    expect(spec).toContain('Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte')
+
+    // Die Zusicherung selbst bleibt bestehen — R3.5a hebt sie nicht auf.
+    expect(spec).toContain('Eine blockierte Schlange kann nicht erweitert werden.')
+  })
 })
 
 describe('GAME_SPEC R7 Sonderkarten-Regelstatus', () => {
