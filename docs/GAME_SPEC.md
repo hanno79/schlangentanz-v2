@@ -337,10 +337,16 @@ durchgesetzt — eine Schlange in diesem Zustand lässt sich nicht erweitern. Er
 wird jedoch von **keiner** aktuell umgesetzten Karte gesetzt.
 
 Insbesondere setzt ihn die Schlangenblockade nicht: Sie legt nach R7.1 eine
-neutrale, nicht farbige Karte auf die Zielschlange. Deren Wirkung ist eine
-andere, nämlich die Unterbrechung — eine Sonderkarte trennt nach R3.3 die
-Farbgruppen links und rechts von sich und kostet den Zielspieler damit Punkte.
-Die Schlange bleibt erweiterbar.
+neutrale, nicht farbige Karte **ans Ende** der Zielschlange. Die Schlange bleibt
+erweiterbar.
+
+Daraus folgt eine Wirkung, die man leicht überschätzt: Eine Sonderkarte trennt
+nach R3.3 die Farbgruppen links und rechts von sich — am Ende einer Schlange
+liegt rechts aber nichts. Die Blockade zerreißt deshalb **keine bestehende**
+Farbgruppe und kostet im Moment des Ausspielens **keine Punkte**. Ihre Wirkung
+ist eine künftige: Wer danach rechts weiter anlegt, beginnt hinter der Sperrkarte
+eine neue Gruppe und erreicht die Dreiergrenze aus R3.3 dort erst wieder mit drei
+weiteren Karten. Anlegen nach links bleibt unberührt.
 
 Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte
 Normquelle. Bis dahin gilt R7.1 als die engere und aktuellere Angabe (siehe
@@ -400,7 +406,7 @@ Verweis auf diesen Abschnitt.
 
 - Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
 - Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
-- Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
+- Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu, sofern der Zielspieler nicht mit Farbenschutz abwehrt. Die Karte wird **ans Ende** der Zielschlange angehängt; eine Einfügeposition gibt es nicht. Sie zerreißt damit keine bestehende Farbgruppe — die Folgen für den weiteren Ausbau stehen in R3.5a.
 - Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
 - Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt.
 - Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).

@@ -129,7 +129,13 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
     // Zeilenumbruch, an dem sie im Markdown gerade steht.
     expect(spec).toContain('von **keiner** aktuell umgesetzten Karte gesetzt.')
     expect(spec).toContain('Insbesondere setzt ihn die Schlangenblockade nicht')
-    expect(spec).toContain('Die Schlange bleibt erweiterbar.')
+    expect(spec).toContain('Die Schlange bleibt\nerweiterbar.')
+    /* ÄNDERUNG [02.08.2026]: Die Einfügeposition gehört mit in die Zusage.
+       R3.5a behauptete zuerst, die Blockade zerreiße eine Farbgruppe — die
+       Engine hängt sie aber ans Ende, wo rechts nichts liegt. Ohne diesen
+       Assert könnte dieselbe Verwechslung zurückkommen. */
+    expect(spec).toContain('**ans Ende** der Zielschlange angehängt')
+    expect(spec).toContain('zerreißt deshalb **keine bestehende**')
     expect(spec).toContain('Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte')
 
     // Die Zusicherung selbst bleibt bestehen — R3.5a hebt sie nicht auf.
