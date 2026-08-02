@@ -13,13 +13,13 @@ import {
   ermittleLegaleAktionen,
   ermittleNichtEnumerierteAktionenHinweise,
   ermittleReaktionsAktionen,
-  HANDKARTENLIMIT,
   starteAusspielphase,
   werfeUeberzaehligeHandkartenAb,
 } from './engine'
 import type { Spielzustand, SpielAktion } from './engine'
 import { erstelleAktionsLabel } from './aktionsLabel'
 import { mussMenschReagieren, reaktionsVerteidiger } from './reaktionen'
+import { ueberhandAbwurfKartenIds } from './ueberhand'
 
 export interface KiZugVorspulErgebnis {
   zustand: Spielzustand
@@ -39,11 +39,6 @@ export interface KiZugVorspulErgebnis {
 
 function aktiverName(zustand: Spielzustand): string {
   return zustand.spieler[zustand.aktiverSpielerIndex].name
-}
-
-function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
-  const hand = zustand.spieler[zustand.aktiverSpielerIndex].hand
-  return hand.slice(HANDKARTENLIMIT).map(karte => karte.id)
 }
 
 export interface KiReaktionsErgebnis {

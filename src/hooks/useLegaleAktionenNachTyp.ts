@@ -2,11 +2,21 @@
 Author: rahn
 Datum: 21.06.2026
 Version: 1.0
-Beschreibung: useLegaleAktionenNachTyp gruppiert die `legaleAktionen` nach
-              `typ`-Discriminant und liefert jeweils eine typisierte Liste
-              pro Sonderkarten-Familie. Wird aus App.tsx extrahiert, damit
-              App.tsx unter dem harten 500-Zeilen-Budget bleibt und die
-              Filter-Logik zentralisiert ist.
+Beschreibung: useLegaleAktionenNachTyp ruft die Engine einmal pro Zustand und
+              liefert die Aktionen, die das Brett getrennt braucht.
+
+ÄNDERUNG [02.08.2026]: Sieben Sonderkarten-Listen entfernt — Farbenschutz,
+Farbenfusion, Schlangenfrass, Schlangenblockade, Farbendieb, Verdoppler und
+Schlangengrube. Sie stammen aus der Zeit, in der jede Sonderkarte ihre eigene
+Bedienfläche hatte. Seit G-11 wählt der Spieler die Karte und klickt ihr Ziel am
+Brett an; welche Ziele das sind, beantwortet `src/spielbrett/sonderkartenziele.ts`
+generisch aus `legaleAktionen`. Danach hat keine der sieben Listen noch einen
+Abnehmer gehabt.
+
+Übrig bleiben die vier, die das Brett wirklich getrennt braucht, plus die
+Reaktionen. `KarteAnlegen` und `NeueSchlangeStarten` stehen dabei nicht aus
+Gewohnheit für sich: Sie hängen an festen Brettflächen — Startkreis, Anlegeplatz
+links und rechts —, die es vor der Kartenauswahl schon gibt.
 */
 
 import { useMemo } from 'react'
@@ -23,13 +33,6 @@ export interface LegaleAktionenNachTyp {
   reaktionsAktionen: SpielAktion[]
   karteAnlegenAktionen: Extract<SpielAktion, { typ: 'KarteAnlegen' }>[]
   neueSchlangeStartenAktionen: Extract<SpielAktion, { typ: 'NeueSchlangeStarten' }>[]
-  farbenschutzAktionen: Extract<SpielAktion, { typ: 'FarbenschutzSpielen' }>[]
-  farbenfusionAktionen: Extract<SpielAktion, { typ: 'FarbenfusionSpielen' }>[]
-  schlangenfrassAktionen: Extract<SpielAktion, { typ: 'SchlangenfrassSpielen' }>[]
-  schlangenblockadeAktionen: Extract<SpielAktion, { typ: 'SchlangenblockadeSpielen' }>[]
-  farbendiebAktionen: Extract<SpielAktion, { typ: 'FarbendiebSpielen' }>[]
-  verdopplerAktionen: Extract<SpielAktion, { typ: 'VerdopplerSpielen' }>[]
-  schlangengrubeAktionen: Extract<SpielAktion, { typ: 'SonderkarteSpielen' }>[]
 }
 
 function filtereAktionen<Typ extends SpielAktion['typ']>(
@@ -45,25 +48,11 @@ export default function useLegaleAktionenNachTyp(zustand: Spielzustand): LegaleA
   const reaktionsAktionen = useMemo(() => ermittleReaktionsAktionen(zustand), [zustand])
   const karteAnlegenAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'KarteAnlegen'), [legaleAktionen])
   const neueSchlangeStartenAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'NeueSchlangeStarten'), [legaleAktionen])
-  const farbenschutzAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'FarbenschutzSpielen'), [legaleAktionen])
-  const farbenfusionAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'FarbenfusionSpielen'), [legaleAktionen])
-  const schlangenfrassAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'SchlangenfrassSpielen'), [legaleAktionen])
-  const schlangenblockadeAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'SchlangenblockadeSpielen'), [legaleAktionen])
-  const farbendiebAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'FarbendiebSpielen'), [legaleAktionen])
-  const verdopplerAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'VerdopplerSpielen'), [legaleAktionen])
-  const schlangengrubeAktionen = useMemo(() => filtereAktionen(legaleAktionen, 'SonderkarteSpielen'), [legaleAktionen])
   return {
     legaleAktionen,
     nichtEnumerierteAktionenHinweise,
     reaktionsAktionen,
     karteAnlegenAktionen,
     neueSchlangeStartenAktionen,
-    farbenschutzAktionen,
-    farbenfusionAktionen,
-    schlangenfrassAktionen,
-    schlangenblockadeAktionen,
-    farbendiebAktionen,
-    verdopplerAktionen,
-    schlangengrubeAktionen,
   }
 }
