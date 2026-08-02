@@ -27,7 +27,12 @@ Dieser Vertrag spielt deshalb eine echte Partie und misst *danach*.
 */
 
 import { expect, test } from '@playwright/test'
-import { befundListe, findeAusserhalbDesBildes, findeVerdeckteBedienelemente } from './messung'
+import {
+  befundListe,
+  findeAusserhalbDesBildes,
+  findeVerdeckteBedienelemente,
+  findeZusammengedruecktes,
+} from './messung'
 
 /**
  * Untergrenze der Spielfläche: ein Drittel des Bildes — Startkreis plus eine
@@ -90,5 +95,33 @@ test.describe('Brett im Dauerlauf', () => {
 
     const verdeckt = await findeVerdeckteBedienelemente(page)
     expect(verdeckt, `verdeckt:\n${befundListe(verdeckt)}`).toHaveLength(0)
+  })
+
+  /*
+   * ÄNDERUNG [02.08.2026]: Dritte Prüfung im Dauerlauf.
+   *
+   * Die beiden darüber haben einen echten Fehler durchgelassen: Das
+   * Gegnerprotokoll war ab dem zweiten Zug auf `clientHeight: 0` gedrückt — bei
+   * 61 px Inhalt. Es lag nicht außerhalb des Bildes und war von nichts verdeckt;
+   * es hatte schlicht keine Höhe mehr. Und weil es formal scrollte, sah auch
+   * `findeAbgeschnittenes` nichts (Regel 10: weggescrollt ist erreichbar).
+   *
+   * Damit war die einzige Rückmeldung darüber, was der Gegner getan hat,
+   * unsichtbar — und Regel 7 verlangt sie ausdrücklich. Dieselbe Sorte Lücke wie
+   * beim Erstbild-Wächter: Jede Prüfung für sich grün, die Seite trotzdem kaputt.
+   *
+   * Die Prüfung läuft nach dem Dauerlauf und nicht im Erstbild, weil der Fehler
+   * dort nicht existiert: Vor dem ersten Gegnerzug gibt es kein Protokoll.
+   */
+  test('nach acht Runden ist kein Textinhalt auf null gedrückt', async ({ page }) => {
+    for (let runde = 1; runde <= 8; runde += 1) {
+      if (!(await spieleEineRunde(page))) break
+    }
+
+    const gedrueckt = await findeZusammengedruecktes(page)
+    expect(
+      gedrueckt,
+      `${gedrueckt.length} Element(e) zeigen nicht einmal eine ganze Zeile:${befundListe(gedrueckt)}`,
+    ).toEqual([])
   })
 })
