@@ -3344,3 +3344,37 @@ deterministisch durch `kiZug.reaktionen.test.ts` (Logik) und
   die Arbeit sei halb getan.
 - **Unter 1000 px Breite** ist das Brett gestapelt und scrollt. Geprüft und
   entworfen ist 1280×900 und breiter.
+
+### Bewusst so gelassen (02.08.2026)
+
+Zwei Beobachtungen aus dem Onboarding, die *keine* Änderung nach sich ziehen.
+Sie stehen hier, damit die nächste Durchsicht sie nicht ein zweites Mal als Fund
+meldet.
+
+**Die Schlangenhäutung wird validiert, indem sie ausgeführt wird.**
+`pruefeAktion` ruft für `SchlangenhaeutungSpielen` das vollständige
+`spieleSchlangenhaeutung` in einem `try/catch` und wirft das Ergebnis weg
+(`src/engine/legalActions.ts`). Bei einer rein funktionalen Engine ist das
+korrekt und billig — der Aufruf hat keine Seiteneffekte, und teuer ist er auch
+nicht. Es ist aber die einzige so validierte Aktion, und daraus folgt die
+Sonderrolle, die sich durch das ganze System zieht: Sie ist die einzige Aktion,
+die `ermittleLegaleAktionen` nicht enumeriert, weil die Zielmenge alle
+Permutationen einer Schlange wäre. Deshalb gibt es
+`ermittleNichtEnumerierteAktionenHinweise`, deshalb hat das Brett einen eigenen
+`Haeutungseditor`, und deshalb baut die KI ihre Häutung als Rotation selbst
+zusammen (`src/kiZug.ts`).
+
+Wer die Enumeration einmal um Häutungen erweitert, macht sie zum teuersten Posten
+der App — die Messtabelle im Kopf von `legalActions.ts` sagt, warum.
+
+**Für Produktionscode gibt es kein Zeilenbudget.** `npm run check:test-lines`
+deckelt nur Testdateien bei 500 Zeilen. `src/engine/turnState.ts` hat rund 1600,
+`src/engine/legalActions.ts` rund 1200 Zeilen; `turnState.ts` enthält die
+Zugphasen-Maschine *und* acht Kartenwirkungen.
+
+Nicht angefasst, weil beide Dateien gegliedert und vollständig getestet sind und
+ein Split quer durch die meistgeänderte Engine-Datei ginge. Das ist ein eigener
+Slice mit eigenem Codex-Review, keine Aufgabe für eine Aufräumrunde. Der Guard
+wurde bewusst *nicht* auf Produktionscode erweitert: Eine Ratsche auf dem
+Ist-Zustand hätte 1600 Zeilen als akzeptiert eingefroren, ohne dass jemand die
+Entscheidung getroffen hätte.
