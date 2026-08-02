@@ -30,9 +30,9 @@ import {
   beendeAufgabenpruefung,
   beendeZug,
   werfeUeberzaehligeHandkartenAb,
-  HANDKARTENLIMIT,
 } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
+import { ueberhandAnzahl, ueberhandAbwurfKartenIds } from '../ueberhand'
 import { baueFixtureZustand } from '../components/waldtanzFixtureLogik'
 import { leseTestPhaseAusUrl, testHooksAktiv } from '../testPhaseHook'
 import { erstelleAktionsLabel } from '../aktionsLabel'
@@ -51,17 +51,11 @@ export interface BrettschrittEintrag {
   konsequenz?: string
 }
 
-/** Wie viele Karten der aktive Spieler über dem Handkartenlimit hält. */
-export function ueberhandAnzahl(zustand: Spielzustand): number {
-  return Math.max(0, zustand.spieler[zustand.aktiverSpielerIndex].hand.length - HANDKARTENLIMIT)
-}
-
-/** Die Karten, die bei fehlender Auswahl automatisch abgeworfen würden. */
-export function ueberhandAbwurfKartenIds(zustand: Spielzustand): string[] {
-  const anzahl = ueberhandAnzahl(zustand)
-  if (anzahl === 0) return []
-  return zustand.spieler[zustand.aktiverSpielerIndex].hand.slice(-anzahl).map((k) => k.id)
-}
+/* ÄNDERUNG [02.08.2026]: `ueberhandAnzahl` und `ueberhandAbwurfKartenIds` wohnen
+   jetzt in `src/ueberhand.ts` — `kiZug.ts` hatte dieselbe Rechnung ein zweites
+   Mal. Hier weiterhin re-exportiert, weil Brett und Tests sie von der
+   Zustandsschicht beziehen. */
+export { ueberhandAnzahl, ueberhandAbwurfKartenIds }
 
 export interface PartieOptionen {
   initialZustand?: Spielzustand
