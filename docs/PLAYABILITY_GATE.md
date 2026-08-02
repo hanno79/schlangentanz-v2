@@ -3378,3 +3378,16 @@ Slice mit eigenem Codex-Review, keine Aufgabe für eine Aufräumrunde. Der Guard
 wurde bewusst *nicht* auf Produktionscode erweitert: Eine Ratsche auf dem
 Ist-Zustand hätte 1600 Zeilen als akzeptiert eingefroren, ohne dass jemand die
 Entscheidung getroffen hätte.
+
+**`docs/` bleibt flach.** 249 der rund 300 Dateien heißen `release_status_*.md`,
+dazu rund 40 `slice_plan_*.md`; die sieben tragenden Dokumente gehen darin
+optisch unter. Ein Verschieben in Unterordner war geplant und wurde nach der
+Prüfung verworfen: Die Release-Status-Dateien werden aus `PLAYABILITY_GATE.md`
+und untereinander mit ihrem Pfad im Fließtext zitiert (allein 13 Stellen im
+Gate-Dokument). Ein Verschieben macht diese Pfade falsch — entweder bleiben sie
+stehen und die Belegkette stimmt nicht mehr, oder ein `sed` über 250 Dateien
+zieht sie nach und niemand liest den Diff.
+
+Der Gewinn wäre kosmetisch, der Einsatz die Verlässlichkeit eines
+Nachweisarchivs. Kein guter Tausch. Wer die tragenden Dokumente sucht: Sie sind
+die, die nicht mit `release_status_` oder `slice_plan_` anfangen.
