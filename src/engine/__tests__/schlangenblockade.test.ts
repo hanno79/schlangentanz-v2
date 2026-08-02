@@ -8,8 +8,14 @@ Beschreibung: Regressionstest für die Schlangenblockade-Sonderkarte im Engine-F
 */
 
 import { describe, expect, it } from 'vitest';
-import { deserialisiere, erstelleSpielzustand, serialisiere, spieleSchlangenblockade } from '../index';
-import { schlange } from './testHelpers';
+import {
+  berechneFarbgruppenPunkte,
+  deserialisiere,
+  erstelleSpielzustand,
+  serialisiere,
+  spieleSchlangenblockade,
+} from '../index';
+import { schlange, schlangeMitFarben } from './testHelpers';
 
 function zustandMitSchlangenblockade(): ReturnType<typeof erstelleSpielzustand> {
   const zustand = erstelleSpielzustand(2, () => 0.999999);
@@ -50,6 +56,44 @@ describe('Schlangenblockade', () => {
       typ: 'Sonderkarte',
       name: 'Schlangenblockade',
     });
+  });
+
+  /*
+   * ÄNDERUNG [02.08.2026]: Die Einfügeposition war nirgends festgehalten.
+   *
+   * Die Tests darüber legen auf eine *leere* Zielschlange — dort ist „ans Ende"
+   * dasselbe wie „irgendwohin". Damit stand nirgends geschrieben, was die Karte
+   * mit einer bestehenden Farbgruppe macht, und GAME_SPEC R3.5a behauptete
+   * zwischenzeitlich, sie zerreiße eine.
+   *
+   * Tut sie nicht: Sie hängt hinten an, und rechts von ihr liegt nichts. Die
+   * Dreiergruppe bleibt vollständig und zählt weiter. Wer das ändern will —
+   * etwa auf eine wählbare Einfügeposition — bricht hier und muss vorher
+   * GAME_SPEC anfassen.
+   */
+  it('hängt hinten an und zerreißt damit keine bestehende Farbgruppe', () => {
+    const zustand = zustandMitSchlangenblockade();
+    const schlangenblockade = zustand.spieler[0].hand[0];
+    zustand.spieler[1].schlangen = [
+      schlangeMitFarben('schlange-spieler-2-1', ['Rot', 'Rot', 'Rot']),
+    ];
+    const punkteVorher = berechneFarbgruppenPunkte(zustand.spieler[1].schlangen[0]).gesamtPunkte;
+
+    const aktualisiert = spieleSchlangenblockade(zustand, {
+      kartenId: schlangenblockade.id,
+      zielSpielerIndex: 1,
+      zielSchlangenId: 'schlange-spieler-2-1',
+    });
+
+    const zielschlange = aktualisiert.spieler[1].schlangen[0];
+    expect(zielschlange.karten).toHaveLength(4);
+    // Letzte Position, nicht irgendeine.
+    expect(zielschlange.karten[3].id).toBe(schlangenblockade.id);
+    expect(zielschlange.karten.slice(0, 3).map((karte) => karte.id)).toEqual(
+      zustand.spieler[1].schlangen[0].karten.slice(0, 3).map((karte) => karte.id),
+    );
+    // Und deshalb kostet die Blockade im Moment des Ausspielens keinen Punkt.
+    expect(berechneFarbgruppenPunkte(zielschlange).gesamtPunkte).toBe(punkteVorher);
   });
 
   it('bleibt nach Serialisierung und Deserialisierung materialkonsistent', () => {
