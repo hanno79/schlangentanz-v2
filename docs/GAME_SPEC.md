@@ -542,6 +542,6 @@ weil sie beim Lesen des Codes wie Lücken aussehen:
   Die Schlangenblockade unterbricht die Farbgruppe, sie sperrt die Schlange
   nicht. Eine Änderung wäre eine Regeländerung und braucht eine bestätigte
   Normquelle.
-- **R6.2a — „Lila Riese" und die Historie-Aufgaben.** Zwei Kartentexte sind am
+- **R6.2a — „Lila Riese“ und die Historie-Aufgaben.** Zwei Kartentexte sind am
   Tisch eindeutig, digital aber auslegungsbedürftig; die getroffene Auslegung
   steht in R6.2a.

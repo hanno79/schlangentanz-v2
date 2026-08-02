@@ -65,7 +65,7 @@ Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
 | Script | Umfang | Ziel | Test-Hooks |
 |---|---|---|---|
 | `npm run smoke:production` | 1 Smoke | Production-URL | nicht nötig |
-| `SMOKE_BASE_URL=<preview-url> npm run smoke:preview` | 0 Smokes | Preview-Deployment | erforderlich |
+| `SMOKE_BASE_URL=<preview-url> npm run smoke:preview` | 0 Smokes | Preview-Deployment | für den aktuellen Lauf nicht nötig (Kette leer); erforderlich für künftig hinzukommende hook-abhängige Smokes |
 
 Maßgeblich ist `scripts/smoke_listen.mjs`; die Zahlen hier sind nur ihre Ansicht.
 
@@ -119,10 +119,11 @@ Test fragt `produktionsSchritte()` und arbeitet auf der Liste.
   Smoke zurück in `smoke:production` wandert **oder** ein bestehender
   Production-Smoke neu einen Hook benutzt. Die Prüfung liest die Skript-Quelltexte,
   verlässt sich also nicht auf eine gepflegte Liste.
-- `src/test/smokeKetten.ts` ist die einzige Stelle, die die Ketten liest — seit
-  AP-4 aus `scripts/smoke_listen.mjs`, nicht mehr aus `package.json`. Tests fragen
-  dort nach, statt selbst auf einer Kette zu suchen; sonst bricht jeder Wechsel
-  der Kette gleich ein Dutzend Tests.
+- `src/test/smokeKetten.ts` ist die Test-Schnittstelle auf die Ketten — seit
+  AP-4 aus `scripts/smoke_listen.mjs`, nicht mehr aus `package.json`. Für die
+  Ausführung liest der Runner (`scripts/run_smokes.mjs`) dieselbe Liste direkt.
+  Tests fragen über diese Schnittstelle nach, statt selbst auf einer Kette zu
+  suchen; sonst bricht jeder Wechsel der Kette gleich ein Dutzend Tests.
 
 ### Was im Production-Bundle steht
 
