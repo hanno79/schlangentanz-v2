@@ -3333,5 +3333,14 @@ deterministisch durch `kiZug.reaktionen.test.ts` (Logik) und
   Regeländerung und gehört erst in `GAME_SPEC.md`.
 - **Drag & Drop** ist im neuen Brett noch nicht verdrahtet; Klick und Tastatur
   decken jede Aktion ab.
+
+  *(ÄNDERUNG 02.08.2026.)* Der alte Hook `src/hooks/useSchlangenDragDrop.ts` ist
+  gelöscht. Er war aus dem mit G-8 entfallenen `Schlangenbereich.tsx` extrahiert
+  und hing an dessen Zonenbegriff (`startzone` / `schlange` / `ungueltig`); seine
+  `finde*Aktion`-Gegenstücke liegen inzwischen in `src/spielbrett/brettziele.ts`
+  und arbeiten auf den enumerierten Aktionen der Engine. Ein Drag-Slice fürs neue
+  Brett wäre also eine Neuimplementierung, keine Wiederverwendung — 199 Zeilen
+  ungetesteten Code als Vorlage stehen zu lassen hätte nur die Illusion erzeugt,
+  die Arbeit sei halb getan.
 - **Unter 1000 px Breite** ist das Brett gestapelt und scrollt. Geprüft und
   entworfen ist 1280×900 und breiter.
