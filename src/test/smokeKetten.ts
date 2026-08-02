@@ -63,9 +63,11 @@ export function previewSchritte(): string[] {
 
 /* ÄNDERUNG [02.08.2026]: Fünf Exporte entfernt — `produktionsKette`,
    `previewKette`, `alleSchritte`, `istVerdrahtet` und `produktionsPosition`.
-   Sie waren die Kompatibilitätsschicht aus AP-4 für die rund 20 Wiring-Tests,
-   die eine Kette als `node a.mjs && node b.mjs` lasen und darauf Mitgliedschaft
-   und Reihenfolge prüften. Diese Tests prüften das alte Waldtanz-Brett und sind
+   Sie waren die Kompatibilitätsschicht aus AP-4 für die über 80 Wiring-Tests
+   (81 Testdateien im Stand von AP-4; dieselbe Schicht, die docs/WORKFLOW.md im
+   Abschnitt „Runner statt &&-Kette" beschreibt), die eine Kette als
+   `node a.mjs && node b.mjs` lasen und darauf Mitgliedschaft und Reihenfolge
+   prüften. Diese Tests prüften das alte Waldtanz-Brett und sind
    mit G-8 entfallen; die Schicht bediente danach niemanden mehr.
 
    Eine Ansicht, die keine Sicht mehr ist, lädt zum Wiederbenutzen ein: Die
