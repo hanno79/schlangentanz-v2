@@ -214,6 +214,65 @@ export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
   })
 }
 
+/**
+ * Elemente, die von ihrem Umfeld auf (fast) nichts zusammengedrückt wurden.
+ *
+ * ÄNDERUNG [02.08.2026]: Neuer Wächter. `findeAbgeschnittenes` zählt nur
+ * Container mit `overflow: hidden|clip` — was scrollt, gilt nach Regel 10
+ * ausdrücklich als erreichbar. Genau in dieser Lücke saß ein echter Fehler:
+ * Das Gegnerprotokoll hatte ab dem zweiten Zug `clientHeight: 0` bei 61 px
+ * Inhalt. Formal scrollte es (`overflow-y: auto`), praktisch war es weg.
+ *
+ * Die Falle ist ein CSS-Klassiker: Ein Flex-Kind mit `overflow` ungleich
+ * `visible` bekommt als automatische Mindestgröße 0 statt seiner Inhaltsgröße.
+ * Ohne `flex-shrink: 0` fällt es zusammen, sobald ein Geschwisterelement Platz
+ * braucht — und keiner der bisherigen vier Wächter sieht es.
+ *
+ * Die Grenze zu Regel 10 ist der Punkt: Wer eine scrollende Spalte um 1000 px
+ * kürzt, sieht immer noch Dutzende Zeilen und scrollt zum Rest. Wer nicht einmal
+ * **eine ganze Zeile** sieht, hat keinen Anhaltspunkt, dass es etwas zu scrollen
+ * gäbe. Deshalb schlägt dieser Wächter erst unterhalb einer Zeilenhöhe an.
+ */
+export async function findeZusammengedruecktes(page: Page): Promise<Befund[]> {
+  return page.evaluate(() => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+
+    const befunde: { element: string; detail: string }[] = []
+    for (const element of Array.from(document.querySelectorAll('*'))) {
+      const stil = getComputedStyle(element)
+      const scrollt = (achse: string) => /auto|scroll/.test(achse)
+      if (!scrollt(stil.overflowY)) continue
+
+      // Nichts zu sehen heißt hier: Der Inhalt ist da, der Platz dafür nicht.
+      const inhaltUeberragt = element.scrollHeight > element.clientHeight + 3
+      if (!inhaltUeberragt) continue
+
+      /* Eine Zeilenhöhe ist das Maß: Darunter sieht man nicht einmal, dass es
+         weitergeht. `line-height: normal` liefert keinen Pixelwert — dann tut
+         es die Schriftgröße mal 1,2. */
+      const zeilenhoehe = Number.parseFloat(stil.lineHeight) ||
+        Number.parseFloat(stil.fontSize) * 1.2
+      if (element.clientHeight >= zeilenhoehe) continue
+
+      // Leere Hüllen sind kein Verlust — es geht um Inhalt, den jemand liest.
+      if ((element.textContent ?? '').trim() === '') continue
+
+      befunde.push({
+        element: kennung(element),
+        detail:
+          `sichtbar ${element.clientHeight} px von ${element.scrollHeight} px Inhalt ` +
+          `(unter einer Zeile: ${Math.round(zeilenhoehe)} px)`,
+      })
+    }
+    return befunde
+  })
+}
+
 /*
 Beide folgenden Wächter brauchen dieselbe Unterscheidung, und zwar dieselbe:
 **weggescrollt ist nicht unerreichbar.** Ein Eintrag in einer scrollenden Spalte

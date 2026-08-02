@@ -380,6 +380,25 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   overflow-y: auto;
   font-size: 0.78rem;
   color: var(--brett-text-leise);
+
+  /* ÄNDERUNG [02.08.2026]: `flex-shrink: 0` ist hier kein Feinschliff, sondern
+     der Unterschied zwischen sichtbar und gar nicht da.
+
+     Gemessen ab dem zweiten Gegnerzug: `clientHeight: 0` bei 61 px Inhalt. Das
+     Protokoll war komplett unsichtbar — und mit ihm die einzige Rückmeldung
+     darüber, was der Gegner getan hat (Regel 7: was ohne Klick durchläuft, muss
+     sichtbare Spuren hinterlassen).
+
+     Die Falle steckt in der Zeile darüber: Ein Flex-Kind mit `overflow` ungleich
+     `visible` bekommt als automatische Mindestgröße **0** statt seiner
+     Inhaltsgröße. Das `overflow-y: auto`, das das Protokoll vor dem
+     Abgeschnittenwerden schützen sollte, hat ihm also zugleich die Erlaubnis
+     gegeben, auf nichts zusammenzufallen — sobald die Gegnerliste im gedeckelten
+     Streifen (20vh) den Platz brauchte.
+
+     Der Streifen behält seinen Deckel: Er scrollt jetzt als Ganzes, statt sein
+     Protokoll aufzuzehren. Genau das war schon die Absicht von `.brett-gegner`. */
+  flex-shrink: 0;
 }
 
 /* Ein Gegner ist ein Block: Name oben, Karten darunter. Vorher lagen beide in
