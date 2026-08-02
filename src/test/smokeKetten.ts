@@ -61,42 +61,17 @@ export function previewSchritte(): string[] {
   return [...SMOKE_LISTEN.preview]
 }
 
-/**
- * Die Production-Kette in der frueheren Textform `node a.mjs && node b.mjs`.
- *
- * ÄNDERUNG [30.07.2026]: AP-4 — seit dem Runner steht in package.json nur noch
- * `node scripts/run_smokes.mjs production`. Etliche Wiring-Tests pruefen
- * Mitgliedschaft und Reihenfolge auf einer solchen Zeichenkette. Diese Ansicht
- * bedient sie weiterhin, liest die Werte aber aus derselben Liste, die auch der
- * Runner ausfuehrt — es kann also nichts mehr auseinanderlaufen.
- */
-export function produktionsKette(): string {
-  return produktionsSchritte().map((schritt) => `node ${schritt}`).join(' && ')
-}
+/* ÄNDERUNG [02.08.2026]: Fünf Exporte entfernt — `produktionsKette`,
+   `previewKette`, `alleSchritte`, `istVerdrahtet` und `produktionsPosition`.
+   Sie waren die Kompatibilitätsschicht aus AP-4 für die rund 20 Wiring-Tests,
+   die eine Kette als `node a.mjs && node b.mjs` lasen und darauf Mitgliedschaft
+   und Reihenfolge prüften. Diese Tests prüften das alte Waldtanz-Brett und sind
+   mit G-8 entfallen; die Schicht bediente danach niemanden mehr.
 
-/** Die Preview-Kette in derselben Textform. */
-export function previewKette(): string {
-  return previewSchritte().map((schritt) => `node ${schritt}`).join(' && ')
-}
-
-/** Alle Smoke-Schritte beider Ketten. */
-export function alleSchritte(): string[] {
-  return [...produktionsSchritte(), ...previewSchritte()]
-}
-
-/**
- * Ist das Skript in *einer* der beiden Ketten verdrahtet?
- * Ersetzt das frühere `chain.toContain(...)` der Wiring-Tests: ein Slice gilt als
- * verdrahtet, egal in welcher Kette er läuft.
- */
-export function istVerdrahtet(skriptDateiname: string): boolean {
-  return alleSchritte().some((schritt) => schritt.includes(skriptDateiname))
-}
-
-/** Position innerhalb der Production-Kette, oder -1. Für Reihenfolge-Asserts. */
-export function produktionsPosition(skriptDateiname: string): number {
-  return produktionsSchritte().findIndex((schritt) => schritt.includes(skriptDateiname))
-}
+   Eine Ansicht, die keine Sicht mehr ist, lädt zum Wiederbenutzen ein: Die
+   Zeichenkettenform war ein Zugeständnis an Bestandstests, nicht die bessere
+   Schnittstelle. Ein neuer Test fragt `produktionsSchritte()` und arbeitet auf
+   der Liste. */
 
 /** Nutzt das Smoke-Skript einen Test-Hook (Fixture-Objekt oder `?phase=`-URL)? */
 export function nutztTestHook(skriptPfad: string): boolean {

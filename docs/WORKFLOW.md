@@ -105,10 +105,13 @@ Der Runner fährt alle Smokes einer Liste, sammelt die Ergebnisse und meldet am 
 **alle** Fehlschläge mit den letzten Ausgabezeilen. Der Exit-Code bleibt 1, sobald
 einer scheitert — die Gate-Semantik ist unverändert.
 
-Die Tests lesen dieselbe Liste über `src/test/smokeKetten.ts`. Für Bestandstests,
-die weiterhin auf einer Zeichenkette prüfen, liefert `produktionsKette()` die alte
-`node a.mjs && node b.mjs`-Form — aber aus der Liste erzeugt, sodass Ausführung und
-Prüfung nicht auseinanderlaufen können.
+Die Tests lesen dieselbe Liste über `src/test/smokeKetten.ts`.
+
+Bis 02.08.2026 bot dieses Modul zusätzlich `produktionsKette()`, das die Liste
+wieder in die alte `node a.mjs && node b.mjs`-Form goss — ein Zugeständnis an die
+Bestandstests, die auf einer Zeichenkette prüften. Diese Tests prüften das alte
+Brett und sind mit G-8 entfallen; die Ansicht ist mit ihnen gegangen. Ein neuer
+Test fragt `produktionsSchritte()` und arbeitet auf der Liste.
 
 ### Absicherung
 
