@@ -374,8 +374,19 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
-  /* Wächst der Gegnerzug einmal länger, scrollt das Protokoll in sich, statt
-     die Spielfläche zusammenzudrücken (Regel 2: nichts abschneiden). */
+  /* ÄNDERUNG [02.08.2026]: Begründung korrigiert. Hier stand, der Deckel
+     verhindere, dass das Protokoll „die Spielfläche zusammendrückt". Das stimmt
+     seit dem 01.08.2026 nicht mehr: Die Spielfläche hat ihren Boden im Grid
+     (Regel 8), das Protokoll kommt an sie gar nicht mehr heran.
+
+     Der Deckel schützt etwas anderes — die Gegner. Gemessen mit neun
+     Protokollzeilen (drei Gegner mal drei Karten, der realistische Worst Case):
+     ohne ihn füllt das Protokoll 282 px des 176 px hohen Streifens und schiebt
+     den ersten Gegnernamen vollständig heraus. Man müsste scrollen, um
+     überhaupt zu sehen, dass es Gegner gibt.
+
+     Damit ist der innere Scroller kein doppelter Scroller aus Versehen: Der
+     Streifen deckelt gegen die Spielfläche, das Protokoll gegen die Gegner. */
   max-block-size: 4.5rem;
   overflow-y: auto;
   font-size: 0.78rem;

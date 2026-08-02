@@ -197,7 +197,7 @@ werden.
 
 ## Wie die Einhaltung geprüft wird
 
-Vier generische Wächter in `tests/layout/brett_waechter.spec.ts` prüfen nicht
+Fünf generische Wächter in `tests/layout/brett_waechter.spec.ts` prüfen nicht
 einzelne Elemente, sondern Eigenschaften der ganzen Seite:
 
 | Wächter | Regel |
@@ -205,7 +205,20 @@ einzelne Elemente, sondern Eigenschaften der ganzen Seite:
 | kein abgeschnittener Inhalt | 2 |
 | kein Bedienelement außerhalb des Bildes | — |
 | kein Bedienelement verdeckt | — |
+| kein Textinhalt unter eine Zeilenhöhe gedrückt | 2, 7, 10 |
 | Elementbudget | 1, 3 |
+
+**Der fünfte kam am 02.08.2026 dazu** und schließt die Lücke zwischen Regel 2 und
+Regel 10. „Abgeschnitten" nimmt scrollende Container aus, denn weggescrolltes ist
+erreichbar — nur gilt das nicht mehr, wenn der Container unter eine Zeilenhöhe
+gedrückt ist. Genau das war dem Gegnerprotokoll passiert: `clientHeight: 0` bei
+61 px Inhalt, formal scrollend, praktisch weg. Vier Wächter grün, die Spur des
+Gegnerzugs unsichtbar.
+
+Drei der Wächter laufen zusätzlich **nach acht gespielten Runden**
+(`tests/layout/brett_dauerlauf.spec.ts`). Das Erstbild allein genügt nicht: Vor
+dem ersten Gegnerzug gibt es kein Protokoll, und die Fehler, um die es geht,
+entstehen mit dem Spielstand.
 
 Dazu bei jedem Slice zwei Prüfungen, die zuvor gefehlt haben:
 

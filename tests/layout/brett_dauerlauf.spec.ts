@@ -43,6 +43,16 @@ const FLAECHE_MINDESTANTEIL = 1 / 3
 
 test.describe('Brett im Dauerlauf', () => {
   test.beforeEach(async ({ page }) => {
+    /* ÄNDERUNG [02.08.2026]: Kartengeben festnageln, wie in
+       `brett_waechter.spec.ts`. Ohne das spielte jeder Lauf eine andere Partie —
+       und der teuerste Test der Suite fiel gelegentlich um, weil ein
+       Reaktionsfenster oder ein Spielende an einer Stelle auftrat, an der die
+       Runden-Schleife einen Knopf erwartet. Ein Layout-Vertrag, der mal grün und
+       mal rot ist, wird bald gar nicht mehr gelesen — dieselbe Begründung wie
+       für `retries: 0` in der Playwright-Konfiguration. */
+    await page.addInitScript(() => {
+      Math.random = () => 0.999999
+    })
     await page.goto('/', { waitUntil: 'networkidle' })
     // Drei Spieler sind der enge Fall: Der Gegnerstreifen trägt zwei Reihen.
     await page.getByRole('button', { name: /Waldparty starten/ }).click()
@@ -85,43 +95,37 @@ test.describe('Brett im Dauerlauf', () => {
     }
   })
 
-  test('nach acht Runden ist noch alles im Bild und bedienbar', async ({ page }) => {
+  /*
+   * ÄNDERUNG [02.08.2026]: Dritte Zusicherung, kein vierter Test.
+   *
+   * Die beiden vorhandenen haben einen echten Fehler durchgelassen: Das
+   * Gegnerprotokoll war ab dem zweiten Zug auf `clientHeight: 0` gedrückt — bei
+   * 61 px Inhalt. Es lag nicht außerhalb des Bildes und war von nichts verdeckt;
+   * es hatte schlicht keine Höhe mehr. Und weil es formal scrollte, sah auch
+   * `findeAbgeschnittenes` nichts (Regel 10: weggescrollt ist erreichbar).
+   * Damit war die einzige Spur dessen, was der Gegner getan hat, unsichtbar —
+   * und Regel 7 verlangt sie ausdrücklich.
+   *
+   * Die Prüfung hängt hier statt in einem eigenen Test, weil der Endzustand
+   * derselbe ist: Ein zweiter Test hätte dieselben acht Runden mit echten Klicks
+   * noch einmal gespielt — gemessen rund zehn Sekunden für eine einzige weitere
+   * Zusicherung. `expect.soft` sorgt dafür, dass die erste Fehlmeldung die
+   * anderen beiden nicht verdeckt.
+   */
+  test('nach acht Runden ist noch alles im Bild, bedienbar und lesbar', async ({ page }) => {
     for (let runde = 1; runde <= 8; runde += 1) {
       if (!(await spieleEineRunde(page))) break
     }
 
     const ausserhalb = await findeAusserhalbDesBildes(page)
-    expect(ausserhalb, `außerhalb des Bildes:\n${befundListe(ausserhalb)}`).toHaveLength(0)
+    expect.soft(ausserhalb, `außerhalb des Bildes:\n${befundListe(ausserhalb)}`).toHaveLength(0)
 
     const verdeckt = await findeVerdeckteBedienelemente(page)
-    expect(verdeckt, `verdeckt:\n${befundListe(verdeckt)}`).toHaveLength(0)
-  })
-
-  /*
-   * ÄNDERUNG [02.08.2026]: Dritte Prüfung im Dauerlauf.
-   *
-   * Die beiden darüber haben einen echten Fehler durchgelassen: Das
-   * Gegnerprotokoll war ab dem zweiten Zug auf `clientHeight: 0` gedrückt — bei
-   * 61 px Inhalt. Es lag nicht außerhalb des Bildes und war von nichts verdeckt;
-   * es hatte schlicht keine Höhe mehr. Und weil es formal scrollte, sah auch
-   * `findeAbgeschnittenes` nichts (Regel 10: weggescrollt ist erreichbar).
-   *
-   * Damit war die einzige Rückmeldung darüber, was der Gegner getan hat,
-   * unsichtbar — und Regel 7 verlangt sie ausdrücklich. Dieselbe Sorte Lücke wie
-   * beim Erstbild-Wächter: Jede Prüfung für sich grün, die Seite trotzdem kaputt.
-   *
-   * Die Prüfung läuft nach dem Dauerlauf und nicht im Erstbild, weil der Fehler
-   * dort nicht existiert: Vor dem ersten Gegnerzug gibt es kein Protokoll.
-   */
-  test('nach acht Runden ist kein Textinhalt auf null gedrückt', async ({ page }) => {
-    for (let runde = 1; runde <= 8; runde += 1) {
-      if (!(await spieleEineRunde(page))) break
-    }
+    expect.soft(verdeckt, `verdeckt:\n${befundListe(verdeckt)}`).toHaveLength(0)
 
     const gedrueckt = await findeZusammengedruecktes(page)
-    expect(
-      gedrueckt,
-      `${gedrueckt.length} Element(e) zeigen nicht einmal eine ganze Zeile:${befundListe(gedrueckt)}`,
-    ).toEqual([])
+    expect
+      .soft(gedrueckt, `zeigen nicht einmal eine ganze Zeile:\n${befundListe(gedrueckt)}`)
+      .toHaveLength(0)
   })
 })

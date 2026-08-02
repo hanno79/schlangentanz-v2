@@ -51,12 +51,6 @@ export interface BrettschrittEintrag {
   konsequenz?: string
 }
 
-/* ÄNDERUNG [02.08.2026]: `ueberhandAnzahl` und `ueberhandAbwurfKartenIds` wohnen
-   jetzt in `src/ueberhand.ts` — `kiZug.ts` hatte dieselbe Rechnung ein zweites
-   Mal. Hier weiterhin re-exportiert, weil Brett und Tests sie von der
-   Zustandsschicht beziehen. */
-export { ueberhandAnzahl, ueberhandAbwurfKartenIds }
-
 export interface PartieOptionen {
   initialZustand?: Spielzustand
   initialBrettschrittEintraege?: BrettschrittEintrag[]

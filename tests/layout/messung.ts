@@ -154,123 +154,144 @@ export interface Befund {
    das Ergebnis, nicht die Funktion drumherum. Die Kennungs-Hilfe wird deshalb in
    jedem Block lokal definiert statt von außen hereingereicht. */
 
+/*
+Zwei Arten, Inhalt zu verlieren — und beide fragen dasselbe DOM nach denselben
+Werten ab: `overflow`, `scrollHeight`/`clientHeight`, zugänglicher Text.
+
+**Abgeschnitten** heißt: Der Container clippt (`hidden`/`clip`), der Rest ist
+nirgends zu holen. **Zusammengedrückt** heißt: Der Container scrollt zwar, ist
+aber unter eine Zeilenhöhe geschrumpft — formal erreichbar, praktisch weg.
+
+Gemessen wird deshalb in *einem* Durchgang, wie schon bei `messeErreichbarkeit`:
+Die gemeinsamen Hilfen (`kennung`, `zugaenglicherText`) stehen einmal da, und
+`getComputedStyle` läuft einmal pro Element statt zweimal.
+*/
+async function messeInhaltsverluste(
+  page: Page,
+): Promise<{ abgeschnitten: Befund[]; zusammengedrueckt: Befund[] }> {
+  return page.evaluate(() => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+
+    /* Regel 2 meint verlorenen *Inhalt*, nicht beschnittene Zierde.
+       Hintergrundgrafik absichtlich auf die Containerform zu clippen ist
+       legitim; ein abgeschnittener Satz ist es nicht. Gezählt wird deshalb
+       nur Text, der auch vorgelesen würde — `aria-hidden`-Glyphen wie ein
+       Stern-Abzeichen tragen keine Information. */
+    const zugaenglicherText = (element: Element): string => {
+      const laeufer = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+        acceptNode: (knoten) =>
+          (knoten.parentElement?.closest('[aria-hidden="true"]') ?? null) === null
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT,
+      })
+      let text = ''
+      while (laeufer.nextNode()) text += laeufer.currentNode.nodeValue ?? ''
+      return text.trim()
+    }
+
+    const abgeschnitten: { element: string; detail: string }[] = []
+    const zusammengedrueckt: { element: string; detail: string }[] = []
+
+    for (const element of Array.from(document.querySelectorAll('*'))) {
+      if (!(element as HTMLElement).checkVisibility()) continue
+
+      /* Eine Mindestfläche wird hier **nicht** vorausgesetzt, und das ist keine
+         Nachlässigkeit: Beim Zusammengedrückten ist die winzige Box das Symptom.
+         Der Filter `box.height < 4`, den der Abgeschnitten-Zweig unten zu Recht
+         anlegt, hätte genau den Anlassfall verworfen — ein Protokoll mit
+         `clientHeight: 0`. Gemessen: Mit dem Filter meldet der Wächter nichts,
+         obwohl der Fehler dasteht. */
+      const box = element.getBoundingClientRect()
+      if (box.width < 4 && box.height < 4) continue
+
+      const ueberhoch = element.scrollHeight > element.clientHeight + 3
+      const ueberbreit = element.scrollWidth > element.clientWidth + 3
+      if (!ueberhoch && !ueberbreit) continue
+
+      const stil = getComputedStyle(element)
+      const schneidetAb = (achse: string) => /hidden|clip/.test(achse)
+
+      if ((schneidetAb(stil.overflowY) && ueberhoch) || (schneidetAb(stil.overflowX) && ueberbreit)) {
+        // Zierde darf beschnitten sein; ein abgeschnittener Satz nicht. Winzlinge
+        // sind hier Deko, nicht Verlust.
+        if (box.width < 4 || box.height < 4) continue
+        const inhaltRagtHeraus = Array.from(element.querySelectorAll('*')).some((kind) => {
+          if (zugaenglicherText(kind) === '') return false
+          const k = kind.getBoundingClientRect()
+          return k.bottom > box.bottom + 3 || k.right > box.right + 3
+        })
+        if (inhaltRagtHeraus) {
+          abgeschnitten.push({
+            element: kennung(element),
+            detail: `Inhalt ${element.scrollHeight}×${element.scrollWidth} in Box ${element.clientHeight}×${element.clientWidth}`,
+          })
+        }
+        continue
+      }
+
+      /* Eine Zeilenhöhe ist die Grenze zu Regel 10: Wer eine gescrollte Spalte
+         um tausend Pixel kürzt, sieht immer noch Dutzende Zeilen und ahnt, dass
+         es weitergeht. Wer nicht einmal eine ganze Zeile sieht, hat keinen
+         Anhaltspunkt. `line-height: normal` liefert keinen Pixelwert — dann tut
+         es die Schriftgröße mal 1,2. */
+      if (zugaenglicherText(element) === '') continue
+      const zeilenhoehe =
+        Number.parseFloat(stil.lineHeight) || Number.parseFloat(stil.fontSize) * 1.2
+      const zuFlach = ueberhoch && element.clientHeight < zeilenhoehe
+      const zuSchmal = ueberbreit && element.clientWidth < zeilenhoehe
+      if (!zuFlach && !zuSchmal) continue
+
+      zusammengedrueckt.push({
+        element: kennung(element),
+        detail: zuFlach
+          ? `sichtbar ${element.clientHeight} px hoch von ${element.scrollHeight} px Inhalt ` +
+            `(unter einer Zeile: ${Math.round(zeilenhoehe)} px)`
+          : `sichtbar ${element.clientWidth} px breit von ${element.scrollWidth} px Inhalt ` +
+            `(unter einer Zeile: ${Math.round(zeilenhoehe)} px)`,
+      })
+    }
+
+    return { abgeschnitten, zusammengedrueckt }
+  })
+}
+
 /**
  * Elemente, deren Inhalt größer ist als ihre Box und die ihn abschneiden.
  *
  * Das ist Regel 2 aus docs/SPIELBRETT_SPEC.md: Der Inhalt bestimmt die Höhe;
  * passt er nicht, scrollt sein Container — er wird nicht abgeschnitten.
  * Scrollbare Container (`overflow: auto`/`scroll`) sind ausgenommen, denn dort
- * kommt der Spieler an den Rest heran.
+ * kommt der Spieler an den Rest heran — siehe `findeZusammengedruecktes` für
+ * die Grenze, ab der das nicht mehr stimmt.
  */
 export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
-  return page.evaluate(() => {
-    const kennung = (element: Element): string => {
-      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
-      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
-      const basis = klasse || element.tagName
-      return name ? `${basis} "${name}"` : basis
-    }
-    const befunde: { element: string; detail: string }[] = []
-    for (const element of Array.from(document.querySelectorAll('*'))) {
-      const box = element.getBoundingClientRect()
-      if (box.width < 4 || box.height < 4) continue
-      if (!(element as HTMLElement).checkVisibility()) continue
-      const stil = getComputedStyle(element)
-      const schneidetAb = (achse: string) => /hidden|clip/.test(achse)
-      const zuHoch = schneidetAb(stil.overflowY) && element.scrollHeight > element.clientHeight + 3
-      const zuBreit = schneidetAb(stil.overflowX) && element.scrollWidth > element.clientWidth + 3
-      if (!zuHoch && !zuBreit) continue
-
-      /* Regel 2 meint abgeschnittenen *Inhalt*, nicht beschnittene Zierde.
-         Hintergrundgrafik absichtlich auf die Containerform zu clippen ist
-         legitim; ein abgeschnittener Satz ist es nicht. Gezählt wird deshalb
-         nur Text, der auch vorgelesen würde — `aria-hidden`-Glyphen wie ein
-         Stern-Abzeichen tragen keine Information. */
-      const zugaenglicherText = (element: Element): string => {
-        const laeufer = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
-          acceptNode: (knoten) =>
-            (knoten.parentElement?.closest('[aria-hidden="true"]') ?? null) === null
-              ? NodeFilter.FILTER_ACCEPT
-              : NodeFilter.FILTER_REJECT,
-        })
-        let text = ''
-        while (laeufer.nextNode()) text += laeufer.currentNode.nodeValue ?? ''
-        return text.trim()
-      }
-      const kasten = element.getBoundingClientRect()
-      const inhaltRagtHeraus = Array.from(element.querySelectorAll('*')).some((kind) => {
-        if (zugaenglicherText(kind) === '') return false
-        const k = kind.getBoundingClientRect()
-        return k.bottom > kasten.bottom + 3 || k.right > kasten.right + 3
-      })
-      if (!inhaltRagtHeraus) continue
-
-      befunde.push({
-        element: kennung(element),
-        detail: `Inhalt ${element.scrollHeight}×${element.scrollWidth} in Box ${element.clientHeight}×${element.clientWidth}`,
-      })
-    }
-    return befunde
-  })
+  return (await messeInhaltsverluste(page)).abgeschnitten
 }
 
 /**
- * Elemente, die von ihrem Umfeld auf (fast) nichts zusammengedrückt wurden.
+ * Elemente, die von ihrem Umfeld auf weniger als eine Zeile gedrückt wurden.
  *
- * ÄNDERUNG [02.08.2026]: Neuer Wächter. `findeAbgeschnittenes` zählt nur
- * Container mit `overflow: hidden|clip` — was scrollt, gilt nach Regel 10
- * ausdrücklich als erreichbar. Genau in dieser Lücke saß ein echter Fehler:
- * Das Gegnerprotokoll hatte ab dem zweiten Zug `clientHeight: 0` bei 61 px
- * Inhalt. Formal scrollte es (`overflow-y: auto`), praktisch war es weg.
+ * ÄNDERUNG [02.08.2026]: Fünfter Wächter. `findeAbgeschnittenes` nimmt
+ * scrollende Container aus, denn nach Regel 10 ist weggescrolltes erreichbar.
+ * Genau in dieser Lücke saß ein echter Fehler: Das Gegnerprotokoll hatte ab dem
+ * zweiten Zug `clientHeight: 0` bei 61 px Inhalt. Formal scrollte es, praktisch
+ * war es weg — und mit ihm die einzige Spur dessen, was der Gegner getan hat
+ * (Regel 7).
  *
- * Die Falle ist ein CSS-Klassiker: Ein Flex-Kind mit `overflow` ungleich
- * `visible` bekommt als automatische Mindestgröße 0 statt seiner Inhaltsgröße.
- * Ohne `flex-shrink: 0` fällt es zusammen, sobald ein Geschwisterelement Platz
- * braucht — und keiner der bisherigen vier Wächter sieht es.
- *
- * Die Grenze zu Regel 10 ist der Punkt: Wer eine scrollende Spalte um 1000 px
- * kürzt, sieht immer noch Dutzende Zeilen und scrollt zum Rest. Wer nicht einmal
- * **eine ganze Zeile** sieht, hat keinen Anhaltspunkt, dass es etwas zu scrollen
- * gäbe. Deshalb schlägt dieser Wächter erst unterhalb einer Zeilenhöhe an.
+ * Die häufigste Ursache ist ein CSS-Klassiker: Ein Flex-Kind mit `overflow`
+ * ungleich `visible` bekommt als automatische Mindestgröße 0 statt seiner
+ * Inhaltsgröße und fällt ohne `flex-shrink: 0` zusammen, sobald ein
+ * Geschwisterelement Platz braucht. Der Wächter fragt aber nicht danach: Er
+ * misst das Ergebnis, nicht den Weg dorthin — ein `min-height: 0` auf einem
+ * Grid-Kind erzeugt denselben Verlust und wird genauso gefunden.
  */
 export async function findeZusammengedruecktes(page: Page): Promise<Befund[]> {
-  return page.evaluate(() => {
-    const kennung = (element: Element): string => {
-      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
-      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
-      const basis = klasse || element.tagName
-      return name ? `${basis} "${name}"` : basis
-    }
-
-    const befunde: { element: string; detail: string }[] = []
-    for (const element of Array.from(document.querySelectorAll('*'))) {
-      const stil = getComputedStyle(element)
-      const scrollt = (achse: string) => /auto|scroll/.test(achse)
-      if (!scrollt(stil.overflowY)) continue
-
-      // Nichts zu sehen heißt hier: Der Inhalt ist da, der Platz dafür nicht.
-      const inhaltUeberragt = element.scrollHeight > element.clientHeight + 3
-      if (!inhaltUeberragt) continue
-
-      /* Eine Zeilenhöhe ist das Maß: Darunter sieht man nicht einmal, dass es
-         weitergeht. `line-height: normal` liefert keinen Pixelwert — dann tut
-         es die Schriftgröße mal 1,2. */
-      const zeilenhoehe = Number.parseFloat(stil.lineHeight) ||
-        Number.parseFloat(stil.fontSize) * 1.2
-      if (element.clientHeight >= zeilenhoehe) continue
-
-      // Leere Hüllen sind kein Verlust — es geht um Inhalt, den jemand liest.
-      if ((element.textContent ?? '').trim() === '') continue
-
-      befunde.push({
-        element: kennung(element),
-        detail:
-          `sichtbar ${element.clientHeight} px von ${element.scrollHeight} px Inhalt ` +
-          `(unter einer Zeile: ${Math.round(zeilenhoehe)} px)`,
-      })
-    }
-    return befunde
-  })
+  return (await messeInhaltsverluste(page)).zusammengedrueckt
 }
 
 /*
