@@ -125,7 +125,9 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
    */
   it('hält fest, dass keine umgesetzte Karte den Zustand blockiert erzeugt', () => {
     expect(spec).toContain('#### R3.5a Der Zustand `blockiert` wird von keiner Karte erzeugt')
-    expect(spec).toContain('Er\nwird jedoch von **keiner** aktuell umgesetzten Karte gesetzt.')
+    // Ohne `Er\n` davor: Der Assert soll die Aussage festhalten, nicht den
+    // Zeilenumbruch, an dem sie im Markdown gerade steht.
+    expect(spec).toContain('von **keiner** aktuell umgesetzten Karte gesetzt.')
     expect(spec).toContain('Insbesondere setzt ihn die Schlangenblockade nicht')
     expect(spec).toContain('Die Schlange bleibt erweiterbar.')
     expect(spec).toContain('Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte')

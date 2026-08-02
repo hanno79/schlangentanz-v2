@@ -35,6 +35,7 @@ import {
   findeAbgeschnittenes,
   findeAusserhalbDesBildes,
   findeVerdeckteBedienelemente,
+  findeZusammengedruecktes,
   zaehleSichtbareElemente,
 } from './messung'
 
@@ -73,6 +74,20 @@ function waechterFuer(route: string, markiere: boolean, optionen: { ohneBudget?:
       expect(
         befunde,
         `${befunde.length} Bedienelement(e) vollständig verdeckt:${befundListe(befunde)}`,
+      ).toEqual([])
+    })
+
+    /* ÄNDERUNG [02.08.2026]: Fünfter Wächter — siehe `findeZusammengedruecktes`.
+       Dass er im Erstbild nichts findet, ist sein Normalzustand und kein Grund,
+       ihn wegzulassen: Die anderen vier finden dort auch nichts, solange das
+       Brett in Ordnung ist. Er läuft zusätzlich nach acht Runden
+       (`brett_dauerlauf.spec.ts`), weil der Fehler, für den es ihn gibt, erst im
+       Spielverlauf entstand. */
+    pruefe('kein Textinhalt ist unter eine Zeilenhöhe gedrückt', async ({ page }) => {
+      const befunde = await findeZusammengedruecktes(page)
+      expect(
+        befunde,
+        `${befunde.length} Element(e) zeigen nicht einmal eine ganze Zeile:${befundListe(befunde)}`,
       ).toEqual([])
     })
 

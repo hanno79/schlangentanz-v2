@@ -49,9 +49,14 @@ export function reaktionsVerteidiger(zustand: Spielzustand): Spieler | null {
         /* Eine neue Reaktionsart soll hier auffallen, solange sie noch
            kostenlos zu beheben ist: Der Compiler meldet sie, weil sie nicht
            mehr `never` ist. Genau das Vergessen einer Variante hat den Fehler
-           vom 01.08.2026 erzeugt. */
+           vom 01.08.2026 erzeugt.
+
+           Die Zusicherung leistet allein die Zuweisung. Zurückgegeben wird
+           `null` — den `never`-Wert zurückzugeben hieße zur Laufzeit, das
+           `pending`-Objekt als Spielerindex auszugeben. */
         const nichtErfassterFall: never = pending
-        return nichtErfassterFall
+        void nichtErfassterFall
+        return null
       }
     }
   })()
