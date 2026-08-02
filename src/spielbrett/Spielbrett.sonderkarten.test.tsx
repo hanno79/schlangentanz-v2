@@ -172,7 +172,10 @@ describe('Reaktionsfenster', () => {
 
     const zugaktion = screen.getByRole('region', { name: 'Zugaktion' })
     expect(within(zugaktion).queryAllByRole('button')).toHaveLength(0)
-    expect(zugaktion).toHaveTextContent(verteidigerName)
+    /* Beides zusammen: Der Mensch bekommt nichts zu drücken, *und* es steht da,
+       auf wen gewartet wird. Nur das Ausbleiben zu prüfen ließe offen, ob das
+       Brett den Zustand erklärt oder bloß leer bleibt. */
+    expect(zugaktion).toHaveTextContent(new RegExp(`${verteidigerName} überlegt`))
   })
 
   it('nimmt der Aktionsliste alles andere, solange die Reaktion offen ist', () => {

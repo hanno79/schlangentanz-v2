@@ -45,6 +45,14 @@ export function reaktionsVerteidiger(zustand: Spielzustand): Spieler | null {
         return pending.verbleibendeSpielerIndizes[0] ?? null
       case 'SchlangenfrassAbwehr':
         return pending.verbleibendeZiele[0]?.spielerIndex ?? null
+      default: {
+        /* Eine neue Reaktionsart soll hier auffallen, solange sie noch
+           kostenlos zu beheben ist: Der Compiler meldet sie, weil sie nicht
+           mehr `never` ist. Genau das Vergessen einer Variante hat den Fehler
+           vom 01.08.2026 erzeugt. */
+        const nichtErfassterFall: never = pending
+        return nichtErfassterFall
+      }
     }
   })()
 
