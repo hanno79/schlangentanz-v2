@@ -22,7 +22,6 @@ mit dem alten Brett entfällt. Sie importiert den Typ jetzt von hier.
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  erstelleSpielzustand,
   erstelleEinzelspielerSpielzustand,
   starteAusspielphase,
   anwendeAktion,
@@ -42,6 +41,7 @@ import { extrahiereAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from '../kiZug'
 import { mussMenschReagieren } from '../reaktionen'
 import { fehlermeldung } from '../spielLabelHelpers'
+import { ladeSpielstand, speichereSpielstand } from '../spielstand'
 import type { KiGegnerAnzahl } from '../components/SonnigesNestLobby'
 
 /** Ein Eintrag der Zughistorie: welche Karte ging wann und wodurch in die Ablage. */
@@ -59,8 +59,26 @@ export interface PartieOptionen {
 }
 
 export function usePartie({ initialZustand, initialBrettschrittEintraege }: PartieOptionen = {}) {
+  /* ÄNDERUNG [03.08.2026]: Die gespeicherte Partie kommt an dritter Stelle.
+     Die Reihenfolge ist die Aussage: `initialZustand` gehört den Tests, der
+     `?phase=`-Hook den Smokes. Läge der Spielstand davor, überstimmte er die
+     Testfixtures — und die Suite wäre davon abhängig, was ein früherer Lauf im
+     Speicher hinterlassen hat. */
   const [startZustand] = useState(
-    () => initialZustand ?? leseTestPhaseAusUrl() ?? starteAusspielphase(erstelleSpielzustand(2)),
+    () =>
+      initialZustand ??
+      leseTestPhaseAusUrl() ??
+      ladeSpielstand() ??
+      /* ÄNDERUNG [03.08.2026]: Der Rückfall benutzt jetzt die spec-nahe
+         Einzelspieler-Factory. `erstelleSpielzustand(2)` benennt die Spieler
+         generisch „Spieler 1" und „Spieler 2"; AP-3 hat dafür
+         `erstelleEinzelspielerSpielzustand` eingeführt („Spieler" gegen
+         „KI Gegner 1"), den Rückfall aber übersehen.
+
+         Aufgefallen ist es erst durch die Persistenz: Vorher erreichte man
+         diesen Pfad nur durch direkten Aufruf von `/game`, jetzt ist er der Weg
+         nach einem verworfenen Spielstand. */
+      starteAusspielphase(erstelleEinzelspielerSpielzustand(1)),
   )
   const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
@@ -106,6 +124,20 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     [zustand, menschlicherSpielerId],
   )
   const ueberhand = ueberhandAnzahl(zustand)
+
+  /* ÄNDERUNG [03.08.2026]: Die Partie überlebt einen Reload.
+
+     Der Effekt ist der eine Ort, an dem *jede* Zustandsänderung ankommt —
+     `wechsleZustand`, `handleKiZugVorspulen`, `handleNeuesLobbySpiel` und der
+     Fixture-Hook rufen alle `setZustand`. In `wechsleZustand` allein zu
+     speichern hätte die anderen drei verpasst.
+
+     Gespeichert wird nur der Spielzustand. Kartenauswahl, Hervorhebung und
+     Zughistorie sind flüchtig: Sie beschreiben, was der Spieler *gerade* tut,
+     nicht wo die Partie steht. */
+  useEffect(() => {
+    speichereSpielstand(zustand)
+  }, [zustand])
 
   // M1dc: Auto-Clear des Spielmoment-Pulses nach 1500 ms, damit der
   // data-letzte-aktion-ziel-Stil nicht permanent auf der Startzone oder

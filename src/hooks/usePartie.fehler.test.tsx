@@ -24,6 +24,7 @@ import {
   starteAusspielphase,
 } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
+import { ladeSpielstand, speichereSpielstand } from '../spielstand'
 
 function partie(): Spielzustand {
   return starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
@@ -137,5 +138,53 @@ describe('usePartie — neue Partie schlägt fehl', () => {
 
     expect(gelungen).toBe(true)
     expect(result.current.fehler).toBeNull()
+  })
+})
+
+/*
+ * ÄNDERUNG [03.08.2026]: Die Partie überlebt einen Reload. Ein echter Reload
+ * lässt sich im Test nicht auslösen — geprüft wird deshalb, was ihn ausmacht:
+ * Was steht im Speicher, und was liest ein frisch aufgesetzter Hook daraus?
+ */
+describe('usePartie — gespeicherte Partie', () => {
+  it('schreibt den Zustand nach jeder Änderung weg', () => {
+    const start = partie()
+    const { result } = renderHook(() => usePartie({ initialZustand: start }))
+
+    const [legale] = ermittleLegaleAktionen(start)
+    act(() => result.current.fuhreAktionAus(legale))
+
+    const gespeichert = ladeSpielstand()
+    expect(gespeichert).not.toBeNull()
+    // Der neue Stand, nicht der alte: Die Aktion muss drin sein.
+    expect(gespeichert!.zugpflichten.gespielteKarten).toBe(1)
+  })
+
+  it('nimmt beim Start die gespeicherte Partie, wenn keine vorgegeben ist', () => {
+    const gespeichert = partie()
+    gespeichert.spieler[0].schlangen = [
+      { id: 'schlange-wiedererkennbar', zustand: 'aktiv', karten: [] },
+    ]
+    speichereSpielstand(gespeichert)
+
+    const { result } = renderHook(() => usePartie())
+
+    expect(result.current.zustand.spieler[0].schlangen[0]?.id).toBe('schlange-wiedererkennbar')
+  })
+
+  /*
+   * Die Reihenfolge ist die eigentliche Zusage: `initialZustand` gehört den
+   * Tests. Läge der Spielstand davor, hinge die ganze Suite davon ab, was ein
+   * früherer Lauf im Speicher hinterlassen hat.
+   */
+  it('lässt sich von einem vorgegebenen Zustand überstimmen', () => {
+    const gespeichert = partie()
+    gespeichert.spieler[0].schlangen = [{ id: 'aus-dem-speicher', zustand: 'aktiv', karten: [] }]
+    speichereSpielstand(gespeichert)
+
+    const vorgegeben = partie()
+    const { result } = renderHook(() => usePartie({ initialZustand: vorgegeben }))
+
+    expect(result.current.zustand.spieler[0].schlangen).toHaveLength(0)
   })
 })

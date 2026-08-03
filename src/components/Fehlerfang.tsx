@@ -18,10 +18,13 @@ Wurfstellen. Ein `try/catch` in einem Klick-Handler erreicht das nicht — wirft
 der Render, stirbt der React-Baum, und der Spieler sieht eine weiße Seite ohne
 ein Wort dazu.
 
-**Warum die Partie trotzdem weg ist.** Es gibt kein Speichern und kein Laden
-(siehe `docs/WORKFLOW.md`, „Bewusst nicht implementiert"). Ein Neustart ist alles,
-was angeboten werden kann — und das gehört ehrlich dagestanden, statt einen
-Weiterspielen-Knopf hinzustellen, der nichts rettet.
+**Warum die Partie trotzdem weg ist.** Seit dem 03.08.2026 überlebt eine Partie
+den Reload (`src/spielstand.ts`) — ausgerechnet hier hilft das aber nicht: Der
+Weg zurück zur Lobby verwirft den Spielstand mit Absicht. Ein Zustand, an dem das
+Zeichnen gescheitert ist, käme sonst nach jedem Reload zurück, und der Spieler
+säße dauerhaft auf dieser Seite. Der Verlust ist der Preis dafür, wieder
+hineinzukommen; das gehört ehrlich dagestanden, statt einen Weiterspielen-Knopf
+hinzustellen, der nichts rettet.
 */
 
 import { Component } from 'react'
@@ -77,8 +80,8 @@ export default class Fehlerfang extends Component<FehlerfangProps, FehlerfangSta
         <h1 className="fehlerfang__titel">Das Spielbrett konnte nicht gezeichnet werden</h1>
         <p className="fehlerfang__meldung">{meldung}</p>
         <p className="fehlerfang__hinweis">
-          Die laufende Partie lässt sich nicht fortsetzen — Schlangentanz speichert
-          keine Spielstände.
+          Die laufende Partie lässt sich nicht fortsetzen — ihr Spielstand wird
+          verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt.
         </p>
         <button type="button" className="fehlerfang__knopf" onClick={this.zurueck}>
           Zurück zur Lobby

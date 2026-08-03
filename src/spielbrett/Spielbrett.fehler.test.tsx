@@ -25,10 +25,9 @@ import App from '../App'
 import Fehlerfang from '../components/Fehlerfang'
 import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
+import { SPIELSTAND_SCHLUESSEL } from '../spielstand'
+import { aufBrettRoute } from '../test/brettTest'
 
-function aufBrettRoute() {
-  window.history.pushState({}, '', '/game')
-}
 
 /* Die Route setzt `src/test/setup.ts` global zurück — hier nur die Spione. */
 afterEach(() => {
@@ -80,8 +79,9 @@ describe('Abgelehnte Aktion', () => {
     const meldung = screen.getByRole('alert')
     expect(meldung).toHaveTextContent('Das Spielbrett konnte nicht gezeichnet werden')
     expect(meldung).toHaveTextContent('Farbenfusion konnte nicht den fusionierten Punkten zugeordnet werden.')
-    // Ehrlich bleiben: Ohne Speichern ist die Partie verloren.
-    expect(meldung).toHaveTextContent(/speichert keine Spielstände/i)
+    /* Ehrlich bleiben: Die Partie ist verloren — nicht weil nicht gespeichert
+       würde, sondern weil der Fehlerfang den Stand mit Absicht verwirft. */
+    expect(meldung).toHaveTextContent(/Spielstand wird\s+verworfen/i)
   })
 
   it('bietet nach einem Zeichenfehler den Weg zurück in die Lobby an', () => {
@@ -115,6 +115,45 @@ describe('Abgelehnte Aktion', () => {
 
     expect(screen.getByRole('region', { name: 'Deine Hand' })).toBeInTheDocument()
     expect(screen.queryByText(/konnte nicht gezeichnet werden/)).not.toBeInTheDocument()
+  })
+
+  /*
+   * ÄNDERUNG [03.08.2026]: Die Falle, die erst die Persistenz aufstellt.
+   *
+   * Ein Zustand, der beim Zeichnen wirft, läge nach dem Speichern dauerhaft im
+   * Browser. Ohne Gegenmaßnahme säße der Spieler nach jedem Reload wieder im
+   * Fehlerfang — und käme mit keinem Klick heraus, weil ein Neustart den
+   * Eintrag nicht anfasst. Deshalb verwirft der Weg zurück zur Lobby ihn.
+   *
+   * **Zwei Dinge beim Schreiben dieses Tests gelernt.**
+   *
+   * Erstens: `serialisiere` lässt den Zustand aus `zustandMitKaputterWertung`
+   * durch, erst `deserialisiere` lehnt ihn ab („Farbenfusion-Karte in
+   * schlange.karten ohne farbenfusionen-Eintrag"). Die Persistenz-Validierung
+   * ist also **strenger als die Wertung** — und weil `ladeSpielstand` verwirft,
+   * was es nicht lesen kann, räumt sich dieser Fall selbst auf. Die Falle ist
+   * deutlich enger als befürchtet.
+   *
+   * Zweitens, und deshalb steht hier `getItem` statt `ladeSpielstand`: Genau
+   * diese Selbstheilung macht jeden Nachweis über `ladeSpielstand` wertlos. Er
+   * liefert immer `null`, ob der Fehlerfang aufräumt oder nicht — die erste
+   * Fassung dieses Tests blieb mit ausgebautem Verwerfen grün und maß nichts.
+   *
+   * Ausgeschlossen ist die Falle nicht: `scoring.ts` hat Laufzeitpfade, die
+   * keine Strukturprüfung sieht (etwa „Regenbogenschlange kann nicht ohne aktive
+   * Farbe fortgesetzt werden"). Geprüft wird deshalb am rohen Eintrag.
+   */
+  it('verwirft den gespeicherten Spielstand, damit der Fehler den Reload nicht überlebt', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    aufBrettRoute()
+    render(<App initialZustand={zustandMitKaputterWertung()} />)
+    // Der Speichern-Effekt hat den kaputten Zustand weggeschrieben.
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).not.toBeNull()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Zurück zur Lobby' }))
+
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
   })
 })
 

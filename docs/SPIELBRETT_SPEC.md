@@ -100,6 +100,14 @@ Orten.
    Gegnerzug wird protokolliert (Region 3), und ein automatischer Schritt
    überschreibt dieses Protokoll nicht, bevor es gelesen werden konnte.
 
+   *(ÄNDERUNG 03.08.2026.)* Aus derselben Regel folgt, dass das **Speichern der
+   Partie unsichtbar bleibt**: Es läuft nach jeder Zustandsänderung von selbst
+   (`src/spielstand.ts`), hat keinen Knopf, keine Anzeige und keine Region. Ein
+   „Speichern"-Knopf verlangte keine Entscheidung — er bestätigte nur, dass der
+   Browser schreiben darf. Der Spieler merkt es daran, dass ein Reload nichts
+   mehr kostet. Die Ausnahme steht in Regel 7 nicht im Widerspruch: Sie verbietet
+   Klicks ohne Entscheidung, nicht Vorgänge ohne Klick.
+
 8. **Die Fläche, auf der gespielt wird, hat einen Boden — die Streifen, die
    mit dem Spielstand wachsen, haben einen Deckel.** *(ÄNDERUNG 01.08.2026.)*
    Gegnerstreifen und Hand wachsen mit jeder Karte; die Spielfläche nicht. Ist

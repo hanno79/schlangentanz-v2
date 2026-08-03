@@ -25,6 +25,7 @@ import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
 import Fehlerfang from './components/Fehlerfang'
 import Spielbrett from './spielbrett/Spielbrett'
+import { verwirfSpielstand } from './spielstand'
 
 interface AppProps {
   initialZustand?: Spielzustand
@@ -66,8 +67,20 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
 
          Er führt zurück in die Lobby und startet nicht selbst eine Partie: Die
          Zahl der Gegner wählt man dort, und auf `/game` gäbe es dafür keine
-         Oberfläche. */
-      <Fehlerfang onZurueckZurLobby={() => navigiere('/')}>
+         Oberfläche.
+
+         ÄNDERUNG [03.08.2026]: Er verwirft dabei den gespeicherten Spielstand.
+         Ohne das baut die Persistenz eine Falle: Ein Zustand, den
+         `deserialisiere` durchlässt, der aber beim Zeichnen die Wertung wirft,
+         käme nach jedem Reload zurück — der Spieler säße dauerhaft im
+         Fehlerfang. Dass das Brett an ihm gescheitert ist, ist der stärkste
+         Hinweis darauf, dass er nicht mehr taugt. */
+      <Fehlerfang
+        onZurueckZurLobby={() => {
+          verwirfSpielstand()
+          navigiere('/')
+        }}
+      >
         <Spielbrett partie={partie} />
         {/* Die Siegerehrung legt sich über das Brett, sobald die Partie endet. */}
         <SiegerParty zustand={partie.zustand} onNeuesSpiel={starteNeuesSpiel} />

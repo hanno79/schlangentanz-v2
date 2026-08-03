@@ -19,10 +19,8 @@ import { afterEach, describe, expect, it } from 'vitest'
 import App from '../App'
 import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
+import { aufBrettRoute } from '../test/brettTest'
 
-function aufBrettRoute() {
-  window.history.pushState({}, '', '/game')
-}
 
 afterEach(() => {
   window.history.pushState({}, '', '/')

@@ -252,17 +252,6 @@ Die Lobby-Migration hat nebenbei einen regredierten Vertrag aufgedeckt — siehe
 Damit diese Punkte nicht wiederholt als „toter Code" oder „vergessenes Feature"
 aufschlagen, hier die bewussten Entscheidungen:
 
-### Speichern/Laden einer Partie
-
-`src/engine/serialization.ts` (rund 700 Zeilen inkl. sieben Migrationsschritten)
-hat **keinen Produktionsaufrufer**. Es gibt kein Speichern/Laden; ein Reload
-verwirft die laufende Partie. Das Modul ist Test-Infrastruktur: der
-Vollpartie-Soak-Test prüft nach jedem Zug den Roundtrip
-`deserialisiere(serialisiere(zustand))` und fängt damit strukturelle Engine-Fehler
-früh ab. Die Migrationsschritte bleiben erhalten, weil sie ältere Testfixtures
-lauffähig halten. Persistenz wäre ein eigener Slice inkl. Fehlerpfad für ungültige
-gespeicherte Stände.
-
 ### Erweiterungskarten außerhalb des Spieldecks
 
 `Comeback` (4), `Risiko-Belohnung` (8) und `Schlangenkorb des Glücks` (1) werden in
@@ -270,3 +259,49 @@ gespeicherte Stände.
 einziger Zweck ist die Namensvalidierung in `serialization.ts`. Das digitale
 Spieldeck umfasst 114 Karten: 110 Basiskarten plus die 4 Schlangenhäutung-Karten
 der Erweiterung (Audit-Fix H1) — siehe `docs/GAME_SPEC.md` R1.1/R1.2.
+
+## Speichern und Laden (ÄNDERUNG 03.08.2026)
+
+Die laufende Partie überlebt einen Reload. Bis zu diesem Datum stand hier das
+Gegenteil: `serialization.ts` habe keinen Produktionsaufrufer, ein Reload
+verwerfe die Partie, Persistenz wäre ein eigener Slice. Das ist erledigt.
+
+**Wie es läuft.** `src/spielstand.ts` schreibt den Spielzustand nach jeder
+Änderung in `localStorage` und liest ihn beim Start zurück. Kein Knopf, keine
+Anzeige, keine neue Region — nach Regel 7 der `SPIELBRETT_SPEC.md` gehören nur
+Klicks aufs Brett, die eine Entscheidung verlangen. Der Spieler merkt es nur
+daran, dass ein Reload nichts mehr kostet.
+
+Die Datei liegt **nicht** in `engine/`: Speichern ist keine Spielregel, und die
+Engine soll frei von Browser-APIs bleiben. Angebunden ist sie in
+`src/hooks/usePartie.ts` — geladen in der Startkette, gespeichert in einem
+Effekt auf `zustand`. Der Effekt ist der eine Ort, an dem jede Änderung ankommt;
+in `wechsleZustand` allein zu speichern hätte den Gegnerzug und den Neustart
+verpasst.
+
+**Reihenfolge beim Laden:** `initialZustand` → `?phase=`-Hook → gespeicherte
+Partie → neue Partie. Tests und Smokes behalten Vorrang, sonst hinge die Suite
+davon ab, was ein früherer Lauf im Speicher hinterlassen hat.
+
+**Ungültige Stände werden still verworfen.** Jeder Fehler beim Lesen — kaputtes
+JSON, ungültige Struktur, ein nicht mehr migrierbares Format — führt zu einer
+frischen Partie und zum Löschen des Eintrags. Der Spieler hat einen kaputten
+Stand weder verursacht noch kann er ihn beheben; ihm eine Fehlermeldung zu
+zeigen hilft nicht, und ihn stehen zu lassen sperrt ihn beim nächsten Reload
+erneut aus.
+
+**Die Falle, die dabei entsteht.** Ein Zustand, den `deserialisiere` durchlässt,
+der aber beim Zeichnen die Wertung wirft, käme nach jedem Reload zurück — der
+Spieler säße dauerhaft im Fehlerfang. Deshalb verwirft der Weg zurück zur Lobby
+(`App.tsx`) den Spielstand.
+
+Beim Bauen gemessen: `serialisiere` lässt mehr durch als `deserialisiere` prüft.
+Ein Zustand mit Farbenfusion-Karte ohne `farbenfusionen`-Eintrag wird
+geschrieben, aber beim Lesen abgelehnt — und damit gelöscht. Die
+Persistenz-Validierung ist also **strenger als die Wertung**, und ein Teil der
+möglichen Fallen räumt sich selbst auf. Ausgeschlossen ist sie nicht:
+`scoring.ts` hat Laufzeitpfade, die keine Strukturprüfung sieht.
+
+**Ein Stand, überschrieben.** Kein Mehrfach-Speicherplatz, kein Export. Bei
+Spielende wird *nicht* gelöscht — die Schlusswertung soll einen Reload
+überleben; eine neue Partie überschreibt den Eintrag ohnehin.

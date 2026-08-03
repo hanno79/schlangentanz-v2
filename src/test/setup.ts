@@ -11,15 +11,27 @@ import { afterEach } from 'vitest'
 // scheitern, die auf den Default-Lobby-Tree angewiesen sind.
 // Wir resetten `pathname` nach jedem Test auf `/` (Lobby-Default),
 // damit die Tests file-uebergreifend stabil bleiben.
+// ÄNDERUNG [03.08.2026]: Dasselbe Problem, zweiter Fall. Seit die Partie in
+// `localStorage` überlebt, schreibt jeder Test, der `usePartie` rendert, einen
+// Spielstand weg. Ohne Aufräumen lädt der nächste Test ohne `initialZustand`
+// die Partie des vorigen — und die Suite hinge davon ab, in welcher Reihenfolge
+// sie läuft. Genau die Sorte Fehler, deretwegen es diese Datei gibt.
 declare const window: {
   history: { pushState: (data: unknown, unused: string, url?: string | null) => void }
+  localStorage?: { clear: () => void }
 } | undefined
 afterEach(() => {
-  if (typeof window !== 'undefined' && window.history) {
+  if (typeof window === 'undefined') return
+  if (window.history) {
     try {
       window.history.pushState({}, '', '/')
     } catch {
       /* ignore */
     }
+  }
+  try {
+    window.localStorage?.clear()
+  } catch {
+    /* ignore */
   }
 })

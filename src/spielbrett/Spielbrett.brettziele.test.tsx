@@ -19,10 +19,8 @@ import App from '../App'
 import { erstelleSpielzustand, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
 import { farbkarte, sonderkarte } from '../engine/__tests__/testHelpers'
+import { aufBrettRoute } from '../test/brettTest'
 
-function aufBrettRoute() {
-  window.history.pushState({}, '', '/game')
-}
 
 afterEach(() => {
   window.history.pushState({}, '', '/')
