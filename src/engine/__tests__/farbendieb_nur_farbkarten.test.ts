@@ -13,7 +13,7 @@ import {
   ermittleLegaleAktionen,
   pruefeAktion,
   erstelleSpielzustand,
-  berechneSpielerGesamtPunkte,
+  berechneSpielerGrundpunkte,
 } from '../index';
 import { farbkarte, schlange, sonderkarte } from './testHelpers';
 import type { FarbendiebSpielenAktion } from '../legalActions';
@@ -91,6 +91,6 @@ describe('Farbendieb — nur Farbkarten stehlbar (K1)', () => {
     });
 
     expect(aktualisiert.spieler[0].schlangen[0].karten.map((k) => k.id)).toContain('ziel-blau');
-    expect(() => berechneSpielerGesamtPunkte(aktualisiert.spieler[0])).not.toThrow();
+    expect(() => berechneSpielerGrundpunkte(aktualisiert.spieler[0])).not.toThrow();
   });
 });

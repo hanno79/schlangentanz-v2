@@ -1,8 +1,32 @@
 # Schlangentanz Game Spec
 
-Status: **Aktive Projektspezifikation — inkrementell versioniert und noch nicht final gesperrt.**
+Status: **Gesperrt am 03.08.2026.**
 
 Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und verifiziert. Nicht bestätigte Regeln bleiben ausdrücklich offen und werden nicht geraten.
+
+### Was „gesperrt" bedeutet
+
+`CLAUDE.md` Schritt 1 verlangt die Sperre **vor** der Spielimplementierung. Sie
+kam zu spät — die Umsetzung war längst fertig, und die Spec trug die Zeile „noch
+nicht final gesperrt" bis zu diesem Datum. Nachgeholt wurde sie erst, als der
+Abgleich mit der Normquelle abgeschlossen war; eine Spec zu sperren, deren
+Abweichungen niemand kennt, wäre eine Unterschrift auf ein ungelesenes Dokument.
+
+Ab jetzt gilt:
+
+- **Jede Regeländerung braucht eine bestätigte Normquelle oder einen
+  User-Signoff.** Ein Code-Fix allein reicht nie — auch dann nicht, wenn die
+  Engine offensichtlich etwas anderes tut als dieses Dokument.
+- **Widersprüche zwischen Spec und Code sind Spec-Fragen**, nicht Bugs. Sie
+  werden in Abschnitt 11 aufgenommen, bevor jemand Code anfasst.
+- **Änderungen werden mit `ÄNDERUNG [Datum]` und Begründung geführt**, nicht
+  still eingearbeitet.
+- **Offene Regelfragen stehen vollständig in Abschnitt 11.** Steht dort nichts,
+  ist nichts offen — die frühere Formulierung „weitere offene Regelfragen
+  betreffen andere Bereiche", die keine einzige benannte, gilt als überholt.
+
+Normquelle ist `https://schlangentanz.ch/rules`. Wo diese Seite und die Spec
+auseinandergehen, steht die Abweichung ausdrücklich im jeweiligen R-Abschnitt.
 
 ## 1. Overview
 
@@ -19,8 +43,6 @@ Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und
 Die zentralen Spielobjekte sind im aktuellen Projektstand konkretisiert und werden in den folgenden Abschnitten weiter präzisiert: Spieler, Handkarten, Nachziehstapel, Ablagestapel, Farbkarten, Sonderkarten, Aufgaben, Schlangen, Schlangen-Zustände, Zugphasen, legale Aktionen und Wertung.
 
 Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie sind keine Implementierungsfreigabe.
-
-> **Arbeitsstatus.** Die folgenden Karten-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
 
 ### R4.1 Farbkarten-Übersicht
 
@@ -62,6 +84,31 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Digitales Spieldeck: Der tatsächlich gemischte Nachziehstapel umfasst die 110 Basiskarten plus die 4 Schlangenhäutung-Karten der Erweiterung (114 Karten). Nur dadurch sind die Schlangenhäutung-Mechanik und die Aufgabe „Schlangentanz" erreichbar. Comeback, Risiko-Belohnung und „Schlangenkorb des Glücks" bleiben vorerst außerhalb des Spieldecks.
 - Materialumfang (141 Karten) und digitales Spieldeck (114 Karten) sind also bewusst verschieden. Die 13 Karten `Comeback` (4), `Risiko-Belohnung` (8) und `Schlangenkorb des Glücks` (1) werden im Code weiterhin als Kartendefinitionen erzeugt, gelangen aber nie in eine Partie; ihr einziger Zweck ist die Namensvalidierung beim Deserialisieren von Spielzuständen. Sie sind kein toter Code und auch keine halbfertige Implementierung, sondern dokumentierter Materialumfang ohne Spielwirkung.
 
+#### R1.2a Umfang der digitalen Fassung (ÄNDERUNG 03.08.2026)
+
+Die digitale Fassung ist **kein reines Basisspiel und keine vollständige
+Erweiterung**, sondern eine bewusst gewählte Teilmenge. Bis zum 03.08.2026 stand
+das nirgends zusammenhängend; man musste es aus R1.1/R1.2, R6 und
+`docs/WORKFLOW.md` zusammensuchen. Verbindlich gilt:
+
+| Bestandteil | Herkunft | Digital |
+|---|---|---|
+| 78 Farbkarten, 32 Basis-Sonderkarten | Basisspiel | **ja** |
+| Längste Farbkette (R8.4a) | Basisspiel | **ja** |
+| 4 Schlangenhäutung-Karten | Erweiterung | **ja** (Audit-Fix H1) |
+| 14 Aufgabenkarten (R6) | Erweiterung | **ja** |
+| Vielfaltbonus | Erweiterung | **nein** |
+| Comeback, Risiko-Belohnung, Schlangenkorb des Glücks | Erweiterung | **nein** |
+
+Die Normquelle kennzeichnet Vielfaltbonus und Aufgabenkarten im
+Wertungsabschnitt ausdrücklich mit dem Etikett „Erweiterung"; die längste
+Farbkette trägt es **nicht** und ist deshalb Basisspielregel. Genau daran hängt,
+warum R8.4a umgesetzt ist und der Vielfaltbonus nicht.
+
+**Der Vielfaltbonus ist damit auch kein offener Punkt, sondern außerhalb des
+Umfangs.** Ihn aufzunehmen wäre eine Erweiterung des Spielumfangs und braucht
+einen User-Signoff — keinen Bugfix.
+
 ### R1.3 Startkarten verteilen
 
 - Jeder Spieler erhält 5 Startkarten vom Nachziehstapel.
@@ -80,8 +127,6 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt und geben nur Punkte, wenn sie erfüllt wurden.
 
 ## 4. Turn Structure
-
-> **Arbeitsstatus.** Die folgenden Zugstruktur-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
 
 ### R2 Zugstruktur
 
@@ -287,8 +332,6 @@ Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie si
 - Die Engine lässt ohne Verdoppler pro Zug höchstens 2 gespielte Karten zu; mit aktivem Verdoppler sind bis zu 3 gespielte Karten zulässig.
 - Nach dem letzten Zug der Endrunde wird automatisch in die Spielende-Phase gewechselt.
 
-> **Arbeitsstatus.** Die folgenden Schlangenbau-Regeln wurden als aktuelle Spezifikationsgrundlage übernommen; offene Details bleiben in den jeweiligen R-Abschnitten ausdrücklich markiert.
-
 ### R3.1 Neue Schlange starten
 
 - Eine neue Schlange kann nur mit einer Farbkarte gestartet werden.
@@ -408,9 +451,9 @@ Verweis auf diesen Abschnitt.
 - Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
 - Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu, sofern der Zielspieler nicht mit Farbenschutz abwehrt. Die Karte wird **ans Ende** der Zielschlange angehängt; eine Einfügeposition gibt es nicht. Sie zerreißt damit keine bestehende Farbgruppe — die Folgen für den weiteren Ausbau stehen in R3.5a.
 - Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
-- Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt.
+- Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt. Mit dem Verdoppler (siehe unten) sind das **alle fünf** Wirkungen, die einen anderen Spieler treffen — die Abwehr ist damit vollständig und nicht etwa ein Zwischenstand. (ÄNDERUNG 03.08.2026: nachgezählt gegen `src/engine/legalActions.ts`; Farbenfusion und Schlangenhäutung wirken nur auf eigene Schlangen und brauchen keine Abwehr.)
 - Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).
-- Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte. Die Fusion zählt als eine Punkteeinheit; für den Vielfaltbonus wird sie ignoriert.
+- Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte. Die Fusion zählt als eine Punkteeinheit. Für die längste Farbkette (R8.4a) zählt sie **nicht** — sie ist eine Sonderkarte und unterbricht die Kette. (ÄNDERUNG 03.08.2026: Hier stand zuvor „für den Vielfaltbonus wird sie ignoriert" — ein Verweis auf eine Regel, die diese Spec nie definiert hat und die nach R1.2a außerhalb des digitalen Umfangs liegt.)
 - Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen. Die Karte aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte. Die zusätzliche Karte darf eine weitere Farbkarte oder eine weitere Sonderkarte sein; insgesamt sind dann bis zu 3 Karten möglich. Der Bonus gilt nur für den aktuellen Zug, und Verdoppler selbst zählt als Sonderkarte. Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren.
 - Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet.
 
@@ -505,9 +548,42 @@ Eine Änderung dieser Auslegungen ist eine Regeländerung und braucht eine best�
 - Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet.
 - Spieler-Farbgruppenpunkte sind die Summe aller Farbgruppenpunkte über beide Schlangen eines Spielers.
 - Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben.
-- Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte.
-- Die UI darf die Wertung pro Spieler zusätzlich in Farbgruppen- und Aufgabenpunkte aufschlüsseln.
+- Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte + Kettenbonus (R8.4a).
+- Die UI darf die Wertung pro Spieler zusätzlich in Farbgruppen-, Aufgaben- und Kettenpunkte aufschlüsseln.
 - Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet.
+
+#### R8.4a Längste Farbkette (ÄNDERUNG 03.08.2026)
+
+Wörtlich aus der Normquelle, Abschnitt „Punktewertung":
+
+> „Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne
+> Sonderkarten!) erhält **5 Bonuspunkte**. Bei Gleichstand erhalten alle
+> beteiligten Spieler die vollen 5 Punkte."
+
+Der Eintrag steht dort **ohne** das Etikett „Erweiterung" und ist damit
+Basisspielregel (R1.2a). Er hat bis zum 03.08.2026 in dieser Spec und in der
+Engine vollständig gefehlt — gefunden beim Abgleich vor dem Sperren.
+
+- Eine Kette ist eine Folge **direkt benachbarter Farbkarten derselben Farbe**
+  innerhalb **einer** Schlange.
+- **Sonderkarten unterbrechen die Kette ausnahmslos.** Das gilt ausdrücklich
+  auch für die Regenbogenschlange und die Farbenfusion. Damit ist eine Kette
+  etwas anderes als eine Farbgruppe nach R3.3, wo die Regenbogenschlange als
+  Wildcard zählt — der Klammerzusatz „ohne Sonderkarten!" lässt keinen Spielraum.
+- Je Spieler zählt die längste Kette über **beide** Schlangen.
+- Den Bonus erhält jeder Spieler, dessen längste Kette der längsten Kette im
+  Spiel entspricht. Es wird nicht geteilt.
+- **Digitale Auslegung (die einzige an dieser Regel):** Die Normquelle nennt
+  keine Mindestlänge. Hat kein Spieler eine Kette (längste Kette = 0), erhält
+  **niemand** den Bonus. Ohne diese Schranke bekäme zu Spielbeginn jeder Spieler
+  5 Punkte für eine Kette, die es nicht gibt. Eine Mindestlänge von 3 analog zu
+  R3.3 wäre dagegen geraten und wird deshalb **nicht** eingeführt.
+- Der Bonus wird **laufend** gewertet, nicht erst bei Spielende — sonst zeigte
+  das Brett während der ganzen Partie einen Stand, von dem bekannt ist, dass er
+  falsch ist.
+- Der Bonus ist **öffentliche Information**: Schlangen liegen offen, jeder kann
+  nachzählen. Er wird deshalb — anders als erfüllte geheime Aufgaben — im
+  angezeigten Punktestand jedes Spielers mitgeführt.
 
 - Eine Partie endet, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist.
 - Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt.
@@ -537,7 +613,31 @@ Eine Änderung dieser Auslegungen ist eine Regeländerung und braucht eine best�
 - Die Spezifikation ist die aktive Arbeitsgrundlage für die digitale Umsetzung.
 - Bereits implementierte Regeln sind über Tests und Release-Gates abgesichert.
 - Offene Regelfragen werden erst nach User-Signoff oder verlässlicher Normquelle implementiert.
-- Aktuell sind keine offenen normalen Sonderkartenwirkungen mehr vermerkt; weitere offene Regelfragen betreffen andere Bereiche.
+
+### Offene Regelfragen (Stand 03.08.2026)
+
+**ÄNDERUNG 03.08.2026:** Hier stand zuvor der Satz „*weitere offene Regelfragen
+betreffen andere Bereiche*" — und keine einzige war benannt. Das war der Grund,
+warum diese Spec nicht gesperrt werden konnte: Man kann nicht festschreiben, was
+offen ist, wenn niemand weiß, was offen ist. Die Liste ist jetzt vollständig.
+Steht hier nichts weiter, ist nichts weiter offen.
+
+Vorausgegangen ist ein vollständiger Abgleich von R1–R8 gegen die Normquelle
+`https://schlangentanz.ch/rules`. Kartenmengen, Punktwerte, Sonderkartenwirkungen,
+Zugstruktur und Spielende stimmen überein. Zwei Abweichungen fanden sich, beide
+sind mit diesem Slice geschlossen: die fehlende Regel R8.4a und der hängende
+Verweis auf den Vielfaltbonus in R7.1.
+
+| # | Frage | Status | Warum offen |
+|---|---|---|---|
+| **O-1** | Einfügeposition der Schlangenblockade | nicht umgesetzt | Die Engine hängt die Karte ans **Ende** der Zielschlange (R7.1/R3.5a). Ob sie am Tisch zwischen zwei Karten gelegt werden darf — und damit eine Farbgruppe zerreißen kann —, sagt die Normquelle nicht. Eine Position einzuführen wäre eine Regeländerung mit unmittelbarer Punktewirkung und braucht eine bestätigte Quelle oder einen Signoff. |
+
+Nicht auf dieser Liste, weil es **keine** Regelfragen sind:
+
+- **Der Vielfaltbonus** liegt nach R1.2a außerhalb des digitalen Umfangs. Ihn
+  aufzunehmen ist eine Umfangsentscheidung, keine offene Regel.
+- **Drag & Drop, Layout unter 1000 px, die gescrollte zweite Schlange** sind
+  Bedien- und Darstellungsfragen. Sie stehen in `docs/PLAYABILITY_GATE.md`.
 
 ### Geklärte Auslegungen
 
@@ -551,3 +651,10 @@ weil sie beim Lesen des Codes wie Lücken aussehen:
 - **R6.2a — „Lila Riese“ und die Historie-Aufgaben.** Zwei Kartentexte sind am
   Tisch eindeutig, digital aber auslegungsbedürftig; die getroffene Auslegung
   steht in R6.2a.
+- **R8.4a — der Nullfall der längsten Farbkette** (03.08.2026). Die Normquelle
+  nennt keine Mindestlänge; ohne eine Schranke bei 0 bekäme zu Spielbeginn jeder
+  Spieler 5 Punkte. Die Gleichstandsregel ist dagegen **keine** Auslegung — sie
+  steht wörtlich in der Quelle.
+- **R1.2a — der digitale Umfang** (03.08.2026). Basisspiel plus Aufgabenkarten
+  plus Schlangenhäutung, ohne Vielfaltbonus. Eine bewusste Teilmenge, keine
+  unfertige Umsetzung.

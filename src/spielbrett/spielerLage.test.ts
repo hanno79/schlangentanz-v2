@@ -11,7 +11,7 @@ Und die geheime Aufgabe darf ausschließlich die des Menschen sein. Sie eines
 KI-Gegners zu zeigen wäre kein Anzeigefehler, sondern ein Regelbruch.
 
 **ÄNDERUNG [01.08.2026]:** Die Aufgabe zu verbergen genügt nicht, wenn ihre
-Punkte sie verraten. `berechneSpielerGesamtPunkte` zählt die erfüllte geheime
+Punkte sie verraten. `berechneSpielerGrundpunkte` zählt die erfüllte geheime
 Aufgabe mit (`scoring.ts`); dieselbe Zahl stand am Brett neben jedem Gegner.
 Erfüllte eine KI ihre geheime Aufgabe, sprang ihre angezeigte Punktzahl um genau
 deren Wert — ablesbar, welche Aufgabe es war.
@@ -60,6 +60,34 @@ describe('ermittleSpielerLagen', () => {
     expect(lagen[0].handkarten).toBe(zustand.spieler[0].hand.length)
     expect(lagen[0].schlangen).toBe(zustand.spieler[0].schlangen.length)
     expect(typeof lagen[0].punkte).toBe('number')
+  })
+
+  /*
+   * ÄNDERUNG [03.08.2026]: R8.4a. Der Kettenbonus wird — anders als die geheimen
+   * Aufgabenpunkte — **nicht** abgezogen. Er verrät nichts: Schlangen liegen
+   * offen, jeder kann die längste Kette selbst nachzählen. Ihn zu verbergen
+   * hieße, dem Spieler eine Punktzahl zu zeigen, die er widerlegen kann.
+   */
+  it('zeigt den Kettenbonus im öffentlichen Punktestand', () => {
+    const zustand = erstelleSpielzustand(2, () => 0.5)
+    zustand.spieler[0].schlangen = [
+      {
+        id: 'kette-1',
+        zustand: 'aktiv',
+        karten: [
+          { typ: 'Farbkarte', id: 'k1', farbe: 'Rot', punkte: 1 },
+          { typ: 'Farbkarte', id: 'k2', farbe: 'Rot', punkte: 1 },
+          { typ: 'Farbkarte', id: 'k3', farbe: 'Rot', punkte: 1 },
+        ],
+      },
+    ]
+    zustand.spieler[1].schlangen = []
+
+    const lagen = ermittleSpielerLagen(zustand)
+
+    // 3 Farbgruppenpunkte + 5 Kettenbonus, nichts davon geheim.
+    expect(lagen[0].punkte).toBe(8)
+    expect(lagen[1].punkte).toBe(0)
   })
 })
 

@@ -81,7 +81,7 @@ function transformiereRegenbogenschlangen(schlange: Schlange): Schlange {
       if (!farbe) {
         throw new Error('Farbenfusion konnte keiner Farbe zugeordnet werden.');
       }
-      return { typ: 'Farbkarte', id: karte.id, farbe, punkte: findeFarbenfusionPunkte(schlange, karte.id), vielfaltbonusIgnorieren: true } as Spielkarte;
+      return { typ: 'Farbkarte', id: karte.id, farbe, punkte: findeFarbenfusionPunkte(schlange, karte.id) } as Spielkarte;
     }
 
     return karte;
@@ -90,15 +90,10 @@ function transformiereRegenbogenschlangen(schlange: Schlange): Schlange {
   return { ...schlange, karten: transformierteKarten };
 }
 
-export function ermittleFarbenFuerFarbvielfalt(schlange: Schlange): Farbe[] {
-  const farben = new Set<Farbe>();
-  const transformierteSchlange = transformiereRegenbogenschlangen(schlange);
-  for (const karte of transformierteSchlange.karten) {
-    if (karte.typ !== 'Farbkarte' || karte.vielfaltbonusIgnorieren === true) continue;
-    farben.add(karte.farbe);
-  }
-  return [...farben];
-}
+/* ÄNDERUNG [03.08.2026]: `ermittleFarbenFuerFarbvielfalt` und das Kartenfeld
+   `vielfaltbonusIgnorieren` sind entfernt — der Vielfaltbonus gehört nicht zum
+   digitalen Umfang (GAME_SPEC R1.2a), und die Funktion hatte keinen
+   Produktionsaufrufer. */
 
 export function ermittleRegenbogenWildfarben(schlange: Schlange): Map<string, Farbe> {
   const zuordnung = bestimmeRegenbogenZuordnung(schlange);
@@ -272,38 +267,103 @@ export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgaben
   return { gesamtPunkte, aufgaben, geheimePunkte: geheimPunkte };
 }
 
-export interface SpielerGesamtPunkteErgebnis {
-  gesamtPunkte: number;
+export interface SpielerGrundpunkteErgebnis {
+  /** Farbgruppen + Aufgaben. **Ohne** den Kettenbonus — der entsteht erst im Spielervergleich. */
+  grundPunkte: number;
   farbgruppenPunkte: SpielerFarbgruppenPunkteErgebnis;
   aufgabenPunkte: SpielerAufgabenPunkteErgebnis;
 }
 
-export function berechneSpielerGesamtPunkte(spieler: Spieler): SpielerGesamtPunkteErgebnis {
+/**
+ * Die Grundpunkte **eines** Spielers: Farbgruppen plus Aufgaben.
+ *
+ * ÄNDERUNG [03.08.2026]: Hieß bis dahin „berechneSpielerGesamtPunkte" mit dem
+ * Feld „gesamtPunkte". Seit der Kettenbonus (R8.4a) dazugekommen ist, war das
+ * eine Lüge im Namen — der Bonus vergleicht Spieler miteinander und kann hier
+ * nicht entstehen. Es gab damit zwei exportierte „gesamtPunkte" mit
+ * verschiedener Bedeutung, getrennt nur durch einen Kommentar, den man lesen
+ * muss. Jetzt trennt sie der Name: Die vollständige Zahl gibt es ausschließlich
+ * bei `berechneSpielGesamtwertung`.
+ *
+ * (Die alten Namen stehen hier bewusst in Anführungszeichen statt in Backticks:
+ * Ein globales `sed` über die Umbenennung hatte diesen Satz schon einmal
+ * mitgeändert und damit in Unsinn verwandelt — gefunden im Codex-Review.)
+ */
+export function berechneSpielerGrundpunkte(spieler: Spieler): SpielerGrundpunkteErgebnis {
   const farbgruppenPunkte = berechneSpielerFarbgruppenPunkte(spieler);
   const aufgabenPunkte = berechneSpielerAufgabenPunkte(spieler);
   return {
-    gesamtPunkte: farbgruppenPunkte.gesamtPunkte + aufgabenPunkte.gesamtPunkte,
+    grundPunkte: farbgruppenPunkte.gesamtPunkte + aufgabenPunkte.gesamtPunkte,
     farbgruppenPunkte,
     aufgabenPunkte,
   };
 }
 
+const KETTENBONUS_PUNKTE = 5;
+
+/**
+ * Die längste ununterbrochene Kette einer Farbe eines Spielers (R8.4a).
+ *
+ * ÄNDERUNG [03.08.2026]: Die erste Fassung hatte hier einen eigenen Scanner mit
+ * der Begründung, `ermittleFarbgruppen` sei nicht wiederverwendbar, weil dort
+ * die Regenbogenschlange als Wildcard zähle. **Das stimmt nicht.** Die Primitive
+ * arbeitet auf der rohen Schlange und bricht bei jeder Sonderkarte; die
+ * Wildcard-Semantik steckt allein in `transformiereRegenbogenschlangen`, das
+ * `berechneFarbgruppenPunkte` davorschaltet. `pruefeLilaRiese` in
+ * `aufgabenPruefung.ts` fragt dieselbe Kettenfrage seit jeher in einer Zeile.
+ *
+ * `mindestLaenge: 1`, weil R8.4a — anders als R3.3 — keine Mindestlänge kennt.
+ */
+function laengsteFarbkette(spieler: Spieler): number {
+  return Math.max(
+    0,
+    ...spieler.schlangen.flatMap((schlange) =>
+      ermittleFarbgruppen(schlange, 1).map((gruppe) => gruppe.laenge),
+    ),
+  );
+}
+
 export type SpielerWertungsEintrag = {
   spielerId: string;
   name: string;
+  /** Die eine vollständige Punktzahl: Grundpunkte + Kettenbonus. */
   gesamtPunkte: number;
-  wertung: SpielerGesamtPunkteErgebnis;
+  /** Die Einzelspieler-Wertung, ohne spielerübergreifende Anteile. */
+  wertung: SpielerGrundpunkteErgebnis;
+  /** 5 für jeden Spieler mit der längsten Farbkette (R8.4a), sonst 0. */
+  kettenbonus: number;
 };
 
 export interface SpielGesamtwertungErgebnis {
   spielerwertungen: SpielerWertungsEintrag[];
 }
 
+/**
+ * Die Wertung aller Spieler — die einzige vollständige Punktzahl.
+ *
+ * ÄNDERUNG [03.08.2026]: Hier kommt der Kettenbonus nach R8.4a dazu. Er gehört
+ * auf diese Ebene, weil er Spieler miteinander vergleicht und in
+ * `berechneSpielerGrundpunkte` gar nicht entstehen kann. Wortlaut der Regel,
+ * Gleichstand und der Nullfall stehen in `docs/GAME_SPEC.md` R8.4a.
+ */
 export function berechneSpielGesamtwertung(spieler: Spieler[]): SpielGesamtwertungErgebnis {
+  const eintraege = spieler.map((s) => ({
+    spieler: s,
+    wertung: berechneSpielerGrundpunkte(s),
+    kette: laengsteFarbkette(s),
+  }));
+  const laengsteKette = Math.max(0, ...eintraege.map((eintrag) => eintrag.kette));
+
   return {
-    spielerwertungen: spieler.map((s) => {
-      const wertung = berechneSpielerGesamtPunkte(s);
-      return { spielerId: s.id, name: s.name, gesamtPunkte: wertung.gesamtPunkte, wertung };
+    spielerwertungen: eintraege.map(({ spieler: s, wertung, kette }) => {
+      const kettenbonus = laengsteKette > 0 && kette === laengsteKette ? KETTENBONUS_PUNKTE : 0;
+      return {
+        spielerId: s.id,
+        name: s.name,
+        gesamtPunkte: wertung.grundPunkte + kettenbonus,
+        wertung,
+        kettenbonus,
+      };
     }),
   };
 }

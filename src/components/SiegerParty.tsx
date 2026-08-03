@@ -38,6 +38,7 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
   const ergebnisLabel = gewinner.length > 1 ? 'Gleichstand' : `Sieg für ${gewinnerLabel}`
   const farbgruppenPunkte = finaleWertung?.wertung.farbgruppenPunkte.gesamtPunkte ?? 0
   const aufgabenPunkte = finaleWertung?.wertung.aufgabenPunkte.gesamtPunkte ?? 0
+  const kettenbonus = finaleWertung?.kettenbonus ?? 0
   const gesamtPunkte = finaleWertung?.gesamtPunkte ?? 0
 
   const konfettiStuecke = Array.from({ length: 10 }, (_, i) => i)
@@ -82,6 +83,10 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
           <div>
             <dt>Aufgaben</dt>
             <dd className="sieger-party__scorewert">{aufgabenPunkte}</dd>
+          </div>
+          <div>
+            <dt>Längste Farbkette</dt>
+            <dd className="sieger-party__scorewert">{kettenbonus}</dd>
           </div>
         </dl>
       </div>

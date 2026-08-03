@@ -27,9 +27,46 @@ const SPEC_PATH = join(process.cwd(), 'docs', 'GAME_SPEC.md')
 
 const spec = readFileSync(SPEC_PATH, 'utf8')
 
+/**
+ * Dieselbe Spec, aber mit zu einzelnen Leerzeichen zusammengezogenem Whitespace.
+ *
+ * ÄNDERUNG [03.08.2026]: Zwei Zusicherungen prüften Sätze, die im Markdown über
+ * einen Zeilenumbruch laufen, und hatten deshalb `\n  ` mitten im erwarteten
+ * Text stehen. Ein Neuumbruch des Absatzes hätte sie zerbrochen, ohne dass sich
+ * die Aussage ändert — genau die Brüchigkeit, die `CLAUDE.md` für
+ * CSS-Quelltext-Verträge untersagt, nur in Markdown. Wer einen Satz prüft, der
+ * umbrechen darf, prüft ihn hier.
+ */
+const specFliesstext = spec.replace(/\s+/g, ' ')
+
 describe('GAME_SPEC R0 Projektziel', () => {
+  /*
+   * ÄNDERUNG [03.08.2026]: Die Spec ist gesperrt (`CLAUDE.md` Schritt 1). Dieser
+   * Test hielt zuvor das Gegenteil fest — „noch nicht final gesperrt" — und war
+   * damit der Grund, warum ein Sperren still zurückgedreht worden wäre, ohne
+   * dass etwas rot geworden wäre.
+   */
+  it('ist gesperrt und nennt das Verfahren für Änderungen', () => {
+    expect(spec).toContain('Status: **Gesperrt am 03.08.2026.**')
+    expect(spec).not.toContain('noch nicht final gesperrt')
+    expect(spec).toContain('### Was „gesperrt" bedeutet')
+    // Eine Sperre ohne Verfahren wäre eine Behauptung.
+    expect(specFliesstext).toContain('Jede Regeländerung braucht eine bestätigte Normquelle oder einen User-Signoff.')
+    expect(spec).toContain('Widersprüche zwischen Spec und Code sind Spec-Fragen')
+    /* Die drei „Arbeitsstatus"-Blöcke sagten, offene Details seien anderswo
+       markiert. Nach dem Sperren stehen sie vollständig in Abschnitt 11. */
+    expect(spec).not.toContain('**Arbeitsstatus.**')
+  })
+
+  it('benennt offene Regelfragen, statt sie anzudeuten', () => {
+    expect(spec).toContain('### Offene Regelfragen (Stand 03.08.2026)')
+    expect(spec).toContain('| **O-1** | Einfügeposition der Schlangenblockade |')
+    /* Der Satz, der das Sperren jahrelang unmöglich gemacht hat: Er behauptete
+       offene Fragen und benannte keine einzige. */
+    expect(spec).not.toContain('weitere offene Regelfragen betreffen andere Bereiche')
+  })
+
   it('hat aktiven Arbeitsstatus und kein veraltetes Draft-/Template-Wording', () => {
-    expect(spec).toContain('Status: **Aktive Projektspezifikation — inkrementell versioniert und noch nicht final gesperrt.**')
     expect(spec).toContain('Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und verifiziert')
     expect(spec).not.toContain('Draft — Signoff ausstehend')
     expect(spec).not.toContain('bevor Implementierung beginnen darf')
@@ -280,6 +317,34 @@ describe('GAME_SPEC R8 Wertung', () => {
     expect(spec).not.toContain('Partie endet regelbasiert, wenn alle Karten verbraucht sind')
     expect(spec).not.toContain('Spielende-Bedingungen werden geprüft')
     expect(spec).not.toContain('TODO: Define scoring, game-end conditions, win/loss/draw logic.')
+  })
+
+  /*
+   * ÄNDERUNG [03.08.2026]: R8.4a. Die Regel fehlte in Spec *und* Engine — gefunden
+   * beim Normquellen-Abgleich vor dem Sperren. Der Klammerzusatz „ohne
+   * Sonderkarten!" ist der Teil, der leicht wieder verlorengeht: Er macht die
+   * Kette zu etwas anderem als eine Farbgruppe nach R3.3.
+   */
+  it('dokumentiert den Bonus für die längste Farbkette', () => {
+    expect(spec).toContain('#### R8.4a Längste Farbkette (ÄNDERUNG 03.08.2026)')
+    expect(spec).toContain('Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne')
+    expect(spec).toContain('Bei Gleichstand erhalten alle')
+    expect(spec).toContain('**Sonderkarten unterbrechen die Kette ausnahmslos.**')
+    expect(spec).toContain('auch für die Regenbogenschlange und die Farbenfusion')
+    expect(specFliesstext).toContain('erhält **niemand** den Bonus')
+    // Sie zählt in die Gesamtpunkte — sonst wäre sie dokumentiert und wirkungslos.
+    expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte + Kettenbonus (R8.4a)')
+  })
+
+  it('schreibt den digitalen Umfang fest und schließt den Vielfaltbonus aus', () => {
+    expect(spec).toContain('#### R1.2a Umfang der digitalen Fassung (ÄNDERUNG 03.08.2026)')
+    expect(spec).toContain('| Vielfaltbonus | Erweiterung | **nein** |')
+    expect(spec).toContain('| Längste Farbkette (R8.4a) | Basisspiel | **ja** |')
+    /* R7.1 verwies auf eine Regel, die diese Spec nie definiert hat. Geprüft
+       wird die Ersetzung, nicht die Abwesenheit: Der Satz steht als zitierte
+       Historie weiterhin im Text, und ein `not.toContain` darauf wäre nur eine
+       Übung in Zeichensetzung. */
+    expect(spec).toContain('Für die längste Farbkette (R8.4a) zählt sie **nicht**')
   })
 
   it('dokumentiert geklärte Partieende- und Gewinnerermittlungsregeln', () => {

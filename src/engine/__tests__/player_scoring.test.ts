@@ -9,8 +9,7 @@ import { describe, expect, it } from 'vitest';
 import {
   berechneSpielerAufgabenPunkte,
   berechneSpielerFarbgruppenPunkte,
-  berechneSpielerGesamtPunkte,
-  ermittleFarbenFuerFarbvielfalt,
+  berechneSpielerGrundpunkte,
 } from '../index';
 import { farbkarte, schlange, sonderkarte, spielerMitSchlangen } from './testHelpers';
 
@@ -228,21 +227,6 @@ describe('Spieler-Farbgruppen-Punktwertung — R4.2/R4.4', () => {
   });
 });
 
-describe('Farbenvielfalt-Helfer', () => {
-  it('ignoriert Farbenfusionen beim Ermitteln der Farben für den Vielfaltbonus', () => {
-    const schlangeMitFusion = schlange([
-      farbkarte('blau-1', 'Blau', 1),
-      farbkarte('blau-2', 'Blau', 1),
-      sonderkarte('farbenfusion-1', 'Farbenfusion'),
-      farbkarte('gruen-1', 'Grün', 3),
-      farbkarte('gruen-2', 'Grün', 3),
-    ]);
-    schlangeMitFusion.farbenfusionen = [{ kartenId: 'farbenfusion-1', punkte: 4 }];
-
-    expect(ermittleFarbenFuerFarbvielfalt(schlangeMitFusion)).toEqual(['Blau', 'Grün']);
-  });
-});
-
 describe('Spieler-Aufgaben-Punktwertung — R8.4c', () => {
   it('summiert die Punkte bereits erfüllter Aufgaben eines Spielers', () => {
     const spieler = spielerMitSchlangen([]);
@@ -293,16 +277,16 @@ describe('Spieler-Gesamtpunktwertung — R8.4d', () => {
       { typ: 'Aufgabenkarte', id: 'aufgabe-gesamt-2', name: 'Gelber Schatz', punkte: 5, bedingung: 'Test' },
     ];
 
-    const ergebnis = berechneSpielerGesamtPunkte(spieler);
+    const ergebnis = berechneSpielerGrundpunkte(spieler);
 
-    expect(ergebnis.gesamtPunkte).toBe(22);           // 9 Farbgruppen + 13 Aufgaben
+    expect(ergebnis.grundPunkte).toBe(22);            // 9 Farbgruppen + 13 Aufgaben
     expect(ergebnis.farbgruppenPunkte.gesamtPunkte).toBe(9);
     expect(ergebnis.aufgabenPunkte.gesamtPunkte).toBe(13);
   });
 
   it('wertet Spieler ohne Farbgruppen und erfüllte Aufgaben mit 0 Gesamtpunkten', () => {
-    expect(berechneSpielerGesamtPunkte(spielerMitSchlangen([]))).toEqual({
-      gesamtPunkte: 0,
+    expect(berechneSpielerGrundpunkte(spielerMitSchlangen([]))).toEqual({
+      grundPunkte: 0,
       farbgruppenPunkte: { gesamtPunkte: 0, schlangen: [] },
       aufgabenPunkte: { gesamtPunkte: 0, geheimePunkte: 0, aufgaben: [] },
     });
@@ -323,11 +307,11 @@ describe('Spieler-Gesamtpunktwertung — R8.4d', () => {
     };
     spieler.geheimeAufgabeErfuellt = true;
 
-    const ergebnis = berechneSpielerGesamtPunkte(spieler);
+    const ergebnis = berechneSpielerGrundpunkte(spieler);
 
     expect(ergebnis.aufgabenPunkte.geheimePunkte).toBe(6);
     // In der Schlusswertung zählt sie weiterhin voll mit.
-    expect(ergebnis.gesamtPunkte).toBe(6);
+    expect(ergebnis.grundPunkte).toBe(6);
   });
 
   it('mutiert Spieler, Schlangen, Karten und Aufgaben nicht', () => {
@@ -343,7 +327,7 @@ describe('Spieler-Gesamtpunktwertung — R8.4d', () => {
     ];
     const vorher = JSON.parse(JSON.stringify(spieler));
 
-    berechneSpielerGesamtPunkte(spieler);
+    berechneSpielerGrundpunkte(spieler);
 
     expect(spieler).toEqual(vorher);
   });

@@ -991,6 +991,14 @@ p, li {
 
 .sieger-party__stats dt {
   font-weight: 900;
+  /* ÄNDERUNG [03.08.2026]: Farbe gesetzt. Die Beschriftungen erbten das
+     Cremeweiß der dunklen Sieger-Sektion, standen aber auf der hellgrünen
+     Pille — gemessen 1,06 : 1 Kontrast, also praktisch unsichtbar. Die Zahlen
+     daneben fielen nur deshalb nicht auf, weil sie einen dicken
+     `-webkit-text-stroke` in derselben dunklen Farbe tragen.
+     Vorbestehend seit dem Bau der Punktetafel; aufgefallen bei der
+     Sichtprüfung der vierten Zeile (Kettenbonus, R8.4a). */
+  color: var(--st-color-on-surface);
 }
 
 .sieger-party__scorewert {

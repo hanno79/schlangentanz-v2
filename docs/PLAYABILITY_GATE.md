@@ -3345,6 +3345,43 @@ deterministisch durch `kiZug.reaktionen.test.ts` (Logik) und
 - **Unter 1000 px Breite** ist das Brett gestapelt und scrollt. Geprüft und
   entworfen ist 1280×900 und breiter.
 
+- **Die Sieger-Party liegt vollständig unter dem Erstbild** (gemessen
+  03.08.2026). Bei 1280×900 beginnt sie exakt bei `y=900`; der Neustart-Knopf
+  sitzt bei `y≈1424`. Wer eine Partie beendet, sieht das Brett mit „Partie
+  beendet." und muss scrollen, um Gewinner und Punktetafel überhaupt zu finden.
+
+  Nach Regel 10 der `SPIELBRETT_SPEC.md` ist „weggescrollt" nicht dasselbe wie
+  „unerreichbar" — verboten ist es also nicht. Es ist trotzdem der schlechteste
+  Moment für einen versteckten Bildschirm, denn hier endet das Spiel.
+
+  Gefunden beim Messen des R8.4a-Slices, der die Punktetafel um eine vierte
+  Zeile erweitert und den Knopf damit auf `y≈1498` schiebt. **Der Befund ist
+  vorbestehend**, nicht von diesem Slice verursacht: ohne die neue Zeile liegt
+  der Knopf bei 1424, also ebenfalls weit außerhalb. Behoben wurde er nicht — das
+  wäre ein eigener Slice am Aufbau der Sieger-Party, kein Nebenbei-Fix in einem
+  Regel-Slice.
+
+- **Warum die Sieger-Party von keinem Layout-Vertrag gedeckt ist** — und das ist
+  der Grund, warum beide Funde hier so lange unbemerkt blieben:
+  `npm run test:layout` fährt gegen `vite preview`, also gegen den
+  Produktionsbuild. Dort sind die Test-Hooks aus (`testHooksAktiv()` verlangt
+  `DEV` oder `VITE_TEST_HOOKS=1`, und letzteres gehört laut `WORKFLOW.md`
+  ausschließlich in die Vercel-Preview-Umgebung). Der Bildschirm ist im
+  Vertragslauf schlicht **nicht erreichbar**, ohne eine Partie zu Ende zu
+  spielen. Gemessen wurde er am 03.08.2026 von Hand gegen `npm run dev`.
+
+- **Behoben am 03.08.2026: unlesbare Beschriftungen in der Punktetafel.** Die
+  `dt`-Beschriftungen („Gesamtpunkte", „Farbgruppen", „Aufgaben") erbten das
+  Cremeweiß `#f4f0e8` der dunklen Sieger-Sektion, standen aber auf der
+  hellgrünen Pille: **Kontrastverhältnis 1,06 : 1** gemessen, WCAG AA verlangt
+  4,5. Praktisch unsichtbar.
+
+  Aufgefallen ist es nur, weil die vierte Zeile eine Sichtprüfung nötig machte.
+  Dass es niemandem vorher auffiel, hat einen Grund: Die **Zahlen** daneben
+  tragen einen dicken `-webkit-text-stroke` in der dunklen Randfarbe und sind
+  deshalb gut lesbar — die Tafel *wirkt* in Ordnung, solange man nur auf die
+  Werte schaut. Jetzt 12,26 : 1.
+
 ### Bewusst so gelassen (02.08.2026)
 
 Zwei Beobachtungen aus dem Onboarding, die *keine* Änderung nach sich ziehen.

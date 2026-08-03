@@ -33,27 +33,33 @@ describe('Spiel-Gesamtwertung — R8.4e', () => {
       { typ: 'Aufgabenkarte', id: 'ben-aufgabe-1', name: 'Gelber Schatz', punkte: 5, bedingung: 'Test' },
     ];
 
+    /* ÄNDERUNG [03.08.2026]: R8.4a. Beide haben eine Dreierkette — Anna in Blau,
+       Ben in Grün —, also Gleichstand, also bekommen beide die vollen 5 Punkte.
+       Nachgerechnet: Anna 3 + 8 + 5 = 16, Ben 9 + 5 + 5 = 19. `wertung` bleibt
+       bei 11 bzw. 14: Die Grundpunkte kennen den Bonus nicht. */
     expect(berechneSpielGesamtwertung([anna, ben])).toEqual({
       spielerwertungen: [
         {
           spielerId: 'spieler-anna',
           name: 'Anna',
-          gesamtPunkte: 11,
+          gesamtPunkte: 16,
           wertung: expect.objectContaining({
-            gesamtPunkte: 11,
+            grundPunkte: 11,
             farbgruppenPunkte: expect.objectContaining({ gesamtPunkte: 3 }),
             aufgabenPunkte: expect.objectContaining({ gesamtPunkte: 8 }),
           }),
+          kettenbonus: 5,
         },
         {
           spielerId: 'spieler-ben',
           name: 'Ben',
-          gesamtPunkte: 14,
+          gesamtPunkte: 19,
           wertung: expect.objectContaining({
-            gesamtPunkte: 14,
+            grundPunkte: 14,
             farbgruppenPunkte: expect.objectContaining({ gesamtPunkte: 9 }),
             aufgabenPunkte: expect.objectContaining({ gesamtPunkte: 5 }),
           }),
+          kettenbonus: 5,
         },
       ],
     });
@@ -152,11 +158,14 @@ describe('Spielzustand-Gesamtwertung — R8.4f', () => {
 
     const erwarteteWertung = berechneSpielGesamtwertung(zustand.spieler);
 
+    /* ÄNDERUNG [03.08.2026]: R8.4a. Nachgerechnet — Anna 3 Farbgruppenpunkte +
+       8 Aufgabe = 11, Ben 3 × Gelb à 2 = 6 ohne Aufgabe. Beide haben eine
+       Dreierkette, also Gleichstand: je +5 auf 16 und 11. */
     expect(berechneSpielzustandGesamtwertung(zustand)).toEqual(erwarteteWertung);
     expect(erwarteteWertung).toEqual({
       spielerwertungen: [
-        expect.objectContaining({ spielerId: 'spieler-anna', name: 'Anna', gesamtPunkte: 11 }),
-        expect.objectContaining({ spielerId: 'spieler-ben', name: 'Ben', gesamtPunkte: 6 }),
+        expect.objectContaining({ spielerId: 'spieler-anna', name: 'Anna', gesamtPunkte: 16 }),
+        expect.objectContaining({ spielerId: 'spieler-ben', name: 'Ben', gesamtPunkte: 11 }),
       ],
     });
   });

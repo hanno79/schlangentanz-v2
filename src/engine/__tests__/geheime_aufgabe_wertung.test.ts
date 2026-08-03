@@ -11,7 +11,7 @@ Beschreibung: Audit-Fix K4 — Die geheime Aufgabe jedes Spielers muss in der
 import { describe, expect, it } from 'vitest';
 import {
   erstelleSpielzustand,
-  berechneSpielerGesamtPunkte,
+  berechneSpielerGrundpunkte,
   serialisiere,
   deserialisiere,
 } from '../index';
@@ -44,7 +44,7 @@ describe('Geheime Aufgabe — Prüfung und Wertung (K4)', () => {
     const nachher = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
     expect(nachher.spieler[0].geheimeAufgabeErfuellt).toBe(true);
 
-    const wertung = berechneSpielerGesamtPunkte(nachher.spieler[0]);
+    const wertung = berechneSpielerGrundpunkte(nachher.spieler[0]);
     expect(wertung.aufgabenPunkte.gesamtPunkte).toBe(5);
     expect(wertung.aufgabenPunkte.aufgaben.some((a) => a.aufgabenId === 'aufgabe-03')).toBe(true);
   });
@@ -52,7 +52,7 @@ describe('Geheime Aufgabe — Prüfung und Wertung (K4)', () => {
   it('wertet eine nicht erfüllte geheime Aufgabe mit 0 Punkten', () => {
     const zustand = erstelleSpielzustand(2, () => 0.5);
     // Standard-Flag ist false/undefined -> keine Punkte.
-    const wertung = berechneSpielerGesamtPunkte(zustand.spieler[0]);
+    const wertung = berechneSpielerGrundpunkte(zustand.spieler[0]);
     expect(wertung.aufgabenPunkte.gesamtPunkte).toBe(0);
   });
 

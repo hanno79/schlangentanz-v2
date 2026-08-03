@@ -17,7 +17,23 @@ export interface Farbgruppe {
   kartenIds: string[];
 }
 
-export function ermittleFarbgruppen(schlange: Schlange): Farbgruppe[] {
+/**
+ * Alle maximalen Läufe direkt benachbarter Farbkarten gleicher Farbe.
+ *
+ * Sonderkarten unterbrechen ausnahmslos — auch die Regenbogenschlange. Wer sie
+ * als Wildcard gewertet haben will, schickt die Schlange vorher durch
+ * `transformiereRegenbogenschlangen` (`scoring.ts`); **dort** sitzt die
+ * Wildcard-Semantik, nicht hier.
+ *
+ * ÄNDERUNG [03.08.2026]: `mindestLaenge` ist dazugekommen. R3.3 zählt erst ab 3
+ * Karten, R8.4a (längste Farbkette) kennt dagegen gar keine Mindestlänge — bei
+ * zwei Spielern mit Maximalkette 2 gäbe der Vorgabewert sonst „keine Kette"
+ * statt Gleichstand. Der Vorgabewert hält alle bestehenden Aufrufer unverändert.
+ */
+export function ermittleFarbgruppen(
+  schlange: Schlange,
+  mindestLaenge: number = MINDEST_FARBGRUPPEN_LAENGE,
+): Farbgruppe[] {
   const gruppen: Farbgruppe[] = [];
   const { karten } = schlange;
 
@@ -36,7 +52,7 @@ export function ermittleFarbgruppen(schlange: Schlange): Farbgruppe[] {
       i++;
     }
 
-    if (ids.length >= MINDEST_FARBGRUPPEN_LAENGE) {
+    if (ids.length >= mindestLaenge) {
       gruppen.push({ farbe, startIndex: start, endIndex: i, laenge: ids.length, kartenIds: ids });
     }
   }

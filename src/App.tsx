@@ -82,8 +82,17 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
         }}
       >
         <Spielbrett partie={partie} />
-        {/* Die Siegerehrung legt sich über das Brett, sobald die Partie endet. */}
-        <SiegerParty zustand={partie.zustand} onNeuesSpiel={starteNeuesSpiel} />
+        {/* Die Siegerehrung legt sich über das Brett, sobald die Partie endet.
+
+            ÄNDERUNG [03.08.2026]: Erst ab `Spielende` gemountet. `SiegerParty`
+            rechnet in zwei `useMemo` die volle Wertung, und die Hook-Regeln
+            zwingen beide **vor** ihren eigenen `return null` — dauerhaft
+            gemountet lief das also die ganze Partie über für eine Komponente,
+            die nichts zeichnet. Mit dem Kettenbonus (R8.4a) wäre auch der
+            zweimal je Zustandsänderung mitgelaufen. */}
+        {partie.zustand.zugphase === 'Spielende' ? (
+          <SiegerParty zustand={partie.zustand} onNeuesSpiel={starteNeuesSpiel} />
+        ) : null}
       </Fehlerfang>
     )
   }

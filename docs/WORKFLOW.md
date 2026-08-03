@@ -256,9 +256,19 @@ aufschlagen, hier die bewussten Entscheidungen:
 
 `Comeback` (4), `Risiko-Belohnung` (8) und `Schlangenkorb des Glücks` (1) werden in
 `src/engine/deck.ts` erzeugt, gelangen aber nicht ins gemischte Spieldeck. Ihr
-einziger Zweck ist die Namensvalidierung in `serialization.ts`. Das digitale
-Spieldeck umfasst 114 Karten: 110 Basiskarten plus die 4 Schlangenhäutung-Karten
-der Erweiterung (Audit-Fix H1) — siehe `docs/GAME_SPEC.md` R1.1/R1.2.
+einziger Zweck ist die Namensvalidierung in `serialization.ts`.
+
+**ÄNDERUNG 03.08.2026:** Der digitale Umfang steht jetzt vollständig und an
+einer Stelle in `docs/GAME_SPEC.md` **R1.2a** — welche Bestandteile aus Basis-
+spiel und Erweiterung übernommen sind und welche nicht. Hier stand er zuvor
+zur Hälfte; die andere Hälfte lag in R1.1/R1.2 und in R6. Wer wissen will, ob
+etwas zum Spiel gehört, liest R1.2a.
+
+Dazugekommen ist dabei eine Regel, die überall gefehlt hat: der Bonus für die
+längste Farbkette (R8.4a). Weggefallen ist der **Vielfaltbonus** — die
+Normquelle weist ihn als Erweiterung aus, und `ermittleFarbenFuerFarbvielfalt`
+samt Kartenfeld `vielfaltbonusIgnorieren` ist mit demselben Slice aus der Engine
+entfernt worden. Beides hatte keinen Produktionsaufrufer.
 
 ## Speichern und Laden (ÄNDERUNG 03.08.2026)
 

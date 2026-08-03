@@ -25,7 +25,6 @@ export interface FarbkarteInfo {
   id: string;
   farbe: Farbe;
   punkte: number;
-  vielfaltbonusIgnorieren?: boolean;
 }
 
 export interface SonderkarteInfo {
