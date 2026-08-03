@@ -9,6 +9,7 @@ import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KART
 import type { Spielkarte, SonderkarteInfo, Spielzustand, Spielphase, PendingFarbendiebAbwehr, PendingSchlangenfrassAbwehr } from './types';
 import { ermittleErfuellteOffeneAufgaben, erfuelleOffeneAufgaben, pruefeGeheimeAufgabe } from './aufgabenPruefung';
 import { ermittleFarbgruppen } from './colorGroups';
+import { ueberhandAnzahl } from './ueberhand';
 
 export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
   return karte?.typ === 'Sonderkarte' && karte.name === 'Farbenschutz';
@@ -474,7 +475,7 @@ export function werfeUeberzaehligeHandkartenAb(
   }
 
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
-  const ueberzaehlig = aktiverSpieler.hand.length - HANDKARTENLIMIT;
+  const ueberzaehlig = ueberhandAnzahl(zustand);
 
   if (ueberzaehlig <= 0) {
     throw new Error('Überzählige Handkarten können nur abgeworfen werden, wenn die Hand das Handkartenlimit überschreitet.');

@@ -21,7 +21,9 @@ export function ausspielphaseBeendbar(zustand: Spielzustand): boolean {
   )
 }
 
-export function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
+// Nur Zulieferer für `aufgabeLabel` — bewusst nicht exportiert, damit die
+// Endspurt-Verdopplung an genau einer Stelle formuliert wird.
+function aufgabenPunkteAnzeige(a: AufgabenkarteInfo, istEndspurt: boolean): string {
   if (!istEndspurt) return `${a.punkte} Punkte`
   return `${a.punkte} Punkte ×2 = ${a.punkte * 2} Punkte`
 }

@@ -24,7 +24,7 @@ import {
   berechneSpielzustandGesamtwertung,
   serialisiere,
   deserialisiere,
-  HANDKARTENLIMIT,
+  ueberhandAbwurfKartenIds,
 } from '../index';
 import type { SpielAktion } from '../legalActions';
 import type { Spielzustand } from '../types';
@@ -59,10 +59,9 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-function ueberhandAbwurfIds(zustand: Spielzustand): string[] {
-  const hand = zustand.spieler[zustand.aktiverSpielerIndex].hand;
-  return hand.slice(HANDKARTENLIMIT).map((karte) => karte.id);
-}
+/* ÄNDERUNG [02.08.2026]: Eigene Kopie durch die Engine-Funktion ersetzt. Der
+   Soak-Test soll die Engine unter Last prüfen, nicht seine eigene Nachbildung
+   ihrer Regeln — sonst laufen beide auseinander und der Test merkt es zuletzt. */
 
 function pruefeInvarianten(zustand: Spielzustand, seed: number, schritt: number): void {
   expect(() => berechneSpielzustandGesamtwertung(zustand), `Wertung wirft (seed=${seed}, schritt=${schritt})`).not.toThrow();
@@ -112,7 +111,7 @@ function spieleVollpartie(seed: number): void {
         zustand = beendeAufgabenpruefung(zustand, { aufgabenGeprueft: true });
         break;
       case 'Zugabschluss': {
-        const abwurf = ueberhandAbwurfIds(zustand);
+        const abwurf = ueberhandAbwurfKartenIds(zustand);
         zustand = abwurf.length > 0
           ? werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: abwurf })
           : beendeZug(zustand, { pflichtenErfuellt: true });

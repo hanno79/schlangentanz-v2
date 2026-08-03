@@ -29,6 +29,7 @@ Dieser Vertrag spielt deshalb eine echte Partie und misst *danach*.
 import { expect, test } from '@playwright/test'
 import {
   befundListe,
+  findeAbgeschnittenes,
   findeAusserhalbDesBildes,
   findeVerdeckteBedienelemente,
   findeZusammengedruecktes,
@@ -126,6 +127,17 @@ test.describe('Brett im Dauerlauf', () => {
     const gedrueckt = await findeZusammengedruecktes(page)
     expect
       .soft(gedrueckt, `zeigen nicht einmal eine ganze Zeile:\n${befundListe(gedrueckt)}`)
+      .toHaveLength(0)
+
+    /* ÄNDERUNG [02.08.2026]: Regel 2 fehlte hier — ausgerechnet die Regel, die
+       docs/SPIELBRETT_SPEC.md als zentrale Layoutregel führt. Sie lief nur im
+       Erstbild, und die Kartenstapel, die etwas abschneiden könnten, wachsen
+       erst im Spielverlauf. Damit prüft der Dauerlauf jetzt dieselben vier
+       Inhaltsfragen wie das Erstbild; welcher Wächter wo läuft, ist keine
+       Entscheidung mehr, die pro Slice neu getroffen wird. */
+    const abgeschnitten = await findeAbgeschnittenes(page)
+    expect
+      .soft(abgeschnitten, `schneiden ihren Inhalt ab:\n${befundListe(abgeschnitten)}`)
       .toHaveLength(0)
   })
 })

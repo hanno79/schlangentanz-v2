@@ -15,11 +15,11 @@ import {
   ermittleReaktionsAktionen,
   starteAusspielphase,
   werfeUeberzaehligeHandkartenAb,
+  ueberhandAbwurfKartenIds,
 } from './engine'
 import type { Spielzustand, SpielAktion } from './engine'
 import { erstelleAktionsLabel } from './aktionsLabel'
 import { mussMenschReagieren, reaktionsVerteidiger } from './reaktionen'
-import { ueberhandAbwurfKartenIds } from './ueberhand'
 
 export interface KiZugVorspulErgebnis {
   zustand: Spielzustand

@@ -104,6 +104,16 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   display: flex;
   flex-direction: column;
   gap: var(--brett-luft-eng);
+  /* ÄNDERUNG [02.08.2026]: `min-block-size: 0` verteilt an alle sieben Regionen
+     dieselbe Erlaubnis, die dem Gegnerprotokoll die Sichtbarkeit gekostet hat —
+     unter die Inhaltsgröße zu schrumpfen. Sie kollabieren heute trotzdem nicht,
+     weil das Grid der Spielfläche einen Boden gibt (Regel 8) und die übrigen
+     Zeilen `auto` sind; nachgemessen am 02.08.2026, keine zweite Fundstelle.
+
+     Bewusst stehen gelassen: Die Zeile ist die Voraussetzung dafür, dass die
+     gedeckelten Streifen überhaupt scrollen statt zu wachsen. Was fehlte, war
+     nicht die Beschränkung, sondern ein Wächter — den gibt es jetzt
+     (`findeZusammengedruecktes`), und er würde eine zweite Fundstelle melden. */
   min-block-size: 0;
   padding: var(--brett-luft-eng) var(--brett-luft);
   border: var(--brett-rahmen) solid var(--brett-linie);

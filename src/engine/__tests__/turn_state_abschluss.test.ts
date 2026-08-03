@@ -11,6 +11,7 @@ import {
   beendeZug,
   erstelleSpielzustand,
   spieleFarbenschutz,
+  ueberhandAbwurfKartenIds,
   werfeUeberzaehligeHandkartenAb,
 } from '../index';
 
@@ -83,9 +84,10 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     return zustand;
   }
 
-  function ueberhandIds(zustand: ReturnType<typeof zustandMitUeberhand>) {
-    return zustand.spieler[0].hand.slice(-1).map((karte) => karte.id);
-  }
+  /* ÄNDERUNG [02.08.2026]: Die fest verdrahtete `slice(-1)` durch die
+     Engine-Funktion ersetzt. Sie tat dasselbe, solange die Überhand genau eine
+     Karte beträgt — bei einem Testaufbau mit zwei Karten zu viel hätte sie
+     stillschweigend zu wenige geliefert. */
 
   it('beendet den Zug ohne Überhand und aktiviert den nächsten Spieler in der Nachziehphase', () => {
     const zustand = zustandInZugabschluss(0);
@@ -119,7 +121,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
 
   it('wirft selbst gewählte überzählige Handkarten ab und bleibt im Zugabschluss', () => {
     const zustand = zustandMitUeberhand();
-    const abzuwerfendeIds = ueberhandIds(zustand);
+    const abzuwerfendeIds = ueberhandAbwurfKartenIds(zustand);
 
     const aktualisiert = werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: abzuwerfendeIds });
 
@@ -134,7 +136,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
   it('erlaubt Zugende nach korrekt abgeworfener Überhand', () => {
     const zustand = zustandMitUeberhand();
     const nachAbwurf = werfeUeberzaehligeHandkartenAb(zustand, {
-      kartenIds: ueberhandIds(zustand),
+      kartenIds: ueberhandAbwurfKartenIds(zustand),
     });
 
     const beendet = beendeZug(nachAbwurf, { pflichtenErfuellt: true });

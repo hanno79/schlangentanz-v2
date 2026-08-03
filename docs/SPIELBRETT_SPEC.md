@@ -215,10 +215,11 @@ gedrückt ist. Genau das war dem Gegnerprotokoll passiert: `clientHeight: 0` bei
 61 px Inhalt, formal scrollend, praktisch weg. Vier Wächter grün, die Spur des
 Gegnerzugs unsichtbar.
 
-Drei der Wächter laufen zusätzlich **nach acht gespielten Runden**
+Alle vier Inhaltswächter laufen zusätzlich **nach acht gespielten Runden**
 (`tests/layout/brett_dauerlauf.spec.ts`). Das Erstbild allein genügt nicht: Vor
 dem ersten Gegnerzug gibt es kein Protokoll, und die Fehler, um die es geht,
-entstehen mit dem Spielstand.
+entstehen mit dem Spielstand. Nur das Elementbudget bleibt dem Erstbild
+vorbehalten — Karten häufen sich im Verlauf legitim an.
 
 Dazu bei jedem Slice zwei Prüfungen, die zuvor gefehlt haben:
 

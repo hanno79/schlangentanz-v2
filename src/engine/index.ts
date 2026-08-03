@@ -16,6 +16,7 @@ export { pruefeAktion, ermittleLegaleAktionen, ermittleReaktionsAktionen, ermitt
 export { ermittleQuestZugHinweise } from './questZugHinweise';
 export type { QuestZugHinweis } from './questZugHinweise';
 export type { AktionErgebnis, NichtEnumerierteAktionHinweis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion, PflichtAbwurfAktion, SonderkarteSpielenAktion, SchlangenblockadeSpielenAktion, SchlangenblockadeAbwehrenAktion, SchlangenblockadeDurchlassenAktion, VerdopplerSpielenAktion, VerdopplerAbwehrenAktion, VerdopplerDurchlassenAktion, FarbenschutzSpielenAktion, SchlangengrubeAbwehrenAktion, SchlangengrubeDurchlassenAktion, FarbendiebSpielenAktion, FarbendiebAbwehrenAktion, FarbendiebDurchlassenAktion, SchlangenfrassAbwehrenAktion, SchlangenfrassDurchlassenAktion, FarbenfusionSpielenAktion, SchlangenhaeutungSpielenAktion, SchlangenfrassSpielenAktion } from './legalActions';
+export { ueberhandAnzahl, ueberhandAbwurfKartenIds } from './ueberhand';
 export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenhaeutung, spieleSchlangenfrass } from './turnState';
 export { ermittleFarbgruppen } from './colorGroups';
 export type { Farbgruppe } from './colorGroups';

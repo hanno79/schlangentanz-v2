@@ -30,9 +30,10 @@ import {
   beendeAufgabenpruefung,
   beendeZug,
   werfeUeberzaehligeHandkartenAb,
+  ueberhandAnzahl,
+  ueberhandAbwurfKartenIds,
 } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
-import { ueberhandAnzahl, ueberhandAbwurfKartenIds } from '../ueberhand'
 import { baueFixtureZustand } from '../components/waldtanzFixtureLogik'
 import { leseTestPhaseAusUrl, testHooksAktiv } from '../testPhaseHook'
 import { erstelleAktionsLabel } from '../aktionsLabel'
