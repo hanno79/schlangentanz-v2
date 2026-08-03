@@ -240,10 +240,21 @@ erreichbaren bestehenden Server nicht mehr weiter, sondern bricht den Start
 sofort ab, sobald unter der URL schon etwas antwortet („… is already used").
 Der Preis ist ein Neubau je Lauf.
 
-Hier stand zwischenzeitlich die Anweisung, vorher `ss -ltn | grep 4173` zu
-tippen. Das war das falsche Mittel: Dieses Repo ersetzt Merkzettel durch
-Messungen, und ein Merkzettel gegen einen still-grünen Fehler ist der
-schlechteste Fall davon.
+Der Abbruch ist damit die Absicherung — und weil er **beabsichtigt** ist, ist er
+selbst erklärungsbedürftig: Playwright sagt `… is already used` und nennt die
+URL, aber nicht, *wer* dort antwortet. Dafür ist
+
+```bash
+ss -ltn | grep -E '4173|4174'
+```
+
+die Vorprüfung: Sie macht einen verwaisten `vite preview` aus einem früheren Lauf
+sichtbar, bevor man vor dem Abbruch steht und rät. Sie ist ausdrücklich **kein**
+Ersatz für die Mechanik — dieses Repo ersetzt Merkzettel durch Messungen, und
+genau deshalb stand hier zwischenzeitlich die Anweisung, `ss` *statt*
+`reuseExistingServer: false` zu benutzen. Das war das falsche Mittel. Als
+Diagnose neben dem Abbruch ist derselbe Befehl richtig: Er verhindert nichts, er
+beantwortet nur die Frage, die der Abbruch stellt.
 
 Beide Server bauen mit `vite build`, nicht mit `npm run build` — also ohne
 `tsc -b`. Der Typecheck ist ein eigenes Gate und kostete hier gemessen 5,0 s je

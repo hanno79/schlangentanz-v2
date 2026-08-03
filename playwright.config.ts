@@ -88,6 +88,10 @@ export default defineConfig({
   bricht den Start sofort ab, sobald unter der URL schon etwas antwortet
   („… is already used"). Der Preis ist ein Neubau je Lauf, und der ist gegenüber
   einem falsch-grünen Gate geschenkt.
+
+  Der Abbruch nennt die URL, aber nicht, wer dort antwortet. `ss -ltn | grep -E
+  '4173|4174'` ist dafür die Vorprüfung — Diagnose neben der Mechanik, nicht ihr
+  Ersatz (siehe `docs/WORKFLOW.md`).
   */
   /* Beide Server bauen mit `vite build`, nicht mit `npm run build` — also ohne
      `tsc -b`. Der Typecheck ist ein eigenes Gate (`npm run typecheck`) und

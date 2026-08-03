@@ -4073,10 +4073,34 @@ Drei dieser Gegenproben waren zunächst **wertlos**: Ein verwaister
 alten Build messen, statt neu zu bauen. Das Ergebnis ist grün und bescheinigt
 einen Build, den es nicht gibt.
 
-Die erste Reaktion war eine Doku-Zeile („vorher `ss -ltn | grep 4173` tippen").
-Das war das falsche Mittel — dieses Repo ersetzt Merkzettel durch Messungen.
-`reuseExistingServer` steht jetzt auf `false`, auch lokal: Playwright bricht bei
-belegtem Port ab, statt still danebenzumessen. Die Doku-Zeile ist wieder weg.
+Die erste Reaktion war eine Doku-Zeile („vorher `ss -ltn | grep 4173` tippen")
+*anstelle* der Mechanik. Das war das falsche Mittel — dieses Repo ersetzt
+Merkzettel durch Messungen. `reuseExistingServer` steht jetzt auf `false`, auch
+lokal: antwortet unter der URL schon ein Server, bricht Playwright ab, statt ihn
+weiterzubenutzen und still danebenzumessen.
+
+Der `ss`-Befehl steht weiter in `docs/WORKFLOW.md`, aber in anderer Rolle: als
+**Diagnose neben** dem Abbruch, nicht als Absicherung vor ihm. Der Abbruch nennt
+die URL, aber nicht, wer dort antwortet; genau diese Frage beantwortet er.
+
+### Die zweite Ebene derselben Falle
+
+Der Produktions-Auftrag baut jetzt mit `env: { VITE_TEST_HOOKS: '0' }`. Ohne das
+hätte eine Umgebung, in der die Variable auf `1` steht, die Hooks in **beide**
+Builds gebacken — der erste Auftrag hätte dann einen Build geprüft, den es in
+Production nicht gibt. Dasselbe falsch-grüne Ergebnis wie beim verwaisten
+Preview-Server, nur eine Ebene tiefer.
+
+Nachgemessen an den Bundles (`md5` über `assets/index-*.js`):
+
+| Bau | Prüfsumme |
+|---|---|
+| `VITE_TEST_HOOKS=1` in der Umgebung, im Auftrag auf `0` gepinnt | `e454c8634dc4` |
+| ohne jede Variable | `e454c8634dc4` |
+| `VITE_TEST_HOOKS=1` durchgereicht | `b5eada7a1048` |
+
+Der gepinnte Bau ist mit dem sauberen **byte-identisch** und vom Hook-Bau
+verschieden. Die Sperre greift.
 
 ### Was noch dazukam, weil die Reviews darauf zeigten
 
@@ -4122,6 +4146,10 @@ belegtem Port ab, statt still danebenzumessen. Die Doku-Zeile ist wieder weg.
   (`… is already used`); ein belegter, aber stummer Port scheitert später und
   anders, über `vite preview --strictPort`. In `docs/WORKFLOW.md`, `CLAUDE.md` und
   im Kommentar in `playwright.config.ts` richtiggestellt.
+- **Der `ss`-Port-Check ist als Vorprüfung zurück** — in anderer Rolle als beim
+  ersten Mal. Absicherung bleibt der Abbruch; `ss` beantwortet die Frage, die der
+  Abbruch offen lässt („`… is already used`" nennt die URL, nicht den Prozess).
+  Diagnose neben der Mechanik, nicht ihr Ersatz.
 
 ### Bekannte Einschränkungen
 
