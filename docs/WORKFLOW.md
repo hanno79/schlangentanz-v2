@@ -45,6 +45,39 @@ This project starts cleanly in a new local folder, new GitHub repository, and ne
 8. Vercel production gate
 9. Human playability gate
 
+## Direkt auf `main` (ÄNDERUNG 03.08.2026)
+
+Slices gehen **direkt auf `main`**, ohne Branch und ohne Pull Request. Seit das
+GitHub-Repo im Vercel-Projekt verbunden ist, deployt jeder Push sofort — es gibt
+also kein Review-Fenster zwischen Commit und Production.
+
+Das ist eine bewusste Entscheidung, und sie hängt an einer Bedingung: **Die
+Gate-Kette läuft vollständig vor dem Push, nicht danach.**
+
+```bash
+npm test -- --run          # Exit-Code einzeln prüfen, nicht den einer Pipe
+npm run typecheck
+npm run build
+npm run check:test-lines
+npm run check:css-asserts
+npx eslint .
+npx playwright test        # bei allem, was die Oberfläche berührt
+```
+
+Dazu Gate 7 als `codex exec` mit gezielten Fragen zum Diff — der in dieser
+Sitzung zweimal echte Fehler gefunden hat, die alle grünen Tests durchgelassen
+hatten.
+
+**Was dadurch entfällt:** Die PR-Bots (CodeRabbit, Kilo) laufen nur an Pull
+Requests. CodeRabbit hat am 02.08.2026 einen echten Fehler in einer
+GAME_SPEC-Änderung gefunden. Der Verlust ist trotzdem verkraftbar, weil beide
+Bots nie Teil dieses Workflows waren: Gate 7 heißt „Codex adversarial review",
+und Codex läuft lokal.
+
+**Wann trotzdem ein Branch:** wenn ein Slice über mehrere Sitzungen läuft, wenn
+er die Engine-Regeln ändert und der Diff gelesen werden soll, bevor er live geht,
+oder wenn ausdrücklich ein PR gewünscht ist.
+
 ## Test-Hooks (ÄNDERUNG 05.07.2026 C4, überarbeitet 30.07.2026 AP-1)
 
 Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
