@@ -3454,3 +3454,178 @@ generischer Layout-Wächter dagegen.
 - Die offenen Punkte der vorigen Releases (zweite Schlange am unteren Rand,
   Schlangenblockade ohne Einfügeposition, Drag & Drop, unter 1000 px) gelten
   unverändert.
+
+---
+
+## Evidence — 03.08.2026 Fehlerbehandlung und Persistenz (Deploy 51ec3dd)
+
+**Release-Commit:** `51ec3ddfde1a8d6a1e4547f85a87b22dd3d599e9` auf `main`,
+Arbeitsverzeichnis sauber, lokal und `origin/main` identisch.
+
+**Nachtrag.** Dieser Block wurde am selben Tag, aber nach den beiden Deploys
+geschrieben. Die Zahlen sind am Release-Commit **neu gemessen**, nicht aus der
+Arbeitssitzung übernommen — nur so belegen sie den ausgelieferten Stand.
+
+### Umfang gegenüber `7813abb`
+
+Fünf Commits, 22 Dateien, +1222/−101 Zeilen:
+
+| Commit | Inhalt |
+|---|---|
+| `8c17c6b` | Kein Fehlerpfad endet mehr in Stille oder auf einer weißen Seite |
+| `9e24d8f` | Review-Nachtrag: der Fehlerfang log über seinen eigenen Knopf |
+| `97525a9` | Slices gehen direkt auf `main` — mit einer Bedingung (`WORKFLOW.md`) |
+| `7a606ba` | Die Partie überlebt einen Reload |
+| `51ec3dd` | Review-Nachtrag: eine zweite Sackgasse, und falsche Begründungen |
+
+### Gate-Kette am Release-Commit
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 643 Tests in 73 Dateien grün (619/70 zuvor) |
+| `npm run typecheck` | grün |
+| `npm run build` | grün — `index-BTh_vDmj.js` 317,70 kB (gzip 87,69 kB), `index-BrVumYNN.css` 38,37 kB (gzip 7,53 kB) |
+| `npm run test:layout` | 34 Verträge grün, 1 übersprungen (Elementbudget auf `/`) |
+| `npm run check:test-lines` | grün |
+| `npm run check:css-asserts` | grün (1 in 1 Datei, Baseline gehalten) |
+| `npx eslint .` | grün |
+| `npm run smoke:production` | 1/1 bestanden (5,7 s) |
+
+Exit-Codes einzeln geprüft, nicht der einer Pipe.
+
+**Bundle-Zuwachs:** 301,09 → 317,70 kB (gzip 84,22 → 87,69 kB). Ursache ist
+nicht der neue Code, sondern `src/engine/serialization.ts`: 717 Zeilen, die mit
+der Persistenz **erstmals** einen Produktionsaufrufer bekommen und damit ins
+Bundle wandern. +3,5 kB gzip für eine Partie, die einen Reload übersteht.
+
+### Vorsicht beim Nachmessen: der Preview-Server
+
+Vor dem Layout-Lauf hielten drei verwaiste `vite preview`-Prozesse (PPID 1,
+gestartet 12:25 Uhr) den Port 4173. Playwright startet dann **keinen** eigenen
+Server, sondern misst still gegen den `dist/`-Stand von damals. Das ist in dieser
+Sitzung schon einmal passiert und hat einen Lauf gegen einen Build vom 01.08.
+gemessen, ohne dass etwas rot wurde. Vor jedem `test:layout` gehört deshalb ein
+Blick auf `ss -ltn | grep 4173`.
+
+### Production
+
+- **URL:** https://schlangentanz-v2.vercel.app — `/` und `/game` je 200
+- **Auslieferung per Auto-Deploy** aus der Git-Integration; kein CLI-Deploy.
+- **Bundle-Abgleich:** Production liefert `index-BTh_vDmj.js` und
+  `index-BrVumYNN.css` — identisch mit dem lokalen Release-Build. Der
+  Hash-Vergleich ist der Beleg, nicht die Deployment-Meldung.
+- **Im ausgelieferten JS nachgewiesen:** `schlangentanz-v2:partie` (der
+  Speicherschlüssel), „Das Spielbrett konnte nicht gezeichnet werden" und
+  „Zurück zur Lobby" (der Fehlerfang). Beide Slices sind wirklich live, nicht
+  nur gebaut.
+
+### Reload-Prüfung gegen Production
+
+Ein echter Reload lässt sich in der Suite nicht auslösen, deshalb einmalig mit
+Playwright direkt gegen Production geprüft (1280×900):
+
+| Prüfung | Ergebnis |
+|---|---|
+| Nach dem Laden von `/game` liegt ein Spielstand im Speicher | OK |
+| Der Eintrag ist lesbares JSON | OK |
+| Nach dem Reload dieselbe Hand — keine neue Partie | OK |
+| Die Schlangen sind unverändert | OK |
+| Das Brett ist da: kein Fehlerfang, keine Lobby | OK |
+| Kaputter Eintrag → keine Fehlermeldung | OK |
+| Kaputter Eintrag → spielbare frische Partie | OK |
+| Der kaputte Eintrag ist ersetzt, nicht liegen geblieben | OK |
+| Keine Laufzeitfehler in der Konsole | OK |
+
+**Was dieser Lauf nicht zeigt:** Er hat keine Karte gespielt
+(`gespielteKarten=0`). Die Identität der Partie ist über die Handkarten-IDs
+belegt — bei einer frischen Partie wären es andere —, nicht über einen
+gespielten Zug. Der Fall „zwei Züge spielen, dann neu laden" wurde lokal von
+Hand geprüft: dieselbe Partie mit beiden Schlangen und identischem Kopf.
+
+### Was dieser Release enthält
+
+**Fehlerbehandlung.** Die Engine wirft an rund 220 Stellen; die UI-Schicht hatte
+davor ein einziges `try/catch`, und das lag im Gegnerzug. Zwei Pfade endeten
+still: Ein Fehler im `onClick` ließ den Knopf kommentarlos nichts tun **und**
+nahm dem Spieler die Kartenauswahl, weil sie vor dem Engine-Aufruf zurückgesetzt
+wurde; ein Fehler beim Zeichnen (`Spielbrett` ruft die Wertung im Render) tötete
+den React-Baum und hinterließ eine weiße Seite. Jetzt läuft der Engine-Aufruf vor
+dem Zurücksetzen, die deutsche Meldung erscheint (`GAME_SPEC.md` Abschnitt 6),
+und `src/components/Fehlerfang.tsx` fängt den Render-Fall ab. Der Fehlerfang
+umschließt bewusst nur Brett und Sieger-Party, nicht die ganze App — sonst wäre
+die Lobby als Ausweg mit betroffen.
+
+**Persistenz.** `src/spielstand.ts` schreibt den Zustand nach jeder Änderung nach
+`localStorage` und liest ihn beim Start zurück. Kein Knopf, keine Region: nach
+Regel 7 der `SPIELBRETT_SPEC.md` gehören nur Klicks aufs Brett, die eine
+Entscheidung verlangen. Details in `docs/WORKFLOW.md`, Abschnitt „Speichern und
+Laden".
+
+### Zwei Sackgassen — die zweite fand erst der Review
+
+Persistenz kann eine Falle bauen, die schlimmer ist als das Problem, das sie
+löst: Ein Zustand, der gespeichert wird und danach wirft, kommt nach **jedem**
+Reload zurück.
+
+- **Sackgasse 1 (beim Bauen gesehen):** Der Zustand wirft beim Zeichnen. Der
+  Fehlerfang greift, und der Weg zurück zur Lobby verwirft den Spielstand.
+- **Sackgasse 2 (Codex-Review, `51ec3dd`):** Der Zustand besteht die
+  Deserialisierung und wirft erst im **Gegnerzug**. Der Fehlerfang hilft nicht,
+  weil beim Zeichnen nichts wirft. Die KI ist am Zug, der Mensch hat keine
+  Aktion, jeder Reload lädt denselben Zustand — **ohne DevTools käme der Spieler
+  nie wieder hinein.** Jetzt verwirft auch dieser Pfad den Spielstand
+  (`handleKiZugVorspulen`, `src/hooks/usePartie.ts`).
+
+### Beim Bauen gemessen, nicht vermutet
+
+- **`serialisiere` lässt mehr durch als `deserialisiere` prüft.** Ein Zustand mit
+  Farbenfusion-Karte ohne `farbenfusionen`-Eintrag wird geschrieben, beim Lesen
+  aber abgelehnt — und dabei gelöscht. Die Persistenz-Validierung ist **strenger
+  als die Wertung**; ein Teil der möglichen Fallen räumt sich selbst auf.
+  Ausgeschlossen sind sie nicht: `scoring.ts` hat Laufzeitpfade, die keine
+  Strukturprüfung sieht.
+- **Genau das machte den ersten Schleifen-Test wertlos.** Er prüfte über
+  `ladeSpielstand`, und das heilt sich selbst — die Antwort ist immer `null`, ob
+  aufgeräumt wird oder nicht. Mit ausgebautem Verwerfen blieb er grün. Geprüft
+  wird jetzt am rohen Eintrag über den exportierten `SPIELSTAND_SCHLUESSEL`.
+
+Beides steht als Kommentar an der jeweiligen Stelle im Code, damit die nächste
+Änderung nicht wieder darauf hereinfällt.
+
+### Was die Reviews sonst trafen: meine eigenen Begründungen
+
+Wie schon im Aufräum-Release fanden `/simplify` und Codex weniger kaputten Code
+als **falsche Aussagen über den Code** — Sätze, die alle grünen Tests passieren:
+
+- `src/test/brettTest.ts` behauptete, `partie()` stehe „in vier Fassungen da, und
+  das zu Recht". Nachgezählt waren vier **byte-gleich**.
+- Dieselbe Datei schrieb, keine Testdatei brauche noch ein eigenes `afterEach`
+  für die Route — fünf hatten es noch, weil nur die gerade bearbeitete Datei
+  bereinigt war.
+- `src/spielstand.ts` hatte drei `try/catch` für denselben Sturz; jetzt eines
+  (`mitSpeicher`), plus ein zweites, das als einziges eine eigene Reaktion hat.
+- Der Fehlerfang-Knopf hieß `onNeuesSpiel` und versprach damit etwas, das der
+  Handler nicht tat; er heißt jetzt `onZurueckZurLobby`.
+
+### Zwei Nebenfunde, erst durch die Persistenz sichtbar
+
+- Der Rückfall in `usePartie` benutzte die generische Factory und erzeugte
+  „Spieler 1" statt „Spieler".
+- `src/test/setup.ts` leert jetzt auch `localStorage` — sonst lädt der nächste
+  Test die Partie des vorigen. Genau die Sorte Verschmutzung, gegen die diese
+  Datei schon einmal gebaut wurde.
+
+### Bekannte Einschränkungen
+
+- **Kein Error-Tracking:** keine Drains, kein `@vercel/analytics`, kein Sentry.
+  Der Fehlerfang zeigt dem Spieler jetzt eine Meldung — erfahren tut davon
+  niemand. Laufzeitfehler sind weiterhin nur über `vercel logs` sichtbar.
+- **Die Vercel-CLI ist veraltet** (54.6.1 gegenüber 58.4.4).
+- **`docs/GAME_SPEC.md` ist weiterhin nicht gesperrt**, obwohl `CLAUDE.md`
+  Schritt 1 das vor der Spielimplementierung verlangt. Der Widerspruch steht seit
+  Monaten und blockiert unter anderem die Einfügeposition der Schlangenblockade.
+- **Kilo Code Review** stand am Branch-Head des Vor-Releases auf rot mit einem
+  Bot-Fehler (`Assistant request was invalid`) und war nicht neu auslösbar.
+- Die offenen Punkte der vorigen Releases (zweite Schlange am unteren Rand,
+  Schlangenblockade ohne Einfügeposition, Drag & Drop, unter 1000 px) gelten
+  unverändert.
