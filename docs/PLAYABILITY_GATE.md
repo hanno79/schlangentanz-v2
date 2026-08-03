@@ -3666,3 +3666,141 @@ als **falsche Aussagen über den Code** — Sätze, die alle grünen Tests passi
 - Die offenen Punkte der vorigen Releases (zweite Schlange am unteren Rand,
   Schlangenblockade ohne Einfügeposition, Drag & Drop, unter 1000 px) gelten
   unverändert.
+
+---
+
+## Evidence — 03.08.2026 GAME_SPEC gesperrt und R8.4a nachgezogen (Deploy e31d84b)
+
+**Release-Commit:** `e31d84b3bfbac15318774cb90fa0c5bf627d1ac0` auf `main`,
+Arbeitsverzeichnis sauber, lokal und `origin/main` identisch.
+
+### Der Anlass, und warum er eine Regel zutage förderte
+
+`CLAUDE.md` Schritt 1 verlangt die Sperre der Spec vor der Implementierung. Sie
+war seit Monaten überfällig und **nicht nachholbar**, weil Abschnitt 11 offene
+Regelfragen behauptete und keine einzige benannte.
+
+Vor dem Sperren stand deshalb der vollständige Abgleich von R1–R8 gegen
+`https://schlangentanz.ch/rules`. Er hat gefunden, was zehn Monate niemand
+gesucht hatte: **Eine Basisspiel-Wertungsregel fehlte in Spec und Engine.**
+
+### Wie die Normquelle gelesen wurde — und warum das zählt
+
+Die Seite ist eine SPA; der Regeltext liegt im JS-Bundle. Ein erster Versuch über
+`WebFetch` lieferte eine **Modellzusammenfassung**, die den Regelsatz sinngemäß
+richtig, aber die Gleichstandsregel gar nicht wiedergab. Geprüft wurde deshalb am
+Rohtext von `https://schlangentanz.ch/assets/index-DgtW5UbA.js`:
+
+> „Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne
+> Sonderkarten!) erhält **5 Bonuspunkte**. Bei Gleichstand erhalten alle
+> beteiligten Spieler die vollen 5 Punkte."
+
+Der Unterschied war nicht kosmetisch: Der Plan hatte die Gleichstandsregel
+vorsorglich als eigene *Auslegung* geführt. Sie steht wörtlich in der Quelle.
+Übrig bleibt als einzige Auslegung der Nullfall (keine Mindestlänge genannt →
+bei längster Kette 0 bekommt niemand etwas).
+
+**Basis oder Erweiterung entschied das Markup, nicht der Eindruck:** Im
+Wertungsabschnitt tragen „Vielfaltbonus" und „Aufgabenkarten" je ein
+`Erweiterung`-Etikett und einen eigenen Hinweiskasten. „Längste Farbkette" steht
+als schlichtes `<li>` **ohne** beides. Daran hängt, warum die eine Regel
+eingebaut und der Vielfaltbonus stattdessen ausgeschlossen wurde (R1.2a).
+
+### Gate-Kette am Release-Commit
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 656 Tests in 74 Dateien grün |
+| `npm run typecheck` | grün |
+| `npm run build` | grün — `index-BKI8CYiX.js` 318,12 kB (gzip 87,79 kB), `index-B3AYEI3E.css` 38,40 kB (gzip 7,54 kB) |
+| `npm run test:layout` | 34 Verträge grün, 1 übersprungen |
+| `npm run check:test-lines` | grün |
+| `npm run check:css-asserts` | grün (1 in 1 Datei, Baseline gehalten) |
+| `npx eslint .` | grün |
+| `npm run smoke:production` | 1/1 bestanden (5,4 s) |
+
+Exit-Codes einzeln geprüft, nicht der einer Pipe.
+
+**Zur Testzahl: 656 statt der vorherigen 658, und das ist Absicht.** Zwei Tests
+prüften ausschließlich interne Felder (`kettenbonus.laenge`, `.farbe`), die kein
+Produktionsaufrufer liest und die mit dem Aufräumen entfallen sind; ein neuer ist
+dazugekommen. Zehn neue Regeltests stehen in `kettenbonus.test.ts`. Alle
+Punktzahlen in den bestehenden Tests sind **einzeln nachgerechnet**, nicht auf
+den neuen Istwert gesetzt.
+
+**Bundle:** 317,70 → 318,12 kB (gzip 87,69 → 87,79). +0,10 kB gzip für eine
+Wertungsregel — der Kettenbonus benutzt die vorhandene Farbgruppen-Primitive
+statt eigenen Code.
+
+### Der Austausch des Kettenscanners, differenziell belegt
+
+Die erste Fassung hatte einen eigenen Scanner. Das `/simplify`-Review zeigte, dass
+`ermittleFarbgruppen` (`src/engine/colorGroups.ts`) dieselbe Frage schon
+beantwortet: Sie arbeitet auf der **rohen** Schlange und bricht bei jeder
+Sonderkarte; die Regenbogen-Wildcard steckt allein im Aufrufer
+`transformiereRegenbogenschlangen`. `pruefeLilaRiese` in `aufgabenPruefung.ts`
+stellt dieselbe Kettenfrage seit jeher in einer Zeile.
+
+Die Primitive hat jetzt einen Parameter `mindestLaenge` (Vorgabe 3, alle sieben
+bestehenden Aufrufer unverändert); R8.4a ruft mit `1`, weil die Regel keine
+Mindestlänge kennt.
+
+**Belegt statt behauptet:** Eine Wegwerf-Differenzprüfung hat alten Scanner und
+neue Fassung über **20 000 Zufallsschlangen** (0–13 Karten, 25 % Sonderkarten,
+gesäter Zufall) verglichen — identische Kettenlängen in allen Fällen.
+
+### Production
+
+- **URL:** https://schlangentanz-v2.vercel.app — `/` und `/game` je 200
+- **Auslieferung per Auto-Deploy** aus der Git-Integration.
+- **Bundle-Abgleich:** Production liefert `index-BKI8CYiX.js` **und**
+  `index-B3AYEI3E.css` — beide identisch mit dem lokalen Release-Build.
+- **Im ausgelieferten Code nachgewiesen:** die Beschriftung „Längste Farbkette",
+  die Felder `kettenbonus` und `grundPunkte`, sowie die Kontrastkorrektur als
+  `sieger-party__stats dt{color:var(--st-color-on-surface);font-weight:900}`.
+
+### Sichtprüfung der Punktetafel (1280×900, `npm run dev`)
+
+Ein Endstand wurde aus **echten Deckkarten** gebaut (Viererkette Grün gegen eine
+Dreierkette Blau), über den Spielstand-Schlüssel geladen und gemessen:
+
+| | Wert |
+|---|---|
+| Gesamtpunkte | 17 |
+| Farbgruppen | 12 |
+| Aufgaben | 0 |
+| Längste Farbkette | **5** |
+
+12 + 0 + 5 = 17 — die Tafel geht auf. Der Gegner mit der Dreierkette bekommt
+nichts.
+
+**Nebenbefund beim Bauen des Fixtures, kein Produktfehler:** Ein erster Versuch
+trug eine Aufgabenkarte als erfüllt ein, die noch im Stapel lag. `deserialisiere`
+lehnte den Zustand mit „Doppelte ID aufgabe-13" ab. Die Validierung tut genau,
+was sie soll.
+
+### Codex-Review (Gate 7)
+
+Ein Befund, Schweregrad LOW — und wieder eine **Begründung** von mir statt eines
+Codefehlers: Mein globales `sed` für die Umbenennung
+`berechneSpielerGesamtPunkte` → `berechneSpielerGrundpunkte` hatte auch die
+historische Notiz *über* diese Umbenennung mitgeändert. Der Satz behauptete
+danach, die Funktion habe vorher schon so geheißen. Korrigiert; die alten Namen
+stehen dort jetzt in Anführungszeichen statt in Backticks, damit das nicht
+wieder passiert.
+
+Zu allen sieben gezielt gestellten Fragen (Kettensemantik, Wildcard-Pfade,
+Zwei-Ebenen-Falle, Gleichstand/Nullfall, Serialisierung alter Spielstände,
+verzögertes Mounten der Sieger-Party, Spec-gegen-Code) kein weiterer belegbarer
+Befund. Ausdrücklich geprüft und in Ordnung: Alte gespeicherte Stände mit dem
+entfernten Feld `vielfaltbonusIgnorieren` bleiben ladbar, und der Kettenbonus
+verrät keine geheime Aufgabe — er ist aus offenen Schlangen nachzählbar.
+
+### Bekannte Einschränkungen
+
+- **Kein Error-Tracking** (keine Drains, kein Sentry, kein `@vercel/analytics`).
+- **Die Vercel-CLI ist veraltet** (54.6.1 gegenüber 58.4.4).
+- **Die Sieger-Party bleibt von keinem Layout-Vertrag gedeckt** — Begründung
+  oben unter „Offene Punkte": Der Bildschirm ist im Lauf gegen `vite preview`
+  nicht erreichbar, weil dort die Test-Hooks aus sind.
+- Die offenen Punkte der vorigen Releases gelten unverändert.
