@@ -234,16 +234,36 @@ async function messeInhaltsverluste(
         continue
       }
 
-      /* Eine Zeilenhöhe ist die Grenze zu Regel 10: Wer eine gescrollte Spalte
-         um tausend Pixel kürzt, sieht immer noch Dutzende Zeilen und ahnt, dass
-         es weitergeht. Wer nicht einmal eine ganze Zeile sieht, hat keinen
-         Anhaltspunkt. `line-height: normal` liefert keinen Pixelwert — dann tut
-         es die Schriftgröße mal 1,2. */
       if (zugaenglicherText(element) === '') continue
-      const zeilenhoehe =
-        Number.parseFloat(stil.lineHeight) || Number.parseFloat(stil.fontSize) * 1.2
-      const zuFlach = ueberhoch && element.clientHeight < zeilenhoehe
-      const zuSchmal = ueberbreit && element.clientWidth < zeilenhoehe
+
+      /* ÄNDERUNG [02.08.2026]: Nur melden, wenn das Überstehende auch wirklich
+         weg ist. Bei `overflow: visible` fließt der Inhalt sichtbar aus der Box
+         heraus — die Box ist dann zwar winzig, gelesen werden kann trotzdem
+         alles. Ohne diese Prüfung meldete der Wächter jedes randlose Element mit
+         `height: 0`, das seinen Text darunter weiterzeichnet (Codex-Review,
+         Gate 7). Der `hidden|clip`-Fall ist oben schon abgehandelt; hier bleibt
+         `auto`/`scroll`/`overlay` — der Inhalt ist zurückgehalten und nur über
+         eine Scrollleiste erreichbar, die es bei dieser Boxgröße praktisch nicht
+         gibt. */
+      const haeltZurueck = (achse: string) => achse !== 'visible'
+
+      /* Die Grenze zu Regel 10, je Achse mit dem passenden Maß:
+
+         Vertikal ist es die Zeilenhöhe. Wer eine gescrollte Spalte um tausend
+         Pixel kürzt, sieht immer noch Dutzende Zeilen und ahnt, dass es
+         weitergeht; wer nicht einmal eine ganze Zeile sieht, hat keinen
+         Anhaltspunkt. `line-height: normal` liefert keinen Pixelwert — dann tut
+         es die Schriftgröße mal 1,2.
+
+         Horizontal wäre die Zeilenhöhe das falsche Maß: Sie sagt nichts über
+         Breite. Gemessen wird deshalb an der Schriftgröße — eine Box schmaler
+         als ein Geviert trägt kein vollständiges Zeichen mehr. */
+      const schriftgroesse = Number.parseFloat(stil.fontSize) || 16
+      const zeilenhoehe = Number.parseFloat(stil.lineHeight) || schriftgroesse * 1.2
+      const zuFlach =
+        ueberhoch && haeltZurueck(stil.overflowY) && element.clientHeight < zeilenhoehe
+      const zuSchmal =
+        ueberbreit && haeltZurueck(stil.overflowX) && element.clientWidth < schriftgroesse
       if (!zuFlach && !zuSchmal) continue
 
       zusammengedrueckt.push({
@@ -252,7 +272,7 @@ async function messeInhaltsverluste(
           ? `sichtbar ${element.clientHeight} px hoch von ${element.scrollHeight} px Inhalt ` +
             `(unter einer Zeile: ${Math.round(zeilenhoehe)} px)`
           : `sichtbar ${element.clientWidth} px breit von ${element.scrollWidth} px Inhalt ` +
-            `(unter einer Zeile: ${Math.round(zeilenhoehe)} px)`,
+            `(unter einem Zeichen: ${Math.round(schriftgroesse)} px)`,
       })
     }
 
@@ -286,9 +306,16 @@ export async function findeAbgeschnittenes(page: Page): Promise<Befund[]> {
  * Die häufigste Ursache ist ein CSS-Klassiker: Ein Flex-Kind mit `overflow`
  * ungleich `visible` bekommt als automatische Mindestgröße 0 statt seiner
  * Inhaltsgröße und fällt ohne `flex-shrink: 0` zusammen, sobald ein
- * Geschwisterelement Platz braucht. Der Wächter fragt aber nicht danach: Er
- * misst das Ergebnis, nicht den Weg dorthin — ein `min-height: 0` auf einem
- * Grid-Kind erzeugt denselben Verlust und wird genauso gefunden.
+ * Geschwisterelement Platz braucht. Nach dem *Weg* dorthin fragt der Wächter
+ * nicht — ein `min-height: 0` auf einem Grid-Kind erzeugt denselben Verlust und
+ * wird genauso gefunden.
+ *
+ * Zwei Bedingungen muss ein Befund erfüllen, und beide zählen:
+ *
+ * 1. Die Box hält den überstehenden Inhalt **zurück** (`overflow` ungleich
+ *    `visible`). Sonst fließt er sichtbar heraus und ist gar nicht verloren.
+ * 2. Sichtbar bleibt weniger als eine Zeile (vertikal) beziehungsweise weniger
+ *    als ein Zeichen (horizontal).
  */
 export async function findeZusammengedruecktes(page: Page): Promise<Befund[]> {
   return (await messeInhaltsverluste(page)).zusammengedrueckt

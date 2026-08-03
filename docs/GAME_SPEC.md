@@ -545,9 +545,9 @@ Diese Punkte sind entschieden und **keine** offenen Regelfragen. Sie stehen hier
 weil sie beim Lesen des Codes wie Lücken aussehen:
 
 - **R3.5a — der Zustand `blockiert` wird von keiner Karte erzeugt** (02.08.2026).
-  Die Schlangenblockade unterbricht die Farbgruppe, sie sperrt die Schlange
-  nicht. Eine Änderung wäre eine Regeländerung und braucht eine bestätigte
-  Normquelle.
+  Die Schlangenblockade hängt ihre Karte ans Ende der Zielschlange; sie sperrt
+  die Schlange nicht und zerreißt auch keine bestehende Farbgruppe. Eine
+  Änderung wäre eine Regeländerung und braucht eine bestätigte Normquelle.
 - **R6.2a — „Lila Riese“ und die Historie-Aufgaben.** Zwei Kartentexte sind am
   Tisch eindeutig, digital aber auslegungsbedürftig; die getroffene Auslegung
   steht in R6.2a.
