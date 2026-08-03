@@ -3391,3 +3391,66 @@ zieht sie nach und niemand liest den Diff.
 Der Gewinn wäre kosmetisch, der Einsatz die Verlässlichkeit eines
 Nachweisarchivs. Kein guter Tausch. Wer die tragenden Dokumente sucht: Sie sind
 die, die nicht mit `release_status_` oder `slice_plan_` anfangen.
+
+---
+
+## Evidence — 03.08.2026 Aufräumen nach dem Onboarding (Deploy 7813abb)
+
+**Release-Commit:** `7813abb527a01e1ba75988a8155f607482331485` auf `main`,
+Arbeitsverzeichnis sauber, lokal und `origin/main` identisch.
+
+### Gate-Kette am Release-Commit
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 619 Tests in 70 Dateien grün |
+| `npm run typecheck` | grün |
+| `npm run build` | grün — `index-C_c8REeK.js` 301,09 kB (gzip 84,22 kB), `index-Bq4MrF6b.css` 37,32 kB |
+| `npm run test:layout` | 34 Verträge grün, 1 übersprungen (Elementbudget auf `/`) |
+| `npm run check:test-lines` | grün |
+| `npm run check:css-asserts` | grün (1 in 1 Datei, Baseline gehalten) |
+| `npx eslint .` | grün |
+| `npm run smoke:production` | 1/1 bestanden (5,9 s) |
+
+Exit-Codes einzeln geprüft, nicht der einer Pipe.
+
+### Production
+
+- **URL:** https://schlangentanz-v2.vercel.app — `/` und `/game` je 200
+- **Deployment:** `schlangentanz-v2-pnidgsgok`, Status Ready, erzeugt 03.08.2026 10:59:53 (MESZ)
+- **Bundle-Abgleich:** Production liefert `index-C_c8REeK.js` und `index-Bq4MrF6b.css` —
+  identisch mit dem lokalen Release-Build. Das ist der Beleg, nicht die
+  Deployment-Meldung: Ein Bundle-Hash-Vergleich sagt, was tatsächlich ausgeliefert
+  wird.
+- **Der Protokoll-Fix ist live**, verifiziert am ausgelieferten CSS:
+  `brett-gegner__protokoll{…;flex-shrink:0;…}`.
+
+### Sichtprüfung mit echten Klicks gegen Production
+
+Lobby → Waldparty starten → Handkarte wählen → Startkreis → Zug beenden →
+Gegnerzug abgewartet. Beide Protokollzeilen vollständig sichtbar
+(„KI Gegner 1: … / KI Gegner 2: …"), Gegnerplaketten darunter nicht verdrängt,
+keine Browser- oder Konsolenfehler.
+
+### Was dieser Release enthält
+
+Zehn Aufräum-Slices plus zwei Review-Nachträge: korrigierte Smoke- und
+Layout-Zahlen in `WORKFLOW.md`, vier Module und fünf Exporte ohne Aufrufer
+entfernt, die Überhand-Rechnung von vier Kopien auf eine Quelle in
+`engine/ueberhand.ts` zusammengeführt, die Spec-Auslegung R3.5a zum Zustand
+`blockiert` samt Einfügeposition der Schlangenblockade, ein behobener
+Anzeigefehler (Gegnerprotokoll ab dem zweiten Zug unsichtbar) und ein fünfter
+generischer Layout-Wächter dagegen.
+
+### Bekannte Einschränkungen
+
+- **Kilo Code Review** steht am Branch-Head auf rot mit
+  `Review failed: Assistant request was invalid` — ein Fehler des Bots, kein
+  Befund am Code. Ein Re-Run war über die GitHub-API nicht möglich (404 auf
+  beiden Rerequest-Endpunkten, kein offener PR mehr). CodeRabbit war grün.
+- **Kein Error-Tracking:** keine Drains, kein `@vercel/analytics`, kein Sentry.
+  Laufzeitfehler in Production sind nur über `vercel logs` sichtbar.
+- **Die Vercel-CLI ist veraltet** (54.6.1 gegenüber 58.4.4).
+- Die offenen Punkte der vorigen Releases (zweite Schlange am unteren Rand,
+  Schlangenblockade ohne Einfügeposition, Drag & Drop, unter 1000 px) gelten
+  unverändert.
