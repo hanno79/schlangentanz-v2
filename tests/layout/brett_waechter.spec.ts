@@ -30,14 +30,8 @@ färben. Sobald das neue Brett auf `/game` liegt (Paket G-8), meldet Playwright
 */
 
 import { expect, test } from '@playwright/test'
-import {
-  befundListe,
-  findeAbgeschnittenes,
-  findeAusserhalbDesBildes,
-  findeVerdeckteBedienelemente,
-  findeZusammengedruecktes,
-  zaehleSichtbareElemente,
-} from './messung'
+import { zaehleSichtbareElemente } from './messung'
+import { brettIstInert, waechterVertraege } from './waechter'
 
 /** Regel 1 und 3 aus der Spezifikation: sieben Regionen, eine Rahmenebene. */
 const ELEMENT_BUDGET = 90
@@ -53,42 +47,19 @@ function waechterFuer(route: string, markiere: boolean, optionen: { ohneBudget?:
       await page.goto(route, { waitUntil: 'networkidle' })
     })
 
-    pruefe('kein sichtbares Element schneidet seinen Inhalt ab', async ({ page }) => {
-      const befunde = await findeAbgeschnittenes(page)
-      expect(
-        befunde,
-        `${befunde.length} Element(e) schneiden ihren Inhalt ab:${befundListe(befunde)}`,
-      ).toEqual([])
-    })
+    waechterVertraege(pruefe)
 
-    pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }) => {
-      const befunde = await findeAusserhalbDesBildes(page)
+    /* ÄNDERUNG [03.08.2026, Punkt 1b]: Die Wächter überspringen seit heute
+       `inert`-Teilbäume. Damit hinge dieser ganze Vertrag daran, dass das Brett
+       nicht versehentlich stillgelegt ist — wäre es das, meldeten zwei Wächter
+       leere Listen und blieben grün, ohne noch etwas zu messen. Deshalb steht
+       die Erwartung hier ausdrücklich. Das Gegenstück prüft
+       `sieger_party.hooks.spec.ts`: Dort *muss* das Brett `inert` sein. */
+    pruefe('das Brett ist bedienbar und nicht stillgelegt', async ({ page }) => {
       expect(
-        befunde,
-        `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`,
-      ).toEqual([])
-    })
-
-    pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }) => {
-      const befunde = await findeVerdeckteBedienelemente(page)
-      expect(
-        befunde,
-        `${befunde.length} Bedienelement(e) vollständig verdeckt:${befundListe(befunde)}`,
-      ).toEqual([])
-    })
-
-    /* ÄNDERUNG [02.08.2026]: Fünfter Wächter — siehe `findeZusammengedruecktes`.
-       Dass er im Erstbild nichts findet, ist sein Normalzustand und kein Grund,
-       ihn wegzulassen: Die anderen vier finden dort auch nichts, solange das
-       Brett in Ordnung ist. Er läuft zusätzlich nach acht Runden
-       (`brett_dauerlauf.spec.ts`), weil der Fehler, für den es ihn gibt, erst im
-       Spielverlauf entstand. */
-    pruefe('kein Textinhalt ist unter eine Zeilenhöhe gedrückt', async ({ page }) => {
-      const befunde = await findeZusammengedruecktes(page)
-      expect(
-        befunde,
-        `${befunde.length} Element(e) zeigen nicht einmal eine ganze Zeile:${befundListe(befunde)}`,
-      ).toEqual([])
+        await brettIstInert(page),
+        'Das Brett ist `inert` — die Wächter messen dann nichts mehr.',
+      ).toBe(false)
     })
 
     const budgetPruefe = optionen.ohneBudget ? test.skip : pruefe

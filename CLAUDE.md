@@ -42,7 +42,13 @@ Layout-Verträge werden **gemessen, nicht im CSS-Quelltext gelesen**.
 
 ## Commands
 - `npm test -- --run`
-- `npm run test:layout` — Playwright-Layout-Verträge gegen `vite preview`
+- `npm run test:layout` — Playwright-Layout-Verträge gegen `vite preview`.
+  Zwei Projekte: `chromium` (Port 4173, Produktionsbuild) und
+  `chromium-testhooks` (Port 4174, Build mit `VITE_TEST_HOOKS=1`) für Verträge,
+  die den `?phase=`-Hook brauchen (`*.hooks.spec.ts`). Siehe `docs/WORKFLOW.md`.
+  Beide Server laufen mit `reuseExistingServer: false`: antwortet unter der URL
+  schon ein Server, bricht Playwright ab, statt ihn weiterzubenutzen und still
+  einen alten Build zu messen.
 - `npm run typecheck`
 - `npm run build`
 - `npm run check:test-lines`

@@ -209,6 +209,60 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 - Der Lauf ist **nicht** Teil von `npm test`: er braucht einen Production-Build und
   ist um Größenordnungen langsamer.
 
+### Zwei Aufträge (ÄNDERUNG 03.08.2026, Punkt 1b)
+
+`npm run test:layout` fährt seither **zwei** Playwright-Projekte:
+
+| Projekt | Port | Verzeichnis | Build | Verträge |
+|---|---|---|---|---|
+| `chromium` | 4173 | `dist` | `vite build` | alle außer `*.hooks.spec.ts` |
+| `chromium-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (`VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
+
+**Warum.** Die Sieger-Party ist nur über `/game?phase=spielende` erreichbar, und
+dieser Hook ist im Produktionsbuild aus. Der Bildschirm war deshalb von keinem
+Vertrag gedeckt — und genau dort saßen vier Fehler, alle alt, alle an einem Tag
+gefunden, als ihn zum ersten Mal jemand ansah. Ein Vertrag, den man nur dadurch
+bekommt, dass man `VITE_TEST_HOOKS` in Production setzt, wäre die Rücknahme von
+AP-1; ein zweiter Auftrag ist es nicht.
+
+Die beiden Builds unterscheiden sich um **genau eine Flagge**. Die 34
+bestehenden Verträge bleiben am Produktionsbuild: Sie messen Bildschirme, die
+ein Spieler ohne Hook erreicht, und sollen weiter genau den Build messen, der
+ausgeliefert wird.
+
+**Der verwaiste Preview-Server ist mechanisch ausgeschlossen**, nicht per
+Merkzettel. `reuseExistingServer` steht auf `false` — auch lokal, wo vorher
+`!process.env.CI` stand. Lief noch ein `vite preview`, baute Playwright nicht
+neu und maß still den alten Build; das Ergebnis ist grün und bescheinigt einen
+Build, den es nicht gibt. Beim Bauen dieses Slices sind daran drei Gegenproben
+wertlos geworden, bevor es auffiel. Mit `false` benutzt Playwright einen
+erreichbaren bestehenden Server nicht mehr weiter, sondern bricht den Start
+sofort ab, sobald unter der URL schon etwas antwortet („… is already used").
+Der Preis ist ein Neubau je Lauf.
+
+Hier stand zwischenzeitlich die Anweisung, vorher `ss -ltn | grep 4173` zu
+tippen. Das war das falsche Mittel: Dieses Repo ersetzt Merkzettel durch
+Messungen, und ein Merkzettel gegen einen still-grünen Fehler ist der
+schlechteste Fall davon.
+
+Beide Server bauen mit `vite build`, nicht mit `npm run build` — also ohne
+`tsc -b`. Der Typecheck ist ein eigenes Gate und kostete hier gemessen 5,0 s je
+Server, während der Bau selbst 0,17 s braucht. Playwright startet **alle**
+`webServer`-Einträge, auch bei `--project=…`.
+
+**Ein hook-abhängiger Vertrag heißt `*.hooks.spec.ts`** — die Zuordnung läuft
+allein über den Dateinamen. `src/layout_hooks_namensgebung.test.ts` hält beide
+Richtungen fest: kein Vertrag mit Hook-Bedarf ohne Suffix, kein Suffix ohne
+Hook-Bedarf. Die zweite Richtung ist die wichtigere, weil sie sonst still wäre —
+ein falsch benannter Vertrag misst für immer `dist-testhooks` und bleibt grün,
+obwohl sein Urteil den ausgelieferten Build nicht mehr betrifft.
+
+**Ein hook-abhängiger Vertrag braucht eine Vorbedingung im `beforeEach`**, die
+prüft, dass der Bildschirm überhaupt da ist. Ohne sie messen die generischen
+Wächter die Seite *ohne* den Bildschirm und bleiben grün — gemessen: fünf von
+acht Tests blieben gegen den Produktionsbuild grün, obwohl es dort gar keine
+Sieger-Party gibt. Mit der Vorbedingung fallen acht von acht.
+
 ### Abbau des Altbestands
 
 `npm run check:css-asserts` zählt die verbliebenen CSS-Quelltext-Assertions und

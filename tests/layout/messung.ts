@@ -375,6 +375,11 @@ async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; 
 
     for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"], input, select'))) {
       if (!(element as HTMLElement).checkVisibility()) continue
+      /* ÄNDERUNG [03.08.2026, Punkt 1b]: `inert` ist kein Bedienelement.
+         Dieselbe Fehlmeldung wie bei den weggescrollten Einträgen unten — der
+         Wächter zeigte etwas an, von dem kein Spieler etwas hat. Warum das Brett
+         ab `Spielende` `inert` ist, steht in `src/spielbrett/Spielbrett.tsx`. */
+      if (element.closest('[inert]') !== null) continue
       const box = element.getBoundingClientRect()
       if (box.width < 2 || box.height < 2) continue
       if (scrollenderVorfahr(element) !== null && weggescrollt(element)) continue
