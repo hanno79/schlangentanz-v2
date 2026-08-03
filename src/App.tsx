@@ -42,18 +42,19 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
   )
   const partie = usePartie({ initialZustand, initialBrettschrittEintraege })
 
-  function starteNeuesSpiel(kiGegner: KiGegnerAnzahl) {
-    partie.handleNeuesLobbySpiel(kiGegner)
-    if (typeof window !== 'undefined') window.history.pushState({}, '', '/game')
-    setPfad('/game')
+  /** Route wechseln, ohne die Seite neu zu laden. */
+  function navigiere(zielPfad: string) {
+    if (typeof window !== 'undefined') window.history.pushState({}, '', zielPfad)
+    setPfad(zielPfad)
   }
 
-  /* Zurück in die Lobby, wenn das Brett nicht mehr zu zeichnen ist. Ein „neues
-     Spiel" auf `/game` würde zwar eine Partie erzeugen, aber ohne Auswahl der
-     Gegnerzahl — die trifft man in der Lobby. */
-  function zurueckZurLobby() {
-    if (typeof window !== 'undefined') window.history.pushState({}, '', '/')
-    setPfad('/')
+  function starteNeuesSpiel(kiGegner: KiGegnerAnzahl) {
+    /* ÄNDERUNG [03.08.2026]: Nur bei Erfolg aufs Brett wechseln. Vorher wurde
+       immer navigiert — schlug die Factory fehl, stand der Spieler auf dem Brett
+       der *alten* Partie, mit einer Meldung, die dort je nach Lage gar nicht zu
+       sehen war (Codex-Review, Gate 7). Wer nicht starten konnte, bleibt in der
+       Lobby, wo die Meldung hingehört. */
+    if (partie.handleNeuesLobbySpiel(kiGegner)) navigiere('/game')
   }
 
   if (istSpielPfad(pfad)) {
@@ -61,8 +62,12 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
       /* ÄNDERUNG [03.08.2026]: Der Fehlerfang sitzt hier und nicht in `main.tsx`
          um die ganze App. Stirbt das Brett an einem Wertungsfehler, soll die
          Lobby erreichbar bleiben — läge der Fang eine Ebene höher, nähme er auch
-         den Weg zurück mit. */
-      <Fehlerfang onNeuesSpiel={zurueckZurLobby}>
+         den Weg zurück mit.
+
+         Er führt zurück in die Lobby und startet nicht selbst eine Partie: Die
+         Zahl der Gegner wählt man dort, und auf `/game` gäbe es dafür keine
+         Oberfläche. */
+      <Fehlerfang onZurueckZurLobby={() => navigiere('/')}>
         <Spielbrett partie={partie} />
         {/* Die Siegerehrung legt sich über das Brett, sobald die Partie endet. */}
         <SiegerParty zustand={partie.zustand} onNeuesSpiel={starteNeuesSpiel} />

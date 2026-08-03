@@ -11,6 +11,20 @@ zentral typisiert testbar ist.
 
 import type { AufgabenkarteInfo, SpielAktion, Spielzustand } from './engine'
 
+/**
+ * Die Meldung aus einer gefangenen Ausnahme.
+ *
+ * ÄNDERUNG [03.08.2026]: Stand nach dem Fehlerbehandlungs-Slice an vier Stellen
+ * — und schon mit Abweichung: dreimal mit Punkt am Ende, einmal ohne. Genau die
+ * Sorte Doppelung, die niemandem auffällt, weil nichts kaputtgeht.
+ *
+ * `unknown` statt `Error`, weil JavaScript alles werfen lässt: eine Zeichenkette,
+ * `undefined`, ein Objekt aus einer fremden Bibliothek.
+ */
+export function fehlermeldung(ausnahme: unknown): string {
+  return ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler.'
+}
+
 // ÄNDERUNG [05.07.2026]: H2 — die Ausspielphase ist beendbar, sobald mindestens eine Karte
 // gespielt wurde ODER der aktive Spieler keine Handkarten mehr hat (Endrunde ohne Nachziehen).
 export function ausspielphaseBeendbar(zustand: Spielzustand): boolean {

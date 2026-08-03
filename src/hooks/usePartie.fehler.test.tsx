@@ -1,7 +1,7 @@
 /*
 Author: Claude Code
 Datum: 03.08.2026
-Version: 1.0
+Version: 1.1
 Beschreibung: Was die Zustandsschicht tut, wenn die Engine eine Aktion ablehnt.
 
 Bis zum 03.08.2026 lief `wechsleZustand` so ab: erst die Auswahl des Spielers
@@ -15,10 +15,14 @@ erhaltene Auswahl. Die zweite ist der eigentliche Regressionsschutz: Sie ist die
 einzige, die umfällt, wenn jemand die Reihenfolge wieder umdreht.
 */
 
-import { act, render, screen } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { usePartie } from './usePartie'
-import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
+import {
+  ermittleLegaleAktionen,
+  erstelleEinzelspielerSpielzustand,
+  starteAusspielphase,
+} from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
 
 function partie(): Spielzustand {
@@ -38,44 +42,27 @@ function abgelehnteAktion(zustand: Spielzustand): SpielAktion {
   }
 }
 
-/* Ein Hook lässt sich nur aus einer Komponente heraus aufrufen. Statt
-   `renderHook` eine winzige Sonde: Sie reicht die Rückgabe nach außen und
-   zeichnet die zwei Werte, die geprüft werden. So bleibt der Test an der
-   öffentlichen Schnittstelle und nicht an Interna. */
-function Sonde({ hinaus, initialZustand }: { hinaus: (p: ReturnType<typeof usePartie>) => void; initialZustand: Spielzustand }) {
-  const partieHook = usePartie({ initialZustand })
-  hinaus(partieHook)
-  return (
-    <div>
-      <span data-testid="fehler">{partieHook.fehler ?? ''}</span>
-      <span data-testid="auswahl">{partieHook.ausgewaehlteHandkarteAuswahl?.karteId ?? ''}</span>
-    </div>
-  )
-}
-
 describe('usePartie — abgelehnte Aktion', () => {
   it('meldet die deutsche Engine-Meldung, statt still zu scheitern', () => {
     const start = partie()
-    let aktuell!: ReturnType<typeof usePartie>
-    render(<Sonde hinaus={(p) => { aktuell = p }} initialZustand={start} />)
+    const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
-    act(() => aktuell.fuhreAktionAus(abgelehnteAktion(start)))
+    act(() => result.current.fuhreAktionAus(abgelehnteAktion(start)))
 
-    expect(screen.getByTestId('fehler')).toHaveTextContent(
+    expect(result.current.fehler).toBe(
       'Die Karte befindet sich nicht auf der Hand des aktiven Spielers.',
     )
   })
 
   it('lässt den Spielzustand unberührt', () => {
     const start = partie()
-    let aktuell!: ReturnType<typeof usePartie>
-    render(<Sonde hinaus={(p) => { aktuell = p }} initialZustand={start} />)
-    const vorher = aktuell.zustand
+    const { result } = renderHook(() => usePartie({ initialZustand: start }))
+    const vorher = result.current.zustand
 
-    act(() => aktuell.fuhreAktionAus(abgelehnteAktion(start)))
+    act(() => result.current.fuhreAktionAus(abgelehnteAktion(start)))
 
     // Identität, nicht nur Gleichheit: setZustand darf gar nicht gelaufen sein.
-    expect(aktuell.zustand).toBe(vorher)
+    expect(result.current.zustand).toBe(vorher)
   })
 
   /*
@@ -85,38 +72,70 @@ describe('usePartie — abgelehnte Aktion', () => {
    */
   it('behält die gewählte Handkarte, damit der Spieler etwas anderes probieren kann', () => {
     const start = partie()
-    let aktuell!: ReturnType<typeof usePartie>
-    render(<Sonde hinaus={(p) => { aktuell = p }} initialZustand={start} />)
+    const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
     const aktiver = start.spieler[start.aktiverSpielerIndex]
     const gewaehlt = { spielerId: aktiver.id, karteId: aktiver.hand[0].id }
-    act(() => aktuell.setAusgewaehlteHandkarteAuswahl(gewaehlt))
-    expect(screen.getByTestId('auswahl')).toHaveTextContent(gewaehlt.karteId)
+    act(() => result.current.setAusgewaehlteHandkarteAuswahl(gewaehlt))
 
-    act(() => aktuell.fuhreAktionAus(abgelehnteAktion(start)))
+    act(() => result.current.fuhreAktionAus(abgelehnteAktion(start)))
 
-    expect(screen.getByTestId('auswahl')).toHaveTextContent(gewaehlt.karteId)
+    expect(result.current.ausgewaehlteHandkarteAuswahl).toEqual(gewaehlt)
   })
 
   it('räumt die Meldung weg, sobald wieder etwas gelingt', () => {
     const start = partie()
-    let aktuell!: ReturnType<typeof usePartie>
-    render(<Sonde hinaus={(p) => { aktuell = p }} initialZustand={start} />)
+    const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
-    act(() => aktuell.fuhreAktionAus(abgelehnteAktion(start)))
-    expect(screen.getByTestId('fehler')).not.toBeEmptyDOMElement()
+    act(() => result.current.fuhreAktionAus(abgelehnteAktion(start)))
+    expect(result.current.fehler).not.toBeNull()
 
-    // Eine Aktion, die die Engine annimmt: die erste, die sie selbst anbietet.
-    const legal = aktuell.zustand
-    act(() => aktuell.fuhreAktionAus(ersteLegaleAktion(legal)))
+    // Die Engine selbst nach einer legalen Aktion fragen, statt eine nachzubauen.
+    const [legale] = ermittleLegaleAktionen(result.current.zustand)
+    expect(legale, 'Testsetup erwartet mindestens eine legale Aktion.').toBeDefined()
+    act(() => result.current.fuhreAktionAus(legale))
 
-    expect(screen.getByTestId('fehler')).toBeEmptyDOMElement()
+    expect(result.current.fehler).toBeNull()
   })
 })
 
-function ersteLegaleAktion(zustand: Spielzustand): SpielAktion {
-  const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
-  const farbkarte = aktiver.hand.find((karte) => karte.typ === 'Farbkarte')
-  if (!farbkarte) throw new Error('Testsetup erwartet eine Farbkarte auf der Hand.')
-  return { typ: 'NeueSchlangeStarten', spielerId: aktiver.id, handkartenId: farbkarte.id }
-}
+/*
+ * ÄNDERUNG [03.08.2026]: Angeregt vom Codex-Review. `App.starteNeuesSpiel`
+ * wechselte bisher immer auf `/game` — auch wenn die Partie gar nicht entstanden
+ * war. Der Spieler landete dann auf dem Brett der *alten* Partie, mit einer
+ * Meldung, die dort je nach Lage nicht zu sehen war.
+ *
+ * Über die Lobby ist der Fall nicht erreichbar: Sie bietet nur 1 bis 3 Gegner
+ * an, und die sind alle gültig. Geprüft wird deshalb an der Stelle, an der er
+ * erreichbar ist — der Rückgabewert ist genau das, worauf `App` seine
+ * Navigationsentscheidung stützt.
+ */
+describe('usePartie — neue Partie schlägt fehl', () => {
+  it('meldet den Fehlschlag, statt eine halb gestartete Partie zu hinterlassen', () => {
+    const start = partie()
+    const { result } = renderHook(() => usePartie({ initialZustand: start }))
+    const vorher = result.current.zustand
+
+    let gelungen: boolean | undefined
+    act(() => {
+      // 99 Gegner: `erstelleEinzelspielerSpielzustand` lehnt das ab (KI_GEGNER_MAX).
+      gelungen = result.current.handleNeuesLobbySpiel(99 as never)
+    })
+
+    expect(gelungen).toBe(false)
+    expect(result.current.fehler).toMatch(/Ungültige KI-Gegneranzahl/)
+    expect(result.current.zustand).toBe(vorher)
+  })
+
+  it('meldet den Erfolg, damit die Ansicht aufs Brett wechseln darf', () => {
+    const { result } = renderHook(() => usePartie({ initialZustand: partie() }))
+
+    let gelungen: boolean | undefined
+    act(() => {
+      gelungen = result.current.handleNeuesLobbySpiel(2)
+    })
+
+    expect(gelungen).toBe(true)
+    expect(result.current.fehler).toBeNull()
+  })
+})

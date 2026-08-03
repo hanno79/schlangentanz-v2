@@ -30,8 +30,8 @@ function aufBrettRoute() {
   window.history.pushState({}, '', '/game')
 }
 
+/* Die Route setzt `src/test/setup.ts` global zurück — hier nur die Spione. */
 afterEach(() => {
-  window.history.pushState({}, '', '/')
   vi.restoreAllMocks()
 })
 
@@ -90,12 +90,31 @@ describe('Abgelehnte Aktion', () => {
     aufBrettRoute()
     render(<App initialZustand={zustandMitKaputterWertung()} />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Neue Partie starten' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Zurück zur Lobby' }))
 
     /* Die Lobby ist wieder da — und zwar die Lobby, nicht ein zweites kaputtes
        Brett. Dort wählt man die Gegnerzahl, was auf `/game` gar nicht ginge. */
     expect(screen.getByRole('heading', { name: 'Schlangentanz' })).toBeInTheDocument()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  /*
+   * ÄNDERUNG [03.08.2026]: Der eigentliche Beweis, angeregt vom Codex-Review.
+   * Zurück in die Lobby zu kommen nützt nichts, wenn der nächste Start wieder im
+   * selben kaputten Brett endet — der Fehler steckte ja im Spielzustand. Erst
+   * dieser Test zeigt, dass `handleNeuesLobbySpiel` ihn wirklich ersetzt.
+   */
+  it('führt aus der Lobby zu einem spielbaren Brett zurück, nicht zurück in den Fehler', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    aufBrettRoute()
+    render(<App initialZustand={zustandMitKaputterWertung()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Zurück zur Lobby' }))
+
+    fireEvent.click(screen.getAllByRole('button', { name: /Waldparty starten/ })[0])
+
+    expect(screen.getByRole('region', { name: 'Deine Hand' })).toBeInTheDocument()
+    expect(screen.queryByText(/konnte nicht gezeichnet werden/)).not.toBeInTheDocument()
   })
 })
 
@@ -108,7 +127,7 @@ describe('Fehlerfang', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
     render(
-      <Fehlerfang>
+      <Fehlerfang onZurueckZurLobby={() => {}}>
         <Wirft />
       </Fehlerfang>,
     )
@@ -118,25 +137,12 @@ describe('Fehlerfang', () => {
 
   it('reicht Kinder unverändert durch, solange nichts wirft', () => {
     render(
-      <Fehlerfang>
+      <Fehlerfang onZurueckZurLobby={() => {}}>
         <p>Alles in Ordnung</p>
       </Fehlerfang>,
     )
 
     expect(screen.getByText('Alles in Ordnung')).toBeInTheDocument()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
-  })
-
-  it('rät ohne Neustart-Handler zum Neuladen, statt einen Knopf ohne Wirkung zu zeigen', () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {})
-
-    render(
-      <Fehlerfang>
-        <Wirft />
-      </Fehlerfang>,
-    )
-
-    expect(screen.queryByRole('button')).not.toBeInTheDocument()
-    expect(screen.getByRole('alert')).toHaveTextContent(/Seite neu laden/i)
   })
 })

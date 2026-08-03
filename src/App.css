@@ -1397,9 +1397,14 @@ p, li {
    gezeichnet werden kann. Vorher war das eine weiße Seite.
 
    Bewusst schlicht und ohne eigene Tokens: Diese Fläche erscheint genau dann,
-   wenn etwas kaputt ist, und soll dann lesbar sein — nicht hübsch. Die Farben
-   kommen aus dem vorhandenen Satz; `--st-color-tertiary` ist im Projekt die
-   Warnfarbe. */
+   wenn etwas kaputt ist, und soll dann lesbar sein — nicht hübsch.
+
+   Zur Farbe: `--st-color-tertiary` war bis hierher in App.css definiert, aber
+   nirgends benutzt; verwendet wurde nur `--st-color-tertiary-container`. Die
+   Warnfarbe des Bretts heißt `--brett-warnung` und liegt in `spielbrett.css` —
+   zufällig derselbe Hexwert. Zwei Namen für eine Farbe sind einer zu viel; sie
+   auf ein Token zurückzuführen ist ein eigener Slice und gehört nicht in eine
+   Fehlerbehandlung. */
 .fehlerfang {
   display: flex;
   flex-direction: column;

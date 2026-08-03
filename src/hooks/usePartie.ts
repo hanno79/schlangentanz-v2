@@ -41,6 +41,7 @@ import type { LetzteAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { extrahiereAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from '../kiZug'
 import { mussMenschReagieren } from '../reaktionen'
+import { fehlermeldung } from '../spielLabelHelpers'
 import type { KiGegnerAnzahl } from '../components/SonnigesNestLobby'
 
 /** Ein Eintrag der Zughistorie: welche Karte ging wann und wodurch in die Ablage. */
@@ -186,12 +187,6 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     aktionZiel: LetzteAktionZiel | null = null,
     optionen: { automatischerSchritt?: boolean } = {},
   ) {
-    /* Ein automatischer Schritt ist keine Handlung des Spielers: Er überschreibt
-       weder die Zuletzt-Zeile („Zuletzt: Ausspielphase starten" sagt niemandem
-       etwas) noch das Gegnerzug-Protokoll. Seit der Gegnerzug ohne Klick
-       durchläuft, ist dieses Protokoll die einzige Stelle, an der der Spieler
-       erfährt, was passiert ist — ein Folgeschritt darf es ihm nicht vor dem
-       Lesen wegnehmen. */
     // Naechsten Zustand synchron aus dem Closure ableiten, damit wir die
     // Brettschritt-Eintraege ausserhalb eines setState-Updaters pflegen koennen
     // und kein setState-during-render Anti-Pattern entsteht.
@@ -217,11 +212,17 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     try {
       naechster = updater(zustand)
     } catch (ausnahme) {
-      setFehler(ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler.')
+      setFehler(fehlermeldung(ausnahme))
       return
     }
 
     setFehler(null)
+    /* Ein automatischer Schritt ist keine Handlung des Spielers: Er überschreibt
+       weder die Zuletzt-Zeile („Zuletzt: Ausspielphase starten" sagt niemandem
+       etwas) noch das Gegnerzug-Protokoll. Seit der Gegnerzug ohne Klick
+       durchläuft, ist dieses Protokoll die einzige Stelle, an der der Spieler
+       erfährt, was passiert ist — ein Folgeschritt darf es ihm nicht vor dem
+       Lesen wegnehmen. */
     if (optionen.automatischerSchritt !== true) {
       setLetzteAktion(label)
       setKiZugProtokoll([])
@@ -310,14 +311,15 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
       ergebnis = spieleKiZuegeBisZumMenschen(zustand)
     } catch (ausnahme) {
       // Defensive: eine unerwartete Engine-Exception darf das Spiel nicht einfrieren.
-      const meldung = ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler'
+      /* ÄNDERUNG [03.08.2026]: Die Meldung steht jetzt im Fehlerkanal statt im
+         Gegnerprotokoll. Das Protokoll lebt in Region 3 und wird vom nächsten
+         Gegnerzug überschrieben — ein Fehler gehört dorthin, wo er nicht
+         wegrutscht. Beides zu setzen hieße, dieselbe Meldung an zwei Orten zu
+         pflegen; „Gegnerzüge abgebrochen" in der Zuletzt-Zeile sagt bereits,
+         woher sie kommt. */
       setLetzteAktion('Gegnerzüge abgebrochen')
-      setKiZugProtokoll([`KI-Zug abgebrochen: ${meldung}`])
-      /* ÄNDERUNG [03.08.2026]: Die Meldung steht jetzt zusätzlich im
-         Fehlerkanal. Das Gegnerprotokoll allein reichte nicht: Es lebt in
-         Region 3 und wird vom nächsten Gegnerzug überschrieben — ein Fehler
-         gehört dorthin, wo er nicht wegrutscht. */
-      setFehler(meldung)
+      setKiZugProtokoll([])
+      setFehler(fehlermeldung(ausnahme))
       return
     }
     setFehler(null)
@@ -343,7 +345,16 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     }))
     setBrettschrittEintraege(eintraege)
   }
-  function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl) {
+  /**
+   * Startet eine neue Partie. Gibt zurück, **ob** das gelungen ist.
+   *
+   * ÄNDERUNG [03.08.2026]: Der Rückgabewert ist nicht Zierde. `App` wechselt
+   * nach dem Aufruf auf `/game` — tat es bisher auch dann, wenn die Factory
+   * geworfen hatte. Dann stand der Spieler auf dem Brett der *alten* Partie, mit
+   * einer Fehlermeldung, die dort je nach Lage gar nicht zu sehen war
+   * (Codex-Review, Gate 7). Wer nicht starten konnte, bleibt in der Lobby.
+   */
+  function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl): boolean {
     /* ÄNDERUNG [03.08.2026]: Erst die neue Partie bauen, dann aufräumen — wie in
        `wechsleZustand`. Die Factory wirft bei ungültiger Gegnerzahl und bei
        leerem Aufgabenstapel (`state.ts`); vorher hätte das die Lobby mit
@@ -356,8 +367,8 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
       // Tests benutzt (Onboarding-Finding 4).
       neuePartie = starteAusspielphase(erstelleEinzelspielerSpielzustand(kiGegner))
     } catch (ausnahme) {
-      setFehler(ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler.')
-      return
+      setFehler(fehlermeldung(ausnahme))
+      return false
     }
     setFehler(null)
     setLetzteAktion(`Neues Spiel: Du + ${kiGegner} KI`)
@@ -367,6 +378,7 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     gezogeneHandkarteIdRef.current = null
     setBrettschrittEintraege([])
     setZustand(neuePartie)
+    return true
   }
 
   return {

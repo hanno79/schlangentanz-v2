@@ -29,8 +29,15 @@ import type { ErrorInfo, ReactNode } from 'react'
 
 interface FehlerfangProps {
   children: ReactNode
-  /** Startet eine neue Partie. Ohne Handler bleibt nur der Neuladen-Hinweis. */
-  onNeuesSpiel?: () => void
+  /**
+   * Führt zurück in die Lobby.
+   *
+   * ÄNDERUNG [03.08.2026]: Hieß zuerst `onNeuesSpiel` und war optional. Beides
+   * war falsch: Der Handler startet keine Partie, sondern navigiert — die Zahl
+   * der Gegner wählt man in der Lobby. Und optional war er nur, um einen Zweig
+   * zu haben, den ausschließlich sein eigener Test benutzte.
+   */
+  onZurueckZurLobby: () => void
 }
 
 interface FehlerfangState {
@@ -54,9 +61,11 @@ export default class Fehlerfang extends Component<FehlerfangProps, FehlerfangSta
     console.error('Fehler beim Zeichnen des Spielbretts:', fehler, info.componentStack)
   }
 
-  private neuStarten = (): void => {
+  /* Erst den eigenen Fehlerzustand räumen, dann navigieren: Sonst zeigt der Fang
+     nach der Rückkehr weiter die alte Meldung, obwohl die Lobby längst da ist. */
+  private zurueck = (): void => {
     this.setState({ meldung: null })
-    this.props.onNeuesSpiel?.()
+    this.props.onZurueckZurLobby()
   }
 
   render(): ReactNode {
@@ -71,13 +80,9 @@ export default class Fehlerfang extends Component<FehlerfangProps, FehlerfangSta
           Die laufende Partie lässt sich nicht fortsetzen — Schlangentanz speichert
           keine Spielstände.
         </p>
-        {this.props.onNeuesSpiel ? (
-          <button type="button" className="fehlerfang__knopf" onClick={this.neuStarten}>
-            Neue Partie starten
-          </button>
-        ) : (
-          <p className="fehlerfang__hinweis">Bitte die Seite neu laden.</p>
-        )}
+        <button type="button" className="fehlerfang__knopf" onClick={this.zurueck}>
+          Zurück zur Lobby
+        </button>
       </main>
     )
   }
