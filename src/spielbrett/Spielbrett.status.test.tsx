@@ -15,24 +15,17 @@ Drei Angaben, die auf `/game` gar nicht sichtbar waren:
 */
 
 import { render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import App from '../App'
-import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
-import { aufBrettRoute } from '../test/brettTest'
+import { aufBrettRoute, einzelspielerPartie } from '../test/brettTest'
 
 
-afterEach(() => {
-  window.history.pushState({}, '', '/')
-})
 
-function partie(): Spielzustand {
-  return starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
-}
 
 describe('Brett-Status', () => {
   it('warnt den Spieler, wenn er selbst aussetzen muss', () => {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     zustand.aussetzenSpielerIndizes = [zustand.aktiverSpielerIndex]
 
     aufBrettRoute()
@@ -42,7 +35,7 @@ describe('Brett-Status', () => {
   })
 
   it('zeigt am Gegner, dass er aussetzt', () => {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     const gegnerIndex = zustand.spieler.findIndex((_, index) => index !== zustand.aktiverSpielerIndex)
     zustand.aussetzenSpielerIndizes = [gegnerIndex]
 
@@ -55,14 +48,14 @@ describe('Brett-Status', () => {
 
   it('sagt nichts über Aussetzen, solange niemand aussetzt', () => {
     aufBrettRoute()
-    render(<App initialZustand={partie()} />)
+    render(<App initialZustand={einzelspielerPartie()} />)
 
     expect(screen.queryByText(/setzt aus/)).toBeNull()
     expect(screen.queryByText(/Du setzt aus/)).toBeNull()
   })
 
   it('führt das Zugbudget nach Farb- und Sonderkarten auf', () => {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     zustand.zugpflichten = { ...zustand.zugpflichten, gespielteKarten: 1, gespielteFarbkarten: 1 }
 
     aufBrettRoute()
@@ -73,7 +66,7 @@ describe('Brett-Status', () => {
   })
 
   it('weist auf den Verdoppler hin und hebt das Budget an', () => {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     zustand.zugpflichten = { ...zustand.zugpflichten, verdopplerBonusAktiv: true }
 
     aufBrettRoute()
@@ -85,14 +78,14 @@ describe('Brett-Status', () => {
 
   it('nennt den nächsten Pflichtschritt', () => {
     aufBrettRoute()
-    render(<App initialZustand={partie()} />)
+    render(<App initialZustand={einzelspielerPartie()} />)
 
     // Frisch in der Ausspielphase, noch keine Karte gespielt.
     expect(screen.getByText(/auswählen\.|beenden\./)).toBeInTheDocument()
   })
 
   it('zeigt die geheime Aufgabe des Menschen, nie die einer KI', () => {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     const mensch = zustand.spieler.find((spieler) => spieler.steuerung === 'Mensch')!
     const ki = zustand.spieler.find((spieler) => spieler.steuerung === 'KI')!
 
@@ -119,7 +112,7 @@ describe('Verdeckte Information bleibt verdeckt', () => {
 
   it('ändert die Punktzahl eines Gegners nicht, wenn er seine geheime Aufgabe erfüllt', () => {
     aufBrettRoute()
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     const { unmount } = render(<App initialZustand={zustand} />)
     const vorher = gegnerPunkte()
     unmount()
@@ -137,7 +130,7 @@ describe('Verdeckte Information bleibt verdeckt', () => {
 
   it('sagt am Gegnerstreifen, dass die Punkte ohne geheime Aufgaben gelten', () => {
     aufBrettRoute()
-    render(<App initialZustand={partie()} />)
+    render(<App initialZustand={einzelspielerPartie()} />)
 
     expect(screen.getByRole('region', { name: /^Gegner/ })).toHaveTextContent(/ohne geheime Aufgaben/)
   })

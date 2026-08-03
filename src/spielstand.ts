@@ -33,14 +33,21 @@ import type { Spielzustand } from './engine'
  * dabei nichts.
  */
 export const SPIELSTAND_SCHLUESSEL = 'schlangentanz-v2:partie'
-const SCHLUESSEL = SPIELSTAND_SCHLUESSEL
 
-/** `null`, wenn es keinen Speicher gibt — SSR, Privatmodus, blockiert. */
-function speicher(): Storage | null {
+/**
+ * Führt etwas mit dem Speicher aus — oder liefert den Ersatzwert.
+ *
+ * ÄNDERUNG [03.08.2026]: Die erste Fassung hatte eine `speicher()`-Hilfe mit
+ * eigenem `try/catch` **und** je ein weiteres in jedem Aufrufer. Drei Netze für
+ * denselben Sturz. Hier ist es eines: Kein `window`, kein Zugriff, ein Wurf beim
+ * Lesen oder Schreiben — alles endet im Ersatzwert.
+ */
+function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
+  if (typeof window === 'undefined') return ersatz
   try {
-    return typeof window === 'undefined' ? null : window.localStorage
+    return tun(window.localStorage)
   } catch {
-    return null
+    return ersatz
   }
 }
 
@@ -54,17 +61,11 @@ function speicher(): Storage | null {
  * lassen sperrt ihn beim nächsten Reload erneut aus.
  */
 export function ladeSpielstand(): Spielzustand | null {
-  const s = speicher()
-  if (s === null) return null
-
-  let roh: string | null
-  try {
-    roh = s.getItem(SCHLUESSEL)
-  } catch {
-    return null
-  }
+  const roh = mitSpeicher((s) => s.getItem(SPIELSTAND_SCHLUESSEL), null)
   if (roh === null) return null
 
+  /* Das zweite `try` bleibt: Es hat als einziges eine eigene Reaktion. Ein
+     unlesbarer Eintrag wird nicht nur übergangen, sondern gelöscht. */
   try {
     return deserialisiere(roh)
   } catch {
@@ -73,25 +74,16 @@ export function ladeSpielstand(): Spielzustand | null {
   }
 }
 
-/** Schreibt die Partie weg. Schlägt das fehl, wird weitergespielt. */
+/**
+ * Schreibt die Partie weg. Schlägt das fehl — Kontingent voll, Speicher
+ * gesperrt —, wird weitergespielt: Die Partie ist im Arbeitsspeicher
+ * vollständig.
+ */
 export function speichereSpielstand(zustand: Spielzustand): void {
-  const s = speicher()
-  if (s === null) return
-  try {
-    s.setItem(SCHLUESSEL, serialisiere(zustand))
-  } catch {
-    /* Kontingent voll oder Speicher gesperrt. Kein Grund, die laufende Partie
-       abzubrechen — sie ist im Arbeitsspeicher vollständig. */
-  }
+  mitSpeicher((s) => s.setItem(SPIELSTAND_SCHLUESSEL, serialisiere(zustand)), undefined)
 }
 
 /** Löscht die gespeicherte Partie. */
 export function verwirfSpielstand(): void {
-  const s = speicher()
-  if (s === null) return
-  try {
-    s.removeItem(SCHLUESSEL)
-  } catch {
-    /* Nichts zu tun — ein nicht löschbarer Speicher ist auch kein lesbarer. */
-  }
+  mitSpeicher((s) => s.removeItem(SPIELSTAND_SCHLUESSEL), undefined)
 }

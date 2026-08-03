@@ -23,10 +23,9 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from '../App'
 import Fehlerfang from '../components/Fehlerfang'
-import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
 import { SPIELSTAND_SCHLUESSEL } from '../spielstand'
-import { aufBrettRoute } from '../test/brettTest'
+import { aufBrettRoute, einzelspielerPartie } from '../test/brettTest'
 
 
 /* Die Route setzt `src/test/setup.ts` global zurück — hier nur die Spione. */
@@ -34,14 +33,11 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function partie(): Spielzustand {
-  return starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
-}
 
 describe('Abgelehnte Aktion', () => {
   it('zeigt keine Fehlermeldung, solange nichts schiefgeht', () => {
     aufBrettRoute()
-    render(<App initialZustand={partie()} />)
+    render(<App initialZustand={einzelspielerPartie()} />)
 
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
@@ -58,7 +54,7 @@ describe('Abgelehnte Aktion', () => {
    * trotzdem entsteht.
    */
   function zustandMitKaputterWertung(): Spielzustand {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
     zustand.spieler[0].schlangen = [
       {
         id: 'schlange-kaputt',

@@ -15,7 +15,7 @@ nicht die automatischen letzten N.
 */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import App from '../App'
 import { erstelleSpielzustand, HANDKARTENLIMIT } from '../engine'
 import type { Spielzustand } from '../engine'
@@ -23,9 +23,6 @@ import { farbkarte } from '../engine/__tests__/testHelpers'
 import { aufBrettRoute } from '../test/brettTest'
 
 
-afterEach(() => {
-  window.history.pushState({}, '', '/')
-})
 
 /**
  * Zugabschluss mit `zuViel` Karten über dem Handkartenlimit.

@@ -41,7 +41,7 @@ import { extrahiereAktionZiel } from '../aktionsziel/extrahiereAktionZiel'
 import { spieleKiZuegeBisZumMenschen } from '../kiZug'
 import { mussMenschReagieren } from '../reaktionen'
 import { fehlermeldung } from '../spielLabelHelpers'
-import { ladeSpielstand, speichereSpielstand } from '../spielstand'
+import { ladeSpielstand, speichereSpielstand, verwirfSpielstand } from '../spielstand'
 import type { KiGegnerAnzahl } from '../components/SonnigesNestLobby'
 
 /** Ein Eintrag der Zughistorie: welche Karte ging wann und wodurch in die Ablage. */
@@ -352,6 +352,16 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
       setLetzteAktion('Gegnerzüge abgebrochen')
       setKiZugProtokoll([])
       setFehler(fehlermeldung(ausnahme))
+      /* ÄNDERUNG [03.08.2026]: Die zweite Sackgasse, gefunden im Codex-Review.
+         Der Fehlerfang hilft hier nicht — es wirft ja nichts beim Zeichnen. Ist
+         die KI am Zug, hat der Mensch keine Aktion; ohne diese Zeile lüde jeder
+         Reload denselben Zustand und damit dieselbe Sackgasse, aus der er ohne
+         DevTools nicht mehr herauskommt.
+
+         Die laufende Partie ist damit verloren. Das ist derselbe Tausch wie im
+         Fehlerfang: Der Verlust ist der Preis dafür, überhaupt wieder
+         hineinzukommen. */
+      verwirfSpielstand()
       return
     }
     setFehler(null)

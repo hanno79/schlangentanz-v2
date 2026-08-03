@@ -17,7 +17,7 @@ versteckt.
 */
 
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import App from '../App'
 import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
@@ -25,9 +25,6 @@ import { farbkarte, sonderkarte } from '../engine/__tests__/testHelpers'
 import { aufBrettRoute } from '../test/brettTest'
 
 
-afterEach(() => {
-  window.history.pushState({}, '', '/')
-})
 
 /** Aktive Schlange aus drei unterscheidbaren Karten plus Häutungskarte auf der Hand. */
 function mitHaeutung(): Spielzustand {

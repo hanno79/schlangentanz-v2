@@ -1,20 +1,23 @@
 /*
 Author: Claude Code
 Datum: 03.08.2026
-Version: 1.0
-Beschreibung: Gemeinsame Hilfen der Brett-Tests.
+Version: 1.1
+Beschreibung: Gemeinsame Hilfen der Brett- und Zustandstests.
 
 Präzedenz: `src/engine/__tests__/testHelpers.ts` für die Engine-Tests,
 `src/test/smokeKetten.ts` für die Smoke-Ketten.
 
-**Bewusst nur `aufBrettRoute`.** Der Simplify-Durchgang hatte auch `partie()`
-genannt — die Funktion steht aber in vier Fassungen da, und das zu Recht:
-`Spielbrett.status` und `.fehler` brauchen einen Einzelspieler-Zustand,
-`.integration` zwei Spieler mit festem Seed, `.brettziele` zusätzlich einen
-Aufbau-Callback. Sie zusammenzuziehen hieße, vier verschiedene Testabsichten in
-eine Signatur mit Schaltern zu pressen. Nur `aufBrettRoute` ist wortgleich
-sechsmal vorhanden — und nur das ist eine Doppelung.
+**ÄNDERUNG [03.08.2026]:** Die erste Fassung behauptete, `partie()` stehe „in
+vier Fassungen da, und das zu Recht". Nachgezählt: Vier sind **byte-gleich**
+(`Spielbrett.status`, `Spielbrett.fehler`, `usePartie.fehler`, `spielstand`), und
+nur zwei unterscheiden sich wirklich — `Spielbrett.integration` braucht zwei
+Spieler mit festem Seed, `Spielbrett.brettziele` zusätzlich einen
+Aufbau-Callback. Die vier identischen liegen jetzt hier, die zwei anderen
+bleiben, wo sie sind.
 */
+
+import { erstelleEinzelspielerSpielzustand, starteAusspielphase } from '../engine'
+import type { Spielzustand } from '../engine'
 
 /* `src/test/**` gehört zu `tsconfig.test.json`, das von `tsconfig.node.json`
    erbt und deshalb keine DOM-Typen kennt. `setup.ts` deklariert `window` aus
@@ -32,4 +35,9 @@ declare const window: {
  */
 export function aufBrettRoute(): void {
   window.history.pushState({}, '', '/game')
+}
+
+/** Eine frische Partie: ein Mensch, ein KI-Gegner, bereit zum Ausspielen. */
+export function einzelspielerPartie(): Spielzustand {
+  return starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
 }

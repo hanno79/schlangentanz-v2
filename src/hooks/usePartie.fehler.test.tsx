@@ -16,19 +16,20 @@ einzige, die umfällt, wenn jemand die Reihenfolge wieder umdreht.
 */
 
 import { act, renderHook } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { usePartie } from './usePartie'
-import {
-  ermittleLegaleAktionen,
-  erstelleEinzelspielerSpielzustand,
-  starteAusspielphase,
-} from '../engine'
+import { ermittleLegaleAktionen } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
-import { ladeSpielstand, speichereSpielstand } from '../spielstand'
+import { ladeSpielstand, speichereSpielstand, SPIELSTAND_SCHLUESSEL } from '../spielstand'
+import { einzelspielerPartie } from '../test/brettTest'
 
-function partie(): Spielzustand {
-  return starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
-}
+/* Der Gegnerzug wird gemockt, um sein Scheitern zu erzwingen. Nur diese eine
+   Funktion — alles andere im Modul bleibt echt. */
+vi.mock('../kiZug', async (echt) => ({
+  ...(await echt<typeof import('../kiZug')>()),
+  spieleKiZuegeBisZumMenschen: vi.fn((zustand) => ({ zustand, protokoll: [], spielzuege: [] })),
+}))
+
 
 /**
  * Eine Aktion, die die Engine sicher ablehnt: Die Handkarte gehört nicht dem
@@ -45,7 +46,7 @@ function abgelehnteAktion(zustand: Spielzustand): SpielAktion {
 
 describe('usePartie — abgelehnte Aktion', () => {
   it('meldet die deutsche Engine-Meldung, statt still zu scheitern', () => {
-    const start = partie()
+    const start = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
     act(() => result.current.fuhreAktionAus(abgelehnteAktion(start)))
@@ -56,7 +57,7 @@ describe('usePartie — abgelehnte Aktion', () => {
   })
 
   it('lässt den Spielzustand unberührt', () => {
-    const start = partie()
+    const start = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: start }))
     const vorher = result.current.zustand
 
@@ -72,7 +73,7 @@ describe('usePartie — abgelehnte Aktion', () => {
    * gewesen, alle anderen grün.
    */
   it('behält die gewählte Handkarte, damit der Spieler etwas anderes probieren kann', () => {
-    const start = partie()
+    const start = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
     const aktiver = start.spieler[start.aktiverSpielerIndex]
@@ -85,7 +86,7 @@ describe('usePartie — abgelehnte Aktion', () => {
   })
 
   it('räumt die Meldung weg, sobald wieder etwas gelingt', () => {
-    const start = partie()
+    const start = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
     act(() => result.current.fuhreAktionAus(abgelehnteAktion(start)))
@@ -113,7 +114,7 @@ describe('usePartie — abgelehnte Aktion', () => {
  */
 describe('usePartie — neue Partie schlägt fehl', () => {
   it('meldet den Fehlschlag, statt eine halb gestartete Partie zu hinterlassen', () => {
-    const start = partie()
+    const start = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: start }))
     const vorher = result.current.zustand
 
@@ -129,7 +130,7 @@ describe('usePartie — neue Partie schlägt fehl', () => {
   })
 
   it('meldet den Erfolg, damit die Ansicht aufs Brett wechseln darf', () => {
-    const { result } = renderHook(() => usePartie({ initialZustand: partie() }))
+    const { result } = renderHook(() => usePartie({ initialZustand: einzelspielerPartie() }))
 
     let gelungen: boolean | undefined
     act(() => {
@@ -148,7 +149,7 @@ describe('usePartie — neue Partie schlägt fehl', () => {
  */
 describe('usePartie — gespeicherte Partie', () => {
   it('schreibt den Zustand nach jeder Änderung weg', () => {
-    const start = partie()
+    const start = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: start }))
 
     const [legale] = ermittleLegaleAktionen(start)
@@ -161,7 +162,7 @@ describe('usePartie — gespeicherte Partie', () => {
   })
 
   it('nimmt beim Start die gespeicherte Partie, wenn keine vorgegeben ist', () => {
-    const gespeichert = partie()
+    const gespeichert = einzelspielerPartie()
     gespeichert.spieler[0].schlangen = [
       { id: 'schlange-wiedererkennbar', zustand: 'aktiv', karten: [] },
     ]
@@ -178,13 +179,37 @@ describe('usePartie — gespeicherte Partie', () => {
    * früherer Lauf im Speicher hinterlassen hat.
    */
   it('lässt sich von einem vorgegebenen Zustand überstimmen', () => {
-    const gespeichert = partie()
+    const gespeichert = einzelspielerPartie()
     gespeichert.spieler[0].schlangen = [{ id: 'aus-dem-speicher', zustand: 'aktiv', karten: [] }]
     speichereSpielstand(gespeichert)
 
-    const vorgegeben = partie()
+    const vorgegeben = einzelspielerPartie()
     const { result } = renderHook(() => usePartie({ initialZustand: vorgegeben }))
 
     expect(result.current.zustand.spieler[0].schlangen).toHaveLength(0)
+  })
+
+  /*
+   * ÄNDERUNG [03.08.2026]: Die zweite Sackgasse, gefunden im Codex-Review.
+   *
+   * Die erste fängt der Fehlerfang ab — dort wirft das Zeichnen. Hier wirft
+   * nichts beim Zeichnen: Der KI-Nachlauf scheitert, die Meldung landet im
+   * Fehlerkanal, und das Brett steht still. Ist die KI am Zug, hat der Mensch
+   * keine Aktion; ohne Verwerfen lüde jeder Reload denselben Zustand und damit
+   * dieselbe Sackgasse.
+   */
+  it('verwirft den Spielstand, wenn der Gegnerzug scheitert', async () => {
+    const { spieleKiZuegeBisZumMenschen } = await import('../kiZug')
+    vi.mocked(spieleKiZuegeBisZumMenschen).mockImplementationOnce(() => {
+      throw new Error('Engine-Fehler im Gegnerzug.')
+    })
+
+    const { result } = renderHook(() => usePartie({ initialZustand: einzelspielerPartie() }))
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).not.toBeNull()
+
+    act(() => result.current.handleKiZugVorspulen())
+
+    expect(result.current.fehler).toBe('Engine-Fehler im Gegnerzug.')
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
   })
 })

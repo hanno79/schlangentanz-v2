@@ -11,22 +11,23 @@ noch kann er ihn beheben.
 */
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ladeSpielstand, speichereSpielstand, verwirfSpielstand } from './spielstand'
-import { erstelleEinzelspielerSpielzustand, serialisiere, starteAusspielphase } from './engine'
-
-const SCHLUESSEL = 'schlangentanz-v2:partie'
+import {
+  ladeSpielstand,
+  speichereSpielstand,
+  verwirfSpielstand,
+  SPIELSTAND_SCHLUESSEL,
+} from './spielstand'
+import { serialisiere } from './engine'
+import { einzelspielerPartie } from './test/brettTest'
 
 afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function partie() {
-  return starteAusspielphase(erstelleEinzelspielerSpielzustand(1))
-}
 
 describe('Spielstand', () => {
   it('gibt die gespeicherte Partie unverändert zurück', () => {
-    const zustand = partie()
+    const zustand = einzelspielerPartie()
 
     speichereSpielstand(zustand)
     const geladen = ladeSpielstand()
@@ -42,28 +43,28 @@ describe('Spielstand', () => {
   })
 
   it('verwirft einen unlesbaren Eintrag, statt ihn liegen zu lassen', () => {
-    window.localStorage.setItem(SCHLUESSEL, 'kein json {{{')
+    window.localStorage.setItem(SPIELSTAND_SCHLUESSEL, 'kein json {{{')
 
     expect(ladeSpielstand()).toBeNull()
     // Der eigentliche Punkt: Der kaputte Eintrag ist weg, nicht nur ignoriert.
-    expect(window.localStorage.getItem(SCHLUESSEL)).toBeNull()
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
   })
 
   it('verwirft auch einen strukturell ungültigen Spielstand', () => {
     // Gültiges JSON, aber kein Spielzustand — `deserialisiere` lehnt das ab.
-    window.localStorage.setItem(SCHLUESSEL, JSON.stringify({ version: 1, spieler: 'nein' }))
+    window.localStorage.setItem(SPIELSTAND_SCHLUESSEL, JSON.stringify({ version: 1, spieler: 'nein' }))
 
     expect(ladeSpielstand()).toBeNull()
-    expect(window.localStorage.getItem(SCHLUESSEL)).toBeNull()
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
   })
 
   it('löscht den Eintrag auf Verlangen', () => {
-    speichereSpielstand(partie())
-    expect(window.localStorage.getItem(SCHLUESSEL)).not.toBeNull()
+    speichereSpielstand(einzelspielerPartie())
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).not.toBeNull()
 
     verwirfSpielstand()
 
-    expect(window.localStorage.getItem(SCHLUESSEL)).toBeNull()
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
   })
 
   /*
@@ -77,7 +78,7 @@ describe('Spielstand', () => {
       throw new Error('QuotaExceededError')
     })
 
-    expect(() => speichereSpielstand(partie())).not.toThrow()
+    expect(() => speichereSpielstand(einzelspielerPartie())).not.toThrow()
   })
 
   it('spielt weiter, wenn der Speicher das Lesen verweigert', () => {
@@ -85,7 +86,7 @@ describe('Spielstand', () => {
       throw new Error('SecurityError')
     })
 
-    expect(() => ladeSpielstand()).not.toThrow()
+    // `toBeNull` schließt „wirft nicht" ein — ein Wurf ließe den Test scheitern.
     expect(ladeSpielstand()).toBeNull()
   })
 })
