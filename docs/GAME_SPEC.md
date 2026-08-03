@@ -191,6 +191,41 @@ einen User-Signoff — keinen Bugfix.
 - Abgeworfene Karten kommen offen auf den Ablagestapel.
 - Hat der aktive Spieler keine Handkarten (z. B. in der Endrunde, in der nicht mehr nachgezogen wird, nachdem Farbenschutz-Reaktionen außerhalb seines Zuges seine Karten verbraucht haben), entfällt die Zugpflicht: Der Zug ist ohne gespielte Karte beendbar. So kann kein Deadlock entstehen.
 
+#### R2.3a Nachziehen nach einer Sonderkarte (ÄNDERUNG 03.08.2026)
+
+Wörtlich aus der Normquelle, Abschnitt „Spielablauf und Timing von Sonderkarten":
+
+> „Nach dem Ausspielen einer Sonderkarte darf sofort eine neue Karte nachgezogen
+> werden, damit zu Beginn des eigenen Zuges wieder 5 Handkarten vorhanden sind."
+> — „Alle Spieler, die eine Karte gespielt haben, dürfen sofort eine neue Karte
+> nachziehen." — „Nach Abhandlung aller Effekte werden neue Karten nachgezogen.
+> Das Nachziehen erfolgt ebenfalls im Uhrzeigersinn."
+
+Diese Regel fehlte bis zum 03.08.2026 vollständig; die Engine zog ausschließlich
+beim Zugwechsel. Sie war zuvor als offene Frage O-2 geführt.
+
+- **Wer:** jeder, der in dieser Abhandlung eine Karte aus der Hand **gespielt**
+  hat — der Angreifer und jeder Verteidiger, der einen Farbenschutz eingesetzt
+  hat. Wer durchlässt, hat keine Karte gespielt und zieht nicht.
+- **Wann:** erst **nach** Abhandlung aller Effekte, also am Ende der
+  Reaktionskette — nicht beim Ablegen der Karte. Der Unterschied ist beobachtbar:
+  Bei einem Schlangenfrass auf zwei Karten desselben Gegners könnte dieser sonst
+  einen frisch gezogenen Farbenschutz gegen das zweite Ziel einsetzen, den er am
+  Tisch noch gar nicht hätte.
+- **Wie viel:** genau eine Karte je gespielter Sonderkarte.
+- **Reihenfolge:** im Uhrzeigersinn ab dem aktiven Spieler. Sie entscheidet, wer
+  die letzte Karte bekommt, wenn der Stapel dabei leer wird.
+- **Nicht im Endspurt:** „Nach Spielende wird noch eine Runde gespielt, ohne neue
+  Karten zu ziehen."
+- **Leerer Stapel ist kein Fehler**, sondern schlicht keine Karte. Läuft der
+  Stapel beim Nachziehen leer, löst das den Endspurt aus — dieselbe Zusicherung
+  wie beim Nachziehen zu Zugbeginn.
+
+**Digitale Auslegung:** Die Anleitung sagt „darf". Digital wird **immer**
+gezogen. Ein optionales Nachziehen wäre ein zusätzlicher Klick, der nach Regel 7
+der `SPIELBRETT_SPEC.md` eine echte Entscheidung verlangen müsste; die
+Nichtziehen-Option hat außer einer marginalen Endspurt-Verzögerung keinen Zweck.
+
 ### R2.4 Aufgabenprüfung
 
 - Nach dem Ausspielen prüft der Spieler offene Aufgaben und seine geheime Aufgabe.
@@ -627,7 +662,7 @@ Steht hier nichts weiter, ist nichts weiter offen.
 Abweichungen ergeben. Das war zu früh behauptet: Gründlich geprüft war der
 **Wertungsabschnitt** der Anleitung, nicht der Abschnitt „Spielablauf und Timing
 von Sonderkarten". Der zweite Durchgang hat dort weitere Abweichungen gefunden;
-sie stehen unten als O-2 bis O-4.
+sie stehen unten als O-3 und O-4; die dritte (sofortiges Nachziehen, zuvor O-2) ist mit demselben Tag als R2.3a umgesetzt.
 
 Übereinstimmend geprüft und in Ordnung sind: Kartenmengen und Punktwerte (R4.1),
 die acht Sonderkartenwirkungen (R7.1), die Zugschritte „auf 5 auffüllen /
@@ -648,7 +683,6 @@ hängende Verweis auf den Vielfaltbonus in R7.1.
 | # | Frage | Status | Warum offen |
 |---|---|---|---|
 | **O-1** | Einfügeposition der Schlangenblockade | nicht umgesetzt | Die Engine hängt die Karte ans **Ende** der Zielschlange (R7.1/R3.5a). Die Anleitung sagt im Zugschritt b) über Sonderkarten allgemein: „kann an beliebiger Stelle eingefügt werden". Ob das auch für Angriffskarten in **fremde** Schlangen gilt oder nur für eigene (Regenbogenschlange, Farbenfusion), sagt sie nicht. Eine Position einzuführen hat unmittelbare Punktewirkung und braucht einen Signoff. |
-| **O-2** | Sofortiges Nachziehen nach einer Sonderkarte | **noch nicht umgesetzt**, Umsetzung beschlossen | Die Anleitung sagt: „Nach dem Ausspielen einer Sonderkarte darf sofort eine neue Karte nachgezogen werden, damit zu Beginn des eigenen Zuges wieder 5 Handkarten vorhanden sind", und nach einer Farbenschutz-Abwehr: „Beide Spieler dürfen sofort eine neue Karte nachziehen." Die Timing-Regeln präzisieren: „Nach Abhandlung aller Effekte werden neue Karten nachgezogen. Das Nachziehen erfolgt ebenfalls im Uhrzeigersinn." Die Engine zieht ausschließlich beim Zugwechsel (`zieheAufMindesthand` in `turnState.ts`). **Echter Spielunterschied:** Am Tisch lässt sich die nachgezogene Karte im selben Zug noch ausspielen. Die Umsetzung ist als eigener Slice beschlossen (Signoff 03.08.2026) — sie berührt jeden Zweig der Reaktionskette und braucht einen Migrationsschritt in der Serialisierung. |
 | **O-3** | Eigener Ablagestapel je Spieler | bewusst nicht umgesetzt | Die Anleitung gibt jedem Spieler einen eigenen Ablagestapel („für gespielte Sonderkarten"); das Datenmodell hat einen gemeinsamen (`ablagestapel`). Ohne Spielwirkung im digitalen Umfang: Keine Regel des Basisspiels liest je aus einem *persönlichen* Stapel. Erst die Erweiterung täte das (Risiko-Belohnung, Aktion 4) — und die ist nach R1.2a außerhalb des Umfangs. |
 | **O-4** | Zweite Spielende-Bedingung | nicht anwendbar | „Wenn der Ablagestapel leer ist und ein Spieler eine Karte vom Ablagestapel ziehen möchte, endet das Spiel ebenfalls." Vom Ablagestapel ziehen kann man nur mit Erweiterungskarten (R1.2a: nicht im Umfang). Die Bedingung ist digital unerreichbar und wird deshalb nicht nachgebildet. |
 

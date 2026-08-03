@@ -56,7 +56,9 @@ describe('Farbenfusion', () => {
       zielKartenId,
     });
 
-    expect(aktualisiert.spieler[0].hand).toHaveLength(2);
+    /* ÄNDERUNG [03.08.2026]: R2.3a. Nach einer Sonderkarte wird sofort eine
+       Karte nachgezogen — die Hand ist deshalb um eins voller als zuvor. */
+    expect(aktualisiert.spieler[0].hand).toHaveLength(3);
     expect(aktualisiert.spieler[0].schlangen[0].karten.map((k) => k.id)).toEqual([farbenfusion.id, erwarteteRestkarteId]);
     expect(aktualisiert.spieler[0].schlangen[0].farbenfusionen).toEqual([
       { kartenId: farbenfusion.id, punkte: erwarteteFusionPunkte },

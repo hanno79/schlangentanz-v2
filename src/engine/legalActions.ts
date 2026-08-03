@@ -41,7 +41,7 @@ es zum teuersten Posten der App.
 
 import type { Spielzustand } from './types';
 import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
-import { starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenfrass, spieleSchlangenhaeutung, werfeKarteMangelsSpielbarerAktionAb, istFarbenschutzkarte, loesePendingReaktionAbwehr, loesePendingReaktionDurchlassen } from './turnState';
+import { zieheOffeneNachziehungen, merkeNachziehBerechtigt, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenfrass, spieleSchlangenhaeutung, werfeKarteMangelsSpielbarerAktionAb, istFarbenschutzkarte, loesePendingReaktionAbwehr, loesePendingReaktionDurchlassen } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
@@ -1099,12 +1099,69 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
   return aktionen;
 }
 
+/** Aktionen, mit denen der aktive Spieler eine Sonderkarte aus der Hand spielt. */
+const SONDERKARTEN_AKTIONEN = new Set<SpielAktion['typ']>([
+  'SonderkarteSpielen',
+  'SchlangenblockadeSpielen',
+  'VerdopplerSpielen',
+  'FarbenschutzSpielen',
+  'FarbendiebSpielen',
+  'FarbenfusionSpielen',
+  'SchlangenhaeutungSpielen',
+  'SchlangenfrassSpielen',
+]);
+
+/** Abwehr-Aktionen: Hier spielt der **Verteidiger** einen Farbenschutz. */
+const ABWEHR_AKTIONEN = new Set<SpielAktion['typ']>([
+  'SchlangengrubeAbwehren',
+  'SchlangenblockadeAbwehren',
+  'FarbendiebAbwehren',
+  'SchlangenfrassAbwehren',
+  'VerdopplerAbwehren',
+]);
+
+/**
+ * Wer hat mit dieser Aktion eine Karte aus der Hand gespielt und darf dafür
+ * nachziehen (R2.3a)? `null`, wenn keine Sonderkarte im Spiel war.
+ *
+ * Durchlassen zählt ausdrücklich **nicht**: Die Normquelle sagt „Alle Spieler,
+ * die eine Karte gespielt haben, dürfen sofort eine neue Karte nachziehen."
+ */
+function kartenspielerFuerNachzug(zustand: Spielzustand, aktion: SpielAktion): number | null {
+  if (SONDERKARTEN_AKTIONEN.has(aktion.typ)) return zustand.aktiverSpielerIndex;
+  if (ABWEHR_AKTIONEN.has(aktion.typ)) return findeSpielerIndex(zustand, aktion.spielerId);
+  return null;
+}
+
+/**
+ * Führt eine Aktion aus und zieht danach nach, was R2.3a vorsieht.
+ *
+ * ÄNDERUNG [03.08.2026]: Das Nachziehen sitzt hier und nicht in den einzelnen
+ * `spiele*`-Funktionen. Es gibt acht davon und sechs Stellen, an denen eine
+ * Reaktionskette endet — dort überall zu ziehen hieße, dieselbe Regel
+ * vierzehnmal zu schreiben.
+ *
+ * `anwendeAktion` ist der Weg, über den **jede Spieleraktion** läuft, auch die
+ * der KI. (Codex-Review: Hier stand zuvor „der einzige Weg, auf dem sich der
+ * Spielzustand ändert" — das ist falsch. `engine/index.ts` exportiert die
+ * `spiele*`-Funktionen und `beendeZug` weiterhin direkt; die Phasenwechsel der
+ * Oberfläche gehen genau dort entlang. Für R2.3a genügt es, weil die Regel nur
+ * an Sonderkarten-Aktionen hängt und die alle hier vorbeikommen.)
+ */
 export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
   const pruefung = pruefeAktion(zustand, aktion);
   if (!pruefung.erlaubt) {
     throw new Error(pruefung.grund);
   }
 
+  const kartenspieler = kartenspielerFuerNachzug(zustand, aktion);
+  const nachher = fuehreAktionAus(zustand, aktion);
+  return zieheOffeneNachziehungen(
+    kartenspieler === null ? nachher : merkeNachziehBerechtigt(nachher, kartenspieler),
+  );
+}
+
+function fuehreAktionAus(zustand: Spielzustand, aktion: SpielAktion): Spielzustand {
   switch (aktion.typ) {
     case 'NeueSchlangeStarten':
       return starteNeueSchlange(zustand, { kartenId: aktion.handkartenId });

@@ -83,7 +83,9 @@ describe('spieleKiReaktionenAus', () => {
   it('setzt den Farbenschutz ein, wenn die KI einen hat', () => {
     const { zustand, protokoll } = spieleKiReaktionenAus(menschGreiftKiAn(true))
 
-    expect(zustand.spieler[1].hand).toHaveLength(0)
+    /* ÄNDERUNG [03.08.2026]: R2.3a. Nach einer Sonderkarte wird sofort eine
+       Karte nachgezogen — die Hand ist deshalb um eins voller als zuvor. */
+    expect(zustand.spieler[1].hand).toHaveLength(1)
     expect(protokoll.join(' ')).toMatch(/abwehren|Farbenschutz/i)
   })
 

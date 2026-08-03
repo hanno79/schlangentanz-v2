@@ -66,7 +66,9 @@ describe('Schlangenfrass', () => {
     expect(aktualisiert.spieler[2].schlangen[0].karten.map((k) => k.id)).toEqual(['ziel-violett']);
     expect(aktualisiert.ablagestapel.map((k) => k.id)).toContain('ziel-blau');
     expect(aktualisiert.ablagestapel.map((k) => k.id)).toContain('ziel-gruen');
-    expect(aktualisiert.spieler[0].hand).toHaveLength(0);
+    /* ÄNDERUNG [03.08.2026]: R2.3a. Nach einer Sonderkarte wird sofort eine
+       Karte nachgezogen — die Hand ist deshalb um eins voller als zuvor. */
+    expect(aktualisiert.spieler[0].hand).toHaveLength(1);
     expect(aktualisiert.zugpflichten.gespielteSonderkarten).toBe(1);
   });
 

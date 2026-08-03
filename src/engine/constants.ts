@@ -16,11 +16,16 @@ hast, lege überzählige Karten auf deinen persönlichen Ablagestapel." Eine Zeh
 kommt in der ganzen Anleitung nicht vor; sie stammt vermutlich aus dem
 überholten Dart-Backlog (siehe `docs/DART_BACKLOG_SOURCE.md`).
 
-**Am Spielverlauf ändert das nichts** — mit beiden Zahlen greift das Limit nie:
-Man zieht auf 5 auf und muss mindestens eine Karte spielen, hält am Zugende also
-höchstens 4. Falsch war die *Anzeige*: Das Brett zeigte „5/10 Karten" und damit
-eine Zahl ohne Regelgrundlage. Die Überhand-Maschinerie bleibt als Absicherung
-bestehen, nicht weil sie im Alltag greift.
+**Am Spielverlauf ändert das nichts**, weil das Limit mit beiden Zahlen nicht
+greift: Man zieht auf 5 auf, und jede gespielte Karte wird nach R2.3a höchstens
+wieder ausgeglichen — über 5 kommt niemand. Falsch war die *Anzeige*: Das Brett
+zeigte „5/10 Karten" und damit eine Zahl ohne Regelgrundlage. Die
+Überhand-Maschinerie bleibt als Absicherung bestehen, nicht weil sie im Alltag
+greift.
+
+ÄNDERUNG [03.08.2026, Codex-Review]: Hier stand zuvor, der aktive Spieler halte
+am Zugende „höchstens 4" Karten. Seit R2.3a stimmt das nicht mehr — wer eine
+Sonderkarte spielt, zieht sofort nach und steht wieder bei 5.
 */
 export const HANDKARTENLIMIT = 5;
 export const MINDESTHANDKARTEN = 5;

@@ -86,6 +86,7 @@ export function deserialisiere(json: string): Spielzustand {
   migriereSchlangentanzHistorieVorR97(parsed);
   migriereGeheimeAufgabeErfuelltVorK4(parsed);
   migriereEndspurtVerdopplungVorK5(parsed);
+  migriereNachziehBerechtigteVorR2_3a(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -217,6 +218,7 @@ function validiereSpielzustand(wert: unknown): asserts wert is Spielzustand {
 
   validiereZugpflichten(obj['zugpflichten']);
   validiereAussetzen(obj['aussetzenSpielerIndizes'], spieler.length);
+  validiereNachziehBerechtigte(obj['nachziehBerechtigteIndizes'], spieler.length, obj['pendingReaktion']);
 
   const verwendeteIds = new Set<string>();
   for (const einSpieler of spieler) {
@@ -443,6 +445,60 @@ function validiereAussetzen(wert: unknown, spielerAnzahl: number): void {
     if (!Number.isInteger(idx) || idx < 0 || idx >= spielerAnzahl) {
       throw new Error('Ungültiger Spielzustand: aussetzenSpielerIndizes enthält ungültigen Spielerindex.');
     }
+  }
+}
+
+/*
+ÄNDERUNG [03.08.2026]: R2.3a, angeregt vom Codex-Review.
+
+Ohne diesen Schritt verlöre ein Spielstand, der **mitten in einer
+Reaktionskette** gespeichert wurde, den Nachzug des Angreifers: Seine Karte war
+längst gespielt, aber die Liste gab es damals noch nicht. Beim Auflösen würde nur
+noch ein abwehrender Verteidiger vermerkt — der Angreifer ginge leer aus.
+
+Aus `pendingReaktion.angreifenderSpielerIndex` lässt sich genau rekonstruieren,
+wer die Angriffskarte gespielt hat. Nicht rekonstruierbar ist, ob ein
+Verteidiger in derselben Kette schon abgewehrt hat; solche Ketten sind aber
+höchstens einen Zug alt, und der Fall ist eng.
+*/
+function migriereNachziehBerechtigteVorR2_3a(parsed: unknown): void {
+  if (typeof parsed !== 'object' || parsed === null) return;
+  const obj = parsed as Record<string, unknown>;
+  if (Object.prototype.hasOwnProperty.call(obj, 'nachziehBerechtigteIndizes')) return;
+
+  /* Nur setzen, wenn es etwas zu retten gibt. Ohne ausstehende Reaktion bedeuten
+     „Feld fehlt" und „leere Liste" dasselbe; das Feld trotzdem zu schreiben würde
+     jeden Roundtrip verändern, ohne irgendeine Aussage zu gewinnen. */
+  const pending = obj['pendingReaktion'] as { angreifenderSpielerIndex?: unknown } | null | undefined;
+  if (!pending) return;
+
+  const angreifer = pending.angreifenderSpielerIndex;
+  if (Number.isInteger(angreifer)) {
+    obj['nachziehBerechtigteIndizes'] = [angreifer];
+  }
+}
+
+/*
+ÄNDERUNG [03.08.2026]: R2.3a. `nachziehBerechtigteIndizes` ist optional — ältere
+Spielstände kennen es nicht und laden deshalb **ohne** Migrationsschritt weiter.
+Geprüft wird es trotzdem: Ein kaputter Eintrag würde später einen Spieler über
+einen Unsinns-Index adressieren, und das fiele erst beim Nachziehen auf.
+*/
+function validiereNachziehBerechtigte(wert: unknown, spielerAnzahl: number, pendingReaktion: unknown): void {
+  if (wert === undefined) return;
+  const indizes = erwarteArray(wert, 'nachziehBerechtigteIndizes');
+  for (const idx of indizes as number[]) {
+    if (!Number.isInteger(idx) || idx < 0 || idx >= spielerAnzahl) {
+      throw new Error('Ungültiger Spielzustand: nachziehBerechtigteIndizes enthält ungültigen Spielerindex.');
+    }
+  }
+  /* ÄNDERUNG [03.08.2026]: Codex-Review. Eine gefüllte Liste **ohne** ausstehende
+     Reaktion kann die Engine nicht erzeugen — `anwendeAktion` zieht am Ende jeder
+     Aktion nach und leert sie dabei. Ein solcher Stand ist also entweder
+     manipuliert oder aus einer kaputten Fassung; würde er geladen, zöge beim
+     nächsten Sonderkartenzug ein Spieler eine Karte zu viel. */
+  if (indizes.length > 0 && (pendingReaktion === null || pendingReaktion === undefined)) {
+    throw new Error('Ungültiger Spielzustand: nachziehBerechtigteIndizes ohne ausstehende Reaktion.');
   }
 }
 

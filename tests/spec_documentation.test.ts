@@ -64,8 +64,9 @@ describe('GAME_SPEC R0 Projektziel', () => {
     /* ÄNDERUNG [03.08.2026]: Der zweite Durchgang durch die Normquelle fand
        weitere Abweichungen. Die Aufzählung muss sie halten — sonst behauptet
        eine gesperrte Spec wieder eine Vollständigkeit, die sie nicht hat. */
-    expect(spec).toContain('| **O-2** | Sofortiges Nachziehen nach einer Sonderkarte |')
     expect(spec).toContain('| **O-3** | Eigener Ablagestapel je Spieler |')
+    // O-2 ist umgesetzt und darf nicht mehr als offen geführt werden.
+    expect(spec).not.toContain('| **O-2** |')
     expect(spec).toContain('| **O-4** | Zweite Spielende-Bedingung |')
     // Die Korrektur der zu früh behaupteten Vollständigkeit.
     expect(specFliesstext).toContain('Das war zu früh behauptet')
@@ -344,6 +345,16 @@ describe('GAME_SPEC R8 Wertung', () => {
     expect(specFliesstext).toContain('erhält **niemand** den Bonus')
     // Sie zählt in die Gesamtpunkte — sonst wäre sie dokumentiert und wirkungslos.
     expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte + Kettenbonus (R8.4a)')
+  })
+
+  it('dokumentiert das sofortige Nachziehen nach einer Sonderkarte', () => {
+    expect(spec).toContain('#### R2.3a Nachziehen nach einer Sonderkarte (ÄNDERUNG 03.08.2026)')
+    expect(specFliesstext).toContain('Nach dem Ausspielen einer Sonderkarte darf sofort eine neue Karte nachgezogen')
+    // Wer durchlässt, hat keine Karte gespielt.
+    expect(specFliesstext).toContain('Wer durchlässt, hat keine Karte gespielt und zieht nicht.')
+    // Der Zeitpunkt ist die eigentliche Zusicherung.
+    expect(specFliesstext).toContain('erst **nach** Abhandlung aller Effekte')
+    expect(specFliesstext).toContain('**Nicht im Endspurt:**')
   })
 
   it('schreibt den digitalen Umfang fest und schließt den Vielfaltbonus aus', () => {

@@ -372,6 +372,79 @@ function berechneEndrundenSpieler(ausloeserIndex: number, spielerAnzahl: number)
   return indizes;
 }
 
+/**
+ * Zieht je eine Karte für die Spieler, die eine Sonderkarte gespielt haben
+ * (R2.3a) — im Uhrzeigersinn ab dem aktiven Spieler.
+ *
+ * ÄNDERUNG [03.08.2026]: Neu. Die Normquelle sagt „Nach Abhandlung aller
+ * Effekte werden neue Karten nachgezogen. Das Nachziehen erfolgt ebenfalls im
+ * Uhrzeigersinn." Bis dahin zog die Engine ausschließlich beim Zugwechsel.
+ *
+ * **Im Endspurt wird nicht gezogen** („Nach Spielende wird noch eine Runde
+ * gespielt, ohne neue Karten zu ziehen"), und ein leerer Stapel ist kein
+ * Fehler, sondern schlicht keine Karte. Läuft der Stapel dabei leer, löst das
+ * den Endspurt aus — dieselbe Zusicherung wie beim Nachziehen zu Zugbeginn.
+ */
+export function zieheOffeneNachziehungen(zustand: Spielzustand): Spielzustand {
+  const offen = zustand.nachziehBerechtigteIndizes ?? [];
+  if (offen.length === 0) return zustand;
+  if (zustand.pendingReaktion !== null) return zustand;
+  if (zustand.spielphase !== 'Normal') {
+    return { ...zustand, nachziehBerechtigteIndizes: [] };
+  }
+
+  const anzahl = zustand.spieler.length;
+  const abstand = (index: number) => (index - zustand.aktiverSpielerIndex + anzahl) % anzahl;
+  /* ÄNDERUNG [03.08.2026]: **Keine** Deduplizierung mehr (Codex-Review). Wer in
+     derselben Abhandlung zwei Karten gespielt hat, zieht zwei — R2.3a sagt „genau
+     eine Karte je gespielter Sonderkarte". Erreichbar ist das: Ein Schlangenfrass
+     darf zwei Karten desselben Gegners fressen, und der darf beide Male mit
+     Farbenschutz abwehren. `sort` ist stabil, Mehrfachnennungen behalten also
+     ihre Reihenfolge. */
+  const reihenfolge = [...offen].sort((a, b) => abstand(a) - abstand(b));
+
+  const stapel = [...zustand.nachziehstapel];
+  const haende = new Map<number, Spielkarte[]>();
+  let letzterZieher: number | null = null;
+  for (const index of reihenfolge) {
+    const karte = stapel.shift();
+    if (!karte) break;
+    haende.set(index, [...(haende.get(index) ?? zustand.spieler[index].hand), karte]);
+    letzterZieher = index;
+  }
+
+  /* ÄNDERUNG [03.08.2026]: Auslöser ist, wer die **letzte** Karte gezogen hat
+     (Codex-Review) — nicht pauschal der aktive Spieler. `zieheAufMindesthand`
+     hält es genauso. Nimmt ein Verteidiger die letzte Karte, gehört ihm die
+     Endrunden-Auslösung, sonst bekäme der falsche Spieler den Schlusszug. */
+  const wirdEndspurt = zustand.nachziehstapel.length > 0 && stapel.length === 0;
+  const ausloeser = letzterZieher ?? zustand.aktiverSpielerIndex;
+
+  return {
+    ...zustand,
+    spieler: zustand.spieler.map((spieler, index) =>
+      haende.has(index) ? { ...spieler, hand: haende.get(index)! } : spieler,
+    ),
+    nachziehstapel: stapel,
+    nachziehBerechtigteIndizes: [],
+    spielphase: wirdEndspurt ? 'Endspurt' : zustand.spielphase,
+    endrunde: wirdEndspurt
+      ? {
+          ausloeserSpielerIndex: ausloeser,
+          verbleibendeSpielerIndizes: berechneEndrundenSpieler(ausloeser, anzahl),
+        }
+      : zustand.endrunde,
+  };
+}
+
+/** Merkt vor, dass dieser Spieler nach Abhandlung aller Effekte nachziehen darf. */
+export function merkeNachziehBerechtigt(zustand: Spielzustand, spielerIndex: number): Spielzustand {
+  return {
+    ...zustand,
+    nachziehBerechtigteIndizes: [...(zustand.nachziehBerechtigteIndizes ?? []), spielerIndex],
+  };
+}
+
 function zieheAufMindesthand(
   zustand: Spielzustand,
   spielerIndex: number,

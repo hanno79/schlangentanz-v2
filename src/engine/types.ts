@@ -140,4 +140,17 @@ export interface Spielzustand {
     verbleibendeSpielerIndizes: number[];
   };
   pendingReaktion: PendingReaktion | null;
+  /**
+   * Wer eine Sonderkarte gespielt hat und dafür noch eine Karte nachziehen darf
+   * (R2.3a) — Spielerindizes, in der Reihenfolge des Spielens.
+   *
+   * Die Liste lebt nur **innerhalb** einer Sonderkarten-Abhandlung. Sie muss im
+   * Zustand stehen und nicht in einer lokalen Variablen, weil eine
+   * Reaktionskette über mehrere Aktionen läuft: Der Angreifer spielt, dann
+   * entscheidet der Verteidiger — dazwischen wird der Zustand serialisiert.
+   *
+   * Optional, damit ältere Spielstände ohne Migrationsschritt weiter laden;
+   * `undefined` bedeutet „niemand offen".
+   */
+  nachziehBerechtigteIndizes?: number[];
 }

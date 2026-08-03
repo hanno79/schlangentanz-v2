@@ -106,7 +106,9 @@ describe('R98 Schlangenhäutung', () => {
     });
 
     expect(aktualisiert.spieler[0].schlangen[0].karten.map((karte) => karte.id)).toEqual(regelBeispielNachher);
-    expect(aktualisiert.spieler[0].hand).toHaveLength(0);
+    /* ÄNDERUNG [03.08.2026]: R2.3a. Nach einer Sonderkarte wird sofort eine
+       Karte nachgezogen — die Hand ist deshalb um eins voller als zuvor. */
+    expect(aktualisiert.spieler[0].hand).toHaveLength(1);
     expect(aktualisiert.ablagestapel.map((karte) => karte.id)).toContain('schlangenhaeutung-r98');
     expect(aktualisiert.zugpflichten.gespielteSonderkarten).toBe(1);
     expect(aktualisiert.spieler[0].ausgespielteSonderkartenNamen).toEqual(['Schlangenhäutung']);
