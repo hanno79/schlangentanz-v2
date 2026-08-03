@@ -221,8 +221,36 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     }
   }
 
+  const partieBeendet = zustand.zugphase === 'Spielende'
+
   return (
-    <main className="spielbrett">
+    /* ÄNDERUNG [03.08.2026, Punkt 1b]: `inert` ab `Spielende`.
+
+       Seit die Siegerehrung als Overlay über dem Brett liegt (`position: fixed`,
+       `z-index: 60`), ist das Brett darunter zwar unsichtbar, aber weiter
+       bedienbar. Zwei Messungen am 03.08.2026, die dasselbe von zwei Seiten
+       zeigen — es sind ausdrücklich **nicht** dieselben sechs Elemente:
+
+       - Tastatur: Sechs Haltepunkte am Brett (die Aktionsliste und fünf
+         Handkarten) kamen vor dem einzigen sinnvollen Knopf, „Noch einmal
+         spielen".
+       - Der neue Layout-Vertrag: „6 Bedienelement(e) vollständig verdeckt" —
+         der Startkreis und fünf Brettkarten.
+
+       `inert` nimmt den ganzen Teilbaum aus Tab-Reihenfolge, Trefferprüfung und
+       Zugänglichkeitsbaum. Das ist keine Sonderbehandlung für das Overlay,
+       sondern die Regel dahinter: Eine beendete Partie hat keine legalen
+       Aktionen mehr, also gibt es am Brett nichts mehr zu bedienen.
+
+       Bewusst **kein** `<dialog>`: Modalität ist hier auf drei Dateien verteilt
+       (`App.css` legt die Party über das Brett, `App.tsx` mountet sie, diese
+       Zeile legt das Brett stumm), und `showModal()` würde die Rolle von
+       `region` auf `dialog` ändern und damit die Zugriffe des Layout-Vertrags
+       brechen — für eine Verallgemeinerung mit genau einem Aufrufer. Der Punkt,
+       an dem sich das dreht, ist benannt: Sobald der Reaktionsdialog aus G-7
+       kommt, steht hier `inert={a || b}` auf derselben Wurzel. Dann ist ein
+       Wahrheitswert am Brett die falsche Höhe und `<dialog>` seinen Preis wert. */
+    <main className="spielbrett" inert={partieBeendet}>
       {/* 1 — Kopfleiste */}
       <section className="brett-kopf brett-bereich" aria-label="Spielstand">
         <p className="brett-kopf__block">
@@ -709,7 +737,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
           </p>
         ) : schritt === null ? (
           <p className="brett-leer">
-            {zustand.zugphase === 'Spielende' ? 'Spiel beendet.' : 'Zuerst oben entscheiden.'}
+            {partieBeendet ? 'Spiel beendet.' : 'Zuerst oben entscheiden.'}
           </p>
         ) : (
           <button

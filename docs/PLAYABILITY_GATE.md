@@ -3984,3 +3984,152 @@ getroffen (M1cx, M1e, und hier) und ist rein mechanisch zu finden.
   Bildschirm wieder nur, wer hinsieht.
 - O-1, O-3, O-4 sowie Drag & Drop, `turnState.ts`-Split und Error-Tracking
   gelten unverändert.
+
+---
+
+## Evidence — 03.08.2026 Ein Vertrag für die Sieger-Party (Punkt 1b)
+
+**Release-Commit:** siehe unten. Der Bildschirm, der zuletzt vier alte Fehler
+verborgen hat, hat jetzt ein Netz.
+
+### Warum es diesen Release gibt
+
+Die Siegerehrung war von **keinem** Layout-Vertrag gedeckt. `npm run test:layout`
+fährt gegen `vite preview`, dort sind die Test-Hooks aus, und der Bildschirm ist
+nur über `/game?phase=spielende` erreichbar. Genau deshalb blieben dort vier
+Fehler jahrelang unbemerkt — sie fielen erst auf, als ihn zum ersten Mal jemand
+ansah.
+
+Umgesetzt ist der Vorschlag aus dem Plan: ein **zweiter Playwright-Auftrag**
+gegen einen Build mit `VITE_TEST_HOOKS=1` in eigenem Ausgabeverzeichnis. Die
+Flagge bleibt aus Production heraus (AP-1); die 34 bestehenden Verträge bleiben
+unverändert am Produktionsbuild.
+
+| Projekt | Port | Verzeichnis | Verträge |
+|---|---|---|---|
+| `chromium` | 4173 | `dist` | alle außer `*.hooks.spec.ts` |
+| `chromium-testhooks` | 4174 | `dist-testhooks` | nur `*.hooks.spec.ts` |
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 668 Tests in 76 Dateien grün (+3) |
+| `npm run typecheck` | grün |
+| `npx tsc -p tsconfig.layout.json --noEmit` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | 44 Verträge grün, 1 übersprungen (+10) |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.
+
+### Die Gegenprobe, die den Test erst brauchbar gemacht hat
+
+Der neue Vertrag lief zuerst gegen den **Produktionsbuild** — also gegen einen
+Bildschirm, auf dem es gar keine Sieger-Party gibt. Erwartet war, dass alles
+fällt. Gefallen sind **drei von acht**.
+
+Die fünf grünen waren die vier generischen Wächter und „die Seite scrollt nicht".
+Sie fragen die ganze Seite ab und finden auf einer Seite ohne Sieger-Party
+erwartungsgemäß nichts zu beanstanden — sie hätten also auch dann grün gemeldet,
+wenn die Siegerehrung überhaupt nicht mehr erschiene. Genau das Muster, das in
+der vorigen Sitzung zweimal auftrat.
+
+Behoben durch eine Vorbedingung im `beforeEach`, die jeden Test an die Sichtbarkeit
+der Region hängt. Gegenprobe wiederholt: **acht von acht** fallen.
+
+### Zwei echte Fehler, vom neuen Vertrag gefunden
+
+1. **Das Brett unter der Siegerehrung blieb bedienbar.** Seit die Party als
+   Overlay darüber liegt (Release 88a9596), ist das Brett unsichtbar, aber weiter
+   im Tab-Weg. Gemessen: sechs Haltepunkte am Brett vor „Noch einmal spielen".
+   Der Wächter meldete parallel „6 Bedienelement(e) vollständig verdeckt" — eine
+   andere Sechs (Startkreis und fünf Brettkarten), dieselbe Ursache.
+   Behoben mit `inert` am Brett ab `Spielende`.
+2. **Eine tote `background`-Regel.** `.sieger-party` war zweimal deklariert,
+   rund 300 Zeilen auseinander. Bei gleicher Spezifität gewinnt die spätere — als
+   ganze Kurzschreibweise. Die vier Verläufe der oberen Regel hat nie jemand
+   gesehen. Aufgefallen, weil das Zerstören der oberen Regel in der Gegenprobe
+   folgenlos blieb. Beide Regeln sind jetzt zu einer zusammengezogen; der
+   aufgelöste `background-image`-Wert ist davor und danach identisch.
+
+### Wovon der Vertrag drei der vier alten Fehler gefunden hätte
+
+| Fehler vom 03.08.2026 | Vertrag |
+|---|---|
+| Party begann bei `y=900` | „im Erstbild" — nachgestellt, drei Verträge fallen |
+| `--st-color-surface-dim` undefiniert → kein Hintergrund | „hat einen Hintergrund" — nachgestellt, fällt |
+| Titel lief unter das Portrait („Schlangent") | Wächter „abgeschnitten" |
+| Punktetafel 1,06 : 1 Kontrast | **nicht** gedeckt — Kontrast ist keine Geometrie |
+
+Jeder neue Vertrag wurde einzeln rot gesehen, jeweils durch Nachstellen des
+Fehlers, den er finden soll.
+
+### Der Merkzettel, der durch einen Mechanismus ersetzt wurde
+
+Drei dieser Gegenproben waren zunächst **wertlos**: Ein verwaister
+`vite preview` auf Port 4174 ließ Playwright wegen `reuseExistingServer` den
+alten Build messen, statt neu zu bauen. Das Ergebnis ist grün und bescheinigt
+einen Build, den es nicht gibt.
+
+Die erste Reaktion war eine Doku-Zeile („vorher `ss -ltn | grep 4173` tippen").
+Das war das falsche Mittel — dieses Repo ersetzt Merkzettel durch Messungen.
+`reuseExistingServer` steht jetzt auf `false`, auch lokal: Playwright bricht bei
+belegtem Port ab, statt still danebenzumessen. Die Doku-Zeile ist wieder weg.
+
+### Was noch dazukam, weil die Reviews darauf zeigten
+
+- **Die vier Wächter standen dreimal wörtlich da.** Der fünfte Wächter musste
+  bereits zweimal nachgetragen werden, und `brett_dauerlauf.spec.ts` ist dabei
+  abgedriftet. Sie liegen jetzt in `tests/layout/waechter.ts`.
+- **Der `inert`-Filter der Wächter war ein stummer Schalter.** Er überspringt
+  `inert`-Teilbäume — richtig, aber bliebe das Brett versehentlich stillgelegt,
+  liefen zwei Wächter leer und blieben grün. Jetzt sagt jeder Vertrag
+  ausdrücklich, welchen Zustand er erwartet: am Brett *nicht* `inert`, unter der
+  Party *schon*.
+- **Die Namensgebung `*.hooks.spec.ts` fiel in eine Richtung still.** Ein Vertrag
+  mit falschem Suffix misst für immer `dist-testhooks`, bleibt grün, und sein
+  Urteil betrifft den ausgelieferten Build nicht mehr.
+  `src/layout_hooks_namensgebung.test.ts` hält beide Richtungen fest — nach dem
+  Vorbild von `App.hooks_production_guard.test.ts`, also am Quelltext statt an
+  einer gepflegten Liste. Beide Richtungen rot gesehen.
+- **Der Layout-Lauf zahlte zweimal `tsc -b`** (gemessen 5,0 s je Server, gegen
+  0,17 s für den Bau selbst). Playwright startet alle `webServer`-Einträge, auch
+  bei `--project=…`. Beide bauen jetzt mit `vite build`; der Typecheck bleibt ein
+  eigenes Gate.
+
+### Nachtrag aus der Review-Runde
+
+- **Eine exportierte `VITE_TEST_HOOKS=1` konnte in den Produktionsauftrag
+  lecken.** Der erste `webServer` rief `vite build` ohne eigene Umgebung auf;
+  Vite reicht `VITE_`-Variablen aus `process.env` durch. Stand die Flagge in der
+  Shell des Aufrufers, prüfte der Auftrag `chromium` einen Build mit Hooks — und
+  meldete grün für einen Build, den es in Production nicht gibt. Dieselbe
+  Fehlerklasse wie der verwaiste Preview-Server, eine Ebene tiefer. Jetzt steht
+  `env: { VITE_TEST_HOOKS: '0' }` am Eintrag; Playwright legt `env` über
+  `process.env`.
+
+  Gemessen am kompilierten Guard, der ganze Lauf mit `VITE_TEST_HOOKS=1` in der
+  Umgebung: `dist` → `function gr(){return!1}`, `dist-testhooks` →
+  `function gr(){return!0}`. Ohne die Zeile liefert dasselbe `vite build`
+  `return!0` — der Fehler war also echt, nicht theoretisch. 44 Verträge blieben
+  grün.
+- **Zwei Doku-Korrekturen.** Die Projekt-Tabelle in `docs/WORKFLOW.md` nannte für
+  `chromium` noch `npm run build` und widersprach damit ihrem eigenen Abschnitt
+  28 Zeilen weiter unten. Und `reuseExistingServer: false` bricht nicht ab, weil
+  ein *Port belegt* ist, sondern weil unter der URL schon ein Server *antwortet*
+  (`… is already used`); ein belegter, aber stummer Port scheitert später und
+  anders, über `vite preview --strictPort`. In `docs/WORKFLOW.md`, `CLAUDE.md` und
+  im Kommentar in `playwright.config.ts` richtiggestellt.
+
+### Bekannte Einschränkungen
+
+- **Der Kontrast der Punktetafel bleibt ungedeckt.** Ein Kontrastvertrag ist
+  keine Geometriemessung und wäre eigene Maschinerie — nicht Teil dieses Slices.
+- **Der Guard für undefinierte CSS-Token fehlt weiter.** Diese Fehlerklasse hat
+  das Projekt dreimal getroffen; der neue Hintergrund-Vertrag fängt sie nur auf
+  diesem einen Bildschirm ab.
+- O-1, O-3, O-4 sowie Drag & Drop, `turnState.ts`-Split und Error-Tracking
+  gelten unverändert.
+- Kein Error-Tracking; Vercel-CLI veraltet (54.6.1 / 58.4.4).

@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+# Zweiter Layout-Auftrag: Build mit VITE_TEST_HOOKS=1 (playwright.config.ts)
+dist-testhooks
 *.local
 
 # Editor directories and files

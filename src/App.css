@@ -784,11 +784,19 @@ bleibt er erreichbar — Regel 10 der `SPIELBRETT_SPEC.md`.
   padding: clamp(1rem, 3vw, 2rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
   border-radius: 0;
+  /* ÄNDERUNG [03.08.2026, Punkt 1b]: Hier standen vier Verläufe, die nie jemand
+     gesehen hat. Eine zweite `.sieger-party`-Regel hinter den `@media`-Blöcken
+     hatte dasselbe Gewicht, und bei gleicher Spezifität gewinnt die spätere —
+     als ganze Kurzschreibweise. Gemessen am aufgelösten Stil: gezeichnet wurde
+     ausschließlich die untere. Aufgefallen beim Gegenprobieren des neuen
+     Hintergrund-Vertrags, weil das Zerstören der oberen Regel folgenlos blieb.
+     Beide Regeln sind jetzt zu dieser einen zusammengezogen. */
   background:
-    radial-gradient(circle at 12% 18%, rgba(254, 203, 0, 0.74) 0 4rem, transparent 4.1rem),
-    radial-gradient(circle at 88% 24%, rgba(255, 188, 170, 0.78) 0 3.6rem, transparent 3.7rem),
-    radial-gradient(circle at 72% 86%, rgba(164, 222, 2, 0.72) 0 5rem, transparent 5.1rem),
-    linear-gradient(180deg, rgba(236, 255, 227, 0.96), rgba(185, 241, 172, 0.8));
+    radial-gradient(ellipse at center, transparent 55%, rgba(6, 57, 7, 0.18) 100%),
+    linear-gradient(180deg,
+      var(--st-color-tertiary-container) 0%,
+      var(--st-color-secondary-container) 38%,
+      var(--st-color-surface-dim) 100%);
   box-shadow: 0 8px 0 var(--st-color-border-strong);
 }
 
@@ -1077,15 +1085,6 @@ bleibt er erreichbar — Regel 10 der `SPIELBRETT_SPEC.md`.
     justify-items: center;
     text-align: center;
   }
-}
-
-.sieger-party {
-  background:
-    radial-gradient(ellipse at center, transparent 55%, rgba(6, 57, 7, 0.18) 100%),
-    linear-gradient(180deg,
-      var(--st-color-tertiary-container) 0%,
-      var(--st-color-secondary-container) 38%,
-      var(--st-color-surface-dim) 100%);
 }
 
 .sieger-party__kopf h2 {
