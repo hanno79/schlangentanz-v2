@@ -3868,3 +3868,60 @@ ab und tauscht nur einen Eintrag.
   spielt die digitale Partie an dieser Stelle anders als am Tisch.
 - Kein Error-Tracking; Vercel-CLI veraltet (54.6.1 / 58.4.4).
 - Die offenen Punkte der vorigen Releases gelten unverändert.
+
+---
+
+## Evidence — 03.08.2026 R2.3a Nachziehen nach einer Sonderkarte (Deploy feffaac)
+
+**Release-Commit:** `feffaac` auf `main`, Arbeitsverzeichnis sauber.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 665 Tests in 75 Dateien grün (+9) |
+| `npm run typecheck` / `build` | grün — `index-Do2Jl3st.js` 320,09 kB (gzip 88,20 kB) |
+| `npm run test:layout` | 34 Verträge grün, 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` / `eslint` | grün |
+| `npm run smoke:production` | 1/1 bestanden (5,6 s) |
+
+Production liefert `index-Do2Jl3st.js`, identisch mit dem lokalen Build; `/` und
+`/game` je 200.
+
+### Gegenprobe
+
+Die sechs Regeltests wurden gegen die unveränderte Engine rot gesehen — drei
+fielen (die neue Regel), drei blieben grün (die Zusicherungen, die schon vorher
+galten: kein Ziehen mitten in der Kette, keins im Endspurt, keins bei leerem
+Stapel). Das ist die saubere Aufteilung: Was rot wird, ist neu; was grün bleibt,
+ist Regressionsschutz.
+
+### Codex-Review (Gate 7): drei HIGH, alle bestätigt
+
+1. **Deduplizierung über ein `Set`** — wer zwei Karten spielt, zog nur eine.
+   Ausgerechnet der Schlangenfrass-Fall, für den das Kettenende gebaut war.
+2. **Endspurt-Auslöser** war pauschal der aktive Spieler; richtig ist, wer die
+   letzte Karte gezogen hat. Sonst bekäme der falsche Spieler den Schlusszug.
+3. **Alte Spielstände mitten in einer Reaktionskette** verlören den Nachzug des
+   Angreifers. Ein Migrationsschritt rekonstruiert ihn aus
+   `pendingReaktion.angreifenderSpielerIndex`.
+
+Dazu MEDIUM (gefüllte Liste ohne ausstehende Reaktion wird jetzt abgelehnt) und
+zwei LOW, die beide **Begründungen** von mir trafen, nicht Code.
+
+### Was das Absichern der Migration nebenbei zutage förderte
+
+Meine Test-Vorrichtung ließ die ausgeteilten Handkarten verschwinden und baute
+Schlangen aus erfundenen Karten-IDs. Sechs Tests liefen damit grün — auffallen
+konnte es erst, als zwei Tests den Zustand **serialisierten**: Die
+Materialvollständigkeitsprüfung in `serialization.ts` schlug an. Ein Beleg dafür,
+dass die strengere Persistenz-Validierung Zustände findet, die die Spiellogik
+klaglos verarbeitet.
+
+### Bekannte Einschränkungen
+
+- **O-1, O-3, O-4** bleiben offen bzw. bewusst nicht umgesetzt (GAME_SPEC
+  Abschnitt 11).
+- **Die Sieger-Party liegt weiterhin unter dem Erstbild** — gemessen, in den
+  offenen Punkten dokumentiert, eigener Slice.
+- Kein Error-Tracking; Vercel-CLI veraltet (54.6.1 / 58.4.4).
