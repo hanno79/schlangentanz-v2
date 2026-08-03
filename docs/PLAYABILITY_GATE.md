@@ -3925,3 +3925,62 @@ klaglos verarbeitet.
 - **Die Sieger-Party liegt weiterhin unter dem Erstbild** — gemessen, in den
   offenen Punkten dokumentiert, eigener Slice.
 - Kein Error-Tracking; Vercel-CLI veraltet (54.6.1 / 58.4.4).
+
+---
+
+## Evidence — 03.08.2026 Siegerehrung ins Erstbild (Deploy 88a9596)
+
+**Release-Commit:** `88a9596` auf `main`. Gate-Kette grün: 665 Tests in 75
+Dateien, Typecheck, Build (`index-CT3xzI0-.js`, `index-CsVRxWqM.css` 38,09 kB —
+**kleiner** als zuvor, weil tote Regeln entfielen), 34 Layout-Verträge, beide
+Ratschen, ESLint. Exit-Codes einzeln.
+
+Production liefert `index-CsVRxWqM.css`; im ausgelieferten CSS nachgewiesen:
+`--st-color-surface-dim:#b9f1ac`.
+
+### Gemessen, vorher und nachher (1280×900, `npm run dev`)
+
+| | vorher | nachher |
+|---|---|---|
+| Sieger-Party | `y=900…1537` | `y=0…900` |
+| Neustart-Knopf, Unterkante | `y≈1424` | `y≈713` |
+| Seite scrollt | ja | nein |
+
+### Drei Fehler auf einem Bildschirm — alle vorbestehend
+
+1. **Toter CSS-Aufhänger.** `.spielbereich--mit-sieger-party` setzte die Party in
+   die erste Gitterzeile, aber die Klasse vergibt seit G-8 keine Komponente mehr.
+2. **Kein Hintergrund.** `--st-color-surface-dim` war nirgends definiert; ein
+   undefiniertes Token macht die ganze `background`-Deklaration ungültig. Die
+   Siegerehrung hatte **nie** einen eigenen Hintergrund — unsichtbar, weil sie
+   unter dem Brett lag und der dunkle `body` durchschien.
+3. **Abgeschnittener Titel.** „Schlangentanz!" lief unter das Porträt der
+   Nachbarspalte und stand als „Schlangent" da.
+
+Dazu am selben Tag bereits behoben: der Kontrast der Punktetafel (1,06 : 1).
+**Vier Fehler auf einem Bildschirm, alle alt.** Dass sie zusammen auffielen,
+liegt allein daran, dass ihn zum ersten Mal jemand angesehen hat.
+
+### Undefinierte CSS-Token — geprüft, zwei offen
+
+Eine Prüfung aller `var(--x)` gegen die Definitionen in `App.css` und
+`spielbrett.css` fand vier undefinierte Token. Behoben: `--st-color-surface-dim`
+und `--st-color-surface-container`. Offen und **kein Fehler**:
+`--st-color-forest-container` (hat einen Rückfallwert),
+`--brett-farbe` (ließ sich keiner Definition und keiner Inline-Zuweisung
+zuordnen — vermutlich Altbestand).
+
+**Empfehlung für einen eigenen Slice:** ein Guard nach dem Muster von
+`check:css-asserts`, der fehlschlägt, sobald ein `var(--x)` ohne Definition und
+ohne Rückfallwert auftaucht. Diese Fehlerklasse hat das Projekt jetzt dreimal
+getroffen (M1cx, M1e, und hier) und ist rein mechanisch zu finden.
+
+### Bekannte Einschränkungen
+
+- **Die Sieger-Party ist weiterhin von keinem Layout-Vertrag gedeckt.** Der
+  geplante zweite Playwright-Auftrag gegen einen Build mit `VITE_TEST_HOOKS=1`
+  ist **nicht** Teil dieses Releases; gemessen wurde von Hand gegen
+  `npm run dev`. Solange das so bleibt, findet den nächsten Fehler auf diesem
+  Bildschirm wieder nur, wer hinsieht.
+- O-1, O-3, O-4 sowie Drag & Drop, `turnState.ts`-Split und Error-Tracking
+  gelten unverändert.
