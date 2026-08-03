@@ -23,6 +23,7 @@ import type { BrettschrittEintrag } from './hooks/usePartie'
 import SonnigesNestLobby from './components/SonnigesNestLobby'
 import type { KiGegnerAnzahl } from './components/SonnigesNestLobby'
 import SiegerParty from './components/SiegerParty'
+import Fehlerfang from './components/Fehlerfang'
 import Spielbrett from './spielbrett/Spielbrett'
 
 interface AppProps {
@@ -47,13 +48,25 @@ function App({ initialZustand, initialBrettschrittEintraege }: AppProps) {
     setPfad('/game')
   }
 
+  /* Zurück in die Lobby, wenn das Brett nicht mehr zu zeichnen ist. Ein „neues
+     Spiel" auf `/game` würde zwar eine Partie erzeugen, aber ohne Auswahl der
+     Gegnerzahl — die trifft man in der Lobby. */
+  function zurueckZurLobby() {
+    if (typeof window !== 'undefined') window.history.pushState({}, '', '/')
+    setPfad('/')
+  }
+
   if (istSpielPfad(pfad)) {
     return (
-      <>
+      /* ÄNDERUNG [03.08.2026]: Der Fehlerfang sitzt hier und nicht in `main.tsx`
+         um die ganze App. Stirbt das Brett an einem Wertungsfehler, soll die
+         Lobby erreichbar bleiben — läge der Fang eine Ebene höher, nähme er auch
+         den Weg zurück mit. */
+      <Fehlerfang onNeuesSpiel={zurueckZurLobby}>
         <Spielbrett partie={partie} />
         {/* Die Siegerehrung legt sich über das Brett, sobald die Partie endet. */}
         <SiegerParty zustand={partie.zustand} onNeuesSpiel={starteNeuesSpiel} />
-      </>
+      </Fehlerfang>
     )
   }
 

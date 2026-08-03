@@ -1390,3 +1390,61 @@ p, li {
     align-content: stretch;
   }
 }
+
+/* ---- Fehlerfang ------------------------------------------------------
+
+   ÄNDERUNG [03.08.2026]: Was der Spieler sieht, wenn das Brett nicht mehr
+   gezeichnet werden kann. Vorher war das eine weiße Seite.
+
+   Bewusst schlicht und ohne eigene Tokens: Diese Fläche erscheint genau dann,
+   wenn etwas kaputt ist, und soll dann lesbar sein — nicht hübsch. Die Farben
+   kommen aus dem vorhandenen Satz; `--st-color-tertiary` ist im Projekt die
+   Warnfarbe. */
+.fehlerfang {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.75rem;
+  min-block-size: 100dvh;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: var(--st-color-background);
+  color: var(--st-color-text);
+  font-family: var(--st-font-body);
+  text-align: start;
+}
+
+.fehlerfang__titel {
+  margin: 0;
+  color: var(--st-color-tertiary);
+  font-size: 1.5rem;
+  letter-spacing: normal;
+}
+
+.fehlerfang__meldung {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--st-color-tertiary);
+  border-radius: 0.75rem;
+  background: var(--st-color-tertiary-container);
+  font-weight: 700;
+}
+
+.fehlerfang__hinweis {
+  margin: 0;
+  color: var(--st-color-text-soft);
+}
+
+.fehlerfang__knopf {
+  padding: 0.7rem 1.1rem;
+  border: 2px solid var(--st-color-border-strong);
+  border-radius: 0.75rem;
+  background: var(--st-color-primary-container);
+  color: var(--st-color-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fehlerfang__knopf:hover {
+  background: var(--st-color-secondary-container);
+}

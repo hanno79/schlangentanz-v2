@@ -459,6 +459,18 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
   font-weight: 700;
 }
 
+/* ÄNDERUNG [03.08.2026]: Die abgelehnte Aktion (GAME_SPEC Abschnitt 6). Sie
+   steht in der Statuszeile, hebt sich dort aber ab: Der Rest der Zeile ist
+   Rückmeldung, das hier ist ein Hindernis. `--brett-warnung` ist im Brett
+   bereits die Farbe für „das solltest du wissen" (Endspurt, Aussetzen). */
+.brett-status__fehler {
+  padding: 0.2rem 0.5rem;
+  border: var(--brett-rahmen) solid var(--brett-warnung);
+  border-radius: var(--brett-rundung);
+  color: var(--brett-warnung);
+  font-weight: 700;
+}
+
 .brett-aktionsliste {
   display: flex;
   flex-direction: column;

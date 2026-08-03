@@ -63,6 +63,12 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
   )
   const [zustand, setZustand] = useState<Spielzustand>(() => startZustand)
   const [letzteAktion, setLetzteAktion] = useState<string | null>(null)
+  /* ÄNDERUNG [03.08.2026]: Die deutsche Engine-Meldung, wenn eine Aktion
+     abgelehnt wurde. GAME_SPEC Abschnitt 6 verlangt sie ausdrücklich: „Bei einem
+     Verstoß soll die UI die deutsche Engine-Meldung sichtbar machen, statt still
+     zu scheitern." Bis hierher schied jede abgelehnte Aktion still — der Knopf
+     tat nichts, und niemand erfuhr warum. */
+  const [fehler, setFehler] = useState<string | null>(null)
   const [letzteAktionZiel, setLetzteAktionZiel] = useState<LetzteAktionZiel | null>(null)
   const [hervorgehobenesAktionszielId, setHervorgehobenesAktionszielId] = useState<string | null>(null)
   // M1dp-Fix: Der Schlangenbereich meldet seinen effektiven Zielspur-Highlight-Key
@@ -186,6 +192,36 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
        durchläuft, ist dieses Protokoll die einzige Stelle, an der der Spieler
        erfährt, was passiert ist — ein Folgeschritt darf es ihm nicht vor dem
        Lesen wegnehmen. */
+    // Naechsten Zustand synchron aus dem Closure ableiten, damit wir die
+    // Brettschritt-Eintraege ausserhalb eines setState-Updaters pflegen koennen
+    // und kein setState-during-render Anti-Pattern entsteht.
+    const vorherAb = zustand.ablagestapel
+    const phaseVorher = zustand.zugphase
+    const aktiverIndexVorher = zustand.aktiverSpielerIndex
+    const aktiverVorher = zustand.spieler[aktiverIndexVorher]
+
+    /* ÄNDERUNG [03.08.2026]: Der Updater läuft jetzt **vor** den Zurücksetzern,
+       und er läuft abgesichert.
+
+       Vorher stand er dahinter. Warf die Engine — und sie wirft an rund 220
+       Stellen —, war die Kartenauswahl des Spielers bereits gelöscht, der
+       Spielzustand aber unverändert. Aus seiner Sicht: Der Klick hat die Auswahl
+       aufgehoben und sonst nichts getan, ohne ein Wort dazu. Genau das verbietet
+       GAME_SPEC Abschnitt 6.
+
+       Jetzt entscheidet der Ausgang: Bei Erfolg wird aufgeräumt wie bisher, bei
+       einem Fehler bleibt alles stehen, wo es war, und der Spieler liest die
+       Meldung. Der Spielzustand kann dabei nicht halb verändert sein — die
+       Engine ist rein funktional, ein geworfener Aufruf hat nichts angefasst. */
+    let naechster: Spielzustand
+    try {
+      naechster = updater(zustand)
+    } catch (ausnahme) {
+      setFehler(ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler.')
+      return
+    }
+
+    setFehler(null)
     if (optionen.automatischerSchritt !== true) {
       setLetzteAktion(label)
       setKiZugProtokoll([])
@@ -194,14 +230,6 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     setAbwurfAuswahl([])
-    // Naechsten Zustand synchron aus dem Closure ableiten, damit wir die
-    // Brettschritt-Eintraege ausserhalb eines setState-Updaters pflegen koennen
-    // und kein setState-during-render Anti-Pattern entsteht.
-    const vorherAb = zustand.ablagestapel
-    const phaseVorher = zustand.zugphase
-    const aktiverIndexVorher = zustand.aktiverSpielerIndex
-    const aktiverVorher = zustand.spieler[aktiverIndexVorher]
-    const naechster = updater(zustand)
     setZustand(naechster)
     const nachherAb = naechster.ablagestapel
     if (nachherAb.length > vorherAb.length) {
@@ -280,13 +308,19 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     let ergebnis
     try {
       ergebnis = spieleKiZuegeBisZumMenschen(zustand)
-    } catch (fehler) {
+    } catch (ausnahme) {
       // Defensive: eine unerwartete Engine-Exception darf das Spiel nicht einfrieren.
-      const meldung = fehler instanceof Error ? fehler.message : 'Unbekannter Fehler'
+      const meldung = ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler'
       setLetzteAktion('Gegnerzüge abgebrochen')
       setKiZugProtokoll([`KI-Zug abgebrochen: ${meldung}`])
+      /* ÄNDERUNG [03.08.2026]: Die Meldung steht jetzt zusätzlich im
+         Fehlerkanal. Das Gegnerprotokoll allein reichte nicht: Es lebt in
+         Region 3 und wird vom nächsten Gegnerzug überschrieben — ein Fehler
+         gehört dorthin, wo er nicht wegrutscht. */
+      setFehler(meldung)
       return
     }
+    setFehler(null)
     setLetzteAktion('Gegnerzüge vorgespult')
     /* Nur die Züge, die etwas verändert haben — Phasenbuchhaltung würde im
        Brett bloß die Spielfläche verdrängen. */
@@ -310,17 +344,29 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     setBrettschrittEintraege(eintraege)
   }
   function handleNeuesLobbySpiel(kiGegner: KiGegnerAnzahl) {
+    /* ÄNDERUNG [03.08.2026]: Erst die neue Partie bauen, dann aufräumen — wie in
+       `wechsleZustand`. Die Factory wirft bei ungültiger Gegnerzahl und bei
+       leerem Aufgabenstapel (`state.ts`); vorher hätte das die Lobby mit
+       gelöschtem Protokoll und ohne neue Partie zurückgelassen. */
+    let neuePartie: Spielzustand
+    try {
+      // ÄNDERUNG [30.07.2026]: AP-3 — die spec-nahe Einzelspieler-Factory benennt die
+      // Gegner „KI Gegner 1..3" statt generisch „Spieler 2..4" und validiert die
+      // KI-Anzahl gegen KI_GEGNER_MIN/MAX. Sie existierte bereits, wurde aber nur von
+      // Tests benutzt (Onboarding-Finding 4).
+      neuePartie = starteAusspielphase(erstelleEinzelspielerSpielzustand(kiGegner))
+    } catch (ausnahme) {
+      setFehler(ausnahme instanceof Error ? ausnahme.message : 'Unbekannter Fehler.')
+      return
+    }
+    setFehler(null)
     setLetzteAktion(`Neues Spiel: Du + ${kiGegner} KI`)
     setKiZugProtokoll([])
     setHervorgehobenesAktionszielId(null)
     setAusgewaehlteHandkarteAuswahl(null)
     gezogeneHandkarteIdRef.current = null
     setBrettschrittEintraege([])
-    // ÄNDERUNG [30.07.2026]: AP-3 — die spec-nahe Einzelspieler-Factory benennt die
-    // Gegner „KI Gegner 1..3" statt generisch „Spieler 2..4" und validiert die
-    // KI-Anzahl gegen KI_GEGNER_MIN/MAX. Sie existierte bereits, wurde aber nur von
-    // Tests benutzt (Onboarding-Finding 4).
-    setZustand(starteAusspielphase(erstelleEinzelspielerSpielzustand(kiGegner)))
+    setZustand(neuePartie)
   }
 
   return {
@@ -328,6 +374,7 @@ export function usePartie({ initialZustand, initialBrettschrittEintraege }: Part
     startZustand,
     zustand,
     letzteAktion,
+    fehler,
     letzteAktionZiel,
     hervorgehobenesAktionszielId,
     setHervorgehobenesAktionszielId,

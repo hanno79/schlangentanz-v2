@@ -174,7 +174,26 @@ Sonderkartenzähler** · **Verdoppler aktiv (2→3 Karten)** · Handkartenzahl u
 Limit 10 · **Schlangenzahl und Limit 2** · Schlangenzustände
 aktiv/blockiert/geschützt · Nachziehstapel und Ablage · offene Aufgaben (im
 Endspurt doppelt zählend) · geheime Aufgabe **nur des Menschen** · **wer
-aussetzt** · nächster Pflichtschritt · letzte Aktion · Wertung und Sieger.
+aussetzt** · nächster Pflichtschritt · letzte Aktion · **abgelehnte Aktion mit
+der deutschen Engine-Meldung** · Wertung und Sieger.
+
+**Zur abgelehnten Aktion** *(ÄNDERUNG 03.08.2026)*: `GAME_SPEC.md` Abschnitt 6
+verlangt, dass die UI bei einem Verstoß die deutsche Engine-Meldung sichtbar
+macht, „statt still zu scheitern". Bis zu diesem Datum war das offen — die Engine
+wirft an rund 220 Stellen, und der Klickpfad fing nichts davon ab: Der Knopf tat
+nichts, kommentarlos.
+
+Die Meldung steht in der **Statuszeile** (Region 7) und bekommt keine eigene
+Region — dort steht ohnehin, was zuletzt geschah. Sie trägt `role="alert"`, damit
+Screenreader sie ansagen; die übrigen Statusangaben sind bewusst still, sonst
+wäre keine davon dringlich.
+
+**Was der Fehlerfang abdeckt.** Ein `try/catch` im Klick-Handler erreicht keine
+Fehler, die beim *Zeichnen* auftreten — und die gibt es: Das Brett ruft die
+Wertung im Render (`ermittleSpielerLagen`). Dafür liegt eine Error Boundary um
+das Brett (`src/components/Fehlerfang.tsx`); ohne sie wurde aus einem
+Wertungsfehler eine weiße Seite. Sie umschließt bewusst nur das Brett, nicht die
+ganze App: Die Lobby soll erreichbar bleiben, wenn das Brett stirbt.
 
 Fett markiert sind die Angaben, die vor dem Neubau **nirgends** sichtbar waren.
 `aussetzenSpielerIndizes` kam im gesamten `.tsx`-Code nicht ein einziges Mal vor.

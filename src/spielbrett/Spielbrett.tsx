@@ -55,6 +55,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
   const {
     zustand,
     letzteAktion,
+    fehler,
     ausgewaehlteHandkarteAuswahl,
     setAusgewaehlteHandkarteAuswahl,
     ueberhand,
@@ -725,6 +726,19 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
 
       {/* 7 — Statuszeile */}
       <section className="brett-status brett-bereich" aria-label="Spielverlauf">
+        {/* Die abgelehnte Aktion. GAME_SPEC Abschnitt 6 verlangt die deutsche
+            Engine-Meldung, „statt still zu scheitern" — bis hierher tat der
+            Knopf in so einem Fall schlicht nichts.
+
+            Der Platz ist die Statuszeile und keine achte Region (Regel 1 und
+            „Mehr Regionen gibt es nicht"): Hier steht ohnehin schon, was zuletzt
+            geschah. `role="alert"` sagt die Meldung an — die übrigen
+            Statusangaben sind bewusst still, sonst wäre keine davon dringlich. */}
+        {fehler ? (
+          <span className="brett-status__fehler" role="alert">
+            {fehler}
+          </span>
+        ) : null}
         <span className="brett-status__pflicht">{pflichtschritt}</span>
         <span>
           <span className="brett-status__leise">Nachziehstapel </span>
