@@ -47,7 +47,13 @@ test.describe('Sieger-Party auf /game?phase=spielende', () => {
      Mit dieser Zeile hängen alle acht am selben Faden. Gegenprobe wiederholt:
      acht von acht fallen gegen den Produktionsbuild. */
   test.beforeEach(async ({ page }) => {
-    await page.goto('/game?phase=spielende', { waitUntil: 'networkidle' })
+    /* Kein `waitUntil: 'networkidle'` — Playwright rät davon ab, und hier wartet
+       es auf nichts: Die App lädt keine Webfonts (nur ein System-Stack), keine
+       Bilder und keine `url()`-Ressourcen; Geometrie kann also nicht nachrutschen.
+       Die Bereitschaft prüft die Zusicherung darunter. Mit `retries: 0` wäre ein
+       Hänger im gemeinsamen `beforeEach` ein harter Fehlschlag für alle acht
+       Verträge dieser Datei. Der Bestand in `tests/layout/` benutzt es noch. */
+    await page.goto('/game?phase=spielende')
     await expect(
       page.getByRole('region', { name: 'Sieger-Party' }),
       'Der `?phase=spielende`-Hook hat nicht gegriffen — dieser Vertrag misst nichts.',
