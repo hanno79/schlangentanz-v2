@@ -37,6 +37,22 @@ bleiben, weil beide Stylesheets dieselbe Palette benutzen.
      Wert spiegelt das helle lime-Hintergrund-Token. */
   --st-color-on-primary: #ecffe3;
   --st-color-on-surface: #063907;
+  /* ÄNDERUNG [03.08.2026]: Zwei Token, die benutzt, aber nie definiert waren.
+
+     `--st-color-surface-dim` schließt den Verlauf der Sieger-Party ab. Weil das
+     Token fehlte, war die **gesamte** `background`-Deklaration ungültig — die
+     Siegerehrung hatte gar keinen eigenen Hintergrund. Aufgefallen ist das erst,
+     als sie sich über das Brett legte: Solange sie darunter lag, schien der
+     dunkle `body` durch und sah wie Absicht aus.
+
+     `--st-color-surface-container` färbt ein Konfettistück, das deshalb
+     unsichtbar blieb.
+
+     Dieselbe Falle wie bei den M1e- und M1cx-Token, die schon einmal still auf
+     geerbtes Schwarz zurückfielen. Werte aus der bestehenden Palette: der
+     Grünton ist der Abschluss des Schwesterverlaufs in `.sieger-party`. */
+  --st-color-surface-dim: #b9f1ac;
+  --st-color-surface-container: #d8ffcb;
   /* AENDERUNG 22.06.2026: M1cy fuegt die Gegnerplakette ein, deren Name-Text
      und Punkte-Pille var(--st-color-on-tertiary-container) als Schrift auf
      dem Tertiary-Container-Hintergrund nutzt. Token war vorher unbenutzt
@@ -718,38 +734,6 @@ p, li {
   line-height: 1.65;
 }
 
-.spielbereich--mit-sieger-party {
-  grid-template-areas:
-    "party"
-    "nav"
-    "status"
-    "arena"
-    "spieler"
-    "material"
-    "wertung";
-}
-
-.sieger-party { grid-area: party; }
-
-@media (min-width: 980px) {
-.spielbereich--mit-sieger-party {
-    grid-template-areas:
-      "party party party"
-      "nav nav nav"
-      "status arena spieler"
-      "material arena wertung";
-  }
-}
-
-@media (min-width: 1360px) {
-.spielbereich--mit-sieger-party {
-    grid-template-areas:
-      "party party party party"
-      "nav status arena spieler"
-      "nav material arena wertung";
-  }
-}
-
 @media (min-width: 1100px) {
 @keyframes handkarten-buehne__spielmoment-puls {
     0%, 100% { transform: translateY(0); }
@@ -770,16 +754,36 @@ p, li {
   }
 }
 
+/*
+ÄNDERUNG [03.08.2026]: Die Sieger-Party liegt jetzt **über** dem Brett statt
+dahinter.
+
+Gemessen war sie bei 1280×900 vollständig unsichtbar: Sie begann exakt bei
+`y=900`, der Neustart-Knopf bei `y≈1424`. Wer eine Partie beendete, sah „Partie
+beendet." und musste scrollen, um überhaupt zu erfahren, wer gewonnen hat.
+
+**Die Ursache war toter CSS-Aufhänger.** Die Regeln
+`.spielbereich--mit-sieger-party` setzten die Party in die erste Gitterzeile —
+aber diese Klasse vergibt seit dem Brett-Neubau (G-8) keine Komponente mehr. Das
+gedachte Layout existierte also noch, nur griff es nirgends. Die drei Regeln sind
+mit dieser Änderung entfallen.
+
+`overflow: auto` statt `hidden`: Passt der Inhalt auf kleinen Fenstern doch nicht,
+bleibt er erreichbar — Regel 10 der `SPIELBRETT_SPEC.md`.
+*/
 .sieger-party {
-  position: relative;
-  overflow: hidden;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   gap: clamp(1rem, 2.5vw, 2rem);
+  align-content: center;
   align-items: center;
   padding: clamp(1rem, 3vw, 2rem);
   border: var(--st-border-width-chunky) solid var(--st-color-border-strong);
-  border-radius: 3rem;
+  border-radius: 0;
   background:
     radial-gradient(circle at 12% 18%, rgba(254, 203, 0, 0.74) 0 4rem, transparent 4.1rem),
     radial-gradient(circle at 88% 24%, rgba(255, 188, 170, 0.78) 0 3.6rem, transparent 3.7rem),
@@ -1085,6 +1089,12 @@ p, li {
 }
 
 .sieger-party__kopf h2 {
+  /* ÄNDERUNG [03.08.2026]: Eigene Größe statt der geerbten Titelgröße
+     (`clamp(2.4rem, 6vw, 4.5rem)`). „Schlangentanz!" war breiter als seine
+     Gitterspalte und lief unter das Porträt der Nachbarspalte — sichtbar
+     abgeschnitten als „Schlangent". Vorbestehend; aufgefallen erst, als die
+     Party ins Erstbild rückte und man sie überhaupt zu sehen bekam. */
+  font-size: clamp(1.8rem, 3.4vw, 3rem);
   color: var(--st-color-secondary-container);
   -webkit-text-stroke: 3px var(--st-color-border-strong);
   text-shadow:
