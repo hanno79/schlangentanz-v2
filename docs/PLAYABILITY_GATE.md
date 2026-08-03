@@ -3804,3 +3804,67 @@ verrät keine geheime Aufgabe — er ist aus offenen Schlangen nachzählbar.
   oben unter „Offene Punkte": Der Bildschirm ist im Lauf gegen `vite preview`
   nicht erreichbar, weil dort die Test-Hooks aus sind.
 - Die offenen Punkte der vorigen Releases gelten unverändert.
+
+---
+
+## Evidence — 03.08.2026 Korrektur des Normquellen-Abgleichs (Deploy 27abadb)
+
+**Release-Commit:** `27abadb` auf `main`, Arbeitsverzeichnis sauber, lokal und
+`origin/main` identisch.
+
+### Warum es diesen Release gibt
+
+Der Release davor hat die Spec gesperrt und dabei einen *vollständigen* Abgleich
+mit der Normquelle behauptet. Die Behauptung war zu früh: Geprüft war der
+Wertungsabschnitt, nicht „Spielablauf und Timing von Sonderkarten". Der zweite
+Durchgang über alle 451 Textzeilen der Anleitung fand drei weitere Abweichungen.
+
+**Das ist der eigentliche Beleg dieses Blocks:** Eine gesperrte Spec, die eine
+Vollständigkeit behauptet, die sie nicht trägt, ist schlechter als eine
+ungesperrte — sie lädt dazu ein, Widersprüche für Bugs zu halten.
+
+### Gate-Kette am Release-Commit
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 656 Tests in 74 Dateien grün |
+| `npm run typecheck` | grün |
+| `npm run build` | grün — `index-BIF68aFI.js` 318,11 kB (gzip 87,79 kB) |
+| `npm run test:layout` | 34 Verträge grün, 1 übersprungen |
+| `npm run check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.
+
+### Production
+
+Bundle-Abgleich `index-BIF68aFI.js` identisch mit dem lokalen Build; `/` und
+`/game` je 200. **Am Brett live nachgemessen:** „5/5 Karten · 0/2 Schlangen" —
+zuvor stand dort „5/10", eine Zahl ohne Regelgrundlage.
+
+### Was dieser Release enthält
+
+- **Handkartenlimit 10 → 5.** Die Anleitung sagt „mehr als 5 Karten"; eine Zehn
+  kommt nirgends vor. Am Spielverlauf ändert das nichts (das Limit greift nie,
+  weil man auf 5 auffüllt und mindestens eine Karte spielt) — falsch war die
+  Anzeige.
+- **O-2 bis O-4** als benannte offene Regelfragen in Abschnitt 11.
+- **Der Fehlalarm zur Farbgruppenwertung**, dokumentiert damit ihn niemand ein
+  zweites Mal meldet.
+
+### Drei Tests hingen still am alten Limit
+
+Aufgefallen erst durch die Änderung. Der lehrreichste: „verbietet Abwurf fremder
+Karten" übergab **eine** fremde Karte und erreichte die Eigentumsprüfung nur,
+weil die Überhand der Vorrichtung zufällig genau 1 betrug. Mit jedem anderen
+Limit greift die Mengenprüfung zuerst — der Test wäre grün geblieben und hätte
+etwas anderes geprüft als seinen Namen. Er leitet die Liste jetzt aus der Engine
+ab und tauscht nur einen Eintrag.
+
+### Bekannte Einschränkungen
+
+- **O-2 ist beschlossen, aber noch nicht umgesetzt**: Das sofortige Nachziehen
+  nach einer Sonderkarte ist ein echter Spielunterschied. Bis zur Umsetzung
+  spielt die digitale Partie an dieser Stelle anders als am Tisch.
+- Kein Error-Tracking; Vercel-CLI veraltet (54.6.1 / 58.4.4).
+- Die offenen Punkte der vorigen Releases gelten unverändert.
