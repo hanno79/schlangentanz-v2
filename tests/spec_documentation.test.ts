@@ -61,6 +61,16 @@ describe('GAME_SPEC R0 Projektziel', () => {
   it('benennt offene Regelfragen, statt sie anzudeuten', () => {
     expect(spec).toContain('### Offene Regelfragen (Stand 03.08.2026)')
     expect(spec).toContain('| **O-1** | Einfügeposition der Schlangenblockade |')
+    /* ÄNDERUNG [03.08.2026]: Der zweite Durchgang durch die Normquelle fand
+       weitere Abweichungen. Die Aufzählung muss sie halten — sonst behauptet
+       eine gesperrte Spec wieder eine Vollständigkeit, die sie nicht hat. */
+    expect(spec).toContain('| **O-2** | Sofortiges Nachziehen nach einer Sonderkarte |')
+    expect(spec).toContain('| **O-3** | Eigener Ablagestapel je Spieler |')
+    expect(spec).toContain('| **O-4** | Zweite Spielende-Bedingung |')
+    // Die Korrektur der zu früh behaupteten Vollständigkeit.
+    expect(specFliesstext).toContain('Das war zu früh behauptet')
+    // Der Fehlalarm, damit ihn niemand ein zweites Mal meldet.
+    expect(specFliesstext).toContain('Gemeint sind Teilmengen **derselben** Gruppe')
     /* Der Satz, der das Sperren jahrelang unmöglich gemacht hat: Er behauptete
        offene Fragen und benannte keine einzige. */
     expect(spec).not.toContain('weitere offene Regelfragen betreffen andere Bereiche')
@@ -116,7 +126,7 @@ describe('GAME_SPEC R2 Zugstruktur', () => {
     expect(spec).toContain('Zugabschluss und Spielerwechsel')
     expect(spec).toContain('Nur der aktive Spieler kann Spielaktionen durchführen')
     expect(spec).toContain('Mindest-Handkarten nach Nachziehen: 5 Karten')
-    expect(spec).toContain('Maximale Handkarten am Zugende: 10 Karten')
+    expect(spec).toContain('Maximale Handkarten am Zugende: 5 Karten')
     expect(spec).toContain('Der aktive Spieler muss mindestens 1 Karte spielen')
     expect(spec).toContain('Der aktive Spieler darf ohne Verdoppler maximal 2 Karten spielen')
     expect(spec).toContain('Grundsätzlich gilt pro Zug: höchstens 1 Farbkarte und höchstens 1 Sonderkarte')

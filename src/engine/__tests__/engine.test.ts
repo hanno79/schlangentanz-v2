@@ -33,7 +33,9 @@ describe('Spielkonstanten', () => {
 
   it('Handkartenlimits sind korrekt', () => {
     expect(STARTHANDKARTEN).toBe(5);
-    expect(HANDKARTENLIMIT).toBe(10);
+    // ÄNDERUNG [03.08.2026]: 10 → 5. Die Normquelle nennt 5; eine Zehn kommt
+    // in der Anleitung nicht vor. Siehe `constants.ts` und GAME_SPEC R1.3.
+    expect(HANDKARTENLIMIT).toBe(5);
     expect(MINDESTHANDKARTEN).toBe(5);
   });
 

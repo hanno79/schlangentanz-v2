@@ -114,7 +114,7 @@ einen User-Signoff — keinen Bugfix.
 - Jeder Spieler erhält 5 Startkarten vom Nachziehstapel.
 - Verteilung erfolgt reihum (kein Durcheinander).
 - Handkarten anderer Spieler dürfen nicht sichtbar sein.
-- Handkartenlimit: 10 Karten.
+- Handkartenlimit: 5 Karten. (ÄNDERUNG 03.08.2026: zuvor 10 — eine Zahl, die in der Normquelle nirgends vorkommt. Die Anleitung sagt im Zugschritt c): „Wenn du mehr als 5 Karten auf der Hand hast, lege überzählige Karten ab.")
 - Mindesthandkarten nach Nachziehen: 5 Karten.
 
 ### R1.4 Aufgabenkarten auslegen
@@ -157,7 +157,7 @@ einen User-Signoff — keinen Bugfix.
 - Nachziehen endet, wenn exakt 5 Handkarten erreicht sind oder der Nachziehstapel leer ist.
 - Hat der Spieler bereits 5 oder mehr Karten, wird die Nachziehphase übersprungen.
 - Mindest-Handkarten nach Nachziehen: 5 Karten.
-- Maximale Handkarten am Zugende: 10 Karten.
+- Maximale Handkarten am Zugende: 5 Karten. Das Limit greift im Spielverlauf nie — man zieht auf 5 auf und muss mindestens 1 Karte spielen, hält am Zugende also höchstens 4. Es ist eine Absicherung, kein Alltagsfall.
 - Nachziehen ist Pflicht, nicht optional.
 - Gezogene Karten sind nur für den Spieler sichtbar.
 - Endspurt-Phase wird aktiviert, wenn der Nachziehstapel durch das Nachziehen leer wird.
@@ -622,15 +622,35 @@ warum diese Spec nicht gesperrt werden konnte: Man kann nicht festschreiben, was
 offen ist, wenn niemand weiß, was offen ist. Die Liste ist jetzt vollständig.
 Steht hier nichts weiter, ist nichts weiter offen.
 
-Vorausgegangen ist ein vollständiger Abgleich von R1–R8 gegen die Normquelle
-`https://schlangentanz.ch/rules`. Kartenmengen, Punktwerte, Sonderkartenwirkungen,
-Zugstruktur und Spielende stimmen überein. Zwei Abweichungen fanden sich, beide
-sind mit diesem Slice geschlossen: die fehlende Regel R8.4a und der hängende
-Verweis auf den Vielfaltbonus in R7.1.
+**ÄNDERUNG 03.08.2026 (Korrektur, noch am selben Tag).** Hier stand, ein
+*vollständiger* Abgleich von R1–R8 gegen die Normquelle habe genau zwei
+Abweichungen ergeben. Das war zu früh behauptet: Gründlich geprüft war der
+**Wertungsabschnitt** der Anleitung, nicht der Abschnitt „Spielablauf und Timing
+von Sonderkarten". Der zweite Durchgang hat dort weitere Abweichungen gefunden;
+sie stehen unten als O-2 bis O-4.
+
+Übereinstimmend geprüft und in Ordnung sind: Kartenmengen und Punktwerte (R4.1),
+die acht Sonderkartenwirkungen (R7.1), die Zugschritte „auf 5 auffüllen /
+mindestens 1, höchstens 2 Karten spielen" (R2.2/R2.3), das Spielende samt
+Endrunde (R8.4) und die Farbgruppenwertung (R3.3).
+
+**Ein Fehlalarm gehört mit dokumentiert**, damit ihn niemand ein zweites Mal
+meldet: Die Anleitung schreibt fett „Es zählt nur die längste Gruppe jeder
+Farbe." Der Satz geht weiter — „Eine Vierergruppe zählt also nicht zusätzlich als
+Dreiergruppe, eine Fünfergruppe nicht als Dreier- und Vierergruppe." Gemeint sind
+Teilmengen **derselben** Gruppe, nicht zwei getrennte Gruppen gleicher Farbe. Die
+Engine wertet genau so. Wer nur das fettgedruckte Fragment liest, findet einen
+schweren Wertungsfehler, den es nicht gibt.
+
+Geschlossen mit dem Slice vom 03.08.2026: die fehlende Regel R8.4a und der
+hängende Verweis auf den Vielfaltbonus in R7.1.
 
 | # | Frage | Status | Warum offen |
 |---|---|---|---|
-| **O-1** | Einfügeposition der Schlangenblockade | nicht umgesetzt | Die Engine hängt die Karte ans **Ende** der Zielschlange (R7.1/R3.5a). Ob sie am Tisch zwischen zwei Karten gelegt werden darf — und damit eine Farbgruppe zerreißen kann —, sagt die Normquelle nicht. Eine Position einzuführen wäre eine Regeländerung mit unmittelbarer Punktewirkung und braucht eine bestätigte Quelle oder einen Signoff. |
+| **O-1** | Einfügeposition der Schlangenblockade | nicht umgesetzt | Die Engine hängt die Karte ans **Ende** der Zielschlange (R7.1/R3.5a). Die Anleitung sagt im Zugschritt b) über Sonderkarten allgemein: „kann an beliebiger Stelle eingefügt werden". Ob das auch für Angriffskarten in **fremde** Schlangen gilt oder nur für eigene (Regenbogenschlange, Farbenfusion), sagt sie nicht. Eine Position einzuführen hat unmittelbare Punktewirkung und braucht einen Signoff. |
+| **O-2** | Sofortiges Nachziehen nach einer Sonderkarte | **noch nicht umgesetzt**, Umsetzung beschlossen | Die Anleitung sagt: „Nach dem Ausspielen einer Sonderkarte darf sofort eine neue Karte nachgezogen werden, damit zu Beginn des eigenen Zuges wieder 5 Handkarten vorhanden sind", und nach einer Farbenschutz-Abwehr: „Beide Spieler dürfen sofort eine neue Karte nachziehen." Die Timing-Regeln präzisieren: „Nach Abhandlung aller Effekte werden neue Karten nachgezogen. Das Nachziehen erfolgt ebenfalls im Uhrzeigersinn." Die Engine zieht ausschließlich beim Zugwechsel (`zieheAufMindesthand` in `turnState.ts`). **Echter Spielunterschied:** Am Tisch lässt sich die nachgezogene Karte im selben Zug noch ausspielen. Die Umsetzung ist als eigener Slice beschlossen (Signoff 03.08.2026) — sie berührt jeden Zweig der Reaktionskette und braucht einen Migrationsschritt in der Serialisierung. |
+| **O-3** | Eigener Ablagestapel je Spieler | bewusst nicht umgesetzt | Die Anleitung gibt jedem Spieler einen eigenen Ablagestapel („für gespielte Sonderkarten"); das Datenmodell hat einen gemeinsamen (`ablagestapel`). Ohne Spielwirkung im digitalen Umfang: Keine Regel des Basisspiels liest je aus einem *persönlichen* Stapel. Erst die Erweiterung täte das (Risiko-Belohnung, Aktion 4) — und die ist nach R1.2a außerhalb des Umfangs. |
+| **O-4** | Zweite Spielende-Bedingung | nicht anwendbar | „Wenn der Ablagestapel leer ist und ein Spieler eine Karte vom Ablagestapel ziehen möchte, endet das Spiel ebenfalls." Vom Ablagestapel ziehen kann man nur mit Erweiterungskarten (R1.2a: nicht im Umfang). Die Bedingung ist digital unerreichbar und wird deshalb nicht nachgebildet. |
 
 Nicht auf dieser Liste, weil es **keine** Regelfragen sind:
 

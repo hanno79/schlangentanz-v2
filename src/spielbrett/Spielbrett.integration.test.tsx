@@ -14,7 +14,7 @@ bedient.
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import App from '../App'
-import { beendeZug, erstelleSpielzustand, starteAusspielphase } from '../engine'
+import { beendeZug, erstelleSpielzustand, HANDKARTENLIMIT, starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
 import { farbkarte } from '../engine/__tests__/testHelpers'
 import { aufBrettRoute } from '../test/brettTest'
@@ -199,14 +199,14 @@ describe('Spielerübersicht spiegelt den Engine-Zustand', () => {
     spieler.hand = [farbkarte('blau-a', 'Blau'), farbkarte('blau-b', 'Blau')]
     render(<App initialZustand={zustand} />)
 
-    expect(screen.getByText(/2\/10 Karten/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(`2/${HANDKARTENLIMIT} Karten`))).toBeInTheDocument()
 
     const start = within(aktionsliste())
       .getAllByRole('button')
       .find((knopf) => /Neue Schlange starten/.test(knopf.textContent ?? ''))
     fireEvent.click(start!)
 
-    expect(screen.getByText(/1\/10 Karten/)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(`1/${HANDKARTENLIMIT} Karten`))).toBeInTheDocument()
   })
 })
 

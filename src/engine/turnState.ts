@@ -482,7 +482,7 @@ export function werfeUeberzaehligeHandkartenAb(
   }
 
   if (!Array.isArray(kartenIds) || kartenIds.length !== ueberzaehlig) {
-    throw new Error('Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.');
+    throw new Error(`Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens ${HANDKARTENLIMIT} Handkarten übrig sind.`);
   }
 
   const abzuwerfenSet = new Set(kartenIds);
@@ -1536,7 +1536,7 @@ export function beendeZug(
     throw new Error('Zug kann erst beendet werden, wenn alle Zugpflichten erfüllt sind.');
   }
   if (zustand.spieler[zustand.aktiverSpielerIndex].hand.length > HANDKARTENLIMIT) {
-    throw new Error('Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.');
+    throw new Error(`Zug kann erst beendet werden, wenn der aktive Spieler höchstens ${HANDKARTENLIMIT} Handkarten hat.`);
   }
 
   if (zustand.spielphase === 'Endspurt') {

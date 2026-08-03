@@ -8,7 +8,21 @@ export const KI_GEGNER_MAX = SPIELER_MAX - 1;
 
 // Handkarten
 export const STARTHANDKARTEN = 5;
-export const HANDKARTENLIMIT = 10;
+/*
+ÄNDERUNG [03.08.2026]: 10 → 5.
+
+Die Normquelle sagt im Zugschritt c): „Wenn du mehr als **5** Karten auf der Hand
+hast, lege überzählige Karten auf deinen persönlichen Ablagestapel." Eine Zehn
+kommt in der ganzen Anleitung nicht vor; sie stammt vermutlich aus dem
+überholten Dart-Backlog (siehe `docs/DART_BACKLOG_SOURCE.md`).
+
+**Am Spielverlauf ändert das nichts** — mit beiden Zahlen greift das Limit nie:
+Man zieht auf 5 auf und muss mindestens eine Karte spielen, hält am Zugende also
+höchstens 4. Falsch war die *Anzeige*: Das Brett zeigte „5/10 Karten" und damit
+eine Zahl ohne Regelgrundlage. Die Überhand-Maschinerie bleibt als Absicherung
+bestehen, nicht weil sie im Alltag greift.
+*/
+export const HANDKARTENLIMIT = 5;
 export const MINDESTHANDKARTEN = 5;
 
 // Schlangen

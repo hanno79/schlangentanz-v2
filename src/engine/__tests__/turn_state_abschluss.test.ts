@@ -10,6 +10,8 @@ import {
   beendeAufgabenpruefung,
   beendeZug,
   erstelleSpielzustand,
+  HANDKARTENLIMIT,
+  MINDESTHANDKARTEN,
   spieleFarbenschutz,
   ueberhandAbwurfKartenIds,
   werfeUeberzaehligeHandkartenAb,
@@ -111,11 +113,11 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     expect(aktualisiert.zugphase).toBe('Nachziehphase');
   });
 
-  it('verbietet Zugende mit mehr als zehn Handkarten beim aktiven Spieler', () => {
+  it('verbietet Zugende mit mehr Handkarten als dem Limit beim aktiven Spieler', () => {
     const zustand = zustandMitUeberhand();
 
     expect(() => beendeZug(zustand, { pflichtenErfuellt: true })).toThrow(
-      'Zug kann erst beendet werden, wenn der aktive Spieler höchstens zehn Handkarten hat.',
+      `Zug kann erst beendet werden, wenn der aktive Spieler höchstens ${HANDKARTENLIMIT} Handkarten hat.`,
     );
   });
 
@@ -125,11 +127,14 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
 
     const aktualisiert = werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: abzuwerfendeIds });
 
-    expect(aktualisiert.spieler[0].hand).toHaveLength(10);
+    /* ÄNDERUNG [03.08.2026]: Zahlen aus der Konstante statt fest verdrahtet. Sie
+       standen als 10 und 11 da und hingen damit still am alten Limit; die
+       Vorrichtung legt sechs Karten auf eine volle Hand. */
+    expect(aktualisiert.spieler[0].hand).toHaveLength(HANDKARTENLIMIT);
     expect(aktualisiert.spieler[0].hand.map((karte) => karte.id)).not.toContain(abzuwerfendeIds[0]);
-    expect(aktualisiert.ablagestapel.at(-1)?.id).toBe(abzuwerfendeIds[0]);
+    expect(aktualisiert.ablagestapel.at(-1)?.id).toBe(abzuwerfendeIds.at(-1));
     expect(aktualisiert.zugphase).toBe('Zugabschluss');
-    expect(zustand.spieler[0].hand).toHaveLength(11);
+    expect(zustand.spieler[0].hand).toHaveLength(MINDESTHANDKARTEN + 6);
     expect(zustand.ablagestapel).toHaveLength(0);
   });
 
@@ -149,7 +154,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     const zustand = zustandMitUeberhand();
 
     expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [] })).toThrow(
-      'Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.',
+      `Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens ${HANDKARTENLIMIT} Handkarten übrig sind.`,
     );
   });
 
@@ -160,7 +165,7 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     ) => void;
 
     expect(() => werfeOhneKartenparameter(zustand)).toThrow(
-      'Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens zehn Handkarten übrig sind.',
+      `Es müssen exakt so viele Handkarten abgeworfen werden, bis höchstens ${HANDKARTENLIMIT} Handkarten übrig sind.`,
     );
   });
 
@@ -176,7 +181,16 @@ describe('Turn State Machine — R2.5 Zugabschluss', () => {
     const zustand = zustandMitUeberhand();
     const fremdeKarte = zustand.spieler[1].hand[0];
 
-    expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds: [fremdeKarte.id] })).toThrow(
+    /* ÄNDERUNG [03.08.2026]: Die Liste hat jetzt die **richtige Länge** und
+       tauscht nur einen Eintrag gegen eine fremde Karte. Zuvor stand hier eine
+       einelementige Liste — die passte nur zufällig zur damaligen Überhand von
+       genau 1. Mit einem anderen Limit greift die Mengenprüfung zuerst, und der
+       Test hätte die Eigentumsprüfung gar nicht mehr erreicht, ohne dass seine
+       Absicht sichtbar verlorenging. */
+    const kartenIds = [...ueberhandAbwurfKartenIds(zustand)];
+    kartenIds[0] = fremdeKarte.id;
+
+    expect(() => werfeUeberzaehligeHandkartenAb(zustand, { kartenIds })).toThrow(
       'Es können nur Handkarten des aktiven Spielers abgeworfen werden.',
     );
   });
