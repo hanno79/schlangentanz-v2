@@ -3987,10 +3987,13 @@ getroffen (M1cx, M1e, und hier) und ist rein mechanisch zu finden.
 
 ---
 
-## Evidence — 03.08.2026 Ein Vertrag für die Sieger-Party (Punkt 1b)
+## Evidence — 03.08.2026 Ein Vertrag für die Sieger-Party (Punkt 1b, Deploy aa91c2a)
 
-**Release-Commit:** siehe unten. Der Bildschirm, der zuletzt vier alte Fehler
-verborgen hat, hat jetzt ein Netz.
+**Release-Commit:** `aa91c2a` auf `main`, Arbeitsverzeichnis sauber. Der
+Bildschirm, der zuletzt vier alte Fehler verborgen hat, hat jetzt ein Netz.
+
+**Production:** liefert `index-C5NE7X4B.js`, identisch mit dem lokalen Build;
+`/` und `/game` je 200; `npm run smoke:production` 1/1 bestanden (6,0 s).
 
 ### Warum es diesen Release gibt
 
