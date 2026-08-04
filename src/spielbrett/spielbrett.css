@@ -668,3 +668,27 @@ Die Regeln aus der Spezifikation gelten hier wörtlich. Besonders:
     overflow-y: visible;
   }
 }
+
+/* ÄNDERUNG [04.08.2026, Etappe 6]: Ziehen als zweite Bedienart.
+
+   Zwei Zustände wollen sichtbar sein, und beide sind rein optisch — die Regeln
+   liegen in `useKarteZiehen.ts` und laufen über dieselben Knöpfe wie ein Klick.
+
+   Bewusst ohne Bewegung: Die Layout-Verträge messen mit
+   `reducedMotion: 'reduce'`, und eine Animation, die dort abgeschaltet ist, wäre
+   ungeprüfte Optik. Was den Zug sichtbar macht, sind Deckkraft und Umriss — beides
+   bei reduzierter Bewegung unverändert wirksam. */
+.brett-karte--gezogen {
+  opacity: 0.55;
+  /* `grabbing` statt `grab`: Der Zug läuft schon. */
+  cursor: grabbing;
+}
+
+/* Das Ziel unter dem Zeiger. Dieselbe Sprache wie `--bereit`: Ein anvisiertes Ziel
+   ist ein Ziel, das gleich getroffen wird. */
+.brett-startkreis--anvisiert,
+.brett-anlegeplatz--anvisiert {
+  background: var(--brett-akzent);
+  outline: 3px solid var(--brett-linie);
+  outline-offset: 2px;
+}

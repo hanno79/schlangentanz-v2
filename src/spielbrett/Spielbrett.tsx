@@ -31,6 +31,7 @@ import type { usePartie } from '../hooks/usePartie'
 import useLegaleAktionenNachTyp from '../hooks/useLegaleAktionenNachTyp'
 import { zugphaseLabel } from '../zugphaseLabels'
 import Kartenmarke from './Kartenmarke'
+import { DROP_ZIEL_ATTRIBUT, useKarteZiehen } from './useKarteZiehen'
 import { ermittlePhasenSchritt } from './phasenSchritt'
 import { findeAnlegeAktion, findeStartAktion, schlangenMitZiel } from './brettziele'
 import { ermittleHandModus, handHinweis } from './handModus'
@@ -130,6 +131,14 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     ziele: [],
   })
   const gewaehlteZiele = zielauswahl.karteId === ausgewaehlteKarteId ? zielauswahl.ziele : []
+
+  /* ÄNDERUNG [04.08.2026, Etappe 6]: Ziehen als zweite Bedienart. Der Hook
+     erzeugt keine Aktion — er wählt die Karte über denselben Aufruf wie der Klick
+     und löst beim Loslassen den Ziel-Knopf aus, der ohnehin dasteht. Deshalb kann
+     Drag nichts erreichen, was Klicken nicht erreicht. Siehe `useKarteZiehen.ts`. */
+  const karteZiehen = useKarteZiehen((karteId: string) => {
+    setAusgewaehlteHandkarteAuswahl({ spielerId: aktiver.id, karteId })
+  })
 
   const aktionenDerKarte =
     ausgewaehlteKarteId === null
@@ -344,7 +353,11 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
         {aktiver.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? (
           <button
             type="button"
-            className={`brett-startkreis${startAktion ? ' brett-startkreis--bereit' : ''}`}
+            className={
+              `brett-startkreis${startAktion ? ' brett-startkreis--bereit' : ''}` +
+              (karteZiehen.aktivesZiel === 'startkreis' ? ' brett-startkreis--anvisiert' : '')
+            }
+            {...{ [DROP_ZIEL_ATTRIBUT]: 'startkreis' }}
             onClick={() => startAktion && fuhreAktionAus(startAktion)}
             disabled={startAktion === null}
           >
@@ -408,8 +421,12 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
                   nach Seite eine andere Schlange und andere Punkte. */}
               <button
                 type="button"
-                className="brett-anlegeplatz"
+                className={
+                  'brett-anlegeplatz' +
+                  (karteZiehen.aktivesZiel === `links-${schlange.id}` ? ' brett-anlegeplatz--anvisiert' : '')
+                }
                 aria-label={`Karte links an ${index + 1}. Schlange anlegen`}
+                {...{ [DROP_ZIEL_ATTRIBUT]: `links-${schlange.id}` }}
                 onClick={() => linksAktion && fuhreAktionAus(linksAktion)}
                 disabled={linksAktion === null}
               >
@@ -439,8 +456,12 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
               </ul>
               <button
                 type="button"
-                className="brett-anlegeplatz"
+                className={
+                  'brett-anlegeplatz' +
+                  (karteZiehen.aktivesZiel === `rechts-${schlange.id}` ? ' brett-anlegeplatz--anvisiert' : '')
+                }
                 aria-label={`Karte rechts an ${index + 1}. Schlange anlegen`}
+                {...{ [DROP_ZIEL_ATTRIBUT]: `rechts-${schlange.id}` }}
                 onClick={() => rechtsAktion && fuhreAktionAus(rechtsAktion)}
                 disabled={rechtsAktion === null}
               >
@@ -716,6 +737,11 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
                 gewaehlt={gewaehlt}
                 variante={handModus === 'ueberhand' ? 'abwurf' : 'auswahl'}
                 onWaehlen={onWaehlen}
+                /* Gezogen wird nur im Auswahl-Modus. Beim Überhand-Abwurf und beim
+                   Pflicht-Abwurf bedeutet ein Klick etwas anderes (die Karte geht
+                   weg), und ein Ablageziel gibt es dort nicht. */
+                ziehHandler={handModus === 'auswahl' && onWaehlen ? karteZiehen.ziehHandler(karte.id) : undefined}
+                wirdGezogen={karteZiehen.gezogeneKarteId === karte.id}
                 zusatz={
                   handModus === 'abwurfPflicht' && abwurfAktion === undefined
                     ? 'diese Art ist im Zug schon verbraucht'

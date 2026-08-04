@@ -4884,3 +4884,87 @@ prüft.
 | `npx eslint .` | grün |
 
 Exit-Codes einzeln geprüft.
+
+---
+
+## Evidence — 04.08.2026 Drag & Drop, ohne zweiten Regelweg (Etappe 6)
+
+Drag & Drop war seit G-8 nicht verdrahtet. Der alte Hook
+(`useSchlangenDragDrop.ts`, 199 Zeilen) hing am Zonenbegriff des entfallenen
+`Schlangenbereich.tsx` und wurde gelöscht, statt ihn als Vorlage liegen zu lassen.
+
+### Die Entscheidung: Ziehen erzeugt keine Aktion
+
+`useKarteZiehen` wählt die Karte über denselben Aufruf wie ein Klick und löst beim
+Loslassen **den Ziel-Knopf aus, der ohnehin dasteht** (`element.click()`). Damit ist
+strukturell garantiert, was ein Vertrag sonst nur behaupten könnte: Jede per Drag
+erreichbare Aktion ist auch per Klick erreichbar, und beide gehen durch
+`zielAnklicken` beziehungsweise `fuhreAktionAus`.
+
+Ein eigener Aktionspfad wäre die zweite Regelquelle, die auseinanderläuft — genau
+der Fehler des gelöschten Vorgängers.
+
+**Pointer-Events, nicht HTML5-Drag:** `dragstart`/`drop` funktioniert auf
+Touch-Geräten nicht und ließe sich nur über synthetische DataTransfer-Objekte
+messen — ein Vertrag, der etwas anderes prüft als das, was ein Mensch tut.
+
+**Was bewusst nicht zieht:** Mehrschrittige Sonderkarten (Schlangenfrass,
+Farbendieb, Schlangenblockade) brauchen mehrere Ziele in Folge; „loslassen" hat dort
+keine sinnvolle Bedeutung. Ziehbar sind die einschrittigen Aktionen — neue Schlange
+am Startkreis, Karte links oder rechts anlegen.
+
+### Der Vertrag hat sofort eine Regression gefunden — in der Klick-Bedienung
+
+Der erste Entwurf wählte die Karte bereits im `pointerdown`. Ein gewöhnlicher Klick
+löst aber `pointerdown` **und** `click` aus: Der erste Schritt wählte die Karte, der
+zweite toggelte sie sofort wieder ab. **Klicken war damit kaputt** — die zweite
+Bedienart hätte die erste mitgenommen.
+
+Gefunden hat es der Vertrag „dasselbe Ziel per Klick erreicht dasselbe", der genau
+dafür dasteht. Gewählt wird jetzt erst, wenn die Bewegung sechs Pixel überschreitet;
+darunter bleibt es ein Klick.
+
+**Ein zweiter Fund von eslint:** `laufend.current = zustand` beim Rendern verstößt
+gegen `react-hooks/refs` und war zudem überflüssig, weil die Handler die Ref selbst
+setzen. Aufgefallen, weil der Exit-Code einzeln geprüft wurde — in einer Pipe hätte
+`tail` die 0 gemeldet und der Fehler wäre durchgelaufen.
+
+### Gegenprobe
+
+`data-drop-ziel` vom Startkreis entfernt:
+
+| Vertrag | erwartet | gemessen |
+|---|---|---|
+| Farbkarte auf den Startkreis ziehen | **fällt** | fällt |
+| dasselbe Ziel per Klick | bleibt grün | grün |
+| Zug ins Leere ändert nichts | bleibt grün | grün |
+| Zug wählt die Karte | bleibt grün | grün |
+
+Die beiden Bedienarten werden also getrennt geprüft — ein Fehler in der einen färbt
+die andere nicht mit.
+
+### Optik ohne Bewegung
+
+Gezogene Karte: Deckkraft 0,55 und `cursor: grabbing`. Anvisiertes Ziel: dieselbe
+Umriss-Sprache wie `--bereit`. Bewusst **keine** Animation: Die Layout-Verträge
+messen mit `reducedMotion: 'reduce'`, und eine Animation, die dort abgeschaltet ist,
+wäre ungeprüfte Optik.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 699 Tests in 79 Dateien grün |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | **62** Verträge grün (+4), 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün (Exit-Code einzeln geprüft) |
+
+### Offen
+
+- **Kein Touch-Vertrag.** Pointer-Events gelten für Finger und Stift, aber gemessen
+  ist nur die Maus. Ein Touch-Vertrag bräuchte einen zweiten Playwright-Auftrag mit
+  `hasTouch: true`.
+- **Die Einfügeplätze und Kartenziele ziehen nicht.** Sie gehören zu den
+  mehrschrittigen Sonderkarten (siehe oben) und bleiben beim Klicken.
