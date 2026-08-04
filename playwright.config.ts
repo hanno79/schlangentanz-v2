@@ -94,11 +94,15 @@ export default defineConfig({
   Ersatz (siehe `docs/WORKFLOW.md`).
   */
   /* Beide Server bauen mit `vite build`, nicht mit `npm run build` — also ohne
-     `tsc -b`. Der Typecheck ist ein eigenes Gate (`npm run typecheck`) und
-     kostete hier gemessen 5,0 s, während der Bau selbst 0,17 s braucht. Playwright
-     startet **alle** `webServer`-Einträge, auch bei `--project=…` oder einem
-     Dateifilter, und zwar nacheinander; der Typecheck lief also zweimal je Lauf
-     mit, ohne etwas zu prüfen, was nicht ohnehin geprüft wird. */
+     `tsc -b`. Gemessen: `tsc -b` 5,0 s, `vite build` 0,17 s. Playwright startet
+     **alle** `webServer`-Einträge, auch bei `--project=…` oder einem Dateifilter,
+     und zwar nacheinander; der Typecheck lief also zweimal je Lauf mit.
+
+     Ausdrücklich: **`npm run test:layout` prüft damit keine Typen mehr.** Das
+     tut `npm run typecheck` als eigenes Gate, und die Gate-Kette in
+     `docs/WORKFLOW.md` führt beide. Vite transpiliert auch bei
+     TypeScript-Fehlern — wer nur den Layout-Lauf fährt, hat also keinen
+     Typecheck gehabt. Das ist der bewusste Preis (Codex-Review, Gate 7). */
   webServer: [
     {
       command: 'vite build && vite preview',

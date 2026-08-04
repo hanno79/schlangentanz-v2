@@ -38,6 +38,11 @@ function vertragsDateien(): string[] {
   return readdirSync(VERZEICHNIS).filter((datei) => datei.endsWith('.spec.ts'))
 }
 
+/** Die geteilten Module unter `tests/layout/` — alles, was kein Vertrag ist. */
+function hilfsModule(): string[] {
+  return readdirSync(VERZEICHNIS).filter((datei) => datei.endsWith('.ts') && !datei.endsWith('.spec.ts'))
+}
+
 function nutztTestHook(datei: string): boolean {
   const quelltext = readFileSync(`${VERZEICHNIS}/${datei}`, 'utf8')
   return HOOK_MERKMALE.some((merkmal) => quelltext.includes(merkmal))
@@ -64,6 +69,30 @@ describe('Layout-Verträge: Namensgebung und Hook-Bedarf stimmen überein', () =
       ohneBedarf,
       'Diese Verträge messen den Build mit VITE_TEST_HOOKS=1, brauchen ihn aber nicht — ' +
         `sie gehören an den Produktionsbuild: ${ohneBedarf.join(', ')}`,
+    ).toEqual([])
+  })
+
+  /* ÄNDERUNG [03.08.2026]: Dritte Prüfung, aus dem Codex-Review (Gate 7).
+
+     Die beiden oben lesen nur den Quelltext der Vertragsdatei selbst. Damit
+     hätte ein Vertrag den Hook **indirekt** über ein geteiltes Modul benutzen
+     können — `messung.ts` oder `waechter.ts` — und wäre ohne Suffix weiter gegen
+     den Produktionsbuild gelaufen. Der Testname versprach mehr, als der Code
+     hielt.
+
+     Statt Importe zu verfolgen, wird der indirekte Pfad hier schlicht
+     ausgeschlossen: Kein geteiltes Modul darf den Hook erwähnen. Das ist die
+     stärkere Zusage und die einfachere Prüfung — und sie ist richtig, weil ein
+     Hook-Aufruf in einem Modul, das *alle* Verträge benutzen, ohnehin am
+     falschen Ort stünde. */
+  it('kein geteiltes Modul unter tests/layout/ benutzt den Test-Hook', () => {
+    const module = hilfsModule()
+    expect(module.length, 'Keine Hilfsmodule gefunden — die Prüfung liefe leer').toBeGreaterThan(0)
+    const mitHook = module.filter(nutztTestHook)
+    expect(
+      mitHook,
+      'Diese geteilten Module erwähnen den Test-Hook. Damit könnte ein Vertrag ihn ohne ' +
+        `\`${SUFFIX}\` indirekt benutzen, und die beiden Prüfungen oben sähen es nicht: ${mitHook.join(', ')}`,
     ).toEqual([])
   })
 })

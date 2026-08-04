@@ -31,6 +31,7 @@ import {
   befundListe,
   findeAbgeschnittenes,
   findeAusserhalbDesBildes,
+  findeStillgelegteBedienelemente,
   findeVerdeckteBedienelemente,
   findeZusammengedruecktes,
 } from './messung'
@@ -138,6 +139,20 @@ test.describe('Brett im Dauerlauf', () => {
     const abgeschnitten = await findeAbgeschnittenes(page)
     expect
       .soft(abgeschnitten, `schneiden ihren Inhalt ab:\n${befundListe(abgeschnitten)}`)
+      .toHaveLength(0)
+
+    /* ÄNDERUNG [03.08.2026, Punkt 1b]: Vierte Zusicherung, aus demselben Grund
+       wie die dritte — und diesmal aus dem Codex-Review.
+
+       Die beiden Erreichbarkeits-Wächter oben überspringen seit heute
+       `inert`-Teilbäume. Endeten diese acht Runden in einem stillgelegten Brett
+       — etwa weil eine Runde versehentlich bis `Spielende` durchläuft —, liefen
+       genau sie leer und meldeten grün, ohne noch etwas zu messen. Im Erstbild
+       ist das abgedeckt (`brett_waechter.spec.ts`); für den späteren
+       Spielverlauf war es die Lücke, für die es diesen Dauerlauf gibt. */
+    const stillgelegt = await findeStillgelegteBedienelemente(page)
+    expect
+      .soft(stillgelegt, `sind \`inert\` und werden von den Wächtern übersprungen:\n${befundListe(stillgelegt)}`)
       .toHaveLength(0)
   })
 })

@@ -445,6 +445,42 @@ export async function findeVerdeckteBedienelemente(page: Page): Promise<Befund[]
   return (await messeErreichbarkeit(page)).verdeckt
 }
 
+/**
+ * Bedienelemente, die die beiden Erreichbarkeits-Wächter wegen `inert`
+ * übersprungen haben.
+ *
+ * ÄNDERUNG [03.08.2026, Punkt 1b]: Der `inert`-Filter ist richtig, aber er ist
+ * ein **stummer** Filter — er macht Befunde unsichtbar, ohne dass irgendwo
+ * steht, wie viele. Ein versehentliches `inert` ließe beide Wächter leerlaufen
+ * und beide Verträge grün bleiben, ohne dass noch etwas gemessen wird. Genau
+ * diese Sorte Fehler ist der Grund, warum es diese Testfamilie gibt.
+ *
+ * Ein erster Entwurf fragte stattdessen `main.spielbrett[inert]` ab. Das war zu
+ * eng: Der Filter gilt für **jeden** `inert`-Teilbaum, ein stillgelegter
+ * Lobby-Bereich wäre also durchgerutscht. Gemessen wird deshalb genau das, was
+ * der Filter tatsächlich verschluckt.
+ */
+export async function findeStillgelegteBedienelemente(page: Page): Promise<Befund[]> {
+  return page.evaluate(() => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+    const befunde: { element: string; detail: string }[] = []
+    for (const element of Array.from(document.querySelectorAll('button, a[href], [role="button"], input, select'))) {
+      if (!(element as HTMLElement).checkVisibility()) continue
+      const box = element.getBoundingClientRect()
+      if (box.width < 2 || box.height < 2) continue
+      const stillleger = element.closest('[inert]')
+      if (stillleger === null) continue
+      befunde.push({ element: kennung(element), detail: `stillgelegt durch ${kennung(stillleger)}` })
+    }
+    return befunde
+  })
+}
+
 /** Anzahl sichtbarer Elemente mit nennenswerter Fläche — das Budget aus Regel 1 und 3. */
 export async function zaehleSichtbareElemente(page: Page): Promise<number> {
   return page.evaluate(

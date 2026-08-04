@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { berechneGewinner, berechneSpielzustandGesamtwertung } from '../engine'
 import type { GewinnerEintrag, SpielerWertungsEintrag, Spielzustand } from '../engine'
 import type { KiGegnerAnzahl } from './SonnigesNestLobby'
@@ -29,6 +29,28 @@ function findeFinaleWertung(wertungen: SpielerWertungsEintrag[], gewinner: Gewin
 function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
   const gesamtwertung = useMemo(() => berechneSpielzustandGesamtwertung(zustand), [zustand])
   const gewinnerErgebnis = useMemo(() => berechneGewinner(zustand.spieler), [zustand.spieler])
+  const titelRef = useRef<HTMLHeadingElement>(null)
+
+  /* ÄNDERUNG [03.08.2026, Punkt 1b]: Fokus in die Siegerehrung holen.
+
+     Seit das Brett ab `Spielende` `inert` ist, verliert der Fokus seinen Halt:
+     Wer die Partie mit der Tastatur beendet, steht auf einem Brett-Knopf, dessen
+     Vorfahr im selben Moment stillgelegt wird — der Browser wirft den Fokus dann
+     auf `<body>`. Sichtbar ist die Siegerehrung, aber Tastatur und Screenreader
+     stehen wieder ganz am Anfang des Dokuments. Gefunden im Codex-Review
+     (Gate 7), nicht von den Tests.
+
+     Der Titel bekommt ihn, nicht der Neustart-Knopf: Ein Knopf im Fokus liest
+     sich wie eine Aufforderung, während der Titel zuerst sagt, *was* passiert
+     ist — und der Knopf ist von dort der nächste Tabstopp. `tabIndex={-1}` macht
+     ihn programmatisch fokussierbar, ohne ihn in die Tab-Reihenfolge zu hängen.
+
+     Der Effekt steht **vor** dem `return null` darunter: Die Hook-Regeln
+     verlangen es, und die Bedingung wiederholt er deshalb selbst. */
+  useEffect(() => {
+    if (zustand.zugphase !== 'Spielende') return
+    titelRef.current?.focus()
+  }, [zustand.zugphase])
 
   if (zustand.zugphase !== 'Spielende') return null
 
@@ -58,7 +80,7 @@ function SiegerParty({ zustand, onNeuesSpiel }: SiegerPartyProps) {
       </div>
       <div className="sieger-party__kopf">
         <p className="sieger-party__eyebrow">Finale Waldlichtung</p>
-        <h2>Schlangentanz!</h2>
+        <h2 ref={titelRef} tabIndex={-1}>Schlangentanz!</h2>
         <p className="sieger-party__ergebnis">{ergebnisLabel}</p>
       </div>
       <div className="sieger-party__portrait" role="region" aria-label="Gewinner-Portrait">

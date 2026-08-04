@@ -4014,11 +4014,11 @@ unverändert am Produktionsbuild.
 
 | Prüfung | Ergebnis |
 |---|---|
-| `npm test -- --run` | 668 Tests in 76 Dateien grün (+3) |
+| `npm test -- --run` | 669 Tests in 76 Dateien grün (+4) |
 | `npm run typecheck` | grün |
 | `npx tsc -p tsconfig.layout.json --noEmit` | grün |
-| `npm run build` | grün |
-| `npm run test:layout` | 44 Verträge grün, 1 übersprungen (+10) |
+| `npm run build` | grün — `index-C5NE7X4B.js`, `index-DgpdZ4YD.css` 37,83 kB |
+| `npm run test:layout` | 45 Verträge grün, 1 übersprungen (+11) |
 | `check:test-lines` / `check:css-asserts` | grün |
 | `npx eslint .` | grün |
 
@@ -4150,6 +4150,47 @@ verschieden. Die Sperre greift.
   ersten Mal. Absicherung bleibt der Abbruch; `ss` beantwortet die Frage, die der
   Abbruch offen lässt („`… is already used`" nennt die URL, nicht den Prozess).
   Diagnose neben der Mechanik, nicht ihr Ersatz.
+
+### Codex-Review (Gate 7): sechs Befunde, fünf bestätigt
+
+1. **MEDIUM — kein Fokus in der Siegerehrung.** Wird das Brett `inert`, während
+   der Fokus dort steht, wirft der Browser ihn auf `<body>`: Der Bildschirm ist
+   sichtbar da, Tastatur und Screenreader beginnen wieder am Dokumentanfang. Der
+   Titel bekommt jetzt den Fokus (`tabIndex={-1}`), nicht der Neustart-Knopf —
+   er sagt zuerst, *was* passiert ist. Neuer Vertrag, rot gesehen.
+2. **MEDIUM — die Gegenprobe war enger als der Filter.** Der `inert`-Filter gilt
+   für **jeden** stillgelegten Teilbaum, geprüft wurde aber nur
+   `main.spielbrett[inert]`. Ein stillgelegter Lobby-Bereich wäre durchgerutscht.
+   `findeStillgelegteBedienelemente` misst jetzt genau das, was der Filter
+   verschluckt.
+3. **MEDIUM — `brett_dauerlauf.spec.ts` hatte gar keine Gegenprobe.** Es benutzt
+   dieselben zwei Wächter. Enden die acht Runden in einem stillgelegten Brett,
+   liefen sie leer. Vierte Zusicherung ergänzt.
+4. **LOW — der Layout-Lauf prüft keine Typen mehr.** Stimmt: `vite build`
+   transpiliert auch bei TypeScript-Fehlern. Der bewusste Preis steht jetzt
+   ausdrücklich im Konfigurationskommentar statt nur implizit.
+5. **LOW — der Namensgebungs-Guard versprach mehr als er hielt.** Er las nur den
+   Quelltext der Vertragsdatei; ein Vertrag hätte den Hook indirekt über ein
+   geteiltes Modul benutzen können. Statt Importe zu verfolgen, ist der indirekte
+   Pfad jetzt ausgeschlossen: Kein geteiltes Modul darf den Hook erwähnen.
+6. **Nicht bestätigt:** „`waechterVertraege` registriert fünf Tests, die Datei
+   spricht von vier" und „es sind neun statt acht Tests". Nachgezählt am Lauf:
+   vier Prüfungen, acht Tests zum Zeitpunkt der Messung. Die *Verwirrung* ist
+   aber echt — die Spezifikation zählt vier Fragen, am 02.08. kam ein „fünfter
+   Wächter" dazu, und seither meint „die vier" nicht mehr dieselben vier. Der
+   Dateikopf schreibt das jetzt aus.
+
+Ausdrücklich geprüft und in Ordnung: kein erlaubter Brettzug bei `Spielende`
+(`ermittleLegaleAktionen` liefert außerhalb der Ausspielphase `[]`), und kein
+Weg, auf dem `dist-testhooks` nach Production gelangt.
+
+### Was dabei schiefging und wofür es steht
+
+Eine Gegenprobe zum Fokus-Vertrag setzte `git checkout src/components/SiegerParty.tsx`
+zurück — und verwarf damit **die Korrektur selbst**, nicht nur die Manipulation.
+Der Vertrag war danach grün, weil er wieder gegen den alten Code lief. Aufgefallen
+nur, weil die Datei danach gelesen wurde. Gegenproben laufen seither über eine
+Sicherungskopie, nicht über `git checkout`.
 
 ### Bekannte Einschränkungen
 

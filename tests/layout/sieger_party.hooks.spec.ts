@@ -30,22 +30,30 @@ Datei daran, dass der Hook gegriffen hat; die Begründung steht dort.
 */
 
 import { expect, test } from '@playwright/test'
-import { berechneterStil, oberkanteVon, seitenHoehe, unterkanteVon } from './messung'
-import { brettIstInert, waechterVertraege } from './waechter'
+import {
+  befundListe,
+  berechneterStil,
+  findeStillgelegteBedienelemente,
+  oberkanteVon,
+  seitenHoehe,
+  unterkanteVon,
+} from './messung'
+import { waechterVertraege } from './waechter'
 
 test.describe('Sieger-Party auf /game?phase=spielende', () => {
   /* Die Vorbedingung steht bewusst im `beforeEach` und nicht nur im ersten Test.
 
      Gemessen am 03.08.2026 gegen den Produktionsbuild (also ohne Hook, ohne
-     Sieger-Party): Von acht Tests fielen **drei**, fünf blieben grün — die vier
-     Wächter und „die Seite scrollt nicht". Sie fragen die ganze Seite ab und
-     finden auf einem Bildschirm ohne Sieger-Party erwartungsgemäß nichts zu
-     beanstanden. Als Vertrag für diesen Bildschirm waren sie damit wertlos: Sie
-     wären auch dann grün geblieben, wenn die Siegerehrung gar nicht mehr
+     Sieger-Party): Von den damals acht Tests fielen **drei**, fünf blieben grün
+     — die vier Wächter und „die Seite scrollt nicht". Sie fragen die ganze Seite
+     ab und finden auf einem Bildschirm ohne Sieger-Party erwartungsgemäß nichts
+     zu beanstanden. Als Vertrag für diesen Bildschirm waren sie damit wertlos:
+     Sie wären auch dann grün geblieben, wenn die Siegerehrung gar nicht mehr
      erschiene.
 
-     Mit dieser Zeile hängen alle acht am selben Faden. Gegenprobe wiederholt:
-     acht von acht fallen gegen den Produktionsbuild. */
+     Mit dieser Zeile hängt jeder Test dieser Datei am selben Faden. Gegenprobe
+     wiederholt: alle acht fielen. Seither sind zwei dazugekommen (Fokus,
+     Stilllegung), die ohnehin an der Region hängen. */
   test.beforeEach(async ({ page }) => {
     /* Kein `waitUntil: 'networkidle'` — Playwright rät davon ab, und hier wartet
        es auf nichts: Die App lädt keine Webfonts (nur ein System-Stack), keine
@@ -123,17 +131,42 @@ test.describe('Sieger-Party auf /game?phase=spielende', () => {
   })
 
   /* ÄNDERUNG [03.08.2026, Punkt 1b]: Das Gegenstück zur Erwartung in
-     `brett_waechter.spec.ts`. Dort darf das Brett *nicht* `inert` sein, hier
-     *muss* es das — sonst tabbt man am Ende der Partie durch sechs unsichtbare
-     Brett-Knöpfe, bevor „Noch einmal spielen" an der Reihe ist (gemessen, genau
-     so). Ohne diesen Test wäre der `inert`-Filter der Wächter ein stummer
+     `brett_waechter.spec.ts`. Dort darf nichts `inert` sein, hier *muss* das
+     Brett es sein — sonst tabbt man am Ende der Partie durch sechs unsichtbare
+     Brett-Haltepunkte, bevor „Noch einmal spielen" an der Reihe ist (gemessen,
+     genau so). Ohne diesen Test wäre der `inert`-Filter der Wächter ein stummer
      Schalter: Er würde die beiden Erreichbarkeits-Wächter unten leerlaufen
-     lassen, ohne dass irgendetwas rot wird. */
+     lassen, ohne dass irgendetwas rot wird.
+
+     Geprüft wird zusätzlich, dass das Stillgelegte **unter dem Brett** liegt —
+     ein `inert` an der Siegerehrung selbst wäre derselbe stumme Filter mit
+     umgekehrtem Vorzeichen und käme sonst durch. */
   test('das Brett unter der Party ist stillgelegt', async ({ page }) => {
+    const stillgelegt = await findeStillgelegteBedienelemente(page)
     expect(
-      await brettIstInert(page),
-      'Das Brett unter der Siegerehrung ist bedienbar — es liegt im Tab-Weg zum Neustart-Knopf.',
+      stillgelegt.length,
+      'Unter der Siegerehrung ist nichts stillgelegt — das Brett liegt im Tab-Weg zum Neustart-Knopf.',
+    ).toBeGreaterThan(0)
+    expect(
+      stillgelegt.every((befund) => befund.detail.includes('spielbrett')),
+      `Stillgelegt ist etwas anderes als das Brett:${befundListe(stillgelegt)}`,
     ).toBe(true)
+
+    // Der Neustart-Knopf selbst darf davon niemals erfasst sein.
+    await expect(page.getByRole('button', { name: /Noch einmal spielen/ })).toBeEnabled()
+  })
+
+  /* Der Fokus muss mitkommen. Wird das Brett `inert`, während der Fokus dort
+     steht, wirft der Browser ihn auf `<body>` — die Siegerehrung stünde sichtbar
+     da, während Tastatur und Screenreader wieder am Dokumentanfang beginnen.
+     Gefunden im Codex-Review (Gate 7), nicht von den Tests. */
+  test('der Fokus steht in der Siegerehrung', async ({ page }) => {
+    const fokus = await page.evaluate(() => {
+      const el = document.activeElement
+      if (el === null || el === document.body) return 'BODY'
+      return el.closest('.sieger-party') === null ? `ausserhalb: ${el.tagName}` : `drin: ${el.tagName}`
+    })
+    expect(fokus, 'Der Fokus liegt nicht in der Siegerehrung').toMatch(/^drin:/)
   })
 
   /* Dieselben vier Fragen wie auf dem Brett — bewusst nicht an Klassennamen

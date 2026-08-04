@@ -31,7 +31,7 @@ färben. Sobald das neue Brett auf `/game` liegt (Paket G-8), meldet Playwright
 
 import { expect, test } from '@playwright/test'
 import { zaehleSichtbareElemente } from './messung'
-import { brettIstInert, waechterVertraege } from './waechter'
+import { nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
 /** Regel 1 und 3 aus der Spezifikation: sieben Regionen, eine Rahmenebene. */
 const ELEMENT_BUDGET = 90
@@ -50,17 +50,12 @@ function waechterFuer(route: string, markiere: boolean, optionen: { ohneBudget?:
     waechterVertraege(pruefe)
 
     /* ÄNDERUNG [03.08.2026, Punkt 1b]: Die Wächter überspringen seit heute
-       `inert`-Teilbäume. Damit hinge dieser ganze Vertrag daran, dass das Brett
-       nicht versehentlich stillgelegt ist — wäre es das, meldeten zwei Wächter
+       `inert`-Teilbäume. Damit hinge dieser ganze Vertrag daran, dass hier
+       nichts versehentlich stillgelegt ist — wäre es das, meldeten zwei Wächter
        leere Listen und blieben grün, ohne noch etwas zu messen. Deshalb steht
-       die Erwartung hier ausdrücklich. Das Gegenstück prüft
+       die Erwartung ausdrücklich da. Das Gegenstück prüft
        `sieger_party.hooks.spec.ts`: Dort *muss* das Brett `inert` sein. */
-    pruefe('das Brett ist bedienbar und nicht stillgelegt', async ({ page }) => {
-      expect(
-        await brettIstInert(page),
-        'Das Brett ist `inert` — die Wächter messen dann nichts mehr.',
-      ).toBe(false)
-    })
+    nichtsIstStillgelegt(pruefe)
 
     const budgetPruefe = optionen.ohneBudget ? test.skip : pruefe
     budgetPruefe(`die Seite zeigt höchstens ${ELEMENT_BUDGET} Elemente`, async ({ page }) => {
