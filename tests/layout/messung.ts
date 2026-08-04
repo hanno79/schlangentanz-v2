@@ -710,24 +710,81 @@ export async function findeUnaufloesbareTokens(
   page: Page,
 ): Promise<{ befunde: Befund[]; geprueft: number; ungeprueft: number }> {
   return page.evaluate(() => {
-    /* Referenzen ohne Fallback aus einem Regeltext. Die Klammer nach dem
-       Tokennamen entscheidet: Komma = Fallback vorhanden. */
-    const refsOhneFallback = (text: string): string[] => {
-      const treffer: string[] = []
-      for (const m of text.matchAll(/var\(\s*(--[\w-]+)\s*([,)])/g)) {
-        if (m[2] === ')') treffer.push(m[1])
+    /*
+    `var()`-Ketten aus einem Regeltext.
+
+    Eine Kette ist das, was CSS bei `var(--a, var(--b))` tut: Erst `--a`, wenn das
+    leer ist `--b`. Die Deklaration ist nur ungültig, wenn **kein** Glied auflöst
+    und am Ende kein Literal steht.
+
+    ÄNDERUNG [04.08.2026], aus dem CodeRabbit-Review zu PR #8: Ein erster Entwurf
+    entschied allein an dem Zeichen nach dem Tokennamen — Komma bedeutete
+    „Fallback vorhanden, also in Ordnung", Klammer bedeutete „melden". Damit wurde
+    aus `var(--brett-farbe, var(--brett-flaeche-tief))` das innere Token als
+    ungeschützt gemeldet, obwohl es nur greift, wenn das äußere fehlt. Im Projekt
+    gibt es genau eine solche Stelle (`spielbrett.css:609`); sie löst heute auf,
+    weshalb kein Fehlalarm sichtbar war. Eine Umbenennung des inneren Tokens hätte
+    ihn erzeugt — ein Wächter, der falsch anschlägt, wird abgeschaltet.
+
+    Gescannt wird deshalb mit Klammertiefe: pro `var(` eine Kette aus Tokennamen,
+    plus die Angabe, ob die Kette in einem Literal endet.
+    */
+    const ketten = (text: string): { glieder: string[]; literalEnde: boolean }[] => {
+      const ergebnis: { glieder: string[]; literalEnde: boolean }[] = []
+      let i = 0
+      while (i < text.length) {
+        const start = text.indexOf('var(', i)
+        if (start === -1) break
+        // Argumentliste dieses var() bis zur passenden schließenden Klammer lesen.
+        let tiefe = 0
+        let ende = start + 3
+        for (; ende < text.length; ende += 1) {
+          if (text[ende] === '(') tiefe += 1
+          else if (text[ende] === ')') {
+            tiefe -= 1
+            if (tiefe === 0) break
+          }
+        }
+        const inhalt = text.slice(start + 4, ende)
+        const glieder: string[] = []
+        for (const m of inhalt.matchAll(/(--[\w-]+)/g)) glieder.push(m[1])
+        /* Endet die Kette in einem Literal? Alles nach dem letzten Tokennamen, das
+           nicht nur Komma, `var(`-Rest und Leerraum ist, zählt als Literal. */
+        const letzterToken = glieder.length > 0 ? inhalt.lastIndexOf(glieder[glieder.length - 1]) : -1
+        const rest =
+          letzterToken === -1 ? inhalt : inhalt.slice(letzterToken + glieder[glieder.length - 1].length)
+        const literalEnde = /[^\s,()]/.test(rest.replace(/var\(/g, ''))
+        if (glieder.length > 0) ergebnis.push({ glieder, literalEnde })
+        i = ende + 1
       }
-      return treffer
+      return ergebnis
     }
 
-    /* Pseudo-Elemente und -Klassen, die `querySelectorAll` nicht kennt, abschneiden:
-       Geprüft wird das Trägerelement — die Custom Property erbt es ohnehin. */
-    const basisSelektor = (selektor: string): string =>
+    /*
+    Selektor für `querySelectorAll` — Pseudo-**Elemente** abgetrennt,
+    Pseudo-**Klassen** behalten.
+
+    ÄNDERUNG [04.08.2026], ebenfalls aus dem CodeRabbit-Review: Vorher fielen auch
+    `:hover`, `:active` und `:focus` weg. Das erhöhte `geprueft`, ohne den Zustand
+    zu prüfen — eine Regel, die nur im `:active`-Fall gilt, wurde im Ruhezustand
+    gemessen. Ein Token, das ebenfalls nur dort definiert ist, hätte einen
+    Fehlalarm ausgelöst. 13 Regeln im Projekt sind betroffen.
+
+    Behalten heißt: `querySelectorAll('.x:active')` trifft im Ruhezustand nichts,
+    und die Regel zählt als **ungeprüft**. Das ist die ehrliche Auskunft.
+
+    `::before`/`::after` werden abgetrennt und an `getComputedStyle` weitergegeben —
+    dort sind sie messbar, im Selektor wären sie ein Syntaxfehler.
+    */
+    const zerlegeSelektor = (selektor: string): { basis: string; pseudo: string | null }[] =>
       selektor
         .split(',')
-        .map((teil) => teil.replace(/::?(before|after|hover|focus|active|focus-visible|first-child|last-child)\b[^\s>+~]*/g, '').trim())
-        .filter((teil) => teil !== '')
-        .join(', ')
+        .map((teil) => {
+          const treffer = teil.match(/::(before|after|first-line|first-letter|marker|placeholder)\b/)
+          const basis = teil.replace(/::[\w-]+(\([^)]*\))?/g, '').trim()
+          return { basis, pseudo: treffer === null ? null : `::${treffer[1]}` }
+        })
+        .filter((eintrag) => eintrag.basis !== '')
 
     const befunde: { element: string; detail: string }[] = []
     const gesehen = new Set<string>()
@@ -750,37 +807,50 @@ export async function findeUnaufloesbareTokens(
         }
         const stilregel = regel as CSSStyleRule
         if (typeof stilregel.selectorText !== 'string') continue
-        const refs = refsOhneFallback(stilregel.cssText ?? '')
-        if (refs.length === 0) continue
+        const alleKetten = ketten(stilregel.cssText ?? '').filter((kette) => !kette.literalEnde)
+        if (alleKetten.length === 0) continue
 
-        let elemente: Element[] = []
-        try {
-          const selektor = basisSelektor(stilregel.selectorText)
-          if (selektor !== '') elemente = Array.from(document.querySelectorAll(selektor))
-        } catch {
-          elemente = []
-        }
-        if (elemente.length === 0) {
-          ungeprueft += 1
-          continue
-        }
+        const ziele = zerlegeSelektor(stilregel.selectorText)
+        let etwasGeprueft = false
 
-        geprueft += 1
-        for (const element of elemente.slice(0, 5)) {
-          const stil = getComputedStyle(element)
-          for (const ref of refs) {
-            if (stil.getPropertyValue(ref).trim() !== '') continue
-            const schluessel = `${stilregel.selectorText}|${ref}`
-            if (gesehen.has(schluessel)) continue
-            gesehen.add(schluessel)
-            befunde.push({
-              element: `${stilregel.selectorText} → ${ref}`,
-              detail:
-                'löst am benutzenden Element nicht auf und hat keinen Fallback — ' +
-                'die ganze Deklaration ist damit ungültig',
-            })
+        for (const ziel of ziele) {
+          let elemente: Element[]
+          try {
+            elemente = Array.from(document.querySelectorAll(ziel.basis))
+          } catch {
+            // Selektor, den `querySelectorAll` nicht versteht — zählt als ungeprüft.
+            elemente = []
+          }
+          if (elemente.length === 0) continue
+          etwasGeprueft = true
+
+          for (const element of elemente.slice(0, 5)) {
+            const stil = getComputedStyle(element, ziel.pseudo)
+            for (const kette of alleKetten) {
+              /* Eine Kette ist nur dann kaputt, wenn **kein** Glied auflöst:
+                 `var(--a, var(--b))` bleibt gültig, solange eines von beiden da
+                 ist. */
+              const loest = kette.glieder.some((glied) => stil.getPropertyValue(glied).trim() !== '')
+              if (loest) continue
+              const name = kette.glieder.join(' → ')
+              const schluessel = `${stilregel.selectorText}|${name}`
+              if (gesehen.has(schluessel)) continue
+              gesehen.add(schluessel)
+              befunde.push({
+                element: `${stilregel.selectorText} → var(${name})`,
+                detail:
+                  kette.glieder.length > 1
+                    ? 'kein Glied dieser var()-Kette löst am benutzenden Element auf — ' +
+                      'die ganze Deklaration ist damit ungültig'
+                    : 'löst am benutzenden Element nicht auf und hat keinen Fallback — ' +
+                      'die ganze Deklaration ist damit ungültig',
+              })
+            }
           }
         }
+
+        if (etwasGeprueft) geprueft += 1
+        else ungeprueft += 1
       }
     }
 
