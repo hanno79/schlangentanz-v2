@@ -19,6 +19,7 @@
     "smoke:preview": "node scripts/run_smokes.mjs preview"
   },
   "dependencies": {
+    "@sentry/browser": "^10.69.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

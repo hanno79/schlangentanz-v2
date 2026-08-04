@@ -29,6 +29,7 @@ hinzustellen, der nichts rettet.
 
 import { Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
+import { meldeFehler } from '../fehlerdienst'
 
 interface FehlerfangProps {
   children: ReactNode
@@ -57,11 +58,21 @@ export default class Fehlerfang extends Component<FehlerfangProps, FehlerfangSta
   }
 
   componentDidCatch(fehler: unknown, info: ErrorInfo): void {
-    /* Der Diagnoseweg, solange es kein externes Fehler-Tracking gibt: Die
-       Meldung steht für den Spieler auf dem Schirm, der Stack für den
-       Entwickler in der Konsole. Bewusst `console.error` und nicht mehr — ein
-       Fremddienst wäre die erste Abhängigkeit im Produktionsbundle. */
+    /* ÄNDERUNG [04.08.2026]: Der Fehler geht jetzt auch nach außen.
+
+       Hier stand: „Bewusst `console.error` und nicht mehr — ein Fremddienst wäre
+       die erste Abhängigkeit im Produktionsbundle." Das war richtig beschrieben und
+       als Zustand falsch: `console.error` erreicht niemanden. Ein Spieler sah die
+       Meldung unten, und niemand sonst erfuhr, dass die Wertung geworfen hat.
+
+       `@sentry/browser` ist damit die erste externe Produktionsabhängigkeit. Der
+       Preis ist gemessen und steht in `docs/PLAYABILITY_GATE.md`; ohne
+       `VITE_SENTRY_DSN` passiert nichts (siehe `src/fehlerdienst.ts`).
+
+       `console.error` bleibt: Es ist der Weg für den Entwickler am eigenen Rechner,
+       wo keine DSN gesetzt ist. */
     console.error('Fehler beim Zeichnen des Spielbretts:', fehler, info.componentStack)
+    meldeFehler(fehler, { componentStack: info.componentStack ?? 'unbekannt' })
   }
 
   /* Erst den eigenen Fehlerzustand räumen, dann navigieren: Sonst zeigt der Fang
