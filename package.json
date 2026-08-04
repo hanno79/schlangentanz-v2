@@ -16,7 +16,8 @@
     "test:layout": "playwright test",
     "typecheck": "tsc -b",
     "smoke:production": "node scripts/run_smokes.mjs production",
-    "smoke:preview": "node scripts/run_smokes.mjs preview"
+    "smoke:preview": "node scripts/run_smokes.mjs preview",
+    "check:merge-bereit": "node scripts/check_merge_bereit.mjs"
   },
   "dependencies": {
     "@sentry/browser": "^10.69.0",

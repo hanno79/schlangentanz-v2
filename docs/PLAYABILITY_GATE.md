@@ -4968,3 +4968,50 @@ wäre ungeprüfte Optik.
   `hasTouch: true`.
 - **Die Einfügeplätze und Kartenziele ziehen nicht.** Sie gehören zu den
   mehrschrittigen Sonderkarten (siehe oben) und bleiben beim Klicken.
+
+---
+
+## Evidence — 04.08.2026 Merge-Guard gegen drei echte Fehler (Etappe 7)
+
+Diese Etappe stand nicht im ursprünglichen Befund offener Punkte. Sie kommt aus den
+Fehlern dieser Sitzung, und zwar aus dreien, die alle wirklich passiert sind:
+
+| # | Fehler | Folge |
+|---|---|---|
+| 1 | `gh pr merge` merged den **PR-HEAD**, nicht den lokalen Stand | Bei PR #2 fiel der zweite Commit heraus; `gh pr checks` meldete weiter grün, weil es den geschlossenen PR nicht kennt. Eine Stunde unbemerkt. |
+| 2 | „Alles grün" hieß „noch nichts angetreten" | Bei PR #8 zeigte `gh pr checks` nur die zwei Vercel-Einträge; Kilo und CodeRabbit hatten ihre Checks noch nicht angelegt. Die Wartebedingung war sofort erfüllt. |
+| 3 | Checks vom Vorgänger-Commit galten als aktuell | Nach einem Push zeigte `gh pr checks` die Ergebnisse des vorigen Commits — gleicher Kilo-Link, gleiches Vercel-Deployment — bei `mergeStateStatus: UNKNOWN`. |
+
+Fehler 2 ist der lehrreichste: **Fehlende Prüfung ist nicht bestandene Prüfung.**
+Dieselbe Verwechslung wie bei einem Wächter, der über eine leere Liste urteilt — und
+dieselbe Antwort wie dort: Die Abdeckung muss zugesichert werden, nicht nur das
+Ergebnis.
+
+### Was das Skript prüft
+
+`scripts/check_merge_bereit.mjs`, aufrufbar als `npm run check:merge-bereit`:
+
+1. **Nichts Ungepushtes** (`origin/<branch>..HEAD` ist leer).
+2. **PR-HEAD == lokaler HEAD** — der PR kennt meinen letzten Commit.
+3. **Jeder erwartete Prüfer ist angetreten und bestanden**, gefragt
+   **commit-bezogen** über `commits/<sha>/check-runs` **und**
+   `commits/<sha>/status`. Beide Abfragen sind nötig: CodeRabbit ist ein
+   Status-Context und taucht in der Check-Run-Liste gar nicht auf — wer nur dort
+   fragt, hält seine Abwesenheit für Unauffälligkeit.
+4. **`mergeable` und `mergeStateStatus`**, wobei `UNKNOWN` als „noch nicht
+   entschieden" gilt und nicht als grün.
+5. **Hinweis, wenn `origin/main` vorausgelaufen ist** — kein Fehler, aber der Grund,
+   warum PR #5 nicht mergebar war: Ein Rebase-Merge schreibt denselben Inhalt als
+   neuen Commit, und der Branch trägt ihn danach doppelt.
+
+### Gegenprobe
+
+| Fall | erwartet | gemessen |
+|---|---|---|
+| auf `main` aufgerufen | Abbruch mit Hinweis | „Auf `main` gibt es nichts zu mergen." |
+| eigener PR, Bots noch nicht angetreten | Exit 1, nennt die fehlenden Prüfer | siehe unten |
+| eigener PR, alle Prüfer grün | Exit 0, „Merge-bereit." | siehe unten |
+
+Die beiden PR-Fälle sind am eigenen Pull Request gemessen — der Guard hat sich
+selbst geprüft, in genau dem Zustand, den ich in dieser Sitzung dreimal falsch
+gelesen habe.

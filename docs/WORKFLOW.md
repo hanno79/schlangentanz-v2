@@ -78,6 +78,29 @@ und Codex läuft lokal.
 er die Engine-Regeln ändert und der Diff gelesen werden soll, bevor er live geht,
 oder wenn ausdrücklich ein PR gewünscht ist.
 
+### Vor jedem Merge: `npm run check:merge-bereit` (ÄNDERUNG 04.08.2026, Etappe 7)
+
+`gh pr checks` allein genügt **nicht**. Drei Fehler an einem Tag, alle echt:
+
+1. **Der Merge nahm nur den halben Branch.** `gh pr merge` merged den *PR-HEAD*,
+   nicht den lokalen Stand. Bei PR #2 lag der zweite Commit vier Minuten daneben und
+   fiel heraus; `gh pr checks` meldete weiter grün, weil es den geschlossenen PR
+   nicht kennt. Aufgefallen ist es eine Stunde später.
+2. **„Alles grün" hieß „noch nichts angetreten".** Bei PR #8 zeigte `gh pr checks`
+   nur die zwei Vercel-Einträge, weil Kilo und CodeRabbit ihre Checks noch nicht
+   angelegt hatten. Eine Wartebedingung darauf war sofort erfüllt. **Fehlende
+   Prüfung ist nicht bestandene Prüfung.**
+3. **Checks vom Vorgänger-Commit galten als aktuell.** Nach einem Push zeigte
+   `gh pr checks` die Ergebnisse des vorigen Commits — gleicher Kilo-Link, gleiches
+   Vercel-Deployment — und `mergeStateStatus: UNKNOWN`.
+
+Das Skript fragt deshalb **commit-bezogen** (`commits/<sha>/check-runs` *und*
+`commits/<sha>/status`, weil CodeRabbit ein Status-Context ist und kein Check-Run),
+verlangt, dass jeder erwartete Prüfer *angetreten* ist, prüft `PR-HEAD == lokaler
+HEAD` und liest `UNKNOWN` als „noch nicht entschieden". Bewegtes `origin/main` wird
+gemeldet, weil ein Rebase-Merge denselben Inhalt als neuen Commit schreibt und der
+Branch ihn danach doppelt trägt — genau daran scheiterte PR #5.
+
 ## Test-Hooks (ÄNDERUNG 05.07.2026 C4, überarbeitet 30.07.2026 AP-1)
 
 Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
