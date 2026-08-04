@@ -4208,7 +4208,11 @@ Sicherungskopie, nicht über `git checkout`.
 
 ---
 
-## Evidence — 04.08.2026 O-1: Schlangenblockade an freier Position
+## Evidence — 04.08.2026 O-1: Schlangenblockade an freier Position (Deploy 8ff7d22)
+
+**Release-Commit:** `8ff7d22` auf `main`. Production liefert `index-b-FZBAtq.js`,
+identisch mit dem lokalen Build; `/` und `/game` je 200;
+`npm run smoke:production` 1/1 bestanden (6,0 s).
 
 **Regelgrundlage:** Signoff des Auftraggebers vom 03.08.2026, im Wortlaut in
 `docs/GAME_SPEC.md` **R7.1a**. Bis dahin stand O-1 als offene Frage in
