@@ -673,3 +673,128 @@ export async function kontrastAbdeckung(page: Page): Promise<{ geprueft: number;
   const { geprueft, uebersprungen } = await messeKontraste(page, 4.5)
   return { geprueft, uebersprungen }
 }
+
+/* ============================================================
+   ÄNDERUNG [04.08.2026]: Unauflösbare CSS-Token.
+
+   Eine `var(--x)` ohne Fallback, die nicht auflöst, macht die **ganze**
+   Deklaration ungültig — ohne Fehlermeldung, ohne Warnung. Diese Fehlerklasse hat
+   das Projekt viermal getroffen (M1cx, M1cy, M1e und am 03.08.2026 die
+   Sieger-Party, die deshalb nie einen eigenen Hintergrund hatte).
+
+   **Warum das hier steht und nicht in einem Skript.** CLAUDE.md verbietet neue
+   CSS-Quelltext-Parser, und das aus gutem Grund: Beim Bauen dieser Prüfung
+   meldete ein Regex über `^\s*--token\s*:` das Token `--brett-farbe` als
+   undefiniert. Es ist definiert — in `spielbrett.css` auf einer Zeile mit dem
+   Selektor (`.brett-karte--blau { --brett-farbe: #3b82f6; }`). Der Quelltext
+   liefert also Fehlalarme, wo die geladene Kaskade die Wahrheit kennt.
+
+   Gemessen wird deshalb an der CSSOM **und am Element**: Ob ein Token existiert,
+   ist die falsche Frage. Die richtige ist, ob es dort auflöst, wo es benutzt wird —
+   ein Token, das nur in `.a` definiert ist und in `.b` benutzt wird, existiert und
+   nützt trotzdem nichts.
+   ============================================================ */
+
+/**
+ * Referenzen auf Custom Properties, die am benutzenden Element nicht auflösen.
+ *
+ * Nur Referenzen **ohne** Fallback werden gemeldet: `var(--x, #fff)` fällt
+ * planmäßig auf den zweiten Wert zurück und ist kein Fehler.
+ *
+ * `ungeprueft` zählt Regeln, deren Selektor auf dieser Seite kein Element trifft
+ * (etwa Lobby-Regeln auf `/game`) — sie sind nicht geprüft, nicht in Ordnung. Der
+ * Unterschied gehört sichtbar, sonst liest sich ein grüner Lauf als Abdeckung,
+ * die es nicht gibt.
+ */
+export async function findeUnaufloesbareTokens(
+  page: Page,
+): Promise<{ befunde: Befund[]; geprueft: number; ungeprueft: number }> {
+  return page.evaluate(() => {
+    /* Referenzen ohne Fallback aus einem Regeltext. Die Klammer nach dem
+       Tokennamen entscheidet: Komma = Fallback vorhanden. */
+    const refsOhneFallback = (text: string): string[] => {
+      const treffer: string[] = []
+      for (const m of text.matchAll(/var\(\s*(--[\w-]+)\s*([,)])/g)) {
+        if (m[2] === ')') treffer.push(m[1])
+      }
+      return treffer
+    }
+
+    /* Pseudo-Elemente und -Klassen, die `querySelectorAll` nicht kennt, abschneiden:
+       Geprüft wird das Trägerelement — die Custom Property erbt es ohnehin. */
+    const basisSelektor = (selektor: string): string =>
+      selektor
+        .split(',')
+        .map((teil) => teil.replace(/::?(before|after|hover|focus|active|focus-visible|first-child|last-child)\b[^\s>+~]*/g, '').trim())
+        .filter((teil) => teil !== '')
+        .join(', ')
+
+    const befunde: { element: string; detail: string }[] = []
+    const gesehen = new Set<string>()
+    let geprueft = 0
+    let ungeprueft = 0
+
+    const laufeRegeln = (regeln: CSSRuleList): void => {
+      for (const regel of Array.from(regeln)) {
+        /* Erst absteigen, dann die Regel selbst prüfen — **nicht** `continue`.
+           Ein erster Entwurf behandelte jede Regel mit vorhandenem `cssRules` als
+           reine Gruppierung und übersprang sie. Seit CSS Nesting hat aber auch
+           eine gewöhnliche `CSSStyleRule` ein `cssRules` (dann leer), also fiel
+           **jede** Regel durch diesen Zweig: Die Prüfung lief über 294 Regeln und
+           sah keine einzige. Gemeldet hat das nichts außer der Abdeckungszahl
+           unten — sie stand auf 0, während der Vertrag grün war. Genau dafür ist
+           sie da. */
+        const kinder = (regel as CSSGroupingRule).cssRules
+        if (kinder !== undefined && kinder !== null && kinder.length > 0) {
+          laufeRegeln(kinder)
+        }
+        const stilregel = regel as CSSStyleRule
+        if (typeof stilregel.selectorText !== 'string') continue
+        const refs = refsOhneFallback(stilregel.cssText ?? '')
+        if (refs.length === 0) continue
+
+        let elemente: Element[] = []
+        try {
+          const selektor = basisSelektor(stilregel.selectorText)
+          if (selektor !== '') elemente = Array.from(document.querySelectorAll(selektor))
+        } catch {
+          elemente = []
+        }
+        if (elemente.length === 0) {
+          ungeprueft += 1
+          continue
+        }
+
+        geprueft += 1
+        for (const element of elemente.slice(0, 5)) {
+          const stil = getComputedStyle(element)
+          for (const ref of refs) {
+            if (stil.getPropertyValue(ref).trim() !== '') continue
+            const schluessel = `${stilregel.selectorText}|${ref}`
+            if (gesehen.has(schluessel)) continue
+            gesehen.add(schluessel)
+            befunde.push({
+              element: `${stilregel.selectorText} → ${ref}`,
+              detail:
+                'löst am benutzenden Element nicht auf und hat keinen Fallback — ' +
+                'die ganze Deklaration ist damit ungültig',
+            })
+          }
+        }
+      }
+    }
+
+    for (const blatt of Array.from(document.styleSheets)) {
+      try {
+        laufeRegeln(blatt.cssRules)
+      } catch {
+        /* Fremdes Blatt ohne CORS-Freigabe. Kommt in diesem Projekt nicht vor
+           (ein einziges eigenes Stylesheet, gemessen), wäre aber kein Grund,
+           den Rest nicht zu prüfen. */
+        ungeprueft += 1
+      }
+    }
+
+    return { befunde, geprueft, ungeprueft }
+  })
+}

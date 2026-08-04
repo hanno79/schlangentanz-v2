@@ -4596,3 +4596,71 @@ verursacht; hier ist es bisher nur toter Wert, gehört aber zusammengezogen.
 | `npx eslint .` | grün |
 
 Exit-Codes einzeln geprüft.
+
+---
+
+## Evidence — 04.08.2026 Unauflösbare CSS-Token, gemessen statt gelesen (Etappe 3)
+
+**Die Fehlerklasse.** Eine `var(--x)` ohne Fallback, die nicht auflöst, macht die
+**ganze** Deklaration ungültig — ohne Fehlermeldung, ohne Warnung. Viermal hat das
+getroffen: M1cx, M1cy, M1e und am 03.08.2026 die Sieger-Party, die deshalb nie
+einen eigenen Hintergrund hatte.
+
+### Warum kein Quelltext-Guard — belegt, nicht behauptet
+
+Beim Bauen meldete ein Regex über `^\s*--token\s*:` das Token `--brett-farbe` als
+undefiniert. Es **ist** definiert, in `spielbrett.css` auf einer Zeile mit dem
+Selektor (`.brett-karte--blau { --brett-farbe: #3b82f6; }`). Der Quelltext liefert
+also Fehlalarme, wo die geladene Kaskade die Wahrheit kennt. Genau dafür steht die
+Regel „keine neuen CSS-Quelltext-Parser" in `CLAUDE.md`.
+
+`findeUnaufloesbareTokens` arbeitet deshalb auf der **CSSOM** und prüft **am
+Element**: Ob ein Token existiert, ist die falsche Frage — ob es dort auflöst, wo
+es benutzt wird, ist die richtige. Ein Token, das nur in `.a` definiert ist und in
+`.b` benutzt wird, existiert und nützt trotzdem nichts.
+
+Referenzen **mit** Fallback (`var(--x, #fff)`) werden nicht gemeldet: Der Rückfall
+ist Absicht, kein Fehler.
+
+### Gemessener Bestand
+
+| Route | Regeln mit `var()` geprüft | ungeprüft (Selektor trifft nichts) | Befunde |
+|---|---|---|---|
+| `/` | 38 | 87 | **0** |
+| `/game` | 31 | 94 | **0** |
+
+Der Vertrag findet heute nichts. Sein Wert liegt im fünften Mal. Die „ungeprüft"-
+Spalte gehört dazu: Regeln, deren Selektor auf dieser Route kein Element trifft,
+sind nicht geprüft — nicht in Ordnung. Der Unterschied darf nicht verschwinden,
+sonst liest sich ein grüner Lauf als Abdeckung, die es nicht gibt.
+
+### Die Abdeckungszahl hat ihren ersten Fehler gefunden — meinen
+
+Ein erster Entwurf behandelte jede Regel mit vorhandenem `cssRules` als reine
+Gruppierung und übersprang sie. Seit CSS Nesting hat aber **auch** eine gewöhnliche
+`CSSStyleRule` ein `cssRules` (dann leer) — also fiel jede der 294 Regeln durch
+diesen Zweig. Die Prüfung sah **keine einzige** Regel und der Vertrag darüber war
+grün.
+
+Gemeldet hat das nichts außer der Abdeckungszahl: Sie stand auf 0. Genau dafür ist
+sie da, und deshalb steht sie jetzt als eigener Vertrag daneben.
+
+### Gegenprobe
+
+Definition von `--st-color-primary-container` in `:root` umbenannt, Nutzungen
+unverändert → der Wächter fällt auf **beiden** Routen und nennt Selektor und
+Token: `:root → --st-color-primary-container`, `.hero → …`. Zurückgenommen, danach
+58/58 grün.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 693 Tests in 78 Dateien grün |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | **58** Verträge grün (+6), 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.

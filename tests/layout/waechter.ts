@@ -34,6 +34,7 @@ import {
   findeAusserhalbDesBildes,
   findeSchwacheKontraste,
   findeStillgelegteBedienelemente,
+  findeUnaufloesbareTokens,
   findeVerdeckteBedienelemente,
   findeZusammengedruecktes,
   kontrastAbdeckung,
@@ -102,6 +103,38 @@ export function waechterVertraege(pruefe: typeof test | typeof test.fail = test)
       geprueft,
       `Kein einzelnes Textelement war messbar (${uebersprungen} wegen Verlauf übersprungen) — ` +
         'der Kontrastwächter urteilt hier über nichts.',
+    ).toBeGreaterThan(0)
+  })
+
+  /* ÄNDERUNG [04.08.2026]: Siebter Wächter — unauflösbare CSS-Token.
+
+     Eine `var(--x)` ohne Fallback, die nicht auflöst, macht die **ganze**
+     Deklaration ungültig, ohne Fehlermeldung. Viermal hat das getroffen: M1cx,
+     M1cy, M1e und am 03.08.2026 die Sieger-Party, die deshalb nie einen eigenen
+     Hintergrund hatte. Der Fehler ist immer derselbe und immer still.
+
+     Gemessen wird an der CSSOM und **am Element** — ob ein Token existiert, ist
+     die falsche Frage; ob es dort auflöst, wo es benutzt wird, ist die richtige.
+     Siehe `findeUnaufloesbareTokens`. */
+  pruefe('jede var() ohne Fallback löst am benutzenden Element auf', async ({ page }: { page: Page }) => {
+    const { befunde } = await findeUnaufloesbareTokens(page)
+    expect(
+      befunde,
+      `${befunde.length} unauflösbare Token-Referenz(en) ohne Fallback:${befundListe(befunde)}`,
+    ).toEqual([])
+  })
+
+  /* Diese Zusicherung hat ihren ersten Fehler schon gefunden, und zwar meinen:
+     Ein erster Entwurf von `findeUnaufloesbareTokens` hielt jede Regel für eine
+     Gruppierung (seit CSS Nesting hat auch `CSSStyleRule` ein `cssRules`) und
+     prüfte deshalb **keine einzige** — der Vertrag darüber war grün. Ohne diese
+     Zahl wäre das nie aufgefallen. */
+  pruefe('die Token-Prüfung hat wirklich Regeln gesehen', async ({ page }: { page: Page }) => {
+    const { geprueft, ungeprueft } = await findeUnaufloesbareTokens(page)
+    expect(
+      geprueft,
+      `Keine einzige Regel mit \`var()\` war prüfbar (${ungeprueft} Regeln treffen auf dieser ` +
+        'Route kein Element) — der Token-Wächter urteilt hier über nichts.',
     ).toBeGreaterThan(0)
   })
 }
