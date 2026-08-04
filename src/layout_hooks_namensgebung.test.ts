@@ -34,17 +34,53 @@ const SUFFIX = '.hooks.spec.ts'
 /** Merkmale, an denen ein Vertrag den Test-Hook tatsächlich benutzt. */
 const HOOK_MERKMALE = ['?phase=', '__schlangentanzFixture']
 
+/* ÄNDERUNG [04.08.2026]: `recursive` — aus dem zweiten Codex-Review (Gate 7).
+   Vorher las der Guard nur die flache Ebene. Ein Hilfsmodul in einem
+   Unterverzeichnis (`tests/layout/helfer/hook.ts`) fiel damit aus **beiden**
+   Listen: Es ist kein Vertrag, und als geteiltes Modul wurde es nicht gesehen.
+   Der Hook-Aufruf hätte dort ungeprüft liegen können. Playwright sammelt sein
+   `testDir` ohnehin rekursiv — der Guard tut es jetzt auch. */
+function alleDateien(): string[] {
+  return readdirSync(VERZEICHNIS, { recursive: true, encoding: 'utf8' })
+}
+
 function vertragsDateien(): string[] {
-  return readdirSync(VERZEICHNIS).filter((datei) => datei.endsWith('.spec.ts'))
+  return alleDateien().filter((datei) => datei.endsWith('.spec.ts'))
 }
 
 /** Die geteilten Module unter `tests/layout/` — alles, was kein Vertrag ist. */
 function hilfsModule(): string[] {
-  return readdirSync(VERZEICHNIS).filter((datei) => datei.endsWith('.ts') && !datei.endsWith('.spec.ts'))
+  return alleDateien().filter((datei) => datei.endsWith('.ts') && !datei.endsWith('.spec.ts'))
+}
+
+/*
+ÄNDERUNG [04.08.2026]: Kommentarzeilen zählen nicht — ebenfalls aus dem zweiten
+Codex-Review.
+
+Die Prüfung ist eine Textsuche, und das ist Absicht: Importe zu verfolgen wäre
+ein Parser, und diese Sorte Prüfung soll billig und lesbar bleiben. Sie hatte
+aber ein Loch in der *stillen* Richtung, also genau dort, wo dieser Guard seinen
+Zweck hat: Eine `*.hooks.spec.ts`, die `?phase=` nur in einer Erklärung erwähnt,
+galt als Hook-Nutzer. Der Suffix war damit gerechtfertigt, ohne dass die Datei
+den Hook braucht — sie mäße für immer `dist-testhooks` und bliebe grün.
+
+Ausgeschlossen werden deshalb Zeilen, die als Kommentar *beginnen*. Bewusst
+konservativ: Ein Merkmal hinter Code auf derselben Zeile zählt weiter. Das ist die
+Richtung, in der ein Irrtum harmlos ist — er meldet zu viel Hook-Bedarf, nicht zu
+wenig.
+*/
+function codeOhneKommentarzeilen(quelltext: string): string {
+  return quelltext
+    .split('\n')
+    .filter((zeile) => {
+      const getrimmt = zeile.trimStart()
+      return !getrimmt.startsWith('//') && !getrimmt.startsWith('*') && !getrimmt.startsWith('/*')
+    })
+    .join('\n')
 }
 
 function nutztTestHook(datei: string): boolean {
-  const quelltext = readFileSync(`${VERZEICHNIS}/${datei}`, 'utf8')
+  const quelltext = codeOhneKommentarzeilen(readFileSync(`${VERZEICHNIS}/${datei}`, 'utf8'))
   return HOOK_MERKMALE.some((merkmal) => quelltext.includes(merkmal))
 }
 
