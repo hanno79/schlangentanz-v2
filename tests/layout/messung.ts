@@ -496,3 +496,180 @@ export async function zaehleSichtbareElemente(page: Page): Promise<number> {
 export function befundListe(befunde: Befund[]): string {
   return befunde.map((b) => `\n  · ${b.element} — ${b.detail}`).join('')
 }
+
+/* ============================================================
+   ÄNDERUNG [04.08.2026]: Kontrast als Messgröße.
+
+   Am 03.08.2026 stand die Beschriftung der Punktetafel mit **1,06 : 1** auf
+   ihrer Pille — praktisch unsichtbar, und zwar seit dem Bau dieses Bildschirms.
+   Gefunden hat es keine Prüfung, sondern eine Sichtprüfung bei anderer
+   Gelegenheit. Der Grund ist strukturell: Alles hier oben misst Geometrie, und
+   Farbabstand ließ sich mit `berechneterStil` nur ablesen, nicht bewerten.
+
+   Deshalb dieselbe Antwort wie bei den Wächtern: nicht *diese eine* Farbe
+   prüfen, sondern die Größe messbar machen.
+   ============================================================ */
+
+/** Ein Kontrastbefund: Element, gemessenes Verhältnis, beteiligte Farben. */
+export interface Kontrastbefund extends Befund {
+  verhaeltnis: number
+}
+
+/*
+Was hier bewusst NICHT gemessen wird: Text über einem `background-image`.
+
+Die Oberfläche arbeitet stark mit Verläufen, und über einem Verlauf hat Text
+keinen *einen* Kontrastwert — er hat einen pro Pixel. Ein gemittelter Wert wäre
+eine Zahl, die nirgends stimmt. Solche Elemente werden übersprungen, aber
+**gezählt**: Ein stiller Filter wäre genau der Fehler, den `nichtsIstStillgelegt`
+für `inert` behoben hat. Wie viele es sind, steht in der Fehlermeldung.
+*/
+async function messeKontraste(
+  page: Page,
+  mindestens: number,
+): Promise<{ schwach: Kontrastbefund[]; uebersprungen: number; geprueft: number }> {
+  return page.evaluate((grenze) => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+
+    const zahlen = (farbe: string): [number, number, number, number] | null => {
+      const treffer = farbe.match(/-?[\d.]+/g)
+      if (treffer === null || treffer.length < 3) return null
+      const [r, g, b, a] = treffer.map(Number)
+      return [r, g, b, a === undefined ? 1 : a]
+    }
+
+    /** Relative Luminanz nach WCAG 2.1. */
+    const luminanz = (r: number, g: number, b: number): number => {
+      const kanal = (wert: number): number => {
+        const v = wert / 255
+        return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+      }
+      return 0.2126 * kanal(r) + 0.7152 * kanal(g) + 0.0722 * kanal(b)
+    }
+
+    /* Der effektive Hintergrund: die erste Vorfahrenfarbe, die nicht durchsichtig
+       ist. Kommt vorher ein Verlauf, ist der Wert nicht bestimmbar. */
+    const hintergrund = (element: Element): { farbe: [number, number, number] | null; verlauf: boolean } => {
+      for (let lauf: Element | null = element; lauf !== null; lauf = lauf.parentElement) {
+        const stil = getComputedStyle(lauf)
+        if (stil.backgroundImage !== 'none') return { farbe: null, verlauf: true }
+        const werte = zahlen(stil.backgroundColor)
+        if (werte !== null && werte[3] > 0.99) return { farbe: [werte[0], werte[1], werte[2]], verlauf: false }
+      }
+      // Ohne gesetzten Hintergrund zeichnet der Browser weiß.
+      return { farbe: [255, 255, 255], verlauf: false }
+    }
+
+    const schwach: { element: string; detail: string; verhaeltnis: number }[] = []
+    let uebersprungen = 0
+    let geprueft = 0
+
+    for (const element of Array.from(document.querySelectorAll('*'))) {
+      if (!(element as HTMLElement).checkVisibility()) continue
+      /* Nur eigener Text, und nur solcher, der auch vorgelesen würde — dieselbe
+         Unterscheidung wie bei den Inhaltsverlusten oben. `aria-hidden`-Glyphen
+         (Pokal, Medaille) tragen keine Information und dürfen dekorativ sein. */
+      if (element.closest('[aria-hidden="true"]') !== null) continue
+      const eigenerText = Array.from(element.childNodes)
+        .filter((knoten) => knoten.nodeType === Node.TEXT_NODE)
+        .map((knoten) => knoten.nodeValue ?? '')
+        .join('')
+        .trim()
+      if (eigenerText === '') continue
+
+      const stil = getComputedStyle(element)
+      const vordergrund = zahlen(stil.color)
+      if (vordergrund === null || vordergrund[3] < 0.99) continue
+
+      const hinten = hintergrund(element)
+      if (hinten.farbe === null) {
+        uebersprungen += 1
+        continue
+      }
+
+      geprueft += 1
+      const vorne = luminanz(vordergrund[0], vordergrund[1], vordergrund[2])
+      const hinter = luminanz(hinten.farbe[0], hinten.farbe[1], hinten.farbe[2])
+      const verhaeltnis = (Math.max(vorne, hinter) + 0.05) / (Math.min(vorne, hinter) + 0.05)
+
+      if (verhaeltnis < grenze) {
+        schwach.push({
+          element: kennung(element),
+          detail:
+            `${verhaeltnis.toFixed(2)} : 1 (Text ${stil.color} auf ` +
+            `rgb(${hinten.farbe.join(', ')}), verlangt ${grenze} : 1)`,
+          verhaeltnis,
+        })
+      }
+    }
+
+    return { schwach, uebersprungen, geprueft }
+  }, mindestens)
+}
+
+/**
+ * Kontrastverhältnis eines einzelnen Elements gegen seinen effektiven
+ * Hintergrund — für Verträge, die eine benannte Stelle prüfen.
+ *
+ * Wirft, wenn der Hintergrund ein Verlauf ist: Dann gibt es keinen einen Wert,
+ * und eine Zahl zurückzugeben wäre eine Erfindung.
+ */
+export async function kontrastVerhaeltnis(locator: Locator): Promise<number> {
+  await expect(locator).toBeVisible()
+  return locator.evaluate((element) => {
+    const zahlen = (farbe: string): number[] | null => {
+      const treffer = farbe.match(/-?[\d.]+/g)
+      return treffer === null ? null : treffer.map(Number)
+    }
+    const luminanz = (r: number, g: number, b: number): number => {
+      const kanal = (wert: number): number => {
+        const v = wert / 255
+        return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+      }
+      return 0.2126 * kanal(r) + 0.7152 * kanal(g) + 0.0722 * kanal(b)
+    }
+    const vordergrund = zahlen(getComputedStyle(element as HTMLElement).color)
+    if (vordergrund === null) throw new Error('Textfarbe nicht lesbar.')
+
+    let hintergrund: number[] | null = null
+    for (let lauf: Element | null = element; lauf !== null; lauf = lauf.parentElement) {
+      const stil = getComputedStyle(lauf)
+      if (stil.backgroundImage !== 'none') {
+        throw new Error(
+          `Hinter diesem Element liegt ein Verlauf (${stil.backgroundImage.slice(0, 40)}…) — ` +
+            'ein einzelnes Kontrastverhältnis gibt es dort nicht.',
+        )
+      }
+      const werte = zahlen(stil.backgroundColor)
+      if (werte !== null && (werte[3] === undefined || werte[3] > 0.99)) {
+        hintergrund = werte
+        break
+      }
+    }
+    const hinten = hintergrund ?? [255, 255, 255]
+    const vorne = luminanz(vordergrund[0], vordergrund[1], vordergrund[2])
+    const dahinter = luminanz(hinten[0], hinten[1], hinten[2])
+    return (Math.max(vorne, dahinter) + 0.05) / (Math.min(vorne, dahinter) + 0.05)
+  })
+}
+
+/**
+ * Sichtbare Textelemente, deren Kontrast unter `mindestens` liegt.
+ *
+ * WCAG 2.1 AA verlangt 4,5 : 1 für normalen Text. Der Anlassfall lag bei
+ * 1,06 : 1 — nicht knapp darunter, sondern unsichtbar.
+ */
+export async function findeSchwacheKontraste(page: Page, mindestens = 4.5): Promise<Kontrastbefund[]> {
+  return (await messeKontraste(page, mindestens)).schwach
+}
+
+/** Wie viele Textelemente wegen eines Verlaufs im Hintergrund nicht messbar waren. */
+export async function kontrastAbdeckung(page: Page): Promise<{ geprueft: number; uebersprungen: number }> {
+  const { geprueft, uebersprungen } = await messeKontraste(page, 4.5)
+  return { geprueft, uebersprungen }
+}

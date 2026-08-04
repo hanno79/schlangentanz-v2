@@ -32,9 +32,11 @@ import {
   befundListe,
   findeAbgeschnittenes,
   findeAusserhalbDesBildes,
+  findeSchwacheKontraste,
   findeStillgelegteBedienelemente,
   findeVerdeckteBedienelemente,
   findeZusammengedruecktes,
+  kontrastAbdeckung,
 } from './messung'
 
 /**
@@ -71,6 +73,36 @@ export function waechterVertraege(pruefe: typeof test | typeof test.fail = test)
     expect(befunde, `${befunde.length} Element(e) zeigen nicht einmal eine ganze Zeile:${befundListe(befunde)}`).toEqual(
       [],
     )
+  })
+
+  /* ÄNDERUNG [04.08.2026]: Sechster Wächter — Kontrast.
+
+     Die fünf davor fragen, ob Inhalt *da* ist. Dieser fragt, ob man ihn lesen
+     kann. Der Anlass: Auf dem Siegerbildschirm standen die Punktzahlen mit
+     1,42 : 1 und die Überschrift mit 1,34 : 1 auf hellen Pillen — praktisch
+     unsichtbar, gefunden von diesem Wächter am Tag seiner Einführung. Die
+     Beschriftungen daneben waren am Vortag per Auge behoben worden, mit der
+     Begründung, die Zahlen seien durch eine Textkontur abgesichert; gemessen war
+     dort `stroke=0px`. Genau deshalb ist Augenmaß hier keine Prüfung. */
+  pruefe('kein Text steht unter 4,5 : 1 Kontrast', async ({ page }: { page: Page }) => {
+    const befunde = await findeSchwacheKontraste(page)
+    expect(
+      befunde,
+      `${befunde.length} Textelement(e) unter der WCAG-AA-Schwelle:${befundListe(befunde)}`,
+    ).toEqual([])
+  })
+
+  /* Der Kontrastwächter überspringt Text über einem Verlauf — dort gibt es keinen
+     *einen* Kontrastwert. Das ist richtig, aber es ist ein stummer Filter: Läge
+     über allem ein Verlauf, meldete der Wächter nichts und bliebe grün. Dieselbe
+     Falle wie beim `inert`-Filter, dieselbe Antwort. */
+  pruefe('der Kontrastwächter hat wirklich etwas gemessen', async ({ page }: { page: Page }) => {
+    const { geprueft, uebersprungen } = await kontrastAbdeckung(page)
+    expect(
+      geprueft,
+      `Kein einzelnes Textelement war messbar (${uebersprungen} wegen Verlauf übersprungen) — ` +
+        'der Kontrastwächter urteilt hier über nichts.',
+    ).toBeGreaterThan(0)
   })
 }
 

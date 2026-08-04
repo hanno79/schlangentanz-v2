@@ -4505,3 +4505,94 @@ einen regelwidrigen Verlauf.
 | `npx eslint .` | grün |
 
 Exit-Codes einzeln geprüft.
+
+---
+
+## Evidence — 04.08.2026 Kontrast als Messgröße (Etappe 2)
+
+**Anlass, und zwar die Ursache.** Am 03.08.2026 stand die Beschriftung der
+Punktetafel mit 1,06 : 1 auf ihrer Pille — praktisch unsichtbar, seit dem Bau des
+Bildschirms. Gefunden hat es keine Prüfung, sondern eine Sichtprüfung bei anderer
+Gelegenheit. Der Grund ist strukturell: `tests/layout/messung.ts` kennt Geometrie,
+und Farbabstand ließ sich mit `berechneterStil` nur ablesen, nicht bewerten.
+Symptomfix wäre gewesen, diese eine Farbe zu prüfen. Hier wird die Größe messbar.
+
+### Was neu ist
+
+- `kontrastVerhaeltnis(locator)` — WCAG-2.1-Verhältnis eines Elements gegen seinen
+  effektiven Hintergrund (Elternkette hoch bis zur ersten opaken Farbe).
+- `findeSchwacheKontraste(page, mindestens = 4.5)` — Befundliste im Format der
+  bestehenden Wächter.
+- `kontrastAbdeckung(page)` — wie viele Textelemente messbar waren.
+- **Sechster Wächter** in `waechterVertraege()`: Die fünf davor fragen, ob Inhalt
+  *da* ist; dieser fragt, ob man ihn lesen kann.
+
+### Fünf aktive Fehler, am Tag der Einführung gefunden
+
+| Element | vorher | nachher |
+|---|---|---|
+| `.sieger-party__scorewert` (4 Punktzahlen) | **1,42 : 1** | **8,16 : 1** |
+| `h3` „Finale Punktetafel" | **1,34 : 1** | behoben |
+
+Beide erbten das Cremeweiß der dunklen Sieger-Sektion, ohne eigene `color`, und
+standen auf hellen Pillen. Am Ende einer Partie war die Punktzahl damit praktisch
+unsichtbar — der Bildschirm, auf dem das Ergebnis steht.
+
+**Die Begründung vom Vortag war falsch.** Im CSS stand, die Zahlen fielen nicht
+auf, weil sie „einen dicken `-webkit-text-stroke` in derselben dunklen Farbe
+tragen". Gemessen: `stroke=0px`, `text-shadow: none`. Ein Urteil per Augenmaß hat
+den Fehler einen Tag länger festgeschrieben; der Kommentar ist korrigiert, nicht
+gelöscht.
+
+### Die regulären Routen sind sauber
+
+| Route | Textelemente geprüft | wegen Verlauf übersprungen | unter 4,5 : 1 |
+|---|---|---|---|
+| `/game` | 21 | 0 | **0** |
+| `/` | 14 | 5 | **0** |
+| Sieger-Party | 28 | 2 | 5 → **0** |
+
+Der Plan hatte weitere Verstöße erwartet und den generischen Teil notfalls als
+`test.fail()` vorgesehen. Gemessen war das unnötig: Der Wächter läuft scharf.
+
+### Was bewusst nicht gemessen wird
+
+Text über einem `background-image` hat keinen *einen* Kontrastwert, sondern einen
+pro Pixel; ein gemittelter wäre eine Zahl, die nirgends stimmt. Solche Elemente
+werden übersprungen — aber **gezählt**, und ein eigener Vertrag sichert zu, dass
+überhaupt etwas messbar war. Ein stiller Filter wäre genau der Fehler, den
+`nichtsIstStillgelegt` für `inert` behoben hat.
+
+### Gegenprobe — und ein Fehlschlag, der dazugehört
+
+Der **erste** Versuch war wirkungslos: Das Cremeweiß wurde *vor* die korrekte
+`color`-Deklaration in dieselbe Regel gesetzt. Bei gleicher Spezifität gewinnt die
+spätere, also blieb alles grün — dasselbe Muster, das in diesem Repo schon zweimal
+zugeschlagen hat (doppelte `.sieger-party`-Regel, 03.08.2026). Das gehört
+dokumentiert, weil eine wirkungslose Gegenprobe schlimmer ist als keine: Sie
+bescheinigt einen Vertrag, der nichts hält.
+
+Der zweite Versuch ersetzte die **wirksame** Deklaration: Beide Verträge fallen —
+der benannte („die Punktzahl der Siegerehrung ist lesbar") und der generische
+Wächter. Zurückgenommen, danach 52/52 grün.
+
+### Nebenbefund für die Aufräum-Etappe
+
+`.sieger-party__scorewert`, `.sieger-party__scorekarte` und
+`.sieger-party__neustart` sind je **zweimal** deklariert (rund 130 Zeilen
+auseinander). Bei `scorewert` ist das `padding` der ersten Regel dadurch
+wirkungslos. Dasselbe Muster hat am 03.08.2026 vier unsichtbare Verläufe
+verursacht; hier ist es bisher nur toter Wert, gehört aber zusammengezogen.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 693 Tests in 78 Dateien grün |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | **52** Verträge grün (+7), 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.
