@@ -981,6 +981,10 @@ bleibt er erreichbar — Regel 10 der `SPIELBRETT_SPEC.md`.
   margin: 0;
   font-family: var(--st-font-headline);
   font-size: clamp(1.3rem, 2.4vw, 2rem);
+  /* ÄNDERUNG [04.08.2026]: Farbe gesetzt. „Finale Punktetafel" erbte das
+     Cremeweiß der dunklen Sieger-Sektion, steht aber auf der gelben Scorekarte —
+     gemessen 1,34 : 1. Gefunden vom neuen Kontrastvertrag, nicht per Auge. */
+  color: var(--st-color-on-surface);
 }
 
 .sieger-party__stats {
@@ -1005,11 +1009,17 @@ bleibt er erreichbar — Regel 10 der `SPIELBRETT_SPEC.md`.
   font-weight: 900;
   /* ÄNDERUNG [03.08.2026]: Farbe gesetzt. Die Beschriftungen erbten das
      Cremeweiß der dunklen Sieger-Sektion, standen aber auf der hellgrünen
-     Pille — gemessen 1,06 : 1 Kontrast, also praktisch unsichtbar. Die Zahlen
-     daneben fielen nur deshalb nicht auf, weil sie einen dicken
-     `-webkit-text-stroke` in derselben dunklen Farbe tragen.
+     Pille — gemessen 1,06 : 1 Kontrast, also praktisch unsichtbar.
      Vorbestehend seit dem Bau der Punktetafel; aufgefallen bei der
-     Sichtprüfung der vierten Zeile (Kettenbonus, R8.4a). */
+     Sichtprüfung der vierten Zeile (Kettenbonus, R8.4a).
+
+     ÄNDERUNG [04.08.2026]: Hier stand, die Zahlen daneben fielen nur deshalb
+     nicht auf, weil sie „einen dicken `-webkit-text-stroke` in derselben dunklen
+     Farbe tragen". Das war nicht wahr — gemessen `stroke=0px` und
+     `text-shadow: none`. Die Zahlen standen weiter bei 1,42 : 1, und mit ihnen
+     die Überschrift bei 1,34 : 1. Beide sind jetzt gesetzt. Eine Begründung per
+     Augenmaß hat hier einen Fehler für einen Tag festgeschrieben; deshalb misst
+     das jetzt ein Vertrag (`tests/layout/kontrast.hooks.spec.ts`). */
   color: var(--st-color-on-surface);
 }
 
@@ -1024,6 +1034,14 @@ bleibt er erreichbar — Regel 10 der `SPIELBRETT_SPEC.md`.
   font-size: 1.5rem;
   font-weight: 900;
   text-align: center;
+  /* ÄNDERUNG [04.08.2026]: Farbe gesetzt — der eigentliche Anlassfall. Die
+     Punktzahlen erbten Cremeweiß und standen auf der hellgrünen Pille, gemessen
+     1,42 : 1. Am 03.08.2026 wurden nur die *Beschriftungen* daneben behoben; die
+     Begründung dafür („die Zahlen tragen einen dicken `-webkit-text-stroke` in
+     derselben dunklen Farbe") traf nicht zu — gemessen `stroke=0px`,
+     `text-shadow: none`. Auf dem Siegerbildschirm war damit die Punktzahl selbst
+     praktisch unsichtbar. */
+  color: var(--st-color-on-surface);
 }
 
 .sieger-party__neustart {

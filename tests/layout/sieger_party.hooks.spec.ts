@@ -34,6 +34,7 @@ import {
   befundListe,
   berechneterStil,
   findeStillgelegteBedienelemente,
+  kontrastVerhaeltnis,
   oberkanteVon,
   seitenHoehe,
   unterkanteVon,
@@ -101,6 +102,31 @@ test.describe('Sieger-Party auf /game?phase=spielende', () => {
     expect(hoehe, `Dokument ist ${hoehe}px hoch — das Erstbild ist ${erstbildHoehe}px`).toBeLessThanOrEqual(
       erstbildHoehe,
     )
+  })
+
+  /* ÄNDERUNG [04.08.2026]: Der dritte Fehler dieses Bildschirms, und der
+     langlebigste. Die Punktzahlen standen mit **1,42 : 1** auf ihrer hellgrünen
+     Pille, die Überschrift „Finale Punktetafel" mit **1,34 : 1** auf der gelben
+     Karte — beide erbten das Cremeweiß der dunklen Sieger-Sektion, ohne eigene
+     `color`.
+
+     Am 03.08.2026 waren die *Beschriftungen* daneben behoben worden (1,06 : 1),
+     mit der Begründung, die Zahlen trügen „einen dicken `-webkit-text-stroke` in
+     derselben dunklen Farbe". Gemessen war dort `stroke=0px` und
+     `text-shadow: none`. Eine Begründung per Augenmaß hat den Fehler damit einen
+     Tag länger festgeschrieben.
+
+     Der generische Wächter deckt das inzwischen ab (`waechter.ts`). Dieser
+     Vertrag steht trotzdem: Er nennt die Stelle, an der es zählt — die Zahl, die
+     der Spieler am Ende einer Partie lesen will. */
+  test('die Punktzahl der Siegerehrung ist lesbar', async ({ page }) => {
+    const wert = page.locator('.sieger-party__scorewert').first()
+    const verhaeltnis = await kontrastVerhaeltnis(wert)
+    expect(
+      verhaeltnis,
+      `Die Punktzahl steht bei ${verhaeltnis.toFixed(2)} : 1 — WCAG AA verlangt 4,5 : 1. ` +
+        'Gemessen am 04.08.2026 vor dem Fix: 1,42 : 1.',
+    ).toBeGreaterThanOrEqual(4.5)
   })
 
   /* Der zweite Fehler vom 03.08.2026 war kein Geometriefehler: `background`
