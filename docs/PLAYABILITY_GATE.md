@@ -4652,6 +4652,38 @@ unverändert → der Wächter fällt auf **beiden** Routen und nennt Selektor un
 Token: `:root → --st-color-primary-container`, `.hero → …`. Zurückgenommen, danach
 58/58 grün.
 
+### Drei Funde aus dem CodeRabbit-Review, zwei davon behoben
+
+**Die var()-Kette wurde falsch bewertet (behoben).** Ein erster Entwurf entschied
+allein am Zeichen nach dem Tokennamen: Komma bedeutete „hat Fallback, in Ordnung",
+Klammer bedeutete „melden". Damit wurde bei `var(--a, var(--b))` das **innere**
+Token als ungeschützt gemeldet, obwohl es nur greift, wenn das äußere fehlt. Im
+Projekt gibt es genau eine solche Stelle (`spielbrett.css:609`,
+`var(--brett-farbe, var(--brett-flaeche-tief))`); sie löst heute auf, weshalb kein
+Fehlalarm sichtbar war. Eine Umbenennung des inneren Tokens hätte ihn erzeugt — und
+ein Wächter, der falsch anschlägt, wird abgeschaltet. Gescannt wird jetzt mit
+Klammertiefe; eine Kette gilt nur als kaputt, wenn **kein** Glied auflöst.
+
+Gegenprobe, gezielt für diesen Fix: `.hero { … var(--gibt-es-nicht, var(--st-color-primary)) }`
+→ **kein** Befund. `.app-title { … var(--gibt-es-nicht-b1, var(--gibt-es-nicht-b2)) }`
+→ **ein** Befund, mit lesbarer Kette. Genau einer, der richtige.
+
+**Pseudo-Klassen wurden abgeschnitten (behoben).** Vorher fielen `:hover`,
+`:active` und `:focus` aus dem Selektor. Das erhöhte `geprueft`, ohne den Zustand
+zu prüfen — und ein Token, das nur im `:active`-Fall definiert ist, hätte einen
+Fehlalarm ausgelöst. 13 Regeln im Projekt sind betroffen. Sie zählen jetzt als
+**ungeprüft**, weil `querySelectorAll('.x:active')` im Ruhezustand nichts trifft;
+das ist die ehrliche Auskunft. `::before`/`::after` werden abgetrennt und an
+`getComputedStyle` weitergegeben. Abdeckung dadurch: 37 statt 38 auf `/`, 27 statt
+31 auf `/game`.
+
+**CSS Nesting mit `&` (nicht behoben, benannt).** Der rekursive Abstieg verliert
+den Elternselektor; `& .child` kann `querySelectorAll` nicht auflösen, die Regel
+landet in `ungeprueft`. Gemessen: Das Projekt benutzt **kein** CSS Nesting (0
+Vorkommen in allen drei Stylesheets). Ein Fix wäre damit ungetesteter Code — eine
+benannte Grenze ist ehrlicher. Wird Nesting eingeführt, sinkt `geprueft` sichtbar,
+statt still falsch zu werden.
+
 ### Gate-Kette
 
 | Prüfung | Ergebnis |
