@@ -29,6 +29,10 @@ interface KartenmarkeProps {
   platz?: number
   /** Länge der Reihe, für „Karte 3 von 11". */
   vonWievielen?: number
+  /** Zeigerhandler zum Ziehen (Etappe 6). Nur Handkarten bekommen sie. */
+  ziehHandler?: { onPointerDown: (ereignis: React.PointerEvent<HTMLElement>) => void }
+  /** Wird diese Karte gerade gezogen? Nur für die Optik. */
+  wirdGezogen?: boolean
 }
 
 function farbklasse(karte: Spielkarte): string {
@@ -44,6 +48,8 @@ export default function Kartenmarke({
   variante = 'auswahl',
   platz,
   vonWievielen,
+  ziehHandler,
+  wirdGezogen,
 }: KartenmarkeProps) {
   if (verdeckt) {
     return (
@@ -66,11 +72,13 @@ export default function Kartenmarke({
         className={
           `brett-karte${farbklasse(karte)}` +
           (variante === 'ziel' ? ' brett-karte--ziel' : '') +
-          (gewaehlt ? (variante === 'abwurf' ? ' brett-karte--abwurf' : ' brett-karte--gewaehlt') : '')
+          (gewaehlt ? (variante === 'abwurf' ? ' brett-karte--abwurf' : ' brett-karte--gewaehlt') : '') +
+          (wirdGezogen ? ' brett-karte--gezogen' : '')
         }
         aria-pressed={onWaehlen ? Boolean(gewaehlt) : undefined}
         aria-label={beschriftung}
         onClick={onWaehlen}
+        {...(ziehHandler ?? {})}
         disabled={!onWaehlen}
       >
         <span className="brett-karte__farbe" aria-hidden="true" />
