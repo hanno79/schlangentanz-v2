@@ -4327,3 +4327,95 @@ Wieder der häufigste Befundtyp — Sätze, die alle grünen Tests passieren:
   entschieden wurde. Gehört in `kiZug.ts`, nicht in die Regeln.
 - O-3 und O-4 unverändert (GAME_SPEC Abschnitt 11); kein Error-Tracking;
   Vercel-CLI veraltet (54.6.1 / 58.4.4).
+
+---
+
+## Evidence — 04.08.2026 Der turnState-Split, geprüft und übernommen
+
+**Herkunft:** Der Slice lag als vorgemerkte, nicht committete Arbeit im Index —
+1453 Zeilen, entstanden in einer parallelen Sitzung. Er ist hier geprüft und
+übernommen worden, nicht neu geschrieben.
+
+`src/engine/turnState.ts` (1744 Zeilen) ist aufgeteilt in:
+
+| Modul | Zeilen | Inhalt |
+|---|---|---|
+| `turnState.ts` | 525 | Zugsteuerung und Fassade |
+| `kartenwirkungen.ts` | 823 | die acht Sonderkarten-Wirkungen |
+| `reaktionsaufloesung.ts` | 179 | Abwehr und Durchlassen im Reaktionsfenster |
+| `zugHelfer.ts` | 397 | gemeinsame Zug-Primitive |
+
+### Warum grüne Tests hier nicht als Beleg reichen
+
+684 grüne Tests sagen bei einem Refactoring wenig: Sie prüfen, was jemand
+aufgeschrieben hat, nicht ob 1744 Zeilen unverändert angekommen sind. Belegt
+wurde deshalb die Gleichheit selbst, maschinell:
+
+| Prüfung | Ergebnis |
+|---|---|
+| Funktionsrümpfe alt → neu (normalisiert) | **56/56 byte-identisch**, 0 verändert, 0 verschwunden, 0 erfunden |
+| Codezeilen als Multiset | **0 Zeilen verloren**; 41 zusätzliche, ausschließlich Import-Listeneinträge |
+| Zeilenbilanz | 1744 → 1931 (+187 für vier Dateiköpfe und Importblöcke) |
+| doppelt definierte Funktionen | keine |
+| Importgraph | azyklisch: `zugHelfer` ← `kartenwirkungen` ← `reaktionsaufloesung` ← `turnState` |
+| Top-Level-Konstanten | 0 in allen vier Modulen — keine Initialisierungsreihenfolge, keine TDZ |
+| Top-Level-`let`/`var` | 0 — kein geteilter veränderlicher Zustand über Modulgrenzen |
+| öffentliche API | alle 21 bisherigen Exporte vorhanden; alle 16 von `index.ts` erwarteten Namen über die Fassade erreichbar (8 direkt, 8 als Re-Export) |
+| Shadowing | jeder aufgerufene Ex-`turnState`-Name im neuen Modul erreichbar; keine Fehlquelle bei Importen |
+
+Die letzten beiden Zeilen sind der eigentliche Punkt: Bei genau einer Definition
+je Name und korrekter Importquelle kann kein Name anders binden als vorher.
+Textgleichheit allein hätte das nicht gezeigt.
+
+### Beim Übernehmen behoben
+
+**Sieben Exporte ohne Abnehmer.** Der Split öffnete 33 bisher private Funktionen.
+Sieben davon werden nirgends außerhalb ihrer eigenen Datei benutzt —
+`entferneKarteAusSchlange`, die drei `ermittleMax*ProZug`, die beiden
+`erstelleFarbgruppenSignatur*` und `pruefeFarbenschutzImHaufen`. Kapselung ohne
+Zweck geöffnet; sie sind wieder modul-lokal.
+
+### Gate 7 (Codex)
+
+Der erste Durchgang lief in den 25-Minuten-Timeout, ohne etwas zu schreiben. Der
+zweite, auf zwei Fragen verengte, lieferte:
+
+- **Shadowing: keine Funde** — deckt sich mit der maschinellen Prüfung.
+- **Schnitt: zwei Hinweise.** `aktualisiereSchlangenfrassPending`
+  (`zugHelfer.ts:87`) gehöre zur Reaktionsauflösung,
+  `entferneSchlangenfrassAusSchlangen` (`zugHelfer.ts:232`) zu den
+  Kartenwirkungen. Beide haben tatsächlich genau **einen** Aufrufer, und zwar
+  jeweils das vorgeschlagene Modul — sie würden dort modul-lokal und ersparten
+  zwei weitere Exporte. Ein Zyklus entstünde nicht.
+
+**Nicht umgesetzt, bewusst.** Es ist kein Korrektheitsproblem, sondern
+Schnitt-Ästhetik, und der Preis wäre der beste Beleg dieses Slices: „alle 56
+Rümpfe byte-identisch verschoben" gilt nur, solange nichts zusätzlich bewegt
+wird. Ein Umbau fremder Arbeit gehört in einen eigenen Slice mit eigenem Review.
+Ein Versuch, es automatisch zu verschieben, hat außerdem gezeigt, dass es nicht
+trivial ist: Die Klammerzählung verschluckte sich an den mehrzeiligen Signaturen
+mit Objekttypen (`ziel: { spielerIndex: number; … }`) und zerlegte drei Dateien;
+zurückgerollt, Beleg danach erneut 56/56.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 684 Tests in 77 Dateien grün (davon 496 Engine) |
+| `npm run typecheck` | grün |
+| `npx tsc -p tsconfig.layout.json --noEmit` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | 45 Verträge grün, 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.
+
+### Offen
+
+- **Der Schnitt der beiden Schlangenfrass-Funktionen** (siehe oben) — benannte
+  Folgearbeit, kein Mangel.
+- Kein Verhaltenstest *für den Split selbst*: Die Gleichheit ist statisch
+  belegt, nicht durch einen Lauf gegen die alte Fassung. Bei byte-identischen
+  Rümpfen und unveränderter Bindung ist das vertretbar; ein Differenztest gegen
+  die Vorversion wäre die stärkere Zusage.
