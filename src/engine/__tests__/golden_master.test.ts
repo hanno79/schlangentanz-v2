@@ -88,10 +88,25 @@ function punktestand(zustand: Spielzustand): string {
 
 function aktionsKennung(aktion: SpielAktion): string {
   /* Nur Engine-Daten, kein UI-Label: `src/aktionsLabel.ts` formuliert für
-     Menschen und darf sich ändern, ohne dass ein Engine-Verlauf sich ändert. */
+     Menschen und darf sich ändern, ohne dass ein Engine-Verlauf sich ändert.
+
+     ÄNDERUNG [04.08.2026]: `JSON.stringify` statt `String`, Schlüssel sortiert —
+     aus dem CodeRabbit-Review zu PR #6, und der Fund war echt. `String(wert)`
+     ergab für das `ziele`-Array von `SchlangenfrassSpielen` schlicht
+     `[object Object]`; im ersten Snapshot stand das **zwölfmal**. Verschiedene
+     Frass-Ziele sahen damit identisch aus, und eine Regeländerung, die andere
+     Ziele wählt, wäre unbemerkt durchgelaufen — genau das, was dieser Test
+     verhindern soll.
+
+     Die Sortierung nimmt der Kennung zusätzlich die Abhängigkeit von der
+     Reihenfolge, in der die Engine die Felder anlegt: Sonst verschiebt ein
+     umgestelltes Objektliteral den Snapshot, ohne dass sich Verhalten ändert. */
   const felder = Object.entries(aktion)
     .filter(([schluessel]) => schluessel !== 'typ' && schluessel !== 'spielerId')
-    .map(([schluessel, wert]) => `${schluessel}=${String(wert)}`)
+    .sort(([a], [b]) => a.localeCompare(b))
+    // Zeichenketten bleiben nackt — mit Anführungszeichen wäre jede Zeile lauter,
+    // ohne etwas zu unterscheiden. Alles andere geht durch JSON.
+    .map(([schluessel, wert]) => `${schluessel}=${typeof wert === 'string' ? wert : JSON.stringify(wert)}`)
     .join(' ');
   return felder === '' ? aktion.typ : `${aktion.typ} ${felder}`;
 }

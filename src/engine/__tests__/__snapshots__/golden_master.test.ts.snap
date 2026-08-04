@@ -19,7 +19,7 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 2 Spieler, erste
 016 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=102 | punkte=5/5
 017 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=101 | punkte=5/5
 018 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=101 | punkte=5/5
-019 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-10 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=101 | punkte=5/5
+019 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-10 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=101 | punkte=5/5
 020 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=101 | punkte=5/5
 021 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=101 | punkte=5/5
 022 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=99 | punkte=5/5
@@ -30,365 +30,365 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 2 Spieler, erste
 027 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=98 | punkte=5/5
 028 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=97 | punkte=5/5
 029 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=97 | punkte=5/5
-030 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-10 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=97 | punkte=5/5
-031 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-03 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 zielKartenId=rot-06 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=96 | punkte=5/5
+030 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-10 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=97 | punkte=5/5
+031 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=0 handkartenId=farbendieb-03 zielKartenId=rot-06 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=4 | stapel=96 | punkte=5/5
 032 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=96 | punkte=5/5
 033 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=96 | punkte=5/5
 034 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=95 | punkte=5/5
 035 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=95 | punkte=5/5
-036 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-13 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=95 | punkte=5/5
-037 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-03 ziele=[object Object] | hand=4 | stapel=94 | punkte=5/5
+036 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-13 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=95 | punkte=5/5
+037 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-03 ziele=[{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"rot-13"}] | hand=4 | stapel=94 | punkte=5/5
 038 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=94 | punkte=5/5
 039 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=94 | punkte=5/5
 040 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=93 | punkte=5/5
 041 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=93 | punkte=5/5
-042 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-07 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=93 | punkte=5/5
+042 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-07 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=93 | punkte=5/5
 043 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-03 zielSpielerId=spieler-2 | hand=4 | stapel=92 | punkte=5/5
 044 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=92 | punkte=5/5
 045 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=92 | punkte=5/5
 046 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=91 | punkte=5/5
 047 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=91 | punkte=5/5
-048 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-07 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=91 | punkte=5/5
+048 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-07 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=91 | punkte=5/5
 049 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=91 | punkte=5/5
 050 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=91 | punkte=5/5
 051 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=90 | punkte=5/5
 052 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=90 | punkte=5/5
-053 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-07 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=90 | punkte=5/5
+053 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-07 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=90 | punkte=5/5
 054 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=farbenfusion-04 | hand=3 | stapel=90 | punkte=5/5
 055 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=90 | punkte=5/5
 056 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=90 | punkte=5/5
 057 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=89 | punkte=5/5
 058 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=89 | punkte=5/5
-059 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-06 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=89 | punkte=5/5
+059 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-06 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=89 | punkte=5/5
 060 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=89 | punkte=5/5
 061 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=89 | punkte=5/5
 062 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=87 | punkte=5/5
 063 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=87 | punkte=5/5
-064 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-10 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=87 | punkte=5/5
+064 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-10 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=87 | punkte=5/5
 065 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=87 | punkte=5/5
 066 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=87 | punkte=5/5
 067 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=86 | punkte=5/5
 068 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=86 | punkte=5/5
-069 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-05 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=86 | punkte=5/5
-070 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-01 ziele=[object Object] | hand=4 | stapel=85 | punkte=5/5
+069 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-05 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=86 | punkte=5/5
+070 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-01 ziele=[{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"violett-05"}] | hand=4 | stapel=85 | punkte=5/5
 071 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=85 | punkte=5/5
 072 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=85 | punkte=5/5
 073 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=84 | punkte=5/5
 074 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=84 | punkte=5/5
-075 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-12 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=84 | punkte=5/5
+075 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-12 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=84 | punkte=5/5
 076 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=84 | punkte=5/5
 077 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=84 | punkte=5/5
 078 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=83 | punkte=5/5
 079 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=83 | punkte=5/5
-080 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-11 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=83 | punkte=5/5
+080 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-11 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=83 | punkte=5/5
 081 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=83 | punkte=5/5
 082 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=83 | punkte=5/5
 083 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=82 | punkte=5/5
 084 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=82 | punkte=5/5
-085 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-07 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=82 | punkte=5/5
+085 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-07 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=82 | punkte=5/5
 086 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=82 | punkte=5/5
 087 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=82 | punkte=5/5
 088 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=81 | punkte=5/5
 089 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=81 | punkte=5/5
-090 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-14 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=81 | punkte=5/0
+090 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-14 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=81 | punkte=5/0
 091 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=81 | punkte=5/0
 092 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=81 | punkte=5/0
 093 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=80 | punkte=5/0
 094 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=80 | punkte=5/0
-095 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-06 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=80 | punkte=5/0
+095 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-06 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=80 | punkte=5/0
 096 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=regenbogenschlange-02 | hand=3 | stapel=80 | punkte=5/0
 097 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=80 | punkte=5/0
 098 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=80 | punkte=5/6
 099 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=79 | punkte=5/6
 100 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=79 | punkte=5/6
-101 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-12 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=79 | punkte=5/6
+101 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-12 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=79 | punkte=5/6
 102 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-02 zielSpielerId=spieler-2 | hand=4 | stapel=78 | punkte=5/6
 103 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=78 | punkte=5/6
 104 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=78 | punkte=5/6
 105 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=77 | punkte=5/6
 106 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=77 | punkte=5/6
-107 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-09 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=77 | punkte=5/6
-108 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-02 ziele=[object Object] | hand=4 | stapel=76 | punkte=5/6
+107 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-09 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=77 | punkte=5/6
+108 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-02 ziele=[{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"rot-09"}] | hand=4 | stapel=76 | punkte=5/6
 109 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=76 | punkte=5/6
 110 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=76 | punkte=5/6
 111 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=74 | punkte=5/6
 112 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=74 | punkte=5/6
-113 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-09 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=74 | punkte=5/11
+113 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-09 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=74 | punkte=5/11
 114 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=74 | punkte=5/11
 115 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=74 | punkte=5/11
 116 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=73 | punkte=5/11
 117 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=73 | punkte=5/11
-118 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-07 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=73 | punkte=5/11
+118 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-07 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=73 | punkte=5/11
 119 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=73 | punkte=5/11
 120 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=73 | punkte=5/11
 121 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=72 | punkte=5/11
 122 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=72 | punkte=5/11
-123 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-01 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=72 | punkte=5/11
+123 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-01 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=72 | punkte=5/11
 124 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=72 | punkte=5/11
 125 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=72 | punkte=5/11
 126 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=71 | punkte=5/11
 127 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=71 | punkte=5/11
-128 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-01 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=71 | punkte=5/11
-129 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-04 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=70 | punkte=5/11
+128 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-01 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=71 | punkte=5/11
+129 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=0 handkartenId=schlangenblockade-04 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=4 | stapel=70 | punkte=5/11
 130 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=70 | punkte=5/11
 131 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=70 | punkte=5/11
 132 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=69 | punkte=5/11
 133 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=69 | punkte=5/11
-134 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-05 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=69 | punkte=5/11
+134 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-05 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=69 | punkte=5/11
 135 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=69 | punkte=5/11
 136 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=69 | punkte=5/11
 137 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=68 | punkte=5/11
 138 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=68 | punkte=5/11
-139 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-14 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=68 | punkte=5/11
+139 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-14 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=68 | punkte=5/11
 140 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=68 | punkte=5/11
 141 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=68 | punkte=5/11
 142 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=67 | punkte=5/11
 143 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=67 | punkte=5/11
-144 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-06 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=67 | punkte=5/11
+144 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-06 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=67 | punkte=5/11
 145 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=67 | punkte=5/11
 146 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=67 | punkte=5/11
 147 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=66 | punkte=5/11
 148 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=66 | punkte=5/11
-149 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-11 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=66 | punkte=5/11
-150 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-02 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 zielKartenId=violett-06 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=65 | punkte=5/11
+149 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-11 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=66 | punkte=5/11
+150 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=0 handkartenId=farbendieb-02 zielKartenId=violett-06 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=4 | stapel=65 | punkte=5/11
 151 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=65 | punkte=5/11
 152 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=65 | punkte=5/11
 153 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=64 | punkte=5/11
 154 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=64 | punkte=5/11
-155 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-04 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=64 | punkte=5/11
+155 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-04 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=64 | punkte=5/11
 156 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=64 | punkte=5/11
 157 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=64 | punkte=5/11
 158 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=63 | punkte=5/11
 159 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=63 | punkte=5/11
-160 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-04 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=63 | punkte=5/11
+160 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-04 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=63 | punkte=5/11
 161 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=63 | punkte=5/11
 162 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=63 | punkte=5/11
 163 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=62 | punkte=5/11
 164 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=62 | punkte=5/11
-165 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-02 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=62 | punkte=5/11
+165 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-02 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=62 | punkte=5/11
 166 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=62 | punkte=5/11
 167 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=62 | punkte=5/11
 168 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=61 | punkte=5/11
 169 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=61 | punkte=5/11
-170 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-14 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=61 | punkte=5/11
+170 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-14 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=61 | punkte=5/11
 171 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-01 zielSpielerId=spieler-2 | hand=4 | stapel=60 | punkte=5/11
 172 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=60 | punkte=5/11
 173 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=60 | punkte=5/11
 174 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=59 | punkte=5/11
 175 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=59 | punkte=5/11
-176 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-05 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=59 | punkte=5/11
+176 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-05 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=59 | punkte=5/11
 177 | Normal | Ausspielphase | S0 | FarbenschutzSpielen handkartenId=farbenschutz-04 zielSchlangenId=schlange-spieler-1-1 | hand=4 | stapel=58 | punkte=5/11
 178 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=58 | punkte=5/11
 179 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=58 | punkte=9/11
 180 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=57 | punkte=9/11
 181 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=57 | punkte=9/11
-182 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-08 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=57 | punkte=9/11
+182 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-08 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=57 | punkte=9/11
 183 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=57 | punkte=9/11
 184 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=57 | punkte=9/11
 185 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=56 | punkte=9/11
 186 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=56 | punkte=9/11
-187 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-01 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=56 | punkte=9/11
-188 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-03 zielSchlangenId=schlange-spieler-1-1 zielKartenId=blau-14 | hand=4 | stapel=55 | punkte=9/11
+187 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-01 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=56 | punkte=9/11
+188 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-03 zielKartenId=blau-14 zielSchlangenId=schlange-spieler-1-1 | hand=4 | stapel=55 | punkte=9/11
 189 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=55 | punkte=9/11
 190 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=55 | punkte=9/11
 191 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=54 | punkte=9/11
 192 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=54 | punkte=9/11
-193 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-04 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=54 | punkte=9/11
+193 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-04 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=54 | punkte=9/11
 194 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=54 | punkte=9/11
 195 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=54 | punkte=9/11
 196 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=53 | punkte=9/11
 197 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=53 | punkte=9/11
-198 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-03 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=53 | punkte=9/11
-199 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-01 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 zielKartenId=rot-04 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=52 | punkte=9/11
+198 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-03 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=53 | punkte=9/11
+199 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=0 handkartenId=farbendieb-01 zielKartenId=rot-04 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=4 | stapel=52 | punkte=9/11
 200 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=52 | punkte=9/11
 201 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=52 | punkte=9/11
 202 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=51 | punkte=9/11
 203 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=51 | punkte=9/11
-204 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-08 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=51 | punkte=9/11
-205 | Normal | Ausspielphase | S1 | SchlangenblockadeSpielen handkartenId=schlangenblockade-01 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=50 | punkte=9/11
+204 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-08 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=51 | punkte=9/11
+205 | Normal | Ausspielphase | S1 | SchlangenblockadeSpielen einfügeIndex=0 handkartenId=schlangenblockade-01 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=4 | stapel=50 | punkte=9/11
 206 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=50 | punkte=9/11
 207 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=50 | punkte=9/11
 208 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=49 | punkte=9/11
 209 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=49 | punkte=9/11
-210 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-09 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=49 | punkte=9/11
+210 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-09 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=49 | punkte=9/11
 211 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-03 | hand=3 | stapel=49 | punkte=9/11
 212 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=49 | punkte=9/11
 213 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=49 | punkte=9/11
 214 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=48 | punkte=9/11
 215 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=48 | punkte=9/11
-216 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-15 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=48 | punkte=9/11
-217 | Normal | Ausspielphase | S1 | FarbendiebSpielen handkartenId=farbendieb-04 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 zielKartenId=braun-09 eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=0 | hand=4 | stapel=47 | punkte=9/11
+216 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-15 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=48 | punkte=9/11
+217 | Normal | Ausspielphase | S1 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=0 handkartenId=farbendieb-04 zielKartenId=braun-09 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=4 | stapel=47 | punkte=9/11
 218 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=47 | punkte=9/11
 219 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=47 | punkte=9/11
 220 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=45 | punkte=9/11
 221 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=45 | punkte=9/11
-222 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-05 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=45 | punkte=9/11
-223 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-02 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=44 | punkte=9/11
+222 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-05 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=45 | punkte=9/11
+223 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=0 handkartenId=schlangenblockade-02 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=4 | stapel=44 | punkte=9/11
 224 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=44 | punkte=9/11
 225 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=44 | punkte=9/11
 226 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=43 | punkte=9/11
 227 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=43 | punkte=9/11
-228 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-05 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=43 | punkte=9/11
+228 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-05 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=43 | punkte=9/11
 229 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=schlangenhaeutung-04 | hand=3 | stapel=43 | punkte=9/11
 230 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=43 | punkte=9/11
 231 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=43 | punkte=9/11
 232 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=42 | punkte=9/11
 233 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=42 | punkte=9/11
-234 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-06 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=42 | punkte=9/11
+234 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-06 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=42 | punkte=9/11
 235 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-01 | hand=3 | stapel=42 | punkte=9/11
 236 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=42 | punkte=9/11
 237 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=42 | punkte=9/11
 238 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=40 | punkte=9/11
 239 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=40 | punkte=9/11
-240 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-05 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=40 | punkte=9/11
+240 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-05 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=40 | punkte=9/11
 241 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=40 | punkte=9/11
 242 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=40 | punkte=9/11
 243 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=38 | punkte=9/11
 244 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=38 | punkte=9/11
-245 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-11 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=38 | punkte=9/11
+245 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-11 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=38 | punkte=9/11
 246 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-04 | hand=3 | stapel=38 | punkte=9/11
 247 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=38 | punkte=9/11
 248 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=38 | punkte=9/11
 249 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=37 | punkte=9/11
 250 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=37 | punkte=9/11
-251 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-12 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=37 | punkte=9/11
-252 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-04 ziele=[object Object] | hand=4 | stapel=36 | punkte=9/11
+251 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-12 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=37 | punkte=9/11
+252 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-04 ziele=[{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"braun-12"}] | hand=4 | stapel=36 | punkte=9/11
 253 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=36 | punkte=9/11
 254 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=36 | punkte=9/11
 255 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=34 | punkte=9/11
 256 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=34 | punkte=9/11
-257 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-09 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=34 | punkte=9/11
+257 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-09 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=34 | punkte=9/11
 258 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-03 | hand=3 | stapel=34 | punkte=9/11
 259 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=34 | punkte=9/11
 260 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=34 | punkte=9/11
 261 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=33 | punkte=9/11
 262 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=33 | punkte=9/11
-263 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-04 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=33 | punkte=9/11
+263 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-04 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=33 | punkte=9/11
 264 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=33 | punkte=9/11
 265 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=33 | punkte=9/11
 266 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=31 | punkte=9/11
 267 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=31 | punkte=9/11
-268 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-01 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=31 | punkte=9/11
+268 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-01 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=31 | punkte=9/11
 269 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=verdoppler-04 | hand=3 | stapel=31 | punkte=9/11
 270 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=31 | punkte=9/11
 271 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=31 | punkte=9/11
 272 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=30 | punkte=9/11
 273 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=30 | punkte=9/11
-274 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-12 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=30 | punkte=9/11
+274 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-12 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=30 | punkte=9/11
 275 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=30 | punkte=9/11
 276 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=30 | punkte=9/11
 277 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=28 | punkte=9/11
 278 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=28 | punkte=9/11
-279 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-11 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=28 | punkte=9/11
+279 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-11 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=28 | punkte=9/11
 280 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=verdoppler-03 | hand=3 | stapel=28 | punkte=9/11
 281 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=28 | punkte=9/11
 282 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=28 | punkte=9/11
 283 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=27 | punkte=9/11
 284 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=27 | punkte=9/11
-285 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-03 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=27 | punkte=9/11
+285 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-03 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=27 | punkte=9/11
 286 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=verdoppler-02 | hand=3 | stapel=27 | punkte=9/11
 287 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=27 | punkte=9/11
 288 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=27 | punkte=9/11
 289 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=25 | punkte=9/11
 290 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=25 | punkte=9/11
-291 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-10 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=25 | punkte=9/11
+291 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-10 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=25 | punkte=9/11
 292 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-02 | hand=3 | stapel=25 | punkte=9/11
 293 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=25 | punkte=9/11
 294 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=25 | punkte=9/11
 295 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=23 | punkte=9/11
 296 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=23 | punkte=9/11
-297 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-03 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=23 | punkte=9/11
+297 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-03 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=23 | punkte=9/11
 298 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=23 | punkte=9/11
 299 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=23 | punkte=9/11
 300 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=21 | punkte=9/11
 301 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=21 | punkte=9/11
-302 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-08 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=21 | punkte=9/11
-303 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-03 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 einfügeIndex=0 | hand=4 | stapel=20 | punkte=9/11
+302 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-08 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=21 | punkte=9/11
+303 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=0 handkartenId=schlangenblockade-03 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=4 | stapel=20 | punkte=9/11
 304 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=20 | punkte=9/11
 305 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=20 | punkte=9/11
 306 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=19 | punkte=9/11
 307 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=19 | punkte=9/11
-308 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-02 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=19 | punkte=9/11
+308 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-02 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=19 | punkte=9/11
 309 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=verdoppler-01 | hand=3 | stapel=19 | punkte=9/11
 310 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=19 | punkte=9/11
 311 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=19 | punkte=9/11
 312 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=18 | punkte=9/11
 313 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=18 | punkte=9/11
-314 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-11 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=18 | punkte=9/11
+314 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-11 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=18 | punkte=9/11
 315 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-01 | hand=3 | stapel=18 | punkte=9/11
 316 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=18 | punkte=9/11
 317 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=18 | punkte=9/11
 318 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=16 | punkte=9/11
 319 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=16 | punkte=9/11
-320 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-09 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=16 | punkte=9/11
+320 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-09 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=16 | punkte=9/11
 321 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=16 | punkte=9/11
 322 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=16 | punkte=9/11
 323 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=14 | punkte=9/11
 324 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=14 | punkte=9/11
-325 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-04 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=14 | punkte=9/11
+325 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-04 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=14 | punkte=9/11
 326 | Normal | Ausspielphase | S0 | FarbenschutzSpielen handkartenId=farbenschutz-01 zielSchlangenId=schlange-spieler-1-2 | hand=4 | stapel=13 | punkte=9/11
 327 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=13 | punkte=9/11
 328 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=13 | punkte=9/11
 329 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=12 | punkte=9/11
 330 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=12 | punkte=9/11
-331 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-02 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=12 | punkte=9/11
+331 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-02 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=12 | punkte=9/11
 332 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=12 | punkte=9/11
 333 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=12 | punkte=9/11
 334 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=11 | punkte=9/11
 335 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=11 | punkte=9/11
-336 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-15 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=11 | punkte=9/11
+336 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-15 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=11 | punkte=9/11
 337 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=11 | punkte=9/11
 338 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=11 | punkte=9/11
 339 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=10 | punkte=9/11
 340 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=10 | punkte=9/11
-341 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-12 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=10 | punkte=9/11
+341 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-12 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=10 | punkte=9/11
 342 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=10 | punkte=9/11
 343 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=10 | punkte=9/11
 344 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=9 | punkte=9/11
 345 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=9 | punkte=9/11
-346 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-04 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=9 | punkte=9/11
+346 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-04 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=9 | punkte=9/11
 347 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=9 | punkte=9/11
 348 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=9 | punkte=9/11
 349 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=8 | punkte=9/11
 350 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=8 | punkte=9/11
-351 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-13 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=8 | punkte=9/11
+351 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-13 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=8 | punkte=9/11
 352 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=8 | punkte=9/11
 353 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=8 | punkte=9/11
 354 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=7 | punkte=9/11
 355 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=7 | punkte=9/11
-356 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-02 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=7 | punkte=9/11
-357 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-02 zielSchlangenId=schlange-spieler-1-1 zielKartenId=rot-11 | hand=4 | stapel=6 | punkte=15/11
+356 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-02 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=7 | punkte=9/11
+357 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-02 zielKartenId=rot-11 zielSchlangenId=schlange-spieler-1-1 | hand=4 | stapel=6 | punkte=15/11
 358 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=6 | punkte=15/11
 359 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=6 | punkte=15/11
 360 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=5 | punkte=15/11
 361 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=5 | punkte=15/11
-362 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-13 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=5 | punkte=15/11
+362 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-13 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=5 | punkte=15/11
 363 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=5 | punkte=15/11
 364 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=5 | punkte=15/11
 365 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=4 | punkte=15/11
 366 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=4 | punkte=15/11
-367 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-08 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=4 | punkte=15/11
+367 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-08 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=4 | punkte=15/11
 368 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=farbenschutz-03 | hand=3 | stapel=4 | punkte=15/11
 369 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=4 | punkte=15/11
 370 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=4 | punkte=15/11
 371 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=3 | punkte=15/11
 372 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=3 | punkte=15/11
-373 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-01 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=3 | punkte=15/11
+373 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-01 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=3 | punkte=15/11
 374 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=3 | punkte=15/11
 375 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=3 | punkte=15/11
 376 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=1 | punkte=15/11
 377 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=1 | punkte=15/11
-378 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-02 schlangenId=schlange-spieler-1-1 position=links | hand=4 | stapel=1 | punkte=15/11
+378 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-02 position=links schlangenId=schlange-spieler-1-1 | hand=4 | stapel=1 | punkte=15/11
 379 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=1 | punkte=15/11
 380 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=1 | punkte=15/11
 381 | Endspurt | Nachziehphase | S1 | beendeZug | hand=5 | stapel=0 | punkte=15/11
 382 | Endspurt | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=0 | punkte=15/11
-383 | Endspurt | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-15 schlangenId=schlange-spieler-2-1 position=links | hand=4 | stapel=0 | punkte=15/11
+383 | Endspurt | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-15 position=links schlangenId=schlange-spieler-2-1 | hand=4 | stapel=0 | punkte=15/11
 384 | Endspurt | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=0 | punkte=15/11
 385 | Endspurt | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=0 | punkte=15/11
 386 | Endspurt | Nachziehphase | S0 | beendeZug | hand=4 | stapel=0 | punkte=15/11
 387 | Endspurt | Ausspielphase | S0 | starteAusspielphase | hand=4 | stapel=0 | punkte=15/11
-388 | Endspurt | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-03 schlangenId=schlange-spieler-1-1 position=links | hand=3 | stapel=0 | punkte=15/11
+388 | Endspurt | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-03 position=links schlangenId=schlange-spieler-1-1 | hand=3 | stapel=0 | punkte=15/11
 389 | Endspurt | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=0 | punkte=15/11
 390 | Endspurt | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=0 | punkte=15/11
 391 | Beendet | Spielende | S0 | beendeZug | hand=3 | stapel=0 | punkte=15/11"
@@ -402,7 +402,7 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 2 Spieler, letzt
 005 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=103 | punkte=5/0
 006 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=102 | punkte=5/0
 007 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=102 | punkte=5/0
-008 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-07 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=102 | punkte=5/0
+008 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-07 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=102 | punkte=5/0
 009 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=102 | punkte=5/0
 010 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=102 | punkte=5/0
 011 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=102 | punkte=5/0
@@ -413,259 +413,259 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 2 Spieler, letzt
 016 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=102 | punkte=5/5
 017 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=101 | punkte=5/5
 018 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=101 | punkte=5/5
-019 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-06 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=101 | punkte=5/5
+019 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-06 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=101 | punkte=5/5
 020 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=101 | punkte=5/5
 021 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=101 | punkte=5/5
 022 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=99 | punkte=5/5
 023 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=99 | punkte=5/5
-024 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-03 ziele=[object Object],[object Object] | hand=5 | stapel=98 | punkte=5/5
-025 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-13 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=98 | punkte=0/5
+024 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-03 ziele=[{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"blau-07"},{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"braun-06"}] | hand=5 | stapel=98 | punkte=5/5
+025 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-13 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=98 | punkte=0/5
 026 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=98 | punkte=0/5
 027 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=98 | punkte=0/5
 028 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=97 | punkte=0/5
 029 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=97 | punkte=0/5
-030 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-03 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 zielKartenId=rot-13 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=1 | hand=4 | stapel=97 | punkte=0/5
+030 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=1 handkartenId=farbendieb-03 zielKartenId=rot-13 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=4 | stapel=97 | punkte=0/5
 031 | Normal | Ausspielphase | S0 | reagiere FarbendiebDurchlassen | hand=5 | stapel=96 | punkte=5/5
-032 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-05 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=96 | punkte=5/5
+032 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-05 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=96 | punkte=5/5
 033 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=96 | punkte=5/5
 034 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=96 | punkte=5/5
 035 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=95 | punkte=5/5
 036 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=95 | punkte=5/5
 037 | Normal | Ausspielphase | S1 | FarbenschutzSpielen handkartenId=farbenschutz-02 zielSchlangenId=schlange-spieler-2-1 | hand=5 | stapel=94 | punkte=5/5
-038 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=94 | punkte=0/5
+038 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=94 | punkte=0/5
 039 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=94 | punkte=0/5
 040 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=94 | punkte=0/5
 041 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=93 | punkte=0/5
 042 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=93 | punkte=0/5
 043 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-03 zielSpielerId=spieler-2 | hand=5 | stapel=92 | punkte=0/5
-044 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-11 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=92 | punkte=0/5
+044 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-11 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=92 | punkte=0/5
 045 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=92 | punkte=0/5
 046 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=92 | punkte=0/5
 047 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=91 | punkte=0/5
 048 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=91 | punkte=0/5
-049 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-14 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=91 | punkte=5/5
+049 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-14 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=91 | punkte=5/5
 050 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=91 | punkte=5/5
 051 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=91 | punkte=5/5
 052 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=90 | punkte=5/5
 053 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=90 | punkte=5/5
-054 | Normal | Ausspielphase | S1 | FarbenfusionSpielen handkartenId=farbenfusion-04 zielSchlangenId=schlange-spieler-2-1 zielKartenId=rot-07 | hand=5 | stapel=89 | punkte=5/0
-055 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=89 | punkte=5/0
+054 | Normal | Ausspielphase | S1 | FarbenfusionSpielen handkartenId=farbenfusion-04 zielKartenId=rot-07 zielSchlangenId=schlange-spieler-2-1 | hand=5 | stapel=89 | punkte=5/0
+055 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=89 | punkte=5/0
 056 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=89 | punkte=5/0
 057 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=89 | punkte=5/0
 058 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=88 | punkte=5/0
 059 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=88 | punkte=5/0
-060 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-06 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=88 | punkte=5/0
+060 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-06 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=88 | punkte=5/0
 061 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=88 | punkte=5/0
 062 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=88 | punkte=5/0
 063 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=87 | punkte=5/0
 064 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=87 | punkte=5/0
-065 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-09 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=87 | punkte=5/9
+065 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-09 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=87 | punkte=5/9
 066 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=87 | punkte=5/9
 067 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=87 | punkte=5/9
 068 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=86 | punkte=5/9
 069 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=86 | punkte=5/9
-070 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-01 ziele=[object Object],[object Object] | hand=5 | stapel=85 | punkte=5/0
-071 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=85 | punkte=5/0
+070 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-01 ziele=[{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"blau-12"},{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"blau-09"}] | hand=5 | stapel=85 | punkte=5/0
+071 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=85 | punkte=5/0
 072 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=85 | punkte=5/0
 073 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=85 | punkte=5/0
 074 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=84 | punkte=5/0
 075 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=84 | punkte=5/0
-076 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-01 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=84 | punkte=5/0
+076 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-01 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=84 | punkte=5/0
 077 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=84 | punkte=5/0
 078 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=84 | punkte=5/0
 079 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=83 | punkte=5/0
 080 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=83 | punkte=5/0
-081 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-07 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=83 | punkte=5/0
+081 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-07 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=83 | punkte=5/0
 082 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=83 | punkte=5/0
 083 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=83 | punkte=5/0
 084 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=82 | punkte=5/0
 085 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=82 | punkte=5/0
-086 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-05 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=82 | punkte=5/9
+086 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-05 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=82 | punkte=5/9
 087 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=82 | punkte=5/9
 088 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=82 | punkte=5/9
 089 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=81 | punkte=5/9
 090 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=81 | punkte=5/9
-091 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=81 | punkte=5/9
+091 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=81 | punkte=5/9
 092 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=81 | punkte=5/9
 093 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=81 | punkte=5/9
 094 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=80 | punkte=5/9
 095 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=80 | punkte=5/9
-096 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-07 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=80 | punkte=5/9
+096 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-07 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=80 | punkte=5/9
 097 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=regenbogenschlange-02 | hand=3 | stapel=80 | punkte=5/9
 098 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=80 | punkte=5/9
 099 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=80 | punkte=5/9
 100 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=79 | punkte=5/9
 101 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=79 | punkte=5/9
 102 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-02 zielSpielerId=spieler-2 | hand=5 | stapel=78 | punkte=5/9
-103 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-10 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=78 | punkte=5/9
+103 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-10 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=78 | punkte=5/9
 104 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=78 | punkte=5/9
 105 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=78 | punkte=5/9
 106 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=77 | punkte=5/9
 107 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=77 | punkte=5/9
-108 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-02 ziele=[object Object],[object Object] | hand=5 | stapel=76 | punkte=5/0
-109 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-11 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=76 | punkte=5/0
+108 | Normal | Ausspielphase | S0 | SchlangenfrassSpielen handkartenId=schlangenfrass-02 ziele=[{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"gelb-05"},{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"grün-07"}] | hand=5 | stapel=76 | punkte=5/0
+109 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-11 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=76 | punkte=5/0
 110 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=76 | punkte=5/0
 111 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=76 | punkte=5/0
 112 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=74 | punkte=5/0
 113 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=74 | punkte=5/0
-114 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-04 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=74 | punkte=5/0
+114 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-04 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=74 | punkte=5/0
 115 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=74 | punkte=5/0
 116 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=74 | punkte=5/0
 117 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=73 | punkte=5/0
 118 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=73 | punkte=5/0
-119 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-04 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=73 | punkte=5/0
+119 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-04 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=73 | punkte=5/0
 120 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=73 | punkte=5/0
 121 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=73 | punkte=5/0
 122 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=72 | punkte=5/0
 123 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=72 | punkte=5/0
-124 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-02 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=72 | punkte=5/0
+124 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-02 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=72 | punkte=5/0
 125 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=72 | punkte=5/0
 126 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=72 | punkte=5/0
 127 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=71 | punkte=5/0
 128 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=71 | punkte=5/0
-129 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-04 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 einfügeIndex=4 | hand=5 | stapel=70 | punkte=5/0
-130 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-14 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=70 | punkte=5/0
+129 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=4 handkartenId=schlangenblockade-04 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=70 | punkte=5/0
+130 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-14 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=70 | punkte=5/0
 131 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=70 | punkte=5/0
 132 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=70 | punkte=5/0
 133 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=69 | punkte=5/0
 134 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=69 | punkte=5/0
-135 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-08 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=69 | punkte=5/0
+135 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-08 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=69 | punkte=5/0
 136 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=69 | punkte=5/0
 137 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=69 | punkte=5/0
 138 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=68 | punkte=5/0
 139 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=68 | punkte=5/0
-140 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-05 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=68 | punkte=5/0
+140 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-05 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=68 | punkte=5/0
 141 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=68 | punkte=5/0
 142 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=68 | punkte=5/0
 143 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=67 | punkte=5/0
 144 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=67 | punkte=5/0
-145 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-04 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=67 | punkte=5/0
+145 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-04 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=67 | punkte=5/0
 146 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=67 | punkte=5/0
 147 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=67 | punkte=5/0
 148 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=66 | punkte=5/0
 149 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=66 | punkte=5/0
-150 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-02 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 zielKartenId=rot-04 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=14 | hand=5 | stapel=65 | punkte=5/0
-151 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-14 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=65 | punkte=5/0
+150 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=14 handkartenId=farbendieb-02 zielKartenId=rot-04 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=65 | punkte=5/0
+151 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-14 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=65 | punkte=5/0
 152 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=65 | punkte=5/0
 153 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=65 | punkte=5/0
 154 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=64 | punkte=5/0
 155 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=64 | punkte=5/0
-156 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-08 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=64 | punkte=5/0
+156 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-08 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=64 | punkte=5/0
 157 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=64 | punkte=5/0
 158 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=64 | punkte=5/0
 159 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=63 | punkte=5/0
 160 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=63 | punkte=5/0
-161 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=63 | punkte=5/0
+161 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=63 | punkte=5/0
 162 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=63 | punkte=5/0
 163 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=63 | punkte=5/0
 164 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=62 | punkte=5/0
 165 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=62 | punkte=5/0
-166 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-15 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=62 | punkte=5/0
+166 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-15 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=62 | punkte=5/0
 167 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=62 | punkte=5/0
 168 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=62 | punkte=5/0
 169 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=61 | punkte=5/0
 170 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=61 | punkte=5/0
 171 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-01 zielSpielerId=spieler-2 | hand=5 | stapel=60 | punkte=5/0
-172 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-10 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=60 | punkte=5/0
+172 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-10 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=60 | punkte=5/0
 173 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=60 | punkte=5/0
 174 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=60 | punkte=5/0
 175 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=59 | punkte=5/0
 176 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=59 | punkte=5/0
 177 | Normal | Ausspielphase | S0 | FarbenschutzSpielen handkartenId=farbenschutz-04 zielSchlangenId=schlange-spieler-1-1 | hand=5 | stapel=58 | punkte=5/0
-178 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-03 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=58 | punkte=5/0
+178 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-03 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=58 | punkte=5/0
 179 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=58 | punkte=5/0
 180 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=58 | punkte=9/0
 181 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=57 | punkte=9/0
 182 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=57 | punkte=9/0
-183 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-05 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=57 | punkte=9/5
+183 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-05 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=57 | punkte=9/5
 184 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=57 | punkte=9/5
 185 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=57 | punkte=9/5
 186 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=56 | punkte=9/5
 187 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=56 | punkte=9/5
-188 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-03 zielSchlangenId=schlange-spieler-1-1 zielKartenId=rot-04 | hand=5 | stapel=55 | punkte=9/5
-189 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-02 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=55 | punkte=9/5
+188 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-03 zielKartenId=rot-04 zielSchlangenId=schlange-spieler-1-1 | hand=5 | stapel=55 | punkte=9/5
+189 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-02 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=55 | punkte=9/5
 190 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=55 | punkte=9/5
 191 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=55 | punkte=9/5
 192 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=54 | punkte=9/5
 193 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=54 | punkte=9/5
-194 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-05 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=54 | punkte=9/5
+194 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-05 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=54 | punkte=9/5
 195 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=54 | punkte=9/5
 196 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=54 | punkte=9/5
 197 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=53 | punkte=9/5
 198 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=53 | punkte=9/5
-199 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-01 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 zielKartenId=rot-05 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=19 | hand=5 | stapel=52 | punkte=9/5
-200 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=52 | punkte=9/5
+199 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=19 handkartenId=farbendieb-01 zielKartenId=rot-05 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=52 | punkte=9/5
+200 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=52 | punkte=9/5
 201 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=52 | punkte=9/5
 202 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=52 | punkte=9/5
 203 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=51 | punkte=9/5
 204 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=51 | punkte=9/5
-205 | Normal | Ausspielphase | S1 | SchlangenblockadeSpielen handkartenId=schlangenblockade-01 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 einfügeIndex=9 | hand=5 | stapel=50 | punkte=9/5
-206 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=50 | punkte=9/5
+205 | Normal | Ausspielphase | S1 | SchlangenblockadeSpielen einfügeIndex=9 handkartenId=schlangenblockade-01 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=50 | punkte=9/5
+206 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=50 | punkte=9/5
 207 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=50 | punkte=9/5
 208 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=50 | punkte=9/5
 209 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=49 | punkte=9/5
 210 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=49 | punkte=9/5
-211 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-05 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=49 | punkte=9/5
+211 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-05 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=49 | punkte=9/5
 212 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-04 | hand=3 | stapel=49 | punkte=9/5
 213 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=49 | punkte=9/5
 214 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=49 | punkte=9/5
 215 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=48 | punkte=9/5
 216 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=48 | punkte=9/5
-217 | Normal | Ausspielphase | S1 | FarbendiebSpielen handkartenId=farbendieb-04 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 zielKartenId=braun-05 eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=11 | hand=5 | stapel=47 | punkte=9/5
-218 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-04 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=47 | punkte=9/5
+217 | Normal | Ausspielphase | S1 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=11 handkartenId=farbendieb-04 zielKartenId=braun-05 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=5 | stapel=47 | punkte=9/5
+218 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-04 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=47 | punkte=9/5
 219 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=47 | punkte=9/5
 220 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=47 | punkte=9/5
 221 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=45 | punkte=9/5
 222 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=45 | punkte=9/5
-223 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-02 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 einfügeIndex=13 | hand=5 | stapel=44 | punkte=9/5
-224 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-11 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=44 | punkte=9/5
+223 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=13 handkartenId=schlangenblockade-02 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=44 | punkte=9/5
+224 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-11 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=44 | punkte=9/5
 225 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=44 | punkte=9/5
 226 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=44 | punkte=9/5
 227 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=43 | punkte=9/5
 228 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=43 | punkte=9/5
-229 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-06 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=43 | punkte=9/5
+229 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-06 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=43 | punkte=9/5
 230 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=schlangenhaeutung-04 | hand=3 | stapel=43 | punkte=9/5
 231 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=43 | punkte=9/5
 232 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=43 | punkte=9/5
 233 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=42 | punkte=9/5
 234 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=42 | punkte=9/5
-235 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=42 | punkte=9/5
+235 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=42 | punkte=9/5
 236 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-01 | hand=3 | stapel=42 | punkte=9/5
 237 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=42 | punkte=9/5
 238 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=42 | punkte=9/5
 239 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=40 | punkte=9/5
 240 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=40 | punkte=9/5
-241 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-03 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=40 | punkte=9/5
+241 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-03 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=40 | punkte=9/5
 242 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=40 | punkte=9/5
 243 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=40 | punkte=9/5
 244 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=38 | punkte=9/5
 245 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=38 | punkte=9/5
-246 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=38 | punkte=9/5
+246 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=38 | punkte=9/5
 247 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-03 | hand=3 | stapel=38 | punkte=9/5
 248 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=38 | punkte=9/5
 249 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=38 | punkte=9/5
 250 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=37 | punkte=9/5
 251 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=37 | punkte=9/5
-252 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-04 ziele=[object Object],[object Object] | hand=5 | stapel=36 | punkte=9/5
-253 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-03 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=36 | punkte=9/5
+252 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-04 ziele=[{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"violett-09"},{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"rot-01"}] | hand=5 | stapel=36 | punkte=9/5
+253 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-03 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=36 | punkte=9/5
 254 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=36 | punkte=9/5
 255 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=36 | punkte=9/5
 256 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=34 | punkte=9/5
 257 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=34 | punkte=9/5
 258 | Normal | Ausspielphase | S0 | VerdopplerSpielen handkartenId=verdoppler-04 | hand=4 | stapel=34 | punkte=9/5
 259 | Normal | Ausspielphase | S0 | reagiere VerdopplerDurchlassen | hand=5 | stapel=33 | punkte=9/5
-260 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-02 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=33 | punkte=9/5
-261 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-11 schlangenId=schlange-spieler-1-1 position=rechts | hand=3 | stapel=33 | punkte=9/5
+260 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-02 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=33 | punkte=9/5
+261 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-11 position=rechts schlangenId=schlange-spieler-1-1 | hand=3 | stapel=33 | punkte=9/5
 262 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=33 | punkte=9/5
 263 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=33 | punkte=9/5
 264 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=32 | punkte=9/5
 265 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=32 | punkte=9/5
-266 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-10 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=32 | punkte=9/5
+266 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-10 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=32 | punkte=9/5
 267 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=32 | punkte=9/5
 268 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=32 | punkte=9/5
 269 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=30 | punkte=9/5
 270 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=30 | punkte=9/5
-271 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=30 | punkte=9/5
+271 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=30 | punkte=9/5
 272 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-03 | hand=3 | stapel=30 | punkte=9/5
 273 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=30 | punkte=9/5
 274 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=30 | punkte=9/5
@@ -673,105 +673,105 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 2 Spieler, letzt
 276 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=29 | punkte=9/5
 277 | Normal | Ausspielphase | S1 | VerdopplerSpielen handkartenId=verdoppler-03 | hand=4 | stapel=29 | punkte=9/5
 278 | Normal | Ausspielphase | S1 | reagiere VerdopplerDurchlassen | hand=5 | stapel=28 | punkte=9/5
-279 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=28 | punkte=9/5
-280 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-10 schlangenId=schlange-spieler-2-1 position=rechts | hand=3 | stapel=28 | punkte=9/5
+279 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=28 | punkte=9/5
+280 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-10 position=rechts schlangenId=schlange-spieler-2-1 | hand=3 | stapel=28 | punkte=9/5
 281 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=28 | punkte=9/5
 282 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=28 | punkte=9/5
 283 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=26 | punkte=9/5
 284 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=26 | punkte=9/5
 285 | Normal | Ausspielphase | S0 | VerdopplerSpielen handkartenId=verdoppler-02 | hand=4 | stapel=26 | punkte=9/5
 286 | Normal | Ausspielphase | S0 | reagiere VerdopplerDurchlassen | hand=5 | stapel=25 | punkte=9/5
-287 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-04 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=25 | punkte=9/5
-288 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-11 schlangenId=schlange-spieler-1-1 position=rechts | hand=3 | stapel=25 | punkte=9/5
+287 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-04 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=25 | punkte=9/5
+288 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-11 position=rechts schlangenId=schlange-spieler-1-1 | hand=3 | stapel=25 | punkte=9/5
 289 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=25 | punkte=9/5
 290 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=25 | punkte=9/5
 291 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=23 | punkte=9/5
 292 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=23 | punkte=9/5
-293 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=23 | punkte=9/5
+293 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=23 | punkte=9/5
 294 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=schlangenhaeutung-02 | hand=3 | stapel=23 | punkte=9/5
 295 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=23 | punkte=9/5
 296 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=23 | punkte=9/5
 297 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=21 | punkte=9/5
 298 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=21 | punkte=9/5
-299 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-03 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 einfügeIndex=21 | hand=5 | stapel=20 | punkte=9/5
-300 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-15 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=20 | punkte=9/5
+299 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=21 handkartenId=schlangenblockade-03 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=20 | punkte=9/5
+300 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-15 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=20 | punkte=9/5
 301 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=20 | punkte=9/5
 302 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=20 | punkte=9/5
 303 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=18 | punkte=9/5
 304 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=18 | punkte=9/5
 305 | Normal | Ausspielphase | S1 | VerdopplerSpielen handkartenId=verdoppler-01 | hand=4 | stapel=18 | punkte=9/5
 306 | Normal | Ausspielphase | S1 | reagiere VerdopplerDurchlassen | hand=5 | stapel=17 | punkte=9/5
-307 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-13 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=17 | punkte=9/5
-308 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-04 schlangenId=schlange-spieler-2-1 position=rechts | hand=3 | stapel=17 | punkte=9/5
+307 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-13 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=17 | punkte=9/5
+308 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-04 position=rechts schlangenId=schlange-spieler-2-1 | hand=3 | stapel=17 | punkte=9/5
 309 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=17 | punkte=9/5
 310 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=17 | punkte=9/5
 311 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=16 | punkte=9/5
 312 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=16 | punkte=9/5
-313 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-13 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=16 | punkte=9/5
+313 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-13 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=16 | punkte=9/5
 314 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-01 | hand=3 | stapel=16 | punkte=9/5
 315 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=16 | punkte=9/5
 316 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=16 | punkte=9/5
 317 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=14 | punkte=9/5
 318 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=14 | punkte=9/5
-319 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-02 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=14 | punkte=9/5
+319 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-02 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=14 | punkte=9/5
 320 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=farbenschutz-01 | hand=3 | stapel=14 | punkte=9/5
 321 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=14 | punkte=9/5
 322 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=14 | punkte=9/5
 323 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=12 | punkte=9/5
 324 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=12 | punkte=9/5
-325 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=12 | punkte=9/5
+325 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=12 | punkte=9/5
 326 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=12 | punkte=9/5
 327 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=12 | punkte=9/5
 328 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=10 | punkte=9/5
 329 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=10 | punkte=9/5
-330 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-15 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=10 | punkte=9/5
+330 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-15 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=10 | punkte=9/5
 331 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=10 | punkte=9/5
 332 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=10 | punkte=9/5
 333 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=9 | punkte=9/5
 334 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=9 | punkte=9/5
-335 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-03 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=9 | punkte=9/5
+335 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-03 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=9 | punkte=9/5
 336 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=9 | punkte=9/5
 337 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=9 | punkte=9/5
 338 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=8 | punkte=9/5
 339 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=8 | punkte=9/5
-340 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-06 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=8 | punkte=9/5
+340 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-06 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=8 | punkte=9/5
 341 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=8 | punkte=9/5
 342 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=8 | punkte=9/5
 343 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=7 | punkte=9/5
 344 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=7 | punkte=9/5
-345 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-02 zielSchlangenId=schlange-spieler-1-1 zielKartenId=blau-13 | hand=5 | stapel=6 | punkte=9/5
-346 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-08 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=6 | punkte=9/5
+345 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-02 zielKartenId=blau-13 zielSchlangenId=schlange-spieler-1-1 | hand=5 | stapel=6 | punkte=9/5
+346 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-08 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=6 | punkte=9/5
 347 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=6 | punkte=9/5
 348 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=6 | punkte=9/5
 349 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=5 | punkte=9/5
 350 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=5 | punkte=9/5
-351 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-03 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=5 | punkte=9/5
+351 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-03 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=5 | punkte=9/5
 352 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=5 | punkte=9/5
 353 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=5 | punkte=9/5
 354 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=4 | punkte=9/5
 355 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=4 | punkte=9/5
-356 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-07 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=4 | punkte=9/5
+356 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-07 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=4 | punkte=9/5
 357 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=farbenschutz-03 | hand=3 | stapel=4 | punkte=9/5
 358 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=4 | punkte=9/5
 359 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=4 | punkte=9/5
 360 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=3 | punkte=9/5
 361 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=3 | punkte=9/5
-362 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-03 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=3 | punkte=9/5
+362 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-03 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=3 | punkte=9/5
 363 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=3 | punkte=9/5
 364 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=3 | punkte=9/5
 365 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=1 | punkte=9/5
 366 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=1 | punkte=9/5
-367 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=1 | punkte=9/5
+367 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=1 | punkte=9/5
 368 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=1 | punkte=9/5
 369 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=1 | punkte=9/5
 370 | Endspurt | Nachziehphase | S1 | beendeZug | hand=5 | stapel=0 | punkte=9/5
 371 | Endspurt | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=0 | punkte=9/5
-372 | Endspurt | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-08 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=0 | punkte=9/5
+372 | Endspurt | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-08 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=0 | punkte=9/5
 373 | Endspurt | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=0 | punkte=9/5
 374 | Endspurt | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=0 | punkte=9/11
 375 | Endspurt | Nachziehphase | S0 | beendeZug | hand=4 | stapel=0 | punkte=9/11
 376 | Endspurt | Ausspielphase | S0 | starteAusspielphase | hand=4 | stapel=0 | punkte=9/11
-377 | Endspurt | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-08 schlangenId=schlange-spieler-1-1 position=rechts | hand=3 | stapel=0 | punkte=9/11
+377 | Endspurt | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-08 position=rechts schlangenId=schlange-spieler-1-1 | hand=3 | stapel=0 | punkte=9/11
 378 | Endspurt | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=0 | punkte=9/11
 379 | Endspurt | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=0 | punkte=9/11
 380 | Beendet | Spielende | S0 | beendeZug | hand=3 | stapel=0 | punkte=9/11"
@@ -785,7 +785,7 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 3 Spieler, letzt
 005 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=98 | punkte=5/0/0
 006 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=98 | punkte=5/0/0
 007 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=98 | punkte=5/0/0
-008 | Normal | Ausspielphase | S1 | SchlangenblockadeSpielen handkartenId=schlangenblockade-01 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 einfügeIndex=1 | hand=5 | stapel=97 | punkte=5/0/0
+008 | Normal | Ausspielphase | S1 | SchlangenblockadeSpielen einfügeIndex=1 handkartenId=schlangenblockade-01 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=5 | stapel=97 | punkte=5/0/0
 009 | Normal | Ausspielphase | S1 | NeueSchlangeStarten handkartenId=rot-03 | hand=4 | stapel=97 | punkte=5/5/0
 010 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=97 | punkte=5/5/0
 011 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=97 | punkte=5/5/0
@@ -794,68 +794,68 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 3 Spieler, letzt
 014 | Normal | Ausspielphase | S0 | VerdopplerSpielen handkartenId=verdoppler-01 | hand=4 | stapel=96 | punkte=5/5/0
 015 | Normal | Ausspielphase | S0 | reagiere VerdopplerDurchlassen | hand=4 | stapel=96 | punkte=5/5/0
 016 | Normal | Ausspielphase | S0 | reagiere VerdopplerDurchlassen | hand=5 | stapel=95 | punkte=5/5/0
-017 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-08 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=95 | punkte=5/5/0
-018 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-13 schlangenId=schlange-spieler-1-1 position=rechts | hand=3 | stapel=95 | punkte=5/5/0
+017 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-08 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=95 | punkte=5/5/0
+018 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-13 position=rechts schlangenId=schlange-spieler-1-1 | hand=3 | stapel=95 | punkte=5/5/0
 019 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=95 | punkte=5/5/0
 020 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=95 | punkte=5/5/0
 021 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=94 | punkte=5/5/0
 022 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=94 | punkte=5/5/0
-023 | Normal | Ausspielphase | S1 | FarbendiebSpielen handkartenId=farbendieb-03 zielSpielerId=spieler-1 zielSchlangenId=schlange-spieler-1-1 zielKartenId=gelb-13 eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=1 | hand=5 | stapel=93 | punkte=5/5/0
-024 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-08 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=93 | punkte=5/5/0
+023 | Normal | Ausspielphase | S1 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=1 handkartenId=farbendieb-03 zielKartenId=gelb-13 zielSchlangenId=schlange-spieler-1-1 zielSpielerId=spieler-1 | hand=5 | stapel=93 | punkte=5/5/0
+024 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-08 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=93 | punkte=5/5/0
 025 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=93 | punkte=5/5/0
 026 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=93 | punkte=5/5/0
 027 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=93 | punkte=5/5/0
 028 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=93 | punkte=5/5/0
-029 | Normal | Ausspielphase | S2 | SchlangenblockadeSpielen handkartenId=schlangenblockade-04 zielSpielerId=spieler-2 zielSchlangenId=schlange-spieler-2-1 einfügeIndex=3 | hand=5 | stapel=92 | punkte=5/5/0
+029 | Normal | Ausspielphase | S2 | SchlangenblockadeSpielen einfügeIndex=3 handkartenId=schlangenblockade-04 zielSchlangenId=schlange-spieler-2-1 zielSpielerId=spieler-2 | hand=5 | stapel=92 | punkte=5/5/0
 030 | Normal | Ausspielphase | S2 | NeueSchlangeStarten handkartenId=rot-02 | hand=4 | stapel=92 | punkte=5/5/5
 031 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=92 | punkte=5/5/5
 032 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=92 | punkte=5/5/5
 033 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=90 | punkte=5/5/5
 034 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=90 | punkte=5/5/5
-035 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-02 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=90 | punkte=5/5/5
+035 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-02 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=90 | punkte=5/5/5
 036 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-04 | hand=3 | stapel=90 | punkte=5/5/5
 037 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=90 | punkte=5/5/5
 038 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=90 | punkte=5/5/5
 039 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=89 | punkte=5/5/5
 040 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=89 | punkte=5/5/5
-041 | Normal | Ausspielphase | S1 | FarbendiebSpielen handkartenId=farbendieb-04 zielSpielerId=spieler-3 zielSchlangenId=schlange-spieler-3-1 zielKartenId=rot-02 eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=4 | hand=5 | stapel=88 | punkte=5/5/0
-042 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-03 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=88 | punkte=5/5/0
+041 | Normal | Ausspielphase | S1 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=4 handkartenId=farbendieb-04 zielKartenId=rot-02 zielSchlangenId=schlange-spieler-3-1 zielSpielerId=spieler-3 | hand=5 | stapel=88 | punkte=5/5/0
+042 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-03 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=88 | punkte=5/5/0
 043 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=88 | punkte=5/5/0
 044 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=88 | punkte=5/5/0
 045 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=87 | punkte=5/5/0
 046 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=87 | punkte=5/5/0
-047 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-01 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=87 | punkte=5/5/5
+047 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-01 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=87 | punkte=5/5/5
 048 | Normal | Ausspielphase | S2 | PflichtAbwurf handkartenId=schlangenhaeutung-04 | hand=3 | stapel=87 | punkte=5/5/5
 049 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=3 | stapel=87 | punkte=5/5/5
 050 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=3 | stapel=87 | punkte=5/5/5
 051 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=85 | punkte=5/5/5
 052 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=85 | punkte=5/5/5
-053 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-05 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=85 | punkte=5/5/5
+053 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-05 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=85 | punkte=5/5/5
 054 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=85 | punkte=5/5/5
 055 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=85 | punkte=5/5/5
 056 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=84 | punkte=5/5/5
 057 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=84 | punkte=5/5/5
-058 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-03 ziele=[object Object],[object Object] | hand=5 | stapel=83 | punkte=5/5/0
-059 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-14 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=83 | punkte=5/5/0
+058 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-03 ziele=[{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"gelb-05"},{"spielerId":"spieler-3","schlangenId":"schlange-spieler-3-1","kartenId":"gelb-01"}] | hand=5 | stapel=83 | punkte=5/5/0
+059 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-14 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=83 | punkte=5/5/0
 060 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=83 | punkte=5/5/0
 061 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=83 | punkte=5/5/0
 062 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=81 | punkte=5/5/0
 063 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=81 | punkte=5/5/0
-064 | Normal | Ausspielphase | S2 | SchlangenfrassSpielen handkartenId=schlangenfrass-02 ziele=[object Object],[object Object] | hand=4 | stapel=81 | punkte=5/5/0
+064 | Normal | Ausspielphase | S2 | SchlangenfrassSpielen handkartenId=schlangenfrass-02 ziele=[{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"gelb-03"},{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"rot-14"}] | hand=4 | stapel=81 | punkte=5/5/0
 065 | Normal | Ausspielphase | S2 | reagiere SchlangenfrassDurchlassen | hand=4 | stapel=81 | punkte=0/5/0
 066 | Normal | Ausspielphase | S2 | reagiere SchlangenfrassDurchlassen | hand=5 | stapel=80 | punkte=5/5/0
-067 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-05 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=80 | punkte=5/5/5
+067 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-05 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=80 | punkte=5/5/5
 068 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=80 | punkte=5/5/5
 069 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=80 | punkte=5/5/5
 070 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=79 | punkte=5/5/5
 071 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=79 | punkte=5/5/5
-072 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-07 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=79 | punkte=5/5/5
+072 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-07 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=79 | punkte=5/5/5
 073 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=79 | punkte=5/5/5
 074 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=79 | punkte=5/5/5
 075 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=78 | punkte=5/5/5
 076 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=78 | punkte=5/5/5
-077 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-04 ziele=[object Object],[object Object] | hand=5 | stapel=77 | punkte=5/5/0
-078 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=77 | punkte=5/5/0
+077 | Normal | Ausspielphase | S1 | SchlangenfrassSpielen handkartenId=schlangenfrass-04 ziele=[{"spielerId":"spieler-1","schlangenId":"schlange-spieler-1-1","kartenId":"braun-07"},{"spielerId":"spieler-3","schlangenId":"schlange-spieler-3-1","kartenId":"violett-05"}] | hand=5 | stapel=77 | punkte=5/5/0
+078 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=77 | punkte=5/5/0
 079 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=77 | punkte=5/5/0
 080 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=77 | punkte=5/5/0
 081 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=76 | punkte=5/5/0
@@ -863,61 +863,61 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 3 Spieler, letzt
 083 | Normal | Ausspielphase | S2 | VerdopplerSpielen handkartenId=verdoppler-04 | hand=4 | stapel=76 | punkte=5/5/0
 084 | Normal | Ausspielphase | S2 | reagiere VerdopplerDurchlassen | hand=4 | stapel=76 | punkte=5/5/0
 085 | Normal | Ausspielphase | S2 | reagiere VerdopplerDurchlassen | hand=5 | stapel=75 | punkte=5/5/0
-086 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=grün-04 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=75 | punkte=5/5/5
-087 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-02 schlangenId=schlange-spieler-3-1 position=rechts | hand=3 | stapel=75 | punkte=5/5/5
+086 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=grün-04 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=75 | punkte=5/5/5
+087 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-02 position=rechts schlangenId=schlange-spieler-3-1 | hand=3 | stapel=75 | punkte=5/5/5
 088 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=3 | stapel=75 | punkte=5/5/5
 089 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=3 | stapel=75 | punkte=5/5/5
 090 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=74 | punkte=5/5/5
 091 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=74 | punkte=5/5/5
-092 | Normal | Ausspielphase | S0 | FarbendiebSpielen handkartenId=farbendieb-02 zielSpielerId=spieler-3 zielSchlangenId=schlange-spieler-3-1 zielKartenId=violett-02 eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=4 | hand=5 | stapel=73 | punkte=5/5/5
-093 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=73 | punkte=5/5/5
+092 | Normal | Ausspielphase | S0 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-1-1 einfügeIndex=4 handkartenId=farbendieb-02 zielKartenId=violett-02 zielSchlangenId=schlange-spieler-3-1 zielSpielerId=spieler-3 | hand=5 | stapel=73 | punkte=5/5/5
+093 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=73 | punkte=5/5/5
 094 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=73 | punkte=5/5/5
 095 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=73 | punkte=5/5/5
 096 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=72 | punkte=5/5/5
 097 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=72 | punkte=5/5/5
 098 | Normal | Ausspielphase | S1 | FarbenschutzSpielen handkartenId=farbenschutz-02 zielSchlangenId=schlange-spieler-2-1 | hand=5 | stapel=71 | punkte=5/5/5
-099 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-07 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=71 | punkte=5/5/5
+099 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-07 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=71 | punkte=5/5/5
 100 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=71 | punkte=5/5/5
 101 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=71 | punkte=5/5/5
 102 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=69 | punkte=5/5/5
 103 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=69 | punkte=5/5/5
 104 | Normal | Ausspielphase | S2 | FarbenschutzSpielen handkartenId=farbenschutz-04 zielSchlangenId=schlange-spieler-3-1 | hand=5 | stapel=68 | punkte=5/5/5
-105 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-08 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=68 | punkte=5/5/5
+105 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-08 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=68 | punkte=5/5/5
 106 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=68 | punkte=5/5/5
 107 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=68 | punkte=5/5/5
 108 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=67 | punkte=5/5/5
 109 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=67 | punkte=5/5/5
-110 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=67 | punkte=5/5/5
+110 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=67 | punkte=5/5/5
 111 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-03 | hand=3 | stapel=67 | punkte=5/5/5
 112 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=67 | punkte=5/5/5
 113 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=67 | punkte=5/5/5
 114 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=66 | punkte=5/5/5
 115 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=66 | punkte=5/5/5
-116 | Normal | Ausspielphase | S1 | FarbendiebSpielen handkartenId=farbendieb-01 zielSpielerId=spieler-3 zielSchlangenId=schlange-spieler-3-1 zielKartenId=gelb-08 eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=7 | hand=5 | stapel=65 | punkte=5/5/5
-117 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-07 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=65 | punkte=0/5/0
+116 | Normal | Ausspielphase | S1 | FarbendiebSpielen eigeneSchlangenId=schlange-spieler-2-1 einfügeIndex=7 handkartenId=farbendieb-01 zielKartenId=gelb-08 zielSchlangenId=schlange-spieler-3-1 zielSpielerId=spieler-3 | hand=5 | stapel=65 | punkte=5/5/5
+117 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-07 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=65 | punkte=0/5/0
 118 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=65 | punkte=0/5/0
 119 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=65 | punkte=0/5/0
 120 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=64 | punkte=0/5/0
 121 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=64 | punkte=0/5/0
-122 | Normal | Ausspielphase | S2 | SchlangenblockadeSpielen handkartenId=schlangenblockade-03 zielSpielerId=spieler-3 zielSchlangenId=schlange-spieler-3-1 einfügeIndex=1 | hand=5 | stapel=63 | punkte=0/5/0
-123 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=rot-06 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=63 | punkte=0/5/0
+122 | Normal | Ausspielphase | S2 | SchlangenblockadeSpielen einfügeIndex=1 handkartenId=schlangenblockade-03 zielSchlangenId=schlange-spieler-3-1 zielSpielerId=spieler-3 | hand=5 | stapel=63 | punkte=0/5/0
+123 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=rot-06 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=63 | punkte=0/5/0
 124 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=63 | punkte=0/5/0
 125 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=63 | punkte=0/5/0
 126 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=61 | punkte=0/5/0
 127 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=61 | punkte=0/5/0
 128 | Normal | Ausspielphase | S0 | SonderkarteSpielen handkartenId=schlangengrube-04 zielSpielerId=spieler-3 | hand=5 | stapel=60 | punkte=0/5/0
-129 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=60 | punkte=0/5/0
+129 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=60 | punkte=0/5/0
 130 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=60 | punkte=0/5/0
 131 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=60 | punkte=0/5/0
 132 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=59 | punkte=0/5/0
 133 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=59 | punkte=0/5/0
-134 | Normal | Ausspielphase | S1 | FarbenfusionSpielen handkartenId=farbenfusion-03 zielSchlangenId=schlange-spieler-2-1 zielKartenId=gelb-08 | hand=5 | stapel=58 | punkte=5/5/5
-135 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-10 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=58 | punkte=5/5/5
+134 | Normal | Ausspielphase | S1 | FarbenfusionSpielen handkartenId=farbenfusion-03 zielKartenId=gelb-08 zielSchlangenId=schlange-spieler-2-1 | hand=5 | stapel=58 | punkte=5/5/5
+135 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-10 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=58 | punkte=5/5/5
 136 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=58 | punkte=5/5/5
 137 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=58 | punkte=5/9/5
 138 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=57 | punkte=5/9/5
 139 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=57 | punkte=5/9/5
-140 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-10 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=57 | punkte=5/9/5
+140 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-10 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=57 | punkte=5/9/5
 141 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=57 | punkte=5/9/5
 142 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=57 | punkte=5/9/5
 143 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=56 | punkte=5/9/5
@@ -925,28 +925,28 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 3 Spieler, letzt
 145 | Normal | Ausspielphase | S1 | VerdopplerSpielen handkartenId=verdoppler-02 | hand=4 | stapel=56 | punkte=5/9/5
 146 | Normal | Ausspielphase | S1 | reagiere VerdopplerDurchlassen | hand=4 | stapel=56 | punkte=5/9/5
 147 | Normal | Ausspielphase | S1 | reagiere VerdopplerDurchlassen | hand=5 | stapel=55 | punkte=5/9/5
-148 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-02 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=55 | punkte=0/15/0
-149 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-01 schlangenId=schlange-spieler-2-1 position=rechts | hand=3 | stapel=55 | punkte=0/15/0
+148 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-02 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=55 | punkte=0/15/0
+149 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-01 position=rechts schlangenId=schlange-spieler-2-1 | hand=3 | stapel=55 | punkte=0/15/0
 150 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=55 | punkte=0/15/0
 151 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=55 | punkte=0/15/0
 152 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=54 | punkte=0/15/0
 153 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=54 | punkte=0/15/0
-154 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-06 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=54 | punkte=0/15/0
+154 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-06 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=54 | punkte=0/15/0
 155 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=54 | punkte=0/15/0
 156 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=54 | punkte=0/15/0
 157 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=53 | punkte=0/15/0
 158 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=53 | punkte=0/15/0
-159 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-04 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=53 | punkte=5/15/0
+159 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-04 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=53 | punkte=5/15/0
 160 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=53 | punkte=5/15/0
 161 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=53 | punkte=5/15/0
 162 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=51 | punkte=5/15/0
 163 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=51 | punkte=5/15/0
-164 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-05 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=51 | punkte=5/15/0
+164 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-05 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=51 | punkte=5/15/0
 165 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=51 | punkte=5/15/0
 166 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=51 | punkte=5/15/0
 167 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=50 | punkte=5/15/0
 168 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=50 | punkte=5/15/0
-169 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-13 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=50 | punkte=5/15/5
+169 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-13 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=50 | punkte=5/15/5
 170 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=50 | punkte=5/15/5
 171 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=50 | punkte=5/15/5
 172 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=49 | punkte=5/15/5
@@ -954,207 +954,207 @@ exports[`Golden Master: ein ganzer Spielverlauf, festgenagelt > 3 Spieler, letzt
 174 | Normal | Ausspielphase | S0 | VerdopplerSpielen handkartenId=verdoppler-03 | hand=4 | stapel=49 | punkte=5/15/5
 175 | Normal | Ausspielphase | S0 | reagiere VerdopplerDurchlassen | hand=4 | stapel=49 | punkte=5/15/5
 176 | Normal | Ausspielphase | S0 | reagiere VerdopplerDurchlassen | hand=5 | stapel=48 | punkte=5/15/5
-177 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-11 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=48 | punkte=5/15/5
-178 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-09 schlangenId=schlange-spieler-1-1 position=rechts | hand=3 | stapel=48 | punkte=5/15/5
+177 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-11 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=48 | punkte=5/15/5
+178 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-09 position=rechts schlangenId=schlange-spieler-1-1 | hand=3 | stapel=48 | punkte=5/15/5
 179 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=48 | punkte=5/15/5
 180 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=48 | punkte=5/15/5
 181 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=47 | punkte=5/15/5
 182 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=47 | punkte=5/15/5
-183 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-11 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=47 | punkte=5/15/5
+183 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-11 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=47 | punkte=5/15/5
 184 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=47 | punkte=5/15/5
 185 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=47 | punkte=5/15/5
 186 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=46 | punkte=5/15/5
 187 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=46 | punkte=5/15/5
-188 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-06 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=46 | punkte=5/15/5
+188 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-06 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=46 | punkte=5/15/5
 189 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=46 | punkte=5/15/5
 190 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=46 | punkte=5/15/5
 191 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=44 | punkte=5/15/5
 192 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=44 | punkte=5/15/5
-193 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-03 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=44 | punkte=5/15/5
+193 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-03 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=44 | punkte=5/15/5
 194 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=44 | punkte=5/15/5
 195 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=44 | punkte=5/15/5
 196 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=43 | punkte=5/15/5
 197 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=43 | punkte=5/15/5
 198 | Normal | Ausspielphase | S1 | SonderkarteSpielen handkartenId=schlangengrube-03 zielSpielerId=spieler-3 | hand=5 | stapel=42 | punkte=5/15/5
-199 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-06 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=42 | punkte=5/15/5
+199 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-06 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=42 | punkte=5/15/5
 200 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=42 | punkte=5/15/5
 201 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=42 | punkte=5/15/5
 202 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=41 | punkte=5/15/5
 203 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=41 | punkte=5/15/5
-204 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-01 zielSchlangenId=schlange-spieler-1-1 zielKartenId=gelb-10 | hand=5 | stapel=40 | punkte=6/15/5
-205 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-13 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=40 | punkte=6/15/5
+204 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-01 zielKartenId=gelb-10 zielSchlangenId=schlange-spieler-1-1 | hand=5 | stapel=40 | punkte=6/15/5
+205 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-13 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=40 | punkte=6/15/5
 206 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=40 | punkte=6/15/5
 207 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=40 | punkte=6/15/5
 208 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=39 | punkte=6/15/5
 209 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=39 | punkte=6/15/5
-210 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-11 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=39 | punkte=6/15/5
+210 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-11 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=39 | punkte=6/15/5
 211 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=39 | punkte=6/15/5
 212 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=39 | punkte=6/15/5
 213 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=38 | punkte=6/15/5
 214 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=38 | punkte=6/15/5
-215 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-03 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=38 | punkte=6/15/5
+215 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-03 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=38 | punkte=6/15/5
 216 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=38 | punkte=6/15/5
 217 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=38 | punkte=6/15/5
 218 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=37 | punkte=6/15/5
 219 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=37 | punkte=6/15/5
-220 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-04 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=37 | punkte=6/15/5
+220 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-04 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=37 | punkte=6/15/5
 221 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=37 | punkte=6/15/5
 222 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=37 | punkte=6/15/5
 223 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=36 | punkte=6/15/5
 224 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=36 | punkte=6/15/5
-225 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-15 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=36 | punkte=6/15/5
+225 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-15 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=36 | punkte=6/15/5
 226 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=36 | punkte=6/15/5
 227 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=36 | punkte=6/15/5
 228 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=35 | punkte=6/15/5
 229 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=35 | punkte=6/15/5
-230 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=braun-06 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=35 | punkte=6/15/5
+230 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=braun-06 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=35 | punkte=6/15/5
 231 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=35 | punkte=6/15/5
 232 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=35 | punkte=6/15/5
 233 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=34 | punkte=6/15/5
 234 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=34 | punkte=6/15/5
-235 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-05 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=34 | punkte=6/15/5
+235 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=grün-05 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=34 | punkte=6/15/5
 236 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=34 | punkte=6/15/5
 237 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=34 | punkte=6/15/5
 238 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=33 | punkte=6/15/5
 239 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=33 | punkte=6/15/5
-240 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-05 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=33 | punkte=6/15/5
+240 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=braun-05 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=33 | punkte=6/15/5
 241 | Normal | Ausspielphase | S1 | PflichtAbwurf handkartenId=farbenschutz-03 | hand=3 | stapel=33 | punkte=6/15/5
 242 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=3 | stapel=33 | punkte=6/15/5
 243 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=3 | stapel=33 | punkte=6/15/5
 244 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=32 | punkte=6/15/5
 245 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=32 | punkte=6/15/5
-246 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=braun-08 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=32 | punkte=6/15/5
+246 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=braun-08 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=32 | punkte=6/15/5
 247 | Normal | Ausspielphase | S2 | PflichtAbwurf handkartenId=schlangenhaeutung-02 | hand=3 | stapel=32 | punkte=6/15/5
 248 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=3 | stapel=32 | punkte=6/15/5
 249 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=3 | stapel=32 | punkte=6/15/5
 250 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=31 | punkte=6/15/5
 251 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=31 | punkte=6/15/5
-252 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-02 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=31 | punkte=6/15/5
+252 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-02 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=31 | punkte=6/15/5
 253 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=31 | punkte=6/15/5
 254 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=31 | punkte=6/15/5
 255 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=29 | punkte=6/15/5
 256 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=29 | punkte=6/15/5
-257 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-09 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=29 | punkte=6/15/5
+257 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=gelb-09 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=29 | punkte=6/15/5
 258 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=29 | punkte=6/15/5
 259 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=29 | punkte=6/15/5
 260 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=27 | punkte=6/15/5
 261 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=27 | punkte=6/15/5
-262 | Normal | Ausspielphase | S2 | SchlangenfrassSpielen handkartenId=schlangenfrass-01 ziele=[object Object],[object Object] | hand=5 | stapel=26 | punkte=6/15/5
-263 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=grün-07 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=26 | punkte=6/15/5
+262 | Normal | Ausspielphase | S2 | SchlangenfrassSpielen handkartenId=schlangenfrass-01 ziele=[{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"braun-05"},{"spielerId":"spieler-2","schlangenId":"schlange-spieler-2-1","kartenId":"gelb-09"}] | hand=5 | stapel=26 | punkte=6/15/5
+263 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=grün-07 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=26 | punkte=6/15/5
 264 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=26 | punkte=6/15/5
 265 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=26 | punkte=6/15/5
 266 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=25 | punkte=6/15/5
 267 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=25 | punkte=6/15/5
-268 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-03 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=25 | punkte=11/15/5
-269 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-02 zielSchlangenId=schlange-spieler-1-1 zielKartenId=blau-02 | hand=4 | stapel=24 | punkte=6/15/5
+268 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=blau-03 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=25 | punkte=11/15/5
+269 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-02 zielKartenId=blau-02 zielSchlangenId=schlange-spieler-1-1 | hand=4 | stapel=24 | punkte=6/15/5
 270 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=24 | punkte=6/15/5
 271 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=24 | punkte=6/15/5
 272 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=23 | punkte=6/15/5
 273 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=23 | punkte=6/15/5
-274 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-08 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=23 | punkte=6/15/5
+274 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-08 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=23 | punkte=6/15/5
 275 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=23 | punkte=6/15/5
 276 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=23 | punkte=6/15/5
 277 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=22 | punkte=6/15/5
 278 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=22 | punkte=6/15/5
-279 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=braun-11 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=22 | punkte=6/15/5
+279 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=braun-11 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=22 | punkte=6/15/5
 280 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=22 | punkte=6/15/5
 281 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=22 | punkte=6/15/5
 282 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=21 | punkte=6/15/5
 283 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=21 | punkte=6/15/5
 284 | Normal | Ausspielphase | S0 | FarbenschutzSpielen handkartenId=farbenschutz-01 zielSchlangenId=schlange-spieler-1-1 | hand=5 | stapel=20 | punkte=6/15/5
-285 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-06 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=20 | punkte=6/15/5
+285 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-06 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=20 | punkte=6/15/5
 286 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=20 | punkte=6/15/5
 287 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=20 | punkte=11/15/5
 288 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=19 | punkte=11/15/5
 289 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=19 | punkte=11/15/5
-290 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-08 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=19 | punkte=11/15/5
+290 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=grün-08 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=19 | punkte=11/15/5
 291 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=19 | punkte=11/15/5
 292 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=19 | punkte=11/15/5
 293 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=18 | punkte=11/15/5
 294 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=18 | punkte=11/15/5
-295 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-10 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=18 | punkte=11/15/5
+295 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-10 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=18 | punkte=11/15/5
 296 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=18 | punkte=11/15/5
 297 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=18 | punkte=11/15/5
 298 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=17 | punkte=11/15/5
 299 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=17 | punkte=11/15/5
-300 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-02 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=17 | punkte=11/15/5
+300 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-02 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=17 | punkte=11/15/5
 301 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-03 | hand=3 | stapel=17 | punkte=11/15/5
 302 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=17 | punkte=11/15/5
 303 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=17 | punkte=11/15/5
 304 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=16 | punkte=11/15/5
 305 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=16 | punkte=11/15/5
-306 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-04 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=16 | punkte=11/15/5
+306 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-04 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=16 | punkte=11/15/5
 307 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=16 | punkte=11/15/5
 308 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=16 | punkte=11/15/5
 309 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=15 | punkte=11/15/5
 310 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=15 | punkte=11/15/5
 311 | Normal | Ausspielphase | S2 | SonderkarteSpielen handkartenId=schlangengrube-02 zielSpielerId=spieler-2 | hand=5 | stapel=14 | punkte=11/15/5
-312 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=rot-10 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=14 | punkte=11/15/5
+312 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=rot-10 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=14 | punkte=11/15/5
 313 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=14 | punkte=11/15/5
 314 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=14 | punkte=11/15/5
 315 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=12 | punkte=11/15/5
 316 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=12 | punkte=11/15/5
-317 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen handkartenId=schlangenblockade-02 zielSpielerId=spieler-3 zielSchlangenId=schlange-spieler-3-1 einfügeIndex=13 | hand=5 | stapel=11 | punkte=11/15/5
-318 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-01 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=11 | punkte=11/15/5
+317 | Normal | Ausspielphase | S0 | SchlangenblockadeSpielen einfügeIndex=13 handkartenId=schlangenblockade-02 zielSchlangenId=schlange-spieler-3-1 zielSpielerId=spieler-3 | hand=5 | stapel=11 | punkte=11/15/5
+318 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=violett-01 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=11 | punkte=11/15/5
 319 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=11 | punkte=11/15/5
 320 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=11 | punkte=11/15/5
 321 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=10 | punkte=11/15/5
 322 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=10 | punkte=11/15/5
-323 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-12 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=10 | punkte=11/15/5
+323 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-12 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=10 | punkte=11/15/5
 324 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=10 | punkte=11/15/5
 325 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=10 | punkte=11/15/5
 326 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=9 | punkte=11/15/5
 327 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=9 | punkte=11/15/5
-328 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-12 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=9 | punkte=11/15/5
+328 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-12 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=9 | punkte=11/15/5
 329 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=regenbogenschlange-02 | hand=3 | stapel=9 | punkte=11/15/5
 330 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=9 | punkte=11/15/5
 331 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=9 | punkte=11/15/5
 332 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=8 | punkte=11/15/5
 333 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=8 | punkte=11/15/5
-334 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-12 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=8 | punkte=11/15/5
+334 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=violett-12 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=8 | punkte=11/15/5
 335 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=8 | punkte=11/15/5
 336 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=8 | punkte=11/15/5
 337 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=7 | punkte=11/15/5
 338 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=7 | punkte=11/15/5
-339 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-10 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=7 | punkte=11/15/5
+339 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=violett-10 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=7 | punkte=11/15/5
 340 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=4 | stapel=7 | punkte=11/15/5
 341 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=4 | stapel=7 | punkte=11/15/5
 342 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=5 | punkte=11/15/5
 343 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=5 | punkte=11/15/5
-344 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-07 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=5 | punkte=16/15/5
-345 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-04 zielSchlangenId=schlange-spieler-1-1 zielKartenId=rot-12 | hand=4 | stapel=4 | punkte=11/15/5
+344 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=rot-07 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=5 | punkte=16/15/5
+345 | Normal | Ausspielphase | S0 | FarbenfusionSpielen handkartenId=farbenfusion-04 zielKartenId=rot-12 zielSchlangenId=schlange-spieler-1-1 | hand=4 | stapel=4 | punkte=11/15/5
 346 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=4 | stapel=4 | punkte=11/15/5
 347 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=4 | stapel=4 | punkte=11/15/5
 348 | Normal | Nachziehphase | S1 | beendeZug | hand=5 | stapel=3 | punkte=11/15/5
 349 | Normal | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=3 | punkte=11/15/5
-350 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-15 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=3 | punkte=11/15/5
+350 | Normal | Ausspielphase | S1 | KarteAnlegen handkartenId=rot-15 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=3 | punkte=11/15/5
 351 | Normal | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=3 | punkte=11/15/5
 352 | Normal | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=3 | punkte=11/15/5
 353 | Normal | Nachziehphase | S2 | beendeZug | hand=5 | stapel=2 | punkte=11/15/5
 354 | Normal | Ausspielphase | S2 | starteAusspielphase | hand=5 | stapel=2 | punkte=11/15/5
-355 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-11 schlangenId=schlange-spieler-3-1 position=rechts | hand=4 | stapel=2 | punkte=11/15/5
+355 | Normal | Ausspielphase | S2 | KarteAnlegen handkartenId=gelb-11 position=rechts schlangenId=schlange-spieler-3-1 | hand=4 | stapel=2 | punkte=11/15/5
 356 | Normal | Ausspielphase | S2 | PflichtAbwurf handkartenId=regenbogenschlange-01 | hand=3 | stapel=2 | punkte=11/15/5
 357 | Normal | Aufgabenpruefung | S2 | beendeAusspielphase | hand=3 | stapel=2 | punkte=11/15/5
 358 | Normal | Zugabschluss | S2 | beendeAufgabenpruefung | hand=3 | stapel=2 | punkte=11/15/5
 359 | Normal | Nachziehphase | S0 | beendeZug | hand=5 | stapel=1 | punkte=11/15/5
 360 | Normal | Ausspielphase | S0 | starteAusspielphase | hand=5 | stapel=1 | punkte=11/15/5
-361 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-03 schlangenId=schlange-spieler-1-1 position=rechts | hand=4 | stapel=1 | punkte=11/15/5
+361 | Normal | Ausspielphase | S0 | KarteAnlegen handkartenId=braun-03 position=rechts schlangenId=schlange-spieler-1-1 | hand=4 | stapel=1 | punkte=11/15/5
 362 | Normal | Ausspielphase | S0 | PflichtAbwurf handkartenId=schlangenhaeutung-01 | hand=3 | stapel=1 | punkte=11/15/5
 363 | Normal | Aufgabenpruefung | S0 | beendeAusspielphase | hand=3 | stapel=1 | punkte=11/15/5
 364 | Normal | Zugabschluss | S0 | beendeAufgabenpruefung | hand=3 | stapel=1 | punkte=11/15/5
 365 | Endspurt | Nachziehphase | S1 | beendeZug | hand=5 | stapel=0 | punkte=11/15/5
 366 | Endspurt | Ausspielphase | S1 | starteAusspielphase | hand=5 | stapel=0 | punkte=11/15/5
-367 | Endspurt | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-01 schlangenId=schlange-spieler-2-1 position=rechts | hand=4 | stapel=0 | punkte=11/15/5
+367 | Endspurt | Ausspielphase | S1 | KarteAnlegen handkartenId=blau-01 position=rechts schlangenId=schlange-spieler-2-1 | hand=4 | stapel=0 | punkte=11/15/5
 368 | Endspurt | Aufgabenpruefung | S1 | beendeAusspielphase | hand=4 | stapel=0 | punkte=11/15/5
 369 | Endspurt | Zugabschluss | S1 | beendeAufgabenpruefung | hand=4 | stapel=0 | punkte=11/15/5
 370 | Endspurt | Nachziehphase | S2 | beendeZug | hand=3 | stapel=0 | punkte=11/15/5
 371 | Endspurt | Ausspielphase | S2 | starteAusspielphase | hand=3 | stapel=0 | punkte=11/15/5
-372 | Endspurt | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-07 schlangenId=schlange-spieler-3-1 position=rechts | hand=2 | stapel=0 | punkte=11/15/5
+372 | Endspurt | Ausspielphase | S2 | KarteAnlegen handkartenId=blau-07 position=rechts schlangenId=schlange-spieler-3-1 | hand=2 | stapel=0 | punkte=11/15/5
 373 | Endspurt | Aufgabenpruefung | S2 | beendeAusspielphase | hand=2 | stapel=0 | punkte=11/15/5
 374 | Endspurt | Zugabschluss | S2 | beendeAufgabenpruefung | hand=2 | stapel=0 | punkte=11/15/5
 375 | Endspurt | Nachziehphase | S0 | beendeZug | hand=3 | stapel=0 | punkte=11/15/5
 376 | Endspurt | Ausspielphase | S0 | starteAusspielphase | hand=3 | stapel=0 | punkte=11/15/5
-377 | Endspurt | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-12 schlangenId=schlange-spieler-1-1 position=rechts | hand=2 | stapel=0 | punkte=11/15/5
+377 | Endspurt | Ausspielphase | S0 | KarteAnlegen handkartenId=gelb-12 position=rechts schlangenId=schlange-spieler-1-1 | hand=2 | stapel=0 | punkte=11/15/5
 378 | Endspurt | Aufgabenpruefung | S0 | beendeAusspielphase | hand=2 | stapel=0 | punkte=11/15/5
 379 | Endspurt | Zugabschluss | S0 | beendeAufgabenpruefung | hand=2 | stapel=0 | punkte=11/15/5
 380 | Beendet | Spielende | S0 | beendeZug | hand=2 | stapel=0 | punkte=11/15/5"
