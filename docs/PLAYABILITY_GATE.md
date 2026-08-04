@@ -5006,12 +5006,32 @@ Ergebnis.
 
 ### Gegenprobe
 
+Alles am eigenen Pull Request (#12) gemessen — der Guard hat sich selbst geprüft,
+in genau den Zuständen, die in dieser Sitzung dreimal falsch gelesen wurden:
+
 | Fall | erwartet | gemessen |
 |---|---|---|
-| auf `main` aufgerufen | Abbruch mit Hinweis | „Auf `main` gibt es nichts zu mergen." |
-| eigener PR, Bots noch nicht angetreten | Exit 1, nennt die fehlenden Prüfer | siehe unten |
-| eigener PR, alle Prüfer grün | Exit 0, „Merge-bereit." | siehe unten |
+| auf `main` aufgerufen | Abbruch | „Auf `main` gibt es nichts zu mergen." |
+| direkt nach dem Push | Exit 1, nennt die Fehlenden | Exit 1: „Kilo Code Review: **nicht angetreten** für 4c2da49 — fehlt, nicht bestanden", dito CodeRabbit, „Vercel: pending". **Genau hier hätte `gh pr checks` „alles grün" gemeldet** (Fall PR #8). |
+| ungepushter Commit | Exit 1, zwei Befunde | Exit 1: „1 lokal voraus" **und** „PR-HEAD 4c2da49, lokal c1c55cb" — die Konstellation, die bei PR #2 einen Commit verschluckt hat. |
+| alle Prüfer durch | Exit 0 | Exit 0, sieben Zeilen OK, „Merge-bereit." |
 
-Die beiden PR-Fälle sind am eigenen Pull Request gemessen — der Guard hat sich
-selbst geprüft, in genau dem Zustand, den ich in dieser Sitzung dreimal falsch
-gelesen habe.
+Der letzte Fall ist der Merge dieses PRs selbst: Etappe 7 ging auf das Urteil des
+eigenen Guards hin live.
+
+### Die Verwandtschaft, die dabei sichtbar wurde
+
+Fehler 2 ist keine Eigenart von `gh`. **Fehlende Prüfung ist nicht bestandene
+Prüfung** — dieselbe Verwechslung trat in dieser Sitzung viermal auf, in vier
+Gewändern:
+
+| Wo | Was still grün blieb |
+|---|---|
+| Sieger-Party (03.08.) | fünf von acht Verträgen gegen einen Bildschirm, den es nicht gab |
+| `inert`-Filter (Punkt 1b) | zwei Wächter, deren Befunde ein Filter verschluckte |
+| Token-Prüfung (Etappe 3) | 294 Regeln übersprungen, Vertrag grün |
+| `gh pr checks` (hier) | zwei Prüfer, die noch nicht angetreten waren |
+
+Die Antwort war jedes Mal dieselbe: **die Abdeckung zusichern, nicht nur das
+Ergebnis.** Deshalb steht heute neben jedem dieser Wächter eine zweite Zusicherung,
+die zählt, worüber er geurteilt hat.
