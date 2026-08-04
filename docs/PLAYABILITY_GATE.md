@@ -4419,3 +4419,89 @@ Exit-Codes einzeln geprüft.
   belegt, nicht durch einen Lauf gegen die alte Fassung. Bei byte-identischen
   Rümpfen und unveränderter Bindung ist das vertretbar; ein Differenztest gegen
   die Vorversion wäre die stärkere Zusage.
+
+---
+
+## Evidence — 04.08.2026 Golden Master für Engine-Refactorings (Etappe 1)
+
+**Anlass, und zwar die Ursache statt des Symptoms.** Beim `turnState`-Split
+(`a8328aa`) ließ sich nur belegen, dass alle 56 Funktionsrümpfe byte-identisch
+verschoben wurden — Verhaltensgleichheit war statisch erschlossen, nicht gemessen.
+Der Grund liegt nicht am Split: Von 684 Tests hielt **keiner** einen Spielverlauf
+fest. Sie prüfen alle, was jemand als Assertion aufgeschrieben hat.
+
+### Was der Test tut
+
+Drei Partien laufen vollständig durch; je Schritt wird eine Zeile protokolliert
+(Zugphase, aktiver Spieler, gewählte Aktion, Handgröße, Stapelrest, Punktestand)
+und als Snapshot verglichen. 391 Schritte für zwei Spieler, bis Endspurt und
+Spielende.
+
+Bewusst ein Protokoll und **kein** Zustands-Snapshot: Ein serialisierter Zustand
+je Schritt wären Tausende Zeilen, und so ein Snapshot wird bei jeder Änderung
+blind bestätigt statt gelesen.
+
+Determinismus ohne globales Patchen: `erstelleSpielzustand` nimmt eine
+`rng`-Funktion, `Math.random` steht in der Engine nur als deren Standardwert.
+
+### Die zweite Auswahlstrategie war nötig, nicht Zierde
+
+| Strategie | Reaktionsfenster im Verlauf |
+|---|---|
+| immer die erste legale Aktion | **0** in 391 Schritten |
+| immer die letzte legale Aktion | 5 (2 Spieler) bzw. 10 (3 Spieler) |
+
+Mit „erste" hält das Ziel nie eine Farbenschutzkarte, also öffnet sich kein
+Reaktionsfenster — `reaktionsaufloesung.ts` wäre ungedeckt geblieben, ausgerechnet
+ein Modul aus dem Split. Der Test sichert deshalb ausdrücklich zu, dass Reaktionen
+vorkommen: Verlöre er diese Abdeckung, bliebe er still grün.
+
+### Gegenprobe
+
+Kettenbonus von 5 auf 4 verfälscht → **alle drei Snapshots fallen**.
+Zurückgenommen, danach 9/9 grün.
+
+### Zwei Funde in diesem Test selbst — beide von Reviewern
+
+**Codex (Gate 7): ein regelwidriger Fahrer.** Ein handgebauter
+Pflicht-Abwurf-Zweig war falsch. `ermittleLegaleAktionen` bietet den
+Pflicht-Abwurf selbst an (`legalActions.ts:1118`); bleibt die Liste leer und ist
+noch keine Karte gespielt, darf gerade *nicht* abgeworfen werden — leere Hand,
+Kartenlimit erreicht, oder eine nicht enumerierte Schlangenhäutung ist möglich,
+bei der der Pflicht-Abwurf ausdrücklich gesperrt ist (`ÄNDERUNG [07.06.2026]`).
+Der Zweig hätte diese Sperre umgangen und einen Verlauf festgenagelt, den ein
+Spieler nie erreicht. Er war zudem toter Code: Nach dem Entfernen sind die
+Snapshots unverändert.
+
+**CodeRabbit: unsichtbare Frass-Ziele.** `String(wert)` ergab für das
+`ziele`-Array von `SchlangenfrassSpielen` schlicht `[object Object]` — im ersten
+Snapshot **zwölfmal**. Verschiedene Ziele sahen identisch aus; eine
+Regeländerung, die andere Ziele wählt, wäre unbemerkt durchgelaufen. Jetzt
+`JSON.stringify` (Zeichenketten bleiben nackt) und sortierte Schlüssel, damit ein
+umgestelltes Objektliteral keinen falschen Alarm auslöst.
+
+Beide Funde hätten grüne Tests durchgelassen. Ein Golden Master mit falschem
+Fahrer wäre schlechter als keiner — er prüfte jedes künftige Refactoring gegen
+einen regelwidrigen Verlauf.
+
+### Als Grenze benannt, nicht behoben
+
+- Überzählige Karten gehen über `ueberhandAbwurfKartenIds` weg — der Fallback von
+  Oberfläche und KI, **nicht** die menschliche Auswahl nach R2.5. Der Verlauf
+  nagelt den Fallback fest.
+- Die nicht enumerierte Schlangenhäutung kann der Fahrer nicht bedienen (sie
+  braucht Eingaben aus dem `Haeutungseditor`). Er bricht dort mit sprechender
+  Meldung ab; die drei gewählten Fälle erreichen den Punkt nicht.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 693 Tests in 78 Dateien grün (+9) |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | 45 Verträge grün, 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.
