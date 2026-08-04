@@ -35,6 +35,7 @@ import {
   findeVerdeckteBedienelemente,
   findeZusammengedruecktes,
 } from './messung'
+import { oeffne } from './oeffnen'
 
 /**
  * Untergrenze der Spielfläche: ein Drittel des Bildes — Startkreis plus eine
@@ -55,7 +56,7 @@ test.describe('Brett im Dauerlauf', () => {
     await page.addInitScript(() => {
       Math.random = () => 0.999999
     })
-    await page.goto('/', { waitUntil: 'networkidle' })
+    await oeffne(page, '/')
     // Drei Spieler sind der enge Fall: Der Gegnerstreifen trägt zwei Reihen.
     await page.getByRole('button', { name: /Waldparty starten/ }).click()
     await expect(page.getByRole('region', { name: 'Deine Hand' })).toBeVisible()

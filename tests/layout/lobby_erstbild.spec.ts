@@ -37,12 +37,13 @@ den mit `test.fail()` markierten Vertrag unten.
 
 import { expect, test } from '@playwright/test'
 import { berechneterStil, kasten, seitenHoehe } from './messung'
+import { oeffne } from './oeffnen'
 
 const VIEWPORT_HOEHE = 900
 
 test.describe('Lobby-Route /', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/', { waitUntil: 'networkidle' })
+    await oeffne(page, '/')
   })
 
   test('blendet den Spielbereich aus, damit das Erstbild der Lobby gehört', async ({ page }) => {
@@ -124,7 +125,7 @@ test.describe('Lobby-Route /', () => {
 
 test.describe('Lobby-Spielerplatz (ersetzt M3h:1–4)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/', { waitUntil: 'networkidle' })
+    await oeffne(page, '/')
   })
 
   test('stapelt die Slot-Elemente überlappungsfrei und mittig', async ({ page }) => {
@@ -191,7 +192,7 @@ test.describe('Lobby-Spielerplatz (ersetzt M3h:1–4)', () => {
 
 test.describe('Lobby-Spielerkarten (ersetzt M3c:1, :2, :5, :6, :7, :11)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/', { waitUntil: 'networkidle' })
+    await oeffne(page, '/')
   })
 
   test('stellt die vier Spielerplätze bei 1280px in eine Reihe', async ({ page }) => {
@@ -283,7 +284,7 @@ test.describe('Lobby-Animationen ohne Bewegungsreduktion (ersetzt M3c:9, :10)', 
   test.use({ contextOptions: { reducedMotion: 'no-preference' } })
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('/', { waitUntil: 'networkidle' })
+    await oeffne(page, '/')
   })
 
   test('lässt aktive KI-Plätze hereingleiten', async ({ page }) => {
@@ -304,7 +305,7 @@ test.describe('Spielroute /game', () => {
      (docs/SPIELBRETT_SPEC.md). Die alte Waldtanz-Ansicht mit `#spielbereich`
      und `app-shell--game` ist entfallen. */
   test('zeigt das Spielbrett und nicht die Lobby', async ({ page }) => {
-    await page.goto('/game', { waitUntil: 'networkidle' })
+    await page.goto('/game')
     await expect(page.locator('.spielbrett')).toBeVisible()
     // Gegenprobe zur Lobby-Route: die Lobby rendert hier nicht.
     await expect(page.locator('.sonniges-nest')).toHaveCount(0)

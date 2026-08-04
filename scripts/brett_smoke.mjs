@@ -193,8 +193,15 @@ try {
   console.log(`\nSchlangentanz-Brett — Smoke @ ${VIEWPORT.width}x${VIEWPORT.height} auf ${BASIS_URL}\n`)
 
   console.log('Lobby')
-  const antwort = await seite.goto(new URL('/', BASIS_URL).toString(), { waitUntil: 'networkidle' })
+  const antwort = await seite.goto(new URL('/', BASIS_URL).toString())
   melde(antwort?.status() === 200, `/ liefert HTTP ${antwort?.status()}`)
+  /* Statt `waitUntil: 'networkidle'` (von Playwright abgeraten) die Bereitschaft
+     ausdrücklich abwarten. Das ist hier keine Formsache: `klickeWieEinMensch`
+     wartet nicht, es fragt einmal per `querySelector` und meldet sonst „kein
+     Element gefunden". Netzwerkruhe war damit die einzige — und nur zufällig
+     passende — Bereitschaftsprüfung vor dem ersten Klick. Gewartet wird auf
+     dasselbe Leitelement wie in den Layout-Verträgen (`tests/layout/oeffnen.ts`). */
+  await seite.waitForSelector('.sonniges-nest', { state: 'visible' })
   await pruefeSeitenzustand(seite, '  /')
   await klickeWieEinMensch(seite, knopfMit('Duell starten'), '  Partie starten')
   melde(seite.url().endsWith('/game'), `  wechselt nach /game (ist ${seite.url()})`)
