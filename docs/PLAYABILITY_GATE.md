@@ -4798,3 +4798,89 @@ Quelltext sucht, findet Dinge, die es nicht gibt.
 | `npx eslint .` | grün |
 
 Exit-Codes einzeln geprüft.
+
+---
+
+## Evidence — 04.08.2026 Error-Tracking mit Sentry (Etappe 5)
+
+**Die blinde Stelle.** `Fehlerfang.tsx` schrieb `console.error` — das erreicht
+niemanden. Schlimmer: Der Fang sieht nur **Render**-Fehler; unbehandelte
+Promise-Rejections und Fehler in Ereignis-Handlern gingen gar nicht durch ihn. Bei
+einer Engine, die an rund 220 Stellen wirft, war das die größte blinde Stelle im
+Betrieb. Ein Spieler sah eine Meldung, und niemand sonst erfuhr davon.
+
+### Der Preis, gemessen und dann gesenkt
+
+`@sentry/browser` ist die erste externe Produktionsabhängigkeit (bisher nur `react`
+und `react-dom`). Was sie kostet, wurde nicht geschätzt, sondern gebaut und
+gewogen:
+
+| Variante | Haupt-Chunk gzip | Zuwachs im kritischen Pfad |
+|---|---|---|
+| ohne Sentry (Referenz) | 87.692 B | — |
+| statischer Import | 116.568 B | **+28.876 B (+32,6 %)** |
+| **nachgeladen (`await import`)** | **88.413 B** | **+721 B (+0,8 %)** |
+
+Ein Drittel mehr Bundle für ein Werkzeug, das im Normalfall nichts tut — und zwar
+im Pfad des Spielers, der auf das Brett wartet. Mit dynamischem Import wird daraus
+ein eigener Chunk (145.564 B gzip), den nur anfordert, wer eine DSN hat. In Dev und
+im Testlauf wird er nie geladen.
+
+**Der Preis dieser Entscheidung ist ein Zeitfenster** zwischen erstem Zeichnen und
+Ende des Nachladens. Fehler aus dieser Zeit sind die interessantesten — ein Wurf
+beim Aufbau des Bretts —, deshalb werden sie gepuffert (Deckel: 20) und
+nachgereicht, statt verloren zu gehen.
+
+**Warum `@sentry/browser` und nicht `@sentry/react`.** Gebraucht werden `init` und
+`captureException`. Was `@sentry/react` darüber hinaus mitbringt, sind Wrapper um
+React-Bausteine samt eigener `ErrorBoundary` — und die gibt es hier schon, mit
+dokumentiertem Grund (`Fehlerfang.tsx`).
+
+### Der Schalter ist die DSN
+
+Ohne `VITE_SENTRY_DSN` passiert nichts: kein Nachladen, keine Initialisierung, kein
+Netzwerkverkehr. Dieselbe Trennung wie bei `VITE_TEST_HOOKS`, und aus einem
+konkreten Grund: `Fehlerfang.fehlerfall.test.tsx` wirft absichtlich. Wäre der
+Dienst ohne DSN-Prüfung scharf, stünden diese Würfe im Dashboard neben echten
+Fehlern von Spielern, ohne Unterschied.
+
+`src/sentry_produktion.test.ts` hält fünf Zusagen fest, nach dem Vorbild von
+`App.hooks_production_guard.test.ts` (liest Quelltexte statt einer Liste):
+
+1. Der Dienst ist im Testlauf nicht scharf.
+2. `sentry.init` steht nur in `fehlerdienst.ts`.
+3. `captureException` steht nur dort.
+4. Der DSN-Wächter steht **vor** `init` — ein `init` davor wäre unbedingt scharf.
+5. Sentry wird nachgeladen; ein statischer Import lässt den Guard fallen.
+
+**Ein Fund über den Guard selbst:** Beim ersten Lauf meldete er **sich** — sein
+Suchmuster enthält den gesuchten String. Ein Quelltext-Guard läuft über seinen
+eigenen Quelltext mit. Testdateien sind jetzt ausgenommen, und das kostet nichts:
+Ein `Sentry.init` in einer Testdatei kann ohne DSN nichts senden, was Zusage 1
+prüft.
+
+### Offen — und das ist wichtig
+
+- **Der Nachweis am lebenden Dienst fehlt.** Ohne `VITE_SENTRY_DSN` im
+  Vercel-Projekt ist die Anbindung unbelegt: Es ist nicht gezeigt, dass ein Fehler
+  aus einer Preview wirklich im Dashboard landet. Dafür braucht es ein
+  Sentry-Konto, ein Projekt und die DSN in der Vercel-Umgebung — Schritte, die
+  außerhalb dieses Repos liegen. Bis dahin gilt: Der Code ist da, geprüft und aus.
+- **Der Sentry-Chunk ist 145 kB gzip** — größer als die App selbst. Er liegt
+  außerhalb des kritischen Pfads, aber in Production lädt ihn jeder Spieler. Eine
+  Reduktion über ausgewählte Integrationen (`defaultIntegrations: false`) wäre
+  möglich, kostet aber die globalen Handler, und genau die decken die
+  Promise-Rejections ab, um die es hier geht.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 699 Tests in 79 Dateien grün (+6) |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün, Haupt-Chunk 88.413 B gzip |
+| `npm run test:layout` | 58 Verträge grün, 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.
