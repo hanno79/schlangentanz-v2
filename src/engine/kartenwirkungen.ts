@@ -23,7 +23,7 @@ import { istGueltigeEinfuegePosition } from './constants';
 import type { Spielkarte, SonderkarteInfo, Spielzustand, PendingFarbendiebAbwehr } from './types';
 import {
   aktualisiereAktivenSpieler,
-  entferneSchlangenfrassAusSchlangen,
+  bereinigeFarbenfusionen,
   ermittleNaechsteSpielerReihenfolge,
   fuegeKarteInSchlangeEin,
   inkrementiereSpieleKarten,
@@ -820,4 +820,34 @@ export function spieleFarbenschutz(
     karte.typ,
     karte.name,
   );
+}
+
+/* ÄNDERUNG [04.08.2026]: `entferneSchlangenfrassAusSchlangen` ist aus
+   `zugHelfer.ts` hierher gewandert — aus dem Codex-Review (Gate 7) zum Split. Sie
+   ist Schlangenfrass-Wirkungslogik, kein allgemeiner Zug-Helfer, und hatte genau
+   einen Aufrufer: `spieleSchlangenfrass` in dieser Datei. Dadurch ist sie
+   modul-lokal, ein Export weniger in `zugHelfer.ts`. */
+function entferneSchlangenfrassAusSchlangen(
+  schlangen: Spielzustand['spieler'][number]['schlangen'],
+  zielKarten: { schlangenId: string; kartenId: string }[],
+  sofortEntfernteKarten: Spielkarte[],
+): Spielzustand['spieler'][number]['schlangen'] {
+  return schlangen.map((schlange) => {
+    const zielKartenFuerSchlange = zielKarten.filter((ziel) => ziel.schlangenId === schlange.id);
+    if (zielKartenFuerSchlange.length === 0) {
+      return schlange;
+    }
+
+    const verbliebeneKarten: Spielkarte[] = [];
+    for (const karteEintrag of schlange.karten) {
+      const ziel = zielKartenFuerSchlange.find((eintrag) => eintrag.kartenId === karteEintrag.id);
+      if (ziel) {
+        sofortEntfernteKarten.push(karteEintrag);
+      } else {
+        verbliebeneKarten.push(karteEintrag);
+      }
+    }
+
+    return bereinigeFarbenfusionen({ ...schlange, karten: verbliebeneKarten });
+  });
 }

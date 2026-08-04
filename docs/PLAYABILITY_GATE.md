@@ -4696,3 +4696,105 @@ statt still falsch zu werden.
 | `npx eslint .` | grün |
 
 Exit-Codes einzeln geprüft.
+
+---
+
+## Evidence — 04.08.2026 Aufräumen mit Netz (Etappe 4)
+
+Diese Etappe war der erste echte Einsatz des Golden Masters aus Etappe 1: ein
+Refactoring, dessen Verhaltensneutralität nicht behauptet, sondern **gemessen**
+wurde.
+
+### Der Schlangenfrass-Schnitt (Codex-Fund aus Gate 7 zum Split)
+
+`aktualisiereSchlangenfrassPending` → `reaktionsaufloesung.ts`,
+`entferneSchlangenfrassAusSchlangen` → `kartenwirkungen.ts`. Beide hatten genau
+**einen** Aufrufer, und der stand jeweils im Zielmodul.
+
+Mitgewandert ist `entferneKarteAusSchlange`: Es wird ausschließlich von der ersten
+Funktion gebraucht. Damit sind alle drei modul-lokal — **zwei Exporte weniger** in
+`zugHelfer.ts` (319 statt 397 Zeilen), keine neuen dazu.
+`bereinigeFarbenfusionen` bleibt exportiert, wird jetzt aber von zwei Modulen
+gebraucht; der Export ist damit belegt statt bloß geduldet.
+
+**Von Hand verschoben, nicht per Skript** — die Lehre aus dem Split: Ein
+automatischer Versuch war an mehrzeiligen Signaturen mit Objekttypen gescheitert
+und hatte drei Dateien zerlegt.
+
+**Beleg:** Golden Master 9/9 grün, **Snapshot-Datei unverändert**. Genau dafür
+wurde sie gebaut.
+
+### Drei doppelte CSS-Regeln, zusammengezogen
+
+`.sieger-party__scorekarte`, `.sieger-party__scorewert` und
+`.sieger-party__neustart` standen je **zweimal** da, rund 140 bis 175 Zeilen
+auseinander — kopierte Blöcke, keine Ergänzungen, mit teils abweichenden Werten
+(`box-shadow: 0 7px` gegen `0 8px`, `rotate(-1deg)` gegen `rotate(-2deg)`,
+`padding: 0.65rem` gegen `0.85rem`).
+
+Gemessen, Eigenschaft für Eigenschaft:
+
+| Klasse | Blöcke | aus dem ersten Block wirksam |
+|---|---|---|
+| `__scorekarte` | 3 (inkl. `transform`-Nachtrag) | **nichts** — vollständig überschrieben |
+| `__scorewert` | 2 | `min-width`, `margin`, `border`, `font-size`, `text-align`, `color` |
+| `__neustart` | 2 | nur `cursor` und `font-weight` |
+
+Bei `__scorekarte` wirkte keine einzige Deklaration des ersten Blocks: Wer dort
+etwas geändert hätte, hätte nichts geändert. Übernommen ist durchgehend, was der
+Browser vorher auflöste — der spätere Wert bei Dopplung.
+
+**Beleg:** Alle 19 berechneten Eigenschaften der drei Elemente sind vor und nach
+dem Zusammenziehen **identisch** (gemessen im Browser gegen die Sieger-Party).
+
+Dasselbe Muster hatte am 03.08.2026 vier unsichtbare Verläufe verursacht — dort mit
+Wirkung, hier nur mit Wartungskosten.
+
+### 16 tote Token entfernt — und zwei Fehler im eigenen Prüfverfahren
+
+`App.css` 1479 → 1451 Zeilen. Entfallen sind die `--ebene-*`, `--handkarte-*`,
+`--spielmoment-*`, vier `--st-color-*` und zwei `--st-radius-*` samt der
+Kommentare, die nur sie erklärten.
+
+Der Weg dorthin ist die eigentliche Lehre. **Zwei Regex-Prüfungen lagen falsch:**
+
+1. Ein Check auf `\bNAME\b` in `src/` zählte **Kommentar-Erwähnungen** als
+   Abnehmer. Deshalb galt `bereinigeFarbenfusionen` als extern benutzt — der
+   einzige Treffer war ein Satz in `Spielbrett.fehler.test.tsx`, der die Funktion
+   zudem im falschen Modul verortete (`turnState.ts`; sie liegt in `zugHelfer.ts`).
+   Richtiggestellt.
+2. Ein Check auf `(--[\w-]+)\s*:` hielt **Klassennamen** für Token: Aus
+   `.brett-knopf--leise:hover` wurde ein Token `--leise`. Ebenso `--rechts`,
+   `--ziel`.
+
+Gemessen wurde deshalb über die **CSSOM**: definierte Custom Properties aus
+`rule.style`, Referenzen aus `cssText`. Ergebnis 60 definiert, 18 nie
+referenziert — davon zwei fremde (`--lightningcss-dark`, `--lightningcss-light`,
+vom Build-Tool erzeugt und unangetastet). Für die 16 eigenen zusätzlich geprüft:
+kein `setProperty`/`getPropertyValue`, keine Quoted-Nutzung in `.ts`/`.tsx`, kein
+Test hängt an ihnen.
+
+Das ist dieselbe Erkenntnis wie in Etappe 3, eine Ebene tiefer: Wer CSS im
+Quelltext sucht, findet Dinge, die es nicht gibt.
+
+### Kleinigkeiten
+
+- `var(--st-color-forest-container, #c4fdb6)` → `#c4fdb6`. Das Token war nirgends
+  definiert; der Fallback trug die Farbe allein. Eine Referenz, die dauerhaft ins
+  Leere zeigt, liest sich wie ein überschreibbarer Punkt im Themensystem — sie war
+  keiner.
+- Vercel-CLI 54.6.1 → **58.5.1** (global, nicht im Projekt).
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| Golden Master | 9/9 grün, Snapshot **unverändert** |
+| `npm test -- --run` | 693 Tests in 78 Dateien grün |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün |
+| `npm run test:layout` | 58 Verträge grün, 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` | grün |
+| `npx eslint .` | grün |
+
+Exit-Codes einzeln geprüft.

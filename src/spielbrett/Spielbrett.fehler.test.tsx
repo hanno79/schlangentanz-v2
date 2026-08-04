@@ -49,7 +49,7 @@ describe('Abgelehnte Aktion', () => {
    * („Farbenfusion konnte nicht den fusionierten Punkten zugeordnet werden.").
    *
    * Das ist kein konstruierter Sonderfall: Genau diese Inkonsistenz war der
-   * Audit-Fund K2, und `bereinigeFarbenfusionen` in `turnState.ts` existiert,
+   * Audit-Fund K2, und `bereinigeFarbenfusionen` in `zugHelfer.ts` existiert,
    * um sie zu verhindern. Der Test prüft, was passiert, wenn so ein Zustand
    * trotzdem entsteht.
    */

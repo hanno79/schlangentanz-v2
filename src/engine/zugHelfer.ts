@@ -18,7 +18,7 @@ nichts außer Typen und Konstanten — sie ist das Blatt im Abhängigkeitsbaum.
 */
 
 import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
-import type { Spielkarte, SonderkarteInfo, Spielzustand, PendingSchlangenfrassAbwehr } from './types';
+import type { Spielkarte, SonderkarteInfo, Spielzustand } from './types';
 import { ermittleFarbgruppen } from './colorGroups';
 
 export function istFarbenschutzkarte(karte: Spielkarte | undefined): karte is SonderkarteInfo {
@@ -56,10 +56,6 @@ export function fuegeKarteInSchlangeEin(schlangeKarten: Spielkarte[], karte: Spi
   return neueKarten;
 }
 
-function entferneKarteAusSchlange(schlangeKarten: Spielkarte[], kartenId: string): Spielkarte[] {
-  return schlangeKarten.filter((karte) => karte.id !== kartenId);
-}
-
 // ÄNDERUNG [05.07.2026]: K2 — nach dem Entfernen von Karten dürfen keine farbenfusionen-Einträge
 // zurückbleiben, deren Farbenfusion-Karte nicht mehr in der Schlange liegt (sonst wirft die
 // Serialisierungs-Validierung und die Wertung).
@@ -84,63 +80,6 @@ export function sortiereSchlangenfrassZiele(
   });
 }
 
-export function aktualisiereSchlangenfrassPending(
-  zustand: Spielzustand,
-  pending: PendingSchlangenfrassAbwehr,
-  ziel: { spielerIndex: number; schlangenId: string; kartenId: string },
-  abwehrt: boolean,
-  abwehrkarte?: SonderkarteInfo,
-): Spielzustand {
-  const verbleibendeZiele = pending.verbleibendeZiele.slice(1);
-  const angegriffeneSchlange = zustand.spieler[ziel.spielerIndex].schlangen.find((schlange) => schlange.id === ziel.schlangenId);
-  if (!angegriffeneSchlange) {
-    throw new Error('Die ausgewählte Zielschlange ist ungültig.');
-  }
-  const angegriffeneKarte = angegriffeneSchlange.karten.find((karte) => karte.id === ziel.kartenId);
-  if (!angegriffeneKarte) {
-    throw new Error('Die ausgewählte Zielkarte ist ungültig.');
-  }
-  const neueSpieler = zustand.spieler.map((spieler, index) => {
-    if (index !== ziel.spielerIndex) return spieler;
-    const neueHand = abwehrt && abwehrkarte
-      ? spieler.hand.filter((karte) => karte.id !== abwehrkarte.id)
-      : spieler.hand;
-    const neueSchlangen = abwehrt
-      ? spieler.schlangen
-      : spieler.schlangen.map((schlange) =>
-          schlange.id === ziel.schlangenId
-            ? bereinigeFarbenfusionen({ ...schlange, karten: entferneKarteAusSchlange(schlange.karten, ziel.kartenId) })
-            : schlange,
-        );
-    return {
-      ...spieler,
-      hand: neueHand,
-      schlangen: neueSchlangen,
-      ausgespielteSonderkartenNamen:
-        abwehrt && abwehrkarte
-          ? [...spieler.ausgespielteSonderkartenNamen, abwehrkarte.name]
-          : spieler.ausgespielteSonderkartenNamen,
-    };
-  });
-
-  return {
-    ...zustand,
-    spieler: neueSpieler,
-    ablagestapel: [
-      ...zustand.ablagestapel,
-      ...(abwehrt && abwehrkarte ? [abwehrkarte] : []),
-      ...(!abwehrt && angegriffeneKarte ? [angegriffeneKarte] : []),
-    ],
-    pendingReaktion:
-      verbleibendeZiele.length > 0
-        ? {
-            typ: 'SchlangenfrassAbwehr',
-            angreifenderSpielerIndex: pending.angreifenderSpielerIndex,
-            verbleibendeZiele,
-          }
-        : null,
-  };
-}
 
 function pruefeFarbenschutzImHaufen(schlangeKarten: Spielkarte[]): SonderkarteInfo | null {
   return schlangeKarten.find(istFarbenschutzkarte) ?? null;
@@ -229,30 +168,6 @@ export function loeseFarbenschutzAbwehr(
   };
 }
 
-export function entferneSchlangenfrassAusSchlangen(
-  schlangen: Spielzustand['spieler'][number]['schlangen'],
-  zielKarten: { schlangenId: string; kartenId: string }[],
-  sofortEntfernteKarten: Spielkarte[],
-): Spielzustand['spieler'][number]['schlangen'] {
-  return schlangen.map((schlange) => {
-    const zielKartenFuerSchlange = zielKarten.filter((ziel) => ziel.schlangenId === schlange.id);
-    if (zielKartenFuerSchlange.length === 0) {
-      return schlange;
-    }
-
-    const verbliebeneKarten: Spielkarte[] = [];
-    for (const karteEintrag of schlange.karten) {
-      const ziel = zielKartenFuerSchlange.find((eintrag) => eintrag.kartenId === karteEintrag.id);
-      if (ziel) {
-        sofortEntfernteKarten.push(karteEintrag);
-      } else {
-        verbliebeneKarten.push(karteEintrag);
-      }
-    }
-
-    return bereinigeFarbenfusionen({ ...schlange, karten: verbliebeneKarten });
-  });
-}
 
 function ermittleMaxKartenartenProZug(zustand: Spielzustand): number {
   return zustand.zugpflichten.verdopplerBonusAktiv === true ? 2 : 1;
