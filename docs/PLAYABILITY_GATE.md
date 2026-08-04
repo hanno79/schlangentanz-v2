@@ -5016,8 +5016,34 @@ in genau den Zuständen, die in dieser Sitzung dreimal falsch gelesen wurden:
 | ungepushter Commit | Exit 1, zwei Befunde | Exit 1: „1 lokal voraus" **und** „PR-HEAD 4c2da49, lokal c1c55cb" — die Konstellation, die bei PR #2 einen Commit verschluckt hat. |
 | alle Prüfer durch | Exit 0 | Exit 0, sieben Zeilen OK, „Merge-bereit." |
 
-Der letzte Fall ist der Merge dieses PRs selbst: Etappe 7 ging auf das Urteil des
-eigenen Guards hin live.
+### Der vierte Fall kam ungeplant — und war der beste Beleg
+
+Nach dem Nachtrag dieser Gegenproben lief der Guard erneut über den finalen Commit
+und meldete **Exit 1**:
+
+```
+  OK   PR-HEAD ist mein letzter Commit (PR f397297, lokal f397297)
+  !!   Kilo Code Review: completed/failure
+  OK   CodeRabbit: success
+  OK   mergeStateStatus: UNSTABLE
+```
+
+Kilos Fehlschlag war **kein Code-Fund**, sondern ein Werkzeugproblem: „Review
+failed: Assistant request was rate limited" — dieselbe Ratenbremse, die CodeRabbit
+an diesem Tag durchgehend traf, nun bei Kilo. Der Guard behandelt das als *nicht
+bestanden*, und das ist genau richtig: Ein Prüfer, der nicht prüfen konnte, hat
+nicht zugestimmt.
+
+Bemerkenswert ist der Zustand daneben: `mergeStateStatus: UNSTABLE` und
+`mergeable: MERGEABLE`. **GitHub hätte diesen Merge erlaubt.** Der Guard hat ihn
+angehalten.
+
+Ein Re-Request über die API scheitert mit 404 — GitHub erlaubt ihn nur der App, die
+den Check angelegt hat. Wieder anstoßen lässt sich ein solcher Check daher nur über
+einen neuen Commit; dieser Abschnitt ist der Anlass dafür.
+
+Der Merge dieses PRs erfolgt auf das Urteil des eigenen Guards hin: Etappe 7 ging
+erst live, als er selbst „Merge-bereit." sagte.
 
 ### Die Verwandtschaft, die dabei sichtbar wurde
 
