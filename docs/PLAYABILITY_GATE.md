@@ -4205,3 +4205,121 @@ Sicherungskopie, nicht über `git checkout`.
 - O-1, O-3, O-4 sowie Drag & Drop, `turnState.ts`-Split und Error-Tracking
   gelten unverändert.
 - Kein Error-Tracking; Vercel-CLI veraltet (54.6.1 / 58.4.4).
+
+---
+
+## Evidence — 04.08.2026 O-1: Schlangenblockade an freier Position
+
+**Regelgrundlage:** Signoff des Auftraggebers vom 03.08.2026, im Wortlaut in
+`docs/GAME_SPEC.md` **R7.1a**. Bis dahin stand O-1 als offene Frage in
+Abschnitt 11.
+
+### Was sich ändert
+
+Die Blockade hing bisher ans **Ende** einer **fremden** Schlange. Ab jetzt darf
+sie an jeder Position jeder Schlange liegen, auch der eigenen. `R7.1` und
+`R3.5a` sagten wörtlich das Gegenteil und sind mit `ÄNDERUNG`-Notiz
+umgeschrieben — nicht still korrigiert.
+
+**Die Punktewirkung ist der Kern, nicht ein Nebeneffekt.** Eine Sonderkarte
+trennt nach R3.3 die Farbgruppen links und rechts von sich. Mitten in eine
+Dreiergruppe gelegt zerreißt die Blockade sie sofort: drei rote Karten (3 Punkte)
+werden zu 1 + 2 Karten und zählen **null**. Nachgerechnet, nicht vom Istwert
+abgelesen.
+
+### Gate-Kette
+
+| Prüfung | Ergebnis |
+|---|---|
+| `npm test -- --run` | 684 Tests in 77 Dateien grün (+15) |
+| `npm run typecheck` / `tsc -p tsconfig.layout.json` | grün |
+| `npm run build` | grün — `index-b-FZBAtq.js`, CSS unverändert |
+| `npm run test:layout` | 45 Verträge grün, 1 übersprungen |
+| `check:test-lines` / `check:css-asserts` / `eslint` | grün |
+
+Exit-Codes einzeln geprüft.
+
+### Die Kostengrenze, auf die dieser Slice zulief
+
+`legalActions.ts` warnte im Kopf, der Umfang-Guard schlage an, „sobald eine
+weitere Kreuzprodukt-Dimension hinzukommt". O-1 ist genau die. **Gemessen statt
+geschätzt:**
+
+| Karten je Schlange | vorher | nachher | Zuwachs |
+|---|---|---|---|
+| 6 | 1 170 | 1 220 | +50 |
+| 9 | 2 553 | 2 627 | +74 |
+| **11 (Decklimit)** | **3 775** | **3 865** | **+90** |
+| 15 (unerreichbar) | 6 939 | 7 061 | +122 |
+
+Am Decklimit bleibt der Wert deutlich unter der Obergrenze von 6 000. Sie wurde
+**nicht** angehoben. Die Laufzeit ist neu gemessen (2,9 ms am Decklimit) statt
+die alte 6-ms-Angabe fortzuschreiben; die Messtabelle steht jetzt an **einer**
+Stelle statt an zweien.
+
+### Drei Bestandstests behaupteten das Gegenteil
+
+Umgedreht statt gelöscht, je mit Notiz warum — wer die alte Sperre zurückholen
+will, kommt dort vorbei:
+
+- „verbietet Schlangenblockade auf der eigenen Schlange" (Engine)
+- „verbietet … bereits in der Aktionsprüfung" (`pruefeAktion`)
+- „zielt bei der Schlangenblockade auf die ganze gegnerische Schlange" (Brett)
+
+### Zwei Fixture-Fallen, beide von der Persistenz gefunden
+
+Dieselbe Klasse wie am 03.08.2026 bei R2.3a: Ein Farbenschutz wurde in die Hand
+gelegt, ohne ihn vom Nachziehstapel zu nehmen („Doppelte ID"), und eine Schlange
+aus erfundenen Karten-IDs gebaut („Kartenmaterial ist nicht vollständig"). Die
+Spiellogik verarbeitet beides klaglos — gefunden hat es erst `serialisiere`.
+`testHelpers.ts` hat dafür jetzt `nimmVomStapel`/`nimmSonderkarte`, die die Karten
+tatsächlich wegnehmen.
+
+### Reviews: ein echter Fehler, den sonst niemand gefunden hätte
+
+Codex (Gate 7) meldete **keine HIGH-Befunde**; die vier Review-Läufe zusammen
+fanden aber zwei Dinge, die zählen:
+
+1. **Der Pflichtabwurf hätte einen illegalen Abwurf durchgewinkt.** O-1 musste
+   dieselbe Regeländerung an *drei* Stellen tragen — `pruefeAktion`, den
+   Enumerator und die Vorprüfung `hatLegaleSchlangenblockadeAktionen`. Die
+   Vorprüfung war mitgeändert, aber **ungetestet**. Der erste Testentwurf dafür
+   griff daneben und blieb auch mit der alten Fassung grün: Er fragte den
+   Enumerator, der dort gar nicht hinkommt. Der korrigierte Test prüft
+   `pruefeAktion` direkt und fällt mit der alten Vorprüfung — sie hätte einen
+   Abwurf erlaubt, obwohl der Spieler noch auf die eigene Schlange blockieren
+   kann (R20 verlangt das Gegenteil).
+2. **Die Aktionsliste wäre unbedienbar geworden.** Das Label der Blockade trug
+   keine Position. Am Decklimit stünden dort **96 Knöpfe mit 8 Texten**, jeder
+   zwölfmal — in der Liste, die `docs/SPIELBRETT_SPEC.md` als garantierte
+   Rückfallebene führt. Der Farbendieb führt die Position aus genau diesem Grund
+   seit jeher mit.
+
+### Falsche Begründungen, korrigiert
+
+Wieder der häufigste Befundtyp — Sätze, die alle grünen Tests passieren:
+
+- **„unmittelbare Folge des letzten Satzes"** in R7.1a. Ist es nicht: Der Signoff
+  verbietet wörtlich nur den Wechsel des *Zielspielers*. Dass auch die Position
+  feststeht, ist eine **Auslegung** und steht jetzt als solche da.
+- **„alle fünf Wirkungen … die Abwehr ist vollständig"** in R7.1. O-1 schafft die
+  erste Angriffskarte, die manchmal *keinen* Verteidiger hat (eigene Schlange).
+  Die Ausnahme ist jetzt an der Zusage vermerkt.
+- **„Der Text folgt der Art des Ziels, nicht dem Kartennamen"** in `Spielbrett.tsx`
+  — direkt über einem Zweig, der genau das tat. Der Hinweis liest die Karte
+  jetzt wirklich aus der Hand, statt sie aus der Zahl der Klicks zu erraten.
+- Verdrehte Zahl im Messkommentar („6 statt 96" statt „96 statt 6") und zwei
+  veraltete Messnotizen.
+
+### Was bewusst offen bleibt
+
+- **`hatLegale*Aktionen` bleibt eine zweite, handgepflegte Legalitätsfassung**
+  (~170 Zeilen, nur vom Pflichtabwurf gelesen). O-1 musste die Regel dreimal
+  eintragen. Der saubere Schnitt — Enumerator ohne Pflichtabwurf plus dünne
+  Hülle — ist ein eigener Slice, kein Anhängsel an eine Regeländerung.
+- **Die KI spielt weiter `aktionen[0]`.** Ihre Blockade landet damit auf
+  Position 0 der ersten Schlange statt wie früher harmlos am Ende — ein realer
+  Schwierigkeitssprung, der an der Spielerreihenfolge hängt und an keiner Stelle
+  entschieden wurde. Gehört in `kiZug.ts`, nicht in die Regeln.
+- O-3 und O-4 unverändert (GAME_SPEC Abschnitt 11); kein Error-Tracking;
+  Vercel-CLI veraltet (54.6.1 / 58.4.4).

@@ -92,6 +92,14 @@ export interface PendingSchlangenblockadeAbwehr {
   zielSpielerIndex: number;
   zielSchlangenId: string;
   blockadeKartenId: string;
+  /* ÄNDERUNG [04.08.2026]: O-1 — die Einfügeposition wird bei der **Ansage**
+     festgelegt und muss deshalb durch die Reaktionskette getragen werden. Läge
+     sie erst bei der Auflösung fest, könnte der Angreifer sie in Kenntnis der
+     gegnerischen Entscheidung noch verschieben — genau das schließt der Signoff
+     aus („darf sich dann nicht mehr umentscheiden"). Altstände kennen das Feld
+     nicht; `migriereSchlangenblockadePositionVorO1` setzt es auf das Ende der
+     Zielschlange, also auf das bisherige Verhalten. */
+  einfügeIndex: number;
 }
 
 export interface PendingFarbendiebAbwehr {

@@ -47,3 +47,24 @@ export const OFFENE_AUFGABEN_START = 3;
 
 // Farbgruppen (R3.3)
 export const MINDEST_FARBGRUPPEN_LAENGE = 3;
+
+/*
+ÄNDERUNG [04.08.2026]: O-1 — ein Prädikat für Einfügepositionen.
+
+Farbendieb und Schlangenblockade fügen beide eine Karte in eine Lücke einer
+Schlange ein, und beide prüfen die Position an drei Stellen: bei der
+Aktionsprüfung (`legalActions.ts`), beim Ausspielen (`turnState.ts`) und beim
+Laden (`serialization.ts`). Das sind sechs Prüfungen für **eine** Regel.
+
+Die Vervielfachung selbst ist Hausbrauch und hier nicht das Problem — die drei
+Schichten prüfen bewusst unabhängig voneinander. Das Problem war die Abweichung:
+Die Blockade-Kopien prüften auf `Number.isInteger`, die Farbendieb-Kopien nicht,
+und die Persistenz prüfte beim Farbendieb nur nach unten, bei der Blockade nach
+beiden Seiten. Dieselbe Regel stand damit in vier Fassungen da.
+
+Gezählt wird als **Lücke**: `0` ist ganz vorn, `laenge` ganz hinten. Deshalb ist
+`laenge` gültig und `laenge + 1` nicht.
+*/
+export function istGueltigeEinfuegePosition(wert: unknown, laenge: number): boolean {
+  return Number.isInteger(wert) && (wert as number) >= 0 && (wert as number) <= laenge;
+}

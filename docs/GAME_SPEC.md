@@ -415,20 +415,27 @@ durchgesetzt — eine Schlange in diesem Zustand lässt sich nicht erweitern. Er
 wird jedoch von **keiner** aktuell umgesetzten Karte gesetzt.
 
 Insbesondere setzt ihn die Schlangenblockade nicht: Sie legt nach R7.1 eine
-neutrale, nicht farbige Karte **ans Ende** der Zielschlange. Die Schlange bleibt
+neutrale, nicht farbige Karte in die Zielschlange. Die Schlange bleibt
 erweiterbar.
 
-Daraus folgt eine Wirkung, die man leicht überschätzt: Eine Sonderkarte trennt
-nach R3.3 die Farbgruppen links und rechts von sich — am Ende einer Schlange
-liegt rechts aber nichts. Die Blockade zerreißt deshalb **keine bestehende**
-Farbgruppe und kostet im Moment des Ausspielens **keine Punkte**. Ihre Wirkung
-ist eine künftige: Wer danach rechts weiter anlegt, beginnt hinter der Sperrkarte
-eine neue Gruppe und erreicht die Dreiergrenze aus R3.3 dort erst wieder mit drei
-weiteren Karten. Anlegen nach links bleibt unberührt.
+**ÄNDERUNG 04.08.2026 (O-1):** Hier stand bis zum Signoff das Gegenteil dessen,
+was jetzt gilt — die Blockade hänge „ans Ende", zerreiße deshalb „**keine
+bestehende** Farbgruppe" und koste im Moment des Ausspielens „**keine Punkte**".
+Der Absatz war am 02.08.2026 eigens präzisiert worden und beschrieb die Engine
+korrekt. Mit R7.1a ist er falsch geworden:
 
-Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte
-Normquelle. Bis dahin gilt R7.1 als die engere und aktuellere Angabe (siehe
-Konfliktregeln in Abschnitt 7).
+Eine Sonderkarte trennt nach R3.3 die Farbgruppen links und rechts von sich.
+Da die Blockade seit O-1 an **jeder** Position liegen darf, zerreißt sie eine
+bestehende Farbgruppe, sobald sie mitten hineingelegt wird, und kostet dann
+sofort Punkte. Nur der Sonderfall „ans Ende" verhält sich wie zuvor: Dort liegt
+rechts nichts, und die Wirkung ist eine rein künftige — wer danach rechts weiter
+anlegt, beginnt hinter der Sperrkarte eine neue Gruppe und erreicht die
+Dreiergrenze aus R3.3 dort erst wieder mit drei weiteren Karten. Anlegen nach
+links bleibt unberührt.
+
+Was **nicht** gilt: Die Blockade setzt trotzdem keinen Zustand `blockiert`. Sie
+zerreißt die Gruppe, sperrt die Schlange aber nicht. Beides gleichzeitig zu tun
+wäre eine weitere Regeländerung und bräuchte eine bestätigte Normquelle.
 
 Der Zustand und seine Durchsetzung bleiben erhalten: Sie kosten nichts und stehen
 bereit, falls eine Erweiterungskarte sie später braucht. Wer die beiden Prüfungen
@@ -484,13 +491,60 @@ Verweis auf diesen Abschnitt.
 
 - Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
 - Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
-- Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu, sofern der Zielspieler nicht mit Farbenschutz abwehrt. Die Karte wird **ans Ende** der Zielschlange angehängt; eine Einfügeposition gibt es nicht. Sie zerreißt damit keine bestehende Farbgruppe — die Folgen für den weiteren Ausbau stehen in R3.5a.
+- Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange **und eine Einfügeposition darin** und fügt dort eine neutrale, nicht farbige Schlangenblockade-Karte ein, sofern der Zielspieler nicht mit Farbenschutz abwehrt. Zielschlange darf **jede** Schlange sein, auch eine eigene. Einzelheiten in R7.1a. (ÄNDERUNG 04.08.2026: Hier stand bis zum Signoff „ans Ende der Zielschlange angehängt; eine Einfügeposition gibt es nicht" und „nur eines anderen Spielers".)
 - Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
-- Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt. Mit dem Verdoppler (siehe unten) sind das **alle fünf** Wirkungen, die einen anderen Spieler treffen — die Abwehr ist damit vollständig und nicht etwa ein Zwischenstand. (ÄNDERUNG 03.08.2026: nachgezählt gegen `src/engine/legalActions.ts`; Farbenfusion und Schlangenhäutung wirken nur auf eigene Schlangen und brauchen keine Abwehr.)
+- Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt. Mit dem Verdoppler (siehe unten) sind das **alle fünf** Wirkungen, die einen anderen Spieler treffen — die Abwehr ist damit vollständig und nicht etwa ein Zwischenstand. (ÄNDERUNG 04.08.2026: Eine Ausnahme kam mit O-1 dazu — eine Schlangenblockade auf die **eigene** Schlange trifft keinen anderen Spieler und löst deshalb keine Abwehr aus. Siehe R7.1a Punkt 4.) (ÄNDERUNG 03.08.2026: nachgezählt gegen `src/engine/legalActions.ts`; Farbenfusion und Schlangenhäutung wirken nur auf eigene Schlangen und brauchen keine Abwehr.)
 - Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).
 - Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte. Die Fusion zählt als eine Punkteeinheit. Für die längste Farbkette (R8.4a) zählt sie **nicht** — sie ist eine Sonderkarte und unterbricht die Kette. (ÄNDERUNG 03.08.2026: Hier stand zuvor „für den Vielfaltbonus wird sie ignoriert" — ein Verweis auf eine Regel, die diese Spec nie definiert hat und die nach R1.2a außerhalb des digitalen Umfangs liegt.)
 - Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen. Die Karte aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte. Die zusätzliche Karte darf eine weitere Farbkarte oder eine weitere Sonderkarte sein; insgesamt sind dann bis zu 3 Karten möglich. Der Bonus gilt nur für den aktuellen Zug, und Verdoppler selbst zählt als Sonderkarte. Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren.
 - Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet.
+
+#### R7.1a Freie Einfügeposition der Schlangenblockade (ÄNDERUNG 04.08.2026, O-1)
+
+*(Signoff des Auftraggebers vom 03.08.2026. Bis dahin stand O-1 in der Tabelle
+der offenen Fragen in Abschnitt 11.)*
+
+**Der Signoff im Wortlaut** — er steht hier vollständig, damit die Regel nie aus
+einer Zusammenfassung rekonstruiert wird:
+
+> Die Blockade darf an jeder beliebigen Stelle platziert werden — sowohl in der
+> eigenen Schlange, was aber natürlich nicht so viel Sinn macht, als auch an
+> beliebiger Stelle beim Gegner. Der Gegner darf ausgesucht werden. Zuerst
+> kündigt der Spieler an: „Ich spiele eine Schlangenblockade auf Spieler X."
+> Dann darf Spieler X entscheiden, ob er abwehrt oder nicht mit der
+> Farbenschutzkarte. Wenn eine Farbenschutzkarte gespielt wird, sind beide
+> Karten ausgespielt — der Spieler, der die Schlangenblockade spielt, darf sich
+> dann nicht mehr umentscheiden und den anderen Spieler nehmen.
+
+**Was daraus folgt:**
+
+1. **Jede Schlange ist ein zulässiges Ziel**, auch eine eigene. Bis 03.08.2026
+   verboten Engine und Spec das ausdrücklich.
+2. **Die Position ist frei wählbar.** Gültig sind die Lücken `0` bis
+   `karten.length`; `karten.length` hängt hinten an — das Verhalten von vor O-1.
+3. **Die Position wird bei der Ansage festgelegt**, nicht nach der
+   Abwehrentscheidung. Das ist eine **Auslegung**, keine wörtliche Folge: Der
+   Signoff verbietet ausdrücklich nur, den *Zielspieler* zu wechseln. Die
+   Position ebenso zu behandeln liegt nahe — wer sich nach der Entscheidung des
+   Verteidigers nicht mehr umentscheiden darf, sollte sie auch nicht mehr
+   verschieben können —, steht dort aber nicht. Wird das je anders gewollt,
+   braucht es einen eigenen Signoff, keine Codeänderung.
+4. **Auf die eigene Schlange gibt es keine Abwehr.** Gegen sich selbst wehrt man
+   sich nicht; dieselbe Auslegung gilt beim Schlangenfrass („eigene Ziele werden
+   immer sofort entfernt, keine Selbst-Reaktion"). Der Signoff nennt die eigene
+   Schlange als das, was „nicht so viel Sinn macht" — nicht als neuen
+   Reaktionsfall.
+
+**Die Punktewirkung ist neu und beabsichtigt.** Eine Sonderkarte trennt nach R3.3
+die Farbgruppen links und rechts von sich. Mitten in eine Dreiergruppe gelegt
+zerreißt die Blockade sie deshalb sofort: Drei rote Karten (3 Punkte) werden zu
+1 + 2 Karten und zählen nach R8 **null**. Genau das war vor O-1 unmöglich, und
+genau darauf zielt der Signoff.
+
+**Altstände.** Ein Spielstand, der mitten in einer Blockade-Reaktionskette
+gespeichert wurde, kennt die Position nicht. `migriereSchlangenblockadePositionVorO1`
+setzt sie auf das Ende der Zielschlange und stellt damit exakt das Verhalten von
+vor O-1 her.
 
 ### R7.2 Keine offenen normalen Sonderkartenwirkungen
 
@@ -682,7 +736,7 @@ hängende Verweis auf den Vielfaltbonus in R7.1.
 
 | # | Frage | Status | Warum offen |
 |---|---|---|---|
-| **O-1** | Einfügeposition der Schlangenblockade | nicht umgesetzt | Die Engine hängt die Karte ans **Ende** der Zielschlange (R7.1/R3.5a). Die Anleitung sagt im Zugschritt b) über Sonderkarten allgemein: „kann an beliebiger Stelle eingefügt werden". Ob das auch für Angriffskarten in **fremde** Schlangen gilt oder nur für eigene (Regenbogenschlange, Farbenfusion), sagt sie nicht. Eine Position einzuführen hat unmittelbare Punktewirkung und braucht einen Signoff. |
+| **O-1** | Einfügeposition der Schlangenblockade | **entschieden und umgesetzt** (Signoff 03.08.2026, Umsetzung 04.08.2026) | Die Frage war, ob „kann an beliebiger Stelle eingefügt werden" aus Zugschritt b) auch für Angriffskarten in **fremde** Schlangen gilt. Der Auftraggeber hat sie bejaht und zugleich die eigene Schlange als Ziel freigegeben. Die Regel steht im Wortlaut in **R7.1a**; R7.1 und R3.5a sind entsprechend umgeschrieben. Diese Zeile bleibt als Spur stehen, damit die Frage nicht ein zweites Mal aufgemacht wird. |
 | **O-3** | Eigener Ablagestapel je Spieler | bewusst nicht umgesetzt | Die Anleitung gibt jedem Spieler einen eigenen Ablagestapel („für gespielte Sonderkarten"); das Datenmodell hat einen gemeinsamen (`ablagestapel`). Ohne Spielwirkung im digitalen Umfang: Keine Regel des Basisspiels liest je aus einem *persönlichen* Stapel. Erst die Erweiterung täte das (Risiko-Belohnung, Aktion 4) — und die ist nach R1.2a außerhalb des Umfangs. |
 | **O-4** | Zweite Spielende-Bedingung | nicht anwendbar | „Wenn der Ablagestapel leer ist und ein Spieler eine Karte vom Ablagestapel ziehen möchte, endet das Spiel ebenfalls." Vom Ablagestapel ziehen kann man nur mit Erweiterungskarten (R1.2a: nicht im Umfang). Die Bedingung ist digital unerreichbar und wird deshalb nicht nachgebildet. |
 
@@ -698,10 +752,13 @@ Nicht auf dieser Liste, weil es **keine** Regelfragen sind:
 Diese Punkte sind entschieden und **keine** offenen Regelfragen. Sie stehen hier,
 weil sie beim Lesen des Codes wie Lücken aussehen:
 
-- **R3.5a — der Zustand `blockiert` wird von keiner Karte erzeugt** (02.08.2026).
-  Die Schlangenblockade hängt ihre Karte ans Ende der Zielschlange; sie sperrt
-  die Schlange nicht und zerreißt auch keine bestehende Farbgruppe. Eine
-  Änderung wäre eine Regeländerung und braucht eine bestätigte Normquelle.
+- **R3.5a — der Zustand `blockiert` wird von keiner Karte erzeugt** (02.08.2026,
+  überarbeitet 04.08.2026). Die Schlangenblockade sperrt die Zielschlange nicht.
+  Sie *zerreißt* seit O-1 aber sehr wohl eine bestehende Farbgruppe, sobald sie
+  mitten hineingelegt wird — hier stand bis zum Signoff das Gegenteil („hängt
+  ans Ende … zerreißt keine bestehende Farbgruppe"). Den Zustand `blockiert` zu
+  setzen wäre weiterhin eine eigene Regeländerung und bräuchte eine bestätigte
+  Normquelle.
 - **R6.2a — „Lila Riese“ und die Historie-Aufgaben.** Zwei Kartentexte sind am
   Tisch eindeutig, digital aber auslegungsbedürftig; die getroffene Auslegung
   steht in R6.2a.

@@ -20,6 +20,21 @@ Verdoppler und 3 Farbkarten):
 | 11 | 113 | 3 775 | 5,5 ms | 0,5 ms |
 | 15 | 145 | 6 939 | 8,4 ms | 1,0 ms |
 
+**Nachgemessen am 04.08.2026 nach O-1** (Schlangenblockade über alle Schlangen ×
+Einfügepositionen — genau die „weitere Kreuzprodukt-Dimension", vor der der
+letzte Absatz warnt):
+
+| Karten je Schlange | Aktionen vorher | Aktionen nachher | Zuwachs |
+|---|---|---|---|
+| 6  | 1 170 | 1 220 | +50  |
+| 9  | 2 553 | 2 627 | +74  |
+| 11 | 3 775 | 3 865 | +90  |
+| 15 | 6 939 | 7 061 | +122 |
+
+Am Decklimit (11) bleibt der Wert mit **3 865** deutlich unter der Obergrenze.
+Sie wurde deshalb **nicht** angehoben — das wäre die falsche Reaktion gewesen und
+hätte den Guard entwertet.
+
 Entscheidend ist die letzte Spalte der Kartenzahl: **das Spieldeck umfasst 114
 Karten**. Board und Hände zusammen können diese Zahl nie überschreiten. Die Zeile
 mit 11 Karten je Schlange liegt bereits am Decklimit; die Zeile mit 15 beschreibt
@@ -33,7 +48,7 @@ weil sie Komplexität gegen einen Gewinn eintauschen würden, den niemand bemerk
 Eine Hypothese aus dem Plan hat sich dabei als falsch erwiesen: erwartet wurde,
 `ermittleQuestZugHinweise` sei der größte Einzelposten, weil es pro Kandidat ein
 volles `anwendeAktion` ausführt. Tatsächlich verarbeitet es nur die
-*Schlangenbau*-Aktionen (hier 12 von 3 775) und liegt damit unter einer Millisekunde.
+*Schlangenbau*-Aktionen (hier 12 von 3 865) und liegt damit unter einer Millisekunde.
 
 Dieser Test ist kein Performance-Test — Wandzeiten sind auf geteilten Maschinen zu
 unzuverlässig, um daraus ein Gate zu bauen. Er sichert stattdessen die
@@ -121,8 +136,10 @@ describe('AP-5 Umfang der Aktionsenumeration', () => {
     // Untergrenze: stellt sicher, dass die Kreuzprodukte überhaupt entstehen. Ohne
     // sie könnte der Test still zur Attrappe werden, wenn das Fixture zerfällt.
     expect(aktionen.length, 'Fixture erzeugt die kombinatorischen Aktionen nicht mehr').toBeGreaterThan(2_000)
-    // Obergrenze: gemessen 3 775. Reserve für Regelerweiterungen, aber eng genug,
-    // dass eine zusätzliche Kreuzprodukt-Dimension auffällt.
+    /* Obergrenze: gemessen 3 865 (04.08.2026, nach O-1; davor 3 775). Reserve für
+       Regelerweiterungen, aber eng genug, dass eine zusätzliche
+       Kreuzprodukt-Dimension auffällt — O-1 war eine, und die 6 000 haben
+       gehalten. */
     expect(aktionen.length, 'Aktionsenumeration ist sprunghaft gewachsen').toBeLessThan(6_000)
   })
 

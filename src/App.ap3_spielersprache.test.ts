@@ -83,6 +83,40 @@ describe('AP-3 Aktionslabels ohne technische IDs', () => {
     expect(label(grube)).toBe('Schlangengrube auf KI Gegner 1 spielen')
   })
 
+  /* ÄNDERUNG [04.08.2026]: O-1. Die Blockade kennt jetzt eine Einfügeposition,
+     und ohne sie im Label sind die Einträge der Aktionsliste nicht mehr
+     unterscheidbar: Am Decklimit stehen dort 96 Blockade-Knöpfe mit 8 Texten,
+     jeder zwölfmal. Die Liste ist nach `docs/SPIELBRETT_SPEC.md` die garantierte
+     Rückfallebene — dort ununterscheidbare Einträge sind genau die Beschwerde,
+     mit der `sonderkartenziele.ts` aufmacht.
+
+     Der Farbendieb führt die Position aus demselben Grund seit jeher mit. */
+  it('nennt bei der Schlangenblockade die Einfügeposition', () => {
+    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
+    zustand.spieler[1].schlangen = [
+      {
+        id: 'gegner-1',
+        zustand: 'aktiv',
+        karten: [farbkarte('blau-77', 'Blau', 1), farbkarte('blau-78', 'Blau', 1)],
+      },
+    ]
+    const label = erstelleAktionsLabel(zustand, { perspektiveSpielerId: menschId(zustand) })
+    const blockade = (einfügeIndex: number): SpielAktion => ({
+      typ: 'SchlangenblockadeSpielen',
+      spielerId: zustand.spieler[0].id,
+      handkartenId: 'blockade-1',
+      zielSpielerId: zustand.spieler[1].id,
+      zielSchlangenId: 'gegner-1',
+      einfügeIndex,
+    })
+
+    // Drei Lücken, drei unterscheidbare Texte.
+    const texte = [0, 1, 2].map((index) => label(blockade(index)))
+    expect(new Set(texte).size).toBe(3)
+    expect(texte[0]).toContain('an Position 1')
+    expect(texte[2]).toContain('an Position 3')
+  })
+
   it('formuliert eigene Schlangen je nach Perspektive', () => {
     const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
     const aktiver = zustand.spieler[0]

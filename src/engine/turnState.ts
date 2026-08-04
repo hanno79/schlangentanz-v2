@@ -5,7 +5,7 @@ Version: 1.7
 Beschreibung: Zugphasen-State-Machine für Schlangentanz – Übergänge zwischen Nachziehphase, Ausspielphase, Aufgabenprüfung und Zugabschluss. Inkl. Überhand-Abwurf, Pflichtprüfung im Zugabschluss (R2.5), Neue Schlange starten (R3.1), Farbkarte anlegen (R3.2), Farbenschutz (R75).
 */
 
-import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
+import { HANDKARTENLIMIT, MINDESTHANDKARTEN, MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG, istGueltigeEinfuegePosition } from './constants';
 import type { Spielkarte, SonderkarteInfo, Spielzustand, Spielphase, PendingFarbendiebAbwehr, PendingSchlangenfrassAbwehr } from './types';
 import { ermittleErfuellteOffeneAufgaben, erfuelleOffeneAufgaben, pruefeGeheimeAufgabe } from './aufgabenPruefung';
 import { ermittleFarbgruppen } from './colorGroups';
@@ -134,6 +134,28 @@ function aktualisiereSchlangenfrassPending(
 
 function pruefeFarbenschutzImHaufen(schlangeKarten: Spielkarte[]): SonderkarteInfo | null {
   return schlangeKarten.find(istFarbenschutzkarte) ?? null;
+}
+
+/**
+ * Bekommt der Angegriffene ein Abwehrfenster?
+ *
+ * ÄNDERUNG [04.08.2026]: O-1 — eine Frage, ein Ort. Zwei Bedingungen gehören
+ * zusammen und standen bis heute in vier Fassungen da:
+ *
+ * 1. **Das Ziel ist ein anderer Spieler.** Gegen sich selbst wehrt man sich
+ *    nicht (GAME_SPEC R7.1a Punkt 4; beim Schlangenfrass seit jeher so).
+ * 2. **Der Zielspieler hält einen Farbenschutz.**
+ *
+ * Vor O-1 kamen Schlangengrube und Farbendieb ohne Punkt 1 aus: Ein eigenes Ziel
+ * war dort per Wurf verboten, also konnte der Fall nicht eintreten. Die
+ * Schlangenblockade hat diese Sperre mit dem Signoff verloren — und damit wurde
+ * aus einer stillschweigenden Voraussetzung eine Bedingung, die dastehen muss.
+ * Sie hier zu benennen ist billiger, als sie an jeder Angriffskarte einzeln
+ * mitzudenken (Altitude-Review, Gate 7).
+ */
+function loestFarbenschutzReaktionAus(zustand: Spielzustand, zielSpielerIndex: number): boolean {
+  if (zielSpielerIndex === zustand.aktiverSpielerIndex) return false;
+  return pruefeFarbenschutzImHaufen(zustand.spieler[zielSpielerIndex].hand) !== null;
 }
 
 function pruefeKeineAusstehendeReaktion(zustand: Spielzustand): void {
@@ -750,8 +772,7 @@ export function spieleSchlangengrube(
   );
 
   // R78: Wenn Zielspieler Farbenschutz hat, bekommt er eine explizite Reaktionsentscheidung.
-  const zielSpieler = zustand.spieler[zielSpielerIndex];
-  const hatFarbenschutz = zielSpieler.hand.some((k) => istFarbenschutzkarte(k));
+  const hatFarbenschutz = loestFarbenschutzReaktionAus(zustand, zielSpielerIndex);
   if (hatFarbenschutz) {
     return {
       ...zustandNachAngriff,
@@ -771,14 +792,19 @@ export function spieleSchlangengrube(
 
 export function spieleSchlangenblockade(
   zustand: Spielzustand,
-  optionen: { kartenId?: string; zielSpielerIndex?: number; zielSchlangenId?: string } | null = {},
+  optionen: {
+    kartenId?: string;
+    zielSpielerIndex?: number;
+    zielSchlangenId?: string;
+    einfügeIndex?: number;
+  } | null = {},
 ): Spielzustand {
   if (zustand.zugphase !== 'Ausspielphase') {
     throw new Error('Schlangenblockade kann nur in der Ausspielphase gespielt werden.');
   }
   pruefeKeineAusstehendeReaktion(zustand);
 
-  const { kartenId, zielSpielerIndex, zielSchlangenId } = optionen ?? {};
+  const { kartenId, zielSpielerIndex, zielSchlangenId, einfügeIndex } = optionen ?? {};
   if (!istGueltigeId(kartenId)) {
     throw new Error('Es muss genau eine Handkarte zum Spielen gewählt werden.');
   }
@@ -788,11 +814,14 @@ export function spieleSchlangenblockade(
   if (!istGueltigeId(zielSchlangenId)) {
     throw new Error('Für Schlangenblockade muss eine Zielschlange gewählt werden.');
   }
-
-  // ÄNDERUNG 03.06.2026: Schlangenblockade darf nur auf fremde Schlangen gelegt werden.
-  if (zielSpielerIndex === zustand.aktiverSpielerIndex) {
-    throw new Error('Schlangenblockade kann nur auf die Schlange eines anderen Spielers gelegt werden.');
+  if (typeof einfügeIndex !== 'number' || !Number.isInteger(einfügeIndex)) {
+    throw new Error('Für Schlangenblockade muss eine Einfügeposition gewählt werden.');
   }
+
+  /* ÄNDERUNG [04.08.2026]: O-1 — die eigene Schlange ist zulässig.
+     Hier stand bis 03.08.2026 ein Wurf („nur auf die Schlange eines anderen
+     Spielers"). Der Signoff hebt ihn auf; die Begründung steht in GAME_SPEC
+     R7.1a. */
 
   const aktiverSpieler = zustand.spieler[zustand.aktiverSpielerIndex];
   const karte = aktiverSpieler.hand.find((k) => k.id === kartenId);
@@ -810,6 +839,11 @@ export function spieleSchlangenblockade(
   if (!zielSchlange) {
     throw new Error('Die ausgewählte Zielschlange ist ungültig.');
   }
+  /* Als Lücke gezählt, wie beim Farbendieb: `0` ganz vorn, `karten.length` ganz
+     hinten — letzteres ist das Verhalten von vor O-1. */
+  if (!istGueltigeEinfuegePosition(einfügeIndex, zielSchlange.karten.length)) {
+    throw new Error('Die gewählte Einfügeposition ist ungültig.');
+  }
 
   pruefeSpielkartenLimit(zustand, karte.typ);
 
@@ -826,7 +860,13 @@ export function spieleSchlangenblockade(
     karte.name,
   );
 
-  const hatFarbenschutz = zielSpieler.hand.some((k) => istFarbenschutzkarte(k));
+  /* ÄNDERUNG [04.08.2026]: O-1 — gegen sich selbst wehrt man sich nicht.
+     Die eigene Schlange ist seit dem Signoff ein zulässiges Ziel, und der
+     Angreifer hält womöglich selbst eine Farbenschutzkarte. Ohne diese
+     Einschränkung eröffnete er eine Reaktionskette gegen sich und müsste seine
+     eigene Blockade abwehren. Beide Bedingungen stehen in
+     `loestFarbenschutzReaktionAus`. */
+  const hatFarbenschutz = loestFarbenschutzReaktionAus(zustand, zielSpielerIndex);
   if (hatFarbenschutz) {
     return {
       ...zustandNachAngriff,
@@ -836,24 +876,48 @@ export function spieleSchlangenblockade(
         zielSpielerIndex,
         zielSchlangenId,
         blockadeKartenId: karte.id,
+        einfügeIndex,
       },
     };
   }
 
+  return legeSchlangenblockadeAb(zustandNachAngriff, {
+    kartenId: karte.id,
+    zielSpielerIndex,
+    zielSchlangenId,
+    einfügeIndex,
+  });
+}
+
+/**
+ * Legt die Blockadekarte an ihre Position und nimmt sie vom Ablagestapel.
+ *
+ * ÄNDERUNG [04.08.2026]: O-1 — herausgezogen, weil es diese Stelle jetzt
+ * zweimal gibt: einmal beim sofortigen Ausspielen (kein Farbenschutz oder
+ * eigenes Ziel) und einmal beim Auflösen einer durchgelassenen Abwehr. Vor O-1
+ * hängten beide nur hinten an; mit einer freien Position wäre eine der beiden
+ * Kopien früher oder später an der anderen vorbeigelaufen.
+ */
+function legeSchlangenblockadeAb(
+  zustand: Spielzustand,
+  ziel: { kartenId: string; zielSpielerIndex: number; zielSchlangenId: string; einfügeIndex: number },
+): Spielzustand {
   const blockadeKarte: SonderkarteInfo = {
     typ: 'Sonderkarte',
-    id: karte.id,
+    id: ziel.kartenId,
     name: 'Schlangenblockade',
   };
   return {
-    ...zustandNachAngriff,
-    ablagestapel: zustandNachAngriff.ablagestapel.filter((abwerfKarte) => abwerfKarte.id !== karte.id),
-    spieler: zustandNachAngriff.spieler.map((spieler, index) =>
-      index === zielSpielerIndex
+    ...zustand,
+    ablagestapel: zustand.ablagestapel.filter((abwerfKarte) => abwerfKarte.id !== ziel.kartenId),
+    spieler: zustand.spieler.map((spieler, index) =>
+      index === ziel.zielSpielerIndex
         ? {
             ...spieler,
             schlangen: spieler.schlangen.map((schlange) =>
-              schlange.id === zielSchlangenId ? { ...schlange, karten: [...schlange.karten, blockadeKarte] } : schlange,
+              schlange.id === ziel.zielSchlangenId
+                ? { ...schlange, karten: fuegeKarteInSchlangeEin(schlange.karten, blockadeKarte, ziel.einfügeIndex) }
+                : schlange,
             ),
           }
         : spieler,
@@ -959,7 +1023,7 @@ export function spieleFarbendieb(
     karte.name,
   );
 
-  const hatFarbenschutz = zielSpieler.hand.some((k) => istFarbenschutzkarte(k));
+  const hatFarbenschutz = loestFarbenschutzReaktionAus(zustand, zielSpielerIndex);
   if (hatFarbenschutz) {
     return {
       ...zustandNachAngriff,
@@ -1349,24 +1413,23 @@ export function loesePendingReaktionDurchlassen(zustand: Spielzustand, spielerId
   if (pending.typ === 'SchlangenblockadeAbwehr') {
     holeReaktionsSpieler(zustand, pending.zielSpielerIndex, spielerId, 'Nur der Zielspieler darf die Reaktion auflösen.');
 
-    const blockadeKarte = zustand.ablagestapel.find((karte) => karte.id === pending.blockadeKartenId);
-    if (!blockadeKarte) {
+    /* Nur eine Existenzprobe: `legeSchlangenblockadeAb` baut die Karte aus der
+       ID neu auf, statt die gefundene zu übernehmen. `find` hätte ausgesehen,
+       als würde die gefundene Karte gelegt. */
+    if (!zustand.ablagestapel.some((karte) => karte.id === pending.blockadeKartenId)) {
       throw new Error('Die ausgewählte Zielkarte ist ungültig.');
     }
 
+    /* ÄNDERUNG [04.08.2026]: O-1 — an die **angesagte** Position, nicht ans Ende.
+       Die Position stammt aus der ausstehenden Reaktion und wurde beim Ausspielen
+       festgelegt; siehe `PendingSchlangenblockadeAbwehr`. */
     return {
-      ...zustand,
-      spieler: zustand.spieler.map((spieler, index) =>
-        index === pending.zielSpielerIndex
-          ? {
-              ...spieler,
-              schlangen: spieler.schlangen.map((schlange) =>
-                schlange.id === pending.zielSchlangenId ? { ...schlange, karten: [...schlange.karten, blockadeKarte] } : schlange,
-              ),
-            }
-          : spieler,
-      ),
-      ablagestapel: zustand.ablagestapel.filter((karte) => karte.id !== pending.blockadeKartenId),
+      ...legeSchlangenblockadeAb(zustand, {
+        kartenId: pending.blockadeKartenId,
+        zielSpielerIndex: pending.zielSpielerIndex,
+        zielSchlangenId: pending.zielSchlangenId,
+        einfügeIndex: pending.einfügeIndex,
+      }),
       pendingReaktion: null,
     };
   }
@@ -1468,7 +1531,7 @@ export function spieleSchlangenfrass(
       // ÄNDERUNG [05.07.2026]: A4 — die Farbenschutz-Reaktionskette gilt nur für gegnerische
       // Ziele; eigene Ziele werden nie in eine Selbst-Reaktion überführt.
       hatFarbenschutz:
-        zielSpielerIndex !== zustand.aktiverSpielerIndex && pruefeFarbenschutzImHaufen(zielSpieler.hand) !== null,
+        loestFarbenschutzReaktionAus(zustand, zielSpielerIndex),
     });
   }
 

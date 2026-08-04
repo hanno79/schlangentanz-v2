@@ -34,7 +34,7 @@ import type {
   Steuerung,
   Zugphase,
 } from './types';
-import { SPIELER_MAX, SPIELER_MIN, MAX_KARTEN_PRO_ZUG } from './constants';
+import { SPIELER_MAX, SPIELER_MIN, MAX_KARTEN_PRO_ZUG, istGueltigeEinfuegePosition } from './constants';
 import { erstelleErweiterungsSonderkarten, erstelleSpieldeck, erstelleSonderkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
@@ -87,6 +87,7 @@ export function deserialisiere(json: string): Spielzustand {
   migriereGeheimeAufgabeErfuelltVorK4(parsed);
   migriereEndspurtVerdopplungVorK5(parsed);
   migriereNachziehBerechtigteVorR2_3a(parsed);
+  migriereSchlangenblockadePositionVorO1(parsed);
   validiereSpielzustand(parsed);
   return parsed;
 }
@@ -365,6 +366,15 @@ function validierePendingReaktion(wert: unknown, spieler: Spieler[], ablagestape
       if (!Array.isArray(ablagestapelRaw) || !ablagestapelRaw.some((k) => istObjekt(k) && k['id'] === blockadeKartenId)) {
         throw new Error('Ungültiger Spielzustand: pendingReaktion.blockadeKartenId existiert nicht im Ablagestapel.');
       }
+      /* ÄNDERUNG [04.08.2026]: O-1 — die angesagte Einfügeposition.
+         Altstände bringt `migriereSchlangenblockadePositionVorO1` auf das Ende
+         der Zielschlange; ab hier ist das Feld also Pflicht. Ein Index außerhalb
+         der Schlange würde beim Auflösen still an der falschen Stelle einfügen —
+         `Array.prototype.slice` wirft dabei nicht. */
+      const zielSchlange = zielSpieler.schlangen.find((s) => s.id === zielSchlangenId);
+      if (!istGueltigeEinfuegePosition(obj['einfügeIndex'], zielSchlange?.karten.length ?? 0)) {
+        throw new Error('Ungültiger Spielzustand: pendingReaktion.einfügeIndex ist ungültig.');
+      }
     }
     return;
   }
@@ -476,6 +486,41 @@ function migriereNachziehBerechtigteVorR2_3a(parsed: unknown): void {
   if (Number.isInteger(angreifer)) {
     obj['nachziehBerechtigteIndizes'] = [angreifer];
   }
+}
+
+/*
+ÄNDERUNG [04.08.2026]: O-1. `PendingSchlangenblockadeAbwehr` führt seit heute die
+angesagte Einfügeposition mit. Ein Spielstand, der **mitten in einer
+Blockade-Reaktionskette** gespeichert wurde, kennt das Feld nicht.
+
+Rekonstruierbar ist es exakt: Vor O-1 hängte die Engine die Karte ausnahmslos ans
+Ende der Zielschlange, und die Zielschlange steht im Spielstand. Das Ende ist
+`karten.length` — die Blockadekarte liegt zu diesem Zeitpunkt noch im
+Ablagestapel und ist deshalb nicht mitzuzählen.
+
+Nur ein Ende ist zu retten, kein Verhalten zu erfinden: Der migrierte Stand
+verhält sich exakt wie vor O-1.
+*/
+function migriereSchlangenblockadePositionVorO1(parsed: unknown): void {
+  if (!istObjekt(parsed)) return;
+  const obj = parsed as Record<string, unknown>;
+  const pending = obj['pendingReaktion'];
+  if (!istObjekt(pending)) return;
+  if (pending['typ'] !== 'SchlangenblockadeAbwehr') return;
+  if (Object.prototype.hasOwnProperty.call(pending, 'einfügeIndex')) return;
+
+  const spieler = obj['spieler'];
+  const zielIndex = pending['zielSpielerIndex'];
+  if (!Array.isArray(spieler) || !Number.isInteger(zielIndex)) return;
+  const zielSpieler = spieler[zielIndex as number];
+  if (!istObjekt(zielSpieler) || !Array.isArray(zielSpieler['schlangen'])) return;
+
+  const zielSchlange = (zielSpieler['schlangen'] as unknown[]).find(
+    (s) => istObjekt(s) && s['id'] === pending['zielSchlangenId'],
+  );
+  if (!istObjekt(zielSchlange) || !Array.isArray(zielSchlange['karten'])) return;
+
+  pending['einfügeIndex'] = (zielSchlange['karten'] as unknown[]).length;
 }
 
 /*

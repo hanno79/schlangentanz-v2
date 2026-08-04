@@ -66,6 +66,9 @@ function angriffsZustand({ zielHatSchutz }: { zielHatSchutz: boolean }) {
   return { zustand, angriff, farbenschutz };
 }
 
+/* ÄNDERUNG [04.08.2026]: O-1 — `einfügeIndex: 1` ist das Ende der einkartigen
+   Zielschlange, also das Verhalten von vor der Regel. Diese Datei prüft das
+   Nachziehen, nicht die Position. */
 function spieleBlockade(zustand: Spielzustand, angriffId: string): Spielzustand {
   return anwendeAktion(zustand, {
     typ: 'SchlangenblockadeSpielen',
@@ -73,6 +76,7 @@ function spieleBlockade(zustand: Spielzustand, angriffId: string): Spielzustand 
     handkartenId: angriffId,
     zielSpielerId: 'spieler-2',
     zielSchlangenId: 'schlange-spieler-2-1',
+    einfügeIndex: 1,
   });
 }
 

@@ -58,7 +58,13 @@ describe('Sonderkarten über Brettziele', () => {
     expect(screen.getByRole('region', { name: 'Spielverlauf' })).toHaveTextContent(/Schlangengrube/)
   })
 
-  it('blockiert eine gegnerische Schlange durch Klick auf sie', () => {
+  /* ÄNDERUNG [04.08.2026]: O-1. Vorher hieß dieser Test „blockiert eine
+     gegnerische Schlange durch Klick auf sie" und traf einen Knopf
+     „N. Schlange blockieren". Den gibt es nicht mehr: Die Blockade wählt seit
+     dem Signoff eine **Position**, und die gegnerische Schlange zeigt dafür
+     dieselben Einfügeplätze wie die eigene. Ein Klick legt Spieler, Schlange
+     und Position zugleich fest. */
+  it('blockiert eine gegnerische Schlange durch Klick auf einen Einfügeplatz', () => {
     const zustand = partie((z) => {
       z.spieler[0].hand = [sonderkarte('blockade', 'Schlangenblockade')]
       z.spieler[1].schlangen = [
@@ -70,7 +76,39 @@ describe('Sonderkarten über Brettziele', () => {
 
     waehleHandkarte(/Schlangenblockade/)
     const gegner = screen.getByRole('region', { name: /^Gegner/ })
-    fireEvent.click(within(gegner).getByRole('button', { name: /blockieren/ }))
+    // Zwei Karten heißt drei Plätze: davor, dazwischen, dahinter.
+    const plaetze = within(gegner).getAllByRole('button', { name: /Blockade/ })
+    expect(plaetze).toHaveLength(3)
+
+    // Der mittlere Platz zerreißt die Zweiergruppe — genau der neue Regelfall.
+    fireEvent.click(plaetze[1])
+
+    expect(screen.getByRole('region', { name: 'Spielverlauf' })).toHaveTextContent(/Schlangenblockade/)
+  })
+
+  /* ÄNDERUNG [04.08.2026]: O-1 — die eigene Schlange als Blockadeziel hatte
+     Engine-Deckung, aber keine am Brett. Genau dort saß der Fehler: Die
+     Einfügeplätze eigener Schlangen trugen weiter die Farbendieb-Beschriftung
+     („wo die Beute landen soll"), obwohl dort jetzt auch eine Blockade landen
+     kann. Gefunden im Altitude-Review (Gate 7). */
+  it('blockiert die eigene Schlange durch Klick auf einen Einfügeplatz', () => {
+    const zustand = partie((z) => {
+      z.spieler[0].hand = [sonderkarte('blockade', 'Schlangenblockade')]
+      z.spieler[0].schlangen = [
+        { id: 'meine-1', karten: [farbkarte('m1', 'Blau'), farbkarte('m2', 'Blau')], zustand: 'aktiv' },
+      ]
+      z.spieler[1].schlangen = []
+    })
+    aufBrettRoute()
+    render(<App initialZustand={zustand} />)
+
+    waehleHandkarte(/Schlangenblockade/)
+    const meine = screen.getByRole('region', { name: 'Deine Schlangen' })
+    // Die Beschriftung nennt die Blockade, nicht die Beute des Farbendiebs.
+    const plaetze = within(meine).getAllByRole('button', { name: /Hier landet die Blockade/ })
+    expect(plaetze).toHaveLength(3)
+
+    fireEvent.click(plaetze[1])
 
     expect(screen.getByRole('region', { name: 'Spielverlauf' })).toHaveTextContent(/Schlangenblockade/)
   })

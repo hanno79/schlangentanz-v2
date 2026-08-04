@@ -30,14 +30,26 @@ import type { SpielAktion } from '../engine'
 export type Brettziel =
   /** Die Plakette eines Gegners — der Gegner als Ganzes (Schlangengrube). */
   | { art: 'gegnerPlakette'; spielerId: string }
-  /** Eine ganze gegnerische Schlange (Schlangenblockade). */
-  | { art: 'gegnerSchlange'; spielerId: string; schlangenId: string }
   /** Eine ganze eigene Schlange (Farbenschutz). */
   | { art: 'eigeneSchlange'; schlangenId: string }
   /** Eine einzelne Karte in irgendeiner Schlange (Farbenfusion, Schlangenfrass, Farbendieb). */
   | { art: 'karte'; spielerId: string; schlangenId: string; kartenId: string }
-  /** Ein Platz zwischen zwei Karten einer eigenen Schlange (Farbendieb). */
-  | { art: 'einfuegeplatz'; schlangenId: string; index: number }
+  /**
+   * Ein Platz zwischen zwei Karten einer Schlange (Farbendieb, Schlangenblockade).
+   *
+   * ÄNDERUNG [04.08.2026]: O-1 — `spielerId` kam dazu. Bis dahin war dieses Ziel
+   * ausschließlich für **eigene** Schlangen gedacht (Farbendieb legt die Beute
+   * bei sich ab), und die Schlangen-ID allein genügte. Die Schlangenblockade
+   * darf ihre Karte seit dem Signoff an jede beliebige Stelle legen, auch beim
+   * Gegner — damit ist die Schlangen-ID allein nicht mehr eindeutig genug, um
+   * den Platz auf dem Brett zu finden.
+   *
+   * Ebenfalls mit O-1 entfallen: `gegnerSchlange`. Es gab dieses Ziel nur, weil
+   * die Blockade eine ganze Schlange traf und keine Position kannte. Jetzt trifft
+   * sie einen Platz, und ein Klick legt Spieler, Schlange und Position zugleich
+   * fest.
+   */
+  | { art: 'einfuegeplatz'; spielerId: string; schlangenId: string; index: number }
 
 export interface Zielangebot {
   /** Was jetzt anklickbar ist. Jedes Ziel genau einmal. */
@@ -51,14 +63,12 @@ export function zielSchluessel(ziel: Brettziel): string {
   switch (ziel.art) {
     case 'gegnerPlakette':
       return `plakette:${ziel.spielerId}`
-    case 'gegnerSchlange':
-      return `gegnerschlange:${ziel.spielerId}:${ziel.schlangenId}`
     case 'eigeneSchlange':
       return `eigeneschlange:${ziel.schlangenId}`
     case 'karte':
       return `karte:${ziel.spielerId}:${ziel.schlangenId}:${ziel.kartenId}`
     case 'einfuegeplatz':
-      return `einfuegeplatz:${ziel.schlangenId}:${ziel.index}`
+      return `einfuegeplatz:${ziel.spielerId}:${ziel.schlangenId}:${ziel.index}`
   }
 }
 
@@ -75,9 +85,18 @@ function zieleVon(aktion: SpielAktion): Brettziel[] {
     case 'SonderkarteSpielen':
       return [{ art: 'gegnerPlakette', spielerId: aktion.zielSpielerId }]
 
+    /* ÄNDERUNG [04.08.2026]: O-1 — ein Platz statt einer ganzen Schlange.
+       Ein Klick legt Zielspieler, Zielschlange und Einfügeposition zugleich
+       fest; ein vorgeschalteter Klick auf die Schlange wäre ein zweiter Schritt
+       ohne zusätzliche Entscheidung. */
     case 'SchlangenblockadeSpielen':
       return [
-        { art: 'gegnerSchlange', spielerId: aktion.zielSpielerId, schlangenId: aktion.zielSchlangenId },
+        {
+          art: 'einfuegeplatz',
+          spielerId: aktion.zielSpielerId,
+          schlangenId: aktion.zielSchlangenId,
+          index: aktion.einfügeIndex,
+        },
       ]
 
     case 'FarbenschutzSpielen':
@@ -101,7 +120,12 @@ function zieleVon(aktion: SpielAktion): Brettziel[] {
           schlangenId: aktion.zielSchlangenId,
           kartenId: aktion.zielKartenId,
         },
-        { art: 'einfuegeplatz', schlangenId: aktion.eigeneSchlangenId, index: aktion.einfügeIndex },
+        {
+          art: 'einfuegeplatz',
+          spielerId: aktion.spielerId,
+          schlangenId: aktion.eigeneSchlangenId,
+          index: aktion.einfügeIndex,
+        },
       ]
 
     case 'SchlangenfrassSpielen':

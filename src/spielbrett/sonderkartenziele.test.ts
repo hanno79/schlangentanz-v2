@@ -22,7 +22,7 @@ Ziele je Karte, aus `legalActions.ts` abgelesen:
 | Karte | Ziele in dieser Reihenfolge |
 |---|---|
 | Schlangengrube | ein Gegner |
-| Schlangenblockade | eine gegnerische Schlange — **keine Einfügeposition** |
+| Schlangenblockade | ein Einfügeplatz in **irgendeiner** Schlange (O-1, 04.08.2026) |
 | Farbenschutz | eine eigene Schlange |
 | Farbenfusion | eine Karte in einer eigenen Schlange |
 | Farbendieb | eine gegnerische Farbkarte, dann ein Einfügeplatz bei sich |
@@ -47,6 +47,13 @@ const BLOCKADE: SpielAktion = {
   handkartenId: 'blockade',
   zielSpielerId: 'gegner-a',
   zielSchlangenId: 's-a1',
+  einfügeIndex: 1,
+}
+const BLOCKADE_EIGEN: SpielAktion = {
+  ...BLOCKADE,
+  zielSpielerId: 'ich',
+  zielSchlangenId: 'meine-1',
+  einfügeIndex: 0,
 }
 
 const FRASS_EIGEN: SpielAktion = {
@@ -94,11 +101,29 @@ describe('ermittleZielangebot', () => {
     expect(angebot.offeneZiele).toEqual([])
   })
 
-  it('zielt bei der Schlangenblockade auf die ganze gegnerische Schlange', () => {
-    // Die Engine kennt für die Blockade keine Einfügeposition (legalActions.ts).
+  /* ÄNDERUNG [04.08.2026]: O-1 kehrt diese Zusicherung um. Bis zum Signoff
+     zielte die Blockade auf eine ganze gegnerische Schlange und kannte keine
+     Position; das Ziel `gegnerSchlange` ist mit dieser Regel entfallen. */
+  it('zielt bei der Schlangenblockade auf einen Einfügeplatz, mit einem Klick', () => {
     const angebot = ermittleZielangebot([BLOCKADE], [])
 
-    expect(angebot.offeneZiele).toEqual([{ art: 'gegnerSchlange', spielerId: 'gegner-a', schlangenId: 's-a1' }])
+    expect(angebot.offeneZiele).toEqual([
+      { art: 'einfuegeplatz', spielerId: 'gegner-a', schlangenId: 's-a1', index: 1 },
+    ])
+
+    const fertig = ermittleZielangebot([BLOCKADE], [
+      { art: 'einfuegeplatz', spielerId: 'gegner-a', schlangenId: 's-a1', index: 1 },
+    ])
+    expect(fertig.fertig).toBe(BLOCKADE)
+  })
+
+  it('bietet die Blockade auch in der eigenen Schlange an (O-1)', () => {
+    const angebot = ermittleZielangebot([BLOCKADE, BLOCKADE_EIGEN], [])
+
+    expect(angebot.offeneZiele).toEqual([
+      { art: 'einfuegeplatz', spielerId: 'gegner-a', schlangenId: 's-a1', index: 1 },
+      { art: 'einfuegeplatz', spielerId: 'ich', schlangenId: 'meine-1', index: 0 },
+    ])
   })
 
   it('nimmt beim Schlangenfrass eine einzelne eigene Karte sofort an', () => {
@@ -144,7 +169,7 @@ describe('ermittleZielangebot', () => {
     const danach = ermittleZielangebot([DIEB], [
       { art: 'karte', spielerId: 'gegner-a', schlangenId: 's-a1', kartenId: 'g1' },
     ])
-    expect(danach.offeneZiele).toEqual([{ art: 'einfuegeplatz', schlangenId: 'meine-1', index: 2 }])
+    expect(danach.offeneZiele).toEqual([{ art: 'einfuegeplatz', spielerId: 'ich', schlangenId: 'meine-1', index: 2 }])
     expect(danach.fertig).toBeNull()
   })
 
@@ -181,7 +206,7 @@ describe('zielSchluessel', () => {
   })
 
   it('gibt für dasselbe Ziel denselben Schlüssel', () => {
-    const ziel = { art: 'einfuegeplatz', schlangenId: 's', index: 3 } as const
+    const ziel = { art: 'einfuegeplatz', spielerId: 'ich', schlangenId: 's', index: 3 } as const
 
     expect(zielSchluessel(ziel)).toBe(zielSchluessel({ ...ziel }))
   })

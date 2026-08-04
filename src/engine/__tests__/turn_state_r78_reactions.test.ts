@@ -33,6 +33,10 @@ function erstelleZustandMitReaktionskarte(angriffsname: 'Schlangenblockade' | 'F
   return { zustand, angriff, farbenschutz };
 }
 
+/* ÄNDERUNG [04.08.2026]: O-1. Die Schlangenblockade trägt jetzt eine
+   Einfügeposition. Alle Aufrufe hier setzen `einfügeIndex: 1` — das Ende der
+   einkartigen Zielschlange und damit genau das Verhalten von vor der Regel.
+   Diese Tests prüfen die Reaktionskette, nicht die Position. */
 describe('Turn State Machine — R78 Reaktionen auf Farbenschutz', () => {
   it('setzt pendingReaktion wenn Schlangenblockade gegen Zielspieler mit Farbenschutz gespielt wird', () => {
     const { zustand, angriff, farbenschutz } = erstelleZustandMitReaktionskarte('Schlangenblockade');
@@ -43,6 +47,7 @@ describe('Turn State Machine — R78 Reaktionen auf Farbenschutz', () => {
       handkartenId: angriff.id,
       zielSpielerId: 'spieler-2',
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: 1,
     });
 
     expect(nachAngriff.pendingReaktion).toEqual({
@@ -51,6 +56,8 @@ describe('Turn State Machine — R78 Reaktionen auf Farbenschutz', () => {
       zielSpielerIndex: 1,
       zielSchlangenId: 'schlange-spieler-2-1',
       blockadeKartenId: angriff.id,
+      // O-1: Die Position wird bei der Ansage festgelegt und hier mitgeführt.
+      einfügeIndex: 1,
     });
     expect(nachAngriff.ablagestapel.map((karte) => karte.id)).toContain(angriff.id);
     expect(nachAngriff.spieler[1].hand.map((karte) => karte.id)).toContain(farbenschutz.id);
@@ -65,6 +72,7 @@ describe('Turn State Machine — R78 Reaktionen auf Farbenschutz', () => {
       handkartenId: angriff.id,
       zielSpielerId: 'spieler-2',
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: 1,
     });
 
     expect(() =>
@@ -86,6 +94,7 @@ describe('Turn State Machine — R78 Reaktionen auf Farbenschutz', () => {
       handkartenId: angriff.id,
       zielSpielerId: 'spieler-2',
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: 1,
     });
     const nachAbwehr = anwendeAktion(nachAngriff, {
       typ: 'SchlangenblockadeAbwehren',
@@ -109,6 +118,7 @@ describe('Turn State Machine — R78 Reaktionen auf Farbenschutz', () => {
       handkartenId: angriff.id,
       zielSpielerId: 'spieler-2',
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: 1,
     });
     const nachDurchlassen = anwendeAktion(nachAngriff, {
       typ: 'SchlangenblockadeDurchlassen',

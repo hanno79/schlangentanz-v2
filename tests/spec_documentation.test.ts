@@ -178,13 +178,18 @@ describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
     expect(spec).toContain('von **keiner** aktuell umgesetzten Karte gesetzt.')
     expect(spec).toContain('Insbesondere setzt ihn die Schlangenblockade nicht')
     expect(spec).toContain('Die Schlange bleibt\nerweiterbar.')
-    /* ÄNDERUNG [02.08.2026]: Die Einfügeposition gehört mit in die Zusage.
-       R3.5a behauptete zuerst, die Blockade zerreiße eine Farbgruppe — die
-       Engine hängt sie aber ans Ende, wo rechts nichts liegt. Ohne diesen
-       Assert könnte dieselbe Verwechslung zurückkommen. */
-    expect(spec).toContain('**ans Ende** der Zielschlange angehängt')
-    expect(spec).toContain('zerreißt deshalb **keine bestehende**')
-    expect(spec).toContain('Beides gleichzeitig zu tun wäre eine Regeländerung und bräuchte eine bestätigte')
+    /* ÄNDERUNG [04.08.2026]: O-1 dreht diese Zusage um.
+       Hier stand seit dem 02.08.2026, die Blockade hänge „**ans Ende**" und
+       zerreiße „**keine bestehende**" Farbgruppe. Das beschrieb die Engine
+       korrekt — bis der Signoff die freie Position einführte. Geprüft wird jetzt,
+       dass R3.5a die Umkehrung ausdrücklich benennt statt sie zu verschweigen:
+       Die alte Aussage darf nicht einfach verschwinden, sonst liest sich der
+       Abschnitt, als hätte er nie etwas anderes behauptet. */
+    expect(spec).toContain('**ÄNDERUNG 04.08.2026 (O-1):**')
+    expect(specFliesstext).toContain('zerreißt sie eine bestehende Farbgruppe, sobald sie mitten hineingelegt wird')
+    expect(spec).toContain('Nur der Sonderfall „ans Ende" verhält sich wie zuvor')
+    // Der Zustand `blockiert` bleibt trotzdem unberührt — das ist der Kern von R3.5a.
+    expect(spec).toContain('Die Blockade setzt trotzdem keinen Zustand `blockiert`')
 
     // Die Zusicherung selbst bleibt bestehen — R3.5a hebt sie nicht auf.
     expect(spec).toContain('Eine blockierte Schlange kann nicht erweitert werden.')
@@ -196,7 +201,9 @@ describe('GAME_SPEC R7 Sonderkarten-Regelstatus', () => {
     expect(spec).toContain('### R7.1 Umgesetzte Sonderkartenwirkungen')
     expect(spec).toContain('Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt')
     expect(spec).toContain('Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler')
-    expect(spec).toContain('Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange eines anderen Spielers und fügt ihr eine neutrale, nicht farbige Schlangenblockade-Karte hinzu')
+    /* ÄNDERUNG [04.08.2026]: O-1 — „eines anderen Spielers" und „ans Ende" sind weg. */
+    expect(spec).toContain('Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange **und eine Einfügeposition darin**')
+    expect(spec).toContain('Zielschlange darf **jede** Schlange sein, auch eine eigene.')
     expect(spec).toContain('Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.')
     expect(spec).toContain('Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden')
     expect(spec).toContain('Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).')
@@ -355,6 +362,33 @@ describe('GAME_SPEC R8 Wertung', () => {
     // Der Zeitpunkt ist die eigentliche Zusicherung.
     expect(specFliesstext).toContain('erst **nach** Abhandlung aller Effekte')
     expect(specFliesstext).toContain('**Nicht im Endspurt:**')
+  })
+
+  /* ÄNDERUNG [04.08.2026]: O-1. Der Signoff steht im Wortlaut in der Spec, und
+     dieser Test hält genau das fest — nicht bloß, dass es die Regel gibt.
+
+     Der Grund ist die teuerste Lehre dieses Projekts: Eine Regel, die aus einer
+     Zusammenfassung rekonstruiert wird, verliert Sätze. Ein `WebFetch`-Abriss
+     der Normquelle hatte am 03.08.2026 eine Gleichstandsregel verschluckt. Der
+     Signoff ist die Normquelle für O-1; er gehört wörtlich abgesichert. */
+  it('hält den O-1-Signoff im Wortlaut fest', () => {
+    expect(spec).toContain('#### R7.1a Freie Einfügeposition der Schlangenblockade (ÄNDERUNG 04.08.2026, O-1)')
+    expect(specFliesstext).toContain(
+      'Die Blockade darf an jeder beliebigen Stelle platziert werden — sowohl in der',
+    )
+    expect(specFliesstext).toContain('als auch an > beliebiger Stelle beim Gegner')
+    // Der letzte Satz trägt die Zusicherung, dass die Position bei der Ansage feststeht.
+    expect(specFliesstext).toContain('darf sich > dann nicht mehr umentscheiden und den anderen Spieler nehmen.')
+
+    // Die vier Folgerungen, die die Engine umsetzt.
+    expect(specFliesstext).toContain('**Jede Schlange ist ein zulässiges Ziel**, auch eine eigene.')
+    expect(specFliesstext).toContain('**Die Position wird bei der Ansage festgelegt**')
+    expect(specFliesstext).toContain('**Auf die eigene Schlange gibt es keine Abwehr.**')
+    // Die Punktewirkung ist der Kern der Änderung, nicht ein Nebeneffekt.
+    expect(specFliesstext).toContain('zerreißt die Blockade sie deshalb sofort')
+
+    // O-1 steht nicht mehr als offene Frage da.
+    expect(spec).toContain('**entschieden und umgesetzt** (Signoff 03.08.2026, Umsetzung 04.08.2026)')
   })
 
   it('schreibt den digitalen Umfang fest und schließt den Vielfaltbonus aus', () => {

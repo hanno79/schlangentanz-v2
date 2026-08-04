@@ -161,32 +161,77 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
     setZielauswahl({ karteId: ausgewaehlteKarteId, ziele: naechste })
   }
 
+  /* ÄNDERUNG [04.08.2026, O-1]: Was in einen Einfügeplatz gelegt wird.
+
+     Seit O-1 zeigen zwei Karten auf dieselbe Zielart: Der Farbendieb legt dort
+     seine Beute ab, die Schlangenblockade ihre Sperrkarte. Der Unterschied ist
+     **kein** Merkmal des Ziels, sondern der gewählten Handkarte — deshalb wird
+     er auch dort abgelesen und nicht aus der Zahl der bisherigen Klicks
+     erschlossen. Ein erster Entwurf tat genau das und stimmte nur zufällig:
+     Er hing daran, dass die beiden Karten sich in der Zahl der Klicks
+     unterscheiden. Die dritte Karte mit einem Einfügeplatz hätte ihn gekippt. */
+  const gewaehlteHandkarte = aktiver.hand.find((karte) => karte.id === ausgewaehlteKarteId) ?? null
+  const einzufuegendes =
+    gewaehlteHandkarte?.typ === 'Sonderkarte' && gewaehlteHandkarte.name === 'Schlangenblockade'
+      ? 'die Blockade'
+      : 'die Beute'
+
   /**
    * Was der nächste Klick bewirken soll.
    *
    * Ohne diesen Satz leuchten plötzlich Karten auf, und der Spieler rät, warum.
-   * Der Text folgt der Art des angebotenen Ziels, nicht dem Kartennamen: Es
-   * gibt weniger Zielarten als Karten, und die Zielart ist genau das, was der
-   * Klick treffen soll.
+   * Der Text folgt der Art des angebotenen Ziels: Es gibt weniger Zielarten als
+   * Karten, und die Zielart ist genau das, was der Klick treffen soll. Einzige
+   * Ausnahme ist seit O-1 der Einfügeplatz — welche Karte dort landet, steht
+   * dem Ziel nicht an; siehe `einzufuegendes` oben.
    */
   const zielHinweis =
     zielangebot.offeneZiele.length === 0
       ? null
       : ({
           gegnerPlakette: 'Jetzt den Gegner anklicken, den es treffen soll.',
-          gegnerSchlange: 'Jetzt die gegnerische Schlange anklicken.',
           eigeneSchlange: 'Jetzt die eigene Schlange anklicken.',
           karte:
             gewaehlteZiele.length === 0
               ? 'Jetzt eine leuchtende Karte anklicken.'
               : 'Jetzt die zweite Karte anklicken.',
-          einfuegeplatz: 'Jetzt den Platz anklicken, an dem die Beute landen soll.',
+          einfuegeplatz: `Jetzt den Platz anklicken, an dem ${einzufuegendes} landen soll.`,
         }[zielangebot.offeneZiele[0].art] ?? null)
 
   /** Ist dieses Ziel gerade anklickbar? */
   const istOffen = (ziel: Brettziel) => offeneSchluessel.has(zielSchluessel(ziel))
   /** Wurde es im laufenden Mehrschritt schon gewählt? */
   const istGewaehlt = (ziel: Brettziel) => gewaehlteSchluessel.has(zielSchluessel(ziel))
+
+  /**
+   * Ein Einfügeplatz zwischen zwei Karten — der „＋"-Knopf.
+   *
+   * ÄNDERUNG [04.08.2026, O-1]: Einmal statt dreimal. Vor O-1 gab es Plätze nur
+   * an eigenen Schlangen (Farbendieb), und die zwei Vorkommen dort standen
+   * inline. Die Blockade brachte ein drittes an den Gegnerschlangen mit — und
+   * die drei Kopien waren sich schon bei der Beschriftung uneins.
+   *
+   * Die Beschriftung nennt seither immer die Schlange, zu der der Platz gehört.
+   * Ohne das sind bei mehreren eigenen Schlangen alle Knöpfe im Fokus
+   * ununterscheidbar („Hier einfügen, vor Karte 1") — gefunden im Codex-Review
+   * (Gate 7) gegen Regel 6 der `docs/SPIELBRETT_SPEC.md`.
+   *
+   * Plätze erscheinen nur, wenn die gewählte Handkarte sie anbietet — sonst
+   * stünden bei jeder Schlange n+1 Knöpfe ohne Zweck.
+   */
+  const einfuegeplatzKnopf = (ziel: Brettziel, wo: string) =>
+    istOffen(ziel) ? (
+      <li key={zielSchluessel(ziel)}>
+        <button
+          type="button"
+          className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
+          aria-label={wo}
+          onClick={() => zielAnklicken(ziel)}
+        >
+          ＋
+        </button>
+      </li>
+    ) : null
 
   /* Pflichtabwurf-Aktionen entstehen nur, wenn sonst gar nichts legal ist —
      die Engine garantiert das. Deshalb ist der Handmodus eindeutig. */
@@ -335,6 +380,7 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
           })
           const platzZiel = (position: number): Brettziel => ({
             art: 'einfuegeplatz',
+            spielerId: aktiver.id,
             schlangenId: schlange.id,
             index: position,
           })
@@ -372,21 +418,10 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
               <ul className="brett-hand__karten">
                 {schlange.karten.map((karte, kartenIndex) => (
                   <Fragment key={karte.id}>
-                    {/* Einfügeplätze erscheinen nur, wenn eine Karte sie
-                        anbietet (Farbendieb) — sonst stünden hier bei jeder
-                        Schlange n+1 Knöpfe ohne Zweck. */}
-                    {istOffen(platzZiel(kartenIndex)) ? (
-                      <li>
-                        <button
-                          type="button"
-                          className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
-                          aria-label={`Hier einfügen, vor Karte ${kartenIndex + 1}`}
-                          onClick={() => zielAnklicken(platzZiel(kartenIndex))}
-                        >
-                          ＋
-                        </button>
-                      </li>
-                    ) : null}
+                    {einfuegeplatzKnopf(
+                      platzZiel(kartenIndex),
+                      `Hier landet ${einzufuegendes}, vor Karte ${kartenIndex + 1} deiner ${index + 1}. Schlange`,
+                    )}
                     <Kartenmarke
                       karte={karte}
                       platz={kartenIndex + 1}
@@ -397,18 +432,10 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
                     />
                   </Fragment>
                 ))}
-                {istOffen(platzZiel(schlange.karten.length)) ? (
-                  <li>
-                    <button
-                      type="button"
-                      className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
-                      aria-label="Hier einfügen, ans Ende"
-                      onClick={() => zielAnklicken(platzZiel(schlange.karten.length))}
-                    >
-                      ＋
-                    </button>
-                  </li>
-                ) : null}
+                {einfuegeplatzKnopf(
+                  platzZiel(schlange.karten.length),
+                  `Hier landet ${einzufuegendes}, ans Ende deiner ${index + 1}. Schlange`,
+                )}
               </ul>
               <button
                 type="button"
@@ -495,46 +522,54 @@ export default function Spielbrett({ partie }: SpielbrettProps) {
                     <span className="brett-leer">noch keine Schlange</span>
                   ) : (
                     spieler.schlangen.map((schlange, schlangenIndex) => {
-                      const schlangeZiel: Brettziel = {
-                        art: 'gegnerSchlange',
-                        spielerId: spieler.id,
-                        schlangenId: schlange.id,
-                      }
+                      /* ÄNDERUNG [04.08.2026]: O-1 — Einfügeplätze auch beim
+                         Gegner. Die Blockade traf vorher eine ganze Schlange und
+                         kannte keine Position; jetzt trifft sie einen Platz, und
+                         ein Klick legt Spieler, Schlange und Position zugleich
+                         fest. Das Ziel `gegnerSchlange` ist damit entfallen. */
                       const karteZiel = (kartenId: string): Brettziel => ({
                         art: 'karte',
                         spielerId: spieler.id,
                         schlangenId: schlange.id,
                         kartenId,
                       })
+                      const platzZiel = (position: number): Brettziel => ({
+                        art: 'einfuegeplatz',
+                        spielerId: spieler.id,
+                        schlangenId: schlange.id,
+                        index: position,
+                      })
+
                       return (
                         <Fragment key={schlange.id}>
-                          {/* Die ganze gegnerische Schlange als Ziel — Schlangenblockade.
-                              Die Engine kennt dafür keine Einfügeposition. */}
-                          {istOffen(schlangeZiel) ? (
-                            <button
-                              type="button"
-                              className="brett-anlegeplatz brett-anlegeplatz--ziel brett-anlegeplatz--schmal"
-                              onClick={() => zielAnklicken(schlangeZiel)}
-                            >
-                              {schlangenIndex + 1}. Schlange blockieren
-                            </button>
-                          ) : null}
+                          <span className="brett-schlange__marke">
+                            {schlangenIndex + 1}. Schlange
+                          </span>
                           <ul className="brett-hand__karten">
                             {schlange.karten.map((karte, kartenIndex) => (
-                              <Kartenmarke
-                                key={karte.id}
-                                karte={karte}
-                                platz={kartenIndex + 1}
-                                vonWievielen={schlange.karten.length}
-                                gewaehlt={istGewaehlt(karteZiel(karte.id))}
-                                variante={istOffen(karteZiel(karte.id)) ? 'ziel' : 'auswahl'}
-                                onWaehlen={
-                                  istOffen(karteZiel(karte.id))
-                                    ? () => zielAnklicken(karteZiel(karte.id))
-                                    : undefined
-                                }
-                              />
+                              <Fragment key={karte.id}>
+                                {einfuegeplatzKnopf(
+                                  platzZiel(kartenIndex),
+                                  `Hier landet ${einzufuegendes}, vor Karte ${kartenIndex + 1} der ${schlangenIndex + 1}. Schlange von ${spieler.name}`,
+                                )}
+                                <Kartenmarke
+                                  karte={karte}
+                                  platz={kartenIndex + 1}
+                                  vonWievielen={schlange.karten.length}
+                                  gewaehlt={istGewaehlt(karteZiel(karte.id))}
+                                  variante={istOffen(karteZiel(karte.id)) ? 'ziel' : 'auswahl'}
+                                  onWaehlen={
+                                    istOffen(karteZiel(karte.id))
+                                      ? () => zielAnklicken(karteZiel(karte.id))
+                                      : undefined
+                                  }
+                                />
+                              </Fragment>
                             ))}
+                            {einfuegeplatzKnopf(
+                              platzZiel(schlange.karten.length),
+                              `Hier landet ${einzufuegendes}, ans Ende der ${schlangenIndex + 1}. Schlange von ${spieler.name}`,
+                            )}
                           </ul>
                         </Fragment>
                       )

@@ -157,17 +157,15 @@ die Abnahmecheckliste des Bretts.
 | eigene Schlange | `FarbenschutzSpielen`, `SchlangenhaeutungSpielen` |
 | Kartenpaar in eigener Schlange | `FarbenfusionSpielen` (max. 1×/Zug) |
 | einzelne eigene Karte | `SchlangenfrassSpielen` (1 Ziel) |
-| gegnerische Schlange | `SchlangenblockadeSpielen` |
 | gegnerische Karte | `FarbendiebSpielen` (Beute), `SchlangenfrassSpielen` (2 Ziele, **2-Schritt-Auswahl mit Reset**) |
-| Einfügeplatz 0..n in eigener Schlange | `FarbendiebSpielen` |
+| Einfügeplatz 0..n in **jeder** Schlange | `FarbendiebSpielen` (nur eigene), `SchlangenblockadeSpielen` (eigene *und* gegnerische, O-1 04.08.2026) |
 | Gegnerplakette | `SonderkarteSpielen` (Schlangengrube) |
 | Verdoppler-Auslöser | `VerdopplerSpielen` (nur bei `gespielteKarten === 0`) |
 | **freier Reihenfolge-Editor** | `SchlangenhaeutungSpielen` — nicht zwei Presets |
 | Gegnerplakette anklicken | `SonderkarteSpielen` (Schlangengrube) |
-| gegnerische Schlange anklicken | `SchlangenblockadeSpielen` — **ohne** Einfügeposition |
 | gegnerische Karte anklicken | `FarbendiebSpielen` (Beute), `SchlangenfrassSpielen` (zwei Ziele) |
 | eigene Karte anklicken | `FarbenfusionSpielen`, `SchlangenfrassSpielen` (ein Ziel) |
-| Einfügeplatz in eigener Schlange | `FarbendiebSpielen` |
+| Einfügeplatz in **jeder** Schlange | `FarbendiebSpielen` (eigene), `SchlangenblockadeSpielen` (alle, ein Klick legt Spieler, Schlange und Position fest) |
 | Reaktionsdialog | `…Abwehren` / `…Durchlassen`, inkl. Zustand „kein Farbenschutz" |
 | Pflicht-Abwurf **mit Kartenwahl** | `PflichtAbwurf` |
 | Überhand-Abwurf: n-aus-m mit Bestätigung | Zugabschluss |

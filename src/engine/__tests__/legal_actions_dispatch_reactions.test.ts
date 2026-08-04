@@ -140,7 +140,13 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
     ]);
   });
 
-  it('verbietet Schlangenblockade auf die eigene Schlange bereits in der Aktionsprüfung', () => {
+  /* ÄNDERUNG [04.08.2026]: O-1 kehrt diese Zusicherung um.
+     Bis zum Signoff vom 03.08.2026 stand hier „verbietet Schlangenblockade auf
+     die eigene Schlange". Der Signoff nennt die eigene Schlange ausdrücklich als
+     zulässiges Ziel — „was aber natürlich nicht so viel Sinn macht". Der Test
+     wurde deshalb umgedreht, nicht gelöscht: Wer die Sperre zurückholen will,
+     kommt hier vorbei und muss vorher GAME_SPEC R7.1a anfassen. */
+  it('erlaubt Schlangenblockade auf die eigene Schlange (O-1)', () => {
     const { zustand, schlangenblockade } = zustandMitSchlangenblockadeAufDerHand();
 
     expect(
@@ -150,16 +156,29 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
         handkartenId: schlangenblockade.id,
         zielSpielerId: 'spieler-1',
         zielSchlangenId: 'schlange-spieler-1-1',
+        einfügeIndex: 0,
       }),
-    ).toEqual({
-      erlaubt: false,
-      grund: 'Schlangenblockade kann nur auf eine Schlange eines anderen Spielers gelegt werden.',
-    });
+    ).toEqual({ erlaubt: true });
+  });
+
+  it('weist eine Einfügeposition außerhalb der Zielschlange zurück (O-1)', () => {
+    const { zustand, schlangenblockade } = zustandMitSchlangenblockadeAufDerHand();
+
+    expect(
+      pruefeAktion(zustand, {
+        typ: 'SchlangenblockadeSpielen',
+        spielerId: 'spieler-1',
+        handkartenId: schlangenblockade.id,
+        zielSpielerId: 'spieler-2',
+        zielSchlangenId: 'schlange-spieler-2-1',
+        einfügeIndex: 99,
+      }),
+    ).toEqual({ erlaubt: false, grund: 'Die gewählte Einfügeposition ist ungültig.' });
   });
 
   it('verbietet SchlangenblockadeAbwehren durch falschen Spieler', () => {
     const { zustand, schlangenblockade } = zustandMitSchlangenblockadeAufDerHand();
-    zustand.pendingReaktion = { typ: 'SchlangenblockadeAbwehr', angreifenderSpielerIndex: 0, zielSpielerIndex: 1, zielSchlangenId: 'schlange-spieler-2-1', blockadeKartenId: 'blockade-1' };
+    zustand.pendingReaktion = { typ: 'SchlangenblockadeAbwehr', angreifenderSpielerIndex: 0, zielSpielerIndex: 1, zielSchlangenId: 'schlange-spieler-2-1', blockadeKartenId: 'blockade-1', einfügeIndex: 0 };
 
     expect(
       pruefeAktion(zustand, {
@@ -279,6 +298,7 @@ describe('Legal Action Anwendung — R17 Engine-Dispatch für UI-Aktionen', () =
       zielSpielerIndex: 1,
       zielSchlangenId: 'schlange-spieler-2-1',
       blockadeKartenId: 'blockade-2',
+      einfügeIndex: 0,
     };
 
     const reaktionen = ermittleReaktionsAktionen(zustand);

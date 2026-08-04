@@ -9,24 +9,37 @@ Beschreibung: Legal-Action-Validator und -Enumerator für erlaubte Schlangentanz
 nicht alle paar Monate neu aufgeworfen wird.
 
 Die Enumeration bildet Kreuzprodukte: Schlangenfrass über alle Zielpaare,
-Farbendieb über gegnerische Farbkarten × eigene Schlangen × Einfügepositionen.
-Jeder Kandidat läuft zusätzlich durch `pruefeAktion`. Gemessen am 30.07.2026 mit
-vier Spielern, je zwei vollen Schlangen und einer Hand aus lauter zielsuchenden
-Sonderkarten:
+Farbendieb über gegnerische Farbkarten × eigene Schlangen × Einfügepositionen,
+seit O-1 auch Schlangenblockade über alle Schlangen × Einfügepositionen. Jeder
+Kandidat läuft zusätzlich durch `pruefeAktion`. Gemessen mit vier Spielern, je
+zwei vollen Schlangen und einer Hand aus lauter zielsuchenden Sonderkarten:
 
-  Karten je Schlange | Karten im Spiel | Aktionen | ermittleLegaleAktionen
-  -------------------|-----------------|----------|-----------------------
-   6                 |  73             |  1 170   | 2,6 ms
-   9                 |  97             |  2 553   | 6,2 ms
-  11                 | 113             |  3 775   | 5,5 ms
-  15                 | 145             |  6 939   | 8,4 ms
+**Die Messtabelle steht in `src/engine/__tests__/legal_actions_umfang.test.ts`**,
+direkt neben dem Guard, der sie absichert — hier stand sie bis zum 04.08.2026 ein
+zweites Mal, und zwei Tabellen bedeuten zwei Stellen, die nach jeder Messung
+nachzuziehen sind. Kurzfassung: Am Decklimit (11 Karten je Schlange, 113 Karten
+im Spiel) sind es **3 865** Aktionen.
+
+ÄNDERUNG [04.08.2026]: O-1 ist genau die „weitere Kreuzprodukt-Dimension", vor der
+der Absatz unten warnt — die Blockade kannte vorher keine Position und traf nur
+fremde Schlangen. Der Zuwachs wurde **gemessen, nicht geschätzt**: Am Decklimit
+kostet sie 90 Aktionen mehr — 96 Blockade-Kandidaten statt 6, weil aus
+6 fremden Schlangen 8 Schlangen × 12 Positionen werden. Die Obergrenze von
+6 000 in `legal_actions_umfang.test.ts` bleibt damit unangetastet und wurde
+**nicht** angehoben.
 
 Der Ausschlag nach oben ist durch das Kartenmaterial begrenzt: **das Spieldeck hat
 114 Karten**, Board und Hände zusammen können das nie überschreiten. Die Zeile mit
 11 Karten je Schlange liegt bereits am Limit; die Zeile mit 15 beschreibt einen
-Zustand, den es im Spiel nicht geben kann. Der reale Worst Case kostet also rund
-6 ms und wird pro Zustandsänderung einmal berechnet (memoisiert in
-`useLegaleAktionenNachTyp`), nicht pro Render.
+Zustand, den es im Spiel nicht geben kann — sie steht nur da, um die Steigung zu
+zeigen, und liegt als einzige über der Obergrenze.
+
+Die Laufzeit wurde am 04.08.2026 **neu gemessen**, nicht aus der Messung vom
+30.07. übernommen: Am Decklimit kostet die Enumeration jetzt rund **2,9 ms**
+(Mittel aus 20 Läufen, warm). Der ältere Wert von 6 ms stammt von einer anderen
+Messung derselben Fixture; entscheidend ist, dass die zusätzliche Dimension die
+Größenordnung nicht verschiebt. Berechnet wird einmal pro Zustandsänderung
+(memoisiert in `useLegaleAktionenNachTyp`), nicht pro Render.
 
 Deshalb bleibt die Enumeration wie sie ist. Wer sie dennoch anfassen will, sollte
 zuerst `src/engine/__tests__/legal_actions_umfang.test.ts` lesen — dort steht die
@@ -35,12 +48,12 @@ Kreuzprodukt-Dimension hinzukommt.
 
 Nebenbefund: `ermittleQuestZugHinweise` führt pro Kandidat ein volles
 `anwendeAktion` aus. Das ist nur deshalb billig, weil es ausschließlich
-Schlangenbau-Aktionen betrachtet (12 von 3 775). Wer diesen Filter aufweicht, macht
+Schlangenbau-Aktionen betrachtet (12 von 3 865). Wer diesen Filter aufweicht, macht
 es zum teuersten Posten der App.
 */
 
 import type { Spielzustand } from './types';
-import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG } from './constants';
+import { MAX_SCHLANGEN_PRO_SPIELER, MAX_KARTEN_PRO_ZUG, istGueltigeEinfuegePosition } from './constants';
 import { zieheOffeneNachziehungen, merkeNachziehBerechtigt, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenfrass, spieleSchlangenhaeutung, werfeKarteMangelsSpielbarerAktionAb, istFarbenschutzkarte, loesePendingReaktionAbwehr, loesePendingReaktionDurchlassen } from './turnState';
 
 export type AktionErgebnis = { erlaubt: true } | { erlaubt: false; grund: string };
@@ -82,6 +95,10 @@ export interface SchlangenblockadeSpielenAktion {
   handkartenId: string;
   zielSpielerId: string;
   zielSchlangenId: string;
+  /* ÄNDERUNG [04.08.2026]: O-1 — freie Einfügeposition, wie beim Farbendieb.
+     Gültig sind `0` bis `karten.length` (letzterer hängt hinten an, das bisherige
+     Verhalten). Siehe GAME_SPEC R7.1a. */
+  einfügeIndex: number;
 }
 
 export interface SchlangenblockadeAbwehrenAktion {
@@ -308,10 +325,12 @@ function hatLegaleSchlangenblockadeAktionen(zustand: Spielzustand): boolean {
     return false;
   }
 
-  return zustand.spieler.some((spieler, index) => {
-    if (index === zustand.aktiverSpielerIndex) return false;
-    return spieler.schlangen.length > 0;
-  });
+  /* ÄNDERUNG [04.08.2026]: O-1 — auch die eigenen Schlangen zählen.
+     Diese Vorprüfung entscheidet mit, ob der Pflichtabwurf greift (R20). Bliebe
+     sie bei „nur fremde", hielte die Engine einen Spieler für handlungsunfähig,
+     der nach der neuen Regel sehr wohl noch legal spielen kann — er müsste
+     abwerfen, obwohl er darf. */
+  return zustand.spieler.some((spieler) => spieler.schlangen.length > 0);
 }
 
 function hatLegaleSchlangengrubeAktionen(zustand: Spielzustand): boolean {
@@ -589,14 +608,20 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
       return verboten('Der ausgewählte Zielspieler ist ungültig.');
     }
 
-    // ÄNDERUNG 03.06.2026: Schlangenblockade darf nur auf fremde Schlangen gelegt werden.
-    if (zielSpielerIndex === zustand.aktiverSpielerIndex) {
-      return verboten('Schlangenblockade kann nur auf eine Schlange eines anderen Spielers gelegt werden.');
-    }
+    /* ÄNDERUNG [04.08.2026]: O-1 — die eigene Schlange ist wieder erlaubt.
+       Bis 03.08.2026 stand hier das Gegenteil („nur auf fremde Schlangen").
+       Der Signoff nennt die eigene Schlange ausdrücklich als zulässiges Ziel,
+       „was aber natürlich nicht so viel Sinn macht". Genau deshalb bleibt sie
+       eine legale, aber selten sinnvolle Aktion und keine Sonderbehandlung. */
     const zielSpieler = zustand.spieler[zielSpielerIndex];
     const zielSchlange = zielSpieler.schlangen.find((s) => s.id === aktion.zielSchlangenId);
     if (!zielSchlange) {
       return verboten('Die ausgewählte Zielschlange ist ungültig.');
+    }
+    /* Die Einfügeposition wird wie beim Farbendieb als Lücke gezählt: `0` ist
+       ganz vorn, `karten.length` ganz hinten. */
+    if (!istGueltigeEinfuegePosition(aktion.einfügeIndex, zielSchlange.karten.length)) {
+      return verboten('Die gewählte Einfügeposition ist ungültig.');
     }
     return { erlaubt: true };
   }
@@ -769,7 +794,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktion
     if (!eigeneSchlange) {
       return verboten('Die ausgewählte eigene Schlange ist ungültig.');
     }
-    if (aktion.einfügeIndex < 0 || aktion.einfügeIndex > eigeneSchlange.karten.length) {
+    if (!istGueltigeEinfuegePosition(aktion.einfügeIndex, eigeneSchlange.karten.length)) {
       return verboten('Die gewählte Einfügeposition ist ungültig.');
     }
     return { erlaubt: true };
@@ -932,18 +957,25 @@ export function ermittleLegaleAktionen(zustand: Spielzustand): SpielAktion[] {
   const schlangenblockaden = aktiverSpieler.hand.filter(
     (karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenblockade',
   );
+  /* ÄNDERUNG [04.08.2026]: O-1 — dritte Dimension, die Einfügeposition.
+     Die Schleife über alle Spieler stand schon hier; die Beschränkung auf fremde
+     Schlangen saß in `pruefeAktion` und ist mit dem Signoff entfallen.
+     Zuwachs gemessen, nicht geschätzt — siehe die Messtabelle im Dateikopf. */
   for (const karte of schlangenblockaden) {
     for (const spieler of zustand.spieler) {
       for (const schlange of spieler.schlangen) {
-        const kandidat: SchlangenblockadeSpielenAktion = {
-          typ: 'SchlangenblockadeSpielen',
-          spielerId: aktiverSpieler.id,
-          handkartenId: karte.id,
-          zielSpielerId: spieler.id,
-          zielSchlangenId: schlange.id,
-        };
-        if (pruefeAktion(zustand, kandidat).erlaubt) {
-          aktionen.push(kandidat);
+        for (let einfügeIndex = 0; einfügeIndex <= schlange.karten.length; einfügeIndex += 1) {
+          const kandidat: SchlangenblockadeSpielenAktion = {
+            typ: 'SchlangenblockadeSpielen',
+            spielerId: aktiverSpieler.id,
+            handkartenId: karte.id,
+            zielSpielerId: spieler.id,
+            zielSchlangenId: schlange.id,
+            einfügeIndex,
+          };
+          if (pruefeAktion(zustand, kandidat).erlaubt) {
+            aktionen.push(kandidat);
+          }
         }
       }
     }
@@ -1181,6 +1213,7 @@ function fuehreAktionAus(zustand: Spielzustand, aktion: SpielAktion): Spielzusta
         kartenId: aktion.handkartenId,
         zielSpielerIndex: findeSpielerIndex(zustand, aktion.zielSpielerId),
         zielSchlangenId: aktion.zielSchlangenId,
+        einfügeIndex: aktion.einfügeIndex,
       });
     case 'VerdopplerSpielen':
       return spieleVerdoppler(zustand, { kartenId: aktion.handkartenId });

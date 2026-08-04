@@ -4,7 +4,15 @@ Datum: 03.06.2026
 Version: 1.2
 Beschreibung: Regressionstest für die Schlangenblockade-Sonderkarte im Engine-Flow.
 # ÄNDERUNG 03.06.2026: Neuer Test für das Anlegen der Schlangenblockade als neutrale Karte auf einer Zielschlange.
-# ÄNDERUNG 03.06.2026: Zusätzlicher Regressionstest stellt sicher, dass Schlangenblockade nicht auf der eigenen Schlange gespielt werden darf.
+# ÄNDERUNG 03.06.2026: Zusätzlicher Regressionstest stellte sicher, dass Schlangenblockade nicht auf der eigenen Schlange gespielt werden darf — **aufgehoben durch O-1**, siehe unten.
+
+ÄNDERUNG [04.08.2026]: O-1. Alle Aufrufe hier setzen `einfügeIndex` auf die
+Länge der Zielschlange — das Ende, und damit genau das Verhalten von vor der
+Regel. Die Blockade darf seit dem Signoff vom 03.08.2026 an
+jeder beliebigen Stelle liegen, auch in der eigenen Schlange. Zwei Zusicherungen
+dieser Datei sagten das Gegenteil und sind nach `schlangenblockade_position.test.ts`
+gewandert, wo sie umgedreht stehen. Was hier bleibt, ist das Verhalten, das O-1
+**nicht** ändert: Ein Index am Ende hängt hinten an wie eh und je.
 */
 
 import { describe, expect, it } from 'vitest';
@@ -47,6 +55,7 @@ describe('Schlangenblockade', () => {
       kartenId: schlangenblockade.id,
       zielSpielerIndex: 1,
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: zustand.spieler[1].schlangen[0].karten.length,
     });
 
     expect(aktualisiert.pendingReaktion).toBeNull();
@@ -66,12 +75,14 @@ describe('Schlangenblockade', () => {
    * mit einer bestehenden Farbgruppe macht, und GAME_SPEC R3.5a behauptete
    * zwischenzeitlich, sie zerreiße eine.
    *
-   * Tut sie nicht: Sie hängt hinten an, und rechts von ihr liegt nichts. Die
-   * Dreiergruppe bleibt vollständig und zählt weiter. Wer das ändern will —
-   * etwa auf eine wählbare Einfügeposition — bricht hier und muss vorher
-   * GAME_SPEC anfassen.
+   * ÄNDERUNG [04.08.2026]: O-1 hat genau das getan, was hier als Bedingung
+   * stand („wer das ändern will, bricht hier"). Die Karte kennt jetzt eine
+   * wählbare Position. Dieser Test prüft seither den **Sonderfall Ende**: Dort
+   * liegt rechts nichts, die Dreiergruppe bleibt vollständig und zählt weiter.
+   * Der neue Regelfall — mittendrin, Gruppe zerrissen — steht in
+   * `schlangenblockade_position.test.ts`.
    */
-  it('hängt hinten an und zerreißt damit keine bestehende Farbgruppe', () => {
+  it('zerreißt bei einem Index am Ende keine bestehende Farbgruppe', () => {
     const zustand = zustandMitSchlangenblockade();
     const schlangenblockade = zustand.spieler[0].hand[0];
     zustand.spieler[1].schlangen = [
@@ -83,6 +94,7 @@ describe('Schlangenblockade', () => {
       kartenId: schlangenblockade.id,
       zielSpielerIndex: 1,
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: zustand.spieler[1].schlangen[0].karten.length,
     });
 
     const zielschlange = aktualisiert.spieler[1].schlangen[0];
@@ -104,6 +116,7 @@ describe('Schlangenblockade', () => {
       kartenId: schlangenblockade.id,
       zielSpielerIndex: 1,
       zielSchlangenId: 'schlange-spieler-2-1',
+      einfügeIndex: zustand.spieler[1].schlangen[0].karten.length,
     });
 
     const roundtrip = deserialisiere(serialisiere(aktualisiert));
@@ -113,17 +126,22 @@ describe('Schlangenblockade', () => {
     expect(roundtrip.ablagestapel.map((karte) => karte.id)).not.toContain(schlangenblockade.id);
   });
 
-  it('verbietet Schlangenblockade auf der eigenen Schlange', () => {
+  /* ÄNDERUNG [04.08.2026]: O-1 hebt diese Sperre auf. Hier stand „verbietet
+     Schlangenblockade auf der eigenen Schlange"; die umgedrehte Zusicherung
+     steht jetzt in `schlangenblockade_position.test.ts`. Was bleibt, ist die
+     Prüfung, dass die Karte ohne Ziel nicht gespielt werden kann — die hat mit
+     O-1 nichts zu tun und war vorher nirgends festgehalten. */
+  it('verlangt eine Zielschlange', () => {
     const zustand = zustandMitSchlangenblockade();
     const schlangenblockade = zustand.spieler[0].hand[0];
-    zustand.spieler[0].schlangen = [{ id: 'schlange-spieler-1-1', zustand: 'aktiv', karten: [] }];
 
     expect(() =>
       spieleSchlangenblockade(zustand, {
         kartenId: schlangenblockade.id,
-        zielSpielerIndex: 0,
-        zielSchlangenId: 'schlange-spieler-1-1',
+        zielSpielerIndex: 1,
+        zielSchlangenId: 'gibt-es-nicht',
+        einfügeIndex: 0,
       }),
-    ).toThrow('Schlangenblockade kann nur auf die Schlange eines anderen Spielers gelegt werden.');
+    ).toThrow('Die ausgewählte Zielschlange ist ungültig.');
   });
 });

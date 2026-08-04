@@ -134,8 +134,12 @@ export function erstelleAktionsLabel(
         return `Schlangengrube auf ${spielerName(aktion.zielSpielerId)} spielen`
       case 'VerdopplerSpielen':
         return 'Verdoppler spielen'
+      /* ÄNDERUNG [04.08.2026]: O-1 — die Einfügeposition gehört ins Label.
+         Ohne sie sind alle Positionen derselben Zielschlange gleich beschriftet;
+         am Decklimit wären das 96 Knöpfe mit 8 Texten. Aus demselben Grund führt
+         der Farbendieb sie seit jeher mit (siehe `brettKartenBezeichnung`). */
       case 'SchlangenblockadeSpielen':
-        return `Schlangenblockade auf ${schlangenBezeichnung(aktion.zielSchlangenId, aktion.spielerId)} spielen`
+        return `Schlangenblockade in ${schlangenBezeichnung(aktion.zielSchlangenId, aktion.spielerId)} an Position ${aktion.einfügeIndex + 1} spielen`
       case 'SchlangenblockadeAbwehren':
         return 'Schlangenblockade mit Farbenschutz abwehren'
       case 'SchlangenblockadeDurchlassen':
