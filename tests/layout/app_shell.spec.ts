@@ -15,12 +15,16 @@ und schneidet den Spielbereich nicht seitlich ab.
 
 import { expect, test } from '@playwright/test'
 import { kasten } from './messung'
+import { oeffne } from './oeffnen'
 
 const VIEWPORT_BREITE = 1280
 
 for (const route of ['/', '/game']) {
   test(`#root nimmt auf ${route} die volle Viewport-Breite ein`, async ({ page }) => {
-    await page.goto(route, { waitUntil: 'networkidle' })
+    /* `oeffne` statt `goto`: `#root` steht als leeres `<div>` schon im HTML und
+       ist auch ohne gerenderte App 1280 px breit — dieser Vertrag wäre erfüllt,
+       bevor die App existiert. Siehe `oeffnen.ts`. */
+    await oeffne(page, route)
     const root = page.locator('#root')
     const box = await kasten(root)
 
@@ -30,7 +34,7 @@ for (const route of ['/', '/game']) {
 }
 
 test('Seite scrollt nicht horizontal', async ({ page }) => {
-  await page.goto('/game', { waitUntil: 'networkidle' })
+  await oeffne(page, '/game')
   const ueberbreite = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   )

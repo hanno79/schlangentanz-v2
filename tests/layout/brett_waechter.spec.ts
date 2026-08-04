@@ -31,6 +31,7 @@ färben. Sobald das neue Brett auf `/game` liegt (Paket G-8), meldet Playwright
 
 import { expect, test } from '@playwright/test'
 import { zaehleSichtbareElemente } from './messung'
+import { oeffne } from './oeffnen'
 import { nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
 /** Regel 1 und 3 aus der Spezifikation: sieben Regionen, eine Rahmenebene. */
@@ -44,7 +45,11 @@ function waechterFuer(route: string, markiere: boolean, optionen: { ohneBudget?:
       await page.addInitScript(() => {
         Math.random = () => 0.999999
       })
-      await page.goto(route, { waitUntil: 'networkidle' })
+      /* `oeffne` prüft, dass die Route ihr Leitelement aufgebaut hat. Ohne diese
+         Vorbedingung wären die vier Wächter auf einer noch leeren Seite grün:
+         Wo nichts steht, ist auch nichts abgeschnitten, verdeckt oder außerhalb
+         des Bildes. Dieselbe Falle wie bei der Sieger-Party. */
+      await oeffne(page, route)
     })
 
     waechterVertraege(pruefe)
