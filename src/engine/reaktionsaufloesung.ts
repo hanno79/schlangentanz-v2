@@ -13,15 +13,87 @@ eigene Frage beantworten — nicht „was tut diese Karte", sondern „was wird 
 einem Angriff, der noch in der Schwebe hängt".
 */
 
-import type { Spielzustand } from './types';
+import type { PendingSchlangenfrassAbwehr, SonderkarteInfo, Spielkarte, Spielzustand } from './types';
 import {
-  aktualisiereSchlangenfrassPending,
+  bereinigeFarbenfusionen,
   entferneFarbenschutzAusHand,
   holeReaktionsSpieler,
   istFarbenschutzkarte,
   loeseFarbenschutzAbwehr,
 } from './zugHelfer';
 import { fuehreFarbendiebAus, legeSchlangenblockadeAb } from './kartenwirkungen';
+
+/* ÄNDERUNG [04.08.2026]: `aktualisiereSchlangenfrassPending` und ihr Helfer
+   `entferneKarteAusSchlange` sind aus `zugHelfer.ts` hierher gewandert — aus dem
+   Codex-Review (Gate 7) zum Split. Die Funktion beantwortet keine allgemeine
+   Zug-Frage, sondern *die* dieser Datei: was aus einem Angriff wird, der noch in
+   der Schwebe hängt. Sie hatte genau einen Aufrufer, und der stand hier.
+
+   Beide sind dadurch modul-lokal: zwei Exporte weniger in `zugHelfer.ts`, keine
+   neuen dazu. `bereinigeFarbenfusionen` bleibt dort exportiert — es wird jetzt von
+   zwei Modulen gebraucht (hier und in `kartenwirkungen.ts`), also ist der Export
+   belegt und nicht bloß geduldet. */
+function entferneKarteAusSchlange(schlangeKarten: Spielkarte[], kartenId: string): Spielkarte[] {
+  return schlangeKarten.filter((karte) => karte.id !== kartenId);
+}
+
+function aktualisiereSchlangenfrassPending(
+  zustand: Spielzustand,
+  pending: PendingSchlangenfrassAbwehr,
+  ziel: { spielerIndex: number; schlangenId: string; kartenId: string },
+  abwehrt: boolean,
+  abwehrkarte?: SonderkarteInfo,
+): Spielzustand {
+  const verbleibendeZiele = pending.verbleibendeZiele.slice(1);
+  const angegriffeneSchlange = zustand.spieler[ziel.spielerIndex].schlangen.find((schlange) => schlange.id === ziel.schlangenId);
+  if (!angegriffeneSchlange) {
+    throw new Error('Die ausgewählte Zielschlange ist ungültig.');
+  }
+  const angegriffeneKarte = angegriffeneSchlange.karten.find((karte) => karte.id === ziel.kartenId);
+  if (!angegriffeneKarte) {
+    throw new Error('Die ausgewählte Zielkarte ist ungültig.');
+  }
+  const neueSpieler = zustand.spieler.map((spieler, index) => {
+    if (index !== ziel.spielerIndex) return spieler;
+    const neueHand = abwehrt && abwehrkarte
+      ? spieler.hand.filter((karte) => karte.id !== abwehrkarte.id)
+      : spieler.hand;
+    const neueSchlangen = abwehrt
+      ? spieler.schlangen
+      : spieler.schlangen.map((schlange) =>
+          schlange.id === ziel.schlangenId
+            ? bereinigeFarbenfusionen({ ...schlange, karten: entferneKarteAusSchlange(schlange.karten, ziel.kartenId) })
+            : schlange,
+        );
+    return {
+      ...spieler,
+      hand: neueHand,
+      schlangen: neueSchlangen,
+      ausgespielteSonderkartenNamen:
+        abwehrt && abwehrkarte
+          ? [...spieler.ausgespielteSonderkartenNamen, abwehrkarte.name]
+          : spieler.ausgespielteSonderkartenNamen,
+    };
+  });
+
+  return {
+    ...zustand,
+    spieler: neueSpieler,
+    ablagestapel: [
+      ...zustand.ablagestapel,
+      ...(abwehrt && abwehrkarte ? [abwehrkarte] : []),
+      ...(!abwehrt && angegriffeneKarte ? [angegriffeneKarte] : []),
+    ],
+    pendingReaktion:
+      verbleibendeZiele.length > 0
+        ? {
+            typ: 'SchlangenfrassAbwehr',
+            angreifenderSpielerIndex: pending.angreifenderSpielerIndex,
+            verbleibendeZiele,
+          }
+        : null,
+  };
+}
 
 export function loesePendingReaktionAbwehr(zustand: Spielzustand, spielerId: string, abwehrKartenId: string): Spielzustand {
   if (zustand.pendingReaktion === null) {
