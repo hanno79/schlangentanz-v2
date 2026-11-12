@@ -22,7 +22,19 @@ export function ProbeSeite() {
   }
 
   return (
-    <main style={{ fontFamily: 'system-ui, sans-serif', padding: '1.5rem', lineHeight: 1.6 }}>
+    // Eigene Farben, weil die globalen Stile der App dunkle Schrift auf dunklem Grund ergäben.
+    <main
+      style={{
+        fontFamily: 'system-ui, sans-serif',
+        padding: '1.5rem',
+        lineHeight: 1.6,
+        minHeight: '100vh',
+        boxSizing: 'border-box',
+        background: '#ffffff',
+        color: '#1a1a1a',
+        textAlign: 'left',
+      }}
+    >
       <h1>Probe-Seite</h1>
       <p>Geräteklasse: {geraeteklasseFuer(messung.breite)}</p>
       <p>Touch: {messung.touch ? 'ja' : 'nein'}</p>
