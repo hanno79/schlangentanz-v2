@@ -6,7 +6,13 @@ import {
   starteAusspielphase,
 } from '../engine'
 import type { Spielzustand } from '../engine'
-import { aufgezaehlteAktionen, phasenSchritte, spieleZufaelligBis, starteEntwicklerPartie } from './partie'
+import {
+  aufgezaehlteAktionen,
+  FestgefahrenFehler,
+  phasenSchritte,
+  spieleZufaelligBis,
+  starteEntwicklerPartie,
+} from './partie'
 import { erzeugeZufall } from './zufall'
 
 describe('P0.4: Zufall nur als Parameter', () => {
@@ -107,9 +113,14 @@ describe('P0.4: zufällig weiterspielen (für Szenarien)', () => {
      nicht auf. Ist sie das Einzige, was ginge, gibt es keinen Knopf; der Tisch
      baut die Aktion nicht selbst (U3). E1 und E9 nehmen sie in die Aufzählung. */
   it('P0.4: hängt eine Partie an der nicht aufgezählten Schlangenhäutung, sagt der Fehler das', () => {
-    expect(() =>
-      spieleZufaelligBis(starteEntwicklerPartie(6, 2), erzeugeZufall(6), (z) => z.zugphase === 'Spielende'),
-    ).toThrow(/nicht aufgezählte \(Schlangenhaeutung\)/)
+    let fehler: unknown
+    try {
+      spieleZufaelligBis(starteEntwicklerPartie(6, 2), erzeugeZufall(6), (z) => z.zugphase === 'Spielende')
+    } catch (geworfen) {
+      fehler = geworfen
+    }
+    expect(fehler).toBeInstanceOf(FestgefahrenFehler)
+    expect((fehler as FestgefahrenFehler).nichtAufgezaehlt).toEqual(['Schlangenhaeutung'])
   })
 
   it('P0.4: wirft mit Grund, wenn das Ziel nicht erreicht wird', () => {

@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleNichtEnumerierteAktionenHinweise, serialisiere } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
 import { erstelleAktionsLabel } from '../aktionsLabel'
-import { pruefeInvarianten } from './invarianten'
+import { Fehler } from './Fehler'
+import { fehlertext, pruefeInvarianten } from './invarianten'
 import { aufgezaehlteAktionen, phasenSchritte } from './partie'
 import { ZustandsAnsicht } from './ZustandsAnsicht'
 
@@ -12,16 +13,12 @@ interface Eintrag {
   schritt: string
 }
 
-function meldung(fehler: unknown): string {
-  return fehler instanceof Error ? fehler.message : String(fehler)
-}
-
 /** Erzeugt den Startzustand; scheitert das, zeigt der Tisch den Grund statt einer leeren Seite. */
-function beginne(erzeuge: () => Spielzustand): { verlauf: Eintrag[] } | { fehler: string } {
+function beginne(erzeuge: () => Spielzustand): { zustand: Spielzustand } | { fehler: string } {
   try {
-    return { verlauf: [{ zustand: erzeuge(), schritt: 'Start' }] }
+    return { zustand: erzeuge() }
   } catch (fehler) {
-    return { fehler: meldung(fehler) }
+    return { fehler: fehlertext(fehler) }
   }
 }
 
@@ -33,34 +30,35 @@ interface TischProps {
 
 export function Tisch({ titel, erzeuge, hinweis }: TischProps) {
   const [anfang] = useState(() => beginne(erzeuge))
-  if ('fehler' in anfang) {
-    return (
-      <p className="et-fehler" data-testid="fehlermeldung">
-        {titel} lässt sich nicht aufbauen: {anfang.fehler}
-      </p>
-    )
-  }
-  return <Spielverlauf titel={titel} start={anfang.verlauf} hinweis={hinweis} />
+  if ('fehler' in anfang) return <Fehler meldung={`${titel} lässt sich nicht aufbauen: ${anfang.fehler}`} />
+  return <Spielverlauf titel={titel} startzustand={anfang.zustand} hinweis={hinweis} />
 }
 
-function Spielverlauf({ titel, start, hinweis }: { titel: string; start: Eintrag[]; hinweis?: ReactNode }) {
-  const [verlauf, setVerlauf] = useState(start)
+interface SpielverlaufProps {
+  titel: string
+  startzustand: Spielzustand
+  hinweis?: ReactNode
+}
+
+function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
+  const [verlauf, setVerlauf] = useState<Eintrag[]>(() => [{ zustand: startzustand, schritt: 'Start' }])
   const [fehler, setFehler] = useState<string | null>(null)
   const zustand = verlauf[verlauf.length - 1].zustand
+  const amAnfang = verlauf.length < 2
+  const roh = useMemo(() => serialisiere(zustand), [zustand])
+
+  /** Jeder Wechsel im Verlauf räumt eine stehende Ablehnung weg. */
+  function setzeVerlauf(neu: Eintrag[]) {
+    setVerlauf(neu)
+    setFehler(null)
+  }
 
   function fuehreAus(schritt: string, wandle: (vorher: Spielzustand) => Spielzustand) {
     try {
-      const neu = wandle(zustand)
-      setVerlauf([...verlauf, { zustand: neu, schritt }])
-      setFehler(null)
+      setzeVerlauf([...verlauf, { zustand: wandle(zustand), schritt }])
     } catch (ablehnung) {
-      setFehler(`${schritt}: ${meldung(ablehnung)}`)
+      setFehler(`${schritt}: ${fehlertext(ablehnung)}`)
     }
-  }
-
-  function zurueck() {
-    setVerlauf(verlauf.slice(0, -1))
-    setFehler(null)
   }
 
   return (
@@ -70,18 +68,14 @@ function Spielverlauf({ titel, start, hinweis }: { titel: string; start: Eintrag
         {hinweis}
         <p>
           Schritt {verlauf.length - 1}{' '}
-          <button type="button" onClick={zurueck} disabled={verlauf.length < 2}>
+          <button type="button" onClick={() => setzeVerlauf(verlauf.slice(0, -1))} disabled={amAnfang}>
             Schritt zurück
           </button>{' '}
-          <button type="button" onClick={() => setVerlauf(verlauf.slice(0, 1))} disabled={verlauf.length < 2}>
+          <button type="button" onClick={() => setzeVerlauf(verlauf.slice(0, 1))} disabled={amAnfang}>
             Von vorn
           </button>
         </p>
-        {fehler === null ? null : (
-          <p className="et-fehler" data-testid="fehlermeldung" role="alert">
-            Abgelehnt: {fehler}
-          </p>
-        )}
+        {fehler === null ? null : <Fehler meldung={`Abgelehnt: ${fehler}`} />}
         <Bedienung zustand={zustand} fuehreAus={fuehreAus} />
       </section>
       <Invarianten zustand={zustand} />
@@ -96,7 +90,7 @@ function Spielverlauf({ titel, start, hinweis }: { titel: string; start: Eintrag
         <details>
           <summary>Rohzustand (wie gespeichert)</summary>
           <pre className="et-roh" data-testid="zustand-json">
-            {serialisiere(zustand)}
+            {roh}
           </pre>
         </details>
       </section>
@@ -120,11 +114,22 @@ interface BedienungProps {
   fuehreAus: (schritt: string, wandle: (vorher: Spielzustand) => Spielzustand) => void
 }
 
-function Bedienung({ zustand, fuehreAus }: BedienungProps) {
-  const aktionen = aufgezaehlteAktionen(zustand)
-  const schritte = phasenSchritte(zustand)
-  const nichtAufgezaehlt = ermittleNichtEnumerierteAktionenHinweise(zustand)
+/** Aufzählung und Beschriftung kosten bei Tausenden Aktionen spürbar; je Zustand einmal. */
+function bereiteAktionenVor(zustand: Spielzustand) {
   const beschrifte = erstelleAktionsLabel(zustand)
+  const aktionen = aufgezaehlteAktionen(zustand)
+  return {
+    anzahl: aktionen.length,
+    laeufe: laeufeNachArt(aktionen).map((lauf) =>
+      lauf.map((aktion) => ({ aktion, text: JSON.stringify(aktion), label: beschrifte(aktion) })),
+    ),
+    nichtAufgezaehlt: ermittleNichtEnumerierteAktionenHinweise(zustand),
+  }
+}
+
+function Bedienung({ zustand, fuehreAus }: BedienungProps) {
+  const { anzahl, laeufe, nichtAufgezaehlt } = useMemo(() => bereiteAktionenVor(zustand), [zustand])
+  const schritte = phasenSchritte(zustand)
 
   return (
     <>
@@ -145,30 +150,26 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
           ))}
         </p>
       )}
-      <h2>Aktionen der Engine ({aktionen.length})</h2>
-      {aktionen.length === 0 ? <p className="et-leer">Die Engine zählt hier keine Aktion auf.</p> : null}
-      {laeufeNachArt(aktionen).map((lauf, index) => (
-        <div key={`${lauf[0].typ}-${index}`} className="et-aktionsgruppe">
+      <h2>Aktionen der Engine ({anzahl})</h2>
+      {anzahl === 0 ? <p className="et-leer">Die Engine zählt hier keine Aktion auf.</p> : null}
+      {laeufe.map((lauf, index) => (
+        <div key={`${lauf[0].aktion.typ}-${index}`} className="et-aktionsgruppe">
           <h3>
-            {lauf[0].typ} ({lauf.length})
+            {lauf[0].aktion.typ} ({lauf.length})
           </h3>
-          {lauf.map((aktion) => {
-            const text = JSON.stringify(aktion)
-            const label = beschrifte(aktion)
-            return (
-              <button
-                key={text}
-                type="button"
-                className="et-aktion"
-                data-aktion={text}
-                title={text}
-                onClick={() => fuehreAus(label, (vorher) => anwendeAktion(vorher, aktion))}
-              >
-                {label}
-                <small>{aktion.spielerId}</small>
-              </button>
-            )
-          })}
+          {lauf.map(({ aktion, text, label }) => (
+            <button
+              key={text}
+              type="button"
+              className="et-aktion"
+              data-aktion={text}
+              title={text}
+              onClick={() => fuehreAus(label, (vorher) => anwendeAktion(vorher, aktion))}
+            >
+              {label}
+              <small>{aktion.spielerId}</small>
+            </button>
+          ))}
         </div>
       ))}
       {nichtAufgezaehlt.length === 0 ? null : (
@@ -183,7 +184,7 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
 }
 
 function Invarianten({ zustand }: { zustand: Spielzustand }) {
-  const befunde = pruefeInvarianten(zustand)
+  const befunde = useMemo(() => pruefeInvarianten(zustand), [zustand])
   const verletzt = befunde.filter((befund) => befund.verletzt).length
   return (
     <section className="et-abschnitt">

@@ -30,6 +30,22 @@ export function aufgezaehlteAktionen(zustand: Spielzustand): SpielAktion[] {
   return [...ermittleReaktionsAktionen(zustand), ...ermittleLegaleAktionen(zustand)]
 }
 
+/**
+ * Die Partie steckt fest: Die Engine zählt nichts auf, kein Phasenschritt geht,
+ * und was ginge, steht nur als nicht aufgezählter Hinweis da (heute die
+ * Schlangenhäutung). Eigene Klasse, damit Aufrufer das von einem Fehler der
+ * Engine unterscheiden können, ohne den Meldungstext zu lesen.
+ */
+export class FestgefahrenFehler extends Error {
+  readonly nichtAufgezaehlt: string[]
+
+  constructor(nichtAufgezaehlt: string[]) {
+    super(`Festgefahren: Die Engine zählt keine Aktion auf und meldet nur nicht aufgezählte (${nichtAufgezaehlt.join(', ')}).`)
+    this.name = 'FestgefahrenFehler'
+    this.nichtAufgezaehlt = nichtAufgezaehlt
+  }
+}
+
 export interface PhasenSchritt {
   name: string
   fuehreAus: (zustand: Spielzustand) => Spielzustand
@@ -110,10 +126,6 @@ function naechsterZufallsschritt(zustand: Spielzustand, zufall: () => number): S
   }
   if (aktionen.length > 0) return waehleAktion()
   const nichtAufgezaehlt = ermittleNichtEnumerierteAktionenHinweise(zustand).map((hinweis) => hinweis.typ)
-  if (nichtAufgezaehlt.length > 0) {
-    throw new Error(
-      `Festgefahren: Die Engine zählt keine Aktion auf und meldet nur nicht aufgezählte (${nichtAufgezaehlt.join(', ')}).`,
-    )
-  }
+  if (nichtAufgezaehlt.length > 0) throw new FestgefahrenFehler(nichtAufgezaehlt)
   throw letzteAblehnung
 }

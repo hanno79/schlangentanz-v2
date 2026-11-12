@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { berechneSpielzustandGesamtwertung, ermittleReaktionsAktionen, starteAusspielphase } from '../engine'
 import type { Spielkarte, Spielzustand } from '../engine'
 import { pruefeInvarianten } from './invarianten'
-import { spieleZufaelligBis, starteEntwicklerPartie } from './partie'
+import { FestgefahrenFehler, spieleZufaelligBis, starteEntwicklerPartie } from './partie'
 import { erzeugeZufall } from './zufall'
 
 function verletzte(zustand: Spielzustand): string[] {
@@ -73,19 +73,26 @@ describe('P0.4: Invarianten am Entwicklertisch', () => {
      Partie anschlagen, wären sie falsch oder die Engine hätte einen Fehler. Beides
      muss auffallen, bevor jemand am Tisch einem roten Eintrag glaubt.
 
-     Die Saaten sind die ersten zehn, deren Partie bis zum Spielende kommt. Die
-     übrigen bleiben an einer Lage hängen, in der nur die Schlangenhäutung ginge;
-     die zählt die heutige Engine nicht auf (siehe `partie.test.ts`). */
-  it('P0.4: in zehn zufällig gespielten Partien bleibt jede Invariante bei jedem Schritt erfüllt', () => {
-    for (const saat of [1, 2, 3, 4, 5, 8, 11, 12, 13, 14]) {
+     Manche Partien bleiben an einer Lage hängen, in der nur die Schlangenhäutung
+     ginge; die zählt die heutige Engine nicht auf (`FestgefahrenFehler`, siehe
+     `partie.test.ts`). Bis dorthin ist jeder Schritt geprüft; die Untergrenze für
+     Partien, die das Spielende erreichen, hält die Prüfung trotzdem gehaltvoll. */
+  it('P0.4: in zufällig gespielten Partien bleibt jede Invariante bei jedem Schritt erfüllt', () => {
+    let bisZumEnde = 0
+    for (let saat = 1; saat <= 15; saat += 1) {
       let schritt = 0
-      const ende = spieleZufaelligBis(starteEntwicklerPartie(saat, 2 + (saat % 3)), erzeugeZufall(saat), (zustand) => {
-        expect(verletzte(zustand), `Saat ${saat}, Schritt ${schritt}`).toEqual([])
-        schritt += 1
-        return zustand.zugphase === 'Spielende'
-      })
-      expect(ende.zugphase, `Saat ${saat}`).toBe('Spielende')
+      try {
+        spieleZufaelligBis(starteEntwicklerPartie(saat, 2 + (saat % 3)), erzeugeZufall(saat), (zustand) => {
+          expect(verletzte(zustand), `Saat ${saat}, Schritt ${schritt}`).toEqual([])
+          schritt += 1
+          return zustand.zugphase === 'Spielende'
+        })
+        bisZumEnde += 1
+      } catch (fehler) {
+        if (!(fehler instanceof FestgefahrenFehler)) throw fehler
+      }
     }
+    expect(bisZumEnde, 'zu wenige Partien bis zum Spielende').toBeGreaterThanOrEqual(8)
   }, 60_000)
 
   it('P0.4: der Aufbau einer Ausspielphase verletzt keine Invariante', () => {

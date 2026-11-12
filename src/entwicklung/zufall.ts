@@ -3,6 +3,9 @@
  *
  * Die Engine zieht keinen eigenen Zufall (U4), sie bekommt ihn als Parameter.
  * Gleiche Saat heisst hier deshalb gleiche Partie, Zug für Zug.
+ *
+ * Derselbe Algorithmus steht als `mulberry32` im Soak-Test der Engine
+ * (`vollpartie_simulation.test.ts`); der darf nach U13 nicht von hier importieren.
  */
 export function erzeugeZufall(saat: number): () => number {
   let stand = saat >>> 0

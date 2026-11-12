@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react'
 
 /*
-Der einzige Schalter für den Entwicklertisch: aktiv im Dev-Server und im
-Testhook-Build (`vite build --mode testhooks` setzt `VITE_TEST_HOOKS`, siehe
-`vite.config.ts`), sonst nicht.
+Der einzige Schalter für den Entwicklertisch: aktiv im Dev-Server und in jedem
+Build mit `VITE_TEST_HOOKS=1`, sonst nicht. Lokal setzt `vite build --mode
+testhooks` die Variable (siehe `vite.config.ts`), in der Vercel-Vorschau die
+Umgebung des Projekts; in Production ist sie nicht gesetzt.
 
 Er steht absichtlich hier als Konstante und nicht in einer Funktion: Vite ersetzt
 beide Werte beim Bauen durch Literale, im Produktionsbuild wird daraus `false`,
@@ -24,7 +25,7 @@ function istEntwicklerPfad(pfad: string): boolean {
 /** Bis O2 (App-Rahmen und Lobby) gibt es kein Spiel, nur diesen Platzhalter. */
 function Platzhalter() {
   return (
-    <main className="platzhalter" data-testid="platzhalter">
+    <main data-testid="platzhalter">
       <h1>Schlangentanz</h1>
       <p>Das Spiel wird gerade neu gebaut. Hier gibt es bald wieder etwas zu spielen.</p>
     </main>

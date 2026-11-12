@@ -13,7 +13,7 @@ export function Karte({ karte }: { karte: Spielkarte }) {
   }
   return (
     <span className="et-karte et-karte--sonder">
-      {karte.name} <small>{karte.id}</small>
+      {karteAnzeigename(karte)} <small>{karte.id}</small>
     </span>
   )
 }

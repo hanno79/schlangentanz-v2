@@ -1,5 +1,6 @@
 import { berechneGewinner, berechneSpielzustandGesamtwertung } from '../engine'
 import type { AufgabenkarteInfo, GewinnerEintrag, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
+import { fehlertext } from './invarianten'
 import { Kartenreihe } from './Karte'
 
 /** Der ganze Spielzustand, lesbar: alle Hände offen, alle Stapel, Phase, Wertung. */
@@ -162,7 +163,7 @@ function werte(zustand: Spielzustand): Wertungsergebnis {
       gewinner: zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler).gewinner : null,
     }
   } catch (fehler) {
-    return { fehler: fehler instanceof Error ? fehler.message : String(fehler) }
+    return { fehler: fehlertext(fehler) }
   }
 }
 

@@ -1,6 +1,7 @@
 import './entwicklertisch.css'
 import { SPIELER_MAX, SPIELER_MIN } from '../engine'
 import { leseEntwicklerAnfrage } from './adresse'
+import { Fehler } from './Fehler'
 import type { EntwicklerAnfrage } from './adresse'
 import { starteEntwicklerPartie } from './partie'
 import { findeSzenario, SZENARIEN } from './szenarien'
@@ -80,14 +81,6 @@ function ErweiterungsHinweis({ erweiterung }: { erweiterung: 0 | 1 }) {
     <p className="et-hinweis" data-testid="hinweis-erweiterung">
       Erweiterung angefordert: {erweiterung}. Die Engine kennt diesen Schalter noch nicht (kommt mit X1); die Partie
       läuft mit dem heutigen Kartenmaterial, gleich welcher Wert hier steht.
-    </p>
-  )
-}
-
-function Fehler({ meldung }: { meldung: string }) {
-  return (
-    <p className="et-fehler" data-testid="fehlermeldung" role="alert">
-      {meldung}
     </p>
   )
 }

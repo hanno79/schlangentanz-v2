@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 
-// `npm run build:testhooks` baut mit `--mode testhooks`. Dieser Modus und nur er
-// schaltet die Test-Hooks ein (`testHooksAktiv()` in `src/testPhaseHook.ts`). Hier
+// `npm run build:testhooks` baut mit `--mode testhooks`. Dieser Modus schaltet den
+// Entwicklertisch unter `/dev` ein (Schalter in `src/App.tsx`). Hier
 // statt in einer `.env.testhooks`, weil `scripts/regelcheck.py` jede eingecheckte
 // `.env.*` als Secret ablehnt; und statt `VITE_TEST_HOOKS=1 vite build`, weil diese
 // Schreibweise unter Windows nicht läuft. Die Vercel-Vorschau setzt die Variable
