@@ -4,11 +4,14 @@ import { spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
+import ts from 'typescript'
 import { GERAETEKLASSEN } from '../scripts/pruefung/geraeteklassen.mjs'
 import { pngGroesse } from '../scripts/pruefung/bildschirmfotos.mjs'
 
 const WURZEL = resolve(__dirname, '..')
 const lies = (pfad: string) => readFileSync(join(WURZEL, pfad), 'utf8')
+/** tsconfig-Dateien enthalten Kommentare; TypeScript liest sie, JSON.parse nicht. */
+const liesTsconfig = (pfad: string) => ts.parseConfigFileTextToJson(pfad, lies(pfad)).config
 const FOTOSKRIPT = join(WURZEL, 'scripts', 'pruefung', 'bildschirmfotos.mjs')
 
 type Projekt = {
@@ -93,19 +96,20 @@ describe('P0.3: playwright.config.ts', () => {
   it('P0.3: die Konfiguration nennt keinen festen Browserpfad', () => {
     const quelltext = lies('playwright.config.ts')
 
-    expect(quelltext).not.toMatch(/[A-Za-z]:[\\/]|\/usr\/|\/opt\/|chrome\.exe|ms-playwright/)
+    // Laufwerksbuchstabe nur direkt nach einem Anführungszeichen, sonst träfe „http://“.
+    expect(quelltext).not.toMatch(/['"`][A-Za-z]:[\\/]|\/usr\/|\/opt\/|chrome\.exe|ms-playwright/)
   })
 })
 
 describe('P0.3: TypeScript und npm-Skripte', () => {
   it.each(['tsconfig.app.json', 'tsconfig.node.json', 'tsconfig.layout.json'])('P0.3: %s setzt "strict": true', (datei) => {
-    const konfiguration = JSON.parse(lies(datei)) as { compilerOptions: { strict?: boolean } }
+    const konfiguration = liesTsconfig(datei) as { compilerOptions: { strict?: boolean } }
 
     expect(konfiguration.compilerOptions.strict, `${datei}: erwartet strict true`).toBe(true)
   })
 
   it('P0.3: tsconfig.test.json erbt strict von tsconfig.node.json und schaltet es nicht ab', () => {
-    const konfiguration = JSON.parse(lies('tsconfig.test.json')) as {
+    const konfiguration = liesTsconfig('tsconfig.test.json') as {
       extends: string
       compilerOptions: { strict?: boolean }
     }
