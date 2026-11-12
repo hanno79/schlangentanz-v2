@@ -11,3 +11,4 @@ eingerichtet: 2026-11-12
 | BRETT | Spieltisch und Kartenaktionen | src/spielbrett/**, src/hooks/**, src/aktionsziel/**, src/reaktionen.ts, src/phasenAktionen.ts, src/aktionsGruppen.ts, src/aktionsLabel.ts, src/spielLabelHelpers.ts, src/zugphaseLabels.ts, src/kartenTexte.ts, src/kartenfarben.ts, src/testPhaseHook.ts |
 | APP | App-Rahmen, Lobby, Fehlerdienst | src/App*, src/main.tsx, src/index.css, src/components/**, src/fehlerdienst.ts, src/spielstand*.ts, src/assets/**, public/**, index.html |
 | SPEC | Regelspiegel und Website-Abgleich | docs/GAME_SPEC.md, scripts/website_abgleich/**, tests/spec_documentation.test.ts |
+| BUILD | Lokale Umgebung, Build und Gates | package.json, package-lock.json, vite.config.ts, playwright.config.ts, tsconfig*.json, eslint.config.js, tests/lokale_umgebung.test.ts |

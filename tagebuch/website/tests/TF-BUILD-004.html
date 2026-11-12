@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-BUILD-004 Zweimal hintereinander gebaut, räumt der Testhook-Build sein Verzeichnis und liefert dasselbe Bundle. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 12.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-BUILD-004 Zweimal hintereinander gebaut, räumt der Testhook-Build sein Verzeichnis und liefert dasselbe Bundle.</h1><p class="etiketten"><span class="etikett">Bereich Lokale Umgebung, Build und Gates</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-BUILD-002</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Playwright baut den Testhook-Build vor jedem Lauf neu. Bleibt dabei Altes in <code>dist-testhooks/</code> liegen oder ändert sich das Bundle ohne Codeänderung, misst der Lauf womöglich einen alten Stand. Geprüft wird ein zweiter Build direkt nach dem ersten.</p><h2>Bestanden, wenn</h2><p>Beide Läufe von <code>npm run build:testhooks</code> enden mit Exit-Code 0, die vorher abgelegte Datei <code>dist-testhooks/veraltet.txt</code> ist danach weg, und der Dateiname <code>dist-testhooks/assets/index-&lt;hash&gt;.js</code> ist nach beiden Läufen gleich.</p><h2>Fehlgeschlagen, wenn</h2><p>Der zweite Lauf endet nicht mit 0, <code>veraltet.txt</code> liegt noch da, oder der Hash im Dateinamen unterscheidet sich zwischen den Läufen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>12.11.2026</dd><dt>Änderung</dt><dd>task/P0.2-lokale-umgebung (PR #24)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo-Arbeitskopie auf dem zu prüfenden Commit, Windows 11, nach <code>npm ci</code> und einem ersten <code>npm run build:testhooks</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Datei <code>dist-testhooks/veraltet.txt</code> mit beliebigem Inhalt, etwa <code>stale</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>Datei anlegen</td><td>`echo stale &gt; dist-testhooks/veraltet.txt`</td><td>Datei existiert</td></tr><tr><td>2</td><td>dieselbe Konsole</td><td>Hash notieren</td><td>`ls dist-testhooks/assets`</td><td>Name `index-&lt;hash&gt;.js`</td></tr><tr><td>3</td><td>dieselbe Konsole</td><td>Befehl ausführen</td><td>`npm run build:testhooks`</td><td>Exit-Code 0</td></tr><tr><td>4</td><td>dieselbe Konsole</td><td>Befehl erneut ausführen</td><td>`npm run build:testhooks`</td><td>Exit-Code 0</td></tr><tr><td>5</td><td>dieselbe Konsole</td><td>Verzeichnis ansehen</td><td>`ls dist-testhooks dist-testhooks/assets`</td><td>keine `veraltet.txt`, `index-&lt;hash&gt;.js` mit demselben Hash wie in Schritt 2</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-12">12.11.2026 22:41</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.2) &middot; agent &middot; pruefung-p0.2 @ <span class="commit" title="aebbd3c345ac4c44f08d95a1959e0253e0947fa7">aebbd3c</span></p><p>Zwei Läufe build:testhooks je EXIT 0; veraltet.txt danach entfernt; index-j7MnWocf.js vor und nach beiden Läufen gleich.</p><ul class="belege"><li><a href="belege/2026-11-12-2241-TF-BUILD-004-1.txt">2026-11-12-2241-TF-BUILD-004-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

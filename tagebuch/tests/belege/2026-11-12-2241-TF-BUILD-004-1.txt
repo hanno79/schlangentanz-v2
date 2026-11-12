@@ -1,0 +1,7 @@
+echo stale > dist-testhooks/veraltet.txt
+npm run build:testhooks -> EXIT 0
+npm run build:testhooks -> EXIT 0
+ls dist-testhooks: assets favicon.svg icons.svg index.html (keine veraltet.txt)
+ls dist-testhooks/assets: index-C2xf7nHK.css index-j7MnWocf.js prod-RboF6ZQP.js
+Hash index-j7MnWocf.js gleich wie im Gate-Lauf davor
+Schalter im Bundle: function Cr(){return!0}function wr(){if(typeof window

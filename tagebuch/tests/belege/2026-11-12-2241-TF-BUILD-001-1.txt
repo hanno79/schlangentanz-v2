@@ -1,0 +1,12 @@
+Gates P0.2, Commit aebbd3c, Windows 11, Node v25.2.1, npm 11.5.2, Python 3.13.15
+npm ci: EXIT 0 (added 277 packages, kein EBADENGINE)
+npm test -- --run: EXIT 0 (Test Files 80 passed, Tests 699 passed)
+npm run typecheck: EXIT 0
+npm run build: EXIT 0
+npm run build:testhooks: EXIT 0
+npm run check:test-lines: EXIT 0 (Alle Testdateien bleiben unter 500 Zeilen.)
+npm run check:css-asserts: EXIT 0 (1 in 1 Dateien, Baseline gehalten)
+npx eslint .: EXIT 0
+python scripts/regelcheck.py: EXIT 0 (13 Warnungen, keine Fehler)
+npx playwright install chromium: EXIT 0 (Playwright 1.60.0)
+npm run test:layout: EXIT 0 (62 passed, 1 skipped: brett_waechter "/" Budget-Pruefung, ohneBudget-Option, Bestand)
