@@ -84,6 +84,11 @@ Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
 3. **pre-commit-Hook:** `git config core.hooksPath scripts/githooks`. Der Hook
    ruft `python scripts/regelcheck.py --geaendert` auf und gilt für alle
    Worktrees des Repos.
+   **Zeilenenden:** `.gitattributes` verlangt LF. Eine Arbeitskopie, die mit
+   `core.autocrlf=true` vor dieser Datei ausgecheckt wurde, behält CRLF, und
+   `tests/spec_documentation.test.ts` schlägt dann fehl. `git ls-files --eol`
+   zeigt solche Dateien als `w/crlf`; löschen und mit `git checkout -- .` neu
+   holen schreibt sie mit LF.
 4. **Browser für die Layout-Verträge:** `npx playwright install chromium`,
    einmal je Rechner und Playwright-Version.
 5. **Gates**, jedes einzeln und mit eigenem Exit-Code (PowerShell:
