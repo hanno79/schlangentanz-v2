@@ -21,7 +21,7 @@ This project starts cleanly in a new local folder, new GitHub repository, and ne
 
 4. **Dart provides backlog input**
    - tasks are requirements candidates, not automatically truth
-   - tasks must be normalized into `GAME_SPEC.md`
+   - Dart is never a rules source; rules come from the website only (see „Regelquelle")
 
 5. **Paperclip is not used for implementation**
    - old Paperclip activity is treated as historical context only
@@ -32,6 +32,23 @@ This project starts cleanly in a new local folder, new GitHub repository, and ne
 - Do not reuse the old Vercel project.
 - Do not mix old build artifacts or Paperclip output into this repo.
 - Any referenced old behavior must be converted into explicit spec text and tests first.
+
+## Regelquelle (ÄNDERUNG 12.11.2026)
+
+Einzige verbindliche Regelquelle ist `https://schlangentanz.ch/rules`. Der Autor
+hat die Spielanleitung dort überarbeitet und zur alleinigen Grundlage erklärt.
+
+- `docs/GAME_SPEC.md` spiegelt die Website wörtlich (Teil A). Regeln ändern sich
+  nur auf der Website; danach wird Teil A aus ihrem Wortlaut neu übernommen.
+- Abweichungen der Engine stehen in Teil C, offene Auslegungsfragen in Teil D.
+- Dart-Tasks, Dart-Dokumente, `docs/release_status_*`, `docs/slice_plan_*` und
+  die Belege in `docs/PLAYABILITY_GATE.md` sind keine Regelquelle. Sie
+  beschreiben frühere Stände und können überholte Regeln enthalten.
+
+Hintergrund: Bis zu diesem Datum gab es drei Regelstände nebeneinander, nämlich
+Dart (zwei sich widersprechende Serien vom Januar), die Website und die Spec
+vom 03.08.2026. Die Engine folgte der Spec, die Spec einem älteren Stand der
+Website.
 
 ## Gates
 
@@ -357,6 +374,11 @@ längste Farbkette (R8.4a). Weggefallen ist der **Vielfaltbonus** — die
 Normquelle weist ihn als Erweiterung aus, und `ermittleFarbenFuerFarbvielfalt`
 samt Kartenfeld `vielfaltbonusIgnorieren` ist mit demselben Slice aus der Engine
 entfernt worden. Beides hatte keinen Produktionsaufrufer.
+
+**ÄNDERUNG 12.11.2026:** Die genannten R-Nummern gehören zur Spec-Fassung bis
+04.08.2026. Der digitale Umfang steht jetzt in `docs/GAME_SPEC.md` Teil B1, die
+längste Farbkette und der Vielfaltbonus in A11. Über den Umfang entscheidet der
+Autor (Teil D, Frage D7).
 
 ## Speichern und Laden (ÄNDERUNG 03.08.2026)
 

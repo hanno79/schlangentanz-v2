@@ -8,9 +8,10 @@ nächsten Release fährt, setzt sie zurück oder trägt den neuen Commit ein.
 
 ## Before release
 
-- [ ] `docs/GAME_SPEC.md` locked — **weiterhin offen.** Die Spec trägt „aktive
-      Projektspezifikation, noch nicht final gesperrt". Bewusst so, solange
-      Regeln nachgezogen werden; zuletzt R3.5a am 02.08.2026.
+- [ ] `docs/GAME_SPEC.md` spiegelt die Website, und Teil C (Abweichungen der
+      Engine) ist leer — **offen.** Stand 12.11.2026: Die Spec ist abgeglichen,
+      Teil C führt 13 Abweichungen. (Bis 12.11.2026 stand hier „locked"; die
+      damals gesperrte Fassung beruhte auf einem älteren Stand der Website.)
 - [x] Acceptance tests derived from spec — `tests/spec_documentation.test.ts`
       erzwingt den Wortlaut jeder Zusage
 - [x] No copied old project/Paperclip code

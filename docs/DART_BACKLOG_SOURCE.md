@@ -1,5 +1,7 @@
 # Dart Backlog Source — Schlangentanz v2
 
+> **Hinweis (12.11.2026).** Dart ist keine Regelquelle. Verbindlich ist allein `https://schlangentanz.ch/rules`, gespiegelt in `docs/GAME_SPEC.md`. Die unten gelisteten Regel-Tasks (R1 bis R10) enthielten zwei sich widersprechende Regelstände vom Januar 2026.
+
 Generated: 2026-05-31
 
 ## Purpose

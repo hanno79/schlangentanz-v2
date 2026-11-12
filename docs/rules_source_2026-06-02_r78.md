@@ -1,5 +1,7 @@
 # Rules Source 2026-06-02 R78 — Sonderkarten-Timing und Farbenschutz
 
+> **Überholt (12.11.2026).** Dieser Auszug gibt den Stand der Website vom 02.06.2026 wieder. Verbindlich ist die Website in ihrem heutigen Stand; ihr Wortlaut steht in `docs/GAME_SPEC.md`, Teil A. Überholt ist hier insbesondere das Nachziehen „nach Abhandlung aller Effekte": Wer ausserhalb seines Zuges spielt, füllt erst zu Beginn seines nächsten Zuges auf.
+
 Author: rahn
 Datum: 02.06.2026
 Version: 1.0

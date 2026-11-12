@@ -1,424 +1,302 @@
 /**
- * Author: rahn
- * Datum: 31.05.2026
- * Version: 1.6
- * Beschreibung: Prüft, dass die Schlangentanz-Spezifikation die übernommenen Projektziel-, Setup-, Zugstruktur-, Schlangenbau-, Farbkarten-, Aufgabenkarten- und Wertungsregeln dokumentiert.
- * ÄNDERUNG [31.05.2026]: R6-Aufgabenkarten gegen https://schlangentanz.ch/rules als verbindliche Quelle aktualisiert.
- * Der Test erzwingt die Website-Regeln zu Aufgabenkarten, Schlangenspass, Punktwertung und Konfliktauflösung.
- * ÄNDERUNG [31.05.2026]: R8-Wertung und geklärte Partieende-/Win-Loss-Regeln dokumentiert.
- * ÄNDERUNG [31.05.2026]: Projektziel und Zielplattform aus den vorhandenen Projektquellen dokumentiert.
- * ÄNDERUNG [31.05.2026]: R10 Nicht-Ziele gegen alte Repo-/Paperclip-Pfade abgesichert.
- * ÄNDERUNG [01.06.2026]: Geklärte Nachziehstapel-Endrundenregel abgesichert.
- * ÄNDERUNG [02.06.2026]: R76-Sonderkarten-Regelstatus abgesichert, damit offene Kartenwirkungen nicht geraten werden.
- * ÄNDERUNG [02.06.2026]: R77 veralteten Draft-/Template-Status der Spezifikation bereinigt.
- * ÄNDERUNG [03.06.2026]: Verdoppler-Regel und Ausspielphasen-Limits an die implementierte 2/2/3-Logik angepasst.
- * ÄNDERUNG [03.06.2026]: Schlangenfrass als implementierte Sonderkarte dokumentiert und aus den offenen Sonderkarten entfernt.
- * ÄNDERUNG [03.06.2026]: Farbenfusion als implementierte Sonderkarte dokumentiert und aus den offenen Sonderkarten entfernt.
- * ÄNDERUNG [03.06.2026]: Letzte offene Sonderkarten-Formulierung in der Spezifikation konsolidiert.
- * ÄNDERUNG [03.06.2026]: Legal-Aktionsmatrix um die implementierten Sonderkartenaktionen ergänzt.
- * ÄNDERUNG [03.06.2026]: Verdoppler-Limits in der Spezifikation an die 2/2/3-Logik geschärft.
+ * Author: Claude Code
+ * Datum: 12.11.2026
+ * Version: 2.0
+ * Beschreibung: Hält fest, dass `docs/GAME_SPEC.md` die Regeln der Website
+ *               wiedergibt und ihren Aufbau behält.
+ *
+ * ÄNDERUNG [12.11.2026]: Neu geschrieben. Die Fassung bis 04.08.2026 prüfte den
+ * Wortlaut einer Spec, die auf einem älteren Stand der Website und auf Dart
+ * beruhte: 14 Aufgabenkarten, sofortiges Nachziehen nach Sonderkarten,
+ * Endspurt-Verdopplung. Der Autor hat die Website überarbeitet und zur einzigen
+ * verbindlichen Regelquelle erklärt; die Spec ist seither ihr Spiegel.
+ *
+ * Dieser Test ersetzt keinen Abgleich mit der Website. Er verhindert nur, dass
+ * Kernaussagen still aus dem Dokument verschwinden oder die Rangfolge der
+ * Quellen wieder verwässert wird. Geprüft werden deshalb wenige, tragende
+ * Sätze und Zahlen, nicht jeder Absatz.
+ *
+ * Zwei Regeln für jede Zusicherung hier, beide gegen Brüchigkeit:
+ * - Sätze werden im Fliesstext gesucht. Ein Neuumbruch ändert keine Aussage.
+ * - Tabellen werden zellenweise gelesen. Ausrichtung und zusätzliche Spalten
+ *   ändern keine Aussage.
  */
 
 import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-const SPEC_PATH = join(process.cwd(), 'docs', 'GAME_SPEC.md')
+const spec = readFileSync('docs/GAME_SPEC.md', 'utf8')
 
-const spec = readFileSync(SPEC_PATH, 'utf8')
+/** Whitespace zu einzelnen Leerzeichen zusammengezogen. */
+function fliesstext(text: string): string {
+  return text.replace(/\s+/g, ' ')
+}
 
 /**
- * Dieselbe Spec, aber mit zu einzelnen Leerzeichen zusammengezogenem Whitespace.
+ * Die Sätze, die im Text fehlen. Leer heisst: alle da.
  *
- * ÄNDERUNG [03.08.2026]: Zwei Zusicherungen prüften Sätze, die im Markdown über
- * einen Zeilenumbruch laufen, und hatten deshalb `\n  ` mitten im erwarteten
- * Text stehen. Ein Neuumbruch des Absatzes hätte sie zerbrochen, ohne dass sich
- * die Aussage ändert — genau die Brüchigkeit, die `CLAUDE.md` für
- * CSS-Quelltext-Verträge untersagt, nur in Markdown. Wer einen Satz prüft, der
- * umbrechen darf, prüft ihn hier.
+ * Als Liste und nicht als `toContain` je Satz: So zeigt ein Fehlschlag alle
+ * fehlenden Sätze auf einmal und nicht den ganzen Teil als „received".
  */
-const specFliesstext = spec.replace(/\s+/g, ' ')
+function fehlende(text: string, saetze: string[]): string[] {
+  const gesucht = fliesstext(text)
+  return saetze.filter((satz) => !gesucht.includes(satz))
+}
 
-describe('GAME_SPEC R0 Projektziel', () => {
-  /*
-   * ÄNDERUNG [03.08.2026]: Die Spec ist gesperrt (`CLAUDE.md` Schritt 1). Dieser
-   * Test hielt zuvor das Gegenteil fest — „noch nicht final gesperrt" — und war
-   * damit der Grund, warum ein Sperren still zurückgedreht worden wäre, ohne
-   * dass etwas rot geworden wäre.
-   */
-  it('ist gesperrt und nennt das Verfahren für Änderungen', () => {
-    expect(spec).toContain('Status: **Gesperrt am 03.08.2026.**')
-    expect(spec).not.toContain('noch nicht final gesperrt')
-    expect(spec).toContain('### Was „gesperrt" bedeutet')
-    // Eine Sperre ohne Verfahren wäre eine Behauptung.
-    expect(specFliesstext).toContain('Jede Regeländerung braucht eine bestätigte Normquelle oder einen User-Signoff.')
-    expect(spec).toContain('Widersprüche zwischen Spec und Code sind Spec-Fragen')
-    /* Die drei „Arbeitsstatus"-Blöcke sagten, offene Details seien anderswo
-       markiert. Nach dem Sperren stehen sie vollständig in Abschnitt 11. */
-    expect(spec).not.toContain('**Arbeitsstatus.**')
+/** Der Text eines Teils („A" bis „E") bis zur nächsten Teil-Überschrift. */
+function teil(buchstabe: string): string {
+  const start = spec.indexOf(`## Teil ${buchstabe} `)
+  expect(start, `Teil ${buchstabe} fehlt`).toBeGreaterThan(-1)
+  const ende = spec.indexOf('\n## Teil ', start + 1)
+  return spec.slice(start, ende === -1 ? undefined : ende)
+}
+
+interface Tabelle {
+  kopf: string[]
+  zeilen: string[][]
+}
+
+/** Alle Markdown-Tabellen eines Texts, zellenweise und ohne Trennzeile. */
+function tabellen(text: string): Tabelle[] {
+  const gefunden: Tabelle[] = []
+  let offene: Tabelle | null = null
+  for (const zeile of text.split('\n')) {
+    if (!zeile.trimStart().startsWith('|')) {
+      offene = null
+      continue
+    }
+    const zellen = zeile
+      .trim()
+      .replace(/^\||\|$/g, '')
+      .split('|')
+      .map((zelle) => zelle.trim())
+    if (zellen.every((zelle) => /^:?-+:?$/.test(zelle))) continue
+    if (offene === null) {
+      offene = { kopf: zellen, zeilen: [] }
+      gefunden.push(offene)
+    } else {
+      offene.zeilen.push(zellen)
+    }
+  }
+  return gefunden
+}
+
+/** Die Tabelle eines Teils, deren Kopf diese Spalte führt. */
+function tabelleMitSpalte(text: string, spalte: string): Tabelle {
+  const treffer = tabellen(text).find((tabelle) => tabelle.kopf.includes(spalte))
+  expect(treffer, `keine Tabelle mit Spalte „${spalte}"`).toBeDefined()
+  return treffer as Tabelle
+}
+
+/** Die Werte der genannten Spalten je Datenzeile, in dieser Reihenfolge. */
+function spalten(tabelle: Tabelle, ...namen: string[]): string[][] {
+  const stellen = namen.map((name) => tabelle.kopf.indexOf(name))
+  return tabelle.zeilen.map((zeile) => stellen.map((stelle) => zeile[stelle] ?? ''))
+}
+
+describe('GAME_SPEC Rangfolge der Quellen', () => {
+  it('nennt die Website als einzige verbindliche Regelquelle', () => {
+    expect(
+      fehlende(spec, [
+        'Die Website `https://schlangentanz.ch/rules` ist die einzige verbindliche Regelquelle.',
+        'Dieses Dokument spiegelt die Website.',
+        'Alles andere ist keine Regelquelle:',
+        'Dart-Tasks und Dart-Dokumente',
+      ]),
+    ).toEqual([])
   })
 
-  it('benennt offene Regelfragen, statt sie anzudeuten', () => {
-    expect(spec).toContain('### Offene Regelfragen (Stand 03.08.2026)')
-    expect(spec).toContain('| **O-1** | Einfügeposition der Schlangenblockade |')
-    /* ÄNDERUNG [03.08.2026]: Der zweite Durchgang durch die Normquelle fand
-       weitere Abweichungen. Die Aufzählung muss sie halten — sonst behauptet
-       eine gesperrte Spec wieder eine Vollständigkeit, die sie nicht hat. */
-    expect(spec).toContain('| **O-3** | Eigener Ablagestapel je Spieler |')
-    // O-2 ist umgesetzt und darf nicht mehr als offen geführt werden.
-    expect(spec).not.toContain('| **O-2** |')
-    expect(spec).toContain('| **O-4** | Zweite Spielende-Bedingung |')
-    // Die Korrektur der zu früh behaupteten Vollständigkeit.
-    expect(specFliesstext).toContain('Das war zu früh behauptet')
-    // Der Fehlalarm, damit ihn niemand ein zweites Mal meldet.
-    expect(specFliesstext).toContain('Gemeint sind Teilmengen **derselben** Gruppe')
-    /* Der Satz, der das Sperren jahrelang unmöglich gemacht hat: Er behauptete
-       offene Fragen und benannte keine einzige. */
-    expect(spec).not.toContain('weitere offene Regelfragen betreffen andere Bereiche')
+  it('legt das Verfahren bei Änderungen fest', () => {
+    expect(
+      fehlende(spec, [
+        'Regeln ändern sich nur auf der Website.',
+        'Was die Website nicht hergibt, wird nicht geraten.',
+        'Ein Widerspruch zwischen Website und Code ist ein Fehler im Code.',
+      ]),
+    ).toEqual([])
   })
 
-  it('hat aktiven Arbeitsstatus und kein veraltetes Draft-/Template-Wording', () => {
-    expect(spec).toContain('Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und verifiziert')
-    expect(spec).not.toContain('Draft — Signoff ausstehend')
-    expect(spec).not.toContain('bevor Implementierung beginnen darf')
-    expect(spec).not.toContain('Status: **Draft template — not locked**')
-    expect(spec).not.toContain('No real game implementation should begin until this document is filled and accepted.')
-    expect(spec).not.toContain('TODO: Define cards, tokens, board/positions if any, players, resources, effects, and persistent state.')
-    expect(spec).not.toContain('## 11. Acceptance Sign-Off')
-    expect(spec).not.toContain('Accepted by: TODO')
-    expect(spec).toContain('## 11. Status und offene Regelfragen')
-  })
-
-  it('dokumentiert Projektziel, Zielplattform, Einzelspieler-Ausrichtung und KI-Gegnerauswahl', () => {
-    expect(spec).toContain('## 1. Overview')
-    expect(spec).toContain('Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild')
-    expect(spec).toContain('Zielplattform ist eine browserbasierte Web-App')
-    expect(spec).toContain('Produktionsbereitstellung erfolgt über Vercel')
-    expect(spec).toContain('Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial')
-    expect(spec).toContain('Einzelspieler-Spiel gegen KI-Gegner')
-    expect(spec).toContain('Der menschliche Spieler wählt zu Spielstart 1, 2 oder 3 KI-Gegner')
-    expect(spec).toContain('Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist')
-    expect(spec).not.toContain('Noch offen: Spieleranzahl und erwartete Sitzungsdauer')
-    expect(spec).not.toContain('TODO: Describe objective, player count, target platform, and expected session duration.')
-  })
-})
-
-describe('GAME_SPEC R1 Setup-Regeln', () => {
-  it('dokumentiert die Setup-Akzeptanzkriterien nach Website-Abgleich', () => {
-    expect(spec).toContain('Basis-Spiel: 110 Karten')
-    expect(spec).toContain('78 Farbkarten')
-    expect(spec).toContain('32 Sonderkarten')
-    expect(spec).toContain('Erweiterung "Schlangenkorb des Glücks": 31 zusätzliche Karten')
-    expect(spec).toContain('genau 14 Aufgabenkarten')
-    expect(spec).toContain('Website-Angabe von 15 Aufgabenkarten ist ein Fehler')
-    expect(spec).toContain('5 Startkarten')
-    expect(spec).toContain('3 offene Aufgabenkarten')
-    expect(spec).toContain('1 geheime Aufgabenkarte')
-  })
-})
-
-describe('GAME_SPEC R2 Zugstruktur', () => {
-  it('dokumentiert die aus Dart übernommenen Zugphasen und Pflichtregeln', () => {
-    expect(spec).toContain('R2 Zugstruktur')
-    expect(spec).toContain('Zugphasen sind verbindlich in dieser Reihenfolge')
-    expect(spec).toContain('Nachziehphase')
-    expect(spec).toContain('Ausspielphase')
-    expect(spec).toContain('Aufgabenprüfung')
-    expect(spec).toContain('Zugabschluss und Spielerwechsel')
-    expect(spec).toContain('Nur der aktive Spieler kann Spielaktionen durchführen')
-    expect(spec).toContain('Mindest-Handkarten nach Nachziehen: 5 Karten')
-    expect(spec).toContain('Maximale Handkarten am Zugende: 5 Karten')
-    expect(spec).toContain('Der aktive Spieler muss mindestens 1 Karte spielen')
-    expect(spec).toContain('Der aktive Spieler darf ohne Verdoppler maximal 2 Karten spielen')
-    expect(spec).toContain('Grundsätzlich gilt pro Zug: höchstens 1 Farbkarte und höchstens 1 Sonderkarte')
-    expect(spec).toContain('Wird zu Beginn des Zuges ein Verdoppler gespielt, erhöht sich das Limit für diesen Zug auf höchstens 2 Farbkarten und höchstens 2 Sonderkarten')
-    expect(spec).toContain('In einem Verdoppler-Zug sind insgesamt höchstens 3 Karten zulässig')
-    expect(spec).toContain('Zulässig sind ohne Verdoppler: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte')
-    expect(spec).toContain('Zulässig sind mit aktivem Verdoppler: zwei Farbkarten, zwei Sonderkarten oder gemischte Kombinationen bis insgesamt 3 Karten')
-    expect(spec).toContain('Sonderkarten zählen für das 2-Karten-Limit')
-    expect(spec).not.toContain('Sonderkarten erhöhen das 2-Karten-Limit nicht')
-    expect(spec).toContain('Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen')
-    expect(spec).toContain('Abwerfen gilt als Karte gespielt für die Zugpflicht')
-    expect(spec).toContain('Endspurt-Phase wird aktiviert, wenn der Nachziehstapel durch das Nachziehen leer wird')
-    expect(spec).toContain('Maßgeblich für das Spielende ist nur der Nachziehstapel')
-    expect(spec).toContain('danach erhalten alle anderen Spieler in Zugreihenfolge noch genau einen Zug')
-    expect(spec).toContain('Der Spieler, der die letzte Nachziehkarte gezogen hat, wird in dieser Endrunde nicht erneut aktiviert')
-    expect(spec).toContain('Spielende-Bedingung ist ausschließlich der leere Nachziehstapel')
-  })
-})
-
-describe('GAME_SPEC R3/R4 Schlangenbau und Farbkarten', () => {
-  it('dokumentiert die aus Dart übernommenen Schlangenbau- und Farbkarten-Akzeptanzkriterien', () => {
-    expect(spec).toContain('Eine neue Schlange kann nur mit einer Farbkarte gestartet werden')
-    expect(spec).toContain('maximal 2 Schlangen pro Spieler')
-    expect(spec).toContain('Farbkarten können an beide Enden einer Schlange angelegt werden')
-    expect(spec).toContain('keine Farb-Einschränkungen beim Anlegen')
-    expect(spec).toContain('Farbgruppe besteht aus mindestens 3 direkt nebeneinander liegenden Karten derselben Farbe')
-    expect(spec).toContain('Sonderkarten unterbrechen Farbgruppen')
-    expect(spec).toContain('Blau: 15 Karten, 1 Punkt pro Karte')
-    expect(spec).toContain('Violett: 12 Karten, 2 Punkte pro Karte')
-    expect(spec).toContain('Grün: 9 Karten, 3 Punkte pro Karte')
-    expect(spec).toContain('Einzelne Karten und 2er-Kombinationen zählen 0 Punkte')
-  })
-
-  /*
-   * ÄNDERUNG [02.08.2026]: R3.5a — der Zustand `blockiert` steht im Datenmodell
-   * und wird von der Engine durchgesetzt, aber keine umgesetzte Karte erzeugt
-   * ihn. Ohne diesen Absatz liest sich R3.5 wie ein unfertiges Feature, und die
-   * beiden Guards in legalActions.ts und turnState.ts wie toter Code.
-   *
-   * Der Test hält die Auslegung fest, nicht bloß ihre Existenz: Wer die
-   * Schlangenblockade doch sperren lässt, muss hier vorbei — und das ist genau
-   * die Stelle, an der auffällt, dass dafür eine Normquelle fehlt.
-   */
-  it('hält fest, dass keine umgesetzte Karte den Zustand blockiert erzeugt', () => {
-    expect(spec).toContain('#### R3.5a Der Zustand `blockiert` wird von keiner Karte erzeugt')
-    // Ohne `Er\n` davor: Der Assert soll die Aussage festhalten, nicht den
-    // Zeilenumbruch, an dem sie im Markdown gerade steht.
-    expect(spec).toContain('von **keiner** aktuell umgesetzten Karte gesetzt.')
-    expect(spec).toContain('Insbesondere setzt ihn die Schlangenblockade nicht')
-    expect(spec).toContain('Die Schlange bleibt\nerweiterbar.')
-    /* ÄNDERUNG [04.08.2026]: O-1 dreht diese Zusage um.
-       Hier stand seit dem 02.08.2026, die Blockade hänge „**ans Ende**" und
-       zerreiße „**keine bestehende**" Farbgruppe. Das beschrieb die Engine
-       korrekt — bis der Signoff die freie Position einführte. Geprüft wird jetzt,
-       dass R3.5a die Umkehrung ausdrücklich benennt statt sie zu verschweigen:
-       Die alte Aussage darf nicht einfach verschwinden, sonst liest sich der
-       Abschnitt, als hätte er nie etwas anderes behauptet. */
-    expect(spec).toContain('**ÄNDERUNG 04.08.2026 (O-1):**')
-    expect(specFliesstext).toContain('zerreißt sie eine bestehende Farbgruppe, sobald sie mitten hineingelegt wird')
-    expect(spec).toContain('Nur der Sonderfall „ans Ende" verhält sich wie zuvor')
-    // Der Zustand `blockiert` bleibt trotzdem unberührt — das ist der Kern von R3.5a.
-    expect(spec).toContain('Die Blockade setzt trotzdem keinen Zustand `blockiert`')
-
-    // Die Zusicherung selbst bleibt bestehen — R3.5a hebt sie nicht auf.
-    expect(spec).toContain('Eine blockierte Schlange kann nicht erweitert werden.')
-  })
-})
-
-describe('GAME_SPEC R7 Sonderkarten-Regelstatus', () => {
-  it('trennt implementierte Sonderkartenwirkungen von noch offenen Kartenregeln', () => {
-    expect(spec).toContain('### R7.1 Umgesetzte Sonderkartenwirkungen')
-    expect(spec).toContain('Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt')
-    expect(spec).toContain('Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler')
-    /* ÄNDERUNG [04.08.2026]: O-1 — „eines anderen Spielers" und „ans Ende" sind weg. */
-    expect(spec).toContain('Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange **und eine Einfügeposition darin**')
-    expect(spec).toContain('Zielschlange darf **jede** Schlange sein, auch eine eigene.')
-    expect(spec).toContain('Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.')
-    expect(spec).toContain('Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden')
-    expect(spec).toContain('Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).')
-    expect(spec).toContain('Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte.')
-    expect(spec).toContain('`SchlangenblockadeSpielen`')
-    expect(spec).toContain('`SchlangenblockadeAbwehren`')
-    expect(spec).toContain('`SchlangenblockadeDurchlassen`')
-    expect(spec).toContain('`SchlangenfrassSpielen`')
-    expect(spec).toContain('`SchlangenfrassAbwehren`')
-    expect(spec).toContain('`SchlangenfrassDurchlassen`')
-    expect(spec).toContain('`FarbenfusionSpielen`')
-    expect(spec).toContain('Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren')
-    expect(spec).toContain('Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen')
-    expect(spec).toContain('im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt')
-    expect(spec).toContain('Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen')
-    expect(spec).toContain('Der Bonus gilt nur für den aktuellen Zug')
-    expect(spec).toContain('Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren')
-    expect(spec).toContain('Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet')
-  })
-
-  it('markiert offene normale Sonderkartenwirkungen ausdrücklich als nicht implementiert', () => {
-    expect(spec).toContain('### R7.2 Keine offenen normalen Sonderkartenwirkungen')
-    expect(spec).toContain('Aktuell sind keine normalen Sonderkartenwirkungen offen.')
-    expect(spec).toContain('Neue offene Sonderkartenwirkungen werden nur mit bestätigter Normquelle ergänzt; sie dürfen nicht aus dem Kartennamen geraten werden.')
-    expect(spec).not.toContain('Aktuell offen sind insbesondere noch die letzten Spezifikationsdetails der übrigen normalen Sonderkarten')
-    expect(spec).not.toContain('### R7.2 Offene normale Sonderkartenwirkungen')
-    const gerateneEffekte = [
-      'Schlangenfrass frisst',
-      'Schlangenblockade blockiert',
-      'Farbendieb stiehlt',
-      'Verdoppler verdoppelt',
-    ]
-    gerateneEffekte.forEach((effekt) => {
-      expect(spec).not.toContain(effekt)
-    })
-  })
-})
-
-describe('GAME_SPEC R6 Aufgabenkarten', () => {
-  it('dokumentiert die allgemeinen Aufgabenregeln der Website', () => {
-    expect(spec).toContain('R6 Aufgabenkarten')
-    expect(spec).toContain('https://schlangentanz.ch/rules')
-    expect(spec).toContain('genau 14 Aufgabenkarten')
-    expect(spec).toContain('Website-Angabe von 15 Aufgabenkarten ist ein Fehler')
-    expect(spec).toContain('3 offene Aufgabenkarten werden neben den Spielbereich gelegt')
-    expect(spec).toContain('Jeder Spieler erhält 1 geheime Aufgabenkarte')
-    expect(spec).toContain('Alle Aufgaben funktionieren nach dem gleichen Prinzip - egal ob offen oder geheim')
-    expect(spec).toContain('Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist')
-    expect(spec).toContain('SchlangenSpass!')
-    expect(spec).toContain('Jede Aufgabe kann nur einmal erfüllt werden')
-    expect(spec).toContain('Offene Aufgaben werden nach Erfüllung ersetzt, solange der Aufgabenkartenstapel nicht leer ist')
-  })
-
-  it('dokumentiert die konkret auf der Website veröffentlichten Aufgaben mit Punktwerten', () => {
-    expect(spec).toContain('Farbenpracht | 8 | Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen')
-    expect(spec).toContain('Farbharmonie | 10 | Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe')
-    expect(spec).toContain('Farbkombination | 5 | Habe 5 oder mehr Karten der gleichen Farbe in einer Schlange')
-    expect(spec).toContain('Farbvielfalt | 9 | Bilde eine Kette aus je einer Karte aller 6 Farben')
-    expect(spec).toContain('Farbwechsler | 6 | Habe in einer Schlange mindestens 4 verschiedene Farben, die direkt aufeinander folgen')
-    expect(spec).toContain('Fusionsexperte | 6 | Habe eine Schlange mit mindestens 2 Farbfusionen')
-    expect(spec).toContain('Schlangenbeschwörer | 7 | Habe min. 4 Sonderkarten in deinen Schlangen')
-    expect(spec).toContain('Schlangenmeister | 4 | Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus')
-    expect(spec).toContain('Schlangenrepertoire | 4 | Spiele min. 5 versch. Arten von Sonderkarten aus')
-    expect(spec).toContain('Schlangenbändiger | 7 | Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben')
-    expect(spec).toContain('Schlangentanz | 7 | Bilde durch Schlangenhäutung 2 neue Dreiergruppen')
-    expect(spec).toContain('Symmetriemeister | 10 | Habe eine Schlange mit min. 8 Karten, bei der die erste Hälfte das Spiegelbild der zweiten ist')
-    expect(spec).toContain('Gelber Schatz | 5 | Bilde eine Gruppe aus min. 6 gelben Karten')
-    expect(spec).toContain('Lila Riese | 5 | Bilde die längste ununterbrochene Kette violetter Karten')
-    const obsoleteDartTaskNames = [
-      'Langschlange',
-      'Doppelschlange',
-      'Grünmeister',
-      'Defensivprofi',
-      'Heimlicher Sammler',
-      'Farbenfavorit',
-      'Schlangenkönig',
-      'Doppelganger',
-      'Gruppenführer',
-      'Stiller Angreifer',
-      'Punktejäger',
-      'Doppelte Farbgruppe',
-      'Lange Schlange',
-      'Schlangenhäutungs-Meister',
-      'Premium-Sammler',
-      'Doppelschlangen-Meister',
-      'Farben-Spezialist',
-      'Defensive Strategie',
-      'Kurze Schlangen',
-      'Diebstahl-König',
-      'Joker-Sammler',
-      'Punktekönig',
-      'Comeback-Held',
-    ]
-
-    obsoleteDartTaskNames.forEach((name) => {
-      expect(spec).not.toContain(name)
-    })
-  })
-
-  it('dokumentiert Endspurt-Verdopplung und die aufgelösten Quellenkonflikte', () => {
-    expect(spec).toContain('Endspurt-Phase beginnt, wenn der Nachziehstapel durch Nachziehen leer wird')
-    expect(spec).toContain('Nur offene Aufgabenkarten werden im Endspurt verdoppelt')
-    expect(spec).toContain('Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht')
-    expect(spec).toContain('R6 Konfliktauflösung')
-    expect(spec).toContain('Die Website-Regeln sind verbindlich')
-    expect(spec).toContain('Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt')
-    expect(spec).toContain('Es gibt korrekt genau 14 Aufgabenkarten')
-    expect(spec).not.toContain('Die 15. Karte')
-    expect(spec).not.toContain('15. Karte')
-    expect(spec).toContain('Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt')
-    expect(spec).toContain('keine sofortige Gutschrift')
-    expect(spec).not.toContain('Geheime Aufgaben werden bei Erfüllung aufgedeckt')
-    expect(spec).not.toContain('Aufgabe durch Gegner-Aktion erfüllt')
-    expect(spec).not.toContain('R6.2/R6.3 nennen andere Aufgabennamen oder Punktwerte als R6.5')
-    expect(spec).not.toContain('Bis zur User-Klärung bleiben R6.5-Abweichungen ungelöst')
-  })
-})
-
-describe('GAME_SPEC R8 Wertung', () => {
-  it('dokumentiert die implementierte Punktwertung', () => {
-    expect(spec).toContain('## 8. Scoring & Win/Loss')
-    expect(spec).toContain('R8.4 Punktwertung')
-    expect(spec).toContain('Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet')
-    expect(spec).toContain('Spieler-Farbgruppenpunkte sind die Summe aller Farbgruppenpunkte über beide Schlangen eines Spielers')
-    expect(spec).toContain('Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben')
-    expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte')
-    expect(spec).toContain('Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet')
-    expect(spec).not.toContain('Eine Partie endet, wenn alle Karten verbraucht sind')
-    expect(spec).not.toContain('Partie endet regelbasiert, wenn alle Karten verbraucht sind')
-    expect(spec).not.toContain('Spielende-Bedingungen werden geprüft')
-    expect(spec).not.toContain('TODO: Define scoring, game-end conditions, win/loss/draw logic.')
-  })
-
-  /*
-   * ÄNDERUNG [03.08.2026]: R8.4a. Die Regel fehlte in Spec *und* Engine — gefunden
-   * beim Normquellen-Abgleich vor dem Sperren. Der Klammerzusatz „ohne
-   * Sonderkarten!" ist der Teil, der leicht wieder verlorengeht: Er macht die
-   * Kette zu etwas anderem als eine Farbgruppe nach R3.3.
-   */
-  it('dokumentiert den Bonus für die längste Farbkette', () => {
-    expect(spec).toContain('#### R8.4a Längste Farbkette (ÄNDERUNG 03.08.2026)')
-    expect(spec).toContain('Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne')
-    expect(spec).toContain('Bei Gleichstand erhalten alle')
-    expect(spec).toContain('**Sonderkarten unterbrechen die Kette ausnahmslos.**')
-    expect(spec).toContain('auch für die Regenbogenschlange und die Farbenfusion')
-    expect(specFliesstext).toContain('erhält **niemand** den Bonus')
-    // Sie zählt in die Gesamtpunkte — sonst wäre sie dokumentiert und wirkungslos.
-    expect(spec).toContain('Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte + Kettenbonus (R8.4a)')
-  })
-
-  it('dokumentiert das sofortige Nachziehen nach einer Sonderkarte', () => {
-    expect(spec).toContain('#### R2.3a Nachziehen nach einer Sonderkarte (ÄNDERUNG 03.08.2026)')
-    expect(specFliesstext).toContain('Nach dem Ausspielen einer Sonderkarte darf sofort eine neue Karte nachgezogen')
-    // Wer durchlässt, hat keine Karte gespielt.
-    expect(specFliesstext).toContain('Wer durchlässt, hat keine Karte gespielt und zieht nicht.')
-    // Der Zeitpunkt ist die eigentliche Zusicherung.
-    expect(specFliesstext).toContain('erst **nach** Abhandlung aller Effekte')
-    expect(specFliesstext).toContain('**Nicht im Endspurt:**')
-  })
-
-  /* ÄNDERUNG [04.08.2026]: O-1. Der Signoff steht im Wortlaut in der Spec, und
-     dieser Test hält genau das fest — nicht bloß, dass es die Regel gibt.
-
-     Der Grund ist die teuerste Lehre dieses Projekts: Eine Regel, die aus einer
-     Zusammenfassung rekonstruiert wird, verliert Sätze. Ein `WebFetch`-Abriss
-     der Normquelle hatte am 03.08.2026 eine Gleichstandsregel verschluckt. Der
-     Signoff ist die Normquelle für O-1; er gehört wörtlich abgesichert. */
-  it('hält den O-1-Signoff im Wortlaut fest', () => {
-    expect(spec).toContain('#### R7.1a Freie Einfügeposition der Schlangenblockade (ÄNDERUNG 04.08.2026, O-1)')
-    expect(specFliesstext).toContain(
-      'Die Blockade darf an jeder beliebigen Stelle platziert werden — sowohl in der',
+  it('trägt genau eine Statuszeile mit dem Datum des Abgleichs', () => {
+    const statuszeilen = spec.split('\n').filter((zeile) => zeile.startsWith('Status:'))
+    expect(statuszeilen).toHaveLength(1)
+    expect(statuszeilen[0]).toMatch(
+      /^Status: \*\*Abgeglichen mit der Website am \d{2}\.\d{2}\.\d{4}\.\*\*$/,
     )
-    expect(specFliesstext).toContain('als auch an > beliebiger Stelle beim Gegner')
-    // Der letzte Satz trägt die Zusicherung, dass die Position bei der Ansage feststeht.
-    expect(specFliesstext).toContain('darf sich > dann nicht mehr umentscheiden und den anderen Spieler nehmen.')
-
-    // Die vier Folgerungen, die die Engine umsetzt.
-    expect(specFliesstext).toContain('**Jede Schlange ist ein zulässiges Ziel**, auch eine eigene.')
-    expect(specFliesstext).toContain('**Die Position wird bei der Ansage festgelegt**')
-    expect(specFliesstext).toContain('**Auf die eigene Schlange gibt es keine Abwehr.**')
-    // Die Punktewirkung ist der Kern der Änderung, nicht ein Nebeneffekt.
-    expect(specFliesstext).toContain('zerreißt die Blockade sie deshalb sofort')
-
-    // O-1 steht nicht mehr als offene Frage da.
-    expect(spec).toContain('**entschieden und umgesetzt** (Signoff 03.08.2026, Umsetzung 04.08.2026)')
-  })
-
-  it('schreibt den digitalen Umfang fest und schließt den Vielfaltbonus aus', () => {
-    expect(spec).toContain('#### R1.2a Umfang der digitalen Fassung (ÄNDERUNG 03.08.2026)')
-    expect(spec).toContain('| Vielfaltbonus | Erweiterung | **nein** |')
-    expect(spec).toContain('| Längste Farbkette (R8.4a) | Basisspiel | **ja** |')
-    /* R7.1 verwies auf eine Regel, die diese Spec nie definiert hat. Geprüft
-       wird die Ersetzung, nicht die Abwesenheit: Der Satz steht als zitierte
-       Historie weiterhin im Text, und ein `not.toContain` darauf wäre nur eine
-       Übung in Zeichensetzung. */
-    expect(spec).toContain('Für die längste Farbkette (R8.4a) zählt sie **nicht**')
-  })
-
-  it('dokumentiert geklärte Partieende- und Gewinnerermittlungsregeln', () => {
-    expect(spec).toContain('Eine Partie endet, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist')
-    expect(spec).toContain('Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt')
-    expect(spec).toContain('Wer die meisten Punkte hat, gewinnt')
-    expect(spec).toContain('Gleichstand ist erlaubt, wenn zwei oder mehr Spieler dieselbe höchste Punktzahl haben')
-    expect(spec).not.toContain('Noch offen: Spielende-Auslöser, Gewinnerlogik, Gleichstandsregeln und Draw-Verhalten')
   })
 })
 
-describe('GAME_SPEC R10 Nicht-Ziele', () => {
-  it('dokumentiert unabhängige Nicht-Ziele aus README und Workflow ohne Spielregeln zu erfinden', () => {
-    expect(spec).toContain('## 10. Non-Goals')
-    expect(spec).toContain('Kein Wiederverwenden des alten `schlangentanz-game`-Repositorys')
-    expect(spec).toContain('Kein Paperclip-Implementierungspfad')
-    expect(spec).toContain('Kein blindes Kopieren von altem Code, alten Build-Artefakten oder alten Vercel-Projektständen')
-    expect(spec).toContain('Dart-Aufgaben sind Backlog-Input und keine automatische Wahrheit')
-    expect(spec).toContain('Nicht-Ziele ändern keine offenen Spielregeln')
-    expect(spec).not.toContain('TODO: Explicitly list what is out of scope for v2 initial release.')
+describe('GAME_SPEC Teil A — Spiegel der Website', () => {
+  it('führt das Spielmaterial mit den Stückzahlen der Website', () => {
+    const a = teil('A')
+    const material = spalten(tabelleMitSpalte(a, 'Anzahl'), 'Anzahl', 'Beschreibung')
+    for (const eintrag of [
+      ['15', 'Blau (1 Punkt)'],
+      ['15', 'Rot (1 Punkt)'],
+      ['15', 'Gelb (1 Punkt)'],
+      ['12', 'Violett (2 Punkte)'],
+      ['12', 'Braun (2 Punkte)'],
+      ['9', 'Grün (3 Punkte)'],
+      ['4', 'Farbenschutz'],
+      ['4', 'Regenbogenschlange'],
+      ['4', 'Schlangenfrass'],
+      ['3', 'Schlangenblockade'],
+      ['4', 'Farbendieb'],
+      ['3', 'Schlangengrube'],
+      ['4', 'Farbenfusion'],
+      ['4', 'Verdoppler'],
+      ['3', 'Schlangenhäutung [Erweiterung]'],
+      ['1', 'Schlangenkorb des Glücks [Erweiterung]'],
+      ['15', 'Aufgabenkarten (verschiedene Ziele)'],
+    ]) {
+      expect(material).toContainEqual(eintrag)
+    }
+    expect(
+      fehlende(a, ['108 Spielkarten (78 Farbkarten + 30 Sonderkarten)', 'alle 139 Spielkarten']),
+    ).toEqual([])
+  })
+
+  it('beschreibt den Zug: eine Farbkarte, optional eine Sonderkarte, Verdoppler bis drei', () => {
+    expect(
+      fehlende(teil('A'), [
+        'Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:',
+        'Optional eine Sonderkarte, um deren Effekt auszulösen',
+        'insgesamt also bis zu 3 Karten',
+        'Ein Spieler darf maximal 2 Schlangen haben.',
+      ]),
+    ).toEqual([])
+  })
+
+  it('beschreibt das Nachziehen: am Zugende, nie sofort ausserhalb des eigenen Zuges', () => {
+    expect(
+      fehlende(teil('A'), [
+        'Zug beenden: Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast.',
+        'Wer ausserhalb seines Zuges eine Karte spielt, zieht nicht gleich nach, sondern füllt erst zu Beginn seines nächsten Zuges auf 5 Karten auf.',
+        'Jeder Spieler erhält einen eigenen Ablagestapel',
+      ]),
+    ).toEqual([])
+  })
+
+  it('lässt als Reaktion nur den Farbenschutz zu', () => {
+    expect(
+      fehlende(teil('A'), [
+        'Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Eine andere Karte ist als Reaktion nicht erlaubt.',
+        'Schlangenfrass ist keine Reaktion',
+      ]),
+    ).toEqual([])
+  })
+
+  it('führt alle zehn Sonderkarten und beide Zusatzkarten mit eigenem Abschnitt', () => {
+    expect(
+      fehlende(teil('A'), [
+        '#### A7.1 Farbendieb',
+        '#### A7.2 Farbenschutz',
+        '#### A7.3 Regenbogenschlange',
+        '#### A7.4 Schlangenfrass',
+        '#### A7.5 Schlangenblockade',
+        '#### A7.6 Schlangengrube',
+        '#### A7.7 Farbenfusion',
+        '#### A7.8 Verdoppler',
+        '#### A7.9 Schlangenhäutung',
+        '#### A7.10 Schlangenkorb des Glücks',
+        '#### A8.1 Comeback-Karte',
+        '#### A8.2 Risiko-Belohnungs-Karte',
+        'einen Abschnitt von 3–5 Farbkarten in der Schlange neu anzuordnen',
+        'Schlangenblockaden in gegnerischen Schlangen können nicht mit Option c) entfernt werden',
+      ]),
+    ).toEqual([])
+  })
+
+  it('führt alle fünfzehn Aufgabenkarten mit ihren Punkten', () => {
+    const aufgaben = spalten(tabelleMitSpalte(teil('A'), 'Punkte'), 'Name', 'Punkte')
+    expect(aufgaben).toEqual([
+      ['Farbenpracht', '8'],
+      ['Farbharmonie', '10'],
+      ['Farbkombination', '5'],
+      ['Farbvielfalt', '9'],
+      ['Vielfaltskönig', '9'],
+      ['Farbwechsler', '6'],
+      ['Fusionsexperte', '6'],
+      ['Schlangenbeschwörer', '7'],
+      ['Schlangenmeister', '4'],
+      ['Schlangenrepertoire', '4'],
+      ['Schlangenbändiger', '7'],
+      ['Schlangentanz', '7'],
+      ['Symmetriemeister', '10'],
+      ['Gelber Schatz', '5'],
+      ['Lila Riese', '5'],
+    ])
+  })
+
+  it('legt die Farbe von Jokern beim ersten Einsatz für eine Aufgabe fest', () => {
+    expect(
+      fehlende(teil('A'), [
+        'Regenbogenschlange und Farbenfusion zählen für Aufgaben als Karte einer Farbe. Diese Farbe wird beim ersten Einsatz für eine Aufgabe festgelegt und gilt danach für alle Aufgaben und für die Punktewertung.',
+      ]),
+    ).toEqual([])
+  })
+
+  it('beschreibt Spielende und Punktezählung', () => {
+    expect(
+      fehlende(teil('A'), [
+        'Das Spiel endet, wenn der Nachziehstapel leer ist. Wer die letzte Karte vom Nachziehstapel zieht, spielt seinen Zug normal zu Ende. Danach machen alle anderen Spieler noch je einen letzten Zug, ohne nachzuziehen.',
+        'Es zählt nur die längste Gruppe jeder Farbe.',
+        'Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne Sonderkarten!) erhält 5 Bonuspunkte. Bei Gleichstand erhalten alle beteiligten Spieler die vollen 5 Punkte.',
+        '5 oder mehr verschiedene Farben mit gültigen Gruppen: 4 Bonuspunkte',
+      ]),
+    ).toEqual([])
+  })
+
+  it('kennt keinen Endspurt mehr', () => {
+    // Die frühere Fassung verdoppelte offene Aufgaben in einem „Endspurt". Die
+    // Website kennt weder den Begriff noch die Regel.
+    expect(fliesstext(teil('A'))).not.toContain('Endspurt')
+  })
+})
+
+describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => {
+  it('trennt den digitalen Umfang von den Regeln', () => {
+    expect(
+      fehlende(teil('B'), [
+        '### B1 Umfang',
+        '### B2 Festlegungen',
+        'Nichts hier ändert eine Regel aus Teil A.',
+        'ein Mensch gegen 1, 2 oder 3 KI-Gegner',
+        '**Verdeckte Information:**',
+      ]),
+    ).toEqual([])
+  })
+
+  it('führt jede Abweichung der Engine mit Nummer und Fundstelle im Code', () => {
+    // Die Liste darf leer werden: Das ist ihr Ziel. Jede Zeile, die dasteht,
+    // muss aber eine Nummer und eine Datei nennen.
+    const abweichungen = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Fundstelle')
+    const unvollstaendig = abweichungen.filter(
+      ([nummer, fundstelle]) => !/^C\d+$/.test(nummer) || !/`src\/[^`]+`/.test(fundstelle),
+    )
+    expect(unvollstaendig).toEqual([])
+  })
+
+  it('führt offene Auslegungsfragen als Fragen an den Autor', () => {
+    const d = teil('D')
+    const fragen = spalten(tabelleMitSpalte(d, 'Frage'), 'Nr.', 'Frage')
+    const keineFrage = fragen.filter(
+      ([nummer, frage]) => !/^D\d+$/.test(nummer) || !frage.endsWith('?'),
+    )
+    expect(keineFrage).toEqual([])
+    expect(fehlende(d, ['Bis zur Antwort bleibt das heutige Verhalten stehen.'])).toEqual([])
+  })
+
+  it('macht die früheren R-Nummern auffindbar', () => {
+    expect(
+      fehlende(teil('E'), [
+        'R1.2a',
+        'R2.3a',
+        'R3.5a',
+        'R6.4',
+        'R7.1a',
+        'R8.4a',
+        '### Stand und Verlauf',
+      ]),
+    ).toEqual([])
   })
 })

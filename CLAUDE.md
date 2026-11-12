@@ -10,15 +10,25 @@ Do **not** copy or import code from:
 
 Old work may be read only as historical reference after explicit Hermes approval, but no code should be copied blindly.
 
+## Regelquelle (ÄNDERUNG 12.11.2026)
+
+- **Einzige verbindliche Regelquelle ist die Website `https://schlangentanz.ch/rules`.**
+- `docs/GAME_SPEC.md` spiegelt sie wörtlich (Teil A) und führt die Abweichungen der
+  Engine als Arbeitsliste (Teil C) und offene Fragen an den Autor (Teil D).
+- Dart-Tasks, Dart-Dokumente, `docs/release_status_*`, `docs/slice_plan_*` und
+  `docs/PLAYABILITY_GATE.md` sind **keine** Regelquelle.
+- Weicht der Code von der Website ab, ist der Code falsch. Gibt die Website etwas
+  nicht her, wird gefragt und nicht geraten.
+
 ## Roles
 - Hermes: orchestrator, release manager, quality gatekeeper.
 - Claude Code: builder for implementation slices.
 - Codex: adversarial reviewer and verifier.
-- Dart: backlog and requirements source.
+- Dart: backlog source. Not a rules source — rules come from the website only.
 - Paperclip: archived history/tracking only, **not** an implementation backend.
 
 ## Required workflow
-1. Lock `docs/GAME_SPEC.md` before real game implementation.
+1. Keep `docs/GAME_SPEC.md` in sync with the website before real game implementation.
 2. Write acceptance tests before production game logic.
 3. Implement in small slices.
 4. After every coding pass, run Claude Code `/simplify` once as a simplification pre-check.
