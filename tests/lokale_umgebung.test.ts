@@ -1,18 +1,17 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import viteKonfiguration from '../vite.config'
-
-const wurzel = resolve(__dirname, '..')
 
 type Paketbeschreibung = {
   scripts: Record<string, string>
   engines?: { node?: string }
 }
 
-function lesePaket(): Paketbeschreibung {
-  return JSON.parse(readFileSync(resolve(wurzel, 'package.json'), 'utf8')) as Paketbeschreibung
-}
+const paket = JSON.parse(
+  readFileSync(resolve(__dirname, '..', 'package.json'), 'utf8'),
+) as Paketbeschreibung
 
 /** Ruft die Vite-Konfiguration so auf, wie `vite build --mode <modus>` es tut. */
 function konfigurationFuer(modus: string) {
@@ -26,14 +25,16 @@ function konfigurationFuer(modus: string) {
 }
 
 describe('P0.2: lokale Umgebung', () => {
-  it('P0.2: build:testhooks setzt keine Variable in POSIX-Schreibweise und baut im Modus testhooks', () => {
-    const befehl = lesePaket().scripts['build:testhooks']
+  it('P0.2: kein npm-Skript setzt eine Variable in POSIX-Schreibweise (läuft unter Windows nicht)', () => {
+    const posixZuweisung = /(^|&&|;)\s*[A-Za-z_][A-Za-z0-9_]*=/
+    const betroffen = Object.entries(paket.scripts).filter(([, befehl]) => posixZuweisung.test(befehl))
 
-    expect(befehl, 'package.json: Skript build:testhooks fehlt').toBeTypeOf('string')
-    expect(
-      /(^|&&|;)\s*[A-Za-z_][A-Za-z0-9_]*=/.test(befehl),
-      `build:testhooks: erwartet kein VAR=-Präfix (läuft unter Windows nicht), erhalten "${befehl}"`,
-    ).toBe(false)
+    expect(betroffen, 'package.json: erwartet keine Skripte mit VAR=-Präfix, erhalten').toEqual([])
+  })
+
+  it('P0.2: build:testhooks baut im Modus testhooks nach dist-testhooks', () => {
+    const befehl = paket.scripts['build:testhooks']
+
     expect(befehl, 'build:testhooks: erwartet "--mode testhooks"').toContain('--mode testhooks')
     expect(befehl, 'build:testhooks: Ausgabe muss weiter nach dist-testhooks gehen').toContain(
       '--outDir dist-testhooks',
@@ -54,10 +55,9 @@ describe('P0.2: lokale Umgebung', () => {
     }
   })
 
-  it('P0.2: package.json nennt die unterstützte Node-Version', () => {
-    const node = lesePaket().engines?.node
-
-    expect(node, 'package.json: engines.node fehlt').toBeTypeOf('string')
-    expect(node?.trim(), 'package.json: engines.node ist leer').not.toBe('')
+  it('P0.2: package.json verlangt mindestens Node 22.13 (Untergrenze von eslint 10 und jsdom 29)', () => {
+    expect(paket.engines?.node, 'package.json: engines.node fehlt oder nennt eine andere Untergrenze').toMatch(
+      /^>=\s*22\.13/,
+    )
   })
 })

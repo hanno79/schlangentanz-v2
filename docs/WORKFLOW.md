@@ -65,6 +65,62 @@ die Dauer des Neuaufbaus den Abschnitt „Direkt auf `main`" weiter unten:
 - Der Abschnitt „Bewusst nicht implementiert" ist überholt: Die Erweiterung
   kommt vollständig (`docs/GAME_SPEC.md` Teil B1).
 
+## Lokale Einrichtung unter Windows
+
+Seit dem 12.11.2026 läuft die Umsetzung lokal auf dem Desktop unter Windows 11.
+Eingerichtet und geprüft wurde sie mit Node 25.2, npm 11.5, Python 3.13, Git for
+Windows 2.55, gh 2.102 und codex-cli 0.166. Alle Befehle laufen in PowerShell
+und in Git Bash.
+
+**npm-Skripte laufen unter Windows in `cmd.exe`.** Die Schreibweise
+`VAR=wert befehl` gibt es dort nicht, deshalb steht sie in keinem Skript in
+`package.json` (`tests/lokale_umgebung.test.ts` hält das fest). Der
+Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
+`vite.config.ts`.
+
+1. **Node ab 22.13** (`engines.node`): die Untergrenze von eslint 10 und
+   jsdom 29. Vercel baut mit der neuesten passenden Hauptversion.
+2. **Abhängigkeiten:** `npm ci`.
+3. **pre-commit-Hook:** `git config core.hooksPath scripts/githooks`. Der Hook
+   ruft `python scripts/regelcheck.py --geaendert` auf und gilt für alle
+   Worktrees des Repos.
+4. **Browser für die Layout-Verträge:** `npx playwright install chromium`,
+   einmal je Rechner und Playwright-Version.
+5. **Gates**, jedes einzeln und mit eigenem Exit-Code (PowerShell:
+   `$LASTEXITCODE`, Git Bash: `$?`):
+
+   ```
+   npm test -- --run
+   npm run typecheck
+   npm run build
+   npm run build:testhooks
+   npm run check:test-lines
+   npm run check:css-asserts
+   npx eslint .
+   python scripts/regelcheck.py
+   npm run test:layout
+   ```
+
+   `npm run check:regeln` kommt mit Task P0.3 dazu.
+6. **Ports 4173 und 4174** müssen vor `npm run test:layout` frei sein. Unter
+   Windows ersetzt `netstat -ano | findstr ":4173 :4174"`
+   (PowerShell oder cmd) die Vorprüfung mit `ss`; ohne Ausgabe sind beide frei.
+7. **Codex:** einmal `codex login` mit dem Abo. Probe:
+   `codex exec --sandbox read-only -C <repo> "Welche npm-Skripte definiert package.json?"`.
+8. **GitHub:** `gh auth login` (HTTPS), danach zeigt `gh auth status` das
+   angemeldete Konto. Task-PRs gehen mit `gh pr create --base neuaufbau` gegen
+   den Integrationsbranch.
+9. **Dart:** über den Dart-Connector der Claude-Code-Sitzung, Board
+   `Schlangentanz/Tasks`. Die Status heissen `To-do`, `Doing` und `Done`.
+10. **Vercel-Vorschau:** Ein Vercel-CLI ist nicht nötig. Jeder Push auf einen
+    Branch baut eine Vorschau, und ihre Adresse steht bei GitHub:
+    `gh api "repos/hanno79/schlangentanz-v2/deployments?sha=<sha>"` liefert die
+    Deployment-ID, `gh api repos/hanno79/schlangentanz-v2/deployments/<id>/statuses`
+    unter `environment_url` die Adresse. Die Vorschauen sind durch die
+    Vercel-Anmeldung geschützt. Solange `neuaufbau` auf demselben Commit steht
+    wie `main`, gibt es für diesen Commit nur das Production-Deployment; eine
+    eigene Vorschau entsteht mit dem ersten eigenen Commit auf `neuaufbau`.
+
 ## Gates
 
 1. Toolchain gate
@@ -271,7 +327,7 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 | Projekt | Port | Verzeichnis | Build | Verträge |
 |---|---|---|---|---|
 | `chromium` | 4173 | `dist` | `vite build` | alle außer `*.hooks.spec.ts` |
-| `chromium-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (`VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
+| `chromium-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
 
 **Warum.** Die Sieger-Party ist nur über `/game?phase=spielende` erreichbar, und
 dieser Hook ist im Produktionsbuild aus. Der Bildschirm war deshalb von keinem

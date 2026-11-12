@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -10,7 +13,7 @@
     "check:css-asserts": "node scripts/check_css_source_asserts.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "build:testhooks": "VITE_TEST_HOOKS=1 vite build --outDir dist-testhooks --emptyOutDir",
+    "build:testhooks": "vite build --mode testhooks --outDir dist-testhooks --emptyOutDir",
     "preview:testhooks": "vite preview --outDir dist-testhooks --port 4174 --strictPort",
     "test": "vitest",
     "test:layout": "playwright test",
