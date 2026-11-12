@@ -10,66 +10,91 @@ const plan = readFileSync(resolve(wurzel, 'docs', 'UMSETZUNGSPLAN.md'), 'utf8')
 const spec = readFileSync(resolve(wurzel, 'docs', 'GAME_SPEC.md'), 'utf8')
 const regelfragen = existsSync(regelfragenPfad) ? readFileSync(regelfragenPfad, 'utf8') : ''
 
+/** Task-IDs des Plans: P0.1 … P0.5, E1 …, X1 …, K1 …, O1 …, Z1 … */
+const TASK_ID = /\b(P0\.\d|[EXKOZ]\d+)\b/g
+/** Fragennummern, auch als Bereich „G3–G8“. */
+const FRAGE_ODER_BEREICH = /\b([FG])(\d+)(?:–\1(\d+))?\b/g
+/** Antwortfeld, solange der Autor noch nicht geantwortet hat. */
+const OFFEN = '—'
+
 type PlanFrage = { nr: string; stelle: string; frage: string; vorschlag?: string }
 
-/** Fasst Leerraum zusammen, damit Zitate über Zeilenumbrüche der Spec hinweg passen. */
+/** Fasst Leerraum zusammen, damit Zitate und Prosa über Zeilenumbrüche hinweg passen. */
 function normalisiert(text: string): string {
   return text.replace(/\s+/g, ' ').trim()
 }
 
-/** Text ab der Zeile, die mit `beginn` anfängt, bis vor die Zeile, die mit `ende` anfängt. */
-function abschnitt(text: string, beginn: string, ende: string): string {
+/** Zellen einer Markdown-Tabellenzeile, ohne die äusseren Striche, je getrimmt. */
+function zellen(zeile: string): string[] {
+  return zeile.trim().replace(/^\||\|$/g, '').split('|').map((zelle) => zelle.trim())
+}
+
+/** Text ab der Überschrift, die `titel` enthält, bis vor die nächste Überschrift gleicher Stufe. */
+function abschnitt(text: string, stufe: string, titel: string): string {
   const zeilen = text.split('\n')
-  const start = zeilen.findIndex((zeile) => zeile.startsWith(beginn))
+  const start = zeilen.findIndex((zeile) => zeile.startsWith(`${stufe} `) && zeile.includes(titel))
   if (start < 0) {
-    throw new Error(`abschnitt: Überschrift "${beginn}" nicht gefunden`)
+    throw new Error(`abschnitt: Überschrift „${stufe} … ${titel}“ nicht gefunden`)
   }
   const rest = zeilen.slice(start + 1)
-  const stopp = rest.findIndex((zeile) => zeile.startsWith(ende))
+  const stopp = rest.findIndex((zeile) => zeile.startsWith(`${stufe} `))
   return (stopp < 0 ? rest : rest.slice(0, stopp)).join('\n')
 }
 
-/** Liest die Fragen F und G aus den Tabellen in Abschnitt 9 des Umsetzungsplans. */
+/** Liest die Fragen F und G aus den Tabellen des Abschnitts „Offene Regelfragen“ im Plan. */
 function fragenAusPlan(): PlanFrage[] {
-  const katalog = abschnitt(plan, '## 9. ', '## 10. ')
-  const fragen: PlanFrage[] = []
-  for (const treffer of katalog.matchAll(/^\| ([FG]\d+) \| (.+) \|\s*$/gm)) {
-    const zellen = treffer[2].split(' | ')
-    const [stelle, frage, vorschlag] = zellen
-    fragen.push({ nr: treffer[1], stelle, frage, vorschlag })
-  }
-  return fragen
+  return abschnitt(plan, '##', 'Offene Regelfragen')
+    .split('\n')
+    .filter((zeile) => /^\|\s*[FG]\d+\s*\|/.test(zeile))
+    .map((zeile) => {
+      const [nr, stelle, frage, vorschlag] = zellen(zeile)
+      return { nr, stelle, frage, vorschlag }
+    })
 }
 
-/** Alle Task-IDs, die im Plan als Überschrift vorkommen (P0.1, E1, X4, K2, O9, Z3 …). */
+/** Alle Task-IDs, die im Plan als Überschrift vorkommen. */
 function taskIdsAusPlan(): Set<string> {
   const ids = new Set<string>()
-  for (const zeile of plan.split('\n')) {
-    if (!/^#{3,4} /.test(zeile)) continue
-    for (const treffer of zeile.matchAll(/\b(P0\.\d|[EXKOZ]\d+)\b/g)) {
-      ids.add(treffer[1])
-    }
+  for (const zeile of plan.split('\n').filter((z) => /^#{3,4} /.test(z))) {
+    for (const treffer of zeile.matchAll(TASK_ID)) ids.add(treffer[1])
   }
   return ids
+}
+
+/** Je Frage die Tasks, deren Block im Plan (Abschnitte 4 bis 8) die Frage erwähnt. */
+function nennendeTasksAusPlan(): Map<string, Set<string>> {
+  const zuordnung = new Map<string, Set<string>>()
+  const beginn = plan.indexOf('\n## 4. ')
+  const ende = plan.search(/^## .*Offene Regelfragen/m)
+  let aktuell: string | undefined
+  for (const zeile of plan.slice(beginn, ende).split('\n')) {
+    const kopf = /^(?:#{3,4} |- \*\*)(P0\.\d|[EXKOZ]\d+)\b/.exec(zeile)
+    if (kopf) aktuell = kopf[1]
+    else if (/^#{2,4} /.test(zeile)) aktuell = undefined
+    if (!aktuell) continue
+    for (const [, art, von, bis] of zeile.matchAll(FRAGE_ODER_BEREICH)) {
+      for (let n = Number(von); n <= Number(bis ?? von); n++) {
+        const tasks = zuordnung.get(`${art}${n}`) ?? new Set<string>()
+        zuordnung.set(`${art}${n}`, tasks.add(aktuell))
+      }
+    }
+  }
+  return zuordnung
 }
 
 /** Zerlegt docs/REGELFRAGEN.md in Fragenblöcke, je ab `### F1: …` bis zur nächsten Überschrift. */
 function fragenbloecke(): Map<string, string> {
   const bloecke = new Map<string, string>()
-  const teile = regelfragen.split(/^(?=#{2,3} )/m)
-  for (const teil of teile) {
+  for (const teil of regelfragen.split(/^(?=#{2,3} )/m)) {
     const kopf = /^### ([FG]\d+): \S/.exec(teil)
-    if (kopf) {
-      bloecke.set(kopf[1], teil)
-    }
+    if (kopf) bloecke.set(kopf[1], teil)
   }
   return bloecke
 }
 
 /** Text des Feldes `**Name:** …` in einem Block, ohne den Namen; undefined, wenn es fehlt. */
 function feld(block: string, name: string): string | undefined {
-  const treffer = new RegExp(`^\\*\\*${name}:\\*\\* (.+)$`, 'm').exec(block)
-  return treffer?.[1].trim()
+  return new RegExp(`^\\*\\*${name}:\\*\\* (.+)$`, 'm').exec(block)?.[1].trim()
 }
 
 /** Buchstaben der Möglichkeiten `- **a)** …` in der Reihenfolge des Blocks. */
@@ -79,31 +104,35 @@ function moeglichkeiten(block: string): string[] {
 
 /** Zitate: jede Zeile `> …` mit Inhalt. */
 function zitate(block: string): string[] {
-  return block
-    .split('\n')
-    .filter((zeile) => zeile.startsWith('> '))
-    .map((zeile) => zeile.slice(2).trim())
-    .filter((zeile) => zeile.length > 0)
+  return [...block.matchAll(/^> (.*\S.*)$/gm)].map((treffer) => treffer[1].trim())
 }
 
-/** Text vor der ersten Fragenüberschrift: Anleitung und Übersichtstabelle. */
-function kopfteil(): string {
-  const erste = regelfragen.search(/^### [FG]\d+: /m)
-  return erste < 0 ? regelfragen : regelfragen.slice(0, erste)
+/** Task-IDs im Teil „nennt die Frage: …“ des Feldes „Betroffene Tasks“. */
+function nennendeTasks(betroffen: string): string[] {
+  const teil = /nennt die Frage: (.*?)(?:Hängt davon ab:|$)/.exec(betroffen)?.[1] ?? ''
+  return [...teil.matchAll(TASK_ID)].map((treffer) => treffer[1])
+}
+
+/** Steht die Abschnittsnummer (A7.1, D9 …) als eigene Nummer im Text, nicht als Teil von A7.10? */
+function nenntStelle(text: string, stelle: string): boolean {
+  const maskiert = stelle.replace(/\./g, '\\.')
+  return new RegExp(`(?<![\\w.])${maskiert}(?!\\d|\\.\\d)`).test(text)
 }
 
 const planFragen = fragenAusPlan()
 const planTaskIds = taskIdsAusPlan()
+const planNennungen = nennendeTasksAusPlan()
 const specNormalisiert = normalisiert(spec)
+/** Anleitung und Übersichtstabelle: alles vor der ersten Fragenüberschrift. */
+const kopf = regelfragen.split(/^### [FG]\d+: /m)[0]
 
 describe('P0.5: Regelfragen an den Autor', () => {
-  it('P0.5: der Plan nennt in Abschnitt 9 die Fragen F1–F15 und G1–G23', () => {
-    const erwartet = [
-      ...Array.from({ length: 15 }, (_, i) => `F${i + 1}`),
-      ...Array.from({ length: 23 }, (_, i) => `G${i + 1}`),
-    ]
-
-    expect(planFragen.map((frage) => frage.nr), 'UMSETZUNGSPLAN.md Abschnitt 9: Fragennummern').toEqual(erwartet)
+  it('P0.5: der Plan nummeriert seine Regelfragen je Art lückenlos ab 1, F mit Vorschlag', () => {
+    for (const art of ['F', 'G']) {
+      const nummern = planFragen.filter((f) => f.nr.startsWith(art)).map((f) => f.nr)
+      expect(nummern.length, `Plan: keine Fragen ${art}`).toBeGreaterThan(0)
+      expect(nummern, `Plan: Fragen ${art} nicht lückenlos ab 1`).toEqual(nummern.map((_, i) => `${art}${i + 1}`))
+    }
     for (const frage of planFragen.filter((f) => f.nr.startsWith('F'))) {
       expect(frage.vorschlag, `Plan ${frage.nr}: Spalte „Vorschlag“ fehlt`).toBeTruthy()
     }
@@ -122,26 +151,30 @@ describe('P0.5: Regelfragen an den Autor', () => {
   })
 
   it('P0.5: die Anleitung erklärt Antwortform, Geltung der Vorschläge und was F und G blockieren', () => {
-    const kopf = kopfteil()
+    const anleitung = normalisiert(kopf)
 
-    expect(kopf, 'Anleitung: Beispiel für die Antwortform „F1: a“ fehlt').toMatch(/F1: a\b/)
-    expect(kopf, 'Anleitung: Hinweis, dass ein Vorschlag erst mit der Antwort gilt, fehlt').toMatch(
+    expect(anleitung, 'Anleitung: Beispiel für die Antwortform „F1: a“ fehlt').toMatch(/F1: a\b/)
+    expect(anleitung, 'Anleitung: Hinweis, dass ein Vorschlag erst mit der Antwort gilt, fehlt').toMatch(
       /Vorschlag gilt erst/,
     )
-    expect(kopf, 'Anleitung: Hinweis, dass F-Fragen Basis-Tasks blockieren, fehlt').toMatch(
-      /Fragen F[^\n]*Basis/,
+    expect(anleitung, 'Anleitung: Hinweis, dass F-Fragen Basis-Tasks blockieren, fehlt').toMatch(
+      /Fragen F blockieren [^.]*Basis/,
     )
-    expect(kopf, 'Anleitung: Hinweis, dass G-Fragen nur die Erweiterung blockieren, fehlt').toMatch(
-      /Fragen G[^\n]*Erweiterung/,
+    expect(anleitung, 'Anleitung: Hinweis, dass G-Fragen nur die Erweiterung blockieren, fehlt').toMatch(
+      /Fragen G blockieren nur [^.]*Erweiterung/,
     )
   })
 
   it('P0.5: die Übersichtstabelle vor den Fragen hat je Frage eine Zeile mit Vorschlag', () => {
-    const kopf = kopfteil()
+    const tabelle = kopf.split('\n').filter((zeile) => zeile.trimStart().startsWith('|'))
+    const spalteVorschlag = zellen(tabelle[0] ?? '').indexOf('Vorschlag')
 
+    expect(spalteVorschlag, 'Übersichtstabelle: Spalte „Vorschlag“ fehlt').toBeGreaterThan(0)
     for (const frage of planFragen) {
-      const zeile = new RegExp(`^\\| ${frage.nr} \\| [^|]*\\S[^|]* \\| [^|]*\\S[^|]* \\|\\s*$`, 'm').exec(kopf)
-      expect(zeile, `Übersichtstabelle: Zeile „| ${frage.nr} | Frage | Vorschlag |“ fehlt oder ist leer`).not.toBeNull()
+      const zeile = tabelle.map(zellen).find((z) => z[0] === frage.nr)
+      expect(zeile, `Übersichtstabelle: Zeile für ${frage.nr} fehlt`).toBeDefined()
+      expect(zeile?.[1], `Übersichtstabelle ${frage.nr}: Frage leer`).toBeTruthy()
+      expect(zeile?.[spalteVorschlag], `Übersichtstabelle ${frage.nr}: Vorschlag leer`).toBeTruthy()
     }
   })
 
@@ -150,6 +183,7 @@ describe('P0.5: Regelfragen an den Autor', () => {
   for (const planFrage of planFragen) {
     describe(`P0.5: ${planFrage.nr}`, () => {
       const block = bloecke.get(planFrage.nr) ?? ''
+      const buchstaben = moeglichkeiten(block)
 
       it(`P0.5: ${planFrage.nr} übernimmt die Frage aus dem Plan wörtlich`, () => {
         expect(normalisiert(feld(block, 'Frage') ?? ''), `${planFrage.nr}: Feld „Frage“`).toBe(
@@ -158,18 +192,22 @@ describe('P0.5: Regelfragen an den Autor', () => {
       })
 
       it(`P0.5: ${planFrage.nr} nennt die Fundstelle aus dem Plan`, () => {
-        const fundstelle = feld(block, 'Fundstelle')
+        const fundstelle = feld(block, 'Fundstelle') ?? ''
 
         expect(fundstelle, `${planFrage.nr}: Feld „Fundstelle“ fehlt`).toBeTruthy()
         for (const stelle of planFrage.stelle.split(/,\s*/)) {
-          expect(fundstelle, `${planFrage.nr}: Fundstelle nennt ${stelle} nicht`).toContain(stelle)
+          expect(nenntStelle(fundstelle, stelle), `${planFrage.nr}: Fundstelle nennt ${stelle} nicht`).toBe(true)
         }
       })
 
-      it(`P0.5: ${planFrage.nr} zitiert die Spec wörtlich`, () => {
+      // Nach der Antwort zieht der Autor die Website nach, und Teil A wird neu
+      // übernommen. Die Zitate halten dann den Stand der Frage fest; geprüft wird
+      // deshalb nur, solange die Frage offen ist.
+      it(`P0.5: ${planFrage.nr} zitiert die Spec wörtlich, solange die Frage offen ist`, () => {
         const zitatListe = zitate(block)
 
         expect(zitatListe.length, `${planFrage.nr}: kein Zitat („> …“)`).toBeGreaterThan(0)
+        if (feld(block, 'Antwort') !== OFFEN) return
         for (const zitat of zitatListe) {
           expect(
             specNormalisiert.includes(normalisiert(zitat)),
@@ -178,17 +216,11 @@ describe('P0.5: Regelfragen an den Autor', () => {
         }
       })
 
-      it(`P0.5: ${planFrage.nr} hat mindestens zwei getrennte Möglichkeiten`, () => {
-        const buchstaben = moeglichkeiten(block)
-
+      it(`P0.5: ${planFrage.nr} hat mindestens zwei getrennte Möglichkeiten, fortlaufend ab a`, () => {
         expect(buchstaben.length, `${planFrage.nr}: weniger als zwei Möglichkeiten`).toBeGreaterThanOrEqual(2)
-        expect(new Set(buchstaben).size, `${planFrage.nr}: Buchstaben doppelt: ${buchstaben.join(', ')}`).toBe(
-          buchstaben.length,
+        expect(buchstaben, `${planFrage.nr}: Buchstaben laufen nicht fortlaufend ab a`).toEqual(
+          buchstaben.map((_, i) => String.fromCharCode(97 + i)),
         )
-        expect(
-          buchstaben,
-          `${planFrage.nr}: Buchstaben laufen nicht fortlaufend ab a`,
-        ).toEqual(buchstaben.map((_, i) => String.fromCharCode(97 + i)))
       })
 
       it(`P0.5: ${planFrage.nr} hat einen Vorschlag, der auf vorhandene Möglichkeiten zeigt`, () => {
@@ -196,7 +228,6 @@ describe('P0.5: Regelfragen an den Autor', () => {
         const gewaehlt = /^([a-z](?:, [a-z])*)\b/.exec(vorschlag)
 
         expect(gewaehlt, `${planFrage.nr}: Vorschlag beginnt nicht mit Buchstaben („a“ oder „a, c“)`).not.toBeNull()
-        const buchstaben = moeglichkeiten(block)
         for (const buchstabe of gewaehlt?.[1].split(', ') ?? []) {
           expect(buchstaben, `${planFrage.nr}: Vorschlag nennt unbekannte Möglichkeit ${buchstabe}`).toContain(
             buchstabe,
@@ -213,14 +244,19 @@ describe('P0.5: Regelfragen an den Autor', () => {
         }
       })
 
-      it(`P0.5: ${planFrage.nr} nennt betroffene Tasks, die es im Plan gibt`, () => {
-        const tasks = feld(block, 'Betroffene Tasks') ?? ''
-        const genannt = [...tasks.matchAll(/\b(P0\.\d|[EXKOZ]\d+)\b/g)].map((treffer) => treffer[1])
+      it(`P0.5: ${planFrage.nr} nennt betroffene Tasks, die es im Plan gibt, und genau die Tasks, die die Frage nennen`, () => {
+        const betroffen = feld(block, 'Betroffene Tasks') ?? ''
+        const genannt = [...betroffen.matchAll(TASK_ID)].map((treffer) => treffer[1])
 
         expect(genannt.length, `${planFrage.nr}: keine Task-ID in „Betroffene Tasks“`).toBeGreaterThan(0)
         for (const id of genannt) {
           expect(planTaskIds.has(id), `${planFrage.nr}: Task ${id} gibt es im Plan nicht`).toBe(true)
         }
+        expect(betroffen, `${planFrage.nr}: Teil „nennt die Frage:“ fehlt`).toContain('nennt die Frage:')
+        expect(
+          [...nennendeTasks(betroffen)].sort(),
+          `${planFrage.nr}: „nennt die Frage“ weicht von den Tasks ab, die die Frage im Plan nennen`,
+        ).toEqual([...(planNennungen.get(planFrage.nr) ?? [])].sort())
       })
 
       it(`P0.5: ${planFrage.nr} hat die Felder „Antwort“ und „Datum“`, () => {
