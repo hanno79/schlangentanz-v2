@@ -1,771 +1,857 @@
 # Schlangentanz Game Spec
 
-Status: **Gesperrt am 03.08.2026.**
+Status: **Abgeglichen mit der Website am 12.11.2026.**
 
-Implementierte Regeln und offene Regelfragen werden pro R-Slice dokumentiert und verifiziert. Nicht bestätigte Regeln bleiben ausdrücklich offen und werden nicht geraten.
+Teil A gibt die Spielanleitung von `https://schlangentanz.ch/rules` wörtlich wieder
+(Stand der Website: 12.11.2026 abends, Bundle `index-ZK016NK3.js`).
 
-### Was „gesperrt" bedeutet
+## Rangfolge der Quellen
 
-`CLAUDE.md` Schritt 1 verlangt die Sperre **vor** der Spielimplementierung. Sie
-kam zu spät — die Umsetzung war längst fertig, und die Spec trug die Zeile „noch
-nicht final gesperrt" bis zu diesem Datum. Nachgeholt wurde sie erst, als der
-Abgleich mit der Normquelle abgeschlossen war; eine Spec zu sperren, deren
-Abweichungen niemand kennt, wäre eine Unterschrift auf ein ungelesenes Dokument.
+1. **Die Website `https://schlangentanz.ch/rules` ist die einzige verbindliche
+   Regelquelle.** Der Autor des Spiels pflegt sie.
+2. **Dieses Dokument spiegelt die Website.** Weicht es von ihr ab, gilt die
+   Website, und dieses Dokument wird nachgezogen. Nie umgekehrt.
+3. **Alles andere ist keine Regelquelle:** Dart-Tasks und Dart-Dokumente,
+   `docs/release_status_*`, `docs/slice_plan_*`, `docs/PLAYABILITY_GATE.md`,
+   `docs/rules_source_2026-06-02_r78.md` und Kommentare im Code. Steht dort eine
+   andere Regel, ist sie überholt.
 
-Ab jetzt gilt:
+### Verfahren bei Änderungen
 
-- **Jede Regeländerung braucht eine bestätigte Normquelle oder einen
-  User-Signoff.** Ein Code-Fix allein reicht nie — auch dann nicht, wenn die
-  Engine offensichtlich etwas anderes tut als dieses Dokument.
-- **Widersprüche zwischen Spec und Code sind Spec-Fragen**, nicht Bugs. Sie
-  werden in Abschnitt 11 aufgenommen, bevor jemand Code anfasst.
-- **Änderungen werden mit `ÄNDERUNG [Datum]` und Begründung geführt**, nicht
-  still eingearbeitet.
-- **Offene Regelfragen stehen vollständig in Abschnitt 11.** Steht dort nichts,
-  ist nichts offen — die frühere Formulierung „weitere offene Regelfragen
-  betreffen andere Bereiche", die keine einzige benannte, gilt als überholt.
+- **Regeln ändern sich nur auf der Website.** Danach wird Teil A aus ihrem
+  Wortlaut neu übernommen, nicht von Hand umformuliert.
+- **Teil A enthält keine Auslegung.** Digitale Festlegungen stehen in Teil B,
+  offene Fragen in Teil D.
+- **Was die Website nicht hergibt, wird nicht geraten.** Es kommt als Frage in
+  Teil D, bevor jemand Code anfasst.
+- **Ein Widerspruch zwischen Website und Code ist ein Fehler im Code.** Er kommt
+  in Teil C, bis er behoben ist.
+- Jede Änderung dieses Dokuments steht mit Datum und Anlass in Teil E.
 
-Normquelle ist `https://schlangentanz.ch/rules`. Wo diese Seite und die Spec
-auseinandergehen, steht die Abweichung ausdrücklich im jeweiligen R-Abschnitt.
+### Aufbau
 
-## 1. Overview
+| Teil | Inhalt |
+|---|---|
+| A | Regeln: wörtlicher Spiegel der Website |
+| B | Digitale Fassung: Umfang und Festlegungen, die die Website offenlässt |
+| C | Abweichungen der heutigen Engine von Teil A (Arbeitsliste) |
+| D | Offene Auslegungsfragen an den Autor |
+| E | Frühere R-Nummern, Stand und Verlauf |
 
-- Schlangentanz v2 ist ein frischer digitaler Greenfield-Rebuild des Brettspiels Schlangentanz.
-- Zielplattform ist eine browserbasierte Web-App.
-- Produktionsbereitstellung erfolgt über Vercel.
-- Workflow: Hermes orchestriert Umsetzung und Verifikation; Claude Code implementiert kleine getestete Slices; Codex reviewt adversarial.
-- Einzelspieler-Spiel gegen KI-Gegner.
-- Der menschliche Spieler wählt zu Spielstart 1, 2 oder 3 KI-Gegner.
-- Es gibt keine Zeitbegrenzung; die Partie endet regelbasiert, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist.
+Schreibweise in Teil A: `[Erweiterung]` steht für das Erweiterungs-Etikett der
+Website. Kartenbilder in Beispielen sind als `[Blau] [Rot] …` wiedergegeben.
+Gliederung und Abschnittsnummern (A1 bis A11) kommen von diesem Dokument, der
+Wortlaut von der Website.
 
-## 2. Entities
+## Teil A — Regeln (Spiegel der Website)
 
-Die zentralen Spielobjekte sind im aktuellen Projektstand konkretisiert und werden in den folgenden Abschnitten weiter präzisiert: Spieler, Handkarten, Nachziehstapel, Ablagestapel, Farbkarten, Sonderkarten, Aufgaben, Schlangen, Schlangen-Zustände, Zugphasen, legale Aktionen und Wertung.
+### A1 Spielmaterial
 
-Noch offene Regelfragen bleiben in den jeweiligen R-Abschnitten markiert; sie sind keine Implementierungsfreigabe.
+**Wichtig:** Diese Anleitung beschreibt sowohl das Basis-Spiel als auch die Erweiterung "Schlangenkorb des Glücks". Erweiterungsinhalte sind entsprechend gekennzeichnet und können optional hinzugefügt werden.
 
-### R4.1 Farbkarten-Übersicht
-
-- Insgesamt 78 Farbkarten in 6 Farben.
-- Blau: 15 Karten, 1 Punkt pro Karte.
-- Rot: 15 Karten, 1 Punkt pro Karte.
-- Gelb: 15 Karten, 1 Punkt pro Karte.
-- Violett: 12 Karten, 2 Punkte pro Karte.
-- Braun: 12 Karten, 2 Punkte pro Karte.
-- Grün: 9 Karten, 3 Punkte pro Karte.
-- Häufige Farben: 45 Karten (3 x 15), je 1 Punkt.
-- Mittlere Farben: 24 Karten (2 x 12), je 2 Punkte.
-- Seltene Farben: 9 Karten (1 x 9), je 3 Punkte.
-- Farben müssen eindeutig unterscheidbar und barrierefrei darstellbar sein.
-
-### R4.2/R4.4 Wertung und Spielmechanik
-
-- Punkte zählen nur in gültigen Farbgruppen ab 3 Karten.
-- Einzelne Karten und 2er-Kombinationen zählen 0 Punkte.
-- Jede Karte in einer gültigen Gruppe zählt ihren Punktwert.
-- Nach jedem Anlegen muss geprüft werden, ob neue Farbgruppen entstanden sind.
-- Sonderkarten unterbrechen Farbgruppen korrekt, außer wenn eine Regel ausdrücklich etwas anderes vorgibt (z. B. Regenbogenschlange als Wildcard mit 0 Punkten).
-
-## 3. Setup
-
-> **Normquelle aktualisiert.** Für Kartenmengen und Aufgabenkarten gilt die geprüfte Korrektur: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler; frühere Dart-Abweichungen werden nur noch als überholte Importquelle behandelt.
-
-### R1.1/R1.2 Kartenstapel vorbereiten
-
-- Alle Karten werden vor Spielbeginn nach Kartentyp sortiert.
-- Basis-Spiel: 110 Karten = 78 Farbkarten + 32 Sonderkarten.
-- Basis-Sonderkarten: 8 benannte Typen mit je 4 Karten — Farbenschutz, Regenbogenschlange, Schlangenfrass, Schlangenblockade, Farbendieb, Schlangengrube, Farbenfusion, Verdoppler.
-- Erweiterung "Schlangenkorb des Glücks": 31 zusätzliche Karten = 4 Schlangenhäutung + 1 Schlangenkorb des Glücks + genau 14 Aufgabenkarten + 4 Comeback-Karten + 8 Risiko-Belohnungs-Karten.
-- Gesamtanzahl mit Erweiterung: 141 Karten.
-- Aufgabenkarten: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler; maßgeblich ist die vollständige Liste der 14 veröffentlichten Aufgabenkarten mit Name, Punktwert und Bedingung.
-- Comeback-Karten: 4 Stück, je 1 pro Spieler.
-- Risiko-Belohnungs-Karten: 8 Stück, je 2 pro Spieler.
-- Digital: Hauptstapel wird per Fisher-Yates oder gleichwertigem Zufallsalgorithmus gemischt.
-- Digitales Spieldeck: Der tatsächlich gemischte Nachziehstapel umfasst die 110 Basiskarten plus die 4 Schlangenhäutung-Karten der Erweiterung (114 Karten). Nur dadurch sind die Schlangenhäutung-Mechanik und die Aufgabe „Schlangentanz" erreichbar. Comeback, Risiko-Belohnung und „Schlangenkorb des Glücks" bleiben vorerst außerhalb des Spieldecks.
-- Materialumfang (141 Karten) und digitales Spieldeck (114 Karten) sind also bewusst verschieden. Die 13 Karten `Comeback` (4), `Risiko-Belohnung` (8) und `Schlangenkorb des Glücks` (1) werden im Code weiterhin als Kartendefinitionen erzeugt, gelangen aber nie in eine Partie; ihr einziger Zweck ist die Namensvalidierung beim Deserialisieren von Spielzuständen. Sie sind kein toter Code und auch keine halbfertige Implementierung, sondern dokumentierter Materialumfang ohne Spielwirkung.
-
-#### R1.2a Umfang der digitalen Fassung (ÄNDERUNG 03.08.2026)
-
-Die digitale Fassung ist **kein reines Basisspiel und keine vollständige
-Erweiterung**, sondern eine bewusst gewählte Teilmenge. Bis zum 03.08.2026 stand
-das nirgends zusammenhängend; man musste es aus R1.1/R1.2, R6 und
-`docs/WORKFLOW.md` zusammensuchen. Verbindlich gilt:
-
-| Bestandteil | Herkunft | Digital |
+| Kategorie | Anzahl | Beschreibung |
 |---|---|---|
-| 78 Farbkarten, 32 Basis-Sonderkarten | Basisspiel | **ja** |
-| Längste Farbkette (R8.4a) | Basisspiel | **ja** |
-| 4 Schlangenhäutung-Karten | Erweiterung | **ja** (Audit-Fix H1) |
-| 14 Aufgabenkarten (R6) | Erweiterung | **ja** |
-| Vielfaltbonus | Erweiterung | **nein** |
-| Comeback, Risiko-Belohnung, Schlangenkorb des Glücks | Erweiterung | **nein** |
-
-Die Normquelle kennzeichnet Vielfaltbonus und Aufgabenkarten im
-Wertungsabschnitt ausdrücklich mit dem Etikett „Erweiterung"; die längste
-Farbkette trägt es **nicht** und ist deshalb Basisspielregel. Genau daran hängt,
-warum R8.4a umgesetzt ist und der Vielfaltbonus nicht.
-
-**Der Vielfaltbonus ist damit auch kein offener Punkt, sondern außerhalb des
-Umfangs.** Ihn aufzunehmen wäre eine Erweiterung des Spielumfangs und braucht
-einen User-Signoff — keinen Bugfix.
-
-### R1.3 Startkarten verteilen
-
-- Jeder Spieler erhält 5 Startkarten vom Nachziehstapel.
-- Verteilung erfolgt reihum (kein Durcheinander).
-- Handkarten anderer Spieler dürfen nicht sichtbar sein.
-- Handkartenlimit: 5 Karten. (ÄNDERUNG 03.08.2026: zuvor 10 — eine Zahl, die in der Normquelle nirgends vorkommt. Die Anleitung sagt im Zugschritt c): „Wenn du mehr als 5 Karten auf der Hand hast, lege überzählige Karten ab.")
-- Mindesthandkarten nach Nachziehen: 5 Karten.
-
-### R1.4 Aufgabenkarten auslegen
-
-- Zu Spielbeginn werden 3 offene Aufgabenkarten neben den Spielbereich gelegt und sind für alle sichtbar.
-- Jeder Spieler erhält genau 1 geheime Aufgabenkarte, die verdeckt vor dem Spieler liegt.
-- Die Aufgabenkarten werden separat gemischt und nicht mit anderen Karten gemischt.
-- Offene und geheime Aufgaben verwenden denselben Aufgabenpool; es gibt laut Website keine getrennten festen 8/7-Namenslisten.
-- Offene Aufgaben können von jedem Spieler erfüllt werden; nach Erfüllung werden sie ersetzt, solange der Aufgabenkartenstapel nicht leer ist.
-- Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt und geben nur Punkte, wenn sie erfüllt wurden.
-
-## 4. Turn Structure
-
-### R2 Zugstruktur
-
-- R2 Zugstruktur beschreibt den Ablauf eines einzelnen Spielzugs.
-- Zugphasen sind verbindlich in dieser Reihenfolge:
-  1. Nachziehphase
-  2. Ausspielphase
-  3. Aufgabenprüfung
-  4. Zugabschluss und Spielerwechsel
-- Jede Zugphase muss eindeutig beschrieben sein.
-- Ausnahmen und Sonderfälle müssen dokumentiert sein.
-- Übergänge zwischen Phasen müssen klar sein.
-
-### R2.1 Zugbeginn und Zugreihenfolge
-
-- Der aktive Spieler wird nach Uhrzeigersinn-Reihenfolge ermittelt.
-- Reihenfolge: Startspieler, dann im Uhrzeigersinn.
-- Nach dem letzten Spieler beginnt wieder der erste Spieler.
-- Die Reihenfolge ändert sich nicht während des Spiels.
-- Nur der aktive Spieler kann Spielaktionen durchführen.
-- Andere Spieler sind während des Zuges blockiert, außer Reaktionskarten erlauben etwas anderes.
-- Der aktive Spieler muss visuell erkennbar sein.
-
-### R2.2 Nachziehphase
-
-- Zu Beginn jedes Zuges prüft der aktive Spieler seine Handkartenanzahl.
-- Hat er weniger als 5 Karten, muss er nachziehen.
-- Nachziehen endet, wenn exakt 5 Handkarten erreicht sind oder der Nachziehstapel leer ist.
-- Hat der Spieler bereits 5 oder mehr Karten, wird die Nachziehphase übersprungen.
-- Mindest-Handkarten nach Nachziehen: 5 Karten.
-- Maximale Handkarten am Zugende: 5 Karten. Das Limit greift im Spielverlauf nie — man zieht auf 5 auf und muss mindestens 1 Karte spielen, hält am Zugende also höchstens 4. Es ist eine Absicherung, kein Alltagsfall.
-- Nachziehen ist Pflicht, nicht optional.
-- Gezogene Karten sind nur für den Spieler sichtbar.
-- Endspurt-Phase wird aktiviert, wenn der Nachziehstapel durch das Nachziehen leer wird.
-- Maßgeblich für das Spielende ist nur der Nachziehstapel.
-- In der Endspurt-/Endrunde wird nicht mehr nachgezogen, weil der Nachziehstapel leer ist.
-
-### R2.3 Ausspielphase
-
-- Nach dem Nachziehen spielt der aktive Spieler Karten aus seiner Hand.
-- Der aktive Spieler muss mindestens 1 Karte spielen.
-- Der aktive Spieler darf ohne Verdoppler maximal 2 Karten spielen.
-- Grundsätzlich gilt pro Zug: höchstens 1 Farbkarte und höchstens 1 Sonderkarte.
-- Wird zu Beginn des Zuges ein Verdoppler gespielt, erhöht sich das Limit für diesen Zug auf höchstens 2 Farbkarten und höchstens 2 Sonderkarten; die zusätzliche Karte darf frei eine Farbkarte oder eine Sonderkarte sein.
-- In einem Verdoppler-Zug sind insgesamt höchstens 3 Karten zulässig.
-- Zulässig sind ohne Verdoppler: genau 1 Farbkarte, genau 1 Sonderkarte oder 1 Farbkarte plus 1 Sonderkarte.
-- Zulässig sind mit aktivem Verdoppler: zwei Farbkarten, zwei Sonderkarten oder gemischte Kombinationen bis insgesamt 3 Karten.
-- Die Reihenfolge ausgespielter Karten ist frei wählbar.
-- Jede Karte wird einzeln ausgeführt und deren Effekt abgehandelt.
-- Farbkarten können an eigene Schlangen angelegt oder zum Starten neuer Schlangen genutzt werden.
-- Sonderkarten führen ihren Kartentext aus.
-- Sonderkarten zählen für das 2-Karten-Limit; Kartentexte können später ausdrücklich zusätzliche Sonderregeln definieren.
-- Farbenschutz kann als eigene Karte auf eine eigene aktive Schlange gespielt werden und deren Zustand auf `geschuetzt` setzen.
-- Farbenschutz kann außerdem als einmalige Reaktion des betroffenen Zielspielers gegen gegnerische Angriffe eingesetzt werden: Die angesagte gegnerische Sonderkarte wird wirkungslos, die Angriffskarte und der Farbenschutz kommen auf den Ablagestapel, und der Angreifer darf denselben Angriff nicht auf ein anderes Ziel umlegen.
-- R78 konkretisiert diese Reaktion zunächst für die bereits implementierte Angriffskarte `Schlangengrube`: Wird sie mit Farbenschutz abgewehrt, wird der Zielspieler nicht zum Aussetzen markiert.
-- Verdoppler kann zu Beginn der Ausspielphase mit einer Verdopplerkarte gespielt werden und aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte.
-- Der aktuelle Reaktionsspieler kann den Verdoppler-Bonus mit Farbenschutz abwehren oder durchlassen.
-- Verdoppler selbst zählt als Sonderkarte.
-- Schlangengrube lässt einen anderen Spieler seinen nächsten Zug aussetzen; bei 3 oder mehr Spielern wählt der aktive Spieler den Zielspieler, bei 2 Spielern ist automatisch der andere Spieler betroffen.
-- Kann der Spieler keine gültige Karte spielen, muss er eine Karte abwerfen.
-- Abwerfen gilt als Karte gespielt für die Zugpflicht.
-- Abgeworfene Karten kommen offen auf den Ablagestapel.
-- Hat der aktive Spieler keine Handkarten (z. B. in der Endrunde, in der nicht mehr nachgezogen wird, nachdem Farbenschutz-Reaktionen außerhalb seines Zuges seine Karten verbraucht haben), entfällt die Zugpflicht: Der Zug ist ohne gespielte Karte beendbar. So kann kein Deadlock entstehen.
-
-#### R2.3a Nachziehen nach einer Sonderkarte (ÄNDERUNG 03.08.2026)
-
-Wörtlich aus der Normquelle, Abschnitt „Spielablauf und Timing von Sonderkarten":
-
-> „Nach dem Ausspielen einer Sonderkarte darf sofort eine neue Karte nachgezogen
-> werden, damit zu Beginn des eigenen Zuges wieder 5 Handkarten vorhanden sind."
-> — „Alle Spieler, die eine Karte gespielt haben, dürfen sofort eine neue Karte
-> nachziehen." — „Nach Abhandlung aller Effekte werden neue Karten nachgezogen.
-> Das Nachziehen erfolgt ebenfalls im Uhrzeigersinn."
-
-Diese Regel fehlte bis zum 03.08.2026 vollständig; die Engine zog ausschließlich
-beim Zugwechsel. Sie war zuvor als offene Frage O-2 geführt.
-
-- **Wer:** jeder, der in dieser Abhandlung eine Karte aus der Hand **gespielt**
-  hat — der Angreifer und jeder Verteidiger, der einen Farbenschutz eingesetzt
-  hat. Wer durchlässt, hat keine Karte gespielt und zieht nicht.
-- **Wann:** erst **nach** Abhandlung aller Effekte, also am Ende der
-  Reaktionskette — nicht beim Ablegen der Karte. Der Unterschied ist beobachtbar:
-  Bei einem Schlangenfrass auf zwei Karten desselben Gegners könnte dieser sonst
-  einen frisch gezogenen Farbenschutz gegen das zweite Ziel einsetzen, den er am
-  Tisch noch gar nicht hätte.
-- **Wie viel:** genau eine Karte je gespielter Sonderkarte.
-- **Reihenfolge:** im Uhrzeigersinn ab dem aktiven Spieler. Sie entscheidet, wer
-  die letzte Karte bekommt, wenn der Stapel dabei leer wird.
-- **Nicht im Endspurt:** „Nach Spielende wird noch eine Runde gespielt, ohne neue
-  Karten zu ziehen."
-- **Leerer Stapel ist kein Fehler**, sondern schlicht keine Karte. Läuft der
-  Stapel beim Nachziehen leer, löst das den Endspurt aus — dieselbe Zusicherung
-  wie beim Nachziehen zu Zugbeginn.
-
-**Digitale Auslegung:** Die Anleitung sagt „darf". Digital wird **immer**
-gezogen. Ein optionales Nachziehen wäre ein zusätzlicher Klick, der nach Regel 7
-der `SPIELBRETT_SPEC.md` eine echte Entscheidung verlangen müsste; die
-Nichtziehen-Option hat außer einer marginalen Endspurt-Verzögerung keinen Zweck.
-
-### R2.4 Aufgabenprüfung
-
-- Nach dem Ausspielen prüft der Spieler offene Aufgaben und seine geheime Aufgabe.
-- Aufgaben müssen im aktuellen Zustand der Schlange(n) vollständig erfüllt sein.
-- Erfüllte Aufgaben werden sofort abgehandelt.
-- Offene Aufgaben werden nach Erfüllung ersetzt, falls der Aufgaben-Nachziehstapel nicht leer ist.
-- Geheime Aufgaben werden im Zug nur intern als erfüllt markiert; sie bleiben verdeckt und werden erst bei der Punktezählung aufgedeckt.
-- Mehrere Aufgaben können in einem Zug erfüllt werden.
-- Vergessenes „SchlangenSpass!“-Rufen verhindert die Erfüllung digital nicht.
-
-### R2.5 Zugabschluss und Spielerwechsel
-
-- Der Zug kann nur beendet werden, wenn alle Pflichten erfüllt sind.
-- Vor Zugende wird geprüft, ob mindestens 1 Karte gespielt wurde.
-- Alle Karteneffekte müssen abgehandelt sein.
-- Erfüllte Aufgaben müssen geprüft sein.
-- Bei mehr als 10 Handkarten muss der Spieler überzählige Karten abwerfen.
-- Der Spieler wählt selbst, welche Karten abgeworfen werden: Im Zugabschluss mit Überhand markiert der menschliche Spieler genau die überzähligen Karten und bestätigt den Abwurf. Ein automatischer Abwurf der zuletzt gehaltenen Karten dient nur als Fallback für den generischen Phasenbutton und für KI-Gegner.
-- Danach wird der nächste Spieler im Uhrzeigersinn aktiviert.
-- Wenn der aktive Spieler in seinem Zug die letzte Karte vom Nachziehstapel gezogen hat, beendet er seinen laufenden Zug normal; danach erhalten alle anderen Spieler in Zugreihenfolge noch genau einen Zug.
-- Der Spieler, der die letzte Nachziehkarte gezogen hat, wird in dieser Endrunde nicht erneut aktiviert.
-- Nach dem letzten Endrunden-Zug wird die Spielphase auf beendet gesetzt und es folgt die Wertung.
-- Spielende-Bedingung ist ausschließlich der leere Nachziehstapel; danach steuert die Endrunde den Übergang zur Wertung.
-
-### R2.6 Sonderfälle
-
-- Keine spielbare Karte: Spieler muss eine Karte abwerfen; das gilt als Karte gespielt für die Zugpflicht.
-- Nachziehstapel wird leer: Spieler zieht alle verbleibenden Karten, Endspurt wird aktiviert, der Zug wird normal beendet; anschließend spielen alle anderen Spieler genau einen Zug ohne Nachziehen, der Auslöser nicht erneut.
-- Sonderkarte würde ungültigen Zustand erzeugen: Die Sonderkarte darf nicht gespielt werden; das System verhindert die Aktion.
-- Aufgabe durch Gegner-Aktion möglich erfüllt: keine sofortige Gutschrift; die Aufgabe wird spätestens in der Aufgabenprüfung des betroffenen Spielers gegen dessen eigene Schlangen geprüft.
-- Mehrere Spieler erfüllen gleichzeitig dieselbe offene Aufgabe: Der aktive Spieler hat Vorrang.
-- Kein Sonderfall darf zu Absturz oder Deadlock führen.
-
-## 5. Legal Actions
-
-### 5.1 Action matrix by phase
-
-- **Nachziehphase**
-  - Spieleraktionen sind nicht erlaubt.
-  - Wenn die Mindesthandkarten erreicht sind, darf die UI die Phase mit `Ausspielphase starten` fortsetzen.
-  - Voraussetzung: Der aktive Spieler hat mindestens die geforderte Mindesthand und die Nachziehphase ist abgeschlossen.
-
-- **Ausspielphase**
-  - `NeueSchlangeStarten`
-    - Nur mit einer Farbkarte.
-    - Nur für den aktiven Spieler.
-    - Nur solange der Spieler weniger als 2 Schlangen besitzt.
-    - Nur solange pro Zug die Farbkartenbegrenzung noch nicht erreicht ist.
-  - `KarteAnlegen`
-    - Nur mit einer Farbkarte.
-    - Nur an eine existierende, nicht blockierte eigene Schlange.
-    - Nur links oder rechts.
-    - Nur für den aktiven Spieler.
-    - Nur solange pro Zug die Farbkartenbegrenzung noch nicht erreicht ist.
-  - `PflichtAbwurf`
-    - Nur wenn keine spielbare Aktion verfügbar ist.
-    - Nur für den aktiven Spieler.
-    - Nur mit einer Karte auf der Hand des aktiven Spielers.
-    - Pro Zug gelten die Kartenlimits der Ausspielphase; bei aktivem Verdoppler-Bonus sind bis zu 2 Farbkarten und bis zu 2 Sonderkarten möglich.
-  - `SonderkarteSpielen`
-    - Nur mit `Schlangengrube`.
-    - Nur für den aktiven Spieler.
-    - Nur auf einen anderen Spieler.
-    - Ohne Farbenschutz-Abwehr markiert sie den gewählten Spieler für seinen nächsten Zug als ausgesetzt.
-    - Mit `abwehrHandkartenId` darf genau der Zielspieler eine eigene `Farbenschutz`-Handkarte als Abwehr einsetzen; dann werden Schlangengrube und Farbenschutz abgelegt und der Aussetzen-Effekt entfällt.
-  - `VerdopplerSpielen`
-    - Nur mit `Verdoppler`.
-    - Nur für den aktiven Spieler.
-    - Nur zu Beginn der Ausspielphase.
-    - Aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte.
-  - `VerdopplerAbwehren`
-    - Nur während einer ausstehenden Verdoppler-Reaktion.
-    - Nur mit `Farbenschutz`.
-    - Nur durch den aktuellen Reaktionsspieler.
-  - `VerdopplerDurchlassen`
-    - Nur während einer ausstehenden Verdoppler-Reaktion.
-    - Nur durch den aktuellen Reaktionsspieler.
-    - Beendet die Reaktionsentscheidung ohne Abwehr.
-  - `FarbenschutzSpielen`
-    - Nur mit `Farbenschutz`.
-    - Nur für den aktiven Spieler.
-    - Nur auf eine eigene aktive Schlange.
-    - Setzt den Zustand der gewählten Schlange auf `geschuetzt`.
-  - `FarbendiebSpielen`
-    - Nur mit `Farbendieb`.
-    - Nur für den aktiven Spieler.
-    - Nur auf eine gegnerische Schlange und eine **Farbkarte** daraus; Sonderkarten (inkl. fusionierter Farbenfusion- oder Regenbogenschlangen-Karten) sind nicht stehlbar.
-    - Die gestohlene Karte kann an einer beliebigen Position in eine eigene Schlange eingefügt werden, auch zwischen bestehende Karten.
-    - Der Angriff kann durch den Zielspieler mit Farbenschutz abgewehrt werden.
-  - `SchlangenblockadeSpielen`
-    - Nur mit `Schlangenblockade`.
-    - Nur für den aktiven Spieler.
-    - Nur auf eine konkrete Zielschlange eines anderen Spielers.
-    - Der Angriff kann durch den Zielspieler mit Farbenschutz abgewehrt werden.
-  - `SchlangenblockadeAbwehren`
-    - Nur während einer ausstehenden Schlangenblockade-Reaktion.
-    - Nur mit `Farbenschutz`.
-    - Nur durch den aktuellen Zielspieler.
-  - `SchlangenblockadeDurchlassen`
-    - Nur während einer ausstehenden Schlangenblockade-Reaktion.
-    - Nur durch den aktuellen Zielspieler.
-  - `SchlangenfrassSpielen`
-    - Nur mit `Schlangenfrass`.
-    - Nur für den aktiven Spieler.
-    - Wählt 1 oder 2 Karten aus beliebigen Schlangen.
-    - Geschützte Ziele werden per Farbenschutz-Reaktionskette im Uhrzeigersinn abgewickelt.
-  - `SchlangenfrassAbwehren`
-    - Nur während einer ausstehenden Schlangenfrass-Reaktion.
-    - Nur mit `Farbenschutz`.
-    - Nur durch den aktuellen Reaktionsspieler.
-  - `SchlangenfrassDurchlassen`
-    - Nur während einer ausstehenden Schlangenfrass-Reaktion.
-    - Nur durch den aktuellen Reaktionsspieler.
-  - `FarbenfusionSpielen`
-    - Nur mit `Farbenfusion`.
-    - Nur für den aktiven Spieler.
-    - Nur auf zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange.
-
-- **Aufgabenprüfung**
-  - Spieleraktionen sind nicht erlaubt.
-  - Die Engine prüft offene Aufgaben und die geheime Aufgabe des aktiven Spielers automatisch.
-  - Die UI darf nur Status, Ergebnis und Phasenfortschritt anzeigen; keine neue Spielaktion starten.
-
-- **Zugabschluss**
-  - Wenn überzählige Handkarten vorhanden sind: `Überzählige Karten abwerfen`.
-  - Andernfalls: `Zug beenden`.
-  - Voraussetzung für `Zug beenden`: Die Pflichtaktionen des Zuges sind erfüllt.
-  - In der Endrunde werden nach `Zug beenden` die verbleibenden Spieler automatisch weitergeführt.
-
-- **Spielende**
-  - Keine Spieleraktionen mehr.
-  - Nur Wertung, Ergebnis und Rückblick sind erlaubt.
-
-### 5.2 Gemeinsame Voraussetzungen
-
-- Nur der aktive Spieler darf eine Aktion ausführen.
-- Aktionen außerhalb der passenden Zugphase sind verboten.
-- Eine Karte muss sich auf der Hand des aktiven Spielers befinden, bevor sie gespielt oder abgeworfen werden kann.
-- Die Engine lässt ohne Verdoppler pro Zug höchstens 2 gespielte Karten zu; mit aktivem Verdoppler sind bis zu 3 gespielte Karten zulässig.
-- Nach dem letzten Zug der Endrunde wird automatisch in die Spielende-Phase gewechselt.
-
-### R3.1 Neue Schlange starten
-
-- Eine neue Schlange kann nur mit einer Farbkarte gestartet werden.
-- Sonderkarten können keine neue Schlange starten.
-- Der Spieler muss weniger als 2 Schlangen haben.
-- Es muss die Ausspielphase des Spielers sein.
-- Eine neue Schlange startet mit genau 1 Karte.
-- Die erste Karte definiert keinen festen Kopf/Schwanz; beide Enden sind gleichwertig.
-
-### R3.2 Schlange erweitern
-
-- Farbkarten können an beide Enden einer Schlange angelegt werden.
-- Es gibt keine Farb-Einschränkungen beim Anlegen.
-- Jede Farbkarte kann an jede Position am linken oder rechten Ende angelegt werden.
-- Die Reihenfolge der Farben ist frei wählbar.
-- Die Schlange wächst nach links oder rechts.
-- Es gibt keine maximale Schlangenlänge.
-
-### R3.3 Farbgruppen bilden
-
-- Eine Farbgruppe besteht aus mindestens 3 direkt nebeneinander liegenden Karten derselben Farbe.
-- Keine anderen Karten dürfen dazwischen liegen.
-- Sonderkarten unterbrechen Farbgruppen, außer wenn eine Regel ausdrücklich etwas anderes vorgibt (z. B. Regenbogenschlange als Wildcard mit 0 Punkten).
-- Regenbogenschlangen werden von der Wertungslogik so zugeordnet, dass die Gesamtpunktzahl der betroffenen Schlange maximal wird; bei Gleichstand ist jede gleich gute Zuordnung zulässig.
-- Eine Schlange kann mehrere Farbgruppen enthalten.
-- Jede Gruppe wird separat gewertet.
-- Gruppen müssen nicht zusammenhängen.
-
-### R3.5 Schlangenlimit und Verwaltung
-
-- Jeder Spieler darf maximal 2 Schlangen pro Spieler gleichzeitig haben.
-- Zu Spielbeginn sind 0 Schlangen erlaubt.
-- Bei 2 Schlangen ist keine neue Schlange möglich.
-- Schlangen können nicht zusammengeführt werden.
-- Schlangen können nicht freiwillig aufgelöst werden.
-- Schlangen-Zustände: aktiv, blockiert, geschützt.
-- Eine blockierte Schlange kann nicht erweitert werden.
-- Jede Schlange hat eine eindeutige ID.
-
-#### R3.5a Der Zustand `blockiert` wird von keiner Karte erzeugt
-
-*(Auslegung festgehalten am 02.08.2026.)*
-
-Der Zustand `blockiert` ist im Datenmodell vorhanden und wird von der Engine
-durchgesetzt — eine Schlange in diesem Zustand lässt sich nicht erweitern. Er
-wird jedoch von **keiner** aktuell umgesetzten Karte gesetzt.
-
-Insbesondere setzt ihn die Schlangenblockade nicht: Sie legt nach R7.1 eine
-neutrale, nicht farbige Karte in die Zielschlange. Die Schlange bleibt
-erweiterbar.
-
-**ÄNDERUNG 04.08.2026 (O-1):** Hier stand bis zum Signoff das Gegenteil dessen,
-was jetzt gilt — die Blockade hänge „ans Ende", zerreiße deshalb „**keine
-bestehende** Farbgruppe" und koste im Moment des Ausspielens „**keine Punkte**".
-Der Absatz war am 02.08.2026 eigens präzisiert worden und beschrieb die Engine
-korrekt. Mit R7.1a ist er falsch geworden:
-
-Eine Sonderkarte trennt nach R3.3 die Farbgruppen links und rechts von sich.
-Da die Blockade seit O-1 an **jeder** Position liegen darf, zerreißt sie eine
-bestehende Farbgruppe, sobald sie mitten hineingelegt wird, und kostet dann
-sofort Punkte. Nur der Sonderfall „ans Ende" verhält sich wie zuvor: Dort liegt
-rechts nichts, und die Wirkung ist eine rein künftige — wer danach rechts weiter
-anlegt, beginnt hinter der Sperrkarte eine neue Gruppe und erreicht die
-Dreiergrenze aus R3.3 dort erst wieder mit drei weiteren Karten. Anlegen nach
-links bleibt unberührt.
-
-Was **nicht** gilt: Die Blockade setzt trotzdem keinen Zustand `blockiert`. Sie
-zerreißt die Gruppe, sperrt die Schlange aber nicht. Beides gleichzeitig zu tun
-wäre eine weitere Regeländerung und bräuchte eine bestätigte Normquelle.
-
-Der Zustand und seine Durchsetzung bleiben erhalten: Sie kosten nichts und stehen
-bereit, falls eine Erweiterungskarte sie später braucht. Wer die beiden Prüfungen
-in `legalActions.ts` und `turnState.ts` für toten Code hält, findet dort einen
-Verweis auf diesen Abschnitt.
-
-## 6. Illegal Actions
-
-- Aktionen in der falschen Zugphase sind verboten.
-- Aktionen eines nicht aktiven Spielers sind verboten.
-- Karten, die nicht auf der Hand des aktiven Spielers liegen, können nicht gespielt oder abgeworfen werden.
-- Farbkarten dürfen pro Zug nur im erlaubten Umfang gespielt werden.
-- Sonderkarten dürfen pro Zug nur im erlaubten Umfang gespielt werden.
-- Neue Schlangen sind nur mit einer Farbkarte und nur bis zum Schlangenlimit erlaubt.
-- Karten können nur an eigene, existente und nicht blockierte Schlangen angelegt werden.
-- `PflichtAbwurf` ist nur erlaubt, wenn keine spielbare Aktion verfügbar ist.
-- Nach dem Erreichen des Zuglimits sind weitere Aktionen im selben Zug verboten.
-
-**Erwartetes UI-Verhalten:**
-- Nicht legale Aktionen werden gar nicht als Button angeboten.
-- Wenn keine Aktion mehr möglich ist, zeigt die UI einen klaren Hinweis wie `Keine weiteren legalen Aktionen.` im Aktionsbereich oder `Aktuell keine legalen Aktionen in dieser Phase.` in den Phasenregeln.
-- Pflichtaktionen werden vor Abschluss des Zuges sichtbar gemacht.
-- Bei einem Verstoß soll die UI die deutsche Engine-Meldung sichtbar machen, statt still zu scheitern.
-
-**Typische Engine-Fehler:**
-- falsche Zugphase
-- nicht aktiver Spieler
-- Karte nicht auf der Hand
-- Schlangenlimit erreicht
-- blockierte Schlange
-- Pflichtabwurf ohne tatsächlichen Zwang
-- Zuglimit überschritten
-
-## 7. Effects & Special Rules
-
-- Reihenfolge im Zug: Nachziehphase → Ausspielphase → Aufgabenprüfung → Zugabschluss.
-- Der Zugabschluss entscheidet, ob der Zug normal endet oder ob die Endrunde fortgesetzt wird.
-- Wenn der Nachziehstapel während des Nachziehens leer wird, startet die Endspurt-/Endrunde.
-- In der Endrunde wird nicht mehr nachgezogen; die verbleibenden Spieler werden nur noch einmal nacheinander aktiv.
-- Der Auslöser der Endrunde spielt seinen begonnenen Zug normal zu Ende und wird danach nicht erneut aktiviert.
-- Offene Aufgaben werden nach Erfüllung ersetzt, solange der Aufgabenkartenstapel noch Karten enthält.
-- Geheime Aufgaben werden erst in der Wertung sichtbar.
-- Wenn mehrere Spieler dieselbe offene Aufgabe gleichzeitig erfüllen könnten, hat der aktive Spieler Vorrang.
-- Sonderkarten unterbrechen Farbreihen in Aufgaben, sofern die Aufgabe nichts anderes verlangt.
-- Eine Partie endet erst, wenn die Endrunde abgeschlossen ist und anschließend die Wertung erfolgt.
-
-**Konfliktregeln:**
-- Explizite Zugregeln schlagen allgemeine Hinweise.
-- Engine-Validierung schlägt UI-Hinweise.
-- Wenn zwei Regeln im Widerspruch stehen, gilt die engere, aktuellere Spezifikation.
-
-### R7.1 Umgesetzte Sonderkartenwirkungen
-
-- Schlangengrube: Der aktive Spieler wählt einen anderen Spieler, der genau seinen nächsten Zug aussetzt, sofern der Zielspieler nicht mit Farbenschutz abwehrt.
-- Bei 2 Spielern ist der Zielspieler automatisch der andere Spieler; bei 3 oder mehr Spielern entscheidet der aktive Spieler.
-- Schlangenblockade: Der aktive Spieler wählt eine konkrete Zielschlange **und eine Einfügeposition darin** und fügt dort eine neutrale, nicht farbige Schlangenblockade-Karte ein, sofern der Zielspieler nicht mit Farbenschutz abwehrt. Zielschlange darf **jede** Schlange sein, auch eine eigene. Einzelheiten in R7.1a. (ÄNDERUNG 04.08.2026: Hier stand bis zum Signoff „ans Ende der Zielschlange angehängt; eine Einfügeposition gibt es nicht" und „nur eines anderen Spielers".)
-- Farbendieb: Der aktive Spieler wählt eine **Farbkarte** aus einer gegnerischen Schlange und fügt sie an beliebiger Position in eine eigene Schlange ein. Sonderkarten sind nicht stehlbar. Die gestohlene Karte kann auch zwischen bereits vorhandenen Karten eingefügt werden; der Angriff kann mit Farbenschutz abgewehrt werden.
-- Farbenschutz: Der aktive Spieler kann eine eigene aktive Schlange als `geschuetzt` markieren. Zusätzlich kann der betroffene Zielspieler Farbenschutz einmalig als Abwehr gegen gegnerische Angriffe einsetzen; im aktuellen R79-Engine-Scope ist diese Reaktion für Schlangengrube, Schlangenblockade, Farbendieb und Schlangenfrass umgesetzt. Mit dem Verdoppler (siehe unten) sind das **alle fünf** Wirkungen, die einen anderen Spieler treffen — die Abwehr ist damit vollständig und nicht etwa ein Zwischenstand. (ÄNDERUNG 04.08.2026: Eine Ausnahme kam mit O-1 dazu — eine Schlangenblockade auf die **eigene** Schlange trifft keinen anderen Spieler und löst deshalb keine Abwehr aus. Siehe R7.1a Punkt 4.) (ÄNDERUNG 03.08.2026: nachgezählt gegen `src/engine/legalActions.ts`; Farbenfusion und Schlangenhäutung wirken nur auf eigene Schlangen und brauchen keine Abwehr.)
-- Schlangenfrass: Der aktive Spieler wählt genau 1 Karte aus einer eigenen Schlange oder genau 2 Karten aus gegnerischen Schlangen. Nur gegnerische geschützte Ziele lösen die Farbenschutz-Reaktionskette im Uhrzeigersinn aus; eigene Ziele werden immer sofort entfernt (keine Selbst-Reaktion).
-- Farbenfusion: Der aktive Spieler wählt zwei nebeneinanderliegende Karten gleicher Farbe in einer eigenen Schlange aus und ersetzt sie durch die Farbenfusion-Karte. Die Fusion zählt als eine Punkteeinheit. Für die längste Farbkette (R8.4a) zählt sie **nicht** — sie ist eine Sonderkarte und unterbricht die Kette. (ÄNDERUNG 03.08.2026: Hier stand zuvor „für den Vielfaltbonus wird sie ignoriert" — ein Verweis auf eine Regel, die diese Spec nie definiert hat und die nach R1.2a außerhalb des digitalen Umfangs liegt.)
-- Verdoppler: Der aktive Spieler kann zu Beginn seiner Ausspielphase eine Verdopplerkarte spielen. Die Karte aktiviert für diesen Zug einen Bonuszug mit genau einer zusätzlichen Karte. Die zusätzliche Karte darf eine weitere Farbkarte oder eine weitere Sonderkarte sein; insgesamt sind dann bis zu 3 Karten möglich. Der Bonus gilt nur für den aktuellen Zug, und Verdoppler selbst zählt als Sonderkarte. Gegner können den Verdoppler mit Farbenschutz in der Reaktionskette abwehren.
-- Regenbogenschlange: In der Wertungslogik wird sie als 0-Punkte-Wildcard der Farbe zugeordnet, die die betroffene Schlange maximal punktet.
-
-#### R7.1a Freie Einfügeposition der Schlangenblockade (ÄNDERUNG 04.08.2026, O-1)
-
-*(Signoff des Auftraggebers vom 03.08.2026. Bis dahin stand O-1 in der Tabelle
-der offenen Fragen in Abschnitt 11.)*
-
-**Der Signoff im Wortlaut** — er steht hier vollständig, damit die Regel nie aus
-einer Zusammenfassung rekonstruiert wird:
-
-> Die Blockade darf an jeder beliebigen Stelle platziert werden — sowohl in der
-> eigenen Schlange, was aber natürlich nicht so viel Sinn macht, als auch an
-> beliebiger Stelle beim Gegner. Der Gegner darf ausgesucht werden. Zuerst
-> kündigt der Spieler an: „Ich spiele eine Schlangenblockade auf Spieler X."
-> Dann darf Spieler X entscheiden, ob er abwehrt oder nicht mit der
-> Farbenschutzkarte. Wenn eine Farbenschutzkarte gespielt wird, sind beide
-> Karten ausgespielt — der Spieler, der die Schlangenblockade spielt, darf sich
-> dann nicht mehr umentscheiden und den anderen Spieler nehmen.
-
-**Was daraus folgt:**
-
-1. **Jede Schlange ist ein zulässiges Ziel**, auch eine eigene. Bis 03.08.2026
-   verboten Engine und Spec das ausdrücklich.
-2. **Die Position ist frei wählbar.** Gültig sind die Lücken `0` bis
-   `karten.length`; `karten.length` hängt hinten an — das Verhalten von vor O-1.
-3. **Die Position wird bei der Ansage festgelegt**, nicht nach der
-   Abwehrentscheidung. Das ist eine **Auslegung**, keine wörtliche Folge: Der
-   Signoff verbietet ausdrücklich nur, den *Zielspieler* zu wechseln. Die
-   Position ebenso zu behandeln liegt nahe — wer sich nach der Entscheidung des
-   Verteidigers nicht mehr umentscheiden darf, sollte sie auch nicht mehr
-   verschieben können —, steht dort aber nicht. Wird das je anders gewollt,
-   braucht es einen eigenen Signoff, keine Codeänderung.
-4. **Auf die eigene Schlange gibt es keine Abwehr.** Gegen sich selbst wehrt man
-   sich nicht; dieselbe Auslegung gilt beim Schlangenfrass („eigene Ziele werden
-   immer sofort entfernt, keine Selbst-Reaktion"). Der Signoff nennt die eigene
-   Schlange als das, was „nicht so viel Sinn macht" — nicht als neuen
-   Reaktionsfall.
-
-**Die Punktewirkung ist neu und beabsichtigt.** Eine Sonderkarte trennt nach R3.3
-die Farbgruppen links und rechts von sich. Mitten in eine Dreiergruppe gelegt
-zerreißt die Blockade sie deshalb sofort: Drei rote Karten (3 Punkte) werden zu
-1 + 2 Karten und zählen nach R8 **null**. Genau das war vor O-1 unmöglich, und
-genau darauf zielt der Signoff.
-
-**Altstände.** Ein Spielstand, der mitten in einer Blockade-Reaktionskette
-gespeichert wurde, kennt die Position nicht. `migriereSchlangenblockadePositionVorO1`
-setzt sie auf das Ende der Zielschlange und stellt damit exakt das Verhalten von
-vor O-1 her.
-
-### R7.2 Keine offenen normalen Sonderkartenwirkungen
-
-- Aktuell sind keine normalen Sonderkartenwirkungen offen.
-- Neue offene Sonderkartenwirkungen werden nur mit bestätigter Normquelle ergänzt; sie dürfen nicht aus dem Kartennamen geraten werden.
-
-> **Normquelle aktualisiert.** Für R6 gilt die geprüfte Korrektur zur Website: Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt und dürfen nicht als Implementierungsgrundlage verwendet werden.
-
-### R6 Aufgabenkarten
-
-Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler. Verbindlich ist die veröffentlichte Liste der 14 Aufgabenkarten mit Name, Punktwert und Bedingung.
-
-#### R6.1 Allgemeine Aufgaben-Regeln
-
-**Spielvorbereitung:**
-- Aufgabenkarten werden separat gemischt und nicht mit anderen Karten gemischt.
-- Zu Beginn des Spiels: 3 offene Aufgabenkarten werden neben den Spielbereich gelegt.
-- Jeder Spieler erhält 1 geheime Aufgabenkarte, die verdeckt vor dem Spieler liegt.
+| Farbkarten | 15 | Blau (1 Punkt) |
+| Farbkarten | 15 | Rot (1 Punkt) |
+| Farbkarten | 15 | Gelb (1 Punkt) |
+| Farbkarten | 12 | Violett (2 Punkte) |
+| Farbkarten | 12 | Braun (2 Punkte) |
+| Farbkarten | 9 | Grün (3 Punkte) |
+| Sonderkarten | 4 | Farbenschutz |
+| Sonderkarten | 4 | Regenbogenschlange |
+| Sonderkarten | 4 | Schlangenfrass |
+| Sonderkarten | 3 | Schlangenblockade |
+| Sonderkarten | 4 | Farbendieb |
+| Sonderkarten | 3 | Schlangengrube |
+| Sonderkarten | 4 | Farbenfusion |
+| Sonderkarten | 4 | Verdoppler |
+| Sonderkarten | 3 | Schlangenhäutung [Erweiterung] |
+| Sonderkarten | 1 | Schlangenkorb des Glücks [Erweiterung] |
+| Aufgabenkarten [Erweiterung] | 15 | Aufgabenkarten (verschiedene Ziele) |
+| Zusätzliches Spielmaterial [Erweiterung] | 4 | Comeback-Karten (1 pro Spieler) |
+| Zusätzliches Spielmaterial [Erweiterung] | 8 | Risiko-Belohnungs-Karten (2 pro Spieler) |
+| Weitere Karten je Box | 1 | Titelkarte der jeweiligen Edition |
+| Weitere Karten je Box | 1 | QR-Regelkarte (Link zur Spielanleitung) |
+
+Basis-Spiel: 110 Karten: 108 Spielkarten (78 Farbkarten + 30 Sonderkarten), Titelkarte und QR-Regelkarte
+
+Erweiterung "Schlangenkorb des Glücks": 33 Karten: 31 Spielkarten, Titelkarte und QR-Regelkarte
+
+Deluxe-Edition (Basis und Erweiterung): 141 Karten: alle 139 Spielkarten, Titelkarte und QR-Regelkarte
+
+### A2 Spieler
+
+2–4 Spieler, ab 6 Jahren, ca. 30–60 Minuten Spielzeit
+
+### A3 Spielziel
+
+Bilde Farbgruppen in deinen Schlangen, erfülle Aufgaben und sammle die meisten Punkte, um das Spiel zu gewinnen.
+
+### A4 Spielvorbereitung
+
+#### [Erweiterung] Nur bei Verwendung der Erweiterung:
+
+1. Gib jedem Spieler 1 Comeback-Karte und 2 Risiko-Belohnungs-Karten. Diese werden offen vor dem Spieler ausgelegt.
+2. Mische die Schlangenhäutung-Karten (3 Stück) und den Schlangenkorb des Glücks (1 Stück) mit den Sonderkarten zusammen.
+
+#### Immer (Basis-Spiel und Erweiterung):
+
+1. Mische alle Farb- und Sonderkarten gut (die Aufgabenkarten nicht, falls die Erweiterung gespielt wird).
+2. Teile jedem Spieler 5 Karten aus.
+3. Lege die restlichen Karten als verdeckten Nachziehstapel in die Tischmitte.
+4. Jeder Spieler erhält einen eigenen Ablagestapel für gespielte Sonderkarten und abgelegte Karten.
+
+#### [Erweiterung] Zusätzlich bei Verwendung der Aufgabenkarten:
+
+1. Mische die Aufgabenkarten separat (nicht mit anderen Karten mischen!).
+2. Lege 3 Aufgabenkarten offen neben den Spielbereich, die übrigen als verdeckten Stapel daneben.
+3. Gib jedem Spieler eine geheime Aufgabenkarte, die verdeckt vor ihm liegt.
+
+### A5 Spielablauf
+
+#### Basis-Spiel:
+
+1. Der jüngste Spieler beginnt. Danach wird im Uhrzeigersinn gespielt. In deinem Zug führst du folgende Aktionen aus:
+
+   - Kartenhand prüfen: Hast du ausserhalb deines Zuges Karten gespielt, zum Beispiel einen Farbenschutz zur Abwehr, ziehst du jetzt vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+   - Karten ausspielen: Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:
+
+     - Eine Farbkarte, um eine Schlange zu beginnen oder fortzusetzen (muss an einem beliebigen Ende der Schlange angelegt werden)
+     - Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle eingefügt werden)
+     - Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen
+     - Ist deine Sonderkarte der Verdoppler, füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug. Neben dem Verdoppler spielst du so bis zu 3 Karten
+   - Zug beenden: Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast. Danach ist der nächste Spieler an der Reihe.
+2. Hast du am Ende deines Zuges mehr als 5 Karten auf der Hand, lege die überzähligen Karten auf deinen Ablagestapel.
+
+#### [Erweiterung] Zusätzlich bei Verwendung der Aufgabenkarten:
+
+In deinem Zug kommt folgende Möglichkeit hinzu:
+
+- Aufgabe erfüllen: Wenn du die Bedingungen einer offenen Aufgabenkarte erfüllst, rufe "Schlangenspass!" und nimm die Aufgabe zu dir. Lege dann eine neue Aufgabenkarte vom Stapel auf. Deine geheime Aufgabe deckst du erst bei der Wertung auf.
+
+Wichtig: Du musst immer mindestens eine Karte spielen. Wenn du nur Sonderkarten auf der Hand hast, musst du eine davon spielen, auch wenn sie keinen optimalen Effekt in deiner eigenen Schlange hat. In diesem Fall kannst du sie auch bei einem Gegner ausspielen. Hast du nur Farbenschutz-Karten auf der Hand, legst du eine davon ohne Wirkung auf deinen Ablagestapel. Danach ziehst du eine Karte nach, und dein Zug ist beendet. Die neue Karte darfst du erst im nächsten Zug ausspielen.
+
+Schlangen:
+
+- Ein Spieler darf maximal 2 Schlangen haben.
+- Eine neue Schlange kann begonnen werden, indem eine Farbkarte separat von bestehenden Schlangen gelegt wird.
+- Es gibt keine Begrenzung für die Länge einer Schlange.
+
+### A6 Sonderkarten-Timing und Beispiele
+
+#### Grundregeln für Sonderkarten:
+
+- Sonderkarten werden immer mit klarer Ansage gespielt: Der Spieler benennt das Ziel seiner Aktion.
+- Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Eine andere Karte ist als Reaktion nicht erlaubt.
+- Gespielte Sonderkarten kommen auf den Ablagestapel des Spielers, der sie gespielt hat.
+- Wer ausserhalb seines Zuges eine Karte spielt, zieht nicht gleich nach, sondern füllt erst zu Beginn seines nächsten Zuges auf 5 Karten auf. Wer in einer Runde zweimal angegriffen wird, kann deshalb nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren.
+- Schlangenfrass ist keine Reaktion: Mit ihm entfernst du in deinem eigenen Zug Karten, die bereits in einer Schlange liegen.
+
+#### Beispiel 1: Schlangenblockade und Farbenschutz:
+
+1. Spieler A sagt an: "Ich spiele eine Schlangenblockade auf die erste Schlange von Spieler B."
+2. Spieler B kann nun einen Farbenschutz spielen.
+3. Spielt Spieler B einen Farbenschutz:
+
+   - Die Schlangenblockade ist wirkungslos.
+   - Beide Karten kommen auf den Ablagestapel ihres Spielers.
+   - Spieler A darf die Schlangenblockade nicht gegen einen anderen Spieler richten.
+4. Spieler A füllt seine Hand am Ende seines Zuges auf, Spieler B zu Beginn seines nächsten Zuges.
+
+[Schlangenblockade] [Farbenschutz]
+
+#### Beispiel 2: Schlangenfrass mit mehreren Zielen:
+
+1. Spieler A sagt an: "Ich spiele Schlangenfrass und fresse je eine Karte von Spieler B und Spieler C."
+2. Die Abwehr wird im Uhrzeigersinn abgehandelt:
+
+   - Zuerst entscheidet Spieler B, ob er einen Farbenschutz spielt.
+   - Dann entscheidet Spieler C, ob er einen Farbenschutz spielt.
+3. Ein Farbenschutz schützt nur die eigene Schlange:
+
+   - Spielt nur Spieler B einen Farbenschutz, bleibt seine Karte liegen. Die Karte von Spieler C wird trotzdem entfernt.
+   - Spielen beide einen Farbenschutz, wird keine Karte gefressen.
+4. Karten kommen auf die Ablagestapel:
+
+   - Schlangenfrass kommt auf den Ablagestapel von Spieler A.
+   - Gespielte Farbenschutzkarten kommen auf den Ablagestapel ihres Spielers.
+   - Gefressene Karten kommen auf den Ablagestapel von Spieler A.
+5. Spieler A füllt am Ende seines Zuges auf. Spieler B und C füllen erst zu Beginn ihres nächsten Zuges auf.
+
+Situation:
+
+[Schlangenfrass] [Farbenschutz]
+
+#### Timing-Regeln:
+
+- Zuerst wird die Aktion vollständig angesagt.
+- Dann können die betroffenen Spieler im Uhrzeigersinn mit einem Farbenschutz reagieren.
+- Erst danach tritt der Effekt der Sonderkarte ein.
+- Der Spieler am Zug füllt seine Hand am Ende seines Zuges auf 5 Karten auf.
+- Wer ausserhalb seines Zuges Karten gespielt hat, füllt zu Beginn seines nächsten Zuges auf 5 Karten auf.
+
+### A7 Sonderkarten
+
+#### A7.1 Farbendieb
+
+Kurzbeschreibung: Erlaubt es, einem anderen Spieler eine Karte aus dessen Schlange wegzunehmen und sofort in die eigene Schlange einzufügen.
+
+Eine taktische Karte, die es ermöglicht, eine Karte aus der Schlange eines Mitspielers zu stehlen und für die eigene Strategie zu nutzen. Der Farbendieb ist besonders nützlich, wenn man eine bestimmte Farbe für eine Dreiergruppe benötigt oder die Strategie eines Gegners durchkreuzen möchte.
+
+**Beispiele:**
+
+Spieler A spielt Farbendieb. Er stiehlt eine blaue Karte aus der Schlange von Spieler B und fügt sie an seine eigene Schlange an.
+
+[Farbendieb] [Blau]
+
+**Wichtige Regeln:**
+
+- Wähle eine Karte aus einer gegnerischen Schlange
+- Lege die Karte an eine beliebige Position in deiner Schlange
+- Der Farbendieb kommt auf deinen Ablagestapel
+- Kann durch Farbenschutz abgewehrt werden
+
+#### A7.2 Farbenschutz
+
+Kurzbeschreibung: Schützt vor negativen Effekten einer Sonderkarte
+
+Eine defensive Karte, die vor den negativen Auswirkungen von Sonderkarten schützt und als Reaktion auf diese gespielt werden kann. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
+
+**Beispiele:**
+
+Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er möchte, einen Farbenschutz spielen, um die Schlangenblockade abzuwehren. Die Schlangenblockade wird auf den Ablagestapel von Spieler B gelegt, und Spieler A bleibt unberührt.
+
+[Farbenschutz] [Schlangenblockade]
+
+**Wichtige Regeln:**
+
+- Spiele als Reaktion auf eine Sonderkarte
+- Lege den Farbenschutz auf deinen Ablagestapel
+- Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers
+- Schützt vor allen negativen Effekten von Sonderkarten
+
+#### A7.3 Regenbogenschlange
+
+Kurzbeschreibung: Eine flexible Joker-Karte, die als Karte einer beliebigen Farbe eingesetzt werden kann
+
+Die Regenbogenschlange ist eine äusserst vielseitige Joker-Karte, die als Karte jeder beliebigen Farbe eingesetzt werden kann. Sie bietet maximale Flexibilität bei der Bildung von Farbgruppen und kann in verschiedenen Situationen strategisch eingesetzt werden.
+
+**Beispiele:**
+
+Eine Schlange hat folgende Karten: Blau - Blau - Regenbogenschlange. Die Regenbogenschlange wird als blaue Karte gewertet, um eine Dreiergruppe zu bilden. Diese Gruppe bringt 2 Punkte (1 Punkt pro blaue Karte, die Regenbogenschlange bringt keinen Punkt).
+
+[Blau] [Blau] [Regenbogenschlange]
+
+Ein Spieler hat die Aufgabe 'Farbvielfalt' (eine Karte jeder Farbe) und hat bereits Blau, Rot, Gelb, Braun und Grün in seiner Schlange. Er legt eine Regenbogenschlange an und nutzt sie als violette Karte, um die Aufgabe zu erfüllen. [Erweiterung]
+
+[Blau] [Rot] [Gelb] [Braun] [Grün] [Regenbogenschlange]
+
+Eine Schlange hat: Rot - Rot - Regenbogenschlange - Braun - Braun. Diese Gruppe bringt 4 Punkte (2 × 2 Punkte für die braunen Karten, 0 Punkte für die Regenbogenschlange).
+
+[Rot] [Rot] [Regenbogenschlange] [Braun] [Braun]
+
+**Wichtige Regeln:**
+
+- Gilt als Karte der Farbe, die für den Spieler am vorteilhaftesten ist
+- Die Farbe ist nie festgelegt und kann sich während des Spiels ändern [Erweiterung]
+- Verbindet Farbgruppen, indem sie als Karte der gewünschten Farbe zählt
+- Die Regenbogenschlange bringt selbst keine Punkte
+- Muss Teil einer Dreiergruppe (oder länger) sein, um die Gruppe zu vervollständigen
+- Die anderen Karten der Gruppe bringen ihre normalen Punkte
+- Zählt auch für den Vielfaltbonus als ihre Farbe [Erweiterung]
+- Bei der Wertung am Spielende zählt sie als die Farbe, die dem Spieler die meisten Punkte bringt
+- Kann als beliebige der sechs Farben gewertet werden, auch als grün
+- Bei jeder Aufgabe zählt sie als die Farbe, mit der die Aufgabe erfüllt ist. Eine erfüllte Aufgabe bleibt erfüllt, auch wenn die Karte später anders zählt [Erweiterung]
+- Unterbricht keine Farbreihen, wenn sie als passende Farbe genutzt wird
+
+#### A7.4 Schlangenfrass
+
+Kurzbeschreibung: Entfernt eine oder zwei Karten aus beliebigen Schlangen
+
+Der Spieler hat die Wahl zwischen drei Optionen: a) Entferne eine beliebige Karte aus deiner eigenen Schlange. b) Entferne eine Schlangenblockade aus deiner eigenen Schlange. c) Entferne zwei beliebige Karten aus den Schlangen der Mitspieler. Diese können Farbkarten, Regenbogenschlangen, Farbfusionen oder andere Sonderkarten sein, ausser Schlangenblockaden. Die Karten können aus einer oder zwei verschiedenen Schlangen stammen und von beliebigen Positionen entfernt werden.
+
+**Beispiele:**
+
+Option a): Ein Spieler entfernt eine rote Karte aus seiner eigenen Schlange, um Platz für eine besser passende Karte zu schaffen.
+
+[Schlangenfrass] [Rot]
+
+Option b): Ein Spieler hat eine Schlangenblockade in seiner Schlange. Er spielt Schlangenfrass und wählt Option b), um die Schlangenblockade zu entfernen. Die Schlangenblockade kommt auf den Ablagestapel des Spielers, der Schlangenfrass gespielt hat.
+
+[Schlangenfrass] [Schlangenblockade]
+
+Option c): Ein Spieler entfernt eine Regenbogenschlange und eine gelbe Farbkarte aus der Schlange eines Mitspielers. Es bleiben nur noch zwei gelbe Farbkarten die keine Punkte mehr zählen.
+
+[Schlangenfrass] [Regenbogenschlange] [Gelb] [Gelb] [Gelb]
+
+**Wichtige Regeln:**
+
+- Die entfernten Karten kommen auf den Ablagestapel
+- Bei Option c) müssen zwei Karten entfernt werden, sofern möglich
+- Schlangenblockaden in gegnerischen Schlangen können nicht mit Option c) entfernt werden
+- Beim Entfernen einer Farbfusionskarte wird nur die Farbfusionskarte selbst entfernt
+- Die darunter liegenden fusionierten Karten werden wieder getrennt und bleiben an ihrer Position
+
+#### A7.5 Schlangenblockade
+
+Kurzbeschreibung: Fügt der Schlange eine neutrale, nicht farbige Karte hinzu
+
+Fügt der Schlange eine neutrale, nicht farbige Karte hinzu. Die Schlangenblockade ist ein mächtiges taktisches Werkzeug, das den Spielfluss des Gegners erheblich einschränken kann. Sie kann durch Farbenschutz verhindert oder durch Schlangenfrass entfernt werden.
+
+**Beispiele:**
+
+Spieler B hat drei rote Karten in einer Reihe. Spieler A legt eine Schlangenblockade zwischen die erste und die zweite rote Karte: Rot – Schlangenblockade – Rot – Rot. Die Dreierreihe ist damit unterbrochen und zählt in der Wertung keine Punkte mehr, bis Spieler B die Schlangenblockade mit Schlangenfrass entfernt.
+
+[Rot] [Schlangenblockade] [Rot] [Rot]
+
+**Wichtige Regeln:**
+
+- Wähle eine Schlange aus
+- Lege die Blockade an eine beliebige Stelle der Schlange
+- Die Blockade bleibt bis zu ihrer Entfernung bestehen
+- Kann durch Farbenschutz abgewehrt werden
+- Kann nur durch Schlangenfrass oder spezielle Karteneffekte entfernt werden
+
+#### A7.6 Schlangengrube
+
+Kurzbeschreibung: Lässt einen Mitspieler deiner Wahl einen kompletten Zug aussetzen
+
+Der Spieler, der die Schlangengrube spielt, wählt einen Mitspieler aus. Der gewählte Spieler muss seinen nächsten Zug komplett aussetzen. Während des Aussetzens darf der Spieler keine Aktionen durchführen - weder Karten ziehen noch Karten ausspielen.
+
+**Beispiele:**
+
+Spieler A spielt eine Schlangengrube gegen Spieler B. Spieler B hat keinen Farbenschutz und muss seinen nächsten Zug komplett aussetzen. Nach dem ausgesetzten Zug wird die Schlangengrube auf den Ablagestapel gelegt.
+
+Spieler A spielt eine Schlangengrube gegen Spieler B. Spieler B hat einen Farbenschutz und spielt diesen als Reaktion. Die Schlangengrube wird wirkungslos auf den Ablagestapel gelegt, und Spieler B kann seinen Zug normal ausführen.
+
+[Schlangengrube] [Farbenschutz]
+
+**Wichtige Regeln:**
+
+- Der Spieler, der die Schlangengrube spielt, wählt einen Mitspieler aus
+- Der gewählte Spieler muss seinen nächsten Zug komplett aussetzen
+- Während des Aussetzens darf der Spieler keine Aktionen durchführen
+- Die Schlangengrube wird nach dem ausgesetzten Zug auf den Ablagestapel gelegt
+- Die Schlangengrube kann durch einen Farbenschutz abgewehrt werden
+- Wird ein Farbenschutz gespielt, wird die Schlangengrube ohne Wirkung abgelegt
+- Der ausgewählte Spieler darf dann seinen Zug normal durchführen
+
+#### A7.7 Farbenfusion
+
+Kurzbeschreibung: Zwei nebeneinanderliegende Karten der gleichen Farbe werden unter die Farbenfusionskarte gelegt
+
+Zwei nebeneinanderliegende Karten der gleichen Farbe werden unter die Farbenfusionskarte gelegt. Im Spiel liegen die Farbkarten übereinander und die Fusionskarte obenauf. Die Farbenfusion zählt als eine einzelne Karte einer beliebiger Farbe und muss Teil einer Dreiergruppe sein, um Punkte zu bringen.
+
+**Beispiele:**
+
+Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Gelb-Gelb. Er spielt Farbenfusion und legt sie auf die beiden gelben Karten. Diese beiden Karten gelten nun als eine Karte beliebiger Farbe (die am vorteilhaftesten ist).
+
+[Blau] [Blau] [Gelb + Farbenfusion + Gelb]
+
+Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Farbenfusion(fusionierte Gelb - Gelb) - Rot - Rot.
+
+[Blau] [Blau] [Gelb + Farbenfusion + Gelb] [Rot] [Rot]
+
+**Wichtige Regeln:**
+
+- Pro Zug darf nur eine Farbenfusion durchgeführt werden
+- Die Farbenfusion liegt oben auf den fusionierten Karten und markiert diese als eine Einheit
+- Wird eine Farbenfusion entfernt, werden die darunter liegenden Karten wieder zu einzelnen Karten
+- Die Farbenfusion zählt als eine einzelne Karte einer beliebigen Farbe
+- Muss Teil einer Dreiergruppe sein, um Punkte zu bringen
+- Bringt die Punkte beider fusionierter Karten
+- Zählt nur als eine Farbe für den Vielfaltbonus [Erweiterung]
+- Für den Vielfaltbonus zählt die Farbe, die die Fusion bei der Wertung hat [Erweiterung]
+- Die Farbe der Fusion ist nie festgelegt. Bei jeder Aufgabe zählt sie als die Farbe, mit der die Aufgabe erfüllt ist, bei der Wertung als die Farbe, die dem Spieler die meisten Punkte bringt [Erweiterung]
+- Die ursprünglichen Farben der fusionierten Karten spielen für Aufgaben keine Rolle mehr [Erweiterung]
+
+#### A7.8 Verdoppler
+
+Kurzbeschreibung: Erlaubt dir, nach deinem Zug die Hand aufzufüllen und sofort einen zweiten Zug zu spielen
+
+Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug, wieder mit einer Farbkarte und optional einer Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
+
+**Beispiele:**
+
+Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf und spielt im zweiten Zug eine blaue Karte und Schlangenfrass. Neben dem Verdoppler hat er so drei Karten gespielt.
+
+**Wichtige Regeln:**
+
+- Spiele den Verdoppler als Sonderkarte deines Zuges, vor oder nach deiner Farbkarte
+- Fülle danach deine Handkarten auf
+- Spiele sofort einen zweiten Zug mit einer Farbkarte und optional einer Sonderkarte
+- Neben dem Verdoppler spielst du so bis zu 3 Karten
+- Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
+
+#### A7.9 Schlangenhäutung
+
+Kurzbeschreibung: Ermöglicht es, einen Abschnitt von 3–5 Farbkarten in der Schlange neu anzuordnen
+
+Die Schlangenhäutung ist eine taktische Karte aus der Erweiterung 'Schlangenkorb des Glücks', die es ermöglicht, einen Abschnitt von 3–5 Farbkarten in der Schlange neu anzuordnen. Es dürfen nur Farbkarten neu angeordnet werden. Der gewählte Abschnitt muss 3–5 aufeinanderfolgende Farbkarten umfassen. Sonderkarten unterbrechen den Abschnitt und können nicht Teil der Neuordnung sein.
+
+**Beispiele:**
+
+Ein Spieler hat folgende Karten in seiner Schlange: Blau - Rot - Gelb - Rot - Gelb. Er spielt Schlangenhäutung und ordnet die Karten neu an, um eine gelbe und eine rote Gruppe zu bilden.
+
+[Blau] [Rot] [Gelb] [Rot] [Gelb]
+
+Ergebnis nach Anwendung der Schlangenhäutung
+
+[Gelb] [Gelb] [Blau] [Rot] [Rot]
+
+Ein Spieler hat eine Schlangenblockade in seiner Reihe. Diese unterbricht die möglichen Bereiche für die Schlangenhäutung. Da auch keine mindestens drei Farbkarten in einer Reihe liegen, kann die Schlangenhäutung nicht eingesetzt werden.
+
+[Blau] [Violett] [Schlangenblockade] [Grün] [Violett]
+
+**Wichtige Regeln:**
+
+- Es dürfen nur Farbkarten neu angeordnet werden
+- Der gewählte Abschnitt muss 3–5 aufeinanderfolgende Farbkarten umfassen
+- Sonderkarten unterbrechen den Abschnitt
+- Die Gesamtstruktur der Schlange bleibt erhalten
+- Die Neuordnung erfolgt einmalig
+- Die Karten dürfen nicht mehrfach verschoben werden
+- Nur zusammenhängende Farbkarten dürfen gewählt werden
+- Neue Farbgruppen zählen für Aufgaben und Punktewertung (Aufgaben sind Erweiterungsinhalt)
+- Die Position von Sonderkarten bleibt unverändert
+
+**Hinweis:** Diese Karte ist Teil der Erweiterung "Schlangenkorb des Glücks" und wird nur bei Verwendung der Erweiterung verwendet.
+
+#### A7.10 Schlangenkorb des Glücks
+
+Kurzbeschreibung: Einmalig nutzbare Spezialkarte mit verschiedenen Bonuseffekten
+
+Diese einzigartige Karte wird zu Beginn des Spiels unter die anderen Karten gemischt. Der Spieler, der sie zieht, kann sie einmal während des Spiels einsetzen, um einen der folgenden Boni zu erhalten.
+
+**Beispiele:**
+
+Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus
+
+Tausche bis zu 2 Karten aus deiner Schlange mit Karten aus deiner Hand
+
+Entferne eine Schlangenblockade aus deiner Schlange ODER entferne eine Sonderkarte aus einer gegnerischen Schlange
+
+Führe zwei zusätzliche Aktionen in diesem Zug aus
+
+**Wichtige Regeln:**
+
+- Wähle einen der verfügbaren Bonuseffekte
+- Führe den gewählten Effekt sofort aus
+- Die Karte wird nach der Nutzung aus dem Spiel entfernt
+
+**Hinweis:** Diese Karte ist Teil der Erweiterung "Schlangenkorb des Glücks" und wird nur bei Verwendung der Erweiterung verwendet.
+
+### A8 Erweiterung: Schlangenkorb des Glücks
+
+Die folgenden Karten sind Teil der Erweiterung "Schlangenkorb des Glücks" und können optional zum Basis-Spiel hinzugefügt werden.
+
+Die Comeback-Karte ist deine zweite Chance! Jeder Spieler erhält zu Spielbeginn eine Comeback-Karte.
+
+#### A8.1 Comeback-Karte
+
+Kurzbeschreibung: Ermöglicht zwei zusätzliche Aktionen, wenn man im Rückstand ist Liegt deine längste Schlange zu Beginn deines Zuges mindestens 5 Karten hinter der längsten Schlange auf dem Tisch, kannst du deine Comeback-Karte einsetzen und erhältst zwei zusätzliche Aktionen. Danach ist sie verbraucht.
+
+Ermöglicht zwei zusätzliche Aktionen, wenn man im Rückstand ist
+
+**Auslösebedingung**
+
+- Die Comeback-Karte kann nur gespielt werden, wenn die Bedingungen zu Beginn des eigenen Zuges erfüllt sind.
+- Die Bedingung ist erfüllt, wenn die längste Schlange des Spielers mindestens 5 Karten kürzer ist als die längste Schlange auf dem Tisch.
+
+**Zeitpunkt der Aktivierung**
+
+- Nur während des eigenen Zuges spielbar.
+- Pro Spieler und Zug darf nur eine Comeback-Karte gespielt werden.
+- Mehrere Spieler dürfen nacheinander in ihren jeweiligen Zügen Comeback-Karten spielen, wenn die Bedingungen jeweils erfüllt sind.
+
+**Bonuseffekt**
+
+Bei Aktivierung erhält der Spieler zwei zusätzliche Aktionen in seinem Zug. Diese zusätzlichen Aktionen können sein:
+
+- Eine Farbkarte aus der Hand ausspielen
+- Eine Sonderkarte aus der Hand ausspielen
+- Zwei Karten abwerfen und drei neue vom Nachziehstapel ziehen
+
+Der Spieler kann diese zwei Aktionen in beliebiger Reihenfolge mit seinen normalen Zugaktionen ausführen und darf auch zweimal die gleiche Aktion wählen.
+
+**Wichtig**
+
+Die Nutzung einer Comeback-Karte zählt nicht als reguläre Aktion in deinem Zug. Du darfst also zusätzlich zu dieser Sonderaktion deine normalen Zugaktionen durchführen.
+
+**Nach der Nutzung**
+
+Die Comeback-Karte wird umgedreht, um anzuzeigen, dass sie verwendet wurde. Sie kann nicht erneut aktiviert werden, auch wenn die Bedingung später wieder erfüllt sein sollte.
+
+Die Risiko-Belohnungs-Karten bieten dir die Möglichkeit, eine zusätzliche Sonderaktion in deinem Zug durchzuführen. Dabei gehst du jedoch ein kalkuliertes Risiko ein: Bei jeder Nutzung wird geprüft, ob du die Belohnung erhältst oder ein Gegenspieler davon profitiert.
+
+#### A8.2 Risiko-Belohnungs-Karte
+
+Kurzbeschreibung: Ermöglicht eine zusätzliche Aktion mit besonderen Effekten Jeder Spieler erhält zu Beginn des Spiels 2 Risiko-Belohnungs-Karten. Nach dem Ausspielen wird eine Risiko-Belohnungs-Karte aus dem Spiel entfernt. Pro Runde darfst du maximal eine Risiko-Belohnungs-Karte verwenden.
+
+Die Risiko-Belohnungs-Karten bieten dir die Möglichkeit, eine zusätzliche Sonderaktion in deinem Zug durchzuführen. Dabei gehst du jedoch ein kalkuliertes Risiko ein: Bei jeder Nutzung wird geprüft, ob du die Belohnung erhältst oder ein Gegenspieler davon profitiert.
+
+Jeder Spieler erhält zu Beginn des Spiels 2 Risiko-Belohnungs-Karten. Nach dem Ausspielen wird eine Risiko-Belohnungs-Karte aus dem Spiel entfernt. Pro Runde darfst du maximal eine Risiko-Belohnungs-Karte verwenden.
+
+**Allgemeine Regel zur Risikoprüfung**
+
+Sobald du eine Risiko-Belohnungs-Karte ausspielst, deckst du die oberste Karte vom Nachziehstapel auf:
+
+**Farbkarte:** Die Aktion ist erfolgreich – du erhältst die volle Belohnung.
+
+**Sonderkarte:** Die Aktion scheitert – stattdessen profitiert ein Gegenspieler.
+
+Wenn die Aktion fehlschlägt, darfst du entscheiden, welchem deiner Gegenspieler die angegebene Ersatzbelohnung zugutekommt. Dies fördert gezielt das Aufholen im Spiel, weil du dem Spieler helfen kannst, der zurückliegt.
+
+**Die vier Risiko-Belohnungs-Aktionen**
+
+**Aktion 1: Zusätzliche Karten ziehen**
+
+Wenn du diese Aktion wählst, ziehst du im Erfolgsfall drei Karten vom Nachziehstapel auf deine Hand.
+
+**Erfolg:** Lege die gezogene Farbkarte auf deine Hand und ziehe anschliessend 2 weitere Karten.
+
+**Misserfolg:** Die aufgedeckte Sonderkarte musst du einem Gegenspieler deiner Wahl geben. Der gewählte Spieler darf die Sonderkarte direkt auf die Hand nehmen.
+
+**Wichtig:** Wenn du oder der Gegenspieler durch diese Aktion mehr als 5 Handkarten habt, reduziert jeder am Ende seines eigenen Zuges wieder auf maximal 5 Karten.
+
+**Aktion 2: Zusätzliche Farbkarte spielen**
+
+Du darfst versuchen, eine zusätzliche Farbkarte an ein beliebiges Ende deiner Schlange anzulegen.
+
+**Erfolg:** Du spielst sofort eine zusätzliche Farbkarte an deiner eigenen Schlange an. Du kannst dafür die gezogene Karte verwenden oder eine Karte aus deiner Hand nutzen. In jedem Fall behältst du die gezogene Farbkarte.
+
+**Misserfolg:** Deine geplante Farbkarte wandert auf die Hand eines beliebigen Gegenspielers deiner Wahl. Alternativ darf dieser Spieler die oberste Karte vom Nachziehstapel ziehen und sie auf die Hand nehmen.
+
+**Aktion 3: Karten tauschen**
+
+Du möchtest eine Farbkarte in deiner Schlange durch eine Karte von deiner Hand ersetzen.
+
+**Ablauf:**
+
+- Benenne vor dem Risiko-Check, welche Karte in deiner Schlange du tauschen möchtest
+- Decke eine Karte vom Nachziehstapel auf
+
+**Erfolg:** Die gezogene Karte ist eine Farbkarte mit dem gleichen Punktewert (1, 2 oder 3 Punkte) wie deine gewählte Schlange-Karte. Du darfst den Tausch ausführen.
+
+**Misserfolg:**
+
+- Farbkarte mit anderem Punktewert: Lege sie zusätzlich an die Position der gewählten Karte. Du hast nun zwei Farbkarten hintereinander an dieser Stelle.
+- Sonderkarte: Die Aktion scheitert vollständig. Die Sonderkarte kommt auf deinen Ablagestapel. Die Schlange bleibt unverändert.
+
+**Aktion 4: Karten aus dem Ablagestapel oder Nachziehstapel nehmen**
+
+Diese Aktion ermöglicht dir mehr Flexibilität:
+
+**Erfolg:** Du wählst:
+
+- Zwei Karten vom Nachziehstapel ziehen
+- **ODER eine beliebige Karte von deinem eigenen Ablagestapel auf die Hand nehmen**
+
+**Misserfolg:** Der Gegenspieler deiner Wahl darf:
+
+- Eine beliebige Karte aus seinem Ablagestapel auf die Hand nehmen
+- **ODER die oberste Karte vom Nachziehstapel ziehen**
+
+**Wichtig:** Risiko-Belohnungs-Karte sowie Schlangenkorb des Glücks können nicht vom Ablagestapel genommen werden.
+
+**Wichtige Regeln für alle Risiko-Belohnungs-Karten:**
+
+- Die Nutzung einer Risiko-Belohnungs-Karte zählt nicht als reguläre Aktion in deinem Zug.
+- Du darfst weiterhin deine normalen Aktionen im selben Zug ausführen.
+- **Pro Runde darfst du nur eine Risiko-Belohnungs-Karte spielen.**
+- Nach der Nutzung kommt die Karte aus dem Spiel.
+- **Handkarten-Limit: Wenn du oder ein Gegenspieler durch eine Aktion mehr als 5 Handkarten erhaltet, wird am Ende des jeweils eigenen Zuges wieder auf maximal 5 Karten reduziert.**
+- **Freie Wahl bei Misserfolg: Bei gescheiterten Aktionen darfst du immer frei wählen, welcher Gegenspieler von der Ersatzbelohnung profitiert.**
+
+### A9 Aufgabenkarten [Erweiterung]
+
+#### Allgemeine Regeln für Aufgabenkarten:
+
+- Zu Beginn des Spiels werden 3 offene Aufgabenkarten ausgelegt.
+- Jeder Spieler erhält zusätzlich eine geheime Aufgabenkarte.
 - Alle Aufgaben funktionieren nach dem gleichen Prinzip - egal ob offen oder geheim.
-
-**Aufgaben erfüllen:**
 - Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist.
 - Die Bedingungen dürfen im selben Zug geschaffen und die Aufgabe direkt erfüllt werden.
-- Bei offenen Aufgaben ruft der Spieler „SchlangenSpass!", wenn er eine Aufgabe erfüllt.
-- Offene Aufgaben werden nach Erfüllung ersetzt, solange der Aufgabenkartenstapel nicht leer ist; die erfüllte offene Aufgabe wandert zum Spieler.
+
+#### Ablauf der Aufgabenerfüllung:
+
+- Bei offenen Aufgaben ruft der Spieler "Schlangenspass!", wenn er eine Aufgabe erfüllt.
+- Die erfüllte offene Aufgabe wandert zum Spieler und wird durch eine neue vom Stapel ersetzt.
 - Geheime Aufgaben werden erst bei der Punktezählung aufgedeckt.
-- Jede Aufgabe kann nur einmal erfüllt werden - wer zuerst die Bedingungen erfüllt und am Zug ist, bekommt die Punkte.
+- Jede Aufgabe kann nur einmal erfüllt werden. Die Punkte bekommt, wer die Bedingungen zuerst erfüllt und am Zug ist.
 - Wenn der Aufgabenkartenstapel leer ist, werden keine neuen Aufgaben mehr aufgedeckt.
 
-**Wichtig für Sonderkarten:** Wenn in den Aufgabenbeschreibungen nicht anders erwähnt, gelten Sonderkarten (wie Regenbogenschlange oder Farbenfusion) als Unterbrechung bei Farbreihen in Aufgaben. Sonderkarten zählen nicht für die Erfüllung von Aufgaben, es sei denn, die Aufgabe verlangt explizit nach Sonderkarten.
+#### Wichtig für Sonderkarten:
 
-**SchlangenSpass!-Sequenz:** Erkennung → Animation „SchlangenSpass!" → Soundeffekt → Aufgabe hervorheben → Punkte gutschreiben → Karte zum Spieler → offene Aufgabe nachziehen (falls verfügbar).
+Regenbogenschlange und Farbenfusion zählen für Aufgaben als Karte einer Farbe, und zwar als die Farbe, mit der die Aufgabe erfüllt ist. Diese Farbe ist nicht festgelegt: Bei einer anderen Aufgabe und bei der Punktewertung darf die Karte als andere Farbe zählen. Die Karten unter einer Farbenfusion zählen nicht einzeln. Andere Sonderkarten, etwa die Schlangenblockade, unterbrechen Farbreihen und zählen nur, wenn eine Aufgabe ausdrücklich Sonderkarten verlangt.
 
-#### R6.2 Veröffentlichte Aufgabenkarten laut Website
+#### Beispiel:
 
-| # | Name | Punkte | Bedingung |
-|---|------|--------|-----------|
+Ein Spieler hat bereits eine Vierergruppe blauer Karten. Als offene Aufgabe liegt "Farbkombination" (5 Karten gleicher Farbe). In seinem Zug legt er eine weitere blaue Karte an und erfüllt damit die Bedingung. Er darf sofort "Schlangenspass!" rufen und die Aufgabe für sich beanspruchen, auch wenn ein anderer Spieler ebenfalls kurz davor war.
+
+Vorher:
+
+[Blau] [Blau] [Blau] [Blau]
+
+Nach Anlegen der fünften Karte:
+
+[Blau] [Blau] [Blau] [Blau] [Blau]
+
+#### Verfügbare Aufgabenkarten
+
+| Nr. | Name | Punkte | Bedingung (Kartentext) |
+|---|---|---|---|
 | 1 | Farbenpracht | 8 | Habe am Ende des Spiels oder Zugs von jeder Farbe mindestens zwei Karten in deinen beiden Schlangen. |
 | 2 | Farbharmonie | 10 | Habe in deinen Schlangen mindestens eine Dreiergruppe jeder Farbe. |
 | 3 | Farbkombination | 5 | Habe 5 oder mehr Karten der gleichen Farbe in einer Schlange. |
 | 4 | Farbvielfalt | 9 | Bilde eine Kette aus je einer Karte aller 6 Farben. |
-| 5 | Farbwechsler | 6 | Habe in einer Schlange mindestens 4 verschiedene Farben, die direkt aufeinander folgen. |
-| 6 | Fusionsexperte | 6 | Habe eine Schlange mit mindestens 2 Farbfusionen. |
-| 7 | Schlangenbeschwörer | 7 | Habe min. 4 Sonderkarten in deinen Schlangen. |
-| 8 | Schlangenmeister | 4 | Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus. |
-| 9 | Schlangenrepertoire | 4 | Spiele min. 5 versch. Arten von Sonderkarten aus. |
-| 10 | Schlangenbändiger | 7 | Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben. |
-| 11 | Schlangentanz | 7 | Bilde durch Schlangenhäutung 2 neue Dreiergruppen. |
-| 12 | Symmetriemeister | 10 | Habe eine Schlange mit min. 8 Karten, bei der die erste Hälfte das Spiegelbild der zweiten ist. |
-| 13 | Gelber Schatz | 5 | Bilde eine Gruppe aus min. 6 gelben Karten. |
-| 14 | Lila Riese | 5 | Bilde die längste ununterbrochene Kette violetter Karten (mindestens 3). |
+| 5 | Vielfaltskönig | 9 | Habe in jeder deiner Schlangen min. 4 versch. Farben. |
+| 6 | Farbwechsler | 6 | Habe in einer Schlange mindestens 4 verschiedene Farben, die direkt aufeinander folgen. Es müssen nicht einzelne Farben aufeinander folgen. Es gelten auch Reihen. |
+| 7 | Fusionsexperte | 6 | Habe eine Schlange mit mindestens 2 Farbfusionen. |
+| 8 | Schlangenbeschwörer | 7 | Habe min. 4 Sonderkarten in deinen Schlangen. |
+| 9 | Schlangenmeister | 4 | Habe min. 2 versch. Sonderkarten in deinen Schlangen und spiele min. 4 aus. |
+| 10 | Schlangenrepertoire | 4 | Spiele min. 5 versch. Arten von Sonderkarten aus. |
+| 11 | Schlangenbändiger | 7 | Habe in einer Schlange ein sich wiederholendes Muster aus min. 3 versch. Farben. |
+| 12 | Schlangentanz | 7 | Bilde durch Schlangenhäutung 2 neue Dreiergruppen. |
+| 13 | Symmetriemeister | 10 | Habe eine Schlange mit min. 8 Karten, bei der die erste Hälfte das Spiegelbild der zweiten ist. |
+| 14 | Gelber Schatz | 5 | Bilde eine Gruppe aus min. 6 gelben Karten. |
+| 15 | Lila Riese | 5 | Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten. |
 
-Hinweis: Diese Liste ersetzt die alten Dart-Unterteilungen „8 offene Aufgabenkarten" und „7 geheime Aufgabenkarten". Offen/geheim ist nach Website-Regel eine Auslage-/Sichtbarkeitsform, keine getrennte Namenskategorie.
+#### Beispiele zu einzelnen Aufgabenkarten
 
-#### R6.2a Digitale Auslegung einzelner Kartentexte
+**Farbharmonie:** Ein Spieler hat zwei Schlangen. In Schlange 1 hat er: Blau - Blau - Blau - Rot - Rot - Rot - Grün - Grün - Grün. In Schlange 2 hat er: Gelb - Gelb - Gelb - Braun - Braun - Braun - Violett - Violett - Violett. Er erfüllt diese Aufgabe und erhält 10 Punkte. [Blau] [Blau] [Blau] [Rot] [Rot] [Rot] [Grün] [Grün] [Grün] [Gelb] [Gelb] [Gelb] [Braun] [Braun] [Braun] [Violett] [Violett] [Violett]
 
-Die Kartentexte oben sind die verbindliche Normquelle und werden **wörtlich** so geführt, wie sie auf der Karte stehen. Zwei Formulierungen sind am Tisch eindeutig, digital aber auslegungsbedürftig; hier gilt verbindlich:
+**Farbkombination:** Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Blau - Blau - Blau. Er erfüllt diese Aufgabe und erhält 5 Punkte. [Blau] [Blau] [Blau] [Blau] [Blau]
 
-- **Nr. 14 „Lila Riese" — „die längste ununterbrochene Kette violetter Karten (mindestens 3)".** Der Superlativ „längste" beschreibt am Tisch einen Vergleich zwischen den Spielern, der digital eine spielerübergreifende Auswertung mit Gleichstandsregel erfordern würde; die Karte nennt aber weder einen Auswertungszeitpunkt noch eine Gleichstandsregel dafür. Digital gilt deshalb die untere Schranke des Kartentexts als Bedingung: **mindestens eine ununterbrochene Violett-Kette aus 3 oder mehr Karten in einer eigenen Schlange.** Sonderkarten unterbrechen die Kette nach der allgemeinen Regel. Dies ist die implementierte Auslegung, keine Abweichung von der Normquelle.
-- **Nr. 6 „Fusionsexperte" und Nr. 7 „Schlangenbeschwörer"** werden gegen den aktuellen Zustand der eigenen Schlangen geprüft (Karten *in* den Schlangen), nicht gegen die Historie ausgespielter Karten. Nr. 8 „Schlangenmeister" und Nr. 9 „Schlangenrepertoire" prüfen umgekehrt ausdrücklich die Historie („spiele … aus"), weil ihr Kartentext das so verlangt.
+**Farbvielfalt:** Ein Spieler hat folgende Karten in seiner Schlange: Blau - Rot - Gelb - Braun - Violett - Grün. Er erfüllt diese Aufgabe und erhält 9 Punkte. Eine Regenbogenschlange oder eine Farbenfusion in der Kette würde als die Farbe zählen, die dem Spieler noch fehlt. [Blau] [Rot] [Gelb] [Braun] [Violett] [Grün]
 
-Eine Änderung dieser Auslegungen ist eine Regeländerung und braucht eine bestätigte Normquelle oder einen User-Signoff — nicht nur einen Code-Fix.
+**Farbwechsler:** Ein Spieler hat folgende Karten in seiner Schlange: Blau - Rot - Gelb - Grün - Blau. Er erfüllt diese Aufgabe, da er vier verschiedene Farben direkt hintereinander in der Schlange liegen hat und erhält 6 Punkte. [Blau] [Rot] [Gelb] [Grün] [Blau]
 
-#### R6.3 SchlangenSpass!-Mechanik
+**Schlangenbändiger:** Ein Spieler hat folgende Karten in seiner Schlange: Rot - Blau - Grün - Rot - Blau - Grün. Er erfüllt diese Aufgabe und erhält 7 Punkte. [Rot] [Blau] [Grün] [Rot] [Blau] [Grün]
 
-- Aufgabenprüfung erfolgt nach relevanten Spielaktionen und spätestens vor Zugabschluss.
-- Geprüft werden alle offenen Aufgaben sowie die geheime Aufgabe des aktiven Spielers gegen den aktuellen Zustand der eigenen Schlangen.
-- Mehrfach-Erfüllungen werden nacheinander angezeigt, jede mit eigener Sequenz; offene Aufgaben werden einzeln nachgezogen.
-- Vergessenes manuelles „SchlangenSpass!"-Rufen verhindert die digitale Erfüllung nicht, wenn die Bedingung eindeutig erfüllt ist.
+**Schlangentanz:** Ein Spieler hat folgende Karten in seiner Schlange: Blau - Grün - Grün - Blau - Grün - Rot - Rot - Violet - Violet - Rot - Violet. Er spielt die Sonderkarte Schlangenhäutung und wählt die letzten 5 Karten aus (Rot - Violet - Violet - Rot - Violet). Durch geschicktes Umordnen bildet er zwei neue Dreiergruppen: Blau - Grün - Grün - Blau - Grün - Rot - Rot - Rot - Violet - Violet - Violet. Er ruft "Schlangenspass!" und erfüllt die Aufgabe "Schlangentanz". #### Vorher: [Blau] [Grün] [Grün] [Blau] [Grün] [Rot] [Rot] [Violett] [Violett] [Rot] [Violett] #### Nachher: [Blau] [Grün] [Grün] [Blau] [Grün] [Rot] [Rot] [Rot] [Violett] [Violett] [Violett]
 
-#### R6.4 Endspurt-Verdopplung
+**Symmetriemeister:** Ein Spieler hat am Ende des Spiels folgende Schlange: Blau - Rot - Gelb - Grün - Grün - Gelb - Rot - Blau. Die erste Hälfte (Blau - Rot - Gelb - Grün) ist das Spiegelbild der zweiten Hälfte (Grün - Gelb - Rot - Blau). Der Spieler erhält 10 Punkte. [Blau] [Rot] [Gelb] [Grün] [Grün] [Gelb] [Rot] [Blau]
 
-- Endspurt-Phase beginnt, wenn der Nachziehstapel durch Nachziehen leer wird; der auslösende Spieler beendet seinen laufenden Zug normal, danach folgt die Endrunde ohne weiteres Nachziehen.
-- Nur offene Aufgabenkarten werden im Endspurt verdoppelt; Berechnung: normaler Punktwert × 2 (Beispiel: Farbvielfalt 9 → 18).
-- Offene Aufgaben zeigen im Endspurt den verdoppelten Wert mit ×2-Anzeige und ursprünglichem Wert.
-- Nicht verdoppelt: geheime Aufgaben, bereits vor dem Endspurt erfüllte Aufgaben, Farbgruppen-Punkte, Risiko-Belohnungs-Punkte.
-- Risiko-Verdopplung und Endspurt-Verdopplung stapeln nicht; es gilt nur eine Verdopplung.
+### A10 Spielende
 
-#### R6 Konfliktauflösung
+Das Spiel endet, wenn der Nachziehstapel leer ist. Wer die letzte Karte vom Nachziehstapel zieht, spielt seinen Zug normal zu Ende. Danach machen alle anderen Spieler noch je einen letzten Zug, ohne nachzuziehen. Wäre der Spieler mit der letzten Karte wieder an der Reihe, endet das Spiel und es folgt die Wertung. Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen, etwa einen Farbenschutz zur Abwehr.
 
-- Die Website-Regeln sind verbindlich: https://schlangentanz.ch/rules.
-- Dart-R6.2/R6.3/R6.5-Abweichungen sind überholt.
-- Nicht mehr gültige Dart-Namen/Punktwerte werden nicht implementiert; maßgeblich ist ausschließlich die veröffentlichte Aufgabenliste der Website.
-- Es gibt korrekt genau 14 Aufgabenkarten. Die Website-Angabe von 15 Aufgabenkarten ist ein Fehler und darf nicht als Material- oder Implementierungsregel übernommen werden.
+### A11 Punktezählung
 
-## 8. Scoring & Win/Loss
+Nach Spielende werden die Punkte gezählt. Es gewinnt der Spieler mit den meisten Punkten.
 
-### R8.4 Punktwertung
+1. Farbgruppen:
 
-- Farbgruppenpunkte werden pro Schlange gemäß R3/R4 berechnet.
-- Spieler-Farbgruppenpunkte sind die Summe aller Farbgruppenpunkte über beide Schlangen eines Spielers.
-- Spieler-Aufgabenpunkte sind die Summe der Punkte bereits erfüllter Aufgaben.
-- Spieler-Gesamtpunkte = Spieler-Farbgruppenpunkte + Spieler-Aufgabenpunkte + Kettenbonus (R8.4a).
-- Die UI darf die Wertung pro Spieler zusätzlich in Farbgruppen-, Aufgaben- und Kettenpunkte aufschlüsseln.
-- Spiel-Gesamtwertung wird über die Spieler-Liste des Spielzustands in stabiler Reihenfolge berechnet.
+   - Eine Farbgruppe besteht aus mindestens drei nebeneinanderliegenden Karten derselben Farbe in einer Schlange.
+   - Jede Gruppe wird nur einmal gewertet, mit ihrer ganzen Länge. Eine Vierergruppe zählt also nicht zusätzlich als Dreiergruppe, eine Fünfergruppe nicht als Dreier- und Vierergruppe, usw. Hat ein Spieler mehrere getrennte Gruppen derselben Farbe, auch in verschiedenen Schlangen, wird jede davon gewertet. Beispiel: Rot-Rot-Rot-Blau-Rot-Rot-Rot-Rot bringt für Rot 3 + 4 = 7 Punkte.
+   - Punkte für Farbgruppen werden anhand der Anzahl an Karten in der Gruppe und der Farbe der Karten berechnet:
 
-#### R8.4a Längste Farbkette (ÄNDERUNG 03.08.2026)
+     - Blau, Rot, Gelb: 1 Punkt pro Karte in der Gruppe.
+     - Violett, Braun: 2 Punkte pro Karte in der Gruppe.
+     - Grün: 3 Punkte pro Karte in der Gruppe.
+   - Sonderkarten in Farbgruppen:
 
-Wörtlich aus der Normquelle, Abschnitt „Punktewertung":
+     - Regenbogenschlangen und Farbfusionen können als jede Farbe zählen, um eine Farbgruppe zu vervollständigen oder zu verlängern. Sie zählen als die Farbe, die dem Spieler insgesamt die meisten Punkte bringt. Wofür sie während des Spiels bei Aufgaben gezählt haben, spielt dabei keine Rolle.
+     - Regenbogenschlangen selbst bringen keine Punkte, ermöglichen aber das Erreichen einer längeren Farbgruppe.
+     - Farbfusionen bringen die Punkte der beiden fusionierten Karten, wenn sie als Teil einer Dreier- oder längeren Gruppe zählen.
 
-> „Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne
-> Sonderkarten!) erhält **5 Bonuspunkte**. Bei Gleichstand erhalten alle
-> beteiligten Spieler die vollen 5 Punkte."
+   **Beispiele für Farbgruppen:**
 
-Der Eintrag steht dort **ohne** das Etikett „Erweiterung" und ist damit
-Basisspielregel (R1.2a). Er hat bis zum 03.08.2026 in dieser Spec und in der
-Engine vollständig gefehlt — gefunden beim Abgleich vor dem Sperren.
+   **1. Beispiel (Einfache Farbgruppen):**
 
-- Eine Kette ist eine Folge **direkt benachbarter Farbkarten derselben Farbe**
-  innerhalb **einer** Schlange.
-- **Sonderkarten unterbrechen die Kette ausnahmslos.** Das gilt ausdrücklich
-  auch für die Regenbogenschlange und die Farbenfusion. Damit ist eine Kette
-  etwas anderes als eine Farbgruppe nach R3.3, wo die Regenbogenschlange als
-  Wildcard zählt — der Klammerzusatz „ohne Sonderkarten!" lässt keinen Spielraum.
-- Je Spieler zählt die längste Kette über **beide** Schlangen.
-- Den Bonus erhält jeder Spieler, dessen längste Kette der längsten Kette im
-  Spiel entspricht. Es wird nicht geteilt.
-- **Digitale Auslegung (die einzige an dieser Regel):** Die Normquelle nennt
-  keine Mindestlänge. Hat kein Spieler eine Kette (längste Kette = 0), erhält
-  **niemand** den Bonus. Ohne diese Schranke bekäme zu Spielbeginn jeder Spieler
-  5 Punkte für eine Kette, die es nicht gibt. Eine Mindestlänge von 3 analog zu
-  R3.3 wäre dagegen geraten und wird deshalb **nicht** eingeführt.
-- Der Bonus wird **laufend** gewertet, nicht erst bei Spielende — sonst zeigte
-  das Brett während der ganzen Partie einen Stand, von dem bekannt ist, dass er
-  falsch ist.
-- Der Bonus ist **öffentliche Information**: Schlangen liegen offen, jeder kann
-  nachzählen. Er wird deshalb — anders als erfüllte geheime Aufgaben — im
-  angezeigten Punktestand jedes Spielers mitgeführt.
+   Ein Spieler hat folgende Schlange: Blau-Blau-Blau-Rot-Rot-Rot-Rot
 
-- Eine Partie endet, wenn der Nachziehstapel leer wird und die anschließende Endrunde abgeschlossen ist.
-- Nach Partieende wird die Punktzahl gemäß den dokumentierten Wertungsregeln ermittelt.
-- Wer die meisten Punkte hat, gewinnt.
-- Gleichstand ist erlaubt, wenn zwei oder mehr Spieler dieselbe höchste Punktzahl haben.
+   [Blau] [Blau] [Blau] [Rot] [Rot] [Rot] [Rot]
 
-## 9. UI Requirements
+   Punktzahl: 7 Punkte (3 Punkte für blaue Gruppe [3 × 1 Punkt] + 4 Punkte für rote Gruppe [4 × 1 Punkt])
 
-- Sichtbare Zustandsanzeige für Phase, aktiven Spieler, Wertung, Handkarten, Schlangen, offene Aufgaben und Materialstapel.
-- Legale Aktionen werden als klickbare, textuell eindeutige UI-Affordances angezeigt.
-- Ein klarer Hinweis auf die nächste legale bzw. verpflichtende Aktion ist sichtbar.
-- Rückmeldungen nach Aktionen aktualisieren sich unmittelbar im aktiven Spielerbereich.
-- Accessibility: semantische Bereiche, aussagekräftige Beschriftungen, `aria-current` für den aktiven Spieler und `aria-live="polite"` für den aktiven Spielerbereich.
-- Verdeckte Information (R1.3/R1.4): Ist ein KI-Gegner am Zug, werden dessen Handkarten nur als verdeckte Rücken mit Anzahl gezeigt — keine Farbe, kein Typ, kein Name, keine konkreten Aktions-Labels (auch nicht in Entwicklungsdaten). Die angezeigte persönliche/geheime Aufgabe gehört stets dem menschlichen Spieler. Es gibt keine Ableitung gegnerischer Handkarten (kein „Peek").
-- Mobile Mindestanforderung: einspaltiges Layout, gut lesbare Textblöcke und vollbreite Aktionsbuttons auf kleinen Viewports.
+   **2. Beispiel (Farbenfusion):**
 
-## 10. Non-Goals
+   Ein Spieler hat folgende Schlange mit einer Farbenfusion zwischen blauen Karten
 
-- Kein Wiederverwenden des alten `schlangentanz-game`-Repositorys.
-- Kein Paperclip-Implementierungspfad.
-- Kein blindes Kopieren von altem Code, alten Build-Artefakten oder alten Vercel-Projektständen.
-- Dart-Aufgaben sind Backlog-Input und keine automatische Wahrheit.
-- Nicht-Ziele ändern keine offenen Spielregeln.
+   [Blau] [Blau] [Blau + Farbenfusion + Blau] [Violett] [Violett]
 
-## 11. Status und offene Regelfragen
+   Punktzahl: 6 Punkte (die Farbenfusion wird als violette Karte genutzt, um eine violette Dreiergruppe zu bilden [3 × 2 Punkte]. Die fusionierten blauen Karten können nicht mehr als blaue Gruppe gewertet werden, da sie jetzt als Teil der violetten Gruppe zählen.)
+2. Vielfaltbonus [Erweiterung]:
 
-- Die Spezifikation ist die aktive Arbeitsgrundlage für die digitale Umsetzung.
-- Bereits implementierte Regeln sind über Tests und Release-Gates abgesichert.
-- Offene Regelfragen werden erst nach User-Signoff oder verlässlicher Normquelle implementiert.
+   Am Ende des Spiels wird für jede Schlange ein Vielfaltbonus berechnet. Es gilt der höchste erreichte Bonus einer Schlange.
 
-### Offene Regelfragen (Stand 03.08.2026)
+   - Voraussetzung für den Vielfaltbonus sind Farbgruppen (mindestens 3 Karten) von verschiedenen Farben.
+   - Regenbogenschlange und Farbenfusion zählen auch für den Vielfaltbonus als ihre Farbe. Eine Gruppe mit einem Joker ist also eine gültige Gruppe dieser Farbe.
+   - Für die Berechnung zählt nur die längste gültige Gruppe jeder Farbe.
+   - Der Bonus wird für jede Schlange separat ermittelt, aber nur der höchste Bonus einer Schlange zählt:
 
-**ÄNDERUNG 03.08.2026:** Hier stand zuvor der Satz „*weitere offene Regelfragen
-betreffen andere Bereiche*" — und keine einzige war benannt. Das war der Grund,
-warum diese Spec nicht gesperrt werden konnte: Man kann nicht festschreiben, was
-offen ist, wenn niemand weiß, was offen ist. Die Liste ist jetzt vollständig.
-Steht hier nichts weiter, ist nichts weiter offen.
+     - 2 verschiedene Farben mit gültigen Gruppen: 1 Bonuspunkt
+     - 3 verschiedene Farben mit gültigen Gruppen: 2 Bonuspunkte
+     - 4 verschiedene Farben mit gültigen Gruppen: 3 Bonuspunkte
+     - 5 oder mehr verschiedene Farben mit gültigen Gruppen: 4 Bonuspunkte
 
-**ÄNDERUNG 03.08.2026 (Korrektur, noch am selben Tag).** Hier stand, ein
-*vollständiger* Abgleich von R1–R8 gegen die Normquelle habe genau zwei
-Abweichungen ergeben. Das war zu früh behauptet: Gründlich geprüft war der
-**Wertungsabschnitt** der Anleitung, nicht der Abschnitt „Spielablauf und Timing
-von Sonderkarten". Der zweite Durchgang hat dort weitere Abweichungen gefunden;
-sie stehen unten als O-3 und O-4; die dritte (sofortiges Nachziehen, zuvor O-2) ist mit demselben Tag als R2.3a umgesetzt.
+   Wichtiger Hinweis zur Gruppenwertung:
 
-Übereinstimmend geprüft und in Ordnung sind: Kartenmengen und Punktwerte (R4.1),
-die acht Sonderkartenwirkungen (R7.1), die Zugschritte „auf 5 auffüllen /
-mindestens 1, höchstens 2 Karten spielen" (R2.2/R2.3), das Spielende samt
-Endrunde (R8.4) und die Farbgruppenwertung (R3.3).
+   Eine Gruppe besteht aus mindestens drei nebeneinanderliegenden Karten einer Farbe. Regenbogenschlange und Farbenfusion zählen dabei als ihre Farbe, für die Punktewertung wie für den Vielfaltbonus.
 
-**Ein Fehlalarm gehört mit dokumentiert**, damit ihn niemand ein zweites Mal
-meldet: Die Anleitung schreibt fett „Es zählt nur die längste Gruppe jeder
-Farbe." Der Satz geht weiter — „Eine Vierergruppe zählt also nicht zusätzlich als
-Dreiergruppe, eine Fünfergruppe nicht als Dreier- und Vierergruppe." Gemeint sind
-Teilmengen **derselben** Gruppe, nicht zwei getrennte Gruppen gleicher Farbe. Die
-Engine wertet genau so. Wer nur das fettgedruckte Fragment liest, findet einen
-schweren Wertungsfehler, den es nicht gibt.
+   **Beispiele für Vielfaltbonus:**
 
-Geschlossen mit dem Slice vom 03.08.2026: die fehlende Regel R8.4a und der
-hängende Verweis auf den Vielfaltbonus in R7.1.
+   **1. Beispiel (Mehrere Farbgruppen):**
 
-| # | Frage | Status | Warum offen |
+   Ein Spieler hat eine Schlange mit Dreiergruppen in Rot, Violett und Braun
+
+   [Rot] [Rot] [Rot] [Violett] [Violett] [Violett] [Braun] [Braun] [Braun]
+
+   Punktzahl: 2 Bonuspunkte (drei verschiedene Farben mit gültigen Gruppen)
+
+   **2. Beispiel (Sonderkarten):**
+
+   Ein Spieler hat folgende Schlange mit einer Regenbogenschlange, die als rote Karte zählt:
+
+   [Blau] [Blau] [Blau] [Rot] [Regenbogenschlange] [Rot] [Violett] [Violett] [Violett]
+
+   Punktzahl: 2 Bonuspunkte (Dreiergruppen in Blau, Rot und Violett, also drei verschiedene Farben; die Regenbogenschlange vervollständigt die rote Gruppe)
+3. Längste Farbkette:
+
+   Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne Sonderkarten!) erhält 5 Bonuspunkte. Bei Gleichstand erhalten alle beteiligten Spieler die vollen 5 Punkte. Getrennte Gruppen derselben Farbe werden dabei nicht zusammengezählt; es zählt die längste einzelne Kette. Anders als bei Farbgruppen zählen Regenbogenschlange und Farbenfusion hier nicht mit und unterbrechen die Kette: Bei Rot-Rot-Rot-Regenbogenschlange-Rot-Rot-Rot-Rot ist die längste Kette 4 Karten lang. Für die Punktewertung bringen die roten Karten trotzdem 7 Punkte.
+4. Aufgabenkarten [Erweiterung]:
+
+   - Zähle die Punkte für erfüllte offene Aufgaben.
+   - Addiere die Punkte für die geheime Aufgabe, wenn diese erfüllt wurde.
+   - Hinweis: Dieser Punktebereich wird nur bei Verwendung der Erweiterung gewertet.
+
+## Teil B — Digitale Fassung
+
+Teil B legt fest, was die Website offenlässt, weil sie ein Spiel am Tisch
+beschreibt. Nichts hier ändert eine Regel aus Teil A.
+
+### B1 Umfang
+
+Der Autor hat entschieden (12.11.2026): Alle Teile der Erweiterung gehören in die
+digitale Fassung. Vor jeder Partie wählt der Spieler, ob er mit oder ohne
+Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
+
+| Bestandteil | Website | Digital heute |
+|---|---|---|
+| 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja, mit abweichenden Stückzahlen (C1) |
+| 15 Aufgabenkarten | Erweiterung | ja, 14 von 15 (C1) |
+| Schlangenhäutung | Erweiterung | ja, mit abweichender Wirkung (C9) |
+| Schlangenkorb des Glücks | Erweiterung | nein |
+| Comeback-Karten | Erweiterung | nein |
+| Risiko-Belohnungs-Karten | Erweiterung | nein |
+| Vielfaltbonus | Erweiterung | nein |
+
+### B2 Festlegungen
+
+- **Erweiterung:** wählbar vor jeder Partie, mit oder ohne (B1).
+- **Spielerzahl:** ein Mensch gegen 1, 2 oder 3 KI-Gegner. Die Website nennt 2–4 Spieler.
+- **Startspieler:** Der Mensch beginnt. Die Website lässt den jüngsten Spieler beginnen.
+- **Mischen:** Fisher-Yates oder ein gleichwertiges Verfahren.
+- **Verdeckte Information:** Handkarten und geheime Aufgabe der KI-Gegner sind für
+  den Menschen nie sichtbar, auch nicht mittelbar über angebotene Aktionen.
+- **„Schlangenspass!":** wird nicht gerufen. Das Spiel erkennt eine erfüllte
+  Aufgabe selbst und zeigt sie sichtbar an.
+- **Ansage (A6):** Die „klare Ansage" ist digital die Auswahl von Karte und Ziel
+  vor dem Ausführen. Danach lässt sich das Ziel nicht mehr wechseln.
+- **Unerlaubte Aktionen:** werden nicht angeboten. Lehnt das Spiel eine Aktion
+  dennoch ab, zeigt die Oberfläche den Grund auf Deutsch.
+- **Zeit:** Es gibt kein Zeitlimit.
+
+## Teil C — Abweichungen der heutigen Engine von Teil A
+
+Arbeitsliste, Stand 12.11.2026. Jede Zeile ist ein Fehler im Code, nicht in der
+Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
+laufenden Spiel beobachtet.
+
+| Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
+|---|---|---|---|---|
+| C1 | Stückzahlen | Schlangenblockade 3, Schlangengrube 3, Schlangenhäutung 3, Aufgabenkarten 15 (A1) | je 4 Blockaden, Gruben und Häutungen; 14 Aufgaben, „Vielfaltskönig" fehlt | `src/engine/deck.ts`, `src/engine/aufgabenKarten.ts`, `src/engine/constants.ts` |
+| C2 | Regenbogenschlange | Sonderkarte, die als Karte beliebiger Farbe in die Schlange kommt, an beliebiger Stelle (A5, A7.3) | lässt sich nicht ausspielen; es gibt keine Aktion dafür, nur den Abwurf | `src/engine/legalActions.ts` (per Test nachgestellt) |
+| C3 | Nachziehen im eigenen Zug | am Ende des eigenen Zuges auf 5 auffüllen (A5) | aufgefüllt wird erst beim Wechsel, für den nächsten Spieler | `src/engine/turnState.ts` (`beendeZug`) |
+| C4 | Nachziehen nach Sonderkarte | wer ausserhalb seines Zuges spielt, füllt erst zu Beginn seines nächsten Zuges auf; kein sofortiges Nachziehen (A6) | jeder zieht sofort eine Karte je gespielter Sonderkarte | `src/engine/turnState.ts` (`zieheOffeneNachziehungen`) |
+| C5 | Ablagestapel | jeder Spieler hat einen eigenen; gefressene Karten gehen auf den Stapel des Angreifers (A4, A6) | ein gemeinsamer Stapel | `src/engine/types.ts` (`ablagestapel`) |
+| C6 | Farbenschutz | nur als Reaktion auf eine Sonderkarte (A7.2); wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht eine Karte und beendet den Zug (A5) | lässt sich zusätzlich im eigenen Zug auf eine eigene Schlange spielen und setzt sie auf „geschützt" | `src/engine/kartenwirkungen.ts` (`spieleFarbenschutz`) |
+| C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug mit Farbkarte und optional Sonderkarte; neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8) | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
+| C8 | Schlangenfrass | a) eine eigene Karte, b) eine eigene Blockade, c) zwei Karten der Mitspieler „sofern möglich", keine gegnerische Blockade (A7.4) | genau eine eigene oder genau zwei gegnerische Karten; gegnerische Blockaden sind nicht ausgenommen | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` |
+| C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
+| C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
+| C11 | Schlussrunde | nach der letzten Karte je ein letzter Zug ohne Nachziehen (A10); eine Verdopplung von Aufgaben kennt die Website nicht | offene Aufgaben zählen in der Schlussrunde doppelt | `src/engine/aufgabenPruefung.ts`, `src/engine/scoring.ts` |
+| C12 | Pflichtkarte | mindestens eine Karte; wer nur Sonderkarten hält, muss eine spielen, notfalls beim Gegner (A5), auch wenn sie keine Wirkung hat (Antwort des Autors zu D4) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
+| C13 | Längste Farbkette | 5 Bonuspunkte in der Punktezählung nach Spielende (A11) | wird laufend angezeigt, schon ab einer einzelnen Karte; der Punktestand springt dadurch | `src/engine/scoring.ts` (im Spiel beobachtet) |
+| C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
+| C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
+
+Mit Teil A übereinstimmend geprüft: höchstens zwei Karten pro Zug (eine Farbkarte,
+eine Sonderkarte), höchstens zwei Schlangen,
+Handlimit 5, Abwehr nur mit Farbenschutz, Reaktion im Uhrzeigersinn ohne
+Zielwechsel, Schlangenblockade an beliebiger Stelle jeder Schlange,
+Schlangengrube, Joker in der Wertung (zählen als die Farbe mit den meisten
+Punkten), Joker unterbrechen die längste Farbkette, mehrere Gruppen derselben
+Farbe zählen je voll, Ablauf der Schlussrunde.
+
+Nicht geprüft und deshalb nicht bewertet: Einzelheiten der KI
+(`src/kiZug.ts`) und jede Regel der nicht umgesetzten Erweiterungsteile (B1).
+
+## Teil D — Offene Auslegungsfragen an den Autor
+
+Hier kommen Stellen hin, die der Wortlaut der Website in zwei Richtungen lesen
+lässt. Bis zur Antwort bleibt das heutige Verhalten stehen.
+
+Zurzeit ist keine Frage offen.
+
+### Beantwortet
+
+Antworten des Autors vom 12.11.2026. Wo die Website es selbst sagt, steht die
+Fundstelle in Teil A; wo nicht, gilt die Antwort, bis die Website sie aufnimmt.
+Die Antworten zu D1 und D8 hat der Autor am selben Abend auf die Website
+übernommen.
+
+| Nr. | Frage | Antwort | Folge |
 |---|---|---|---|
-| **O-1** | Einfügeposition der Schlangenblockade | **entschieden und umgesetzt** (Signoff 03.08.2026, Umsetzung 04.08.2026) | Die Frage war, ob „kann an beliebiger Stelle eingefügt werden" aus Zugschritt b) auch für Angriffskarten in **fremde** Schlangen gilt. Der Auftraggeber hat sie bejaht und zugleich die eigene Schlange als Ziel freigegeben. Die Regel steht im Wortlaut in **R7.1a**; R7.1 und R3.5a sind entsprechend umgeschrieben. Diese Zeile bleibt als Spur stehen, damit die Frage nicht ein zweites Mal aufgemacht wird. |
-| **O-3** | Eigener Ablagestapel je Spieler | bewusst nicht umgesetzt | Die Anleitung gibt jedem Spieler einen eigenen Ablagestapel („für gespielte Sonderkarten"); das Datenmodell hat einen gemeinsamen (`ablagestapel`). Ohne Spielwirkung im digitalen Umfang: Keine Regel des Basisspiels liest je aus einem *persönlichen* Stapel. Erst die Erweiterung täte das (Risiko-Belohnung, Aktion 4) — und die ist nach R1.2a außerhalb des Umfangs. |
-| **O-4** | Zweite Spielende-Bedingung | nicht anwendbar | „Wenn der Ablagestapel leer ist und ein Spieler eine Karte vom Ablagestapel ziehen möchte, endet das Spiel ebenfalls." Vom Ablagestapel ziehen kann man nur mit Erweiterungskarten (R1.2a: nicht im Umfang). Die Bedingung ist digital unerreichbar und wird deshalb nicht nachgebildet. |
+| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Website geändert: Jede Gruppe zählt voll, auch über beide Schlangen; eine Vierergruppe nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste einzelne Kette (A11). | Engine stimmt überein |
+| D2 | Darf der Farbendieb Sonderkarten stehlen? | Nein, nur Farbkarten. | Engine stimmt überein |
+| D3 | Lila Riese: genügt eine Kette ab 3? | Website geändert: mindestens 5 violette Karten in einer Reihe (A9). | C14 |
+| D4 | Was gilt, wenn keine Sonderkarte spielbar ist? | Eine Sonderkarte muss gespielt werden, auch wenn sie wirkungslos ist. Pflicht ist mindestens eine Karte pro Zug. | C12 |
+| D5 | Neu aufgedeckte Aufgabe im selben Zug? | Darf sofort eingelöst werden. | C15 |
+| D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 |
+| D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 |
+| D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 |
 
-Nicht auf dieser Liste, weil es **keine** Regelfragen sind:
+## Teil E — Frühere R-Nummern, Stand und Verlauf
 
-- **Der Vielfaltbonus** liegt nach R1.2a außerhalb des digitalen Umfangs. Ihn
-  aufzunehmen ist eine Umfangsentscheidung, keine offene Regel.
-- **Drag & Drop, Layout unter 1000 px, die gescrollte zweite Schlange** sind
-  Bedien- und Darstellungsfragen. Sie stehen in `docs/PLAYABILITY_GATE.md`.
+### Frühere R-Nummern
 
-### Geklärte Auslegungen
+Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
+04.08.2026. Sie finden sich hier wieder:
 
-Diese Punkte sind entschieden und **keine** offenen Regelfragen. Sie stehen hier,
-weil sie beim Lesen des Codes wie Lücken aussehen:
+| Früher | Jetzt |
+|---|---|
+| R1.1, R1.2, R4.1 Kartenmaterial | A1 |
+| R1.2a Umfang der digitalen Fassung | B1 |
+| R1.3, R1.4 Startkarten, Aufgaben auslegen | A4 |
+| R2, R2.1 bis R2.6 Zugstruktur | A5 |
+| R2.3a Nachziehen nach einer Sonderkarte | entfällt, siehe A6 und C4 |
+| R3.1 bis R3.5 Schlangenbau | A5 (Schlangen), A11 (Farbgruppen) |
+| R3.5a Zustand „blockiert" | entfällt; die Website kennt keinen Schlangenzustand (C6) |
+| R6, R6.1 bis R6.3 Aufgabenkarten | A9 |
+| R6.2a Auslegung „Lila Riese" | A9, C14 |
+| R6.4 Endspurt-Verdopplung | entfällt, siehe C11 |
+| R7.1 Sonderkartenwirkungen | A6, A7 |
+| R7.1a Einfügeposition der Schlangenblockade (O-1) | A7.5 |
+| R8.4 Punktwertung | A11 |
+| R8.4a Längste Farbkette | A11, C13 |
+| O-3 eigener Ablagestapel je Spieler | A4, C5 |
+| O-4 zweite Spielende-Bedingung | entfällt; A10 nennt nur den leeren Nachziehstapel |
 
-- **R3.5a — der Zustand `blockiert` wird von keiner Karte erzeugt** (02.08.2026,
-  überarbeitet 04.08.2026). Die Schlangenblockade sperrt die Zielschlange nicht.
-  Sie *zerreißt* seit O-1 aber sehr wohl eine bestehende Farbgruppe, sobald sie
-  mitten hineingelegt wird — hier stand bis zum Signoff das Gegenteil („hängt
-  ans Ende … zerreißt keine bestehende Farbgruppe"). Den Zustand `blockiert` zu
-  setzen wäre weiterhin eine eigene Regeländerung und bräuchte eine bestätigte
-  Normquelle.
-- **R6.2a — „Lila Riese“ und die Historie-Aufgaben.** Zwei Kartentexte sind am
-  Tisch eindeutig, digital aber auslegungsbedürftig; die getroffene Auslegung
-  steht in R6.2a.
-- **R8.4a — der Nullfall der längsten Farbkette** (03.08.2026). Die Normquelle
-  nennt keine Mindestlänge; ohne eine Schranke bei 0 bekäme zu Spielbeginn jeder
-  Spieler 5 Punkte. Die Gleichstandsregel ist dagegen **keine** Auslegung — sie
-  steht wörtlich in der Quelle.
-- **R1.2a — der digitale Umfang** (03.08.2026). Basisspiel plus Aufgabenkarten
-  plus Schlangenhäutung, ohne Vielfaltbonus. Eine bewusste Teilmenge, keine
-  unfertige Umsetzung.
+### Stand und Verlauf
+
+- **12.11.2026 abends:** Zweiter Abgleich nach Überarbeitung der Website
+  (Verdoppler als zweiter Zug, Lila Riese ab 5 Karten, Schlangenfrass ohne
+  gegnerische Blockaden, neue Beispiele). Antworten des Autors zu D1 bis D7
+  aufgenommen; C14, C15 neu; C7 neu gefasst. Danach dritter Abgleich: Jokerfarbe
+  nie festgelegt (D8 beantwortet, C10 neu gefasst), mehrere Gruppen derselben
+  Farbe zählen je voll (D1).
+- **12.11.2026:** Neu gefasst als Spiegel der Website. Anlass: Der Autor hat die
+  Spielanleitung auf der Website überarbeitet und sie zur einzigen verbindlichen
+  Quelle erklärt. Die Fassung vom 03./04.08.2026 beruhte auf einem älteren Stand
+  der Website und auf Dart; sie wich in Stückzahlen, Nachziehen, Schlussrunde,
+  Jokern und mehreren Sonderkarten ab. Ihr Wortlaut steht in der Git-Historie.
+- **03.08.2026:** Frühere Fassung gesperrt.
+- **04.08.2026:** Freie Einfügeposition der Schlangenblockade (O-1) aufgenommen.

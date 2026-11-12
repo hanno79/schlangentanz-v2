@@ -147,6 +147,12 @@ Orten.
 Abgeleitet aus `src/engine/legalActions.ts` und `GAME_SPEC.md`. Diese Liste ist
 die Abnahmecheckliste des Bretts.
 
+**ÄNDERUNG 12.11.2026:** Die Liste folgt der heutigen Engine. Wo diese von der
+Website abweicht, gilt die Website (`GAME_SPEC.md`, Teil C): Farbenschutz im
+eigenen Zug, Abwehr des Verdopplers, Schlangenzustände, doppelt zählende
+Aufgaben in der Schlussrunde und die freie Neuordnung der ganzen Schlange bei
+der Schlangenhäutung. Die Einträge dazu werden mit der Engine nachgezogen.
+
 ### Eingaben — je Aktion mindestens ein Klickpfad
 
 | Eingabe | Für welche Aktion |
@@ -177,7 +183,7 @@ die Abnahmecheckliste des Bretts.
 
 aktiver Spieler · Zugphase · Endspurt · **gespielte Karten x/y mit Farb- und
 Sonderkartenzähler** · **Verdoppler aktiv (2→3 Karten)** · Handkartenzahl und
-Limit 10 · **Schlangenzahl und Limit 2** · Schlangenzustände
+Limit 5 · **Schlangenzahl und Limit 2** · Schlangenzustände
 aktiv/blockiert/geschützt · Nachziehstapel und Ablage · offene Aufgaben (im
 Endspurt doppelt zählend) · geheime Aufgabe **nur des Menschen** · **wer
 aussetzt** · nächster Pflichtschritt · letzte Aktion · **abgelehnte Aktion mit

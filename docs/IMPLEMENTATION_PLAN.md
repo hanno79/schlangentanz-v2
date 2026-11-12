@@ -1,5 +1,7 @@
 # Implementation Plan
 
+> **Hinweis (12.11.2026).** Regeln kommen ausschließlich von `https://schlangentanz.ch/rules` (`docs/GAME_SPEC.md`, Teil A). Dart liefert Backlog, keine Regeln; Phase 1 und 2 sind in diesem Sinn zu lesen.
+
 ## Phase 0 — Toolchain gate
 
 - Verify Hermes, Claude Code, Codex, Archon, Node/npm, Vercel.
