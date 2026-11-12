@@ -16,7 +16,7 @@ import { mkdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
-import { GERAETEKLASSEN, chromiumPfad } from './geraeteklassen.mjs'
+import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './geraeteklassen.mjs'
 
 const AUFRUF =
   'Aufruf: node scripts/pruefung/bildschirmfotos.mjs <adresse> --name <präfix> [--ziel <ordner>] [--warte-auf <css-selektor>]\n' +
@@ -52,13 +52,7 @@ function leseArgumente(argumente) {
 }
 
 async function fotografiere(browser, klasse, optionen) {
-  const kontext = await browser.newContext({
-    viewport: klasse.viewport,
-    deviceScaleFactor: klasse.deviceScaleFactor,
-    hasTouch: klasse.hasTouch,
-    isMobile: klasse.isMobile,
-    reducedMotion: 'reduce',
-  })
+  const kontext = await browser.newContext({ ...kontextOptionen(klasse), reducedMotion: 'reduce' })
   try {
     const seite = await kontext.newPage()
     const konsolenfehler = []
@@ -77,7 +71,7 @@ async function fotografiere(browser, klasse, optionen) {
     if (breite !== klasse.viewport.width || hoehe !== klasse.viewport.height) {
       throw new Error(`${pfad}: ${breite}×${hoehe} statt ${klasse.viewport.width}×${klasse.viewport.height}`)
     }
-    return { pfad, breite, hoehe, grob, konsolenfehler }
+    return { pfad, grob, konsolenfehler }
   } finally {
     await kontext.close()
   }
@@ -96,9 +90,9 @@ async function hauptprogramm() {
   const browser = await chromium.launch({ executablePath: chromiumPfad() })
   try {
     for (const klasse of GERAETEKLASSEN) {
-      const { pfad, breite, hoehe, grob, konsolenfehler } = await fotografiere(browser, klasse, optionen)
+      const { pfad, grob, konsolenfehler } = await fotografiere(browser, klasse, optionen)
       console.log(
-        `${klasse.titel}: ${pfad} (${breite}×${hoehe} px), Touch ${klasse.hasTouch ? 'an' : 'aus'}, ` +
+        `${klasse.titel}: ${pfad} (${klasse.viewport.width}×${klasse.viewport.height} px), Touch ${klasse.hasTouch ? 'an' : 'aus'}, ` +
           `pointer: coarse ${grob ? 'ja' : 'nein'}, Konsolenfehler: ${konsolenfehler.length}`,
       )
       for (const text of konsolenfehler) console.log(`  Konsole: ${text}`)

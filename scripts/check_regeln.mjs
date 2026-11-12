@@ -23,14 +23,12 @@
 // Exit 0: keine Verstösse. Exit 1: Verstösse oder veraltete Ausnahmen. Exit 2: Aufruf falsch.
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { extname, join, relative, sep } from 'node:path'
+import { extname, join } from 'node:path'
 import ts from 'typescript'
+import { CODE_ENDUNGEN, TESTDATEI, parse, sammleDateien as sammleOrdner, zeileVon } from './pruefung/quelldateien.mjs'
 
 const SUCHORDNER = ['src', 'tests', 'scripts']
-const UEBERSPRUNGEN = new Set(['node_modules', 'dist', 'dist-testhooks', '__snapshots__'])
-const CODE_ENDUNGEN = new Set(['.ts', '.tsx', '.mts', '.cts', '.js', '.jsx', '.mjs', '.cjs'])
 const U7_ENDUNGEN = new Set([...CODE_ENDUNGEN, '.css'])
-const TESTDATEI = /\.(test|spec)\.[cm]?[jt]sx?$/
 const AUSNAHMEN_DATEI = 'scripts/check_regeln_ausnahmen.json'
 const REGELN = ['U1', 'U6', 'U7']
 
@@ -57,24 +55,8 @@ function leseArgumente(argumente) {
   return optionen
 }
 
-function posix(pfad) {
-  return pfad.split(sep).join('/')
-}
-
-function sammle(wurzel, ordner, treffer) {
-  const absolut = join(wurzel, ordner)
-  if (!existsSync(absolut)) return
-  for (const eintrag of readdirSync(absolut, { withFileTypes: true })) {
-    if (UEBERSPRUNGEN.has(eintrag.name)) continue
-    const pfad = join(ordner, eintrag.name)
-    if (eintrag.isDirectory()) sammle(wurzel, pfad, treffer)
-    else if (eintrag.isFile()) treffer.push(posix(pfad))
-  }
-}
-
 function sammleDateien(wurzel) {
-  const dateien = []
-  for (const ordner of SUCHORDNER) sammle(wurzel, ordner, dateien)
+  const dateien = SUCHORDNER.flatMap((ordner) => sammleOrdner(wurzel, ordner))
   for (const eintrag of readdirSync(wurzel, { withFileTypes: true })) {
     if (eintrag.isFile()) dateien.push(eintrag.name)
   }
@@ -84,13 +66,6 @@ function sammleDateien(wurzel) {
 function zaehleZeilen(text) {
   if (text.length === 0) return 0
   return text.replace(/\n$/, '').split('\n').length
-}
-
-function skriptArt(pfad) {
-  if (pfad.endsWith('.tsx')) return ts.ScriptKind.TSX
-  if (pfad.endsWith('.jsx')) return ts.ScriptKind.JSX
-  if (/\.[cm]?js$/.test(pfad)) return ts.ScriptKind.JS
-  return ts.ScriptKind.TS
 }
 
 /** Alle Kommentare der Datei, auch die zwischen Token, je genau einmal. */
@@ -109,17 +84,15 @@ function kommentare(quelle) {
   return [...gefunden.entries()].map(([pos, inhalt]) => ({ pos, inhalt }))
 }
 
-function zeileVon(quelle, pos) {
-  return quelle.getLineAndCharacterOfPosition(pos).line + 1
-}
-
 function pruefeKommentare(quelle, melde) {
+  // Jeder Kommentar, den U6 meldet, enthält eines der beiden Wörter; der Gang über
+  // alle Token lohnt sich nur dann.
+  if (!/@ts-|eslint-disable/.test(quelle.getFullText())) return
   for (const { pos, inhalt } of kommentare(quelle)) {
     const ersteZeile = inhalt.split('\n')[0]
     const kern = ersteZeile.replace(/^\/[/*]\s*\**\s*/, '').replace(/\*\/\s*$/, '')
-    if (/^@ts-(ignore|nocheck)\b/.test(kern)) {
-      melde('U6', pos, `${kern.match(/^@ts-\w+/)[0]} ist verboten`)
-    }
+    const direktive = kern.match(/^@ts-(ignore|nocheck)\b/)
+    if (direktive) melde('U6', pos, `${direktive[0]} ist verboten`)
     if (/^eslint-disable(-next-line|-line)?\b/.test(kern) && !/\s--\s*\S/.test(kern)) {
       melde('U6', pos, 'eslint-disable ohne Begründung in derselben Zeile (Schreibweise: „-- Grund“)')
     }
@@ -198,15 +171,15 @@ function pruefeDatei(wurzel, pfad, statistik) {
   const befunde = []
   const endung = extname(pfad)
   const istTest = TESTDATEI.test(pfad)
-  const text = CODE_ENDUNGEN.has(endung) || U7_ENDUNGEN.has(endung) ? readFileSync(join(wurzel, pfad), 'utf8') : null
-  if (text === null) return befunde
+  if (!U7_ENDUNGEN.has(endung)) return befunde
+  const text = readFileSync(join(wurzel, pfad), 'utf8')
 
   const zeilen = zaehleZeilen(text)
   if (istTest) {
     statistik.testdateien += 1
     if (zeilen > MAX_ZEILEN_TEST) befunde.push({ regel: 'U7', pfad, zeile: 0, was: `${pfad}: ${zeilen} Zeilen, erlaubt sind ${MAX_ZEILEN_TEST}` })
   }
-  if (/^src\/(ui|ki)\//.test(pfad) && !istTest && U7_ENDUNGEN.has(endung)) {
+  if (/^src\/(ui|ki)\//.test(pfad) && !istTest) {
     statistik.uiKi += 1
     if (zeilen > MAX_ZEILEN_UI_KI) befunde.push({ regel: 'U7', pfad, zeile: 0, was: `${pfad}: ${zeilen} Zeilen, erlaubt sind ${MAX_ZEILEN_UI_KI}` })
   }
@@ -216,7 +189,7 @@ function pruefeDatei(wurzel, pfad, statistik) {
   const istRegeltest = istTest && pfad.startsWith('src/engine/')
   if (istRegeltest) statistik.regeltests += 1
 
-  const quelle = ts.createSourceFile(pfad, text, ts.ScriptTarget.Latest, true, skriptArt(pfad))
+  const quelle = parse(pfad, text)
   const melde = (regel, pos, was) => befunde.push({ regel, pfad, zeile: zeileVon(quelle, pos), was })
   pruefeKommentare(quelle, melde)
   pruefeAst(quelle, istRegeltest, melde, () => (statistik.testnamen += 1))
@@ -233,20 +206,17 @@ function leseAusnahmen(wurzel) {
 
 function vergleiche(befunde, ausnahmen) {
   const ist = Object.fromEntries(REGELN.map((regel) => [regel, {}]))
-  for (const { regel, pfad } of befunde) ist[regel][pfad] = (ist[regel][pfad] ?? 0) + 1
+  for (const befund of befunde) (ist[befund.regel][befund.pfad] ??= []).push(befund)
 
   const verstoesse = []
   const veraltet = []
   for (const regel of REGELN) {
-    for (const [pfad, anzahl] of Object.entries(ist[regel])) {
+    for (const [pfad, eigene] of Object.entries(ist[regel])) {
       const erlaubt = ausnahmen[regel][pfad] ?? 0
-      if (anzahl > erlaubt) {
-        const eigene = befunde.filter((befund) => befund.regel === regel && befund.pfad === pfad)
-        verstoesse.push({ regel, pfad, anzahl, erlaubt, eigene })
-      }
+      if (eigene.length > erlaubt) verstoesse.push({ regel, pfad, anzahl: eigene.length, erlaubt, eigene })
     }
     for (const [pfad, erlaubt] of Object.entries(ausnahmen[regel])) {
-      const anzahl = ist[regel][pfad] ?? 0
+      const anzahl = ist[regel][pfad]?.length ?? 0
       if (anzahl < erlaubt) veraltet.push({ regel, pfad, anzahl, erlaubt })
     }
   }
@@ -257,7 +227,7 @@ function schrumpfe(wurzel, daten, ist) {
   for (const regel of REGELN) {
     const neu = {}
     for (const [pfad, erlaubt] of Object.entries(daten[regel])) {
-      const behalten = Math.min(erlaubt, ist[regel][pfad] ?? 0)
+      const behalten = Math.min(erlaubt, ist[regel][pfad]?.length ?? 0)
       if (behalten > 0) neu[pfad] = behalten
     }
     daten[regel] = neu

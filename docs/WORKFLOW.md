@@ -337,7 +337,7 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 
 | Projekt | Port | Verzeichnis | Build | Verträge |
 |---|---|---|---|---|
-| `desktop`, `tablet`, `handy` | 4173 | `dist` | `vite build` | alle außer `*.hooks.spec.ts` |
+| `desktop`, `tablet`, `handy` | 4173 | `dist` | `vite build` | alle ausser `*.hooks.spec.ts` |
 | `desktop-testhooks`, `tablet-testhooks`, `handy-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
 
 Die Verträge der alten Oberfläche laufen nur in `desktop` und `desktop-testhooks`

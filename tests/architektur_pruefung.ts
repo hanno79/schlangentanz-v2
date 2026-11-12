@@ -3,9 +3,10 @@
 // für U5 zusätzlich mit dem Typprüfer: Ein Wort in einer Zeichenkette oder in einem
 // Kommentar ist kein Verstoss.
 
-import { existsSync, readdirSync } from 'node:fs'
-import { join, posix, sep } from 'node:path'
+import { existsSync, readFileSync } from 'node:fs'
+import { extname, join, posix } from 'node:path'
 import ts from 'typescript'
+import { CODE_ENDUNGEN, TESTDATEI, parse, sammleDateien as sammleAlle, zeileVon, zuPosix } from '../scripts/pruefung/quelldateien.mjs'
 
 export type Verstoss = { regel: 'U3' | 'U4' | 'U5'; datei: string; zeile: number; was: string }
 
@@ -13,18 +14,14 @@ export type Verstoss = { regel: 'U3' | 'U4' | 'U5'; datei: string; zeile: number
 export const VOLLER_ZUSTAND_TYP = 'Spielzustand'
 
 /**
- * Altbestand zu U4: Datei und Zahl der Verstösse, die dort noch stehen dürfen.
- * Darf nur schrumpfen; der Architekturtest meldet auch einen veralteten Eintrag.
+ * Altbestand zu U4 aus derselben Ausnahmeliste wie check:regeln: Datei und Zahl der
+ * Verstösse, die dort noch stehen dürfen. Darf nur schrumpfen; der Architekturtest
+ * meldet auch einen veralteten Eintrag.
  */
-export const AUSNAHMEN_U4: Record<string, number> = {
-  // Math.random als Standardwert der Zufallsquelle in erstelleSpielzustand und
-  // erstelleEinzelspielerSpielzustand. E1 baut die Partie mit der Zufallsquelle als
-  // Parameter (Abnahmekriterium 5) und löscht diesen Eintrag.
-  'src/engine/state.ts': 2,
-}
+export const AUSNAHMEN_U4: Record<string, number> = JSON.parse(
+  readFileSync(join(__dirname, '..', 'scripts', 'check_regeln_ausnahmen.json'), 'utf8'),
+).U4
 
-const CODEDATEI = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs)$/
-const TESTDATEI = /\.(test|spec)\.[cm]?[jt]sx?$/
 const REACT_MODUL = /^react(-dom)?(\/|$)/
 const DOM_GLOBALE = new Set([
   'window',
@@ -44,30 +41,14 @@ const ZUFALL = new Map([
   ['crypto', new Set(['getRandomValues', 'randomUUID'])],
 ])
 
-const zuPosix = (pfad: string) => pfad.split(sep).join('/')
-
+/** Testdateien und alles unter `__tests__/` (dort liegen auch Testhelfer ohne `.test`). */
 export function istTestdatei(pfad: string): boolean {
   return TESTDATEI.test(pfad) || pfad.includes('/__tests__/')
 }
 
 /** Codedateien unter `ordner` als Pfade relativ zu `wurzel`; fehlt der Ordner, eine leere Liste. */
 export function sammleDateien(wurzel: string, ordner: string): string[] {
-  const absolut = join(wurzel, ordner)
-  if (!existsSync(absolut)) return []
-  return readdirSync(absolut, { withFileTypes: true, recursive: true })
-    .filter((eintrag) => eintrag.isFile() && CODEDATEI.test(eintrag.name))
-    .map((eintrag) => zuPosix(join(eintrag.parentPath, eintrag.name).slice(wurzel.length + 1)))
-    .sort()
-}
-
-function parse(datei: string, quelltext: string): ts.SourceFile {
-  const art = datei.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS
-  return ts.createSourceFile(datei, quelltext, ts.ScriptTarget.Latest, true, art)
-}
-
-function zeileVon(knoten: ts.Node): number {
-  const quelle = knoten.getSourceFile()
-  return quelle.getLineAndCharacterOfPosition(knoten.getStart(quelle)).line + 1
+  return sammleAlle(wurzel, ordner).filter((pfad) => CODE_ENDUNGEN.has(extname(pfad)))
 }
 
 function besucheAlle(knoten: ts.Node, besucher: (knoten: ts.Node) => void): void {
@@ -135,7 +116,7 @@ export function pruefeEngineZugang(datei: string, quelltext: string): Verstoss[]
   return verstoesse
 }
 
-const OPTIONEN: ts.CompilerOptions = {
+const STANDARD_OPTIONEN: ts.CompilerOptions = {
   strict: true,
   target: ts.ScriptTarget.ES2022,
   module: ts.ModuleKind.ESNext,
@@ -147,12 +128,29 @@ const OPTIONEN: ts.CompilerOptions = {
   types: [],
 }
 
+/**
+ * Compiler-Optionen von tsconfig.app.json, damit Importe so aufgelöst werden wie in
+ * `tsc -b`; die Probe-Bäume der Gegenproben haben keine und nehmen feste Optionen.
+ */
+function optionenFuer(wurzel: string): ts.CompilerOptions {
+  const tsconfig = join(wurzel, 'tsconfig.app.json')
+  if (!existsSync(tsconfig)) return STANDARD_OPTIONEN
+  const gelesen = ts.getParsedCommandLineOfConfigFile(tsconfig, {}, {
+    ...ts.sys,
+    onUnRecoverableConfigFileDiagnostic: (diagnose) => {
+      throw new Error(`optionenFuer: ${tsconfig}: ${ts.flattenDiagnosticMessageText(diagnose.messageText, ' ')}`)
+    },
+  })
+  if (!gelesen) throw new Error(`optionenFuer: ${tsconfig} liess sich nicht lesen`)
+  return { ...gelesen.options, noEmit: true }
+}
+
 /** U5: Ausser src/ki/sicht.ts liest keine Datei den vollen Zustand (Eigenschaft, Index, Zerlegen, Spreizen). */
 export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[] {
   const zuPruefen = dateien.filter((datei) => datei !== 'src/ki/sicht.ts')
   if (zuPruefen.length === 0) return []
 
-  const programm = ts.createProgram(zuPruefen.map((datei) => join(wurzel, datei)), OPTIONEN)
+  const programm = ts.createProgram(zuPruefen.map((datei) => join(wurzel, datei)), optionenFuer(wurzel))
   const pruefer = programm.getTypeChecker()
   const engineOrdner = `${zuPosix(join(wurzel, 'src', 'engine'))}/`
 
@@ -189,7 +187,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
 /** Ob src/engine/index.ts unter `wurzel` einen Export dieses Namens hat. */
 export function exportiertEngine(wurzel: string, name: string): boolean {
   const einstieg = join(wurzel, 'src', 'engine', 'index.ts')
-  const programm = ts.createProgram([einstieg], OPTIONEN)
+  const programm = ts.createProgram([einstieg], optionenFuer(wurzel))
   const pruefer = programm.getTypeChecker()
   const quelle = programm.getSourceFile(einstieg)
   const modul = quelle && pruefer.getSymbolAtLocation(quelle)

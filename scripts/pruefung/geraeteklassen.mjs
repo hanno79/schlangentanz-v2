@@ -36,6 +36,11 @@ export const GERAETEKLASSEN = Object.freeze([
   },
 ])
 
+/** Die Browser-Kontextoptionen einer Geräteklasse, für Playwright-Projekte und `browser.newContext`. */
+export function kontextOptionen({ viewport, deviceScaleFactor, hasTouch, isMobile }) {
+  return { viewport, deviceScaleFactor, hasTouch, isMobile }
+}
+
 /**
  * Pfad zu einem eigenen Chromium aus PW_CHROMIUM_PFAD, sonst undefined (dann nimmt
  * Playwright sein mit `npx playwright install chromium` geladenes). Ein gesetzter

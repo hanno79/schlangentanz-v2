@@ -84,8 +84,9 @@ committen.
 - **U4:** Dateien unter `src/engine/` (ohne Tests) nutzen kein React, kein DOM
   (`window`, `document`, `localStorage` …), kein `Math.random`, keinen
   `crypto`-Zufall und kein `Date`. Zufall kommt als Parameter.
-  Altbestand: `AUSNAHMEN_U4` in `tests/architektur_pruefung.ts`, darf nur
-  schrumpfen (E1 löscht den Eintrag für `src/engine/state.ts`).
+  Altbestand: Schlüssel `U4` in `scripts/check_regeln_ausnahmen.json`, darf nur
+  schrumpfen und wird von Hand gesenkt (E1 löscht den Eintrag für
+  `src/engine/state.ts`); einen veralteten Eintrag meldet der Test.
 - **U5:** Unter `src/ki/` liest nur `src/ki/sicht.ts` den vollen Zustand
   (Typ `Spielzustand`, Konstante `VOLLER_ZUSTAND_TYP`). Andere Dateien dürfen
   ihn entgegennehmen und an die Engine oder an `sicht.ts` weiterreichen, aber

@@ -241,11 +241,11 @@ P0.4), vermerkst du die Browserprüfung als „blockiert, Entwicklertisch fehlt�
 
    ```js
    import { chromium } from 'playwright'
-   import { GERAETEKLASSEN, chromiumPfad } from './scripts/pruefung/geraeteklassen.mjs'
+   import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './scripts/pruefung/geraeteklassen.mjs'
 
-   const { viewport, deviceScaleFactor, hasTouch, isMobile } = GERAETEKLASSEN.find((k) => k.name === 'tablet')
+   const tablet = GERAETEKLASSEN.find((klasse) => klasse.name === 'tablet')
    const browser = await chromium.launch({ executablePath: chromiumPfad() })
-   const kontext = await browser.newContext({ viewport, deviceScaleFactor, hasTouch, isMobile, reducedMotion: 'reduce' })
+   const kontext = await browser.newContext({ ...kontextOptionen(tablet), reducedMotion: 'reduce' })
    const seite = await kontext.newPage()
    await seite.goto('http://localhost:4173/')
    await seite.getByRole('button', { name: 'Partie starten' }).tap()   // tap statt click: Touch

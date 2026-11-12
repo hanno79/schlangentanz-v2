@@ -22,6 +22,7 @@ const ohneTests = (pfade: string[]) => pfade.filter((pfad) => !istTestdatei(pfad
 const engineDateien = ohneTests(sammleDateien(WURZEL, 'src/engine'))
 const uiKiDateien = ohneTests([...sammleDateien(WURZEL, 'src/ui'), ...sammleDateien(WURZEL, 'src/ki')])
 const kiDateien = uiKiDateien.filter((pfad) => pfad.startsWith('src/ki/'))
+const u4Verstoesse = new Map(engineDateien.map((pfad) => [pfad, pruefeEngineReinheit(pfad, lies(pfad))]))
 
 const beschreibe = (verstoesse: Verstoss[]) =>
   verstoesse.map(({ regel, datei, zeile, was }) => `${regel} ${datei}:${zeile} ${was}`).join('\n')
@@ -37,10 +38,9 @@ describe('U4: Die Engine ist rein', () => {
   it(`U4: ${engineDateien.length} Dateien unter src/engine (ohne Tests) nutzen kein React, kein DOM, kein Math.random, kein Date`, () => {
     expect(engineDateien.length, 'U4: unter src/engine wurde keine Datei gefunden').toBeGreaterThan(0)
 
-    const neue = engineDateien.flatMap((pfad) => {
-      const verstoesse = pruefeEngineReinheit(pfad, lies(pfad))
-      return verstoesse.length > (AUSNAHMEN_U4[pfad] ?? 0) ? verstoesse : []
-    })
+    const neue = [...u4Verstoesse].flatMap(([pfad, verstoesse]) =>
+      verstoesse.length > (AUSNAHMEN_U4[pfad] ?? 0) ? verstoesse : [],
+    )
 
     expect(beschreibe(neue), 'U4: erwartet keine Verstösse ausserhalb der Ausnahmeliste').toBe('')
   })
@@ -48,12 +48,12 @@ describe('U4: Die Engine ist rein', () => {
   it('U4: die Ausnahmeliste für den Altbestand ist nicht veraltet', () => {
     const veraltet = Object.entries(AUSNAHMEN_U4)
       .map(([pfad, erlaubt]) => {
-        const ist = engineDateien.includes(pfad) ? pruefeEngineReinheit(pfad, lies(pfad)).length : 0
+        const ist = u4Verstoesse.get(pfad)?.length ?? 0
         return { pfad, erlaubt, ist }
       })
       .filter(({ erlaubt, ist }) => ist < erlaubt)
 
-    expect(veraltet, 'U4: AUSNAHMEN_U4 in tests/architektur_pruefung.ts senken oder Eintrag löschen').toEqual([])
+    expect(veraltet, 'U4: Eintrag unter "U4" in scripts/check_regeln_ausnahmen.json senken oder löschen').toEqual([])
   })
 })
 

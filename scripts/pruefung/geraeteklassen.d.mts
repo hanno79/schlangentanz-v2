@@ -11,4 +11,7 @@ export type Geraeteklasse = {
 }
 
 export declare const GERAETEKLASSEN: ReadonlyArray<Geraeteklasse>
+export declare function kontextOptionen(
+  klasse: Geraeteklasse,
+): Pick<Geraeteklasse, 'viewport' | 'deviceScaleFactor' | 'hasTouch' | 'isMobile'>
 export declare function chromiumPfad(): string | undefined

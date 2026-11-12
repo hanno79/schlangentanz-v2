@@ -3,6 +3,7 @@
     "Altbestand, den npm run check:regeln vorerst duldet: je Regel und Datei die Zahl der Verstösse, die dort noch stehen dürfen.",
     "Die Liste darf nur schrumpfen. Neue Einträge oder höhere Zahlen sind nicht erlaubt; --ausnahmen-schrumpfen senkt und löscht nur.",
     "U1: die alten Regeltests unter src/engine/__tests__. Sie halten altes Verhalten fest und werden in E1 bis E11 gelöscht oder ersetzt (Plan, Abschnitt 1 und E1).",
+    "U4 liest der Architekturtest (tests/architektur.test.ts), nicht check:regeln: Math.random als Standardwert der Zufallsquelle in src/engine/state.ts. E1 erzeugt die Partie mit der Zufallsquelle als Parameter und löscht den Eintrag; einen veralteten Eintrag meldet der Test.",
     "U6: src/hooks/usePartie.ts und tests/layout/brett_waechter.spec.ts. Beide löscht P0.4.",
     "Angelegt mit P0.3 aus dem Stand 590e69e (Task-Branch P0.2)."
   ],
@@ -55,6 +56,9 @@
     "src/engine/__tests__/turn_state_r96_schlangenmeister.test.ts": 5,
     "src/engine/__tests__/turn_state_r97_schlangentanz.test.ts": 8,
     "src/engine/__tests__/turn_state_r98_schlangenhaeutung.test.ts": 7
+  },
+  "U4": {
+    "src/engine/state.ts": 2
   },
   "U6": {
     "src/hooks/usePartie.ts": 1,

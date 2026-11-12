@@ -15,7 +15,7 @@
 // nimmt Playwright das mit `npx playwright install chromium` geladene.
 
 import { defineConfig, devices, type Project } from '@playwright/test'
-import { GERAETEKLASSEN, chromiumPfad } from './scripts/pruefung/geraeteklassen.mjs'
+import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './scripts/pruefung/geraeteklassen.mjs'
 
 const PRODUKTION_URL = 'http://localhost:4173'
 const TESTHOOKS_URL = 'http://localhost:4174'
@@ -35,8 +35,9 @@ const NUR_DESKTOP = [
   'sieger_party.hooks.spec.ts',
 ].map((datei) => `**/${datei}`)
 
-const projekte: Project[] = GERAETEKLASSEN.flatMap(({ name, viewport, deviceScaleFactor, hasTouch, isMobile }) => {
-  const geraet = { viewport, deviceScaleFactor, hasTouch, isMobile }
+const projekte: Project[] = GERAETEKLASSEN.flatMap((klasse) => {
+  const { name } = klasse
+  const geraet = kontextOptionen(klasse)
   const nurDesktop = name === 'desktop' ? [] : NUR_DESKTOP
   return [
     { name, use: { ...geraet, baseURL: PRODUKTION_URL }, testIgnore: [HOOK_VERTRAEGE, ...nurDesktop] },

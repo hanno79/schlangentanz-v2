@@ -172,9 +172,12 @@ describe('U7: Dateigrössen', () => {
     const zuLang = legeAn({ 'tests/lang.test.ts': zeile.repeat(500) })
     const gerade = legeAn({ 'tests/lang.test.ts': zeile.repeat(499) })
 
-    expect(pruefe(zuLang).code, 'U7: 500 Zeilen müssen fehlschlagen').toBe(1)
-    expect(pruefe(zuLang).ausgabe).toContain('tests/lang.test.ts: 500 Zeilen')
-    expect(pruefe(gerade).code, `U7: 499 Zeilen sind erlaubt:\n${pruefe(gerade).ausgabe}`).toBe(0)
+    const lang = pruefe(zuLang)
+    const passend = pruefe(gerade)
+
+    expect(lang.code, 'U7: 500 Zeilen müssen fehlschlagen').toBe(1)
+    expect(lang.ausgabe).toContain('tests/lang.test.ts: 500 Zeilen')
+    expect(passend.code, `U7: 499 Zeilen sind erlaubt:\n${passend.ausgabe}`).toBe(0)
   })
 
   it('U7: eine Datei unter src/ui oder src/ki mit 301 Zeilen schlägt fehl', () => {
