@@ -121,6 +121,18 @@ In Claude Code deckt `/baseline:onboard` diesen Ablauf ab.
 
 ## Projektspezifisches
 
+### Abweichungen vom Kern (Entscheidung des Autors vom 12.11.2026)
+
+- **Deutsche Bezeichner** auch im Anwendungscode. Der Bestand ist durchgehend
+  deutsch benannt; Mischformen wären schlimmer als die Abweichung.
+- **Kein Dateikopf, keine `// ÄNDERUNG`-Kommentare** in neuem Code: hier gilt der
+  Kern, Plan-Regel U9 ist entsprechend angepasst.
+- **Testregister und Merges:** Prüfer tragen ihre Prüfungen als Testfälle und
+  Läufe ins Register ein. Ein Task-Merge in `neuaufbau` setzt das bestandene
+  Prüfprotokoll `docs/abnahme/<ID>.md` voraus, keinen freigegebenen Durchgang.
+  Vor jedem Merge nach `main` (geht sofort in Produktion) muss
+  `python scripts/testregister_freigabe.py` mit 0 enden.
+
 ### Scope
 This repository is a **fresh greenfield rebuild** of Schlangentanz.
 

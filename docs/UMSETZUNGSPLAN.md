@@ -182,7 +182,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 | U6 | Kein `any`, kein `@ts-ignore`, kein `eslint-disable` ohne Begründung in derselben Zeile, kein `it.skip`, `it.only`, `describe.skip`. | `check:regeln` |
 | U7 | Testdateien höchstens 499 Zeilen; neue Dateien in `src/ui` und `src/ki` höchstens 300 Zeilen. | `check:test-lines`, `check:regeln` |
 | U8 | Layout wird gemessen (Playwright, `tests/layout/messung.ts`), nie im CSS-Quelltext gelesen. | `check:css-asserts` |
-| U9 | Deutsche Bezeichner und Kommentare, Dateikopf (Author, Datum, Version, Beschreibung), Änderungen als `// ÄNDERUNG [TT.MM.JJJJ]: …`. | Prüfer |
+| U9 | Deutsche Bezeichner und Kommentare. Kein Dateikopf mit Author, Datum oder Version und keine `// ÄNDERUNG`-Kommentare: wer, wann und warum steht im git-Log (Kern in `AGENTS.md`, Entscheidung des Autors vom 12.11.2026). Bestehende Köpfe bleiben, bis die Datei ohnehin umgebaut wird. | Prüfer |
 | U10 | Keine neue Laufzeit-Abhängigkeit. Neue Entwicklungs-Abhängigkeiten nur, wenn der Task sie nennt. | Prüfer liest `package.json`-Diff |
 | U11 | Kein Code aus Altprojekten. | Prüfer |
 | U12 | Fehlermeldungen der Engine sind deutsch und nennen den Grund. | Regeltests |
