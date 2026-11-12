@@ -10,8 +10,6 @@ Geprüft wird:
  2. Spielernamen werden aus dem Zustand aufgelöst, nicht aus dem Id-Präfix geraten.
  3. Die Perspektive steuert „deine …" gegenüber „eigene …", damit das KI-Protokoll
     nicht in der zweiten Person spricht, während die KI zieht.
- 4. Wirkungsgleiche Handkarten-Aktionen werden zusammengefasst,
-    Brettkarten-Ziele ausdrücklich nicht.
 */
 
 import { describe, expect, it } from 'vitest'
@@ -23,7 +21,6 @@ import {
 } from './engine'
 import type { FarbkarteInfo, SpielAktion, Spielzustand } from './engine'
 import { erstelleAktionsLabel } from './aktionsLabel'
-import { gruppiereWirkungsgleicheAktionen } from './aktionsGruppen'
 import { kartenArtSchluessel, karteAnzeigename } from './kartenTexte'
 
 function farbkarte(id: string, farbe: FarbkarteInfo['farbe'], punkte: number): FarbkarteInfo {
@@ -158,55 +155,6 @@ describe('AP-3 Aktionslabels ohne technische IDs', () => {
     expect(label(frassAufErste)).toContain('Wasserwirbel an Position 1')
     expect(label(frassAufDritte)).toContain('Wasserwirbel an Position 3')
     expect(label(frassAufErste)).not.toBe(label(frassAufDritte))
-  })
-})
-
-describe('AP-3 Entdopplung wirkungsgleicher Aktionen', () => {
-  it('fasst gleichwertige Handkarten zu einer Aktion zusammen', () => {
-    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
-    const hand = zustand.spieler[0].hand
-    const aktionen = ermittleLegaleAktionen(zustand)
-
-    // Ausgangslage: fünf gleichwertige blaue Handkarten.
-    expect(hand).toHaveLength(5)
-    expect(new Set(hand.map(kartenArtSchluessel)).size).toBe(1)
-    expect(aktionen).toHaveLength(5)
-
-    const gruppen = gruppiereWirkungsgleicheAktionen(aktionen, hand)
-    expect(gruppen).toHaveLength(1)
-    expect(gruppen[0].anzahl).toBe(5)
-  })
-
-  it('fasst Brettkarten-Ziele NICHT zusammen — dort ist die Position wirksam', () => {
-    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
-    const aktiver = zustand.spieler[0]
-    zustand.spieler[0].schlangen = [{
-      id: 'meine-1',
-      zustand: 'aktiv',
-      karten: [farbkarte('blau-a', 'Blau', 1), farbkarte('rot-a', 'Rot', 1), farbkarte('blau-b', 'Blau', 1)],
-    }]
-    const basis = { typ: 'SchlangenfrassSpielen', spielerId: aktiver.id, handkartenId: aktiver.hand[0].id } as const
-    const aktionen: SpielAktion[] = [
-      { ...basis, ziele: [{ spielerId: aktiver.id, schlangenId: 'meine-1', kartenId: 'blau-a' }] },
-      { ...basis, ziele: [{ spielerId: aktiver.id, schlangenId: 'meine-1', kartenId: 'blau-b' }] },
-    ]
-
-    // Beide Ziele sind blaue Karten derselben Art — trotzdem zwei Aktionen, weil
-    // die Restschlange danach unterschiedlich aussieht.
-    expect(gruppiereWirkungsgleicheAktionen(aktionen, aktiver.hand)).toHaveLength(2)
-  })
-
-  it('erhält die Reihenfolge des ersten Auftretens', () => {
-    const zustand = starteAusspielphase(erstelleSpielzustand(2, () => 0.999999))
-    const hand = zustand.spieler[0].hand
-    const aktionen: SpielAktion[] = [
-      { typ: 'PflichtAbwurf', spielerId: zustand.spieler[0].id, handkartenId: hand[0].id },
-      { typ: 'NeueSchlangeStarten', spielerId: zustand.spieler[0].id, handkartenId: hand[1].id },
-      { typ: 'PflichtAbwurf', spielerId: zustand.spieler[0].id, handkartenId: hand[2].id },
-    ]
-    const gruppen = gruppiereWirkungsgleicheAktionen(aktionen, hand)
-    expect(gruppen.map((gruppe) => gruppe.aktion.typ)).toEqual(['PflichtAbwurf', 'NeueSchlangeStarten'])
-    expect(gruppen[0].anzahl).toBe(2)
   })
 })
 

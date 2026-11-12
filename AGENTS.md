@@ -100,8 +100,8 @@ unter die Marker, nicht hinein.
 - `npm run test:layout` — Playwright-Layout-Verträge gegen `vite preview`.
   Je Geräteklasse (`desktop`, `tablet`, `handy`) zwei Projekte: `<klasse>`
   (Port 4173, Produktionsbuild) und `<klasse>-testhooks` (Port 4174, Build mit
-  `VITE_TEST_HOOKS=1`) für Verträge, die einen Testhook brauchen
-  (`*.hooks.spec.ts`). Siehe `docs/WORKFLOW.md`.
+  `VITE_TEST_HOOKS=1`) für Verträge, die den Entwicklertisch unter `/dev`
+  brauchen (`*.hooks.spec.ts`). Siehe `docs/WORKFLOW.md`.
   Beide Server laufen mit `reuseExistingServer: false`: antwortet unter der URL
   schon ein Server, bricht Playwright ab, statt ihn weiterzubenutzen und still
   einen alten Build zu messen.

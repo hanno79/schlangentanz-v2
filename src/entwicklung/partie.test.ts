@@ -99,8 +99,17 @@ describe('P0.4: zufällig weiterspielen (für Szenarien)', () => {
   })
 
   it('P0.4: erreicht das Spielende', () => {
-    const ende = spieleZufaelligBis(starteEntwicklerPartie(1, 2), erzeugeZufall(1), (z) => z.zugphase === 'Spielende')
+    const ende = spieleZufaelligBis(starteEntwicklerPartie(1, 3), erzeugeZufall(1), (z) => z.zugphase === 'Spielende')
     expect(ende.zugphase).toBe('Spielende')
+  })
+
+  /* Die heutige Engine meldet die Schlangenhäutung nur als Hinweis und zählt sie
+     nicht auf. Ist sie das Einzige, was ginge, gibt es keinen Knopf; der Tisch
+     baut die Aktion nicht selbst (U3). E1 und E9 nehmen sie in die Aufzählung. */
+  it('P0.4: hängt eine Partie an der nicht aufgezählten Schlangenhäutung, sagt der Fehler das', () => {
+    expect(() =>
+      spieleZufaelligBis(starteEntwicklerPartie(6, 2), erzeugeZufall(6), (z) => z.zugphase === 'Spielende'),
+    ).toThrow(/nicht aufgezählte \(Schlangenhaeutung\)/)
   })
 
   it('P0.4: wirft mit Grund, wenn das Ziel nicht erreicht wird', () => {

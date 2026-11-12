@@ -94,8 +94,9 @@ describe('P0.4: Entwicklertisch', () => {
   it('P0.4: verletzte Invarianten stehen sichtbar als verletzt da', () => {
     oeffne('/dev?szenario=kaputt-doppelte-karte')
     const verletzt = screen.getAllByTestId('invariante').filter((e) => e.getAttribute('data-verletzt') === 'ja')
-    expect(verletzt).toHaveLength(1)
+    expect(verletzt).toHaveLength(2)
     expect(verletzt[0]).toHaveTextContent('Jede Spielkarte liegt genau einmal im Spiel')
+    expect(verletzt[0]).toHaveTextContent('Doppelt:')
   })
 
   it('P0.4: /dev/szenarien listet alle Szenarien mit Beschreibung, Erwartung und Link', () => {
@@ -116,7 +117,9 @@ describe('P0.4: Entwicklertisch', () => {
 
   it('P0.4: die Startseite bietet Szenarien und den Partiestart an', () => {
     oeffne('/dev')
-    expect(screen.getByRole('link', { name: /Szenarien/ })).toHaveAttribute('href', '/dev/szenarien')
+    const links = screen.getAllByRole('link', { name: /Szenarien/ })
+    expect(links.length).toBeGreaterThan(0)
+    for (const link of links) expect(link).toHaveAttribute('href', '/dev/szenarien')
     expect(screen.getByRole('spinbutton', { name: /Saat/ })).toBeInTheDocument()
   })
 

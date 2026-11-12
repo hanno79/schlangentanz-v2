@@ -107,8 +107,8 @@ test.describe('P0.4: Szenarien und Invarianten', () => {
   test('P0.4: eine verletzte Invariante ist rot', async ({ page }) => {
     await oeffneTisch(page, '/dev?szenario=kaputt-doppelte-karte')
     const verletzt = page.locator('[data-testid="invariante"][data-verletzt="ja"]')
-    await expect(verletzt).toHaveCount(1)
-    const [rot, gruen, blau] = (await berechneterStil(verletzt, 'color')).match(/\d+/g)!.map(Number)
+    await expect(verletzt).toHaveCount(2)
+    const [rot, gruen, blau] = (await berechneterStil(verletzt.first(), 'color')).match(/\d+/g)!.map(Number)
     expect(rot, 'Textfarbe der verletzten Invariante ist nicht rot').toBeGreaterThan(150)
     expect(gruen).toBeLessThan(80)
     expect(blau).toBeLessThan(80)

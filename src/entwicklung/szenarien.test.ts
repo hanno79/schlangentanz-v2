@@ -36,7 +36,10 @@ describe('P0.4: Szenarien des Entwicklertischs', () => {
     for (const szenario of SZENARIEN) {
       const verletzt = pruefeInvarianten(szenario.erzeuge()).filter((i) => i.verletzt).map((i) => i.name)
       if (szenario.name === 'kaputt-doppelte-karte') {
-        expect(verletzt).toEqual(['Jede Spielkarte liegt genau einmal im Spiel'])
+        expect(verletzt).toEqual([
+          'Jede Spielkarte liegt genau einmal im Spiel',
+          'Der Spielstand übersteht Speichern und Laden unverändert',
+        ])
       } else {
         expect(verletzt, szenario.name).toEqual([])
       }
