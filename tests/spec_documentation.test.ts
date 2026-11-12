@@ -1,7 +1,7 @@
 /**
  * Author: Claude Code
  * Datum: 12.11.2026
- * Version: 2.0
+ * Version: 2.1
  * Beschreibung: Hält fest, dass `docs/GAME_SPEC.md` die Regeln der Website
  *               wiedergibt und ihren Aufbau behält.
  *
@@ -10,6 +10,10 @@
  * beruhte: 14 Aufgabenkarten, sofortiges Nachziehen nach Sonderkarten,
  * Endspurt-Verdopplung. Der Autor hat die Website überarbeitet und zur einzigen
  * verbindlichen Regelquelle erklärt; die Spec ist seither ihr Spiegel.
+ *
+ * ÄNDERUNG [12.11.2026, abends]: Zweiter Abgleich. Der Verdoppler gibt jetzt
+ * einen zweiten Zug mit Auffüllen dazwischen statt einer dritten Karte im
+ * selben Zug.
  *
  * Dieser Test ersetzt keinen Abgleich mit der Website. Er verhindert nur, dass
  * Kernaussagen still aus dem Dokument verschwinden oder die Rangfolge der
@@ -155,12 +159,12 @@ describe('GAME_SPEC Teil A — Spiegel der Website', () => {
     ).toEqual([])
   })
 
-  it('beschreibt den Zug: eine Farbkarte, optional eine Sonderkarte, Verdoppler bis drei', () => {
+  it('beschreibt den Zug: eine Farbkarte, optional eine Sonderkarte, Verdoppler als zweiter Zug', () => {
     expect(
       fehlende(teil('A'), [
         'Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:',
         'Optional eine Sonderkarte, um deren Effekt auszulösen',
-        'insgesamt also bis zu 3 Karten',
+        'füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug. Neben dem Verdoppler spielst du so bis zu 3 Karten',
         'Ein Spieler darf maximal 2 Schlangen haben.',
       ]),
     ).toEqual([])

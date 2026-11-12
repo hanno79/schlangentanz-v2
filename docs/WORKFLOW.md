@@ -377,8 +377,8 @@ entfernt worden. Beides hatte keinen Produktionsaufrufer.
 
 **ÄNDERUNG 12.11.2026:** Die genannten R-Nummern gehören zur Spec-Fassung bis
 04.08.2026. Der digitale Umfang steht jetzt in `docs/GAME_SPEC.md` Teil B1, die
-längste Farbkette und der Vielfaltbonus in A11. Über den Umfang entscheidet der
-Autor (Teil D, Frage D7).
+längste Farbkette und der Vielfaltbonus in A11. Der Autor hat entschieden: die
+ganze Erweiterung, vor der Partie wählbar (Teil B1).
 
 ## Speichern und Laden (ÄNDERUNG 03.08.2026)
 
