@@ -39,7 +39,8 @@ Einzige verbindliche Regelquelle ist `https://schlangentanz.ch/rules`. Der Autor
 hat die Spielanleitung dort überarbeitet und zur alleinigen Grundlage erklärt.
 
 - `docs/GAME_SPEC.md` spiegelt die Website wörtlich (Teil A). Regeln ändern sich
-  nur auf der Website; danach wird Teil A aus ihrem Wortlaut neu übernommen.
+  nur auf der Website; danach wird Teil A aus ihrem Wortlaut neu übernommen
+  (`npm run abgleich:website`, mit `-- --schreiben` zum Übernehmen).
 - Abweichungen der Engine stehen in Teil C, offene Auslegungsfragen in Teil D.
 - Dart-Tasks, Dart-Dokumente, `docs/release_status_*`, `docs/slice_plan_*` und
   die Belege in `docs/PLAYABILITY_GATE.md` sind keine Regelquelle. Sie
@@ -49,6 +50,20 @@ Hintergrund: Bis zu diesem Datum gab es drei Regelstände nebeneinander, nämlic
 Dart (zwei sich widersprechende Serien vom Januar), die Website und die Spec
 vom 03.08.2026. Die Engine folgte der Spec, die Spec einem älteren Stand der
 Website.
+
+## Umsetzungsplan (ÄNDERUNG 12.11.2026)
+
+Ab dem 12.11.2026 gilt für alle Arbeit `docs/UMSETZUNGSPLAN.md`. Er ersetzt für
+die Dauer des Neuaufbaus den Abschnitt „Direkt auf `main`" weiter unten:
+
+- Arbeit läuft auf dem Integrationsbranch `neuaufbau`; jeder Task hat einen
+  eigenen Branch `task/<ID>-<kurzname>` und einen PR gegen `neuaufbau`.
+- `main` bekommt nur Meilensteine (M2, M3, M4), jeweils nach Freigabe des Autors
+  auf der Vercel-Vorschau.
+- Jeder Task wird von einem unabhängigen Prüfer ohne Vorkenntnisse abgenommen,
+  auch im Browser; das Protokoll liegt unter `docs/abnahme/<ID>.md`.
+- Der Abschnitt „Bewusst nicht implementiert" ist überholt: Die Erweiterung
+  kommt vollständig (`docs/GAME_SPEC.md` Teil B1).
 
 ## Gates
 
@@ -352,7 +367,7 @@ und sind mit ihm entfallen. Was blieb, war bereits gemessen.
 Die Lobby-Migration hat nebenbei einen regredierten Vertrag aufgedeckt — siehe
 `docs/PLAYABILITY_GATE.md`, Abschnitt „AP-6: M3g-Erstbild-Vertrag ist regrediert".
 
-## Bewusst nicht implementiert (Stand 30.07.2026)
+## Bewusst nicht implementiert (Stand 30.07.2026, überholt seit 12.11.2026)
 
 Damit diese Punkte nicht wiederholt als „toter Code" oder „vergessenes Feature"
 aufschlagen, hier die bewussten Entscheidungen:

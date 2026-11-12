@@ -19,12 +19,26 @@ Old work may be read only as historical reference after explicit Hermes approval
   `docs/PLAYABILITY_GATE.md` sind **keine** Regelquelle.
 - Weicht der Code von der Website ab, ist der Code falsch. Gibt die Website etwas
   nicht her, wird gefragt und nicht geraten.
+- `npm run abgleich:website` prüft, ob Teil A mit der Website übereinstimmt.
+
+## Umsetzungsplan (ÄNDERUNG 12.11.2026)
+
+**Die laufende Arbeit folgt `docs/UMSETZUNGSPLAN.md`.** Lies ihn vor jedem Task.
+Er legt fest: Branches (`neuaufbau`, je Task `task/<ID>-<kurzname>`, `main` nur
+für Meilensteine), Rollen (Orchestrator, Umsetzer, unabhängiger Prüfer, Codex),
+Ablauf eines Tasks (Tests zuerst, `/simplify`, Gates, Codex, Abnahme im
+Browser), Definition of Done, prüfbare Umsetzungsregeln U1–U13 und die
+Reihenfolge der Tasks. Der Fortschritt steht in Dart, die Prüfprotokolle unter
+`docs/abnahme/`. Bei Widerspruch zwischen diesem Dokument und dem Plan gilt der Plan.
 
 ## Roles
-- Hermes: orchestrator, release manager, quality gatekeeper.
-- Claude Code: builder for implementation slices.
-- Codex: adversarial reviewer and verifier.
-- Dart: backlog source. Not a rules source — rules come from the website only.
+- Hermes: orchestrator, release manager, quality gatekeeper. Im Umsetzungsplan
+  übernimmt die Claude-Code-Hauptsitzung die Rolle des Orchestrators.
+- Claude Code: builder for implementation slices (Umsetzer) and independent
+  reviewer without prior knowledge (Prüfer), each as a separate subagent.
+- Codex: adversarial reviewer and verifier (`codex exec`, lokal mit Abo).
+- Dart: backlog source and progress tracker (one task per plan task). Not a rules
+  source — rules come from the website only.
 - Paperclip: archived history/tracking only, **not** an implementation backend.
 
 ## Required workflow
