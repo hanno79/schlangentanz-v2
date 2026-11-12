@@ -14,7 +14,7 @@ eine Regel zum Umkehren und eine Oberfläche für drei Geräteklassen.
   `origin/neuaufbau`.
 - **Ziel:** Unter der Adresse `/probe` zeigt die App, in welcher Geräteklasse
   sie gerade läuft.
-- **Dateien:** `src/probe/geraeteklasse.ts`, `src/probe/geraeteklasse.test.ts`,
+- **Dateien:** `src/probe/geraeteklasse.ts`, `src/probe/geraeteklasse.test.tsx`,
   `src/probe/ProbeSeite.tsx`, `src/main.tsx`.
 - **Festlegung:** Die Klasse hängt nur von der Fensterbreite in CSS-Pixeln ab:
   unter 600 „Handy“, von 600 bis 1024 „Tablet“, über 1024 „Desktop“. Touch zeigt
