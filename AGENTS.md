@@ -98,9 +98,10 @@ unter die Marker, nicht hinein.
 
 - `npm test -- --run`
 - `npm run test:layout` — Playwright-Layout-Verträge gegen `vite preview`.
-  Zwei Projekte: `chromium` (Port 4173, Produktionsbuild) und
-  `chromium-testhooks` (Port 4174, Build mit `VITE_TEST_HOOKS=1`) für Verträge,
-  die den `?phase=`-Hook brauchen (`*.hooks.spec.ts`). Siehe `docs/WORKFLOW.md`.
+  Je Geräteklasse (`desktop`, `tablet`, `handy`) zwei Projekte: `<klasse>`
+  (Port 4173, Produktionsbuild) und `<klasse>-testhooks` (Port 4174, Build mit
+  `VITE_TEST_HOOKS=1`) für Verträge, die einen Testhook brauchen
+  (`*.hooks.spec.ts`). Siehe `docs/WORKFLOW.md`.
   Beide Server laufen mit `reuseExistingServer: false`: antwortet unter der URL
   schon ein Server, bricht Playwright ab, statt ihn weiterzubenutzen und still
   einen alten Build zu messen.
@@ -108,6 +109,7 @@ unter die Marker, nicht hinein.
 - `npm run build`
 - `npm run check:test-lines`
 - `npm run check:css-asserts`
+- `npm run check:regeln` — Umsetzungsregeln U1, U6, U7 (`docs/UMSETZUNGSPLAN.md` 3.7)
 - `npm run dev`
 
 ## Erste Aktion in einer neuen Session

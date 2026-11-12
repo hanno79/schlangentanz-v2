@@ -101,12 +101,16 @@ Testhook-Build nutzt den Vite-Modus `testhooks`; warum, steht in
    npm run build:testhooks
    npm run check:test-lines
    npm run check:css-asserts
+   npm run check:regeln
    npx eslint .
    python scripts/regelcheck.py
    npm run test:layout
    ```
 
-   `npm run check:regeln` kommt mit Task P0.3 dazu.
+   `npm run check:regeln` prüft die Umsetzungsregeln U1, U6 und U7 (Plan 3.7);
+   den Altbestand duldet `scripts/check_regeln_ausnahmen.json`, die nur
+   schrumpfen darf. Umsetzer und Prüfer folgen `docs/abnahme/UMSETZER_ANLEITUNG.md`
+   und `docs/abnahme/PRUEFER_ANLEITUNG.md`.
 6. **Ports 4173 und 4174** müssen vor `npm run test:layout` frei sein. Unter
    Windows ersetzt `netstat -ano | findstr ":4173 :4174"`
    (PowerShell oder cmd) die Vorprüfung mit `ss`; ohne Ausgabe sind beide frei.
@@ -327,12 +331,18 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 
 ### Zwei Aufträge (ÄNDERUNG 03.08.2026, Punkt 1b)
 
-`npm run test:layout` fährt seither **zwei** Playwright-Projekte:
+`npm run test:layout` fährt seither je Geräteklasse **zwei** Playwright-Projekte
+(seit P0.3 drei Geräteklassen aus `scripts/pruefung/geraeteklassen.mjs`: `desktop`
+1280×900, `tablet` 1024×768 mit Touch, `handy` 390×844 mit Touch):
 
 | Projekt | Port | Verzeichnis | Build | Verträge |
 |---|---|---|---|---|
-| `chromium` | 4173 | `dist` | `vite build` | alle außer `*.hooks.spec.ts` |
-| `chromium-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
+| `desktop`, `tablet`, `handy` | 4173 | `dist` | `vite build` | alle außer `*.hooks.spec.ts` |
+| `desktop-testhooks`, `tablet-testhooks`, `handy-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
+
+Die Verträge der alten Oberfläche laufen nur in `desktop` und `desktop-testhooks`
+(Liste `NUR_DESKTOP` in `playwright.config.ts`). Ein eigenes Chromium nennt nur
+die Umgebungsvariable `PW_CHROMIUM_PFAD`.
 
 **Warum.** Die Sieger-Party ist nur über `/game?phase=spielende` erreichbar, und
 dieser Hook ist im Produktionsbuild aus. Der Bildschirm war deshalb von keinem
