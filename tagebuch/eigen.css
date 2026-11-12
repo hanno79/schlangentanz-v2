@@ -1,0 +1,56 @@
+/* Der Anpassungspunkt dieses Projekts.
+ *
+ * stil.css gehört der Baseline und wird bei jedem Sync ersetzt — Änderungen
+ * dort gehen verloren. Diese Datei wird nie überschrieben und nach stil.css
+ * geladen, gewinnt also bei gleicher Spezifität.
+ *
+ * Für die meisten Fälle genügt es, Farben zu überschreiben. Die Werte unten
+ * sind der Baseline-Stand; entkommentieren und ändern. Was jede Farbe trägt,
+ * steht im Kopfkommentar von stil.css.
+ */
+
+/*
+:root {
+  --grund: #fbfcfc;            Seitenhintergrund
+  --flaeche: #ffffff;          Bilder, Tabellen, Eingabefelder
+  --leiste: #f0f3f3;           Gliederung, Filterleiste, Chips
+  --text: #1c2427;             Fliesstext und Überschriften
+  --leise: #59656a;            Nebenangaben: Datum, wer, Herkunft
+  --linie: #dfe4e5;            Haarlinien, Rahmen
+  --linie-stark: #848f92;      Rahmen von Bedienteilen, geplante Strecken
+  --akzent: #0f5f73;           Verweise, aktive Gliederung, Entscheidungen
+  --akzent-tief: #0a4656;      Verweise beim Überfahren
+  --akzent-flaeche: #e1eef1;   gedrückte Filter, aktive Gliederung
+  --sackgasse: #94560f;        Sackgassen und ihre Folge
+  --sackgasse-flaeche: #f7eee2;
+  --abdunkler: rgba(16, 22, 24, 0.92);   Hintergrund der Vergrösserung
+  --auf-dunkel: #ffffff;                  Schrift und Pfeile darauf
+  --auf-dunkel-leise: #e9eeef;            Bildunterschrift darauf
+  --auf-dunkel-flaeche: rgba(255, 255, 255, 0.08);   Knöpfe darauf
+  --auf-dunkel-hover: rgba(255, 255, 255, 0.18);     Knöpfe beim Überfahren
+  --auf-dunkel-linie: rgba(255, 255, 255, 0.35);     Rand der Knöpfe
+  --schatten: rgba(16, 22, 24, 0.35);     Schatten der Filterleiste
+}
+*/
+
+/* Schrift: zwei Familien, beide aus dem System.
+
+:root {
+  --schrift-text: "Deine Schrift", "Segoe UI", sans-serif;
+  --schrift-titel: "Deine Titelschrift", Bahnschrift, sans-serif;
+}
+*/
+
+/* Breite der Gliederung und Zeilenlänge des Fliesstexts:
+
+:root {
+  --gliederung: 15rem;
+  --zeile: 68ch;
+}
+*/
+
+/* Alles Weitere gehört auch hierher — eigene Regeln, zusätzliche Auszeichnung.
+ * Nach einer Änderung 'python scripts/tagebuch_bauen.py' laufen lassen; der
+ * Regelcheck erinnert sonst daran, dass die Seite nicht mehr zu ihren Quellen
+ * passt.
+ */
