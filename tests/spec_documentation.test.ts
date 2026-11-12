@@ -13,7 +13,8 @@
  *
  * ÄNDERUNG [12.11.2026, abends]: Zweiter Abgleich. Der Verdoppler gibt jetzt
  * einen zweiten Zug mit Auffüllen dazwischen statt einer dritten Karte im
- * selben Zug.
+ * selben Zug. Danach dritter Abgleich: Die Farbe eines Jokers ist nie
+ * festgelegt; mehrere Gruppen derselben Farbe zählen je voll.
  *
  * Dieser Test ersetzt keinen Abgleich mit der Website. Er verhindert nur, dass
  * Kernaussagen still aus dem Dokument verschwinden oder die Rangfolge der
@@ -231,19 +232,24 @@ describe('GAME_SPEC Teil A — Spiegel der Website', () => {
     ])
   })
 
-  it('legt die Farbe von Jokern beim ersten Einsatz für eine Aufgabe fest', () => {
+  it('legt die Farbe von Jokern nie fest: je Aufgabe passend, bei der Wertung die meisten Punkte', () => {
+    const a = teil('A')
     expect(
-      fehlende(teil('A'), [
-        'Regenbogenschlange und Farbenfusion zählen für Aufgaben als Karte einer Farbe. Diese Farbe wird beim ersten Einsatz für eine Aufgabe festgelegt und gilt danach für alle Aufgaben und für die Punktewertung.',
+      fehlende(a, [
+        'Regenbogenschlange und Farbenfusion zählen für Aufgaben als Karte einer Farbe, und zwar als die Farbe, mit der die Aufgabe erfüllt ist. Diese Farbe ist nicht festgelegt:',
+        'Sie zählen als die Farbe, die dem Spieler insgesamt die meisten Punkte bringt.',
       ]),
     ).toEqual([])
+    // Die frühere Fassung legte die Farbe beim ersten Einsatz für eine Aufgabe fest.
+    expect(fliesstext(a)).not.toContain('beim ersten Einsatz für eine Aufgabe festgelegt')
   })
 
   it('beschreibt Spielende und Punktezählung', () => {
     expect(
       fehlende(teil('A'), [
         'Das Spiel endet, wenn der Nachziehstapel leer ist. Wer die letzte Karte vom Nachziehstapel zieht, spielt seinen Zug normal zu Ende. Danach machen alle anderen Spieler noch je einen letzten Zug, ohne nachzuziehen.',
-        'Es zählt nur die längste Gruppe jeder Farbe.',
+        'Hat ein Spieler mehrere getrennte Gruppen derselben Farbe, auch in verschiedenen Schlangen, wird jede davon gewertet.',
+        'Getrennte Gruppen derselben Farbe werden dabei nicht zusammengezählt; es zählt die längste einzelne Kette.',
         'Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne Sonderkarten!) erhält 5 Bonuspunkte. Bei Gleichstand erhalten alle beteiligten Spieler die vollen 5 Punkte.',
         '5 oder mehr verschiedene Farben mit gültigen Gruppen: 4 Bonuspunkte',
       ]),

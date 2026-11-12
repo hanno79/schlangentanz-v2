@@ -3,7 +3,7 @@
 Status: **Abgeglichen mit der Website am 12.11.2026.**
 
 Teil A gibt die Spielanleitung von `https://schlangentanz.ch/rules` wörtlich wieder
-(Stand der Website: 12.11.2026 abends, Bundle `index-IDSV-WMZ.js`).
+(Stand der Website: 12.11.2026 abends, Bundle `index-ZK016NK3.js`).
 
 ## Rangfolge der Quellen
 
@@ -253,16 +253,15 @@ Eine Schlange hat: Rot - Rot - Regenbogenschlange - Braun - Braun. Diese Gruppe 
 **Wichtige Regeln:**
 
 - Gilt als Karte der Farbe, die für den Spieler am vorteilhaftesten ist
-- Die Farbe bleibt offen, bis die Karte zum ersten Mal für eine Aufgabe zählt. Danach ist sie für den Rest des Spiels festgelegt [Erweiterung]
+- Die Farbe ist nie festgelegt und kann sich während des Spiels ändern [Erweiterung]
 - Verbindet Farbgruppen, indem sie als Karte der gewünschten Farbe zählt
 - Die Regenbogenschlange bringt selbst keine Punkte
 - Muss Teil einer Dreiergruppe (oder länger) sein, um die Gruppe zu vervollständigen
 - Die anderen Karten der Gruppe bringen ihre normalen Punkte
 - Zählt auch für den Vielfaltbonus als ihre Farbe [Erweiterung]
-- Wurde die Karte nie für eine Aufgabe genutzt, wird ihre Farbe erst bei der Wertung gewählt [Erweiterung]
+- Bei der Wertung am Spielende zählt sie als die Farbe, die dem Spieler die meisten Punkte bringt
 - Kann als beliebige der sechs Farben gewertet werden, auch als grün
-- Zählt für alle Aufgaben als dieselbe Farbe: nicht für eine Aufgabe als Rot und für eine andere als Blau [Erweiterung]
-- Die Farbe wird angesagt, wenn die Karte zum ersten Mal für eine Aufgabe zählt, und gilt dann auch für die Punktewertung [Erweiterung]
+- Bei jeder Aufgabe zählt sie als die Farbe, mit der die Aufgabe erfüllt ist. Eine erfüllte Aufgabe bleibt erfüllt, auch wenn die Karte später anders zählt [Erweiterung]
 - Unterbricht keine Farbreihen, wenn sie als passende Farbe genutzt wird
 
 #### A7.4 Schlangenfrass
@@ -362,8 +361,8 @@ Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Farbenfusion(f
 - Muss Teil einer Dreiergruppe sein, um Punkte zu bringen
 - Bringt die Punkte beider fusionierter Karten
 - Zählt nur als eine Farbe für den Vielfaltbonus [Erweiterung]
-- Für den Vielfaltbonus zählt die Farbe der Fusion. Wurde sie nie für eine Aufgabe festgelegt, wird sie bei der Wertung gewählt [Erweiterung]
-- Die Farbe wird angesagt, wenn die Fusion zum ersten Mal für eine Aufgabe zählt. Sie gilt dann für alle Aufgaben und für die Punktewertung [Erweiterung]
+- Für den Vielfaltbonus zählt die Farbe, die die Fusion bei der Wertung hat [Erweiterung]
+- Die Farbe der Fusion ist nie festgelegt. Bei jeder Aufgabe zählt sie als die Farbe, mit der die Aufgabe erfüllt ist, bei der Wertung als die Farbe, die dem Spieler die meisten Punkte bringt [Erweiterung]
 - Die ursprünglichen Farben der fusionierten Karten spielen für Aufgaben keine Rolle mehr [Erweiterung]
 
 #### A7.8 Verdoppler
@@ -584,7 +583,7 @@ Diese Aktion ermöglicht dir mehr Flexibilität:
 
 #### Wichtig für Sonderkarten:
 
-Regenbogenschlange und Farbenfusion zählen für Aufgaben als Karte einer Farbe. Diese Farbe wird beim ersten Einsatz für eine Aufgabe festgelegt und gilt danach für alle Aufgaben und für die Punktewertung. Die Karten unter einer Farbenfusion zählen nicht einzeln. Andere Sonderkarten, etwa die Schlangenblockade, unterbrechen Farbreihen und zählen nur, wenn eine Aufgabe ausdrücklich Sonderkarten verlangt.
+Regenbogenschlange und Farbenfusion zählen für Aufgaben als Karte einer Farbe, und zwar als die Farbe, mit der die Aufgabe erfüllt ist. Diese Farbe ist nicht festgelegt: Bei einer anderen Aufgabe und bei der Punktewertung darf die Karte als andere Farbe zählen. Die Karten unter einer Farbenfusion zählen nicht einzeln. Andere Sonderkarten, etwa die Schlangenblockade, unterbrechen Farbreihen und zählen nur, wenn eine Aufgabe ausdrücklich Sonderkarten verlangt.
 
 #### Beispiel:
 
@@ -645,7 +644,7 @@ Nach Spielende werden die Punkte gezählt. Es gewinnt der Spieler mit den meiste
 1. Farbgruppen:
 
    - Eine Farbgruppe besteht aus mindestens drei nebeneinanderliegenden Karten derselben Farbe in einer Schlange.
-   - Es zählt nur die längste Gruppe jeder Farbe. Eine Vierergruppe zählt also nicht zusätzlich als Dreiergruppe, eine Fünfergruppe nicht als Dreier- und Vierergruppe, usw.
+   - Jede Gruppe wird nur einmal gewertet, mit ihrer ganzen Länge. Eine Vierergruppe zählt also nicht zusätzlich als Dreiergruppe, eine Fünfergruppe nicht als Dreier- und Vierergruppe, usw. Hat ein Spieler mehrere getrennte Gruppen derselben Farbe, auch in verschiedenen Schlangen, wird jede davon gewertet. Beispiel: Rot-Rot-Rot-Blau-Rot-Rot-Rot-Rot bringt für Rot 3 + 4 = 7 Punkte.
    - Punkte für Farbgruppen werden anhand der Anzahl an Karten in der Gruppe und der Farbe der Karten berechnet:
 
      - Blau, Rot, Gelb: 1 Punkt pro Karte in der Gruppe.
@@ -653,7 +652,7 @@ Nach Spielende werden die Punkte gezählt. Es gewinnt der Spieler mit den meiste
      - Grün: 3 Punkte pro Karte in der Gruppe.
    - Sonderkarten in Farbgruppen:
 
-     - Regenbogenschlangen und Farbfusionen können als jede Farbe zählen, um eine Farbgruppe zu vervollständigen oder zu verlängern. Sie zählen als die Farbe, die die längste Gruppe ermöglicht. Wurde ihre Farbe bereits für eine Aufgabe festgelegt, zählen sie bei der Wertung als diese Farbe.
+     - Regenbogenschlangen und Farbfusionen können als jede Farbe zählen, um eine Farbgruppe zu vervollständigen oder zu verlängern. Sie zählen als die Farbe, die dem Spieler insgesamt die meisten Punkte bringt. Wofür sie während des Spiels bei Aufgaben gezählt haben, spielt dabei keine Rolle.
      - Regenbogenschlangen selbst bringen keine Punkte, ermöglichen aber das Erreichen einer längeren Farbgruppe.
      - Farbfusionen bringen die Punkte der beiden fusionierten Karten, wenn sie als Teil einer Dreier- oder längeren Gruppe zählen.
 
@@ -711,7 +710,7 @@ Nach Spielende werden die Punkte gezählt. Es gewinnt der Spieler mit den meiste
    Punktzahl: 2 Bonuspunkte (Dreiergruppen in Blau, Rot und Violett, also drei verschiedene Farben; die Regenbogenschlange vervollständigt die rote Gruppe)
 3. Längste Farbkette:
 
-   Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne Sonderkarten!) erhält 5 Bonuspunkte. Bei Gleichstand erhalten alle beteiligten Spieler die vollen 5 Punkte.
+   Der Spieler mit der längsten ununterbrochenen Kette einer Farbe (ohne Sonderkarten!) erhält 5 Bonuspunkte. Bei Gleichstand erhalten alle beteiligten Spieler die vollen 5 Punkte. Getrennte Gruppen derselben Farbe werden dabei nicht zusammengezählt; es zählt die längste einzelne Kette. Anders als bei Farbgruppen zählen Regenbogenschlange und Farbenfusion hier nicht mit und unterbrechen die Kette: Bei Rot-Rot-Rot-Regenbogenschlange-Rot-Rot-Rot-Rot ist die längste Kette 4 Karten lang. Für die Punktewertung bringen die roten Karten trotzdem 7 Punkte.
 4. Aufgabenkarten [Erweiterung]:
 
    - Zähle die Punkte für erfüllte offene Aufgaben.
@@ -772,7 +771,7 @@ laufenden Spiel beobachtet.
 | C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug mit Farbkarte und optional Sonderkarte; neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8) | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
 | C8 | Schlangenfrass | a) eine eigene Karte, b) eine eigene Blockade, c) zwei Karten der Mitspieler „sofern möglich", keine gegnerische Blockade (A7.4) | genau eine eigene oder genau zwei gegnerische Karten; gegnerische Blockaden sind nicht ausgenommen | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` |
 | C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
-| C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen als Karte einer Farbe; die Farbe wird beim ersten Einsatz für eine Aufgabe festgelegt und gilt dann für alle Aufgaben und die Wertung (A9, A11) | Sonderkarten unterbrechen in Aufgaben immer; eine festgelegte Jokerfarbe gibt es nicht | `src/engine/aufgabenPruefung.ts`, `src/engine/scoring.ts` |
+| C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
 | C11 | Schlussrunde | nach der letzten Karte je ein letzter Zug ohne Nachziehen (A10); eine Verdopplung von Aufgaben kennt die Website nicht | offene Aufgaben zählen in der Schlussrunde doppelt | `src/engine/aufgabenPruefung.ts`, `src/engine/scoring.ts` |
 | C12 | Pflichtkarte | mindestens eine Karte; wer nur Sonderkarten hält, muss eine spielen, notfalls beim Gegner (A5), auch wenn sie keine Wirkung hat (Antwort des Autors zu D4) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
 | C13 | Längste Farbkette | 5 Bonuspunkte in der Punktezählung nach Spielende (A11) | wird laufend angezeigt, schon ab einer einzelnen Karte; der Punktestand springt dadurch | `src/engine/scoring.ts` (im Spiel beobachtet) |
@@ -783,35 +782,37 @@ Mit Teil A übereinstimmend geprüft: höchstens zwei Karten pro Zug (eine Farbk
 eine Sonderkarte), höchstens zwei Schlangen,
 Handlimit 5, Abwehr nur mit Farbenschutz, Reaktion im Uhrzeigersinn ohne
 Zielwechsel, Schlangenblockade an beliebiger Stelle jeder Schlange,
-Schlangengrube, Farbenfusion in der Wertung, Ablauf der Schlussrunde.
+Schlangengrube, Joker in der Wertung (zählen als die Farbe mit den meisten
+Punkten), Joker unterbrechen die längste Farbkette, mehrere Gruppen derselben
+Farbe zählen je voll, Ablauf der Schlussrunde.
 
 Nicht geprüft und deshalb nicht bewertet: Einzelheiten der KI
 (`src/kiZug.ts`) und jede Regel der nicht umgesetzten Erweiterungsteile (B1).
 
 ## Teil D — Offene Auslegungsfragen an den Autor
 
-Diese Stellen lässt der Wortlaut der Website in zwei Richtungen lesen, oder eine
-Antwort des Autors weicht vom Wortlaut ab. Bis zur Antwort bleibt das heutige
-Verhalten stehen.
+Hier kommen Stellen hin, die der Wortlaut der Website in zwei Richtungen lesen
+lässt. Bis zur Antwort bleibt das heutige Verhalten stehen.
 
-| Nr. | Stelle | Frage | Engine heute |
-|---|---|---|---|
-| D8 | A7.3, A7.7, A9, A11: Farbe eines Jokers | Die Website legt die Farbe von Regenbogenschlange und Farbenfusion beim ersten Einsatz für eine Aufgabe fest, danach gilt sie für den Rest des Spiels. Nach Auskunft des Autors vom 12.11.2026 wählt das Spiel die Farbe erst bei der Wertung so, dass sie die meisten Punkte bringt, und sie kann sich bis dahin ändern. Welche Fassung gilt? | eine festgelegte Jokerfarbe gibt es nicht (C10) |
+Zurzeit ist keine Frage offen.
 
 ### Beantwortet
 
 Antworten des Autors vom 12.11.2026. Wo die Website es selbst sagt, steht die
 Fundstelle in Teil A; wo nicht, gilt die Antwort, bis die Website sie aufnimmt.
+Die Antworten zu D1 und D8 hat der Autor am selben Abend auf die Website
+übernommen.
 
 | Nr. | Frage | Antwort | Folge |
 |---|---|---|---|
-| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Ja, bei den Punkten für Farbgruppen zählt jede Gruppe voll, auch über beide Schlangen. Eine Vierergruppe zählt nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste Kette, getrennte Gruppen werden nicht addiert. | Engine stimmt überein; Wortlaut der Website („Es zählt nur die längste Gruppe jeder Farbe.") sollte das klarer sagen |
+| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Website geändert: Jede Gruppe zählt voll, auch über beide Schlangen; eine Vierergruppe nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste einzelne Kette (A11). | Engine stimmt überein |
 | D2 | Darf der Farbendieb Sonderkarten stehlen? | Nein, nur Farbkarten. | Engine stimmt überein |
 | D3 | Lila Riese: genügt eine Kette ab 3? | Website geändert: mindestens 5 violette Karten in einer Reihe (A9). | C14 |
 | D4 | Was gilt, wenn keine Sonderkarte spielbar ist? | Eine Sonderkarte muss gespielt werden, auch wenn sie wirkungslos ist. Pflicht ist mindestens eine Karte pro Zug. | C12 |
 | D5 | Neu aufgedeckte Aufgabe im selben Zug? | Darf sofort eingelöst werden. | C15 |
 | D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 |
 | D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 |
+| D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -844,7 +845,9 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 - **12.11.2026 abends:** Zweiter Abgleich nach Überarbeitung der Website
   (Verdoppler als zweiter Zug, Lila Riese ab 5 Karten, Schlangenfrass ohne
   gegnerische Blockaden, neue Beispiele). Antworten des Autors zu D1 bis D7
-  aufgenommen; C14, C15 neu; C7 neu gefasst; D8 offen.
+  aufgenommen; C14, C15 neu; C7 neu gefasst. Danach dritter Abgleich: Jokerfarbe
+  nie festgelegt (D8 beantwortet, C10 neu gefasst), mehrere Gruppen derselben
+  Farbe zählen je voll (D1).
 - **12.11.2026:** Neu gefasst als Spiegel der Website. Anlass: Der Autor hat die
   Spielanleitung auf der Website überarbeitet und sie zur einzigen verbindlichen
   Quelle erklärt. Die Fassung vom 03./04.08.2026 beruhte auf einem älteren Stand
