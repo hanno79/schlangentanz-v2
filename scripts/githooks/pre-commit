@@ -1,0 +1,40 @@
+#!/bin/sh
+# Baseline-Regelcheck vor jedem Commit.
+# Aktivieren mit: git config core.hooksPath scripts/githooks
+#
+# Greift unabhaengig vom Harness — Claude Code, Codex, Cursor, Kilo und
+# Handarbeit laufen gleichermassen hier durch.
+#
+# ASCII-Ersatzformen (ae/oe/ue) statt echter Umlaute mit Absicht: /bin/sh
+# laeuft auf vielen Systemen ohne verlaessliche UTF-8-Annahme fuer
+# Skriptdateien, und dieses Skript wird per Vendoring in jedes Zielprojekt
+# kopiert. Ein falsch interpretiertes Umlaut-Byte in einem POSIX-sh-Kommentar
+# waere ein unnoetiges Risiko fuer eine Datei, die ueberall zuverlaessig
+# laufen muss — deshalb hier die Ausnahme von der sonst verbindlichen Regel
+# "echte Umlaute" (rules/kern.md).
+
+# "command -v" genuegt nicht: Windows legt ohne Python-Installation Stubs fuer
+# python und python3 auf den PATH, die vorhanden sind, aber nur auf den
+# Microsoft Store verweisen und mit einem Fehler enden. Genommen wird das
+# erste Python, das tatsaechlich Python 3.9 oder neuer ausfuehrt; aeltere
+# Versionen koennen regelcheck.py nicht lesen.
+python_laeuft() {
+    "$@" -c "import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)" >/dev/null 2>&1
+}
+
+# Windows-Launcher py.exe: kennt die installierten Versionen auch ohne Python
+# auf dem PATH. "-3" waehlt Python 3 aus.
+if python_laeuft python3; then
+    PYTHON="python3"
+elif python_laeuft python; then
+    PYTHON="python"
+elif python_laeuft py -3; then
+    PYTHON="py -3"
+else
+    # Ohne Pruefung kein Commit: sonst rutschten auch Secrets ungeprueft durch.
+    echo "regelcheck: Kein lauffaehiges Python 3.9 oder neuer gefunden; Commit abgebrochen." >&2
+    echo "regelcheck: Python 3.9+ installieren oder auf den PATH legen (python3, python oder py -3)." >&2
+    exit 1
+fi
+
+exec $PYTHON scripts/regelcheck.py --geaendert

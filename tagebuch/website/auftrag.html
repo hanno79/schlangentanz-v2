@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1 Auftrag — Schlangentanz v2</title>
+<link rel="stylesheet" href="stil.css">
+<link rel="stylesheet" href="eigen.css">
+<script src="tagebuch.js" defer></script>
+</head>
+<body class="seite-auftrag">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="index.html">Überblick</a></li><li><a href="auftrag.html" class="aktiv" aria-current="page">1 Auftrag</a></li><li><a href="datengrundlage.html">2 Datengrundlage</a></li><li><a href="vorgehen.html">3 Vorgehen</a></li><li><a href="ergebnisse.html">4 Ergebnisse</a></li><li><a href="entscheidungen.html">5 Entscheidungen</a></li><li><a href="offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="verlauf.html">Verlauf</a></li><li><a href="abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="tests.html">Tests</a></li><li><a href="durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1 class="seitentitel">1 Auftrag</h1>
+<section class="kapitel-text"><p>Das digitale Schlangentanz ist heute nicht spielbar. Die Engine weicht an über zwanzig Stellen von der Spielanleitung ab, die KI spielt stets die erste erlaubte Aktion, und die Oberfläche läuft nur auf dem Desktop. Der Auftrag ist ein regelkonformes Spiel, in dem ein Mensch gegen eine bis drei KI-Gegner antritt, auf Desktop, Tablet quer und Handy hochkant, mit Maus und Touch. Basis-Spiel und Erweiterung sind vor der Partie wählbar.</p>
+<p>Einzige Regelquelle ist die Website schlangentanz.ch/rules. <code>docs/GAME_SPEC.md</code> spiegelt sie wörtlich; Dart, Release-Notizen und Slice-Pläne sind keine Regelquelle. Wo die Website etwas offenlässt, entscheidet der Autor, und erst danach entsteht Code dafür.</p>
+<p>KI und Oberfläche entstehen neu. Die Engine behält ihren Aufbau, Zugablauf, Aktionsschicht, Abwehr und Speicherformat werden neu geschrieben. Es gibt eine solide KI ohne Stufen, die Kartenbilder kommen von schlangentanz.ch, alte Spielstände werden verworfen. Die Arbeit folgt <code>docs/UMSETZUNGSPLAN.md</code> in fünf Phasen bis zu den Meilensteinen M0 bis M4. <code>main</code> geht sofort in Produktion und bekommt nur Meilensteine nach Freigabe durch den Autor.</p>
+<p>Nicht zum Auftrag gehört, Code aus dem alten Repository <code>schlangentanz-game</code>, aus Paperclip oder aus alten Vercel-Ständen zu übernehmen. Paperclip bleibt Archiv und ist kein Umsetzungsweg.</p></section>
+
+<section class="kapitel-eintraege"><h2>Einträge zu diesem Kapitel</h2><p class="leer">Noch keine Einträge.</p></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

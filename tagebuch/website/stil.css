@@ -1,0 +1,1363 @@
+/* Gestaltung des Projekttagebuchs (v2)
+
+   regelcheck: laenge-bewusst eine Gestaltung für alle Seiten; Variablen,
+   Grundformen und Seitenbausteine verweisen aufeinander, und die Datei geht
+   als Ganzes in jedes Tagebuch-Projekt. Aufgeteilt müsste jedes Projekt
+   mehrere Dateien synchron halten.
+
+   Haltung
+   Ein Projektdokument, kein Dashboard. Die Seite wird gezeigt und gelesen:
+   Projektteam und Projektleitung während des Projekts, später wer den
+   Bericht schreibt. Ruhig, hell, mit klarer Gliederung links; Ordnung
+   entsteht durch Abstand und Linien, nicht durch Kästen. Zielgrösse ist ein
+   Laptop ab 1280 px; keine Handyansicht.
+
+   Farbe: eine tragende Farbe, sonst Neutraltöne
+   --grund          Seitenhintergrund, fast weiss mit einem Hauch Petrol
+   --flaeche        Weiss für Bilder, Tabellen, Eingabefelder
+   --leiste         zweite Neutralschicht: Gliederung, Filterleiste, Chips
+   --text           Graphit, Fliesstext und Überschriften
+   --leise          Nebenangaben (Datum, wer, Herkunft); 5.9:1 auf --grund
+   --linie          Haarlinien und Rahmen
+   --linie-stark    Rahmen von Bedienteilen, geplante Strecken; 3.2:1
+   --akzent         Petrol. Verweise, aktive Gliederung, gedrückte Filter,
+                    erreichte Meilensteine, Entscheidungen, Fokus. 7:1 auf
+                    --grund. Bewusst weder Blau-Violett noch Terrakotta.
+   --akzent-tief    Verweise beim Überfahren, Schrift auf --akzent-flaeche
+   --akzent-flaeche Hintergrund gedrückter Filter und angesprungener Stellen
+   --sackgasse      Ocker, nur für Sackgassen und ihre Folge; die einzige
+   --sackgasse-flaeche  zweite Farbe, weil eine Sackgasse ein Warnsignal ist
+   --abdunkler      Hintergrund der Vergrösserung
+   --auf-dunkel     Schrift und Pfeile auf --abdunkler, Fokusrahmen dort
+   --auf-dunkel-leise   Bildunterschrift in der Vergrösserung
+   --auf-dunkel-flaeche Knöpfe der Vergrösserung; --auf-dunkel-hover beim
+                    Überfahren, --auf-dunkel-linie ihr Rand
+   --schatten       Schatten der Filterleiste, wenn sie beim Lesen oben steht
+   Nur mit Testregister (Gruppe Prüfen) kommen Statusfarben dazu, je als
+   Schrift- und Flächenton; sie tragen eine Aussage, keinen Schmuck:
+   --gut            bestanden, freigegeben, Bereich grün, Kasten "Worum es geht"
+   --schlecht       fehlgeschlagen, gesperrt, Bereich rot
+   --offen          unklar, Bereich gelb, Kasten "Unklar", ungültiger Lauf
+   --hinweis        Kasten "Zurücksetzen"
+   Blockiert und übersprungen bleiben neutral (--leise, --leiste).
+   Die übrigen Eintragsarten unterscheiden sich durch die Form ihrer Marke
+   (Kreis, Quadrat, Raute), nicht durch Farbe, und tragen immer ihren Namen.
+
+   Schrift: zwei Systemfamilien, nichts aus dem Netz
+   --schrift-text   Segoe UI / San Francisco / Helvetica: Fliesstext, Bedienung
+   --schrift-titel  Bahnschrift (Windows) bzw. DIN Alternate (macOS): Titel,
+                    Kennzahlen, Zähler. Die DIN-Anmutung passt zu Plänen und
+                    technischen Berichten und hebt sich von der Vorgabeschrift
+                    ab, ohne eine Schrift nachzuladen.
+   --schrift-code   nur für Code, Pfade und Datensatznamen
+   Grössen (rem): 0.8125 Nebenangabe · 0.9375 Bedienung, Tabelle ·
+   1.0625 Fliesstext · 1.25 Eintragstitel · 1.375 Abschnitt · 2.125 Seitentitel
+   · 2.25 Kennzahl. Fliesstext höchstens 68 Zeichen breit.
+
+   Abstände: Raster von 4 px
+   --a1 0.25 · --a2 0.5 · --a3 0.75 · --a4 1 · --a5 1.5 · --a6 2 · --a7 3 ·
+   --a8 4.5 rem. Über einer Überschrift mehr Raum als darunter.
+
+   Bausteine
+   Kopf mit Projektname und Status; Gliederung links, bleibt stehen;
+   Kennzahlen als Zahlenband statt Karten; Meilenstein-Strahl mit
+   Heute-Marke; Zeitleiste mit Marken je Art (Überblick, Kapitel, Verlauf);
+   Filterleiste, die beim Lesen des Verlaufs oben stehen bleibt;
+   Datenfluss in drei Spalten; Carousel und Vergrösserung mit gezeichneten
+   Pfeilen. Bewegung nur als kurzer Farbwechsel beim Überfahren.
+
+   Anpassen: tagebuch/eigen.css überschreibt die Variablen auf :root. */
+
+:root {
+  --grund: #fbfcfc;
+  --flaeche: #ffffff;
+  --leiste: #f0f3f3;
+  --text: #1c2427;
+  --leise: #59656a;
+  --linie: #dfe4e5;
+  --linie-stark: #848f92;
+  --akzent: #0f5f73;
+  --akzent-tief: #0a4656;
+  --akzent-flaeche: #e1eef1;
+  --sackgasse: #94560f;
+  --sackgasse-flaeche: #f7eee2;
+  --abdunkler: rgba(16, 22, 24, 0.92);
+  --auf-dunkel: #ffffff;
+  --auf-dunkel-leise: #e9eeef;
+  --auf-dunkel-flaeche: rgba(255, 255, 255, 0.08);
+  --auf-dunkel-hover: rgba(255, 255, 255, 0.18);
+  --auf-dunkel-linie: rgba(255, 255, 255, 0.35);
+  --schatten: rgba(16, 22, 24, 0.35);
+  --gut: #2f6b3a;
+  --gut-flaeche: #e7f1e8;
+  --schlecht: #a3322a;
+  --schlecht-flaeche: #f8e7e5;
+  --offen: #855d00;
+  --offen-flaeche: #fbf2d8;
+  --hinweis: #2b5c9e;
+  --hinweis-flaeche: #e7eef8;
+
+  --schrift-text: "Segoe UI Variable Text", "Segoe UI", -apple-system,
+    BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --schrift-titel: Bahnschrift, "DIN Alternate", "DIN 2014", "Barlow",
+    "Roboto Condensed", "Segoe UI", system-ui, sans-serif;
+  --schrift-code: "Cascadia Mono", Consolas, "SF Mono", Menlo,
+    "DejaVu Sans Mono", monospace;
+
+  --a1: 0.25rem;
+  --a2: 0.5rem;
+  --a3: 0.75rem;
+  --a4: 1rem;
+  --a5: 1.5rem;
+  --a6: 2rem;
+  --a7: 3rem;
+  --a8: 4.5rem;
+
+  --gliederung: 15rem;
+  --zeile: 68ch;
+  --rundung: 0.375rem;
+}
+
+/* ---------- Grundformen ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html {
+  scrollbar-color: var(--linie-stark) transparent;
+  accent-color: var(--akzent);
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--grund);
+  color: var(--text);
+  font-family: var(--schrift-text);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  caret-color: var(--akzent);
+}
+
+::selection { background: var(--akzent-flaeche); color: var(--akzent-tief); }
+
+a {
+  color: var(--akzent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 150ms ease-out;
+}
+a:hover { color: var(--akzent-tief); text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--akzent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--schrift-titel);
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1.seitentitel {
+  font-size: 2.125rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--a6);
+}
+
+main h2 {
+  font-size: 1.375rem;
+  margin: var(--a7) 0 var(--a3);
+}
+
+main h3 {
+  font-size: 1.125rem;
+  margin: var(--a6) 0 var(--a2);
+}
+
+p, ul, ol, dl { margin: 0 0 var(--a4); }
+
+main p, main li, main dd { max-width: var(--zeile); }
+
+code {
+  font-family: var(--schrift-code);
+  font-size: 0.875em;
+  background: var(--leiste);
+  border-radius: 0.25rem;
+  padding: 0.05em 0.3em;
+}
+
+pre {
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--rundung);
+  padding: var(--a3) var(--a4);
+  overflow-x: auto;
+  font-size: 0.9375rem;
+}
+pre code { background: none; padding: 0; }
+
+hr { border: 0; border-top: 1px solid var(--linie); margin: var(--a6) 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: var(--a4) 0 var(--a5);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--a2) var(--a3);
+  border-bottom: 1px solid var(--linie);
+}
+th {
+  font-weight: 600;
+  color: var(--leise);
+  font-size: 0.8125rem;
+  border-bottom-color: var(--linie-stark);
+  white-space: nowrap;
+}
+tbody tr:last-child td { border-bottom-color: var(--linie-stark); }
+
+.leer { color: var(--leise); font-style: italic; }
+
+a.mehr {
+  display: inline-block;
+  margin-top: var(--a2);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* ---------- Kopf und Gliederung ---------- */
+
+header.kopf {
+  background: var(--flaeche);
+  border-bottom: 1px solid var(--linie);
+}
+header.kopf .innen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--a1) var(--a5);
+  padding: var(--a4) var(--a7) var(--a4) var(--a5);
+}
+.projektname {
+  margin: 0;
+  font-family: var(--schrift-titel);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.angaben {
+  margin: 0;
+  color: var(--leise);
+  font-size: 0.875rem;
+}
+.status {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+.status::first-letter { text-transform: uppercase; }
+.status[data-stand="laufend"] { color: var(--akzent); background: var(--akzent-flaeche); }
+.status[data-stand="pausiert"] { color: var(--sackgasse); background: var(--sackgasse-flaeche); }
+.status[data-stand="abgeschlossen"] { color: var(--leise); background: var(--leiste); }
+
+.rahmen {
+  display: grid;
+  grid-template-columns: var(--gliederung) minmax(0, 1fr);
+  align-items: start;
+}
+
+nav[aria-label="Gliederung"] {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: var(--a6) var(--a3) var(--a6) var(--a4);
+}
+nav[aria-label="Gliederung"] ul { list-style: none; margin: 0; padding: 0; }
+nav[aria-label="Gliederung"] a {
+  display: block;
+  padding: 0.4rem var(--a3);
+  border-radius: var(--rundung);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9688rem;
+  line-height: 1.35;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+nav[aria-label="Gliederung"] a:hover { background: var(--leiste); }
+nav[aria-label="Gliederung"] a.aktiv {
+  background: var(--akzent-flaeche);
+  color: var(--akzent-tief);
+  font-weight: 600;
+}
+nav[aria-label="Gliederung"] li.gruppe {
+  margin: var(--a5) var(--a3) var(--a2);
+  padding-top: var(--a4);
+  border-top: 1px solid var(--linie);
+  color: var(--leise);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+main {
+  min-width: 0;
+  max-width: 76rem;
+  padding: var(--a7) var(--a8) var(--a8) var(--a6);
+  border-left: 1px solid var(--linie);
+  min-height: calc(100vh - 4rem);
+}
+
+footer {
+  margin-left: var(--gliederung);
+  padding: var(--a5) var(--a6);
+  border-top: 1px solid var(--linie);
+  color: var(--leise);
+  font-size: 0.8125rem;
+}
+
+/* ---------- Überblick ---------- */
+
+.seite-index main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-areas:
+    "titel   titel"
+    "kurz    kurz"
+    "zahlen  zahlen"
+    "tests   tests"
+    "strahl  strahl"
+    "stand   naechst"
+    "zuletzt naechst"
+    "bilder  bilder";
+  grid-template-rows: repeat(6, auto) 1fr auto;
+  column-gap: var(--a8);
+  align-items: start;
+}
+.seite-index main > * { min-width: 0; }
+.seite-index .seitentitel { grid-area: titel; }
+.seite-index .kurzfassung { grid-area: kurz; }
+.seite-index .kennzahlen { grid-area: zahlen; }
+.seite-index .testregister { grid-area: tests; }
+.seite-index .meilensteine { grid-area: strahl; }
+.seite-index .stand-heute { grid-area: stand; }
+.seite-index .zuletzt-passiert { grid-area: zuletzt; }
+.seite-index .als-naechstes { grid-area: naechst; }
+.seite-index .abbildungen { grid-area: bilder; }
+
+.seite-index main h2 { margin-top: var(--a7); }
+
+.kurzfassung p {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  max-width: 60ch;
+  margin-bottom: var(--a6);
+}
+
+/* Kennzahlen: ein Zahlenband, keine Karten. */
+.kennzahlen.kacheln {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  border-top: 1px solid var(--text);
+  border-bottom: 1px solid var(--linie);
+}
+.kennzahlen.kacheln .kachel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--a4) var(--a5) var(--a4) 0;
+}
+.kennzahlen.kacheln .kachel + .kachel {
+  padding-left: var(--a5);
+  border-left: 1px solid var(--linie);
+}
+.kachel .wert {
+  font-family: var(--schrift-titel);
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.kachel .bezeichnung { font-size: 0.9375rem; margin-top: var(--a1); }
+.kachel .herkunft {
+  font-style: normal;
+  color: var(--leise);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  margin-top: var(--a1);
+}
+
+/* Kennzahlen eines Eintrags auf der Seite Ergebnisse: eine Zeile. */
+.kennzahlen.liste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--a2) var(--a5);
+  margin: var(--a3) 0;
+}
+.kennzahlen.liste .kachel { display: flex; align-items: baseline; gap: var(--a2); }
+.kennzahlen.liste .wert { font-size: 1.5rem; }
+
+/* Meilenstein-Strahl: erreicht durchgezogen, geplant gestrichelt.
+   Viele Meilensteine brechen in weitere Zeilen um, statt die Seite zu
+   verbreitern; die Mindestbreite hält die Titel lesbar. */
+ol.strahl {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: var(--a5);
+  list-style: none;
+  margin: var(--a4) 0 0;
+  padding: 0;
+}
+ol.strahl li { position: relative; max-width: none; }
+ol.strahl .strahlpunkt {
+  flex: 1 0 10rem;
+  padding: 1.75rem var(--a4) 0 0;
+}
+ol.strahl .strahlpunkt::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.125rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  border: 2px solid var(--akzent);
+  background: var(--akzent);
+  z-index: 1;
+}
+ol.strahl .strahlpunkt::after {
+  content: "";
+  position: absolute;
+  left: 0.875rem;
+  right: 0;
+  top: 0.5rem;
+  border-top: 2px solid var(--akzent);
+}
+ol.strahl .strahlpunkt[data-status="geplant"]::before { background: var(--grund); }
+ol.strahl .strahlpunkt[data-status="geplant"]::after {
+  border-top: 2px dashed var(--linie-stark);
+}
+ol.strahl .strahlpunkt:last-child::after { display: none; }
+ol.strahl .titel { display: block; font-weight: 600; line-height: 1.35; }
+ol.strahl .zeit { display: block; color: var(--leise); font-size: 0.8125rem; }
+ol.strahl .heute {
+  flex: 0 0 auto;
+  width: 4.5rem;
+  padding-top: 1.75rem;
+  font-family: var(--schrift-titel);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text);
+}
+ol.strahl .heute::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -0.25rem;
+  height: 1.5rem;
+  border-left: 2px solid var(--text);
+}
+ol.strahl .heute::after {
+  content: "";
+  position: absolute;
+  left: 0.125rem;
+  right: 0;
+  top: 0.5rem;
+  border-top: 2px dashed var(--linie-stark);
+}
+
+.stand-heute p { max-width: 60ch; }
+
+.als-naechstes ol {
+  list-style: none;
+  counter-reset: punkt;
+  padding: 0;
+}
+.als-naechstes li {
+  counter-increment: punkt;
+  position: relative;
+  padding: var(--a3) 0 var(--a3) 2.25rem;
+  border-top: 1px solid var(--linie);
+}
+.als-naechstes li:last-child { border-bottom: 1px solid var(--linie); }
+.als-naechstes li::before {
+  content: counter(punkt);
+  position: absolute;
+  left: 0;
+  top: var(--a3);
+  font-family: var(--schrift-titel);
+  font-weight: 600;
+  color: var(--akzent);
+  font-variant-numeric: tabular-nums;
+}
+.als-naechstes .punkt { display: block; line-height: 1.4; }
+.als-naechstes small { display: block; color: var(--leise); font-size: 0.8125rem; margin-top: 0.15rem; }
+.als-naechstes .blockiert { color: var(--sackgasse); }
+
+/* ---------- Marken der Eintragsarten ---------- */
+
+/* Kurzform (Überblick, Kapitel) und Verlauf teilen die Formsprache:
+   Fortschritt Kreis, Auswertung Quadrat, Entscheidung Raute in Petrol,
+   Sackgasse offener Ring in Ocker, Meilenstein grosse Raute in Graphit. */
+.eintrag-kurz::before,
+article.eintrag::before,
+.arten button[data-art]::before {
+  content: "";
+  display: block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--leise);
+}
+.eintrag-kurz.auswertung::before,
+article.eintrag.auswertung::before,
+.arten button[data-art="auswertung"]::before { border-radius: 1px; }
+.eintrag-kurz.entscheidung::before,
+article.eintrag.entscheidung::before,
+.arten button[data-art="entscheidung"]::before {
+  border-radius: 1px;
+  background: var(--akzent);
+  transform: rotate(45deg) scale(0.92);
+}
+.eintrag-kurz.sackgasse::before,
+article.eintrag.sackgasse::before,
+.arten button[data-art="sackgasse"]::before {
+  background: var(--grund);
+  border: 2px solid var(--sackgasse);
+}
+.eintrag-kurz.meilenstein::before,
+article.eintrag.meilenstein::before,
+.arten button[data-art="meilenstein"]::before {
+  border-radius: 1px;
+  background: var(--text);
+  transform: rotate(45deg);
+}
+.arten button[data-art="alle"]::before { display: none; }
+
+.art { color: var(--leise); text-transform: capitalize; }
+.eintrag-kurz.entscheidung .art, article.eintrag.entscheidung .art { color: var(--akzent); }
+.eintrag-kurz.sackgasse .art, article.eintrag.sackgasse .art { color: var(--sackgasse); }
+.eintrag-kurz.meilenstein .art, article.eintrag.meilenstein .art { color: var(--text); }
+
+/* ---------- Kurzform eines Eintrags (Überblick, Kapitelseiten) ---------- */
+
+.zuletzt, .kapitel-eintraege {
+  position: relative;
+}
+.eintrag-kurz {
+  position: relative;
+  padding: 0 0 var(--a4) var(--a5);
+  font-size: 0.875rem;
+  color: var(--leise);
+}
+.eintrag-kurz::before {
+  position: absolute;
+  left: 0.0625rem;
+  top: 0.45rem;
+}
+.eintrag-kurz:not(:last-of-type)::after {
+  content: "";
+  position: absolute;
+  left: 0.3438rem;
+  top: 1.35rem;
+  bottom: 0.1rem;
+  border-left: 1px solid var(--linie);
+}
+.eintrag-kurz a.titel {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+  text-decoration: none;
+  margin-bottom: 0.15rem;
+}
+.eintrag-kurz a.titel:hover { color: var(--akzent-tief); text-decoration: underline; }
+.eintrag-kurz .art,
+.eintrag-kurz time,
+.eintrag-kurz .kapitel { display: inline; }
+.eintrag-kurz time::before,
+.eintrag-kurz .kapitel::before { content: " · "; color: var(--leise); }
+.kapitel-eintraege h2 { margin-bottom: var(--a4); }
+
+/* ---------- Abbildungen ---------- */
+
+figure { margin: var(--a6) 0; }
+figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: 0.25rem;
+}
+[data-lightbox] img, figure img { cursor: zoom-in; }
+figure table { margin: 0; background: var(--flaeche); }
+figcaption {
+  margin-top: var(--a2);
+  color: var(--leise);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  max-width: var(--zeile);
+}
+.kapitel-text figure { max-width: 52rem; }
+figure:target {
+  outline: 2px solid var(--akzent);
+  outline-offset: var(--a3);
+  border-radius: 0.25rem;
+}
+
+.galerie {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--a6) var(--a5);
+  align-items: start;
+}
+.galerie figure { margin: 0; }
+.galerie figure img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  padding: var(--a2);
+}
+.galerie figure[data-art="tabelle"] { grid-column: span 1; }
+
+/* Carousel im Überblick */
+.carousel {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+  align-items: center;
+  gap: var(--a3);
+  margin-top: var(--a3);
+  border-radius: var(--rundung);
+}
+.carousel .folien { min-width: 0; }
+.carousel .folie figure { margin: 0; }
+.carousel .folie img {
+  margin: 0 auto;
+  width: 100%;
+  height: 26rem;
+  object-fit: contain;
+  padding: var(--a3);
+}
+.carousel .folie figure[data-art="tabelle"] {
+  min-height: 26rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.carousel .folie figcaption { text-align: center; max-width: none; }
+.carousel .punkte {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: var(--a1);
+}
+
+/* Gezeichnete Pfeile: das Zeichen im Knopf bleibt für die Ansicht ohne
+   Gestaltung, wird hier aber durch eine Linienform ersetzt. */
+.carousel > button,
+.lightbox > button {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--linie-stark);
+  background: var(--flaeche);
+  color: var(--text);
+  font-size: 0;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+.carousel > button:hover { border-color: var(--akzent); background: var(--akzent-flaeche); }
+.carousel > button::before,
+.lightbox > .zurueck::before,
+.lightbox > .weiter::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}
+.carousel > [data-zurueck]::before,
+.lightbox > .zurueck::before { transform: translate(-30%, -50%) rotate(45deg); }
+.carousel > [data-weiter]::before,
+.lightbox > .weiter::before { transform: translate(-70%, -50%) rotate(-135deg); }
+
+.punkte .punkt {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+.punkte .punkt::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--leise);
+}
+.punkte .punkt.aktiv::before { background: var(--akzent); border-color: var(--akzent); }
+
+/* Vergrösserung */
+html.lightbox-offen { overflow: hidden; }
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) 4rem;
+  align-items: center;
+  gap: var(--a4);
+  padding: var(--a6) var(--a5);
+  background: var(--abdunkler);
+}
+.lightbox figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+.lightbox img {
+  max-width: 100%;
+  max-height: calc(100vh - 9rem);
+  background: var(--flaeche);
+  border: 0;
+  cursor: default;
+}
+.lightbox img[src$=".svg"] {
+  width: auto;
+  height: calc(100vh - 9rem);
+}
+.lightbox figcaption {
+  color: var(--auf-dunkel-leise);
+  text-align: center;
+  font-size: 0.9375rem;
+  max-width: 70ch;
+}
+.lightbox > button {
+  background: var(--auf-dunkel-flaeche);
+  border-color: var(--auf-dunkel-linie);
+  color: var(--auf-dunkel);
+}
+.lightbox > button:hover { background: var(--auf-dunkel-hover); }
+.lightbox > .schliessen {
+  position: absolute;
+  top: var(--a4);
+  right: var(--a4);
+}
+.lightbox > .schliessen::before,
+.lightbox > .schliessen::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.125rem;
+  border-top: 2px solid currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.lightbox > .schliessen::after { transform: translate(-50%, -50%) rotate(-45deg); }
+.lightbox :focus-visible { outline-color: var(--auf-dunkel); }
+
+/* ---------- Verlauf ---------- */
+
+.filterleiste {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--a2) var(--a3);
+  margin: 0 calc(-1 * var(--a3)) var(--a5);
+  padding: var(--a3);
+  background: var(--leiste);
+  border-radius: var(--rundung);
+  box-shadow: 0 6px 12px -10px var(--schatten);
+}
+.filterleiste .arten { display: flex; flex-wrap: wrap; gap: var(--a1); flex: 1 1 100%; }
+.filterleiste button,
+.filterleiste select,
+.filterleiste input {
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--text);
+  background: var(--flaeche);
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--rundung);
+  padding: 0.3rem 0.65rem;
+  min-height: 2.25rem;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+.filterleiste button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+.filterleiste .arten button { text-transform: capitalize; }
+.filterleiste button:hover { border-color: var(--akzent); }
+.filterleiste button[aria-pressed="true"] {
+  background: var(--akzent-flaeche);
+  border-color: var(--akzent);
+  color: var(--akzent-tief);
+  font-weight: 600;
+}
+.filterleiste .anzahl {
+  font-family: var(--schrift-titel);
+  color: var(--leise);
+  font-variant-numeric: tabular-nums;
+}
+.filterleiste button[aria-pressed="true"] .anzahl { color: var(--akzent-tief); }
+.filterleiste select { cursor: pointer; max-width: 16rem; }
+.filterleiste input[type="search"] { flex: 1 1 12rem; min-width: 10rem; }
+.filterleiste input::placeholder { color: var(--leise); }
+.filterleiste .treffer {
+  margin-left: auto;
+  color: var(--leise);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.phase { position: relative; }
+.phase > h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--a1) var(--a3);
+  margin: var(--a7) 0 var(--a5);
+  padding-bottom: var(--a2);
+  border-bottom: 1px solid var(--text);
+}
+.phase:first-child > h2 { margin-top: var(--a5); }
+.phase .zeitraum {
+  font-family: var(--schrift-text);
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--leise);
+}
+.phase .anzahl {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--leise);
+  font-variant-numeric: tabular-nums;
+}
+.phase .anzahl { font-family: var(--schrift-titel); }
+.phase .anzahl::before { content: "Einträge: "; font-family: var(--schrift-text); }
+
+/* Ein Eintrag: Datum links, Marke auf der Zeitlinie, Inhalt rechts. */
+article.eintrag {
+  position: relative;
+  padding: 0 0 var(--a6) 9.5rem;
+}
+article.eintrag::before {
+  position: absolute;
+  left: 7.6875rem;
+  top: 0.55rem;
+  z-index: 1;
+}
+article.eintrag::after {
+  content: "";
+  position: absolute;
+  left: 7.9688rem;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--linie);
+}
+article.eintrag.meilenstein::before { width: 0.875rem; height: 0.875rem; left: 7.5625rem; top: 0.45rem; }
+.eintragskopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--a2);
+  font-size: 0.875rem;
+  color: var(--leise);
+}
+.eintragskopf h3 {
+  order: -1;
+  flex-basis: 100%;
+  margin: 0 0 var(--a1);
+  font-size: 1.25rem;
+  color: var(--text);
+  max-width: var(--zeile);
+}
+.eintragskopf time {
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  width: 6.75rem;
+  text-align: right;
+  font-family: var(--schrift-titel);
+  font-size: 0.9375rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.eintragskopf .art { font-weight: 600; }
+.eintragskopf .wer::before,
+.eintragskopf .betrifft::before { content: "· "; }
+
+article.eintrag.meilenstein {
+  padding-top: var(--a4);
+  padding-bottom: var(--a4);
+  margin-bottom: var(--a6);
+  background: var(--leiste);
+  border-radius: var(--rundung);
+}
+article.eintrag.meilenstein::before { top: 1.45rem; }
+article.eintrag.meilenstein .eintragskopf time { top: 1.2rem; }
+article.eintrag.meilenstein::after { display: none; }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--a2); margin: var(--a3) 0; }
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.15rem 0.6rem;
+  background: var(--leiste);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+article.eintrag.meilenstein .chip { background: var(--flaeche); }
+.chip b {
+  font-family: var(--schrift-titel);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.eintragstext { margin-top: var(--a3); }
+.eintragstext > :last-child { margin-bottom: 0; }
+.eintragstext h4, .eintragstext h5, .eintragstext h6 {
+  font-family: var(--schrift-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--leise);
+  margin: var(--a4) 0 0.15rem;
+}
+
+/* Eingeklappt bleibt der Anfang lesbar; der Rest blendet aus. */
+article.eintrag.eingeklappt .eintragstext {
+  max-height: 10.5em;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+button.weiterlesen {
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--akzent);
+  background: none;
+  border: 0;
+  padding: var(--a1) 0;
+  margin-top: var(--a1);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+button.weiterlesen:hover { color: var(--akzent-tief); text-decoration-thickness: 2px; }
+
+dl.entscheidungsfelder {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: var(--a2) var(--a4);
+  margin: var(--a3) 0 var(--a4);
+  max-width: calc(var(--zeile) + 8.5rem);
+}
+dl.entscheidungsfelder dt {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--leise);
+  padding-top: 0.2rem;
+}
+dl.entscheidungsfelder dd { margin: 0; }
+dl.entscheidungsfelder dd > :last-child { margin-bottom: 0; }
+dl.entscheidungsfelder dt:nth-of-type(3),
+dl.entscheidungsfelder dt:nth-of-type(3) + dd { color: var(--akzent-tief); font-weight: 600; }
+
+.abschnitt.folge {
+  margin-top: var(--a3);
+  padding: var(--a2) var(--a4) var(--a3);
+  background: var(--sackgasse-flaeche);
+  border-radius: var(--rundung);
+  max-width: var(--zeile);
+}
+.abschnitt.folge h4 { color: var(--sackgasse); margin-top: var(--a1); }
+.abschnitt.folge p { margin-bottom: 0; }
+
+.vorschauen { display: flex; flex-wrap: wrap; gap: var(--a3); margin-top: var(--a4); }
+.vorschau {
+  display: grid;
+  place-items: center;
+  width: 9rem;
+  height: 6rem;
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  text-decoration: none;
+  font-family: var(--schrift-titel);
+  font-weight: 600;
+  color: var(--leise);
+  transition: border-color 150ms ease-out;
+}
+.vorschau:hover { border-color: var(--akzent); color: var(--akzent); }
+.vorschau img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  border: 0;
+}
+
+/* ---------- Datengrundlage ---------- */
+
+.fluss {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--a8);
+  margin: var(--a4) 0 var(--a5);
+}
+.fluss .spalte {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--a2);
+}
+.fluss .spalte:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * var(--a8) / 2 - 0.75rem);
+  width: 1.5rem;
+  height: 0.75rem;
+  background: var(--leise);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 6h21M16 1l5 5-5 5' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 6h21M16 1l5 5-5 5' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.fluss .k {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--leise);
+  padding-bottom: var(--a1);
+  border-bottom: 1px solid var(--linie);
+}
+.fluss a.knoten {
+  display: block;
+  padding: var(--a2) var(--a3);
+  background: var(--flaeche);
+  border: 1px solid var(--linie-stark);
+  border-radius: var(--rundung);
+  font-family: var(--schrift-code);
+  font-size: 0.875rem;
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: border-color 150ms ease-out;
+}
+.fluss a.knoten:hover { border-color: var(--akzent); color: var(--akzent-tief); }
+.fluss [data-rolle="ergebnis"] a.knoten { border: 2px solid var(--akzent); }
+.fluss a.knoten.geplant {
+  border-style: dashed;
+  background: transparent;
+  color: var(--leise);
+}
+
+.katalog { overflow-x: auto; }
+/* Feste Spaltenbreiten: Der Katalog passt bei 1280 px in die Spalte, auch
+   mit langen URLs, Dokument-IDs und vielen Datensätzen. Ein Wort bricht nur,
+   wenn es breiter ist als seine Spalte. */
+.katalog table { font-size: 0.8125rem; table-layout: fixed; }
+.katalog th, .katalog td { padding: var(--a2) var(--a2); overflow-wrap: break-word; hyphens: auto; }
+.katalog th:nth-child(1) { width: 15%; }
+.katalog th:nth-child(2) { width: 17%; }
+.katalog th:nth-child(3) { width: 15%; }
+.katalog th:nth-child(4) { width: 9%; }
+.katalog th:nth-child(5) { width: 12%; }
+.katalog th:nth-child(6) { width: 9%; }
+.katalog th:nth-child(7) { width: 7.5%; }
+.katalog th:nth-child(8) { width: 6%; }
+.katalog th:nth-child(9) { width: 9.5%; }
+.katalog td:nth-child(4) { white-space: nowrap; }
+/* Namen brechen an den <wbr> nach '_' und '-', mitten im Wort nur, wenn ein
+   Teil breiter ist als die Spalte. */
+.katalog td:first-child { font-family: var(--schrift-code); font-size: 0.75rem; hyphens: manual; }
+.katalog td:last-child { text-transform: capitalize; }
+.katalog tr.geplant td { color: var(--leise); font-style: italic; }
+
+/* Steckbrief eines Datensatzes */
+.seite-datensatz h1.seitentitel { font-family: var(--schrift-code); font-weight: 600; font-size: 1.875rem; letter-spacing: -0.02em; }
+dl.felder {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--a2) var(--a5);
+  max-width: 56rem;
+  padding: var(--a4) 0;
+  border-top: 1px solid var(--text);
+  border-bottom: 1px solid var(--linie);
+}
+dl.felder dt { color: var(--leise); font-size: 0.875rem; padding-top: 0.15rem; }
+dl.felder dd { margin: 0; }
+.herkunft h2 { font-size: 1.125rem; margin-top: var(--a6); }
+.herkunft a { font-family: var(--schrift-code); font-size: 0.9375rem; }
+table.ausdehnung-werte {
+  width: auto;
+  margin: var(--a2) 0 var(--a4);
+}
+table.ausdehnung-werte td { padding-right: var(--a5); white-space: nowrap; }
+svg.ausdehnung {
+  display: block;
+  width: 24rem;
+  max-width: 100%;
+  height: auto;
+  color: var(--akzent);
+  background: var(--flaeche);
+  border-radius: 0.25rem;
+}
+svg.ausdehnung .rahmen { color: var(--linie-stark); }
+
+/* ---------- Kapitel 4 bis 6 ---------- */
+
+.entscheidungen article.entscheidung,
+.auswertungen article.auswertung {
+  padding: var(--a5) 0;
+  border-top: 1px solid var(--linie);
+}
+.entscheidungen article.entscheidung h2,
+.auswertungen article.auswertung h2 { margin: 0 0 var(--a1); font-size: 1.25rem; }
+.entscheidungen article.entscheidung h2 a,
+.auswertungen article.auswertung h2 a { color: var(--text); text-decoration: none; }
+.entscheidungen article.entscheidung h2 a:hover,
+.auswertungen article.auswertung h2 a:hover { color: var(--akzent-tief); text-decoration: underline; }
+article.entscheidung > .kopf,
+article.auswertung > .kopf { color: var(--leise); font-size: 0.875rem; margin-bottom: var(--a3); }
+article.entscheidung .abschnitt,
+article.auswertung .abschnitt {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: var(--a4);
+  margin-top: var(--a2);
+}
+article.entscheidung .abschnitt h3,
+article.auswertung .abschnitt h3 {
+  margin: 0;
+  padding-top: 0.2rem;
+  font-family: var(--schrift-text);
+  font-size: 0.8125rem;
+  color: var(--leise);
+}
+article.entscheidung .abschnitt p,
+article.auswertung .abschnitt p { margin-bottom: 0; }
+article.entscheidung .abschnitt:nth-of-type(3),
+article.entscheidung .abschnitt:nth-of-type(3) h3 { color: var(--akzent-tief); font-weight: 600; }
+
+.offene-punkte td:first-child { font-weight: 600; }
+.meilensteine ul { list-style: none; padding: 0; }
+.meilensteine ul .strahlpunkt {
+  position: relative;
+  padding: var(--a2) 0 var(--a2) var(--a5);
+}
+.meilensteine ul .strahlpunkt::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.95rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid var(--akzent);
+  border-radius: 50%;
+}
+.meilensteine ul .titel { font-weight: 600; margin-right: var(--a2); }
+.meilensteine ul .zeit { color: var(--leise); font-size: 0.875rem; }
+
+/* ---------- Testregister: Tests, Testfall, Durchgänge ---------- */
+
+/* Jeder Status setzt seinen Ton als --ton und --ton-flaeche; Marke, Kachel,
+   Bereichsfeld und Lauf lesen nur diese beiden. */
+.status-bestanden, .status-freigegeben, .bereich.gruen {
+  --ton: var(--gut); --ton-flaeche: var(--gut-flaeche);
+}
+.status-fehlgeschlagen, .status-gesperrt, .bereich.rot {
+  --ton: var(--schlecht); --ton-flaeche: var(--schlecht-flaeche);
+}
+.status-unklar, .bereich.gelb {
+  --ton: var(--offen); --ton-flaeche: var(--offen-flaeche);
+}
+.status-blockiert, .status-uebersprungen {
+  --ton: var(--leise); --ton-flaeche: var(--leiste);
+}
+.status[class*="status-"] { color: var(--ton); background: var(--ton-flaeche); }
+.status-blockiert.status, .status-uebersprungen.status { border-style: dashed; }
+
+/* Die Seiten des Registers setzen ihre h1 selbst, ohne .seitentitel. */
+main > h1:not(.seitentitel) {
+  font-size: 2.125rem;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--a5);
+}
+
+/* Kachel des letzten Durchgangs im Überblick */
+.testregister .kachel {
+  display: block;
+  margin-top: var(--a5);
+  padding: var(--a3) var(--a4);
+  border-left: 4px solid var(--ton, var(--linie-stark));
+  border-radius: 0 var(--rundung) var(--rundung) 0;
+  background: var(--ton-flaeche, var(--leiste));
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+.testregister a.kachel:hover { color: var(--text); text-decoration: underline; }
+.testregister .kachel .bezeichnung { margin: 0; font-size: 1rem; }
+
+/* Kacheln auf der Seite Tests: Texte statt Zahlen, deshalb kleiner. */
+.kennzahlen.kacheln a.kachel { color: var(--text); text-decoration: none; }
+.kennzahlen.kacheln a.kachel:hover .bezeichnung { text-decoration: underline; }
+.seite-tests .kachel .wert { font-size: 1.5rem; }
+.kachel[class*="status-"] .wert { color: var(--ton); }
+
+/* Bereichskarte: ein Feld je Bereich, der Rand links trägt die Farbe. */
+.bereichskarte {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: var(--a3);
+  margin: var(--a5) 0 var(--a6);
+}
+.bereich {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--a1);
+  padding: var(--a3) var(--a4);
+  border: 1px solid var(--linie);
+  border-left: 4px solid var(--ton, var(--linie-stark));
+  border-radius: var(--rundung);
+  background: var(--flaeche);
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 150ms ease-out;
+}
+.bereich:hover { background: var(--ton-flaeche, var(--leiste)); color: var(--text); }
+.bereich b { font-family: var(--schrift-titel); font-size: 1.125rem; color: var(--ton, var(--text)); }
+.bereich .name { font-weight: 600; line-height: 1.3; }
+.bereich .anzahl { color: var(--leise); font-size: 0.8125rem; line-height: 1.4; }
+.bereich.leer {
+  font-style: normal;
+  border-style: dashed;
+  border-left-width: 1px;
+  background: transparent;
+  color: var(--leise);
+}
+
+.etikett {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 0.25rem;
+  background: var(--leiste);
+  color: var(--leise);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-style: normal;
+}
+.etiketten { display: flex; flex-wrap: wrap; gap: var(--a2); }
+.seite-tests section[id^="bereich-"] td:first-child { font-family: var(--schrift-code); font-size: 0.875rem; white-space: nowrap; }
+
+/* Testfall: Ziel grün, Zurücksetzen blau, Unklar gelb, Technik abgesetzt. */
+.kasten-ziel, .kasten-zuruecksetzen, .kasten-unklar, .technisch {
+  margin: var(--a5) 0;
+  padding: var(--a2) var(--a5) var(--a3);
+  border-left: 4px solid var(--kasten);
+  border-radius: 0 var(--rundung) var(--rundung) 0;
+  background: var(--kasten-flaeche);
+}
+.kasten-ziel { --kasten: var(--gut); --kasten-flaeche: var(--gut-flaeche); }
+.kasten-zuruecksetzen { --kasten: var(--hinweis); --kasten-flaeche: var(--hinweis-flaeche); }
+.kasten-unklar { --kasten: var(--offen); --kasten-flaeche: var(--offen-flaeche); }
+.technisch {
+  --kasten: var(--linie-stark);
+  --kasten-flaeche: var(--leiste);
+  border: 1px dashed var(--linie-stark);
+  border-left-width: 4px;
+  color: var(--leise);
+}
+.kasten-ziel h2, .kasten-zuruecksetzen h2, .technisch h2,
+.kasten-unklar h4 {
+  margin: var(--a4) 0 var(--a1);
+  font-size: 1.0625rem;
+}
+.technisch .hinweis {
+  margin: var(--a2) 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Läufe, neueste zuerst */
+article.lauf {
+  padding: var(--a4) 0 var(--a4) var(--a4);
+  border-left: 3px solid var(--ton, var(--linie));
+  margin-bottom: var(--a4);
+}
+article.lauf h3 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--a3);
+  margin: 0 0 var(--a1);
+  font-size: 1.0625rem;
+}
+article.lauf h3 time { font-variant-numeric: tabular-nums; }
+article.lauf .angaben { margin-bottom: var(--a2); }
+article.lauf .ungueltig { color: var(--offen); font-weight: 600; }
+article.lauf .fehler { color: var(--schlecht); font-weight: 600; }
+article.lauf h4 { font-size: 0.9375rem; margin: var(--a3) 0 var(--a1); }
+ul.belege { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: var(--a3); }
+img.beleg-vorschau {
+  display: block;
+  max-width: 18rem;
+  max-height: 12rem;
+  border: 1px solid var(--linie);
+  border-radius: 0.25rem;
+  background: var(--flaeche);
+}
+
+/* Durchgänge */
+section[id^="durchgang-"] {
+  padding: var(--a4) 0;
+  border-top: 1px solid var(--linie);
+}
+section[id^="durchgang-"] h2 { margin: 0 0 var(--a1); }
+section[id^="durchgang-"] h2 .status { margin-left: var(--a2); vertical-align: middle; }
+ul.offen li::marker { color: var(--schlecht); }
+.commit { font-family: var(--schrift-code); font-size: 0.875em; cursor: help; }
+
+/* Verlauf: Verweis eines Eintrags auf die Testfälle seiner Läufe */
+.testlaeufe { margin: var(--a3) 0 0; font-size: 0.875rem; color: var(--leise); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
