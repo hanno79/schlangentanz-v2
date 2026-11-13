@@ -169,6 +169,13 @@ describe('A11/A7.7: gleich gute Jokerfarben werden immer gleich gewählt (E10, K
     expect(wertung.gruppenPunkte).toBe(4)
   })
 
+  it('A11: bei gleicher Summe liegen möglichst viele Joker in einer Gruppe; die Regenbogenschlange verlängert Braun', () => {
+    // Als Braun oder als jede andere Farbe bringt sie 0 Punkte; Blau käme in der Reihenfolge zuerst.
+    const wertung = endwertung(false, [[['Braun', 'Braun', 'Braun', 'Regenbogenschlange']]]).spieler[0]
+    expect(jokerfarben(wertung)).toEqual(['Braun'])
+    expect(wertung.schlangen[0].gruppen.map((g) => g.laenge)).toEqual([4])
+  })
+
   it('A11: dieselbe Stellung ergibt dieselbe Wahl, auch nach Speichern und Laden', () => {
     const z = tisch(true, [[['Braun', 'Braun', { fusion: ['Blau', 'Blau'] }, 'Violett', 'Violett']], [['Grün', 'Regenbogenschlange', 'Grün']]])
     const erste = berechneEndwertung(z)

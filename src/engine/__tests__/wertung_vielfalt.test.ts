@@ -6,6 +6,9 @@ E10, Satz für Satz: A11 Abschnitt 2 (Vielfaltbonus, nur mit Erweiterung) und di
 Sätze aus A7.3 und A7.7, die den Vielfaltbonus betreffen.
 */
 
+/** Der Spieler hat in jedem Test hier eine Kette ab 3 Karten, der Mitspieler keine Schlange: 5 Bonuspunkte (A11). */
+const KETTE = 5
+
 const DREI_FARBEN = ['Rot', 'Rot', 'Rot', 'Violett', 'Violett', 'Violett', 'Braun', 'Braun', 'Braun'] as const
 
 describe('A11: Vielfaltbonus [Erweiterung]', () => {
@@ -13,7 +16,7 @@ describe('A11: Vielfaltbonus [Erweiterung]', () => {
     const wertung = eineSchlange([...DREI_FARBEN], true)
     expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Rot', 'Violett', 'Braun'])
     expect(wertung.vielfaltBonus).toBe(2)
-    expect(wertung.summe).toBe(3 + 6 + 6 + 2)
+    expect(wertung.summe).toBe(3 + 6 + 6 + 2 + KETTE)
   })
 
   it('A11 Vielfalt Beispiel 2: Blau³, Rot-Regenbogenschlange-Rot, Violett³ ergeben 2 Bonuspunkte; die Regenbogenschlange zählt als Rot', () => {
@@ -30,7 +33,7 @@ describe('A11: Vielfaltbonus [Erweiterung]', () => {
     const wertung = eineSchlange([...DREI_FARBEN], false)
     expect(wertung.vielfaltBonus).toBeNull()
     expect(wertung.schlangen[0].vielfaltBonus).toBeNull()
-    expect(wertung.summe).toBe(15)
+    expect(wertung.summe).toBe(15 + KETTE)
   })
 
   it('A11: Voraussetzung sind Gruppen ab 3 Karten; zwei Karten einer Farbe zählen nicht als Farbe', () => {
@@ -105,13 +108,13 @@ describe('A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten 
     expect(jokerfarben(wertung)).toEqual(['Rot'])
     expect(wertung.gruppenPunkte).toBe(5)
     expect(wertung.vielfaltBonus).toBe(1)
-    expect(wertung.summe).toBe(6)
+    expect(wertung.summe).toBe(5 + 1 + KETTE)
   })
 
   it('A11: ohne Erweiterung zählt nur die Gruppenwertung, bei Gleichstand die feste Reihenfolge (Blau vor Rot)', () => {
     const wertung = eineSchlange(['Blau', 'Blau', 'Blau', 'Gelb', 'Blau', 'Blau', 'Regenbogenschlange', 'Rot', 'Rot'], false)
     expect(jokerfarben(wertung)).toEqual(['Blau'])
-    expect(wertung.summe).toBe(5)
+    expect(wertung.summe).toBe(5 + KETTE)
   })
 
   it('A11: die Jokerfarbe einer Schlange richtet sich nach dem Bonus der anderen Schlange (nur der höchste zählt)', () => {
@@ -127,7 +130,7 @@ describe('A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten 
     expect(jokerfarben(wertung)).toEqual(['Blau'])
     expect(wertung.schlangen.map((s) => s.vielfaltBonus)).toEqual([0, 2])
     expect(wertung.vielfaltBonus).toBe(2)
-    expect(wertung.summe).toBe(5 + 15 + 2)
+    expect(wertung.summe).toBe(5 + 15 + 2 + KETTE)
   })
 
   it('A11: Gruppenpunkte und Vielfaltbonus werden gemeinsam am höchsten, nicht nacheinander', () => {
@@ -137,7 +140,7 @@ describe('A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten 
       ['Violett', 'Violett', 'Violett', 'Blau', 'Gelb', 'Regenbogenschlange', 'Regenbogenschlange', 'Violett'],
       true,
     )
-    expect(wertung.summe).toBe(6 + 2 + 0)
+    expect(wertung.summe).toBe(6 + 2 + 0 + KETTE)
     expect(jokerfarben(wertung)).toEqual(['Gelb', 'Gelb'])
     expect(wertung.gruppenPunkte).toBe(7)
     expect(wertung.vielfaltBonus).toBe(1)

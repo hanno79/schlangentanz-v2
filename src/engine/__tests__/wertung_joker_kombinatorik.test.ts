@@ -7,8 +7,9 @@ import { endwertung, jokerfarben } from './wertung_hilfe'
 /*
 E10, Kriterien 3 und 8 mit Kombinatorik: Mehrere Joker in einem oder zwei
 Schlangen. Ein unabhängiger Vergleich probiert jede Farbbelegung aller Joker
-durch (6^k) und nimmt in fester Reihenfolge die erste mit der höchsten Summe
-(A11: Gruppenpunkte, mit Erweiterung plus Vielfaltbonus). Die Wertung muss
+durch (6^k) und nimmt die mit der höchsten Summe (A11: Gruppenpunkte, mit
+Erweiterung plus Vielfaltbonus); bei gleicher Summe die mit mehr Jokern in einer
+Gruppe, dann die erste in fester Reihenfolge (Kriterium 8). Die Wertung muss
 dieselbe Summe und dieselben Jokerfarben liefern. Die Schlangen sind hier frei
 erfunden, nicht aus dem Material: Die Wertung einer Schlange hängt nicht davon ab.
 */
@@ -64,7 +65,7 @@ function scanne(farben: Array<Farbe | null>, punkte: number[]): { punkte: number
 
 function durchprobieren(schlangen: Schlange[], mitVielfalt: boolean): { summe: number; joker: Array<Farbe | null> } {
   const joker = schlangen.flatMap((s) => s.karten.filter((k) => k.typ === 'Sonderkarte' && k.name !== 'Schlangenblockade'))
-  let beste: { summe: number; joker: Array<Farbe | null> } | null = null
+  let beste: { summe: number; inGruppe: number; joker: Array<Farbe | null> } | null = null
   for (let n = 0; n < 6 ** joker.length; n++) {
     const wahl = new Map<string, Farbe>()
     joker.forEach((karte, index) => wahl.set(karte.id, FARBEN[Math.floor(n / 6 ** (joker.length - 1 - index)) % 6]))
@@ -84,12 +85,13 @@ function durchprobieren(schlangen: Schlange[], mitVielfalt: boolean): { summe: n
       schlange.karten.forEach((k, i) => jokerInGruppe.set(k.id, ergebnis.inGruppe[i]))
     }
     const summe = punkte + (mitVielfalt ? bonus : 0)
-    if (beste === null || summe > beste.summe) {
-      beste = { summe, joker: joker.map((k) => (jokerInGruppe.get(k.id) ? (wahl.get(k.id) as Farbe) : null)) }
+    const inGruppe = joker.filter((k) => jokerInGruppe.get(k.id)).length
+    if (beste === null || summe > beste.summe || (summe === beste.summe && inGruppe > beste.inGruppe)) {
+      beste = { summe, inGruppe, joker: joker.map((k) => (jokerInGruppe.get(k.id) ? (wahl.get(k.id) as Farbe) : null)) }
     }
   }
   if (beste === null) throw new Error('keine Belegung')
-  return beste
+  return { summe: beste.summe, joker: beste.joker }
 }
 
 function zufallsSchlangen(zufall: () => number): Glied[][] {
@@ -152,14 +154,15 @@ describe('A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren gepr
       ],
     ]).spieler[0]
     expect(wertung.schlangen.flatMap((s) => s.joker)).toHaveLength(8)
-    // Schlange 1: Rot-Rot-R, Gelb-Gelb-R, Blau-R-Blau (6 Punkte, 3 Farben, Bonus 2); die zweite Regenbogenschlange
-    // liegt in keiner Gruppe. Schlange 2: Violett mit zwei Fusionen (6), Braun-Braun mit zwei Fusionen (12).
-    expect(jokerfarben(wertung)).toEqual(['Rot', null, 'Gelb', 'Blau', 'Violett', 'Violett', 'Braun', 'Braun'])
+    // Schlange 1: Rot-Rot-R-R, Gelb-Gelb-R, Blau-R-Blau (6 Punkte, 3 Farben, Bonus 2); die zweite Regenbogenschlange
+    // bringt nichts, verlängert aber die rote Gruppe (feste Wahl: möglichst viele Joker in Gruppen). Schlange 2: zwei Fusionen mit Braun-Braun (2 + 2 + 4 = 8), zwei Fusionen mit Grün
+    // (2 + 6 + 3 = 11); Violett bleibt allein. Violett mit zwei Fusionen und Braun mit zwei Fusionen brächte nur 18.
+    expect(jokerfarben(wertung)).toEqual(['Rot', 'Rot', 'Gelb', 'Blau', 'Braun', 'Braun', 'Grün', 'Grün'])
     expect(wertung.schlangen.map((s) => s.vielfaltFarben)).toEqual([
       ['Blau', 'Rot', 'Gelb'],
-      ['Violett', 'Braun'],
+      ['Braun', 'Grün'],
     ])
-    expect(wertung.schlangen.map((s) => s.gruppenPunkte)).toEqual([6, 18])
+    expect(wertung.schlangen.map((s) => s.gruppenPunkte)).toEqual([6, 19])
     expect(wertung.vielfaltBonus).toBe(2)
   })
 })
