@@ -1,6 +1,7 @@
 /*
-Alle Anzeigetexte des App-Rahmens an einer Stelle: Lobby, vorläufiger
-Spieltisch, Regelseite und die Seite für unbekannte Adressen.
+Alle Anzeigetexte des App-Rahmens an einer Stelle: Lobby, `/spiel` ohne
+Partie, Regelseite und die Seite für unbekannte Adressen. Die Texte des
+Spieltischs stehen in `src/ui/tisch/texte.ts`.
 */
 
 export const SPIELNAME = 'Schlangentanz'
@@ -48,11 +49,9 @@ export function verworfenHinweis(grund: 'aelteres-format' | 'beschaedigt', meldu
   return `Die gespeicherte Partie liess sich nicht laden. ${warum} Sie wurde verworfen; starte eine neue Partie.`
 }
 
+/** `/spiel` ohne Partie; mit Partie steht dort der Spieltisch (`src/ui/tisch`). */
 export const SPIEL = {
-  titel: 'Spieltisch im Aufbau',
-  text: 'Die Partie ist angelegt und gespeichert. Den Spieltisch gibt es noch nicht; bis dahin lässt sie sich hier nicht spielen.',
-  gegner: 'Gegner',
-  erweiterung: 'Erweiterung',
+  titel: 'Spieltisch',
   keinePartie: 'Es läuft keine Partie. Starte in der Lobby eine neue.',
 }
 

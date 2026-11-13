@@ -1,0 +1,29 @@
+== Volltisch, vorher (390x844)
+  st-flaeche: scrollTop 0, client 400, scroll 850 -> Zeichen [unten=mehr ↓]
+  KI-Gegner 1, Schlange 1: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 1, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 2, Schlange 1: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 2, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 3, Schlange 1: 11 Karten, kein: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 3, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+== Volltisch, quer (844x390)
+  st-flaeche: scrollTop 0, client 337, scroll 825 -> Zeichen [unten=mehr ↓]
+  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+== Volltisch, zurueck (390x844)
+  st-flaeche: scrollTop 0, client 400, scroll 850 -> Zeichen [unten=mehr ↓]
+  KI-Gegner 1, Schlange 1: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 1, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 2, Schlange 1: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 2, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 3, Schlange 1: 11 Karten, kein: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  KI-Gegner 3, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+
+== Wischen (CDP touchStart/touchMove/touchEnd) auf dem Zeichen „+12 ›“, Handy quer, lange Schlange
+  scrollLeft vorher 0, nachher 135; unter dem Finger liegt: IMG.karte Farbkarte Grün, 3 Punkte
+  KI-Gegner 1, Schlange 1: 12 Karten, Farb: scrollLeft 0, client 376, scroll 393, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 135, client 391, scroll 855, Karten links 4, rechts 9 (ganz verborgen 8) -> Zeichen [links=‹ +4, rechts=+9 ›]

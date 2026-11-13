@@ -1,0 +1,264 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a262de9e73d645a75
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx (12 tests | 11 failed) 299ms
+     × O4 K2: Szenario volltisch nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 79ms
+     × O4 K2: Szenario mittelspiel nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 16ms
+     × O4 K2: Szenario geheime-haende nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 14ms
+     × O4 K2: Szenario angriff-auf-mich nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 8ms
+     × O4 K2: Szenario neue-partie nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 6ms
+     × O4 K2: 80 Zufallszustände (2 bis 4 Spieler, jede Phase, mit und ohne Erweiterung) verraten keine Id 15ms
+     × O4 K2: Partie aus Saat 11 mit 2 Spielern (Erweiterung false) verrät nach keinem Schritt eine Id 5ms
+     × O4 K2: Partie aus Saat 12 mit 3 Spielern (Erweiterung true) verrät nach keinem Schritt eine Id 7ms
+     × O4 K2: Partie aus Saat 13 mit 4 Spielern (Erweiterung false) verrät nach keinem Schritt eine Id 6ms
+     × O4 K2: Partie aus Saat 14 mit 4 Spielern (Erweiterung true) verrät nach keinem Schritt eine Id 8ms
+     × O4 K2: liegen die Kartenarten der fremden Hände sonst nirgends offen, steht auch ihr Name nicht im HTML 13ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario volltisch nennt keine Id einer fremden Handkarte oder geheimen Aufgabe
+AssertionError: expected [ 'farbenschutz-02', …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "farbenschutz-02",
++   "farbenschutz-03",
++   "farbenschutz-04",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:54:55
+     52|       const zustand = erzeuge()
+     53|       expect(verborgeneIds(zustand).length, 'Der Test braucht verborge…
+     54|       expect(verrateneIds(zustand, zeichne(zustand))).toEqual([])
+       |                                                       ^
+     55|     },
+     56|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario mittelspiel nennt keine Id einer fremden Handkarte oder geheimen Aufgabe
+AssertionError: expected [ 'verdoppler-03', 'verdoppler-02' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "verdoppler-03",
++   "verdoppler-02",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:54:55
+     52|       const zustand = erzeuge()
+     53|       expect(verborgeneIds(zustand).length, 'Der Test braucht verborge…
+     54|       expect(verrateneIds(zustand, zeichne(zustand))).toEqual([])
+       |                                                       ^
+     55|     },
+     56|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario geheime-haende nennt keine Id einer fremden Handkarte oder geheimen Aufgabe
+AssertionError: expected [ 'verdoppler-01', 'farbenschutz-02' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "verdoppler-01",
++   "farbenschutz-02",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:54:55
+     52|       const zustand = erzeuge()
+     53|       expect(verborgeneIds(zustand).length, 'Der Test braucht verborge…
+     54|       expect(verrateneIds(zustand, zeichne(zustand))).toEqual([])
+       |                                                       ^
+     55|     },
+     56|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario angriff-auf-mich nennt keine Id einer fremden Handkarte oder geheimen Aufgabe
+AssertionError: expected [ 'gelb-14' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "gelb-14",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:54:55
+     52|       const zustand = erzeuge()
+     53|       expect(verborgeneIds(zustand).length, 'Der Test braucht verborge…
+     54|       expect(verrateneIds(zustand, zeichne(zustand))).toEqual([])
+       |                                                       ^
+     55|     },
+     56|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario neue-partie nennt keine Id einer fremden Handkarte oder geheimen Aufgabe
+AssertionError: expected [ 'blau-08' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "blau-08",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:54:55
+     52|       const zustand = erzeuge()
+     53|       expect(verborgeneIds(zustand).length, 'Der Test braucht verborge…
+     54|       expect(verrateneIds(zustand, zeichne(zustand))).toEqual([])
+       |                                                       ^
+     55|     },
+     56|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: 80 Zufallszustände (2 bis 4 Spieler, jede Phase, mit und ohne Erweiterung) verraten keine Id
+AssertionError: Zufallszustand 1: expected [ 'blau-14', 'blau-01' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "blau-14",
++   "blau-01",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:61:81
+     59|     for (let saat = 1; saat <= 80; saat += 1) {
+     60|       const zustand = zufallszustand(erzeugeZufall(saat))
+     61|       expect(verrateneIds(zustand, zeichne(zustand)), `Zufallszustand …
+       |                                                                                 ^
+     62|     }
+     63|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Partie aus Saat 11 mit 2 Spielern (Erweiterung false) verrät nach keinem Schritt eine Id
+AssertionError: Saat 11, Schritt 0: expected [ 'rot-12' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "rot-12",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:74:91
+     72|     expect(schritte.length, 'mindestens der Startzustand').toBeGreater…
+     73|     schritte.forEach((zustand, schritt) => {
+     74|       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, S…
+       |                                                                                           ^
+     75|     })
+     76|   })
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:73:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Partie aus Saat 12 mit 3 Spielern (Erweiterung true) verrät nach keinem Schritt eine Id
+AssertionError: Saat 12, Schritt 0: expected [ 'farbenschutz-01', 'rot-01' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "farbenschutz-01",
++   "rot-01",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:74:91
+     72|     expect(schritte.length, 'mindestens der Startzustand').toBeGreater…
+     73|     schritte.forEach((zustand, schritt) => {
+     74|       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, S…
+       |                                                                                           ^
+     75|     })
+     76|   })
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:73:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Partie aus Saat 13 mit 4 Spielern (Erweiterung false) verrät nach keinem Schritt eine Id
+AssertionError: Saat 13, Schritt 0: expected [ 'farbenfusion-03', 'gruen-03', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "farbenfusion-03",
++   "gruen-03",
++   "verdoppler-04",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:74:91
+     72|     expect(schritte.length, 'mindestens der Startzustand').toBeGreater…
+     73|     schritte.forEach((zustand, schritt) => {
+     74|       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, S…
+       |                                                                                           ^
+     75|     })
+     76|   })
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:73:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Partie aus Saat 14 mit 4 Spielern (Erweiterung true) verrät nach keinem Schritt eine Id
+AssertionError: Saat 14, Schritt 0: expected [ 'braun-09', 'farbendieb-03', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "braun-09",
++   "farbendieb-03",
++   "gelb-02",
++ ]
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:74:91
+     72|     expect(schritte.length, 'mindestens der Startzustand').toBeGreater…
+     73|     schritte.forEach((zustand, schritt) => {
+     74|       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, S…
+       |                                                                                           ^
+     75|     })
+     76|   })
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:73:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: liegen die Kartenarten der fremden Hände sonst nirgends offen, steht auch ihr Name nicht im HTML
+AssertionError: „Verdoppler“ steht im Tisch: expected '<div class="spieltisch" data-testid="…' not to contain 'verdoppler'
+
+Expected: "verdoppler"
+Received: "<div class="spieltisch" data-testid="spiel"><header class="st-kopf"><div class="st-statuszeile" role="status" aria-live="polite"><span class="st-statuszeile-titel">ki-gegner 1 ist dran</span></div><a href="/" class="st-knopf">zur lobby</a></header><div class="st-flaeche"><section class="st-gegnerliste" aria-label="gegner"><article class="st-gegner st-gegner--dran" aria-labelledby="_r_k_"><header class="st-gegner-kopf"><h2 id="_r_k_" class="st-gegner-name">ki-gegner 1 verdoppler-01</h2><span class="st-abzeichen">ist dran</span><span class="st-gegner-info">5 handkarten</span><span class="st-ablage"><img class="karte" sizes="22px" alt="farbkarte gelb, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-gelb.webp 240w, /karten/farbe-gelb.webp 470w" src="/karten/farbe-gelb.webp"><span>ablage 1</span></span></header><div class="st-schlangen"><ol class="st-schlange" aria-label="ki-gegner 1 verdoppler-01, schlange 1: 3 karten, farbgruppen blau (3)"><li class="st-in-gruppe st-gruppe-anfang" data-gruppe="blau"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 40px, (min-width: 700px) and (min-height: 501px) 34px, 30px" alt="farbkarte blau, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-blau.webp 240w, /karten/farbe-blau.webp 470w" src="/karten/farbe-blau.webp"></li><li class="st-in-gruppe" data-gruppe="blau"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 40px, (min-width: 700px) and (min-height: 501px) 34px, 30px" alt="sonderkarte regenbogenschlange" width="470" height="766" draggable="false" srcset="/karten-klein/sonder-regenbogenschlange.webp 240w, /karten/sonder-regenbogenschlange.webp 470w" src="/karten/sonder-regenbogenschlange.webp"></li><li class="st-in-gruppe st-gruppe-ende" data-gruppe="blau"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 40px, (min-width: 700px) and (min-height: 501px) 34px, 30px" alt="farbkarte blau, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-blau.webp 240w, /karten/farbe-blau.webp 470w" src="/karten/farbe-blau.webp"></li></ol></div></article><article class="st-gegner" aria-labelledby="_r_l_"><header class="st-gegner-kopf"><h2 id="_r_l_" class="st-gegner-name">ki-gegner 2 farbenschutz-02</h2><span class="st-gegner-info">5 handkarten</span><span class="st-ablage"><span>ablage leer</span></span></header><div class="st-schlangen"><ol class="st-schlange" aria-label="ki-gegner 2 farbenschutz-02, schlange 1: 3 karten, keine farbgruppe"><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 40px, (min-width: 700px) and (min-height: 501px) 34px, 30px" alt="farbkarte violett, 2 punkte" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-violett.webp 240w, /karten/farbe-violett.webp 470w" src="/karten/farbe-violett.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 40px, (min-width: 700px) and (min-height: 501px) 34px, 30px" alt="sonderkarte schlangenblockade" width="470" height="766" draggable="false" srcset="/karten-klein/sonder-schlangenblockade.webp 240w, /karten/sonder-schlangenblockade.webp 470w" src="/karten/sonder-schlangenblockade.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 40px, (min-width: 700px) and (min-height: 501px) 34px, 30px" alt="farbkarte braun, 2 punkte" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-braun.webp 240w, /karten/farbe-braun.webp 470w" src="/karten/farbe-braun.webp"></li></ol></div></article></section><section class="st-mitte" aria-label="tischmitte"><div class="st-stapel"><img class="karte" alt="verdeckte karte" width="470" height="766" draggable="false" src="/karten/rueckseite-platzhalter.svg"><span>nachziehstapel <strong>87</strong></span></div><section class="st-aufgaben" aria-label="offene aufgaben"><h2 class="st-bereichstitel">offene aufgaben</h2><ul class="st-kartenreihe"><li><button type="button" class="st-kartenknopf" aria-label="aufgabe farbenpracht, 8 punkte: habe am ende des spiels oder zugs von jeder farbe mindestens zwei karten in deinen beiden schlangen."><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 60px, (min-width: 700px) and (min-height: 501px) 52px, 44px" alt="aufgabe farbenpracht, 8 punkte: habe am ende des spiels oder zugs von jeder farbe mindestens zwei karten in deinen beiden schlangen." width="470" height="766" draggable="false" srcset="/karten-klein/aufgabe-farbenpracht.webp 240w, /karten/aufgabe-farbenpracht.webp 470w" src="/karten/aufgabe-farbenpracht.webp"></button></li><li><button type="button" class="st-kartenknopf" aria-label="aufgabe farbharmonie, 10 punkte: habe in deinen schlangen mindestens eine dreiergruppe jeder farbe."><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 60px, (min-width: 700px) and (min-height: 501px) 52px, 44px" alt="aufgabe farbharmonie, 10 punkte: habe in deinen schlangen mindestens eine dreiergruppe jeder farbe." width="470" height="766" draggable="false" srcset="/karten-klein/aufgabe-farbharmonie.webp 240w, /karten/aufgabe-farbharmonie.webp 470w" src="/karten/aufgabe-farbharmonie.webp"></button></li><li><button type="button" class="st-kartenknopf" aria-label="aufgabe farbkombination, 5 punkte: habe 5 oder mehr karten der gleichen farbe in einer schlange."><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 60px, (min-width: 700px) and (min-height: 501px) 52px, 44px" alt="aufgabe farbkombination, 5 punkte: habe 5 oder mehr karten der gleichen farbe in einer schlange." width="470" height="766" draggable="false" srcset="/karten-klein/aufgabe-farbkombination.webp 240w, /karten/aufgabe-farbkombination.webp 470w" src="/karten/aufgabe-farbkombination.webp"></button></li></ul></section></section><section class="st-auslage" aria-label="deine auslage"><h2 class="st-bereichstitel">deine auslage</h2><ul class="st-kartenreihe"><li class="st-mit-unterschrift"><button type="button" class="st-kartenknopf" aria-label="deine geheime aufgabe farbvielfalt, 9 punkte: bilde eine kette aus je einer karte aller 6 farben."><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 60px, (min-width: 700px) and (min-height: 501px) 52px, 44px" alt="aufgabe farbvielfalt, 9 punkte: bilde eine kette aus je einer karte aller 6 farben." width="470" height="766" draggable="false" srcset="/karten-klein/aufgabe-farbvielfalt.webp 240w, /karten/aufgabe-farbvielfalt.webp 470w" src="/karten/aufgabe-farbvielfalt.webp"></button><span>geheim</span></li><li class="st-mit-unterschrift"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 56px, (min-width: 700px) and (min-height: 501px) 48px, 36px" alt="comeback-karte" width="470" height="766" draggable="false" srcset="/karten-klein/comeback.webp 240w, /karten/comeback.webp 470w" src="/karten/comeback.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 56px, (min-width: 700px) and (min-height: 501px) 48px, 36px" alt="risiko-belohnungs-karte" width="470" height="766" draggable="false" srcset="/karten-klein/risiko-belohnung.webp 240w, /karten/risiko-belohnung.webp 470w" src="/karten/risiko-belohnung.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 56px, (min-width: 700px) and (min-height: 501px) 48px, 36px" alt="risiko-belohnungs-karte" width="470" height="766" draggable="false" srcset="/karten-klein/risiko-belohnung.webp 240w, /karten/risiko-belohnung.webp 470w" src="/karten/risiko-belohnung.webp"></li></ul></section></div><section class="st-unten" aria-label="dein platz"><section class="st-eigene" aria-label="deine schlangen"><h2 class="st-bereichstitel">deine schlangen</h2><div class="st-schlangen"><ol class="st-schlange" aria-label="deine schlange 1: 3 karten, farbgruppen rot (3)"><li class="st-in-gruppe st-gruppe-anfang" data-gruppe="rot"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 56px, (min-width: 700px) and (min-height: 501px) 48px, 36px" alt="farbkarte rot, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-rot.webp 240w, /karten/farbe-rot.webp 470w" src="/karten/farbe-rot.webp"></li><li class="st-in-gruppe" data-gruppe="rot"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 56px, (min-width: 700px) and (min-height: 501px) 48px, 36px" alt="farbkarte rot, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-rot.webp 240w, /karten/farbe-rot.webp 470w" src="/karten/farbe-rot.webp"></li><li class="st-in-gruppe st-gruppe-ende" data-gruppe="rot"><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 56px, (min-width: 700px) and (min-height: 501px) 48px, 36px" alt="farbkarte rot, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-rot.webp 240w, /karten/farbe-rot.webp 470w" src="/karten/farbe-rot.webp"></li></ol></div></section><section class="st-hand" aria-label="deine hand"><div class="st-hand-kopf"><h2 class="st-bereichstitel">deine hand · 5 karten</h2><span class="st-ablage"><span>deine ablage leer</span></span></div><ul class="st-hand-karten" aria-label="handkarten" style="--hand-anzahl: 5;"><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 96px, (min-width: 700px) and (min-height: 501px) 80px, 64px" alt="farbkarte rot, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-rot.webp 240w, /karten/farbe-rot.webp 470w" src="/karten/farbe-rot.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 96px, (min-width: 700px) and (min-height: 501px) 80px, 64px" alt="farbkarte blau, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-blau.webp 240w, /karten/farbe-blau.webp 470w" src="/karten/farbe-blau.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 96px, (min-width: 700px) and (min-height: 501px) 80px, 64px" alt="farbkarte gelb, 1 punkt" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-gelb.webp 240w, /karten/farbe-gelb.webp 470w" src="/karten/farbe-gelb.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 96px, (min-width: 700px) and (min-height: 501px) 80px, 64px" alt="farbkarte grün, 3 punkte" width="470" height="766" draggable="false" srcset="/karten-klein/farbe-gruen.webp 240w, /karten/farbe-gruen.webp 470w" src="/karten/farbe-gruen.webp"></li><li><img class="karte" sizes="(min-width: 1100px) and (min-height: 501px) 96px, (min-width: 700px) and (min-height: 501px) 80px, 64px" alt="sonderkarte farbendieb" width="470" height="766" draggable="false" srcset="/karten-klein/sonder-farbendieb.webp 240w, /karten/sonder-farbendieb.webp 470w" src="/karten/sonder-farbendieb.webp"></li></ul></section></section></div>"
+
+ ❯ src/ui/tisch/Tisch.geheim.test.tsx:85:52
+     83|     for (const name of GEHEIME_KARTENARTEN) {
+     84|       // Kleinschreibung fängt auch Bildadressen wie /karten/sonder-ve…
+     85|       expect(html, `„${name}“ steht im Tisch`).not.toContain(name.toLo…
+       |                                                    ^
+     86|     }
+     87|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 1 passed (12)
+   Start at  15:38:03
+   Duration  3.89s (transform 499ms, setup 280ms, import 696ms, tests 299ms, environment 2.31s)
+

@@ -1,0 +1,433 @@
+
+Running 50 tests using 16 workers
+
+  ok  2 [desktop] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (937ms)
+  ok  3 [desktop] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.1s)
+  ok  4 [desktop] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Mittelspiel › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.3s)
+  ok  7 [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.1s)
+  ok 10 [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, zehn Handkarten › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.1s)
+  ok  5 [desktop] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.6s)
+  ok  8 [desktop] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, neue Partie › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.4s)
+  ok 14 [tablet-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, neue Partie › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.2s)
+  ok  9 [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.4s)
+  ok  6 [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, neue Partie › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.5s)
+  ok 11 [tablet-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.5s)
+  ok 13 [tablet-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Mittelspiel › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.5s)
+  ok 15 [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.6s)
+  ok 12 [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, neue Partie › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.6s)
+  x   1 [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (3.1s)
+  ok 17 [tablet-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (834ms)
+  ok 18 [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (916ms)
+  ok 19 [tablet-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (895ms)
+  ok 20 [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, zehn Handkarten › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (991ms)
+  ok 21 [tablet-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.1s)
+  ok 22 [tablet-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Mittelspiel › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (944ms)
+  x  16 [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (3.8s)
+  ok 24 [tablet-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, neue Partie › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.2s)
+  ok 26 [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, neue Partie › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.1s)
+  ok 25 [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.3s)
+  ok 29 [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.0s)
+  ok 27 [tablet-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.2s)
+  ok 30 [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, zehn Handkarten › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.2s)
+  ok 28 [tablet-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.4s)
+  x  31 [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.1s)
+  ok 33 [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Mittelspiel › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (906ms)
+  x  23 [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (3.2s)
+  ok 35 [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, neue Partie › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (961ms)
+  ok 36 [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.1s)
+  ok 38 [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, neue Partie › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.3s)
+  ok 37 [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.3s)
+  ok 39 [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, zehn Handkarten › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.0s)
+  x  40 [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (990ms)
+  x  41 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.2s)
+  ok 43 [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (1.0s)
+  ok 44 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Mittelspiel › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.1s)
+  ok 45 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, neue Partie › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (1.1s)
+  x  32 [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (3.0s)
+  ok 46 [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, neue Partie › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (778ms)
+  x  34 [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (2.9s)
+  x  47 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (707ms)
+  ok 49 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen (628ms)
+  ok 50 [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, zehn Handkarten › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (654ms)
+  x  42 [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (3.1s)
+  x  48 [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht (2.7s)
+
+
+  1) [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-a5dcf-nd-unten-dass-es-weitergeht-desktop\error-context.md
+
+  2) [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-a5dcf-nd-unten-dass-es-weitergeht-tablet-quer\error-context.md
+
+  3) [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-a5dcf-nd-unten-dass-es-weitergeht-tablet-hochkant\error-context.md
+
+  4) [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      108 |     test('O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen', async ({ page }) => {
+      109 |       const { befunde } = await verborgenOhneHinweis(page)
+    > 110 |       expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+          |                                                                                         ^
+      111 |     })
+      112 |
+      113 |     test('O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:110:89
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-dfc4d-s-ohne-Scrollen-zu-erkennen-handy-hochkant\error-context.md
+
+  5) [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+      · st-flaeche — geht oben weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 10[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht oben weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-a5dcf-nd-unten-dass-es-weitergeht-handy-hochkant\error-context.md
+
+  6) [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-Mittel-a340e-nd-unten-dass-es-weitergeht-handy-hochkant\error-context.md
+
+  7) [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      108 |     test('O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen', async ({ page }) => {
+      109 |       const { befunde } = await verborgenOhneHinweis(page)
+    > 110 |       expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+          |                                                                                         ^
+      111 |     })
+      112 |
+      113 |     test('O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:110:89
+
+    Error Context: test-results\tisch-O4-Spieltisch-zehn-H-d52d5-s-ohne-Scrollen-zu-erkennen-handy-hochkant\error-context.md
+
+  8) [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+      · Deine Schlange 1: 11 Karten, Farbgruppen Blau (3), Rot (4), Gelb (3) — geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+      · Deine Schlange 2: 11 Karten, Farbgruppen Grün (3), Braun (3), Violett (3) — geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "Deine Schlange 1: 11 Karten, Farbgruppen Blau (3), Rot (4), Gelb (3)",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "Deine Schlange 2: 11 Karten, Farbgruppen Grün (3), Braun (3), Violett (3)",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      108 |     test('O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen', async ({ page }) => {
+      109 |       const { befunde } = await verborgenOhneHinweis(page)
+    > 110 |       expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+          |                                                                                         ^
+      111 |     })
+      112 |
+      113 |     test('O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:110:89
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-dfc4d-s-ohne-Scrollen-zu-erkennen-handy-quer\error-context.md
+
+  9) [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · st-flaeche — geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+      · Deine Schlange 1: 11 Karten, Farbgruppen Blau (3), Rot (4), Gelb (3) — geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+      · Deine Schlange 2: 11 Karten, Farbgruppen Grün (3), Braun (3), Violett (3) — geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht unten weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "st-flaeche",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "Deine Schlange 1: 11 Karten, Farbgruppen Blau (3), Rot (4), Gelb (3)",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "Deine Schlange 2: 11 Karten, Farbgruppen Grün (3), Braun (3), Violett (3)",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-a5dcf-nd-unten-dass-es-weitergeht-handy-quer\error-context.md
+
+  10) [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · Deine Schlange 1: 22 Karten, Farbgruppen Rot (4), Blau (3), Gelb (3), Grün (3), Violett (3), Braun (3) — geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "Deine Schlange 1: 22 Karten, Farbgruppen Rot (4), Blau (3), Gelb (3), Grün (3), Violett (3), Braun (3)",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      108 |     test('O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen', async ({ page }) => {
+      109 |       const { befunde } = await verborgenOhneHinweis(page)
+    > 110 |       expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+          |                                                                                         ^
+      111 |     })
+      112 |
+      113 |     test('O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:110:89
+
+    Error Context: test-results\tisch-O4-Spieltisch-lange--24d07-s-ohne-Scrollen-zu-erkennen-handy-quer\error-context.md
+
+  11) [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+
+    Error: Bereiche, die ohne Hinweis weitergehen:
+      · Deine Schlange 1: 22 Karten, Farbgruppen Rot (4), Blau (3), Gelb (3), Grün (3), Violett (3), Braun (3) — geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "geht rechts weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte",[39m
+    [31m+     "element": "Deine Schlange 1: 22 Karten, Farbgruppen Rot (4), Blau (3), Gelb (3), Grün (3), Violett (3), Braun (3)",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+    Call Log:
+    - Timeout 2000ms exceeded while waiting on the predicate
+
+      116 |         const { befunde } = await verborgenOhneHinweis(page)
+      117 |         expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    > 118 |       }).toPass({ timeout: 2000 })
+          |          ^
+      119 |     })
+      120 |
+      121 |     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ae785cee3778e57a5\tests\layout\tisch.spec.ts:118:10
+
+    Error Context: test-results\tisch-O4-Spieltisch-lange--88a51-nd-unten-dass-es-weitergeht-handy-quer\error-context.md
+
+  11 failed
+    [desktop] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+    [tablet-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+    [tablet-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+    [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+    [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+    [handy-hochkant] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Mittelspiel › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+    [handy-hochkant] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, zehn Handkarten › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+    [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+    [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, Volltisch › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+    [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, lange Schlange › O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen 
+    [handy-quer] › tests\layout\tisch.spec.ts:113:5 › O4: Spieltisch, lange Schlange › O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht 
+  39 passed (19.6s)

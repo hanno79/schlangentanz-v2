@@ -1,0 +1,42 @@
+/*
+Der Spieltisch auf niedrigen Schirmen im Querformat (Handy quer): dein Platz
+steht rechts neben der Tischfläche statt darunter. Gehört zu tisch.css und wird
+nach ihr geladen.
+*/
+
+/* Handy quer und andere niedrige Schirme im Querformat: dein Platz rechts. Die Karten bleiben in
+   Handygrösse, weil die Breitenstufen oben erst ab 501 px Höhe gelten. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .spieltisch {
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    /* Dein Platz reicht über die ganze Höhe, die Kopfleiste steht nur über der Tischfläche. */
+    grid-template-areas: 'kopf unten' 'flaeche unten';
+  }
+
+  .st-unten {
+    grid-template-rows: minmax(0, 1fr) auto;
+    border-top: 0;
+    border-left: 1px solid var(--farbe-linie);
+    box-shadow: var(--schatten-leiste-seite);
+  }
+
+  /* Mehr als fünf Handkarten (Abwerfen) brechen hier nicht um, sonst nähme die
+     Hand deinen Schlangen die Höhe; sie scrollen seitlich, mit Zeichen am Rand. */
+  .st-hand-karten {
+    flex-wrap: nowrap;
+    overflow: auto hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+}
+
+/* Noch niedrigere Schirme im Querformat (etwa 740×360): etwas kleinere Karten,
+   damit deine zwei Schlangen samt Fusion über der Hand Platz haben. */
+@media (orientation: landscape) and (max-height: 380px) {
+  .spieltisch {
+    --karte-gegner: 28px;
+    --karte-eigene: 32px;
+    --karte-hand-max: 56px;
+  }
+}

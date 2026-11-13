@@ -1,0 +1,117 @@
+===== desktop Konsolenfehler []
+ -- volltisch scrollWidth/clientWidth 1280/1280 verrateneIds 0 grosseBilder 0 kleineBilder 21 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":397,"r":1280,"u":684,"b":1280,"h":287,"scrollH":287,"clientH":287} Hand {"l":0,"o":684,"r":1280,"u":900,"b":1280,"h":216}
+    Deine Schlange 1 oben 429 unten 528 scrollH/clientH 99/99 bilder 11 hoeheAusserhalb 0 balken 10 balkenAusserhalb 0
+    Deine Schlange 2 oben 532 unten 684 scrollH/clientH 151/151 bilder 13 hoeheAusserhalb 0 balken 9 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 2 ist dranSchlussrunde","l":12,"o":14,"r":1051,"u":38,"b":1039,"h":23,"titelZeilen":1,"titelBreite":177} Kopf {"text":"Stapel leer","l":1063,"o":12,"r":1142,"u":41,"b":78,"h":29}
+ -- mittelspiel scrollWidth/clientWidth 1280/1280 verrateneIds 0 grosseBilder 0 kleineBilder 13 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":397,"r":1280,"u":684,"b":1280,"h":287,"scrollH":287,"clientH":287} Hand {"l":0,"o":684,"r":1280,"u":900,"b":1280,"h":216}
+    Deine Schlange 1 oben 429 unten 528 scrollH/clientH 99/99 bilder 4 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+    Deine Schlange 2 oben 532 unten 684 scrollH/clientH 151/151 bilder 5 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"Du bist dranSpiele Karten aus deiner Hand.","l":12,"o":14,"r":1061,"u":38,"b":1049,"h":23,"titelZeilen":1,"titelBreite":104} Kopf {"text":"Stapel 68","l":1073,"o":12,"r":1142,"u":41,"b":68,"h":29}
+ -- langeSchlange scrollWidth/clientWidth 1280/1280 verrateneIds 0 grosseBilder 0 kleineBilder 7 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":412,"r":1280,"u":699,"b":1280,"h":287,"scrollH":287,"clientH":287} Hand {"l":0,"o":699,"r":1280,"u":900,"b":1280,"h":201}
+    Deine Schlange 1 oben 445 unten 544 scrollH/clientH 99/99 bilder 22 hoeheAusserhalb 0 balken 21 balkenAusserhalb 0
+    Deine Schlange 2 oben 548 unten 699 scrollH/clientH 151/151 bilder 7 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":1061,"u":37,"b":1049,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 69","l":1073,"o":12,"r":1142,"u":41,"b":68,"h":29}
+ -- angriffAufMich scrollWidth/clientWidth 1280/1280 verrateneIds 0 grosseBilder 0 kleineBilder 5 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":647,"r":1280,"u":699,"b":1280,"h":53,"scrollH":53,"clientH":53} Hand {"l":0,"o":699,"r":1280,"u":900,"b":1280,"h":201}
+   Statuszeile {"text":"KI-Gegner 1 spielt SchlangengrubeDu entscheidest, ob du abwehrst.","l":12,"o":14,"r":1062,"u":38,"b":1050,"h":23,"titelZeilen":1,"titelBreite":296} Kopf {"text":"Stapel 95","l":1074,"o":12,"r":1142,"u":41,"b":67,"h":29}
+ -- geheimeHaende scrollWidth/clientWidth 1280/1280 verrateneIds 0 grosseBilder 0 kleineBilder 15 Bedienflaechen<44 0 geheimeNamenImHtml []
+   DeineSchlangen {"l":0,"o":568,"r":1280,"u":699,"b":1280,"h":132,"scrollH":132,"clientH":132} Hand {"l":0,"o":699,"r":1280,"u":900,"b":1280,"h":201}
+    Deine Schlange 1 oben 600 unten 699 scrollH/clientH 99/99 bilder 3 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":1063,"u":37,"b":1051,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 87","l":1075,"o":12,"r":1142,"u":41,"b":67,"h":29}
+===== tablet-quer Konsolenfehler []
+ -- volltisch scrollWidth/clientWidth 1024/1024 verrateneIds 0 grosseBilder 0 kleineBilder 21 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":324,"r":1024,"u":578,"b":1024,"h":254,"scrollH":254,"clientH":254} Hand {"l":0,"o":578,"r":1024,"u":768,"b":1024,"h":190}
+    Deine Schlange 1 oben 356 unten 442 scrollH/clientH 86/86 bilder 11 hoeheAusserhalb 0 balken 10 balkenAusserhalb 0
+    Deine Schlange 2 oben 446 unten 578 scrollH/clientH 132/132 bilder 13 hoeheAusserhalb 0 balken 9 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 2 ist dranSchlussrunde","l":12,"o":14,"r":795,"u":38,"b":783,"h":23,"titelZeilen":1,"titelBreite":177} Kopf {"text":"Stapel leer","l":807,"o":12,"r":886,"u":41,"b":78,"h":29}
+ -- mittelspiel scrollWidth/clientWidth 1024/1024 verrateneIds 0 grosseBilder 0 kleineBilder 13 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":324,"r":1024,"u":578,"b":1024,"h":254,"scrollH":254,"clientH":254} Hand {"l":0,"o":578,"r":1024,"u":768,"b":1024,"h":190}
+    Deine Schlange 1 oben 356 unten 442 scrollH/clientH 86/86 bilder 4 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+    Deine Schlange 2 oben 446 unten 578 scrollH/clientH 132/132 bilder 5 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"Du bist dranSpiele Karten aus deiner Hand.","l":12,"o":14,"r":805,"u":38,"b":793,"h":23,"titelZeilen":1,"titelBreite":104} Kopf {"text":"Stapel 68","l":817,"o":12,"r":886,"u":41,"b":68,"h":29}
+ -- langeSchlange scrollWidth/clientWidth 1024/1024 verrateneIds 0 grosseBilder 0 kleineBilder 7 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":339,"r":1024,"u":593,"b":1024,"h":254,"scrollH":254,"clientH":254} Hand {"l":0,"o":593,"r":1024,"u":768,"b":1024,"h":175}
+    Deine Schlange 1 oben 371 unten 458 scrollH/clientH 86/86 bilder 22 hoeheAusserhalb 0 balken 21 balkenAusserhalb 0
+    Deine Schlange 2 oben 462 unten 593 scrollH/clientH 132/132 bilder 7 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":805,"u":37,"b":793,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 69","l":817,"o":12,"r":886,"u":41,"b":68,"h":29}
+ -- angriffAufMich scrollWidth/clientWidth 1024/1024 verrateneIds 0 grosseBilder 0 kleineBilder 5 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":541,"r":1024,"u":593,"b":1024,"h":53,"scrollH":53,"clientH":53} Hand {"l":0,"o":593,"r":1024,"u":768,"b":1024,"h":175}
+   Statuszeile {"text":"KI-Gegner 1 spielt SchlangengrubeDu entscheidest, ob du abwehrst.","l":12,"o":14,"r":806,"u":38,"b":794,"h":23,"titelZeilen":1,"titelBreite":296} Kopf {"text":"Stapel 95","l":818,"o":12,"r":886,"u":41,"b":67,"h":29}
+ -- geheimeHaende scrollWidth/clientWidth 1024/1024 verrateneIds 0 grosseBilder 0 kleineBilder 15 Bedienflaechen<44 0 geheimeNamenImHtml []
+   DeineSchlangen {"l":0,"o":475,"r":1024,"u":593,"b":1024,"h":119,"scrollH":119,"clientH":119} Hand {"l":0,"o":593,"r":1024,"u":768,"b":1024,"h":175}
+    Deine Schlange 1 oben 507 unten 593 scrollH/clientH 86/86 bilder 3 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":807,"u":37,"b":795,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 87","l":819,"o":12,"r":886,"u":41,"b":67,"h":29}
+===== tablet-hochkant Konsolenfehler []
+ -- volltisch scrollWidth/clientWidth 768/768 verrateneIds 0 grosseBilder 0 kleineBilder 21 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":580,"r":768,"u":834,"b":768,"h":254,"scrollH":254,"clientH":254} Hand {"l":0,"o":834,"r":768,"u":1024,"b":768,"h":190}
+    Deine Schlange 1 oben 612 unten 698 scrollH/clientH 86/86 bilder 11 hoeheAusserhalb 0 balken 10 balkenAusserhalb 0
+    Deine Schlange 2 oben 702 unten 834 scrollH/clientH 132/132 bilder 13 hoeheAusserhalb 0 balken 9 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 2 ist dranSchlussrunde","l":12,"o":14,"r":539,"u":38,"b":527,"h":23,"titelZeilen":1,"titelBreite":177} Kopf {"text":"Stapel leer","l":551,"o":12,"r":630,"u":41,"b":78,"h":29}
+ -- mittelspiel scrollWidth/clientWidth 768/768 verrateneIds 0 grosseBilder 0 kleineBilder 13 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":580,"r":768,"u":834,"b":768,"h":254,"scrollH":254,"clientH":254} Hand {"l":0,"o":834,"r":768,"u":1024,"b":768,"h":190}
+    Deine Schlange 1 oben 612 unten 698 scrollH/clientH 86/86 bilder 4 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+    Deine Schlange 2 oben 702 unten 834 scrollH/clientH 132/132 bilder 5 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"Du bist dranSpiele Karten aus deiner Hand.","l":12,"o":14,"r":549,"u":38,"b":537,"h":23,"titelZeilen":1,"titelBreite":104} Kopf {"text":"Stapel 68","l":561,"o":12,"r":630,"u":41,"b":68,"h":29}
+ -- langeSchlange scrollWidth/clientWidth 768/768 verrateneIds 0 grosseBilder 0 kleineBilder 7 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":595,"r":768,"u":849,"b":768,"h":254,"scrollH":254,"clientH":254} Hand {"l":0,"o":849,"r":768,"u":1024,"b":768,"h":175}
+    Deine Schlange 1 oben 627 unten 714 scrollH/clientH 86/86 bilder 22 hoeheAusserhalb 0 balken 21 balkenAusserhalb 0
+    Deine Schlange 2 oben 718 unten 849 scrollH/clientH 132/132 bilder 7 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":549,"u":37,"b":537,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 69","l":561,"o":12,"r":630,"u":41,"b":68,"h":29}
+ -- angriffAufMich scrollWidth/clientWidth 768/768 verrateneIds 0 grosseBilder 0 kleineBilder 5 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":797,"r":768,"u":849,"b":768,"h":53,"scrollH":53,"clientH":53} Hand {"l":0,"o":849,"r":768,"u":1024,"b":768,"h":175}
+   Statuszeile {"text":"KI-Gegner 1 spielt SchlangengrubeDu entscheidest, ob du abwehrst.","l":12,"o":14,"r":550,"u":38,"b":538,"h":23,"titelZeilen":1,"titelBreite":296} Kopf {"text":"Stapel 95","l":562,"o":12,"r":630,"u":41,"b":67,"h":29}
+ -- geheimeHaende scrollWidth/clientWidth 768/768 verrateneIds 0 grosseBilder 0 kleineBilder 15 Bedienflaechen<44 0 geheimeNamenImHtml []
+   DeineSchlangen {"l":0,"o":731,"r":768,"u":849,"b":768,"h":119,"scrollH":119,"clientH":119} Hand {"l":0,"o":849,"r":768,"u":1024,"b":768,"h":175}
+    Deine Schlange 1 oben 763 unten 849 scrollH/clientH 86/86 bilder 3 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":551,"u":37,"b":539,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 87","l":563,"o":12,"r":630,"u":41,"b":67,"h":29}
+===== handy-hochkant Konsolenfehler []
+ -- volltisch scrollWidth/clientWidth 390/390 verrateneIds 0 grosseBilder 0 kleineBilder 21 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":475,"r":390,"u":680,"b":390,"h":205,"scrollH":205,"clientH":205} Hand {"l":0,"o":680,"r":390,"u":844,"b":390,"h":164}
+    Deine Schlange 1 oben 507 unten 573 scrollH/clientH 67/67 bilder 11 hoeheAusserhalb 0 balken 10 balkenAusserhalb 0
+    Deine Schlange 2 oben 577 unten 680 scrollH/clientH 102/102 bilder 13 hoeheAusserhalb 0 balken 9 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 2 ist dranSchlussrunde","l":12,"o":4,"r":161,"u":68,"b":149,"h":64,"titelZeilen":2,"titelBreite":149} Kopf {"text":"Stapel leer","l":173,"o":22,"r":252,"u":51,"b":78,"h":29}
+ -- mittelspiel scrollWidth/clientWidth 390/390 verrateneIds 0 grosseBilder 0 kleineBilder 13 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":475,"r":390,"u":680,"b":390,"h":205,"scrollH":205,"clientH":205} Hand {"l":0,"o":680,"r":390,"u":844,"b":390,"h":164}
+    Deine Schlange 1 oben 507 unten 573 scrollH/clientH 67/67 bilder 4 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+    Deine Schlange 2 oben 577 unten 680 scrollH/clientH 102/102 bilder 5 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"Du bist dranSpiele Karten aus deiner Hand.","l":12,"o":4,"r":171,"u":67,"b":159,"h":63,"titelZeilen":1,"titelBreite":104} Kopf {"text":"Stapel 68","l":183,"o":21,"r":252,"u":50,"b":68,"h":29}
+ -- langeSchlange scrollWidth/clientWidth 390/390 verrateneIds 0 grosseBilder 0 kleineBilder 7 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":490,"r":390,"u":695,"b":390,"h":205,"scrollH":205,"clientH":205} Hand {"l":0,"o":695,"r":390,"u":844,"b":390,"h":149}
+    Deine Schlange 1 oben 522 unten 589 scrollH/clientH 67/67 bilder 22 hoeheAusserhalb 0 balken 21 balkenAusserhalb 0
+    Deine Schlange 2 oben 593 unten 695 scrollH/clientH 102/102 bilder 7 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":4,"r":171,"u":48,"b":159,"h":44,"titelZeilen":2,"titelBreite":159} Kopf {"text":"Stapel 69","l":183,"o":12,"r":252,"u":41,"b":68,"h":29}
+ -- angriffAufMich scrollWidth/clientWidth 390/390 verrateneIds 0 grosseBilder 0 kleineBilder 5 Bedienflaechen<44 0 
+   DeineSchlangen {"l":0,"o":643,"r":390,"u":695,"b":390,"h":53,"scrollH":53,"clientH":53} Hand {"l":0,"o":695,"r":390,"u":844,"b":390,"h":149}
+   Statuszeile {"text":"KI-Gegner 1 spielt SchlangengrubeDu entscheidest, ob du abwehrst.","l":12,"o":4,"r":172,"u":89,"b":160,"h":85,"titelZeilen":2,"titelBreite":160} Kopf {"text":"Stapel 95","l":184,"o":32,"r":252,"u":61,"b":67,"h":29}
+ -- geheimeHaende scrollWidth/clientWidth 390/390 verrateneIds 0 grosseBilder 0 kleineBilder 15 Bedienflaechen<44 0 geheimeNamenImHtml []
+   DeineSchlangen {"l":0,"o":596,"r":390,"u":695,"b":390,"h":99,"scrollH":99,"clientH":99} Hand {"l":0,"o":695,"r":390,"u":844,"b":390,"h":149}
+    Deine Schlange 1 oben 629 unten 695 scrollH/clientH 67/67 bilder 3 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":4,"r":173,"u":48,"b":161,"h":44,"titelZeilen":2,"titelBreite":161} Kopf {"text":"Stapel 87","l":185,"o":12,"r":252,"u":41,"b":67,"h":29}
+===== handy-quer Konsolenfehler []
+ -- volltisch scrollWidth/clientWidth 844/844 verrateneIds 0 grosseBilder 0 kleineBilder 21 Bedienflaechen<44 0 
+   DeineSchlangen {"l":429,"o":0,"r":844,"u":226,"b":415,"h":226,"scrollH":226,"clientH":226} Hand {"l":429,"o":226,"r":844,"u":390,"b":415,"h":164}
+    Deine Schlange 1 oben 32 unten 99 scrollH/clientH 67/67 bilder 11 hoeheAusserhalb 0 balken 10 balkenAusserhalb 0
+    Deine Schlange 2 oben 103 unten 205 scrollH/clientH 102/102 bilder 13 hoeheAusserhalb 0 balken 9 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 2 ist dranSchlussrunde","l":12,"o":5,"r":199,"u":47,"b":187,"h":42,"titelZeilen":1,"titelBreite":177} Kopf {"text":"Stapel leer","l":211,"o":12,"r":290,"u":41,"b":78,"h":29}
+ -- mittelspiel scrollWidth/clientWidth 844/844 verrateneIds 0 grosseBilder 0 kleineBilder 13 Bedienflaechen<44 0 
+   DeineSchlangen {"l":429,"o":0,"r":844,"u":226,"b":415,"h":226,"scrollH":226,"clientH":226} Hand {"l":429,"o":226,"r":844,"u":390,"b":415,"h":164}
+    Deine Schlange 1 oben 32 unten 99 scrollH/clientH 67/67 bilder 4 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+    Deine Schlange 2 oben 103 unten 205 scrollH/clientH 102/102 bilder 5 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"Du bist dranSpiele Karten aus deiner Hand.","l":12,"o":4,"r":209,"u":67,"b":197,"h":63,"titelZeilen":1,"titelBreite":104} Kopf {"text":"Stapel 68","l":221,"o":21,"r":290,"u":50,"b":68,"h":29}
+ -- langeSchlange scrollWidth/clientWidth 844/844 verrateneIds 0 grosseBilder 0 kleineBilder 7 Bedienflaechen<44 0 
+   DeineSchlangen {"l":429,"o":0,"r":844,"u":241,"b":415,"h":241,"scrollH":241,"clientH":241} Hand {"l":429,"o":241,"r":844,"u":390,"b":415,"h":149}
+    Deine Schlange 1 oben 32 unten 99 scrollH/clientH 67/67 bilder 22 hoeheAusserhalb 0 balken 21 balkenAusserhalb 0
+    Deine Schlange 2 oben 103 unten 205 scrollH/clientH 102/102 bilder 7 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":209,"u":37,"b":197,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 69","l":221,"o":12,"r":290,"u":41,"b":68,"h":29}
+ -- angriffAufMich scrollWidth/clientWidth 844/844 verrateneIds 0 grosseBilder 0 kleineBilder 5 Bedienflaechen<44 0 
+   DeineSchlangen {"l":429,"o":0,"r":844,"u":241,"b":415,"h":241,"scrollH":241,"clientH":241} Hand {"l":429,"o":241,"r":844,"u":390,"b":415,"h":149}
+   Statuszeile {"text":"KI-Gegner 1 spielt SchlangengrubeDu entscheidest, ob du abwehrst.","l":12,"o":4,"r":210,"u":89,"b":198,"h":85,"titelZeilen":2,"titelBreite":198} Kopf {"text":"Stapel 95","l":222,"o":32,"r":290,"u":61,"b":67,"h":29}
+ -- geheimeHaende scrollWidth/clientWidth 844/844 verrateneIds 0 grosseBilder 0 kleineBilder 15 Bedienflaechen<44 0 geheimeNamenImHtml []
+   DeineSchlangen {"l":429,"o":0,"r":844,"u":241,"b":415,"h":241,"scrollH":241,"clientH":241} Hand {"l":429,"o":241,"r":844,"u":390,"b":415,"h":149}
+    Deine Schlange 1 oben 32 unten 99 scrollH/clientH 67/67 bilder 3 hoeheAusserhalb 0 balken 3 balkenAusserhalb 0
+   Statuszeile {"text":"KI-Gegner 1 ist dran","l":12,"o":15,"r":211,"u":37,"b":199,"h":22,"titelZeilen":1,"titelBreite":174} Kopf {"text":"Stapel 87","l":223,"o":12,"r":290,"u":41,"b":67,"h":29}
+k2-desktop {"geprueft":60,"verborgenSumme":748,"verraten":[]}
+k2-handy-hochkant {"geprueft":60,"verborgenSumme":748,"verraten":[]}

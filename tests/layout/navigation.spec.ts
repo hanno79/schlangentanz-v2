@@ -1,5 +1,8 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { oeffne } from './oeffnen'
+
+/** Die Gegner, die der Spieltisch zeigt (O4). */
+const gegnerAmTisch = (page: Page) => page.getByRole('region', { name: 'Gegner' }).getByRole('article')
 
 /*
 O2 K3: Vor und Zurück im Browser wechseln die Ansicht richtig.
@@ -17,7 +20,7 @@ test.describe('O2 K3: Vor und Zurück', () => {
     await expect(page.getByRole('radio', { name: '2 Gegner' })).toBeChecked()
     await page.getByRole('button', { name: 'Neue Partie' }).click()
     await expect(page).toHaveURL(/\/spiel$/)
-    await expect(page.getByTestId('einstellung-gegner')).toHaveText(/2/)
+    await expect(gegnerAmTisch(page)).toHaveCount(2)
 
     await page.goBack()
     await expect(page).toHaveURL(/\/$/)
@@ -26,11 +29,11 @@ test.describe('O2 K3: Vor und Zurück', () => {
 
     await page.goForward()
     await expect(page).toHaveURL(/\/spiel$/)
-    await expect(page.getByTestId('einstellung-gegner')).toHaveText(/2/)
+    await expect(gegnerAmTisch(page)).toHaveCount(2)
 
     await page.reload()
     await expect(page.getByTestId('spiel')).toBeVisible()
-    await expect(page.getByTestId('einstellung-gegner')).toHaveText(/2/)
+    await expect(gegnerAmTisch(page)).toHaveCount(2)
   })
 
   test('O2 K3: Lobby → Regeln → Zurück → Vor', async ({ page }) => {
@@ -54,7 +57,7 @@ test.describe('O2 K3: Vor und Zurück', () => {
     await oeffne(page, '/')
     await page.getByRole('button', { name: 'Weiterspielen' }).click()
     await expect(page).toHaveURL(/\/spiel$/)
-    await expect(page.getByTestId('einstellung-gegner')).toBeVisible()
+    await expect(gegnerAmTisch(page).first()).toBeVisible()
 
     await page.goBack()
     await expect(page.getByTestId('lobby')).toBeVisible()

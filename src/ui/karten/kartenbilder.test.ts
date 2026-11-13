@@ -14,6 +14,7 @@ import {
   sonderkartenbild,
   ZUSATZKARTEN,
 } from './kartenbilder'
+import { webpGroesse } from './__tests__/webp'
 
 /*
 O1, Kriterium 1: Für jeden Kartennamen des Materials (mit Erweiterung) und jede
@@ -55,22 +56,6 @@ const SPEC_FARBEN = A1.filter(([kategorie]) => kategorie === 'Farbkarten').map((
 const SPEC_SONDERKARTEN = A1.filter(([kategorie]) => kategorie === 'Sonderkarten').map(([, , name]) => ohneEtikett(name))
 const SPEC_ZUSATZ = A1.filter(([kategorie]) => kategorie.startsWith('Zusätzliches Spielmaterial')).map(([, , text]) => text)
 const SPEC_AUFGABEN = tabellenzeilen(abschnitt('#### Verfügbare Aufgabenkarten')).map(([, name]) => name)
-
-/** Liest Breite und Höhe aus dem Kopf einer WebP-Datei (VP8X, VP8 oder VP8L). */
-function webpGroesse(pfad: string): { breite: number; hoehe: number } {
-  const daten = readFileSync(pfad)
-  if (daten.toString('ascii', 0, 4) !== 'RIFF' || daten.toString('ascii', 8, 12) !== 'WEBP') {
-    throw new Error(`webpGroesse: ${pfad} ist keine WebP-Datei`)
-  }
-  const art = daten.toString('ascii', 12, 16)
-  if (art === 'VP8X') return { breite: daten.readUIntLE(24, 3) + 1, hoehe: daten.readUIntLE(27, 3) + 1 }
-  if (art === 'VP8 ') return { breite: daten.readUInt16LE(26) & 0x3fff, hoehe: daten.readUInt16LE(28) & 0x3fff }
-  if (art === 'VP8L') {
-    const bits = daten.readUInt32LE(21)
-    return { breite: (bits & 0x3fff) + 1, hoehe: ((bits >> 14) & 0x3fff) + 1 }
-  }
-  throw new Error(`webpGroesse: ${pfad} hat den unbekannten Block „${art}“`)
-}
 
 /** Der Pfad unter `public/` zu einer Bildadresse der Seite (`/karten/x.webp`). */
 const dateiZu = (adresse: string) => join(OEFFENTLICH, ...adresse.split('/').filter(Boolean))

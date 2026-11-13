@@ -133,6 +133,11 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
   durchsichtig. Aufgaben, Comeback und Risiko-Belohnung sind randlos gestaltet
   und werden nur auf dasselbe Format gebracht. Alle Karten haben das
   Seitenverhältnis 470 : 766 (`--kartenverhaeltnis`), WebP, 20 bis 70 KB.
+  Von jeder Karte gibt es eine kleine Fassung, 240 px breit, 7 bis 16 KB, unter
+  `public/karten-klein/` (`scripts/kartenbilder_zuschneiden.py --nur-klein`).
+  Am Tisch bekommt `<Karte>` die Höchstbreite seines Bereichs als `sizes`, und
+  der Browser lädt die kleine Fassung, solange sie für die Pixeldichte reicht;
+  die Grossansicht nimmt immer die grosse.
 - **Zuordnung:** `src/ui/karten/kartenbilder.ts` (Name in der Engine → Datei).
   Ein unbekannter Name wirft einen Fehler, statt ein leeres Bild zu zeigen.
 - **Komponente:** `<Karte karte={…} />` aus `src/ui/karten/Karte.tsx`. Die
@@ -165,7 +170,8 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
 
 Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
 
-1. **Kopfleiste:** wer dran ist, Zug und gespielte Karten, „Menü“.
+1. **Kopfleiste:** wer dran ist, Zug und gespielte Karten, Zahl des
+   Nachziehstapels, „Menü“ (bis O5: „Zur Lobby“).
 2. **Tischfläche** (scrollt senkrecht): Gegner mit Name, Zahl der Handkarten,
    oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
    Nachziehstapel und Zahl, offene Aufgaben; deine Auslage (geheime Aufgabe,
@@ -175,8 +181,34 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
    sehr lang werden), deine Hand und die Zugleiste. Ab 700 px steht die
    Zugleiste rechts neben Schlangen und Hand und zeigt die gewählte Karte gross.
 
-Schlangen brechen bei Platzmangel um, statt die Seite zu verbreitern. Karten
-einer Farbgruppe tragen einen durchgehenden Balken darunter.
+Schlangen der Gegner brechen bei Platzmangel um, statt die Seite zu
+verbreitern; der Zeilenabstand (10 px) lässt Platz für die Balken. Karten einer
+Farbgruppe tragen einen durchgehenden Balken direkt unter der Karte; eine
+Farbenfusion zeigt die zwei Karten, auf denen sie liegt, als halbe Karten unter
+diesem Balken. **Deine Schlangen** stehen immer als je eine Zeile, die seitlich
+scrollt, wenn sie zu lang wird: So sind beide in der Höhe stets ganz zu sehen,
+mit Fusionskarten und Balken. Die Zahl des Nachziehstapels steht zusätzlich in
+der Kopfleiste („Stapel 68“), damit man sie ohne Scrollen liest.
+
+**Geht weiter:** Jeder Bereich, der scrollt (Schlangen als Zeilen, die Hand mit
+mehr als fünf Karten in Handy quer, die Tischfläche), zeigt an jedem Rand, hinter
+dem noch etwas liegt, ein Zeichen: einen Verlauf in den Grund der Fläche und
+darauf ein Abzeichen in Weiss mit Linie, an einer Zeile „+3 ›“ (so viele Karten
+liegen noch hinter dem Rand, links „‹ +3“), an der Tischfläche „mehr ↓“ bzw.
+„mehr ↑“. Es nimmt keine Klicks an und wird nicht vorgelesen (die Kartenzahl
+steht im Namen der Schlange). Auf Touch-Geräten gibt es keinen Scrollbalken;
+ohne dieses Zeichen sähe eine Zeile, deren Rand zwischen zwei Karten liegt, aus
+wie zu Ende. Im Querformat bis 380 px Höhe (etwa 740×360) werden die Karten
+etwas kleiner, damit deine zwei Schlangen samt Fusion über der Hand Platz haben.
+
+**Handy** (schmaler als 700 px, oder niedriger als 500 px im Querformat): Auch
+die Schlangen der Gegner stehen als kompakte Zeilen, die seitlich scrollen.
+**Handy quer** (niedriger als 500 px im Querformat): Dein Platz steht rechts
+neben der Tischfläche und reicht über die ganze Höhe, deine Schlangen oben und
+die Hand unten in dieser Spalte; die Kopfleiste steht nur über der Tischfläche.
+Alle Karten haben Handygrösse. **Hand:** Die Handkarten teilen sich die Breite
+der Hand (höchstens so gross wie in der Tabelle, mindestens 44 px), damit bei
+fünf und mehr Karten keine angeschnitten ist.
 
 ## Komponenten
 
