@@ -85,11 +85,12 @@ function git(wurzel, ...argumente) {
 }
 
 /**
- * Fassung der Ausnahmeliste auf der Merge-Basis von HEAD und `vergleich`.
- * Liefert `{ basis, daten }`; fehlt die Datei dort, ist `daten` leer. Wirft mit
- * einer Erklärung, wenn kein Repository oder der Vergleichsstand fehlt.
+ * Fassung einer Ausnahmeliste (Vorgabe: die von check:regeln) auf der Merge-Basis
+ * von HEAD und `vergleich`. Liefert `{ basis, daten }`; fehlt die Datei dort, ist
+ * `daten` leer. Wirft mit einer Erklärung, wenn kein Repository oder der
+ * Vergleichsstand fehlt.
  */
-export function basisAusnahmen(wurzel, vergleich) {
+export function basisAusnahmen(wurzel, vergleich, liste = AUSNAHMEN_DATEI) {
   const mergeBasis = git(wurzel, 'merge-base', 'HEAD', vergleich)
   if (!mergeBasis.ok) {
     const repo = git(wurzel, 'rev-parse', '--is-inside-work-tree')
@@ -97,6 +98,6 @@ export function basisAusnahmen(wurzel, vergleich) {
     throw new Error(`keine Merge-Basis von HEAD und „${vergleich}“ (${mergeBasis.fehler || 'Stand unbekannt'})`)
   }
   const basis = mergeBasis.ausgabe
-  const datei = git(wurzel, 'show', `${basis}:./${AUSNAHMEN_DATEI}`)
+  const datei = git(wurzel, 'show', `${basis}:./${liste}`)
   return { basis, daten: datei.ok ? JSON.parse(datei.ausgabe) : {} }
 }

@@ -32,6 +32,6 @@ test('P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklass
     hochkant: height > width,
     grob: klasse.hasTouch,
     touch: klasse.hasTouch,
-    pixelverhaeltnis: 1,
+    pixelverhaeltnis: klasse.deviceScaleFactor,
   })
 })

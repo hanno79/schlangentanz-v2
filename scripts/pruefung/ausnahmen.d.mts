@@ -8,4 +8,4 @@ export declare function merkmalDerZeile(quelltext: string, zeile: number): strin
 export declare function abgleich(gefunden: string[], erlaubt: string[]): { neu: number[]; veraltet: string[] }
 export declare function pruefeFormat(daten: Ausnahmen): void
 export declare function zuwachs(basis: Ausnahmen, aktuell: Ausnahmen): Array<{ regel: string; pfad: string; merkmal: string }>
-export declare function basisAusnahmen(wurzel: string, vergleich: string): { basis: string; daten: Ausnahmen }
+export declare function basisAusnahmen(wurzel: string, vergleich: string, liste?: string): { basis: string; daten: Ausnahmen }

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { spawnSync } from 'node:child_process'
+import { spawnSync, type SpawnSyncReturns } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
@@ -148,44 +148,38 @@ describe('P0.3: scripts/pruefung/bildschirmfotos.mjs', () => {
     expect(lauf.stderr).toContain('Aufruf:')
   })
 
-  it('P0.3c: fotografiert eine Adresse in allen fünf Geräteklassen in der richtigen Grösse und misst pointer: coarse', { timeout: 120_000 }, () => {
+  /** Fotografiert `adresse` in einen eigenen Ordner, prüft dort und räumt danach auf. */
+  function fotografiereProbe(adresse: string, pruefe: (lauf: SpawnSyncReturns<string>, ziel: string) => void): void {
     const ziel = mkdtempSync(join(tmpdir(), 'bildschirmfotos-'))
     try {
-      // Mit viewport-Meta-Tag wie index.html; ohne legt Chromium die Seite 980 px breit aus (nächster Test).
-      const adresse = `data:text/html,${VIEWPORT_META}<title>Probe</title><h1>Probe</h1>`
-      const lauf = spawnSync(process.execPath, [FOTOSKRIPT, adresse, '--name', 'probe', '--ziel', ziel], {
-        encoding: 'utf8',
-      })
+      pruefe(spawnSync(process.execPath, [FOTOSKRIPT, adresse, '--name', 'probe', '--ziel', ziel], { encoding: 'utf8' }), ziel)
+    } finally {
+      rmSync(ziel, { recursive: true, force: true })
+    }
+  }
+  const ausgabe = (lauf: SpawnSyncReturns<string>) => `bildschirmfotos.mjs: Exit ${lauf.status}\n${lauf.stdout}\n${lauf.stderr}`
 
-      expect(lauf.status, `bildschirmfotos.mjs: Exit ${lauf.status}\n${lauf.stdout}\n${lauf.stderr}`).toBe(0)
+  it('P0.3c: fotografiert eine Adresse in allen fünf Geräteklassen in der richtigen Grösse und misst pointer: coarse', { timeout: 120_000 }, () => {
+    // Mit viewport-Meta-Tag wie index.html; ohne legt Chromium die Seite 980 px breit aus (nächster Test).
+    fotografiereProbe(`data:text/html,${VIEWPORT_META}<title>Probe</title><h1>Probe</h1>`, (lauf, ziel) => {
+      expect(lauf.status, ausgabe(lauf)).toBe(0)
       for (const { name, breite, hoehe, touch } of ERWARTETE_KLASSEN) {
         const datei = join(ziel, `probe-${name}.png`)
         expect(existsSync(datei), `${datei} fehlt`).toBe(true)
         expect(pngGroesse(readFileSync(datei)), `${name}: falsche Bildgrösse`).toEqual({ breite, hoehe })
         // Die Zeile des Skripts zu diesem Bild nennt, ob der Browser (pointer: coarse) gemeldet hat.
         const zeile = lauf.stdout.split('\n').find((text) => text.includes(`probe-${name}.png`))
-        expect(zeile, `${name}: keine Ausgabezeile`).toBeDefined()
         expect(zeile, `${name}: pointer: coarse`).toContain(`pointer: coarse ${touch ? 'ja' : 'nein'}`)
       }
-    } finally {
-      rmSync(ziel, { recursive: true, force: true })
-    }
+    })
   })
 
   it('P0.3c: eine Seite ohne viewport-Meta-Tag bricht mit Exit 1 und Hinweis ab, statt ein verkleinertes Bild abzulegen', { timeout: 120_000 }, () => {
-    const ziel = mkdtempSync(join(tmpdir(), 'bildschirmfotos-'))
-    try {
-      const adresse = 'data:text/html,<title>Probe</title><h1>Probe</h1>'
-      const lauf = spawnSync(process.execPath, [FOTOSKRIPT, adresse, '--name', 'probe', '--ziel', ziel], {
-        encoding: 'utf8',
-      })
-
-      expect(lauf.status, `bildschirmfotos.mjs: Exit ${lauf.status}\n${lauf.stdout}\n${lauf.stderr}`).toBe(1)
+    fotografiereProbe('data:text/html,<title>Probe</title><h1>Probe</h1>', (lauf) => {
+      expect(lauf.status, ausgabe(lauf)).toBe(1)
       expect(lauf.stderr).toContain('980 px breit')
       expect(lauf.stderr).toContain('viewport')
-    } finally {
-      rmSync(ziel, { recursive: true, force: true })
-    }
+    })
   })
 })
 
@@ -238,13 +232,15 @@ describe('P0.3c: Anleitungen und Befehle nennen fünf Geräteklassen', () => {
   })
 
   it.each(MIT_PROJEKTNAMEN)('P0.3c: %s nennt die fünf Projektnamen', (datei) => {
-    for (const { name } of ERWARTETE_KLASSEN) expect(text(datei), `${datei}: \`${name}\` fehlt`).toContain(`\`${name}\``)
+    const inhalt = text(datei)
+    for (const { name } of ERWARTETE_KLASSEN) expect(inhalt, `${datei}: \`${name}\` fehlt`).toContain(`\`${name}\``)
   })
 
   it.each(MIT_FENSTERN)('P0.3c: %s nennt die fünf Fenster und Bilddateien', (datei) => {
+    const inhalt = text(datei)
     for (const { name, breite, hoehe } of ERWARTETE_KLASSEN) {
-      expect(text(datei), `${datei}: ${breite}×${hoehe} fehlt`).toContain(`${breite}×${hoehe}`)
-      expect(text(datei), `${datei}: -${name}.png fehlt`).toContain(`-${name}.png`)
+      expect(inhalt, `${datei}: ${breite}×${hoehe} fehlt`).toContain(`${breite}×${hoehe}`)
+      expect(inhalt, `${datei}: -${name}.png fehlt`).toContain(`-${name}.png`)
     }
   })
 })
