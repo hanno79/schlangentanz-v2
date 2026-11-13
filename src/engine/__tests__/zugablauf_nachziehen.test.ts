@@ -151,6 +151,15 @@ describe('A5: mehr als 5 Handkarten am Zugende', () => {
     expect(grund(zustand, abwerfen([a, fremd]))).toMatch(new RegExp(`${fremd} liegt nicht auf der Hand`))
   })
 
+  it('A5: die Reihenfolge der genannten Karten ändert nichts: jede Wahl ergibt denselben Ablagestapel wie die aufgezählte', () => {
+    const zustand = amZugende()
+    const [a, b] = hand(zustand, 0)
+    const vorwaerts = fuehreAus(zustand, { typ: 'UeberhandAbwerfen', spielerId: 'spieler-1', karteIds: [a, b] }).zustand
+    const rueckwaerts = fuehreAus(zustand, { typ: 'UeberhandAbwerfen', spielerId: 'spieler-1', karteIds: [b, a] }).zustand
+    expect(rueckwaerts).toEqual(vorwaerts)
+    expect(aktionen(zustand)).toContainEqual({ typ: 'UeberhandAbwerfen', spielerId: 'spieler-1', karteIds: [a, b] })
+  })
+
   it('A5: solange abgeworfen wird, gibt es weder Karten noch „Zug beenden“', () => {
     const zustand = amZugende()
     const blau = zustand.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte')!
