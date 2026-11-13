@@ -150,18 +150,21 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
  * nicht mehr dran, und jeder andere hat genau einen letzten Zug (A10).
  */
 function regelPruefer(): SchrittPruefer {
-  let schlusszuege: number | null = null
+  /** Wer in der Schlussrunde seinen letzten Zug hatte, gespielt oder ausgesetzt (D21); `null` vor der Schlussrunde. */
+  let letzteZuege: number[] | null = null
   return (vorher, _aktion, { zustand, ereignisse }) => {
     const { zug } = zustand
     if (zug.gespielteFarbkarten > 1 || zug.gespielteSonderkarten > 1) return `D12: ${JSON.stringify(zug)}`
     for (const ereignis of ereignisse) {
-      if (ereignis.typ === 'SchlussrundeBegonnen') schlusszuege = 0
-      else if (schlusszuege === null) continue
+      if (ereignis.typ === 'SchlussrundeBegonnen') letzteZuege = []
+      else if (letzteZuege === null) continue
       else if (ereignis.typ === 'KartenGezogen') return `A10: In der Schlussrunde zieht ${ereignis.spielerIndex} Karten.`
-      else if (ereignis.typ === 'ZugBegonnen' && ereignis.spielerIndex === zustand.schlussrundeAusloeser) return 'A10: Der Auslöser ist noch einmal dran.'
-      else if (ereignis.typ === 'ZugBegonnen') schlusszuege += 1
-      else if (ereignis.typ === 'PartieBeendet' && schlusszuege !== zustand.spieler.length - 1) {
-        return `A10: ${schlusszuege} statt ${zustand.spieler.length - 1} letzte Züge.`
+      else if (ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'Ausgesetzt') {
+        if (ereignis.spielerIndex === zustand.schlussrundeAusloeser) return 'A10: Der Auslöser ist noch einmal dran.'
+        if (letzteZuege.includes(ereignis.spielerIndex)) return `A10: Spieler ${ereignis.spielerIndex} hat einen zweiten letzten Zug.`
+        letzteZuege.push(ereignis.spielerIndex)
+      } else if (ereignis.typ === 'PartieBeendet' && letzteZuege.length !== zustand.spieler.length - 1) {
+        return `A10: ${letzteZuege.length} statt ${zustand.spieler.length - 1} letzte Züge.`
       }
     }
     const zugende = ereignisse.some((ereignis) => ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'PartieBeendet')
