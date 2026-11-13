@@ -1,5 +1,5 @@
 import { SONDERKARTENNAMEN } from '../deck';
-import type { Partiephase, Spielkarte, Spielzustand } from '../types';
+import type { FarbkarteInfo, Partiephase, Spielkarte, Spielzustand } from '../types';
 import { baukasten } from './szenario';
 import type { Baukasten, Schlangenglied } from './szenario';
 
@@ -26,7 +26,7 @@ function waehle(bau: Baukasten, wuerfel: Wuerfel, anzahl: number, passt: (karte:
 }
 
 function zufallsSchlange(bau: Baukasten, wuerfel: Wuerfel): Schlangenglied[] {
-  const paar = wuerfel.ja(0.4) && waehle(bau, wuerfel, 1, istSonderkarte('Farbenfusion')).length > 0 ? fusionspaar(bau, wuerfel) : null;
+  const paar = wuerfel.ja(0.4) && bau.frei().some(istSonderkarte('Farbenfusion')) ? fusionspaar(bau, wuerfel) : null;
   const vergeben = new Set(paar?.map((wahl) => wahl.id) ?? []);
   // Eine Farbenfusion ohne Karten darunter gibt es nicht; sie kommt nur über `fusion` in die Schlange.
   const ohneFusion = (karte: Spielkarte) => !vergeben.has(karte.id) && !istSonderkarte('Farbenfusion')(karte);
@@ -37,10 +37,11 @@ function zufallsSchlange(bau: Baukasten, wuerfel: Wuerfel): Schlangenglied[] {
 
 /** Zwei freie Farbkarten gleicher Farbe (A7.7, D20), wenn es sie gibt. */
 function fusionspaar(bau: Baukasten, wuerfel: Wuerfel): [{ id: string }, { id: string }] | null {
-  const farbkarten = bau.frei().filter((karte) => karte.typ === 'Farbkarte');
+  const farbkarten = bau.frei().filter((karte): karte is FarbkarteInfo => karte.typ === 'Farbkarte');
   const erste = farbkarten[wuerfel.bis(farbkarten.length)];
-  const zweite = farbkarten.find((karte) => karte.id !== erste?.id && karte.typ === 'Farbkarte' && erste?.typ === 'Farbkarte' && karte.farbe === erste.farbe);
-  return erste === undefined || zweite === undefined ? null : [{ id: erste.id }, { id: zweite.id }];
+  if (erste === undefined) return null;
+  const zweite = farbkarten.find((karte) => karte.id !== erste.id && karte.farbe === erste.farbe);
+  return zweite === undefined ? null : [{ id: erste.id }, { id: zweite.id }];
 }
 
 /** Aufgaben erfüllen, Comeback umdrehen, Risiko-Karten aus dem Spiel nehmen. */
@@ -67,7 +68,7 @@ export function zufallszustand(zufall: () => number): Spielzustand {
     for (let anzahl = bis(3); anzahl > 0; anzahl -= 1) bau.schlange(index, zufallsSchlange(bau, wuerfel));
     bau.ablage(index, waehle(bau, wuerfel, bis(4)));
   }
-  if (ja(0.4) && waehle(bau, wuerfel, 1, istSonderkarte('Schlangengrube')).length > 0) bau.grube(bis(spielerzahl), bis(spielerzahl));
+  if (ja(0.4) && bau.frei().some(istSonderkarte('Schlangengrube'))) bau.grube(bis(spielerzahl), bis(spielerzahl));
   bau.ausDemSpiel(waehle(bau, wuerfel, bis(2)));
   bau.haendeAuffuellen();
   for (let index = 0; index < spielerzahl; index += 1) bau.hand(index, waehle(bau, wuerfel, bis(3)));

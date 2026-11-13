@@ -13,8 +13,8 @@ Beschreibung: Punktwertung gültiger Farbgruppen nach R4.2/R4.4 und R8.4.
 
 import type { Farbe, Schlange, Spielzustand, Spielkarte, Spieler } from './types';
 import { ermittleFarbgruppen, type Farbgruppe } from './colorGroups';
+import { FARBEN } from './deck';
 
-const FARBEN: Farbe[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'];
 const REGENBOGEN_NAME = 'Regenbogenschlange';
 const FARBENFUSION_NAME = 'Farbenfusion';
 
@@ -251,12 +251,12 @@ export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgaben
   // Die Endspurt-Verdopplung gibt es nicht mehr (C11); E1 hat das Feld dafür aus dem Zustand genommen.
   const aufgaben = spieler.erfuellteAufgaben.map((a) => ({ aufgabenId: a.id, name: a.name, punkte: a.punkte }));
   const geheime = spieler.geheimeAufgabeErfuellt ? spieler.geheimeAufgabe : null;
-  const geheimPunkte = geheime?.punkte ?? 0;
+  const geheimePunkte = geheime?.punkte ?? 0;
   if (geheime !== null) {
     aufgaben.push({ aufgabenId: geheime.id, name: geheime.name, punkte: geheime.punkte });
   }
   const gesamtPunkte = aufgaben.reduce((sum, a) => sum + a.punkte, 0);
-  return { gesamtPunkte, aufgaben, geheimePunkte: geheimPunkte };
+  return { gesamtPunkte, aufgaben, geheimePunkte };
 }
 
 export interface SpielerGrundpunkteErgebnis {

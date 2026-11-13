@@ -1,8 +1,7 @@
 import type { KartenAktion } from '../aktionen/typen';
-import { HANDKARTEN } from '../constants';
 import { FARBEN } from '../deck';
 import { pruefeInvarianten } from '../invarianten';
-import { erstelleTisch, schlangenIdFuer } from '../state';
+import { erstelleTisch, schlangenIdFuer, teileReihumAus } from '../state';
 import type { TischOptionen } from '../state';
 import type { FarbkarteInfo, Farbe, Schlange, Sonderkartenname, SonderkarteInfo, Spielkarte, Spielzustand } from '../types';
 
@@ -39,8 +38,8 @@ export interface Baukasten {
   beendet(ausloeser: number): Baukasten;
   /** Für alles Übrige; `zustand()` prüft danach trotzdem jede Invariante. */
   aendere(veraendere: (zustand: Spielzustand) => void): Baukasten;
-  /** Die Karten, die noch frei im Nachziehstapel liegen, oberste zuerst. */
-  frei(): Spielkarte[];
+  /** Die Karten, die noch frei im Nachziehstapel liegen, oberste zuerst. Nur lesen. */
+  frei(): readonly Spielkarte[];
   zustand(): Spielzustand;
 }
 
@@ -131,12 +130,7 @@ export function baukasten(optionen: TischOptionen): Baukasten {
       return bau;
     },
     haendeAuffuellen() {
-      while (zustand.nachziehstapel.length > 0 && zustand.spieler.some((einzelner) => einzelner.hand.length < HANDKARTEN)) {
-        for (const einzelner of zustand.spieler) {
-          const karte = einzelner.hand.length < HANDKARTEN ? zustand.nachziehstapel.shift() : undefined;
-          if (karte !== undefined) einzelner.hand.push(karte);
-        }
-      }
+      teileReihumAus(zustand);
       return bau;
     },
     amZug(index, teilzug = 1) {
@@ -164,7 +158,7 @@ export function baukasten(optionen: TischOptionen): Baukasten {
       return bau;
     },
     frei() {
-      return structuredClone(zustand.nachziehstapel);
+      return [...zustand.nachziehstapel];
     },
     zustand() {
       const ergebnis = structuredClone(zustand);

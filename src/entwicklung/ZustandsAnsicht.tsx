@@ -1,5 +1,5 @@
-import { berechneGewinner, berechneSpielzustandGesamtwertung, ermittleEntscheider } from '../engine'
-import type { AufgabenkarteInfo, Auslagekarte, GewinnerEintrag, Schlange, Spieler, SpielerWertungsEintrag, Spielkarte, Spielzustand } from '../engine'
+import { berechneGewinner, berechneSpielzustandGesamtwertung, ermittleEntscheider, istAuslagekarte } from '../engine'
+import type { AufgabenkarteInfo, Auslagekarte, GewinnerEintrag, Schlange, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
 import { fehlertext } from './invarianten'
 import { Karte, Kartenreihe } from './Karte'
 
@@ -89,10 +89,6 @@ function Aufgabenliste({ aufgaben }: { aufgaben: AufgabenkarteInfo[] }) {
       ))}
     </>
   )
-}
-
-function istAuslagekarte(karte: Spielkarte | Auslagekarte): karte is Auslagekarte {
-  return karte.typ === 'Comeback' || karte.typ === 'Risiko-Belohnung'
 }
 
 function Auslage({ karte }: { karte: Auslagekarte }) {

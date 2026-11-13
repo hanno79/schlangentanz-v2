@@ -61,9 +61,18 @@ export function definitionFuer(karte: Spielkarte): KartenDefinition {
   return KARTENREGISTER[kartenartVon(karte)];
 }
 
+const ART_FUER_AKTION: ReadonlyMap<string, Kartenart> = new Map(
+  Object.values(KARTENREGISTER).flatMap((eintrag) => (eintrag.aktionstyp === null ? [] : [[eintrag.aktionstyp, eintrag.art] as const])),
+);
+
+/** Spielt dieser Aktionstyp eine Karte aus dem Register? */
+export function istKartenaktionstyp(aktionstyp: string): aktionstyp is KartenAktion['typ'] {
+  return ART_FUER_AKTION.has(aktionstyp);
+}
+
 /** Die Kartenart, die eine Kartenaktion spielt. */
 export function kartenartFuer(aktionstyp: KartenAktion['typ']): Kartenart {
-  const definition = Object.values(KARTENREGISTER).find((eintrag) => eintrag.aktionstyp === aktionstyp);
-  if (definition === undefined) throw new Error(`Kein Eintrag im Kartenregister spielt ${aktionstyp}.`);
-  return definition.art;
+  const art = ART_FUER_AKTION.get(aktionstyp);
+  if (art === undefined) throw new Error(`Kein Eintrag im Kartenregister spielt ${aktionstyp}.`);
+  return art;
 }

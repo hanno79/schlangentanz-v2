@@ -2,7 +2,7 @@ import { MAX_SCHLANGEN_PRO_SPIELER, OFFENE_AUFGABEN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 import { kartenartFuer, kartenartVon } from './karten/register';
-import type { Auslagekarte, Spielkarte, Spielzustand } from './types';
+import type { AufgabenkarteInfo, Auslagekarte, Spielkarte, Spielzustand } from './types';
 
 /*
 Strukturelle Zusicherungen, die in jedem Zustand gelten, gleich welche Regel
@@ -17,7 +17,8 @@ export interface InvariantenBefund {
   detail: string;
 }
 
-type Pruefung = (zustand: Spielzustand) => string[];
+/** `karten` sind alle Spielkarten des Zustands, einmal gesammelt (`alleSpielkarten`). */
+type Pruefung = (zustand: Spielzustand, karten: Spielkarte[]) => string[];
 
 const INVARIANTEN: ReadonlyArray<[name: string, pruefe: Pruefung]> = [
   ['Jede Spielkarte liegt genau einmal an genau einem Ort', jedeSpielkarteGenauEinmal],
@@ -32,66 +33,95 @@ const INVARIANTEN: ReadonlyArray<[name: string, pruefe: Pruefung]> = [
 ];
 
 export function pruefeInvarianten(zustand: Spielzustand): InvariantenBefund[] {
+  const karten = alleSpielkarten(zustand);
   return INVARIANTEN.map(([name, pruefe]) => {
-    const probleme = pruefe(zustand);
+    const probleme = pruefe(zustand, karten);
     return { name, verletzt: probleme.length > 0, detail: probleme.join(' ') };
   });
 }
 
-/** Jede Karte, wo sie liegt (A4, A6, A7.6, A7.7, A7.10). */
+/** Jede Spielkarte, wo sie liegt (A4, A6, A7.6, A7.7, A7.10). */
 export function alleSpielkarten(zustand: Spielzustand): Spielkarte[] {
-  return [
-    ...zustand.nachziehstapel,
-    ...zustand.spieler.flatMap((spieler) => [
-      ...spieler.hand,
-      ...spieler.ablagestapel,
-      ...spieler.schlangen.flatMap((schlange) => [...schlange.karten, ...schlange.fusionen.flatMap((fusion) => fusion.unter)]),
-    ]),
-    ...zustand.ausliegendeGruben.map((grube) => grube.karte),
-    ...(zustand.schwebend === null ? [] : [zustand.schwebend.karte]),
-    ...zustand.ausDemSpiel.filter(istSpielkarte),
-  ];
-}
-
-function istSpielkarte(karte: Spielkarte | Auslagekarte): karte is Spielkarte {
-  return karte.typ === 'Farbkarte' || karte.typ === 'Sonderkarte';
-}
-
-const kanonisch = (wert: unknown): string => JSON.stringify(wert, Object.keys(wert as object).sort());
-
-/** Vergleicht die vorhandenen Stücke mit dem erwarteten Material: fehlend, doppelt, unbekannt, verändert. */
-function vergleicheMitMaterial<T extends { id: string }>(erwartet: readonly T[], vorhanden: readonly T[]): string[] {
-  const vorlage = new Map(erwartet.map((stueck) => [stueck.id, kanonisch(stueck)]));
-  const anzahl = new Map<string, number>();
-  const veraendert = new Set<string>();
-  for (const stueck of vorhanden) {
-    anzahl.set(stueck.id, (anzahl.get(stueck.id) ?? 0) + 1);
-    const soll = vorlage.get(stueck.id);
-    if (soll !== undefined && soll !== kanonisch(stueck)) veraendert.add(stueck.id);
+  const karten: Spielkarte[] = [...zustand.nachziehstapel];
+  for (const spieler of zustand.spieler) {
+    karten.push(...spieler.hand, ...spieler.ablagestapel);
+    for (const schlange of spieler.schlangen) {
+      karten.push(...schlange.karten);
+      for (const fusion of schlange.fusionen) karten.push(...fusion.unter);
+    }
   }
-  const liste = (titel: string, ids: string[]) => (ids.length > 0 ? [`${titel}: ${ids.join(', ')}.`] : []);
+  for (const grube of zustand.ausliegendeGruben) karten.push(grube.karte);
+  if (zustand.schwebend !== null) karten.push(zustand.schwebend.karte);
+  for (const karte of zustand.ausDemSpiel) if (!istAuslagekarte(karte)) karten.push(karte);
+  return karten;
+}
+
+/** Jede Aufgabenkarte, wo sie liegt (A4, A9). */
+function alleAufgaben(zustand: Spielzustand): AufgabenkarteInfo[] {
   return [
-    ...liste('Fehlt', [...vorlage.keys()].filter((id) => !anzahl.has(id))),
-    ...liste('Doppelt', [...anzahl].filter(([, n]) => n > 1).map(([id, n]) => `${id} (${n}×)`)),
-    ...liste('Unbekannt', [...anzahl.keys()].filter((id) => !vorlage.has(id))),
-    ...liste('Verändert', [...veraendert]),
-  ];
-}
-
-const material = new Map<boolean, Spielkarte[]>();
-
-function jedeSpielkarteGenauEinmal(zustand: Spielzustand): string[] {
-  if (!material.has(zustand.erweiterung)) material.set(zustand.erweiterung, erstelleSpielkarten(zustand.erweiterung));
-  return vergleicheMitMaterial(material.get(zustand.erweiterung)!, alleSpielkarten(zustand));
-}
-
-function jedeAufgabeGenauEinmal(zustand: Spielzustand): string[] {
-  const vorhanden = [
     ...zustand.offeneAufgaben,
     ...zustand.aufgabenStapel,
     ...zustand.spieler.flatMap((spieler) => [...(spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe]), ...spieler.erfuellteAufgaben]),
   ];
-  const probleme = vergleicheMitMaterial(zustand.erweiterung ? erstelleAufgabenStapel() : [], vorhanden);
+}
+
+/** Jede Comeback- und Risiko-Karte, wo sie liegt (A4, A8). */
+function alleAuslagekarten(zustand: Spielzustand): Auslagekarte[] {
+  return [
+    ...zustand.spieler.flatMap((spieler) => [...(spieler.comeback === null ? [] : [spieler.comeback.karte]), ...spieler.risikoKarten]),
+    ...zustand.ausDemSpiel.filter(istAuslagekarte),
+  ];
+}
+
+export function istAuslagekarte(karte: Spielkarte | Auslagekarte): karte is Auslagekarte {
+  return karte.typ === 'Comeback' || karte.typ === 'Risiko-Belohnung';
+}
+
+/** Das erwartete Material als Id → kanonische Form; das Material ändert sich nie, deshalb einmal gebaut. */
+type Vorlage = ReadonlyMap<string, string>;
+
+const kanonisch = (wert: object): string => JSON.stringify(wert, Object.keys(wert).sort());
+const vorlage = (stuecke: readonly { id: string }[]): Vorlage => new Map(stuecke.map((stueck) => [stueck.id, kanonisch(stueck)]));
+const zwischengespeichert = <S, W>(baue: (schluessel: S) => W) => {
+  const ablage = new Map<S, W>();
+  return (schluessel: S): W => {
+    if (!ablage.has(schluessel)) ablage.set(schluessel, baue(schluessel));
+    return ablage.get(schluessel)!;
+  };
+};
+
+const spielkartenVorlage = zwischengespeichert((erweiterung: boolean) => vorlage(erstelleSpielkarten(erweiterung)));
+const aufgabenVorlage = vorlage(erstelleAufgabenStapel());
+const auslageVorlage = zwischengespeichert((spielerzahl: number) =>
+  vorlage(Array.from({ length: spielerzahl }, (_, index) => erstelleAuslagekarten(index)).flatMap(({ comeback, risiko }) => [comeback, ...risiko])),
+);
+/** Ohne Erweiterung gibt es weder Aufgaben noch Comeback- und Risiko-Karten (A4). */
+const OHNE_ERWEITERUNG: Vorlage = new Map();
+
+/** Vergleicht die vorhandenen Stücke mit dem erwarteten Material: fehlend, doppelt, unbekannt, verändert. */
+function vergleicheMitMaterial(erwartet: Vorlage, vorhanden: readonly { id: string }[]): string[] {
+  const anzahl = new Map<string, number>();
+  const veraendert = new Set<string>();
+  for (const stueck of vorhanden) {
+    anzahl.set(stueck.id, (anzahl.get(stueck.id) ?? 0) + 1);
+    const soll = erwartet.get(stueck.id);
+    if (soll !== undefined && soll !== kanonisch(stueck)) veraendert.add(stueck.id);
+  }
+  const liste = (titel: string, ids: string[]) => (ids.length > 0 ? [`${titel}: ${ids.join(', ')}.`] : []);
+  return [
+    ...liste('Fehlt', [...erwartet.keys()].filter((id) => !anzahl.has(id))),
+    ...liste('Doppelt', [...anzahl].filter(([, n]) => n > 1).map(([id, n]) => `${id} (${n}×)`)),
+    ...liste('Unbekannt', [...anzahl.keys()].filter((id) => !erwartet.has(id))),
+    ...liste('Verändert', [...veraendert]),
+  ];
+}
+
+function jedeSpielkarteGenauEinmal(zustand: Spielzustand, karten: Spielkarte[]): string[] {
+  return vergleicheMitMaterial(spielkartenVorlage(zustand.erweiterung), karten);
+}
+
+function jedeAufgabeGenauEinmal(zustand: Spielzustand): string[] {
+  const probleme = vergleicheMitMaterial(zustand.erweiterung ? aufgabenVorlage : OHNE_ERWEITERUNG, alleAufgaben(zustand));
   if (zustand.offeneAufgaben.length > OFFENE_AUFGABEN) probleme.push(`${zustand.offeneAufgaben.length} offene Aufgaben, höchstens ${OFFENE_AUFGABEN}.`);
   for (const spieler of zustand.spieler) {
     if (zustand.erweiterung && spieler.geheimeAufgabe === null) probleme.push(`${spieler.id} hat keine geheime Aufgabe.`);
@@ -100,17 +130,8 @@ function jedeAufgabeGenauEinmal(zustand: Spielzustand): string[] {
 }
 
 function jedeAuslagekarteGenauEinmal(zustand: Spielzustand): string[] {
-  const erwartet = zustand.erweiterung
-    ? zustand.spieler.flatMap((_, index) => {
-        const { comeback, risiko } = erstelleAuslagekarten(index);
-        return [comeback, ...risiko];
-      })
-    : [];
-  const vorhanden = [
-    ...zustand.spieler.flatMap((spieler) => [...(spieler.comeback === null ? [] : [spieler.comeback.karte]), ...spieler.risikoKarten]),
-    ...zustand.ausDemSpiel.filter((karte): karte is Auslagekarte => !istSpielkarte(karte)),
-  ];
-  return vergleicheMitMaterial(erwartet, vorhanden);
+  const erwartet = zustand.erweiterung ? auslageVorlage(zustand.spieler.length) : OHNE_ERWEITERUNG;
+  return vergleicheMitMaterial(erwartet, alleAuslagekarten(zustand));
 }
 
 function hoechstensZweiSchlangen(zustand: Spielzustand): string[] {
@@ -125,20 +146,11 @@ function keineLeereSchlange(zustand: Spielzustand): string[] {
   );
 }
 
-function idsEindeutig(zustand: Spielzustand): string[] {
+function idsEindeutig(zustand: Spielzustand, karten: Spielkarte[]): string[] {
   const ids = [
     ...zustand.spieler.map((spieler) => spieler.id),
     ...zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id)),
-    ...alleSpielkarten(zustand).map((karte) => karte.id),
-    ...zustand.offeneAufgaben.map((aufgabe) => aufgabe.id),
-    ...zustand.aufgabenStapel.map((aufgabe) => aufgabe.id),
-    ...zustand.spieler.flatMap((spieler) => [
-      ...(spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe.id]),
-      ...spieler.erfuellteAufgaben.map((aufgabe) => aufgabe.id),
-      ...(spieler.comeback === null ? [] : [spieler.comeback.karte.id]),
-      ...spieler.risikoKarten.map((karte) => karte.id),
-    ]),
-    ...zustand.ausDemSpiel.filter((karte) => !istSpielkarte(karte)).map((karte) => karte.id),
+    ...[...karten, ...alleAufgaben(zustand), ...alleAuslagekarten(zustand)].map((stueck) => stueck.id),
   ];
   const gesehen = new Set<string>();
   const doppelt = new Set<string>();

@@ -3,21 +3,16 @@ import { HANDKARTEN, OFFENE_AUFGABEN, SPIELER_MAX, SPIELER_MIN } from './constan
 import { erstelleAuslagekarten, erstelleSpielkarten, mischeDeck } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
-export interface PartieOptionen {
+export interface TischOptionen {
   /** A2: 2 bis 4. Spieler 1 ist der Mensch, die übrigen sind KI-Gegner (B2). */
   spielerzahl: number;
   /** B1: mit oder ohne Erweiterung, vor der Partie gewählt. */
   erweiterung: boolean;
-  /** Werte in [0, 1). Gleiche Folge, gleiche Partie (U4). */
-  zufall: () => number;
-}
-
-export interface TischOptionen {
-  spielerzahl: number;
-  erweiterung: boolean;
-  /** Ohne Zufallsquelle bleibt das Material in fester Reihenfolge. */
+  /** Werte in [0, 1); gleiche Folge, gleiche Partie (U4). Ohne bleibt das Material in fester Reihenfolge. */
   zufall?: () => number;
 }
+
+export type PartieOptionen = Required<TischOptionen>;
 
 /** Die Id der Schlange mit dieser laufenden Nummer. */
 export function schlangenIdFuer(nummer: number): string {
@@ -67,10 +62,8 @@ export function erstelleTisch({ spielerzahl, erweiterung, zufall }: TischOptione
 
   // A4: Aufgaben getrennt mischen, 3 offen auslegen, jedem Spieler eine geheime geben.
   const aufgabenStapel = erweiterung ? mische(erstelleAufgabenStapel()) : [];
-  const offeneAufgaben = aufgabenStapel.splice(0, erweiterung ? OFFENE_AUFGABEN : 0);
-  if (erweiterung) {
-    for (const einzelner of spieler) einzelner.geheimeAufgabe = aufgabenStapel.shift() ?? null;
-  }
+  const offeneAufgaben = aufgabenStapel.splice(0, OFFENE_AUFGABEN);
+  for (const einzelner of spieler) einzelner.geheimeAufgabe = aufgabenStapel.shift() ?? null;
 
   return {
     version: 2,
@@ -97,6 +90,16 @@ export function erstelleTisch({ spielerzahl, erweiterung, zufall }: TischOptione
   };
 }
 
+/** Teilt reihum von oben aus, bis jeder 5 Handkarten hat oder der Nachziehstapel leer ist (A4). Verändert `zustand`. */
+export function teileReihumAus(zustand: Spielzustand): void {
+  while (zustand.nachziehstapel.length > 0 && zustand.spieler.some((spieler) => spieler.hand.length < HANDKARTEN)) {
+    for (const spieler of zustand.spieler) {
+      const karte = spieler.hand.length < HANDKARTEN ? zustand.nachziehstapel.shift() : undefined;
+      if (karte !== undefined) spieler.hand.push(karte);
+    }
+  }
+}
+
 /**
  * Eine neue Partie nach A4: mischen, jedem Spieler reihum 5 Karten austeilen,
  * der Rest ist der Nachziehstapel. Der Mensch beginnt (B2).
@@ -106,12 +109,6 @@ export function erstellePartie({ spielerzahl, erweiterung, zufall }: PartieOptio
     throw new Error('Ungültige Partie: Ohne Zufallsquelle lässt sich nicht mischen (B2).');
   }
   const zustand = erstelleTisch({ spielerzahl, erweiterung, zufall });
-  for (let runde = 0; runde < HANDKARTEN; runde++) {
-    for (const spieler of zustand.spieler) {
-      const karte = zustand.nachziehstapel.shift();
-      if (karte === undefined) throw new Error('Ungültige Partie: Für das Austeilen fehlen Karten.');
-      spieler.hand.push(karte);
-    }
-  }
+  teileReihumAus(zustand);
   return zustand;
 }

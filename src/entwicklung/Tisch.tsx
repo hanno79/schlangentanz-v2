@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { anwendeAktion, serialisiere } from '../engine'
-import type { SpielAktion, Spielkarte, Spielzustand } from '../engine'
+import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
+import type { SpielAktion, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
-import { aufgezaehlteAktionen } from './partie'
 import { ZustandsAnsicht } from './ZustandsAnsicht'
 
 interface Eintrag {
@@ -112,7 +111,8 @@ function laeufeNachArt(aktionen: SpielAktion[]): SpielAktion[][] {
 /** Kurze Beschriftung: Aktionstyp und, wenn sie eine Karte spielt, deren Name. Die ganze Aktion steht im Tooltip. */
 function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   if (!('karteId' in aktion)) return aktion.typ
-  const karte = zustand.spieler.flatMap((spieler) => spieler.hand).find((handkarte: Spielkarte) => handkarte.id === aktion.karteId)
+  const hand = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand ?? []
+  const karte = hand.find((handkarte) => handkarte.id === aktion.karteId)
   return karte === undefined ? `${aktion.typ} ${aktion.karteId}` : `${aktion.typ}: ${karteAnzeigename(karte)}`
 }
 
@@ -124,7 +124,7 @@ interface BedienungProps {
 function Bedienung({ zustand, fuehreAus }: BedienungProps) {
   const laeufe = useMemo(
     () =>
-      laeufeNachArt(aufgezaehlteAktionen(zustand)).map((lauf) =>
+      laeufeNachArt(ermittleAktionen(zustand)).map((lauf) =>
         lauf.map((aktion) => ({ aktion, text: JSON.stringify(aktion), label: beschrifte(zustand, aktion) })),
       ),
     [zustand],

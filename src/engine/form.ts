@@ -16,6 +16,11 @@ export function istGanzeZahl(wert: unknown, minimum = 0): wert is number {
   return Number.isInteger(wert) && (wert as number) >= minimum;
 }
 
+/** Text eines gefangenen Fehlers; ein geworfener Nicht-Error-Wert bleibt als Text sichtbar. */
+export function fehlertext(fehler: unknown): string {
+  return fehler instanceof Error ? fehler.message : String(fehler);
+}
+
 /** Felder, die fehlen oder zu viel sind, gemessen an `erwartet`. */
 export function abweichendeFelder(objekt: Record<string, unknown>, erwartet: readonly string[]): string[] {
   const fehlend = erwartet.filter((feld) => !Object.prototype.hasOwnProperty.call(objekt, feld));

@@ -38,7 +38,7 @@ export { ermittleEntscheider, pruefeAktion } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
 
 // Invarianten, Speichern und Laden
-export { pruefeInvarianten } from './invarianten';
+export { istAuslagekarte, pruefeInvarianten } from './invarianten';
 export type { InvariantenBefund } from './invarianten';
 export { deserialisiere, serialisiere } from './serialization';
 

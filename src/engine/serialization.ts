@@ -1,7 +1,7 @@
 import { istKartenaktion, pruefeAktionsform } from './aktionen/pruefen';
 import type { SpielAktion } from './aktionen/typen';
 import { FARBEN, SONDERKARTENNAMEN } from './deck';
-import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from './form';
+import { abweichendeFelder, fehlertext, istGanzeZahl, istObjekt, istText } from './form';
 import { pruefeInvarianten } from './invarianten';
 import type { Spielzustand } from './types';
 
@@ -35,6 +35,16 @@ export function deserialisiere(json: string): Spielzustand {
   const verletzt = pruefeInvarianten(roh).find((befund) => befund.verletzt);
   if (verletzt !== undefined) throw new Error(`Ungültiger Spielstand: ${verletzt.name} verletzt. ${verletzt.detail}`);
   return roh;
+}
+
+/** Was beim Speichern und Wiederladen verloren ginge oder abgelehnt würde; leer, wenn nichts. */
+export function pruefeSpeichernUndLaden(zustand: Spielzustand): string[] {
+  const gespeichert = serialisiere(zustand);
+  try {
+    return serialisiere(deserialisiere(gespeichert)) === gespeichert ? [] : ['Nach dem Laden weicht der Zustand ab.'];
+  } catch (fehler) {
+    return [`Die Engine wirft: ${fehlertext(fehler)}`];
+  }
 }
 
 function sortiereStabil(wert: unknown): unknown {

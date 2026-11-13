@@ -3,7 +3,8 @@ import { ermittleAktionen } from '../aktionen/enumerieren';
 import { pruefeAktion } from '../aktionen/pruefen';
 import type { AktionsErgebnis, Pruefergebnis, SpielAktion } from '../aktionen/typen';
 import { pruefeInvarianten } from '../invarianten';
-import { deserialisiere, serialisiere } from '../serialization';
+import { fehlertext } from '../form';
+import { pruefeSpeichernUndLaden } from '../serialization';
 import { erstellePartie } from '../state';
 import type { Spielzustand } from '../types';
 import { erzeugeZufall } from './zufall';
@@ -50,21 +51,12 @@ export function dauerlaufPartien(anzahl: number, erweiterung: boolean, ersteSaat
   return Array.from({ length: anzahl }, (_, index) => ({ saat: ersteSaat + index, spielerzahl: 2 + (index % 3), erweiterung }));
 }
 
-function meldung(fehler: unknown): string {
-  return fehler instanceof Error ? fehler.message : String(fehler);
-}
-
 /** Der Befund des Zustands, bevor die nächste Aktion gewählt wird, oder `null`. */
 function befundVorDemSchritt(zustand: Spielzustand): { ausgang: DauerlaufAusgang; detail: string } | null {
   const verletzt = pruefeInvarianten(zustand).filter((befund) => befund.verletzt);
   if (verletzt.length > 0) return { ausgang: 'invariante', detail: verletzt.map((befund) => `${befund.name}: ${befund.detail}`).join(' | ') };
-  const gespeichert = serialisiere(zustand);
-  try {
-    if (serialisiere(deserialisiere(gespeichert)) !== gespeichert) return { ausgang: 'speichern', detail: 'Nach dem Laden weicht der Zustand ab.' };
-  } catch (fehler) {
-    return { ausgang: 'speichern', detail: meldung(fehler) };
-  }
-  return null;
+  const speichern = pruefeSpeichernUndLaden(zustand);
+  return speichern.length > 0 ? { ausgang: 'speichern', detail: speichern.join(' ') } : null;
 }
 
 export function spieleDauerlaufPartie(partie: DauerlaufPartie, optionen: DauerlaufOptionen = {}): DauerlaufErgebnis {
@@ -87,7 +79,7 @@ export function spieleDauerlaufPartie(partie: DauerlaufPartie, optionen: Dauerla
     try {
       zustand = motor.anwende(zustand, aktion).zustand;
     } catch (fehler) {
-      return ergebnis('fehler', schritt, `${JSON.stringify(aktion)}: ${meldung(fehler)}`);
+      return ergebnis('fehler', schritt, `${JSON.stringify(aktion)}: ${fehlertext(fehler)}`);
     }
   }
 }

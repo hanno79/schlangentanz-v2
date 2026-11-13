@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleAktionen, serialisiere } from '../engine'
+import { serialisiere } from '../engine'
 import { erzeugeZufall } from '../engine/testing/zufall'
-import { aufgezaehlteAktionen, starteEntwicklerPartie } from './partie'
+import { starteEntwicklerPartie } from './partie'
 
 describe('P0.4: Zufall nur als Parameter', () => {
   it('P0.4: gleiche Saat liefert dieselbe Zahlenfolge, andere Saat eine andere', () => {
@@ -39,12 +39,5 @@ describe('E1: Partie aus Saat, Spielerzahl und Erweiterung', () => {
   it('E1: die Erweiterung schaltet die Engine selbst', () => {
     expect(starteEntwicklerPartie(5, 2, true).erweiterung).toBe(true)
     expect(starteEntwicklerPartie(5, 2, false).erweiterung).toBe(false)
-  })
-})
-
-describe('E1: Aktionen kommen aus der Aufzählung der Engine', () => {
-  it('E1: der Tisch zeigt genau, was ermittleAktionen liefert', () => {
-    const zustand = starteEntwicklerPartie(1, 2, true)
-    expect(aufgezaehlteAktionen(zustand)).toEqual(ermittleAktionen(zustand))
   })
 })

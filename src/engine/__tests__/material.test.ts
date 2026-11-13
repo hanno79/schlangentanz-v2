@@ -7,7 +7,7 @@ function partie(spielerzahl: number, erweiterung: boolean, saat = 1): Spielzusta
   return erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
 }
 
-/** Jede Spielkarte, egal wo sie liegt. */
+/** Jede Spielkarte, egal wo sie liegt. Bewusst unabhängig von `alleSpielkarten` der Engine, damit der Test sie nicht nur nachspricht. */
 function alleSpielkarten(zustand: Spielzustand): Spielkarte[] {
   return [
     ...zustand.nachziehstapel,

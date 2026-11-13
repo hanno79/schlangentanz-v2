@@ -1,5 +1,5 @@
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
-import { KARTENREGISTER, kartenartFuer, kartenartVon } from '../karten/register';
+import { KARTENREGISTER, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
 import { AKTIONSTYPEN } from './typen';
 import type { Aktionstyp, KartenAktion, Pruefergebnis, SpielAktion } from './typen';
@@ -7,7 +7,7 @@ import type { Aktionstyp, KartenAktion, Pruefergebnis, SpielAktion } from './typ
 type Feld = (wert: unknown) => boolean;
 
 const text: Feld = istText;
-const position: Feld = (wert) => istGanzeZahl(wert);
+const position: Feld = istGanzeZahl;
 const textOderNull: Feld = (wert) => wert === null || istText(wert);
 const textliste = (minimum: number, maximum = Infinity): Feld => (wert) =>
   Array.isArray(wert) && wert.length >= minimum && wert.length <= maximum && wert.every(istText);
@@ -19,9 +19,11 @@ function genau(felder: Record<string, Feld>): Feld {
     Object.entries(felder).every(([name, pruefe]) => pruefe(wert[name]));
 }
 
-const kartenVerweis = genau({ schlangenId: text, karteId: text });
-const neueSchlange = genau({ art: (wert) => wert === 'neueSchlange' });
 const einerVon = (werte: readonly string[]): Feld => (wert) => typeof wert === 'string' && werte.includes(wert);
+const kartenVerweis = genau({ schlangenId: text, karteId: text });
+const neueSchlange = genau({ art: einerVon(['neueSchlange']) });
+const anSchlangenende = genau({ art: einerVon(['schlange']), schlangenId: text, seite: einerVon(['anfang', 'ende']) });
+const inSchlange = genau({ art: einerVon(['schlange']), schlangenId: text, position });
 
 const MIT_KARTE = { spielerId: text, karteId: text };
 const IN_SCHLANGE = { ...MIT_KARTE, schlangenId: text, position };
@@ -30,8 +32,7 @@ const IN_SCHLANGE = { ...MIT_KARTE, schlangenId: text, position };
 const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   FarbkarteLegen: {
     ...MIT_KARTE,
-    ziel: (wert) =>
-      neueSchlange(wert) || genau({ art: (art) => art === 'schlange', schlangenId: text, seite: einerVon(['anfang', 'ende']) })(wert),
+    ziel: (wert) => neueSchlange(wert) || anSchlangenende(wert),
   },
   RegenbogenschlangeLegen: IN_SCHLANGE,
   BlockadeLegen: IN_SCHLANGE,
@@ -39,7 +40,7 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   FarbendiebSpielen: {
     ...MIT_KARTE,
     quelle: kartenVerweis,
-    ziel: (wert) => neueSchlange(wert) || genau({ art: (art) => art === 'schlange', schlangenId: text, position })(wert),
+    ziel: (wert) => neueSchlange(wert) || inSchlange(wert),
   },
   SchlangenfrassSpielen: {
     ...MIT_KARTE,
@@ -55,10 +56,8 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   Reagieren: { spielerId: text, farbenschutzId: textOderNull },
 };
 
-const KARTENAKTIONEN = new Set<string>(AKTIONSTYPEN.filter((typ) => Object.values(KARTENREGISTER).some((karte) => karte.aktionstyp === typ)));
-
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {
-  return KARTENAKTIONEN.has(aktion.typ);
+  return istKartenaktionstyp(aktion.typ);
 }
 
 /** Prüft nur die Form einer Aktion unbekannter Herkunft. `null` heisst: wohlgeformt. */
@@ -114,7 +113,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     if (schwebend === null) return nein('Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).');
     const entscheider = ermittleEntscheider(zustand);
     if (entscheider !== spielerIndex) {
-      return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider ?? 0]?.name ?? 'niemand'} (A6).`);
+      return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider!].name} (A6).`);
     }
     return nein('Reagieren ist noch nicht umgesetzt (kommt mit E4).');
   }
