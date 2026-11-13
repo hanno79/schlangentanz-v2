@@ -18,6 +18,8 @@ function zaehlMotor(bisEnde: number, verfaelsche?: (zustand: Spielzustand) => vo
       zuege += 1
       neu.zug.spielerIndex = (neu.zug.spielerIndex + 1) % neu.spieler.length
       if (zuege >= bisEnde) {
+        // A10: Beendet ist die Partie erst mit leerem Nachziehstapel.
+        neu.spieler[0].ablagestapel.push(...neu.nachziehstapel.splice(0))
         neu.partiephase = 'Beendet'
         neu.schlussrundeAusloeser = 0
       }
@@ -86,6 +88,18 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
       ausgang: 'fehler',
       detail: expect.stringContaining('kaputt'),
     })
+  })
+
+  it('B2: wirft das Aufzählen oder Prüfen, meldet der Lauf „fehler“ und prüft die übrigen Partien weiter', () => {
+    const aufzaehlenWirft: Motor = {
+      ...zaehlMotor(5),
+      aktionen: () => {
+        throw new Error('Aufzählung kaputt')
+      },
+    }
+    const ergebnisse = dauerlauf(dauerlaufPartien(2, false), { motor: aufzaehlenWirft })
+    expect(ergebnisse.map((ergebnis) => ergebnis.ausgang)).toEqual(['fehler', 'fehler'])
+    expect(ergebnisse[0].detail).toContain('Aufzählung kaputt')
   })
 
   it('A4: ein Zustand, der Speichern und Laden nicht übersteht, wird gemeldet', () => {
