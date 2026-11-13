@@ -72,8 +72,11 @@ export const HAND: BeispielHandkarte[] = [
   },
 ]
 
+const FARBEN: readonly string[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'] satisfies Farbe[]
+const istFarbe = (wert: string): wert is Farbe => FARBEN.includes(wert)
+
+/** Eine Schlange aus Farb- und Sonderkartennamen; `gruppen` als [Anfang, Länge]. */
 function schlange(id: string, farben: (Farbe | string)[], gruppen: [number, number][] = []): BeispielSchlange {
-  const istFarbe = (wert: string): wert is Farbe => ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'].includes(wert)
   return {
     id,
     karten: farben.map((wert, index) => ({

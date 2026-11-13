@@ -33,7 +33,7 @@ export function Schlange({ schlange, titel, endenAlsZiel, kartenAlsZiel, zielwah
   const ende = (seite: 'links' | 'rechts') => {
     const ziel = { id: `ende:${schlange.id}:${seite}`, beschreibung: `${seite} an ${titel}` }
     return (
-      <li className="schlange-ende">
+      <li>
         <ZielKnopf ziel={ziel} zielwahl={zielwahl} klasse="ziel--ende" name={`${seite === 'links' ? 'Links' : 'Rechts'} an ${titel} anlegen`}>
           <span aria-hidden="true">+</span>
         </ZielKnopf>

@@ -1,3 +1,4 @@
+import './lupe.css'
 import { useEffect, useRef } from 'react'
 import type { AufgabenkarteInfo, Spielkarte } from '../../engine'
 import { Karte } from '../../ui/karten/Karte'

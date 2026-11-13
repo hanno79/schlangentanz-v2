@@ -1,5 +1,7 @@
+import './ergebnis.css'
 import { useState } from 'react'
 import { WERTUNG } from './beispiel'
+import { EntwurfHinweis } from './Hinweis'
 
 const POSTEN = [
   { schluessel: 'farbgruppen', titel: 'Farbgruppen' },
@@ -54,11 +56,7 @@ export function EntwurfErgebnis() {
             </li>
           ))}
         </ol>
-        {hinweis !== null && (
-          <p className="hinweis" role="status">
-            Entwurf: „{hinweis}“ startet hier nichts.
-          </p>
-        )}
+        <EntwurfHinweis knopf={hinweis} />
       </main>
       <footer className="aktionsleiste">
         <a className="knopf knopf--zweit" href="/dev/entwurf/lobby">

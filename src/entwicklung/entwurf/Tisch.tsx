@@ -4,9 +4,17 @@ import type { AufgabenkarteInfo, Spielkarte } from '../../engine'
 import { Karte } from '../../ui/karten/Karte'
 import { kartenkurzname, kartenname } from '../../ui/karten/kartentexte'
 import { GEGNER, HAND } from './beispiel'
+import type { BeispielHandkarte } from './beispiel'
 import { Lupe } from './Lupe'
 import type { Ziel } from './Schlange'
 import { EigeneSchlangen, Tischflaeche } from './Tischflaeche'
+
+/** Was die Zugleiste sagt: ohne Wahl die letzte Meldung, mit Karte ihr Auftrag, mit Ziel die ganze Aktion. */
+function zugleistenText(handkarte: BeispielHandkarte | null, ziel: Ziel | null, meldung: string | null): string {
+  if (handkarte === null) return meldung ?? 'Wähle eine Karte aus deiner Hand.'
+  if (ziel === null) return handkarte.auftrag
+  return `${kartenkurzname(handkarte.karte)}: ${ziel.beschreibung}.`
+}
 
 interface TischEigenschaften {
   gegnerzahl: number
@@ -43,7 +51,7 @@ export function EntwurfTisch({ gegnerzahl, vorgewaehlt }: TischEigenschaften) {
   }
 
   return (
-    <div className={handkarte === null ? 'entwurf entwurf--rahmen tisch' : 'entwurf entwurf--rahmen tisch tisch--zielwahl'} data-testid="entwurf-tisch">
+    <div className={`entwurf entwurf--rahmen tisch${handkarte === null ? '' : ' tisch--zielwahl'}`} data-testid="entwurf-tisch">
       <header className="kopfleiste">
         <span className="kopfleiste-titel">Du bist dran</span>
         <span className="kopfleiste-info">Zug 14 · 0 von 2 Karten</span>
@@ -82,13 +90,7 @@ export function EntwurfTisch({ gegnerzahl, vorgewaehlt }: TischEigenschaften) {
               <Karte karte={handkarte.karte} />
             </div>
           )}
-          <p className="zugleiste-text">
-            {handkarte === null
-              ? (meldung ?? 'Wähle eine Karte aus deiner Hand.')
-              : ziel === null
-                ? handkarte.auftrag
-                : `${kartenkurzname(handkarte.karte)}: ${ziel.beschreibung}.`}
-          </p>
+          <p className="zugleiste-text">{zugleistenText(handkarte, ziel, meldung)}</p>
           <div className="zugleiste-knoepfe">
             {handkarte === null ? (
               <button type="button" className="knopf knopf--zweit" onClick={() => setzeMeldung('Entwurf: Der Zug endet hier nicht.')}>

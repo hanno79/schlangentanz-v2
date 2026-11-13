@@ -1,0 +1,24 @@
+/* Grossansicht einer Karte (<dialog>). */
+
+.lupe {
+  padding: var(--abstand-4);
+  border: 0;
+  border-radius: var(--radius-gross);
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.lupe::backdrop {
+  background: rgb(43 33 28 / 0.6);
+}
+
+.lupe[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--abstand-3);
+}
+
+.lupe-karte {
+  --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * 470 / 766));
+}

@@ -1,6 +1,8 @@
+import './lobby.css'
 import { useState } from 'react'
 import { LOGO_BILD } from '../../ui/karten/kartenbilder'
 import { GESPEICHERTE_PARTIE } from './beispiel'
+import { EntwurfHinweis } from './Hinweis'
 
 const GEGNERZAHLEN = [1, 2, 3]
 
@@ -67,7 +69,7 @@ export function EntwurfLobby() {
                 aria-checked={erweiterung}
                 onClick={() => setzeErweiterung(!erweiterung)}
               >
-                <span className="schalter-text">{erweiterung ? 'An' : 'Aus'}</span>
+                {erweiterung ? 'An' : 'Aus'}
               </button>
             </div>
             <button type="button" className="knopf knopf--zweit" onClick={() => setzeHinweis('Neue Partie')}>
@@ -75,11 +77,7 @@ export function EntwurfLobby() {
             </button>
           </section>
 
-          {hinweis !== null && (
-            <p className="hinweis" role="status">
-              Entwurf: „{hinweis}“ startet hier nichts.
-            </p>
-          )}
+          <EntwurfHinweis knopf={hinweis} />
         </div>
       </main>
     </div>
