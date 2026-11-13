@@ -1,5 +1,5 @@
 import type { Sonderkartenname } from '../../../engine'
-import { hilfeId, type Hilfeabschnitt, type Kartenhilfe } from './typen'
+import { hilfeId, reihe, type Hilfeabschnitt, type Kartenhilfe, type Textbaustein } from './typen'
 
 /* Die Sonderkarten aus A7, in der Reihenfolge der Materialliste (A1). */
 
@@ -13,7 +13,7 @@ function sonderkarte(
 }
 
 const regeln = (...punkte: string[]): Hilfeabschnitt => ({ titel: 'Wichtige Regeln', inhalt: [punkte] })
-const beispiele = (...absaetze: string[]): Hilfeabschnitt => ({ titel: 'Beispiele', inhalt: absaetze })
+const beispiele = (...inhalt: Textbaustein[]): Hilfeabschnitt => ({ titel: 'Beispiele', inhalt })
 
 const NUR_ERWEITERUNG =
   'Hinweis: Diese Karte ist Teil der Erweiterung "Schlangenkorb des Glücks" und wird nur bei Verwendung der Erweiterung verwendet.'
@@ -27,6 +27,7 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
     },
     beispiele(
       'Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er möchte, einen Farbenschutz spielen, um die Schlangenblockade abzuwehren. Die Schlangenblockade wird auf den Ablagestapel von Spieler B gelegt, und Spieler A bleibt unberührt.',
+      reihe('Farbenschutz', 'Schlangenblockade'),
     ),
     regeln(
       'Spiele als Reaktion auf eine Sonderkarte',
@@ -47,8 +48,11 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
       },
       beispiele(
         'Eine Schlange hat folgende Karten: Blau - Blau - Regenbogenschlange. Die Regenbogenschlange wird als blaue Karte gewertet, um eine Dreiergruppe zu bilden. Diese Gruppe bringt 2 Punkte (1 Punkt pro blaue Karte, die Regenbogenschlange bringt keinen Punkt).',
+        reihe('Blau', 'Blau', 'Regenbogenschlange'),
         "Ein Spieler hat die Aufgabe 'Farbvielfalt' (eine Karte jeder Farbe) und hat bereits Blau, Rot, Gelb, Braun und Grün in seiner Schlange. Er legt eine Regenbogenschlange an und nutzt sie als violette Karte, um die Aufgabe zu erfüllen. [Erweiterung]",
+        reihe('Blau', 'Rot', 'Gelb', 'Braun', 'Grün', 'Regenbogenschlange'),
         'Eine Schlange hat: Rot - Rot - Regenbogenschlange - Braun - Braun. Diese Gruppe bringt 4 Punkte (2 × 2 Punkte für die braunen Karten, 0 Punkte für die Regenbogenschlange).',
+        reihe('Rot', 'Rot', 'Regenbogenschlange', 'Braun', 'Braun'),
       ),
       regeln(
         'Gilt als Karte der Farbe, die für den Spieler am vorteilhaftesten ist',
@@ -73,8 +77,11 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
     },
     beispiele(
       'Option a): Ein Spieler entfernt eine rote Karte aus seiner eigenen Schlange, um Platz für eine besser passende Karte zu schaffen.',
+      reihe('Schlangenfrass', 'Rot'),
       'Option b): Ein Spieler hat eine Schlangenblockade in seiner Schlange. Er spielt Schlangenfrass und wählt Option b), um die Schlangenblockade zu entfernen. Die Schlangenblockade kommt auf den Ablagestapel des Spielers, der Schlangenfrass gespielt hat.',
+      reihe('Schlangenfrass', 'Schlangenblockade'),
       'Option c): Ein Spieler entfernt eine Regenbogenschlange und eine gelbe Farbkarte aus der Schlange eines Mitspielers. Es bleiben nur noch zwei gelbe Farbkarten die keine Punkte mehr zählen.',
+      reihe('Schlangenfrass', 'Regenbogenschlange', 'Gelb', 'Gelb', 'Gelb'),
     ),
     regeln(
       'Die entfernten Karten kommen auf den Ablagestapel',
@@ -92,6 +99,7 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
     },
     beispiele(
       'Spieler B hat drei rote Karten in einer Reihe. Spieler A legt eine Schlangenblockade zwischen die erste und die zweite rote Karte: Rot – Schlangenblockade – Rot – Rot. Die Dreierreihe ist damit unterbrochen und zählt in der Wertung keine Punkte mehr, bis Spieler B die Schlangenblockade mit Schlangenfrass entfernt.',
+      reihe('Rot', 'Schlangenblockade', 'Rot', 'Rot'),
     ),
     regeln(
       'Wähle eine Schlange aus',
@@ -113,6 +121,7 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
       },
       beispiele(
         'Spieler A spielt Farbendieb. Er stiehlt eine blaue Karte aus der Schlange von Spieler B und fügt sie an seine eigene Schlange an.',
+        reihe('Farbendieb', 'Blau'),
       ),
       regeln(
         'Wähle eine Karte aus einer gegnerischen Schlange',
@@ -131,6 +140,7 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
     beispiele(
       'Spieler A spielt eine Schlangengrube gegen Spieler B. Spieler B hat keinen Farbenschutz und muss seinen nächsten Zug komplett aussetzen. Nach dem ausgesetzten Zug wird die Schlangengrube auf den Ablagestapel gelegt.',
       'Spieler A spielt eine Schlangengrube gegen Spieler B. Spieler B hat einen Farbenschutz und spielt diesen als Reaktion. Die Schlangengrube wird wirkungslos auf den Ablagestapel gelegt, und Spieler B kann seinen Zug normal ausführen.',
+      reihe('Schlangengrube', 'Farbenschutz'),
     ),
     regeln(
       'Der Spieler, der die Schlangengrube spielt, wählt einen Mitspieler aus',
@@ -154,7 +164,9 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
       },
       beispiele(
         'Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Gelb-Gelb. Er spielt Farbenfusion und legt sie auf die beiden gelben Karten. Diese beiden Karten gelten nun als eine Karte beliebiger Farbe (die am vorteilhaftesten ist).',
+        reihe('Blau', 'Blau', 'Gelb + Farbenfusion + Gelb'),
         'Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Farbenfusion(fusionierte Gelb - Gelb) - Rot - Rot.',
+        reihe('Blau', 'Blau', 'Gelb + Farbenfusion + Gelb', 'Rot', 'Rot'),
       ),
       regeln(
         'Pro Zug darf nur eine Farbenfusion durchgeführt werden',
@@ -204,7 +216,11 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
       },
       beispiele(
         'Ein Spieler hat folgende Karten in seiner Schlange: Blau - Rot - Gelb - Rot - Gelb. Er spielt Schlangenhäutung und ordnet die Karten neu an, um eine gelbe und eine rote Gruppe zu bilden.',
+        reihe('Blau', 'Rot', 'Gelb', 'Rot', 'Gelb'),
+        'Ergebnis nach Anwendung der Schlangenhäutung',
+        reihe('Gelb', 'Gelb', 'Blau', 'Rot', 'Rot'),
         'Ein Spieler hat eine Schlangenblockade in seiner Reihe. Diese unterbricht die möglichen Bereiche für die Schlangenhäutung. Da auch keine mindestens drei Farbkarten in einer Reihe liegen, kann die Schlangenhäutung nicht eingesetzt werden.',
+        reihe('Blau', 'Violett', 'Schlangenblockade', 'Grün', 'Violett'),
       ),
       regeln(
         'Es dürfen nur Farbkarten neu angeordnet werden',

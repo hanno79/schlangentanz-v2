@@ -74,7 +74,10 @@ Stylesheets vor `.rahmen` aus lobby.css gilt.
   line-height: 1.3;
 }
 
+/* Ein Satz je Zeile, damit das Etikett „Ergänzung des Autors“ eindeutig bei seinem Satz steht. */
 .zugablauf__text {
+  display: grid;
+  gap: var(--abstand-1);
   margin: 0;
   line-height: var(--zeilenhoehe);
 }
@@ -121,7 +124,8 @@ Stylesheets vor `.rahmen` aus lobby.css gilt.
 
 .kartenuebersicht {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
+  /* So breit, dass der längste Kartenname („Schlangenbeschwörer“) ohne Umbruch im Wort passt. */
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
   gap: var(--abstand-3);
   margin: 0;
   padding: 0;
@@ -146,6 +150,10 @@ Stylesheets vor `.rahmen` aus lobby.css gilt.
   -webkit-tap-highlight-color: transparent;
 }
 
+.kartenknopf .karte {
+  --karte-breite: 4.5rem;
+}
+
 .kartenknopf:hover {
   border-color: var(--farbe-linie);
   background: var(--farbe-flaeche);
@@ -155,6 +163,8 @@ Stylesheets vor `.rahmen` aus lobby.css gilt.
   font-size: var(--groesse-klein);
   line-height: 1.25;
   text-align: center;
-  hyphens: auto;
-  overflow-wrap: anywhere;
+  /* Umbruch nur zwischen Wörtern: Der Rahmen erlaubt sonst `anywhere`, und ohne
+     Trennwörterbuch zerfiele „Farbenschutz“ mitten im Wort. */
+  hyphens: manual;
+  overflow-wrap: normal;
 }

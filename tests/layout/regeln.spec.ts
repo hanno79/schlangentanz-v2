@@ -148,7 +148,7 @@ for (const kartenname of BEISPIELE) {
       expect(dialogUeberstand, 'waagrechter Überstand im Dialog').toBeLessThanOrEqual(0)
 
       // Mindestens 280 px breit; nur wo das Fenster dafür zu niedrig ist, füllt die Karte die Höhe bis auf 48 px.
-      const karte = await kasten(dialog.getByRole('img'))
+      const karte = await kasten(dialog.locator('.grossansicht__bild img'))
       const verlangt = Math.min(280, Math.floor(((height - 48) * 470) / 766))
       expect(karte.breite, `Breite der Karte bei ${height} px Fensterhöhe`).toBeGreaterThanOrEqual(verlangt)
       expect(karte.unten, 'Unterkante der Karte').toBeLessThanOrEqual(height)
@@ -188,6 +188,25 @@ for (const kartenname of BEISPIELE) {
     })
   })
 }
+
+test.describe('O9: Kartenreihen in der Grossansicht', () => {
+  test('O9/A7.9: die Kartenreihen der Schlangenhäutung stehen nebeneinander, jede in einer Zeile', async ({ page }, info) => {
+    await oeffneRegeln(page)
+    const knopf = page.getByRole('button', { name: 'Schlangenhäutung: Text zeigen' })
+    await knopf.scrollIntoViewIfNeeded()
+    await bediene(info)(knopf)
+    const reihen = page.getByRole('dialog').getByRole('list', { name: 'Kartenreihe' })
+    await expect(reihen).toHaveCount(3)
+    for (const reihe of await reihen.all()) {
+      await reihe.scrollIntoViewIfNeeded()
+      const oberkanten = await reihe.getByRole('img').evaluateAll((bilder) =>
+        bilder.map((bild) => Math.round(bild.getBoundingClientRect().top)),
+      )
+      expect(oberkanten, 'fünf Karten einer Reihe auf derselben Höhe').toHaveLength(5)
+      expect(new Set(oberkanten).size, `Oberkanten ${oberkanten.join(', ')}`).toBe(1)
+    }
+  })
+})
 
 test.describe('O9: Grossansicht mit der Tastatur', () => {
   test('O9: Enter öffnet, Escape schliesst, der Fokus kehrt zur Karte zurück', async ({ page }) => {

@@ -87,7 +87,9 @@ describe('O9: Grossansicht einer Karte', () => {
   it('O9: zeigt als Dialog Bild, Text und „Schliessen“; der Dialog trägt den Namen der Karte', () => {
     render(<Grossansicht karte={farbendieb.karte} schliesse={() => {}} />)
     const dialog = screen.getByRole('dialog', { name: 'Farbendieb' })
-    expect(within(dialog).getByRole('img', { name: 'Sonderkarte Farbendieb' })).toBeInTheDocument()
+    // Das erste Bild ist die Karte selbst; Kartenreihen der Beispiele folgen im Text.
+    const [bild] = within(dialog).getAllByRole('img', { name: 'Sonderkarte Farbendieb' })
+    expect(bild.closest('[aria-label="Kartenreihe"]')).toBeNull()
     expect(within(dialog).getByText(farbendieb.kurz)).toBeInTheDocument()
     expect(within(dialog).getByRole('button', { name: 'Schliessen' })).toBeInTheDocument()
   })

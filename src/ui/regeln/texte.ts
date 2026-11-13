@@ -1,3 +1,5 @@
+import { KARTENHILFE_TEXTE } from '../karten/hilfe/texte'
+
 /* Anzeigetexte der Regelseite `/regeln` (O9). */
 
 export const REGELHILFE = {
@@ -8,7 +10,7 @@ export const REGELHILFE = {
   zugTitel: 'Ein Zug in fünf Schritten',
   zugHinweis:
     'Die Sätze stammen aus der Spielanleitung. Was mit „Ergänzung des Autors“ markiert ist, hat der Autor des Spiels entschieden; es steht noch nicht auf der Website.',
-  ergaenzung: 'Ergänzung des Autors',
+  ergaenzung: KARTENHILFE_TEXTE.ergaenzung,
   nurErweiterung: 'Nur mit Erweiterung',
   kartenTitel: 'Alle Karten',
   kartenText: 'Wähle eine Karte, um ihren Text aus der Spielanleitung zu lesen.',

@@ -1,14 +1,19 @@
 import { hilfeId, type Kartenhilfe } from './typen'
 
-/* Comeback- und Risiko-Belohnungs-Karte aus A8 (Erweiterung). */
+/*
+Comeback- und Risiko-Belohnungs-Karte aus A8 (Erweiterung). Die Website leitet
+jede der beiden Karten mit einem Absatz vor ihrer Überschrift ein; er gehört
+zur Karte. Der Einleitungsabsatz der Comeback-Karte steht in A8 vor A8.1.
+*/
 
 const COMEBACK: Kartenhilfe = {
   karte: { typ: 'Comeback', id: hilfeId('comeback') },
-  quellen: ['A8.1'],
+  quellen: ['A8.1', 'A8'],
   kurz: 'Ermöglicht zwei zusätzliche Aktionen, wenn man im Rückstand ist',
   abschnitte: [
     {
       inhalt: [
+        'Die Comeback-Karte ist deine zweite Chance! Jeder Spieler erhält zu Spielbeginn eine Comeback-Karte.',
         'Liegt deine längste Schlange zu Beginn deines Zuges mindestens 5 Karten hinter der längsten Schlange auf dem Tisch, kannst du deine Comeback-Karte einsetzen und erhältst zwei zusätzliche Aktionen. Danach ist sie verbraucht.',
       ],
     },
@@ -78,6 +83,7 @@ const RISIKO_BELOHNUNG: Kartenhilfe = {
         'Wenn die Aktion fehlschlägt, darfst du entscheiden, welchem deiner Gegenspieler die angegebene Ersatzbelohnung zugutekommt. Dies fördert gezielt das Aufholen im Spiel, weil du dem Spieler helfen kannst, der zurückliegt.',
       ],
     },
+    { titel: 'Die vier Risiko-Belohnungs-Aktionen', inhalt: [] },
     {
       titel: 'Aktion 1: Zusätzliche Karten ziehen',
       inhalt: [
@@ -99,6 +105,7 @@ const RISIKO_BELOHNUNG: Kartenhilfe = {
       titel: 'Aktion 3: Karten tauschen',
       inhalt: [
         'Du möchtest eine Farbkarte in deiner Schlange durch eine Karte von deiner Hand ersetzen.',
+        'Ablauf:',
         [
           'Benenne vor dem Risiko-Check, welche Karte in deiner Schlange du tauschen möchtest',
           'Decke eine Karte vom Nachziehstapel auf',

@@ -5,7 +5,8 @@ Jeder Satz steht wörtlich in der Spielanleitung (Teil A der Spec) oder in einer
 Antwort des Autors (Teil D) und nennt seine Stelle; `zugschritte.test.ts`
 prüft das gegen `docs/GAME_SPEC.md`. So behauptet die Zusammenfassung nichts,
 was dort nicht steht (U2). Wo Teil D die Website ergänzt, folgt sie Teil D,
-etwa bei der Zahl der Karten (D12) oder einer Sonderkarte ohne Ziel (D13), und
+etwa bei der Zahl der Karten (D12), einer Sonderkarte ohne Ziel (D13) oder dem
+Verdoppler im zweiten Zug (D11, D23), und
 die Oberfläche kennzeichnet den Satz als Ergänzung des Autors.
 */
 
@@ -88,6 +89,10 @@ export const ZUGSCHRITTE: readonly Zugschritt[] = [
         quelle: 'A5',
       },
       { text: 'Nur ein Verdoppler pro Runde.', quelle: 'D11' },
+      {
+        text: 'Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht.',
+        quelle: 'D23',
+      },
     ],
   },
 ]
