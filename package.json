@@ -11,6 +11,7 @@
     "build": "tsc -b && vite build",
     "check:test-lines": "node scripts/check_test_file_lines.mjs",
     "check:css-asserts": "node scripts/check_css_source_asserts.mjs",
+    "check:regeln": "node scripts/check_regeln.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "build:testhooks": "vite build --mode testhooks --outDir dist-testhooks --emptyOutDir",
