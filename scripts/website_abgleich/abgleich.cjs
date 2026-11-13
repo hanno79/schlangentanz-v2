@@ -5,8 +5,8 @@ Zwei Prüfungen, beide müssen bestehen:
 1. **Gleichheit:** Teil A, frisch aus der Website gebaut, ist zeichengleich mit Teil A
    im Dokument. Sonst zeigt das Skript die Unterschiede.
 2. **Abdeckung:** Jede Textzeile der Website (Seite und Karten-Dialoge, so wie der
-   Browser sie anzeigt) steht im Dokument. Diese Prüfung hängt nicht am
-   Markdown-Konverter und fängt dessen Fehler ab. Zeilen, die nur in der
+   Browser sie anzeigt) steht in Teil A; ein Satz nur in Teil D zählt nicht.
+   Diese Prüfung hängt nicht am Markdown-Konverter und fängt dessen Fehler ab. Zeilen, die nur in der
    Formatierung abweichen (Tabellenzellen, Erweiterungs-Etikett), stehen in
    NUR_FORMATIERUNG und werden ausgewiesen, nicht verschwiegen.
 
@@ -36,20 +36,29 @@ const NUR_FORMATIERUNG = [
   /^.+ \(\d+ Punkte\)$/,
 ];
 
+/**
+ * Lage von Teil A im Dokument: Inhalt ab der Überschrift bis vor die nächste
+ * Überschrift „## …“ (heute Teil B). Ohne Teil A ein Fehler, damit nie still das
+ * ganze Dokument zählt.
+ */
 function teilAImDokument(spec) {
-  const start = spec.indexOf(TEIL_A_KOPF);
-  const ende = spec.indexOf('\n## Teil B');
-  if (start < 0 || ende < 0) throw new Error('Teil A oder Teil B nicht gefunden in docs/GAME_SPEC.md');
-  return { start: start + TEIL_A_KOPF.length, ende: ende + 1 };
+  const kopf = spec.indexOf(TEIL_A_KOPF);
+  if (kopf < 0) throw new Error('Teil A nicht gefunden; erwartet wird die Überschrift „## Teil A — Regeln (Spiegel der Website)“');
+  const start = kopf + TEIL_A_KOPF.length;
+  const naechster = spec.indexOf('\n## ', start);
+  return { start, ende: naechster < 0 ? spec.length : naechster + 1 };
 }
 
 /**
- * Prüft, ob jede Textzeile der Website im Dokument steht. `seiteText` ist der
- * Bildschirmtext der Seite, `dialogeText` je Karten-Dialog `{ label, text }`.
+ * Prüft, ob jede Textzeile der Website in Teil A des Dokuments steht. `seiteText`
+ * ist der Bildschirmtext der Seite, `dialogeText` je Karten-Dialog `{ label, text }`,
+ * `spec` das ganze Dokument. Gezählt wird nur Teil A: Ein Satz, der nur in Teil D
+ * steht (Antwort des Autors), ist nicht gespiegelt.
  */
 function pruefeAbdeckung({ seiteText, dialogeText }, spec) {
   const norm = (s) => s.replace(/\[[^\]]*\]/g, ' ').replace(/[*#|`>]/g, ' ').replace(/^\s*(\d+\.|-)\s+/gm, ' ').replace(/\s+/g, ' ').trim();
-  const dokument = norm(spec);
+  const { start, ende } = teilAImDokument(spec);
+  const dokument = norm(spec.slice(start, ende));
   const seite = seiteText.split('\n');
   const dialoge = dialogeText.flatMap((d) => d.text.split('\n'));
   // Navigation (bis „Spielanleitung") und Fuss (ab „HR Spiele") gehören nicht zur Anleitung.

@@ -20,7 +20,8 @@ async function main() {
   assert.match(website.seiteMd, /^## Spielmaterial$/m, 'Abschnitt „Spielmaterial“ fehlt im Markdown');
   const teilA = baueTeilA(website);
   assert.match(teilA, /^### A11 Punktezählung$/m, 'Teil A liess sich nicht bis A11 bauen');
-  const abdeckung = pruefeAbdeckung(website, teilA);
+  // Die Abdeckung liest nur Teil A eines Dokuments, deshalb mit Überschrift.
+  const abdeckung = pruefeAbdeckung(website, `## Teil A — Regeln (Spiegel der Website)\n\n${teilA}`);
   assert.ok(abdeckung.geprueft > 100, `nur ${abdeckung.geprueft} Zeilen der Website geprüft`);
   console.log(`Netztest bestanden: ${website.dialogeMd.length} Dialoge, ${abdeckung.geprueft} Zeilen, Bundle ${website.bundle}.`);
 }
