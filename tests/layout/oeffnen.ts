@@ -47,8 +47,7 @@ Leitelement soll auffallen, statt still auf ein nacktes `goto` zurückzufallen.
 Deshalb wirft `oeffne()` unten, statt die Prüfung zu überspringen.
 */
 const LEITELEMENT: Record<string, string> = {
-  '/': '.sonniges-nest',
-  '/game': '.spielbrett',
+  '/': '[data-testid="platzhalter"]',
 }
 
 /**

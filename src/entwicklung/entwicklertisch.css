@@ -1,0 +1,261 @@
+/* Entwicklertisch: Werkzeug, keine Gestaltung. Lesbar, dicht, ohne Spielgrafik. */
+
+.entwicklertisch {
+  --et-text: #1d1b20;
+  --et-gedaempft: #5c5864;
+  --et-linie: #c9c5d0;
+  --et-flaeche: #f6f5f8;
+  --et-rot: #b00020;
+  --et-rot-flaeche: #fde7ea;
+  --et-gruen: #1b5e20;
+  --et-hinweis-flaeche: #fff8e1;
+
+  /* `#root` ist eine Flex-Spalte (index.css). Ohne `min-width: 0` wäre der Tisch
+     als Flex-Element mindestens so breit wie sein längstes unteilbares Stück und
+     schöbe die Seite auf dem Handy über den Rand. */
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem 2rem;
+  color: var(--et-text);
+  font: 14px/1.45 system-ui, sans-serif;
+  text-align: left;
+  /* Lange Ids, JSON und Kartennamen brechen um, statt die Seite zu verbreitern. */
+  overflow-wrap: anywhere;
+}
+
+.entwicklertisch h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.entwicklertisch h2 {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 1.1rem;
+}
+
+.entwicklertisch h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1rem;
+}
+
+.entwicklertisch small {
+  color: var(--et-gedaempft);
+}
+
+.entwicklertisch button {
+  max-width: 100%;
+  margin: 0 0.35rem 0.35rem 0;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--et-linie);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--et-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.entwicklertisch button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.et-navigation {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--et-linie);
+}
+
+.et-abschnitt {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--et-linie);
+  border-radius: 6px;
+  background: var(--et-flaeche);
+}
+
+.et-lage {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.15rem 1rem;
+  margin: 0;
+}
+
+.et-lage dt {
+  font-weight: 600;
+}
+
+.et-lage dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.et-spielerliste {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+  gap: 0.5rem;
+}
+
+.et-spieler {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--et-linie);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.et-spieler--aktiv {
+  border: 2px solid var(--et-gruen);
+}
+
+.et-spieler p {
+  margin: 0.25rem 0;
+}
+
+.et-marke {
+  margin-left: 0.5rem;
+  padding: 0 0.4rem;
+  border-radius: 4px;
+  background: var(--et-gruen);
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.et-kartenreihe {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.et-karte,
+.et-aufgabe {
+  display: inline-block;
+  margin: 0 0.25rem 0.15rem 0;
+  padding: 0 0.35rem;
+  border: 1px solid var(--et-linie);
+  border-left-width: 6px;
+  border-radius: 4px;
+  background: #fff;
+  max-width: 100%;
+}
+
+.et-karte--blau { border-left-color: #1e5bb8; }
+.et-karte--rot { border-left-color: #c62828; }
+.et-karte--gelb { border-left-color: #d8a800; }
+.et-karte--violett { border-left-color: #6a1b9a; }
+.et-karte--braun { border-left-color: #6d4c41; }
+.et-karte--gruen { border-left-color: #2e7d32; }
+.et-karte--sonder { border-left-color: #222; font-style: italic; }
+
+.et-leer {
+  color: var(--et-gedaempft);
+  font-style: italic;
+}
+
+.et-aktionsgruppe {
+  margin-bottom: 0.25rem;
+}
+
+.et-aktion small {
+  margin-left: 0.4rem;
+}
+
+.et-invarianten {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.et-invariante {
+  color: var(--et-gruen);
+}
+
+.et-invariante--verletzt {
+  color: var(--et-rot);
+  background: var(--et-rot-flaeche);
+  font-weight: 600;
+}
+
+.et-invariante--verletzt small {
+  color: var(--et-rot);
+}
+
+.et-fehler {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--et-rot);
+  border-radius: 4px;
+  background: var(--et-rot-flaeche);
+  color: var(--et-rot);
+}
+
+.et-hinweis {
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  background: var(--et-hinweis-flaeche);
+}
+
+.et-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.et-tabelle th,
+.et-tabelle td {
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--et-linie);
+  text-align: left;
+  vertical-align: top;
+  /* In Tabellen nur an Wortgrenzen umbrechen, sonst wird aus „Spieler 1“ „Spiel|er 1“. */
+  overflow-wrap: break-word;
+}
+
+/* Schmal (Handy hochkant): Die Szenarientabelle wird zu einer Karte je Szenario,
+   statt drei Spalten auf Silbenbreite zu quetschen. */
+@media (max-width: 40rem) {
+  .et-szenarien thead {
+    display: none;
+  }
+
+  .et-szenarien,
+  .et-szenarien tbody,
+  .et-szenarien tr,
+  .et-szenarien td {
+    display: block;
+  }
+
+  .et-szenarien tr {
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--et-linie);
+    background: #fff;
+  }
+
+  .et-szenarien td {
+    border: 0;
+  }
+
+  .et-tabelle th,
+  .et-tabelle td {
+    padding: 0.2rem 0.35rem;
+  }
+
+  .et-szenarien td::before {
+    content: attr(data-titel) ': ';
+    font-weight: 600;
+  }
+}
+
+.et-formular {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.et-roh {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 12px;
+}

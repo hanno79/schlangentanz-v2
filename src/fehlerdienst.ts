@@ -18,8 +18,7 @@ Profiler —, und die eigene `ErrorBoundary` gibt es hier schon
 (`src/components/Fehlerfang.tsx`, mit einem Grund dokumentiert). Gemessen wurde die
 Bundle-Differenz beider Pakete, siehe `docs/PLAYABILITY_GATE.md`.
 
-**Warum diese Datei.** Sentry steht nur hier, nach dem Vorbild von
-`testPhaseHook.ts` mit `testHooksAktiv()`: eine Bedingung, eine Stelle, prüfbar
+**Warum diese Datei.** Sentry steht nur hier: eine Bedingung, eine Stelle, prüfbar
 per Test. `src/sentry_produktion.test.ts` hält fest, dass es dabei bleibt.
 
 **Der Schalter ist die DSN.** Ohne `VITE_SENTRY_DSN` passiert nichts — kein

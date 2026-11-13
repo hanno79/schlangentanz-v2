@@ -7,6 +7,14 @@
     {
       "source": "/game/:path*",
       "destination": "/index.html"
+    },
+    {
+      "source": "/dev",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dev/:path*",
+      "destination": "/index.html"
     }
   ]
 }

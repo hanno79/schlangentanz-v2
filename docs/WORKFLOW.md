@@ -198,11 +198,37 @@ HEAD` und liest `UNKNOWN` als „noch nicht entschieden". Bewegtes `origin/main`
 gemeldet, weil ein Rebase-Merge denselben Inhalt als neuen Commit schreibt und der
 Branch ihn danach doppelt trägt — genau daran scheiterte PR #5.
 
-## Test-Hooks (ÄNDERUNG 05.07.2026 C4, überarbeitet 30.07.2026 AP-1)
+## Test-Hooks und Entwicklertisch
 
-Die Test-Hooks `window.__schlangentanzFixture` und der `?phase=`-URL-Hook sind
-**nur im Dev-Build oder mit gesetztem `VITE_TEST_HOOKS=1`** aktiv (siehe
-`src/testPhaseHook.ts` → `testHooksAktiv()`).
+Seit P0.4 gibt es genau einen Test-Hook: den **Entwicklertisch unter `/dev`**
+(`src/entwicklung/`). Die alten Hooks `window.__schlangentanzFixture` und
+`?phase=` sind mit der alten Oberfläche entfallen.
+
+Der Tisch ist **nur im Dev-Server und im Testhook-Build** erreichbar
+(`npm run build:testhooks`, Vite-Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`).
+Der Schalter steht als Konstante in `src/App.tsx`; im Produktionsbuild wird er
+zu `false`, und der Bundler lässt den dynamischen Import weg. Dass der Code
+dann nicht im Bundle steht, prüft `tests/entwicklertisch_bundle.test.ts` bei
+jedem `npm test`; `tests/layout/entwicklertisch_produktion.hooks.spec.ts`
+prüft im Browser, dass `/dev` dort nur den Platzhalter zeigt.
+
+| Adresse | Inhalt |
+|---|---|
+| `/dev` | Startseite mit Formular für eine Partie |
+| `/dev/szenarien` | alle Szenarien mit Beschreibung und erwartetem Verhalten |
+| `/dev?szenario=<name>` | lädt ein Szenario |
+| `/dev?seed=<n>&spieler=<2–4>&erweiterung=<0\|1>` | Partie aus Saat; gleiche Saat, gleiche Partie |
+
+Der Tisch zeigt alle Hände offen, alle Stapel, Phase, Wertung und verletzte
+Invarianten in Rot. Knöpfe gibt es für jede Aktion, die die Engine aufzählt,
+und für die Phasenschritte der aktuellen Zugphase; lehnt die Engine einen
+Schritt ab, steht ihr Grund da. Die Schlangenhäutung zählt die heutige Engine
+nicht auf, sie hat deshalb keinen Knopf (kommt mit E1/E9). Der Parameter
+`erweiterung` wird angezeigt, ändert die Partie aber erst, wenn die Engine den
+Schalter hat (X1).
+
+Lokal: `npm run build:testhooks`, dann `npm run preview:testhooks` und
+`http://localhost:4174/dev` öffnen.
 
 > **`VITE_TEST_HOOKS` gehört ausschließlich in die Vercel-Preview-Umgebung —
 > ausdrücklich NICHT in Production.**
@@ -340,21 +366,21 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 | `desktop`, `tablet`, `handy` | 4173 | `dist` | `vite build` | alle ausser `*.hooks.spec.ts` |
 | `desktop-testhooks`, `tablet-testhooks`, `handy-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
 
-Die Verträge der alten Oberfläche laufen nur in `desktop` und `desktop-testhooks`
-(Liste `NUR_DESKTOP` in `playwright.config.ts`). Ein eigenes Chromium nennt nur
+Alle Verträge laufen in allen drei Geräteklassen. Ein eigenes Chromium nennt nur
 die Umgebungsvariable `PW_CHROMIUM_PFAD`.
 
-**Warum.** Die Sieger-Party ist nur über `/game?phase=spielende` erreichbar, und
-dieser Hook ist im Produktionsbuild aus. Der Bildschirm war deshalb von keinem
+**Warum.** Bis P0.4 war die Sieger-Party nur über `/game?phase=spielende`
+erreichbar, und dieser Hook war im Produktionsbuild aus. Der Bildschirm war deshalb von keinem
 Vertrag gedeckt — und genau dort saßen vier Fehler, alle alt, alle an einem Tag
 gefunden, als ihn zum ersten Mal jemand ansah. Ein Vertrag, den man nur dadurch
 bekommt, dass man `VITE_TEST_HOOKS` in Production setzt, wäre die Rücknahme von
 AP-1; ein zweiter Auftrag ist es nicht.
 
-Die beiden Builds unterscheiden sich um **genau eine Flagge**. Die 34
-bestehenden Verträge bleiben am Produktionsbuild: Sie messen Bildschirme, die
-ein Spieler ohne Hook erreicht, und sollen weiter genau den Build messen, der
-ausgeliefert wird.
+Die beiden Builds unterscheiden sich um **genau eine Flagge**. Verträge für
+Bildschirme, die ein Spieler ohne Hook erreicht, bleiben am Produktionsbuild und
+messen genau den Build, der ausgeliefert wird. Seit P0.4 (alte Oberfläche
+entfernt) sind das `platzhalter.spec.ts`; der zweite Auftrag misst den
+Entwicklertisch (`entwicklertisch*.hooks.spec.ts`).
 
 **Der verwaiste Preview-Server ist mechanisch ausgeschlossen**, nicht per
 Merkzettel. `reuseExistingServer` steht auf `false` — auch lokal, wo vorher

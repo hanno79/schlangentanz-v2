@@ -60,7 +60,6 @@ import { describe, expect, it } from 'vitest'
 import {
   aufgabenPool,
   ermittleLegaleAktionen,
-  ermittleQuestZugHinweise,
   erstelleSpieldeck,
   erstelleSpielzustand,
   starteAusspielphase,
@@ -141,21 +140,5 @@ describe('AP-5 Umfang der Aktionsenumeration', () => {
        Kreuzprodukt-Dimension auffällt — O-1 war eine, und die 6 000 haben
        gehalten. */
     expect(aktionen.length, 'Aktionsenumeration ist sprunghaft gewachsen').toBeLessThan(6_000)
-  })
-
-  it('lässt die Quest-Hinweise nur über Schlangenbau-Aktionen laufen', () => {
-    const zustand = ungeguenstigsterZustand()
-    const aktionen = ermittleLegaleAktionen(zustand)
-    const schlangenbau = aktionen.filter(
-      (aktion) => aktion.typ === 'KarteAnlegen' || aktion.typ === 'NeueSchlangeStarten',
-    )
-
-    // ermittleQuestZugHinweise führt pro Kandidat ein volles anwendeAktion aus. Das
-    // ist nur deshalb billig, weil es ausschließlich Schlangenbau-Aktionen betrachtet.
-    // Würde es über alle Aktionen laufen, wäre es der teuerste Posten der App.
-    expect(schlangenbau.length).toBeLessThan(50)
-    expect(schlangenbau.length / aktionen.length).toBeLessThan(0.05)
-
-    expect(() => ermittleQuestZugHinweise(zustand, aktionen)).not.toThrow()
   })
 })

@@ -13,8 +13,6 @@ export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, erstelleSp
 export { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from './state';
 export { serialisiere, deserialisiere } from './serialization';
 export { pruefeAktion, ermittleLegaleAktionen, ermittleReaktionsAktionen, ermittleNichtEnumerierteAktionenHinweise, anwendeAktion } from './legalActions';
-export { ermittleQuestZugHinweise } from './questZugHinweise';
-export type { QuestZugHinweis } from './questZugHinweise';
 export type { AktionErgebnis, NichtEnumerierteAktionHinweis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion, PflichtAbwurfAktion, SonderkarteSpielenAktion, SchlangenblockadeSpielenAktion, SchlangenblockadeAbwehrenAktion, SchlangenblockadeDurchlassenAktion, VerdopplerSpielenAktion, VerdopplerAbwehrenAktion, VerdopplerDurchlassenAktion, FarbenschutzSpielenAktion, SchlangengrubeAbwehrenAktion, SchlangengrubeDurchlassenAktion, FarbendiebSpielenAktion, FarbendiebAbwehrenAktion, FarbendiebDurchlassenAktion, SchlangenfrassAbwehrenAktion, SchlangenfrassDurchlassenAktion, FarbenfusionSpielenAktion, SchlangenhaeutungSpielenAktion, SchlangenfrassSpielenAktion } from './legalActions';
 export { ueberhandAnzahl, ueberhandAbwurfKartenIds } from './ueberhand';
 export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenhaeutung, spieleSchlangenfrass } from './turnState';
