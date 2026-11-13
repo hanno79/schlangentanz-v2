@@ -258,13 +258,21 @@ Aktionsknöpfe ausführen, das Ergebnis im angezeigten Zustand ablesen und mit
 der Erwartung vergleichen. Ist der Entwicklertisch noch nicht gemergt (vor
 P0.4), vermerkst du die Browserprüfung als „blockiert, Entwicklertisch fehlt“.
 
-**Oberflächen-Tasks** prüfst du in allen drei Geräteklassen:
+**Oberflächen-Tasks** prüfst du in allen fünf Geräteklassen (Plan 2.3 und
+3.4; Tablet hochkant und Handy quer seit dem 13.11.2026):
 
-| Geräteklasse | Fenster | Bedienung |
-|---|---|---|
-| Desktop | 1280×900 | Maus |
-| Tablet quer | 1024×768 | Touch |
-| Handy hochkant | 390×844 | Touch |
+| Geräteklasse | Name | Fenster | Bedienung |
+|---|---|---|---|
+| Desktop | `desktop` | 1280×900 | Maus |
+| Tablet quer | `tablet-quer` | 1024×768 | Touch |
+| Tablet hochkant | `tablet-hochkant` | 768×1024 | Touch |
+| Handy hochkant | `handy-hochkant` | 390×844 | Touch |
+| Handy quer | `handy-quer` | 844×390 | Touch |
+
+Handy quer ist nur 390 px hoch: Was dort unter den Bildrand rutscht, ist nur
+nach Scrollen erreichbar. Bekannte Befunde dieser Art stehen in
+`tests/layout/geraeteklassen_ausnahmen.json`; was dort nicht steht und auf dem
+Foto fehlt, ist ein Mangel.
 
 1. **Fotos:** aus dem Repo heraus
 
@@ -272,10 +280,12 @@ P0.4), vermerkst du die Browserprüfung als „blockiert, Entwicklertisch fehlt�
    node scripts/pruefung/bildschirmfotos.mjs <adresse> --name <ID>-<was> --ziel <ordner> [--warte-auf <css-selektor>]
    ```
 
-   Das Skript schreibt `<ID>-<was>-desktop.png`, `-tablet.png` und
-   `-handy.png`, prüft die Bildgrössen und meldet je Bild, ob Touch an war
-   (`pointer: coarse ja`) und wie viele Konsolenfehler die Seite hatte. Exit 0
-   heisst: drei Bilder in der richtigen Grösse. Als `--ziel` nimmst du zuerst
+   Das Skript schreibt `<ID>-<was>-desktop.png`, `-tablet-quer.png`,
+   `-tablet-hochkant.png`, `-handy-hochkant.png` und `-handy-quer.png`, prüft
+   die Bildgrössen und meldet je Bild, ob Touch an war (`pointer: coarse ja`)
+   und wie viele Konsolenfehler die Seite hatte. Exit 0 heisst: fünf Bilder in
+   der richtigen Grösse. Legt sich eine Seite breiter aus als das Fenster (ohne
+   viewport-Meta-Tag 980 px), bricht es mit Exit 1 und diesem Hinweis ab. Als `--ziel` nimmst du zuerst
    einen Ordner **ausserhalb** des Repos (Scratchpad oder Temp); warum, steht in
    Schritt 9. Ohne `--ziel` landen die Bilder in `docs/abnahme/bilder/`.
 2. **Ansehen:** Öffne jedes Bild (in Claude Code mit dem Read-Werkzeug) und
@@ -311,7 +321,7 @@ P0.4), vermerkst du die Browserprüfung als „blockiert, Entwicklertisch fehlt�
    **Grenzwerte der Breite** (etwa 767 und 768 px oder genau die Grenze aus dem
    Task) misst du deshalb mit Playwright: `await seite.setViewportSize({ width: 768, height: 1024 })`,
    danach messen wie oben. Das Skript dafür baust du wie in Punkt 5.
-5. **Bedienen mit Touch (Tablet, Handy):** Der eingebaute Browser emuliert ein
+5. **Bedienen mit Touch (Tablet und Handy, beide Ausrichtungen):** Der eingebaute Browser emuliert ein
    Touch-Gerät nur unter 768 px Breite und schickt Klicks auch dann als
    Mausklicks. Nimm deshalb Playwright mit denselben
    Geräteklassen. Lege das Skript im Scratchpad ab, nicht im Repo, und führe
@@ -322,7 +332,7 @@ P0.4), vermerkst du die Browserprüfung als „blockiert, Entwicklertisch fehlt�
    import { chromium } from 'playwright'
    import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './scripts/pruefung/geraeteklassen.mjs'
 
-   const tablet = GERAETEKLASSEN.find((klasse) => klasse.name === 'tablet')
+   const tablet = GERAETEKLASSEN.find((klasse) => klasse.name === 'tablet-quer')
    const browser = await chromium.launch({ executablePath: chromiumPfad() })
    const kontext = await browser.newContext({ ...kontextOptionen(tablet), reducedMotion: 'reduce' })
    const seite = await kontext.newPage()
@@ -344,7 +354,9 @@ P0.4), vermerkst du die Browserprüfung als „blockiert, Entwicklertisch fehlt�
 Plan 3.4: Du suchst aktiv nach Fehlern. Mindestens **zwei** eigene
 Grenzfälle je Task, die nicht in den Kriterien stehen. Denk an: genau auf der
 Grenze und eins daneben, 0, leer, Maximum, zweimal hintereinander, falsche
-Reihenfolge, Neuladen der Seite, Drehen des Geräts (390×844 wird 844×390),
+Reihenfolge, Neuladen der Seite, Drehen des Geräts mitten in der Bedienung
+(`setViewportSize` von 390×844 auf 844×390: bleibt der Zustand, etwa eine offene
+Rückfrage?), schmaler als jede Klasse (320 px),
 2, 3 und 4 Spieler, mit und ohne Erweiterung. Je Grenzfall ins Protokoll: was,
 warum, wie geprüft, Ergebnis.
 
@@ -406,7 +418,7 @@ Kurz:
      --wer "Claude Code (Prüfer <ID>)" --ausfuehrung agent \
      --ergebnis "<was du gesehen hast, mit Zahlen>" \
      --browser "Playwright Chromium <Version>, 1024x768 Touch" \
-     --screenshot <scratchpad>/<ID>-<was>-tablet.png
+     --screenshot <scratchpad>/<ID>-<was>-tablet-quer.png
    ```
 
    Status `bestanden`, `fehlgeschlagen` (mindestens ein Beleg), `unklar` (mit
@@ -466,7 +478,7 @@ Kurz:
 - [ ] Gates einzeln mit `tee` in den eigenen Unterordner, jeder Exit-Code notiert, Ports vorher geprüft (nur `LISTENING`/`ABHÖREN` zählt)
 - [ ] `git diff --stat` gegen „Dateien“, Begründungen geprüft, U2/U9/U10/U11/U13
 - [ ] Gegenprobe: Regel im Code umgekehrt, Test rot, Code wiederhergestellt
-- [ ] Browser: drei Geräteklassen (Oberfläche) oder Entwicklertisch (Engine, KI), Fotos angesehen und beschrieben, `scrollWidth` gemessen, Grenzbreiten mit `setViewportSize`
+- [ ] Browser: fünf Geräteklassen (Oberfläche) oder Entwicklertisch (Engine, KI), Fotos angesehen und beschrieben, `scrollWidth` gemessen, Grenzbreiten mit `setViewportSize`
 - [ ] Mindestens zwei eigene Grenzfälle; bei Engine-Tasks Satz-für-Satz-Abdeckung
 - [ ] Testregister: Bereich, Testfälle, Läufe mit dem Werkzeug, `tagebuch_bauen.py`
 - [ ] Protokoll nach `VORLAGE.md`, Urteil ABGENOMMEN oder ABGELEHNT, Commit, Push auf den Task-Branch, eigene Server beendet (PID und Befehlszeile geprüft)

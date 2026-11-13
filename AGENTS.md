@@ -98,7 +98,8 @@ unter die Marker, nicht hinein.
 
 - `npm test -- --run`
 - `npm run test:layout` — Playwright-Layout-Verträge gegen `vite preview`.
-  Je Geräteklasse (`desktop`, `tablet`, `handy`) zwei Projekte: `<klasse>`
+  Je Geräteklasse (`desktop`, `tablet-quer`, `tablet-hochkant`,
+  `handy-hochkant`, `handy-quer`) zwei Projekte: `<klasse>`
   (Port 4173, Produktionsbuild) und `<klasse>-testhooks` (Port 4174, Build mit
   `VITE_TEST_HOOKS=1`) für Verträge, die den Entwicklertisch unter `/dev`
   brauchen (`*.hooks.spec.ts`). Siehe `docs/WORKFLOW.md`.

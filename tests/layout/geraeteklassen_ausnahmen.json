@@ -1,0 +1,28 @@
+{
+  "erklaerung": [
+    "Layout-Verträge, die in einer der mit P0.3c neuen Geräteklassen (tablet-hochkant 768×1024, handy-quer 844×390) rot sind. Je Eintrag: Datei, Vertrag als „Gruppe › Test“ wie im Playwright-Bericht, Geräteklasse und was gemessen wurde.",
+    "tests/layout/ausnahmen.ts lässt Playwright für genau diese Paare ein Scheitern erwarten (test.fail). Wird ein Vertrag grün, schlägt der Lauf fehl, und der Eintrag muss gelöscht werden.",
+    "Die Liste darf nur schrumpfen: tests/geraeteklassen_ausnahmen.test.ts vergleicht sie mit der Fassung auf der Merge-Basis von origin/neuaufbau und erlaubt nur die beiden neuen Klassen.",
+    "Angelegt mit P0.3c (13.11.2026). Ob und wie die Lobby für flache Fenster umgebaut wird, entscheidet der Orchestrator."
+  ],
+  "ausnahmen": [
+    {
+      "datei": "tests/layout/lobby.spec.ts",
+      "vertrag": "O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Die Lobby ist einspaltig und höher als das 390 px hohe Fenster: „Neue Partie“ liegt bei 412..460 px, „Regeln“ bei 480..528 px, beide nur nach Scrollen erreichbar."
+    },
+    {
+      "datei": "tests/layout/lobby.spec.ts",
+      "vertrag": "O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Mit dem Hinweis auf den verworfenen Spielstand liegt „Neue Partie“ bei 386..434 px und „Regeln“ bei 454..502 px, unter dem 390 px hohen Fenster."
+    },
+    {
+      "datei": "tests/layout/lobby.spec.ts",
+      "vertrag": "O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Bei offener Rückfrage liegt „Regeln“ bei 389..437 px, unter dem 390 px hohen Fenster. Die Knöpfe der Rückfrage selbst sind sichtbar."
+    }
+  ]
+}

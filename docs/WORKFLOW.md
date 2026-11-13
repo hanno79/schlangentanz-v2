@@ -364,17 +364,21 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 
 ### Zwei Aufträge (ÄNDERUNG 03.08.2026, Punkt 1b)
 
-`npm run test:layout` fährt seither je Geräteklasse **zwei** Playwright-Projekte
-(seit P0.3 drei Geräteklassen aus `scripts/pruefung/geraeteklassen.mjs`: `desktop`
-1280×900, `tablet` 1024×768 mit Touch, `handy` 390×844 mit Touch):
+`npm run test:layout` fährt seither je Geräteklasse **zwei** Playwright-Projekte.
+Die Geräteklassen stehen in `scripts/pruefung/geraeteklassen.mjs`; seit P0.3c
+sind es fünf: `desktop` 1280×900, `tablet-quer` 1024×768, `tablet-hochkant`
+768×1024, `handy-hochkant` 390×844 und `handy-quer` 844×390, alle ausser
+`desktop` mit Touch.
 
 | Projekt | Port | Verzeichnis | Build | Verträge |
 |---|---|---|---|---|
-| `desktop`, `tablet`, `handy` | 4173 | `dist` | `vite build` | alle ausser `*.hooks.spec.ts` |
-| `desktop-testhooks`, `tablet-testhooks`, `handy-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
+| `desktop`, `tablet-quer`, `tablet-hochkant`, `handy-hochkant`, `handy-quer` | 4173 | `dist` | `vite build` | alle ausser `*.hooks.spec.ts` |
+| dieselben mit `-testhooks`, etwa `handy-quer-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
 
-Alle Verträge laufen in allen drei Geräteklassen. Ein eigenes Chromium nennt nur
-die Umgebungsvariable `PW_CHROMIUM_PFAD`.
+Alle Verträge laufen in allen fünf Geräteklassen. Bekannte Befunde in den mit
+P0.3c neuen Klassen stehen in `tests/layout/geraeteklassen_ausnahmen.json`;
+die Liste darf nur schrumpfen. Ein eigenes Chromium nennt nur die
+Umgebungsvariable `PW_CHROMIUM_PFAD`.
 
 **Warum.** Bis P0.4 war die Sieger-Party nur über `/game?phase=spielende`
 erreichbar, und dieser Hook war im Produktionsbuild aus. Der Bildschirm war deshalb von keinem

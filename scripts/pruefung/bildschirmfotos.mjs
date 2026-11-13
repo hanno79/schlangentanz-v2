@@ -1,16 +1,21 @@
-// Fotografiert eine Adresse in allen drei Geräteklassen (scripts/pruefung/geraeteklassen.mjs).
+// Fotografiert eine Adresse in allen fünf Geräteklassen (scripts/pruefung/geraeteklassen.mjs).
 //
 // Aufruf:
 //   node scripts/pruefung/bildschirmfotos.mjs <adresse> --name <präfix> [--ziel <ordner>] [--warte-auf <css-selektor>]
 //
-// Schreibt <ziel>/<präfix>-desktop.png, -tablet.png und -handy.png, Standardziel
-// docs/abnahme/bilder. Jedes Bild zeigt genau das Fenster der Geräteklasse; das Skript
-// liest die Grösse aus der PNG-Datei zurück und bricht ab, wenn sie nicht stimmt.
+// Schreibt <ziel>/<präfix>-desktop.png, -tablet-quer.png, -tablet-hochkant.png,
+// -handy-hochkant.png und -handy-quer.png, Standardziel docs/abnahme/bilder. Jedes
+// Bild zeigt genau das Fenster der Geräteklasse; das Skript liest die Grösse aus der
+// PNG-Datei zurück und bricht ab, wenn sie nicht stimmt.
 // Zu jedem Bild meldet es, ob Touch aktiv war und wie viele Fehler die Seite in die
 // Konsole schrieb. Ansehen und beschreiben muss der Prüfer die Bilder selbst.
 //
-// Exit 0: drei Bilder in der richtigen Grösse. Exit 1: Seite nicht geladen oder Bild
-// falsch. Exit 2: Aufruf falsch.
+// Eine Seite ohne viewport-Meta-Tag legt sich auf einem Touch-Gerät 980 px breit aus
+// und wird verkleinert; das Bild zeigt dann nicht das Fenster der Klasse. Das Skript
+// bricht in diesem Fall mit einer Meldung ab, statt ein solches Bild abzulegen.
+//
+// Exit 0: fünf Bilder in der richtigen Grösse. Exit 1: Seite nicht geladen, nicht im
+// Fenster der Klasse ausgelegt oder Bild falsch. Exit 2: Aufruf falsch.
 
 import { mkdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
@@ -63,7 +68,16 @@ async function fotografiere(browser, klasse, optionen) {
 
     await seite.goto(optionen.adresse, { waitUntil: 'load' })
     if (optionen.warteAuf) await seite.locator(optionen.warteAuf).first().waitFor({ state: 'visible', timeout: 15_000 })
-    const grob = await seite.evaluate(() => matchMedia('(pointer: coarse)').matches)
+    const { grob, layoutBreite } = await seite.evaluate(() => ({
+      grob: matchMedia('(pointer: coarse)').matches,
+      layoutBreite: window.innerWidth,
+    }))
+    if (layoutBreite !== klasse.viewport.width) {
+      throw new Error(
+        `${klasse.titel}: Die Seite legt sich ${layoutBreite} px breit aus statt ${klasse.viewport.width} px ` +
+          '(fehlt <meta name="viewport" content="width=device-width">?).',
+      )
+    }
 
     const pfad = join(optionen.ziel, `${optionen.name}-${klasse.name}.png`)
     await seite.screenshot({ path: pfad })
