@@ -10,12 +10,11 @@ der umgebende Bereich (`--karte-breite` im CSS); `groesse` sagt dem Browser
 dieselbe Obergrenze, damit er die passende Bildfassung lädt.
 */
 
-function gliedKlasse({ gruppe, unter }: KarteInSchlange): string | undefined {
+function gliedKlasse({ gruppe }: KarteInSchlange): string | undefined {
   const klassen = [
     gruppe !== null ? 'in-gruppe' : '',
     gruppe?.anfang ? 'gruppe-anfang' : '',
     gruppe?.ende ? 'gruppe-ende' : '',
-    unter !== null ? 'mit-fusion' : '',
   ].filter(Boolean)
   return klassen.length === 0 ? undefined : klassen.join(' ')
 }

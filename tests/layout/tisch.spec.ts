@@ -7,7 +7,7 @@ import {
   geheimeHaende,
   mittelspiel,
   neuePartie,
-  verborgeneIds,
+  verrateneIds,
   volltisch,
 } from '../../src/ui/tisch/__tests__/szenarien'
 import { befundListe, kasten, type Befund } from './messung'
@@ -156,7 +156,7 @@ test.describe('O4 K2: Fremde Handkarten stehen nicht im Seitenquelltext', () => 
     await oeffneMitPartie(page, zustand)
     await expect(page.getByRole('article', { name: 'KI-Gegner 1' })).toContainText('5 Handkarten')
     const html = await page.content()
-    const verraten = verborgeneIds(zustand).filter((id) => new RegExp(`(^|[^\\w-])${id}([^\\w-]|$)`).test(html))
+    const verraten = verrateneIds(zustand, html)
     expect(verraten, 'Ids aus fremden Händen oder geheimen Aufgaben').toEqual([])
     for (const art of GEHEIME_KARTENARTEN) {
       expect(html.toLowerCase(), `„${art}“ steht im HTML`).not.toContain(art.toLowerCase())

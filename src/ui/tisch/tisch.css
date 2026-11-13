@@ -32,7 +32,7 @@ keine Höhe (O1, Hinweis 1).
   -webkit-tap-highlight-color: transparent;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 700px) and (min-height: 501px) {
   .tisch {
     --karte-gegner: 34px;
     --karte-eigene: 48px;
@@ -41,7 +41,7 @@ keine Höhe (O1, Hinweis 1).
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1100px) and (min-height: 501px) {
   .tisch {
     --karte-gegner: 40px;
     --karte-eigene: 56px;
@@ -149,7 +149,7 @@ keine Höhe (O1, Hinweis 1).
   overscroll-behavior: contain;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 700px) and (min-height: 501px) {
   .tisch-flaeche {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: 'gegner gegner' 'mitte auslage';
@@ -206,7 +206,7 @@ keine Höhe (O1, Hinweis 1).
   min-height: 0;
   background: var(--farbe-flaeche);
   border-top: 1px solid var(--farbe-linie);
-  box-shadow: 0 -4px 12px rgb(43 33 28 / 0.08);
+  box-shadow: var(--schatten-leiste);
 }
 
 .eigene {
@@ -253,13 +253,10 @@ keine Höhe (O1, Hinweis 1).
   list-style: none;
 }
 
-/* Handy quer und andere niedrige Schirme im Querformat: dein Platz rechts, Karten in Handygrösse. */
+/* Handy quer und andere niedrige Schirme im Querformat: dein Platz rechts. Die Karten bleiben in
+   Handygrösse, weil die Breitenstufen oben erst ab 501 px Höhe gelten. */
 @media (orientation: landscape) and (max-height: 500px) {
   .tisch {
-    --karte-gegner: 30px;
-    --karte-eigene: 36px;
-    --karte-mitte: 44px;
-    --karte-hand-max: 64px;
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
     grid-template-areas: 'kopf kopf' 'flaeche unten';
@@ -269,15 +266,11 @@ keine Höhe (O1, Hinweis 1).
     grid-template-rows: minmax(0, 1fr) auto;
     border-top: 0;
     border-left: 1px solid var(--farbe-linie);
-    box-shadow: -4px 0 12px rgb(43 33 28 / 0.08);
+    box-shadow: var(--schatten-leiste-seite);
   }
 
   .eigene {
     max-height: none;
   }
 
-  .tisch-flaeche {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'gegner' 'mitte' 'auslage';
-  }
 }

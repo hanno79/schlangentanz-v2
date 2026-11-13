@@ -132,7 +132,7 @@ function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: 
 
 /** Deine Hand, unten fest; die Karten teilen sich die Breite, damit keine angeschnitten ist. */
 function Hand({ ich }: { ich: EigeneAnsicht }) {
-  const anzahl = { '--hand-anzahl': Math.max(ich.hand.length, 1) } as CSSProperties
+  const anzahl = { '--hand-anzahl': ich.hand.length } as CSSProperties
   return (
     <section className="hand" aria-label={TISCH.deineHand}>
       <div className="hand-kopf">

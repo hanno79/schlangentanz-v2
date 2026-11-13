@@ -5,7 +5,7 @@ import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
 import { tischAnsicht } from '../spiel/tischAnsicht'
-import { GEHEIME_KARTENARTEN, TISCH_SZENARIEN, geheimeHaende, verborgeneIds } from './__tests__/szenarien'
+import { GEHEIME_KARTENARTEN, TISCH_SZENARIEN, geheimeHaende, verborgeneIds, verrateneIds } from './__tests__/szenarien'
 import { Tisch } from './Tisch'
 
 /*
@@ -14,10 +14,11 @@ weder Name noch Id einer fremden Handkarte. Dasselbe gilt für die geheimen
 Aufgaben der Gegner (B2).
 
 Geprüft wird das gezeichnete HTML. Ids prüft jeder Zustand: die Szenarien, 80
-Zufallszustände und jeder Schritt von Partien, die über die aufgezählten
-Aktionen der Engine laufen. Solange die Engine keine Aktion aufzählt (vor E2),
-ist das nur der Startzustand; mit E2 wird jeder Zug geprüft, ohne dass dieser
-Test sich ändert. Namen lassen sich nur dort prüfen, wo sie sonst nirgends
+Zufallszustände und jeder der ersten 150 Schritte von vier Partien, die über
+die aufgezählten Aktionen der Engine laufen. Solange die Engine keine Aktion
+aufzählt (vor E2), ist das nur der Startzustand; mit E2 wird jeder Zug geprüft,
+ohne dass dieser Test sich ändert. Die Grenze hält die Laufzeit klein: Jeder
+Schritt zeichnet den ganzen Tisch. Namen lassen sich nur dort prüfen, wo sie sonst nirgends
 offen liegen: im Szenario `geheimeHaende`.
 */
 
@@ -28,11 +29,6 @@ function zeichne(zustand: Spielzustand): string {
   const html = container.innerHTML
   cleanup()
   return html
-}
-
-function verrateneIds(zustand: Spielzustand, html: string): string[] {
-  // Ids stehen nie allein im Text; ein Wortrand genügt, damit „rot-1“ nicht in „rot-10“ gefunden wird.
-  return verborgeneIds(zustand).filter((id) => new RegExp(`(^|[^\\w-])${id}([^\\w-]|$)`).test(html))
 }
 
 /** Die Zustände einer Partie, Schritt für Schritt über die aufgezählten Aktionen der Engine. */
@@ -72,7 +68,7 @@ describe('O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im H
     [13, 4, false],
     [14, 4, true],
   ])('O4 K2: Partie aus Saat %i mit %i Spielern (Erweiterung %s) verrät nach keinem Schritt eine Id', (saat, spielerzahl, erweiterung) => {
-    const schritte = partieSchritte(saat, spielerzahl, erweiterung, 400)
+    const schritte = partieSchritte(saat, spielerzahl, erweiterung, 150)
     expect(schritte.length, 'mindestens der Startzustand').toBeGreaterThan(0)
     schritte.forEach((zustand, schritt) => {
       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, Schritt ${schritt}`).toEqual([])

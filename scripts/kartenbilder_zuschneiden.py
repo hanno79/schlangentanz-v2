@@ -179,9 +179,9 @@ def runde_ecken(bild, radius: int, Image, ImageDraw):
     return ergebnis
 
 
-def speichere(bild, name: str) -> None:
-    pfad = ZIEL / f"{name}.webp"
-    bild.save(pfad, "WEBP", quality=86, method=6)
+def speichere(bild, name: str, ziel: Path = ZIEL, qualitaet: int = 86) -> None:
+    pfad = ziel / f"{name}.webp"
+    bild.save(pfad, "WEBP", quality=qualitaet, method=6)
     print(f"{pfad.relative_to(WURZEL)}: {bild.size[0]}×{bild.size[1]}, {pfad.stat().st_size // 1024} KB")
 
 
@@ -234,25 +234,21 @@ def kleine_fassungen(Image) -> None:
             continue
         bild = Image.open(gross).convert("RGBA")
         hoehe = round(bild.size[1] * KLEINE_BREITE / bild.size[0])
-        klein = bild.resize((KLEINE_BREITE, hoehe), Image.LANCZOS)
-        pfad = ZIEL_KLEIN / gross.name
-        klein.save(pfad, "WEBP", quality=75, method=6)
-        print(f"{pfad.relative_to(WURZEL)}: {KLEINE_BREITE}×{hoehe}, {pfad.stat().st_size // 1024} KB")
+        speichere(bild.resize((KLEINE_BREITE, hoehe), Image.LANCZOS), gross.stem, ZIEL_KLEIN, qualitaet=75)
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--roh", type=Path, help="Ordner für die Rohbilder der Website")
+    quelle = parser.add_mutually_exclusive_group(required=True)
+    quelle.add_argument("--roh", type=Path, help="Ordner für die Rohbilder der Website")
+    quelle.add_argument("--nur-klein", action="store_true", help="nur die kleinen Fassungen neu bauen")
     parser.add_argument("--laden", action="store_true", help="Rohbilder vorher von schlangentanz.ch laden")
-    parser.add_argument("--nur-klein", action="store_true", help="nur die kleinen Fassungen neu bauen")
     argumente = parser.parse_args()
 
     Image, ImageDraw = lade_pillow()
     if argumente.nur_klein:
         kleine_fassungen(Image)
         return 0
-    if argumente.roh is None:
-        parser.error("--roh fehlt (oder --nur-klein angeben)")
     if argumente.laden:
         lade_rohbilder(argumente.roh)
     fehlend = [d for d in [*RANDKARTEN.values(), *RANDLOSE_KARTEN.values(), LOGO] if not (argumente.roh / d).exists()]

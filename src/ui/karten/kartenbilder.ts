@@ -90,10 +90,7 @@ export const sonderkartenbild = (name: string): string => bild(SONDERKARTEN, nam
 export const aufgabenbild = (name: string): string => bild(AUFGABEN, name, 'die Aufgabe')
 
 /** Die kleine Fassung zur Adresse eines Kartenbilds. */
-export function kleinbild(adresse: string): string {
-  if (!adresse.startsWith(ORDNER)) throw new Error(`Keine kleine Fassung für ${adresse}: Sie gibt es nur für Bilder unter ${ORDNER}.`)
-  return ORDNER_KLEIN + adresse.slice(ORDNER.length)
-}
+export const kleinbild = (adresse: string): string => adresse.replace(ORDNER, ORDNER_KLEIN)
 
 export function kartenbild(karte: Bildkarte): string {
   switch (karte.typ) {

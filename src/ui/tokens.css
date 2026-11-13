@@ -95,6 +95,11 @@ Bewusst nur hell (DESIGN.md, „Hell oder dunkel“): `color-scheme: light`.
   --schatten-flaeche: 0 1px 3px rgb(43 33 28 / 0.12);
   --schatten-erhoben: 0 8px 20px rgb(43 33 28 / 0.22);
   --schatten-karte: drop-shadow(0 1px 1.5px rgb(43 33 28 / 0.35));
+  /* Leiste, die über der Tischfläche liegt: unten fest oder rechts daneben. */
+  --schatten-leiste: 0 -4px 12px rgb(43 33 28 / 0.08);
+  --schatten-leiste-seite: -4px 0 12px rgb(43 33 28 / 0.08);
+  /* Grund hinter einem modalen Dialog (Grossansicht). */
+  --farbe-abdunkeln: rgb(43 33 28 / 0.6);
 
   /* Bedienung */
   --ziel-mindestens: 44px;

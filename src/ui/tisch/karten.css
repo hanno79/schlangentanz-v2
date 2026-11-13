@@ -179,7 +179,7 @@ Höhe übrig (Plan O4).
 }
 
 .lupe::backdrop {
-  background: rgb(43 33 28 / 0.6);
+  background: var(--farbe-abdunkeln);
 }
 
 .lupe[open] {
@@ -190,5 +190,5 @@ Höhe übrig (Plan O4).
 }
 
 .lupe-karte {
-  --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * 470 / 766));
+  --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * var(--kartenverhaeltnis)));
 }

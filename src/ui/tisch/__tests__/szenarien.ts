@@ -14,7 +14,6 @@ Spieler 1 ist immer der Mensch (B2), die übrigen sind KI-Gegner.
 
 export interface TischSzenario {
   name: string
-  beschreibung: string
   erzeuge: () => Spielzustand
 }
 
@@ -110,11 +109,11 @@ export function neuePartie(): Spielzustand {
 }
 
 export const TISCH_SZENARIEN: readonly TischSzenario[] = [
-  { name: 'volltisch', beschreibung: '4 Spieler, je 2 Schlangen mit 11 Karten, Erweiterung, Schlussrunde', erzeuge: volltisch },
-  { name: 'mittelspiel', beschreibung: '3 Spieler mitten in der Partie, Fusion und Grube', erzeuge: mittelspiel },
-  { name: 'geheime-haende', beschreibung: 'Gegner halten nur Karten, die sonst nirgends liegen', erzeuge: geheimeHaende },
-  { name: 'angriff-auf-mich', beschreibung: 'Eine Schlangengrube schwebt über dem Menschen', erzeuge: angriffAufMich },
-  { name: 'neue-partie', beschreibung: 'Neue Partie mit 2 Spielern', erzeuge: neuePartie },
+  { name: 'volltisch', erzeuge: volltisch },
+  { name: 'mittelspiel', erzeuge: mittelspiel },
+  { name: 'geheime-haende', erzeuge: geheimeHaende },
+  { name: 'angriff-auf-mich', erzeuge: angriffAufMich },
+  { name: 'neue-partie', erzeuge: neuePartie },
 ]
 
 /** Die Karten-Ids und Aufgaben-Ids, die der Mensch nie sehen darf: fremde Handkarten und fremde geheime Aufgaben (B2). */
@@ -123,4 +122,14 @@ export function verborgeneIds(zustand: Spielzustand): string[] {
   return zustand.spieler.flatMap((spieler, index) =>
     index === mensch ? [] : [...spieler.hand.map((karte) => karte.id), ...(spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe.id])],
   )
+}
+
+/**
+ * Die verborgenen Ids, die im HTML stehen. Ids stehen nie allein im Text; als
+ * Wort gilt, was zwischen Zeichen ausser Buchstaben, Ziffern, `_` und `-` steht,
+ * damit „rot-01“ nicht in „rot-010“ gefunden wird.
+ */
+export function verrateneIds(zustand: Spielzustand, html: string): string[] {
+  const woerter = new Set(html.split(/[^\w-]+/))
+  return verborgeneIds(zustand).filter((id) => woerter.has(id))
 }
