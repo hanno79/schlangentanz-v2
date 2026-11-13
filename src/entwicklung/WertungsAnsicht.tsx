@@ -30,12 +30,12 @@ function Tabelle({ wertungen, testid, titel }: { wertungen: SpielerWertung[]; te
       <caption>{titel}</caption>
       <thead>
         <tr>
-          <th>Spieler</th>
-          <th title="Punkte aus Farbgruppen">Gruppen</th>
-          <th title="Vielfaltbonus, nur mit Erweiterung">Vielfalt</th>
+          <th>Spie­ler</th>
+          <th title="Punkte aus Farbgruppen">Grup­pen</th>
+          <th title="Vielfaltbonus, nur mit Erweiterung">Viel­falt</th>
           <th title="Kettenbonus, erst nach Spielende">Kette</th>
           <th title="Punkte aus Aufgaben, nur mit Erweiterung">Aufg.</th>
-          <th>Summe</th>
+          <th>Sum­me</th>
         </tr>
       </thead>
       <tbody>
