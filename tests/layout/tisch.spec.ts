@@ -10,8 +10,9 @@ import {
   verrateneIds,
   volltisch,
 } from '../../src/ui/tisch/__tests__/szenarien'
-import { befundListe, kasten, type Befund } from './messung'
+import { befundListe, kasten } from './messung'
 import { oeffne } from './oeffnen'
+import { abgeschnitteneEigeneSchlangen, lesbareStapelzahlen, ueberdeckendeBalken, unerreichbareKarten } from './tisch_messung'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
 /*
@@ -26,11 +27,14 @@ Desktop wie auf dem Handy quer.
 
 /* `karten`: so viele Kartenbilder stehen mindestens am Tisch. Im Volltisch 88
    Schlangenkarten, 2 unter der Fusion, 5 Handkarten, Ablage, Grube, 3 offene
-   Aufgaben und 4 Karten Auslage; in der neuen Partie 5 Handkarten und der Stapel. */
-const SZENARIEN: { name: string; erzeuge: () => Spielzustand; karten: number }[] = [
-  { name: 'Volltisch', erzeuge: volltisch, karten: 104 },
-  { name: 'Mittelspiel', erzeuge: mittelspiel, karten: 25 },
-  { name: 'neue Partie', erzeuge: neuePartie, karten: 6 },
+   Aufgaben und 4 Karten Auslage; in der neuen Partie 5 Handkarten und der Stapel.
+   `eigeneBilder`: Bilder in deinen Schlangen (Volltisch 22 + 2 unter der Fusion,
+   Mittelspiel 4 + 3 + 2). `gruppenBalken`: Glieder in Farbgruppen am ganzen Tisch,
+   mindestens. `stapel`: wie der Nachziehstapel angesagt wird. */
+const SZENARIEN: { name: string; erzeuge: () => Spielzustand; karten: number; eigeneBilder: number; gruppenBalken: number; stapel: string }[] = [
+  { name: 'Volltisch', erzeuge: volltisch, karten: 104, eigeneBilder: 24, gruppenBalken: 40, stapel: 'leer' },
+  { name: 'Mittelspiel', erzeuge: mittelspiel, karten: 25, eigeneBilder: 9, gruppenBalken: 13, stapel: String(mittelspiel().nachziehstapel.length) },
+  { name: 'neue Partie', erzeuge: neuePartie, karten: 6, eigeneBilder: 0, gruppenBalken: 0, stapel: String(neuePartie().nachziehstapel.length) },
 ]
 
 async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void> {
@@ -56,38 +60,7 @@ async function kaputteBilder(page: Page): Promise<string[]> {
   })
 }
 
-/**
- * Jede Karte am Tisch: in ihren Bereich scrollen und prüfen, dass sie dann im
- * Fenster liegt, mindestens 12 px breit ist und an ihrer Mitte nicht von etwas
- * anderem überdeckt wird.
- */
-async function unerreichbareKarten(page: Page): Promise<{ gezaehlt: number; befunde: Befund[] }> {
-  return page.evaluate(() => {
-    const befunde: { element: string; detail: string }[] = []
-    const bilder = Array.from(document.querySelectorAll<HTMLImageElement>('[data-testid="spiel"] img'))
-    for (const bild of bilder) {
-      bild.scrollIntoView({ block: 'nearest', inline: 'nearest' })
-      const box = bild.getBoundingClientRect()
-      const name = bild.alt
-      if (box.width < 12) {
-        befunde.push({ element: name, detail: `nur ${Math.round(box.width)} px breit` })
-        continue
-      }
-      const imFenster = box.left >= -1 && box.top >= -1 && box.right <= window.innerWidth + 1 && box.bottom <= window.innerHeight + 1
-      if (!imFenster) {
-        befunde.push({ element: name, detail: `nach dem Scrollen bei ${Math.round(box.left)},${Math.round(box.top)} ausserhalb des Fensters` })
-        continue
-      }
-      const treffer = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
-      if (treffer === null || !(treffer === bild || treffer.contains(bild) || bild.contains(treffer))) {
-        befunde.push({ element: name, detail: `überdeckt von ${treffer?.className || treffer?.tagName || 'nichts'}` })
-      }
-    }
-    return { gezaehlt: bilder.length, befunde }
-  })
-}
-
-for (const { name, erzeuge, karten } of SZENARIEN) {
+for (const { name, erzeuge, karten, eigeneBilder, gruppenBalken, stapel } of SZENARIEN) {
   test.describe(`O4: Spieltisch, ${name}`, () => {
     test.beforeEach(async ({ page }) => {
       await oeffneMitPartie(page, erzeuge())
@@ -112,8 +85,24 @@ for (const { name, erzeuge, karten } of SZENARIEN) {
       expect(fenster.height - hand.unten, 'Abstand der Hand zum unteren Rand').toBeLessThanOrEqual(24)
       expect(schlangen.oben, 'Oberkante deiner Schlangen').toBeGreaterThanOrEqual(0)
       expect(schlangen.unten, 'Unterkante deiner Schlangen').toBeLessThanOrEqual(hand.oben + 1)
-      // Mindestens Titel und eine Zeile: „Noch keine Schlange“ oder die erste Schlange.
-      expect(schlangen.hoehe, 'Höhe deiner Schlangen').toBeGreaterThanOrEqual(40)
+    })
+
+    // Iteration 2: ersetzt „Höhe deiner Schlangen ≥ 40 px“, das zu schwach war (Prüfprotokoll O4, Mangel 1).
+    test('O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken', async ({ page }) => {
+      const { bilder, befunde } = await abgeschnitteneEigeneSchlangen(page)
+      expect(bilder, 'Bilder in deinen Schlangen').toBe(eigeneBilder)
+      expect(befunde, `deine Schlangen sind ohne Scrollen nicht ganz zu sehen:${befundListe(befunde)}`).toEqual([])
+    })
+
+    test('O4 K4: kein Gruppenbalken liegt auf einer Karte, auch wenn eine Schlange umbricht', async ({ page }) => {
+      const { balken, befunde } = await ueberdeckendeBalken(page)
+      expect(balken, 'Balken unter Farbgruppen').toBeGreaterThanOrEqual(gruppenBalken)
+      expect(befunde, `Balken auf Karten:${befundListe(befunde)}`).toEqual([])
+    })
+
+    test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
+      const lesbar = await lesbareStapelzahlen(page, stapel)
+      expect(lesbar, `„Nachziehstapel ${stapel}“ oder „Stapel ${stapel}“ ganz im Bild und frei`).not.toEqual([])
     })
 
     test('O4 K1: wer die Tischfläche scrollt, verschiebt deine Hand und deine Schlangen nicht', async ({ page }) => {

@@ -14,12 +14,13 @@ weder Name noch Id einer fremden Handkarte. Dasselbe gilt für die geheimen
 Aufgaben der Gegner (B2).
 
 Geprüft wird das gezeichnete HTML. Ids prüft jeder Zustand: die Szenarien, 80
-Zufallszustände und jeder der ersten 150 Schritte von vier Partien, die über
-die aufgezählten Aktionen der Engine laufen. Solange die Engine keine Aktion
-aufzählt (vor E2), ist das nur der Startzustand; mit E2 wird jeder Zug geprüft,
-ohne dass dieser Test sich ändert. Die Grenze hält die Laufzeit klein: Jeder
-Schritt zeichnet den ganzen Tisch. Namen lassen sich nur dort prüfen, wo sie sonst nirgends
-offen liegen: im Szenario `geheimeHaende`.
+Zufallszustände und jeder Schritt zweier ganzer Partien, die über die
+aufgezählten Aktionen der Engine bis zum Ende laufen. Solange die Engine keine
+Aktion aufzählt (vor E2), ist das nur der Startzustand; mit E2 wird jeder Zug
+bis zum Spielende geprüft, ohne dass dieser Test sich ändert. Jeder Schritt
+zeichnet den ganzen Tisch; deshalb zwei Partien (2 Spieler ohne, 4 mit
+Erweiterung) statt vieler kurzer. Namen lassen sich nur dort prüfen, wo sie
+sonst nirgends offen liegen: im Szenario `geheimeHaende`.
 */
 
 afterEach(cleanup)
@@ -31,14 +32,23 @@ function zeichne(zustand: Spielzustand): string {
   return html
 }
 
-/** Die Zustände einer Partie, Schritt für Schritt über die aufgezählten Aktionen der Engine. */
-function partieSchritte(saat: number, spielerzahl: number, erweiterung: boolean, grenze: number): Spielzustand[] {
+/** Sicherung gegen eine Partie, die nie endet; der Dauerlauf der Engine nimmt dieselbe Grenze. */
+const HOECHSTENS_SCHRITTE = 5000
+
+/**
+ * Die Zustände einer ganzen Partie, Schritt für Schritt über die aufgezählten
+ * Aktionen der Engine, bis sie beendet ist oder keine Aktion mehr aufgezählt
+ * wird. Endet sie nach der Sicherung nicht, ist das ein Fehler und kein stilles
+ * Abschneiden.
+ */
+function partieSchritte(saat: number, spielerzahl: number, erweiterung: boolean): Spielzustand[] {
   const wahl = erzeugeZufall(saat ^ 0x7155)
   let zustand = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
   const schritte = [zustand]
-  for (let schritt = 0; schritt < grenze && zustand.partiephase !== 'Beendet'; schritt += 1) {
+  while (zustand.partiephase !== 'Beendet') {
     const aktionen = ermittleAktionen(zustand)
     if (aktionen.length === 0) break
+    if (schritte.length > HOECHSTENS_SCHRITTE) throw new Error(`partieSchritte: Saat ${saat} nach ${HOECHSTENS_SCHRITTE} Schritten nicht beendet.`)
     zustand = anwendeAktion(zustand, aktionen[Math.floor(wahl() * aktionen.length)]).zustand
     schritte.push(zustand)
   }
@@ -64,11 +74,9 @@ describe('O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im H
 
   it.each([
     [11, 2, false],
-    [12, 3, true],
-    [13, 4, false],
     [14, 4, true],
-  ])('O4 K2: Partie aus Saat %i mit %i Spielern (Erweiterung %s) verrät nach keinem Schritt eine Id', (saat, spielerzahl, erweiterung) => {
-    const schritte = partieSchritte(saat, spielerzahl, erweiterung, 150)
+  ])('O4 K2: ganze Partie aus Saat %i mit %i Spielern (Erweiterung %s) verrät nach keinem Schritt eine Id', (saat, spielerzahl, erweiterung) => {
+    const schritte = partieSchritte(saat, spielerzahl, erweiterung)
     expect(schritte.length, 'mindestens der Startzustand').toBeGreaterThan(0)
     schritte.forEach((zustand, schritt) => {
       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, Schritt ${schritt}`).toEqual([])
