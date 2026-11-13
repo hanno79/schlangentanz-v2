@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { serialisiere } from '../../src/engine'
+import { ermittleAktionen, serialisiere } from '../../src/engine'
 import { starteEntwicklerPartie } from '../../src/entwicklung/partie'
 import { findeSzenario } from '../../src/entwicklung/szenarien'
 import { berechneterStil } from './messung'
@@ -10,8 +10,7 @@ laufen gegen den Testhook-Build auf :4174; nur dort gibt es `/dev`.
 
 Die Erwartung kommt jeweils aus der Engine selbst, im Testprozess berechnet:
 Die Seite soll zeigen, was die Engine aufbaut, nicht was sie über sich selbst
-behauptet. Nach E1 zählt die Engine noch keine Aktion auf; Knöpfe gibt es erst
-mit E2.
+behauptet. Seit E2 zählt die Engine Aktionen auf, und jede steht als Knopf da.
 */
 
 async function oeffneTisch(page: Page, adresse: string): Promise<void> {
@@ -58,10 +57,14 @@ test.describe('P0.4 K1: Partie aus Saat', () => {
     }
   })
 
-  test('E1: ohne aufgezählte Aktion gibt es keinen Aktionsknopf, und der Tisch sagt warum', async ({ page }) => {
+  test('E2: die aufgezählten Aktionen stehen als Knöpfe da; Karte und „Zug beenden“ geben den Zug weiter', async ({ page }) => {
     await oeffneTisch(page, '/dev?seed=1&spieler=2')
-    await expect(page.locator('button[data-aktion]')).toHaveCount(0)
-    await expect(page.getByTestId('keine-aktion')).toBeVisible()
+    const zustand = starteEntwicklerPartie(1, 2, false)
+    await expect(page.locator('button[data-aktion]')).toHaveCount(ermittleAktionen(zustand).length)
+    await page.locator('button[data-aktion]').first().click()
+    await page.locator('button[data-aktion*="ZugBeenden"]').click()
+    await expect(page.getByTestId('entscheider')).toContainText('KI-Gegner 1')
+    await expect(page.getByTestId('ereignisse')).toContainText('ZugBegonnen')
   })
 })
 

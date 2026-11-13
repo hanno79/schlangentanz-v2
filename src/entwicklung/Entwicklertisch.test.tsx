@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
-import { serialisiere } from '../engine'
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
 import Entwicklertisch from './Entwicklertisch'
 import { starteEntwicklerPartie } from './partie'
 import { findeSzenario, SZENARIEN } from './szenarien'
@@ -60,10 +60,39 @@ describe('E1: Entwicklertisch auf der neuen Aktionsschicht', () => {
     expect(screen.getByTestId('wertung')).toBeInTheDocument()
   })
 
-  it('E1: die Engine zählt nach E1 keine Aktion auf; der Tisch sagt das und baut keine eigene', () => {
+  it('E2: der Tisch bietet genau die Aktionen als Knöpfe an, die die Engine aufzählt, und baut keine eigene', () => {
     oeffne('/dev?seed=1&spieler=2')
+    const zustand = starteEntwicklerPartie(1, 2, false)
+    expect(aktionsKnoepfe()).toEqual(ermittleAktionen(zustand).map((aktion) => JSON.stringify(aktion)))
+    expect(aktionsKnoepfe().length).toBeGreaterThan(0)
+    expect(screen.queryByTestId('keine-aktion')).toBeNull()
+  })
+
+  it('E2: ein Klick spielt die Aktion; „Zug beenden“ gibt den Zug weiter, und die Ereignisse stehen da', () => {
+    oeffne('/dev?seed=1&spieler=2')
+    const zustand = starteEntwicklerPartie(1, 2, false)
+    const karte = ermittleAktionen(zustand)[0]
+    fireEvent.click(screen.getByTitle(JSON.stringify(karte)))
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('KarteGespielt')
+    const nach = anwendeAktion(zustand, karte).zustand
+    expect(zustandsText()).toBe(serialisiere(nach))
+    fireEvent.click(screen.getByTitle(JSON.stringify({ typ: 'ZugBeenden', spielerId: 'spieler-1' })))
+    expect(screen.getByTestId('entscheider')).toHaveTextContent('KI-Gegner 1')
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('ZugBegonnen')
+    expect(within(screen.getByTestId('verlauf')).getAllByRole('listitem')).toHaveLength(3)
+  })
+
+  it('E2: nach Spielende sagt der Tisch, dass die Partie beendet ist, und bietet keinen Knopf mehr an', () => {
+    oeffne('/dev?szenario=schlussrunde-2')
+    // Zwei Züge (Auslöser, dann der letzte Zug des Gegners): je eine Karte, dann „Zug beenden“.
+    for (let zug = 0; zug < 2; zug += 1) {
+      fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => !text.includes('ZugBeenden'))!))
+      fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => text.includes('ZugBeenden'))!))
+    }
+    expect(screen.getByTestId('partiephase')).toHaveTextContent('Beendet')
     expect(aktionsKnoepfe()).toEqual([])
-    expect(screen.getByTestId('keine-aktion')).toHaveTextContent('Die Engine zählt hier keine Aktion auf')
+    expect(screen.getByTestId('keine-aktion')).toHaveTextContent('Die Partie ist beendet')
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('PartieBeendet')
   })
 
   it('E1: das Szenario alle-orte zeigt Fusion, ausliegende Grube, schwebende Karte und Karten aus dem Spiel', () => {
