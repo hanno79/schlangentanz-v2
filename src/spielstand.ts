@@ -52,26 +52,68 @@ export function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
 }
 
 /**
- * Die gespeicherte Partie — oder `null`, wenn es keine brauchbare gibt.
+ * Das Speicherformat, das die Engine heute schreibt. Der Typ bindet die Zahl an
+ * `Spielzustand['version']`: Hebt E1 das Format an, meldet der Typecheck diese
+ * Stelle.
+ */
+const SPEICHERFORMAT: Spielzustand['version'] = 1
+
+/**
+ * Was im Speicher liegt.
  *
- * **Jeder** Fehler führt zu `null` *und* zum Löschen des Eintrags: kein JSON,
- * ungültige Struktur, ein Format aus einer Version, die keine Migration mehr
- * kennt. Der Spieler hat einen kaputten Stand weder verursacht noch kann er ihn
- * beheben — ihm eine Fehlermeldung zu zeigen, hilft ihm nicht, und ihn stehen zu
- * lassen sperrt ihn beim nächsten Reload erneut aus.
+ * - `aelteres-format`: ein Stand aus einer früheren Fassung, die keine Migration
+ *   mehr kennt. Erwartet nach jedem Formatwechsel (Plan 2.3: alte Spielstände
+ *   werden verworfen), kein Defekt.
+ * - `beschaedigt`: alles andere, das sich nicht lesen lässt (kein JSON, ungültige
+ *   Struktur, unbekanntes neueres Format). Das sollte nie vorkommen.
+ */
+export type GespeicherteLage =
+  | { art: 'keiner' }
+  | { art: 'geladen'; zustand: Spielzustand }
+  | { art: 'unlesbar'; grund: 'aelteres-format' | 'beschaedigt'; fehler: Error }
+
+/**
+ * Liest den Spielstand, ohne etwas zu ändern, und sagt bei einem unlesbaren
+ * Eintrag, warum. Verwerfen und melden ist Sache des Aufrufers: Der Spieler soll
+ * erfahren, dass seine Partie weg ist, statt dass sie still verschwindet.
+ */
+export function pruefeSpielstand(): GespeicherteLage {
+  const roh = mitSpeicher((s) => s.getItem(SPIELSTAND_SCHLUESSEL), null)
+  if (roh === null) return { art: 'keiner' }
+
+  try {
+    return { art: 'geladen', zustand: deserialisiere(roh) }
+  } catch (fehler) {
+    return {
+      art: 'unlesbar',
+      grund: istAelteresFormat(roh) ? 'aelteres-format' : 'beschaedigt',
+      fehler: fehler instanceof Error ? fehler : new Error(String(fehler)),
+    }
+  }
+}
+
+/** Ein JSON-Objekt mit einer Versionsnummer unter der heutigen. */
+function istAelteresFormat(roh: string): boolean {
+  let wert: unknown
+  try {
+    wert = JSON.parse(roh)
+  } catch {
+    return false
+  }
+  if (typeof wert !== 'object' || wert === null) return false
+  const version = (wert as { version?: unknown }).version
+  return typeof version === 'number' && version < SPEICHERFORMAT
+}
+
+/**
+ * Die gespeicherte Partie — oder `null`, wenn es keine brauchbare gibt. Ein
+ * unlesbarer Eintrag wird dabei gelöscht, ohne den Grund zu nennen; wer dem
+ * Spieler etwas zeigen muss, nimmt `pruefeSpielstand`.
  */
 export function ladeSpielstand(): Spielzustand | null {
-  const roh = mitSpeicher((s) => s.getItem(SPIELSTAND_SCHLUESSEL), null)
-  if (roh === null) return null
-
-  /* Das zweite `try` bleibt: Es hat als einziges eine eigene Reaktion. Ein
-     unlesbarer Eintrag wird nicht nur übergangen, sondern gelöscht. */
-  try {
-    return deserialisiere(roh)
-  } catch {
-    verwirfSpielstand()
-    return null
-  }
+  const lage = pruefeSpielstand()
+  if (lage.art === 'unlesbar') verwirfSpielstand()
+  return lage.art === 'geladen' ? lage.zustand : null
 }
 
 /**

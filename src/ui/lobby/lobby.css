@@ -281,3 +281,7 @@ bleibt dabei unverändert.
   border-radius: var(--rahmen-radius);
   background: var(--rahmen-hinweis-flaeche);
 }
+
+.hinweis--fehler {
+  border-left: 4px solid var(--rahmen-warnung);
+}

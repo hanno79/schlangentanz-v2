@@ -1,20 +1,22 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { geheZu } from './navigation'
-import { GEGNER_AUSWAHL, findeLaufendePartie, starteNeuePartie, type LaufendePartie } from './partie'
+import { GEGNER_AUSWAHL, starteNeuePartie, useGespeichertePartie } from './partie'
 import Rahmen from './Rahmen'
 import { LOBBY, SPIELNAME, partieKurz } from './texte'
 import Verweis from './Verweis'
+import VerworfenHinweis from './VerworfenHinweis'
 
 /**
  * Die Startseite: Gegnerzahl und Erweiterung wählen, eine neue Partie beginnen
  * oder die gespeicherte fortsetzen.
  *
  * Hier läuft keine Partie (O2 K5): Die Lobby liest den Spielstand einmal beim
- * Öffnen, um „Weiterspielen“ anzubieten, und ruft die Engine erst beim Klick
- * auf „Neue Partie“.
+ * Öffnen, um „Weiterspielen“ anzubieten oder zu sagen, dass er unlesbar war,
+ * und ruft die Engine erst beim Klick auf „Neue Partie“.
  */
 export default function Lobby() {
-  const [laufend] = useState<LaufendePartie | null>(findeLaufendePartie)
+  const gespeichert = useGespeichertePartie()
+  const laufend = gespeichert.art === 'laufend' ? gespeichert.partie : null
   const [gegner, setGegner] = useState(GEGNER_AUSWAHL[0])
   const [erweiterung, setErweiterung] = useState(false)
   const [fragtNach, setFragtNach] = useState(false)
@@ -50,6 +52,8 @@ export default function Lobby() {
       text={LOBBY.untertitel}
       fuss={<Verweis ziel="regeln">{LOBBY.regeln}</Verweis>}
     >
+      {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
+
       {laufend !== null && (
         <section className="lobby__laufend" aria-label={LOBBY.laufendePartie}>
           <p data-testid="laufende-partie">

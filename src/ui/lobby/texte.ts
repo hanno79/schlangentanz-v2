@@ -38,6 +38,15 @@ export function partieKurz(gegner: number, erweiterung: boolean | null): string 
   return `${LOBBY.gegner(gegner)}, Erweiterung ${erweiterungWort(erweiterung)}`
 }
 
+/** Hinweis, wenn sich die gespeicherte Partie beim Öffnen nicht lesen liess und verworfen wurde. */
+export function verworfenHinweis(grund: 'aelteres-format' | 'beschaedigt', meldung: string): string {
+  const warum =
+    grund === 'aelteres-format'
+      ? 'Sie stammt aus einem älteren Speicherformat, das diese Fassung des Spiels nicht mehr liest.'
+      : `Der Spielstand ist beschädigt (${meldung.replace(/\.$/, '')}).`
+  return `Die gespeicherte Partie liess sich nicht laden. ${warum} Sie wurde verworfen; starte eine neue Partie.`
+}
+
 export const SPIEL = {
   titel: 'Spieltisch im Aufbau',
   text: 'Die Partie ist angelegt und gespeichert. Den Spieltisch gibt es noch nicht; bis dahin lässt sie sich hier nicht spielen.',

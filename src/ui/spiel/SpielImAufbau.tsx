@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { findeLaufendePartie } from '../lobby/partie'
+import { useGespeichertePartie } from '../lobby/partie'
 import { SPIEL, ZURUECK_ZUR_LOBBY, erweiterungWort } from '../lobby/texte'
 import Rahmen from '../lobby/Rahmen'
 import Verweis from '../lobby/Verweis'
+import VerworfenHinweis from '../lobby/VerworfenHinweis'
 
 /**
  * Vorläufige Seite unter `/spiel`, bis O3 bis O8 den Spieltisch bauen: Sie
@@ -10,7 +10,8 @@ import Verweis from '../lobby/Verweis'
  * zurück in die Lobby. Es läuft hier nichts.
  */
 export default function SpielImAufbau() {
-  const [partie] = useState(findeLaufendePartie)
+  const gespeichert = useGespeichertePartie()
+  const partie = gespeichert.art === 'laufend' ? gespeichert.partie : null
 
   return (
     <Rahmen
@@ -19,6 +20,7 @@ export default function SpielImAufbau() {
       text={partie === null ? SPIEL.keinePartie : SPIEL.text}
       fuss={<Verweis ziel="lobby">{ZURUECK_ZUR_LOBBY}</Verweis>}
     >
+      {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
       {partie !== null && (
         <>
           <dl className="einstellungen">

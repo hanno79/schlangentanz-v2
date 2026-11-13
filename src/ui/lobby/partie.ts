@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { KI_GEGNER_MAX, KI_GEGNER_MIN, erstelleEinzelspielerSpielzustand } from '../../engine'
-import { ladeSpielstand, mitSpeicher, speichereSpielstand, verwirfSpielstand } from '../../spielstand'
+import { meldeFehler } from '../../fehlerdienst'
+import { mitSpeicher, pruefeSpielstand, speichereSpielstand, verwirfSpielstand } from '../../spielstand'
 
 /*
 Partie anlegen, finden und verwerfen, für Lobby, Spieltisch und Fehlerfang.
@@ -60,18 +62,75 @@ export function starteNeuePartie({ gegner, erweiterung }: Einstellungen): void {
   mitSpeicher((s) => s.setItem(ERWEITERUNG_SCHLUESSEL, erweiterung ? '1' : '0'), undefined)
 }
 
-/** Die gespeicherte Partie in Kurzform, oder `null`, wenn es keine brauchbare gibt. */
-export function findeLaufendePartie(): LaufendePartie | null {
-  const zustand = ladeSpielstand()
-  if (zustand === null) return null
-  return {
-    gegner: zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').length,
-    erweiterung: gemerkteErweiterung(),
-  }
-}
-
 /** Verwirft die gespeicherte Partie samt gemerktem Schalter. */
 export function verwirfPartie(): void {
   verwirfSpielstand()
   mitSpeicher((s) => s.removeItem(ERWEITERUNG_SCHLUESSEL), undefined)
+}
+
+export type Verwurfsgrund = 'aelteres-format' | 'beschaedigt'
+
+export type PartieLage =
+  | { art: 'keine' }
+  | { art: 'laufend'; partie: LaufendePartie }
+  | { art: 'verworfen'; grund: Verwurfsgrund; fehler: Error }
+
+/** Was im Speicher liegt, in Kurzform. Liest nur und ändert nichts. */
+function leseGespeichertePartie(): PartieLage {
+  const lage = pruefeSpielstand()
+  switch (lage.art) {
+    case 'keiner':
+      return { art: 'keine' }
+    case 'geladen':
+      return {
+        art: 'laufend',
+        partie: {
+          gegner: lage.zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').length,
+          erweiterung: gemerkteErweiterung(),
+        },
+      }
+    case 'unlesbar':
+      return { art: 'verworfen', grund: lage.grund, fehler: lage.fehler }
+  }
+}
+
+/* Jede Lage wird genau einmal aufgeräumt und gemeldet, auch wenn der StrictMode
+   den Effekt zweimal ausführt. */
+const aufgeraeumt = new WeakSet<PartieLage>()
+
+/*
+Ein unlesbarer Stand wird verworfen (samt gemerktem Schalter) und gemeldet.
+
+Die Abgrenzung beim Melden: Ein älteres Speicherformat ist kein Defekt, sondern
+die erwartete Folge eines Formatwechsels (Plan 2.3; E1 lehnt Format 1 mit
+Absicht ab). An den Fehlerdienst gemeldet, käme nach jedem Wechsel ein Bericht
+je wiederkehrendem Spieler, und die echten Fehler gingen darin unter; es bleibt
+bei einer Warnung in der Konsole. Alles andere, was sich nicht lesen lässt, ist
+ein Defekt (eigener Code hat Unlesbares geschrieben, oder etwas Fremdes hat den
+Eintrag verändert) und geht an den Fehlerdienst.
+*/
+function raeumeVerworfeneAuf(lage: Extract<PartieLage, { art: 'verworfen' }>): void {
+  if (aufgeraeumt.has(lage)) return
+  aufgeraeumt.add(lage)
+  verwirfPartie()
+  if (lage.grund === 'aelteres-format') {
+    console.warn('Gespeicherte Partie im älteren Speicherformat verworfen:', lage.fehler.message)
+    return
+  }
+  console.error('Gespeicherte Partie beschädigt und verworfen:', lage.fehler)
+  meldeFehler(lage.fehler, { ort: 'spielstand', grund: lage.grund })
+}
+
+/**
+ * Die gespeicherte Partie für eine Seite: einmal beim Öffnen gelesen. Ist sie
+ * unlesbar, liefert der Hook das als `verworfen` (die Seite zeigt es an) und
+ * räumt nach dem Zeichnen auf. Gelesen wird im Zeichnen, verworfen erst im
+ * Effekt, damit ein zweites Zeichnen denselben Befund sieht.
+ */
+export function useGespeichertePartie(): PartieLage {
+  const [lage] = useState(leseGespeichertePartie)
+  useEffect(() => {
+    if (lage.art === 'verworfen') raeumeVerworfeneAuf(lage)
+  }, [lage])
+  return lage
 }
