@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { duldeBekannteAusnahmen } from './ausnahmen'
+import { kasten } from './messung'
 import { oeffne } from './oeffnen'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
@@ -10,7 +11,8 @@ Wächter (nichts abgeschnitten, ausserhalb, verdeckt, zu blass), kein
 waagrechtes Scrollen und Tippflächen von mindestens 44 px.
 */
 
-// Bekannte Befunde in Handy quer (P0.3c): tests/layout/geraeteklassen_ausnahmen.json.
+// Bekannte Befunde in den neuen Geräteklassen (P0.3c): tests/layout/geraeteklassen_ausnahmen.json.
+// Die drei Einträge zur Lobby in Handy quer hat O2b behoben; für diese Datei steht dort nichts mehr.
 duldeBekannteAusnahmen()
 
 /** Startet über die Lobby eine Partie; danach steht ein Spielstand im Browser. */
@@ -87,6 +89,38 @@ test.describe('O2: Lobby mit offener Rückfrage vor einer neuen Partie', () => {
     const frage = page.getByRole('alertdialog')
     await expect(frage.getByRole('button', { name: /neue Partie/i })).toBeVisible()
     await expect(frage.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
+  })
+
+  alleVertraege()
+})
+
+/*
+O2b, TF-APP-016: Das Gerät wird bei offener Rückfrage gedreht. Jede Klasse
+dreht ihr eigenes Fenster (Breite und Höhe getauscht); Handy hochkant landet
+so in Handy quer, dem Fall aus dem Testregister. Danach gelten dieselben
+Messungen wie in jedem anderen Zustand der Lobby.
+*/
+test.describe('O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen', () => {
+  test.beforeEach(async ({ page }) => {
+    await startePartie(page)
+    await oeffne(page, '/')
+    await page.getByRole('button', { name: 'Neue Partie' }).click()
+    await expect(page.getByRole('alertdialog')).toBeVisible()
+    const fenster = page.viewportSize()
+    if (fenster === null) throw new Error('TF-APP-016: Das Fenster hat keine feste Grösse.')
+    await page.setViewportSize({ width: fenster.height, height: fenster.width })
+  })
+
+  test('O2b TF-APP-016: die Rückfrage liegt nach dem Drehen ganz im Bild', async ({ page }) => {
+    const frage = page.getByRole('alertdialog')
+    await expect(frage.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
+    await expect
+      .poll(async () => {
+        const box = await kasten(frage)
+        const hoehe = await page.evaluate(() => window.innerHeight)
+        return box.oben >= 0 && box.unten <= hoehe ? 'im Bild' : `${box.oben}..${box.unten} bei ${hoehe} px Höhe`
+      })
+      .toBe('im Bild')
   })
 
   alleVertraege()
