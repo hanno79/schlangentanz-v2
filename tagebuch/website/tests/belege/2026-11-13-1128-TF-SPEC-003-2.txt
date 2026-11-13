@@ -1,0 +1,43 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac3de62bd02041981
+
+ ❯ tests/regelfragen.test.ts (354 tests | 1 failed) 69ms
+       × P0.5: F11 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und „Website folgt“ 8ms
+node.exe : 
+In Zeile:1 Zeichen:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\hanno\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F11 > P0.5: F11 steht in Teil D genau dann, 
+wenn sie beantwortet ist, mit Datum und „Website folgt“
+AssertionError: F11: Teil D D24 ohne Wortlaut des Autors „längste Schlange muss mindestens aus 3 Farbkarten bestehen 
+nicht nur 2. sonst ok“: expected 'Eine Kette zählt erst ab 3 Farbkarten…' to contain '„längste Schlange muss 
+mindestens aus…'
+
+Expected: "„längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“"
+Received: "Eine Kette zählt erst ab 3 Farbkarten derselben Farbe nebeneinander, nicht schon ab 2; Sonderkarten zählen 
+nicht mit und unterbrechen sie (A11). Hat niemand eine solche Kette, bekommt niemand den Bonus; wer keine hat, bekommt 
+ihn nie. Wortlaut: „längste Schlange muss mindestens aus 2 Farbkarten bestehen. sonst ok“ (gemeint ist die längste 
+Farbkette). Website folgt."
+
+ ❯ pruefeTeilD tests/regelfragen.test.ts:113:94
+    111|   expect(antwort, `${nr}: Antwort nennt den Eintrag ${eintrag.nr} in T…
+    112|   for (const zitat of antwort.match(ZITAT) ?? []) {
+    113|     expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr} ohne Wortlaut…
+       |                                                                                              ^
+    114|   }
+    115| }
+ ❯ tests/regelfragen.test.ts:238:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 358 passed (359)
+   Start at  11:17:07
+   Duration  803ms (transform 173ms, setup 655ms, import 134ms, tests 80ms, environment 0ms)
+

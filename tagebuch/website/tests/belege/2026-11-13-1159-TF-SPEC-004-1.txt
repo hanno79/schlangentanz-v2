@@ -1,0 +1,26 @@
+Pruefstand 1500df9, origin/neuaufbau 85cde73 (Merge #29 O2)
+merge-tree --write-tree --name-only origin/neuaufbau HEAD -> exit 1:
+1de670e276d2c868e4656dd73300c4f22a96a01a
+tagebuch/website/.stand
+tagebuch/website/tests.html
+
+Auto-merging tagebuch/tests/bereiche.md
+Auto-merging tagebuch/website/.stand
+CONFLICT (content): Merge conflict in tagebuch/website/.stand
+Auto-merging tagebuch/website/tests.html
+CONFLICT (content): Merge conflict in tagebuch/website/tests.html
+
+Probe-Merge lokal (verworfen): Konflikte mit checkout --theirs und python scripts/tagebuch_bauen.py aufgeloest, dann npm test -- --run:
+
+> schlangentanz-v2@0.0.0 test
+> vitest --run
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a81e4946f03aeb274
+
+
+ Test Files  76 passed (76)
+      Tests  1164 passed (1164)
+   Start at  11:56:27
+   Duration  25.97s (transform 4.04s, setup 45.13s, import 11.93s, tests 68.45s, environment 536.98s)
+

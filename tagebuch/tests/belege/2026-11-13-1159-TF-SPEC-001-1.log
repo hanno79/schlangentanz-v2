@@ -1,0 +1,9 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a81e4946f03aeb274
+
+
+ Test Files  3 passed (3)
+      Tests  391 passed (391)
+   Start at  11:47:18
+   Duration  5.14s (transform 165ms, setup 1.10s, import 138ms, tests 94ms, environment 4.55s)
+

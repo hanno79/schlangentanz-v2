@@ -372,7 +372,7 @@ daneben.
 #### E2 Zugablauf
 
 - **Behebt:** C3, C4, C12, Teil von C11. Spec: A5, A6 (Timing), A10, D12, D13.
-  Fragen: F5, F8, F12.
+  Fragen: F5 → D18, F8 → D21, F12 → D25 (Antworten in Teil D).
 - **Dateien:** neu `src/engine/zugablauf.ts`; `turnState.ts` und
   `ueberhand.ts` werden gelöscht; `aktionen/*`, `karten/farbkarte.ts`.
 - **Abnahmekriterien:**
@@ -407,7 +407,7 @@ daneben.
 
 #### E3 Verdoppler
 
-- **Behebt:** C7. Spec: A5, A7.8, D11. Frage: F10.
+- **Behebt:** C7. Spec: A5, A7.8, D11. Frage: F10 → D23 (Antwort in Teil D).
 - **Dateien:** `karten/verdoppler.ts`, `zugablauf.ts`.
 - **Abnahmekriterien:**
   1. Der Verdoppler ist die Sonderkarte des Zuges; er geht vor oder nach der
@@ -425,7 +425,9 @@ daneben.
 
 #### E4 Abwehr und Schlangengrube
 
-- **Behebt:** C6, C17 (Rahmen), C18. Spec: A6, A7.2, A7.6, D10. Fragen: F1, F5, F8.
+- **Behebt:** C6, C17 (Rahmen), C18. Spec: A6, A7.2, A7.6, D10.
+  Fragen: F1 → D14, F5 → D18, F8 → D21, Nachfrage F8a → D29 (Antworten in
+  Teil D).
 - **Dateien:** neu `src/engine/reaktion.ts`; `reaktionsaufloesung.ts` und
   `src/reaktionen.ts` werden gelöscht; `karten/{farbenschutz,schlangengrube}.ts`.
 - **Abnahmekriterien:**
@@ -444,8 +446,8 @@ daneben.
      der sie gespielt hat. Abgewehrt hat sie keine Wirkung.
   8. Speichern und Laden mitten in einer offenen Frage setzt genau dort fort.
 - **Grenzfälle:** zwei Schlangengruben auf einen Spieler (F1); zu zweit
-  mehrmals hintereinander; Schlangengrube in der Schlussrunde und auf einen
-  Spieler ohne weiteren Zug (F8); Abwehr mit der letzten Handkarte; Abwehr
+  mehrmals hintereinander; Schlangengrube in der Schlussrunde (F8) und auf
+  einen Spieler ohne weiteren Zug (F8a); Abwehr mit der letzten Handkarte; Abwehr
   während des Aussetzens (F5); Verteidiger mit zwei Farbenschutz verbraucht einen.
 - **Szenarien:** `schlangengrube`, `abwehr-schlangengrube`, `doppelangriff`.
 
@@ -453,7 +455,8 @@ daneben.
 
 #### E5 Legen: Farbkarte in jede Schlange, Regenbogenschlange, Schlangenblockade
 
-- **Behebt:** C2, Teil von C19. Spec: A5, A7.3, A7.5, D9, D10. Fragen: F3, F6.
+- **Behebt:** C2, Teil von C19. Spec: A5, A7.3, A7.5, D9, D10.
+  Fragen: F3 → D16, F6 → D19 (Antworten in Teil D).
 - **Dateien:** `karten/{farbkarte,regenbogenschlange,schlangenblockade}.ts`.
 - **Abnahmekriterien:**
   1. D9: Eine Farbkarte geht an beide Enden **jeder** Schlange am Tisch und
@@ -472,7 +475,7 @@ daneben.
 
 #### E6 Schlangenfrass
 
-- **Behebt:** C8, C17. Spec: A7.4, A6 Beispiel 2. Frage: F2.
+- **Behebt:** C8, C17. Spec: A7.4, A6 Beispiel 2. Frage: F2 → D15 (Antwort in Teil D).
 - **Dateien:** `karten/schlangenfrass.ts`.
 - **Abnahmekriterien:**
   1. a) entfernt eine beliebige eigene Karte; b) eine eigene Blockade;
@@ -493,7 +496,8 @@ daneben.
 
 #### E7 Farbenfusion
 
-- **Behebt:** C16, Teil von C19. Spec: A7.7, A7.4, D9, D10. Fragen: F7, F14.
+- **Behebt:** C16, Teil von C19. Spec: A7.7, A7.4, D9, D10.
+  Fragen: F7 → D20, F14 → D27 (Antworten in Teil D).
 - **Dateien:** `karten/farbenfusion.ts`.
 - **Abnahmekriterien:**
   1. Die beiden Farbkarten bleiben unter der Fusion in der Schlange erhalten.
@@ -507,7 +511,7 @@ daneben.
 
 #### E8 Farbendieb
 
-- **Spec:** A7.1, Teil D (D2). Frage: F4.
+- **Spec:** A7.1, Teil D (D2). Frage: F4 → D17 (Antwort in Teil D).
 - **Dateien:** `karten/farbendieb.ts`.
 - **Abnahmekriterien:**
   1. Gestohlen werden nur Farbkarten aus gegnerischen Schlangen; nie Karten
@@ -524,7 +528,7 @@ daneben.
 
 *Karte der Erweiterung; läuft technisch mit den übrigen Kartentasks.*
 
-- **Behebt:** C9, Teil von C19. Spec: A7.9, D9, D10. Frage: F13.
+- **Behebt:** C9, Teil von C19. Spec: A7.9, D9, D10. Frage: F13 → D26 (Antwort in Teil D).
 - **Dateien:** `karten/schlangenhaeutung.ts`.
 - **Abnahmekriterien:**
   1. Gewählt wird ein Abschnitt von 3 bis 5 aufeinanderfolgenden Farbkarten
@@ -544,7 +548,8 @@ daneben.
 
 *Läuft ab E1 neben den anderen Tasks.*
 
-- **Behebt:** C11, C13. Spec: A11, A7.3, A7.7. Fragen: F9, F11.
+- **Behebt:** C11, C13. Spec: A11, A7.3, A7.7.
+  Fragen: F9 → D22, F11 → D24 (Antworten in Teil D).
 - **Dateien:** `src/engine/scoring.ts`, neu `src/engine/jokerGruppen.ts`.
   `colorGroups.ts` bleibt unverändert (der Kettenbonus braucht die rohe Sicht).
 - **Abnahmekriterien:**
@@ -556,7 +561,8 @@ daneben.
   4. Vielfaltbonus (nur mit Erweiterung): je Schlange berechnet, der höchste
      zählt; 1/2/3/4 Punkte für 2/3/4/5 und mehr Farben; beide Beispiele aus A11.
   5. Längste Farbkette: 5 Punkte für jeden Spieler mit der längsten einzelnen
-     Kette; Joker und Sonderkarten unterbrechen (Beispiel Länge 4).
+     Kette; Joker und Sonderkarten unterbrechen (Beispiel Länge 4). Eine Kette
+     zählt erst ab 3 Farbkarten; hat niemand eine, gibt es keinen Bonus (D24).
   6. Es gibt einen **Zwischenstand** (ohne Kettenbonus, ohne fremde geheime
      Aufgaben) und eine **Endwertung** mit Aufschlüsselung je Spieler: Gruppen
      je Schlange, Farbe jedes Jokers, Vielfaltbonus, Kette, Aufgaben, Summe.
@@ -679,10 +685,10 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
   eine Aktion oder nichts, wenn ein Mensch entscheidet), `src/ki/zufallsKi.ts`,
   `src/ki/turnier.ts` (N Partien mit Saat, Sitz rotierend).
 - **Abnahmekriterien:**
-  1. Die Sicht enthält: eigene Hand, alle Schlangen, Ablagestapel (nach F15),
-     Handgrössen, Stapelgrösse, offene Aufgaben, eigene geheime Aufgabe, die
-     angesagte Aktion. Sie enthält keine fremde Hand, keine Stapelreihenfolge,
-     keine fremde geheime Aufgabe.
+  1. Die Sicht enthält: eigene Hand, alle Schlangen, Ablagestapel (nach
+     F15 → D28 in Teil D), Handgrössen, Stapelgrösse, offene Aufgaben, eigene
+     geheime Aufgabe, die angesagte Aktion. Sie enthält keine fremde Hand, keine
+     Stapelreihenfolge, keine fremde geheime Aufgabe.
   2. 200 Partien Zufalls-KI gegen Zufalls-KI enden alle ohne Invariantenverletzung.
   3. Gleiche Saat ergibt denselben Verlauf.
   4. Am Entwicklertisch spielt „KI-Schritt" genau einen Schritt.
@@ -956,25 +962,30 @@ Die Website lässt diese Punkte offen. Ein Vorschlag gilt **nicht**, bevor der
 Autor ihn bestätigt hat. Fragen F blockieren Basis-Tasks, Fragen G nur die
 Erweiterung.
 
+Stand 13.11.2026: Der Autor hat F1–F15 beantwortet. Die Antworten stehen in
+`docs/GAME_SPEC.md` Teil D (D14–D28), die zur Nachfrage F8a als D29; jeder
+Task, der eine Frage nennt, verweist mit „F1 → D14“ darauf. Offen sind
+G1–G23.
+
 ### Basis-Spiel
 
-| Nr. | Stelle | Frage | Vorschlag |
-|---|---|---|---|
-| F1 | A7.6 | Treffen zwei Schlangengruben denselben Spieler, bevor er ausgesetzt hat: setzt er einen oder zwei Züge aus? | zwei |
-| F2 | A6 | Schlangenfrass c) frisst zwei Karten **desselben** Spielers: Wehrt ein Farbenschutz beide ab? | ja |
-| F3 | A5, D9 | Kann eine Sonderkarte (etwa die Regenbogenschlange) eine neue Schlange beginnen? | nein, nur eine Farbkarte |
-| F4 | A7.1, D9 | Farbendieb: Muss die gestohlene Karte in eine eigene Schlange, oder darf sie nach D9 in jede? Was gilt, wenn der Dieb keine Schlange hat? | eigene Schlange, beliebige Stelle; ohne Schlange beginnt sie eine neue |
-| F5 | A7.6 | Füllt ein aussetzender Spieler seine Hand auf? Darf er mit Farbenschutz reagieren? | kein Auffüllen; Reaktion erlaubt |
-| F6 | D9 | Farbkarte beim Gegner: nur an bestehende Schlangen, oder darf man ihm auch eine neue beginnen? | nur bestehende |
-| F7 | A7.7 | Farbenfusion: Gelten eine Farbkarte und eine Regenbogenschlange als „zwei Karten gleicher Farbe"? | nein, nur zwei Farbkarten |
-| F8 | A10, A7.6 | Verfällt der letzte Zug eines Spielers, der in der Schlussrunde aussetzen muss? Darf man die Schlangengrube auf jemanden spielen, der keinen Zug mehr hat? | ja; nein |
-| F9 | A11 | Gleichstand bei den Punkten: geteilter Sieg? | ja |
-| F10 | A7.8, D11 | Verdoppler im zweiten Zug: Darf er wirkungslos abgelegt werden? | ja, ohne weiteren Zug |
-| F11 | A11 | Längste Farbkette: Gibt es eine Mindestlänge? Was gilt bei lauter Einzelkarten und für Spieler ohne Schlange? | Mindestlänge 2; ohne Kette kein Bonus |
-| F12 | D13 | Darf man eine Sonderkarte, die ein mögliches Ziel hätte, trotzdem ohne Wirkung ablegen? | nein; nur ohne Ziel, Farbenschutz immer |
-| F13 | A7.9 | Schlangenhäutung: Muss sich die Reihenfolge ändern? | ja |
-| F14 | A7.7 | „Pro Zug nur eine Farbenfusion": Darf im zweiten Zug nach einem Verdoppler eine weitere gespielt werden? | ja, je Zug eine |
-| F15 | A4 | Sind die Ablagestapel für alle vollständig einsehbar, oder nur die oberste Karte? | vollständig einsehbar |
+| Nr. | Stelle | Frage | Vorschlag | Antwort (13.11.2026) |
+|---|---|---|---|---|
+| F1 | A7.6 | Treffen zwei Schlangengruben denselben Spieler, bevor er ausgesetzt hat: setzt er einen oder zwei Züge aus? | zwei | wie Vorschlag (D14) |
+| F2 | A6 | Schlangenfrass c) frisst zwei Karten **desselben** Spielers: Wehrt ein Farbenschutz beide ab? | ja | wie Vorschlag (D15) |
+| F3 | A5, D9 | Kann eine Sonderkarte (etwa die Regenbogenschlange) eine neue Schlange beginnen? | nein, nur eine Farbkarte | wie Vorschlag (D16) |
+| F4 | A7.1, D9 | Farbendieb: Muss die gestohlene Karte in eine eigene Schlange, oder darf sie nach D9 in jede? Was gilt, wenn der Dieb keine Schlange hat? | eigene Schlange, beliebige Stelle; ohne Schlange beginnt sie eine neue | wie Vorschlag (D17) |
+| F5 | A7.6 | Füllt ein aussetzender Spieler seine Hand auf? Darf er mit Farbenschutz reagieren? | kein Auffüllen; Reaktion erlaubt | wie Vorschlag (D18) |
+| F6 | D9 | Farbkarte beim Gegner: nur an bestehende Schlangen, oder darf man ihm auch eine neue beginnen? | nur bestehende | wie Vorschlag (D19) |
+| F7 | A7.7 | Farbenfusion: Gelten eine Farbkarte und eine Regenbogenschlange als „zwei Karten gleicher Farbe"? | nein, nur zwei Farbkarten | wie Vorschlag (D20) |
+| F8 | A10, A7.6 | Verfällt der letzte Zug eines Spielers, der in der Schlussrunde aussetzen muss? Darf man die Schlangengrube auf jemanden spielen, der keinen Zug mehr hat? | ja; nein | abweichend: letzter Zug verfällt, Grube auch in der Schlussrunde, Abwehr mit Farbenschutz (D21); Grube auf Spieler ohne Zug erlaubt, ohne Wirkung (Nachfrage F8a, D29) |
+| F9 | A11 | Gleichstand bei den Punkten: geteilter Sieg? | ja | wie Vorschlag (D22) |
+| F10 | A7.8, D11 | Verdoppler im zweiten Zug: Darf er wirkungslos abgelegt werden? | ja, ohne weiteren Zug | wie Vorschlag (D23) |
+| F11 | A11 | Längste Farbkette: Gibt es eine Mindestlänge? Was gilt bei lauter Einzelkarten und für Spieler ohne Schlange? | Mindestlänge 2; ohne Kette kein Bonus | abweichend: Mindestlänge 3 Farbkarten; ohne Kette kein Bonus (D24) |
+| F12 | D13 | Darf man eine Sonderkarte, die ein mögliches Ziel hätte, trotzdem ohne Wirkung ablegen? | nein; nur ohne Ziel, Farbenschutz immer | wie Vorschlag (D25) |
+| F13 | A7.9 | Schlangenhäutung: Muss sich die Reihenfolge ändern? | ja | wie Vorschlag (D26) |
+| F14 | A7.7 | „Pro Zug nur eine Farbenfusion": Darf im zweiten Zug nach einem Verdoppler eine weitere gespielt werden? | ja, je Zug eine | wie Vorschlag (D27) |
+| F15 | A4 | Sind die Ablagestapel für alle vollständig einsehbar, oder nur die oberste Karte? | vollständig einsehbar | wie Vorschlag (D28) |
 
 ### Erweiterung
 

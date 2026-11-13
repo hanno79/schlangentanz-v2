@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-004 Der Stand von P0.5 bleibt nach einem Merge mit dem aktuellen neuaufbau konfliktfrei, und Tests, Typecheck, check:regeln und eslint enden mit 0. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-004 Der Stand von P0.5 bleibt nach einem Merge mit dem aktuellen neuaufbau konfliktfrei, und Tests, Typecheck, check:regeln und eslint enden mit 0.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Task-Branch zweigt von einem älteren <code>neuaufbau</code> ab; seither sind P0.4 (Abriss der alten Oberfläche) und P0.3b (schärferes <code>check:regeln</code>) gemergt. Die Zwischenabnahme soll auch auf dem Stand nach dem Merge halten.</p><h2>Bestanden, wenn</h2><p><code>git merge origin/neuaufbau</code> auf einem losgelösten HEAD meldet keinen Konflikt, und <code>npm test -- --run</code>, <code>npm run typecheck</code>, <code>npm run check:regeln</code>, <code>npx eslint .</code> enden je mit 0.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Merge meldet einen Konflikt oder ein Befehl endet nicht mit 0.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.5-regelfragen (PR #25)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>git fetch origin</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Prüfstand des Task-Branchs und der jeweils aktuelle <code>origin/neuaufbau</code> (bei dieser Prüfung <code>6ab9ce8</code>).</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>auf losgelösten HEAD wechseln und mergen</td><td>`git switch --detach HEAD` und `git merge --no-edit origin/neuaufbau`</td><td>„Merge made“, kein Konflikt</td></tr><tr><td>2</td><td>dieselbe Konsole</td><td>Gates einzeln ausführen</td><td>`npm test -- --run`, `npm run typecheck`, `npm run check:regeln`, `npx eslint .`</td><td>je Exit 0</td></tr><tr><td>3</td><td>dieselbe Konsole</td><td>zurück auf den Prüfbranch</td><td>`git switch &lt;prüfbranch&gt;`</td><td>Merge-Commit verworfen</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 11:59</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer P0.5 Iteration 2) &middot; agent &middot; pruefung-P0.5-iter2 @ <span class="commit" title="1500df9e2a659100639db3f1f6dcbc231933df25">1500df9</span></p><p>merge-tree Exit 1, Konflikte nur in tagebuch/website/.stand und tests.html (von tagebuch_bauen.py erzeugt). Auf einem lokalen, verworfenen Probe-Merge mit checkout --theirs und python scripts/tagebuch_bauen.py aufgelöst: npm test -- --run Exit 0, 76 Dateien, 1164 Tests. Keine Überschneidung in docs/ oder tests/.</p><p class="fehler">Merge von 1500df9 mit origin/neuaufbau 85cde73 (nach Merge #29 O2) meldet Konflikte in den erzeugten Dateien tagebuch/website/.stand und tagebuch/website/tests.html</p><ul class="belege"><li><a href="belege/2026-11-13-1159-TF-SPEC-004-1.txt">2026-11-13-1159-TF-SPEC-004-1.txt</a></li></ul></article><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 11:28</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5 Teil 2a) &middot; agent &middot; pruefung-P0.5-teil2a @ <span class="commit" title="eade1d3df8607e3d447681545045f89bd4e9daac">eade1d3</span></p><p>Merge eade1d3 mit origin/neuaufbau 6ab9ce8 auf losgelöstem HEAD ohne Konflikt; npm test 72 Dateien/1107 Tests Exit 0, typecheck 0, check:regeln 0, eslint 0. Merge danach verworfen.</p><ul class="belege"><li><a href="belege/2026-11-13-1128-TF-SPEC-004-1.txt">2026-11-13-1128-TF-SPEC-004-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

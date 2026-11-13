@@ -1,0 +1,39 @@
+
+> schlangentanz-v2@0.0.0 abgleich:website
+> node scripts/website_abgleich/abgleich.cjs
+
+node.exe : FEHLER beim Laden der Website: page.waitForFunction: Timeout 20000ms exceeded.
+In Zeile:1 Zeichen:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\hanno\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (FEHLER beim Lad...000ms exceeded.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+node:child_process:964
+    throw err;
+    ^
+
+Error: Command failed: C:\Program Files\nodejs\node.exe 
+E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ac3de62bd02041981\scripts\website_abgleich\lade_website.cjs 
+C:\Users\hanno\AppData\Local\Temp\website-abgleich-7bOiWT
+    at genericNodeError (node:internal/errors:998:15)
+    at wrappedFn (node:internal/errors:543:14)
+    at checkExecSyncError (node:child_process:925:11)
+    at execFileSync (node:child_process:961:15)
+    at main 
+(E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ac3de62bd02041981\scripts\website_abgleich\abgleich.cjs:73:3)
+    at Object.<anonymous> 
+(E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ac3de62bd02041981\scripts\website_abgleich\abgleich.cjs:108:1)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14)
+    at Object..js (node:internal/modules/cjs/loader:1892:10)
+    at Module.load (node:internal/modules/cjs/loader:1480:32)
+    at Module._load (node:internal/modules/cjs/loader:1299:12) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 60852,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v25.2.1

@@ -1,0 +1,80 @@
+=== V1 D14 Zwei Züge -> Ein Zug (nur Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F1: gewählt „b“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F1: gewählt „b“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 7ms
+    git status nach Rücksetzen: sauber
+=== V2 D24 ab 3 -> schon ab 2, Zitat bleibt (nur Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F11: gewählt „b, d“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F11: gewählt „b, d“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 7ms
+    git status nach Rücksetzen: sauber
+=== V3 D29 ohne Wirkung -> Nein: kein Ziel (nur Teil D, Zitat bleibt): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F8a: gewählt „b“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F8a: gewählt „b“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 7ms
+    git status nach Rücksetzen: sauber
+=== V4 F13 auf b mit erfundenem Zitat (REGELFRAGEN und Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F13: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F13: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 5ms
+    git status nach Rücksetzen: sauber
+=== V4b F13 nur Buchstabe a -> b, Rest unverändert: exit 1 Tests  2 failed | 389 passed (391)
+    FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F13 > P0.5: F13 ist offen oder hat eine Antwort aus vorhandenen Möglichkeiten mit Datum
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F13: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F13 ist offen oder hat eine Antwort aus vorhandenen Möglichkeiten mit Datum 7ms
+    × P0.5: F13: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 9ms
+    git status nach Rücksetzen: sauber
+=== V5 F2 nein (REGELFRAGEN b und Teil D konsistent): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F2: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F2: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 6ms
+    git status nach Rücksetzen: sauber
+=== V6 D18 Auffüllen im ausgesetzten Zug erlaubt (nur Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F5: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F5: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 7ms
+    git status nach Rücksetzen: sauber
+=== V7 D25 Ablegen auch mit Ziel (nur Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F12: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F12: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 7ms
+    git status nach Rücksetzen: sauber
+=== V8 Zeile D22 aus Teil D gelöscht: exit 1 Tests  2 failed | 389 passed (391)
+    FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F9 > P0.5: F9 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und „Website folgt“
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F9: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F9 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und „Website folgt“ 3ms
+    × P0.5: F9: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 5ms
+    git status nach Rücksetzen: sauber
+=== V9 Plan Abschnitt 9: Antwort F9 gelöscht: exit 0 Tests  391 passed (391)
+    git status nach Rücksetzen: sauber
+=== V10 Plan Abschnitt 9: F11 als wie Vorschlag: exit 0 Tests  391 passed (391)
+    git status nach Rücksetzen: sauber
+=== V11 Plan E10 Kriterium 5: ab 3 -> ab 2: exit 0 Tests  391 passed (391)
+    git status nach Rücksetzen: sauber
+=== V12 Teil C C13: ab 3 -> ab 2: exit 0 Tests  391 passed (391)
+    git status nach Rücksetzen: sauber
+=== V13 D21 Abwehr mit Farbenschutz gestrichen: exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F8: gewählt „Freie Antwort“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F8: gewählt „Freie Antwort“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 9ms
+    git status nach Rücksetzen: sauber
+=== V14 D21 verneint, Kernsätze als Zitat erhalten: exit 0 Tests  391 passed (391)
+    git status nach Rücksetzen: sauber
+=== V15 F12 Datum 14.11.2026 (REGELFRAGEN und Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F12: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F12: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 5ms
+    git status nach Rücksetzen: sauber
+=== V16 Plan E4 Verweis F1 -> D15: exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F1 > P0.5: F1: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D
+    × P0.5: F1: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D 5ms
+    git status nach Rücksetzen: sauber
+=== V17 F5 Wahl a, c -> b, c (nur REGELFRAGEN, mit Zitat): exit 1 Tests  2 failed | 389 passed (391)
+    FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F5 > P0.5: F5 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und „Website folgt“
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F5: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F5 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und „Website folgt“ 7ms
+    × P0.5: F5: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 5ms
+    git status nach Rücksetzen: sauber
+=== V18 F1 Möglichkeit b im Fragenblatt umgeschrieben: exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F1: gewählt „b“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F1: gewählt „b“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 8ms
+    git status nach Rücksetzen: sauber
+=== V19 D28 nur oberste Karte (nur Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F15: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F15: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 6ms
+    git status nach Rücksetzen: sauber
+=== V20 D17 Dieb legt in jede Schlange (nur Teil D): exit 1 Tests  1 failed | 390 passed (391)
+    FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 > P0.5: F4: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+    × P0.5: F4: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 7ms
+    git status nach Rücksetzen: sauber

@@ -765,24 +765,24 @@ laufenden Spiel beobachtet.
 | Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
 |---|---|---|---|---|
 | C1 | Stückzahlen | Schlangenblockade 3, Schlangengrube 3, Schlangenhäutung 3, Aufgabenkarten 15 (A1) | je 4 Blockaden, Gruben und Häutungen; 14 Aufgaben, „Vielfaltskönig" fehlt | `src/engine/deck.ts`, `src/engine/aufgabenKarten.ts`, `src/engine/constants.ts` |
-| C2 | Regenbogenschlange | Sonderkarte, die als Karte beliebiger Farbe in die Schlange kommt, an beliebiger Stelle (A5, A7.3) | lässt sich nicht ausspielen; es gibt keine Aktion dafür, nur den Abwurf | `src/engine/legalActions.ts` (per Test nachgestellt) |
+| C2 | Regenbogenschlange | Sonderkarte, die als Karte beliebiger Farbe in die Schlange kommt, an beliebiger Stelle (A5, A7.3); sie beginnt keine neue Schlange (D16) | lässt sich nicht ausspielen; es gibt keine Aktion dafür, nur den Abwurf | `src/engine/legalActions.ts` (per Test nachgestellt) |
 | C3 | Nachziehen im eigenen Zug | am Ende des eigenen Zuges auf 5 auffüllen (A5) | aufgefüllt wird erst beim Wechsel, für den nächsten Spieler | `src/engine/turnState.ts` (`beendeZug`) |
 | C4 | Nachziehen nach Sonderkarte | wer ausserhalb seines Zuges spielt, füllt erst zu Beginn seines nächsten Zuges auf; kein sofortiges Nachziehen (A6) | jeder zieht sofort eine Karte je gespielter Sonderkarte | `src/engine/turnState.ts` (`zieheOffeneNachziehungen`) |
 | C5 | Ablagestapel | jeder Spieler hat einen eigenen; gefressene Karten gehen auf den Stapel des Angreifers (A4, A6) | ein gemeinsamer Stapel | `src/engine/types.ts` (`ablagestapel`) |
-| C6 | Farbenschutz | nur als Reaktion auf eine Sonderkarte (A7.2), und zwar gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, nie gegen Farbkarten (D10); wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht eine Karte und beendet den Zug (A5) | lässt sich zusätzlich im eigenen Zug auf eine eigene Schlange spielen und setzt sie auf „geschützt"; abwehrbar sind nur Blockade, Farbendieb, Schlangenfrass, Schlangengrube und Verdoppler | `src/engine/kartenwirkungen.ts` (`spieleFarbenschutz`) |
-| C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug mit Farbkarte und optional Sonderkarte; neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8) | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
+| C6 | Farbenschutz | nur als Reaktion auf eine Sonderkarte (A7.2), und zwar gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, nie gegen Farbkarten (D10), auch während des Aussetzens (D18); wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht eine Karte und beendet den Zug (A5) | lässt sich zusätzlich im eigenen Zug auf eine eigene Schlange spielen und setzt sie auf „geschützt"; abwehrbar sind nur Blockade, Farbendieb, Schlangenfrass, Schlangengrube und Verdoppler | `src/engine/kartenwirkungen.ts` (`spieleFarbenschutz`) |
+| C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug mit Farbkarte und optional Sonderkarte; neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8); im zweiten Zug ist ein Verdoppler nur wirkungslos ablegbar (D11, D23) | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
 | C8 | Schlangenfrass | a) eine eigene Karte, b) eine eigene Blockade, c) zwei Karten der Mitspieler „sofern möglich", keine gegnerische Blockade (A7.4) | genau eine eigene oder genau zwei gegnerische Karten; gegnerische Blockaden sind nicht ausgenommen | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` |
-| C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
+| C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9); die Farbfolge im Abschnitt muss sich ändern (D26) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
 | C11 | Schlussrunde | nach der letzten Karte je ein letzter Zug ohne Nachziehen (A10); eine Verdopplung von Aufgaben kennt die Website nicht | offene Aufgaben zählen in der Schlussrunde doppelt | `src/engine/aufgabenPruefung.ts`, `src/engine/scoring.ts` |
-| C12 | Pflichtkarte | mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art (A5, D12); eine Sonderkarte darf jederzeit gespielt werden, auch ohne Nutzen, und kommt ohne Ziel wirkungslos auf den eigenen Ablagestapel (D4, D13) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
-| C13 | Längste Farbkette | 5 Bonuspunkte in der Punktezählung nach Spielende (A11) | wird laufend angezeigt, schon ab einer einzelnen Karte; der Punktestand springt dadurch | `src/engine/scoring.ts` (im Spiel beobachtet) |
+| C12 | Pflichtkarte | mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art (A5, D12); eine Sonderkarte darf jederzeit gespielt werden, auch ohne Nutzen, und kommt ohne Ziel wirkungslos auf den eigenen Ablagestapel (D4, D13); mit möglichem Ziel ist sie nicht wirkungslos ablegbar, Farbenschutz immer (D25) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
+| C13 | Längste Farbkette | 5 Bonuspunkte in der Punktezählung nach Spielende (A11); eine Kette zählt erst ab 3 Farbkarten derselben Farbe, ohne sie gibt es keinen Bonus (D24) | wird laufend angezeigt, schon ab einer einzelnen Karte; der Punktestand springt dadurch | `src/engine/scoring.ts` (im Spiel beobachtet; `mindestLaenge: 1`) |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
 | C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
 | C16 | Farbenfusion | die zwei Farbkarten liegen unter der Fusion; wird sie entfernt, liegen beide wieder einzeln an ihrer Stelle (A7.7, A7.4) | die zwei Farbkarten kommen auf den Ablagestapel, nur ihre Punktsumme bleibt gespeichert; beim Entfernen kehren sie nicht zurück | `src/engine/kartenwirkungen.ts` (`spieleFarbenfusion`), `src/engine/zugHelfer.ts` (`bereinigeFarbenfusionen`) |
-| C17 | Abwehr bei Schlangenfrass | jeder betroffene Spieler entscheidet einmal; die Wirkung tritt erst nach allen Reaktionen ein (A6, Beispiel 2) | gefragt wird je Zielkarte; ungeschützte Ziele werden sofort entfernt | `src/engine/reaktionsaufloesung.ts`, `src/engine/kartenwirkungen.ts` (`spieleSchlangenfrass`) |
-| C18 | Schlangengrube | kommt erst nach dem ausgesetzten Zug auf den Ablagestapel (A7.6) | kommt sofort auf den Ablagestapel | `src/engine/kartenwirkungen.ts` (`spieleSchlangengrube`) |
-| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle (D9) | Farbkarte, Farbenfusion und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
+| C17 | Abwehr bei Schlangenfrass | jeder betroffene Spieler entscheidet einmal; die Wirkung tritt erst nach allen Reaktionen ein (A6, Beispiel 2); ein Farbenschutz schützt beide Karten desselben Spielers (D15) | gefragt wird je Zielkarte; ungeschützte Ziele werden sofort entfernt | `src/engine/reaktionsaufloesung.ts`, `src/engine/kartenwirkungen.ts` (`spieleSchlangenfrass`) |
+| C18 | Schlangengrube | kommt erst nach dem ausgesetzten Zug auf den Ablagestapel (A7.6); zwei Gruben auf denselben Spieler kosten zwei Züge (D14); in der Schlussrunde nimmt sie den letzten Zug (D21), auf einen Spieler ohne weiteren Zug geht sie ohne Wirkung auf den Ablagestapel (D29) | kommt sofort auf den Ablagestapel | `src/engine/kartenwirkungen.ts` (`spieleSchlangengrube`) |
+| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle (D9); beim Gegner nur an eine bestehende Schlange (D19) | Farbkarte, Farbenfusion und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
 | C20 | Zeitpunkt der Aufgabenprüfung | eine Aufgabe kann erfüllt werden, sobald die Bedingung gilt und der Spieler am Zug ist (A9) | geprüft wird nur einmal am Ende der Ausspielphase | `src/engine/turnState.ts` (`beendeAufgabenpruefung`) |
 | C21 | Farbwechsler | „Es gelten auch Reihen" (A9) | geprüft werden vier verschiedene Einzelkarten direkt nacheinander | `src/engine/aufgabenPruefung.ts` (`pruefeFarbwechsler`) |
 | C22 | Erweiterungsmaterial | Comeback- und Risiko-Belohnungs-Karten liegen offen vor dem Spieler, sie sind kein Teil des Kartenstapels (A1, A4) | stehen als Sonderkarten im Deckmodul | `src/engine/deck.ts` |
@@ -803,32 +803,50 @@ Nicht geprüft und deshalb nicht bewertet: Einzelheiten der KI
 Hier kommen Stellen hin, die der Wortlaut der Website in zwei Richtungen lesen
 lässt. Bis zur Antwort bleibt das heutige Verhalten stehen.
 
-Offen sind die Fragen F1–F15 (Basis-Spiel) und G1–G23 (Erweiterung) aus
-`docs/UMSETZUNGSPLAN.md`, Abschnitt 9. Sie werden mit Task P0.5 beantwortet
-und dann hier eingetragen.
+Offen sind die Fragen G1–G23 (Erweiterung) aus `docs/UMSETZUNGSPLAN.md`,
+Abschnitt 9. Fragen, Möglichkeiten und Vorschläge stehen in
+`docs/REGELFRAGEN.md`; beantwortet kommen sie mit Task P0.5 hierher.
 
 ### Beantwortet
 
-Antworten des Autors vom 12.11.2026. Wo die Website es selbst sagt, steht die
-Fundstelle in Teil A; wo nicht, gilt die Antwort, bis die Website sie aufnimmt.
-Die Antworten zu D1 und D8 hat der Autor am selben Abend auf die Website
-übernommen.
+Wo die Website es selbst sagt, steht die Fundstelle in Teil A; wo nicht, gilt
+die Antwort, bis die Website sie aufnimmt („Website folgt“). Die Antworten zu
+D1 und D8 hat der Autor am 12.11.2026 abends auf die Website übernommen.
+D14–D29 beantworten die Regelfragen F1–F15 und die Nachfrage F8a aus
+`docs/REGELFRAGEN.md`; die Nummer der Regelfrage steht vor der Frage. Die
+Spalte „Folge“ nennt dort den Task, der die Antwort umsetzt.
 
-| Nr. | Frage | Antwort | Folge |
-|---|---|---|---|
-| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Website geändert: Jede Gruppe zählt voll, auch über beide Schlangen; eine Vierergruppe nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste einzelne Kette (A11). | Engine stimmt überein |
-| D2 | Darf der Farbendieb Sonderkarten stehlen? | Nein, nur Farbkarten. | Engine stimmt überein |
-| D3 | Lila Riese: genügt eine Kette ab 3? | Website geändert: mindestens 5 violette Karten in einer Reihe (A9). | C14 |
-| D4 | Was gilt, wenn keine Sonderkarte spielbar ist? | Eine Sonderkarte muss gespielt werden, auch wenn sie wirkungslos ist. Pflicht ist mindestens eine Karte pro Zug. | C12 |
-| D5 | Neu aufgedeckte Aufgabe im selben Zug? | Darf sofort eingelöst werden. | C15 |
-| D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 |
-| D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 |
-| D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 |
-| D9 | Darf man Karten in gegnerische Schlangen spielen? | Ja, jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. Eine Regenbogenschlange beim Gegner ist erlaubt, nützt aber ihm. Website folgt. | C19 |
-| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange. Gegen Farbkarten gibt es keine Abwehr. Website folgt. | C6 |
-| D11 | Gibt ein Verdoppler im zweiten Zug einen dritten Zug? | Nein, nur ein Verdoppler pro Runde. Website folgt. | C7 |
-| D12 | Muss man eine Farbkarte spielen, wenn man eine hat? | Nein. Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art. Website folgt. | C12 |
-| D13 | Darf man eine Sonderkarte spielen, die einem nichts bringt? | Ja, jederzeit, auch wenn man eine Farbkarte hätte. Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. Website folgt. | C12 |
+| Nr. | Frage | Antwort | Folge | Datum |
+|---|---|---|---|---|
+| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Website geändert: Jede Gruppe zählt voll, auch über beide Schlangen; eine Vierergruppe nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste einzelne Kette (A11). | Engine stimmt überein | 12.11.2026 |
+| D2 | Darf der Farbendieb Sonderkarten stehlen? | Nein, nur Farbkarten. | Engine stimmt überein | 12.11.2026 |
+| D3 | Lila Riese: genügt eine Kette ab 3? | Website geändert: mindestens 5 violette Karten in einer Reihe (A9). | C14 | 12.11.2026 |
+| D4 | Was gilt, wenn keine Sonderkarte spielbar ist? | Eine Sonderkarte muss gespielt werden, auch wenn sie wirkungslos ist. Pflicht ist mindestens eine Karte pro Zug. | C12 | 12.11.2026 |
+| D5 | Neu aufgedeckte Aufgabe im selben Zug? | Darf sofort eingelöst werden. | C15 | 12.11.2026 |
+| D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 | 12.11.2026 |
+| D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 | 12.11.2026 |
+| D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 | 12.11.2026 |
+| D9 | Darf man Karten in gegnerische Schlangen spielen? | Ja, jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. Eine Regenbogenschlange beim Gegner ist erlaubt, nützt aber ihm. Website folgt. | C19 | 12.11.2026 |
+| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange. Gegen Farbkarten gibt es keine Abwehr. Website folgt. | C6 | 12.11.2026 |
+| D11 | Gibt ein Verdoppler im zweiten Zug einen dritten Zug? | Nein, nur ein Verdoppler pro Runde. Website folgt. | C7 | 12.11.2026 |
+| D12 | Muss man eine Farbkarte spielen, wenn man eine hat? | Nein. Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art. Website folgt. | C12 | 12.11.2026 |
+| D13 | Darf man eine Sonderkarte spielen, die einem nichts bringt? | Ja, jederzeit, auch wenn man eine Farbkarte hätte. Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. Website folgt. | C12 | 12.11.2026 |
+| D14 | F1: Treffen zwei Schlangengruben denselben Spieler, bevor er ausgesetzt hat: setzt er einen oder zwei Züge aus? | Zwei Züge: Jede Schlangengrube kostet einen eigenen Zug und bleibt vor ihm liegen, bis er für sie ausgesetzt hat. Website folgt. | E4 | 13.11.2026 |
+| D15 | F2: Schlangenfrass c) frisst zwei Karten **desselben** Spielers: Wehrt ein Farbenschutz beide ab? | Ja: Ein Farbenschutz wehrt den ganzen Schlangenfrass für diesen Spieler ab, beide Karten bleiben liegen. Website folgt. | E6 | 13.11.2026 |
+| D16 | F3: Kann eine Sonderkarte (etwa die Regenbogenschlange) eine neue Schlange beginnen? | Nein, nur eine Farbkarte beginnt eine Schlange. Regenbogenschlange und Schlangenblockade brauchen eine bestehende Schlange. Website folgt. | E5 | 13.11.2026 |
+| D17 | F4: Farbendieb: Muss die gestohlene Karte in eine eigene Schlange, oder darf sie nach D9 in jede? Was gilt, wenn der Dieb keine Schlange hat? | Nur in eine eigene Schlange, an eine beliebige Stelle. Hat der Dieb keine Schlange, beginnt die gestohlene Karte eine neue eigene Schlange. Website folgt. | E8 | 13.11.2026 |
+| D18 | F5: Füllt ein aussetzender Spieler seine Hand auf? Darf er mit Farbenschutz reagieren? | Kein Auffüllen im ausgesetzten Zug; er füllt erst zu Beginn seines nächsten gespielten Zuges auf. Abwehr mit Farbenschutz bleibt erlaubt, auch zwischen Grube und ausgesetztem Zug. Website folgt. | E2, E4 | 13.11.2026 |
+| D19 | F6: Farbkarte beim Gegner: nur an bestehende Schlangen, oder darf man ihm auch eine neue beginnen? | Nur an ein Ende einer bestehenden gegnerischen Schlange. Eine neue Schlange beginnt jeder nur für sich selbst. Website folgt. | E5 | 13.11.2026 |
+| D20 | F7: Farbenfusion: Gelten eine Farbkarte und eine Regenbogenschlange als „zwei Karten gleicher Farbe"? | Nein, nur zwei Farbkarten derselben Farbe dürfen fusioniert werden. Website folgt. | E7 | 13.11.2026 |
+| D21 | F8: Verfällt der letzte Zug eines Spielers, der in der Schlussrunde aussetzen muss? Darf man die Schlangengrube auf jemanden spielen, der keinen Zug mehr hat? | Ja, der letzte Zug verfällt. Die Schlangengrube darf auch in der Schlussrunde gespielt werden; trifft sie einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr. Er darf sich mit Farbenschutz verteidigen. Wortlaut: „man darf auch in der letzten Runde einen Spieler aussetzen lassen. Er hat dann keinen letzetn Zug mehr. Er darf aber verteidigen mit Farbenschutz“. Ob die Grube einen Spieler treffen darf, der keinen Zug mehr hat, beantwortet D29 (Nachfrage F8a). Website folgt. | E2, E4 | 13.11.2026 |
+| D22 | F9: Gleichstand bei den Punkten: geteilter Sieg? | Ja, alle Punktgleichen gewinnen. Website folgt. | E10 | 13.11.2026 |
+| D23 | F10: Verdoppler im zweiten Zug: Darf er wirkungslos abgelegt werden? | Ja: Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Website folgt. | E3 | 13.11.2026 |
+| D24 | F11: Längste Farbkette: Gibt es eine Mindestlänge? Was gilt bei lauter Einzelkarten und für Spieler ohne Schlange? | Eine Kette zählt erst ab 3 Farbkarten derselben Farbe nebeneinander, nicht schon ab 2; Sonderkarten zählen nicht mit und unterbrechen sie (A11). Hat niemand eine solche Kette, bekommt niemand den Bonus; wer keine hat, bekommt ihn nie. Wortlaut: „längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“; auf die Rückfrage „Bonus erst ab 3 gleichfarbigen Karten in einer ununterbrochenen Reihe, also Rot-Rot noch nicht, Rot-Rot-Rot schon?“ bestätigt am 13.11.2026: „Ja, genau so“. Website folgt. | E10 | 13.11.2026 |
+| D25 | F12: Darf man eine Sonderkarte, die ein mögliches Ziel hätte, trotzdem ohne Wirkung ablegen? | Nein. Wirkungslos ablegen geht nur, wenn die Karte kein mögliches Ziel hat; ein Farbenschutz darf immer wirkungslos abgelegt werden. Website folgt. | E2 | 13.11.2026 |
+| D26 | F13: Schlangenhäutung: Muss sich die Reihenfolge ändern? | Ja, die Farbfolge im Abschnitt muss danach anders sein; eine unveränderte Anordnung wird abgelehnt. Website folgt. | E9 | 13.11.2026 |
+| D27 | F14: „Pro Zug nur eine Farbenfusion": Darf im zweiten Zug nach einem Verdoppler eine weitere gespielt werden? | Ja, je Zug eine: Im zweiten Zug nach einem Verdoppler ist wieder eine Farbenfusion erlaubt. Website folgt. | E7 | 13.11.2026 |
+| D28 | F15: Sind die Ablagestapel für alle vollständig einsehbar, oder nur die oberste Karte? | Alle Ablagestapel sind für alle vollständig einsehbar. Website folgt. | K1 | 13.11.2026 |
+| D29 | F8a: Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat? | Ja, erlaubt: Die Grube darf ihn treffen und geht ohne Wirkung auf den Ablagestapel. Wortlaut: „Ja, ohne Wirkung“. Website folgt. | E4 | 13.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -858,6 +876,16 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **13.11.2026, Task P0.5:** Antworten des Autors auf die Regelfragen F1–F15
+  als D14–D28 aufgenommen (Website folgt), Teil D um die Spalte „Datum“
+  ergänzt. Abweichend vom Vorschlag: F8 (Grube in der Schlussrunde nimmt den
+  letzten Zug, Abwehr erlaubt) und F11 (Kette ab 3 Farbkarten). Die
+  Nachfrage F8a (Grube auf einen Spieler, der seinen letzten Zug gemacht hat)
+  hat der Autor am selben Tag beantwortet: D29, erlaubt, ohne Wirkung. Teil A
+  unverändert.
+- **13.11.2026, Task P0.5, Iteration 2:** D24 nennt die Bestätigung des Autors
+  zu F11 („Ja, genau so“). Teil C verweist auf die Folgen von D14–D29 (C2, C6,
+  C7, C9, C12, C13, C17, C18, C19); Freigabe des Orchestrators nach U13.
 - **12.11.2026, Umsetzungsplan:** D9–D13 (Antworten des Autors, Website folgt)
   aufgenommen; C6 und C12 danach neu gefasst; C16–C23 beim Planen am Code
   gefunden. Offene Fragen stehen in `docs/UMSETZUNGSPLAN.md`, Abschnitt 9.
