@@ -1,7 +1,7 @@
 import { definitionFuer } from '../karten/register';
 import type { Spielkarte, Spielzustand } from '../types';
 import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
-import { ermittleEntscheider, istWirkungslosAblegbar } from './pruefen';
+import { ermittleEntscheider, ohneZielAblegbar } from './pruefen';
 import type { SpielAktion, UeberhandAbwerfenAktion } from './typen';
 
 /**
@@ -18,11 +18,14 @@ export function ermittleAktionen(zustand: Spielzustand): SpielAktion[] {
   const spieler = zustand.spieler[entscheider];
   if (zustand.zug.abschnitt === 'Abwerfen') return abwurfAktionen(spieler.id, spieler.hand, ueberzaehligeKarten(spieler));
 
-  const spielbar = spieler.hand.filter((karte) => kartengrenze(zustand.zug, karte) === null);
-  const mitWirkung = spielbar.flatMap((karte) => definitionFuer(karte).ziele(zustand, entscheider, karte));
-  const wirkungslos: SpielAktion[] = spielbar
-    .filter((karte) => istWirkungslosAblegbar(zustand, entscheider, karte))
-    .map((karte) => ({ typ: 'SonderkarteWirkungslosAblegen', spielerId: spieler.id, karteId: karte.id }));
+  const mitWirkung: SpielAktion[] = [];
+  const wirkungslos: SpielAktion[] = [];
+  for (const karte of spieler.hand) {
+    if (kartengrenze(zustand.zug, karte) !== null) continue;
+    const ziele = definitionFuer(karte).ziele(zustand, entscheider, karte);
+    mitWirkung.push(...ziele);
+    if (ohneZielAblegbar(karte, () => ziele)) wirkungslos.push({ typ: 'SonderkarteWirkungslosAblegen', spielerId: spieler.id, karteId: karte.id });
+  }
   const beenden: SpielAktion[] = darfZugBeenden(zustand.zug, spieler) ? [{ typ: 'ZugBeenden', spielerId: spieler.id }] : [];
   return [...mitWirkung, ...wirkungslos, ...beenden];
 }

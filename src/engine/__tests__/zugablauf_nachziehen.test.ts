@@ -154,7 +154,7 @@ describe('A5: mehr als 5 Handkarten am Zugende', () => {
   it('A5: solange abgeworfen wird, gibt es weder Karten noch „Zug beenden“', () => {
     const zustand = amZugende()
     const blau = zustand.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte')!
-    expect(grund(zustand, zugBeenden(zustand))).toMatch(/überzählige Karten abwerfen \(A5\)/)
+    expect(grund(zustand, zugBeenden(zustand))).toMatch(/nur überzählige Handkarten abgeworfen \(A5\)/)
     expect(grund(zustand, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: blau.id, ziel: { art: 'neueSchlange' } })).toMatch(
       /nur überzählige Handkarten abgeworfen/,
     )
