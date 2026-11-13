@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
-import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
+import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
@@ -182,14 +182,32 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
   )
 }
 
+/** Wohin eine gespielte Karte kam, lesbar. */
+function beschreibeOrt(zustand: Spielzustand, ort: Kartenort): string {
+  switch (ort.ort) {
+    case 'Schlange':
+      return `${ort.schlangenId} von ${name(zustand, ort.spielerIndex)}, Stelle ${ort.position}`
+    case 'Ablagestapel':
+      return `Ablagestapel von ${name(zustand, ort.spielerIndex)}`
+    case 'VorSpieler':
+      return `vor ${name(zustand, ort.spielerIndex)}`
+    case 'Schwebend':
+      return 'schwebend'
+    case 'AusDemSpiel':
+      return 'aus dem Spiel'
+  }
+}
+
 /** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer. */
 function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
   const wer = (index: number) => name(zustand, index)
   switch (ereignis.typ) {
     case 'KarteGespielt':
-      return `KarteGespielt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.aktion})`
+      return `KarteGespielt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.aktion}) → ${beschreibeOrt(zustand, ereignis.nach)}`
     case 'KartenGezogen':
       return `KartenGezogen: ${wer(ereignis.spielerIndex)} zieht ${ereignis.anzahl}`
+    case 'AbwerfenVerlangt':
+      return `AbwerfenVerlangt: ${wer(ereignis.spielerIndex)} muss ${ereignis.anzahl} Karte(n) abwerfen`
     case 'KartenAbgeworfen':
       return `KartenAbgeworfen: ${wer(ereignis.spielerIndex)} legt ${ereignis.karteIds.join(', ')} ab`
     case 'ZugBegonnen':
@@ -197,7 +215,7 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
     case 'Abgewehrt':
       return `Abgewehrt: ${wer(ereignis.spielerIndex)} wehrt ${ereignis.karteId} ab`
     case 'Ausgesetzt':
-      return `Ausgesetzt: ${wer(ereignis.spielerIndex)} setzt aus`
+      return `Ausgesetzt: ${wer(ereignis.spielerIndex)} setzt aus; ${ereignis.karteId} auf den Ablagestapel von ${wer(ereignis.ablagestapelVon)}`
     case 'SchlussrundeBegonnen':
       return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':

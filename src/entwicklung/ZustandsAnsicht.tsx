@@ -39,10 +39,16 @@ function Kopf({ zustand }: { zustand: Spielzustand }) {
         <dd data-testid="partiephase">{zustand.partiephase}</dd>
         <dt>Am Zug</dt>
         <dd data-testid="zug">
-          {name(zustand, zug.spielerIndex)}, Teilzug {zug.teilzug}, {zug.abschnitt}; gespielt: {zug.gespielteFarbkarten}{' '}
-          Farbkarte(n), {zug.gespielteSonderkarten} Sonderkarte(n)
-          {zug.verdopplerGespielt ? ', Verdoppler' : ''}
-          {zug.farbenfusionGespielt ? ', Farbenfusion' : ''}
+          {zustand.partiephase === 'Beendet' ? (
+            'niemand, die Partie ist beendet (A10)'
+          ) : (
+            <>
+              {name(zustand, zug.spielerIndex)}, Teilzug {zug.teilzug}, {zug.abschnitt}; gespielt: {zug.gespielteFarbkarten}{' '}
+              Farbkarte(n), {zug.gespielteSonderkarten} Sonderkarte(n)
+              {zug.verdopplerGespielt ? ', Verdoppler' : ''}
+              {zug.farbenfusionGespielt ? ', Farbenfusion' : ''}
+            </>
+          )}
         </dd>
         <dt>Entscheidet</dt>
         <dd data-testid="entscheider">{name(zustand, ermittleEntscheider(zustand))}</dd>

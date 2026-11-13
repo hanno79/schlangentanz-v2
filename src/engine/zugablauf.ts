@@ -1,4 +1,4 @@
-import type { Aktionstyp, Ereignis, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
+import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
 import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
@@ -37,23 +37,40 @@ export function darfZugBeenden(zug: Zug, spieler: Spieler): boolean {
   return zug.gespielteFarbkarten + zug.gespielteSonderkarten > 0 || spieler.hand.length === 0;
 }
 
+type GespielteKarte = { typ: Aktionstyp; spielerId: string; karteId: string };
+
 /**
  * Eine Handkarte wird gespielt, mit oder ohne Wirkung: Sie zählt zum laufenden
- * Zug (A5, D12, D13), und das Ereignis wird gemeldet. Liefert die Karte; sie
- * liegt danach noch auf der Hand.
+ * Zug (A5, D12, D13). Liefert die Karte; sie liegt danach noch auf der Hand.
  */
-export function vermerkeGespielteKarte(
-  zustand: Spielzustand,
-  aktion: { typ: Aktionstyp; spielerId: string; karteId: string },
-  ereignisse: Ereignis[],
-): Spielkarte {
-  const spielerIndex = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
-  const karte = zustand.spieler[spielerIndex]?.hand.find((handkarte) => handkarte.id === aktion.karteId);
+export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte): Spielkarte {
+  const karte = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === aktion.karteId);
   if (karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
   if (karte.typ === 'Farbkarte') zustand.zug.gespielteFarbkarten += 1;
   else zustand.zug.gespielteSonderkarten += 1;
-  ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: karte.id, aktion: aktion.typ });
   return karte;
+}
+
+/** Meldet die gespielte Karte, nachdem sie hingelegt ist, mit dem Ort, an dem sie jetzt liegt (Plan E2, Kriterium 11). */
+export function meldeGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte, ereignisse: Ereignis[]): void {
+  const spielerIndex = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
+  ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: aktion.karteId, aktion: aktion.typ, nach: findeKartenort(zustand, aktion.karteId) });
+}
+
+/** Wo eine Karte ausserhalb der Hände und des Nachziehstapels liegt. Gesucht wird im Zustand, deshalb gilt es für jede Kartenwirkung. */
+export function findeKartenort(zustand: Spielzustand, karteId: string): Kartenort {
+  for (const [spielerIndex, spieler] of zustand.spieler.entries()) {
+    for (const schlange of spieler.schlangen) {
+      const position = schlange.karten.findIndex((karte) => karte.id === karteId);
+      if (position >= 0) return { ort: 'Schlange', spielerIndex, schlangenId: schlange.id, position };
+    }
+    if (spieler.ablagestapel.some((karte) => karte.id === karteId)) return { ort: 'Ablagestapel', spielerIndex };
+  }
+  const grube = zustand.ausliegendeGruben.find((eintrag) => eintrag.karte.id === karteId);
+  if (grube !== undefined) return { ort: 'VorSpieler', spielerIndex: grube.vor };
+  if (zustand.schwebend?.karte.id === karteId) return { ort: 'Schwebend' };
+  if (zustand.ausDemSpiel.some((karte) => karte.id === karteId)) return { ort: 'AusDemSpiel' };
+  throw new Error(`Die gespielte Karte ${karteId} liegt an keinem Ort, den ein Ereignis nennen kann.`);
 }
 
 /**
@@ -70,9 +87,10 @@ export function entnehmeHandkarte(zustand: Spielzustand, spielerId: string, kart
 
 /** D13, D25: Die Sonderkarte kommt ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. */
 export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirkungslosAblegenAktion, ereignisse: Ereignis[]): void {
-  vermerkeGespielteKarte(zustand, aktion, ereignisse);
+  zaehleGespielteKarte(zustand, aktion);
   const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
   zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)!.ablagestapel.push(karte);
+  meldeGespielteKarte(zustand, aktion, ereignisse);
 }
 
 /**
@@ -105,8 +123,10 @@ export function ueberzaehligeKarten(spieler: Spieler): number {
 export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   const { spielerIndex } = zustand.zug;
   fuelleHandAuf(zustand, spielerIndex, ereignisse);
-  if (ueberzaehligeKarten(zustand.spieler[spielerIndex]) > 0) {
+  const anzahl = ueberzaehligeKarten(zustand.spieler[spielerIndex]);
+  if (anzahl > 0) {
     zustand.zug.abschnitt = 'Abwerfen';
+    ereignisse.push({ typ: 'AbwerfenVerlangt', spielerIndex, anzahl });
     return;
   }
   gibZugWeiter(zustand, ereignisse);
@@ -143,8 +163,8 @@ function gibZugWeiter(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   for (;;) {
     naechster = (naechster + 1) % zustand.spieler.length;
     if (zustand.partiephase === 'Schlussrunde' && naechster === zustand.schlussrundeAusloeser) {
+      // Der Zug bleibt beim Spieler, der zuletzt gespielt hat; am Zug ist niemand mehr (`ermittleEntscheider`).
       zustand.partiephase = 'Beendet';
-      zustand.zug = neuerZug(naechster);
       ereignisse.push({ typ: 'PartieBeendet' });
       return;
     }
@@ -152,7 +172,7 @@ function gibZugWeiter(zustand: Spielzustand, ereignisse: Ereignis[]): void {
     if (grube < 0) break;
     const [ausgesessen] = zustand.ausliegendeGruben.splice(grube, 1);
     zustand.spieler[ausgesessen.gespieltVon].ablagestapel.push(ausgesessen.karte);
-    ereignisse.push({ typ: 'Ausgesetzt', spielerIndex: naechster });
+    ereignisse.push({ typ: 'Ausgesetzt', spielerIndex: naechster, karteId: ausgesessen.karte.id, ablagestapelVon: ausgesessen.gespieltVon });
   }
   zustand.zug = neuerZug(naechster);
   ereignisse.push({ typ: 'ZugBegonnen', spielerIndex: naechster, teilzug: 1 });

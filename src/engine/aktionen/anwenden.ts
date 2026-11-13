@@ -1,6 +1,6 @@
 import { definitionFuer } from '../karten/register';
 import type { Spielzustand } from '../types';
-import { beendeZug, legeWirkungslosAb, vermerkeGespielteKarte, werfeUeberhandAb } from '../zugablauf';
+import { beendeZug, legeWirkungslosAb, meldeGespielteKarte, werfeUeberhandAb, zaehleGespielteKarte } from '../zugablauf';
 import { pruefeAktion } from './pruefen';
 import type { AktionsErgebnis, Ereignis, KartenAktion, SpielAktion } from './typen';
 
@@ -40,6 +40,8 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
  * selbst aus der Hand. Abwehr gibt es noch keine (E4).
  */
 function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereignisse: Ereignis[]): Spielzustand {
-  const karte = vermerkeGespielteKarte(zustand, aktion, ereignisse);
-  return definitionFuer(karte).wirke(zustand, aktion, []);
+  const karte = zaehleGespielteKarte(zustand, aktion);
+  const nach = definitionFuer(karte).wirke(zustand, aktion, []);
+  meldeGespielteKarte(nach, aktion, ereignisse);
+  return nach;
 }

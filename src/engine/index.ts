@@ -17,6 +17,7 @@ export type {
   Farbkartenziel,
   FusionLegenAktion,
   KartenAktion,
+  Kartenort,
   Pruefergebnis,
   ReagierenAktion,
   RegenbogenschlangeLegenAktion,
