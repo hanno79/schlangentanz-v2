@@ -73,14 +73,24 @@ export function buchstabenAm(text: string): string | undefined {
   return /^([a-z](?:, [a-z])*)\b/.exec(text)?.[1]
 }
 
-/** Buchstaben der Möglichkeiten `- **a)** …` in der Reihenfolge des Blocks. */
-export function moeglichkeiten(block: string): string[] {
-  return [...block.matchAll(/^- \*\*([a-z])\)\*\* \S/gm)].map((treffer) => treffer[1])
+/** Möglichkeiten `- **a)** …` in der Reihenfolge des Blocks: Buchstabe → Text. */
+function moeglichkeitenMitText(block: string): Map<string, string> {
+  return new Map([...block.matchAll(/^- \*\*([a-z])\)\*\* (\S.*)$/gm)].map((t) => [t[1], t[2].trim()]))
 }
 
-/** Text der Möglichkeit `- **b)** …` ohne den Buchstaben; leer, wenn es sie nicht gibt. */
+/** Buchstaben der Möglichkeiten in der Reihenfolge des Blocks. */
+export function moeglichkeiten(block: string): string[] {
+  return [...moeglichkeitenMitText(block).keys()]
+}
+
+/** Text der Möglichkeit ohne den Buchstaben; leer, wenn es sie nicht gibt. */
 export function moeglichkeitText(block: string, buchstabe: string): string {
-  return new RegExp(`^- \\*\\*${buchstabe}\\)\\*\\* (.+)$`, 'm').exec(block)?.[1].trim() ?? ''
+  return moeglichkeitenMitText(block).get(buchstabe) ?? ''
+}
+
+/** Was eine Antwort wählt: „Freie Antwort“ oder ihre Buchstaben („b“, „a, c“). */
+export function gewaehlt(antwort: string): string | undefined {
+  return antwort.startsWith(FREI) ? FREI : buchstabenAm(antwort)
 }
 
 /** Task-IDs im Teil „nennt die Frage: …“ des Feldes „Betroffene Tasks“. */

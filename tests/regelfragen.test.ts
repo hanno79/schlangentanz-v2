@@ -10,6 +10,7 @@ import {
   bloecke,
   buchstabenAm,
   feld,
+  gewaehlt,
   kopf,
   moeglichkeiten,
   nachfragen,
@@ -88,7 +89,7 @@ function pruefeAntwort(nr: string, block: string): void {
     return
   }
   expect(datum, `${nr}: beantwortet, Datum „${datum}“ nicht im Format TT.MM.JJJJ`).toMatch(/^\d{2}\.\d{2}\.\d{4}$/)
-  if (!antwort.startsWith(FREI)) pruefeBuchstaben(nr, block, 'Antwort')
+  if (gewaehlt(antwort) !== FREI) pruefeBuchstaben(nr, block, 'Antwort')
   if (buchstabenAm(antwort) !== buchstabenAm(feld(block, 'Vorschlag'))) {
     expect(antwort.match(ZITAT), `${nr}: weicht vom Vorschlag ab, aber ohne Wortlaut des Autors in „…“`).not.toBeNull()
   }
