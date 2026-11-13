@@ -578,6 +578,9 @@ daneben.
 
 - **Dateien:** Regeltests, `legal_actions_umfang.test.ts`, neuer Golden
   Master, `tests/architecture_r84.test.ts`, `docs/GAME_SPEC.md` Teil C.
+  E1 hat `legal_actions_umfang.test.ts` und `tests/architecture_r84.test.ts`
+  mit dem alten Code gelöscht; E11 schreibt sie neu (Kriterium 4 bzw. die
+  Architekturprüfung liegt seit P0.3 in `tests/architektur.test.ts`).
 - **Abnahmekriterien:**
   1. Teil C enthält nur noch Punkte der Erweiterung (Aufgaben, Schlangenkorb,
      Comeback, Risiko).
@@ -665,6 +668,12 @@ daneben.
   `src/engine/karten/schlangenkorb.ts`.
 - **Für alle drei:** jeder Regelsatz des Abschnitts hat einen Test; Dauerlauf
   mit Erweiterung grün; Szenarien am Entwicklertisch.
+- **Zusätzliche Dateien für alle drei (U13, nachgetragen nach E1):** E1 legt
+  die Aktionstypen abschliessend für die 13 Basistypen an; Comeback, Risiko und
+  Schlangenkorb haben dort noch keinen Typ. X4–X6 dürfen deshalb
+  `src/engine/aktionen/typen.ts`, `src/engine/karten/register.ts` und
+  `src/engine/types.ts` um ihre eigenen Aktionstypen und Zustandsfelder
+  erweitern, ohne bestehende zu ändern.
 
 #### X7 Abnahme Erweiterung
 
