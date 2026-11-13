@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-006 Schaltet man eine einzelne Prüfung in pruefeInvarianten oder im Szenario-Baukasten ab, wird mindestens ein Test rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-006 Schaltet man eine einzelne Prüfung in pruefeInvarianten oder im Szenario-Baukasten ab, wird mindestens ein Test rot.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-ENGINE-003</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Invarianten prüfen jeden Zustand, den spätere Engine-Tasks erzeugen. Fehlt einer Prüfung der Test, fällt das erst auf, wenn ein kaputter Zustand unbemerkt durchgeht. Deshalb wird jede einzelne Prüfung abgeschaltet und nachgesehen, ob ein Test es merkt.</p><h2>Bestanden, wenn</h2><p>Jede der 15 Änderungen unter „Technische Prüfung“ macht in <code>npx vitest run src/engine</code> mindestens einen Test rot, und der rote Test nennt die abgeschaltete Regel.</p><h2>Fehlgeschlagen, wenn</h2><p>Nach einer der Änderungen bleiben alle Tests grün.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E1-struktur (PR #31), Commit 96b1650</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E1-struktur</code>, <code>npm ci</code> gelaufen, keine offenen Änderungen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Je eine Änderung in <code>src/engine/invarianten.ts</code> oder <code>src/engine/testing/szenario.ts</code>, nach jedem Lauf zurückgesetzt.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>invarianten.ts</code>: Doppelt erst ab 3 statt ab 2; ausliegende Gruben nicht mitzählen; mehr als 4 statt 3 offene Aufgaben erlaubt; Comeback/Risiko auf falschem Platz nicht melden; 3 Schlangen erlaubt; leere Schlange nicht melden; Schlangen-Ids nicht auf Eindeutigkeit prüfen; Fusion über zwei Farben erlauben; Grube vor dem eigenen Spieler nicht melden; Angreifer unter den Betroffenen nicht melden; fehlende Karten einer schwebenden Aktion nicht melden; laufende Partie mit leerem Stapel nicht melden. <code>szenario.ts</code>: Bauschritt bei Fehler nicht zurücksetzen; <code>zustand()</code> ohne Invariantenprüfung; fehlendes Material erfinden statt ablehnen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 12:57</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E1 Iteration 2) &middot; agent &middot; pruefung-E1-it2 @ <span class="commit" title="96b1650e800b66423ecc8f51c1c6f9cf8a1d9efc">96b1650</span></p><p>15 Änderungen, jede einzeln: invarianten.ts 12 (doppelt ab 3, Gruben nicht gezählt, 4 offene Aufgaben, falscher Auslageplatz, 3 Schlangen, leere Schlange, Schlangen-Ids, Fusion zweifarbig, Grube vor eigenem Spieler, Angreifer betroffen, fehlende Karte der schwebenden Aktion, laufend mit leerem Stapel) und szenario.ts 3 (kein Zurücksetzen, keine Invariantenprüfung, Material erfunden). Jede macht 1 bis 12 Tests rot, Exit 1; danach alle Dateien zurückgesetzt.</p><ul class="belege"><li><a href="belege/2026-11-13-1257-TF-ENGINE-006-1.txt">2026-11-13-1257-TF-ENGINE-006-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

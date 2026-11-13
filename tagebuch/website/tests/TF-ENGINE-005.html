@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-005 Ein Test wird rot, wenn die geheimen Aufgaben ungemischt verteilt oder die Handkarten vor dem Mischen ausgeteilt werden. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-005 Ein Test wird rot, wenn die geheimen Aufgaben ungemischt verteilt oder die Handkarten vor dem Mischen ausgeteilt werden.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-ENGINE-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>A4 sagt zuerst „mischen“ und dann „austeilen“, für die Spielkarten wie für die Aufgaben. Wer das vertauscht, gibt jedem Spieler in jeder Partie dieselben Starthandkarten oder dieselbe geheime Aufgabe, und der Rest der Partie sieht trotzdem gemischt aus. Ein Test muss das bemerken.</p><h2>Bestanden, wenn</h2><p>Jede der beiden Änderungen in <code>src/engine/state.ts</code> macht mindestens einen Test von <code>npm test</code> rot: (a) die geheimen Aufgaben vor dem Mischen aus dem ungemischten Aufgabenstapel verteilen, danach den Rest mischen; (b) in <code>erstellePartie</code> erst aus dem ungemischten Tisch austeilen und danach nur den Nachziehstapel mischen.</p><h2>Fehlgeschlagen, wenn</h2><p>Nach (a) bekommt Spieler 1 bei jeder Saat „Farbenpracht“ (<code>aufgabe-01</code>) und Spieler 2 „Farbharmonie“ (<code>aufgabe-02</code>), oder nach (b) hat Spieler 1 bei jeder Saat <code>blau-01</code>, <code>blau-03</code>, <code>blau-05</code>, <code>blau-07</code>, <code>blau-09</code> auf der Hand, und trotzdem bleiben alle Tests grün.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E1-struktur (PR #31), Commit 96b1650</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E1-struktur</code>, <code>npm ci</code> gelaufen, keine offenen Änderungen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Die Änderungen (a) und (b) unter „Technische Prüfung“.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>(a) In <code>erstelleTisch</code> die drei Zeilen ab <code>const aufgabenStapel = …</code> ersetzen durch: <code>const ungemischt = erweiterung ? erstelleAufgabenStapel() : []; for (const einzelner of spieler) einzelner.geheimeAufgabe = ungemischt.shift() ?? null; const aufgabenStapel = mische(ungemischt); const offeneAufgaben = aufgabenStapel.splice(0, OFFENE_AUFGABEN);</code>. <code>npx vitest run</code> ausführen, Exit-Code lesen, <code>git checkout -- src/engine/state.ts</code>.</p>
+<p>(b) In <code>erstellePartie</code> <code>erstelleTisch({ spielerzahl, erweiterung, zufall })</code> durch <code>erstelleTisch({ spielerzahl, erweiterung })</code> ersetzen, nach <code>teileReihumAus(zustand)</code> den Nachziehstapel mit <code>mischeDeck(zustand.nachziehstapel, zufall)</code> mischen und die Aufgaben aus einem zweiten, gemischten <code>erstelleTisch</code> übernehmen. <code>npx vitest run</code> ausführen, Exit-Code lesen, zurücksetzen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 12:57</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer E1 Iteration 2) &middot; agent &middot; pruefung-E1-it2 @ <span class="commit" title="96b1650e800b66423ecc8f51c1c6f9cf8a1d9efc">96b1650</span></p><p>(a) geheime Aufgaben vor dem Mischen verteilt: Spieler 1 hat bei Saat 1, 2, 3 immer aufgabe-01, Spieler 2 aufgabe-02; volle Suite 33/33 Dateien, 799/799 Tests grün. (b) Handkarten vor dem Mischen ausgeteilt: Spieler 1 hat bei Saat 1, 2, 3 immer blau-01, -03, -05, -07, -09; volle Suite 799/799 grün, Engine/Entwicklertisch/UI 244/244 grün.</p><p class="fehler">Kein Test hält fest, dass die geheimen Aufgaben und die Starthandkarten aus dem gemischten Stapel kommen (A4: erst mischen, dann austeilen).</p><ul class="belege"><li><a href="belege/2026-11-13-1257-TF-ENGINE-005-1.txt">2026-11-13-1257-TF-ENGINE-005-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+##### gp-g1
+Gegenprobe g1: src/engine/state.ts
+64c64
+<   const aufgabenStapel = erweiterung ? mische(erstelleAufgabenStapel()) : [];
+---
+>   const aufgabenStapel = erweiterung ? erstelleAufgabenStapel() : [];
+Befehl: npx vitest run src/engine src/entwicklung
+     × A4: die Aufgabenkarten werden separat gemischt; welche offen liegen und wer welche geheim hat, hängt von der Saat ab 9ms
+ Test Files  1 failed | 13 passed (14)
+      Tests  1 failed | 205 passed (206)
+exit 1
+##### gp-g2
+Gegenprobe g2: src/engine/state.ts
+61c61,63
+<   const nachziehstapel = mische(erstelleSpielkarten(erweiterung));
+---
+>   const basisIds = new Set(erstelleSpielkarten(false).map((k) => k.id));
+>   const alle = erstelleSpielkarten(erweiterung);
+>   const nachziehstapel = [...mische(alle.filter((k) => basisIds.has(k.id))), ...alle.filter((k) => !basisIds.has(k.id))];
+Befehl: npx vitest run src/engine src/entwicklung
+     × A4: Schlangenhäutungen und Schlangenkorb werden mit den übrigen Karten gemischt, ihre Lage hängt von der Saat ab 6ms
+ Test Files  1 failed | 13 passed (14)
+      Tests  1 failed | 205 passed (206)
+exit 1

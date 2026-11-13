@@ -1,0 +1,182 @@
+##### gp-i1
+Gegenprobe i1: src/engine/invarianten.ts
+114c114
+<     ...liste('Doppelt', [...anzahl].filter(([, n]) => n > 1).map(([id, n]) => `${id} (${n}×)`)),
+---
+>     ...liste('Doppelt', [...anzahl].filter(([, n]) => n > 2).map(([id, n]) => `${id} (${n}×)`)),
+Befehl: npx vitest run src/engine
+     × A4: ein Zustand, der eine Invariante verletzt, wird nicht herausgegeben 6ms
+     × A4: eine doppelt liegende Karte wird mit Id gemeldet 6ms
+     × A7.7: auch Karten unter einer Fusion, in ausliegenden Gruben und aus dem Spiel zählen mit 4ms
+     × A8.2: eine doppelte oder fehlende Risiko-Karte wird gemeldet 1ms
+     × A4: ein Zustand mit verletzter Invariante wird beim Laden abgelehnt und nennt sie 6ms
+ Test Files  3 failed | 6 passed (9)
+      Tests  5 failed | 155 passed (160)
+exit 1
+##### gp-i1b
+Gegenprobe i1b: src/engine/invarianten.ts
+54d53
+<   for (const grube of zustand.ausliegendeGruben) karten.push(grube.karte);
+Befehl: npx vitest run src/engine
+     × A6/A7.6/A7.7/A7.10: schwebende Karte, ausliegende Schlangengruben, Karten unter einer Farbenfusion und Karten aus dem Spiel haben ihren Platz 6ms
+     × A6/A7.6: der Angreifer steht nie unter den Betroffenen, und eine Grube liegt nie vor dem, der sie gespielt hat 8ms
+     × A4: Hand, Schlange, Fusion, Ablage, Grube und „aus dem Spiel“ nehmen ihre Karten vom Nachziehstapel 6ms
+     × A4: was der Baukasten baut, übersteht Speichern und Laden 2ms
+     × A4: nennt jede Invariante mit Namen, auch die erfüllten 20ms
+     × A7.7: auch Karten unter einer Fusion, in ausliegenden Gruben und aus dem Spiel zählen mit 2ms
+     × A5: eine leere Schlange wird gemeldet 2ms
+     × A4: zwei Schlangen mit derselben Id werden gemeldet 2ms
+     × A4: zwei Spieler mit derselben Id und eine Schlange mit der Id einer Karte werden gemeldet 2ms
+     × A7.7: eine Fusionskarte ohne die zwei Karten darunter wird gemeldet 2ms
+     × A7.7: Karten unter einer Fusion, die nicht in der Schlange liegt, werden gemeldet 1ms
+     × A7.7: zwei Karten verschiedener Farbe unter einer Fusion werden gemeldet 1ms
+     × A7.6: eine Schlangengrube vor einem Spieler, den es nicht gibt, wird gemeldet 2ms
+     × A4: Speichern und Laden ergibt für 200 Zufallszustände denselben Zustand 38ms
+ Test Files  5 failed | 4 passed (9)
+      Tests  14 failed | 146 passed (160)
+exit 1
+##### gp-i2
+Gegenprobe i2: src/engine/invarianten.ts
+126c126
+<   if (zustand.offeneAufgaben.length > OFFENE_AUFGABEN) probleme.push(`${zustand.offeneAufgaben.length} offene Aufgaben, höchstens ${OFFENE_AUFGABEN}.`);
+---
+>   if (zustand.offeneAufgaben.length > OFFENE_AUFGABEN + 1) probleme.push(`${zustand.offeneAufgaben.length} offene Aufgaben, höchstens ${OFFENE_AUFGABEN}.`);
+Befehl: npx vitest run src/engine
+     × A4: mehr als 3 offene Aufgaben oder ein Spieler ohne geheime Aufgabe werden gemeldet 8ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i3
+Gegenprobe i3: src/engine/invarianten.ts
+141c141
+<     if (falsch.length > 0) probleme.push(`${spieler.id} hat ${falsch.join(', ')} auf dem falschen Platz.`);
+---
+>     if (falsch.length > 99) probleme.push(`${spieler.id} hat ${falsch.join(', ')} auf dem falschen Platz.`);
+Befehl: npx vitest run src/engine
+     × A4/A8: eine Risiko-Karte auf dem Platz der Comeback-Karte wird gemeldet 7ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i4
+Gegenprobe i4: src/engine/invarianten.ts
+148c148
+<     .filter((spieler) => spieler.schlangen.length > MAX_SCHLANGEN_PRO_SPIELER)
+---
+>     .filter((spieler) => spieler.schlangen.length > MAX_SCHLANGEN_PRO_SPIELER + 1)
+Befehl: npx vitest run src/engine
+     × A5: ein Spieler mit 3 Schlangen wird gemeldet 10ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i5
+Gegenprobe i5: src/engine/invarianten.ts
+154c154
+<     spieler.schlangen.filter((schlange) => schlange.karten.length === 0).map((schlange) => `${schlange.id} von ${spieler.id} ist leer.`),
+---
+>     spieler.schlangen.filter((schlange) => schlange.karten.length < 0).map((schlange) => `${schlange.id} von ${spieler.id} ist leer.`),
+Befehl: npx vitest run src/engine
+     × A5: eine leere Schlange wird gemeldet 8ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i6
+Gegenprobe i6: src/engine/invarianten.ts
+161d160
+<     ...zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id)),
+Befehl: npx vitest run src/engine
+     × A4: zwei Schlangen mit derselben Id werden gemeldet 8ms
+     × A4: zwei Spieler mit derselben Id und eine Schlange mit der Id einer Karte werden gemeldet 3ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  2 failed | 158 passed (160)
+exit 1
+##### gp-i7
+Gegenprobe i7: src/engine/invarianten.ts
+189c189
+<       if (!zweiFarbkarten || links.farbe !== rechts.farbe) {
+---
+>       if (!zweiFarbkarten) {
+Befehl: npx vitest run src/engine
+     × A7.7: zwei Karten verschiedener Farbe unter einer Fusion werden gemeldet 9ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i8a
+Gegenprobe i8a: src/engine/invarianten.ts
+211c211
+<     if (grube.vor === grube.gespieltVon) probleme.push(`${grube.karte.id} liegt vor dem Spieler, der sie gespielt hat.`);
+---
+>     if (grube.vor === -1) probleme.push(`${grube.karte.id} liegt vor dem Spieler, der sie gespielt hat.`);
+Befehl: npx vitest run src/engine
+     × A6/A7.6: der Angreifer steht nie unter den Betroffenen, und eine Grube liegt nie vor dem, der sie gespielt hat 9ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i8b
+Gegenprobe i8b: src/engine/invarianten.ts
+229c229
+<     if (entschieden.includes(angreifer)) probleme.push(`Der Angreifer steht bei seiner eigenen ${schwebend.karte.id} unter den Betroffenen.`);
+---
+>     if (entschieden.includes(-5)) probleme.push(`Der Angreifer steht bei seiner eigenen ${schwebend.karte.id} unter den Betroffenen.`);
+Befehl: npx vitest run src/engine
+     × A6/A7.6: der Angreifer steht nie unter den Betroffenen, und eine Grube liegt nie vor dem, der sie gespielt hat 8ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i8c
+Gegenprobe i8c: src/engine/invarianten.ts
+241c241
+<       if (fehlend.length > 0) probleme.push(`Die schwebende Aktion nennt ${fehlend.join(', ')}, das liegt nicht in ${schlangenId}.`);
+---
+>       if (fehlend.length > 99) probleme.push(`Die schwebende Aktion nennt ${fehlend.join(', ')}, das liegt nicht in ${schlangenId}.`);
+Befehl: npx vitest run src/engine
+     × A6: eine schwebende Aktion, die eine Karte nennt, die nicht in der genannten Schlange liegt, wird gemeldet 11ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-i9
+Gegenprobe i9: src/engine/invarianten.ts
+280c280
+<   if (laufend && stapelLeer) probleme.push('Die Partie läuft, aber der Nachziehstapel ist leer (A10).');
+---
+>   if (laufend && stapelLeer && false) probleme.push('Die Partie läuft, aber der Nachziehstapel ist leer (A10).');
+Befehl: npx vitest run src/engine
+     × A10: eine laufende Partie mit leerem Stapel und eine Schlussrunde mit vollem Stapel werden gemeldet 6ms
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 159 passed (160)
+exit 1
+##### gp-k8a
+Gegenprobe k8a: src/engine/testing/szenario.ts
+85d84
+<       Object.assign(zustand, vorher);
+Befehl: npx vitest run src/engine src/entwicklung
+     × A1: ein Aufruf, der an fehlendem Material scheitert, nimmt auch keine der anderen Karten 5ms
+ Test Files  1 failed | 13 passed (14)
+      Tests  1 failed | 205 passed (206)
+exit 1
+##### gp-k8b
+Gegenprobe k8b: src/engine/testing/szenario.ts
+185c185
+<       if (verletzt.length > 0) {
+---
+>       if (verletzt.length > 99) {
+Befehl: npx vitest run src/engine src/entwicklung
+     × A4: ein Zustand, der eine Invariante verletzt, wird nicht herausgegeben 7ms
+     × A5: ein Spieler mit 3 Schlangen wird gemeldet 9ms
+     × A10: eine laufende Partie mit leerem Stapel und eine Schlussrunde mit vollem Stapel werden gemeldet 6ms
+ Test Files  3 failed | 11 passed (14)
+      Tests  3 failed | 203 passed (206)
+exit 1
+##### gp-k8c
+Gegenprobe k8c: src/engine/testing/szenario.ts
+68c68
+<     if (index < 0) {
+---
+>     if (index < 0 && typeof wahl !== 'string') {
+71a72
+>     if (index < 0) return { typ: 'Sonderkarte', id: `erfunden-${Math.round(Math.random() * 1e9)}`, name: wahl as Sonderkartenname };
+Befehl: npx vitest run src/engine src/entwicklung
+     × A1: es gibt nur so viele Karten, wie das Material hat 9ms
+     × A1: ein Aufruf, der an fehlendem Material scheitert, nimmt auch keine der anderen Karten 2ms
+ Test Files  1 failed | 13 passed (14)
+      Tests  2 failed | 204 passed (206)
+exit 1
