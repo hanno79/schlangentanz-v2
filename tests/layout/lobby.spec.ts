@@ -55,6 +55,22 @@ test.describe('O2: Lobby mit laufender Partie', () => {
   alleVertraege()
 })
 
+test.describe('O2 K4: Lobby nach einem unlesbaren Spielstand', () => {
+  test.beforeEach(async ({ page }) => {
+    await oeffne(page, '/')
+    await page.evaluate(() => window.localStorage.setItem('schlangentanz-v2:partie', '{"version":1,"kaputt":true}'))
+    await page.reload()
+    await expect(page.getByTestId('spielstand-verworfen')).toBeVisible()
+  })
+
+  test('O2 K4: die Lobby sagt, dass die Partie verworfen wurde, und bietet kein „Weiterspielen“', async ({ page }) => {
+    await expect(page.getByTestId('spielstand-verworfen')).toContainText('beschädigt')
+    await expect(page.getByRole('button', { name: 'Weiterspielen' })).toHaveCount(0)
+  })
+
+  alleVertraege()
+})
+
 test.describe('O2: Lobby mit offener Rückfrage vor einer neuen Partie', () => {
   test.beforeEach(async ({ page }) => {
     await startePartie(page)
