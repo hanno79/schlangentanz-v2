@@ -35,6 +35,12 @@ function oberste(bau: Baukasten, spieler: number, anzahl: number): Baukasten {
   return bau.hand(spieler, bau.frei().slice(0, anzahl).map((karte) => ({ id: karte.id })))
 }
 
+/** Gibt jedem Spieler der Reihe nach so viele Karten von oben, wie `anzahlen` nennt. */
+function verteile(bau: Baukasten, anzahlen: number[]): Baukasten {
+  anzahlen.forEach((anzahl, spieler) => oberste(bau, spieler, anzahl))
+  return bau
+}
+
 function zugablaufSzenarien(): Szenario[] {
   return [
     {
@@ -65,10 +71,7 @@ function zugablaufSzenarien(): Szenario[] {
         'A7.6: Drei Spieler. Vor KI-Gegner 1 liegt eine Schlangengrube, die Spieler 1 gespielt hat; KI-Gegner 1 hält 3 Karten. Spieler 1 ist am Zug.',
       erwartet:
         'Spieler 1 spielt eine Karte und beendet den Zug. Ereignisse: KartenGezogen (Spieler 1), Ausgesetzt (KI-Gegner 1), ZugBegonnen (KI-Gegner 2). KI-Gegner 1 zieht nicht und behält seine 3 Karten (D18); die Grube liegt nun auf dem Ablagestapel von Spieler 1, keine Grube mehr aus. Spielt man weiter, füllt KI-Gegner 1 zu Beginn seines nächsten Zuges auf 5 auf.',
-      erzeuge: () => {
-        const bau = gemischt(3, 14).grube(0, 1)
-        return oberste(oberste(oberste(bau, 0, 5), 1, 3), 2, 5).zustand()
-      },
+      erzeuge: () => verteile(gemischt(3, 14).grube(0, 1), [5, 3, 5]).zustand(),
     },
     {
       name: 'nur-farbenschutz',

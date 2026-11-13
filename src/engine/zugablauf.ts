@@ -1,4 +1,4 @@
-import type { Ereignis, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
+import type { Aktionstyp, Ereignis, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
 import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
@@ -37,10 +37,23 @@ export function darfZugBeenden(zug: Zug, spieler: Spieler): boolean {
   return zug.gespielteFarbkarten + zug.gespielteSonderkarten > 0 || spieler.hand.length === 0;
 }
 
-/** Zählt eine gespielte Handkarte zum laufenden Zug (A5, D12, D13). */
-export function zaehleKarte(zug: Zug, karte: Spielkarte): void {
-  if (karte.typ === 'Farbkarte') zug.gespielteFarbkarten += 1;
-  else zug.gespielteSonderkarten += 1;
+/**
+ * Eine Handkarte wird gespielt, mit oder ohne Wirkung: Sie zählt zum laufenden
+ * Zug (A5, D12, D13), und das Ereignis wird gemeldet. Liefert die Karte; sie
+ * liegt danach noch auf der Hand.
+ */
+export function vermerkeGespielteKarte(
+  zustand: Spielzustand,
+  aktion: { typ: Aktionstyp; spielerId: string; karteId: string },
+  ereignisse: Ereignis[],
+): Spielkarte {
+  const spielerIndex = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
+  const karte = zustand.spieler[spielerIndex]?.hand.find((handkarte) => handkarte.id === aktion.karteId);
+  if (karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
+  if (karte.typ === 'Farbkarte') zustand.zug.gespielteFarbkarten += 1;
+  else zustand.zug.gespielteSonderkarten += 1;
+  ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: karte.id, aktion: aktion.typ });
+  return karte;
 }
 
 /**
@@ -57,11 +70,9 @@ export function entnehmeHandkarte(zustand: Spielzustand, spielerId: string, kart
 
 /** D13, D25: Die Sonderkarte kommt ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. */
 export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirkungslosAblegenAktion, ereignisse: Ereignis[]): void {
-  const spielerIndex = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
+  vermerkeGespielteKarte(zustand, aktion, ereignisse);
   const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
-  zaehleKarte(zustand.zug, karte);
-  zustand.spieler[spielerIndex].ablagestapel.push(karte);
-  ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: karte.id, aktion: aktion.typ });
+  zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)!.ablagestapel.push(karte);
 }
 
 /**

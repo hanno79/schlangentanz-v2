@@ -101,10 +101,9 @@ export function spieleDauerlaufPartie(partie: DauerlaufPartie, optionen: Dauerla
         if (!pruefung.erlaubt) return ergebnis('abgelehnt', schritt, `Aufgezählt, aber abgelehnt: ${JSON.stringify(angeboten)}: ${pruefung.grund}`);
       }
       aktion = aktionen[Math.floor(wahl() * aktionen.length)];
-      const vorher = zustand;
       const ausgefuehrt = motor.anwende(zustand, aktion);
+      const verstoss = pruefeSchritt?.(zustand, aktion, ausgefuehrt) ?? null;
       zustand = ausgefuehrt.zustand;
-      const verstoss = pruefeSchritt?.(vorher, aktion, ausgefuehrt) ?? null;
       if (verstoss !== null) return ergebnis('verstoss', schritt + 1, `Saat ${partie.saat}, nach ${JSON.stringify(aktion)}: ${verstoss}`);
     } catch (fehler) {
       const bei = aktion === null ? '' : `${JSON.stringify(aktion)}: `;

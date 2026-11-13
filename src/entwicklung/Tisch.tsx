@@ -5,6 +5,7 @@ import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
+import { name } from './namen'
 import { ZustandsAnsicht } from './ZustandsAnsicht'
 
 interface Eintrag {
@@ -183,22 +184,22 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
 
 /** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer. */
 function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
-  const name = (index: number) => zustand.spieler[index]?.name ?? `Spieler ${index}`
+  const wer = (index: number) => name(zustand, index)
   switch (ereignis.typ) {
     case 'KarteGespielt':
-      return `KarteGespielt: ${name(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.aktion})`
+      return `KarteGespielt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.aktion})`
     case 'KartenGezogen':
-      return `KartenGezogen: ${name(ereignis.spielerIndex)} zieht ${ereignis.anzahl}`
+      return `KartenGezogen: ${wer(ereignis.spielerIndex)} zieht ${ereignis.anzahl}`
     case 'KartenAbgeworfen':
-      return `KartenAbgeworfen: ${name(ereignis.spielerIndex)} legt ${ereignis.karteIds.join(', ')} ab`
+      return `KartenAbgeworfen: ${wer(ereignis.spielerIndex)} legt ${ereignis.karteIds.join(', ')} ab`
     case 'ZugBegonnen':
-      return `ZugBegonnen: ${name(ereignis.spielerIndex)}, Teilzug ${ereignis.teilzug}`
+      return `ZugBegonnen: ${wer(ereignis.spielerIndex)}, Teilzug ${ereignis.teilzug}`
     case 'Abgewehrt':
-      return `Abgewehrt: ${name(ereignis.spielerIndex)} wehrt ${ereignis.karteId} ab`
+      return `Abgewehrt: ${wer(ereignis.spielerIndex)} wehrt ${ereignis.karteId} ab`
     case 'Ausgesetzt':
-      return `Ausgesetzt: ${name(ereignis.spielerIndex)} setzt aus`
+      return `Ausgesetzt: ${wer(ereignis.spielerIndex)} setzt aus`
     case 'SchlussrundeBegonnen':
-      return `SchlussrundeBegonnen: ausgelöst von ${name(ereignis.ausloeser)}`
+      return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':
       return 'PartieBeendet'
   }

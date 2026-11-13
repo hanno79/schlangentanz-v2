@@ -126,9 +126,11 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
   }
 
   const { zug } = zustand;
+  if (zug.abschnitt === 'Abwerfen' && aktion.typ !== 'UeberhandAbwerfen') {
+    return nein('Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5).');
+  }
   switch (aktion.typ) {
     case 'ZugBeenden':
-      if (zug.abschnitt === 'Abwerfen') return nein('Der Zug ist beendet: Erst überzählige Karten abwerfen (A5).');
       if (!darfZugBeenden(zug, spieler)) {
         return nein(`${spieler.name} muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).`);
       }
@@ -141,15 +143,14 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
 
   const karte = spieler.hand.find((handkarte) => handkarte.id === aktion.karteId);
   if (karte === undefined) return nein(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${spieler.name}.`);
-  if (zug.abschnitt === 'Abwerfen') {
-    return nein('Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5).');
+  if (aktion.typ === 'SonderkarteWirkungslosAblegen' && karte.typ !== 'Sonderkarte') {
+    return nein(`Die Karte ${karte.id} ist eine Farbkarte: Wirkungslos ablegen lassen sich nur Sonderkarten (D13).`);
   }
+  const grenze = kartengrenze(zug, karte);
+  if (grenze !== null) return nein(grenze);
   if (aktion.typ === 'SonderkarteWirkungslosAblegen') {
-    if (karte.typ !== 'Sonderkarte') return nein(`Die Karte ${karte.id} ist eine Farbkarte: Wirkungslos ablegen lassen sich nur Sonderkarten (D13).`);
-    const grenze = kartengrenze(zug, karte);
-    if (grenze !== null) return nein(grenze);
     if (!istWirkungslosAblegbar(zustand, spielerIndex, karte)) {
-      return nein(`${karte.name} hat ein mögliches Ziel; wirkungslos ablegen geht nur ohne Ziel, Farbenschutz immer (D25).`);
+      return nein(`${kartenartVon(karte)} hat ein mögliches Ziel; wirkungslos ablegen geht nur ohne Ziel, Farbenschutz immer (D25).`);
     }
     return JA;
   }
@@ -159,11 +160,16 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
 /**
  * D13, D25: Eine Sonderkarte ohne mögliches Ziel und jeder Farbenschutz dürfen
  * ohne Wirkung auf den eigenen Ablagestapel. Ob die Karte ein Ziel hat, sagt ihr
- * Eintrag im Kartenregister; die Grenze je Zug prüft der Aufrufer.
+ * Eintrag im Kartenregister; die Grenze je Zug prüft der Aufrufer (`kartengrenze`).
  */
 export function istWirkungslosAblegbar(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): boolean {
+  return ohneZielAblegbar(karte, () => definitionFuer(karte).ziele(zustand, spielerIndex, karte));
+}
+
+/** Dieselbe Regel, wenn die Ziele der Karte schon ermittelt sind (`ermittleAktionen`); `ziele` wird nur bei Bedarf gerufen. */
+export function ohneZielAblegbar(karte: Spielkarte, ziele: () => readonly unknown[]): boolean {
   if (karte.typ !== 'Sonderkarte') return false;
-  return karte.name === 'Farbenschutz' || definitionFuer(karte).ziele(zustand, spielerIndex, karte).length === 0;
+  return karte.name === 'Farbenschutz' || ziele().length === 0;
 }
 
 /** A5: Am Zugende kommen genau die überzähligen Karten auf den eigenen Ablagestapel, jede einmal. */
@@ -184,8 +190,6 @@ function pruefeKartenaktion(zustand: Spielzustand, aktion: KartenAktion, karte: 
   const erwartet = kartenartFuer(aktion.typ);
   const art = kartenartVon(karte);
   if (art !== erwartet) return nein(`Die Karte ${karte.id} ist ${mitArtikel(art)}; ${aktion.typ} braucht ${mitArtikel(erwartet)}.`);
-  const grenze = kartengrenze(zustand.zug, karte);
-  if (grenze !== null) return nein(grenze);
   const grund = KARTENREGISTER[art].pruefe(zustand, aktion);
   return grund === null ? JA : nein(grund);
 }

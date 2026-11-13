@@ -1,5 +1,6 @@
 import { ermittleEntscheider, istAuslagekarte } from '../engine'
 import type { AufgabenkarteInfo, Auslagekarte, Schlange, Spieler, Spielzustand } from '../engine'
+import { name } from './namen'
 import { Karte, Kartenreihe } from './Karte'
 import { WertungsAnsicht } from './WertungsAnsicht'
 
@@ -24,12 +25,6 @@ export function ZustandsAnsicht({ zustand }: { zustand: Spielzustand }) {
 
 function json(wert: unknown): string {
   return JSON.stringify(wert)
-}
-
-function name(zustand: Spielzustand, index: number | null): string {
-  if (index === null) return 'niemand'
-  const spieler = zustand.spieler[index]
-  return spieler === undefined ? `unbekannter Spieler ${index}` : `${spieler.name} (${spieler.id})`
 }
 
 function Kopf({ zustand }: { zustand: Spielzustand }) {
