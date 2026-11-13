@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-BRETT-006 Mit zehn Handkarten bleibt jede Handkarte ganz im Bild und mindestens 44 px breit. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-BRETT-006 Mit zehn Handkarten bleibt jede Handkarte ganz im Bild und mindestens 44 px breit.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch und Kartenaktionen</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-BRETT-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Am Zugende kann die Hand mehr als fünf Karten haben, bevor du ablegst. Die Szenarien haben nur fünf. Mit zehn Karten soll keine angeschnitten sein und die Statuszeile das Ablegen ansagen.</p><h2>Bestanden, wenn</h2><p>In allen fünf Klassen liegen zehn Handkarten ganz im Fenster (rechte Kante ≤ Fensterbreite, Unterkante ≤ Fensterhöhe), jede mindestens 44 px breit; <code>scrollWidth</code> gleich <code>clientWidth</code>; die Statuszeile sagt „Lege überzählige Handkarten ab.“</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Handkarte ragt über den Rand, ist schmaler als 44 px, oder die Seite scrollt waagrecht.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O4-spieltisch (PR #34)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild, Playwright-Kontexte aller fünf Klassen</td></tr><tr><td>Ausgangslage</td><td>Szenario <code>neuePartie</code>, im gespeicherten JSON fünf Karten vom Nachziehstapel in die Hand des Menschen verschoben, <code>zug.abschnitt</code> = <code>Abwerfen</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zehn Handkarten, Abschnitt Abwerfen.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser</td><td>geänderten Spielstand legen, `/spiel` öffnen</td><td></td><td>Titel „Deine Hand · 10 Karten“</td></tr><tr><td>2</td><td>Konsole</td><td>Breite, rechte und untere Kante jeder Handkarte lesen</td><td></td><td>alle im Fenster, ≥ 44 px</td></tr><tr><td>3</td><td>Tisch</td><td>Foto ansehen</td><td></td><td>keine Karte angeschnitten</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Browserkontext schliessen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 15:43</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O4) &middot; agent &middot; pruefung-O4 @ <span class="commit" title="5e2f7a7974add05b10888b1ff7e98606f452cd6c">5e2f7a7</span> / Playwright Chromium 1.60.0, fünf Geräteklassen</p><p>10 Handkarten: Desktop 96 px, Tablet quer 80, Tablet hochkant 67 (eine Zeile), Handy hochkant und quer 44 px in 2 Zeilen; alle im Fenster (Handy quer unterstes Bild 382 von 390), scrollWidth = clientWidth, Status &#x27;Lege überzählige Handkarten ab.&#x27;</p><ul class="belege"><li><a href="belege/2026-11-13-1543-TF-BRETT-006-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1543-TF-BRETT-006-1.png" alt="Beleg 2026-11-13-1543-TF-BRETT-006-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1543-TF-BRETT-006-2.png"><img class="beleg-vorschau" src="belege/2026-11-13-1543-TF-BRETT-006-2.png" alt="Beleg 2026-11-13-1543-TF-BRETT-006-2.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1543-TF-BRETT-006-3.txt">2026-11-13-1543-TF-BRETT-006-3.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

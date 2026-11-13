@@ -1,0 +1,16 @@
+K2-zufall desktop zustaende 30 verborgene ids gesamt 381 treffer []
+K2-zufall handy-hochkant zustaende 30 verborgene ids gesamt 381 treffer []
+320px volltisch {"sw":320,"cw":320,"hand":[53,53,53,53,53],"handUnten":640,"flaeche":220,"kopf":73} fehler 0
+320px mittelspiel {"sw":320,"cw":320,"hand":[53,53,53,53,53],"handUnten":640,"flaeche":222,"kopf":72} fehler 0
+hand10 desktop {"anzahl":10,"breiten":[96],"zeilen":1,"unterstesBild":892,"rechtestes":1044,"fenster":[1280,900],"sw":1280,"status":"Du bist dran Lege überzählige Handkarten ab.","flaeche":593} fehler 
+hand10 tablet-quer {"anzahl":10,"breiten":[80],"zeilen":1,"unterstesBild":760,"rechtestes":884,"fenster":[1024,768],"sw":1024,"status":"Du bist dran Lege überzählige Handkarten ab.","flaeche":487} fehler 
+hand10 tablet-hochkant {"anzahl":10,"breiten":[67],"zeilen":1,"unterstesBild":1016,"rechtestes":756,"fenster":[768,1024],"sw":768,"status":"Du bist dran Lege überzählige Handkarten ab.","flaeche":764} fehler 
+hand10 handy-hochkant {"anzahl":10,"breiten":[44],"zeilen":2,"unterstesBild":836,"rechtestes":368,"fenster":[390,844],"sw":390,"status":"Du bist dran Lege überzählige Handkarten ab.","flaeche":542} fehler 
+hand10 handy-quer {"anzahl":10,"breiten":[44],"zeilen":2,"unterstesBild":382,"rechtestes":797,"fenster":[844,390],"sw":844,"status":"Du bist dran Lege überzählige Handkarten ab.","flaeche":337} fehler 
+mensch-platz3 {"gegner":["Spieler 1","KI-Gegner 1"],"status":"Spieler 1 ist dran","eigene":"Deine Schlange 1: 4 Karten, keine Farbgruppe","handOben":684} fehler 
+dpr desktop 2 bilder 21 KB 215 gross 0 
+dpr tablet-quer 2 bilder 21 KB 215 gross 0 
+dpr handy-hochkant 3 bilder 21 KB 215 gross 0 
+dpr handy-quer 3 bilder 21 KB 215 gross 0 
+drehen-lupe {"offen":true,"bild":{"b":151,"h":246,"oben":44,"unten":290},"knopf":{"oben":302,"unten":346,"h":44},"fenster":[844,390],"sw":844}
+nach-schliessen 0 true
