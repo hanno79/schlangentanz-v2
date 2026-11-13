@@ -18,7 +18,8 @@ const KOPIE = '.claude/worktrees/agent-probe'
 const VERSTOESSE = {
   [`${KOPIE}/src/engine/__tests__/alt.test.ts`]: "it('ohne Abschnitt', () => {})\n",
   [`${KOPIE}/tests/lang.test.ts`]: "it.skip('x', () => { const y: any = 1 })\n".repeat(600),
-  [`${KOPIE}/tests/css.test.ts`]: 'const appCss = 1\nexport { appCss }\n',
+  // Zusammengesetzt, damit check:css-asserts diese Datei hier nicht selbst mitzählt.
+  [`${KOPIE}/tests/css.test.ts`]: `const ${'app'}Css = 1\nexport { ${'app'}Css }\n`,
   [`${KOPIE}/src/ui/Gross.tsx`]: 'export {}\n'.repeat(400),
   '.claude/werkzeug.test.ts': "it.only('x', () => {})\n",
 }
