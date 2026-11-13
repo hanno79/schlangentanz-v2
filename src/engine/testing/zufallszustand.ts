@@ -68,7 +68,10 @@ export function zufallszustand(zufall: () => number): Spielzustand {
     for (let anzahl = bis(3); anzahl > 0; anzahl -= 1) bau.schlange(index, zufallsSchlange(bau, wuerfel));
     bau.ablage(index, waehle(bau, wuerfel, bis(4)));
   }
-  if (ja(0.4) && bau.frei().some(istSonderkarte('Schlangengrube'))) bau.grube(bis(spielerzahl), bis(spielerzahl));
+  if (ja(0.4) && bau.frei().some(istSonderkarte('Schlangengrube'))) {
+    const von = bis(spielerzahl);
+    bau.grube(von, (von + 1 + bis(spielerzahl - 1)) % spielerzahl);
+  }
   bau.ausDemSpiel(waehle(bau, wuerfel, bis(2)));
   bau.haendeAuffuellen();
   for (let index = 0; index < spielerzahl; index += 1) bau.hand(index, waehle(bau, wuerfel, bis(3)));

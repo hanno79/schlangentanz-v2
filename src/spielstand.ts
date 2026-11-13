@@ -42,7 +42,7 @@ export const SPIELSTAND_SCHLUESSEL = 'schlangentanz-v2:partie'
  * denselben Sturz. Hier ist es eines: Kein `window`, kein Zugriff, ein Wurf beim
  * Lesen oder Schreiben — alles endet im Ersatzwert.
  */
-export function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
+function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
   if (typeof window === 'undefined') return ersatz
   try {
     return tun(window.localStorage)
@@ -56,7 +56,7 @@ export function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
  * `Spielzustand['version']`: Hebt E1 das Format an, meldet der Typecheck diese
  * Stelle.
  */
-const SPEICHERFORMAT: Spielzustand['version'] = 1
+const SPEICHERFORMAT: Spielzustand['version'] = 2
 
 /**
  * Was im Speicher liegt.

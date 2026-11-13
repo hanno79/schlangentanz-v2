@@ -28,13 +28,12 @@ export const LOBBY = {
   abbrechen: 'Abbrechen',
 }
 
-/** „an“, „aus“ oder „unbekannt“, wenn zu einem Spielstand kein Schalter gemerkt ist. */
-export function erweiterungWort(erweiterung: boolean | null): string {
-  if (erweiterung === null) return 'unbekannt'
+/** „an“ oder „aus“. */
+export function erweiterungWort(erweiterung: boolean): string {
   return erweiterung ? 'an' : 'aus'
 }
 
-export function partieKurz(gegner: number, erweiterung: boolean | null): string {
+export function partieKurz(gegner: number, erweiterung: boolean): string {
   return `${LOBBY.gegner(gegner)}, Erweiterung ${erweiterungWort(erweiterung)}`
 }
 
@@ -52,8 +51,6 @@ export const SPIEL = {
   text: 'Die Partie ist angelegt und gespeichert. Den Spieltisch gibt es noch nicht; bis dahin lässt sie sich hier nicht spielen.',
   gegner: 'Gegner',
   erweiterung: 'Erweiterung',
-  hinweisErweiterung:
-    'Die Engine kennt den Erweiterungs-Schalter noch nicht. Die Partie wurde ohne ihn angelegt; gemerkt ist nur, was du gewählt hast.',
   keinePartie: 'Es läuft keine Partie. Starte in der Lobby eine neue.',
 }
 

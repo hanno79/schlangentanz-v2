@@ -143,7 +143,7 @@ describe('O2 K4: unlesbarer Spielstand beim Öffnen', () => {
   })
 
   it('O2 K4: im StrictMode bleibt der Hinweis stehen und der Fehler wird nur einmal gemeldet', () => {
-    legeRohenStandAb('{"version":1,"kaputt":true}')
+    legeRohenStandAb('{"version":2,"kaputt":true}')
     oeffne('/', true)
     expect(screen.getByTestId('spielstand-verworfen')).toBeInTheDocument()
     expect(meldeFehler).toHaveBeenCalledTimes(1)

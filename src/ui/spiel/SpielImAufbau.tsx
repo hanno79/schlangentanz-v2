@@ -22,21 +22,16 @@ export default function SpielImAufbau() {
     >
       {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
       {partie !== null && (
-        <>
-          <dl className="einstellungen">
-            <div>
-              <dt>{SPIEL.gegner}</dt>
-              <dd data-testid="einstellung-gegner">{partie.gegner}</dd>
-            </div>
-            <div>
-              <dt>{SPIEL.erweiterung}</dt>
-              <dd data-testid="einstellung-erweiterung">{erweiterungWort(partie.erweiterung)}</dd>
-            </div>
-          </dl>
-          <p className="hinweis" data-testid="hinweis-erweiterung">
-            {SPIEL.hinweisErweiterung}
-          </p>
-        </>
+        <dl className="einstellungen">
+          <div>
+            <dt>{SPIEL.gegner}</dt>
+            <dd data-testid="einstellung-gegner">{partie.gegner}</dd>
+          </div>
+          <div>
+            <dt>{SPIEL.erweiterung}</dt>
+            <dd data-testid="einstellung-erweiterung">{erweiterungWort(partie.erweiterung)}</dd>
+          </div>
+        </dl>
       )}
     </Rahmen>
   )

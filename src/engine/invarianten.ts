@@ -207,6 +207,8 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
     pruefe(grube.gespieltVon, `${grube.karte.id} (gespielt von)`);
     pruefe(grube.vor, `${grube.karte.id} (liegt vor)`);
     if (grube.karte.name !== 'Schlangengrube') probleme.push(`${grube.karte.id} liegt als Schlangengrube aus, ist aber keine.`);
+    // A7.6: Die Grube trifft einen Mitspieler.
+    if (grube.vor === grube.gespieltVon) probleme.push(`${grube.karte.id} liegt vor dem Spieler, der sie gespielt hat.`);
   }
   const { schwebend } = zustand;
   if (schwebend !== null) {
@@ -222,24 +224,49 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
     if (new Set(entschieden).size !== entschieden.length) {
       probleme.push(`Bei der schwebenden ${schwebend.karte.id} steht ein Spieler mehrfach unter ausstehend oder abgewehrt.`);
     }
-    const spielerIds = new Set(zustand.spieler.map((spieler) => spieler.id));
-    const schlangenIds = new Set(zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id)));
-    if ('zielSpielerId' in aktion && !spielerIds.has(aktion.zielSpielerId)) probleme.push(`Die schwebende Aktion zielt auf den unbekannten Spieler ${aktion.zielSpielerId}.`);
-    for (const id of verwieseneSchlangen(aktion)) {
-      if (!schlangenIds.has(id)) probleme.push(`Die schwebende Aktion nennt die unbekannte Schlange ${id}.`);
+    // A6: Betroffen sind die Besitzer der Ziele ohne den Angreifer.
+    const angreifer = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
+    if (entschieden.includes(angreifer)) probleme.push(`Der Angreifer steht bei seiner eigenen ${schwebend.karte.id} unter den Betroffenen.`);
+    if ('zielSpielerId' in aktion && !zustand.spieler.some((spieler) => spieler.id === aktion.zielSpielerId)) {
+      probleme.push(`Die schwebende Aktion zielt auf den unbekannten Spieler ${aktion.zielSpielerId}.`);
+    }
+    const schlangen = new Map(zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => [schlange.id, schlange] as const)));
+    for (const { schlangenId, karteIds } of verweise(aktion)) {
+      const schlange = schlangen.get(schlangenId);
+      if (schlange === undefined) {
+        probleme.push(`Die schwebende Aktion nennt die unbekannte Schlange ${schlangenId}.`);
+        continue;
+      }
+      const fehlend = karteIds.filter((id) => !schlange.karten.some((karte) => karte.id === id));
+      if (fehlend.length > 0) probleme.push(`Die schwebende Aktion nennt ${fehlend.join(', ')}, das liegt nicht in ${schlangenId}.`);
     }
   }
   return probleme;
 }
 
-/** Die Schlangen, die eine angesagte Aktion nennt; das Ziel steht mit der Ansage fest (A6, B2). */
-function verwieseneSchlangen(aktion: KartenAktion): string[] {
-  const ids: string[] = [];
-  if ('schlangenId' in aktion) ids.push(aktion.schlangenId);
-  if ('quelle' in aktion) ids.push(aktion.quelle.schlangenId);
-  if ('ziel' in aktion && aktion.ziel.art === 'schlange') ids.push(aktion.ziel.schlangenId);
-  if ('ziele' in aktion) ids.push(...aktion.ziele.map((ziel) => ziel.schlangenId));
-  return ids;
+/** Die Schlangen und Karten darin, die eine angesagte Aktion nennt; das Ziel steht mit der Ansage fest (A6, B2). */
+function verweise(aktion: KartenAktion): { schlangenId: string; karteIds: string[] }[] {
+  switch (aktion.typ) {
+    case 'FarbkarteLegen':
+      return aktion.ziel.art === 'schlange' ? [{ schlangenId: aktion.ziel.schlangenId, karteIds: [] }] : [];
+    case 'RegenbogenschlangeLegen':
+    case 'BlockadeLegen':
+      return [{ schlangenId: aktion.schlangenId, karteIds: [] }];
+    case 'FusionLegen':
+      return [{ schlangenId: aktion.schlangenId, karteIds: aktion.kartenIds }];
+    case 'SchlangenhaeutungSpielen':
+      return [{ schlangenId: aktion.schlangenId, karteIds: aktion.neueReihenfolge }];
+    case 'FarbendiebSpielen':
+      return [
+        { schlangenId: aktion.quelle.schlangenId, karteIds: [aktion.quelle.karteId] },
+        ...(aktion.ziel.art === 'schlange' ? [{ schlangenId: aktion.ziel.schlangenId, karteIds: [] }] : []),
+      ];
+    case 'SchlangenfrassSpielen':
+      return aktion.ziele.map((ziel) => ({ schlangenId: ziel.schlangenId, karteIds: [ziel.karteId] }));
+    default:
+      // Schlangengrube und Verdoppler nennen keine Schlange; ein unbekannter Typ ist oben schon gemeldet.
+      return [];
+  }
 }
 
 function partiephasePasst(zustand: Spielzustand): string[] {

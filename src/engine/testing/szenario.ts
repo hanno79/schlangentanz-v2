@@ -72,6 +72,22 @@ export function baukasten(optionen: TischOptionen): Baukasten {
     return zustand.nachziehstapel.splice(index, 1)[0];
   }
 
+  /**
+   * Führt einen Bauschritt ganz oder gar nicht aus: Scheitert er, etwa an
+   * fehlendem Material, steht der Tisch wieder wie vorher, und der Fehler geht
+   * an den Aufrufer.
+   */
+  function ganzOderGarNicht(schritt: () => void): Baukasten {
+    const vorher = structuredClone(zustand);
+    try {
+      schritt();
+    } catch (fehler) {
+      Object.assign(zustand, vorher);
+      throw fehler;
+    }
+    return bau;
+  }
+
   function nimmSonderkarte(wahl: Kartenwahl): SonderkarteInfo {
     const karte = nimm(wahl);
     if (karte.typ !== 'Sonderkarte') throw new Error(`Baukasten: ${karte.id} ist keine Sonderkarte.`);
@@ -84,46 +100,45 @@ export function baukasten(optionen: TischOptionen): Baukasten {
     return karte;
   }
 
+  function legeSchlange(index: number, glieder: Schlangenglied[]): void {
+    const besitzer = spieler(index);
+    zustand.schlangenZaehler += 1;
+    const schlange: Schlange = { id: schlangenIdFuer(zustand.schlangenZaehler), karten: [], fusionen: [] };
+    for (const glied of glieder) {
+      if (typeof glied === 'object' && 'fusion' in glied) {
+        const unter: [FarbkarteInfo, FarbkarteInfo] = [nimmFarbkarte(glied.fusion[0]), nimmFarbkarte(glied.fusion[1])];
+        const fusion = nimmSonderkarte('Farbenfusion');
+        schlange.karten.push(fusion);
+        schlange.fusionen.push({ karteId: fusion.id, unter });
+      } else {
+        schlange.karten.push(nimm(glied));
+      }
+    }
+    besitzer.schlangen.push(schlange);
+  }
+
   const bau: Baukasten = {
     hand(index, karten) {
-      spieler(index).hand.push(...karten.map(nimm));
-      return bau;
+      return ganzOderGarNicht(() => spieler(index).hand.push(...karten.map(nimm)));
     },
     schlange(index, glieder) {
-      const besitzer = spieler(index);
-      zustand.schlangenZaehler += 1;
-      const schlange: Schlange = { id: schlangenIdFuer(zustand.schlangenZaehler), karten: [], fusionen: [] };
-      for (const glied of glieder) {
-        if (typeof glied === 'object' && 'fusion' in glied) {
-          const unter: [FarbkarteInfo, FarbkarteInfo] = [nimmFarbkarte(glied.fusion[0]), nimmFarbkarte(glied.fusion[1])];
-          const fusion = nimmSonderkarte('Farbenfusion');
-          schlange.karten.push(fusion);
-          schlange.fusionen.push({ karteId: fusion.id, unter });
-        } else {
-          schlange.karten.push(nimm(glied));
-        }
-      }
-      besitzer.schlangen.push(schlange);
-      return bau;
+      return ganzOderGarNicht(() => legeSchlange(index, glieder));
     },
     ablage(index, karten) {
-      spieler(index).ablagestapel.push(...karten.map(nimm));
-      return bau;
+      return ganzOderGarNicht(() => spieler(index).ablagestapel.push(...karten.map(nimm)));
     },
     grube(gespieltVon, vor) {
-      spieler(gespieltVon);
-      spieler(vor);
-      zustand.ausliegendeGruben.push({ karte: nimmSonderkarte('Schlangengrube'), gespieltVon, vor });
-      return bau;
+      return ganzOderGarNicht(() => {
+        spieler(gespieltVon);
+        spieler(vor);
+        zustand.ausliegendeGruben.push({ karte: nimmSonderkarte('Schlangengrube'), gespieltVon, vor });
+      });
     },
     ausDemSpiel(karten) {
-      zustand.ausDemSpiel.push(...karten.map(nimm));
-      return bau;
+      return ganzOderGarNicht(() => zustand.ausDemSpiel.push(...karten.map(nimm)));
     },
     stapelOben(karten) {
-      const oben = karten.map(nimm);
-      zustand.nachziehstapel.unshift(...oben);
-      return bau;
+      return ganzOderGarNicht(() => zustand.nachziehstapel.unshift(...karten.map(nimm)));
     },
     stapelBehalten(anzahl) {
       const rest = zustand.nachziehstapel.splice(anzahl);
@@ -140,9 +155,10 @@ export function baukasten(optionen: TischOptionen): Baukasten {
       return bau;
     },
     schwebend(index, wahl, aktion, ausstehend) {
-      const karte = nimmSonderkarte(wahl);
-      zustand.schwebend = { karte, aktion: aktion(karte.id, spieler(index).id), ausstehend, abgewehrt: [] };
-      return bau;
+      return ganzOderGarNicht(() => {
+        const karte = nimmSonderkarte(wahl);
+        zustand.schwebend = { karte, aktion: aktion(karte.id, spieler(index).id), ausstehend, abgewehrt: [] };
+      });
     },
     schlussrunde(ausloeser) {
       bau.stapelBehalten(0);

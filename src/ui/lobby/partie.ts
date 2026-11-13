@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import { KI_GEGNER_MAX, KI_GEGNER_MIN, erstelleEinzelspielerSpielzustand } from '../../engine'
+import { KI_GEGNER_MAX, KI_GEGNER_MIN, erstellePartie } from '../../engine'
 import { meldeFehler } from '../../fehlerdienst'
-import { mitSpeicher, pruefeSpielstand, speichereSpielstand, verwirfSpielstand } from '../../spielstand'
+import { pruefeSpielstand, speichereSpielstand, verwirfSpielstand } from '../../spielstand'
 
 /*
 Partie anlegen, finden und verwerfen, für Lobby, Spieltisch und Fehlerfang.
 
 Die Partie entsteht über die Engine-Schnittstelle (U3) und landet über
-`src/spielstand.ts` im Speicher des Browsers. Die Zahl der Gegner steht danach
-im Spielstand selbst und wird von dort gelesen, nicht noch einmal gemerkt.
+`src/spielstand.ts` im Speicher des Browsers. Gegnerzahl und Erweiterung
+stehen danach im Spielstand selbst und werden von dort gelesen, nicht noch
+einmal gemerkt.
 */
 
 /** Die Gegnerzahlen, die die Engine zulässt (heute 1 bis 3). */
@@ -22,50 +23,22 @@ export interface Einstellungen {
   erweiterung: boolean
 }
 
-export interface LaufendePartie {
-  gegner: number
-  /** `null`, wenn zu diesem Spielstand kein Schalter gemerkt ist. */
-  erweiterung: boolean | null
-}
-
-/*
-FALLBACK: Die Engine im Speicherformat 1 hat keinen Erweiterungs-Schalter
-(`erstelleEinzelspielerSpielzustand` nimmt nur die Gegnerzahl). Bis E1 ihn in
-den Zustand bringt (Plan E1, Kriterium 5), merkt sich die Oberfläche die Wahl
-unter einem eigenen Schlüssel neben dem Spielstand, sagt auf dem Spieltisch,
-dass die Partie ohne ihn angelegt wurde, und schreibt bei jedem Start eine
-Warnung. Angelegt und verworfen wird der Schlüssel nur zusammen mit dem
-Spielstand (`starteNeuePartie`, `verwirfPartie`). Mit E1 entfällt er.
-
-Scheitert der Speicher (Privatmodus, voll, gesperrt), fängt `mitSpeicher` das
-ab wie beim Spielstand; der Spieltisch zeigt die Erweiterung dann als
-„unbekannt“.
-*/
-const ERWEITERUNG_SCHLUESSEL = 'schlangentanz-v2:erweiterung'
-
-function gemerkteErweiterung(): boolean | null {
-  const wert = mitSpeicher((s) => s.getItem(ERWEITERUNG_SCHLUESSEL), null)
-  if (wert === '1') return true
-  if (wert === '0') return false
-  return null
-}
+export type LaufendePartie = Einstellungen
 
 /**
  * Legt eine neue Partie an und speichert sie; ein vorhandener Spielstand wird
- * überschrieben. Wirft die Engine, ist nichts gespeichert und der Fehler geht
- * an den Aufrufer.
+ * überschrieben. Der Mensch spielt gegen `gegner` KI-Gegner (B2). Wirft die
+ * Engine, ist nichts gespeichert und der Fehler geht an den Aufrufer.
+ *
+ * Die Oberfläche liefert den Zufall, die Engine zieht keinen eigenen (U4).
  */
 export function starteNeuePartie({ gegner, erweiterung }: Einstellungen): void {
-  const zustand = erstelleEinzelspielerSpielzustand(gegner)
-  console.warn('Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.')
-  speichereSpielstand(zustand)
-  mitSpeicher((s) => s.setItem(ERWEITERUNG_SCHLUESSEL, erweiterung ? '1' : '0'), undefined)
+  speichereSpielstand(erstellePartie({ spielerzahl: gegner + 1, erweiterung, zufall: Math.random }))
 }
 
-/** Verwirft die gespeicherte Partie samt gemerktem Schalter. */
+/** Verwirft die gespeicherte Partie. */
 export function verwirfPartie(): void {
   verwirfSpielstand()
-  mitSpeicher((s) => s.removeItem(ERWEITERUNG_SCHLUESSEL), undefined)
 }
 
 export type Verwurfsgrund = 'aelteres-format' | 'beschaedigt'
@@ -86,7 +59,7 @@ function leseGespeichertePartie(): PartieLage {
         art: 'laufend',
         partie: {
           gegner: lage.zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').length,
-          erweiterung: gemerkteErweiterung(),
+          erweiterung: lage.zustand.erweiterung,
         },
       }
     case 'unlesbar':
@@ -99,7 +72,7 @@ function leseGespeichertePartie(): PartieLage {
 const aufgeraeumt = new WeakSet<PartieLage>()
 
 /*
-Ein unlesbarer Stand wird verworfen (samt gemerktem Schalter) und gemeldet.
+Ein unlesbarer Stand wird verworfen und gemeldet.
 
 Die Abgrenzung beim Melden: Ein älteres Speicherformat ist kein Defekt, sondern
 die erwartete Folge eines Formatwechsels (Plan 2.3; E1 lehnt Format 1 mit
