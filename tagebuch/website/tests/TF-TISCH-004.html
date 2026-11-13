@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-004 Auf einem sehr flachen Handy quer (568 × 320) bleiben Kopfleiste und deine Schlangen ganz zu sehen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-004 Auf einem sehr flachen Handy quer (568 × 320) bleiben Kopfleiste und deine Schlangen ganz zu sehen.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ältere kleine Handys sind quer nur 568 × 320 gross. Das liegt unter allen fünf Geräteklassen. Die Tischfläche links wird dort sehr schmal, und für deine Schlangen bleibt wenig Höhe. Der Fall zeigt, wo das Layout an seine Grenze kommt.</p><h2>Bestanden, wenn</h2><p>Bei 568 × 320 mit Touch, im Volltisch:</p>
+<ul><li>Die Kopfleiste zeigt „Zur Lobby“ ganz, und kein Text überlagert einen anderen.</li><li>„Deine Schlangen“ hält in der Höhe nichts zurück (<code>scrollHeight − clientHeight</code> ≤ 1).</li><li>Die Tischfläche schneidet seitlich nichts ab (<code>scrollWidth</code> ≤ <code>clientWidth</code> + 1).</li></ul><h2>Fehlgeschlagen, wenn</h2><p>„Zur Lobby“ ist abgeschnitten, Texte in der Kopfleiste liegen übereinander, deine Schlangen halten Höhe zurück, oder die Tischfläche schneidet seitlich Inhalt ab.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O4-spieltisch (PR #34)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild, Playwright-Kontext „handy-hochkant“ (Touch) mit Fenster 568 × 320</td></tr><tr><td>Ausgangslage</td><td>Spielstand <code>volltisch()</code> im Local Storage</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>volltisch()</code> aus <code>src/ui/tisch/__tests__/szenarien.ts</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser</td><td>Spielstand legen, `/spiel` bei 568 × 320 öffnen</td><td></td><td>dein Platz rechts</td></tr><tr><td>2</td><td>Kopfleiste</td><td>Foto ansehen</td><td></td><td>„Zur Lobby“ ganz, Texte getrennt</td></tr><tr><td>3</td><td>Konsole</td><td>`scrollHeight` und `clientHeight` von „Deine Schlangen“ lesen, dazu `scrollWidth` und `clientWidth` von `.st-flaeche`</td><td></td><td>nichts zurückgehalten, nichts seitlich abgeschnitten</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Browserkontext schliessen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 17:57</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer O4 Iteration 3) &middot; agent &middot; pruefung-O4-i3 @ <span class="commit" title="71718d39a545070ee61ba23aa4bb42201840361b">71718d3</span> / Playwright Chromium 1.60.0, Produktionsbuild :4173, 568x320 Touch</p><p>568x320 (unter allen fünf Klassen): Kopfleiste über der 152 px schmalen Tischfläche bricht in &#x27;KI- / Gegner / 2 / ist dran&#x27;, &#x27;Stapel leer&#x27; liegt dazwischen, der Knopf zeigt nur &#x27;Zur Lobb&#x27;; .st-flaeche schneidet seitlich 16 px ab (168/152); &#x27;Deine Schlangen&#x27; hält 20 px zurück, die halben Karten unter der Fusion liegen bei 157..181, sichtbar bis 169. Ausserhalb der Geräteklassen, kein Mangel von O4.</p><ul class="belege"><li><a href="belege/2026-11-13-1757-TF-TISCH-004-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1757-TF-TISCH-004-1.png" alt="Beleg 2026-11-13-1757-TF-TISCH-004-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1757-TF-TISCH-004-2.txt">2026-11-13-1757-TF-TISCH-004-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

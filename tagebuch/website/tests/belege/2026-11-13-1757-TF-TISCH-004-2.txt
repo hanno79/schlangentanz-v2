@@ -1,0 +1,88 @@
+== 320x640 volltisch: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=320 clientWidth=320 scrollHeight=640 clientHeight=640
+   kopf 320x95 text="KI-Gegner 2 ist dran | Schlussrunde |  | Stapel leer |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":192,"scrollHeight":898} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":360,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":360,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":360,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":360,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":360,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":360,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   Deine Schlange 1: 11 K {"scrollLeft":0,"clientWidth":296,"scrollWidth":426,"rechtsTeil":4,"rechtsGanz":3,"linksTeil":0} +4 ›
+   Deine Schlange 2: 11 K {"scrollLeft":0,"clientWidth":296,"scrollWidth":426,"rechtsTeil":4,"rechtsGanz":3,"linksTeil":0} +4 ›
+== 320x640 lange-schlange: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=320 clientWidth=320 scrollHeight=640 clientHeight=640
+   kopf 320x114 text="Du bist dran | Spiele Karten aus deiner Hand. |  | Stapel 64 |  | Zur Lobby"
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":268,"scrollWidth":393,"rechtsTeil":4,"rechtsGanz":3,"linksTeil":0} +4 ›
+   Deine Schlange 1: 22 K {"scrollLeft":0,"clientWidth":296,"scrollWidth":855,"rechtsTeil":15,"rechtsGanz":14,"linksTeil":0} +15 ›
+== 320x640 zehn-handkarten: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=320 clientWidth=320 scrollHeight=640 clientHeight=640
+   kopf 320x134 text="Du bist dran | Lege überzählige Handkarten ab. |  | Stapel 63 |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":88,"scrollHeight":501} mehr ↓
+== 568x320 volltisch: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten ['hält 20 px in der Höhe zurück', 'liegt bei 157..181, sichtbar ist 0..169', 'liegt bei 157..181, sichtbar ist 0..169']
+   seite scrollWidth=568 clientWidth=568 scrollHeight=320 clientHeight=320
+   versteckt X: st-flaeche 168/152 1233/203
+   kopf 152x117 text="KI-Gegner 2 ist dran | Schlussrunde |  | Stapel leer |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":203,"scrollHeight":1233} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":338,"rechtsTeil":8,"rechtsGanz":7,"linksTeil":0} +8 ›
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":338,"rechtsTeil":8,"rechtsGanz":7,"linksTeil":0} +8 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":338,"rechtsTeil":8,"rechtsGanz":7,"linksTeil":0} +8 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":338,"rechtsTeil":8,"rechtsGanz":7,"linksTeil":0} +8 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":338,"rechtsTeil":8,"rechtsGanz":7,"linksTeil":0} +8 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":338,"rechtsTeil":8,"rechtsGanz":7,"linksTeil":0} +8 ›
+== 568x320 lange-schlange: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=568 clientWidth=568 scrollHeight=320 clientHeight=320
+   versteckt X: st-flaeche 166/152 269/166
+   kopf 152x154 text="Du bist dran | Spiele Karten aus deiner Hand. |  | Stapel 64 |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":166,"scrollHeight":269} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":369,"rechtsTeil":9,"rechtsGanz":8,"linksTeil":0} +9 ›
+   Deine Schlange 1: 22 K {"scrollLeft":0,"clientWidth":391,"scrollWidth":767,"rechtsTeil":11,"rechtsGanz":10,"linksTeil":0} +11 ›
+== 568x320 zehn-handkarten: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=568 clientWidth=568 scrollHeight=320 clientHeight=320
+   versteckt X: st-flaeche 168/152 544/186
+   kopf 152x134 text="Du bist dran | Lege überzählige Handkarten ab. |  | Stapel 63 |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":186,"scrollHeight":544} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":152,"rechtsTeil":2,"rechtsGanz":1,"linksTeil":0} +2 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":100,"scrollWidth":121,"rechtsTeil":1,"rechtsGanz":0,"linksTeil":0} +1 ›
+   Handkarten {"scrollLeft":0,"clientWidth":391,"scrollWidth":512,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+== 667x375 volltisch: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=667 clientWidth=667 scrollHeight=375 clientHeight=375
+   kopf 251x117 text="KI-Gegner 2 ist dran | Schlussrunde |  | Stapel leer |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":258,"scrollHeight":969} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":338,"rechtsTeil":5,"rechtsGanz":4,"linksTeil":0} +5 ›
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":338,"rechtsTeil":5,"rechtsGanz":4,"linksTeil":0} +5 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":338,"rechtsTeil":5,"rechtsGanz":4,"linksTeil":0} +5 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":338,"rechtsTeil":5,"rechtsGanz":4,"linksTeil":0} +5 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":338,"rechtsTeil":5,"rechtsGanz":4,"linksTeil":0} +5 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":338,"rechtsTeil":5,"rechtsGanz":4,"linksTeil":0} +5 ›
+== 667x375 lange-schlange: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=667 clientWidth=667 scrollHeight=375 clientHeight=375
+   kopf 251x154 text="Du bist dran | Spiele Karten aus deiner Hand. |  | Stapel 64 |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":221,"scrollHeight":245} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":199,"scrollWidth":369,"rechtsTeil":6,"rechtsGanz":5,"linksTeil":0} +6 ›
+   Deine Schlange 1: 22 K {"scrollLeft":0,"clientWidth":391,"scrollWidth":767,"rechtsTeil":11,"rechtsGanz":10,"linksTeil":0} +11 ›
+== 667x375 zehn-handkarten: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=667 clientWidth=667 scrollHeight=375 clientHeight=375
+   kopf 251x134 text="Du bist dran | Lege überzählige Handkarten ab. |  | Stapel 63 |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":241,"scrollHeight":491} mehr ↓
+   Handkarten {"scrollLeft":0,"clientWidth":391,"scrollWidth":512,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+== 740x360 volltisch: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=740 clientWidth=740 scrollHeight=360 clientHeight=360
+   kopf 324x95 text="KI-Gegner 2 ist dran | Schlussrunde |  | Stapel leer |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":265,"scrollHeight":879} mehr ↓
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":338,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":338,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":338,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 2, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":338,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":338,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+   KI-Gegner 3, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":338,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›
+== 740x360 lange-schlange: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=740 clientWidth=740 scrollHeight=360 clientHeight=360
+   kopf 324x114 text="Du bist dran | Spiele Karten aus deiner Hand. |  | Stapel 64 |  | Zur Lobby"
+   KI-Gegner 1, Schlange  {"scrollLeft":0,"clientWidth":272,"scrollWidth":369,"rechtsTeil":4,"rechtsGanz":3,"linksTeil":0} +4 ›
+   Deine Schlange 1: 22 K {"scrollLeft":0,"clientWidth":391,"scrollWidth":767,"rechtsTeil":11,"rechtsGanz":10,"linksTeil":0} +11 ›
+== 740x360 zehn-handkarten: ohne Hinweis 0, unerreichbar 0, deine Schlangen abgeschnitten []
+   seite scrollWidth=740 clientWidth=740 scrollHeight=360 clientHeight=360
+   kopf 324x134 text="Du bist dran | Lege überzählige Handkarten ab. |  | Stapel 63 |  | Zur Lobby"
+   st-flaeche {"scrollTop":0,"clientHeight":226,"scrollHeight":491} mehr ↓
+   Handkarten {"scrollLeft":0,"clientWidth":391,"scrollWidth":512,"rechtsTeil":3,"rechtsGanz":2,"linksTeil":0} +3 ›

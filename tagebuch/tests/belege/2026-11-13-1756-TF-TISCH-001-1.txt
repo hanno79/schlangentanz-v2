@@ -1,0 +1,112 @@
+O4 Iteration 3, Prüfer: jeder scrollende Bereich mit Überlauf, eigene Zählung der Karten hinter dem Rand gegen das Zeichen.
+Produktionsbuild :4173, Playwright 1.60.0, Kontexte aus scripts/pruefung/geraeteklassen.mjs.
+
+== angriff-auf-mich-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+== angriff-auf-mich-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+== angriff-auf-mich-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+== angriff-auf-mich-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+== angriff-auf-mich-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+== geheime-haende-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+== geheime-haende-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+start  st-flaeche: scrollTop 0, client 542, scroll 582 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 20, client 542, scroll 582 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== geheime-haende-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+start  st-flaeche: scrollTop 0, client 337, scroll 555 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 109, client 337, scroll 555 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== geheime-haende-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+== geheime-haende-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+== lange-schlange-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+start  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 0, client 1256, scroll 1295, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+Zeile 0 halb  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 20, client 1256, scroll 1295, Karten links 1, rechts 1 (ganz verborgen 0) -> Zeichen [links=‹ +1, rechts=+1 ›]
+Zeile 0 ende  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 39, client 1256, scroll 1295, Karten links 1, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +1]
+== lange-schlange-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+start  KI-Gegner 1, Schlange 1: 12 Karten, Farb: scrollLeft 0, client 338, scroll 393, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+start  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 855, Karten links 0, rechts 13 (ganz verborgen 12) -> Zeichen [rechts=+13 ›]
+Zeile 0 halb  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 245, client 366, scroll 855, Karten links 7, rechts 7 (ganz verborgen 6) -> Zeichen [links=‹ +7, rechts=+7 ›]
+Zeile 0 ende  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 489, client 366, scroll 855, Karten links 13, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +13]
+== lange-schlange-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+start  KI-Gegner 1, Schlange 1: 12 Karten, Farb: scrollLeft 0, client 376, scroll 393, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 855, Karten links 0, rechts 12 (ganz verborgen 11) -> Zeichen [rechts=+12 ›]
+Zeile 0 halb  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 232, client 391, scroll 855, Karten links 6, rechts 6 (ganz verborgen 6) -> Zeichen [links=‹ +6, rechts=+6 ›]
+Zeile 0 ende  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 464, client 391, scroll 855, Karten links 12, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +12]
+== lange-schlange-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+start  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 0, client 744, scroll 1119, Karten links 0, rechts 8 (ganz verborgen 7) -> Zeichen [rechts=+8 ›]
+Zeile 0 halb  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 188, client 744, scroll 1119, Karten links 4, rechts 4 (ganz verborgen 3) -> Zeichen [links=‹ +4, rechts=+4 ›]
+Zeile 0 ende  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 375, client 744, scroll 1119, Karten links 8, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +8]
+== lange-schlange-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+start  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 0, client 1000, scroll 1119, Karten links 0, rechts 3 (ganz verborgen 2) -> Zeichen [rechts=+3 ›]
+Zeile 0 halb  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 60, client 1000, scroll 1119, Karten links 2, rechts 2 (ganz verborgen 1) -> Zeichen [links=‹ +2, rechts=+2 ›]
+Zeile 0 ende  Deine Schlange 1: 22 Karten, Farbgruppen: scrollLeft 119, client 1000, scroll 1119, Karten links 3, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +3]
+== mittelspiel-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+== mittelspiel-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+start  st-flaeche: scrollTop 0, client 402, scroll 449 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 24, client 402, scroll 449 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== mittelspiel-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+start  st-flaeche: scrollTop 0, client 318, scroll 449 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 66, client 318, scroll 449 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== mittelspiel-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+== mittelspiel-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+start  st-flaeche: scrollTop 0, client 270, scroll 339 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 35, client 270, scroll 339 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== neue-partie-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+== neue-partie-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+== neue-partie-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+== neue-partie-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+== neue-partie-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+== volltisch-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+start  st-flaeche: scrollTop 0, client 343, scroll 566 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 112, client 343, scroll 566 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== volltisch-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+start  st-flaeche: scrollTop 0, client 400, scroll 850 -> Zeichen [unten=mehr ↓]
+start  KI-Gegner 1, Schlange 1: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  KI-Gegner 1, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  KI-Gegner 2, Schlange 1: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  KI-Gegner 2, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  KI-Gegner 3, Schlange 1: 11 Karten, kein: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  KI-Gegner 3, Schlange 2: 11 Karten, Farb: scrollLeft 0, client 338, scroll 360, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+start  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+Fläche halb  st-flaeche: scrollTop 225, client 400, scroll 850 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+Zeile 0 halb  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 30, client 366, scroll 426, Karten links 1, rechts 1 (ganz verborgen 0) -> Zeichen [links=‹ +1, rechts=+1 ›]
+Zeile 0 halb  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+Zeile 0 ende  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 60, client 366, scroll 426, Karten links 2, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +2]
+Zeile 0 ende  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+Zeile 1 halb  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+Zeile 1 halb  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 30, client 366, scroll 426, Karten links 1, rechts 1 (ganz verborgen 0) -> Zeichen [links=‹ +1, rechts=+1 ›]
+Zeile 1 ende  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 366, scroll 426, Karten links 0, rechts 2 (ganz verborgen 1) -> Zeichen [rechts=+2 ›]
+Zeile 1 ende  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 60, client 366, scroll 426, Karten links 2, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +2]
+== volltisch-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+start  st-flaeche: scrollTop 0, client 337, scroll 825 -> Zeichen [unten=mehr ↓]
+start  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+start  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+Fläche halb  st-flaeche: scrollTop 244, client 337, scroll 825 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+Zeile 0 halb  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 18, client 391, scroll 426, Karten links 1, rechts 1 (ganz verborgen 0) -> Zeichen [links=‹ +1, rechts=+1 ›]
+Zeile 0 halb  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+Zeile 0 ende  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 35, client 391, scroll 426, Karten links 1, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +1]
+Zeile 0 ende  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+Zeile 1 halb  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+Zeile 1 halb  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 18, client 391, scroll 426, Karten links 1, rechts 1 (ganz verborgen 0) -> Zeichen [links=‹ +1, rechts=+1 ›]
+Zeile 1 ende  Deine Schlange 1: 11 Karten, Farbgruppen: scrollLeft 0, client 391, scroll 426, Karten links 0, rechts 1 (ganz verborgen 0) -> Zeichen [rechts=+1 ›]
+Zeile 1 ende  Deine Schlange 2: 11 Karten, Farbgruppen: scrollLeft 35, client 391, scroll 426, Karten links 1, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +1]
+== volltisch-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+start  st-flaeche: scrollTop 0, client 526, scroll 855 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 165, client 526, scroll 855 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== volltisch-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+start  st-flaeche: scrollTop 0, client 270, scroll 514 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 122, client 270, scroll 514 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== zehn-handkarten-desktop  Konsolenfehler 0, Seite seite scrollWidth=1280 clientWidth=1280 scrollHeight=900 clientHeight=900
+== zehn-handkarten-handy-hochkant  Konsolenfehler 0, Seite seite scrollWidth=390 clientWidth=390 scrollHeight=844 clientHeight=844
+start  st-flaeche: scrollTop 0, client 355, scroll 449 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 47, client 355, scroll 449 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+== zehn-handkarten-handy-quer  Konsolenfehler 0, Seite seite scrollWidth=844 clientWidth=844 scrollHeight=390 clientHeight=390
+start  st-flaeche: scrollTop 0, client 318, scroll 449 -> Zeichen [unten=mehr ↓]
+start  Handkarten: scrollLeft 0, client 391, scroll 512, Karten links 0, rechts 3 (ganz verborgen 2) -> Zeichen [rechts=+3 ›]
+Fläche halb  st-flaeche: scrollTop 66, client 318, scroll 449 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+Zeile 2 halb  Handkarten: scrollLeft 61, client 391, scroll 512, Karten links 2, rechts 2 (ganz verborgen 1) -> Zeichen [links=‹ +2, rechts=+2 ›]
+Zeile 2 ende  Handkarten: scrollLeft 121, client 391, scroll 512, Karten links 3, rechts 0 (ganz verborgen 0) -> Zeichen [links=‹ +3]
+== zehn-handkarten-tablet-hochkant  Konsolenfehler 0, Seite seite scrollWidth=768 clientWidth=768 scrollHeight=1024 clientHeight=1024
+== zehn-handkarten-tablet-quer  Konsolenfehler 0, Seite seite scrollWidth=1024 clientWidth=1024 scrollHeight=768 clientHeight=768
+start  st-flaeche: scrollTop 0, client 270, scroll 339 -> Zeichen [unten=mehr ↓]
+Fläche halb  st-flaeche: scrollTop 35, client 270, scroll 339 -> Zeichen [oben=mehr ↑, unten=mehr ↓]
+
+Abgleich: in allen Zuständen stimmt das Zeichen mit der eigenen Zählung überein (0 Abweichungen).
