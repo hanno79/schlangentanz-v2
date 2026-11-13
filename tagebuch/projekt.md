@@ -11,4 +11,4 @@ Schlangentanz v2 ist die digitale Fassung des Kartenspiels Schlangentanz: Ein Me
 
 ## Stand heute
 
-P0.2 ist abgenommen und in `neuaufbau`. P0.3, P0.4 und der erste Teil von P0.5 sind umgesetzt und warten auf ihre Abnahme; für P0.5 fehlen noch die Antworten des Autors auf 38 Regelfragen.
+M0 ist erreicht, die Lobby (O2) steht, und Teil D enthält die Antworten auf F1 bis F15. E1 ist umgesetzt und in der Abnahme; O1 wartet auf die Freigabe der Entwürfe durch den Autor.
