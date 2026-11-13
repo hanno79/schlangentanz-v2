@@ -1,0 +1,149 @@
+
+Running 62 tests using 16 workers
+
+  ok  1 [handy-quer] › tests\layout\tisch.spec.ts:69:5 › O4: Spieltisch, Volltisch › O4: jedes Bild ist geladen (1.0s)
+  ok  2 [handy-quer] › tests\layout\tisch.spec.ts:79:5 › O4: Spieltisch, Volltisch › O4 K1: deine Hand steht ganz im Bild am unteren Rand, deine Schlangen darüber (1.1s)
+  ok  4 [handy-quer] › tests\layout\tisch.spec.ts:73:5 › O4: Spieltisch, Volltisch › O4 K3: jede Karte am Tisch ist erreichbar (1.2s)
+  ok  6 [handy-quer] › tests\layout\tisch.spec.ts:97:5 › O4: Spieltisch, Volltisch › O4 K4: kein Gruppenbalken liegt auf einer Karte, auch wenn eine Schlange umbricht (1.3s)
+  ok  7 [handy-quer] › tests\layout\tisch.spec.ts:116:5 › O4: Spieltisch, Volltisch › O4: die Gegner stehen über deiner Hand und sind in der Tischfläche zu sehen (1.6s)
+  ok  5 [handy-quer] › tests\layout\tisch.spec.ts:103:5 › O4: Spieltisch, Volltisch › O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen (1.8s)
+  x   3 [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, Volltisch › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken (1.7s)
+  ok 13 [handy-quer] › tests\layout\waechter.ts:165:3 › O4: Spieltisch, Volltisch › jede Tippfläche misst mindestens 44 × 44 px (1.7s)
+  ok 12 [handy-quer] › tests\layout\waechter.ts:40:3 › O4: Spieltisch, Volltisch › kein sichtbares Element schneidet seinen Inhalt ab (1.7s)
+  ok  8 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Volltisch › O4 K1: wer die Tischfläche scrollt, verschiebt deine Hand und deine Schlangen nicht (2.1s)
+  ok  9 [handy-quer] › tests\layout\waechter.ts:46:3 › O4: Spieltisch, Volltisch › kein Bedienelement liegt außerhalb des Bildes (2.1s)
+  ok 17 [handy-quer] › tests\layout\waechter.ts:91:3 › O4: Spieltisch, Volltisch › der Kontrastwächter hat wirklich etwas gemessen (1.7s)
+  ok 15 [handy-quer] › tests\layout\waechter.ts:52:3 › O4: Spieltisch, Volltisch › kein Bedienelement ist vollständig verdeckt (2.3s)
+  ok 16 [handy-quer] › tests\layout\waechter.ts:65:3 › O4: Spieltisch, Volltisch › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (2.4s)
+  ok 14 [handy-quer] › tests\layout\waechter.ts:80:3 › O4: Spieltisch, Volltisch › kein Text steht unter 4,5 : 1 Kontrast (2.7s)
+  ok 18 [handy-quer] › tests\layout\waechter.ts:109:3 › O4: Spieltisch, Volltisch › jede var() ohne Fallback löst am benutzenden Element auf (2.4s)
+  ok 19 [handy-quer] › tests\layout\waechter.ts:123:3 › O4: Spieltisch, Volltisch › die Token-Prüfung hat wirklich Regeln gesehen (2.1s)
+  ok 11 [handy-quer] › tests\layout\waechter.ts:159:3 › O4: Spieltisch, Volltisch › die Seite ist nicht breiter als das Fenster (3.2s)
+  ok 20 [handy-quer] › tests\layout\waechter.ts:145:3 › O4: Spieltisch, Volltisch › kein Bedienelement ist stillgelegt (2.3s)
+  ok 10 [handy-quer] › tests\layout\tisch.spec.ts:125:5 › O4: Spieltisch, Volltisch › O4: kleine Karten laden die kleine Bildfassung, keine grosse (3.5s)
+  x  23 [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, Mittelspiel › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken (1.9s)
+  ok 24 [handy-quer] › tests\layout\tisch.spec.ts:97:5 › O4: Spieltisch, Mittelspiel › O4 K4: kein Gruppenbalken liegt auf einer Karte, auch wenn eine Schlange umbricht (2.1s)
+  ok 25 [handy-quer] › tests\layout\tisch.spec.ts:103:5 › O4: Spieltisch, Mittelspiel › O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen (2.0s)
+  ok 26 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, Mittelspiel › O4 K1: wer die Tischfläche scrollt, verschiebt deine Hand und deine Schlangen nicht (2.1s)
+  ok 22 [handy-quer] › tests\layout\tisch.spec.ts:73:5 › O4: Spieltisch, Mittelspiel › O4 K3: jede Karte am Tisch ist erreichbar (2.6s)
+  ok 30 [handy-quer] › tests\layout\waechter.ts:165:3 › O4: Spieltisch, Mittelspiel › jede Tippfläche misst mindestens 44 × 44 px (2.1s)
+  ok 27 [handy-quer] › tests\layout\tisch.spec.ts:116:5 › O4: Spieltisch, Mittelspiel › O4: die Gegner stehen über deiner Hand und sind in der Tischfläche zu sehen (2.8s)
+  ok 21 [handy-quer] › tests\layout\tisch.spec.ts:69:5 › O4: Spieltisch, Mittelspiel › O4: jedes Bild ist geladen (4.0s)
+  ok 31 [handy-quer] › tests\layout\waechter.ts:40:3 › O4: Spieltisch, Mittelspiel › kein sichtbares Element schneidet seinen Inhalt ab (2.6s)
+  ok 34 [handy-quer] › tests\layout\waechter.ts:65:3 › O4: Spieltisch, Mittelspiel › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (2.3s)
+  ok 32 [handy-quer] › tests\layout\waechter.ts:46:3 › O4: Spieltisch, Mittelspiel › kein Bedienelement liegt außerhalb des Bildes (3.1s)
+  ok 33 [handy-quer] › tests\layout\waechter.ts:52:3 › O4: Spieltisch, Mittelspiel › kein Bedienelement ist vollständig verdeckt (3.0s)
+  ok 29 [handy-quer] › tests\layout\waechter.ts:159:3 › O4: Spieltisch, Mittelspiel › die Seite ist nicht breiter als das Fenster (3.8s)
+  ok 36 [handy-quer] › tests\layout\tisch.spec.ts:79:5 › O4: Spieltisch, Mittelspiel › O4 K1: deine Hand steht ganz im Bild am unteren Rand, deine Schlangen darüber (2.6s)
+  ok 28 [handy-quer] › tests\layout\tisch.spec.ts:125:5 › O4: Spieltisch, Mittelspiel › O4: kleine Karten laden die kleine Bildfassung, keine grosse (4.3s)
+  ok 35 [handy-quer] › tests\layout\waechter.ts:80:3 › O4: Spieltisch, Mittelspiel › kein Text steht unter 4,5 : 1 Kontrast (3.4s)
+  ok 37 [handy-quer] › tests\layout\waechter.ts:109:3 › O4: Spieltisch, Mittelspiel › jede var() ohne Fallback löst am benutzenden Element auf (3.0s)
+  ok 38 [handy-quer] › tests\layout\waechter.ts:123:3 › O4: Spieltisch, Mittelspiel › die Token-Prüfung hat wirklich Regeln gesehen (3.0s)
+  ok 39 [handy-quer] › tests\layout\waechter.ts:145:3 › O4: Spieltisch, Mittelspiel › kein Bedienelement ist stillgelegt (3.0s)
+  ok 45 [handy-quer] › tests\layout\tisch.spec.ts:97:5 › O4: Spieltisch, neue Partie › O4 K4: kein Gruppenbalken liegt auf einer Karte, auch wenn eine Schlange umbricht (1.6s)
+  ok 43 [handy-quer] › tests\layout\tisch.spec.ts:79:5 › O4: Spieltisch, neue Partie › O4 K1: deine Hand steht ganz im Bild am unteren Rand, deine Schlangen darüber (2.3s)
+  ok 42 [handy-quer] › tests\layout\waechter.ts:91:3 › O4: Spieltisch, Mittelspiel › der Kontrastwächter hat wirklich etwas gemessen (2.4s)
+  ok 46 [handy-quer] › tests\layout\tisch.spec.ts:103:5 › O4: Spieltisch, neue Partie › O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen (2.0s)
+  ok 40 [handy-quer] › tests\layout\tisch.spec.ts:69:5 › O4: Spieltisch, neue Partie › O4: jedes Bild ist geladen (3.7s)
+  ok 47 [handy-quer] › tests\layout\tisch.spec.ts:108:5 › O4: Spieltisch, neue Partie › O4 K1: wer die Tischfläche scrollt, verschiebt deine Hand und deine Schlangen nicht (1.8s)
+  ok 41 [handy-quer] › tests\layout\tisch.spec.ts:73:5 › O4: Spieltisch, neue Partie › O4 K3: jede Karte am Tisch ist erreichbar (3.3s)
+  ok 44 [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, neue Partie › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken (2.6s)
+  ok 57 [handy-quer] › tests\layout\waechter.ts:91:3 › O4: Spieltisch, neue Partie › der Kontrastwächter hat wirklich etwas gemessen (941ms)
+  ok 56 [handy-quer] › tests\layout\waechter.ts:80:3 › O4: Spieltisch, neue Partie › kein Text steht unter 4,5 : 1 Kontrast (1.6s)
+  ok 48 [handy-quer] › tests\layout\tisch.spec.ts:116:5 › O4: Spieltisch, neue Partie › O4: die Gegner stehen über deiner Hand und sind in der Tischfläche zu sehen (2.7s)
+  ok 60 [handy-quer] › tests\layout\waechter.ts:145:3 › O4: Spieltisch, neue Partie › kein Bedienelement ist stillgelegt (1.1s)
+  ok 51 [handy-quer] › tests\layout\waechter.ts:165:3 › O4: Spieltisch, neue Partie › jede Tippfläche misst mindestens 44 × 44 px (2.6s)
+  ok 58 [handy-quer] › tests\layout\waechter.ts:109:3 › O4: Spieltisch, neue Partie › jede var() ohne Fallback löst am benutzenden Element auf (1.8s)
+  ok 54 [handy-quer] › tests\layout\waechter.ts:52:3 › O4: Spieltisch, neue Partie › kein Bedienelement ist vollständig verdeckt (2.3s)
+  ok 53 [handy-quer] › tests\layout\waechter.ts:46:3 › O4: Spieltisch, neue Partie › kein Bedienelement liegt außerhalb des Bildes (2.5s)
+  ok 55 [handy-quer] › tests\layout\waechter.ts:65:3 › O4: Spieltisch, neue Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (2.5s)
+  ok 50 [handy-quer] › tests\layout\waechter.ts:159:3 › O4: Spieltisch, neue Partie › die Seite ist nicht breiter als das Fenster (3.4s)
+  ok 61 [handy-quer] › tests\layout\tisch.spec.ts:143:3 › O4 K2: Fremde Handkarten stehen nicht im Seitenquelltext › O4 K2: weder Name noch Id einer fremden Handkarte oder geheimen Aufgabe steht im HTML (1.8s)
+  ok 49 [handy-quer] › tests\layout\tisch.spec.ts:125:5 › O4: Spieltisch, neue Partie › O4: kleine Karten laden die kleine Bildfassung, keine grosse (3.5s)
+  ok 52 [handy-quer] › tests\layout\waechter.ts:40:3 › O4: Spieltisch, neue Partie › kein sichtbares Element schneidet seinen Inhalt ab (3.3s)
+  ok 59 [handy-quer] › tests\layout\waechter.ts:123:3 › O4: Spieltisch, neue Partie › die Token-Prüfung hat wirklich Regeln gesehen (2.5s)
+  ok 62 [handy-quer] › tests\layout\tisch.spec.ts:160:3 › O4: Grossansicht einer offenen Aufgabe › O4: eine offene Aufgabe öffnet sich gross, ganz im Bild, und schliesst wieder (2.2s)
+
+
+  1) [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, Volltisch › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken 
+
+    Error: deine Schlangen sind ohne Scrollen nicht ganz zu sehen:
+      · Deine Schlangen — hält 32 px in der Höhe zurück
+      · Farbkarte Gelb, 1 Punkt — liegt bei 223..250, sichtbar ist 53..226
+      · Farbkarte Gelb, 1 Punkt — liegt bei 223..250, sichtbar ist 53..226
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "hält 32 px in der Höhe zurück",[39m
+    [31m+     "element": "Deine Schlangen",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 223..250, sichtbar ist 53..226",[39m
+    [31m+     "element": "Farbkarte Gelb, 1 Punkt",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 223..250, sichtbar ist 53..226",[39m
+    [31m+     "element": "Farbkarte Gelb, 1 Punkt",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      92 |       const { bilder, befunde } = await abgeschnitteneEigeneSchlangen(page)
+      93 |       expect(bilder, 'Bilder in deinen Schlangen').toBe(eigeneBilder)
+    > 94 |       expect(befunde, `deine Schlangen sind ohne Scrollen nicht ganz zu sehen:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                         ^
+      95 |     })
+      96 |
+      97 |     test('O4 K4: kein Gruppenbalken liegt auf einer Karte, auch wenn eine Schlange umbricht', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ab004ad3b918c9939\tests\layout\tisch.spec.ts:94:105
+
+    Error Context: test-results\tisch-O4-Spieltisch-Vollti-9af64-r-der-Fusion-und-den-Balken-handy-quer\error-context.md
+
+  2) [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, Mittelspiel › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken 
+
+    Error: deine Schlangen sind ohne Scrollen nicht ganz zu sehen:
+      · Deine Schlangen — hält 32 px in der Höhe zurück
+      · Farbkarte Gelb, 1 Punkt — liegt bei 223..250, sichtbar ist 53..226
+      · Farbkarte Gelb, 1 Punkt — liegt bei 223..250, sichtbar ist 53..226
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "hält 32 px in der Höhe zurück",[39m
+    [31m+     "element": "Deine Schlangen",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 223..250, sichtbar ist 53..226",[39m
+    [31m+     "element": "Farbkarte Gelb, 1 Punkt",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 223..250, sichtbar ist 53..226",[39m
+    [31m+     "element": "Farbkarte Gelb, 1 Punkt",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      92 |       const { bilder, befunde } = await abgeschnitteneEigeneSchlangen(page)
+      93 |       expect(bilder, 'Bilder in deinen Schlangen').toBe(eigeneBilder)
+    > 94 |       expect(befunde, `deine Schlangen sind ohne Scrollen nicht ganz zu sehen:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                         ^
+      95 |     })
+      96 |
+      97 |     test('O4 K4: kein Gruppenbalken liegt auf einer Karte, auch wenn eine Schlange umbricht', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-ab004ad3b918c9939\tests\layout\tisch.spec.ts:94:105
+
+    Error Context: test-results\tisch-O4-Spieltisch-Mittel-fcd84-r-der-Fusion-und-den-Balken-handy-quer\error-context.md
+
+  2 failed
+    [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, Volltisch › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken 
+    [handy-quer] › tests\layout\tisch.spec.ts:91:5 › O4: Spieltisch, Mittelspiel › O4 K1/K4: deine Schlangen stehen ohne Scrollen ganz da, mit den Karten unter der Fusion und den Balken 
+  60 passed (19.6s)

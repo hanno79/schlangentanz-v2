@@ -1,0 +1,6 @@
+320x640 volltisch {"fenster":[320,640],"sw":320,"cw":320,"befunde":[],"hand":[494,640],"handKartenBreite":[53,53,53,53,53],"handKartenAusserhalb":0,"scrollLeft":0}
+320x640 mittelspiel {"fenster":[320,640],"sw":320,"cw":320,"befunde":[],"hand":[494,640],"handKartenBreite":[53,53,53,53,53],"handKartenAusserhalb":0,"scrollLeft":0}
+hochkant vorher {"fenster":[390,844],"sw":390,"cw":390,"befunde":[],"hand":[680,844],"handKartenBreite":[64,64,64,64,64],"handKartenAusserhalb":0,"scrollLeft":30}
+nach Drehen quer {"fenster":[844,390],"sw":844,"cw":844,"befunde":[],"hand":[226,390],"handKartenBreite":[64,64,64,64,64],"handKartenAusserhalb":0,"scrollLeft":30}
+zurück hochkant {"fenster":[390,844],"sw":390,"cw":390,"befunde":[],"hand":[680,844],"handKartenBreite":[64,64,64,64,64],"handKartenAusserhalb":0,"scrollLeft":0}
+740x360 volltisch {"fenster":[740,360],"sw":740,"cw":740,"befunde":["Bereich hält 9 px zurück","Farbkarte Gelb, 1 Punkt 170..197 ausserhalb 0..196","Farbkarte Gelb, 1 Punkt 170..197 ausserhalb 0..196"],"hand":[196,360],"handKartenBreite":[64,64,64,64,64],"handKartenAusserhalb":0,"scrollLeft":0}
