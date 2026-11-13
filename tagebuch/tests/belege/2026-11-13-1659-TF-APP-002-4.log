@@ -1,0 +1,40 @@
+== desktop
+  leer Tab: Regeln{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring} > Regeln{Ring}
+  Segment: vor Pfeil 1 Gegner checked=true; nach Pfeil rechts 2 Gegner checked=true ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px 
+  Schalter: Mit ErweiterungAus checked=false ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; nach Leertaste checked=true, Wort „An“
+  Enter auf Neue Partie -> /spiel, Einstellungen: Gegner 2 Erweiterung an
+  partie Tab: Regeln{Ring} > Weiterspielen{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring}
+  Rückfrage: Fokus Abbrechen ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; Shift+Tab -> Ja, neue Partie; Escape -> offen=0, Fokus Neue Partie
+  Konsolenfehler: 0
+== tablet-quer
+  leer Tab: Regeln{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring} > Regeln{Ring}
+  Segment: vor Pfeil 1 Gegner checked=true; nach Pfeil rechts 2 Gegner checked=true ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px 
+  Schalter: Mit ErweiterungAus checked=false ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; nach Leertaste checked=true, Wort „An“
+  Enter auf Neue Partie -> /spiel, Einstellungen: Gegner 2 Erweiterung an
+  partie Tab: Regeln{Ring} > Weiterspielen{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring}
+  Rückfrage: Fokus Abbrechen ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; Shift+Tab -> Ja, neue Partie; Escape -> offen=0, Fokus Neue Partie
+  Konsolenfehler: 0
+== tablet-hochkant
+  leer Tab: Regeln{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring} > Regeln{Ring}
+  Segment: vor Pfeil 1 Gegner checked=true; nach Pfeil rechts 2 Gegner checked=true ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px 
+  Schalter: Mit ErweiterungAus checked=false ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; nach Leertaste checked=true, Wort „An“
+  Enter auf Neue Partie -> /spiel, Einstellungen: Gegner 2 Erweiterung an
+  partie Tab: Regeln{Ring} > Weiterspielen{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring}
+  Rückfrage: Fokus Abbrechen ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; Shift+Tab -> Ja, neue Partie; Escape -> offen=0, Fokus Neue Partie
+  Konsolenfehler: 0
+== handy-hochkant
+  leer Tab: Regeln{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring} > Regeln{Ring}
+  Segment: vor Pfeil 1 Gegner checked=true; nach Pfeil rechts 2 Gegner checked=true ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px 
+  Schalter: Mit ErweiterungAus checked=false ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; nach Leertaste checked=true, Wort „An“
+  Enter auf Neue Partie -> /spiel, Einstellungen: Gegner 2 Erweiterung an
+  partie Tab: Regeln{Ring} > Weiterspielen{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring}
+  Rückfrage: Fokus Abbrechen ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; Shift+Tab -> Ja, neue Partie; Escape -> offen=0, Fokus Neue Partie
+  Konsolenfehler: 0
+== handy-quer
+  leer Tab: Regeln{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring} > Regeln{Ring}
+  Segment: vor Pfeil 1 Gegner checked=true; nach Pfeil rechts 2 Gegner checked=true ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px 
+  Schalter: Mit ErweiterungAus checked=false ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; nach Leertaste checked=true, Wort „An“
+  Enter auf Neue Partie -> /spiel, Einstellungen: Gegner 2 Erweiterung an
+  partie Tab: Regeln{Ring} > Weiterspielen{Ring} > 1 Gegner{Ring} > Mit ErweiterungAus{Ring} > Neue Partie{Ring} > (body){Ring}
+  Rückfrage: Fokus Abbrechen ring=rgb(255, 255, 255) 0px 0px 0px 3px, rgb(43, 33, 28) 0px 0px ; Shift+Tab -> Ja, neue Partie; Escape -> offen=0, Fokus Neue Partie
+  Konsolenfehler: 0

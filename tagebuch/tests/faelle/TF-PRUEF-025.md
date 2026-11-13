@@ -16,7 +16,7 @@ Die Lobby zeichnet die Gegnerzahl als Segmente und die Erweiterung als Schalter.
 
 ## Bestanden, wenn
 
-Nach dem Verschieben des Schalters unter den Bildrand (`.schalter { position: relative; top: 400px; }` am Ende von `src/ui/lobby/lobby-seite.css`) schlägt in `handy-quer` mindestens ein Lobby-Vertrag „kein Bedienelement liegt außerhalb des Bildes“ fehl und nennt „Mit Erweiterung“.
+Nach dem Verschieben des Schalters unter den Bildrand (`.lobby__schalter { position: relative; top: 400px; }` am Ende von `src/ui/lobby/lobby-seite.css`; bis Iteration 1 hiess die Klasse `.schalter`) schlägt in `handy-quer` mindestens ein Lobby-Vertrag „kein Bedienelement liegt außerhalb des Bildes“ fehl und nennt „Mit Erweiterung“.
 
 ## Fehlgeschlagen, wenn
 
@@ -31,7 +31,7 @@ Alle Lobby-Verträge in `handy-quer` bleiben grün, obwohl der Schalter bei 577.
 
 ## Testdaten
 
-Eine Zeile CSS: `.schalter { position: relative; top: 400px; }`.
+Eine Zeile CSS: `.lobby__schalter { position: relative; top: 400px; }` (bis Iteration 1 hiess die Klasse `.schalter`).
 
 ## Schritte
 
@@ -39,7 +39,7 @@ Eine Zeile CSS: `.schalter { position: relative; top: 400px; }`.
 |---|---|---|---|---|
 | 1 | Konsole | Zeile ans Ende von `src/ui/lobby/lobby-seite.css` hängen | | |
 | 2 | Konsole | Lobby-Verträge in Handy quer laufen lassen | `npx playwright test tests/layout/lobby.spec.ts --project=handy-quer` | Exit-Code und Name des roten Vertrags |
-| 3 | Browser | Produktionsbuild bei 844×390 öffnen und messen | `getBoundingClientRect()` von `label.schalter` | liegt unter 390 px |
+| 3 | Browser | Produktionsbuild bei 844×390 öffnen und messen | `getBoundingClientRect()` von `label.lobby__schalter` | liegt unter 390 px |
 
 ## Zurücksetzen
 
@@ -47,4 +47,4 @@ Eine Zeile CSS: `.schalter { position: relative; top: 400px; }`.
 
 ## Nicht abgedeckte Grenzfälle
 
-Dieselbe Lücke im Wächter „kein Bedienelement ist vollständig verdeckt“ (gleiche Auswahl und gleiche 2-px-Grenze in `messeErreichbarkeit`): ohne eigenen Testfall, weil eine Behebung beide Wächter zugleich ändert. Die Segmente der Gegnerzahl (Radios, schon seit O2 unsichtbar): ohne eigenen Testfall, sie liegen in derselben Form wie der Schalter und fallen mit ihm unter dieselbe Behebung.
+Segmente unter dem Bildrand und ein zugedecktes Schalter-Label: TF-PRUEF-026. Ein sichtbares Eingabefeld, dessen Label nur vorgelesen wird: TF-PRUEF-027.

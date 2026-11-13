@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-027 Ein sichtbares Eingabefeld, dessen Label nur vorgelesen wird, messen die Wächter „ausserhalb des Bildes“ und „vollständig verdeckt“ weiter selbst. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-027 Ein sichtbares Eingabefeld, dessen Label nur vorgelesen wird, messen die Wächter „ausserhalb des Bildes“ und „vollständig verdeckt“ weiter selbst.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PRUEF-025</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Seit O2b Iteration 2 misst <code>messeErreichbarkeit</code> ein <code>input</code> mit Label an seinem grössten Label statt am Feld selbst. Das ist richtig, solange das Feld unsichtbar ist und das Label getippt wird. Umgekehrt gibt es auch sichtbare Felder mit einem Label, das nur vorgelesen wird (<code>.nur-vorlesen</code>, 1 × 1 px), etwa ein Suchfeld. Dann darf der Wächter das Feld nicht übergehen.</p><h2>Bestanden, wenn</h2><p>Ein sichtbares Textfeld (240 × 48 px) mit einem 1 × 1 px grossen Label meldet <code>findeAusserhalbDesBildes</code>, wenn es 100 px unter dem Bildrand liegt, und <code>findeVerdeckteBedienelemente</code>, wenn eine Fläche es ganz zudeckt.</p><h2>Fehlgeschlagen, wenn</h2><p>Beide Wächter liefern in diesen Fällen eine leere Liste.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2b-lobby-flach (PR #35)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo-Stand ab O2b Iteration 2, Ports 4173 und 4174 frei</td></tr><tr><td>Ausgangslage</td><td><code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Eine eigene Seite über <code>page.setContent</code>: <code>&lt;label for=&quot;f&quot;&gt;</code> mit den Stilen von <code>.nur-vorlesen</code>, dazu <code>&lt;input id=&quot;f&quot; type=&quot;text&quot;&gt;</code> mit 240 × 48 px, einmal bei <code>top: calc(100vh + 100px)</code>, einmal bei <code>top: 16px</code> unter einer <code>position: fixed</code>-Fläche über das ganze Fenster.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole</td><td>vorübergehende Spec-Datei unter `tests/layout/` mit beiden Seiten anlegen, die `findeAusserhalbDesBildes` und `findeVerdeckteBedienelemente` aus `./messung` aufruft</td><td></td><td></td></tr><tr><td>2</td><td>Konsole</td><td>Datei in einer Klasse laufen lassen</td><td>`npx playwright test tests/layout/&lt;datei&gt; --project=desktop`</td><td>je ein Befund erwartet</td></tr><tr><td>3</td><td>Konsole</td><td>zum Vergleich `tests/layout/messung.ts` von `origin/neuaufbau` einsetzen und wiederholen</td><td>`git show origin/neuaufbau:tests/layout/messung.ts &gt; tests/layout/messung.ts`</td><td>dort meldet der Wächter beide Fälle</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Spec-Datei löschen, <code>git checkout -- tests/layout/messung.ts</code>, danach <code>git status</code> leer.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 16:58</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer O2b Iteration 2) &middot; agent &middot; pruefung-O2b-it2 @ <span class="commit" title="488c2a3fe1078d10e182b48352234f5dac24061a">488c2a3</span> / Playwright 1.60.0 Chromium, 1280x900</p><p>Stand 488c2a3, eigene Spec mit page.setContent: sichtbares Textfeld 240x48 mit 1x1-Label 100 px unter dem Rand -&gt; findeAusserhalbDesBildes liefert []; dasselbe Feld unter einer fixed-Flaeche -&gt; findeVerdeckteBedienelemente liefert []; 2 failed. Mit messung.ts von origin/neuaufbau: 2 passed (beide gemeldet). Ursache: messeErreichbarkeit nimmt das groesste Label statt das groesste von Label und Feld, das 1x1-Label faellt unter die 2-px-Grenze. In der App gibt es heute kein solches Feld; der Tippflaechen-Vertrag meldet dieselbe Lage als zu klein.</p><p class="fehler">Sichtbares Feld mit nur vorgelesenem Label wird von beiden Waechtern uebergangen</p><ul class="belege"><li><a href="belege/2026-11-13-1658-TF-PRUEF-027-1.txt">2026-11-13-1658-TF-PRUEF-027-1.txt</a></li><li><a href="belege/2026-11-13-1658-TF-PRUEF-027-2.txt">2026-11-13-1658-TF-PRUEF-027-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

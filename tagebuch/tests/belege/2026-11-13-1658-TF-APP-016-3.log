@@ -1,0 +1,40 @@
+desktop          leer        1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+desktop          partie      1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+desktop          rueckfrage  1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=505..609 true fehler=0
+desktop          unlesbar    1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=- fehler=1
+desktop          gedreht     900x1280  sw=900/900 sh=1280 y=0 kleinste=44 ausserhalb=[] frage=685..811 true fehler=0
+desktop          spiel       1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+desktop          spiel-ohne  1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+desktop          regeln      1280x900  sw=1280/1280 sh=900 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-quer      leer        1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-quer      partie      1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-quer      rueckfrage  1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=439..543 true fehler=0
+tablet-quer      unlesbar    1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=- fehler=1
+tablet-quer      gedreht     768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=551..678 true fehler=0
+tablet-quer      spiel       1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-quer      spiel-ohne  1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-quer      regeln      1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-hochkant  leer        768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-hochkant  partie      768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-hochkant  rueckfrage  768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=551..678 true fehler=0
+tablet-hochkant  unlesbar    768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=- fehler=1
+tablet-hochkant  gedreht     1024x768  sw=1024/1024 sh=768 y=0 kleinste=44 ausserhalb=[] frage=439..543 true fehler=0
+tablet-hochkant  spiel       768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-hochkant  spiel-ohne  768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+tablet-hochkant  regeln      768x1024  sw=768/768 sh=1024 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-hochkant   leer        390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-hochkant   partie      390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-hochkant   rueckfrage  390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=545..723 true fehler=0
+handy-hochkant   unlesbar    390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=- fehler=1
+handy-hochkant   gedreht     844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=230..356 true fehler=0
+handy-hochkant   spiel       390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-hochkant   spiel-ohne  390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-hochkant   regeln      390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-quer       leer        844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-quer       partie      844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-quer       rueckfrage  844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=230..356 true fehler=0
+handy-quer       unlesbar    844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=- fehler=1
+handy-quer       gedreht     390x844   sw=390/390 sh=844 y=0 kleinste=44 ausserhalb=[] frage=545..723 true fehler=0
+handy-quer       spiel       844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-quer       spiel-ohne  844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0
+handy-quer       regeln      844x390   sw=844/844 sh=390 y=0 kleinste=44 ausserhalb=[] frage=- fehler=0

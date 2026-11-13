@@ -1,0 +1,51 @@
+
+Running 2 tests using 2 workers
+
+[1A[2K[1/2] [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:16:1 › Prüfer: sichtbares Textfeld zugedeckt, Label nur vorgelesen
+[1A[2K[2/2] [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:7:1 › Prüfer: sichtbares Textfeld unter dem Rand, Label nur vorgelesen
+[1A[2K  1) [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:7:1 › Prüfer: sichtbares Textfeld unter dem Rand, Label nur vorgelesen 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 3[39m
+    [31m+ Received  + 1[39m
+
+    [32m- Array [[39m
+    [32m-   StringContaining "",[39m
+    [32m- ][39m
+    [31m+ Array [][39m
+
+      11 |   </body>`)
+      12 |   const befunde = await findeAusserhalbDesBildes(page)
+    > 13 |   expect(befunde.map((b) => b.element)).toEqual([expect.stringContaining('')])
+         |                                         ^
+      14 | })
+      15 |
+      16 | test('Prüfer: sichtbares Textfeld zugedeckt, Label nur vorgelesen', async ({ page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\zz_pruefer_tmp.spec.ts:13:41
+
+    Error Context: test-results\zz_pruefer_tmp-Prüfer-sich-bf698-m-Rand-Label-nur-vorgelesen-desktop\error-context.md
+
+
+[1A[2K  2) [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:16:1 › Prüfer: sichtbares Textfeld zugedeckt, Label nur vorgelesen 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoHaveLength[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected length: [32m1[39m
+    Received length: [31m0[39m
+    Received array:  [31m[][39m
+
+      21 |   </body>`)
+      22 |   const befunde = await findeVerdeckteBedienelemente(page)
+    > 23 |   expect(befunde).toHaveLength(1)
+         |                   ^
+      24 | })
+      25 |
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\zz_pruefer_tmp.spec.ts:23:19
+
+    Error Context: test-results\zz_pruefer_tmp-Prüfer-sich-81bcd-edeckt-Label-nur-vorgelesen-desktop\error-context.md
+
+
+[1A[2K  2 failed
+    [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:7:1 › Prüfer: sichtbares Textfeld unter dem Rand, Label nur vorgelesen 
+    [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:16:1 › Prüfer: sichtbares Textfeld zugedeckt, Label nur vorgelesen 

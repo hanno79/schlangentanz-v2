@@ -1,0 +1,309 @@
+
+Running 99 tests using 16 workers
+
+[1A[2K[1/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby ohne Spielstand › die Seite ist nicht breiter als das Fenster
+[1A[2K[2/99] [handy-quer] › tests\layout\lobby.spec.ts:54:3 › O2: Lobby ohne Spielstand › O2 K1: ein Tipp auf „3 Gegner“ wählt diese Zahl
+[1A[2K[3/99] [handy-quer] › tests\layout\lobby.spec.ts:47:3 › O2: Lobby ohne Spielstand › O2 K1: die Lobby zeigt Gegnerwahl, Erweiterung und „Neue Partie“, aber kein „Weiterspielen“
+[1A[2K[4/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby ohne Spielstand › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[5/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby ohne Spielstand › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[6/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby ohne Spielstand › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[7/99] [handy-quer] › tests\layout\lobby.spec.ts:59:3 › O2: Lobby ohne Spielstand › O2b: die Tab-Reihe folgt der sichtbaren Anordnung
+[1A[2K[8/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby ohne Spielstand › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[9/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby ohne Spielstand › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[10/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby ohne Spielstand › kein Bedienelement ist vollständig verdeckt
+[1A[2K[11/99] [handy-quer] › tests\layout\lobby.spec.ts:76:3 › O2: Lobby mit laufender Partie › O2b: die Tab-Reihe folgt der sichtbaren Anordnung, „Weiterspielen“ vor der neuen Partie
+[1A[2K[12/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby ohne Spielstand › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[13/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby ohne Spielstand › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[14/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby ohne Spielstand › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[15/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby ohne Spielstand › kein Bedienelement ist stillgelegt
+[1A[2K[16/99] [handy-quer] › tests\layout\lobby.spec.ts:72:3 › O2: Lobby mit laufender Partie › O2 K2: die Lobby bietet „Weiterspielen“
+[1A[2K[17/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby mit laufender Partie › die Seite ist nicht breiter als das Fenster
+[1A[2K[18/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby mit laufender Partie › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[19/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[20/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[21/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist vollständig verdeckt
+[1A[2K[22/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby mit laufender Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[23/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby mit laufender Partie › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[24/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby mit laufender Partie › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[25/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby mit laufender Partie › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[26/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby mit laufender Partie › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[27/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist stillgelegt
+[1A[2K  1) [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby ohne Spielstand › kein Bedienelement liegt außerhalb des Bildes 
+
+    Error: 3 Bedienelement(e) außerhalb des Bildes:
+      · lobby__segment "1 Gegner" — liegt bei 521..565 (Bild ist 390px hoch)
+      · lobby__segment "2 Gegner" — liegt bei 521..565 (Bild ist 390px hoch)
+      · lobby__segment "3 Gegner" — liegt bei 521..565 (Bild ist 390px hoch)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 521..565 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"1 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 521..565 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"2 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 521..565 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"3 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      58 |   pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }: { page: Page }) => {
+      59 |     const befunde = await findeAusserhalbDesBildes(page)
+    > 60 |     expect(befunde, `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                        ^
+      61 |   })
+      62 |
+      63 |   pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }: { page: Page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\waechter.ts:60:104
+
+    Error Context: test-results\lobby-O2-Lobby-ohne-Spiels-b4b54--liegt-außerhalb-des-Bildes-handy-quer\error-context.md
+
+
+[1A[2K[28/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › die Seite ist nicht breiter als das Fenster
+[1A[2K[29/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[30/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[31/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[32/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement ist vollständig verdeckt
+[1A[2K[33/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[34/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[35/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[36/99] [handy-quer] › tests\layout\lobby.spec.ts:91:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › O2 K4: die Lobby sagt, dass die Partie verworfen wurde, und bietet kein „Weiterspielen“
+[1A[2K[37/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[38/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[39/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement ist stillgelegt
+[1A[2K[40/99] [handy-quer] › tests\layout\lobby.spec.ts:107:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › O2 K2: die Rückfrage bietet Bestätigen und Abbrechen
+[1A[2K[41/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › die Seite ist nicht breiter als das Fenster
+[1A[2K  2) [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes 
+
+    Error: 3 Bedienelement(e) außerhalb des Bildes:
+      · lobby__segment "1 Gegner" — liegt bei 563..607 (Bild ist 390px hoch)
+      · lobby__segment "2 Gegner" — liegt bei 563..607 (Bild ist 390px hoch)
+      · lobby__segment "3 Gegner" — liegt bei 563..607 (Bild ist 390px hoch)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 563..607 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"1 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 563..607 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"2 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 563..607 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"3 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      58 |   pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }: { page: Page }) => {
+      59 |     const befunde = await findeAusserhalbDesBildes(page)
+    > 60 |     expect(befunde, `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                        ^
+      61 |   })
+      62 |
+      63 |   pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }: { page: Page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\waechter.ts:60:104
+
+    Error Context: test-results\lobby-O2-Lobby-mit-laufend-d9dd4--liegt-außerhalb-des-Bildes-handy-quer\error-context.md
+
+
+[1A[2K[42/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[43/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[44/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement ist vollständig verdeckt
+[1A[2K[45/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[46/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[47/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[48/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[49/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K  3) [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes 
+
+    Error: 3 Bedienelement(e) außerhalb des Bildes:
+      · lobby__segment "1 Gegner" — liegt bei 585..629 (Bild ist 390px hoch)
+      · lobby__segment "2 Gegner" — liegt bei 585..629 (Bild ist 390px hoch)
+      · lobby__segment "3 Gegner" — liegt bei 585..629 (Bild ist 390px hoch)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 585..629 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"1 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 585..629 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"2 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 585..629 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"3 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      58 |   pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }: { page: Page }) => {
+      59 |     const befunde = await findeAusserhalbDesBildes(page)
+    > 60 |     expect(befunde, `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                        ^
+      61 |   })
+      62 |
+      63 |   pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }: { page: Page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\waechter.ts:60:104
+
+    Error Context: test-results\lobby-O2-K4-Lobby-nach-ein-f79df--liegt-außerhalb-des-Bildes-handy-quer\error-context.md
+
+
+[1A[2K[50/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement ist stillgelegt
+[1A[2K[51/99] [handy-quer] › tests\layout\lobby.spec.ts:133:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › O2b TF-APP-016: die Rückfrage liegt nach dem Drehen ganz im Bild
+[1A[2K[52/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › die Seite ist nicht breiter als das Fenster
+[1A[2K[53/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[54/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[55/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[56/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Bedienelement ist vollständig verdeckt
+[1A[2K[57/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[58/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[59/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[60/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K  4) [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes 
+
+    Error: 3 Bedienelement(e) außerhalb des Bildes:
+      · lobby__segment "1 Gegner" — liegt bei 522..566 (Bild ist 390px hoch)
+      · lobby__segment "2 Gegner" — liegt bei 522..566 (Bild ist 390px hoch)
+      · lobby__segment "3 Gegner" — liegt bei 522..566 (Bild ist 390px hoch)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 522..566 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"1 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 522..566 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"2 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 522..566 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "lobby__segment \"3 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      58 |   pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }: { page: Page }) => {
+      59 |     const befunde = await findeAusserhalbDesBildes(page)
+    > 60 |     expect(befunde, `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                        ^
+      61 |   })
+      62 |
+      63 |   pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }: { page: Page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\waechter.ts:60:104
+
+    Error Context: test-results\lobby-O2-Lobby-mit-offener-ee25d--liegt-außerhalb-des-Bildes-handy-quer\error-context.md
+
+
+[1A[2K[61/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[62/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Bedienelement ist stillgelegt
+[1A[2K[63/99] [handy-quer] › tests\layout\lobby.spec.ts:145:3 › O2: vorläufiger Spieltisch mit Partie › O2: der Spieltisch nennt die Einstellungen und führt zurück
+[1A[2K[64/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2: vorläufiger Spieltisch mit Partie › die Seite ist nicht breiter als das Fenster
+[1A[2K[65/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2: vorläufiger Spieltisch mit Partie › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[66/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2: vorläufiger Spieltisch mit Partie › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[67/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2: vorläufiger Spieltisch mit Partie › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[68/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2: vorläufiger Spieltisch mit Partie › kein Bedienelement ist vollständig verdeckt
+[1A[2K[69/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2: vorläufiger Spieltisch mit Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[70/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2: vorläufiger Spieltisch mit Partie › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K  5) [handy-quer] › tests\layout\waechter.ts:46:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Bedienelement liegt außerhalb des Bildes 
+
+    Error: 3 Bedienelement(e) außerhalb des Bildes:
+      · lobby__segment "1 Gegner" — liegt bei 829..873 (Bild ist 844px hoch)
+      · lobby__segment "2 Gegner" — liegt bei 829..873 (Bild ist 844px hoch)
+      · lobby__segment "3 Gegner" — liegt bei 829..873 (Bild ist 844px hoch)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  -  1[39m
+    [31m+ Received  + 14[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 829..873 (Bild ist 844px hoch)",[39m
+    [31m+     "element": "lobby__segment \"1 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 829..873 (Bild ist 844px hoch)",[39m
+    [31m+     "element": "lobby__segment \"2 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 829..873 (Bild ist 844px hoch)",[39m
+    [31m+     "element": "lobby__segment \"3 Gegner\"",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      58 |   pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }: { page: Page }) => {
+      59 |     const befunde = await findeAusserhalbDesBildes(page)
+    > 60 |     expect(befunde, `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                        ^
+      61 |   })
+      62 |
+      63 |   pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }: { page: Page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a30baa5760485d33f\tests\layout\waechter.ts:60:104
+
+    Error Context: test-results\lobby-O2b-TF-APP-016-Lobby-a795c--liegt-außerhalb-des-Bildes-handy-quer\error-context.md
+
+
+[1A[2K[71/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2: vorläufiger Spieltisch mit Partie › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[72/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2: vorläufiger Spieltisch mit Partie › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[73/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2: vorläufiger Spieltisch mit Partie › kein Bedienelement ist stillgelegt
+[1A[2K[74/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[75/99] [handy-quer] › tests\layout\lobby.spec.ts:159:3 › O2: vorläufiger Spieltisch ohne Partie › O2: ohne Spielstand sagt der Spieltisch, dass keine Partie läuft
+[1A[2K[76/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2: vorläufiger Spieltisch ohne Partie › die Seite ist nicht breiter als das Fenster
+[1A[2K[77/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2: vorläufiger Spieltisch ohne Partie › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[78/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2: vorläufiger Spieltisch ohne Partie › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[79/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2: vorläufiger Spieltisch ohne Partie › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[80/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2: vorläufiger Spieltisch mit Partie › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[81/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2: vorläufiger Spieltisch ohne Partie › kein Bedienelement ist vollständig verdeckt
+[1A[2K[82/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2: vorläufiger Spieltisch ohne Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[83/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2: vorläufiger Spieltisch ohne Partie › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[84/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2: vorläufiger Spieltisch ohne Partie › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[85/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2: vorläufiger Spieltisch ohne Partie › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[86/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2: vorläufiger Spieltisch ohne Partie › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[87/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2: vorläufiger Spieltisch ohne Partie › kein Bedienelement ist stillgelegt
+[1A[2K[88/99] [handy-quer] › tests\layout\lobby.spec.ts:171:3 › O2: Regelseite › O2: die Regelseite verweist auf die Website
+[1A[2K[89/99] [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Regelseite › die Seite ist nicht breiter als das Fenster
+[1A[2K[90/99] [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Regelseite › jede Tippfläche misst mindestens 44 × 44 px
+[1A[2K[91/99] [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Regelseite › kein sichtbares Element schneidet seinen Inhalt ab
+[1A[2K[92/99] [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Regelseite › kein Bedienelement liegt außerhalb des Bildes
+[1A[2K[93/99] [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Regelseite › kein Bedienelement ist vollständig verdeckt
+[1A[2K[94/99] [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Regelseite › kein Textinhalt ist unter eine Zeilenhöhe gedrückt
+[1A[2K[95/99] [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Regelseite › kein Text steht unter 4,5 : 1 Kontrast
+[1A[2K[96/99] [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Regelseite › der Kontrastwächter hat wirklich etwas gemessen
+[1A[2K[97/99] [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Regelseite › jede var() ohne Fallback löst am benutzenden Element auf
+[1A[2K[98/99] [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Regelseite › die Token-Prüfung hat wirklich Regeln gesehen
+[1A[2K[99/99] [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Regelseite › kein Bedienelement ist stillgelegt
+[1A[2K  5 failed
+    [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby ohne Spielstand › kein Bedienelement liegt außerhalb des Bildes 
+    [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes 
+    [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes 
+    [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes 
+    [handy-quer] › tests\layout\waechter.ts:46:3 › O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen › kein Bedienelement liegt außerhalb des Bildes 
+  94 passed (17.5s)
