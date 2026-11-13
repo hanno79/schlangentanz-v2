@@ -1,0 +1,82 @@
+import { berechneEndwertung } from '../index'
+import type { AufgabenkarteInfo, Endwertung, SpielerWertung, Spielzustand } from '../index'
+import { baukasten } from '../testing/szenario'
+import type { Baukasten, Schlangenglied } from '../testing/szenario'
+
+/*
+Hilfen für die Wertungstests (E10). Jeder Zustand kommt aus dem Szenario-Baukasten,
+also aus echtem Material, und erfüllt jede Invariante.
+*/
+
+/** Je Spieler seine Schlangen, jede als Liste ihrer Glieder. */
+export type Auslage = Schlangenglied[][][]
+
+export function tisch(erweiterung: boolean, auslage: Auslage, weiter: (bau: Baukasten) => Baukasten = (bau) => bau): Spielzustand {
+  let bau = baukasten({ spielerzahl: Math.max(2, auslage.length), erweiterung })
+  auslage.forEach((schlangen, spieler) => {
+    for (const glieder of schlangen) bau = bau.schlange(spieler, glieder)
+  })
+  return weiter(bau).zustand()
+}
+
+export function endwertung(erweiterung: boolean, auslage: Auslage, weiter?: (bau: Baukasten) => Baukasten): Endwertung {
+  return berechneEndwertung(tisch(erweiterung, auslage, weiter))
+}
+
+/** Die Endwertung von Spieler 1, der nur diese eine Schlange hat. */
+export function eineSchlange(glieder: Schlangenglied[], erweiterung = false): SpielerWertung {
+  return endwertung(erweiterung, [[glieder]]).spieler[0]
+}
+
+/** Die Farbe jedes Jokers dieses Spielers, in der Reihenfolge der Schlangen und Karten. */
+export function jokerfarben(wertung: SpielerWertung): Array<string | null> {
+  return wertung.schlangen.flatMap((schlange) => schlange.joker.map((joker) => joker.farbe))
+}
+
+/** Die Gruppen des Spielers als `Farbe×Länge=Punkte`, gut lesbar in einer Erwartung. */
+export function gruppen(wertung: SpielerWertung): string[] {
+  return wertung.schlangen.flatMap((schlange) => schlange.gruppen.map((g) => `${g.farbe}×${g.laenge}=${g.punkte}`))
+}
+
+/** Gibt Spieler `spieler` die Aufgabe `name` als erfüllte offene Aufgabe (Schnittstelle zu X1/X2). */
+export function erfuellt(spieler: number, name: string): (bau: Baukasten) => Baukasten {
+  return (bau) =>
+    bau.aendere((z) => {
+      const aufgabe = nimmAufgabe(z, name)
+      z.spieler[spieler].erfuellteAufgaben.push(aufgabe)
+      if (z.aufgabenStapel.length > 0 && z.offeneAufgaben.length < 3) z.offeneAufgaben.push(z.aufgabenStapel.shift() as AufgabenkarteInfo)
+    })
+}
+
+/** Legt Spieler `spieler` die Aufgabe `name` als geheime Aufgabe hin, erfüllt oder nicht. */
+export function geheim(spieler: number, name: string, erfuelltJa: boolean): (bau: Baukasten) => Baukasten {
+  return (bau) =>
+    bau.aendere((z) => {
+      const aufgabe = nimmAufgabe(z, name)
+      const alte = z.spieler[spieler].geheimeAufgabe
+      if (alte !== null) z.aufgabenStapel.push(alte)
+      z.spieler[spieler].geheimeAufgabe = aufgabe
+      z.spieler[spieler].geheimeAufgabeErfuellt = erfuelltJa
+    })
+}
+
+function nimmAufgabe(z: Spielzustand, name: string): AufgabenkarteInfo {
+  for (const liste of [z.offeneAufgaben, z.aufgabenStapel]) {
+    const index = liste.findIndex((a) => a.name === name)
+    if (index >= 0) return liste.splice(index, 1)[0]
+  }
+  for (const spieler of z.spieler) {
+    if (spieler.geheimeAufgabe?.name === name) {
+      const aufgabe = spieler.geheimeAufgabe
+      const ersatz = z.aufgabenStapel.shift()
+      if (ersatz === undefined) throw new Error('Kein Ersatz für die geheime Aufgabe')
+      spieler.geheimeAufgabe = ersatz
+      return aufgabe
+    }
+  }
+  throw new Error(`Aufgabe ${name} liegt nicht frei`)
+}
+
+export function nacheinander(...schritte: Array<(bau: Baukasten) => Baukasten>): (bau: Baukasten) => Baukasten {
+  return (bau) => schritte.reduce((b, schritt) => schritt(b), bau)
+}
