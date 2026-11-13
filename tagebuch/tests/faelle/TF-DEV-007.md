@@ -27,7 +27,7 @@ Bei 390×844 mit Touch ist `document.documentElement.scrollWidth` gleich `client
 
 | Was | Wert |
 |---|---|
-| Anwendung | Testhook-Build auf Port 4174, Playwright-Kontext der Geräteklasse `handy` aus `scripts/pruefung/geraeteklassen.mjs` |
+| Anwendung | Testhook-Build auf Port 4174, Playwright-Kontext der Geräteklasse `handy-hochkant` aus `scripts/pruefung/geraeteklassen.mjs` |
 
 ## Testdaten
 
@@ -37,6 +37,6 @@ Die drei Adressen unter „Bestanden, wenn“.
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Playwright, Klasse handy | Adresse öffnen | `/dev?seed=1&spieler=2` | `scrollWidth` 390, Hinweistext ganz sichtbar |
-| 2 | Playwright, Klasse handy | Adresse öffnen | `/dev/szenarien` | Tabelle passt in 390 px |
-| 3 | Playwright, 844×390 (gedreht) | Adresse öffnen | `/dev?seed=1&spieler=2` | `scrollWidth` 844 |
+| 1 | Playwright, Klasse `handy-hochkant` | Adresse öffnen | `/dev?seed=1&spieler=2` | `scrollWidth` 390, Hinweistext ganz sichtbar |
+| 2 | Playwright, Klasse `handy-hochkant` | Adresse öffnen | `/dev/szenarien` | Tabelle passt in 390 px |
+| 3 | Playwright, Klasse `handy-quer` (844×390) | Adresse öffnen | `/dev?seed=1&spieler=2` | `scrollWidth` 844 |

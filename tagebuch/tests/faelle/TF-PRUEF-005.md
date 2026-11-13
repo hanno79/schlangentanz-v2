@@ -16,6 +16,8 @@ status: stillgelegt
 
 Prüfer fotografieren jede Oberfläche in den drei Geräteklassen mit diesem Skript. Stimmen Grösse oder Touch nicht, beschreibt ein Prüfer ein falsches Gerät.
 
+Stillgelegt mit P0.3c: Das Skript liefert seit dem 13.11.2026 fünf Bilder mit neuen Namen; der Nachfolger ist TF-PRUEF-017.
+
 ## Bestanden, wenn
 
 Das Skript endet mit Exit 0, schreibt `<name>-desktop.png` (1280×900, „pointer: coarse nein“), `-tablet.png` (1024×768, „pointer: coarse ja“) und `-handy.png` (390×844, „pointer: coarse ja“), jeweils mit „Konsolenfehler: 0“, und die PNG-Dateien haben genau diese Grössen (`file *.png`). Die Bilder zeigen die Lobby vollständig gerendert.

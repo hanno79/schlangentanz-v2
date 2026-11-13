@@ -247,7 +247,7 @@ describe('P0.3c: Anleitungen und Befehle nennen fünf Geräteklassen', () => {
   it('P0.3c: kein gültiger Testfall im Register nennt noch die alten Klassen tablet oder handy', () => {
     const ordner = join(WURZEL, 'tagebuch', 'tests', 'faelle')
     // Suchmuster aus TF-PRUEF-022: als Name in Backticks, „Klasse handy“ oder „, tablet 1024“.
-    const alterName = /`(tablet|handy)`|Klasse (tablet|handy)\b|, (tablet|handy) [0-9]|Projekte? (desktop, )?`?(tablet|handy)\b(?!-)/
+    const alterName = /`(tablet|handy)`|Klasse (tablet|handy)\b(?!-)|, (tablet|handy) [0-9]|Projekte? (desktop, )?`?(tablet|handy)\b(?!-)/
     const treffer = readdirSync(ordner)
       // TF-PRUEF-022 beschreibt diese Suche und nennt die alten Namen deshalb absichtlich.
       .filter((datei) => datei !== 'TF-PRUEF-022.md')

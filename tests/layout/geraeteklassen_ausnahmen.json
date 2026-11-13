@@ -16,7 +16,7 @@
       "datei": "tests/layout/lobby.spec.ts",
       "vertrag": "O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes",
       "klasse": "handy-quer",
-      "befund": "Mit dem Hinweis auf den verworfenen Spielstand liegt „Neue Partie“ bei 386..434 px und „Regeln“ bei 454..502 px, unter dem 390 px hohen Fenster."
+      "befund": "Mit dem Hinweis auf den verworfenen Spielstand liegt „Neue Partie“ bei 410..458 px und „Regeln“ bei 478..526 px (gemessen nach E1; vorher 386..434 und 454..502), unter dem 390 px hohen Fenster."
     },
     {
       "datei": "tests/layout/lobby.spec.ts",

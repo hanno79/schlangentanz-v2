@@ -176,9 +176,11 @@ und `<klasse>-testhooks` gegen den Testhook-Build (nur `*.hooks.spec.ts`).
   `tests/layout/geraeteklassen_ausnahmen.json` eintragen und im PR begründen;
   die Spec ruft dann `duldeBekannteAusnahmen()` aus `tests/layout/ausnahmen.ts`
   auf. Playwright erwartet für diese Paare ein Scheitern und wird rot, sobald
-  der Vertrag grün ist; dann den Eintrag löschen. Neue Einträge lehnt
-  `tests/geraeteklassen_ausnahmen.test.ts` ab, sobald die Liste auf
-  `neuaufbau` liegt.
+  der Vertrag grün ist; dann den Eintrag löschen. Der Vertrag steht dort mit
+  vollem Titel („Gruppe › Test“, wörtlich wie in `npx playwright test --list`);
+  einen Eintrag ohne passenden Vertrag lehnt
+  `tests/geraeteklassen_ausnahmen.test.ts` ab, ebenso neue Einträge, sobald
+  die Liste auf `neuaufbau` liegt.
 - Ein eigenes Chromium nennst du nur über `PW_CHROMIUM_PFAD`. Kein Pfad im Code.
 
 ## 6. Selbst im Browser ansehen
