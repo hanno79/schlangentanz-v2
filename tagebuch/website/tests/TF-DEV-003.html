@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-003 Im Produktionsbuild ist /dev nicht erreichbar, und kein Code des Entwicklertischs steht im Bundle. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-003 Im Produktionsbuild ist /dev nicht erreichbar, und kein Code des Entwicklertischs steht im Bundle.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art beides</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Entwicklertisch zeigt alle Hände offen und ist eine Test-Hintertür. In der ausgelieferten App darf er weder erreichbar sein noch im ausgelieferten JavaScript stehen (Plan P0.4, Kriterium 3).</p><h2>Bestanden, wenn</h2><p><code>npm run build</code> erzeugt nur <code>index-*.js</code>, <code>index-*.css</code> und <code>prod-*.js</code>; eine Suche in <code>dist/</code> nach <code>ntwicklertisch</code>, <code>Festgefahren</code>, <code>kaputt-doppelte-karte</code>, <code>Phasenschritte</code>, <code>Invariante</code>, <code>szenario</code>, <code>/dev</code> und <code>0x6d2b79f5</code> findet nichts. <code>http://localhost:4173/dev?seed=1&amp;spieler=2</code> zeigt nur den Platzhalter „Schlangentanz – Das Spiel wird gerade neu gebaut …“ und lädt nur <code>index-*.js</code> und <code>index-*.css</code>.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Datei in <code>dist/</code> enthält einen der Suchbegriffe, ein Chunk <code>Entwicklertisch-*.js</code> entsteht, oder <code>/dev</code> auf Port 4173 zeigt den Tisch oder lädt einen weiteren Chunk.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.4-entwicklertisch (PR #27)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td><code>npm run build</code>, dann <code>npm run preview -- --port 4173 --strictPort</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Suchbegriffe wie unter „Bestanden, wenn“.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>bauen</td><td>`npm run build`</td><td>Exit 0, kein `Entwicklertisch-*` in der Liste</td></tr><tr><td>2</td><td>dieselbe Konsole</td><td>Bundle durchsuchen</td><td>`grep -l -e ntwicklertisch -e Festgefahren -e /dev dist/index.html dist/assets/*`</td><td>keine Ausgabe</td></tr><tr><td>3</td><td>Browser</td><td>Adresse öffnen</td><td>`http://localhost:4173/dev?seed=1&amp;spieler=2`</td><td>nur Platzhalter, Netzwerk: `index-*.js`, `index-*.css`</td></tr><tr><td>4</td><td>Browser</td><td>Adresse öffnen</td><td>`http://localhost:4173/dev/szenarien`</td><td>nur Platzhalter</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Der Dev-Server (<code>npm run dev</code>) zeigt den Tisch absichtlich; er wird nie ausgeliefert. Die Vercel-Vorschau mit <code>VITE_TEST_HOOKS=1</code> zeigt ihn ebenfalls absichtlich; nicht geprüft, weil kein Deployment Teil der Abnahme ist.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 09:17</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.4) &middot; agent &middot; pruefung-P0.4 @ <span class="commit" title="94d0307637ae343617ee6d0b4bfd5472bede9d57">94d0307</span> / Playwright 1.60.0 Chromium, 1280x900 Maus, 1024x768 Touch, 390x844 Touch; eingebauter Browser 1280x900</p><p>npm run build: nur index-BwpGEidI.js, index-KA3qtMah.css, prod-BmFCX5J3.js; grep nach ntwicklertisch, Festgefahren, kaputt-doppelte-karte, Phasenschritte, Invariante, szenario, et-aktion, /dev, spieleZufaelligBis, Partie aus Saat, 0x6d2b79f5: 0 Treffer. :4173/dev?seed=1&amp;spieler=2 im eingebauten Browser und in 3 Klassen: nur Platzhalter, Netzwerk nur index-<em>.js und index-</em>.css. tests/entwicklertisch_bundle.test.ts grün, Gegenprobe (Schalter || true) rot.</p><ul class="belege"><li><a href="belege/2026-11-13-0917-TF-DEV-003-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-0917-TF-DEV-003-1.png" alt="Beleg 2026-11-13-0917-TF-DEV-003-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-0917-TF-DEV-003-2.png"><img class="beleg-vorschau" src="belege/2026-11-13-0917-TF-DEV-003-2.png" alt="Beleg 2026-11-13-0917-TF-DEV-003-2.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
