@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-015 Eine ganze Partie zu zweit lässt sich am Entwicklertisch bis „Beendet“ durchklicken, mit richtiger Handgrösse, Schlussrunde und Wertung. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-015 Eine ganze Partie zu zweit lässt sich am Entwicklertisch bis „Beendet“ durchklicken, mit richtiger Handgrösse, Schlussrunde und Wertung.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-DEV-014</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Szenarien zeigen einzelne Stellen. Erst eine ganze Partie vom Start bis zur Wertung zeigt, dass der Zugablauf über viele Züge trägt und am Ende eine Wertung steht, die man nachrechnen kann.</p><h2>Bestanden, wenn</h2><p>Aus <code>start-2</code> endet die Partie nach etwa 100 Zügen mit „Die Partie ist beendet (A10)“ und Stapel 0. Nach jedem Zugwechsel im laufenden Spiel hält der Spieler, der beendet hat, 5 Karten, und die Anzeige „Hand (n)“ stimmt mit dem Zustand überein. Die Schlussrunde beginnt mit KartenGezogen, SchlussrundeBegonnen und ZugBegonnen des anderen, und danach folgt genau ein Zug. Die Endwertung stimmt mit der von Hand nachgerechneten Summe der Gruppen und Ketten aus den angezeigten Schlangen überein. Kein Konsolenfehler.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Partie stecken bleibt, eine Hand nach dem Zugende nicht 5 Karten hält, der Auslöser noch einmal spielt oder die Wertung von der nachgerechneten abweicht.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E2-zugablauf (PR #36)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, <code>npm run preview:testhooks</code> auf Port 4174, Fenster 1280×900</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>start-2</code> (Saat 1, zwei Spieler, ohne Erweiterung). Je Zug eine Karte (reihum eine andere aus der Liste der Knöpfe), dann „ZugBeenden“.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`/dev?szenario=start-2`</td><td>eine Karte, dann „ZugBeenden“</td><td></td><td>Ereignisse KartenGezogen (Spieler 1, 1), ZugBegonnen (KI-Gegner 1); Hände 5/5, Stapel 97</td></tr><tr><td>2</td><td>dieselbe Seite</td><td>weiter je Zug eine Karte und „ZugBeenden“</td><td></td><td>nach jedem Zugende 5 Karten beim abgebenden Spieler</td></tr><tr><td>3</td><td>dieselbe Seite</td><td>Zug, in dem der Stapel leer wird</td><td></td><td>KartenGezogen, SchlussrundeBegonnen (Auslöser), ZugBegonnen des anderen; Stapel 0</td></tr><tr><td>4</td><td>dieselbe Seite</td><td>letzten Zug spielen</td><td></td><td>PartieBeendet, keine Knöpfe</td></tr><tr><td>5</td><td>Abschnitt „Wertung“</td><td>Schlangen und Endwertung lesen, Gruppen und Kette nachrechnen</td><td></td><td>Endwertung gleich der nachgerechneten Summe, „Gewonnen“ nennt den Höchsten</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 16:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E2) &middot; agent &middot; pruefung-E2 @ <span class="commit" title="3bcbc5073ec3cf57e718337dcb287743e577c7ab">3bcbc50</span> / Playwright Chromium 1.60.0, 1280x900 Maus</p><p>start-2 bis Beendet: 198 Klicks, 99 Züge, Stapel 0, 0 Verstösse (nach jedem Zugwechsel 5 Karten beim Abgebenden, Anzeige Hand(n) gleich Zustand). Stelle 1: erstes Zugende KartenGezogen(S1,1), ZugBegonnen(K1), Hände 5/5, Stapel 97. Stelle 2: Zug 98 KartenGezogen(K1,1), SchlussrundeBegonnen(K1), ZugBegonnen(S1); danach genau ein Zug von S1, dann PartieBeendet, Hände 4/5. Stelle 3: Wertung von Hand nachgerechnet: S1 keine Dreiergruppe, keine Kette = 0; K1 Rot-Rot-Rot = 3, Kette 3, Bonus 5 = 8; Anzeige 0 und 8, Gewonnen: KI-Gegner 1 (8). 0 Konsolenfehler.</p><ul class="belege"><li><a href="belege/2026-11-13-1638-TF-DEV-015-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1638-TF-DEV-015-1.png" alt="Beleg 2026-11-13-1638-TF-DEV-015-1.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
-import { KARTENREGISTER, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
+import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
+import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
 import { AKTIONSTYPEN } from './typen';
 import type { Aktionstyp, KartenAktion, Pruefergebnis, SpielAktion } from './typen';
 
@@ -124,25 +125,65 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     return nein(`${spieler.name} ist nicht am Zug; am Zug ist ${zustand.spieler[zustand.zug.spielerIndex]?.name ?? 'niemand'} (A5).`);
   }
 
+  const { zug } = zustand;
+  if (zug.abschnitt === 'Abwerfen' && aktion.typ !== 'UeberhandAbwerfen') {
+    return nein('Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5).');
+  }
   switch (aktion.typ) {
     case 'ZugBeenden':
-      return nein('Zug beenden ist noch nicht umgesetzt (kommt mit E2).');
+      if (!darfZugBeenden(zug, spieler)) {
+        return nein(`${spieler.name} muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).`);
+      }
+      return JA;
     case 'UeberhandAbwerfen':
-      return nein('Überzählige Karten abwerfen ist noch nicht umgesetzt (kommt mit E2).');
+      return pruefeUeberhand(zustand, spielerIndex, aktion.karteIds);
     default:
       break;
   }
 
   const karte = spieler.hand.find((handkarte) => handkarte.id === aktion.karteId);
   if (karte === undefined) return nein(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${spieler.name}.`);
-  if (zustand.zug.abschnitt === 'Abwerfen') {
-    return nein('Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5).');
+  if (aktion.typ === 'SonderkarteWirkungslosAblegen' && karte.typ !== 'Sonderkarte') {
+    return nein(`Die Karte ${karte.id} ist eine Farbkarte: Wirkungslos ablegen lassen sich nur Sonderkarten (D13).`);
   }
+  const grenze = kartengrenze(zug, karte);
+  if (grenze !== null) return nein(grenze);
   if (aktion.typ === 'SonderkarteWirkungslosAblegen') {
-    if (karte.typ !== 'Sonderkarte') return nein(`Die Karte ${karte.id} ist eine Farbkarte: Wirkungslos ablegen lassen sich nur Sonderkarten (D13).`);
-    return nein('Wirkungslos ablegen ist noch nicht umgesetzt (kommt mit E2).');
+    if (!istWirkungslosAblegbar(zustand, spielerIndex, karte)) {
+      return nein(`${kartenartVon(karte)} hat ein mögliches Ziel; wirkungslos ablegen geht nur ohne Ziel, Farbenschutz immer (D25).`);
+    }
+    return JA;
   }
   return pruefeKartenaktion(zustand, aktion, karte);
+}
+
+/**
+ * D13, D25: Eine Sonderkarte ohne mögliches Ziel und jeder Farbenschutz dürfen
+ * ohne Wirkung auf den eigenen Ablagestapel. Ob die Karte ein Ziel hat, sagt ihr
+ * Eintrag im Kartenregister; die Grenze je Zug prüft der Aufrufer (`kartengrenze`).
+ */
+export function istWirkungslosAblegbar(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): boolean {
+  return ohneZielAblegbar(karte, () => definitionFuer(karte).ziele(zustand, spielerIndex, karte));
+}
+
+/** Dieselbe Regel, wenn die Ziele der Karte schon ermittelt sind (`ermittleAktionen`); `ziele` wird nur bei Bedarf gerufen. */
+export function ohneZielAblegbar(karte: Spielkarte, ziele: () => readonly unknown[]): boolean {
+  if (karte.typ !== 'Sonderkarte') return false;
+  return karte.name === 'Farbenschutz' || ziele().length === 0;
+}
+
+/** A5: Am Zugende kommen genau die überzähligen Karten auf den eigenen Ablagestapel, jede einmal. */
+function pruefeUeberhand(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[]): Pruefergebnis {
+  const spieler = zustand.spieler[spielerIndex];
+  const anzahl = ueberzaehligeKarten(spieler);
+  if (zustand.zug.abschnitt !== 'Abwerfen') return nein('Überzählige Karten wirft man erst am Zugende ab, nach dem Auffüllen (A5).');
+  if (new Set(karteIds).size !== karteIds.length) return nein('Beim Abwerfen ist eine Karte doppelt genannt.');
+  const fremd = karteIds.find((id) => !spieler.hand.some((karte) => karte.id === id));
+  if (fremd !== undefined) return nein(`Die Karte ${fremd} liegt nicht auf der Hand von ${spieler.name}.`);
+  if (karteIds.length !== anzahl) {
+    return nein(`${spieler.name} hält ${spieler.hand.length} Karten und legt genau ${anzahl} Karten ab, nicht ${karteIds.length} (A5).`);
+  }
+  return JA;
 }
 
 function pruefeKartenaktion(zustand: Spielzustand, aktion: KartenAktion, karte: Spielkarte): Pruefergebnis {

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-011 Verfälscht man eine Regel des Zugablaufs in zugablauf.ts, pruefen.ts, enumerieren.ts, anwenden.ts oder farbkarte.ts, wird ein passender Test rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-011 Verfälscht man eine Regel des Zugablaufs in zugablauf.ts, pruefen.ts, enumerieren.ts, anwenden.ts oder farbkarte.ts, wird ein passender Test rot.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-010</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Grüne Tests sagen nur etwas, wenn sie bei einer falschen Regel rot werden. Ein Skript des Prüfers ändert je Probe eine Stelle im Code, lässt die Tests laufen und stellt den Code wieder her: 18 Proben aus der PR-Tabelle und 13 eigene, etwa Auffüllen auf 4 statt 5 oder ein umgekehrter Uhrzeigersinn.</p><h2>Bestanden, wenn</h2><p>Jede der 31 Proben macht mindestens einen Test rot, dessen Name zur geänderten Regel passt. Nach dem Lauf zeigt <code>git status</code> keine geänderte Quelldatei.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Probe alle Tests grün lässt; dann hält kein Test diese Regel fest.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E2-zugablauf (PR #36)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E2-zugablauf</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Die 31 Proben (Datei, alte und neue Stelle) stehen im Prüfprotokoll <code>docs/abnahme/E2.md</code>, Abschnitt „Gegenprobe“; das Skript <code>gegenproben.py</code> des Prüfers setzt sie nacheinander um.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>je Probe die Stelle ändern, die drei Zugablauf-Dateien und `aktionen.test.ts` laufen lassen, Stelle zurücksetzen (oder `python -I gegenproben.py`)</td><td>`npx vitest run src/engine/__tests__/zugablauf_*.test.ts src/engine/__tests__/aktionen.test.ts`</td><td>je Probe eine Zeile mit `exit 1` und mindestens 1 rotem Test</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Stand prüfen</td><td>`git status --short`</td><td>keine geänderte Datei unter `src/`</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 16:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E2) &middot; agent &middot; pruefung-E2 @ <span class="commit" title="3bcbc5073ec3cf57e718337dcb287743e577c7ab">3bcbc50</span></p><p>31 Proben (18 aus der PR-Tabelle, 13 eigene) je mit Exit 1 und passendem rotem Test. E07 (Schlussrunde schon bei 1 Karte im Stapel) wird nur vom Dauerlauf rot (214 von 300 Partien), kein Unit-Test. Danach keine geänderte Datei unter src/.</p><ul class="belege"><li><a href="belege/2026-11-13-1638-TF-ENGINE-011-1.txt">2026-11-13-1638-TF-ENGINE-011-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
