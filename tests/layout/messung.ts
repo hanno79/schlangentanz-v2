@@ -868,3 +868,54 @@ export async function findeUnaufloesbareTokens(
     return { befunde, geprueft, ungeprueft }
   })
 }
+
+/* ============================================================
+   Bedienbarkeit auf Touch-Geräten (O2).
+
+   Zwei Fragen, die jede Seite mit Bedienelementen in jeder Geräteklasse
+   beantworten muss: Ist die Seite breiter als das Fenster, und ist jede
+   Tippfläche gross genug für einen Finger?
+   ============================================================ */
+
+/** Wie viele Pixel die Seite breiter ist als das Fenster; 0, wenn sie hineinpasst. */
+export async function waagrechterUeberstand(page: Page): Promise<number> {
+  return page.evaluate(() =>
+    Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth),
+  )
+}
+
+/**
+ * Sichtbare Bedienelemente, deren Tippfläche schmaler oder niedriger ist als
+ * `mindestens` Pixel (Plan O4 K5: mindestens 44 px).
+ *
+ * Ein Auswahlfeld (`radio`, `checkbox`) zählt mit der Fläche seines Labels:
+ * Wer das Label antippt, trifft das Feld. Das Feld selbst darf deshalb
+ * unsichtbar klein sein, solange sein Label gross genug ist; hat es kein
+ * Label, zählt das Feld.
+ */
+export async function findeKleineTippflaechen(page: Page, mindestens = 44): Promise<Befund[]> {
+  return page.evaluate((grenze) => {
+    const kennung = (element: Element): string => {
+      const klasse = (element.className && element.className.toString().split(' ')[0]) || ''
+      const name = element.getAttribute('aria-label') || (element.textContent || '').trim().slice(0, 30)
+      const basis = klasse || element.tagName
+      return name ? `${basis} "${name}"` : basis
+    }
+    const befunde: { element: string; detail: string }[] = []
+    const auswahl = 'button, a[href], [role="button"], input, select, summary'
+    for (const element of Array.from(document.querySelectorAll(auswahl))) {
+      if (!(element as HTMLElement).checkVisibility()) continue
+      if (element.closest('[inert]') !== null) continue
+      const labels = element instanceof HTMLInputElement ? Array.from(element.labels ?? []) : []
+      const flaechen = (labels.length > 0 ? labels : [element]).map((teil) => teil.getBoundingClientRect())
+      const groesste = flaechen.reduce((a, b) => (a.width * a.height >= b.width * b.height ? a : b))
+      if (groesste.width < grenze || groesste.height < grenze) {
+        befunde.push({
+          element: kennung(labels[0] ?? element),
+          detail: `Tippfläche ${Math.round(groesste.width)}×${Math.round(groesste.height)} px, verlangt ${grenze}×${grenze} px`,
+        })
+      }
+    }
+    return befunde
+  }, mindestens)
+}

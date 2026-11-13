@@ -24,9 +24,10 @@ async function oeffneUndSammle(page: Page, adresse: string): Promise<string[]> {
 
 test.describe('P0.4 K3: /dev im Produktionsbuild', () => {
   for (const pfad of ['/dev?seed=1&spieler=2', '/dev/szenarien', '/dev?szenario=spielende']) {
-    test(`P0.4 K3: ${pfad} zeigt im Produktionsbuild nur den Platzhalter und lädt nichts nach`, async ({ page }) => {
+    test(`P0.4 K3: ${pfad} kennt der Produktionsbuild nicht, und er lädt nichts nach`, async ({ page }) => {
       const anfragen = await oeffneUndSammle(page, `${PRODUKTION}${pfad}`)
-      await expect(page.getByTestId('platzhalter')).toBeVisible()
+      // Seit O2 zeigt eine Adresse, die die App nicht kennt, „Diese Seite gibt es nicht“.
+      await expect(page.getByTestId('unbekannte-seite')).toBeVisible()
       await expect(page.getByTestId('entwicklertisch')).toHaveCount(0)
       expect(anfragen.filter((url) => /entwicklertisch/i.test(url))).toEqual([])
     })
@@ -35,7 +36,7 @@ test.describe('P0.4 K3: /dev im Produktionsbuild', () => {
   test('P0.4 K3 Gegenprobe: derselbe Pfad lädt im Testhook-Build den Tisch als eigenen Chunk', async ({ page }) => {
     const anfragen = await oeffneUndSammle(page, `${TESTHOOKS}/dev?seed=1&spieler=2`)
     await expect(page.getByTestId('entwicklertisch')).toBeVisible()
-    await expect(page.getByTestId('platzhalter')).toHaveCount(0)
+    await expect(page.getByTestId('unbekannte-seite')).toHaveCount(0)
     expect(anfragen.filter((url) => /entwicklertisch/i.test(url)).length).toBeGreaterThan(0)
   })
 })
