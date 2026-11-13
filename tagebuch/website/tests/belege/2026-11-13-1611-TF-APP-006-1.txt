@@ -1,0 +1,167 @@
+
+===== Desktop 1280×900 (touch false) =====
+pointer coarse: false
+A leer: {"fenster":"1280x900","scrollW":1280,"clientW":1280,"scrollH":900,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[372..416|959..1003]; 2 Gegner[372..416|1007..1051]; 3 Gegner[372..416|1055..1099]; Mit ErweiterungAus[432..476|580..1103]; Neue Partie[488..532|580..1103]; Regeln[552..596|319..372]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+A Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+A Radios: 1 Gegner:true 2 Gegner:false 3 Gegner:false
+nach Wahl: radios 010 schalter An checkbox true
+Spiel: http://localhost:4383/spiel Spieltisch · Schlangentanz | Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | nicht; | bis | dahin | lässt | sie | sich | hier | nicht | spielen. | Gegner | 2 |
+Spiel Mass: {"fenster":"1280x900","scrollW":1280,"clientW":1280,"ausserhalb":[],"minTipp":"136x44"}
+B mit Partie: {"fenster":"1280x900","scrollW":1280,"clientW":1280,"scrollH":900,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[321..365|953..1103]; 1 Gegner[419..463|959..1003]; 2 Gegner[419..463|1007..1051]; 3 Gegner[419..463|1055..1099]; Mit ErweiterungAus[479..523|580..1103]; Neue Partie[535..579|580..1103]; Regeln[552..596|319..372]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+B Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Laufende | Partie: | 2 | Gegner, | Erweiterung | an | Weiterspielen | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+Vor -> /spiel
+Zurück -> /
+C Rückfrage: {"fenster":"1280x900","scrollW":1280,"clientW":1280,"scrollH":900,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[291..335|953..1103]; 1 Gegner[389..433|959..1003]; 2 Gegner[389..433|1007..1051]; 3 Gegner[389..433|1055..1099]; Mit ErweiterungAus[449..493|580..1103]; Es läuft schon eine Partie. [505..609|580..1103]; Ja, neue Partie[551..595|594..838]; Abbrechen[551..595|846..1089]; Regeln[552..596|319..372]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+C Fokus: Abbrechen
+nach Escape: dialog 0 Fokus Neue Partie Stand gleich true
+nach Abbrechen: dialog 0 Stand gleich true
+D gedreht 900x1280: {"fenster":"900x1280","scrollW":900,"clientW":900,"scrollH":1280,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog {"x":399.390625,"y":685,"width":467.59375,"height":126.375} Fokus Abbrechen
+D zurückgedreht 1280x900: {"fenster":"1280x900","scrollW":1280,"clientW":1280,"scrollH":900,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog offen 1
+Ja, neue Partie -> /spiel Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | ni Stand neu true
+E Hintergrund 3 s: {"timeout":0,"interval":0,"raf":0,"random":0,"gleich":true}
+F Startfehler: Hier | ist | ein | Fehler | aufgetreten | Pruefer: | Zufall | gesperrt | Eine | laufende | Partie | lässt | sich | nicht | fortsetzen: | Ihr | Spielstand | wird | verworfen, | damit | der | Fehler | sich | beim | nächste
+F Mass: {"scrollW":1280,"clientW":1280,"ausserhalb":[],"minTipp":"512x44"}
+G unlesbar: {"fenster":"1280x900","scrollW":1280,"clientW":1280,"scrollH":900,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[427..471|959..1003]; 2 Gegner[427..471|1007..1051]; 3 Gegner[427..471|1055..1099]; Mit ErweiterungAus[487..531|580..1103]; Neue Partie[543..587|580..1103]; Regeln[552..596|319..372]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+G Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Die | gespeicherte | Partie | liess | sich | nicht | laden. | Sie | stammt | aus | einem | älteren | Speicherformat, | das | diese | Fassung | des | Spiels | nicht | mehr | liest. | Sie | wurde | verworfen; | starte | eine | neue | Partie. | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+H Regeln: {"scrollW":1280,"clientW":1280,"ausserhalb":[],"minTipp":"136x44","elemente":"Spielregeln auf schlangentan[138..182|384..687]; Zurück zur Lobby[138..182|703..839]"}
+H Text: Regeln | Diese | Seite | entsteht | gerade. | Die | vollständigen | Spielregeln | stehen | auf | der | Website | des | Spiels. | Spielregeln | auf | schlangentanz.ch | Zurück | zur | Lobby
+Regeln Zurück -> /
+Konsole: error: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+    at D (http://local || error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+ || warning: Gespeicherte Partie im älteren Speicherformat verworfen: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit d
+
+===== Tablet quer 1024×768, Touch (touch true) =====
+pointer coarse: true
+A leer: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"scrollH":768,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[306..350|831..875]; 2 Gegner[306..350|879..923]; 3 Gegner[306..350|927..971]; Mit ErweiterungAus[366..410|452..975]; Neue Partie[422..466|452..975]; Regeln[475..519|191..244]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+A Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+A Radios: 1 Gegner:true 2 Gegner:false 3 Gegner:false
+nach Wahl: radios 010 schalter An checkbox true
+Spiel: http://localhost:4383/spiel Spieltisch · Schlangentanz | Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | nicht; | bis | dahin | lässt | sie | sich | hier | nicht | spielen. | Gegner | 2 |
+Spiel Mass: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"ausserhalb":[],"minTipp":"136x44"}
+B mit Partie: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"scrollH":768,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[255..299|825..975]; 1 Gegner[353..397|831..875]; 2 Gegner[353..397|879..923]; 3 Gegner[353..397|927..971]; Mit ErweiterungAus[413..457|452..975]; Neue Partie[469..513|452..975]; Regeln[475..519|191..244]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+B Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Laufende | Partie: | 2 | Gegner, | Erweiterung | an | Weiterspielen | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+Vor -> /spiel
+Zurück -> /
+C Rückfrage: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"scrollH":768,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[225..269|825..975]; 1 Gegner[323..367|831..875]; 2 Gegner[323..367|879..923]; 3 Gegner[323..367|927..971]; Mit ErweiterungAus[383..427|452..975]; Es läuft schon eine Partie. [439..543|452..975]; Ja, neue Partie[485..529|466..710]; Abbrechen[485..529|718..961]; Regeln[475..519|191..244]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+C Fokus: Abbrechen
+nach Escape: dialog 0 Fokus Neue Partie Stand gleich true
+nach Abbrechen: dialog 0 Stand gleich true
+D gedreht 768x1024: {"fenster":"768x1024","scrollW":768,"clientW":768,"scrollH":1024,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog {"x":145,"y":503.140625,"width":478,"height":126.375} Fokus Abbrechen
+D zurückgedreht 1024x768: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"scrollH":768,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog offen 1
+Ja, neue Partie -> /spiel Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | ni Stand neu true
+E Hintergrund 3 s: {"timeout":0,"interval":0,"raf":0,"random":0,"gleich":true}
+F Startfehler: Hier | ist | ein | Fehler | aufgetreten | Pruefer: | Zufall | gesperrt | Eine | laufende | Partie | lässt | sich | nicht | fortsetzen: | Ihr | Spielstand | wird | verworfen, | damit | der | Fehler | sich | beim | nächste
+F Mass: {"scrollW":1024,"clientW":1024,"ausserhalb":[],"minTipp":"512x44"}
+G unlesbar: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"scrollH":768,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[361..405|831..875]; 2 Gegner[361..405|879..923]; 3 Gegner[361..405|927..971]; Mit ErweiterungAus[421..465|452..975]; Neue Partie[477..521|452..975]; Regeln[475..519|191..244]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+G Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Die | gespeicherte | Partie | liess | sich | nicht | laden. | Sie | stammt | aus | einem | älteren | Speicherformat, | das | diese | Fassung | des | Spiels | nicht | mehr | liest. | Sie | wurde | verworfen; | starte | eine | neue | Partie. | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+H Regeln: {"scrollW":1024,"clientW":1024,"ausserhalb":[],"minTipp":"136x44","elemente":"Spielregeln auf schlangentan[138..182|256..559]; Zurück zur Lobby[138..182|575..711]"}
+H Text: Regeln | Diese | Seite | entsteht | gerade. | Die | vollständigen | Spielregeln | stehen | auf | der | Website | des | Spiels. | Spielregeln | auf | schlangentanz.ch | Zurück | zur | Lobby
+Regeln Zurück -> /
+Konsole: error: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+    at D (http://local || error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+ || warning: Gespeicherte Partie im älteren Speicherformat verworfen: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit d
+
+===== Tablet hochkant 768×1024, Touch (touch true) =====
+pointer coarse: true
+A leer: {"fenster":"768x1024","scrollW":768,"clientW":768,"scrollH":1024,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[258..302|479..523]; 2 Gegner[258..302|527..571]; 3 Gegner[258..302|575..619]; Mit ErweiterungAus[318..362|145..623]; Neue Partie[374..418|145..623]; Regeln[455..499|357..411]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+A Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+A Radios: 1 Gegner:true 2 Gegner:false 3 Gegner:false
+nach Wahl: radios 010 schalter An checkbox true
+Spiel: http://localhost:4383/spiel Spieltisch · Schlangentanz | Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | nicht; | bis | dahin | lässt | sie | sich | hier | nicht | spielen. | Gegner | 2 |
+Spiel Mass: {"fenster":"768x1024","scrollW":768,"clientW":768,"ausserhalb":[],"minTipp":"136x44"}
+B mit Partie: {"fenster":"768x1024","scrollW":768,"clientW":768,"scrollH":1024,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[289..333|145..623]; 1 Gegner[387..431|479..523]; 2 Gegner[387..431|527..571]; 3 Gegner[387..431|575..619]; Mit ErweiterungAus[447..491|145..623]; Neue Partie[503..547|145..623]; Regeln[584..628|357..411]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+B Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Laufende | Partie: | 2 | Gegner, | Erweiterung | an | Weiterspielen | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+Vor -> /spiel
+Zurück -> /
+C Rückfrage: {"fenster":"768x1024","scrollW":768,"clientW":768,"scrollH":1024,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[289..333|145..623]; 1 Gegner[387..431|479..523]; 2 Gegner[387..431|527..571]; 3 Gegner[387..431|575..619]; Mit ErweiterungAus[447..491|145..623]; Es läuft schon eine Partie. [503..630|145..623]; Ja, neue Partie[572..616|159..380]; Abbrechen[572..616|388..609]; Regeln[667..711|357..411]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+C Fokus: Abbrechen
+nach Escape: dialog 0 Fokus Neue Partie Stand gleich true
+nach Abbrechen: dialog 0 Stand gleich true
+D gedreht 1024x768: {"fenster":"1024x768","scrollW":1024,"clientW":1024,"scrollH":768,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog {"x":452.1875,"y":439.40625,"width":522.8125,"height":103.1875} Fokus Abbrechen
+D zurückgedreht 768x1024: {"fenster":"768x1024","scrollW":768,"clientW":768,"scrollH":1024,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog offen 1
+Ja, neue Partie -> /spiel Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | ni Stand neu true
+E Hintergrund 3 s: {"timeout":0,"interval":0,"raf":0,"random":0,"gleich":true}
+F Startfehler: Hier | ist | ein | Fehler | aufgetreten | Pruefer: | Zufall | gesperrt | Eine | laufende | Partie | lässt | sich | nicht | fortsetzen: | Ihr | Spielstand | wird | verworfen, | damit | der | Fehler | sich | beim | nächste
+F Mass: {"scrollW":768,"clientW":768,"ausserhalb":[],"minTipp":"512x44"}
+G unlesbar: {"fenster":"768x1024","scrollW":768,"clientW":768,"scrollH":1024,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[368..412|479..523]; 2 Gegner[368..412|527..571]; 3 Gegner[368..412|575..619]; Mit ErweiterungAus[428..472|145..623]; Neue Partie[484..528|145..623]; Regeln[565..609|357..411]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+G Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Die | gespeicherte | Partie | liess | sich | nicht | laden. | Sie | stammt | aus | einem | älteren | Speicherformat, | das | diese | Fassung | des | Spiels | nicht | mehr | liest. | Sie | wurde | verworfen; | starte | eine | neue | Partie. | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+H Regeln: {"scrollW":768,"clientW":768,"ausserhalb":[],"minTipp":"136x44","elemente":"Spielregeln auf schlangentan[133..177|128..431]; Zurück zur Lobby[133..177|447..583]"}
+H Text: Regeln | Diese | Seite | entsteht | gerade. | Die | vollständigen | Spielregeln | stehen | auf | der | Website | des | Spiels. | Spielregeln | auf | schlangentanz.ch | Zurück | zur | Lobby
+Regeln Zurück -> /
+Konsole: error: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+    at D (http://local || error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+ || warning: Gespeicherte Partie im älteren Speicherformat verworfen: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit d
+
+===== Handy hochkant 390×844, Touch (touch true) =====
+pointer coarse: true
+A leer: {"fenster":"390x844","scrollW":390,"clientW":390,"scrollH":844,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[228..272|213..257]; 2 Gegner[228..272|261..305]; 3 Gegner[228..272|309..353]; Mit ErweiterungAus[288..332|33..357]; Neue Partie[344..388|33..357]; Regeln[425..469|168..222]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+A Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+A Radios: 1 Gegner:true 2 Gegner:false 3 Gegner:false
+nach Wahl: radios 010 schalter An checkbox true
+Spiel: http://localhost:4383/spiel Spieltisch · Schlangentanz | Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | nicht; | bis | dahin | lässt | sie | sich | hier | nicht | spielen. | Gegner | 2 |
+Spiel Mass: {"fenster":"390x844","scrollW":390,"clientW":390,"ausserhalb":[],"minTipp":"136x44"}
+B mit Partie: {"fenster":"390x844","scrollW":390,"clientW":390,"scrollH":844,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[283..327|33..357]; 1 Gegner[381..425|213..257]; 2 Gegner[381..425|261..305]; 3 Gegner[381..425|309..353]; Mit ErweiterungAus[441..485|33..357]; Neue Partie[497..541|33..357]; Regeln[578..622|168..222]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+B Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Laufende | Partie: | 2 | Gegner, | Erweiterung | an | Weiterspielen | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+Vor -> /spiel
+Zurück -> /
+C Rückfrage: {"fenster":"390x844","scrollW":390,"clientW":390,"scrollH":844,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[283..327|33..357]; 1 Gegner[381..425|213..257]; 2 Gegner[381..425|261..305]; 3 Gegner[381..425|309..353]; Mit ErweiterungAus[441..485|33..357]; Es läuft schon eine Partie. [497..675|33..357]; Ja, neue Partie[565..609|47..343]; Abbrechen[617..661|47..343]; Regeln[712..756|168..222]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+C Fokus: Abbrechen
+nach Escape: dialog 0 Fokus Neue Partie Stand gleich true
+nach Abbrechen: dialog 0 Stand gleich true
+D gedreht 844x390: {"fenster":"844x390","scrollW":844,"clientW":844,"scrollH":390,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog {"x":373,"y":230,"width":442,"height":126.375} Fokus Abbrechen
+D zurückgedreht 390x844: {"fenster":"390x844","scrollW":390,"clientW":390,"scrollH":844,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog offen 1
+Ja, neue Partie -> /spiel Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | ni Stand neu true
+E Hintergrund 3 s: {"timeout":0,"interval":0,"raf":0,"random":0,"gleich":true}
+F Startfehler: Hier | ist | ein | Fehler | aufgetreten | Pruefer: | Zufall | gesperrt | Eine | laufende | Partie | lässt | sich | nicht | fortsetzen: | Ihr | Spielstand | wird | verworfen, | damit | der | Fehler | sich | beim | nächste
+F Mass: {"scrollW":390,"clientW":390,"ausserhalb":[],"minTipp":"358x44"}
+G unlesbar: {"fenster":"390x844","scrollW":390,"clientW":390,"scrollH":844,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[384..428|213..257]; 2 Gegner[384..428|261..305]; 3 Gegner[384..428|309..353]; Mit ErweiterungAus[444..488|33..357]; Neue Partie[500..544|33..357]; Regeln[581..625|168..222]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+G Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Die | gespeicherte | Partie | liess | sich | nicht | laden. | Sie | stammt | aus | einem | älteren | Speicherformat, | das | diese | Fassung | des | Spiels | nicht | mehr | liest. | Sie | wurde | verworfen; | starte | eine | neue | Partie. | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+H Regeln: {"scrollW":390,"clientW":390,"ausserhalb":[],"minTipp":"136x44","elemente":"Spielregeln auf schlangentan[125..169|16..319]; Zurück zur Lobby[177..221|16..152]"}
+H Text: Regeln | Diese | Seite | entsteht | gerade. | Die | vollständigen | Spielregeln | stehen | auf | der | Website | des | Spiels. | Spielregeln | auf | schlangentanz.ch | Zurück | zur | Lobby
+Regeln Zurück -> /
+Konsole: error: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+    at D (http://local || error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+ || warning: Gespeicherte Partie im älteren Speicherformat verworfen: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit d
+
+===== Handy quer 844×390, Touch (touch true) =====
+pointer coarse: true
+A leer: {"fenster":"844x390","scrollW":844,"clientW":844,"scrollH":390,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[121..165|671..715]; 2 Gegner[121..165|719..763]; 3 Gegner[121..165|767..811]; Mit ErweiterungAus[177..221|373..815]; Neue Partie[229..273|373..815]; Regeln[247..291|145..199]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+A Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+A Radios: 1 Gegner:true 2 Gegner:false 3 Gegner:false
+nach Wahl: radios 010 schalter An checkbox true
+Spiel: http://localhost:4383/spiel Spieltisch · Schlangentanz | Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | nicht; | bis | dahin | lässt | sie | sich | hier | nicht | spielen. | Gegner | 2 |
+Spiel Mass: {"fenster":"844x390","scrollW":844,"clientW":844,"ausserhalb":[],"minTipp":"136x44"}
+B mit Partie: {"fenster":"844x390","scrollW":844,"clientW":844,"scrollH":390,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[76..120|665..815]; 1 Gegner[163..207|671..715]; 2 Gegner[163..207|719..763]; 3 Gegner[163..207|767..811]; Mit ErweiterungAus[219..263|373..815]; Neue Partie[271..315|373..815]; Regeln[247..291|145..199]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+B Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Laufende | Partie: | 2 | Gegner, | Erweiterung | an | Weiterspielen | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+Vor -> /spiel
+Zurück -> /
+C Rückfrage: {"fenster":"844x390","scrollW":844,"clientW":844,"scrollH":390,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"Weiterspielen[35..79|665..815]; 1 Gegner[122..166|671..715]; 2 Gegner[122..166|719..763]; 3 Gegner[122..166|767..811]; Mit ErweiterungAus[178..222|373..815]; Es läuft schon eine Partie. [230..356|373..815]; Ja, neue Partie[298..342|387..590]; Abbrechen[298..342|598..801]; Regeln[247..291|145..199]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+C Fokus: Abbrechen
+nach Escape: dialog 0 Fokus Neue Partie Stand gleich true
+nach Abbrechen: dialog 0 Stand gleich true
+D gedreht 390x844: {"fenster":"390x844","scrollW":390,"clientW":390,"scrollH":844,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog {"x":33,"y":496.625,"width":324,"height":178.375} Fokus Abbrechen
+D zurückgedreht 844x390: {"fenster":"844x390","scrollW":844,"clientW":844,"scrollH":390,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"} dialog offen 1
+Ja, neue Partie -> /spiel Spieltisch | im | Aufbau | Die | Partie | ist | angelegt | und | gespeichert. | Den | Spieltisch | gibt | es | noch | ni Stand neu true
+E Hintergrund 3 s: {"timeout":0,"interval":0,"raf":0,"random":0,"gleich":true}
+F Startfehler: Hier | ist | ein | Fehler | aufgetreten | Pruefer: | Zufall | gesperrt | Eine | laufende | Partie | lässt | sich | nicht | fortsetzen: | Ihr | Spielstand | wird | verworfen, | damit | der | Fehler | sich | beim | nächste
+F Mass: {"scrollW":844,"clientW":844,"ausserhalb":[],"minTipp":"512x44"}
+G unlesbar: {"fenster":"844x390","scrollW":844,"clientW":844,"scrollH":390,"scrollY":0,"ausserhalb":[],"minTipp":"44x44","elemente":"1 Gegner[185..229|671..715]; 2 Gegner[185..229|719..763]; 3 Gegner[185..229|767..811]; Mit ErweiterungAus[241..285|373..815]; Neue Partie[293..337|373..815]; Regeln[247..291|145..199]","fonts":"Inter 400, Inter 600, Inter 700, Lilita One 400"}
+G Text: Schlangentanz | Du | gegen | bis | zu | drei | KI-Gegner | Die | gespeicherte | Partie | liess | sich | nicht | laden. | Sie | stammt | aus | einem | älteren | Speicherformat, | das | diese | Fassung | des | Spiels | nicht | mehr | liest. | Sie | wurde | verworfen; | starte | eine | neue | Partie. | Gegner | 1 | Gegner | 2 | Gegner | 3 | Gegner | Mit | Erweiterung | Aus | Neue | Partie | Regeln
+H Regeln: {"scrollW":844,"clientW":844,"ausserhalb":[],"minTipp":"136x44","elemente":"Spielregeln auf schlangentan[135..179|166..469]; Zurück zur Lobby[135..179|485..621]"}
+H Text: Regeln | Diese | Seite | entsteht | gerade. | Die | vollständigen | Spielregeln | stehen | auf | der | Website | des | Spiels. | Spielregeln | auf | schlangentanz.ch | Zurück | zur | Lobby
+Regeln Zurück -> /
+Konsole: error: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+    at D (http://local || error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt
+    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)
+ || warning: Gespeicherte Partie im älteren Speicherformat verworfen: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit d
+
+Klassen-Befunde ausserhalb: 0

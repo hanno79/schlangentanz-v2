@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-APP-018 Auf einem sehr kleinen Handy quer (568×320) liegt die Lobby mit laufender Partie oder offener Rückfrage ganz im Bild. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-APP-018 Auf einem sehr kleinen Handy quer (568×320) liegt die Lobby mit laufender Partie oder offener Rückfrage ganz im Bild.</h1><p class="etiketten"><span class="etikett">Bereich App-Rahmen, Lobby, Fehlerdienst</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-APP-003</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>568×320 ist das kleinste verbreitete Querformat (iPhone SE der ersten Generation). Es ist kleiner als jede der fünf Geräteklassen. Ob die Lobby dort ohne Scrollen bedienbar sein muss, hat der Autor nicht festgelegt. Der Testfall hält fest, wie sie sich dort verhält.</p><h2>Bestanden, wenn</h2><p>Bei 568×320 mit Touch liegen mit laufender Partie und mit offener Rückfrage alle Knöpfe und die ganze Rückfrage zwischen 0 und 320 px, und kein Knopftext bricht mitten im Wort um.</p><h2>Fehlgeschlagen, wenn</h2><p>„Neue Partie“, „Weiterspielen“ oder ein Teil der Rückfrage liegt ausserhalb von 0 bis 320 px, oder ein Knopftext bricht mitten im Wort um (etwa „Abbreche“ / „n“).</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2b-lobby-flach (PR #35)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild, Playwright Chromium mit Touch (<code>hasTouch</code>, <code>isMobile</code>)</td></tr><tr><td>Ausgangslage</td><td>Local Storage leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Fenster 568×320.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Lobby</td><td>„Neue Partie“ antippen, Zurück</td><td>`/`</td><td>Lage von „Neue Partie“</td></tr><tr><td>2</td><td>Lobby</td><td>„Neue Partie“ antippen</td><td></td><td>Lage der Rückfrage und von „Weiterspielen“, Umbruch von „Abbrechen“</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage löschen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-unklar"><h3><time datetime="2026-11-13">13.11.2026 16:11</time> <span class="status status-unklar">unklar</span></h3><p class="angaben">Claude Code (Prüfer O2b) &middot; agent &middot; pruefung-O2b @ <span class="commit" title="3626e9020115e02e83bbac487e4111bccaaa9c9f">3626e90</span> / Playwright 1.60.0 Chromium, 568x320 Touch</p><p>568x320: mit Partie liegt Neue Partie bei 295..339, mit Rueckfrage Weiterspielen bei -45..-1 und die Rueckfrage bei 185..334; Abbrechen bricht als Abbreche/n um. Leer und mit unlesbarem Stand alles im Bild.</p><ul class="belege"><li><a href="belege/2026-11-13-1611-TF-APP-018-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1611-TF-APP-018-1.png" alt="Beleg 2026-11-13-1611-TF-APP-018-1.png" loading="lazy"></a></li></ul><div class="kasten-unklar"><h4>Unklar</h4><p>ob die Lobby bei 568x320 ohne Scrollen bedienbar sein muss</p><h4>Fehlt</h4><p>Entscheidung des Autors; 568x320 ist kleiner als jede Geraeteklasse</p></div></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
