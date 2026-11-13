@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { AktionsErgebnis, SpielAktion, Spielzustand } from '../index'
 import { ENGINE_MOTOR, dauerlauf, dauerlaufPartien, spieleDauerlaufPartie } from '../testing/dauerlauf'
-import type { Motor } from '../testing/dauerlauf'
+import type { Motor, SchrittPruefer } from '../testing/dauerlauf'
 
 const ZUG_BEENDEN = (zustand: Spielzustand): SpielAktion[] => [
   { typ: 'ZugBeenden', spielerId: zustand.spieler[zustand.zug.spielerIndex].id },
@@ -41,13 +41,38 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
     ])
   })
 
-  it('A5: nach E1 bleibt jede Partie am Anfang stehen, weil die Engine noch keine Aktion aufzählt', () => {
-    const ergebnisse = dauerlauf([...dauerlaufPartien(3, false), ...dauerlaufPartien(3, true)])
-    for (const ergebnis of ergebnisse) {
-      expect(ergebnis).toMatchObject({ ausgang: 'festgefahren', schritte: 0 })
-      expect(ergebnis.detail).toMatch(/keine Aktion/)
-    }
+  it('A5: zählt die Engine in einer laufenden Partie keine Aktion auf, meldet der Lauf „festgefahren“', () => {
+    const ohneAktion: Motor = { ...zaehlMotor(5), aktionen: () => [] }
+    const ergebnis = spieleDauerlaufPartie({ saat: 1, spielerzahl: 2, erweiterung: false }, { motor: ohneAktion })
+    expect(ergebnis).toMatchObject({ ausgang: 'festgefahren', schritte: 0 })
+    expect(ergebnis.detail).toMatch(/keine Aktion.*Spieler 1 hält 5 Handkarten/)
     expect(ENGINE_MOTOR.aktionen).toBeTypeOf('function')
+  })
+
+  it('B2: eine aufgezählte Aktion, die die Engine ablehnt, wird gemeldet, auch wenn der Lauf sie nicht wählt', () => {
+    const zweiAktionen: Motor = {
+      ...zaehlMotor(5),
+      aktionen: (zustand) => [...ZUG_BEENDEN(zustand), { typ: 'ZugBeenden', spielerId: 'niemand' }],
+      pruefe: (_, aktion) => (aktion.spielerId === 'niemand' ? { erlaubt: false, grund: 'unbekannt' } : { erlaubt: true }),
+    }
+    const ergebnis = spieleDauerlaufPartie({ saat: 1, spielerzahl: 2, erweiterung: false }, { motor: zweiAktionen })
+    expect(ergebnis).toMatchObject({ ausgang: 'abgelehnt', schritte: 0, detail: expect.stringContaining('niemand') })
+  })
+
+  it('A10: ein Prüfer je Partie sieht jeden Schritt; meldet er etwas, hält der Lauf mit „verstoss“ an', () => {
+    let partien = 0
+    const neuerPruefer = () => {
+      partien += 1
+      let schritte = 0
+      return () => (++schritte === 3 ? 'dritter Schritt' : null)
+    }
+    const ergebnisse = dauerlauf(dauerlaufPartien(2, false), { motor: zaehlMotor(10), neuerPruefer })
+    expect(partien).toBe(2)
+    expect(ergebnisse.map((ergebnis) => [ergebnis.ausgang, ergebnis.schritte])).toEqual([
+      ['verstoss', 3],
+      ['verstoss', 3],
+    ])
+    expect(ergebnisse[0].detail).toContain('dritter Schritt')
   })
 
   it('A10: eine Partie, die endet, meldet „beendet“ mit der Zahl der Schritte', () => {
@@ -116,4 +141,44 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
     const lauf = () => spieleDauerlaufPartie({ saat: 9, spielerzahl: 3, erweiterung: true }, { motor: zaehlMotor(4) })
     expect(lauf()).toEqual(lauf())
   })
+})
+
+/**
+ * Was der Dauerlauf je Partie zusätzlich zu den Invarianten prüft (E2): höchstens
+ * eine Farbkarte und eine Sonderkarte je Zug (D12), höchstens 5 Handkarten nach
+ * dem eigenen Zugende (A5), in der Schlussrunde zieht niemand, der Auslöser kommt
+ * nicht mehr dran, und jeder andere hat genau einen letzten Zug (A10).
+ */
+function regelPruefer(): SchrittPruefer {
+  let schlusszuege: number | null = null
+  return (vorher, _aktion, { zustand, ereignisse }) => {
+    const { zug } = zustand
+    if (zug.gespielteFarbkarten > 1 || zug.gespielteSonderkarten > 1) return `D12: ${JSON.stringify(zug)}`
+    for (const ereignis of ereignisse) {
+      if (ereignis.typ === 'SchlussrundeBegonnen') schlusszuege = 0
+      else if (schlusszuege === null) continue
+      else if (ereignis.typ === 'KartenGezogen') return `A10: In der Schlussrunde zieht ${ereignis.spielerIndex} Karten.`
+      else if (ereignis.typ === 'ZugBegonnen' && ereignis.spielerIndex === zustand.schlussrundeAusloeser) return 'A10: Der Auslöser ist noch einmal dran.'
+      else if (ereignis.typ === 'ZugBegonnen') schlusszuege += 1
+      else if (ereignis.typ === 'PartieBeendet' && schlusszuege !== zustand.spieler.length - 1) {
+        return `A10: ${schlusszuege} statt ${zustand.spieler.length - 1} letzte Züge.`
+      }
+    }
+    const zugende = ereignisse.some((ereignis) => ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'PartieBeendet')
+    const hand = zustand.spieler[vorher.zug.spielerIndex].hand.length
+    return zugende && hand > 5 ? `A5: Nach dem Zugende hält Spieler ${vorher.zug.spielerIndex} ${hand} Karten.` : null
+  }
+}
+
+describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2)', () => {
+  const PARTIEN = [...dauerlaufPartien(150, false), ...dauerlaufPartien(150, true, 151)]
+
+  it('A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante', () => {
+    expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 2)).toHaveLength(100)
+    expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 4)).toHaveLength(100)
+    const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer: regelPruefer })
+    expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet')).toEqual([])
+    // Jede Partie braucht mehrere Züge: mindestens eine Karte und „Zug beenden“ je Zug.
+    expect(Math.min(...ergebnisse.map((ergebnis) => ergebnis.schritte))).toBeGreaterThan(40)
+  }, 300_000)
 })

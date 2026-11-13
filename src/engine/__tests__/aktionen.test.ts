@@ -87,7 +87,8 @@ describe('A1/A7: das Kartenregister', () => {
     }
   })
 
-  it.each(ARTEN)('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
+  // Die Farbkarte setzt E2 um (A5), die übrigen Karten ihre Tasks E3 bis E9 und X6.
+  it.each(ARTEN.filter(([kartenart]) => kartenart !== 'Farbkarte'))('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
     const zustand = start()
     const definition = KARTENREGISTER[kartenart]
     const karte = zustand.spieler[0].hand[0]
@@ -125,10 +126,12 @@ describe('A5/A6: wer entscheidet', () => {
 })
 
 describe('A5/B2: Aufzählen, Prüfen und Anwenden', () => {
-  it('A5: nach E1 lässt sich eine Partie aufbauen, aber noch nicht spielen: die Engine zählt keine Aktion auf', () => {
+  it('A5: zu Beginn zählt die Engine nur Aktionen des Spielers am Zug auf, und noch kein „Zug beenden“ (D12)', () => {
     for (const spielerzahl of [2, 3, 4]) {
       for (const erweiterung of [false, true]) {
-        expect(ermittleAktionen(start(spielerzahl, erweiterung))).toEqual([])
+        const angeboten = ermittleAktionen(start(spielerzahl, erweiterung))
+        expect(angeboten.length).toBeGreaterThan(0)
+        expect(angeboten.every((aktion) => aktion.spielerId === 'spieler-1' && aktion.typ !== 'ZugBeenden')).toBe(true)
       }
     }
   })
@@ -179,26 +182,10 @@ describe('A5/B2: Aufzählen, Prüfen und Anwenden', () => {
     )
   })
 
-  it('A5/D13: Zugende, Überhand und wirkungsloses Ablegen kommen mit E2', () => {
-    const zustand = mitHand(['Farbenschutz'])
-    const [farbenschutz] = zustand.spieler[0].hand
-    expect(grund(zustand, { typ: 'ZugBeenden', spielerId: 'spieler-1' })).toMatch(/kommt mit E2/)
-    expect(grund(zustand, { typ: 'UeberhandAbwerfen', spielerId: 'spieler-1', karteIds: [] })).toMatch(/kommt mit E2/)
-    expect(grund(zustand, { typ: 'SonderkarteWirkungslosAblegen', spielerId: 'spieler-1', karteId: farbenschutz.id })).toMatch(
-      /kommt mit E2/,
-    )
-  })
-
   it('B2: anwendeAktion lehnt mit dem Grund ab und lässt den Zustand unverändert', () => {
     const zustand = mitHand(['Blau'])
     const vorher = serialisiere(zustand)
-    const aktion: SpielAktion = {
-      typ: 'FarbkarteLegen',
-      spielerId: 'spieler-1',
-      karteId: zustand.spieler[0].hand[0].id,
-      ziel: { art: 'neueSchlange' },
-    }
-    expect(() => anwendeAktion(zustand, aktion)).toThrow(/Farbkarte ist noch nicht umgesetzt/)
+    expect(() => anwendeAktion(zustand, { typ: 'ZugBeenden', spielerId: 'spieler-1' })).toThrow(/mindestens eine Karte/)
     expect(serialisiere(zustand)).toBe(vorher)
   })
 })
