@@ -1,7 +1,8 @@
 import { MAX_SCHLANGEN_PRO_SPIELER, OFFENE_AUFGABEN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
-import { kartenartFuer, kartenartVon } from './karten/register';
+import type { KartenAktion } from './aktionen/typen';
+import { istKartenaktionstyp, kartenartFuer, kartenartVon } from './karten/register';
 import type { AufgabenkarteInfo, Auslagekarte, Spielkarte, Spielzustand } from './types';
 
 /*
@@ -131,7 +132,15 @@ function jedeAufgabeGenauEinmal(zustand: Spielzustand): string[] {
 
 function jedeAuslagekarteGenauEinmal(zustand: Spielzustand): string[] {
   const erwartet = zustand.erweiterung ? auslageVorlage(zustand.spieler.length) : OHNE_ERWEITERUNG;
-  return vergleicheMitMaterial(erwartet, alleAuslagekarten(zustand));
+  const probleme = vergleicheMitMaterial(erwartet, alleAuslagekarten(zustand));
+  for (const spieler of zustand.spieler) {
+    const falsch = [
+      ...(spieler.comeback !== null && spieler.comeback.karte.typ !== 'Comeback' ? [spieler.comeback.karte.id] : []),
+      ...spieler.risikoKarten.filter((karte) => karte.typ !== 'Risiko-Belohnung').map((karte) => karte.id),
+    ];
+    if (falsch.length > 0) probleme.push(`${spieler.id} hat ${falsch.join(', ')} auf dem falschen Platz.`);
+  }
+  return probleme;
 }
 
 function hoechstensZweiSchlangen(zustand: Spielzustand): string[] {
@@ -155,7 +164,13 @@ function idsEindeutig(zustand: Spielzustand, karten: Spielkarte[]): string[] {
   const gesehen = new Set<string>();
   const doppelt = new Set<string>();
   for (const id of ids) (gesehen.has(id) ? doppelt : gesehen).add(id);
-  return doppelt.size > 0 ? [`Mehrfach vergeben: ${[...doppelt].join(', ')}.`] : [];
+  const probleme = doppelt.size > 0 ? [`Mehrfach vergeben: ${[...doppelt].join(', ')}.`] : [];
+  // Die nächste Schlange bekommt die Nummer `schlangenZaehler + 1`; die darf es noch nicht geben.
+  const zuHoch = zustand.spieler
+    .flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id))
+    .filter((id) => Number(/^schlange-(\d+)$/.exec(id)?.[1] ?? 0) > zustand.schlangenZaehler);
+  if (zuHoch.length > 0) probleme.push(`Schlangenzähler ${zustand.schlangenZaehler} würde ${zuHoch.join(', ')} noch einmal vergeben.`);
+  return probleme;
 }
 
 function fusionenVollstaendig(zustand: Spielzustand): string[] {
@@ -170,7 +185,8 @@ function fusionenVollstaendig(zustand: Spielzustand): string[] {
     for (const fusion of schlange.fusionen) {
       if (!fusionskarten.includes(fusion.karteId)) probleme.push(`Unter ${fusion.karteId} liegen Karten, aber ${schlange.id} enthält diese Farbenfusion nicht.`);
       const [links, rechts] = fusion.unter;
-      if (fusion.unter.length !== 2 || links.farbe !== rechts.farbe) {
+      const zweiFarbkarten = fusion.unter.length === 2 && links.typ === 'Farbkarte' && rechts.typ === 'Farbkarte';
+      if (!zweiFarbkarten || links.farbe !== rechts.farbe) {
         probleme.push(`Unter ${fusion.karteId} liegen nicht zwei Farbkarten gleicher Farbe.`);
       }
     }
@@ -198,13 +214,32 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
     if (!zustand.spieler.some((spieler) => spieler.id === schwebend.aktion.spielerId)) {
       probleme.push(`Die schwebende Aktion nennt den unbekannten Spieler ${schwebend.aktion.spielerId}.`);
     }
-    if (schwebend.aktion.karteId !== schwebend.karte.id || kartenartFuer(schwebend.aktion.typ) !== kartenartVon(schwebend.karte)) {
-      probleme.push(`Die schwebende ${schwebend.karte.id} passt nicht zur Aktion ${schwebend.aktion.typ} mit ${schwebend.aktion.karteId}.`);
+    const { aktion } = schwebend;
+    if (aktion.karteId !== schwebend.karte.id || !istKartenaktionstyp(aktion.typ) || kartenartFuer(aktion.typ) !== kartenartVon(schwebend.karte)) {
+      probleme.push(`Die schwebende ${schwebend.karte.id} passt nicht zur Aktion ${aktion.typ} mit ${aktion.karteId}.`);
     }
-    const doppelt = schwebend.ausstehend.filter((index) => schwebend.abgewehrt.includes(index));
-    if (doppelt.length > 0) probleme.push(`Spieler ${doppelt.join(', ')} steht bei der schwebenden Karte zugleich als ausstehend und abgewehrt.`);
+    const entschieden = [...schwebend.ausstehend, ...schwebend.abgewehrt];
+    if (new Set(entschieden).size !== entschieden.length) {
+      probleme.push(`Bei der schwebenden ${schwebend.karte.id} steht ein Spieler mehrfach unter ausstehend oder abgewehrt.`);
+    }
+    const spielerIds = new Set(zustand.spieler.map((spieler) => spieler.id));
+    const schlangenIds = new Set(zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id)));
+    if ('zielSpielerId' in aktion && !spielerIds.has(aktion.zielSpielerId)) probleme.push(`Die schwebende Aktion zielt auf den unbekannten Spieler ${aktion.zielSpielerId}.`);
+    for (const id of verwieseneSchlangen(aktion)) {
+      if (!schlangenIds.has(id)) probleme.push(`Die schwebende Aktion nennt die unbekannte Schlange ${id}.`);
+    }
   }
   return probleme;
+}
+
+/** Die Schlangen, die eine angesagte Aktion nennt; das Ziel steht mit der Ansage fest (A6, B2). */
+function verwieseneSchlangen(aktion: KartenAktion): string[] {
+  const ids: string[] = [];
+  if ('schlangenId' in aktion) ids.push(aktion.schlangenId);
+  if ('quelle' in aktion) ids.push(aktion.quelle.schlangenId);
+  if ('ziel' in aktion && aktion.ziel.art === 'schlange') ids.push(aktion.ziel.schlangenId);
+  if ('ziele' in aktion) ids.push(...aktion.ziele.map((ziel) => ziel.schlangenId));
+  return ids;
 }
 
 function partiephasePasst(zustand: Spielzustand): string[] {
@@ -213,5 +248,9 @@ function partiephasePasst(zustand: Spielzustand): string[] {
   if (laufend && zustand.schlussrundeAusloeser !== null) probleme.push('Die Partie läuft, nennt aber einen Schlussrunden-Auslöser.');
   if (!laufend && zustand.schlussrundeAusloeser === null) probleme.push(`Partiephase ${zustand.partiephase} ohne Schlussrunden-Auslöser (A10).`);
   if (zustand.partiephase === 'Beendet' && zustand.schwebend !== null) probleme.push('Die Partie ist beendet, aber eine Karte schwebt noch.');
+  // A10: Mit der letzten Karte aus dem Nachziehstapel beginnt die Schlussrunde.
+  const stapelLeer = zustand.nachziehstapel.length === 0;
+  if (laufend && stapelLeer) probleme.push('Die Partie läuft, aber der Nachziehstapel ist leer (A10).');
+  if (!laufend && !stapelLeer) probleme.push(`Partiephase ${zustand.partiephase}, aber im Nachziehstapel liegen noch ${zustand.nachziehstapel.length} Karten (A10).`);
   return probleme;
 }

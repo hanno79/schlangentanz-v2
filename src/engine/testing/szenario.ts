@@ -34,6 +34,7 @@ export interface Baukasten {
   amZug(spieler: number, teilzug?: 1 | 2): Baukasten;
   /** Eine angesagte Sonderkarte von `spieler`, über die `ausstehend` noch entscheiden (A6). */
   schwebend(spieler: number, karte: Kartenwahl, aktion: (karteId: string, spielerId: string) => KartenAktion, ausstehend: number[]): Baukasten;
+  /** A10: Der Nachziehstapel ist dann leer; was dort noch lag, kommt reihum auf die Ablagestapel. */
   schlussrunde(ausloeser: number): Baukasten;
   beendet(ausloeser: number): Baukasten;
   /** Für alles Übrige; `zustand()` prüft danach trotzdem jede Invariante. */
@@ -144,11 +145,13 @@ export function baukasten(optionen: TischOptionen): Baukasten {
       return bau;
     },
     schlussrunde(ausloeser) {
+      bau.stapelBehalten(0);
       zustand.partiephase = 'Schlussrunde';
       zustand.schlussrundeAusloeser = ausloeser;
       return bau;
     },
     beendet(ausloeser) {
+      bau.stapelBehalten(0);
       zustand.partiephase = 'Beendet';
       zustand.schlussrundeAusloeser = ausloeser;
       return bau;

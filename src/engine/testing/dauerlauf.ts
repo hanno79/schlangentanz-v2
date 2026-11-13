@@ -66,20 +66,22 @@ export function spieleDauerlaufPartie(partie: DauerlaufPartie, optionen: Dauerla
   const ergebnis = (ausgang: DauerlaufAusgang, schritte: number, detail: string): DauerlaufErgebnis => ({ partie, ausgang, schritte, detail });
 
   for (let schritt = 0; ; schritt += 1) {
-    const befund = befundVorDemSchritt(zustand);
-    if (befund !== null) return ergebnis(befund.ausgang, schritt, befund.detail);
-    if (zustand.partiephase === 'Beendet') return ergebnis('beendet', schritt, '');
-    if (schritt >= schrittGrenze) return ergebnis('schrittgrenze', schritt, `Nach ${schrittGrenze} Schritten nicht beendet.`);
-
-    const aktionen = motor.aktionen(zustand);
-    if (aktionen.length === 0) return ergebnis('festgefahren', schritt, 'Die Engine zählt keine Aktion auf, die Partie läuft aber noch.');
-    const aktion = aktionen[Math.floor(wahl() * aktionen.length)];
-    const pruefung = motor.pruefe(zustand, aktion);
-    if (!pruefung.erlaubt) return ergebnis('abgelehnt', schritt, `Aufgezählt, aber abgelehnt: ${JSON.stringify(aktion)}: ${pruefung.grund}`);
+    let aktion: SpielAktion | null = null;
     try {
+      const befund = befundVorDemSchritt(zustand);
+      if (befund !== null) return ergebnis(befund.ausgang, schritt, befund.detail);
+      if (zustand.partiephase === 'Beendet') return ergebnis('beendet', schritt, '');
+      if (schritt >= schrittGrenze) return ergebnis('schrittgrenze', schritt, `Nach ${schrittGrenze} Schritten nicht beendet.`);
+
+      const aktionen = motor.aktionen(zustand);
+      if (aktionen.length === 0) return ergebnis('festgefahren', schritt, 'Die Engine zählt keine Aktion auf, die Partie läuft aber noch.');
+      aktion = aktionen[Math.floor(wahl() * aktionen.length)];
+      const pruefung = motor.pruefe(zustand, aktion);
+      if (!pruefung.erlaubt) return ergebnis('abgelehnt', schritt, `Aufgezählt, aber abgelehnt: ${JSON.stringify(aktion)}: ${pruefung.grund}`);
       zustand = motor.anwende(zustand, aktion).zustand;
     } catch (fehler) {
-      return ergebnis('fehler', schritt, `${JSON.stringify(aktion)}: ${fehlertext(fehler)}`);
+      const bei = aktion === null ? '' : `${JSON.stringify(aktion)}: `;
+      return ergebnis('fehler', schritt, `Saat ${partie.saat}, Schritt ${schritt}: ${bei}${fehlertext(fehler)}`);
     }
   }
 }

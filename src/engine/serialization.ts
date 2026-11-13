@@ -1,5 +1,6 @@
 import { istKartenaktion, pruefeAktionsform } from './aktionen/pruefen';
 import type { SpielAktion } from './aktionen/typen';
+import { SPIELER_MAX, SPIELER_MIN } from './constants';
 import { FARBEN, SONDERKARTENNAMEN } from './deck';
 import { abweichendeFelder, fehlertext, istGanzeZahl, istObjekt, istText } from './form';
 import { pruefeInvarianten } from './invarianten';
@@ -226,6 +227,8 @@ function pruefeZustandsform(wert: unknown): asserts wert is Spielzustand {
   ]);
   wahrheitswert(roh.erweiterung, 'erweiterung');
   liste(roh.spieler, 'spieler', spieler);
+  const anzahl = (roh.spieler as unknown[]).length;
+  if (anzahl < SPIELER_MIN || anzahl > SPIELER_MAX) fehler('spieler', `hat ${anzahl} Einträge; Schlangentanz spielen ${SPIELER_MIN} bis ${SPIELER_MAX} Spieler (A2)`);
   einer(roh.partiephase, 'partiephase', ['Laufend', 'Schlussrunde', 'Beendet']);
   zug(roh.zug, 'zug');
   if (roh.schlussrundeAusloeser !== null) zahl(roh.schlussrundeAusloeser, 'schlussrundeAusloeser');
