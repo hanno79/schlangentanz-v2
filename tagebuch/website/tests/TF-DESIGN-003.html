@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DESIGN-003 Auf dem quer gehaltenen Handy (844×390) bleibt am Tisch genug Platz, um die Gegner zu sehen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DESIGN-003 Auf dem quer gehaltenen Handy (844×390) bleibt am Tisch genug Platz, um die Gegner zu sehen.</h1><p class="etiketten"><span class="etikett">Bereich Gestaltung: Kartenbilder, Kartenkomponente, Tokens, Schriften, Entwurfsseiten</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-DESIGN-002</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Wer das Handy dreht, hat 390 px Höhe. Die eigenen Schlangen, die Hand und die Zugleiste stehen unten fest; darüber scrollt die Tischfläche mit Gegnern, Stapel und Aufgaben. Ist der feste Teil zu hoch, bleibt für die Gegner fast nichts. Ob das Querformat gefordert ist, entscheiden Autor und Orchestrator.</p><h2>Bestanden, wenn</h2><p>Bei 844×390 ist die Tischfläche (<code>.tisch-flaeche</code>) mindestens 120 px hoch, sodass mindestens eine Reihe Gegnerkarten ohne Scrollen zu sehen ist, und die Seite ist 844 px breit.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Tischfläche niedriger als 120 px ist; dann ihre Höhe und die Höhe des festen Teils (<code>.tisch-unten</code>) nennen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O1-gestaltung (PR #30)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build auf Port 4174, Playwright-Kontext 844×390 mit Touch</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p><code>/dev/entwurf/tisch</code> und <code>/dev/entwurf/tisch?karte=rot-01</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Playwright 844×390</td><td>Tisch öffnen, Höhen von `.tisch-flaeche` und `.tisch-unten` messen</td><td>`/dev/entwurf/tisch`</td><td>Tischfläche mindestens 120 px</td></tr><tr><td>2</td><td>Playwright 844×390</td><td>dasselbe mit gewählter Farbkarte</td><td>`/dev/entwurf/tisch?karte=rot-01`</td><td>Tischfläche mindestens 120 px</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 11:43</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer O1) &middot; agent &middot; pruefung-O1 @ <span class="commit" title="d4c2795fae23686fc080c23b67d600facfa96255">d4c2795</span> / Playwright 1.60.0 Chromium, 844x390 Touch</p><p>844x390: Seite 844 px breit (kein waagrechtes Scrollen), aber .tisch-flaeche 28 px hoch (Inhalt 487 px, mit Farbkarte 599 px), .tisch-unten 309 px. Gegner, Stapel und Aufgaben stehen in einem 28 px hohen Fenster. Ausserhalb der Abnahme-Geräteklassen, deshalb kein Mangel von O1; geht an den Autor zur Freigabe der Entwürfe.</p><p class="fehler">Tischfläche nur 28 px hoch, fester Teil unten 309 px</p><ul class="belege"><li><a href="belege/2026-11-13-1143-TF-DESIGN-003-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1143-TF-DESIGN-003-1.png" alt="Beleg 2026-11-13-1143-TF-DESIGN-003-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1143-TF-DESIGN-003-2.png"><img class="beleg-vorschau" src="belege/2026-11-13-1143-TF-DESIGN-003-2.png" alt="Beleg 2026-11-13-1143-TF-DESIGN-003-2.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1143-TF-DESIGN-003-3.log">2026-11-13-1143-TF-DESIGN-003-3.log</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
