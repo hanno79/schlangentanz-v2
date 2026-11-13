@@ -1,0 +1,40 @@
+﻿### curl -sI https://schlangentanz.ch/rules
+alt-svc: h3=":443"; ma=86400 (Server: cloudflare)
+
+### quic-ohne
+load nach 249 ms
+Modus ohne (ohne Schalter): 16868 Zeichen in main/#root nach 1269 ms
+Protokolle der Antworten: {"h2":21}
+Abgeschlossen: 22, davon fehlgeschlagen: 1
+  FEHLER net::ERR_NAME_NOT_RESOLVED https://static.cloudflareinsights.com/beacon.min.js
+Offene Anfragen: 0
+Über h3 geladen: 0 
+
+### quic-ohne-2
+load nach 771 ms
+Modus ohne (ohne Schalter): 16868 Zeichen in main/#root nach 1800 ms
+Protokolle der Antworten: {"h2":21}
+Abgeschlossen: 22, davon fehlgeschlagen: 1
+  FEHLER net::ERR_NAME_NOT_RESOLVED https://static.cloudflareinsights.com/beacon.min.js
+Offene Anfragen: 0
+DOM: {"rootText":17295,"rootKinder":2,"mainText":16868,"mainInRoot":true,"bodyKinder":"DIV#root SCRIPT","skripte":"index-EH-TKokX.js, beacon.min.js"}
+Über h3 geladen: 0 
+
+### alter-lader
+FEHLER beim Laden der Website: page.waitForFunction: Timeout 20000ms exceeded.
+
+### quic-ohne-3
+load nach 386 ms
+Modus ohne (ohne Schalter): #root 0 Zeichen nach 25729 ms
+nextHopProtocol (fertige Ressourcen): {"h2":4,"-":1}
+Offene Anfragen: 4
+  OFFEN seit 25332 ms: https://schlangentanz.ch/assets/Index-BNDPdj4r.js
+  OFFEN seit 25331 ms: https://schlangentanz.ch/assets/arrow-left-BarUjFE0.js
+  OFFEN seit 25321 ms: https://schlangentanz.ch/images/01-bluesnake.webp
+  OFFEN seit 6558 ms: https://schlangentanz.ch/images/01-redsnake.webp
+
+### quic-mit
+load nach 645 ms
+Modus mit (--disable-quic): #root 17295 Zeichen nach 1677 ms
+nextHopProtocol (fertige Ressourcen): {"h2":21,"-":1}
+Offene Anfragen: 0

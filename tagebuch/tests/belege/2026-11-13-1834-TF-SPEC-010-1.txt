@@ -1,0 +1,8 @@
+
+> schlangentanz-v2@0.0.0 abgleich:website
+> node scripts/website_abgleich/abgleich.cjs
+
+FEHLER beim Abgleich: page.goto: net::ERR_PROXY_CONNECTION_FAILED at https://schlangentanz.ch/rules
+Call log:
+[2m  - navigating to "https://schlangentanz.ch/rules", waiting until "load"[22m
+

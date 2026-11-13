@@ -1,18 +1,12 @@
 /*
-Author: Claude Code
-Datum: 12.11.2026
-Version: 1.0
-Beschreibung: Setzt Teil A von docs/GAME_SPEC.md aus der umgewandelten Website zusammen.
+Setzt Teil A von docs/GAME_SPEC.md aus der umgewandelten Website zusammen (`seiteMd`
+und `dialogeMd` aus lade_website.cjs).
 Wörtlich; hinzu kommen nur Gliederung und Abschnittsnummern (A1 bis A11). Danach
 vereinheitlicht `nachbessern` zwei Darstellungsfragen (Bildreihen der Farbenfusion,
 Erweiterungs-Etikett), ohne Wortlaut zu ändern.
 */
-const fs = require('fs');
-const path = require('path');
-
-function baueTeilA(mdDir) {
-const seite = fs.readFileSync(path.join(mdDir, 'seite.md'), 'utf8');
-const dialoge = new Map(JSON.parse(fs.readFileSync(path.join(mdDir, 'dialoge.json'), 'utf8')).map((d) => [d.label, d.md]));
+function baueTeilA({ seiteMd: seite, dialogeMd }) {
+const dialoge = new Map(dialogeMd.map((d) => [d.label, d.md]));
 
 // Abschnitte der Seite nach H2 trennen.
 const teile = new Map();

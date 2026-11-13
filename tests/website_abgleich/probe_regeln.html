@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Probe der Spielanleitung</title>
+</head>
+<body>
+<!-- Nachgebauter Ausschnitt von schlangentanz.ch/rules (Aufbau wie am 13.11.2026), ohne Netz nutzbar. -->
+<div id="root">
+  <nav aria-label="Hauptnavigation"><a href="/">Startseite</a> <a href="/rules">Spielanleitung</a></nav>
+  <main>
+    <h1>Spielanleitung</h1>
+    <section>
+      <h2 id="spielziel"><svg width="24" height="24"></svg><span>Spielziel</span></h2>
+      <p>Ziel ist es, mit <strong>möglichst langen</strong> Schlangen<br>viele Punkte zu sammeln.</p>
+    </section>
+    <section>
+      <h2 id="spielablauf"><span>Spielablauf</span></h2>
+      <ol>
+        <li><h4>Farbkarte legen</h4><p>Eine Farbkarte an ein Ende einer Schlange legen.</p></li>
+        <li>Am Zugende nachziehen.</li>
+      </ol>
+      <ul>
+        <li>Nur sichtbare Punkte zählen.</li>
+        <li style="display:none">Verborgener Punkt</li>
+      </ul>
+      <p style="display:none">Dieser Absatz ist verborgen.</p>
+      <p>Beispiel: <img src="/images/01-bluesnake.webp" alt=""> <img src="/images/farbenfusion.webp" alt=""> <img src="/images/unbekannt.webp" alt=""></p>
+      <table>
+        <tr><th>Kategorie</th><th>Anzahl</th></tr>
+        <tr><td>Blau</td><td>10</td></tr>
+      </table>
+    </section>
+    <section>
+      <h2 id="sonderkarten"><span>Sonderkarten</span></h2>
+      <div>
+        <h3>Verfügbare Sonderkarten:</h3>
+        <div>
+          <div>
+            <button type="button" aria-label="Details zu Farbendieb anzeigen" aria-haspopup="dialog" data-dialog="dialog-farbendieb">
+              <span><img src="/images/bild-c340c00a.webp" alt=""><span aria-hidden="true">Details</span></span>
+            </button>
+            <div><h4>Farbendieb</h4><p>Nimmt einem Mitspieler eine Karte weg.</p></div>
+          </div>
+          <div>
+            <button type="button" aria-label="Details zu Farbenschutz anzeigen" aria-haspopup="dialog" data-dialog="dialog-farbenschutz">
+              <span><img src="/images/farbenschutz.webp" alt=""><span aria-hidden="true">Details</span></span>
+            </button>
+            <div><h4>Farbenschutz</h4><p>Wehrt eine Sonderkarte ab.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer><p>HR Spiele</p></footer>
+</div>
+<div id="dialog-farbendieb" role="dialog" hidden>
+  <h2>Farbendieb</h2>
+  <p>Du nimmst eine Karte aus einer <strong>fremden</strong> Schlange.</p>
+  <p><img src="/images/01-redsnake.webp" alt=""> <img src="/images/01-redsnake.webp" alt=""></p>
+  <button type="button">Schliessen</button>
+</div>
+<div id="dialog-farbenschutz" role="dialog" hidden>
+  <h2>Farbenschutz</h2>
+  <p>Spiele ihn sofort, wenn dich eine Sonderkarte trifft.</p>
+  <button type="button">Schliessen</button>
+</div>
+<script>
+  // Öffnen per Klick, Schliessen mit Escape, wie die Radix-Dialoge der Website.
+  for (const knopf of document.querySelectorAll('button[aria-haspopup="dialog"]')) {
+    knopf.addEventListener('click', () => { document.getElementById(knopf.dataset.dialog).hidden = false })
+  }
+  document.addEventListener('keydown', (ereignis) => {
+    if (ereignis.key !== 'Escape') return
+    for (const dialog of document.querySelectorAll('[role=dialog]')) dialog.hidden = true
+  })
+</script>
+</body>
+</html>

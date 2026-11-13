@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-008 Wird der Konverter oder der QUIC-Schalter verfälscht, schlagen die Offline-Tests fehl, und eine neue Zeile der Website meldet der Abgleich als fehlend. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-008 Wird der Konverter oder der QUIC-Schalter verfälscht, schlagen die Offline-Tests fehl, und eine neue Zeile der Website meldet der Abgleich als fehlend.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-006</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Tests sollen die Umwandlung und den Startschalter festhalten. Verfälscht man den Code oder ergänzt die Probe der Website um eine Zeile, muss das auffallen.</p><h2>Bestanden, wenn</h2><p>Jede Verfälschung unten macht <code>npx vitest run tests/website_abgleich.test.ts</code> rot (Exit 1), und eine zusätzliche Zeile in der Probe erscheint in der Liste <code>fehlend</code> der Abdeckungsprüfung.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Verfälschung bleibt grün, oder die zusätzliche Zeile wird nicht gemeldet.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.5c-website-abgleich (PR #38)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>git status --short</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Verfälschung 1: in <code>scripts/website_abgleich/konverter.cjs</code> <code>&#x27;01-bluesnake&#x27;: &#x27;Blau&#x27;</code> zu <code>&#x27;01-bluesnake&#x27;: &#x27;Rot&#x27;</code>. Verfälschung 2: in <code>scripts/website_abgleich/lade_website.cjs</code> <code>args: [&#x27;--disable-quic&#x27;]</code> zu <code>args: []</code>. Zusätzliche Zeile: in einer Kopie der Probe nach <code>&lt;li&gt;Nur sichtbare Punkte zählen.&lt;/li&gt;</code> ein <code>&lt;li&gt;Neue Regel nur auf der Website.&lt;/li&gt;</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`konverter.cjs`</td><td>Verfälschung 1 einbauen und den Test ausführen</td><td>`npx vitest run tests/website_abgleich.test.ts`</td><td>Exit 1, rot ist „liesSeite liefert Markdown der Seite …“</td></tr><tr><td>2</td><td>Terminal</td><td>Datei zurücksetzen</td><td>`git checkout -- scripts/website_abgleich/konverter.cjs`</td><td>`git status --short` leer</td></tr><tr><td>3</td><td>`lade_website.cjs`</td><td>Verfälschung 2 einbauen und den Test ausführen</td><td>`npx vitest run tests/website_abgleich.test.ts`</td><td>Exit 1, rot sind die zwei Tests zu den Startoptionen mit „expected [] to include &#x27;--disable-quic&#x27;“</td></tr><tr><td>4</td><td>Terminal</td><td>Datei zurücksetzen</td><td>`git checkout -- scripts/website_abgleich/lade_website.cjs`</td><td>`git status --short` leer</td></tr><tr><td>5</td><td>Kleines Node-Skript ausserhalb des Repos</td><td>Original-Probe und Probe mit zusätzlicher Zeile über `liesSeite` lesen (alle Anfragen abgebrochen), dann `pruefeAbdeckung(probeMitZeile, MarkdownDerOriginalprobe)`</td><td></td><td>`fehlend` ist genau `[&quot;Neue Regel nur auf der Website.&quot;]`; gegen die Original-Probe ist `fehlend` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 18:34</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5c) &middot; agent &middot; pruefung-P0.5c @ <span class="commit" title="cde5e71c3de5d4107538fabd7fb0a2e6195e5b8a">cde5e71</span> / Playwright Chromium (headless)</p><p>Konverter Blau-&gt;Rot: 1 Test rot, Exit 1. QUIC-Schalter entfernt: 2 Tests rot (expected [] to include &#x27;--disable-quic&#x27;), Exit 1. Beide Dateien zurückgesetzt, git status leer. Probe mit zusätzlicher Zeile: fehlend = [&#x27;Neue Regel nur auf der Website.&#x27;], Original-Probe: fehlend leer; 0 http-Anfragen.</p><ul class="belege"><li><a href="belege/2026-11-13-1834-TF-SPEC-008-1.txt">2026-11-13-1834-TF-SPEC-008-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

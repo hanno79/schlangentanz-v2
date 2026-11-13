@@ -1,0 +1,21 @@
+﻿### Lauf normal
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a28a9637c6f11dead
+
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  18:33:55
+   Duration  2.93s (transform 69ms, setup 270ms, import 432ms, tests 1.94s, environment 0ms)
+
+
+### Lauf mit HTTPS_PROXY=http://127.0.0.1:9
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a28a9637c6f11dead
+
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  18:31:32
+   Duration  2.93s (transform 68ms, setup 265ms, import 438ms, tests 1.94s, environment 0ms)
+

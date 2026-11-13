@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-011 Steht ein Satz der Website nur ausserhalb von Teil A im Dokument, meldet der Abgleich trotzdem eine Abweichung (Exit 1). — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-011 Steht ein Satz der Website nur ausserhalb von Teil A im Dokument, meldet der Abgleich trotzdem eine Abweichung (Exit 1).</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-005</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Abdeckungsprüfung sucht jede Zeile der Website im ganzen Dokument und nicht nur in Teil A. Steht ein Satz der Website nur in Teil D, darf der Abgleich trotzdem nicht „stimmt überein“ melden.</p><h2>Bestanden, wenn</h2><p>Der Abgleich endet mit Exit 1, und der Satz „Gegen Farbkarten gibt es keine Abwehr“ (Website A7.2, im Dokument nur in Teil D) steht als <code>+</code>-Zeile in der Ausgabe der Gleichheitsprüfung.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Abgleich endet mit Exit 0, obwohl Teil A den Satz nicht enthält.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.5c-website-abgleich (PR #38)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie, Netzzugang; <code>docs/GAME_SPEC.md</code> enthält den Satz nur in Teil D (D10)</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Satz „Gegen Farbkarten gibt es keine Abwehr“ aus den wichtigen Regeln des Farbenschutz-Dialogs der Website; in <code>docs/GAME_SPEC.md</code> nur in Zeile D10 von Teil D.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>Prüfen, wo der Satz im Dokument steht</td><td>`grep -n &quot;Gegen Farbkarten gibt es keine Abwehr&quot; docs/GAME_SPEC.md`</td><td>nur eine Fundstelle, Zeile D10 in Teil D</td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Abgleich ausführen</td><td>`npm run abgleich:website; echo $?`</td><td>Diff enthält `+- Gegen Farbkarten gibt es keine Abwehr`, Exit 1; in der Liste „FEHLT:“ steht der Satz nicht, weil die Abdeckung das ganze Dokument durchsucht</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 18:34</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5c) &middot; agent &middot; pruefung-P0.5c @ <span class="commit" title="cde5e71c3de5d4107538fabd7fb0a2e6195e5b8a">cde5e71</span> / Playwright Chromium (headless, --disable-quic)</p><p>Satz steht im Dokument nur in D10. Abgleich: Diff enthält &#x27;+- Gegen Farbkarten gibt es keine Abwehr&#x27;, Exit 1. Die FEHLT-Liste (11) nennt ihn nicht, weil die Abdeckung das ganze Dokument durchsucht; offline nachgestellt (probe_abgleich.cjs Fall 5: fehlend leer).</p><ul class="belege"><li><a href="belege/2026-11-13-1834-TF-SPEC-011-1.txt">2026-11-13-1834-TF-SPEC-011-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

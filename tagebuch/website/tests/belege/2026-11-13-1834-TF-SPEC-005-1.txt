@@ -1,0 +1,102 @@
+
+> schlangentanz-v2@0.0.0 abgleich:website
+> node scripts/website_abgleich/abgleich.cjs
+
+Website geladen: 17914 Zeichen Markdown, 27 Karten-Dialoge, Bundle index-EH-TKokX.js
+
+ABWEICHUNG: Teil A im Dokument (-) und auf der Website (+):
+
+diff --git "a/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-ywn4vh\\teil_a_dokument.md" "b/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-ywn4vh\\teil_a_website.md"
+index 389c998..1d17a13 100644
+--- "a/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-ywn4vh\\teil_a_dokument.md"
++++ "b/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-ywn4vh\\teil_a_website.md"
+@@ -69,8 +69,8 @@ Bilde Farbgruppen in deinen Schlangen, erfülle Aufgaben und sammle die meisten
+    - Kartenhand prüfen: Hast du ausserhalb deines Zuges Karten gespielt, zum Beispiel einen Farbenschutz zur Abwehr, ziehst du jetzt vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+    - Karten ausspielen: Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:
+ 
+-     - Eine Farbkarte, um eine Schlange zu beginnen oder fortzusetzen (muss an einem beliebigen Ende der Schlange angelegt werden)
+-     - Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle eingefügt werden)
++     - Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)
++     - Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
+      - Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen
+      - Ist deine Sonderkarte der Verdoppler, füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug. Neben dem Verdoppler spielst du so bis zu 3 Karten
+    - Zug beenden: Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast. Danach ist der nächste Spieler an der Reihe.
+@@ -82,7 +82,7 @@ In deinem Zug kommt folgende Möglichkeit hinzu:
+ 
+ - Aufgabe erfüllen: Wenn du die Bedingungen einer offenen Aufgabenkarte erfüllst, rufe "Schlangenspass!" und nimm die Aufgabe zu dir. Lege dann eine neue Aufgabenkarte vom Stapel auf. Deine geheime Aufgabe deckst du erst bei der Wertung auf.
+ 
+-Wichtig: Du musst immer mindestens eine Karte spielen. Wenn du nur Sonderkarten auf der Hand hast, musst du eine davon spielen, auch wenn sie keinen optimalen Effekt in deiner eigenen Schlange hat. In diesem Fall kannst du sie auch bei einem Gegner ausspielen. Hast du nur Farbenschutz-Karten auf der Hand, legst du eine davon ohne Wirkung auf deinen Ablagestapel. Danach ziehst du eine Karte nach, und dein Zug ist beendet. Die neue Karte darfst du erst im nächsten Zug ausspielen.
++Wichtig: Du musst immer mindestens eine Karte spielen. Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest. Du darfst auch eine Sonderkarte spielen, die dir gerade nichts bringt. Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges. Hast du nur Farbenschutz-Karten auf der Hand, legst du eine davon ohne Wirkung auf deinen Ablagestapel. Danach ziehst du eine Karte nach, und dein Zug ist beendet. Die neue Karte darfst du erst im nächsten Zug ausspielen.
+ 
+ Schlangen:
+ 
+@@ -95,7 +95,7 @@ Schlangen:
+ #### Grundregeln für Sonderkarten:
+ 
+ - Sonderkarten werden immer mit klarer Ansage gespielt: Der Spieler benennt das Ziel seiner Aktion.
+-- Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Eine andere Karte ist als Reaktion nicht erlaubt.
++- Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Das gilt für jede Sonderkarte, die ein Mitspieler gegen ihn oder in seine Schlange spielt. Gegen Farbkarten gibt es keine Abwehr. Eine andere Karte als Farbenschutz ist als Reaktion nicht erlaubt.
+ - Gespielte Sonderkarten kommen auf den Ablagestapel des Spielers, der sie gespielt hat.
+ - Wer ausserhalb seines Zuges eine Karte spielt, zieht nicht gleich nach, sondern füllt erst zu Beginn seines nächsten Zuges auf 5 Karten auf. Wer in einer Runde zweimal angegriffen wird, kann deshalb nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren.
+ - Schlangenfrass ist keine Reaktion: Mit ihm entfernst du in deinem eigenen Zug Karten, die bereits in einer Schlange liegen.
+@@ -166,9 +166,9 @@ Spieler A spielt Farbendieb. Er stiehlt eine blaue Karte aus der Schlange von Sp
+ 
+ #### A7.2 Farbenschutz
+ 
+-Kurzbeschreibung: Schützt vor negativen Effekten einer Sonderkarte
++Kurzbeschreibung: Wehrt eine Sonderkarte eines Mitspielers ab
+ 
+-Eine defensive Karte, die vor den negativen Auswirkungen von Sonderkarten schützt und als Reaktion auf diese gespielt werden kann. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
++Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
+ 
+ **Beispiele:**
+ 
+@@ -181,7 +181,8 @@ Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er
+ - Spiele als Reaktion auf eine Sonderkarte
+ - Lege den Farbenschutz auf deinen Ablagestapel
+ - Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers
+-- Schützt vor allen negativen Effekten von Sonderkarten
++- Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange
++- Gegen Farbkarten gibt es keine Abwehr
+ 
+ #### A7.3 Regenbogenschlange
+ 
+@@ -322,7 +323,7 @@ Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Farbenfusion(f
+ 
+ Kurzbeschreibung: Erlaubt dir, nach deinem Zug die Hand aufzufüllen und sofort einen zweiten Zug zu spielen
+ 
+-Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug, wieder mit einer Farbkarte und optional einer Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
++Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug. Er läuft wie ein normaler Zug ab: mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
+ 
+ **Beispiele:**
+ 
+@@ -330,11 +331,12 @@ Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf
+ 
+ **Wichtige Regeln:**
+ 
+-- Spiele den Verdoppler als Sonderkarte deines Zuges, vor oder nach deiner Farbkarte
++- Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach
+ - Fülle danach deine Handkarten auf
+-- Spiele sofort einen zweiten Zug mit einer Farbkarte und optional einer Sonderkarte
++- Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
+ - Neben dem Verdoppler spielst du so bis zu 3 Karten
+ - Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
++- Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+ 
+ #### A7.9 Schlangenhäutung
+ 
+
+Abdeckung: 469 Zeilen der Website geprüft, 11 fehlen, 22 nur anders formatiert.
+  FEHLT: Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)
+  FEHLT: Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
+  FEHLT: Wichtig: Du musst immer mindestens eine Karte spielen. Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest. Du darfst auch eine Sonderkarte spielen, die dir
+  FEHLT: Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Das gilt für jede Sonderkarte, die ein Mitspieler gegen ihn oder in seine Schlange spielt. Gegen Farbkarten gibt es keine Abwehr. E
+  FEHLT: Wehrt eine Sonderkarte eines Mitspielers ab
+  FEHLT: Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtig
+  FEHLT: Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange
+  FEHLT: Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf un
+  FEHLT: Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach
+  FEHLT: Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
+  FEHLT: Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+
+Ergebnis: Teil A weicht von der Website ab.

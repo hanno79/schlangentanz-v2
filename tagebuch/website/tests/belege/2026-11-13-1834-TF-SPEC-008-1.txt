@@ -1,0 +1,94 @@
+﻿### Gegenprobe 1: konverter.cjs 01-bluesnake Blau -> Rot
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a28a9637c6f11dead
+
+ ❯ tests/website_abgleich.test.ts (9 tests | 1 failed) 1989ms
+     × P0.5c: liesSeite liefert Markdown der Seite, Bildschirmtext und jeden Karten-Dialog 576ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/website_abgleich.test.ts > P0.5c: Umwandlung der gespeicherten Probe ohne Netz > P0.5c: liesSeite liefert Markdown der Seite, Bildschirmtext und jeden Karten-Dialog
+AssertionError: expected '# Spielanleitung\n\n## Spielziel\n\nZ…' to be '# Spielanleitung\n\n## Spielziel\n\nZ…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -11,11 +11,11 @@
+     Eine Farbkarte an ein Ende einer Schlange legen.
+  2. Am Zugende nachziehen.
+
+  - Nur sichtbare Punkte zählen.
+
+- Beispiel: [Blau] [Farbenfusion]
++ Beispiel: [Rot] [Farbenfusion]
+
+  | Kategorie | Anzahl |
+  |---|---|
+  | Blau | 10 |
+
+
+ ❯ tests/website_abgleich.test.ts:113:30
+    111|     await s.close()
+    112|
+    113|     expect(ergebnis.seiteMd).toBe(ERWARTETES_MARKDOWN)
+       |                              ^
+    114|     expect(ergebnis.seiteText).toContain('Spielanleitung')
+    115|     expect(ergebnis.seiteText).toContain('HR Spiele')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  18:30:40
+   Duration  2.99s (transform 69ms, setup 269ms, import 451ms, tests 1.99s, environment 0ms)
+
+
+### Gegenprobe 2: lade_website.cjs args --disable-quic -> leer
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a28a9637c6f11dead
+
+ ❯ tests/website_abgleich.test.ts (9 tests | 2 failed) 1973ms
+     × P0.5c: Chromium startet ohne QUIC, weil Anfragen über HTTP/3 im Headless-Lauf hängen bleiben 6ms
+     × P0.5c: PW_CHROMIUM_PFAD und HTTPS_PROXY werden durchgereicht 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/website_abgleich.test.ts > P0.5c: Startoptionen des Browsers für den Website-Abgleich > P0.5c: Chromium startet ohne QUIC, weil Anfragen über HTTP/3 im Headless-Lauf hängen bleiben
+AssertionError: expected [] to include '--disable-quic'
+ ❯ tests/website_abgleich.test.ts:64:27
+     62|     setze('HTTPS_PROXY', undefined)
+     63|     const optionen = startOptionen()
+     64|     expect(optionen.args).toContain('--disable-quic')
+       |                           ^
+     65|     expect(optionen.executablePath).toBeUndefined()
+     66|     expect(optionen.proxy).toBeUndefined()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/website_abgleich.test.ts > P0.5c: Startoptionen des Browsers für den Website-Abgleich > P0.5c: PW_CHROMIUM_PFAD und HTTPS_PROXY werden durchgereicht
+AssertionError: expected [] to include '--disable-quic'
+ ❯ tests/website_abgleich.test.ts:76:27
+     74|     expect(optionen.executablePath).toBe(process.execPath)
+     75|     expect(optionen.proxy).toEqual({ server: 'http://proxy.probe:8080'…
+     76|     expect(optionen.args).toContain('--disable-quic')
+       |                           ^
+     77|   })
+     78|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  18:30:55
+   Duration  2.96s (transform 68ms, setup 267ms, import 438ms, tests 1.97s, environment 0ms)
+
+
+### Gegenprobe 3: Probe mit zusaetzlicher Zeile (probe_abgleich.cjs)
+1 Original gegen eigenes Markdown: {"geprueft":21,"fehlend":[],"formatiert":[]}
+2 Website mit neuer Zeile: {"geprueft":22,"fehlend":["Neue Regel nur auf der Website."],"formatiert":[]}
+3 Dokument ohne „Wehrt eine Sonderkarte ab.“: {"geprueft":21,"fehlend":["Wehrt eine Sonderkarte ab."],"formatiert":[]}
+4 Neuer Satz nur im Dialog: {"geprueft":22,"fehlend":["Gegen Farbkarten gibt es keine Abwehr."],"formatiert":[]}
+5 Satz nur in Teil D: {"geprueft":22,"fehlend":[],"formatiert":[]}
+Netzanfragen mit http(s): 0 von 0
