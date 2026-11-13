@@ -87,7 +87,7 @@ function Seiteninhalt({ pfad }: { pfad: string }) {
           titel={UNBEKANNT.titel}
           text={UNBEKANNT.text(pfad)}
           fuss={
-            <Verweis ziel="lobby" className="verweis verweis--haupt">
+            <Verweis ziel="lobby" className="rahmen-verweis rahmen-verweis--haupt">
               {ZURUECK_ZUR_LOBBY}
             </Verweis>
           }

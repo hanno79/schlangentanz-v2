@@ -10,7 +10,8 @@ Wächter (nichts abgeschnitten, ausserhalb, verdeckt, zu blass), kein
 waagrechtes Scrollen und Tippflächen von mindestens 44 px.
 */
 
-// Bekannte Befunde in Handy quer (P0.3c): tests/layout/geraeteklassen_ausnahmen.json.
+// Bekannte Befunde in den neuen Geräteklassen (P0.3c): tests/layout/geraeteklassen_ausnahmen.json.
+// Die drei Einträge zur Lobby in Handy quer hat O2b behoben; für diese Datei steht dort nichts mehr.
 duldeBekannteAusnahmen()
 
 /** Startet über die Lobby eine Partie; danach steht ein Spielstand im Browser. */
@@ -18,6 +19,18 @@ async function startePartie(page: Page): Promise<void> {
   await oeffne(page, '/')
   await page.getByRole('button', { name: 'Neue Partie' }).click()
   await expect(page.getByTestId('spiel')).toBeVisible()
+}
+
+/**
+ * O2b: Die Tab-Reihe folgt der sichtbaren Anordnung. „Regeln“ steht unter dem
+ * Titel (hochkant darunter, quer links daneben) und kommt deshalb vor der Wahl
+ * der Partie, nicht als letztes Element.
+ */
+async function erwarteTabReihe(page: Page, namen: string[]): Promise<void> {
+  for (const name of namen) {
+    await page.keyboard.press('Tab')
+    await expect(page.locator(':focus'), `Tab führt als Nächstes auf „${name}“`).toHaveAccessibleName(name)
+  }
 }
 
 function alleVertraege(): void {
@@ -43,6 +56,10 @@ test.describe('O2: Lobby ohne Spielstand', () => {
     await expect(page.getByRole('radio', { name: '3 Gegner' })).toBeChecked()
   })
 
+  test('O2b: die Tab-Reihe folgt der sichtbaren Anordnung', async ({ page }) => {
+    await erwarteTabReihe(page, ['Regeln', '1 Gegner', 'Mit Erweiterung', 'Neue Partie'])
+  })
+
   alleVertraege()
 })
 
@@ -54,6 +71,10 @@ test.describe('O2: Lobby mit laufender Partie', () => {
 
   test('O2 K2: die Lobby bietet „Weiterspielen“', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Weiterspielen' })).toBeVisible()
+  })
+
+  test('O2b: die Tab-Reihe folgt der sichtbaren Anordnung, „Weiterspielen“ vor der neuen Partie', async ({ page }) => {
+    await erwarteTabReihe(page, ['Regeln', 'Weiterspielen', '1 Gegner', 'Mit Erweiterung', 'Neue Partie'])
   })
 
   alleVertraege()
@@ -87,6 +108,30 @@ test.describe('O2: Lobby mit offener Rückfrage vor einer neuen Partie', () => {
     const frage = page.getByRole('alertdialog')
     await expect(frage.getByRole('button', { name: /neue Partie/i })).toBeVisible()
     await expect(frage.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
+  })
+
+  alleVertraege()
+})
+
+/*
+O2b, TF-APP-016: Das Gerät wird bei offener Rückfrage gedreht. Jede Klasse
+dreht ihr eigenes Fenster (Breite und Höhe getauscht); Handy hochkant landet
+so in Handy quer, dem Fall aus dem Testregister. Danach gelten dieselben
+Messungen wie in jedem anderen Zustand der Lobby.
+*/
+test.describe('O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen', () => {
+  test.beforeEach(async ({ page }) => {
+    await startePartie(page)
+    await oeffne(page, '/')
+    await page.getByRole('button', { name: 'Neue Partie' }).click()
+    await expect(page.getByRole('alertdialog')).toBeVisible()
+    const fenster = page.viewportSize()
+    if (fenster === null) throw new Error('TF-APP-016: Das Fenster hat keine feste Grösse.')
+    await page.setViewportSize({ width: fenster.height, height: fenster.width })
+  })
+
+  test('O2b TF-APP-016: die Rückfrage liegt nach dem Drehen ganz im Bild', async ({ page }) => {
+    await expect(page.getByRole('alertdialog')).toBeInViewport({ ratio: 1 })
   })
 
   alleVertraege()

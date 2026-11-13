@@ -52,4 +52,4 @@ Local Storage löschen; danach zeigt `/` keine „Laufende Partie“.
 
 ## Nicht abgedeckte Grenzfälle
 
-Rückfrage auf gedrehtem Handy: TF-APP-008. Zweiter Tab: TF-APP-009. Escape mit Fokus ausserhalb der Rückfrage: TF-APP-010.
+Rückfrage auf gedrehtem Handy: TF-APP-008 und TF-APP-016. Querformate zwischen den Geräteklassen: TF-APP-017; sehr kleines Handy quer (568×320): TF-APP-018. Zweiter Tab: TF-APP-009. Escape mit Fokus ausserhalb der Rückfrage: TF-APP-010.

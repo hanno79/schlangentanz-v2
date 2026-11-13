@@ -19,6 +19,8 @@ export const LOBBY = {
   gegnerLegende: 'Gegner',
   gegner: (anzahl: number) => `${anzahl} Gegner`,
   erweiterung: 'Mit Erweiterung',
+  an: 'An',
+  aus: 'Aus',
   neuePartie: 'Neue Partie',
   weiterspielen: 'Weiterspielen',
   laufendePartie: 'Laufende Partie',

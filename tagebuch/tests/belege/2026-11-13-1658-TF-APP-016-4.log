@@ -1,0 +1,24 @@
+G1 568x320 leer        568x320 sw=568 sh=320 y=0 frage=- fokus=Schlangentanz
+
+Du ge ausserhalb=[]
+G1 568x320 rueckfrage  568x320 sw=568 sh=473 y=110 frage=185..334 TEILWEISE fokus=Abbrechen ausserhalb=[Weiterspielen -45..-1]
+G1 640x360 leer        640x360 sw=640 sh=360 y=0 frage=- fokus=Schlangentanz
+
+Du ge ausserhalb=[]
+G1 640x360 rueckfrage  640x360 sw=640 sh=426 y=23 frage=226..374 TEILWEISE fokus=Abbrechen ausserhalb=[]
+G1 320x568 leer        320x568 sw=320 sh=568 y=0 frage=- fokus=Schlangentanz
+
+Du ge ausserhalb=[]
+G1 320x568 rueckfrage  320x568 sw=320 sh=758 y=190 frage=325..527 ganz fokus=Abbrechen ausserhalb=[Regeln -28..16]
+G1 740x360 leer        740x360 sw=740 sh=360 y=0 frage=- fokus=Schlangentanz
+
+Du ge ausserhalb=[]
+G1 740x360 rueckfrage  740x360 sw=740 sh=381 y=0 frage=225..352 ganz fokus=Abbrechen ausserhalb=[]
+G2 start            390x844 sw=390 sh=844 y=0 frage=545..723 ganz fokus=Abbrechen ausserhalb=[]
+G2 gedreht 844x390 844x390 sw=844 sh=390 y=0 frage=230..356 ganz fokus=Abbrechen ausserhalb=[]
+G2 gedreht 390x844 390x844 sw=390 sh=844 y=0 frage=545..723 ganz fokus=Abbrechen ausserhalb=[]
+G2 gedreht 844x390 844x390 sw=844 sh=390 y=0 frage=230..356 ganz fokus=Abbrechen ausserhalb=[]
+G2 nach Abbrechen   844x390 sw=844 sh=390 y=0 frage=- fokus=Neue Partie ausserhalb=[]
+G3 390x500 oben gescrollt 390x500 sw=390 sh=735 y=0 frage=515..694 TEILWEISE fokus=Abbrechen ausserhalb=[Mit Erweiterung Aus 459..503; Ja, neue Partie 584..628; Abbrechen 636..680]
+G3 gedreht 500x390       500x390 sw=500 sh=602 y=183 frage=263..390 ganz fokus=Abbrechen ausserhalb=[Regeln -39..5]
+G4 rgba(0, 0, 0, 0)/pointer, rgba(0, 0, 0, 0)/pointer, rgba(0, 0, 0, 0)/pointer, rgba(0, 0, 0, 0)/pointer

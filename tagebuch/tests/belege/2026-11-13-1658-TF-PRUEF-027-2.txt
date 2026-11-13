@@ -1,0 +1,6 @@
+
+Running 2 tests using 2 workers
+
+[1A[2K[1/2] [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:7:1 › Prüfer: sichtbares Textfeld unter dem Rand, Label nur vorgelesen
+[1A[2K[2/2] [desktop] › tests\layout\zz_pruefer_tmp.spec.ts:16:1 › Prüfer: sichtbares Textfeld zugedeckt, Label nur vorgelesen
+[1A[2K  2 passed (7.4s)

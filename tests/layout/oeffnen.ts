@@ -5,12 +5,15 @@ Version: 1.0
 Beschreibung: Route öffnen samt Vorbedingung — der Ersatz für `waitUntil: 'networkidle'`.
 
 **Warum kein `networkidle`.** Playwright stuft die Option ausdrücklich als
-abgeraten ein und verweist auf Web-Assertions. Hier wartet sie zudem auf nichts:
-Die App lädt kein `@font-face`, keine Google-Fonts (nur ein System-Stack), kein
-`url()` aus `src/App.css`, kein `<img>` und keine data-URI. Es gibt keine
-Ressource, deren Ankunft die Geometrie noch verschieben könnte. Der Preis war
-dagegen real — bei `retries: 0` ist ein Hänger im gemeinsamen `beforeEach` ein
-harter Fehlschlag für alle Verträge der Datei, ohne Wiederholung.
+abgeraten ein und verweist auf Web-Assertions. Der Preis war zudem real — bei
+`retries: 0` ist ein Hänger im gemeinsamen `beforeEach` ein harter Fehlschlag
+für alle Verträge der Datei, ohne Wiederholung.
+
+**Worauf stattdessen gewartet wird.** Seit O2b lädt der App-Rahmen die Schriften
+aus `src/ui/tokens.css` (`@font-face` mit `font-display: swap`). Bis sie da
+sind, steht der Text in der Ersatzschrift, und die Geometrie verschiebt sich
+noch. `oeffne()` wartet deshalb auf `document.fonts.ready`. Bilder tragen
+`width` und `height`, ihre Ankunft verschiebt nichts.
 
 **Warum sie nicht einfach entfallen kann.** Ein nacktes `page.goto()` wäre der
 schlechtere Tausch, denn die meisten Verträge messen *direkt* nach dem Öffnen,
@@ -73,4 +76,5 @@ export async function oeffne(page: Page, route: string): Promise<void> {
     page.locator(leitelement),
     `Route ${route} hat ${leitelement} nicht aufgebaut — dieser Vertrag misst nichts.`,
   ).toBeVisible()
+  await page.evaluate(() => document.fonts.ready.then(() => undefined))
 }

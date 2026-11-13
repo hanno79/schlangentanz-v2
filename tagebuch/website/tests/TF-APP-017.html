@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-APP-017 In Querformaten zwischen den Geräteklassen (1024×600, 740×360, 667×375) bleiben alle Knöpfe der Lobby ohne Scrollen erreichbar. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-APP-017 In Querformaten zwischen den Geräteklassen (1024×600, 740×360, 667×375) bleiben alle Knöpfe der Lobby ohne Scrollen erreichbar.</h1><p class="etiketten"><span class="etikett">Bereich App-Rahmen, Lobby, Fehlerdienst</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-APP-003</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die fünf Geräteklassen haben feste Masse. Echte Geräte liegen dazwischen: ein kleines Notebook mit 1024×600, ein Android-Handy quer mit 740×360, ein iPhone SE quer mit 667×375. Die Lobby schaltet im Querformat ab 560 px Breite auf zwei Spalten. Hier wird geprüft, ob das auch bei diesen Grössen reicht.</p><h2>Bestanden, wenn</h2><p>In allen drei Fenstern liegen in der leeren Lobby, mit laufender Partie, mit offener Rückfrage und nach einem unlesbaren Spielstand „Weiterspielen“, 1, 2 und 3, „Mit Erweiterung“, „Neue Partie“, „Ja, neue Partie“, „Abbrechen“ und „Regeln“ ganz zwischen 0 px und der Fensterhöhe. Die Seite ist nicht breiter als das Fenster.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Knopf ragt unten oder oben aus dem Bild, oder die Seite ist breiter als das Fenster.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2b-lobby-flach (PR #35)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild, Playwright Chromium mit Touch (<code>hasTouch</code>, <code>isMobile</code>)</td></tr><tr><td>Ausgangslage</td><td>Local Storage leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Fenster 1024×600, 740×360 und 667×375. Unlesbarer Stand: <code>schlangentanz-v2:partie</code> = <code>{&quot;version&quot;:1,&quot;kaputt&quot;:true}</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Lobby</td><td>Seite öffnen, Lage aller Knöpfe lesen</td><td>`/`</td><td>alles im Bild</td></tr><tr><td>2</td><td>Lobby</td><td>„Neue Partie“ antippen, Zurück</td><td></td><td>„Laufende Partie“ mit „Weiterspielen“, alles im Bild</td></tr><tr><td>3</td><td>Lobby</td><td>„Neue Partie“ antippen</td><td></td><td>Rückfrage mit beiden Knöpfen im Bild</td></tr><tr><td>4</td><td>Lobby</td><td>unlesbaren Stand setzen, neu laden</td><td></td><td>Hinweis und alle Knöpfe im Bild</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage löschen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 16:58</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O2b Iteration 2) &middot; agent &middot; pruefung-O2b-it2 @ <span class="commit" title="488c2a3fe1078d10e182b48352234f5dac24061a">488c2a3</span> / Playwright 1.60.0 Chromium, 1024x600, 740x360, 667x375 Touch</p><p>Vier Zustaende je Fenster, keine Seite breiter als das Fenster. 1024x600: alles im Bild, scrollHeight 600. 740x360: alles im Bild; mit Rueckfrage scrollHeight 381, Rueckfrage 225..352, Knoepfe im Bild. 667x375: alle Knoepfe im Bild; Rahmen der Rueckfrage 241..389, also 14 px unter dem Rand (nur Rahmen, kein Knopf).</p><ul class="belege"><li><a href="belege/2026-11-13-1658-TF-APP-017-1.log">2026-11-13-1658-TF-APP-017-1.log</a></li></ul></article><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 16:11</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O2b) &middot; agent &middot; pruefung-O2b @ <span class="commit" title="3626e9020115e02e83bbac487e4111bccaaa9c9f">3626e90</span> / Playwright 1.60.0 Chromium, 1024x600, 740x360, 667x375 Touch</p><p>1024x600 und 740x360: in allen Zustaenden alles im Bild. 667x375: alle Knoepfe im Bild, nur der Rahmen der Rueckfrage reicht bis 389 px (Knoepfe innerhalb). Kein Ueberstand.</p><ul class="belege"><li><a href="belege/2026-11-13-1611-TF-APP-017-1.txt">2026-11-13-1611-TF-APP-017-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { LOGO_BILD } from '../karten/kartenbilder'
+import './lobby.css'
+import './lobby-seite.css'
 import { geheZu } from './navigation'
 import { GEGNER_AUSWAHL, starteNeuePartie, useGespeichertePartie } from './partie'
 import Rahmen from './Rahmen'
@@ -48,84 +51,113 @@ export default function Lobby() {
   return (
     <Rahmen
       testId="lobby"
+      klasse="rahmen--lobby"
+      bild={<img className="lobby__logo" src={LOGO_BILD} alt="" width={521} height={672} />}
       titel={SPIELNAME}
       text={LOBBY.untertitel}
-      fuss={<Verweis ziel="regeln">{LOBBY.regeln}</Verweis>}
+      // Unter dem Titel wie im Entwurf: so steht „Regeln“ auch in der Tab-Reihe vor der Wahl der Partie.
+      kopfZusatz={<Verweis ziel="regeln">{LOBBY.regeln}</Verweis>}
     >
-      {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
+      <div className="lobby__inhalt">
+        {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
 
-      {laufend !== null && (
-        <section className="lobby__laufend" aria-label={LOBBY.laufendePartie}>
-          <p data-testid="laufende-partie">
-            <strong>{LOBBY.laufendePartie}:</strong> {partieKurz(laufend.gegner, laufend.erweiterung)}
-          </p>
-          <button type="button" className="knopf knopf--haupt" onClick={() => geheZu('spiel')}>
-            {LOBBY.weiterspielen}
-          </button>
-        </section>
-      )}
-
-      <form
-        className="lobby__neu"
-        onSubmit={(ereignis) => {
-          ereignis.preventDefault()
-          if (laufend !== null) setFragtNach(true)
-          else beginne()
-        }}
-      >
-        <fieldset className="lobby__gegner" role="radiogroup">
-          <legend>{LOBBY.gegnerLegende}</legend>
-          <div className="lobby__wahl">
-            {GEGNER_AUSWAHL.map((anzahl) => (
-              <label key={anzahl} className="wahl">
-                <input
-                  type="radio"
-                  name="gegner"
-                  value={anzahl}
-                  checked={gegner === anzahl}
-                  onChange={() => setGegner(anzahl)}
-                />
-                <span>{LOBBY.gegner(anzahl)}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <label className="schalter">
-          <input type="checkbox" checked={erweiterung} onChange={(e) => setErweiterung(e.target.checked)} />
-          <span>{LOBBY.erweiterung}</span>
-        </label>
-
-        {fragtNach ? (
-          <Rueckfrage onBestaetigen={beginne} onAbbrechen={() => setFragtNach(false)} />
-        ) : (
-          <button type="submit" ref={neuePartieKnopf} className={laufend === null ? 'knopf knopf--haupt' : 'knopf'}>
-            {LOBBY.neuePartie}
-          </button>
+        {laufend !== null && (
+          <section className="lobby__laufend" aria-label={LOBBY.laufendePartie}>
+            <p data-testid="laufende-partie">
+              <strong>{LOBBY.laufendePartie}:</strong> {partieKurz(laufend.gegner, laufend.erweiterung)}
+            </p>
+            <button type="button" className="rahmen-knopf rahmen-knopf--haupt" onClick={() => geheZu('spiel')}>
+              {LOBBY.weiterspielen}
+            </button>
+          </section>
         )}
-      </form>
+
+        <form
+          className="lobby__neu"
+          onSubmit={(ereignis) => {
+            ereignis.preventDefault()
+            if (laufend !== null) setFragtNach(true)
+            else beginne()
+          }}
+        >
+          <fieldset className="lobby__gegner" role="radiogroup">
+            <legend>{LOBBY.gegnerLegende}</legend>
+            <div className="lobby__wahl">
+              {GEGNER_AUSWAHL.map((anzahl) => (
+                <label key={anzahl} className="lobby__segment">
+                  {/* Sichtbar steht nur die Zahl wie im Entwurf; Name und Text heissen „2 Gegner“. */}
+                  <input
+                    type="radio"
+                    className="nur-vorlesen"
+                    name="gegner"
+                    value={anzahl}
+                    aria-label={LOBBY.gegner(anzahl)}
+                    checked={gegner === anzahl}
+                    onChange={() => setGegner(anzahl)}
+                  />
+                  <span>
+                    {anzahl}
+                    <span className="nur-vorlesen"> {LOBBY.gegnerLegende}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label className="lobby__schalter">
+            <span>{LOBBY.erweiterung}</span>
+            <input
+              type="checkbox"
+              className="nur-vorlesen"
+              checked={erweiterung}
+              onChange={(e) => setErweiterung(e.target.checked)}
+            />
+            {/* Der Zustand steht als Wort da, nicht nur als Farbe (DESIGN.md); vorgelesen wird er über das Kästchen. */}
+            <span className="lobby__bahn" aria-hidden="true">
+              {erweiterung ? LOBBY.an : LOBBY.aus}
+            </span>
+          </label>
+
+          {fragtNach ? (
+            <Rueckfrage onBestaetigen={beginne} onAbbrechen={() => setFragtNach(false)} />
+          ) : (
+            <button type="submit" ref={neuePartieKnopf} className={laufend === null ? 'rahmen-knopf rahmen-knopf--haupt' : 'rahmen-knopf'}>
+              {LOBBY.neuePartie}
+            </button>
+          )}
+        </form>
+      </div>
     </Rahmen>
   )
 }
 
 function Rueckfrage({ onBestaetigen, onAbbrechen }: { onBestaetigen: () => void; onAbbrechen: () => void }) {
+  const frage = useRef<HTMLDivElement>(null)
   const abbrechen = useRef<HTMLButtonElement>(null)
 
   // Der Fokus springt auf „Abbrechen“: Die Frage wird vorgelesen, und ein versehentliches Enter überschreibt nichts.
   useEffect(() => abbrechen.current?.focus(), [])
+
+  /* Dreht jemand das Gerät, während die Frage offen ist, holt die Lobby sie
+     wieder ins Bild (TF-APP-016). Der Fokus allein tut das nur beim Öffnen. */
+  useEffect(() => {
+    const holeInsBild = () => frage.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+    window.addEventListener('resize', holeInsBild)
+    return () => window.removeEventListener('resize', holeInsBild)
+  }, [])
 
   function beiTaste(ereignis: KeyboardEvent) {
     if (ereignis.key === 'Escape') onAbbrechen()
   }
 
   return (
-    <div className="lobby__frage" role="alertdialog" aria-labelledby="lobby-frage" onKeyDown={beiTaste}>
+    <div ref={frage} className="lobby__frage" role="alertdialog" aria-labelledby="lobby-frage" onKeyDown={beiTaste}>
       <p id="lobby-frage">{LOBBY.frage}</p>
       <div className="lobby__knoepfe">
-        <button type="button" className="knopf knopf--warnung" onClick={onBestaetigen}>
+        <button type="button" className="rahmen-knopf rahmen-knopf--warnung" onClick={onBestaetigen}>
           {LOBBY.bestaetigen}
         </button>
-        <button type="button" className="knopf" ref={abbrechen} onClick={onAbbrechen}>
+        <button type="button" className="rahmen-knopf" ref={abbrechen} onClick={onAbbrechen}>
           {LOBBY.abbrechen}
         </button>
       </div>

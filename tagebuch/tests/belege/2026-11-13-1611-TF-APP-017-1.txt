@@ -1,0 +1,63 @@
+
+== 568x320 Touch ==
+leer {"scrollW":568,"clientW":568,"scrollH":320,"h":320,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+partie {"scrollW":568,"clientW":568,"scrollH":368,"h":320,"ausserhalb":["Neue Partie 295..339"],"minTipp":"44x44","zweispaltig":true}
+rueckfrage {"scrollW":568,"clientW":568,"scrollH":473,"h":320,"ausserhalb":["Weiterspielen -45..-1","Es läuft schon eine Part 185..334"],"minTipp":"44x44","zweispaltig":true}
+gedreht 320x568 rueckfrage {"scrollW":320,"clientW":320,"scrollH":774,"h":568,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+zurueck rueckfrage {"scrollW":568,"clientW":568,"scrollH":473,"h":320,"ausserhalb":["Weiterspielen -59..-15"],"minTipp":"44x44","zweispaltig":true}
+unlesbar {"scrollW":568,"clientW":568,"scrollH":389,"h":320,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+pageerror 0
+
+== 1024x600 Touch ==
+leer {"scrollW":1024,"clientW":1024,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+partie {"scrollW":1024,"clientW":1024,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+rueckfrage {"scrollW":1024,"clientW":1024,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+gedreht 600x1024 rueckfrage {"scrollW":600,"clientW":600,"scrollH":1024,"h":1024,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+zurueck rueckfrage {"scrollW":1024,"clientW":1024,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+unlesbar {"scrollW":1024,"clientW":1024,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+pageerror 0
+
+== 667x375 Touch ==
+leer {"scrollW":667,"clientW":667,"scrollH":375,"h":375,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+partie {"scrollW":667,"clientW":667,"scrollH":375,"h":375,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+rueckfrage {"scrollW":667,"clientW":667,"scrollH":426,"h":375,"ausserhalb":["Es läuft schon eine Part 241..389"],"minTipp":"44x44","zweispaltig":true}
+gedreht 375x667 rueckfrage {"scrollW":375,"clientW":375,"scrollH":759,"h":667,"ausserhalb":["Regeln 677..721"],"minTipp":"44x44","zweispaltig":false}
+zurueck rueckfrage {"scrollW":667,"clientW":667,"scrollH":426,"h":375,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+unlesbar {"scrollW":667,"clientW":667,"scrollH":375,"h":375,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+pageerror 0
+
+== 740x360 Touch ==
+leer {"scrollW":740,"clientW":740,"scrollH":360,"h":360,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+partie {"scrollW":740,"clientW":740,"scrollH":360,"h":360,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+rueckfrage {"scrollW":740,"clientW":740,"scrollH":381,"h":360,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+gedreht 360x740 rueckfrage {"scrollW":360,"clientW":360,"scrollH":768,"h":740,"ausserhalb":["Regeln 700..744"],"minTipp":"44x44","zweispaltig":false}
+zurueck rueckfrage {"scrollW":740,"clientW":740,"scrollH":381,"h":360,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+unlesbar {"scrollW":740,"clientW":740,"scrollH":360,"h":360,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+pageerror 0
+
+== 320x568 Touch ==
+leer {"scrollW":320,"clientW":320,"scrollH":568,"h":568,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+partie {"scrollW":320,"clientW":320,"scrollH":616,"h":568,"ausserhalb":["Regeln 548..592"],"minTipp":"44x44","zweispaltig":false}
+rueckfrage {"scrollW":320,"clientW":320,"scrollH":774,"h":568,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+gedreht 568x320 rueckfrage {"scrollW":568,"clientW":568,"scrollH":473,"h":320,"ausserhalb":["Weiterspielen -59..-15"],"minTipp":"44x44","zweispaltig":true}
+zurueck rueckfrage {"scrollW":320,"clientW":320,"scrollH":774,"h":568,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+unlesbar {"scrollW":320,"clientW":320,"scrollH":666,"h":568,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+pageerror 0
+
+== 1366x600 Touch ==
+leer {"scrollW":1366,"clientW":1366,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+partie {"scrollW":1366,"clientW":1366,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+rueckfrage {"scrollW":1366,"clientW":1366,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+gedreht 600x1366 rueckfrage {"scrollW":600,"clientW":600,"scrollH":1366,"h":1366,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+zurueck rueckfrage {"scrollW":1366,"clientW":1366,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+unlesbar {"scrollW":1366,"clientW":1366,"scrollH":600,"h":600,"ausserhalb":[],"minTipp":"44x44","zweispaltig":true}
+pageerror 0
+
+== 540x300 Touch ==
+leer {"scrollW":540,"clientW":540,"scrollH":427,"h":300,"ausserhalb":["Neue Partie 290..334","Regeln 367..411"],"minTipp":"44x44","zweispaltig":false}
+partie {"scrollW":540,"clientW":540,"scrollH":540,"h":300,"ausserhalb":["1 Gegner 261..305","2 Gegner 261..305","3 Gegner 261..305","Mit ErweiterungAus 317..361","Neue Partie 369..413","Regeln 446..490"],"minTipp":"44x44","zweispaltig":false}
+rueckfrage {"scrollW":540,"clientW":540,"scrollH":599,"h":300,"ausserhalb":["Weiterspielen -31..13","Regeln 299..343"],"minTipp":"44x44","zweispaltig":false}
+gedreht 300x540 rueckfrage {"scrollW":300,"clientW":300,"scrollH":774,"h":540,"ausserhalb":[],"minTipp":"44x44","zweispaltig":false}
+zurueck rueckfrage {"scrollW":540,"clientW":540,"scrollH":599,"h":300,"ausserhalb":["Regeln 333..377"],"minTipp":"44x44","zweispaltig":false}
+unlesbar {"scrollW":540,"clientW":540,"scrollH":533,"h":300,"ausserhalb":["1 Gegner 288..332","2 Gegner 288..332","3 Gegner 288..332","Mit ErweiterungAus 344..388","Neue Partie 396..440","Regeln 473..517"],"minTipp":"44x44","zweispaltig":false}
+pageerror 0
