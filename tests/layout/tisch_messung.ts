@@ -186,3 +186,75 @@ export async function lesbareStapelzahlen(page: Page, erwartet: string): Promise
     return treffer
   }, erwartet)
 }
+
+/**
+ * Jeder Bereich des Tischs, der scrollt (`overflow` auto oder scroll und mehr
+ * Inhalt als Platz), muss ohne Scrollen zeigen, dass es weitergeht, und zwar an
+ * jedem Rand, hinter dem Inhalt liegt. Das gilt als erkennbar, wenn
+ *
+ * - ein Zeichen am Rand sichtbar ist: ein Element mit `data-weiter`, das die
+ *   Richtung nennt und den Randstreifen (24 px) des Bereichs berührt, oder
+ * - von der nächsten Karte, die über den Rand reicht, mindestens ein Viertel
+ *   zu sehen ist.
+ *
+ * Gemessen wird so, wie der Tisch sich öffnet, ohne `scrollIntoView` und ohne
+ * Wischen (O4, Prüfprotokoll Iteration 2: eine Zeile zeigte von der elften
+ * Karte 1 px, sonst nichts).
+ */
+export async function verborgenOhneHinweis(page: Page): Promise<{ bereiche: number; befunde: Befund[] }> {
+  return page.evaluate(() => {
+    type Rand = 'rechts' | 'links' | 'unten' | 'oben'
+    const STREIFEN = 24
+    const befunde: { element: string; detail: string }[] = []
+    const scrollt = (wert: string) => wert === 'auto' || wert === 'scroll'
+    const kennung = (element: Element) => element.getAttribute('aria-label') ?? (element.className.toString() || element.tagName)
+    const zeichen = Array.from(document.querySelectorAll<HTMLElement>('[data-testid="spiel"] [data-weiter]')).filter((element) => {
+      const box = element.getBoundingClientRect()
+      return element.checkVisibility({ opacityProperty: true }) && box.width >= 8 && box.height >= 8
+    })
+
+    const hatZeichen = (box: DOMRect, rand: Rand) =>
+      zeichen.some((element) => {
+        if (!(element.dataset.weiter ?? '').split(' ').includes(rand)) return false
+        const z = element.getBoundingClientRect()
+        const waagrecht = z.left < box.right && z.right > box.left
+        const senkrecht = z.top < box.bottom && z.bottom > box.top
+        if (rand === 'rechts') return senkrecht && z.right >= box.right - STREIFEN && z.left <= box.right
+        if (rand === 'links') return senkrecht && z.left <= box.left + STREIFEN && z.right >= box.left
+        if (rand === 'unten') return waagrecht && z.bottom >= box.bottom - STREIFEN && z.top <= box.bottom
+        return waagrecht && z.top <= box.top + STREIFEN && z.bottom >= box.top
+      })
+
+    const viertelDerNaechstenKarte = (bereich: Element, box: DOMRect, rand: Rand) =>
+      Array.from(bereich.querySelectorAll('img')).some((bild) => {
+        const b = bild.getBoundingClientRect()
+        if (rand === 'rechts') return b.left < box.right && b.right > box.right && (box.right - b.left) / b.width >= 0.25
+        if (rand === 'links') return b.right > box.left && b.left < box.left && (b.right - box.left) / b.width >= 0.25
+        if (rand === 'unten') return b.top < box.bottom && b.bottom > box.bottom && (box.bottom - b.top) / b.height >= 0.25
+        return b.bottom > box.top && b.top < box.top && (b.bottom - box.top) / b.height >= 0.25
+      })
+
+    let bereiche = 0
+    for (const bereich of Array.from(document.querySelectorAll('[data-testid="spiel"] *'))) {
+      if (!(bereich as HTMLElement).checkVisibility()) continue
+      const stil = getComputedStyle(bereich)
+      const raender: Rand[] = []
+      if (scrollt(stil.overflowX) && bereich.scrollWidth > bereich.clientWidth + 1) {
+        if (bereich.scrollLeft + bereich.clientWidth < bereich.scrollWidth - 1) raender.push('rechts')
+        if (bereich.scrollLeft > 1) raender.push('links')
+      }
+      if (scrollt(stil.overflowY) && bereich.scrollHeight > bereich.clientHeight + 1) {
+        if (bereich.scrollTop + bereich.clientHeight < bereich.scrollHeight - 1) raender.push('unten')
+        if (bereich.scrollTop > 1) raender.push('oben')
+      }
+      if (raender.length === 0) continue
+      bereiche += 1
+      const box = bereich.getBoundingClientRect()
+      for (const rand of raender) {
+        if (hatZeichen(box, rand) || viertelDerNaechstenKarte(bereich, box, rand)) continue
+        befunde.push({ element: kennung(bereich), detail: `geht ${rand} weiter, ohne Zeichen und ohne ein Viertel der nächsten Karte` })
+      }
+    }
+    return { bereiche, befunde }
+  })
+}

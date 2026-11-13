@@ -103,6 +103,23 @@ export function angriffAufMich(): Spielzustand {
     .zustand()
 }
 
+/**
+ * Eine lange eigene Schlange: 22 Karten bei dir, 12 beim Gegner. Kein Handy
+ * zeigt sie auf einmal; ohne Wischen muss zu sehen sein, dass sie weitergeht
+ * (O4, Prüfprotokoll Iteration 2).
+ */
+export function langeSchlange(): Spielzustand {
+  return baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(5) })
+    .schlange(0, [
+      'Rot', 'Rot', 'Rot', 'Rot', 'Blau', 'Blau', 'Blau', 'Gelb', 'Gelb', 'Gelb', 'Grün',
+      'Grün', 'Grün', 'Violett', 'Violett', 'Violett', 'Braun', 'Braun', 'Braun', 'Rot', 'Blau', 'Gelb',
+    ])
+    .schlange(1, ['Gelb', 'Gelb', 'Gelb', 'Rot', 'Rot', 'Rot', 'Braun', 'Braun', 'Braun', 'Violett', 'Violett', 'Violett'])
+    .haendeAuffuellen()
+    .amZug(0)
+    .zustand()
+}
+
 /** Eine frisch begonnene Partie wie aus der Lobby: 2 Spieler, ohne Erweiterung, Saat 1. */
 export function neuePartie(): Spielzustand {
   return erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(1) })
@@ -114,6 +131,7 @@ export const TISCH_SZENARIEN: readonly TischSzenario[] = [
   { name: 'geheime-haende', erzeuge: geheimeHaende },
   { name: 'angriff-auf-mich', erzeuge: angriffAufMich },
   { name: 'neue-partie', erzeuge: neuePartie },
+  { name: 'lange-schlange', erzeuge: langeSchlange },
 ]
 
 /** Die Karten-Ids und Aufgaben-Ids, die der Mensch nie sehen darf: fremde Handkarten und fremde geheime Aufgaben (B2). */

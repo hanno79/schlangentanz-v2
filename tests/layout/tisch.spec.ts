@@ -5,6 +5,7 @@ import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import {
   GEHEIME_KARTENARTEN,
   geheimeHaende,
+  langeSchlange,
   mittelspiel,
   neuePartie,
   verrateneIds,
@@ -12,7 +13,7 @@ import {
 } from '../../src/ui/tisch/__tests__/szenarien'
 import { befundListe, kasten } from './messung'
 import { oeffne } from './oeffnen'
-import { abgeschnitteneEigeneSchlangen, lesbareStapelzahlen, ueberdeckendeBalken, unerreichbareKarten } from './tisch_messung'
+import { abgeschnitteneEigeneSchlangen, lesbareStapelzahlen, ueberdeckendeBalken, unerreichbareKarten, verborgenOhneHinweis } from './tisch_messung'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
 /*
@@ -35,6 +36,7 @@ const SZENARIEN: { name: string; erzeuge: () => Spielzustand; karten: number; ei
   { name: 'Volltisch', erzeuge: volltisch, karten: 104, eigeneBilder: 24, gruppenBalken: 40, stapel: 'leer' },
   { name: 'Mittelspiel', erzeuge: mittelspiel, karten: 25, eigeneBilder: 9, gruppenBalken: 13, stapel: String(mittelspiel().nachziehstapel.length) },
   { name: 'neue Partie', erzeuge: neuePartie, karten: 6, eigeneBilder: 0, gruppenBalken: 0, stapel: String(neuePartie().nachziehstapel.length) },
+  { name: 'lange Schlange', erzeuge: langeSchlange, karten: 40, eigeneBilder: 22, gruppenBalken: 30, stapel: String(langeSchlange().nachziehstapel.length) },
 ]
 
 async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void> {
@@ -98,6 +100,12 @@ for (const { name, erzeuge, karten, eigeneBilder, gruppenBalken, stapel } of SZE
       const { balken, befunde } = await ueberdeckendeBalken(page)
       expect(balken, 'Balken unter Farbgruppen').toBeGreaterThanOrEqual(gruppenBalken)
       expect(befunde, `Balken auf Karten:${befundListe(befunde)}`).toEqual([])
+    })
+
+    // Iteration 3: dieselbe Blindstelle wie bei „jede Karte erreichbar“, allgemein für jeden scrollenden Bereich.
+    test('O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen', async ({ page }) => {
+      const { befunde } = await verborgenOhneHinweis(page)
+      expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
     })
 
     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
