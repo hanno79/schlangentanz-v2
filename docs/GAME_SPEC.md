@@ -1,9 +1,9 @@
 # Schlangentanz Game Spec
 
-Status: **Abgeglichen mit der Website am 12.11.2026.**
+Status: **Abgeglichen mit der Website am 13.11.2026.**
 
 Teil A gibt die Spielanleitung von `https://schlangentanz.ch/rules` wörtlich wieder
-(Stand der Website: 12.11.2026 abends, Bundle `index-ZK016NK3.js`).
+(Stand der Website: 13.11.2026, Bundle `index-EH-TKokX.js`).
 
 ## Rangfolge der Quellen
 
@@ -118,8 +118,8 @@ Bilde Farbgruppen in deinen Schlangen, erfülle Aufgaben und sammle die meisten 
    - Kartenhand prüfen: Hast du ausserhalb deines Zuges Karten gespielt, zum Beispiel einen Farbenschutz zur Abwehr, ziehst du jetzt vom Nachziehstapel, bis du wieder 5 Handkarten hast.
    - Karten ausspielen: Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:
 
-     - Eine Farbkarte, um eine Schlange zu beginnen oder fortzusetzen (muss an einem beliebigen Ende der Schlange angelegt werden)
-     - Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle eingefügt werden)
+     - Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)
+     - Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
      - Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen
      - Ist deine Sonderkarte der Verdoppler, füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug. Neben dem Verdoppler spielst du so bis zu 3 Karten
    - Zug beenden: Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast. Danach ist der nächste Spieler an der Reihe.
@@ -131,7 +131,7 @@ In deinem Zug kommt folgende Möglichkeit hinzu:
 
 - Aufgabe erfüllen: Wenn du die Bedingungen einer offenen Aufgabenkarte erfüllst, rufe "Schlangenspass!" und nimm die Aufgabe zu dir. Lege dann eine neue Aufgabenkarte vom Stapel auf. Deine geheime Aufgabe deckst du erst bei der Wertung auf.
 
-Wichtig: Du musst immer mindestens eine Karte spielen. Wenn du nur Sonderkarten auf der Hand hast, musst du eine davon spielen, auch wenn sie keinen optimalen Effekt in deiner eigenen Schlange hat. In diesem Fall kannst du sie auch bei einem Gegner ausspielen. Hast du nur Farbenschutz-Karten auf der Hand, legst du eine davon ohne Wirkung auf deinen Ablagestapel. Danach ziehst du eine Karte nach, und dein Zug ist beendet. Die neue Karte darfst du erst im nächsten Zug ausspielen.
+Wichtig: Du musst immer mindestens eine Karte spielen. Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest. Du darfst auch eine Sonderkarte spielen, die dir gerade nichts bringt. Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges. Hast du nur Farbenschutz-Karten auf der Hand, legst du eine davon ohne Wirkung auf deinen Ablagestapel. Danach ziehst du eine Karte nach, und dein Zug ist beendet. Die neue Karte darfst du erst im nächsten Zug ausspielen.
 
 Schlangen:
 
@@ -144,7 +144,7 @@ Schlangen:
 #### Grundregeln für Sonderkarten:
 
 - Sonderkarten werden immer mit klarer Ansage gespielt: Der Spieler benennt das Ziel seiner Aktion.
-- Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Eine andere Karte ist als Reaktion nicht erlaubt.
+- Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Das gilt für jede Sonderkarte, die ein Mitspieler gegen ihn oder in seine Schlange spielt. Gegen Farbkarten gibt es keine Abwehr. Eine andere Karte als Farbenschutz ist als Reaktion nicht erlaubt.
 - Gespielte Sonderkarten kommen auf den Ablagestapel des Spielers, der sie gespielt hat.
 - Wer ausserhalb seines Zuges eine Karte spielt, zieht nicht gleich nach, sondern füllt erst zu Beginn seines nächsten Zuges auf 5 Karten auf. Wer in einer Runde zweimal angegriffen wird, kann deshalb nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren.
 - Schlangenfrass ist keine Reaktion: Mit ihm entfernst du in deinem eigenen Zug Karten, die bereits in einer Schlange liegen.
@@ -215,9 +215,9 @@ Spieler A spielt Farbendieb. Er stiehlt eine blaue Karte aus der Schlange von Sp
 
 #### A7.2 Farbenschutz
 
-Kurzbeschreibung: Schützt vor negativen Effekten einer Sonderkarte
+Kurzbeschreibung: Wehrt eine Sonderkarte eines Mitspielers ab
 
-Eine defensive Karte, die vor den negativen Auswirkungen von Sonderkarten schützt und als Reaktion auf diese gespielt werden kann. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
+Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
 
 **Beispiele:**
 
@@ -230,7 +230,8 @@ Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er
 - Spiele als Reaktion auf eine Sonderkarte
 - Lege den Farbenschutz auf deinen Ablagestapel
 - Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers
-- Schützt vor allen negativen Effekten von Sonderkarten
+- Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange
+- Gegen Farbkarten gibt es keine Abwehr
 
 #### A7.3 Regenbogenschlange
 
@@ -371,7 +372,7 @@ Ein Spieler hat folgende Karten in seiner Schlange: Blau - Blau - Farbenfusion(f
 
 Kurzbeschreibung: Erlaubt dir, nach deinem Zug die Hand aufzufüllen und sofort einen zweiten Zug zu spielen
 
-Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug, wieder mit einer Farbkarte und optional einer Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
+Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug. Er läuft wie ein normaler Zug ab: mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
 
 **Beispiele:**
 
@@ -379,11 +380,12 @@ Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf 
 
 **Wichtige Regeln:**
 
-- Spiele den Verdoppler als Sonderkarte deines Zuges, vor oder nach deiner Farbkarte
+- Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach
 - Fülle danach deine Handkarten auf
-- Spiele sofort einen zweiten Zug mit einer Farbkarte und optional einer Sonderkarte
+- Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
 - Neben dem Verdoppler spielst du so bis zu 3 Karten
 - Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
+- Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
 
 #### A7.9 Schlangenhäutung
 
@@ -768,18 +770,18 @@ laufenden Spiel beobachtet.
 | C2 | Regenbogenschlange | Sonderkarte, die als Karte beliebiger Farbe in die Schlange kommt, an beliebiger Stelle (A5, A7.3); sie beginnt keine neue Schlange (D16) | lässt sich nicht ausspielen; es gibt keine Aktion dafür, nur den Abwurf | `src/engine/legalActions.ts` (per Test nachgestellt) |
 | C3 | Nachziehen im eigenen Zug | am Ende des eigenen Zuges auf 5 auffüllen (A5) | aufgefüllt wird erst beim Wechsel, für den nächsten Spieler | `src/engine/turnState.ts` (`beendeZug`) |
 | C4 | Nachziehen nach Sonderkarte | wer ausserhalb seines Zuges spielt, füllt erst zu Beginn seines nächsten Zuges auf; kein sofortiges Nachziehen (A6) | jeder zieht sofort eine Karte je gespielter Sonderkarte | `src/engine/turnState.ts` (`zieheOffeneNachziehungen`) |
-| C6 | Farbenschutz | nur als Reaktion auf eine Sonderkarte (A7.2), und zwar gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, nie gegen Farbkarten (D10), auch während des Aussetzens (D18); wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht eine Karte und beendet den Zug (A5) | lässt sich zusätzlich im eigenen Zug auf eine eigene Schlange spielen und setzt sie auf „geschützt"; abwehrbar sind nur Blockade, Farbendieb, Schlangenfrass, Schlangengrube und Verdoppler | `src/engine/kartenwirkungen.ts` (`spieleFarbenschutz`) |
-| C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug mit Farbkarte und optional Sonderkarte; neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8); im zweiten Zug ist ein Verdoppler nur wirkungslos ablegbar (D11, D23) | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
+| C6 | Farbenschutz | nur als Reaktion auf eine Sonderkarte, und zwar auf jede, die ein Mitspieler gegen mich oder in meine Schlange spielt, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange; gegen Farbkarten gibt es keine Abwehr (A6, A7.2, D10); auch während des Aussetzens (D18); wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht eine Karte und beendet den Zug (A5) | lässt sich zusätzlich im eigenen Zug auf eine eigene Schlange spielen und setzt sie auf „geschützt"; abwehrbar sind nur Blockade, Farbendieb, Schlangenfrass, Schlangengrube und Verdoppler | `src/engine/kartenwirkungen.ts` (`spieleFarbenschutz`) |
+| C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit höchstens einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug, der wie ein normaler Zug abläuft (mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte); neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8); im zweiten Zug kein weiterer Verdoppler (A7.8, D11); D23 lässt ihn dort wirkungslos ablegen, der Widerspruch zu A7.8 liegt beim Autor | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
 | C8 | Schlangenfrass | a) eine eigene Karte, b) eine eigene Blockade, c) zwei Karten der Mitspieler „sofern möglich", keine gegnerische Blockade (A7.4) | genau eine eigene oder genau zwei gegnerische Karten; gegnerische Blockaden sind nicht ausgenommen | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` |
 | C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9); die Farbfolge im Abschnitt muss sich ändern (D26) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
-| C12 | Pflichtkarte | mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art (A5, D12); eine Sonderkarte darf jederzeit gespielt werden, auch ohne Nutzen, und kommt ohne Ziel wirkungslos auf den eigenen Ablagestapel (D4, D13); mit möglichem Ziel ist sie nicht wirkungslos ablegbar, Farbenschutz immer (D25) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
+| C12 | Pflichtkarte | mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art (A5, A7.8, D12); eine Sonderkarte darf jederzeit gespielt werden, auch ohne Nutzen, und kommt ohne Ziel wirkungslos auf den eigenen Ablagestapel (A5, D13); mit möglichem Ziel ist sie nicht wirkungslos ablegbar, Farbenschutz immer (D25) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
 | C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
 | C16 | Farbenfusion | die zwei Farbkarten liegen unter der Fusion; wird sie entfernt, liegen beide wieder einzeln an ihrer Stelle (A7.7, A7.4) | die zwei Farbkarten kommen auf den Ablagestapel, nur ihre Punktsumme bleibt gespeichert; beim Entfernen kehren sie nicht zurück | `src/engine/kartenwirkungen.ts` (`spieleFarbenfusion`), `src/engine/zugHelfer.ts` (`bereinigeFarbenfusionen`) |
 | C17 | Abwehr bei Schlangenfrass | jeder betroffene Spieler entscheidet einmal; die Wirkung tritt erst nach allen Reaktionen ein (A6, Beispiel 2); ein Farbenschutz schützt beide Karten desselben Spielers (D15) | gefragt wird je Zielkarte; ungeschützte Ziele werden sofort entfernt | `src/engine/reaktionsaufloesung.ts`, `src/engine/kartenwirkungen.ts` (`spieleSchlangenfrass`) |
 | C18 | Schlangengrube | kommt erst nach dem ausgesetzten Zug auf den Ablagestapel (A7.6); zwei Gruben auf denselben Spieler kosten zwei Züge (D14); in der Schlussrunde nimmt sie den letzten Zug (D21), auf einen Spieler ohne weiteren Zug geht sie ohne Wirkung auf den Ablagestapel (D29) | kommt sofort auf den Ablagestapel | `src/engine/kartenwirkungen.ts` (`spieleSchlangengrube`) |
-| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle (D9); beim Gegner nur an eine bestehende Schlange (D19) | Farbkarte, Farbenfusion und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
+| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle; eine neue Schlange beginnt man nur für sich, beim Gegner nur an eine bestehende Schlange (A5, D9, D19) | Farbkarte, Farbenfusion und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
 | C20 | Zeitpunkt der Aufgabenprüfung | eine Aufgabe kann erfüllt werden, sobald die Bedingung gilt und der Spieler am Zug ist (A9) | geprüft wird nur einmal am Ende der Ausspielphase | `src/engine/turnState.ts` (`beendeAufgabenpruefung`) |
 | C21 | Farbwechsler | „Es gelten auch Reihen" (A9) | geprüft werden vier verschiedene Einzelkarten direkt nacheinander | `src/engine/aufgabenPruefung.ts` (`pruefeFarbwechsler`) |
 | C23 | Symmetriemeister | „min. 8 Karten, erste Hälfte Spiegelbild der zweiten" (A9); gerade Länge und Sonderkarten sagt die Website nicht | verlangt gerade Länge und ausschliesslich Farbkarten (Auslegung offen, Umsetzungsplan Frage G6) | `src/engine/aufgabenPruefung.ts` (`pruefeSymmetriemeister`) |
@@ -807,7 +809,10 @@ Abschnitt 9. Fragen, Möglichkeiten und Vorschläge stehen in
 
 Wo die Website es selbst sagt, steht die Fundstelle in Teil A; wo nicht, gilt
 die Antwort, bis die Website sie aufnimmt („Website folgt“). Die Antworten zu
-D1 und D8 hat der Autor am 12.11.2026 abends auf die Website übernommen.
+D1 und D8 hat der Autor am 12.11.2026 abends auf die Website übernommen, D9,
+D10, D12 und D13 am 13.11.2026 (Bundle `index-EH-TKokX.js`, Wortlaut in A5, A6,
+A7.2 und A7.8). D11 steht ebenfalls auf der Website (A7.8), widerspricht dort
+aber D23; bis der Autor entscheidet, steht bei D11 weiter „Website folgt“.
 D14–D29 beantworten die Regelfragen F1–F15 und die Nachfrage F8a aus
 `docs/REGELFRAGEN.md`; die Nummer der Regelfrage steht vor der Frage. Die
 Spalte „Folge“ nennt dort den Task, der die Antwort umsetzt.
@@ -822,11 +827,11 @@ Spalte „Folge“ nennt dort den Task, der die Antwort umsetzt.
 | D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 | 12.11.2026 |
 | D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 | 12.11.2026 |
 | D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 | 12.11.2026 |
-| D9 | Darf man Karten in gegnerische Schlangen spielen? | Ja, jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. Eine Regenbogenschlange beim Gegner ist erlaubt, nützt aber ihm. Website folgt. | C19 | 12.11.2026 |
-| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange. Gegen Farbkarten gibt es keine Abwehr. Website folgt. | C6 | 12.11.2026 |
+| D9 | Darf man Karten in gegnerische Schlangen spielen? | Ja, jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. Eine Regenbogenschlange beim Gegner ist erlaubt, nützt aber ihm. Website übernommen am 13.11.2026. | C19 | 12.11.2026 |
+| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange. Gegen Farbkarten gibt es keine Abwehr. Website übernommen am 13.11.2026. | C6 | 12.11.2026 |
 | D11 | Gibt ein Verdoppler im zweiten Zug einen dritten Zug? | Nein, nur ein Verdoppler pro Runde. Website folgt. | C7 | 12.11.2026 |
-| D12 | Muss man eine Farbkarte spielen, wenn man eine hat? | Nein. Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art. Website folgt. | C12 | 12.11.2026 |
-| D13 | Darf man eine Sonderkarte spielen, die einem nichts bringt? | Ja, jederzeit, auch wenn man eine Farbkarte hätte. Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. Website folgt. | C12 | 12.11.2026 |
+| D12 | Muss man eine Farbkarte spielen, wenn man eine hat? | Nein. Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art. Website übernommen am 13.11.2026. | C12 | 12.11.2026 |
+| D13 | Darf man eine Sonderkarte spielen, die einem nichts bringt? | Ja, jederzeit, auch wenn man eine Farbkarte hätte. Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. Website übernommen am 13.11.2026. | C12 | 12.11.2026 |
 | D14 | F1: Treffen zwei Schlangengruben denselben Spieler, bevor er ausgesetzt hat: setzt er einen oder zwei Züge aus? | Zwei Züge: Jede Schlangengrube kostet einen eigenen Zug und bleibt vor ihm liegen, bis er für sie ausgesetzt hat. Website folgt. | E4 | 13.11.2026 |
 | D15 | F2: Schlangenfrass c) frisst zwei Karten **desselben** Spielers: Wehrt ein Farbenschutz beide ab? | Ja: Ein Farbenschutz wehrt den ganzen Schlangenfrass für diesen Spieler ab, beide Karten bleiben liegen. Website folgt. | E6 | 13.11.2026 |
 | D16 | F3: Kann eine Sonderkarte (etwa die Regenbogenschlange) eine neue Schlange beginnen? | Nein, nur eine Farbkarte beginnt eine Schlange. Regenbogenschlange und Schlangenblockade brauchen eine bestehende Schlange. Website folgt. | E5 | 13.11.2026 |
@@ -872,6 +877,17 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **13.11.2026, Task P0.5d:** Teil A an die Website angeglichen (Bundle
+  `index-EH-TKokX.js`): Der Autor hat D9–D13 übernommen. Neuer Wortlaut in
+  A5 (Karten ausspielen, „Wichtig“), A6 (Grundregeln für Sonderkarten), A7.2
+  (Farbenschutz) und A7.8 (Verdoppler); Abschnittsnummern unverändert. D9,
+  D10, D12 und D13 stimmen mit Teil D überein: „Website übernommen am
+  13.11.2026“. D11 bleibt „Website folgt“: A7.8 sagt „Im zweiten Zug darfst du
+  keinen weiteren Verdoppler spielen“, D23 lässt ihn dort wirkungslos ablegen;
+  das entscheidet der Autor. Teil C: C6, C7, C12 und C19 auf den neuen
+  Wortlaut verwiesen, Spalte „Engine heute“ unverändert. Die Abdeckungsprüfung
+  liest nur noch Teil A; `npm run abgleich:website` meldet volle Abdeckung.
+  Freigabe des Orchestrators nach U13.
 - **13.11.2026, Task P0.5:** Antworten des Autors auf die Regelfragen F1–F15
   als D14–D28 aufgenommen (Website folgt), Teil D um die Spalte „Datum“
   ergänzt. Abweichend vom Vorschlag: F8 (Grube in der Schlussrunde nimmt den

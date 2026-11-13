@@ -807,7 +807,7 @@ Hinweis des Orchestrators: Drei Farbenfusionen nebeneinander bringen nach A11 Pu
 
 > Die Karte wird nach der Nutzung aus dem Spiel entfernt
 
-> Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle eingefügt werden)
+> Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
 
 **Möglichkeiten:**
 

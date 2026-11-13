@@ -184,8 +184,27 @@ describe('GAME_SPEC Teil A — Spiegel der Website', () => {
   it('lässt als Reaktion nur den Farbenschutz zu', () => {
     expect(
       fehlende(teil('A'), [
-        'Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Eine andere Karte ist als Reaktion nicht erlaubt.',
+        'Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren.',
+        'Eine andere Karte als Farbenschutz ist als Reaktion nicht erlaubt.',
         'Schlangenfrass ist keine Reaktion',
+      ]),
+    ).toEqual([])
+  })
+
+  it('P0.5d: trägt die Entscheidungen D9, D10, D12 und D13 im Wortlaut der Website (13.11.2026)', () => {
+    expect(
+      fehlende(teil('A'), [
+        // D9, D19
+        'Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)',
+        'Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)',
+        // D10
+        'Das gilt für jede Sonderkarte, die ein Mitspieler gegen ihn oder in seine Schlange spielt. Gegen Farbkarten gibt es keine Abwehr.',
+        'Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange',
+        // D12, D13
+        'Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.',
+        'Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges.',
+        // D11 (Verdoppler), Widerspruch zu D23 offen
+        'Im zweiten Zug darfst du keinen weiteren Verdoppler spielen',
       ]),
     ).toEqual([])
   })
@@ -294,6 +313,16 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
     )
     expect(keineFrage).toEqual([])
     expect(fehlende(d, ['Bis zur Antwort bleibt das heutige Verhalten stehen.'])).toEqual([])
+  })
+
+  it('P0.5d: Teil D vermerkt, welche Antworten die Website übernommen hat und welche noch folgen', () => {
+    const antworten = new Map(spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Antwort').map(([nr, antwort]) => [nr, antwort]))
+    for (const nr of ['D9', 'D10', 'D12', 'D13']) {
+      expect(antworten.get(nr), `${nr}: Status`).toContain('Website übernommen am 13.11.2026.')
+      expect(antworten.get(nr), `${nr}: Status`).not.toContain('Website folgt')
+    }
+    // D11 steht auf der Website, widerspricht dort aber D23; bis der Autor entscheidet, bleibt „Website folgt“.
+    expect(antworten.get('D11'), 'D11: Status').toContain('Website folgt.')
   })
 
   it('macht die früheren R-Nummern auffindbar', () => {
