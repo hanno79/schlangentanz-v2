@@ -12,9 +12,10 @@ Fensters, statt neben einer Fusszeile zu schrumpfen.
 
 .grossansicht {
   --rand: var(--abstand-4);
+  --hoechstens: calc(100dvh - 2 * var(--abstand-2));
   width: min(calc(100vw - 2 * var(--abstand-2)), 60rem);
   max-width: none;
-  max-height: calc(100dvh - 2 * var(--abstand-2));
+  max-height: var(--hoechstens);
   margin: auto;
   padding: 0;
   border: 0;
@@ -27,6 +28,7 @@ Fensters, statt neben einer Fusszeile zu schrumpfen.
 }
 
 .grossansicht::backdrop {
+  /* --farbe-tinte mit 60 % Deckkraft; als Wert, weil ::backdrop nicht überall Variablen erbt. */
   background: rgb(43 33 28 / 0.6);
 }
 
@@ -88,8 +90,8 @@ Fensters, statt neben einer Fusszeile zu schrumpfen.
 
 @media (min-width: 600px) {
   .grossansicht {
-    --bild: min(360px, 40vw, calc((100dvh - 2 * var(--abstand-2) - 2 * var(--rand)) * 470 / 766));
-    height: calc(var(--bild) * 766 / 470 + 2 * var(--rand));
+    --bild: min(360px, 40vw, calc((var(--hoechstens) - 2 * var(--rand)) * var(--kartenverhaeltnis)));
+    height: calc(var(--bild) / (var(--kartenverhaeltnis)) + 2 * var(--rand));
   }
 
   .grossansicht[open] {

@@ -1,4 +1,5 @@
 import type { Farbe } from '../../../engine'
+import { punkteText } from '../kartentexte'
 import { hilfeId, type Kartenhilfe } from './typen'
 
 /*
@@ -20,7 +21,7 @@ function farbkarte(farbe: Farbe, punkte: number): Kartenhilfe {
   return {
     karte: { typ: 'Farbkarte', id: hilfeId(farbe), farbe, punkte },
     quellen: ['A1', 'A5', 'A11'],
-    kurz: `${farbe} (${punkte === 1 ? '1 Punkt' : `${punkte} Punkte`})`,
+    kurz: `${farbe} (${punkteText(punkte)})`,
     abschnitte: [{ inhalt: [ANLEGEN, FARBGRUPPE, PUNKTE_JE_KARTE[punkte]] }],
   }
 }

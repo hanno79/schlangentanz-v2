@@ -63,11 +63,10 @@ test.describe('O9: Regelseite', () => {
     await expect(knoepfe).toHaveCount(33)
     const befunde: string[] = []
     const { width, height } = page.viewportSize()!
-    for (let i = 0; i < 33; i++) {
-      const knopf = knoepfe.nth(i)
+    for (const knopf of await knoepfe.all()) {
       await knopf.scrollIntoViewIfNeeded()
       const box = await kasten(knopf)
-      const name = (await knopf.getAttribute('aria-label')) ?? `Knopf ${i}`
+      const name = await knopf.getAttribute('aria-label')
       if (box.oben < 0 || box.unten > height || box.links < 0 || box.rechts > width) {
         befunde.push(`${name}: ${box.links}..${box.rechts} × ${box.oben}..${box.unten} ausserhalb ${width}×${height}`)
       }
@@ -103,35 +102,33 @@ for (const kartenname of BEISPIELE) {
       await page.evaluate(() => document.fonts.ready.then(() => undefined))
     })
 
-    test('O9: der Dialog liegt ganz im Fenster, die Seite scrollt nicht waagrecht', async ({ page }) => {
+    // Eine Messung, ein Seitenaufruf: Lage, Grösse der Karte und Text werden am selben offenen Dialog gelesen.
+    test('O9: Dialog ganz im Fenster, Karte gross genug, Text bis zum letzten Absatz erreichbar, nichts abgeschnitten', async ({
+      page,
+    }) => {
       const { width, height } = page.viewportSize()!
-      const box = await kasten(page.getByRole('dialog'))
+      const dialog = page.getByRole('dialog')
+      const box = await kasten(dialog)
       expect(box.links, 'linker Rand des Dialogs').toBeGreaterThanOrEqual(0)
       expect(box.oben, 'oberer Rand des Dialogs').toBeGreaterThanOrEqual(0)
       expect(box.rechts, 'rechter Rand des Dialogs').toBeLessThanOrEqual(width)
       expect(box.unten, 'unterer Rand des Dialogs').toBeLessThanOrEqual(height)
       expect(await waagrechterUeberstand(page), 'waagrechter Überstand der Seite').toBe(0)
-      const dialogUeberstand = await page.getByRole('dialog').evaluate((d) => d.scrollWidth - d.clientWidth)
+      const dialogUeberstand = await dialog.evaluate((d) => d.scrollWidth - d.clientWidth)
       expect(dialogUeberstand, 'waagrechter Überstand im Dialog').toBeLessThanOrEqual(0)
-    })
 
-    test('O9: die Karte ist mindestens 280 px breit oder füllt die Fensterhöhe bis auf 48 px', async ({ page }) => {
-      const { height } = page.viewportSize()!
-      const karte = await kasten(page.getByRole('dialog').getByRole('img'))
+      // Mindestens 280 px breit; nur wo das Fenster dafür zu niedrig ist, füllt die Karte die Höhe bis auf 48 px.
+      const karte = await kasten(dialog.getByRole('img'))
       const verlangt = Math.min(280, Math.floor(((height - 48) * 470) / 766))
       expect(karte.breite, `Breite der Karte bei ${height} px Fensterhöhe`).toBeGreaterThanOrEqual(verlangt)
       expect(karte.unten, 'Unterkante der Karte').toBeLessThanOrEqual(height)
-    })
 
-    test('O9: Kurztext sichtbar, letzter Absatz erreichbar, nichts abgeschnitten', async ({ page }) => {
-      const dialog = page.getByRole('dialog')
       await expect(dialog.locator('.kartentext__kurz')).toBeVisible()
       const letzter = dialog.locator('.kartentext p, .kartentext li').last()
       await letzter.scrollIntoViewIfNeeded()
-      const { height, width } = page.viewportSize()!
-      const box = await kasten(letzter)
-      expect(box.unten, 'letzter Absatz unten im Bild').toBeLessThanOrEqual(height)
-      expect(box.rechts, 'letzter Absatz rechts im Bild').toBeLessThanOrEqual(width)
+      const absatz = await kasten(letzter)
+      expect(absatz.unten, 'letzter Absatz unten im Bild').toBeLessThanOrEqual(height)
+      expect(absatz.rechts, 'letzter Absatz rechts im Bild').toBeLessThanOrEqual(width)
       for (const [art, befunde] of [
         ['abgeschnitten', await findeAbgeschnittenes(page)],
         ['zusammengedrückt', await findeZusammengedruecktes(page)],

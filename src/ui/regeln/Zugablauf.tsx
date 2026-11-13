@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { Fragment, useId } from 'react'
 import { REGELHILFE } from './texte'
 import { istErgaenzungDesAutors, ZUGSCHRITTE, type Satz } from './zugschritte'
 
@@ -35,10 +35,10 @@ export default function Zugablauf() {
             </h3>
             <p className="zugablauf__text">
               {schritt.saetze.map((satz, i) => (
-                <span key={satz.text}>
+                <Fragment key={satz.text}>
                   {i > 0 && ' '}
                   <Zugsatz satz={satz} />
-                </span>
+                </Fragment>
               ))}
             </p>
           </li>

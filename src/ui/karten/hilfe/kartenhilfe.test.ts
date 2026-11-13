@@ -3,15 +3,20 @@ import { describe, expect, it } from 'vitest'
 import { erstelleAufgabenStapel } from '../../../engine/aufgabenKarten'
 import { erstelleAuslagekarten, erstelleSpielkarten } from '../../../engine/deck'
 import {
+  A1_TABELLE,
   abschnittA,
   abschnittsnummer,
   aufzaehlungen,
   aufzaehlungUnter,
+  AUFGABEN_TABELLE,
   kurzbeschreibung,
-  tabellenzeilen,
+  SPEC_AUFGABEN,
+  SPEC_FARBEN,
+  SPEC_SONDERKARTEN,
   zeilenOhneAuszeichnung,
 } from '../../../test/specText'
 import type { Bildkarte } from '../kartenbilder'
+import { kartenkurzname } from '../kartentexte'
 import { KARTENHILFEN, kartenhilfe, type Kartenhilfe } from './kartenhilfe'
 
 /*
@@ -22,20 +27,9 @@ Quelle nennt, und der erste dieser Abschnitte ist der Abschnitt der Karte selbst
 Wo Teil A eine Liste führt („Wichtige Regeln“), ist sie vollständig übernommen.
 */
 
-const A1 = tabellenzeilen(abschnittA('A1').text)
-const AUFGABEN_TABELLE = tabellenzeilen(abschnittA('A9').text.split('#### Verfügbare Aufgabenkarten')[1])
-const ohneEtikett = (name: string) => name.replace(/\s*\[Erweiterung\]$/, '')
-const SPEC_FARBEN = A1.filter(([art]) => art === 'Farbkarten').map(([, , text]) => text.split(' ')[0])
-const SPEC_SONDERKARTEN = A1.filter(([art]) => art === 'Sonderkarten').map(([, , name]) => ohneEtikett(name))
-const SPEC_AUFGABEN = AUFGABEN_TABELLE.map(([, name]) => name)
-
+const A9_ZEILEN = zeilenOhneAuszeichnung(abschnittA('A9'))
 const nach = (typ: Bildkarte['typ']) => KARTENHILFEN.filter((hilfe) => hilfe.karte.typ === typ)
-const name = (hilfe: Kartenhilfe): string => {
-  const { karte } = hilfe
-  if (karte.typ === 'Farbkarte') return karte.farbe
-  if (karte.typ === 'Sonderkarte' || karte.typ === 'Aufgabenkarte') return karte.name
-  return karte.typ
-}
+const name = (hilfe: Kartenhilfe): string => kartenkurzname(hilfe.karte)
 
 /** Der Abschnitt von Teil A, in dem die Karte selbst beschrieben ist. */
 function eigenerAbschnitt(karte: Bildkarte): string {
@@ -63,7 +57,7 @@ function sonderkartenAbschnitt(kartenname: string): string {
 }
 
 /** Text aller Quellabschnitte eines Kartentexts. */
-const quelltext = (hilfe: Kartenhilfe) => hilfe.quellen.map((nummer) => abschnittA(nummer).text).join('\n')
+const quelltext = (hilfe: Kartenhilfe) => hilfe.quellen.map((nummer) => abschnittA(nummer)).join('\n')
 
 describe('O9: Zu jeder Karte gibt es einen Text (Kriterium 1)', () => {
   it('O9/A1/A9: 6 Farbkarten, 10 Sonderkarten, Comeback, Risiko-Belohnung und 15 Aufgaben, in der Reihenfolge der Spec', () => {
@@ -111,8 +105,9 @@ describe('O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1)', () 
   it.each(KARTENHILFEN.map((hilfe) => [name(hilfe), hilfe] as const))(
     'O9/A: jeder Absatz, jede Aufzählung und jeder Zwischentitel von %s steht wörtlich in den Quellabschnitten',
     (_, hilfe) => {
-      const zeilen = zeilenOhneAuszeichnung(quelltext(hilfe))
-      const listen = aufzaehlungen(quelltext(hilfe))
+      const text = quelltext(hilfe)
+      const zeilen = zeilenOhneAuszeichnung(text)
+      const listen = aufzaehlungen(text)
       const fehlend: string[] = []
       if (!zeilen.some((zeile) => zeile.includes(hilfe.kurz))) fehlend.push(`Kurztext: ${hilfe.kurz}`)
       for (const abschnitt of hilfe.abschnitte) {
@@ -136,7 +131,7 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
   it.each(nach('Farbkarte').map((hilfe) => [name(hilfe), hilfe] as const))(
     'O9/A1: Farbkarte %s nennt Farbe und Punkte wie in der Materialliste',
     (farbe, hilfe) => {
-      const zeile = A1.find(([art, , text]) => art === 'Farbkarten' && text.startsWith(`${farbe} `))
+      const zeile = A1_TABELLE.find(([art, , text]) => art === 'Farbkarten' && text.startsWith(`${farbe} `))
       expect(hilfe.kurz, `Kurztext der Farbkarte ${farbe}`).toBe(zeile?.[2])
     },
   )
@@ -144,7 +139,7 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
   it.each(nach('Sonderkarte').map((hilfe) => [name(hilfe), hilfe] as const))(
     'O9/A7: Sonderkarte %s: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig',
     (kartenname, hilfe) => {
-      const { text } = abschnittA(sonderkartenAbschnitt(kartenname))
+      const text = abschnittA(sonderkartenAbschnitt(kartenname))
       expect(hilfe.kurz, `Kurzbeschreibung von ${kartenname}`).toBe(kurzbeschreibung(text))
       const regeln = hilfe.abschnitte.find((abschnitt) => abschnitt.titel === 'Wichtige Regeln')
       expect(regeln?.inhalt, `„Wichtige Regeln“ von ${kartenname}`).toEqual([aufzaehlungUnter(text, 'Wichtige Regeln')])
@@ -154,7 +149,7 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
   it.each([...nach('Comeback'), ...nach('Risiko-Belohnung')].map((hilfe) => [name(hilfe), hilfe] as const))(
     'O9/A8: %s: Kurztext ist der Anfang der Kurzbeschreibung',
     (kartenname, hilfe) => {
-      const { text } = abschnittA(eigenerAbschnitt(hilfe.karte))
+      const text = abschnittA(eigenerAbschnitt(hilfe.karte))
       expect(kurzbeschreibung(text).startsWith(hilfe.kurz), `Kurztext von ${kartenname}: ${hilfe.kurz}`).toBe(true)
     },
   )
@@ -165,7 +160,7 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
       const [, , punkte, bedingung] = AUFGABEN_TABELLE.find(([, n]) => n === aufgabe)!
       expect(hilfe.kurz, `Bedingung von ${aufgabe}`).toBe(bedingung)
       expect(hilfe.karte.typ === 'Aufgabenkarte' && hilfe.karte.punkte, `Punkte von ${aufgabe}`).toBe(Number(punkte))
-      const beispiel = zeilenOhneAuszeichnung(abschnittA('A9').text).find((zeile) => zeile.startsWith(`${aufgabe}: `))
+      const beispiel = A9_ZEILEN.find((zeile) => zeile.startsWith(`${aufgabe}: `))
       const absaetze = hilfe.abschnitte.flatMap((abschnitt) => abschnitt.inhalt).filter((b) => typeof b === 'string')
       if (beispiel === undefined) {
         expect(absaetze, `${aufgabe} hat in Teil A kein Beispiel`).toEqual([])

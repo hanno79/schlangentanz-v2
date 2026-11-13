@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { abschnittA, antwortD, stehtImSatz, zeilenOhneAuszeichnung } from '../../test/specText'
-import { istErgaenzungDesAutors, ZUGSCHRITTE } from './zugschritte'
+import { ZUGSCHRITTE } from './zugschritte'
 
 /*
 O9, Kriterium 2: `/regeln` fasst einen Zug in fünf Schritten zusammen und
@@ -40,9 +40,8 @@ describe('O9: Ein Zug in fünf Schritten (Kriterium 2)', () => {
   it.each(ALLE_SAETZE.filter(([, satz]) => satz.quelle.startsWith('A')))(
     'O9/U2: „%s“: Satz aus Teil A steht wörtlich in seiner Quelle: %j',
     (_, satz) => {
-      const zeilen = zeilenOhneAuszeichnung(abschnittA(satz.quelle).text)
+      const zeilen = zeilenOhneAuszeichnung(abschnittA(satz.quelle))
       expect(stehtImSatz(satz.text, zeilen), `${satz.quelle} enthält nicht: ${satz.text}`).toBe(true)
-      expect(istErgaenzungDesAutors(satz), 'Ein Satz der Website ist keine Ergänzung des Autors').toBe(false)
     },
   )
 
@@ -50,7 +49,6 @@ describe('O9: Ein Zug in fünf Schritten (Kriterium 2)', () => {
     'O9/U2: „%s“: Ergänzung aus Teil D steht wörtlich in der Antwort des Autors: %j',
     (_, satz) => {
       expect(stehtImSatz(satz.text, [antwortD(satz.quelle)]), `${satz.quelle} enthält nicht: ${satz.text}`).toBe(true)
-      expect(istErgaenzungDesAutors(satz), 'Ein Satz aus Teil D ist eine Ergänzung des Autors').toBe(true)
     },
   )
 

@@ -3,15 +3,20 @@ import { Grossansicht } from '../karten/Grossansicht'
 import { Karte } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import { kartenkurzname } from '../karten/kartentexte'
-import { KARTENHILFEN } from '../karten/hilfe/kartenhilfe'
+import {
+  AUFGABEN_HILFE,
+  FARBKARTEN_HILFE,
+  SONDERKARTEN_HILFE,
+  ZUSATZKARTEN_HILFE,
+  type Kartenhilfe,
+} from '../karten/hilfe/kartenhilfe'
 import { REGELHILFE } from './texte'
 
-/** Gruppen der Übersicht in der Reihenfolge von `KARTENHILFEN`. */
-const GRUPPEN: readonly { titel: string; typen: readonly Bildkarte['typ'][] }[] = [
-  { titel: REGELHILFE.gruppen.farbkarten, typen: ['Farbkarte'] },
-  { titel: REGELHILFE.gruppen.sonderkarten, typen: ['Sonderkarte'] },
-  { titel: REGELHILFE.gruppen.zusatzkarten, typen: ['Comeback', 'Risiko-Belohnung'] },
-  { titel: REGELHILFE.gruppen.aufgaben, typen: ['Aufgabenkarte'] },
+const GRUPPEN: readonly { titel: string; hilfen: readonly Kartenhilfe[] }[] = [
+  { titel: REGELHILFE.gruppen.farbkarten, hilfen: FARBKARTEN_HILFE },
+  { titel: REGELHILFE.gruppen.sonderkarten, hilfen: SONDERKARTEN_HILFE },
+  { titel: REGELHILFE.gruppen.zusatzkarten, hilfen: ZUSATZKARTEN_HILFE },
+  { titel: REGELHILFE.gruppen.aufgaben, hilfen: AUFGABEN_HILFE },
 ]
 
 /** Alle Karten als Knöpfe; ein Knopf öffnet die Grossansicht mit dem Text der Karte (O9, Kriterium 1). */
@@ -29,7 +34,7 @@ export default function Kartenuebersicht() {
         <div key={gruppe.titel} className="kartenuebersicht__gruppe">
           <h3 className="kartenuebersicht__titel">{gruppe.titel}</h3>
           <ul className="kartenuebersicht">
-            {KARTENHILFEN.filter(({ karte }) => gruppe.typen.includes(karte.typ)).map(({ karte }) => (
+            {gruppe.hilfen.map(({ karte }) => (
               <li key={karte.id}>
                 <button
                   type="button"
@@ -38,7 +43,7 @@ export default function Kartenuebersicht() {
                   aria-label={REGELHILFE.textZeigen(kartenkurzname(karte))}
                   onClick={() => setzeGewaehlt(karte)}
                 >
-                  <Karte karte={karte} />
+                  <Karte karte={karte} sizes="72px" />
                   <span className="kartenknopf__name" aria-hidden="true">
                     {kartenkurzname(karte)}
                   </span>

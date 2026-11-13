@@ -1,8 +1,9 @@
-import { beforeAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { dialogNachbilden } from '../../test/dialog'
 import { KARTENHILFEN } from '../karten/hilfe/kartenhilfe'
+import { kartenkurzname } from '../karten/kartentexte'
 import Regeln from './Regeln'
+import { REGELHILFE } from './texte'
 import { istErgaenzungDesAutors, ZUGSCHRITTE } from './zugschritte'
 
 /*
@@ -10,8 +11,6 @@ O9: Die Regelseite verweist auf die Website, fasst einen Zug in fünf Schritten
 zusammen (Kriterium 2) und zeigt alle Karten; eine gewählte Karte zeigt ihren
 Text (Kriterium 1).
 */
-
-beforeAll(dialogNachbilden)
 
 describe('O9: /regeln verweist auf die Website und fasst einen Zug zusammen (Kriterium 2)', () => {
   it('O9: der einzige Verweis auf die Website führt zu den Regeln auf schlangentanz.ch', () => {
@@ -73,8 +72,7 @@ describe('O9: Kartenübersicht auf /regeln, jede Karte zeigt auf Wunsch ihren Te
     'O9: %s: Antippen öffnet die Grossansicht mit dem Kurztext, „Schliessen“ schliesst sie',
     (_, hilfe) => {
       render(<Regeln />)
-      const knoepfe = within(screen.getByRole('region', { name: 'Alle Karten' })).getAllByRole('button')
-      const knopf = knoepfe[KARTENHILFEN.indexOf(hilfe)]
+      const knopf = screen.getByRole('button', { name: REGELHILFE.textZeigen(kartenkurzname(hilfe.karte)) })
       expect(knopf).toHaveAttribute('aria-haspopup', 'dialog')
       fireEvent.click(knopf)
       const dialog = screen.getByRole('dialog')

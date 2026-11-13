@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
 /*
-Liest `docs/GAME_SPEC.md` für Tests, die Anzeigetexte mit dem Wortlaut der
-Spielanleitung vergleichen (O9). Die Texte kommen aus der Spec selbst, nicht aus
-einer Kopie: Ändert sich Teil A, wird der Test rot, bis die Oberfläche folgt.
+Liest `docs/GAME_SPEC.md` für Tests, die Anzeigetexte und Material mit dem
+Wortlaut der Spielanleitung vergleichen (O1, O9). Die Texte kommen aus der Spec
+selbst, nicht aus einer Kopie: Ändert sich Teil A, wird der Test rot, bis die
+Oberfläche folgt.
 
 Verglichen wird ohne Markdown-Auszeichnung: Einzug, Listenzeichen,
 Überschriftszeichen und `**` gehören zur Schreibweise der Spec, nicht zum
@@ -20,11 +21,17 @@ function teil(kennung: 'A' | 'D'): string {
   return ende < 0 ? SPEC.slice(start) : SPEC.slice(start, ende)
 }
 
-const TEIL_A = teil('A')
+const ZEILEN_A = teil('A').split('\n')
 const TEIL_D = teil('D')
 
+/** Überschriften von Teil A: Zeile, Ebene, Nummer („A7.1“) und Titel („Farbendieb“). */
+const UEBERSCHRIFTEN = ZEILEN_A.flatMap((zeile, index) => {
+  const teile = zeile.match(/^(#{2,4}) (A[\d.]+) (.+)$/)
+  return teile === null ? [] : [{ index, ebene: teile[1].length, nummer: teile[2], titel: teile[3].trim() }]
+})
+
 /** Eine Zeile ohne Einzug, Überschrifts- und Listenzeichen und ohne `**`. */
-export function ohneAuszeichnung(zeile: string): string {
+function ohneAuszeichnung(zeile: string): string {
   return zeile
     .trim()
     .replace(/^#{1,6}\s+/, '')
@@ -33,26 +40,19 @@ export function ohneAuszeichnung(zeile: string): string {
     .trim()
 }
 
-/** Überschrift „A7.1 Farbendieb“ und Text eines Abschnitts von Teil A bis zur nächsten Überschrift gleicher oder höherer Ebene. */
-export function abschnittA(nummer: string): { ueberschrift: string; text: string } {
-  const zeilen = TEIL_A.split('\n')
-  const start = zeilen.findIndex((zeile) => new RegExp(`^#{2,4} ${nummer.replace('.', '\\.')}( |$)`).test(zeile))
-  if (start < 0) throw new Error(`abschnittA: Abschnitt ${nummer} steht nicht in Teil A von docs/GAME_SPEC.md`)
-  const ebene = zeilen[start].match(/^#+/)![0].length
-  const ende = zeilen.findIndex((zeile, i) => i > start && new RegExp(`^#{1,${ebene}} `).test(zeile))
-  return {
-    ueberschrift: ohneAuszeichnung(zeilen[start]),
-    text: zeilen.slice(start + 1, ende < 0 ? undefined : ende).join('\n'),
-  }
+/** Text eines Abschnitts von Teil A („A7.1“) bis zur nächsten Überschrift gleicher oder höherer Ebene. */
+export function abschnittA(nummer: string): string {
+  const start = UEBERSCHRIFTEN.find((ueberschrift) => ueberschrift.nummer === nummer)
+  if (start === undefined) throw new Error(`abschnittA: Abschnitt ${nummer} steht nicht in Teil A von docs/GAME_SPEC.md`)
+  const ende = ZEILEN_A.findIndex((zeile, i) => i > start.index && /^#{1,6} /.test(zeile) && zeile.indexOf(' ') <= start.ebene)
+  return ZEILEN_A.slice(start.index + 1, ende < 0 ? undefined : ende).join('\n')
 }
 
 /** Die Nummer des Abschnitts von Teil A, dessen Überschrift genau „<Nummer> <Titel>“ lautet. */
 export function abschnittsnummer(titel: string): string {
-  const treffer = TEIL_A.split('\n')
-    .map((zeile) => zeile.match(/^#{2,4} (A[\d.]+) (.+)$/))
-    .find((teile) => teile !== null && teile[2].trim() === titel)
-  if (treffer == null) throw new Error(`abschnittsnummer: keine Überschrift „${titel}“ in Teil A`)
-  return treffer[1]
+  const treffer = UEBERSCHRIFTEN.find((ueberschrift) => ueberschrift.titel === titel)
+  if (treffer === undefined) throw new Error(`abschnittsnummer: keine Überschrift „${titel}“ in Teil A`)
+  return treffer.nummer
 }
 
 /** Alle nicht leeren Zeilen eines Texts, ohne Auszeichnung. */
@@ -67,14 +67,10 @@ export function aufzaehlungen(text: string): string[][] {
   let einzug = -1
   for (const zeile of text.split('\n')) {
     const punkt = zeile.match(/^(\s*)- (.*)$/)
-    if (punkt !== null && (aktuell.length === 0 || punkt[1].length === einzug)) {
-      aktuell.push(ohneAuszeichnung(punkt[2]))
-      einzug = punkt[1].length
-      continue
+    if (aktuell.length > 0 && (punkt === null || punkt[1].length !== einzug)) {
+      listen.push(aktuell)
+      aktuell = []
     }
-    if (aktuell.length > 0) listen.push(aktuell)
-    aktuell = []
-    einzug = -1
     if (punkt !== null) {
       aktuell.push(ohneAuszeichnung(punkt[2]))
       einzug = punkt[1].length
@@ -111,6 +107,21 @@ export function tabellenzeilen(text: string): string[][] {
     .slice(1)
 }
 
+/** Materialliste (A1) und Aufgabentabelle (A9) als Zeilen ihrer Zellen. */
+export const A1_TABELLE = tabellenzeilen(abschnittA('A1'))
+export const AUFGABEN_TABELLE = tabellenzeilen(abschnittA('A9').split('#### Verfügbare Aufgabenkarten')[1])
+
+const ohneEtikett = (name: string) => name.replace(/\s*\[Erweiterung\]$/, '')
+const nachArt = (art: string) => A1_TABELLE.filter(([kategorie]) => kategorie === art)
+
+/** Die Karten des Materials in der Reihenfolge der Spec: Farben, Sonderkarten, Zusatzmaterial, Aufgaben. */
+export const SPEC_FARBEN = nachArt('Farbkarten').map(([, , text]) => text.split(' ')[0])
+export const SPEC_SONDERKARTEN = nachArt('Sonderkarten').map(([, , name]) => ohneEtikett(name))
+export const SPEC_ZUSATZ = A1_TABELLE.filter(([kategorie]) => kategorie.startsWith('Zusätzliches Spielmaterial')).map(
+  ([, , text]) => text,
+)
+export const SPEC_AUFGABEN = AUFGABEN_TABELLE.map(([, name]) => name)
+
 /** Die Antwort des Autors zu einer Frage aus Teil D, etwa „D12“. */
 export function antwortD(nummer: string): string {
   const zeile = tabellenzeilen(TEIL_D).find(([kennung]) => kennung === nummer)
@@ -126,11 +137,6 @@ export function antwortD(nummer: string): string {
  */
 export function stehtImSatz(text: string, zeilen: readonly string[]): boolean {
   const gesucht = text.trim().replace(/[.:]$/, '')
-  const rest = gesucht.slice(1)
-  return zeilen.some((zeile) => {
-    for (let i = zeile.indexOf(rest, 1); i >= 1; i = zeile.indexOf(rest, i + 1)) {
-      if (zeile[i - 1].toLowerCase() === gesucht[0].toLowerCase()) return true
-    }
-    return false
-  })
+  const fassungen = [gesucht[0].toLowerCase(), gesucht[0].toUpperCase()].map((anfang) => anfang + gesucht.slice(1))
+  return zeilen.some((zeile) => fassungen.some((fassung) => zeile.includes(fassung)))
 }

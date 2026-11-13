@@ -1,8 +1,8 @@
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { dialogNachbilden } from '../../test/dialog'
 import { Grossansicht } from './Grossansicht'
 import { KARTENHILFEN, type Kartenhilfe } from './hilfe/kartenhilfe'
+import { ERWEITERUNG_KENNUNG } from './hilfe/texte'
 import { Kartentext } from './Kartentext'
 
 /*
@@ -10,10 +10,6 @@ O9, Kriterium 1: Die Grossansicht einer Karte zeigt neben dem Bild ihren Text.
 Die Komponente ist für Regelseite, Tisch (O4) und Kartenwahl (O5) gedacht und
 bekommt deshalb nur die Karte und einen Weg zum Schliessen.
 */
-
-beforeAll(dialogNachbilden)
-
-const ETIKETT = /\s*\[Erweiterung\]$/
 
 /** Alle Texte eines Kartentexts so, wie sie angezeigt werden: „[Erweiterung]“ wird zum Etikett. */
 function angezeigteTexte(hilfe: Kartenhilfe): string[] {
@@ -23,7 +19,7 @@ function angezeigteTexte(hilfe: Kartenhilfe): string[] {
       ...(abschnitt.titel === undefined ? [] : [abschnitt.titel]),
       ...abschnitt.inhalt.flat(),
     ]),
-  ].map((text) => text.replace(ETIKETT, ''))
+  ].map((text) => (text.endsWith(ERWEITERUNG_KENNUNG) ? text.slice(0, -ERWEITERUNG_KENNUNG.length) : text))
 }
 
 const leerzeichen = (text: string | null) => (text ?? '').replace(/\s+/g, ' ')

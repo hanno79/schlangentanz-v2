@@ -5,6 +5,7 @@ import { join, resolve } from 'node:path'
 import type { Farbe } from '../../engine'
 import { erstelleAufgabenStapel } from '../../engine/aufgabenKarten'
 import { erstelleAuslagekarten, erstelleSpielkarten } from '../../engine/deck'
+import { SPEC_AUFGABEN, SPEC_FARBEN, SPEC_SONDERKARTEN, SPEC_ZUSATZ } from '../../test/specText'
 import {
   aufgabenbild,
   farbkartenbild,
@@ -29,33 +30,6 @@ hier auf und nicht erst am Tisch als fehlendes Bild.
 const WURZEL = resolve(__dirname, '../../..')
 const OEFFENTLICH = join(WURZEL, 'public')
 const KARTENORDNER = join(OEFFENTLICH, 'karten')
-const SPEC = readFileSync(join(WURZEL, 'docs/GAME_SPEC.md'), 'utf8')
-
-/** Der Text eines Spec-Abschnitts von seiner Überschrift bis zur nächsten gleicher Tiefe. */
-function abschnitt(ueberschrift: string): string {
-  const start = SPEC.indexOf(ueberschrift)
-  if (start < 0) throw new Error(`abschnitt: „${ueberschrift}“ steht nicht in docs/GAME_SPEC.md`)
-  const tiefe = ueberschrift.match(/^#+/)?.[0] ?? '#'
-  const rest = SPEC.slice(start + ueberschrift.length)
-  const ende = rest.search(new RegExp(`\\n${tiefe} `))
-  return ende < 0 ? rest : rest.slice(0, ende)
-}
-
-/** Die Zellen jeder Tabellenzeile (ohne Kopf und Trennzeile). */
-function tabellenzeilen(text: string): string[][] {
-  return text
-    .split('\n')
-    .filter((zeile) => zeile.startsWith('|') && !/^\|\s*-/.test(zeile))
-    .map((zeile) => zeile.slice(1, -1).split('|').map((zelle) => zelle.trim()))
-    .slice(1)
-}
-
-const A1 = tabellenzeilen(abschnitt('### A1 Spielmaterial'))
-const ohneEtikett = (name: string) => name.replace(/\s*\[Erweiterung\]$/, '')
-const SPEC_FARBEN = A1.filter(([kategorie]) => kategorie === 'Farbkarten').map(([, , text]) => text.split(' ')[0])
-const SPEC_SONDERKARTEN = A1.filter(([kategorie]) => kategorie === 'Sonderkarten').map(([, , name]) => ohneEtikett(name))
-const SPEC_ZUSATZ = A1.filter(([kategorie]) => kategorie.startsWith('Zusätzliches Spielmaterial')).map(([, , text]) => text)
-const SPEC_AUFGABEN = tabellenzeilen(abschnitt('#### Verfügbare Aufgabenkarten')).map(([, name]) => name)
 
 /** Der Pfad unter `public/` zu einer Bildadresse der Seite (`/karten/x.webp`). */
 const dateiZu = (adresse: string) => join(OEFFENTLICH, ...adresse.split('/').filter(Boolean))
