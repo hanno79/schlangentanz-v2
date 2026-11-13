@@ -26,6 +26,9 @@ dist-testhooks
 *.sw?
 .vercel
 
+# Worktrees der Agenten: vollständige Kopien des Repos
+.claude/worktrees/
+
 # Playwright (AP-2 Layout-Vertraege)
 test-results
 playwright-report

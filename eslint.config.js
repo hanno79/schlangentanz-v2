@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // .claude/worktrees/ hält vollständige Kopien des Repos (Worktrees der Agenten).
+  globalIgnores(['dist', '.claude/']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

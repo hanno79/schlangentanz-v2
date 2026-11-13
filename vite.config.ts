@@ -25,5 +25,9 @@ export default defineConfig(({ mode }) => ({
     // jsdom ausführen, wo `@playwright/test` nicht funktioniert.
     // Lauf über `npm run test:layout`.
     exclude: ['**/node_modules/**', '**/dist/**', 'tests/layout/**'],
+    // Gesucht wird nur unter src/ und tests/, wie bei den anderen Gates. Ohne diese
+    // Angabe sucht Vitest im ganzen Baum und sammelt im Hauptordner auch die
+    // vollständigen Repo-Kopien unter .claude/worktrees/ (Worktrees der Agenten) ein.
+    include: ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
   },
 }))

@@ -1,0 +1,3 @@
+Desktop 1280×900: C:\Users\hanno\AppData\Local\Temp\claude\4d785897d08d603c\302a7f32-1072-4fc8-a34d-c8f4b23507c9\scratchpad\P0.3b-pruefer\P0.3b-platzhalter-desktop.png (1280×900 px), Touch aus, pointer: coarse nein, Konsolenfehler: 0
+Tablet quer 1024×768, Touch: C:\Users\hanno\AppData\Local\Temp\claude\4d785897d08d603c\302a7f32-1072-4fc8-a34d-c8f4b23507c9\scratchpad\P0.3b-pruefer\P0.3b-platzhalter-tablet.png (1024×768 px), Touch an, pointer: coarse ja, Konsolenfehler: 0
+Handy hochkant 390×844, Touch: C:\Users\hanno\AppData\Local\Temp\claude\4d785897d08d603c\302a7f32-1072-4fc8-a34d-c8f4b23507c9\scratchpad\P0.3b-pruefer\P0.3b-platzhalter-handy.png (390×844 px), Touch an, pointer: coarse ja, Konsolenfehler: 0

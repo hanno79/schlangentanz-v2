@@ -1,0 +1,17 @@
+Warnung: src/engine/__tests__/legal_actions_dispatch_reactions.test.ts — eine Datei, eine Verantwortung — 465 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/__tests__/legal_actions_enumerator_sonderkarten.test.ts — eine Datei, eine Verantwortung — 425 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/__tests__/turn_state.test.ts — eine Datei, eine Verantwortung — 485 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/kartenwirkungen.ts — eine Datei, eine Verantwortung — 853 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/legalActions.ts — eine Datei, eine Verantwortung — 1279 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/scoring.ts — eine Datei, eine Verantwortung — 411 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/serialization.ts — eine Datei, eine Verantwortung — 818 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: src/engine/turnState.ts — eine Datei, eine Verantwortung — 525 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+Warnung: tagebuch/tests — Testregister — Arbeitsschritt ohne Testlauf: 2026-11-13-p0-2-lokale-umgebung.md
+Warnung: tests/layout/messung.ts — eine Datei, eine Verantwortung — 870 Zeilen, Richtwert 400 — Aufteilung prüfen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+
+118 Datei(en) nicht als Text lesbar, übersprungen.
+
+In 233 Datei(en) stehen 867 Zeilen mit Eszett. Die Regel verbietet nur das Einführen, deshalb keine Warnung — beim nächsten Anfassen greift der Hook.
+
+10 Warnungen, keine Fehler.
+exit 0

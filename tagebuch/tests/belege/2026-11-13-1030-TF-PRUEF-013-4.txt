@@ -1,0 +1,6 @@
+
+> schlangentanz-v2@0.0.0 check:test-lines
+> node scripts/check_test_file_lines.mjs
+
+Alle Testdateien bleiben unter 500 Zeilen.
+exit 0

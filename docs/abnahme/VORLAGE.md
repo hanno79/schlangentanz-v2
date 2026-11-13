@@ -19,9 +19,9 @@ löschen. Beispiel eines fertigen Protokolls: docs/abnahme/P0.2.md.
 
 Vorbereitung: <Zeilenenden geprüft (Zahl der `w/crlf`-Dateien vorher und nachher), `core.hooksPath`, `npm ci` mit Exit-Code.>
 
-## Urteil: <ABGENOMMEN oder NICHT ABGENOMMEN>
+## Urteil: <ABGENOMMEN oder ABGELEHNT>
 
-<Ein bis zwei Sätze. Bei NICHT ABGENOMMEN: jeder Mangel als nummerierte Zeile mit Kriterium, Beobachtung und Beleg, damit der Umsetzer ihn ohne Rückfrage beheben kann.>
+<Ein bis zwei Sätze. Bei ABGELEHNT: jeder Mangel als nummerierte Zeile mit Kriterium, Beobachtung und Beleg, damit der Umsetzer ihn ohne Rückfrage beheben kann.>
 
 ## Abnahmekriterien
 
@@ -35,7 +35,7 @@ Vorbereitung: <Zeilenenden geprüft (Zahl der `w/crlf`-Dateien vorher und nachhe
 
 ## Gates
 
-Jeder Befehl einzeln, Exit-Code einzeln gelesen (<PowerShell `$LASTEXITCODE` oder Git Bash `$?`>):
+Jeder Befehl einzeln, Exit-Code einzeln gelesen (<PowerShell `$LASTEXITCODE` oder Git Bash `${PIPESTATUS[0]}` hinter `tee`>), Logs unter `<scratchpad>/<ID>-pruefer/`:
 
 | Befehl | Exit | gekürzte Ausgabe |
 |---|---|---|
@@ -49,7 +49,7 @@ Jeder Befehl einzeln, Exit-Code einzeln gelesen (<PowerShell `$LASTEXITCODE` ode
 | `python scripts/regelcheck.py` | | |
 | `npm run test:layout` | | <nur bei Oberflächen-Tasks oder Änderungen an Playwright; sonst „entfällt, weil …“> |
 
-Ports vor `test:layout`: <Ausgabe der Portprüfung; wann frei>.
+Ports vor `test:layout`: <Ausgabe der Portprüfung (nur `LISTENING`/`ABHÖREN` zählt, `TIME_WAIT`/`WARTEND` nicht); wann frei>.
 
 ## Erster Commit
 
@@ -95,7 +95,9 @@ Ports vor `test:layout`: <Ausgabe der Portprüfung; wann frei>.
 
 <Beschreibung, dazu was mit Touch bedient wurde und was geschah.>
 
-Server danach beendet: <Portprüfung ohne LISTEN auf 4173/4174, soweit es deine Server waren>.
+Waagrechtes Scrollen je Klasse: <`scrollWidth` und `clientWidth` von `document.documentElement`; `scrollWidth > clientWidth` oder ein abgeschnittener Text ist ein Mangel>.
+
+Server danach beendet: <PID und Befehlszeile der eigenen Server, Portprüfung ohne `LISTENING`/`ABHÖREN` auf 4173/4174>.
 
 ## Satz-für-Satz-Abdeckung
 

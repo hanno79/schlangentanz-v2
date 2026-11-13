@@ -1,0 +1,13 @@
+
+> schlangentanz-v2@0.0.0 check:regeln
+> node scripts/check_regeln.mjs
+
+check:regeln: 144 Dateien geprüft (U6).
+  U1: Regeltestdateien unter src/engine: 50, Testnamen darin: 466
+  U7: Testdateien: 74, Dateien unter src/ui und src/ki ohne Tests: 0
+  Ausnahmen für den Altbestand (dürfen nur schrumpfen): U1 48 Dateien/464, U6 0 Dateien/0, U7 0 Dateien/0
+  Ausnahmeliste verglichen mit origin/neuaufbau (Merge-Basis e2914da).
+Die Ausnahmeliste wächst gegenüber origin/neuaufbau (Merge-Basis e2914da); sie darf nur schrumpfen. Neu sind:
+  U1 src/engine/__tests__/color_groups.test.ts: „Farbgruppen-Erkennung — R3.3 › neuer Test ohne Abschnitt“
+Den Verstoss beheben, statt ihn in die Liste zu schreiben.
+check:regeln: 0 Dateien mit Verstössen, 0 veraltete Ausnahmen, 1 neue Merkmale in der Ausnahmeliste. Regeln: docs/UMSETZUNGSPLAN.md, Abschnitt 3.7.

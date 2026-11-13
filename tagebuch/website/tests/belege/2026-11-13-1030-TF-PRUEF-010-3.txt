@@ -1,0 +1,13 @@
+
+> schlangentanz-v2@0.0.0 check:regeln
+> node scripts/check_regeln.mjs --vergleich origin/task/P0.3b-pruefwerkzeuge-nachschaerfen
+
+check:regeln: 144 Dateien geprüft (U6).
+  U1: Regeltestdateien unter src/engine: 50, Testnamen darin: 465
+  U7: Testdateien: 74, Dateien unter src/ui und src/ki ohne Tests: 0
+  Ausnahmen für den Altbestand (dürfen nur schrumpfen): U1 48 Dateien/463, U6 0 Dateien/0, U7 0 Dateien/0
+  Ausnahmeliste verglichen mit origin/task/P0.3b-pruefwerkzeuge-nachschaerfen (Merge-Basis 2df7c1e).
+Die Ausnahmeliste wächst gegenüber origin/task/P0.3b-pruefwerkzeuge-nachschaerfen (Merge-Basis 2df7c1e); sie darf nur schrumpfen. Neu sind:
+  U1 src/engine/__tests__/color_groups.test.ts: „Farbgruppen-Erkennung — R3.3 › ignoriert kurze Farbsequenzen“
+Den Verstoss beheben, statt ihn in die Liste zu schreiben.
+check:regeln: 0 Dateien mit Verstössen, 0 veraltete Ausnahmen, 1 neue Merkmale in der Ausnahmeliste. Regeln: docs/UMSETZUNGSPLAN.md, Abschnitt 3.7.

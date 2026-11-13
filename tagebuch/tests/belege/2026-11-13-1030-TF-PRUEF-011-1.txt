@@ -1,0 +1,7 @@
+
+> schlangentanz-v2@0.0.0 check:regeln
+> node scripts/check_regeln.mjs --vergleich origin/gibt-es-nicht
+
+check:regeln: Die Ausnahmeliste lässt sich nicht mit origin/gibt-es-nicht vergleichen: keine Merge-Basis von HEAD und „origin/gibt-es-nicht“ (fatal: Not a valid object name origin/gibt-es-nicht).
+  Abhilfe: git fetch origin; oder mit --vergleich <ref> einen anderen Stand nennen (etwa origin/main).
+  Nur für Probe-Bäume ohne git: --ohne-vergleich (dann entfällt die Prüfung, ob die Liste wächst).

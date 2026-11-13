@@ -162,3 +162,38 @@ describe('P0.3: scripts/pruefung/bildschirmfotos.mjs', () => {
     }
   })
 })
+
+describe('P0.3b: Anleitungen für Prüfer und Umsetzer decken die Stolpersteine ab', () => {
+  const anleitungen = ['docs/abnahme/PRUEFER_ANLEITUNG.md', 'docs/abnahme/UMSETZER_ANLEITUNG.md']
+  const pflicht: Array<[string, string]> = [
+    ['lauschender Socket englisch', 'LISTENING'],
+    ['lauschender Socket deutsch', 'ABHÖREN'],
+    ['TIME_WAIT ignorieren', 'TIME_WAIT'],
+    ['WARTEND ignorieren', 'WARTEND'],
+    ['Befehlszeile des Prozesses prüfen', 'CommandLine'],
+    ['eigener Unterordner im Scratchpad', 'Unterordner'],
+    ['Logs beim Lauf mitschreiben', 'tee'],
+    ['Breite mit Playwright messen', 'setViewportSize'],
+    ['waagrechtes Scrollen', 'scrollWidth > clientWidth'],
+    ['verkettete git-Befehle einzeln', 'einzeln aus'],
+  ]
+
+  it.each(anleitungen.flatMap((datei) => pflicht.map(([was, text]) => [datei, was, text])))('P0.3b: %s nennt %s', (datei, _, text) => {
+    expect(lies(datei)).toContain(text)
+  })
+
+  it('P0.3b: Urteile heissen überall ABGENOMMEN oder ABGELEHNT', () => {
+    for (const datei of ['docs/abnahme/PRUEFER_ANLEITUNG.md', 'docs/abnahme/VORLAGE.md']) {
+      expect(lies(datei), datei).toContain('ABGELEHNT')
+      expect(lies(datei), datei).not.toContain('NICHT ABGENOMMEN')
+    }
+  })
+
+  it('P0.3b: die Prüferanleitung erklärt Testregister, Probe ohne PR und Eszett in Zitaten', () => {
+    const text = lies('docs/abnahme/PRUEFER_ANLEITUNG.md')
+
+    for (const teil of ['Block „Testregister“', 'rules/testregister.md', '--eintrag', 'Humanizer', '.txt', 'ohne Bereich', 'ohne PR', 'Eszett']) {
+      expect(text, `PRUEFER_ANLEITUNG.md: „${teil}“ fehlt`).toContain(teil)
+    }
+  })
+})

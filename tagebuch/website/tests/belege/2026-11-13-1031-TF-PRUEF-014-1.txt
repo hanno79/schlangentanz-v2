@@ -1,0 +1,4 @@
+dateien-neuaufbau.txt Vorgabe-Muster: 68 neues include: 68 nur Vorgabe: [] nur include: []
+dateien-head.txt Vorgabe-Muster: 70 neues include: 70 nur Vorgabe: [] nur include: []
+ Test Files  70 passed (70)
+      Tests  748 passed (748)

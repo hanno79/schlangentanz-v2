@@ -1,0 +1,3 @@
+check:regeln: Die Ausnahmeliste lässt sich nicht mit origin/neuaufbau vergleichen: kein git-Repository unter C:/Users/hanno/AppData/Local/Temp/claude/4d785897d08d603c/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/P0.3b-pruefer/baum-ohne-repo (fatal: not a git repository (or any of the parent directories): .git).
+  Abhilfe: git fetch origin; oder mit --vergleich <ref> einen anderen Stand nennen (etwa origin/main).
+  Nur für Probe-Bäume ohne git: --ohne-vergleich (dann entfällt die Prüfung, ob die Liste wächst).
