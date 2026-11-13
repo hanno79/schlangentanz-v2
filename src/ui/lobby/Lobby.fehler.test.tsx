@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { StrictMode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
 import App from '../../App'
-import { erstelleEinzelspielerSpielzustand } from '../../engine'
+import { erstellePartie, serialisiere } from '../../engine'
 import { meldeFehler } from '../../fehlerdienst'
 import { SPIELSTAND_SCHLUESSEL } from '../../spielstand'
 
@@ -17,8 +17,6 @@ verworfen wurde. Beschädigte Stände gehen an den Fehlerdienst; ein Stand im
 älteren Speicherformat ist erwartet (Plan 2.3) und wird nur protokolliert.
 */
 
-const ERWEITERUNG_SCHLUESSEL = 'schlangentanz-v2:erweiterung'
-
 vi.mock('../../fehlerdienst', () => ({
   meldeFehler: vi.fn(),
   starteFehlerdienst: vi.fn(),
@@ -27,7 +25,7 @@ vi.mock('../../fehlerdienst', () => ({
 
 vi.mock('../../engine', async (importOriginal) => {
   const echt = await importOriginal<typeof import('../../engine')>()
-  return { ...echt, erstelleEinzelspielerSpielzustand: vi.fn(echt.erstelleEinzelspielerSpielzustand) }
+  return { ...echt, erstellePartie: vi.fn(echt.erstellePartie) }
 })
 
 beforeEach(() => {
@@ -40,7 +38,7 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks()
   // `mockReset` setzt die Durchreichung an die echte Funktion wieder ein.
-  vi.mocked(erstelleEinzelspielerSpielzustand).mockReset()
+  vi.mocked(erstellePartie).mockReset()
 })
 
 function oeffne(pfad: string, strikt = false): void {
@@ -59,7 +57,7 @@ function oeffne(pfad: string, strikt = false): void {
 describe('O2 K4: Fehler beim Start', () => {
   it('O2 K4: wirft die Engine beim Anlegen der Partie, zeigt der Fehlerfang den Grund und meldet ihn', () => {
     const fehler = new Error('Ungültiger Zufallswert beim Mischen')
-    vi.mocked(erstelleEinzelspielerSpielzustand).mockImplementationOnce(() => {
+    vi.mocked(erstellePartie).mockImplementationOnce(() => {
       throw fehler
     })
     oeffne('/')
@@ -73,7 +71,7 @@ describe('O2 K4: Fehler beim Start', () => {
   })
 
   it('O2 K4: nach dem Fehler führt der Fehlerfang zurück in eine bedienbare Lobby', () => {
-    vi.mocked(erstelleEinzelspielerSpielzustand).mockImplementationOnce(() => {
+    vi.mocked(erstellePartie).mockImplementationOnce(() => {
       throw new Error('kaputt')
     })
     oeffne('/')
@@ -90,12 +88,11 @@ describe('O2 K4: Fehler beim Start', () => {
 /** Legt einen rohen Eintrag in den Speicher, wie ihn eine ältere Fassung oder ein Defekt hinterlässt. */
 function legeRohenStandAb(roh: string): void {
   window.localStorage.setItem(SPIELSTAND_SCHLUESSEL, roh)
-  window.localStorage.setItem(ERWEITERUNG_SCHLUESSEL, '1')
 }
 
 describe('O2 K4: unlesbarer Spielstand beim Öffnen', () => {
   it.each([
-    ['ein ungültiger Zustand', '{"version":1,"kaputt":true}'],
+    ['ein ungültiger Zustand', '{"version":2,"kaputt":true}'],
     ['kein JSON', '{kaputt'],
     ['eine leere Zeichenkette', ''],
     ['ein unbekanntes neueres Format', '{"version":99}'],
@@ -111,13 +108,21 @@ describe('O2 K4: unlesbarer Spielstand beim Öffnen', () => {
     expect(meldeFehler).toHaveBeenCalledTimes(1)
     expect(console.error).toHaveBeenCalled()
     expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
-    expect(window.localStorage.getItem(ERWEITERUNG_SCHLUESSEL)).toBeNull()
   })
 
   it('O2 K4: der Hinweis nennt den Grund der Engine', () => {
-    legeRohenStandAb('{"version":1,"kaputt":true}')
+    legeRohenStandAb('{"version":2,"kaputt":true}')
     oeffne('/')
-    expect(screen.getByTestId('spielstand-verworfen')).toHaveTextContent('Ungültiger Spielzustand')
+    expect(screen.getByTestId('spielstand-verworfen')).toHaveTextContent('Ungültiger Spielstand')
+  })
+
+  it('E1: ein echter Stand im Format 1 gilt als älteres Speicherformat und wird verworfen, nicht gemeldet', () => {
+    const formatEins = { ...JSON.parse(serialisiere(erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: Math.random }))), version: 1 }
+    legeRohenStandAb(JSON.stringify(formatEins))
+    oeffne('/')
+    expect(screen.getByTestId('spielstand-verworfen')).toHaveTextContent(/älteren Speicherformat/)
+    expect(meldeFehler).not.toHaveBeenCalled()
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
   })
 
   it('O2 K4: ein Stand im älteren Speicherformat wird sichtbar verworfen, aber nicht als Fehler gemeldet', () => {
@@ -128,7 +133,6 @@ describe('O2 K4: unlesbarer Spielstand beim Öffnen', () => {
     expect(meldeFehler).not.toHaveBeenCalled()
     expect(console.warn).toHaveBeenCalled()
     expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
-    expect(window.localStorage.getItem(ERWEITERUNG_SCHLUESSEL)).toBeNull()
   })
 
   it('O2 K4: auch /spiel sagt beim direkten Aufruf, dass der Stand verworfen wurde', () => {

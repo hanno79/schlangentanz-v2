@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import App from '../../App'
-import { erstelleEinzelspielerSpielzustand } from '../../engine'
+import { erstellePartie } from '../../engine'
 import { speichereSpielstand } from '../../spielstand'
 
 /*
@@ -58,7 +58,7 @@ describe('O2 K5: keine Partie im Hintergrund', () => {
   })
 
   it('O2 K5: mit Spielstand liest die Lobby ihn nur und lässt die Partie ruhen', () => {
-    speichereSpielstand(erstelleEinzelspielerSpielzustand(3))
+    speichereSpielstand(erstellePartie({ spielerzahl: 4, erweiterung: false, zufall: Math.random }))
     aufrufe.length = 0
 
     window.history.pushState({}, '', '/')

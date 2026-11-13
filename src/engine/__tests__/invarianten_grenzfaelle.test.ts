@@ -68,6 +68,31 @@ describe('A2/A4: Grenzfälle der Invarianten', () => {
     expect(verletzte(blockade)).toEqual([VERWEISE])
   })
 
+  it('A6: eine schwebende Aktion, die eine Karte nennt, die nicht in der genannten Schlange liegt, wird gemeldet', () => {
+    const fusion = baukasten({ spielerzahl: 3, erweiterung: false })
+      .schlange(1, ['Rot', 'Rot'])
+      .schwebend(
+        0,
+        'Farbenfusion',
+        (karteId, spielerId) => ({ typ: 'FusionLegen', spielerId, karteId, schlangenId: 'schlange-1', kartenIds: ['rot-01', 'rot-02'] }),
+        [1],
+      )
+      .zustand()
+    expect(verletzte(fusion)).toEqual([])
+    if (fusion.schwebend!.aktion.typ !== 'FusionLegen') throw new Error('Testaufbau')
+    fusion.schwebend!.aktion.kartenIds = ['rot-01', 'rot-09']
+    expect(verletzte(fusion)).toEqual([VERWEISE])
+  })
+
+  it('A6/A7.6: der Angreifer steht nie unter den Betroffenen, und eine Grube liegt nie vor dem, der sie gespielt hat', () => {
+    const angreifer = mitSchwebender((karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-2' }))
+    angreifer.schwebend!.ausstehend = [0]
+    expect(verletzte(angreifer)).toEqual([VERWEISE])
+    const grube = baukasten({ spielerzahl: 2, erweiterung: false }).grube(1, 0).zustand()
+    grube.ausliegendeGruben[0].vor = 1
+    expect(verletzte(grube)).toEqual([VERWEISE])
+  })
+
   it('A6: wer bei einer schwebenden Karte zweimal ausstehend steht, wird gemeldet', () => {
     const zustand = mitSchwebender((karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-2' }))
     zustand.schwebend!.ausstehend = [1, 1]

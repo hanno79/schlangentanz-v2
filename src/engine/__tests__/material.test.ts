@@ -147,6 +147,35 @@ describe('A1/A4: Material mit Erweiterung', () => {
     )
   })
 
+  it('A4: die Aufgabenkarten werden separat gemischt; welche offen liegen und wer welche geheim hat, hängt von der Saat ab', () => {
+    const verteilung = (saat: number) => {
+      const zustand = partie(3, true, saat)
+      return [...zustand.offeneAufgaben, ...zustand.spieler.map((spieler) => spieler.geheimeAufgabe!), ...zustand.aufgabenStapel]
+        .map((aufgabe) => aufgabe.id)
+        .join(',')
+    }
+    const verteilungen = new Set(Array.from({ length: 12 }, (_, index) => verteilung(index + 1)))
+    expect(verteilungen.size, 'A4: die Aufgabenreihenfolge ist bei jeder Saat gleich, also ungemischt').toBeGreaterThan(8)
+    // „Nicht mit anderen Karten mischen“: Keine Aufgabe liegt bei den Spielkarten, das zählt der Test mit den 112 Karten oben.
+  })
+
+  it('A4: Schlangenhäutungen und Schlangenkorb werden mit den übrigen Karten gemischt, ihre Lage hängt von der Saat ab', () => {
+    const ERWEITERUNG = new Set<string>(['Schlangenhäutung', 'Schlangenkorb des Glücks'])
+    const lagen = Array.from({ length: 20 }, (_, index) => {
+      const zustand = partie(2, true, index + 1)
+      const imStapel = zustand.nachziehstapel.flatMap((karte, position) =>
+        karte.typ === 'Sonderkarte' && ERWEITERUNG.has(karte.name) ? [position] : [],
+      )
+      const inHand = zustand.spieler.flatMap((spieler) => spieler.hand).filter((karte) => karte.typ === 'Sonderkarte' && ERWEITERUNG.has(karte.name))
+      return { imStapel, inHand: inHand.length, stapel: zustand.nachziehstapel.length }
+    })
+    expect(new Set(lagen.map((lage) => lage.imStapel.join(','))).size, 'A4: die vier Karten liegen bei jeder Saat gleich').toBeGreaterThan(10)
+    const obenOderInDerHand = lagen.some((lage) => lage.inHand > 0 || lage.imStapel.some((position) => position < lage.stapel / 2))
+    const unten = lagen.some((lage) => lage.imStapel.some((position) => position >= lage.stapel / 2))
+    expect(obenOderInDerHand, 'A4: die vier Karten liegen nie in der oberen Stapelhälfte oder auf einer Hand').toBe(true)
+    expect(unten, 'A4: die vier Karten liegen nie in der unteren Stapelhälfte').toBe(true)
+  })
+
   it.each(SPIELERZAHLEN)(
     'A4: %i Spieler: jeder hat 1 Comeback- und 2 Risiko-Belohnungs-Karten offen vor sich, nicht im Kartenstapel (C22)',
     (spielerzahl) => {

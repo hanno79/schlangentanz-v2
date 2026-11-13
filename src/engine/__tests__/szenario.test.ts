@@ -44,6 +44,19 @@ describe('A1/A4: Szenario-Baukasten baut nur aus echtem Material', () => {
     expect(() => baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, [{ id: 'gibt-es-nicht' }])).toThrow(/gibt-es-nicht/)
   })
 
+  it('A1: ein Aufruf, der an fehlendem Material scheitert, nimmt auch keine der anderen Karten', () => {
+    const bau = baukasten({ spielerzahl: 2, erweiterung: false })
+    expect(() => bau.hand(0, ['Grün', 'Schlangenhäutung'])).toThrow(/Schlangenhäutung/)
+    expect(() => bau.schlange(1, ['Blau', { fusion: ['Rot', 'Grün'] }, 'Schlangenhäutung'])).toThrow()
+    const zustand = bau.zustand()
+    expect(zustand.nachziehstapel).toHaveLength(108)
+    expect(zustand.spieler.map((spieler) => [spieler.hand.length, spieler.schlangen.length])).toEqual([
+      [0, 0],
+      [0, 0],
+    ])
+    expect(zustand.schlangenZaehler).toBe(0)
+  })
+
   it('A1: eine bestimmte Karte lässt sich über ihre Id wählen, aber nur einmal', () => {
     const bau = baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, [{ id: 'gruen-09' }])
     expect(bau.zustand().spieler[0].hand.map((karte) => karte.id)).toEqual(['gruen-09'])
