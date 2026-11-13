@@ -1,0 +1,200 @@
+/*
+Regelseite `/regeln` (O9). Nur Variablen aus src/ui/tokens.css.
+
+Die Seite ist länger als jedes Fenster. Sie scrollt im Rahmen selbst und nicht
+als ganzes Dokument, wie es DESIGN.md für alles verlangt, was nicht auf den
+Schirm passt; die Breite der Textspalte wächst für die Kartenübersicht.
+*/
+
+.rahmen:has(> .regelhilfe) {
+  --rahmen-breite: 56rem;
+  flex: none;
+  height: 100dvh;
+  overflow-y: auto;
+}
+
+.regelhilfe {
+  display: grid;
+  gap: var(--abstand-6);
+  min-width: 0;
+  color: var(--farbe-tinte);
+  font-family: var(--schrift-text);
+}
+
+.regelhilfe__website {
+  margin: 0;
+}
+
+.regelhilfe__website-verweis,
+.regelhilfe__lobby {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  padding: var(--abstand-2) var(--abstand-5);
+  border: 2px solid var(--farbe-akzent);
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color var(--dauer);
+}
+
+.regelhilfe__website-verweis {
+  background: var(--farbe-akzent);
+  color: var(--farbe-auf-akzent);
+}
+
+.regelhilfe__website-verweis:hover {
+  background: var(--farbe-akzent-stark);
+}
+
+.regelhilfe__lobby {
+  background: var(--farbe-flaeche);
+  color: var(--farbe-akzent-stark);
+}
+
+.regelhilfe__lobby:hover {
+  background: var(--farbe-akzent-hell);
+}
+
+.regelhilfe a:focus-visible,
+.regelhilfe button:focus-visible,
+.regelhilfe__lobby:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--fokus-ring);
+}
+
+.regelhilfe__abschnitt {
+  display: grid;
+  gap: var(--abstand-4);
+}
+
+.regelhilfe__titel {
+  margin: 0;
+  color: var(--farbe-akzent-stark);
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-titel);
+  font-weight: 400;
+  line-height: var(--zeilenhoehe-titel);
+}
+
+.regelhilfe__hinweis {
+  margin: 0;
+  color: var(--farbe-tinte-leise);
+}
+
+/* Ein Zug in fünf Schritten */
+
+.zugablauf {
+  display: grid;
+  gap: var(--abstand-3);
+  margin: 0;
+  padding-left: 2rem;
+}
+
+.zugablauf__schritt {
+  padding: var(--abstand-3) var(--abstand-4);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.zugablauf__schritt::marker {
+  color: var(--farbe-akzent-stark);
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+}
+
+.zugablauf__titel {
+  margin: 0 0 var(--abstand-1);
+  font-size: var(--groesse-gross);
+  line-height: 1.3;
+}
+
+.zugablauf__text {
+  margin: 0;
+  line-height: var(--zeilenhoehe);
+}
+
+.zugablauf__ergaenzung > span:first-child {
+  text-decoration: underline dotted var(--farbe-akzent);
+  text-underline-offset: 3px;
+}
+
+.zugablauf__etikett,
+.zugablauf__erweiterung {
+  display: inline-block;
+  padding: 0 var(--abstand-2);
+  border-radius: var(--radius-voll);
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+  vertical-align: 0.1em;
+}
+
+.zugablauf__etikett {
+  background: var(--farbe-akzent-hell);
+  color: var(--farbe-akzent-stark);
+}
+
+.zugablauf__erweiterung {
+  background: var(--farbe-tisch);
+  color: var(--farbe-tinte);
+}
+
+/* Alle Karten */
+
+.kartenuebersicht__gruppe {
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+.kartenuebersicht__titel {
+  margin: 0;
+  font-size: var(--groesse-text);
+  font-weight: 700;
+}
+
+.kartenuebersicht {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
+  gap: var(--abstand-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kartenknopf {
+  display: grid;
+  justify-items: center;
+  gap: var(--abstand-1);
+  width: 100%;
+  min-height: var(--ziel-mindestens);
+  padding: var(--abstand-1);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--farbe-tinte);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--dauer);
+  /* Der blaue Tipp-Schimmer von Chrome bliebe über der Grossansicht stehen. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kartenknopf:hover {
+  border-color: var(--farbe-linie);
+  background: var(--farbe-flaeche);
+}
+
+.kartenknopf__name {
+  font-size: var(--groesse-klein);
+  line-height: 1.25;
+  text-align: center;
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}

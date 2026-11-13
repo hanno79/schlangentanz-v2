@@ -1,3 +1,5 @@
+/// <reference lib="dom" />
+
 /*
 jsdom kennt `<dialog>`, aber nicht `showModal()` und `close()`. Für
 Komponententests reicht das Verhalten, das die Oberfläche nutzt: `open` setzen

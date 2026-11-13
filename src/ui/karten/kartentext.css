@@ -1,0 +1,67 @@
+/* Text einer Karte im Wortlaut der Spielanleitung (Kartentext.tsx). Nur Variablen aus tokens.css. */
+
+.kartentext {
+  display: grid;
+  align-content: start;
+  gap: var(--abstand-3);
+  min-width: 0;
+  color: var(--farbe-tinte);
+  font-family: var(--schrift-text);
+  font-size: var(--groesse-text);
+  line-height: var(--zeilenhoehe);
+  text-align: left;
+  overflow-wrap: break-word;
+}
+
+.kartentext h2,
+.kartentext h3,
+.kartentext p,
+.kartentext ul {
+  margin: 0;
+}
+
+.kartentext__titel {
+  color: var(--farbe-akzent-stark);
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-titel);
+  font-weight: 400;
+  line-height: var(--zeilenhoehe-titel);
+}
+
+.kartentext__punkte {
+  color: var(--farbe-tinte-leise);
+  font-weight: 700;
+}
+
+.kartentext__kurz {
+  font-size: var(--groesse-gross);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.kartentext__abschnitt {
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+.kartentext__zwischentitel {
+  font-size: var(--groesse-text);
+  font-weight: 700;
+}
+
+.kartentext ul {
+  display: grid;
+  gap: var(--abstand-1);
+  padding-left: 1.25em;
+}
+
+.kartentext__etikett {
+  display: inline-block;
+  padding: 0 var(--abstand-2);
+  border-radius: var(--radius-voll);
+  background: var(--farbe-akzent-hell);
+  color: var(--farbe-akzent-stark);
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  white-space: nowrap;
+}

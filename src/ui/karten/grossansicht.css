@@ -1,0 +1,134 @@
+/*
+Grossansicht einer Karte (<dialog>, Grossansicht.tsx). Nur Variablen aus tokens.css.
+
+Schmal (Handy hochkant): Bild über dem Text, beides scrollt zusammen; die
+Fusszeile mit „Schliessen“ steht fest.
+
+Ab 600 px Breite: Bild links, Text rechts. Das Bild ist so gross, wie die
+Fensterhöhe zulässt (höchstens 360 px breit), der Dialog genau so hoch wie das
+Bild, und nur der Text scrollt. So füllt die Karte in Handy quer die Höhe des
+Fensters, statt neben einer Fusszeile zu schrumpfen.
+*/
+
+.grossansicht {
+  --rand: var(--abstand-4);
+  width: min(calc(100vw - 2 * var(--abstand-2)), 60rem);
+  max-width: none;
+  max-height: calc(100dvh - 2 * var(--abstand-2));
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-gross);
+  background: var(--farbe-flaeche);
+  color: var(--farbe-tinte);
+  box-shadow: var(--schatten-erhoben);
+  font-family: var(--schrift-text);
+  line-height: var(--zeilenhoehe);
+}
+
+.grossansicht::backdrop {
+  background: rgb(43 33 28 / 0.6);
+}
+
+.grossansicht[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.grossansicht__koerper {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--abstand-4);
+  padding: var(--rand);
+}
+
+.grossansicht__bild {
+  flex: none;
+  width: min(320px, 100%);
+}
+
+.grossansicht .kartentext {
+  align-self: stretch;
+}
+
+.grossansicht__fuss {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--abstand-2) var(--rand);
+  border-top: 1px solid var(--farbe-linie);
+}
+
+.grossansicht__schliessen {
+  min-width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  padding: var(--abstand-2) var(--abstand-5);
+  border: 2px solid var(--farbe-akzent);
+  border-radius: var(--radius);
+  background: var(--farbe-flaeche);
+  color: var(--farbe-akzent-stark);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--dauer);
+}
+
+.grossansicht__schliessen:hover {
+  background: var(--farbe-akzent-hell);
+}
+
+.grossansicht__schliessen:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--fokus-ring);
+}
+
+@media (min-width: 600px) {
+  .grossansicht {
+    --bild: min(360px, 40vw, calc((100dvh - 2 * var(--abstand-2) - 2 * var(--rand)) * 470 / 766));
+    height: calc(var(--bild) * 766 / 470 + 2 * var(--rand));
+  }
+
+  .grossansicht[open] {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'bild text'
+      'bild fuss';
+  }
+
+  .grossansicht__koerper {
+    display: contents;
+  }
+
+  .grossansicht__bild {
+    grid-area: bild;
+    align-self: center;
+    width: var(--bild);
+    padding: var(--rand);
+    box-sizing: content-box;
+  }
+
+  .grossansicht .kartentext {
+    grid-area: text;
+    min-height: 0;
+    overflow-y: auto;
+    padding: var(--rand) var(--rand) var(--abstand-3) 0;
+  }
+
+  .grossansicht__fuss {
+    grid-area: fuss;
+    padding-left: 0;
+  }
+}
+
+/* Flache Fenster (Handy quer): schmaler Rand, damit die Karte grösser wird. */
+@media (max-height: 500px) {
+  .grossansicht {
+    --rand: var(--abstand-2);
+  }
+}
