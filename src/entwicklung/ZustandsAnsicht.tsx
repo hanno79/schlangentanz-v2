@@ -1,9 +1,9 @@
-import { berechneGewinner, berechneSpielzustandGesamtwertung } from '../engine'
-import type { AufgabenkarteInfo, GewinnerEintrag, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
+import { berechneGewinner, berechneSpielzustandGesamtwertung, ermittleEntscheider } from '../engine'
+import type { AufgabenkarteInfo, Auslagekarte, GewinnerEintrag, Schlange, Spieler, SpielerWertungsEintrag, Spielkarte, Spielzustand } from '../engine'
 import { fehlertext } from './invarianten'
-import { Kartenreihe } from './Karte'
+import { Karte, Kartenreihe } from './Karte'
 
-/** Der ganze Spielzustand, lesbar: alle Hände offen, alle Stapel, Phase, Wertung. */
+/** Der ganze Spielzustand, lesbar: alle Hände offen, alle Stapel, Partiephase, Zug, Wertung. */
 export function ZustandsAnsicht({ zustand }: { zustand: Spielzustand }) {
   return (
     <>
@@ -12,44 +12,61 @@ export function ZustandsAnsicht({ zustand }: { zustand: Spielzustand }) {
         <h2>Spieler</h2>
         <div className="et-spielerliste">
           {zustand.spieler.map((spieler, index) => (
-            <SpielerAnsicht key={spieler.id} spieler={spieler} aktiv={index === zustand.aktiverSpielerIndex} />
+            <SpielerAnsicht key={spieler.id} spieler={spieler} aktiv={index === zustand.zug.spielerIndex} />
           ))}
         </div>
       </section>
-      <Stapel zustand={zustand} />
+      <Tischmitte zustand={zustand} />
       <Wertung zustand={zustand} />
     </>
   )
 }
 
 function json(wert: unknown): string {
-  return wert === undefined ? '—' : JSON.stringify(wert)
+  return JSON.stringify(wert)
+}
+
+function name(zustand: Spielzustand, index: number | null): string {
+  if (index === null) return 'niemand'
+  const spieler = zustand.spieler[index]
+  return spieler === undefined ? `unbekannter Spieler ${index}` : `${spieler.name} (${spieler.id})`
 }
 
 function Kopf({ zustand }: { zustand: Spielzustand }) {
-  const aktiver = zustand.spieler[zustand.aktiverSpielerIndex]
+  const { zug } = zustand
   return (
     <section className="et-abschnitt">
       <h2>Lage</h2>
       <dl className="et-lage">
-        <dt>Zugphase</dt>
-        <dd data-testid="zugphase">{zustand.zugphase}</dd>
-        <dt>Spielphase</dt>
-        <dd>{zustand.spielphase}</dd>
+        <dt>Erweiterung</dt>
+        <dd data-testid="erweiterung">{zustand.erweiterung ? 'mit' : 'ohne'}</dd>
+        <dt>Partiephase</dt>
+        <dd data-testid="partiephase">{zustand.partiephase}</dd>
         <dt>Am Zug</dt>
-        <dd>
-          {aktiver ? `${aktiver.name} (${aktiver.id})` : '—'}, Index {zustand.aktiverSpielerIndex}
+        <dd data-testid="zug">
+          {name(zustand, zug.spielerIndex)}, Teilzug {zug.teilzug}, {zug.abschnitt}; gespielt: {zug.gespielteFarbkarten}{' '}
+          Farbkarte(n), {zug.gespielteSonderkarten} Sonderkarte(n)
+          {zug.verdopplerGespielt ? ', Verdoppler' : ''}
+          {zug.farbenfusionGespielt ? ', Farbenfusion' : ''}
         </dd>
-        <dt>Zugpflichten</dt>
-        <dd>{json(zustand.zugpflichten)}</dd>
-        <dt>Reaktionsfenster</dt>
-        <dd data-testid="reaktionsfenster">{zustand.pendingReaktion === null ? 'keins' : json(zustand.pendingReaktion)}</dd>
-        <dt>Setzen aus</dt>
-        <dd>{json(zustand.aussetzenSpielerIndizes)}</dd>
-        <dt>Endrunde</dt>
-        <dd>{json(zustand.endrunde)}</dd>
-        <dt>Dürfen nachziehen</dt>
-        <dd>{json(zustand.nachziehBerechtigteIndizes)}</dd>
+        <dt>Entscheidet</dt>
+        <dd data-testid="entscheider">{name(zustand, ermittleEntscheider(zustand))}</dd>
+        <dt>Schlussrunde</dt>
+        <dd>
+          {zustand.schlussrundeAusloeser === null ? 'nein' : `ausgelöst von ${name(zustand, zustand.schlussrundeAusloeser)}`}
+        </dd>
+        <dt>Schwebend</dt>
+        <dd>
+          {zustand.schwebend === null ? (
+            'keine Karte'
+          ) : (
+            <span data-testid="schwebend">
+              <Karte karte={zustand.schwebend.karte} /> {json(zustand.schwebend.aktion)}; entscheiden noch:{' '}
+              {zustand.schwebend.ausstehend.map((index) => name(zustand, index)).join(', ') || 'niemand'}; abgewehrt:{' '}
+              {zustand.schwebend.abgewehrt.map((index) => name(zustand, index)).join(', ') || 'niemand'}
+            </span>
+          )}
+        </dd>
       </dl>
     </section>
   )
@@ -74,6 +91,36 @@ function Aufgabenliste({ aufgaben }: { aufgaben: AufgabenkarteInfo[] }) {
   )
 }
 
+function istAuslagekarte(karte: Spielkarte | Auslagekarte): karte is Auslagekarte {
+  return karte.typ === 'Comeback' || karte.typ === 'Risiko-Belohnung'
+}
+
+function Auslage({ karte }: { karte: Auslagekarte }) {
+  return (
+    <span className="et-aufgabe">
+      {karte.typ} <small>{karte.id}</small>
+    </span>
+  )
+}
+
+function SchlangenAnsicht({ schlange, nummer }: { schlange: Schlange; nummer: number }) {
+  return (
+    <div data-testid="schlange">
+      <p>
+        <strong>
+          Schlange {nummer} <small>{schlange.id}</small>:
+        </strong>{' '}
+        <Kartenreihe karten={schlange.karten} />
+      </p>
+      {schlange.fusionen.map((fusion) => (
+        <p key={fusion.karteId} data-testid="fusion">
+          <small>Unter {fusion.karteId}:</small> <Kartenreihe karten={fusion.unter} />
+        </p>
+      ))}
+    </div>
+  )
+}
+
 function SpielerAnsicht({ spieler, aktiv }: { spieler: Spieler; aktiv: boolean }) {
   return (
     <article className={aktiv ? 'et-spieler et-spieler--aktiv' : 'et-spieler'} data-testid="spieler">
@@ -92,34 +139,40 @@ function SpielerAnsicht({ spieler, aktiv }: { spieler: Spieler; aktiv: boolean }
           <strong>Schlangen:</strong> <span className="et-leer">keine</span>
         </p>
       ) : (
-        spieler.schlangen.map((schlange, index) => (
-          <p key={schlange.id} data-testid="schlange">
-            <strong>
-              Schlange {index + 1} <small>{schlange.id}</small>, {schlange.zustand}:
-            </strong>{' '}
-            <Kartenreihe karten={schlange.karten} />
-            {schlange.farbenfusionen && schlange.farbenfusionen.length > 0 ? (
-              <small> Fusionen: {json(schlange.farbenfusionen)}</small>
-            ) : null}
-          </p>
-        ))
+        spieler.schlangen.map((schlange, index) => <SchlangenAnsicht key={schlange.id} schlange={schlange} nummer={index + 1} />)
+      )}
+      <details data-testid="ablagestapel" open={spieler.ablagestapel.length > 0}>
+        <summary>Ablagestapel: {spieler.ablagestapel.length} Karten, unterste zuerst</summary>
+        <Kartenreihe karten={spieler.ablagestapel} leer="leer" />
+      </details>
+      {spieler.geheimeAufgabe === null ? null : (
+        <p>
+          <strong>Geheime Aufgabe:</strong> <Aufgabe aufgabe={spieler.geheimeAufgabe} />{' '}
+          {spieler.geheimeAufgabeErfuellt ? 'erfüllt' : 'nicht erfüllt'}
+        </p>
+      )}
+      {spieler.comeback === null && spieler.risikoKarten.length === 0 ? null : (
+        <p>
+          <strong>Offen vor sich:</strong>{' '}
+          {spieler.comeback === null ? null : (
+            <>
+              <Auslage karte={spieler.comeback.karte} /> {spieler.comeback.verbraucht ? '(verbraucht)' : ''}{' '}
+            </>
+          )}
+          {spieler.risikoKarten.map((karte) => (
+            <Auslage key={karte.id} karte={karte} />
+          ))}
+        </p>
       )}
       <p>
-        <strong>Geheime Aufgabe:</strong> <Aufgabe aufgabe={spieler.geheimeAufgabe} />{' '}
-        {spieler.geheimeAufgabeErfuellt === true ? 'erfüllt' : 'nicht erfüllt'}
-      </p>
-      <p>
         <strong>Erfüllte Aufgaben:</strong> <Aufgabenliste aufgaben={spieler.erfuellteAufgaben} />
-        {spieler.endspurtVerdoppelteAufgabenIds && spieler.endspurtVerdoppelteAufgabenIds.length > 0 ? (
-          <small> im Endspurt verdoppelt: {spieler.endspurtVerdoppelteAufgabenIds.join(', ')}</small>
-        ) : null}
       </p>
       <p>
         <strong>Ausgespielte Sonderkarten:</strong>{' '}
-        {spieler.ausgespielteSonderkartenNamen.length === 0 ? (
+        {spieler.ausgespielteSonderkarten.length === 0 ? (
           <span className="et-leer">keine</span>
         ) : (
-          spieler.ausgespielteSonderkartenNamen.join(', ')
+          spieler.ausgespielteSonderkarten.join(', ')
         )}
         {' · '}Dreiergruppen durch Häutung: {spieler.schlangenhaeutungDreiergruppen}
       </p>
@@ -127,21 +180,38 @@ function SpielerAnsicht({ spieler, aktiv }: { spieler: Spieler; aktiv: boolean }
   )
 }
 
-function Stapel({ zustand }: { zustand: Spielzustand }) {
+function Tischmitte({ zustand }: { zustand: Spielzustand }) {
   return (
     <section className="et-abschnitt">
-      <h2>Stapel</h2>
+      <h2>Tischmitte</h2>
       <details data-testid="nachziehstapel">
         <summary>Nachziehstapel: {zustand.nachziehstapel.length} Karten, oberste zuerst</summary>
         <Kartenreihe karten={zustand.nachziehstapel} leer="leer" />
       </details>
-      <details data-testid="ablagestapel" open>
-        <summary>Ablagestapel: {zustand.ablagestapel.length} Karten, unterste zuerst</summary>
-        <Kartenreihe karten={zustand.ablagestapel} leer="leer" />
-      </details>
+      <p data-testid="gruben">
+        <strong>Ausliegende Schlangengruben:</strong>{' '}
+        {zustand.ausliegendeGruben.length === 0 ? (
+          <span className="et-leer">keine</span>
+        ) : (
+          zustand.ausliegendeGruben.map((grube) => (
+            <span key={grube.karte.id}>
+              <Karte karte={grube.karte} /> vor {name(zustand, grube.vor)}, gespielt von {name(zustand, grube.gespieltVon)}{' '}
+            </span>
+          ))
+        )}
+      </p>
+      <p data-testid="aus-dem-spiel">
+        <strong>Aus dem Spiel:</strong>{' '}
+        {zustand.ausDemSpiel.length === 0 ? (
+          <span className="et-leer">nichts</span>
+        ) : (
+          zustand.ausDemSpiel.map((karte) =>
+            istAuslagekarte(karte) ? <Auslage key={karte.id} karte={karte} /> : <Karte key={karte.id} karte={karte} />,
+          )
+        )}
+      </p>
       <p data-testid="offene-aufgaben">
-        <strong>Offene Aufgaben ({zustand.offeneAufgaben.length}):</strong>{' '}
-        <Aufgabenliste aufgaben={zustand.offeneAufgaben} />
+        <strong>Offene Aufgaben ({zustand.offeneAufgaben.length}):</strong> <Aufgabenliste aufgaben={zustand.offeneAufgaben} />
       </p>
       <details>
         <summary>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</summary>
@@ -151,16 +221,14 @@ function Stapel({ zustand }: { zustand: Spielzustand }) {
   )
 }
 
-type Wertungsergebnis =
-  | { wertungen: SpielerWertungsEintrag[]; gewinner: GewinnerEintrag[] | null }
-  | { fehler: string }
+type Wertungsergebnis = { wertungen: SpielerWertungsEintrag[]; gewinner: GewinnerEintrag[] | null } | { fehler: string }
 
 /** Wirft die Engine beim Werten, steht ihr Grund da; die Invariante dazu ist dann rot. */
 function werte(zustand: Spielzustand): Wertungsergebnis {
   try {
     return {
       wertungen: berechneSpielzustandGesamtwertung(zustand).spielerwertungen,
-      gewinner: zustand.zugphase === 'Spielende' ? berechneGewinner(zustand.spieler).gewinner : null,
+      gewinner: zustand.partiephase === 'Beendet' ? berechneGewinner(zustand.spieler).gewinner : null,
     }
   } catch (fehler) {
     return { fehler: fehlertext(fehler) }

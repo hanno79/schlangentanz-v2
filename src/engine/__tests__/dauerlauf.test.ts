@@ -53,7 +53,7 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
     expect(ergebnis).toMatchObject({ ausgang: 'beendet', schritte: 7 })
   })
 
-  it('A10: eine Partie, die nicht endet, stößt an die Schrittgrenze', () => {
+  it('A10: eine Partie, die nicht endet, stösst an die Schrittgrenze', () => {
     const ergebnis = spieleDauerlaufPartie(
       { saat: 1, spielerzahl: 2, erweiterung: false },
       { motor: zaehlMotor(10_000), schrittGrenze: 25 },

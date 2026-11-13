@@ -57,12 +57,13 @@ function istFarbenfusion(karte: Spielkarte): boolean {
   return karte.typ === 'Sonderkarte' && karte.name === FARBENFUSION_NAME;
 }
 
+/** A7.7: Die Fusion bringt die Punkte der beiden Karten darunter. */
 function findeFarbenfusionPunkte(schlange: Schlange, karteId: string): number {
-  const eintrag = schlange.farbenfusionen?.find((fusion) => fusion.kartenId === karteId);
+  const eintrag = schlange.fusionen.find((fusion) => fusion.karteId === karteId);
   if (!eintrag) {
-    throw new Error('Farbenfusion konnte nicht den fusionierten Punkten zugeordnet werden.');
+    throw new Error(`Unter der Farbenfusion ${karteId} liegen keine Karten; ihre Punkte sind unbekannt.`);
   }
-  return eintrag.punkte;
+  return eintrag.unter[0].punkte + eintrag.unter[1].punkte;
 }
 
 function transformiereRegenbogenschlangen(schlange: Schlange): Schlange {
@@ -247,21 +248,12 @@ export interface SpielerAufgabenPunkteErgebnis {
 }
 
 export function berechneSpielerAufgabenPunkte(spieler: Spieler): SpielerAufgabenPunkteErgebnis {
-  // ÄNDERUNG [05.07.2026]: K5 — im Endspurt erfüllte offene Aufgaben zählen doppelt (R6.4).
-  const verdoppelt = new Set(spieler.endspurtVerdoppelteAufgabenIds ?? []);
-  const aufgaben = spieler.erfuellteAufgaben.map((a) => ({
-    aufgabenId: a.id,
-    name: a.name,
-    punkte: verdoppelt.has(a.id) ? a.punkte * 2 : a.punkte,
-  }));
-  // ÄNDERUNG [05.07.2026]: K4 — erfüllte geheime Aufgabe zählt einfach (nie verdoppelt).
-  const geheimPunkte = spieler.geheimeAufgabeErfuellt === true ? spieler.geheimeAufgabe.punkte : 0;
-  if (spieler.geheimeAufgabeErfuellt === true) {
-    aufgaben.push({
-      aufgabenId: spieler.geheimeAufgabe.id,
-      name: spieler.geheimeAufgabe.name,
-      punkte: spieler.geheimeAufgabe.punkte,
-    });
+  // Die Endspurt-Verdopplung gibt es nicht mehr (C11); E1 hat das Feld dafür aus dem Zustand genommen.
+  const aufgaben = spieler.erfuellteAufgaben.map((a) => ({ aufgabenId: a.id, name: a.name, punkte: a.punkte }));
+  const geheime = spieler.geheimeAufgabeErfuellt ? spieler.geheimeAufgabe : null;
+  const geheimPunkte = geheime?.punkte ?? 0;
+  if (geheime !== null) {
+    aufgaben.push({ aufgabenId: geheime.id, name: geheime.name, punkte: geheime.punkte });
   }
   const gesamtPunkte = aufgaben.reduce((sum, a) => sum + a.punkte, 0);
   return { gesamtPunkte, aufgaben, geheimePunkte: geheimPunkte };

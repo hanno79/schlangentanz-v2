@@ -1,133 +1,117 @@
-/*
-Author: rahn
-Datum: 31.05.2026
-Version: 1.1
-Beschreibung: Factory für den initialen Schlangentanz-Spielzustand.
-*/
-
-import type { Spielzustand, Spieler, Spielkarte, AufgabenkarteInfo, Steuerung } from './types';
-import {
-  SPIELER_MIN,
-  SPIELER_MAX,
-  KI_GEGNER_MIN,
-  KI_GEGNER_MAX,
-  STARTHANDKARTEN,
-  OFFENE_AUFGABEN_START,
-} from './constants';
-import { erstelleSpieldeck, mischeDeck } from './deck';
+import type { Spieler, Spielzustand, Steuerung } from './types';
+import { HANDKARTEN, OFFENE_AUFGABEN, SPIELER_MAX, SPIELER_MIN } from './constants';
+import { erstelleAuslagekarten, erstelleSpielkarten, mischeDeck } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 
-type SpielerDefinition = { id: string; name: string; steuerung: Steuerung };
-
-export function erstelleEinzelspielerSpielzustand(
-  kiGegnerAnzahl: number,
-  rng: () => number = () => Math.random(),
-): Spielzustand {
-  if (
-    !Number.isInteger(kiGegnerAnzahl) ||
-    kiGegnerAnzahl < KI_GEGNER_MIN ||
-    kiGegnerAnzahl > KI_GEGNER_MAX
-  ) {
-    throw new Error(
-      `Ungültige KI-Gegneranzahl: ${kiGegnerAnzahl}. Erlaubt sind ${KI_GEGNER_MIN}–${KI_GEGNER_MAX} KI-Gegner.`,
-    );
-  }
-
-  const definitionen: SpielerDefinition[] = [
-    { id: 'spieler-mensch', name: 'Spieler', steuerung: 'Mensch' },
-    ...Array.from({ length: kiGegnerAnzahl }, (_, i): SpielerDefinition => ({
-      id: `ki-gegner-${i + 1}`,
-      name: `KI Gegner ${i + 1}`,
-      steuerung: 'KI',
-    })),
-  ];
-
-  return erstelleSpielzustandVonDefinitionen(definitionen, rng);
+export interface PartieOptionen {
+  /** A2: 2 bis 4. Spieler 1 ist der Mensch, die übrigen sind KI-Gegner (B2). */
+  spielerzahl: number;
+  /** B1: mit oder ohne Erweiterung, vor der Partie gewählt. */
+  erweiterung: boolean;
+  /** Werte in [0, 1). Gleiche Folge, gleiche Partie (U4). */
+  zufall: () => number;
 }
 
-export function erstelleSpielzustand(
-  anzahlSpieler: number,
-  rng: () => number = () => Math.random(),
-): Spielzustand {
-  if (anzahlSpieler < SPIELER_MIN || anzahlSpieler > SPIELER_MAX) {
-    throw new Error(
-      `Ungültige Spieleranzahl: ${anzahlSpieler}. Erlaubt sind ${SPIELER_MIN}–${SPIELER_MAX} Spieler.`,
-    );
-  }
-
-  const definitionen: SpielerDefinition[] = Array.from({ length: anzahlSpieler }, (_, i) => ({
-    id: `spieler-${i + 1}`,
-    name: `Spieler ${i + 1}`,
-    steuerung: i === 0 ? 'Mensch' : 'KI',
-  }));
-
-  return erstelleSpielzustandVonDefinitionen(definitionen, rng);
+export interface TischOptionen {
+  spielerzahl: number;
+  erweiterung: boolean;
+  /** Ohne Zufallsquelle bleibt das Material in fester Reihenfolge. */
+  zufall?: () => number;
 }
 
-function erstelleSpielzustandVonDefinitionen(
-  definitionen: SpielerDefinition[],
-  rng: () => number,
-): Spielzustand {
-  const hauptdeck = mischeDeck(erstelleSpieldeck(), rng);
-  const aufgabenStapel = mischeDeck(erstelleAufgabenStapel(), rng);
-  const spieler = erstelleSpielerListe(definitionen, aufgabenStapel);
+/** Die Id der Schlange mit dieser laufenden Nummer. */
+export function schlangenIdFuer(nummer: number): string {
+  return `schlange-${nummer}`;
+}
 
-  verteileStartkartenReihum(spieler, hauptdeck);
+function pruefeSpielerzahl(spielerzahl: number): void {
+  if (!Number.isInteger(spielerzahl) || spielerzahl < SPIELER_MIN || spielerzahl > SPIELER_MAX) {
+    throw new Error(`Ungültige Spielerzahl ${spielerzahl}: Schlangentanz spielen ${SPIELER_MIN} bis ${SPIELER_MAX} Spieler (A2).`);
+  }
+}
 
+function erstelleSpieler(index: number, erweiterung: boolean): Spieler {
+  const steuerung: Steuerung = index === 0 ? 'Mensch' : 'KI';
+  const auslage = erstelleAuslagekarten(index);
   return {
-    version: 1,
-    spieler,
-    aktiverSpielerIndex: 0,
-    zugphase: 'Nachziehphase',
-    zugpflichten: { gespielteKarten: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0, verdopplerBonusAktiv: false, farbenfusionGespielt: false },
-    spielphase: 'Normal',
-    nachziehstapel: hauptdeck,
-    ablagestapel: [],
-    aussetzenSpielerIndizes: [],
-    offeneAufgaben: aufgabenStapel.splice(0, OFFENE_AUFGABEN_START),
-    aufgabenStapel,
-    endrunde: { ausloeserSpielerIndex: null, verbleibendeSpielerIndizes: [] },
-    pendingReaktion: null,
-  };
-}
-
-function erstelleSpielerListe(
-  definitionen: SpielerDefinition[],
-  aufgabenStapel: AufgabenkarteInfo[],
-): Spieler[] {
-  return definitionen.map(({ id, name, steuerung }) => ({
-    id,
-    name,
+    id: `spieler-${index + 1}`,
+    name: index === 0 ? 'Spieler 1' : `KI-Gegner ${index}`,
     steuerung,
     hand: [],
     schlangen: [],
-    ausgespielteSonderkartenNamen: [],
-    // ÄNDERUNG [07.06.2026]: R97 initialisiert die Schlangentanz-Historie für neue Spielstände.
+    ablagestapel: [],
+    ausgespielteSonderkarten: [],
     schlangenhaeutungDreiergruppen: 0,
     erfuellteAufgaben: [],
-    // ÄNDERUNG [29.06.2026]: R181 — Spec: jeder Spieler hat genau eine geheime Aufgabenkarte.
-    // Factory wirft Exception wenn der Aufgabenstapel leer ist (statt stille `null`-Inkonsistenz).
-    geheimeAufgabe: aufgabenStapel.shift() ?? throwEmptyAufgabenStapel(),
+    geheimeAufgabe: null,
     geheimeAufgabeErfuellt: false,
-    endspurtVerdoppelteAufgabenIds: [],
-  }));
+    comeback: erweiterung ? { karte: auslage.comeback, verbraucht: false } : null,
+    risikoKarten: erweiterung ? auslage.risiko : [],
+  };
 }
 
-function throwEmptyAufgabenStapel(): never {
-  throw new Error('Ungültiger Spielzustand: Aufgabenstapel leer beim Anlegen der Spieler.');
+/**
+ * Der Tisch nach A4, aber ohne ausgeteilte Handkarten: alle Spielkarten im
+ * Nachziehstapel, mit Erweiterung die Aufgaben ausgelegt und die Auslage vor
+ * jedem Spieler. Grundlage für `erstellePartie` und den Szenario-Baukasten.
+ */
+export function erstelleTisch({ spielerzahl, erweiterung, zufall }: TischOptionen): Spielzustand {
+  pruefeSpielerzahl(spielerzahl);
+  if (typeof erweiterung !== 'boolean') {
+    throw new Error('Ungültige Partie: Es muss feststehen, ob mit oder ohne Erweiterung gespielt wird (B1).');
+  }
+  const mische = <T>(liste: T[]): T[] => (zufall === undefined ? liste : mischeDeck(liste, zufall));
+
+  const spieler = Array.from({ length: spielerzahl }, (_, index) => erstelleSpieler(index, erweiterung));
+  const nachziehstapel = mische(erstelleSpielkarten(erweiterung));
+
+  // A4: Aufgaben getrennt mischen, 3 offen auslegen, jedem Spieler eine geheime geben.
+  const aufgabenStapel = erweiterung ? mische(erstelleAufgabenStapel()) : [];
+  const offeneAufgaben = aufgabenStapel.splice(0, erweiterung ? OFFENE_AUFGABEN : 0);
+  if (erweiterung) {
+    for (const einzelner of spieler) einzelner.geheimeAufgabe = aufgabenStapel.shift() ?? null;
+  }
+
+  return {
+    version: 2,
+    erweiterung,
+    spieler,
+    partiephase: 'Laufend',
+    zug: {
+      spielerIndex: 0,
+      teilzug: 1,
+      gespielteFarbkarten: 0,
+      gespielteSonderkarten: 0,
+      verdopplerGespielt: false,
+      farbenfusionGespielt: false,
+      abschnitt: 'Ausspielen',
+    },
+    schlussrundeAusloeser: null,
+    nachziehstapel,
+    ausliegendeGruben: [],
+    schwebend: null,
+    ausDemSpiel: [],
+    offeneAufgaben,
+    aufgabenStapel,
+    schlangenZaehler: 0,
+  };
 }
 
-function verteileStartkartenReihum(
-  spieler: Spieler[],
-  hauptdeck: Spielkarte[],
-): void {
-  for (let runde = 0; runde < STARTHANDKARTEN; runde++) {
-    for (const einzelnerSpieler of spieler) {
-      const karte = hauptdeck.shift();
-      if (karte === undefined) {
-        throw new Error('Ungültiger Spielzustand: Nicht genug Karten für Startverteilung.');
-      }
-      einzelnerSpieler.hand.push(karte);
+/**
+ * Eine neue Partie nach A4: mischen, jedem Spieler reihum 5 Karten austeilen,
+ * der Rest ist der Nachziehstapel. Der Mensch beginnt (B2).
+ */
+export function erstellePartie({ spielerzahl, erweiterung, zufall }: PartieOptionen): Spielzustand {
+  if (typeof zufall !== 'function') {
+    throw new Error('Ungültige Partie: Ohne Zufallsquelle lässt sich nicht mischen (B2).');
+  }
+  const zustand = erstelleTisch({ spielerzahl, erweiterung, zufall });
+  for (let runde = 0; runde < HANDKARTEN; runde++) {
+    for (const spieler of zustand.spieler) {
+      const karte = zustand.nachziehstapel.shift();
+      if (karte === undefined) throw new Error('Ungültige Partie: Für das Austeilen fehlen Karten.');
+      spieler.hand.push(karte);
     }
   }
+  return zustand;
 }

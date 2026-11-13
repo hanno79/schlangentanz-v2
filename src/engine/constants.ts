@@ -1,70 +1,27 @@
-// Spieler-Grenzen
+/** A2: 2–4 Spieler. */
 export const SPIELER_MIN = 2;
 export const SPIELER_MAX = 4;
 
-// KI-Gegner-Grenzen (Einzelspieler-Modus): exakt ein Mensch-Platz weniger als Gesamtgrenzen
+/** B2: ein Mensch gegen 1, 2 oder 3 KI-Gegner. */
 export const KI_GEGNER_MIN = SPIELER_MIN - 1;
 export const KI_GEGNER_MAX = SPIELER_MAX - 1;
 
-// Handkarten
-export const STARTHANDKARTEN = 5;
-/*
-ÄNDERUNG [03.08.2026]: 10 → 5.
+/** A4/A5: 5 Handkarten zu Beginn, aufgefüllt wird auf 5. */
+export const HANDKARTEN = 5;
 
-Die Normquelle sagt im Zugschritt c): „Wenn du mehr als **5** Karten auf der Hand
-hast, lege überzählige Karten auf deinen persönlichen Ablagestapel." Eine Zehn
-kommt in der ganzen Anleitung nicht vor; sie stammt vermutlich aus dem
-überholten Dart-Backlog (siehe `docs/DART_BACKLOG_SOURCE.md`).
-
-**Am Spielverlauf ändert das nichts**, weil das Limit mit beiden Zahlen nicht
-greift: Man zieht auf 5 auf, und jede gespielte Karte wird nach R2.3a höchstens
-wieder ausgeglichen — über 5 kommt niemand. Falsch war die *Anzeige*: Das Brett
-zeigte „5/10 Karten" und damit eine Zahl ohne Regelgrundlage. Die
-Überhand-Maschinerie bleibt als Absicherung bestehen, nicht weil sie im Alltag
-greift.
-
-ÄNDERUNG [03.08.2026, Codex-Review]: Hier stand zuvor, der aktive Spieler halte
-am Zugende „höchstens 4" Karten. Seit R2.3a stimmt das nicht mehr — wer eine
-Sonderkarte spielt, zieht sofort nach und steht wieder bei 5.
-*/
-export const HANDKARTENLIMIT = 5;
-export const MINDESTHANDKARTEN = 5;
-
-// Schlangen
+/** A5: höchstens 2 Schlangen je Spieler. */
 export const MAX_SCHLANGEN_PRO_SPIELER = 2;
-export const MAX_KARTEN_PRO_ZUG = 2;
 
-// Kartenmaterial laut Spec (R1.1)
-export const FARBKARTEN_GESAMT = 78;
-export const SONDERKARTEN_GESAMT = 32;
-export const BASIS_KARTEN_GESAMT = FARBKARTEN_GESAMT + SONDERKARTEN_GESAMT;
-export const AUFGABENKARTEN_GESAMT = 14;
-export const ERWEITERUNG_KARTEN = 31;
-export const KARTEN_GESAMT = BASIS_KARTEN_GESAMT + ERWEITERUNG_KARTEN;
+/** A4: 3 offene Aufgabenkarten. */
+export const OFFENE_AUFGABEN = 3;
 
-// Offene Aufgabenkarten zu Spielbeginn
-export const OFFENE_AUFGABEN_START = 3;
-
-// Farbgruppen (R3.3)
+/** A11: Eine Farbgruppe hat mindestens drei Karten. */
 export const MINDEST_FARBGRUPPEN_LAENGE = 3;
 
-/*
-ÄNDERUNG [04.08.2026]: O-1 — ein Prädikat für Einfügepositionen.
-
-Farbendieb und Schlangenblockade fügen beide eine Karte in eine Lücke einer
-Schlange ein, und beide prüfen die Position an drei Stellen: bei der
-Aktionsprüfung (`legalActions.ts`), beim Ausspielen (`turnState.ts`) und beim
-Laden (`serialization.ts`). Das sind sechs Prüfungen für **eine** Regel.
-
-Die Vervielfachung selbst ist Hausbrauch und hier nicht das Problem — die drei
-Schichten prüfen bewusst unabhängig voneinander. Das Problem war die Abweichung:
-Die Blockade-Kopien prüften auf `Number.isInteger`, die Farbendieb-Kopien nicht,
-und die Persistenz prüfte beim Farbendieb nur nach unten, bei der Blockade nach
-beiden Seiten. Dieselbe Regel stand damit in vier Fassungen da.
-
-Gezählt wird als **Lücke**: `0` ist ganz vorn, `laenge` ganz hinten. Deshalb ist
-`laenge` gültig und `laenge + 1` nicht.
-*/
+/**
+ * Eine Lücke in einer Schlange der Länge `laenge`: `0` ist vor der ersten Karte,
+ * `laenge` hinter der letzten.
+ */
 export function istGueltigeEinfuegePosition(wert: unknown, laenge: number): boolean {
   return Number.isInteger(wert) && (wert as number) >= 0 && (wert as number) <= laenge;
 }
