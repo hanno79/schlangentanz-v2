@@ -20,14 +20,21 @@ anhalten und berichten, nicht raten (U2).
 ```bash
 git fetch origin
 git switch -c task/<ID>-<kurzname> origin/neuaufbau
-git ls-files --eol | grep -c w/crlf      # > 0: git ls-files -z | xargs -0 rm -f && git checkout -- .
+git ls-files --eol | grep -c w/crlf      # > 0: erst git ls-files -z | xargs -0 rm -f, dann git checkout -- .
 git config --get core.hooksPath          # muss scripts/githooks zeigen
 npm ci
 ```
 
+Jede Zeile ist ein eigener Aufruf. Lehnt deine Umgebung einen verketteten
+git-Befehl ab (mit `&&`, `|` oder `;`), führst du die Teile einzeln aus; geht
+die Pipe nicht, schreibst du die Liste erst in eine Datei
+(`git ls-files > <scratchpad>/dateien.txt`).
+
 Andere Umsetzer und Prüfer arbeiten gleichzeitig. Fass nur die Dateien deines
 Tasks an, benutze `git stash` nicht ohne eigenen Namen, und beende keine
-fremden Prozesse.
+fremden Prozesse. Im gemeinsamen Scratchpad legst du einen eigenen
+Unterordner an (`<ID>-umsetzer/`); dorthin gehen Logs, Fotos und kleine
+Skripte. Er heisst unten `<scratchpad>`.
 
 ## 3. Ablauf
 
@@ -48,19 +55,27 @@ fremden Prozesse.
 ## 4. Gates
 
 Jeder Befehl allein, danach den Exit-Code lesen (Git Bash `echo $?`,
-PowerShell `$LASTEXITCODE`), nicht hinter einem `|`:
+PowerShell `$LASTEXITCODE`). Die Ausgabe schreibst du beim Lauf mit `tee` in
+deinen Ordner; hinter dem `|` liest du in Git Bash `${PIPESTATUS[0]}`, sonst
+bekommst du den Exit-Code von `tee`:
 
 ```bash
-npm test -- --run
-npm run typecheck
-npm run build
-npm run check:test-lines
-npm run check:css-asserts
-npm run check:regeln
-npx eslint .
-python scripts/regelcheck.py
-npm run test:layout        # bei Oberflächen-Tasks und Änderungen an tests/layout/ oder playwright.config.ts
+npm test -- --run 2>&1 | tee <scratchpad>/npm-test.log; echo "exit ${PIPESTATUS[0]}"
+npm run typecheck 2>&1 | tee <scratchpad>/typecheck.log; echo "exit ${PIPESTATUS[0]}"
+npm run build 2>&1 | tee <scratchpad>/build.log; echo "exit ${PIPESTATUS[0]}"
+npm run check:test-lines 2>&1 | tee <scratchpad>/test-lines.log; echo "exit ${PIPESTATUS[0]}"
+npm run check:css-asserts 2>&1 | tee <scratchpad>/css-asserts.log; echo "exit ${PIPESTATUS[0]}"
+npm run check:regeln 2>&1 | tee <scratchpad>/regeln.log; echo "exit ${PIPESTATUS[0]}"
+npx eslint . 2>&1 | tee <scratchpad>/eslint.log; echo "exit ${PIPESTATUS[0]}"
+python scripts/regelcheck.py 2>&1 | tee <scratchpad>/regelcheck.log; echo "exit ${PIPESTATUS[0]}"
+npm run test:layout 2>&1 | tee <scratchpad>/layout.log; echo "exit ${PIPESTATUS[0]}"   # bei Oberflächen-Tasks und Änderungen an tests/layout/ oder playwright.config.ts
 ```
+
+Im Hauptordner des Repos liegen unter `.claude/worktrees/` vollständige Kopien
+(die Worktrees der Agenten). Kein Gate erfasst sie: Vitest sucht nur unter
+`src/` und `tests/`, ESLint schliesst `.claude/` aus, `check:regeln`, `check:test-lines` und `check:css-asserts`
+lesen nur `src/`, `tests/`, `scripts/` und den Wurzelordner, `regelcheck.py`
+nur, was git kennt (`tests/claude_ordner.test.ts` hält das fest).
 
 **`npm run check:regeln`** (`scripts/check_regeln.mjs`) prüft:
 
@@ -71,11 +86,25 @@ npm run test:layout        # bei Oberflächen-Tasks und Änderungen an tests/lay
 | U7 | Testdateien höchstens 499 Zeilen; andere Dateien unter `src/ui/` und `src/ki/` (Code und CSS) höchstens 300 | |
 
 Der Altbestand steht in `scripts/check_regeln_ausnahmen.json`, je Regel und
-Datei mit der Zahl der Verstösse, die dort noch stehen dürfen. Die Liste darf
-nur schrumpfen: Du trägst nie etwas ein und erhöhst keine Zahl. Löschst oder
-ersetzt du alte Tests, meldet `check:regeln` die Ausnahme als veraltet; dann
-`npm run check:regeln -- --ausnahmen-schrumpfen` und die geänderte Liste mit
-committen.
+Datei jeder geduldete Verstoss mit einem Merkmal: bei U1 der volle Testname
+(`describe › it`), bei U4 und U6 der Inhalt der Zeile mit zusammengezogenem
+Leerraum, bei U7 die Art der Grenze. Geduldet ist genau diese Liste:
+
+- Ein Verstoss ohne passendes Merkmal ist rot, auch wenn du dafür einen alten
+  behoben hast. Änderst du eine gelistete Zeile, behebst du ihren Verstoss.
+- Die Liste darf nur schrumpfen. `check:regeln` vergleicht sie mit ihrer Fassung
+  auf der Merge-Basis von `HEAD` und `origin/neuaufbau`; eine neue Datei, eine
+  neue Regel oder ein neues Merkmal ist rot („wächst gegenüber …“). Du trägst
+  also nie etwas ein.
+- Löschst oder ersetzt du alte Tests, meldet `check:regeln` die Merkmale als
+  veraltet; dann `npm run check:regeln -- --ausnahmen-schrumpfen` und die
+  geänderte Liste mit committen. Der Schalter löscht nur, er fügt nie etwas
+  hinzu. Die Merkmale unter `U4` pflegt er nicht; die löschst du von Hand, wenn
+  der Architekturtest sie als veraltet meldet.
+- Endet `check:regeln` mit 2 und „lässt sich nicht … vergleichen“, fehlt
+  `origin/neuaufbau`: `git fetch origin` und noch einmal. Einen anderen
+  Vergleichsstand nennst du mit `-- --vergleich <ref>`; `--ohne-vergleich` ist
+  nur für Probe-Bäume ohne git gedacht und schreibt das in die Ausgabe.
 
 **Der Architekturtest** `tests/architektur.test.ts` läuft in `npm test`:
 
@@ -83,10 +112,16 @@ committen.
   der Engine nur `src/engine/index.ts`, auch keine Typen an ihr vorbei.
 - **U4:** Dateien unter `src/engine/` (ohne Tests) nutzen kein React, kein DOM
   (`window`, `document`, `localStorage` …), kein `Math.random`, keinen
-  `crypto`-Zufall und kein `Date`. Zufall kommt als Parameter.
-  Altbestand: Schlüssel `U4` in `scripts/check_regeln_ausnahmen.json`, darf nur
-  schrumpfen und wird von Hand gesenkt (E1 löscht den Eintrag für
-  `src/engine/state.ts`); einen veralteten Eintrag meldet der Test.
+  `crypto`-Zufall und kein `Date` (auch nicht `new Date` oder `Date.now()`).
+  Zufall kommt als Parameter. Der Test erkennt auch die Umwege:
+  `Math['random']`, `globalThis.Math.random()`, `window.Math.random()`,
+  `const { random } = Math`, einen berechneten Schlüssel an `Math` und `Math`
+  als weitergereichten Wert; ebenso `globalThis.Date` und `import()` oder
+  `require()` mit einem berechneten Modulnamen.
+  Altbestand: Schlüssel `U4` in `scripts/check_regeln_ausnahmen.json`, je
+  Verstoss mit dem Inhalt seiner Zeile; darf nur schrumpfen und wird von Hand
+  gekürzt (E1 löscht den Eintrag für `src/engine/state.ts`); ein veraltetes
+  Merkmal meldet der Test.
 - **U5:** Unter `src/ki/` liest nur `src/ki/sicht.ts` den vollen Zustand
   (Typ `Spielzustand`, Konstante `VOLLER_ZUSTAND_TYP`). Andere Dateien dürfen
   ihn entgegennehmen und an die Engine oder an `sicht.ts` weiterreichen, aber
@@ -98,10 +133,29 @@ Die Testnamen nennen, wie viele Dateien geprüft wurden. Solange `src/ui/` und
 
 **Ports 4173 und 4174.** `npm run test:layout` startet zwei Server auf festen
 Ports: 4173 Produktionsbuild, 4174 Testhook-Build. Antwortet dort schon etwas,
-bricht Playwright ab. Vorher prüfen (`netstat -ano | grep -E ':417[34] '`, in
-PowerShell `netstat -ano | findstr ":4173 :4174"`). Belegt heisst meist: ein
-anderer Agent läuft. Ein paar Minuten warten und erneut versuchen, nie fremde
-Prozesse beenden. Eigene Server danach beenden.
+bricht Playwright ab.
+
+1. Vorher prüfen. Belegt ist ein Port nur bei einem lauschenden Socket, Status
+   `LISTENING` (deutsches Windows: `ABHÖREN`). `TIME_WAIT` (`WARTEND`) und
+   `ESTABLISHED` (`HERGESTELLT`) ignorierst du.
+
+   ```bash
+   netstat -ano | grep -E ':417[34] ' | grep -E 'LISTENING|ABH'
+   ```
+
+   PowerShell: `Get-NetTCPConnection -LocalPort 4173,4174 -State Listen -ErrorAction SilentlyContinue`.
+   Ohne Ausgabe sind beide frei.
+2. Belegt heisst meist: ein anderer Agent läuft. Ein paar Minuten warten und
+   erneut versuchen, nie fremde Prozesse beenden.
+3. Eigene Server danach beenden. Unter Windows überlebt der Node-Kindprozess
+   (`vite preview`) oft, wenn `npm` oder die Hintergrundaufgabe endet. Dann:
+   PID aus der letzten Spalte von `netstat` (PowerShell: `OwningProcess`),
+   Befehlszeile lesen mit
+   `Get-CimInstance Win32_Process -Filter "ProcessId=<PID>" | Select-Object ProcessId, CommandLine`
+   (aus Git Bash: `powershell -NoProfile -Command "(Get-CimInstance Win32_Process -Filter 'ProcessId=<PID>').CommandLine"`).
+   Steht dort der Pfad deines Worktrees, beendest du ihn mit
+   `Stop-Process -Id <PID>`; sonst gehört er einem anderen, und du wartest.
+   Danach die Portprüfung wiederholen.
 
 ## 5. Playwright und Geräteklassen
 
@@ -124,6 +178,14 @@ Prüfer tun wird (`PRUEFER_ANLEITUNG.md`, Schritt 7):
 - Oberfläche: `node scripts/pruefung/bildschirmfotos.mjs <adresse> --name <ID>-<was> --ziel <scratchpad>`
   liefert drei Bilder; ansehen, nicht nur erzeugen. Bedienen im eingebauten
   Browser (`mcp__Claude_Browser__*`) oder mit Playwright und `tap()` für Touch.
+- Waagrechtes Scrollen und abgeschnittene Texte sind in **jeder** Geräteklasse
+  ein Mangel. Waagrecht scrollen muss man, wenn auf `document.documentElement`
+  `scrollWidth > clientWidth` gilt; das misst du in allen drei Klassen.
+- Der eingebaute Browser ist zum Ansehen da; direkt nach `resize_window`
+  meldet er mitunter noch die alte Breite. Grenzwerte der Breite (etwa 767 und
+  768 px) misst du mit Playwright: `await seite.setViewportSize({ width: 768, height: 1024 })`,
+  danach `scrollWidth` und `clientWidth` lesen. Ein Beispielskript steht in
+  `PRUEFER_ANLEITUNG.md`, Schritt 7.
 - Engine und KI: am Entwicklertisch (`/dev`, Testhook-Build auf 4174), das
   Szenario des Tasks mit Klicks durchspielen.
 
