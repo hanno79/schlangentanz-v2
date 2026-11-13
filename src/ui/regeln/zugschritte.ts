@@ -5,9 +5,10 @@ Jeder Satz steht wörtlich in der Spielanleitung (Teil A der Spec) oder in einer
 Antwort des Autors (Teil D) und nennt seine Stelle; `zugschritte.test.ts`
 prüft das gegen `docs/GAME_SPEC.md`. So behauptet die Zusammenfassung nichts,
 was dort nicht steht (U2). Wo Teil D die Website ergänzt, folgt sie Teil D,
-etwa bei der Zahl der Karten (D12), einer Sonderkarte ohne Ziel (D13) oder dem
-Verdoppler im zweiten Zug (D11, D23), und
-die Oberfläche kennzeichnet den Satz als Ergänzung des Autors.
+etwa bei der neuen Schlange (D16) oder dem Verdoppler im zweiten Zug (D11,
+D23), und die Oberfläche kennzeichnet den Satz als Ergänzung des Autors. Was
+die Website inzwischen selbst sagt (D9, D10, D12, D13, D19), steht im Wortlaut
+von Teil A da, ohne Etikett.
 */
 
 export interface Satz {
@@ -39,14 +40,18 @@ export const ZUGSCHRITTE: readonly Zugschritt[] = [
   {
     titel: 'Karten ausspielen',
     saetze: [
+      { text: 'Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:', quelle: 'A5' },
       {
-        text: 'Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art.',
-        quelle: 'D12',
+        text: 'Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)',
+        quelle: 'A5',
       },
+      {
+        text: 'Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)',
+        quelle: 'A5',
+      },
+      { text: 'Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.', quelle: 'A5' },
       { text: 'Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen.', quelle: 'A5' },
-      { text: 'Jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle.', quelle: 'D9' },
       { text: 'Nur eine Farbkarte beginnt eine Schlange.', quelle: 'D16' },
-      { text: 'Eine neue Schlange beginnt jeder nur für sich selbst.', quelle: 'D19' },
       { text: 'Ein Spieler darf maximal 2 Schlangen haben.', quelle: 'A5' },
     ],
   },
@@ -58,11 +63,12 @@ export const ZUGSCHRITTE: readonly Zugschritt[] = [
         quelle: 'A6',
       },
       { text: 'Dann können die betroffenen Spieler im Uhrzeigersinn mit einem Farbenschutz reagieren.', quelle: 'A6' },
-      { text: 'Gegen Farbkarten gibt es keine Abwehr.', quelle: 'D10' },
+      { text: 'Gegen Farbkarten gibt es keine Abwehr.', quelle: 'A6' },
       { text: 'Erst danach tritt der Effekt der Sonderkarte ein.', quelle: 'A6' },
+      { text: 'Du darfst auch eine Sonderkarte spielen, die dir gerade nichts bringt.', quelle: 'A5' },
       {
-        text: 'Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges.',
-        quelle: 'D13',
+        text: 'Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges.',
+        quelle: 'A5',
       },
     ],
   },

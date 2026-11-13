@@ -247,11 +247,9 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
     expect(lilaRiese?.kurz).toBe('Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.')
   })
 
-  it('O9/D3: Lila Riese erklärt den Unterschied zum Kartenbild mit der Antwort des Autors', () => {
+  it('P0.5d/D3: Lila Riese trägt keine Ergänzung des Autors, denn A9 enthält die Antwort D3 schon', () => {
     const lilaRiese = nach('Aufgabenkarte').find((hilfe) => name(hilfe) === 'Lila Riese')
-    expect(lilaRiese?.ergaenzungen).toEqual([
-      { text: 'Website geändert: mindestens 5 violette Karten in einer Reihe.', quelle: 'D3' },
-    ])
+    expect(lilaRiese?.ergaenzungen).toBeUndefined()
   })
 })
 

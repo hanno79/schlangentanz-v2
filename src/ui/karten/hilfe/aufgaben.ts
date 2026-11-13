@@ -5,7 +5,8 @@ Die 15 Aufgaben aus A9 (Erweiterung): Bedingung und Punkte aus der Tabelle
 „Verfügbare Aufgabenkarten“, dazu das Beispiel, wo die Spielanleitung eines hat.
 
 Lila Riese: Das Kartenbild sagt „mindestens 3“, die Spielanleitung „min. 5“.
-Es gilt die Spielanleitung; die Antwort des Autors (D3) steht als Ergänzung darunter.
+Es gilt die Spielanleitung (A9); die Antwort des Autors (D3) steht dort schon,
+eine Ergänzung braucht es nicht.
 */
 
 function aufgabe(name: string, punkte: number, bedingung: string, ...beispiel: Textbaustein[]): Kartenhilfe {
@@ -81,9 +82,5 @@ export const AUFGABEN_HILFE: readonly Kartenhilfe[] = [
     reihe('Blau', 'Rot', 'Gelb', 'Grün', 'Grün', 'Gelb', 'Rot', 'Blau'),
   ),
   aufgabe('Gelber Schatz', 5, 'Bilde eine Gruppe aus min. 6 gelben Karten.'),
-  {
-    ...aufgabe('Lila Riese', 5, 'Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.'),
-    // Das Kartenbild sagt noch „mindestens 3“; die Antwort des Autors erklärt den Unterschied.
-    ergaenzungen: [{ text: 'Website geändert: mindestens 5 violette Karten in einer Reihe.', quelle: 'D3' }],
-  },
+  aufgabe('Lila Riese', 5, 'Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.'),
 ]

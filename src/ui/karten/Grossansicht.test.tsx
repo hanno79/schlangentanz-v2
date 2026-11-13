@@ -52,11 +52,11 @@ describe('O9: Kartentext zeigt den Wortlaut der Spielanleitung (Kriterium 1)', (
     expect(screen.getByText('Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.')).toBeInTheDocument()
   })
 
-  it('O9/D3: bei Lila Riese steht die Antwort des Autors mit dem Etikett „Ergänzung des Autors“', () => {
+  it('P0.5d/D3: bei Lila Riese steht kein Etikett „Ergänzung des Autors“, A9 sagt schon „min. 5“', () => {
     const lilaRiese = KARTENHILFEN.find((h) => h.karte.typ === 'Aufgabenkarte' && h.karte.name === 'Lila Riese')!
     render(<Kartentext karte={lilaRiese.karte} />)
-    const satz = screen.getByText('Website geändert: mindestens 5 violette Karten in einer Reihe.')
-    expect(within(satz.closest('p')!).getByText('Ergänzung des Autors')).toBeInTheDocument()
+    expect(screen.queryByText('Ergänzung des Autors')).toBeNull()
+    expect(screen.queryByText(/Website geändert/)).toBeNull()
   })
 
   it('O9/A7.9: die Schlangenhäutung zeigt das Ergebnis ihres Beispiels als Reihe von Kartenbildern', () => {
