@@ -141,10 +141,16 @@ export type SpielAktion =
 
 export type Pruefergebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
-/** Was eine Aktion bewirkt hat, damit die Oberfläche keine Zustände vergleichen muss (Plan E2). */
+/**
+ * Was eine Aktion bewirkt hat, in der Reihenfolge, in der es geschah, damit die
+ * Oberfläche keine Zustände vergleichen muss (Plan E2). Gezogene Karten stehen
+ * nur als Anzahl da, weil Handkarten der Gegner verdeckt sind (B2).
+ */
 export type Ereignis =
   | { typ: 'KarteGespielt'; spielerIndex: number; karteId: string; aktion: Aktionstyp }
   | { typ: 'KartenGezogen'; spielerIndex: number; anzahl: number }
+  | { typ: 'KartenAbgeworfen'; spielerIndex: number; karteIds: string[] }
+  | { typ: 'ZugBegonnen'; spielerIndex: number; teilzug: 1 | 2 }
   | { typ: 'Abgewehrt'; spielerIndex: number; karteId: string }
   | { typ: 'Ausgesetzt'; spielerIndex: number }
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
