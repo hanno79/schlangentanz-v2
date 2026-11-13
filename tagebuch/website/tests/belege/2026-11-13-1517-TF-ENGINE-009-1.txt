@@ -1,0 +1,108 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8edbd845a747de10
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > mehrere Joker nebeneinander, Vielfalt false
+[E10P] mehrere Joker nebeneinander V=false: Wertung 8, Durchprobieren 8, Gruppen 8, Bonus null, Joker [["Gelb","Gelb","Gelb"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei Gruppen, Vielfalt false
+[E10P] Joker zwischen zwei Gruppen V=false: Wertung 2, Durchprobieren 2, Gruppen 2, Bonus null, Joker [["Blau"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei fertigen Gruppen, Vielfalt false
+[E10P] Joker zwischen zwei fertigen Gruppen V=false: Wertung 12, Durchprobieren 12, Gruppen 12, Bonus null, Joker [["Rot"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Vielfalt kippt Farbe, Vielfalt false
+[E10P] Vielfalt kippt Farbe V=false: Wertung 13, Durchprobieren 13, Gruppen 13, Bonus null, Joker [["Violett"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker am Schlangenende, nicht über das Ende, Vielfalt false
+[E10P] Joker am Schlangenende, nicht über das Ende V=false: Wertung 0, Durchprobieren 0, Gruppen 0, Bonus null, Joker [[],[null]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker an beiden Enden, Vielfalt false
+[E10P] Joker an beiden Enden V=false: Wertung 12, Durchprobieren 12, Gruppen 12, Bonus null, Joker [["Grün"],["Grün"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > zwei Schlangen, Bonus hängt zusammen, Vielfalt false
+[E10P] zwei Schlangen, Bonus hängt zusammen V=false: Wertung 22, Durchprobieren 22, Gruppen 22, Bonus null, Joker [["Violett"],["Grün"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > nur Joker (G9 wörtlich), Vielfalt false
+[E10P] nur Joker (G9 wörtlich) V=false: Wertung 10, Durchprobieren 10, Gruppen 10, Bonus null, Joker [["Blau","Blau","Blau"],["Blau","Blau","Blau"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Fusion verbindet zwei Gruppen, Vielfalt false
+[E10P] Fusion verbindet zwei Gruppen V=false: Wertung 10, Durchprobieren 10, Gruppen 10, Bonus null, Joker [["Braun"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > 8 Joker eng, Vielfalt false
+[E10P] 8 Joker eng V=false: Wertung 14, Durchprobieren 14, Gruppen 14, Bonus null, Joker [["Rot","Rot","Blau","Blau","Blau"],["Violett","Violett",null]]
+
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > mehrere Joker nebeneinander, Vielfalt false 13ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei Gruppen, Vielfalt false 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei fertigen Gruppen, Vielfalt false 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Vielfalt kippt Farbe, Vielfalt false 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker am Schlangenende, nicht über das Ende, Vielfalt false 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker an beiden Enden, Vielfalt false 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > zwei Schlangen, Bonus hängt zusammen, Vielfalt false 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > nur Joker (G9 wörtlich), Vielfalt false 65ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Fusion verbindet zwei Gruppen, Vielfalt false 1ms
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > mehrere Joker nebeneinander, Vielfalt true
+[E10P] mehrere Joker nebeneinander V=true: Wertung 8, Durchprobieren 8, Gruppen 8, Bonus 0, Joker [["Gelb","Gelb","Gelb"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei Gruppen, Vielfalt true
+[E10P] Joker zwischen zwei Gruppen V=true: Wertung 2, Durchprobieren 2, Gruppen 2, Bonus 0, Joker [["Blau"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei fertigen Gruppen, Vielfalt true
+[E10P] Joker zwischen zwei fertigen Gruppen V=true: Wertung 13, Durchprobieren 13, Gruppen 12, Bonus 1, Joker [["Rot"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Vielfalt kippt Farbe, Vielfalt true
+[E10P] Vielfalt kippt Farbe V=true: Wertung 14, Durchprobieren 14, Gruppen 13, Bonus 1, Joker [["Violett"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker am Schlangenende, nicht über das Ende, Vielfalt true
+[E10P] Joker am Schlangenende, nicht über das Ende V=true: Wertung 0, Durchprobieren 0, Gruppen 0, Bonus 0, Joker [[],[null]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker an beiden Enden, Vielfalt true
+[E10P] Joker an beiden Enden V=true: Wertung 12, Durchprobieren 12, Gruppen 12, Bonus 0, Joker [["Grün"],["Grün"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > zwei Schlangen, Bonus hängt zusammen, Vielfalt true
+[E10P] zwei Schlangen, Bonus hängt zusammen V=true: Wertung 24, Durchprobieren 24, Gruppen 22, Bonus 2, Joker [["Violett"],["Grün"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > nur Joker (G9 wörtlich), Vielfalt true
+[E10P] nur Joker (G9 wörtlich) V=true: Wertung 10, Durchprobieren 10, Gruppen 10, Bonus 0, Joker [["Blau","Blau","Blau"],["Blau","Blau","Blau"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Fusion verbindet zwei Gruppen, Vielfalt true
+[E10P] Fusion verbindet zwei Gruppen V=true: Wertung 10, Durchprobieren 10, Gruppen 10, Bonus 0, Joker [["Braun"]]
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > 8 Joker eng, Vielfalt true
+[E10P] 8 Joker eng V=true: Wertung 15, Durchprobieren 15, Gruppen 14, Bonus 1, Joker [["Rot","Rot","Blau","Blau","Blau"],["Violett","Violett",null]]
+
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > 8 Joker eng, Vielfalt false 2504ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > mehrere Joker nebeneinander, Vielfalt true 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei Gruppen, Vielfalt true 0ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker zwischen zwei fertigen Gruppen, Vielfalt true 0ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Vielfalt kippt Farbe, Vielfalt true 0ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker am Schlangenende, nicht über das Ende, Vielfalt true 0ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Joker an beiden Enden, Vielfalt true 0ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > zwei Schlangen, Bonus hängt zusammen, Vielfalt true 0ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > nur Joker (G9 wörtlich), Vielfalt true 53ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Fusion verbindet zwei Gruppen, Vielfalt true 0ms
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Zufall: 300 Auslagen bis 6 Joker, beide Varianten, eigenes Durchprobieren; Kippfälle zählen
+[E10P] Kippfälle (weniger Gruppenpunkte, mehr Summe): 2; Beispiel: [["Rot",["F","Gelb","Blau"],"Rot","Rot","Violett","Rot",["F","Braun","Violett"],"RB",["F","Violett","Violett"]]] Gruppen 13 < max 14, Summe 14
+
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > 8 Joker eng, Vielfalt true 2484ms
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Laufzeit: 8 Joker in 2 x 54 Karten und 30 Joker in 3 Schlangen
+[E10P] Laufzeit 8 Joker: 0.42 ms; 90 Joker: 92.2 ms, Summe 174
+
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Zufall: 300 Auslagen bis 6 Joker, beide Varianten, eigenes Durchprobieren; Kippfälle zählen 4010ms
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: Zwischenstand verrät keine fremde geheime Aufgabe (Kriterium 6) > der Zwischenstand für Spieler 0 ist gleich, egal ob Spieler 1 seine geheime Aufgabe erfüllt hat oder welche er hat
+[E10P] geheim Spieler 1: Vielfaltskönig; Zwischenstand gleich: true
+
+stdout | src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: echter Kippfall (weniger Gruppenpunkte, mehr Summe) gesucht > Suche
+[E10P] strikte Kippfälle: 0; Beispiel: 
+
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: eigene Gegenprüfung Kriterium 3 > Laufzeit: 8 Joker in 2 x 54 Karten und 30 Joker in 3 Schlangen 102ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: Zwischenstand verrät keine fremde geheime Aufgabe (Kriterium 6) > der Zwischenstand für Spieler 0 ist gleich, egal ob Spieler 1 seine geheime Aufgabe erfüllt hat oder welche er hat 5ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: weitere Grenzfälle > Kettenbonus im Zwischenstand nie, auch im Zustand Beendet 2ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: weitere Grenzfälle > Vier Spieler: drei mit Kette 3 gleich, einer 3 in zwei Schlangen getrennt 2ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: weitere Grenzfälle > Joker-Wahl unabhängig von Reihenfolge der Spieler 1ms
+ ✓ src/engine/__tests__/zz_pruefer_e10.test.ts > Prüfer E10: echter Kippfall (weniger Gruppenpunkte, mehr Summe) gesucht > Suche 4026ms
+
+ Test Files  1 passed (1)
+      Tests  27 passed (27)
+   Start at  15:16:16
+   Duration  16.51s (transform 335ms, setup 268ms, import 345ms, tests 13.28s, environment 2.33s)
+

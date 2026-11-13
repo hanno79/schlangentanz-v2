@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-009 Die Jokerwahl der Wertung erreicht in kniffligen Fällen dieselbe Summe wie ein unabhängiges Durchprobieren aller Farben. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-009 Die Jokerwahl der Wertung erreicht in kniffligen Fällen dieselbe Summe wie ein unabhängiges Durchprobieren aller Farben.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-007</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Wertung wählt die Farben der Joker mit einer Suche, nicht durch Ausprobieren. Ein eigener, vom Umsetzer unabhängiger Vergleich probiert jede Farbbelegung durch und zeigt, ob die Suche in schwierigen Lagen dieselbe höchste Summe findet. Dazu gehört, dass der Zwischenstand eines Spielers nichts über die geheime Aufgabe eines anderen verrät.</p><h2>Bestanden, wenn</h2><p>In allen Fällen unter „Testdaten“ ist die Summe der Wertung (Gruppenpunkte plus Vielfaltbonus) gleich der besten Summe des Durchprobierens, mit und ohne Erweiterung, und die Gruppen der Aufschlüsselung ergeben zusammen die gemeldeten Gruppenpunkte. Eine Wertung mit 8 Jokern in zwei Schlangen zu je 54 Karten dauert unter 100 ms. Der Zwischenstand aus Sicht von Spieler 1 ist zeichengleich, ob Spieler 2 seine geheime Aufgabe erfüllt hat oder nicht, und nennt sie nicht.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Wertung eine kleinere Summe meldet als das Durchprobieren, die Aufschlüsselung nicht aufgeht, eine Wertung mit 8 Jokern 100 ms oder länger braucht oder der Zwischenstand sich mit der fremden geheimen Aufgabe ändert.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E10-wertung (PR #33)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E10-wertung</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zehn feste Auslagen: mehrere Joker nebeneinander, Joker zwischen zwei Gruppen, Joker zwischen zwei fertigen Gruppen, Vielfaltbonus gegen höhere Gruppenpunkte, Joker am Schlangenende (zählt nicht über das Ende), Joker an beiden Enden, zwei Schlangen mit abhängigem Bonus, Gruppen nur aus Jokern (G9 wörtlich), Fusion verbindet zwei Gruppen, 8 Joker eng beieinander. Dazu 300 Zufallsauslagen mit bis zu 6 Jokern (Saat 4711) und 1500 Zufallsauslagen auf der Suche nach einem Fall „weniger Gruppenpunkte, mehr Summe“ (Saat 99).</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>Prüfdatei aus dem Beleg als `src/engine/__tests__/zz_pruefer_e10.test.ts` ablegen</td><td>Inhalt des Belegs `E10-zz_pruefer_e10.test.ts.txt`</td><td>Datei liegt neben den Wertungstests</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>ausführen</td><td>`npx vitest run src/engine/__tests__/zz_pruefer_e10.test.ts --reporter=verbose`</td><td>Exit 0, alle Tests grün, Zeilen mit `[E10P]` nennen Summe der Wertung und des Durchprobierens</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Prüfdatei wieder löschen</td><td></td><td>`git status` zeigt keine Änderung</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 15:17</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E10) &middot; agent &middot; pruefung-E10 @ <span class="commit" title="dc947679a682ff540566f9a87f6f783e69f5cdf2">dc94767</span></p><p>27 eigene Tests grün: 10 feste Fälle je mit/ohne Erweiterung gleich dem Durchprobieren (z. B. 8 Joker eng 15 = 15, nur Joker 10 = 10, Joker am Schlangenende 0 = 0); 300 Zufallsauslagen bis 6 Joker gleich; 1500 Auslagen: 0 strikte Fälle weniger Gruppenpunkte/mehr Summe; Laufzeit 8 Joker 0.42 ms, 90 Joker 92 ms; Zwischenstand bei erfüllter und nicht erfüllter fremder geheimer Aufgabe zeichengleich.</p><ul class="belege"><li><a href="belege/2026-11-13-1517-TF-ENGINE-009-1.txt">2026-11-13-1517-TF-ENGINE-009-1.txt</a></li><li><a href="belege/2026-11-13-1517-TF-ENGINE-009-2.txt">2026-11-13-1517-TF-ENGINE-009-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
