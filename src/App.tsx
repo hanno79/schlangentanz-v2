@@ -1,4 +1,14 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
+import Fehlerfang from './components/Fehlerfang'
+import Lobby from './ui/lobby/Lobby'
+import { geheZu, seiteZuPfad, useAdresse } from './ui/lobby/navigation'
+import { verwirfPartie } from './ui/lobby/partie'
+import Rahmen from './ui/lobby/Rahmen'
+import { SEITENTITEL, UNBEKANNT, ZURUECK_ZUR_LOBBY } from './ui/lobby/texte'
+import Verweis from './ui/lobby/Verweis'
+import SpielImAufbau from './ui/spiel/SpielImAufbau'
+import Regeln from './ui/regeln/Regeln'
+import './ui/lobby/lobby.css'
 
 /*
 Der einzige Schalter für den Entwicklertisch: aktiv im Dev-Server und in jedem
@@ -22,23 +32,66 @@ function istEntwicklerPfad(pfad: string): boolean {
   return pfad === '/dev' || pfad.startsWith('/dev/')
 }
 
-/** Bis O2 (App-Rahmen und Lobby) gibt es kein Spiel, nur diesen Platzhalter. */
-function Platzhalter() {
+/**
+ * Der App-Rahmen: wählt zur Adresse die Seite und legt den Fehlerfang darum,
+ * damit ein Fehler beim Start oder beim Zeichnen sichtbar wird (O2 K4).
+ *
+ * Der Weg aus dem Fehlerfang zurück in die Lobby verwirft den Spielstand mit
+ * Absicht (Begründung in `Fehlerfang.tsx`): Sonst käme ein Stand, an dem das
+ * Zeichnen scheitert, nach jedem Neuladen zurück.
+ */
+export default function App() {
+  const pfad = useAdresse()
+
+  // `key`: Wer nach einem Fehler mit Vor oder Zurück die Seite wechselt, sieht die neue Seite, nicht den alten Fehler.
   return (
-    <main data-testid="platzhalter">
-      <h1>Schlangentanz</h1>
-      <p>Das Spiel wird gerade neu gebaut. Hier gibt es bald wieder etwas zu spielen.</p>
-    </main>
+    <Fehlerfang
+      key={pfad}
+      onZurueckZurLobby={() => {
+        verwirfPartie()
+        geheZu('lobby')
+      }}
+    >
+      <Seiteninhalt pfad={pfad} />
+    </Fehlerfang>
   )
 }
 
-export default function App() {
-  if (Entwicklertisch !== null && istEntwicklerPfad(window.location.pathname)) {
+function Seiteninhalt({ pfad }: { pfad: string }) {
+  const seite = seiteZuPfad(pfad)
+  const istEntwicklertisch = Entwicklertisch !== null && istEntwicklerPfad(pfad)
+
+  useEffect(() => {
+    if (!istEntwicklertisch) document.title = SEITENTITEL[seite ?? 'unbekannt']
+  }, [seite, istEntwicklertisch])
+
+  if (Entwicklertisch !== null && istEntwicklertisch) {
     return (
       <Suspense fallback={<p>Lädt …</p>}>
         <Entwicklertisch />
       </Suspense>
     )
   }
-  return <Platzhalter />
+
+  switch (seite) {
+    case 'lobby':
+      return <Lobby />
+    case 'spiel':
+      return <SpielImAufbau />
+    case 'regeln':
+      return <Regeln />
+    case null:
+      return (
+        <Rahmen
+          testId="unbekannte-seite"
+          titel={UNBEKANNT.titel}
+          text={UNBEKANNT.text(pfad)}
+          fuss={
+            <Verweis ziel="lobby" className="verweis verweis--haupt">
+              {ZURUECK_ZUR_LOBBY}
+            </Verweis>
+          }
+        />
+      )
+  }
 }

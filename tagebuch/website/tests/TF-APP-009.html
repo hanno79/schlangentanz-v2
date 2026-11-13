@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-APP-009 Legt ein zweiter Tab eine Partie an, fragt die Lobby im ersten Tab trotzdem nach, bevor sie sie überschreibt. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-APP-009 Legt ein zweiter Tab eine Partie an, fragt die Lobby im ersten Tab trotzdem nach, bevor sie sie überschreibt.</h1><p class="etiketten"><span class="etikett">Bereich App-Rahmen, Lobby, Fehlerdienst</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-APP-003</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Lobby liest den Spielstand nur beim Öffnen. Ist sie in einem Tab offen, während ein anderer Tab eine Partie anlegt, weiss sie davon nichts. Ob die Rückfrage aus Kriterium 2 auch dann gelten muss, ist offen.</p><h2>Bestanden, wenn</h2><p>Nach „Neue Partie“ im ersten Tab erscheint die Rückfrage, und die Partie des zweiten Tabs bleibt bis zur Bestätigung erhalten.</p><h2>Fehlgeschlagen, wenn</h2><p>Der erste Tab wechselt ohne Rückfrage auf <code>/spiel</code> und überschreibt die Partie des zweiten Tabs.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2-app-rahmen-lobby (PR #29)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild auf Port 4173, Local Storage leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Tab A: Lobby ohne Partie. Tab B: 3 Gegner.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Tab A</td><td>`http://localhost:4173/` öffnen</td><td></td><td>Lobby ohne „Laufende Partie“</td></tr><tr><td>2</td><td>Tab B</td><td>dieselbe Adresse öffnen, „3 Gegner“, „Neue Partie“</td><td></td><td>`/spiel` mit „Gegner 3“</td></tr><tr><td>3</td><td>Tab A</td><td>ohne Neuladen „Neue Partie“</td><td></td><td>Rückfrage oder Wechsel auf `/spiel`</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage löschen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-unklar"><h3><time datetime="2026-11-13">13.11.2026 11:12</time> <span class="status status-unklar">unklar</span></h3><p class="angaben">Claude Code (Prüfer O2) &middot; agent &middot; pruefung-O2 @ <span class="commit" title="85013f4acbccfff9638e667f5bb9d688b4289b3f">85013f4</span> / Playwright 1.60.0 Chromium, 1280x900, zwei Tabs</p><p>Tab A: Lobby leer, Tab B: 3 Gegner, Neue Partie. Danach Tab A Neue Partie: Wechsel auf /spiel ohne Rückfrage, Spielstand von Tab B überschrieben.</p><div class="kasten-unklar"><h4>Unklar</h4><p>Tab A (Lobby ohne Partie geöffnet) überschreibt nach Neue Partie ohne Rückfrage die Partie, die Tab B inzwischen angelegt hat (Pfad /spiel, Rückfrage false, überschrieben true). Ob Kriterium 2 auch über Tabs gilt, ist offen.</p><h4>Fehlt</h4><p>Entscheidung des Orchestrators, ob die Lobby den Spielstand vor dem Überschreiben neu lesen muss.</p></div></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

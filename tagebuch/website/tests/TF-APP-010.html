@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-APP-010 Ändert man bei offener Rückfrage die Gegnerzahl, legt „Ja, neue Partie“ die Partie mit der neuen Wahl an. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-APP-010 Ändert man bei offener Rückfrage die Gegnerzahl, legt „Ja, neue Partie“ die Partie mit der neuen Wahl an.</h1><p class="etiketten"><span class="etikett">Bereich App-Rahmen, Lobby, Fehlerdienst</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-APP-003</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Während die Rückfrage offen ist, bleiben Gegnerwahl und Erweiterung bedienbar. Die neue Partie muss dann mit dem angelegt werden, was zum Zeitpunkt der Bestätigung gewählt ist. Dabei wird auch Escape mit dem Fokus ausserhalb der Rückfrage geprüft.</p><h2>Bestanden, wenn</h2><p>Nach „Neue Partie“, dann „3 Gegner“, dann „Ja, neue Partie“ zeigt <code>/spiel</code> „Gegner 3“, und der alte Spielstand ist überschrieben.</p><h2>Fehlgeschlagen, wenn</h2><p><code>/spiel</code> zeigt die Gegnerzahl von vor der Änderung.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2-app-rahmen-lobby (PR #29)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild auf Port 4173, Desktop 1280×900</td></tr><tr><td>Ausgangslage</td><td>Eine Partie mit 1 Gegner ist gespeichert</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Neue Wahl: 3 Gegner.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Lobby</td><td>„Neue Partie“</td><td></td><td>Rückfrage offen</td></tr><tr><td>2</td><td>Lobby</td><td>„3 Gegner“ anklicken, dann Escape</td><td></td><td>Rückfrage bleibt offen, weil der Fokus auf „3 Gegner“ liegt</td></tr><tr><td>3</td><td>Rückfrage</td><td>„Ja, neue Partie“</td><td></td><td>`/spiel` mit „Gegner 3“</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage löschen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 11:12</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O2) &middot; agent &middot; pruefung-O2 @ <span class="commit" title="85013f4acbccfff9638e667f5bb9d688b4289b3f">85013f4</span> / Playwright 1.60.0 Chromium, 1280x900 Maus</p><p>Rückfrage offen, 3 Gegner angeklickt, Escape: Rückfrage bleibt offen (Fokus auf dem Radio 3). Ja, neue Partie: /spiel mit Gegner 3, Spielstand überschrieben.</p></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-APP-012 Ein Spielstand im älteren Speicherformat wird beim Öffnen sichtbar verworfen und nur als Warnung protokolliert, nicht als Fehler gemeldet. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-APP-012 Ein Spielstand im älteren Speicherformat wird beim Öffnen sichtbar verworfen und nur als Warnung protokolliert, nicht als Fehler gemeldet.</h1><p class="etiketten"><span class="etikett">Bereich App-Rahmen, Lobby, Fehlerdienst</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art beides</span><span class="etikett">Grenzfall von TF-APP-005</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Nach jedem Wechsel des Speicherformats bringen wiederkehrende Spieler einen alten Spielstand mit. Den kann das Spiel nicht mehr lesen. Der Spieler soll erfahren, dass seine Partie deshalb weg ist. An den Fehlerdienst geht das aber nicht, sonst käme nach jedem Wechsel ein Bericht pro Spieler (Plan 2.3, O2 Kriterium 4).</p><h2>Bestanden, wenn</h2><p>Nach dem Neuladen steht über der Gegnerwahl ein gelber Kasten mit rotem Rand: „Die gespeicherte Partie liess sich nicht laden. Sie stammt aus einem älteren Speicherformat, das diese Fassung des Spiels nicht mehr liest. Sie wurde verworfen; starte eine neue Partie.“ „Weiterspielen“ fehlt. Danach sind <code>schlangentanz-v2:partie</code> und <code>schlangentanz-v2:erweiterung</code> beide <code>null</code>. In der Konsole steht genau eine Warnung „Gespeicherte Partie im älteren Speicherformat verworfen: …“ und kein Fehler. Nach einem zweiten Neuladen ist der Kasten weg.</p><h2>Fehlgeschlagen, wenn</h2><p>Kein Kasten erscheint, im Kasten steht „beschädigt“, einer der beiden Schlüssel ist noch da, die Konsole zeigt einen Fehler (rot) statt einer Warnung, oder der Kasten erscheint auch nach dem zweiten Neuladen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2-app-rahmen-lobby (PR #29), Commit 04091c2</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild (<code>npm run build</code>, <code>npm run preview</code>), Seite <code>/regeln</code> offen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>In der Konsole: <code>localStorage.setItem(&#x27;schlangentanz-v2:partie&#x27;, &#x27;{&quot;version&quot;:0,&quot;spieler&quot;:[]}&#x27;); localStorage.setItem(&#x27;schlangentanz-v2:erweiterung&#x27;, &#x27;1&#x27;)</code>. Gleiches Ergebnis erwartet mit <code>&#x27;{&quot;version&quot;:-1}&#x27;</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Entwicklerwerkzeuge, Konsole</td><td>alten Spielstand anlegen</td><td>Ausdruck aus den Testdaten</td><td>keine Ausgabe</td></tr><tr><td>2</td><td>Adresszeile</td><td>`/` öffnen</td><td></td><td>Kasten mit „älteren Speicherformat“, kein „Weiterspielen“</td></tr><tr><td>3</td><td>Konsole</td><td>Meldungen ansehen</td><td></td><td>eine Warnung, kein Fehler</td></tr><tr><td>4</td><td>Konsole</td><td>Speicher ansehen</td><td>`[localStorage.getItem(&#x27;schlangentanz-v2:partie&#x27;), localStorage.getItem(&#x27;schlangentanz-v2:erweiterung&#x27;)]`</td><td>`[null, null]`</td></tr><tr><td>5</td><td>Browser</td><td>neu laden (F5)</td><td></td><td>Lobby ohne Kasten</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p><code>localStorage.clear()</code> in der Konsole; danach zeigt <code>/</code> die leere Lobby ohne „Laufende Partie“.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 11:46</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O2 Iteration 2) &middot; agent &middot; pruefung-O2-it2 @ <span class="commit" title="04091c23fc4132b6ceb053b8e5782a405bddd9b2">04091c2</span> / Playwright 1.60.0 Chromium, drei Geräteklassen</p><p>{&quot;version&quot;:0,&quot;spieler&quot;:[]} und {&quot;version&quot;:-1} auf / und /spiel in allen drei Klassen: Kasten Sie stammt aus einem älteren Speicherformat, beide Schlüssel null, genau eine Warnung, kein Fehler, nach F5 weg. Überstand 0 px.</p><ul class="belege"><li><a href="belege/2026-11-13-1146-TF-APP-012-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1146-TF-APP-012-1.png" alt="Beleg 2026-11-13-1146-TF-APP-012-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1146-TF-APP-012-2.log">2026-11-13-1146-TF-APP-012-2.log</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
