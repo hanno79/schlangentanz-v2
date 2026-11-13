@@ -34,3 +34,6 @@ test-results
 playwright-report
 blob-report
 .playwright
+
+# Belege des Testregisters werden mitversioniert, auch Logs
+!tagebuch/tests/belege/**

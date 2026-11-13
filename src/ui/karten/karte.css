@@ -1,0 +1,15 @@
+/*
+Die Karte als Bild. Ihr Bereich setzt `--karte-breite`; ohne Angabe ist sie so
+breit wie ihr Behälter. Die runden Ecken sind im Bild durchsichtig, deshalb
+ein `drop-shadow`, der der Kartenform folgt, und kein `box-shadow`.
+*/
+.karte {
+  display: block;
+  width: var(--karte-breite, 100%);
+  height: auto;
+  aspect-ratio: var(--kartenverhaeltnis);
+  object-fit: cover;
+  filter: var(--schatten-karte);
+  user-select: none;
+  -webkit-user-drag: none;
+}

@@ -1,0 +1,246 @@
+/*
+Gemeinsame Bausteine der Entwürfe: App-Rahmen, Titel, Knöpfe, Flächen,
+Leisten und Übersicht. Lobby, Ergebnis und Grossansicht haben eigene Dateien. Nur Variablen aus src/ui/tokens.css; die Regeln
+stehen in DESIGN.md unter „Komponenten“.
+
+Der Rahmen steht fest im Fenster (`position: fixed`), damit er nicht von den
+Grundregeln in src/index.css abhängt, die O2 neu schreibt.
+*/
+
+.entwurf {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  color: var(--farbe-tinte);
+  background: var(--farbe-grund);
+  font-family: var(--schrift-text);
+  font-size: var(--groesse-text);
+  line-height: var(--zeilenhoehe);
+  letter-spacing: normal;
+  text-align: left;
+}
+
+.entwurf *,
+.entwurf *::before,
+.entwurf *::after {
+  box-sizing: border-box;
+}
+
+.entwurf h1,
+.entwurf h2,
+.entwurf p {
+  margin: 0;
+  letter-spacing: normal;
+}
+
+.entwurf h2 {
+  font-family: var(--schrift-text);
+  font-size: var(--groesse-gross);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--farbe-tinte);
+}
+
+.entwurf :focus-visible {
+  outline: none;
+  box-shadow: var(--fokus-ring);
+}
+
+/* Seite, die als Ganzes scrollt (Übersicht, Lobby): Inhalt scrollt im Rahmen. */
+.entwurf--seite {
+  overflow-y: auto;
+}
+
+/* Rahmen mit fester Kopf- und Fussleiste: dazwischen scrollt der Inhalt. */
+.entwurf--rahmen {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.entwurf-inhalt {
+  padding: var(--abstand-5) var(--abstand-4);
+}
+
+.entwurf--rahmen > .entwurf-inhalt {
+  overflow-y: auto;
+}
+
+.entwurf-schmal {
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-4);
+}
+
+.entwurf-titel {
+  font-family: var(--schrift-titel);
+  font-weight: 400;
+  font-size: var(--groesse-titel);
+  line-height: var(--zeilenhoehe-titel);
+  color: var(--farbe-tinte);
+}
+
+.entwurf-titel--gross {
+  font-size: var(--groesse-titel-gross);
+  color: var(--farbe-akzent-stark);
+}
+
+.leise {
+  color: var(--farbe-tinte-leise);
+}
+
+/* Zwei Klassen, damit die Regel die Grundregel für h2 oben schlägt. */
+.entwurf .bereichstitel {
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  color: var(--farbe-tinte-leise);
+}
+
+/* Knöpfe: Haupt (eine je Bildschirm), Zweit (umrandet), Leise (nur Text). */
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ziel-mindestens);
+  min-width: var(--ziel-mindestens);
+  padding: 0 var(--abstand-4);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dauer), border-color var(--dauer);
+}
+
+.knopf--haupt {
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent);
+}
+
+.knopf--haupt:hover {
+  background: var(--farbe-akzent-stark);
+}
+
+.knopf--zweit {
+  color: var(--farbe-akzent-stark);
+  background: var(--farbe-flaeche);
+  border-color: var(--farbe-akzent);
+}
+
+.knopf--zweit:hover {
+  background: var(--farbe-akzent-hell);
+}
+
+.knopf--leise {
+  color: var(--farbe-tinte);
+  background: transparent;
+}
+
+.knopf--leise:hover {
+  background: var(--farbe-tisch);
+}
+
+.flaeche {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-3);
+  padding: var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius-gross);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.hinweis {
+  padding: var(--abstand-3) var(--abstand-4);
+  color: var(--farbe-warnung);
+  background: var(--farbe-warnung-hell);
+  border-radius: var(--radius);
+}
+
+.verweis {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ziel-mindestens);
+  color: var(--farbe-akzent-stark);
+  font-weight: 600;
+}
+
+.abzeichen {
+  display: inline-block;
+  margin-left: var(--abstand-2);
+  padding: 0 var(--abstand-2);
+  font-size: var(--groesse-klein);
+  font-weight: 700;
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent-stark);
+  border-radius: var(--radius-voll);
+}
+
+/* Kopf- und Fussleiste des Rahmens */
+.kopfleiste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--abstand-3);
+  padding: var(--abstand-1) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border-bottom: 1px solid var(--farbe-linie);
+}
+
+.kopfleiste-titel {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  color: var(--farbe-akzent-stark);
+}
+
+.kopfleiste-info {
+  flex: 1;
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+.kopfleiste .knopf {
+  margin-left: auto;
+}
+
+.aktionsleiste {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--abstand-3);
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border-top: 1px solid var(--farbe-linie);
+}
+
+/* Übersicht */
+.entwurf-verweise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  padding: 0;
+  list-style: none;
+}
+
+.entwurf-verweise a {
+  display: flex;
+  flex-direction: column;
+  padding: var(--abstand-3) var(--abstand-4);
+  color: var(--farbe-tinte);
+  text-decoration: none;
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+}
+
+.entwurf-verweise a:hover {
+  border-color: var(--farbe-akzent);
+}
+
+.entwurf-verweise span {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}

@@ -71,3 +71,43 @@ describe('P0.4: Adressen des Entwicklertischs', () => {
     expect(anfrage.art === 'fehler' ? anfrage.meldung : '').toContain('/dev/gibtsnicht')
   })
 })
+
+describe('O1: Entwurfsseiten unter /dev/entwurf', () => {
+  it('O1: /dev/entwurf zeigt die Übersicht der Entwürfe', () => {
+    expect(leseEntwicklerAnfrage('/dev/entwurf', '')).toEqual({ art: 'entwurf', seite: 'uebersicht' })
+    expect(leseEntwicklerAnfrage('/dev/entwurf/', '')).toEqual({ art: 'entwurf', seite: 'uebersicht' })
+  })
+
+  it('O1: /dev/entwurf/lobby und /dev/entwurf/ergebnis', () => {
+    expect(leseEntwicklerAnfrage('/dev/entwurf/lobby', '')).toEqual({ art: 'entwurf', seite: 'lobby' })
+    expect(leseEntwicklerAnfrage('/dev/entwurf/ergebnis/', '')).toEqual({ art: 'entwurf', seite: 'ergebnis' })
+  })
+
+  it('O1: /dev/entwurf/tisch zeigt drei Gegner ohne gewählte Karte', () => {
+    expect(leseEntwicklerAnfrage('/dev/entwurf/tisch', '')).toEqual({
+      art: 'entwurf',
+      seite: 'tisch',
+      gegner: 3,
+      karte: null,
+    })
+  })
+
+  it('O1: /dev/entwurf/tisch?gegner=<1–3>&karte=<id> übernimmt beide Werte', () => {
+    expect(leseEntwicklerAnfrage('/dev/entwurf/tisch', '?gegner=1&karte=farbendieb-01')).toEqual({
+      art: 'entwurf',
+      seite: 'tisch',
+      gegner: 1,
+      karte: 'farbendieb-01',
+    })
+  })
+
+  it.each(['?gegner=0', '?gegner=4', '?gegner=zwei', '?karte='])('O1: /dev/entwurf/tisch%s ist ungültig', (suche) => {
+    expect(leseEntwicklerAnfrage('/dev/entwurf/tisch', suche).art).toBe('fehler')
+  })
+
+  it('O1: eine unbekannte Entwurfsseite ist ein Fehler und nennt die Adresse', () => {
+    const anfrage = leseEntwicklerAnfrage('/dev/entwurf/gibtsnicht', '')
+    expect(anfrage.art).toBe('fehler')
+    expect(anfrage.art === 'fehler' ? anfrage.meldung : '').toContain('/dev/entwurf/gibtsnicht')
+  })
+})

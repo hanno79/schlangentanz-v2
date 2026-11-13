@@ -1,0 +1,69 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8d370f89dd066686
+
+ ❯ src/ui/karten/kartenbilder.test.ts (72 tests | 3 failed) 96ms
+     × O1/A9: Aufgabe Lila Riese hat ein Bild 10ms
+     × O1: jede Karte, die die Engine heute erzeugt, hat ein Bild (Spieldeck, Erweiterung, Aufgaben) 35ms
+     × O1: /karten/aufgabe-lila-riese.webp ist ohne Rand im Kartenformat (Breite zu Höhe 0,60 bis 0,63) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/karten/kartenbilder.test.ts > O1: Für jede Karte des Materials gibt es ein Bild (Kriterium 1) > O1/A9: Aufgabe Lila Riese hat ein Bild
+AssertionError: Bilddatei für Aufgabe Lila Riese fehlt: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/ui/karten/kartenbilder.test.ts:106:92
+    104|
+    105|   it.each(SPEC_AUFGABEN)('O1/A9: Aufgabe %s hat ein Bild', (name) => {
+    106|     expect(existsSync(dateiZu(aufgabenbild(name))), `Bilddatei für Auf…
+       |                                                                                            ^
+    107|   })
+    108|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/ui/karten/kartenbilder.test.ts > O1: Für jede Karte des Materials gibt es ein Bild (Kriterium 1) > O1: jede Karte, die die Engine heute erzeugt, hat ein Bild (Spieldeck, Erweiterung, Aufgaben)
+AssertionError: Karten der Engine ohne Bilddatei: expected [ 'aufgabe-14' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "aufgabe-14",
++ ]
+
+ ❯ src/ui/karten/kartenbilder.test.ts:112:58
+    110|     const karten = [...erstelleSpieldeck(), ...erstelleErweiterungsSon…
+    111|     const ohneBild = karten.filter((karte) => !existsSync(dateiZu(kart…
+    112|     expect(ohneBild, 'Karten der Engine ohne Bilddatei').toEqual([])
+       |                                                          ^
+    113|   })
+    114|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/ui/karten/kartenbilder.test.ts > O1: Die Kartenbilder sind zugeschnitten > O1: /karten/aufgabe-lila-riese.webp ist ohne Rand im Kartenformat (Breite zu Höhe 0,60 bis 0,63)
+Error: ENOENT: no such file or directory, open 'E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a8d370f89dd066686\public\karten\aufgabe-lila-riese.webp'
+ ❯ webpGroesse src/ui/karten/kartenbilder.test.ts:60:17
+     58| /** Liest Breite und Höhe aus dem Kopf einer WebP-Datei (VP8X, VP8 ode…
+     59| function webpGroesse(pfad: string): { breite: number; hoehe: number } {
+     60|   const daten = readFileSync(pfad)
+       |                 ^
+     61|   if (daten.toString('ascii', 0, 4) !== 'RIFF' || daten.toString('asci…
+     62|     throw new Error(`webpGroesse: ${pfad} ist keine WebP-Datei`)
+ ❯ src/ui/karten/kartenbilder.test.ts:135:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 75 passed (78)
+   Start at  11:31:47
+   Duration  6.41s (transform 966ms, setup 991ms, import 1.29s, tests 346ms, environment 4.44s)
+

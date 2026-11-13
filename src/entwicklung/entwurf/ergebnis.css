@@ -1,0 +1,74 @@
+/* Ergebnis-Entwurf: Sieger und Rangliste. */
+
+.ergebnis-sieger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  text-align: center;
+}
+
+.rangliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rang {
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+}
+
+.rang--sieger {
+  border: 2px solid var(--farbe-akzent);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.rang-kopf {
+  display: flex;
+  align-items: baseline;
+  gap: var(--abstand-3);
+}
+
+.rang-platz {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  color: var(--farbe-tinte-leise);
+}
+
+.rang-name {
+  flex: 1;
+  font-weight: 700;
+}
+
+.rang-gesamt {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+}
+
+.rang-posten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--abstand-1) var(--abstand-3);
+  margin: var(--abstand-2) 0 0;
+  font-size: var(--groesse-klein);
+}
+
+@media (min-width: 560px) {
+  .rang-posten {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rang-posten dt {
+  color: var(--farbe-tinte-leise);
+}
+
+.rang-posten dd {
+  margin: 0;
+  font-weight: 600;
+}
