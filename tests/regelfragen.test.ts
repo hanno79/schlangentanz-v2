@@ -396,8 +396,9 @@ describe('P0.5: Regelfragen an den Autor', () => {
     }
   })
 
-  it('P0.5: F8 und F11 halten den Wortlaut des Autors fest; F8 lässt die Grube auf Spieler ohne Zug offen (F8a)', () => {
+  it('P0.5: F8, F8a und F11 halten den Wortlaut des Autors fest; F8a ist b, „Ja, ohne Wirkung“', () => {
     const f8 = normalisiert(feld(bloecke.get('F8') ?? '', 'Antwort') ?? '')
+    const f8a = bloecke.get('F8a') ?? ''
     const f11 = normalisiert(feld(bloecke.get('F11') ?? '', 'Antwort') ?? '')
 
     expect(f8, 'F8: Wortlaut des Autors').toContain(
@@ -406,7 +407,12 @@ describe('P0.5: Regelfragen an den Autor', () => {
     expect(f11, 'F11: Wortlaut des Autors').toContain(
       '„längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“',
     )
-    expect(feld(bloecke.get('F8a') ?? '', 'Antwort'), 'F8a: Nachfrage fehlt oder ist nicht offen').toBe(OFFEN)
+    expect(feld(f8a, 'Frage'), 'F8a: Frage, wie sie dem Autor gestellt wurde').toBe(
+      'Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat?',
+    )
+    expect(feld(f8a, 'Antwort') ?? '', 'F8a: Antwort').toMatch(/^b\. .*„Ja, ohne Wirkung“/)
+    expect(feld(f8a, 'Datum'), 'F8a: Datum der Antwort').toBe(DATUM_F)
+    expect(teilD.get('F8a')?.antwort ?? '', 'F8a: Teil D ohne Wortlaut des Autors').toContain('„Ja, ohne Wirkung“')
   })
 
   it('P0.5: Teil D vergibt jede Nummer einmal und führt nur Regelfragen aus REGELFRAGEN.md', () => {
