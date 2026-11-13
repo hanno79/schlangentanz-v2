@@ -13,6 +13,7 @@ const lies = (pfad: string) => readFileSync(join(WURZEL, pfad), 'utf8')
 /** tsconfig-Dateien enthalten Kommentare; TypeScript liest sie, JSON.parse nicht. */
 const liesTsconfig = (pfad: string) => ts.parseConfigFileTextToJson(pfad, lies(pfad)).config
 const FOTOSKRIPT = join(WURZEL, 'scripts', 'pruefung', 'bildschirmfotos.mjs')
+const VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1">'
 
 type Projekt = {
   name?: string
@@ -150,7 +151,8 @@ describe('P0.3: scripts/pruefung/bildschirmfotos.mjs', () => {
   it('P0.3c: fotografiert eine Adresse in allen fünf Geräteklassen in der richtigen Grösse und misst pointer: coarse', { timeout: 120_000 }, () => {
     const ziel = mkdtempSync(join(tmpdir(), 'bildschirmfotos-'))
     try {
-      const adresse = 'data:text/html,<title>Probe</title><h1>Probe</h1>'
+      // Mit viewport-Meta-Tag wie index.html; ohne legt Chromium die Seite 980 px breit aus (nächster Test).
+      const adresse = `data:text/html,${VIEWPORT_META}<title>Probe</title><h1>Probe</h1>`
       const lauf = spawnSync(process.execPath, [FOTOSKRIPT, adresse, '--name', 'probe', '--ziel', ziel], {
         encoding: 'utf8',
       })
@@ -165,6 +167,22 @@ describe('P0.3: scripts/pruefung/bildschirmfotos.mjs', () => {
         expect(zeile, `${name}: keine Ausgabezeile`).toBeDefined()
         expect(zeile, `${name}: pointer: coarse`).toContain(`pointer: coarse ${touch ? 'ja' : 'nein'}`)
       }
+    } finally {
+      rmSync(ziel, { recursive: true, force: true })
+    }
+  })
+
+  it('P0.3c: eine Seite ohne viewport-Meta-Tag bricht mit Exit 1 und Hinweis ab, statt ein verkleinertes Bild abzulegen', { timeout: 120_000 }, () => {
+    const ziel = mkdtempSync(join(tmpdir(), 'bildschirmfotos-'))
+    try {
+      const adresse = 'data:text/html,<title>Probe</title><h1>Probe</h1>'
+      const lauf = spawnSync(process.execPath, [FOTOSKRIPT, adresse, '--name', 'probe', '--ziel', ziel], {
+        encoding: 'utf8',
+      })
+
+      expect(lauf.status, `bildschirmfotos.mjs: Exit ${lauf.status}\n${lauf.stdout}\n${lauf.stderr}`).toBe(1)
+      expect(lauf.stderr).toContain('980 px breit')
+      expect(lauf.stderr).toContain('viewport')
     } finally {
       rmSync(ziel, { recursive: true, force: true })
     }
