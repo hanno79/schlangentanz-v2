@@ -1,0 +1,6 @@
+Nach Rebase auf origin/neuaufbau 60d2847 (E1). npm run test:layout: Exit 0, 620 passed (1.3m)
+
+Ist-Werte der gelisteten Verträge (JSON-Reporter, erwartetes Scheitern):
+O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes: Error: 2 Bedienelement(e) außerhalb des Bildes: · knopf "Neue Partie" — liegt bei 412..460 (Bild ist 390px hoch) · verweis "Regeln" — liegt bei 480..528 (Bild ist 390px hoch)
+O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes: Error: 2 Bedienelement(e) außerhalb des Bildes: · knopf "Neue Partie" — liegt bei 410..458 (Bild ist 390px hoch) · verweis "Regeln" — liegt bei 478..526 (Bild ist 390px hoch)
+O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes: Error: 1 Bedienelement(e) außerhalb des Bildes: · verweis "Regeln" — liegt bei 389..437 (Bild ist 390px hoch) 
