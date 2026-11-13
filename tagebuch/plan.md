@@ -12,5 +12,5 @@
 
 | Punkt | wer | blockiert | seit |
 |---|---|---|---|
-| P0.2: Die lokale Umgebung einrichten, damit alle Gates, Playwright, Codex, gh, die Vercel-Vorschau und Dart vom Desktop aus laufen. | | P0.3, P0.4, P0.5, O1, O2, O9 | 12.11.2026 |
+| P0.3, P0.4 und P0.5 abnehmen; P0.4 baut auf P0.3 auf und wird danach gemerged. | | O1, O2, O9 | 13.11.2026 |
 | P0.5: Die Regelfragen aus Abschnitt 9 des Umsetzungsplans beantworten und D9 bis D13 auf die Website bringen. | Autor | X1 | 12.11.2026 |
