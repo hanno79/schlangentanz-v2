@@ -23,8 +23,10 @@ function fehler(meldung: string): EntwicklerAnfrage {
  * diesen Parameter nennt.
  */
 export function leseEntwicklerAnfrage(pfad: string, suche: string): EntwicklerAnfrage {
-  if (pfad === '/dev/szenarien') return { art: 'szenarien' }
-  if (pfad !== '/dev' && pfad !== '/dev/') return fehler(`Unbekannte Seite ${pfad}. Es gibt /dev und /dev/szenarien.`)
+  // Ein Schrägstrich am Ende ist dieselbe Seite: `/dev/` wie `/dev`, `/dev/szenarien/` wie `/dev/szenarien`.
+  const seite = pfad.replace(/\/+$/, '')
+  if (seite === '/dev/szenarien') return { art: 'szenarien' }
+  if (seite !== '/dev') return fehler(`Unbekannte Seite ${pfad}. Es gibt /dev und /dev/szenarien.`)
 
   const parameter = new URLSearchParams(suche)
   const szenario = parameter.get('szenario')

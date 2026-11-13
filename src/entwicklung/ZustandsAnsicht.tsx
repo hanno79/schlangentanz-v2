@@ -180,10 +180,10 @@ function Wertung({ zustand }: { zustand: Spielzustand }) {
             <thead>
               <tr>
                 <th>Spieler</th>
-                <th>Farbgruppen</th>
-                <th>Aufgaben</th>
-                <th>Kettenbonus</th>
-                <th>Gesamt</th>
+                <th title="Punkte aus Farbgruppen">Farben</th>
+                <th title="Punkte aus Aufgaben">Aufgaben</th>
+                <th title="Kettenbonus">Kette</th>
+                <th>Summe</th>
               </tr>
             </thead>
             <tbody>

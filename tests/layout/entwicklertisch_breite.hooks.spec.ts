@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
-import { befundListe, findeAbgeschnittenes, findeAusserhalbDesBildes } from './messung'
+import { befundListe, findeAbgeschnittenes } from './messung'
 
 /*
 P0.4, Iteration 2: Der Entwicklertisch passt in jede Geräteklasse.
@@ -20,7 +20,11 @@ const ADRESSEN = [
   '/dev?szenario=kaputt-doppelte-karte',
 ]
 
-/** Sichtbare Elemente mit eigenem Text, die rechts über das Fenster hinausragen. */
+/**
+ * Sichtbare Elemente mit eigenem Text und Bedienelemente, die rechts über das
+ * Fenster hinausragen. Nur waagrecht: Der Tisch ist eine lange Seite, nach unten
+ * zu scrollen ist gewollt (`findeAusserhalbDesBildes` zählt auch das).
+ */
 async function textRechtsAusserhalb(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const breite = document.documentElement.clientWidth
@@ -32,9 +36,11 @@ async function textRechtsAusserhalb(page: Page): Promise<string[]> {
         .map((knoten) => knoten.nodeValue ?? '')
         .join('')
         .trim()
-      if (eigenerText === '') continue
+      const bedienelement = element.matches('a, button, input, select, summary')
+      if (eigenerText === '' && !bedienelement) continue
       const rechts = element.getBoundingClientRect().right
-      if (rechts > breite + 1) befunde.push(`${element.tagName} "${eigenerText.slice(0, 40)}" bis ${Math.round(rechts)} px`)
+      const name = eigenerText || element.textContent?.trim() || ''
+      if (rechts > breite + 1) befunde.push(`${element.tagName} "${name.slice(0, 40)}" bis ${Math.round(rechts)} px`)
     }
     return befunde
   })
@@ -58,16 +64,14 @@ for (const adresse of ADRESSEN) {
       )
     })
 
-    test('P0.4: kein Text ragt rechts aus dem Bild', async ({ page }) => {
+    test('P0.4: kein Text und kein Bedienelement ragt rechts aus dem Bild', async ({ page }) => {
       const befunde = await textRechtsAusserhalb(page)
       expect(befunde, `${befunde.length} Element(e) ragen rechts hinaus:\n${befunde.join('\n')}`).toEqual([])
     })
 
-    test('P0.4: nichts ist abgeschnitten, kein Bedienelement liegt ausserhalb', async ({ page }) => {
+    test('P0.4: nichts ist abgeschnitten', async ({ page }) => {
       const abgeschnitten = await findeAbgeschnittenes(page)
       expect(abgeschnitten, `Abgeschnitten:${befundListe(abgeschnitten)}`).toEqual([])
-      const ausserhalb = await findeAusserhalbDesBildes(page)
-      expect(ausserhalb, `Ausserhalb des Bildes:${befundListe(ausserhalb)}`).toEqual([])
     })
   })
 }

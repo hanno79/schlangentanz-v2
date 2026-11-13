@@ -117,7 +117,7 @@ function Szenarienliste() {
   return (
     <section className="et-abschnitt">
       <h1>Szenarien ({SZENARIEN.length})</h1>
-      <table className="et-tabelle">
+      <table className="et-tabelle et-szenarien">
         <thead>
           <tr>
             <th>Name</th>
@@ -128,11 +128,11 @@ function Szenarienliste() {
         <tbody>
           {SZENARIEN.map((szenario) => (
             <tr key={szenario.name} data-testid="szenario" data-name={szenario.name}>
-              <td>
+              <td data-titel="Name">
                 <a href={`/dev?szenario=${szenario.name}`}>{szenario.name}</a>
               </td>
-              <td>{szenario.beschreibung}</td>
-              <td>{szenario.erwartet}</td>
+              <td data-titel="Beschreibung">{szenario.beschreibung}</td>
+              <td data-titel="Erwartet">{szenario.erwartet}</td>
             </tr>
           ))}
         </tbody>
