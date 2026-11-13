@@ -32,12 +32,14 @@ import {
   befundListe,
   findeAbgeschnittenes,
   findeAusserhalbDesBildes,
+  findeKleineTippflaechen,
   findeSchwacheKontraste,
   findeStillgelegteBedienelemente,
   findeUnaufloesbareTokens,
   findeVerdeckteBedienelemente,
   findeZusammengedruecktes,
   kontrastAbdeckung,
+  waagrechterUeberstand,
 } from './messung'
 
 /**
@@ -157,5 +159,22 @@ export function nichtsIstStillgelegt(pruefe: typeof test | typeof test.fail = te
       `${befunde.length} Bedienelement(e) sind \`inert\` — die Erreichbarkeits-Wächter ` +
         `überspringen sie und messen insoweit nichts:${befundListe(befunde)}`,
     ).toEqual([])
+  })
+}
+
+/**
+ * Registriert die Bedienbarkeits-Prüfungen für Touch-Geräte (O2): Die Seite ist
+ * nicht breiter als das Fenster, und jede Tippfläche misst mindestens 44 × 44 px.
+ * Hier und nicht im einzelnen Vertrag, damit jede Seite dieselben Fragen stellt.
+ */
+export function bedienbarkeitsVertraege(pruefe: typeof test | typeof test.fail = test): void {
+  pruefe('die Seite ist nicht breiter als das Fenster', async ({ page }: { page: Page }) => {
+    const ueberstand = await waagrechterUeberstand(page)
+    expect(ueberstand, `Die Seite ist ${ueberstand} px breiter als das Fenster`).toBe(0)
+  })
+
+  pruefe('jede Tippfläche misst mindestens 44 × 44 px', async ({ page }: { page: Page }) => {
+    const befunde = await findeKleineTippflaechen(page)
+    expect(befunde, `${befunde.length} Tippfläche(n) zu klein:${befundListe(befunde)}`).toEqual([])
   })
 }

@@ -42,7 +42,7 @@ export const SPIELSTAND_SCHLUESSEL = 'schlangentanz-v2:partie'
  * denselben Sturz. Hier ist es eines: Kein `window`, kein Zugriff, ein Wurf beim
  * Lesen oder Schreiben — alles endet im Ersatzwert.
  */
-function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
+export function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
   if (typeof window === 'undefined') return ersatz
   try {
     return tun(window.localStorage)

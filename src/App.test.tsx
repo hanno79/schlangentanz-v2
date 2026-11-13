@@ -26,7 +26,7 @@ describe('O2: Seiten des App-Rahmens', () => {
   it('O2: /spiel ohne Spielstand sagt, dass keine Partie läuft, und führt zur Lobby', () => {
     oeffne('/spiel')
     expect(screen.getByTestId('spiel')).toHaveTextContent('Es läuft keine Partie')
-    fireEvent.click(screen.getByRole('link', { name: 'Zur Lobby' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Zurück zur Lobby' }))
     expect(window.location.pathname).toBe('/')
     expect(screen.getByTestId('lobby')).toBeInTheDocument()
   })
@@ -34,7 +34,7 @@ describe('O2: Seiten des App-Rahmens', () => {
   it('O2: eine unbekannte Adresse sagt das und führt zur Lobby', () => {
     oeffne('/gibt-es-nicht')
     expect(screen.getByTestId('unbekannte-seite')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Zur Lobby' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Zurück zur Lobby' })).toHaveAttribute('href', '/')
   })
 
   it('O2: ein Schrägstrich am Ende ist dieselbe Seite', () => {

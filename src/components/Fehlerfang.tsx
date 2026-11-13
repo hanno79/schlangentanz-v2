@@ -71,7 +71,7 @@ export default class Fehlerfang extends Component<FehlerfangProps, FehlerfangSta
 
        `console.error` bleibt: Es ist der Weg für den Entwickler am eigenen Rechner,
        wo keine DSN gesetzt ist. */
-    console.error('Fehler beim Zeichnen des Spielbretts:', fehler, info.componentStack)
+    console.error('Fehler beim Zeichnen:', fehler, info.componentStack)
     meldeFehler(fehler, { componentStack: info.componentStack ?? 'unbekannt' })
   }
 
@@ -88,10 +88,10 @@ export default class Fehlerfang extends Component<FehlerfangProps, FehlerfangSta
 
     return (
       <main className="fehlerfang" role="alert">
-        <h1 className="fehlerfang__titel">Das Spielbrett konnte nicht gezeichnet werden</h1>
+        <h1 className="fehlerfang__titel">Hier ist ein Fehler aufgetreten</h1>
         <p className="fehlerfang__meldung">{meldung}</p>
         <p className="fehlerfang__hinweis">
-          Die laufende Partie lässt sich nicht fortsetzen — ihr Spielstand wird
+          Eine laufende Partie lässt sich nicht fortsetzen: Ihr Spielstand wird
           verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt.
         </p>
         <button type="button" className="fehlerfang__knopf" onClick={this.zurueck}>

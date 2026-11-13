@@ -5,8 +5,11 @@ import { resolve } from 'node:path'
 
 /*
 O2 K3: Wer `/spiel` oder `/regeln` direkt aufruft oder dort neu lädt, bekommt
-auf Vercel die App und nicht deren 404. Jede Seite der App braucht deshalb eine
-Umschreibung auf `index.html`; `/dev` braucht sie für die Vercel-Vorschau.
+auf Vercel die App und nicht deren 404. Eine einzige Umschreibung leitet jede
+Adresse auf `index.html`; Vercel liefert vorhandene Dateien (`/assets/…`,
+`/favicon.svg`) vor jeder Umschreibung aus. Welche Adressen es gibt, entscheidet
+damit allein die App: Sie zeigt für eine unbekannte „Diese Seite gibt es
+nicht“, und eine neue Seite braucht keinen Eintrag hier.
 */
 
 interface Umschreibung {
@@ -18,14 +21,16 @@ const { rewrites } = JSON.parse(readFileSync(resolve(__dirname, '..', 'vercel.js
   rewrites: Umschreibung[]
 }
 
-describe('O2 K3: vercel.json leitet jede Seite der App auf index.html', () => {
-  it.each(['/spiel', '/regeln', '/dev', '/dev/:path*'])('O2 K3: %s wird auf /index.html umgeschrieben', (quelle) => {
-    expect(rewrites.filter((eintrag) => eintrag.source === quelle).map((eintrag) => eintrag.destination)).toEqual([
-      '/index.html',
-    ])
+describe('O2 K3: vercel.json leitet jede Adresse auf index.html', () => {
+  it('O2 K3: genau eine Umschreibung, die jede Adresse auf /index.html leitet', () => {
+    expect(rewrites).toEqual([{ source: '/(.*)', destination: '/index.html' }])
   })
 
-  it('O2 K3: keine Umschreibung zeigt auf eine Seite, die es nicht mehr gibt', () => {
-    expect(rewrites.map((eintrag) => eintrag.source).filter((quelle) => quelle.startsWith('/game'))).toEqual([])
-  })
+  it.each(['/spiel', '/regeln', '/dev', '/dev/szenarien', '/gibt-es-nicht'])(
+    'O2 K3: %s fällt unter die Umschreibung',
+    (adresse) => {
+      // Vercel liest `/(.*)` als regulären Ausdruck über den ganzen Pfad.
+      expect(new RegExp(`^${rewrites[0].source}$`).test(adresse)).toBe(true)
+    },
+  )
 })

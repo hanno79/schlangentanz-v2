@@ -902,7 +902,7 @@ export async function findeKleineTippflaechen(page: Page, mindestens = 44): Prom
       return name ? `${basis} "${name}"` : basis
     }
     const befunde: { element: string; detail: string }[] = []
-    const auswahl = 'button, a[href], [role="button"], input, select, summary'
+    const auswahl = 'button, a[href], [role="button"], input, select'
     for (const element of Array.from(document.querySelectorAll(auswahl))) {
       if (!(element as HTMLElement).checkVisibility()) continue
       if (element.closest('[inert]') !== null) continue

@@ -7,13 +7,14 @@ prioritaet: mittel
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
-skript: tests/layout/platzhalter.spec.ts
+skript: tests/layout/lobby.spec.ts
 aenderung: task/P0.4-entwicklertisch (PR #27)
+status: stillgelegt
 ---
 
 ## Worum es geht
 
-Mit P0.4 ist die alte Oberfläche weg. Bis O2 (App-Rahmen und Lobby) soll die Startseite nur sagen, dass das Spiel neu gebaut wird, und nichts zum Bedienen anbieten.
+Stillgelegt mit O2 (Branch task/O2-app-rahmen-lobby): Unter / steht jetzt die Lobby. Das Skript tests/layout/platzhalter.spec.ts ist gelöscht; `skript` nennt seinen Nachfolger. Mit P0.4 ist die alte Oberfläche weg. Bis O2 (App-Rahmen und Lobby) soll die Startseite nur sagen, dass das Spiel neu gebaut wird, und nichts zum Bedienen anbieten.
 
 ## Bestanden, wenn
 

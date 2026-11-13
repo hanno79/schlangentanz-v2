@@ -1,7 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import { oeffne } from './oeffnen'
-import { befundListe, findeKleineTippflaechen, waagrechterUeberstand } from './messung'
-import { nichtsIstStillgelegt, waechterVertraege } from './waechter'
+import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
 /*
 O2: Lobby, vorläufiger Spieltisch und Regelseite im Produktionsbuild, in jeder
@@ -17,17 +16,8 @@ async function startePartie(page: Page): Promise<void> {
   await expect(page.getByTestId('spiel')).toBeVisible()
 }
 
-function bedienbarkeitsVertraege(): void {
-  test('O2: die Seite ist nicht breiter als das Fenster', async ({ page }) => {
-    const ueberstand = await waagrechterUeberstand(page)
-    expect(ueberstand, `Die Seite ist ${ueberstand} px breiter als das Fenster`).toBe(0)
-  })
-
-  test('O2: jede Tippfläche misst mindestens 44 × 44 px', async ({ page }) => {
-    const befunde = await findeKleineTippflaechen(page)
-    expect(befunde, `${befunde.length} Tippfläche(n) zu klein:${befundListe(befunde)}`).toEqual([])
-  })
-
+function alleVertraege(): void {
+  bedienbarkeitsVertraege()
   waechterVertraege()
   nichtsIstStillgelegt()
 }
@@ -49,7 +39,7 @@ test.describe('O2: Lobby ohne Spielstand', () => {
     await expect(page.getByRole('radio', { name: '3 Gegner' })).toBeChecked()
   })
 
-  bedienbarkeitsVertraege()
+  alleVertraege()
 })
 
 test.describe('O2: Lobby mit laufender Partie', () => {
@@ -62,7 +52,7 @@ test.describe('O2: Lobby mit laufender Partie', () => {
     await expect(page.getByRole('button', { name: 'Weiterspielen' })).toBeVisible()
   })
 
-  bedienbarkeitsVertraege()
+  alleVertraege()
 })
 
 test.describe('O2: Lobby mit offener Rückfrage vor einer neuen Partie', () => {
@@ -79,7 +69,7 @@ test.describe('O2: Lobby mit offener Rückfrage vor einer neuen Partie', () => {
     await expect(frage.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
   })
 
-  bedienbarkeitsVertraege()
+  alleVertraege()
 })
 
 test.describe('O2: vorläufiger Spieltisch mit Partie', () => {
@@ -93,7 +83,7 @@ test.describe('O2: vorläufiger Spieltisch mit Partie', () => {
     await expect(page.getByRole('link', { name: 'Zurück zur Lobby' })).toBeVisible()
   })
 
-  bedienbarkeitsVertraege()
+  alleVertraege()
 })
 
 test.describe('O2: vorläufiger Spieltisch ohne Partie', () => {
@@ -105,7 +95,7 @@ test.describe('O2: vorläufiger Spieltisch ohne Partie', () => {
     await expect(page.getByTestId('spiel')).toContainText('Es läuft keine Partie')
   })
 
-  bedienbarkeitsVertraege()
+  alleVertraege()
 })
 
 test.describe('O2: Regelseite', () => {
@@ -120,5 +110,5 @@ test.describe('O2: Regelseite', () => {
     )
   })
 
-  bedienbarkeitsVertraege()
+  alleVertraege()
 })
