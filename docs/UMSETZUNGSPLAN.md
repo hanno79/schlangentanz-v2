@@ -58,7 +58,9 @@ Prompt, um die Website nachzuziehen.
   erkennt, welche Karte beim Gegner schadet und welche bei ihr selbst nützt.
 - **Kartenbilder** von schlangentanz.ch (gemessen: 604×900 Pixel, für alle
   Geräte ausreichend).
-- **Geräte:** Desktop, Tablet quer, Handy hochkant; Maus und Touch.
+- **Geräte:** Desktop, Tablet quer und hochkant, Handy hochkant und quer; Maus
+  und Touch. (Tablet hochkant und Handy quer: Entscheidung des Autors vom
+  13.11.2026.)
 - **Erweiterung:** komplett, ein Schalter vor der Partie.
 - **Alte Spielstände** werden verworfen (neues Speicherformat).
 - **Umsetzung läuft lokal auf dem Desktop**, dort ist Codex mit Abo verfügbar.
@@ -96,7 +98,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 |---|---|---|
 | M0 | Fundament: Plan im Repo, Prüfwerkzeuge, Entwicklertisch | nein |
 | M1 | Basis-Engine regelkonform | nein |
-| M2 | **Basis-Spiel spielbar:** neue Oberfläche, neue KI, drei Geräteklassen | ja, nach Freigabe |
+| M2 | **Basis-Spiel spielbar:** neue Oberfläche, neue KI, fünf Geräteklassen | ja, nach Freigabe |
 | M3 | **Erweiterung spielbar** | ja, nach Freigabe |
 | M4 | Release: Doku, Evidenz, Produktion geprüft | ja |
 
@@ -141,8 +143,11 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 - **Er prüft im echten Browser**, nie nur am Code:
   - Engine- und KI-Tasks am **Entwicklertisch** (P0.4): Szenario laden, die
     Schritte des Tasks mit echten Klicks ausführen, das Ergebnis ablesen.
-  - Oberflächen-Tasks in **drei Geräteklassen**: Desktop 1280×900, Tablet quer
-    1024×768 mit Touch, Handy hochkant 390×844 mit Touch.
+  - Oberflächen-Tasks in **fünf Geräteklassen**: Desktop 1280×900, Tablet quer
+    1024×768 mit Touch, Tablet hochkant 768×1024 mit Touch, Handy hochkant
+    390×844 mit Touch, Handy quer 844×390 mit Touch. (Bis 13.11.2026 waren es
+    drei; Tablet hochkant und Handy quer gelten ab den Tasks, die nach P0.3c
+    beginnen.)
   - Er macht Bildschirmfotos, **sieht sie an** und beschreibt im Protokoll,
     was zu sehen ist. Ein Foto ohne Beschreibung gilt nicht als Beleg.
 - Er sucht aktiv nach Fehlern: mindestens zwei eigene Grenzfälle je Task, die
