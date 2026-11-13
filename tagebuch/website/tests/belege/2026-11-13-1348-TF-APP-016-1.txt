@@ -1,0 +1,11 @@
+hochkant, Rueckfrage offen {"fenster":"390x844","hochkant":true,"grob":true,"scrollWidth":390,"clientWidth":390,"dialog":true,"dialogLage":"402..600"}
+gedreht 844x390 {"fenster":"844x390","hochkant":false,"grob":true,"scrollWidth":844,"clientWidth":844,"dialog":true,"dialogLage":"412..531"}
+nach Abbrechen (Partie bleibt?) 1
+zurueck 390x844 {"fenster":"390x844","hochkant":true,"grob":true,"scrollWidth":390,"clientWidth":390,"dialog":false,"dialogLage":null}
+320 Lobby {"fenster":"320x568","hochkant":true,"grob":true,"scrollWidth":320,"clientWidth":320,"dialog":false,"dialogLage":null}
+320 /dev {"fenster":"330x586","hochkant":true,"grob":true,"scrollWidth":330,"clientWidth":320,"dialog":false,"dialogLage":null}
+desktop /dev 1280 1280 Lobby 1280 1280 grob false Konsolenfehler 0
+tablet-quer /dev 1024 1024 Lobby 1024 1024 grob true Konsolenfehler 0
+tablet-hochkant /dev 768 768 Lobby 768 768 grob true Konsolenfehler 0
+handy-hochkant /dev 390 390 Lobby 390 390 grob true Konsolenfehler 0
+handy-quer /dev 844 844 Lobby 844 844 grob true Konsolenfehler 0

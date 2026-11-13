@@ -1,0 +1,122 @@
+
+Running 85 tests using 16 workers
+
+  ok  1 [handy-quer] › tests\layout\lobby.spec.ts:41:3 › O2: Lobby ohne Spielstand › O2 K1: ein Tipp auf „3 Gegner“ wählt diese Zahl (920ms)
+  ok  2 [handy-quer] › tests\layout\lobby.spec.ts:34:3 › O2: Lobby ohne Spielstand › O2 K1: die Lobby zeigt Gegnerwahl, Erweiterung und „Neue Partie“, aber kein „Weiterspielen“ (859ms)
+  ok  3 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby ohne Spielstand › die Seite ist nicht breiter als das Fenster (1.0s)
+  ok  4 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby ohne Spielstand › jede Tippfläche misst mindestens 44 × 44 px (1.0s)
+  ok  5 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby ohne Spielstand › die Token-Prüfung hat wirklich Regeln gesehen (952ms)
+  ok  6 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby ohne Spielstand › kein Bedienelement liegt außerhalb des Bildes (1.0s)
+  ok 10 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby ohne Spielstand › kein Bedienelement ist vollständig verdeckt (843ms)
+  ok  7 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby ohne Spielstand › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (1.0s)
+  ok 16 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby ohne Spielstand › kein Bedienelement ist stillgelegt (964ms)
+  ok  9 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby ohne Spielstand › kein sichtbares Element schneidet seinen Inhalt ab (1.1s)
+  ok  8 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby ohne Spielstand › kein Text steht unter 4,5 : 1 Kontrast (1.1s)
+  ok 13 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby ohne Spielstand › der Kontrastwächter hat wirklich etwas gemessen (1.2s)
+  ok 12 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby ohne Spielstand › jede var() ohne Fallback löst am benutzenden Element auf (1.3s)
+  x  18 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes (1.2s)
+  ok 23 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby mit laufender Partie › jede var() ohne Fallback löst am benutzenden Element auf (1.2s)
+  ok 15 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby mit laufender Partie › jede Tippfläche misst mindestens 44 × 44 px (2.0s)
+  ok 19 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist vollständig verdeckt (1.5s)
+  ok 21 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby mit laufender Partie › kein Text steht unter 4,5 : 1 Kontrast (1.5s)
+  ok 14 [handy-quer] › tests\layout\lobby.spec.ts:55:3 › O2: Lobby mit laufender Partie › O2 K2: die Lobby bietet „Weiterspielen“ (2.1s)
+  ok 11 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby mit laufender Partie › die Seite ist nicht breiter als das Fenster (2.1s)
+  ok 20 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby mit laufender Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (1.6s)
+  ok 27 [handy-quer] › tests\layout\waechter.ts:159:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › die Seite ist nicht breiter als das Fenster (1.1s)
+  ok 26 [handy-quer] › tests\layout\lobby.spec.ts:70:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › O2 K4: die Lobby sagt, dass die Partie verworfen wurde, und bietet kein „Weiterspielen“ (1.1s)
+  ok 17 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab (2.0s)
+  ok 28 [handy-quer] › tests\layout\waechter.ts:165:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › jede Tippfläche misst mindestens 44 × 44 px (1.2s)
+  ok 29 [handy-quer] › tests\layout\waechter.ts:40:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein sichtbares Element schneidet seinen Inhalt ab (1.2s)
+  ok 31 [handy-quer] › tests\layout\waechter.ts:52:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement ist vollständig verdeckt (937ms)
+  x  30 [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes (1.3s)
+  ok 22 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby mit laufender Partie › der Kontrastwächter hat wirklich etwas gemessen (2.2s)
+  ok 25 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist stillgelegt (1.9s)
+  ok 24 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby mit laufender Partie › die Token-Prüfung hat wirklich Regeln gesehen (2.3s)
+  ok 33 [handy-quer] › tests\layout\waechter.ts:80:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Text steht unter 4,5 : 1 Kontrast (1.1s)
+  ok 32 [handy-quer] › tests\layout\waechter.ts:65:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (1.2s)
+  ok 34 [handy-quer] › tests\layout\waechter.ts:91:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › der Kontrastwächter hat wirklich etwas gemessen (1.3s)
+  ok 35 [handy-quer] › tests\layout\waechter.ts:109:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › jede var() ohne Fallback löst am benutzenden Element auf (1.3s)
+  ok 38 [handy-quer] › tests\layout\lobby.spec.ts:86:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › O2 K2: die Rückfrage bietet Bestätigen und Abbrechen (1.4s)
+  ok 39 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › die Seite ist nicht breiter als das Fenster (1.5s)
+  ok 37 [handy-quer] › tests\layout\waechter.ts:145:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement ist stillgelegt (1.5s)
+  ok 36 [handy-quer] › tests\layout\waechter.ts:123:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › die Token-Prüfung hat wirklich Regeln gesehen (1.6s)
+  ok 40 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › jede Tippfläche misst mindestens 44 × 44 px (1.6s)
+  ok 43 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement ist vollständig verdeckt (1.1s)
+  ok 46 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › der Kontrastwächter hat wirklich etwas gemessen (1.3s)
+  ok 51 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: vorläufiger Spieltisch mit Partie › die Seite ist nicht breiter als das Fenster (824ms)
+  ok 41 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein sichtbares Element schneidet seinen Inhalt ab (1.8s)
+  ok 50 [handy-quer] › tests\layout\lobby.spec.ts:100:3 › O2: vorläufiger Spieltisch mit Partie › O2: der Spieltisch nennt die Einstellungen und führt zurück (934ms)
+  ok 44 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (1.5s)
+  ok 45 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Text steht unter 4,5 : 1 Kontrast (1.5s)
+  ok 53 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: vorläufiger Spieltisch mit Partie › kein sichtbares Element schneidet seinen Inhalt ab (734ms)
+  ok 47 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › jede var() ohne Fallback löst am benutzenden Element auf (1.3s)
+  ok 48 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › die Token-Prüfung hat wirklich Regeln gesehen (1.3s)
+  ok 54 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: vorläufiger Spieltisch mit Partie › kein Bedienelement liegt außerhalb des Bildes (829ms)
+  ok 49 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement ist stillgelegt (1.3s)
+  x  42 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes (2.1s)
+  ok 52 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: vorläufiger Spieltisch mit Partie › jede Tippfläche misst mindestens 44 × 44 px (1.0s)
+  ok 56 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: vorläufiger Spieltisch mit Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (780ms)
+  ok 57 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: vorläufiger Spieltisch mit Partie › kein Text steht unter 4,5 : 1 Kontrast (823ms)
+  ok 55 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: vorläufiger Spieltisch mit Partie › kein Bedienelement ist vollständig verdeckt (1.1s)
+  ok 58 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: vorläufiger Spieltisch mit Partie › der Kontrastwächter hat wirklich etwas gemessen (728ms)
+  ok 59 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: vorläufiger Spieltisch mit Partie › jede var() ohne Fallback löst am benutzenden Element auf (761ms)
+  ok 60 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: vorläufiger Spieltisch mit Partie › die Token-Prüfung hat wirklich Regeln gesehen (831ms)
+  ok 61 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: vorläufiger Spieltisch mit Partie › kein Bedienelement ist stillgelegt (809ms)
+  ok 62 [handy-quer] › tests\layout\lobby.spec.ts:114:3 › O2: vorläufiger Spieltisch ohne Partie › O2: ohne Spielstand sagt der Spieltisch, dass keine Partie läuft (824ms)
+  ok 64 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: vorläufiger Spieltisch ohne Partie › jede Tippfläche misst mindestens 44 × 44 px (783ms)
+  ok 65 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: vorläufiger Spieltisch ohne Partie › kein sichtbares Element schneidet seinen Inhalt ab (811ms)
+  ok 68 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: vorläufiger Spieltisch ohne Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (882ms)
+  ok 69 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: vorläufiger Spieltisch ohne Partie › der Kontrastwächter hat wirklich etwas gemessen (922ms)
+  ok 70 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: vorläufiger Spieltisch ohne Partie › jede var() ohne Fallback löst am benutzenden Element auf (879ms)
+  ok 74 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Regelseite › die Seite ist nicht breiter als das Fenster (723ms)
+  ok 71 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: vorläufiger Spieltisch ohne Partie › die Token-Prüfung hat wirklich Regeln gesehen (1.0s)
+  ok 63 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: vorläufiger Spieltisch ohne Partie › die Seite ist nicht breiter als das Fenster (1.4s)
+  ok 73 [handy-quer] › tests\layout\lobby.spec.ts:126:3 › O2: Regelseite › O2: die Regelseite verweist auf die Website (1.1s)
+  ok 67 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: vorläufiger Spieltisch ohne Partie › kein Bedienelement ist vollständig verdeckt (1.5s)
+  ok 72 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: vorläufiger Spieltisch ohne Partie › kein Bedienelement ist stillgelegt (1.2s)
+  ok 76 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Regelseite › kein sichtbares Element schneidet seinen Inhalt ab (926ms)
+  ok 77 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Regelseite › kein Bedienelement liegt außerhalb des Bildes (944ms)
+  ok 78 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Regelseite › kein Bedienelement ist vollständig verdeckt (941ms)
+  ok 80 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Regelseite › kein Text steht unter 4,5 : 1 Kontrast (752ms)
+  ok 66 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: vorläufiger Spieltisch ohne Partie › kein Bedienelement liegt außerhalb des Bildes (1.8s)
+  ok 82 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Regelseite › der Kontrastwächter hat wirklich etwas gemessen (769ms)
+  ok 83 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Regelseite › jede var() ohne Fallback löst am benutzenden Element auf (814ms)
+  ok 81 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: vorläufiger Spieltisch ohne Partie › kein Text steht unter 4,5 : 1 Kontrast (878ms)
+  ok 84 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Regelseite › die Token-Prüfung hat wirklich Regeln gesehen (824ms)
+  ok 79 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Regelseite › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (1.3s)
+  ok 85 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Regelseite › kein Bedienelement ist stillgelegt (808ms)
+  ok 75 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Regelseite › jede Tippfläche misst mindestens 44 × 44 px (1.6s)
+
+
+  1) [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes 
+
+    Error: 1 Bedienelement(e) außerhalb des Bildes:
+      · verweis "Regeln" — liegt bei 389..437 (Bild ist 390px hoch)
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+    [32m- Expected  - 1[39m
+    [31m+ Received  + 6[39m
+
+    [32m- Array [][39m
+    [31m+ Array [[39m
+    [31m+   Object {[39m
+    [31m+     "detail": "liegt bei 389..437 (Bild ist 390px hoch)",[39m
+    [31m+     "element": "verweis \"Regeln\"",[39m
+    [31m+   },[39m
+    [31m+ ][39m
+
+      58 |   pruefe('kein Bedienelement liegt außerhalb des Bildes', async ({ page }: { page: Page }) => {
+      59 |     const befunde = await findeAusserhalbDesBildes(page)
+    > 60 |     expect(befunde, `${befunde.length} Bedienelement(e) außerhalb des Bildes:${befundListe(befunde)}`).toEqual([])
+         |                                                                                                        ^
+      61 |   })
+      62 |
+      63 |   pruefe('kein Bedienelement ist vollständig verdeckt', async ({ page }: { page: Page }) => {
+        at E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-aee957e29f5c8a41a\tests\layout\waechter.ts:60:104
+
+    Error Context: test-results\lobby-O2-Lobby-mit-offener-ee25d--liegt-außerhalb-des-Bildes-handy-quer\error-context.md
+
+  1 failed
+    [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes 
+  84 passed (14.0s)

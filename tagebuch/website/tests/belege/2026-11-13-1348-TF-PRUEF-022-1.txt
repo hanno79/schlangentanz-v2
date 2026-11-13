@@ -1,0 +1,11 @@
+tagebuch/tests/faelle/TF-DEV-007.md:30:| Anwendung | Testhook-Build auf Port 4174, Playwright-Kontext der Geräteklasse `handy` aus `scripts/pruefung/geraeteklassen.mjs` |
+tagebuch/tests/faelle/TF-DEV-007.md:40:| 1 | Playwright, Klasse handy | Adresse öffnen | `/dev?seed=1&spieler=2` | `scrollWidth` 390, Hinweistext ganz sichtbar |
+tagebuch/tests/faelle/TF-DEV-007.md:41:| 2 | Playwright, Klasse handy | Adresse öffnen | `/dev/szenarien` | Tabelle passt in 390 px |
+tagebuch/tests/faelle/TF-PRUEF-008.md:16:Heute laufen alle Layout-Verträge nur in `desktop`; die Projekte `tablet` und `handy` haben 0 Tests. Ob sie wirklich das richtige Gerät liefern, zeigt erst ein Vertrag, der dort läuft.
+tagebuch/tests/faelle/TF-PRUEF-008.md:20:Eine vorübergehende Spec misst in jedem der drei Projekte `innerWidth`, `innerHeight`, `(pointer: coarse)` und `devicePixelRatio` und findet desktop 1280/900/nein/1, tablet 1024/768/ja/1, handy 390/844/ja/1; `npx playwright test <spec>` endet mit Exit 0, 3 passed.
+tagebuch/tests/faelle/TF-APP-001.md
+tagebuch/tests/faelle/TF-PRUEF-005.md
+Error: Project(s) "handy" not found. Available projects: "desktop", "desktop-testhooks", "tablet-quer", "tablet-quer-testhooks", "tablet-hochkant", "tablet-hochkant-testhooks", "handy-hochkant", "handy-hochkant-testhooks", "handy-quer", "handy-quer-testhooks"
+    at Object.filterProjects (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-aee957e29f5c8a41a\node_modules\playwright\lib\runner\index.js:2084:11)
+    at runTests (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-aee957e29f5c8a41a\node_modules\playwright\lib\cli\testActions.js:59:30)
+    at _Command.<anonymous> (E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-aee957e29f5c8a41a\node_modules\playwright\lib\program.js:50:7)

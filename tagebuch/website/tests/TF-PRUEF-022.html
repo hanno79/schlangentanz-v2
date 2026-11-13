@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-022 Nach der Umbenennung der Geräteklassen nennt kein gültiger Testfall mehr die Klassen `tablet` oder `handy`. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-022 Nach der Umbenennung der Geräteklassen nennt kein gültiger Testfall mehr die Klassen `tablet` oder `handy`.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PRUEF-019</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Seit P0.3c heissen die Klassen <code>tablet-quer</code> und <code>handy-hochkant</code>. Nennt ein Testfall noch <code>handy</code> oder <code>tablet</code> als Klasse oder Projekt, muss der Tester den Namen selbst übersetzen. Wörtlich ausgeführt findet <code>GERAETEKLASSEN.find(k =&gt; k.name === &#x27;handy&#x27;)</code> nichts, und <code>--project=handy</code> bricht ab.</p><h2>Bestanden, wenn</h2><p>Der Suchbefehl aus Schritt 1 findet nur Zeilen in Testfällen mit <code>status: stillgelegt</code> (Schritt 2), oder gar keine.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Suchbefehl findet eine Zeile in einem Testfall ohne <code>status: stillgelegt</code>.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.3c-fuenf-geraeteklassen (PR #32)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Keine.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>alte Klassennamen suchen</td><td>``git grep -nE &#x27;`(tablet|handy)`|Klasse (tablet|handy)\b|, tablet [0-9]|, handy [0-9]&#x27; -- tagebuch/tests/faelle``</td><td>Liste der Treffer</td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>stillgelegte Testfälle suchen</td><td>`git grep -l &quot;status: stillgelegt&quot; -- tagebuch/tests/faelle`</td><td>jeder Treffer aus Schritt 1 steht in einer dieser Dateien</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 13:48</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer P0.3c) &middot; agent &middot; pruefung-P0.3c @ <span class="commit" title="59a27bffb675dcde065bee199d886f6654cb27b7">59a27bf</span></p><p>Treffer in nicht stillgelegten Testfällen: TF-DEV-007 Zeilen 30, 40, 41 (Geräteklasse &#x27;handy&#x27;, &#x27;Klasse handy&#x27;), TF-PRUEF-008 Zeilen 16, 20 (Projekte &#x27;tablet&#x27; und &#x27;handy&#x27;, &#x27;3 passed&#x27;). Stillgelegt sind nur TF-APP-001 und TF-PRUEF-005. npx playwright test --list --project=handy: Exit 1 &#x27;Project(s) &quot;handy&quot; not found&#x27;.</p><p class="fehler">Testregister-Fälle nennen alte Klassennamen</p><ul class="belege"><li><a href="belege/2026-11-13-1348-TF-PRUEF-022-1.txt">2026-11-13-1348-TF-PRUEF-022-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
