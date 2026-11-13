@@ -1,6 +1,6 @@
 import './lupe.css'
 import { useEffect, useRef } from 'react'
-import type { AufgabenkarteInfo, Spielkarte } from '../../engine'
+import type { Bildkarte } from '../../ui/karten/kartenbilder'
 import { Karte } from '../../ui/karten/Karte'
 import { kartenname } from '../../ui/karten/kartentexte'
 
@@ -9,7 +9,7 @@ import { kartenname } from '../../ui/karten/kartentexte'
  * ihren Text zu lesen; hier steht sie so gross, wie der Schirm es erlaubt.
  * Als modaler Dialog: Escape und ein Tippen neben die Karte schliessen ihn.
  */
-export function Lupe({ karte, schliesse }: { karte: Spielkarte | AufgabenkarteInfo; schliesse: () => void }) {
+export function Lupe({ karte, schliesse }: { karte: Bildkarte; schliesse: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {

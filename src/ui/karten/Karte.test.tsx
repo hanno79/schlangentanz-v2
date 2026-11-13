@@ -1,15 +1,20 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { aufgabenPool, erstelleErweiterungsSonderkarten, erstelleFarbkarten } from '../../engine'
+import type { Spielkarte } from '../../engine'
+import { erstelleAufgabenStapel } from '../../engine/aufgabenKarten'
+import { erstelleAuslagekarten, erstelleSpielkarten } from '../../engine/deck'
 import { Karte, Kartenrueckseite } from './Karte'
 
 /* O1: Die Kartenkomponente zeigt das Bild mit einem Alt-Text, der die Karte so
    nennt, wie ein Mensch sie ansagt — nie die technische ID. */
 
-const blau = erstelleFarbkarten().find((karte) => karte.farbe === 'Blau')!
-const gruen = erstelleFarbkarten().find((karte) => karte.farbe === 'Grün')!
-const korb = erstelleErweiterungsSonderkarten().find((karte) => karte.name === 'Schlangenkorb des Glücks')!
-const farbenpracht = aufgabenPool.find((aufgabe) => aufgabe.name === 'Farbenpracht')!
+const material = erstelleSpielkarten(true)
+const finde = (passt: (karte: Spielkarte) => boolean) => material.find(passt)!
+const blau = finde((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Blau')
+const gruen = finde((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Grün')
+const korb = finde((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenkorb des Glücks')
+const farbenpracht = erstelleAufgabenStapel().find((aufgabe) => aufgabe.name === 'Farbenpracht')!
+const { comeback } = erstelleAuslagekarten(0)
 
 describe('O1: Karte zeigt das Kartenbild mit Alt-Text', () => {
   it('O1: Farbkarte nennt Farbe und Punkte', () => {
@@ -26,6 +31,11 @@ describe('O1: Karte zeigt das Kartenbild mit Alt-Text', () => {
   it('O1: Sonderkarte nennt ihren Namen', () => {
     render(<Karte karte={korb} />)
     expect(screen.getByRole('img', { name: 'Sonderkarte Schlangenkorb des Glücks' })).toBeInTheDocument()
+  })
+
+  it('O1: Comeback-Karte (Auslagekarte der Engine) hat Bild und Namen', () => {
+    render(<Karte karte={comeback} />)
+    expect(screen.getByRole('img', { name: 'Comeback-Karte' }).getAttribute('src')).toBe('/karten/comeback.webp')
   })
 
   it('O1: Aufgabe nennt Name, Punkte und Bedingung', () => {

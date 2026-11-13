@@ -1,4 +1,7 @@
-import type { AufgabenkarteInfo, Farbe, Spielkarte } from '../../engine'
+import type { AufgabenkarteInfo, Auslagekarte, Farbe, Spielkarte } from '../../engine'
+
+/** Alles, was als Kartenbild erscheint: Spielkarte, Aufgabe, Comeback- oder Risiko-Karte. */
+export type Bildkarte = Spielkarte | AufgabenkarteInfo | Auslagekarte
 
 /*
 Zuordnung Kartenname → Bild unter `public/karten/`.
@@ -82,7 +85,7 @@ export const farbkartenbild = (farbe: Farbe): string => bild(FARBKARTEN, farbe, 
 export const sonderkartenbild = (name: string): string => bild(SONDERKARTEN, name, 'die Sonderkarte')
 export const aufgabenbild = (name: string): string => bild(AUFGABEN, name, 'die Aufgabe')
 
-export function kartenbild(karte: Spielkarte | AufgabenkarteInfo): string {
+export function kartenbild(karte: Bildkarte): string {
   switch (karte.typ) {
     case 'Farbkarte':
       return farbkartenbild(karte.farbe)
@@ -90,5 +93,8 @@ export function kartenbild(karte: Spielkarte | AufgabenkarteInfo): string {
       return sonderkartenbild(karte.name)
     case 'Aufgabenkarte':
       return aufgabenbild(karte.name)
+    case 'Comeback':
+    case 'Risiko-Belohnung':
+      return sonderkartenbild(karte.typ)
   }
 }

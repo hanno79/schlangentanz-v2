@@ -1,6 +1,6 @@
 import './tisch.css'
 import { useState } from 'react'
-import type { AufgabenkarteInfo, Spielkarte } from '../../engine'
+import type { Bildkarte } from '../../ui/karten/kartenbilder'
 import { Karte } from '../../ui/karten/Karte'
 import { kartenkurzname, kartenname } from '../../ui/karten/kartentexte'
 import { GEGNER, HAND } from './beispiel'
@@ -30,7 +30,7 @@ interface TischEigenschaften {
 export function EntwurfTisch({ gegnerzahl, vorgewaehlt }: TischEigenschaften) {
   const [gewaehlt, setzeGewaehlt] = useState<string | null>(vorgewaehlt)
   const [ziel, setzeZiel] = useState<Ziel | null>(null)
-  const [gross, setzeGross] = useState<Spielkarte | AufgabenkarteInfo | null>(null)
+  const [gross, setzeGross] = useState<Bildkarte | null>(null)
   const [meldung, setzeMeldung] = useState<string | null>(null)
 
   const handkarte = HAND.find((eintrag) => eintrag.karte.id === gewaehlt) ?? null

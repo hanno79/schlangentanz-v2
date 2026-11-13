@@ -1,6 +1,6 @@
 import './karte.css'
-import type { AufgabenkarteInfo, Spielkarte } from '../../engine'
 import { KARTENBILD_BREITE, KARTENBILD_HOEHE, kartenbild, RUECKSEITE_BILD } from './kartenbilder'
+import type { Bildkarte } from './kartenbilder'
 import { kartenname, RUECKSEITE_NAME } from './kartentexte'
 
 interface Kartenbildeigenschaften {
@@ -17,7 +17,7 @@ function klassen(zusatz: string | undefined): string {
  * die Höhe folgt aus dem Kartenformat. Bedienbar wird sie erst in einem Knopf, den
  * der Tisch darum legt; das Bild selbst kennt keine Spielregel.
  */
-export function Karte({ karte, className }: Kartenbildeigenschaften & { karte: Spielkarte | AufgabenkarteInfo }) {
+export function Karte({ karte, className }: Kartenbildeigenschaften & { karte: Bildkarte }) {
   return (
     <img
       className={klassen(className)}

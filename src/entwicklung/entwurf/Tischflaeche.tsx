@@ -1,4 +1,4 @@
-import type { AufgabenkarteInfo, Spielkarte } from '../../engine'
+import type { Bildkarte } from '../../ui/karten/kartenbilder'
 import { Karte, Kartenrueckseite } from '../../ui/karten/Karte'
 import { kartenname } from '../../ui/karten/kartentexte'
 import {
@@ -18,7 +18,7 @@ interface FlaecheEigenschaften {
   /** Welche Art Ziel die gewählte Handkarte anbietet; `null` ohne Wahl. */
   zielart: Zielart | null
   zielwahl: Zielwahl
-  zeigeGross: (karte: Spielkarte | AufgabenkarteInfo) => void
+  zeigeGross: (karte: Bildkarte) => void
 }
 
 /** Alles zwischen Kopfleiste und eigenem Bereich: Gegner, Tischmitte und Auslage. Scrollt bei Bedarf. */
@@ -146,8 +146,8 @@ function GrossKnopf({
   zeigeGross,
   name,
 }: {
-  karte: Spielkarte | AufgabenkarteInfo
-  zeigeGross: (karte: Spielkarte | AufgabenkarteInfo) => void
+  karte: Bildkarte
+  zeigeGross: (karte: Bildkarte) => void
   name?: string
 }) {
   return (

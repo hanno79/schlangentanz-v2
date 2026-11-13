@@ -1,5 +1,6 @@
-import { aufgabenPool, erstelleErweiterungsSonderkarten, erstelleFarbkarten, erstelleSonderkarten } from '../../engine'
-import type { AufgabenkarteInfo, Farbe, Spielkarte } from '../../engine'
+import type { AufgabenkarteInfo, Farbe, Sonderkartenname, Spielkarte } from '../../engine'
+import { erstelleAufgabenStapel } from '../../engine/aufgabenKarten'
+import { erstelleAuslagekarten, erstelleSpielkarten } from '../../engine/deck'
 
 /*
 Feste Beispieldaten für die Entwurfsseiten unter /dev/entwurf.
@@ -33,7 +34,7 @@ export interface BeispielHandkarte {
 }
 
 class Vorrat {
-  private karten: Spielkarte[] = [...erstelleFarbkarten(), ...erstelleSonderkarten(), ...erstelleErweiterungsSonderkarten()]
+  private karten: Spielkarte[] = erstelleSpielkarten(true)
 
   private nimm(passt: (karte: Spielkarte) => boolean, wer: string): Spielkarte {
     const index = this.karten.findIndex(passt)
@@ -45,13 +46,13 @@ class Vorrat {
     return this.nimm((karte) => karte.typ === 'Farbkarte' && karte.farbe === farbe, farbe)
   }
 
-  sonder(name: string): Spielkarte {
+  sonder(name: Sonderkartenname): Spielkarte {
     return this.nimm((karte) => karte.typ === 'Sonderkarte' && karte.name === name, name)
   }
 }
 
 function aufgabe(name: string): AufgabenkarteInfo {
-  const treffer = aufgabenPool.find((karte) => karte.name === name)
+  const treffer = erstelleAufgabenStapel().find((karte) => karte.name === name)
   if (treffer === undefined) throw new Error(`Beispieldaten: keine Aufgabe „${name}“`)
   return treffer
 }
@@ -73,10 +74,10 @@ export const HAND: BeispielHandkarte[] = [
 ]
 
 const FARBEN: readonly string[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'] satisfies Farbe[]
-const istFarbe = (wert: string): wert is Farbe => FARBEN.includes(wert)
+const istFarbe = (wert: Farbe | Sonderkartenname): wert is Farbe => FARBEN.includes(wert)
 
 /** Eine Schlange aus Farb- und Sonderkartennamen; `gruppen` als [Anfang, Länge]. */
-function schlange(id: string, farben: (Farbe | string)[], gruppen: [number, number][] = []): BeispielSchlange {
+function schlange(id: string, farben: (Farbe | Sonderkartenname)[], gruppen: [number, number][] = []): BeispielSchlange {
   return {
     id,
     karten: farben.map((wert, index) => ({
@@ -125,7 +126,8 @@ export const EIGENE_ABLAGE = { anzahl: 4, oben: vorrat.sonder('Schlangenhäutung
 export const NACHZIEHSTAPEL = 42
 export const OFFENE_AUFGABEN = [aufgabe('Farbenpracht'), aufgabe('Farbkombination'), aufgabe('Lila Riese')]
 export const GEHEIME_AUFGABE = aufgabe('Gelber Schatz')
-export const ZUSATZKARTEN = [vorrat.sonder('Comeback'), vorrat.sonder('Risiko-Belohnung'), vorrat.sonder('Risiko-Belohnung')]
+const auslage = erstelleAuslagekarten(0)
+export const ZUSATZKARTEN = [auslage.comeback, ...auslage.risiko]
 
 /** Die Lobby kennt einen gespeicherten Spielstand, damit „Weiterspielen“ zu sehen ist. */
 export const GESPEICHERTE_PARTIE = { datum: '12.11.2026', gegner: 3, erweiterung: true, zug: 14 }

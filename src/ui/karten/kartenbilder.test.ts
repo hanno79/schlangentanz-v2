@@ -2,8 +2,9 @@
 import { describe, expect, it } from 'vitest'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
-import { aufgabenPool, erstelleErweiterungsSonderkarten, erstelleSpieldeck } from '../../engine'
 import type { Farbe } from '../../engine'
+import { erstelleAufgabenStapel } from '../../engine/aufgabenKarten'
+import { erstelleAuslagekarten, erstelleSpielkarten } from '../../engine/deck'
 import {
   aufgabenbild,
   farbkartenbild,
@@ -18,10 +19,10 @@ import {
 O1, Kriterium 1: Für jeden Kartennamen des Materials (mit Erweiterung) und jede
 Aufgabe gibt es ein Bild.
 
-Geprüft wird gegen zwei Quellen, weil keine allein reicht: Teil A der Spec
-(Spiegel der Website) nennt das ganze Material mit allen 15 Aufgaben, die
-heutige Engine kennt erst 14 (C1). Die Engine ist aber das, was die Oberfläche
-später tatsächlich anzeigen muss.
+Geprüft wird gegen zwei Quellen: Teil A der Spec (Spiegel der Website) nennt
+das ganze Material, das Material der Engine ist das, was die Oberfläche
+tatsächlich anzeigen muss. Weicht eine Quelle von der anderen ab, fällt das
+hier auf und nicht erst am Tisch als fehlendes Bild.
 */
 
 const WURZEL = resolve(__dirname, '../../..')
@@ -106,8 +107,17 @@ describe('O1: Für jede Karte des Materials gibt es ein Bild (Kriterium 1)', () 
     expect(existsSync(dateiZu(aufgabenbild(name))), `Bilddatei für Aufgabe ${name} fehlt`).toBe(true)
   })
 
-  it('O1: jede Karte, die die Engine heute erzeugt, hat ein Bild (Spieldeck, Erweiterung, Aufgaben)', () => {
-    const karten = [...erstelleSpieldeck(), ...erstelleErweiterungsSonderkarten(), ...aufgabenPool]
+  it('O1: jede Karte aus dem Material der Engine hat ein Bild (Spielkarten mit Erweiterung, Aufgaben, Comeback, Risiko)', () => {
+    const karten = [
+      ...erstelleSpielkarten(true),
+      ...erstelleAufgabenStapel(),
+      ...[0, 1, 2, 3].flatMap((spieler) => {
+        const { comeback, risiko } = erstelleAuslagekarten(spieler)
+        return [comeback, ...risiko]
+      }),
+    ]
+    // Gegen einen leeren Lauf: 6 Farben, 10 Sonderkarten, 15 Aufgaben, Comeback, Risiko-Belohnung.
+    expect(new Set(karten.map(kartenbild)).size, 'verschiedene Kartenbilder im Material der Engine').toBe(33)
     const ohneBild = karten.filter((karte) => !existsSync(dateiZu(kartenbild(karte)))).map((karte) => karte.id)
     expect(ohneBild, 'Karten der Engine ohne Bilddatei').toEqual([])
   })
