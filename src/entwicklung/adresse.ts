@@ -6,7 +6,13 @@ export type EntwicklerAnfrage =
   | { art: 'szenarien' }
   | { art: 'szenario'; name: string }
   | { art: 'partie'; saat: number; spieler: number; erweiterung: 0 | 1 }
+  | EntwurfAnfrage
   | { art: 'fehler'; meldung: string }
+
+/** Eine Entwurfsseite unter `/dev/entwurf` (O1): Lobby, Tisch oder Ergebnis mit festen Beispieldaten. */
+export type EntwurfAnfrage =
+  | { art: 'entwurf'; seite: 'uebersicht' | 'lobby' | 'ergebnis' }
+  | { art: 'entwurf'; seite: 'tisch'; gegner: number; karte: string | null }
 
 const GROESSTE_SAAT = 2 ** 32 - 1
 
@@ -26,7 +32,8 @@ export function leseEntwicklerAnfrage(pfad: string, suche: string): EntwicklerAn
   // Ein Schrägstrich am Ende ist dieselbe Seite: `/dev/` wie `/dev`, `/dev/szenarien/` wie `/dev/szenarien`.
   const seite = pfad.replace(/\/+$/, '')
   if (seite === '/dev/szenarien') return { art: 'szenarien' }
-  if (seite !== '/dev') return fehler(`Unbekannte Seite ${pfad}. Es gibt /dev und /dev/szenarien.`)
+  if (seite === '/dev/entwurf' || seite.startsWith('/dev/entwurf/')) return leseEntwurf(seite, pfad, suche)
+  if (seite !== '/dev') return fehler(`Unbekannte Seite ${pfad}. Es gibt /dev, /dev/szenarien und /dev/entwurf.`)
 
   const parameter = new URLSearchParams(suche)
   const szenario = parameter.get('szenario')
@@ -65,4 +72,23 @@ export function leseEntwicklerAnfrage(pfad: string, suche: string): EntwicklerAn
     spieler: anzahl,
     erweiterung: erweiterung === '1' ? 1 : 0,
   }
+}
+
+const ENTWURFSSEITEN = ['lobby', 'tisch', 'ergebnis'] as const
+
+/** `/dev/entwurf[/<seite>]`; nur der Tisch nimmt Parameter (`gegner`, `karte`). */
+function leseEntwurf(seite: string, pfad: string, suche: string): EntwicklerAnfrage {
+  const name = seite.slice('/dev/entwurf/'.length)
+  if (seite === '/dev/entwurf') return { art: 'entwurf', seite: 'uebersicht' }
+  if (name === 'lobby' || name === 'ergebnis') return { art: 'entwurf', seite: name }
+  if (name !== 'tisch') {
+    return fehler(`Unbekannte Entwurfsseite ${pfad}. Es gibt ${ENTWURFSSEITEN.map((s) => `/dev/entwurf/${s}`).join(', ')}.`)
+  }
+
+  const parameter = new URLSearchParams(suche)
+  const gegner = parameter.get('gegner') ?? '3'
+  if (!/^[123]$/.test(gegner)) return fehler(`Parameter gegner muss 1, 2 oder 3 sein, erhalten: „${gegner}“.`)
+  const karte = parameter.get('karte')
+  if (karte === '') return fehler('Parameter karte ist leer.')
+  return { art: 'entwurf', seite: 'tisch', gegner: Number(gegner), karte }
 }

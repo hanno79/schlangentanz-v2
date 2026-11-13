@@ -2,7 +2,8 @@ import './entwicklertisch.css'
 import { SPIELER_MAX, SPIELER_MIN } from '../engine'
 import { leseEntwicklerAnfrage } from './adresse'
 import { Fehler } from './Fehler'
-import type { EntwicklerAnfrage } from './adresse'
+import type { EntwicklerAnfrage, EntwurfAnfrage } from './adresse'
+import { Entwurf } from './entwurf/Entwurf'
 import { starteEntwicklerPartie } from './partie'
 import { findeSzenario, SZENARIEN } from './szenarien'
 import { Tisch } from './Tisch'
@@ -21,10 +22,13 @@ neu laden oder weitergeben kann, und nach dem Laden steht sie wieder genau so da
 */
 export default function Entwicklertisch() {
   const anfrage = leseEntwicklerAnfrage(window.location.pathname, window.location.search)
+  // Die Entwürfe (O1) zeigen die spätere Spieloberfläche und brauchen den ganzen Schirm: ohne Kopfleiste.
+  if (anfrage.art === 'entwurf') return <Entwurf anfrage={anfrage} />
   return (
     <div className="entwicklertisch" data-testid="entwicklertisch">
       <nav className="et-navigation">
-        <strong>Entwicklertisch</strong> <a href="/dev">Start</a> <a href="/dev/szenarien">Szenarien</a>
+        <strong>Entwicklertisch</strong> <a href="/dev">Start</a> <a href="/dev/szenarien">Szenarien</a>{' '}
+        <a href="/dev/entwurf">Entwürfe</a>
       </nav>
       <main>
         <Inhalt anfrage={anfrage} />
@@ -33,7 +37,7 @@ export default function Entwicklertisch() {
   )
 }
 
-function Inhalt({ anfrage }: { anfrage: EntwicklerAnfrage }) {
+function Inhalt({ anfrage }: { anfrage: Exclude<EntwicklerAnfrage, EntwurfAnfrage> }) {
   switch (anfrage.art) {
     case 'start':
       return <Startseite />

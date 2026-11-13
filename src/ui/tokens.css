@@ -1,0 +1,110 @@
+/*
+Gestaltungsgrundlage der Oberfläche: Schrift, Farben, Abstände, Radien,
+Schatten. Was die Werte bedeuten und warum sie so sind, steht in DESIGN.md.
+Neue Oberflächen benutzen nur diese Variablen, keine eigenen Farbwerte.
+
+Bewusst nur hell (DESIGN.md, „Hell oder dunkel“): `color-scheme: light`.
+*/
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/schrift/inter-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/schrift/inter-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/schrift/inter-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Lilita One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/schrift/LilitaOne-Regular.ttf') format('truetype');
+}
+
+:root {
+  color-scheme: light;
+
+  /* Tragende Farbe: Kürbis, das Orange aus Logo und Website. */
+  --farbe-akzent: #c2410c;
+  --farbe-akzent-stark: #9a3412;
+  --farbe-akzent-hell: #ffedd5;
+  --farbe-auf-akzent: #ffffff;
+
+  /* Neutraltöne: warmes Papier wie die Schriftrolle der Aufgabenkarten. */
+  --farbe-grund: #fbf6ee;
+  --farbe-flaeche: #ffffff;
+  --farbe-tisch: #f1e7d6;
+  --farbe-linie: #e0d3bf;
+  --farbe-tinte: #2b211c;
+  --farbe-tinte-leise: #6b5b4e;
+
+  /* Signalfarben, je mit heller Fläche für Hinweise. */
+  --farbe-erfolg: #166534;
+  --farbe-erfolg-hell: #e9f5ec;
+  --farbe-warnung: #92400e;
+  --farbe-warnung-hell: #fef3c7;
+  --farbe-fehler: #b91c1c;
+  --farbe-fehler-hell: #fdecec;
+
+  /* Schrift: Inter für Text, Lilita One nur für Titel. */
+  --schrift-text: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --schrift-titel: 'Lilita One', 'Inter', system-ui, sans-serif;
+  --groesse-klein: 0.875rem;
+  --groesse-text: 1rem;
+  --groesse-gross: 1.25rem;
+  --groesse-titel: 1.75rem;
+  --groesse-titel-gross: 2.5rem;
+  --zeilenhoehe: 1.45;
+  --zeilenhoehe-titel: 1.1;
+
+  /* Abstände: eine Skala, sonst nichts. */
+  --abstand-1: 4px;
+  --abstand-2: 8px;
+  --abstand-3: 12px;
+  --abstand-4: 16px;
+  --abstand-5: 24px;
+  --abstand-6: 32px;
+  --abstand-7: 48px;
+
+  /* Radien. Karten tragen ihre runden Ecken im Bild; ein Rahmen um eine Karte
+     nimmt --radius-karte, das als Anteil mitwächst. */
+  --radius-klein: 6px;
+  --radius: 12px;
+  --radius-gross: 20px;
+  --radius-voll: 999px;
+  --radius-karte: 6% / 4%;
+
+  /* Schatten: warm getönt, nie grau-blau. */
+  --schatten-flaeche: 0 1px 3px rgb(43 33 28 / 0.12);
+  --schatten-erhoben: 0 8px 20px rgb(43 33 28 / 0.22);
+  --schatten-karte: drop-shadow(0 1px 1.5px rgb(43 33 28 / 0.35));
+
+  /* Bedienung */
+  --ziel-mindestens: 44px;
+  --fokus-ring: 0 0 0 3px var(--farbe-flaeche), 0 0 0 6px var(--farbe-tinte);
+  --kartenverhaeltnis: 470 / 766;
+  --dauer: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dauer: 0ms;
+  }
+}

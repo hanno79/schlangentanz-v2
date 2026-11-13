@@ -1,0 +1,339 @@
+/*
+Der Tisch im Entwurf. Aufbau von oben nach unten: Kopfleiste, Tischfläche
+(Gegner, Mitte, Auslage; scrollt), unten fest eigene Schlangen, Hand und
+Zugleiste.
+
+Kartengrössen je Bereich als Variablen, drei Stufen nach Fensterbreite. Was
+wählbar ist, wird mindestens --ziel-mindestens gross, auch wenn die Karte im
+Ruhezustand kleiner ist.
+*/
+
+.tisch {
+  --karte-gegner: 30px;
+  --karte-eigene: 36px;
+  --karte-mitte: 44px;
+  /* Fünf Handkarten passen auch auf schmale Handys (375 px) ohne Scrollen. */
+  --karte-hand: clamp(52px, calc((100vw - 72px) / 5), 64px);
+  background: var(--farbe-tisch);
+}
+
+@media (min-width: 700px) {
+  .tisch {
+    --karte-gegner: 34px;
+    --karte-eigene: 48px;
+    --karte-mitte: 52px;
+    --karte-hand: 80px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .tisch {
+    --karte-gegner: 40px;
+    --karte-eigene: 56px;
+    --karte-mitte: 60px;
+    --karte-hand: 96px;
+  }
+}
+
+.tisch-flaeche {
+  display: grid;
+  grid-template-areas: 'gegner' 'mitte' 'auslage';
+  align-content: start;
+  gap: var(--abstand-3);
+  padding: var(--abstand-3);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (min-width: 700px) {
+  .tisch-flaeche {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'gegner gegner' 'mitte auslage';
+  }
+}
+
+/* Gegner: untereinander auf dem Handy, nebeneinander ab Tablet. */
+.gegnerliste {
+  grid-area: gegner;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--abstand-2);
+}
+
+.gegner {
+  --karte-breite: var(--karte-gegner);
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  min-width: 0;
+  padding: var(--abstand-2) var(--abstand-3);
+  background: var(--farbe-flaeche);
+  border-radius: var(--radius);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.gegner-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--abstand-1) var(--abstand-3);
+}
+
+.entwurf .gegner-name {
+  font-size: var(--groesse-text);
+}
+
+.gegner-info {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+.gegner-ablage {
+  --karte-breite: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  margin-left: auto;
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Schlangen: Karten in einer Reihe, die umbricht statt die Seite zu verbreitern. */
+.schlange {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 3px;
+  margin: 0;
+  padding: 0 0 6px;
+  list-style: none;
+}
+
+.schlange > li {
+  display: flex;
+  position: relative;
+}
+
+/* Farbgruppe: Balken unter den Karten, durchgehend über die Gruppe. */
+.schlange > li.in-gruppe::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: -6px;
+  height: 4px;
+  background: var(--farbe-tinte);
+}
+
+.mitte {
+  grid-area: mitte;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--abstand-3) var(--abstand-5);
+  --karte-breite: var(--karte-mitte);
+}
+
+.stapel {
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  font-size: var(--groesse-klein);
+}
+
+.stapel strong {
+  display: block;
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  font-weight: 400;
+}
+
+.aufgaben {
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2);
+}
+
+.aufgaben .bereichstitel {
+  max-width: 5rem;
+}
+
+/* Eigene Schlangen: unten fest; werden sie sehr lang, scrollen sie in sich. */
+.eigene {
+  grid-area: eigene;
+  --karte-breite: var(--karte-eigene);
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-width: 0;
+  max-height: 32dvh;
+  padding: var(--abstand-2) var(--abstand-3) 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.auslage {
+  grid-area: auslage;
+  --karte-breite: var(--karte-eigene);
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+}
+
+.kartenreihe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mit-unterschrift {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Offen liegende Karte zum Grossansehen: mindestens fingergross. */
+.kartenknopf {
+  --karte-breite: max(var(--karte-mitte), var(--ziel-mindestens));
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: var(--radius-karte);
+  cursor: zoom-in;
+}
+
+/* Ziele der gewählten Karte */
+.ziel {
+  padding: 0;
+  font: inherit;
+  color: var(--farbe-tinte);
+  background: var(--farbe-akzent-hell);
+  border: 0;
+  outline: 3px dashed var(--farbe-akzent);
+  outline-offset: 1px;
+  border-radius: var(--radius-klein);
+  cursor: pointer;
+}
+
+.ziel[aria-pressed='true'] {
+  outline: 4px solid var(--farbe-tinte);
+}
+
+.ziel--karte {
+  --karte-breite: max(var(--karte-gegner), var(--ziel-mindestens));
+  border-radius: var(--radius-karte);
+}
+
+.eigene .ziel--karte,
+.auslage .ziel--karte {
+  --karte-breite: max(var(--karte-eigene), var(--ziel-mindestens));
+}
+
+.ziel--ende {
+  width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  font-size: var(--groesse-gross);
+  font-weight: 700;
+}
+
+.ziel--gegner {
+  min-width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  padding: 0 var(--abstand-3);
+  font-weight: 700;
+}
+
+.tisch--zielwahl .schlange {
+  gap: 6px;
+}
+
+/* Unten fest: Hand und Zugleiste. Ab Tablet nebeneinander. */
+.tisch-unten {
+  display: grid;
+  grid-template-areas: 'eigene' 'hand' 'zug';
+  background: var(--farbe-flaeche);
+  border-top: 1px solid var(--farbe-linie);
+  box-shadow: 0 -4px 12px rgb(43 33 28 / 0.08);
+}
+
+@media (min-width: 700px) {
+  .tisch-unten {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+    grid-template-areas: 'eigene zug' 'hand zug';
+  }
+}
+
+.hand {
+  grid-area: hand;
+  --karte-breite: var(--karte-hand);
+  min-width: 0;
+  padding: var(--abstand-2) var(--abstand-3) 0;
+}
+
+.hand-karten {
+  display: flex;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: var(--abstand-3) var(--abstand-1) var(--abstand-2);
+  list-style: none;
+  overflow-x: auto;
+}
+
+.handkarte {
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: var(--radius-karte);
+  cursor: pointer;
+  transition: transform var(--dauer);
+}
+
+.handkarte[aria-pressed='true'] {
+  transform: translateY(-8px);
+  outline: 4px solid var(--farbe-akzent);
+  outline-offset: 2px;
+}
+
+.zugleiste {
+  grid-area: zug;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--abstand-2);
+  padding: var(--abstand-2) var(--abstand-3) var(--abstand-3);
+}
+
+@media (min-width: 700px) {
+  .zugleiste {
+    border-left: 1px solid var(--farbe-linie);
+  }
+}
+
+.zugleiste-vorschau {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .zugleiste-vorschau {
+    --karte-breite: clamp(96px, 18vh, 150px);
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.zugleiste-text {
+  font-weight: 600;
+}
+
+.zugleiste-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--abstand-2);
+}

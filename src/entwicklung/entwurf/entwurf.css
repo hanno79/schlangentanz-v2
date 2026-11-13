@@ -1,0 +1,455 @@
+/*
+Gemeinsame Bausteine der Entwürfe: App-Rahmen, Titel, Knöpfe, Flächen, Lobby,
+Ergebnis und Grossansicht. Nur Variablen aus src/ui/tokens.css; die Regeln
+stehen in DESIGN.md unter „Komponenten“.
+
+Der Rahmen steht fest im Fenster (`position: fixed`), damit er nicht von den
+Grundregeln in src/index.css abhängt, die O2 neu schreibt.
+*/
+
+.entwurf {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  color: var(--farbe-tinte);
+  background: var(--farbe-grund);
+  font-family: var(--schrift-text);
+  font-size: var(--groesse-text);
+  line-height: var(--zeilenhoehe);
+  letter-spacing: normal;
+  text-align: left;
+}
+
+.entwurf *,
+.entwurf *::before,
+.entwurf *::after {
+  box-sizing: border-box;
+}
+
+.entwurf h1,
+.entwurf h2,
+.entwurf p {
+  margin: 0;
+  letter-spacing: normal;
+}
+
+.entwurf h2 {
+  font-family: var(--schrift-text);
+  font-size: var(--groesse-gross);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--farbe-tinte);
+}
+
+.entwurf :focus-visible {
+  outline: none;
+  box-shadow: var(--fokus-ring);
+}
+
+/* Seite, die als Ganzes scrollt (Übersicht, Lobby): Inhalt scrollt im Rahmen. */
+.entwurf--seite {
+  overflow-y: auto;
+}
+
+/* Rahmen mit fester Kopf- und Fussleiste: dazwischen scrollt der Inhalt. */
+.entwurf--rahmen {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.entwurf-inhalt {
+  padding: var(--abstand-5) var(--abstand-4);
+}
+
+.entwurf--rahmen > .entwurf-inhalt {
+  overflow-y: auto;
+}
+
+.entwurf-schmal {
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-4);
+}
+
+.entwurf-titel {
+  font-family: var(--schrift-titel);
+  font-weight: 400;
+  font-size: var(--groesse-titel);
+  line-height: var(--zeilenhoehe-titel);
+  color: var(--farbe-tinte);
+}
+
+.entwurf-titel--gross {
+  font-size: var(--groesse-titel-gross);
+  color: var(--farbe-akzent-stark);
+}
+
+.leise {
+  color: var(--farbe-tinte-leise);
+}
+
+.bereichstitel {
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  color: var(--farbe-tinte-leise);
+}
+
+.entwurf h2.bereichstitel {
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  color: var(--farbe-tinte-leise);
+}
+
+/* Knöpfe: Haupt (eine je Bildschirm), Zweit (umrandet), Leise (nur Text). */
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ziel-mindestens);
+  min-width: var(--ziel-mindestens);
+  padding: 0 var(--abstand-4);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dauer), border-color var(--dauer);
+}
+
+.knopf--haupt {
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent);
+}
+
+.knopf--haupt:hover {
+  background: var(--farbe-akzent-stark);
+}
+
+.knopf--zweit {
+  color: var(--farbe-akzent-stark);
+  background: var(--farbe-flaeche);
+  border-color: var(--farbe-akzent);
+}
+
+.knopf--zweit:hover {
+  background: var(--farbe-akzent-hell);
+}
+
+.knopf--leise {
+  color: var(--farbe-tinte);
+  background: transparent;
+}
+
+.knopf--leise:hover {
+  background: var(--farbe-tisch);
+}
+
+.flaeche {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-3);
+  padding: var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius-gross);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.hinweis {
+  padding: var(--abstand-3) var(--abstand-4);
+  color: var(--farbe-warnung);
+  background: var(--farbe-warnung-hell);
+  border-radius: var(--radius);
+}
+
+.verweis {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ziel-mindestens);
+  color: var(--farbe-akzent-stark);
+  font-weight: 600;
+}
+
+.abzeichen {
+  display: inline-block;
+  margin-left: var(--abstand-2);
+  padding: 0 var(--abstand-2);
+  font-size: var(--groesse-klein);
+  font-weight: 700;
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent-stark);
+  border-radius: var(--radius-voll);
+}
+
+/* Kopf- und Fussleiste des Rahmens */
+.kopfleiste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--abstand-3);
+  padding: var(--abstand-1) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border-bottom: 1px solid var(--farbe-linie);
+}
+
+.kopfleiste-titel {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  color: var(--farbe-akzent-stark);
+}
+
+.kopfleiste-info {
+  flex: 1;
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+.kopfleiste .knopf {
+  margin-left: auto;
+}
+
+.aktionsleiste {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--abstand-3);
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border-top: 1px solid var(--farbe-linie);
+}
+
+/* Übersicht */
+.entwurf-verweise {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  padding: 0;
+  list-style: none;
+}
+
+.entwurf-verweise a {
+  display: flex;
+  flex-direction: column;
+  padding: var(--abstand-3) var(--abstand-4);
+  color: var(--farbe-tinte);
+  text-decoration: none;
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+}
+
+.entwurf-verweise a:hover {
+  border-color: var(--farbe-akzent);
+}
+
+.entwurf-verweise span {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Lobby */
+.lobby-kopf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--abstand-1);
+  text-align: center;
+}
+
+.lobby-wahl {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-4);
+}
+
+/* Ab Tablet quer zwei Spalten, damit nichts unter den Rand rutscht. */
+@media (min-width: 900px) {
+  .entwurf-schmal.lobby {
+    max-width: 60rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--abstand-6);
+    min-height: 100%;
+  }
+}
+
+.lobby-logo {
+  width: auto;
+  height: clamp(96px, 18vh, 160px);
+}
+
+.lobby-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--abstand-3);
+}
+
+.lobby-zeile > span {
+  flex: 1 1 12rem;
+}
+
+.lobby-zeile small {
+  display: block;
+  font-size: var(--groesse-klein);
+}
+
+.segmente {
+  display: inline-flex;
+  padding: var(--abstand-1);
+  gap: var(--abstand-1);
+  background: var(--farbe-tisch);
+  border-radius: var(--radius);
+}
+
+.segment,
+.schalter {
+  min-width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  font: inherit;
+  font-weight: 700;
+  color: var(--farbe-tinte);
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: var(--radius-klein);
+  cursor: pointer;
+}
+
+.segment[aria-pressed='true'] {
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent);
+}
+
+/* Schalter: Schiene mit Knopf, dazu „An“/„Aus“ als Text (Farbe ist nie allein Träger). */
+.schalter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  flex: none;
+  min-width: 5.5rem;
+  padding: 0 var(--abstand-3) 0 var(--abstand-1);
+  background: var(--farbe-tisch);
+  border-color: var(--farbe-linie);
+  border-radius: var(--radius-voll);
+}
+
+.schalter::before {
+  content: '';
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-flaeche);
+  transition: transform var(--dauer);
+}
+
+.schalter[aria-checked='true'] {
+  flex-direction: row-reverse;
+  padding: 0 var(--abstand-1) 0 var(--abstand-3);
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-erfolg);
+  border-color: var(--farbe-erfolg);
+}
+
+/* Ergebnis */
+.ergebnis-sieger {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  text-align: center;
+}
+
+.rangliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rang {
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+}
+
+.rang--sieger {
+  border: 2px solid var(--farbe-akzent);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.rang-kopf {
+  display: flex;
+  align-items: baseline;
+  gap: var(--abstand-3);
+}
+
+.rang-platz {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  color: var(--farbe-tinte-leise);
+}
+
+.rang-name {
+  flex: 1;
+  font-weight: 700;
+}
+
+.rang-gesamt {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+}
+
+.rang-posten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--abstand-1) var(--abstand-3);
+  margin: var(--abstand-2) 0 0;
+  font-size: var(--groesse-klein);
+}
+
+@media (min-width: 560px) {
+  .rang-posten {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rang-posten dt {
+  color: var(--farbe-tinte-leise);
+}
+
+.rang-posten dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Grossansicht */
+.lupe {
+  padding: var(--abstand-4);
+  border: 0;
+  border-radius: var(--radius-gross);
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.lupe::backdrop {
+  background: rgb(43 33 28 / 0.6);
+}
+
+.lupe[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--abstand-3);
+}
+
+.lupe-karte {
+  --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * 470 / 766));
+}
