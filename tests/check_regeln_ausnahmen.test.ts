@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it } from 'vitest'
 import { AUSNAHMEN_DATEI, abgleich, merkmalDerZeile, zuwachs, type Ausnahmen as Liste } from '../scripts/pruefung/ausnahmen.mjs'
-import { git, legeAn, leseJson, pruefeRegeln, raeumeAuf, schreibe } from './probebaum'
+import { MIT_PROZESSEN, git, legeAn, leseJson, pruefeRegeln, raeumeAuf, schreibe } from './probebaum'
 
 const ALT = 'src/engine/__tests__/alt.test.ts'
 const ALTTEST = "it('zählt', () => {})\nit('zählt mehr', () => {})\n"
@@ -29,7 +29,7 @@ function mitBasis(dateien: Record<string, string>, basis: Liste, aktuell: Liste)
 
 afterEach(raeumeAuf)
 
-describe('P0.3b: Ausnahmen gelten je Verstoss mit Merkmal, nicht je Anzahl', () => {
+describe('P0.3b: Ausnahmen gelten je Verstoss mit Merkmal, nicht je Anzahl', MIT_PROZESSEN, () => {
   it('P0.3b: ein Altbestand mit genau den gelisteten Merkmalen bleibt grün', () => {
     const wurzel = ohneGit({ [ALT]: ALTTEST }, { U1: { [ALT]: ['zählt', 'zählt mehr'] } })
 
@@ -135,7 +135,7 @@ describe('P0.3b: Ausnahmen gelten je Verstoss mit Merkmal, nicht je Anzahl', () 
   })
 })
 
-describe('P0.3b: Die Ausnahmeliste wächst nicht gegenüber origin/neuaufbau', () => {
+describe('P0.3b: Die Ausnahmeliste wächst nicht gegenüber origin/neuaufbau', MIT_PROZESSEN, () => {
   const DATEIEN = { [ALT]: ALTTEST, 'src/engine/__tests__/neu.test.ts': "it('ohne Abschnitt', () => {})\n" }
   const BASIS: Liste = { U1: { [ALT]: ['zählt', 'zählt mehr'], 'src/engine/__tests__/neu.test.ts': ['ohne Abschnitt'] } }
 

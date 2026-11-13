@@ -8,6 +8,13 @@ import { dirname, join, resolve } from 'node:path'
 
 export const WURZEL = resolve(__dirname, '..')
 
+/**
+ * Zeitgrenze für Tests, die node-, git- oder python-Prozesse starten. Im vollen
+ * Lauf teilen sie sich die Maschine mit allen anderen Testdateien; unter Windows
+ * braucht ein Fall mit mehreren Prozessen dann länger als die Vorgabe von 5 s.
+ */
+export const MIT_PROZESSEN = { timeout: 30_000 }
+
 const angelegt: string[] = []
 
 /** Schreibt die Dateien unter `wurzel`; Schlüssel sind Pfade relativ zur Wurzel. */

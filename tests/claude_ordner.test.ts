@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { ESLint } from 'eslint'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { WURZEL, fuehreAus, git, legeAn, pruefeRegeln, raeumeAuf, schreibe } from './probebaum'
+import { MIT_PROZESSEN, WURZEL, fuehreAus, git, legeAn, pruefeRegeln, raeumeAuf, schreibe } from './probebaum'
 
 // Im Hauptordner liegen unter .claude/worktrees/ vollständige Kopien des Repos
 // (Worktrees der Agenten). Kein Prüfwerkzeug darf sie mitprüfen: Ein Gate im
@@ -27,7 +27,7 @@ const PYTHON = process.platform === 'win32' ? 'python' : 'python3'
 
 afterEach(raeumeAuf)
 
-describe('P0.3b: Agenten-Worktrees unter .claude/ erfasst kein Prüfwerkzeug', () => {
+describe('P0.3b: Agenten-Worktrees unter .claude/ erfasst kein Prüfwerkzeug', MIT_PROZESSEN, () => {
   it('P0.3b: npm test (Vitest) sammelt keine Testdatei unter .claude/', { timeout: 60_000 }, () => {
     const wurzel = legeAn({ ...SAUBER, ...VERSTOESSE })
     const vitest = join(WURZEL, 'node_modules', 'vitest', 'vitest.mjs')
