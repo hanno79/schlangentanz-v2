@@ -1,10 +1,11 @@
-import { berechneFarbgruppenPunkte, ermittleEntscheider } from '../../engine'
+import { ermittleEntscheider, werteSchlangen } from '../../engine'
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
   Farbe,
   FarbkarteInfo,
   Partiephase,
+  GewerteteGruppe,
   Schlange,
   Sonderkartenname,
   SonderkarteInfo,
@@ -98,8 +99,7 @@ export interface TischAnsicht {
   status: StatusAnsicht
 }
 
-function schlangeAnsicht(schlange: Schlange): SchlangeAnsicht {
-  const { gruppen } = berechneFarbgruppenPunkte(schlange)
+function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]): SchlangeAnsicht {
   const gruppeVon = new Map<string, KarteInSchlange['gruppe']>()
   for (const gruppe of gruppen) {
     gruppe.kartenIds.forEach((id, stelle) => {
@@ -117,6 +117,16 @@ function schlangeAnsicht(schlange: Schlange): SchlangeAnsicht {
   }
 }
 
+/**
+ * Die Schlangen eines Spielers mit ihren Farbgruppen. Die Gruppen kommen aus der
+ * Wertung der Engine; sie wertet alle Schlangen eines Spielers zusammen, weil die
+ * Farbe eines Jokers mit Erweiterung vom Vielfaltbonus beider Schlangen abhängt.
+ */
+function schlangenAnsicht(schlangen: readonly Schlange[], erweiterung: boolean): SchlangeAnsicht[] {
+  const wertung = werteSchlangen(schlangen, erweiterung).schlangen
+  return schlangen.map((schlange, index) => schlangeAnsicht(schlange, wertung[index].gruppen))
+}
+
 /** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
 export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
   const menschen = zustand.spieler.flatMap((spieler, index) => (spieler.steuerung === 'Mensch' ? [index] : []))
@@ -129,7 +139,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
   const platz = (spieler: Spieler, index: number): PlatzAnsicht => ({
     id: spieler.id,
     name: spieler.name,
-    schlangen: spieler.schlangen.map(schlangeAnsicht),
+    schlangen: schlangenAnsicht(spieler.schlangen, zustand.erweiterung),
     ablage: { anzahl: spieler.ablagestapel.length, oben: spieler.ablagestapel.at(-1) ?? null },
     gruben: zustand.ausliegendeGruben.filter((grube) => grube.vor === index).map((grube) => ({ karte: grube.karte, von: person(grube.gespieltVon) })),
     amZug: zustand.zug.spielerIndex === index,

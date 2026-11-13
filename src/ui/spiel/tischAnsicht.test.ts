@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { berechneFarbgruppenPunkte } from '../../engine'
+import { werteSchlangen } from '../../engine'
 import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
@@ -101,15 +101,15 @@ describe('O4 K4: Farbgruppen, Fusion und Grube', () => {
     const zustand = volltisch()
     const ansicht = tischAnsicht(zustand)
     const ansichtSchlangen = [ansicht.ich, ...ansicht.gegner].flatMap((platz) => platz.schlangen)
-    const zustandSchlangen = zustand.spieler.flatMap((spieler) => spieler.schlangen)
+    const gewertet = zustand.spieler.flatMap((spieler) => werteSchlangen(spieler.schlangen, zustand.erweiterung).schlangen)
     expect(ansichtSchlangen).toHaveLength(8)
-    for (const schlange of zustandSchlangen) {
+    for (const { schlangenId, gruppen } of gewertet) {
+      const schlange = { id: schlangenId }
       const gesehen = ansichtSchlangen.find((eintrag) => eintrag.id === schlange.id)
       expect(gesehen, `Schlange ${schlange.id} fehlt in der Sicht`).toBeDefined()
       const markiert = gesehen!.karten.filter((eintrag) => eintrag.gruppe !== null).map((eintrag) => eintrag.karte.id)
-      const erwartet = berechneFarbgruppenPunkte(schlange).gruppen.flatMap((gruppe) => gruppe.kartenIds)
-      expect(markiert, `Schlange ${schlange.id}: Karten in Farbgruppen`).toEqual(erwartet)
-      expect(gesehen!.farbgruppen).toEqual(berechneFarbgruppenPunkte(schlange).gruppen.map(({ farbe, laenge }) => ({ farbe, laenge })))
+      expect(markiert, `Schlange ${schlange.id}: Karten in Farbgruppen`).toEqual(gruppen.flatMap((gruppe) => gruppe.kartenIds))
+      expect(gesehen!.farbgruppen).toEqual(gruppen.map(({ farbe, laenge }) => ({ farbe, laenge })))
     }
   })
 
