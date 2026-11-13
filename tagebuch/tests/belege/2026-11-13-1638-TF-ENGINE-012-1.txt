@@ -1,0 +1,43 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a56db9f58551b8354
+
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: die Partien laufen reihum mit 2, 3 und 4 Spielern und festen Saaten 9ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A5: zählt die Engine in einer laufenden Partie keine Aktion auf, meldet der Lauf „festgefahren“ 5ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > B2: eine aufgezählte Aktion, die die Engine ablehnt, wird gemeldet, auch wenn der Lauf sie nicht wählt 2ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: ein Prüfer je Partie sieht jeden Schritt; meldet er etwas, hält der Lauf mit „verstoss“ an 7ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: eine Partie, die endet, meldet „beendet“ mit der Zahl der Schritte 7ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: eine Partie, die nicht endet, stösst an die Schrittgrenze 24ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A4: eine verletzte Invariante hält den Lauf an und nennt sie 3ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > B2: eine aufgezählte, aber abgelehnte Aktion und ein Wurf der Engine werden gemeldet 3ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > B2: wirft das Aufzählen oder Prüfen, meldet der Lauf „fehler“ und prüft die übrigen Partien weiter 2ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A4: ein Zustand, der Speichern und Laden nicht übersteht, wird gemeldet 2ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: gleiche Saat, gleicher Lauf 14ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10/D21: der Regelprüfer des Dauerlaufs selbst > A10: kommt ein Spieler in der Schlussrunde zweimal dran und ein anderer gar nicht, meldet der Prüfer das 1ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10/D21: der Regelprüfer des Dauerlaufs selbst > D21: ein ausgesetzter letzter Zug zählt als sein letzter Zug 0ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante 68033ms
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  16:35:47
+   Duration  71.29s (transform 280ms, setup 273ms, import 283ms, tests 68.11s, environment 2.32s)
+
+
+=== Eigener Lauf des Prüfers (pruefer_e2_tmp.test.ts, Saaten 1001-1300) ===
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a56db9f58551b8354
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  16:30:31
+   Duration  32.21s (transform 606ms, setup 518ms, import 622ms, tests 26.02s, environment 4.54s)
+
+P1: 300 Partien beendet, 50162 Schritte, Befunde 0, leere Hand ohne Aktion 0
+P2 Grund fremd: KI-Gegner 1 ist nicht am Zug; am Zug ist Spieler 1 (A5).
+P3 Ereignisse: [{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"SchlussrundeBegonnen","ausloeser":0},{"typ":"Ausgesetzt","spielerIndex":1},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1},{"typ":"PartieBeendet"}]
+P3 Ende: Beendet Gruben übrig: [{"vor":1,"von":2}]
+P4 Ereignisse: [{"typ":"KarteGespielt","spielerIndex":0,"karteId":"blau-01","aktion":"FarbkarteLegen"},{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"Ausgesetzt","spielerIndex":1},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1},{"typ":"KartenGezogen","spielerIndex":2,"anzahl":2},{"typ":"SchlussrundeBegonnen","ausloeser":2}]
+P6 Gruben vorher: [{"karte":"schlangengrube-01","vor":1,"von":2},{"karte":"schlangengrube-02","vor":1,"von":0}]
+P6 Ereignisse: [{"typ":"KarteGespielt","spielerIndex":0,"karteId":"blau-01","aktion":"FarbkarteLegen"},{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"Ausgesetzt","spielerIndex":1},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1}]
+P6 Gruben nachher: [{"karte":"schlangengrube-02","vor":1,"von":0}]
+P6 Ablagen nachher: [[],[],["schlangengrube-01"]]
