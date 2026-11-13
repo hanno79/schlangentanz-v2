@@ -1,0 +1,35 @@
+== Grün: npx vitest run src/ui/karten src/ui/regeln (Stand a164a66)
+
+ Test Files  7 passed (7)
+      Tests  356 passed (356)
+   Start at  18:37:43
+   Duration  8.78s (transform 999ms, setup 4.26s, import 2.15s, tests 3.45s, environment 19.43s)
+
+
+== Gegenprobe A: Absatz in A7.1 der Spec eingefügt
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Farbendieb (A7.1): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
++   "Ein eingefügter Prüferabsatz, der im Kartentext fehlt.",
+      Tests  1 failed | 131 passed (132)
+
+== Gegenprobe B: Zeile „Ergebnis nach Anwendung der Schlangenhäutung“ aus sonderkarten.ts gelöscht
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/karten/Grossansicht.test.tsx > O9: Kartentext zeigt den Wortlaut der Spielanleitung (Kriterium 1) > O9/A7.9: die Schlangenhäutung zeigt das Ergebnis ihres Beispiels als Reihe von Kartenbildern
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenhäutung (A7.9): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
++   "Ergebnis nach Anwendung der Schlangenhäutung",
+      Tests  2 failed | 354 passed (356)
+
+== Gegenprobe C: Bildzeilen Schlangenblockade und Schlangentanz verfälscht
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Schlangenblockade steht wörtlich in den Quellabschnitten
++   "Kartenreihe: Rot Rot Schlangenblockade Rot",
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Schlangentanz steht wörtlich in den Quellabschnitten
++   "Kartenreihe: Blau Grün Grün Blau Grün Rot Rot Rot Violett Violett Braun",
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenblockade (A7.5): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangentanz: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat
+      Tests  4 failed | 352 passed (356)
+
+== Gegenprobe D: Quelle D11 -> A5 im Zugablauf
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/regeln/zugschritte.test.ts > O9: Ein Zug in fünf Schritten (Kriterium 2) > O9/U2: „Zug beenden“: Satz aus Teil A steht wörtlich in seiner Quelle: {"text":"Nur ein Verdoppler pro Runde.","quelle":"A5"}
+      Tests  1 failed | 65 passed (66)

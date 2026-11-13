@@ -1,0 +1,257 @@
+== Playwright Chromium 1.60.0, Wortmessung je Klasse (klassen.mjs)
+desktop: scrollWidth/clientWidth {'sw': 1280, 'cw': 1280}, Befunde ['ZWEIZEILIG Schlangenkorb des Glücks (2)'], Knöpfe {'min_w': 170, 'min_h': 151, 'spalten': 2}, Tippflächen < 44 px: []
+tablet-quer: scrollWidth/clientWidth {'sw': 1024, 'cw': 1024}, Befunde ['ZWEIZEILIG Schlangenkorb des Glücks (2)'], Knöpfe {'min_w': 170, 'min_h': 151, 'spalten': 2}, Tippflächen < 44 px: []
+tablet-hochkant: scrollWidth/clientWidth {'sw': 768, 'cw': 768}, Befunde ['ZWEIZEILIG Schlangenkorb des Glücks (2)'], Knöpfe {'min_w': 175, 'min_h': 151, 'spalten': 2}, Tippflächen < 44 px: []
+handy-hochkant: scrollWidth/clientWidth {'sw': 390, 'cw': 390}, Befunde ['ZWEIZEILIG Schlangenkorb des Glücks (2)'], Knöpfe {'min_w': 173, 'min_h': 151, 'spalten': 3}, Tippflächen < 44 px: []
+handy-quer: scrollWidth/clientWidth {'sw': 844, 'cw': 844}, Befunde [], Knöpfe {'min_w': 194, 'min_h': 151, 'spalten': 2}, Tippflächen < 44 px: []
+
+== Gegenprobe E: alte CSS (minmax 4.75rem, hyphens auto, overflow-wrap anywhere)
+  x  1 [desktop] › tests\layout\regeln.spec.ts:87:3 › O9: Regelseite › O9: kein Kartenname bricht mitten im Wort um oder ragt über seinen Knopf (689ms)
+  x  3 [handy-hochkant] › tests\layout\regeln.spec.ts:87:3 › O9: Regelseite › O9: kein Kartenname bricht mitten im Wort um oder ragt über seinen Knopf (688ms)
+  x  2 [tablet-hochkant] › tests\layout\regeln.spec.ts:87:3 › O9: Regelseite › O9: kein Kartenname bricht mitten im Wort um oder ragt über seinen Knopf (760ms)
+  x  4 [handy-quer] › tests\layout\regeln.spec.ts:87:3 › O9: Regelseite › O9: kein Kartenname bricht mitten im Wort um oder ragt über seinen Knopf (822ms)
+  x  5 [tablet-quer] › tests\layout\regeln.spec.ts:87:3 › O9: Regelseite › O9: kein Kartenname bricht mitten im Wort um oder ragt über seinen Knopf (862ms)
+    Error: „Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen
+    „Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen
+    „Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen
+    „Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen
+    „Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen
+    „Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen
+    „Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen
+    „Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen
+    „Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen
+    „Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen
+    „Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen
+    „Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen
+    „Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen
+    „Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen
+    „Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen
+    „Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen
+    „Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen
+    „Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen
+    „Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen
+    „Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen
+    „Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen
+    „Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen
+    „Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen
+    „Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen
+    [31m+   "„Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen",[39m
+    [31m+   "„Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen",[39m
+    [31m+   "„Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen",[39m
+    [31m+   "„Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen",[39m
+    [31m+   "„Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen",[39m
+    Error: „Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen
+    „Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen
+    „Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen
+    „Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen
+    „Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen
+    „Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen
+    „Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen
+    „Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen
+    „Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen
+    „Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen
+    „Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen
+    „Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen
+    „Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen
+    „Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen
+    „Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen
+    „Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen
+    „Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen
+    „Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen
+    „Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen
+    „Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen
+    „Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen
+    „Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen
+    „Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen
+    „Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen
+    [31m+   "„Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen",[39m
+    [31m+   "„Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen",[39m
+    [31m+   "„Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen",[39m
+    [31m+   "„Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen",[39m
+    [31m+   "„Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen",[39m
+    Error: „Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen
+    „Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen
+    „Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen
+    „Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen
+    „Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen
+    „Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen
+    „Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen
+    „Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen
+    „Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen
+    „Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen
+    „Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen
+    „Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen
+    „Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen
+    „Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen
+    „Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen
+    „Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen
+    „Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen
+    „Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen
+    „Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen
+    „Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen
+    „Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen
+    „Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen
+    „Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen
+    „Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen
+    [31m+   "„Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen",[39m
+    [31m+   "„Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen",[39m
+    [31m+   "„Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen",[39m
+    [31m+   "„Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen",[39m
+    [31m+   "„Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen",[39m
+    Error: „Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen
+    „Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen
+    „Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen
+    „Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen
+    „Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen
+    „Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen
+    „Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen
+    „Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen
+    „Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen
+    „Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen
+    „Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen
+    „Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen
+    „Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen
+    „Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen
+    „Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen
+    „Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen
+    „Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen
+    „Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen
+    „Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen
+    „Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen
+    „Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen
+    „Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen
+    „Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen
+    „Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen
+    [31m+   "„Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen",[39m
+    [31m+   "„Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen",[39m
+    [31m+   "„Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen",[39m
+    [31m+   "„Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen",[39m
+    [31m+   "„Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen",[39m
+    Error: „Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen
+    „Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen
+    „Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen
+    „Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen
+    „Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen
+    „Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen
+    „Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen
+    „Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen
+    „Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen
+    „Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen
+    „Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen
+    „Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen
+    „Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen
+    „Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen
+    „Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen
+    „Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen
+    „Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen
+    „Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen
+    „Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen
+    „Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen
+    „Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen
+    „Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen
+    „Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen
+    „Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen
+    [31m+   "„Farbenschutz“ in „Farbenschutz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Regenbogenschlange“ in „Regenbogenschlange“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenfrass“ in „Schlangenfrass“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenblockade“ in „Schlangenblockade“ steht auf 3 Zeilen",[39m
+    [31m+   "„Farbendieb“ in „Farbendieb“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangengrube“ in „Schlangengrube“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenfusion“ in „Farbenfusion“ steht auf 2 Zeilen",[39m
+    [31m+   "„Verdoppler“ in „Verdoppler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenhäutung“ in „Schlangenhäutung“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenkorb“ in „Schlangenkorb des Glücks“ steht auf 2 Zeilen",[39m
+    [31m+   "„Risiko-Belohnung“ in „Risiko-Belohnung“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbenpracht“ in „Farbenpracht“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbharmonie“ in „Farbharmonie“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbkombination“ in „Farbkombination“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbvielfalt“ in „Farbvielfalt“ steht auf 2 Zeilen",[39m
+    [31m+   "„Vielfaltskönig“ in „Vielfaltskönig“ steht auf 2 Zeilen",[39m
+    [31m+   "„Farbwechsler“ in „Farbwechsler“ steht auf 2 Zeilen",[39m
+    [31m+   "„Fusionsexperte“ in „Fusionsexperte“ steht auf 2 Zeilen",[39m
+    [31m+   "„Schlangenbeschwörer“ in „Schlangenbeschwörer“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenmeister“ in „Schlangenmeister“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenrepertoire“ in „Schlangenrepertoire“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangenbändiger“ in „Schlangenbändiger“ steht auf 3 Zeilen",[39m
+    [31m+   "„Schlangentanz“ in „Schlangentanz“ steht auf 2 Zeilen",[39m
+    [31m+   "„Symmetriemeister“ in „Symmetriemeister“ steht auf 2 Zeilen",[39m
+
+== Eingebauter Browser der Desktop-App (kein deutsches Trennwörterbuch: hyphens:auto ändert die Höhe von „Schlangenhäutung“ in 60 px nicht)
+1280x900, 1024x768, 768x1024, 390x844, 844x390: je 33 Knöpfe, 37 Wörter gemessen, Befunde [], scrollWidth = clientWidth;
+mehrzeilig nur „Schlangenkorb des Glücks“ (2 Zeilen, Umbruch zwischen Wörtern; bei 844x390 einzeilig).

@@ -1,0 +1,10 @@
+320 Seite: {"sw":320,"cw":320,"befunde":[],"knopf":288}
+320 Dialog: {"db":{"x":8,"y":8,"width":304,"height":552},"ueber":0,"sw":320}
+320 Konsole: []
+Drehen quer: {"vorher":769,"offen":true,"box":{"x":8,"y":8,"width":828,"height":374},"ueber":0,"bild":{"x":16,"y":16,"width":219.65625,"height":357.984375},"textScroll":{"top":0,"max":832},"titel":"Farbenfusion"}
+Zurueck hochkant: {"offen":true,"box":{"x":8,"y":8,"width":374,"height":828}}
+Tab im Dialog: ["AUSSERHALB: \n    RegelnKurz erklärt: wie e","im Dialog: FarbenfusionZwei nebeneinander","im Dialog: Schliessen","AUSSERHALB: \n    RegelnKurz erklärt: wie e"]
+Zweimal: {"t1":"Farbenfusion","t2":"Farbkarte Blau","dialoge":1}
+BODY. -> DIV.grossansicht__koerper (im Dialog) -> BUTTON.grossansicht__schliessen (im Dialog) -> BODY. -> DIV.grossansicht__koerper (im Dialog) -> BUTTON.grossansicht__schliessen (im Dialog)
+006: {"sw":320,"kleineFlaechen":0,"dialog":{"x":8,"y":8,"width":304,"height":552},"ueber":0}
+007: {"hoch1":320,"offenQuer":true,"quer":{"w":220,"unten":374},"hoch2":320,"fokus":"Lila Riese: Text zeigen"}
