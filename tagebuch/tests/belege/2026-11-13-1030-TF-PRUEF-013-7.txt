@@ -1,0 +1,124 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a02180c85cd6c8167
+
+ ❯ tests/claude_ordner.test.ts (7 tests | 2 failed) 6478ms
+     × P0.3b: npm test (Vitest) sammelt keine Testdatei unter .claude/ 1016ms
+     × P0.3b: npx eslint . ignoriert .claude/ 3584ms
+ ❯ .claude/worktrees/fake/src/rot2.test.ts (1 test | 1 failed) 15ms
+   × rot2 14ms
+ ❯ .claude/direkt.test.ts (1 test | 1 failed) 15ms
+   × rot3 14ms
+ ❯ .claude/worktrees/fake/tests/rot.test.ts (1 test | 1 failed) 15ms
+   × rot 14ms
+ ❯ .claude/worktrees/fake/tests/css.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  .claude/worktrees/fake/tests/css.test.ts [ .claude/worktrees/fake/tests/css.test.ts ]
+Error: No test suite found in file E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a02180c85cd6c8167/.claude/worktrees/fake/tests/css.test.ts
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  .claude/direkt.test.ts > rot3
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ .claude/direkt.test.ts:2:33
+      1| import { expect, it } from 'vitest'
+      2| it.only('rot3', () => expect(1).toBe(2))
+       |                                 ^
+      3|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/claude_ordner.test.ts > P0.3b: Agenten-Worktrees unter .claude/ erfasst kein Prüfwerkzeug > P0.3b: npm test (Vitest) sammelt keine Testdatei unter .claude/
+AssertionError: expected '.claude/werkzeug.test.ts\ntests/saube…' not to contain '.claude'
+
+- Expected
++ Received
+
+- .claude
++ .claude/werkzeug.test.ts
++ tests/sauber.test.ts
++ .claude/worktrees/agent-probe/tests/css.test.ts
++ .claude/worktrees/agent-probe/tests/lang.test.ts
++ .claude/worktrees/agent-probe/src/engine/__tests__/alt.test.ts
++
++
+
+ ❯ tests/claude_ordner.test.ts:39:25
+     37|     expect(code, `vitest list: erwartet Exit 0, Ausgabe:\n${ausgabe}`)…
+     38|     expect(ausgabe, 'Gegenprobe: die eigene Testdatei muss gefunden we…
+     39|     expect(ausgabe).not.toContain('.claude')
+       |                         ^
+     40|   })
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/claude_ordner.test.ts > P0.3b: Agenten-Worktrees unter .claude/ erfasst kein Prüfwerkzeug > P0.3b: npx eslint . ignoriert .claude/
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/claude_ordner.test.ts:45:80
+     43|     const eslint = new ESLint({ cwd: WURZEL })
+     44|
+     45|     expect(await eslint.isPathIgnored(join(WURZEL, KOPIE, 'src', 'main…
+       |                                                                                ^
+     46|     expect(await eslint.isPathIgnored(join(WURZEL, '.claude', 'werkzeu…
+     47|     expect(await eslint.isPathIgnored(join(WURZEL, 'src', 'main.tsx'))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  .claude/worktrees/fake/src/rot2.test.ts > rot2
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ .claude/worktrees/fake/src/rot2.test.ts:2:53
+      1| import { expect, it } from 'vitest'
+      2| it.only('rot2', () => { const y: any = 1; expect(y).toBe(2) })
+       |                                                     ^
+      3|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  .claude/worktrees/fake/tests/rot.test.ts > rot
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ .claude/worktrees/fake/tests/rot.test.ts:2:27
+      1| import { expect, it } from 'vitest'
+      2| it('rot', () => expect(1).toBe(2))
+       |                           ^
+      3|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  5 failed | 70 passed | 1 skipped (76)
+      Tests  5 failed | 747 passed | 600 skipped (1352)
+   Start at  10:21:44
+   Duration  25.66s (transform 3.44s, setup 43.50s, import 9.75s, tests 67.94s, environment 542.67s)
+

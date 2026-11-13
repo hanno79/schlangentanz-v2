@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-014 Das neue include in vite.config.ts erfasst genau die Testdateien, die Vitest vorher mit seinem Standardmuster gefunden hat. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-014 Das neue include in vite.config.ts erfasst genau die Testdateien, die Vitest vorher mit seinem Standardmuster gefunden hat.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PRUEF-013</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>P0.3b beschränkt Vitest auf <code>src/**/*.test.{ts,tsx}</code> und <code>tests/**/*.test.{ts,tsx}</code>, damit die Kopien unter <code>.claude/</code> nicht mitlaufen. Dabei darf keine bisherige Testdatei still herausfallen.</p><h2>Bestanden, wenn</h2><p>Die Menge der getrackten Dateien, die das alte Standardmuster (<code>**/*.{test,spec}.?(c|m)[jt]s?(x)</code> ohne <code>node_modules</code>, <code>dist</code>, <code>tests/layout</code>) trifft, ist auf <code>origin/neuaufbau</code> und auf dem geprüften Commit gleich der Menge, die das neue include trifft. Heute: 68 auf <code>origin/neuaufbau</code>, 70 auf dem Commit, Differenz zwischen den Mustern je 0. <code>npm test</code> meldet 70 Testdateien.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Datei trifft nur das alte Muster, oder <code>npm test</code> meldet weniger Testdateien, als das neue include trifft.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.3b-pruefwerkzeuge-nachschaerfen (PR #28)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>origin/neuaufbau</code> geholt</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Dateilisten aus <code>git ls-tree -r --name-only origin/neuaufbau</code> und <code>git ls-files</code>, je in eine Textdatei im eigenen Scratchpad-Ordner geschrieben.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>beide Listen schreiben</td><td>`git ls-tree -r --name-only origin/neuaufbau &gt; &lt;scratchpad&gt;/dateien-neuaufbau.txt`, dann `git ls-files &gt; &lt;scratchpad&gt;/dateien-head.txt`</td><td></td></tr><tr><td>2</td><td>Python</td><td>beide Muster auf beide Listen anwenden und vergleichen</td><td>Regex alt `\.(test|spec)\.(c|m)?[jt]sx?$` ohne `node_modules/`, `dist/`, `tests/layout/`; neu `^(src|tests)/.*\.test\.(ts|tsx)$`</td><td>Differenzen leer, Zahlen 68 und 70</td></tr><tr><td>3</td><td>Git Bash</td><td>`npm test -- --run`</td><td></td><td>„Test Files 70 passed (70)“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 10:31</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.3b) &middot; agent &middot; pruefung-P0.3b @ <span class="commit" title="2df7c1e98c951e520180f161daf44ea5bbde1fad">2df7c1e</span></p><p>origin/neuaufbau: altes Standardmuster 68 Dateien, neues include 68, Differenz beidseitig leer. Geprüfter Commit 2df7c1e: 70 und 70, Differenz leer. npm test: Test Files 70 passed (70).</p><ul class="belege"><li><a href="belege/2026-11-13-1031-TF-PRUEF-014-1.txt">2026-11-13-1031-TF-PRUEF-014-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

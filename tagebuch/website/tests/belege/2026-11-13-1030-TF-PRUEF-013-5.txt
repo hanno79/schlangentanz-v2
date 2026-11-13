@@ -1,0 +1,6 @@
+
+> schlangentanz-v2@0.0.0 check:css-asserts
+> node scripts/check_css_source_asserts.mjs
+
+CSS-Quelltext-Assertions: 0 in 0 Dateien (Baseline gehalten).
+exit 0

@@ -1,0 +1,3 @@
+  TCP    [::1]:4183             [::]:0                 ABH™REN         11628
+"node"   "E:\Work\Privat\Schlangentanz_v2\.claude\worktrees\agent-a02180c85cd6c8167\node_modules\.bin\\..\vite\bin\vite.js" preview --port 4183 --strictPort
+grep exit 1 (1 = nichts lauscht)
