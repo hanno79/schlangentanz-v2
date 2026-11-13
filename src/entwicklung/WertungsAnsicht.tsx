@@ -19,8 +19,9 @@ function werte(zustand: Spielzustand): Ergebnis {
   }
 }
 
-function zahlOder(wert: number | null, ohne: string): string {
-  return wert === null ? ohne : String(wert)
+/** Eine Zahl, oder ein Strich, wo es den Anteil nicht gibt (ohne Erweiterung, Kette im Zwischenstand). */
+function zahl(wert: number | null | undefined): string {
+  return wert == null ? '–' : String(wert)
 }
 
 function Tabelle({ wertungen, testid, titel }: { wertungen: SpielerWertung[]; testid: string; titel: string }) {
@@ -42,9 +43,9 @@ function Tabelle({ wertungen, testid, titel }: { wertungen: SpielerWertung[]; te
           <tr key={wertung.spielerId}>
             <td>{wertung.name}</td>
             <td>{wertung.gruppenPunkte}</td>
-            <td>{zahlOder(wertung.vielfaltBonus, '–')}</td>
-            <td>{wertung.kette === null ? '–' : wertung.kette.bonus}</td>
-            <td>{zahlOder(wertung.aufgaben === null ? null : wertung.aufgabenPunkte, '–')}</td>
+            <td>{zahl(wertung.vielfaltBonus)}</td>
+            <td>{zahl(wertung.kette?.bonus)}</td>
+            <td>{wertung.aufgaben === null ? zahl(null) : wertung.aufgabenPunkte}</td>
             <td data-testid="summe">{wertung.summe}</td>
           </tr>
         ))}

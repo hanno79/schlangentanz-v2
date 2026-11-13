@@ -1,5 +1,6 @@
 import { berechneEndwertung } from '../index'
-import type { AufgabenkarteInfo, Endwertung, SpielerWertung, Spielzustand } from '../index'
+import type { Endwertung, SpielerWertung, Spielzustand } from '../index'
+import { gibErfuellteAufgabe, legeGeheimeAufgabe } from '../testing/aufgaben'
 import { baukasten } from '../testing/szenario'
 import type { Baukasten, Schlangenglied } from '../testing/szenario'
 
@@ -40,41 +41,12 @@ export function gruppen(wertung: SpielerWertung): string[] {
 
 /** Gibt Spieler `spieler` die Aufgabe `name` als erfüllte offene Aufgabe (Schnittstelle zu X1/X2). */
 export function erfuellt(spieler: number, name: string): (bau: Baukasten) => Baukasten {
-  return (bau) =>
-    bau.aendere((z) => {
-      const aufgabe = nimmAufgabe(z, name)
-      z.spieler[spieler].erfuellteAufgaben.push(aufgabe)
-      if (z.aufgabenStapel.length > 0 && z.offeneAufgaben.length < 3) z.offeneAufgaben.push(z.aufgabenStapel.shift() as AufgabenkarteInfo)
-    })
+  return (bau) => bau.aendere((z) => gibErfuellteAufgabe(z, spieler, name))
 }
 
 /** Legt Spieler `spieler` die Aufgabe `name` als geheime Aufgabe hin, erfüllt oder nicht. */
 export function geheim(spieler: number, name: string, erfuelltJa: boolean): (bau: Baukasten) => Baukasten {
-  return (bau) =>
-    bau.aendere((z) => {
-      const aufgabe = nimmAufgabe(z, name)
-      const alte = z.spieler[spieler].geheimeAufgabe
-      if (alte !== null) z.aufgabenStapel.push(alte)
-      z.spieler[spieler].geheimeAufgabe = aufgabe
-      z.spieler[spieler].geheimeAufgabeErfuellt = erfuelltJa
-    })
-}
-
-function nimmAufgabe(z: Spielzustand, name: string): AufgabenkarteInfo {
-  for (const liste of [z.offeneAufgaben, z.aufgabenStapel]) {
-    const index = liste.findIndex((a) => a.name === name)
-    if (index >= 0) return liste.splice(index, 1)[0]
-  }
-  for (const spieler of z.spieler) {
-    if (spieler.geheimeAufgabe?.name === name) {
-      const aufgabe = spieler.geheimeAufgabe
-      const ersatz = z.aufgabenStapel.shift()
-      if (ersatz === undefined) throw new Error('Kein Ersatz für die geheime Aufgabe')
-      spieler.geheimeAufgabe = ersatz
-      return aufgabe
-    }
-  }
-  throw new Error(`Aufgabe ${name} liegt nicht frei`)
+  return (bau) => bau.aendere((z) => legeGeheimeAufgabe(z, spieler, name, erfuelltJa))
 }
 
 export function nacheinander(...schritte: Array<(bau: Baukasten) => Baukasten>): (bau: Baukasten) => Baukasten {

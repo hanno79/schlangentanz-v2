@@ -1,6 +1,8 @@
+import { ermittleFarbgruppen } from './colorGroups';
+import type { Farbgruppe } from './colorGroups';
 import { MINDEST_FARBGRUPPEN_LAENGE } from './constants';
 import { FARBEN } from './deck';
-import type { Farbe, Schlange, Spielkarte } from './types';
+import type { Farbe, FarbkarteInfo, Schlange, Spielkarte } from './types';
 
 /*
 Farbgruppen mit Jokern (A11 Abschnitte 1 und 2, A7.3, A7.7).
@@ -33,14 +35,7 @@ hier wörtlich nach A11 als drei Karten derselben Farbe und damit als Gruppe.
 
 export type Jokerart = 'Regenbogenschlange' | 'Farbenfusion';
 
-export interface GewerteteGruppe {
-  farbe: Farbe;
-  startIndex: number;
-  endIndex: number;
-  laenge: number;
-  kartenIds: string[];
-  punkte: number;
-}
+export type GewerteteGruppe = Farbgruppe & { punkte: number };
 
 export interface JokerFarbe {
   karteId: string;
@@ -67,15 +62,18 @@ export interface FarbgruppenErgebnis {
   vielfaltBonus: number | null;
 }
 
+/** A11: Höchster Vielfaltbonus, ab 5 Farben. */
+const HOECHSTER_VIELFALTBONUS = 4;
+
 /** A11: 2, 3, 4, 5 und mehr Farben mit gültigen Gruppen bringen 1, 2, 3, 4 Bonuspunkte. */
 export function vielfaltBonusFuer(anzahlFarben: number): number {
-  return anzahlFarben < 2 ? 0 : Math.min(anzahlFarben - 1, 4);
+  return anzahlFarben < 2 ? 0 : Math.min(anzahlFarben - 1, HOECHSTER_VIELFALTBONUS);
 }
 
 /** Ein Glied der Suche. `farbe` ist ein Index in `FARBEN`. */
 type Glied =
   | { art: 'farbe'; farbe: number; punkte: number }
-  | { art: 'joker'; punkte: number }
+  | { art: 'joker'; karteId: string; punkte: number }
   | { art: 'sperre' }
   | { art: 'schlangenende' };
 
@@ -120,7 +118,7 @@ function zuGliedern(schlangen: readonly Schlange[]): Glied[] {
   return schlangen.flatMap((schlange): Glied[] => [
     ...schlange.karten.map((karte): Glied => {
       if (karte.typ === 'Farbkarte') return { art: 'farbe', farbe: farbIndex(karte.farbe), punkte: karte.punkte };
-      if (istJoker(karte)) return { art: 'joker', punkte: jokerPunkte(schlange, karte) };
+      if (istJoker(karte)) return { art: 'joker', karteId: karte.id, punkte: jokerPunkte(schlange, karte) };
       return { art: 'sperre' };
     }),
     { art: 'schlangenende' },
@@ -161,15 +159,20 @@ function beendeSchlange(lage: Lage, mitVielfalt: boolean): Lage {
   return { ...START, bonus };
 }
 
-/** Wählt für jeden Joker eine Farbe (Index in `FARBEN`), sodass Gruppenpunkte plus Vielfaltbonus am höchsten sind. */
-function waehleJokerfarben(glieder: readonly Glied[], mitVielfalt: boolean): number[] {
+/** Schranke für `Lage.offen`: höchstens zwei Karten zu je 6 Punkten (Farbenfusion aus zwei grünen Karten). */
+const OFFEN_SCHRANKE = 32;
+
+/** Wählt für jeden Joker (nach Karten-Id) eine Farbe, sodass Gruppenpunkte plus Vielfaltbonus am höchsten sind. */
+function waehleJokerfarben(glieder: readonly Glied[], mitVielfalt: boolean): Map<string, Farbe> {
   const merker = new Map<number, number>();
   // Ein Wert ist Summe × GEWICHT + Joker in Gruppen; so entscheidet die Jokerzahl nur bei gleicher Summe.
   const GEWICHT = glieder.filter((glied) => glied.art === 'joker').length + 1;
 
+  /** Packt die Lage eindeutig in eine Zahl; jeder Faktor ist die Zahl möglicher Werte des folgenden Feldes. */
   function schluessel(stelle: number, lage: Lage): number {
-    const gruppe = ((stelle * 7 + lage.farbe + 1) * 4 + lage.laenge) * 3 + lage.offeneJoker;
-    return ((gruppe * 32 + lage.offen) * 64 + lage.farben) * 5 + lage.bonus;
+    const lauf = ((stelle * (FARBEN.length + 1) + lage.farbe + 1) * (MINDEST_FARBGRUPPEN_LAENGE + 1) + lage.laenge) * MINDEST_FARBGRUPPEN_LAENGE;
+    const offen = (lauf + lage.offeneJoker) * OFFEN_SCHRANKE + lage.offen;
+    return (offen * (1 << FARBEN.length) + lage.farben) * (HOECHSTER_VIELFALTBONUS + 1) + lage.bonus;
   }
 
   function wert(ertrag: Ertrag): number {
@@ -206,50 +209,40 @@ function waehleJokerfarben(glieder: readonly Glied[], mitVielfalt: boolean): num
     return wert;
   }
 
-  const farben: number[] = [];
+  const farben = new Map<string, Farbe>();
   let lage = START;
   for (let stelle = 0; stelle < glieder.length; stelle++) {
     const ziel = bester(stelle, lage);
     const gewaehlt = nachfolger(stelle, lage).find((schritt) => schritt.gewinn + bester(stelle + 1, schritt.lage) === ziel);
     if (gewaehlt === undefined) throw new Error('Wertung: Die beste Jokerbelegung liess sich nicht nachvollziehen.');
-    if (glieder[stelle].art === 'joker') farben.push(gewaehlt.farbe);
+    const glied = glieder[stelle];
+    if (glied.art === 'joker') farben.set(glied.karteId, FARBEN[gewaehlt.farbe]);
     lage = gewaehlt.lage;
   }
   return farben;
 }
 
-/** Die Gruppen einer Schlange, wenn jeder Joker die gewählte Farbe hat (A11: ab 3 Karten derselben Farbe nebeneinander). */
-function werteSchlange(schlange: Schlange, jokerfarben: readonly Farbe[], mitVielfalt: boolean): SchlangenWertung {
-  let naechsterJoker = 0;
-  const glieder = schlange.karten.map((karte) => {
-    if (karte.typ === 'Farbkarte') return { karte, farbe: karte.farbe as Farbe | null, punkte: karte.punkte };
-    if (istJoker(karte)) return { karte, farbe: jokerfarben[naechsterJoker++] as Farbe | null, punkte: jokerPunkte(schlange, karte) };
-    return { karte, farbe: null, punkte: 0 };
+/**
+ * Die Gruppen einer Schlange, wenn jeder Joker die gewählte Farbe hat: Joker werden dafür zu Farbkarten
+ * ihrer Farbe mit ihren Punkten, andere Sonderkarten bleiben und unterbrechen (A11).
+ */
+function werteSchlange(schlange: Schlange, jokerfarben: ReadonlyMap<string, Farbe>, mitVielfalt: boolean): SchlangenWertung {
+  const gewertet = schlange.karten.map((karte): Spielkarte => {
+    if (!istJoker(karte)) return karte;
+    const farbe = jokerfarben.get(karte.id);
+    if (farbe === undefined) throw new Error(`Wertung: Der Joker ${karte.id} hat keine Farbe bekommen.`);
+    return { typ: 'Farbkarte', id: karte.id, farbe, punkte: jokerPunkte(schlange, karte) };
   });
-
-  const gruppen: GewerteteGruppe[] = [];
-  for (let start = 0; start < glieder.length; ) {
-    const farbe = glieder[start].farbe;
-    let ende = start;
-    while (farbe !== null && ende + 1 < glieder.length && glieder[ende + 1].farbe === farbe) ende += 1;
-    if (farbe !== null && ende - start + 1 >= MINDEST_FARBGRUPPEN_LAENGE) {
-      const teil = glieder.slice(start, ende + 1);
-      gruppen.push({
-        farbe,
-        startIndex: start,
-        endIndex: ende,
-        laenge: teil.length,
-        kartenIds: teil.map((glied) => glied.karte.id),
-        punkte: teil.reduce((summe, glied) => summe + glied.punkte, 0),
-      });
-    }
-    start = ende + 1;
-  }
-
+  const gruppen = ermittleFarbgruppen({ ...schlange, karten: gewertet }).map((gruppe) => ({
+    ...gruppe,
+    punkte: gewertet.slice(gruppe.startIndex, gruppe.endIndex + 1).reduce((summe, karte) => summe + (karte as FarbkarteInfo).punkte, 0),
+  }));
   const inGruppe = new Set(gruppen.flatMap((gruppe) => gruppe.kartenIds));
-  const joker = glieder.flatMap(({ karte, farbe }) =>
-    istJoker(karte) ? [{ karteId: karte.id, art: karte.name, farbe: inGruppe.has(karte.id) ? farbe : null }] : [],
-  );
+  const joker = schlange.karten.filter(istJoker).map((karte) => ({
+    karteId: karte.id,
+    art: karte.name,
+    farbe: inGruppe.has(karte.id) ? (jokerfarben.get(karte.id) ?? null) : null,
+  }));
   const vielfaltFarben = FARBEN.filter((farbe) => gruppen.some((gruppe) => gruppe.farbe === farbe));
   return {
     schlangenId: schlange.id,
@@ -266,15 +259,8 @@ function werteSchlange(schlange: Schlange, jokerfarben: readonly Farbe[], mitVie
  * `mitVielfalt` ist die Erweiterung: dann zählt der Vielfaltbonus mit, auch bei der Wahl der Jokerfarben.
  */
 export function werteSchlangen(schlangen: readonly Schlange[], mitVielfalt: boolean): FarbgruppenErgebnis {
-  const glieder = zuGliedern(schlangen);
-  const gewaehlt = waehleJokerfarben(glieder, mitVielfalt).map((index) => FARBEN[index]);
-  let verbraucht = 0;
-  const gewertet = schlangen.map((schlange) => {
-    const anzahl = schlange.karten.filter(istJoker).length;
-    const ergebnis = werteSchlange(schlange, gewaehlt.slice(verbraucht, verbraucht + anzahl), mitVielfalt);
-    verbraucht += anzahl;
-    return ergebnis;
-  });
+  const jokerfarben = waehleJokerfarben(zuGliedern(schlangen), mitVielfalt);
+  const gewertet = schlangen.map((schlange) => werteSchlange(schlange, jokerfarben, mitVielfalt));
   return {
     schlangen: gewertet,
     gruppenPunkte: gewertet.reduce((summe, schlange) => summe + schlange.gruppenPunkte, 0),

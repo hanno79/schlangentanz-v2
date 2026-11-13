@@ -1,4 +1,4 @@
-import type { AufgabenkarteInfo, Spielzustand } from '../engine'
+import { gibErfuellteAufgabe, legeGeheimeAufgabe } from '../engine/testing/aufgaben'
 import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten } from '../engine/testing/szenario'
 import type { Szenario } from './szenarien'
@@ -11,30 +11,11 @@ Spieler die Aufschlüsselung: Gruppen je Schlange, Farbe jedes Jokers,
 Vielfaltbonus, Kette, Aufgaben und Summe.
 */
 
-/** Nimmt die Aufgabe `name` aus der Auslage, dem Stapel oder einer geheimen Hand; die Lücke füllt der Stapel. */
-function nimmAufgabe(zustand: Spielzustand, name: string): AufgabenkarteInfo {
-  for (const liste of [zustand.offeneAufgaben, zustand.aufgabenStapel]) {
-    const index = liste.findIndex((aufgabe) => aufgabe.name === name)
-    if (index >= 0) {
-      const [aufgabe] = liste.splice(index, 1)
-      if (liste === zustand.offeneAufgaben && zustand.aufgabenStapel.length > 0) liste.push(zustand.aufgabenStapel.shift() as AufgabenkarteInfo)
-      return aufgabe
-    }
-  }
-  throw new Error(`Szenario: Die Aufgabe ${name} liegt nicht frei.`)
-}
-
 /** X1/X2 prüfen Aufgaben erst später; hier werden sie als erfüllt gesetzt, damit die Wertung sie zeigt. */
 function mitAufgaben(bau: Baukasten, offen: Array<[number, string]>, geheim: Array<[number, string]>): Baukasten {
   return bau.aendere((zustand) => {
-    for (const [spieler, name] of offen) zustand.spieler[spieler].erfuellteAufgaben.push(nimmAufgabe(zustand, name))
-    for (const [spieler, name] of geheim) {
-      const neu = nimmAufgabe(zustand, name)
-      const alt = zustand.spieler[spieler].geheimeAufgabe
-      if (alt !== null) zustand.aufgabenStapel.push(alt)
-      zustand.spieler[spieler].geheimeAufgabe = neu
-      zustand.spieler[spieler].geheimeAufgabeErfuellt = true
-    }
+    for (const [spieler, name] of offen) gibErfuellteAufgabe(zustand, spieler, name)
+    for (const [spieler, name] of geheim) legeGeheimeAufgabe(zustand, spieler, name, true)
   })
 }
 
