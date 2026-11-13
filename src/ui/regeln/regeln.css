@@ -1,69 +1,29 @@
 /*
-Regelseite `/regeln` (O9). Nur Variablen aus src/ui/tokens.css.
+Regelseite `/regeln` (O9). Nur Variablen aus src/ui/tokens.css; Verweise und
+Fokus kommen aus dem App-Rahmen (lobby.css).
 
 Die Seite ist länger als jedes Fenster. Sie scrollt im Rahmen selbst und nicht
 als ganzes Dokument, wie es DESIGN.md für alles verlangt, was nicht auf den
-Schirm passt; die Breite der Textspalte wächst für die Kartenübersicht.
+Schirm passt; die Textspalte ist für die Kartenübersicht breiter als sonst.
+`.rahmen.regelseite`, damit die Regel unabhängig von der Reihenfolge der
+Stylesheets vor `.rahmen` aus lobby.css gilt.
 */
 
-.rahmen:has(> .regelhilfe) {
+.rahmen.regelseite {
   --rahmen-breite: 56rem;
   flex: none;
   height: 100dvh;
   overflow-y: auto;
 }
 
+.regelseite__website {
+  margin: var(--abstand-3) 0 0;
+}
+
 .regelhilfe {
   display: grid;
   gap: var(--abstand-6);
   min-width: 0;
-  color: var(--farbe-tinte);
-  font-family: var(--schrift-text);
-}
-
-.regelhilfe__website {
-  margin: 0;
-}
-
-.regelhilfe__website-verweis,
-.regelhilfe__lobby {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--ziel-mindestens);
-  min-height: var(--ziel-mindestens);
-  padding: var(--abstand-2) var(--abstand-5);
-  border: 2px solid var(--farbe-akzent);
-  border-radius: var(--radius);
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  transition: background-color var(--dauer);
-}
-
-.regelhilfe__website-verweis {
-  background: var(--farbe-akzent);
-  color: var(--farbe-auf-akzent);
-}
-
-.regelhilfe__website-verweis:hover {
-  background: var(--farbe-akzent-stark);
-}
-
-.regelhilfe__lobby {
-  background: var(--farbe-flaeche);
-  color: var(--farbe-akzent-stark);
-}
-
-.regelhilfe__lobby:hover {
-  background: var(--farbe-akzent-hell);
-}
-
-.regelhilfe a:focus-visible,
-.regelhilfe button:focus-visible,
-.regelhilfe__lobby:focus-visible {
-  outline: 2px solid transparent;
-  box-shadow: var(--fokus-ring);
 }
 
 .regelhilfe__abschnitt {

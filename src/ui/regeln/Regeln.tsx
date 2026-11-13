@@ -1,4 +1,3 @@
-import '../tokens.css'
 import './regeln.css'
 import Rahmen from '../lobby/Rahmen'
 import { ZURUECK_ZUR_LOBBY } from '../lobby/texte'
@@ -16,20 +15,24 @@ export default function Regeln() {
   return (
     <Rahmen
       testId="regeln"
+      klasse="regelseite"
       titel={REGELHILFE.titel}
       text={REGELHILFE.text}
-      fuss={
-        <Verweis ziel="lobby" className="regelhilfe__lobby">
-          {ZURUECK_ZUR_LOBBY}
-        </Verweis>
-      }
-    >
-      <div className="regelhilfe">
-        <p className="regelhilfe__website">
-          <a className="regelhilfe__website-verweis" href={REGELHILFE.websiteAdresse} target="_blank" rel="noopener noreferrer">
+      kopfZusatz={
+        <p className="regelseite__website">
+          <a
+            className="rahmen-verweis rahmen-verweis--haupt"
+            href={REGELHILFE.websiteAdresse}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {REGELHILFE.websiteVerweis}
           </a>
         </p>
+      }
+      fuss={<Verweis ziel="lobby">{ZURUECK_ZUR_LOBBY}</Verweis>}
+    >
+      <div className="regelhilfe">
         <Zugablauf />
         <Kartenuebersicht />
       </div>
