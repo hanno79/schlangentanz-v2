@@ -1,27 +1,30 @@
 /*
-App-Rahmen: Lobby, vorläufiger Spieltisch, Regelseite, unbekannte Adresse und
-Fehlerfang.
+App-Rahmen: vorläufiger Spieltisch, Regelseite, unbekannte Adresse und
+Fehlerfang, dazu was die Lobby mit ihnen teilt (Titel, Knöpfe, Verweise,
+Hinweise). Die Lobby selbst steht in `lobby-seite.css`.
 
-Alle Farben und Masse stehen als Variablen in diesem einen Block. Sobald O1
-`src/ui/tokens.css` liefert, zeigen sie auf deren Werte; der Rest der Datei
-bleibt dabei unverändert.
+Die Variablen `--rahmen-*` zeigen auf die Gestaltungsgrundlage aus
+`src/ui/tokens.css` (DESIGN.md); eigene Farbwerte gibt es hier nicht. Sie
+bleiben, damit bestehende Regeln unverändert lesbar sind; neue Regeln nehmen
+die Tokens direkt.
 */
+@import '../tokens.css';
+
 :root {
-  --rahmen-flaeche: #f5f1e6;
-  --rahmen-karte: #ffffff;
-  --rahmen-text: #1f2a1f;
-  --rahmen-text-leise: #47503f;
-  --rahmen-linie: #8c8a7e;
-  --rahmen-haupt: #2e6b3a;
-  --rahmen-haupt-dunkel: #24552e;
-  --rahmen-auf-haupt: #ffffff;
-  --rahmen-warnung: #9b2c1f;
-  --rahmen-hinweis-flaeche: #fff4d6;
-  --rahmen-fokus: #1b4fd1;
-  --rahmen-schrift: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --rahmen-radius: 12px;
-  --rahmen-tippflaeche: 48px;
-  --rahmen-abstand: 16px;
+  --rahmen-flaeche: var(--farbe-grund);
+  --rahmen-karte: var(--farbe-flaeche);
+  --rahmen-text: var(--farbe-tinte);
+  --rahmen-text-leise: var(--farbe-tinte-leise);
+  --rahmen-linie: var(--farbe-linie);
+  --rahmen-haupt: var(--farbe-akzent);
+  --rahmen-haupt-dunkel: var(--farbe-akzent-stark);
+  --rahmen-auf-haupt: var(--farbe-auf-akzent);
+  --rahmen-warnung: var(--farbe-fehler);
+  --rahmen-hinweis-flaeche: var(--farbe-warnung-hell);
+  --rahmen-schrift: var(--schrift-text);
+  --rahmen-radius: var(--radius);
+  --rahmen-tippflaeche: var(--ziel-mindestens);
+  --rahmen-abstand: var(--abstand-4);
   --rahmen-breite: 32rem;
 }
 
@@ -51,9 +54,11 @@ bleibt dabei unverändert.
 .rahmen__titel,
 .fehlerfang__titel {
   margin: 0;
-  font-size: clamp(1.75rem, 1.25rem + 2vw, 2.5rem);
-  line-height: 1.15;
-  font-weight: 700;
+  color: var(--farbe-akzent-stark);
+  font-family: var(--schrift-titel);
+  font-size: clamp(var(--groesse-titel), 1.25rem + 2vw, var(--groesse-titel-gross));
+  line-height: var(--zeilenhoehe-titel);
+  font-weight: 400;
 }
 
 .rahmen__text,
@@ -126,73 +131,16 @@ bleibt dabei unverändert.
   color: var(--rahmen-auf-haupt);
 }
 
+/* Fokus: doppelter Ring aus Weiss und Tinte (DESIGN.md); der durchsichtige
+   Umriss bleibt für den Kontrastmodus von Windows sichtbar. */
 .rahmen :focus-visible,
-.fehlerfang :focus-visible,
-.wahl:has(input:focus-visible) > span,
-.schalter:has(input:focus-visible) {
-  outline: 3px solid var(--rahmen-fokus);
-  outline-offset: 2px;
+.fehlerfang :focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--fokus-ring);
 }
 
-/* Lobby */
-
-.lobby__laufend,
-.lobby__frage {
-  display: grid;
-  gap: 12px;
-  padding: var(--rahmen-abstand);
-  border: 2px solid var(--rahmen-linie);
-  border-radius: var(--rahmen-radius);
-  background: var(--rahmen-karte);
-}
-
-.lobby__laufend p,
-.lobby__frage p {
-  margin: 0;
-}
-
-.lobby__frage {
-  border-color: var(--rahmen-warnung);
-  background: var(--rahmen-hinweis-flaeche);
-}
-
-.lobby__neu {
-  display: grid;
-  gap: var(--rahmen-abstand);
-}
-
-.lobby__gegner {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
-.lobby__gegner legend {
-  margin-bottom: 8px;
-  padding: 0;
-  font-weight: 600;
-}
-
-.lobby__wahl {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.lobby__knoepfe {
-  display: grid;
-  gap: 8px;
-}
-
-@media (min-width: 30rem) {
-  .lobby__knoepfe {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Das Auswahlfeld ist unsichtbar; getippt wird sein Label, das als Fläche gezeichnet ist. */
-.wahl input {
+/* Steht im Text und wird vorgelesen, aber nicht gezeichnet. */
+.nur-vorlesen {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -202,51 +150,6 @@ bleibt dabei unverändert.
   clip-path: inset(50%);
   border: 0;
   white-space: nowrap;
-}
-
-.wahl {
-  display: block;
-  cursor: pointer;
-}
-
-.wahl > span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--rahmen-tippflaeche);
-  padding: 4px 8px;
-  border: 2px solid var(--rahmen-linie);
-  border-radius: var(--rahmen-radius);
-  background: var(--rahmen-karte);
-  font-weight: 600;
-  text-align: center;
-}
-
-.wahl input:checked + span {
-  border-color: var(--rahmen-haupt);
-  background: var(--rahmen-haupt);
-  color: var(--rahmen-auf-haupt);
-}
-
-.schalter {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: var(--rahmen-tippflaeche);
-  padding: 4px var(--rahmen-abstand);
-  border: 2px solid var(--rahmen-linie);
-  border-radius: var(--rahmen-radius);
-  background: var(--rahmen-karte);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.schalter input[type='checkbox'] {
-  flex: none;
-  accent-color: var(--rahmen-haupt);
-  width: 22px;
-  height: 22px;
-  margin: 0;
 }
 
 /* Vorläufiger Spieltisch */
@@ -284,4 +187,5 @@ bleibt dabei unverändert.
 
 .hinweis--fehler {
   border-left: 4px solid var(--rahmen-warnung);
+  background: var(--farbe-fehler-hell);
 }

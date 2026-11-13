@@ -1,6 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
 import { duldeBekannteAusnahmen } from './ausnahmen'
-import { kasten } from './messung'
 import { oeffne } from './oeffnen'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
@@ -112,15 +111,7 @@ test.describe('O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen', ()
   })
 
   test('O2b TF-APP-016: die Rückfrage liegt nach dem Drehen ganz im Bild', async ({ page }) => {
-    const frage = page.getByRole('alertdialog')
-    await expect(frage.getByRole('button', { name: 'Abbrechen' })).toBeVisible()
-    await expect
-      .poll(async () => {
-        const box = await kasten(frage)
-        const hoehe = await page.evaluate(() => window.innerHeight)
-        return box.oben >= 0 && box.unten <= hoehe ? 'im Bild' : `${box.oben}..${box.unten} bei ${hoehe} px Höhe`
-      })
-      .toBe('im Bild')
+    await expect(page.getByRole('alertdialog')).toBeInViewport({ ratio: 1 })
   })
 
   alleVertraege()

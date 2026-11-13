@@ -1,0 +1,221 @@
+/*
+Lobby nach dem freigegebenen Entwurf (`src/entwicklung/entwurf/Lobby.tsx`):
+Kopf mit Logo, darunter die laufende Partie und die neue Partie als Flächen.
+
+Hochkant steht alles untereinander. Im Querformat und ab 900 px Breite stehen
+Kopf und Verweis links, die Wahl der Partie rechts (O2b). In flachen Fenstern
+(Handy quer, 390 px hoch) rücken die Abstände zusammen, damit alles ohne
+Scrollen im Bild liegt. Nur Variablen aus `src/ui/tokens.css`.
+*/
+
+.rahmen--lobby .rahmen__kopf {
+  justify-items: center;
+  text-align: center;
+}
+
+.rahmen--lobby .rahmen__fuss {
+  justify-content: center;
+}
+
+.lobby__logo {
+  width: auto;
+  height: clamp(72px, 12vh, 140px);
+}
+
+.lobby__inhalt {
+  display: grid;
+  gap: var(--abstand-4);
+}
+
+.lobby__laufend,
+.lobby__neu {
+  display: grid;
+  gap: var(--abstand-3);
+  padding: var(--abstand-4);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius-gross);
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.lobby__laufend p,
+.lobby__frage p {
+  margin: 0;
+}
+
+/* Gegnerzahl: Beschriftung links, die drei Segmente rechts daneben (Entwurf). */
+.lobby__gegner {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.lobby__gegner legend {
+  float: left;
+  margin-right: var(--abstand-3);
+  padding: 0;
+  line-height: calc(var(--ziel-mindestens) + 2 * var(--abstand-1));
+}
+
+.lobby__wahl {
+  display: grid;
+  grid-template-columns: repeat(3, var(--ziel-mindestens));
+  gap: var(--abstand-1);
+  padding: var(--abstand-1);
+  margin-left: auto;
+  width: fit-content;
+  border-radius: var(--radius);
+  background: var(--farbe-tisch);
+}
+
+/* Das Auswahlfeld ist unsichtbar (`.nur-vorlesen`, lobby.css); getippt wird
+   sein Label, das als Segment oder Schalter gezeichnet ist. Den Fokus zeigt das Label. */
+.wahl:has(input:focus-visible) > span,
+.schalter:has(input:focus-visible) {
+  outline: 2px solid transparent;
+  box-shadow: var(--fokus-ring);
+}
+
+.wahl {
+  display: block;
+  cursor: pointer;
+}
+
+.wahl > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--ziel-mindestens);
+  border-radius: var(--radius-klein);
+  font-weight: 700;
+}
+
+.wahl input:checked + span {
+  background: var(--farbe-akzent);
+  color: var(--farbe-auf-akzent);
+}
+
+/* Erweiterung: Beschriftung links, Schalter rechts; „An“ oder „Aus“ steht als Wort da. */
+.schalter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--abstand-3);
+  min-height: var(--ziel-mindestens);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.schalter__bahn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  flex: none;
+  min-width: 5.5rem;
+  min-height: var(--ziel-mindestens);
+  padding: 0 var(--abstand-3) 0 var(--abstand-1);
+  border: 2px solid var(--farbe-linie);
+  border-radius: var(--radius-voll);
+  background: var(--farbe-tisch);
+  font-weight: 700;
+}
+
+.schalter__bahn::before {
+  content: '';
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.schalter input:checked + .schalter__bahn {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  padding: 0 var(--abstand-1) 0 var(--abstand-3);
+  border-color: var(--farbe-erfolg);
+  background: var(--farbe-erfolg);
+  color: var(--farbe-auf-akzent);
+}
+
+.lobby__frage {
+  display: grid;
+  gap: var(--abstand-2);
+  padding: var(--abstand-3);
+  border: 2px solid var(--farbe-warnung);
+  border-radius: var(--radius);
+  background: var(--farbe-warnung-hell);
+}
+
+.lobby__knoepfe {
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+@media (min-width: 30rem) {
+  .lobby__knoepfe {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Querformat und breite Fenster: zwei Spalten, damit nichts unter den Rand rutscht. */
+@media (min-width: 900px), (orientation: landscape) and (min-width: 560px) {
+  .rahmen--lobby {
+    --rahmen-breite: 60rem;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-areas:
+      'kopf inhalt'
+      'fuss inhalt';
+    align-content: center;
+    column-gap: var(--abstand-6);
+    row-gap: var(--abstand-3);
+  }
+
+  .rahmen--lobby .rahmen__kopf {
+    grid-area: kopf;
+    align-self: end;
+  }
+
+  .rahmen--lobby .rahmen__fuss {
+    grid-area: fuss;
+    align-self: start;
+  }
+
+  .lobby__inhalt {
+    grid-area: inhalt;
+    align-self: center;
+  }
+
+  .lobby__logo {
+    height: clamp(72px, 18vh, 160px);
+  }
+
+  /* Laufende Partie: Text und „Weiterspielen“ nebeneinander. */
+  .lobby__laufend {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+
+/* Flache Fenster (Handy quer, 390 px hoch): engere Abstände. */
+@media (orientation: landscape) and (max-height: 34rem) {
+  .rahmen--lobby {
+    padding-block: var(--abstand-4);
+  }
+
+  .rahmen--lobby .rahmen__kopf {
+    gap: 0;
+  }
+
+  .lobby__inhalt {
+    gap: var(--abstand-3);
+  }
+
+  .lobby__laufend,
+  .lobby__neu {
+    gap: var(--abstand-2);
+    padding: var(--abstand-3);
+  }
+}
