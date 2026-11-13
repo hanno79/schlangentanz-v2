@@ -51,10 +51,8 @@ describe('U4: Die Engine ist rein', () => {
     expect(beschreibe(neue), 'U4: erwartet keine Verstösse ausserhalb der Ausnahmeliste').toBe('')
   })
 
-  it('U4: die Ausnahmeliste für den Altbestand ist nicht veraltet und nennt je Verstoss ein Merkmal', () => {
-    for (const [pfad, erlaubt] of Object.entries(AUSNAHMEN_U4)) {
-      expect(Array.isArray(erlaubt) && erlaubt.every((merkmal) => typeof merkmal === 'string'), `U4 ${pfad}: erwartet eine Liste von Merkmalen`).toBe(true)
-    }
+  // Dass jeder Eintrag eine Liste von Merkmalen ist, prüft schon das Laden von AUSNAHMEN_U4 (pruefeFormat).
+  it('U4: die Ausnahmeliste für den Altbestand ist nicht veraltet', () => {
     const veraltet = Object.entries(AUSNAHMEN_U4)
       .map(([pfad, erlaubt]) => ({ pfad, veraltet: u4.get(pfad)?.veraltet ?? erlaubt }))
       .filter(({ veraltet }) => veraltet.length > 0)
@@ -104,6 +102,8 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     "export { useState } from 'react'",
     "const r = require('react')",
     "const m = await import('react')",
+    "const n = await import('re' + 'act')",
+    'const o = require(modulname)',
     'const z = Math.random()',
     'const f = Math.random',
     'const t = Date.now()',
@@ -132,6 +132,7 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     "const z = globalThis['Math'].random()",
     'const M = Math',
     'export const z = Math[schluessel]()',
+    'export const w = globalThis[schluessel].random()',
     'const { getRandomValues } = crypto',
     'globalThis.crypto.randomUUID()',
   ]

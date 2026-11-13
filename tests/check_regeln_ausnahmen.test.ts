@@ -1,9 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it } from 'vitest'
-import { abgleich, merkmalDerZeile } from '../scripts/pruefung/ausnahmen.mjs'
-import { AUSNAHMEN_PFAD, git, legeAn, leseJson, pruefeRegeln, raeumeAuf, schreibe } from './probebaum'
-
-type Liste = Record<string, Record<string, string[] | number>>
+import { AUSNAHMEN_DATEI, abgleich, merkmalDerZeile, zuwachs, type Ausnahmen as Liste } from '../scripts/pruefung/ausnahmen.mjs'
+import { git, legeAn, leseJson, pruefeRegeln, raeumeAuf, schreibe } from './probebaum'
 
 const ALT = 'src/engine/__tests__/alt.test.ts'
 const ALTTEST = "it('zählt', () => {})\nit('zählt mehr', () => {})\n"
@@ -12,7 +10,7 @@ const liste = (eintraege: Liste) => `${JSON.stringify({ U1: {}, U4: {}, U6: {}, 
 
 /** Probe-Baum ohne git; die Wachstumsprüfung wird ausdrücklich übersprungen. */
 function ohneGit(dateien: Record<string, string>, eintraege: Liste) {
-  return legeAn({ ...dateien, [AUSNAHMEN_PFAD]: liste(eintraege) })
+  return legeAn({ ...dateien, [AUSNAHMEN_DATEI]: liste(eintraege) })
 }
 
 /**
@@ -20,12 +18,12 @@ function ohneGit(dateien: Record<string, string>, eintraege: Liste) {
  * `origin/neuaufbau` zeigt. Danach steht `aktuell` als Ausnahmeliste im Arbeitsbaum.
  */
 function mitBasis(dateien: Record<string, string>, basis: Liste, aktuell: Liste) {
-  const wurzel = legeAn({ ...dateien, [AUSNAHMEN_PFAD]: liste(basis) })
+  const wurzel = legeAn({ ...dateien, [AUSNAHMEN_DATEI]: liste(basis) })
   git(wurzel, 'init', '-q', '-b', 'arbeit')
   git(wurzel, 'add', '-A')
   git(wurzel, 'commit', '-q', '-m', 'basis')
   git(wurzel, 'update-ref', 'refs/remotes/origin/neuaufbau', 'HEAD')
-  schreibe(wurzel, { [AUSNAHMEN_PFAD]: liste(aktuell) })
+  schreibe(wurzel, { [AUSNAHMEN_DATEI]: liste(aktuell) })
   return wurzel
 }
 
@@ -114,7 +112,7 @@ describe('P0.3b: Ausnahmen gelten je Verstoss mit Merkmal, nicht je Anzahl', () 
     )
 
     const { code } = pruefeRegeln(wurzel, '--ausnahmen-schrumpfen', '--ohne-vergleich')
-    const danach = leseJson<Liste>(wurzel, AUSNAHMEN_PFAD)
+    const danach = leseJson<Liste>(wurzel, AUSNAHMEN_DATEI)
 
     expect(code, 'Schrumpfen: der neue Verstoss bleibt ein Fehler').toBe(1)
     expect(danach.U1).toEqual({ [ALT]: ['zählt'] })
@@ -148,24 +146,25 @@ describe('P0.3b: Die Ausnahmeliste wächst nicht gegenüber origin/neuaufbau', (
     expect(ausgabe).toContain('origin/neuaufbau')
   })
 
-  // Je Fall passt die aktuelle Liste genau zu den Verstössen im Baum; rot wird er
-  // nur, weil die Liste gegenüber der Basis gewachsen ist.
-  const HAKEN = { 'src/haken.ts': 'export const x: any = 1\n' }
-  const gewachsen: Array<[string, Liste, Liste, Record<string, string>]> = [
-    ['neue Datei', { U1: { [ALT]: ['zählt', 'zählt mehr'] } }, BASIS, {}],
-    ['neue Regel', BASIS, { ...BASIS, U6: { 'src/haken.ts': ['export const x: any = 1'] } }, HAKEN],
-    ['zusätzliches Merkmal', { U1: { [ALT]: ['zählt'], 'src/engine/__tests__/neu.test.ts': ['ohne Abschnitt'] } }, BASIS, {}],
-    ['U4 wächst', { ...BASIS, U4: { 'src/engine/state.ts': ['a'] } }, { ...BASIS, U4: { 'src/engine/state.ts': ['a', 'b'] } }, {}],
-    ['Merkmal getauscht', { U1: { [ALT]: ['zählt', 'zählt nicht'], 'src/engine/__tests__/neu.test.ts': ['ohne Abschnitt'] } }, BASIS, {}],
+  // Die Fälle prüfen zuwachs direkt; dass check:regeln es aufruft und mit 1 endet,
+  // zeigen die Läufe darunter.
+  const gewachsen: Array<[string, Liste, Liste, string]> = [
+    ['neue Datei', { U1: { [ALT]: ['zählt', 'zählt mehr'] } }, BASIS, 'ohne Abschnitt'],
+    ['neue Regel', BASIS, { ...BASIS, U6: { 'src/haken.ts': ['export const x: any = 1'] } }, 'export const x: any = 1'],
+    ['zusätzliches Merkmal', { U1: { [ALT]: ['zählt'], 'src/engine/__tests__/neu.test.ts': ['ohne Abschnitt'] } }, BASIS, 'zählt mehr'],
+    ['U4 wächst', { ...BASIS, U4: { 'src/engine/state.ts': ['a'] } }, { ...BASIS, U4: { 'src/engine/state.ts': ['a', 'b'] } }, 'b'],
+    ['Merkmal getauscht', { U1: { [ALT]: ['zählt', 'zählt nicht'], 'src/engine/__tests__/neu.test.ts': ['ohne Abschnitt'] } }, BASIS, 'zählt mehr'],
+    ['mehr Merkmale als die Zahl im alten Format', { U1: { [ALT]: 1, 'src/engine/__tests__/neu.test.ts': 1 } }, BASIS, 'zählt mehr'],
   ]
 
-  it.each(gewachsen)('P0.3b: %s in der Liste gegenüber der Basis: Exit 1', (_, basis, aktuell, weitere) => {
-    const wurzel = mitBasis({ ...DATEIEN, ...weitere }, basis, aktuell)
+  it.each(gewachsen)('P0.3b: %s gilt als Wachstum', (_, basis, aktuell, merkmal) => {
+    expect(zuwachs(basis, aktuell).map((eintrag) => eintrag.merkmal)).toEqual([merkmal])
+  })
 
-    const { code, ausgabe } = pruefeRegeln(wurzel)
-
-    expect(code, `erwartet Exit 1, Ausgabe:\n${ausgabe}`).toBe(1)
-    expect(ausgabe).toContain('wächst gegenüber')
+  it('P0.3b: gleich viele oder weniger Merkmale sind kein Wachstum, auch gegen Zahlen', () => {
+    expect(zuwachs(BASIS, BASIS)).toEqual([])
+    expect(zuwachs(BASIS, { U1: { [ALT]: ['zählt'] } })).toEqual([])
+    expect(zuwachs({ U1: { [ALT]: 2, 'src/engine/__tests__/neu.test.ts': 1 } }, BASIS)).toEqual([])
   })
 
   it('P0.3b: auch committet fällt das Wachstum auf (Vergleich mit der Merge-Basis)', () => {
@@ -175,6 +174,7 @@ describe('P0.3b: Die Ausnahmeliste wächst nicht gegenüber origin/neuaufbau', (
     const { code, ausgabe } = pruefeRegeln(wurzel)
 
     expect(code, `erwartet Exit 1, Ausgabe:\n${ausgabe}`).toBe(1)
+    expect(ausgabe).toContain('wächst gegenüber')
     expect(ausgabe).toContain('src/engine/__tests__/neu.test.ts')
   })
 
@@ -186,12 +186,10 @@ describe('P0.3b: Die Ausnahmeliste wächst nicht gegenüber origin/neuaufbau', (
     expect(code, `erwartet Exit 0, Ausgabe:\n${ausgabe}`).toBe(0)
   })
 
-  it('P0.3b: eine Basis im alten Format (Zahlen) begrenzt die Zahl der Merkmale je Datei', () => {
-    const gleich = pruefeRegeln(mitBasis(DATEIEN, { U1: { [ALT]: 2, 'src/engine/__tests__/neu.test.ts': 1 } }, BASIS))
-    const mehr = pruefeRegeln(mitBasis(DATEIEN, { U1: { [ALT]: 1, 'src/engine/__tests__/neu.test.ts': 1 } }, BASIS))
+  it('P0.3b: eine Basis im alten Format (Zahlen) wird gelesen; gleich viele Merkmale sind grün', () => {
+    const { code, ausgabe } = pruefeRegeln(mitBasis(DATEIEN, { U1: { [ALT]: 2, 'src/engine/__tests__/neu.test.ts': 1 } }, BASIS))
 
-    expect(gleich.code, `gleich viele Merkmale wie die Zahl:\n${gleich.ausgabe}`).toBe(0)
-    expect(mehr.code, `mehr Merkmale als die Zahl:\n${mehr.ausgabe}`).toBe(1)
+    expect(code, `gleich viele Merkmale wie die Zahl:\n${ausgabe}`).toBe(0)
   })
 
   it('P0.3b: --vergleich <ref> nimmt einen anderen Stand als origin/neuaufbau', () => {

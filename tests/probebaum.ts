@@ -7,7 +7,6 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 
 export const WURZEL = resolve(__dirname, '..')
-export const AUSNAHMEN_PFAD = 'scripts/check_regeln_ausnahmen.json'
 
 const angelegt: string[] = []
 
@@ -33,9 +32,7 @@ export function raeumeAuf(): void {
 }
 
 /** Umgebung ohne GIT_*-Variablen, damit ein äusserer git-Aufruf (Hook) die Probe nicht umlenkt. */
-export function umgebungOhneGit(): NodeJS.ProcessEnv {
-  return Object.fromEntries(Object.entries(process.env).filter(([name]) => !name.startsWith('GIT_')))
-}
+const umgebungOhneGit = () => Object.fromEntries(Object.entries(process.env).filter(([name]) => !name.startsWith('GIT_')))
 
 /** Führt ein Programm aus und liefert Exit-Code und Ausgabe (stdout und stderr). */
 export function fuehreAus(programm: string, argumente: string[], cwd = WURZEL) {
@@ -49,14 +46,9 @@ export function pruefeRegeln(wurzel: string, ...argumente: string[]) {
 }
 
 /** git im Probe-Baum, mit festem Namen für Commits; bricht bei einem Fehler ab. */
-export function git(wurzel: string, ...argumente: string[]): string {
-  const lauf = spawnSync('git', ['-c', 'user.name=Probe', '-c', 'user.email=probe@example.invalid', ...argumente], {
-    cwd: wurzel,
-    encoding: 'utf8',
-    env: umgebungOhneGit(),
-  })
-  if (lauf.status !== 0) throw new Error(`git ${argumente.join(' ')}: ${lauf.stderr}`)
-  return lauf.stdout
+export function git(wurzel: string, ...argumente: string[]): void {
+  const { code, ausgabe } = fuehreAus('git', ['-c', 'user.name=Probe', '-c', 'user.email=probe@example.invalid', ...argumente], wurzel)
+  if (code !== 0) throw new Error(`git ${argumente.join(' ')}: ${ausgabe}`)
 }
 
 export function leseJson<T>(wurzel: string, pfad: string): T {

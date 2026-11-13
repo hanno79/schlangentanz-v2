@@ -77,7 +77,7 @@ describe('P0.3b: Agenten-Worktrees unter .claude/ erfasst kein Prüfwerkzeug', (
     git(wurzel, 'add', '-A')
     git(wurzel, 'commit', '-q', '-m', 'probe')
     git(wurzel, 'worktree', 'add', '-q', '-b', 'agent-probe', KOPIE)
-    schreibe(wurzel, { ...VERSTOESSE, [`${KOPIE}/.env.production`]: 'GEHEIM=1\n', '.claude/notiz.md': 'Straße\n' })
+    schreibe(wurzel, { ...VERSTOESSE, [`${KOPIE}/.env.production`]: 'GEHEIM=1\n', '.claude/notiz.md': `Stra${String.fromCharCode(0xdf)}e\n` })
 
     const { ausgabe } = fuehreAus(PYTHON, [join(WURZEL, 'scripts', 'regelcheck.py'), '--wurzel', wurzel], wurzel)
 
