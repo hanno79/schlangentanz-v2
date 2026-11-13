@@ -120,14 +120,14 @@ for (const { name, erzeuge, karten } of SZENARIEN) {
       const hand = page.getByRole('region', { name: 'Deine Hand' })
       const schlangen = page.getByRole('region', { name: 'Deine Schlangen' })
       const vorher = [await kasten(hand), await kasten(schlangen)]
-      await page.locator('.tisch-flaeche').evaluate((flaeche) => flaeche.scrollTo(0, flaeche.scrollHeight))
+      await page.locator('.st-flaeche').evaluate((flaeche) => flaeche.scrollTo(0, flaeche.scrollHeight))
       expect([await kasten(hand), await kasten(schlangen)]).toEqual(vorher)
     })
 
     test('O4: die Gegner stehen über deiner Hand und sind in der Tischfläche zu sehen', async ({ page }) => {
       const gegner = await kasten(page.getByRole('region', { name: 'Gegner' }))
       const hand = await kasten(page.getByRole('region', { name: 'Deine Hand' }))
-      const flaeche = await kasten(page.locator('.tisch-flaeche'))
+      const flaeche = await kasten(page.locator('.st-flaeche'))
       expect(gegner.oben, 'Gegner oben').toBeLessThan(hand.oben)
       // Handy quer war im Entwurf die Tischfläche 28 px hoch (O1, Hinweis 1).
       expect(flaeche.hoehe, 'Höhe der Tischfläche').toBeGreaterThanOrEqual(Math.min(240, page.viewportSize()!.height * 0.5))

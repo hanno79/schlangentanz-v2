@@ -8,7 +8,7 @@ Zeilen, die seitlich scrollen: So bleibt für Gegner, Mitte und eigenen Platz
 Höhe übrig (Plan O4).
 */
 
-.schlangen {
+.st-schlangen {
   display: flex;
   flex-direction: column;
   gap: var(--abstand-1);
@@ -17,7 +17,7 @@ Höhe übrig (Plan O4).
 
 /* `stretch`: Alle Glieder einer Zeile sind gleich hoch, auch neben einer Fusion
    mit ihren Karten darunter; so liegt der Balken einer Farbgruppe auf einer Linie. */
-.schlange {
+.st-schlange {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
@@ -29,7 +29,7 @@ Höhe übrig (Plan O4).
   list-style: none;
 }
 
-.schlange > li {
+.st-schlange > li {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@ Höhe übrig (Plan O4).
 /* Farbgruppe: ein durchgehender Balken unter den Karten. Er reicht über den
    Zwischenraum zur Nachbarkarte, nur nicht über Anfang und Ende der Gruppe,
    damit zwei Gruppen nebeneinander getrennt bleiben. */
-.schlange > li.in-gruppe::after {
+.st-schlange > li.st-in-gruppe::after {
   content: '';
   position: absolute;
   left: -2px;
@@ -50,32 +50,32 @@ Höhe übrig (Plan O4).
   background: var(--farbe-tinte);
 }
 
-.schlange > li.gruppe-anfang::after {
+.st-schlange > li.st-gruppe-anfang::after {
   left: 1px;
   border-top-left-radius: var(--radius-voll);
   border-bottom-left-radius: var(--radius-voll);
 }
 
-.schlange > li.gruppe-ende::after {
+.st-schlange > li.st-gruppe-ende::after {
   right: 1px;
   border-top-right-radius: var(--radius-voll);
   border-bottom-right-radius: var(--radius-voll);
 }
 
 /* Farbenfusion: die zwei Karten darunter als halbe Karten unter der Fusion. */
-.fusion-unter {
+.st-fusion-unter {
   display: flex;
   gap: 2px;
   width: var(--karte-breite);
   --karte-breite-unter: calc((var(--karte-breite) - 2px) / 2);
 }
 
-.fusion-unter > .karte {
+.st-fusion-unter > .karte {
   width: var(--karte-breite-unter);
 }
 
-.ablage,
-.grube {
+.st-ablage,
+.st-grube {
   --karte-breite: var(--karte-klein);
   display: inline-flex;
   align-items: center;
@@ -84,17 +84,17 @@ Höhe übrig (Plan O4).
   color: var(--farbe-tinte-leise);
 }
 
-.gegner .ablage {
+.st-gegner .st-ablage {
   margin-left: auto;
 }
 
-.grube {
+.st-grube {
   font-weight: 600;
   color: var(--farbe-tinte);
 }
 
 /* Tischmitte und Auslage: Nachziehstapel, offene Aufgaben, deine Auslage. */
-.mitte {
+.st-mitte {
   grid-area: mitte;
   --karte-breite: var(--karte-mitte);
   display: flex;
@@ -103,27 +103,27 @@ Höhe übrig (Plan O4).
   gap: var(--abstand-3) var(--abstand-5);
 }
 
-.stapel {
+.st-stapel {
   display: flex;
   align-items: center;
   gap: var(--abstand-2);
   font-size: var(--groesse-klein);
 }
 
-.stapel strong {
+.st-stapel strong {
   display: block;
   font-family: var(--schrift-titel);
   font-size: var(--groesse-gross);
   font-weight: 400;
 }
 
-.aufgaben {
+.st-aufgaben {
   display: flex;
   align-items: center;
   gap: var(--abstand-2);
 }
 
-.auslage {
+.st-auslage {
   grid-area: auslage;
   --karte-breite: var(--karte-eigene);
   display: flex;
@@ -131,7 +131,7 @@ Höhe übrig (Plan O4).
   gap: var(--abstand-1);
 }
 
-.kartenreihe {
+.st-kartenreihe {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -141,7 +141,7 @@ Höhe übrig (Plan O4).
   list-style: none;
 }
 
-.mit-unterschrift {
+.st-mit-unterschrift {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -150,7 +150,7 @@ Höhe übrig (Plan O4).
 }
 
 /* Offen liegende Karte zum Grossansehen: mindestens fingergross. */
-.kartenknopf {
+.st-kartenknopf {
   --karte-breite: max(var(--karte-mitte), var(--ziel-mindestens));
   padding: 0;
   border: 0;
@@ -161,7 +161,7 @@ Höhe übrig (Plan O4).
 
 /* Handy: kompakte Zeilen, die seitlich scrollen. */
 @media (max-width: 699px), (orientation: landscape) and (max-height: 500px) {
-  .schlange {
+  .st-schlange {
     flex-wrap: nowrap;
     overflow: auto hidden;
     overscroll-behavior-x: contain;
@@ -170,7 +170,7 @@ Höhe übrig (Plan O4).
 }
 
 /* Grossansicht einer Karte (<dialog>). */
-.lupe {
+.st-lupe {
   padding: var(--abstand-4);
   border: 0;
   border-radius: var(--radius-gross);
@@ -178,17 +178,17 @@ Höhe übrig (Plan O4).
   box-shadow: var(--schatten-erhoben);
 }
 
-.lupe::backdrop {
+.st-lupe::backdrop {
   background: var(--farbe-abdunkeln);
 }
 
-.lupe[open] {
+.st-lupe[open] {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--abstand-3);
 }
 
-.lupe-karte {
+.st-lupe-karte {
   --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * var(--kartenverhaeltnis)));
 }

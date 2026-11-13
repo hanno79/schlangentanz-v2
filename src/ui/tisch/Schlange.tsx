@@ -12,9 +12,9 @@ dieselbe Obergrenze, damit er die passende Bildfassung lädt.
 
 function gliedKlasse({ gruppe }: KarteInSchlange): string | undefined {
   const klassen = [
-    gruppe !== null ? 'in-gruppe' : '',
-    gruppe?.anfang ? 'gruppe-anfang' : '',
-    gruppe?.ende ? 'gruppe-ende' : '',
+    gruppe !== null ? 'st-in-gruppe' : '',
+    gruppe?.anfang ? 'st-gruppe-anfang' : '',
+    gruppe?.ende ? 'st-gruppe-ende' : '',
   ].filter(Boolean)
   return klassen.length === 0 ? undefined : klassen.join(' ')
 }
@@ -26,12 +26,12 @@ function gliedKlasse({ gruppe }: KarteInSchlange): string | undefined {
  */
 export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsicht; titel: string; groesse: string }) {
   return (
-    <ol className="schlange" aria-label={schlangenName(titel, schlange.karten.length, schlange.farbgruppen)}>
+    <ol className="st-schlange" aria-label={schlangenName(titel, schlange.karten.length, schlange.farbgruppen)}>
       {schlange.karten.map((glied) => (
         <li key={glied.karte.id} className={gliedKlasse(glied)} data-gruppe={glied.gruppe?.farbe}>
           <Karte karte={glied.karte} sizes={groesse} />
           {glied.unter !== null && (
-            <span className="fusion-unter" role="group" aria-label={TISCH.unterFusion}>
+            <span className="st-fusion-unter" role="group" aria-label={TISCH.unterFusion}>
               <Karte karte={glied.unter[0]} sizes={groesse} />
               <Karte karte={glied.unter[1]} sizes={groesse} />
             </span>
@@ -44,9 +44,9 @@ export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsic
 
 /** Alle Schlangen eines Spielers, oder ein Satz, wenn er noch keine hat. */
 export function Schlangen({ schlangen, besitzer, groesse }: { schlangen: SchlangeAnsicht[]; besitzer: Person; groesse: string }) {
-  if (schlangen.length === 0) return <p className="leer">{TISCH.keineSchlange}</p>
+  if (schlangen.length === 0) return <p className="st-leer">{TISCH.keineSchlange}</p>
   return (
-    <div className="schlangen">
+    <div className="st-schlangen">
       {schlangen.map((schlange, index) => (
         <Schlange key={schlange.id} schlange={schlange} titel={schlangenTitel(besitzer, index + 1)} groesse={groesse} />
       ))}
@@ -57,7 +57,7 @@ export function Schlangen({ schlangen, besitzer, groesse }: { schlangen: Schlang
 /** Ein Ablagestapel: oberste Karte und Anzahl; leer nur als Text. */
 export function Ablage({ ablage, eigene }: { ablage: AblageAnsicht; eigene: boolean }) {
   return (
-    <span className="ablage">
+    <span className="st-ablage">
       {ablage.oben !== null && <Karte karte={ablage.oben} sizes={KARTENGROESSE.klein} />}
       <span>{ablageText(ablage.anzahl, eigene)}</span>
     </span>
@@ -67,7 +67,7 @@ export function Ablage({ ablage, eigene }: { ablage: AblageAnsicht; eigene: bool
 /** Eine Schlangengrube, die vor einem Spieler liegt, bis er ausgesetzt hat (A7.6). */
 export function Grube({ grube }: { grube: GrubeAnsicht }) {
   return (
-    <span className="grube">
+    <span className="st-grube">
       <Karte karte={grube.karte} sizes={KARTENGROESSE.klein} />
       <span>{grubeText(grube.von)}</span>
     </span>

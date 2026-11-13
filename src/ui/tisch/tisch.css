@@ -9,7 +9,7 @@ senkrecht), unten fest der eigene Platz. Auf niedrigen Schirmen im Querformat
 keine Höhe (O1, Hinweis 1).
 */
 
-.tisch {
+.spieltisch {
   --karte-gegner: 30px;
   --karte-eigene: 36px;
   --karte-mitte: 44px;
@@ -33,7 +33,7 @@ keine Höhe (O1, Hinweis 1).
 }
 
 @media (min-width: 700px) and (min-height: 501px) {
-  .tisch {
+  .spieltisch {
     --karte-gegner: 34px;
     --karte-eigene: 48px;
     --karte-mitte: 52px;
@@ -42,7 +42,7 @@ keine Höhe (O1, Hinweis 1).
 }
 
 @media (min-width: 1100px) and (min-height: 501px) {
-  .tisch {
+  .spieltisch {
     --karte-gegner: 40px;
     --karte-eigene: 56px;
     --karte-mitte: 60px;
@@ -50,29 +50,29 @@ keine Höhe (O1, Hinweis 1).
   }
 }
 
-.tisch h2,
-.tisch p {
+.spieltisch h2,
+.spieltisch p {
   margin: 0;
 }
 
-.tisch :focus-visible {
+.spieltisch :focus-visible {
   outline: none;
   box-shadow: var(--fokus-ring);
 }
 
-.bereichstitel {
+.st-bereichstitel {
   font-size: var(--groesse-klein);
   font-weight: 600;
   line-height: var(--zeilenhoehe);
   color: var(--farbe-tinte-leise);
 }
 
-.leer {
+.st-leer {
   font-size: var(--groesse-klein);
   color: var(--farbe-tinte-leise);
 }
 
-.abzeichen {
+.st-abzeichen {
   display: inline-block;
   padding: 0 var(--abstand-2);
   font-size: var(--groesse-klein);
@@ -82,7 +82,7 @@ keine Höhe (O1, Hinweis 1).
   border-radius: var(--radius-voll);
 }
 
-.tisch-knopf {
+.st-knopf {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -100,12 +100,12 @@ keine Höhe (O1, Hinweis 1).
   transition: background-color var(--dauer);
 }
 
-.tisch-knopf:hover {
+.st-knopf:hover {
   background: var(--farbe-akzent-hell);
 }
 
 /* Kopf: Statuszeile und der Weg zurück in die Lobby. */
-.tisch-kopf {
+.st-kopf {
   grid-area: kopf;
   display: flex;
   align-items: center;
@@ -115,7 +115,7 @@ keine Höhe (O1, Hinweis 1).
   border-bottom: 1px solid var(--farbe-linie);
 }
 
-.statuszeile {
+.st-statuszeile {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -124,20 +124,20 @@ keine Höhe (O1, Hinweis 1).
   gap: 0 var(--abstand-2);
 }
 
-.statuszeile-titel {
+.st-statuszeile-titel {
   font-family: var(--schrift-titel);
   font-size: var(--groesse-gross);
   line-height: var(--zeilenhoehe-titel);
   color: var(--farbe-akzent-stark);
 }
 
-.statuszeile-text {
+.st-statuszeile-text {
   font-size: var(--groesse-klein);
   color: var(--farbe-tinte-leise);
 }
 
 /* Tischfläche: Gegner, Mitte, Auslage. Scrollt senkrecht, nie waagrecht. */
-.tisch-flaeche {
+.st-flaeche {
   grid-area: flaeche;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -150,20 +150,20 @@ keine Höhe (O1, Hinweis 1).
 }
 
 @media (min-width: 700px) and (min-height: 501px) {
-  .tisch-flaeche {
+  .st-flaeche {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: 'gegner gegner' 'mitte auslage';
   }
 }
 
-.gegnerliste {
+.st-gegnerliste {
   grid-area: gegner;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: var(--abstand-2);
 }
 
-.gegner {
+.st-gegner {
   --karte-breite: var(--karte-gegner);
   display: flex;
   flex-direction: column;
@@ -176,30 +176,30 @@ keine Höhe (O1, Hinweis 1).
   box-shadow: var(--schatten-flaeche);
 }
 
-.gegner--dran {
+.st-gegner--dran {
   border-color: var(--farbe-akzent);
 }
 
-.gegner-kopf {
+.st-gegner-kopf {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--abstand-1) var(--abstand-3);
 }
 
-.gegner-name {
+.st-gegner-name {
   font-size: var(--groesse-text);
   font-weight: 700;
   line-height: var(--zeilenhoehe);
 }
 
-.gegner-info {
+.st-gegner-info {
   font-size: var(--groesse-klein);
   color: var(--farbe-tinte-leise);
 }
 
 /* Unten fest: deine Schlangen und deine Hand mit Ablage. */
-.tisch-unten {
+.st-unten {
   grid-area: unten;
   display: grid;
   grid-template-rows: auto auto;
@@ -209,7 +209,7 @@ keine Höhe (O1, Hinweis 1).
   box-shadow: var(--schatten-leiste);
 }
 
-.eigene {
+.st-eigene {
   --karte-breite: var(--karte-eigene);
   display: flex;
   flex-direction: column;
@@ -222,24 +222,24 @@ keine Höhe (O1, Hinweis 1).
 }
 
 /* Die Hand ist ein Container: Ihre Karten teilen sich ihre Breite (--hand-anzahl setzt der Tisch). */
-.hand {
+.st-hand {
   container-type: inline-size;
   min-width: 0;
   padding: var(--abstand-2) var(--rand) var(--abstand-2);
 }
 
-.hand-kopf {
+.st-hand-kopf {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--abstand-1) var(--abstand-3);
 }
 
-.hand-kopf .bereichstitel {
+.st-hand-kopf .st-bereichstitel {
   flex: 1;
 }
 
-.hand-karten {
+.st-hand-karten {
   --karte-breite: clamp(
     var(--ziel-mindestens),
     calc((100cqi - (var(--hand-anzahl) - 1) * var(--abstand-2)) / var(--hand-anzahl)),
@@ -256,20 +256,20 @@ keine Höhe (O1, Hinweis 1).
 /* Handy quer und andere niedrige Schirme im Querformat: dein Platz rechts. Die Karten bleiben in
    Handygrösse, weil die Breitenstufen oben erst ab 501 px Höhe gelten. */
 @media (orientation: landscape) and (max-height: 500px) {
-  .tisch {
+  .spieltisch {
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
     grid-template-areas: 'kopf kopf' 'flaeche unten';
   }
 
-  .tisch-unten {
+  .st-unten {
     grid-template-rows: minmax(0, 1fr) auto;
     border-top: 0;
     border-left: 1px solid var(--farbe-linie);
     box-shadow: var(--schatten-leiste-seite);
   }
 
-  .eigene {
+  .st-eigene {
     max-height: none;
   }
 

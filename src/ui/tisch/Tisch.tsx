@@ -28,16 +28,16 @@ Der Tisch zeigt nur an. Was er zeigt, kommt aus der Sicht des Menschen
 export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
   const [gross, setzeGross] = useState<Bildkarte | null>(null)
   return (
-    <div className="tisch" data-testid="spiel">
-      <header className="tisch-kopf">
+    <div className="spieltisch" data-testid="spiel">
+      <header className="st-kopf">
         <Statuszeile status={ansicht.status} />
-        <Verweis ziel="lobby" className="tisch-knopf">
+        <Verweis ziel="lobby" className="st-knopf">
           {TISCH.zurLobby}
         </Verweis>
       </header>
 
-      <div className="tisch-flaeche">
-        <section className="gegnerliste" aria-label={TISCH.gegner}>
+      <div className="st-flaeche">
+        <section className="st-gegnerliste" aria-label={TISCH.gegner}>
           {ansicht.gegner.map((gegner) => (
             <Gegner key={gegner.id} gegner={gegner} />
           ))}
@@ -46,9 +46,9 @@ export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
         {ansicht.erweiterung && <Auslage ich={ansicht.ich} zeigeGross={setzeGross} />}
       </div>
 
-      <section className="tisch-unten" aria-label={TISCH.deinPlatz}>
-        <section className="eigene" aria-label={TISCH.deineSchlangen}>
-          <h2 className="bereichstitel">{TISCH.deineSchlangen}</h2>
+      <section className="st-unten" aria-label={TISCH.deinPlatz}>
+        <section className="st-eigene" aria-label={TISCH.deineSchlangen}>
+          <h2 className="st-bereichstitel">{TISCH.deineSchlangen}</h2>
           <Schlangen schlangen={ansicht.ich.schlangen} besitzer={{ name: ansicht.ich.name, ich: true }} groesse={KARTENGROESSE.eigene} />
         </section>
         <Hand ich={ansicht.ich} />
@@ -63,18 +63,18 @@ export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
 function Statuszeile({ status }: { status: StatusAnsicht }) {
   const { titel, text } = statusText(status)
   return (
-    <div className="statuszeile" role="status" aria-live="polite">
-      <span className="statuszeile-titel">{titel}</span>
-      {status.partiephase === 'Schlussrunde' && <span className="abzeichen">{TISCH.schlussrunde}</span>}
-      {text !== '' && <span className="statuszeile-text">{text}</span>}
+    <div className="st-statuszeile" role="status" aria-live="polite">
+      <span className="st-statuszeile-titel">{titel}</span>
+      {status.partiephase === 'Schlussrunde' && <span className="st-abzeichen">{TISCH.schlussrunde}</span>}
+      {text !== '' && <span className="st-statuszeile-text">{text}</span>}
     </div>
   )
 }
 
 function Mitte({ ansicht, zeigeGross }: { ansicht: TischAnsicht; zeigeGross: (karte: Bildkarte) => void }) {
   return (
-    <section className="mitte" aria-label={TISCH.mitte}>
-      <div className="stapel">
+    <section className="st-mitte" aria-label={TISCH.mitte}>
+      <div className="st-stapel">
         {ansicht.nachziehstapel > 0 ? (
           <>
             <Kartenrueckseite />
@@ -83,13 +83,13 @@ function Mitte({ ansicht, zeigeGross }: { ansicht: TischAnsicht; zeigeGross: (ka
             </span>
           </>
         ) : (
-          <span className="leer">{TISCH.nachziehstapelLeer}</span>
+          <span className="st-leer">{TISCH.nachziehstapelLeer}</span>
         )}
       </div>
       {ansicht.erweiterung && (
-        <section className="aufgaben" aria-label={TISCH.offeneAufgaben}>
-          <h2 className="bereichstitel">{TISCH.offeneAufgaben}</h2>
-          <ul className="kartenreihe">
+        <section className="st-aufgaben" aria-label={TISCH.offeneAufgaben}>
+          <h2 className="st-bereichstitel">{TISCH.offeneAufgaben}</h2>
+          <ul className="st-kartenreihe">
             {ansicht.offeneAufgaben.map((aufgabe) => (
               <li key={aufgabe.id}>
                 <GrossKnopf karte={aufgabe} zeigeGross={zeigeGross} />
@@ -105,17 +105,17 @@ function Mitte({ ansicht, zeigeGross }: { ansicht: TischAnsicht; zeigeGross: (ka
 /** Was mit Erweiterung offen vor dem Menschen liegt: geheime Aufgabe, Comeback- und Risiko-Karten (A4). */
 function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: Bildkarte) => void }) {
   return (
-    <section className="auslage" aria-label={TISCH.auslage}>
-      <h2 className="bereichstitel">{TISCH.auslage}</h2>
-      <ul className="kartenreihe">
+    <section className="st-auslage" aria-label={TISCH.auslage}>
+      <h2 className="st-bereichstitel">{TISCH.auslage}</h2>
+      <ul className="st-kartenreihe">
         {ich.geheimeAufgabe !== null && (
-          <li className="mit-unterschrift">
+          <li className="st-mit-unterschrift">
             <GrossKnopf karte={ich.geheimeAufgabe} name={geheimeAufgabeName(kartenname(ich.geheimeAufgabe))} zeigeGross={zeigeGross} />
             <span>{TISCH.geheim}</span>
           </li>
         )}
         {ich.comeback !== null && (
-          <li className="mit-unterschrift">
+          <li className="st-mit-unterschrift">
             <Karte karte={ich.comeback.karte} sizes={KARTENGROESSE.eigene} />
             {ich.comeback.verbraucht && <span>{TISCH.verbraucht}</span>}
           </li>
@@ -134,18 +134,18 @@ function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: 
 function Hand({ ich }: { ich: EigeneAnsicht }) {
   const anzahl = { '--hand-anzahl': ich.hand.length } as CSSProperties
   return (
-    <section className="hand" aria-label={TISCH.deineHand}>
-      <div className="hand-kopf">
-        <h2 className="bereichstitel">{deineHandTitel(ich.hand.length)}</h2>
+    <section className="st-hand" aria-label={TISCH.deineHand}>
+      <div className="st-hand-kopf">
+        <h2 className="st-bereichstitel">{deineHandTitel(ich.hand.length)}</h2>
         {ich.gruben.map((grube) => (
           <Grube key={grube.karte.id} grube={grube} />
         ))}
         <Ablage ablage={ich.ablage} eigene />
       </div>
       {ich.hand.length === 0 ? (
-        <p className="leer">{TISCH.keineHandkarte}</p>
+        <p className="st-leer">{TISCH.keineHandkarte}</p>
       ) : (
-        <ul className="hand-karten" aria-label={TISCH.handkartenListe} style={anzahl}>
+        <ul className="st-hand-karten" aria-label={TISCH.handkartenListe} style={anzahl}>
           {ich.hand.map((karte) => (
             <li key={karte.id}>
               <Karte karte={karte} sizes={KARTENGROESSE.hand} />

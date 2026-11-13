@@ -22,15 +22,15 @@ export function Lupe({ karte, schliesse }: { karte: Bildkarte; schliesse: () => 
   return (
     <dialog
       ref={dialog}
-      className="lupe"
+      className="st-lupe"
       aria-label={kartenname(karte)}
       onClose={schliesse}
       onClick={(ereignis) => {
         if (ereignis.target === dialog.current) dialog.current.close()
       }}
     >
-      <Karte karte={karte} className="lupe-karte" />
-      <button type="button" className="tisch-knopf" onClick={() => dialog.current?.close()}>
+      <Karte karte={karte} className="st-lupe-karte" />
+      <button type="button" className="st-knopf" onClick={() => dialog.current?.close()}>
         {TISCH.schliessen}
       </button>
     </dialog>
@@ -40,7 +40,7 @@ export function Lupe({ karte, schliesse }: { karte: Bildkarte; schliesse: () => 
 /** Eine offen liegende Karte, die man zum Lesen gross ansehen kann. */
 export function GrossKnopf({ karte, name, zeigeGross }: { karte: Bildkarte; name?: string; zeigeGross: (karte: Bildkarte) => void }) {
   return (
-    <button type="button" className="kartenknopf" aria-label={name ?? kartenname(karte)} onClick={() => zeigeGross(karte)}>
+    <button type="button" className="st-kartenknopf" aria-label={name ?? kartenname(karte)} onClick={() => zeigeGross(karte)}>
       <Karte karte={karte} sizes={KARTENGROESSE.mitte} />
     </button>
   )

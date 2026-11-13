@@ -12,13 +12,13 @@ import { TISCH, handkartenText } from './texte'
 export function Gegner({ gegner }: { gegner: GegnerAnsicht }) {
   const kennung = useId()
   return (
-    <article className={gegner.amZug ? 'gegner gegner--dran' : 'gegner'} aria-labelledby={kennung}>
-      <header className="gegner-kopf">
-        <h2 id={kennung} className="gegner-name">
+    <article className={gegner.amZug ? 'st-gegner st-gegner--dran' : 'st-gegner'} aria-labelledby={kennung}>
+      <header className="st-gegner-kopf">
+        <h2 id={kennung} className="st-gegner-name">
           {gegner.name}
         </h2>
-        {gegner.amZug && <span className="abzeichen">{TISCH.istDran}</span>}
-        <span className="gegner-info">{handkartenText(gegner.handkarten)}</span>
+        {gegner.amZug && <span className="st-abzeichen">{TISCH.istDran}</span>}
+        <span className="st-gegner-info">{handkartenText(gegner.handkarten)}</span>
         <Ablage ablage={gegner.ablage} eigene={false} />
         {gegner.gruben.map((grube) => (
           <Grube key={grube.karte.id} grube={grube} />

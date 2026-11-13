@@ -36,8 +36,8 @@ describe('O4 K1: Der Mensch sitzt unten, auch während eines KI-Zuges', () => {
 
   it('O4 K1: der eigene Bereich steht im Dokument nach der Tischfläche, also unten', () => {
     const { container } = zeige(volltisch())
-    const flaeche = container.querySelector('.tisch-flaeche')
-    const unten = container.querySelector('.tisch-unten')
+    const flaeche = container.querySelector('.st-flaeche')
+    const unten = container.querySelector('.st-unten')
     expect(flaeche, 'Tischfläche').not.toBeNull()
     expect(unten, 'eigener Bereich unten').not.toBeNull()
     expect(flaeche!.compareDocumentPosition(unten!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
@@ -122,7 +122,7 @@ describe('O4: Gegner oben, Tischmitte, eigener Ablagestapel', () => {
 describe('O4 K3: Volltisch, jede Karte steht am Tisch', () => {
   it('O4 K3: 4 Spieler mit je 2 Schlangen zu 11 Karten, dazu die 2 Karten unter der Fusion', () => {
     const { container } = zeige(volltisch())
-    const schlangen = Array.from(container.querySelectorAll('ol.schlange'))
+    const schlangen = Array.from(container.querySelectorAll('ol.st-schlange'))
     expect(schlangen).toHaveLength(8)
     for (const schlange of schlangen) {
       expect(schlange.querySelectorAll(':scope > li'), schlange.getAttribute('aria-label') ?? '').toHaveLength(11)
@@ -142,7 +142,7 @@ describe('O4 K4: Farbgruppen, Fusion und Grube sind sichtbar', () => {
     expect(glieder.map((glied) => glied.getAttribute('data-gruppe'))).toEqual([
       'Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Rot', 'Gelb', 'Gelb', 'Gelb', null,
     ])
-    expect(container.querySelectorAll('li.gruppe-anfang').length).toBe(container.querySelectorAll('li.gruppe-ende').length)
+    expect(container.querySelectorAll('li.st-gruppe-anfang').length).toBe(container.querySelectorAll('li.st-gruppe-ende').length)
   })
 
   it('O4 K4/A7.7: eine Farbenfusion zeigt die zwei Karten darunter', () => {
