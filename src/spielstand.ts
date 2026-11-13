@@ -12,8 +12,7 @@ verloren.
 
 **Warum hier und nicht in `engine/`.** Speichern ist keine Spielregel. Die Engine
 ist rein funktional und kennt keine Browser-API; das soll so bleiben, denn genau
-daran hängt, dass sie im Test ohne jsdom läuft. (Anders als `ueberhand.ts`, das
-in die Engine gehörte — dort rechnete `turnState.ts` die Regel selbst nach.)
+daran hängt, dass sie im Test ohne jsdom läuft.
 
 **Warum jeder Zugriff abgesichert ist.** `localStorage` wirft in mehr Fällen als
 man denkt: im Privatmodus älterer Browser, bei vollem Kontingent, bei blockierten

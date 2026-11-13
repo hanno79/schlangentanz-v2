@@ -67,6 +67,7 @@ function fehler(pfad: string, was: string): never {
 function objekt(wert: unknown, pfad: string, felder: readonly string[]): Record<string, unknown> {
   if (!istObjekt(wert)) fehler(pfad, 'ist kein Objekt');
   const abweichend = abweichendeFelder(wert, felder);
+  if (abweichend.length > 3) fehler(`${pfad}:`, `${abweichend.slice(0, 3).join(', ')} und ${abweichend.length - 3} weitere`);
   if (abweichend.length > 0) fehler(`${pfad}:`, abweichend.join(', '));
   return wert;
 }

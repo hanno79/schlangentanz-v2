@@ -301,8 +301,7 @@ const KETTENBONUS_PUNKTE = 5;
  * die Regenbogenschlange als Wildcard zähle. **Das stimmt nicht.** Die Primitive
  * arbeitet auf der rohen Schlange und bricht bei jeder Sonderkarte; die
  * Wildcard-Semantik steckt allein in `transformiereRegenbogenschlangen`, das
- * `berechneFarbgruppenPunkte` davorschaltet. `pruefeLilaRiese` in
- * `aufgabenPruefung.ts` fragt dieselbe Kettenfrage seit jeher in einer Zeile.
+ * `berechneFarbgruppenPunkte` davorschaltet.
  *
  * `mindestLaenge: 1`, weil R8.4a — anders als R3.3 — keine Mindestlänge kennt.
  */
