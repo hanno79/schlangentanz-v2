@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
-import type { SpielAktion, Spielzustand } from '../engine'
+import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
@@ -10,6 +10,8 @@ import { ZustandsAnsicht } from './ZustandsAnsicht'
 interface Eintrag {
   zustand: Spielzustand
   schritt: string
+  /** Was die Engine zu diesem Schritt gemeldet hat (Plan E2, Kriterium 11). */
+  ereignisse: Ereignis[]
 }
 
 /** Erzeugt den Startzustand; scheitert das, zeigt der Tisch den Grund statt einer leeren Seite. */
@@ -40,9 +42,9 @@ interface SpielverlaufProps {
 }
 
 function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
-  const [verlauf, setVerlauf] = useState<Eintrag[]>(() => [{ zustand: startzustand, schritt: 'Start' }])
+  const [verlauf, setVerlauf] = useState<Eintrag[]>(() => [{ zustand: startzustand, schritt: 'Start', ereignisse: [] }])
   const [fehler, setFehler] = useState<string | null>(null)
-  const zustand = verlauf[verlauf.length - 1].zustand
+  const { zustand, ereignisse } = verlauf[verlauf.length - 1]
   const amAnfang = verlauf.length < 2
   const roh = useMemo(() => serialisiere(zustand), [zustand])
 
@@ -54,7 +56,8 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
 
   function fuehreAus(aktion: SpielAktion, beschriftung: string) {
     try {
-      setzeVerlauf([...verlauf, { zustand: anwendeAktion(zustand, aktion).zustand, schritt: beschriftung }])
+      const ergebnis = anwendeAktion(zustand, aktion)
+      setzeVerlauf([...verlauf, { zustand: ergebnis.zustand, schritt: beschriftung, ereignisse: ergebnis.ereignisse }])
     } catch (ablehnung) {
       setFehler(`${beschriftung}: ${fehlertext(ablehnung)}`)
     }
@@ -76,6 +79,7 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
         </p>
         {fehler === null ? null : <Fehler meldung={`Abgelehnt: ${fehler}`} />}
         <Bedienung zustand={zustand} fuehreAus={fuehreAus} />
+        <Ereignisse zustand={zustand} ereignisse={ereignisse} />
       </section>
       <Invarianten zustand={zustand} />
       <ZustandsAnsicht zustand={zustand} />
@@ -108,12 +112,24 @@ function laeufeNachArt(aktionen: SpielAktion[]): SpielAktion[][] {
   return laeufe
 }
 
-/** Kurze Beschriftung: Aktionstyp und, wenn sie eine Karte spielt, deren Name. Die ganze Aktion steht im Tooltip. */
+/** Name und Id einer Handkarte des Spielers, der die Aktion wählt. */
+function handkarte(zustand: Spielzustand, spielerId: string, karteId: string): string {
+  const karte = zustand.spieler.find((spieler) => spieler.id === spielerId)?.hand.find((eintrag) => eintrag.id === karteId)
+  return karte === undefined ? karteId : `${karteAnzeigename(karte)} (${karteId})`
+}
+
+/**
+ * Kurze Beschriftung: Aktionstyp, gespielte Karte und, wo es mehrere gibt, das
+ * Ziel. Die ganze Aktion steht im Tooltip und in `data-aktion`.
+ */
 function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
+  if (aktion.typ === 'UeberhandAbwerfen') {
+    return `${aktion.typ}: ${aktion.karteIds.map((id) => handkarte(zustand, aktion.spielerId, id)).join(', ')}`
+  }
   if (!('karteId' in aktion)) return aktion.typ
-  const hand = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand ?? []
-  const karte = hand.find((handkarte) => handkarte.id === aktion.karteId)
-  return karte === undefined ? `${aktion.typ} ${aktion.karteId}` : `${aktion.typ}: ${karteAnzeigename(karte)}`
+  const text = `${aktion.typ}: ${handkarte(zustand, aktion.spielerId, aktion.karteId)}`
+  if (aktion.typ !== 'FarbkarteLegen') return text
+  return aktion.ziel.art === 'neueSchlange' ? `${text} → neue Schlange` : `${text} → ${aktion.ziel.schlangenId} ${aktion.ziel.seite}`
 }
 
 interface BedienungProps {
@@ -136,8 +152,9 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
       <h2>Aktionen der Engine ({anzahl})</h2>
       {anzahl === 0 ? (
         <p className="et-leer" data-testid="keine-aktion">
-          Die Engine zählt hier keine Aktion auf. Nach E1 lässt sich eine Partie aufbauen, aber noch nicht spielen; die
-          Aktionen kommen mit E2 und den Kartentasks.
+          {zustand.partiephase === 'Beendet'
+            ? 'Die Partie ist beendet (A10); die Wertung steht unten.'
+            : 'Die Engine zählt hier keine Aktion auf. Solange die Partie läuft, ist das ein Fehler der Engine (Plan E2, Kriterium 12).'}
         </p>
       ) : null}
       {laeufe.map((lauf, index) => (
@@ -160,6 +177,43 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
           ))}
         </div>
       ))}
+    </>
+  )
+}
+
+/** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer. */
+function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
+  const name = (index: number) => zustand.spieler[index]?.name ?? `Spieler ${index}`
+  switch (ereignis.typ) {
+    case 'KarteGespielt':
+      return `KarteGespielt: ${name(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.aktion})`
+    case 'KartenGezogen':
+      return `KartenGezogen: ${name(ereignis.spielerIndex)} zieht ${ereignis.anzahl}`
+    case 'KartenAbgeworfen':
+      return `KartenAbgeworfen: ${name(ereignis.spielerIndex)} legt ${ereignis.karteIds.join(', ')} ab`
+    case 'ZugBegonnen':
+      return `ZugBegonnen: ${name(ereignis.spielerIndex)}, Teilzug ${ereignis.teilzug}`
+    case 'Abgewehrt':
+      return `Abgewehrt: ${name(ereignis.spielerIndex)} wehrt ${ereignis.karteId} ab`
+    case 'Ausgesetzt':
+      return `Ausgesetzt: ${name(ereignis.spielerIndex)} setzt aus`
+    case 'SchlussrundeBegonnen':
+      return `SchlussrundeBegonnen: ausgelöst von ${name(ereignis.ausloeser)}`
+    case 'PartieBeendet':
+      return 'PartieBeendet'
+  }
+}
+
+/** Die Ereignisse, die die Engine zum letzten Schritt gemeldet hat. */
+function Ereignisse({ zustand, ereignisse }: { zustand: Spielzustand; ereignisse: Ereignis[] }) {
+  return (
+    <>
+      <h2>Ereignisse des letzten Schritts ({ereignisse.length})</h2>
+      <ol data-testid="ereignisse" className="et-ereignisse">
+        {ereignisse.map((ereignis, index) => (
+          <li key={index}>{beschreibeEreignis(zustand, ereignis)}</li>
+        ))}
+      </ol>
     </>
   )
 }
