@@ -1,0 +1,117 @@
+[desktop] pointer coarse: false
+[desktop] titel: Schlangentanz
+[desktop] lang: de
+[desktop] favicon: /favicon.svg
+[desktop] favicon status: 200
+[desktop] lobby leer text: Schlangentanz | Du gegen bis zu drei KI-Gegner | Gegner | 1 Gegner | 2 Gegner | 3 Gegner | Mit Erweiterung | Neue Partie | Regeln
+[desktop] radios: ["1:true","2:false","3:false"]
+[desktop] weiterspielen leer: 0
+[desktop] masse lobby leer: {"sw":1280,"cw":1280,"klein":["INPUT \"\" 22x22"]}
+[desktop] radio 2 gewählt: true
+[desktop] erweiterung gewählt: true
+[desktop] nach start pfad: /spiel
+[desktop] spiel text: Spieltisch im Aufbau | Die Partie ist angelegt und gespeichert. Den Spieltisch gibt es noch nicht; bis dahin lässt sie sich hier nicht spielen. | Gegner | 2 | Erweiterung | an | Die Engine kennt den Erweiterungs-Schalter noch nicht. Die Partie wurde ohne ihn angelegt; gemerkt ist nur, was du gewählt hast. | Zurück zur Lobby
+[desktop] titel spiel: Spieltisch · Schlangentanz
+[desktop] masse spiel: {"sw":1280,"cw":1280,"klein":[]}
+[desktop] gespeichert: {"laenge":10804,"erweiterung":"1"}
+[desktop] nach zurueck: / lobby=1 laufend="Laufende Partie: 2 Gegner, Erweiterung an"
+[desktop] nach vor: /spiel spiel=1
+[desktop] nach reload: /spiel gegner=2 erw=an
+[desktop] link zur lobby: /
+[desktop] masse lobby partie: {"sw":1280,"cw":1280,"klein":["INPUT \"\" 22x22"]}
+[desktop] K5 zaehler 5s: {"timeout":0,"interval":0,"raf":0,"random":0}
+[desktop] K5 stand unveraendert: true
+[desktop] frage sichtbar: true "Es läuft schon eine Partie. Eine neue Partie überschreibt sie. | Ja, neue Partie | Abbrechen"
+[desktop] fokus in frage: Abbrechen
+[desktop] masse frage: {"sw":1280,"cw":1280,"klein":["INPUT \"\" 22x22"]}
+[desktop] nach abbrechen: frage=0 pfad=/ gleich=true fokus=Neue Partie
+[desktop] nach escape: frage=0 gleich=true
+[desktop] nach bestaetigen: /spiel gegner=3 erw=an neu=true
+[desktop] regeln: Regeln · Schlangentanz | Regeln | Diese Seite entsteht gerade. Die vollständigen Spielregeln stehen auf der Website des Spiels. | Spielregeln auf schlangentanz.ch | Zurück zur Lobby | href=https://schlangentanz.ch/rules
+[desktop] masse regeln: {"sw":1280,"cw":1280,"klein":[]}
+[desktop] zurueck von regeln: /spiel
+[desktop] /spiel/ direkt: spiel=1
+[desktop] unbekannt: Seite nicht gefunden · Schlangentanz | Diese Seite gibt es nicht | Unter /gibt-es-nicht ist nichts zu finden. | Zurück zur Lobby
+[desktop] /dev im Produktionsbuild: Seite nicht gefunden · Schlangentanz unbekannt=1
+[desktop] K4 fehlerfang: 1 "Hier ist ein Fehler aufgetreten | Pruefer: Zufall gesperrt | Eine laufende Partie lässt sich nicht fortsetzen: Ihr Spielstand wird verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt. | Zurück zur Lobby" pfad=/
+[desktop] masse fehler: {"sw":1280,"cw":1280,"klein":[]}
+[desktop] K4 zurueck: lobby=1 partie=null erw=null
+[desktop] konsole: ["warning: Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.","warning: Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.","error: Error: Pruefer: Zufall gesperrt\n    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)\n    at t (http://localhost:4373/assets/ind","error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt\n    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)\n    at t (http://loc"]
+[tablet] pointer coarse: true
+[tablet] titel: Schlangentanz
+[tablet] lang: de
+[tablet] favicon: /favicon.svg
+[tablet] favicon status: 200
+[tablet] lobby leer text: Schlangentanz | Du gegen bis zu drei KI-Gegner | Gegner | 1 Gegner | 2 Gegner | 3 Gegner | Mit Erweiterung | Neue Partie | Regeln
+[tablet] radios: ["1:true","2:false","3:false"]
+[tablet] weiterspielen leer: 0
+[tablet] masse lobby leer: {"sw":1024,"cw":1024,"klein":["INPUT \"\" 22x22"]}
+[tablet] radio 2 gewählt: true
+[tablet] erweiterung gewählt: true
+[tablet] nach start pfad: /spiel
+[tablet] spiel text: Spieltisch im Aufbau | Die Partie ist angelegt und gespeichert. Den Spieltisch gibt es noch nicht; bis dahin lässt sie sich hier nicht spielen. | Gegner | 2 | Erweiterung | an | Die Engine kennt den Erweiterungs-Schalter noch nicht. Die Partie wurde ohne ihn angelegt; gemerkt ist nur, was du gewählt hast. | Zurück zur Lobby
+[tablet] titel spiel: Spieltisch · Schlangentanz
+[tablet] masse spiel: {"sw":1024,"cw":1024,"klein":[]}
+[tablet] gespeichert: {"laenge":10804,"erweiterung":"1"}
+[tablet] nach zurueck: / lobby=1 laufend="Laufende Partie: 2 Gegner, Erweiterung an"
+[tablet] nach vor: /spiel spiel=1
+[tablet] nach reload: /spiel gegner=2 erw=an
+[tablet] link zur lobby: /
+[tablet] masse lobby partie: {"sw":1024,"cw":1024,"klein":["INPUT \"\" 22x22"]}
+[tablet] K5 zaehler 5s: {"timeout":0,"interval":0,"raf":0,"random":0}
+[tablet] K5 stand unveraendert: true
+[tablet] frage sichtbar: true "Es läuft schon eine Partie. Eine neue Partie überschreibt sie. | Ja, neue Partie | Abbrechen"
+[tablet] fokus in frage: Abbrechen
+[tablet] masse frage: {"sw":1024,"cw":1024,"klein":["INPUT \"\" 22x22"]}
+[tablet] nach abbrechen: frage=0 pfad=/ gleich=true fokus=Neue Partie
+[tablet] nach escape: frage=0 gleich=true
+[tablet] nach bestaetigen: /spiel gegner=3 erw=an neu=true
+[tablet] regeln: Regeln · Schlangentanz | Regeln | Diese Seite entsteht gerade. Die vollständigen Spielregeln stehen auf der Website des Spiels. | Spielregeln auf schlangentanz.ch | Zurück zur Lobby | href=https://schlangentanz.ch/rules
+[tablet] masse regeln: {"sw":1024,"cw":1024,"klein":[]}
+[tablet] zurueck von regeln: /spiel
+[tablet] /spiel/ direkt: spiel=1
+[tablet] unbekannt: Seite nicht gefunden · Schlangentanz | Diese Seite gibt es nicht | Unter /gibt-es-nicht ist nichts zu finden. | Zurück zur Lobby
+[tablet] /dev im Produktionsbuild: Seite nicht gefunden · Schlangentanz unbekannt=1
+[tablet] K4 fehlerfang: 1 "Hier ist ein Fehler aufgetreten | Pruefer: Zufall gesperrt | Eine laufende Partie lässt sich nicht fortsetzen: Ihr Spielstand wird verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt. | Zurück zur Lobby" pfad=/
+[tablet] masse fehler: {"sw":1024,"cw":1024,"klein":[]}
+[tablet] K4 zurueck: lobby=1 partie=null erw=null
+[tablet] konsole: ["warning: Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.","warning: Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.","error: Error: Pruefer: Zufall gesperrt\n    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)\n    at t (http://localhost:4373/assets/ind","error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt\n    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)\n    at t (http://loc"]
+[handy] pointer coarse: true
+[handy] titel: Schlangentanz
+[handy] lang: de
+[handy] favicon: /favicon.svg
+[handy] favicon status: 200
+[handy] lobby leer text: Schlangentanz | Du gegen bis zu drei KI-Gegner | Gegner | 1 Gegner | 2 Gegner | 3 Gegner | Mit Erweiterung | Neue Partie | Regeln
+[handy] radios: ["1:true","2:false","3:false"]
+[handy] weiterspielen leer: 0
+[handy] masse lobby leer: {"sw":390,"cw":390,"klein":["INPUT \"\" 22x22"]}
+[handy] radio 2 gewählt: true
+[handy] erweiterung gewählt: true
+[handy] nach start pfad: /spiel
+[handy] spiel text: Spieltisch im Aufbau | Die Partie ist angelegt und gespeichert. Den Spieltisch gibt es noch nicht; bis dahin lässt sie sich hier nicht spielen. | Gegner | 2 | Erweiterung | an | Die Engine kennt den Erweiterungs-Schalter noch nicht. Die Partie wurde ohne ihn angelegt; gemerkt ist nur, was du gewählt hast. | Zurück zur Lobby
+[handy] titel spiel: Spieltisch · Schlangentanz
+[handy] masse spiel: {"sw":390,"cw":390,"klein":[]}
+[handy] gespeichert: {"laenge":10804,"erweiterung":"1"}
+[handy] nach zurueck: / lobby=1 laufend="Laufende Partie: 2 Gegner, Erweiterung an"
+[handy] nach vor: /spiel spiel=1
+[handy] nach reload: /spiel gegner=2 erw=an
+[handy] link zur lobby: /
+[handy] masse lobby partie: {"sw":390,"cw":390,"klein":["INPUT \"\" 22x22"]}
+[handy] K5 zaehler 5s: {"timeout":0,"interval":0,"raf":0,"random":0}
+[handy] K5 stand unveraendert: true
+[handy] frage sichtbar: true "Es läuft schon eine Partie. Eine neue Partie überschreibt sie. | Ja, neue Partie | Abbrechen"
+[handy] fokus in frage: Abbrechen
+[handy] masse frage: {"sw":390,"cw":390,"klein":["INPUT \"\" 22x22"]}
+[handy] nach abbrechen: frage=0 pfad=/ gleich=true fokus=Neue Partie
+[handy] nach escape: frage=0 gleich=true
+[handy] nach bestaetigen: /spiel gegner=3 erw=an neu=true
+[handy] regeln: Regeln · Schlangentanz | Regeln | Diese Seite entsteht gerade. Die vollständigen Spielregeln stehen auf der Website des Spiels. | Spielregeln auf schlangentanz.ch | Zurück zur Lobby | href=https://schlangentanz.ch/rules
+[handy] masse regeln: {"sw":390,"cw":390,"klein":[]}
+[handy] zurueck von regeln: /spiel
+[handy] /spiel/ direkt: spiel=1
+[handy] unbekannt: Seite nicht gefunden · Schlangentanz | Diese Seite gibt es nicht | Unter /gibt-es-nicht ist nichts zu finden. | Zurück zur Lobby
+[handy] /dev im Produktionsbuild: Seite nicht gefunden · Schlangentanz unbekannt=1
+[handy] K4 fehlerfang: 1 "Hier ist ein Fehler aufgetreten | Pruefer: Zufall gesperrt | Eine laufende Partie lässt sich nicht fortsetzen: Ihr Spielstand wird verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt. | Zurück zur Lobby" pfad=/
+[handy] masse fehler: {"sw":390,"cw":390,"klein":[]}
+[handy] K4 zurueck: lobby=1 partie=null erw=null
+[handy] konsole: ["warning: Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.","warning: Die Engine kennt den Erweiterungs-Schalter noch nicht (kommt mit E1); die Partie ist ohne ihn angelegt.","error: Error: Pruefer: Zufall gesperrt\n    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)\n    at t (http://localhost:4373/assets/ind","error: Fehler beim Zeichnen: Error: Pruefer: Zufall gesperrt\n    at Math.random (eval at evaluate (:302:30), <anonymous>:1:37)\n    at t (http://loc"]

@@ -47,4 +47,4 @@ Seite neu laden (stellt `Math.random` wieder her), Local Storage löschen.
 
 ## Nicht abgedeckte Grenzfälle
 
-Unlesbarer Spielstand beim Laden: TF-APP-007.
+Unlesbarer Spielstand beim Laden: TF-APP-007 (beschädigt, Lobby), TF-APP-012 (älteres Speicherformat), TF-APP-013 (direkter Aufruf von `/spiel`), TF-APP-014 (exotische und sehr grosse Inhalte).

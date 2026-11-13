@@ -1,0 +1,10 @@
+G1 hochkant ueberstand 0 frage 1
+G1 quer ueberstand 0 frage 1 fokus Abbrechen
+G1 320px mit hinweis ueberstand 0 hinweis 1
+G2 doppelklick ohne partie: history 2 -> 3 nach zurueck / lobby 1
+G2 doppelklick bestaetigen: history 3 nach zurueck / laufend Laufende Partie: 1 Gegner, Erweiterung aus
+G2 zweites zurueck blank
+G3 verwaist: hinweis 0 weiter 0 erw danach 1
+G3 /spiel: Spieltisch im Aufbau | Es läuft keine Partie. Starte in der Lobby eine neue. | Zurück zur Lobby
+G4 ohne KI: hinweis 1 laufend -
+G4 /spiel: Spieltisch im Aufbau | Es läuft keine Partie. Starte in der Lobby eine neue. | Zurück zur Lobby
