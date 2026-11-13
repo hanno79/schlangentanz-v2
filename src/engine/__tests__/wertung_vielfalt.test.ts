@@ -133,6 +133,20 @@ describe('A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten 
     expect(wertung.summe).toBe(5 + 15 + 2 + KETTE)
   })
 
+  it('A11: der Bonus der ersten Schlange bleibt der höchste, auch wenn die zweite weniger Farben hat (Codex-Befund)', () => {
+    // Schlange 1 erreicht mit der Regenbogenschlange als Rot zwei Farben (Bonus 1), Schlange 2 hat nur Gelb (Bonus 0).
+    // Nur wenn der Bonus von Schlange 1 über das Schlangenende hinaus zählt, ist Rot besser als Blau.
+    const wertung = endwertung(true, [
+      [
+        ['Blau', 'Blau', 'Blau', 'Gelb', 'Blau', 'Blau', 'Regenbogenschlange', 'Rot', 'Rot'],
+        ['Gelb', 'Gelb', 'Gelb'],
+      ],
+    ]).spieler[0]
+    expect(jokerfarben(wertung)).toEqual(['Rot'])
+    expect(wertung.schlangen.map((s) => s.vielfaltBonus)).toEqual([1, 0])
+    expect(wertung.summe).toBe(5 + 3 + 1 + KETTE)
+  })
+
   it('A11: Gruppenpunkte und Vielfaltbonus werden gemeinsam am höchsten, nicht nacheinander', () => {
     // Gelb-Regenbogenschlange-Regenbogenschlange-Violett: als Violett 2 Gruppenpunkte, als Gelb nur 1,
     // aber Gelb ist eine neue Farbe. Die Summe ist gleich; bei gleicher Summe gilt die feste Reihenfolge (Gelb vor Violett).
