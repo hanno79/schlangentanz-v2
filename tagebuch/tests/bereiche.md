@@ -8,7 +8,7 @@ eingerichtet: 2026-11-12
 |---|---|---|
 | ENGINE | Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat | src/engine/** |
 | KI | KI-Gegner | src/ki/** |
-| BRETT | Spieltisch und Kartenaktionen | src/aktionsziel/**, src/reaktionen.ts, src/aktionsLabel.ts, src/spielLabelHelpers.ts, src/kartenTexte.ts, src/kartenfarben.ts |
+| BRETT | Spieltisch und Kartenaktionen | src/aktionsziel/**, src/reaktionen.ts, src/aktionsLabel.ts, src/spielLabelHelpers.ts, src/kartenTexte.ts, src/kartenfarben.ts, src/ui/spiel/** |
 | APP | App-Rahmen, Lobby, Fehlerdienst | src/App*, src/main.tsx, src/index.css, src/components/**, src/fehlerdienst.ts, src/spielstand*.ts, src/assets/**, public/**, index.html, vercel.json, src/ui/lobby/**, src/ui/regeln/**, tests/layout/lobby.spec.ts, tests/layout/navigation.spec.ts, tests/vercel_rewrites.test.ts |
 | DEV | Entwicklertisch unter /dev (nur Testhook-Build) | src/entwicklung/**, tests/entwicklertisch_bundle.test.ts, tests/layout/entwicklertisch*.hooks.spec.ts |
 | SPEC | Regelspiegel und Website-Abgleich | docs/GAME_SPEC.md, scripts/website_abgleich/**, tests/spec_documentation.test.ts |

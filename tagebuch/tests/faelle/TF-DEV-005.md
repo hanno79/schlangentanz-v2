@@ -17,7 +17,7 @@ Wird eine falsche Saat still ersetzt, glaubt ein Prüfer, er sehe die verlangte 
 
 ## Bestanden, wenn
 
-`seed=0` und `seed=4294967295` (mit 2 bzw. 3 Spielern) zeigen eine Partie. Jede der folgenden Adressen zeigt eine rote Meldung mit Grund und keine Partie: `seed=4294967296`, `seed=-1`, `seed=abc`, `seed=1.5`, `spieler=1`, `spieler=5`, `spieler=2.0`, fehlendes `spieler`, fehlendes `seed`, `erweiterung=2`, `szenario=gibtsnicht`, `szenario=`, `szenario=spielende&seed=1`, Pfad `/dev/xyz`. `/devx` zeigt den Platzhalter.
+`seed=0` und `seed=4294967295` (mit 2 bzw. 3 Spielern) zeigen eine Partie. Jede der folgenden Adressen zeigt eine rote Meldung mit Grund und keine Partie: `seed=4294967296`, `seed=-1`, `seed=abc`, `seed=1.5`, `spieler=1`, `spieler=5`, `spieler=2.0`, fehlendes `spieler`, fehlendes `seed`, `erweiterung=2`, `szenario=gibtsnicht`, `szenario=`, `szenario=spielende&seed=1`, Pfad `/dev/xyz`. `/devx` zeigt seit O2 die Seite für unbekannte Adressen „Diese Seite gibt es nicht“.
 
 ## Fehlgeschlagen, wenn
 

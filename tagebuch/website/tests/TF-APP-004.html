@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-APP-004 Vor, Zurück, Neuladen und direkter Aufruf zeigen zu jeder Adresse die richtige Seite. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-APP-004 Vor, Zurück, Neuladen und direkter Aufruf zeigen zu jeder Adresse die richtige Seite.</h1><p class="etiketten"><span class="etikett">Bereich App-Rahmen, Lobby, Fehlerdienst</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art beides</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die App wechselt die Seiten ohne Neuladen. Die Knöpfe Vor und Zurück des Browsers, das Neuladen und ein Lesezeichen müssen trotzdem genau die Seite zeigen, die zur Adresse gehört (Plan O2, Kriterium 3).</p><h2>Bestanden, wenn</h2><p>Zurück von <code>/spiel</code> zeigt die Lobby, Vor wieder <code>/spiel</code>. Der Verweis „Regeln“ führt auf <code>/regeln</code>, „Zurück zur Lobby“ auf <code>/</code>, zweimal Browser-Zurück danach auf <code>/regeln</code> und <code>/</code>. Direkt aufgerufen und neu geladen zeigen <code>/</code> die Lobby, <code>/spiel</code> und <code>/spiel/</code> „Spieltisch im Aufbau“, <code>/regeln</code> „Regeln“, <code>/unbekannt</code> und im Produktionsbuild <code>/dev</code> „Diese Seite gibt es nicht“. Der Fenstertitel passt jeweils zur Seite.</p><h2>Fehlgeschlagen, wenn</h2><p>Nach Vor oder Zurück zeigt die Seite einen anderen Inhalt als die Adresse, ein Neuladen ergibt eine Fehlerseite des Servers oder eine leere Seite.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O2-app-rahmen-lobby (PR #29)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild auf Port 4173</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Adressen <code>/</code>, <code>/spiel</code>, <code>/spiel/</code>, <code>/regeln</code>, <code>/unbekannt</code>, <code>/dev</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Lobby</td><td>„Neue Partie“</td><td></td><td>`/spiel`</td></tr><tr><td>2</td><td>Browser</td><td>Zurück, dann Vor, dann Zurück</td><td></td><td>Lobby, Spieltisch, Lobby</td></tr><tr><td>3</td><td>Lobby</td><td>Verweis „Regeln“, dann „Zurück zur Lobby“</td><td></td><td>`/regeln`, dann `/`</td></tr><tr><td>4</td><td>Browser</td><td>zweimal Zurück</td><td></td><td>`/regeln`, dann `/`</td></tr><tr><td>5</td><td>Browser</td><td>jede Adresse der Testdaten eintippen und danach F5</td><td></td><td>Inhalt wie unter „Bestanden, wenn“</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage löschen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Die Umschreibung auf Vercel (<code>vercel.json</code>) ist nicht im Browser geprüft: Die Vercel-Vorschau verlangt eine Anmeldung.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 11:12</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O2) &middot; agent &middot; pruefung-O2 @ <span class="commit" title="85013f4acbccfff9638e667f5bb9d688b4289b3f">85013f4</span> / Playwright 1.60.0 Chromium, alle drei Geräteklassen</p><p>In jeder Geräteklasse: Zurück von /spiel zeigt Lobby, Vor /spiel, Zurück Lobby. Regeln, Zurück zur Lobby, zweimal Browser-Zurück: /regeln, dann /. Direkt aufgerufen und neu geladen: / Lobby, /spiel und /spiel/ &#x27;Spieltisch im Aufbau&#x27;, /regeln &#x27;Regeln&#x27;, /unbekannt und /dev &#x27;Diese Seite gibt es nicht&#x27;; Titel jeweils passend. Zusätzlich im eingebauten Browser (1280x900) Vor/Zurück mehrfach und F5 auf /spiel und /regeln.</p><ul class="belege"><li><a href="belege/2026-11-13-1112-TF-APP-004-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1112-TF-APP-004-1.png" alt="Beleg 2026-11-13-1112-TF-APP-004-1.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

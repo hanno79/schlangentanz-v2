@@ -17,7 +17,7 @@ Der Entwicklertisch zeigt alle Hände offen und ist eine Test-Hintertür. In der
 
 ## Bestanden, wenn
 
-`npm run build` erzeugt nur `index-*.js`, `index-*.css` und `prod-*.js`; eine Suche in `dist/` nach `ntwicklertisch`, `Festgefahren`, `kaputt-doppelte-karte`, `Phasenschritte`, `Invariante`, `szenario`, `/dev` und `0x6d2b79f5` findet nichts. `http://localhost:4173/dev?seed=1&spieler=2` zeigt nur den Platzhalter „Schlangentanz – Das Spiel wird gerade neu gebaut …“ und lädt nur `index-*.js` und `index-*.css`.
+`npm run build` erzeugt nur `index-*.js`, `index-*.css` und `prod-*.js`; eine Suche in `dist/` nach `ntwicklertisch`, `Festgefahren`, `kaputt-doppelte-karte`, `Phasenschritte`, `Invariante`, `szenario`, `/dev` und `0x6d2b79f5` findet nichts. `http://localhost:4173/dev?seed=1&spieler=2` zeigt seit O2 nur die Seite für unbekannte Adressen „Diese Seite gibt es nicht – Unter /dev ist nichts zu finden.“ und lädt nur `index-*.js` und `index-*.css`.
 
 ## Fehlgeschlagen, wenn
 
@@ -39,8 +39,8 @@ Suchbegriffe wie unter „Bestanden, wenn“.
 |---|---|---|---|---|
 | 1 | Git Bash im Repo | bauen | `npm run build` | Exit 0, kein `Entwicklertisch-*` in der Liste |
 | 2 | dieselbe Konsole | Bundle durchsuchen | `grep -l -e ntwicklertisch -e Festgefahren -e /dev dist/index.html dist/assets/*` | keine Ausgabe |
-| 3 | Browser | Adresse öffnen | `http://localhost:4173/dev?seed=1&spieler=2` | nur Platzhalter, Netzwerk: `index-*.js`, `index-*.css` |
-| 4 | Browser | Adresse öffnen | `http://localhost:4173/dev/szenarien` | nur Platzhalter |
+| 3 | Browser | Adresse öffnen | `http://localhost:4173/dev?seed=1&spieler=2` | nur „Diese Seite gibt es nicht“, Netzwerk: `index-*.js`, `index-*.css` |
+| 4 | Browser | Adresse öffnen | `http://localhost:4173/dev/szenarien` | nur „Diese Seite gibt es nicht“ |
 
 ## Nicht abgedeckte Grenzfälle
 
