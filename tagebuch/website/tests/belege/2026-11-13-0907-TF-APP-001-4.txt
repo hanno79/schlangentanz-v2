@@ -1,0 +1,5 @@
+Ausgabe von tipp.mjs (Playwright Chromium 148.0.7778.96, Produktionsbuild 59a50e2 auf http://localhost:4173), Handy-Kontext 390x844 mit Touch:
+[adresse /probe/] Probe-Seite sichtbar: nein; Anfang: DAS KARTENSPIEL | Schlangentanz | Bereit für deine nächste Schlange | Baue farbige 
+[adresse /PROBE] Probe-Seite sichtbar: nein; Anfang: DAS KARTENSPIEL | Schlangentanz | Bereit für deine nächste Schlange | Baue farbige 
+[adresse /] Probe-Seite sichtbar: nein; Anfang: DAS KARTENSPIEL | Schlangentanz | Bereit für deine nächste Schlange | Baue farbige 
+[adresse /game] Probe-Seite sichtbar: nein; Anfang: Spieler | 0 Punkte | 5/5 Karten · 0/2 Schlangen | Phase | Karten ausspielen | Gespielt | 0

@@ -1,0 +1,8 @@
+Ausgabe von tipp.mjs (Playwright Chromium 148.0.7778.96, Produktionsbuild 59a50e2 auf http://localhost:4173), Desktop-Kontext ohne Touch, setViewportSize ohne Neuladen:
+[grenze 1025] Probe-Seite | Geräteklasse: Desktop | Touch: nein | Breite: 1025 px | Neu messen | Messungen: 1
+[grenze 1024] Probe-Seite | Geräteklasse: Tablet | Touch: nein | Breite: 1024 px | Neu messen | Messungen: 1
+[grenze 600] Probe-Seite | Geräteklasse: Tablet | Touch: nein | Breite: 600 px | Neu messen | Messungen: 1
+[grenze 599] Probe-Seite | Geräteklasse: Handy | Touch: nein | Breite: 599 px | Neu messen | Messungen: 1
+[grenze 320] Probe-Seite | Geräteklasse: Handy | Touch: nein | Breite: 320 px | Neu messen | Messungen: 1
+[grenze 1280] Probe-Seite | Geräteklasse: Desktop | Touch: nein | Breite: 1280 px | Neu messen | Messungen: 1
+[nach Neuladen] Probe-Seite | Geräteklasse: Desktop | Touch: nein | Breite: 1280 px | Neu messen | Messungen: 0

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PROBE-002 Auf und neben den Grenzen 600 und 1024 wechselt die Anzeige ohne Neuladen richtig, und erst Neuladen setzt den Zähler zurück. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 12.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PROBE-002 Auf und neben den Grenzen 600 und 1024 wechselt die Anzeige ohne Neuladen richtig, und erst Neuladen setzt den Zähler zurück.</h1><p class="etiketten"><span class="etikett">Bereich Probe-Seite für die Prüferabnahme (PROBE-1, wird nicht gemergt)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PROBE-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Festlegung zieht die Grenzen bei 600 und 1024 Pixeln, und genau dort passieren die typischen Fehler um eins. Geprüft wird im echten Browser, ob sich die Anzeige beim Ändern der Fensterbreite sofort anpasst. Der Zähler „Messungen“ zeigt dabei, dass die Seite nicht neu geladen wurde.</p><h2>Bestanden, wenn</h2><p>Nach einem Klick auf „Neu messen“ (Zähler 1) zeigt die Seite bei 1025 px „Desktop“, bei 1024 px „Tablet“, bei 600 px „Tablet“, bei 599 px „Handy“, bei 320 px „Handy“ und bei 1280 px wieder „Desktop“; „Breite“ nennt jedes Mal genau die eingestellte Zahl und „Messungen: 1“ bleibt stehen. Nach dem Neuladen steht „Messungen: 0“.</p><h2>Fehlgeschlagen, wenn</h2><p>Bei 600 steht „Handy“, bei 1024 „Desktop“, bei 1025 „Tablet“ oder bei 599 „Tablet“; die Anzeige ändert sich erst nach einem Neuladen; oder der Zähler springt beim Ändern der Breite auf 0.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>probe/PROBE-1-geraeteklasse (59a50e2)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild ab Commit 59a50e2 auf <code>http://localhost:4173/probe</code></td></tr><tr><td>Ausgangslage prüfen</td><td>Browser ohne Touch, Fenster 1280×900, Seite zeigt „Messungen: 0“</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Fensterbreiten in dieser Reihenfolge: 1025, 1024, 600, 599, 320, 1280 (Höhe immer 900).</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Seite `/probe`, 1280×900</td><td>„Neu messen“ einmal klicken</td><td></td><td>„Messungen: 1“</td></tr><tr><td>2</td><td>Fenstergrösse (Entwicklerwerkzeuge oder Playwright `setViewportSize`)</td><td>Breite setzen, nicht neu laden</td><td>1025</td><td>„Geräteklasse: Desktop“, „Breite: 1025 px“, „Messungen: 1“</td></tr><tr><td>3</td><td>Fenstergrösse</td><td>Breite setzen</td><td>1024</td><td>„Geräteklasse: Tablet“, „Breite: 1024 px“, „Messungen: 1“</td></tr><tr><td>4</td><td>Fenstergrösse</td><td>Breite setzen</td><td>600</td><td>„Geräteklasse: Tablet“, „Breite: 600 px“, „Messungen: 1“</td></tr><tr><td>5</td><td>Fenstergrösse</td><td>Breite setzen</td><td>599</td><td>„Geräteklasse: Handy“, „Breite: 599 px“, „Messungen: 1“</td></tr><tr><td>6</td><td>Fenstergrösse</td><td>Breite setzen</td><td>320</td><td>„Geräteklasse: Handy“, „Breite: 320 px“, „Messungen: 1“</td></tr><tr><td>7</td><td>Fenstergrösse</td><td>Breite setzen</td><td>1280</td><td>„Geräteklasse: Desktop“, „Breite: 1280 px“, „Messungen: 1“</td></tr><tr><td>8</td><td>Browser</td><td>Seite neu laden (F5)</td><td></td><td>„Geräteklasse: Desktop“, „Messungen: 0“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 09:07</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer PROBE-1) &middot; agent &middot; pruefung-probe-1 @ <span class="commit" title="59a50e23d8a41e26e5378a34bbf58bebc140de0d">59a50e2</span> / Playwright Chromium 148.0.7778.96 (Playwright 1.60.0), 1280x900 ohne Touch, Breite variiert</p><p>Nach einem Klick (Messungen: 1) per setViewportSize ohne Neuladen: 1025 Desktop, 1024 Tablet, 600 Tablet, 599 Handy, 320 Handy, 1280 Desktop; Breite jeweils exakt die eingestellte Zahl; Messungen blieb 1. Nach reload Messungen: 0.</p><ul class="belege"><li><a href="belege/2026-11-13-0907-TF-PROBE-002-1.txt">2026-11-13-0907-TF-PROBE-002-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

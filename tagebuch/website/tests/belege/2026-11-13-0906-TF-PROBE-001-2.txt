@@ -1,0 +1,6 @@
+Eingebauter Browser der Desktop-App (mcp__Claude_Browser), Fenster 1280x900, Maus, http://localhost:4173/probe, get_page_text:
+nach dem Laden: Probe-Seite / Geräteklasse: Desktop / Touch: nein / Breite: 1280 px / Neu messen / Messungen: 0
+nach zwei left_click auf den Knopf "Neu messen": ... Geräteklasse: Desktop / Touch: nein / Breite: 1280 px / Messungen: 2
+nach resize_window 800x900 (ohne Neuladen): Geräteklasse: Tablet / Touch: nein / Breite: 800 px / Messungen: 2
+nach resize_window 1025x900: Geräteklasse: Desktop / Touch: nein / Breite: 1025 px / Messungen: 2
+read_console_messages: nur 4 Warnungen "Error with Permissions-Policy header: Unrecognized feature ..." (Header des Vorschau-Servers), keine Fehler.
