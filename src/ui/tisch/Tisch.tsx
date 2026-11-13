@@ -1,6 +1,7 @@
 import '../tokens.css'
 import './tisch.css'
 import './karten.css'
+import './quer.css'
 import type { CSSProperties } from 'react'
 import { useState } from 'react'
 import { Karte, Kartenrueckseite } from '../karten/Karte'
@@ -9,6 +10,8 @@ import { kartenname } from '../karten/kartentexte'
 import Verweis from '../lobby/Verweis'
 import type { EigeneAnsicht, StatusAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
 import { Gegner } from './Gegner'
+import { useUeberlauf } from './ueberlauf'
+import { Weiter } from './Weiter'
 import { GrossKnopf, Lupe } from './Lupe'
 import { KARTENGROESSE } from './groessen'
 import { Ablage, Grube, Schlangen } from './Schlange'
@@ -29,6 +32,7 @@ Der Tisch zeigt nur an. Was er zeigt, kommt aus der Sicht des Menschen
 
 export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
   const [gross, setzeGross] = useState<Bildkarte | null>(null)
+  const [flaeche, flaecheUeberlauf] = useUeberlauf<HTMLDivElement>()
   return (
     <div className="spieltisch" data-testid="spiel">
       <header className="st-kopf">
@@ -41,7 +45,8 @@ export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
         </Verweis>
       </header>
 
-      <div className="st-flaeche">
+      <div className="st-flaeche-rahmen">
+      <div ref={flaeche} className="st-flaeche">
         <section className="st-gegnerliste" aria-label={TISCH.gegner}>
           {ansicht.gegner.map((gegner) => (
             <Gegner key={gegner.id} gegner={gegner} />
@@ -49,6 +54,8 @@ export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
         </section>
         <Mitte ansicht={ansicht} zeigeGross={setzeGross} />
         {ansicht.erweiterung && <Auslage ich={ansicht.ich} zeigeGross={setzeGross} />}
+      </div>
+      <Weiter ueberlauf={flaecheUeberlauf} />
       </div>
 
       <section className="st-unten" aria-label={TISCH.deinPlatz}>
@@ -138,6 +145,7 @@ function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: 
 /** Deine Hand, unten fest; die Karten teilen sich die Breite, damit keine angeschnitten ist. */
 function Hand({ ich }: { ich: EigeneAnsicht }) {
   const anzahl = { '--hand-anzahl': ich.hand.length } as CSSProperties
+  const [reihe, ueberlauf] = useUeberlauf<HTMLUListElement>()
   return (
     <section className="st-hand" aria-label={TISCH.deineHand}>
       <div className="st-hand-kopf">
@@ -150,13 +158,16 @@ function Hand({ ich }: { ich: EigeneAnsicht }) {
       {ich.hand.length === 0 ? (
         <p className="st-leer">{TISCH.keineHandkarte}</p>
       ) : (
-        <ul className="st-hand-karten" aria-label={TISCH.handkartenListe} style={anzahl}>
-          {ich.hand.map((karte) => (
-            <li key={karte.id}>
-              <Karte karte={karte} sizes={KARTENGROESSE.hand} />
-            </li>
-          ))}
-        </ul>
+        <div className="st-rolle">
+          <ul ref={reihe} className="st-hand-karten" aria-label={TISCH.handkartenListe} style={anzahl}>
+            {ich.hand.map((karte) => (
+              <li key={karte.id}>
+                <Karte karte={karte} sizes={KARTENGROESSE.hand} />
+              </li>
+            ))}
+          </ul>
+          <Weiter ueberlauf={ueberlauf} />
+        </div>
       )}
     </section>
   )

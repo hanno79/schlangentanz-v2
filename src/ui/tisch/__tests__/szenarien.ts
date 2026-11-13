@@ -120,6 +120,17 @@ export function langeSchlange(): Spielzustand {
     .zustand()
 }
 
+/**
+ * Das Mittelspiel am Zugende mit zehn Handkarten (A5: Abwerfen). Mehr Karten,
+ * als in eine Reihe passen; die Hand darf deinen Schlangen keine Höhe nehmen.
+ */
+export function zehnHandkarten(): Spielzustand {
+  const zustand = mittelspiel()
+  zustand.spieler[0].hand.push(...zustand.nachziehstapel.splice(0, 5))
+  zustand.zug.abschnitt = 'Abwerfen'
+  return zustand
+}
+
 /** Eine frisch begonnene Partie wie aus der Lobby: 2 Spieler, ohne Erweiterung, Saat 1. */
 export function neuePartie(): Spielzustand {
   return erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(1) })
@@ -132,6 +143,7 @@ export const TISCH_SZENARIEN: readonly TischSzenario[] = [
   { name: 'angriff-auf-mich', erzeuge: angriffAufMich },
   { name: 'neue-partie', erzeuge: neuePartie },
   { name: 'lange-schlange', erzeuge: langeSchlange },
+  { name: 'zehn-handkarten', erzeuge: zehnHandkarten },
 ]
 
 /** Die Karten-Ids und Aufgaben-Ids, die der Mensch nie sehen darf: fremde Handkarten und fremde geheime Aufgaben (B2). */

@@ -185,6 +185,74 @@ Höhe übrig (Plan O4).
   }
 }
 
+/* „Geht weiter“: Zeichen am Rand eines scrollenden Bereichs (Weiter.tsx). Ein
+   Verlauf in den Grund der Fläche und darauf die Zahl der Karten hinter dem
+   Rand. Es nimmt keine Klicks an; darunter bleibt alles bedienbar. */
+.st-rolle {
+  position: relative;
+  min-width: 0;
+}
+
+.st-weiter {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  font-size: var(--groesse-klein);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.st-weiter--rechts,
+.st-weiter--links {
+  top: 0;
+  bottom: var(--abstand-2);
+  width: 3rem;
+}
+
+.st-weiter--rechts {
+  right: 0;
+  justify-content: flex-end;
+  background: linear-gradient(to right, transparent, var(--weiter-grund) 60%);
+}
+
+.st-weiter--links {
+  left: 0;
+  background: linear-gradient(to left, transparent, var(--weiter-grund) 60%);
+}
+
+.st-weiter--unten,
+.st-weiter--oben {
+  left: 0;
+  right: 0;
+  height: 2.5rem;
+  justify-content: center;
+}
+
+.st-weiter--unten {
+  bottom: 0;
+  align-items: flex-end;
+  padding-bottom: var(--abstand-1);
+  background: linear-gradient(to bottom, transparent, var(--weiter-grund));
+}
+
+.st-weiter--oben {
+  top: 0;
+  align-items: flex-start;
+  padding-top: var(--abstand-1);
+  background: linear-gradient(to top, transparent, var(--weiter-grund));
+}
+
+.st-weiter-zeichen {
+  padding: 0 var(--abstand-2);
+  white-space: nowrap;
+  color: var(--farbe-tinte);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius-voll);
+  box-shadow: var(--schatten-flaeche);
+}
+
 /* Grossansicht einer Karte (<dialog>). */
 .st-lupe {
   padding: var(--abstand-4);

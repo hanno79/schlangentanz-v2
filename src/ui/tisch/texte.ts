@@ -31,6 +31,14 @@ export const TISCH = {
   schliessen: 'Schliessen',
 }
 
+/** Das Zeichen am Rand eines Bereichs, hinter dem noch etwas liegt (`Weiter`). */
+export const WEITER = {
+  rechts: (anzahl: number) => `+${anzahl} ›`,
+  links: (anzahl: number) => `‹ +${anzahl}`,
+  unten: 'mehr ↓',
+  oben: 'mehr ↑',
+}
+
 export const anzahlKarten = (anzahl: number): string => (anzahl === 1 ? '1 Karte' : `${anzahl} Karten`)
 
 export const handkartenText = (anzahl: number): string => (anzahl === 1 ? '1 Handkarte' : `${anzahl} Handkarten`)
@@ -68,7 +76,8 @@ export function statusText(status: StatusAnsicht): { titel: string; text: string
     const text = entscheidet.ich ? 'Du entscheidest, ob du abwehrst.' : `${entscheidet.name} entscheidet, ob abgewehrt wird.`
     return { titel, text }
   }
-  const titel = status.amZug.ich ? 'Du bist dran' : `${status.amZug.name} ist dran`
+  // „ist dran“ bleibt beisammen; umbrechen darf die Zeile nur vor „ist“.
+  const titel = status.amZug.ich ? 'Du bist\u00a0dran' : `${status.amZug.name} ist\u00a0dran`
   const teile: string[] = []
   if (status.teilzug === 2) teile.push('Zweiter Zug nach dem Verdoppler')
   if (status.amZug.ich) teile.push(status.abschnitt === 'Abwerfen' ? 'Lege überzählige Handkarten ab.' : 'Spiele Karten aus deiner Hand.')

@@ -1,6 +1,8 @@
 import { Karte } from '../karten/Karte'
 import type { AblageAnsicht, GrubeAnsicht, KarteInSchlange, Person, SchlangeAnsicht } from '../spiel/tischAnsicht'
 import { KARTENGROESSE } from './groessen'
+import { useUeberlauf } from './ueberlauf'
+import { Weiter } from './Weiter'
 import { TISCH, ablageText, grubeText, schlangenName, schlangenTitel } from './texte'
 
 /*
@@ -25,8 +27,10 @@ function gliedKlasse({ gruppe }: KarteInSchlange): string | undefined {
  * denen sie liegt. Der zugängliche Name sagt beides in Worten.
  */
 export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsicht; titel: string; groesse: string }) {
+  const [zeile, ueberlauf] = useUeberlauf<HTMLOListElement>()
   return (
-    <ol className="st-schlange" aria-label={schlangenName(titel, schlange.karten.length, schlange.farbgruppen)}>
+    <div className="st-rolle">
+    <ol ref={zeile} className="st-schlange" aria-label={schlangenName(titel, schlange.karten.length, schlange.farbgruppen)}>
       {schlange.karten.map((glied) => (
         <li key={glied.karte.id} className={gliedKlasse(glied)} data-gruppe={glied.gruppe?.farbe}>
           <Karte karte={glied.karte} sizes={groesse} />
@@ -39,6 +43,8 @@ export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsic
         </li>
       ))}
     </ol>
+    <Weiter ueberlauf={ueberlauf} />
+    </div>
   )
 }
 

@@ -25,6 +25,15 @@ sonst nirgends offen liegen: im Szenario `geheimeHaende`.
 
 afterEach(cleanup)
 
+/*
+Zeitgrenzen: Jeder Schritt zeichnet den ganzen Tisch in jsdom (etwa 15 ms). Die
+80 Zufallszustände brauchen allein gut eine Sekunde, eine ganze Partie ab E2
+einige hundert Schritte. Unter Last (volle Suite, alle Worker) reichen die
+5 s von Vitest dafür nicht sicher; ein Abbruch wäre ein Wackler, kein Befund.
+*/
+const ZEIT_ZUFALL = 30_000
+const ZEIT_PARTIE = 120_000
+
 function zeichne(zustand: Spielzustand): string {
   const { container } = render(<Tisch ansicht={tischAnsicht(zustand)} />)
   const html = container.innerHTML
@@ -70,7 +79,7 @@ describe('O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im H
       const zustand = zufallszustand(erzeugeZufall(saat))
       expect(verrateneIds(zustand, zeichne(zustand)), `Zufallszustand ${saat}`).toEqual([])
     }
-  })
+  }, ZEIT_ZUFALL)
 
   it.each([
     [11, 2, false],
@@ -81,7 +90,7 @@ describe('O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im H
     schritte.forEach((zustand, schritt) => {
       expect(verrateneIds(zustand, zeichne(zustand)), `Saat ${saat}, Schritt ${schritt}`).toEqual([])
     })
-  })
+  }, ZEIT_PARTIE)
 
   it('O4 K2: liegen die Kartenarten der fremden Hände sonst nirgends offen, steht auch ihr Name nicht im HTML', () => {
     const zustand = geheimeHaende()

@@ -16,6 +16,8 @@ keine Höhe (O1, Hinweis 1).
   --karte-hand-max: 64px;
   --karte-klein: 22px;
   --rand: var(--abstand-3);
+  /* Grund unter dem Zeichen „geht weiter“ (karten.css); auf weissen Flächen weiss. */
+  --weiter-grund: var(--farbe-tisch);
 
   position: fixed;
   inset: 0;
@@ -151,8 +153,17 @@ keine Höhe (O1, Hinweis 1).
 }
 
 /* Tischfläche: Gegner, Mitte, Auslage. Scrollt senkrecht, nie waagrecht. */
-.st-flaeche {
+/* Der Rahmen trägt das Zeichen „mehr ↓“ über dem Rand der scrollenden Fläche. */
+.st-flaeche-rahmen {
   grid-area: flaeche;
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  min-width: 0;
+}
+
+.st-flaeche {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas: 'gegner' 'mitte' 'auslage';
@@ -179,6 +190,7 @@ keine Höhe (O1, Hinweis 1).
 
 .st-gegner {
   --karte-breite: var(--karte-gegner);
+  --weiter-grund: var(--farbe-flaeche);
   display: flex;
   flex-direction: column;
   gap: var(--abstand-1);
@@ -221,6 +233,7 @@ keine Höhe (O1, Hinweis 1).
   grid-template-columns: minmax(0, 1fr);
   min-height: 0;
   background: var(--farbe-flaeche);
+  --weiter-grund: var(--farbe-flaeche);
   border-top: 1px solid var(--farbe-linie);
   box-shadow: var(--schatten-leiste);
 }
@@ -264,22 +277,4 @@ keine Höhe (O1, Hinweis 1).
   margin: 0;
   padding: var(--abstand-2) 0 0;
   list-style: none;
-}
-
-/* Handy quer und andere niedrige Schirme im Querformat: dein Platz rechts. Die Karten bleiben in
-   Handygrösse, weil die Breitenstufen oben erst ab 501 px Höhe gelten. */
-@media (orientation: landscape) and (max-height: 500px) {
-  .spieltisch {
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
-    /* Dein Platz reicht über die ganze Höhe, die Kopfleiste steht nur über der Tischfläche. */
-    grid-template-areas: 'kopf unten' 'flaeche unten';
-  }
-
-  .st-unten {
-    grid-template-rows: minmax(0, 1fr) auto;
-    border-top: 0;
-    border-left: 1px solid var(--farbe-linie);
-    box-shadow: var(--schatten-leiste-seite);
-  }
 }

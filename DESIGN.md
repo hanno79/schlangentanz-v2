@@ -190,6 +190,17 @@ scrollt, wenn sie zu lang wird: So sind beide in der Höhe stets ganz zu sehen,
 mit Fusionskarten und Balken. Die Zahl des Nachziehstapels steht zusätzlich in
 der Kopfleiste („Stapel 68“), damit man sie ohne Scrollen liest.
 
+**Geht weiter:** Jeder Bereich, der scrollt (Schlangen als Zeilen, die Hand mit
+mehr als fünf Karten in Handy quer, die Tischfläche), zeigt an jedem Rand, hinter
+dem noch etwas liegt, ein Zeichen: einen Verlauf in den Grund der Fläche und
+darauf ein Abzeichen in Weiss mit Linie, an einer Zeile „+3 ›“ (so viele Karten
+liegen noch hinter dem Rand, links „‹ +3“), an der Tischfläche „mehr ↓“ bzw.
+„mehr ↑“. Es nimmt keine Klicks an und wird nicht vorgelesen (die Kartenzahl
+steht im Namen der Schlange). Auf Touch-Geräten gibt es keinen Scrollbalken;
+ohne dieses Zeichen sähe eine Zeile, deren Rand zwischen zwei Karten liegt, aus
+wie zu Ende. Im Querformat bis 380 px Höhe (etwa 740×360) werden die Karten
+etwas kleiner, damit deine zwei Schlangen samt Fusion über der Hand Platz haben.
+
 **Handy** (schmaler als 700 px, oder niedriger als 500 px im Querformat): Auch
 die Schlangen der Gegner stehen als kompakte Zeilen, die seitlich scrollen.
 **Handy quer** (niedriger als 500 px im Querformat): Dein Platz steht rechts
