@@ -1,0 +1,170 @@
+/*
+Regelseite `/regeln` (O9). Nur Variablen aus src/ui/tokens.css; Verweise und
+Fokus kommen aus dem App-Rahmen (lobby.css).
+
+Die Seite ist länger als jedes Fenster. Sie scrollt im Rahmen selbst und nicht
+als ganzes Dokument, wie es DESIGN.md für alles verlangt, was nicht auf den
+Schirm passt; die Textspalte ist für die Kartenübersicht breiter als sonst.
+`.rahmen.regelseite`, damit die Regel unabhängig von der Reihenfolge der
+Stylesheets vor `.rahmen` aus lobby.css gilt.
+*/
+
+.rahmen.regelseite {
+  --rahmen-breite: 56rem;
+  flex: none;
+  height: 100dvh;
+  overflow-y: auto;
+}
+
+.regelseite__website {
+  margin: var(--abstand-3) 0 0;
+}
+
+.regelhilfe {
+  display: grid;
+  gap: var(--abstand-6);
+  min-width: 0;
+}
+
+.regelhilfe__abschnitt {
+  display: grid;
+  gap: var(--abstand-4);
+}
+
+.regelhilfe__titel {
+  margin: 0;
+  color: var(--farbe-akzent-stark);
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-titel);
+  font-weight: 400;
+  line-height: var(--zeilenhoehe-titel);
+}
+
+.regelhilfe__hinweis {
+  margin: 0;
+  color: var(--farbe-tinte-leise);
+}
+
+/* Ein Zug in fünf Schritten */
+
+.zugablauf {
+  display: grid;
+  gap: var(--abstand-3);
+  margin: 0;
+  padding-left: 2rem;
+}
+
+.zugablauf__schritt {
+  padding: var(--abstand-3) var(--abstand-4);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.zugablauf__schritt::marker {
+  color: var(--farbe-akzent-stark);
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+}
+
+.zugablauf__titel {
+  margin: 0 0 var(--abstand-1);
+  font-size: var(--groesse-gross);
+  line-height: 1.3;
+}
+
+/* Ein Satz je Zeile, damit das Etikett „Ergänzung des Autors“ eindeutig bei seinem Satz steht. */
+.zugablauf__text {
+  display: grid;
+  gap: var(--abstand-1);
+  margin: 0;
+  line-height: var(--zeilenhoehe);
+}
+
+.zugablauf__ergaenzung > span:first-child {
+  text-decoration: underline dotted var(--farbe-akzent);
+  text-underline-offset: 3px;
+}
+
+.zugablauf__etikett,
+.zugablauf__erweiterung {
+  display: inline-block;
+  padding: 0 var(--abstand-2);
+  border-radius: var(--radius-voll);
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+  vertical-align: 0.1em;
+}
+
+.zugablauf__etikett {
+  background: var(--farbe-akzent-hell);
+  color: var(--farbe-akzent-stark);
+}
+
+.zugablauf__erweiterung {
+  background: var(--farbe-tisch);
+  color: var(--farbe-tinte);
+}
+
+/* Alle Karten */
+
+.kartenuebersicht__gruppe {
+  display: grid;
+  gap: var(--abstand-2);
+}
+
+.kartenuebersicht__titel {
+  margin: 0;
+  font-size: var(--groesse-text);
+  font-weight: 700;
+}
+
+.kartenuebersicht {
+  display: grid;
+  /* So breit, dass der längste Kartenname („Schlangenbeschwörer“) ohne Umbruch im Wort passt. */
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--abstand-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kartenknopf {
+  display: grid;
+  justify-items: center;
+  gap: var(--abstand-1);
+  width: 100%;
+  min-height: var(--ziel-mindestens);
+  padding: var(--abstand-1);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--farbe-tinte);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--dauer);
+  /* Der blaue Tipp-Schimmer von Chrome bliebe über der Grossansicht stehen. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kartenknopf .karte {
+  --karte-breite: 4.5rem;
+}
+
+.kartenknopf:hover {
+  border-color: var(--farbe-linie);
+  background: var(--farbe-flaeche);
+}
+
+.kartenknopf__name {
+  font-size: var(--groesse-klein);
+  line-height: 1.25;
+  text-align: center;
+  /* Umbruch nur zwischen Wörtern: Der Rahmen erlaubt sonst `anywhere`, und ohne
+     Trennwörterbuch zerfiele „Farbenschutz“ mitten im Wort. */
+  hyphens: manual;
+  overflow-wrap: normal;
+}

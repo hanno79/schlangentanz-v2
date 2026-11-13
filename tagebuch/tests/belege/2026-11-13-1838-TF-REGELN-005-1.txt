@@ -1,0 +1,52 @@
+== Vollständigkeit je Kartenabschnitt und Aufgabenbeispiel, Stand a164a66
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Farbenschutz (A7.2): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 3ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Regenbogenschlange (A7.3): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenfrass (A7.4): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenblockade (A7.5): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Farbendieb (A7.1): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangengrube (A7.6): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Farbenfusion (A7.7): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Verdoppler (A7.8): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenhäutung (A7.9): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenkorb des Glücks (A7.10): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Comeback (A8.1): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Risiko-Belohnung (A8.2): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Farbenpracht: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Farbharmonie: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 1ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Farbkombination: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Farbvielfalt: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Vielfaltskönig: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Farbwechsler: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Fusionsexperte: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangenbeschwörer: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangenmeister: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangenrepertoire: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangenbändiger: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangentanz: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Symmetriemeister: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Gelber Schatz: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+ ✓ src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Lila Riese: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat 0ms
+      Tests  27 passed | 105 skipped (132)
+
+== Gegenprobe A: Absatz in A7.1 der Spec eingefügt
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Farbendieb (A7.1): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
++   "Ein eingefügter Prüferabsatz, der im Kartentext fehlt.",
+      Tests  1 failed | 131 passed (132)
+
+== Gegenprobe B: Zeile „Ergebnis nach Anwendung der Schlangenhäutung“ aus sonderkarten.ts gelöscht
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/karten/Grossansicht.test.tsx > O9: Kartentext zeigt den Wortlaut der Spielanleitung (Kriterium 1) > O9/A7.9: die Schlangenhäutung zeigt das Ergebnis ihres Beispiels als Reihe von Kartenbildern
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenhäutung (A7.9): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
++   "Ergebnis nach Anwendung der Schlangenhäutung",
+      Tests  2 failed | 354 passed (356)
+
+== Gegenprobe C: Bildzeilen Schlangenblockade und Schlangentanz verfälscht
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Schlangenblockade steht wörtlich in den Quellabschnitten
++   "Kartenreihe: Rot Rot Schlangenblockade Rot",
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Schlangentanz steht wörtlich in den Quellabschnitten
++   "Kartenreihe: Blau Grün Grün Blau Grün Rot Rot Rot Violett Violett Braun",
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Schlangenblockade (A7.5): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A9: Aufgabe Schlangentanz: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat
+      Tests  4 failed | 352 passed (356)

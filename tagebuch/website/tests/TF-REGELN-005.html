@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-REGELN-005 Jeder Satz aus dem Abschnitt einer Karte in Teil A erscheint auch in ihrem Kartentext. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-REGELN-005 Jeder Satz aus dem Abschnitt einer Karte in Teil A erscheint auch in ihrem Kartentext.</h1><p class="etiketten"><span class="etikett">Bereich Regelhilfe: Regelseite /regeln, Kartentexte aus Teil A, Grossansicht einer Karte</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein Kartentext, der nur wörtliche Sätze enthält, kann trotzdem einen Satz weglassen. Fehlt etwa das Ergebnis eines Beispiels, versteht der Spieler das Beispiel nicht mehr. Bildzeilen wie „[Blau] [Rot]“ zählen dabei nicht als Satz.</p><h2>Bestanden, wenn</h2><p>Für jede Sonderkarte (A7.1 bis A7.10), die Comeback-Karte (A8.1) und die Risiko-Belohnungs-Karte (A8.2) fehlt im Kartentext keine Textzeile des Abschnitts.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Textzeile des Abschnitts fehlt, etwa „Ergebnis nach Anwendung der Schlangenhäutung“ samt Ergebnis in A7.9.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O9-regelhilfe (PR #37)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem geprüften Stand</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Alle 12 Karten mit eigenem Abschnitt in A7 und A8.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`docs/GAME_SPEC.md`, A7.9</td><td>Beispiele lesen</td><td></td><td>Zeile „Ergebnis nach Anwendung der Schlangenhäutung“</td></tr><tr><td>2</td><td>`/regeln`, Schlangenhäutung</td><td>Grossansicht öffnen, „Beispiele“ lesen</td><td></td><td>steht das Ergebnis da?</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Ein vorübergehender Vitest-Test vergleicht jede Zeile von <code>abschnittA(quelle)</code> (ohne Bildzeilen) mit dem zusammengesetzten Kartentext und listet fehlende Zeilen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Farbkarten und Aufgaben haben keinen eigenen Abschnitt in Teil A; ihre Texte stammen aus A1, A5, A11 und der Tabelle in A9.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 18:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O9, Iteration 2) &middot; agent &middot; pruefung-O9-i2 @ <span class="commit" title="a164a665d82abdbd0d3876375ffe3cb2f8aab1a7">a164a66</span> / Vitest 4.1.7; Playwright Chromium 1.60.0</p><p>Vollständigkeitstest grün für 12 Kartenabschnitte (A7.1-A7.10, A8.1, A8.2) und 15 Aufgaben. Schlangenhäutung zeigt &#x27;Ergebnis nach Anwendung der Schlangenhäutung&#x27; mit Reihe Gelb Gelb Blau Rot Rot (im Browser gesehen, 5 Klassen). Gegenproben rot: Absatz in A7.1 (1 rot), gelöschte Zeile (2 rot), verfälschte Bildzeilen (4 rot).</p><ul class="belege"><li><a href="belege/2026-11-13-1838-TF-REGELN-005-1.txt">2026-11-13-1838-TF-REGELN-005-1.txt</a></li><li><a href="belege/2026-11-13-1838-TF-REGELN-005-2.png"><img class="beleg-vorschau" src="belege/2026-11-13-1838-TF-REGELN-005-2.png" alt="Beleg 2026-11-13-1838-TF-REGELN-005-2.png" loading="lazy"></a></li></ul></article><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 17:47</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer O9) &middot; agent &middot; pruefung-O9 @ <span class="commit" title="5258dfa2ed57fbce18275c89b38289641ed4aa35">5258dfa</span></p><p>Vergleich aller Zeilen von A7.1 bis A7.10, A8.1, A8.2 mit dem Kartentext: Bei Schlangenhäutung fehlt „Ergebnis nach Anwendung der Schlangenhäutung“ samt Ergebnis [Gelb] [Gelb] [Blau] [Rot] [Rot]; bei Risiko-Belohnung fehlen die Zwischentitel „Die vier Risiko-Belohnungs-Aktionen“ und „Ablauf:“. Ein neu eingefügter Satz in A7.1 ausserhalb von „Wichtige Regeln“ liess alle Tests grün.</p><p class="fehler">A7.9: Ergebnis des ersten Beispiels der Schlangenhäutung fehlt im Kartentext; der Test prüft Vollständigkeit nur für „Wichtige Regeln“.</p><ul class="belege"><li><a href="belege/2026-11-13-1747-TF-REGELN-005-1.txt">2026-11-13-1747-TF-REGELN-005-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

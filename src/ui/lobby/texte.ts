@@ -1,7 +1,7 @@
 /*
 Alle Anzeigetexte des App-Rahmens an einer Stelle: Lobby, `/spiel` ohne
-Partie, Regelseite und die Seite für unbekannte Adressen. Die Texte des
-Spieltischs stehen in `src/ui/tisch/texte.ts`.
+Partie und die Seite für unbekannte Adressen. Die Texte des Spieltischs stehen
+in `src/ui/tisch/texte.ts`, die der Regelseite in `src/ui/regeln/texte.ts`.
 */
 
 export const SPIELNAME = 'Schlangentanz'
@@ -53,13 +53,6 @@ export function verworfenHinweis(grund: 'aelteres-format' | 'beschaedigt', meldu
 export const SPIEL = {
   titel: 'Spieltisch',
   keinePartie: 'Es läuft keine Partie. Starte in der Lobby eine neue.',
-}
-
-export const REGELN = {
-  titel: 'Regeln',
-  text: 'Diese Seite entsteht gerade. Die vollständigen Spielregeln stehen auf der Website des Spiels.',
-  verweis: 'Spielregeln auf schlangentanz.ch',
-  adresse: 'https://schlangentanz.ch/rules',
 }
 
 export const UNBEKANNT = {

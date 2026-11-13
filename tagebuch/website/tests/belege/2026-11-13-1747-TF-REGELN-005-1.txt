@@ -1,0 +1,18 @@
+regelhilfe-Farbenschutz (A7.2): nichts fehlt
+regelhilfe-Regenbogenschlange (A7.3): nichts fehlt
+regelhilfe-Schlangenfrass (A7.4): nichts fehlt
+regelhilfe-Schlangenblockade (A7.5): nichts fehlt
+regelhilfe-Farbendieb (A7.1): nichts fehlt
+regelhilfe-Schlangengrube (A7.6): nichts fehlt
+regelhilfe-Farbenfusion (A7.7): nichts fehlt
+regelhilfe-Verdoppler (A7.8): nichts fehlt
+regelhilfe-Schlangenhäutung (A7.9): 
+   - Ergebnis nach Anwendung der Schlangenhäutung
+regelhilfe-Schlangenkorb des Glücks (A7.10): nichts fehlt
+regelhilfe-comeback (A8.1): 
+   - Kurzbeschreibung: Ermöglicht zwei zusätzliche Aktionen, wenn man im Rückstand ist Liegt deine längste Schlange zu Beginn deines Zuges mindestens 5 Karten hinter der längsten Schlange auf dem Tisch, kannst du deine Comeback-Karte einsetzen und erhältst zwei zusätzliche Aktionen. Danach ist sie verbraucht.
+   - Die Risiko-Belohnungs-Karten bieten dir die Möglichkeit, eine zusätzliche Sonderaktion in deinem Zug durchzuführen. Dabei gehst du jedoch ein kalkuliertes Risiko ein: Bei jeder Nutzung wird geprüft, ob du die Belohnung erhältst oder ein Gegenspieler davon profitiert.
+regelhilfe-risiko-belohnung (A8.2): 
+   - Kurzbeschreibung: Ermöglicht eine zusätzliche Aktion mit besonderen Effekten Jeder Spieler erhält zu Beginn des Spiels 2 Risiko-Belohnungs-Karten. Nach dem Ausspielen wird eine Risiko-Belohnungs-Karte aus dem Spiel entfernt. Pro Runde darfst du maximal eine Risiko-Belohnungs-Karte verwenden.
+   - Die vier Risiko-Belohnungs-Aktionen
+   - Ablauf:

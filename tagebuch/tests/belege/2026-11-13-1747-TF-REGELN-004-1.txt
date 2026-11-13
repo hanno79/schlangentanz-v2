@@ -1,0 +1,123 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a5788e1e83f205b95
+
+ ❯ src/ui/regeln/zugschritte.test.ts (25 tests | 1 failed) 15ms
+     × O9/U2: „Karten ausspielen“: Satz aus Teil A steht wörtlich in seiner Quelle: {"text":"Ein Spieler darf maximal 2 Schlangen haben.","quelle":"A5"} 6ms
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts (103 tests | 4 failed) 32ms
+     × O9/A: jeder Absatz, jede Aufzählung und jeder Zwischentitel von Schlangenfrass steht wörtlich in den Quellabschnitten 6ms
+     × O9/A: jeder Absatz, jede Aufzählung und jeder Zwischentitel von Gelber Schatz steht wörtlich in den Quellabschnitten 1ms
+     × O9/A7: Sonderkarte Schlangenfrass: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig 1ms
+     × O9/A9: Aufgabe Gelber Schatz: Bedingung und Punkte aus der Tabelle, Beispiel übernommen, falls es eines gibt 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/regeln/zugschritte.test.ts > O9: Ein Zug in fünf Schritten (Kriterium 2) > O9/U2: „Karten ausspielen“: Satz aus Teil A steht wörtlich in seiner Quelle: {"text":"Ein Spieler darf maximal 2 Schlangen haben.","quelle":"A5"}
+AssertionError: A5 enthält nicht: Ein Spieler darf maximal 2 Schlangen haben.: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/ui/regeln/zugschritte.test.ts:44:92
+     42|     (_, satz) => {
+     43|       const zeilen = zeilenOhneAuszeichnung(abschnittA(satz.quelle))
+     44|       expect(stehtImSatz(satz.text, zeilen), `${satz.quelle} enthält n…
+       |                                                                                            ^
+     45|     },
+     46|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung und jeder Zwischentitel von Schlangenfrass steht wörtlich in den Quellabschnitten
+AssertionError: Schlangenfrass: nicht wörtlich in A7.4: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Aufzählung: Die entfernten Karten kommen auf den Ablagestapel | Bei Option c) müssen zwei Karten entfernt werden, sofern möglich | Schlangenblockaden in gegnerischen Schlangen können nicht mit Option c) entfernt werden | Beim Entfernen einer Farbfusionskarte wird nur die Farbfusionskarte selbst entfernt | Die darunter liegenden fusionierten Karten werden wieder getrennt und bleiben an ihrer Position",
++ ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:125:88
+    123|         }
+    124|       }
+    125|       expect(fehlend, `${name(hilfe)}: nicht wörtlich in ${hilfe.quell…
+       |                                                                                        ^
+    126|     },
+    127|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung und jeder Zwischentitel von Gelber Schatz steht wörtlich in den Quellabschnitten
+AssertionError: Gelber Schatz: nicht wörtlich in A9: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Kurztext: Bilde eine Gruppe aus min. 6 gelben Karten.",
++ ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:125:88
+    123|         }
+    124|       }
+    125|       expect(fehlend, `${name(hilfe)}: nicht wörtlich in ${hilfe.quell…
+       |                                                                                        ^
+    126|     },
+    127|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1) > O9/A7: Sonderkarte Schlangenfrass: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig
+AssertionError: „Wichtige Regeln“ von Schlangenfrass: expected [ [ …(5) ] ] to deeply equal [ [ …(5) ] ]
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  [
+    [
+-     "Die entfernten Karten kommen auf den Nachziehstapel",
++     "Die entfernten Karten kommen auf den Ablagestapel",
+      "Bei Option c) müssen zwei Karten entfernt werden, sofern möglich",
+      "Schlangenblockaden in gegnerischen Schlangen können nicht mit Option c) entfernt werden",
+      "Beim Entfernen einer Farbfusionskarte wird nur die Farbfusionskarte selbst entfernt",
+      "Die darunter liegenden fusionierten Karten werden wieder getrennt und bleiben an ihrer Position",
+    ],
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:145:69
+    143|       expect(hilfe.kurz, `Kurzbeschreibung von ${kartenname}`).toBe(ku…
+    144|       const regeln = hilfe.abschnitte.find((abschnitt) => abschnitt.ti…
+    145|       expect(regeln?.inhalt, `„Wichtige Regeln“ von ${kartenname}`).to…
+       |                                                                     ^
+    146|     },
+    147|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1) > O9/A9: Aufgabe Gelber Schatz: Bedingung und Punkte aus der Tabelle, Beispiel übernommen, falls es eines gibt
+AssertionError: Bedingung von Gelber Schatz: expected 'Bilde eine Gruppe aus min. 6 gelben K…' to be 'Bilde eine Gruppe aus min. 7 gelben K…' // Object.is equality
+
+Expected: "Bilde eine Gruppe aus min. 7 gelben Karten."
+Received: "Bilde eine Gruppe aus min. 6 gelben Karten."
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:161:54
+    159|     (aufgabe, hilfe) => {
+    160|       const [, , punkte, bedingung] = AUFGABEN_TABELLE.find(([, n]) =>…
+    161|       expect(hilfe.kurz, `Bedingung von ${aufgabe}`).toBe(bedingung)
+       |                                                      ^
+    162|       expect(hilfe.karte.typ === 'Aufgabenkarte' && hilfe.karte.punkte…
+    163|       const beispiel = A9_ZEILEN.find((zeile) => zeile.startsWith(`${a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed | 4 passed (6)
+      Tests  5 failed | 280 passed (285)
+   Start at  17:36:00
+   Duration  5.67s (transform 678ms, setup 1.87s, import 1.23s, tests 2.57s, environment 7.77s)
+

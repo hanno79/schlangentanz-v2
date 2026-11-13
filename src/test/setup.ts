@@ -1,5 +1,11 @@
 import '@testing-library/jest-dom/vitest'
 import { afterEach } from 'vitest'
+import { dialogNachbilden } from './dialog'
+
+// O9: jsdom kennt `showModal()` nicht; Komponenten mit `<dialog>` (Grossansicht) brauchen es in jedem Test.
+if (typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototype.showModal !== 'function') {
+  dialogNachbilden()
+}
 
 // M1dq (2026-06-26): Globale Test-Pollution-Praevention.
 // Verschiedene Slices (M1dp, M1dq) muessen fuer ihre RED-Tests
