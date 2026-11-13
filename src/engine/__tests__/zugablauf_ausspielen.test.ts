@@ -208,6 +208,14 @@ describe('D13/D25: Sonderkarte wirkungslos ablegen', () => {
     expect(ablage(fuehreAus(zustand, wirkungslos(zustand, 1)).zustand, 0)).toEqual([schutz])
   })
 
+  it('D25: Farbenschutz darf immer wirkungslos abgelegt werden, gleich was sein Registereintrag an Zielen meldet', () => {
+    const zustand = tisch(['Blau', 'Farbenschutz'])
+    const fremdesZiel: SpielAktion = { typ: 'VerdopplerSpielen', spielerId: 'spieler-1', karteId: karteId(zustand, 1) }
+    vi.spyOn(KARTENREGISTER.Farbenschutz, 'ziele').mockReturnValue([fremdesZiel])
+    expect(aktionen(zustand, 'SonderkarteWirkungslosAblegen')).toEqual([wirkungslos(zustand, 1)])
+    expect(ablage(fuehreAus(zustand, wirkungslos(zustand, 1)).zustand, 0)).toEqual([karteId(zustand, 1)])
+  })
+
   it('D25: eine Sonderkarte mit möglichem Ziel lässt sich nicht wirkungslos ablegen; aufgezählt wird ihre Aktion mit Wirkung', () => {
     const zustand = tisch(['Blau', 'Schlangengrube'])
     const grube = karteId(zustand, 1)
