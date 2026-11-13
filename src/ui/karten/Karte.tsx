@@ -1,5 +1,5 @@
 import './karte.css'
-import { KARTENBILD_BREITE, KARTENBILD_HOEHE, kartenbild, RUECKSEITE_BILD } from './kartenbilder'
+import { KARTENBILD_BREITE, KARTENBILD_HOEHE, KLEINBILD_BREITE, kartenbild, kleinbild, RUECKSEITE_BILD } from './kartenbilder'
 import type { Bildkarte } from './kartenbilder'
 import { kartenname, RUECKSEITE_NAME } from './kartentexte'
 
@@ -12,16 +12,29 @@ function klassen(zusatz: string | undefined): string {
   return zusatz === undefined ? 'karte' : `karte ${zusatz}`
 }
 
+interface Karteneigenschaften extends Kartenbildeigenschaften {
+  karte: Bildkarte
+  /**
+   * Wie breit die Karte höchstens gezeichnet wird, als `sizes` des Bildes
+   * (etwa „96px“). Dann darf der Browser die kleine Fassung laden, solange sie
+   * für die Pixeldichte reicht. Ohne Angabe (Grossansicht) gilt das grosse Bild.
+   */
+  sizes?: string
+}
+
 /**
  * Eine Karte als Bild. Die Breite bestimmt der umgebende Bereich (`--karte-breite`),
  * die Höhe folgt aus dem Kartenformat. Bedienbar wird sie erst in einem Knopf, den
  * der Tisch darum legt; das Bild selbst kennt keine Spielregel.
  */
-export function Karte({ karte, className }: Kartenbildeigenschaften & { karte: Bildkarte }) {
+export function Karte({ karte, className, sizes }: Karteneigenschaften) {
+  const gross = kartenbild(karte)
   return (
     <img
       className={klassen(className)}
-      src={kartenbild(karte)}
+      src={gross}
+      srcSet={sizes === undefined ? undefined : `${kleinbild(gross)} ${KLEINBILD_BREITE}w, ${gross} ${KARTENBILD_BREITE}w`}
+      sizes={sizes}
       alt={kartenname(karte)}
       width={KARTENBILD_BREITE}
       height={KARTENBILD_HOEHE}

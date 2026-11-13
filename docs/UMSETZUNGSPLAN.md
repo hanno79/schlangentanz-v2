@@ -816,6 +816,9 @@ Aktionen der Engine (U3). Ziehen und Ablegen gehört nicht zu M2.
 - **Dateien:** `src/ui/spiel/{useSpiel.ts,tischAnsicht.ts,auswahl.ts}`.
   `tischAnsicht` macht aus dem Zustand das, was der Mensch sehen darf;
   `auswahl` führt von der Karte über die Ziele zur fertigen Aktion.
+  Den Teil von `tischAnsicht`, den der Tisch zum Anzeigen braucht, baut O4
+  (`src/ui/spiel/tischAnsicht.ts`, Typ `TischAnsicht`); O3 ergänzt dort, was
+  die Bedienung braucht, und behält Namen und Ort.
 - **Abnahmekriterien:**
   1. Jeder KI-Schritt wird einzeln ausgeführt und ist sichtbar, bevor der
      nächste folgt (etwa 700 ms; sofort bei „weniger Bewegung" und im Test).

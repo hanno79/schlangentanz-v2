@@ -11,12 +11,18 @@ gross sind, und bekommen dieselben runden Ecken.
 
 Aufruf:
     python scripts/kartenbilder_zuschneiden.py --roh <ordner> [--laden]
+    python scripts/kartenbilder_zuschneiden.py --nur-klein
 
---roh    Ordner für die Rohbilder der Website (ausserhalb des Repos, etwa im
-         Scratchpad). Mit --laden werden sie dorthin heruntergeladen, sonst
-         müssen sie dort schon liegen.
+--roh       Ordner für die Rohbilder der Website (ausserhalb des Repos, etwa im
+            Scratchpad). Mit --laden werden sie dorthin heruntergeladen, sonst
+            müssen sie dort schon liegen.
+--nur-klein Baut nur die kleinen Fassungen aus den schon zugeschnittenen
+            Bildern unter public/karten/ neu; ohne Rohbilder und ohne Netz.
 Ziel ist immer public/karten/ (Karten und Logo) sowie public/favicon.ico und
-public/apple-touch-icon.png.
+public/apple-touch-icon.png. Dazu kommt von jeder Karte eine kleine Fassung,
+240 Pixel breit, unter public/karten-klein/: Am Tisch sind die Karten 30 bis
+96 Pixel breit, und der Browser wählt die kleine Fassung über `srcset`, solange
+sie für die Pixeldichte reicht (src/ui/karten/Karte.tsx).
 
 Braucht Pillow nur lokal (pip install Pillow); es ist keine Abhängigkeit des
 Repos, weil die fertigen Bilder eingecheckt sind.
@@ -32,6 +38,10 @@ from pathlib import Path
 WEBSITE = "https://schlangentanz.ch/images/"
 WURZEL = Path(__file__).resolve().parent.parent
 ZIEL = WURZEL / "public" / "karten"
+ZIEL_KLEIN = WURZEL / "public" / "karten-klein"
+# Breite der kleinen Fassung: reicht für 96 px breite Handkarten bei
+# zweifacher und für 80 px bei dreifacher Pixeldichte.
+KLEINE_BREITE = 240
 OEFFENTLICH = WURZEL / "public"
 
 # Seitenverhältnis der zugeschnittenen Farbkarten (470×766 Pixel).
@@ -214,13 +224,35 @@ def logo_und_favicon(roh: Path, Image) -> None:
     print("public/favicon.ico, public/apple-touch-icon.png")
 
 
+def kleine_fassungen(Image) -> None:
+    """Jede Karte unter public/karten/ (ohne Logo) noch einmal, KLEINE_BREITE Pixel breit."""
+    ZIEL_KLEIN.mkdir(parents=True, exist_ok=True)
+    for veraltet in ZIEL_KLEIN.glob("*.webp"):
+        veraltet.unlink()
+    for gross in sorted(ZIEL.glob("*.webp")):
+        if gross.name == LOGO:
+            continue
+        bild = Image.open(gross).convert("RGBA")
+        hoehe = round(bild.size[1] * KLEINE_BREITE / bild.size[0])
+        klein = bild.resize((KLEINE_BREITE, hoehe), Image.LANCZOS)
+        pfad = ZIEL_KLEIN / gross.name
+        klein.save(pfad, "WEBP", quality=75, method=6)
+        print(f"{pfad.relative_to(WURZEL)}: {KLEINE_BREITE}×{hoehe}, {pfad.stat().st_size // 1024} KB")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--roh", required=True, type=Path, help="Ordner für die Rohbilder der Website")
+    parser.add_argument("--roh", type=Path, help="Ordner für die Rohbilder der Website")
     parser.add_argument("--laden", action="store_true", help="Rohbilder vorher von schlangentanz.ch laden")
+    parser.add_argument("--nur-klein", action="store_true", help="nur die kleinen Fassungen neu bauen")
     argumente = parser.parse_args()
 
     Image, ImageDraw = lade_pillow()
+    if argumente.nur_klein:
+        kleine_fassungen(Image)
+        return 0
+    if argumente.roh is None:
+        parser.error("--roh fehlt (oder --nur-klein angeben)")
     if argumente.laden:
         lade_rohbilder(argumente.roh)
     fehlend = [d for d in [*RANDKARTEN.values(), *RANDLOSE_KARTEN.values(), LOGO] if not (argumente.roh / d).exists()]
@@ -234,6 +266,7 @@ def main() -> int:
     for name, datei in RANDLOSE_KARTEN.items():
         schneide_randlose_karte(argumente.roh, name, datei, Image, ImageDraw)
     logo_und_favicon(argumente.roh, Image)
+    kleine_fassungen(Image)
     return 0
 
 

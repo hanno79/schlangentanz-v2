@@ -133,6 +133,11 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
   durchsichtig. Aufgaben, Comeback und Risiko-Belohnung sind randlos gestaltet
   und werden nur auf dasselbe Format gebracht. Alle Karten haben das
   Seitenverhältnis 470 : 766 (`--kartenverhaeltnis`), WebP, 20 bis 70 KB.
+  Von jeder Karte gibt es eine kleine Fassung, 240 px breit, 7 bis 16 KB, unter
+  `public/karten-klein/` (`scripts/kartenbilder_zuschneiden.py --nur-klein`).
+  Am Tisch bekommt `<Karte>` die Höchstbreite seines Bereichs als `sizes`, und
+  der Browser lädt die kleine Fassung, solange sie für die Pixeldichte reicht;
+  die Grossansicht nimmt immer die grosse.
 - **Zuordnung:** `src/ui/karten/kartenbilder.ts` (Name in der Engine → Datei).
   Ein unbekannter Name wirft einen Fehler, statt ein leeres Bild zu zeigen.
 - **Komponente:** `<Karte karte={…} />` aus `src/ui/karten/Karte.tsx`. Die
@@ -176,7 +181,17 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
    Zugleiste rechts neben Schlangen und Hand und zeigt die gewählte Karte gross.
 
 Schlangen brechen bei Platzmangel um, statt die Seite zu verbreitern. Karten
-einer Farbgruppe tragen einen durchgehenden Balken darunter.
+einer Farbgruppe tragen einen durchgehenden Balken darunter; eine Farbenfusion
+zeigt die zwei Karten, auf denen sie liegt, als halbe Karten darunter.
+
+**Handy** (schmaler als 700 px, oder niedriger als 500 px im Querformat):
+Schlangen stehen als kompakte Zeilen, die seitlich scrollen, statt umzubrechen.
+**Handy quer** (niedriger als 500 px im Querformat): Dein Platz steht rechts
+neben der Tischfläche statt darunter, deine Schlangen oben und die Hand unten
+in dieser Spalte, alle Karten in Handygrösse. So bleibt der Tischfläche die
+volle Höhe unter der Kopfleiste. **Hand:** Die Handkarten teilen sich die Breite
+der Hand (höchstens so gross wie in der Tabelle, mindestens 44 px), damit bei
+fünf und mehr Karten keine angeschnitten ist.
 
 ## Komponenten
 

@@ -1,0 +1,194 @@
+/*
+Karten am Tisch: Schlangen mit Farbgruppen und Fusionen, Ablagestapel,
+ausliegende Grube, Tischmitte, Auslage, Grossansicht. Der Aufbau des Tischs steht in tisch.css.
+
+Schlangen brechen bei Platzmangel um, statt die Seite zu verbreitern. Auf dem
+Handy (schmal, oder niedrig im Querformat) stehen sie dagegen als kompakte
+Zeilen, die seitlich scrollen: So bleibt für Gegner, Mitte und eigenen Platz
+Höhe übrig (Plan O4).
+*/
+
+.schlangen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-width: 0;
+}
+
+/* `stretch`: Alle Glieder einer Zeile sind gleich hoch, auch neben einer Fusion
+   mit ihren Karten darunter; so liegt der Balken einer Farbgruppe auf einer Linie. */
+.schlange {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 3px;
+  min-width: 0;
+  margin: 0;
+  /* Platz für den Balken unter einer Farbgruppe. */
+  padding: 0 0 var(--abstand-2);
+  list-style: none;
+}
+
+.schlange > li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  gap: 2px;
+}
+
+/* Farbgruppe: ein durchgehender Balken unter den Karten. Er reicht über den
+   Zwischenraum zur Nachbarkarte, nur nicht über Anfang und Ende der Gruppe,
+   damit zwei Gruppen nebeneinander getrennt bleiben. */
+.schlange > li.in-gruppe::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: -6px;
+  height: 4px;
+  background: var(--farbe-tinte);
+}
+
+.schlange > li.gruppe-anfang::after {
+  left: 1px;
+  border-top-left-radius: var(--radius-voll);
+  border-bottom-left-radius: var(--radius-voll);
+}
+
+.schlange > li.gruppe-ende::after {
+  right: 1px;
+  border-top-right-radius: var(--radius-voll);
+  border-bottom-right-radius: var(--radius-voll);
+}
+
+/* Farbenfusion: die zwei Karten darunter als halbe Karten unter der Fusion. */
+.fusion-unter {
+  display: flex;
+  gap: 2px;
+  width: var(--karte-breite);
+  --karte-breite-unter: calc((var(--karte-breite) - 2px) / 2);
+}
+
+.fusion-unter > .karte {
+  width: var(--karte-breite-unter);
+}
+
+.ablage,
+.grube {
+  --karte-breite: var(--karte-klein);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+.gegner .ablage {
+  margin-left: auto;
+}
+
+.grube {
+  font-weight: 600;
+  color: var(--farbe-tinte);
+}
+
+/* Tischmitte und Auslage: Nachziehstapel, offene Aufgaben, deine Auslage. */
+.mitte {
+  grid-area: mitte;
+  --karte-breite: var(--karte-mitte);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--abstand-3) var(--abstand-5);
+}
+
+.stapel {
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2);
+  font-size: var(--groesse-klein);
+}
+
+.stapel strong {
+  display: block;
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  font-weight: 400;
+}
+
+.aufgaben {
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2);
+}
+
+.auslage {
+  grid-area: auslage;
+  --karte-breite: var(--karte-eigene);
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+}
+
+.kartenreihe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mit-unterschrift {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Offen liegende Karte zum Grossansehen: mindestens fingergross. */
+.kartenknopf {
+  --karte-breite: max(var(--karte-mitte), var(--ziel-mindestens));
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: var(--radius-karte);
+  cursor: zoom-in;
+}
+
+/* Handy: kompakte Zeilen, die seitlich scrollen. */
+@media (max-width: 699px), (orientation: landscape) and (max-height: 500px) {
+  .schlange {
+    flex-wrap: nowrap;
+    overflow: auto hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+}
+
+/* Grossansicht einer Karte (<dialog>). */
+.lupe {
+  padding: var(--abstand-4);
+  border: 0;
+  border-radius: var(--radius-gross);
+  background: var(--farbe-flaeche);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.lupe::backdrop {
+  background: rgb(43 33 28 / 0.6);
+}
+
+.lupe[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--abstand-3);
+}
+
+.lupe-karte {
+  --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * 470 / 766));
+}

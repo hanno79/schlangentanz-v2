@@ -6,7 +6,7 @@ import { verwirfPartie } from './ui/lobby/partie'
 import Rahmen from './ui/lobby/Rahmen'
 import { SEITENTITEL, UNBEKANNT, ZURUECK_ZUR_LOBBY } from './ui/lobby/texte'
 import Verweis from './ui/lobby/Verweis'
-import SpielImAufbau from './ui/spiel/SpielImAufbau'
+import Spielseite from './ui/spiel/Spielseite'
 import Regeln from './ui/regeln/Regeln'
 import './ui/lobby/lobby.css'
 
@@ -77,7 +77,7 @@ function Seiteninhalt({ pfad }: { pfad: string }) {
     case 'lobby':
       return <Lobby />
     case 'spiel':
-      return <SpielImAufbau />
+      return <Spielseite />
     case 'regeln':
       return <Regeln />
     case null:

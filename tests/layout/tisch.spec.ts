@@ -24,10 +24,13 @@ Die Verträge fragen nach keiner Geräteklasse: Was hier steht, gilt auf dem
 Desktop wie auf dem Handy quer.
 */
 
-const SZENARIEN: { name: string; erzeuge: () => Spielzustand }[] = [
-  { name: 'Volltisch', erzeuge: volltisch },
-  { name: 'Mittelspiel', erzeuge: mittelspiel },
-  { name: 'neue Partie', erzeuge: neuePartie },
+/* `karten`: so viele Kartenbilder stehen mindestens am Tisch. Im Volltisch 88
+   Schlangenkarten, 2 unter der Fusion, 5 Handkarten, Ablage, Grube, 3 offene
+   Aufgaben und 4 Karten Auslage; in der neuen Partie 5 Handkarten und der Stapel. */
+const SZENARIEN: { name: string; erzeuge: () => Spielzustand; karten: number }[] = [
+  { name: 'Volltisch', erzeuge: volltisch, karten: 104 },
+  { name: 'Mittelspiel', erzeuge: mittelspiel, karten: 25 },
+  { name: 'neue Partie', erzeuge: neuePartie, karten: 6 },
 ]
 
 async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void> {
@@ -84,7 +87,7 @@ async function unerreichbareKarten(page: Page): Promise<{ gezaehlt: number; befu
   })
 }
 
-for (const { name, erzeuge } of SZENARIEN) {
+for (const { name, erzeuge, karten } of SZENARIEN) {
   test.describe(`O4: Spieltisch, ${name}`, () => {
     test.beforeEach(async ({ page }) => {
       await oeffneMitPartie(page, erzeuge())
@@ -96,7 +99,7 @@ for (const { name, erzeuge } of SZENARIEN) {
 
     test('O4 K3: jede Karte am Tisch ist erreichbar', async ({ page }) => {
       const { gezaehlt, befunde } = await unerreichbareKarten(page)
-      expect(gezaehlt, 'Karten am Tisch').toBeGreaterThan(10)
+      expect(gezaehlt, 'Karten am Tisch').toBeGreaterThanOrEqual(karten)
       expect(befunde, `${befunde.length} von ${gezaehlt} Karten nicht erreichbar:${befundListe(befunde)}`).toEqual([])
     })
 
@@ -109,7 +112,8 @@ for (const { name, erzeuge } of SZENARIEN) {
       expect(fenster.height - hand.unten, 'Abstand der Hand zum unteren Rand').toBeLessThanOrEqual(24)
       expect(schlangen.oben, 'Oberkante deiner Schlangen').toBeGreaterThanOrEqual(0)
       expect(schlangen.unten, 'Unterkante deiner Schlangen').toBeLessThanOrEqual(hand.oben + 1)
-      expect(schlangen.hoehe, 'Höhe deiner Schlangen').toBeGreaterThanOrEqual(60)
+      // Mindestens Titel und eine Zeile: „Noch keine Schlange“ oder die erste Schlange.
+      expect(schlangen.hoehe, 'Höhe deiner Schlangen').toBeGreaterThanOrEqual(40)
     })
 
     test('O4 K1: wer die Tischfläche scrollt, verschiebt deine Hand und deine Schlangen nicht', async ({ page }) => {

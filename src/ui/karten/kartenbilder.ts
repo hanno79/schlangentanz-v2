@@ -17,6 +17,10 @@ beim Bauen auffallen, nicht am Tisch als Lücke.
 
 const ORDNER = '/karten/'
 
+/** Dieselben Bilder, 240 Pixel breit, für die kleinen Karten am Tisch (`scripts/kartenbilder_zuschneiden.py --nur-klein`). */
+const ORDNER_KLEIN = '/karten-klein/'
+export const KLEINBILD_BREITE = 240
+
 /** Seitengrösse, mit der eine Karte ins Layout geht, bevor ihr Bild geladen ist. */
 export const KARTENBILD_BREITE = 470
 export const KARTENBILD_HOEHE = 766
@@ -84,6 +88,12 @@ function bild(tabelle: Readonly<Record<string, string>>, name: string, art: stri
 export const farbkartenbild = (farbe: Farbe): string => bild(FARBKARTEN, farbe, 'die Farbkarte')
 export const sonderkartenbild = (name: string): string => bild(SONDERKARTEN, name, 'die Sonderkarte')
 export const aufgabenbild = (name: string): string => bild(AUFGABEN, name, 'die Aufgabe')
+
+/** Die kleine Fassung zur Adresse eines Kartenbilds. */
+export function kleinbild(adresse: string): string {
+  if (!adresse.startsWith(ORDNER)) throw new Error(`Keine kleine Fassung für ${adresse}: Sie gibt es nur für Bilder unter ${ORDNER}.`)
+  return ORDNER_KLEIN + adresse.slice(ORDNER.length)
+}
 
 export function kartenbild(karte: Bildkarte): string {
   switch (karte.typ) {

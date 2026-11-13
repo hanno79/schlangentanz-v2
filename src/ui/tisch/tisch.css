@@ -1,0 +1,283 @@
+/*
+Der Spieltisch: Aufbau und Bereiche. Karten, Schlangen, Tischmitte, Auslage
+und die schmale Darstellung stehen in karten.css. Nur Variablen aus src/ui/tokens.css; was
+sie bedeuten, steht in DESIGN.md.
+
+Aufbau von oben nach unten: Kopf mit Statuszeile, Tischfläche (scrollt
+senkrecht), unten fest der eigene Platz. Auf niedrigen Schirmen im Querformat
+(Handy quer) steht der eigene Platz rechts, sonst bliebe der Tischfläche fast
+keine Höhe (O1, Hinweis 1).
+*/
+
+.tisch {
+  --karte-gegner: 30px;
+  --karte-eigene: 36px;
+  --karte-mitte: 44px;
+  --karte-hand-max: 64px;
+  --karte-klein: 22px;
+  --rand: var(--abstand-3);
+
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'kopf' 'flaeche' 'unten';
+  color: var(--farbe-tinte);
+  background: var(--farbe-tisch);
+  font-family: var(--schrift-text);
+  font-size: var(--groesse-text);
+  line-height: var(--zeilenhoehe);
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 700px) {
+  .tisch {
+    --karte-gegner: 34px;
+    --karte-eigene: 48px;
+    --karte-mitte: 52px;
+    --karte-hand-max: 80px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .tisch {
+    --karte-gegner: 40px;
+    --karte-eigene: 56px;
+    --karte-mitte: 60px;
+    --karte-hand-max: 96px;
+  }
+}
+
+.tisch h2,
+.tisch p {
+  margin: 0;
+}
+
+.tisch :focus-visible {
+  outline: none;
+  box-shadow: var(--fokus-ring);
+}
+
+.bereichstitel {
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  line-height: var(--zeilenhoehe);
+  color: var(--farbe-tinte-leise);
+}
+
+.leer {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+.abzeichen {
+  display: inline-block;
+  padding: 0 var(--abstand-2);
+  font-size: var(--groesse-klein);
+  font-weight: 700;
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent-stark);
+  border-radius: var(--radius-voll);
+}
+
+.tisch-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  padding: 0 var(--abstand-4);
+  font: inherit;
+  font-weight: 600;
+  color: var(--farbe-akzent-stark);
+  text-decoration: none;
+  background: var(--farbe-flaeche);
+  border: 2px solid var(--farbe-akzent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color var(--dauer);
+}
+
+.tisch-knopf:hover {
+  background: var(--farbe-akzent-hell);
+}
+
+/* Kopf: Statuszeile und der Weg zurück in die Lobby. */
+.tisch-kopf {
+  grid-area: kopf;
+  display: flex;
+  align-items: center;
+  gap: var(--abstand-2) var(--abstand-3);
+  padding: var(--abstand-1) var(--rand);
+  background: var(--farbe-flaeche);
+  border-bottom: 1px solid var(--farbe-linie);
+}
+
+.statuszeile {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--abstand-2);
+}
+
+.statuszeile-titel {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  line-height: var(--zeilenhoehe-titel);
+  color: var(--farbe-akzent-stark);
+}
+
+.statuszeile-text {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Tischfläche: Gegner, Mitte, Auslage. Scrollt senkrecht, nie waagrecht. */
+.tisch-flaeche {
+  grid-area: flaeche;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'gegner' 'mitte' 'auslage';
+  align-content: start;
+  gap: var(--abstand-3);
+  padding: var(--rand);
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 700px) {
+  .tisch-flaeche {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'gegner gegner' 'mitte auslage';
+  }
+}
+
+.gegnerliste {
+  grid-area: gegner;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--abstand-2);
+}
+
+.gegner {
+  --karte-breite: var(--karte-gegner);
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-width: 0;
+  padding: var(--abstand-2) var(--abstand-3);
+  background: var(--farbe-flaeche);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.gegner--dran {
+  border-color: var(--farbe-akzent);
+}
+
+.gegner-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--abstand-1) var(--abstand-3);
+}
+
+.gegner-name {
+  font-size: var(--groesse-text);
+  font-weight: 700;
+  line-height: var(--zeilenhoehe);
+}
+
+.gegner-info {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Unten fest: deine Schlangen und deine Hand mit Ablage. */
+.tisch-unten {
+  grid-area: unten;
+  display: grid;
+  grid-template-rows: auto auto;
+  min-height: 0;
+  background: var(--farbe-flaeche);
+  border-top: 1px solid var(--farbe-linie);
+  box-shadow: 0 -4px 12px rgb(43 33 28 / 0.08);
+}
+
+.eigene {
+  --karte-breite: var(--karte-eigene);
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-height: 0;
+  max-height: 36dvh;
+  padding: var(--abstand-2) var(--rand) 0;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+}
+
+/* Die Hand ist ein Container: Ihre Karten teilen sich ihre Breite (--hand-anzahl setzt der Tisch). */
+.hand {
+  container-type: inline-size;
+  min-width: 0;
+  padding: var(--abstand-2) var(--rand) var(--abstand-2);
+}
+
+.hand-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--abstand-1) var(--abstand-3);
+}
+
+.hand-kopf .bereichstitel {
+  flex: 1;
+}
+
+.hand-karten {
+  --karte-breite: clamp(
+    var(--ziel-mindestens),
+    calc((100cqi - (var(--hand-anzahl) - 1) * var(--abstand-2)) / var(--hand-anzahl)),
+    var(--karte-hand-max)
+  );
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: var(--abstand-2) 0 0;
+  list-style: none;
+}
+
+/* Handy quer und andere niedrige Schirme im Querformat: dein Platz rechts, Karten in Handygrösse. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .tisch {
+    --karte-gegner: 30px;
+    --karte-eigene: 36px;
+    --karte-mitte: 44px;
+    --karte-hand-max: 64px;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    grid-template-areas: 'kopf kopf' 'flaeche unten';
+  }
+
+  .tisch-unten {
+    grid-template-rows: minmax(0, 1fr) auto;
+    border-top: 0;
+    border-left: 1px solid var(--farbe-linie);
+    box-shadow: -4px 0 12px rgb(43 33 28 / 0.08);
+  }
+
+  .eigene {
+    max-height: none;
+  }
+
+  .tisch-flaeche {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'gegner' 'mitte' 'auslage';
+  }
+}

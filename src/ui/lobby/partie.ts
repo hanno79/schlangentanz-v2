@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { KI_GEGNER_MAX, KI_GEGNER_MIN, erstellePartie } from '../../engine'
+import type { Spielzustand } from '../../engine'
 import { meldeFehler } from '../../fehlerdienst'
 import { pruefeSpielstand, speichereSpielstand, verwirfSpielstand } from '../../spielstand'
 
@@ -45,7 +46,7 @@ export type Verwurfsgrund = 'aelteres-format' | 'beschaedigt'
 
 export type PartieLage =
   | { art: 'keine' }
-  | { art: 'laufend'; partie: LaufendePartie }
+  | { art: 'laufend'; partie: LaufendePartie; zustand: Spielzustand }
   | { art: 'verworfen'; grund: Verwurfsgrund; fehler: Error }
 
 /** Was im Speicher liegt, in Kurzform. Liest nur und ändert nichts. */
@@ -61,6 +62,8 @@ function leseGespeichertePartie(): PartieLage {
           gegner: lage.zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').length,
           erweiterung: lage.zustand.erweiterung,
         },
+        // Den Zustand selbst zeigt der Spieltisch (O4).
+        zustand: lage.zustand,
       }
     case 'unlesbar':
       return { art: 'verworfen', grund: lage.grund, fehler: lage.fehler }
