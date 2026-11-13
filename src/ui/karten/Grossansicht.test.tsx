@@ -17,8 +17,9 @@ function angezeigteTexte(hilfe: Kartenhilfe): string[] {
     hilfe.kurz,
     ...hilfe.abschnitte.flatMap((abschnitt) => [
       ...(abschnitt.titel === undefined ? [] : [abschnitt.titel]),
-      ...abschnitt.inhalt.flat(),
+      ...abschnitt.inhalt.flatMap((baustein) => (typeof baustein === 'string' ? [baustein] : 'reihe' in baustein ? [] : baustein)),
     ]),
+    ...(hilfe.ergaenzungen ?? []).map((satz) => satz.text),
   ].map((text) => (text.endsWith(ERWEITERUNG_KENNUNG) ? text.slice(0, -ERWEITERUNG_KENNUNG.length) : text))
 }
 
@@ -49,6 +50,34 @@ describe('O9: Kartentext zeigt den Wortlaut der Spielanleitung (Kriterium 1)', (
     expect(screen.getByRole('heading', { name: 'Aufgabe Lila Riese' })).toBeInTheDocument()
     expect(screen.getByText('5 Punkte')).toBeInTheDocument()
     expect(screen.getByText('Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.')).toBeInTheDocument()
+  })
+
+  it('O9/D3: bei Lila Riese steht die Antwort des Autors mit dem Etikett „Ergänzung des Autors“', () => {
+    const lilaRiese = KARTENHILFEN.find((h) => h.karte.typ === 'Aufgabenkarte' && h.karte.name === 'Lila Riese')!
+    render(<Kartentext karte={lilaRiese.karte} />)
+    const satz = screen.getByText('Website geändert: mindestens 5 violette Karten in einer Reihe.')
+    expect(within(satz.closest('p')!).getByText('Ergänzung des Autors')).toBeInTheDocument()
+  })
+
+  it('O9/A7.9: die Schlangenhäutung zeigt das Ergebnis ihres Beispiels als Reihe von Kartenbildern', () => {
+    const haeutung = KARTENHILFEN.find((h) => h.karte.typ === 'Sonderkarte' && h.karte.name === 'Schlangenhäutung')!
+    render(<Kartentext karte={haeutung.karte} />)
+    expect(screen.getByText('Ergebnis nach Anwendung der Schlangenhäutung')).toBeInTheDocument()
+    const reihen = screen.getAllByRole('list', { name: 'Kartenreihe' })
+    const namen = reihen.map((reihe) => within(reihe).getAllByRole('img').map((bild) => bild.getAttribute('alt')))
+    expect(namen).toContainEqual([
+      'Farbkarte Gelb, 1 Punkt',
+      'Farbkarte Gelb, 1 Punkt',
+      'Farbkarte Blau, 1 Punkt',
+      'Farbkarte Rot, 1 Punkt',
+      'Farbkarte Rot, 1 Punkt',
+    ])
+  })
+
+  it('O9/A7.7: eine Farbenfusion in einer Kartenreihe nennt die beiden Karten darunter', () => {
+    const fusion = KARTENHILFEN.find((h) => h.karte.typ === 'Sonderkarte' && h.karte.name === 'Farbenfusion')!
+    render(<Kartentext karte={fusion.karte} />)
+    expect(screen.getAllByText('Gelb + Farbenfusion + Gelb').length).toBeGreaterThan(0)
   })
 })
 

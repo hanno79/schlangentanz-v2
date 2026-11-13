@@ -61,5 +61,6 @@ describe('O9: Ein Zug in fünf Schritten (Kriterium 2)', () => {
     const quellen = ALLE_SAETZE.map(([, satz]) => satz.quelle)
     expect(quellen, 'Pflichtkarte: mindestens 1, höchstens 2 Karten (D12)').toContain('D12')
     expect(quellen, 'Sonderkarte ohne Ziel wirkungslos ablegen (D13)').toContain('D13')
+    expect(quellen, 'Verdoppler im zweiten Zug wirkungslos ablegen (D23) präzisiert D11').toContain('D23')
   })
 })

@@ -83,6 +83,36 @@ test.describe('O9: Regelseite', () => {
     expect(befunde, `Kartenknöpfe:\n${befunde.join('\n')}`).toEqual([])
   })
 
+  // Iteration 2, Mangel 1: Ohne Trennwörterbuch (eingebauter Browser) zerbrach „Farbensc/hutz“; mit Wörterbuch hiess es „Verdopp-ler“.
+  test('O9: kein Kartenname bricht mitten im Wort um oder ragt über seinen Knopf', async ({ page }) => {
+    const { geprueft, befunde } = await page.evaluate(() => {
+      const ergebnis: string[] = []
+      let woerter = 0
+      for (const name of Array.from(document.querySelectorAll('.kartenknopf__name'))) {
+        const knopf = name.closest('button')!.getBoundingClientRect()
+        const box = name.getBoundingClientRect()
+        if (box.left < knopf.left - 1 || box.right > knopf.right + 1) ergebnis.push(`„${name.textContent}“ ragt über den Knopf`)
+        const text = name.firstChild
+        if (text === null || text.nodeType !== Node.TEXT_NODE) {
+          ergebnis.push(`„${name.textContent}“: kein einfacher Text`)
+          continue
+        }
+        const inhalt = text.textContent ?? ''
+        for (const treffer of inhalt.matchAll(/\S+/g)) {
+          woerter++
+          const bereich = document.createRange()
+          bereich.setStart(text, treffer.index)
+          bereich.setEnd(text, treffer.index + treffer[0].length)
+          const zeilen = new Set(Array.from(bereich.getClientRects(), (r) => Math.round(r.top)))
+          if (zeilen.size > 1) ergebnis.push(`„${treffer[0]}“ in „${inhalt}“ steht auf ${zeilen.size} Zeilen`)
+        }
+      }
+      return { geprueft: woerter, befunde: ergebnis }
+    })
+    expect(geprueft, 'gemessene Wörter in den 33 Kartennamen').toBeGreaterThanOrEqual(33)
+    expect(befunde, befunde.join('\n')).toEqual([])
+  })
+
   bedienbarkeitsVertraege()
   waechterVertraege()
   nichtsIstStillgelegt()

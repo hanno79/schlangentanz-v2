@@ -9,15 +9,22 @@ import {
   aufzaehlungen,
   aufzaehlungUnter,
   AUFGABEN_TABELLE,
+  aufgabenbeispiel,
+  antwortD,
+  beispielTeile,
+  bildreihe,
+  istBildzeile,
+  kartenabschnittZeilen,
   kurzbeschreibung,
   SPEC_AUFGABEN,
   SPEC_FARBEN,
   SPEC_SONDERKARTEN,
+  stehtImSatz,
   zeilenOhneAuszeichnung,
 } from '../../../test/specText'
 import type { Bildkarte } from '../kartenbilder'
 import { kartenkurzname } from '../kartentexte'
-import { KARTENHILFEN, kartenhilfe, type Kartenhilfe } from './kartenhilfe'
+import { KARTENHILFEN, kartenhilfe, type Kartenhilfe, type Textbaustein } from './kartenhilfe'
 
 /*
 O9, Kriterium 1: Jede Karte zeigt auf Wunsch ihren Text, und dieser stammt
@@ -25,9 +32,10 @@ wörtlich aus Teil A der Spec. Gelesen wird `docs/GAME_SPEC.md` selbst, keine
 Kopie. Jeder Textbaustein muss in einem Abschnitt stehen, den der Kartentext als
 Quelle nennt, und der erste dieser Abschnitte ist der Abschnitt der Karte selbst.
 Wo Teil A eine Liste führt („Wichtige Regeln“), ist sie vollständig übernommen.
+Umgekehrt steht jede Zeile eines Kartenabschnitts (A7.1 bis A8.2) und jedes
+Beispiel einer Aufgabe (A9) im Kartentext, auch Bildzeilen wie
+`[Gelb] [Gelb] [Blau] [Rot] [Rot]` als Kartenreihe.
 */
-
-const A9_ZEILEN = zeilenOhneAuszeichnung(abschnittA('A9'))
 const nach = (typ: Bildkarte['typ']) => KARTENHILFEN.filter((hilfe) => hilfe.karte.typ === typ)
 const name = (hilfe: Kartenhilfe): string => kartenkurzname(hilfe.karte)
 
@@ -94,6 +102,25 @@ describe('O9: Zu jeder Karte gibt es einen Text (Kriterium 1)', () => {
   })
 })
 
+/** Alle Bildreihen einer Zeile: aufeinanderfolgende `[…]`, auch mitten im Text eines Beispiels. */
+const bildreihenIn = (zeile: string) => [...zeile.matchAll(/\[[^\]]+\](?:\s*\[[^\]]+\])*/g)].map((t) => bildreihe(t[0]))
+
+const istReihe = (baustein: Textbaustein): baustein is { reihe: readonly string[] } =>
+  typeof baustein === 'object' && 'reihe' in baustein
+const istListe = (baustein: Textbaustein): baustein is readonly string[] => Array.isArray(baustein)
+const gleicheReihe = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((k, i) => k === b[i])
+
+/** Alles, was der Kartentext zeigt: Absätze, Listenpunkte, Zwischentitel, Kartenreihen. */
+function inhaltVon(hilfe: Kartenhilfe) {
+  const bausteine = hilfe.abschnitte.flatMap((abschnitt) => abschnitt.inhalt)
+  return {
+    titel: hilfe.abschnitte.flatMap((abschnitt) => (abschnitt.titel === undefined ? [] : [abschnitt.titel])),
+    absaetze: bausteine.filter((b): b is string => typeof b === 'string'),
+    punkte: bausteine.filter(istListe).flat(),
+    reihen: bausteine.filter(istReihe).map((b) => b.reihe),
+  }
+}
+
 describe('O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1)', () => {
   it.each(KARTENHILFEN.map((hilfe) => [name(hilfe), hilfe] as const))(
     'O9/A: %s nennt zuerst den eigenen Abschnitt als Quelle',
@@ -103,11 +130,12 @@ describe('O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1)', () 
   )
 
   it.each(KARTENHILFEN.map((hilfe) => [name(hilfe), hilfe] as const))(
-    'O9/A: jeder Absatz, jede Aufzählung und jeder Zwischentitel von %s steht wörtlich in den Quellabschnitten',
+    'O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von %s steht wörtlich in den Quellabschnitten',
     (_, hilfe) => {
       const text = quelltext(hilfe)
       const zeilen = zeilenOhneAuszeichnung(text)
       const listen = aufzaehlungen(text)
+      const reihen = zeilen.flatMap(bildreihenIn)
       const fehlend: string[] = []
       if (!zeilen.some((zeile) => zeile.includes(hilfe.kurz))) fehlend.push(`Kurztext: ${hilfe.kurz}`)
       for (const abschnitt of hilfe.abschnitte) {
@@ -117,12 +145,63 @@ describe('O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1)', () 
         for (const baustein of abschnitt.inhalt) {
           if (typeof baustein === 'string') {
             if (!zeilen.some((zeile) => zeile.includes(baustein))) fehlend.push(`Absatz: ${baustein}`)
+          } else if (istReihe(baustein)) {
+            if (!reihen.some((reihe) => gleicheReihe(reihe, baustein.reihe))) fehlend.push(`Kartenreihe: ${baustein.reihe.join(' ')}`)
           } else if (!listen.some((liste) => enthaeltFolge(liste, baustein))) {
             fehlend.push(`Aufzählung: ${baustein.join(' | ')}`)
           }
         }
       }
       expect(fehlend, `${name(hilfe)}: nicht wörtlich in ${hilfe.quellen.join(', ')}`).toEqual([])
+    },
+  )
+
+  it.each(KARTENHILFEN.filter((hilfe) => hilfe.ergaenzungen !== undefined).map((hilfe) => [name(hilfe), hilfe] as const))(
+    'O9/U2: %s: jede Ergänzung des Autors steht wörtlich in seiner Antwort in Teil D',
+    (_, hilfe) => {
+      for (const satz of hilfe.ergaenzungen ?? []) {
+        expect(satz.quelle, `Quelle von „${satz.text}“`).toMatch(/^D\d+$/)
+        expect(stehtImSatz(satz.text, [antwortD(satz.quelle)]), `${satz.quelle} enthält nicht: ${satz.text}`).toBe(true)
+      }
+    },
+  )
+})
+
+describe('O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1)', () => {
+  const MIT_ABSCHNITT = [...nach('Sonderkarte'), ...nach('Comeback'), ...nach('Risiko-Belohnung')]
+
+  it.each(MIT_ABSCHNITT.map((hilfe) => [name(hilfe), eigenerAbschnitt(hilfe.karte), hilfe] as const))(
+    'O9/A7, A8: %s (%s): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext',
+    (_, nummer, hilfe) => {
+      const { titel, absaetze, punkte, reihen } = inhaltVon(hilfe)
+      const fehlend = kartenabschnittZeilen(nummer).filter((zeile) => {
+        if (zeile.startsWith('Kurzbeschreibung: ')) {
+          const rest = zeile.slice('Kurzbeschreibung: '.length)
+          return rest !== hilfe.kurz && !absaetze.some((absatz) => rest === `${hilfe.kurz} ${absatz}`)
+        }
+        if (istBildzeile(zeile)) return !reihen.some((reihe) => gleicheReihe(reihe, bildreihe(zeile)))
+        // A8.1 wiederholt die Kurzbeschreibung als eigene Zeile; sie steht schon als Kurztext da.
+        if (zeile === hilfe.kurz) return false
+        return !absaetze.includes(zeile) && !punkte.includes(zeile) && !titel.includes(zeile.replace(/:$/, ''))
+      })
+      expect(fehlend, `${name(hilfe)}: Zeilen aus ${nummer} fehlen im Kartentext`).toEqual([])
+    },
+  )
+
+  it.each(nach('Aufgabenkarte').map((hilfe) => [name(hilfe), hilfe] as const))(
+    'O9/A9: Aufgabe %s: Beispiel mit Text und Kartenreihen vollständig, falls Teil A eines hat',
+    (aufgabe, hilfe) => {
+      const { titel, absaetze, reihen } = inhaltVon(hilfe)
+      const zeile = aufgabenbeispiel(aufgabe)
+      if (zeile === undefined) {
+        expect([...absaetze, ...reihen.flat()], `${aufgabe} hat in Teil A kein Beispiel`).toEqual([])
+        return
+      }
+      expect(titel, `Zwischentitel des Beispiels zu ${aufgabe}`).toContain('Beispiel')
+      const fehlend = beispielTeile(zeile).filter((teil) =>
+        typeof teil === 'string' ? !absaetze.includes(teil) : !reihen.some((reihe) => gleicheReihe(reihe, teil)),
+      )
+      expect(fehlend, `Beispiel zu ${aufgabe}: fehlt im Kartentext`).toEqual([])
     },
   )
 })
@@ -155,25 +234,24 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
   )
 
   it.each(nach('Aufgabenkarte').map((hilfe) => [name(hilfe), hilfe] as const))(
-    'O9/A9: Aufgabe %s: Bedingung und Punkte aus der Tabelle, Beispiel übernommen, falls es eines gibt',
+    'O9/A9: Aufgabe %s: Bedingung und Punkte aus der Tabelle',
     (aufgabe, hilfe) => {
       const [, , punkte, bedingung] = AUFGABEN_TABELLE.find(([, n]) => n === aufgabe)!
       expect(hilfe.kurz, `Bedingung von ${aufgabe}`).toBe(bedingung)
       expect(hilfe.karte.typ === 'Aufgabenkarte' && hilfe.karte.punkte, `Punkte von ${aufgabe}`).toBe(Number(punkte))
-      const beispiel = A9_ZEILEN.find((zeile) => zeile.startsWith(`${aufgabe}: `))
-      const absaetze = hilfe.abschnitte.flatMap((abschnitt) => abschnitt.inhalt).filter((b) => typeof b === 'string')
-      if (beispiel === undefined) {
-        expect(absaetze, `${aufgabe} hat in Teil A kein Beispiel`).toEqual([])
-      } else {
-        expect(absaetze.length, `Beispiel zu ${aufgabe} fehlt`).toBe(1)
-        expect(beispiel.startsWith(`${aufgabe}: ${absaetze[0]}`), `Beispiel zu ${aufgabe} ab seinem Anfang`).toBe(true)
-      }
     },
   )
 
   it('O9/A9: Lila Riese verlangt mindestens 5 violette Karten (Teil A), nicht 3 wie das Kartenbild', () => {
     const lilaRiese = nach('Aufgabenkarte').find((hilfe) => name(hilfe) === 'Lila Riese')
     expect(lilaRiese?.kurz).toBe('Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.')
+  })
+
+  it('O9/D3: Lila Riese erklärt den Unterschied zum Kartenbild mit der Antwort des Autors', () => {
+    const lilaRiese = nach('Aufgabenkarte').find((hilfe) => name(hilfe) === 'Lila Riese')
+    expect(lilaRiese?.ergaenzungen).toEqual([
+      { text: 'Website geändert: mindestens 5 violette Karten in einer Reihe.', quelle: 'D3' },
+    ])
   })
 })
 

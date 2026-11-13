@@ -48,6 +48,61 @@ export function abschnittA(nummer: string): string {
   return ZEILEN_A.slice(start.index + 1, ende < 0 ? undefined : ende).join('\n')
 }
 
+/** Ein Absatz im Fliesstext, kein Titel, keine Liste, keine Bildzeile und keine fett eingeleitete Zeile. */
+const istEinleitung = (zeile: string) => zeile.trim() !== '' && !/^\s*(#|-|\*\*|\[|\d+\.)/.test(zeile)
+
+/**
+ * Alle Zeilen, die zum Text einer Karte gehören, ohne Auszeichnung. Das ist ihr
+ * Abschnitt, mit einer Regel der Website: Ein Absatz direkt vor der Überschrift
+ * einer Karte leitet diese Karte ein („Die Comeback-Karte ist deine zweite
+ * Chance! …“ vor A8.1). Er gehört deshalb zur folgenden Karte und nicht zum
+ * Abschnitt, an dessen Ende er steht.
+ */
+export function kartenabschnittZeilen(nummer: string): string[] {
+  const start = UEBERSCHRIFTEN.find((ueberschrift) => ueberschrift.nummer === nummer)
+  if (start === undefined) throw new Error(`kartenabschnittZeilen: Abschnitt ${nummer} steht nicht in Teil A`)
+  const einleitungVor = (index: number): number | null => {
+    let i = index - 1
+    while (i >= 0 && ZEILEN_A[i].trim() === '') i--
+    return i >= 0 && istEinleitung(ZEILEN_A[i]) ? i : null
+  }
+  const zeilen = abschnittA(nummer).split('\n')
+  const naechste = UEBERSCHRIFTEN.find((ueberschrift) => ueberschrift.index > start.index)
+  const fremd = naechste === undefined ? null : einleitungVor(naechste.index)
+  if (fremd !== null && fremd > start.index) zeilen.splice(fremd - start.index - 1, 1)
+  const eigen = einleitungVor(start.index)
+  return zeilenOhneAuszeichnung([...(eigen === null ? [] : [ZEILEN_A[eigen]]), ...zeilen].join('\n'))
+}
+
+/** Eine Zeile, die nur Kartenbilder zeigt, etwa `[Blau] [Blau] [Gelb + Farbenfusion + Gelb]`. */
+export const istBildzeile = (zeile: string) => /^(\[[^\]]+\]\s*)+$/.test(zeile.trim())
+
+/** Die Karten einer Bildzeile in ihrer Reihenfolge: `Blau`, `Gelb + Farbenfusion + Gelb`. */
+export const bildreihe = (zeile: string): string[] => [...zeile.matchAll(/\[([^\]]+)\]/g)].map((treffer) => treffer[1])
+
+/**
+ * Ein Beispiel zu einer Aufgabe (A9) zerlegt in Text und Bildreihen. Die Spec
+ * schreibt es als eine Zeile: „**Name:** Text [Blau] [Rot] #### Vorher: [Blau] …“.
+ */
+export function beispielTeile(zeile: string): (string | string[])[] {
+  const ohneName = ohneAuszeichnung(zeile).replace(/^[^:]+:\s*/, '')
+  return ohneName
+    .split(/\s*#{2,6}\s+/)
+    .flatMap((stueck) => {
+      const bilder = stueck.indexOf(' [')
+      const text = (bilder < 0 ? stueck : stueck.slice(0, bilder)).trim()
+      const reihe = bilder < 0 ? [] : bildreihe(stueck.slice(bilder))
+      return [...(text === '' ? [] : [text]), ...(reihe.length === 0 ? [] : [reihe])]
+    })
+}
+
+/** Die Zeile mit dem Beispiel zu einer Aufgabe; `undefined`, wenn Teil A keines hat. */
+export function aufgabenbeispiel(name: string): string | undefined {
+  return abschnittA('A9')
+    .split('\n')
+    .find((zeile) => zeile.startsWith(`**${name}:** `))
+}
+
 /** Die Nummer des Abschnitts von Teil A, dessen Überschrift genau „<Nummer> <Titel>“ lautet. */
 export function abschnittsnummer(titel: string): string {
   const treffer = UEBERSCHRIFTEN.find((ueberschrift) => ueberschrift.titel === titel)
