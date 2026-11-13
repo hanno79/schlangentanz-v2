@@ -111,7 +111,8 @@ describe('E2: Szenarien des Zugablaufs', () => {
     expect(zustand.spieler).toHaveLength(spielerzahl)
     expect(zustand).toMatchObject({ partiephase: 'Schlussrunde', schlussrundeAusloeser: ausloeser, zug: { spielerIndex: ausloeser } })
     const reihe: number[] = []
-    while (zustand.partiephase !== 'Beendet') {
+    for (let zug = 0; zustand.partiephase !== 'Beendet'; zug += 1) {
+      if (zug > spielerzahl) throw new Error(`${name}: Die Partie endet nicht nach ${spielerzahl} Zügen.`)
       const schritt = spieleZug(zustand)
       expect(schritt.ereignisse.some((ereignis) => ereignis.typ === 'KartenGezogen')).toBe(false)
       zustand = schritt.zustand
