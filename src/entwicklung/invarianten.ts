@@ -1,4 +1,4 @@
-import { berechneSpielzustandGesamtwertung, pruefeInvarianten as engineInvarianten } from '../engine'
+import { berechneEndwertung, pruefeInvarianten as engineInvarianten } from '../engine'
 import type { InvariantenBefund, Spielzustand } from '../engine'
 import { fehlertext } from '../engine/form'
 import { pruefeSpeichernUndLaden } from '../engine/serialization'
@@ -15,7 +15,7 @@ export function pruefeInvarianten(zustand: Spielzustand): InvariantenBefund[] {
   return [
     ...engineInvarianten(zustand),
     gelingt('Die Wertung lässt sich berechnen', () => {
-      berechneSpielzustandGesamtwertung(zustand)
+      berechneEndwertung(zustand)
       return []
     }),
     gelingt('Der Spielstand übersteht Speichern und Laden unverändert', () => pruefeSpeichernUndLaden(zustand)),

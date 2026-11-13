@@ -45,26 +45,7 @@ export { deserialisiere, serialisiere } from './serialization';
 // Wertung
 export { ermittleFarbgruppen } from './colorGroups';
 export type { Farbgruppe } from './colorGroups';
-export {
-  berechneFarbgruppenPunkte,
-  berechneGewinner,
-  berechneSpielerAufgabenPunkte,
-  berechneSpielerFarbgruppenPunkte,
-  berechneSpielerGrundpunkte,
-  berechneSpielGesamtwertung,
-  berechneSpielzustandGesamtwertung,
-  ermittleRegenbogenWildfarben,
-} from './scoring';
-export type {
-  AufgabenPunkteEintrag,
-  FarbgruppenPunkteErgebnis,
-  FarbgruppenWertung,
-  GewinnerEintrag,
-  GewinnerErgebnis,
-  SchlangenFarbgruppenPunkteErgebnis,
-  SpielerAufgabenPunkteErgebnis,
-  SpielerFarbgruppenPunkteErgebnis,
-  SpielerGrundpunkteErgebnis,
-  SpielerWertungsEintrag,
-  SpielGesamtwertungErgebnis,
-} from './scoring';
+export { vielfaltBonusFuer, werteSchlangen } from './jokerGruppen';
+export type { FarbgruppenErgebnis, GewerteteGruppe, JokerFarbe, Jokerart, SchlangenWertung } from './jokerGruppen';
+export { berechneEndwertung, berechneZwischenstand, KETTENBONUS, laengsteFarbkette } from './scoring';
+export type { AufgabenEintrag, Endwertung, KettenWertung, SpielerWertung, Zwischenstand } from './scoring';

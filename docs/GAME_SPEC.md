@@ -758,7 +758,7 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
@@ -773,9 +773,7 @@ laufenden Spiel beobachtet.
 | C8 | Schlangenfrass | a) eine eigene Karte, b) eine eigene Blockade, c) zwei Karten der Mitspieler „sofern möglich", keine gegnerische Blockade (A7.4) | genau eine eigene oder genau zwei gegnerische Karten; gegnerische Blockaden sind nicht ausgenommen | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` |
 | C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9); die Farbfolge im Abschnitt muss sich ändern (D26) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
-| C11 | Schlussrunde | nach der letzten Karte je ein letzter Zug ohne Nachziehen (A10); eine Verdopplung von Aufgaben kennt die Website nicht | offene Aufgaben zählen in der Schlussrunde doppelt | `src/engine/aufgabenPruefung.ts`, `src/engine/scoring.ts` |
 | C12 | Pflichtkarte | mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art (A5, D12); eine Sonderkarte darf jederzeit gespielt werden, auch ohne Nutzen, und kommt ohne Ziel wirkungslos auf den eigenen Ablagestapel (D4, D13); mit möglichem Ziel ist sie nicht wirkungslos ablegbar, Farbenschutz immer (D25) | ohne erlaubte Aktion wird eine beliebige Karte abgeworfen | `src/engine/turnState.ts` (`werfeKarteMangelsSpielbarerAktionAb`) |
-| C13 | Längste Farbkette | 5 Bonuspunkte in der Punktezählung nach Spielende (A11); eine Kette zählt erst ab 3 Farbkarten derselben Farbe, ohne sie gibt es keinen Bonus (D24) | wird laufend angezeigt, schon ab einer einzelnen Karte; der Punktestand springt dadurch | `src/engine/scoring.ts` (im Spiel beobachtet; `mindestLaenge: 1`) |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
 | C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
 | C16 | Farbenfusion | die zwei Farbkarten liegen unter der Fusion; wird sie entfernt, liegen beide wieder einzeln an ihrer Stelle (A7.7, A7.4) | die zwei Farbkarten kommen auf den Ablagestapel, nur ihre Punktsumme bleibt gespeichert; beim Entfernen kehren sie nicht zurück | `src/engine/kartenwirkungen.ts` (`spieleFarbenfusion`), `src/engine/zugHelfer.ts` (`bereinigeFarbenfusionen`) |

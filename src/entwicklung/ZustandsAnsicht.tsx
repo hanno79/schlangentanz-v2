@@ -1,7 +1,7 @@
-import { berechneGewinner, berechneSpielzustandGesamtwertung, ermittleEntscheider, istAuslagekarte } from '../engine'
-import type { AufgabenkarteInfo, Auslagekarte, GewinnerEintrag, Schlange, Spieler, SpielerWertungsEintrag, Spielzustand } from '../engine'
-import { fehlertext } from './invarianten'
+import { ermittleEntscheider, istAuslagekarte } from '../engine'
+import type { AufgabenkarteInfo, Auslagekarte, Schlange, Spieler, Spielzustand } from '../engine'
 import { Karte, Kartenreihe } from './Karte'
+import { WertungsAnsicht } from './WertungsAnsicht'
 
 /** Der ganze Spielzustand, lesbar: alle Hände offen, alle Stapel, Partiephase, Zug, Wertung. */
 export function ZustandsAnsicht({ zustand }: { zustand: Spielzustand }) {
@@ -17,7 +17,7 @@ export function ZustandsAnsicht({ zustand }: { zustand: Spielzustand }) {
         </div>
       </section>
       <Tischmitte zustand={zustand} />
-      <Wertung zustand={zustand} />
+      <WertungsAnsicht zustand={zustand} />
     </>
   )
 }
@@ -213,62 +213,6 @@ function Tischmitte({ zustand }: { zustand: Spielzustand }) {
         <summary>Aufgabenstapel: {zustand.aufgabenStapel.length} Karten</summary>
         <Aufgabenliste aufgaben={zustand.aufgabenStapel} />
       </details>
-    </section>
-  )
-}
-
-type Wertungsergebnis = { wertungen: SpielerWertungsEintrag[]; gewinner: GewinnerEintrag[] | null } | { fehler: string }
-
-/** Wirft die Engine beim Werten, steht ihr Grund da; die Invariante dazu ist dann rot. */
-function werte(zustand: Spielzustand): Wertungsergebnis {
-  try {
-    return {
-      wertungen: berechneSpielzustandGesamtwertung(zustand).spielerwertungen,
-      gewinner: zustand.partiephase === 'Beendet' ? berechneGewinner(zustand.spieler).gewinner : null,
-    }
-  } catch (fehler) {
-    return { fehler: fehlertext(fehler) }
-  }
-}
-
-function Wertung({ zustand }: { zustand: Spielzustand }) {
-  const ergebnis = werte(zustand)
-  return (
-    <section className="et-abschnitt" data-testid="wertung">
-      <h2>Wertung</h2>
-      {'fehler' in ergebnis ? (
-        <p className="et-fehler">Die Wertung wirft: {ergebnis.fehler}</p>
-      ) : (
-        <>
-          <table className="et-tabelle">
-            <thead>
-              <tr>
-                <th>Spieler</th>
-                <th title="Punkte aus Farbgruppen">Farben</th>
-                <th title="Punkte aus Aufgaben">Aufgaben</th>
-                <th title="Kettenbonus">Kette</th>
-                <th>Summe</th>
-              </tr>
-            </thead>
-            <tbody>
-              {ergebnis.wertungen.map((eintrag) => (
-                <tr key={eintrag.spielerId}>
-                  <td>{eintrag.name}</td>
-                  <td>{eintrag.wertung.farbgruppenPunkte.gesamtPunkte}</td>
-                  <td>{eintrag.wertung.aufgabenPunkte.gesamtPunkte}</td>
-                  <td>{eintrag.kettenbonus}</td>
-                  <td>{eintrag.gesamtPunkte}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {ergebnis.gewinner === null ? null : (
-            <p data-testid="gewinner">
-              Gewonnen: {ergebnis.gewinner.map((g) => `${g.name} (${g.gesamtPunkte})`).join(', ')}
-            </p>
-          )}
-        </>
-      )}
     </section>
   )
 }

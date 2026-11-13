@@ -1,0 +1,128 @@
+P01 | Tabelle 32/G23 | src/engine/scoring.ts: `export const KETTENBONUS = 5;` -> `export const KETTENBONUS = 4;` | exit 1 | 21 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+P02 | Tabelle 37/G24 | src/engine/scoring.ts: `const MINDEST_KETTENLAENGE = 3;` -> `const MINDEST_KETTENLAENGE = 2;` | exit 1 | 6 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - A7.3: Regenbogenschlange in der Wertung A7.3 Beispiel 3: Rot-Rot-Regenbogenschlange-Braun-Braun bringt 4 Punkte, die Regenbogenschlange zählt als Braun
+    - D24: eine Kette zählt erst ab 3 Farbkarten derselben Farbe D24: Rot-Rot ist noch keine Kette, Rot-Rot-Rot schon
+P03 | Tabelle 38/G25 (alter Stand C13) | src/engine/scoring.ts: `const MINDEST_KETTENLAENGE = 3;` -> `const MINDEST_KETTENLAENGE = 1;` | exit 1 | 7 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - A7.3: Regenbogenschlange in der Wertung A7.3 Beispiel 3: Rot-Rot-Regenbogenschlange-Braun-Braun bringt 4 Punkte, die Regenbogenschlange zählt als Braun
+    - A11: längste Farbkette A11: die Kette ist einfarbig; verschiedene Farben nebeneinander bilden keine Kette
+P04 | Tabelle 34/G26 | src/engine/scoring.ts: `bonus: laenge > 0 && laenge === laengste ? KETTENBONUS : 0` -> `bonus: laenge > 0 && index === ketten.indexOf(laengste) ? KETTENBONUS ` | exit 1 | 7 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - E10: Wertungsansicht am Entwicklertisch A11: ohne Erweiterung zeigt die Ansicht weder Vielfaltbonus noch Aufgaben als Zahl
+P05 | Tabelle 36/G28 | src/engine/scoring.ts: `ermittleFarbgruppen(schlange, MINDEST_KETTENLAENGE)` -> `ermittleFarbgruppen({ ...schlange, karten: schlange.karten.filter((k) ` | exit 1 | 7 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - E10: Wertungsansicht am Entwicklertisch A11: ohne Erweiterung zeigt die Ansicht weder Vielfaltbonus noch Aufgaben als Zahl
+P06 | Tabelle 35/G29 | src/engine/scoring.ts: `return Math.max(0, ...laengen);` -> `return laengen.reduce((a, b) => a + b, 0);` | exit 1 | 9 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+P07 | Tabelle 1/G30 | src/engine/scoring.ts: `werteSpieler(spieler, zustand.erweiterung, null, spieler.id === betrac` -> `werteSpieler(spieler, zustand.erweiterung, { laenge: laengsteFarbkette` | exit 1 | 4 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11/A9: Zwischenstand und Endwertung (E10, Kriterium 6) A11: der Zwischenstand hat keinen Kettenbonus, die Endwertung schon
+    - A11: längste Farbkette A11: der Kettenbonus kommt erst in der Punktezählung nach Spielende, nicht in den Zwischenstand
+P08 | Tabelle 44/G35 | src/engine/scoring.ts: `werteSpieler(spieler, zustand.erweiterung, null, spieler.id === betrac` -> `werteSpieler(spieler, zustand.erweiterung, null, true)` | exit 1 | 4 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11/A9: Zwischenstand und Endwertung (E10, Kriterium 6) A9: im Zwischenstand zählt die eigene erfüllte geheime Aufgabe, eine fremde nicht
+    - A11/A9: Zwischenstand und Endwertung (E10, Kriterium 6) A11: der Zwischenstand hat keinen Kettenbonus, die Endwertung schon
+P09 | Tabelle 45/G36 | src/engine/scoring.ts: `summe + aufgabe.punkte, 0)` -> `summe + 2 * aufgabe.punkte, 0)` | exit 1 | 8 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11: Aufgabenkarten [Erweiterung] A11: die Punkte erfüllter offener Aufgaben zählen
+    - A11: Aufgabenkarten [Erweiterung] A11: die geheime Aufgabe zählt, wenn sie erfüllt wurde
+P10 | Tabelle 46/G38 | src/engine/scoring.ts: `.map((wertung) => wertung.spielerId),` -> `.map((wertung) => wertung.spielerId).slice(0, 1),` | exit 1 | 4 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Wertungsansicht am Entwicklertisch A11: ohne Erweiterung zeigt die Ansicht weder Vielfaltbonus noch Aufgaben als Zahl
+    - A11: Sieg und Gleichstand D22: bei Gleichstand gewinnen alle Punktgleichen
+    - A11: Sieg und Gleichstand D22: haben alle 0 Punkte, gewinnen alle
+P11 | Tabelle 22/G18 | src/engine/scoring.ts: `werteSchlangen(spieler.schlangen, erweiterung)` -> `werteSchlangen(spieler.schlangen, true)` | exit 1 | 4 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Wertungsansicht am Entwicklertisch A11: ohne Erweiterung zeigt die Ansicht weder Vielfaltbonus noch Aufgaben als Zahl
+    - A11: Vielfaltbonus [Erweiterung] A11: ohne Erweiterung gibt es keinen Vielfaltbonus
+    - A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) A11: ohne Erweiterung zählt nur die Gruppenwertung, bei Gleichstand die feste Reihenfolge (Blau vor Rot)
+P12 | Tabelle 27/G20 | src/engine/jokerGruppen.ts: `const HOECHSTER_VIELFALTBONUS = 4;` -> `const HOECHSTER_VIELFALTBONUS = 5;` | exit 1 | 3 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11: Vielfaltbonus [Erweiterung] A11: 6 verschiedene Farben mit gültigen Gruppen ergeben 4 Bonuspunkte (5 und 6 beide 4)
+P13 | Tabelle 23/G12 | src/engine/jokerGruppen.ts: `vielfaltBonus: mitVielfalt ? Math.max(0, ...gewertet.map((schlange) =>` -> `vielfaltBonus: mitVielfalt ? gewertet.reduce((s, schlange) => s + (sch` | exit 1 | 6 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+P14 | Tabelle 18,65/G14 | src/engine/jokerGruppen.ts: `return fusion.unter[0].punkte + fusion.unter[1].punkte;` -> `return fusion.unter[0].punkte;` | exit 1 | 17 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+P15 | Tabelle 17,53/G13 | src/engine/jokerGruppen.ts: `if (karte.name === 'Regenbogenschlange') return 0;` -> `if (karte.name === 'Regenbogenschlange') return 1;` | exit 1 | 29 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+P16 | Tabelle 15,49/G09 | src/engine/jokerGruppen.ts: `return FARBEN.map((_, farbe) => {` -> `return FARBEN.slice(0, 1).map((_, farbe) => {` | exit 1 | 37 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11: Farbgruppen A11 Beispiel 2: Blau, Blau, Blau+Fusion+Blau, Violett, Violett ergibt 6 Punkte; die Fusion zählt als Violett
+P17 | Tabelle 31/G10 | src/engine/jokerGruppen.ts: `const jokerfarben = waehleJokerfarben(zuGliedern(schlangen), mitVielfa` -> `const jokerfarben = waehleJokerfarben(zuGliedern(schlangen), false);` | exit 1 | 6 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+    - A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) A11: bei gleichen Gruppenpunkten entscheidet der Vielfaltbonus die Jokerfarbe
+P18 | Tabelle 72/G39 | src/engine/jokerGruppen.ts: `const gewaehlt = nachfolger(stelle, lage).find(` -> `const gewaehlt = [...nachfolger(stelle, lage)].reverse().find(` | exit 1 | 12 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11/A7.7: gleich gute Jokerfarben werden immer gleich gewählt (E10, Kriterium 8) A7.7 Beispiel 2: die Fusion zwischen Blau-Blau und Rot-Rot zählt als Blau, Reihenfolge Blau, Rot, Gelb, Violett, Braun, Grün
+    - A11/A7.7: gleich gute Jokerfarben werden immer gleich gewählt (E10, Kriterium 8) A11: bei mehreren gleich guten Jokern wird von vorn nach hinten je die erste Farbe der Reihenfolge gewählt
+P19 | Tabelle 23,31/G43 | src/engine/jokerGruppen.ts: `const bonus = mitVielfalt ? Math.max(lage.bonus, vielfaltBonusFuer(anz` -> `const bonus = mitVielfalt ? vielfaltBonusFuer(anzahlBits(lage.farben))` | exit 1 | 3 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) A11: der Bonus der ersten Schlange bleibt der höchste, auch wenn die zweite weniger Farben hat (Codex-Befund)
+P20 | Tabelle 26/G19 | src/engine/jokerGruppen.ts: `const vielfaltFarben = FARBEN.filter((farbe) => gruppen.some((gruppe) ` -> `const vielfaltFarben = gruppen.map((gruppe) => gruppe.farbe);` | exit 1 | 6 rot erwarteter Test rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: aus echtem Material, alle 4 Regenbogenschlangen und 4 Farbenfusionen bei einem Spieler
+    - A11: Vielfaltbonus [Erweiterung] A11: für die Berechnung zählt nur die längste Gruppe jeder Farbe; zwei rote Gruppen sind eine Farbe
+E01 | eigen: Schlangenende setzt die laufende Gruppe nicht zurück | src/engine/jokerGruppen.ts: `return { ...START, bonus };` -> `return { ...lage, farben: 0, bonus };` | exit 1 | 3 rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus false: gleiche Summe, gleiche Jokerfarben
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+E02 | eigen: Schlüssel der Suche zu eng (Kollisionen) | src/engine/jokerGruppen.ts: `const OFFEN_SCHRANKE = 32;` -> `const OFFEN_SCHRANKE = 2;` | exit 1 | 1 rot
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus false: gleiche Summe, gleiche Jokerfarben
+E03 | eigen: Gewicht 1, Jokerzahl mischt sich in die Summe | src/engine/jokerGruppen.ts: `const GEWICHT = glieder.filter((glied) => glied.art === 'joker').lengt` -> `const GEWICHT = 1;` | exit 1 | 1 rot
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+E04 | eigen: Joker ohne Gruppe meldet trotzdem eine Farbe | src/engine/jokerGruppen.ts: `farbe: inGruppe.has(karte.id) ? (jokerfarben.get(karte.id) ?? null) : ` -> `farbe: jokerfarben.get(karte.id) ?? null,` | exit 1 | 3 rot
+    - A7.3: Regenbogenschlange in der Wertung A7.3: muss Teil einer Dreiergruppe sein; mit nur einer Nachbarkarte entsteht keine Gruppe
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus false: gleiche Summe, gleiche Jokerfarben
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+E05 | eigen: Joker als erste Karte einer Gruppe zählt nicht für die Jokerzahl | src/engine/jokerGruppen.ts: `if (farbe !== lage.farbe) return [{ ...lage, farbe, laenge: 1, offen: ` -> `if (farbe !== lage.farbe) return [{ ...lage, farbe, laenge: 1, offen: ` | exit 1 | 5 rot
+    - A11/A7.7: gleich gute Jokerfarben werden immer gleich gewählt (E10, Kriterium 8) A7.7 Beispiel 2: die Fusion zwischen Blau-Blau und Rot-Rot zählt als Blau, Reihenfolge Blau, Rot, Gelb, Violett, Braun, Grün
+    - A11/A7.7: gleich gute Jokerfarben werden immer gleich gewählt (E10, Kriterium 8) A11: bei mehreren gleich guten Jokern wird von vorn nach hinten je die erste Farbe der Reihenfolge gewählt
+    - A11/A7.7: gleich gute Jokerfarben werden immer gleich gewählt (E10, Kriterium 8) A11: dieselbe Stellung ergibt dieselbe Wahl, auch nach Speichern und Laden
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus false: gleiche Summe, gleiche Jokerfarben
+E06 | eigen: geheime Aufgabe in der Endwertung nicht aufgedeckt | src/engine/scoring.ts: `{ laenge, bonus: laenge > 0 && laenge === laengste ? KETTENBONUS : 0 }` -> `{ laenge, bonus: laenge > 0 && laenge === laengste ? KETTENBONUS : 0 }` | exit 1 | 5 rot
+    - E10: Szenarien der Wertung am Entwicklertisch A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben
+    - E10: Wertungsansicht am Entwicklertisch A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler
+    - A11: Aufgabenkarten [Erweiterung] A11: die geheime Aufgabe zählt, wenn sie erfüllt wurde
+    - A11: Aufgabenkarten [Erweiterung] C11: keine Endspurt-Verdopplung; in der Schlussrunde und nach Spielende zählt jede Aufgabe einfach
+E07 | eigen: unbekannter Betrachter nicht abgelehnt | src/engine/scoring.ts: `if (!zustand.spieler.some((spieler) => spieler.id === betrachterId)) {` -> `if (false) {` | exit 1 | 1 rot
+    - A11/A9: Zwischenstand und Endwertung (E10, Kriterium 6) A11: ein unbekannter Betrachter wird mit Grund abgelehnt
+E08 | eigen: Sperre unterbricht die Gruppe in der Suche nicht | src/engine/jokerGruppen.ts: `return [{ farbe: -1, lage: unterbreche(lage), gewinn: 0 }];` -> `return [{ farbe: -1, lage, gewinn: 0 }];` | exit 1 | 2 rot
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus false: gleiche Summe, gleiche Jokerfarben
+    - A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben
+git status danach: ?? src/engine/__tests__/zz_pruefer_e10.test.ts
+?? tagebuch/tests/faelle/TF-ENGINE-007.md
+?? tagebuch/tests/faelle/TF-ENGINE-008.md

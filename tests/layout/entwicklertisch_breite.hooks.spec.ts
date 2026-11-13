@@ -18,6 +18,9 @@ const ADRESSEN = [
   '/dev?seed=1&spieler=4&erweiterung=1',
   '/dev?szenario=alle-orte',
   '/dev?szenario=kaputt-doppelte-karte',
+  '/dev?szenario=wertung-beispiele',
+  '/dev?szenario=wertung-beispiele-kette',
+  '/dev?szenario=wertung-joker',
 ]
 
 /**

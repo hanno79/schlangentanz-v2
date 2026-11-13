@@ -1,0 +1,233 @@
+import { describe, expect, it } from 'vitest'
+import { werteSchlangen } from '../jokerGruppen'
+import { berechneEndwertung, berechneZwischenstand } from '../index'
+import type { Farbe, Schlange, Spielkarte } from '../index'
+import { erzeugeZufall } from '../testing/zufall'
+import { endwertung, tisch, jokerfarben } from './wertung_hilfe'
+
+// Unabhängige Gegenprüfung des Prüfers E10 (nicht Teil des Repos).
+const F: Farbe[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün']
+const W: Record<Farbe, number> = { Blau: 1, Rot: 1, Gelb: 1, Violett: 2, Braun: 2, Grün: 3 }
+type G = Farbe | 'RB' | 'X' | ['F', Farbe, Farbe]
+
+function bau(listen: G[][]): Schlange[] {
+  let n = 0
+  return listen.map((l, si) => {
+    const s: Schlange = { id: `s${si}`, karten: [], fusionen: [] }
+    for (const g of l) {
+      if (g === 'RB') s.karten.push({ typ: 'Sonderkarte', id: `c${n++}`, name: 'Regenbogenschlange' } as Spielkarte)
+      else if (g === 'X') s.karten.push({ typ: 'Sonderkarte', id: `c${n++}`, name: 'Schlangenblockade' } as Spielkarte)
+      else if (Array.isArray(g)) {
+        const id = `c${n++}`
+        s.karten.push({ typ: 'Sonderkarte', id, name: 'Farbenfusion' } as Spielkarte)
+        s.fusionen.push({ karteId: id, unter: [{ typ: 'Farbkarte', id: `c${n++}`, farbe: g[1], punkte: W[g[1]] }, { typ: 'Farbkarte', id: `c${n++}`, farbe: g[2], punkte: W[g[2]] }] })
+      } else s.karten.push({ typ: 'Farbkarte', id: `c${n++}`, farbe: g, punkte: W[g] })
+    }
+    return s
+  })
+}
+
+/** Eigene Bewertung einer festen Belegung: Läufe gleicher Farbe ab 3, Werte addieren. */
+function bewerte(listen: G[][], belegung: Farbe[], vielfalt: boolean) {
+  let j = 0
+  let punkte = 0
+  let bonus = 0
+  for (const l of listen) {
+    const farben: Array<Farbe | null> = []
+    const werte: number[] = []
+    for (const g of l) {
+      if (g === 'X') { farben.push(null); werte.push(0) }
+      else if (g === 'RB') { farben.push(belegung[j++]); werte.push(0) }
+      else if (Array.isArray(g)) { farben.push(belegung[j++]); werte.push(W[g[1]] + W[g[2]]) }
+      else { farben.push(g); werte.push(W[g]) }
+    }
+    const gef = new Set<Farbe>()
+    let i = 0
+    while (i < farben.length) {
+      let k = i
+      while (k < farben.length && farben[i] !== null && farben[k] === farben[i]) k++
+      if (farben[i] !== null && k - i >= 3) { for (let m = i; m < k; m++) punkte += werte[m]; gef.add(farben[i] as Farbe) }
+      i = Math.max(k, i + 1)
+    }
+    const b = gef.size >= 5 ? 4 : Math.max(0, gef.size - 1)
+    bonus = Math.max(bonus, b)
+  }
+  return { punkte, bonus, summe: punkte + (vielfalt ? bonus : 0) }
+}
+
+function anzahlJoker(listen: G[][]) { return listen.flat().filter((g) => g === 'RB' || Array.isArray(g)).length }
+
+function brute(listen: G[][], vielfalt: boolean) {
+  const k = anzahlJoker(listen)
+  let best = -1
+  let maxPunkte = -1
+  let bestPunkte = -1
+  for (let n = 0; n < 6 ** k; n++) {
+    const bel = Array.from({ length: k }, (_, i) => F[Math.floor(n / 6 ** i) % 6])
+    const r = bewerte(listen, bel, vielfalt)
+    if (r.summe > best || (r.summe === best && r.punkte < bestPunkte)) { best = r.summe; bestPunkte = r.punkte }
+    maxPunkte = Math.max(maxPunkte, r.punkte)
+  }
+  return { best, maxPunkte, bestPunkteMin: bestPunkte }
+}
+
+function impl(listen: G[][], vielfalt: boolean) {
+  const e = werteSchlangen(bau(listen), vielfalt)
+  return { summe: e.gruppenPunkte + (e.vielfaltBonus ?? 0), e }
+}
+
+/** Die von der Wertung gewählten Farben mit der eigenen Bewertung nachrechnen (Konsistenz der Aufschlüsselung). */
+function nachrechnen(listen: G[][], vielfalt: boolean) {
+  const e = werteSchlangen(bau(listen), vielfalt)
+  // Joker ohne Gruppe: Farbe, die nichts bewirkt, gibt es nicht immer; wir setzen eine Farbe ein,
+  // die keine Nachbarn hat, indem wir als Sperre rechnen.
+  const ersatz = listen.map((l, si) => l.map((g, gi): G => {
+    if (g === 'RB' || Array.isArray(g)) {
+      const karte = e.schlangen[si].joker.find((jj) => jj.karteId === bau(listen)[si].karten[gi].id)
+      return karte?.farbe ?? 'X'
+    }
+    return g
+  }))
+  // Fusionen mit Farbe: Wert der Fusion statt einer Farbkarte -> eigene Rechnung über die Gruppen der Wertung
+  const punkte = e.schlangen.reduce((s, sch) => s + sch.gruppen.reduce((t, gr) => t + gr.punkte, 0), 0)
+  return { punkte, e, ersatz }
+}
+
+describe('Prüfer E10: eigene Gegenprüfung Kriterium 3', () => {
+  const faelle: Array<[string, G[][]]> = [
+    ['mehrere Joker nebeneinander', [['Gelb', 'RB', ['F', 'Grün', 'Grün'], 'RB', 'Gelb']]],
+    ['Joker zwischen zwei Gruppen', [['Rot', 'Rot', 'RB', 'Blau', 'Blau']]],
+    ['Joker zwischen zwei fertigen Gruppen', [['Rot', 'Rot', 'Rot', 'RB', 'Grün', 'Grün', 'Grün']]],
+    ['Vielfalt kippt Farbe', [['Blau', 'Blau', 'Blau', 'X', 'Violett', 'Violett', 'RB', 'Gelb', 'Gelb', 'X', 'Violett', 'Violett', 'Violett']]],
+    ['Joker am Schlangenende, nicht über das Ende', [['Grün', 'Grün'], ['RB', 'Grün']]],
+    ['Joker an beiden Enden', [['Grün', 'Grün', 'RB'], ['RB', 'Grün', 'Grün']]],
+    ['zwei Schlangen, Bonus hängt zusammen', [['Rot', 'Rot', 'Rot', 'Gelb', 'Gelb', 'RB', 'Violett', 'Violett'], ['Blau', 'Blau', 'Blau', 'Braun', 'Braun', 'Braun', 'Grün', 'Grün', 'RB']]],
+    ['nur Joker (G9 wörtlich)', [['RB', 'RB', 'RB'], [['F', 'Grün', 'Grün'], ['F', 'Blau', 'Blau'], ['F', 'Rot', 'Rot']]]],
+    ['Fusion verbindet zwei Gruppen', [['Braun', 'Braun', ['F', 'Rot', 'Rot'], 'Braun', 'Braun']]],
+    ['8 Joker eng', [['RB', 'Rot', 'RB', 'Rot', 'RB', ['F', 'Gelb', 'Gelb'], 'RB'], [['F', 'Grün', 'Grün'], 'Violett', ['F', 'Blau', 'Blau'], 'X', ['F', 'Braun', 'Braun'], 'Braun']]],
+  ]
+  for (const vielfalt of [false, true]) {
+    for (const [name, listen] of faelle) {
+      it(`${name}, Vielfalt ${vielfalt}`, () => {
+        const b = brute(listen, vielfalt)
+        const r = impl(listen, vielfalt)
+        const n = nachrechnen(listen, vielfalt)
+        console.log(`[E10P] ${name} V=${vielfalt}: Wertung ${r.summe}, Durchprobieren ${b.best}, Gruppen ${r.e.gruppenPunkte}, Bonus ${r.e.vielfaltBonus}, Joker ${JSON.stringify(r.e.schlangen.map((s) => s.joker.map((j) => j.farbe)))}`)
+        expect(r.summe).toBe(b.best)
+        expect(n.punkte).toBe(r.e.gruppenPunkte)
+        // Bonus ist der höchste der Schlangen
+        expect(r.e.vielfaltBonus).toBe(vielfalt ? Math.max(0, ...r.e.schlangen.map((s) => s.vielfaltBonus ?? 0)) : null)
+      })
+    }
+  }
+
+  it('Zufall: 300 Auslagen bis 6 Joker, beide Varianten, eigenes Durchprobieren; Kippfälle zählen', () => {
+    const z = erzeugeZufall(4711)
+    const wahl = <T,>(l: readonly T[]) => l[Math.floor(z() * l.length)]
+    let kipp = 0
+    let beispiel = ''
+    for (let fall = 0; fall < 300; fall++) {
+      let joker = 0
+      const listen: G[][] = Array.from({ length: 1 + Math.floor(z() * 2) }, () =>
+        Array.from({ length: 2 + Math.floor(z() * 9) }, (): G => {
+          const r = z()
+          if (r < 0.3 && joker < 6) { joker++; return z() < 0.5 ? 'RB' : ['F', wahl(F), wahl(F)] }
+          if (r < 0.34) return 'X'
+          return wahl(F.slice(0, 3 + Math.floor(z() * 4)))
+        }),
+      )
+      for (const vielfalt of [false, true]) {
+        const b = brute(listen, vielfalt)
+        const r = impl(listen, vielfalt)
+        expect(r.summe, JSON.stringify(listen)).toBe(b.best)
+        expect(nachrechnen(listen, vielfalt).punkte).toBe(r.e.gruppenPunkte)
+        if (vielfalt && r.e.gruppenPunkte < b.maxPunkte) { kipp++; if (!beispiel) beispiel = `${JSON.stringify(listen)} Gruppen ${r.e.gruppenPunkte} < max ${b.maxPunkte}, Summe ${r.summe}` }
+      }
+    }
+    console.log(`[E10P] Kippfälle (weniger Gruppenpunkte, mehr Summe): ${kipp}; Beispiel: ${beispiel}`)
+  })
+
+  it('Laufzeit: 8 Joker in 2 x 54 Karten und 30 Joker in 3 Schlangen', () => {
+    const lang = (s: number): G[] => Array.from({ length: 54 }, (_, i): G => F[Math.floor((i + s) / 2) % 6])
+    const a = lang(0); const b = lang(1)
+    ;[3, 4, 10, 11].forEach((i) => (a[i] = 'RB'))
+    ;[5, 6, 20, 21].forEach((i, k) => (b[i] = ['F', F[k], F[k + 1]]))
+    let t = performance.now()
+    for (let i = 0; i < 20; i++) werteSchlangen(bau([a, b]), true)
+    const d8 = (performance.now() - t) / 20
+    const viele = Array.from({ length: 3 }, (_, s) => Array.from({ length: 40 }, (_, i): G => (i % 4 === s ? F[(i + s) % 6] : i % 2 ? 'RB' : ['F', F[i % 6], F[(i + 1) % 6]])))
+    t = performance.now()
+    const e = werteSchlangen(bau(viele), true)
+    const d30 = performance.now() - t
+    console.log(`[E10P] Laufzeit 8 Joker: ${d8.toFixed(2)} ms; ${viele.flat().filter((g) => g === 'RB' || Array.isArray(g)).length} Joker: ${d30.toFixed(1)} ms, Summe ${e.gruppenPunkte + (e.vielfaltBonus ?? 0)}`)
+    expect(d8).toBeLessThan(100)
+  })
+})
+
+describe('Prüfer E10: Zwischenstand verrät keine fremde geheime Aufgabe (Kriterium 6)', () => {
+  it('der Zwischenstand für Spieler 0 ist gleich, egal ob Spieler 1 seine geheime Aufgabe erfüllt hat oder welche er hat', () => {
+    const basis = [[['Blau', 'Blau', 'Blau']], [['Rot', 'Rot', 'Rot', 'Rot']]] as never
+    const a = tisch(true, basis, (bau) => bau.aendere((zz) => { zz.spieler[1].geheimeAufgabeErfuellt = true }))
+    const b = tisch(true, basis, (bau) => bau.aendere((zz) => { zz.spieler[1].geheimeAufgabeErfuellt = false }))
+    const sa = JSON.stringify(berechneZwischenstand(a, a.spieler[0].id))
+    const sb = JSON.stringify(berechneZwischenstand(b, b.spieler[0].id))
+    expect(sa).toBe(sb)
+    expect(sa).not.toContain(a.spieler[1].geheimeAufgabe?.name ?? '§§')
+    expect(sa).not.toContain(a.spieler[1].geheimeAufgabe?.id ?? '§§')
+    console.log(`[E10P] geheim Spieler 1: ${a.spieler[1].geheimeAufgabe?.name}; Zwischenstand gleich: ${sa === sb}`)
+  })
+})
+
+describe('Prüfer E10: weitere Grenzfälle', () => {
+  it('Kettenbonus im Zwischenstand nie, auch im Zustand Beendet', () => {
+    const z = tisch(false, [[['Grün', 'Grün', 'Grün', 'Grün']], [['Rot']]], (bau) => bau.beendet(0))
+    const s = berechneZwischenstand(z, z.spieler[1].id)
+    expect(s.spieler.map((x) => x.kette)).toEqual([null, null])
+    expect(berechneEndwertung(z).spieler[0].kette).toEqual({ laenge: 4, bonus: 5 })
+  })
+  it('Vier Spieler: drei mit Kette 3 gleich, einer 3 in zwei Schlangen getrennt', () => {
+    const w = endwertung(false, [[['Gelb', 'Gelb', 'Gelb']], [['Braun', 'Braun', 'Schlangenblockade', 'Braun', 'Braun', 'Braun']], [['Blau', 'Blau'], ['Blau']], [['Grün', 'Grün', 'Grün']]])
+    expect(w.spieler.map((s) => s.kette?.bonus)).toEqual([5, 5, 0, 5])
+  })
+  it('Joker-Wahl unabhängig von Reihenfolge der Spieler', () => {
+    const w = endwertung(true, [[['Gelb', 'Gelb', 'Regenbogenschlange', 'Rot', 'Rot']], [['Blau', 'Blau', 'Blau']]])
+    expect(jokerfarben(w.spieler[0])).toEqual(['Rot']) // Reihenfolge Blau, Rot, Gelb: Rot vor Gelb
+  })
+})
+
+describe('Prüfer E10: echter Kippfall (weniger Gruppenpunkte, mehr Summe) gesucht', () => {
+  it('Suche', () => {
+    const z = erzeugeZufall(99)
+    const wahl = <T,>(l: readonly T[]) => l[Math.floor(z() * l.length)]
+    let strikt = 0
+    let beispiel = ''
+    for (let fall = 0; fall < 1500; fall++) {
+      let joker = 0
+      const listen: G[][] = Array.from({ length: 1 + Math.floor(z() * 2) }, () =>
+        Array.from({ length: 3 + Math.floor(z() * 9) }, (): G => {
+          const r = z()
+          if (r < 0.3 && joker < 5) { joker++; if (z() < 0.5) return 'RB'; const f = wahl(F); return ['F', f, f] }
+          if (r < 0.34) return 'X'
+          return wahl(F)
+        }),
+      )
+      const k = anzahlJoker(listen)
+      let maxP = -1; let bestSum = -1; let bestSumAtMax = -1
+      const alle: Array<{ p: number; s: number }> = []
+      for (let n = 0; n < 6 ** k; n++) {
+        const bel = Array.from({ length: k }, (_, i) => F[Math.floor(n / 6 ** i) % 6])
+        const r = bewerte(listen, bel, true)
+        alle.push({ p: r.punkte, s: r.summe })
+        maxP = Math.max(maxP, r.punkte); bestSum = Math.max(bestSum, r.summe)
+      }
+      for (const a of alle) if (a.p === maxP) bestSumAtMax = Math.max(bestSumAtMax, a.s)
+      if (bestSum > bestSumAtMax) {
+        strikt++
+        const r = impl(listen, true)
+        expect(r.summe).toBe(bestSum)
+        if (!beispiel) beispiel = `${JSON.stringify(listen)}: max Gruppenpunkte ${maxP} (Summe dort ${bestSumAtMax}), bestes ${bestSum}; Wertung Gruppen ${r.e.gruppenPunkte}, Bonus ${r.e.vielfaltBonus}, Joker ${JSON.stringify(r.e.schlangen.map((s) => s.joker.map((j) => j.farbe)))}`
+      }
+    }
+    console.log(`[E10P] strikte Kippfälle: ${strikt}; Beispiel: ${beispiel}`)
+  }, 300000)
+})

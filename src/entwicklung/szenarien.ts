@@ -1,6 +1,7 @@
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import { starteEntwicklerPartie } from './partie'
+import { WERTUNGS_SZENARIEN } from './szenarienWertung'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -66,6 +67,7 @@ export const SZENARIEN: readonly Szenario[] = [
         .amZug(1)
         .zustand(),
   },
+  ...WERTUNGS_SZENARIEN,
   {
     name: 'kaputt-doppelte-karte',
     beschreibung: 'Absichtlich kaputt: Die erste Handkarte von Spieler 1 liegt zusätzlich in der Hand von Spieler 2.',
