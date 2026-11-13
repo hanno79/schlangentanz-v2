@@ -21,6 +21,18 @@ async function startePartie(page: Page): Promise<void> {
   await expect(page.getByTestId('spiel')).toBeVisible()
 }
 
+/**
+ * O2b: Die Tab-Reihe folgt der sichtbaren Anordnung. „Regeln“ steht unter dem
+ * Titel (hochkant darunter, quer links daneben) und kommt deshalb vor der Wahl
+ * der Partie, nicht als letztes Element.
+ */
+async function erwarteTabReihe(page: Page, namen: string[]): Promise<void> {
+  for (const name of namen) {
+    await page.keyboard.press('Tab')
+    await expect(page.locator(':focus'), `Tab führt als Nächstes auf „${name}“`).toHaveAccessibleName(name)
+  }
+}
+
 function alleVertraege(): void {
   bedienbarkeitsVertraege()
   waechterVertraege()
@@ -44,6 +56,10 @@ test.describe('O2: Lobby ohne Spielstand', () => {
     await expect(page.getByRole('radio', { name: '3 Gegner' })).toBeChecked()
   })
 
+  test('O2b: die Tab-Reihe folgt der sichtbaren Anordnung', async ({ page }) => {
+    await erwarteTabReihe(page, ['Regeln', '1 Gegner', 'Mit Erweiterung', 'Neue Partie'])
+  })
+
   alleVertraege()
 })
 
@@ -55,6 +71,10 @@ test.describe('O2: Lobby mit laufender Partie', () => {
 
   test('O2 K2: die Lobby bietet „Weiterspielen“', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Weiterspielen' })).toBeVisible()
+  })
+
+  test('O2b: die Tab-Reihe folgt der sichtbaren Anordnung, „Weiterspielen“ vor der neuen Partie', async ({ page }) => {
+    await erwarteTabReihe(page, ['Regeln', 'Weiterspielen', '1 Gegner', 'Mit Erweiterung', 'Neue Partie'])
   })
 
   alleVertraege()
