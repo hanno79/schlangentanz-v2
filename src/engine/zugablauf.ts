@@ -112,12 +112,19 @@ export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   gibZugWeiter(zustand, ereignisse);
 }
 
-/** A5: Die gewählten überzähligen Karten kommen auf den eigenen Ablagestapel, dann ist der Nächste dran. */
+/**
+ * A5: Die gewählten überzähligen Karten kommen auf den eigenen Ablagestapel,
+ * dann ist der Nächste dran. Sie landen in der Reihenfolge der Hand, damit jede
+ * Schreibweise derselben Wahl dasselbe ergibt wie die aufgezählte Aktion.
+ */
 export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly string[], ereignisse: Ereignis[]): void {
   const { spielerIndex } = zustand.zug;
   const spieler = zustand.spieler[spielerIndex];
-  for (const karteId of karteIds) spieler.ablagestapel.push(entnehmeHandkarte(zustand, spieler.id, karteId));
-  ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: [...karteIds] });
+  const gewaehlt = new Set(karteIds);
+  const abgeworfen = spieler.hand.filter((karte) => gewaehlt.has(karte.id));
+  spieler.hand = spieler.hand.filter((karte) => !gewaehlt.has(karte.id));
+  spieler.ablagestapel.push(...abgeworfen);
+  ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: abgeworfen.map((karte) => karte.id) });
   gibZugWeiter(zustand, ereignisse);
 }
 
