@@ -4,8 +4,8 @@ import { oeffne } from './oeffnen'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
 /*
-O2: Lobby, vorläufiger Spieltisch und Regelseite im Produktionsbuild, in jeder
-Geräteklasse. Jeder Zustand bekommt dieselben Messungen: die generischen
+O2: Lobby, Spieltisch nach „Neue Partie“ und ohne Partie, Regelseite im
+Produktionsbuild, in jeder Geräteklasse. Jeder Zustand bekommt dieselben Messungen: die generischen
 Wächter (nichts abgeschnitten, ausserhalb, verdeckt, zu blass), kein
 waagrechtes Scrollen und Tippflächen von mindestens 44 px.
 */
