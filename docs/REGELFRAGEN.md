@@ -3,6 +3,10 @@
 Task P0.5 · Katalog aus `docs/UMSETZUNGSPLAN.md`, Abschnitt 9 · 38 Fragen:
 F1–F15 zum Basis-Spiel, G1–G23 zur Erweiterung.
 
+Stand 13.11.2026: F1–F15 und die Nachfrage F8a sind beantwortet, die
+Antworten stehen in `docs/GAME_SPEC.md` Teil D (D14–D29). Offen sind
+G1–G23.
+
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der
 Website (Teil A) oder der Entscheidung aus Teil D, die Möglichkeiten mit ihrer
@@ -23,6 +27,9 @@ Folge fürs Spiel und einen Vorschlag.
 - **Was blockiert wird:** Fragen F blockieren Tasks des Basis-Spiels (Engine,
   KI und Oberfläche bis Meilenstein M2). Fragen G blockieren nur die
   Erweiterung (X1–X6, K4, O10 bis Meilenstein M3).
+- **Nachfragen:** Lässt eine Antwort einen Fall offen, folgt direkt nach der
+  Frage eine Nachfrage mit ihrer Nummer und einem Buchstaben, etwa F8a.
+  Antworte darauf wie auf jede andere Frage.
 - **Danach:** Deine Antwort kommt mit Datum in das Feld „Antwort“ der Frage,
   dann in `docs/GAME_SPEC.md` Teil D. Du bekommst einen Prompt, um die Website
   nachzuziehen.
@@ -39,6 +46,7 @@ Folge fürs Spiel und einen Vorschlag.
 | F6 | Darf man einem Gegner mit einer Farbkarte eine neue Schlange beginnen? | a: nein, nur an bestehende |
 | F7 | Sind eine Farbkarte und eine Regenbogenschlange „zwei Karten gleicher Farbe“ für die Farbenfusion? | a: nein, nur zwei Farbkarten |
 | F8 | Verfällt der letzte Zug bei Aussetzen in der Schlussrunde, und ist eine Grube auf jemanden ohne Zug erlaubt? | a, c: ja; nein |
+| F8a | Nachfrage zu F8: Darf die Grube jemanden treffen, der seinen letzten Zug schon gemacht hat? | a: nein, kein Ziel (aus dem Plan) |
 | F9 | Ist Gleichstand bei den Punkten ein geteilter Sieg? | a: ja |
 | F10 | Darf ein Verdoppler im zweiten Zug wirkungslos abgelegt werden? | a: ja, ohne weiteren Zug |
 | F11 | Hat die längste Farbkette eine Mindestlänge, und was gilt ohne Kette? | a, d: Mindestlänge 2; ohne Kette kein Bonus |
@@ -92,9 +100,9 @@ Folge fürs Spiel und einen Vorschlag.
 
 **Betroffene Tasks:** nennt die Frage: E4 (Grenzfall). Hängt davon ab: E2 (Aussetzen im Zugablauf), O6 (Anzeige des Aussetzens).
 
-**Antwort:** —
+**Antwort:** b. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D14.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F2: Ein Farbenschutz gegen zwei gefressene Karten
 
@@ -120,9 +128,9 @@ Folge fürs Spiel und einen Vorschlag.
 
 **Betroffene Tasks:** nennt die Frage: E6 (Grenzfall). Hängt davon ab: E4 (Reaktionsablauf, jeder Betroffene einmal), K3 (Abwehr der KI), O6 (Abwehrfrage an den Menschen).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D15.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F3: Neue Schlange mit einer Sonderkarte beginnen
 
@@ -146,9 +154,9 @@ Folge fürs Spiel und einen Vorschlag.
 
 **Betroffene Tasks:** nennt die Frage: E5. Hängt davon ab: E1 (Aktionstypen), O5 (Ziel „neue Schlange“), K2 (Zugsuche).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D16.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F4: Wohin der Farbendieb die Karte legt
 
@@ -178,9 +186,9 @@ Teil 2, der Dieb hat keine eigene Schlange:
 
 **Betroffene Tasks:** nennt die Frage: E8 (Grenzfall). Hängt davon ab: O5 (Farbendieb: Karte, dann Platz), K3 (Angriff der KI).
 
-**Antwort:** —
+**Antwort:** a, c. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D17.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F5: Auffüllen und Abwehr beim Aussetzen
 
@@ -210,9 +218,9 @@ Teil 2, Abwehr mit Farbenschutz:
 
 **Betroffene Tasks:** nennt die Frage: E2 (Abnahmekriterium 10), E4 (Grenzfall). Hängt davon ab: O6 (Abnahmekriterium 4), K3 (Abwehr der KI).
 
-**Antwort:** —
+**Antwort:** a, c. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D18.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F6: Einem Gegner eine neue Schlange beginnen
 
@@ -235,9 +243,9 @@ Teil 2, Abwehr mit Farbenschutz:
 
 **Betroffene Tasks:** nennt die Frage: E5 (Abnahmekriterium 1). Hängt davon ab: O5 (Abnahmekriterium 2), K3 (störende Farbkarte beim Gegner).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D19.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F7: Farbenfusion mit einer Regenbogenschlange
 
@@ -260,9 +268,9 @@ Teil 2, Abwehr mit Farbenschutz:
 
 **Betroffene Tasks:** nennt die Frage: E7. Hängt davon ab: O5 (Farbenfusion: Kartenpaar wählen), K2 (Abnahmekriterium 4).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D20.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F8: Aussetzen in der Schlussrunde
 
@@ -292,9 +300,36 @@ Teil 2, Grube auf jemanden ohne weiteren Zug:
 
 **Betroffene Tasks:** nennt die Frage: E2 (Abnahmekriterium 10), E4 (Grenzfall). Hängt davon ab: K3 (Schlussrunde), O6 (Anzeige des Aussetzens).
 
-**Antwort:** —
+**Antwort:** Freie Antwort, nah am Wortlaut des Autors: „man darf auch in der letzten Runde einen Spieler aussetzen lassen. Er hat dann keinen letzetn Zug mehr. Er darf aber verteidigen mit Farbenschutz“. Teil 1 wie a: Der letzte Zug verfällt. Die Schlangengrube darf auch in der Schlussrunde gespielt werden; trifft sie einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr. Er darf sich mit Farbenschutz verteidigen. Teil 2 hat der Autor hier nicht beantwortet; dazu kam die Nachfrage F8a. Teil D: D21.
 
-**Datum:** —
+**Datum:** 13.11.2026
+
+### F8a: Schlangengrube auf einen Spieler ohne weiteren Zug
+
+**Frage:** Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat?
+
+**Fundstelle:** A10 Spielende; A7.6 Schlangengrube; Nachfrage zu F8 (D21 in Teil D)
+
+> Danach machen alle anderen Spieler noch je einen letzten Zug, ohne nachzuziehen.
+
+> Wäre der Spieler mit der letzten Karte wieder an der Reihe, endet das Spiel und es folgt die Wertung.
+
+> Der gewählte Spieler muss seinen nächsten Zug komplett aussetzen.
+
+Deine Antwort zu F8 sagt, dass eine Grube in der Schlussrunde den letzten Zug nimmt, wenn der Spieler noch einen hätte. Offen ist der Fall, dass er keinen mehr hat.
+
+**Möglichkeiten:**
+
+- **a)** Nicht erlaubt: Ein Spieler ohne weiteren Zug ist kein Ziel der Grube. Folge: Dieses Ziel wird nicht angeboten; ohne anderes Ziel ist die Grube nur wirkungslos ablegbar.
+- **b)** Erlaubt, aber ohne Wirkung: Er darf sich mit Farbenschutz verteidigen; so oder so geht die Grube ohne Wirkung auf den Ablagestapel. Folge: Man kann so einen Farbenschutz des Gegners herauslocken, der ihm aber nichts mehr nützt.
+
+**Vorschlag:** a. Aus dem Plan zu F8, Teil 2: „nein“.
+
+**Betroffene Tasks:** nennt die Frage: E4 (Grenzfall). Hängt davon ab: K3 (Schlussrunde), O6 (Anzeige des Aussetzens).
+
+**Antwort:** b. Abweichung vom Vorschlag, Wortlaut des Autors: „Ja, ohne Wirkung“. Die Grube darf einen Spieler treffen, der seinen letzten Zug schon gemacht hat, bleibt aber ohne Wirkung und geht auf den Ablagestapel. Teil D: D29.
+
+**Datum:** 13.11.2026
 
 ### F9: Gleichstand beim Sieg
 
@@ -317,9 +352,9 @@ Der zweite Satz gilt nur für die längste Farbkette; für den Sieg sagt die Web
 
 **Betroffene Tasks:** nennt die Frage: E10 (Grenzfall). Hängt davon ab: O8 (Abnahmekriterium 3), K5 (Zählweise der Siege im Turnier).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D22.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F10: Verdoppler im zweiten Zug
 
@@ -342,9 +377,9 @@ Der zweite Satz gilt nur für die längste Farbkette; für den Sieg sagt die Web
 
 **Betroffene Tasks:** nennt die Frage: E3 (Abnahmekriterium 3). Hängt davon ab: E2 (wirkungslos ablegen), O5 (Abnahmekriterium 6), K2 (Abnahmekriterium 6).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D23.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F11: Mindestlänge der längsten Farbkette
 
@@ -375,9 +410,9 @@ Teil 2, niemand hat eine Kette der Mindestlänge (auch: Spieler ohne Schlange):
 
 **Betroffene Tasks:** nennt die Frage: E10 (Grenzfall). Hängt davon ab: O8 (Abnahmekriterium 1), K2 (Rennen um die längste Kette).
 
-**Antwort:** —
+**Antwort:** b, d. Abweichung vom Vorschlag in Teil 1, Wortlaut des Autors: „längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“. Gemeint ist die längste Farbkette: Sie zählt erst ab 3 Farbkarten derselben Farbe nebeneinander; Sonderkarten zählen nach A11 nicht mit und unterbrechen sie. Teil 2 wie vorgeschlagen (d). Teil D: D24.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F12: Sonderkarte mit Ziel wirkungslos ablegen
 
@@ -401,9 +436,9 @@ Teil 2, niemand hat eine Kette der Mindestlänge (auch: Spieler ohne Schlange):
 
 **Betroffene Tasks:** nennt die Frage: E2 (Abnahmekriterium 6). Hängt davon ab: O5 (wirkungslos ablegen), K2 (Abnahmekriterium 5).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D25.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F13: Schlangenhäutung ohne Änderung
 
@@ -426,9 +461,9 @@ Teil 2, niemand hat eine Kette der Mindestlänge (auch: Spieler ohne Schlange):
 
 **Betroffene Tasks:** nennt die Frage: E9 (Grenzfall). Hängt davon ab: O7 (Abnahmekriterium 1), K4 (Abnahmekriterium 3), X2 (Aufgaben „Schlangentanz“ und „Schlangenrepertoire“).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D26.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F14: Zweite Farbenfusion im zweiten Zug
 
@@ -453,9 +488,9 @@ Hinweis des Orchestrators: Im Basis-Spiel ist der Verdoppler die Sonderkarte des
 
 **Betroffene Tasks:** nennt die Frage: E7 (Abnahmekriterium 3). Hängt davon ab: E3 (Teilzug), X3 (Grenzen an einer Stelle), X6 (Zusatzaktionen des Schlangenkorbs).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D27.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ### F15: Einsicht in die Ablagestapel
 
@@ -477,9 +512,9 @@ Hinweis des Orchestrators: Im Basis-Spiel ist der Verdoppler die Sonderkarte des
 
 **Betroffene Tasks:** nennt die Frage: K1 (Abnahmekriterium 1). Hängt davon ab: O3 (Tischansicht), O4 (Ablagestapel am Tisch), X5 (Aktion 4).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D28.
 
-**Datum:** —
+**Datum:** 13.11.2026
 
 ## Erweiterung (G1–G23)
 

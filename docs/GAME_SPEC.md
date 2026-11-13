@@ -803,32 +803,50 @@ Nicht geprüft und deshalb nicht bewertet: Einzelheiten der KI
 Hier kommen Stellen hin, die der Wortlaut der Website in zwei Richtungen lesen
 lässt. Bis zur Antwort bleibt das heutige Verhalten stehen.
 
-Offen sind die Fragen F1–F15 (Basis-Spiel) und G1–G23 (Erweiterung) aus
-`docs/UMSETZUNGSPLAN.md`, Abschnitt 9. Sie werden mit Task P0.5 beantwortet
-und dann hier eingetragen.
+Offen sind die Fragen G1–G23 (Erweiterung) aus `docs/UMSETZUNGSPLAN.md`,
+Abschnitt 9. Fragen, Möglichkeiten und Vorschläge stehen in
+`docs/REGELFRAGEN.md`; beantwortet kommen sie mit Task P0.5 hierher.
 
 ### Beantwortet
 
-Antworten des Autors vom 12.11.2026. Wo die Website es selbst sagt, steht die
-Fundstelle in Teil A; wo nicht, gilt die Antwort, bis die Website sie aufnimmt.
-Die Antworten zu D1 und D8 hat der Autor am selben Abend auf die Website
-übernommen.
+Wo die Website es selbst sagt, steht die Fundstelle in Teil A; wo nicht, gilt
+die Antwort, bis die Website sie aufnimmt („Website folgt“). Die Antworten zu
+D1 und D8 hat der Autor am 12.11.2026 abends auf die Website übernommen.
+D14–D29 beantworten die Regelfragen F1–F15 und die Nachfrage F8a aus
+`docs/REGELFRAGEN.md`; die Nummer der Regelfrage steht vor der Frage. Die
+Spalte „Folge“ nennt dort den Task, der die Antwort umsetzt.
 
-| Nr. | Frage | Antwort | Folge |
-|---|---|---|---|
-| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Website geändert: Jede Gruppe zählt voll, auch über beide Schlangen; eine Vierergruppe nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste einzelne Kette (A11). | Engine stimmt überein |
-| D2 | Darf der Farbendieb Sonderkarten stehlen? | Nein, nur Farbkarten. | Engine stimmt überein |
-| D3 | Lila Riese: genügt eine Kette ab 3? | Website geändert: mindestens 5 violette Karten in einer Reihe (A9). | C14 |
-| D4 | Was gilt, wenn keine Sonderkarte spielbar ist? | Eine Sonderkarte muss gespielt werden, auch wenn sie wirkungslos ist. Pflicht ist mindestens eine Karte pro Zug. | C12 |
-| D5 | Neu aufgedeckte Aufgabe im selben Zug? | Darf sofort eingelöst werden. | C15 |
-| D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 |
-| D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 |
-| D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 |
-| D9 | Darf man Karten in gegnerische Schlangen spielen? | Ja, jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. Eine Regenbogenschlange beim Gegner ist erlaubt, nützt aber ihm. Website folgt. | C19 |
-| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange. Gegen Farbkarten gibt es keine Abwehr. Website folgt. | C6 |
-| D11 | Gibt ein Verdoppler im zweiten Zug einen dritten Zug? | Nein, nur ein Verdoppler pro Runde. Website folgt. | C7 |
-| D12 | Muss man eine Farbkarte spielen, wenn man eine hat? | Nein. Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art. Website folgt. | C12 |
-| D13 | Darf man eine Sonderkarte spielen, die einem nichts bringt? | Ja, jederzeit, auch wenn man eine Farbkarte hätte. Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. Website folgt. | C12 |
+| Nr. | Frage | Antwort | Folge | Datum |
+|---|---|---|---|---|
+| D1 | Zählen zwei getrennte Gruppen derselben Farbe beide? | Website geändert: Jede Gruppe zählt voll, auch über beide Schlangen; eine Vierergruppe nicht zusätzlich als Dreiergruppe. Für die längste Farbkette zählt nur die längste einzelne Kette (A11). | Engine stimmt überein | 12.11.2026 |
+| D2 | Darf der Farbendieb Sonderkarten stehlen? | Nein, nur Farbkarten. | Engine stimmt überein | 12.11.2026 |
+| D3 | Lila Riese: genügt eine Kette ab 3? | Website geändert: mindestens 5 violette Karten in einer Reihe (A9). | C14 | 12.11.2026 |
+| D4 | Was gilt, wenn keine Sonderkarte spielbar ist? | Eine Sonderkarte muss gespielt werden, auch wenn sie wirkungslos ist. Pflicht ist mindestens eine Karte pro Zug. | C12 | 12.11.2026 |
+| D5 | Neu aufgedeckte Aufgabe im selben Zug? | Darf sofort eingelöst werden. | C15 | 12.11.2026 |
+| D6 | Zählt der Verdoppler zu den drei Karten? | Website geändert: nein, neben dem Verdoppler bis zu 3 Karten in zwei Zügen (A5, A7.8). | C7 | 12.11.2026 |
+| D7 | Umfang der Erweiterung? | Alle Teile; vor der Partie wählbar mit oder ohne Erweiterung. | B1 | 12.11.2026 |
+| D8 | Wer legt die Farbe eines Jokers fest, und wann? | Website geändert: Die Farbe ist nie festgelegt. Bei jeder Aufgabe zählt der Joker als die Farbe, mit der sie erfüllt ist, bei der Wertung als die Farbe mit den meisten Punkten (A7.3, A7.7, A9, A11). | C10 | 12.11.2026 |
+| D9 | Darf man Karten in gegnerische Schlangen spielen? | Ja, jede Karte in jede Schlange: Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. Eine Regenbogenschlange beim Gegner ist erlaubt, nützt aber ihm. Website folgt. | C19 | 12.11.2026 |
+| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, auch Farbenfusion, Schlangenhäutung und Regenbogenschlange. Gegen Farbkarten gibt es keine Abwehr. Website folgt. | C6 | 12.11.2026 |
+| D11 | Gibt ein Verdoppler im zweiten Zug einen dritten Zug? | Nein, nur ein Verdoppler pro Runde. Website folgt. | C7 | 12.11.2026 |
+| D12 | Muss man eine Farbkarte spielen, wenn man eine hat? | Nein. Mindestens eine, höchstens zwei Karten, davon höchstens eine Farbkarte und eine Sonderkarte; eine Karte genügt, egal welcher Art. Website folgt. | C12 | 12.11.2026 |
+| D13 | Darf man eine Sonderkarte spielen, die einem nichts bringt? | Ja, jederzeit, auch wenn man eine Farbkarte hätte. Hat sie kein mögliches Ziel, kommt sie wirkungslos auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. Website folgt. | C12 | 12.11.2026 |
+| D14 | F1: Treffen zwei Schlangengruben denselben Spieler, bevor er ausgesetzt hat: setzt er einen oder zwei Züge aus? | Zwei Züge: Jede Schlangengrube kostet einen eigenen Zug und bleibt vor ihm liegen, bis er für sie ausgesetzt hat. Website folgt. | E4 | 13.11.2026 |
+| D15 | F2: Schlangenfrass c) frisst zwei Karten **desselben** Spielers: Wehrt ein Farbenschutz beide ab? | Ja: Ein Farbenschutz wehrt den ganzen Schlangenfrass für diesen Spieler ab, beide Karten bleiben liegen. Website folgt. | E6 | 13.11.2026 |
+| D16 | F3: Kann eine Sonderkarte (etwa die Regenbogenschlange) eine neue Schlange beginnen? | Nein, nur eine Farbkarte beginnt eine Schlange. Regenbogenschlange und Schlangenblockade brauchen eine bestehende Schlange. Website folgt. | E5 | 13.11.2026 |
+| D17 | F4: Farbendieb: Muss die gestohlene Karte in eine eigene Schlange, oder darf sie nach D9 in jede? Was gilt, wenn der Dieb keine Schlange hat? | Nur in eine eigene Schlange, an eine beliebige Stelle. Hat der Dieb keine Schlange, beginnt die gestohlene Karte eine neue eigene Schlange. Website folgt. | E8 | 13.11.2026 |
+| D18 | F5: Füllt ein aussetzender Spieler seine Hand auf? Darf er mit Farbenschutz reagieren? | Kein Auffüllen im ausgesetzten Zug; er füllt erst zu Beginn seines nächsten gespielten Zuges auf. Abwehr mit Farbenschutz bleibt erlaubt, auch zwischen Grube und ausgesetztem Zug. Website folgt. | E2, E4 | 13.11.2026 |
+| D19 | F6: Farbkarte beim Gegner: nur an bestehende Schlangen, oder darf man ihm auch eine neue beginnen? | Nur an ein Ende einer bestehenden gegnerischen Schlange. Eine neue Schlange beginnt jeder nur für sich selbst. Website folgt. | E5 | 13.11.2026 |
+| D20 | F7: Farbenfusion: Gelten eine Farbkarte und eine Regenbogenschlange als „zwei Karten gleicher Farbe"? | Nein, nur zwei Farbkarten derselben Farbe dürfen fusioniert werden. Website folgt. | E7 | 13.11.2026 |
+| D21 | F8: Verfällt der letzte Zug eines Spielers, der in der Schlussrunde aussetzen muss? Darf man die Schlangengrube auf jemanden spielen, der keinen Zug mehr hat? | Ja, der letzte Zug verfällt. Die Schlangengrube darf auch in der Schlussrunde gespielt werden; trifft sie einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr. Er darf sich mit Farbenschutz verteidigen. Wortlaut: „man darf auch in der letzten Runde einen Spieler aussetzen lassen. Er hat dann keinen letzetn Zug mehr. Er darf aber verteidigen mit Farbenschutz“. Ob die Grube einen Spieler treffen darf, der keinen Zug mehr hat, beantwortet D29 (Nachfrage F8a). Website folgt. | E2, E4 | 13.11.2026 |
+| D22 | F9: Gleichstand bei den Punkten: geteilter Sieg? | Ja, alle Punktgleichen gewinnen. Website folgt. | E10 | 13.11.2026 |
+| D23 | F10: Verdoppler im zweiten Zug: Darf er wirkungslos abgelegt werden? | Ja: Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Website folgt. | E3 | 13.11.2026 |
+| D24 | F11: Längste Farbkette: Gibt es eine Mindestlänge? Was gilt bei lauter Einzelkarten und für Spieler ohne Schlange? | Eine Kette zählt erst ab 3 Farbkarten derselben Farbe nebeneinander, nicht schon ab 2; Sonderkarten zählen nicht mit und unterbrechen sie (A11). Hat niemand eine solche Kette, bekommt niemand den Bonus; wer keine hat, bekommt ihn nie. Wortlaut: „längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“ (gemeint ist die längste Farbkette). Website folgt. | E10 | 13.11.2026 |
+| D25 | F12: Darf man eine Sonderkarte, die ein mögliches Ziel hätte, trotzdem ohne Wirkung ablegen? | Nein. Wirkungslos ablegen geht nur, wenn die Karte kein mögliches Ziel hat; ein Farbenschutz darf immer wirkungslos abgelegt werden. Website folgt. | E2 | 13.11.2026 |
+| D26 | F13: Schlangenhäutung: Muss sich die Reihenfolge ändern? | Ja, die Farbfolge im Abschnitt muss danach anders sein; eine unveränderte Anordnung wird abgelehnt. Website folgt. | E9 | 13.11.2026 |
+| D27 | F14: „Pro Zug nur eine Farbenfusion": Darf im zweiten Zug nach einem Verdoppler eine weitere gespielt werden? | Ja, je Zug eine: Im zweiten Zug nach einem Verdoppler ist wieder eine Farbenfusion erlaubt. Website folgt. | E7 | 13.11.2026 |
+| D28 | F15: Sind die Ablagestapel für alle vollständig einsehbar, oder nur die oberste Karte? | Alle Ablagestapel sind für alle vollständig einsehbar. Website folgt. | K1 | 13.11.2026 |
+| D29 | F8a: Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat? | Ja: Die Grube darf ihn treffen, bleibt aber ohne Wirkung und geht auf den Ablagestapel. Wortlaut: „Ja, ohne Wirkung“. Website folgt. | E4 | 13.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -858,6 +876,13 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **13.11.2026, Task P0.5:** Antworten des Autors auf die Regelfragen F1–F15
+  als D14–D28 aufgenommen (Website folgt), Teil D um die Spalte „Datum“
+  ergänzt. Abweichend vom Vorschlag: F8 (Grube in der Schlussrunde nimmt den
+  letzten Zug, Abwehr erlaubt) und F11 (Kette ab 3 Farbkarten). Die
+  Nachfrage F8a (Grube auf einen Spieler, der seinen letzten Zug gemacht hat)
+  hat der Autor am selben Tag beantwortet: D29, erlaubt, ohne Wirkung. Teil A
+  unverändert.
 - **12.11.2026, Umsetzungsplan:** D9–D13 (Antworten des Autors, Website folgt)
   aufgenommen; C6 und C12 danach neu gefasst; C16–C23 beim Planen am Code
   gefunden. Offene Fragen stehen in `docs/UMSETZUNGSPLAN.md`, Abschnitt 9.
