@@ -170,6 +170,45 @@ function regelPruefer(): SchrittPruefer {
   }
 }
 
+describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
+  /** Ein Zustand mit `spieler` Spielern, Auslöser Spieler 0; nur die Felder, die der Prüfer liest. */
+  function lage(spieler: number, amZug: number): Spielzustand {
+    return {
+      spieler: Array.from({ length: spieler }, () => ({ hand: [] })),
+      schlussrundeAusloeser: 0,
+      zug: { spielerIndex: amZug, gespielteFarbkarten: 0, gespielteSonderkarten: 0 },
+    } as unknown as Spielzustand
+  }
+  const ende: SpielAktion = { typ: 'ZugBeenden', spielerId: 'x' }
+
+  function pruefeFolge(spieler: number, folge: AktionsErgebnis['ereignisse'][]): string | null {
+    const pruefer = regelPruefer()
+    for (const ereignisse of folge) {
+      const befund = pruefer(lage(spieler, 0), ende, { zustand: lage(spieler, 0), ereignisse })
+      if (befund !== null) return befund
+    }
+    return null
+  }
+
+  it('A10: kommt ein Spieler in der Schlussrunde zweimal dran und ein anderer gar nicht, meldet der Prüfer das', () => {
+    const befund = pruefeFolge(4, [
+      [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, { typ: 'ZugBegonnen', spielerIndex: 1, teilzug: 1 }],
+      [{ typ: 'ZugBegonnen', spielerIndex: 1, teilzug: 1 }],
+      [{ typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 }],
+      [{ typ: 'PartieBeendet' }],
+    ])
+    expect(befund).toMatch(/A10/)
+  })
+
+  it('D21: ein ausgesetzter letzter Zug zählt als sein letzter Zug', () => {
+    const befund = pruefeFolge(3, [
+      [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, { typ: 'Ausgesetzt', spielerIndex: 1 }, { typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 }],
+      [{ typ: 'PartieBeendet' }],
+    ])
+    expect(befund).toBeNull()
+  })
+})
+
 describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2)', () => {
   const PARTIEN = [...dauerlaufPartien(150, false), ...dauerlaufPartien(150, true, 151)]
 
