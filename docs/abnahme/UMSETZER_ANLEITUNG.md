@@ -115,8 +115,6 @@ und `<klasse>-testhooks` gegen den Testhook-Build (nur `*.hooks.spec.ts`).
   mit `tests/layout/messung.ts` (U8), nie im CSS-Quelltext.
 - Nur eine Klasse: `npx playwright test --project=handy`.
 - Ein eigenes Chromium nennst du nur über `PW_CHROMIUM_PFAD`. Kein Pfad im Code.
-- Die Liste `NUR_DESKTOP` in `playwright.config.ts` hält die Verträge der alten
-  Oberfläche auf dem Desktop; wer sie löscht, löscht auch die Einträge.
 
 ## 6. Selbst im Browser ansehen
 

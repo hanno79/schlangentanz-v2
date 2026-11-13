@@ -4,7 +4,7 @@
     "Die Liste darf nur schrumpfen. Neue Einträge oder höhere Zahlen sind nicht erlaubt; --ausnahmen-schrumpfen senkt und löscht nur.",
     "U1: die alten Regeltests unter src/engine/__tests__. Sie halten altes Verhalten fest und werden in E1 bis E11 gelöscht oder ersetzt (Plan, Abschnitt 1 und E1).",
     "U4 liest der Architekturtest (tests/architektur.test.ts), nicht check:regeln: Math.random als Standardwert der Zufallsquelle in src/engine/state.ts. E1 erzeugt die Partie mit der Zufallsquelle als Parameter und löscht den Eintrag; einen veralteten Eintrag meldet der Test.",
-    "U6: src/hooks/usePartie.ts und tests/layout/brett_waechter.spec.ts. Beide löscht P0.4.",
+    "U6: leer, seit P0.4 src/hooks/usePartie.ts und tests/layout/brett_waechter.spec.ts gelöscht hat.",
     "Angelegt mit P0.3 aus dem Stand 590e69e (Task-Branch P0.2)."
   ],
   "U1": {
@@ -24,7 +24,7 @@
     "src/engine/__tests__/legal_actions_discard.test.ts": 6,
     "src/engine/__tests__/legal_actions_dispatch_reactions.test.ts": 24,
     "src/engine/__tests__/legal_actions_enumerator_sonderkarten.test.ts": 18,
-    "src/engine/__tests__/legal_actions_umfang.test.ts": 2,
+    "src/engine/__tests__/legal_actions_umfang.test.ts": 1,
     "src/engine/__tests__/nachziehen_nach_sonderkarte.test.ts": 8,
     "src/engine/__tests__/pflichtabwurf_konsistenz.test.ts": 3,
     "src/engine/__tests__/player_scoring.test.ts": 14,
@@ -60,9 +60,6 @@
   "U4": {
     "src/engine/state.ts": 2
   },
-  "U6": {
-    "src/hooks/usePartie.ts": 1,
-    "tests/layout/brett_waechter.spec.ts": 1
-  },
+  "U6": {},
   "U7": {}
 }

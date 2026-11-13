@@ -23,30 +23,12 @@ const TESTHOOKS_URL = 'http://localhost:4174'
 /** Verträge, die einen Testhook brauchen — nur gegen den Testhook-Build. */
 const HOOK_VERTRAEGE = /\.hooks\.spec\.ts$/
 
-// Die Verträge der alten Oberfläche sind auf 1280×900 gemessen und laufen nur auf
-// dem Desktop. P0.4 löscht sie samt diesem Eintrag; neue Verträge laufen in allen
-// drei Geräteklassen.
-const NUR_DESKTOP = [
-  'app_shell.spec.ts',
-  'brett_dauerlauf.spec.ts',
-  'brett_waechter.spec.ts',
-  'drag_drop.spec.ts',
-  'lobby_erstbild.spec.ts',
-  'sieger_party.hooks.spec.ts',
-].map((datei) => `**/${datei}`)
-
 const projekte: Project[] = GERAETEKLASSEN.flatMap((klasse) => {
   const { name } = klasse
   const geraet = kontextOptionen(klasse)
-  const nurDesktop = name === 'desktop' ? [] : NUR_DESKTOP
   return [
-    { name, use: { ...geraet, baseURL: PRODUKTION_URL }, testIgnore: [HOOK_VERTRAEGE, ...nurDesktop] },
-    {
-      name: `${name}-testhooks`,
-      use: { ...geraet, baseURL: TESTHOOKS_URL },
-      testMatch: HOOK_VERTRAEGE,
-      testIgnore: nurDesktop,
-    },
+    { name, use: { ...geraet, baseURL: PRODUKTION_URL }, testIgnore: HOOK_VERTRAEGE },
+    { name: `${name}-testhooks`, use: { ...geraet, baseURL: TESTHOOKS_URL }, testMatch: HOOK_VERTRAEGE },
   ]
 })
 

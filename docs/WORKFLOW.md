@@ -366,12 +366,11 @@ Rendering, und einzelne Asserts waren wirkungslos, ohne dass es auffiel.
 | `desktop`, `tablet`, `handy` | 4173 | `dist` | `vite build` | alle ausser `*.hooks.spec.ts` |
 | `desktop-testhooks`, `tablet-testhooks`, `handy-testhooks` | 4174 | `dist-testhooks` | `npm run build:testhooks` (Modus `testhooks`, setzt `VITE_TEST_HOOKS=1`) | nur `*.hooks.spec.ts` |
 
-Die Verträge der alten Oberfläche laufen nur in `desktop` und `desktop-testhooks`
-(Liste `NUR_DESKTOP` in `playwright.config.ts`). Ein eigenes Chromium nennt nur
+Alle Verträge laufen in allen drei Geräteklassen. Ein eigenes Chromium nennt nur
 die Umgebungsvariable `PW_CHROMIUM_PFAD`.
 
-**Warum.** Die Sieger-Party ist nur über `/game?phase=spielende` erreichbar, und
-dieser Hook ist im Produktionsbuild aus. Der Bildschirm war deshalb von keinem
+**Warum.** Bis P0.4 war die Sieger-Party nur über `/game?phase=spielende`
+erreichbar, und dieser Hook war im Produktionsbuild aus. Der Bildschirm war deshalb von keinem
 Vertrag gedeckt — und genau dort saßen vier Fehler, alle alt, alle an einem Tag
 gefunden, als ihn zum ersten Mal jemand ansah. Ein Vertrag, den man nur dadurch
 bekommt, dass man `VITE_TEST_HOOKS` in Production setzt, wäre die Rücknahme von
