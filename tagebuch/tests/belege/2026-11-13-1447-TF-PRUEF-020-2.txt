@@ -1,0 +1,42 @@
+
+Running 24 tests using 16 workers
+
+  ok  3 [tablet-hochkant] › tests\layout\waechter.ts:165:3 › O2: Lobby mit laufender Partie › jede Tippfläche misst mindestens 44 × 44 px (1.9s)
+  ok  1 [tablet-hochkant] › tests\layout\lobby.spec.ts:55:3 › O2: Lobby mit laufender Partie › O2 K2: die Lobby bietet „Weiterspielen“ (2.0s)
+  ok  2 [tablet-hochkant] › tests\layout\waechter.ts:159:3 › O2: Lobby mit laufender Partie › die Seite ist nicht breiter als das Fenster (2.1s)
+  ok 11 [tablet-hochkant] › tests\layout\waechter.ts:123:3 › O2: Lobby mit laufender Partie › die Token-Prüfung hat wirklich Regeln gesehen (1.5s)
+  ok  9 [tablet-hochkant] › tests\layout\waechter.ts:80:3 › O2: Lobby mit laufender Partie › kein Text steht unter 4,5 : 1 Kontrast (1.7s)
+  ok  8 [tablet-hochkant] › tests\layout\waechter.ts:145:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist stillgelegt (1.9s)
+  ok  4 [tablet-hochkant] › tests\layout\waechter.ts:52:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist vollständig verdeckt (2.2s)
+  ok  5 [tablet-hochkant] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab (2.1s)
+  ok 14 [handy-quer] › tests\layout\lobby.spec.ts:55:3 › O2: Lobby mit laufender Partie › O2 K2: die Lobby bietet „Weiterspielen“ (1.8s)
+  ok  6 [tablet-hochkant] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes (2.0s)
+  ok 10 [tablet-hochkant] › tests\layout\waechter.ts:91:3 › O2: Lobby mit laufender Partie › der Kontrastwächter hat wirklich etwas gemessen (2.0s)
+  ok 12 [tablet-hochkant] › tests\layout\waechter.ts:109:3 › O2: Lobby mit laufender Partie › jede var() ohne Fallback löst am benutzenden Element auf (2.0s)
+  ok 13 [handy-quer] › tests\layout\waechter.ts:159:3 › O2: Lobby mit laufender Partie › die Seite ist nicht breiter als das Fenster (2.1s)
+  ok 15 [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab (2.1s)
+  ok  7 [tablet-hochkant] › tests\layout\waechter.ts:65:3 › O2: Lobby mit laufender Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (2.3s)
+  ok 16 [handy-quer] › tests\layout\waechter.ts:165:3 › O2: Lobby mit laufender Partie › jede Tippfläche misst mindestens 44 × 44 px (2.2s)
+  x  17 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes (1.2s)
+  ok 19 [handy-quer] › tests\layout\waechter.ts:52:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist vollständig verdeckt (1.2s)
+  ok 18 [handy-quer] › tests\layout\waechter.ts:91:3 › O2: Lobby mit laufender Partie › der Kontrastwächter hat wirklich etwas gemessen (1.3s)
+  ok 20 [handy-quer] › tests\layout\waechter.ts:109:3 › O2: Lobby mit laufender Partie › jede var() ohne Fallback löst am benutzenden Element auf (1.3s)
+  ok 22 [handy-quer] › tests\layout\waechter.ts:123:3 › O2: Lobby mit laufender Partie › die Token-Prüfung hat wirklich Regeln gesehen (1.2s)
+  ok 24 [handy-quer] › tests\layout\waechter.ts:145:3 › O2: Lobby mit laufender Partie › kein Bedienelement ist stillgelegt (1.3s)
+  ok 23 [handy-quer] › tests\layout\waechter.ts:65:3 › O2: Lobby mit laufender Partie › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (1.4s)
+  ok 21 [handy-quer] › tests\layout\waechter.ts:80:3 › O2: Lobby mit laufender Partie › kein Text steht unter 4,5 : 1 Kontrast (1.5s)
+
+
+  1) [tablet-hochkant] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes 
+
+    Expected to fail, but passed.
+
+  2) [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab 
+
+    Expected to fail, but passed.
+
+  2 failed
+    [tablet-hochkant] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes 
+    [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab 
+  22 passed (14.2s)
+exit 1

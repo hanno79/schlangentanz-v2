@@ -1,0 +1,46 @@
+{
+  "erklaerung": [
+    "Layout-Verträge, die in einer der mit P0.3c neuen Geräteklassen (tablet-hochkant 768×1024, handy-quer 844×390) rot sind. Je Eintrag: Datei, Vertrag als „Gruppe › Test“ wie im Playwright-Bericht, Geräteklasse und was gemessen wurde.",
+    "tests/layout/ausnahmen.ts lässt Playwright für genau diese Paare ein Scheitern erwarten (test.fail). Wird ein Vertrag grün, schlägt der Lauf fehl, und der Eintrag muss gelöscht werden.",
+    "Die Liste darf nur schrumpfen: tests/geraeteklassen_ausnahmen.test.ts vergleicht sie mit der Fassung auf der Merge-Basis von origin/neuaufbau und erlaubt nur die beiden neuen Klassen.",
+    "Angelegt mit P0.3c (13.11.2026). Ob und wie die Lobby für flache Fenster umgebaut wird, entscheidet der Orchestrator. Die Einträge zu tests/layout/entwurf.hooks.spec.ts betreffen die von O1 abgenommenen Gestaltungsentwürfe unter /dev/entwurf; sie werden nicht nachgebessert, der echte Tisch (O4) muss alle fünf Klassen erfüllen."
+  ],
+  "ausnahmen": [
+    {
+      "datei": "tests/layout/lobby.spec.ts",
+      "vertrag": "O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Die Lobby ist einspaltig und höher als das 390 px hohe Fenster: „Neue Partie“ liegt bei 412..460 px, „Regeln“ bei 480..528 px, beide nur nach Scrollen erreichbar."
+    },
+    {
+      "datei": "tests/layout/lobby.spec.ts",
+      "vertrag": "O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Mit dem Hinweis auf den verworfenen Spielstand liegt „Neue Partie“ bei 410..458 px und „Regeln“ bei 478..526 px (gemessen nach E1; vorher 386..434 und 454..502), unter dem 390 px hohen Fenster."
+    },
+    {
+      "datei": "tests/layout/lobby.spec.ts",
+      "vertrag": "O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Bei offener Rückfrage liegt „Regeln“ bei 389..437 px, unter dem 390 px hohen Fenster. Die Knöpfe der Rückfrage selbst sind sichtbar."
+    },
+    {
+      "datei": "tests/layout/entwurf.hooks.spec.ts",
+      "vertrag": "O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Entwurf, wird durch O4 ersetzt. Auf dem Entwurfstisch liegt der Verweis „Tisch: Farbendieb gewählt … Ziele“ bei 382..451 px, unter dem 390 px hohen Fenster."
+    },
+    {
+      "datei": "tests/layout/entwurf.hooks.spec.ts",
+      "vertrag": "O1: Entwurf /dev/entwurf/lobby passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes",
+      "klasse": "handy-quer",
+      "befund": "Entwurf, wird durch O4 ersetzt. In der Entwurfs-Lobby liegt „Weiterspielen“ bei 349..393 px und ragt über den 390 px hohen Rand."
+    },
+    {
+      "datei": "tests/layout/entwurf.hooks.spec.ts",
+      "vertrag": "O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: eine Aufgabe lässt sich gross ansehen und ist dort mindestens 280 px breit",
+      "klasse": "handy-quer",
+      "befund": "Entwurf, wird durch O4 ersetzt. Die Grossansicht einer Aufgabe ist nur 151 px breit statt mindestens 280 px."
+    }
+  ]
+}

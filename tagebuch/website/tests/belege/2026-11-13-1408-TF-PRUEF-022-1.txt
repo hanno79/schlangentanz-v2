@@ -1,0 +1,13 @@
+Schritt 1 (Suchbefehl aus dem Testfall):
+tagebuch/tests/faelle/TF-PRUEF-008.md:17:Heute laufen alle Layout-Verträge nur in `desktop`; die Projekte `tablet` und `handy` haben 0 Tests. Ob sie wirklich da
+tagebuch/tests/faelle/TF-PRUEF-008.md:23:Eine vorübergehende Spec misst in jedem der drei Projekte `innerWidth`, `innerHeight`, `(pointer: coarse)` und `deviceP
+tagebuch/tests/faelle/TF-PRUEF-022.md:3:titel: Nach der Umbenennung der Geräteklassen nennt kein gültiger Testfall mehr die Klassen `tablet` oder `handy`.
+tagebuch/tests/faelle/TF-PRUEF-022.md:16:Seit P0.3c heissen die Klassen `tablet-quer` und `handy-hochkant`. Nennt ein Testfall noch `handy` oder `tablet` als Kl
+
+Schritt 2 (stillgelegt):
+tagebuch/tests/faelle/TF-APP-001.md
+tagebuch/tests/faelle/TF-DEV-006.md
+tagebuch/tests/faelle/TF-DEV-008.md
+tagebuch/tests/faelle/TF-PRUEF-005.md
+tagebuch/tests/faelle/TF-PRUEF-008.md
+tagebuch/tests/faelle/TF-PRUEF-022.md

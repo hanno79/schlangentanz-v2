@@ -1,0 +1,10 @@
+Gesamtlauf npm run test:layout: Exit 0, 620 passed (1.3m)
+
+Gegenprobe veralteter Eintrag (Exit 1):
+    Expected to fail, but passed.
+  1 failed
+  11 passed (8.6s)
+
+Gegenprobe Eintrag mit klasse desktop (vitest Exit 1):
+     × P0.3c: jeder Eintrag nennt Datei, Vertrag, eine neue Geräteklasse und den Befund, keiner doppelt 7ms
+AssertionError: desktop | tests/layout/lobby.spec.ts | O2: Lobby mit laufender Partie › kein Bedienelement liegt 

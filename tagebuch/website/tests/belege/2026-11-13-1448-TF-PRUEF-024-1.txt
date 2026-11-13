@@ -1,0 +1,30 @@
+
+== lobby-partie: Fenster 844×390, scrollWidth 844/844, scrollHeight 552, Konsolenfehler 0
+   ausserhalb: BUTTON „Neue Partie“ y 412..460 x 166..678
+   ausserhalb: A „Regeln“ y 480..528 x 166..216
+
+== lobby-unlesbar: Fenster 844×390, scrollWidth 844/844, scrollHeight 550, Konsolenfehler 1
+   ausserhalb: BUTTON „Neue Partie“ y 410..458 x 166..678
+   ausserhalb: A „Regeln“ y 478..526 x 166..216
+
+== lobby-rueckfrage: Fenster 844×390, scrollWidth 844/844, scrollHeight 623, Konsolenfehler 0
+   ausserhalb: A „Regeln“ y 389..437 x 166..216
+
+== entwurf-uebersicht: Fenster 844×390, scrollWidth 844/844, scrollHeight 390, Konsolenfehler 0
+   ausserhalb: A „Tisch: Farbendieb gewähltZiele sind die Karten der“ y 382..451 x 166..678
+   ausserhalb: A „Tisch mit einem GegnerDer kleinste Tisch.“ y 459..529 x 166..678
+   ausserhalb: A „ErgebnisWertung je Spieler und Sieger.“ y 537..606 x 166..678
+
+== entwurf-lobby: Fenster 844×390, scrollWidth 844/844, scrollHeight 390, Konsolenfehler 0
+   ausserhalb: BUTTON „Weiterspielen“ y 349..393 x 183..661
+   ausserhalb: BUTTON „1 Gegner“ y 485..529 x 517..561
+   ausserhalb: BUTTON „2 Gegner“ y 485..529 x 565..609
+   ausserhalb: BUTTON „3 Gegner“ y 485..529 x 613..657
+   ausserhalb: BUTTON „Aus“ y 545..589 x 573..661
+   ausserhalb: BUTTON „Neue Partie“ y 601..645 x 183..661
+   Lupe: Bild 151×246 px bei x 347, y 44
+
+== entwurf-lupe: Fenster 844×390, scrollWidth 844/844, scrollHeight 390, Konsolenfehler 0
+   ausserhalb: nichts
+
+== tablet-hochkant Lupe: Bild 360×587 px

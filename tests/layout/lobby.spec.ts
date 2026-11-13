@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { duldeBekannteAusnahmen } from './ausnahmen'
 import { oeffne } from './oeffnen'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
@@ -8,6 +9,9 @@ Geräteklasse. Jeder Zustand bekommt dieselben Messungen: die generischen
 Wächter (nichts abgeschnitten, ausserhalb, verdeckt, zu blass), kein
 waagrechtes Scrollen und Tippflächen von mindestens 44 px.
 */
+
+// Bekannte Befunde in Handy quer (P0.3c): tests/layout/geraeteklassen_ausnahmen.json.
+duldeBekannteAusnahmen()
 
 /** Startet über die Lobby eine Partie; danach steht ein Spielstand im Browser. */
 async function startePartie(page: Page): Promise<void> {

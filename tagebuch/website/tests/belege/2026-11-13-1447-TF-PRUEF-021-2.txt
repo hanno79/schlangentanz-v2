@@ -1,0 +1,69 @@
+Gegenprobe im Code: vertraege.mjs Zeile 46, Abgleich nur gegen die Gruppe (wie Iteration 1) statt gegen den vollen Titel
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a8340d0ae61a71503
+
+ ❯ tests/geraeteklassen_ausnahmen.test.ts (5 tests | 2 failed) 2020ms
+     × P0.3c: unbekannteAusnahmen meldet einen Eintrag, dessen voller Titel in seiner Klasse nicht vorkommt 7ms
+     × P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt 1862ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geraeteklassen_ausnahmen.test.ts > P0.3c: Ausnahmeliste der Layout-Verträge je Geräteklasse > P0.3c: unbekannteAusnahmen meldet einen Eintrag, dessen voller Titel in seiner Klasse nicht vorkommt
+AssertionError: expected [] to deeply equal [ { …(4) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "befund": "Probe: Vertragsname mit ss",
+-     "datei": "tests/layout/lobby.spec.ts",
+-     "klasse": "handy-quer",
+-     "vertrag": "O2: Regelseite › kein Bedienelement liegt ausserhalb des Bildes",
+-   },
+- ]
++ []
+
+ ❯ tests/geraeteklassen_ausnahmen.test.ts:62:73
+     60|     const hook = { datei: 'tests/layout/x.hooks.spec.ts', vertrag: 'G …
+     61|
+     62|     expect(unbekannteAusnahmen([TIPPFEHLER, richtig, hook], vertraege)…
+       |                                                                         ^
+     63|     expect(unbekannteAusnahmen([{ ...richtig, klasse: 'tablet-hochkant…
+     64|     expect(unbekannteAusnahmen([{ ...richtig, datei: 'tests/layout/nav…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/geraeteklassen_ausnahmen.test.ts > P0.3c: Ausnahmeliste der Layout-Verträge je Geräteklasse > P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt
+AssertionError: Gegenprobe mit „ausserhalb“: expected [] to deeply equal [ { …(4) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "befund": "Probe: Vertragsname mit ss",
+-     "datei": "tests/layout/lobby.spec.ts",
+-     "klasse": "handy-quer",
+-     "vertrag": "O2: Regelseite › kein Bedienelement liegt ausserhalb des Bildes",
+-   },
+- ]
++ []
+
+ ❯ tests/geraeteklassen_ausnahmen.test.ts:72:89
+     70|
+     71|     expect(unbekannteAusnahmen(ausnahmen(), vertraege).map(schluessel)…
+     72|     expect(unbekannteAusnahmen([TIPPFEHLER], vertraege), 'Gegenprobe m…
+       |                                                                                         ^
+     73|   })
+     74|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  14:34:49
+   Duration  2.82s (transform 91ms, setup 348ms, import 70ms, tests 2.02s, environment 0ms)
+
+vitest exit 1

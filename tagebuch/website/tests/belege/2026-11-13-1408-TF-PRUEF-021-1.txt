@@ -1,0 +1,7 @@
+Eintrag am Ende von ausnahmen: handy-quer | tests/layout/lobby.spec.ts | O2: Regelseite › kein Bedienelement liegt ausserhalb des Bildes
+npx vitest run tests/geraeteklassen_ausnahmen.test.ts: Exit 1
+× P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt 1191ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++   "handy-quer | tests/layout/lobby.spec.ts | O2: Regelseite › kein Bedienelement liegt ausserhalb des Bildes",
+Tests  1 failed | 4 passed (5)
+Liste danach zurückgesetzt; derselbe Lauf ohne Eintrag: 5 passed.

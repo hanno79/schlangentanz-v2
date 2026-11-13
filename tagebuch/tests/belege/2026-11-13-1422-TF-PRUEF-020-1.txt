@@ -1,0 +1,13 @@
+Stand: Rebase auf origin/neuaufbau 88e1623 (O1), Ausnahmeliste mit 6 Einträgen (3 Lobby, 3 Entwurf), alle handy-quer.
+
+Vor dem Eintrag (npx playwright test --reporter=json): expected 1062, unexpected 3, alle in handy-quer-testhooks, entwurf.hooks.spec.ts:
+- O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes: A "Tisch: Farbendieb gewähltZiele" liegt bei 382..451 (Bild ist 390px hoch)
+- O1: Entwurf /dev/entwurf/lobby passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes: knopf "Weiterspielen" liegt bei 349..393 (Bild ist 390px hoch)
+- O1: Entwurf Tisch › Karte wählen, dann Ziel wählen › O1: eine Aufgabe lässt sich gross ansehen und ist dort mindestens 280 px breit: Breite der Karte in der Grossansicht 151, erwartet >= 280
+In tablet-hochkant(-testhooks): keine Abweichung.
+
+Nach dem Eintrag:
+- npx vitest run tests/geraeteklassen_ausnahmen.test.ts: Exit 0, 5 passed
+- Gegenprobe "280px" statt "280 px" im Entwurfs-Eintrag: Exit 1, Eintrag genannt
+- npm run test:layout, erster Lauf: Exit 1, 1064 passed, 1 failed: handy-quer-testhooks, O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 … außerhalb des Bildes: Leitelement entwurf-tisch nach 5000 ms nicht sichtbar (nicht gelistet, im Lauf davor und danach grün)
+- npm run test:layout, zweiter Lauf: Exit 0, 1065 passed (2.6m)

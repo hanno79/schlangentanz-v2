@@ -1,0 +1,16 @@
+handy-quer mit Partie {"innen":"844x390","scrollWidth":844,"clientWidth":844,"scrollHeight":552,"unterRand":["button \"Neue Partie\" 412..460","a \"Regeln\" 480..528"]}
+handy-quer Rueckfrage {"innen":"844x390","scrollWidth":844,"clientWidth":844,"scrollHeight":623,"unterRand":["a \"Regeln\" 389..437"]}
+handy-quer Rueckfrage Text: Es läuft schon eine Partie. Eine neue Partie überschreibt sie. |  | Ja, neue Partie | Abbrechen
+handy-quer Rueckfrage: Regeln nach Scrollen {"x":166,"y":342.15625,"width":49.703125,"height":48} scrollY 209
+handy-quer unlesbar {"innen":"844x390","scrollWidth":844,"clientWidth":844,"scrollHeight":526,"unterRand":["button \"Neue Partie\" 386..434","a \"Regeln\" 454..502"]}
+handy-quer unlesbar Text: Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielzustand: spieler fehlt oder ist kein Array). Sie wurde verworfen; starte eine neue Partie.
+handy-quer nach Tipp auf Neue Partie: http://localhost:4283/spiel {"innen":"844x390","scrollWidth":844,"clientWidth":844,"scrollHeight":405,"unterRand":[]}
+handy-quer Konsolenfehler: 1 ["Gespeicherte Partie beschädigt und verworfen: Error: Ungültiger Spielzustand: sp"]
+tablet-hochkant mit Partie {"innen":"768x1024","scrollWidth":768,"clientWidth":768,"scrollHeight":1024,"unterRand":[]}
+tablet-hochkant Rueckfrage {"innen":"768x1024","scrollWidth":768,"clientWidth":768,"scrollHeight":1024,"unterRand":[]}
+tablet-hochkant Rueckfrage Text: Es läuft schon eine Partie. Eine neue Partie überschreibt sie. |  | Ja, neue Partie | Abbrechen
+tablet-hochkant Rueckfrage: Regeln nach Scrollen {"x":128,"y":549.40625,"width":49.703125,"height":48} scrollY 0
+tablet-hochkant unlesbar {"innen":"768x1024","scrollWidth":768,"clientWidth":768,"scrollHeight":1024,"unterRand":[]}
+tablet-hochkant unlesbar Text: Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielzustand: spieler fehlt oder ist kein Array). Sie wurde verworfen; starte eine neue Partie.
+tablet-hochkant nach Tipp auf Neue Partie: http://localhost:4283/spiel {"innen":"768x1024","scrollWidth":768,"clientWidth":768,"scrollHeight":1024,"unterRand":[]}
+tablet-hochkant Konsolenfehler: 1 ["Gespeicherte Partie beschädigt und verworfen: Error: Ungültiger Spielzustand: sp"]

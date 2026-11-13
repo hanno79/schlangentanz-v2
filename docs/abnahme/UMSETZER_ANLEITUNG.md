@@ -159,15 +159,28 @@ bricht Playwright ab.
 
 ## 5. Playwright und Geräteklassen
 
-`scripts/pruefung/geraeteklassen.mjs` ist die einzige Quelle für die drei
-Geräteklassen: `desktop` 1280×900, `tablet` 1024×768 mit Touch, `handy`
-390×844 mit Touch. `playwright.config.ts` baut daraus je Klasse zwei Projekte:
+`scripts/pruefung/geraeteklassen.mjs` ist die einzige Quelle für die fünf
+Geräteklassen (Plan 2.3 und 3.4): `desktop` 1280×900, `tablet-quer` 1024×768,
+`tablet-hochkant` 768×1024, `handy-hochkant` 390×844 und `handy-quer` 844×390,
+alle ausser `desktop` mit Touch. `playwright.config.ts` baut daraus je Klasse
+zwei Projekte, zusammen zehn:
 `<klasse>` gegen den Produktionsbuild (alle Verträge ausser `*.hooks.spec.ts`)
 und `<klasse>-testhooks` gegen den Testhook-Build (nur `*.hooks.spec.ts`).
 
-- Neue Verträge unter `tests/layout/` laufen in allen drei Klassen. Sie messen
+- Neue Verträge unter `tests/layout/` laufen in allen fünf Klassen. Sie messen
   mit `tests/layout/messung.ts` (U8), nie im CSS-Quelltext.
-- Nur eine Klasse: `npx playwright test --project=handy`.
+- Nur eine Klasse: `npx playwright test --project=handy-quer` (oder
+  `--project=handy-quer-testhooks` für `*.hooks.spec.ts`).
+- Wird ein bestehender Vertrag in `tablet-hochkant` oder `handy-quer` rot, ist
+  das ein echter Befund. Beheben, oder mit Messwerten in
+  `tests/layout/geraeteklassen_ausnahmen.json` eintragen und im PR begründen;
+  die Spec ruft dann `duldeBekannteAusnahmen()` aus `tests/layout/ausnahmen.ts`
+  auf. Playwright erwartet für diese Paare ein Scheitern und wird rot, sobald
+  der Vertrag grün ist; dann den Eintrag löschen. Der Vertrag steht dort mit
+  vollem Titel („Gruppe › Test“, wörtlich wie in `npx playwright test --list`);
+  einen Eintrag ohne passenden Vertrag lehnt
+  `tests/geraeteklassen_ausnahmen.test.ts` ab, ebenso neue Einträge, sobald
+  die Liste auf `neuaufbau` liegt.
 - Ein eigenes Chromium nennst du nur über `PW_CHROMIUM_PFAD`. Kein Pfad im Code.
 
 ## 6. Selbst im Browser ansehen
@@ -176,11 +189,11 @@ Bevor du den PR öffnest, siehst du dir an, was du gebaut hast, so wie es der
 Prüfer tun wird (`PRUEFER_ANLEITUNG.md`, Schritt 7):
 
 - Oberfläche: `node scripts/pruefung/bildschirmfotos.mjs <adresse> --name <ID>-<was> --ziel <scratchpad>`
-  liefert drei Bilder; ansehen, nicht nur erzeugen. Bedienen im eingebauten
+  liefert fünf Bilder; ansehen, nicht nur erzeugen. Bedienen im eingebauten
   Browser (`mcp__Claude_Browser__*`) oder mit Playwright und `tap()` für Touch.
 - Waagrechtes Scrollen und abgeschnittene Texte sind in **jeder** Geräteklasse
   ein Mangel. Waagrecht scrollen muss man, wenn auf `document.documentElement`
-  `scrollWidth > clientWidth` gilt; das misst du in allen drei Klassen.
+  `scrollWidth > clientWidth` gilt; das misst du in allen fünf Klassen.
 - Der eingebaute Browser ist zum Ansehen da; direkt nach `resize_window`
   meldet er mitunter noch die alte Breite. Grenzwerte der Breite (etwa 767 und
   768 px) misst du mit Playwright: `await seite.setViewportSize({ width: 768, height: 1024 })`,

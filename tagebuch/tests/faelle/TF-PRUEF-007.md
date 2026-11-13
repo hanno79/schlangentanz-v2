@@ -8,6 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
 aenderung: task/P0.3-pruefwerkzeuge (PR #26)
+status: stillgelegt
 ---
 
 ## Worum es geht
@@ -45,3 +46,5 @@ Keine.
 ## Nicht abgedeckte Grenzfälle
 
 Touch bei 1024×768: Der eingebaute Browser emuliert Touch erst unter 768 px Breite; Touch im Tablet prüft deshalb TF-PRUEF-008 mit Playwright. Pixelgleichheit: nicht geprüft, weil die Lobby im eingebauten Browser animiert ist.
+
+Stillgelegt am 13.11.2026 (Orchestrator, nach P0.3c): Der Fall beschreibt drei Geräteklassen und die Lobby vor O2. Seit P0.3c gibt es fünf Klassen; den Abgleich von Vorschau und Fotos deckt TF-PRUEF-019 ab.

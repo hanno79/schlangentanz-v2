@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-023 Liegt die Ausnahmeliste schon auf der Basis, meldet die Wachstumsprüfung jeden zusätzlichen Eintrag, ein entfernter Eintrag geht durch. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-023 Liegt die Ausnahmeliste schon auf der Basis, meldet die Wachstumsprüfung jeden zusätzlichen Eintrag, ein entfernter Eintrag geht durch.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PRUEF-020</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Liste <code>tests/layout/geraeteklassen_ausnahmen.json</code> darf nur kleiner werden. Der Test dafür vergleicht sie mit der Fassung auf <code>origin/neuaufbau</code>. Dort liegt sie vor dem Merge von P0.3c noch nicht, und der Test endet ohne Vergleich. Dieser Fall nimmt deshalb den aktuellen Commit als Basis und zeigt so, dass der Vergleich nach dem Merge greift.</p><h2>Bestanden, wenn</h2><p>Mit unveränderter Liste meldet Schritt 2 „neu 0“ und Exit 0. Mit einem zusätzlichen Eintrag meldet Schritt 4 „neu 1“, nennt den Eintrag und endet mit Exit 1. Fehlt ein Eintrag, meldet Schritt 6 „neu 0“ und Exit 0.</p><h2>Fehlgeschlagen, wenn</h2><p>Schritt 4 meldet „neu 0“ oder endet mit Exit 0, oder Schritt 6 meldet einen neuen Eintrag.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.3c-fuenf-geraeteklassen (PR #32)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, die Liste ist dort committet, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zusätzlicher Eintrag am Ende von <code>ausnahmen</code> (richtiger Titel eines vorhandenen Vertrags, aber Klasse <code>tablet-hochkant</code>): <code>{&quot;datei&quot;: &quot;tests/layout/lobby.spec.ts&quot;, &quot;vertrag&quot;: &quot;O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes&quot;, &quot;klasse&quot;: &quot;tablet-hochkant&quot;, &quot;befund&quot;: &quot;Probe&quot;}</code></p>
+<p>Prüfskript <code>wachstum-probe.mjs</code> im Repo-Ordner (danach löschen):</p>
+<pre><code>import { readFileSync } from &#x27;node:fs&#x27;
+import { abgleich, basisAusnahmen } from &#x27;./scripts/pruefung/ausnahmen.mjs&#x27;
+const LISTE = &#x27;tests/layout/geraeteklassen_ausnahmen.json&#x27;
+const s = ({ datei, vertrag, klasse }) =&gt; `${klasse} | ${datei} | ${vertrag}`
+const frueher = basisAusnahmen(process.cwd(), &#x27;HEAD&#x27;, LISTE).daten.ausnahmen.map(s)
+const jetzt = JSON.parse(readFileSync(LISTE, &#x27;utf8&#x27;)).ausnahmen.map(s)
+const { neu } = abgleich(jetzt, frueher)
+console.log(`früher ${frueher.length}, jetzt ${jetzt.length}, neu ${neu.length}`, neu.map((i) =&gt; jetzt[i]))
+process.exit(neu.length === 0 ? 0 : 1)</code></pre></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor</td><td>Prüfskript aus „Testdaten“ als `wachstum-probe.mjs` im Repo-Ordner anlegen</td><td></td><td></td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Vergleich ohne Änderung</td><td>`node wachstum-probe.mjs; echo $?`</td><td>„neu 0“, Exit 0</td></tr><tr><td>3</td><td>Editor</td><td>Eintrag aus „Testdaten“ in die Liste einfügen</td><td>Testdaten</td><td>gültiges JSON</td></tr><tr><td>4</td><td>Git Bash im Repo</td><td>Vergleich mit dem Zusatz</td><td>`node wachstum-probe.mjs; echo $?`</td><td>„neu 1“, der Eintrag mit `tablet-hochkant`, Exit 1</td></tr><tr><td>5</td><td>Git Bash im Repo, dann Editor</td><td>Liste zurücksetzen und den ersten Eintrag löschen</td><td>`git checkout -- tests/layout/geraeteklassen_ausnahmen.json`</td><td></td></tr><tr><td>6</td><td>Git Bash im Repo</td><td>Vergleich mit einem Eintrag weniger</td><td>`node wachstum-probe.mjs; echo $?`</td><td>„neu 0“, Exit 0</td></tr><tr><td>7</td><td>Git Bash im Repo</td><td>aufräumen</td><td>`git checkout -- tests/layout/geraeteklassen_ausnahmen.json`, `rm wachstum-probe.mjs`</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 14:48</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.3c, Iteration 2) &middot; agent &middot; pruefung-P0.3c-it2 @ <span class="commit" title="5759f63d6efe7e7336e2f7ee0377d45a04dfd00f">5759f63</span> / Node 25.2.1</p><p>Basis HEAD 5759f63 mit 6 Einträgen. Unverändert: früher 6, jetzt 6, neu 0, Exit 0. Mit Zusatz (O2 Lobby mit laufender Partie, tablet-hochkant): früher 6, jetzt 7, neu 1, Eintrag genannt, Exit 1. Ersten Eintrag entfernt: früher 6, jetzt 5, neu 0, Exit 0 (in der Sitzung beobachtet, Beleg enthält die ersten beiden Fälle).</p><ul class="belege"><li><a href="belege/2026-11-13-1448-TF-PRUEF-023-1.txt">2026-11-13-1448-TF-PRUEF-023-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

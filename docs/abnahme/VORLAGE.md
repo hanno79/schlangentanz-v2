@@ -87,13 +87,21 @@ Ports vor `test:layout`: <Ausgabe der Portprüfung (nur `LISTENING`/`ABHÖREN` z
 
 <Beschreibung dessen, was auf dem Bild zu sehen ist: Aufbau, Texte und Zahlen, ob etwas abgeschnitten, verdeckt oder unlesbar ist, ob die Werte plausibel sind. Konsolenfehler.>
 
-### Tablet quer 1024×768, Touch – `bilder/<ID>-<was>-tablet.png`
+### Tablet quer 1024×768, Touch – `bilder/<ID>-<was>-tablet-quer.png`
 
 <Beschreibung, dazu was mit Touch bedient wurde und was geschah.>
 
-### Handy hochkant 390×844, Touch – `bilder/<ID>-<was>-handy.png`
+### Tablet hochkant 768×1024, Touch – `bilder/<ID>-<was>-tablet-hochkant.png`
 
 <Beschreibung, dazu was mit Touch bedient wurde und was geschah.>
+
+### Handy hochkant 390×844, Touch – `bilder/<ID>-<was>-handy-hochkant.png`
+
+<Beschreibung, dazu was mit Touch bedient wurde und was geschah.>
+
+### Handy quer 844×390, Touch – `bilder/<ID>-<was>-handy-quer.png`
+
+<Beschreibung, dazu was mit Touch bedient wurde und was geschah. Was liegt unter dem Bildrand?>
 
 Waagrechtes Scrollen je Klasse: <`scrollWidth` und `clientWidth` von `document.documentElement`; `scrollWidth > clientWidth` oder ein abgeschnittener Text ist ein Mangel>.
 

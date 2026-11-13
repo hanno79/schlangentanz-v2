@@ -1,0 +1,26 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aee957e29f5c8a41a
+
+ ❯ tests/geraeteklassen_ausnahmen.test.ts (3 tests | 1 failed) 85ms
+     × P0.3c: jeder Eintrag nennt Datei, Vertrag, eine neue Geräteklasse und den Befund, keiner doppelt 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/geraeteklassen_ausnahmen.test.ts > P0.3c: Ausnahmeliste der Layout-Verträge je Geräteklasse > P0.3c: jeder Eintrag nennt Datei, Vertrag, eine neue Geräteklasse und den Befund, keiner doppelt
+AssertionError: desktop | tests/layout/lobby.spec.ts | O2: Regelseite › kein Bedienelement liegt außerhalb des Bildes: nur Tablet hochkant und Handy quer dürfen Ausnahmen haben: expected [ 'tablet-hochkant', 'handy-quer' ] to include 'desktop'
+ ❯ tests/geraeteklassen_ausnahmen.test.ts:29:96
+     27|     for (const ausnahme of liste) {
+     28|       const wo = schluessel(ausnahme)
+     29|       expect(NEUE_KLASSEN, `${wo}: nur Tablet hochkant und Handy quer …
+       |                                                                                                ^
+     30|       expect(ausnahme.befund.trim(), `${wo}: Befund fehlt`).not.toBe('…
+     31|       expect(ausnahme.vertrag, `${wo}: Vertrag als „Gruppe › Test“`).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  13:44:18
+   Duration  675ms (transform 59ms, setup 265ms, import 40ms, tests 85ms, environment 0ms)
+

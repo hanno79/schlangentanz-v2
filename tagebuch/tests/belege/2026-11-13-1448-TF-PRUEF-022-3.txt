@@ -1,0 +1,6 @@
+tagebuch/tests/faelle/TF-APP-001.md
+tagebuch/tests/faelle/TF-DEV-006.md
+tagebuch/tests/faelle/TF-DEV-008.md
+tagebuch/tests/faelle/TF-PRUEF-005.md
+tagebuch/tests/faelle/TF-PRUEF-008.md
+tagebuch/tests/faelle/TF-PRUEF-022.md

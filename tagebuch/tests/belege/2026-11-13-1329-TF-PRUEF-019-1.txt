@@ -1,0 +1,7 @@
+[desktop] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts
+[tablet-quer] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts
+[tablet-hochkant] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts
+[handy-hochkant] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts
+[handy-quer] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts
+  620 passed (1.3m)
+npm run test:layout: Exit 0

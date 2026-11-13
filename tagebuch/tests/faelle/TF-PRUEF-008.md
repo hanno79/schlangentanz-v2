@@ -9,11 +9,14 @@ angelegt: 2026-11-13
 veraendert_daten: nein
 aenderung: task/P0.3-pruefwerkzeuge (PR #26)
 grenzfall_von: TF-PRUEF-007
+status: stillgelegt
 ---
 
 ## Worum es geht
 
 Heute laufen alle Layout-Verträge nur in `desktop`; die Projekte `tablet` und `handy` haben 0 Tests. Ob sie wirklich das richtige Gerät liefern, zeigt erst ein Vertrag, der dort läuft.
+
+Stillgelegt mit P0.3c: Die Projekte heissen jetzt `tablet-quer` und `handy-hochkant`, dazu kommen `tablet-hochkant` und `handy-quer`. Dieselbe Messung macht seither der feste Vertrag `tests/layout/geraeteklasse.spec.ts` in allen fünf Klassen (TF-PRUEF-019).
 
 ## Bestanden, wenn
 

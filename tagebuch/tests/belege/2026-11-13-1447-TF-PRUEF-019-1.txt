@@ -1,0 +1,53 @@
+=== npm run test:layout, Lauf 1
+Running 1065 tests using 16 workers
+  x   864 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes (2.2s)
+  x   883 [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes (1.4s)
+  x   895 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes (1.4s)
+  x   981 [handy-quer-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (1.3s)
+  x   993 [handy-quer-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf/lobby passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (1.4s)
+  x  1063 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:130:3 › O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: eine Aufgabe lässt sich gross ansehen und ist dort mindestens 280
+  1065 passed (2.1m)
+=== npm run test:layout, Lauf 2
+Running 1065 tests using 16 workers
+  x   867 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes (2.2s)
+  x   883 [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes (1.8s)
+  x   895 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes (1.9s)
+  x   981 [handy-quer-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (1.4s)
+  x   993 [handy-quer-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf/lobby passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (1.5s)
+  x  1063 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:130:3 › O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: eine Aufgabe lässt sich gross ansehen und ist dort mindestens 280
+  1065 passed (2.5m)
+exit 0
+=== npm run test:layout, Lauf 3 (unter Last)
+Running 1065 tests using 16 workers
+  x   181 [desktop-testhooks] › tests\layout\waechter.ts:91:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › der Kontrastwächter hat wirklich etwas gemessen (7.3s)
+  x   176 [desktop-testhooks] › tests\layout\waechter.ts:40:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › kein sichtbares Element schneidet seinen Inhalt ab (7.6s)
+  x   179 [desktop-testhooks] › tests\layout\waechter.ts:65:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (6.8s)
+  x   191 [desktop-testhooks] › tests\layout\waechter.ts:65:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein Textinhalt ist unter eine Zeilenhöhe gedrückt (6.9s)
+  x   189 [desktop-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (7.7s)
+  x   188 [desktop-testhooks] › tests\layout\waechter.ts:40:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein sichtbares Element schneidet seinen Inhalt ab (8.0s)
+  x   185 [desktop-testhooks] › tests\layout\entwurf.hooks.spec.ts:77:5 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › O1: die Seite ist nicht breiter als das Fenster
+  x   190 [desktop-testhooks] › tests\layout\waechter.ts:52:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein Bedienelement ist vollständig verdeckt (7.0s)
+  x   178 [desktop-testhooks] › tests\layout\waechter.ts:52:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › kein Bedienelement ist vollständig verdeckt (7.7s)
+  x   869 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes (1.7s)
+  x   883 [handy-quer] › tests\layout\waechter.ts:46:3 › O2 K4: Lobby nach einem unlesbaren Spielstand › kein Bedienelement liegt außerhalb des Bildes (1.4s)
+  x   895 [handy-quer] › tests\layout\waechter.ts:46:3 › O2: Lobby mit offener Rückfrage vor einer neuen Partie › kein Bedienelement liegt außerhalb des Bildes (1.4s)
+  x   982 [handy-quer-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (1.6s)
+  x   993 [handy-quer-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf/lobby passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes (1.5s)
+  x  1063 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:130:3 › O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: eine Aufgabe lässt sich gross ansehen und ist dort mindestens 280
+  9 failed
+  1056 passed (3.4m)
+exit 1
+Lauf 3 lief absichtlich parallel zu zwei Läufen von npm test -- --run.
+  9 failed
+    [desktop-testhooks] › tests\layout\waechter.ts:40:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › kein sichtbares Element schneidet seinen Inhalt ab 
+    [desktop-testhooks] › tests\layout\waechter.ts:52:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › kein Bedienelement ist vollständig verdeckt 
+    [desktop-testhooks] › tests\layout\waechter.ts:65:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › kein Textinhalt ist unter eine Zeilenhöhe gedrückt 
+    [desktop-testhooks] › tests\layout\waechter.ts:91:3 › O1: Entwurf /dev/entwurf/tisch?karte=rot-01 passt in die Geräteklasse › der Kontrastwächter hat wirklich etwas gemessen 
+    [desktop-testhooks] › tests\layout\entwurf.hooks.spec.ts:77:5 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › O1: die Seite ist nicht breiter als das Fenster 
+    [desktop-testhooks] › tests\layout\waechter.ts:40:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein sichtbares Element schneidet seinen Inhalt ab 
+    [desktop-testhooks] › tests\layout\waechter.ts:46:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes 
+    [desktop-testhooks] › tests\layout\waechter.ts:52:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein Bedienelement ist vollständig verdeckt 
+    [desktop-testhooks] › tests\layout\waechter.ts:65:3 › O1: Entwurf /dev/entwurf/tisch?karte=farbendieb-01 passt in die Geräteklasse › kein Textinhalt ist unter eine Zeilenhöhe gedrückt 
+  1056 passed (3.4m)
+4x Error: /dev/entwurf/tisch?karte=rot-01 hat entwurf-tisch nicht aufgebaut
+5x Error: /dev/entwurf/tisch?karte=farbendieb-01 hat entwurf-tisch nicht aufgebaut

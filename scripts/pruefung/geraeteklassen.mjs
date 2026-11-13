@@ -1,5 +1,7 @@
-// Die drei Geräteklassen der Abnahme (docs/UMSETZUNGSPLAN.md, Abschnitte 2.3 und 3.4).
+// Die fünf Geräteklassen der Abnahme (docs/UMSETZUNGSPLAN.md, Abschnitte 2.3 und 3.4;
+// Tablet hochkant und Handy quer seit der Entscheidung des Autors vom 13.11.2026).
 // Einzige Quelle für playwright.config.ts und scripts/pruefung/bildschirmfotos.mjs.
+// Der Name ist zugleich Playwright-Projekt und Endung der Bilddateien.
 //
 // deviceScaleFactor 1, damit ein Bildschirmfoto genau so viele Pixel hat wie das
 // Fenster. isMobile bei den Touch-Klassen, damit Chromium wie auf einem Gerät das
@@ -18,23 +20,22 @@ export const GERAETEKLASSEN = Object.freeze([
     hasTouch: false,
     isMobile: false,
   },
-  {
-    name: 'tablet',
-    titel: 'Tablet quer 1024×768, Touch',
-    viewport: { width: 1024, height: 768 },
-    deviceScaleFactor: 1,
-    hasTouch: true,
-    isMobile: true,
-  },
-  {
-    name: 'handy',
-    titel: 'Handy hochkant 390×844, Touch',
-    viewport: { width: 390, height: 844 },
-    deviceScaleFactor: 1,
-    hasTouch: true,
-    isMobile: true,
-  },
+  touchKlasse('tablet-quer', 'Tablet quer', 1024, 768),
+  touchKlasse('tablet-hochkant', 'Tablet hochkant', 768, 1024),
+  touchKlasse('handy-hochkant', 'Handy hochkant', 390, 844),
+  touchKlasse('handy-quer', 'Handy quer', 844, 390),
 ])
+
+function touchKlasse(name, geraet, width, height) {
+  return {
+    name,
+    titel: `${geraet} ${width}×${height}, Touch`,
+    viewport: { width, height },
+    deviceScaleFactor: 1,
+    hasTouch: true,
+    isMobile: true,
+  }
+}
 
 /** Die Browser-Kontextoptionen einer Geräteklasse, für Playwright-Projekte und `browser.newContext`. */
 export function kontextOptionen({ viewport, deviceScaleFactor, hasTouch, isMobile }) {

@@ -2,7 +2,7 @@
 // Tests dieselbe Quelle lesen wie das Fotoskript.
 
 export type Geraeteklasse = {
-  name: 'desktop' | 'tablet' | 'handy'
+  name: 'desktop' | 'tablet-quer' | 'tablet-hochkant' | 'handy-hochkant' | 'handy-quer'
   titel: string
   viewport: { width: number; height: number }
   deviceScaleFactor: number

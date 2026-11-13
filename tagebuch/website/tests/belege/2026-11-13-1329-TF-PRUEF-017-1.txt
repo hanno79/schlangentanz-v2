@@ -1,0 +1,6 @@
+Desktop 1280×900: <ordner>/P0.3c-lobby-desktop.png (1280×900 px), Touch aus, pointer: coarse nein, Konsolenfehler: 0
+Tablet quer 1024×768, Touch: <ordner>/P0.3c-lobby-tablet-quer.png (1024×768 px), Touch an, pointer: coarse ja, Konsolenfehler: 0
+Tablet hochkant 768×1024, Touch: <ordner>/P0.3c-lobby-tablet-hochkant.png (768×1024 px), Touch an, pointer: coarse ja, Konsolenfehler: 0
+Handy hochkant 390×844, Touch: <ordner>/P0.3c-lobby-handy-hochkant.png (390×844 px), Touch an, pointer: coarse ja, Konsolenfehler: 0
+Handy quer 844×390, Touch: <ordner>/P0.3c-lobby-handy-quer.png (844×390 px), Touch an, pointer: coarse ja, Konsolenfehler: 0
+Exit 0

@@ -9,11 +9,14 @@ angelegt: 2026-11-13
 veraendert_daten: nein
 skript: tests/pruefwerkzeuge.test.ts
 aenderung: task/P0.3-pruefwerkzeuge (PR #26)
+status: stillgelegt
 ---
 
 ## Worum es geht
 
 Prüfer fotografieren jede Oberfläche in den drei Geräteklassen mit diesem Skript. Stimmen Grösse oder Touch nicht, beschreibt ein Prüfer ein falsches Gerät.
+
+Stillgelegt mit P0.3c: Das Skript liefert seit dem 13.11.2026 fünf Bilder mit neuen Namen; der Nachfolger ist TF-PRUEF-017.
 
 ## Bestanden, wenn
 
