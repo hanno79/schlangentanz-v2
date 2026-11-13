@@ -8,6 +8,7 @@ import {
   langeSchlange,
   mittelspiel,
   neuePartie,
+  zehnHandkarten,
   verrateneIds,
   volltisch,
 } from '../../src/ui/tisch/__tests__/szenarien'
@@ -37,6 +38,7 @@ const SZENARIEN: { name: string; erzeuge: () => Spielzustand; karten: number; ei
   { name: 'Mittelspiel', erzeuge: mittelspiel, karten: 25, eigeneBilder: 9, gruppenBalken: 13, stapel: String(mittelspiel().nachziehstapel.length) },
   { name: 'neue Partie', erzeuge: neuePartie, karten: 6, eigeneBilder: 0, gruppenBalken: 0, stapel: String(neuePartie().nachziehstapel.length) },
   { name: 'lange Schlange', erzeuge: langeSchlange, karten: 40, eigeneBilder: 22, gruppenBalken: 30, stapel: String(langeSchlange().nachziehstapel.length) },
+  { name: 'zehn Handkarten', erzeuge: zehnHandkarten, karten: 35, eigeneBilder: 9, gruppenBalken: 13, stapel: String(zehnHandkarten().nachziehstapel.length) },
 ]
 
 async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void> {
@@ -106,6 +108,14 @@ for (const { name, erzeuge, karten, eigeneBilder, gruppenBalken, stapel } of SZE
     test('O4 K3: wo ein Bereich weitergeht, ist es ohne Scrollen zu erkennen', async ({ page }) => {
       const { befunde } = await verborgenOhneHinweis(page)
       expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+    })
+
+    test('O4 K3: ist die Tischfläche halb gescrollt, zeigt sie oben und unten, dass es weitergeht', async ({ page }) => {
+      await page.locator('.st-flaeche').evaluate((flaeche) => flaeche.scrollTo(0, (flaeche.scrollHeight - flaeche.clientHeight) / 2))
+      await expect(async () => {
+        const { befunde } = await verborgenOhneHinweis(page)
+        expect(befunde, `Bereiche, die ohne Hinweis weitergehen:${befundListe(befunde)}`).toEqual([])
+      }).toPass({ timeout: 2000 })
     })
 
     test('O4: die Zahl des Nachziehstapels ist ohne Scrollen zu lesen', async ({ page }) => {
