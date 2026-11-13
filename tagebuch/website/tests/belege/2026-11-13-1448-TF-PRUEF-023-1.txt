@@ -1,0 +1,6 @@
+Basis 5759f63: früher 6, jetzt 6, neu 0
+exit 0
+Eintrag B ergänzt: {"datei":"tests/layout/lobby.spec.ts","vertrag":"O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes","klasse":"tablet-hochkant","befund":"Probe B"}
+Basis 5759f63: früher 6, jetzt 7, neu 1
+  neu: tablet-hochkant | tests/layout/lobby.spec.ts | O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes
+exit 1

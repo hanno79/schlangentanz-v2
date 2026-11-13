@@ -1,0 +1,5 @@
+  ok    6 [desktop] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entspr
+  ok  214 [tablet-quer] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch en
+  ok  427 [tablet-hochkant] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touc
+  ok  640 [handy-hochkant] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch
+  ok  853 [handy-quer] › tests\layout\geraeteklasse.spec.ts:14:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch ent

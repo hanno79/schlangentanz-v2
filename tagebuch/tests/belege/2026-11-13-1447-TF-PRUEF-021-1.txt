@@ -1,0 +1,44 @@
+=== Variante A
+Eintrag A ergänzt: {"datei":"tests/layout/lobby.spec.ts","vertrag":"O2: Regelseite › kein Bedienelement liegt ausserhalb des Bildes","klasse":"handy-quer","befund":"Probe A"}
+     × P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt 1511ms
+AssertionError: Einträge ohne passenden Vertrag: expected [ Array(1) ] to deeply equal []
+vitest exit 1
+=== Variante C
+Eintrag C ergänzt: {"datei":"tests/layout/entwurf.hooks.spec.ts","vertrag":"O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes","klasse":"handy-quer","befund":"Probe C"}
+     × P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt 1165ms
+AssertionError: Einträge ohne passenden Vertrag: expected [ Array(1) ] to deeply equal []
+vitest exit 1
+=== Variante D
+Eintrag D ergänzt: {"datei":"tests/layout/waechter.ts","vertrag":"O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes","klasse":"handy-quer","befund":"Probe D"}
+     × P0.3c: jede Datei mit Einträgen wendet die Liste an 14ms
+     × P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt 1509ms
+AssertionError: tests/layout/waechter.ts ruft duldeBekannteAusnahmen() nicht auf: expected '/*\nAuthor: Claude Code (1b)\nDatum: …' to contain 'duldeBekannteAusnahmen()'
++  * nicht breiter als das Fenster, und jede Tippfläche misst mindestens 44 × 44 px.
++   pruefe('jede Tippfläche misst mindestens 44 × 44 px', async ({ page }: { page: Page }) => {
+AssertionError: Einträge ohne passenden Vertrag: expected [ Array(1) ] to deeply equal []
+=== Variante F
+Eintrag F ergänzt: {"datei":"tests/layout/lobby.spec.ts","vertrag":"kein Bedienelement liegt außerhalb des Bildes","klasse":"handy-quer","befund":"Probe F"}
+     × P0.3c: jeder Eintrag nennt Datei, Vertrag, eine neue Geräteklasse und den Befund, keiner doppelt 17ms
+     × P0.3c: jeder Eintrag trifft einen Vertrag, den npx playwright test --list in seiner Klasse kennt 1636ms
+AssertionError: handy-quer | tests/layout/lobby.spec.ts | kein Bedienelement liegt außerhalb des Bildes: Vertrag als „Gruppe › Test“: expected 'kein Bedienelement liegt außerhalb de…' to contain ' › '
+AssertionError: Einträge ohne passenden Vertrag: expected [ Array(1) ] to deeply equal []
+vitest exit 1
+=== Variante G
+Eintrag G ergänzt: {"datei":"tests/layout/entwurf.hooks.spec.ts","vertrag":"O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes","klasse":"desktop","befund":"Probe G"}
+     × P0.3c: jeder Eintrag nennt Datei, Vertrag, eine neue Geräteklasse und den Befund, keiner doppelt 11ms
+AssertionError: desktop | tests/layout/entwurf.hooks.spec.ts | O1: Entwurf /dev/entwurf passt in die Geräteklasse › kein Bedienelement liegt außerhalb des Bildes: nur Tablet hochkant und Handy quer dürfen Ausnahmen haben
+vitest exit 1
+=== Variante B
+Eintrag B ergänzt: {"datei":"tests/layout/lobby.spec.ts","vertrag":"O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes","klasse":"tablet-hochkant","befund":"Probe B"}
+vitest exit 0
+=== Variante E
+Eintrag E ergänzt: {"datei":"tests/layout/lobby.spec.ts","vertrag":"O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab","klasse":"handy-quer","befund":"Probe E"}
+vitest exit 0
+=== Playwright mit B und E, Projekte tablet-hochkant und handy-quer
+  1) [tablet-hochkant] › tests\layout\waechter.ts:46:3 › O2: Lobby mit laufender Partie › kein Bedienelement liegt außerhalb des Bildes 
+    Expected to fail, but passed.
+  2) [handy-quer] › tests\layout\waechter.ts:40:3 › O2: Lobby mit laufender Partie › kein sichtbares Element schneidet seinen Inhalt ab 
+    Expected to fail, but passed.
+  2 failed
+  22 passed (14.2s)
+exit 1
