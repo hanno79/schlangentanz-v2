@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-005 npm run abgleich:website lädt https://schlangentanz.ch/rules und meldet, welche Zeilen der Website in Teil A stehen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-005 npm run abgleich:website lädt https://schlangentanz.ch/rules und meldet, welche Zeilen der Website in Teil A stehen.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Website ist die einzige Regelquelle; der Abgleich zeigt, ob Teil A sie vollständig spiegelt. P0.5 Kriterium 2 verlangt nach der Website-Änderung volle Abdeckung.</p><h2>Bestanden, wenn</h2><p>Der Befehl endet mit Exit 0 und meldet die Abdeckung der Website-Zeilen in Teil A.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Befehl meldet fehlende Zeilen oder bricht ab.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Nachtrag</dd><dt>Angelegt</dt><dd>13.11.2026</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie, Netzzugang zu schlangentanz.ch, Playwright-Chromium installiert</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Live-Seite <code>https://schlangentanz.ch/rules</code> und <code>docs/GAME_SPEC.md</code> Teil A des geprüften Commits.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npm run abgleich:website; echo $?</code> im Repo. Bricht er mit „FEHLER beim Laden der Website: page.waitForFunction: Timeout 20000ms exceeded“ ab, mit einem kleinen Playwright-Skript prüfen, ob <code>#root</code> nach dem Laden Text enthält, und die Seite im eingebauten Browser gegenprüfen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Website nicht erreichbar oder geändert, während Teil A unverändert ist: deckt der Abgleich selbst ab, kein eigener Testfall.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-blockiert"><h3><time datetime="2026-11-13">13.11.2026 11:28</time> <span class="status status-blockiert">blockiert</span></h3><p class="angaben">Claude Code (Prüfer P0.5 Teil 2a) &middot; agent &middot; pruefung-P0.5-teil2a @ <span class="commit" title="eade1d3df8607e3d447681545045f89bd4e9daac">eade1d3</span></p><p>npm run abgleich:website bricht dreimal (auch ausserhalb der Sandbox) mit &#x27;page.waitForFunction: Timeout 20000ms exceeded&#x27; ab. Playwright-Chromium 1.60 headless erhält Status 200, aber #root bleibt leer (0 Zeichen, auch nach 8 s und mit normalem User-Agent); der eingebaute Browser zeigt dieselbe Seite mit 17034 Zeichen Text.</p><ul class="belege"><li><a href="belege/2026-11-13-1128-TF-SPEC-005-1.txt">2026-11-13-1128-TF-SPEC-005-1.txt</a></li></ul><h4>Grund</h4><p>Website rendert im headless Playwright-Chromium nicht; Ursache ausserhalb von P0.5</p></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

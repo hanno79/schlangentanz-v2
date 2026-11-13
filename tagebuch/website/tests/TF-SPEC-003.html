@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-003 Wird der Regelinhalt einer Antwort in Teil D verfälscht, schlagen die P0.5-Tests fehl. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-003 Wird der Regelinhalt einer Antwort in Teil D verfälscht, schlagen die P0.5-Tests fehl.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Teil D ist die Vorlage für die Engine. Die Tests sollen nicht nur das Vorhandensein einer Antwort, sondern ihren Inhalt festhalten, sonst kann eine spätere Änderung die Regel unbemerkt umkehren.</p><h2>Bestanden, wenn</h2><p>Jede der drei Verfälschungen unten führt einzeln zu Exit ungleich 0 bei <code>npx vitest run tests/regelfragen.test.ts tests/regelfragen_antworten.test.ts</code>.</p><h2>Fehlgeschlagen, wenn</h2><p>Mindestens eine Verfälschung bleibt grün (Exit 0).</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.5-regelfragen (PR #25)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>git status --short</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><ul><li>D14 „Zwei Züge: Jede Schlangengrube kostet …“ ersetzt durch „Ein Zug: Die zweite Grube hat keine weitere Wirkung.“</li><li>D24 „Eine Kette zählt erst ab 3 Farbkarten derselben Farbe nebeneinander, nicht schon ab 2;“ ersetzt durch „Eine Kette zählt schon ab 2 Farbkarten derselben Farbe nebeneinander;“ (Wortlaut des Autors bleibt stehen)</li><li>D29 „Ja: Die Grube darf ihn treffen, bleibt aber ohne Wirkung und geht auf den Ablagestapel.“ ersetzt durch „Nein: Ein Spieler ohne weiteren Zug ist kein Ziel der Grube.“ (Wortlaut bleibt stehen)</li></ul></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor</td><td>eine Verfälschung aus „Testdaten“ in `docs/GAME_SPEC.md` eintragen</td><td></td><td>nur diese eine Zeile geändert</td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Tests ausführen</td><td>`npx vitest run tests/regelfragen.test.ts tests/regelfragen_antworten.test.ts; echo $?`</td><td>Exit ungleich 0</td></tr><tr><td>3</td><td>dieselbe Konsole</td><td>zurücksetzen</td><td>`git checkout -- docs/GAME_SPEC.md`</td><td>`git status --short` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-13">13.11.2026 11:28</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer P0.5 Teil 2a) &middot; agent &middot; pruefung-P0.5-teil2a @ <span class="commit" title="eade1d3df8607e3d447681545045f89bd4e9daac">eade1d3</span></p><p>Nur die Verfälschung des Autor-Zitats in D24 (3 -&gt; 2) macht rot: Exit 1, &#x27;F11: Teil D D24 ohne Wortlaut des Autors&#x27;. Die drei Inhaltsverfälschungen D14 &#x27;Ein Zug&#x27;, D24 &#x27;schon ab 2&#x27; (Zitat stehen gelassen), D29 &#x27;Nein: kein Ziel&#x27; gemeinsam: Exit 0, 375 passed. Der Regelinhalt von Teil D ist ungetestet.</p><p class="fehler">Inhaltsverfälschungen in D14, D24, D29 bleiben grün (Exit 0, 375 passed)</p><ul class="belege"><li><a href="belege/2026-11-13-1128-TF-SPEC-003-1.txt">2026-11-13-1128-TF-SPEC-003-1.txt</a></li><li><a href="belege/2026-11-13-1128-TF-SPEC-003-2.txt">2026-11-13-1128-TF-SPEC-003-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
