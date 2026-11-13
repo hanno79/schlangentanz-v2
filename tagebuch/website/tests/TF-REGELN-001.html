@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-REGELN-001 /regeln verweist auf die Spielanleitung der Website und fasst einen Zug in fünf Schritten zusammen, in allen fünf Geräteklassen ohne waagrechtes Scrollen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-REGELN-001 /regeln verweist auf die Spielanleitung der Website und fasst einen Zug in fünf Schritten zusammen, in allen fünf Geräteklassen ohne waagrechtes Scrollen.</h1><p class="etiketten"><span class="etikett">Bereich Regelhilfe: Regelseite /regeln, Kartentexte aus Teil A, Grossansicht einer Karte</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Regelseite soll Spielern einen Zug kurz erklären und für alles Weitere auf die Website verweisen, denn nur die Website ist verbindlich. Sätze, die der Autor entschieden hat und die noch nicht auf der Website stehen, müssen als solche erkennbar sein.</p><h2>Bestanden, wenn</h2><p>Der Knopf „Spielregeln auf schlangentanz.ch“ führt zu https://schlangentanz.ch/rules. Unter „Ein Zug in fünf Schritten“ stehen genau fünf nummerierte Schritte, „Aufgabe erfüllen“ trägt „Nur mit Erweiterung“, und jeder Satz aus Teil D trägt das Etikett „Ergänzung des Autors“. In jeder Klasse gilt scrollWidth gleich clientWidth, und die Konsole zeigt keinen Fehler.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Verweis fehlt oder zeigt woandershin, es sind mehr oder weniger als fünf Schritte, ein Satz aus Teil D steht ohne Etikett da, oder die Seite ist breiter als das Fenster.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O9-regelhilfe (PR #37)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Produktionsbuild (<code>npm run build</code>, <code>vite preview</code>), Playwright Chromium, Touch in den vier Touch-Klassen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Die fünf Geräteklassen aus <code>scripts/pruefung/geraeteklassen.mjs</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser</td><td>`/regeln` öffnen</td><td></td><td>Titel „Regeln · Schlangentanz“, Knopf „Spielregeln auf schlangentanz.ch“</td></tr><tr><td>2</td><td>Abschnitt „Ein Zug in fünf Schritten“</td><td>lesen</td><td></td><td>fünf Schritte, Etiketten „Ergänzung des Autors“ und „Nur mit Erweiterung“</td></tr><tr><td>3</td><td>Konsole</td><td>`document.documentElement.scrollWidth` und `clientWidth` vergleichen</td><td></td><td>gleich gross</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob jeder Satz wörtlich in Teil A oder D steht, prüft <code>src/ui/regeln/zugschritte.test.ts</code> automatisch; dafür gibt es keinen eigenen Testfall.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 17:47</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O9) &middot; agent &middot; pruefung-O9 @ <span class="commit" title="5258dfa2ed57fbce18275c89b38289641ed4aa35">5258dfa</span> / Playwright Chromium 1.60.0, fünf Geräteklassen, Touch in vier</p><p>Verweis auf https://schlangentanz.ch/rules, fünf nummerierte Schritte, „Aufgabe erfüllen“ mit „Nur mit Erweiterung“, 7 Sätze aus Teil D mit Etikett „Ergänzung des Autors“. scrollWidth = clientWidth in allen fünf Klassen (1280, 1024, 768, 390, 844), keine Konsolenfehler.</p><ul class="belege"><li><a href="belege/2026-11-13-1747-TF-REGELN-001-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1747-TF-REGELN-001-1.png" alt="Beleg 2026-11-13-1747-TF-REGELN-001-1.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

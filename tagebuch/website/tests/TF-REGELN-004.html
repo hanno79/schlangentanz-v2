@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-REGELN-004 Jeder Kartentext steht wörtlich in Teil A der Spec, und der Test wird rot, wenn Text oder Spec abweichen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-REGELN-004 Jeder Kartentext steht wörtlich in Teil A der Spec, und der Test wird rot, wenn Text oder Spec abweichen.</h1><p class="etiketten"><span class="etikett">Bereich Regelhilfe: Regelseite /regeln, Kartentexte aus Teil A, Grossansicht einer Karte</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Regelhilfe darf nichts behaupten, was nicht in der Spielanleitung steht. Der Test liest dafür <code>docs/GAME_SPEC.md</code> selbst. Die Gegenprobe zeigt, dass er wirklich die Spec liest und nicht eine Kopie.</p><h2>Bestanden, wenn</h2><p><code>npx vitest run src/ui/karten src/ui/regeln</code> endet mit 0. Wird ein Satz in <code>src/ui/karten/hilfe/</code> verfälscht oder ein Satz in Teil A geändert, endet derselbe Befehl mit 1 und nennt die betroffene Karte.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Befehl endet ohne Änderung mit 1, oder er bleibt nach einer verfälschten Stelle grün.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/O9-regelhilfe (PR #37)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem geprüften Stand, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Gegenproben: im Beispiel des Farbendiebs „blaue“ zu „rote“; in Teil A „Ablagestapel“ zu „Nachziehstapel“ (A7.4), „maximal 2 Schlangen“ zu „3“ (A5), „min. 6 gelben“ zu „7“ (A9).</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/ui/karten src/ui/regeln</code>, danach jede Gegenprobe einzeln zurücksetzen und den Befehl wiederholen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ein neuer Satz in Teil A ausserhalb von „Wichtige Regeln“ fällt dem Test nicht auf; das deckt TF-REGELN-005 ab.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 17:47</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O9) &middot; agent &middot; pruefung-O9 @ <span class="commit" title="5258dfa2ed57fbce18275c89b38289641ed4aa35">5258dfa</span></p><p>npx vitest run src/ui/karten src/ui/regeln: Exit 0 (285 Tests). Gegenprobe Kartentext Farbendieb „blaue“ zu „rote“: Exit 1, 1 Test rot. Gegenprobe Spec (A7.4, A5, A9 geändert): Exit 1, 5 Tests rot. Beide zurückgesetzt.</p><ul class="belege"><li><a href="belege/2026-11-13-1747-TF-REGELN-004-1.txt">2026-11-13-1747-TF-REGELN-004-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
