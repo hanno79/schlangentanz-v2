@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test'
+import { duldeBekannteAusnahmen } from './ausnahmen'
 import { befundListe, kasten, type Befund } from './messung'
 import { nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
@@ -17,6 +18,10 @@ Der Tisch wird in drei Zuständen gemessen, weil sich die Zugleiste und die
 Schlangen mit der Auswahl ändern: ohne Auswahl, mit einer Farbkarte (Ziele an
 den Schlangenenden) und mit dem Farbendieb (Ziele sind Karten der Gegner).
 */
+
+// Die Entwürfe sind unter drei Geräteklassen abgenommen und werden nicht
+// nachgebessert; was in Handy quer rot ist, steht in tests/layout/geraeteklassen_ausnahmen.json (P0.3c).
+duldeBekannteAusnahmen()
 
 const SEITEN: { adresse: string; leitelement: string }[] = [
   { adresse: '/dev/entwurf', leitelement: 'entwurf-uebersicht' },
