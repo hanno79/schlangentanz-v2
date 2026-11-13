@@ -16,8 +16,18 @@ const TASK_ID = /\b(P0\.\d|[EXKOZ]\d+)\b/g
 const FRAGE_ODER_BEREICH = /\b([FG])(\d+)(?:–\1(\d+))?\b/g
 /** Antwortfeld, solange der Autor noch nicht geantwortet hat. */
 const OFFEN = '—'
+/** Nachfrage: Nummer der Ausgangsfrage plus Kleinbuchstabe, etwa „F8a“. */
+const NACHFRAGE = /^([FG]\d+)[a-z]$/
+/** Antwort aus Buchstaben vorhandener Möglichkeiten: „b“ oder „a, c“. */
+const ANTWORT_BUCHSTABEN = /^([a-z](?:, [a-z])*)\b/
+/** Zitat in deutschen Anführungszeichen. */
+const ZITAT = /„[^“]+“/g
+/** Am 13.11.2026 hat der Autor F1–F15 beantwortet: alle Vorschläge, ausser F8 und F11. */
+const DATUM_F = '13.11.2026'
+const ABWEICHUNGEN_F: Record<string, string> = { F8: 'Freie Antwort', F11: 'b, d' }
 
 type PlanFrage = { nr: string; stelle: string; frage: string; vorschlag?: string }
+type TeilDEintrag = { nr: string; frage: string; antwort: string; datum: string }
 
 /** Fasst Leerraum zusammen, damit Zitate und Prosa über Zeilenumbrüche hinweg passen. */
 function normalisiert(text: string): string {
@@ -61,9 +71,9 @@ function taskIdsAusPlan(): Set<string> {
   return ids
 }
 
-/** Je Frage die Tasks, deren Block im Plan (Abschnitte 4 bis 8) die Frage erwähnt. */
-function nennendeTasksAusPlan(): Map<string, Set<string>> {
-  const zuordnung = new Map<string, Set<string>>()
+/** Text jedes Task-Blocks im Plan (Abschnitte 4 bis 8), je Task-ID. */
+function taskBloeckeAusPlan(): Map<string, string> {
+  const bloecke = new Map<string, string>()
   const beginn = plan.indexOf('\n## 4. ')
   const ende = plan.search(/^## .*Offene Regelfragen/m)
   let aktuell: string | undefined
@@ -71,25 +81,66 @@ function nennendeTasksAusPlan(): Map<string, Set<string>> {
     const kopf = /^(?:#{3,4} |- \*\*)(P0\.\d|[EXKOZ]\d+)\b/.exec(zeile)
     if (kopf) aktuell = kopf[1]
     else if (/^#{2,4} /.test(zeile)) aktuell = undefined
-    if (!aktuell) continue
-    for (const [, art, von, bis] of zeile.matchAll(FRAGE_ODER_BEREICH)) {
+    if (aktuell) bloecke.set(aktuell, `${bloecke.get(aktuell) ?? ''}${zeile}\n`)
+  }
+  return bloecke
+}
+
+/** Je Frage die Tasks, deren Block im Plan die Frage erwähnt. */
+function nennendeTasksAusPlan(): Map<string, Set<string>> {
+  const zuordnung = new Map<string, Set<string>>()
+  for (const [task, text] of planBloecke) {
+    for (const [, art, von, bis] of text.matchAll(FRAGE_ODER_BEREICH)) {
       for (let n = Number(von); n <= Number(bis ?? von); n++) {
         const tasks = zuordnung.get(`${art}${n}`) ?? new Set<string>()
-        zuordnung.set(`${art}${n}`, tasks.add(aktuell))
+        zuordnung.set(`${art}${n}`, tasks.add(task))
       }
     }
   }
   return zuordnung
 }
 
-/** Zerlegt docs/REGELFRAGEN.md in Fragenblöcke, je ab `### F1: …` bis zur nächsten Überschrift. */
+/** Tasks, deren Block im Plan die Nachfrage (etwa „F8a“) erwähnt. */
+function nennendeTasksFuerNachfrage(nr: string): string[] {
+  return [...planBloecke].filter(([, text]) => new RegExp(`\\b${nr}\\b`).test(text)).map(([task]) => task)
+}
+
+/** Zerlegt docs/REGELFRAGEN.md in Fragenblöcke, je ab `### F1: …` oder `### F8a: …` bis zur nächsten Überschrift. */
 function fragenbloecke(): Map<string, string> {
   const bloecke = new Map<string, string>()
   for (const teil of regelfragen.split(/^(?=#{2,3} )/m)) {
-    const kopf = /^### ([FG]\d+): \S/.exec(teil)
+    const kopf = /^### ([FG]\d+[a-z]?): \S/.exec(teil)
     if (kopf) bloecke.set(kopf[1], teil)
   }
   return bloecke
+}
+
+/** Die Tabelle in Teil D der Spec, zellenweise, mit ihrer Kopfzeile. */
+function tabelleTeilD(): { kopf: string[]; zeilen: string[][] } {
+  const zeilen = abschnitt(spec, '##', 'Teil D')
+    .split('\n')
+    .filter((zeile) => zeile.trimStart().startsWith('|'))
+    .map(zellen)
+  return { kopf: zeilen[0] ?? [], zeilen: zeilen.slice(1).filter((z) => !z.every((zelle) => /^-+$/.test(zelle))) }
+}
+
+/** Einträge in Teil D, die eine Regelfrage beantworten („F1: …?“ in der Spalte „Frage“), je Fragennummer. */
+function beantworteteInTeilD(): Map<string, TeilDEintrag> {
+  const { kopf, zeilen } = tabelleTeilD()
+  const spalte = (name: string) => kopf.indexOf(name)
+  const eintraege = new Map<string, TeilDEintrag>()
+  for (const zeile of zeilen) {
+    const frage = zeile[spalte('Frage')] ?? ''
+    const bezug = /^([FG]\d+[a-z]?): /.exec(frage)
+    if (!bezug) continue
+    eintraege.set(bezug[1], {
+      nr: zeile[spalte('Nr.')] ?? '',
+      frage: frage.slice(bezug[0].length),
+      antwort: zeile[spalte('Antwort')] ?? '',
+      datum: zeile[spalte('Datum')] ?? '',
+    })
+  }
+  return eintraege
 }
 
 /** Text des Feldes `**Name:** …` in einem Block, ohne den Namen; undefined, wenn es fehlt. */
@@ -119,10 +170,81 @@ function nenntStelle(text: string, stelle: string): boolean {
   return new RegExp(`(?<![\\w.])${maskiert}(?!\\d|\\.\\d)`).test(text)
 }
 
+/** Möglichkeiten fortlaufend ab a, mindestens zwei. */
+function pruefeMoeglichkeiten(nr: string, block: string): void {
+  const buchstaben = moeglichkeiten(block)
+  expect(buchstaben.length, `${nr}: weniger als zwei Möglichkeiten`).toBeGreaterThanOrEqual(2)
+  expect(buchstaben, `${nr}: Buchstaben laufen nicht fortlaufend ab a`).toEqual(
+    buchstaben.map((_, i) => String.fromCharCode(97 + i)),
+  )
+}
+
+/** Das Feld beginnt mit Buchstaben („a“ oder „a, c“), und jeder ist eine vorhandene Möglichkeit. */
+function pruefeBuchstaben(nr: string, block: string, name: string): void {
+  const gewaehlt = ANTWORT_BUCHSTABEN.exec(feld(block, name) ?? '')
+  expect(gewaehlt, `${nr}: ${name} beginnt nicht mit Buchstaben („a“ oder „a, c“)`).not.toBeNull()
+  for (const buchstabe of gewaehlt?.[1].split(', ') ?? []) {
+    expect(moeglichkeiten(block), `${nr}: ${name} nennt unbekannte Möglichkeit ${buchstabe}`).toContain(buchstabe)
+  }
+}
+
+/** Antwort: offen („—“, Datum „—“) oder Buchstaben bzw. „Freie Antwort“ mit Wortlaut des Autors, dazu ein Datum. */
+function pruefeAntwort(nr: string, block: string): void {
+  const antwort = feld(block, 'Antwort') ?? ''
+  const datum = feld(block, 'Datum') ?? ''
+  expect(antwort, `${nr}: Feld „Antwort“ fehlt`).toBeTruthy()
+  if (antwort === OFFEN) {
+    expect(datum, `${nr}: offen, aber Datum „${datum}“ statt „${OFFEN}“`).toBe(OFFEN)
+    return
+  }
+  expect(datum, `${nr}: beantwortet, Datum „${datum}“ nicht im Format TT.MM.JJJJ`).toMatch(/^\d{2}\.\d{2}\.\d{4}$/)
+  if (antwort.startsWith('Freie Antwort')) {
+    expect(antwort.match(ZITAT), `${nr}: freie Antwort ohne Wortlaut des Autors in „…“`).not.toBeNull()
+  } else {
+    pruefeBuchstaben(nr, block, 'Antwort')
+  }
+}
+
+/** Beantwortet heisst: Eintrag „Fn: …“ in Teil D mit derselben Frage, demselben Datum und „Website folgt.“. */
+function pruefeTeilD(nr: string, block: string): void {
+  const antwort = feld(block, 'Antwort') ?? OFFEN
+  const eintrag = teilD.get(nr)
+  if (antwort === OFFEN) {
+    expect(eintrag, `${nr}: offen, steht aber beantwortet in Teil D`).toBeUndefined()
+    return
+  }
+  expect(eintrag, `${nr}: beantwortet, aber kein Eintrag „${nr}: …“ in Teil D`).toBeDefined()
+  if (!eintrag) return
+  expect(eintrag.nr, `${nr}: Teil D, Spalte „Nr.“`).toMatch(/^D\d+$/)
+  expect(normalisiert(eintrag.frage), `${nr}: Teil D ${eintrag.nr}, Frage`).toBe(normalisiert(feld(block, 'Frage') ?? ''))
+  expect(eintrag.datum, `${nr}: Teil D ${eintrag.nr}, Datum`).toBe(feld(block, 'Datum'))
+  expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr}, Status „Website folgt.“`).toContain('Website folgt.')
+  expect(antwort, `${nr}: Antwort nennt den Eintrag ${eintrag.nr} in Teil D nicht`).toMatch(
+    new RegExp(`\\b${eintrag.nr}\\b`),
+  )
+  if (!antwort.startsWith('Freie Antwort')) return
+  for (const zitat of antwort.match(ZITAT) ?? []) {
+    expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr} ohne Wortlaut des Autors`).toContain(zitat)
+  }
+}
+
+/** Kriterium 3: Jeder Task, der eine beantwortete Frage nennt, verweist mit „F1 → D14“ auf Teil D. */
+function pruefeVerweise(nr: string, tasks: Iterable<string>): void {
+  const eintrag = teilD.get(nr)
+  if (!eintrag) return
+  for (const task of tasks) {
+    expect(planBloecke.get(task), `Plan ${task}: nennt ${nr}, aber ohne „${nr} → ${eintrag.nr}“`).toMatch(
+      new RegExp(`\\b${nr} → ${eintrag.nr}\\b`),
+    )
+  }
+}
+
 const planFragen = fragenAusPlan()
 const planTaskIds = taskIdsAusPlan()
+const planBloecke = taskBloeckeAusPlan()
 const planNennungen = nennendeTasksAusPlan()
 const specNormalisiert = normalisiert(spec)
+const teilD = beantworteteInTeilD()
 /** Anleitung und Übersichtstabelle: alles vor der ersten Fragenüberschrift. */
 const kopf = regelfragen.split(/^### [FG]\d+: /m)[0]
 
@@ -180,89 +302,180 @@ describe('P0.5: Regelfragen an den Autor', () => {
 
   const bloecke = fragenbloecke()
 
+  /** Zitate vorhanden; solange die Frage offen ist, steht jedes wörtlich in der Spec. */
+  function pruefeZitate(nr: string, block: string): void {
+    const zitatListe = zitate(block)
+    expect(zitatListe.length, `${nr}: kein Zitat („> …“)`).toBeGreaterThan(0)
+    if (feld(block, 'Antwort') !== OFFEN) return
+    for (const zitat of zitatListe) {
+      expect(
+        specNormalisiert.includes(normalisiert(zitat)),
+        `${nr}: Zitat steht nicht wörtlich in docs/GAME_SPEC.md: „${zitat}“`,
+      ).toBe(true)
+    }
+  }
+
+  /** Betroffene Tasks gibt es im Plan, und „nennt die Frage“ sind genau die erwarteten. */
+  function pruefeBetroffene(nr: string, block: string, erwartet: Iterable<string>): void {
+    const betroffen = feld(block, 'Betroffene Tasks') ?? ''
+    const genannt = [...betroffen.matchAll(TASK_ID)].map((treffer) => treffer[1])
+
+    expect(genannt.length, `${nr}: keine Task-ID in „Betroffene Tasks“`).toBeGreaterThan(0)
+    for (const id of genannt) {
+      expect(planTaskIds.has(id), `${nr}: Task ${id} gibt es im Plan nicht`).toBe(true)
+    }
+    expect(betroffen, `${nr}: Teil „nennt die Frage:“ fehlt`).toContain('nennt die Frage:')
+    expect(
+      [...nennendeTasks(betroffen)].sort(),
+      `${nr}: „nennt die Frage“ weicht von den Tasks ab, die die Frage im Plan nennen`,
+    ).toEqual([...erwartet].sort())
+  }
+
   for (const planFrage of planFragen) {
     describe(`P0.5: ${planFrage.nr}`, () => {
-      const block = bloecke.get(planFrage.nr) ?? ''
-      const buchstaben = moeglichkeiten(block)
+      const nr = planFrage.nr
+      const block = bloecke.get(nr) ?? ''
 
-      it(`P0.5: ${planFrage.nr} übernimmt die Frage aus dem Plan wörtlich`, () => {
-        expect(normalisiert(feld(block, 'Frage') ?? ''), `${planFrage.nr}: Feld „Frage“`).toBe(
-          normalisiert(planFrage.frage),
-        )
+      it(`P0.5: ${nr} übernimmt die Frage aus dem Plan wörtlich`, () => {
+        expect(normalisiert(feld(block, 'Frage') ?? ''), `${nr}: Feld „Frage“`).toBe(normalisiert(planFrage.frage))
       })
 
-      it(`P0.5: ${planFrage.nr} nennt die Fundstelle aus dem Plan`, () => {
+      it(`P0.5: ${nr} nennt die Fundstelle aus dem Plan`, () => {
         const fundstelle = feld(block, 'Fundstelle') ?? ''
 
-        expect(fundstelle, `${planFrage.nr}: Feld „Fundstelle“ fehlt`).toBeTruthy()
+        expect(fundstelle, `${nr}: Feld „Fundstelle“ fehlt`).toBeTruthy()
         for (const stelle of planFrage.stelle.split(/,\s*/)) {
-          expect(nenntStelle(fundstelle, stelle), `${planFrage.nr}: Fundstelle nennt ${stelle} nicht`).toBe(true)
+          expect(nenntStelle(fundstelle, stelle), `${nr}: Fundstelle nennt ${stelle} nicht`).toBe(true)
         }
       })
 
       // Nach der Antwort zieht der Autor die Website nach, und Teil A wird neu
       // übernommen. Die Zitate halten dann den Stand der Frage fest; geprüft wird
       // deshalb nur, solange die Frage offen ist.
-      it(`P0.5: ${planFrage.nr} zitiert die Spec wörtlich, solange die Frage offen ist`, () => {
-        const zitatListe = zitate(block)
+      it(`P0.5: ${nr} zitiert die Spec wörtlich, solange die Frage offen ist`, () => pruefeZitate(nr, block))
 
-        expect(zitatListe.length, `${planFrage.nr}: kein Zitat („> …“)`).toBeGreaterThan(0)
-        if (feld(block, 'Antwort') !== OFFEN) return
-        for (const zitat of zitatListe) {
-          expect(
-            specNormalisiert.includes(normalisiert(zitat)),
-            `${planFrage.nr}: Zitat steht nicht wörtlich in docs/GAME_SPEC.md: „${zitat}“`,
-          ).toBe(true)
-        }
-      })
+      it(`P0.5: ${nr} hat mindestens zwei getrennte Möglichkeiten, fortlaufend ab a`, () =>
+        pruefeMoeglichkeiten(nr, block))
 
-      it(`P0.5: ${planFrage.nr} hat mindestens zwei getrennte Möglichkeiten, fortlaufend ab a`, () => {
-        expect(buchstaben.length, `${planFrage.nr}: weniger als zwei Möglichkeiten`).toBeGreaterThanOrEqual(2)
-        expect(buchstaben, `${planFrage.nr}: Buchstaben laufen nicht fortlaufend ab a`).toEqual(
-          buchstaben.map((_, i) => String.fromCharCode(97 + i)),
-        )
-      })
-
-      it(`P0.5: ${planFrage.nr} hat einen Vorschlag, der auf vorhandene Möglichkeiten zeigt`, () => {
+      it(`P0.5: ${nr} hat einen Vorschlag, der auf vorhandene Möglichkeiten zeigt`, () => {
         const vorschlag = feld(block, 'Vorschlag') ?? ''
-        const gewaehlt = /^([a-z](?:, [a-z])*)\b/.exec(vorschlag)
 
-        expect(gewaehlt, `${planFrage.nr}: Vorschlag beginnt nicht mit Buchstaben („a“ oder „a, c“)`).not.toBeNull()
-        for (const buchstabe of gewaehlt?.[1].split(', ') ?? []) {
-          expect(buchstaben, `${planFrage.nr}: Vorschlag nennt unbekannte Möglichkeit ${buchstabe}`).toContain(
-            buchstabe,
-          )
-        }
+        pruefeBuchstaben(nr, block, 'Vorschlag')
         if (planFrage.vorschlag) {
-          expect(vorschlag, `${planFrage.nr}: Vorschlag des Plans fehlt wörtlich`).toContain(
-            `„${planFrage.vorschlag}“`,
-          )
+          expect(vorschlag, `${nr}: Vorschlag des Plans fehlt wörtlich`).toContain(`„${planFrage.vorschlag}“`)
         } else {
-          expect(vorschlag, `${planFrage.nr}: ohne Plan-Vorschlag als „Vorschlag des Orchestrators“ kennzeichnen`).toContain(
+          expect(vorschlag, `${nr}: ohne Plan-Vorschlag als „Vorschlag des Orchestrators“ kennzeichnen`).toContain(
             'Vorschlag des Orchestrators',
           )
         }
       })
 
-      it(`P0.5: ${planFrage.nr} nennt betroffene Tasks, die es im Plan gibt, und genau die Tasks, die die Frage nennen`, () => {
-        const betroffen = feld(block, 'Betroffene Tasks') ?? ''
-        const genannt = [...betroffen.matchAll(TASK_ID)].map((treffer) => treffer[1])
+      it(`P0.5: ${nr} nennt betroffene Tasks, die es im Plan gibt, und genau die Tasks, die die Frage nennen`, () =>
+        pruefeBetroffene(nr, block, planNennungen.get(nr) ?? []))
 
-        expect(genannt.length, `${planFrage.nr}: keine Task-ID in „Betroffene Tasks“`).toBeGreaterThan(0)
-        for (const id of genannt) {
-          expect(planTaskIds.has(id), `${planFrage.nr}: Task ${id} gibt es im Plan nicht`).toBe(true)
-        }
-        expect(betroffen, `${planFrage.nr}: Teil „nennt die Frage:“ fehlt`).toContain('nennt die Frage:')
-        expect(
-          [...nennendeTasks(betroffen)].sort(),
-          `${planFrage.nr}: „nennt die Frage“ weicht von den Tasks ab, die die Frage im Plan nennen`,
-        ).toEqual([...(planNennungen.get(planFrage.nr) ?? [])].sort())
+      it(`P0.5: ${nr} ist offen oder hat eine Antwort aus vorhandenen Möglichkeiten mit Datum`, () =>
+        pruefeAntwort(nr, block))
+
+      it(`P0.5: ${nr} steht beantwortet in Teil D, mit Datum und „Website folgt“`, () => pruefeTeilD(nr, block))
+
+      it(`P0.5: ${nr}: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D`, () =>
+        pruefeVerweise(nr, planNennungen.get(nr) ?? []))
+    })
+  }
+
+  it(`P0.5: F1–F15 hat der Autor am ${DATUM_F} beantwortet, alle wie vorgeschlagen ausser F8 und F11`, () => {
+    for (const { nr } of planFragen.filter((frage) => frage.nr.startsWith('F'))) {
+      const block = bloecke.get(nr) ?? ''
+      const antwort = feld(block, 'Antwort') ?? ''
+      const gewaehlt =
+        ANTWORT_BUCHSTABEN.exec(antwort)?.[1] ?? (antwort.startsWith('Freie Antwort') ? 'Freie Antwort' : antwort)
+      const erwartet = ABWEICHUNGEN_F[nr] ?? ANTWORT_BUCHSTABEN.exec(feld(block, 'Vorschlag') ?? '')?.[1]
+
+      expect(feld(block, 'Datum'), `${nr}: Datum der Antwort`).toBe(DATUM_F)
+      expect(gewaehlt, `${nr}: Antwort`).toBe(erwartet)
+    }
+  })
+
+  it('P0.5: F8 und F11 halten den Wortlaut des Autors fest; F8 lässt die Grube auf Spieler ohne Zug offen (F8a)', () => {
+    const f8 = normalisiert(feld(bloecke.get('F8') ?? '', 'Antwort') ?? '')
+    const f11 = normalisiert(feld(bloecke.get('F11') ?? '', 'Antwort') ?? '')
+
+    expect(f8, 'F8: Wortlaut des Autors').toContain(
+      '„man darf auch in der letzten Runde einen Spieler aussetzen lassen. Er hat dann keinen letzetn Zug mehr. Er darf aber verteidigen mit Farbenschutz“',
+    )
+    expect(f11, 'F11: Wortlaut des Autors').toContain(
+      '„längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“',
+    )
+    expect(feld(bloecke.get('F8a') ?? '', 'Antwort'), 'F8a: Nachfrage fehlt oder ist nicht offen').toBe(OFFEN)
+  })
+
+  it('P0.5: Teil D vergibt jede Nummer einmal und führt nur Regelfragen aus REGELFRAGEN.md', () => {
+    const { kopf: spalten, zeilen } = tabelleTeilD()
+    const nummern = zeilen.map((zeile) => zeile[spalten.indexOf('Nr.')])
+
+    expect(spalten, 'Teil D: Spalte „Datum“ fehlt').toContain('Datum')
+    expect(nummern.length, 'Teil D: keine Einträge').toBeGreaterThan(0)
+    expect(new Set(nummern).size, `Teil D: doppelte Nummer in ${nummern.join(', ')}`).toBe(nummern.length)
+    for (const nr of teilD.keys()) {
+      expect(bloecke.has(nr), `Teil D: ${nr} gibt es in REGELFRAGEN.md nicht`).toBe(true)
+    }
+  })
+
+  it('P0.5: Teil A bleibt Spiegel der Website und enthält keine der neuen Antworten', () => {
+    const teilA = normalisiert(abschnitt(spec, '##', 'Teil A'))
+
+    expect(teilA, 'Teil A enthält das Datum der Antworten').not.toContain(DATUM_F)
+    expect(teilA, 'Teil A enthält „Website folgt“').not.toContain('Website folgt')
+    for (const { antwort } of teilD.values()) {
+      for (const zitat of antwort.match(ZITAT) ?? []) {
+        expect(teilA, `Teil A enthält den Wortlaut des Autors ${zitat}`).not.toContain(zitat)
+      }
+    }
+  })
+
+  const nachfragen = [...bloecke.keys()].filter((nr) => NACHFRAGE.test(nr))
+
+  it('P0.5: jede Nachfrage steht direkt nach ihrer Ausgangsfrage, und deren Antwort nennt sie', () => {
+    const reihenfolge = [...regelfragen.matchAll(/^### ([FG]\d+[a-z]?): /gm)].map((treffer) => treffer[1])
+
+    for (const nr of nachfragen) {
+      const ausgang = NACHFRAGE.exec(nr)?.[1] ?? ''
+      const davor = reihenfolge
+        .slice(0, reihenfolge.indexOf(nr))
+        .filter((n) => !NACHFRAGE.test(n))
+        .at(-1)
+
+      expect(davor, `${nr}: steht nicht nach ihrer Ausgangsfrage ${ausgang}`).toBe(ausgang)
+      expect(feld(bloecke.get(ausgang) ?? '', 'Antwort'), `${ausgang}: Antwort nennt die Nachfrage ${nr} nicht`).toMatch(
+        new RegExp(`\\b${nr}\\b`),
+      )
+    }
+  })
+
+  for (const nr of nachfragen) {
+    describe(`P0.5: Nachfrage ${nr}`, () => {
+      const block = bloecke.get(nr) ?? ''
+
+      it(`P0.5: ${nr} hat Frage, Fundstelle und Zitate aus der Spec`, () => {
+        expect(feld(block, 'Frage') ?? '', `${nr}: Feld „Frage“ fehlt oder endet nicht mit „?“`).toMatch(/\S.*\?$/)
+        expect(feld(block, 'Fundstelle') ?? '', `${nr}: Fundstelle nennt keinen Spec-Abschnitt`).toMatch(/\b[ABD]\d+/)
+        pruefeZitate(nr, block)
       })
 
-      it(`P0.5: ${planFrage.nr} hat die Felder „Antwort“ und „Datum“`, () => {
-        expect(feld(block, 'Antwort'), `${planFrage.nr}: Feld „Antwort“ fehlt`).toBeTruthy()
-        expect(feld(block, 'Datum'), `${planFrage.nr}: Feld „Datum“ fehlt`).toBeTruthy()
+      it(`P0.5: ${nr} hat mindestens zwei Möglichkeiten ab a und einen Vorschlag darauf`, () => {
+        pruefeMoeglichkeiten(nr, block)
+        pruefeBuchstaben(nr, block, 'Vorschlag')
       })
+
+      it(`P0.5: ${nr} nennt genau die Tasks, die die Nachfrage im Plan nennen`, () =>
+        pruefeBetroffene(nr, block, nennendeTasksFuerNachfrage(nr)))
+
+      it(`P0.5: ${nr} ist offen oder hat eine Antwort mit Datum`, () => pruefeAntwort(nr, block))
+
+      it(`P0.5: ${nr} steht in Teil D genau dann, wenn sie beantwortet ist`, () => pruefeTeilD(nr, block))
+
+      it(`P0.5: ${nr}: jeder Task, der die Nachfrage nennt, verweist auf die Antwort in Teil D`, () =>
+        pruefeVerweise(nr, nennendeTasksFuerNachfrage(nr)))
     })
   }
 })
