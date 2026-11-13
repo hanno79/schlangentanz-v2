@@ -11,4 +11,4 @@ Schlangentanz v2 ist die digitale Fassung des Kartenspiels Schlangentanz: Ein Me
 
 ## Stand heute
 
-M0 ist erreicht, die Lobby (O2) steht, und Teil D enthält die Antworten auf F1 bis F15. E1 ist umgesetzt und in der Abnahme; O1 wartet auf die Freigabe der Entwürfe durch den Autor.
+E1 und E10 sind abgenommen: Die Engine baut eine Partie auf und wertet sie. Lobby, Kartenbilder und fünf Geräteklassen stehen. E2 (Zugablauf) und O4 (Spieltisch) sind in weiteren Iterationen, O9 (Regelhilfe) ist in Arbeit.
