@@ -47,7 +47,7 @@ export const SZENARIEN: readonly Szenario[] = [
     beschreibung:
       'Aus dem Baukasten: drei Spieler mit Erweiterung, Karten an jedem Ort, den der Zustand kennt (Schlange, unter einer Fusion, Ablagestapel, ausliegende Grube, schwebende Karte, aus dem Spiel).',
     erwartet:
-      'Spieler 1 hat eine Schlange mit einer Farbenfusion über zwei gelben Karten, Spieler 2 eine mit Blockade. Vor Spieler 3 liegt eine Schlangengrube von Spieler 1. Eine Schlangengrube von Spieler 2 auf Spieler 3 schwebt, Spieler 3 entscheidet. Der Schlangenkorb liegt aus dem Spiel. Alle Invarianten erfüllt.',
+      'Spieler 1 hat eine Schlange mit einer Farbenfusion über zwei gelben Karten, KI-Gegner 1 eine mit Blockade und Regenbogenschlange. Vor KI-Gegner 2 liegt eine Schlangengrube von Spieler 1. KI-Gegner 1 ist am Zug; seine Schlangengrube auf KI-Gegner 2 schwebt, deshalb entscheidet KI-Gegner 2. Der Schlangenkorb liegt aus dem Spiel. Alle Invarianten erfüllt.',
     erzeuge: () =>
       baukasten({ spielerzahl: 3, erweiterung: true })
         .schlange(0, ['Blau', 'Blau', { fusion: ['Gelb', 'Gelb'] }, 'Rot'])
