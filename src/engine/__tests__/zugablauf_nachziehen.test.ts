@@ -200,9 +200,9 @@ describe('A5/A6: Aktionsschicht und Ereignisse des Zugablaufs', () => {
     const zustand = mitHaenden([['Blau', 'Farbenschutz'], FUENF])
     const [blau, schutz] = hand(zustand, 0)
     const erste = fuehreAus(zustand, aktionen(zustand, 'FarbkarteLegen')[0])
-    expect(erste.ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blau, aktion: 'FarbkarteLegen' }])
+    expect(erste.ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blau, aktion: 'FarbkarteLegen', nach: { ort: 'Schlange', spielerIndex: 0, schlangenId: 'schlange-1', position: 0 } }])
     const zweite = fuehreAus(erste.zustand, aktionen(erste.zustand, 'SonderkarteWirkungslosAblegen')[0])
-    expect(zweite.ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: schutz, aktion: 'SonderkarteWirkungslosAblegen' }])
+    expect(zweite.ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: schutz, aktion: 'SonderkarteWirkungslosAblegen', nach: { ort: 'Ablagestapel', spielerIndex: 0 } }])
     const dritte = fuehreAus(zweite.zustand, zugBeenden(zweite.zustand))
     expect(dritte.ereignisse).toEqual([
       { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 5 },

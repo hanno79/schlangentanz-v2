@@ -205,7 +205,7 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
 
   it('D21: ein ausgesetzter letzter Zug zählt als sein letzter Zug', () => {
     const befund = pruefeFolge(3, [
-      [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, { typ: 'Ausgesetzt', spielerIndex: 1 }, { typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 }],
+      [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, { typ: 'Ausgesetzt', spielerIndex: 1, karteId: 'schlangengrube-01', ablagestapelVon: 0 }, { typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 }],
       [{ typ: 'PartieBeendet' }],
     ])
     expect(befund).toBeNull()

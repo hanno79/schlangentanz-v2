@@ -126,7 +126,7 @@ describe('E2: Szenarien des Zugablaufs', () => {
     const grube = zustand.ausliegendeGruben[0]
     expect(grube).toMatchObject({ gespieltVon: 0, vor: 1 })
     const { zustand: nach, ereignisse } = spieleZug(zustand)
-    expect(ereignisse).toContainEqual({ typ: 'Ausgesetzt', spielerIndex: 1 })
+    expect(ereignisse).toContainEqual({ typ: 'Ausgesetzt', spielerIndex: 1, karteId: grube.karte.id, ablagestapelVon: 0 })
     expect(nach.zug.spielerIndex).toBe(2)
     expect(nach.spieler[1].hand).toEqual(zustand.spieler[1].hand)
     expect(nach.spieler[0].ablagestapel.map((karte) => karte.id)).toContain(grube.karte.id)

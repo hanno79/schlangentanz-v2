@@ -116,7 +116,7 @@ describe('A5: Farbkarte legen und Schlangen', () => {
     expect(nach.spieler[0].schlangen).toEqual([{ id: 'schlange-1', karten: [blau], fusionen: [] }])
     expect(hand(nach, 0)).not.toContain(blau.id)
     expect(nach.schlangenZaehler).toBe(1)
-    expect(ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blau.id, aktion: 'FarbkarteLegen' }])
+    expect(ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blau.id, aktion: 'FarbkarteLegen', nach: { ort: 'Schlange', spielerIndex: 0, schlangenId: 'schlange-1', position: 0 } }])
   })
 
   it.each([
@@ -187,7 +187,7 @@ describe('D13/D25: Sonderkarte wirkungslos ablegen', () => {
     expect(hand(nach, 0)).toEqual([karteId(zustand, 0)])
     expect(nach.spieler.flatMap((spieler) => spieler.schlangen)).toEqual([])
     expect(nach.zug).toMatchObject({ gespielteSonderkarten: 1, gespielteFarbkarten: 0 })
-    expect(ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blockade, aktion: 'SonderkarteWirkungslosAblegen' }])
+    expect(ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blockade, aktion: 'SonderkarteWirkungslosAblegen', nach: { ort: 'Ablagestapel', spielerIndex: 0 } }])
   })
 
   it('D13: jederzeit, auch wenn man eine Farbkarte hätte: jede Sonderkarte ohne Ziel wird zum Ablegen angeboten', () => {

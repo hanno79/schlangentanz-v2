@@ -90,6 +90,7 @@ describe('E1: Entwicklertisch auf der neuen Aktionsschicht', () => {
       fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => text.includes('ZugBeenden'))!))
     }
     expect(screen.getByTestId('partiephase')).toHaveTextContent('Beendet')
+    expect(screen.getByTestId('zug')).toHaveTextContent('niemand, die Partie ist beendet')
     expect(aktionsKnoepfe()).toEqual([])
     expect(screen.getByTestId('keine-aktion')).toHaveTextContent('Die Partie ist beendet')
     expect(screen.getByTestId('ereignisse')).toHaveTextContent('PartieBeendet')

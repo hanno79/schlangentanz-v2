@@ -98,6 +98,15 @@ describe('A10: Spielende und Schlussrunde', () => {
     expect(grund(ende, { typ: 'ZugBeenden', spielerId: ende.spieler[ausloeser].id })).toMatch(/Partie ist beendet/)
   })
 
+  it('A10: die Schlussrunde beginnt erst mit der letzten Karte; bleibt eine im Stapel, läuft die Partie weiter', () => {
+    let zustand = tisch(2).stapelBehalten(2).zustand()
+    zustand = fuehreAus(zustand, aktionen(zustand, 'FarbkarteLegen')[0]).zustand
+    const { zustand: nach, ereignisse } = fuehreAus(zustand, zugBeenden(zustand))
+    expect(nach.nachziehstapel).toHaveLength(1)
+    expect(nach).toMatchObject({ partiephase: 'Laufend', schlussrundeAusloeser: null })
+    expect(ereignisseVom(ereignisse, 'SchlussrundeBegonnen')).toEqual([])
+  })
+
   it('A10: in der Schlussrunde darf ein Spieler mit leerer Hand seinen Zug beenden', () => {
     const zustand = tisch(3, [FUENF, [], FUENF]).schlussrunde(0).amZug(1).zustand()
     expect(aktionen(zustand)).toEqual([zugBeenden(zustand)])
@@ -127,7 +136,7 @@ describe('A7.6/D18: aussetzen', () => {
     const { zustand, ereignisse } = spieleZug(mitGrube())
     expect(ereignisse.slice(-3)).toEqual([
       { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 1 },
-      { typ: 'Ausgesetzt', spielerIndex: 1 },
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 1 }),
       { typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 },
     ])
     expect(zustand.zug.spielerIndex).toBe(2)
@@ -140,7 +149,7 @@ describe('A7.6/D18: aussetzen', () => {
     expect(zustand.spieler[1].hand).toEqual(vorher.spieler[1].hand)
     expect(zustand.spieler[1].schlangen).toEqual([])
     expect(ereignisse.filter((ereignis) => 'spielerIndex' in ereignis && ereignis.spielerIndex === 1)).toEqual([
-      { typ: 'Ausgesetzt', spielerIndex: 1 },
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 1 }),
     ])
   })
 
@@ -189,8 +198,8 @@ describe('A7.6/D18: aussetzen', () => {
     const { zustand, ereignisse } = spieleZug(vorher)
     expect(ereignisse.slice(-4)).toEqual([
       { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 1 },
-      { typ: 'Ausgesetzt', spielerIndex: 1 },
-      { typ: 'Ausgesetzt', spielerIndex: 2 },
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 1 }),
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 2 }),
       { typ: 'ZugBegonnen', spielerIndex: 0, teilzug: 1 },
     ])
     expect(zustand.zug).toMatchObject({ spielerIndex: 0, gespielteFarbkarten: 0, gespielteSonderkarten: 0 })
@@ -198,7 +207,7 @@ describe('A7.6/D18: aussetzen', () => {
 
   it('A7.6: zu zweit ist nach dem Aussetzen des Gegners wieder der Spieler dran, der die Grube gespielt hat', () => {
     const { zustand, ereignisse } = spieleZug(tisch(2).grube(0, 1).zustand())
-    expect(ereignisseVom(ereignisse, 'Ausgesetzt')).toEqual([{ typ: 'Ausgesetzt', spielerIndex: 1 }])
+    expect(ereignisseVom(ereignisse, 'Ausgesetzt')).toEqual([expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 1 })])
     expect(zustand.zug.spielerIndex).toBe(0)
   })
 })
@@ -211,7 +220,7 @@ describe('D21: aussetzen in der Schlussrunde', () => {
     expect(wechsel.ereignisse.slice(-4)).toEqual([
       { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 1 },
       { typ: 'SchlussrundeBegonnen', ausloeser: 0 },
-      { typ: 'Ausgesetzt', spielerIndex: 1 },
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 1 }),
       { typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 },
     ])
     expect(ablage(wechsel.zustand, 2)).toContain(grube)
@@ -225,8 +234,8 @@ describe('D21: aussetzen in der Schlussrunde', () => {
     expect(ereignisse.slice(-5)).toEqual([
       { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 1 },
       { typ: 'SchlussrundeBegonnen', ausloeser: 0 },
-      { typ: 'Ausgesetzt', spielerIndex: 1 },
-      { typ: 'Ausgesetzt', spielerIndex: 2 },
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 1 }),
+      expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 2 }),
       { typ: 'PartieBeendet' },
     ])
     expect(zustand).toMatchObject({ partiephase: 'Beendet', ausliegendeGruben: [] })
