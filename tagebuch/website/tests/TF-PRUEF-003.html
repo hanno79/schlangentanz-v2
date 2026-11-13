@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-003 Der Architekturtest schlägt fehl, wenn eine Datei unter src/engine react importiert oder Math.random aufruft. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 12.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-003 Der Architekturtest schlägt fehl, wenn eine Datei unter src/engine react importiert oder Math.random aufruft.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art beides</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Engine muss rein bleiben (U4): kein React, kein DOM, kein Zufall ausser als Parameter. Der Architekturtest in <code>npm test</code> hält das fest.</p><h2>Bestanden, wenn</h2><p>Mit einer neuen Datei <code>src/engine/pruefer_u4.ts</code>, die <code>import { useState } from &#x27;react&#x27;</code> und <code>Math.random()</code> enthält, endet <code>npx vitest run tests/architektur.test.ts</code> mit Exit 1, und die Meldung nennt <code>pruefer_u4.ts:1 importiert „react“</code> und <code>pruefer_u4.ts:5 nutzt Math.random</code>. Ohne die Datei: Exit 0, 22 Tests grün.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Lauf mit der Probedatei endet mit 0 oder nennt eine der beiden Zeilen nicht.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.3-pruefwerkzeuge (PR #26)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, nach <code>npm ci</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p><code>src/engine/pruefer_u4.ts</code>: Zeile 1 <code>import { useState } from &#x27;react&#x27;</code>, dazu <code>export function prueferWurf() { return Math.floor(Math.random() * 6) + 1 }</code> in Zeile 5.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor</td><td>Probedatei anlegen</td><td>Inhalt aus „Testdaten“</td><td></td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Test ausführen</td><td>`npx vitest run tests/architektur.test.ts; echo $?`</td><td>Exit 1, Test „U4: 18 Dateien unter src/engine …“ rot, beide Zeilen genannt</td></tr><tr><td>3</td><td>dieselbe Konsole</td><td>Datei löschen, erneut ausführen</td><td>`rm src/engine/pruefer_u4.ts`</td><td>Exit 0, „U4: 17 Dateien …“ grün</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-PRUEF-004.html">TF-PRUEF-004</a></td><td>Ein weiterer Math.random-Aufruf in src/engine/state.ts, das zwei geduldete Aufrufe hat, lässt den Architekturtest fehlschlagen.</td><td><span class="status status-bestanden">bestanden</span> 13.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Umgehungen werden nicht erkannt: <code>const { random } = Math; random()</code>, <code>Math[&#x27;random&#x27;]()</code>, <code>globalThis.Math.random()</code> und <code>import(&#x27;react&#x27; + &#x27;&#x27;)</code> (geprüft im Protokoll P0.3, Grenzfall 4). Sie stehen nicht im Kriterium; ein Prüfer sieht sie am Code.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 09:10</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.3) &middot; agent &middot; pruefung-P0.3 @ <span class="commit" title="22ced4b656cf88e96c2ef4bf01f88a0a4644cfbc">22ced4b</span></p><p>Mit src/engine/pruefer_u4.ts (import useState from react, Math.random): vitest tests/architektur.test.ts Exit 1, 1 failed/21 passed, &#x27;U4 src/engine/pruefer_u4.ts:1 importiert „react“&#x27; und &#x27;:5 nutzt Math.random&#x27;. Ohne Datei Exit 0, 22 passed, &#x27;U4: 17 Dateien unter src/engine&#x27;.</p></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
