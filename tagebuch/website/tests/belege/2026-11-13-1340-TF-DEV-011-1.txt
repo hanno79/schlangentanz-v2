@@ -1,0 +1,2 @@
+DEV-011 a Erweiterung Schrit | Nachziehstapel: 97 Karten | Offene Aufgaben (3): S | Aufgabenstapel: 9 Karten | geheim 3 | Risiko 6 | Invarianten (alle erfüllt
+DEV-011 b Erweiterung Schrit | Nachziehstapel: 98 Karten | Offene Aufgaben (0): k | erste Handkarte Waldspross (Grün, 3) gruen-01 / Waldspross (Grün, 3) gruen-01 | Invarianten (alle erfüllt

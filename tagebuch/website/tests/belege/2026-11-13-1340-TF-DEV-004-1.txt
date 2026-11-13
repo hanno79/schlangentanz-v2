@@ -1,0 +1,18 @@
+SZEN start-2 | Invarianten erfüllt. Schr | Erweiterung (A4).  | Nachziehstapel: 98 Karten | Spieler 2 | Ablage leer 2 | Offene Aufgaben (0): k | Aufgabenstapel: 0 Karten | Comeback 0 | Entscheidet Spieler 1 (spieler-1) Schlus
+SZEN start-4 | Invarianten erfüllt. Schr | Erweiterung (A4).  | Nachziehstapel: 88 Karten | Spieler 4 | Ablage leer 4 | Offene Aufgaben (0): k | Aufgabenstapel: 0 Karten | Comeback 0 | Entscheidet Spieler 1 (spieler-1) Schlus
+SZEN start-erweiterung | Invarianten erfüllt. Schr | Erweiterung (A1, A | Nachziehstapel: 97 Karten | Spieler 3 | Ablage leer 3 | Offene Aufgaben (3): S | Aufgabenstapel: 9 Karten | Comeback 3 | Entscheidet Spieler 1 (spieler-1) Schlus
+BILD desktop start-2 überstand 0
+BILD desktop start-4 überstand 0
+BILD desktop start-erweiterung überstand 0
+BILD desktop alle-orte überstand 0
+BILD desktop kaputt-doppelte-karte überstand 0
+BILD tablet start-2 überstand 0
+BILD tablet start-4 überstand 0
+BILD tablet start-erweiterung überstand 0
+BILD tablet alle-orte überstand 0
+BILD tablet kaputt-doppelte-karte überstand 0
+BILD handy start-2 überstand 0
+BILD handy start-4 überstand 0
+BILD handy start-erweiterung überstand 0
+BILD handy alle-orte überstand 0
+BILD handy kaputt-doppelte-karte überstand 0

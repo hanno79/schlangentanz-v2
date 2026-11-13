@@ -1,0 +1,3 @@
+DEV-002 /dev?seed=1&spieler=2 | Aktionen der Engine (0) Die Engine zählt hier keine Aktion a | data-aktion 0 | zurück grau true | von vorn grau true | Phasenknopf 0 | Schritt 
+DEV-002 /dev?seed=7&spieler=4 | Aktionen der Engine (0) Die Engine zählt hier keine Aktion a | data-aktion 0 | zurück grau true | von vorn grau true | Phasenknopf 0 | Schritt 
+DEV-002 /dev?szenario=alle-orte | Aktionen der Engine (0) Die Engine zählt hier keine Aktion a | data-aktion 0 | zurück grau true | von vorn grau true | Phasenknopf 0 | Schritt 
