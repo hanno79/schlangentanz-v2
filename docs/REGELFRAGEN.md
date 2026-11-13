@@ -327,7 +327,7 @@ Deine Antwort zu F8 sagt, dass eine Grube in der Schlussrunde den letzten Zug ni
 
 **Betroffene Tasks:** nennt die Frage: E4 (Grenzfall). Hängt davon ab: K3 (Schlussrunde), O6 (Anzeige des Aussetzens).
 
-**Antwort:** b. Abweichung vom Vorschlag, Wortlaut des Autors: „Ja, ohne Wirkung“. Die Grube darf einen Spieler treffen, der seinen letzten Zug schon gemacht hat, bleibt aber ohne Wirkung und geht auf den Ablagestapel. Teil D: D29.
+**Antwort:** b. Abweichung vom Vorschlag, Wortlaut des Autors: „Ja, ohne Wirkung“. Die Grube darf einen Spieler treffen, der seinen letzten Zug schon gemacht hat, und geht ohne Wirkung auf den Ablagestapel. Teil D: D29.
 
 **Datum:** 13.11.2026
 
@@ -410,7 +410,7 @@ Teil 2, niemand hat eine Kette der Mindestlänge (auch: Spieler ohne Schlange):
 
 **Betroffene Tasks:** nennt die Frage: E10 (Grenzfall). Hängt davon ab: O8 (Abnahmekriterium 1), K2 (Rennen um die längste Kette).
 
-**Antwort:** b, d. Abweichung vom Vorschlag in Teil 1, Wortlaut des Autors: „längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“. Gemeint ist die längste Farbkette: Sie zählt erst ab 3 Farbkarten derselben Farbe nebeneinander; Sonderkarten zählen nach A11 nicht mit und unterbrechen sie. Teil 2 wie vorgeschlagen (d). Teil D: D24.
+**Antwort:** b, d. Abweichung vom Vorschlag in Teil 1, Wortlaut des Autors: „längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“. Auf die Rückfrage „Bonus erst ab 3 gleichfarbigen Karten in einer ununterbrochenen Reihe, also Rot-Rot noch nicht, Rot-Rot-Rot schon?“ bestätigte der Autor am 13.11.2026: „Ja, genau so“. Gemeint ist also die längste Farbkette: Sie zählt erst ab 3 Farbkarten derselben Farbe nebeneinander; Sonderkarten zählen nach A11 nicht mit und unterbrechen sie. Teil 2 wie vorgeschlagen (d). Teil D: D24.
 
 **Datum:** 13.11.2026
 
