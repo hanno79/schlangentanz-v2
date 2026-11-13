@@ -9,11 +9,12 @@ angelegt: 2026-11-13
 veraendert_daten: nein
 aenderung: task/P0.4-entwicklertisch (PR #27)
 grenzfall_von: TF-DEV-001
+status: stillgelegt
 ---
 
 ## Worum es geht
 
-Die heutige Engine hat noch keinen Schalter für die Erweiterung (kommt mit X1). Der Tisch nimmt den Parameter an; damit niemand eine Basis-Partie für eine mit Erweiterung hält, muss er sichtbar sagen, dass der Wert nichts bewirkt.
+Stillgelegt mit E1 (Branch task/E1-struktur, PR #31): Die Engine kennt den Erweiterungs-Schalter jetzt, der Hinweis ist weg. Was heute gilt, prüft TF-DEV-011. Die heutige Engine hat noch keinen Schalter für die Erweiterung (kommt mit X1). Der Tisch nimmt den Parameter an; damit niemand eine Basis-Partie für eine mit Erweiterung hält, muss er sichtbar sagen, dass der Wert nichts bewirkt.
 
 ## Bestanden, wenn
 
