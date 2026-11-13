@@ -1,35 +1,6 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it } from 'vitest'
-import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
-
-const SKRIPT = resolve(__dirname, '..', 'scripts', 'check_regeln.mjs')
-const angelegt: string[] = []
-
-/** Legt einen Probe-Baum im Temp-Ordner an; Schlüssel sind Pfade relativ zur Wurzel. */
-function legeAn(dateien: Record<string, string>): string {
-  const wurzel = mkdtempSync(join(tmpdir(), 'check-regeln-'))
-  angelegt.push(wurzel)
-  for (const [pfad, inhalt] of Object.entries(dateien)) {
-    const ziel = join(wurzel, pfad)
-    mkdirSync(dirname(ziel), { recursive: true })
-    writeFileSync(ziel, inhalt)
-  }
-  return wurzel
-}
-
-function pruefe(wurzel: string, ...argumente: string[]) {
-  const lauf = spawnSync(process.execPath, [SKRIPT, '--wurzel', wurzel, ...argumente], {
-    encoding: 'utf8',
-  })
-  return { code: lauf.status, ausgabe: `${lauf.stdout}\n${lauf.stderr}` }
-}
-
-function ausnahmen(wurzel: string): Record<string, Record<string, number>> {
-  return JSON.parse(readFileSync(join(wurzel, 'scripts', 'check_regeln_ausnahmen.json'), 'utf8'))
-}
+import { legeAn, pruefeRegeln as pruefe, raeumeAuf } from './probebaum'
 
 const SAUBERER_REGELTEST = [
   "describe('A5: Spielablauf', () => {",
@@ -40,9 +11,7 @@ const SAUBERER_REGELTEST = [
   '',
 ].join('\n')
 
-afterEach(() => {
-  for (const wurzel of angelegt.splice(0)) rmSync(wurzel, { recursive: true, force: true })
-})
+afterEach(raeumeAuf)
 
 describe('P0.3: check:regeln ist ohne Verstoss grün', () => {
   it('P0.3: ein sauberer Baum endet mit 0 und nennt, wie viele Dateien geprüft wurden', () => {
@@ -195,60 +164,5 @@ describe('U7: Dateigrössen', () => {
     expect(ausgabe).toContain('src/ki/bewertung.ts: 301 Zeilen')
     expect(ausgabe).toContain('src/ui/tisch.css: 301 Zeilen')
     expect(ausgabe, 'U7: src/engine fällt nicht unter die 300-Zeilen-Grenze').not.toContain('gross.ts')
-  })
-})
-
-describe('P0.3: Ausnahmeliste für den Altbestand darf nur schrumpfen', () => {
-  const ALTTEST = "it('zählt', () => {})\nit('zählt mehr', () => {})\n"
-
-  function mitAusnahmen(inhalt: string, eintraege: Record<string, Record<string, number>>) {
-    return legeAn({
-      'src/engine/__tests__/alt.test.ts': inhalt,
-      'scripts/check_regeln_ausnahmen.json': JSON.stringify({ U1: {}, U6: {}, U7: {}, ...eintraege }),
-    })
-  }
-
-  it('P0.3: ein gelisteter Altbestand bleibt grün, solange die Zahl gehalten wird', () => {
-    const wurzel = mitAusnahmen(ALTTEST, { U1: { 'src/engine/__tests__/alt.test.ts': 2 } })
-
-    const { code, ausgabe } = pruefe(wurzel)
-
-    expect(code, `Ausnahmen: erwartet Exit 0, Ausgabe:\n${ausgabe}`).toBe(0)
-    expect(ausgabe).toMatch(/Ausnahmen/)
-  })
-
-  it('P0.3: ein weiterer Verstoss in einer gelisteten Datei schlägt fehl', () => {
-    const wurzel = mitAusnahmen(`${ALTTEST}it('noch einer', () => {})\n`, {
-      U1: { 'src/engine/__tests__/alt.test.ts': 2 },
-    })
-
-    const { code, ausgabe } = pruefe(wurzel)
-
-    expect(code, `Ausnahmen: erwartet Exit 1, Ausgabe:\n${ausgabe}`).toBe(1)
-    expect(ausgabe).toContain('3 statt höchstens 2')
-  })
-
-  it('P0.3: eine veraltete Ausnahme schlägt fehl und nennt den Befehl zum Schrumpfen', () => {
-    const wurzel = mitAusnahmen("it('zählt', () => {})\n", {
-      U1: { 'src/engine/__tests__/alt.test.ts': 2, 'src/engine/__tests__/geloescht.test.ts': 5 },
-    })
-
-    const { code, ausgabe } = pruefe(wurzel)
-
-    expect(code, `Ausnahmen: erwartet Exit 1, Ausgabe:\n${ausgabe}`).toBe(1)
-    expect(ausgabe).toContain('npm run check:regeln -- --ausnahmen-schrumpfen')
-    expect(ausgabe).toContain('src/engine/__tests__/geloescht.test.ts')
-  })
-
-  it('P0.3: --ausnahmen-schrumpfen senkt die Zahlen und fügt nie etwas hinzu', () => {
-    const wurzel = mitAusnahmen("it('zählt', () => {})\n", {
-      U1: { 'src/engine/__tests__/alt.test.ts': 2, 'src/engine/__tests__/geloescht.test.ts': 5 },
-    })
-    writeFileSync(join(wurzel, 'src/engine/neu.test.ts'), "it('ohne Abschnitt', () => {})\n")
-
-    const { code } = pruefe(wurzel, '--ausnahmen-schrumpfen')
-
-    expect(code, 'Schrumpfen: der neue Verstoss bleibt ein Fehler').toBe(1)
-    expect(ausnahmen(wurzel).U1).toEqual({ 'src/engine/__tests__/alt.test.ts': 1 })
   })
 })
