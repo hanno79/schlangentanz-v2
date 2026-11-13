@@ -9,6 +9,7 @@ angelegt: 2026-11-13
 veraendert_daten: nein
 skript: tests/pruefwerkzeuge.test.ts
 aenderung: task/P0.3-pruefwerkzeuge (PR #26)
+status: stillgelegt
 ---
 
 ## Worum es geht

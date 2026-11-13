@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-018 Eine Seite ohne viewport-Meta-Tag lässt bildschirmfotos.mjs mit Exit 1 und dem Hinweis „980 px breit“ abbrechen, statt ein verkleinertes Bild abzulegen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-018 Eine Seite ohne viewport-Meta-Tag lässt bildschirmfotos.mjs mit Exit 1 und dem Hinweis „980 px breit“ abbrechen, statt ein verkleinertes Bild abzulegen.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art beides</span><span class="etikett">Grenzfall von TF-PRUEF-017</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ohne viewport-Meta-Tag legt Chromium eine Seite auf einem Touch-Gerät 980 px breit aus und verkleinert sie aufs Fenster. Das Bild zeigt dann nicht das Fenster der Klasse; bei Tablet hochkant und Handy quer war es zudem eine Zeile zu niedrig (768×1023, 844×389). Das Skript soll das klar sagen.</p><h2>Bestanden, wenn</h2><p>Für die Adresse <code>data:text/html,&lt;title&gt;Probe&lt;/title&gt;&lt;h1&gt;Probe&lt;/h1&gt;</code> endet das Skript mit Exit 1 und der Meldung „Tablet hochkant 768×1024, Touch: Die Seite legt sich 980 px breit aus statt 768 px (fehlt &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;?).“ Im Zielordner liegen nur <code>probe-desktop.png</code> und <code>probe-tablet-quer.png</code>: Bei 1280 und 1024 px Breite ist das Fenster breiter als 980 px, dort fällt das fehlende Meta-Tag nicht auf.</p><h2>Fehlgeschlagen, wenn</h2><p>Exit 0, oder die Meldung nennt nur eine falsche Bildgrösse ohne die 980 px und den Hinweis auf das Meta-Tag.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/P0.3c-fuenf-geraeteklassen</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit nach <code>npm ci</code>; kein Server nötig</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Adresse <code>data:text/html,&lt;title&gt;Probe&lt;/title&gt;&lt;h1&gt;Probe&lt;/h1&gt;</code>, Name <code>probe</code>, Ziel ein leerer Ordner ausserhalb des Repos. Zum Vergleich dieselbe Adresse mit <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</code> davor.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>Skript ohne Meta-Tag aufrufen</td><td>`node scripts/pruefung/bildschirmfotos.mjs &#x27;data:text/html,&lt;title&gt;Probe&lt;/title&gt;&lt;h1&gt;Probe&lt;/h1&gt;&#x27; --name probe --ziel &lt;ordner&gt;; echo $?`</td><td>Exit 1, Meldung mit „980 px breit“ und „viewport“</td></tr><tr><td>2</td><td>dieselbe Konsole</td><td>Ordner ansehen</td><td>`ls &lt;ordner&gt;`</td><td>nur `probe-desktop.png` und `probe-tablet-quer.png`</td></tr><tr><td>3</td><td>dieselbe Konsole</td><td>Skript mit Meta-Tag aufrufen</td><td>`node scripts/pruefung/bildschirmfotos.mjs &#x27;data:text/html,&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;&lt;h1&gt;Probe&lt;/h1&gt;&#x27; --name probe --ziel &lt;ordner&gt;; echo $?`</td><td>Exit 0, fünf Bilder</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 13:29</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Umsetzer P0.3c) &middot; agent &middot; task/P0.3c-fuenf-geraeteklassen @ <span class="commit" title="8d7810dd964266af8ce56a53e7fd5ab461c2dbf6">8d7810d</span> / Playwright Chromium 1.60.0, fünf Geräteklassen</p><p>Ohne Meta-Tag Exit 1 mit &#x27;Tablet hochkant 768x1024, Touch: Die Seite legt sich 980 px breit aus statt 768 px&#x27;, im Ordner nur probe-desktop.png und probe-tablet-quer.png; mit Meta-Tag Exit 0 und fünf Bilder</p><ul class="belege"><li><a href="belege/2026-11-13-1329-TF-PRUEF-018-1.txt">2026-11-13-1329-TF-PRUEF-018-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
