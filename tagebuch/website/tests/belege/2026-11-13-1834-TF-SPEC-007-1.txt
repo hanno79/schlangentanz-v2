@@ -1,0 +1,6 @@
+
+> schlangentanz-v2@0.0.0 test:website-netz
+> node scripts/website_abgleich/netztest.cjs
+
+Website geladen: 17914 Zeichen Markdown, 27 Karten-Dialoge, Bundle index-EH-TKokX.js
+Netztest bestanden: 27 Dialoge, 469 Zeilen, Bundle index-EH-TKokX.js.
