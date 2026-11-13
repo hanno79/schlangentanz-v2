@@ -19,7 +19,9 @@ Der Spieltisch (Plan O4, DESIGN.md „Tisch“). Feste Sicht: Der Mensch sitzt
 immer unten. Von oben nach unten: Statuszeile, Tischfläche mit Gegnern,
 Tischmitte und Auslage (scrollt), unten fest der eigene Platz mit Schlangen,
 Hand und Ablagestapel. Im Querformat niedriger Schirme steht der eigene Platz
-rechts neben der Tischfläche, damit für beide Höhe bleibt.
+über die ganze Höhe rechts neben der Tischfläche, damit für beide Höhe bleibt.
+Die Zahl des Nachziehstapels steht auch in der Kopfleiste, damit man sie ohne
+Scrollen liest.
 
 Der Tisch zeigt nur an. Was er zeigt, kommt aus der Sicht des Menschen
 (`tischAnsicht`), nie aus dem vollen Zustand.
@@ -31,6 +33,9 @@ export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
     <div className="spieltisch" data-testid="spiel">
       <header className="st-kopf">
         <Statuszeile status={ansicht.status} />
+        <p className="st-kopf-stapel">
+          {TISCH.stapel} <strong>{ansicht.nachziehstapel > 0 ? ansicht.nachziehstapel : TISCH.leer}</strong>
+        </p>
         <Verweis ziel="lobby" className="st-knopf">
           {TISCH.zurLobby}
         </Verweis>

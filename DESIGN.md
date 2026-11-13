@@ -170,7 +170,8 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
 
 Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
 
-1. **Kopfleiste:** wer dran ist, Zug und gespielte Karten, „Menü“.
+1. **Kopfleiste:** wer dran ist, Zug und gespielte Karten, Zahl des
+   Nachziehstapels, „Menü“ (bis O5: „Zur Lobby“).
 2. **Tischfläche** (scrollt senkrecht): Gegner mit Name, Zahl der Handkarten,
    oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
    Nachziehstapel und Zahl, offene Aufgaben; deine Auslage (geheime Aufgabe,
@@ -180,16 +181,21 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
    sehr lang werden), deine Hand und die Zugleiste. Ab 700 px steht die
    Zugleiste rechts neben Schlangen und Hand und zeigt die gewählte Karte gross.
 
-Schlangen brechen bei Platzmangel um, statt die Seite zu verbreitern. Karten
-einer Farbgruppe tragen einen durchgehenden Balken darunter; eine Farbenfusion
-zeigt die zwei Karten, auf denen sie liegt, als halbe Karten darunter.
+Schlangen der Gegner brechen bei Platzmangel um, statt die Seite zu
+verbreitern; der Zeilenabstand (10 px) lässt Platz für die Balken. Karten einer
+Farbgruppe tragen einen durchgehenden Balken direkt unter der Karte; eine
+Farbenfusion zeigt die zwei Karten, auf denen sie liegt, als halbe Karten unter
+diesem Balken. **Deine Schlangen** stehen immer als je eine Zeile, die seitlich
+scrollt, wenn sie zu lang wird: So sind beide in der Höhe stets ganz zu sehen,
+mit Fusionskarten und Balken. Die Zahl des Nachziehstapels steht zusätzlich in
+der Kopfleiste („Stapel 68“), damit man sie ohne Scrollen liest.
 
-**Handy** (schmaler als 700 px, oder niedriger als 500 px im Querformat):
-Schlangen stehen als kompakte Zeilen, die seitlich scrollen, statt umzubrechen.
+**Handy** (schmaler als 700 px, oder niedriger als 500 px im Querformat): Auch
+die Schlangen der Gegner stehen als kompakte Zeilen, die seitlich scrollen.
 **Handy quer** (niedriger als 500 px im Querformat): Dein Platz steht rechts
-neben der Tischfläche statt darunter, deine Schlangen oben und die Hand unten
-in dieser Spalte, alle Karten in Handygrösse. So bleibt der Tischfläche die
-volle Höhe unter der Kopfleiste. **Hand:** Die Handkarten teilen sich die Breite
+neben der Tischfläche und reicht über die ganze Höhe, deine Schlangen oben und
+die Hand unten in dieser Spalte; die Kopfleiste steht nur über der Tischfläche.
+Alle Karten haben Handygrösse. **Hand:** Die Handkarten teilen sich die Breite
 der Hand (höchstens so gross wie in der Tabelle, mindestens 44 px), damit bei
 fünf und mehr Karten keine angeschnitten ist.
 

@@ -12,6 +12,9 @@ export const TISCH = {
   mitte: 'Tischmitte',
   nachziehstapel: 'Nachziehstapel',
   nachziehstapelLeer: 'Nachziehstapel leer',
+  /** Kurz in der Kopfleiste. */
+  stapel: 'Stapel',
+  leer: 'leer',
   offeneAufgaben: 'Offene Aufgaben',
   auslage: 'Deine Auslage',
   geheim: 'geheim',

@@ -15,13 +15,15 @@ Höhe übrig (Plan O4).
   min-width: 0;
 }
 
-/* `stretch`: Alle Glieder einer Zeile sind gleich hoch, auch neben einer Fusion
-   mit ihren Karten darunter; so liegt der Balken einer Farbgruppe auf einer Linie. */
+/* Der Zeilenabstand (10 px) hält beim Umbruch Platz für den Balken unter der
+   oberen Zeile frei, damit er nicht auf den Karten der nächsten liegt. */
 .st-schlange {
+  --balken-abstand: 2px;
+  --balken-hoehe: 4px;
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
-  gap: 3px;
+  align-items: flex-start;
+  gap: 10px 3px;
   min-width: 0;
   margin: 0;
   /* Platz für den Balken unter einer Farbgruppe. */
@@ -37,16 +39,19 @@ Höhe übrig (Plan O4).
   gap: 2px;
 }
 
-/* Farbgruppe: ein durchgehender Balken unter den Karten. Er reicht über den
-   Zwischenraum zur Nachbarkarte, nur nicht über Anfang und Ende der Gruppe,
-   damit zwei Gruppen nebeneinander getrennt bleiben. */
+/* Farbgruppe: ein durchgehender Balken direkt unter den Karten, also in der
+   Höhe der Karte (Breite durch Seitenverhältnis) und nicht am Fuss des Glieds:
+   So liegt er auf einer Linie, auch wenn neben ihm eine Fusion mit ihren
+   Karten darunter höher ist. Er reicht über den Zwischenraum zur Nachbarkarte,
+   nur nicht über Anfang und Ende der Gruppe, damit zwei Gruppen nebeneinander
+   getrennt bleiben. */
 .st-schlange > li.st-in-gruppe::after {
   content: '';
   position: absolute;
+  top: calc(var(--karte-breite) / (var(--kartenverhaeltnis)) + var(--balken-abstand));
   left: -2px;
   right: -2px;
-  bottom: -6px;
-  height: 4px;
+  height: var(--balken-hoehe);
   background: var(--farbe-tinte);
 }
 
@@ -62,10 +67,12 @@ Höhe übrig (Plan O4).
   border-bottom-right-radius: var(--radius-voll);
 }
 
-/* Farbenfusion: die zwei Karten darunter als halbe Karten unter der Fusion. */
+/* Farbenfusion: die zwei Karten darunter als halbe Karten unter der Fusion,
+   mit Abstand für den Balken, der zwischen Fusion und diesen Karten liegt. */
 .st-fusion-unter {
   display: flex;
   gap: 2px;
+  margin-top: calc(var(--balken-abstand) + var(--balken-hoehe));
   width: var(--karte-breite);
   --karte-breite-unter: calc((var(--karte-breite) - 2px) / 2);
 }
@@ -159,7 +166,16 @@ Höhe übrig (Plan O4).
   cursor: zoom-in;
 }
 
-/* Handy: kompakte Zeilen, die seitlich scrollen. */
+/* Kompakte Zeilen, die seitlich scrollen: deine Schlangen immer, damit sie in
+   der Höhe nie mehr als eine Zeile je Schlange brauchen und unten ganz zu sehen
+   sind; auf dem Handy auch die der Gegner. */
+.st-eigene .st-schlange {
+  flex-wrap: nowrap;
+  overflow: auto hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
 @media (max-width: 699px), (orientation: landscape) and (max-height: 500px) {
   .st-schlange {
     flex-wrap: nowrap;
