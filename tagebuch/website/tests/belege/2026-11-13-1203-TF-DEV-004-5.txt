@@ -1,0 +1,26 @@
+desktop /dev?szenario=start-2 {"sw":1280,"cw":1280} ok
+desktop /dev?szenario=start-4 {"sw":1280,"cw":1280} ok
+desktop /dev?szenario=start-erweiterung {"sw":1280,"cw":1280} ok
+desktop /dev?szenario=alle-orte {"sw":1280,"cw":1280} ok
+desktop /dev?szenario=kaputt-doppelte-karte {"sw":1280,"cw":1280} ok
+desktop /dev?seed=2&spieler=4&erweiterung=1 {"sw":1280,"cw":1280} ok
+desktop /dev/szenarien {"sw":1280,"cw":1280} ok
+desktop Konsolenfehler 0
+tablet /dev?szenario=start-2 {"sw":1024,"cw":1024} ok
+tablet /dev?szenario=start-4 {"sw":1024,"cw":1024} ok
+tablet /dev?szenario=start-erweiterung {"sw":1024,"cw":1024} ok
+tablet /dev?szenario=alle-orte {"sw":1024,"cw":1024} ok
+tablet /dev?szenario=kaputt-doppelte-karte {"sw":1024,"cw":1024} ok
+tablet /dev?seed=2&spieler=4&erweiterung=1 {"sw":1024,"cw":1024} ok
+tablet /dev/szenarien {"sw":1024,"cw":1024} ok
+tablet nach Tippen: http://localhost:4174/dev?szenario=alle-orte true
+tablet Konsolenfehler 0
+handy /dev?szenario=start-2 {"sw":390,"cw":390} ok
+handy /dev?szenario=start-4 {"sw":390,"cw":390} ok
+handy /dev?szenario=start-erweiterung {"sw":390,"cw":390} ok
+handy /dev?szenario=alle-orte {"sw":390,"cw":390} ok
+handy /dev?szenario=kaputt-doppelte-karte {"sw":390,"cw":390} ok
+handy /dev?seed=2&spieler=4&erweiterung=1 {"sw":390,"cw":390} ok
+handy /dev/szenarien {"sw":390,"cw":390} ok
+handy nach Tippen: http://localhost:4174/dev?szenario=alle-orte true
+handy Konsolenfehler 0
