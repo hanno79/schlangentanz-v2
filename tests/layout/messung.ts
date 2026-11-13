@@ -380,14 +380,22 @@ async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; 
          Wächter zeigte etwas an, von dem kein Spieler etwas hat. Warum das Brett
          ab `Spielende` `inert` ist, steht in `src/spielbrett/Spielbrett.tsx`. */
       if (element.closest('[inert]') !== null) continue
-      const box = element.getBoundingClientRect()
+      /* O2b: Ein Auswahlfeld, das über sein Label bedient wird, zählt mit der
+         Fläche seines grössten Labels, wie bei der Tippfläche
+         (`findeKleineTippflaechen`). Sonst fällt ein unsichtbar kleines Feld
+         (Segmente und Schalter der Lobby) unter die 2-px-Grenze unten, und
+         beide Wächter messen es nie (Protokoll O2b, Mangel 1). */
+      const labels = element instanceof HTMLInputElement ? Array.from(element.labels ?? []) : []
+      const flaeche = (teil: Element) => teil.getBoundingClientRect().width * teil.getBoundingClientRect().height
+      const ziel = labels.length > 0 ? labels.reduce((a, b) => (flaeche(a) >= flaeche(b) ? a : b)) : element
+      const box = ziel.getBoundingClientRect()
       if (box.width < 2 || box.height < 2) continue
-      if (scrollenderVorfahr(element) !== null && weggescrollt(element)) continue
+      if (scrollenderVorfahr(ziel) !== null && weggescrollt(ziel)) continue
 
       const imBild = box.bottom <= hoehe + 1 && box.top >= -1 && box.right <= breite + 1 && box.left >= -1
       if (!imBild) {
         ausserhalb.push({
-          element: kennung(element),
+          element: kennung(ziel),
           detail: `liegt bei ${Math.round(box.top)}..${Math.round(box.bottom)} (Bild ist ${hoehe}px hoch)`,
         })
         // Was schon außerhalb liegt, wird nicht zusätzlich als verdeckt gezählt.
@@ -401,7 +409,7 @@ async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; 
          nicht. Und eine Karte am Rand einer scrollenden Spalte ragt zum
          größten Teil hinaus; Proben über die volle Höhe landen dann sämtlich
          außerhalb, obwohl der sichtbare Streifen anklickbar ist. */
-      const scroller = scrollenderVorfahr(element)
+      const scroller = scrollenderVorfahr(ziel)
       const fenster = scroller === null ? null : scroller.getBoundingClientRect()
       const sichtbar = {
         links: Math.max(box.left, fenster?.left ?? 0, 0),
@@ -420,14 +428,14 @@ async function messeErreichbarkeit(page: Page): Promise<{ ausserhalb: Befund[]; 
             sichtbar.links + sichtbareBreite * quer,
             sichtbar.oben + sichtbareHoehe * hoch,
           )
-          if (treffer && (element === treffer || element.contains(treffer))) {
+          if (treffer && (ziel === treffer || ziel.contains(treffer))) {
             frei = true
             break
           }
         }
       }
       if (!frei) {
-        verdeckt.push({ element: kennung(element), detail: 'an keiner Stelle frei — vollständig überdeckt' })
+        verdeckt.push({ element: kennung(ziel), detail: 'an keiner Stelle frei — vollständig überdeckt' })
       }
     }
 

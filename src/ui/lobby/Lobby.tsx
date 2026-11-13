@@ -55,7 +55,8 @@ export default function Lobby() {
       bild={<img className="lobby__logo" src={LOGO_BILD} alt="" width={521} height={672} />}
       titel={SPIELNAME}
       text={LOBBY.untertitel}
-      fuss={<Verweis ziel="regeln">{LOBBY.regeln}</Verweis>}
+      // Unter dem Titel wie im Entwurf: so steht „Regeln“ auch in der Tab-Reihe vor der Wahl der Partie.
+      kopfZusatz={<Verweis ziel="regeln">{LOBBY.regeln}</Verweis>}
     >
       <div className="lobby__inhalt">
         {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
@@ -65,7 +66,7 @@ export default function Lobby() {
             <p data-testid="laufende-partie">
               <strong>{LOBBY.laufendePartie}:</strong> {partieKurz(laufend.gegner, laufend.erweiterung)}
             </p>
-            <button type="button" className="knopf knopf--haupt" onClick={() => geheZu('spiel')}>
+            <button type="button" className="rahmen-knopf rahmen-knopf--haupt" onClick={() => geheZu('spiel')}>
               {LOBBY.weiterspielen}
             </button>
           </section>
@@ -83,7 +84,7 @@ export default function Lobby() {
             <legend>{LOBBY.gegnerLegende}</legend>
             <div className="lobby__wahl">
               {GEGNER_AUSWAHL.map((anzahl) => (
-                <label key={anzahl} className="wahl">
+                <label key={anzahl} className="lobby__segment">
                   {/* Sichtbar steht nur die Zahl wie im Entwurf; Name und Text heissen „2 Gegner“. */}
                   <input
                     type="radio"
@@ -103,7 +104,7 @@ export default function Lobby() {
             </div>
           </fieldset>
 
-          <label className="schalter">
+          <label className="lobby__schalter">
             <span>{LOBBY.erweiterung}</span>
             <input
               type="checkbox"
@@ -112,7 +113,7 @@ export default function Lobby() {
               onChange={(e) => setErweiterung(e.target.checked)}
             />
             {/* Der Zustand steht als Wort da, nicht nur als Farbe (DESIGN.md); vorgelesen wird er über das Kästchen. */}
-            <span className="schalter__bahn" aria-hidden="true">
+            <span className="lobby__bahn" aria-hidden="true">
               {erweiterung ? LOBBY.an : LOBBY.aus}
             </span>
           </label>
@@ -120,7 +121,7 @@ export default function Lobby() {
           {fragtNach ? (
             <Rueckfrage onBestaetigen={beginne} onAbbrechen={() => setFragtNach(false)} />
           ) : (
-            <button type="submit" ref={neuePartieKnopf} className={laufend === null ? 'knopf knopf--haupt' : 'knopf'}>
+            <button type="submit" ref={neuePartieKnopf} className={laufend === null ? 'rahmen-knopf rahmen-knopf--haupt' : 'rahmen-knopf'}>
               {LOBBY.neuePartie}
             </button>
           )}
@@ -153,10 +154,10 @@ function Rueckfrage({ onBestaetigen, onAbbrechen }: { onBestaetigen: () => void;
     <div ref={frage} className="lobby__frage" role="alertdialog" aria-labelledby="lobby-frage" onKeyDown={beiTaste}>
       <p id="lobby-frage">{LOBBY.frage}</p>
       <div className="lobby__knoepfe">
-        <button type="button" className="knopf knopf--warnung" onClick={onBestaetigen}>
+        <button type="button" className="rahmen-knopf rahmen-knopf--warnung" onClick={onBestaetigen}>
           {LOBBY.bestaetigen}
         </button>
-        <button type="button" className="knopf" ref={abbrechen} onClick={onAbbrechen}>
+        <button type="button" className="rahmen-knopf" ref={abbrechen} onClick={onAbbrechen}>
           {LOBBY.abbrechen}
         </button>
       </div>

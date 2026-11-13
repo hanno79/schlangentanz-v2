@@ -4,7 +4,7 @@ import { findeAusserhalbDesBildes, findeVerdeckteBedienelemente } from './messun
 /*
 O2b, Iteration 2 (Mangel 1 im Protokoll, TF-PRUEF-025): Ein Auswahlfeld, das
 unsichtbar klein ist und über sein Label bedient wird (Segmente und Schalter
-der Lobby), zählt für die Wächter „außerhalb des Bildes“ und „vollständig
+der Lobby), zählt für die Wächter „ausserhalb des Bildes“ und „vollständig
 verdeckt“ mit der Fläche seines Labels, so wie schon für die Tippfläche.
 Vorher übersprangen beide Wächter das 1×1-px-Feld, und ein Schalter unter dem
 Bildrand blieb unbemerkt.
@@ -29,7 +29,7 @@ async function zeigeLabel(page: Page, stil: string, deckel = false): Promise<voi
 }
 
 test.describe('O2b: Wächter messen versteckte Auswahlfelder an ihrem Label', () => {
-  test('O2b: ein Label unter dem Bildrand gilt als außerhalb des Bildes', async ({ page }) => {
+  test('O2b: ein Label unter dem Bildrand gilt als ausserhalb des Bildes', async ({ page }) => {
     await zeigeLabel(page, 'top: calc(100vh + 100px);')
     const befunde = await findeAusserhalbDesBildes(page)
     expect(befunde.map((befund) => befund.element)).toEqual([expect.stringContaining('Mit Erweiterung')])

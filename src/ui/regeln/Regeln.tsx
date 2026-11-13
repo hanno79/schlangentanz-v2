@@ -11,7 +11,7 @@ export default function Regeln() {
       text={REGELN.text}
       fuss={
         <>
-          <a className="verweis verweis--haupt" href={REGELN.adresse} target="_blank" rel="noopener noreferrer">
+          <a className="rahmen-verweis rahmen-verweis--haupt" href={REGELN.adresse} target="_blank" rel="noopener noreferrer">
             {REGELN.verweis}
           </a>
           <Verweis ziel="lobby">{ZURUECK_ZUR_LOBBY}</Verweis>

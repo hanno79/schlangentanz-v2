@@ -81,8 +81,8 @@ die Tokens direkt.
 }
 
 /* Knöpfe und Verweise: mindestens eine Tippfläche hoch und breit. */
-/* Zuerst der schlichte Verweis, damit `.verweis--haupt` unten seine Farben überschreibt. */
-.verweis {
+/* Zuerst der schlichte Verweis, damit `.rahmen-verweis--haupt` unten seine Farben überschreibt. */
+.rahmen-verweis {
   display: inline-flex;
   align-items: center;
   min-height: var(--rahmen-tippflaeche);
@@ -92,9 +92,9 @@ die Tokens direkt.
   font-weight: 600;
 }
 
-.knopf,
+.rahmen-knopf,
 .fehlerfang__knopf,
-.verweis--haupt {
+.rahmen-verweis--haupt {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -112,20 +112,20 @@ die Tokens direkt.
   cursor: pointer;
 }
 
-.knopf--haupt,
+.rahmen-knopf--haupt,
 .fehlerfang__knopf,
-.verweis--haupt {
+.rahmen-verweis--haupt {
   background: var(--rahmen-haupt);
   color: var(--rahmen-auf-haupt);
 }
 
-.knopf--haupt:hover,
+.rahmen-knopf--haupt:hover,
 .fehlerfang__knopf:hover,
-.verweis--haupt:hover {
+.rahmen-verweis--haupt:hover {
   background: var(--rahmen-haupt-dunkel);
 }
 
-.knopf--warnung {
+.rahmen-knopf--warnung {
   border-color: var(--rahmen-warnung);
   background: var(--rahmen-warnung);
   color: var(--rahmen-auf-haupt);
@@ -178,14 +178,14 @@ die Tokens direkt.
   font-weight: 700;
 }
 
-.hinweis {
+.rahmen-hinweis {
   margin: 0;
   padding: 12px var(--rahmen-abstand);
   border-radius: var(--rahmen-radius);
   background: var(--rahmen-hinweis-flaeche);
 }
 
-.hinweis--fehler {
+.rahmen-hinweis--fehler {
   border-left: 4px solid var(--rahmen-warnung);
   background: var(--farbe-fehler-hell);
 }
