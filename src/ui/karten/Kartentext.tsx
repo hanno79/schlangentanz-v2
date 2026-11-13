@@ -22,7 +22,7 @@ function Kartenreihe({ reihe }: { reihe: readonly string[] }) {
     <ul className="kartenreihe" aria-label={KARTENHILFE_TEXTE.kartenreihe}>
       {reihe.map((name, i) => (
         <li key={i} className="kartenreihe__platz">
-          <Karte karte={reihenkarte(name)} />
+          <Karte karte={reihenkarte(name)} sizes="40px" />
           {reiheMitUnterschrift(name) && <span className="kartenreihe__unterschrift">{name}</span>}
         </li>
       ))}

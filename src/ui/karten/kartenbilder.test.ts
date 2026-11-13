@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import type { Farbe } from '../../engine'
 import { erstelleAufgabenStapel } from '../../engine/aufgabenKarten'
