@@ -22,7 +22,8 @@
     "smoke:production": "node scripts/run_smokes.mjs production",
     "smoke:preview": "node scripts/run_smokes.mjs preview",
     "check:merge-bereit": "node scripts/check_merge_bereit.mjs",
-    "abgleich:website": "node scripts/website_abgleich/abgleich.cjs"
+    "abgleich:website": "node scripts/website_abgleich/abgleich.cjs",
+    "test:website-netz": "node scripts/website_abgleich/netztest.cjs"
   },
   "dependencies": {
     "@sentry/browser": "^10.69.0",

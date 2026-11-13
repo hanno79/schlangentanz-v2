@@ -2,7 +2,7 @@
 // Website-Abgleich ohne Netz: Startoptionen des Browsers, Umwandlung einer
 // gespeicherten Probe der Spielanleitung und Abdeckungsprüfung. Der Abruf der echten
 // Website läuft getrennt über `npm run test:website-netz` und `npm run abgleich:website`.
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { chromium, type Browser, type Page } from 'playwright'
@@ -47,18 +47,38 @@ const ERWARTETES_MARKDOWN = [
 ].join('\n')
 
 describe('P0.5c: Startoptionen des Browsers für den Website-Abgleich', () => {
+  const vorher = { PW_CHROMIUM_PFAD: process.env.PW_CHROMIUM_PFAD, HTTPS_PROXY: process.env.HTTPS_PROXY }
+  const setze = (name: keyof typeof vorher, wert: string | undefined) => {
+    if (wert === undefined) delete process.env[name]
+    else process.env[name] = wert
+  }
+  afterEach(() => {
+    setze('PW_CHROMIUM_PFAD', vorher.PW_CHROMIUM_PFAD)
+    setze('HTTPS_PROXY', vorher.HTTPS_PROXY)
+  })
+
   it('P0.5c: Chromium startet ohne QUIC, weil Anfragen über HTTP/3 im Headless-Lauf hängen bleiben', () => {
-    const optionen = startOptionen({})
+    setze('PW_CHROMIUM_PFAD', undefined)
+    setze('HTTPS_PROXY', undefined)
+    const optionen = startOptionen()
     expect(optionen.args).toContain('--disable-quic')
     expect(optionen.executablePath).toBeUndefined()
     expect(optionen.proxy).toBeUndefined()
   })
 
   it('P0.5c: PW_CHROMIUM_PFAD und HTTPS_PROXY werden durchgereicht', () => {
-    const optionen = startOptionen({ PW_CHROMIUM_PFAD: 'C:/chromium/chrome.exe', HTTPS_PROXY: 'http://proxy.probe:8080' })
-    expect(optionen.executablePath).toBe('C:/chromium/chrome.exe')
+    // Irgendeine vorhandene Datei: chromiumPfad() prüft nur, dass dort etwas liegt.
+    setze('PW_CHROMIUM_PFAD', process.execPath)
+    setze('HTTPS_PROXY', 'http://proxy.probe:8080')
+    const optionen = startOptionen()
+    expect(optionen.executablePath).toBe(process.execPath)
     expect(optionen.proxy).toEqual({ server: 'http://proxy.probe:8080' })
     expect(optionen.args).toContain('--disable-quic')
+  })
+
+  it('P0.5c: ein PW_CHROMIUM_PFAD ohne Datei ist ein Fehler, kein stiller Rückfall', () => {
+    setze('PW_CHROMIUM_PFAD', join(resolve(__dirname), 'gibt-es-nicht', 'chrome.exe'))
+    expect(() => startOptionen()).toThrow(/PW_CHROMIUM_PFAD/)
   })
 })
 
@@ -68,7 +88,7 @@ describe('P0.5c: Umwandlung der gespeicherten Probe ohne Netz', () => {
   const netzanfragen: string[] = []
 
   beforeAll(async () => {
-    browser = await chromium.launch(startOptionen({ PW_CHROMIUM_PFAD: process.env.PW_CHROMIUM_PFAD }))
+    browser = await chromium.launch(startOptionen())
   })
   afterAll(async () => {
     await browser?.close()
@@ -111,7 +131,7 @@ describe('P0.5c: Umwandlung der gespeicherten Probe ohne Netz', () => {
     // Die Anfrage bleibt offen, wie das Seiten-Bundle über HTTP/3 im Headless-Lauf.
     await s.route('**/haengt.js', () => {})
     await s.setContent('<div id="root"></div><script async src="https://probe.invalid/assets/haengt.js"></script>', { waitUntil: 'domcontentloaded' })
-    await expect(liesSeite(s, { wartezeit: 800, nachlauf: 0 })).rejects.toThrow(/keinen Text.*Offene Anfragen: https:\/\/probe\.invalid\/assets\/haengt\.js/s)
+    await expect(liesSeite(s, { wartezeit: 800, nachlauf: 0, offeneAnfragen })).rejects.toThrow(/keinen Text.*Offene Anfragen: https:\/\/probe\.invalid\/assets\/haengt\.js/s)
     await s.close()
   })
 
