@@ -78,6 +78,11 @@ export function moeglichkeiten(block: string): string[] {
   return [...block.matchAll(/^- \*\*([a-z])\)\*\* \S/gm)].map((treffer) => treffer[1])
 }
 
+/** Text der Möglichkeit `- **b)** …` ohne den Buchstaben; leer, wenn es sie nicht gibt. */
+export function moeglichkeitText(block: string, buchstabe: string): string {
+  return new RegExp(`^- \\*\\*${buchstabe}\\)\\*\\* (.+)$`, 'm').exec(block)?.[1].trim() ?? ''
+}
+
 /** Task-IDs im Teil „nennt die Frage: …“ des Feldes „Betroffene Tasks“. */
 export function nennendeTasks(betroffen: string): string[] {
   const teil = /nennt die Frage: (.*?)(?:Hängt davon ab:|$)/.exec(betroffen)?.[1] ?? ''

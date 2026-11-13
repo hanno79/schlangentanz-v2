@@ -10,9 +10,9 @@ import {
   bloecke,
   buchstabenAm,
   feld,
+  moeglichkeitText,
   nachfragen,
   normalisiert,
-  planFragen,
   spec,
   teilD,
   teilDTabelle,
@@ -24,35 +24,93 @@ import {
 /** Am 13.11.2026 hat der Autor F1–F15 und die Nachfrage F8a beantwortet. */
 const DATUM_F = '13.11.2026'
 
-describe('P0.5: Antworten des Autors vom 13.11.2026', () => {
-  it(`P0.5: F1–F15 hat der Autor am ${DATUM_F} beantwortet`, () => {
-    for (const { nr } of planFragen.filter((frage) => frage.nr.startsWith('F'))) {
-      const block = bloecke.get(nr) ?? ''
+type Erwartung = { wahl: string; kern: string[]; verboten?: string[] }
 
-      expect(feld(block, 'Antwort'), `${nr}: noch offen`).not.toBe(OFFEN)
-      expect(feld(block, 'Datum'), `${nr}: Datum der Antwort`).toBe(DATUM_F)
-    }
+/**
+ * Was der Autor gewählt hat, abgeleitet aus seinen Worten, nicht aus den Dateien:
+ * „Alle andere Vorschläge sind passend“ (also der Vorschlag), F8 frei („man darf auch
+ * in der letzten Runde einen Spieler aussetzen lassen …“), F11 „mindestens aus 3
+ * Farbkarten … sonst ok“ mit der Bestätigung „Ja, genau so“, F8a „Ja, ohne Wirkung“.
+ * `kern` sind die tragenden Aussagen. Sie stehen in REGELFRAGEN.md (in der Antwort oder
+ * in der gewählten Möglichkeit) und im Eintrag in Teil D; `verboten` steht in keinem von beiden.
+ */
+const ERWARTET: Record<string, Erwartung> = {
+  F1: { wahl: 'b', kern: ['zwei Züge', 'eigenen Zug'], verboten: ['Ein Zug:'] },
+  F2: { wahl: 'a', kern: ['wehrt den ganzen Schlangenfrass', 'beide Karten bleiben liegen'] },
+  F3: { wahl: 'a', kern: ['nur eine Farbkarte beginnt eine Schlange'] },
+  F4: { wahl: 'a, c', kern: ['nur in eine eigene Schlange', 'beliebige Stelle', 'neue eigene Schlange'] },
+  F5: { wahl: 'a, c', kern: ['kein Auffüllen im ausgesetzten Zug', 'auch zwischen Grube und ausgesetztem Zug'] },
+  F6: { wahl: 'a', kern: ['nur an ein Ende einer bestehenden gegnerischen Schlange'] },
+  F7: { wahl: 'a', kern: ['nur zwei Farbkarten derselben Farbe'] },
+  F8: { wahl: FREI, kern: ['letzte Zug verfällt', 'keinen letzten Zug mehr', 'Farbenschutz'] },
+  F8a: { wahl: 'b', kern: ['ohne Wirkung auf den Ablagestapel'], verboten: ['kein Ziel'] },
+  F9: { wahl: 'a', kern: ['alle Punktgleichen gewinnen'] },
+  F10: { wahl: 'a', kern: ['ein weiterer Zug folgt nicht'] },
+  F11: {
+    wahl: 'b, d',
+    kern: ['ab 3 Farbkarten', 'bekommt niemand den Bonus', '„Ja, genau so“'],
+    verboten: ['schon ab 2 Farbkarten'],
+  },
+  F12: {
+    wahl: 'a',
+    kern: ['nur, wenn die Karte kein mögliches Ziel hat', 'Farbenschutz darf immer wirkungslos abgelegt werden'],
+  },
+  F13: { wahl: 'a', kern: ['muss danach anders sein'] },
+  F14: { wahl: 'a', kern: ['im zweiten Zug nach einem Verdoppler ist wieder eine'] },
+  F15: { wahl: 'a', kern: ['vollständig einsehbar'] },
+}
+
+/** Kleinbuchstaben, Leerraum zusammengefasst: Kernaussagen gelten auch am Satzanfang. */
+function vergleichbar(text: string): string {
+  return normalisiert(text).toLowerCase()
+}
+
+describe('P0.5: Antworten des Autors vom 13.11.2026', () => {
+  it('P0.5: genau die beantworteten Fragen stehen in der Erwartungstabelle', () => {
+    const beantwortet = [...bloecke].filter(([, block]) => feld(block, 'Antwort') !== OFFEN).map(([nr]) => nr)
+
+    expect(beantwortet.sort(), 'beantwortete Fragen ohne oder mit überzähliger Erwartung').toEqual(
+      Object.keys(ERWARTET).sort(),
+    )
   })
 
-  it('P0.5: F8 frei, F11 b, d und F8a b halten den Wortlaut des Autors fest', () => {
+  for (const [nr, { wahl, kern, verboten = [] }] of Object.entries(ERWARTET)) {
+    it(`P0.5: ${nr}: gewählt „${wahl}“, die Kernaussage steht in REGELFRAGEN.md und in Teil D`, () => {
+      const block = bloecke.get(nr) ?? ''
+      const antwort = feld(block, 'Antwort')
+      const gewaehlt = antwort.startsWith(FREI) ? FREI : buchstabenAm(antwort)
+      const gewaehlteTexte = wahl === FREI ? [] : wahl.split(', ').map((b) => moeglichkeitText(block, b))
+      const fragenblatt = vergleichbar([antwort, ...gewaehlteTexte].join(' '))
+      const eintrag = vergleichbar(teilD.get(nr)?.antwort ?? '')
+
+      expect(gewaehlt, `${nr}: gewählte Möglichkeit`).toBe(wahl)
+      expect(feld(block, 'Datum'), `${nr}: Datum der Antwort`).toBe(DATUM_F)
+      for (const aussage of kern.map(vergleichbar)) {
+        expect(fragenblatt, `${nr}: REGELFRAGEN.md ohne Kernaussage „${aussage}“`).toContain(aussage)
+        expect(eintrag, `${nr}: Teil D ohne Kernaussage „${aussage}“`).toContain(aussage)
+      }
+      for (const aussage of verboten.map(vergleichbar)) {
+        expect(vergleichbar(antwort), `${nr}: REGELFRAGEN.md enthält „${aussage}“`).not.toContain(aussage)
+        expect(eintrag, `${nr}: Teil D enthält „${aussage}“`).not.toContain(aussage)
+      }
+    })
+  }
+
+  it('P0.5: F8, F8a und F11 halten den Wortlaut des Autors fest', () => {
     const f8 = bloecke.get('F8') ?? ''
     const f8a = bloecke.get('F8a') ?? ''
     const f11 = bloecke.get('F11') ?? ''
 
-    expect(feld(f8, 'Antwort').startsWith(FREI), 'F8: als freie Antwort gekennzeichnet').toBe(true)
     expect(normalisiert(feld(f8, 'Antwort')), 'F8: Wortlaut des Autors').toContain(
       '„man darf auch in der letzten Runde einen Spieler aussetzen lassen. Er hat dann keinen letzetn Zug mehr. Er darf aber verteidigen mit Farbenschutz“',
     )
-    expect(buchstabenAm(feld(f11, 'Antwort')), 'F11: Antwort').toBe('b, d')
     expect(feld(f11, 'Antwort'), 'F11: Wortlaut des Autors').toContain(
       '„längste Schlange muss mindestens aus 3 Farbkarten bestehen nicht nur 2. sonst ok“',
     )
     expect(feld(f8a, 'Frage'), 'F8a: Frage, wie sie dem Autor gestellt wurde').toBe(
       'Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat?',
     )
-    expect(buchstabenAm(feld(f8a, 'Antwort')), 'F8a: Antwort').toBe('b')
     expect(feld(f8a, 'Antwort'), 'F8a: Wortlaut des Autors').toContain('„Ja, ohne Wirkung“')
-    expect(feld(f8a, 'Datum'), 'F8a: Datum der Antwort').toBe(DATUM_F)
   })
 
   it('P0.5: jede Nachfrage steht direkt nach ihrer Ausgangsfrage, und deren Antwort nennt sie', () => {
