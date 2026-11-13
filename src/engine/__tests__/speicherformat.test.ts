@@ -94,6 +94,22 @@ describe('A4/B2: Speichern und Laden im Format 2', () => {
     ).toThrow(/spieler\[0\]\.schlangen\[0\].*zustand/)
   })
 
+  it.each([
+    ['zug.teilzug', 3, (roh: Record<string, unknown>, wert: unknown) => ((roh.zug as Record<string, unknown>).teilzug = wert)],
+    ['zug.abschnitt', 'Nachziehen', (roh: Record<string, unknown>, wert: unknown) => ((roh.zug as Record<string, unknown>).abschnitt = wert)],
+    ['partiephase', 'Endspurt', (roh: Record<string, unknown>, wert: unknown) => (roh.partiephase = wert)],
+    ['erweiterung', 'ja', (roh: Record<string, unknown>, wert: unknown) => (roh.erweiterung = wert)],
+    ['schlangenZaehler', -1, (roh: Record<string, unknown>, wert: unknown) => (roh.schlangenZaehler = wert)],
+  ])('A5/A7.8/A10: ein ungültiger Wert in %s (%s) wird beim Laden mit Pfad abgelehnt', (pfad, wert, setze) => {
+    expect(ladeVeraendert(start(), (roh) => setze(roh, wert))).toThrow(new RegExp(pfad.replace('.', '\\.')))
+  })
+
+  it('B2: ein Spielstand mit vielen fehlenden Feldern nennt die ersten drei und die Zahl der übrigen', () => {
+    expect(() => deserialisiere(JSON.stringify({ version: 2, spieler: [] }))).toThrow(
+      'Ungültiger Spielstand: Spielstand: erweiterung fehlt, partiephase fehlt, zug fehlt und 8 weitere.',
+    )
+  })
+
   it('A1: eine veränderte Karte wird beim Laden abgelehnt', () => {
     const zustand = start()
     const blau = zustand.nachziehstapel.findIndex((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Blau')
