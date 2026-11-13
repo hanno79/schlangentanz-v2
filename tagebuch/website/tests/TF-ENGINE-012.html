@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-012 300 Zufallspartien mit 2, 3 und 4 Spielern enden alle, ohne verletzte Invariante und ohne einen laufenden Zustand ohne Aktion. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-012 300 Zufallspartien mit 2, 3 und 4 Spielern enden alle, ohne verletzte Invariante und ohne einen laufenden Zustand ohne Aktion.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-ENGINE-010</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Dauerlauf spielt viele Partien mit Zufallszügen bis zum Ende. Er zeigt, ob die Engine irgendwo stecken bleibt (Handkarten, aber keine erlaubte Aktion), ob jede angebotene Aktion auch erlaubt ist und ob Material verloren geht. Der Prüfer lässt dazu einen eigenen, strengeren Lauf mit anderen Saaten laufen.</p><h2>Bestanden, wenn</h2><p>Der Dauerlauf des Umsetzers (Saaten 1 bis 300) endet grün. Im eigenen Lauf (Saaten 1001 bis 1300, je 100 mit 2, 3 und 4 Spielern, mit und ohne Erweiterung) enden alle 300 Partien. Dabei zieht im laufenden Spiel nur, wer seinen Zug beendet oder beginnt, nach jedem Zugwechsel hält der abgebende und der neue Spieler genau 5 Karten, in der Schlussrunde zieht niemand, der Auslöser kommt nicht mehr dran, und es gibt genau N−1 letzte Züge.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Partie nicht endet, eine Invariante verletzt ist, die Engine in einer laufenden Partie keine Aktion anbietet oder eine der Zusatzprüfungen etwas meldet.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E2-zugablauf (PR #36)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E2-zugablauf</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten 1 bis 300 (Umsetzer) und 1001 bis 1300 (Prüfer); Zugwahl mit eigener Zufallsquelle.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/engine/__tests__/dauerlauf.test.ts</code> endet mit Exit 0. Für den eigenen Lauf vorübergehend eine Testdatei unter <code>src/engine/__tests__/</code> anlegen, die 300 Partien mit <code>erstellePartie</code>, <code>ermittleAktionen</code> und <code>anwendeAktion</code> spielt und die Zusatzprüfungen aus „Bestanden, wenn“ je Schritt auswertet (Beschreibung im Prüfprotokoll <code>docs/abnahme/E2.md</code>, Abschnitt „Dauerlauf“); erwartet „300 Partien beendet, Befunde 0“. Danach die Datei wieder löschen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 16:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E2) &middot; agent &middot; pruefung-E2 @ <span class="commit" title="3bcbc5073ec3cf57e718337dcb287743e577c7ab">3bcbc50</span></p><p>dauerlauf.test.ts: 14 Tests grün, Exit 0 (300 Partien, Saaten 1-300, alle beendet). Eigener Lauf Saaten 1001-1300: 300 Partien beendet, 50162 Schritte, 0 Befunde (Ziehen nur durch Abgebenden/Beginnenden, 5 Karten nach jedem Zugwechsel, kein Ziehen in der Schlussrunde, Auslöser nie wieder dran, N-1 letzte Züge, nie ohne Aktion).</p><ul class="belege"><li><a href="belege/2026-11-13-1638-TF-ENGINE-012-1.txt">2026-11-13-1638-TF-ENGINE-012-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
