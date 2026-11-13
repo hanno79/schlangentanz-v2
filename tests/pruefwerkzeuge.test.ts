@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { spawnSync, type SpawnSyncReturns } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import ts from 'typescript'
@@ -242,5 +242,21 @@ describe('P0.3c: Anleitungen und Befehle nennen fünf Geräteklassen', () => {
       expect(inhalt, `${datei}: ${breite}×${hoehe} fehlt`).toContain(`${breite}×${hoehe}`)
       expect(inhalt, `${datei}: -${name}.png fehlt`).toContain(`-${name}.png`)
     }
+  })
+
+  it('P0.3c: kein gültiger Testfall im Register nennt noch die alten Klassen tablet oder handy', () => {
+    const ordner = join(WURZEL, 'tagebuch', 'tests', 'faelle')
+    // Suchmuster aus TF-PRUEF-022: als Name in Backticks, „Klasse handy“ oder „, tablet 1024“.
+    const alterName = /`(tablet|handy)`|Klasse (tablet|handy)\b|, (tablet|handy) [0-9]|Projekte? (desktop, )?`?(tablet|handy)\b(?!-)/
+    const treffer = readdirSync(ordner)
+      // TF-PRUEF-022 beschreibt diese Suche und nennt die alten Namen deshalb absichtlich.
+      .filter((datei) => datei !== 'TF-PRUEF-022.md')
+      .map((datei) => ({ datei, text: readFileSync(join(ordner, datei), 'utf8') }))
+      .filter(({ text }) => !/^status: stillgelegt$/m.test(text))
+      .flatMap(({ datei, text }) =>
+        text.split('\n').flatMap((zeile, index) => (alterName.test(zeile) ? [`${datei}:${index + 1}: ${zeile.slice(0, 80)}`] : [])),
+      )
+
+    expect(treffer).toEqual([])
   })
 })
