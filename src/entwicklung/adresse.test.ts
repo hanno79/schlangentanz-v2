@@ -11,6 +11,11 @@ describe('P0.4: Adressen des Entwicklertischs', () => {
     expect(leseEntwicklerAnfrage('/dev/szenarien', '')).toEqual({ art: 'szenarien' })
   })
 
+  it('P0.4: ein Schrägstrich am Ende ändert nichts, auch nicht bei /dev/szenarien/', () => {
+    expect(leseEntwicklerAnfrage('/dev/szenarien/', '')).toEqual({ art: 'szenarien' })
+    expect(leseEntwicklerAnfrage('/dev/', '?seed=1&spieler=2')).toEqual(leseEntwicklerAnfrage('/dev', '?seed=1&spieler=2'))
+  })
+
   it('P0.4: /dev?szenario=<name> lädt ein Szenario', () => {
     expect(leseEntwicklerAnfrage('/dev', '?szenario=reaktionsfenster')).toEqual({
       art: 'szenario',
