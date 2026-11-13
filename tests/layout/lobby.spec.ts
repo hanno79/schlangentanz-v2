@@ -137,21 +137,21 @@ test.describe('O2b TF-APP-016: Lobby mit offener Rückfrage nach dem Drehen', ()
   alleVertraege()
 })
 
-test.describe('O2: vorläufiger Spieltisch mit Partie', () => {
+test.describe('O2/O4: Spieltisch nach „Neue Partie“', () => {
   test.beforeEach(async ({ page }) => {
     await startePartie(page)
   })
 
-  test('O2: der Spieltisch nennt die Einstellungen und führt zurück', async ({ page }) => {
-    await expect(page.getByTestId('einstellung-gegner')).toBeVisible()
-    await expect(page.getByTestId('einstellung-erweiterung')).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Zurück zur Lobby' })).toBeVisible()
+  test('O2/O4: der Spieltisch zeigt die neue Partie und führt zurück', async ({ page }) => {
+    await expect(page.getByRole('region', { name: 'Deine Hand' })).toBeVisible()
+    await expect(page.getByRole('region', { name: 'Gegner' }).getByRole('article')).toHaveCount(1)
+    await expect(page.getByRole('link', { name: 'Zur Lobby' })).toBeVisible()
   })
 
   alleVertraege()
 })
 
-test.describe('O2: vorläufiger Spieltisch ohne Partie', () => {
+test.describe('O2: Spieltisch ohne Partie', () => {
   test.beforeEach(async ({ page }) => {
     await oeffne(page, '/spiel')
   })

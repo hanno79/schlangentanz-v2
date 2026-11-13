@@ -15,6 +15,16 @@ function oeffneLobby() {
   return render(<App />)
 }
 
+/** Wie viele Gegner der Spieltisch zeigt. */
+function gegnerAmTisch(): number {
+  return within(screen.getByRole('region', { name: 'Gegner' })).getAllByRole('article').length
+}
+
+/** Mit Erweiterung liegen am Tisch die offenen Aufgaben (A4). */
+function erweiterungAmTisch(): boolean {
+  return screen.queryByRole('region', { name: 'Offene Aufgaben' }) !== null
+}
+
 function kiGegner(): number {
   const zustand = ladeSpielstand()
   if (zustand === null) throw new Error('kiGegner: erwartet einen Spielstand, gefunden: keinen')
@@ -46,21 +56,21 @@ describe('O2 K1: Einstellungen und neue Partie', () => {
 
     expect(kiGegner()).toBe(anzahl)
     expect(window.location.pathname).toBe('/spiel')
-    expect(screen.getByTestId('einstellung-gegner')).toHaveTextContent(String(anzahl))
+    expect(gegnerAmTisch()).toBe(anzahl)
   })
 
   it.each([
     [true, 'an'],
     [false, 'aus'],
-  ])('O2 K1: der Erweiterungs-Schalter (%s) kommt auf dem Spieltisch an, auch nach neuem Laden', (an, wort) => {
+  ])('O2 K1: der Erweiterungs-Schalter (%s) kommt auf dem Spieltisch an, auch nach neuem Laden', (an) => {
     oeffneLobby()
     if (an) fireEvent.click(screen.getByRole('checkbox', { name: /Erweiterung/ }))
     fireEvent.click(screen.getByRole('button', { name: 'Neue Partie' }))
-    expect(screen.getByTestId('einstellung-erweiterung')).toHaveTextContent(wort)
+    expect(erweiterungAmTisch()).toBe(an)
 
     cleanup()
     render(<App />)
-    expect(screen.getByTestId('einstellung-erweiterung')).toHaveTextContent(wort)
+    expect(erweiterungAmTisch()).toBe(an)
   })
 
   it('E1: der Erweiterungs-Schalter erreicht die Engine; es gibt keinen Ersatzschlüssel und keine Warnung mehr', () => {
@@ -76,8 +86,8 @@ describe('O2 K1: Einstellungen und neue Partie', () => {
   it('O2 K1: der Spieltisch bietet einen Weg zurück in die Lobby', () => {
     oeffneLobby()
     fireEvent.click(screen.getByRole('button', { name: 'Neue Partie' }))
-    expect(screen.getByTestId('spiel')).toHaveTextContent('Spieltisch im Aufbau')
-    fireEvent.click(screen.getByRole('link', { name: 'Zurück zur Lobby' }))
+    expect(screen.getByTestId('spiel')).toContainElement(screen.getByRole('region', { name: 'Deine Hand' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Zur Lobby' }))
     expect(window.location.pathname).toBe('/')
     expect(screen.getByTestId('lobby')).toBeInTheDocument()
   })
@@ -104,7 +114,7 @@ describe('O2 K2: Weiterspielen und Rückfrage', () => {
     expect(screen.getByTestId('laufende-partie')).toHaveTextContent('2 Gegner')
     fireEvent.click(screen.getByRole('button', { name: 'Weiterspielen' }))
     expect(window.location.pathname).toBe('/spiel')
-    expect(screen.getByTestId('einstellung-gegner')).toHaveTextContent('2')
+    expect(gegnerAmTisch()).toBe(2)
   })
 
   it.each([
@@ -115,7 +125,7 @@ describe('O2 K2: Weiterspielen und Rückfrage', () => {
     oeffneLobby()
     expect(screen.getByTestId('laufende-partie')).toHaveTextContent(`Erweiterung ${wort}`)
     fireEvent.click(screen.getByRole('button', { name: 'Weiterspielen' }))
-    expect(screen.getByTestId('einstellung-erweiterung')).toHaveTextContent(wort)
+    expect(erweiterungAmTisch()).toBe(erweiterung)
   })
 
   it('O2 K2: „Neue Partie“ fragt erst nach; Abbrechen lässt den Spielstand unverändert', () => {
