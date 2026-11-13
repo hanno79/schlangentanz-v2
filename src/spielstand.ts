@@ -12,8 +12,7 @@ verloren.
 
 **Warum hier und nicht in `engine/`.** Speichern ist keine Spielregel. Die Engine
 ist rein funktional und kennt keine Browser-API; das soll so bleiben, denn genau
-daran hängt, dass sie im Test ohne jsdom läuft. (Anders als `ueberhand.ts`, das
-in die Engine gehörte — dort rechnete `turnState.ts` die Regel selbst nach.)
+daran hängt, dass sie im Test ohne jsdom läuft.
 
 **Warum jeder Zugriff abgesichert ist.** `localStorage` wirft in mehr Fällen als
 man denkt: im Privatmodus älterer Browser, bei vollem Kontingent, bei blockierten
@@ -42,7 +41,7 @@ export const SPIELSTAND_SCHLUESSEL = 'schlangentanz-v2:partie'
  * denselben Sturz. Hier ist es eines: Kein `window`, kein Zugriff, ein Wurf beim
  * Lesen oder Schreiben — alles endet im Ersatzwert.
  */
-export function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
+function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
   if (typeof window === 'undefined') return ersatz
   try {
     return tun(window.localStorage)
@@ -56,7 +55,7 @@ export function mitSpeicher<T>(tun: (speicher: Storage) => T, ersatz: T): T {
  * `Spielzustand['version']`: Hebt E1 das Format an, meldet der Typecheck diese
  * Stelle.
  */
-const SPEICHERFORMAT: Spielzustand['version'] = 1
+const SPEICHERFORMAT: Spielzustand['version'] = 2
 
 /**
  * Was im Speicher liegt.

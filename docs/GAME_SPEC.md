@@ -758,17 +758,16 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
 | Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
 |---|---|---|---|---|
-| C1 | Stückzahlen | Schlangenblockade 3, Schlangengrube 3, Schlangenhäutung 3, Aufgabenkarten 15 (A1) | je 4 Blockaden, Gruben und Häutungen; 14 Aufgaben, „Vielfaltskönig" fehlt | `src/engine/deck.ts`, `src/engine/aufgabenKarten.ts`, `src/engine/constants.ts` |
+| C1 | Stückzahlen | Schlangenblockade 3, Schlangengrube 3, Schlangenhäutung 3, Aufgabenkarten 15 (A1) | Stückzahlen und alle 15 Aufgaben im Material behoben mit E1 (13.11.2026); die Prüfung der Aufgaben fehlt noch (X1, X2) | `src/engine/deck.ts`, `src/engine/aufgabenKarten.ts`, `src/engine/constants.ts` |
 | C2 | Regenbogenschlange | Sonderkarte, die als Karte beliebiger Farbe in die Schlange kommt, an beliebiger Stelle (A5, A7.3); sie beginnt keine neue Schlange (D16) | lässt sich nicht ausspielen; es gibt keine Aktion dafür, nur den Abwurf | `src/engine/legalActions.ts` (per Test nachgestellt) |
 | C3 | Nachziehen im eigenen Zug | am Ende des eigenen Zuges auf 5 auffüllen (A5) | aufgefüllt wird erst beim Wechsel, für den nächsten Spieler | `src/engine/turnState.ts` (`beendeZug`) |
 | C4 | Nachziehen nach Sonderkarte | wer ausserhalb seines Zuges spielt, füllt erst zu Beginn seines nächsten Zuges auf; kein sofortiges Nachziehen (A6) | jeder zieht sofort eine Karte je gespielter Sonderkarte | `src/engine/turnState.ts` (`zieheOffeneNachziehungen`) |
-| C5 | Ablagestapel | jeder Spieler hat einen eigenen; gefressene Karten gehen auf den Stapel des Angreifers (A4, A6) | ein gemeinsamer Stapel | `src/engine/types.ts` (`ablagestapel`) |
 | C6 | Farbenschutz | nur als Reaktion auf eine Sonderkarte (A7.2), und zwar gegen jede Sonderkarte eines Gegners, die mich oder meine Schlange trifft, nie gegen Farbkarten (D10), auch während des Aussetzens (D18); wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht eine Karte und beendet den Zug (A5) | lässt sich zusätzlich im eigenen Zug auf eine eigene Schlange spielen und setzt sie auf „geschützt"; abwehrbar sind nur Blockade, Farbendieb, Schlangenfrass, Schlangengrube und Verdoppler | `src/engine/kartenwirkungen.ts` (`spieleFarbenschutz`) |
 | C7 | Verdoppler | ist die Sonderkarte des Zuges und wird mit einer Farbkarte gespielt, Reihenfolge frei; danach Hand auffüllen und sofort ein zweiter Zug mit Farbkarte und optional Sonderkarte; neben dem Verdoppler bis zu 3 Karten; betrifft keinen Mitspieler (A5, A7.8); im zweiten Zug ist ein Verdoppler nur wirkungslos ablegbar (D11, D23) | nur als erste Karte des Zuges; danach eine zusätzliche Karte im selben Zug ohne Auffüllen, höchstens 3 Karten einschliesslich Verdoppler; Mitspieler dürfen ihn mit Farbenschutz abwehren, der Mensch wird bei jedem Verdoppler gefragt | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` (`spieleVerdoppler`), `src/engine/reaktionsaufloesung.ts` |
 | C8 | Schlangenfrass | a) eine eigene Karte, b) eine eigene Blockade, c) zwei Karten der Mitspieler „sofern möglich", keine gegnerische Blockade (A7.4) | genau eine eigene oder genau zwei gegnerische Karten; gegnerische Blockaden sind nicht ausgenommen | `src/engine/legalActions.ts`, `src/engine/kartenwirkungen.ts` |
@@ -785,7 +784,6 @@ laufenden Spiel beobachtet.
 | C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle (D9); beim Gegner nur an eine bestehende Schlange (D19) | Farbkarte, Farbenfusion und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
 | C20 | Zeitpunkt der Aufgabenprüfung | eine Aufgabe kann erfüllt werden, sobald die Bedingung gilt und der Spieler am Zug ist (A9) | geprüft wird nur einmal am Ende der Ausspielphase | `src/engine/turnState.ts` (`beendeAufgabenpruefung`) |
 | C21 | Farbwechsler | „Es gelten auch Reihen" (A9) | geprüft werden vier verschiedene Einzelkarten direkt nacheinander | `src/engine/aufgabenPruefung.ts` (`pruefeFarbwechsler`) |
-| C22 | Erweiterungsmaterial | Comeback- und Risiko-Belohnungs-Karten liegen offen vor dem Spieler, sie sind kein Teil des Kartenstapels (A1, A4) | stehen als Sonderkarten im Deckmodul | `src/engine/deck.ts` |
 | C23 | Symmetriemeister | „min. 8 Karten, erste Hälfte Spiegelbild der zweiten" (A9); gerade Länge und Sonderkarten sagt die Website nicht | verlangt gerade Länge und ausschliesslich Farbkarten (Auslegung offen, Umsetzungsplan Frage G6) | `src/engine/aufgabenPruefung.ts` (`pruefeSymmetriemeister`) |
 
 Mit Teil A übereinstimmend geprüft: höchstens zwei Karten pro Zug (eine Farbkarte,

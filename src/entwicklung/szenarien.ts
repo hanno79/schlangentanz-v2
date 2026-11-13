@@ -1,7 +1,6 @@
-import { starteAusspielphase } from '../engine'
 import type { Spielzustand } from '../engine'
-import { spieleZufaelligBis, starteEntwicklerPartie } from './partie'
-import { erzeugeZufall } from './zufall'
+import { baukasten } from '../engine/testing/szenario'
+import { starteEntwicklerPartie } from './partie'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -12,74 +11,68 @@ export interface Szenario {
   erzeuge: () => Spielzustand
 }
 
-/** Spielt die Partie aus `saat` zufällig, aber reproduzierbar, bis `ziel` gilt. */
-function gespieltBis(saat: number, spieler: number, ziel: (zustand: Spielzustand) => boolean): Spielzustand {
-  return spieleZufaelligBis(starteEntwicklerPartie(saat, spieler), erzeugeZufall(saat), ziel)
-}
-
 /*
-Die Szenarien entstehen aus der Engine: eine Partie aus fester Saat, danach nur
-aufgezählte Aktionen und Phasenschritte. Damit ist jeder Zustand einer, den das
-Spiel wirklich erreicht. Einzige Ausnahme ist das absichtlich kaputte Szenario,
-an dem man sieht, wie eine verletzte Invariante aussieht.
+Die Startszenarien kommen aus `erstellePartie` mit fester Saat, die übrigen aus
+dem Szenario-Baukasten der Engine, also aus echtem Material. Einzige Ausnahme ist
+das absichtlich kaputte Szenario, an dem man sieht, wie eine verletzte Invariante
+aussieht.
 
-Die Regeln sind die der heutigen Engine (P0.4 ändert kein Verhalten). E1 und E2
-ziehen die Szenarien auf die neue Aktionsschicht um.
+Nach E1 lässt sich eine Partie aufbauen, aber noch nicht spielen: Die Engine
+zählt keine Aktion auf. Szenarien zum Spielen bringen E2 und die Kartentasks.
 */
 export const SZENARIEN: readonly Szenario[] = [
   {
-    name: 'partiebeginn',
-    beschreibung: 'Neue Partie aus Saat 1 mit zwei Spielern, vor dem ersten Zug.',
+    name: 'start-2',
+    beschreibung: 'Neue Partie aus Saat 1 mit zwei Spielern, ohne Erweiterung (A4).',
     erwartet:
-      'Zugphase Nachziehphase, je Spieler fünf offene Handkarten, keine Aktionsknöpfe, nur der Phasenknopf „Ausspielphase starten“.',
-    erzeuge: () => starteEntwicklerPartie(1, 2),
+      'Partiephase Laufend, Spieler 1 am Zug im Teilzug 1. Je Spieler 5 offene Handkarten und ein leerer eigener Ablagestapel, 98 Karten im Nachziehstapel, keine Aufgaben, keine Comeback- oder Risiko-Karten. Keine Aktionsknöpfe, alle Invarianten erfüllt.',
+    erzeuge: () => starteEntwicklerPartie(1, 2, false),
   },
   {
-    name: 'ausspielphase',
-    beschreibung: 'Saat 1, zwei Spieler, Spieler 1 hat die Ausspielphase begonnen.',
+    name: 'start-4',
+    beschreibung: 'Neue Partie aus Saat 4 mit vier Spielern, ohne Erweiterung (A4).',
     erwartet:
-      'Je aufgezählte Aktion ein Knopf. „Ausspielphase beenden“ lehnt die Engine ab, solange keine Karte gespielt ist; der Grund steht rot da.',
-    erzeuge: () => starteAusspielphase(starteEntwicklerPartie(1, 2)),
+      'Vier Spieler mit je 5 Handkarten und eigenem leeren Ablagestapel, 88 Karten im Nachziehstapel, Spieler 1 (Mensch) entscheidet. Keine Aktionsknöpfe, alle Invarianten erfüllt.',
+    erzeuge: () => starteEntwicklerPartie(4, 4, false),
   },
   {
-    name: 'vier-spieler',
-    beschreibung: 'Saat 4, vier Spieler, Ausspielphase des ersten Spielers.',
-    erwartet: 'Vier Spieler mit offenen Händen, Aktionsknöpfe für Spieler 1, keine verletzte Invariante.',
-    erzeuge: () => starteAusspielphase(starteEntwicklerPartie(4, 4)),
-  },
-  {
-    name: 'reaktionsfenster',
-    beschreibung: 'Saat 3, drei Spieler, gespielt bis zur ersten Sonderkarte, auf die ein Gegner reagieren muss.',
+    name: 'start-erweiterung',
+    beschreibung: 'Neue Partie aus Saat 3 mit drei Spielern und Erweiterung (A1, A4).',
     erwartet:
-      'Das offene Reaktionsfenster steht im Kopf. Die Knöpfe sind nur die Reaktionen des angegriffenen Spielers (Abwehren, falls er einen Farbenschutz hat, und Durchlassen).',
-    erzeuge: () => gespieltBis(3, 3, (zustand) => zustand.pendingReaktion !== null),
+      'Erweiterung: mit. 112 Karten im Spiel (97 im Nachziehstapel), 3 offene Aufgaben, je Spieler eine geheime Aufgabe, 1 Comeback- und 2 Risiko-Belohnungs-Karten offen vor jedem Spieler, 9 Aufgaben im Stapel. Alle Invarianten erfüllt.',
+    erzeuge: () => starteEntwicklerPartie(3, 3, true),
   },
   {
-    name: 'zugabschluss',
-    beschreibung: 'Saat 1, zwei Spieler, gespielt bis zum ersten Zugabschluss.',
+    name: 'alle-orte',
+    beschreibung:
+      'Aus dem Baukasten: drei Spieler mit Erweiterung, Karten an jedem Ort, den der Zustand kennt (Schlange, unter einer Fusion, Ablagestapel, ausliegende Grube, schwebende Karte, aus dem Spiel).',
     erwartet:
-      'Zugphase Zugabschluss mit den Knöpfen „Überzählige Handkarten abwerfen“ und „Zug beenden“; Abwerfen lehnt die Engine ab, wenn die Hand nicht über dem Limit ist.',
-    erzeuge: () => gespieltBis(1, 2, (zustand) => zustand.zugphase === 'Zugabschluss'),
-  },
-  {
-    name: 'endspurt',
-    beschreibung: 'Saat 1, drei Spieler, gespielt bis der Nachziehstapel leer ist und der Endspurt beginnt.',
-    erwartet: 'Spielphase Endspurt, leerer oder fast leerer Nachziehstapel, die Endrunde nennt die verbleibenden Spieler.',
-    erzeuge: () => gespieltBis(1, 3, (zustand) => zustand.spielphase === 'Endspurt'),
-  },
-  {
-    name: 'spielende',
-    beschreibung: 'Saat 1, drei Spieler, zufällig zu Ende gespielt.',
-    erwartet: 'Zugphase Spielende, keine Knöpfe, die Wertung nennt Punkte je Spieler und den Gewinner.',
-    erzeuge: () => gespieltBis(1, 3, (zustand) => zustand.zugphase === 'Spielende'),
+      'Spieler 1 hat eine Schlange mit einer Farbenfusion über zwei gelben Karten, KI-Gegner 1 eine mit Blockade und Regenbogenschlange. Vor KI-Gegner 2 liegt eine Schlangengrube von Spieler 1. KI-Gegner 1 ist am Zug; seine Schlangengrube auf KI-Gegner 2 schwebt, deshalb entscheidet KI-Gegner 2. Der Schlangenkorb liegt aus dem Spiel. Alle Invarianten erfüllt.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 3, erweiterung: true })
+        .schlange(0, ['Blau', 'Blau', { fusion: ['Gelb', 'Gelb'] }, 'Rot'])
+        .schlange(1, ['Rot', 'Schlangenblockade', 'Rot', 'Regenbogenschlange'])
+        .ablage(0, ['Farbendieb', 'Grün'])
+        .ablage(2, ['Farbenschutz'])
+        .grube(0, 2)
+        .ausDemSpiel(['Schlangenkorb des Glücks'])
+        .schwebend(
+          1,
+          'Schlangengrube',
+          (karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-3' }),
+          [2],
+        )
+        .haendeAuffuellen()
+        .amZug(1)
+        .zustand(),
   },
   {
     name: 'kaputt-doppelte-karte',
     beschreibung: 'Absichtlich kaputt: Die erste Handkarte von Spieler 1 liegt zusätzlich in der Hand von Spieler 2.',
     erwartet:
-      'Zwei Invarianten sind verletzt und rot: „Jede Spielkarte liegt genau einmal im Spiel“ nennt die doppelte Karte, und beim Laden lehnt die Engine die doppelte Id ab.',
+      'Drei Invarianten sind verletzt und rot: „Jede Spielkarte liegt genau einmal an genau einem Ort“ nennt die doppelte Karte, „Alle Ids sind eindeutig“ ebenso, und beim Laden lehnt die Engine den Stand ab.',
     erzeuge: () => {
-      const zustand = starteEntwicklerPartie(1, 2)
+      const zustand = starteEntwicklerPartie(1, 2, false)
       zustand.spieler[1].hand.push(zustand.spieler[0].hand[0])
       return zustand
     },

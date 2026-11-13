@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
 skript: tests/layout/entwicklertisch.hooks.spec.ts
-aenderung: task/P0.4-entwicklertisch (PR #27)
+aenderung: task/P0.4-entwicklertisch (PR #27); auf den Stand nach E1 gebracht mit task/E1-struktur (PR #31)
 ---
 
 ## Worum es geht
@@ -17,7 +17,7 @@ Der Entwicklertisch ist der Prüfstand für alle Engine-Tasks. Eine Partie aus S
 
 ## Bestanden, wenn
 
-Der Tisch zeigt „Partie aus Saat 1, 2 Spieler“, Zugphase Nachziehphase, zwei Spieler mit je 5 offenen Handkarten, Nachziehstapel 104 Karten, alle 6 Invarianten erfüllt. Der Rohzustand (Abschnitt „Rohzustand (wie gespeichert)“) ist nach Neuladen und nach erneutem Aufruf der Adresse Zeichen für Zeichen gleich.
+Der Tisch zeigt „Partie aus Saat 1, 2 Spieler, ohne Erweiterung“, Erweiterung ohne, Partiephase Laufend, am Zug „Spieler 1 (spieler-1), Teilzug 1“, zwei Spieler mit je 5 offenen Handkarten und leerem Ablagestapel, Nachziehstapel 98 Karten, alle 11 Invarianten erfüllt. Der Rohzustand (Abschnitt „Rohzustand (wie gespeichert)“) ist nach Neuladen und nach erneutem Aufruf der Adresse Zeichen für Zeichen gleich.
 
 ## Fehlgeschlagen, wenn
 
@@ -31,17 +31,17 @@ Handkarten, Stapelgrösse oder Rohzustand unterscheiden sich zwischen zwei Ladev
 
 ## Testdaten
 
-Adresse `http://localhost:4174/dev?seed=1&spieler=2`; Spieler 1 hat dort u. a. Wasserwirbel `blau-13` und Schlangenfrass `schlangenfrass-02` auf der Hand.
+Adresse `http://localhost:4174/dev?seed=1&spieler=2`.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Browser | Adresse öffnen | `http://localhost:4174/dev?seed=1&spieler=2` | Überschrift „Partie aus Saat 1, 2 Spieler“, Zugphase Nachziehphase |
+| 1 | Browser | Adresse öffnen | `http://localhost:4174/dev?seed=1&spieler=2` | Überschrift „Partie aus Saat 1, 2 Spieler, ohne Erweiterung“, Partiephase Laufend |
 | 2 | Abschnitt Spieler | Hände lesen | | Hand (5) bei beiden Spielern, Karten mit Name, Farbe, Punkten und Id |
 | 3 | Abschnitt Verlauf | „Rohzustand (wie gespeichert)“ aufklappen, Text kopieren | | JSON-Text |
 | 4 | Browser | Seite neu laden (F5), Rohzustand erneut kopieren | | Text gleich wie in Schritt 3 |
 
 ## Nicht abgedeckte Grenzfälle
 
-Ungültige Parameter: TF-DEV-005. Parameter `erweiterung`: TF-DEV-006. Andere Saaten (`seed=7&spieler=4`) prüft TF-DEV-002 mit.
+Ungültige Parameter: TF-DEV-005. Parameter `erweiterung`: TF-DEV-011. Andere Saaten (`seed=7&spieler=4`) prüft TF-DEV-002 mit.

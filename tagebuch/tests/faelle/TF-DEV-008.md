@@ -9,11 +9,12 @@ angelegt: 2026-11-13
 veraendert_daten: nein
 aenderung: task/P0.4-entwicklertisch (PR #27)
 grenzfall_von: TF-DEV-002
+status: stillgelegt
 ---
 
 ## Worum es geht
 
-Die heutige Engine meldet die Schlangenhäutung nur über `ermittleNichtEnumerierteAktionenHinweise` und zählt sie nicht auf. Der Tisch baut keine Aktion selbst (U3); er muss deshalb sichtbar sagen, dass es diese Möglichkeit gibt, damit niemand eine festgefahrene Partie für einen Fehler des Tischs hält. E1/E9 nehmen sie in die Aufzählung.
+Stillgelegt mit E1 (Branch task/E1-struktur, PR #31): Die Schlangenhäutung hat jetzt einen eigenen Aktionstyp, und die Engine meldet keine „nicht aufgezählten“ Aktionen mehr; aufgezählt wird sie, sobald E9 die Karte umsetzt. Die heutige Engine meldet die Schlangenhäutung nur über `ermittleNichtEnumerierteAktionenHinweise` und zählt sie nicht auf. Der Tisch baut keine Aktion selbst (U3); er muss deshalb sichtbar sagen, dass es diese Möglichkeit gibt, damit niemand eine festgefahrene Partie für einen Fehler des Tischs hält. E1/E9 nehmen sie in die Aufzählung.
 
 ## Bestanden, wenn
 

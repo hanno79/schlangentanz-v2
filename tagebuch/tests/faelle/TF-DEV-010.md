@@ -7,7 +7,7 @@ prioritaet: niedrig
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
-aenderung: task/P0.4-entwicklertisch (PR #27, Iteration 2)
+aenderung: task/P0.4-entwicklertisch (PR #27, Iteration 2); auf den Stand nach E1 gebracht mit task/E1-struktur (PR #31)
 grenzfall_von: TF-DEV-002
 ---
 
@@ -17,7 +17,7 @@ Die Geräteklasse Handy der Abnahme ist 390 px breit. Ältere oder kleine Handys
 
 ## Bestanden, wenn
 
-Bei 320×640 mit Touch ist `document.documentElement.scrollWidth` gleich 320 auf `/dev?seed=7&spieler=4`, `/dev?szenario=spielende`, `/dev/szenarien` und `/dev`.
+Bei 320×640 mit Touch ist `document.documentElement.scrollWidth` gleich 320 auf `/dev?seed=7&spieler=4`, `/dev?szenario=alle-orte`, `/dev/szenarien` und `/dev`.
 
 ## Fehlgeschlagen, wenn
 
@@ -38,6 +38,6 @@ Die vier Adressen unter „Bestanden, wenn“.
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
 | 1 | Playwright 320×640 | Adresse öffnen, `scrollWidth` lesen | `/dev?seed=7&spieler=4` | 320 |
-| 2 | Playwright 320×640 | Adresse öffnen, `scrollWidth` lesen | `/dev?szenario=spielende` | 320, Wertungstabelle ganz sichtbar |
+| 2 | Playwright 320×640 | Adresse öffnen, `scrollWidth` lesen | `/dev?szenario=alle-orte` | 320, Wertungstabelle und die Aktion der schwebenden Karte ganz sichtbar |
 | 3 | Playwright 320×640 | Adresse öffnen, `scrollWidth` lesen | `/dev/szenarien` | 320, je Szenario eine Karte |
 | 4 | Playwright 320×640 | Adresse öffnen, `scrollWidth` lesen | `/dev` | 320 |

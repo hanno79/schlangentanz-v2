@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import App from '../../App'
-import { erstelleEinzelspielerSpielzustand, serialisiere } from '../../engine'
+import { erstellePartie, serialisiere } from '../../engine'
 import { SPIELSTAND_SCHLUESSEL, ladeSpielstand, speichereSpielstand } from '../../spielstand'
 
 /*
@@ -22,7 +22,6 @@ function kiGegner(): number {
 }
 
 beforeEach(() => {
-  // Die Partie wird bis E1 ohne Erweiterungs-Schalter angelegt; das meldet der Start als Warnung.
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
@@ -64,11 +63,14 @@ describe('O2 K1: Einstellungen und neue Partie', () => {
     expect(screen.getByTestId('einstellung-erweiterung')).toHaveTextContent(wort)
   })
 
-  it('O2 K1: der Spieltisch sagt, dass die Engine den Erweiterungs-Schalter noch nicht kennt', () => {
+  it('E1: der Erweiterungs-Schalter erreicht die Engine; es gibt keinen Ersatzschlüssel und keine Warnung mehr', () => {
     oeffneLobby()
+    fireEvent.click(screen.getByRole('checkbox', { name: /Erweiterung/ }))
     fireEvent.click(screen.getByRole('button', { name: 'Neue Partie' }))
-    expect(screen.getByTestId('hinweis-erweiterung')).toHaveTextContent(/noch nicht/)
-    expect(console.warn).toHaveBeenCalledTimes(1)
+    expect(ladeSpielstand()?.erweiterung).toBe(true)
+    expect(window.localStorage.getItem('schlangentanz-v2:erweiterung')).toBeNull()
+    expect(screen.queryByTestId('hinweis-erweiterung')).toBeNull()
+    expect(console.warn).not.toHaveBeenCalled()
   })
 
   it('O2 K1: der Spieltisch bietet einen Weg zurück in die Lobby', () => {
@@ -82,8 +84,8 @@ describe('O2 K1: Einstellungen und neue Partie', () => {
 })
 
 describe('O2 K2: Weiterspielen und Rückfrage', () => {
-  function legeSpielstandAn(gegner: number): string {
-    speichereSpielstand(erstelleEinzelspielerSpielzustand(gegner))
+  function legeSpielstandAn(gegner: number, erweiterung = false): string {
+    speichereSpielstand(erstellePartie({ spielerzahl: gegner + 1, erweiterung, zufall: Math.random }))
     const roh = window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)
     if (roh === null) throw new Error('legeSpielstandAn: Spielstand wurde nicht geschrieben')
     return roh
@@ -105,11 +107,15 @@ describe('O2 K2: Weiterspielen und Rückfrage', () => {
     expect(screen.getByTestId('einstellung-gegner')).toHaveTextContent('2')
   })
 
-  it('O2 K2: ein Spielstand ohne gemerkten Schalter zeigt die Erweiterung als unbekannt, nicht als aus', () => {
-    legeSpielstandAn(1)
+  it.each([
+    [true, 'an'],
+    [false, 'aus'],
+  ])('E1: Lobby und Spieltisch lesen die Erweiterung (%s) aus dem Spielstand selbst', (erweiterung, wort) => {
+    legeSpielstandAn(1, erweiterung)
     oeffneLobby()
+    expect(screen.getByTestId('laufende-partie')).toHaveTextContent(`Erweiterung ${wort}`)
     fireEvent.click(screen.getByRole('button', { name: 'Weiterspielen' }))
-    expect(screen.getByTestId('einstellung-erweiterung')).toHaveTextContent('unbekannt')
+    expect(screen.getByTestId('einstellung-erweiterung')).toHaveTextContent(wort)
   })
 
   it('O2 K2: „Neue Partie“ fragt erst nach; Abbrechen lässt den Spielstand unverändert', () => {

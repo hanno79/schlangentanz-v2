@@ -15,8 +15,8 @@ const ADRESSEN = [
   '/dev/szenarien',
   '/dev/szenarien/',
   '/dev?seed=1&spieler=4',
-  '/dev?szenario=spielende',
-  '/dev?szenario=reaktionsfenster',
+  '/dev?seed=1&spieler=4&erweiterung=1',
+  '/dev?szenario=alle-orte',
   '/dev?szenario=kaputt-doppelte-karte',
 ]
 

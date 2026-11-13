@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-003 pruefeInvarianten meldet jeden absichtlich kaputten Zustand mit der verletzten Invariante und der Id. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-003 pruefeInvarianten meldet jeden absichtlich kaputten Zustand mit der verletzten Invariante und der Id.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Invarianten sind das Netz unter allen späteren Engine-Tasks und dem Dauerlauf. Meldet eine nicht, was sie verspricht, fallen spätere Regelfehler nicht auf.</p><h2>Bestanden, wenn</h2><p>Jeder der folgenden kaputten Zustände, aus einem sauberen Zustand mit Schlange, Fusion, Grube, schwebender Karte und „aus dem Spiel“ gebaut, ist bei der genannten Invariante „verletzt“: Karte in zwei Schlangen verschiedener Spieler, nur eine Karte unter einer Fusion, schwebende Karte auch im Ablagestapel, Karte aus dem Spiel auch auf der Hand, Grube auch im Nachziehstapel, Sonderkarte mit getauschtem Namen bei gleicher Id, dieselbe Karte zweimal in einer Hand, erfundene Karte <code>blau-16</code>, Aufgabe offen und erfüllt zugleich, Risiko-Karte doppelt (Karten- beziehungsweise Aufgaben- oder Auslage-Invariante); dritte Schlange (höchstens 2 Schlangen); leere zweite Schlange (keine leere Schlange); Spieler-Id gleich Karten-Id, Schlangen-Id gleich Spieler-Id, zwei Aufgaben mit derselben Id (eindeutige Ids).</p><h2>Fehlgeschlagen, wenn</h2><p>Einer dieser Zustände ohne verletzte Invariante durchgeht oder <code>pruefeInvarianten</code> wirft.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E1-struktur (PR #31)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E1-struktur</code>, <code>npm ci</code> gelaufen, keine offenen Änderungen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Baukasten mit 4 Spielern, Erweiterung, Saat 77: Schlangen bei Spieler 2 (Rot, Fusion über Gelb/Gelb, Blau) und Spieler 3 (Grün, Grün; Braun), Verdoppler im Ablagestapel von Spieler 4, Grube von Spieler 4 vor Spieler 2, Schlangenkorb aus dem Spiel, schwebende Blockade von Spieler 1.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Eigene Testdatei des Prüfers (<code>E1-pruefer-probe.test.ts</code>, vorübergehend unter <code>src/</code> abgelegt) mit <code>npx vitest run</code> ausführen; erwartet 20 von 20 grün.</p></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-ENGINE-006.html">TF-ENGINE-006</a></td><td>Schaltet man eine einzelne Prüfung in pruefeInvarianten oder im Szenario-Baukasten ab, wird mindestens ein Test rot.</td><td><span class="status status-bestanden">bestanden</span> 13.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Grube vor dem eigenen Spieler, Angreifer unter den Betroffenen, weniger als 3 offene Aufgaben bei vollem Aufgabenstapel, Farbkarte „aus dem Spiel“ und unmögliche Zugzähler meldet keine Invariante; Kriterium 7 von E1 verlangt sie nicht, die Kartentasks und E2 sollen sie aufnehmen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 12:03</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E1) &middot; agent &middot; pruefung-E1 @ <span class="commit" title="d26f2c40054f0ab92e9cc2cac8317c3014c3d577">d26f2c4</span></p><p>Eigene Probe 20/20 grün: 15 kaputte Zustände je an der richtigen Invariante gemeldet (Doppelt/Fehlt/Verändert/Unbekannt mit Id; 3 Schlangen; leere Schlange; Mehrfach vergeben gruen-01, spieler-1, aufgabe-10). Nicht in den Tests: Namenstausch verdoppler-01 -&gt; &#x27;Verändert: verdoppler-01&#x27;, Karte zweimal in einer Hand, erfundene blau-16, Aufgabe offen+erfüllt, Risiko doppelt. Nicht gemeldet und nicht verlangt: Grube vor sich selbst, Angreifer als Betroffener, 2 offene Aufgaben bei vollem Stapel, Farbkarte aus dem Spiel, 7 Farbkarten im Teilzug.</p><ul class="belege"><li><a href="belege/2026-11-13-1203-TF-ENGINE-003-1.txt">2026-11-13-1203-TF-ENGINE-003-1.txt</a></li><li><a href="belege/2026-11-13-1203-TF-ENGINE-003-2.ts">2026-11-13-1203-TF-ENGINE-003-2.ts</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,22 +1,70 @@
 /*
-Author: rahn
-Datum: 31.05.2026
-Version: 1.0
-Beschreibung: Zentrale Exporte für die Schlangentanz-Engine.
+Die Schnittstelle der Engine für Oberfläche und KI (Plan, Abschnitt 10). Wer
+ausserhalb von `src/engine/` etwas aus der Engine braucht, holt es hier (U3).
 */
 
+// Zustand und Aktionen
 export * from './types';
 export * from './constants';
-export { aufgabenPool, erstelleAufgabenStapel } from './aufgabenKarten';
-export { ermittleErfuellteOffeneAufgaben, ermittleFarbkombinationFortschritt } from './aufgabenPruefung';
-export { erstelleFarbkarten, erstelleSonderkarten, erstelleHauptdeck, erstelleSpieldeck, erstelleErweiterungsSonderkarten, mischeDeck } from './deck';
-export { erstelleSpielzustand, erstelleEinzelspielerSpielzustand } from './state';
-export { serialisiere, deserialisiere } from './serialization';
-export { pruefeAktion, ermittleLegaleAktionen, ermittleReaktionsAktionen, ermittleNichtEnumerierteAktionenHinweise, anwendeAktion } from './legalActions';
-export type { AktionErgebnis, NichtEnumerierteAktionHinweis, SpielAktion, NeueSchlangeStartenAktion, KarteAnlegenAktion, PflichtAbwurfAktion, SonderkarteSpielenAktion, SchlangenblockadeSpielenAktion, SchlangenblockadeAbwehrenAktion, SchlangenblockadeDurchlassenAktion, VerdopplerSpielenAktion, VerdopplerAbwehrenAktion, VerdopplerDurchlassenAktion, FarbenschutzSpielenAktion, SchlangengrubeAbwehrenAktion, SchlangengrubeDurchlassenAktion, FarbendiebSpielenAktion, FarbendiebAbwehrenAktion, FarbendiebDurchlassenAktion, SchlangenfrassAbwehrenAktion, SchlangenfrassDurchlassenAktion, FarbenfusionSpielenAktion, SchlangenhaeutungSpielenAktion, SchlangenfrassSpielenAktion } from './legalActions';
-export { ueberhandAnzahl, ueberhandAbwurfKartenIds } from './ueberhand';
-export { starteAusspielphase, beendeAusspielphase, beendeAufgabenpruefung, beendeZug, werfeUeberzaehligeHandkartenAb, werfeKarteMangelsSpielbarerAktionAb, starteNeueSchlange, legeKarteAnSchlangeAn, spieleSchlangengrube, spieleSchlangenblockade, spieleVerdoppler, spieleFarbenschutz, spieleFarbendieb, spieleFarbenfusion, spieleSchlangenhaeutung, spieleSchlangenfrass } from './turnState';
+export { AKTIONSTYPEN } from './aktionen/typen';
+export type {
+  Aktionstyp,
+  AktionsErgebnis,
+  BlockadeLegenAktion,
+  Ereignis,
+  FarbendiebSpielenAktion,
+  FarbkarteLegenAktion,
+  Farbkartenziel,
+  FusionLegenAktion,
+  KartenAktion,
+  Pruefergebnis,
+  ReagierenAktion,
+  RegenbogenschlangeLegenAktion,
+  SchlangenfrassSpielenAktion,
+  SchlangengrubeSpielenAktion,
+  SchlangenhaeutungSpielenAktion,
+  SonderkarteWirkungslosAblegenAktion,
+  SpielAktion,
+  UeberhandAbwerfenAktion,
+  VerdopplerSpielenAktion,
+  ZugBeendenAktion,
+} from './aktionen/typen';
+
+// Partie beginnen, Aktionen aufzählen, prüfen und anwenden
+export { erstellePartie } from './state';
+export type { PartieOptionen } from './state';
+export { ermittleAktionen } from './aktionen/enumerieren';
+export { ermittleEntscheider, pruefeAktion } from './aktionen/pruefen';
+export { anwendeAktion } from './aktionen/anwenden';
+
+// Invarianten, Speichern und Laden
+export { istAuslagekarte, pruefeInvarianten } from './invarianten';
+export type { InvariantenBefund } from './invarianten';
+export { deserialisiere, serialisiere } from './serialization';
+
+// Wertung
 export { ermittleFarbgruppen } from './colorGroups';
 export type { Farbgruppe } from './colorGroups';
-export { berechneFarbgruppenPunkte, berechneSpielerFarbgruppenPunkte, berechneSpielerAufgabenPunkte, berechneSpielerGrundpunkte, berechneSpielGesamtwertung, berechneSpielzustandGesamtwertung, berechneGewinner, ermittleRegenbogenWildfarben } from './scoring';
-export type { FarbgruppenWertung, FarbgruppenPunkteErgebnis, SchlangenFarbgruppenPunkteErgebnis, SpielerFarbgruppenPunkteErgebnis, AufgabenPunkteEintrag, SpielerAufgabenPunkteErgebnis, SpielerGrundpunkteErgebnis, SpielerWertungsEintrag, SpielGesamtwertungErgebnis, GewinnerEintrag, GewinnerErgebnis } from './scoring';
+export {
+  berechneFarbgruppenPunkte,
+  berechneGewinner,
+  berechneSpielerAufgabenPunkte,
+  berechneSpielerFarbgruppenPunkte,
+  berechneSpielerGrundpunkte,
+  berechneSpielGesamtwertung,
+  berechneSpielzustandGesamtwertung,
+  ermittleRegenbogenWildfarben,
+} from './scoring';
+export type {
+  AufgabenPunkteEintrag,
+  FarbgruppenPunkteErgebnis,
+  FarbgruppenWertung,
+  GewinnerEintrag,
+  GewinnerErgebnis,
+  SchlangenFarbgruppenPunkteErgebnis,
+  SpielerAufgabenPunkteErgebnis,
+  SpielerFarbgruppenPunkteErgebnis,
+  SpielerGrundpunkteErgebnis,
+  SpielerWertungsEintrag,
+  SpielGesamtwertungErgebnis,
+} from './scoring';

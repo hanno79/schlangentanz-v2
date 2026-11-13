@@ -59,30 +59,13 @@ function Inhalt({ anfrage }: { anfrage: EntwicklerAnfrage }) {
     case 'partie':
       return (
         <Tisch
-          titel={`Partie aus Saat ${anfrage.saat}, ${anfrage.spieler} Spieler`}
-          erzeuge={() => starteEntwicklerPartie(anfrage.saat, anfrage.spieler)}
-          hinweis={<ErweiterungsHinweis erweiterung={anfrage.erweiterung} />}
+          titel={`Partie aus Saat ${anfrage.saat}, ${anfrage.spieler} Spieler, ${anfrage.erweiterung === 1 ? 'mit' : 'ohne'} Erweiterung`}
+          erzeuge={() => starteEntwicklerPartie(anfrage.saat, anfrage.spieler, anfrage.erweiterung === 1)}
         />
       )
     case 'fehler':
       return <Fehler meldung={anfrage.meldung} />
   }
-}
-
-/*
-Die heutige Engine hat keinen Schalter für die Erweiterung: Schlangenhäutung und
-Aufgaben sind immer dabei, Comeback, Risiko-Belohnung und Schlangenkorb nie.
-Der Parameter wird deshalb angenommen und angezeigt, ändert die Partie aber
-nicht, bis X1 den Schalter in die Engine bringt. Das steht hier sichtbar, damit
-niemand eine Basis-Partie für eine mit Erweiterung hält oder umgekehrt.
-*/
-function ErweiterungsHinweis({ erweiterung }: { erweiterung: 0 | 1 }) {
-  return (
-    <p className="et-hinweis" data-testid="hinweis-erweiterung">
-      Erweiterung angefordert: {erweiterung}. Die Engine kennt diesen Schalter noch nicht (kommt mit X1); die Partie
-      läuft mit dem heutigen Kartenmaterial, gleich welcher Wert hier steht.
-    </p>
-  )
 }
 
 function Startseite() {

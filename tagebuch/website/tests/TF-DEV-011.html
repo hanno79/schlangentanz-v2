@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-011 erweiterung=1 baut am Entwicklertisch eine Partie mit Erweiterung, erweiterung=0 eine ohne. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-011 erweiterung=1 baut am Entwicklertisch eine Partie mit Erweiterung, erweiterung=0 eine ohne.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Seit E1 kennt die Engine den Erweiterungs-Schalter. Der Entwicklertisch muss ihn aus der Adresse übernehmen, sonst prüft man am Tisch immer nur das Basis-Spiel. TF-DEV-006 hielt das Gegenteil fest, als die Engine den Schalter noch nicht kannte.</p><h2>Bestanden, wenn</h2><p><code>/dev?seed=8&amp;spieler=3&amp;erweiterung=1</code> zeigt „Erweiterung mit“, 97 Karten im Nachziehstapel, „Offene Aufgaben (3)“, „Aufgabenstapel: 9 Karten“ und je Spieler eine geheime Aufgabe, eine Comeback- und zwei Risiko-Karten. <code>/dev?seed=7&amp;spieler=2&amp;erweiterung=0</code> zeigt „Erweiterung ohne“, 98 im Nachziehstapel, keine Aufgaben, zweimal geladen dieselbe erste Handkarte. Alle Invarianten sind erfüllt.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Erweiterung fehlt trotz <code>erweiterung=1</code>, oder Aufgaben erscheinen ohne Erweiterung.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>13.11.2026</dd><dt>Änderung</dt><dd>task/E1-struktur (PR #31)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Port 4174</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saat 8 mit 3 Spielern und Erweiterung, Saat 7 mit 2 Spielern ohne Erweiterung, Saat 5 mit der ungültigen Spielerzahl 5.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Adresszeile</td><td>öffnen</td><td>`/dev?seed=8&amp;spieler=3&amp;erweiterung=1`</td><td>Werte wie unter „Bestanden, wenn“</td></tr><tr><td>2</td><td>Adresszeile</td><td>zweimal öffnen</td><td>`/dev?seed=7&amp;spieler=2&amp;erweiterung=0`</td><td>gleiche erste Handkarte, keine Aufgaben</td></tr><tr><td>3</td><td>Adresszeile</td><td>öffnen</td><td>`/dev?seed=5&amp;spieler=5&amp;erweiterung=0`</td><td>rote Meldung „Parameter spieler muss eine Zahl von 2 bis 4 sein“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Keine.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 13:40</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E1 Iteration 3) &middot; agent &middot; pruefung-E1-i3 @ <span class="commit" title="02284e76ee5afd0749dd004e4a4fb5a16d685765">02284e7</span> / Playwright Chromium 1.60.0, Testhook-Build Port 4174, 1280x900</p><p>seed=8&amp;spieler=3&amp;erweiterung=1: Erweiterung mit, 97 im Nachziehstapel, Offene Aufgaben (3), Aufgabenstapel 9, 3 geheime Aufgaben, 6 Risiko-Karten, alle Invarianten erfüllt. seed=7&amp;spieler=2&amp;erweiterung=0: 98, Offene Aufgaben (0), erste Handkarte zweimal gruen-01, alle erfüllt</p><ul class="belege"><li><a href="belege/2026-11-13-1340-TF-DEV-011-1.txt">2026-11-13-1340-TF-DEV-011-1.txt</a></li></ul></article><article class="lauf status-bestanden"><h3><time datetime="2026-11-13">13.11.2026 12:03</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E1) &middot; agent &middot; pruefung-E1 @ <span class="commit" title="d26f2c40054f0ab92e9cc2cac8317c3014c3d577">d26f2c4</span> / eingebauter Browser 1280x900</p><p>seed=8/3 Spieler/erweiterung=1: &#x27;Erweiterung mit&#x27;, Stapel 97, Offene Aufgaben (3), Aufgabenstapel 9, 3 geheime, 3 Comeback, 6 Risiko. seed=7/2/0 zweimal: &#x27;ohne&#x27;, Stapel 98, erste Handkarte beide Male gruen-01. seed=2/4/1: Stapel 92, 3 offen, 8 im Stapel. spieler=5: &#x27;Parameter spieler muss eine Zahl von 2 bis 4 sein, erhalten: „5“.&#x27; Alle Invarianten erfüllt.</p><ul class="belege"><li><a href="belege/2026-11-13-1203-TF-DEV-011-1.png"><img class="beleg-vorschau" src="belege/2026-11-13-1203-TF-DEV-011-1.png" alt="Beleg 2026-11-13-1203-TF-DEV-011-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1203-TF-DEV-011-2.png"><img class="beleg-vorschau" src="belege/2026-11-13-1203-TF-DEV-011-2.png" alt="Beleg 2026-11-13-1203-TF-DEV-011-2.png" loading="lazy"></a></li><li><a href="belege/2026-11-13-1203-TF-DEV-011-3.png"><img class="beleg-vorschau" src="belege/2026-11-13-1203-TF-DEV-011-3.png" alt="Beleg 2026-11-13-1203-TF-DEV-011-3.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

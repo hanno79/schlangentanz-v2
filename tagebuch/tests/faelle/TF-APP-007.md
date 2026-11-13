@@ -7,13 +7,13 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: ja
-aenderung: task/O2-app-rahmen-lobby (PR #29)
+aenderung: task/O2-app-rahmen-lobby (PR #29); an Format 2 angepasst mit task/E1-struktur (PR #31)
 grenzfall_von: TF-APP-005
 ---
 
 ## Worum es geht
 
-Ein Spielstand kann unlesbar werden, etwa nach einem Update mit neuem Speicherformat. Das ist ein Fehler beim Start der App. Verschwindet die Partie dann ohne ein Wort, weiss der Spieler nicht, was passiert ist, und niemand erfährt davon (Plan O2, Kriterium 4).
+Ein Spielstand kann beschädigt werden, etwa durch einen Fehler beim Schreiben oder eine fremde Änderung im Speicher. Das ist ein Fehler beim Start der App. Ein Stand aus einem älteren Speicherformat ist dagegen erwartet und wird nur als Warnung protokolliert (TF-APP-012). Verschwindet die Partie dann ohne ein Wort, weiss der Spieler nicht, was passiert ist, und niemand erfährt davon (Plan O2, Kriterium 4).
 
 ## Bestanden, wenn
 
@@ -31,7 +31,7 @@ Die Lobby erscheint ohne jeden Hinweis, als hätte es nie eine Partie gegeben, u
 
 ## Testdaten
 
-In der Konsole: `localStorage.setItem('schlangentanz-v2:partie', '{"version":1,"kaputt":true}'); localStorage.setItem('schlangentanz-v2:erweiterung', '1')`
+In der Konsole: `localStorage.setItem('schlangentanz-v2:partie', '{"version":2,"kaputt":true}')`. Seit E1 ist 2 das aktuelle Speicherformat; mit `version` 1 wäre es ein älteres Format und kein Defekt.
 
 ## Schritte
 
@@ -39,7 +39,7 @@ In der Konsole: `localStorage.setItem('schlangentanz-v2:partie', '{"version":1,"
 |---|---|---|---|---|
 | 1 | Entwicklerwerkzeuge, Konsole | unlesbaren Spielstand anlegen | Ausdruck aus den Testdaten | |
 | 2 | Browser | Seite neu laden (F5) | | sichtbare Meldung zum Spielstand |
-| 3 | Konsole | Speicher ansehen | `Object.keys(localStorage)` | kein verwaister Schlüssel `schlangentanz-v2:erweiterung` ohne Spielstand |
+| 3 | Konsole | Speicher ansehen | `localStorage.getItem('schlangentanz-v2:partie')` | `null`: der beschädigte Stand ist verworfen |
 
 ## Zurücksetzen
 

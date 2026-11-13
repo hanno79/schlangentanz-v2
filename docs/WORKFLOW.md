@@ -219,16 +219,23 @@ prüft im Browser, dass `/dev` dort nur den Platzhalter zeigt.
 | `/dev?szenario=<name>` | lädt ein Szenario |
 | `/dev?seed=<n>&spieler=<2–4>&erweiterung=<0\|1>` | Partie aus Saat; gleiche Saat, gleiche Partie |
 
-Der Tisch zeigt alle Hände offen, alle Stapel, Phase, Wertung und verletzte
-Invarianten in Rot. Knöpfe gibt es für jede Aktion, die die Engine aufzählt,
-und für die Phasenschritte der aktuellen Zugphase; lehnt die Engine einen
-Schritt ab, steht ihr Grund da. Die Schlangenhäutung zählt die heutige Engine
-nicht auf, sie hat deshalb keinen Knopf (kommt mit E1/E9). Der Parameter
-`erweiterung` wird angezeigt, ändert die Partie aber erst, wenn die Engine den
-Schalter hat (X1).
+Der Tisch zeigt den ganzen Zustand offen: alle Hände, Schlangen samt Karten
+unter einer Farbenfusion, die Ablagestapel je Spieler, ausliegende Gruben,
+die schwebende Karte, Karten aus dem Spiel, Partiephase, Zug mit Teilzug, wer
+gerade entscheidet, die Wertung und verletzte Invarianten in Rot. Knöpfe gibt
+es für jede Aktion, die die Engine aufzählt; lehnt die Engine eine ab, steht
+ihr Grund da. Seit E1 kennt die Engine den Erweiterungs-Schalter, der Parameter
+`erweiterung` baut die Partie also mit oder ohne Erweiterung. Nach E1 zählt die
+Engine noch keine Aktion auf (alle Karten sind Platzhalter); die Knöpfe kommen
+mit E2 und den Kartentasks. Szenarien entstehen aus `erstellePartie` mit
+fester Saat oder aus dem Szenario-Baukasten `src/engine/testing/szenario.ts`.
 
 Lokal: `npm run build:testhooks`, dann `npm run preview:testhooks` und
 `http://localhost:4174/dev` öffnen.
+
+**Bildschirmfotos vom Tisch:** Er wird nachgeladen; ohne Warten zeigt das Foto
+nur „Lädt …“. Deshalb immer mit
+`node scripts/pruefung/bildschirmfotos.mjs <adresse> --name <ID>-<was> --ziel <ordner> --warte-auf '[data-testid="verlauf"]'`.
 
 > **`VITE_TEST_HOOKS` gehört ausschließlich in die Vercel-Preview-Umgebung —
 > ausdrücklich NICHT in Production.**

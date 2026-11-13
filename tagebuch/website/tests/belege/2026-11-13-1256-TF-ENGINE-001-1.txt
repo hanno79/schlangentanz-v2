@@ -1,0 +1,21 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a783fce56df13bd39
+
+stdout | src/engine/__tests__/zz_pruefer_tmp.test.ts > Pruefer: Material, 200 eigene Zufallszustaende, echter Format-1-Stand
+2 Sp, Erw false: gesamt 108, Stapel 98, Haende 5/5, offen 0, geheim 0, Aufgabenstapel 0; Blau 15, Grün 9, Farbenfusion 4, Gelb 15, Regenbogenschlange 4, Braun 12, Rot 15, Violett 12, Schlangenblockade 3, Farbendieb 4, Schlangenfrass 4, Farbenschutz 4, Verdoppler 4, Schlangengrube 3
+2 Sp, Erw true: gesamt 112, Stapel 102, Haende 5/5, offen 3, geheim 2, Aufgabenstapel 10; Farbenschutz 4, Rot 15, Farbenfusion 4, Schlangengrube 3, Verdoppler 4, Schlangenhäutung 3, Schlangenblockade 3, Farbendieb 4, Blau 15, Schlangenfrass 4, Braun 12, Grün 9, Gelb 15, Violett 12, Regenbogenschlange 4, Schlangenkorb des Glücks 1
+3 Sp, Erw false: gesamt 108, Stapel 93, Haende 5/5/5, offen 0, geheim 0, Aufgabenstapel 0; Gelb 15, Regenbogenschlange 4, Braun 12, Blau 15, Rot 15, Violett 12, Schlangenblockade 3, Farbendieb 4, Schlangenfrass 4, Grün 9, Farbenfusion 4, Farbenschutz 4, Verdoppler 4, Schlangengrube 3
+3 Sp, Erw true: gesamt 112, Stapel 97, Haende 5/5/5, offen 3, geheim 3, Aufgabenstapel 9; Schlangengrube 3, Verdoppler 4, Rot 15, Schlangenhäutung 3, Farbenschutz 4, Schlangenblockade 3, Farbendieb 4, Blau 15, Schlangenfrass 4, Farbenfusion 4, Braun 12, Grün 9, Gelb 15, Violett 12, Regenbogenschlange 4, Schlangenkorb des Glücks 1
+4 Sp, Erw false: gesamt 108, Stapel 88, Haende 5/5/5/5, offen 0, geheim 0, Aufgabenstapel 0; Blau 15, Rot 15, Regenbogenschlange 4, Gelb 15, Violett 12, Schlangenblockade 3, Farbendieb 4, Schlangenfrass 4, Grün 9, Braun 12, Farbenfusion 4, Farbenschutz 4, Verdoppler 4, Schlangengrube 3
+4 Sp, Erw true: gesamt 112, Stapel 92, Haende 5/5/5/5, offen 3, geheim 4, Aufgabenstapel 8; Schlangenblockade 3, Verdoppler 4, Farbendieb 4, Blau 15, Schlangenfrass 4, Farbenfusion 4, Braun 12, Grün 9, Rot 15, Gelb 15, Violett 12, Regenbogenschlange 4, Schlangenkorb des Glücks 1, Farbenschutz 4, Schlangengrube 3, Schlangenhäutung 3
+Zufallszustaende 5000-5199 gleich nach Laden: 200
+Format-1-Stand version 1, 10804 Zeichen
+deserialisiere: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit dem Neuaufbau gilt Format 2, alte Spielstände werden verworfen.
+
+ ✓ src/engine/__tests__/zz_pruefer_tmp.test.ts > Pruefer: Material, 200 eigene Zufallszustaende, echter Format-1-Stand 626ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  12:50:50
+   Duration  3.95s (transform 325ms, setup 280ms, import 329ms, tests 627ms, environment 2.41s)
+

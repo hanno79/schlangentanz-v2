@@ -17,8 +17,13 @@ import {
   verwirfSpielstand,
   SPIELSTAND_SCHLUESSEL,
 } from './spielstand'
-import { serialisiere } from './engine'
-import { einzelspielerPartie } from './test/brettTest'
+import { erstellePartie, serialisiere } from './engine'
+import { erzeugeZufall } from './engine/testing/zufall'
+
+/** Eine frische Partie: ein Mensch, ein KI-Gegner. */
+function einzelspielerPartie() {
+  return erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(1) })
+}
 
 afterEach(() => {
   vi.restoreAllMocks()
@@ -53,6 +58,14 @@ describe('Spielstand', () => {
   it('verwirft auch einen strukturell ungültigen Spielstand', () => {
     // Gültiges JSON, aber kein Spielzustand — `deserialisiere` lehnt das ab.
     window.localStorage.setItem(SPIELSTAND_SCHLUESSEL, JSON.stringify({ version: 1, spieler: 'nein' }))
+
+    expect(ladeSpielstand()).toBeNull()
+    expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()
+  })
+
+  it('E1: verwirft einen Spielstand im alten Format 1 (Plan 2.3)', () => {
+    const formatEins = { ...JSON.parse(serialisiere(einzelspielerPartie())), version: 1 }
+    window.localStorage.setItem(SPIELSTAND_SCHLUESSEL, JSON.stringify(formatEins))
 
     expect(ladeSpielstand()).toBeNull()
     expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)).toBeNull()

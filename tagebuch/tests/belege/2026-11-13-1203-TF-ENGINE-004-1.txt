@@ -1,0 +1,62 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-acd5fc076d38e7a37
+
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: eigene Abzählung > Material selbst abgezählt aus A1
+BASIS {"n":108,"z":{"Blau":15,"Rot":15,"Gelb":15,"Violett":12,"Braun":12,"Grün":9,"Farbenschutz":4,"Regenbogenschlange":4,"Schlangenfrass":4,"Schlangenblockade":3,"Farbendieb":4,"Schlangengrube":3,"Farbenfusion":4,"Verdoppler":4},"farb":78,"sonder":30}
+ERW {"n":112,"z":{"Blau":15,"Rot":15,"Gelb":15,"Violett":12,"Braun":12,"Grün":9,"Farbenschutz":4,"Regenbogenschlange":4,"Schlangenfrass":4,"Schlangenblockade":3,"Farbendieb":4,"Schlangengrube":3,"Farbenfusion":4,"Verdoppler":4,"Schlangenhäutung":3,"Schlangenkorb des Glücks":1},"farb":78,"sonder":34}
+
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): Sonderkarte mit getauschtem Namen bei gleicher Id
+NAMENSTAUSCH [
+  'Jede Spielkarte liegt genau einmal an genau einem Ort: Verändert: verdoppler-01.'
+]
+
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): dieselbe Karte zweimal in derselben Hand
+HAND2X [
+  'Jede Spielkarte liegt genau einmal an genau einem Ort: Doppelt: farbenschutz-04 (2×).',
+  'Alle Ids sind eindeutig: Mehrfach vergeben: farbenschutz-04.'
+]
+
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7d: Spieler-Id gleich Karten-Id; Schlangen-Id gleich Spieler-Id; zwei Aufgaben mit derselben Id
+IDS [ 'Alle Ids sind eindeutig: Mehrfach vergeben: gruen-01.' ] [
+  'Alle Ids sind eindeutig: Mehrfach vergeben: spieler-1.',
+  'Alle Verweise auf Spieler und Karten sind gültig: Die schwebende Aktion nennt die unbekannte Schlange schlange-2.'
+] [
+  'Jede Aufgabenkarte liegt genau einmal im Spiel: Fehlt: aufgabe-15. Doppelt: aufgabe-10 (2×). Verändert: aufgabe-10.',
+  'Alle Ids sind eindeutig: Mehrfach vergeben: aufgabe-10.'
+]
+
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > Nicht verlangt, nur beobachtet: was die Invarianten nicht melden
+NICHT GEMELDET {"grubeVorSichSelbst":[],"angreiferAlsBetroffener":[],"nurZweiOffeneTrotzStapel":[],"farbkarteAusDemSpiel":[],"sieben_Farbkarten_im_Teilzug":[]}
+
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: Kriterien 5, 6, 8 > K5: gleiche Saat gleicher Anfang (alle 6), Aufgaben hängen von der Saat ab
+VERSCHIEDENE OFFENE AUFGABEN UEBER 20 SAATEN 19
+
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: eigene Abzählung > Material selbst abgezählt aus A1 17ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > belebter Zustand ist sauber 7ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a: Karte in zwei Schlangen verschiedener Spieler 4ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a: Karte unter der Fusion fehlt (nur eine Karte darunter wird entfernt) 3ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a: schwebende Karte zusätzlich im Ablagestapel 3ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a: Karte aus dem Spiel zusätzlich auf der Hand 2ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a: ausliegende Grube zusätzlich im Nachziehstapel 2ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): Sonderkarte mit getauschtem Namen bei gleicher Id 4ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): dieselbe Karte zweimal in derselben Hand 3ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): erfundene Karte blau-16 im Stapel 2ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): Aufgabe gleichzeitig offen und erfüllt 2ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7a (nicht in den Tests): Risiko-Karte gleichzeitig vor Spieler und aus dem Spiel 1ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7b: dritte Schlange bei Spieler 3 (aus echtem Material) 2ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7c: zweite Schlange leer 2ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > K7d: Spieler-Id gleich Karten-Id; Schlangen-Id gleich Spieler-Id; zwei Aufgaben mit derselben Id 7ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Gegenproben je Invariante > Nicht verlangt, nur beobachtet: was die Invarianten nicht melden 7ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Kriterien 5, 6, 8 > K5: gleiche Saat gleicher Anfang (alle 6), Aufgaben hängen von der Saat ab 6ms
+stdout | src/zz_pruefer_tmp.test.ts > Prüfer E1: Kriterien 5, 6, 8 > K6: echter Spielstand der alten Engine (Format 1) wird abgelehnt und vom Spielstand-Lader verworfen
+ALT {"ablagestapel":[],"aktiverSpielerIndex":0,"aufgabenStapel":[{"bedingung":"Habe eine Schlange mit mindestens 2 Farbfusio
+
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Kriterien 5, 6, 8 > K6: 200 weitere Zufallszustände (Saat 5000–5199) und alle Startpartien rund 443ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Kriterien 5, 6, 8 > K6: echter Spielstand der alten Engine (Format 1) wird abgelehnt und vom Spielstand-Lader verworfen 5ms
+ ✓ src/zz_pruefer_tmp.test.ts > Prüfer E1: Kriterien 5, 6, 8 > K8: Baukasten erfindet nichts 4ms
+
+ Test Files  1 passed (1)
+      Tests  20 passed (20)
+   Start at  11:51:23
+   Duration  4.02s (transform 472ms, setup 283ms, import 497ms, tests 529ms, environment 2.41s)
+

@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: ja
 skript: src/ui/lobby/Lobby.fehler.test.tsx
-aenderung: task/O2-app-rahmen-lobby (PR #29), Commit 04091c2
+aenderung: task/O2-app-rahmen-lobby (PR #29), Commit 04091c2; an Format 2 angepasst mit task/E1-struktur (PR #31)
 grenzfall_von: TF-APP-005
 ---
 
@@ -18,11 +18,11 @@ Nach jedem Wechsel des Speicherformats bringen wiederkehrende Spieler einen alte
 
 ## Bestanden, wenn
 
-Nach dem Neuladen steht über der Gegnerwahl ein gelber Kasten mit rotem Rand: „Die gespeicherte Partie liess sich nicht laden. Sie stammt aus einem älteren Speicherformat, das diese Fassung des Spiels nicht mehr liest. Sie wurde verworfen; starte eine neue Partie.“ „Weiterspielen“ fehlt. Danach sind `schlangentanz-v2:partie` und `schlangentanz-v2:erweiterung` beide `null`. In der Konsole steht genau eine Warnung „Gespeicherte Partie im älteren Speicherformat verworfen: …“ und kein Fehler. Nach einem zweiten Neuladen ist der Kasten weg.
+Nach dem Neuladen steht über der Gegnerwahl ein gelber Kasten mit rotem Rand: „Die gespeicherte Partie liess sich nicht laden. Sie stammt aus einem älteren Speicherformat, das diese Fassung des Spiels nicht mehr liest. Sie wurde verworfen; starte eine neue Partie.“ „Weiterspielen“ fehlt. Danach ist `schlangentanz-v2:partie` `null`. In der Konsole steht genau eine Warnung „Gespeicherte Partie im älteren Speicherformat verworfen: …“ und kein Fehler. Nach einem zweiten Neuladen ist der Kasten weg.
 
 ## Fehlgeschlagen, wenn
 
-Kein Kasten erscheint, im Kasten steht „beschädigt“, einer der beiden Schlüssel ist noch da, die Konsole zeigt einen Fehler (rot) statt einer Warnung, oder der Kasten erscheint auch nach dem zweiten Neuladen.
+Kein Kasten erscheint, im Kasten steht „beschädigt“, der Schlüssel ist noch da, die Konsole zeigt einen Fehler (rot) statt einer Warnung, oder der Kasten erscheint auch nach dem zweiten Neuladen.
 
 ## Vorbedingungen
 
@@ -32,7 +32,7 @@ Kein Kasten erscheint, im Kasten steht „beschädigt“, einer der beiden Schl�
 
 ## Testdaten
 
-In der Konsole: `localStorage.setItem('schlangentanz-v2:partie', '{"version":0,"spieler":[]}'); localStorage.setItem('schlangentanz-v2:erweiterung', '1')`. Gleiches Ergebnis erwartet mit `'{"version":-1}'`.
+In der Konsole: `localStorage.setItem('schlangentanz-v2:partie', '{"version":1,"spieler":[]}')`. Gleiches Ergebnis erwartet mit `'{"version":0,"spieler":[]}'` und `'{"version":-1}'`. Seit E1 gilt Format 2; jeder Stand mit kleinerer Versionsnummer ist ein älteres Format.
 
 ## Schritte
 
@@ -41,7 +41,7 @@ In der Konsole: `localStorage.setItem('schlangentanz-v2:partie', '{"version":0,"
 | 1 | Entwicklerwerkzeuge, Konsole | alten Spielstand anlegen | Ausdruck aus den Testdaten | keine Ausgabe |
 | 2 | Adresszeile | `/` öffnen | | Kasten mit „älteren Speicherformat“, kein „Weiterspielen“ |
 | 3 | Konsole | Meldungen ansehen | | eine Warnung, kein Fehler |
-| 4 | Konsole | Speicher ansehen | `[localStorage.getItem('schlangentanz-v2:partie'), localStorage.getItem('schlangentanz-v2:erweiterung')]` | `[null, null]` |
+| 4 | Konsole | Speicher ansehen | `localStorage.getItem('schlangentanz-v2:partie')` | `null` |
 | 5 | Browser | neu laden (F5) | | Lobby ohne Kasten |
 
 ## Zurücksetzen

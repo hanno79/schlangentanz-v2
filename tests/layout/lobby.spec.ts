@@ -58,7 +58,7 @@ test.describe('O2: Lobby mit laufender Partie', () => {
 test.describe('O2 K4: Lobby nach einem unlesbaren Spielstand', () => {
   test.beforeEach(async ({ page }) => {
     await oeffne(page, '/')
-    await page.evaluate(() => window.localStorage.setItem('schlangentanz-v2:partie', '{"version":1,"kaputt":true}'))
+    await page.evaluate(() => window.localStorage.setItem('schlangentanz-v2:partie', '{"version":2,"kaputt":true}'))
     await page.reload()
     await expect(page.getByTestId('spielstand-verworfen')).toBeVisible()
   })

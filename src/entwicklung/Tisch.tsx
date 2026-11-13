@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { anwendeAktion, ermittleNichtEnumerierteAktionenHinweise, serialisiere } from '../engine'
+import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
-import { erstelleAktionsLabel } from '../aktionsLabel'
+import { karteAnzeigename } from '../kartenTexte'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
-import { aufgezaehlteAktionen, phasenSchritte } from './partie'
 import { ZustandsAnsicht } from './ZustandsAnsicht'
 
 interface Eintrag {
@@ -53,11 +52,11 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
     setFehler(null)
   }
 
-  function fuehreAus(schritt: string, wandle: (vorher: Spielzustand) => Spielzustand) {
+  function fuehreAus(aktion: SpielAktion, beschriftung: string) {
     try {
-      setzeVerlauf([...verlauf, { zustand: wandle(zustand), schritt }])
+      setzeVerlauf([...verlauf, { zustand: anwendeAktion(zustand, aktion).zustand, schritt: beschriftung }])
     } catch (ablehnung) {
-      setFehler(`${schritt}: ${fehlertext(ablehnung)}`)
+      setFehler(`${beschriftung}: ${fehlertext(ablehnung)}`)
     }
   }
 
@@ -109,49 +108,38 @@ function laeufeNachArt(aktionen: SpielAktion[]): SpielAktion[][] {
   return laeufe
 }
 
-interface BedienungProps {
-  zustand: Spielzustand
-  fuehreAus: (schritt: string, wandle: (vorher: Spielzustand) => Spielzustand) => void
+/** Kurze Beschriftung: Aktionstyp und, wenn sie eine Karte spielt, deren Name. Die ganze Aktion steht im Tooltip. */
+function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
+  if (!('karteId' in aktion)) return aktion.typ
+  const hand = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand ?? []
+  const karte = hand.find((handkarte) => handkarte.id === aktion.karteId)
+  return karte === undefined ? `${aktion.typ} ${aktion.karteId}` : `${aktion.typ}: ${karteAnzeigename(karte)}`
 }
 
-/** Aufzählung und Beschriftung kosten bei Tausenden Aktionen spürbar; je Zustand einmal. */
-function bereiteAktionenVor(zustand: Spielzustand) {
-  const beschrifte = erstelleAktionsLabel(zustand)
-  const aktionen = aufgezaehlteAktionen(zustand)
-  return {
-    anzahl: aktionen.length,
-    laeufe: laeufeNachArt(aktionen).map((lauf) =>
-      lauf.map((aktion) => ({ aktion, text: JSON.stringify(aktion), label: beschrifte(aktion) })),
-    ),
-    nichtAufgezaehlt: ermittleNichtEnumerierteAktionenHinweise(zustand),
-  }
+interface BedienungProps {
+  zustand: Spielzustand
+  fuehreAus: (aktion: SpielAktion, beschriftung: string) => void
 }
 
 function Bedienung({ zustand, fuehreAus }: BedienungProps) {
-  const { anzahl, laeufe, nichtAufgezaehlt } = useMemo(() => bereiteAktionenVor(zustand), [zustand])
-  const schritte = phasenSchritte(zustand)
+  const laeufe = useMemo(
+    () =>
+      laeufeNachArt(ermittleAktionen(zustand)).map((lauf) =>
+        lauf.map((aktion) => ({ aktion, text: JSON.stringify(aktion), label: beschrifte(zustand, aktion) })),
+      ),
+    [zustand],
+  )
+  const anzahl = laeufe.reduce((summe, lauf) => summe + lauf.length, 0)
 
   return (
     <>
-      <h2>Phasenschritte</h2>
-      {schritte.length === 0 ? (
-        <p className="et-leer">Keine in dieser Zugphase.</p>
-      ) : (
-        <p>
-          {schritte.map((schritt) => (
-            <button
-              key={schritt.name}
-              type="button"
-              data-phasenschritt={schritt.name}
-              onClick={() => fuehreAus(schritt.name, schritt.fuehreAus)}
-            >
-              {schritt.name}
-            </button>
-          ))}
-        </p>
-      )}
       <h2>Aktionen der Engine ({anzahl})</h2>
-      {anzahl === 0 ? <p className="et-leer">Die Engine zählt hier keine Aktion auf.</p> : null}
+      {anzahl === 0 ? (
+        <p className="et-leer" data-testid="keine-aktion">
+          Die Engine zählt hier keine Aktion auf. Nach E1 lässt sich eine Partie aufbauen, aber noch nicht spielen; die
+          Aktionen kommen mit E2 und den Kartentasks.
+        </p>
+      ) : null}
       {laeufe.map((lauf, index) => (
         <div key={`${lauf[0].aktion.typ}-${index}`} className="et-aktionsgruppe">
           <h3>
@@ -164,7 +152,7 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
               className="et-aktion"
               data-aktion={text}
               title={text}
-              onClick={() => fuehreAus(label, (vorher) => anwendeAktion(vorher, aktion))}
+              onClick={() => fuehreAus(aktion, label)}
             >
               {label}
               <small>{aktion.spielerId}</small>
@@ -172,13 +160,6 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
           ))}
         </div>
       ))}
-      {nichtAufgezaehlt.length === 0 ? null : (
-        <p className="et-hinweis" data-testid="nicht-aufgezaehlt">
-          Die Engine meldet zusätzlich nicht aufgezählte Aktionen: {nichtAufgezaehlt.map((h) => h.typ).join(', ')}.
-          Sie haben keinen Knopf, weil der Tisch keine Aktion selbst baut (U3); E1 und E9 nehmen sie in die
-          Aufzählung.
-        </p>
-      )}
     </>
   )
 }
@@ -194,6 +175,7 @@ function Invarianten({ zustand }: { zustand: Spielzustand }) {
           <li
             key={befund.name}
             data-testid="invariante"
+            data-name={befund.name}
             data-verletzt={befund.verletzt ? 'ja' : 'nein'}
             className={befund.verletzt ? 'et-invariante et-invariante--verletzt' : 'et-invariante'}
           >

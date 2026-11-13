@@ -8,20 +8,20 @@ herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
 skript: tests/layout/entwicklertisch.hooks.spec.ts
-aenderung: task/P0.4-entwicklertisch (PR #27)
+aenderung: task/P0.4-entwicklertisch (PR #27); auf den Stand nach E1 gebracht mit task/E1-struktur (PR #31)
 ---
 
 ## Worum es geht
 
-Prüfer spielen Engine-Szenarien am Tisch mit echten Klicks nach. Das geht nur, wenn genau die Aktionen der Engine als Knöpfe dastehen und jeder Klick den Zustand sichtbar ändert (Plan P0.4, Kriterium 2). Phasenwechsel sind in der heutigen Engine keine Aktionen und stehen als eigene „Phasenschritte“ da.
+Prüfer spielen Engine-Szenarien am Tisch mit echten Klicks nach. Das geht nur, wenn genau die Aktionen der Engine als Knöpfe dastehen und jeder Klick den Zustand sichtbar ändert (Plan P0.4, Kriterium 2). Seit E1 gibt es keine Phasenschritte mehr; alles läuft über Aktionen. Nach E1 zählt die Engine aber noch keine Aktion auf, weil alle Karten Platzhalter sind. Bis E2 prüft dieser Testfall deshalb, dass der Tisch das sagt und keinen Knopf selbst baut; E2 trägt die Klicks nach.
 
 ## Bestanden, wenn
 
-In `/dev?seed=1&spieler=2` erscheinen nach „Ausspielphase starten“ 3 Knöpfe „Neue Schlange starten mit …“; ein Klick auf den ersten senkt die Hand von Spieler 1 von 5 auf 4 und legt Schlange 1 an. „Ausspielphase beenden“ vor der ersten Karte zeigt rot „Abgelehnt: … erst nach mindestens einer gespielten Karte …“ und lässt den Zustand gleich; nach einer gespielten Karte wechselt die Zugphase auf Aufgabenpruefung. Im Szenario `reaktionsfenster` gibt es genau den Knopf „Verdoppler durchlassen“ für spieler-3; ein Klick verkürzt `verbleibendeSpielerIndizes` von [2,0] auf [0].
+In `/dev?seed=1&spieler=2`, `/dev?seed=7&spieler=4` und im Szenario `alle-orte` steht „Aktionen der Engine (0)“ mit dem kursiven Satz „Die Engine zählt hier keine Aktion auf. Nach E1 lässt sich eine Partie aufbauen, aber noch nicht spielen; die Aktionen kommen mit E2 und den Kartentasks.“ Es gibt keinen Knopf mit dem Attribut `data-aktion` und keinen Knopf „Ausspielphase starten“. „Schritt zurück“ und „Von vorn“ sind ausgegraut, der Zähler steht auf Schritt 0.
 
 ## Fehlgeschlagen, wenn
 
-Ein Knopf fehlt oder ist zu viel gegenüber `ermittleLegaleAktionen`/`ermittleReaktionsAktionen`, ein Klick ändert nichts ohne Fehlermeldung, oder eine Ablehnung der Engine verändert den Zustand.
+Ein Aktionsknopf erscheint, obwohl `ermittleAktionen` nichts liefert, ein alter Phasenknopf ist noch da, oder der Satz zur leeren Aufzählung fehlt.
 
 ## Vorbedingungen
 
@@ -31,21 +31,18 @@ Ein Knopf fehlt oder ist zu viel gegenüber `ermittleLegaleAktionen`/`ermittleRe
 
 ## Testdaten
 
-`/dev?seed=1&spieler=2`, `/dev?seed=7&spieler=4`, Szenarien `reaktionsfenster`, `zugabschluss`, `vier-spieler`, `endspurt`, `spielende`.
+`/dev?seed=1&spieler=2`, `/dev?seed=7&spieler=4`, Szenario `alle-orte`.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | `/dev?seed=1&spieler=2` | Knopf „Ausspielphase starten“ | | Zugphase Ausspielphase, „Aktionen der Engine (3)“ |
-| 2 | Phasenschritte | „Ausspielphase beenden“ | | rote Meldung „Abgelehnt: …“, Schritt bleibt 1 |
-| 3 | Aktionen | ersten Knopf „Neue Schlange starten mit Wasserwirbel“ | | Hand (4), Schlange 1 mit Wasserwirbel |
-| 4 | Phasenschritte | „Ausspielphase beenden“ | | Zugphase Aufgabenpruefung, keine rote Meldung |
-| 5 | Kopf | „Schritt zurück“, dann „Von vorn“ | | Schritt sinkt, danach Schritt 0 mit Startzustand |
-| 6 | `/dev?seed=7&spieler=4` | „Ausspielphase starten“, zweiten Aktionsknopf | | 4 Spieler, Hand von Spieler 1 von 5 auf 4 |
-| 7 | `/dev/szenarien` | Link `reaktionsfenster`, Knopf „Verdoppler durchlassen“ | | Reaktionsfenster `VerdopplerAbwehr`, danach verbleibt nur Index 0, Knopf jetzt für spieler-1 |
-| 8 | `/dev/szenarien` | Link `zugabschluss`, „Überzählige Handkarten abwerfen“, dann „Zug beenden“ | | erst rote Ablehnung (Hand nicht über Limit), dann Nachziehphase, Spieler 2 am Zug |
+| 1 | Browser | Adresse öffnen | `/dev?seed=1&spieler=2` | „Aktionen der Engine (0)“ und der Satz zur leeren Aufzählung |
+| 2 | Konsole | Aktionsknöpfe zählen | `document.querySelectorAll('button[data-aktion]').length` | `0` |
+| 3 | Kopf | Knöpfe ansehen | | „Schritt zurück“ und „Von vorn“ ausgegraut, Schritt 0, kein „Ausspielphase starten“ |
+| 4 | Browser | Adresse öffnen | `/dev?seed=7&spieler=4` | wie Schritt 1 bis 3 |
+| 5 | `/dev/szenarien` | Link `alle-orte` | | wie Schritt 1 bis 3, obwohl eine Karte schwebt |
 
 ## Nicht abgedeckte Grenzfälle
 
-Die Schlangenhäutung zählt die heutige Engine nicht auf; der Tisch zeigt sie nur als Hinweis (TF-DEV-008).
+Klicks auf Aktionsknöpfe, Ablehnungen und „Schritt zurück“ nach einem Klick lassen sich erst prüfen, wenn E2 Aktionen aufzählt; E2 trägt sie hier nach.

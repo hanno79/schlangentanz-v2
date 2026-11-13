@@ -7,7 +7,7 @@ Beschreibung: Spielersprache für Karten — Anzeigename, Symbol, Wert- und Kurz
 Hintergrund (AP-3, Onboarding-Findings 11/14): Die Aktionslabels zeigten technische
 IDs („Karte gelb-03 an Schlange schlange-spieler-1-1 links anlegen"). Das
 Spielervokabular dafür existierte längst — nur eingeschlossen in
-`HandkartenPanel.tsx`. Diese Datei zieht es heraus, damit `aktionsLabel` dasselbe
+`HandkartenPanel.tsx`. Diese Datei zieht es heraus, damit jede Ansicht dasselbe
 Vokabular benutzt statt ein zweites zu erfinden.
 
 Zusammengeführt wurden dabei die zwei Kopien von `karteSymbol` aus
@@ -61,9 +61,9 @@ export function karteKurzLabel(karte: Spielkarte): string {
  * Schlüssel für die *Austauschbarkeit* zweier Karten.
  *
  * Zwei Karten mit gleichem Schlüssel sind im Spiel vollständig gleichwertig: Es
- * macht keinen Unterschied, welche von beiden gespielt wird. Genau darauf beruht
- * die Entdopplung der Aktionsliste (`gruppiereWirkungsgleicheAktionen`) — fünf
- * blaue Handkarten erzeugen sonst fünf identisch beschriftete Aktionen.
+ * macht keinen Unterschied, welche von beiden gespielt wird. Darauf kann eine
+ * Entdopplung der Aktionsliste aufbauen; fünf blaue Handkarten erzeugen sonst
+ * fünf identisch beschriftete Aktionen.
  *
  * Bewusst NICHT Teil des Schlüssels ist die Karten-ID: sie unterscheidet Exemplare,
  * nicht Wirkungen.

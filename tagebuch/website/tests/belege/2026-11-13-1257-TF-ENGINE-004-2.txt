@@ -1,0 +1,9 @@
+ ✓ src/spielstand.test.ts > Spielstand > gibt die gespeicherte Partie unverändert zurück 13ms
+ ✓ src/spielstand.test.ts > Spielstand > liefert null, wenn nichts gespeichert ist 0ms
+ ✓ src/spielstand.test.ts > Spielstand > verwirft einen unlesbaren Eintrag, statt ihn liegen zu lassen 1ms
+ ✓ src/spielstand.test.ts > Spielstand > verwirft auch einen strukturell ungültigen Spielstand 0ms
+ ✓ src/spielstand.test.ts > Spielstand > E1: verwirft einen Spielstand im alten Format 1 (Plan 2.3) 1ms
+ ✓ src/spielstand.test.ts > Spielstand > löscht den Eintrag auf Verlangen 1ms
+ ✓ src/spielstand.test.ts > Spielstand > spielt weiter, wenn der Speicher das Schreiben verweigert 2ms
+ ✓ src/spielstand.test.ts > Spielstand > spielt weiter, wenn der Speicher das Lesen verweigert 0ms
+      Tests  8 passed (8)

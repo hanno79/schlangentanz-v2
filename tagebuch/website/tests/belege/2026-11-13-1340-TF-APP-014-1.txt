@@ -1,0 +1,9 @@
+APP-014 0  175 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Er ist kein gültiges JSON). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 1 null 168 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Er ist kein Objekt). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 2 [1,2,3] 168 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Er ist kein Objekt). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 3 {"version":"1"} 195 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Format 1 ist unbekannt, erwartet ist Format 2). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 4 {"version":99} 196 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Format 99 ist unbekannt, erwartet ist Format 2). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 5 {"version":2,"spieler":[]} 223 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Spielstand: erweiterung fehlt, partiephase fehlt, zug fehlt und 8 weitere). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 6 {"version":2,"spieler":"xxxxxx 223 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Spielstand: erweiterung fehlt, partiephase fehlt, zug fehlt und 8 weitere). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 7 {yyyyyyyyyyyyyyyyyyyyyyyyyyyyy 175 Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Er ist kein gültiges JSON). Sie wurde verworfen; starte eine neue Partie. 1
+APP-014 Läufe 48 max Länge 223 Probleme []

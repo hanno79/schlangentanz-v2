@@ -1,0 +1,3 @@
+DEV-001 Partie aus Saat 1, 2 Spieler, ohne Erweiterung Schritt 0 Sch | Am Zug Spieler 1 (spieler-1), Teilzug 1, Ausspielen; gespiel | Nachziehstapel: 98 Karten, obe | Invarianten (alle erfüllt | Hände 2 | Ablage leer 2 | roh gleich true Länge 7870
+Konsolenfehler desktop []
+Konsolenfehler desktop []

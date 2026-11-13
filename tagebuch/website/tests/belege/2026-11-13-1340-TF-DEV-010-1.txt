@@ -1,0 +1,65 @@
+/dev?seed=7&spieler=4 [
+ 330,
+ 320,
+ [
+  "TR. \"KI-Gegner 10000\" right=330",
+  "TD. \"0\" right=330",
+  "TR. \"KI-Gegner 20000\" right=330",
+  "TD. \"0\" right=330",
+  "TR. \"KI-Gegner 30000\" right=330",
+  "TD. \"0\" right=330"
+ ]
+]
+/dev?szenario=alle-orte [
+ 330,
+ 320,
+ [
+  "TR. \"Spieler 14059\" right=330",
+  "TD. \"9\" right=330",
+  "TR. \"KI-Gegner 10000\" right=330",
+  "TD. \"0\" right=330",
+  "TR. \"KI-Gegner 20000\" right=330",
+  "TD. \"0\" right=330"
+ ]
+]
+/dev?seed=1&spieler=2 [
+ 330,
+ 320,
+ [
+  "TH. \"Summe\" right=330",
+  "TBODY. \"Spieler 10000KI-Gegner 10000\" right=330",
+  "TR. \"Spieler 10000\" right=330",
+  "TD. \"0\" right=330",
+  "TR. \"KI-Gegner 10000\" right=330",
+  "TD. \"0\" right=330"
+ ]
+]
+/dev?seed=7&spieler=4 [
+ 330,
+ 320,
+ [
+  "TR. \"Spieler 20000\" right=329",
+  "TD. \"0\" right=329",
+  "TR. \"Spieler 30000\" right=329",
+  "TD. \"0\" right=329",
+  "TR. \"Spieler 40000\" right=329",
+  "TD. \"0\" right=329"
+ ]
+]
+/dev?szenario=alle-orte [
+ 320,
+ 320,
+ []
+]
+/dev?seed=1&spieler=2 [
+ 330,
+ 320,
+ [
+  "TH. \"Summe\" right=329",
+  "TBODY. \"Spieler 10000Spieler 20000\" right=329",
+  "TR. \"Spieler 10000\" right=329",
+  "TD. \"0\" right=329",
+  "TR. \"Spieler 20000\" right=329",
+  "TD. \"0\" right=329"
+ ]
+]

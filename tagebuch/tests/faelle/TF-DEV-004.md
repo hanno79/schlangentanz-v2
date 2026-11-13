@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
 skript: tests/layout/entwicklertisch.hooks.spec.ts
-aenderung: task/P0.4-entwicklertisch (PR #27)
+aenderung: task/P0.4-entwicklertisch (PR #27); auf den Stand nach E1 gebracht mit task/E1-struktur (PR #31)
 ---
 
 ## Worum es geht
@@ -17,11 +17,11 @@ Engine-Tasks liefern Szenarien, die der Prüfer am Tisch lädt. Die Liste muss B
 
 ## Bestanden, wenn
 
-`/dev/szenarien` zeigt „Szenarien (8)“ mit Name, Beschreibung und Erwartung je Zeile. Der Link `spielende` zeigt Zugphase Spielende, keine Knöpfe und „Gewonnen: Spieler 2 (17)“. Der Link `kaputt-doppelte-karte` zeigt „Invarianten (2 verletzt)“: „Jede Spielkarte liegt genau einmal im Spiel – Doppelt: blau-13 (2×)“ und „Der Spielstand übersteht Speichern und Laden unverändert – Die Engine wirft: Ungültiger Spielzustand: Doppelte ID blau-13“, beide in roter Schrift auf rosa Grund; die übrigen 4 grün.
+`/dev/szenarien` zeigt „Szenarien (5)“ mit Name, Beschreibung und Erwartung je Zeile. Der Link `start-erweiterung` zeigt Erweiterung mit, 3 Spieler, 97 Karten im Nachziehstapel und alle 11 Invarianten grün. Der Link `alle-orte` zeigt unter Spieler 1 „Unter farbenfusion-01:“ mit zwei Sonnenblatt-Karten, unter Tischmitte eine Schlangengrube vor KI-Gegner 2 und den Schlangenkorb unter „Aus dem Spiel“, alle 11 Invarianten grün. Der Link `kaputt-doppelte-karte` zeigt „Invarianten (3 verletzt)“: „Jede Spielkarte liegt genau einmal an genau einem Ort – Doppelt: blau-12 (2×).“, „Alle Ids sind eindeutig – Mehrfach vergeben: blau-12.“ und „Der Spielstand übersteht Speichern und Laden unverändert – Die Engine wirft: Ungültiger Spielstand: …“, alle drei in roter Schrift auf rosa Grund; die übrigen 8 grün.
 
 ## Fehlgeschlagen, wenn
 
-Ein Szenario fehlt, ein Link zeigt eine Fehlermeldung, im kaputten Szenario ist keine oder eine andere Invariante rot, oder erfüllte Invarianten sind rot.
+Eines der Szenarien `start-2`, `start-4`, `start-erweiterung`, `alle-orte`, `kaputt-doppelte-karte` fehlt, ein Link zeigt eine Fehlermeldung, im kaputten Szenario sind andere als die drei genannten Invarianten rot, oder in einem anderen Szenario ist eine Invariante rot.
 
 ## Vorbedingungen
 
@@ -31,16 +31,16 @@ Ein Szenario fehlt, ein Link zeigt eine Fehlermeldung, im kaputten Szenario ist 
 
 ## Testdaten
 
-Szenarien `partiebeginn`, `ausspielphase`, `vier-spieler`, `reaktionsfenster`, `zugabschluss`, `endspurt`, `spielende`, `kaputt-doppelte-karte`.
+Szenarien `start-2`, `start-4`, `start-erweiterung`, `alle-orte`, `kaputt-doppelte-karte`.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Browser | Adresse öffnen | `http://localhost:4174/dev/szenarien` | Tabelle mit 8 Zeilen |
-| 2 | Tabelle | Link `endspurt` | | Spielphase Endspurt, Nachziehstapel 0 Karten |
-| 3 | Navigation | „Szenarien“, Link `spielende` | | „Gewonnen: Spieler 2 (17)“ |
-| 4 | Navigation | „Szenarien“, Link `kaputt-doppelte-karte` | | zwei rote Invarianten wie oben |
+| 1 | Browser | Adresse öffnen | `http://localhost:4174/dev/szenarien` | Tabelle mit 5 Zeilen |
+| 2 | Tabelle | Link `start-erweiterung` | | Erweiterung mit, 97 Karten im Nachziehstapel, „Invarianten (alle erfüllt)“ |
+| 3 | Navigation | „Szenarien“, Link `alle-orte` | | Fusion, Grube, schwebende Schlangengrube, Schlangenkorb aus dem Spiel, „Invarianten (alle erfüllt)“ |
+| 4 | Navigation | „Szenarien“, Link `kaputt-doppelte-karte` | | drei rote Invarianten wie oben |
 
 ## Nicht abgedeckte Grenzfälle
 
