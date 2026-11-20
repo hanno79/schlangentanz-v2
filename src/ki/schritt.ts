@@ -24,9 +24,10 @@ export function waehleFuer(zustand: Spielzustand, entscheider: Entscheider, ki: 
   if (aufgezaehlt.length === 0) {
     throw new Error(`KI-Schritt: ${entscheider.name} entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).`);
   }
-  const angeboten = structuredClone(aufgezaehlt);
-  const stelle = angeboten.indexOf(ki.waehle(sichtFuer(zustand, entscheider.index), angeboten));
-  if (stelle < 0 || stelle >= aufgezaehlt.length) {
+  // Die KI bekommt Abschriften in einer eigenen Liste; wiedererkannt wird ihre Wahl in einer zweiten, die sie nicht erreicht.
+  const abschriften = structuredClone(aufgezaehlt);
+  const stelle = abschriften.indexOf(ki.waehle(sichtFuer(zustand, entscheider.index), [...abschriften]));
+  if (stelle < 0) {
     throw new Error(`KI-Schritt: ${ki.name} hat eine Aktion gewählt, die die Engine nicht aufgezählt hat; eine KI wählt nur aus den aufgezählten Aktionen (U3).`);
   }
   return aufgezaehlt[stelle];
