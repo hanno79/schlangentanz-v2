@@ -848,6 +848,7 @@ Spalte „Folge“ nennt dort den Task, der die Antwort umsetzt.
 | D27 | F14: „Pro Zug nur eine Farbenfusion": Darf im zweiten Zug nach einem Verdoppler eine weitere gespielt werden? | Ja, je Zug eine: Im zweiten Zug nach einem Verdoppler ist wieder eine Farbenfusion erlaubt. Website folgt. | E7 | 13.11.2026 |
 | D28 | F15: Sind die Ablagestapel für alle vollständig einsehbar, oder nur die oberste Karte? | Alle Ablagestapel sind für alle vollständig einsehbar. Website folgt. | K1 | 13.11.2026 |
 | D29 | F8a: Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat? | Ja, erlaubt: Die Grube darf ihn treffen und geht ohne Wirkung auf den Ablagestapel. Wortlaut: „Ja, ohne Wirkung“. Website folgt. | E4 | 13.11.2026 |
+| D30 | Wert einer Farbenfusion in einer Gruppe: wie eine Karte der Gruppenfarbe, oder die Summe der beiden Karten darunter? | Die Summe der beiden Karten darunter, nicht der Wert einer Karte der Gruppenfarbe. Gefragt mit dem Beispiel „zwei grüne Karten je 3 → 6 bei a, 10 bei b“. Wortlaut: „Summe darunter“. So sagen es auch A7.7 („Bringt die Punkte beider fusionierter Karten“) und A11; die Rechnung in A11, Beispiel 2 („[3 × 2 Punkte]“), lässt beide Lesarten zu, weil zwei blaue Karten zusammen so viel bringen wie eine violette. Website folgt. | E10 (die Wertung rechnet bereits so) | 20.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -877,6 +878,10 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **20.11.2026, Task P0.5d:** Antwort des Autors zum Wert einer Farbenfusion in
+  einer Gruppe als D30 aufgenommen („Summe darunter“, Website folgt). Sie
+  stimmt mit A7.7 und A11 überein; die Wertung (E10) rechnet schon so. Teil A
+  unverändert.
 - **13.11.2026, Task P0.5d:** Teil A an die Website angeglichen (Bundle
   `index-EH-TKokX.js`): Der Autor hat D9–D13 übernommen. Neuer Wortlaut in
   A5 (Karten ausspielen, „Wichtig“), A6 (Grundregeln für Sonderkarten), A7.2

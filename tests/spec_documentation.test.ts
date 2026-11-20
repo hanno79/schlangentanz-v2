@@ -325,6 +325,17 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
     expect(antworten.get('D11'), 'D11: Status').toContain('Website folgt.')
   })
 
+  it('D30: die Farbenfusion bringt in einer Gruppe die Summe der beiden Karten darunter (Antwort vom 20.11.2026)', () => {
+    const d30 = spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Antwort', 'Datum').find(([nr]) => nr === 'D30')
+    expect(d30, 'D30 fehlt in Teil D').toBeDefined()
+    const [, antwort, datum] = d30 as string[]
+    expect(antwort).toContain('Wortlaut: „Summe darunter“.')
+    expect(antwort).toContain('Website folgt.')
+    expect(datum).toBe('20.11.2026')
+    // Teil A sagt dasselbe (A7.7, A11); die Antwort ändert Teil A nicht.
+    expect(fehlende(teil('A'), ['Bringt die Punkte beider fusionierter Karten', 'Farbfusionen bringen die Punkte der beiden fusionierten Karten'])).toEqual([])
+  })
+
   it('macht die früheren R-Nummern auffindbar', () => {
     expect(
       fehlende(teil('E'), [
