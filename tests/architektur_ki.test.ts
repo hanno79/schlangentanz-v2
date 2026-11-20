@@ -2,22 +2,21 @@
 import { afterAll, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { istTestdatei, pruefeEngineReinheit, pruefeSichtZugriff, sammleDateien, type Verstoss } from './architektur_pruefung'
+import ts from 'typescript'
+import { beschreibe, engineExporte } from './architektur_pruefung'
+import { ERLAUBTE_ENGINE_EMPFAENGER, pruefeSichtZugriff } from './architektur_ki_pruefung'
+import { parse } from '../scripts/pruefung/quelldateien.mjs'
 import { WURZEL, legeAn, raeumeAuf } from './probebaum'
 
 /*
-Die Grenze der KI im Architekturtest (P0.3d, Befunde H1, H2 und H7 der
+Die Grenze der KI im Architekturtest (P0.3d, Befunde H1, H2 und H5 der
 K1-Prüfung). KI-Code ausserhalb von src/ki/sicht.ts gilt als nicht
-vertrauenswürdig: Er reicht den vollen Zustand nur unverändert weiter (U5),
-verändert keine globalen Objekte (H1) und holt weder Zufall noch Zeit selbst (U4).
+vertrauenswürdig: Er reicht den vollen Zustand nur unverändert weiter (U5) und
+verändert keine globalen Objekte (H1). U4 für src/ki (H7) prüft
+tests/architektur.test.ts zusammen mit der Engine.
 */
 
 afterAll(raeumeAuf)
-
-const beschreibe = (verstoesse: Verstoss[]) =>
-  verstoesse.map(({ regel, datei, zeile, was }) => `${regel} ${datei}:${zeile} ${was}`).join('\n')
-
-const kiDateien = sammleDateien(WURZEL, 'src/ki').filter((pfad) => !istTestdatei(pfad))
 
 const ENGINE = [
   'export interface Spielzustand { spieler: string[]; stapel: string[] }',
@@ -43,7 +42,8 @@ const probedatei = (rumpf: string, vorspann = '') =>
   `${KOPF}${vorspann}\nexport function probe(zustand: Spielzustand, ergebnis: AktionsErgebnis, text: string, f: () => void): unknown {\n${rumpf}\n}\n`
 
 const ERLAUBT = [
-  'function weiter(zustand: Spielzustand): number { return sichtFuer(zustand, 0).anzahl + ermittleAktionen(zustand).length }',
+  'const zaehle = (zustand: Spielzustand) => ermittleAktionen(zustand).length',
+  'function weiter(zustand: Spielzustand): number { return sichtFuer(zustand, 0).anzahl + zaehle(zustand) }',
   'export function lauf(start: Spielzustand): number {',
   '  let zustand = start',
   "  zustand = anwendeAktion(zustand, 'a').zustand",
@@ -86,6 +86,16 @@ const umgehungenU5: Array<[string, string, string?]> = [
   ['zerlegt in der Variablen', 'const { stapel } = zustand\nreturn stapel'],
   ['der Behälter AktionsErgebnis an Object.values', 'const liste = Object.values(ergebnis)\nreturn liste'],
   ['Cast eines fremden Werts zum vollen Zustand', 'const umgedeutet = text as unknown as Spielzustand\nreturn umgedeutet'],
+  [
+    'an eine umgehängte Methode',
+    'const kiste = new Kiste()\nkiste.lies = JSON.stringify as never\nreturn kiste.lies(zustand)',
+    'class Kiste { lies(_wert: Spielzustand) { return 0 } }',
+  ],
+  [
+    'an eine umgehängte Funktion in einem Objekt',
+    'helfer.lies = Object.keys as never\nreturn helfer.lies(zustand)',
+    'const helfer = { lies: (_wert: Spielzustand) => 0 }',
+  ],
   ['geworfen', 'throw zustand'],
   ['zurückgegeben', 'return zustand'],
 ]
@@ -117,23 +127,32 @@ const globaleAenderungen: Array<[string, string]> = [
   ['über Function', "Function('return this')().structuredClone = f"],
 ]
 
-const fallname = (index: number, art: string) => `src/ki/${art}-${String(index + 1).padStart(2, '0')}.ts`
+/** Je Fall eine Probedatei; `art` steht im Dateinamen und in der Meldung. */
+const faelle = (art: string, liste: Array<[string, string, string?]>) =>
+  liste.map(([name, rumpf, vorspann], index) => ({
+    name,
+    datei: `src/ki/${art}-${String(index + 1).padStart(2, '0')}.ts`,
+    inhalt: probedatei(rumpf, vorspann),
+  }))
+const faelleU5 = faelle('umgehung', umgehungenU5)
+const faelleH1 = faelle('global', globaleAenderungen)
 
-const probe = legeAn({
-  'src/engine/index.ts': ENGINE,
+const probeInhalt: Record<string, string> = {
   'src/ki/sicht.ts': SICHT,
   'src/ki/erlaubt.ts': `${KOPF}${ERLAUBT}\n`,
-  ...Object.fromEntries(umgehungenU5.map(([, rumpf, vorspann], index) => [fallname(index, 'umgehung'), probedatei(rumpf, vorspann)])),
-  ...Object.fromEntries(globaleAenderungen.map(([, rumpf], index) => [fallname(index, 'global'), probedatei(rumpf)])),
-})
-const probeDateien = [
-  'src/ki/sicht.ts',
-  'src/ki/erlaubt.ts',
-  ...umgehungenU5.map((_, index) => fallname(index, 'umgehung')),
-  ...globaleAenderungen.map((_, index) => fallname(index, 'global')),
-]
-const befunde = pruefeSichtZugriff(probe, probeDateien)
+  ...Object.fromEntries([...faelleU5, ...faelleH1].map(({ datei, inhalt }) => [datei, inhalt])),
+}
+const probe = legeAn({ 'src/engine/index.ts': ENGINE, ...probeInhalt })
+const befunde = pruefeSichtZugriff(probe, Object.keys(probeInhalt))
 const befundeIn = (datei: string) => befunde.filter((verstoss) => verstoss.datei === datei)
+
+/** Mindestens ein Verstoss in `datei`, und alle zu U5. */
+function erwarteGemeldet(kuerzel: string, name: string, datei: string) {
+  const gefunden = befundeIn(datei)
+
+  expect(gefunden.length, `${kuerzel}: erwartet mindestens einen Verstoss für ${name} in ${datei}`).toBeGreaterThan(0)
+  expect(gefunden.every(({ regel }) => regel === 'U5'), `${kuerzel}: erwartet nur U5-Meldungen, gefunden:\n${beschreibe(gefunden)}`).toBe(true)
+}
 
 describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unverändert weiter', () => {
   it('P0.3d: Weitergabe an Sicht, freigegebene Engine-Funktionen und eigene Funktionen bleibt erlaubt', () => {
@@ -141,21 +160,30 @@ describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unv
     expect(beschreibe(befundeIn('src/ki/sicht.ts')), 'U5: sicht.ts darf den vollen Zustand lesen').toBe('')
   })
 
-  it.each(umgehungenU5.map(([name], index) => [name, fallname(index, 'umgehung')]))('P0.3d: U5-Umgehung „%s“ wird gemeldet', (name, datei) => {
-    const gefunden = befundeIn(datei)
+  it.each(faelleU5)('P0.3d: U5-Umgehung „$name“ wird gemeldet', ({ name, datei }) => erwarteGemeldet('U5', name, datei))
+})
 
-    expect(gefunden.length, `U5: erwartet mindestens einen Verstoss für ${name} in ${datei}`).toBeGreaterThan(0)
-    expect(gefunden.every(({ regel }) => regel === 'U5'), `U5: erwartet nur U5-Meldungen, gefunden:\n${beschreibe(gefunden)}`).toBe(true)
+describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
+  it('P0.3d: jede freigegebene Engine-Funktion ist ein Export von src/engine/index.ts', () => {
+    const exporte = engineExporte(WURZEL)
+
+    expect([...ERLAUBTE_ENGINE_EMPFAENGER].filter((name) => !exporte.has(name)), 'U5: aus ERLAUBTE_ENGINE_EMPFAENGER löschen oder exportieren').toEqual([])
+  })
+
+  // H5: erzeugeZufall liegt unter src/engine/testing, gehört aber zur Schnittstelle (Turnier, Entwicklertisch).
+  it('P0.3d: H5 – aus src/engine/testing gibt index.ts nur erzeugeZufall heraus', () => {
+    const quelle = parse('src/engine/index.ts', readFileSync(join(WURZEL, 'src/engine/index.ts'), 'utf8'))
+    const ausTesting = quelle.statements
+      .filter(ts.isExportDeclaration)
+      .filter((d) => d.moduleSpecifier && ts.isStringLiteral(d.moduleSpecifier) && d.moduleSpecifier.text.startsWith('./testing/'))
+      .flatMap((d) => (d.exportClause && ts.isNamedExports(d.exportClause) ? d.exportClause.elements.map((e) => e.name.text) : ['*']))
+
+    expect(ausTesting, 'H5: erwartet aus src/engine/testing allein erzeugeZufall in der Schnittstelle').toEqual(['erzeugeZufall'])
   })
 })
 
 describe('P0.3d: H1 – KI-Code verändert keine globalen Objekte', () => {
-  it.each(globaleAenderungen.map(([name], index) => [name, fallname(index, 'global')]))('P0.3d: globale Änderung „%s“ wird gemeldet', (name, datei) => {
-    const gefunden = befundeIn(datei)
-
-    expect(gefunden.length, `H1: erwartet mindestens einen Verstoss für ${name} in ${datei}`).toBeGreaterThan(0)
-    expect(gefunden.every(({ regel }) => regel === 'U5'), `H1: erwartet nur U5-Meldungen, gefunden:\n${beschreibe(gefunden)}`).toBe(true)
-  })
+  it.each(faelleH1)('P0.3d: globale Änderung „$name“ wird gemeldet', ({ name, datei }) => erwarteGemeldet('H1', name, datei))
 
   it('P0.3d: auch sicht.ts verändert keine globalen Objekte', () => {
     const sichtProbe = legeAn({
@@ -168,37 +196,5 @@ describe('P0.3d: H1 – KI-Code verändert keine globalen Objekte', () => {
     expect(gefunden.map(({ datei, zeile }) => `${datei}:${zeile}`), `H1: erwartet die Zuweisung in Zeile 3, gefunden:\n${beschreibe(gefunden)}`).toEqual([
       'src/ki/sicht.ts:3',
     ])
-  })
-})
-
-describe('P0.3d: H7 – U4 gilt auch unter src/ki', () => {
-  it(`P0.3d: ${kiDateien.length} Dateien unter src/ki (ohne Tests) nutzen kein Math.random, kein Date, kein performance, kein crypto`, () => {
-    expect(kiDateien, 'U4: erwartet die vier Dateien der KI aus K1').toEqual(
-      expect.arrayContaining(['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/zufallsKi.ts', 'src/ki/turnier.ts']),
-    )
-
-    const verstoesse = kiDateien.flatMap((pfad) => pruefeEngineReinheit(pfad, readFileSync(join(WURZEL, pfad), 'utf8')))
-
-    expect(beschreibe(verstoesse), 'U4: erwartet unter src/ki keinen Zufall und keine Zeit').toBe('')
-  })
-
-  const zufallUndZeit = [
-    'const z = Math.random()',
-    'const z = globalThis.Math.random()',
-    'const { random } = Math',
-    'const t = Date.now()',
-    'const d = new Date()',
-    'const t = performance.now()',
-    'const t = globalThis.performance.now()',
-    'const { now } = performance',
-    'crypto.getRandomValues(new Uint8Array(1))',
-    'const u = globalThis.crypto.randomUUID()',
-  ]
-
-  it.each(zufallUndZeit)('P0.3d: U4 unter src/ki – „%s“ wird gemeldet', (zeile) => {
-    const verstoesse = pruefeEngineReinheit('src/ki/probe.ts', `${zeile}\n`)
-
-    expect(verstoesse.map(({ zeile }) => zeile), `U4: erwartet einen Verstoss in Zeile 1, gefunden:\n${beschreibe(verstoesse)}`).toContain(1)
-    expect(verstoesse.every(({ regel }) => regel === 'U4')).toBe(true)
   })
 })

@@ -183,7 +183,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 | U2 | Keine Regel im Code, die nicht in Teil A, B oder D steht. Bei einer Lücke: anhalten, Frage in Teil D. | Prüfer, Codex |
 | U3 | Die Oberfläche enthält keine Regellogik. `src/ui/**` und `src/ki/**` importieren die Engine nur über `src/engine/index.ts`. Die Oberfläche filtert aufgezählte Aktionen und baut nie selbst eine. | Architekturtest |
 | U4 | Die Engine ist rein: kein React, kein DOM, kein `Math.random`, kein `Date`. Zufall kommt als Parameter. | Architekturtest |
-| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. | Architekturtest, Test K2.7 |
+| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. KI-Code ausserhalb von `sicht.ts` gilt als nicht vertrauenswürdig (P0.3d): Er reicht den vollen Zustand nur unverändert an die Sicht, an eigene Funktionen oder an freigegebene Engine-Funktionen weiter, castet nicht nach `any` oder `unknown` und verändert, wie `sicht.ts`, keine globalen Objekte. Unter `src/ki` gilt auch U4. | Architekturtest, Test K2.7 |
 | U6 | Kein `any`, kein `@ts-ignore`, kein `eslint-disable` ohne Begründung in derselben Zeile, kein `it.skip`, `it.only`, `describe.skip`. | `check:regeln` |
 | U7 | Testdateien höchstens 499 Zeilen; neue Dateien in `src/ui` und `src/ki` höchstens 300 Zeilen. | `check:test-lines`, `check:regeln` |
 | U8 | Layout wird gemessen (Playwright, `tests/layout/messung.ts`), nie im CSS-Quelltext gelesen. | `check:css-asserts` |
