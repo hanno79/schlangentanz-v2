@@ -193,11 +193,11 @@ function regelPruefer(zaehler: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }): 
 
 describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
   /** Ein Zustand mit `spieler` Spielern, Auslöser Spieler 0; nur die Felder, die der Prüfer liest. */
-  function lage(spieler: number, amZug: number): Spielzustand {
+  function lage(spieler: number, amZug: number, zug: Partial<Spielzustand['zug']> = {}): Spielzustand {
     return {
       spieler: Array.from({ length: spieler }, () => ({ hand: [] })),
       schlussrundeAusloeser: 0,
-      zug: { spielerIndex: amZug, gespielteFarbkarten: 0, gespielteSonderkarten: 0 },
+      zug: { spielerIndex: amZug, gespielteFarbkarten: 0, gespielteSonderkarten: 0, ...zug },
     } as unknown as Spielzustand
   }
   const ende: SpielAktion = { typ: 'ZugBeenden', spielerId: 'x' }
@@ -225,7 +225,7 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
     const zweiter: AktionsErgebnis['ereignisse'] = [{ typ: 'ZugBegonnen', spielerIndex: 0, teilzug: 2 }]
     const ohne = lage(2, 0)
     expect(regelPruefer()(ohne, ende, { zustand: ohne, ereignisse: zweiter })).toMatch(/A7\.8/)
-    const mit = { ...lage(2, 0), zug: { spielerIndex: 0, teilzug: 1, verdopplerGespielt: true, gespielteFarbkarten: 0, gespielteSonderkarten: 1 } } as unknown as Spielzustand
+    const mit = lage(2, 0, { teilzug: 1, verdopplerGespielt: true, gespielteSonderkarten: 1 })
     const zaehler = { gesamt: 0, inSchlussrunde: 0 }
     const pruefer = regelPruefer(zaehler)
     expect(pruefer(mit, ende, { zustand: lage(2, 0), ereignisse: [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, ...zweiter] })).toBeNull()
@@ -233,7 +233,7 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
   })
 
   it('D11: ein Verdoppler mit Wirkung im zweiten Zug wird gemeldet', () => {
-    const zweiterZug = { ...lage(2, 0), zug: { spielerIndex: 0, teilzug: 2, gespielteFarbkarten: 0, gespielteSonderkarten: 0 } } as unknown as Spielzustand
+    const zweiterZug = lage(2, 0, { teilzug: 2 })
     const aktion: SpielAktion = { typ: 'VerdopplerSpielen', spielerId: 'x', karteId: 'verdoppler-01' }
     expect(regelPruefer()(zweiterZug, aktion, { zustand: lage(2, 0), ereignisse: [] })).toMatch(/D11/)
   })

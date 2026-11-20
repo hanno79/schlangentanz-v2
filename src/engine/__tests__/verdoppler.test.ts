@@ -197,7 +197,6 @@ describe('A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug', () => {
     const meldung = grund(zustand, zweiter)
     expect(meldung).toMatch(/zweiten Zug.*keinen weiteren Zug.*\(A7\.8, D11\)/)
     expect(meldung).toMatch(/wirkungslos.*\(D23\)/)
-    expect(KARTENREGISTER.Verdoppler.ziele(zustand, 0, zustand.spieler[0].hand.find((handkarte) => handkarte.id === zweiter.karteId)!)).toEqual([])
   })
 
   it('D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht', () => {

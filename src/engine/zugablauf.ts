@@ -85,11 +85,16 @@ export function entnehmeHandkarte(zustand: Spielzustand, spielerId: string, kart
   return spieler.hand.splice(index, 1)[0];
 }
 
+/** A6: Eine gespielte Sonderkarte kommt aus der Hand auf den Ablagestapel dessen, der sie gespielt hat. */
+export function legeAufEigenenAblagestapel(zustand: Spielzustand, spielerId: string, karteId: string): void {
+  const karte = entnehmeHandkarte(zustand, spielerId, karteId);
+  zustand.spieler.find((spieler) => spieler.id === spielerId)!.ablagestapel.push(karte);
+}
+
 /** D13, D25: Die Sonderkarte kommt ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. */
 export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirkungslosAblegenAktion, ereignisse: Ereignis[]): void {
   zaehleGespielteKarte(zustand, aktion);
-  const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
-  zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)!.ablagestapel.push(karte);
+  legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
   meldeGespielteKarte(zustand, aktion, ereignisse);
 }
 
@@ -157,8 +162,7 @@ export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly strin
 function schliesseZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   const { spielerIndex, teilzug, verdopplerGespielt } = zustand.zug;
   if (teilzug === 1 && verdopplerGespielt) {
-    zustand.zug = neuerZug(spielerIndex, 2);
-    ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug: 2 });
+    beginneZug(zustand, spielerIndex, 2, ereignisse);
     return;
   }
   gibZugWeiter(zustand, ereignisse);
@@ -190,7 +194,12 @@ function gibZugWeiter(zustand: Spielzustand, ereignisse: Ereignis[]): void {
     zustand.spieler[ausgesessen.gespieltVon].ablagestapel.push(ausgesessen.karte);
     ereignisse.push({ typ: 'Ausgesetzt', spielerIndex: naechster, karteId: ausgesessen.karte.id, ablagestapelVon: ausgesessen.gespieltVon });
   }
-  zustand.zug = neuerZug(naechster);
-  ereignisse.push({ typ: 'ZugBegonnen', spielerIndex: naechster, teilzug: 1 });
+  beginneZug(zustand, naechster, 1, ereignisse);
   fuelleHandAuf(zustand, naechster, ereignisse);
+}
+
+/** Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben Teilzug nennen. */
+function beginneZug(zustand: Spielzustand, spielerIndex: number, teilzug: 1 | 2, ereignisse: Ereignis[]): void {
+  zustand.zug = neuerZug(spielerIndex, teilzug);
+  ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug });
 }
