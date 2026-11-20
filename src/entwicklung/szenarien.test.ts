@@ -112,11 +112,12 @@ describe('E2: Szenarien des Zugablaufs', () => {
     expect(zustand).toMatchObject({ partiephase: 'Schlussrunde', schlussrundeAusloeser: ausloeser, zug: { spielerIndex: ausloeser } })
     const reihe: number[] = []
     for (let zug = 0; zustand.partiephase !== 'Beendet'; zug += 1) {
-      if (zug > spielerzahl) throw new Error(`${name}: Die Partie endet nicht nach ${spielerzahl} Zügen.`)
+      if (zug > 2 * spielerzahl) throw new Error(`${name}: Die Partie endet nicht nach ${2 * spielerzahl} Zügen.`)
       const schritt = spieleZug(zustand)
       expect(schritt.ereignisse.some((ereignis) => ereignis.typ === 'KartenGezogen')).toBe(false)
       zustand = schritt.zustand
-      if (zustand.partiephase !== 'Beendet') reihe.push(zustand.zug.spielerIndex)
+      // A7.8: Ein zweiter Zug nach einem Verdoppler gehört zum selben letzten Zug.
+      if (zustand.partiephase !== 'Beendet' && zustand.zug.teilzug === 1) reihe.push(zustand.zug.spielerIndex)
     }
     expect(reihe).toEqual(folge)
   })

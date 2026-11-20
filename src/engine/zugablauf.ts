@@ -3,9 +3,9 @@ import { HANDKARTEN } from './constants';
 import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
-Der Zugablauf (A5, A6, A7.6, A10): Karten des Zuges zählen, Zug beenden,
-Auffüllen, überzählige Karten abwerfen und den Zug weitergeben, bis wieder
-jemand entscheiden muss. Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
+Der Zugablauf (A5, A6, A7.6, A7.8, A10): Karten des Zuges zählen, Zug beenden,
+Auffüllen, überzählige Karten abwerfen, nach einem Verdoppler den zweiten Zug
+beginnen und den Zug weitergeben, bis wieder jemand entscheiden muss. Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
 Aktion erlaubt ist; die Funktionen hier verändern den übergebenen Zustand, den
 `anwendeAktion` vorher kopiert hat, und schreiben mit, was geschieht.
 
@@ -118,7 +118,7 @@ export function ueberzaehligeKarten(spieler: Spieler): number {
 /**
  * A5 „Zug beenden“: auffüllen auf 5, in der Schlussrunde ohne Nachziehen (A10).
  * Hält der Spieler danach mehr als 5 Karten, wählt er, welche er ablegt;
- * sonst ist der Nächste dran.
+ * sonst geht es weiter (`schliesseZugAb`).
  */
 export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   const { spielerIndex } = zustand.zug;
@@ -129,7 +129,7 @@ export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
     ereignisse.push({ typ: 'AbwerfenVerlangt', spielerIndex, anzahl });
     return;
   }
-  gibZugWeiter(zustand, ereignisse);
+  schliesseZugAb(zustand, ereignisse);
 }
 
 /**
@@ -145,6 +145,22 @@ export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly strin
   spieler.hand = spieler.hand.filter((karte) => !gewaehlt.has(karte.id));
   spieler.ablagestapel.push(...abgeworfen);
   ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: abgeworfen.map((karte) => karte.id) });
+  schliesseZugAb(zustand, ereignisse);
+}
+
+/**
+ * Nach einem ersten Zug mit Verdoppler spielt derselbe Spieler sofort einen
+ * zweiten Zug, der wie ein normaler Zug abläuft (A7.8); aufgefüllt hat er beim
+ * Beenden schon. Nach dem zweiten Zug folgt kein weiterer (D11), sondern der
+ * Nächste ist dran.
+ */
+function schliesseZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  const { spielerIndex, teilzug, verdopplerGespielt } = zustand.zug;
+  if (teilzug === 1 && verdopplerGespielt) {
+    zustand.zug = neuerZug(spielerIndex, 2);
+    ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug: 2 });
+    return;
+  }
   gibZugWeiter(zustand, ereignisse);
 }
 
