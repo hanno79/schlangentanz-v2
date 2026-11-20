@@ -208,7 +208,7 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     const dateien: Record<string, string> = {
       'src/engine/index.ts': [
         'export interface Spielzustand { spieler: string[]; stapel: string[] }',
-        'export function erlaubteAktionen(zustand: Spielzustand): string[] { return zustand.spieler }',
+        'export function ermittleAktionen(zustand: Spielzustand): string[] { return zustand.spieler }',
         '',
       ].join('\n'),
       'src/ki/sicht.ts': [
@@ -217,9 +217,9 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
         '',
       ].join('\n'),
       'src/ki/schritt.ts': [
-        "import { erlaubteAktionen, type Spielzustand } from '../engine'",
+        "import { ermittleAktionen, type Spielzustand } from '../engine'",
         "import { sicht } from './sicht'",
-        'export function schritt(zustand: Spielzustand) { return [sicht(zustand), erlaubteAktionen(zustand)] }',
+        'export function schritt(zustand: Spielzustand) { return [sicht(zustand), ermittleAktionen(zustand)] }',
         '',
       ].join('\n'),
       'src/ki/boese.ts': [
