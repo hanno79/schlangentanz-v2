@@ -49,7 +49,7 @@ const ZUFALL = new Map([
   ['crypto', new Set(['getRandomValues', 'randomUUID'])],
 ])
 /** Zeitquellen; Zeit gehört weder in die Engine noch in die KI. */
-const ZEIT = new Set(['Date', 'performance'])
+export const ZEIT = new Set(['Date', 'performance'])
 /** Objekte, über die man jedes Global erreicht: `globalThis.Math`, `window.Date` … */
 export const GLOBALE_WURZELN = new Set(['globalThis', 'window', 'self', 'global'])
 
@@ -124,6 +124,49 @@ function globalerName(knoten: ts.Node): string | null {
 /** Der äusserste Knoten um `knoten`, der nur Klammern oder `!` hinzufügt. */
 export function aeusserer(knoten: ts.Node): ts.Node {
   return ts.isParenthesizedExpression(knoten.parent) || ts.isNonNullExpression(knoten.parent) ? aeusserer(knoten.parent) : knoten
+}
+
+/** Ein Ziel ohne Klammern, `!` und Casts: `(globalThis as T).x` schreibt in globalThis. */
+export function ohneHuellen(ausdruck: ts.Expression): ts.Expression {
+  const kern = ohneKlammern(ausdruck)
+  if (ts.isAsExpression(kern) || ts.isTypeAssertionExpression(kern) || ts.isSatisfiesExpression(kern)) return ohneHuellen(kern.expression)
+  return kern
+}
+
+/** Die Ziele einer Zuweisung, auch beim Zerlegen: `[a.b] = …`, `({ x: a.b } = …)`. */
+function zuweisungsziele(links: ts.Expression): ts.Expression[] {
+  const kern = ohneHuellen(links)
+  const ohneVorgabe = (ziel: ts.Expression) =>
+    ts.isBinaryExpression(ziel) && ziel.operatorToken.kind === ts.SyntaxKind.EqualsToken ? ziel.left : ziel
+  if (ts.isArrayLiteralExpression(kern)) {
+    return kern.elements.flatMap((element) =>
+      ts.isOmittedExpression(element) ? [] : zuweisungsziele(ohneVorgabe(ts.isSpreadElement(element) ? element.expression : element)),
+    )
+  }
+  if (ts.isObjectLiteralExpression(kern)) {
+    return kern.properties.flatMap((eigenschaft) => {
+      if (ts.isPropertyAssignment(eigenschaft)) return zuweisungsziele(ohneVorgabe(eigenschaft.initializer))
+      if (ts.isSpreadAssignment(eigenschaft)) return zuweisungsziele(eigenschaft.expression)
+      return ts.isShorthandPropertyAssignment(eigenschaft) ? [eigenschaft.name] : []
+    })
+  }
+  return [kern]
+}
+
+/** Die Ziele, in die ein Knoten schreibt: Zuweisung, `++`, `--`, `delete`, Kopf von `for … in` und `for … of`. */
+export function geschriebeneZiele(knoten: ts.Node): ts.Expression[] {
+  if (ts.isBinaryExpression(knoten) && knoten.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && knoten.operatorToken.kind <= ts.SyntaxKind.LastAssignment) {
+    return zuweisungsziele(knoten.left)
+  }
+  if ((ts.isPrefixUnaryExpression(knoten) || ts.isPostfixUnaryExpression(knoten)) &&
+    (knoten.operator === ts.SyntaxKind.PlusPlusToken || knoten.operator === ts.SyntaxKind.MinusMinusToken)) {
+    return zuweisungsziele(knoten.operand)
+  }
+  if (ts.isDeleteExpression(knoten)) return zuweisungsziele(knoten.expression)
+  if ((ts.isForInStatement(knoten) || ts.isForOfStatement(knoten)) && !ts.isVariableDeclarationList(knoten.initializer)) {
+    return zuweisungsziele(knoten.initializer)
+  }
+  return []
 }
 
 /**

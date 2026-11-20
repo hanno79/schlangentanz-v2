@@ -11,9 +11,12 @@ import { zeileVon, zuPosix } from '../scripts/pruefung/quelldateien.mjs'
 import {
   GLOBALE_WURZELN,
   VOLLER_ZUSTAND_TYP,
+  ZEIT,
   aeusserer,
   besucheAlle,
+  geschriebeneZiele,
   istFreierWert,
+  ohneHuellen,
   ohneKlammern,
   optionenFuer,
   zugriff,
@@ -51,8 +54,7 @@ const VERBOTEN_AN_OBJECT = new Set([
 const PROTOTYP_SCHLUESSEL = new Set(['prototype', '__proto__', 'constructor'])
 /** Von Object.prototype geerbt; `globalThis.valueOf()` etwa gibt das globale Objekt ohne seinen Namen heraus. */
 const GEERBT_VON_OBJECT = new Set(['valueOf', 'toString', 'toLocaleString', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable'])
-/** U4 nach Typ: Zeitquellen als globale Variable, Zufall und Zeit als Mitglied einer Schnittstelle der Bibliothek. */
-const ZEIT_GLOBAL = new Set(['Date', 'performance'])
+/** U4 nach Typ: Zufall und Zeit als Mitglied einer Schnittstelle der Bibliothek; Zeitquellen als globale Variable stehen in ZEIT. */
 const ZUFALL_UND_ZEIT: Record<string, Set<string> | 'alle'> = {
   Math: new Set(['random']),
   Crypto: new Set(['getRandomValues', 'randomUUID']),
@@ -74,49 +76,6 @@ function istWertausdruck(knoten: ts.Node): knoten is ts.Expression {
   return !inTypposition(knoten)
 }
 
-/** Ein Ziel ohne Klammern, `!` und Casts: `(globalThis as T).x` schreibt in globalThis. */
-function ohneHuellen(ausdruck: ts.Expression): ts.Expression {
-  const kern = ohneKlammern(ausdruck)
-  if (ts.isAsExpression(kern) || ts.isTypeAssertionExpression(kern) || ts.isSatisfiesExpression(kern)) return ohneHuellen(kern.expression)
-  return kern
-}
-
-/** Die Ziele einer Zuweisung, auch beim Zerlegen: `[a.b] = …`, `({ x: a.b } = …)`. */
-function zuweisungsziele(links: ts.Expression): ts.Expression[] {
-  const kern = ohneHuellen(links)
-  const ohneVorgabe = (ziel: ts.Expression) =>
-    ts.isBinaryExpression(ziel) && ziel.operatorToken.kind === ts.SyntaxKind.EqualsToken ? ziel.left : ziel
-  if (ts.isArrayLiteralExpression(kern)) {
-    return kern.elements.flatMap((element) =>
-      ts.isOmittedExpression(element) ? [] : zuweisungsziele(ohneVorgabe(ts.isSpreadElement(element) ? element.expression : element)),
-    )
-  }
-  if (ts.isObjectLiteralExpression(kern)) {
-    return kern.properties.flatMap((eigenschaft) => {
-      if (ts.isPropertyAssignment(eigenschaft)) return zuweisungsziele(ohneVorgabe(eigenschaft.initializer))
-      if (ts.isSpreadAssignment(eigenschaft)) return zuweisungsziele(eigenschaft.expression)
-      return ts.isShorthandPropertyAssignment(eigenschaft) ? [eigenschaft.name] : []
-    })
-  }
-  return [kern]
-}
-
-/** Die Ziele, in die ein Knoten schreibt: Zuweisung, `++`, `--`, `delete`, Kopf von `for … in` und `for … of`. */
-function geschriebeneZiele(knoten: ts.Node): ts.Expression[] {
-  if (ts.isBinaryExpression(knoten) && knoten.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && knoten.operatorToken.kind <= ts.SyntaxKind.LastAssignment) {
-    return zuweisungsziele(knoten.left)
-  }
-  if ((ts.isPrefixUnaryExpression(knoten) || ts.isPostfixUnaryExpression(knoten)) &&
-    (knoten.operator === ts.SyntaxKind.PlusPlusToken || knoten.operator === ts.SyntaxKind.MinusMinusToken)) {
-    return zuweisungsziele(knoten.operand)
-  }
-  if (ts.isDeleteExpression(knoten)) return zuweisungsziele(knoten.expression)
-  if ((ts.isForInStatement(knoten) || ts.isForOfStatement(knoten)) && !ts.isVariableDeclarationList(knoten.initializer)) {
-    return zuweisungsziele(knoten.initializer)
-  }
-  return []
-}
-
 /** Die Funktion hinter einem Namen, der sich nicht umhängen lässt: `function f` oder `const f = (…) => …`. */
 function festeFunktion(symbol: ts.Symbol | undefined): { funktion: ts.FunctionLikeDeclaration; name: string } | null {
   const deklaration = symbol?.valueDeclaration
@@ -132,10 +91,11 @@ function festeFunktion(symbol: ts.Symbol | undefined): { funktion: ts.FunctionLi
  * oder enthält, nur unverändert weitergereicht werden: an eine Funktion unter
  * `dateien` mit einem Parameter dieses Typs, an eine der ERLAUBTE_ENGINE_EMPFAENGER,
  * in eine Variable dieses Typs; einen Behälter wie das Ergebnis von `anwendeAktion`
- * darf man öffnen. Alles andere ist ein Verstoss, ebenso Casts von oder zu diesem
- * Typ, Casts nach `any` oder `unknown`, Ausdrücke vom Typ `any` und `arguments`.
- * In allen `dateien`, auch in sicht.ts: keine Änderung globaler Objekte (H1) und
- * U4 nach Typ, damit `(Math.valueOf() as Math).random()` nicht durchrutscht.
+ * darf man öffnen. Alles andere ist ein Verstoss.
+ * In allen `dateien`, auch in sicht.ts: keine Casts ausser `as const`, keine
+ * Ausdrücke vom Typ `any`, kein `arguments`, denn die Prüfung glaubt den Typen; keine
+ * Änderung globaler Objekte (H1) und U4 nach Typ, damit etwa
+ * `(Math.valueOf() as Math).random()` nicht durchrutscht.
  */
 export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[] {
   if (dateien.length === 0) return []
@@ -205,18 +165,29 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
   }
 
   /**
+   * Ob ein Wert vom Typ `quelle` in einen Platz vom Typ `ziel` darf: der Zustand nur
+   * in einen Platz, der selbst der Zustand ist; ein Behälter nur in einen gleichwertigen.
+   * Sonst tarnte `{ stapel: …; reserve?: Spielzustand }` den Zustand als Behälter.
+   */
+  const nimmtAuf = (ziel: ts.Type, quelle: ts.Type): boolean => {
+    if (istVollerZustand(quelle)) return istVollerZustand(ziel)
+    return traegtZustand(ziel) && pruefer.isTypeAssignableTo(ziel, quelle) && pruefer.isTypeAssignableTo(quelle, ziel)
+  }
+
+  /**
    * Ob die aufgerufene Funktion den Zustand an Stelle `stelle` bekommen darf. Sie
    * wird mit ihrem Namen aufgerufen, nicht als Methode: Eine Methode lässt sich
    * umhängen, etwa auf JSON.stringify, und der Typprüfer sähe weiter die alte.
    */
-  const erlaubterEmpfaenger = (aufruf: ts.CallExpression, stelle: number): boolean => {
+  const erlaubterEmpfaenger = (aufruf: ts.CallExpression, stelle: number, quelle: ts.Type): boolean => {
     const aufgerufen = ohneKlammern(aufruf.expression)
     const fest = festeFunktion(ts.isIdentifier(aufgerufen) ? symbolVon(aufgerufen) : undefined)
     if (stelle < 0 || !fest || pruefer.getResolvedSignature(aufruf)?.declaration !== fest.funktion) return false
     const herkunft = zuPosix(fest.funktion.getSourceFile().fileName)
     if (herkunft.startsWith(engineOrdner)) return ERLAUBTE_ENGINE_EMPFAENGER.has(fest.name)
-    const parameter = fest.funktion.parameters[stelle]
-    return kiPfade.has(herkunft) && fest.funktion.body !== undefined && parameter !== undefined && !parameter.dotDotDotToken && traegtZustand(typ(parameter))
+    // Ein `this`-Parameter steht nur im Typ, nicht unter den Argumenten.
+    const parameter = fest.funktion.parameters.filter((p) => !(ts.isIdentifier(p.name) && p.name.text === 'this'))[stelle]
+    return kiPfade.has(herkunft) && fest.funktion.body !== undefined && parameter !== undefined && !parameter.dotDotDotToken && nimmtAuf(typ(parameter), quelle)
   }
 
   /** Ob `ausdruck` vom Typ, der den Zustand trägt, an seiner Stelle nur weitergereicht wird. */
@@ -227,22 +198,21 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     const istZuweisung = ts.isBinaryExpression(ausdruck) && ausdruck.operatorToken.kind === ts.SyntaxKind.EqualsToken
     if (istZuweisung && ts.isExpressionStatement(eltern)) return true
     if (ts.isCallExpression(eltern) && eltern.expression !== aussen) {
-      return erlaubterEmpfaenger(eltern, eltern.arguments.indexOf(aussen as ts.Expression))
+      return erlaubterEmpfaenger(eltern, eltern.arguments.indexOf(aussen as ts.Expression), typ(ausdruck))
     }
-    if (ts.isVariableDeclaration(eltern) && eltern.initializer === aussen) return ts.isIdentifier(eltern.name) && traegtZustand(typ(eltern.name))
+    if (ts.isVariableDeclaration(eltern) && eltern.initializer === aussen) return ts.isIdentifier(eltern.name) && nimmtAuf(typ(eltern.name), typ(ausdruck))
     if (ts.isBinaryExpression(eltern) && eltern.operatorToken.kind === ts.SyntaxKind.EqualsToken) {
       if (eltern.left === aussen) return ts.isIdentifier(ausdruck)
-      return ts.isIdentifier(ohneKlammern(eltern.left)) && traegtZustand(typ(eltern.left))
+      return ts.isIdentifier(ohneKlammern(eltern.left)) && nimmtAuf(typ(eltern.left), typ(ausdruck))
     }
     // Einen Behälter darf man öffnen; was herauskommt, wird für sich geprüft. Den Zustand selbst nicht.
     const teile = zugriff(eltern)
     return teile !== null && teile.objekt === aussen && !istVollerZustand(typ(ausdruck))
   }
 
-  /** Die Schlüssel eines Zugriffs; `null`, wenn er jeder Text sein kann. Zahlen gelten als harmlos. */
-  const schluesselVon = (knoten: ts.PropertyAccessExpression | ts.ElementAccessExpression): string[] | null => {
-    if (ts.isPropertyAccessExpression(knoten)) return [knoten.name.text]
-    const schluesseltyp = typ(knoten.argumentExpression)
+  /** Die Texte, die ein Schlüsselausdruck annehmen kann; `null`, wenn jeder Text. Zahlen gelten als harmlos. */
+  const schluesselwerte = (schluessel: ts.Expression): string[] | null => {
+    const schluesseltyp = typ(schluessel)
     const werte: string[] = []
     for (const teil of schluesseltyp.isUnion() ? schluesseltyp.types : [schluesseltyp]) {
       if (teil.isStringLiteral()) werte.push(teil.value)
@@ -250,6 +220,9 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     }
     return werte
   }
+  /** Die Schlüssel eines Zugriffs; `null`, wenn er jeder Text sein kann. */
+  const schluesselVon = (knoten: ts.PropertyAccessExpression | ts.ElementAccessExpression): string[] | null =>
+    ts.isPropertyAccessExpression(knoten) ? [knoten.name.text] : schluesselwerte(knoten.argumentExpression)
 
   /** Ob ein Bezeichner oder ein Zugriff wie `globalThis.Math` eine globale Variable meint; dann ihr Name. */
   const globalerWert = (knoten: ts.Node): string | null => {
@@ -263,6 +236,22 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     const teile = zugriff(knoten)
     if (!teile?.schluessel || !GLOBALE_WURZELN.has(globalerWert(ohneKlammern(teile.objekt)) ?? '')) return null
     return teile.schluessel
+  }
+  /** Ein Mitglied eines globalen Objekts wie `JSON.stringify`; dann `JSON.stringify`. */
+  const globalesMitglied = (knoten: ts.Node): string | null => {
+    const teile = zugriff(knoten)
+    const objekt = teile && globalerWert(ohneKlammern(teile.objekt))
+    return objekt && teile.schluessel ? `${objekt}.${teile.schluessel}` : null
+  }
+
+  /** Schlüssel beim Zerlegen und in Objekten: `{ constructor: k } = …`, `{ __proto__: … }`. */
+  const schluesselImMuster = (knoten: ts.Node): string[] | null | undefined => {
+    const name = ts.isBindingElement(knoten) && ts.isObjectBindingPattern(knoten.parent)
+      ? knoten.propertyName ?? knoten.name
+      : ts.isPropertyAssignment(knoten) || ts.isShorthandPropertyAssignment(knoten) ? knoten.name : undefined
+    if (name === undefined) return undefined
+    if (ts.isIdentifier(name) || ts.isStringLiteral(name)) return [name.text]
+    return ts.isComputedPropertyName(name) ? schluesselwerte(name.expression) : []
   }
 
   const verstoesse: Verstoss[] = []
@@ -305,7 +294,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       if (name === undefined || (ts.isIdentifier(knoten) && !istFreierWert(knoten))) return
       const symbol = symbolVon(name)
       if (symbol === undefined || !ausBibliothek(symbol)) return
-      const zeitGlobal = ZEIT_GLOBAL.has(symbol.name) && symbol.flags & ts.SymbolFlags.Variable
+      const zeitGlobal = ZEIT.has(symbol.name) && symbol.flags & ts.SymbolFlags.Variable
       const gehoertZu = (symbol.declarations ?? []).some((d) => {
         if (!ts.isInterfaceDeclaration(d.parent)) return false
         const mitglieder = ZUFALL_UND_ZEIT[d.parent.name.text]
@@ -318,12 +307,10 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
 
     /** H1: kein Weg zu einem Prototyp; globale Objekte nur aufrufen oder an ihnen lesen, nie weitergeben. */
     const pruefeGlobales = (knoten: ts.Node) => {
-      if (ts.isPropertyAccessExpression(knoten) || ts.isElementAccessExpression(knoten)) {
-        const schluessel = schluesselVon(knoten)
-        if (schluessel === null) melde(knoten, `greift mit einem Schlüssel zu, der jeder Text sein kann: ${knoten.getText()}`)
-        else if (schluessel.some((wert) => PROTOTYP_SCHLUESSEL.has(wert))) melde(knoten, `greift auf ${knoten.getText()} zu`)
-      }
-      const name = globalerWert(knoten)
+      const schluessel = ts.isPropertyAccessExpression(knoten) || ts.isElementAccessExpression(knoten) ? schluesselVon(knoten) : schluesselImMuster(knoten)
+      if (schluessel === null) melde(knoten, `greift mit einem Schlüssel zu, der jeder Text sein kann: ${knoten.getText()}`)
+      else if (schluessel?.some((wert) => PROTOTYP_SCHLUESSEL.has(wert))) melde(knoten, `greift auf ${knoten.getText()} zu`)
+      const name = globalerWert(knoten) ?? globalesMitglied(knoten)
       if (name === null || geschrieben.has(knoten)) return
       if (VERBOTENE_GLOBALE.has(name)) return melde(knoten, `nutzt ${name}`)
       if (!(typ(knoten).flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive))) return
@@ -341,27 +328,31 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       melde(knoten, `gibt das globale ${name} als Wert weiter`)
     }
 
-    /** U5: den vollen Zustand nur weiterreichen, keine Casts, die ihn verstecken. */
+    /** Die Prüfung glaubt den Typen: keine Casts ausser `as const`, kein `any`, kein `arguments`. */
+    const pruefeTypen = (knoten: ts.Node) => {
+      if (!istWertausdruck(knoten)) return
+      if (ts.isIdentifier(knoten) && knoten.text === 'arguments') melde(knoten, 'liest arguments')
+      if (typ(knoten).flags & ts.TypeFlags.Any) melde(knoten, `Ausdruck vom Typ any: ${knoten.getText()}`)
+      const istCast = ts.isTypeAssertionExpression(knoten) || (ts.isAsExpression(knoten) && !ts.isConstTypeReference(knoten.type))
+      if (istCast) melde(knoten, `Cast: ${knoten.getText()}; ein Cast verdeckt den Typ, an dem die Prüfung hängt`)
+    }
+
+    /** U5: den vollen Zustand nur weiterreichen. */
     const pruefeZustand = (knoten: ts.Node) => {
       if ((ts.isObjectBindingPattern(knoten) || ts.isArrayBindingPattern(knoten)) && (ts.isParameter(knoten.parent) || ts.isBindingElement(knoten.parent))) {
         if (traegtZustand(typ(knoten.parent))) melde(knoten, `zerlegt ${VOLLER_ZUSTAND_TYP}: ${knoten.getText()}`)
         return
       }
-      if (!istWertausdruck(knoten)) return
-      const eigener = typ(knoten)
-      if (ts.isIdentifier(knoten) && knoten.text === 'arguments') melde(knoten, 'liest arguments')
-      if (eigener.flags & ts.TypeFlags.Any) melde(knoten, `Ausdruck vom Typ any: ${knoten.getText()}`)
-      if (ts.isAsExpression(knoten) || ts.isTypeAssertionExpression(knoten)) {
-        const verdeckt = eigener.flags & (ts.TypeFlags.Any | ts.TypeFlags.Unknown)
-        if (verdeckt || traegtZustand(eigener) || traegtZustand(typ(knoten.expression))) melde(knoten, `Cast: ${knoten.getText()}`)
+      if (istWertausdruck(knoten) && traegtZustand(typ(knoten)) && !wirdWeitergereicht(knoten)) {
+        melde(knoten, `verwendet ${VOLLER_ZUSTAND_TYP}, statt ihn weiterzureichen: ${knoten.getText()}`)
       }
-      if (traegtZustand(eigener) && !wirdWeitergereicht(knoten)) melde(knoten, `verwendet ${VOLLER_ZUSTAND_TYP}, statt ihn weiterzureichen: ${knoten.getText()}`)
     }
 
     besucheAlle(quelle, (knoten) => {
       for (const ziel of geschriebeneZiele(knoten)) pruefeSchreiben(ziel)
       pruefeGlobales(knoten)
       pruefeZufallUndZeit(knoten)
+      pruefeTypen(knoten)
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })
   }
