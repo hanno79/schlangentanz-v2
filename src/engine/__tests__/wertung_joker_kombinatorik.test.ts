@@ -150,32 +150,29 @@ function regenbogenAuslage(zufall: () => number): Glied[][] {
   return schlangen
 }
 
+/** Die Wertung muss dieselbe Summe und dieselben Jokerfarben liefern wie das Durchprobieren; gibt die Schlangen zurück. */
+function vergleiche(glieder: Glied[][], mitVielfalt: boolean): { schlangen: Schlange[]; summe: number } {
+  const schlangen = baue(glieder)
+  const ergebnis = werteSchlangen(schlangen, mitVielfalt)
+  const erwartet = durchprobieren(schlangen, mitVielfalt)
+  const beschreibung = JSON.stringify(glieder)
+  expect(ergebnis.gruppenPunkte + (ergebnis.vielfaltBonus ?? 0), beschreibung).toBe(erwartet.summe)
+  expect(ergebnis.schlangen.flatMap((s) => s.joker.map((j) => j.farbe)), beschreibung).toEqual(erwartet.joker)
+  return { schlangen, summe: erwartet.summe }
+}
+
 describe('A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft', () => {
   it.each([false, true])('A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus %s: gleiche Summe, gleiche Jokerfarben', (mitVielfalt) => {
     const zufall = erzeugeZufall(mitVielfalt ? 1010 : 2020)
-    for (let fall = 0; fall < 400; fall++) {
-      const glieder = zufallsSchlangen(zufall)
-      const schlangen = baue(glieder)
-      const ergebnis = werteSchlangen(schlangen, mitVielfalt)
-      const erwartet = durchprobieren(schlangen, mitVielfalt)
-      const beschreibung = JSON.stringify(glieder)
-      expect(ergebnis.gruppenPunkte + (ergebnis.vielfaltBonus ?? 0), beschreibung).toBe(erwartet.summe)
-      expect(ergebnis.schlangen.flatMap((s) => s.joker.map((j) => j.farbe)), beschreibung).toEqual(erwartet.joker)
-    }
+    for (let fall = 0; fall < 400; fall++) vergleiche(zufallsSchlangen(zufall), mitVielfalt)
   })
 
   it('D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren', () => {
     const zufall = erzeugeZufall(3232)
     let regelEntscheidet = 0
     for (let fall = 0; fall < 400; fall++) {
-      const glieder = regenbogenAuslage(zufall)
-      const schlangen = baue(glieder)
-      const ergebnis = werteSchlangen(schlangen, true)
-      const erwartet = durchprobieren(schlangen, true)
-      const beschreibung = JSON.stringify(glieder)
-      expect(ergebnis.gruppenPunkte + (ergebnis.vielfaltBonus ?? 0), beschreibung).toBe(erwartet.summe)
-      expect(ergebnis.schlangen.flatMap((s) => s.joker.map((j) => j.farbe)), beschreibung).toEqual(erwartet.joker)
-      if (durchprobieren(schlangen, true, true).summe !== erwartet.summe) regelEntscheidet += 1
+      const { schlangen, summe } = vergleiche(regenbogenAuslage(zufall), true)
+      if (durchprobieren(schlangen, true, true).summe !== summe) regelEntscheidet += 1
     }
     // Gegenprobe: Die Auslagen sind so gewählt, dass D32 oft die Summe ändert; sonst prüfte der Vergleich wenig.
     expect(regelEntscheidet, 'Auslagen, in denen D32 die Summe ändert').toBeGreaterThanOrEqual(20)

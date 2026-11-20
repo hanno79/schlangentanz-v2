@@ -6,7 +6,8 @@ import type { Szenario } from './szenarien'
 /*
 Szenarien zur Wertung (E10). Die Schlangen sind die Rechenbeispiele der Website
 (A11, A7.3, A7.7) und die Grenzfälle mit Jokern; das Material reicht nicht für
-alle Beispiele in einer Partie, deshalb sind es drei Szenarien. Am Tisch steht je
+alle Beispiele in einer Partie, deshalb sind es drei Szenarien; ein viertes zeigt
+D32 (E10b). Am Tisch steht je
 Spieler die Aufschlüsselung: Gruppen je Schlange, Farbe jedes Jokers,
 Vielfaltbonus, Kette, Aufgaben und Summe.
 */
@@ -72,6 +73,19 @@ export const WERTUNGS_SZENARIEN: readonly Szenario[] = [
       )
         .haendeAuffuellen()
         .amZug(0)
+        .zustand(),
+  },
+  {
+    name: 'wertung-vielfalt-regenbogen',
+    beschreibung:
+      'Vielfaltbonus nach D32, zwei Spieler mit Erweiterung, Partie beendet. Spieler 1: Rot³, Blau³, Gelb³ und drei Regenbogenschlangen. KI-Gegner 1: Blau³, Rot-Regenbogenschlange-Rot, Gelb³, Violett³.',
+    erwartet:
+      'Spieler 1: vier Gruppen, die drei Regenbogenschlangen als eigene Gruppe mit 0 Punkten (als Blau, gleich gut wie das Verlängern von Gelb, feste Reihenfolge); Gruppen 9, Farben für den Vielfaltbonus nur Blau, Rot und Gelb, Vielfalt 2 (nicht 3), Kette 3 mit Bonus 5, Summe 16. KI-Gegner 1: Regenbogenschlange als Rot in einer Gruppe mit roten Karten, die rote Gruppe zählt; Gruppen 14, vier Farben, Vielfalt 3, Kette 3 mit Bonus 5, Summe 22. Gewonnen hat KI-Gegner 1 mit 22.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 2, erweiterung: true })
+        .schlange(0, ['Rot', 'Rot', 'Rot', 'Blau', 'Blau', 'Blau', 'Gelb', 'Gelb', 'Gelb', 'Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'])
+        .schlange(1, ['Blau', 'Blau', 'Blau', 'Rot', 'Regenbogenschlange', 'Rot', 'Gelb', 'Gelb', 'Gelb', 'Violett', 'Violett', 'Violett'])
+        .beendet(0)
         .zustand(),
   },
 ]
