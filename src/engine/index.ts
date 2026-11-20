@@ -37,6 +37,8 @@ export type { PartieOptionen } from './state';
 export { ermittleAktionen } from './aktionen/enumerieren';
 export { ermittleEntscheider, pruefeAktion } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
+/** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
+export { erzeugeZufall } from './testing/zufall';
 
 // Invarianten, Speichern und Laden
 export { istAuslagekarte, pruefeInvarianten } from './invarianten';

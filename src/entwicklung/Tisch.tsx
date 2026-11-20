@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erzeugeZufall, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
+import { entscheidetKi, naechsterKiSchritt } from '../ki/schritt'
+import { erstelleZufallsKi } from '../ki/zufallsKi'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
 import { name } from './namen'
@@ -78,6 +80,7 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
             Von vorn
           </button>
         </p>
+        <KiSchritt zustand={zustand} schritt={verlauf.length} fuehreAus={fuehreAus} scheitert={setFehler} />
         {fehler === null ? null : <Fehler meldung={`Abgelehnt: ${fehler}`} />}
         <Bedienung zustand={zustand} fuehreAus={fuehreAus} />
         <Ereignisse zustand={zustand} ereignisse={ereignisse} />
@@ -99,6 +102,43 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
         </details>
       </section>
     </>
+  )
+}
+
+interface KiSchrittProps {
+  zustand: Spielzustand
+  /** Die Nummer des Schritts; aus ihr entsteht der Zufall der KI, damit derselbe Stand denselben Schritt ergibt. */
+  schritt: number
+  fuehreAus: (aktion: SpielAktion, beschriftung: string) => void
+  scheitert: (grund: string) => void
+}
+
+/** K1, Kriterium 4: spielt genau einen Schritt der Zufalls-KI, wenn eine KI entscheidet. */
+function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
+  const entscheider = ermittleEntscheider(zustand)
+  const kiAmZug = entscheidetKi(zustand)
+  const hinweis =
+    entscheider === null
+      ? 'Die Partie ist beendet.'
+      : `${zustand.spieler[entscheider].name} entscheidet; das ist ${kiAmZug ? 'eine KI.' : 'ein Mensch.'}`
+
+  function spiele() {
+    try {
+      const aktion = naechsterKiSchritt(zustand, erstelleZufallsKi(erzeugeZufall(schritt)))
+      if (aktion === null) throw new Error('Es entscheidet keine KI.')
+      fuehreAus(aktion, `KI-Schritt: ${beschrifte(zustand, aktion)}`)
+    } catch (fehler) {
+      scheitert(fehlertext(fehler))
+    }
+  }
+
+  return (
+    <p>
+      <button type="button" onClick={spiele} disabled={!kiAmZug}>
+        KI-Schritt
+      </button>{' '}
+      <small data-testid="ki-schritt-hinweis">{hinweis}</small>
+    </p>
   )
 }
 
