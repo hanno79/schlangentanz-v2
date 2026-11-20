@@ -95,6 +95,32 @@ describe('K1: naechsterKiSchritt liefert genau eine Aktion oder nichts', () => {
     expect(() => naechsterKiSchritt(zustand, ki)).toThrow(/nicht aufgezählt/)
   })
 
+  it('U3 (Codex-Review): ersetzt die KI einen Eintrag der Liste durch eine eigene Aktion, wird das abgelehnt', () => {
+    const zustand = partie(1)
+    const ki: Ki = {
+      name: 'Tausch-KI',
+      waehle: (_, aktionen) => {
+        const eigene: SpielAktion = { typ: 'ZugBeenden', spielerId: 'spieler-2' }
+        ;(aktionen as SpielAktion[]).splice(0, 1, eigene)
+        return eigene
+      },
+    }
+    expect(() => naechsterKiSchritt(zustand, ki)).toThrow(/Tausch-KI hat eine Aktion gewählt, die die Engine nicht aufgezählt hat/)
+  })
+
+  it('U3 (Codex-Review): sortiert die KI die Liste um, gilt die Aktion, die sie zurückgibt', () => {
+    const zustand = partie(1)
+    const aufgezaehlt = ermittleAktionen(zustand)
+    const ki: Ki = {
+      name: 'Sortier-KI',
+      waehle: (_, aktionen) => {
+        ;(aktionen as SpielAktion[]).reverse()
+        return aktionen[0]
+      },
+    }
+    expect(naechsterKiSchritt(zustand, ki), 'U3: gewählt ist die letzte aufgezählte Aktion').toEqual(aufgezaehlt.at(-1))
+  })
+
   it('U3: verändert die KI die gewählte Aktion, gilt trotzdem die aufgezählte', () => {
     const zustand = partie(1)
     const aufgezaehlt = ermittleAktionen(zustand)
