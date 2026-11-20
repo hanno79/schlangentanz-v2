@@ -1,0 +1,120 @@
+== Gegenprobe Sicht: Z.83 ablagestapel nur oberste Karte (D28 verletzt), Z.110 oberste Karte des Nachziehstapels in der Sicht (B2 verletzt)
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+ ❯ src/ki/sicht.test.ts (14 tests | 3 failed) 61ms
+     × D28: alle Ablagestapel vollständig, in ihrer Reihenfolge, nicht nur die oberste Karte 10ms
+     × B2: keine fremde Hand, keine Stapelreihenfolge, keine fremde geheime Aufgabe, für jeden Spieler 5ms
+     × K1: zwei Zustände, die sich nur in Verborgenem unterscheiden, ergeben dieselbe Sicht (200 Zufallszustände) 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > D28: alle Ablagestapel vollständig, in ihrer Reihenfolge, nicht nur die oberste Karte
+AssertionError: expected [ Array(3) ] to deeply equal [ [ …(2) ], [ …(3) ], [ { …(3) } ] ]
+
+- Expected
++ Received
+
+@@ -1,31 +1,15 @@
+  [
+    [
+      {
+-       "id": "farbendieb-04",
+-       "name": "Farbendieb",
+-       "typ": "Sonderkarte",
+-     },
+-     {
+        "farbe": "Grün",
+        "id": "gruen-08",
+        "punkte": 3,
+        "typ": "Farbkarte",
+      },
+    ],
+    [
+-     {
+-       "farbe": "Braun",
+-       "id": "braun-05",
+-       "punkte": 2,
+-       "typ": "Farbkarte",
+-     },
+-     {
+-       "id": "verdoppler-03",
+-       "name": "Verdoppler",
+-       "typ": "Sonderkarte",
+-     },
+      {
+        "farbe": "Violett",
+        "id": "violett-05",
+        "punkte": 2,
+        "typ": "Farbkarte",
+
+ ❯ src/ki/sicht.test.ts:50:66
+     48|
+     49|   it('D28: alle Ablagestapel vollständig, in ihrer Reihenfolge, nicht …
+     50|     expect(sicht.spieler.map((spieler) => spieler.ablagestapel)).toEqu…
+       |                                                                  ^
+     51|     expect(sicht.spieler[1].ablagestapel.length, 'D28: der Ablagestape…
+     52|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > B2: keine fremde Hand, keine Stapelreihenfolge, keine fremde geheime Aufgabe, für jeden Spieler
+AssertionError: B2: Sicht von Spieler 0 nennt Verborgenes: expected [ 'braun-06' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "braun-06",
++ ]
+
+ ❯ src/ki/sicht.test.ts:101:105
+     99|       expect(verborgen.length, `B2: Testaufbau, für Spieler ${ich} gib…
+    100|       const texte = alleTexte(sicht)
+    101|       expect(verborgen.filter((id) => texte.has(id)), `B2: Sicht von S…
+       |                                                                                                         ^
+    102|       for (const [index, spieler] of sicht.spieler.entries()) {
+    103|         expect(Object.keys(spieler), `B2: Spieler ${index} in der Sich…
+ ❯ src/ki/sicht.test.ts:96:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > K1: zwei Zustände, die sich nur in Verborgenem unterscheiden, ergeben dieselbe Sicht (200 Zufallszustände)
+AssertionError: K1: Zustand 0, Sicht von Spieler 2: expected { ich: 2, …(16) } to deeply equal { ich: 2, …(16) }
+
+- Expected
++ Received
+
+@@ -58,12 +58,12 @@
+      },
+    ],
+    "ich": 2,
+    "nachziehstapelGroesse": 80,
+    "oben": {
+-     "farbe": "Rot",
+-     "id": "rot-11",
++     "farbe": "Gelb",
++     "id": "gelb-05",
+      "punkte": 1,
+      "typ": "Farbkarte",
+    },
+    "offeneAufgaben": [],
+    "partiephase": "Laufend",
+
+ ❯ src/ki/sicht.test.ts:120:89
+    118|       const anders = mischeVerborgenes(zustand, ich, zufall)
+    119|       if (JSON.stringify(anders) !== JSON.stringify(zustand)) verschie…
+    120|       expect(sichtFuer(anders, ich), `K1: Zustand ${nummer}, Sicht von…
+       |                                                                                         ^
+    121|     }
+    122|     expect(verschieden, 'K1: Testaufbau, das Mischen verändert fast je…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 11 passed (14)
+   Start at  22:17:17
+   Duration  3.48s (transform 453ms, setup 310ms, import 469ms, tests 61ms, environment 2.33s)
+

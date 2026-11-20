@@ -1,45 +1,49 @@
 ---
 id: TF-DEV-016
-titel: Das Szenario wertung-vielfalt-regenbogen zeigt am Entwicklertisch die von Hand nachgerechnete Wertung 16 zu 22 und das Etikett „Farben für den Vielfaltbonus“.
-art: manuell
-regression: nein
-prioritaet: mittel
+titel: Am Entwicklertisch spielt ein Klick auf „KI-Schritt“ genau einen Schritt, und der Knopf ist gesperrt, solange ein Mensch entscheidet.
+art: beides
+regression: ja
+prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
-aenderung: task/E10b-vielfalt-regenbogen (PR #52)
+skript: src/entwicklung/Entwicklertisch.test.tsx
+aenderung: task/K1-ki-schnittstelle
 ---
 
 ## Worum es geht
 
-Am Entwicklertisch soll man D32 sehen und nachrechnen können: Spieler 1 hat neben drei Farbgruppen eine Gruppe aus drei Regenbogenschlangen, die keine Farbe für den Vielfaltbonus bringt. Das Etikett heisst jetzt „Farben für den Vielfaltbonus“, weil „Farben mit Gruppe“ bei einer solchen Gruppe nicht mehr stimmt.
+Mit dem Knopf „KI-Schritt“ lässt man am Entwicklertisch die Zufalls-KI für den Spieler wählen, der gerade entscheidet. Ein Klick darf genau eine Aktion ausführen, nie einen ganzen Zug auf einmal, und für den Menschen darf die KI nicht spielen.
 
 ## Bestanden, wenn
 
-Im Abschnitt „Wertung“ steht in der Endwertung Spieler 1 mit Gruppen 9, Vielfalt 2, Kette 5, Aufgaben 0, Summe 16 und KI-Gegner 1 mit 14, 3, 5, 0, 22, darunter „Gewonnen: KI-Gegner 1 (22)“. Die Aufschlüsselung nennt für Spieler 1 „Blau×3 = 0“, alle drei Regenbogenschlangen „als Blau“ und „Farben für den Vielfaltbonus: Blau, Rot, Gelb, Vielfalt 2“, für KI-Gegner 1 die Regenbogenschlange „als Rot“ und „Farben für den Vielfaltbonus: Blau, Rot, Gelb, Violett, Vielfalt 3“. Der Text „Farben mit Gruppe“ kommt nicht vor. Bei 1280 und bei 390 px Breite ist `scrollWidth` gleich `clientWidth`, keine Konsolenfehler.
+Bei Saat 1 mit zwei Spielern ist der Knopf zu Beginn gesperrt mit dem Hinweis „Spieler 1 entscheidet; das ist ein Mensch.“. Nach einer Karte und „ZugBeenden“ von Spieler 1 (Schritt 2) ist er frei mit „KI-Gegner 1 entscheidet; das ist eine KI.“. Der erste Klick führt zu Schritt 3 und dem Verlaufseintrag „KI-Schritt: FarbkarteLegen: Mondranke (violett-06) → neue Schlange“, der zweite zu Schritt 4 mit „KI-Schritt: ZugBeenden“. Danach ist der Knopf wieder gesperrt, ein Klick darauf ändert nichts. Zweimal „Schritt zurück“ und ein Klick ergeben wieder Schritt 3 mit violett-06. Keine Konsolenfehler, kein waagrechtes Scrollen.
 
 ## Fehlgeschlagen, wenn
 
-Eine Zahl abweicht, die Regenbogen-Gruppe als Farbe zählt, das alte Etikett erscheint oder die Seite waagrecht scrollt.
+Ein Klick mehr als einen Verlaufseintrag erzeugt, der Knopf frei ist, während der Mensch entscheidet, nach „Schritt zurück“ eine andere Aktion kommt oder eine Fehlermeldung erscheint.
 
 ## Vorbedingungen
 
 | Was | Wert |
 |---|---|
-| Anwendung | Testhook-Build (`npm run build:testhooks`), Vorschau mit `vite preview --outDir dist-testhooks`, Fenster 1280×900 und 390×844 |
+| Anwendung | Testhook-Build, `npm run preview:testhooks` auf Port 4174, Fenster 1280×900 |
 
 ## Testdaten
 
-Szenario `wertung-vielfalt-regenbogen` aus `/dev/szenarien`. Nachrechnung: Spieler 1 Rot³ 3 + Blau³ 3 + Gelb³ 3 + Regenbogen³ 0 = 9, drei Farben gibt 2, Kette 3 gibt 5, Summe 16. KI-Gegner 1 Blau³ 3 + Rot, Regenbogenschlange, Rot 2 + Gelb³ 3 + Violett³ 6 = 14, vier Farben gibt 3, Kette 5, Summe 22.
+Adresse `/dev?seed=1&spieler=2`.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | `/dev/szenarien` | Link `wertung-vielfalt-regenbogen` anklicken | | Tisch lädt, „Invarianten (alle erfüllt)“ |
-| 2 | Abschnitt „Wertung“ | Tabellen und Aufschlüsselung lesen | | Werte wie unter „Bestanden, wenn“ |
-| 3 | Browser | Fenster auf 390×844 stellen, Seite neu laden | | gleiche Werte, nichts abgeschnitten, kein waagrechtes Scrollen |
+| 1 | `/dev?seed=1&spieler=2` | Seite öffnen | | „Schritt 0“, Knopf „KI-Schritt“ grau, Hinweis „Spieler 1 entscheidet; das ist ein Mensch.“ |
+| 2 | Aktionen der Engine | „FarbkarteLegen: Wasserwirbel (blau-12) → neue Schlange“ klicken, dann „ZugBeenden“ | | „Schritt 2“, Knopf frei, Hinweis „KI-Gegner 1 entscheidet; das ist eine KI.“ |
+| 3 | Knopf „KI-Schritt“ | einmal klicken | | „Schritt 3“, Ereignis „KarteGespielt: KI-Gegner 1 (spieler-2), violett-06 (FarbkarteLegen) → schlange-2 …“, Hand von KI-Gegner 1 hat 4 Karten |
+| 4 | Knopf „KI-Schritt“ | noch einmal klicken | | „Schritt 4“, Knopf grau, Hinweis „Spieler 1 entscheidet; das ist ein Mensch.“ |
+| 5 | Knopf „KI-Schritt“ | auf den grauen Knopf klicken | | weiter „Schritt 4“, keine Fehlermeldung |
+| 6 | Knopf „Schritt zurück“ | zweimal klicken, dann „KI-Schritt“ | | „Schritt 3“, letzter Verlaufseintrag „KI-Schritt: FarbkarteLegen: Mondranke (violett-06) → neue Schlange“ |
 
 ## Nicht abgedeckte Grenzfälle
 
-Tablet und Handy quer misst der Layout-Vertrag `entwicklertisch_breite` mit. Eine Gruppe aus Regenbogenschlangen und Farbenfusion zeigt das Szenario nicht, weil die Regel dazu offen ist.
+Eine ganze Partie mit dem Knopf steht in TF-DEV-017, die angesagte Karte ohne Aktion in TF-DEV-018. Tablet-Klassen sind nicht eigens geprüft; der Entwicklertisch ist kein Oberflächen-Task, Desktop und Handy hochkant genügen nach Auftrag.

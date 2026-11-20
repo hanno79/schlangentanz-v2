@@ -88,6 +88,12 @@ describe('U5: Die KI sieht nur ihre Sicht', () => {
     ).toBe(true)
   })
 
+  it('K1: die Prüfung erfasst die echten Dateien der KI unter src/ki', () => {
+    expect(kiDateien, 'K1: erwartet Sicht, Schritt, Zufalls-KI und Turnier unter src/ki').toEqual(
+      expect.arrayContaining(['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/zufallsKi.ts', 'src/ki/turnier.ts']),
+    )
+  })
+
   it(`U5: ${kiDateien.length} Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts`, () => {
     const verstoesse = pruefeSichtZugriff(WURZEL, kiDateien)
 

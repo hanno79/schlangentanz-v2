@@ -1,0 +1,228 @@
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall } from '../engine'
+import type { SpielAktion, Spielzustand } from '../engine'
+import { naechsterKiSchritt, waehleFuer } from './schritt'
+import type { Ki } from './schritt'
+import { entscheiderVon, sichtFuer } from './sicht'
+import { turnier } from './turnier'
+import type { Teilnehmer } from './turnier'
+import { erstelleZufallsKi } from './zufallsKi'
+
+// Prüfer K1: eigene Gegenproben, nicht committet.
+
+function texte(wert: unknown, menge = new Set<string>()): Set<string> {
+  if (typeof wert === 'string') menge.add(wert)
+  else if (Array.isArray(wert)) wert.forEach((w) => texte(w, menge))
+  else if (wert !== null && typeof wert === 'object') Object.values(wert).forEach((w) => texte(w, menge))
+  return menge
+}
+
+function objekte(wert: unknown, menge = new Set<object>()): Set<object> {
+  if (wert !== null && typeof wert === 'object') {
+    if (menge.has(wert)) return menge
+    menge.add(wert)
+    Object.values(wert).forEach((w) => objekte(w, menge))
+  }
+  return menge
+}
+
+function verborgen(z: Spielzustand, ich: number): string[] {
+  const fremd = z.spieler.filter((_, i) => i !== ich)
+  return [
+    ...fremd.flatMap((s) => s.hand.map((k) => k.id)),
+    ...z.nachziehstapel.map((k) => k.id),
+    ...fremd.flatMap((s) => (s.geheimeAufgabe ? [s.geheimeAufgabe.id, s.geheimeAufgabe.name, s.geheimeAufgabe.bedingung] : [])),
+    ...z.aufgabenStapel.flatMap((a) => [a.id, a.name, a.bedingung]),
+  ]
+}
+
+/** Eigene Störung des Verborgenen: Karte fremde Hand <-> Stapel tauschen, Stapel umdrehen, fremde geheime Aufgaben rotieren, Erfüllt kippen. */
+function stoere(z: Spielzustand, ich: number, zufall: () => number): Spielzustand {
+  const n = structuredClone(z)
+  const fremd = n.spieler.filter((_, i) => i !== ich)
+  for (const s of fremd) {
+    if (s.hand.length > 0 && n.nachziehstapel.length > 0) {
+      const a = Math.floor(zufall() * s.hand.length)
+      const b = Math.floor(zufall() * n.nachziehstapel.length)
+      ;[s.hand[a], n.nachziehstapel[b]] = [n.nachziehstapel[b], s.hand[a]]
+    }
+    s.hand.reverse()
+    s.geheimeAufgabeErfuellt = !s.geheimeAufgabeErfuellt
+  }
+  n.nachziehstapel.reverse()
+  const mit = fremd.filter((s) => s.geheimeAufgabe !== null)
+  if (mit.length > 0 && n.aufgabenStapel.length > 0) {
+    const pool = [...mit.map((s) => s.geheimeAufgabe!), ...n.aufgabenStapel]
+    pool.push(pool.shift()!)
+    mit.forEach((s, i) => (s.geheimeAufgabe = pool[i]))
+    n.aufgabenStapel = pool.slice(mit.length)
+  }
+  n.aufgabenStapel.reverse()
+  return n
+}
+
+function zufallspartien(anzahl: number, saat0: number, cb: (z: Spielzustand, nr: number) => void) {
+  for (let p = 0; p < anzahl; p += 1) {
+    const spielerzahl = 2 + (p % 3)
+    const erweiterung = p % 2 === 0
+    let z = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat0 + p) })
+    const kis = z.spieler.map((_, i) => erstelleZufallsKi(erzeugeZufall(saat0 * 7 + p * 13 + i)))
+    let schritt = 0
+    while (ermittleEntscheider(z) !== null && schritt < 4000) {
+      cb(z, schritt)
+      const e = entscheiderVon(z)!
+      z = anwendeAktion(z, waehleFuer(z, e, kis[e.index])).zustand
+      schritt += 1
+    }
+    cb(z, schritt)
+  }
+}
+
+describe('Prüfer K1: Geheimnis in echten Partien', () => {
+  it('Prüfer: in 24 Partien (2-4 Spieler, mit/ohne Erweiterung) nennt weder Sicht noch Aktionsliste eine verborgene Id, und die Sicht teilt keine Objektreferenz mit dem Zustand', () => {
+    let pruefungen = 0
+    let aktionsPruefungen = 0
+    zufallspartien(24, 900, (z, schritt) => {
+      if (schritt % 3 !== 0) return
+      const refs = objekte(z)
+      const entscheider = ermittleEntscheider(z)
+      z.spieler.forEach((_, ich) => {
+        const sicht = sichtFuer(z, ich)
+        const t = texte(sicht)
+        const leck = verborgen(z, ich).filter((id) => t.has(id))
+        expect(leck, `Sicht von ${ich} in Schritt ${schritt}`).toEqual([])
+        const geteilt = [...objekte(sicht)].filter((o) => refs.has(o))
+        expect(geteilt.length, 'Sicht teilt Referenzen mit Zustand').toBe(0)
+        pruefungen += 1
+        if (entscheider === ich) {
+          const ta = texte(ermittleAktionen(z))
+          expect(verborgen(z, ich).filter((id) => ta.has(id)), `Aktionen von ${ich} in Schritt ${schritt}`).toEqual([])
+          aktionsPruefungen += 1
+        }
+      })
+    })
+    expect(pruefungen).toBeGreaterThan(1000)
+    expect(aktionsPruefungen).toBeGreaterThan(300)
+  }, 300_000)
+
+  it('Prüfer: eigene Störung des Verborgenen lässt Sicht, Aktionsliste und Wahl der Zufalls-KI gleich', () => {
+    const zufall = erzeugeZufall(31337)
+    let geaendert = 0
+    let vergleiche = 0
+    zufallspartien(18, 500, (z, schritt) => {
+      if (schritt % 5 !== 0) return
+      z.spieler.forEach((_, ich) => {
+        const anders = stoere(z, ich, zufall)
+        if (JSON.stringify(anders) !== JSON.stringify(z)) geaendert += 1
+        expect(sichtFuer(anders, ich)).toEqual(sichtFuer(z, ich))
+        vergleiche += 1
+        if (ermittleEntscheider(z) === ich) {
+          expect(ermittleAktionen(anders)).toEqual(ermittleAktionen(z))
+          const ki = () => erstelleZufallsKi(erzeugeZufall(schritt))
+          if (entscheiderVon(z)!.steuerung === 'KI') expect(naechsterKiSchritt(anders, ki())).toEqual(naechsterKiSchritt(z, ki()))
+        }
+      })
+    })
+    expect(vergleiche).toBeGreaterThan(500)
+    expect(geaendert / vergleiche).toBeGreaterThan(0.9)
+  }, 300_000)
+
+  it('Prüfer: Sichtbares ändert die Sicht (eigene Hand, fremde Schlange, offene Aufgabe, Comeback, Grube, Phase)', () => {
+    let z = erstellePartie({ spielerzahl: 3, erweiterung: true, zufall: erzeugeZufall(2024) })
+    const kis = z.spieler.map((_, i) => erstelleZufallsKi(erzeugeZufall(i + 50)))
+    for (let s = 0; s < 30; s += 1) {
+      const e = entscheiderVon(z)!
+      z = anwendeAktion(z, waehleFuer(z, e, kis[e.index])).zustand
+    }
+    const v = sichtFuer(z, 0)
+    const fremdeSchlange = z.spieler.findIndex((s, i) => i !== 0 && s.schlangen.length > 0)
+    expect(fremdeSchlange).toBeGreaterThan(0)
+    const varianten: Array<[string, (n: Spielzustand) => void]> = [
+      ['eigene Hand', (n) => { [n.spieler[0].hand[0], n.nachziehstapel[0]] = [n.nachziehstapel[0], n.spieler[0].hand[0]] }],
+      ['fremde Schlange', (n) => n.spieler[fremdeSchlange].schlangen[0].karten.reverse()],
+      ['offene Aufgabe', (n) => { [n.offeneAufgaben[0], n.aufgabenStapel[0]] = [n.aufgabenStapel[0], n.offeneAufgaben[0]] }],
+      ['Comeback umgedreht', (n) => { n.spieler[1].comeback!.verbraucht = !n.spieler[1].comeback!.verbraucht }],
+      ['Phase', (n) => { n.partiephase = 'Schlussrunde' }],
+      ['eigene geheime Aufgabe erfüllt', (n) => { n.spieler[0].geheimeAufgabeErfuellt = !n.spieler[0].geheimeAufgabeErfuellt }],
+      ['Stapelgrösse', (n) => { n.spieler[2].ablagestapel.push(n.nachziehstapel.shift()!) }],
+    ]
+    for (const [name, aendere] of varianten) {
+      const n = structuredClone(z)
+      aendere(n)
+      expect(sichtFuer(n, 0), name).not.toEqual(v)
+    }
+  })
+})
+
+describe('Prüfer K1: Manipulation', () => {
+  const start = () => {
+    let z = erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(77) })
+    z = anwendeAktion(z, ermittleAktionen(z)[0]).zustand
+    z = anwendeAktion(z, ermittleAktionen(z).find((a) => a.typ === 'ZugBeenden')!).zustand
+    return z
+  }
+
+  it('Prüfer: eine Aktion aus einer früheren Aufzählung (gleicher Inhalt, alte Abschrift) wird abgelehnt', () => {
+    const z = start()
+    let alt: SpielAktion | null = null
+    const sammler: Ki = { name: 'Sammler', waehle: (_, a) => (alt = a[0], a[0]) }
+    naechsterKiSchritt(z, sammler)
+    const wieder: Ki = { name: 'Wiederholer', waehle: () => alt! }
+    expect(() => naechsterKiSchritt(z, wieder)).toThrow(/nicht aufgezählt/)
+  })
+
+  it('Prüfer: undefined oder eine Zahl als Rückgabe werden abgelehnt', () => {
+    const z = start()
+    expect(() => naechsterKiSchritt(z, { name: 'Leer', waehle: (_, a) => a[999] })).toThrow(/nicht aufgezählt/)
+    expect(() => naechsterKiSchritt(z, { name: 'Zahl', waehle: () => 0 as unknown as SpielAktion })).toThrow(/nicht aufgezählt/)
+  })
+
+  it('Prüfer: verändert die KI Sicht und Aktionen tief, bleibt der Zustand unverändert, und die Aktionen teilen keine Referenz mit dem Zustand', () => {
+    const z = start()
+    const roh = JSON.stringify(z)
+    const refs = objekte(z)
+    const ki: Ki = {
+      name: 'Zerstörer',
+      waehle: (sicht, a) => {
+        expect([...objekte(a)].filter((o) => refs.has(o))).toEqual([])
+        sicht.hand.length = 0
+        sicht.spieler.forEach((s) => { s.schlangen.length = 0; s.ablagestapel.length = 0 })
+        for (const aktion of a) (aktion as { spielerId: string }).spielerId = 'x'
+        return a[0]
+      },
+    }
+    const aktion = naechsterKiSchritt(z, ki)
+    expect(JSON.stringify(z)).toBe(roh)
+    expect(aktion?.spielerId).toBe('spieler-2')
+  })
+})
+
+describe('Prüfer K1: Kriterium 2 und 3 mit eigenen Saaten', () => {
+  const Z: Teilnehmer = { name: 'Z', erstelle: erstelleZufallsKi }
+  it('Prüfer: 200 Partien (2/3/4 Spieler je mit und ohne Erweiterung, Saaten ab 5000) enden alle', () => {
+    const laeufe = [
+      turnier({ teilnehmer: [Z, Z], partien: 35, ersteSaat: 5000, erweiterung: false }),
+      turnier({ teilnehmer: [Z, Z], partien: 35, ersteSaat: 5100, erweiterung: true }),
+      turnier({ teilnehmer: [Z, Z, Z], partien: 30, ersteSaat: 5200, erweiterung: false }),
+      turnier({ teilnehmer: [Z, Z, Z], partien: 30, ersteSaat: 5300, erweiterung: true }),
+      turnier({ teilnehmer: [Z, Z, Z, Z], partien: 35, ersteSaat: 5400, erweiterung: false }),
+      turnier({ teilnehmer: [Z, Z, Z, Z], partien: 35, ersteSaat: 5500, erweiterung: true }),
+    ]
+    const partien = laeufe.flatMap((l) => l.partien)
+    expect(partien).toHaveLength(200)
+    const nichtBeendet = partien.filter((p) => p.ausgang !== 'beendet')
+    const schritte = partien.map((p) => p.schritte)
+    console.log(`PRUEFER K2: 200 Partien, nicht beendet ${nichtBeendet.length}, Schritte min ${Math.min(...schritte)} max ${Math.max(...schritte)} Mittel ${(schritte.reduce((a, b) => a + b, 0) / 200).toFixed(1)}`)
+    expect(nichtBeendet.map(({ saat, ausgang, detail }) => ({ saat, ausgang, detail }))).toEqual([])
+  }, 300_000)
+
+  it('Prüfer: gleiche Saat gleicher Verlauf, auch zu viert mit Erweiterung und mit Saat 0; andere Saat anderer Verlauf', () => {
+    const o = { teilnehmer: [Z, Z, Z, Z], partien: 3, ersteSaat: 0, erweiterung: true }
+    const a = turnier(o)
+    const b = turnier(o)
+    expect(b).toEqual(a)
+    const c = turnier({ ...o, ersteSaat: 3 })
+    expect(c.partien[0].verlauf).not.toEqual(a.partien[0].verlauf)
+    console.log(`PRUEFER K3: Saat 0 Partie 0 ${a.partien[0].schritte} Schritte, gleich: ${JSON.stringify(a) === JSON.stringify(b)}`)
+  }, 120_000)
+})
