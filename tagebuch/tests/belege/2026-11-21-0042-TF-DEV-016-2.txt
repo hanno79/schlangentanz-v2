@@ -1,0 +1,17 @@
+Prüfer P0.3d, eingebauter Browser der Desktop-App, 1280x900, Maus
+Build: npm run build:testhooks (Exit 0), npm run preview:testhooks, Port 4174, Worktree agent-a7d7c37ca6a651ff9, Stand 4c1a211
+
+1. http://localhost:4174/dev?szenario=start-2 geladen, Schritt 1, Spieler 1 (Mensch) entscheidet.
+2. Klick "KI-Schritt" bei Spieler 1: Schritt bleibt 1 (kein Zug ausgeführt).
+3. Klick FarbkarteLegen blau-12 -> neue Schlange, dann ZugBeenden: Schritt 2,
+   Hinweis neben dem Knopf: "KI-Gegner 1 entscheidet; das ist eine KI.",
+   Ereignisse: KartenGezogen Spieler 1 zieht 1, ZugBegonnen KI-Gegner 1 Teilzug 1, 5 Aktionen der Engine.
+4. Klick "KI-Schritt": Schritt 3 (genau ein Schritt),
+   Ereignis: "KarteGespielt: KI-Gegner 1 (spieler-2), gruen-03 (FarbkarteLegen) -> schlange-2 von KI-Gegner 1 (spieler-2), Stelle 0",
+   danach 2 Aktionen (VerdopplerSpielen verdoppler-04, ZugBeenden spieler-2), Invarianten alle erfüllt.
+5. Konsole: keine Fehler. scrollWidth 1265 = clientWidth 1265.
+
+Laufzeitprobe zu den Befunden (javascript_tool auf derselben Seite, danach zurückgesetzt):
+  const w = self; w === globalThis                     -> true
+  w.structuredClone ersetzt, structuredClone({a:1})    -> Ersatz aufgerufen mit "object"
+  setTimeout('window.__p03dPruefer = 7', 0)             -> window.__p03dPruefer === 7 (Zeichenkette wird als Code ausgeführt, kein CSP)

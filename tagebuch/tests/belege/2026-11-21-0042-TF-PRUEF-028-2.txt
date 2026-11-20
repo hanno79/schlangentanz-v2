@@ -1,0 +1,149 @@
+// Legt die Angriffsdateien des Prüfers unter src/ki an (Aufruf aus dem Repo) oder löscht sie (--weg).
+import { writeFileSync, rmSync, readdirSync, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
+
+const A = 'src/ki'
+const K = "import { anwendeAktion, berechneEndwertung, ermittleAktionen, pruefeAktion, type AktionsErgebnis, type SpielAktion, type Spielkarte, type Spielzustand } from '../engine'\nimport { sichtFuer, type Sicht } from './sicht'\n"
+
+if (process.argv.includes('--weg')) {
+  for (const n of readdirSync(A)) if (n.startsWith('zz-angriff-')) rmSync(join(A, n))
+  rmSync(join(A, '__tests__', 'zz-lauscher.ts'), { force: true })
+  process.exit(0)
+}
+
+const f = {
+  // U5: eigene Umgehungen
+  u01: "export const a = (z: Spielzustand) => Object.getOwnPropertyDescriptor(z, 'nachziehstapel')?.value",
+  u02: 'export const a = (z: Spielzustand) => Array.from(z.nachziehstapel)',
+  u03: 'export function a(z: Spielzustand) { const { version: _v, ...rest } = z; return rest.nachziehstapel }',
+  u04: "export function a(x: Spielzustand | Sicht) { return 'nachziehstapel' in x ? x.nachziehstapel.length : 0 }",
+  u05: 'export const a = (z: Spielzustand) => Promise.resolve(z).then((k) => k.nachziehstapel)',
+  u06: 'export function a(z: Spielzustand) { const lies = () => z; return lies().nachziehstapel }',
+  u07: "export const a = (z: Spielzustand) => String(z) + ('' + z)",
+  u08: 'export const a = (z: Spielzustand) => new Proxy(z, {})',
+  u09: 'export function a(z: Spielzustand, kopie: unknown = z) { return JSON.stringify(kopie) }',
+  u10: 'class Leser { constructor(private z: Spielzustand) {} get stapel(): Spielkarte[] { return this.z.nachziehstapel } }\nexport const a = (z: Spielzustand) => new Leser(z).stapel',
+  u11: 'function lies(z: Spielzustand): string\nfunction lies(z: unknown): string { return JSON.stringify(z) }\nexport const a = (z: Spielzustand) => lies(z)',
+  u12: 'function* g(z: Spielzustand) { yield z }\nexport const a = (z: Spielzustand) => [...g(z)]',
+  u13: 'const o = { lies(this: Spielzustand) { return this.nachziehstapel } }\nexport const a = (z: Spielzustand) => o.lies.call(z)',
+  u14: 'export const a = (z: Spielzustand, bedingung: boolean) => { const k: Spielzustand = bedingung ? z : z; return k }',
+  u15: 'export function a(z: Spielzustand, leck = () => z) { return leck }',
+  u16: 'const tag = (_s: TemplateStringsArray, ...werte: unknown[]) => JSON.stringify(werte)\nexport const a = (z: Spielzustand) => tag`${z}`',
+  u17: 'export const a = (z: Spielzustand) => { const k = z satisfies Spielzustand; return k }',
+  u18: "type Mein = { [K in 'nachziehstapel']: Spielzustand[K] }\nfunction lies(k: Mein) { return k.nachziehstapel }\nexport const a = (z: Spielzustand) => lies(z)",
+  u19: "type Huelle = { zustand: { [K in keyof Spielzustand]: Spielzustand[K] }; ereignisse: AktionsErgebnis['ereignisse'] }\nfunction lies(h: Huelle) { return h.zustand.nachziehstapel }\nexport const a = (e: AktionsErgebnis) => lies(e)",
+  u20: 'export const a = (z: Spielzustand) => { for (const s of [z]) return s.nachziehstapel }',
+  u21: "type Feld = 'nachziehstapel' | 'version'\nexport const a = (z: Spielzustand, k: Feld) => z[k]",
+  u22: 'export const a = (z: Spielzustand) => z?.nachziehstapel',
+  u23: 'export const a = (z: Spielzustand) => new Map([[1, z]])',
+  // Semantisch: nur erlaubte Weitergabe, Ergebnis verrät Verborgenes
+  s01: 'export const a = (z: Spielzustand, gegner: number) => sichtFuer(z, gegner).hand',
+  s02: "export const a = (z: Spielzustand, ich: string) => ermittleAktionen(anwendeAktion(z, { typ: 'ZugBeenden', spielerId: ich }).zustand)",
+  s03: "export const a = (z: Spielzustand, ich: string, index: number) => sichtFuer(anwendeAktion(z, { typ: 'ZugBeenden', spielerId: ich }).zustand, index).hand",
+  s04: 'export const a = (z: Spielzustand) => berechneEndwertung(z).spieler.map((s) => s.aufgaben)',
+  s05: 'export const a = (z: Spielzustand, aktion: SpielAktion) => pruefeAktion(z, aktion)',
+  // H1: globale Objekte (eigene)
+  g01: "export const a = () => setTimeout('globalThis.structuredClone = (x) => x', 0)",
+  g02: "export const a = () => setInterval('globalThis.structuredClone = (x) => x', 1000)",
+  g03: 'export const a = () => Object.freeze(globalThis)',
+  g04: 'export const a = (f: () => void) => { const w = frames.self; w.structuredClone = f as never }',
+  g05: 'export const a = (f: () => void) => { const w = document.defaultView; if (w) w.structuredClone = f as never }',
+  g06: "class MeinArray extends Array<number> { static setze() { super.indexOf = () => 0 } }\nexport const a = () => MeinArray.setze()",
+  g07: 'export const a = () => ({}).__defineSetter__("x", () => 0)',
+  g08: "export const a = (f: typeof structuredClone) => { const g: { structuredClone: typeof structuredClone } = globalThis; g.structuredClone = f }",
+  g09: "import './__tests__/zz-lauscher'\nimport { gefangenerStapel } from './__tests__/zz-lauscher'\nexport const a = (z: Spielzustand, aktion: SpielAktion) => { anwendeAktion(z, aktion); return gefangenerStapel() }",
+  // U4: Zufall und Zeit (eigene)
+  z01: "export const a = () => new Intl.DateTimeFormat('de-CH', { timeStyle: 'medium' }).format()",
+  z02: "export const a = () => new Event('x').timeStamp",
+  z03: 'export const a = () => URL.createObjectURL(new Blob([]))',
+  z04: 'export const a = () => { const o = { t: Intl.DateTimeFormat().formatToParts() }; return o.t }',
+  z05: 'export const a = () => new AbortController().signal.aborted && performance.timeOrigin',
+}
+
+for (const [name, rumpf] of Object.entries(f)) writeFileSync(join(A, `zz-angriff-${name}.ts`), `${K}${rumpf}\n`)
+mkdirSync(join(A, '__tests__'), { recursive: true })
+writeFileSync(
+  join(A, '__tests__', 'zz-lauscher.ts'),
+  [
+    "import type { Spielzustand } from '../../engine'",
+    'let gefangen: Spielzustand | null = null',
+    'const echt = globalThis.structuredClone',
+    'globalThis.structuredClone = ((wert: unknown, optionen?: StructuredSerializeOptions) => {',
+    "  if (wert && typeof wert === 'object' && 'nachziehstapel' in wert) gefangen = wert as Spielzustand",
+    '  return echt(wert, optionen)',
+    '}) as typeof structuredClone',
+    "export const gefangenerStapel = (): string[] => (gefangen ? gefangen.nachziehstapel.map((k) => k.id) : [])",
+    '',
+  ].join('\n'),
+)
+console.log(`${Object.keys(f).length} Angriffsdateien und src/ki/__tests__/zz-lauscher.ts angelegt`)
+// Runde 2 der Angriffe (Aufruf aus dem Repo); --weg löscht sie.
+import { writeFileSync, rmSync, readdirSync, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
+
+const A = 'src/ki'
+const K = "import { anwendeAktion, ermittleAktionen, type SpielAktion, type Spielzustand } from '../engine'\nimport { sichtFuer, type Sicht } from './sicht'\n"
+
+if (process.argv.includes('--weg')) {
+  for (const n of readdirSync(A)) if (n.startsWith('zz-')) rmSync(join(A, n))
+  for (const n of readdirSync(join(A, '__tests__'))) if (n.startsWith('zz-')) rmSync(join(A, '__tests__', n))
+  rmSync('src/hilfen', { recursive: true, force: true })
+  process.exit(0)
+}
+
+const f = {
+  // Globale Objekte ohne Cast
+  g04b: 'export const a = (f: typeof structuredClone) => { const w = frames.self; w.structuredClone = f }',
+  g10: "export const a = () => import('data:text/javascript,globalThis.structuredClone=(x)=>x')",
+  g11: 'export const a = (f: () => void) => { Error.prepareStackTrace = f }',
+  g12: "export const a = () => window.setTimeout('globalThis.structuredClone = (x) => x')",
+  // Seitenkanal über einen Testhelfer unter src/ki/__tests__: die KI-Datei sieht nur die Sicht
+  g09b: "import { gefangenerStapel } from './__tests__/zz-lauscher'\nexport const a = (sicht: Sicht) => gefangenerStapel()[sicht.ich]",
+  // dasselbe mit einer Datei, die wie ein Test heisst
+  g13: "import { gefangenerStapel } from './zz-lauscher.test'\nexport const a = (sicht: Sicht) => gefangenerStapel()[sicht.ich]",
+  // dasselbe mit einem Helfer ausserhalb von src/ki
+  g14: "import { gefangenerStapel } from '../hilfen/zz-lauscher'\nexport const a = (sicht: Sicht) => gefangenerStapel()[sicht.ich]",
+  // U4 über einen Testhelfer
+  z06: "import { wuerfel } from './__tests__/zz-wuerfel'\nexport const a = (sicht: Sicht) => wuerfel() + sicht.ich",
+  // U5 weitere
+  u24: 'class Kiste<T> { constructor(public wert: T) {} }\nexport const a = (z: Spielzustand) => new Kiste(z).wert',
+  u25: "export function a(z: Spielzustand, aktion: SpielAktion): Spielzustand { return anwendeAktion(z, aktion).zustand }",
+  u26: "export function a(z: Spielzustand, ich: number): number { const neu = anwendeAktion(z, ermittleAktionen(z)[0]).zustand; return sichtFuer(neu, ich).hand.length }",
+}
+
+for (const [name, rumpf] of Object.entries(f)) writeFileSync(join(A, `zz-angriff-${name}.ts`), `${K}${rumpf}\n`)
+const lauscher = [
+  "import type { Spielzustand } from '../engine'",
+  'let gefangen: Spielzustand | null = null',
+  'const echt = globalThis.structuredClone',
+  'globalThis.structuredClone = ((wert: unknown, optionen?: StructuredSerializeOptions) => {',
+  "  if (wert && typeof wert === 'object' && 'nachziehstapel' in wert) gefangen = wert as Spielzustand",
+  '  return echt(wert, optionen)',
+  '}) as typeof structuredClone',
+  'export const gefangenerStapel = (): string[] => (gefangen ? gefangen.nachziehstapel.map((k) => k.id) : [])',
+  '',
+].join('\n')
+mkdirSync(join(A, '__tests__'), { recursive: true })
+writeFileSync(join(A, '__tests__', 'zz-lauscher.ts'), lauscher.replace("'../engine'", "'../../engine'"))
+writeFileSync(join(A, 'zz-lauscher.test.ts'), lauscher)
+mkdirSync('src/hilfen', { recursive: true })
+writeFileSync(join('src/hilfen', 'zz-lauscher.ts'), lauscher)
+writeFileSync(join(A, '__tests__', 'zz-wuerfel.ts'), 'export const wuerfel = () => Math.random()\n')
+writeFileSync(join(A, 'zz-angriff-j01.js'), 'export const a = (z) => z.nachziehstapel\n')
+console.log(`${Object.keys(f).length} Angriffe, Lauscher, Würfel und j01.js angelegt`)
+// Runde 3: das globale Objekt unter einem Schnitt- oder Vereinigungstyp.
+import { writeFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+const K = "import type { Sicht } from './sicht'\nexport type Ersatz = typeof structuredClone\n"
+const f = {
+  g15: 'export const a = (f: Ersatz, s: Sicht) => { const w = self; w.structuredClone = f; return s.ich }',
+  g16: 'export const a = (f: Ersatz, s: Sicht) => { const w = globalThis.self; w.structuredClone = f; return s.ich }',
+  g17: 'export const a = (f: Ersatz, s: Sicht) => { const w = top; if (w) w.structuredClone = f; return s.ich }',
+  g18: 'export const a = (f: Ersatz, s: Sicht) => { const w = parent; w.structuredClone = f; return s.ich }',
+  g19: 'export const a = (f: Ersatz, s: Sicht) => { const w = frames; w.structuredClone = f; return s.ich }',
+  g20: 'export const a = (f: Ersatz, s: Sicht) => { Object.assign(self, { structuredClone: f }); return s.ich }',
+  g21: 'export const a = (f: (x: number, y: number) => number, s: Sicht) => { const m = globalThis.self.Math; m.max = f; return s.ich }',
+}
+for (const [name, rumpf] of Object.entries(f)) writeFileSync(join('src/ki', `zz-angriff-${name}.ts`), `${K}${rumpf}\n`)
+console.log(`${Object.keys(f).length} Angriffe angelegt`)

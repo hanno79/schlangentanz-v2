@@ -1,0 +1,6 @@
+ROT  src/ki/zz-k2-bewertung.ts
+      U5:70 greift mit einem Schlüssel zu, der jeder Text sein kann: ergebnis[spieler.id]
+      U5:81 Cast: aktionen.filter((aktion) => aktion.typ === 'FarbkarteLegen') as FarbkarteLegenAktion[]; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+ROT  src/ki/zz-k2-zugsuche.ts
+      U5:25 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(zustand, aktion).zustand
+echte Dateien: 0 Verstösse

@@ -1,0 +1,24 @@
+Fehlalarm-Probe des Prüfers P0.3d: zwei vorübergehende Dateien unter src/ki (danach gelöscht).
+Ergebnis siehe P0.3d-k2-probe.txt: drei Meldungen, alle an absichtlich eingebauten Mustern (Zeilen 70, 81, 25).
+
+=== src/ki/zz-k2-bewertung.ts ===
+import { werteSchlangen } from '../engine'
+import type { Farbe, FarbkarteInfo, FarbkarteLegenAktion, SpielAktion, Spielkarte } from '../engine'
+import type { Ki } from './schritt'
+import type { Sicht, SpielerSicht } from './sicht'
+const GEWICHT = { punkte: 1, paar: 0.6, joker: 0.3 } as const
+function istFarbkarte(karte: Spielkarte): karte is FarbkarteInfo { return karte.typ === 'Farbkarte' }
+function istLegen(aktion: SpielAktion): aktion is FarbkarteLegenAktion { return aktion.typ === 'FarbkarteLegen' }
+export function farbzaehler(hand): Map<Farbe, number>      -- Map, for-of, filter
+function punkteVon(spieler: SpielerSicht, erweiterung)       -- werteSchlangen(spieler.schlangen, erweiterung).gruppenPunkte
+export function bewerte(sicht: Sicht): number                -- Paare, Math.max(...gegner), Partial<Record<Farbe, number>> mit Farbe-Schlüssel, Object.keys
+export function ordneLegeaktionen(sicht, aktionen)           -- new Map(sicht.hand.map(...)), filter(istLegen).sort(...), localeCompare
+export function erstelleProbeKi(): Ki                        -- Map als Gedächtnis, JSON.stringify([sicht.ich, ids]) als Schlüssel
+export function punkteJeSpieler(sicht): Record<string, number>  -- ergebnis[spieler.id] = ...   (Zeile 70, absichtlich: freier Text-Schlüssel)
+export function fuehrender(sicht)                            -- Object.entries(punkte).sort(...)
+export function legeaktionenAlsListe(aktionen)               -- aktionen.filter(...) as FarbkarteLegenAktion[]   (Zeile 81, absichtlich: Cast)
+
+=== src/ki/zz-k2-zugsuche.ts ===
+A besterZugA(zustand, ich): for (const aktion of ermittleAktionen(zustand)) { const danach = anwendeAktion(zustand, aktion).zustand; bewerte(sichtFuer(danach, ich)) ... }
+B folgezustand(zustand, aktion): Spielzustand { return anwendeAktion(zustand, aktion).zustand }   (Zeile 25: gemeldet)
+C alleBewertungen(zustand, ich): ermittleAktionen(zustand).map((aktion) => bewerte(sichtFuer(anwendeAktion(zustand, aktion).zustand, ich)))
