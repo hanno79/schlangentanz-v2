@@ -143,20 +143,38 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
   })
 })
 
+/** Wie oft der Dauerlauf einen zweiten Zug nach einem Verdoppler sah (E3). */
+interface ZweiteZuege {
+  gesamt: number
+  inSchlussrunde: number
+}
+
 /**
  * Was der Dauerlauf je Partie zusätzlich zu den Invarianten prüft (E2): höchstens
  * eine Farbkarte und eine Sonderkarte je Zug (D12), höchstens 5 Handkarten nach
  * dem eigenen Zugende (A5), in der Schlussrunde zieht niemand, der Auslöser kommt
  * nicht mehr dran, und jeder andere hat genau einen letzten Zug (A10).
+ *
+ * Seit E3 (A7.8, D11): Ein zweiter Zug beginnt nur für denselben Spieler direkt
+ * nach seinem ersten Zug mit Verdoppler, im zweiten Zug wird kein Verdoppler mit
+ * Wirkung gespielt, und in der Schlussrunde zählen beide Züge als ein letzter Zug.
  */
-function regelPruefer(): SchrittPruefer {
+function regelPruefer(zaehler: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }): SchrittPruefer {
   /** Wer in der Schlussrunde seinen letzten Zug hatte, gespielt oder ausgesetzt (D21); `null` vor der Schlussrunde. */
   let letzteZuege: number[] | null = null
-  return (vorher, _aktion, { zustand, ereignisse }) => {
+  return (vorher, aktion, { zustand, ereignisse }) => {
     const { zug } = zustand
     if (zug.gespielteFarbkarten > 1 || zug.gespielteSonderkarten > 1) return `D12: ${JSON.stringify(zug)}`
+    if (aktion.typ === 'VerdopplerSpielen' && vorher.zug.teilzug === 2) return 'D11: Im zweiten Zug wirkt ein Verdoppler.'
     for (const ereignis of ereignisse) {
-      if (ereignis.typ === 'SchlussrundeBegonnen') letzteZuege = []
+      if (ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2) {
+        const { spielerIndex, teilzug, verdopplerGespielt } = vorher.zug
+        if (ereignis.spielerIndex !== spielerIndex || teilzug !== 1 || !verdopplerGespielt) {
+          return `A7.8: zweiter Zug für ${ereignis.spielerIndex} nach ${JSON.stringify(vorher.zug)}.`
+        }
+        zaehler.gesamt += 1
+        if (letzteZuege !== null) zaehler.inSchlussrunde += 1
+      } else if (ereignis.typ === 'SchlussrundeBegonnen') letzteZuege = []
       else if (letzteZuege === null) continue
       else if (ereignis.typ === 'KartenGezogen') return `A10: In der Schlussrunde zieht ${ereignis.spielerIndex} Karten.`
       else if (ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'Ausgesetzt') {
@@ -203,6 +221,23 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
     expect(befund).toMatch(/A10/)
   })
 
+  it('A7.8: ein zweiter Zug ohne Verdoppler im ersten Zug davor wird gemeldet; mit Verdoppler nicht, auch in der Schlussrunde', () => {
+    const zweiter: AktionsErgebnis['ereignisse'] = [{ typ: 'ZugBegonnen', spielerIndex: 0, teilzug: 2 }]
+    const ohne = lage(2, 0)
+    expect(regelPruefer()(ohne, ende, { zustand: ohne, ereignisse: zweiter })).toMatch(/A7\.8/)
+    const mit = { ...lage(2, 0), zug: { spielerIndex: 0, teilzug: 1, verdopplerGespielt: true, gespielteFarbkarten: 0, gespielteSonderkarten: 1 } } as unknown as Spielzustand
+    const zaehler = { gesamt: 0, inSchlussrunde: 0 }
+    const pruefer = regelPruefer(zaehler)
+    expect(pruefer(mit, ende, { zustand: lage(2, 0), ereignisse: [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, ...zweiter] })).toBeNull()
+    expect(zaehler).toEqual({ gesamt: 1, inSchlussrunde: 1 })
+  })
+
+  it('D11: ein Verdoppler mit Wirkung im zweiten Zug wird gemeldet', () => {
+    const zweiterZug = { ...lage(2, 0), zug: { spielerIndex: 0, teilzug: 2, gespielteFarbkarten: 0, gespielteSonderkarten: 0 } } as unknown as Spielzustand
+    const aktion: SpielAktion = { typ: 'VerdopplerSpielen', spielerId: 'x', karteId: 'verdoppler-01' }
+    expect(regelPruefer()(zweiterZug, aktion, { zustand: lage(2, 0), ereignisse: [] })).toMatch(/D11/)
+  })
+
   it('D21: ein ausgesetzter letzter Zug zählt als sein letzter Zug', () => {
     const befund = pruefeFolge(3, [
       [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, { typ: 'Ausgesetzt', spielerIndex: 1, karteId: 'schlangengrube-01', ablagestapelVon: 0 }, { typ: 'ZugBegonnen', spielerIndex: 2, teilzug: 1 }],
@@ -215,12 +250,16 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
 describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2)', () => {
   const PARTIEN = [...dauerlaufPartien(150, false), ...dauerlaufPartien(150, true, 151)]
 
-  it('A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante', () => {
+  it('A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler', () => {
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 2)).toHaveLength(100)
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 4)).toHaveLength(100)
-    const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer: regelPruefer })
+    const zweiteZuege: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }
+    const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer: () => regelPruefer(zweiteZuege) })
     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet')).toEqual([])
     // Jede Partie braucht mehrere Züge: mindestens eine Karte und „Zug beenden“ je Zug.
     expect(Math.min(...ergebnisse.map((ergebnis) => ergebnis.schritte))).toBeGreaterThan(40)
+    // E3: Der Verdoppler wird wirklich gespielt, auch in der Schlussrunde.
+    expect(zweiteZuege.gesamt, 'zweite Züge nach einem Verdoppler im Dauerlauf').toBeGreaterThan(100)
+    expect(zweiteZuege.inSchlussrunde, 'zweite Züge in der Schlussrunde im Dauerlauf').toBeGreaterThan(0)
   }, 300_000)
 })

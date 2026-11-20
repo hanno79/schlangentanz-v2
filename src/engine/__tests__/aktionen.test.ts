@@ -87,8 +87,8 @@ describe('A1/A7: das Kartenregister', () => {
     }
   })
 
-  // Die Farbkarte setzt E2 um (A5), die übrigen Karten ihre Tasks E3 bis E9 und X6.
-  it.each(ARTEN.filter(([kartenart]) => kartenart !== 'Farbkarte'))('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
+  // Die Farbkarte setzt E2 um (A5), den Verdoppler E3 (A7.8), die übrigen Karten ihre Tasks E4 bis E9 und X6.
+  it.each(ARTEN.filter(([kartenart]) => kartenart !== 'Farbkarte' && kartenart !== 'Verdoppler'))('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
     const zustand = start()
     const definition = KARTENREGISTER[kartenart]
     const karte = zustand.spieler[0].hand[0]
@@ -166,7 +166,7 @@ describe('A5/B2: Aufzählen, Prüfen und Anwenden', () => {
     expect(grund(start(), { typ: 'Reagieren', spielerId: 'spieler-1', farbenschutzId: null })).toMatch(/nichts abzuwehren/)
   })
 
-  it('A5: eine Karte, die nicht auf der Hand liegt, oder eine Karte der falschen Art wird abgelehnt', () => {
+  it('A5/A7.8: eine Karte, die nicht auf der Hand liegt, oder eine Karte der falschen Art wird abgelehnt; der Verdoppler selbst ist erlaubt', () => {
     const zustand = mitHand(['Blau', 'Verdoppler'])
     const [blau, verdoppler] = zustand.spieler[0].hand
     const fremde = zustand.spieler[1].hand[0]
@@ -177,9 +177,7 @@ describe('A5/B2: Aufzählen, Prüfen und Anwenden', () => {
     expect(grund(zustand, { typ: 'SonderkarteWirkungslosAblegen', spielerId: 'spieler-1', karteId: blau.id })).toMatch(
       /nur Sonderkarten/,
     )
-    expect(grund(zustand, { typ: 'VerdopplerSpielen', spielerId: 'spieler-1', karteId: verdoppler.id })).toMatch(
-      /Verdoppler ist noch nicht umgesetzt \(kommt mit E3\)/,
-    )
+    expect(pruefeAktion(zustand, { typ: 'VerdopplerSpielen', spielerId: 'spieler-1', karteId: verdoppler.id })).toEqual({ erlaubt: true })
   })
 
   it('B2: anwendeAktion lehnt mit dem Grund ab und lässt den Zustand unverändert', () => {
