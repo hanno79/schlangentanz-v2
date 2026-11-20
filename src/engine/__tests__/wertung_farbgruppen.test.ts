@@ -226,11 +226,11 @@ describe('D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026)',
   })
 
   it('D31, D32: drei Regenbogenschlangen sind eine Gruppe mit 0 Punkten, bringen aber keine Farbe für den Vielfaltbonus', () => {
-    const glieder: Parameters<typeof eineSchlange>[0] = ['Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Schlangenblockade']
+    // Die Regenbogen-Gruppe ist blau (feste Reihenfolge), Blau zählt trotzdem nicht als Farbe für den Vielfaltbonus.
+    const glieder: Parameters<typeof eineSchlange>[0] = ['Rot', 'Rot', 'Rot', 'Gelb', 'Gelb', 'Gelb', 'Schlangenblockade']
     const wertung = eineSchlange([...glieder, 'Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'], true)
-    expect(gruppen(wertung)).toHaveLength(3)
-    expect(gruppen(wertung)[2]).toMatch(/×3=0$/)
-    expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Blau', 'Rot'])
+    expect(gruppen(wertung)).toEqual(['Rot×3=3', 'Gelb×3=3', 'Blau×3=0'])
+    expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Rot', 'Gelb'])
     expect(wertung.vielfaltBonus).toBe(1)
   })
 })
