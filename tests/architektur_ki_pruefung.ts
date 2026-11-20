@@ -49,6 +49,16 @@ const VERBOTEN_AN_OBJECT = new Set([
 ])
 /** Schlüssel, über die man an den Prototyp eingebauter Objekte kommt. */
 const PROTOTYP_SCHLUESSEL = new Set(['prototype', '__proto__', 'constructor'])
+/** Von Object.prototype geerbt; `globalThis.valueOf()` etwa gibt das globale Objekt ohne seinen Namen heraus. */
+const GEERBT_VON_OBJECT = new Set(['valueOf', 'toString', 'toLocaleString', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable'])
+/** U4 nach Typ: Zeitquellen als globale Variable, Zufall und Zeit als Mitglied einer Schnittstelle der Bibliothek. */
+const ZEIT_GLOBAL = new Set(['Date', 'performance'])
+const ZUFALL_UND_ZEIT: Record<string, Set<string> | 'alle'> = {
+  Math: new Set(['random']),
+  Crypto: new Set(['getRandomValues', 'randomUUID']),
+  DateConstructor: 'alle',
+  Performance: 'alle',
+}
 
 function inTypposition(knoten: ts.Node): boolean {
   for (let eltern = knoten.parent; eltern; eltern = eltern.parent) if (ts.isTypeNode(eltern)) return true
@@ -124,7 +134,8 @@ function festeFunktion(symbol: ts.Symbol | undefined): { funktion: ts.FunctionLi
  * in eine Variable dieses Typs; einen Behälter wie das Ergebnis von `anwendeAktion`
  * darf man öffnen. Alles andere ist ein Verstoss, ebenso Casts von oder zu diesem
  * Typ, Casts nach `any` oder `unknown`, Ausdrücke vom Typ `any` und `arguments`.
- * In allen `dateien`, auch in sicht.ts: keine Änderung globaler Objekte (H1).
+ * In allen `dateien`, auch in sicht.ts: keine Änderung globaler Objekte (H1) und
+ * U4 nach Typ, damit `(Math.valueOf() as Math).random()` nicht durchrutscht.
  */
 export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[] {
   if (dateien.length === 0) return []
@@ -139,6 +150,15 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     return gefunden && gefunden.flags & ts.SymbolFlags.Alias ? pruefer.getAliasedSymbol(gefunden) : gefunden
   }
 
+  const istZustandsdeklaration = (deklaration: ts.Node | undefined): boolean =>
+    deklaration !== undefined &&
+    (ts.isInterfaceDeclaration(deklaration) || ts.isTypeAliasDeclaration(deklaration)) &&
+    deklaration.name.text === VOLLER_ZUSTAND_TYP &&
+    zuPosix(deklaration.getSourceFile().fileName).startsWith(engineOrdner)
+  /**
+   * Der volle Zustand beim Namen oder abgeleitet: `Readonly<Spielzustand>` und
+   * `Pick<Spielzustand, …>` tragen Felder, die in Spielzustand deklariert sind.
+   */
   const istVollerZustand = (geprueft: ts.Type): boolean => {
     if (geprueft.isUnionOrIntersection()) return geprueft.types.some(istVollerZustand)
     if (geprueft.flags & ts.TypeFlags.TypeParameter) {
@@ -146,10 +166,9 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       return grenze !== undefined && grenze !== geprueft && istVollerZustand(grenze)
     }
     const symbol = geprueft.aliasSymbol ?? geprueft.getSymbol()
-    return (
-      symbol?.name === VOLLER_ZUSTAND_TYP &&
-      (symbol.declarations ?? []).some((d) => zuPosix(d.getSourceFile().fileName).startsWith(engineOrdner))
-    )
+    if (symbol?.name === VOLLER_ZUSTAND_TYP && (symbol.declarations ?? []).some(istZustandsdeklaration)) return true
+    if (!(geprueft.flags & ts.TypeFlags.Object)) return false
+    return pruefer.getPropertiesOfType(geprueft).some((feld) => (feld.declarations ?? []).some((d) => istZustandsdeklaration(d.parent)))
   }
   /** Ob ein Symbol nur in Bibliotheksdateien (lib.*.d.ts, @types) deklariert ist. */
   const ausBibliothek = (symbol: ts.Symbol | undefined): boolean => {
@@ -169,12 +188,16 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       if (teil.isUnionOrIntersection()) return teil.types.some(suche)
       if (pruefer.isArrayType(teil) || pruefer.isTupleType(teil)) return pruefer.getTypeArguments(teil as ts.TypeReference).some(suche)
       if (!(teil.flags & ts.TypeFlags.Object)) return false
-      // Typen der Bibliothek (DOM, Map …) enthalten den Zustand höchstens über ihre Typargumente.
-      if (ausBibliothek(teil.getSymbol())) {
+      // Schnittstellen und Klassen der Bibliothek (DOM, Map …) enthalten den Zustand höchstens über ihre Typargumente.
+      const symbol = teil.getSymbol()
+      if (symbol && symbol.flags & (ts.SymbolFlags.Interface | ts.SymbolFlags.Class) && ausBibliothek(symbol)) {
         const referenz = (teil as ts.ObjectType).objectFlags & ts.ObjectFlags.Reference
         return referenz !== 0 && pruefer.getTypeArguments(teil as ts.TypeReference).some(suche)
       }
-      return pruefer.getPropertiesOfType(teil).some((eigenschaft) => suche(pruefer.getTypeOfSymbol(eigenschaft)))
+      return (
+        pruefer.getPropertiesOfType(teil).some((eigenschaft) => suche(pruefer.getTypeOfSymbol(eigenschaft))) ||
+        pruefer.getIndexInfosOfType(teil).some((index) => suche(index.type))
+      )
     }
     const ergebnis = suche(geprueft)
     gemerkt.set(geprueft, ergebnis)
@@ -268,6 +291,31 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
     }
 
+    /** H1: `Object.assign` schreibt in sein erstes Argument; erlaubt ist nur ein neues Objekt `{ … }`. */
+    const pruefeZielVonAssign = (funktion: ts.Expression) => {
+      const aufruf = aeusserer(funktion).parent
+      if (!ts.isCallExpression(aufruf) || aufruf.expression !== aeusserer(funktion)) return melde(funktion, `gibt ${funktion.getText()} als Wert weiter`)
+      const ziel = aufruf.arguments[0]
+      if (ziel === undefined || !ts.isObjectLiteralExpression(ohneKlammern(ziel))) melde(aufruf, `Object.assign schreibt in ein bestehendes Objekt: ${aufruf.getText()}`)
+    }
+
+    /** U4 nach Typ: Zufall und Zeit, auch über `valueOf()`, Casts oder Variablen erreicht. */
+    const pruefeZufallUndZeit = (knoten: ts.Node) => {
+      const name = ts.isIdentifier(knoten) ? knoten : ts.isPropertyAccessExpression(knoten) ? knoten.name : undefined
+      if (name === undefined || (ts.isIdentifier(knoten) && !istFreierWert(knoten))) return
+      const symbol = symbolVon(name)
+      if (symbol === undefined || !ausBibliothek(symbol)) return
+      const zeitGlobal = ZEIT_GLOBAL.has(symbol.name) && symbol.flags & ts.SymbolFlags.Variable
+      const gehoertZu = (symbol.declarations ?? []).some((d) => {
+        if (!ts.isInterfaceDeclaration(d.parent)) return false
+        const mitglieder = ZUFALL_UND_ZEIT[d.parent.name.text]
+        return mitglieder === 'alle' || (mitglieder?.has(symbol.name) ?? false)
+      })
+      if (zeitGlobal || gehoertZu) {
+        verstoesse.push({ regel: 'U4', datei, zeile: zeileVon(knoten), was: `nutzt ${knoten.getText()}; Zufall kommt als Parameter, Zeit gehört nicht in die KI` })
+      }
+    }
+
     /** H1: kein Weg zu einem Prototyp; globale Objekte nur aufrufen oder an ihnen lesen, nie weitergeben. */
     const pruefeGlobales = (knoten: ts.Node) => {
       if (ts.isPropertyAccessExpression(knoten) || ts.isElementAccessExpression(knoten)) {
@@ -282,7 +330,10 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       const aussen = aeusserer(knoten)
       const eltern = aussen.parent
       if ((ts.isPropertyAccessExpression(eltern) || ts.isElementAccessExpression(eltern)) && eltern.expression === aussen) {
-        if (name === 'Object' && schluesselVon(eltern)?.some((wert) => VERBOTEN_AN_OBJECT.has(wert))) melde(eltern, `nutzt ${eltern.getText()}`)
+        const schluessel = schluesselVon(eltern) ?? []
+        if (schluessel.some((wert) => GEERBT_VON_OBJECT.has(wert))) melde(eltern, `nutzt die geerbte Methode ${eltern.getText()}`)
+        if (name === 'Object' && schluessel.some((wert) => VERBOTEN_AN_OBJECT.has(wert))) melde(eltern, `nutzt ${eltern.getText()}`)
+        if (name === 'Object' && schluessel.includes('assign')) pruefeZielVonAssign(eltern)
         return
       }
       if ((ts.isCallExpression(eltern) || ts.isNewExpression(eltern)) && eltern.expression === aussen) return
@@ -310,6 +361,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     besucheAlle(quelle, (knoten) => {
       for (const ziel of geschriebeneZiele(knoten)) pruefeSchreiben(ziel)
       pruefeGlobales(knoten)
+      pruefeZufallUndZeit(knoten)
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })
   }

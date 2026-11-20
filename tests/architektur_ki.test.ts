@@ -182,7 +182,7 @@ describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unv
     expect(beschreibe(befundeIn('src/ki/sicht.ts')), 'U5: sicht.ts darf den vollen Zustand lesen').toBe('')
   })
 
-  it.each(faelleU5)('P0.3d: U5-Umgehung „$name“ wird gemeldet', ({ name, datei }) => erwarteGemeldet('U5', name, datei))
+  it.each(faelleU5.map(({ name, datei }) => [name, datei]))('P0.3d: U5-Umgehung „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('U5', name, datei))
 })
 
 describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
@@ -205,11 +205,11 @@ describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
 })
 
 describe('P0.3d: U4 – auch über Umwege kein Zufall und keine Zeit unter src/ki', () => {
-  it.each(faelleU4)('P0.3d: U4-Umweg „$name“ wird gemeldet', ({ name, datei }) => erwarteGemeldet('U4', name, datei, 'U4'))
+  it.each(faelleU4.map(({ name, datei }) => [name, datei]))('P0.3d: U4-Umweg „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('U4', name, datei, 'U4'))
 })
 
 describe('P0.3d: H1 – KI-Code verändert keine globalen Objekte', () => {
-  it.each(faelleH1)('P0.3d: globale Änderung „$name“ wird gemeldet', ({ name, datei }) => erwarteGemeldet('H1', name, datei))
+  it.each(faelleH1.map(({ name, datei }) => [name, datei]))('P0.3d: globale Änderung „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('H1', name, datei))
 
   it('P0.3d: auch sicht.ts verändert keine globalen Objekte', () => {
     const sichtProbe = legeAn({

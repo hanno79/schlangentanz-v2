@@ -250,7 +250,8 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     it('U5: jeder Lesezugriff ausserhalb von sicht.ts wird gemeldet', () => {
       const verstoesse = pruefeSichtZugriff(probe, ['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/boese.ts'])
 
-      expect(verstoesse.map(({ datei, zeile }) => `${datei}:${zeile}`)).toEqual([
+      // Je Zeile genügt eine Meldung; beim Spreizen meldet die Prüfung `zustand` und die Kopie, die selbst der Zustand ist.
+      expect([...new Set(verstoesse.map(({ datei, zeile }) => `${datei}:${zeile}`))]).toEqual([
         'src/ki/boese.ts:2',
         'src/ki/boese.ts:3',
         'src/ki/boese.ts:4',
