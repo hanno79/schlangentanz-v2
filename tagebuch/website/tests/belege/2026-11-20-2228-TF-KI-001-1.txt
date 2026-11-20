@@ -1,0 +1,115 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+ ✓ tests/architektur.test.ts > U4: Die Engine ist rein > U4: 35 Dateien unter src/engine (ohne Tests) nutzen kein React, kein DOM, kein Math.random, kein Date 2ms
+ ✓ tests/architektur.test.ts > U4: Die Engine ist rein > U4: die Ausnahmeliste für den Altbestand ist nicht veraltet 1ms
+ ✓ tests/architektur.test.ts > U4: Die Engine ist rein > P0.3b: U4-Tausch – ein neuer Verstoss statt eines geduldeten fällt auf 2ms
+ ✓ tests/architektur.test.ts > U3: Oberfläche und KI kennen nur src/engine/index.ts > U3: 38 Dateien unter src/ui und src/ki (ohne Tests) importieren die Engine nur über src/engine/index.ts 50ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: src/engine/index.ts exportiert den vollen Zustandstyp Spielzustand 478ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > K1: die Prüfung erfasst die echten Dateien der KI unter src/ki 0ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: 4 Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts 431ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „import React from 'react'“ unter src/engine wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „import { createRoot } from 'react-dom/client'“ unter src/engine wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „export { useState } from 'react'“ unter src/engine wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const r = require('react')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const m = await import('react')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const n = await import('re' + 'act')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const o = require(modulname)“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const z = Math.random()“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const f = Math.random“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const t = Date.now()“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const d = new Date()“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const titel = document.title“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const s = window.localStorage“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „localStorage.getItem('x')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „crypto.getRandomValues(new Uint8Array(1))“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const { random } = Math“ wird als Zufall gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const { random: wuerfel } = Math“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „Math['random']()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const f = Math["random"]“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „globalThis.Math.random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „window.Math.random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „self.Math.random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const z = globalThis['Math'].random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const M = Math“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „export const z = Math[schluessel]()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „export const w = globalThis[schluessel].random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const { getRandomValues } = crypto“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „globalThis.crypto.randomUUID()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const d = new Date“ wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const t = Date.now()“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „globalThis.Date.now()“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const { now } = Date“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const h = globalThis['Date']“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: Harmloses mit ähnlichen Namen wird nicht gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U3: Importe an src/engine/index.ts vorbei werden gemeldet, über index.ts nicht 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U5: Lesezugriff auf den vollen Zustand > U5: jeder Lesezugriff ausserhalb von sicht.ts wird gemeldet 205ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U5: Lesezugriff auf den vollen Zustand > U5: der Typ wird über den Export von src/engine/index.ts gefunden 377ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > K1: sie wählt gleichverteilt über die Stelle in der Liste: Wert × Anzahl, abgerundet 10ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > K1: sie heisst Zufalls-KI 0ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > U4: ein Zufallswert 1 ausserhalb von 0 bis kleiner 1 wird mit Grund abgelehnt 1ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > U4: ein Zufallswert -0.1 ausserhalb von 0 bis kleiner 1 wird mit Grund abgelehnt 0ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > U4: ein Zufallswert NaN ausserhalb von 0 bis kleiner 1 wird mit Grund abgelehnt 0ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > U4: ein Zufallswert 2 ausserhalb von 0 bis kleiner 1 wird mit Grund abgelehnt 0ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > K1: ohne Aktion gibt es nichts zu wählen; das ist ein Fehler, kein stiller Ersatz 0ms
+ ✓ src/ki/zufallsKi.test.ts > K1: die Zufalls-KI > K1 Kriterium 3: gleiche Saat, gleiche Wahlen; andere Saat, andere Wahlen 2ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > B2: entscheidet ein Mensch, liefert er nichts und fragt die KI nicht 13ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > A10: nach Spielende liefert er nichts 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3: entscheidet eine KI, wählt sie aus den aufgezählten Aktionen mit ihrer eigenen Sicht 4ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > K1: kiWahl fragt die KI auch für den Platz eines Menschen, etwa im Turnier 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3: baut die KI eine Aktion selbst, auch eine gleich aussehende, wird das mit Grund abgelehnt 2ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3: verändert die KI die angebotene Liste, merkt der Schritt es nicht als Erlaubnis 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3 (Codex-Review): ersetzt die KI einen Eintrag der Liste durch eine eigene Aktion, wird das abgelehnt 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3 (Codex-Review): sortiert die KI die Liste um, gilt die Aktion, die sie zurückgibt 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3: verändert die KI die gewählte Aktion, gilt trotzdem die aufgezählte 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > K1: zählt die Engine für eine KI keine Aktion auf, obwohl sie entscheidet, bricht der Schritt mit Grund ab 1ms
+ ✓ src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > A6: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht (füllt E4) 2ms
+ ✓ src/ki/turnier.test.ts > K1: Sitzordnung im Turnier > K1: der Sitz rotiert von Partie zu Partie 10ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > P0.4 K1: /dev?seed=1&spieler=2 zeigt genau die Partie aus Saat 1 mit zwei Spielern ohne Erweiterung 92ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: die eigene Hand vollständig, die eigene geheime Aufgabe und ob sie erfüllt ist 10ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: alle Schlangen aller Spieler, mit den Karten unter einer Farbenfusion (A7.7) 1ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > D28: alle Ablagestapel vollständig, in ihrer Reihenfolge, nicht nur die oberste Karte 1ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: die Handgrösse jedes Spielers und die Grösse des Nachziehstapels, aber keine Karte daraus 1ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: die offenen Aufgaben, die Auslage, erfüllte Aufgaben, ausliegende Gruben und was aus dem Spiel ist 3ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > A6/B2: die angesagte Aktion mit Karte, Ziel und wer noch entscheidet 2ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet 1ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > B2: keine fremde Hand, keine Stapelreihenfolge, keine fremde geheime Aufgabe, für jeden Spieler 9ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > K1: zwei Zustände, die sich nur in Verborgenem unterscheiden, ergeben dieselbe Sicht (200 Zufallszustände) 559ms
+ ✓ src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > K1 Gegenprobe: was offen liegt, ändert die Sicht 4ms
+ ✓ src/ki/sicht.test.ts > K1: die Sicht ist eine Abschrift > K1: wer die Sicht verändert, verändert den Zustand nicht 2ms
+ ✓ src/ki/sicht.test.ts > K1: die Sicht ist eine Abschrift > K1: ein Spieler, den es nicht gibt, wird mit Grund abgelehnt 3ms
+ ✓ src/ki/sicht.test.ts > K1: wer entscheidet > B2: zu Beginn entscheidet der Mensch; bei einer angesagten Karte der Gefragte; nach Spielende niemand 3ms
+ ✓ src/ki/sicht.test.ts > K1: wer entscheidet > A2: wie viele Spieler am Tisch sitzen 2ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > E1: der Parameter erweiterung=1 baut die Partie mit Erweiterung 50ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > P0.4: zeigt alle Hände offen, mit jeder Karte beim Namen und ihrer Id 45ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > E1: zeigt Partiephase, Zug mit Teilzug, wer entscheidet, Stapel, Ablagestapel je Spieler und Wertung 40ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > E2: der Tisch bietet genau die Aktionen als Knöpfe an, die die Engine aufzählt, und baut keine eigene 144ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > E2: ein Klick spielt die Aktion; „Zug beenden“ gibt den Zug weiter, und die Ereignisse stehen da 107ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > E2: nach Spielende sagt der Tisch, dass die Partie beendet ist, und bietet keinen Knopf mehr an 144ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > E1: das Szenario alle-orte zeigt Fusion, ausliegende Grube, schwebende Karte und Karten aus dem Spiel 50ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > P0.4: verletzte Invarianten stehen sichtbar als verletzt da 28ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > P0.4: /dev/szenarien listet alle Szenarien mit Beschreibung, Erwartung und Link 58ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > P0.4: ein unbekanntes Szenario zeigt den Grund 2ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > E1: Entwicklertisch auf der neuen Aktionsschicht > P0.4: die Startseite bietet Szenarien und den Partiestart mit Erweiterungs-Schalter an 26ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > B2: solange der Mensch entscheidet, ist der Knopf gesperrt und sagt warum 41ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > K1 Kriterium 4: entscheidet eine KI, spielt ein Klick genau einen Schritt, und zwar eine aufgezählte Aktion 99ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > K1 Kriterium 3: nach „Schritt zurück“ spielt derselbe Klick denselben Schritt 91ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > K1: nach Spielende ist der Knopf gesperrt 125ms
+ ✓ src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > K1: scheitert der KI-Schritt, steht der Grund da und der Zustand bleibt 60ms
+ ✓ src/ki/turnier.test.ts > K1: Sitzordnung im Turnier > K1: jede Partie hat ihre Saat und ihre Sitzordnung; jeder Teilnehmer beginnt gleich oft 475ms
+ ✓ src/ki/turnier.test.ts > K1: Sitzordnung im Turnier > A2: zwei bis vier Teilnehmer, mindestens eine Partie; sonst ein Fehler mit Grund 2ms
+ ✓ src/ki/turnier.test.ts > K1 Kriterium 2: Zufalls-KI gegen Zufalls-KI > K1: 200 Partien mit 2, 3 und 4 Spielern, mit und ohne Erweiterung, enden alle ohne Invariantenverletzung 14741ms
+ ✓ src/ki/turnier.test.ts > K1 Kriterium 2: Zufalls-KI gegen Zufalls-KI > D22: die Sieger sind die Teilnehmer mit der höchsten Endwertung; der Verlauf spielt die Partie genau nach 198ms
+ ✓ src/ki/turnier.test.ts > K1 Kriterium 3: gleiche Saat, gleicher Verlauf > K1: dasselbe Turnier zweimal ergibt Zug für Zug dasselbe; eine andere Saat einen anderen Verlauf 964ms
+ ✓ src/ki/turnier.test.ts > K1 Kriterium 3: gleiche Saat, gleicher Verlauf > U4: das Turnier zieht keinen eigenen Zufall: Math.random wird nie gerufen 129ms
+ ✓ src/ki/turnier.test.ts > K1 Kriterium 3: gleiche Saat, gleicher Verlauf > K1: jede KI bekommt ihre eigene Zufallsquelle, auch zwei gleiche Teilnehmer spielen nicht im Gleichschritt 65ms
+ ✓ src/ki/turnier.test.ts > K1: Ausgänge einer Partie > K1: eine verletzte Invariante hält die Partie an und nennt sie 2ms
+ ✓ src/ki/turnier.test.ts > K1: Ausgänge einer Partie > K1: eine Partie, die nicht endet, stösst an die Schrittgrenze 2ms
+ ✓ src/ki/turnier.test.ts > K1: Ausgänge einer Partie > K1: eine Partie braucht je Sitz genau eine KI 0ms
+ ✓ src/ki/turnier.test.ts > K1: Ausgänge einer Partie > U3: baut eine KI ihre Aktion selbst, bricht das Turnier mit Saat und Grund ab 2ms
+
+ Test Files  6 passed (6)
+      Tests  106 passed (106)
+   Start at  22:27:09
+   Duration  20.72s (transform 2.15s, setup 1.93s, import 3.10s, tests 20.01s, environment 15.24s)
+

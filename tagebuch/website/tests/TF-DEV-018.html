@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-018 Entscheidet eine KI über eine angesagte Karte, für die die Engine noch keine Aktion aufzählt, zeigt „KI-Schritt“ den Grund und der Zustand bleibt. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-018 Entscheidet eine KI über eine angesagte Karte, für die die Engine noch keine Aktion aufzählt, zeigt „KI-Schritt“ den Grund und der Zustand bleibt.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-DEV-016</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Bis E4 zählt die Engine keine Reaktion auf eine angesagte Sonderkarte auf. Im Szenario <code>alle-orte</code> entscheidet KI-Gegner 2 über eine schwebende Schlangengrube. Der Knopf darf dann nichts erfinden, sondern muss den Grund nennen und den Zustand stehen lassen.</p><h2>Bestanden, wenn</h2><p>Der Knopf ist frei („KI-Gegner 2 entscheidet; das ist eine KI.“). Nach dem Klick steht „Abgelehnt: KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).“, die Anzeige bleibt bei „Schritt 0“, der Verlauf hat nur „Start“, und die Konsole zeigt keinen Fehler.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Schritt eine Aktion ausführt, der Verlauf wächst, keine Meldung erscheint oder die Seite abstürzt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/K1-ki-schnittstelle</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, <code>npm run preview:testhooks</code> auf Port 4174, Fenster 1280×900</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Adresse <code>/dev?szenario=alle-orte</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`/dev?szenario=alle-orte`</td><td>Seite öffnen</td><td></td><td>„Schritt 0“, „Aktionen der Engine (0)“, Hinweis „KI-Gegner 2 entscheidet; das ist eine KI.“</td></tr><tr><td>2</td><td>Knopf „KI-Schritt“</td><td>klicken</td><td></td><td>rote Meldung „Abgelehnt: KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).“, weiter „Schritt 0“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:28</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K1) &middot; agent &middot; pruefung-K1 @ <span class="commit" title="3e0f4efc72815021658a51c018c8982267a82049">3e0f4ef</span> / eingebauter Browser der Desktop-App, 1280x900</p><p>/dev?szenario=alle-orte: Knopf frei (&#x27;KI-Gegner 2 entscheidet; das ist eine KI.&#x27;), Aktionen der Engine (0); nach Klick &#x27;Abgelehnt: KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).&#x27;, weiter Schritt 0, Verlauf nur &#x27;Start&#x27;, keine Konsolenfehler.</p><ul class="belege"><li><a href="belege/2026-11-20-2228-TF-DEV-018-1.jpg"><img class="beleg-vorschau" src="belege/2026-11-20-2228-TF-DEV-018-1.jpg" alt="Beleg 2026-11-20-2228-TF-DEV-018-1.jpg" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

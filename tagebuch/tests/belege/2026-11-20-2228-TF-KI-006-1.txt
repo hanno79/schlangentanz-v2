@@ -1,0 +1,52 @@
+== Gegenprobe U3+U5: schritt.ts Zeile 2 importiert ../engine/aktionen/anwenden, Zeile 49 liest zustand.nachziehstapel
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+ ❯ tests/architektur.test.ts (44 tests | 2 failed) 1537ms
+     × U3: 38 Dateien unter src/ui und src/ki (ohne Tests) importieren die Engine nur über src/engine/index.ts 52ms
+     × U5: 4 Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts 444ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/architektur.test.ts > U3: Oberfläche und KI kennen nur src/engine/index.ts > U3: 38 Dateien unter src/ui und src/ki (ohne Tests) importieren die Engine nur über src/engine/index.ts
+AssertionError: U3: erwartet keine Importe an src/engine/index.ts vorbei: expected 'U3 src/ki/schritt.ts:2 importiert „..…' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ U3 src/ki/schritt.ts:2 importiert „../engine/aktionen/anwenden“ an src/engine/index.ts vorbei
+
+ ❯ tests/architektur.test.ts:79:96
+     77|     const verstoesse = uiKiDateien.flatMap((pfad) => pruefeEngineZugan…
+     78|
+     79|     expect(beschreibe(verstoesse), 'U3: erwartet keine Importe an src/…
+       |                                                                                                ^
+     80|   })
+     81| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: 4 Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts
+AssertionError: U5: erwartet keinen Lesezugriff auf den vollen Zustand ausser in sicht.ts: expected 'U5 src/ki/schritt.ts:49 liest Spielzu…' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ U5 src/ki/schritt.ts:49 liest Spielzustand: zustand.nachziehstapel
+
+ ❯ tests/architektur.test.ts:100:113
+     98|     const verstoesse = pruefeSichtZugriff(WURZEL, kiDateien)
+     99|
+    100|     expect(beschreibe(verstoesse), 'U5: erwartet keinen Lesezugriff au…
+       |                                                                                                                 ^
+    101|   })
+    102| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 42 passed (44)
+   Start at  22:16:20
+   Duration  2.74s (transform 189ms, setup 288ms, import 623ms, tests 1.54s, environment 0ms)
+

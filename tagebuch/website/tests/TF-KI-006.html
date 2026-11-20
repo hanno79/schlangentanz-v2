@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-006 Der Architekturtest wird rot, wenn eine KI-Datei ausser sicht.ts den vollen Zustand liest oder die Engine an src/engine/index.ts vorbei importiert. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-006 Der Architekturtest wird rot, wenn eine KI-Datei ausser sicht.ts den vollen Zustand liest oder die Engine an src/engine/index.ts vorbei importiert.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>U3 und U5 liefen bis K1 leer, weil es unter <code>src/ki</code> keine Datei gab. Jetzt gibt es vier. Der Testfall zeigt, dass die Prüfung die echten Dateien erfasst und bei einem Verstoss in ihnen anschlägt, und hält fest, wo sie nicht hinsieht.</p><h2>Bestanden, wenn</h2><p><code>tests/architektur.test.ts</code> ist grün und meldet 4 Dateien unter <code>src/ki</code>. Liest <code>src/ki/schritt.ts</code> <code>zustand.nachziehstapel</code>, meldet U5 „src/ki/schritt.ts:49 liest Spielzustand: zustand.nachziehstapel“; importiert sie <code>../engine/aktionen/anwenden</code>, meldet U3 Zeile 2.</p><h2>Fehlgeschlagen, wenn</h2><p>Einer der beiden Verstösse bleibt grün oder die vier KI-Dateien fehlen in der Prüfung.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/K1-ki-schnittstelle</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K1-ki-schnittstelle</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zwei eingefügte Zeilen in <code>src/ki/schritt.ts</code>, nach der Probe mit <code>git checkout -- src/ki/schritt.ts</code> zurückgesetzt.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run tests/architektur.test.ts</code> endet mit Exit 0, danach mit den beiden Verstössen mit Exit 1 und genau diesen zwei Meldungen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p><code>Object.values(zustand)</code> und <code>JSON.parse(JSON.stringify(zustand))</code> in <code>src/ki/schritt.ts</code> erkennt die Prüfung nicht (Lauf mit diesen Zeilen: 44 Tests grün). Das ist eine Grenze des Werkzeugs aus P0.3, kein Verstoss im Code von K1; im Prüfprotokoll K1 als Hinweis vermerkt.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:28</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K1) &middot; agent &middot; pruefung-K1 @ <span class="commit" title="3e0f4efc72815021658a51c018c8982267a82049">3e0f4ef</span></p><p>architektur.test.ts grün, 4 Dateien unter src/ki. Gegenprobe: U3 src/ki/schritt.ts:2 und U5 src/ki/schritt.ts:49 gemeldet, 2 Tests rot. Grenze: Object.values(zustand) und JSON.parse(JSON.stringify(zustand)) nicht erkannt (44 Tests grün), Hinweis im Protokoll.</p><ul class="belege"><li><a href="belege/2026-11-20-2228-TF-KI-006-1.txt">2026-11-20-2228-TF-KI-006-1.txt</a></li><li><a href="belege/2026-11-20-2228-TF-KI-006-2.txt">2026-11-20-2228-TF-KI-006-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
