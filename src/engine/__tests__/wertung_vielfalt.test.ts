@@ -3,7 +3,8 @@ import { eineSchlange, endwertung, jokerfarben } from './wertung_hilfe'
 
 /*
 E10, Satz für Satz: A11 Abschnitt 2 (Vielfaltbonus, nur mit Erweiterung) und die
-Sätze aus A7.3 und A7.7, die den Vielfaltbonus betreffen.
+Sätze aus A7.3 und A7.7, die den Vielfaltbonus betreffen. E10b: D32 (eine Gruppe
+nur aus Regenbogenschlangen bringt keine Farbe).
 */
 
 /** Der Spieler hat in jedem Test hier eine Kette ab 3 Karten, der Mitspieler keine Schlange: 5 Bonuspunkte (A11). */
@@ -158,5 +159,54 @@ describe('A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten 
     expect(jokerfarben(wertung)).toEqual(['Gelb', 'Gelb'])
     expect(wertung.gruppenPunkte).toBe(7)
     expect(wertung.vielfaltBonus).toBe(1)
+  })
+})
+
+describe('D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus', () => {
+  const ROT_BLAU_GELB = ['Rot', 'Rot', 'Rot', 'Blau', 'Blau', 'Blau', 'Gelb', 'Gelb', 'Gelb'] as const
+  const DREI_REGENBOGEN = ['Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'] as const
+
+  it('D32: Rot-, Blau- und Gelbgruppe und eine Gruppe aus drei Regenbogenschlangen zählen 3 Farben, nicht 4', () => {
+    const wertung = eineSchlange([...ROT_BLAU_GELB, 'Schlangenblockade', ...DREI_REGENBOGEN], true)
+    // D31: Die drei Regenbogenschlangen bleiben eine Gruppe mit 0 Punkten.
+    expect(wertung.schlangen[0].gruppen.map((g) => g.punkte)).toEqual([3, 3, 3, 0])
+    expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Blau', 'Rot', 'Gelb'])
+    expect(wertung.vielfaltBonus).toBe(2)
+    expect(wertung.summe).toBe(9 + 2 + KETTE)
+  })
+
+  it('D32: die Jokerwahl setzt drei Regenbogenschlangen nicht als zusätzliche Farbe an', () => {
+    // Die Regenbogenschlangen verlängern Gelb oder bilden eine eigene Gruppe; beides bringt 0 Punkte und keine
+    // neue Farbe. Vor D32 wären sie Violett geworden (vierte Farbe, Bonus 3). Gleich gut: feste Reihenfolge, Blau.
+    const wertung = eineSchlange([...ROT_BLAU_GELB, ...DREI_REGENBOGEN], true)
+    expect(jokerfarben(wertung)).toEqual(['Blau', 'Blau', 'Blau'])
+    expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Blau', 'Rot', 'Gelb'])
+    expect(wertung.vielfaltBonus).toBe(2)
+    expect(wertung.summe).toBe(9 + 2 + KETTE)
+  })
+
+  it('D32: von vier Regenbogenschlangen vervollständigt eine die gelbe Gruppe, die anderen drei bringen keine Farbe', () => {
+    // Vor D32: erste Regenbogenschlange Gelb (2 Punkte), die drei anderen Violett: 4 Farben, Bonus 3.
+    const wertung = eineSchlange(
+      ['Rot', 'Rot', 'Rot', 'Blau', 'Blau', 'Blau', 'Gelb', 'Gelb', ...DREI_REGENBOGEN, 'Regenbogenschlange'],
+      true,
+    )
+    expect(jokerfarben(wertung)).toEqual(['Gelb', 'Blau', 'Blau', 'Blau'])
+    expect(wertung.gruppenPunkte).toBe(8)
+    expect(wertung.vielfaltBonus).toBe(2)
+    expect(wertung.summe).toBe(8 + 2 + KETTE)
+  })
+
+  // Im dritten Fall sind Blau×4 + Rot×3 und Blau×3 + Rot×4 gleich gut; die feste Reihenfolge nimmt Blau zuerst.
+  it.each([
+    [['Rot', 'Regenbogenschlange', 'Rot'], 2, ['Rot']],
+    [['Regenbogenschlange', 'Regenbogenschlange', 'Rot'], 1, ['Rot', 'Rot']],
+    [['Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange', 'Rot'], 1, ['Blau', 'Rot', 'Rot']],
+  ] as const)('D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot: %j', (rot, rotPunkte, farben) => {
+    const wertung = eineSchlange(['Blau', 'Blau', 'Blau', ...rot], true)
+    expect(jokerfarben(wertung)).toEqual(farben)
+    expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Blau', 'Rot'])
+    expect(wertung.vielfaltBonus).toBe(1)
+    expect(wertung.summe).toBe(3 + rotPunkte + 1 + KETTE)
   })
 })

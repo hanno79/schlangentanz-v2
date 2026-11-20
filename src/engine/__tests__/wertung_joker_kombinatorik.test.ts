@@ -8,7 +8,8 @@ import { endwertung, jokerfarben } from './wertung_hilfe'
 E10, Kriterien 3 und 8 mit Kombinatorik: Mehrere Joker in einem oder zwei
 Schlangen. Ein unabhängiger Vergleich probiert jede Farbbelegung aller Joker
 durch (6^k) und nimmt die mit der höchsten Summe (A11: Gruppenpunkte, mit
-Erweiterung plus Vielfaltbonus); bei gleicher Summe die mit mehr Jokern in einer
+Erweiterung plus Vielfaltbonus, wobei eine Gruppe nur aus Regenbogenschlangen
+keine Farbe bringt, D32); bei gleicher Summe die mit mehr Jokern in einer
 Gruppe, dann die erste in fester Reihenfolge (Kriterium 8). Die Wertung muss
 dieselbe Summe und dieselben Jokerfarben liefern. Die Schlangen sind hier frei
 erfunden, nicht aus dem Material: Die Wertung einer Schlange hängt nicht davon ab.
@@ -41,8 +42,15 @@ function vielfalt(anzahl: number): number {
   return anzahl >= 5 ? 4 : Math.max(0, anzahl - 1)
 }
 
-/** Gruppen ab 3 gleichfarbigen Gliedern; `null` heisst: unterbricht. */
-function scanne(farben: Array<Farbe | null>, punkte: number[]): { punkte: number; farben: Set<Farbe>; inGruppe: boolean[] } {
+/**
+ * Gruppen ab 3 gleichfarbigen Gliedern; `null` heisst: unterbricht. Eine Gruppe bringt ihre Farbe für den
+ * Vielfaltbonus nur, wenn ein Glied darin `traegtFarbe` ist (D32).
+ */
+function scanne(
+  farben: Array<Farbe | null>,
+  punkte: number[],
+  traegtFarbe: boolean[],
+): { punkte: number; farben: Set<Farbe>; inGruppe: boolean[] } {
   let summe = 0
   const gefunden = new Set<Farbe>()
   const inGruppe = farben.map(() => false)
@@ -56,14 +64,27 @@ function scanne(farben: Array<Farbe | null>, punkte: number[]): { punkte: number
         summe += punkte[k]
         inGruppe[k] = true
       }
-      gefunden.add(farbe)
+      if (traegtFarbe.slice(i, j).some(Boolean)) gefunden.add(farbe)
     }
     i = Math.max(j, i + 1)
   }
   return { punkte: summe, farben: gefunden, inGruppe }
 }
 
-function durchprobieren(schlangen: Schlange[], mitVielfalt: boolean): { summe: number; joker: Array<Farbe | null> } {
+/**
+ * D32: Eine Regenbogenschlange bringt keine Farbe für den Vielfaltbonus. Ob eine Gruppe aus Regenbogenschlangen und
+ * Farbenfusionen als Farbe zählt, ist offen; bis zur Antwort trägt die Fusion ihre Farbe (D31).
+ * `regenbogenTraegtFarbe` ist die Regel vor D32, nur für die Gegenprobe unten.
+ */
+function traegtFarbe(karte: Spielkarte, regenbogenTraegtFarbe: boolean): boolean {
+  return karte.typ === 'Farbkarte' || karte.name === 'Farbenfusion' || (regenbogenTraegtFarbe && karte.name === 'Regenbogenschlange')
+}
+
+function durchprobieren(
+  schlangen: Schlange[],
+  mitVielfalt: boolean,
+  regenbogenTraegtFarbe = false,
+): { summe: number; joker: Array<Farbe | null> } {
   const joker = schlangen.flatMap((s) => s.karten.filter((k) => k.typ === 'Sonderkarte' && k.name !== 'Schlangenblockade'))
   let beste: { summe: number; inGruppe: number; joker: Array<Farbe | null> } | null = null
   for (let n = 0; n < 6 ** joker.length; n++) {
@@ -79,7 +100,7 @@ function durchprobieren(schlangen: Schlange[], mitVielfalt: boolean): { summe: n
         const fusion = schlange.fusionen.find((f) => f.karteId === k.id)
         return fusion === undefined ? 0 : fusion.unter[0].punkte + fusion.unter[1].punkte
       })
-      const ergebnis = scanne(farben, werte)
+      const ergebnis = scanne(farben, werte, schlange.karten.map((k) => traegtFarbe(k, regenbogenTraegtFarbe)))
       punkte += ergebnis.punkte
       bonus = Math.max(bonus, vielfalt(ergebnis.farben.size))
       schlange.karten.forEach((k, i) => jokerInGruppe.set(k.id, ergebnis.inGruppe[i]))
@@ -94,17 +115,18 @@ function durchprobieren(schlangen: Schlange[], mitVielfalt: boolean): { summe: n
   return { summe: beste.summe, joker: beste.joker }
 }
 
-function zufallsSchlangen(zufall: () => number): Glied[][] {
+/** `jokerAnteil` und `regenbogenAnteil` (unter den Jokern) steuern, wie oft Joker und Regenbogenschlangen vorkommen. */
+function zufallsSchlangen(zufall: () => number, jokerAnteil = 0.2, regenbogenAnteil = 0.5): Glied[][] {
   const wahl = <T,>(liste: readonly T[]): T => liste[Math.floor(zufall() * liste.length)]
   let joker = 0
   return Array.from({ length: 1 + Math.floor(zufall() * 2) }, () =>
     Array.from({ length: 1 + Math.floor(zufall() * 10) }, (): Glied => {
       const r = zufall()
-      if (r < 0.2 && joker < 4) {
+      if (r < jokerAnteil && joker < 4) {
         joker += 1
-        return zufall() < 0.5 ? 'R' : { f: wahl(FARBEN) }
+        return zufall() < regenbogenAnteil ? 'R' : { f: wahl(FARBEN) }
       }
-      if (r < 0.25) return 'B'
+      if (r < jokerAnteil + 0.05) return 'B'
       return wahl(FARBEN.slice(0, 2 + Math.floor(zufall() * 4)))
     }),
   )
@@ -122,6 +144,23 @@ describe('A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren gepr
       expect(ergebnis.gruppenPunkte + (ergebnis.vielfaltBonus ?? 0), beschreibung).toBe(erwartet.summe)
       expect(ergebnis.schlangen.flatMap((s) => s.joker.map((j) => j.farbe)), beschreibung).toEqual(erwartet.joker)
     }
+  })
+
+  it('D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren', () => {
+    const zufall = erzeugeZufall(3232)
+    let regelEntscheidet = 0
+    for (let fall = 0; fall < 400; fall++) {
+      const glieder = zufallsSchlangen(zufall, 0.45, 0.8)
+      const schlangen = baue(glieder)
+      const ergebnis = werteSchlangen(schlangen, true)
+      const erwartet = durchprobieren(schlangen, true)
+      const beschreibung = JSON.stringify(glieder)
+      expect(ergebnis.gruppenPunkte + (ergebnis.vielfaltBonus ?? 0), beschreibung).toBe(erwartet.summe)
+      expect(ergebnis.schlangen.flatMap((s) => s.joker.map((j) => j.farbe)), beschreibung).toEqual(erwartet.joker)
+      if (durchprobieren(schlangen, true, true).summe !== erwartet.summe) regelEntscheidet += 1
+    }
+    // Gegenprobe: Die Auslagen sind so gewählt, dass D32 oft die Summe ändert; sonst prüfte der Vergleich wenig.
+    expect(regelEntscheidet, 'Auslagen, in denen D32 die Summe ändert').toBeGreaterThanOrEqual(20)
   })
 
   it('A11: drei Joker nebeneinander zwischen zwei Gruppen werden gemeinsam am besten verteilt', () => {

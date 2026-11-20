@@ -225,10 +225,12 @@ describe('D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026)',
     expect(gruppen(eineSchlange(['Violett', 'Violett', { fusion: ['Grün', 'Grün'] }]))).toEqual(['Violett×3=10'])
   })
 
-  it('D31: eine Gruppe nur aus Jokern zählt mit Erweiterung für den Vielfaltbonus', () => {
+  it('D31, D32: drei Regenbogenschlangen sind eine Gruppe mit 0 Punkten, bringen aber keine Farbe für den Vielfaltbonus', () => {
     const glieder: Parameters<typeof eineSchlange>[0] = ['Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Schlangenblockade']
     const wertung = eineSchlange([...glieder, 'Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'], true)
-    expect(wertung.schlangen[0].vielfaltFarben).toHaveLength(3)
-    expect(wertung.vielfaltBonus).toBe(2)
+    expect(gruppen(wertung)).toHaveLength(3)
+    expect(gruppen(wertung)[2]).toMatch(/×3=0$/)
+    expect(wertung.schlangen[0].vielfaltFarben).toEqual(['Blau', 'Rot'])
+    expect(wertung.vielfaltBonus).toBe(1)
   })
 })
