@@ -179,3 +179,44 @@ describe('P0.5c: Abdeckungsprüfung gegen Teil A', () => {
     expect(() => pruefeAbdeckung({ seiteText: 'Startseite\nSpielziel', dialogeText: [] }, spec)).toThrow(/Aufbau der Website/)
   })
 })
+
+describe('P0.5d: Abdeckung zählt nur Teil A, nicht den Rest der Spec', () => {
+  // Wie in docs/GAME_SPEC.md: Der Satz aus D10 steht auf der Website (Farbenschutz),
+  // im Dokument aber nur in Teil D. Er darf nicht als abgedeckt gelten.
+  const satz = 'Gegen Farbkarten gibt es keine Abwehr'
+  const dokument = [
+    '# Schlangentanz Game Spec',
+    '',
+    'Vorspann: Ein Satz, der nur vor Teil A steht.',
+    '',
+    '## Teil A — Regeln (Spiegel der Website)',
+    '',
+    '#### A7.2 Farbenschutz',
+    '',
+    '- Spiele als Reaktion auf eine Sonderkarte',
+    '',
+    '## Teil B — Digitale Fassung',
+    '',
+    'Ein Satz, der nur in Teil B steht.',
+    '',
+    '## Teil D — Offene Auslegungsfragen an den Autor',
+    '',
+    `| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderkarte. ${satz}. Website folgt. | C6 | 12.11.2026 |`,
+    '',
+  ].join('\n')
+  const website = (zeilen: string[]) => ({ seiteText: ['Spielanleitung', ...zeilen, 'HR Spiele'].join('\n'), dialogeText: [] })
+
+  it('P0.5d: ein Satz der Website, der nur in Teil D steht, fehlt in Teil A', () => {
+    const ergebnis = pruefeAbdeckung(website(['Spiele als Reaktion auf eine Sonderkarte', satz]), dokument)
+    expect(ergebnis.fehlend).toEqual([satz])
+  })
+
+  it('P0.5d: Sätze nur vor Teil A oder nur in Teil B gelten ebenfalls nicht als abgedeckt', () => {
+    const ergebnis = pruefeAbdeckung(website(['Vorspann: Ein Satz, der nur vor Teil A steht.', 'Ein Satz, der nur in Teil B steht.']), dokument)
+    expect(ergebnis.fehlend).toEqual(['Vorspann: Ein Satz, der nur vor Teil A steht.', 'Ein Satz, der nur in Teil B steht.'])
+  })
+
+  it('P0.5d: ohne Überschrift „Teil A“ bricht die Prüfung ab, statt das ganze Dokument zu durchsuchen', () => {
+    expect(() => pruefeAbdeckung(website([satz]), `Nur Fliesstext. ${satz}.`)).toThrow(/Teil A/)
+  })
+})

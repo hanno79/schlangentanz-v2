@@ -1,0 +1,102 @@
+== Gegenprobe Sicht 2: Z.89 jede SpielerSicht nennt geheimeAufgabeErfuellt (A9/B2 verletzt)
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+ ❯ src/ki/sicht.test.ts (14 tests | 2 failed) 90ms
+     × K1: zwei Zustände, die sich nur in Verborgenem unterscheiden, ergeben dieselbe Sicht (200 Zufallszustände) 41ms
+     × K1 Gegenprobe: was offen liegt, ändert die Sicht 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > K1: zwei Zustände, die sich nur in Verborgenem unterscheiden, ergeben dieselbe Sicht (200 Zufallszustände)
+AssertionError: K1: Zustand 4, Sicht von Spieler 1: expected { ich: 1, …(15) } to deeply equal { ich: 1, …(15) }
+
+- Expected
++ Received
+
+@@ -194,11 +194,11 @@
+            "typ": "Comeback",
+          },
+          "verbraucht": false,
+        },
+        "erfuellteAufgaben": [],
+-       "fremdErfuellt": false,
++       "fremdErfuellt": true,
+        "handgroesse": 6,
+        "id": "spieler-1",
+        "name": "Spieler 1",
+        "risikoKarten": [
+          {
+@@ -510,11 +510,11 @@
+            "typ": "Comeback",
+          },
+          "verbraucht": true,
+        },
+        "erfuellteAufgaben": [],
+-       "fremdErfuellt": true,
++       "fremdErfuellt": false,
+        "handgroesse": 5,
+        "id": "spieler-3",
+        "name": "KI-Gegner 2",
+        "risikoKarten": [
+          {
+@@ -669,11 +669,11 @@
+            "typ": "Comeback",
+          },
+          "verbraucht": false,
+        },
+        "erfuellteAufgaben": [],
+-       "fremdErfuellt": false,
++       "fremdErfuellt": true,
+        "handgroesse": 7,
+        "id": "spieler-4",
+        "name": "KI-Gegner 3",
+        "risikoKarten": [
+          {
+
+ ❯ src/ki/sicht.test.ts:120:89
+    118|       const anders = mischeVerborgenes(zustand, ich, zufall)
+    119|       if (JSON.stringify(anders) !== JSON.stringify(zustand)) verschie…
+    120|       expect(sichtFuer(anders, ich), `K1: Zustand ${nummer}, Sicht von…
+       |                                                                                         ^
+    121|     }
+    122|     expect(verschieden, 'K1: Testaufbau, das Mischen verändert fast je…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > K1 Gegenprobe: was offen liegt, ändert die Sicht
+AssertionError: K1: für Spieler 2 ist die Hand von Spieler 1 verborgen: expected { ich: 1, …(15) } to deeply equal { ich: 1, …(15) }
+
+- Expected
++ Received
+
+@@ -285,11 +285,11 @@
+            "typ": "Comeback",
+          },
+          "verbraucht": false,
+        },
+        "erfuellteAufgaben": [],
+-       "fremdErfuellt": false,
++       "fremdErfuellt": true,
+        "handgroesse": 6,
+        "id": "spieler-3",
+        "name": "KI-Gegner 2",
+        "risikoKarten": [
+          {
+
+ ❯ src/ki/sicht.test.ts:139:94
+    137|     const fuerZwei = mischeVerborgenes(zustand, 1, erzeugeZufall(3))
+    138|     expect(fuerZwei.spieler[0].hand, 'K1: Testaufbau, die Hand von Spi…
+    139|     expect(sichtFuer(fuerZwei, 1), 'K1: für Spieler 2 ist die Hand von…
+       |                                                                                              ^
+    140|     expect(sichtFuer(fuerZwei, 0), 'K1: die eigene Hand sieht ihr Besi…
+    141|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  22:17:37
+   Duration  3.53s (transform 412ms, setup 285ms, import 422ms, tests 90ms, environment 2.42s)
+

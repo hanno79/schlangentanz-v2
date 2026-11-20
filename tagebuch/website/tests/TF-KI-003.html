@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-003 200 Partien Zufalls-KI gegen Zufalls-KI mit 2, 3 und 4 Spielern, mit und ohne Erweiterung, enden alle ohne verletzte Invariante. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-003 200 Partien Zufalls-KI gegen Zufalls-KI mit 2, 3 und 4 Spielern, mit und ohne Erweiterung, enden alle ohne verletzte Invariante.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Das Turnier ist der Prüfstand für alle späteren KIs (K5). Es muss jede Partie bis zum Ende spielen, vor jedem Schritt die Invarianten prüfen und Sieger und Punkte richtig zuordnen, auch wenn der Sitz von Partie zu Partie wechselt.</p><h2>Bestanden, wenn</h2><p>Die 200 Partien des Umsetzers (70 zu zweit ohne, 70 zu zweit mit Erweiterung, 30 zu dritt, 30 zu viert) enden alle mit Ausgang „beendet“. Die 200 eigenen Partien des Prüfers (je 35 oder 30 mit 2, 3 und 4 Spielern, je mit und ohne Erweiterung, Saaten ab 5000) enden ebenfalls alle, jede mit mehr als 40 Schritten.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Partie mit „invariante“ oder „schrittgrenze“ endet oder das Turnier mit einem Fehler abbricht.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/K1-ki-schnittstelle</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K1-ki-schnittstelle</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten 1 bis 70, 101 bis 170, 201 bis 230, 301 bis 330 (Umsetzer); 5000 bis 5034, 5100 bis 5134, 5200 bis 5229, 5300 bis 5329, 5400 bis 5434, 5500 bis 5534 (Prüfer).</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/ki/turnier.test.ts</code> endet mit Exit 0. Die eigenen 200 Partien laufen in der Probe aus TF-KI-002 („Prüfer: 200 Partien …“) und geben eine Zeile <code>PRUEFER K2: 200 Partien, nicht beendet 0, …</code> aus.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Partien mit Abwehr und mit gezielten Sonderkarten kommen erst mit E3 bis E9; heute sind diese Karten Platzhalter ohne Ziel. Der Dauerlauf muss mit diesen Tasks neu laufen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:28</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K1) &middot; agent &middot; pruefung-K1 @ <span class="commit" title="3e0f4efc72815021658a51c018c8982267a82049">3e0f4ef</span></p><p>turnier.test.ts grün (200 Partien des Umsetzers). Eigene 200 Partien (Saaten 5000-5534, 2/3/4 Spieler je mit und ohne Erweiterung): nicht beendet 0, Schritte min 154, max 181, Mittel 167.1.</p><ul class="belege"><li><a href="belege/2026-11-20-2228-TF-KI-003-1.txt">2026-11-20-2228-TF-KI-003-1.txt</a></li><li><a href="belege/2026-11-20-2228-TF-KI-003-2.txt">2026-11-20-2228-TF-KI-003-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

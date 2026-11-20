@@ -9,9 +9,12 @@ angelegt: 2026-11-13
 veraendert_daten: nein
 aenderung: task/P0.5c-website-abgleich (PR #38)
 grenzfall_von: TF-SPEC-005
+status: stillgelegt
 ---
 
 ## Worum es geht
+
+Stillgelegt am 20.11.2026 (P0.5d): Seit die Abdeckung nur Teil A liest und Teil A „Gegen Farbkarten gibt es keine Abwehr“ selbst enthält, gilt der Fall nicht mehr. Nachfolger ist TF-SPEC-015.
 
 Die Abdeckungsprüfung sucht jede Zeile der Website im ganzen Dokument und nicht nur in Teil A. Steht ein Satz der Website nur in Teil D, darf der Abgleich trotzdem nicht „stimmt überein“ melden.
 

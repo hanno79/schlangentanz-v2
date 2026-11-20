@@ -19,10 +19,10 @@ const NUR_ERWEITERUNG =
   'Hinweis: Diese Karte ist Teil der Erweiterung "Schlangenkorb des Glücks" und wird nur bei Verwendung der Erweiterung verwendet.'
 
 export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
-  sonderkarte('Farbenschutz', 'A7.2', 'Schützt vor negativen Effekten einer Sonderkarte', [
+  sonderkarte('Farbenschutz', 'A7.2', 'Wehrt eine Sonderkarte eines Mitspielers ab', [
     {
       inhalt: [
-        'Eine defensive Karte, die vor den negativen Auswirkungen von Sonderkarten schützt und als Reaktion auf diese gespielt werden kann. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.',
+        'Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.',
       ],
     },
     beispiele(
@@ -33,7 +33,8 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
       'Spiele als Reaktion auf eine Sonderkarte',
       'Lege den Farbenschutz auf deinen Ablagestapel',
       'Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers',
-      'Schützt vor allen negativen Effekten von Sonderkarten',
+      'Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange',
+      'Gegen Farbkarten gibt es keine Abwehr',
     ),
   ]),
   sonderkarte(
@@ -189,18 +190,19 @@ export const SONDERKARTEN_HILFE: readonly Kartenhilfe[] = [
     [
       {
         inhalt: [
-          'Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug, wieder mit einer Farbkarte und optional einer Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.',
+          'Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug. Er läuft wie ein normaler Zug ab: mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.',
         ],
       },
       beispiele(
         'Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf und spielt im zweiten Zug eine blaue Karte und Schlangenfrass. Neben dem Verdoppler hat er so drei Karten gespielt.',
       ),
       regeln(
-        'Spiele den Verdoppler als Sonderkarte deines Zuges, vor oder nach deiner Farbkarte',
+        'Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach',
         'Fülle danach deine Handkarten auf',
-        'Spiele sofort einen zweiten Zug mit einer Farbkarte und optional einer Sonderkarte',
+        'Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft',
         'Neben dem Verdoppler spielst du so bis zu 3 Karten',
         'Kann nicht mit anderen zugerweiternden Effekten kombiniert werden',
+        'Im zweiten Zug darfst du keinen weiteren Verdoppler spielen',
       ),
     ],
   ),

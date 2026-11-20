@@ -39,7 +39,7 @@ ohne Vorkenntnisse abgenommen.
 Festlegungen) und Teil D (Antworten des Autors). Alles andere ist keine
 Regelquelle. Gibt die Website etwas nicht her: fragen, nicht raten.
 
-### 2.2 Entscheidungen des Autors vom 12.11.2026 (noch nicht auf der Website)
+### 2.2 Entscheidungen des Autors vom 12.11.2026 (seit 13.11.2026 auf der Website)
 
 Sie gelten ab sofort. P0.1 trägt sie in Teil D ein und liefert dem Autor einen
 Prompt, um die Website nachzuziehen.
@@ -48,7 +48,7 @@ Prompt, um die Website nachzuziehen.
 |---|---|
 | D9 | **Jede Karte darf in jede Schlange**, auch in gegnerische. Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. |
 | D10 | **Farbenschutz** wehrt jede Sonderkarte eines Gegners ab, die mich oder meine Schlange trifft (auch Farbenfusion, Schlangenhäutung, Regenbogenschlange). Gegen Farbkarten gibt es keine Abwehr. |
-| D11 | **Verdoppler:** Im zweiten Zug ist kein weiterer Verdoppler erlaubt. |
+| D11 | **Verdoppler:** Im zweiten Zug ist kein weiterer Verdoppler erlaubt (kein weiterer Zug; wirkungslos ablegen bleibt erlaubt, D23, bestätigt am 20.11.2026). |
 | D12 | **Pflichtkarte:** mindestens 1, höchstens 2 Karten, davon höchstens eine Farbkarte und höchstens eine Sonderkarte. Eine Karte genügt, egal welcher Art. |
 | D13 | **Sonderkarten ohne Nutzen:** Man darf jederzeit eine Sonderkarte spielen, auch wenn sie nichts bringt. Hat sie kein mögliches Ziel, kommt sie ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. |
 
@@ -223,6 +223,7 @@ Bildwerkzeuge (Higgsfield) brauchen: Kartenrückseite und Tischhintergrund
 - **Abnahmekriterien:**
   1. `npm run abgleich:website` meldet: jede Zeile der Website steht in Teil A.
   2. `tests/spec_documentation.test.ts` ist grün; Teil A enthält D9–D13 **nicht**.
+     (Überholt seit P0.5d: Teil A enthält D9–D13.)
   3. In Dart gibt es je Plan-Task genau einen Task; Stichprobe von fünf Tasks
      stimmt wörtlich mit den Abnahmekriterien des Plans überein.
   4. Eine frische Sitzung findet mit „Lies `docs/UMSETZUNGSPLAN.md`" alles Nötige.
@@ -420,7 +421,8 @@ daneben.
   2. Beim Beenden des ersten Zuges: Auffüllen auf 5, dann sofort ein zweiter
      Zug desselben Spielers mit höchstens einer Farbkarte und einer Sonderkarte.
   3. D11: Im zweiten Zug gibt ein Verdoppler keinen weiteren Zug (F10); die
-     Meldung nennt den Grund.
+     Meldung nennt den Grund. Wirkungslos ablegen darf man ihn dort; A7.8 meint
+     „kein weiterer Verdoppler mit Wirkung“ (Rückfrage vom 20.11.2026 in D23).
   4. Kein Mitspieler wird gefragt.
 - **Grenzfälle:** Stapel wird beim Auffüllen zwischen den Zügen leer (der
   Spieler spielt den zweiten Zug noch, dann beginnt die Schlussrunde);
@@ -554,7 +556,10 @@ daneben.
 *Läuft ab E1 neben den anderen Tasks.*
 
 - **Behebt:** C11, C13. Spec: A11, A7.3, A7.7.
-  Fragen: F9 → D22, F11 → D24 (Antworten in Teil D).
+  Fragen: F9 → D22, F11 → D24, G9 → D31 (Antworten in Teil D); dazu D30
+  (Farbenfusion bringt die Summe der Karten darunter) und D32 (eine Gruppe nur
+  aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus; umgesetzt
+  mit der Folgeaufgabe E10b).
 - **Dateien:** `src/engine/scoring.ts`, neu `src/engine/jokerGruppen.ts`.
   `colorGroups.ts` bleibt unverändert (der Kettenbonus braucht die rohe Sicht).
 - **Abnahmekriterien:**
@@ -628,7 +633,8 @@ daneben.
 
 #### X2 Die 15 Aufgaben mit Jokern
 
-- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8.
+- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8, G9 → D31.
+  D32 betrifft nur den Vielfaltbonus, nicht „Farbharmonie“ (dort gilt D31).
 - **Dateien:** `src/engine/aufgaben/<name>.ts` je Aufgabe, gemeinsame Helfer
   in `jokerGruppen.ts`. **Drei gleichzeitige Pakete zu je fünf Aufgaben.**
 - **Abnahmekriterien:**
@@ -981,8 +987,8 @@ Erweiterung.
 
 Stand 13.11.2026: Der Autor hat F1–F15 beantwortet. Die Antworten stehen in
 `docs/GAME_SPEC.md` Teil D (D14–D28), die zur Nachfrage F8a als D29; jeder
-Task, der eine Frage nennt, verweist mit „F1 → D14“ darauf. Offen sind
-G1–G23.
+Task, der eine Frage nennt, verweist mit „F1 → D14“ darauf. G9 hat der
+Autor am 20.11.2026 beantwortet (D31). Offen sind G1–G8 und G10–G23.
 
 ### Basis-Spiel
 

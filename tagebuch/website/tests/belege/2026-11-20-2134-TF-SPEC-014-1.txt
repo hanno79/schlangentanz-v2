@@ -1,0 +1,42 @@
+== Schritt 1: Zeilen D30 und D31 (Folge, Datum)
+| D30 | Folge: E10 (die Wertung rechnet bereits so) | Datum: 20.11.2026 |
+| D31 | Folge: E10 (die Wertung rechnet bereits so), X2 | Datum: 20.11.2026 |
+Zitat Summe darunter: 2 Zeile(n)
+Zitat Ja, als Gruppe: 2 Zeile(n)
+== Schritt 2: G9 → D31 im Plan
+559:  Fragen: F9 → D22, F11 → D24, G9 → D31 (Antworten in Teil D); dazu D30
+634:- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8, G9 → D31.
+== Schritt 3-4: Gegenprobe D30 (Kernaussage umgedreht, Zitat bleibt)
+ersetzt in docs/GAME_SPEC.md
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ tests/spec_documentation.test.ts (21 tests | 1 failed) 37ms
+     × D30: die Farbenfusion belegt einen Platz der Gruppe und bringt die Summe der Karten darunter (20.11.2026) 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D30: die Farbenfusion belegt einen Platz der Gruppe und bringt die Summe der Karten darunter (20.11.2026)
+AssertionError: D30 ohne Kernaussage „Die Summe der beiden Karten darunter, nicht der Wert einer Karte der Gruppenfarbe.“: expected 'der wert einer karte der gruppenfarbe…' to contain 'die summe der beiden karten darunter,…'
+
+Expected: "die summe der beiden karten darunter, nicht der wert einer karte der gruppenfarbe."
+Received: "der wert einer karte der gruppenfarbe, nicht die summe der beiden karten darunter. gefragt mit dem beispiel „zwei grüne karten je 3 → 6 bei a, 10 bei b“. wortlaut: „summe darunter“. präzisierung vom 20.11.2026, wortlaut: „1. bei einer fusion vervollständigen die beiden zusammen gelegten karten die dreierreihe. die jeweiligen 2 karten allein würden ja sonst gar nicht zählen. durch die fusion von zwei karten zahlt es als dreierreihe. bei der schlusswertung zählen dann auch die werte der farbkarten die unter der fusion liegen.“ die fusion belegt also einen platz in der gruppe und bringt die summe der karten darunter. beispiel: regenbogenschlange, farbenfusion aus grün und grün, regenbogenschlange: eine gruppe mit 6 punkten (d31). so sagen es auch a7.7 („bringt die punkte beider fusionierter karten“) und a11; die rechnung in a11, beispiel 2 („[3 × 2 punkte]“), lässt beide lesarten zu, weil zwei blaue karten zusammen so viel bringen wie eine violette. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation.test.ts:338:92
+    336|   /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    337|   function pruefeKern(nummer: string, antwort: string, kern: string[],…
+    338|     for (const aussage of kern) expect(antwort, `${nummer} ohne Kernau…
+       |                                                                                            ^
+    339|     for (const aussage of verboten) expect(antwort, `${nummer} enthält…
+    340|   }
+ ❯ tests/spec_documentation.test.ts:344:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 42 passed (43)
+   Start at  21:21:23
+   Duration  2.92s (transform 112ms, setup 537ms, import 81ms, tests 50ms, environment 2.30s)
+
+exit 1

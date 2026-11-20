@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-017 D32 steht mit Frage, Wortlaut, Datum 20.11.2026, Folge E10b und „Website folgt“ in Teil D, D31 verweist darauf, und eine umgedrehte Antwort macht die Tests rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-017 D32 steht mit Frage, Wortlaut, Datum 20.11.2026, Folge E10b und „Website folgt“ in Teil D, D31 verweist darauf, und eine umgedrehte Antwort macht die Tests rot.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art beides</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Antwort des Autors zum Vielfaltbonus einer Gruppe nur aus Regenbogenschlangen muss so in der Spec stehen, wie er sie gegeben hat: „Nein. Eine Regenbogenschlange zählt nicht beim Vielfalt Bonus“. D31 sagte vorher das Gegenteil für den Vielfaltbonus und muss deshalb auf D32 verweisen. Was der Autor nicht beantwortet hat, die Gruppe aus Regenbogenschlangen und Farbenfusion, muss als offen dastehen.</p><h2>Bestanden, wenn</h2><p>Die Zeile D32 enthält die Frage, den Wortlaut in Anführungszeichen, „Website folgt.“, die Folge E10b und das Datum 20.11.2026, nennt die Gruppe mit Farbenfusion ausdrücklich als offen und sagt zu „Farbharmonie“ nur, dass dort D31 weiter gilt. D31 endet mit „Für den Vielfaltbonus schränkt D32 das ein.“ Teil E hat einen Eintrag vom 20.11.2026 zu E10b. Ersetzt man in D32 „bringt keine Farbe für den Vielfaltbonus“ durch „bringt eine Farbe für den Vielfaltbonus“, endet <code>npx vitest run tests/spec_documentation.test.ts</code> mit 1.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Feld fehlt, D32 behauptet mehr als der Wortlaut und Teil A hergeben, oder die Tests bleiben nach der umgedrehten Aussage grün.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/E10b-vielfalt-regenbogen (PR #52)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie des Branches ab Commit 4c83fb0, <code>npm ci</code> gelaufen, <code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Gegenprobe: in <code>docs/GAME_SPEC.md</code>, Zeile D32, den ersten Satz „Nein: Eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus.“ ersetzen durch „Nein: Eine Gruppe nur aus Regenbogenschlangen bringt eine Farbe für den Vielfaltbonus.“</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor, `docs/GAME_SPEC.md`, Teil D</td><td>Zeilen D31 und D32 lesen</td><td></td><td>Felder wie unter „Bestanden, wenn“</td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Spec-Tests ausführen</td><td>`npx vitest run tests/spec_documentation.test.ts; echo $?`</td><td>Exit 0</td></tr><tr><td>3</td><td>Editor</td><td>Gegenprobe einsetzen</td><td>siehe „Testdaten“</td><td></td></tr><tr><td>4</td><td>Git Bash im Repo</td><td>Tests wie in Schritt 2</td><td></td><td>Exit 1, rot: „D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe …“</td></tr><tr><td>5</td><td>Git Bash im Repo</td><td>zurücksetzen</td><td>`git checkout -- docs/GAME_SPEC.md`</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob die Website die Antwort schon übernommen hat, prüft <code>npm run abgleich:website</code> (TF-SPEC-005), nicht dieser Testfall.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:49</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E10b) &middot; agent &middot; pruefung-E10b @ <span class="commit" title="4c83fb0bf20776d1d1192dff54b16e5ba8456837">4c83fb0</span></p><p>D32 mit Frage, Wortlaut, Website folgt, Folge E10b, 20.11.2026, offener Fusionsfall benannt; D31 endet mit Verweis auf D32; Teil E Eintrag 20.11.2026. spec_documentation Exit 0; Gegenprobe Kernaussage umgedreht Exit 1 (D32-Test rot), Verweis in D31 entfernt Exit 1 (D31-Test rot); Datei byte-genau zurück</p><ul class="belege"><li><a href="belege/2026-11-20-2249-TF-SPEC-017-1.txt">2026-11-20-2249-TF-SPEC-017-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

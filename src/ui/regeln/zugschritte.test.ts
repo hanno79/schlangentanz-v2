@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { abschnittA, antwortD, stehtImSatz, zeilenOhneAuszeichnung } from '../../test/specText'
+import { TEIL_A_ZEILEN, abschnittA, antwortD, stehtImSatz, zeilenOhneAuszeichnung } from '../../test/specText'
 import { ZUGSCHRITTE } from './zugschritte'
 
 /*
@@ -52,15 +52,30 @@ describe('O9: Ein Zug in fünf Schritten (Kriterium 2)', () => {
     },
   )
 
+  it.each(ALLE_SAETZE.filter(([, satz]) => satz.quelle.startsWith('D')))(
+    'P0.5d/U2: „%s“: eine Ergänzung aus Teil D steht noch nicht wörtlich in Teil A, sonst gehört Teil A als Quelle hin: %j',
+    (_, satz) => {
+      expect(stehtImSatz(satz.text, TEIL_A_ZEILEN), `${satz.quelle} steht inzwischen in Teil A: ${satz.text}`).toBe(false)
+    },
+  )
+
   it('O9/U2: jeder Satz nennt Teil A oder Teil D als Quelle, sonst nichts', () => {
     const ohneQuelle = ALLE_SAETZE.filter(([, satz]) => !/^(A\d+(\.\d+)?|D\d+)$/.test(satz.quelle))
     expect(ohneQuelle, 'Sätze ohne Quelle in Teil A oder D').toEqual([])
   })
 
-  it('O9/D12, D13: wo Teil D die Website ergänzt, folgt die Zusammenfassung Teil D', () => {
+  it('O9/D23: wo Teil D die Website ergänzt, folgt die Zusammenfassung Teil D', () => {
     const quellen = ALLE_SAETZE.map(([, satz]) => satz.quelle)
-    expect(quellen, 'Pflichtkarte: mindestens 1, höchstens 2 Karten (D12)').toContain('D12')
-    expect(quellen, 'Sonderkarte ohne Ziel wirkungslos ablegen (D13)').toContain('D13')
     expect(quellen, 'Verdoppler im zweiten Zug wirkungslos ablegen (D23) präzisiert D11').toContain('D23')
+  })
+
+  it('P0.5d: was die Website seit dem 13.11.2026 selbst sagt (D9, D10, D12, D13, D19), steht als Satz aus Teil A da', () => {
+    const quellen = ALLE_SAETZE.map(([, satz]) => satz.quelle)
+    for (const uebernommen of ['D9', 'D10', 'D12', 'D13', 'D19']) {
+      expect(quellen, `${uebernommen} ist auf der Website; der Satz kommt aus Teil A`).not.toContain(uebernommen)
+    }
+    const texte = ALLE_SAETZE.map(([, satz]) => satz.text)
+    expect(texte).toContain('Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.')
+    expect(texte).toContain('Gegen Farbkarten gibt es keine Abwehr.')
   })
 })

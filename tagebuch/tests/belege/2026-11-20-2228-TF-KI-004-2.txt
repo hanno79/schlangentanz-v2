@@ -1,0 +1,1426 @@
+== Gegenprobe Schritt: schritt.ts Z.33 gibt die Abschrift der KI statt der Aktion der Engine zurück; zufallsKi.ts Z.13 ruft Math.random
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+ ❯ src/ki/schritt.test.ts (11 tests | 1 failed) 56ms
+     × U3: verändert die KI die gewählte Aktion, gilt trotzdem die aufgezählte 12ms
+ ❯ src/ki/turnier.test.ts (12 tests | 1 failed) 19299ms
+     × U4: das Turnier zieht keinen eigenen Zufall: Math.random wird nie gerufen 145ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > U3: verändert die KI die gewählte Aktion, gilt trotzdem die aufgezählte
+AssertionError: expected { typ: 'FarbkarteLegen', …(3) } to deeply equal { typ: 'FarbkarteLegen', …(3) }
+
+- Expected
++ Received
+
+  {
+-   "karteId": "gelb-12",
+-   "spielerId": "spieler-2",
++   "karteId": "gibt-es-nicht",
++   "spielerId": "spieler-1",
+    "typ": "FarbkarteLegen",
+    "ziel": {
+      "art": "neueSchlange",
+    },
+  }
+
+ ❯ src/ki/schritt.test.ts:136:45
+    134|       },
+    135|     }
+    136|     expect(naechsterKiSchritt(zustand, ki)).toEqual(aufgezaehlt[0])
+       |                                             ^
+    137|     expect(ermittleAktionen(zustand), 'U3: die Engine zählt danach das…
+    138|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/ki/turnier.test.ts > K1 Kriterium 3: gleiche Saat, gleicher Verlauf > U4: das Turnier zieht keinen eigenen Zufall: Math.random wird nie gerufen
+AssertionError: expected "random" to not be called at all, but actually been called 341 times
+
+Received:
+
+  1st random call:
+
+    Array []
+
+  2nd random call:
+
+    Array []
+
+  3rd random call:
+
+    Array []
+
+  4th random call:
+
+    Array []
+
+  5th random call:
+
+    Array []
+
+  6th random call:
+
+    Array []
+
+  7th random call:
+
+    Array []
+
+  8th random call:
+
+    Array []
+
+  9th random call:
+
+    Array []
+
+  10th random call:
+
+    Array []
+
+  11th random call:
+
+    Array []
+
+  12th random call:
+
+    Array []
+
+  13th random call:
+
+    Array []
+
+  14th random call:
+
+    Array []
+
+  15th random call:
+
+    Array []
+
+  16th random call:
+
+    Array []
+
+  17th random call:
+
+    Array []
+
+  18th random call:
+
+    Array []
+
+  19th random call:
+
+    Array []
+
+  20th random call:
+
+    Array []
+
+  21st random call:
+
+    Array []
+
+  22nd random call:
+
+    Array []
+
+  23rd random call:
+
+    Array []
+
+  24th random call:
+
+    Array []
+
+  25th random call:
+
+    Array []
+
+  26th random call:
+
+    Array []
+
+  27th random call:
+
+    Array []
+
+  28th random call:
+
+    Array []
+
+  29th random call:
+
+    Array []
+
+  30th random call:
+
+    Array []
+
+  31st random call:
+
+    Array []
+
+  32nd random call:
+
+    Array []
+
+  33rd random call:
+
+    Array []
+
+  34th random call:
+
+    Array []
+
+  35th random call:
+
+    Array []
+
+  36th random call:
+
+    Array []
+
+  37th random call:
+
+    Array []
+
+  38th random call:
+
+    Array []
+
+  39th random call:
+
+    Array []
+
+  40th random call:
+
+    Array []
+
+  41st random call:
+
+    Array []
+
+  42nd random call:
+
+    Array []
+
+  43rd random call:
+
+    Array []
+
+  44th random call:
+
+    Array []
+
+  45th random call:
+
+    Array []
+
+  46th random call:
+
+    Array []
+
+  47th random call:
+
+    Array []
+
+  48th random call:
+
+    Array []
+
+  49th random call:
+
+    Array []
+
+  50th random call:
+
+    Array []
+
+  51st random call:
+
+    Array []
+
+  52nd random call:
+
+    Array []
+
+  53rd random call:
+
+    Array []
+
+  54th random call:
+
+    Array []
+
+  55th random call:
+
+    Array []
+
+  56th random call:
+
+    Array []
+
+  57th random call:
+
+    Array []
+
+  58th random call:
+
+    Array []
+
+  59th random call:
+
+    Array []
+
+  60th random call:
+
+    Array []
+
+  61st random call:
+
+    Array []
+
+  62nd random call:
+
+    Array []
+
+  63rd random call:
+
+    Array []
+
+  64th random call:
+
+    Array []
+
+  65th random call:
+
+    Array []
+
+  66th random call:
+
+    Array []
+
+  67th random call:
+
+    Array []
+
+  68th random call:
+
+    Array []
+
+  69th random call:
+
+    Array []
+
+  70th random call:
+
+    Array []
+
+  71st random call:
+
+    Array []
+
+  72nd random call:
+
+    Array []
+
+  73rd random call:
+
+    Array []
+
+  74th random call:
+
+    Array []
+
+  75th random call:
+
+    Array []
+
+  76th random call:
+
+    Array []
+
+  77th random call:
+
+    Array []
+
+  78th random call:
+
+    Array []
+
+  79th random call:
+
+    Array []
+
+  80th random call:
+
+    Array []
+
+  81st random call:
+
+    Array []
+
+  82nd random call:
+
+    Array []
+
+  83rd random call:
+
+    Array []
+
+  84th random call:
+
+    Array []
+
+  85th random call:
+
+    Array []
+
+  86th random call:
+
+    Array []
+
+  87th random call:
+
+    Array []
+
+  88th random call:
+
+    Array []
+
+  89th random call:
+
+    Array []
+
+  90th random call:
+
+    Array []
+
+  91st random call:
+
+    Array []
+
+  92nd random call:
+
+    Array []
+
+  93rd random call:
+
+    Array []
+
+  94th random call:
+
+    Array []
+
+  95th random call:
+
+    Array []
+
+  96th random call:
+
+    Array []
+
+  97th random call:
+
+    Array []
+
+  98th random call:
+
+    Array []
+
+  99th random call:
+
+    Array []
+
+  100th random call:
+
+    Array []
+
+  101st random call:
+
+    Array []
+
+  102nd random call:
+
+    Array []
+
+  103rd random call:
+
+    Array []
+
+  104th random call:
+
+    Array []
+
+  105th random call:
+
+    Array []
+
+  106th random call:
+
+    Array []
+
+  107th random call:
+
+    Array []
+
+  108th random call:
+
+    Array []
+
+  109th random call:
+
+    Array []
+
+  110th random call:
+
+    Array []
+
+  111th random call:
+
+    Array []
+
+  112th random call:
+
+    Array []
+
+  113th random call:
+
+    Array []
+
+  114th random call:
+
+    Array []
+
+  115th random call:
+
+    Array []
+
+  116th random call:
+
+    Array []
+
+  117th random call:
+
+    Array []
+
+  118th random call:
+
+    Array []
+
+  119th random call:
+
+    Array []
+
+  120th random call:
+
+    Array []
+
+  121st random call:
+
+    Array []
+
+  122nd random call:
+
+    Array []
+
+  123rd random call:
+
+    Array []
+
+  124th random call:
+
+    Array []
+
+  125th random call:
+
+    Array []
+
+  126th random call:
+
+    Array []
+
+  127th random call:
+
+    Array []
+
+  128th random call:
+
+    Array []
+
+  129th random call:
+
+    Array []
+
+  130th random call:
+
+    Array []
+
+  131st random call:
+
+    Array []
+
+  132nd random call:
+
+    Array []
+
+  133rd random call:
+
+    Array []
+
+  134th random call:
+
+    Array []
+
+  135th random call:
+
+    Array []
+
+  136th random call:
+
+    Array []
+
+  137th random call:
+
+    Array []
+
+  138th random call:
+
+    Array []
+
+  139th random call:
+
+    Array []
+
+  140th random call:
+
+    Array []
+
+  141st random call:
+
+    Array []
+
+  142nd random call:
+
+    Array []
+
+  143rd random call:
+
+    Array []
+
+  144th random call:
+
+    Array []
+
+  145th random call:
+
+    Array []
+
+  146th random call:
+
+    Array []
+
+  147th random call:
+
+    Array []
+
+  148th random call:
+
+    Array []
+
+  149th random call:
+
+    Array []
+
+  150th random call:
+
+    Array []
+
+  151st random call:
+
+    Array []
+
+  152nd random call:
+
+    Array []
+
+  153rd random call:
+
+    Array []
+
+  154th random call:
+
+    Array []
+
+  155th random call:
+
+    Array []
+
+  156th random call:
+
+    Array []
+
+  157th random call:
+
+    Array []
+
+  158th random call:
+
+    Array []
+
+  159th random call:
+
+    Array []
+
+  160th random call:
+
+    Array []
+
+  161st random call:
+
+    Array []
+
+  162nd random call:
+
+    Array []
+
+  163rd random call:
+
+    Array []
+
+  164th random call:
+
+    Array []
+
+  165th random call:
+
+    Array []
+
+  166th random call:
+
+    Array []
+
+  167th random call:
+
+    Array []
+
+  168th random call:
+
+    Array []
+
+  169th random call:
+
+    Array []
+
+  170th random call:
+
+    Array []
+
+  171st random call:
+
+    Array []
+
+  172nd random call:
+
+    Array []
+
+  173rd random call:
+
+    Array []
+
+  174th random call:
+
+    Array []
+
+  175th random call:
+
+    Array []
+
+  176th random call:
+
+    Array []
+
+  177th random call:
+
+    Array []
+
+  178th random call:
+
+    Array []
+
+  179th random call:
+
+    Array []
+
+  180th random call:
+
+    Array []
+
+  181st random call:
+
+    Array []
+
+  182nd random call:
+
+    Array []
+
+  183rd random call:
+
+    Array []
+
+  184th random call:
+
+    Array []
+
+  185th random call:
+
+    Array []
+
+  186th random call:
+
+    Array []
+
+  187th random call:
+
+    Array []
+
+  188th random call:
+
+    Array []
+
+  189th random call:
+
+    Array []
+
+  190th random call:
+
+    Array []
+
+  191st random call:
+
+    Array []
+
+  192nd random call:
+
+    Array []
+
+  193rd random call:
+
+    Array []
+
+  194th random call:
+
+    Array []
+
+  195th random call:
+
+    Array []
+
+  196th random call:
+
+    Array []
+
+  197th random call:
+
+    Array []
+
+  198th random call:
+
+    Array []
+
+  199th random call:
+
+    Array []
+
+  200th random call:
+
+    Array []
+
+  201st random call:
+
+    Array []
+
+  202nd random call:
+
+    Array []
+
+  203rd random call:
+
+    Array []
+
+  204th random call:
+
+    Array []
+
+  205th random call:
+
+    Array []
+
+  206th random call:
+
+    Array []
+
+  207th random call:
+
+    Array []
+
+  208th random call:
+
+    Array []
+
+  209th random call:
+
+    Array []
+
+  210th random call:
+
+    Array []
+
+  211th random call:
+
+    Array []
+
+  212th random call:
+
+    Array []
+
+  213th random call:
+
+    Array []
+
+  214th random call:
+
+    Array []
+
+  215th random call:
+
+    Array []
+
+  216th random call:
+
+    Array []
+
+  217th random call:
+
+    Array []
+
+  218th random call:
+
+    Array []
+
+  219th random call:
+
+    Array []
+
+  220th random call:
+
+    Array []
+
+  221st random call:
+
+    Array []
+
+  222nd random call:
+
+    Array []
+
+  223rd random call:
+
+    Array []
+
+  224th random call:
+
+    Array []
+
+  225th random call:
+
+    Array []
+
+  226th random call:
+
+    Array []
+
+  227th random call:
+
+    Array []
+
+  228th random call:
+
+    Array []
+
+  229th random call:
+
+    Array []
+
+  230th random call:
+
+    Array []
+
+  231st random call:
+
+    Array []
+
+  232nd random call:
+
+    Array []
+
+  233rd random call:
+
+    Array []
+
+  234th random call:
+
+    Array []
+
+  235th random call:
+
+    Array []
+
+  236th random call:
+
+    Array []
+
+  237th random call:
+
+    Array []
+
+  238th random call:
+
+    Array []
+
+  239th random call:
+
+    Array []
+
+  240th random call:
+
+    Array []
+
+  241st random call:
+
+    Array []
+
+  242nd random call:
+
+    Array []
+
+  243rd random call:
+
+    Array []
+
+  244th random call:
+
+    Array []
+
+  245th random call:
+
+    Array []
+
+  246th random call:
+
+    Array []
+
+  247th random call:
+
+    Array []
+
+  248th random call:
+
+    Array []
+
+  249th random call:
+
+    Array []
+
+  250th random call:
+
+    Array []
+
+  251st random call:
+
+    Array []
+
+  252nd random call:
+
+    Array []
+
+  253rd random call:
+
+    Array []
+
+  254th random call:
+
+    Array []
+
+  255th random call:
+
+    Array []
+
+  256th random call:
+
+    Array []
+
+  257th random call:
+
+    Array []
+
+  258th random call:
+
+    Array []
+
+  259th random call:
+
+    Array []
+
+  260th random call:
+
+    Array []
+
+  261st random call:
+
+    Array []
+
+  262nd random call:
+
+    Array []
+
+  263rd random call:
+
+    Array []
+
+  264th random call:
+
+    Array []
+
+  265th random call:
+
+    Array []
+
+  266th random call:
+
+    Array []
+
+  267th random call:
+
+    Array []
+
+  268th random call:
+
+    Array []
+
+  269th random call:
+
+    Array []
+
+  270th random call:
+
+    Array []
+
+  271st random call:
+
+    Array []
+
+  272nd random call:
+
+    Array []
+
+  273rd random call:
+
+    Array []
+
+  274th random call:
+
+    Array []
+
+  275th random call:
+
+    Array []
+
+  276th random call:
+
+    Array []
+
+  277th random call:
+
+    Array []
+
+  278th random call:
+
+    Array []
+
+  279th random call:
+
+    Array []
+
+  280th random call:
+
+    Array []
+
+  281st random call:
+
+    Array []
+
+  282nd random call:
+
+    Array []
+
+  283rd random call:
+
+    Array []
+
+  284th random call:
+
+    Array []
+
+  285th random call:
+
+    Array []
+
+  286th random call:
+
+    Array []
+
+  287th random call:
+
+    Array []
+
+  288th random call:
+
+    Array []
+
+  289th random call:
+
+    Array []
+
+  290th random call:
+
+    Array []
+
+  291st random call:
+
+    Array []
+
+  292nd random call:
+
+    Array []
+
+  293rd random call:
+
+    Array []
+
+  294th random call:
+
+    Array []
+
+  295th random call:
+
+    Array []
+
+  296th random call:
+
+    Array []
+
+  297th random call:
+
+    Array []
+
+  298th random call:
+
+    Array []
+
+  299th random call:
+
+    Array []
+
+  300th random call:
+
+    Array []
+
+  301st random call:
+
+    Array []
+
+  302nd random call:
+
+    Array []
+
+  303rd random call:
+
+    Array []
+
+  304th random call:
+
+    Array []
+
+  305th random call:
+
+    Array []
+
+  306th random call:
+
+    Array []
+
+  307th random call:
+
+    Array []
+
+  308th random call:
+
+    Array []
+
+  309th random call:
+
+    Array []
+
+  310th random call:
+
+    Array []
+
+  311th random call:
+
+    Array []
+
+  312th random call:
+
+    Array []
+
+  313th random call:
+
+    Array []
+
+  314th random call:
+
+    Array []
+
+  315th random call:
+
+    Array []
+
+  316th random call:
+
+    Array []
+
+  317th random call:
+
+    Array []
+
+  318th random call:
+
+    Array []
+
+  319th random call:
+
+    Array []
+
+  320th random call:
+
+    Array []
+
+  321st random call:
+
+    Array []
+
+  322nd random call:
+
+    Array []
+
+  323rd random call:
+
+    Array []
+
+  324th random call:
+
+    Array []
+
+  325th random call:
+
+    Array []
+
+  326th random call:
+
+    Array []
+
+  327th random call:
+
+    Array []
+
+  328th random call:
+
+    Array []
+
+  329th random call:
+
+    Array []
+
+  330th random call:
+
+    Array []
+
+  331st random call:
+
+    Array []
+
+  332nd random call:
+
+    Array []
+
+  333rd random call:
+
+    Array []
+
+  334th random call:
+
+    Array []
+
+  335th random call:
+
+    Array []
+
+  336th random call:
+
+    Array []
+
+  337th random call:
+
+    Array []
+
+  338th random call:
+
+    Array []
+
+  339th random call:
+
+    Array []
+
+  340th random call:
+
+    Array []
+
+  341st random call:
+
+    Array []
+
+
+Number of calls: 341
+
+ ❯ src/ki/turnier.test.ts:85:24
+     83|     const random = vi.spyOn(Math, 'random')
+     84|     turnier({ teilnehmer: zufallsTeilnehmer(2), partien: 2, ersteSaat:…
+     85|     expect(random).not.toHaveBeenCalled()
+       |                        ^
+     86|   })
+     87|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 21 passed (23)
+   Start at  22:17:57
+   Duration  22.78s (transform 803ms, setup 624ms, import 826ms, tests 19.36s, environment 4.89s)
+

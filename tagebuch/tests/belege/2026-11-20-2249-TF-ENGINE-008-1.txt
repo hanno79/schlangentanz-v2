@@ -1,0 +1,70 @@
+G1 (src/engine/jokerGruppen.ts): Regenbogenschlange trägt Farbe (Regel vor D32), Suche und Aufschlüsselung
+  alt: return karte.typ === 'Farbkarte' || (istJoker(karte) && karte.name === 'Farbenfusion');
+  neu: return karte.typ === 'Farbkarte' || istJoker(karte);
+  exit 1; Tests 6 failed | 112 passed (118)
+    × D32: Rot-, Blau- und Gelbgruppe und eine Gruppe aus drei Regenbogenschlangen zählen 3 Farben, nicht 4 12ms
+    × D32: die Jokerwahl setzt drei Regenbogenschlangen nicht als zusätzliche Farbe an 3ms
+    × D32: von vier Regenbogenschlangen vervollständigt eine die gelbe Gruppe, die anderen drei bringen keine Farbe 2ms
+    × D31, D32: drei Regenbogenschlangen sind eine Gruppe mit 0 Punkten, bringen aber keine Farbe für den Vielfaltbonus 10ms
+    × D32: wertung-vielfalt-regenbogen zeigt, dass drei Regenbogenschlangen keine Farbe für den Vielfaltbonus bringen 10ms
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 11ms
+G2 (src/engine/jokerGruppen.ts): nur die Suche kennt D32 nicht (Joker trägt immer Farbe)
+  alt: lege(lage, farbe, glied.punkte, 1, glied.traegtFarbe, mitVielfalt)
+  neu: lege(lage, farbe, glied.punkte, 1, true, mitVielfalt)
+  exit 1; Tests 4 failed | 114 passed (118)
+    × D32: die Jokerwahl setzt drei Regenbogenschlangen nicht als zusätzliche Farbe an 13ms
+    × D32: von vier Regenbogenschlangen vervollständigt eine die gelbe Gruppe, die anderen drei bringen keine Farbe 2ms
+    × D32: wertung-vielfalt-regenbogen zeigt, dass drei Regenbogenschlangen keine Farbe für den Vielfaltbonus bringen 10ms
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 12ms
+G3 (src/engine/jokerGruppen.ts): nur die Aufschlüsselung kennt D32 nicht
+  alt: gruppe.farbe === farbe && gruppe.kartenIds.some((id) => farbtraeger.has(id))
+  neu: gruppe.farbe === farbe
+  exit 1; Tests 2 failed | 116 passed (118)
+    × D31, D32: drei Regenbogenschlangen sind eine Gruppe mit 0 Punkten, bringen aber keine Farbe für den Vielfaltbonus 8ms
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 25ms
+G4 (src/engine/jokerGruppen.ts): Farbkarte nach fertiger Regenbogen-Gruppe setzt die Farbe nicht
+  alt: const farben = mitFarbe(traegt);
+  neu: const farben = lage.farben;
+  exit 1; Tests 2 failed | 116 passed (118)
+    × A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben 27ms
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 44ms
+G5 (src/engine/jokerGruppen.ts): Farbenfusion trägt keine Farbe (offene Frage andersherum)
+  alt: return karte.typ === 'Farbkarte' || (istJoker(karte) && karte.name === 'Farbenfusion');
+  neu: return karte.typ === 'Farbkarte';
+  exit 1; Tests 1 failed | 117 passed (118)
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 14ms
+G6 (src/engine/jokerGruppen.ts): Farbträger vor der dritten Karte wird vergessen (nur die dritte zählt)
+  alt: farben: mitFarbe(offenBelegt) };
+  neu: farben: mitFarbe(traegt) };
+  exit 1; Tests 3 failed | 115 passed (118)
+    × A11: Gruppenpunkte und Vielfaltbonus werden gemeinsam am höchsten, nicht nacheinander 8ms
+    × A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben 108ms
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 92ms
+P1 (src/engine/jokerGruppen.ts): eigene: Merkschlüssel ohne offenBelegt (Zustände fallen zusammen)
+  alt: + lage.offen) * 2 + Number(lage.offenBelegt);
+  neu: + lage.offen) * 2;
+  exit 0; Tests 118 passed (118)
+P2 (src/engine/jokerGruppen.ts): eigene: Aufschlüsselung verlangt, dass jede Karte der Gruppe Farbe trägt
+  alt: gruppe.kartenIds.some((id) => farbtraeger.has(id))
+  neu: gruppe.kartenIds.every((id) => farbtraeger.has(id))
+  exit 1; Tests 17 failed | 101 passed (118)
+    × A11: die Aufschlüsselung nennt Gruppen je Schlange, Farbe jedes Jokers, Vielfaltbonus, Kette, Aufgaben und Summe 10ms
+    × A11 Vielfalt Beispiel 2: Blau³, Rot-Regenbogenschlange-Rot, Violett³ ergeben 2 Bonuspunkte; die Regenbogenschlange zählt als Rot 9ms
+    × A7.3/A11: die Regenbogenschlange zählt für Gruppenpunkte und Vielfaltbonus als dieselbe Farbe 2ms
+    × A11: bei gleichen Gruppenpunkten entscheidet der Vielfaltbonus die Jokerfarbe 2ms
+    × A11: der Bonus der ersten Schlange bleibt der höchste, auch wenn die zweite weniger Farben hat (Codex-Befund) 2ms
+    × A11: Gruppenpunkte und Vielfaltbonus werden gemeinsam am höchsten, nicht nacheinander 1ms
+    × D32: von vier Regenbogenschlangen vervollständigt eine die gelbe Gruppe, die anderen drei bringen keine Farbe 2ms
+    × D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot: ["Rot","Regenbogenschlange","Rot"] 2ms
+P3 (src/entwicklung/WertungsAnsicht.tsx): eigene: Etikett am Entwicklertisch wieder 'Farben mit Gruppe'
+  alt: ; Farben für den Vielfaltbonus: 
+  neu: ; Farben mit Gruppe: 
+  exit 1; Tests 1 failed | 117 passed (118)
+    × A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler 49ms
+P4 (src/engine/jokerGruppen.ts): eigene: erste Karte einer neuen Gruppe trägt nie Farbe
+  alt: offeneJoker: joker, offenBelegt: traegt }, NICHTS];
+  neu: offeneJoker: joker, offenBelegt: false }, NICHTS];
+  exit 1; Tests 3 failed | 115 passed (118)
+    × A11: Gruppenpunkte und Vielfaltbonus werden gemeinsam am höchsten, nicht nacheinander 8ms
+    × A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben 96ms
+    × D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 139ms

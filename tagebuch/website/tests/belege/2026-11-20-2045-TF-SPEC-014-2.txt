@@ -1,0 +1,30 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a883f2a4912ec8eae
+
+ ❯ tests/regelfragen_antworten.test.ts (22 tests | 1 failed) 23ms
+     × P0.5: G9: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 und 20.11.2026 > P0.5: G9: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+AssertionError: G9: gewählte Möglichkeit: expected 'b' to be 'a' // Object.is equality
+
+Expected: "a"
+Received: "b"
+
+ ❯ tests/regelfragen_antworten.test.ts:109:64
+    107|       const eintrag = vergleichbar(teilD.get(nr)?.antwort ?? '')
+    108|
+    109|       expect(gewaehlt(antwort), `${nr}: gewählte Möglichkeit`).toBe(wa…
+       |                                                                ^
+    110|       expect(feld(block, 'Datum'), `${nr}: Datum der Antwort`).toBe(da…
+    111|       for (const aussage of kern.map(vergleichbar)) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 passed (22)
+   Start at  20:22:32
+   Duration  741ms (transform 71ms, setup 335ms, import 43ms, tests 23ms, environment 0ms)
+

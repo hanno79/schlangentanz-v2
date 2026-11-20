@@ -9,7 +9,7 @@ Aufruf: npm run test:website-netz
 const assert = require('assert/strict');
 const { ladeWebsite } = require('./lade_website.cjs');
 const { baueTeilA } = require('./baue_teil_a.cjs');
-const { pruefeAbdeckung } = require('./abgleich.cjs');
+const { pruefeAbdeckung, TEIL_A_KOPF } = require('./abgleich.cjs');
 
 async function main() {
   const website = await ladeWebsite();
@@ -20,7 +20,8 @@ async function main() {
   assert.match(website.seiteMd, /^## Spielmaterial$/m, 'Abschnitt „Spielmaterial“ fehlt im Markdown');
   const teilA = baueTeilA(website);
   assert.match(teilA, /^### A11 Punktezählung$/m, 'Teil A liess sich nicht bis A11 bauen');
-  const abdeckung = pruefeAbdeckung(website, teilA);
+  // Die Abdeckung liest nur Teil A eines Dokuments, deshalb mit Überschrift.
+  const abdeckung = pruefeAbdeckung(website, `${TEIL_A_KOPF}${teilA}`);
   assert.ok(abdeckung.geprueft > 100, `nur ${abdeckung.geprueft} Zeilen der Website geprüft`);
   console.log(`Netztest bestanden: ${website.dialogeMd.length} Dialoge, ${abdeckung.geprueft} Zeilen, Bundle ${website.bundle}.`);
 }

@@ -1,0 +1,189 @@
+import { appendFileSync } from 'node:fs'
+const log = (s: string) => appendFileSync('C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/E10b-pruefer/E10b-eigener-abgleich-werte.txt', s + String.fromCharCode(10))
+// Eigener, unabhängiger Abgleich des Prüfers E10b: Durchprobieren aller Jokerfarben (6^k)
+// nach A11, A7.3, A7.7, D30, D31, D32. Kein Code des Umsetzers ausser der geprüften Funktion.
+import { werteSchlangen } from 'E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a69578dec3044b37d/src/engine/jokerGruppen'
+
+const F = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'] as const
+type Fb = (typeof F)[number]
+const W: Record<Fb, number> = { Blau: 1, Rot: 1, Gelb: 1, Violett: 2, Braun: 2, Grün: 3 }
+
+// Eigene Darstellung: Farbe | 'RB' (Regenbogen) | 'BL' (Blockade) | ['FU', Farbe] (Fusion aus zwei gleichen)
+type Z = Fb | 'RB' | 'BL' | ['FU', Fb]
+
+let id = 0
+function alsSchlange(z: Z[], s: number): any {
+  const karten: any[] = []
+  const fusionen: any[] = []
+  for (const x of z) {
+    const k = `p${id++}`
+    if (x === 'RB') karten.push({ typ: 'Sonderkarte', id: k, name: 'Regenbogenschlange' })
+    else if (x === 'BL') karten.push({ typ: 'Sonderkarte', id: k, name: 'Schlangenblockade' })
+    else if (Array.isArray(x)) {
+      karten.push({ typ: 'Sonderkarte', id: k, name: 'Farbenfusion' })
+      fusionen.push({ karteId: k, unter: [0, 1].map((i) => ({ typ: 'Farbkarte', id: `${k}u${i}`, farbe: x[1], punkte: W[x[1]] })) })
+    } else karten.push({ typ: 'Farbkarte', id: k, farbe: x, punkte: W[x] })
+  }
+  return { id: `ps${s}`, karten, fusionen }
+}
+
+function bonusFuer(n: number): number {
+  if (n >= 5) return 4
+  if (n === 4) return 3
+  if (n === 3) return 2
+  if (n === 2) return 1
+  return 0
+}
+
+/** Bewertet eine feste Belegung. Rückgabe: Summe, Joker in Gruppen, je Joker ob in Gruppe. */
+function bewerte(schlangen: Z[][], belegung: Fb[], mitVielfalt: boolean, rbTraegt = false) {
+  let j = 0
+  let punkte = 0
+  let bonus = 0
+  let jokerInGruppe = 0
+  const inGr: boolean[] = []
+  for (const s of schlangen) {
+    // farbe je Position (null = Blockade), wert, traeger (Farbkarte oder Fusion)
+    const pos = s.map((x) => {
+      if (x === 'BL') return { f: null as Fb | null, w: 0, t: false, joker: -1 }
+      if (x === 'RB') return { f: belegung[j], w: 0, t: rbTraegt, joker: j++ }
+      if (Array.isArray(x)) return { f: belegung[j], w: 2 * W[x[1]], t: true, joker: j++ }
+      return { f: x, w: W[x], t: true, joker: -1 }
+    })
+    const farben = new Set<Fb>()
+    let a = 0
+    while (a < pos.length) {
+      if (pos[a].f === null) { a++; continue }
+      let e = a
+      while (e + 1 < pos.length && pos[e + 1].f === pos[a].f) e++
+      const lauf = pos.slice(a, e + 1)
+      if (lauf.length >= 3) {
+        punkte += lauf.reduce((x, p) => x + p.w, 0)
+        if (lauf.some((p) => p.t)) farben.add(pos[a].f!)
+        for (const p of lauf) if (p.joker >= 0) { inGr[p.joker] = true; jokerInGruppe++ }
+      }
+      a = e + 1
+    }
+    for (const p of pos) if (p.joker >= 0 && inGr[p.joker] === undefined) inGr[p.joker] = false
+    bonus = Math.max(bonus, bonusFuer(farben.size))
+  }
+  return { summe: punkte + (mitVielfalt ? bonus : 0), jokerInGruppe, inGr }
+}
+
+function durchprobieren(schlangen: Z[][], mitVielfalt: boolean, rbTraegt = false) {
+  const k = schlangen.flat().filter((x) => x === 'RB' || Array.isArray(x)).length
+  let beste: { summe: number; jig: number; farben: (Fb | null)[] } | null = null
+  const total = 6 ** k
+  for (let n = 0; n < total; n++) {
+    // erste Joker = höchstwertige Stelle -> lexikografische Reihenfolge
+    const bel: Fb[] = []
+    let r = n
+    for (let i = k - 1; i >= 0; i--) { bel[i] = F[r % 6]; r = Math.floor(r / 6) }
+    const b = bewerte(schlangen, bel, mitVielfalt, rbTraegt)
+    if (beste === null || b.summe > beste.summe || (b.summe === beste.summe && b.jokerInGruppe > beste.jig)) {
+      beste = { summe: b.summe, jig: b.jokerInGruppe, farben: bel.map((f, i) => (b.inGr[i] ? f : null)) }
+    }
+  }
+  return beste!
+}
+
+function engine(schlangen: Z[][], mitVielfalt: boolean) {
+  const e = werteSchlangen(schlangen.map(alsSchlange), mitVielfalt)
+  return { summe: e.gruppenPunkte + (e.vielfaltBonus ?? 0), farben: e.schlangen.flatMap((s) => s.joker.map((x) => x.farbe)), e }
+}
+
+function zufall(saat: number) {
+  let s = saat >>> 0
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296 }
+}
+
+function auslage(r: () => number): Z[][] {
+  const n = (m: number) => Math.floor(r() * m)
+  let joker = 0
+  const schlangen: Z[][] = []
+  for (let s = 0; s < 1 + n(2); s++) {
+    const z: Z[] = []
+    const laenge = 1 + n(12)
+    for (let i = 0; i < laenge; i++) {
+      const x = r()
+      if (x < 0.4 && joker < 5) { joker++; z.push(r() < 0.7 ? 'RB' : ['FU', F[n(6)]]) }
+      else if (x < 0.47) z.push('BL')
+      else z.push(F[n(2 + n(5))])
+    }
+    schlangen.push(z)
+  }
+  return schlangen
+}
+
+test('Prüfer E10b: eigener Abgleich gegen Durchprobieren (D32)', () => {
+  const r = zufall(777)
+  let faelle = 0, abweichSumme = 0, abweichFarben = 0, d32relevant = 0
+  const beispiele: string[] = []
+  for (let i = 0; i < 3000; i++) {
+    const a = auslage(r)
+    for (const mv of [true, false]) {
+      const soll = durchprobieren(a, mv)
+      const ist = engine(a, mv)
+      faelle++
+      if (soll.summe !== ist.summe) { abweichSumme++; if (beispiele.length < 5) beispiele.push(`Summe ${JSON.stringify(a)} mv=${mv} soll ${soll.summe} ist ${ist.summe}`) }
+      else if (JSON.stringify(soll.farben) !== JSON.stringify(ist.farben)) { abweichFarben++; if (beispiele.length < 5) beispiele.push(`Farben ${JSON.stringify(a)} mv=${mv} soll ${JSON.stringify(soll.farben)} ist ${JSON.stringify(ist.farben)}`) }
+    }
+    // D32-Relevanz: wie oft hätte die alte Regel (Regenbogen trägt Farbe) eine andere Summe ergeben?
+    if (durchprobieren(a, true, true).summe !== durchprobieren(a, true).summe) d32relevant++
+  }
+  log(JSON.stringify({ faelle, abweichSumme, abweichFarben, beispiele, d32relevant }))
+  expect(abweichSumme).toBe(0)
+  expect(abweichFarben).toBe(0)
+})
+
+test('Prüfer E10b: eigene Handfälle', () => {
+  const fall = (z: Z[][], mv: boolean) => {
+    const x = engine(z, mv)
+    return { summe: x.summe, farben: x.farben, vf: x.e.schlangen.map((s) => s.vielfaltFarben), bonus: x.e.vielfaltBonus, gp: x.e.gruppenPunkte, gr: x.e.schlangen.map((s) => s.gruppen.map((g: any) => `${g.farbe}x${g.kartenIds.length}=${g.punkte}`)) }
+  }
+  const out: Record<string, unknown> = {}
+  // A11 Vielfalt Beispiel 1 und 2
+  out.vb1 = fall([['Rot', 'Rot', 'Rot', 'Violett', 'Violett', 'Violett', 'Braun', 'Braun', 'Braun']], true)
+  out.vb2 = fall([['Blau', 'Blau', 'Blau', 'Rot', 'RB', 'Rot', 'Violett', 'Violett', 'Violett']], true)
+  // A11 Farbgruppen Beispiel 1, 2
+  out.fg1 = fall([['Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Rot']], true)
+  out.fg2 = fall([['Blau', 'Blau', ['FU', 'Blau'], 'Violett', 'Violett']], false)
+  // A7.3 Beispiele
+  out.a73a = fall([['Blau', 'Blau', 'RB']], false)
+  out.a73c = fall([['Rot', 'Rot', 'RB', 'Braun', 'Braun']], false)
+  // D31: RB RB RB -> Gruppe 0 Punkte; RB FU(Grün) RB -> 6 Punkte
+  out.d31a = fall([['RB', 'RB', 'RB']], true)
+  out.d31b = fall([['RB', ['FU', 'Grün'], 'RB']], true)
+  // D30: Violett Violett FU(Grün) -> 10
+  out.d30 = fall([['Violett', 'Violett', ['FU', 'Grün']]], false)
+  // Eigene: drei RB in zweiter Schlange allein + Blau-Gruppe in erster -> Bonus 0
+  out.e1 = fall([['Blau', 'Blau', 'Blau'], ['RB', 'RB', 'RB']], true)
+  // Eigene: RB RB RB BL Rot Rot -> keine Farbe aus RB, Rot nur 2 Karten -> Bonus 0
+  out.e2 = fall([['Rot', 'Rot', 'Rot', 'Gelb', 'Gelb', 'Gelb', 'BL', 'RB', 'RB', 'RB', 'BL', 'Grün', 'Grün']], true)
+  // Eigene: RB RB RB Grün (Farbkarte nach drei RB) -> Grün zählt
+  out.e3 = fall([['Rot', 'Rot', 'Rot', 'BL', 'RB', 'RB', 'RB', 'Grün']], true)
+  // Eigene: vier RB zwischen zwei Blockaden, dazu 4 Farben -> bleibt 4 Farben, Bonus 3
+  out.e4 = fall([['Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Gelb', 'Gelb', 'Gelb', 'Braun', 'Braun', 'Braun', 'BL', 'RB', 'RB', 'RB', 'RB']], true)
+  // Offener Fall: RB FU(Grün) RB als einzige Gruppe neben Blau-Gruppe -> zählt heute (D31) => Bonus 1
+  out.offen = fall([['Blau', 'Blau', 'Blau', 'BL', 'RB', ['FU', 'Grün'], 'RB']], true)
+  log(JSON.stringify(out, null, 1))
+})
+
+test('Prüfer E10b: Laufzeit mit vielen Jokern', () => {
+  // 2 Schlangen à 60 Karten, alle 4 RB + 4 Fusionen, plus 10 Läufe
+  const lang = (s: number): Z[] => Array.from({ length: 60 }, (_, i) => F[Math.floor((i + s) / 3) % 6])
+  const a = lang(0), b = lang(1)
+  ;[3, 4, 5, 30].forEach((p) => (a[p] = 'RB'))
+  ;[10, 20, 40, 50].forEach((p, i) => (b[p] = ['FU', F[i]]))
+  const t0 = performance.now()
+  for (let i = 0; i < 10; i++) engine([a, b], true)
+  const ms = (performance.now() - t0) / 10
+  // 12 Joker (über Material hinaus) als Belastungsprobe
+  const c = lang(2)
+  ;[1, 2, 3, 7, 8, 9, 15, 16, 17, 25, 26, 27].forEach((p) => (c[p] = 'RB'))
+  const t1 = performance.now()
+  engine([c, b], true)
+  const ms2 = performance.now() - t1
+  log(JSON.stringify({ msJeWertung8Joker120Karten: ms.toFixed(2), ms16Joker120Karten: ms2.toFixed(2) }))
+  expect(ms).toBeLessThan(200)
+})

@@ -65,7 +65,7 @@ function SchlangenZeile({ schlange }: { schlange: SchlangenWertung }) {
       {joker === '' ? '' : `; Joker: ${joker}`}
       {schlange.vielfaltBonus === null
         ? ''
-        : `; Farben mit Gruppe: ${schlange.vielfaltFarben.join(', ') || 'keine'}, Vielfalt ${schlange.vielfaltBonus}`}
+        : `; Farben für den Vielfaltbonus: ${schlange.vielfaltFarben.join(', ') || 'keine'}, Vielfalt ${schlange.vielfaltBonus}`}
     </li>
   )
 }

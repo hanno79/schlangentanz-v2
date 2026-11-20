@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
+import { anwendeAktion, deserialisiere, ermittleAktionen, serialisiere } from '../engine'
 import Entwicklertisch from './Entwicklertisch'
 import { starteEntwicklerPartie } from './partie'
 import { findeSzenario, SZENARIEN } from './szenarien'
@@ -142,5 +142,64 @@ describe('E1: Entwicklertisch auf der neuen Aktionsschicht', () => {
     for (const link of links) expect(link).toHaveAttribute('href', '/dev/szenarien')
     expect(screen.getByRole('spinbutton', { name: /Saat/ })).toBeInTheDocument()
     expect(screen.getByRole('combobox', { name: /Erweiterung/ })).toBeInTheDocument()
+  })
+})
+
+describe('K1: Knopf „KI-Schritt“ am Entwicklertisch', () => {
+  const kiKnopf = () => screen.getByRole('button', { name: 'KI-Schritt' })
+  const verlaufseintraege = () => within(screen.getByTestId('verlauf')).getAllByRole('listitem')
+
+  /** Wer am Zug ist, spielt die erste aufgezählte Karte und beendet den Zug. */
+  function zugVonHand() {
+    fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => !text.includes('ZugBeenden'))!))
+    fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => text.includes('ZugBeenden'))!))
+  }
+
+  it('B2: solange der Mensch entscheidet, ist der Knopf gesperrt und sagt warum', () => {
+    oeffne('/dev?seed=1&spieler=2')
+    expect(kiKnopf()).toBeDisabled()
+    expect(screen.getByTestId('ki-schritt-hinweis')).toHaveTextContent('Spieler 1 entscheidet; das ist ein Mensch.')
+  })
+
+  it('K1 Kriterium 4: entscheidet eine KI, spielt ein Klick genau einen Schritt, und zwar eine aufgezählte Aktion', () => {
+    oeffne('/dev?seed=1&spieler=2')
+    zugVonHand()
+    expect(kiKnopf()).toBeEnabled()
+    const vorher = deserialisiere(zustandsText())
+    const schritte = verlaufseintraege().length
+
+    fireEvent.click(kiKnopf())
+
+    expect(verlaufseintraege().length, 'K1: genau ein Eintrag mehr im Verlauf').toBe(schritte + 1)
+    const nachher = zustandsText()
+    const passend = ermittleAktionen(vorher).filter((aktion) => serialisiere(anwendeAktion(vorher, aktion).zustand) === nachher)
+    expect(passend.length, 'K1: der neue Zustand entsteht aus einer aufgezählten Aktion').toBeGreaterThan(0)
+    expect(verlaufseintraege().at(-1)).toHaveTextContent(/^KI-Schritt: /)
+    expect(screen.queryByTestId('fehlermeldung')).toBeNull()
+  })
+
+  it('K1 Kriterium 3: nach „Schritt zurück“ spielt derselbe Klick denselben Schritt', () => {
+    oeffne('/dev?seed=1&spieler=2')
+    zugVonHand()
+    fireEvent.click(kiKnopf())
+    const erster = zustandsText()
+    fireEvent.click(screen.getByRole('button', { name: 'Schritt zurück' }))
+    fireEvent.click(kiKnopf())
+    expect(zustandsText()).toBe(erster)
+  })
+
+  it('K1: nach Spielende ist der Knopf gesperrt', () => {
+    oeffne('/dev?szenario=schlussrunde-2')
+    for (let zug = 0; zug < 2; zug += 1) zugVonHand()
+    expect(kiKnopf()).toBeDisabled()
+    expect(screen.getByTestId('ki-schritt-hinweis')).toHaveTextContent('Die Partie ist beendet.')
+  })
+
+  it('K1: scheitert der KI-Schritt, steht der Grund da und der Zustand bleibt', () => {
+    oeffne('/dev?szenario=alle-orte')
+    const vorher = zustandsText()
+    fireEvent.click(kiKnopf())
+    expect(screen.getByTestId('fehlermeldung')).toHaveTextContent('KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf')
+    expect(zustandsText()).toBe(vorher)
   })
 })

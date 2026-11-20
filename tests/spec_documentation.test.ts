@@ -184,8 +184,27 @@ describe('GAME_SPEC Teil A — Spiegel der Website', () => {
   it('lässt als Reaktion nur den Farbenschutz zu', () => {
     expect(
       fehlende(teil('A'), [
-        'Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren. Eine andere Karte ist als Reaktion nicht erlaubt.',
+        'Der betroffene Spieler kann sofort mit einem Farbenschutz reagieren.',
+        'Eine andere Karte als Farbenschutz ist als Reaktion nicht erlaubt.',
         'Schlangenfrass ist keine Reaktion',
+      ]),
+    ).toEqual([])
+  })
+
+  it('P0.5d: trägt die Entscheidungen D9, D10, D12 und D13 im Wortlaut der Website (13.11.2026)', () => {
+    expect(
+      fehlende(teil('A'), [
+        // D9, D19
+        'Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)',
+        'Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)',
+        // D10
+        'Das gilt für jede Sonderkarte, die ein Mitspieler gegen ihn oder in seine Schlange spielt. Gegen Farbkarten gibt es keine Abwehr.',
+        'Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange',
+        // D12, D13
+        'Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.',
+        'Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges.',
+        // D11 (Verdoppler), Widerspruch zu D23 offen
+        'Im zweiten Zug darfst du keinen weiteren Verdoppler spielen',
       ]),
     ).toEqual([])
   })
@@ -294,6 +313,105 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
     )
     expect(keineFrage).toEqual([])
     expect(fehlende(d, ['Bis zur Antwort bleibt das heutige Verhalten stehen.'])).toEqual([])
+  })
+
+  it('P0.5d: Teil D vermerkt, welche Antworten die Website übernommen hat und welche noch folgen', () => {
+    const antworten = new Map(spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Antwort').map(([nr, antwort]) => [nr, antwort]))
+    for (const nr of ['D9', 'D10', 'D12', 'D13', 'D19']) {
+      expect(antworten.get(nr), `${nr}: Status`).toContain('Website übernommen am 13.11.2026.')
+      expect(antworten.get(nr), `${nr}: Status`).not.toContain('Website folgt')
+    }
+    // A7.8 sagt „keinen weiteren Verdoppler“; was das heisst, präzisiert D23. Die Website soll das nachziehen.
+    for (const nr of ['D11', 'D23']) expect(antworten.get(nr), `${nr}: Status`).toContain('Website folgt.')
+  })
+
+  /** Antwort, Datum und Folge eines Eintrags in Teil D, Leerraum zusammengezogen und klein geschrieben. */
+  function eintragD(nummer: string): { antwort: string; datum: string; folge: string } {
+    const zeile = spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Antwort', 'Datum', 'Folge').find(([nr]) => nr === nummer)
+    expect(zeile, `${nummer} fehlt in Teil D`).toBeDefined()
+    const [, antwort, datum, folge] = zeile as string[]
+    return { antwort: fliesstext(antwort).toLowerCase(), datum, folge }
+  }
+
+  /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+  function pruefeKern(nummer: string, antwort: string, kern: string[], verboten: string[]): void {
+    for (const aussage of kern) expect(antwort, `${nummer} ohne Kernaussage „${aussage}“`).toContain(aussage.toLowerCase())
+    for (const aussage of verboten) expect(antwort, `${nummer} enthält „${aussage}“`).not.toContain(aussage.toLowerCase())
+  }
+
+  it('D30: die Farbenfusion belegt einen Platz der Gruppe und bringt die Summe der Karten darunter (20.11.2026)', () => {
+    const { antwort, datum, folge } = eintragD('D30')
+    pruefeKern(
+      'D30',
+      antwort,
+      [
+        'Die Summe der beiden Karten darunter, nicht der Wert einer Karte der Gruppenfarbe.',
+        'Wortlaut: „Summe darunter“.',
+        '„1. Bei einer Fusion vervollständigen die beiden zusammen gelegten Karten die Dreierreihe.',
+        'Bei der Schlusswertung zählen dann auch die Werte der Farbkarten die unter der Fusion liegen.“',
+        'Die Fusion belegt also einen Platz in der Gruppe und bringt die Summe der Karten darunter.',
+        'Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten',
+        'Website folgt.',
+      ],
+      // Gegenprobe: die andere Lesart (Wert einer Karte der Gruppenfarbe) und falsche Punktzahlen.
+      ['nicht die Summe', 'Der Wert einer Karte der Gruppenfarbe, nicht', 'eine Gruppe mit 0 Punkten', 'mit 10 Punkten'],
+    )
+    expect(datum).toBe('20.11.2026')
+    expect(folge).toContain('E10')
+    // Teil A sagt dasselbe (A7.7, A11); die Antwort ändert Teil A nicht.
+    expect(fehlende(teil('A'), ['Bringt die Punkte beider fusionierter Karten', 'Farbfusionen bringen die Punkte der beiden fusionierten Karten'])).toEqual([])
+  })
+
+  it('D31: drei Joker nebeneinander sind eine Gruppe; Regenbogenschlangen bringen keine Punkte (20.11.2026)', () => {
+    const { antwort } = eintragD('D31')
+    pruefeKern(
+      'D31',
+      antwort,
+      [
+        '„2. Drei Joker nebeneinander zählen zwar als farbreihe aber eine Regenbogenschlange zählt ja nicht für die Wertung.',
+        'Drei Regenbogenschlangen nebeneinander: eine Gruppe mit 0 Punkten',
+        'Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten',
+      ],
+      ['keine Gruppe', 'mit 3 Punkten'],
+    )
+    // D32 schränkt den Vielfaltbonus ein; D31 verweist darauf, damit beide Einträge zusammen gelesen werden.
+    expect(antwort, 'D31 ohne Verweis auf D32').toContain('d32')
+  })
+
+  it('D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus (20.11.2026)', () => {
+    const { antwort, datum, folge } = eintragD('D32')
+    pruefeKern(
+      'D32',
+      antwort,
+      [
+        'Eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus.',
+        'Wortlaut: „Nein. Eine Regenbogenschlange zählt nicht beim Vielfalt Bonus“',
+        'eine Gruppe mit 0 Punkten (D31)',
+        'Rot, Regenbogenschlange, Rot',
+        'Wortlaut: „Zählt als grün.“',
+        'Eine Gruppe aus Regenbogenschlangen und einer Farbenfusion zählt also beim Vielfaltbonus als Farbe.',
+        'Website folgt.',
+      ],
+      // Gegenprobe: die alte Lesart aus D31 und das Gegenteil von D31 (keine Gruppe).
+      ['bringt eine Farbe für den Vielfaltbonus', 'zählt als eigene Farbe', 'keine Gruppe', 'Offen ist'],
+    )
+    expect(datum).toBe('20.11.2026')
+    expect(folge).toContain('E10b')
+  })
+
+  it('D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden; Rückfrage vom 20.11.2026', () => {
+    const { antwort, datum } = eintragD('D23')
+    pruefeKern(
+      'D23',
+      antwort,
+      ['Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel', 'Rückfrage vom 20.11.2026', 'Wortlaut: „Ja, wirkungslos“', 'kein weiterer Verdoppler mit Wirkung'],
+      ['Widerspruch'],
+    )
+    expect(datum).toBe('13.11.2026')
+    // C7 nennt keinen offenen Widerspruch mehr.
+    const c7 = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Website (Teil A)').find(([nr]) => nr === 'C7')
+    expect(c7?.[1], 'C7').not.toContain('Widerspruch')
+    expect(c7?.[1], 'C7').toContain('D23')
   })
 
   it('macht die früheren R-Nummern auffindbar', () => {

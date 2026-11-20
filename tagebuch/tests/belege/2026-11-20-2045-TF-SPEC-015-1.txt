@@ -1,0 +1,59 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a883f2a4912ec8eae
+
+ ❯ tests/website_abgleich.test.ts (12 tests | 2 failed) 2035ms
+     × P0.5d: ein Satz der Website, der nur in Teil D steht, fehlt in Teil A 6ms
+     × P0.5d: Sätze nur vor Teil A oder nur in Teil B gelten ebenfalls nicht als abgedeckt 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/website_abgleich.test.ts > P0.5d: Abdeckung zählt nur Teil A, nicht den Rest der Spec > P0.5d: ein Satz der Website, der nur in Teil D steht, fehlt in Teil A
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "Gegen Farbkarten gibt es keine Abwehr",
+- ]
++ []
+
+ ❯ tests/website_abgleich.test.ts:211:30
+    209|   it('P0.5d: ein Satz der Website, der nur in Teil D steht, fehlt in T…
+    210|     const ergebnis = pruefeAbdeckung(website(['Spiele als Reaktion auf…
+    211|     expect(ergebnis.fehlend).toEqual([satz])
+       |                              ^
+    212|   })
+    213|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/website_abgleich.test.ts > P0.5d: Abdeckung zählt nur Teil A, nicht den Rest der Spec > P0.5d: Sätze nur vor Teil A oder nur in Teil B gelten ebenfalls nicht als abgedeckt
+AssertionError: expected [] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+- [
+-   "Vorspann: Ein Satz, der nur vor Teil A steht.",
+-   "Ein Satz, der nur in Teil B steht.",
+- ]
++ []
+
+ ❯ tests/website_abgleich.test.ts:216:30
+    214|   it('P0.5d: Sätze nur vor Teil A oder nur in Teil B gelten ebenfalls …
+    215|     const ergebnis = pruefeAbdeckung(website(['Vorspann: Ein Satz, der…
+    216|     expect(ergebnis.fehlend).toEqual(['Vorspann: Ein Satz, der nur vor…
+       |                              ^
+    217|   })
+    218|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  20:20:26
+   Duration  3.10s (transform 79ms, setup 288ms, import 469ms, tests 2.04s, environment 0ms)
+
+Gegenprobe 1: scripts/website_abgleich/abgleich.cjs Zeile 61 norm(spec.slice(start, ende)) -> norm(spec); exit 1

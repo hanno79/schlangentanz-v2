@@ -1,0 +1,23 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Geheimnis in echten Partien > Prüfer: in 24 Partien (2-4 Spieler, mit/ohne Erweiterung) nennt weder Sicht noch Aktionsliste eine verborgene Id, und die Sicht teilt keine Objektreferenz mit dem Zustand 3218ms
+stdout | src/ki/pruefer_k1.test.ts > Prüfer K1: Kriterium 2 und 3 mit eigenen Saaten > Prüfer: 200 Partien (2/3/4 Spieler je mit und ohne Erweiterung, Saaten ab 5000) enden alle
+PRUEFER K2: 200 Partien, nicht beendet 0, Schritte min 154 max 181 Mittel 167.1
+
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Geheimnis in echten Partien > Prüfer: eigene Störung des Verborgenen lässt Sicht, Aktionsliste und Wahl der Zufalls-KI gleich 2948ms
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Geheimnis in echten Partien > Prüfer: Sichtbares ändert die Sicht (eigene Hand, fremde Schlange, offene Aufgabe, Comeback, Grube, Phase) 11ms
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Manipulation > Prüfer: eine Aktion aus einer früheren Aufzählung (gleicher Inhalt, alte Abschrift) wird abgelehnt 2ms
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Manipulation > Prüfer: undefined oder eine Zahl als Rückgabe werden abgelehnt 1ms
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Manipulation > Prüfer: verändert die KI Sicht und Aktionen tief, bleibt der Zustand unverändert, und die Aktionen teilen keine Referenz mit dem Zustand 1ms
+stdout | src/ki/pruefer_k1.test.ts > Prüfer K1: Kriterium 2 und 3 mit eigenen Saaten > Prüfer: gleiche Saat gleicher Verlauf, auch zu viert mit Erweiterung und mit Saat 0; andere Saat anderer Verlauf
+PRUEFER K3: Saat 0 Partie 0 163 Schritte, gleich: true
+
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Kriterium 2 und 3 mit eigenen Saaten > Prüfer: 200 Partien (2/3/4 Spieler je mit und ohne Erweiterung, Saaten ab 5000) enden alle 18170ms
+ ✓ src/ki/pruefer_k1.test.ts > Prüfer K1: Kriterium 2 und 3 mit eigenen Saaten > Prüfer: gleiche Saat gleicher Verlauf, auch zu viert mit Erweiterung und mit Saat 0; andere Saat anderer Verlauf 765ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  22:15:24
+   Duration  29.51s (transform 533ms, setup 440ms, import 546ms, tests 25.12s, environment 2.97s)
+

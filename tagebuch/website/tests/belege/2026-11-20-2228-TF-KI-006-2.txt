@@ -1,0 +1,10 @@
+== Umgehung U5: Object.values(zustand) und JSON.parse(JSON.stringify(zustand)).nachziehstapel in schritt.ts
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac99fed0c14727294
+
+
+ Test Files  1 passed (1)
+      Tests  44 passed (44)
+   Start at  22:16:50
+   Duration  2.63s (transform 189ms, setup 277ms, import 618ms, tests 1.46s, environment 0ms)
+

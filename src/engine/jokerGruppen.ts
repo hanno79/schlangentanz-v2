@@ -15,8 +15,9 @@ Jokerfarben beider Schlangen eines Spielers voneinander ab; die Suche läuft
 deshalb über alle Schlangen des Spielers zugleich.
 
 Die Suche ist eine dynamische Programmierung über die Karten: Der Zustand ist die
-laufende Gruppe (Farbe, Länge bis 3, Punkte, solange sie noch keine 3 Karten hat),
-die Farben mit Gruppe in der laufenden Schlange und der höchste Bonus der schon
+laufende Gruppe (Farbe, Länge bis 3, Punkte und ob eine Karte darin ihre Farbe für
+den Vielfaltbonus trägt, beides solange sie noch keine 3 Karten hat), die Farben
+für den Vielfaltbonus in der laufenden Schlange und der höchste Bonus der schon
 fertigen Schlangen. Gleiche Zustände werden nur einmal gerechnet; die Laufzeit
 wächst mit der Kartenzahl, nicht mit 6^Joker.
 
@@ -29,8 +30,12 @@ Reihenfolge Blau, Rot, Gelb, Violett, Braun, Grün, mit der das Beste noch
 erreichbar ist. Die Summe ist in jedem Fall dieselbe; die Wahl legt nur fest, wie
 die Aufschlüsselung aussieht.
 
-Offen (Teil D noch ohne Antwort, Regelfrage G9): Drei Joker nebeneinander gelten
-hier wörtlich nach A11 als drei Karten derselben Farbe und damit als Gruppe.
+Drei Joker nebeneinander gelten als drei Karten derselben Farbe und damit als
+Gruppe (G9 → D31); Regenbogenschlangen bringen darin keine Punkte, eine
+Farbenfusion die Summe der Karten darunter (D30). Eine Gruppe nur aus
+Regenbogenschlangen bringt aber keine Farbe für den Vielfaltbonus (D32). Ob eine
+Gruppe aus Regenbogenschlangen und Farbenfusionen als Farbe zählt, ist offen; bis
+zur Antwort trägt die Farbenfusion ihre Farbe wie eine Farbkarte (D31).
 */
 
 export type Jokerart = 'Regenbogenschlange' | 'Farbenfusion';
@@ -49,7 +54,7 @@ export interface SchlangenWertung {
   gruppen: GewerteteGruppe[];
   gruppenPunkte: number;
   joker: JokerFarbe[];
-  /** Die Farben mit mindestens einer Gruppe in dieser Schlange, in der Reihenfolge von `FARBEN`. */
+  /** Die Farben, die in dieser Schlange für den Vielfaltbonus zählen (D32), in der Reihenfolge von `FARBEN`. */
   vielfaltFarben: Farbe[];
   /** Der Vielfaltbonus dieser Schlange; `null` ohne Erweiterung. */
   vielfaltBonus: number | null;
@@ -73,7 +78,7 @@ export function vielfaltBonusFuer(anzahlFarben: number): number {
 /** Ein Glied der Suche. `farbe` ist ein Index in `FARBEN`. */
 type Glied =
   | { art: 'farbe'; farbe: number; punkte: number }
-  | { art: 'joker'; karteId: string; punkte: number }
+  | { art: 'joker'; karteId: string; punkte: number; traegtFarbe: boolean }
   | { art: 'sperre' }
   | { art: 'schlangenende' };
 
@@ -86,16 +91,23 @@ interface Lage {
   offen: number;
   /** Joker in der laufenden Gruppe, solange sie noch zu kurz ist. */
   offeneJoker: number;
-  /** Farben mit Gruppe in der laufenden Schlange, als Bitmaske. */
+  /** Ob eine Karte der laufenden Gruppe ihre Farbe für den Vielfaltbonus trägt (D32), solange sie noch zu kurz ist. */
+  offenBelegt: boolean;
+  /** Farben für den Vielfaltbonus in der laufenden Schlange, als Bitmaske. */
   farben: number;
   /** Der höchste Vielfaltbonus der schon fertigen Schlangen. */
   bonus: number;
 }
 
-const START: Lage = { farbe: -1, laenge: 0, offen: 0, offeneJoker: 0, farben: 0, bonus: 0 };
+const START: Lage = { farbe: -1, laenge: 0, offen: 0, offeneJoker: 0, offenBelegt: false, farben: 0, bonus: 0 };
 
 function istJoker(karte: Spielkarte): karte is Spielkarte & { typ: 'Sonderkarte'; name: Jokerart } {
   return karte.typ === 'Sonderkarte' && (karte.name === 'Regenbogenschlange' || karte.name === 'Farbenfusion');
+}
+
+/** D32: Eine Regenbogenschlange gibt ihrer Gruppe keine Farbe für den Vielfaltbonus, Farbkarte und Farbenfusion schon. */
+function traegtFarbe(karte: Spielkarte): boolean {
+  return karte.typ === 'Farbkarte' || (istJoker(karte) && karte.name === 'Farbenfusion');
 }
 
 /** A7.3: Die Regenbogenschlange bringt keine Punkte. A7.7: Die Farbenfusion bringt die Punkte der beiden Karten darunter. */
@@ -118,7 +130,7 @@ function zuGliedern(schlangen: readonly Schlange[]): Glied[] {
   return schlangen.flatMap((schlange): Glied[] => [
     ...schlange.karten.map((karte): Glied => {
       if (karte.typ === 'Farbkarte') return { art: 'farbe', farbe: farbIndex(karte.farbe), punkte: karte.punkte };
-      if (istJoker(karte)) return { art: 'joker', karteId: karte.id, punkte: jokerPunkte(schlange, karte) };
+      if (istJoker(karte)) return { art: 'joker', karteId: karte.id, punkte: jokerPunkte(schlange, karte), traegtFarbe: traegtFarbe(karte) };
       return { art: 'sperre' };
     }),
     { art: 'schlangenende' },
@@ -139,19 +151,27 @@ interface Ertrag {
 
 const NICHTS: Ertrag = { punkte: 0, joker: 0 };
 
-/** Legt eine Karte der Farbe `farbe` an die laufende Gruppe. */
-function lege(lage: Lage, farbe: number, punkte: number, joker: number, mitVielfalt: boolean): [Lage, Ertrag] {
-  if (farbe !== lage.farbe) return [{ ...lage, farbe, laenge: 1, offen: punkte, offeneJoker: joker }, NICHTS];
-  if (lage.laenge >= MINDEST_FARBGRUPPEN_LAENGE) return [lage, { punkte, joker }];
+/**
+ * Legt eine Karte der Farbe `farbe` an die laufende Gruppe. Die Farbe zählt für den Vielfaltbonus, sobald die Gruppe
+ * 3 Karten hat und eine davon ihre Farbe trägt (D32), auch wenn diese erst nach dem dritten Joker kommt.
+ */
+function lege(lage: Lage, farbe: number, punkte: number, joker: number, traegt: boolean, mitVielfalt: boolean): [Lage, Ertrag] {
+  if (farbe !== lage.farbe) return [{ ...lage, farbe, laenge: 1, offen: punkte, offeneJoker: joker, offenBelegt: traegt }, NICHTS];
+  const mitFarbe = (belegt: boolean): number => (mitVielfalt && belegt ? lage.farben | (1 << farbe) : lage.farben);
+  if (lage.laenge >= MINDEST_FARBGRUPPEN_LAENGE) {
+    const farben = mitFarbe(traegt);
+    return [farben === lage.farben ? lage : { ...lage, farben }, { punkte, joker }];
+  }
   const offen = lage.offen + punkte;
   const offeneJoker = lage.offeneJoker + joker;
-  if (lage.laenge + 1 < MINDEST_FARBGRUPPEN_LAENGE) return [{ ...lage, laenge: lage.laenge + 1, offen, offeneJoker }, NICHTS];
-  const farben = mitVielfalt ? lage.farben | (1 << farbe) : 0;
-  return [{ ...lage, laenge: MINDEST_FARBGRUPPEN_LAENGE, offen: 0, offeneJoker: 0, farben }, { punkte: offen, joker: offeneJoker }];
+  const offenBelegt = lage.offenBelegt || traegt;
+  if (lage.laenge + 1 < MINDEST_FARBGRUPPEN_LAENGE) return [{ ...lage, laenge: lage.laenge + 1, offen, offeneJoker, offenBelegt }, NICHTS];
+  const fertig = { ...lage, laenge: MINDEST_FARBGRUPPEN_LAENGE, offen: 0, offeneJoker: 0, offenBelegt: false, farben: mitFarbe(offenBelegt) };
+  return [fertig, { punkte: offen, joker: offeneJoker }];
 }
 
 function unterbreche(lage: Lage): Lage {
-  return { ...lage, farbe: -1, laenge: 0, offen: 0, offeneJoker: 0 };
+  return { ...lage, farbe: -1, laenge: 0, offen: 0, offeneJoker: 0, offenBelegt: false };
 }
 
 function beendeSchlange(lage: Lage, mitVielfalt: boolean): Lage {
@@ -171,7 +191,7 @@ function waehleJokerfarben(glieder: readonly Glied[], mitVielfalt: boolean): Map
   /** Packt die Lage eindeutig in eine Zahl; jeder Faktor ist die Zahl möglicher Werte des folgenden Feldes. */
   function schluessel(stelle: number, lage: Lage): number {
     const lauf = ((stelle * (FARBEN.length + 1) + lage.farbe + 1) * (MINDEST_FARBGRUPPEN_LAENGE + 1) + lage.laenge) * MINDEST_FARBGRUPPEN_LAENGE;
-    const offen = (lauf + lage.offeneJoker) * OFFEN_SCHRANKE + lage.offen;
+    const offen = ((lauf + lage.offeneJoker) * OFFEN_SCHRANKE + lage.offen) * 2 + Number(lage.offenBelegt);
     return (offen * (1 << FARBEN.length) + lage.farben) * (HOECHSTER_VIELFALTBONUS + 1) + lage.bonus;
   }
 
@@ -183,12 +203,12 @@ function waehleJokerfarben(glieder: readonly Glied[], mitVielfalt: boolean): Map
     const glied = glieder[stelle];
     switch (glied.art) {
       case 'farbe': {
-        const [neu, ertrag] = lege(lage, glied.farbe, glied.punkte, 0, mitVielfalt);
+        const [neu, ertrag] = lege(lage, glied.farbe, glied.punkte, 0, true, mitVielfalt);
         return [{ farbe: glied.farbe, lage: neu, gewinn: wert(ertrag) }];
       }
       case 'joker':
         return FARBEN.map((_, farbe) => {
-          const [neu, ertrag] = lege(lage, farbe, glied.punkte, 1, mitVielfalt);
+          const [neu, ertrag] = lege(lage, farbe, glied.punkte, 1, glied.traegtFarbe, mitVielfalt);
           return { farbe, lage: neu, gewinn: wert(ertrag) };
         });
       case 'sperre':
@@ -243,7 +263,10 @@ function werteSchlange(schlange: Schlange, jokerfarben: ReadonlyMap<string, Farb
     art: karte.name,
     farbe: inGruppe.has(karte.id) ? (jokerfarben.get(karte.id) ?? null) : null,
   }));
-  const vielfaltFarben = FARBEN.filter((farbe) => gruppen.some((gruppe) => gruppe.farbe === farbe));
+  const farbtraeger = new Set(schlange.karten.filter(traegtFarbe).map((karte) => karte.id));
+  const vielfaltFarben = FARBEN.filter((farbe) =>
+    gruppen.some((gruppe) => gruppe.farbe === farbe && gruppe.kartenIds.some((id) => farbtraeger.has(id))),
+  );
   return {
     schlangenId: schlange.id,
     gruppen,
