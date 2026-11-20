@@ -1,0 +1,3 @@
+O3b KartenAbgeworfen in umgekehrter Reihenfolge (alle Zugablauf-Tests): exit 1; Tests  1 failed | 131 passed (132); erster roter: FAIL  src/engine/__tests__/zugablauf_nachziehen.test.ts > A5: mehr als 5 Handkarten am Zugende > A5: der Spieler wählt, welche überzähligen Karten auf seinen Ablagestapel gehen; danach ist der Nächste dran
+O9 KarteGespielt mit falscher Aktion (alle Zugablauf-Tests): exit 1; Tests  3 failed | 101 passed (104); erster roter: FAIL  src/engine/__tests__/zugablauf_ausspielen.test.ts > A5: Farbkarte legen und Schlangen > A5: eine Farbkarte, separat gelegt, beginnt eine neue eigene Schlange
+git status danach: (leer)

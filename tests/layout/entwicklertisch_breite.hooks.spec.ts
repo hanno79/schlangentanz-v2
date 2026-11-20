@@ -21,6 +21,8 @@ const ADRESSEN = [
   '/dev?szenario=wertung-beispiele',
   '/dev?szenario=wertung-beispiele-kette',
   '/dev?szenario=wertung-joker',
+  '/dev?szenario=nur-sonderkarten',
+  '/dev?szenario=aussetzen',
 ]
 
 /**

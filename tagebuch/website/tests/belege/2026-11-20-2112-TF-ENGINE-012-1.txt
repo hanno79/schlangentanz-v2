@@ -1,0 +1,13 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac3a1dab53b956c56
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer-Dauerlauf: 300 Partien, Saaten 1001–1300
+PRUEFER-DAUERLAUF: 300 von 300 beendet, Spielerzahlen {"2":100,"3":100,"4":100}, Schritte gesamt 50138, Befunde 0 []
+
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer-Dauerlauf: 300 Partien, Saaten 1001–1300 19418ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  21:01:31
+   Duration  22.66s (transform 340ms, setup 284ms, import 337ms, tests 19.42s, environment 2.31s)
+

@@ -1,0 +1,15 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac3a1dab53b956c56
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > P6: Ausgesetzt nennt Grube und Ablagestapel
+P6 Gruben vorher [{"karte":"schlangengrube-01","vor":1,"gespieltVon":2},{"karte":"schlangengrube-02","vor":1,"gespieltVon":0}]
+P6 Ereignisse [{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"Ausgesetzt","spielerIndex":1,"karteId":"schlangengrube-01","ablagestapelVon":2},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1}]
+P6 Ablagestapel [[],[],["schlangengrube-01"]] Gruben danach ["schlangengrube-02"]
+
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > P6: Ausgesetzt nennt Grube und Ablagestapel 16ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  21:01:19
+   Duration  3.28s (transform 344ms, setup 284ms, import 343ms, tests 18ms, environment 2.34s)
+

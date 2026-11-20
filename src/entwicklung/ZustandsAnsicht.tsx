@@ -1,5 +1,6 @@
 import { ermittleEntscheider, istAuslagekarte } from '../engine'
 import type { AufgabenkarteInfo, Auslagekarte, Schlange, Spieler, Spielzustand } from '../engine'
+import { name } from './namen'
 import { Karte, Kartenreihe } from './Karte'
 import { WertungsAnsicht } from './WertungsAnsicht'
 
@@ -26,12 +27,6 @@ function json(wert: unknown): string {
   return JSON.stringify(wert)
 }
 
-function name(zustand: Spielzustand, index: number | null): string {
-  if (index === null) return 'niemand'
-  const spieler = zustand.spieler[index]
-  return spieler === undefined ? `unbekannter Spieler ${index}` : `${spieler.name} (${spieler.id})`
-}
-
 function Kopf({ zustand }: { zustand: Spielzustand }) {
   const { zug } = zustand
   return (
@@ -44,10 +39,16 @@ function Kopf({ zustand }: { zustand: Spielzustand }) {
         <dd data-testid="partiephase">{zustand.partiephase}</dd>
         <dt>Am Zug</dt>
         <dd data-testid="zug">
-          {name(zustand, zug.spielerIndex)}, Teilzug {zug.teilzug}, {zug.abschnitt}; gespielt: {zug.gespielteFarbkarten}{' '}
-          Farbkarte(n), {zug.gespielteSonderkarten} Sonderkarte(n)
-          {zug.verdopplerGespielt ? ', Verdoppler' : ''}
-          {zug.farbenfusionGespielt ? ', Farbenfusion' : ''}
+          {zustand.partiephase === 'Beendet' ? (
+            'niemand, die Partie ist beendet (A10)'
+          ) : (
+            <>
+              {name(zustand, zug.spielerIndex)}, Teilzug {zug.teilzug}, {zug.abschnitt}; gespielt: {zug.gespielteFarbkarten}{' '}
+              Farbkarte(n), {zug.gespielteSonderkarten} Sonderkarte(n)
+              {zug.verdopplerGespielt ? ', Verdoppler' : ''}
+              {zug.farbenfusionGespielt ? ', Farbenfusion' : ''}
+            </>
+          )}
         </dd>
         <dt>Entscheidet</dt>
         <dd data-testid="entscheider">{name(zustand, ermittleEntscheider(zustand))}</dd>
