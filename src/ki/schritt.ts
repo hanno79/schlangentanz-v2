@@ -1,22 +1,19 @@
 import { ermittleAktionen } from '../engine';
 import type { SpielAktion, Spielzustand } from '../engine';
 import { entscheiderVon, sichtFuer } from './sicht';
-import type { Entscheider, Sicht } from './sicht';
+import type { Entscheider } from './sicht';
+import type { Ki } from './strategien/strategie';
+
+export type { Ki };
 
 /*
 Die Schnittstelle zwischen Engine und KI (Plan K1): Zustand hinein, ein
-Schritt heraus. Eine KI sieht nur die Sicht ihres Spielers (U5) und wählt aus
-den Aktionen, die die Engine aufzählt (U3). Sie bekommt Abschriften; gespielt
+Schritt heraus. Eine KI (eine Strategie unter `strategien/`) sieht nur die
+Sicht ihres Spielers (U5) und wählt aus den Aktionen, die die Engine aufzählt
+(U3). Sie bekommt Abschriften; gespielt
 wird immer die Aktion der Engine an der gewählten Stelle, damit eine KI weder
 eine eigene Aktion noch eine veränderte durchbringt.
 */
-
-export interface Ki {
-  /** Für Meldungen und das Turnier. */
-  name: string;
-  /** Wählt genau eine der angebotenen Aktionen und gibt sie zurück; `aktionen` ist nie leer. */
-  waehle(sicht: Sicht, aktionen: readonly SpielAktion[]): SpielAktion;
-}
 
 /** Lässt `ki` für `entscheider` wählen, den Spieler, der gerade entscheidet (`entscheiderVon`). */
 export function waehleFuer(zustand: Spielzustand, entscheider: Entscheider, ki: Ki): SpielAktion {

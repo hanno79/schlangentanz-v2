@@ -1,4 +1,4 @@
-import type { Ki } from './schritt';
+import type { Ki } from './strategie';
 
 /**
  * Die Zufalls-KI (Plan K1): wählt gleichverteilt eine der angebotenen Aktionen.

@@ -4,6 +4,8 @@
 // Zustand ist oder enthält; er darf nur unverändert weitergereicht werden. Dazu darf
 // kein KI-Code, auch sicht.ts nicht, globale Objekte verändern: Eine KI, die etwa
 // `structuredClone` ersetzt, bekäme beim nächsten Zug der Engine den vollen Zustand.
+// Strategien unter src/ki/strategien sehen nur die Sicht: Sie erwähnen den vollen
+// Zustand nicht einmal als Typ und importieren nur aus einer Positivliste.
 
 import { join } from 'node:path'
 import ts from 'typescript'
@@ -22,45 +24,21 @@ import {
   zugriff,
   type Verstoss,
 } from './architektur_pruefung'
+import { ausBibliothek, zustandstypen } from './architektur_ki_typen'
+import {
+  ERLAUBTE_ENGINE_EMPFAENGER,
+  GEERBT_VON_OBJECT,
+  POSITIVLISTE_ENGINE_FUER_STRATEGIEN,
+  POSITIVLISTE_GLOBALE,
+  PROTOTYP_SCHLUESSEL,
+  VERBOTEN_AN_OBJECT,
+  ZUFALL_UND_ZEIT,
+} from './architektur_ki_listen'
 
 /** Die einzige Datei, die den vollen Zustand lesen darf. */
 const SICHT_DATEI = 'src/ki/sicht.ts'
-
-/**
- * Engine-Funktionen, denen KI-Code den vollen Zustand geben darf. Was sie
- * zurückgeben, ist nicht der Zustand selbst; `serialisiere` etwa fehlt mit Absicht.
- */
-export const ERLAUBTE_ENGINE_EMPFAENGER = new Set([
-  'anwendeAktion',
-  'berechneEndwertung',
-  'ermittleAktionen',
-  'ermittleEntscheider',
-  'pruefeAktion',
-  'pruefeInvarianten',
-])
-
-/** Globale Werte, mit denen KI-Code Text als Code ausführt oder Objekte beliebig umbaut. */
-const VERBOTENE_GLOBALE = new Set(['eval', 'Function', 'Reflect'])
-/** Funktionen von `Object`, die Eigenschaften oder Prototypen anderer Objekte ändern oder herausgeben. */
-const VERBOTEN_AN_OBJECT = new Set([
-  'defineProperty',
-  'defineProperties',
-  'getOwnPropertyDescriptor',
-  'getOwnPropertyDescriptors',
-  'getPrototypeOf',
-  'setPrototypeOf',
-])
-/** Schlüssel, über die man an den Prototyp eingebauter Objekte kommt. */
-const PROTOTYP_SCHLUESSEL = new Set(['prototype', '__proto__', 'constructor'])
-/** Von Object.prototype geerbt; `globalThis.valueOf()` etwa gibt das globale Objekt ohne seinen Namen heraus. */
-const GEERBT_VON_OBJECT = new Set(['valueOf', 'toString', 'toLocaleString', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable'])
-/** U4 nach Typ: Zufall und Zeit als Mitglied einer Schnittstelle der Bibliothek; Zeitquellen als globale Variable stehen in ZEIT. */
-const ZUFALL_UND_ZEIT: Record<string, Set<string> | 'alle'> = {
-  Math: new Set(['random']),
-  Crypto: new Set(['getRandomValues', 'randomUUID']),
-  DateConstructor: 'alle',
-  Performance: 'alle',
-}
+/** Strategien: sehen nur die Sicht; alles andere unter src/ki ist Rahmen. */
+const STRATEGIEN = 'src/ki/strategien/'
 
 function inTypposition(knoten: ts.Node): boolean {
   for (let eltern = knoten.parent; eltern; eltern = eltern.parent) if (ts.isTypeNode(eltern)) return true
@@ -74,6 +52,16 @@ function istWertausdruck(knoten: ts.Node): knoten is ts.Expression {
   if (ts.isImportDeclaration(knoten.parent) || ts.isExportDeclaration(knoten.parent)) return false
   if (ts.isIdentifier(knoten) && !istFreierWert(knoten)) return false
   return !inTypposition(knoten)
+}
+
+/** Die Namen der Werte, die ein Import holt; `*` für einen Namensraum, `default` für den Standardexport. */
+function importierteWerte(klausel: ts.ImportClause | undefined): string[] {
+  if (klausel === undefined) return ['*']
+  const gebunden = klausel.namedBindings
+  const benannt = gebunden && ts.isNamedImports(gebunden)
+    ? gebunden.elements.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text)
+    : gebunden ? ['*'] : []
+  return klausel.name ? ['default', ...benannt] : benannt
 }
 
 /** Die Funktion hinter einem Namen, der sich nicht umhängen lässt: `function f` oder `const f = (…) => …`. */
@@ -94,8 +82,10 @@ function festeFunktion(symbol: ts.Symbol | undefined): { funktion: ts.FunctionLi
  * darf man öffnen. Alles andere ist ein Verstoss.
  * In allen `dateien`, auch in sicht.ts: keine Casts ausser `as const`, keine
  * Ausdrücke vom Typ `any`, kein `arguments`, denn die Prüfung glaubt den Typen; keine
- * Änderung globaler Objekte (H1) und U4 nach Typ, damit etwa
- * `(Math.valueOf() as Math).random()` nicht durchrutscht.
+ * Änderung globaler Objekte (H1), nur globale Werte aus POSITIVLISTE_GLOBALE, Werte nur
+ * aus src/engine/index.ts und aus `dateien` importiert, U4 nach Typ.
+ * Unter src/ki/strategien zudem: kein Name, dessen Typ den vollen Zustand erwähnt, und
+ * Importe nur aus sicht.ts, anderen Strategien und POSITIVLISTE_ENGINE_FUER_STRATEGIEN.
  */
 export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[] {
   if (dateien.length === 0) return []
@@ -110,59 +100,8 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     return gefunden && gefunden.flags & ts.SymbolFlags.Alias ? pruefer.getAliasedSymbol(gefunden) : gefunden
   }
 
-  const istZustandsdeklaration = (deklaration: ts.Node | undefined): boolean =>
-    deklaration !== undefined &&
-    (ts.isInterfaceDeclaration(deklaration) || ts.isTypeAliasDeclaration(deklaration)) &&
-    deklaration.name.text === VOLLER_ZUSTAND_TYP &&
-    zuPosix(deklaration.getSourceFile().fileName).startsWith(engineOrdner)
-  /**
-   * Der volle Zustand beim Namen oder abgeleitet: `Readonly<Spielzustand>` und
-   * `Pick<Spielzustand, …>` tragen Felder, die in Spielzustand deklariert sind.
-   */
-  const istVollerZustand = (geprueft: ts.Type): boolean => {
-    if (geprueft.isUnionOrIntersection()) return geprueft.types.some(istVollerZustand)
-    if (geprueft.flags & ts.TypeFlags.TypeParameter) {
-      const grenze = pruefer.getBaseConstraintOfType(geprueft)
-      return grenze !== undefined && grenze !== geprueft && istVollerZustand(grenze)
-    }
-    const symbol = geprueft.aliasSymbol ?? geprueft.getSymbol()
-    if (symbol?.name === VOLLER_ZUSTAND_TYP && (symbol.declarations ?? []).some(istZustandsdeklaration)) return true
-    if (!(geprueft.flags & ts.TypeFlags.Object)) return false
-    return pruefer.getPropertiesOfType(geprueft).some((feld) => (feld.declarations ?? []).some((d) => istZustandsdeklaration(d.parent)))
-  }
-  /** Ob ein Symbol nur in Bibliotheksdateien (lib.*.d.ts, @types) deklariert ist. */
-  const ausBibliothek = (symbol: ts.Symbol | undefined): boolean => {
-    const deklarationen = symbol?.declarations ?? []
-    return deklarationen.length > 0 && deklarationen.every((d) => zuPosix(d.getSourceFile().fileName).includes('/node_modules/'))
-  }
-  const gemerkt = new Map<ts.Type, boolean>()
-  /** Ob ein Wert dieses Typs den vollen Zustand ist oder in einer Eigenschaft, einem Element enthält. */
-  const traegtZustand = (geprueft: ts.Type): boolean => {
-    const bekannt = gemerkt.get(geprueft)
-    if (bekannt !== undefined) return bekannt
-    const besucht = new Set<ts.Type>()
-    const suche = (teil: ts.Type): boolean => {
-      if (istVollerZustand(teil)) return true
-      if (besucht.has(teil)) return false
-      besucht.add(teil)
-      if (teil.isUnionOrIntersection()) return teil.types.some(suche)
-      if (pruefer.isArrayType(teil) || pruefer.isTupleType(teil)) return pruefer.getTypeArguments(teil as ts.TypeReference).some(suche)
-      if (!(teil.flags & ts.TypeFlags.Object)) return false
-      // Schnittstellen und Klassen der Bibliothek (DOM, Map …) enthalten den Zustand höchstens über ihre Typargumente.
-      const symbol = teil.getSymbol()
-      if (symbol && symbol.flags & (ts.SymbolFlags.Interface | ts.SymbolFlags.Class) && ausBibliothek(symbol)) {
-        const referenz = (teil as ts.ObjectType).objectFlags & ts.ObjectFlags.Reference
-        return referenz !== 0 && pruefer.getTypeArguments(teil as ts.TypeReference).some(suche)
-      }
-      return (
-        pruefer.getPropertiesOfType(teil).some((eigenschaft) => suche(pruefer.getTypeOfSymbol(eigenschaft))) ||
-        pruefer.getIndexInfosOfType(teil).some((index) => suche(index.type))
-      )
-    }
-    const ergebnis = suche(geprueft)
-    gemerkt.set(geprueft, ergebnis)
-    return ergebnis
-  }
+  const { istVollerZustand, traegtZustand, erwaehntZustand } = zustandstypen(pruefer, engineOrdner)
+  const engineEinstieg = zuPosix(join(wurzel, 'src', 'engine', 'index.ts'))
 
   /**
    * Ob ein Wert vom Typ `quelle` in einen Platz vom Typ `ziel` darf: der Zustand nur
@@ -305,6 +244,44 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
     }
 
+    /**
+     * Importe (Prüfung P0.3d, Mangel 3): Werte nur aus src/engine/index.ts und aus `dateien`,
+     * Typen im Rahmen frei; Strategien nur aus sicht.ts, Strategien und der Positivliste.
+     */
+    const pruefeImport = (knoten: ts.Node) => {
+      if (ts.isCallExpression(knoten) && knoten.expression.kind === ts.SyntaxKind.ImportKeyword) return melde(knoten, 'importiert mit import(); unter src/ki nur statisch')
+      if (!(ts.isImportDeclaration(knoten) || ts.isExportDeclaration(knoten)) || !knoten.moduleSpecifier) return
+      const ziel = pruefer.getSymbolAtLocation(knoten.moduleSpecifier)?.declarations?.find(ts.isSourceFile)
+      const zielpfad = ziel ? zuPosix(ziel.fileName) : `nicht aufgelöst: ${knoten.moduleSpecifier.getText()}`
+      const namen = ts.isImportDeclaration(knoten)
+        ? (knoten.importClause?.isTypeOnly ? [] : importierteWerte(knoten.importClause))
+        : knoten.isTypeOnly ? [] : knoten.exportClause && ts.isNamedExports(knoten.exportClause)
+          ? knoten.exportClause.elements.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text) : ['*']
+      const ausEngine = zielpfad === engineEinstieg
+      if (datei.startsWith(STRATEGIEN)) {
+        const erlaubtesZiel = ausEngine || zielpfad === zuPosix(join(wurzel, SICHT_DATEI)) || (kiPfade.has(zielpfad) && zielpfad.includes(`/${STRATEGIEN}`))
+        if (!erlaubtesZiel) return melde(knoten, `Strategie importiert aus ${knoten.moduleSpecifier.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
+        const fremd = ausEngine ? namen.filter((name) => !POSITIVLISTE_ENGINE_FUER_STRATEGIEN.has(name)) : []
+        if (fremd.length > 0) melde(knoten, `Strategie importiert ${fremd.join(', ')} aus der Engine; nicht auf POSITIVLISTE_ENGINE_FUER_STRATEGIEN`)
+        return
+      }
+      if (namen.length > 0 && !ausEngine && !kiPfade.has(zielpfad)) {
+        melde(knoten, `importiert Werte aus ${knoten.moduleSpecifier.getText()}; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki`)
+      }
+    }
+
+    /** Strategien erwähnen den vollen Zustand nicht, auch nicht über einen Typ, der ihn enthält oder nimmt. */
+    const pruefeStrategie = (knoten: ts.Node) => {
+      if (!ts.isIdentifier(knoten)) return
+      const symbol = symbolVon(knoten)
+      if (symbol === undefined) return
+      const typen = [
+        ...(symbol.flags & (ts.SymbolFlags.Type | ts.SymbolFlags.TypeParameter) ? [pruefer.getDeclaredTypeOfSymbol(symbol)] : []),
+        ...(symbol.flags & ts.SymbolFlags.Value ? [pruefer.getTypeOfSymbolAtLocation(symbol, knoten)] : []),
+      ]
+      if (typen.some(erwaehntZustand)) melde(knoten, `Strategie erwähnt ${VOLLER_ZUSTAND_TYP}: ${knoten.text}`)
+    }
+
     /** H1: kein Weg zu einem Prototyp; globale Objekte nur aufrufen oder an ihnen lesen, nie weitergeben. */
     const pruefeGlobales = (knoten: ts.Node) => {
       const schluessel = ts.isPropertyAccessExpression(knoten) || ts.isElementAccessExpression(knoten) ? schluesselVon(knoten) : schluesselImMuster(knoten)
@@ -312,8 +289,9 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       else if (schluessel?.some((wert) => PROTOTYP_SCHLUESSEL.has(wert))) melde(knoten, `greift auf ${knoten.getText()} zu`)
       const name = globalerWert(knoten) ?? globalesMitglied(knoten)
       if (name === null || geschrieben.has(knoten)) return
-      if (VERBOTENE_GLOBALE.has(name)) return melde(knoten, `nutzt ${name}`)
-      if (!(typ(knoten).flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive))) return
+      if (ts.isIdentifier(knoten) && !POSITIVLISTE_GLOBALE.has(name)) return melde(knoten, `nutzt das globale ${name}; unter src/ki gilt POSITIVLISTE_GLOBALE`)
+      const wert = typ(knoten)
+      if (!wert.isUnionOrIntersection() && !(wert.flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive))) return
       const aussen = aeusserer(knoten)
       const eltern = aussen.parent
       if ((ts.isPropertyAccessExpression(eltern) || ts.isElementAccessExpression(eltern)) && eltern.expression === aussen) {
@@ -353,6 +331,8 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       pruefeGlobales(knoten)
       pruefeZufallUndZeit(knoten)
       pruefeTypen(knoten)
+      pruefeImport(knoten)
+      if (datei.startsWith(STRATEGIEN)) pruefeStrategie(knoten)
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })
   }

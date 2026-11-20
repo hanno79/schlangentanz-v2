@@ -5,7 +5,7 @@ import { baukasten } from '../engine/testing/szenario'
 import type { Ki } from './schritt'
 import { sitzordnung, spielePartie, turnier } from './turnier'
 import type { Teilnehmer, TurnierErgebnis } from './turnier'
-import { erstelleZufallsKi } from './zufallsKi'
+import { erstelleZufallsKi } from './strategien/zufallsKi'
 
 const ZUFALL: Teilnehmer = { name: 'Zufalls-KI', erstelle: erstelleZufallsKi }
 const zufallsTeilnehmer = (anzahl: number): Teilnehmer[] => Array.from({ length: anzahl }, (_, index) => ({ ...ZUFALL, name: `Zufall ${index + 1}` }))

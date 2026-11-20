@@ -4,7 +4,8 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import ts from 'typescript'
 import { beschreibe, engineExporte, type Verstoss } from './architektur_pruefung'
-import { ERLAUBTE_ENGINE_EMPFAENGER, pruefeSichtZugriff } from './architektur_ki_pruefung'
+import { ERLAUBTE_ENGINE_EMPFAENGER, POSITIVLISTE_ENGINE_FUER_STRATEGIEN } from './architektur_ki_listen'
+import { pruefeSichtZugriff } from './architektur_ki_pruefung'
 import { parse } from '../scripts/pruefung/quelldateien.mjs'
 import { WURZEL, legeAn, raeumeAuf } from './probebaum'
 
@@ -282,6 +283,12 @@ describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
     const exporte = engineExporte(WURZEL)
 
     expect([...ERLAUBTE_ENGINE_EMPFAENGER].filter((name) => !exporte.has(name)), 'U5: aus ERLAUBTE_ENGINE_EMPFAENGER löschen oder exportieren').toEqual([])
+  })
+
+  it('P0.3d: jeder Wert der Positivliste für Strategien ist ein Export von src/engine/index.ts', () => {
+    const exporte = engineExporte(WURZEL)
+
+    expect([...POSITIVLISTE_ENGINE_FUER_STRATEGIEN].filter((name) => !exporte.has(name)), 'U5: aus POSITIVLISTE_ENGINE_FUER_STRATEGIEN löschen').toEqual([])
   })
 
   // H5: erzeugeZufall liegt unter src/engine/testing, gehört aber zur Schnittstelle (Turnier, Entwicklertisch).

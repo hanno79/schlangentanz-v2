@@ -183,7 +183,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 | U2 | Keine Regel im Code, die nicht in Teil A, B oder D steht. Bei einer Lücke: anhalten, Frage in Teil D. | Prüfer, Codex |
 | U3 | Die Oberfläche enthält keine Regellogik. `src/ui/**` und `src/ki/**` importieren die Engine nur über `src/engine/index.ts`. Die Oberfläche filtert aufgezählte Aktionen und baut nie selbst eine. | Architekturtest |
 | U4 | Die Engine ist rein: kein React, kein DOM, kein `Math.random`, kein `Date`. Zufall kommt als Parameter. | Architekturtest |
-| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. KI-Code ausserhalb von `sicht.ts` gilt als nicht vertrauenswürdig (P0.3d): Er reicht den vollen Zustand nur unverändert an die Sicht, an eigene Funktionen oder an freigegebene Engine-Funktionen weiter. Kein KI-Code, auch `sicht.ts` nicht, castet (ausser `as const`) oder verändert globale Objekte. Unter `src/ki` gilt auch U4. | Architekturtest, Test K2.7 |
+| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. Den vollen Zustand hält allein der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`); er reicht ihn nur unverändert an die Sicht, an eigene Funktionen oder an freigegebene Engine-Funktionen weiter. Jede andere Datei ist eine **Strategie** unter `src/ki/strategien/`, gilt als nicht vertrauenswürdig und bekommt nur Sicht, Aktionen und Zufall: Sie erwähnt den vollen Zustand nicht, auch nicht als Typ oder über einen Typ, der ihn enthält oder nimmt, und importiert nur aus `sicht.ts`, aus anderen Strategien und aus einer Positivliste von Engine-Exporten ohne Zustandsbezug (P0.3d). Für allen Code unter `src/ki` gilt: kein Cast ausser `as const`, kein `any`, kein `arguments`, kein Zugriff mit einem Schlüssel vom Typ `string` (dafür `Map` oder Literaltypen), keine Prototyp-Schlüssel, `Object.assign` nur in ein neues `{ … }`, keine Änderung globaler Objekte, nur globale Werte aus einer Positivliste (`Math` ohne `random`, `JSON`, `Array`, `Object`, `Map`, `Set`, `Number`, `String`, `Error`, `structuredClone` …), Werte nur aus `src/engine/index.ts` und geprüften Dateien unter `src/ki` importiert, kein `import()`. Eine Hilfsfunktion des Rahmens gibt weder einen Zustand noch ein `AktionsErgebnis` zurück. Unter `src/ki` gilt auch U4. Die Listen stehen in `tests/architektur_ki_listen.ts`. | Architekturtest, Test K2.7 |
 | U6 | Kein `any`, kein `@ts-ignore`, kein `eslint-disable` ohne Begründung in derselben Zeile, kein `it.skip`, `it.only`, `describe.skip`. | `check:regeln` |
 | U7 | Testdateien höchstens 499 Zeilen; neue Dateien in `src/ui` und `src/ki` höchstens 300 Zeilen. | `check:test-lines`, `check:regeln` |
 | U8 | Layout wird gemessen (Playwright, `tests/layout/messung.ts`), nie im CSS-Quelltext gelesen. | `check:css-asserts` |
@@ -696,14 +696,20 @@ daneben.
 ## 6. Phase 3 — KI (Teil von M2, Erweiterung in M3)
 
 Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
+Aufbau nach U5 (P0.3d): Der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`)
+hält den vollen Zustand, ruft `sichtFuer` und gibt der Strategie nur Sicht,
+Aktionen und Zufall. **Strategien** liegen unter `src/ki/strategien/` und
+implementieren `Ki` aus `src/ki/strategien/strategie.ts`.
 
 ### K1 Schnittstelle, Sicht und Zufalls-KI
 
 - **Hängt ab von:** E2.
 - **Dateien:** `src/ki/sicht.ts` (einzige Datei mit Zugriff auf den vollen
   Zustand), `src/ki/schritt.ts` (`naechsterKiSchritt(zustand)`: liefert genau
-  eine Aktion oder nichts, wenn ein Mensch entscheidet), `src/ki/zufallsKi.ts`,
-  `src/ki/turnier.ts` (N Partien mit Saat, Sitz rotierend).
+  eine Aktion oder nichts, wenn ein Mensch entscheidet), `src/ki/turnier.ts`
+  (N Partien mit Saat, Sitz rotierend); seit P0.3d die Strategien
+  `src/ki/strategien/strategie.ts` (Schnittstelle `Ki`) und
+  `src/ki/strategien/zufallsKi.ts`.
 - **Abnahmekriterien:**
   1. Die Sicht enthält: eigene Hand, alle Schlangen, Ablagestapel (nach
      F15 → D28 in Teil D), Handgrössen, Stapelgrösse, offene Aufgaben, eigene
@@ -716,7 +722,19 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
 ### K2 Bewertung und Zugplanung (Basis-Spiel)
 
 - **Hängt ab von:** E5–E10.
-- **Dateien:** `src/ki/bewertung.ts`, `src/ki/zugsuche.ts`, `src/ki/solideKi.ts`.
+- **Dateien:** `src/ki/strategien/bewertung.ts`, `src/ki/strategien/zugsuche.ts`,
+  `src/ki/strategien/solideKi.ts`; für die Simulation zusätzlich der Rahmen in
+  `src/ki/sicht.ts` (siehe Vorgabe).
+- **Vorgabe aus P0.3d (Simulation ohne verdeckte Information):** Eine Strategie
+  bekommt nie den echten Zustand, auch nicht für die Zugsuche; über
+  `sichtFuer(zustand, gegner)`, `ermittleAktionen` nach einem simulierten
+  Zugende oder `berechneEndwertung` als Orakel käme sie sonst an fremde Hände
+  und den Stapel. Simuliert wird deshalb auf einem erratenen Zustand: Der Rahmen
+  bietet in `sicht.ts` eine Funktion wie `bestimmeZustand(sicht, zufall)`, die
+  fremde Hände, Stapel und fremde geheime Aufgaben aus den ungesehenen Karten
+  zufällig füllt (Determinisierung), und darauf eine Folgefunktion, die einer
+  Strategie zu einer Aktion die **Sicht danach** liefert. Die Strategie sieht so
+  nur Sichten, nie einen Zustand. K2.7 prüft das Verhalten.
 - **Vorgehen:** Bewertet wird der eigene Zwischenstand plus Aussichten (Paare,
   offene Enden, Joker, Rennen um die längste Kette) minus der stärkste Gegner.
   Die Zugsuche rechnet die Folgen eines Zuges durch (nur Farbkarte, nur
@@ -739,7 +757,7 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
 
 ### K3 Angriff und Abwehr
 
-- **Dateien:** `src/ki/zugsuche.ts`, `src/ki/abwehr.ts`.
+- **Dateien:** `src/ki/strategien/zugsuche.ts`, `src/ki/strategien/abwehr.ts`.
 - **Abnahmekriterien:**
   1. Schlangenfrass: Liegt eine Blockade in einer eigenen Gruppe und hat kein
      Gegner ein lohnendes Ziel, entfernt sie die Blockade; hat der Führende
