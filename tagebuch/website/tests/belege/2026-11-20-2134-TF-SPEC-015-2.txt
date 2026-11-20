@@ -1,0 +1,27 @@
+
+> schlangentanz-v2@0.0.0 abgleich:website
+> node scripts/website_abgleich/abgleich.cjs
+
+Website geladen: 17914 Zeichen Markdown, 27 Karten-Dialoge, Bundle index-EH-TKokX.js
+
+ABWEICHUNG: Teil A im Dokument (-) und auf der Website (+):
+
+diff --git "a/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-plI0Ri\\teil_a_dokument.md" "b/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-plI0Ri\\teil_a_website.md"
+index 7c4f268..1d17a13 100644
+--- "a/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-plI0Ri\\teil_a_dokument.md"
++++ "b/C:\\Users\\hanno\\AppData\\Local\\Temp\\website-abgleich-plI0Ri\\teil_a_website.md"
+@@ -336,7 +336,7 @@ Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf
+ - Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
+ - Neben dem Verdoppler spielst du so bis zu 3 Karten
+ - Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
+-- Im zweiten Zug darfst du einen weiteren Verdoppler spielen
++- Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+ 
+ #### A7.9 Schlangenhäutung
+ 
+
+Abdeckung: 469 Zeilen der Website geprüft, 1 fehlen, 22 nur anders formatiert.
+  FEHLT: Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+
+Ergebnis: Teil A weicht von der Website ab.
+exit 1
