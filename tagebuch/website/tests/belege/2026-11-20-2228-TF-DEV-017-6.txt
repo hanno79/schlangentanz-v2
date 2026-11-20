@@ -1,0 +1,18 @@
+{
+ "klasseName": "desktop",
+ "kiKlicks": 99,
+ "menschZuege": 43,
+ "gesperrtBeimMenschen": 43,
+ "maxKiFolge": 3,
+ "fehler": [],
+ "hinweisAmEnde": "Die Partie ist beendet.",
+ "knopfAmEnde": true,
+ "schrittZeile": "Schritt 185",
+ "phase": "Partiephase und Schlussrunde passen zusammen",
+ "scroll": {
+  "sw": 1280,
+  "cw": 1280
+ },
+ "konsole": []
+}
+WERTUNG: Wertung steht unten. | Ereignisse des letzten Schritts (1) | PartieBeendet | Invarianten (alle erfüllt) | erfüllt: Jede Spielkarte liegt genau einmal an genau einem Ort | erfüllt: Jede Aufgabenkarte liegt genau einmal im Spiel | erfüllt: Jede Comeback- und Risiko-Karte liegt genau einmal im Spiel | erfüllt: Kein Spieler hat mehr als 2 Schlangen | erfüllt: Keine Schlange ist leer | erfüllt: Alle Ids sind eindeutig | 

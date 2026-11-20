@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-002 Weder die Sicht noch die angebotenen Aktionen verraten eine fremde Handkarte, die Reihenfolge der Stapel oder eine fremde geheime Aufgabe. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-002 Weder die Sicht noch die angebotenen Aktionen verraten eine fremde Handkarte, die Reihenfolge der Stapel oder eine fremde geheime Aufgabe.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-001</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Das ist die zweite Hälfte von Kriterium 1: Verdeckt bleibt, was am Tisch verdeckt liegt (B2, A9). Geprüft werden die Sicht und die Liste der Aktionen, die die KI bekommt, denn B2 verbietet auch das mittelbare Verraten über angebotene Aktionen. Der Prüfer stört dazu das Verborgene mitten in echten Partien auf eigene Weise.</p><h2>Bestanden, wenn</h2><p>In den Tests des Umsetzers kommt für jeden Spieler keine verborgene Id und kein verborgener Aufgabenname in der Sicht vor, und 200 Zufallszustände ergeben nach dem Neumischen des Verborgenen dieselbe Sicht. In der eigenen Probe des Prüfers (24 und 18 Zufallspartien mit 2, 3 und 4 Spielern, mit und ohne Erweiterung) nennt keine Sicht und keine Aktionsliste eine verborgene Id, keine Sicht teilt ein Objekt mit dem Zustand, und nach dem Tausch fremder Handkarten mit dem Stapel, dem Umdrehen der Stapel, dem Rotieren fremder geheimer Aufgaben und dem Umkippen ihres Erfüllt-Status bleiben Sicht, Aktionsliste und Wahl der Zufalls-KI gleich.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine verborgene Id in Sicht oder Aktionsliste auftaucht, eine Sicht nach dem Stören anders ist oder die Zufalls-KI danach anders wählt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/K1-ki-schnittstelle</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K1-ki-schnittstelle</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Umsetzer: Saat 4711 für 200 Zufallszustände. Prüfer: Partien mit Saaten 900 bis 923 und 500 bis 517, Störung mit Saat 31337.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/ki/sicht.test.ts</code> endet mit Exit 0. Für die eigene Probe die Datei aus dem Beleg vorübergehend als <code>src/ki/pruefer_k1.test.ts</code> ablegen und <code>npx vitest run src/ki/pruefer_k1.test.ts --reporter=verbose --silent=false</code> ausführen; erwartet 8 Tests grün. Danach die Datei wieder löschen. Gegenprobe: <code>geheimeAufgabeErfuellt</code> jedes Spielers in die <code>SpielerSicht</code> schreiben; dann werden zwei Sichttests rot.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:28</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K1) &middot; agent &middot; pruefung-K1 @ <span class="commit" title="3e0f4efc72815021658a51c018c8982267a82049">3e0f4ef</span></p><p>sicht.test.ts grün (200 Zufallszustände, für jeden Spieler keine verborgene Id). Eigene Probe pruefer_k1.test.ts (8 Tests grün): 24 Partien, über 1000 Sichten und über 300 Aktionslisten ohne verborgene Id und ohne geteilte Objektreferenz; 18 Partien, über 500 Vergleiche nach eigener Störung des Verborgenen (Tausch Hand/Stapel, Stapel umgedreht, geheime Aufgaben rotiert, Erfüllt gekippt): Sicht, Aktionsliste und Wahl der Zufalls-KI gleich. Gegenproben: oberste Stapelkarte in der Sicht -&gt; 2 Tests rot; fremdes geheimeAufgabeErfuellt in der Sicht -&gt; 2 Tests rot. Codex (read-only): kein Leck in Sicht oder Aktionsliste; Lauschen über ersetztes globalThis.structuredClone liegt ausserhalb (Hinweis im Protokoll).</p><ul class="belege"><li><a href="belege/2026-11-20-2228-TF-KI-002-1.txt">2026-11-20-2228-TF-KI-002-1.txt</a></li><li><a href="belege/2026-11-20-2228-TF-KI-002-2.txt">2026-11-20-2228-TF-KI-002-2.txt</a></li><li><a href="belege/2026-11-20-2228-TF-KI-002-3.txt">2026-11-20-2228-TF-KI-002-3.txt</a></li><li><a href="belege/2026-11-20-2228-TF-KI-002-4.txt">2026-11-20-2228-TF-KI-002-4.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,89 @@
+codex
+**Sicht und Aktionsliste enthalten im heutigen regulären Datenpfad kein gefundenes Leck. Die absolute Garantie gegenüber beliebigem bösartigem `Ki`-Code gilt jedoch nicht: Dafür gibt es einen reproduzierten kritischen Befund.** Die vorhandene Zufalls-KI nutzt diesen Weg nicht.
+
+1. **Kritisch – heute ausnutzbar: gemeinsamer JavaScript-Kontext.**  
+   **Fundstellen:** `src/ki/schritt.ts:29`, `src/ki/turnier.ts:103`, `src/engine/aktionen/anwenden.ts:16`.
+
+   Eine KI kann während `waehle` die globale Funktion `structuredClone` ersetzen und eine angebotene Aktion unverändert zurückgeben:
+
+   ```ts
+   const original = globalThis.structuredClone;
+   globalThis.structuredClone = <T>(wert: T): T => {
+     abgegriffen = wert; // Variable im Gültigkeitsbereich der KI
+     globalThis.structuredClone = original;
+     return original(wert);
+   };
+   return aktionen[0];
+   ```
+
+   Beim anschliessenden `anwendeAktion` erhält dieser Callback den **vollen echten Spielzustand**. Reproduziert: Referenzgleichheit mit dem Ausgangszustand, fremde Hand, fremde geheime Aufgabe und beide Stapelreihenfolgen zugänglich. Auch fremde Erfüllt-Flags liegen darin.
+
+   Die typisierte Gegenprobe bestand TypeScript und meldete **keinen U5-Verstoss**. Das ist keine `structuredClone`-Kopierlücke, sondern eine fehlende Ausführungsgrenze. Relevant, wenn „eine beliebige Interface-Implementierung“ tatsächlich als potenziell bösartig verstanden wird; für ausschliesslich vertrauenswürdigen Anwendungscode ist es eine Architekturgrenze.
+
+2. **Mittel – heute nachgewiesen: U5 prüft Syntax, keinen Informationsfluss.**  
+   **Fundstelle:** `tests/architektur_pruefung.ts:236`.
+
+   Folgende Zugriffe wurden in einer ausschliesslich im Speicher angelegten Gegenprobe akzeptiert:
+
+   ```ts
+   Object.values(zustand)
+   JSON.stringify(zustand)
+   serialisiere(zustand)
+   (zustand as unknown as { nachziehstapel: unknown }).nachziehstapel
+   ```
+
+   Nur der direkte Zugriff `zustand.nachziehstapel` wurde erkannt. Damit kann insbesondere ein späterer Umbau von `schritt.ts` oder `turnier.ts` Verborgenes lesen und trotzdem das Gate bestehen. **Im aktuellen regulären KI-Code fand ich keinen solchen Zugriff.** Ein reiner `waehle`-Empfänger bekommt durch diese Prüflücke allein noch keinen Zustand.
+
+3. **Mittel – heute im deterministischen Turnier: bekannte Saat erlaubt Rekonstruktion.**  
+   **Fundstellen:** `src/ki/turnier.ts:121`, `src/ki/turnier.ts:127`, `src/engine/index.ts:35` und `:41`.
+
+   Eine KI kann über die erlaubten Engine-Exporte selbst
+   `erstellePartie(... erzeugeZufall(1))` aufrufen. Im Standardturnier ist das die erste tatsächliche Partie.
+
+   Reproduziert mit einem Teilnehmer auf Sitz 0: Er verglich ausschliesslich seine eigene Hand und Aufgabe mit der Rekonstruktion und erhielt dadurch korrekt die fremde Hand, beide Stapelreihenfolgen und die fremde geheime Aufgabe. Dafür waren weder Globals-Manipulation noch der echte Zustand nötig.
+
+   Das betrifft **bekannte beziehungsweise erratbare Turnier-Saaten**, nicht automatisch eine gewöhnliche Browserpartie. Die Exporte halten keinen laufenden Zustand bereit; sie ermöglichen hier die Rekonstruktion des bewusst reproduzierbaren Prüfstands.
+
+4. **Gering – Risiko späterer Tasks: Unterobjekte werden vollständig übernommen.**  
+   **Fundstellen:** `src/ki/sicht.ts:82`, `:86`, `:106` und `:113`.
+
+   `Zug`, `SchwebendeKarte` samt Aktion, Schlangen/Fusionen und weitere Unterobjekte werden vollständig kopiert. **Die heutigen Typen enthalten dort keine zusätzlich verborgenen Daten.** Spätere interne Felder würden allerdings automatisch sichtbar: etwa temporäre Ziehkarten in `Zug` oder Reaktionsdetails in `SchwebendeKarte`.
+
+   Reproduktion dieses künftigen Risikos: Ein zusätzliches Feld an `zustand.zug`, das auf verdeckte Karten verweist, erscheint auch unter `sicht.zug`. Das ist heute kein regulär erzeugter Zustand. Ebenso müssen X1/X2 geheime Aufgaben weiterhin getrennt von `erfuellteAufgaben` halten.
+
+Die übrigen Prüfpunkte ergeben:
+
+- **Tiefe Sichtfelder:** Gruben, `ausDemSpiel`, Comeback/Risiko-Auslage, erfüllte offene Aufgaben und Fusion-Unterkarten sind nach heutiger Bedeutung öffentlich. Die angesagte Kartenaktion nennt die bereits angesagte Karte und öffentliche Ziele. Kein konkretes Leck dieser bestehenden Felder gefunden.
+- **Aktionen:** Menge, Inhalt und Reihenfolge hängen heute von eigener Hand und öffentlichen Daten ab. In **656 Gegenproben** änderte das Umverteilen verborgener Informationen keine Aktionsliste. E4-Reaktionen und Erweiterungsaktionen sind noch nicht vollständig implementiert; deren spätere Sicherheit ist damit nicht bewiesen.
+- **Referenzen und Fehler:** **3’018 Sichten** zeigten weder verborgene IDs noch Abweichungen nach verdecktem Umverteilen. Rekursives Verändern der Sicht änderte den Zustand nicht. Kein zusätzlicher Fehlertext-Kanal zur KI gefunden.
+- **Karten-IDs:** Sie entstehen **vor** dem Mischen und kodieren Kartenart und Exemplarnummer, keine Mischposition. Kein unmittelbares Positionsleck; die Saatrekonstruktion oben bleibt gesondert relevant.
+- **Determinismus:** Alle **200 Turnierpartien** endeten ohne Invariantenverletzung. Wiederholungen mit gleichen Optionen waren identisch. Der Entwicklerknopf verwendet tatsächlich `verlauf.length`, also den angezeigten bisherigen Schritt **plus eins**. Zurückgehen und erneut wählen ist damit reproduzierbar.
+- **Zusätzlicher `ki`-Parameter:** Vertretbare Abweichung. Die explizite Übergabe macht die Strategie austauschbar und testbar; sie verletzt weder U3 noch U4/U5.
+
+Keine Dateien von mir geschrieben. Die Gegenproben liefen mit den echten Modulen ausschliesslich im Speicher; vollständige Gates, Build und Browserabnahme habe ich nicht ausgeführt.
+tokens used
+154.814
+**Sicht und Aktionsliste enthalten im heutigen regulären Datenpfad kein gefundenes Leck. Die absolute Garantie gegenüber beliebigem bösartigem `Ki`-Code gilt jedoch nicht: Dafür gibt es einen reproduzierten kritischen Befund.** Die vorhandene Zufalls-KI nutzt diesen Weg nicht.
+
+1. **Kritisch – heute ausnutzbar: gemeinsamer JavaScript-Kontext.**  
+   **Fundstellen:** `src/ki/schritt.ts:29`, `src/ki/turnier.ts:103`, `src/engine/aktionen/anwenden.ts:16`.
+
+   Eine KI kann während `waehle` die globale Funktion `structuredClone` ersetzen und eine angebotene Aktion unverändert zurückgeben:
+
+   ```ts
+   const original = globalThis.structuredClone;
+   globalThis.structuredClone = <T>(wert: T): T => {
+     abgegriffen = wert; // Variable im Gültigkeitsbereich der KI
+     globalThis.structuredClone = original;
+     return original(wert);
+   };
+   return aktionen[0];
+   ```
+
+   Beim anschliessenden `anwendeAktion` erhält dieser Callback den **vollen echten Spielzustand**. Reproduziert: Referenzgleichheit mit dem Ausgangszustand, fremde Hand, fremde geheime Aufgabe und beide Stapelreihenfolgen zugänglich. Auch fremde Erfüllt-Flags liegen darin.
+
+   Die typisierte Gegenprobe bestand TypeScript und meldete **keinen U5-Verstoss**. Das ist keine `structuredClone`-Kopierlücke, sondern eine fehlende Ausführungsgrenze. Relevant, wenn „eine beliebige Interface-Implementierung“ tatsächlich als potenziell bösartig verstanden wird; für ausschliesslich vertrauenswürdigen Anwendungscode ist es eine Architekturgrenze.
+
+2. **Mittel – heute nachgewiesen: U5 prüft Syntax, keinen Informationsfluss.**  
+   **Fundstelle:** `tests/architektur_pruefung.ts:236`.
+
