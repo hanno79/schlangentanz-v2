@@ -74,3 +74,37 @@ export function ablage(zustand: Spielzustand, spieler: number): string[] {
 export function ereignisseVom<T extends Ereignis['typ']>(ereignisse: Ereignis[], typ: T): Extract<Ereignis, { typ: T }>[] {
   return ereignisse.filter((ereignis): ereignis is Extract<Ereignis, { typ: T }> => ereignis.typ === typ)
 }
+
+/** Die aufgezählte Schlangengrube auf den Spieler an Stelle `ziel` (A7.6). */
+export function grubeAuf(zustand: Spielzustand, ziel: number): SpielAktion {
+  const id = zustand.spieler[ziel].id
+  const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((aktion) => aktion.typ === 'SchlangengrubeSpielen' && aktion.zielSpielerId === id)
+  expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezählt`).toBeGreaterThan(0)
+  return passend[0]
+}
+
+/** Die aufgezählte Reaktion dessen, der gerade entscheidet: mit dem ersten Farbenschutz abwehren oder durchlassen (A6). */
+export function reaktion(zustand: Spielzustand, abwehren: boolean): SpielAktion {
+  const passend = aktionen(zustand, 'Reagieren').filter((aktion) => aktion.typ === 'Reagieren' && (aktion.farbenschutzId !== null) === abwehren)
+  expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchlassen'}) ist nicht aufgezählt`).toBeGreaterThan(0)
+  return passend[0]
+}
+
+/** Die erste aufgezählte Farbkarte, für Züge, in denen es nur darauf ankommt, dass eine Karte gespielt ist. */
+export function farbkarte(zustand: Spielzustand): SpielAktion {
+  const passend = aktionen(zustand, 'FarbkarteLegen')
+  expect(passend.length, 'FarbkarteLegen ist nicht aufgezählt').toBeGreaterThan(0)
+  return passend[0]
+}
+
+/** Führt nacheinander aus, was jede Wahl aus dem jeweiligen Zustand nimmt, und sammelt alle Ereignisse. */
+export function folge(zustand: Spielzustand, ...wahlen: Array<(jetzt: Spielzustand) => SpielAktion>): Schritt {
+  let jetzt = zustand
+  const ereignisse: Ereignis[] = []
+  for (const waehle of wahlen) {
+    const schritt = fuehreAus(jetzt, waehle(jetzt))
+    jetzt = schritt.zustand
+    ereignisse.push(...schritt.ereignisse)
+  }
+  return { zustand: jetzt, ereignisse }
+}

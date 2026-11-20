@@ -77,16 +77,19 @@ describe('K1 Kriterium 1: Was die Sicht enthält', () => {
     })
   })
 
-  it('A6/B2: die angesagte Aktion mit Karte, Ziel und wer noch entscheidet', () => {
-    expect(sicht.angesagt).toEqual(zustand.schwebend)
+  it('A6/B2: die angesagte Aktion mit Karte, Ziel und wer schon abgewehrt hat, aber nicht, wer noch gefragt wird', () => {
+    const { karte, aktion, abgewehrt } = zustand.schwebend!
+    expect(sicht.angesagt).toEqual({ karte, aktion, abgewehrt })
     expect(sicht.angesagt?.aktion).toMatchObject({ typ: 'SchlangengrubeSpielen', zielSpielerId: 'spieler-3' })
-    expect(sicht.angesagt?.ausstehend).toEqual([2])
+    expect(Object.keys(sicht.angesagt ?? {}), 'B2: gefragt wird nur, wer Farbenschutz hält (E4 Kriterium 3)').not.toContain('ausstehend')
     expect(sichtFuer(baukasten({ spielerzahl: 2, erweiterung: false }).haendeAuffuellen().zustand(), 0).angesagt).toBeNull()
   })
 
-  it('K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet', () => {
+  it('K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet; bei einer angesagten Karte nur der Gefragte selbst', () => {
     expect(sicht).toMatchObject({ erweiterung: true, partiephase: 'Laufend', zug: zustand.zug, schlussrundeAusloeser: null })
-    expect(sicht.entscheider, 'A6: bei der angesagten Grube entscheidet Spieler 3, nicht der Spieler am Zug').toBe(2)
+    expect(sicht.entscheider, 'B2: für den Angreifer bleibt verdeckt, wer gefragt wird').toBeNull()
+    expect(sichtFuer(zustand, 2).entscheider, 'A6: der Gefragte sieht, dass er entscheidet').toBe(2)
+    expect(sichtFuer(zustand, 0).entscheider).toBeNull()
   })
 })
 
@@ -122,6 +125,16 @@ describe('K1 Kriterium 1: Was die Sicht nicht enthält', () => {
     expect(verschieden, 'K1: Testaufbau, das Mischen verändert fast jeden Zustand').toBeGreaterThan(180)
   })
 
+  it('B2/E4: wer bei einer angesagten Karte gefragt wird, verrät einen Farbenschutz; das sieht nur der Gefragte selbst', () => {
+    const zustand = tisch()
+    const anders = structuredClone(zustand)
+    anders.schwebend!.ausstehend = [0, 2]
+    expect(sichtFuer(anders, 1), 'B2: der Angreifer sieht nicht, wer gefragt wird').toEqual(sichtFuer(zustand, 1))
+    expect(sichtFuer(anders, 2), 'B2: Spieler 3 sieht nicht, ob vor ihm noch jemand gefragt wird').not.toHaveProperty('angesagt.ausstehend')
+    expect(sichtFuer(anders, 2).entscheider, 'B2: Spieler 3 ist noch nicht dran').toBeNull()
+    expect(sichtFuer(anders, 0).entscheider).toBe(0)
+  })
+
   it('K1 Gegenprobe: was offen liegt, ändert die Sicht', () => {
     const zustand = tisch()
     const vorher = sichtFuer(zustand, 0)
@@ -149,7 +162,7 @@ describe('K1: die Sicht ist eine Abschrift', () => {
     sicht.hand.pop()
     sicht.spieler[0].schlangen[0].karten.pop()
     sicht.spieler[0].ablagestapel.pop()
-    sicht.angesagt?.ausstehend.pop()
+    sicht.angesagt?.abgewehrt.push(0)
     sicht.offeneAufgaben.pop()
     expect(JSON.stringify(zustand)).toBe(roh)
   })

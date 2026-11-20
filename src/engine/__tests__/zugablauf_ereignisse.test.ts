@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen } from '../index'
-import type { Aktionstyp, Ereignis, Spielzustand } from '../index'
+import type { Aktionstyp, Ereignis, Kartenort, SpielAktion, Spielzustand } from '../index'
 import { erstellePartie } from '../state'
 import { baukasten } from '../testing/szenario'
 import type { Kartenwahl } from '../testing/szenario'
@@ -15,6 +15,12 @@ alten Lage und den Ereignissen nach und vergleicht sie mit der Lage des neuen
 Zustands: Handgrössen, Ablagestapel (alle einsehbar, D28), Stapelgrösse,
 Schlangen, wer am Zug ist, in welchem Teilzug (A7.8) und in welchem
 Abschnitt, ausliegende Gruben, Partiephase und Auslöser (A5, A6, A7.6, A10).
+
+Seit E4 auch die angesagte Karte, die schwebt, bis die Betroffenen entschieden
+haben (A6), die Abwehr (A7.2) und die Grube ohne Wirkung (D29). Wer gerade
+gefragt wird, steht absichtlich in keinem Ereignis: Gefragt wird nur, wer
+Farbenschutz hält, und das ist verdeckt (B2). Die Oberfläche erfährt es aus
+`ermittleEntscheider`, für den Menschen allein.
 */
 
 interface Lage {
@@ -30,6 +36,8 @@ interface Lage {
   gruben: { karteId: string; vor: number; von: number }[]
   partiephase: string
   ausloeser: number | null
+  /** Die angesagte Karte, die noch schwebt (A6). */
+  schwebend: string | null
 }
 
 function lageVon(zustand: Spielzustand): Lage {
@@ -49,7 +57,18 @@ function lageVon(zustand: Spielzustand): Lage {
     gruben: zustand.ausliegendeGruben.map((grube) => ({ karteId: grube.karte.id, vor: grube.vor, von: grube.gespieltVon })),
     partiephase: zustand.partiephase,
     ausloeser: zustand.schlussrundeAusloeser,
+    schwebend: zustand.schwebend?.karte.id ?? null,
   }
+}
+
+/** Legt eine Karte dorthin, wo ein Ereignis sie hinlegt. */
+function lege(lage: Lage, karteId: string, nach: Kartenort, von: number): void {
+  if (nach.ort === 'Ablagestapel') lage.ablagestapel[nach.spielerIndex].push(karteId)
+  else if (nach.ort === 'Schlange') {
+    lage.schlangen[nach.schlangenId] ??= { besitzer: nach.spielerIndex, karten: [] }
+    lage.schlangen[nach.schlangenId].karten.splice(nach.position, 0, karteId)
+  } else if (nach.ort === 'VorSpieler') lage.gruben.push({ karteId, vor: nach.spielerIndex, von })
+  else throw new Error(`Testaufbau: Ort ${nach.ort} kommt bis E4 nicht vor`)
 }
 
 /** Was die Oberfläche aus den Ereignissen allein ableitet. */
@@ -57,16 +76,22 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
   const lage: Lage = structuredClone(alt)
   for (const ereignis of ereignisse) {
     switch (ereignis.typ) {
-      case 'KarteGespielt': {
+      case 'KarteGespielt':
         lage.haende[ereignis.spielerIndex] -= 1
-        const { nach } = ereignis
-        if (nach.ort === 'Ablagestapel') lage.ablagestapel[nach.spielerIndex].push(ereignis.karteId)
-        else if (nach.ort === 'Schlange') {
-          lage.schlangen[nach.schlangenId] ??= { besitzer: nach.spielerIndex, karten: [] }
-          lage.schlangen[nach.schlangenId].karten.splice(nach.position, 0, ereignis.karteId)
-        } else throw new Error(`Testaufbau: Ort ${nach.ort} kommt in E2 nicht vor`)
+        lege(lage, ereignis.karteId, ereignis.nach, ereignis.spielerIndex)
         break
-      }
+      case 'KarteAngesagt':
+        lage.haende[ereignis.spielerIndex] -= 1
+        lage.schwebend = ereignis.karteId
+        break
+      case 'Abgewehrt':
+        lage.haende[ereignis.spielerIndex] -= 1
+        lage.ablagestapel[ereignis.spielerIndex].push(ereignis.karteId)
+        break
+      case 'AnsageEntschieden':
+        lage.schwebend = null
+        lege(lage, ereignis.karteId, ereignis.nach, ereignis.spielerIndex)
+        break
       case 'KartenGezogen':
         lage.haende[ereignis.spielerIndex] += ereignis.anzahl
         lage.stapel -= ereignis.anzahl
@@ -84,6 +109,7 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
         lage.abschnitt = 'Ausspielen'
         break
       case 'Ausgesetzt':
+      case 'GrubeOhneWirkung':
         lage.gruben = lage.gruben.filter((grube) => grube.karteId !== ereignis.karteId)
         lage.ablagestapel[ereignis.ablagestapelVon].push(ereignis.karteId)
         break
@@ -97,8 +123,6 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
         lage.teilzug = null
         lage.abschnitt = null
         break
-      case 'Abgewehrt':
-        throw new Error('Testaufbau: Abwehr gibt es erst mit E4')
     }
   }
   return lage
@@ -111,35 +135,47 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
  */
 function verrateneHandkarten(zustand: Spielzustand, ereignisse: Ereignis[]): string[] {
   const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
-  const genannt = ereignisse.flatMap((ereignis) => [
-    ...('karteId' in ereignis ? [ereignis.karteId] : []),
-    ...('karteIds' in ereignis ? ereignis.karteIds : []),
-  ])
-  return genannt.filter((id) => aufHand.has(id))
+  return [...texteIn(ereignisse)].filter((text) => aufHand.has(text))
+}
+
+/** Jeder Text, der irgendwo in einem Ereignis steht, auch tief in einer angesagten Aktion. */
+function texteIn(wert: unknown, gesammelt = new Set<string>()): Set<string> {
+  if (typeof wert === 'string') gesammelt.add(wert)
+  else if (typeof wert === 'object' && wert !== null) for (const eintrag of Object.values(wert)) texteIn(eintrag, gesammelt)
+  return gesammelt
+}
+
+/** Ein Aktionstyp, oder bei „Reagieren“ die Abwehr mit Farbenschutz. */
+function istBevorzugt(aktion: SpielAktion, bevorzugt: readonly (Aktionstyp | 'Abwehren')[]): boolean {
+  if (aktion.typ === 'Reagieren') return bevorzugt.includes('Abwehren') && aktion.farbenschutzId !== null
+  return bevorzugt.includes(aktion.typ)
 }
 
 /**
  * Spielt mit fester Saat zufällig unter den aufgezählten Aktionen und prüft jeden
- * Schritt. Ist `bevorzugt` angeboten, wird diese Aktion gewählt. Liefert die Zahl
- * der Schritte und der zweiten Züge (A7.8).
+ * Schritt. Ist eine Aktion aus `bevorzugt` angeboten, wird sie gewählt. Liefert
+ * die Zahl der Schritte und wie oft jedes Ereignis vorkam.
  */
-function pruefePartie(start: Spielzustand, saat: number, bevorzugt?: Aktionstyp): { schritte: number; zweiteZuege: number } {
+function pruefePartie(start: Spielzustand, saat: number, bevorzugt: readonly (Aktionstyp | 'Abwehren')[] = []): { schritte: number; anzahl: Partial<Record<Ereignis['typ'] | 'ZweiterZug', number>> } {
   const wahl = erzeugeZufall(saat)
   let zustand = start
   let schritte = 0
-  let zweiteZuege = 0
+  const anzahl: Partial<Record<Ereignis['typ'] | 'ZweiterZug', number>> = {}
   while (zustand.partiephase !== 'Beendet') {
     if (schritte > 2000) throw new Error(`Saat ${saat}: Die Partie endet nicht nach 2000 Schritten.`)
     const angeboten = ermittleAktionen(zustand)
-    const aktion = angeboten.find((angebot) => angebot.typ === bevorzugt) ?? angeboten[Math.floor(wahl() * angeboten.length)]
+    const aktion = angeboten.find((angebot) => istBevorzugt(angebot, bevorzugt)) ?? angeboten[Math.floor(wahl() * angeboten.length)]
     const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
     expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}, Schritt ${schritte}: ${JSON.stringify(aktion)}`).toEqual(lageVon(neu))
     expect(verrateneHandkarten(neu, ereignisse), `Saat ${saat}, Schritt ${schritte}: Ereignis nennt eine Handkarte`).toEqual([])
-    zweiteZuege += ereignisse.filter((ereignis) => ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2).length
+    for (const ereignis of ereignisse) {
+      const art = ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2 ? 'ZweiterZug' : ereignis.typ
+      anzahl[art] = (anzahl[art] ?? 0) + 1
+    }
     zustand = neu
     schritte += 1
   }
-  return { schritte, zweiteZuege }
+  return { schritte, anzahl }
 }
 
 const FUENF: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']
@@ -175,9 +211,34 @@ describe('A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriteri
       .hand(2, ['Verdoppler', 'Gelb', 'Blau', 'Rot', 'Braun'])
       .stapelBehalten(3)
       .zustand()
-    const { schritte, zweiteZuege } = pruefePartie(start, 8, 'VerdopplerSpielen')
+    const { schritte, anzahl } = pruefePartie(start, 8, ['VerdopplerSpielen'])
     expect(schritte).toBeGreaterThan(5)
-    expect(zweiteZuege).toBeGreaterThanOrEqual(3)
+    expect(anzahl.ZweiterZug).toBeGreaterThanOrEqual(3)
+  })
+
+  it('A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen', () => {
+    const start = baukasten({ spielerzahl: 3, erweiterung: false })
+      .hand(0, ['Schlangengrube', 'Schlangengrube', 'Farbenschutz', 'Blau', 'Rot'])
+      .hand(1, ['Schlangengrube', 'Farbenschutz', 'Farbenschutz', 'Gelb', 'Blau'])
+      .hand(2, ['Farbenschutz', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .stapelBehalten(8)
+      .zustand()
+    const { anzahl } = pruefePartie(start, 9, ['SchlangengrubeSpielen', 'Abwehren'])
+    expect(anzahl.KarteAngesagt, 'A6: die Gruben sind angesagt').toBeGreaterThanOrEqual(2)
+    expect(anzahl.Abgewehrt, 'A7.2: wer Farbenschutz hält, wehrt ab').toBeGreaterThanOrEqual(1)
+    expect((anzahl.Ausgesetzt ?? 0) + (anzahl.GrubeOhneWirkung ?? 0), 'A7.6/D29: nicht abgewehrte Gruben gehen weg').toBeGreaterThanOrEqual(1)
+  })
+
+  it('A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen', () => {
+    const anzahl = { KarteAngesagt: 0, Abgewehrt: 0, Ausgesetzt: 0 }
+    for (const saat of [31, 32, 33, 34, 35, 36]) {
+      const start = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+      const ergebnis = pruefePartie(start, saat, ['SchlangengrubeSpielen'])
+      for (const art of ['KarteAngesagt', 'Abgewehrt', 'Ausgesetzt'] as const) anzahl[art] += ergebnis.anzahl[art] ?? 0
+    }
+    expect(anzahl.KarteAngesagt).toBeGreaterThanOrEqual(10)
+    expect(anzahl.Abgewehrt).toBeGreaterThan(0)
+    expect(anzahl.Ausgesetzt).toBeGreaterThan(0)
   })
 })
 

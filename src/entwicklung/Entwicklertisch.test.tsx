@@ -1,6 +1,12 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { anwendeAktion, deserialisiere, ermittleAktionen, serialisiere } from '../engine'
+
+// Die Engine bleibt echt; nur für den Fall „keine Aktion aufgezählt“ lässt sich ihr Ergebnis einmal ersetzen (Plan E2, Kriterium 12).
+vi.mock('../engine', async (original) => {
+  const engine = await original<typeof import('../engine')>()
+  return { ...engine, ermittleAktionen: vi.fn(engine.ermittleAktionen) }
+})
 import Entwicklertisch from './Entwicklertisch'
 import { starteEntwicklerPartie } from './partie'
 import { findeSzenario, SZENARIEN } from './szenarien'
@@ -198,8 +204,18 @@ describe('K1: Knopf „KI-Schritt“ am Entwicklertisch', () => {
   it('K1: scheitert der KI-Schritt, steht der Grund da und der Zustand bleibt', () => {
     oeffne('/dev?szenario=alle-orte')
     const vorher = zustandsText()
+    vi.mocked(ermittleAktionen).mockReturnValueOnce([])
     fireEvent.click(kiKnopf())
     expect(screen.getByTestId('fehlermeldung')).toHaveTextContent('KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf')
     expect(zustandsText()).toBe(vorher)
+  })
+
+  it('E4: bei einer angesagten Karte, über die eine KI entscheidet, spielt der KI-Schritt ihre Reaktion, und es geht weiter', () => {
+    oeffne('/dev?szenario=alle-orte')
+    fireEvent.click(kiKnopf())
+    expect(screen.queryByTestId('fehlermeldung')).toBeNull()
+    expect(verlaufseintraege().at(-1)).toHaveTextContent(/^KI-Schritt: Reagieren/)
+    expect(deserialisiere(zustandsText()).schwebend).toBeNull()
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('AnsageEntschieden')
   })
 })
