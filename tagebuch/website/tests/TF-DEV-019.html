@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-019 Das Szenario wertung-vielfalt-regenbogen zeigt am Entwicklertisch die von Hand nachgerechnete Wertung 16 zu 22 und das Etikett „Farben für den Vielfaltbonus“. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-019 Das Szenario wertung-vielfalt-regenbogen zeigt am Entwicklertisch die von Hand nachgerechnete Wertung 16 zu 22 und das Etikett „Farben für den Vielfaltbonus“.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Am Entwicklertisch soll man D32 sehen und nachrechnen können: Spieler 1 hat neben drei Farbgruppen eine Gruppe aus drei Regenbogenschlangen, die keine Farbe für den Vielfaltbonus bringt. Das Etikett heisst jetzt „Farben für den Vielfaltbonus“, weil „Farben mit Gruppe“ bei einer solchen Gruppe nicht mehr stimmt.</p><h2>Bestanden, wenn</h2><p>Im Abschnitt „Wertung“ steht in der Endwertung Spieler 1 mit Gruppen 9, Vielfalt 2, Kette 5, Aufgaben 0, Summe 16 und KI-Gegner 1 mit 14, 3, 5, 0, 22, darunter „Gewonnen: KI-Gegner 1 (22)“. Die Aufschlüsselung nennt für Spieler 1 „Blau×3 = 0“, alle drei Regenbogenschlangen „als Blau“ und „Farben für den Vielfaltbonus: Blau, Rot, Gelb, Vielfalt 2“, für KI-Gegner 1 die Regenbogenschlange „als Rot“ und „Farben für den Vielfaltbonus: Blau, Rot, Gelb, Violett, Vielfalt 3“. Der Text „Farben mit Gruppe“ kommt nicht vor. Bei 1280 und bei 390 px Breite ist <code>scrollWidth</code> gleich <code>clientWidth</code>, keine Konsolenfehler.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Zahl abweicht, die Regenbogen-Gruppe als Farbe zählt, das alte Etikett erscheint oder die Seite waagrecht scrollt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/E10b-vielfalt-regenbogen (PR #52)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build (<code>npm run build:testhooks</code>), Vorschau mit <code>vite preview --outDir dist-testhooks</code>, Fenster 1280×900 und 390×844</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>wertung-vielfalt-regenbogen</code> aus <code>/dev/szenarien</code>. Nachrechnung: Spieler 1 Rot³ 3 + Blau³ 3 + Gelb³ 3 + Regenbogen³ 0 = 9, drei Farben gibt 2, Kette 3 gibt 5, Summe 16. KI-Gegner 1 Blau³ 3 + Rot, Regenbogenschlange, Rot 2 + Gelb³ 3 + Violett³ 6 = 14, vier Farben gibt 3, Kette 5, Summe 22.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`/dev/szenarien`</td><td>Link `wertung-vielfalt-regenbogen` anklicken</td><td></td><td>Tisch lädt, „Invarianten (alle erfüllt)“</td></tr><tr><td>2</td><td>Abschnitt „Wertung“</td><td>Tabellen und Aufschlüsselung lesen</td><td></td><td>Werte wie unter „Bestanden, wenn“</td></tr><tr><td>3</td><td>Browser</td><td>Fenster auf 390×844 stellen, Seite neu laden</td><td></td><td>gleiche Werte, nichts abgeschnitten, kein waagrechtes Scrollen</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Tablet und Handy quer misst der Layout-Vertrag <code>entwicklertisch_breite</code> mit. Eine Gruppe aus Regenbogenschlangen und Farbenfusion zeigt das Szenario nicht, weil die Regel dazu offen ist.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:49</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E10b) &middot; agent &middot; pruefung-E10b @ <span class="commit" title="4c83fb0bf20776d1d1192dff54b16e5ba8456837">4c83fb0</span> / Playwright Chromium, 5 Geräteklassen, Testhook-Build Port 4185; eingebauter Browser 1280x900</p><p>Endwertung Spieler 1 9/2/5/0/16, KI-Gegner 1 14/3/5/0/22, Gewonnen: KI-Gegner 1 (22); Spieler 1 Blau×3 = 0, drei Rb als Blau, Farben für den Vielfaltbonus: Blau, Rot, Gelb, Vielfalt 2; KI Rb als Rot, Blau, Rot, Gelb, Violett, Vielfalt 3; altes Etikett nicht vorhanden; scrollWidth=clientWidth in allen fünf Klassen (1280/1024/768/390/844), 0 Konsolenfehler</p><ul class="belege"><li><a href="belege/2026-11-20-2249-TF-DEV-019-1.png"><img class="beleg-vorschau" src="belege/2026-11-20-2249-TF-DEV-019-1.png" alt="Beleg 2026-11-20-2249-TF-DEV-019-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-20-2249-TF-DEV-019-2.png"><img class="beleg-vorschau" src="belege/2026-11-20-2249-TF-DEV-019-2.png" alt="Beleg 2026-11-20-2249-TF-DEV-019-2.png" loading="lazy"></a></li><li><a href="belege/2026-11-20-2249-TF-DEV-019-3.txt">2026-11-20-2249-TF-DEV-019-3.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

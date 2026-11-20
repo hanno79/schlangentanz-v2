@@ -374,6 +374,29 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
       ],
       ['keine Gruppe', 'mit 3 Punkten'],
     )
+    // D32 schränkt den Vielfaltbonus ein; D31 verweist darauf, damit beide Einträge zusammen gelesen werden.
+    expect(antwort, 'D31 ohne Verweis auf D32').toContain('d32')
+  })
+
+  it('D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus (20.11.2026)', () => {
+    const { antwort, datum, folge } = eintragD('D32')
+    pruefeKern(
+      'D32',
+      antwort,
+      [
+        'Eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus.',
+        'Wortlaut: „Nein. Eine Regenbogenschlange zählt nicht beim Vielfalt Bonus“',
+        'eine Gruppe mit 0 Punkten (D31)',
+        'Rot, Regenbogenschlange, Rot',
+        'Wortlaut: „Zählt als grün.“',
+        'Eine Gruppe aus Regenbogenschlangen und einer Farbenfusion zählt also beim Vielfaltbonus als Farbe.',
+        'Website folgt.',
+      ],
+      // Gegenprobe: die alte Lesart aus D31 und das Gegenteil von D31 (keine Gruppe).
+      ['bringt eine Farbe für den Vielfaltbonus', 'zählt als eigene Farbe', 'keine Gruppe', 'Offen ist'],
+    )
+    expect(datum).toBe('20.11.2026')
+    expect(folge).toContain('E10b')
   })
 
   it('D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden; Rückfrage vom 20.11.2026', () => {

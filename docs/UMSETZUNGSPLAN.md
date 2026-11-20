@@ -557,7 +557,9 @@ daneben.
 
 - **Behebt:** C11, C13. Spec: A11, A7.3, A7.7.
   Fragen: F9 → D22, F11 → D24, G9 → D31 (Antworten in Teil D); dazu D30
-  (Farbenfusion bringt die Summe der Karten darunter).
+  (Farbenfusion bringt die Summe der Karten darunter) und D32 (eine Gruppe nur
+  aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus; umgesetzt
+  mit der Folgeaufgabe E10b).
 - **Dateien:** `src/engine/scoring.ts`, neu `src/engine/jokerGruppen.ts`.
   `colorGroups.ts` bleibt unverändert (der Kettenbonus braucht die rohe Sicht).
 - **Abnahmekriterien:**
@@ -632,6 +634,7 @@ daneben.
 #### X2 Die 15 Aufgaben mit Jokern
 
 - **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8, G9 → D31.
+  D32 betrifft nur den Vielfaltbonus, nicht „Farbharmonie“ (dort gilt D31).
 - **Dateien:** `src/engine/aufgaben/<name>.ts` je Aufgabe, gemeinsame Helfer
   in `jokerGruppen.ts`. **Drei gleichzeitige Pakete zu je fünf Aufgaben.**
 - **Abnahmekriterien:**

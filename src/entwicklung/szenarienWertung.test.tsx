@@ -74,6 +74,28 @@ describe('E10: Szenarien der Wertung am Entwicklertisch', () => {
     expect(zwischenstand.spieler.map((s) => s.summe)).toEqual([15, 14, 0, 55])
     for (const zahl of ['20', '19', '60', '15', '14', '55']) expect(erwartet).toContain(zahl)
   })
+
+  it('D32: wertung-vielfalt-regenbogen zeigt, dass drei Regenbogenschlangen keine Farbe für den Vielfaltbonus bringen', () => {
+    const { zustand, erwartet } = szenario('wertung-vielfalt-regenbogen')
+    expect(pruefeInvarianten(zustand).filter((i) => i.verletzt)).toEqual([])
+    expect(zustand.partiephase).toBe('Beendet')
+    const wertung = berechneEndwertung(zustand)
+    expect(wertung.spieler.map((s) => s.schlangen.flatMap((schlange) => schlange.joker.map((j) => j.farbe)))).toEqual([
+      ['Blau', 'Blau', 'Blau'],
+      ['Rot'],
+    ])
+    expect(wertung.spieler.map((s) => s.schlangen.map((schlange) => schlange.gruppen.length))).toEqual([[4], [4]])
+    expect(wertung.spieler.map((s) => s.schlangen[0].vielfaltFarben)).toEqual([
+      ['Blau', 'Rot', 'Gelb'],
+      ['Blau', 'Rot', 'Gelb', 'Violett'],
+    ])
+    expect(wertung.spieler.map((s) => s.gruppenPunkte)).toEqual([9, 14])
+    expect(wertung.spieler.map((s) => s.vielfaltBonus)).toEqual([2, 3])
+    expect(wertung.spieler.map((s) => s.kette?.bonus)).toEqual([5, 5])
+    expect(summen(zustand)).toEqual([16, 22])
+    expect(wertung.gewinner).toEqual([zustand.spieler[1].id])
+    for (const zahl of ['9', '14', '16', '22']) expect(erwartet).toContain(zahl)
+  })
 })
 
 describe('E10: Wertungsansicht am Entwicklertisch', () => {
@@ -92,6 +114,7 @@ describe('E10: Wertungsansicht am Entwicklertisch', () => {
     expect(aufschluesselung[0]).toHaveTextContent('Farbenfusion')
     expect(aufschluesselung[0]).toHaveTextContent('als Blau')
     expect(aufschluesselung[0]).toHaveTextContent('Vielfaltbonus 1')
+    expect(aufschluesselung[0]).toHaveTextContent('Farben für den Vielfaltbonus: Blau, Rot, Vielfalt 1')
     expect(aufschluesselung[0]).toHaveTextContent('Farbkombination')
     expect(aufschluesselung[1]).toHaveTextContent('Gelber Schatz')
     expect(aufschluesselung[1]).toHaveTextContent('geheim')

@@ -1,0 +1,117 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a69578dec3044b37d
+
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Rangfolge der Quellen > nennt die Website als einzige verbindliche Regelquelle 11ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Rangfolge der Quellen > legt das Verfahren bei Änderungen fest 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Rangfolge der Quellen > trägt genau eine Statuszeile mit dem Datum des Abgleichs 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > führt das Spielmaterial mit den Stückzahlen der Website 3ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > beschreibt den Zug: eine Farbkarte, optional eine Sonderkarte, Verdoppler als zweiter Zug 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > beschreibt das Nachziehen: am Zugende, nie sofort ausserhalb des eigenen Zuges 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > lässt als Reaktion nur den Farbenschutz zu 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > P0.5d: trägt die Entscheidungen D9, D10, D12 und D13 im Wortlaut der Website (13.11.2026) 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > führt alle zehn Sonderkarten und beide Zusatzkarten mit eigenem Abschnitt 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > führt alle fünfzehn Aufgabenkarten mit ihren Punkten 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > legt die Farbe von Jokern nie fest: je Aufgabe passend, bei der Wertung die meisten Punkte 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > beschreibt Spielende und Punktezählung 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > kennt keinen Endspurt mehr 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > trennt den digitalen Umfang von den Regeln 0ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > führt jede Abweichung der Engine mit Nummer und Fundstelle im Code 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > führt offene Auslegungsfragen als Fragen an den Autor 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > P0.5d: Teil D vermerkt, welche Antworten die Website übernommen hat und welche noch folgen 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D30: die Farbenfusion belegt einen Platz der Gruppe und bringt die Summe der Karten darunter (20.11.2026) 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D31: drei Joker nebeneinander sind eine Gruppe; Regenbogenschlangen bringen keine Punkte (20.11.2026) 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus (20.11.2026) 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden; Rückfrage vom 20.11.2026 1ms
+ ✓ tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > macht die früheren R-Nummern auffindbar 0ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11 Vielfalt Beispiel 1: Dreiergruppen in Rot, Violett und Braun ergeben 2 Bonuspunkte 15ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11 Vielfalt Beispiel 2: Blau³, Rot-Regenbogenschlange-Rot, Violett³ ergeben 2 Bonuspunkte; die Regenbogenschlange zählt als Rot 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: ohne Erweiterung gibt es keinen Vielfaltbonus 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: Voraussetzung sind Gruppen ab 3 Karten; zwei Karten einer Farbe zählen nicht als Farbe 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: für die Berechnung zählt nur die längste Gruppe jeder Farbe; zwei rote Gruppen sind eine Farbe 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: 1 verschiedene Farben mit gültigen Gruppen ergeben 0 Bonuspunkte (5 und 6 beide 4) 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: 2 verschiedene Farben mit gültigen Gruppen ergeben 1 Bonuspunkte (5 und 6 beide 4) 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: 3 verschiedene Farben mit gültigen Gruppen ergeben 2 Bonuspunkte (5 und 6 beide 4) 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: 4 verschiedene Farben mit gültigen Gruppen ergeben 3 Bonuspunkte (5 und 6 beide 4) 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: 5 verschiedene Farben mit gültigen Gruppen ergeben 4 Bonuspunkte (5 und 6 beide 4) 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: 6 verschiedene Farben mit gültigen Gruppen ergeben 4 Bonuspunkte (5 und 6 beide 4) 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: der Bonus wird je Schlange ermittelt, nur der höchste zählt (nicht die Summe, nicht über beide Schlangen) 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: Farben in verschiedenen Schlangen werden nicht zusammengezählt 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A11: eine Gruppe mit einem Joker ist eine gültige Gruppe dieser Farbe (Farbenfusion) 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A7.7: die Farbenfusion zählt nur als eine Farbe für den Vielfaltbonus, nicht für beide Nachbargruppen 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11: Vielfaltbonus [Erweiterung] > A7.3/A11: die Regenbogenschlange zählt für Gruppenpunkte und Vielfaltbonus als dieselbe Farbe 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) > A11: bei gleichen Gruppenpunkten entscheidet der Vielfaltbonus die Jokerfarbe 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) > A11: ohne Erweiterung zählt nur die Gruppenwertung, bei Gleichstand die feste Reihenfolge (Blau vor Rot) 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) > A11: die Jokerfarbe einer Schlange richtet sich nach dem Bonus der anderen Schlange (nur der höchste zählt) 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) > A11: der Bonus der ersten Schlange bleibt der höchste, auch wenn die zweite weniger Farben hat (Codex-Befund) 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > A11/A7.3/A7.7: Joker zählen als die Farbe, die insgesamt die meisten Punkte bringt (Gruppen und Vielfaltbonus) > A11: Gruppenpunkte und Vielfaltbonus werden gemeinsam am höchsten, nicht nacheinander 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus > D32: Rot-, Blau- und Gelbgruppe und eine Gruppe aus drei Regenbogenschlangen zählen 3 Farben, nicht 4 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus > D32: die Jokerwahl setzt drei Regenbogenschlangen nicht als zusätzliche Farbe an 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus > D32: von vier Regenbogenschlangen vervollständigt eine die gelbe Gruppe, die anderen drei bringen keine Farbe 1ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus > D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot: ["Rot","Regenbogenschlange","Rot"] 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus > D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot: ["Regenbogenschlange","Regenbogenschlange","Rot"] 2ms
+ ✓ src/engine/__tests__/wertung_vielfalt.test.ts > D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus > D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot: ["Regenbogenschlange","Regenbogenschlange","Regenbogenschlange","Rot"] 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Farbgruppe hat mindestens drei Karten; zwei gleiche Karten zählen nicht 19ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: die Karten einer Gruppe liegen nebeneinander; eine andere Farbe dazwischen trennt 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Gruppe liegt in einer Schlange; zwei Schlangen ergeben zusammen keine Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Schlangenblockade dazwischen trennt (sie ist keine Karte der Farbe) 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Vierergruppe zählt einmal mit ihrer ganzen Länge, nicht zusätzlich als Dreiergruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Fünfergruppe zählt einmal, nicht als Dreier- und Vierergruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11/D1: Beispiel Rot-Rot-Rot-Blau-Rot-Rot-Rot-Rot bringt für Rot 3 + 4 = 7 Punkte 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11/D1: getrennte Gruppen derselben Farbe in verschiedenen Schlangen zählen je voll 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Blau bringt 1 Punkt(e) pro Karte in der Gruppe 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Rot bringt 1 Punkt(e) pro Karte in der Gruppe 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Gelb bringt 1 Punkt(e) pro Karte in der Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Violett bringt 2 Punkt(e) pro Karte in der Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Braun bringt 2 Punkt(e) pro Karte in der Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Grün bringt 3 Punkt(e) pro Karte in der Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11 Beispiel 1: Blau-Blau-Blau-Rot-Rot-Rot-Rot ergibt 7 Punkte (3 + 4) 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11 Beispiel 2: Blau, Blau, Blau+Fusion+Blau, Violett, Violett ergibt 6 Punkte; die Fusion zählt als Violett 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Regenbogenschlange und Farbenfusion können eine Gruppe vervollständigen 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Regenbogenschlange und Farbenfusion können eine Gruppe verlängern 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Joker zählen als die Farbe, die die meisten Punkte bringt, auch wenn die Nachbarn links stehen 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: wofür ein Joker bei einer Aufgabe gezählt hat, spielt keine Rolle (der Zustand kennt keine Jokerfarbe) 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Regenbogenschlange selbst bringt keine Punkte, ermöglicht aber eine längere Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Farbenfusion bringt die Punkte der beiden fusionierten Karten, wenn sie in einer Gruppe zählt 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Farbenfusion ausserhalb einer Gruppe bringt nichts 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Joker in zwei getrennten Gruppen zählen je für ihre Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3 Beispiel 1: Blau-Blau-Regenbogenschlange ist eine Dreiergruppe mit 2 Punkten 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3 Beispiel 3: Rot-Rot-Regenbogenschlange-Braun-Braun bringt 4 Punkte, die Regenbogenschlange zählt als Braun 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: gilt als Karte der Farbe, die für den Spieler am vorteilhaftesten ist 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: die Farbe ist nie festgelegt und kann sich während des Spiels ändern 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: verbindet Farbgruppen, indem sie als Karte der gewünschten Farbe zählt 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: muss Teil einer Dreiergruppe sein; mit nur einer Nachbarkarte entsteht keine Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: die anderen Karten der Gruppe bringen ihre normalen Punkte 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: kann als beliebige der sechs Farben gewertet werden, hier als Blau 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: kann als beliebige der sechs Farben gewertet werden, hier als Rot 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: kann als beliebige der sechs Farben gewertet werden, hier als Gelb 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: kann als beliebige der sechs Farben gewertet werden, hier als Violett 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: kann als beliebige der sechs Farben gewertet werden, hier als Braun 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: kann als beliebige der sechs Farben gewertet werden, hier als Grün 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: unterbricht keine Farbreihe, wenn sie als passende Farbe genutzt wird 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.7: Farbenfusion in der Wertung > A7.7 Beispiel 1: Blau-Blau und eine Fusion auf zwei gelben Karten gilt als Karte beliebiger Farbe, hier Blau 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.7: Farbenfusion in der Wertung > A7.7 Beispiel 2: Blau-Blau-Fusion(Gelb-Gelb)-Rot-Rot ergibt eine Dreiergruppe mit 4 Punkten 2ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.7: Farbenfusion in der Wertung > A7.7: zählt als eine einzelne Karte; Blau und eine Fusion sind nur zwei Karten 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.7: Farbenfusion in der Wertung > A7.7: die Karten unter der Fusion zählen nicht einzeln als Gruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > A7.7: Farbenfusion in der Wertung > A7.7: zählt als Karte einer beliebigen Farbe, auch einer anderen als der Karten darunter 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026) > D31: drei Regenbogenschlangen nebeneinander sind eine Gruppe mit 0 Punkten 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026) > D30, D31: Regenbogenschlange, Fusion aus Grün und Grün, Regenbogenschlange ist eine Gruppe mit 6 Punkten 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026) > D30: die Fusion belegt einen Platz; zwei Farbkarten und eine Fusion ergeben eine Dreiergruppe 1ms
+ ✓ src/engine/__tests__/wertung_farbgruppen.test.ts > D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026) > D31, D32: drei Regenbogenschlangen sind eine Gruppe mit 0 Punkten, bringen aber keine Farbe für den Vielfaltbonus 1ms
+ ✓ src/entwicklung/szenarienWertung.test.tsx > E10: Szenarien der Wertung am Entwicklertisch > A11/A7.3/A7.7: wertung-beispiele legt die Beispiele aus A11, A7.3 und A7.7 als Schlangen aus 23ms
+ ✓ src/entwicklung/szenarienWertung.test.tsx > E10: Szenarien der Wertung am Entwicklertisch > A11/D22: wertung-beispiele-kette zeigt das Kettenbeispiel, Gleichstand beim Kettenbonus und beim Sieg 4ms
+ ✓ src/entwicklung/szenarienWertung.test.tsx > E10: Szenarien der Wertung am Entwicklertisch > A11/A7.3/A7.7: wertung-joker zeigt Vielfaltbonus, Gleichstand der Jokerfarben, verbundene Gruppen und Aufgaben 9ms
+ ✓ src/entwicklung/szenarienWertung.test.tsx > E10: Szenarien der Wertung am Entwicklertisch > D32: wertung-vielfalt-regenbogen zeigt, dass drei Regenbogenschlangen keine Farbe für den Vielfaltbonus bringen 4ms
+ ✓ src/entwicklung/szenarienWertung.test.tsx > E10: Wertungsansicht am Entwicklertisch > A11: zeigt Zwischenstand aus Sicht von Spieler 1 und Endwertung mit Aufschlüsselung je Spieler 45ms
+ ✓ src/entwicklung/szenarienWertung.test.tsx > E10: Wertungsansicht am Entwicklertisch > A11: ohne Erweiterung zeigt die Ansicht weder Vielfaltbonus noch Aufgaben als Zahl 10ms
+ ✓ src/engine/__tests__/wertung_joker_kombinatorik.test.ts > A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft > A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus false: gleiche Summe, gleiche Jokerfarben 220ms
+ ✓ src/engine/__tests__/wertung_joker_kombinatorik.test.ts > A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft > A11: 400 zufällige Auslagen mit bis zu 4 Jokern, Vielfaltbonus true: gleiche Summe, gleiche Jokerfarben 110ms
+ ✓ src/engine/__tests__/wertung_joker_kombinatorik.test.ts > A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft > D32: 400 Auslagen mit vielen Regenbogenschlangen: gleiche Summe und Jokerfarben wie das Durchprobieren 835ms
+ ✓ src/engine/__tests__/wertung_joker_kombinatorik.test.ts > A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft > A11: drei Joker nebeneinander zwischen zwei Gruppen werden gemeinsam am besten verteilt 1ms
+ ✓ src/engine/__tests__/wertung_joker_kombinatorik.test.ts > A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft > A11: ein Spieler mit allen 8 Jokern in zwei langen Schlangen wird schnell gewertet 4ms
+ ✓ src/engine/__tests__/wertung_joker_kombinatorik.test.ts > A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft > A11: aus echtem Material, alle 4 Regenbogenschlangen und 4 Farbenfusionen bei einem Spieler 7ms
+
+ Test Files  5 passed (5)
+      Tests  108 passed (108)
+   Start at  22:47:22
+   Duration  5.23s (transform 1.25s, setup 1.64s, import 1.61s, tests 1.44s, environment 14.92s)
+

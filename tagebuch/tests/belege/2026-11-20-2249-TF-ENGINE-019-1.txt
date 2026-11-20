@@ -1,0 +1,293 @@
+{"faelle":6000,"abweichSumme":0,"abweichFarben":0,"beispiele":[],"d32relevant":30}
+{
+ "vb1": {
+  "summe": 17,
+  "farben": [],
+  "vf": [
+   [
+    "Rot",
+    "Violett",
+    "Braun"
+   ]
+  ],
+  "bonus": 2,
+  "gp": 15,
+  "gr": [
+   [
+    "Rotx3=3",
+    "Violettx3=6",
+    "Braunx3=6"
+   ]
+  ]
+ },
+ "vb2": {
+  "summe": 13,
+  "farben": [
+   "Rot"
+  ],
+  "vf": [
+   [
+    "Blau",
+    "Rot",
+    "Violett"
+   ]
+  ],
+  "bonus": 2,
+  "gp": 11,
+  "gr": [
+   [
+    "Blaux3=3",
+    "Rotx3=2",
+    "Violettx3=6"
+   ]
+  ]
+ },
+ "fg1": {
+  "summe": 8,
+  "farben": [],
+  "vf": [
+   [
+    "Blau",
+    "Rot"
+   ]
+  ],
+  "bonus": 1,
+  "gp": 7,
+  "gr": [
+   [
+    "Blaux3=3",
+    "Rotx4=4"
+   ]
+  ]
+ },
+ "fg2": {
+  "summe": 6,
+  "farben": [
+   "Violett"
+  ],
+  "vf": [
+   [
+    "Violett"
+   ]
+  ],
+  "bonus": null,
+  "gp": 6,
+  "gr": [
+   [
+    "Violettx3=6"
+   ]
+  ]
+ },
+ "a73a": {
+  "summe": 2,
+  "farben": [
+   "Blau"
+  ],
+  "vf": [
+   [
+    "Blau"
+   ]
+  ],
+  "bonus": null,
+  "gp": 2,
+  "gr": [
+   [
+    "Blaux3=2"
+   ]
+  ]
+ },
+ "a73c": {
+  "summe": 4,
+  "farben": [
+   "Braun"
+  ],
+  "vf": [
+   [
+    "Braun"
+   ]
+  ],
+  "bonus": null,
+  "gp": 4,
+  "gr": [
+   [
+    "Braunx3=4"
+   ]
+  ]
+ },
+ "d31a": {
+  "summe": 0,
+  "farben": [
+   "Blau",
+   "Blau",
+   "Blau"
+  ],
+  "vf": [
+   []
+  ],
+  "bonus": 0,
+  "gp": 0,
+  "gr": [
+   [
+    "Blaux3=0"
+   ]
+  ]
+ },
+ "d31b": {
+  "summe": 6,
+  "farben": [
+   "Blau",
+   "Blau",
+   "Blau"
+  ],
+  "vf": [
+   [
+    "Blau"
+   ]
+  ],
+  "bonus": 0,
+  "gp": 6,
+  "gr": [
+   [
+    "Blaux3=6"
+   ]
+  ]
+ },
+ "d30": {
+  "summe": 10,
+  "farben": [
+   "Violett"
+  ],
+  "vf": [
+   [
+    "Violett"
+   ]
+  ],
+  "bonus": null,
+  "gp": 10,
+  "gr": [
+   [
+    "Violettx3=10"
+   ]
+  ]
+ },
+ "e1": {
+  "summe": 3,
+  "farben": [
+   "Blau",
+   "Blau",
+   "Blau"
+  ],
+  "vf": [
+   [
+    "Blau"
+   ],
+   []
+  ],
+  "bonus": 0,
+  "gp": 3,
+  "gr": [
+   [
+    "Blaux3=3"
+   ],
+   [
+    "Blaux3=0"
+   ]
+  ]
+ },
+ "e2": {
+  "summe": 7,
+  "farben": [
+   "Blau",
+   "Blau",
+   "Blau"
+  ],
+  "vf": [
+   [
+    "Rot",
+    "Gelb"
+   ]
+  ],
+  "bonus": 1,
+  "gp": 6,
+  "gr": [
+   [
+    "Rotx3=3",
+    "Gelbx3=3",
+    "Blaux3=0"
+   ]
+  ]
+ },
+ "e3": {
+  "summe": 7,
+  "farben": [
+   "Grün",
+   "Grün",
+   "Grün"
+  ],
+  "vf": [
+   [
+    "Rot",
+    "Grün"
+   ]
+  ],
+  "bonus": 1,
+  "gp": 6,
+  "gr": [
+   [
+    "Rotx3=3",
+    "Grünx4=3"
+   ]
+  ]
+ },
+ "e4": {
+  "summe": 18,
+  "farben": [
+   "Blau",
+   "Blau",
+   "Blau",
+   "Blau"
+  ],
+  "vf": [
+   [
+    "Blau",
+    "Rot",
+    "Gelb",
+    "Braun"
+   ]
+  ],
+  "bonus": 3,
+  "gp": 15,
+  "gr": [
+   [
+    "Blaux3=3",
+    "Rotx3=3",
+    "Gelbx3=3",
+    "Braunx3=6",
+    "Blaux4=0"
+   ]
+  ]
+ },
+ "offen": {
+  "summe": 10,
+  "farben": [
+   "Rot",
+   "Rot",
+   "Rot"
+  ],
+  "vf": [
+   [
+    "Blau",
+    "Rot"
+   ]
+  ],
+  "bonus": 1,
+  "gp": 9,
+  "gr": [
+   [
+    "Blaux3=3",
+    "Rotx3=6"
+   ]
+  ]
+ }
+}
+{"msJeWertung8Joker120Karten":"0.23","ms16Joker120Karten":"0.39"}
