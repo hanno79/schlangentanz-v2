@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-018
+id: TF-ENGINE-021
 titel: In 300 Zufallspartien mit eigenen Saaten enden alle Partien, und jeder zweite Zug folgt direkt auf einen ersten Zug mit Verdoppler desselben Spielers.
 art: manuell
 regression: nein
@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
 aenderung: task/E3-verdoppler (PR #51)
-grenzfall_von: TF-ENGINE-017
+grenzfall_von: TF-ENGINE-020
 ---
 
 ## Worum es geht

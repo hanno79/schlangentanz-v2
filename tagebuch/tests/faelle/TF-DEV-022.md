@@ -1,5 +1,5 @@
 ---
-id: TF-DEV-019
+id: TF-DEV-022
 titel: Im Szenario „verdoppler“ zeigt der Entwicklertisch den zweiten Zug mit „Teilzug 2“, bietet dort keinen Verdoppler mit Wirkung an und nennt beim Versuch den Grund.
 art: manuell
 regression: nein

@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
 aenderung: task/E3-verdoppler (PR #51)
-grenzfall_von: TF-DEV-019
+grenzfall_von: TF-DEV-022
 ---
 
 ## Worum es geht
@@ -45,4 +45,4 @@ Ein zweiter Zug ausbleibt, an den falschen Spieler geht, die Hand nicht auf 5 ko
 
 ## Nicht abgedeckte Grenzfälle
 
-Die Partie wurde nicht bis zum Ende gespielt; das Spielende mit Verdoppler prüfen TF-DEV-020 und TF-ENGINE-018.
+Die Partie wurde nicht bis zum Ende gespielt; das Spielende mit Verdoppler prüfen TF-DEV-020 und TF-ENGINE-021.

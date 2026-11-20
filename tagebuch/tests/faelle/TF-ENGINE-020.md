@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-017
+id: TF-ENGINE-020
 titel: Der Verdoppler gibt nach A5, A7.8, D11, D12 und D23 genau einen zweiten Zug mit Auffüllen, im zweiten Zug wirkt kein weiterer Verdoppler, und niemand wird gefragt.
 art: automatisch
 regression: ja

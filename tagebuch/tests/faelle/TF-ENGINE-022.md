@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-019
+id: TF-ENGINE-022
 titel: Auch am Rand bleibt der Verdoppler bei genau einem zweiten Zug, nach Speichern und Laden, bei aussetzendem Gegner, bei direkter Aktion, nach einer anderen Sonderkarte und mit vier Spielern in der Schlussrunde.
 art: manuell
 regression: nein
@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
 aenderung: task/E3-verdoppler (PR #51)
-grenzfall_von: TF-ENGINE-017
+grenzfall_von: TF-ENGINE-020
 ---
 
 ## Worum es geht

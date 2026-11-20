@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
 aenderung: task/E3-verdoppler (PR #51)
-grenzfall_von: TF-DEV-019
+grenzfall_von: TF-DEV-022
 ---
 
 ## Worum es geht
@@ -45,4 +45,4 @@ Szenario `verdoppler-schlussrunde`: drei Spieler, Schlussrunde ausgelöst von KI
 
 ## Nicht abgedeckte Grenzfälle
 
-Ein Verdoppler des Auslösers selbst in der Schlussrunde ist nicht möglich, weil der Auslöser keinen Zug mehr hat; den Fall, dass der Stapel erst zwischen den Teilzügen leer wird, prüft TF-ENGINE-017.
+Ein Verdoppler des Auslösers selbst in der Schlussrunde ist nicht möglich, weil der Auslöser keinen Zug mehr hat; den Fall, dass der Stapel erst zwischen den Teilzügen leer wird, prüft TF-ENGINE-020.
