@@ -3,7 +3,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import ts from 'typescript'
-import { beschreibe, engineExporte } from './architektur_pruefung'
+import { beschreibe, engineExporte, type Verstoss } from './architektur_pruefung'
 import { ERLAUBTE_ENGINE_EMPFAENGER, pruefeSichtZugriff } from './architektur_ki_pruefung'
 import { parse } from '../scripts/pruefung/quelldateien.mjs'
 import { WURZEL, legeAn, raeumeAuf } from './probebaum'
@@ -98,6 +98,14 @@ const umgehungenU5: Array<[string, string, string?]> = [
   ],
   ['geworfen', 'throw zustand'],
   ['zurückgegeben', 'return zustand'],
+  // Codex zu P0.3d: der Zustand unter einem Typ, der ihn nicht beim Namen nennt.
+  [
+    'getarnt als Readonly mit Reserve',
+    'return text',
+    'type Tarn = Readonly<Spielzustand> & { reserve?: Spielzustand }\nfunction lies(wert: Tarn) { return wert.stapel }\nexport const weiter = (zustand: Spielzustand) => lies(zustand)',
+  ],
+  ['als Pick', 'return text', "export function lies(wert: Pick<Spielzustand, 'stapel'>) { return wert.stapel }"],
+  ['in einem Record', 'return text', 'export function lies(kiste: Record<string, Spielzustand>) { return JSON.stringify(kiste) }'],
 ]
 
 /** H1: Wege, eine globale Funktion zu ersetzen, die die Engine später aufruft. */
@@ -125,6 +133,20 @@ const globaleAenderungen: Array<[string, string]> = [
   ['Zuweisung durch Zerlegen in eine Liste', '[globalThis.structuredClone] = [f]'],
   ['Zuweisung durch Zerlegen in ein Objekt', '({ wert: globalThis.structuredClone } = { wert: f })'],
   ['über Function', "Function('return this')().structuredClone = f"],
+  // Codex zu P0.3d: das globale Objekt über valueOf.
+  ['Object.assign auf globalThis.valueOf()', 'Object.assign(globalThis.valueOf(), { structuredClone: f })'],
+  ['globalThis.valueOf() in einer Variablen', "const g = globalThis.valueOf() as Record<string, unknown>\ng['structuredClone'] = f"],
+  ['JSON.valueOf() in einer Variablen', "const j = JSON.valueOf() as Record<string, unknown>\nj['stringify'] = f"],
+  ['Object.assign auf eine eigene Variable', 'const ziel = {}\nObject.assign(ziel, { a: f })'],
+]
+
+/** Codex zu P0.3d: Zufall und Zeit über Umwege, die nur der Typprüfer sieht (U4). */
+const zufallUeberTypen: Array<[string, string]> = [
+  ['Math über valueOf', 'const z = (Math.valueOf() as Math).random()\nreturn z'],
+  ['Date über globalThis.valueOf', 'const t = (globalThis.valueOf() as typeof globalThis).Date.now()\nreturn t'],
+  ['Math in einer typisierten Variablen', 'const m: Math = Math\nreturn m.random()'],
+  ['performance über valueOf', 'const p = (globalThis.valueOf() as typeof globalThis).performance\nreturn p.now()'],
+  ['crypto über valueOf', 'const c = (globalThis.valueOf() as typeof globalThis).crypto\nreturn c.randomUUID()'],
 ]
 
 /** Je Fall eine Probedatei; `art` steht im Dateinamen und in der Meldung. */
@@ -136,22 +158,22 @@ const faelle = (art: string, liste: Array<[string, string, string?]>) =>
   }))
 const faelleU5 = faelle('umgehung', umgehungenU5)
 const faelleH1 = faelle('global', globaleAenderungen)
+const faelleU4 = faelle('zufall', zufallUeberTypen)
 
 const probeInhalt: Record<string, string> = {
   'src/ki/sicht.ts': SICHT,
   'src/ki/erlaubt.ts': `${KOPF}${ERLAUBT}\n`,
-  ...Object.fromEntries([...faelleU5, ...faelleH1].map(({ datei, inhalt }) => [datei, inhalt])),
+  ...Object.fromEntries([...faelleU5, ...faelleH1, ...faelleU4].map(({ datei, inhalt }) => [datei, inhalt])),
 }
 const probe = legeAn({ 'src/engine/index.ts': ENGINE, ...probeInhalt })
 const befunde = pruefeSichtZugriff(probe, Object.keys(probeInhalt))
 const befundeIn = (datei: string) => befunde.filter((verstoss) => verstoss.datei === datei)
 
-/** Mindestens ein Verstoss in `datei`, und alle zu U5. */
-function erwarteGemeldet(kuerzel: string, name: string, datei: string) {
+/** Mindestens ein Verstoss gegen `regel` in `datei`. */
+function erwarteGemeldet(kuerzel: string, name: string, datei: string, regel: Verstoss['regel'] = 'U5') {
   const gefunden = befundeIn(datei)
 
-  expect(gefunden.length, `${kuerzel}: erwartet mindestens einen Verstoss für ${name} in ${datei}`).toBeGreaterThan(0)
-  expect(gefunden.every(({ regel }) => regel === 'U5'), `${kuerzel}: erwartet nur U5-Meldungen, gefunden:\n${beschreibe(gefunden)}`).toBe(true)
+  expect(gefunden.filter((verstoss) => verstoss.regel === regel).length, `${kuerzel}: erwartet eine ${regel}-Meldung für ${name} in ${datei}, gefunden:\n${beschreibe(gefunden)}`).toBeGreaterThan(0)
 }
 
 describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unverändert weiter', () => {
@@ -180,6 +202,10 @@ describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
 
     expect(ausTesting, 'H5: erwartet aus src/engine/testing allein erzeugeZufall in der Schnittstelle').toEqual(['erzeugeZufall'])
   })
+})
+
+describe('P0.3d: U4 – auch über Umwege kein Zufall und keine Zeit unter src/ki', () => {
+  it.each(faelleU4)('P0.3d: U4-Umweg „$name“ wird gemeldet', ({ name, datei }) => erwarteGemeldet('U4', name, datei, 'U4'))
 })
 
 describe('P0.3d: H1 – KI-Code verändert keine globalen Objekte', () => {
