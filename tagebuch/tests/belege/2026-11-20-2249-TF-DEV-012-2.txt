@@ -1,0 +1,3 @@
+wertung-beispiele "Endwertung\nSpie­ler\tGrup­pen\tViel­falt\tKette\tAufg.\tSum­me\nSpieler 1\t10\t0\t0\t0\t10\nKI-Gegner 1\t7\t0\t5\t0\t12\nKI-Gegner 2\t26\t2\t0\t0\t28\nKI-Gegner 3\t6\t0\t0\t0\t6\n\nGewonnen: KI-Gegner 2 (28)\n\n"
+wertung-beispiele-kette "Endwertung\nSpie­ler\tGrup­pen\tViel­falt\tKette\tAufg.\tSum­me\nSpieler 1\t7\t–\t5\t–\t12\nKI-Gegner 1\t7\t–\t5\t–\t12\nKI-Gegner 2\t4\t–\t0\t–\t4\n\nGewonnen: Spieler 1 (12), KI-Gegner 1 (12)\n\n"
+konsolenfehler 0

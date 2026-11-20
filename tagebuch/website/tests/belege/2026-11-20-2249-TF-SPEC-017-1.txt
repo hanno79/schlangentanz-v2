@@ -1,0 +1,6 @@
+S1 Kernaussage umgedreht: exit 1; Tests 1 failed | 21 passed (22)
+  × D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus (20.11.2026) 14ms
+  AssertionError: D32 ohne Kernaussage „Eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe für den Vielfaltbonus.“: expected 'nein: eine gruppe nur aus regenbogens…' to contain 'eine gruppe nur aus regenbogenschlang…'
+S2 Verweis in D31 entfernt: exit 1; Tests 1 failed | 21 passed (22)
+  × D31: drei Joker nebeneinander sind eine Gruppe; Regenbogenschlangen bringen keine Punkte (20.11.2026) 7ms
+  AssertionError: D31 ohne Verweis auf D32: expected 'ja: drei joker nebeneinander sind ein…' to contain 'd32'
