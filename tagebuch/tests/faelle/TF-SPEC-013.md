@@ -8,6 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
 aenderung: task/P0.5d-teil-a-website (PR #50)
+status: stillgelegt
 ---
 
 ## Worum es geht
@@ -44,3 +45,5 @@ Website A7.8: „Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“.
 ## Nicht abgedeckte Grenzfälle
 
 Ob D19 inzwischen ebenfalls auf der Website steht, prüft dieser Testfall nicht; das gehört nicht zu D9 bis D13. Den Fall „nur Verdoppler auf der Hand im zweiten Zug“ prüft die Engine (E3), nicht die Spec.
+
+Stillgelegt am 20.11.2026 (Orchestrator): Der Fall erwartete den offenen Widerspruch zwischen A7.8 und D23; der Autor hat ihn am 20.11.2026 aufgelöst (D23 gilt). Nachfolger: TF-SPEC-016.

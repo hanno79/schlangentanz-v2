@@ -48,7 +48,7 @@ Prompt, um die Website nachzuziehen.
 |---|---|
 | D9 | **Jede Karte darf in jede Schlange**, auch in gegnerische. Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle. |
 | D10 | **Farbenschutz** wehrt jede Sonderkarte eines Gegners ab, die mich oder meine Schlange trifft (auch Farbenfusion, Schlangenhäutung, Regenbogenschlange). Gegen Farbkarten gibt es keine Abwehr. |
-| D11 | **Verdoppler:** Im zweiten Zug ist kein weiterer Verdoppler erlaubt. |
+| D11 | **Verdoppler:** Im zweiten Zug ist kein weiterer Verdoppler erlaubt (kein weiterer Zug; wirkungslos ablegen bleibt erlaubt, D23, bestätigt am 20.11.2026). |
 | D12 | **Pflichtkarte:** mindestens 1, höchstens 2 Karten, davon höchstens eine Farbkarte und höchstens eine Sonderkarte. Eine Karte genügt, egal welcher Art. |
 | D13 | **Sonderkarten ohne Nutzen:** Man darf jederzeit eine Sonderkarte spielen, auch wenn sie nichts bringt. Hat sie kein mögliches Ziel, kommt sie ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. |
 
