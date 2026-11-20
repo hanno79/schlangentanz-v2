@@ -99,16 +99,32 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
   return lage
 }
 
+/**
+ * B2: Ereignisse gehen an die Oberfläche aller Spieler. Jede Karte, die ein
+ * Ereignis nennt, muss danach offen liegen; liegt sie auf einer Hand, verriete
+ * das Ereignis eine Handkarte.
+ */
+function verrateneHandkarten(zustand: Spielzustand, ereignisse: Ereignis[]): string[] {
+  const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
+  const genannt = ereignisse.flatMap((ereignis) => [
+    ...('karteId' in ereignis ? [ereignis.karteId] : []),
+    ...('karteIds' in ereignis ? ereignis.karteIds : []),
+  ])
+  return genannt.filter((id) => aufHand.has(id))
+}
+
 /** Spielt mit fester Saat zufällig unter den aufgezählten Aktionen und prüft jeden Schritt. */
 function pruefePartie(start: Spielzustand, saat: number): number {
   const wahl = erzeugeZufall(saat)
   let zustand = start
   let schritte = 0
   while (zustand.partiephase !== 'Beendet') {
+    if (schritte > 2000) throw new Error(`Saat ${saat}: Die Partie endet nicht nach 2000 Schritten.`)
     const angeboten = ermittleAktionen(zustand)
     const aktion = angeboten[Math.floor(wahl() * angeboten.length)]
     const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
     expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}, Schritt ${schritte}: ${JSON.stringify(aktion)}`).toEqual(lageVon(neu))
+    expect(verrateneHandkarten(neu, ereignisse), `Saat ${saat}, Schritt ${schritte}: Ereignis nennt eine Handkarte`).toEqual([])
     zustand = neu
     schritte += 1
   }
