@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { erzeugeZufall } from '../engine'
 import type { SpielAktion } from '../engine'
-import { erzeugeZufall } from '../engine/testing/zufall'
 import { baukasten } from '../engine/testing/szenario'
 import { sichtFuer } from './sicht'
 import { erstelleZufallsKi } from './zufallsKi'

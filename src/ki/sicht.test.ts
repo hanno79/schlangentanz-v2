@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
+import { erzeugeZufall } from '../engine'
 import type { Spielzustand } from '../engine'
-import { erzeugeZufall } from '../engine/testing/zufall'
 import { baukasten } from '../engine/testing/szenario'
 import { zufallszustand } from '../engine/testing/zufallszustand'
-import { entscheiderVon, sichtFuer } from './sicht'
+import { entscheiderVon, sichtFuer, spielerzahl } from './sicht'
 import { alleTexte, mischeVerborgenes, verborgeneIds } from './__tests__/verborgenes'
 
 /** Drei Spieler mit Erweiterung, Karten an jedem offenen Ort und eine angesagte Schlangengrube (A6), über die Spieler 2 entscheidet. */
@@ -164,8 +164,12 @@ describe('K1: die Sicht ist eine Abschrift', () => {
 
 describe('K1: wer entscheidet', () => {
   it('B2: zu Beginn entscheidet der Mensch; bei einer angesagten Karte der Gefragte; nach Spielende niemand', () => {
-    expect(entscheiderVon(baukasten({ spielerzahl: 2, erweiterung: false }).haendeAuffuellen().zustand())).toEqual({ index: 0, steuerung: 'Mensch' })
-    expect(entscheiderVon(tisch())).toEqual({ index: 2, steuerung: 'KI' })
+    expect(entscheiderVon(baukasten({ spielerzahl: 2, erweiterung: false }).haendeAuffuellen().zustand())).toEqual({ index: 0, name: 'Spieler 1', steuerung: 'Mensch' })
+    expect(entscheiderVon(tisch())).toEqual({ index: 2, name: 'KI-Gegner 2', steuerung: 'KI' })
     expect(entscheiderVon(baukasten({ spielerzahl: 2, erweiterung: false }).beendet(0).zustand())).toBeNull()
+  })
+
+  it('A2: wie viele Spieler am Tisch sitzen', () => {
+    expect(spielerzahl(tisch())).toBe(3)
   })
 })

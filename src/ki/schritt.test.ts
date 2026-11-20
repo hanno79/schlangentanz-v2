@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ermittleAktionen, pruefeAktion } from '../engine'
+import { ermittleAktionen, erzeugeZufall, pruefeAktion } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
-import { erzeugeZufall } from '../engine/testing/zufall'
 import { baukasten } from '../engine/testing/szenario'
 import { entscheidetKi, kiWahl, naechsterKiSchritt } from './schritt'
 import type { Ki } from './schritt'
@@ -17,8 +16,10 @@ vi.mock('../engine', async (original) => {
 afterEach(() => vi.mocked(ermittleAktionen).mockClear())
 
 /** Eine KI, die sich merkt, was sie bekam, und die Aktion an Stelle `stelle` zurückgibt. */
-function merkKi(stelle = 0): Ki & { aufrufe: { sicht: Sicht; aktionen: readonly SpielAktion[] }[] } {
-  const aufrufe: { sicht: Sicht; aktionen: readonly SpielAktion[] }[] = []
+type Aufruf = { sicht: Sicht; aktionen: readonly SpielAktion[] }
+
+function merkKi(stelle = 0): Ki & { aufrufe: Aufruf[] } {
+  const aufrufe: Aufruf[] = []
   return {
     name: 'Merk-KI',
     aufrufe,

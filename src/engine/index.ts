@@ -44,6 +44,7 @@ export { erzeugeZufall } from './testing/zufall';
 export { istAuslagekarte, pruefeInvarianten } from './invarianten';
 export type { InvariantenBefund } from './invarianten';
 export { deserialisiere, serialisiere } from './serialization';
+export { fehlertext } from './form';
 
 // Wertung
 export { ermittleFarbgruppen } from './colorGroups';

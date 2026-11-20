@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { anwendeAktion, berechneEndwertung, erstellePartie } from '../engine'
+import { anwendeAktion, berechneEndwertung, erstellePartie, erzeugeZufall } from '../engine'
 import type { Spielzustand } from '../engine'
-import { erzeugeZufall } from '../engine/testing/zufall'
 import { baukasten } from '../engine/testing/szenario'
 import type { Ki } from './schritt'
 import { sitzordnung, spielePartie, turnier } from './turnier'

@@ -1,4 +1,4 @@
-import type { AufgabenkarteInfo, Spielzustand } from '../../engine'
+import type { AufgabenkarteInfo, Spieler, Spielzustand } from '../../engine'
 import { mischeDeck } from '../../engine/deck'
 
 /*
@@ -21,11 +21,8 @@ export function mischeVerborgenes(zustand: Spielzustand, fuer: number, zufall: (
   for (const spieler of fremde) spieler.hand = karten.splice(0, spieler.hand.length)
   neu.nachziehstapel = karten
 
-  const mitAufgabe = fremde.filter((spieler) => spieler.geheimeAufgabe !== null)
-  const aufgaben: AufgabenkarteInfo[] = mischeDeck(
-    [...mitAufgabe.flatMap((spieler) => (spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe])), ...neu.aufgabenStapel],
-    zufall,
-  )
+  const mitAufgabe = fremde.filter((spieler): spieler is Spieler & { geheimeAufgabe: AufgabenkarteInfo } => spieler.geheimeAufgabe !== null)
+  const aufgaben = mischeDeck([...mitAufgabe.map((spieler) => spieler.geheimeAufgabe), ...neu.aufgabenStapel], zufall)
   for (const spieler of mitAufgabe) spieler.geheimeAufgabe = aufgaben.splice(0, 1)[0]
   neu.aufgabenStapel = aufgaben
   for (const spieler of fremde) spieler.geheimeAufgabeErfuellt = zufall() < 0.5

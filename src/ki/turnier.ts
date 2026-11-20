@@ -1,8 +1,8 @@
-import { SPIELER_MAX, SPIELER_MIN, anwendeAktion, berechneEndwertung, erstellePartie, erzeugeZufall, ermittleEntscheider, pruefeInvarianten } from '../engine';
+import { SPIELER_MAX, SPIELER_MIN, anwendeAktion, berechneEndwertung, erstellePartie, erzeugeZufall, fehlertext, pruefeInvarianten } from '../engine';
 import type { SpielAktion, Spielzustand } from '../engine';
-import { kiWahl } from './schritt';
+import { waehleFuer } from './schritt';
 import type { Ki } from './schritt';
-import { sichtFuer } from './sicht';
+import { entscheiderVon, spielerzahl } from './sicht';
 
 /*
 Das Turnier (Plan K1, gebraucht von K5): N Partien KI gegen KI, jede aus einer
@@ -79,7 +79,7 @@ function kiSaat(saat: number, sitz: number): number {
  * jeder Fehlermeldung.
  */
 export function spielePartie(start: Spielzustand, kis: readonly Ki[], schrittGrenze = SCHRITTGRENZE, wo = 'Partie'): PartieVerlauf {
-  const sitze = sichtFuer(start, 0).spieler.length;
+  const sitze = spielerzahl(start);
   if (kis.length !== sitze) throw new Error(`Turnier: ${kis.length} KIs für ${sitze} Sitze; jeder Sitz braucht genau eine KI.`);
   const verlauf: SpielAktion[] = [];
   const ende = (ausgang: PartieAusgang, detail: string): PartieVerlauf => ({ ausgang, schritte: verlauf.length, detail, verlauf, siegerSitze: [], punkteSitze: [] });
@@ -88,7 +88,7 @@ export function spielePartie(start: Spielzustand, kis: readonly Ki[], schrittGre
   for (;;) {
     const verletzt = pruefeInvarianten(zustand).filter((befund) => befund.verletzt);
     if (verletzt.length > 0) return ende('invariante', verletzt.map((befund) => `${befund.name}: ${befund.detail}`).join(' | '));
-    const entscheider = ermittleEntscheider(zustand);
+    const entscheider = entscheiderVon(zustand);
     if (entscheider === null) {
       const wertung = berechneEndwertung(zustand);
       return {
@@ -99,13 +99,11 @@ export function spielePartie(start: Spielzustand, kis: readonly Ki[], schrittGre
     }
     if (verlauf.length >= schrittGrenze) return ende('schrittgrenze', `Nach ${schrittGrenze} Schritten nicht beendet.`);
     try {
-      const aktion = kiWahl(zustand, kis[entscheider]);
-      if (aktion === null) throw new Error('Die Partie läuft, aber niemand entscheidet.');
+      const aktion = waehleFuer(zustand, entscheider, kis[entscheider.index]);
       zustand = anwendeAktion(zustand, aktion).zustand;
       verlauf.push(aktion);
     } catch (fehler) {
-      const grund = fehler instanceof Error ? fehler.message : String(fehler);
-      throw new Error(`Turnier, ${wo}, Schritt ${verlauf.length}: ${grund}`, { cause: fehler });
+      throw new Error(`Turnier, ${wo}, Schritt ${verlauf.length}: ${fehlertext(fehler)}`, { cause: fehler });
     }
   }
 }
@@ -120,7 +118,7 @@ function pruefeOptionen({ teilnehmer, partien }: TurnierOptionen): void {
 /** Spielt `partien` Partien mit festen Saaten und rotierendem Sitz. */
 export function turnier(optionen: TurnierOptionen): TurnierErgebnis {
   pruefeOptionen(optionen);
-  const { teilnehmer, partien, ersteSaat = 1, erweiterung, schrittGrenze = SCHRITTGRENZE } = optionen;
+  const { teilnehmer, partien, ersteSaat = 1, erweiterung, schrittGrenze } = optionen;
   const siege = teilnehmer.map(() => 0);
 
   const ergebnisse = Array.from({ length: partien }, (_, nummer): TurnierPartie => {

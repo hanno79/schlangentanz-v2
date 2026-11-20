@@ -1,7 +1,7 @@
 import { ermittleAktionen } from '../engine';
 import type { SpielAktion, Spielzustand } from '../engine';
 import { entscheiderVon, sichtFuer } from './sicht';
-import type { Sicht } from './sicht';
+import type { Entscheider, Sicht } from './sicht';
 
 /*
 Die Schnittstelle zwischen Engine und KI (Plan K1): Zustand hinein, ein
@@ -18,17 +18,11 @@ export interface Ki {
   waehle(sicht: Sicht, aktionen: readonly SpielAktion[]): SpielAktion;
 }
 
-/**
- * Lässt `ki` für den Spieler wählen, der gerade entscheidet, gleich ob Mensch
- * oder KI (etwa im Turnier); `null` nach Spielende.
- */
-export function kiWahl(zustand: Spielzustand, ki: Ki): SpielAktion | null {
-  const entscheider = entscheiderVon(zustand);
-  if (entscheider === null) return null;
+/** Lässt `ki` für `entscheider` wählen, den Spieler, der gerade entscheidet (`entscheiderVon`). */
+export function waehleFuer(zustand: Spielzustand, entscheider: Entscheider, ki: Ki): SpielAktion {
   const aufgezaehlt = ermittleAktionen(zustand);
   if (aufgezaehlt.length === 0) {
-    const sicht = sichtFuer(zustand, entscheider.index);
-    throw new Error(`KI-Schritt: ${sicht.spieler[sicht.ich].name} entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).`);
+    throw new Error(`KI-Schritt: ${entscheider.name} entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).`);
   }
   const angeboten = structuredClone(aufgezaehlt);
   const stelle = angeboten.indexOf(ki.waehle(sichtFuer(zustand, entscheider.index), angeboten));
@@ -38,6 +32,15 @@ export function kiWahl(zustand: Spielzustand, ki: Ki): SpielAktion | null {
   return aufgezaehlt[stelle];
 }
 
+/**
+ * Lässt `ki` für den Spieler wählen, der gerade entscheidet, gleich ob Mensch
+ * oder KI (etwa im Turnier); `null` nach Spielende.
+ */
+export function kiWahl(zustand: Spielzustand, ki: Ki): SpielAktion | null {
+  const entscheider = entscheiderVon(zustand);
+  return entscheider === null ? null : waehleFuer(zustand, entscheider, ki);
+}
+
 /** Ob gerade eine KI entscheidet; nach Spielende und bei einem Menschen nicht. */
 export function entscheidetKi(zustand: Spielzustand): boolean {
   return entscheiderVon(zustand)?.steuerung === 'KI';
@@ -45,5 +48,6 @@ export function entscheidetKi(zustand: Spielzustand): boolean {
 
 /** Der nächste Schritt der KI: genau eine Aktion, oder `null`, wenn ein Mensch entscheidet oder die Partie beendet ist. */
 export function naechsterKiSchritt(zustand: Spielzustand, ki: Ki): SpielAktion | null {
-  return entscheidetKi(zustand) ? kiWahl(zustand, ki) : null;
+  const entscheider = entscheiderVon(zustand);
+  return entscheider?.steuerung === 'KI' ? waehleFuer(zustand, entscheider, ki) : null;
 }

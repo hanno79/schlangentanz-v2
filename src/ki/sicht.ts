@@ -92,7 +92,7 @@ function spielerSicht(spieler: Spieler): SpielerSicht {
 /** Die Sicht des Spielers an Stelle `spielerIndex`. */
 export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
   const ich = zustand.spieler[spielerIndex];
-  if (!Number.isInteger(spielerIndex) || ich === undefined) {
+  if (ich === undefined) {
     throw new Error(`Sicht: Einen Spieler an Stelle ${spielerIndex} gibt es bei ${zustand.spieler.length} Spielern nicht.`);
   }
   return structuredClone({
@@ -115,9 +115,21 @@ export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
   });
 }
 
-/** Wer gerade entscheidet und ob Mensch oder KI; `null` nach Spielende. */
-export function entscheiderVon(zustand: Spielzustand): { index: number; steuerung: Steuerung } | null {
+export interface Entscheider {
+  index: number;
+  name: string;
+  steuerung: Steuerung;
+}
+
+/** Wer gerade entscheidet, mit Namen und ob Mensch oder KI; `null` nach Spielende. */
+export function entscheiderVon(zustand: Spielzustand): Entscheider | null {
   const index = ermittleEntscheider(zustand);
   if (index === null) return null;
-  return { index, steuerung: zustand.spieler[index].steuerung };
+  const { name, steuerung } = zustand.spieler[index];
+  return { index, name, steuerung };
+}
+
+/** Wie viele Spieler am Tisch sitzen. */
+export function spielerzahl(zustand: Spielzustand): number {
+  return zustand.spieler.length;
 }
