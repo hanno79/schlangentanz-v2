@@ -3,9 +3,9 @@ import { HANDKARTEN } from './constants';
 import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
-Der Zugablauf (A5, A6, A7.6, A10): Karten des Zuges zählen, Zug beenden,
-Auffüllen, überzählige Karten abwerfen und den Zug weitergeben, bis wieder
-jemand entscheiden muss. Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
+Der Zugablauf (A5, A6, A7.6, A7.8, A10): Karten des Zuges zählen, Zug beenden,
+Auffüllen, überzählige Karten abwerfen, nach einem Verdoppler den zweiten Zug
+beginnen und den Zug weitergeben, bis wieder jemand entscheiden muss. Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
 Aktion erlaubt ist; die Funktionen hier verändern den übergebenen Zustand, den
 `anwendeAktion` vorher kopiert hat, und schreiben mit, was geschieht.
 
@@ -85,11 +85,16 @@ export function entnehmeHandkarte(zustand: Spielzustand, spielerId: string, kart
   return spieler.hand.splice(index, 1)[0];
 }
 
+/** A6: Eine gespielte Sonderkarte kommt aus der Hand auf den Ablagestapel dessen, der sie gespielt hat. */
+export function legeAufEigenenAblagestapel(zustand: Spielzustand, spielerId: string, karteId: string): void {
+  const karte = entnehmeHandkarte(zustand, spielerId, karteId);
+  zustand.spieler.find((spieler) => spieler.id === spielerId)!.ablagestapel.push(karte);
+}
+
 /** D13, D25: Die Sonderkarte kommt ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. */
 export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirkungslosAblegenAktion, ereignisse: Ereignis[]): void {
   zaehleGespielteKarte(zustand, aktion);
-  const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
-  zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)!.ablagestapel.push(karte);
+  legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
   meldeGespielteKarte(zustand, aktion, ereignisse);
 }
 
@@ -118,7 +123,7 @@ export function ueberzaehligeKarten(spieler: Spieler): number {
 /**
  * A5 „Zug beenden“: auffüllen auf 5, in der Schlussrunde ohne Nachziehen (A10).
  * Hält der Spieler danach mehr als 5 Karten, wählt er, welche er ablegt;
- * sonst ist der Nächste dran.
+ * sonst geht es weiter (`schliesseZugAb`).
  */
 export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   const { spielerIndex } = zustand.zug;
@@ -129,7 +134,7 @@ export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
     ereignisse.push({ typ: 'AbwerfenVerlangt', spielerIndex, anzahl });
     return;
   }
-  gibZugWeiter(zustand, ereignisse);
+  schliesseZugAb(zustand, ereignisse);
 }
 
 /**
@@ -145,6 +150,21 @@ export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly strin
   spieler.hand = spieler.hand.filter((karte) => !gewaehlt.has(karte.id));
   spieler.ablagestapel.push(...abgeworfen);
   ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: abgeworfen.map((karte) => karte.id) });
+  schliesseZugAb(zustand, ereignisse);
+}
+
+/**
+ * Nach einem ersten Zug mit Verdoppler spielt derselbe Spieler sofort einen
+ * zweiten Zug, der wie ein normaler Zug abläuft (A7.8); aufgefüllt hat er beim
+ * Beenden schon. Nach dem zweiten Zug folgt kein weiterer (D11), sondern der
+ * Nächste ist dran.
+ */
+function schliesseZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  const { spielerIndex, teilzug, verdopplerGespielt } = zustand.zug;
+  if (teilzug === 1 && verdopplerGespielt) {
+    beginneZug(zustand, spielerIndex, 2, ereignisse);
+    return;
+  }
   gibZugWeiter(zustand, ereignisse);
 }
 
@@ -174,7 +194,12 @@ function gibZugWeiter(zustand: Spielzustand, ereignisse: Ereignis[]): void {
     zustand.spieler[ausgesessen.gespieltVon].ablagestapel.push(ausgesessen.karte);
     ereignisse.push({ typ: 'Ausgesetzt', spielerIndex: naechster, karteId: ausgesessen.karte.id, ablagestapelVon: ausgesessen.gespieltVon });
   }
-  zustand.zug = neuerZug(naechster);
-  ereignisse.push({ typ: 'ZugBegonnen', spielerIndex: naechster, teilzug: 1 });
+  beginneZug(zustand, naechster, 1, ereignisse);
   fuelleHandAuf(zustand, naechster, ereignisse);
+}
+
+/** Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben Teilzug nennen. */
+function beginneZug(zustand: Spielzustand, spielerIndex: number, teilzug: 1 | 2, ereignisse: Ereignis[]): void {
+  zustand.zug = neuerZug(spielerIndex, teilzug);
+  ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug });
 }

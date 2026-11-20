@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
-import type { Ereignis, Spielzustand } from '../engine'
+import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { pruefeInvarianten } from './invarianten'
 import { findeSzenario, SZENARIEN } from './szenarien'
 
@@ -112,11 +112,12 @@ describe('E2: Szenarien des Zugablaufs', () => {
     expect(zustand).toMatchObject({ partiephase: 'Schlussrunde', schlussrundeAusloeser: ausloeser, zug: { spielerIndex: ausloeser } })
     const reihe: number[] = []
     for (let zug = 0; zustand.partiephase !== 'Beendet'; zug += 1) {
-      if (zug > spielerzahl) throw new Error(`${name}: Die Partie endet nicht nach ${spielerzahl} Zügen.`)
+      if (zug > 2 * spielerzahl) throw new Error(`${name}: Die Partie endet nicht nach ${2 * spielerzahl} Zügen.`)
       const schritt = spieleZug(zustand)
       expect(schritt.ereignisse.some((ereignis) => ereignis.typ === 'KartenGezogen')).toBe(false)
       zustand = schritt.zustand
-      if (zustand.partiephase !== 'Beendet') reihe.push(zustand.zug.spielerIndex)
+      // A7.8: Ein zweiter Zug nach einem Verdoppler gehört zum selben letzten Zug.
+      if (zustand.partiephase !== 'Beendet' && zustand.zug.teilzug === 1) reihe.push(zustand.zug.spielerIndex)
     }
     expect(reihe).toEqual(folge)
   })
@@ -149,5 +150,77 @@ describe('E2: Szenarien des Zugablaufs', () => {
     const angeboten = ermittleAktionen(zustand)
     expect(angeboten.map((aktion) => aktion.typ)).toEqual(Array(5).fill('SonderkarteWirkungslosAblegen'))
     expect(ermittleAktionen(anwendeAktion(zustand, angeboten[0]).zustand).map((aktion) => aktion.typ)).toEqual(['ZugBeenden'])
+  })
+})
+
+function artVon(karte: Spielzustand['spieler'][number]['hand'][number]): string {
+  return karte.typ === 'Farbkarte' ? karte.farbe : karte.name
+}
+
+/** Die erste aufgezählte Aktion dieses Typs, auf Wunsch mit einer Handkarte dieser Art, wie ein Klick am Tisch. */
+function erste(zustand: Spielzustand, typ: SpielAktion['typ'], art?: string): SpielAktion {
+  const hand = zustand.spieler[zustand.zug.spielerIndex].hand
+  const passend = ermittleAktionen(zustand).find(
+    (aktion) => aktion.typ === typ && (art === undefined || ('karteId' in aktion && hand.some((karte) => karte.id === aktion.karteId && artVon(karte) === art))),
+  )
+  if (passend === undefined) throw new Error(`Testaufbau: ${typ} ${art ?? ''} ist nicht aufgezählt`)
+  return passend
+}
+
+describe('E3: Szenarien des Verdopplers', () => {
+  it('E3: die Szenarien des Tasks sind da', () => {
+    expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.arrayContaining(['verdoppler', 'verdoppler-schlussrunde']))
+  })
+
+  it('A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1', () => {
+    let zustand = erzeuge('verdoppler')
+    expect(zustand.spieler).toHaveLength(3)
+    expect(zustand.spieler.slice(1).every((spieler) => spieler.hand.some((karte) => artVon(karte) === 'Farbenschutz'))).toBe(true)
+    const zuBeginn = ermittleAktionen(zustand)
+    expect(zuBeginn.filter((aktion) => aktion.typ === 'VerdopplerSpielen')).toHaveLength(2)
+    expect(zuBeginn.some((aktion) => aktion.typ === 'SonderkarteWirkungslosAblegen' && aktion.karteId.startsWith('verdoppler'))).toBe(false)
+
+    const nachVerdoppler = anwendeAktion(zustand, erste(zustand, 'VerdopplerSpielen'))
+    zustand = nachVerdoppler.zustand
+    expect(nachVerdoppler.ereignisse).toMatchObject([{ typ: 'KarteGespielt', spielerIndex: 0, nach: { ort: 'Ablagestapel', spielerIndex: 0 } }])
+    expect(zustand.schwebend).toBeNull()
+    expect(new Set(ermittleAktionen(zustand).map((aktion) => aktion.typ))).toEqual(new Set(['FarbkarteLegen', 'ZugBeenden']))
+    zustand = anwendeAktion(zustand, erste(zustand, 'FarbkarteLegen', 'Rot')).zustand
+    expect(ermittleAktionen(zustand).map((aktion) => aktion.typ)).toEqual(['ZugBeenden'])
+
+    const wechsel = anwendeAktion(zustand, erste(zustand, 'ZugBeenden'))
+    expect(wechsel.ereignisse).toEqual([
+      { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 2 },
+      { typ: 'ZugBegonnen', spielerIndex: 0, teilzug: 2 },
+    ])
+    zustand = wechsel.zustand
+    expect(ermittleAktionen(zustand).some((aktion) => aktion.typ === 'VerdopplerSpielen')).toBe(false)
+    zustand = anwendeAktion(zustand, erste(zustand, 'FarbkarteLegen', 'Blau')).zustand
+    zustand = anwendeAktion(zustand, erste(zustand, 'SonderkarteWirkungslosAblegen', 'Verdoppler')).zustand
+    expect(ermittleAktionen(zustand).map((aktion) => aktion.typ)).toEqual(['ZugBeenden'])
+    const ende = anwendeAktion(zustand, erste(zustand, 'ZugBeenden'))
+    expect(ende.ereignisse).toEqual([
+      { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 2 },
+      { typ: 'ZugBegonnen', spielerIndex: 1, teilzug: 1 },
+    ])
+    expect(ende.zustand.spieler[0].hand).toHaveLength(5)
+  })
+
+  it('A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende', () => {
+    let zustand = erzeuge('verdoppler-schlussrunde')
+    expect(zustand).toMatchObject({ partiephase: 'Schlussrunde', schlussrundeAusloeser: 2, nachziehstapel: [], zug: { spielerIndex: 0, teilzug: 1 } })
+    zustand = anwendeAktion(zustand, erste(zustand, 'VerdopplerSpielen')).zustand
+    zustand = anwendeAktion(zustand, erste(zustand, 'FarbkarteLegen', 'Grün')).zustand
+    const wechsel = anwendeAktion(zustand, erste(zustand, 'ZugBeenden'))
+    expect(wechsel.ereignisse).toEqual([{ typ: 'ZugBegonnen', spielerIndex: 0, teilzug: 2 }])
+    zustand = wechsel.zustand
+    expect(zustand.spieler[0].hand.map(artVon)).toEqual(['Gelb', 'Farbenschutz'])
+    zustand = anwendeAktion(zustand, erste(zustand, 'FarbkarteLegen', 'Gelb')).zustand
+    zustand = anwendeAktion(zustand, erste(zustand, 'SonderkarteWirkungslosAblegen', 'Farbenschutz')).zustand
+    const nachZweitem = anwendeAktion(zustand, erste(zustand, 'ZugBeenden'))
+    expect(nachZweitem.ereignisse).toEqual([{ typ: 'ZugBegonnen', spielerIndex: 1, teilzug: 1 }])
+    const letzter = spieleZug(nachZweitem.zustand)
+    expect(letzter.ereignisse.filter((ereignis) => ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'KartenGezogen')).toEqual([])
+    expect(letzter.zustand.partiephase).toBe('Beendet')
   })
 })

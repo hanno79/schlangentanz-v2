@@ -62,7 +62,7 @@ function zugablaufSzenarien(): Szenario[] {
       name: 'schlussrunde-4',
       beschreibung: 'A10: Vier Spieler in der Schlussrunde. KI-Gegner 2 hat die letzte Karte gezogen und ist am Zug.',
       erwartet:
-        'Nach dem Zug von KI-Gegner 2 hat jeder andere genau einen letzten Zug, im Uhrzeigersinn: KI-Gegner 3, Spieler 1, KI-Gegner 1. Niemand zieht nach. KI-Gegner 2 kommt nicht mehr dran: Nach dem „Zug beenden“ von KI-Gegner 1 ist die Partie beendet.',
+        'Nach dem Zug von KI-Gegner 2 hat jeder andere genau einen letzten Zug, im Uhrzeigersinn: KI-Gegner 3, Spieler 1, KI-Gegner 1. Niemand zieht nach. KI-Gegner 3 hält einen Verdoppler: Spielt er ihn, folgt sein zweiter Zug (Teilzug 2) ohne Nachziehen, und beide zählen als sein einer letzter Zug (A7.8). KI-Gegner 2 kommt nicht mehr dran: Nach dem „Zug beenden“ von KI-Gegner 1 ist die Partie beendet.',
       erzeuge: () => gemischt(4, 13).haendeAuffuellen().schlussrunde(2).amZug(2).zustand(),
     },
     {
@@ -88,6 +88,38 @@ function zugablaufSzenarien(): Szenario[] {
         'Ohne Schlange am Tisch hat keine der fünf Karten ein Ziel: fünf Knöpfe SonderkarteWirkungslosAblegen, kein „Zug beenden“ (mindestens eine Karte). Nach einem bleibt nur ZugBeenden (D12); die Karte liegt auf dem Ablagestapel von Spieler 1.',
       erzeuge: () =>
         oberste(gemischt(2, 16).hand(0, ['Regenbogenschlange', 'Schlangenblockade', 'Farbendieb', 'Schlangenfrass', 'Farbenfusion']), 1, 5).zustand(),
+    },
+  ]
+}
+
+function verdopplerSzenarien(): Szenario[] {
+  return [
+    {
+      name: 'verdoppler',
+      beschreibung:
+        'A7.8: Drei Spieler. Spieler 1 ist am Zug und hält Verdoppler, Rot, Blau, Schlangenfrass und einen zweiten Verdoppler. Beide KI-Gegner halten einen Farbenschutz.',
+      erwartet:
+        'Zwei Knöpfe VerdopplerSpielen; einen Verdoppler wirkungslos ablegen bietet die Engine im ersten Zug nicht an (D25). Nach VerdopplerSpielen: Ereignis KarteGespielt (Verdoppler → Ablagestapel von Spieler 1), niemand wird gefragt, es entscheidet weiter Spieler 1, obwohl beide KI-Gegner Farbenschutz halten (A6); angeboten sind nur noch FarbkarteLegen und ZugBeenden. Nach Rot bleibt nur ZugBeenden. Es füllt auf 5 auf: Ereignisse KartenGezogen (Spieler 1 zieht 2) und ZugBegonnen (Spieler 1, Teilzug 2). Im zweiten Zug gibt es kein VerdopplerSpielen; der zweite Verdoppler steht nur als SonderkarteWirkungslosAblegen da (D11, D23). Nach Blau und diesem Verdoppler bleibt nur ZugBeenden; Spieler 1 zieht 2 nach, dann beginnt KI-Gegner 1 mit Teilzug 1.',
+      erzeuge: () =>
+        verteile(
+          gemischt(3, 17).hand(0, ['Verdoppler', 'Rot', 'Blau', 'Schlangenfrass', 'Verdoppler']).hand(1, ['Farbenschutz']).hand(2, ['Farbenschutz']),
+          [0, 4, 4],
+        ).zustand(),
+    },
+    {
+      name: 'verdoppler-schlussrunde',
+      beschreibung:
+        'A7.8, A10: Drei Spieler in der Schlussrunde, ausgelöst von KI-Gegner 2. Spieler 1 ist mit seinem letzten Zug dran und hält Verdoppler, Grün, Gelb und Farbenschutz.',
+      erwartet:
+        'Nach VerdopplerSpielen und Grün beendet Spieler 1 den ersten Zug: kein KartenGezogen, nur ZugBegonnen (Spieler 1, Teilzug 2); er hält noch Gelb und Farbenschutz. Im zweiten Zug legt er Gelb und den Farbenschutz ab; „Zug beenden“ zieht nichts nach, dann hat KI-Gegner 1 genau einen letzten Zug (Teilzug 1). Nach dessen „Zug beenden“ ist die Partie beendet; KI-Gegner 2 kommt nicht mehr dran.',
+      erzeuge: () =>
+        gemischt(3, 18)
+          .hand(0, ['Verdoppler', 'Grün', 'Gelb', 'Farbenschutz'])
+          .hand(1, ['Blau', 'Rot', 'Violett', 'Braun', 'Blau'])
+          .hand(2, ['Rot', 'Gelb', 'Grün', 'Blau', 'Braun'])
+          .schlussrunde(2)
+          .amZug(0)
+          .zustand(),
     },
   ]
 }
@@ -151,6 +183,7 @@ export const SZENARIEN: readonly Szenario[] = [
     },
   },
   ...zugablaufSzenarien(),
+  ...verdopplerSzenarien(),
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

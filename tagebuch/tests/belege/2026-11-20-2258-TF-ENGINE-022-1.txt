@@ -1,0 +1,16 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a97084c9813e31011
+
+G-A: teilzug=2 aktionenGleich=true verdopplerMitWirkung=0
+G-B: KartenGezogen@0, Ausgesetzt@1, ZugBegonnen1@0; verdopplerAngeboten=1
+G-C: Im zweiten Zug nach einem Verdoppler gibt ein weiterer Verdoppler keinen weiteren Zug (A7.8, D11); er lässt sich nur wirkungslos auf den eigenen Ablagestapel legen (D23).
+G-D: In diesem Zug ist schon eine Sonderkarte gespielt; je Zug höchstens eine Farbkarte und eine Sonderkarte (A5, D12).
+H2: Hand KI-Gegner 3 = verdoppler-04, violett-02, gelb-10, violett-06, rot-14
+G-F: KartenGezogen, SchlussrundeBegonnen, ZugBegonnen; phase=Schlussrunde; teilzug=2; Aktionen mit violett-01=3
+G-E: Zugfolge 1/2 2/1 3/1 3/2; KartenGezogen=0; Phase=Beendet
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  22:52:08
+   Duration  3.57s (transform 425ms, setup 306ms, import 381ms, tests 90ms, environment 2.44s)
+

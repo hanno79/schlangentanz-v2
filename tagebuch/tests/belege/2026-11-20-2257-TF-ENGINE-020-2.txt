@@ -1,0 +1,497 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a97084c9813e31011
+
+ ❯ src/engine/__tests__/aktionen.test.ts (34 tests | 1 failed) 79ms
+     × A5/A7.8: eine Karte, die nicht auf der Hand liegt, oder eine Karte der falschen Art wird abgelehnt; der Verdoppler selbst ist erlaubt 15ms
+ ❯ src/engine/__tests__/verdoppler.test.ts (22 tests | 22 failed) 98ms
+     × A7.8: der Verdoppler zählt als Sonderkarte des Zuges: danach keine weitere Sonderkarte, aber noch eine Farbkarte 27ms
+     × A7.8: höchstens eine Farbkarte nach dem Verdoppler; danach bleibt nur „Zug beenden“ 3ms
+     × A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdoppler kommen 8ms
+     × A7.8/D12: der Verdoppler allein genügt als Karte des ersten Zuges 3ms
+     × A6/A7.8: der gespielte Verdoppler kommt auf den eigenen Ablagestapel; das Ereignis nennt ihn und den Ort 3ms
+     × D25: im ersten Zug hat der Verdoppler ein Ziel: aufgezählt wird er mit Wirkung, wirkungslos ablegen wird abgelehnt 9ms
+     × A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2 3ms
+     × A7.8/D12: der zweite Zug läuft wie ein normaler Zug: ohne Karte kein „Zug beenden“ 3ms
+     × A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge 3ms
+     × A7.8/A5: nach dem zweiten Zug füllt er auf 5 auf, dann beginnt der Nächste seinen ersten Zug 3ms
+     × A7.8 Beispiel: Verdoppler und Rot, auffüllen, dann Blau und Schlangenfrass: neben dem Verdoppler drei Karten 3ms
+     × D11: im Zug danach darf der Nächste selbst wieder einen Verdoppler mit Wirkung spielen 2ms
+     × A7.8/D11: im zweiten Zug wird ein Verdoppler mit Wirkung nicht angeboten und mit Grund abgelehnt 2ms
+     × D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht 2ms
+     × D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht 2ms
+     × A6: auch wer Farbenschutz hält, wird nicht gefragt; es entscheidet weiter der Spieler am Zug 2ms
+     × A10/A7.8: wird der Stapel beim Auffüllen zwischen den Zügen leer, spielt er den zweiten Zug noch; danach hat jeder andere genau einen letzten Zug 3ms
+     × A10/A7.8: Verdoppler in der Schlussrunde: der zweite Zug folgt ohne Auffüllen, beide zusammen sind sein letzter Zug 2ms
+     × A10/A7.8: leere Hand im zweiten Zug: angeboten ist nur „Zug beenden“, und es ist erlaubt 2ms
+     × A10/A7.8: in der Schlussrunde mit dem Verdoppler als einziger Karte folgt ein zweiter Zug mit leerer Hand 2ms
+     × A7.8: Verdoppler als einzige Handkarte: allein gespielt, aufgefüllt auf 5, dann der zweite Zug 2ms
+     × A5/A7.8: hält er nach dem Auffüllen des ersten Zuges mehr als 5 Karten, wirft er erst ab, dann folgt der zweite Zug 2ms
+ ❯ src/entwicklung/szenarien.test.ts (17 tests | 3 failed) 181ms
+     × E3: die Szenarien des Tasks sind da 11ms
+     × A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1 1ms
+     × A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende 1ms
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts (10 tests | 1 failed) 401ms
+     × A7.8/A10: Verdoppler, auch wenn der Stapel zwischen den beiden Zügen leer wird, lassen sich nachrechnen 10ms
+ ❯ src/engine/__tests__/dauerlauf.test.ts (16 tests | 1 failed) 65187ms
+     × A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler 65035ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 28 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > E3: die Szenarien des Tasks sind da
+AssertionError: expected [ 'start-2', 'start-4', …(12) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "verdoppler",
+-   "verdoppler-schlussrunde",
++ [
++   "start-2",
++   "start-4",
++   "start-erweiterung",
++   "alle-orte",
++   "wertung-beispiele",
++   "wertung-beispiele-kette",
++   "wertung-joker",
++   "kaputt-doppelte-karte",
++   "stapel-fast-leer",
++   "schlussrunde-2",
++   "schlussrunde-4",
++   "aussetzen",
++   "nur-farbenschutz",
++   "nur-sonderkarten",
+  ]
+
+ ❯ src/entwicklung/szenarien.test.ts:171:56
+    169| describe('E3: Szenarien des Verdopplers', () => {
+    170|   it('E3: die Szenarien des Tasks sind da', () => {
+    171|     expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.…
+       |                                                        ^
+    172|   })
+    173|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/28]⎯
+
+ FAIL  src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+Error: Szenario verdoppler fehlt
+ ❯ erzeuge src/entwicklung/szenarien.test.ts:9:37
+      7| function erzeuge(name: string) {
+      8|   const szenario = findeSzenario(name)
+      9|   if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
+       |                                     ^
+     10|   return szenario.erzeuge()
+     11| }
+ ❯ src/entwicklung/szenarien.test.ts:175:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/28]⎯
+
+ FAIL  src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende
+Error: Szenario verdoppler-schlussrunde fehlt
+ ❯ erzeuge src/entwicklung/szenarien.test.ts:9:37
+      7| function erzeuge(name: string) {
+      8|   const szenario = findeSzenario(name)
+      9|   if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
+       |                                     ^
+     10|   return szenario.erzeuge()
+     11| }
+ ❯ src/entwicklung/szenarien.test.ts:209:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/28]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A5/A7.8: eine Karte, die nicht auf der Hand liegt, oder eine Karte der falschen Art wird abgelehnt; der Verdoppler selbst ist erlaubt
+AssertionError: expected { erlaubt: false, …(1) } to deeply equal { erlaubt: true }
+
+- Expected
++ Received
+
+  {
+-   "erlaubt": true,
++   "erlaubt": false,
++   "grund": "Verdoppler ist noch nicht umgesetzt (kommt mit E3).",
+  }
+
+ ❯ src/engine/__tests__/aktionen.test.ts:180:113
+    178|       /nur Sonderkarten/,
+    179|     )
+    180|     expect(pruefeAktion(zustand, { typ: 'VerdopplerSpielen', spielerId…
+       |                                                                                                                 ^
+    181|   })
+    182|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/28]⎯
+
+ FAIL  src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+AssertionError: zweite Züge nach einem Verdoppler im Dauerlauf: expected 0 to be greater than 100
+ ❯ src/engine/__tests__/dauerlauf.test.ts:262:82
+    260|     expect(Math.min(...ergebnisse.map((ergebnis) => ergebnis.schritte)…
+    261|     // E3: Der Verdoppler wird wirklich gespielt, auch in der Schlussr…
+    262|     expect(zweiteZuege.gesamt, 'zweite Züge nach einem Verdoppler im D…
+       |                                                                                  ^
+    263|     expect(zweiteZuege.inSchlussrunde, 'zweite Züge in der Schlussrund…
+    264|   }, 300_000)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: der Verdoppler zählt als Sonderkarte des Zuges: danach keine weitere Sonderkarte, aber noch eine Farbkarte
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:60:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: höchstens eine Farbkarte nach dem Verdoppler; danach bleibt nur „Zug beenden“
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:67:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdoppler kommen
+AssertionError: expected [ …(2) ] to include 'VerdopplerSpielen'
+ ❯ src/engine/__tests__/verdoppler.test.ts:76:30
+     74|   it('A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdo…
+     75|     const nachFarbe = spiele(tisch(['Blau', 'Verdoppler', 'Rot']).zust…
+     76|     expect(typen(nachFarbe)).toContain('VerdopplerSpielen')
+       |                              ^
+     77|     const nachVerdoppler = verdoppler(nachFarbe).zustand
+     78|     expect(typen(nachVerdoppler)).toEqual(['ZugBeenden'])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8/D12: der Verdoppler allein genügt als Karte des ersten Zuges
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:83:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A6/A7.8: der gespielte Verdoppler kommt auf den eigenen Ablagestapel; das Ereignis nennt ihn und den Ort
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:91:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > D25: im ersten Zug hat der Verdoppler ein Ziel: aufgezählt wird er mit Wirkung, wirkungslos ablegen wird abgelehnt
+AssertionError: expected [] to deeply equal [ { typ: 'VerdopplerSpielen', …(2) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "karteId": "verdoppler-01",
+-     "spielerId": "spieler-1",
+-     "typ": "VerdopplerSpielen",
+-   },
+- ]
++ []
+
+ ❯ src/engine/__tests__/verdoppler.test.ts:102:52
+    100|     const zustand = tisch(['Verdoppler', 'Blau']).zustand()
+    101|     const id = karte(zustand, 'Verdoppler')
+    102|     expect(aktionen(zustand, 'VerdopplerSpielen')).toEqual([{ typ: 'Ve…
+       |                                                    ^
+    103|     expect(aktionen(zustand, 'SonderkarteWirkungslosAblegen')).toEqual…
+    104|     expect(grund(zustand, wirkungslos(zustand, 'Verdoppler'))).toMatch…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:111:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: der zweite Zug läuft wie ein normaler Zug: ohne Karte kein „Zug beenden“
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:131:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:138:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/A5: nach dem zweiten Zug füllt er auf 5 auf, dann beginnt der Nächste seinen ersten Zug
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:148:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8 Beispiel: Verdoppler und Rot, auffüllen, dann Blau und Schlangenfrass: neben dem Verdoppler drei Karten
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:162:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > D11: im Zug danach darf der Nächste selbst wieder einen Verdoppler mit Wirkung spielen
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:185:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > A7.8/D11: im zweiten Zug wird ein Verdoppler mit Wirkung nicht angeboten und mit Grund abgelehnt
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:194:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:204:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:218:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A6: der Verdoppler betrifft keinen Mitspieler (Plan E3, Kriterium 4) > A6: auch wer Farbenschutz hält, wird nicht gefragt; es entscheidet weiter der Spieler am Zug
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ src/engine/__tests__/verdoppler.test.ts:231:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: wird der Stapel beim Auffüllen zwischen den Zügen leer, spielt er den zweiten Zug noch; danach hat jeder andere genau einen letzten Zug
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:247:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: Verdoppler in der Schlussrunde: der zweite Zug folgt ohne Auffüllen, beide zusammen sind sein letzter Zug
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:280:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: leere Hand im zweiten Zug: angeboten ist nur „Zug beenden“, und es ist erlaubt
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ ersterZug src/engine/__tests__/verdoppler.test.ts:54:28
+ ❯ src/engine/__tests__/verdoppler.test.ts:296:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: in der Schlussrunde mit dem Verdoppler als einziger Karte folgt ein zweiter Zug mit leerer Hand
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:305:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Grenzfälle der Hand > A7.8: Verdoppler als einzige Handkarte: allein gespielt, aufgefüllt auf 5, dann der zweite Zug
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:316:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/28]⎯
+
+ FAIL  src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Grenzfälle der Hand > A5/A7.8: hält er nach dem Auffüllen des ersten Zuges mehr als 5 Karten, wirft er erst ab, dann folgt der zweite Zug
+AssertionError: VerdopplerSpielen mit verdoppler-01 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ aktionFuer src/engine/__tests__/zugablauf_hilfen.ts:43:72
+     41| export function aktionFuer(zustand: Spielzustand, typ: Aktionstyp, kar…
+     42|   const passend = aktionen(zustand, typ).filter((aktion) => 'karteId' …
+     43|   expect(passend.length, `${typ} mit ${karteId} ist nicht aufgezählt`)…
+       |                                                                        ^
+     44|   return passend[0]
+     45| }
+ ❯ spiele src/engine/__tests__/verdoppler.test.ts:37:29
+ ❯ verdoppler src/engine/__tests__/verdoppler.test.ts:41:10
+ ❯ src/engine/__tests__/verdoppler.test.ts:330:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/28]⎯
+
+ FAIL  src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A7.8/A10: Verdoppler, auch wenn der Stapel zwischen den beiden Zügen leer wird, lassen sich nachrechnen
+AssertionError: expected 0 to be greater than or equal to 3
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts:180:25
+    178|     const { schritte, zweiteZuege } = pruefePartie(start, 8, 'Verdoppl…
+    179|     expect(schritte).toBeGreaterThan(5)
+    180|     expect(zweiteZuege).toBeGreaterThanOrEqual(3)
+       |                         ^
+    181|   })
+    182| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/28]⎯
+
+
+ Test Files  5 failed (5)
+      Tests  28 failed | 71 passed (99)
+   Start at  22:22:27
+   Duration  71.41s (transform 2.55s, setup 2.94s, import 2.72s, tests 65.95s, environment 23.17s)
+

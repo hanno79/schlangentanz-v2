@@ -408,10 +408,14 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
       ['Widerspruch'],
     )
     expect(datum).toBe('13.11.2026')
-    // C7 nennt keinen offenen Widerspruch mehr.
+    // C7 nennt keinen offenen Widerspruch mehr; seit E3 ist die Zeile behoben und gestrichen.
     const c7 = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Website (Teil A)').find(([nr]) => nr === 'C7')
-    expect(c7?.[1], 'C7').not.toContain('Widerspruch')
-    expect(c7?.[1], 'C7').toContain('D23')
+    if (c7) {
+      expect(c7[1], 'C7').not.toContain('Widerspruch')
+      expect(c7[1], 'C7').toContain('D23')
+    } else {
+      expect(teil('C'), 'C7 fehlt in Teil C, ohne als gestrichen vermerkt zu sein').toMatch(/Behoben und gestrichen:[^\n]*C7 \(E3/)
+    }
   })
 
   it('macht die früheren R-Nummern auffindbar', () => {

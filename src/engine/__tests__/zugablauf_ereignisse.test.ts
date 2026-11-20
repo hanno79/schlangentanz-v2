@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen } from '../index'
-import type { Ereignis, Spielzustand } from '../index'
+import type { Aktionstyp, Ereignis, Spielzustand } from '../index'
 import { erstellePartie } from '../state'
 import { baukasten } from '../testing/szenario'
 import type { Kartenwahl } from '../testing/szenario'
@@ -13,8 +13,8 @@ den Ereignissen einer Aktion alles nachvollziehen können, was sie zeigt, ohne
 zwei Zustände zu vergleichen. Der Test rechnet die sichtbare Lage aus der
 alten Lage und den Ereignissen nach und vergleicht sie mit der Lage des neuen
 Zustands: Handgrössen, Ablagestapel (alle einsehbar, D28), Stapelgrösse,
-Schlangen, wer am Zug ist und in welchem Abschnitt, ausliegende Gruben,
-Partiephase und Auslöser (A5, A6, A7.6, A10).
+Schlangen, wer am Zug ist, in welchem Teilzug (A7.8) und in welchem
+Abschnitt, ausliegende Gruben, Partiephase und Auslöser (A5, A6, A7.6, A10).
 */
 
 interface Lage {
@@ -24,6 +24,8 @@ interface Lage {
   schlangen: Record<string, { besitzer: number; karten: string[] }>
   /** `null` nach Spielende: dann ist niemand mehr am Zug (A10). */
   amZug: number | null
+  /** A7.8: 2 im zweiten Zug nach einem Verdoppler; `null` nach Spielende. */
+  teilzug: number | null
   abschnitt: string | null
   gruben: { karteId: string; vor: number; von: number }[]
   partiephase: string
@@ -42,6 +44,7 @@ function lageVon(zustand: Spielzustand): Lage {
     stapel: zustand.nachziehstapel.length,
     schlangen,
     amZug: beendet ? null : zustand.zug.spielerIndex,
+    teilzug: beendet ? null : zustand.zug.teilzug,
     abschnitt: beendet ? null : zustand.zug.abschnitt,
     gruben: zustand.ausliegendeGruben.map((grube) => ({ karteId: grube.karte.id, vor: grube.vor, von: grube.gespieltVon })),
     partiephase: zustand.partiephase,
@@ -77,6 +80,7 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
         break
       case 'ZugBegonnen':
         lage.amZug = ereignis.spielerIndex
+        lage.teilzug = ereignis.teilzug
         lage.abschnitt = 'Ausspielen'
         break
       case 'Ausgesetzt':
@@ -90,6 +94,7 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
       case 'PartieBeendet':
         lage.partiephase = 'Beendet'
         lage.amZug = null
+        lage.teilzug = null
         lage.abschnitt = null
         break
       case 'Abgewehrt':
@@ -113,22 +118,28 @@ function verrateneHandkarten(zustand: Spielzustand, ereignisse: Ereignis[]): str
   return genannt.filter((id) => aufHand.has(id))
 }
 
-/** Spielt mit fester Saat zufällig unter den aufgezählten Aktionen und prüft jeden Schritt. */
-function pruefePartie(start: Spielzustand, saat: number): number {
+/**
+ * Spielt mit fester Saat zufällig unter den aufgezählten Aktionen und prüft jeden
+ * Schritt. Ist `bevorzugt` angeboten, wird diese Aktion gewählt. Liefert die Zahl
+ * der Schritte und der zweiten Züge (A7.8).
+ */
+function pruefePartie(start: Spielzustand, saat: number, bevorzugt?: Aktionstyp): { schritte: number; zweiteZuege: number } {
   const wahl = erzeugeZufall(saat)
   let zustand = start
   let schritte = 0
+  let zweiteZuege = 0
   while (zustand.partiephase !== 'Beendet') {
     if (schritte > 2000) throw new Error(`Saat ${saat}: Die Partie endet nicht nach 2000 Schritten.`)
     const angeboten = ermittleAktionen(zustand)
-    const aktion = angeboten[Math.floor(wahl() * angeboten.length)]
+    const aktion = angeboten.find((angebot) => angebot.typ === bevorzugt) ?? angeboten[Math.floor(wahl() * angeboten.length)]
     const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
     expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}, Schritt ${schritte}: ${JSON.stringify(aktion)}`).toEqual(lageVon(neu))
     expect(verrateneHandkarten(neu, ereignisse), `Saat ${saat}, Schritt ${schritte}: Ereignis nennt eine Handkarte`).toEqual([])
+    zweiteZuege += ereignisse.filter((ereignis) => ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2).length
     zustand = neu
     schritte += 1
   }
-  return schritte
+  return { schritte, zweiteZuege }
 }
 
 const FUENF: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']
@@ -141,7 +152,7 @@ describe('A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriteri
     [2, 4],
   ])('A10: Zufallspartie mit %i Spielern (Saat %i): jeder Schritt lässt sich aus den Ereignissen nachrechnen', (spielerzahl, saat) => {
     const start = erstellePartie({ spielerzahl, erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
-    expect(pruefePartie(start, saat)).toBeGreaterThan(40)
+    expect(pruefePartie(start, saat).schritte).toBeGreaterThan(40)
   })
 
   it('A7.6/D14/D21: Aussetzen mit zwei Gruben verschiedener Spieler, Überhand und Schlussrunde lassen sich nachrechnen', () => {
@@ -154,7 +165,19 @@ describe('A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriteri
       .grube(0, 1)
       .stapelBehalten(6)
       .zustand()
-    expect(pruefePartie(start, 7)).toBeGreaterThan(5)
+    expect(pruefePartie(start, 7).schritte).toBeGreaterThan(5)
+  })
+
+  it('A7.8/A10: Verdoppler, auch wenn der Stapel zwischen den beiden Zügen leer wird, lassen sich nachrechnen', () => {
+    const start = baukasten({ spielerzahl: 3, erweiterung: false })
+      .hand(0, ['Verdoppler', 'Blau', 'Rot', 'Verdoppler', 'Gelb'])
+      .hand(1, ['Verdoppler', 'Rot', 'Gelb', 'Blau', 'Grün'])
+      .hand(2, ['Verdoppler', 'Gelb', 'Blau', 'Rot', 'Braun'])
+      .stapelBehalten(3)
+      .zustand()
+    const { schritte, zweiteZuege } = pruefePartie(start, 8, 'VerdopplerSpielen')
+    expect(schritte).toBeGreaterThan(5)
+    expect(zweiteZuege).toBeGreaterThanOrEqual(3)
   })
 })
 

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-021 In der Zufallspartie aus Saat 7 mit drei Spielern spielen zwei Spieler je einen Verdoppler, und der Tisch zeigt jedes Mal einen zweiten Zug mit „Teilzug 2“ und danach den nächsten Spieler. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-021 In der Zufallspartie aus Saat 7 mit drei Spielern spielen zwei Spieler je einen Verdoppler, und der Tisch zeigt jedes Mal einen zweiten Zug mit „Teilzug 2“ und danach den nächsten Spieler.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-DEV-022</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Szenarien sind gebaute Lagen. In einer gemischten Partie zeigt sich, ob der Verdoppler auch dort richtig läuft, wo die Karten zufällig verteilt sind, und ob nach einem zweiten Zug die Reihenfolge der Spieler stimmt.</p><h2>Bestanden, wenn</h2><p>Spieler 1 legt Grün, spielt danach den Verdoppler (Farbkarte vor dem Verdoppler) und beendet: KartenGezogen (zieht 2), ZugBegonnen Spieler 1 Teilzug 2, Stapel 91. Nach Rot und „ZugBeenden“: zieht 1, KI-Gegner 1 mit Teilzug 1, Stapel 90, Hände 5/5/5. KI-Gegner 2 spielt später den Verdoppler allein, zieht 1 und beginnt Teilzug 2 (Stapel 88); nach Blau und „ZugBeenden“ ist Spieler 1 mit Teilzug 1 dran, Stapel 87, Hände 5/5/5. Invarianten alle erfüllt, keine Konsolenfehler.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein zweiter Zug ausbleibt, an den falschen Spieler geht, die Hand nicht auf 5 kommt oder der Stapel nicht um die gezogenen Karten kleiner wird.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/E3-verdoppler (PR #51)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, <code>npm run preview:testhooks</code> auf Port 4174</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p><code>/dev?seed=7&amp;spieler=3</code> (ohne Erweiterung). Spieler 1 hält zu Beginn Grün, Schlangenblockade, Gelb, Verdoppler (verdoppler-03), Rot; KI-Gegner 2 erhält verdoppler-02.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`/dev?seed=7&amp;spieler=3`</td><td>„FarbkarteLegen: Waldspross (gruen-01) → neue Schlange“, „VerdopplerSpielen“, „ZugBeenden“</td><td></td><td>ZugBegonnen: Spieler 1, Teilzug 2; Stapel 91</td></tr><tr><td>2</td><td>Aktionen der Engine</td><td>„FarbkarteLegen: Feuerkeim (rot-08) → schlange-1 ende“, „ZugBeenden“</td><td></td><td>ZugBegonnen: KI-Gegner 1, Teilzug 1; Stapel 90</td></tr><tr><td>3</td><td>Aktionen der Engine</td><td>KI-Gegner 1: „FarbkarteLegen: Wasserwirbel (blau-12) → neue Schlange“, „ZugBeenden“</td><td></td><td>ZugBegonnen: KI-Gegner 2, Teilzug 1; VerdopplerSpielen angeboten</td></tr><tr><td>4</td><td>Aktionen der Engine</td><td>KI-Gegner 2: „VerdopplerSpielen: Verdoppler (verdoppler-02)“, „ZugBeenden“</td><td></td><td>zieht 1; ZugBegonnen: KI-Gegner 2, Teilzug 2; Stapel 88</td></tr><tr><td>5</td><td>Aktionen der Engine</td><td>KI-Gegner 2: „FarbkarteLegen: Wasserwirbel (blau-04) → neue Schlange“, „ZugBeenden“</td><td></td><td>ZugBegonnen: Spieler 1, Teilzug 1; Stapel 87; Hände 5/5/5</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Die Partie wurde nicht bis zum Ende gespielt; das Spielende mit Verdoppler prüfen TF-DEV-020 und TF-ENGINE-021.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 22:58</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E3) &middot; agent &middot; pruefung-E3 @ <span class="commit" title="93e256fcfa626622f122ce7aa3a6dd8edcebb76d">93e256f</span> / eingebauter Browser 1280x900; Beginn zusätzlich Playwright 1280x900 und 390x844 Touch</p><p>Saat 7, 3 Spieler, 11 Schritte: Spieler 1 Grün+Verdoppler, zieht 2, Teilzug 2, Stapel 91; Rot, zieht 1, KI-Gegner 1 Teilzug 1, Stapel 90; KI-Gegner 1 Blau, zieht 1, Stapel 89; KI-Gegner 2 Verdoppler allein, zieht 1, Teilzug 2, Stapel 88; Blau, zieht 1, Spieler 1 Teilzug 1, Stapel 87, Hände 5/5/5; Invarianten erfüllt, keine Konsolenfehler</p><ul class="belege"><li><a href="belege/2026-11-20-2258-TF-DEV-021-1.png"><img class="beleg-vorschau" src="belege/2026-11-20-2258-TF-DEV-021-1.png" alt="Beleg 2026-11-20-2258-TF-DEV-021-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-20-2258-TF-DEV-021-2.png"><img class="beleg-vorschau" src="belege/2026-11-20-2258-TF-DEV-021-2.png" alt="Beleg 2026-11-20-2258-TF-DEV-021-2.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
