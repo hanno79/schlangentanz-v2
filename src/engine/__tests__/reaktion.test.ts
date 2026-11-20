@@ -121,11 +121,12 @@ describe('A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die
 
   it('A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers', () => {
     const { zustand, wirke, ansage } = mehrereZiele([3, 1], ALLE_MIT_SCHUTZ)
+    const grube = zustand.spieler[2].hand[0].id
     const nach = folge(zustand, () => ansage, (jetzt) => reaktion(jetzt, true), (jetzt) => reaktion(jetzt, true))
     expect(wirke).not.toHaveBeenCalled()
-    expect(ablage(nach.zustand, 2)).toEqual([ansage.karteId])
+    expect(ablage(nach.zustand, 2)).toEqual([grube])
     expect(ereignisseVom(nach.ereignisse, 'AnsageEntschieden')).toEqual([
-      { typ: 'AnsageEntschieden', spielerIndex: 2, karteId: ansage.karteId, abgewehrt: [3, 1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 2 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 2, karteId: grube, abgewehrt: [3, 1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 2 } },
     ])
   })
 })

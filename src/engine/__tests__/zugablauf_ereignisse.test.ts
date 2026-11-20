@@ -220,7 +220,7 @@ describe('A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriteri
     const start = baukasten({ spielerzahl: 3, erweiterung: false })
       .hand(0, ['Schlangengrube', 'Schlangengrube', 'Farbenschutz', 'Blau', 'Rot'])
       .hand(1, ['Schlangengrube', 'Farbenschutz', 'Farbenschutz', 'Gelb', 'Blau'])
-      .hand(2, ['Farbenschutz', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .hand(2, ['Violett', 'Rot', 'Gelb', 'Blau', 'Rot'])
       .stapelBehalten(8)
       .zustand()
     const { anzahl } = pruefePartie(start, 9, ['SchlangengrubeSpielen', 'Abwehren'])
