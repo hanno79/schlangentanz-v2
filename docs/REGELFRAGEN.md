@@ -3,9 +3,9 @@
 Task P0.5 · Katalog aus `docs/UMSETZUNGSPLAN.md`, Abschnitt 9 · 38 Fragen:
 F1–F15 zum Basis-Spiel, G1–G23 zur Erweiterung.
 
-Stand 13.11.2026: F1–F15 und die Nachfrage F8a sind beantwortet, die
-Antworten stehen in `docs/GAME_SPEC.md` Teil D (D14–D29). Offen sind
-G1–G23.
+Stand 20.11.2026: F1–F15 und die Nachfrage F8a sind beantwortet, die
+Antworten stehen in `docs/GAME_SPEC.md` Teil D (D14–D29). Von den Fragen zur
+Erweiterung ist G9 beantwortet (D31). Offen sind G1–G8 und G10–G23.
 
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der
@@ -789,11 +789,11 @@ Hinweis des Orchestrators: Drei Farbenfusionen nebeneinander bringen nach A11 Pu
 
 **Vorschlag:** a. Vorschlag des Orchestrators: Nach A11 zählen Joker als jede Farbe; eine Sonderregel für reine Jokergruppen nennt die Website nicht, und eine einheitliche Regel für Wertung, Bonus und Aufgaben ist am leichtesten zu verstehen.
 
-**Betroffene Tasks:** nennt die Frage: keine. Hängt davon ab: E10 (Vielfaltbonus, Jokergruppen), X2 („Farbharmonie“), E5 (Grenzfall „drei Joker nebeneinander“).
+**Betroffene Tasks:** nennt die Frage: E10 (Vielfaltbonus, Jokergruppen), X2 („Farbharmonie“). Hängt davon ab: E5 (Grenzfall „drei Joker nebeneinander“).
 
-**Antwort:** —
+**Antwort:** a. Wortlaut des Autors: „Ja, als Gruppe“, gefragt als „Bilden drei Joker nebeneinander allein eine Farbgruppe?“ (etwa drei Regenbogenschlangen in Folge oder zwei Regenbogenschlangen und eine Farbenfusion). Das gilt auch für die Gruppenpunkte. Teil D: D31.
 
-**Datum:** —
+**Datum:** 20.11.2026
 
 ### G10: Schlangenkorb als Karte
 

@@ -554,7 +554,7 @@ daneben.
 *Läuft ab E1 neben den anderen Tasks.*
 
 - **Behebt:** C11, C13. Spec: A11, A7.3, A7.7.
-  Fragen: F9 → D22, F11 → D24 (Antworten in Teil D).
+  Fragen: F9 → D22, F11 → D24, G9 → D31 (Antworten in Teil D).
 - **Dateien:** `src/engine/scoring.ts`, neu `src/engine/jokerGruppen.ts`.
   `colorGroups.ts` bleibt unverändert (der Kettenbonus braucht die rohe Sicht).
 - **Abnahmekriterien:**
@@ -628,7 +628,7 @@ daneben.
 
 #### X2 Die 15 Aufgaben mit Jokern
 
-- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8.
+- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8, G9 → D31.
 - **Dateien:** `src/engine/aufgaben/<name>.ts` je Aufgabe, gemeinsame Helfer
   in `jokerGruppen.ts`. **Drei gleichzeitige Pakete zu je fünf Aufgaben.**
 - **Abnahmekriterien:**
@@ -981,8 +981,8 @@ Erweiterung.
 
 Stand 13.11.2026: Der Autor hat F1–F15 beantwortet. Die Antworten stehen in
 `docs/GAME_SPEC.md` Teil D (D14–D28), die zur Nachfrage F8a als D29; jeder
-Task, der eine Frage nennt, verweist mit „F1 → D14“ darauf. Offen sind
-G1–G23.
+Task, der eine Frage nennt, verweist mit „F1 → D14“ darauf. G9 hat der
+Autor am 20.11.2026 beantwortet (D31). Offen sind G1–G8 und G10–G23.
 
 ### Basis-Spiel
 

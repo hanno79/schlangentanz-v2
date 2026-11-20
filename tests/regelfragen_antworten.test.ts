@@ -23,13 +23,16 @@ import {
 
 /** Am 13.11.2026 hat der Autor F1–F15 und die Nachfrage F8a beantwortet. */
 const DATUM_F = '13.11.2026'
+/** Am 20.11.2026 hat der Autor G9 beantwortet. */
+const DATUM_G9 = '20.11.2026'
 
-type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[] }
+/** `datum` fehlt bei den Antworten vom 13.11.2026 (`DATUM_F`). */
+type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string }
 
 /**
  * Was der Autor gewählt hat, abgeleitet aus seinen Worten, nicht aus den Dateien:
  * „Alle andere Vorschläge sind passend“ (also der Vorschlag), F8 frei, F11 „mindestens
- * aus 3 Farbkarten … sonst ok“ mit der Bestätigung „Ja, genau so“, F8a „Ja, ohne Wirkung“.
+ * aus 3 Farbkarten … sonst ok“ mit der Bestätigung „Ja, genau so“, F8a „Ja, ohne Wirkung“, G9 „Ja, als Gruppe“ (Vorschlag a, 20.11.2026).
  * `kern` sind die tragenden Aussagen: Sie stehen in REGELFRAGEN.md (in der Antwort oder
  * in der gewählten Möglichkeit) und im Eintrag in Teil D; `verboten` steht an keiner
  * dieser Stellen. `wortlaut` zitiert den Autor in der Antwort; dass jedes Zitat auch in
@@ -71,6 +74,14 @@ const ERWARTET: Record<string, Erwartung> = {
   F13: { wahl: 'a', kern: ['muss danach anders sein'] },
   F14: { wahl: 'a', kern: ['im zweiten Zug nach einem Verdoppler ist wieder eine'] },
   F15: { wahl: 'a', kern: ['vollständig einsehbar'] },
+  G9: {
+    wahl: 'a',
+    kern: ['drei Joker nebeneinander', 'gültige Gruppe', 'Vielfaltbonus', 'Farbharmonie'],
+    // Gegenprobe: Möglichkeit b verlangt eine echte Farbkarte in jeder Gruppe.
+    verboten: ['echte Farbkarte', 'zählen weder'],
+    wortlaut: ['„Ja, als Gruppe“'],
+    datum: DATUM_G9,
+  },
 }
 
 /** Kleinbuchstaben, Leerraum zusammengefasst: Kernaussagen gelten auch am Satzanfang. */
@@ -78,7 +89,7 @@ function vergleichbar(text: string): string {
   return normalisiert(text).toLowerCase()
 }
 
-describe('P0.5: Antworten des Autors vom 13.11.2026', () => {
+describe('P0.5: Antworten des Autors vom 13.11.2026 und 20.11.2026', () => {
   it('P0.5: genau die beantworteten Fragen stehen in der Erwartungstabelle', () => {
     const beantwortet = [...bloecke].filter(([, block]) => feld(block, 'Antwort') !== OFFEN).map(([nr]) => nr)
 
@@ -87,7 +98,7 @@ describe('P0.5: Antworten des Autors vom 13.11.2026', () => {
     )
   })
 
-  for (const [nr, { wahl, kern, verboten = [], wortlaut = [] }] of Object.entries(ERWARTET)) {
+  for (const [nr, { wahl, kern, verboten = [], wortlaut = [], datum = DATUM_F }] of Object.entries(ERWARTET)) {
     it(`P0.5: ${nr}: gewählt „${wahl}“, die Kernaussage steht in REGELFRAGEN.md und in Teil D`, () => {
       const block = bloecke.get(nr) ?? ''
       const antwort = feld(block, 'Antwort')
@@ -96,7 +107,7 @@ describe('P0.5: Antworten des Autors vom 13.11.2026', () => {
       const eintrag = vergleichbar(teilD.get(nr)?.antwort ?? '')
 
       expect(gewaehlt(antwort), `${nr}: gewählte Möglichkeit`).toBe(wahl)
-      expect(feld(block, 'Datum'), `${nr}: Datum der Antwort`).toBe(DATUM_F)
+      expect(feld(block, 'Datum'), `${nr}: Datum der Antwort`).toBe(datum)
       for (const aussage of kern.map(vergleichbar)) {
         expect(fragenblatt, `${nr}: REGELFRAGEN.md ohne Kernaussage „${aussage}“`).toContain(aussage)
         expect(eintrag, `${nr}: Teil D ohne Kernaussage „${aussage}“`).toContain(aussage)
