@@ -1,0 +1,108 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a883f2a4912ec8eae
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts (131 tests | 3 failed) 39ms
+     × O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Verdoppler steht wörtlich in den Quellabschnitten 7ms
+     × O9/A7, A8: Verdoppler (A7.8): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 1ms
+     × O9/A7: Sonderkarte Verdoppler: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig 1ms
+ ❯ tests/spec_documentation.test.ts (19 tests | 1 failed) 45ms
+     × P0.5d: trägt die Entscheidungen D9, D10, D12 und D13 im Wortlaut der Website (13.11.2026) 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation.test.ts > GAME_SPEC Teil A — Spiegel der Website > P0.5d: trägt die Entscheidungen D9, D10, D12 und D13 im Wortlaut der Website (13.11.2026)
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Im zweiten Zug darfst du keinen weiteren Verdoppler spielen",
++ ]
+
+ ❯ tests/spec_documentation.test.ts:209:7
+    207|         'Im zweiten Zug darfst du keinen weiteren Verdoppler spielen',
+    208|       ]),
+    209|     ).toEqual([])
+       |       ^
+    210|   })
+    211|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Verdoppler steht wörtlich in den Quellabschnitten
+AssertionError: Verdoppler: nicht wörtlich in A7.8: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Aufzählung: Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach | Fülle danach deine Handkarten auf | Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft | Neben dem Verdoppler spielst du so bis zu 3 Karten | Kann nicht mit anderen zugerweiternden Effekten kombiniert werden | Im zweiten Zug darfst du keinen weiteren Verdoppler spielen",
++ ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:155:88
+    153|         }
+    154|       }
+    155|       expect(fehlend, `${name(hilfe)}: nicht wörtlich in ${hilfe.quell…
+       |                                                                                        ^
+    156|     },
+    157|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Verdoppler (A7.8): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
+AssertionError: Verdoppler: Zeilen aus A7.8 fehlen im Kartentext: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Im zweiten Zug darfst du einen weiteren Verdoppler spielen",
++ ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:187:84
+    185|         return !absaetze.includes(zeile) && !punkte.includes(zeile) &&…
+    186|       })
+    187|       expect(fehlend, `${name(hilfe)}: Zeilen aus ${nummer} fehlen im …
+       |                                                                                    ^
+    188|     },
+    189|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1) > O9/A7: Sonderkarte Verdoppler: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig
+AssertionError: „Wichtige Regeln“ von Verdoppler: expected [ [ …(6) ] ] to deeply equal [ [ …(6) ] ]
+
+- Expected
++ Received
+
+@@ -3,8 +3,8 @@
+      "Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach",
+      "Fülle danach deine Handkarten auf",
+      "Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft",
+      "Neben dem Verdoppler spielst du so bis zu 3 Karten",
+      "Kann nicht mit anderen zugerweiternden Effekten kombiniert werden",
+-     "Im zweiten Zug darfst du einen weiteren Verdoppler spielen",
++     "Im zweiten Zug darfst du keinen weiteren Verdoppler spielen",
+    ],
+  ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:224:69
+    222|       expect(hilfe.kurz, `Kurzbeschreibung von ${kartenname}`).toBe(ku…
+    223|       const regeln = hilfe.abschnitte.find((abschnitt) => abschnitt.ti…
+    224|       expect(regeln?.inhalt, `„Wichtige Regeln“ von ${kartenname}`).to…
+       |                                                                     ^
+    225|     },
+    226|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 146 passed (150)
+   Start at  20:21:17
+   Duration  3.51s (transform 218ms, setup 585ms, import 197ms, tests 85ms, environment 2.66s)
+

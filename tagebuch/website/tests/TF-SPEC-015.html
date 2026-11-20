@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-015 Durchsucht die Abdeckungsprüfung wieder das ganze Dokument statt nur Teil A, schlagen die Offline-Tests fehl, und ein verfälschter Satz in Teil A erscheint beim Abgleich als fehlend. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-015 Durchsucht die Abdeckungsprüfung wieder das ganze Dokument statt nur Teil A, schlagen die Offline-Tests fehl, und ein verfälschter Satz in Teil A erscheint beim Abgleich als fehlend.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-006</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein Satz der Website zählt nur als gespiegelt, wenn er in Teil A steht. Viele Sätze stehen zusätzlich in Teil D oder im Verlauf, etwa „Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“. Liest die Prüfung das ganze Dokument, übersieht sie einen falschen Satz in Teil A.</p><h2>Bestanden, wenn</h2><p>Mit <code>norm(spec)</code> statt <code>norm(spec.slice(start, ende))</code> in <code>scripts/website_abgleich/abgleich.cjs</code> endet <code>npx vitest run tests/website_abgleich.test.ts</code> mit 1 und zwei roten P0.5d-Tests. Mit der unveränderten Prüfung und dem Satz „Im zweiten Zug darfst du einen weiteren Verdoppler spielen“ in Teil A endet <code>npm run abgleich:website</code> mit 1 und meldet „FEHLT: Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“, obwohl der richtige Satz noch in Teil D und Teil E steht.</p><h2>Fehlgeschlagen, wenn</h2><p>Einer der beiden Befehle endet mit 0, oder die FEHLT-Liste nennt den Verdoppler-Satz nicht.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/P0.5d-teil-a-website (PR #50)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie des Branches, Netzzugang für <code>abgleich:website</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p><code>scripts/website_abgleich/abgleich.cjs</code> Zeile 61; <code>docs/GAME_SPEC.md</code> Zeile 388 (letzter Punkt der „Wichtigen Regeln“ in A7.8).</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor, `scripts/website_abgleich/abgleich.cjs` Zeile 61</td><td>Ausschnitt entfernen</td><td>`const dokument = norm(spec);`</td><td></td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Offline-Tests ausführen</td><td>`npx vitest run tests/website_abgleich.test.ts; echo $?`</td><td>Exit 1, rot: „P0.5d: ein Satz der Website, der nur in Teil D steht, fehlt in Teil A“ und „P0.5d: Sätze nur vor Teil A oder nur in Teil B …“</td></tr><tr><td>3</td><td>Git Bash im Repo</td><td>zurücksetzen</td><td>`git checkout -- scripts/website_abgleich/abgleich.cjs`</td><td>`git status` leer</td></tr><tr><td>4</td><td>Editor, `docs/GAME_SPEC.md` Zeile 388</td><td>„keinen weiteren“ durch „einen weiteren“ ersetzen</td><td></td><td></td></tr><tr><td>5</td><td>Git Bash im Repo</td><td>Abgleich ausführen</td><td>`npm run abgleich:website; echo $?`</td><td>Exit 1, „1 fehlen“, „FEHLT: Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“</td></tr><tr><td>6</td><td>Git Bash im Repo</td><td>zurücksetzen</td><td>`git checkout -- docs/GAME_SPEC.md`</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 20:45</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5d) &middot; agent &middot; pruefung-P0.5d @ <span class="commit" title="21ac2fa9f7ed983a85c5614d3485af9e7af23f50">21ac2fa</span></p><p>abgleich.cjs Z. 61 norm(spec): website_abgleich.test.ts Exit 1, 2 P0.5d-Tests rot (Teil D, Vorspann/Teil B). GAME_SPEC.md Z. 388 &#x27;einen weiteren&#x27;: abgleich:website Exit 1, &#x27;1 fehlen&#x27;, &#x27;FEHLT: Im zweiten Zug darfst du keinen weiteren Verdoppler spielen&#x27;, obwohl der Satz in Teil D/E steht; beide Dateien zurückgesetzt</p><ul class="belege"><li><a href="belege/2026-11-20-2045-TF-SPEC-015-1.txt">2026-11-20-2045-TF-SPEC-015-1.txt</a></li><li><a href="belege/2026-11-20-2045-TF-SPEC-015-2.txt">2026-11-20-2045-TF-SPEC-015-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

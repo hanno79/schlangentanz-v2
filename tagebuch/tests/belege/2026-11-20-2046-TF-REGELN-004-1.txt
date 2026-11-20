@@ -1,0 +1,85 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a883f2a4912ec8eae
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts (131 tests | 3 failed) 39ms
+     × O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Farbenschutz steht wörtlich in den Quellabschnitten 7ms
+     × O9/A7, A8: Farbenschutz (A7.2): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext 2ms
+     × O9/A7: Sonderkarte Farbenschutz: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Der Text jeder Karte steht wörtlich in Teil A (Kriterium 1) > O9/A: jeder Absatz, jede Aufzählung, jeder Zwischentitel und jede Kartenreihe von Farbenschutz steht wörtlich in den Quellabschnitten
+AssertionError: Farbenschutz: nicht wörtlich in A7.2: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Aufzählung: Spiele als Reaktion auf eine Sonderkarte | Lege den Farbenschutz auf deinen Ablagestapel | Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers | Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange | Auch gegen Farbkarten gibt es eine Abwehr",
++ ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:155:88
+    153|         }
+    154|       }
+    155|       expect(fehlend, `${name(hilfe)}: nicht wörtlich in ${hilfe.quell…
+       |                                                                                        ^
+    156|     },
+    157|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kein Satz eines Kartenabschnitts fehlt im Kartentext (Kriterium 1) > O9/A7, A8: Farbenschutz (A7.2): jede Zeile, jede Beispielzeile und jedes Kartenbild des Abschnitts steht im Kartentext
+AssertionError: Farbenschutz: Zeilen aus A7.2 fehlen im Kartentext: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Gegen Farbkarten gibt es keine Abwehr",
++ ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:187:84
+    185|         return !absaetze.includes(zeile) && !punkte.includes(zeile) &&…
+    186|       })
+    187|       expect(fehlend, `${name(hilfe)}: Zeilen aus ${nummer} fehlen im …
+       |                                                                                    ^
+    188|     },
+    189|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1) > O9/A7: Sonderkarte Farbenschutz: Kurzbeschreibung wörtlich, „Wichtige Regeln“ vollständig
+AssertionError: „Wichtige Regeln“ von Farbenschutz: expected [ [ …(5) ] ] to deeply equal [ [ …(5) ] ]
+
+- Expected
++ Received
+
+@@ -2,8 +2,8 @@
+    [
+      "Spiele als Reaktion auf eine Sonderkarte",
+      "Lege den Farbenschutz auf deinen Ablagestapel",
+      "Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers",
+      "Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange",
+-     "Gegen Farbkarten gibt es keine Abwehr",
++     "Auch gegen Farbkarten gibt es eine Abwehr",
+    ],
+  ]
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:224:69
+    222|       expect(hilfe.kurz, `Kurzbeschreibung von ${kartenname}`).toBe(ku…
+    223|       const regeln = hilfe.abschnitte.find((abschnitt) => abschnitt.ti…
+    224|       expect(regeln?.inhalt, `„Wichtige Regeln“ von ${kartenname}`).to…
+       |                                                                     ^
+    225|     },
+    226|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 128 passed (131)
+   Start at  20:21:34
+   Duration  1.05s (transform 180ms, setup 286ms, import 171ms, tests 39ms, environment 0ms)
+

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-013 Teil D vermerkt D9, D10, D12 und D13 als von der Website übernommen, lässt D11 offen und löst den Widerspruch zwischen A7.8 und D23 nirgends stillschweigend auf. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-013 Teil D vermerkt D9, D10, D12 und D13 als von der Website übernommen, lässt D11 offen und löst den Widerspruch zwischen A7.8 und D23 nirgends stillschweigend auf.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Seit der Autor D9 bis D13 auf die Website gebracht hat, muss Teil D sagen, welche Antworten dort stehen. Wo die Website einer Antwort widerspricht (A7.8 „keinen weiteren Verdoppler spielen“ gegen D23 „wirkungslos ablegen“), darf niemand die Regel eigenmächtig in eine Richtung festlegen.</p><h2>Bestanden, wenn</h2><p>In Teil D tragen D9, D10, D12 und D13 „Website übernommen am 13.11.2026.“ und nicht mehr „Website folgt“; D11 und D23 tragen weiter „Website folgt“. Der Widerspruch steht als offen in Teil D (Einleitung „Beantwortet“), in Teil C (C7) und im Verlauf von Teil E. Keine Datei in <code>src/</code> legt die Frage in eine Richtung fest, ohne den Satz als Ergänzung des Autors zu kennzeichnen.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der vier Antworten trägt noch „Website folgt“, D11 oder D23 ist als übernommen markiert, oder der Widerspruch fehlt an allen drei Stellen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/P0.5d-teil-a-website (PR #50)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie des Branches, Website <code>https://schlangentanz.ch/rules</code> zum Vergleich</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Website A7.8: „Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“. D23: „Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht.“</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor, `docs/GAME_SPEC.md`, Tabelle in Teil D</td><td>Zeilen D9 bis D13 und D23 lesen</td><td></td><td>D9, D10, D12, D13: „Website übernommen am 13.11.2026.“; D11 und D23: „Website folgt.“</td></tr><tr><td>2</td><td>Teil D, Absatz unter „Beantwortet“</td><td>lesen</td><td></td><td>nennt den Widerspruch zwischen A7.8 und D23 als offen beim Autor</td></tr><tr><td>3</td><td>Teil C, Zeile C7</td><td>lesen</td><td></td><td>Spalte „Soll“ nennt A7.8 und D23 und dass der Autor entscheidet</td></tr><tr><td>4</td><td>Git Bash im Repo</td><td>Fundstellen in `src/` suchen</td><td>`grep -rn &quot;wirkungslos|weiteren Verdoppler&quot; src --include=*.ts`</td><td>Sätze zu D23 tragen die Quelle `D23` und damit das Etikett „Ergänzung des Autors“, der Satz aus A7.8 die Quelle Teil A</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob D19 inzwischen ebenfalls auf der Website steht, prüft dieser Testfall nicht; das gehört nicht zu D9 bis D13. Den Fall „nur Verdoppler auf der Hand im zweiten Zug“ prüft die Engine (E3), nicht die Spec.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 20:45</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5d) &middot; agent &middot; pruefung-P0.5d @ <span class="commit" title="21ac2fa9f7ed983a85c5614d3485af9e7af23f50">21ac2fa</span></p><p>D9, D10, D12, D13: &#x27;Website übernommen am 13.11.2026.&#x27;; D11 und D23: &#x27;Website folgt.&#x27;; Widerspruch A7.8/D23 in Teil-D-Einleitung, C7 und Verlauf Teil E als offen genannt; in src/ steht D23 nur in zugschritte.ts mit Quelle D23 (Etikett), A7.8-Satz in sonderkarten.ts mit Quelle Teil A. Hinweis: D23-Zeile selbst nennt den Widerspruch nicht, E3-Block auch nicht</p><ul class="belege"><li><a href="belege/2026-11-20-2045-TF-SPEC-013-1.txt">2026-11-20-2045-TF-SPEC-013-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

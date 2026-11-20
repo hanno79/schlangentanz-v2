@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-REGELN-009 Gibt man einem Satz der Zugschritte, der wörtlich in Teil A steht, eine Quelle aus Teil D, schlagen die Tests der Regelseite fehl. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-REGELN-009 Gibt man einem Satz der Zugschritte, der wörtlich in Teil A steht, eine Quelle aus Teil D, schlagen die Tests der Regelseite fehl.</h1><p class="etiketten"><span class="etikett">Bereich Regelhilfe: Regelseite /regeln, Kartentexte aus Teil A, Grossansicht einer Karte</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-REGELN-008</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Ein veraltetes Etikett „Ergänzung des Autors“ würde behaupten, ein Satz stehe noch nicht auf der Website. Der neue Test soll das merken, sobald ein Satz aus Teil D wörtlich in Teil A angekommen ist.</p><h2>Bestanden, wenn</h2><p>Mit der Quelle <code>D10</code> statt <code>A6</code> beim Satz „Gegen Farbkarten gibt es keine Abwehr.“ in <code>src/ui/regeln/zugschritte.ts</code> endet <code>npx vitest run src/ui/regeln</code> mit 1, und rot sind „P0.5d/U2: „Sonderkarte ansagen“: eine Ergänzung aus Teil D steht noch nicht wörtlich in Teil A …“ und „P0.5d: was die Website seit dem 13.11.2026 selbst sagt …“.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Befehl endet mit 0.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/P0.5d-teil-a-website (PR #50)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie des Branches, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p><code>src/ui/regeln/zugschritte.ts</code> Zeile 65: <code>{ text: &#x27;Gegen Farbkarten gibt es keine Abwehr.&#x27;, quelle: &#x27;A6&#x27; }</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor, `src/ui/regeln/zugschritte.ts` Zeile 65</td><td>Quelle ändern</td><td>`quelle: &#x27;D10&#x27;`</td><td></td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Tests ausführen</td><td>`npx vitest run src/ui/regeln; echo $?`</td><td>Exit 1, die zwei roten Tests aus „Bestanden, wenn“</td></tr><tr><td>3</td><td>Git Bash im Repo</td><td>zurücksetzen</td><td>`git checkout -- src/ui/regeln/zugschritte.ts`</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 20:46</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5d) &middot; agent &middot; pruefung-P0.5d @ <span class="commit" title="21ac2fa9f7ed983a85c5614d3485af9e7af23f50">21ac2fa</span></p><p>zugschritte.ts Z. 65 quelle &#x27;A6&#x27; -&gt; &#x27;D10&#x27;: npx vitest run src/ui/regeln Exit 1, 2 P0.5d-Tests rot (steht noch nicht in Teil A; D9, D10, D12, D13, D19 als Teil A); zurückgesetzt</p><ul class="belege"><li><a href="belege/2026-11-20-2046-TF-REGELN-009-1.txt">2026-11-20-2046-TF-REGELN-009-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
