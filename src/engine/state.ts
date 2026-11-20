@@ -2,6 +2,7 @@ import type { Spieler, Spielzustand, Steuerung } from './types';
 import { HANDKARTEN, OFFENE_AUFGABEN, SPIELER_MAX, SPIELER_MIN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten, mischeDeck } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
+import { neuerZug } from './zugablauf';
 
 export interface TischOptionen {
   /** A2: 2 bis 4. Spieler 1 ist der Mensch, die übrigen sind KI-Gegner (B2). */
@@ -70,15 +71,7 @@ export function erstelleTisch({ spielerzahl, erweiterung, zufall }: TischOptione
     erweiterung,
     spieler,
     partiephase: 'Laufend',
-    zug: {
-      spielerIndex: 0,
-      teilzug: 1,
-      gespielteFarbkarten: 0,
-      gespielteSonderkarten: 0,
-      verdopplerGespielt: false,
-      farbenfusionGespielt: false,
-      abschnitt: 'Ausspielen',
-    },
+    zug: neuerZug(0),
     schlussrundeAusloeser: null,
     nachziehstapel,
     ausliegendeGruben: [],

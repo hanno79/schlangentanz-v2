@@ -141,12 +141,31 @@ export type SpielAktion =
 
 export type Pruefergebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
-/** Was eine Aktion bewirkt hat, damit die Oberfläche keine Zustände vergleichen muss (Plan E2). */
+/** Wo eine gespielte Karte danach liegt; `spielerIndex` ist der Besitzer der Schlange, des Ablagestapels bzw. der, vor dem sie liegt. */
+export type Kartenort =
+  | { ort: 'Schlange'; spielerIndex: number; schlangenId: string; position: number }
+  | { ort: 'Ablagestapel'; spielerIndex: number }
+  | { ort: 'VorSpieler'; spielerIndex: number }
+  | { ort: 'Schwebend' }
+  | { ort: 'AusDemSpiel' };
+
+/**
+ * Was eine Aktion bewirkt hat, in der Reihenfolge, in der es geschah, damit die
+ * Oberfläche keine Zustände vergleichen muss (Plan E2). Gezogene Karten stehen
+ * nur als Anzahl da, weil Handkarten der Gegner verdeckt sind (B2).
+ */
 export type Ereignis =
-  | { typ: 'KarteGespielt'; spielerIndex: number; karteId: string; aktion: Aktionstyp }
+  /** Eine Handkarte ist gespielt; `nach` sagt, wo sie danach liegt. */
+  | { typ: 'KarteGespielt'; spielerIndex: number; karteId: string; aktion: Aktionstyp; nach: Kartenort }
   | { typ: 'KartenGezogen'; spielerIndex: number; anzahl: number }
+  /** A5: Nach dem Auffüllen hält der Spieler mehr als 5 Karten und muss `anzahl` abwerfen. */
+  | { typ: 'AbwerfenVerlangt'; spielerIndex: number; anzahl: number }
+  /** Die Karten liegen danach in dieser Reihenfolge oben auf dem eigenen Ablagestapel. */
+  | { typ: 'KartenAbgeworfen'; spielerIndex: number; karteIds: string[] }
+  | { typ: 'ZugBegonnen'; spielerIndex: number; teilzug: 1 | 2 }
   | { typ: 'Abgewehrt'; spielerIndex: number; karteId: string }
-  | { typ: 'Ausgesetzt'; spielerIndex: number }
+  /** A7.6: Der Spieler setzt aus; die Schlangengrube `karteId` kommt auf den Ablagestapel von `ablagestapelVon`. */
+  | { typ: 'Ausgesetzt'; spielerIndex: number; karteId: string; ablagestapelVon: number }
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
   | { typ: 'PartieBeendet' };
 

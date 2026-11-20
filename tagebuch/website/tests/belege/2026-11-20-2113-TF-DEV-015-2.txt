@@ -1,0 +1,131 @@
+PARTIE {"schritte":99,"klicks":198,"ende":{"phase":"Beendet","zug":"niemand, die Partie ist beendet (A10)","entscheider":"niemand","haende":["Farbenfusion farbenfusion-02Schlangengrube schlangengrube-02Farbenfusion farbenf","Regenbogenschlange regenbogenschlange-03Schlangenblockade schlangenblockade-02Ve"],"knoepfe":0,"ereignisse":["PartieBeendet"]}}
+PROBEN [
+ {
+  "schritt": 5,
+  "vorher": {
+   "phase": "Laufend",
+   "zug": "Spieler 1 (spieler-1), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "Spieler 1 (spieler-1)",
+   "haende": [
+    "Mondranke (Violett, 2) violett-09Sonnenblatt (Gelb, 1) gelb-06Mondranke (Violett",
+    "Schlangenblockade schlangenblockade-01Wasserwirbel (Blau, 1) blau-09Verdoppler v"
+   ],
+   "knoepfe": 20,
+   "ereignisse": [
+    "KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1",
+    "ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1"
+   ]
+  },
+  "nach": {
+   "phase": "Laufend",
+   "zug": "KI-Gegner 1 (spieler-2), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "KI-Gegner 1 (spieler-2)",
+   "haende": [
+    "Sonnenblatt (Gelb, 1) gelb-06Mondranke (Violett, 2) violett-08Waldspross (Grün, ",
+    "Schlangenblockade schlangenblockade-01Wasserwirbel (Blau, 1) blau-09Verdoppler v"
+   ],
+   "knoepfe": 11,
+   "ereignisse": [
+    "KartenGezogen: Spieler 1 (spieler-1) zieht 1",
+    "ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1"
+   ]
+  }
+ },
+ {
+  "schritt": 40,
+  "vorher": {
+   "phase": "Laufend",
+   "zug": "KI-Gegner 1 (spieler-2), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "KI-Gegner 1 (spieler-2)",
+   "haende": [
+    "Farbenfusion farbenfusion-03Farbendieb farbendieb-01Schlangenblockade schlangenb",
+    "Farbendieb farbendieb-03Farbendieb farbendieb-04Schlangenfrass schlangenfrass-01"
+   ],
+   "knoepfe": 8,
+   "ereignisse": [
+    "KartenGezogen: Spieler 1 (spieler-1) zieht 1",
+    "ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1"
+   ]
+  },
+  "nach": {
+   "phase": "Laufend",
+   "zug": "Spieler 1 (spieler-1), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "Spieler 1 (spieler-1)",
+   "haende": [
+    "Farbenfusion farbenfusion-03Farbendieb farbendieb-01Schlangenblockade schlangenb",
+    "Farbendieb farbendieb-03Farbendieb farbendieb-04Schlangenfrass schlangenfrass-01"
+   ],
+   "knoepfe": 8,
+   "ereignisse": [
+    "KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1",
+    "ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1"
+   ]
+  }
+ },
+ {
+  "schritt": 98,
+  "vorher": {
+   "phase": "Laufend",
+   "zug": "KI-Gegner 1 (spieler-2), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "KI-Gegner 1 (spieler-2)",
+   "haende": [
+    "Farbenfusion farbenfusion-02Schlangengrube schlangengrube-02Farbenfusion farbenf",
+    "Regenbogenschlange regenbogenschlange-02Regenbogenschlange regenbogenschlange-03"
+   ],
+   "knoepfe": 5,
+   "ereignisse": [
+    "KartenGezogen: Spieler 1 (spieler-1) zieht 1",
+    "ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1"
+   ]
+  },
+  "nach": {
+   "phase": "Schlussrunde",
+   "zug": "Spieler 1 (spieler-1), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "Spieler 1 (spieler-1)",
+   "haende": [
+    "Farbenfusion farbenfusion-02Schlangengrube schlangengrube-02Farbenfusion farbenf",
+    "Regenbogenschlange regenbogenschlange-03Schlangenblockade schlangenblockade-02Ve"
+   ],
+   "knoepfe": 8,
+   "ereignisse": [
+    "KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1",
+    "SchlussrundeBegonnen: ausgelöst von KI-Gegner 1 (spieler-2)",
+    "ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1"
+   ]
+  }
+ },
+ {
+  "schritt": 99,
+  "vorher": {
+   "phase": "Schlussrunde",
+   "zug": "Spieler 1 (spieler-1), Teilzug 1, Ausspielen; gespielt: 0 Farbkarte(n), 0 Sonderkarte(n)",
+   "entscheider": "Spieler 1 (spieler-1)",
+   "haende": [
+    "Farbenfusion farbenfusion-02Schlangengrube schlangengrube-02Farbenfusion farbenf",
+    "Regenbogenschlange regenbogenschlange-03Schlangenblockade schlangenblockade-02Ve"
+   ],
+   "knoepfe": 8,
+   "ereignisse": [
+    "KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1",
+    "SchlussrundeBegonnen: ausgelöst von KI-Gegner 1 (spieler-2)",
+    "ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1"
+   ]
+  },
+  "nach": {
+   "phase": "Beendet",
+   "zug": "niemand, die Partie ist beendet (A10)",
+   "entscheider": "niemand",
+   "haende": [
+    "Farbenfusion farbenfusion-02Schlangengrube schlangengrube-02Farbenfusion farbenf",
+    "Regenbogenschlange regenbogenschlange-03Schlangenblockade schlangenblockade-02Ve"
+   ],
+   "knoepfe": 0,
+   "ereignisse": [
+    "PartieBeendet"
+   ]
+  }
+ }
+]
+Wertung Die Partie ist beendet (A10); die Wertung steht unten. | erfüllt: Die Wertung lässt sich berechnen | Wertung | Vielfaltbonus: ohne Erweiterung; Kette 4, Bonus 0; Aufgaben: ohne Erweiterung; Summe 4 | Vielfaltbonus: ohne Erweiterung; Kette 5, Bonus 5; Aufgaben: ohne Erweiterung; Summe 19
+scroll {"scrollWidth":1280,"clientWidth":1280}
+KONSOLENFEHLER []

@@ -1,0 +1,73 @@
+=== npm-test.log (alle Exit 0) ===
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a56db9f58551b8354
+
+
+ Test Files  45 passed (45)
+      Tests  1097 passed (1097)
+   Start at  16:13:57
+   Duration  79.29s (transform 8.39s, setup 70.75s, import 19.24s, tests 130.13s, environment 536.36s)
+
+
+=== typecheck.log (alle Exit 0) ===
+
+> schlangentanz-v2@0.0.0 typecheck
+> tsc -b
+
+
+=== build.log (alle Exit 0) ===
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.58 kB │ gzip:   0.35 kB
+dist/assets/index-BG87-Kiu.css    5.06 kB │ gzip:   1.47 kB
+dist/assets/index-DOfJR4DQ.js   223.81 kB │ gzip:  70.93 kB
+dist/assets/prod-DPQ4S8gR.js    448.15 kB │ gzip: 147.01 kB
+
+[32m✓ built in 410ms[39m
+
+=== test-lines.log (alle Exit 0) ===
+
+> schlangentanz-v2@0.0.0 check:test-lines
+> node scripts/check_test_file_lines.mjs
+
+Alle Testdateien bleiben unter 500 Zeilen.
+
+=== css.log (alle Exit 0) ===
+
+> schlangentanz-v2@0.0.0 check:css-asserts
+> node scripts/check_css_source_asserts.mjs
+
+CSS-Quelltext-Assertions: 0 in 0 Dateien (Baseline gehalten).
+
+=== regeln.log (alle Exit 0) ===
+> node scripts/check_regeln.mjs
+
+check:regeln: 164 Dateien geprüft (U6).
+  U1: Regeltestdateien unter src/engine: 17, Testnamen darin: 253
+  U7: Testdateien: 52, Dateien unter src/ui und src/ki ohne Tests: 15
+  Ausnahmen für den Altbestand (dürfen nur schrumpfen): U1 0 Dateien/0, U6 0 Dateien/0, U7 0 Dateien/0
+  Ausnahmeliste verglichen mit origin/neuaufbau (Merge-Basis e96caac).
+check:regeln: keine Verstösse.
+
+=== eslint.log (alle Exit 0) ===
+
+
+=== regelcheck.log (alle Exit 0) ===
+Warnung: tagebuch/tests � Testregister � Regression TF-SPEC-005 nie bestanden
+Warnung: tests/layout/messung.ts � eine Datei, eine Verantwortung � 921 Zeilen, Richtwert 400 � Aufteilung pr�fen, oder die Ausnahme mit 'regelcheck: laenge-bewusst <Grund>' in den ersten 20 Zeilen festhalten
+
+514 Datei(en) nicht als Text lesbar, �bersprungen.
+
+In 246 Datei(en) stehen 992 Zeilen mit Eszett. Die Regel verbietet nur das Einf�hren, deshalb keine Warnung � beim n�chsten Anfassen greift der Hook.
+
+3 Warnungen, keine Fehler.
+
+=== layout.log (alle Exit 0) ===
+  ok 1134 [handy-quer-testhooks] › tests\layout\waechter.ts:123:3 › O1: Entwurf /dev/entwurf/ergebnis passt in die Geräteklasse › die Token-Prüfung hat wirklich Regeln gesehen (1.9s)
+  ok 1137 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:114:3 › O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: Farbendieb wählen zeigt die Ziele, ein Ziel wählen bietet „Ausführen“ an (1.5s)
+  ok 1139 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:143:3 › O1: Entwurf Ergebnis › O1: Wertung je Spieler und der Sieger stehen als Text da, nicht nur als Farbe (1.5s)
+  x  1138 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:130:3 › O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: eine Aufgabe lässt sich gross ansehen und ist dort mindestens 280 px breit (1.5s)
+  ok 1136 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:107:3 › O1: Entwurf Tisch — Karte wählen, dann Ziel wählen › O1: eigene Hand und eigene Schlangen sind als „deine“ beschriftet und sichtbar (1.8s)
+  ok 1140 [handy-quer-testhooks] › tests\layout\entwurf.hooks.spec.ts:153:3 › O1: Entwurf Lobby › O1: 1 bis 3 Gegner, Erweiterung an/aus, Neue Partie und Weiterspielen (1.5s)
+
+  1140 passed (3.1m)
+
