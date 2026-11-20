@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-010
+id: TF-ENGINE-016
 titel: Drei Regenbogenschlangen nebeneinander bilden eine Gruppe mit 0 Punkten, und Regenbogenschlange, Fusion aus Grün und Grün, Regenbogenschlange eine Gruppe mit 6 Punkten.
 art: beides
 regression: ja
