@@ -1,6 +1,6 @@
 import type { SchlangengrubeSpielenAktion } from '../aktionen/typen';
 import type { Spielkarte, Spielzustand } from '../types';
-import { entnehmeHandkarte, mitspielerImUhrzeigersinn } from '../zugablauf';
+import { entnehmeHandkarte, mitspielerImUhrzeigersinn, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
 
 /*
@@ -14,7 +14,7 @@ geht sie ohne Wirkung ab (D29). Ob das klug ist, entscheidet der Spieler.
 */
 
 function zielIndex(zustand: Spielzustand, aktion: SchlangengrubeSpielenAktion): number {
-  return zustand.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId);
+  return spielerIndexVon(zustand, aktion.zielSpielerId);
 }
 
 export const schlangengrube: KartenDefinition<SchlangengrubeSpielenAktion> = {
@@ -44,8 +44,7 @@ export const schlangengrube: KartenDefinition<SchlangengrubeSpielenAktion> = {
   wirke(zustand: Spielzustand, aktion: SchlangengrubeSpielenAktion): Spielzustand {
     const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
     if (karte.typ !== 'Sonderkarte') throw new Error(`Die Karte ${karte.id} ist keine Schlangengrube.`);
-    const gespieltVon = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
-    zustand.ausliegendeGruben.push({ karte, gespieltVon, vor: zielIndex(zustand, aktion) });
+    zustand.ausliegendeGruben.push({ karte, gespieltVon: spielerIndexVon(zustand, aktion.spielerId), vor: zielIndex(zustand, aktion) });
     return zustand;
   },
 };

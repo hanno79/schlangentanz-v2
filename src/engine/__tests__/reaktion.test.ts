@@ -1,11 +1,27 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, pruefeInvarianten, serialisiere } from '../index'
+import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
 import type { KartenAktion, Sonderkartenname, Spielzustand } from '../index'
 import { KARTENREGISTER } from '../karten/register'
-import { baukasten } from '../testing/szenario'
-import type { Baukasten, Kartenwahl } from '../testing/szenario'
+import type { Kartenwahl } from '../testing/szenario'
 import { legeAufEigenenAblagestapel } from '../zugablauf'
-import { ablage, aktionen, ereignisseVom, farbkarte, folge, fuehreAus, grubeAuf, grund, hand, reaktion, zugBeenden } from './zugablauf_hilfen'
+import {
+  ablage,
+  aktionen,
+  ereignisseVom,
+  farbkarte,
+  folge,
+  FUENF,
+  fuehreAus,
+  grubeAuf,
+  grund,
+  hand,
+  MIT_GRUBE,
+  MIT_SCHUTZ,
+  reaktion,
+  tischMitHaenden as tisch,
+  verletzteInvarianten as verletzt,
+  zugBeenden,
+} from './zugablauf_hilfen'
 
 /*
 E4, der allgemeine Reaktionsablauf (A6, A7.2, D10, D15, B2): Eine Sonderkarte
@@ -16,20 +32,6 @@ einzigen Karte mit Ziel beim Gegner, die schon umgesetzt ist; mehrere Betroffene
 Spion auf dem Kartenregister nach. Was die Grube selbst bewirkt, prüft
 `schlangengrube.test.ts`.
 */
-
-const FUENF: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']
-const MIT_SCHUTZ: Kartenwahl[] = ['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Grün']
-const MIT_GRUBE: Kartenwahl[] = ['Schlangengrube', 'Blau', 'Rot', 'Gelb', 'Grün']
-
-function tisch(haende: Kartenwahl[][], erweiterung = false): Baukasten {
-  const bau = baukasten({ spielerzahl: haende.length, erweiterung })
-  haende.forEach((karten, index) => bau.hand(index, karten))
-  return bau
-}
-
-function verletzt(zustand: Spielzustand): string[] {
-  return pruefeInvarianten(zustand).filter((befund) => befund.verletzt).map((befund) => `${befund.name}: ${befund.detail}`)
-}
 
 afterEach(() => {
   vi.restoreAllMocks()

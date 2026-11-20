@@ -36,7 +36,7 @@ function klicke(zustand: Spielzustand, ...wahlen: Wahl[]): { zustand: Spielzusta
   return { zustand: jetzt, ereignisse }
 }
 
-const typen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)
+const ereignistypen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)
 
 describe('E4: Szenarien der Abwehr und der Schlangengrube', () => {
   it('E4: die Szenarien des Tasks sind da', () => {
@@ -47,11 +47,11 @@ describe('E4: Szenarien der Abwehr und der Schlangengrube', () => {
     const start = erzeuge('schlangengrube')
     expect(ermittleAktionen(start).filter((aktion) => aktion.typ === 'SchlangengrubeSpielen')).toHaveLength(2)
     const angesagt = klicke(start, grubeAuf('spieler-2'))
-    expect(typen(angesagt.ereignisse)).toEqual(['KarteAngesagt', 'AnsageEntschieden'])
+    expect(ereignistypen(angesagt.ereignisse)).toEqual(['KarteAngesagt', 'AnsageEntschieden'])
     expect(angesagt.zustand.ausliegendeGruben).toMatchObject([{ gespieltVon: 0, vor: 1 }])
     expect(ermittleEntscheider(angesagt.zustand), 'A6: niemand wird gefragt').toBe(0)
     const ende = klicke(angesagt.zustand, farbkarte, beenden)
-    expect(typen(ende.ereignisse)).toEqual(['KarteGespielt', 'KartenGezogen', 'Ausgesetzt', 'ZugBegonnen'])
+    expect(ereignistypen(ende.ereignisse)).toEqual(['KarteGespielt', 'KartenGezogen', 'Ausgesetzt', 'ZugBegonnen'])
     expect(ende.zustand.zug.spielerIndex).toBe(2)
     expect(ende.zustand.spieler[0].ablagestapel.map((karte) => karte.id)).toEqual([angesagt.zustand.ausliegendeGruben[0].karte.id])
   })
@@ -62,7 +62,7 @@ describe('E4: Szenarien der Abwehr und der Schlangengrube', () => {
     expect(ermittleEntscheider(angesagt.zustand), 'A6: KI-Gegner 1 entscheidet').toBe(1)
     expect(ermittleAktionen(angesagt.zustand).map((aktion) => aktion.typ)).toEqual(['Reagieren', 'Reagieren'])
     const abwehr = klicke(angesagt.zustand, abwehren)
-    expect(typen(abwehr.ereignisse)).toEqual(['Abgewehrt', 'AnsageEntschieden'])
+    expect(ereignistypen(abwehr.ereignisse)).toEqual(['Abgewehrt', 'AnsageEntschieden'])
     expect(abwehr.zustand.spieler[1].hand).toHaveLength(4)
     expect(abwehr.zustand.spieler.map((spieler) => spieler.ablagestapel.map((karte) => karte.typ === 'Sonderkarte' && karte.name))).toEqual([
       ['Schlangengrube'],
@@ -72,7 +72,7 @@ describe('E4: Szenarien der Abwehr und der Schlangengrube', () => {
     const ende = klicke(abwehr.zustand, farbkarte, beenden)
     expect(ende.ereignisse).toContainEqual({ typ: 'ZugBegonnen', spielerIndex: 1, teilzug: 1 })
     expect(ende.ereignisse).toContainEqual({ typ: 'KartenGezogen', spielerIndex: 1, anzahl: 1 })
-    expect(typen(ende.ereignisse)).not.toContain('Ausgesetzt')
+    expect(ereignistypen(ende.ereignisse)).not.toContain('Ausgesetzt')
   })
 
   it('A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren', () => {
@@ -81,7 +81,7 @@ describe('E4: Szenarien der Abwehr und der Schlangengrube', () => {
     expect(erster.zustand.spieler[2].hand).toHaveLength(4)
     expect(erster.zustand.zug.spielerIndex).toBe(1)
     const zweiter = klicke(erster.zustand, grubeAuf('spieler-3'))
-    expect(typen(zweiter.ereignisse), 'A6: ohne Farbenschutz wird KI-Gegner 2 nicht gefragt').toEqual(['KarteAngesagt', 'AnsageEntschieden'])
+    expect(ereignistypen(zweiter.ereignisse), 'A6: ohne Farbenschutz wird KI-Gegner 2 nicht gefragt').toEqual(['KarteAngesagt', 'AnsageEntschieden'])
     const ende = klicke(zweiter.zustand, farbkarte, beenden)
     expect(ende.ereignisse).toContainEqual(expect.objectContaining({ typ: 'Ausgesetzt', spielerIndex: 2, ablagestapelVon: 1 }))
     expect(ende.zustand.spieler[2].hand, 'D18: kein Auffüllen beim Aussetzen').toHaveLength(4)

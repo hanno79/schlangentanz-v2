@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { AktionsErgebnis, SpielAktion, Spielzustand } from '../index'
 import { ENGINE_MOTOR, dauerlauf, dauerlaufPartien, spieleDauerlaufPartie } from '../testing/dauerlauf'
 import type { Motor, SchrittPruefer } from '../testing/dauerlauf'
+import { istFarbenschutz } from '../reaktion'
 
 const ZUG_BEENDEN = (zustand: Spielzustand): SpielAktion[] => [
   { typ: 'ZugBeenden', spielerId: zustand.spieler[zustand.zug.spielerIndex].id },
@@ -174,7 +175,7 @@ function reaktionsPruefer(zaehler: Reaktionen): SchrittPruefer {
       const gefragt = schwebend.ausstehend[0]
       if (gefragt === undefined) return 'A6: Eine Karte schwebt, aber niemand ist gefragt.'
       if (zustand.spieler[gefragt].id === schwebend.aktion.spielerId) return 'A6: Der Angreifer ist bei seiner eigenen Karte gefragt.'
-      if (!zustand.spieler[gefragt].hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz')) {
+      if (!zustand.spieler[gefragt].hand.some(istFarbenschutz)) {
         return `E4 Kriterium 3: Spieler ${gefragt} ist gefragt, hält aber keinen Farbenschutz.`
       }
     }

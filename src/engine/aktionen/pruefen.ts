@@ -1,6 +1,6 @@
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
-import { pruefeReaktion } from '../reaktion';
+import { istFarbenschutz, pruefeReaktion } from '../reaktion';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
 import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
 import { AKTIONSTYPEN } from './typen';
@@ -171,7 +171,7 @@ export function istWirkungslosAblegbar(zustand: Spielzustand, spielerIndex: numb
 /** Dieselbe Regel, wenn die Ziele der Karte schon ermittelt sind (`ermittleAktionen`); `ziele` wird nur bei Bedarf gerufen. */
 export function ohneZielAblegbar(karte: Spielkarte, ziele: () => readonly unknown[]): boolean {
   if (karte.typ !== 'Sonderkarte') return false;
-  return karte.name === 'Farbenschutz' || ziele().length === 0;
+  return istFarbenschutz(karte) || ziele().length === 0;
 }
 
 /** A5: Am Zugende kommen genau die überzähligen Karten auf den eigenen Ablagestapel, jede einmal. */

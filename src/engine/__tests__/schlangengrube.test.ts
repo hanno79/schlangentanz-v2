@@ -1,9 +1,27 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleAktionen, pruefeInvarianten } from '../index'
+import { ermittleAktionen } from '../index'
 import type { Ereignis, Spielzustand } from '../index'
-import { baukasten } from '../testing/szenario'
 import type { Baukasten, Kartenwahl } from '../testing/szenario'
-import { ablage, aktionen, ereignisseVom, farbkarte, folge, fuehreAus, grubeAuf, grund, hand, reaktion, spieleZug, typen, zugBeenden } from './zugablauf_hilfen'
+import {
+  ablage,
+  aktionen,
+  ereignisseVom,
+  farbkarte,
+  folge,
+  FUENF,
+  fuehreAus,
+  grubeAuf,
+  grund,
+  hand,
+  MIT_GRUBE,
+  MIT_SCHUTZ,
+  reaktion,
+  spieleZug,
+  tischMitHaenden as tisch,
+  typen,
+  verletzteInvarianten,
+  zugBeenden,
+} from './zugablauf_hilfen'
 
 /*
 E4, die Schlangengrube durch Spielen (A7.6 mit beiden Beispielen, D14, D18,
@@ -14,16 +32,6 @@ allgemeinen Reaktionsablauf prüft `reaktion.test.ts`, das Aussetzen mit schon
 liegender Grube `zugablauf_schlussrunde.test.ts` (E2).
 */
 
-const FUENF: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']
-const MIT_SCHUTZ: Kartenwahl[] = ['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Grün']
-const MIT_GRUBE: Kartenwahl[] = ['Schlangengrube', 'Blau', 'Rot', 'Gelb', 'Grün']
-
-function tisch(haende: Kartenwahl[][]): Baukasten {
-  const bau = baukasten({ spielerzahl: haende.length, erweiterung: false })
-  haende.forEach((karten, index) => bau.hand(index, karten))
-  return bau
-}
-
 /** Grube auf `ziel`, eine Farbkarte, Zug beenden: der Zug des Angreifers ohne Abwehr. */
 function grubeUndEnde(zustand: Spielzustand, ziel: number) {
   return folge(zustand, (jetzt) => grubeAuf(jetzt, ziel), farbkarte, zugBeenden)
@@ -31,10 +39,6 @@ function grubeUndEnde(zustand: Spielzustand, ziel: number) {
 
 function grubenId(zustand: Spielzustand, spieler: number): string {
   return zustand.spieler[spieler].hand.find((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangengrube')!.id
-}
-
-function ohneVerletzung(zustand: Spielzustand): string[] {
-  return pruefeInvarianten(zustand).filter((befund) => befund.verletzt).map((befund) => befund.name)
 }
 
 describe('A7.6: die Schlangengrube wählt einen Mitspieler', () => {
@@ -169,7 +173,7 @@ describe('D21, D29, A10: die Schlangengrube in der Schlussrunde', () => {
     ])
     expect(zustand.ausliegendeGruben).toEqual([])
     expect(ablage(zustand, 2).at(-1)).toBe(grube)
-    expect(ohneVerletzung(zustand)).toEqual([])
+    expect(verletzteInvarianten(zustand)).toEqual([])
   })
 
   it('D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren', () => {

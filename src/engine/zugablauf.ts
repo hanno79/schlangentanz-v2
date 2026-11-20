@@ -52,9 +52,14 @@ export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKar
   return karte;
 }
 
+/** Die Stelle des Spielers mit dieser Id in `spieler`, -1, wenn es ihn nicht gibt. */
+export function spielerIndexVon(zustand: Spielzustand, spielerId: string): number {
+  return zustand.spieler.findIndex((spieler) => spieler.id === spielerId);
+}
+
 /** Meldet die gespielte Karte, nachdem sie hingelegt ist, mit dem Ort, an dem sie jetzt liegt (Plan E2, Kriterium 11). */
 export function meldeGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte, ereignisse: Ereignis[]): void {
-  const spielerIndex = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
+  const spielerIndex = spielerIndexVon(zustand, aktion.spielerId);
   ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: aktion.karteId, aktion: aktion.typ, nach: findeKartenort(zustand, aktion.karteId) });
 }
 
@@ -206,34 +211,32 @@ export function mitspielerImUhrzeigersinn(zustand: Spielzustand, spielerIndex: n
 }
 
 /**
- * Wie viele Züge der Spieler noch hat, in denen er für eine Schlangengrube
- * aussetzen kann: solange die Partie läuft, beliebig viele (D14); in der
- * Schlussrunde einen, wenn sein letzter Zug noch kommt (A10, D21), sonst und
- * nach Spielende keinen. Der Spieler am Zug setzt in diesem Zug nicht mehr aus.
+ * A10, D21: Kommt der letzte Zug dieses Spielers in der Schlussrunde noch? Ja für
+ * jeden, der nach dem Spieler am Zug und vor dem Auslöser sitzt; ist der Auslöser
+ * selbst am Zug, für alle anderen. Nach Spielende für niemanden.
  */
-function verbleibendeZuege(zustand: Spielzustand, spielerIndex: number): number {
+function hatNochLetztenZug(zustand: Spielzustand, spielerIndex: number): boolean {
   const { partiephase, schlussrundeAusloeser: ausloeser, zug } = zustand;
-  if (partiephase === 'Laufend') return Infinity;
-  if (partiephase === 'Beendet' || ausloeser === null || spielerIndex === zug.spielerIndex || spielerIndex === ausloeser) return 0;
-  // Bis zum Auslöser kommt jeder andere noch einmal dran; ist der Auslöser selbst am Zug, alle anderen.
-  const reihe = mitspielerImUhrzeigersinn(zustand, zug.spielerIndex);
-  const bisAusloeser = zug.spielerIndex === ausloeser ? reihe : reihe.slice(0, reihe.indexOf(ausloeser));
-  return bisAusloeser.includes(spielerIndex) ? 1 : 0;
+  if (partiephase === 'Beendet' || ausloeser === null) return false;
+  const anzahl = zustand.spieler.length;
+  // Abstand im Uhrzeigersinn ab dem Spieler am Zug; er selbst und der Auslöser am Zug zählen als ganze Runde.
+  const abstand = (index: number) => (index - zug.spielerIndex + anzahl) % anzahl || anzahl;
+  return spielerIndex !== zug.spielerIndex && abstand(spielerIndex) < abstand(ausloeser);
 }
 
 /**
  * D29: Jede Schlangengrube kostet den Spieler, vor dem sie liegt, einen eigenen
- * Zug (D14). Hat er für sie keinen Zug mehr, weil die Schlussrunde läuft und sein
- * letzter Zug vorbei oder schon von einer früheren Grube belegt ist, oder weil
- * die Partie beendet ist, kommt sie ohne Wirkung auf den Ablagestapel dessen, der
- * sie gespielt hat (A6). Die zuerst gelegten Gruben behalten seine Züge.
+ * Zug (D14); solange die Partie läuft, hat er dafür genug. Hat er für sie keinen
+ * Zug mehr, weil die Schlussrunde läuft und sein letzter Zug vorbei oder schon
+ * von einer früheren Grube belegt ist, oder weil die Partie beendet ist, kommt
+ * sie ohne Wirkung auf den Ablagestapel dessen, der sie gespielt hat (A6).
  */
 export function legeGrubenOhneZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
-  const belegt = new Map<number, number>();
+  if (zustand.partiephase === 'Laufend' || zustand.ausliegendeGruben.length === 0) return;
+  const belegt = new Set<number>();
   zustand.ausliegendeGruben = zustand.ausliegendeGruben.filter((grube) => {
-    const schon = belegt.get(grube.vor) ?? 0;
-    if (schon < verbleibendeZuege(zustand, grube.vor)) {
-      belegt.set(grube.vor, schon + 1);
+    if (!belegt.has(grube.vor) && hatNochLetztenZug(zustand, grube.vor)) {
+      belegt.add(grube.vor);
       return true;
     }
     zustand.spieler[grube.gespieltVon].ablagestapel.push(grube.karte);

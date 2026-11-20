@@ -171,7 +171,7 @@ function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   }
   if (!('karteId' in aktion)) return aktion.typ
   const text = `${aktion.typ}: ${handkarte(zustand, aktion.spielerId, aktion.karteId)}`
-  if (aktion.typ === 'SchlangengrubeSpielen') return `${text} → ${zustand.spieler.find((spieler) => spieler.id === aktion.zielSpielerId)?.name ?? aktion.zielSpielerId}`
+  if (aktion.typ === 'SchlangengrubeSpielen') return `${text} → ${name(zustand, zustand.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId))}`
   if (aktion.typ !== 'FarbkarteLegen') return text
   return aktion.ziel.art === 'neueSchlange' ? `${text} → neue Schlange` : `${text} → ${aktion.ziel.schlangenId} ${aktion.ziel.seite}`
 }

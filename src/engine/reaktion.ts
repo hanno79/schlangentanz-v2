@@ -1,7 +1,15 @@
 import type { Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
 import { definitionFuer } from './karten/register';
-import type { Spielkarte, Spielzustand } from './types';
-import { entnehmeHandkarte, findeKartenort, meldeGespielteKarte, mitspielerImUhrzeigersinn, zaehleGespielteKarte } from './zugablauf';
+import type { SonderkarteInfo, Spielkarte, Spielzustand } from './types';
+import {
+  entnehmeHandkarte,
+  findeKartenort,
+  legeAufEigenenAblagestapel,
+  meldeGespielteKarte,
+  mitspielerImUhrzeigersinn,
+  spielerIndexVon,
+  zaehleGespielteKarte,
+} from './zugablauf';
 
 /*
 Der Reaktionsablauf (A6, A7.2, D10, Plan E4), für jede Sonderkarte gleich: Wer
@@ -22,13 +30,8 @@ export function istFarbenschutz(karte: Spielkarte): boolean {
   return karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz';
 }
 
-function spielerIndexVon(zustand: Spielzustand, spielerId: string): number {
-  return zustand.spieler.findIndex((spieler) => spieler.id === spielerId);
-}
-
 /** Wen die Karte trifft und wer deshalb abwehren darf, ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal. */
-function betroffeneVon(zustand: Spielzustand, karte: Spielkarte, aktion: KartenAktion): number[] {
-  if (karte.typ !== 'Sonderkarte') return [];
+function betroffeneVon(zustand: Spielzustand, karte: SonderkarteInfo, aktion: KartenAktion): number[] {
   const genannt = new Set(definitionFuer(karte).betroffene(zustand, aktion));
   return mitspielerImUhrzeigersinn(zustand, spielerIndexVon(zustand, aktion.spielerId)).filter((index) => genannt.has(index));
 }
@@ -41,7 +44,8 @@ function betroffeneVon(zustand: Spielzustand, karte: Spielkarte, aktion: KartenA
  */
 export function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereignisse: Ereignis[]): Spielzustand {
   const karte = zaehleGespielteKarte(zustand, aktion);
-  const betroffene = betroffeneVon(zustand, karte, aktion);
+  // Gegen Farbkarten gibt es keine Abwehr (A6).
+  const betroffene = karte.typ === 'Sonderkarte' ? betroffeneVon(zustand, karte, aktion) : [];
   if (betroffene.length === 0 || karte.typ !== 'Sonderkarte') {
     // Die Karte nimmt sich die Wirkung selbst aus der Hand.
     const nach = definitionFuer(karte).wirke(zustand, aktion, []);
@@ -80,11 +84,11 @@ export function reaktionsAktionen(zustand: Spielzustand, spielerIndex: number): 
  * hat jeder entschieden, wirkt die Karte.
  */
 export function reagiere(zustand: Spielzustand, aktion: ReagierenAktion, ereignisse: Ereignis[]): Spielzustand {
-  const schwebend = zustand.schwebend;
-  const spielerIndex = schwebend?.ausstehend.shift();
-  if (schwebend === null || spielerIndex === undefined) throw new Error('Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).');
+  const { schwebend } = zustand;
+  if (schwebend === null || schwebend.ausstehend.length === 0) throw new Error('Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).');
+  const spielerIndex = schwebend.ausstehend.shift()!;
   if (aktion.farbenschutzId !== null) {
-    zustand.spieler[spielerIndex].ablagestapel.push(entnehmeHandkarte(zustand, aktion.spielerId, aktion.farbenschutzId));
+    legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.farbenschutzId);
     schwebend.abgewehrt.push(spielerIndex);
     ereignisse.push({ typ: 'Abgewehrt', spielerIndex, karteId: aktion.farbenschutzId, gegen: schwebend.karte.id });
   }
@@ -102,7 +106,7 @@ function loeseAuf(zustand: Spielzustand, ereignisse: Ereignis[]): Spielzustand {
   else {
     // Die Kartendateien nehmen sich die gespielte Karte aus der Hand (`entnehmeHandkarte`); bis hierher hat sie geschwebt.
     zustand.spieler[angreifer].hand.push(karte);
-    nach = definitionFuer(karte).wirke(zustand, aktion, [...abgewehrt]);
+    nach = definitionFuer(karte).wirke(zustand, aktion, abgewehrt);
   }
   ereignisse.push({ typ: 'AnsageEntschieden', spielerIndex: angreifer, karteId: karte.id, abgewehrt: [...abgewehrt], ohneWirkung, nach: findeKartenort(nach, karte.id) });
   return nach;
