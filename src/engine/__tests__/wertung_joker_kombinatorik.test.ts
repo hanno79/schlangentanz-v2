@@ -115,21 +115,39 @@ function durchprobieren(
   return { summe: beste.summe, joker: beste.joker }
 }
 
-/** `jokerAnteil` und `regenbogenAnteil` (unter den Jokern) steuern, wie oft Joker und Regenbogenschlangen vorkommen. */
-function zufallsSchlangen(zufall: () => number, jokerAnteil = 0.2, regenbogenAnteil = 0.5): Glied[][] {
+function zufallsSchlangen(zufall: () => number): Glied[][] {
   const wahl = <T,>(liste: readonly T[]): T => liste[Math.floor(zufall() * liste.length)]
   let joker = 0
   return Array.from({ length: 1 + Math.floor(zufall() * 2) }, () =>
     Array.from({ length: 1 + Math.floor(zufall() * 10) }, (): Glied => {
       const r = zufall()
-      if (r < jokerAnteil && joker < 4) {
+      if (r < 0.2 && joker < 4) {
         joker += 1
-        return zufall() < regenbogenAnteil ? 'R' : { f: wahl(FARBEN) }
+        return zufall() < 0.5 ? 'R' : { f: wahl(FARBEN) }
       }
-      if (r < jokerAnteil + 0.05) return 'B'
+      if (r < 0.25) return 'B'
       return wahl(FARBEN.slice(0, 2 + Math.floor(zufall() * 4)))
     }),
   )
+}
+
+/**
+ * D32: Auslagen mit einem Block aus 2 bis 4 Regenbogenschlangen, manchmal mit einer Farbenfusion darin, zwischen
+ * kurzen Farbblöcken. So liegen oft drei Regenbogenschlangen nebeneinander; höchstens 4 Joker wie oben.
+ */
+function regenbogenAuslage(zufall: () => number): Glied[][] {
+  const zahl = (n: number): number => Math.floor(zufall() * n)
+  const schlangen: Glied[][] = Array.from({ length: 1 + zahl(2) }, () =>
+    Array.from({ length: 1 + zahl(4) }).flatMap((): Glied[] => {
+      const block = Array<Glied>(1 + zahl(3)).fill(FARBEN[zahl(FARBEN.length)])
+      return zahl(5) === 0 ? [...block, 'B'] : block
+    }),
+  )
+  const regenbogen = Array<Glied>(2 + zahl(3)).fill('R')
+  if (regenbogen.length < 4 && zahl(2) === 0) regenbogen.splice(zahl(regenbogen.length + 1), 0, { f: FARBEN[zahl(FARBEN.length)] })
+  const ziel = schlangen[zahl(schlangen.length)]
+  ziel.splice(zahl(ziel.length + 1), 0, ...regenbogen)
+  return schlangen
 }
 
 describe('A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren geprüft', () => {
@@ -150,7 +168,7 @@ describe('A11/A7.3/A7.7: mehrere Joker, gegen vollständiges Durchprobieren gepr
     const zufall = erzeugeZufall(3232)
     let regelEntscheidet = 0
     for (let fall = 0; fall < 400; fall++) {
-      const glieder = zufallsSchlangen(zufall, 0.45, 0.8)
+      const glieder = regenbogenAuslage(zufall)
       const schlangen = baue(glieder)
       const ergebnis = werteSchlangen(schlangen, true)
       const erwartet = durchprobieren(schlangen, true)
