@@ -23,10 +23,26 @@ import {
   planTaskIds,
   regelfragen,
   regelfragenPfad,
+  abschnitt,
+  spec,
   specNormalisiert,
   tabelle,
   teilD,
 } from './regelfragen_lesen'
+
+/**
+ * Antworten, die die Website inzwischen selbst trägt, mit den Sätzen aus Teil A,
+ * die das belegen. Nur diese Einträge dürfen „Website übernommen am …“ tragen,
+ * alle anderen „Website folgt.“ (P0.5d).
+ */
+const AUF_DER_WEBSITE: Record<string, { datum: string; saetze: string[] }> = {
+  // D19: „Eine neue Schlange beginnt jeder nur für sich selbst“ und beim Gegner nur an eine bestehende.
+  F6: {
+    datum: '13.11.2026',
+    saetze: ['Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers'],
+  },
+}
+const teilANormalisiert = normalisiert(abschnitt(spec, '##', 'Teil A'))
 
 /** Zitate vorhanden; solange die Frage offen ist, steht jedes wörtlich in der Spec. */
 function pruefeZitate(nr: string, block: string): void {
@@ -95,7 +111,7 @@ function pruefeAntwort(nr: string, block: string): void {
   }
 }
 
-/** Beantwortet heisst: Eintrag „F1: …“ in Teil D mit derselben Frage, demselben Datum, „Website folgt.“ und dem Wortlaut des Autors. */
+/** Beantwortet heisst: Eintrag „F1: …“ in Teil D mit derselben Frage, demselben Datum, „Website folgt.“ (oder „Website übernommen am …“ mit Beleg in Teil A) und dem Wortlaut des Autors. */
 function pruefeTeilD(nr: string, block: string): void {
   const antwort = feld(block, 'Antwort')
   const eintrag = teilD.get(nr)
@@ -108,7 +124,16 @@ function pruefeTeilD(nr: string, block: string): void {
   expect(eintrag.nr, `${nr}: Teil D, Spalte „Nr.“`).toMatch(/^D\d+$/)
   expect(normalisiert(eintrag.frage), `${nr}: Teil D ${eintrag.nr}, Frage`).toBe(normalisiert(feld(block, 'Frage')))
   expect(eintrag.datum, `${nr}: Teil D ${eintrag.nr}, Datum`).toBe(feld(block, 'Datum'))
-  expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr}, Status „Website folgt.“`).toContain('Website folgt.')
+  const aufDerWebsite = AUF_DER_WEBSITE[nr]
+  if (aufDerWebsite === undefined) {
+    expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr}, Status „Website folgt.“`).toContain('Website folgt.')
+  } else {
+    expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr}, Status`).toContain(`Website übernommen am ${aufDerWebsite.datum}.`)
+    expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr} trägt beide Status`).not.toContain('Website folgt')
+    for (const satz of aufDerWebsite.saetze) {
+      expect(teilANormalisiert, `${nr}: Beleg steht nicht in Teil A: „${satz}“`).toContain(normalisiert(satz))
+    }
+  }
   expect(antwort, `${nr}: Antwort nennt den Eintrag ${eintrag.nr} in Teil D nicht`).toMatch(alsWort(eintrag.nr))
   for (const zitat of antwort.match(ZITAT) ?? []) {
     expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr} ohne Wortlaut des Autors ${zitat}`).toContain(zitat)
@@ -235,7 +260,7 @@ describe('P0.5: Regelfragen an den Autor', () => {
       it(`P0.5: ${nr} ist offen oder hat eine Antwort aus vorhandenen Möglichkeiten mit Datum`, () =>
         pruefeAntwort(nr, block))
 
-      it(`P0.5: ${nr} steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und „Website folgt“`, () =>
+      it(`P0.5: ${nr} steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und Status zur Website`, () =>
         pruefeTeilD(nr, block))
 
       it(`P0.5: ${nr}: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D`, () => pruefeVerweise(nr))

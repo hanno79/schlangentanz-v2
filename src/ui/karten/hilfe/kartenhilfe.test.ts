@@ -247,10 +247,19 @@ describe('O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1)', () => {
     expect(lilaRiese?.kurz).toBe('Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.')
   })
 
-  it('P0.5d/D3: Lila Riese trägt keine Ergänzung des Autors, denn A9 enthält die Antwort D3 schon', () => {
+  it('P0.5d/D3: Lila Riese erklärt den Unterschied zum Kartenbild mit der Entscheidung des Autors, die auf der Website steht', () => {
     const lilaRiese = nach('Aufgabenkarte').find((hilfe) => name(hilfe) === 'Lila Riese')
-    expect(lilaRiese?.ergaenzungen).toBeUndefined()
+    expect(lilaRiese?.ergaenzungen).toEqual([{ text: 'Mindestens 5 violette Karten in einer Reihe.', quelle: 'D3', aufDerWebsite: true }])
   })
+
+  it.each(KARTENHILFEN.flatMap((hilfe) => (hilfe.ergaenzungen ?? []).map((satz) => [name(hilfe), satz] as const)))(
+    'P0.5d: %s: das Etikett passt zum Stand der Website in Teil D (%j)',
+    (_, satz) => {
+      const antwort = antwortD(satz.quelle)
+      if (satz.aufDerWebsite === true) expect(antwort, `${satz.quelle}: Website hat übernommen`).toMatch(/Website (geändert|übernommen)/)
+      else expect(antwort, `${satz.quelle}: Website folgt`).toContain('Website folgt')
+    },
+  )
 })
 
 /** Steht `folge` zusammenhängend und in derselben Reihenfolge in `liste`? */

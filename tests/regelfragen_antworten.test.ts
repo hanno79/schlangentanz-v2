@@ -60,7 +60,12 @@ const ERWARTET: Record<string, Erwartung> = {
     wortlaut: ['„Ja, ohne Wirkung“'],
   },
   F9: { wahl: 'a', kern: ['alle Punktgleichen gewinnen'] },
-  F10: { wahl: 'a', kern: ['ein weiterer Zug folgt nicht'] },
+  F10: {
+    wahl: 'a',
+    kern: ['ein weiterer Zug folgt nicht', 'kein weiterer Verdoppler mit Wirkung'],
+    // Rückfrage vom 20.11.2026 zu A7.8 („Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“).
+    wortlaut: ['„Ja, wirkungslos“'],
+  },
   F11: {
     wahl: 'b, d',
     kern: ['ab 3 Farbkarten', 'bekommt niemand den Bonus'],
@@ -76,7 +81,15 @@ const ERWARTET: Record<string, Erwartung> = {
   F15: { wahl: 'a', kern: ['vollständig einsehbar'] },
   G9: {
     wahl: 'a',
-    kern: ['drei Joker nebeneinander', 'gültige Gruppe', 'Vielfaltbonus', 'Farbharmonie'],
+    kern: [
+      'drei Joker nebeneinander',
+      'gültige Gruppe',
+      'Vielfaltbonus',
+      'Farbharmonie',
+      // Präzisierung vom 20.11.2026: Regenbogenschlangen bringen keine Punkte, die Fusion die Summe darunter.
+      'drei Regenbogenschlangen nebeneinander: eine Gruppe mit 0 Punkten',
+      'Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten',
+    ],
     // Gegenprobe: Möglichkeit b verlangt eine echte Farbkarte in jeder Gruppe.
     verboten: ['echte Farbkarte', 'zählen weder'],
     wortlaut: ['„Ja, als Gruppe“'],

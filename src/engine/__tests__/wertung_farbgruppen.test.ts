@@ -204,3 +204,31 @@ describe('A7.7: Farbenfusion in der Wertung', () => {
     expect(wertung.gruppenPunkte).toBe(6)
   })
 })
+
+describe('D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026)', () => {
+  it('D31: drei Regenbogenschlangen nebeneinander sind eine Gruppe mit 0 Punkten', () => {
+    const wertung = eineSchlange(['Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'])
+    expect(gruppen(wertung)).toHaveLength(1)
+    expect(gruppen(wertung)[0]).toMatch(/×3=0$/)
+    expect(wertung.gruppenPunkte).toBe(0)
+  })
+
+  it('D30, D31: Regenbogenschlange, Fusion aus Grün und Grün, Regenbogenschlange ist eine Gruppe mit 6 Punkten', () => {
+    const wertung = eineSchlange(['Regenbogenschlange', { fusion: ['Grün', 'Grün'] }, 'Regenbogenschlange'])
+    expect(gruppen(wertung)).toHaveLength(1)
+    // Gegenprobe zu D30: als Karte der Gruppenfarbe gezählt brächte die Fusion höchstens 3, nicht 6.
+    expect(gruppen(wertung)[0]).toMatch(/×3=6$/)
+    expect(wertung.gruppenPunkte).toBe(6)
+  })
+
+  it('D30: die Fusion belegt einen Platz; zwei Farbkarten und eine Fusion ergeben eine Dreiergruppe', () => {
+    expect(gruppen(eineSchlange(['Violett', 'Violett', { fusion: ['Grün', 'Grün'] }]))).toEqual(['Violett×3=10'])
+  })
+
+  it('D31: eine Gruppe nur aus Jokern zählt mit Erweiterung für den Vielfaltbonus', () => {
+    const glieder: Parameters<typeof eineSchlange>[0] = ['Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot', 'Schlangenblockade']
+    const wertung = eineSchlange([...glieder, 'Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange'], true)
+    expect(wertung.schlangen[0].vielfaltFarben).toHaveLength(3)
+    expect(wertung.vielfaltBonus).toBe(2)
+  })
+})
