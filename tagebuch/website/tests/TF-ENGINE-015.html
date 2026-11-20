@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-015 Am Rand des Zugablaufs verhält sich die Engine nach A5, A10, D12 und D14, auch wenn der Stapel zu wenig Karten hat oder beim Abwerfen falsche Aktionen kommen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-015 Am Rand des Zugablaufs verhält sich die Engine nach A5, A10, D12 und D14, auch wenn der Stapel zu wenig Karten hat oder beim Abwerfen falsche Aktionen kommen.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-010</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Fünf Lagen, die in den Abnahmekriterien nicht einzeln stehen: Der Stapel hat weniger Karten als nötig, eine Grube liegt bei Spielende noch vor dem Auslöser, zwei Gruben liegen in der Schlussrunde vor demselben Spieler, im Abschnitt „Abwerfen“ kommen falsche Aktionen, und ein Farbenschutz wird nach einer Farbkarte oder nach einer Sonderkarte abgelegt.</p><h2>Bestanden, wenn</h2><p>Alle fünf Fälle verhalten sich so:</p>
+<ul><li>Liegt noch 1 Karte im Stapel und braucht Spieler 1 am Zugende 2, zieht er 1 (Hand 4), die Schlussrunde beginnt mit ihm als Auslöser.</li><li>Liegt bei Spielende eine Grube vor dem Auslöser, endet die Partie mit <code>PartieBeendet</code>, und keine Invariante ist verletzt.</li><li>Liegen zwei Gruben vor demselben Spieler in der Schlussrunde, setzt er genau einmal aus (D21), dann endet die Partie.</li><li>Im Abschnitt „Abwerfen“ werden ein fremder Spieler, „Zug beenden“, eine Karte mit oder ohne Wirkung, 0 Karten, 2 Karten statt 1 und eine doppelt genannte Karte mit deutschem Grund abgelehnt; Speichern und Laden ergibt denselben Zustand.</li><li>Nach einer Farbkarte sind beide Farbenschutz wirkungslos ablegbar; nach einem davon bleibt nur „Zug beenden“, der zweite wird mit Verweis auf D12 abgelehnt.</li></ul><h2>Fehlgeschlagen, wenn</h2><p>Einer der fünf Fälle anders ausgeht, etwa die Schlussrunde mit einer Karte im Stapel nicht beginnt, eine falsche Aktion beim Abwerfen erlaubt ist oder ein Spieler in der Schlussrunde zweimal aussetzt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/E2-zugablauf (PR #36)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E2-zugablauf</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario-Baukasten ohne Erweiterung; Hände aus Blau, Rot, Gelb, Grün, Violett, Braun und Farbenschutz; <code>stapelBehalten(1)</code>, <code>.grube(1, 0).schlussrunde(0).amZug(1)</code> und <code>.grube(0, 1).grube(2, 1).schlussrunde(0)</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>vorübergehende Testdatei `src/engine/__tests__/pruefer_e2_tmp.test.ts` mit den Fällen G-A bis G-E anlegen</td><td>Lagen aus „Testdaten“</td><td>Datei liegt neben den Zugablauf-Tests</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Datei ausführen</td><td>`npx vitest run src/engine/__tests__/pruefer_e2_tmp.test.ts -t &quot;eigene Grenzfälle&quot; --reporter=verbose`</td><td>Zeilen „G-A“ bis „G-E“ mit den Werten aus „Bestanden, wenn“, Exit 0</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Prüfdatei wieder löschen</td><td></td><td>`git status` zeigt keine Änderung unter `src/`</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 21:13</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E2, Iteration 2) &middot; agent &middot; pruefung-E2-i2 @ <span class="commit" title="c2a83ac9ac03282724319775e1011c1ed3eb642d">c2a83ac</span></p><p>G-A: zieht 1, Hand 4, Schlussrunde Auslöser 0; G-B: PartieBeendet, Grube schlangengrube-01 bleibt vor Spieler 1 liegen, 0 Invarianten verletzt; G-C: genau 1 Ausgesetzt, dann PartieBeendet, schlangengrube-02 bleibt liegen; G-D: 6 falsche Aktionen beim Abwerfen abgelehnt mit deutschem Grund, Speichern/Laden ohne Befund; G-E: 2 Farbenschutz ablegbar nach Farbkarte, danach nur ZugBeenden, zweiter abgelehnt (A5, D12)</p><ul class="belege"><li><a href="belege/2026-11-20-2113-TF-ENGINE-015-1.txt">2026-11-20-2113-TF-ENGINE-015-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

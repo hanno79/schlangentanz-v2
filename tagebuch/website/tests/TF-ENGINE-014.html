@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-014 Keine Karten-Id, die ein Ereignis in einem Zug nennt, liegt danach auf einer Hand. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-014 Keine Karten-Id, die ein Ereignis in einem Zug nennt, liegt danach auf einer Hand.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-010</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Ereignisse der Engine gehen an die Oberfläche aller Spieler. Nennt ein Ereignis die Id einer Karte, die danach noch oder wieder auf einer Hand liegt, kann ein Spieler fremde Handkarten erfahren (B2, O4 Kriterium 2). Geprüft wird deshalb jedes Feld jedes Ereignisses, nicht nur <code>karteId</code> und <code>karteIds</code>.</p><h2>Bestanden, wenn</h2><p>In sechs ganzen Zufallspartien (2, 3 und 4 Spieler, je zweimal, mit und ohne Erweiterung) liegt nach keinem Schritt und nach keinem Zug eine Karten-Id auf einer Hand, die in irgendeinem Ereignisfeld dieses Zuges steht. Gezählt werden dabei mindestens 60 Züge je Partie.</p><h2>Fehlgeschlagen, wenn</h2><p>Auch nur eine genannte Id nach dem Schritt oder am Zugende auf einer Hand liegt, etwa weil <code>KartenGezogen</code> die gezogenen Karten nennt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>20.11.2026</dd><dt>Änderung</dt><dd>task/E2-zugablauf (PR #36)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E2-zugablauf</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saaten 101 bis 106, Spielerzahl 2, 3, 4, 2, 3, 4; Erweiterung bei gerader Saat; Zugwahl mit der Zufallsquelle aus Saat × 7.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>vorübergehende Testdatei `src/engine/__tests__/pruefer_e2_tmp.test.ts` anlegen, die die Partien aus „Testdaten“ bis zum Ende spielt, alle Zeichenketten der Ereignisse sammelt, die Karten-Ids sind, und sie nach jedem Schritt und am Zugende mit den Händen vergleicht</td><td>Partien aus „Testdaten“</td><td>Datei liegt neben den Zugablauf-Tests</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Datei ausführen</td><td>`npx vitest run src/engine/__tests__/pruefer_e2_tmp.test.ts --reporter=verbose`</td><td>je Partie eine Zeile „GEHEIM …: n Züge, m genannte Karten-Ids, keine auf einer Hand“, Exit 0</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Prüfdatei wieder löschen</td><td></td><td>`git status` zeigt keine Änderung unter `src/`</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-20">20.11.2026 21:13</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E2, Iteration 2) &middot; agent &middot; pruefung-E2-i2 @ <span class="commit" title="c2a83ac9ac03282724319775e1011c1ed3eb642d">c2a83ac</span></p><p>6 Partien (2/3/4 Spieler, Saaten 101-106): 70, 71, 65, 73, 73, 65 Züge mit 99, 101, 92, 104, 96, 97 genannten Karten-Ids; keine davon nach dem Schritt oder am Zugende auf einer Hand; KartenGezogen nur mit spielerIndex und anzahl</p><ul class="belege"><li><a href="belege/2026-11-20-2113-TF-ENGINE-014-1.txt">2026-11-20-2113-TF-ENGINE-014-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

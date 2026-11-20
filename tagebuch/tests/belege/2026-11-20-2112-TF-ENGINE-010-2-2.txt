@@ -1,0 +1,44 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac3a1dab53b956c56
+
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: die Partien laufen reihum mit 2, 3 und 4 Spielern und festen Saaten 12ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A5: zählt die Engine in einer laufenden Partie keine Aktion auf, meldet der Lauf „festgefahren“ 7ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > B2: eine aufgezählte Aktion, die die Engine ablehnt, wird gemeldet, auch wenn der Lauf sie nicht wählt 2ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: ein Prüfer je Partie sieht jeden Schritt; meldet er etwas, hält der Lauf mit „verstoss“ an 11ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: eine Partie, die endet, meldet „beendet“ mit der Zahl der Schritte 11ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: eine Partie, die nicht endet, stösst an die Schrittgrenze 32ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A4: eine verletzte Invariante hält den Lauf an und nennt sie 4ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > B2: eine aufgezählte, aber abgelehnte Aktion und ein Wurf der Engine werden gemeldet 4ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > B2: wirft das Aufzählen oder Prüfen, meldet der Lauf „fehler“ und prüft die übrigen Partien weiter 4ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A4: ein Zustand, der Speichern und Laden nicht übersteht, wird gemeldet 3ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A10: Zufallspartie mit 2 Spielern (Saat 1): jeder Schritt lässt sich aus den Ereignissen nachrechnen 92ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A10: Zufallspartie mit 3 Spielern (Saat 2): jeder Schritt lässt sich aus den Ereignissen nachrechnen 99ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A10: Zufallspartie mit 4 Spielern (Saat 3): jeder Schritt lässt sich aus den Ereignissen nachrechnen 91ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A10: Zufallspartie mit 2 Spielern (Saat 4): jeder Schritt lässt sich aus den Ereignissen nachrechnen 62ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A7.6/D14/D21: Aussetzen mit zwei Gruben verschiedener Spieler, Überhand und Schlussrunde lassen sich nachrechnen 12ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A7.6/D14: Ausgesetzt nennt die Grube und den Ablagestapel > A7.6/A6: bei zwei Gruben verschiedener Spieler nennt das Ereignis, welche Grube auf welchen Ablagestapel geht 3ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/B2: einzelne Ereignisse > A5: der Beginn des Abwerfens hat ein eigenes Ereignis mit der Zahl der überzähligen Karten 2ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/B2: einzelne Ereignisse > B2: KartenGezogen nennt nur Spieler und Anzahl, keine Karte 2ms
+ ✓ src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/B2: einzelne Ereignisse > A10: nach Spielende ist niemand am Zug, auch nicht der Auslöser 2ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario volltisch nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 132ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario mittelspiel nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 29ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario geheime-haende nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 23ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario angriff-auf-mich nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 14ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario neue-partie nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 6ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario lange-schlange nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 14ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario zehn-handkarten nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 17ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: 80 Zufallszustände (2 bis 4 Spieler, jede Phase, mit und ohne Erweiterung) verraten keine Id 1291ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: ganze Partie aus Saat 11 mit 2 Spielern (Erweiterung false) verrät nach keinem Schritt eine Id 2209ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: ganze Partie aus Saat 14 mit 4 Spielern (Erweiterung true) verrät nach keinem Schritt eine Id 2841ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: liegen die Kartenarten der fremden Hände sonst nirgends offen, steht auch ihr Name nicht im HTML 19ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2/B2: die geheimen Aufgaben der Gegner stehen nicht im HTML, die eigene schon 180ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10: Dauerlauf-Grundgerüst > A10: gleiche Saat, gleicher Lauf 23ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10/D21: der Regelprüfer des Dauerlaufs selbst > A10: kommt ein Spieler in der Schlussrunde zweimal dran und ein anderer gar nicht, meldet der Prüfer das 1ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A10/D21: der Regelprüfer des Dauerlaufs selbst > D21: ein ausgesetzter letzter Zug zählt als sein letzter Zug 0ms
+ ✓ src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante 50895ms
+
+ Test Files  3 passed (3)
+      Tests  35 passed (35)
+   Start at  21:02:11
+   Duration  55.65s (transform 878ms, setup 1.23s, import 1.20s, tests 58.16s, environment 9.95s)
+
