@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { abschnittA, antwortD, stehtImSatz, zeilenOhneAuszeichnung } from '../../test/specText'
+import { TEIL_A_ZEILEN, abschnittA, antwortD, stehtImSatz, zeilenOhneAuszeichnung } from '../../test/specText'
 import { ZUGSCHRITTE } from './zugschritte'
 
 /*
@@ -49,6 +49,13 @@ describe('O9: Ein Zug in fünf Schritten (Kriterium 2)', () => {
     'O9/U2: „%s“: Ergänzung aus Teil D steht wörtlich in der Antwort des Autors: %j',
     (_, satz) => {
       expect(stehtImSatz(satz.text, [antwortD(satz.quelle)]), `${satz.quelle} enthält nicht: ${satz.text}`).toBe(true)
+    },
+  )
+
+  it.each(ALLE_SAETZE.filter(([, satz]) => satz.quelle.startsWith('D')))(
+    'P0.5d/U2: „%s“: eine Ergänzung aus Teil D steht noch nicht wörtlich in Teil A, sonst gehört Teil A als Quelle hin: %j',
+    (_, satz) => {
+      expect(stehtImSatz(satz.text, TEIL_A_ZEILEN), `${satz.quelle} steht inzwischen in Teil A: ${satz.text}`).toBe(false)
     },
   )
 

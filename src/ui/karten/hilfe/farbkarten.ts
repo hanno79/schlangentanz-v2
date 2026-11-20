@@ -8,7 +8,7 @@ aus der Materialliste (A1), dem Zugablauf (A5) und der Punktezählung (A11).
 */
 
 const FARBGRUPPE = 'Eine Farbgruppe besteht aus mindestens drei nebeneinanderliegenden Karten derselben Farbe in einer Schlange.'
-const ANLEGEN =
+export const ANLEGEN =
   'Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)'
 
 const PUNKTE_JE_KARTE: Readonly<Record<number, string>> = {

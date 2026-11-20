@@ -11,6 +11,8 @@ die Website inzwischen selbst sagt (D9, D10, D12, D13, D19), steht im Wortlaut
 von Teil A da, ohne Etikett.
 */
 
+import { ANLEGEN } from '../karten/hilfe/farbkarten'
+
 export interface Satz {
   text: string
   /** Abschnitt von Teil A („A5“) oder Antwort aus Teil D („D12“). */
@@ -41,10 +43,7 @@ export const ZUGSCHRITTE: readonly Zugschritt[] = [
     titel: 'Karten ausspielen',
     saetze: [
       { text: 'Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:', quelle: 'A5' },
-      {
-        text: 'Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)',
-        quelle: 'A5',
-      },
+      { text: ANLEGEN, quelle: 'A5' },
       {
         text: 'Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)',
         quelle: 'A5',

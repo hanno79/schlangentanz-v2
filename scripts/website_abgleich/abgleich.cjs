@@ -43,7 +43,7 @@ const NUR_FORMATIERUNG = [
  */
 function teilAImDokument(spec) {
   const kopf = spec.indexOf(TEIL_A_KOPF);
-  if (kopf < 0) throw new Error('Teil A nicht gefunden; erwartet wird die Überschrift „## Teil A — Regeln (Spiegel der Website)“');
+  if (kopf < 0) throw new Error(`Teil A nicht gefunden; erwartet wird die Überschrift „${TEIL_A_KOPF.trim()}“`);
   const start = kopf + TEIL_A_KOPF.length;
   const naechster = spec.indexOf('\n## ', start);
   return { start, ende: naechster < 0 ? spec.length : naechster + 1 };
@@ -123,4 +123,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { pruefeAbdeckung };
+module.exports = { pruefeAbdeckung, TEIL_A_KOPF };
