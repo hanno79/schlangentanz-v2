@@ -106,6 +106,18 @@ const umgehungenU5: Array<[string, string, string?]> = [
   ],
   ['als Pick', 'return text', "export function lies(wert: Pick<Spielzustand, 'stapel'>) { return wert.stapel }"],
   ['in einem Record', 'return text', 'export function lies(kiste: Record<string, Spielzustand>) { return JSON.stringify(kiste) }'],
+  // Codex, zweite Runde: ein Behälter mit eigenen Feldern statt des Zustands, ein this-Parameter.
+  [
+    'als Behälter mit eigenen Feldern getarnt',
+    'return text',
+    'type Tarn = { stapel: string[]; reserve?: Spielzustand }\nfunction lies(wert: Tarn) { return wert.stapel }\nexport const weiter = (zustand: Spielzustand) => lies(zustand)',
+  ],
+  [
+    'ein Behälter in einen getarnten Behälter',
+    'return text',
+    'type Huelle = { zustand: { stapel: string[]; reserve?: Spielzustand } }\nfunction lies(wert: Huelle) { return wert.zustand.stapel }\nexport const weiter = (ergebnis: AktionsErgebnis) => lies(ergebnis)',
+  ],
+  ['über einen this-Parameter', 'return lies(zustand)', 'function lies(this: Spielzustand | void, wert: unknown) { return JSON.stringify(wert) }'],
 ]
 
 /** H1: Wege, eine globale Funktion zu ersetzen, die die Engine später aufruft. */
@@ -138,6 +150,17 @@ const globaleAenderungen: Array<[string, string]> = [
   ['globalThis.valueOf() in einer Variablen', "const g = globalThis.valueOf() as Record<string, unknown>\ng['structuredClone'] = f"],
   ['JSON.valueOf() in einer Variablen', "const j = JSON.valueOf() as Record<string, unknown>\nj['stringify'] = f"],
   ['Object.assign auf eine eigene Variable', 'const ziel = {}\nObject.assign(ziel, { a: f })'],
+  // Codex, zweite Runde: Function über einen getarnten Schlüssel, beim Zerlegen, und globale Funktionen in Variablen.
+  [
+    'constructor über einen getarnten Schlüssel',
+    "const baue = Object['constructor' as 'keys'] as {} as (text: string) => () => { structuredClone: unknown }\nconst ziel = baue('return globalThis')()\nziel.structuredClone = f",
+  ],
+  [
+    'constructor beim Zerlegen',
+    "const { constructor: konstruktor } = Object.is\nconst baue = konstruktor as (text: string) => () => { structuredClone: unknown }\nconst ziel = baue('return globalThis')()\nziel.structuredClone = f",
+  ],
+  ['globale Funktion in einer Variablen mit Cast', 'const methode = JSON.stringify as typeof JSON.stringify & { merkmal?: number }\nmethode.merkmal = 42'],
+  ['globale Funktion in einer Variablen ohne Cast', 'const methode: typeof JSON.stringify & { merkmal?: number } = JSON.stringify\nmethode.merkmal = 42'],
 ]
 
 /** Codex zu P0.3d: Zufall und Zeit über Umwege, die nur der Typprüfer sieht (U4). */
