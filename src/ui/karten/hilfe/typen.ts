@@ -25,6 +25,11 @@ export interface Ergaenzung {
   text: string
   /** Frage in Teil D, etwa „D3“. */
   quelle: string
+  /**
+   * Die Website hat die Antwort schon übernommen; der Satz erklärt dann nur, warum
+   * etwa ein Kartenbild abweicht. Etikett „Entscheidung des Autors“ statt „Ergänzung“.
+   */
+  aufDerWebsite?: true
 }
 
 export interface Hilfeabschnitt {

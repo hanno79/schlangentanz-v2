@@ -77,7 +77,7 @@ export function Kartentext({ karte, titelId }: { karte: Bildkarte; titelId?: str
       ))}
       {hilfe.ergaenzungen?.map((satz) => (
         <p key={satz.text} className="kartentext__ergaenzung">
-          <span>{satz.text}</span> <span className="kartentext__etikett">{KARTENHILFE_TEXTE.ergaenzung}</span>
+          <span>{satz.text}</span> <span className="kartentext__etikett">{satz.aufDerWebsite === true ? KARTENHILFE_TEXTE.entscheidung : KARTENHILFE_TEXTE.ergaenzung}</span>
         </p>
       ))}
     </article>

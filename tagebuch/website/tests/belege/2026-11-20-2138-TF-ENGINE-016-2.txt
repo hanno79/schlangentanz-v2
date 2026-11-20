@@ -1,0 +1,289 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts (47 tests | 13 failed) 110ms
+     × A11: Regenbogenschlange und Farbenfusion können eine Gruppe vervollständigen 12ms
+     × A11: Regenbogenschlange und Farbenfusion können eine Gruppe verlängern 2ms
+     × A11: Joker zählen als die Farbe, die die meisten Punkte bringt, auch wenn die Nachbarn links stehen 2ms
+     × A11: wofür ein Joker bei einer Aufgabe gezählt hat, spielt keine Rolle (der Zustand kennt keine Jokerfarbe) 3ms
+     × A11: eine Regenbogenschlange selbst bringt keine Punkte, ermöglicht aber eine längere Gruppe 2ms
+     × A11: Joker in zwei getrennten Gruppen zählen je für ihre Gruppe 2ms
+     × A7.3 Beispiel 1: Blau-Blau-Regenbogenschlange ist eine Dreiergruppe mit 2 Punkten 2ms
+     × A7.3 Beispiel 3: Rot-Rot-Regenbogenschlange-Braun-Braun bringt 4 Punkte, die Regenbogenschlange zählt als Braun 2ms
+     × A7.3: verbindet Farbgruppen, indem sie als Karte der gewünschten Farbe zählt 2ms
+     × A7.3: die anderen Karten der Gruppe bringen ihre normalen Punkte 1ms
+     × A7.3: unterbricht keine Farbreihe, wenn sie als passende Farbe genutzt wird 2ms
+     × D31: drei Regenbogenschlangen nebeneinander sind eine Gruppe mit 0 Punkten 2ms
+     × D30, D31: Regenbogenschlange, Fusion aus Grün und Grün, Regenbogenschlange ist eine Gruppe mit 6 Punkten 2ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Regenbogenschlange und Farbenfusion können eine Gruppe vervollständigen
+AssertionError: expected [ 'Gelb×3=3' ] to deeply equal [ 'Gelb×3=2' ]
+
+- Expected
++ Received
+
+  [
+-   "Gelb×3=2",
++   "Gelb×3=3",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:82:75
+     80|
+     81|   it('A11: Regenbogenschlange und Farbenfusion können eine Gruppe verv…
+     82|     expect(gruppen(eineSchlange(['Gelb', 'Gelb', 'Regenbogenschlange']…
+       |                                                                           ^
+     83|     expect(gruppen(eineSchlange(['Gelb', { fusion: ['Rot', 'Rot'] }, '…
+     84|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Regenbogenschlange und Farbenfusion können eine Gruppe verlängern
+AssertionError: expected [ 'Braun×4=7' ] to deeply equal [ 'Braun×4=6' ]
+
+- Expected
++ Received
+
+  [
+-   "Braun×4=6",
++   "Braun×4=7",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:87:86
+     85|
+     86|   it('A11: Regenbogenschlange und Farbenfusion können eine Gruppe verl…
+     87|     expect(gruppen(eineSchlange(['Braun', 'Braun', 'Braun', 'Regenboge…
+       |                                                                                      ^
+     88|     expect(gruppen(eineSchlange(['Braun', 'Braun', 'Braun', { fusion: …
+     89|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Joker zählen als die Farbe, die die meisten Punkte bringt, auch wenn die Nachbarn links stehen
+AssertionError: expected 7 to be 6 // Object.is equality
+
+- Expected
++ Received
+
+- 6
++ 7
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:94:35
+     92|     const wertung = eineSchlange(['Grün', 'Grün', 'Regenbogenschlange'…
+     93|     expect(jokerfarben(wertung)).toEqual(['Grün'])
+     94|     expect(wertung.gruppenPunkte).toBe(6)
+       |                                   ^
+     95|   })
+     96|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: wofür ein Joker bei einer Aufgabe gezählt hat, spielt keine Rolle (der Zustand kennt keine Jokerfarbe)
+AssertionError: expected 10 to be 9 // Object.is equality
+
+- Expected
++ Received
+
+- 9
++ 10
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:103:46
+    101|     expect(zustand.spieler[0].aufgaben?.map((a) => a.name)).toEqual(['…
+    102|     expect(jokerfarben(zustand.spieler[0])).toEqual(['Grün'])
+    103|     expect(zustand.spieler[0].gruppenPunkte).toBe(9)
+       |                                              ^
+    104|   })
+    105|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: eine Regenbogenschlange selbst bringt keine Punkte, ermöglicht aber eine längere Gruppe
+AssertionError: expected 13 to be 12 // Object.is equality
+
+- Expected
++ Received
+
+- 12
++ 13
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:107:96
+    105|
+    106|   it('A11: eine Regenbogenschlange selbst bringt keine Punkte, ermögli…
+    107|     expect(eineSchlange(['Grün', 'Grün', 'Grün', 'Regenbogenschlange',…
+       |                                                                                                ^
+    108|   })
+    109|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A11: Farbgruppen > A11: Joker in zwei getrennten Gruppen zählen je für ihre Gruppe
+AssertionError: expected [ 'Blau×3=3', 'Rot×3=3' ] to deeply equal [ 'Blau×3=2', 'Rot×3=2' ]
+
+- Expected
++ Received
+
+  [
+-   "Blau×3=2",
+-   "Rot×3=2",
++   "Blau×3=3",
++   "Rot×3=3",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:120:30
+    118|   it('A11: Joker in zwei getrennten Gruppen zählen je für ihre Gruppe'…
+    119|     const wertung = eineSchlange(['Blau', 'Blau', 'Regenbogenschlange'…
+    120|     expect(gruppen(wertung)).toEqual(['Blau×3=2', 'Rot×3=2'])
+       |                              ^
+    121|     expect(jokerfarben(wertung)).toEqual(['Blau', 'Rot'])
+    122|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3 Beispiel 1: Blau-Blau-Regenbogenschlange ist eine Dreiergruppe mit 2 Punkten
+AssertionError: expected [ 'Blau×3=3' ] to deeply equal [ 'Blau×3=2' ]
+
+- Expected
++ Received
+
+  [
+-   "Blau×3=2",
++   "Blau×3=3",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:128:30
+    126|   it('A7.3 Beispiel 1: Blau-Blau-Regenbogenschlange ist eine Dreiergru…
+    127|     const wertung = eineSchlange(['Blau', 'Blau', 'Regenbogenschlange'…
+    128|     expect(gruppen(wertung)).toEqual(['Blau×3=2'])
+       |                              ^
+    129|     expect(jokerfarben(wertung)).toEqual(['Blau'])
+    130|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3 Beispiel 3: Rot-Rot-Regenbogenschlange-Braun-Braun bringt 4 Punkte, die Regenbogenschlange zählt als Braun
+AssertionError: expected [ 'Braun×3=5' ] to deeply equal [ 'Braun×3=4' ]
+
+- Expected
++ Received
+
+  [
+-   "Braun×3=4",
++   "Braun×3=5",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:134:30
+    132|   it('A7.3 Beispiel 3: Rot-Rot-Regenbogenschlange-Braun-Braun bringt 4…
+    133|     const wertung = eineSchlange(['Rot', 'Rot', 'Regenbogenschlange', …
+    134|     expect(gruppen(wertung)).toEqual(['Braun×3=4'])
+       |                              ^
+    135|     expect(jokerfarben(wertung)).toEqual(['Braun'])
+    136|     expect(wertung.summe).toBe(4)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: verbindet Farbgruppen, indem sie als Karte der gewünschten Farbe zählt
+AssertionError: expected [ 'Blau×5=5' ] to deeply equal [ 'Blau×5=4' ]
+
+- Expected
++ Received
+
+  [
+-   "Blau×5=4",
++   "Blau×5=5",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:153:30
+    151|   it('A7.3: verbindet Farbgruppen, indem sie als Karte der gewünschten…
+    152|     const wertung = eineSchlange(['Blau', 'Blau', 'Regenbogenschlange'…
+    153|     expect(gruppen(wertung)).toEqual(['Blau×5=4'])
+       |                              ^
+    154|   })
+    155|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: die anderen Karten der Gruppe bringen ihre normalen Punkte
+AssertionError: expected 5 to be 4 // Object.is equality
+
+- Expected
++ Received
+
+- 4
++ 5
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:162:86
+    160|
+    161|   it('A7.3: die anderen Karten der Gruppe bringen ihre normalen Punkte…
+    162|     expect(eineSchlange(['Violett', 'Regenbogenschlange', 'Violett']).…
+       |                                                                                      ^
+    163|   })
+    164|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > A7.3: Regenbogenschlange in der Wertung > A7.3: unterbricht keine Farbreihe, wenn sie als passende Farbe genutzt wird
+AssertionError: expected [ 'Rot×4=4' ] to deeply equal [ 'Rot×4=3' ]
+
+- Expected
++ Received
+
+  [
+-   "Rot×4=3",
++   "Rot×4=4",
+  ]
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:175:80
+    173|
+    174|   it('A7.3: unterbricht keine Farbreihe, wenn sie als passende Farbe g…
+    175|     expect(gruppen(eineSchlange(['Rot', 'Regenbogenschlange', 'Rot', '…
+       |                                                                                ^
+    176|   })
+    177| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026) > D31: drei Regenbogenschlangen nebeneinander sind eine Gruppe mit 0 Punkten
+AssertionError: expected 'Blau×3=3' to match /×3=0$/
+
+- Expected:
+/×3=0$/
+
++ Received:
+"Blau×3=3"
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:212:33
+    210|     const wertung = eineSchlange(['Regenbogenschlange', 'Regenbogensch…
+    211|     expect(gruppen(wertung)).toHaveLength(1)
+    212|     expect(gruppen(wertung)[0]).toMatch(/×3=0$/)
+       |                                 ^
+    213|     expect(wertung.gruppenPunkte).toBe(0)
+    214|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/13]⎯
+
+ FAIL  src/engine/__tests__/wertung_farbgruppen.test.ts > D30, D31: Gruppen aus Jokern und Fusionen (Antworten vom 20.11.2026) > D30, D31: Regenbogenschlange, Fusion aus Grün und Grün, Regenbogenschlange ist eine Gruppe mit 6 Punkten
+AssertionError: expected 'Blau×3=8' to match /×3=6$/
+
+- Expected:
+/×3=6$/
+
++ Received:
+"Blau×3=8"
+
+ ❯ src/engine/__tests__/wertung_farbgruppen.test.ts:220:33
+    218|     expect(gruppen(wertung)).toHaveLength(1)
+    219|     // Gegenprobe zu D30: als Karte der Gruppenfarbe gezählt brächte d…
+    220|     expect(gruppen(wertung)[0]).toMatch(/×3=6$/)
+       |                                 ^
+    221|     expect(wertung.gruppenPunkte).toBe(6)
+    222|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/13]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  13 failed | 34 passed (47)
+   Start at  21:17:36
+   Duration  3.68s (transform 413ms, setup 312ms, import 422ms, tests 110ms, environment 2.47s)
+

@@ -1,0 +1,31 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ tests/spec_documentation.test.ts (21 tests | 1 failed) 38ms
+     × D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden; Rückfrage vom 20.11.2026 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden; Rückfrage vom 20.11.2026
+AssertionError: D23 ohne Kernaussage „Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel“: expected 'nein: im zweiten zug ist er nicht abl…' to contain 'im zweiten zug darf er wirkungslos au…'
+
+Expected: "im zweiten zug darf er wirkungslos auf den eigenen ablagestapel"
+Received: "nein: im zweiten zug ist er nicht ablegbar; er zählt als sonderkarte dieses zuges, ein weiterer zug folgt nicht. rückfrage vom 20.11.2026 zu a7.8, nach dem man im zweiten zug keinen weiteren verdoppler spielen darf, und zum fall, dass im zweiten zug nur verdoppler auf der hand sind. wortlaut: „ja, wirkungslos“. a7.8 heisst also: kein weiterer verdoppler mit wirkung, kein weiterer zug. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation.test.ts:338:92
+    336|   /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    337|   function pruefeKern(nummer: string, antwort: string, kern: string[],…
+    338|     for (const aussage of kern) expect(antwort, `${nummer} ohne Kernau…
+       |                                                                                            ^
+    339|     for (const aussage of verboten) expect(antwort, `${nummer} enthält…
+    340|   }
+ ❯ tests/spec_documentation.test.ts:381:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 396 passed (397)
+   Start at  21:18:51
+   Duration  2.93s (transform 188ms, setup 852ms, import 144ms, tests 108ms, environment 2.29s)
+

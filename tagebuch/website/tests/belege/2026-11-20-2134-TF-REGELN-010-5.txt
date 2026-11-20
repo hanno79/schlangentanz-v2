@@ -1,0 +1,45 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ src/ui/karten/Grossansicht.test.tsx (41 tests | 1 failed) 536ms
+     × P0.5d/D3: bei Lila Riese steht die Antwort des Autors mit dem Etikett „Entscheidung des Autors“, nicht „Ergänzung“ 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/karten/Grossansicht.test.tsx > O9: Kartentext zeigt den Wortlaut der Spielanleitung (Kriterium 1) > P0.5d/D3: bei Lila Riese steht die Antwort des Autors mit dem Etikett „Entscheidung des Autors“, nicht „Ergänzung“
+TestingLibraryElementError: Unable to find an element with the text: Entscheidung des Autors. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<p[39m
+  [33mclass[39m=[32m"kartentext__ergaenzung"[39m
+[36m>[39m
+  [36m<span>[39m
+    [0mMindestens 5 violette Karten in einer Reihe.[0m
+  [36m</span>[39m
+  [0m [0m
+  [36m<span[39m
+    [33mclass[39m=[32m"kartentext__etikett"[39m
+  [36m>[39m
+    [0mErgänzung des Autors[0m
+  [36m</span>[39m
+[36m</p>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/ui/karten/Grossansicht.test.tsx:59:39
+     57|     render(<Kartentext karte={lilaRiese.karte} />)
+     58|     const satz = screen.getByText('Mindestens 5 violette Karten in ein…
+     59|     expect(within(satz.closest('p')!).getByText('Entscheidung des Auto…
+       |                                       ^
+     60|     expect(screen.queryByText('Ergänzung des Autors')).toBeNull()
+     61|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 362 passed (363)
+   Start at  21:19:42
+   Duration  6.73s (transform 902ms, setup 2.82s, import 2.13s, tests 3.67s, environment 10.98s)
+

@@ -24,6 +24,9 @@ function teil(kennung: 'A' | 'D'): string {
 const ZEILEN_A = teil('A').split('\n')
 const TEIL_D = teil('D')
 
+/** Alle Zeilen von Teil A ohne Auszeichnung, etwa um zu prüfen, ob ein Satz aus Teil D inzwischen auf der Website steht. */
+export const TEIL_A_ZEILEN = zeilenOhneAuszeichnung(ZEILEN_A.join('\n'))
+
 /** Überschriften von Teil A: Zeile, Ebene, Nummer („A7.1“) und Titel („Farbendieb“). */
 const UEBERSCHRIFTEN = ZEILEN_A.flatMap((zeile, index) => {
   const teile = zeile.match(/^(#{2,4}) (A[\d.]+) (.+)$/)

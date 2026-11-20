@@ -29,8 +29,9 @@ Reihenfolge Blau, Rot, Gelb, Violett, Braun, Grün, mit der das Beste noch
 erreichbar ist. Die Summe ist in jedem Fall dieselbe; die Wahl legt nur fest, wie
 die Aufschlüsselung aussieht.
 
-Offen (Teil D noch ohne Antwort, Regelfrage G9): Drei Joker nebeneinander gelten
-hier wörtlich nach A11 als drei Karten derselben Farbe und damit als Gruppe.
+Drei Joker nebeneinander gelten als drei Karten derselben Farbe und damit als
+Gruppe (G9 → D31); Regenbogenschlangen bringen darin keine Punkte, eine
+Farbenfusion die Summe der Karten darunter (D30).
 */
 
 export type Jokerart = 'Regenbogenschlange' | 'Farbenfusion';

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts (133 tests | 1 failed) 35ms
+     × P0.5d: Lila Riese: das Etikett passt zum Stand der Website in Teil D ({"text":"Mindestens 5 violette Karten in einer Reihe.","quelle":"D3","aufDerWebsite":true}) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/karten/hilfe/kartenhilfe.test.ts > O9: Kurztext und Pflichtteile je Kartenart (Kriterium 1) > P0.5d: Lila Riese: das Etikett passt zum Stand der Website in Teil D ({"text":"Mindestens 5 violette Karten in einer Reihe.","quelle":"D3","aufDerWebsite":true})
+AssertionError: D3: Website hat übernommen: expected 'Mindestens 5 violette Karten in einer…' to match /Website (geändert|übernommen)/
+
+- Expected:
+/Website (geändert|übernommen)/
+
++ Received:
+"Mindestens 5 violette Karten in einer Reihe (A9). Website folgt."
+
+ ❯ src/ui/karten/hilfe/kartenhilfe.test.ts:259:98
+    257|     (_, satz) => {
+    258|       const antwort = antwortD(satz.quelle)
+    259|       if (satz.aufDerWebsite === true) expect(antwort, `${satz.quelle}…
+       |                                                                                                  ^
+    260|       else expect(antwort, `${satz.quelle}: Website folgt`).toContain(…
+    261|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 132 passed (133)
+   Start at  21:20:00
+   Duration  757ms (transform 167ms, setup 276ms, import 159ms, tests 35ms, environment 0ms)
+

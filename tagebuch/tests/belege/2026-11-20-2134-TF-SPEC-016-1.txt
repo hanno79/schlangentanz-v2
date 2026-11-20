@@ -1,0 +1,49 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ tests/regelfragen_antworten.test.ts (22 tests | 1 failed) 22ms
+     × P0.5: G9: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 9ms
+ ❯ tests/spec_documentation.test.ts (21 tests | 1 failed) 37ms
+     × D31: drei Joker nebeneinander sind eine Gruppe; Regenbogenschlangen bringen keine Punkte (20.11.2026) 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026 und 20.11.2026 > P0.5: G9: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+AssertionError: G9: Teil D ohne Kernaussage „regenbogenschlange, farbenfusion aus grün und grün, regenbogenschlange: eine gruppe mit 6 punkten“: expected 'ja: drei joker nebeneinander sind ein…' to contain 'regenbogenschlange, farbenfusion aus …'
+
+Expected: "regenbogenschlange, farbenfusion aus grün und grün, regenbogenschlange: eine gruppe mit 6 punkten"
+Received: "ja: drei joker nebeneinander sind eine gültige gruppe einer frei wählbaren farbe, für die gruppenpunkte, für den vielfaltbonus und für „farbharmonie“, etwa drei regenbogenschlangen in folge oder zwei regenbogenschlangen und eine farbenfusion. gefragt als „bilden drei joker nebeneinander allein eine farbgruppe?“. wortlaut: „ja, als gruppe“. präzisierung vom 20.11.2026, wortlaut: „2. drei joker nebeneinander zählen zwar als farbreihe aber eine regenbogenschlange zählt ja nicht für die wertung. man dürfte aber durchaus eine farbfusion und regenbogen mischen. sobald es mindestens drei karten sind zählen dann wie im beispiel zuvor die kartenwerte unter der fusion.“ also: drei regenbogenschlangen nebeneinander: eine gruppe mit 0 punkten; regenbogenschlange, farbenfusion aus grün und grün, regenbogenschlange: eine gruppe mit 0 punkten. website folgt."
+
+ ❯ tests/regelfragen_antworten.test.ts:126:72
+    124|       for (const aussage of kern.map(vergleichbar)) {
+    125|         expect(fragenblatt, `${nr}: REGELFRAGEN.md ohne Kernaussage „$…
+    126|         expect(eintrag, `${nr}: Teil D ohne Kernaussage „${aussage}“`)…
+       |                                                                        ^
+    127|       }
+    128|       for (const aussage of verboten.map(vergleichbar)) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D31: drei Joker nebeneinander sind eine Gruppe; Regenbogenschlangen bringen keine Punkte (20.11.2026)
+AssertionError: D31 ohne Kernaussage „Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten“: expected 'ja: drei joker nebeneinander sind ein…' to contain 'regenbogenschlange, farbenfusion aus …'
+
+Expected: "regenbogenschlange, farbenfusion aus grün und grün, regenbogenschlange: eine gruppe mit 6 punkten"
+Received: "ja: drei joker nebeneinander sind eine gültige gruppe einer frei wählbaren farbe, für die gruppenpunkte, für den vielfaltbonus und für „farbharmonie“, etwa drei regenbogenschlangen in folge oder zwei regenbogenschlangen und eine farbenfusion. gefragt als „bilden drei joker nebeneinander allein eine farbgruppe?“. wortlaut: „ja, als gruppe“. präzisierung vom 20.11.2026, wortlaut: „2. drei joker nebeneinander zählen zwar als farbreihe aber eine regenbogenschlange zählt ja nicht für die wertung. man dürfte aber durchaus eine farbfusion und regenbogen mischen. sobald es mindestens drei karten sind zählen dann wie im beispiel zuvor die kartenwerte unter der fusion.“ also: drei regenbogenschlangen nebeneinander: eine gruppe mit 0 punkten; regenbogenschlange, farbenfusion aus grün und grün, regenbogenschlange: eine gruppe mit 0 punkten. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation.test.ts:338:92
+    336|   /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    337|   function pruefeKern(nummer: string, antwort: string, kern: string[],…
+    338|     for (const aussage of kern) expect(antwort, `${nummer} ohne Kernau…
+       |                                                                                            ^
+    339|     for (const aussage of verboten) expect(antwort, `${nummer} enthält…
+    340|   }
+ ❯ tests/spec_documentation.test.ts:367:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 395 passed (397)
+   Start at  21:18:37
+   Duration  2.92s (transform 186ms, setup 874ms, import 143ms, tests 117ms, environment 2.28s)
+

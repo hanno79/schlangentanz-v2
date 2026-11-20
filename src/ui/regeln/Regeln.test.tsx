@@ -46,7 +46,9 @@ describe('O9: /regeln verweist auf die Website und fasst einen Zug zusammen (Kri
     for (const satz of website) {
       expect(screen.getByText(satz.text).closest('.zugablauf__ergaenzung'), `fälschlich gekennzeichnet: ${satz.text}`).toBeNull()
     }
-    expect(screen.getByText(/noch nicht auf der Website/)).toBeInTheDocument()
+    // P0.5d: Der Hinweis stimmt für jedes Etikett: D16, D11 und D23 sagt die Website nicht so ausdrücklich.
+    expect(screen.getByText(/die Website sagt es noch nicht so ausdrücklich/)).toBeInTheDocument()
+    expect(screen.queryByText(/steht noch nicht auf der Website/)).toBeNull()
   })
 
   it('O9: „Aufgabe erfüllen“ trägt den Hinweis „Nur mit Erweiterung“', () => {

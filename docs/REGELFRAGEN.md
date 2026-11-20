@@ -3,9 +3,9 @@
 Task P0.5 · Katalog aus `docs/UMSETZUNGSPLAN.md`, Abschnitt 9 · 38 Fragen:
 F1–F15 zum Basis-Spiel, G1–G23 zur Erweiterung.
 
-Stand 13.11.2026: F1–F15 und die Nachfrage F8a sind beantwortet, die
-Antworten stehen in `docs/GAME_SPEC.md` Teil D (D14–D29). Offen sind
-G1–G23.
+Stand 20.11.2026: F1–F15 und die Nachfrage F8a sind beantwortet, die
+Antworten stehen in `docs/GAME_SPEC.md` Teil D (D14–D29). Von den Fragen zur
+Erweiterung ist G9 beantwortet (D31). Offen sind G1–G8 und G10–G23.
 
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der
@@ -377,7 +377,7 @@ Der zweite Satz gilt nur für die längste Farbkette; für den Sieg sagt die Web
 
 **Betroffene Tasks:** nennt die Frage: E3 (Abnahmekriterium 3). Hängt davon ab: E2 (wirkungslos ablegen), O5 (Abnahmekriterium 6), K2 (Abnahmekriterium 6).
 
-**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D23.
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Rückfrage vom 20.11.2026 zu A7.8 (kein weiterer Verdoppler im zweiten Zug) und zum Fall, dass im zweiten Zug nur Verdoppler auf der Hand sind: „Ja, wirkungslos“. A7.8 heisst also: kein weiterer Verdoppler mit Wirkung, kein weiterer Zug. Teil D: D23.
 
 **Datum:** 13.11.2026
 
@@ -789,11 +789,11 @@ Hinweis des Orchestrators: Drei Farbenfusionen nebeneinander bringen nach A11 Pu
 
 **Vorschlag:** a. Vorschlag des Orchestrators: Nach A11 zählen Joker als jede Farbe; eine Sonderregel für reine Jokergruppen nennt die Website nicht, und eine einheitliche Regel für Wertung, Bonus und Aufgaben ist am leichtesten zu verstehen.
 
-**Betroffene Tasks:** nennt die Frage: keine. Hängt davon ab: E10 (Vielfaltbonus, Jokergruppen), X2 („Farbharmonie“), E5 (Grenzfall „drei Joker nebeneinander“).
+**Betroffene Tasks:** nennt die Frage: E10 (Vielfaltbonus, Jokergruppen), X2 („Farbharmonie“). Hängt davon ab: E5 (Grenzfall „drei Joker nebeneinander“).
 
-**Antwort:** —
+**Antwort:** a. Wortlaut des Autors: „Ja, als Gruppe“, gefragt als „Bilden drei Joker nebeneinander allein eine Farbgruppe?“ (etwa drei Regenbogenschlangen in Folge oder zwei Regenbogenschlangen und eine Farbenfusion). Das gilt auch für die Gruppenpunkte. Präzisierung vom 20.11.2026: „2. Drei Joker nebeneinander zählen zwar als farbreihe aber eine Regenbogenschlange zählt ja nicht für die Wertung. Man dürfte aber durchaus eine farbfusion und Regenbogen mischen. Sobald es mindestens drei Karten sind zählen dann wie im Beispiel zuvor die Kartenwerte unter der Fusion.“ Also: Drei Regenbogenschlangen nebeneinander: eine Gruppe mit 0 Punkten; Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten. Teil D: D31.
 
-**Datum:** —
+**Datum:** 20.11.2026
 
 ### G10: Schlangenkorb als Karte
 
@@ -807,7 +807,7 @@ Hinweis des Orchestrators: Drei Farbenfusionen nebeneinander bringen nach A11 Pu
 
 > Die Karte wird nach der Nutzung aus dem Spiel entfernt
 
-> Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle eingefügt werden)
+> Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
 
 **Möglichkeiten:**
 

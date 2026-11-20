@@ -9,7 +9,7 @@ export const REGELHILFE = {
   websiteAdresse: 'https://schlangentanz.ch/rules',
   zugTitel: 'Ein Zug in fünf Schritten',
   zugHinweis:
-    'Die Sätze stammen aus der Spielanleitung. Was mit „Ergänzung des Autors“ markiert ist, hat der Autor des Spiels entschieden; es steht noch nicht auf der Website.',
+    'Die Sätze stammen aus der Spielanleitung. Was mit „Ergänzung des Autors“ markiert ist, hat der Autor des Spiels entschieden; die Website sagt es noch nicht so ausdrücklich.',
   ergaenzung: KARTENHILFE_TEXTE.ergaenzung,
   nurErweiterung: 'Nur mit Erweiterung',
   kartenTitel: 'Alle Karten',

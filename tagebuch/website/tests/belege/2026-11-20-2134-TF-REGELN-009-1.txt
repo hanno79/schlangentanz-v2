@@ -1,0 +1,46 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a0154cfb72783357e
+
+ ❯ src/ui/regeln/zugschritte.test.ts (33 tests | 2 failed) 17ms
+     × P0.5d/U2: „Sonderkarte ansagen“: eine Ergänzung aus Teil D steht noch nicht wörtlich in Teil A, sonst gehört Teil A als Quelle hin: {"text":"Gegen Farbkarten gibt es keine Abwehr.","quelle":"D10"} 5ms
+     × P0.5d: was die Website seit dem 13.11.2026 selbst sagt (D9, D10, D12, D13, D19), steht als Satz aus Teil A da 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/regeln/zugschritte.test.ts > O9: Ein Zug in fünf Schritten (Kriterium 2) > P0.5d/U2: „Sonderkarte ansagen“: eine Ergänzung aus Teil D steht noch nicht wörtlich in Teil A, sonst gehört Teil A als Quelle hin: {"text":"Gegen Farbkarten gibt es keine Abwehr.","quelle":"D10"}
+AssertionError: D10 steht inzwischen in Teil A: Gegen Farbkarten gibt es keine Abwehr.: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/ui/regeln/zugschritte.test.ts:58:112
+     56|     'P0.5d/U2: „%s“: eine Ergänzung aus Teil D steht noch nicht wörtli…
+     57|     (_, satz) => {
+     58|       expect(stehtImSatz(satz.text, TEIL_A_ZEILEN), `${satz.quelle} st…
+       |                                                                                                                ^
+     59|     },
+     60|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/ui/regeln/zugschritte.test.ts > O9: Ein Zug in fünf Schritten (Kriterium 2) > P0.5d: was die Website seit dem 13.11.2026 selbst sagt (D9, D10, D12, D13, D19), steht als Satz aus Teil A da
+AssertionError: D10 ist auf der Website; der Satz kommt aus Teil A: expected [ 'A5', 'A5', 'A5', 'A5', 'A5', …(18) ] to not include 'D10'
+ ❯ src/ui/regeln/zugschritte.test.ts:75:92
+     73|     const quellen = ALLE_SAETZE.map(([, satz]) => satz.quelle)
+     74|     for (const uebernommen of ['D9', 'D10', 'D12', 'D13', 'D19']) {
+     75|       expect(quellen, `${uebernommen} ist auf der Website; der Satz ko…
+       |                                                                                            ^
+     76|     }
+     77|     const texte = ALLE_SAETZE.map(([, satz]) => satz.text)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 71 passed (73)
+   Start at  21:20:15
+   Duration  5.76s (transform 365ms, setup 535ms, import 526ms, tests 2.50s, environment 2.27s)
+

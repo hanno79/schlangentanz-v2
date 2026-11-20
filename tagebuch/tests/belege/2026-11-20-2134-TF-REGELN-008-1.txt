@@ -1,0 +1,297 @@
+
+===== desktop {"scrollWidth":1280,"clientWidth":1280} pointer coarse: false
+--- Zugschritte:
+Ein Zug in fünf Schritten
+
+Die Sätze stammen aus der Spielanleitung. Was mit „Ergänzung des Autors“ markiert ist, hat der Autor des Spiels entschieden; die Website sagt es noch nicht so ausdrücklich.
+
+Kartenhand prüfen
+
+Hast du ausserhalb deines Zuges Karten gespielt, zum Beispiel einen Farbenschutz zur Abwehr, ziehst du jetzt vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+
+Karten ausspielen
+
+Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:
+Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)
+Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
+Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.
+Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen.
+Nur eine Farbkarte beginnt eine Schlange. Ergänzung des Autors
+Ein Spieler darf maximal 2 Schlangen haben.
+
+Sonderkarte ansagen
+
+Sonderkarten werden immer mit klarer Ansage gespielt: Der Spieler benennt das Ziel seiner Aktion.
+Dann können die betroffenen Spieler im Uhrzeigersinn mit einem Farbenschutz reagieren.
+Gegen Farbkarten gibt es keine Abwehr.
+Erst danach tritt der Effekt der Sonderkarte ein.
+Du darfst auch eine Sonderkarte spielen, die dir gerade nichts bringt.
+Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges.
+
+Aufgabe erfüllen Nur mit Erweiterung
+
+Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist.
+Die erfüllte offene Aufgabe wandert zum Spieler und wird durch eine neue vom Stapel ersetzt.
+Deine geheime Aufgabe deckst du erst bei der Wertung auf.
+
+Zug beenden
+
+Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+Hast du am Ende deines Zuges mehr als 5 Karten auf der Hand, lege die überzähligen Karten auf deinen Ablagestapel.
+Danach ist der nächste Spieler an der Reihe.
+Ist deine Sonderkarte der Verdoppler, füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug.
+Nur ein Verdoppler pro Runde. Ergänzung des Autors
+Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Ergänzung des Autors
+--- Sätze mit Etikett (3):
+Nur eine Farbkarte beginnt eine Schlange. Ergänzung des Autors
+Nur ein Verdoppler pro Runde. Ergänzung des Autors
+Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Ergänzung des Autors
+--- Dialog Verdoppler:
+Verdoppler
+
+Erlaubt dir, nach deinem Zug die Hand aufzufüllen und sofort einen zweiten Zug zu spielen
+
+Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug. Er läuft wie ein normaler Zug ab: mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
+
+Beispiele
+
+Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf und spielt im zweiten Zug eine blaue Karte und Schlangenfrass. Neben dem Verdoppler hat er so drei Karten gespielt.
+
+Wichtige Regeln
+Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach
+Fülle danach deine Handkarten auf
+Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
+Neben dem Verdoppler spielst du so bis zu 3 Karten
+Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
+Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+Schliessen
+Breite mit Dialog Verdoppler: {"scrollWidth":1280,"clientWidth":1280}
+--- Dialog Farbenschutz:
+Farbenschutz
+
+Wehrt eine Sonderkarte eines Mitspielers ab
+
+Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
+
+Beispiele
+
+Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er möchte, einen Farbenschutz spielen, um die Schlangenblockade abzuwehren. Die Schlangenblockade wird auf den Ablagestapel von Spieler B gelegt, und Spieler A bleibt unberührt.
+
+Wichtige Regeln
+Spiele als Reaktion auf eine Sonderkarte
+Lege den Farbenschutz auf deinen Ablagestapel
+Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers
+Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange
+Gegen Farbkarten gibt es keine Abwehr
+Schliessen
+Breite mit Dialog Farbenschutz: {"scrollWidth":1280,"clientWidth":1280}
+--- Dialog Lila Riese:
+Aufgabe Lila Riese
+
+5 Punkte
+
+Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.
+
+Mindestens 5 violette Karten in einer Reihe. Entscheidung des Autors
+
+Schliessen
+Breite mit Dialog Lila Riese: {"scrollWidth":1280,"clientWidth":1280}
+Konsolenfehler desktop: 0 
+
+===== handy-hochkant {"scrollWidth":390,"clientWidth":390} pointer coarse: true
+--- Zugschritte:
+Ein Zug in fünf Schritten
+
+Die Sätze stammen aus der Spielanleitung. Was mit „Ergänzung des Autors“ markiert ist, hat der Autor des Spiels entschieden; die Website sagt es noch nicht so ausdrücklich.
+
+Kartenhand prüfen
+
+Hast du ausserhalb deines Zuges Karten gespielt, zum Beispiel einen Farbenschutz zur Abwehr, ziehst du jetzt vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+
+Karten ausspielen
+
+Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:
+Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)
+Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
+Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.
+Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen.
+Nur eine Farbkarte beginnt eine Schlange. Ergänzung des Autors
+Ein Spieler darf maximal 2 Schlangen haben.
+
+Sonderkarte ansagen
+
+Sonderkarten werden immer mit klarer Ansage gespielt: Der Spieler benennt das Ziel seiner Aktion.
+Dann können die betroffenen Spieler im Uhrzeigersinn mit einem Farbenschutz reagieren.
+Gegen Farbkarten gibt es keine Abwehr.
+Erst danach tritt der Effekt der Sonderkarte ein.
+Du darfst auch eine Sonderkarte spielen, die dir gerade nichts bringt.
+Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges.
+
+Aufgabe erfüllen Nur mit Erweiterung
+
+Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist.
+Die erfüllte offene Aufgabe wandert zum Spieler und wird durch eine neue vom Stapel ersetzt.
+Deine geheime Aufgabe deckst du erst bei der Wertung auf.
+
+Zug beenden
+
+Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+Hast du am Ende deines Zuges mehr als 5 Karten auf der Hand, lege die überzähligen Karten auf deinen Ablagestapel.
+Danach ist der nächste Spieler an der Reihe.
+Ist deine Sonderkarte der Verdoppler, füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug.
+Nur ein Verdoppler pro Runde. Ergänzung des Autors
+Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Ergänzung des Autors
+--- Sätze mit Etikett (3):
+Nur eine Farbkarte beginnt eine Schlange. Ergänzung des Autors
+Nur ein Verdoppler pro Runde. Ergänzung des Autors
+Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Ergänzung des Autors
+--- Dialog Verdoppler:
+Verdoppler
+
+Erlaubt dir, nach deinem Zug die Hand aufzufüllen und sofort einen zweiten Zug zu spielen
+
+Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug. Er läuft wie ein normaler Zug ab: mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
+
+Beispiele
+
+Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf und spielt im zweiten Zug eine blaue Karte und Schlangenfrass. Neben dem Verdoppler hat er so drei Karten gespielt.
+
+Wichtige Regeln
+Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach
+Fülle danach deine Handkarten auf
+Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
+Neben dem Verdoppler spielst du so bis zu 3 Karten
+Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
+Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+Schliessen
+Breite mit Dialog Verdoppler: {"scrollWidth":390,"clientWidth":390}
+--- Dialog Farbenschutz:
+Farbenschutz
+
+Wehrt eine Sonderkarte eines Mitspielers ab
+
+Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
+
+Beispiele
+
+Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er möchte, einen Farbenschutz spielen, um die Schlangenblockade abzuwehren. Die Schlangenblockade wird auf den Ablagestapel von Spieler B gelegt, und Spieler A bleibt unberührt.
+
+Wichtige Regeln
+Spiele als Reaktion auf eine Sonderkarte
+Lege den Farbenschutz auf deinen Ablagestapel
+Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers
+Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange
+Gegen Farbkarten gibt es keine Abwehr
+Schliessen
+Breite mit Dialog Farbenschutz: {"scrollWidth":390,"clientWidth":390}
+--- Dialog Lila Riese:
+Aufgabe Lila Riese
+
+5 Punkte
+
+Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.
+
+Mindestens 5 violette Karten in einer Reihe. Entscheidung des Autors
+
+Schliessen
+Breite mit Dialog Lila Riese: {"scrollWidth":390,"clientWidth":390}
+Konsolenfehler handy-hochkant: 0 
+
+===== handy-quer {"scrollWidth":844,"clientWidth":844} pointer coarse: true
+--- Zugschritte:
+Ein Zug in fünf Schritten
+
+Die Sätze stammen aus der Spielanleitung. Was mit „Ergänzung des Autors“ markiert ist, hat der Autor des Spiels entschieden; die Website sagt es noch nicht so ausdrücklich.
+
+Kartenhand prüfen
+
+Hast du ausserhalb deines Zuges Karten gespielt, zum Beispiel einen Farbenschutz zur Abwehr, ziehst du jetzt vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+
+Karten ausspielen
+
+Du musst mindestens 1 Karte und darfst maximal 2 Karten ausspielen:
+Eine Farbkarte, um eine eigene Schlange zu beginnen oder eine beliebige Schlange fortzusetzen, auch die eines Mitspielers (muss an einem Ende der Schlange angelegt werden)
+Optional eine Sonderkarte, um deren Effekt auszulösen (kann an beliebiger Stelle jeder Schlange eingefügt werden, auch bei einem Mitspieler)
+Welche, ist dir überlassen: Eine Sonderkarte allein genügt, auch wenn du eine Farbkarte hättest.
+Du darfst die Farbkarte und die Sonderkarte in beliebiger Reihenfolge spielen.
+Nur eine Farbkarte beginnt eine Schlange. Ergänzung des Autors
+Ein Spieler darf maximal 2 Schlangen haben.
+
+Sonderkarte ansagen
+
+Sonderkarten werden immer mit klarer Ansage gespielt: Der Spieler benennt das Ziel seiner Aktion.
+Dann können die betroffenen Spieler im Uhrzeigersinn mit einem Farbenschutz reagieren.
+Gegen Farbkarten gibt es keine Abwehr.
+Erst danach tritt der Effekt der Sonderkarte ein.
+Du darfst auch eine Sonderkarte spielen, die dir gerade nichts bringt.
+Hat sie kein mögliches Ziel, legst du sie ohne Wirkung auf deinen Ablagestapel; sie zählt dann als die Sonderkarte deines Zuges.
+
+Aufgabe erfüllen Nur mit Erweiterung
+
+Eine Aufgabe kann erfüllt werden, sobald ein Spieler die Bedingungen erfüllt und am Zug ist.
+Die erfüllte offene Aufgabe wandert zum Spieler und wird durch eine neue vom Stapel ersetzt.
+Deine geheime Aufgabe deckst du erst bei der Wertung auf.
+
+Zug beenden
+
+Ziehe Karten vom Nachziehstapel, bis du wieder 5 Handkarten hast.
+Hast du am Ende deines Zuges mehr als 5 Karten auf der Hand, lege die überzähligen Karten auf deinen Ablagestapel.
+Danach ist der nächste Spieler an der Reihe.
+Ist deine Sonderkarte der Verdoppler, füllst du nach diesem Zug deine Handkarten auf und spielst sofort einen zweiten Zug.
+Nur ein Verdoppler pro Runde. Ergänzung des Autors
+Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Ergänzung des Autors
+--- Sätze mit Etikett (3):
+Nur eine Farbkarte beginnt eine Schlange. Ergänzung des Autors
+Nur ein Verdoppler pro Runde. Ergänzung des Autors
+Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht. Ergänzung des Autors
+--- Dialog Verdoppler:
+Verdoppler
+
+Erlaubt dir, nach deinem Zug die Hand aufzufüllen und sofort einen zweiten Zug zu spielen
+
+Der Verdoppler zählt als Sonderkarte deines Zuges. Du spielst ihn zusammen mit höchstens einer Farbkarte, die Reihenfolge ist frei. Damit ist dein erster Zug beendet: Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug. Er läuft wie ein normaler Zug ab: mindestens eine Karte, höchstens eine Farbkarte und eine Sonderkarte. Neben dem Verdoppler spielst du so bis zu 3 Karten. Das ermöglicht eine schnellere Entwicklung der eigenen Schlange oder die Kombination mehrerer taktischer Züge.
+
+Beispiele
+
+Ein Spieler spielt den Verdoppler und eine rote Karte. Er füllt seine Hand auf und spielt im zweiten Zug eine blaue Karte und Schlangenfrass. Neben dem Verdoppler hat er so drei Karten gespielt.
+
+Wichtige Regeln
+Spiele den Verdoppler als Sonderkarte deines Zuges, mit höchstens einer Farbkarte davor oder danach
+Fülle danach deine Handkarten auf
+Spiele sofort einen zweiten Zug, der wie ein normaler Zug abläuft
+Neben dem Verdoppler spielst du so bis zu 3 Karten
+Kann nicht mit anderen zugerweiternden Effekten kombiniert werden
+Im zweiten Zug darfst du keinen weiteren Verdoppler spielen
+Schliessen
+Breite mit Dialog Verdoppler: {"scrollWidth":844,"clientWidth":844}
+--- Dialog Farbenschutz:
+Farbenschutz
+
+Wehrt eine Sonderkarte eines Mitspielers ab
+
+Eine defensive Karte, die als Reaktion auf jede Sonderkarte gespielt werden kann, die ein Mitspieler gegen dich oder in deine Schlange spielt. Der Farbenschutz ist besonders wertvoll, wenn man wichtige Karten in seiner Schlange vor Angriffen schützen möchte.
+
+Beispiele
+
+Spieler B spielt eine Schlangenblockade gegen Spieler A. Spieler A kann, wenn er möchte, einen Farbenschutz spielen, um die Schlangenblockade abzuwehren. Die Schlangenblockade wird auf den Ablagestapel von Spieler B gelegt, und Spieler A bleibt unberührt.
+
+Wichtige Regeln
+Spiele als Reaktion auf eine Sonderkarte
+Lege den Farbenschutz auf deinen Ablagestapel
+Die abgewehrte Sonderkarte kommt auf den Ablagestapel des Angreifers
+Wirkt gegen jede Sonderkarte, die ein Mitspieler gegen dich oder in deine Schlange spielt, auch gegen Farbenfusion, Schlangenhäutung und Regenbogenschlange
+Gegen Farbkarten gibt es keine Abwehr
+Schliessen
+Breite mit Dialog Farbenschutz: {"scrollWidth":844,"clientWidth":844}
+--- Dialog Lila Riese:
+Aufgabe Lila Riese
+
+5 Punkte
+
+Bilde eine ununterbrochene Reihe aus min. 5 violetten Karten.
+
+Mindestens 5 violette Karten in einer Reihe. Entscheidung des Autors
+
+Schliessen
+Breite mit Dialog Lila Riese: {"scrollWidth":844,"clientWidth":844}
+Konsolenfehler handy-quer: 0 

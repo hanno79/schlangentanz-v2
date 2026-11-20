@@ -1,0 +1,11 @@
+src/engine/aktionen/enumerieren.ts:11: * wirkungsloses Ablegen bringt E2, die Reaktionen E4.
+src/ui/karten/hilfe/sonderkarten.ts:143:      'Spieler A spielt eine Schlangengrube gegen Spieler B. Spieler B hat einen Farbenschutz und spielt diesen als Reaktion. Die Schlangengrube wird wirkungslos auf den Ablagestapel gelegt, und Spieler B kann seinen Zug normal ausführen.',
+src/ui/karten/hilfe/sonderkarten.ts:205:        'Im zweiten Zug darfst du keinen weiteren Verdoppler spielen',
+src/ui/regeln/zugschritte.ts:98:        text: 'Im zweiten Zug darf er wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte dieses Zuges, ein weiterer Zug folgt nicht.',
+774:| C7 | Verdoppler | ist die Sonderkarte des Zuges und wi
+830:| D9 | Darf man Karten in gegnerische Schlangen spielen?
+831:| D10 | Wogegen wirkt Farbenschutz? | Gegen jede Sonderk
+832:| D11 | Gibt ein Verdoppler im zweiten Zug einen dritten
+833:| D12 | Muss man eine Farbkarte spielen, wenn man eine h
+834:| D13 | Darf man eine Sonderkarte spielen, die einem nic
+844:| D23 | F10: Verdoppler im zweiten Zug: Darf er wirkungs

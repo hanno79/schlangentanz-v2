@@ -50,8 +50,9 @@ describe('O2: Seiten des App-Rahmens', () => {
 
   it('P0.4: /dev lädt im Testlauf (Dev-Modus) den Entwicklertisch nach', async () => {
     oeffne('/dev?seed=1&spieler=2')
-    expect(await screen.findByTestId('entwicklertisch')).toBeInTheDocument()
-  })
+    // Das Modul wird nachgeladen; unter Last dauert das länger als die Standardwartezeit von 1 s.
+    expect(await screen.findByTestId('entwicklertisch', {}, { timeout: 10_000 })).toBeInTheDocument()
+  }, 15_000)
 })
 
 describe('O2 K3: Vor und Zurück im Browser', () => {
