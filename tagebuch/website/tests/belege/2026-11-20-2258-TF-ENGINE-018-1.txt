@@ -1,0 +1,12 @@
+{
+ "zweite": 1064,
+ "zweiteSchluss": 27,
+ "wirkungslosVerdopplerT2": 54,
+ "verdopplerT1": 1064,
+ "nurVerdopplerT2": 0,
+ "leerT2": 0,
+ "stapelLeerZwischen": 19,
+ "partien": 300,
+ "nichtBeendet": 0,
+ "beispiele": []
+}

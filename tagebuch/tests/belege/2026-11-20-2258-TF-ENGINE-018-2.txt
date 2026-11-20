@@ -1,0 +1,9 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a97084c9813e31011
+
+PRUEFER-E3 {"zweite":1064,"zweiteSchluss":27,"wirkungslosVerdopplerT2":54,"verdopplerT1":1064,"nurVerdopplerT2":0,"leerT2":0,"stapelLeerZwischen":19,"partien":300,"nichtBeendet":0,"beispiele":[]}
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  22:28:54
+   Duration  45.63s (transform 318ms, setup 278ms, import 317ms, tests 42.42s, environment 2.32s)
+

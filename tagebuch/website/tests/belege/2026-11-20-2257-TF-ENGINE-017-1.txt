@@ -1,0 +1,221 @@
+=== N1: ziele auch im Teilzug 2
+ 1 file changed, 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  4 failed | 21 passed (25)
+      Tests  6 failed | 439 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > A7.8/D11: im zweiten Zug wird ein Verdoppler mit Wirkung nicht angeboten und mit Grund abgelehnt
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht
+src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A7.8/A10: Verdoppler, auch wenn der Stapel zwischen den beiden Zügen leer wird, lassen sich nachrechnen
+
+=== N2: pruefe lehnt im Teilzug 2 nicht ab
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 24 passed (25)
+      Tests  1 failed | 444 passed (445)
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > A7.8/D11: im zweiten Zug wird ein Verdoppler mit Wirkung nicht angeboten und mit Grund abgelehnt
+
+=== N3: N1 + N2 + dritter Zug möglich
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  3 failed | 22 passed (25)
+      Tests  5 failed | 440 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > A7.8/D11: im zweiten Zug wird ein Verdoppler mit Wirkung nicht angeboten und mit Grund abgelehnt
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht
+
+=== N4: kein zweiter Zug
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯ Failed Tests 21 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  4 failed | 21 passed (25)
+      Tests  21 failed | 424 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdoppler kommen
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8/D12: der Verdoppler allein genügt als Karte des ersten Zuges
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/A5: nach dem zweiten Zug füllt er auf 5 auf, dann beginnt der Nächste seinen ersten Zug
+
+=== N5: Ereignis meldet Teilzug 1 statt 2
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  4 failed | 21 passed (25)
+      Tests  15 failed | 430 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2
+src/engine/__tests__/verdoppler.test.ts > A6: der Verdoppler betrifft keinen Mitspieler (Plan E3, Kriterium 4) > A6: auch wer Farbenschutz hält, wird nicht gefragt; es entscheidet weiter der Spieler am Zug
+src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: wird der Stapel beim Auffüllen zwischen den Zügen leer, spielt er den zweiten Zug noch; danach hat jeder andere genau einen letzten Zug
+src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: Verdoppler in der Schlussrunde: der zweite Zug folgt ohne Auffüllen, beide zusammen sind sein letzter Zug
+src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: in der Schlussrunde mit dem Verdoppler als einziger Karte folgt ein zweiter Zug mit leerer Hand
+
+=== N6: Verdoppler landet auf dem Ablagestapel von Spieler 2
+ 1 file changed, 1 insertion(+)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed | 23 passed (25)
+      Tests  2 failed | 443 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A6/A7.8: der gespielte Verdoppler kommt auf den eigenen Ablagestapel; das Ereignis nennt ihn und den Ort
+
+=== N7: betroffene nennt einen Gegner
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 24 passed (25)
+      Tests  1 failed | 444 passed (445)
+src/engine/__tests__/verdoppler.test.ts > A6: der Verdoppler betrifft keinen Mitspieler (Plan E3, Kriterium 4) > A6: auch wer Farbenschutz hält, wird nicht gefragt; es entscheidet weiter der Spieler am Zug
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+
+=== N8: Zähler im zweiten Zug nicht zurückgesetzt
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed | 23 passed (25)
+      Tests  14 failed | 431 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: der zweite Zug läuft wie ein normaler Zug: ohne Karte kein „Zug beenden“
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/A5: nach dem zweiten Zug füllt er auf 5 auf, dann beginnt der Nächste seinen ersten Zug
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8 Beispiel: Verdoppler und Rot, auffüllen, dann Blau und Schlangenfrass: neben dem Verdoppler drei Karten
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > D11: im Zug danach darf der Nächste selbst wieder einen Verdoppler mit Wirkung spielen
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== N10: nach Überhand-Abwurf kein zweiter Zug
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed | 24 passed (25)
+      Tests  1 failed | 444 passed (445)
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Grenzfälle der Hand > A5/A7.8: hält er nach dem Auffüllen des ersten Zuges mehr als 5 Karten, wirft er erst ab, dann folgt der zweite Zug
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== N11: verdopplerGespielt nicht gesetzt
+ 1 file changed, 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  4 failed | 21 passed (25)
+      Tests  22 failed | 423 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A10/A7.8: verdoppler-schlussrunde: zweiter Zug ohne Auffüllen, dann genau ein letzter Zug für KI-Gegner 1 und Spielende
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: der Verdoppler zählt als Sonderkarte des Zuges: danach keine weitere Sonderkarte, aber noch eine Farbkarte
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdoppler kommen
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8/D12: der Verdoppler allein genügt als Karte des ersten Zuges
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== O1: zweiter Zug erlaubt zwei Farbkarten
+ 1 file changed, 1 insertion(+)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  3 failed | 22 passed (25)
+      Tests  4 failed | 441 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8 Beispiel: Verdoppler und Rot, auffüllen, dann Blau und Schlangenfrass: neben dem Verdoppler drei Karten
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== O2: Auffüllen zwischen den Zügen fehlt
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed | 23 passed (25)
+      Tests  7 failed | 438 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8/A5: nach dem zweiten Zug füllt er auf 5 auf, dann beginnt der Nächste seinen ersten Zug
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Auffüllen und der zweite Zug > A7.8 Beispiel: Verdoppler und Rot, auffüllen, dann Blau und Schlangenfrass: neben dem Verdoppler drei Karten
+src/engine/__tests__/verdoppler.test.ts > A10: Verdoppler und Spielende > A10/A7.8: wird der Stapel beim Auffüllen zwischen den Zügen leer, spielt er den zweiten Zug noch; danach hat jeder andere genau einen letzten Zug
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: Grenzfälle der Hand > A7.8: Verdoppler als einzige Handkarte: allein gespielt, aufgefüllt auf 5, dann der zweite Zug
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== O3: Verdoppler mit zwei Farbkarten im ersten Zug
+ 1 file changed, 1 insertion(+)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  3 failed | 22 passed (25)
+      Tests  4 failed | 441 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: höchstens eine Farbkarte nach dem Verdoppler; danach bleibt nur „Zug beenden“
+src/engine/__tests__/verdoppler.test.ts > A7.8/A5: der Verdoppler im ersten Zug > A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdoppler kommen
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== O4: dritter Zug möglich (verdopplerGespielt im Teilzug 2 gesetzt, Bedingung ohne Teilzug)
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  3 failed | 22 passed (25)
+      Tests  4 failed | 441 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, auch mit echtem Verdoppler
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
+=== O5: Verdoppler im zweiten Zug nicht wirkungslos ablegbar (D23 umgekehrt)
+ 1 file changed, 1 insertion(+)
+exit 1
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed | 23 passed (25)
+      Tests  3 failed | 442 passed (445)
+src/entwicklung/szenarien.test.ts > E3: Szenarien des Verdopplers > A7.8/A6/D23: verdoppler: niemand wird gefragt, Auffüllen, im zweiten Zug kein Verdoppler mit Wirkung, dann KI-Gegner 1
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht
+src/engine/__tests__/verdoppler.test.ts > A7.8/D11/D23: kein weiterer Verdoppler im zweiten Zug > D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht
+?? tagebuch/tests/faelle/TF-DEV-019.md
+?? tagebuch/tests/faelle/TF-DEV-020.md
+?? tagebuch/tests/faelle/TF-DEV-021.md
+?? tagebuch/tests/faelle/TF-ENGINE-017.md
+?? tagebuch/tests/faelle/TF-ENGINE-018.md
+?? tagebuch/tests/faelle/TF-ENGINE-019.md
+
