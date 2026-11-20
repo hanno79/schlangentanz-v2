@@ -25,12 +25,16 @@ const ENGINE = [
   "export function anwendeAktion(zustand: Spielzustand, aktion: string): AktionsErgebnis { return { zustand, ereignisse: [aktion] } }",
   'export function serialisiere(zustand: Spielzustand): string { return JSON.stringify(zustand) }',
   'export function erstellePartie(): Spielzustand { return { spieler: [], stapel: [] } }',
+  'export function werteSchlangen(schlangen: readonly string[]): number { return schlangen.length }',
+  'export type Karte = { id: string }',
+  'export const NICHT_FREIGEGEBEN = 1',
   '',
 ].join('\n')
 
 const SICHT = [
   "import type { Spielzustand } from '../engine'",
-  'export function sichtFuer(zustand: Spielzustand, ich: number) { return { ich, anzahl: zustand.spieler.length } }',
+  'export interface Sicht { ich: number; anzahl: number }',
+  'export function sichtFuer(zustand: Spielzustand, ich: number): Sicht { return { ich, anzahl: zustand.spieler.length } }',
   '',
 ].join('\n')
 
@@ -161,6 +165,26 @@ const globaleAenderungen: Array<[string, string]> = [
   ],
   ['globale Funktion in einer Variablen mit Cast', 'const methode = JSON.stringify as typeof JSON.stringify & { merkmal?: number }\nmethode.merkmal = 42'],
   ['globale Funktion in einer Variablen ohne Cast', 'const methode: typeof JSON.stringify & { merkmal?: number } = JSON.stringify\nmethode.merkmal = 42'],
+  // Prüfung P0.3d, Iteration 1: das globale Objekt unter anderem Namen, Text als Code, valueOf ohne Cast.
+  ['self in einer Variablen', 'const w = self\nw.structuredClone = f'],
+  ['globalThis.self in einer Variablen', 'const w = globalThis.self\nw.structuredClone = f'],
+  ['top in einer Variablen', 'const w = top\nif (w) w.structuredClone = f'],
+  ['frames.self in einer Variablen', 'const w = frames.self\nw.structuredClone = f'],
+  ['setTimeout mit Text', "setTimeout('globalThis.structuredClone = (x) => x', 0)"],
+  ['setInterval mit Text', "setInterval('globalThis.structuredClone = (x) => x', 0)"],
+  [
+    'globalThis.valueOf() ohne Cast',
+    'const g: { toString(): string; structuredClone?: typeof structuredClone } = globalThis.valueOf()\ng.structuredClone = f',
+  ],
+]
+
+/** Prüfung P0.3d, Iteration 1: Uhren und Zufall der Plattform; erlaubt sind nur Globale aus der Positivliste. */
+const plattformquellen: Array<[string, string]> = [
+  ['Intl.DateTimeFormat', "const t = new Intl.DateTimeFormat('de-CH', { timeStyle: 'medium' }).format()\nreturn t"],
+  ['Intl.DateTimeFormat().formatToParts', 'const t = Intl.DateTimeFormat().formatToParts()\nreturn t'],
+  ['Event.timeStamp', "const t = new Event('x').timeStamp\nreturn t"],
+  ['URL.createObjectURL', 'const u = URL.createObjectURL(new Blob([]))\nreturn u'],
+  ['console', "console.log('x')"],
 ]
 
 /** Codex zu P0.3d: Zufall und Zeit über Umwege, die nur der Typprüfer sieht (U4). */
@@ -182,21 +206,66 @@ const faelle = (art: string, liste: Array<[string, string, string?]>) =>
 const faelleU5 = faelle('umgehung', umgehungenU5)
 const faelleH1 = faelle('global', globaleAenderungen)
 const faelleU4 = faelle('zufall', zufallUeberTypen)
+const faellePlattform = faelle('plattform', plattformquellen)
+
+/**
+ * Seitenkanäle (Prüfung P0.3d, Mangel 3): Werte nur aus src/engine/index.ts und aus geprüften
+ * Dateien unter src/ki, nicht aus Testhelfern, Testdateien oder fremden Ordnern. Typen sind frei.
+ */
+const LAUSCHER = 'export const gefangen = (): string[] => []\nexport type Gefangen = string[]\n'
+const seitenkanaele: Array<[string, string]> = [
+  ['aus __tests__', "import { gefangen } from './__tests__/lauscher'\nexport const a = () => gefangen()\n"],
+  ['aus einer Testdatei', "import { gefangen } from './lauscher.test'\nexport const a = () => gefangen()\n"],
+  ['aus einem Ordner ausserhalb', "import { gefangen } from '../hilfen/lauscher'\nexport const a = () => gefangen()\n"],
+  ['mit export … from', "export { gefangen } from './__tests__/lauscher'\n"],
+  ['mit import()', "export const a = () => import('./__tests__/lauscher')\n"],
+]
+
+/** Strategien unter src/ki/strategien sehen nur die Sicht (Orchestrator, Iteration 2). */
+const STRATEGIE_ERLAUBT = [
+  "import type { Sicht } from '../sicht'",
+  "import { werteSchlangen, type Karte } from '../../engine'",
+  "import { hilfe } from './hilfe'",
+  'export function waehle(sicht: Sicht, aktionen: readonly Karte[], zufall: () => number): Karte {',
+  '  return aktionen[Math.floor(zufall() * aktionen.length)] ?? aktionen[hilfe(sicht) + werteSchlangen([])]',
+  '}',
+  '',
+].join('\n')
+const strategien: Array<[string, string]> = [
+  ['den Typ des vollen Zustands', "import type { Spielzustand } from '../../engine'\nexport type T = Spielzustand\n"],
+  ['einen Behälter des Zustands', "import type { AktionsErgebnis } from '../../engine'\nexport type E = AktionsErgebnis\n"],
+  ['einen Engine-Wert ausserhalb der Positivliste', "import { NICHT_FREIGEGEBEN } from '../../engine'\nexport const g = NICHT_FREIGEGEBEN\n"],
+  ['sichtFuer, das den Zustand nimmt', "import { sichtFuer } from '../sicht'\nexport const s = sichtFuer\n"],
+  ['den Rahmen', "import { erlaubtEtwas } from '../erlaubt'\nexport const r = erlaubtEtwas\n"],
+  ['eine Funktion, deren Parameter den Zustand trägt', "import type { Spielzustand } from '../../engine'\nexport type F = (z: Spielzustand) => void\n"],
+]
+const faelleStrategie = strategien.map(([name, inhalt], index) => ({ name, datei: `src/ki/strategien/verboten-${index + 1}.ts`, inhalt }))
+const faelleSeitenkanal = seitenkanaele.map(([name, inhalt], index) => ({ name, datei: `src/ki/seitenkanal-${index + 1}.ts`, inhalt }))
 
 const probeInhalt: Record<string, string> = {
   'src/ki/sicht.ts': SICHT,
-  'src/ki/erlaubt.ts': `${KOPF}${ERLAUBT}\n`,
-  ...Object.fromEntries([...faelleU5, ...faelleH1, ...faelleU4].map(({ datei, inhalt }) => [datei, inhalt])),
+  'src/ki/erlaubt.ts': `${KOPF}${ERLAUBT}\nexport const erlaubtEtwas = 1\nexport type { Gefangen } from './__tests__/lauscher'\n`,
+  'src/ki/strategien/erlaubt.ts': STRATEGIE_ERLAUBT,
+  'src/ki/strategien/hilfe.ts': "import type { Sicht } from '../sicht'\nexport const hilfe = (sicht: Sicht) => sicht.ich\n",
+  ...Object.fromEntries(
+    [...faelleU5, ...faelleH1, ...faelleU4, ...faellePlattform, ...faelleStrategie, ...faelleSeitenkanal].map(({ datei, inhalt }) => [datei, inhalt]),
+  ),
 }
-const probe = legeAn({ 'src/engine/index.ts': ENGINE, ...probeInhalt })
+const probe = legeAn({
+  'src/engine/index.ts': ENGINE,
+  'src/ki/__tests__/lauscher.ts': LAUSCHER,
+  'src/ki/lauscher.test.ts': LAUSCHER,
+  'src/hilfen/lauscher.ts': LAUSCHER,
+  ...probeInhalt,
+})
 const befunde = pruefeSichtZugriff(probe, Object.keys(probeInhalt))
 const befundeIn = (datei: string) => befunde.filter((verstoss) => verstoss.datei === datei)
 
-/** Mindestens ein Verstoss gegen `regel` in `datei`. */
-function erwarteGemeldet(kuerzel: string, name: string, datei: string, regel: Verstoss['regel'] = 'U5') {
-  const gefunden = befundeIn(datei)
+/** Mindestens ein Verstoss gegen `regel` in `datei`; ohne `regel` gegen U4 oder U5. */
+function erwarteGemeldet(kuerzel: string, name: string, datei: string, regel?: Verstoss['regel']) {
+  const gefunden = befundeIn(datei).filter((verstoss) => regel === undefined || verstoss.regel === regel)
 
-  expect(gefunden.filter((verstoss) => verstoss.regel === regel).length, `${kuerzel}: erwartet eine ${regel}-Meldung für ${name} in ${datei}, gefunden:\n${beschreibe(gefunden)}`).toBeGreaterThan(0)
+  expect(gefunden.length, `${kuerzel}: erwartet eine ${regel ?? 'U4- oder U5'}-Meldung für ${name} in ${datei}, gefunden:\n${beschreibe(befundeIn(datei))}`).toBeGreaterThan(0)
 }
 
 describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unverändert weiter', () => {
@@ -205,7 +274,7 @@ describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unv
     expect(beschreibe(befundeIn('src/ki/sicht.ts')), 'U5: sicht.ts darf den vollen Zustand lesen').toBe('')
   })
 
-  it.each(faelleU5.map(({ name, datei }) => [name, datei]))('P0.3d: U5-Umgehung „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('U5', name, datei))
+  it.each(faelleU5.map(({ name, datei }) => [name, datei]))('P0.3d: U5-Umgehung „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('U5', name, datei, 'U5'))
 })
 
 describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
@@ -232,7 +301,7 @@ describe('P0.3d: U4 – auch über Umwege kein Zufall und keine Zeit unter src/k
 })
 
 describe('P0.3d: H1 – KI-Code verändert keine globalen Objekte', () => {
-  it.each(faelleH1.map(({ name, datei }) => [name, datei]))('P0.3d: globale Änderung „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('H1', name, datei))
+  it.each(faelleH1.map(({ name, datei }) => [name, datei]))('P0.3d: globale Änderung „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('H1', name, datei, 'U5'))
 
   it('P0.3d: auch sicht.ts verändert keine globalen Objekte', () => {
     const sichtProbe = legeAn({
@@ -242,8 +311,29 @@ describe('P0.3d: H1 – KI-Code verändert keine globalen Objekte', () => {
 
     const gefunden = pruefeSichtZugriff(sichtProbe, ['src/ki/sicht.ts'])
 
-    expect(gefunden.map(({ datei, zeile }) => `${datei}:${zeile}`), `H1: erwartet die Zuweisung in Zeile 3, gefunden:\n${beschreibe(gefunden)}`).toEqual([
-      'src/ki/sicht.ts:3',
+    expect([...new Set(gefunden.map(({ datei, zeile }) => `${datei}:${zeile}`))], `H1: erwartet nur Zeile 4, gefunden:\n${beschreibe(gefunden)}`).toEqual([
+      'src/ki/sicht.ts:4',
     ])
   })
+})
+
+describe('P0.3d: Plattform – unter src/ki nur globale Werte aus der Positivliste', () => {
+  it.each(faellePlattform.map(({ name, datei }) => [name, datei]))('P0.3d: „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('U4/U5', name, datei))
+})
+
+describe('P0.3d: Seitenkanäle – Werte nur aus der Engine-Schnittstelle und aus geprüften KI-Dateien', () => {
+  it('P0.3d: ein Typ aus einem Testhelfer bleibt im Rahmen erlaubt', () => {
+    expect(beschreibe(befundeIn('src/ki/erlaubt.ts')), 'U5: erwartet keinen Verstoss in erlaubt.ts').toBe('')
+  })
+
+  it.each(faelleSeitenkanal.map(({ name, datei }) => [name, datei]))('P0.3d: Import „%s“ wird gemeldet', (name, datei) => erwarteGemeldet('U5', name, datei, 'U5'))
+})
+
+describe('P0.3d: Strategien unter src/ki/strategien sehen nur die Sicht', () => {
+  it('P0.3d: Sicht, Positivliste der Engine und andere Strategien sind erlaubt', () => {
+    expect(beschreibe(befundeIn('src/ki/strategien/erlaubt.ts')), 'U5: erwartet keinen Verstoss in der erlaubten Strategie').toBe('')
+    expect(beschreibe(befundeIn('src/ki/strategien/hilfe.ts')), 'U5: erwartet keinen Verstoss im Helfer').toBe('')
+  })
+
+  it.each(faelleStrategie.map(({ name, datei }) => [name, datei]))('P0.3d: eine Strategie erwähnt „%s“ und wird gemeldet', (name, datei) => erwarteGemeldet('U5', name, datei, 'U5'))
 })
