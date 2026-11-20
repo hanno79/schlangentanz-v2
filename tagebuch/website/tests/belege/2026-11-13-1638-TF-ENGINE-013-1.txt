@@ -1,0 +1,9 @@
+P1: 300 Partien beendet, 50162 Schritte, Befunde 0, leere Hand ohne Aktion 0
+P2 Grund fremd: KI-Gegner 1 ist nicht am Zug; am Zug ist Spieler 1 (A5).
+P3 Ereignisse: [{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"SchlussrundeBegonnen","ausloeser":0},{"typ":"Ausgesetzt","spielerIndex":1},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1},{"typ":"PartieBeendet"}]
+P3 Ende: Beendet Gruben übrig: [{"vor":1,"von":2}]
+P4 Ereignisse: [{"typ":"KarteGespielt","spielerIndex":0,"karteId":"blau-01","aktion":"FarbkarteLegen"},{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"Ausgesetzt","spielerIndex":1},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1},{"typ":"KartenGezogen","spielerIndex":2,"anzahl":2},{"typ":"SchlussrundeBegonnen","ausloeser":2}]
+P6 Gruben vorher: [{"karte":"schlangengrube-01","vor":1,"von":2},{"karte":"schlangengrube-02","vor":1,"von":0}]
+P6 Ereignisse: [{"typ":"KarteGespielt","spielerIndex":0,"karteId":"blau-01","aktion":"FarbkarteLegen"},{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"Ausgesetzt","spielerIndex":1},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1}]
+P6 Gruben nachher: [{"karte":"schlangengrube-02","vor":1,"von":0}]
+P6 Ablagen nachher: [[],[],["schlangengrube-01"]]

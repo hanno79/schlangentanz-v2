@@ -1,0 +1,13 @@
+
+> schlangentanz-v2@0.0.0 test
+> vitest --run
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac3a1dab53b956c56
+
+
+ Test Files  57 passed (57)
+      Tests  1446 passed (1446)
+   Start at  20:50:49
+   Duration  87.83s (transform 8.12s, setup 63.52s, import 26.20s, tests 208.57s, environment 736.95s)
+

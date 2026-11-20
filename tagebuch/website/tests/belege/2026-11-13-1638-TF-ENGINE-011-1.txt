@@ -1,0 +1,32 @@
+G01 A5 Uhrzeigersinn	PR	exit 1	33 rot	A5/D12: mindestens eine, höchstens zwei Karten D12: eine Farbkarte genügt; danach ist „Zug beenden“ erlaubt
+G02 A5 Zugbeginn auffuellen	PR	exit 1	7 rot	A5/A6: Auffüllen zu Beginn des nächsten Zuges A5: zu Zugbeginn füllt der Spieler auf 5 Handkarten auf (Kartenhand prüfen)
+G03 A5 Zugende auffuellen	PR	exit 1	18 rot	A5 Wichtig: nur Sonderkarten, nur Farbenschutz A5: wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht nach, und der Zug ist beende
+G05 A5/D12 mindestens eine Karte	PR	exit 1	6 rot	A5/B2: Aufzählen, Prüfen und Anwenden A5: zu Beginn zählt die Engine nur Aktionen des Spielers am Zug auf, und noch kein „Zug beenden“ (D12)
+G07 D12 hoechstens eine Farbkarte	PR	exit 1	3 rot	A5/D12: mindestens eine, höchstens zwei Karten D12: höchstens eine Farbkarte je Zug
+G10 D13 eigener Ablagestapel	PR	exit 1	4 rot	D13/D25: Sonderkarte wirkungslos ablegen D13: eine Sonderkarte ohne mögliches Ziel kommt wirkungslos auf den eigenen Ablagestapel
+G13 D25 Farbenschutz immer	PR	exit 1	1 rot	D13/D25: Sonderkarte wirkungslos ablegen D25: Farbenschutz darf immer wirkungslos abgelegt werden, gleich was sein Registereintrag an Zielen
+G14 D25 mit Ziel nicht wirkungslos	PR	exit 1	1 rot	D13/D25: Sonderkarte wirkungslos ablegen D25: eine Sonderkarte mit möglichem Ziel lässt sich nicht wirkungslos ablegen; aufgezählt wird ihre
+G21 A5 hoechstens 2 Schlangen (Pruefen)	PR	exit 1	1 rot	A5: Farbkarte legen und Schlangen A5: ein Spieler darf höchstens 2 Schlangen haben
+G24 A5 Ueberhand genau die Zahl	PR	exit 1	1 rot	A5: mehr als 5 Handkarten am Zugende A5: abgeworfen wird genau die überzählige Zahl eigener Handkarten, jede einmal
+G28 A7.6 aussetzen	PR	exit 1	9 rot	A7.6/D18: aussetzen A7.6: wer eine Schlangengrube vor sich hat, setzt seinen nächsten Zug komplett aus
+G30 A7.6 Grube zu dem, der sie spielte	PR	exit 1	3 rot	A7.6/D18: aussetzen A7.6/A6: nach dem ausgesetzten Zug liegt die Schlangengrube auf dem Ablagestapel dessen, der sie gespielt hat
+G31 D14 zwei Gruben zwei Zuege	PR	exit 1	1 rot	A7.6/D18: aussetzen D14: zwei Schlangengruben kosten zwei Züge, jede geht danach an ihren Spieler
+G33 A10 Schlussrunde beginnt	PR	exit 1	10 rot	A10: Spielende und Schlussrunde A10: wer die letzte Karte zu Beginn seines Zuges zieht, beginnt die Schlussrunde und spielt seinen Zug norma
+G37 A10 Ausloeser kommt nicht mehr dran	PR	exit 1	9 rot	A10: Spielende und Schlussrunde A10: wer die letzte Karte am Zugende zieht, beendet seinen Zug; danach je ein letzter Zug ohne Nachziehen
+G38 D21 letzter Zug verfaellt	PR	exit 1	2 rot	D21: aussetzen in der Schlussrunde D21: wer in der Schlussrunde aussetzen muss, verliert seinen letzten Zug
+G41 K1 Zustand bleibt unveraendert	PR	exit 1	7 rot	A5: Farbkarte legen und Schlangen A5: eine Farbkarte setzt eine eigene Schlange am Ende „anfang“ fort
+G43 K12 ohne wirkungsloses Ablegen	PR	exit 1	11 rot	A5/A10/D12/D13: Dauerlauf über die Engine (E2) A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte 
+E01 Auffuellen auf 4 statt 5	eigen	exit 1	21 rot	A5 Wichtig: nur Sonderkarten, nur Farbenschutz A5: wer nur Farbenschutz hält, legt einen ohne Wirkung ab, zieht nach, und der Zug ist beende
+E02 Uhrzeigersinn umgekehrt	eigen	exit 1	18 rot	A5: Zug beenden und Uhrzeigersinn A5: im Uhrzeigersinn: mit 3 Spielern ist nach dem letzten wieder der erste dran
+E03 Ausloeser kommt doch dran	eigen	exit 1	11 rot	A10: Spielende und Schlussrunde A10: wer die letzte Karte zu Beginn seines Zuges zieht, beginnt die Schlussrunde und spielt seinen Zug norma
+E04 Aussetzender fuellt auf	eigen	exit 1	3 rot	A7.6/D18: aussetzen A7.6: wer eine Schlangengrube vor sich hat, setzt seinen nächsten Zug komplett aus
+E05 zwei Farbkarten im Zug erlaubt	eigen	exit 1	3 rot	A5/D12: mindestens eine, höchstens zwei Karten D12: höchstens eine Farbkarte je Zug
+E06 Zug beenden ohne Karte bei voller Hand	eigen	exit 1	6 rot	A5/B2: Aufzählen, Prüfen und Anwenden A5: zu Beginn zählt die Engine nur Aktionen des Spielers am Zug auf, und noch kein „Zug beenden“ (D12)
+E07 Schlussrunde schon bei 1 Karte im Stapel	eigen	exit 0	0 rot	-
+E08 Abwerfen-Abschnitt ohne Sperre	eigen	exit 1	1 rot	A5: mehr als 5 Handkarten am Zugende A5: solange abgeworfen wird, gibt es weder Karten noch „Zug beenden“
+E09 Ereignis SchlussrundeBegonnen fehlt	eigen	exit 1	4 rot	A10: Spielende und Schlussrunde A10: wer die letzte Karte zu Beginn seines Zuges zieht, beginnt die Schlussrunde und spielt seinen Zug norma
+E10 Ereignis Ausgesetzt fehlt	eigen	exit 1	7 rot	A7.6/D18: aussetzen A7.6: wer eine Schlangengrube vor sich hat, setzt seinen nächsten Zug komplett aus
+E11 Ueberhand ohne Wahl: immer die ersten Karten	eigen	exit 1	2 rot	A5: mehr als 5 Handkarten am Zugende A5: der Spieler wählt, welche überzähligen Karten auf seinen Ablagestapel gehen; danach ist der Nächste
+E12 Ausloeser ist der Naechste statt des Ziehenden	eigen	exit 1	11 rot	A5/A10/D12/D13: Dauerlauf über die Engine (E2) A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte 
+E13 Ueberhand-Abwurf nach Zugende nicht verlangt	eigen	exit 1	5 rot	A5: mehr als 5 Handkarten am Zugende A5: der Spieler wählt, welche überzähligen Karten auf seinen Ablagestapel gehen; danach ist der Nächste
+E07 Schlussrunde schon bei 1 Karte im Stapel	eigen	src/engine/zugablauf.ts	exit 1	1 rot	A5/A10/D12/D13: Dauerlauf �ber die Engine (E2) A10: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte 

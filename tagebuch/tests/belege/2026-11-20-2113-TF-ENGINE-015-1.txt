@@ -1,0 +1,58 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac3a1dab53b956c56
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 2 Spieler, Saat 101: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand
+GEHEIM 2/101: 70 Züge, 99 genannte Karten-Ids, keine auf einer Hand. Zug 4: Ids ["rot-15"]; Hände danach: schlangenfrass-03|gelb-14|regenbogenschlange-03|gelb-03|violett-08 / farbenfusion-02|gruen-08|blau-02|gruen-07|violett-10
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 3 Spieler, Saat 102: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand
+GEHEIM 3/102: 71 Züge, 101 genannte Karten-Ids, keine auf einer Hand. Zug 4: Ids ["braun-01"]; Hände danach: verdoppler-02|gelb-15|gelb-07|rot-14|gelb-11 / regenbogenschlange-01|blau-06|violett-03|violett-08|farbendieb-04 / schlangenfrass-04|rot-04|violett-01|gelb-05|blau-07
+
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 2 Spieler, Saat 101: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand 53ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 3 Spieler, Saat 102: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand 47ms
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 4 Spieler, Saat 103: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand
+GEHEIM 4/103: 65 Züge, 92 genannte Karten-Ids, keine auf einer Hand. Zug 4: Ids ["farbendieb-04"]; Hände danach: rot-04|rot-14|blau-13|violett-03|gruen-03 / violett-07|gelb-09|farbenfusion-04|blau-11|rot-13 / schlangenfrass-01|blau-07|farbenschutz-02|gelb-03|gruen-01 / blau-01|rot-03|farbenschutz-04|gelb-10|braun-04
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 2 Spieler, Saat 104: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand
+GEHEIM 2/104: 73 Züge, 104 genannte Karten-Ids, keine auf einer Hand. Zug 4: Ids ["blau-03","schlangenhaeutung-03"]; Hände danach: braun-10|blau-12|gelb-04|rot-12|gelb-12 / gelb-01|violett-12|gruen-06|violett-06|braun-06
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 3 Spieler, Saat 105: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand
+GEHEIM 3/105: 73 Züge, 96 genannte Karten-Ids, keine auf einer Hand. Zug 4: Ids ["rot-15"]; Hände danach: rot-05|blau-14|braun-11|braun-06|violett-05 / gelb-05|braun-01|gruen-05|violett-08|rot-04 / blau-05|braun-04|regenbogenschlange-04|gelb-12|farbendieb-02
+
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 4 Spieler, Saat 103: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand 41ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 2 Spieler, Saat 104: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand 47ms
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 4 Spieler, Saat 106: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand
+GEHEIM 4/106: 65 Züge, 97 genannte Karten-Ids, keine auf einer Hand. Zug 4: Ids ["gelb-15"]; Hände danach: braun-01|gruen-01|farbendieb-03|blau-07|violett-05 / regenbogenschlange-02|braun-05|braun-03|schlangengrube-01|gruen-07 / farbenfusion-02|gruen-02|violett-07|violett-09|gelb-05 / schlangenfrass-04|gruen-08|farbenschutz-03|schlangengrube-02|braun-09
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-A: Stapel hat 1 Karte, Spieler braucht 2 am Zugende: zieht 1, löst Schlussrunde aus
+G-A [{"typ":"KartenGezogen","spielerIndex":0,"anzahl":1},{"typ":"SchlussrundeBegonnen","ausloeser":0},{"typ":"ZugBegonnen","spielerIndex":1,"teilzug":1}] [ 4, 5, 5 ] Schlussrunde 0
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-B: Auslöser hat eine Grube vor sich, wenn die Partie endet
+G-B [{"typ":"PartieBeendet"}] Gruben danach: [["schlangengrube-01",0,1]] Invarianten verletzt: 0
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-C: zwei Gruben vor demselben Spieler in der Schlussrunde: nur eine wird ausgesessen
+G-C [{"typ":"Ausgesetzt","spielerIndex":1,"karteId":"schlangengrube-01","ablagestapelVon":0},{"typ":"ZugBegonnen","spielerIndex":2,"teilzug":1},{"typ":"PartieBeendet"}] Gruben danach: [["schlangengrube-02",1,2]]
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-D: im Abschnitt Abwerfen: fremder Spieler, ZugBeenden, Karte spielen und falsche Anzahl werden mit Grund abgelehnt; Speichern/Laden hält
+G-D fremd {"erlaubt":false,"grund":"KI-Gegner 1 ist nicht am Zug; am Zug ist Spieler 1 (A5)."}
+G-D beenden {"erlaubt":false,"grund":"Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5)."}
+G-D wirkungslos {"erlaubt":false,"grund":"Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5)."}
+G-D null {"erlaubt":false,"grund":"Spieler 1 hält 6 Karten und legt genau 1 Karten ab, nicht 0 (A5)."}
+G-D zwei {"erlaubt":false,"grund":"Spieler 1 hält 6 Karten und legt genau 1 Karten ab, nicht 2 (A5)."}
+G-D doppelt {"erlaubt":false,"grund":"Beim Abwerfen ist eine Karte doppelt genannt."}
+
+stdout | src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-E: Farbenschutz wirkungslos nach einer Farbkarte erlaubt, nach einer Sonderkarte nicht
+G-E {"erlaubt":false,"grund":"In diesem Zug ist schon eine Sonderkarte gespielt; je Zug höchstens eine Farbkarte und eine Sonderkarte (A5, D12)."}
+
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 3 Spieler, Saat 105: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand 54ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: Geheimnis je Zug > B2: 4 Spieler, Saat 106: keine in einem Zug genannte Karten-Id liegt danach auf einer Hand 49ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-A: Stapel hat 1 Karte, Spieler braucht 2 am Zugende: zieht 1, löst Schlussrunde aus 6ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-B: Auslöser hat eine Grube vor sich, wenn die Partie endet 3ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-C: zwei Gruben vor demselben Spieler in der Schlussrunde: nur eine wird ausgesessen 3ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-D: im Abschnitt Abwerfen: fremder Spieler, ZugBeenden, Karte spielen und falsche Anzahl werden mit Grund abgelehnt; Speichern/Laden hält 5ms
+ ✓ src/engine/__tests__/pruefer_e2_tmp.test.ts > Prüfer E2: eigene Grenzfälle > G-E: Farbenschutz wirkungslos nach einer Farbkarte erlaubt, nach einer Sonderkarte nicht 2ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  20:55:36
+   Duration  3.91s (transform 412ms, setup 313ms, import 421ms, tests 313ms, environment 2.54s)
+
