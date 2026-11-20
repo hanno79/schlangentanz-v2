@@ -5,7 +5,8 @@ import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 /*
 Der Zugablauf (A5, A6, A7.6, A7.8, A10): Karten des Zuges zählen, Zug beenden,
 Auffüllen, überzählige Karten abwerfen, nach einem Verdoppler den zweiten Zug
-beginnen und den Zug weitergeben, bis wieder jemand entscheiden muss. Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
+beginnen, den Zug weitergeben, bis wieder jemand entscheiden muss, und
+Schlangengruben ohne verbleibenden Zug ablegen (D29). Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
 Aktion erlaubt ist; die Funktionen hier verändern den übergebenen Zustand, den
 `anwendeAktion` vorher kopiert hat, und schreiben mit, was geschieht.
 
@@ -196,6 +197,49 @@ function gibZugWeiter(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   }
   beginneZug(zustand, naechster, 1, ereignisse);
   fuelleHandAuf(zustand, naechster, ereignisse);
+}
+
+/** Die Mitspieler von `spielerIndex` im Uhrzeigersinn, beginnend mit seinem linken Nachbarn (A5, A6). */
+export function mitspielerImUhrzeigersinn(zustand: Spielzustand, spielerIndex: number): number[] {
+  const anzahl = zustand.spieler.length;
+  return Array.from({ length: anzahl - 1 }, (_, schritt) => (spielerIndex + 1 + schritt) % anzahl);
+}
+
+/**
+ * Wie viele Züge der Spieler noch hat, in denen er für eine Schlangengrube
+ * aussetzen kann: solange die Partie läuft, beliebig viele (D14); in der
+ * Schlussrunde einen, wenn sein letzter Zug noch kommt (A10, D21), sonst und
+ * nach Spielende keinen. Der Spieler am Zug setzt in diesem Zug nicht mehr aus.
+ */
+function verbleibendeZuege(zustand: Spielzustand, spielerIndex: number): number {
+  const { partiephase, schlussrundeAusloeser: ausloeser, zug } = zustand;
+  if (partiephase === 'Laufend') return Infinity;
+  if (partiephase === 'Beendet' || ausloeser === null || spielerIndex === zug.spielerIndex || spielerIndex === ausloeser) return 0;
+  // Bis zum Auslöser kommt jeder andere noch einmal dran; ist der Auslöser selbst am Zug, alle anderen.
+  const reihe = mitspielerImUhrzeigersinn(zustand, zug.spielerIndex);
+  const bisAusloeser = zug.spielerIndex === ausloeser ? reihe : reihe.slice(0, reihe.indexOf(ausloeser));
+  return bisAusloeser.includes(spielerIndex) ? 1 : 0;
+}
+
+/**
+ * D29: Jede Schlangengrube kostet den Spieler, vor dem sie liegt, einen eigenen
+ * Zug (D14). Hat er für sie keinen Zug mehr, weil die Schlussrunde läuft und sein
+ * letzter Zug vorbei oder schon von einer früheren Grube belegt ist, oder weil
+ * die Partie beendet ist, kommt sie ohne Wirkung auf den Ablagestapel dessen, der
+ * sie gespielt hat (A6). Die zuerst gelegten Gruben behalten seine Züge.
+ */
+export function legeGrubenOhneZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  const belegt = new Map<number, number>();
+  zustand.ausliegendeGruben = zustand.ausliegendeGruben.filter((grube) => {
+    const schon = belegt.get(grube.vor) ?? 0;
+    if (schon < verbleibendeZuege(zustand, grube.vor)) {
+      belegt.set(grube.vor, schon + 1);
+      return true;
+    }
+    zustand.spieler[grube.gespieltVon].ablagestapel.push(grube.karte);
+    ereignisse.push({ typ: 'GrubeOhneWirkung', spielerIndex: grube.vor, karteId: grube.karte.id, ablagestapelVon: grube.gespieltVon });
+    return false;
+  });
 }
 
 /** Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben Teilzug nennen. */

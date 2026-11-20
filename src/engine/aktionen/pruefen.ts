@@ -1,5 +1,6 @@
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
+import { pruefeReaktion } from '../reaktion';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
 import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
 import { AKTIONSTYPEN } from './typen';
@@ -116,7 +117,8 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     if (entscheider !== spielerIndex) {
       return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider!].name} (A6).`);
     }
-    return nein('Reagieren ist noch nicht umgesetzt (kommt mit E4).');
+    const grund = pruefeReaktion(zustand, spielerIndex, aktion.farbenschutzId);
+    return grund === null ? JA : nein(grund);
   }
   if (schwebend !== null) {
     return nein(`Die ${schwebend.karte.name} schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).`);

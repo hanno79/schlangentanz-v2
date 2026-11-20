@@ -1,14 +1,19 @@
-import { definitionFuer } from '../karten/register';
+import { reagiere, spieleKarte } from '../reaktion';
 import type { Spielzustand } from '../types';
-import { beendeZug, legeWirkungslosAb, meldeGespielteKarte, werfeUeberhandAb, zaehleGespielteKarte } from '../zugablauf';
+import { beendeZug, legeGrubenOhneZugAb, legeWirkungslosAb, werfeUeberhandAb } from '../zugablauf';
 import { pruefeAktion } from './pruefen';
-import type { AktionsErgebnis, Ereignis, KartenAktion, SpielAktion } from './typen';
+import type { AktionsErgebnis, Ereignis, SpielAktion } from './typen';
 
 /**
  * Führt eine erlaubte Aktion aus; eine unerlaubte wird mit ihrem Grund abgelehnt
  * (B2, U12). Der übergebene Zustand bleibt unverändert. Danach rückt die Engine
  * selbst bis zur nächsten Entscheidung vor (Zugwechsel, Auffüllen, Aussetzen,
- * Spielende) und meldet in `ereignisse`, was dabei geschah.
+ * Spielende, Schlangengruben ohne Zug, D29) und meldet in `ereignisse`, was
+ * dabei geschah.
+ *
+ * Eine Handkarte mit Wirkung zählt zum Zug und wirkt nach ihrem Eintrag im
+ * Kartenregister; trifft sie Mitspieler, wird sie erst angesagt, und die
+ * Betroffenen entscheiden, ob sie abwehren (`reaktion.ts`, A6).
  */
 export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): AktionsErgebnis {
   const pruefung = pruefeAktion(zustand, aktion);
@@ -27,21 +32,11 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
       legeWirkungslosAb(neu, aktion, ereignisse);
       break;
     case 'Reagieren':
-      throw new Error('Reagieren ist noch nicht umgesetzt (kommt mit E4).');
+      ergebnis = reagiere(neu, aktion, ereignisse);
+      break;
     default:
       ergebnis = spieleKarte(neu, aktion, ereignisse);
   }
+  legeGrubenOhneZugAb(ergebnis, ereignisse);
   return { zustand: ergebnis, ereignisse };
-}
-
-/**
- * Eine Handkarte mit Wirkung spielen: Sie zählt zum Zug (A5, D12), dann wirkt
- * sie nach ihrem Eintrag im Kartenregister; die Karte nimmt sich die Wirkung
- * selbst aus der Hand. Abwehr gibt es noch keine (E4).
- */
-function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereignisse: Ereignis[]): Spielzustand {
-  const karte = zaehleGespielteKarte(zustand, aktion);
-  const nach = definitionFuer(karte).wirke(zustand, aktion, []);
-  meldeGespielteKarte(nach, aktion, ereignisse);
-  return nach;
 }

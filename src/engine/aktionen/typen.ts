@@ -153,19 +153,38 @@ export type Kartenort =
  * Was eine Aktion bewirkt hat, in der Reihenfolge, in der es geschah, damit die
  * Oberfläche keine Zustände vergleichen muss (Plan E2). Gezogene Karten stehen
  * nur als Anzahl da, weil Handkarten der Gegner verdeckt sind (B2).
+ *
+ * Wer bei einer angesagten Karte gerade gefragt wird, steht in keinem Ereignis:
+ * Gefragt wird nur, wer Farbenschutz hält (Plan E4, Kriterium 3), und das ist
+ * verdeckt, bis er ihn spielt (B2). Wer entscheidet, sagt `ermittleEntscheider`.
  */
 export type Ereignis =
-  /** Eine Handkarte ist gespielt; `nach` sagt, wo sie danach liegt. */
+  /** Eine Handkarte ist gespielt und hat gewirkt; `nach` sagt, wo sie danach liegt. Gilt für Karten, die niemanden sonst treffen. */
   | { typ: 'KarteGespielt'; spielerIndex: number; karteId: string; aktion: Aktionstyp; nach: Kartenort }
+  /**
+   * A6: Eine Sonderkarte, die Mitspieler trifft, ist mit ihrem Ziel angesagt und
+   * schwebt. `betroffene` sind alle, die sie trifft, im Uhrzeigersinn, gleich ob
+   * sie Farbenschutz halten.
+   */
+  | { typ: 'KarteAngesagt'; spielerIndex: number; karteId: string; ansage: KartenAktion; betroffene: number[] }
+  /**
+   * A6: Alle Betroffenen haben entschieden. Für die in `abgewehrt` hatte die Karte
+   * keine Wirkung (A7.2); `ohneWirkung` heisst, dass alle abgewehrt haben und sie
+   * wirkungslos auf dem Ablagestapel des Angreifers liegt. `nach` sagt, wo sie liegt.
+   */
+  | { typ: 'AnsageEntschieden'; spielerIndex: number; karteId: string; abgewehrt: number[]; ohneWirkung: boolean; nach: Kartenort }
   | { typ: 'KartenGezogen'; spielerIndex: number; anzahl: number }
   /** A5: Nach dem Auffüllen hält der Spieler mehr als 5 Karten und muss `anzahl` abwerfen. */
   | { typ: 'AbwerfenVerlangt'; spielerIndex: number; anzahl: number }
   /** Die Karten liegen danach in dieser Reihenfolge oben auf dem eigenen Ablagestapel. */
   | { typ: 'KartenAbgeworfen'; spielerIndex: number; karteIds: string[] }
   | { typ: 'ZugBegonnen'; spielerIndex: number; teilzug: 1 | 2 }
-  | { typ: 'Abgewehrt'; spielerIndex: number; karteId: string }
+  /** A7.2: Der Spieler wehrt die schwebende Karte `gegen` mit dem Farbenschutz `karteId` ab; der liegt danach auf seinem Ablagestapel. */
+  | { typ: 'Abgewehrt'; spielerIndex: number; karteId: string; gegen: string }
   /** A7.6: Der Spieler setzt aus; die Schlangengrube `karteId` kommt auf den Ablagestapel von `ablagestapelVon`. */
   | { typ: 'Ausgesetzt'; spielerIndex: number; karteId: string; ablagestapelVon: number }
+  /** D29: Der Spieler hat für die Schlangengrube `karteId` keinen Zug mehr; sie kommt ohne Wirkung auf den Ablagestapel von `ablagestapelVon`. */
+  | { typ: 'GrubeOhneWirkung'; spielerIndex: number; karteId: string; ablagestapelVon: number }
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
   | { typ: 'PartieBeendet' };
 

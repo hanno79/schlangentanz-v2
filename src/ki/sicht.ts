@@ -27,7 +27,9 @@ Gruben (A7.6), was aus dem Spiel ist, und die angesagte Sonderkarte (A6, B2).
 Verdeckt bleibt (B2): fremde Handkarten, von denen nur die Zahl zu sehen ist;
 die Reihenfolge von Nachzieh- und Aufgabenstapel, von denen nur die Grösse zu
 sehen ist; fremde geheime Aufgaben und ob sie erfüllt sind, weil sie erst bei
-der Wertung aufgedeckt werden (A9).
+der Wertung aufgedeckt werden (A9); und bei einer angesagten Karte, wer gefragt
+wird, solange man es nicht selbst ist. Gefragt wird nur, wer Farbenschutz hält
+(Plan E4), die Frage verriete also eine fremde Handkarte.
 
 Die Sicht ist eine Abschrift: Wer sie verändert, verändert den Zustand nicht.
 */
@@ -49,6 +51,9 @@ export interface SpielerSicht {
   risikoKarten: Auslagekarte[];
 }
 
+/** Die angesagte Sonderkarte mit Ziel (A6, B2) und wer sie schon abgewehrt hat (A7.2); wer noch gefragt wird, fehlt (B2). */
+export type AngesagteKarte = Pick<SchwebendeKarte, 'karte' | 'aktion' | 'abgewehrt'>
+
 export interface Sicht {
   /** Für wen die Sicht gilt: seine Stelle in `spieler`. */
   ich: number;
@@ -60,15 +65,19 @@ export interface Sicht {
   erweiterung: boolean;
   partiephase: Partiephase;
   zug: Zug;
-  /** Wer gerade entscheidet: der Spieler am Zug oder, bei einer angesagten Karte, der Gefragte (A6); `null` nach Spielende. */
+  /**
+   * Wer gerade entscheidet: der Spieler am Zug, bei einer angesagten Karte nur
+   * dann, wenn ich selbst gefragt bin (A6, B2). `null` nach Spielende und
+   * während andere über eine angesagte Karte entscheiden.
+   */
   entscheider: number | null;
   schlussrundeAusloeser: number | null;
   nachziehstapelGroesse: number;
   aufgabenstapelGroesse: number;
   offeneAufgaben: AufgabenkarteInfo[];
   ausliegendeGruben: AusliegendeGrube[];
-  /** Die angesagte Sonderkarte mit Ziel, über die Betroffene noch entscheiden (A6, B2); `null`, wenn keine schwebt. */
-  angesagt: SchwebendeKarte | null;
+  /** Die angesagte Sonderkarte, über die Betroffene noch entscheiden; `null`, wenn keine schwebt. */
+  angesagt: AngesagteKarte | null;
   ausDemSpiel: Array<Spielkarte | Auslagekarte>;
 }
 
@@ -95,6 +104,8 @@ export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
   if (ich === undefined) {
     throw new Error(`Sicht: Einen Spieler an Stelle ${spielerIndex} gibt es bei ${zustand.spieler.length} Spielern nicht.`);
   }
+  const { schwebend } = zustand;
+  const entscheider = ermittleEntscheider(zustand);
   return structuredClone({
     ich: spielerIndex,
     hand: ich.hand,
@@ -104,13 +115,13 @@ export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
     erweiterung: zustand.erweiterung,
     partiephase: zustand.partiephase,
     zug: zustand.zug,
-    entscheider: ermittleEntscheider(zustand),
+    entscheider: schwebend !== null && entscheider !== spielerIndex ? null : entscheider,
     schlussrundeAusloeser: zustand.schlussrundeAusloeser,
     nachziehstapelGroesse: zustand.nachziehstapel.length,
     aufgabenstapelGroesse: zustand.aufgabenStapel.length,
     offeneAufgaben: zustand.offeneAufgaben,
     ausliegendeGruben: zustand.ausliegendeGruben,
-    angesagt: zustand.schwebend,
+    angesagt: schwebend === null ? null : { karte: schwebend.karte, aktion: schwebend.aktion, abgewehrt: schwebend.abgewehrt },
     ausDemSpiel: zustand.ausDemSpiel,
   });
 }
