@@ -377,7 +377,7 @@ Der zweite Satz gilt nur für die längste Farbkette; für den Sieg sagt die Web
 
 **Betroffene Tasks:** nennt die Frage: E3 (Abnahmekriterium 3). Hängt davon ab: E2 (wirkungslos ablegen), O5 (Abnahmekriterium 6), K2 (Abnahmekriterium 6).
 
-**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Teil D: D23.
+**Antwort:** a. Vorschlag übernommen (Sammelantwort des Autors). Rückfrage vom 20.11.2026 zu A7.8 (kein weiterer Verdoppler im zweiten Zug) und zum Fall, dass im zweiten Zug nur Verdoppler auf der Hand sind: „Ja, wirkungslos“. A7.8 heisst also: kein weiterer Verdoppler mit Wirkung, kein weiterer Zug. Teil D: D23.
 
 **Datum:** 13.11.2026
 
@@ -791,7 +791,7 @@ Hinweis des Orchestrators: Drei Farbenfusionen nebeneinander bringen nach A11 Pu
 
 **Betroffene Tasks:** nennt die Frage: E10 (Vielfaltbonus, Jokergruppen), X2 („Farbharmonie“). Hängt davon ab: E5 (Grenzfall „drei Joker nebeneinander“).
 
-**Antwort:** a. Wortlaut des Autors: „Ja, als Gruppe“, gefragt als „Bilden drei Joker nebeneinander allein eine Farbgruppe?“ (etwa drei Regenbogenschlangen in Folge oder zwei Regenbogenschlangen und eine Farbenfusion). Das gilt auch für die Gruppenpunkte. Teil D: D31.
+**Antwort:** a. Wortlaut des Autors: „Ja, als Gruppe“, gefragt als „Bilden drei Joker nebeneinander allein eine Farbgruppe?“ (etwa drei Regenbogenschlangen in Folge oder zwei Regenbogenschlangen und eine Farbenfusion). Das gilt auch für die Gruppenpunkte. Präzisierung vom 20.11.2026: „2. Drei Joker nebeneinander zählen zwar als farbreihe aber eine Regenbogenschlange zählt ja nicht für die Wertung. Man dürfte aber durchaus eine farbfusion und Regenbogen mischen. Sobald es mindestens drei Karten sind zählen dann wie im Beispiel zuvor die Kartenwerte unter der Fusion.“ Also: Drei Regenbogenschlangen nebeneinander: eine Gruppe mit 0 Punkten; Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten. Teil D: D31.
 
 **Datum:** 20.11.2026
 

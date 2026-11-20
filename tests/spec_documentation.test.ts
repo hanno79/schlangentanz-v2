@@ -349,7 +349,7 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
         'Wortlaut: „Summe darunter“.',
         '„1. Bei einer Fusion vervollständigen die beiden zusammen gelegten Karten die Dreierreihe.',
         'Bei der Schlusswertung zählen dann auch die Werte der Farbkarten die unter der Fusion liegen.“',
-        'belegt einen Platz in der Gruppe',
+        'Die Fusion belegt also einen Platz in der Gruppe und bringt die Summe der Karten darunter.',
         'Regenbogenschlange, Farbenfusion aus Grün und Grün, Regenbogenschlange: eine Gruppe mit 6 Punkten',
         'Website folgt.',
       ],

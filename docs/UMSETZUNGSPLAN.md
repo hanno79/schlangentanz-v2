@@ -39,7 +39,7 @@ ohne Vorkenntnisse abgenommen.
 Festlegungen) und Teil D (Antworten des Autors). Alles andere ist keine
 Regelquelle. Gibt die Website etwas nicht her: fragen, nicht raten.
 
-### 2.2 Entscheidungen des Autors vom 12.11.2026 (noch nicht auf der Website)
+### 2.2 Entscheidungen des Autors vom 12.11.2026 (seit 13.11.2026 auf der Website)
 
 Sie gelten ab sofort. P0.1 trägt sie in Teil D ein und liefert dem Autor einen
 Prompt, um die Website nachzuziehen.
@@ -223,6 +223,7 @@ Bildwerkzeuge (Higgsfield) brauchen: Kartenrückseite und Tischhintergrund
 - **Abnahmekriterien:**
   1. `npm run abgleich:website` meldet: jede Zeile der Website steht in Teil A.
   2. `tests/spec_documentation.test.ts` ist grün; Teil A enthält D9–D13 **nicht**.
+     (Überholt seit P0.5d: Teil A enthält D9–D13.)
   3. In Dart gibt es je Plan-Task genau einen Task; Stichprobe von fünf Tasks
      stimmt wörtlich mit den Abnahmekriterien des Plans überein.
   4. Eine frische Sitzung findet mit „Lies `docs/UMSETZUNGSPLAN.md`" alles Nötige.
@@ -420,7 +421,8 @@ daneben.
   2. Beim Beenden des ersten Zuges: Auffüllen auf 5, dann sofort ein zweiter
      Zug desselben Spielers mit höchstens einer Farbkarte und einer Sonderkarte.
   3. D11: Im zweiten Zug gibt ein Verdoppler keinen weiteren Zug (F10); die
-     Meldung nennt den Grund.
+     Meldung nennt den Grund. Wirkungslos ablegen darf man ihn dort; A7.8 meint
+     „kein weiterer Verdoppler mit Wirkung“ (Rückfrage vom 20.11.2026 in D23).
   4. Kein Mitspieler wird gefragt.
 - **Grenzfälle:** Stapel wird beim Auffüllen zwischen den Zügen leer (der
   Spieler spielt den zweiten Zug noch, dann beginnt die Schlussrunde);
@@ -554,7 +556,8 @@ daneben.
 *Läuft ab E1 neben den anderen Tasks.*
 
 - **Behebt:** C11, C13. Spec: A11, A7.3, A7.7.
-  Fragen: F9 → D22, F11 → D24, G9 → D31 (Antworten in Teil D).
+  Fragen: F9 → D22, F11 → D24, G9 → D31 (Antworten in Teil D); dazu D30
+  (Farbenfusion bringt die Summe der Karten darunter).
 - **Dateien:** `src/engine/scoring.ts`, neu `src/engine/jokerGruppen.ts`.
   `colorGroups.ts` bleibt unverändert (der Kettenbonus braucht die rohe Sicht).
 - **Abnahmekriterien:**

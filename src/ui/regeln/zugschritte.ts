@@ -26,7 +26,7 @@ export interface Zugschritt {
   saetze: readonly Satz[]
 }
 
-/** Ein Satz aus Teil D: vom Autor entschieden, noch nicht auf der Website. */
+/** Ein Satz aus Teil D: vom Autor entschieden; die Website sagt es noch nicht so ausdrücklich. */
 export const istErgaenzungDesAutors = (satz: Satz): boolean => satz.quelle.startsWith('D')
 
 export const ZUGSCHRITTE: readonly Zugschritt[] = [
