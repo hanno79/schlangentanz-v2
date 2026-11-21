@@ -171,7 +171,7 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
 Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
 
 1. **Kopfleiste:** wer dran ist, Zug und gespielte Karten, Zahl des
-   Nachziehstapels, „Menü“ (bis O5: „Zur Lobby“).
+   Nachziehstapels, „Zur Lobby“.
 2. **Tischfläche** (scrollt senkrecht): Gegner mit Name, Zahl der Handkarten,
    oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
    Nachziehstapel und Zahl, offene Aufgaben; deine Auslage (geheime Aufgabe,
@@ -180,6 +180,10 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
 3. **Unten fest, weiss abgesetzt:** deine Schlangen (scrollen in sich, wenn sie
    sehr lang werden), deine Hand und die Zugleiste. Ab 700 px steht die
    Zugleiste rechts neben Schlangen und Hand und zeigt die gewählte Karte gross.
+   Auf dem Handy hochkant steht sie über deinen Schlangen: So bleibt die Hand am
+   unteren Rand, auch wenn die Leiste mit einer gewählten Karte wächst. Im Handy
+   quer steht sie links unter der Tischfläche, weil rechts deine Schlangen und
+   die Hand die ganze Höhe brauchen.
 
 Schlangen der Gegner brechen bei Platzmangel um, statt die Seite zu
 verbreitern; der Zeilenabstand (10 px) lässt Platz für die Balken. Karten einer
@@ -236,17 +240,40 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
 - **Laden:** Karten haben ihre Grösse schon vor dem Bild (`width`/`height`),
   nichts springt. Längeres Laden zeigt „Lädt …“ an der Stelle des Inhalts.
 - **Handkarte:** Knopf um die Karte, `aria-pressed`. Gewählt: 8 px angehoben,
-  4 px Akzent-Umrandung.
+  4 px Akzent-Umrandung (innen, damit eine scrollende Hand sie nicht
+  abschneidet). Eine Karte, die die Engine gerade nicht spielen lässt, ist
+  gesperrt: halbe Deckkraft, im Namen „(jetzt nicht spielbar)“. Ist ein Gegner
+  dran, zeigt die Hand nur Bilder.
 - **Angebotenes Ziel:** gestrichelte Akzent-Umrandung auf `--farbe-akzent-hell`.
   Gewählt: durchgezogene Umrandung in Tinte. Schlangenenden erscheinen als
-  Felder mit „+“ links und rechts der Schlange.
+  Felder mit „+“ links und rechts der Schlange, Lücken (Schlangenblockade,
+  Regenbogenschlange, Platz für den Farbendieb) als Felder „+“ zwischen den
+  Karten. Ist die ganze Schlange das Ziel, liegt eine gestrichelte Fläche über
+  ihr; gewählt ist sie in Tinte umrandet. Karten als Ziel sind Knöpfe um die
+  Karte, mindestens 44 px breit. Ein Gegner als Ziel bekommt „Wählen“ im Kopf,
+  deine Ablage wird zum Ziel, wenn eine Karte ohne Wirkung abgelegt wird, und
+  „+ Neue Schlange“ steht neben „Deine Schlangen“. Liegt ein Ziel hinter dem
+  Rand einer scrollenden Zeile, sagt das Zeichen am Rand „Ziel“ und trägt die
+  Farbe der Ziele.
 - **Kartenknopf** (offene Aufgabe, Auslage): öffnet die Grossansicht.
-- **Grossansicht** (`<dialog>`): die Karte so gross, wie der Schirm erlaubt
-  (bis 360 px breit), darunter „Schliessen“; Escape und Tippen daneben
-  schliessen auch.
+- **Grossansicht** (`<dialog>`, `src/ui/karten/Grossansicht.tsx`): die Karte so
+  gross, wie der Schirm erlaubt (bis 360 px breit), mit ihrem Text aus der
+  Spielanleitung, darunter „Schliessen“; Escape und Tippen daneben schliessen
+  auch. Am Tisch dieselbe wie unter `/regeln`.
 - **Zugleiste:** ein Satz, was jetzt zu tun ist, darunter die möglichen
-  Schritte („Ansehen“, „Abbrechen“, „Ausführen“, „Zug beenden“). Wird
-  vorgelesen, wenn sie sich ändert (`aria-live`).
+  Schritte („Zug beenden“, „Ansehen“, „Abbrechen“, „Ausführen“, der Hauptknopf
+  zuletzt). Ist die Auswahl vollständig, steht dort die Ansage („Ansage: Rot an
+  das Ende der Schlange 1 von KI-Gegner 1.“), und erst „Ausführen“ spielt sie.
+  „Zug beenden“ ist gesperrt, bis die Engine es erlaubt; daneben steht dann
+  „Du musst immer mindestens eine Karte spielen.“ Die Möglichkeiten des
+  Schlangenfrass stehen hier als Knöpfe. Lehnt die Engine eine Aktion ab, steht
+  ihr Grund in `--farbe-fehler` darunter. Der Satz wird vorgelesen, wenn er
+  sich ändert (`aria-live`).
+- **Dialog „Zu viele Handkarten“** (`<dialog>`): alle Handkarten als Knöpfe,
+  wie viele abzulegen sind, „Gewählt: n von m“, „Zum Tisch“ und „Ablegen“
+  (Hauptknopf, gesperrt mit dem Grund daneben, bis genau so viele gewählt
+  sind). „Zum Tisch“ und Escape schliessen ihn, ohne die Wahl zu verlieren;
+  „Karten wählen“ in der Zugleiste öffnet ihn wieder.
 - **Kopf- und Aktionsleiste:** weisse Leisten oben und unten; die Aktionsleiste
   trägt die Knöpfe eines Bildschirms rechtsbündig, den Hauptknopf zuletzt.
 - **Rangliste:** ein Eintrag je Spieler mit Platz, Name, Gesamtpunkten und den

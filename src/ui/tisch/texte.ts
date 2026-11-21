@@ -31,10 +31,10 @@ export const TISCH = {
   schliessen: 'Schliessen',
 }
 
-/** Das Zeichen am Rand eines Bereichs, hinter dem noch etwas liegt (`Weiter`). */
+/** Das Zeichen am Rand eines Bereichs, hinter dem noch etwas liegt (`Weiter`); mit `ziel` liegt dort auch ein Ziel (O5). */
 export const WEITER = {
-  rechts: (anzahl: number) => `+${anzahl} ›`,
-  links: (anzahl: number) => `‹ +${anzahl}`,
+  rechts: (anzahl: number, ziel = false) => `${ziel ? 'Ziel ' : ''}${anzahl > 0 ? `+${anzahl} ` : ''}›`,
+  links: (anzahl: number, ziel = false) => `‹${anzahl > 0 ? ` +${anzahl}` : ''}${ziel ? ' Ziel' : ''}`,
   unten: 'mehr ↓',
   oben: 'mehr ↑',
 }

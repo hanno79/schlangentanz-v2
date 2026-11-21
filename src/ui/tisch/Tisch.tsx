@@ -2,20 +2,27 @@ import '../tokens.css'
 import './tisch.css'
 import './karten.css'
 import './quer.css'
-import type { CSSProperties } from 'react'
+import './bedienung.css'
 import { useState } from 'react'
+import type { SpielAktion } from '../../engine'
+import { Grossansicht } from '../karten/Grossansicht'
 import { Karte, Kartenrueckseite } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import { kartenname } from '../karten/kartentexte'
 import Verweis from '../lobby/Verweis'
 import type { EigeneAnsicht, StatusAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
+import { useBedienung, ZielKontext } from './bedienung'
 import { Gegner } from './Gegner'
+import { Hand } from './Hand'
+import { GrossKnopf } from './Kartenknopf'
 import { useUeberlauf } from './ueberlauf'
+import { UeberhandDialog } from './UeberhandDialog'
 import { Weiter } from './Weiter'
-import { GrossKnopf, Lupe } from './Lupe'
 import { KARTENGROESSE } from './groessen'
-import { Ablage, Grube, Schlangen } from './Schlange'
-import { TISCH, deineHandTitel, geheimeAufgabeName, statusText } from './texte'
+import { Schlangen } from './Schlange'
+import { TISCH, geheimeAufgabeName, statusText } from './texte'
+import { NeueSchlangeZiel } from './Ziele'
+import { Zugleiste } from './Zugleiste'
 
 /*
 Der Spieltisch (Plan O4, DESIGN.md „Tisch“). Feste Sicht: Der Mensch sitzt
@@ -26,15 +33,31 @@ Hand und Ablagestapel. Im Querformat niedriger Schirme steht der eigene Platz
 Die Zahl des Nachziehstapels steht auch in der Kopfleiste, damit man sie ohne
 Scrollen liest.
 
-Der Tisch zeigt nur an. Was er zeigt, kommt aus der Sicht des Menschen
-(`tischAnsicht`), nie aus dem vollen Zustand.
+Was der Tisch zeigt, kommt aus der Sicht des Menschen (`tischAnsicht`), nie
+aus dem vollen Zustand. Bedienen lässt er sich mit O5: Karte wählen, Ziel
+wählen, Ansage bestätigen; die Bedienung liegt im Kontext der Ziele, die
+Zugleiste steht unten bei deinem Platz (DESIGN.md „Zugleiste“).
 */
 
-export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
+interface TischEigenschaften {
+  ansicht: TischAnsicht
+  /** Führt eine Aktion des Menschen aus, eine aus `ansicht.aktionen` (useSpiel). */
+  fuehreAus: (aktion: SpielAktion) => void
+  /** Der Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat. */
+  ablehnung: string | null
+}
+
+export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
+  const bedienung = useBedienung(ansicht.aktionen)
   const [gross, setzeGross] = useState<Bildkarte | null>(null)
+  // Der Dialog zum Abwerfen ist offen, bis du ihn für diesen Stand schliesst.
+  const [abwerfenZu, setzeAbwerfenZu] = useState<SpielAktion[] | null>(null)
   const [flaeche, flaecheUeberlauf] = useUeberlauf<HTMLDivElement>()
+  const abwerfen = bedienung.aktionen.some((aktion) => aktion.typ === 'UeberhandAbwerfen')
+  const ausspielen = bedienung.aktionen.length > 0 && !abwerfen
   return (
-    <div className="spieltisch" data-testid="spiel">
+    <ZielKontext.Provider value={bedienung}>
+    <div className={bedienung.ziele.length > 0 ? 'spieltisch spieltisch--zielwahl' : 'spieltisch'} data-testid="spiel">
       <header className="st-kopf">
         <Statuszeile status={ansicht.status} />
         <p className="st-kopf-stapel">
@@ -60,14 +83,30 @@ export function Tisch({ ansicht }: { ansicht: TischAnsicht }) {
 
       <section className="st-unten" aria-label={TISCH.deinPlatz}>
         <section className="st-eigene" aria-label={TISCH.deineSchlangen}>
-          <h2 className="st-bereichstitel">{TISCH.deineSchlangen}</h2>
+          <div className="st-eigene-kopf">
+            <h2 className="st-bereichstitel">{TISCH.deineSchlangen}</h2>
+            <NeueSchlangeZiel />
+          </div>
           <Schlangen schlangen={ansicht.ich.schlangen} besitzer={{ name: ansicht.ich.name, ich: true }} groesse={KARTENGROESSE.eigene} />
         </section>
-        <Hand ich={ansicht.ich} />
+        <Hand ich={ansicht.ich} bedienung={ausspielen ? bedienung : null} />
       </section>
 
-      {gross !== null && <Lupe karte={gross} schliesse={() => setzeGross(null)} />}
+      <Zugleiste
+        ansicht={ansicht}
+        bedienung={bedienung}
+        fuehreAus={fuehreAus}
+        ablehnung={ablehnung}
+        zeigeGross={setzeGross}
+        oeffneAbwerfen={() => setzeAbwerfenZu(null)}
+      />
+
+      {gross !== null && <Grossansicht karte={gross} schliesse={() => setzeGross(null)} />}
+      {abwerfen && abwerfenZu !== ansicht.aktionen && (
+        <UeberhandDialog hand={ansicht.ich.hand} bedienung={bedienung} fuehreAus={fuehreAus} schliesse={() => setzeAbwerfenZu(ansicht.aktionen)} />
+      )}
     </div>
+    </ZielKontext.Provider>
   )
 }
 
@@ -138,37 +177,6 @@ function Auslage({ ich, zeigeGross }: { ich: EigeneAnsicht; zeigeGross: (karte: 
           </li>
         ))}
       </ul>
-    </section>
-  )
-}
-
-/** Deine Hand, unten fest; die Karten teilen sich die Breite, damit keine angeschnitten ist. */
-function Hand({ ich }: { ich: EigeneAnsicht }) {
-  const anzahl = { '--hand-anzahl': ich.hand.length } as CSSProperties
-  const [reihe, ueberlauf] = useUeberlauf<HTMLUListElement>()
-  return (
-    <section className="st-hand" aria-label={TISCH.deineHand}>
-      <div className="st-hand-kopf">
-        <h2 className="st-bereichstitel">{deineHandTitel(ich.hand.length)}</h2>
-        {ich.gruben.map((grube) => (
-          <Grube key={grube.karte.id} grube={grube} />
-        ))}
-        <Ablage ablage={ich.ablage} eigene />
-      </div>
-      {ich.hand.length === 0 ? (
-        <p className="st-leer">{TISCH.keineHandkarte}</p>
-      ) : (
-        <div className="st-rolle">
-          <ul ref={reihe} className="st-hand-karten" aria-label={TISCH.handkartenListe} style={anzahl}>
-            {ich.hand.map((karte) => (
-              <li key={karte.id}>
-                <Karte karte={karte} sizes={KARTENGROESSE.hand} />
-              </li>
-            ))}
-          </ul>
-          <Weiter ueberlauf={ueberlauf} />
-        </div>
-      )}
     </section>
   )
 }

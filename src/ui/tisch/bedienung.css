@@ -1,0 +1,242 @@
+/*
+Die Bedienung am Tisch (O5): Handkarten als Knöpfe, angebotene Ziele, die
+Zugleiste; der Dialog zum Abwerfen steht in abwerfen.css. Wo die Zugleiste im Tisch steht, legen
+tisch.css und quer.css fest. Nur Variablen aus src/ui/tokens.css; was sie
+bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zugleiste“).
+*/
+
+/* Knöpfe der Zugleiste und des Dialogs: neben dem Zweitknopf (.st-knopf) der Haupt- und der leise Knopf. */
+.st-knopf--haupt {
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent);
+  border-color: var(--farbe-akzent);
+}
+
+.st-knopf--haupt:hover {
+  background: var(--farbe-akzent-stark);
+  border-color: var(--farbe-akzent-stark);
+}
+
+.st-knopf--leise {
+  border-color: transparent;
+}
+
+.st-knopf--leise:hover {
+  background: var(--farbe-tisch);
+}
+
+.st-knopf:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.st-knopf:disabled:hover {
+  background: var(--farbe-flaeche);
+}
+
+/* Handkarte als Knopf: gewählt 8 px angehoben und mit 4 px Akzent umrandet. Die
+   Umrandung liegt innen und über dem Bild (das Bild hat einen Filter und läge sonst
+   darüber), damit eine Hand, die seitlich scrollt, sie nicht abschneidet. */
+.st-handkarte {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: var(--radius-karte);
+  cursor: pointer;
+  transition: transform var(--dauer);
+}
+
+.st-handkarte[aria-pressed='true'] {
+  transform: translateY(-8px);
+}
+
+.st-handkarte[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 4px solid var(--farbe-akzent);
+  border-radius: var(--radius-karte);
+  pointer-events: none;
+}
+
+.st-handkarte:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Ein angebotenes Ziel: gestrichelt in Akzent auf heller Akzentfläche; gewählt
+   durchgezogen in Tinte. Die Umrandung ist ein Rahmen und kein outline, damit
+   eine scrollende Zeile sie nicht abschneidet. */
+.st-ziel {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ziel-mindestens);
+  min-height: var(--ziel-mindestens);
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--farbe-tinte);
+  background: var(--farbe-akzent-hell);
+  border: 3px dashed var(--farbe-akzent);
+  border-radius: var(--radius-klein);
+  cursor: pointer;
+}
+
+.st-ziel[aria-pressed='true'] {
+  background: var(--farbe-flaeche);
+  border-style: solid;
+  border-color: var(--farbe-tinte);
+}
+
+/* Enden und Lücken einer Schlange: Felder „+“ so hoch wie die Karten daneben. */
+.st-zielplatz {
+  display: flex;
+}
+
+.st-ziel--ende,
+.st-ziel--luecke {
+  width: var(--ziel-mindestens);
+  height: max(var(--ziel-mindestens), calc(var(--karte-breite) / (var(--kartenverhaeltnis))));
+  font-size: var(--groesse-gross);
+}
+
+/* Eine Karte als Ziel ist mindestens fingerbreit, auch in den Schlangen der Gegner. */
+.st-ziel--karte {
+  --karte-breite: max(var(--karte-gegner), calc(var(--ziel-mindestens) - 6px));
+  border-radius: var(--radius-karte);
+}
+
+.st-eigene .st-ziel--karte {
+  --karte-breite: max(var(--karte-eigene), calc(var(--ziel-mindestens) - 6px));
+}
+
+/* Die ganze Schlange als Ziel (Schlangenblockade, Regenbogenschlange): eine Fläche über der Zeile. */
+.st-ziel--schlange {
+  position: absolute;
+  inset: 0 0 var(--abstand-1);
+  background: color-mix(in srgb, var(--farbe-akzent-hell) 20%, transparent);
+}
+
+.st-rolle--gewaehlt {
+  border-radius: var(--radius-klein);
+  box-shadow: inset 0 0 0 3px var(--farbe-tinte);
+}
+
+.st-ziel--neu,
+.st-ziel--spieler,
+.st-ziel--ablage {
+  padding: 0 var(--abstand-3);
+}
+
+.st-ziel--ablage {
+  font-weight: 400;
+}
+
+/* Während der Zielwahl stehen die Karten einer Schlange weiter auseinander (DESIGN.md, „Abstände“). */
+.spieltisch--zielwahl .st-schlange {
+  column-gap: 6px;
+}
+
+.st-eigene-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--abstand-1) var(--abstand-3);
+}
+
+/* Die Zugleiste: ein Satz, darunter die Schritte. */
+.st-zugleiste {
+  grid-area: zug;
+  display: flex;
+  gap: var(--abstand-3);
+  min-width: 0;
+  padding: var(--abstand-2) var(--rand);
+  background: var(--farbe-flaeche);
+  border-top: 1px solid var(--farbe-linie);
+}
+
+.st-zugleiste-inhalt {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+}
+
+.st-zugleiste-text {
+  font-weight: 600;
+}
+
+.st-zugleiste-fehler {
+  padding: var(--abstand-1) var(--abstand-2);
+  color: var(--farbe-fehler);
+  background: var(--farbe-fehler-hell);
+  border-radius: var(--radius-klein);
+}
+
+.st-zugleiste-optionen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+}
+
+.st-ziel--option {
+  justify-content: flex-start;
+  padding: var(--abstand-1) var(--abstand-3);
+  text-align: left;
+  font-weight: 600;
+}
+
+.st-zugleiste-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--abstand-2);
+}
+
+.st-zugleiste-beenden {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--abstand-2);
+  min-width: 0;
+}
+
+/* Der Grund neben einem gesperrten Knopf (DESIGN.md, „Komponenten“); er bricht um, statt den Knopf zu verdrängen. */
+.st-zugleiste-grund {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+  text-align: right;
+}
+
+.st-zugleiste-beenden > .st-knopf {
+  flex: none;
+}
+
+.st-zugleiste-vorschau {
+  display: none;
+}
+
+/* Ab 700 px: die gewählte Karte gross in der Zugleiste. */
+@media (min-width: 700px) and (min-height: 501px) {
+  .st-zugleiste {
+    flex-direction: column;
+    border-left: 1px solid var(--farbe-linie);
+    box-shadow: var(--schatten-leiste);
+  }
+
+  .st-zugleiste-vorschau {
+    --karte-breite: clamp(64px, 11vh, 96px);
+    display: flex;
+    justify-content: center;
+  }
+}

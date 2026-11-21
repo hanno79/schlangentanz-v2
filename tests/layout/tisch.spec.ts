@@ -53,6 +53,13 @@ async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void>
   )
   await oeffne(page, '/spiel')
   await expect(page.getByRole('region', { name: 'Deine Hand' }), '/spiel zeigt keinen Tisch').toBeVisible()
+  // Seit O5 öffnet sich beim Abwerfen (zehn Handkarten) der Dialog „Zu viele Handkarten“.
+  // Gemessen wird der Tisch, wie er nach „Zum Tisch“ dahinter steht.
+  const abwerfen = page.getByRole('dialog', { name: 'Zu viele Handkarten' })
+  if (zustand.zug.abschnitt === 'Abwerfen') {
+    await abwerfen.getByRole('button', { name: 'Zum Tisch' }).click()
+    await expect(abwerfen).toBeHidden()
+  }
 }
 
 /** Tippen mit Touch-Geräten, sonst klicken. */
