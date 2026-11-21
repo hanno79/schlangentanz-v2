@@ -24,8 +24,8 @@ export const NACHFRAGE = /^([FG]\d+)[a-z]$/
 /** Zitat in deutschen Anführungszeichen. */
 export const ZITAT = /„[^“]+“/g
 
-type PlanFrage = { nr: string; stelle: string; frage: string; vorschlag?: string }
-type TeilDEintrag = { nr: string; frage: string; antwort: string; datum: string }
+type PlanFrage = { nr: string; stelle: string; frage: string; vorschlag?: string; antwort?: string }
+type TeilDEintrag = { nr: string; frage: string; antwort: string; folge: string; datum: string }
 
 /** Fasst Leerraum zusammen, damit Zitate und Prosa über Zeilenumbrüche hinweg passen. */
 export function normalisiert(text: string): string {
@@ -105,14 +105,29 @@ export function nenntStelle(text: string, stelle: string): boolean {
   return new RegExp(`(?<![\\w.])${maskiert}(?!\\d|\\.\\d)`).test(text)
 }
 
-/** Die Fragen F und G aus den Tabellen des Abschnitts „Offene Regelfragen“ im Plan. */
+/**
+ * Die Fragen F und G aus den Tabellen des Abschnitts „Offene Regelfragen“ im Plan.
+ * Spalten nach ihrem Kopf, je Unterabschnitt: Die Tabelle der Erweiterung hat
+ * eine Spalte „Antwort“, aber keine Spalte „Vorschlag“ (P0.5e).
+ */
 function fragenAusPlan(): PlanFrage[] {
   return abschnitt(plan, '##', 'Offene Regelfragen')
-    .split('\n')
-    .filter((zeile) => /^\|\s*[FG]\d+\s*\|/.test(zeile))
-    .map((zeile) => {
-      const [nr, stelle, frage, vorschlag] = zellen(zeile)
-      return { nr, stelle, frage, vorschlag }
+    .split(/^(?=### )/m)
+    .flatMap((teil) => {
+      const { kopf, zeilen } = tabelle(teil)
+      const spalte = (zeile: string[], name: string) => {
+        const stelle = kopf.findIndex((zelle) => zelle.startsWith(name))
+        return stelle < 0 ? undefined : zeile[stelle]
+      }
+      return zeilen
+        .filter((zeile) => /^[FG]\d+$/.test(zeile[0] ?? ''))
+        .map((zeile) => ({
+          nr: zeile[0],
+          stelle: spalte(zeile, 'Stelle') ?? '',
+          frage: spalte(zeile, 'Frage') ?? '',
+          vorschlag: spalte(zeile, 'Vorschlag'),
+          antwort: spalte(zeile, 'Antwort'),
+        }))
     })
 }
 
@@ -166,7 +181,7 @@ function fragenbloeckeLesen(): Map<string, string> {
 /** Einträge in Teil D, die eine Regelfrage beantworten („F1: …?“ in der Spalte „Frage“), je Fragennummer. */
 function beantworteteInTeilD(): Map<string, TeilDEintrag> {
   const { kopf, zeilen } = teilDTabelle
-  const [nr, frage, antwort, datum] = ['Nr.', 'Frage', 'Antwort', 'Datum'].map((name) => kopf.indexOf(name))
+  const [nr, frage, antwort, folge, datum] = ['Nr.', 'Frage', 'Antwort', 'Folge', 'Datum'].map((name) => kopf.indexOf(name))
   const eintraege = new Map<string, TeilDEintrag>()
   for (const zeile of zeilen) {
     const bezug = /^([FG]\d+[a-z]?): /.exec(zeile[frage] ?? '')
@@ -175,6 +190,7 @@ function beantworteteInTeilD(): Map<string, TeilDEintrag> {
       nr: zeile[nr] ?? '',
       frage: (zeile[frage] ?? '').slice(bezug[0].length),
       antwort: zeile[antwort] ?? '',
+      folge: zeile[folge] ?? '',
       datum: zeile[datum] ?? '',
     })
   }
