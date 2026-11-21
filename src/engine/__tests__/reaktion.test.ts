@@ -273,6 +273,17 @@ describe('A5, A6: Nachziehen nach einer Abwehr', () => {
     expect(durch.zustand.ausliegendeGruben.map((grube) => grube.vor)).toEqual([2])
   })
 
+  it('A6/D18: zu zweit, mit ausgesetztem Zug zwischen zwei Angriffen: wer nicht aufgefüllt hat, kann den zweiten nicht mit einem nachgezogenen Farbenschutz abwehren', () => {
+    // Vor B liegt schon eine Grube; A greift ihn an, B wehrt mit seinem einzigen Farbenschutz ab und setzt danach aus.
+    const start = tisch([['Schlangengrube', 'Schlangengrube', 'Blau', 'Rot', 'Gelb'], MIT_SCHUTZ]).grube(0, 1).stapelOben(['Farbenschutz', 'Farbenschutz']).zustand()
+    const erster = folge(start, (jetzt) => grubeAuf(jetzt, 1), (jetzt) => reaktion(jetzt, true), farbkarte, zugBeenden)
+    expect(erster.ereignisse.filter((ereignis) => ereignis.typ === 'Ausgesetzt').map((ereignis) => ereignis.spielerIndex), 'A7.6: B setzt aus').toEqual([1])
+    expect(erster.zustand.zug.spielerIndex, 'zu zweit ist A gleich wieder dran').toBe(0)
+    expect(hand(erster.zustand, 1), 'A6/D18: B hat weder nach der Abwehr noch im ausgesetzten Zug nachgezogen').toHaveLength(4)
+    const zweiter = fuehreAus(erster.zustand, grubeAuf(erster.zustand, 1))
+    expect(aktionen(zweiter.zustand), 'A6, D33: ohne Farbenschutz kann B nur durchlassen').toEqual([{ typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: null }])
+  })
+
   it('E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren', () => {
     const start = tisch([MIT_GRUBE, MIT_GRUBE, ['Farbenschutz', 'Farbenschutz', 'Blau', 'Rot', 'Gelb']]).zustand()
     const erster = folge(start, (jetzt) => grubeAuf(jetzt, 2), (jetzt) => reaktion(jetzt, true), farbkarte, zugBeenden)

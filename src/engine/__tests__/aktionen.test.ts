@@ -127,7 +127,7 @@ describe('A5/A6: wer entscheidet', () => {
     expect(ermittleEntscheider(baukasten({ spielerzahl: 3, erweiterung: false }).amZug(2).zustand())).toBe(2)
   })
 
-  it('A6: schwebt eine Karte, entscheidet der nächste Betroffene; ohne Betroffene der Angreifer', () => {
+  it('A6: schwebt eine Karte, entscheidet der nächste Betroffene; eine schwebende Karte ohne Ausstehenden gibt es nicht (E4-H3)', () => {
     const angriff = baukasten({ spielerzahl: 3, erweiterung: false })
       .schwebend(0, 'Schlangengrube', (karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-3' }), [2])
       .zustand()
@@ -135,8 +135,7 @@ describe('A5/A6: wer entscheidet', () => {
     const ohne = baukasten({ spielerzahl: 3, erweiterung: false })
       .schwebend(1, 'Verdoppler', (karteId, spielerId) => ({ typ: 'VerdopplerSpielen', spielerId, karteId }), [])
       .amZug(1)
-      .zustand()
-    expect(ermittleEntscheider(ohne)).toBe(1)
+    expect(() => ohne.zustand(), 'Baukasten: ohne Ausstehenden entschiede niemand').toThrow(/niemand.*\(A6\)/)
   })
 
   it('A10: nach Spielende entscheidet niemand', () => {

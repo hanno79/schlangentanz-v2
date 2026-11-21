@@ -221,6 +221,25 @@ describe('D21, D29, A10: die Schlangengrube in der Schlussrunde', () => {
     expect(ablage(zustand, 1)).toContain(grube)
   })
 
+  it('D29/D14: eine zweite Grube, für die bis Spielende kein Zug mehr kommt, bleibt nicht liegen; jede Grube endet auf dem Ablagestapel ihres Spielers', () => {
+    // Spieler 3 hat zwei Gruben vor sich, von Spieler 1 und Spieler 2; Spieler 2 zieht die letzte Karte.
+    const start = tisch([FUENF, FUENF, FUENF]).grube(0, 2).grube(1, 2).stapelBehalten(1).amZug(1).zustand()
+    const [vonEins, vonZwei] = start.ausliegendeGruben.map((grube) => grube.karte.id)
+    let zustand = start
+    const ereignisse: Ereignis[] = []
+    while (zustand.partiephase !== 'Beendet') {
+      const schritt = spieleZug(zustand)
+      ereignisse.push(...schritt.ereignisse)
+      zustand = schritt.zustand
+    }
+    expect(ereignisseVom(ereignisse, 'Ausgesetzt'), 'D14: die erste Grube kostet seinen letzten Zug').toEqual([{ typ: 'Ausgesetzt', spielerIndex: 2, karteId: vonEins, ablagestapelVon: 0 }])
+    expect(ereignisseVom(ereignisse, 'GrubeOhneWirkung'), 'D29: die zweite geht ohne Wirkung ab').toEqual([{ typ: 'GrubeOhneWirkung', spielerIndex: 2, karteId: vonZwei, ablagestapelVon: 1 }])
+    expect(zustand.ausliegendeGruben, 'A10/D29: bei Spielende liegt keine Grube mehr aus').toEqual([])
+    expect(ablage(zustand, 0)).toContain(vonEins)
+    expect(ablage(zustand, 1)).toContain(vonZwei)
+    expect(verletzteInvarianten(zustand)).toEqual([])
+  })
+
   it('E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden', () => {
     const start = schlussrunde([FUENF, MIT_GRUBE, ['Farbenschutz']], 1).zustand()
     const abwehr = folge(start, (jetzt) => grubeAuf(jetzt, 2), (jetzt) => reaktion(jetzt, true), farbkarte, zugBeenden)
