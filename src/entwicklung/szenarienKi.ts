@@ -47,6 +47,22 @@ export const KI_SZENARIEN: readonly Szenario[] = [
         .zustand(),
   },
   {
+    name: 'ki-dreiergruppe-ausnahme',
+    beschreibung:
+      'K2, Kriterium 1, Ausnahme: KI-Gegner 1 hat Grün, Grün, Grün (9 Punkte) und Regenbogenschlange, Violett, Violett, Farbenfusion (über Blau, Blau), Rot (violette Gruppe, 6 Punkte; zusammen 15). Er hält ein Rot, ein Grün, Gelb, Braun und Blau; je Zug geht nur eine Farbkarte.',
+    erwartet:
+      'Das Rot hinten an die zweite Schlange vollendet eine rote Dreiergruppe aus Fusion, Rot, Rot, aber die Fusion zählt dann als Rot statt als Violett: 15 → 17 (+2). Das Grün an die grüne Gruppe bringt 15 → 18 (+3). Die KI legt das Grün, weil es nachweislich besser bewertet ist; danach steht ihr Zwischenstand auf 18.',
+    erzeuge: () =>
+      gemischt(2, 210)
+        .schlange(1, ['Grün', 'Grün', 'Grün'])
+        .schlange(1, ['Regenbogenschlange', 'Violett', 'Violett', { fusion: ['Blau', 'Blau'] }, 'Rot'])
+        .schlange(0, ['Braun'])
+        .hand(1, ['Rot', 'Grün', 'Gelb', 'Braun', 'Blau'])
+        .haendeAuffuellen()
+        .amZug(1)
+        .zustand(),
+  },
+  {
     name: 'ki-farbe-und-sonderkarte',
     beschreibung:
       'K2, Kriterium 2: KI-Gegner 1 hat zwei Schlangen, Blau, Blau und Braun, Braun. Auf der Hand hält er ein Blau und eine Regenbogenschlange, dazu Rot, Gelb und Grün.',

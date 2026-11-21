@@ -1,4 +1,4 @@
-import { KETTENBONUS, ermittleFarbgruppen, werteSchlangen } from '../../engine';
+import { KETTENBONUS, hatNochLetztenZug, istJoker, laengsteFarbkette, werteSchlangen } from '../../engine';
 import type { Farbe, Schlange, Spielkarte } from '../../engine';
 import type { Sicht, SpielerSicht } from '../sicht';
 
@@ -24,8 +24,6 @@ Die Gewichte sind Schätzungen in Punkten; sie entscheiden nur zwischen Zügen,
 die die Engine erlaubt.
 */
 
-/** D24: Eine Kette zählt erst ab 3 Farbkarten derselben Farbe in ununterbrochener Reihe. */
-const KETTE_AB = 3;
 /** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. */
 const HANDKARTE_GEGNER = 0.4;
 /** Ein Zug, den ein Spieler wegen einer Schlangengrube aussetzt (A7.6). */
@@ -75,25 +73,9 @@ export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = new Map()): 
   return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker);
 }
 
-/** A11, D24: die längste ununterbrochene Kette einer Farbe ab 3 Farbkarten; Sonderkarten unterbrechen sie. 0 ohne. */
-export function kettenlaenge(spieler: SpielerSicht): number {
-  return Math.max(0, ...spieler.schlangen.flatMap((schlange) => ermittleFarbgruppen(schlange, KETTE_AB).map((kette) => kette.laenge)));
-}
-
-/** A10: Hat der Spieler nach dem laufenden Zug noch einen Zug? In der Schlussrunde nur, wer vor dem Auslöser noch drankommt. */
+/** A10: Hat der Spieler nach dem laufenden Zug noch einen Zug? Solange die Partie läuft, immer; in der Schlussrunde sagt es die Engine. */
 export function hatNochZug(sicht: Sicht, spieler: number): boolean {
-  if (sicht.partiephase === 'Laufend') return true;
-  const ausloeser = sicht.schlussrundeAusloeser;
-  if (sicht.partiephase === 'Beendet' || ausloeser === null) return false;
-  const anzahl = sicht.spieler.length;
-  const amZug = sicht.zug.spielerIndex;
-  const abstand = (index: number) => (index - amZug + anzahl) % anzahl || anzahl;
-  return spieler !== amZug && abstand(spieler) < abstand(ausloeser);
-}
-
-/** Regenbogenschlange und Farbenfusion zählen als jede Farbe (A7.3, A7.7). */
-export function istJoker(karte: Spielkarte): boolean {
-  return karte.typ === 'Sonderkarte' && (karte.name === 'Regenbogenschlange' || karte.name === 'Farbenfusion');
+  return sicht.partiephase === 'Laufend' || hatNochLetztenZug(sicht, spieler);
 }
 
 /** Die Farbe der ersten Farbkarte ab `start` in Richtung `schritt`, über Joker hinweg; `null`, wenn vorher eine andere Sonderkarte oder das Ende kommt. */
@@ -220,15 +202,15 @@ function spielerwert(sicht: Sicht, index: number, merker: Wertungsmerker): numbe
   return punkte + FERTIGE_GRUPPE * gruppen + ausblick * aussichten + hand - AUSGESETZTER_ZUG * gruben + zweiterZug;
 }
 
-/** Wer die längste Kette ab 3 Karten hat, bekommt den Kettenbonus, bei Gleichstand jeder (A11, D24). */
+/** Wer die längste Kette ab 3 Karten hat, bekommt den Kettenbonus, bei Gleichstand jeder (A11, D24); `laengsteFarbkette` zählt erst ab 3. */
 function kettenbonus(laengen: readonly number[]): number[] {
   const laengste = Math.max(0, ...laengen);
-  return laengen.map((laenge) => (laenge >= KETTE_AB && laenge === laengste ? KETTENBONUS : 0));
+  return laengen.map((laenge) => (laenge > 0 && laenge === laengste ? KETTENBONUS : 0));
 }
 
 /** Der Wert der Stellung für den Betrachter der Sicht: sein Wert minus der des stärksten Gegners. */
 export function bewerte(sicht: Sicht, merker: Wertungsmerker = new Map()): number {
-  const bonus = kettenbonus(sicht.spieler.map(kettenlaenge));
+  const bonus = kettenbonus(sicht.spieler.map(laengsteFarbkette));
   const werte = sicht.spieler.map((_, index) => spielerwert(sicht, index, merker) + bonus[index]);
   const gegner = werte.filter((_, index) => index !== sicht.ich);
   const staerkster = Math.max(...gegner);

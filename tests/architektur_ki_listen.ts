@@ -49,8 +49,11 @@ export const POSITIVLISTE_ENGINE_FUER_STRATEGIEN = new Set([
   'SPIELER_MIN',
   'ermittleFarbgruppen',
   'fehlertext',
+  'hatNochLetztenZug',
   'istAuslagekarte',
   'istGueltigeEinfuegePosition',
+  'istJoker',
+  'laengsteFarbkette',
   'vielfaltBonusFuer',
   'werteSchlangen',
 ])

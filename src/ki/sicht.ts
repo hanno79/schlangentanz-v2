@@ -24,7 +24,9 @@ weiter; der Architekturtest prüft das.
 Offen liegt: die eigene Hand und die eigene geheime Aufgabe, alle Schlangen
 samt der Karten unter einer Farbenfusion, alle Ablagestapel vollständig (D28),
 die Auslage vor jedem Spieler (A4), erfüllte offene Aufgaben (A9), ausliegende
-Gruben (A7.6), was aus dem Spiel ist, und die angesagte Sonderkarte (A6, B2).
+Gruben (A7.6), was aus dem Spiel ist, die angesagte Sonderkarte (A6, B2) und
+wie viele Schlangen bisher angelegt wurden, weil jede neue Schlange am Tisch zu
+sehen war.
 Verdeckt bleibt (B2): fremde Handkarten, von denen nur die Zahl zu sehen ist;
 die Reihenfolge von Nachzieh- und Aufgabenstapel, von denen nur die Grösse zu
 sehen ist; fremde geheime Aufgaben und ob sie erfüllt sind, weil sie erst bei
@@ -71,6 +73,8 @@ export interface Sicht {
   /** Die angesagte Sonderkarte mit Ziel, über die Betroffene noch entscheiden (A6, B2); `null`, wenn keine schwebt. */
   angesagt: SchwebendeKarte | null;
   ausDemSpiel: Array<Spielkarte | Auslagekarte>;
+  /** Wie viele Schlangen bisher angelegt wurden; jede neue lag offen am Tisch. Daraus entsteht die Id der nächsten. */
+  schlangenZaehler: number;
 }
 
 /** Verweist noch auf den Zustand; `sichtFuer` schreibt alles zusammen ab. */
@@ -113,6 +117,7 @@ function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
     ausliegendeGruben: zustand.ausliegendeGruben,
     angesagt: zustand.schwebend,
     ausDemSpiel: zustand.ausDemSpiel,
+    schlangenZaehler: zustand.schlangenZaehler,
   };
 }
 
@@ -150,12 +155,9 @@ offen liegen. Der erratene Zustand hängt nur von der Sicht und vom Zufall der K
 nie vom echten Zustand. Darauf spielt die Strategie Aktionen durch und sieht nach
 jeder wieder nur die Sicht danach (`Stellung`).
 
-Was der erratene Zustand festlegt, ist geraten: Ob eine fremde geheime Aufgabe
-erfüllt ist, sieht niemand (A9); geraten wird „nicht erfüllt“. Den Zähler der
-Schlangen zeigt die Sicht nicht; geraten wird die höchste Nummer am Tisch, damit
-eine neue Schlange keine bestehende Id bekommt. Beides ändert an den Aktionen des
-Spielers und an den Schlangen nichts, nur die Id einer neuen Schlange kann anders
-heissen als in der echten Partie.
+Was der erratene Zustand darüber hinaus festlegt, ist geraten: Ob eine fremde
+geheime Aufgabe erfüllt ist, sieht niemand (A9); geraten wird „nicht erfüllt“. An
+den Aktionen des Spielers und an den Schlangen ändert das nichts.
 */
 
 /** Alle Spielkarten und Aufgabenkarten einer Partie dieser Grösse, gemischt mit `zufall` (A1, A4). */
@@ -188,12 +190,6 @@ function offeneAufgabenIds(sicht: Sicht): Set<string> {
     ...sicht.spieler.flatMap((spieler) => spieler.erfuellteAufgaben.map((aufgabe) => aufgabe.id)),
     ...(sicht.geheimeAufgabe === null ? [] : [sicht.geheimeAufgabe.id]),
   ]);
-}
-
-/** Die höchste Nummer einer Schlange am Tisch, 0 ohne Schlange. */
-function hoechsteSchlangennummer(sicht: Sicht): number {
-  const nummern = sicht.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => Number(/^schlange-(\d+)$/.exec(schlange.id)?.[1] ?? 0)));
-  return Math.max(0, ...nummern);
 }
 
 /**
@@ -239,7 +235,7 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
     ausDemSpiel: kopie.ausDemSpiel,
     offeneAufgaben: kopie.offeneAufgaben,
     aufgabenStapel: verdeckteAufgaben,
-    schlangenZaehler: hoechsteSchlangennummer(kopie),
+    schlangenZaehler: kopie.schlangenZaehler,
   };
 }
 
