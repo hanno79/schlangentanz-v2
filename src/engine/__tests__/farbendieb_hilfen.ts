@@ -1,6 +1,7 @@
 import { expect } from 'vitest'
-import type { FarbendiebSpielenAktion, Spielzustand } from '../index'
-import { aktionen } from './zugablauf_hilfen'
+import { ermittleAktionen } from '../index'
+import type { FarbendiebSpielenAktion, Schlange, Spielzustand } from '../index'
+import type { Kartenwahl } from '../testing/szenario'
 
 /*
 Hilfen für die Tests des Farbendiebs (E8). Wie in `zugablauf_hilfen.ts` spielen
@@ -9,9 +10,12 @@ sie nur, was die Engine aufzählt.
 
 export type Diebesziel = FarbendiebSpielenAktion['ziel']
 
+/** Eine Hand mit Farbendieb an erster Stelle. */
+export const DIEB: Kartenwahl[] = ['Farbendieb', 'Blau', 'Rot', 'Gelb', 'Grün']
+
 /** Alle aufgezählten Farbendieb-Aktionen. */
 export function diebstaehle(zustand: Spielzustand): FarbendiebSpielenAktion[] {
-  return aktionen(zustand, 'FarbendiebSpielen').filter((aktion): aktion is FarbendiebSpielenAktion => aktion.typ === 'FarbendiebSpielen')
+  return ermittleAktionen(zustand).filter((aktion): aktion is FarbendiebSpielenAktion => aktion.typ === 'FarbendiebSpielen')
 }
 
 /** Die aufgezählte Aktion, mit der der erste Farbendieb des Spielers am Zug die Karte `karteId` stiehlt und nach `ziel` legt. */
@@ -32,6 +36,15 @@ export function karteIn(zustand: Spielzustand, spieler: number, schlange: number
 /** Die Schlangen eines Spielers als Folge von Farben und Namen der Sonderkarten. */
 export function schlangenVon(zustand: Spielzustand, spieler: number): string[][] {
   return zustand.spieler[spieler].schlangen.map((schlange) => schlange.karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)))
+}
+
+/** Die Schlange mit dieser Id und ihr Besitzer, oder `null`. */
+export function schlangeMit(zustand: Spielzustand, schlangenId: string): { besitzer: number; schlange: Schlange } | null {
+  for (const [besitzer, spieler] of zustand.spieler.entries()) {
+    const schlange = spieler.schlangen.find((eintrag) => eintrag.id === schlangenId)
+    if (schlange !== undefined) return { besitzer, schlange }
+  }
+  return null
 }
 
 /** Die Id des ersten Farbendiebs auf der Hand von `spieler`. */

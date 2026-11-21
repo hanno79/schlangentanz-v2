@@ -11,8 +11,10 @@ Schlange und legt sie an eine beliebige Stelle einer eigenen Schlange; hat der
 Dieb keine Schlange, beginnt sie eine neue. Sonderkarten stiehlt er nicht (D2),
 auch keine Farbkarte unter einer Farbenfusion: die liegt nicht offen in der
 Schlange, sondern darunter (A7.7). Betroffen ist der Besitzer der Schlange, aus
-der gestohlen wird; er darf abwehren (A6, A7.2, `reaktion.ts`). Danach liegt der
-Farbendieb auf dem Ablagestapel des Diebs, mit oder ohne Wirkung.
+der gestohlen wird; er darf abwehren (A6, A7.2). Wehrt er ab, legt der
+Reaktionsablauf den Farbendieb ohne Wirkung auf den Ablagestapel des Diebs
+(`reaktion.ts`), und `wirke` wird nicht gerufen. Sonst kommt er nach dem
+Diebstahl dorthin.
 */
 
 type Ziel = FarbendiebSpielenAktion['ziel'];
@@ -84,7 +86,8 @@ function nimmAusSchlange(zustand: Spielzustand, quelle: FarbendiebSpielenAktion[
     schlange.karten.findIndex((eintrag) => eintrag.id === quelle.karteId),
     1,
   );
-  if (schlange.karten.length === 0) zustand.spieler[besitzer].schlangen = zustand.spieler[besitzer].schlangen.filter((eintrag) => eintrag !== schlange);
+  const spieler = zustand.spieler[besitzer];
+  if (schlange.karten.length === 0) spieler.schlangen = spieler.schlangen.filter((eintrag) => eintrag !== schlange);
   return karte;
 }
 
@@ -110,11 +113,8 @@ export const farbendieb: KartenDefinition<FarbendiebSpielenAktion> = {
     return gefunden === null ? [] : [gefunden.besitzer];
   },
 
-  wirke(zustand: Spielzustand, aktion: FarbendiebSpielenAktion, abgewehrt: readonly number[]): Spielzustand {
-    const bestohlen = findeSchlange(zustand, aktion.quelle.schlangenId)!.besitzer;
+  wirke(zustand: Spielzustand, aktion: FarbendiebSpielenAktion): Spielzustand {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
-    // A7.2: Hat der Bestohlene abgewehrt, bleibt seine Karte liegen.
-    if (abgewehrt.includes(bestohlen)) return zustand;
     const karte = nimmAusSchlange(zustand, aktion.quelle);
     const eigene = zustand.spieler[spielerIndexVon(zustand, aktion.spielerId)].schlangen;
     const { ziel } = aktion;

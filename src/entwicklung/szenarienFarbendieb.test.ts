@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../engine'
-import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
+import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../engine'
 import { findeSzenario, SZENARIEN } from './szenarien'
 
 /*
@@ -40,9 +40,9 @@ function klicke(zustand: Spielzustand, ...wahlen: Wahl[]): { zustand: Spielzusta
   return { zustand: jetzt, ereignisse }
 }
 
-const farben = (zustand: Spielzustand, spieler: number) =>
-  zustand.spieler[spieler].schlangen.map((schlange) => schlange.karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)))
-const ablagen = (zustand: Spielzustand) => zustand.spieler.map((spieler) => spieler.ablagestapel.map((karte) => (karte.typ === 'Sonderkarte' ? karte.name : karte.farbe)))
+const name = (karte: Spielkarte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)
+const farben = (zustand: Spielzustand, spieler: number) => zustand.spieler[spieler].schlangen.map((schlange) => schlange.karten.map(name))
+const ablagen = (zustand: Spielzustand) => zustand.spieler.map((spieler) => spieler.ablagestapel.map(name))
 const typen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)
 const anzahl = (zustand: Spielzustand) => ermittleAktionen(zustand).filter((aktion) => aktion.typ === 'FarbendiebSpielen').length
 

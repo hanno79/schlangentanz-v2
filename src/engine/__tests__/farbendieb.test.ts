@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { ermittleFarbgruppen } from '../index'
 import type { Spielzustand } from '../index'
-import type { Kartenwahl } from '../testing/szenario'
-import { diebId, diebstaehle, karteIn, schlangenVon, stiehl } from './farbendieb_hilfen'
+import { DIEB, diebId, diebstaehle, karteIn, schlangeMit, schlangenVon, stiehl } from './farbendieb_hilfen'
+import type { Diebesziel } from './farbendieb_hilfen'
 import {
   ablage,
   aktionen,
@@ -25,10 +25,8 @@ eigene Schlange beginnt sie eine neue. Danach liegt er auf dem Ablagestapel des
 Diebs. Die Abwehr prüft `farbendieb_abwehr.test.ts`.
 */
 
-const DIEB: Kartenwahl[] = ['Farbendieb', 'Blau', 'Rot', 'Gelb', 'Grün']
-
 /** Spieler A (0) stiehlt, Spieler B (1) lässt durch: die ganze Wirkung ohne Abwehr. */
-function stiehlUndDurch(zustand: Spielzustand, karteId: string, ziel: Parameters<typeof stiehl>[2]) {
+function stiehlUndDurch(zustand: Spielzustand, karteId: string, ziel: Diebesziel) {
   return folge(zustand, (jetzt) => stiehl(jetzt, karteId, ziel), durchlassen)
 }
 
@@ -69,15 +67,10 @@ describe('A7.1, D2: was der Farbendieb stehlen darf (E8 Kriterium 1)', () => {
 
   it('A7.1/D2: angeboten sind genau die Farbkarten in den Schlangen der Mitspieler, im Uhrzeigersinn; nie eine eigene Karte, nie eine Sonderkarte, nie eine Karte unter einer Fusion', () => {
     const zustand = dreiSpieler()
-    const quellen = [...new Set(diebstaehle(zustand).map((aktion) => `${aktion.quelle.schlangenId}/${aktion.quelle.karteId}`))]
+    const quellen = diebstaehle(zustand).filter((aktion) => aktion.ziel.art === 'schlange' && aktion.ziel.position === 0).map((aktion) => aktion.quelle)
     const [b, c1, c2] = [zustand.spieler[1].schlangen[0], zustand.spieler[2].schlangen[0], zustand.spieler[2].schlangen[1]]
-    expect(quellen).toEqual([
-      `${b.id}/${b.karten[0].id}`,
-      `${b.id}/${b.karten[4].id}`,
-      `${c1.id}/${c1.karten[0].id}`,
-      `${c2.id}/${c2.karten[0].id}`,
-      `${c2.id}/${c2.karten[1].id}`,
-    ])
+    const quelle = (schlange: typeof b, stelle: number) => ({ schlangenId: schlange.id, karteId: schlange.karten[stelle].id })
+    expect(quellen).toEqual([quelle(b, 0), quelle(b, 4), quelle(c1, 0), quelle(c2, 0), quelle(c2, 1)])
     expect(typen(zustand), 'D25: mit möglichem Ziel lässt er sich nicht wirkungslos ablegen').not.toContain('SonderkarteWirkungslosAblegen')
   })
 
@@ -177,7 +170,7 @@ describe('A7.1, D17: wohin die gestohlene Karte kommt (E8 Kriterium 2)', () => {
     expect(diebstaehle(start).map((aktion) => aktion.ziel)).toEqual([{ art: 'neueSchlange' }, { art: 'neueSchlange' }])
     const rot = karteIn(start, 1, 0, 1)
     const { zustand } = stiehlUndDurch(start, rot, { art: 'neueSchlange' })
-    expect(schlangenVon(zustand, 0)).toEqual([['Rot']])
+    expect(zustand.spieler[0].schlangen).toHaveLength(1)
     expect(zustand.spieler[0].schlangen[0]).toEqual({ id: `schlange-${start.schlangenZaehler + 1}`, karten: [start.spieler[1].schlangen[0].karten[1]], fusionen: [] })
     expect(zustand.schlangenZaehler).toBe(start.schlangenZaehler + 1)
     expect(schlangenVon(zustand, 1)).toEqual([['Blau']])
@@ -248,7 +241,7 @@ describe('A7.1, D13, A5: Grenzfälle des Farbendiebs (E8)', () => {
 
   it('A7.1: der Dieb stiehlt in vier Spielern aus jeder gegnerischen Schlange, beginnend beim linken Nachbarn', () => {
     const zustand = tisch([FUENF, FUENF, DIEB, FUENF]).schlange(0, ['Blau']).schlange(1, ['Rot']).schlange(2, ['Gelb']).schlange(3, ['Grün']).amZug(2).zustand()
-    const farben = diebstaehle(zustand).map((aktion) => schlangenVon(zustand, zustand.spieler.findIndex((spieler) => spieler.schlangen.some((s) => s.id === aktion.quelle.schlangenId)))[0][0])
-    expect(farben).toEqual(['Grün', 'Grün', 'Blau', 'Blau', 'Rot', 'Rot'])
+    const bestohlen = diebstaehle(zustand).map((aktion) => schlangeMit(zustand, aktion.quelle.schlangenId)?.besitzer)
+    expect(bestohlen, 'A5/A6: im Uhrzeigersinn, je zwei Stellen in der eigenen Schlange').toEqual([3, 3, 0, 0, 1, 1])
   })
 })

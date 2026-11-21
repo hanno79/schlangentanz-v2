@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { Spielzustand } from '../index'
-import type { Kartenwahl } from '../testing/szenario'
-import { diebId, karteIn, stiehl } from './farbendieb_hilfen'
+import type { SpielAktion, Spielzustand } from '../index'
+import { DIEB, diebId, karteIn, stiehl } from './farbendieb_hilfen'
 import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
 import { durchlassen, ereignisseVom, folge, FUENF, MIT_SCHUTZ, reaktion, tischMitHaenden as tisch } from './zugablauf_hilfen'
 import type { Schritt } from './zugablauf_hilfen'
@@ -14,10 +13,8 @@ den Diebstahl leer wird. Die Oberfläche rechnet daraus die neue Lage nach, ohne
 Zustände zu vergleichen.
 */
 
-const DIEB: Kartenwahl[] = ['Farbendieb', 'Blau', 'Rot', 'Gelb', 'Grün']
-
 /** Führt die Schritte aus und prüft jeden: nachrechenbar, keine Handkarte verraten (B2). */
-function nachgerechnet(start: Spielzustand, ...wahlen: Array<(jetzt: Spielzustand) => ReturnType<typeof durchlassen>>): Schritt {
+function nachgerechnet(start: Spielzustand, ...wahlen: Array<(jetzt: Spielzustand) => SpielAktion>): Schritt {
   let jetzt = start
   const ereignisse: Schritt['ereignisse'] = []
   for (const waehle of wahlen) {

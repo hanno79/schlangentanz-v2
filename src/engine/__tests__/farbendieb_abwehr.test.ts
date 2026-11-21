@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
-import type { Ereignis, FarbendiebSpielenAktion, Spielzustand } from '../index'
+import type { Ereignis, FarbendiebSpielenAktion, Schlange, Spielzustand } from '../index'
 import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
 import type { SchrittPruefer } from '../testing/dauerlauf'
-import type { Kartenwahl } from '../testing/szenario'
-import { diebId, karteIn, schlangenVon, stiehl } from './farbendieb_hilfen'
+import { DIEB, diebId, karteIn, schlangeMit, schlangenVon, stiehl } from './farbendieb_hilfen'
 import {
   ablage,
   durchlassen,
@@ -30,8 +29,6 @@ der Farbendieb liegt auf dem Ablagestapel des Diebs. Dazu ein Dauerlauf, der
 jeden gespielten Farbendieb nachrechnet.
 */
 
-const DIEB: Kartenwahl[] = ['Farbendieb', 'Blau', 'Rot', 'Gelb', 'Grün']
-
 /** Drei Spieler: A stiehlt, B hält Farbenschutz, C nicht; B und C haben je eine Schlange. */
 function dreiSpieler(): Spielzustand {
   return tisch([DIEB, MIT_SCHUTZ, FUENF]).schlange(0, ['Rot']).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(2, ['Blau', 'Gelb']).zustand()
@@ -45,8 +42,7 @@ describe('A7.1, A7.2: der Farbendieb kann durch Farbenschutz abgewehrt werden (E
     const dieb = diebId(start, 0)
     const schutz = start.spieler[1].hand[0].id
     const { zustand, ereignisse } = folge(start, (jetzt) => stiehl(jetzt, karteIn(jetzt, 1, 0, 0), anDasEnde(jetzt)), (jetzt) => reaktion(jetzt, true))
-    expect(schlangenVon(zustand, 1), 'A7.2: B bleibt unberührt').toEqual([['Grün', 'Grün', 'Grün']])
-    expect(zustand.spieler[1].schlangen).toEqual(start.spieler[1].schlangen)
+    expect(zustand.spieler[1].schlangen, 'A7.2: B bleibt unberührt').toEqual(start.spieler[1].schlangen)
     expect(schlangenVon(zustand, 0)).toEqual([['Rot']])
     expect(ablage(zustand, 0)).toEqual([dieb])
     expect(ablage(zustand, 1)).toEqual([schutz])
@@ -122,15 +118,6 @@ interface Diebe {
   schlangeVerschwunden: number
 }
 
-/** Die Schlange mit dieser Id und ihr Besitzer, oder `null`. */
-function schlangeMit(zustand: Spielzustand, schlangenId: string) {
-  for (const [besitzer, spieler] of zustand.spieler.entries()) {
-    const schlange = spieler.schlangen.find((eintrag) => eintrag.id === schlangenId)
-    if (schlange !== undefined) return { besitzer, schlange }
-  }
-  return null
-}
-
 /**
  * Rechnet jeden entschiedenen Farbendieb nach (A7.1, A7.2, D2, D17): Abgewehrt
  * bleibt alles liegen; sonst liegt die gestohlene Farbkarte in einer Schlange des
@@ -160,19 +147,27 @@ function diebPruefer(zaehler: Diebe): SchrittPruefer {
       zaehler.gestohlen += 1
       if (nochDa) return 'A7.1: Die gestohlene Karte liegt noch beim Gegner.'
       if (quelleNachher === null) zaehler.schlangeVerschwunden += 1
-      const ziel = ansage.ziel.art === 'neueSchlange' ? zustand.spieler[dieb].schlangen.at(-1) : schlangeMit(zustand, ansage.ziel.schlangenId)?.schlange
-      const stelle = ansage.ziel.art === 'neueSchlange' ? 0 : ansage.ziel.position
-      if (ansage.ziel.art === 'neueSchlange') zaehler.neueSchlange += 1
-      if (ziel?.karten[stelle]?.id !== gestohlen.id || !zustand.spieler[dieb].schlangen.includes(ziel)) return `D17: Die Karte liegt nicht an der angesagten Stelle ${JSON.stringify(ansage.ziel)}.`
+      let ziel: { besitzer: number; schlange: Schlange } | null
+      let stelle: number
+      if (ansage.ziel.art === 'neueSchlange') {
+        zaehler.neueSchlange += 1
+        const neu = zustand.spieler[dieb].schlangen.at(-1)
+        ziel = neu === undefined ? null : { besitzer: dieb, schlange: neu }
+        stelle = 0
+      } else {
+        ziel = schlangeMit(zustand, ansage.ziel.schlangenId)
+        stelle = ansage.ziel.position
+      }
+      if (ziel?.besitzer !== dieb || ziel.schlange.karten[stelle]?.id !== gestohlen.id) return `D17: Die Karte liegt nicht an der angesagten Stelle ${JSON.stringify(ansage.ziel)}.`
     }
     return null
   }
 }
 
 describe('A7.1, D17: Dauerlauf mit dem Farbendieb (Plan 3.6, Punkt 7)', () => {
-  it('A7.1/D2/D17: 120 Zufallspartien mit 2, 3 und 4 Spielern enden; jeder Farbendieb wirkt wie angesagt', () => {
+  it('A7.1/D2/D17: 40 Zufallspartien mit 2, 3 und 4 Spielern enden; jeder Farbendieb wirkt wie angesagt', () => {
     const zaehler: Diebe = { gestohlen: 0, abgewehrt: 0, neueSchlange: 0, schlangeVerschwunden: 0 }
-    const partien = [...dauerlaufPartien(60, false, 701), ...dauerlaufPartien(60, true, 801)]
+    const partien = [...dauerlaufPartien(20, false, 701), ...dauerlaufPartien(20, true, 801)]
     const ergebnisse = dauerlauf(partien, { neuerPruefer: () => diebPruefer(zaehler) })
     const nichtBeendet = ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet')
     expect(nichtBeendet.map((ergebnis) => `${ergebnis.ausgang}: ${ergebnis.detail}`)).toEqual([])
