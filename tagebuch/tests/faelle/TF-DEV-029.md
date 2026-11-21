@@ -1,5 +1,5 @@
 ---
-id: TF-DEV-028
+id: TF-DEV-029
 titel: Die Szenarien fusion-eigen und fusion-beim-gegner laufen am Entwicklertisch mit Klicks so ab, wie ihre Beschreibung erwartet, auf dem Desktop und auf dem Handy hochkant.
 art: manuell
 regression: ja

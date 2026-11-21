@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-037
+id: TF-ENGINE-039
 titel: Gespielte Farbenfusionen zwischen Regenbogenschlangen, nebeneinander und in Zufallspartien werten und melden sich richtig.
 art: manuell
 regression: nein
@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
 aenderung: task/E7-farbenfusion (PR #65)
-grenzfall_von: TF-ENGINE-036
+grenzfall_von: TF-ENGINE-038
 ---
 
 ## Worum es geht
@@ -47,4 +47,4 @@ Das Prüferskript liegt als Beleg beim Lauf; es wird für den Lauf nach `src/eng
 
 ## Nicht abgedeckte Grenzfälle
 
-Eine Fusion, die gefressen wird, gehört zu E6. Ein Zustand mit gesetztem `farbenfusionGespielt` ohne gezählte Sonderkarte entsteht im Spiel nicht und ist nur im Regeltest von TF-ENGINE-036 geprüft.
+Eine Fusion, die gefressen wird, gehört zu E6. Ein Zustand mit gesetztem `farbenfusionGespielt` ohne gezählte Sonderkarte entsteht im Spiel nicht und ist nur im Regeltest von TF-ENGINE-038 geprüft.

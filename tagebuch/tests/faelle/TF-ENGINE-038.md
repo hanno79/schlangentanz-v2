@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-036
+id: TF-ENGINE-038
 titel: Die Farbenfusion folgt A7.7, D9, D10, D20, D25, D27 und D30, und jede umgekehrte Regel macht einen Regeltest rot.
 art: beides
 regression: ja
@@ -46,4 +46,4 @@ Gegenproben in `src/engine/karten/farbenfusion.ts`: G1 Reihenfolge unter der Fus
 
 ## Nicht abgedeckte Grenzfälle
 
-Das Entfernen einer Fusion mit Schlangenfrass prüft E6; in E7 ist Schlangenfrass noch ein Platzhalter. Aufgaben, bei denen die Fusion eine Farbe annimmt, kommen mit X2. Die eigenen Grenzfälle stehen in TF-ENGINE-037.
+Das Entfernen einer Fusion mit Schlangenfrass prüft E6; in E7 ist Schlangenfrass noch ein Platzhalter. Aufgaben, bei denen die Fusion eine Farbe annimmt, kommen mit X2. Die eigenen Grenzfälle stehen in TF-ENGINE-039.
