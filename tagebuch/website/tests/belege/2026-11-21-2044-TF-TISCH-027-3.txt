@@ -1,0 +1,44 @@
+desktop stapel-fast-leer: Spieler 1=0, KI-Gegner 1=0 Sieger spieler-1+spieler-2
+desktop wertung-beispiele: Spieler 1=10, KI-Gegner 1=12, KI-Gegner 2=28, KI-Gegner 3=6 Sieger spieler-3
+desktop wertung-beispiele-kette: Spieler 1=12, KI-Gegner 1=12, KI-Gegner 2=4 Sieger spieler-1+spieler-2
+desktop saat7023: Spieler 1=2, KI-Gegner 1=0, KI-Gegner 2=17 Sieger spieler-3
+desktop prod-saat7004: Spieler 1=17, KI-Gegner 1=10 Sieger spieler-1
+tablet-quer stapel-fast-leer: Spieler 1=0, KI-Gegner 1=0 Sieger spieler-1+spieler-2
+tablet-quer wertung-beispiele: Spieler 1=10, KI-Gegner 1=12, KI-Gegner 2=28, KI-Gegner 3=6 Sieger spieler-3
+tablet-quer wertung-beispiele-kette: Spieler 1=12, KI-Gegner 1=12, KI-Gegner 2=4 Sieger spieler-1+spieler-2
+tablet-quer saat7023: Spieler 1=2, KI-Gegner 1=0, KI-Gegner 2=17 Sieger spieler-3
+tablet-quer prod-saat7004: Spieler 1=17, KI-Gegner 1=10 Sieger spieler-1
+tablet-hochkant stapel-fast-leer: Spieler 1=0, KI-Gegner 1=0 Sieger spieler-1+spieler-2
+tablet-hochkant wertung-beispiele: Spieler 1=10, KI-Gegner 1=12, KI-Gegner 2=28, KI-Gegner 3=6 Sieger spieler-3
+tablet-hochkant wertung-beispiele-kette: Spieler 1=12, KI-Gegner 1=12, KI-Gegner 2=4 Sieger spieler-1+spieler-2
+tablet-hochkant saat7023: Spieler 1=2, KI-Gegner 1=0, KI-Gegner 2=17 Sieger spieler-3
+tablet-hochkant prod-saat7004: Spieler 1=17, KI-Gegner 1=10 Sieger spieler-1
+handy-hochkant stapel-fast-leer: Spieler 1=0, KI-Gegner 1=0 Sieger spieler-1+spieler-2
+handy-hochkant wertung-beispiele: Spieler 1=10, KI-Gegner 1=12, KI-Gegner 2=28, KI-Gegner 3=6 Sieger spieler-3
+handy-hochkant wertung-beispiele-kette: Spieler 1=12, KI-Gegner 1=12, KI-Gegner 2=4 Sieger spieler-1+spieler-2
+handy-hochkant saat7023: Spieler 1=2, KI-Gegner 1=0, KI-Gegner 2=17 Sieger spieler-3
+handy-hochkant prod-saat7004: Spieler 1=17, KI-Gegner 1=10 Sieger spieler-1
+handy-quer stapel-fast-leer: Spieler 1=0, KI-Gegner 1=0 Sieger spieler-1+spieler-2
+handy-quer wertung-beispiele: Spieler 1=10, KI-Gegner 1=12, KI-Gegner 2=28, KI-Gegner 3=6 Sieger spieler-3
+handy-quer wertung-beispiele-kette: Spieler 1=12, KI-Gegner 1=12, KI-Gegner 2=4 Sieger spieler-1+spieler-2
+handy-quer saat7023: Spieler 1=2, KI-Gegner 1=0, KI-Gegner 2=17 Sieger spieler-3
+handy-quer prod-saat7004: Spieler 1=17, KI-Gegner 1=10 Sieger spieler-1
+desktop stapel-fast-leer-start Zwischenstand ok: [0,0]
+desktop wertung-joker Zwischenstand ok: [15,14,0,55]
+tablet-quer stapel-fast-leer-start Zwischenstand ok: [0,0]
+tablet-quer wertung-joker Zwischenstand ok: [15,14,0,55]
+tablet-hochkant stapel-fast-leer-start Zwischenstand ok: [0,0]
+tablet-hochkant wertung-joker Zwischenstand ok: [15,14,0,55]
+handy-hochkant stapel-fast-leer-start Zwischenstand ok: [0,0]
+handy-hochkant wertung-joker Zwischenstand ok: [15,14,0,55]
+handy-quer stapel-fast-leer-start Zwischenstand ok: [0,0]
+handy-quer wertung-joker Zwischenstand ok: [15,14,0,55]
+desktop vor dem Zug: Zwischenstand [15,14,0,55], Endwertung desselben Stands [20,19,0,60], Ketten [{"laenge":3,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":5}]
+desktop nach Rot an Schlange 1: Zwischenstand [18,14,0,55], Endwertung desselben Stands [23,19,0,60], Ketten [{"laenge":3,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":5}]
+desktop nach dem Zug von KI-Gegner 1: Zwischenstand [18,14,0,55], Endwertung desselben Stands [23,19,0,60], Ketten [{"laenge":3,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":5}]
+desktop nach der Runde der KI: Zwischenstand [18,14,0,55], Endwertung desselben Stands [23,19,0,60], Ketten [{"laenge":3,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":5}]
+handy-hochkant vor dem Zug: Zwischenstand [15,14,0,55], Endwertung desselben Stands [20,19,0,60], Ketten [{"laenge":3,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":5}]
+handy-hochkant nach Rot an Schlange 1: Zwischenstand [18,14,0,55], Endwertung desselben Stands [23,19,0,60], Ketten [{"laenge":3,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":5}]
+handy-hochkant nach dem Zug von KI-Gegner 1: Zwischenstand [19,14,0,55], Endwertung desselben Stands [24,19,0,55], Ketten [{"laenge":4,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":0}]
+handy-hochkant nach der Runde der KI: Zwischenstand [19,14,0,55], Endwertung desselben Stands [24,19,0,55], Ketten [{"laenge":4,"bonus":5},{"laenge":0,"bonus":0},{"laenge":0,"bonus":0},{"laenge":3,"bonus":0}]
+verglichene Zahlen: 482
