@@ -14,3 +14,6 @@ export interface Ki {
   /** Wählt genau eine der angebotenen Aktionen und gibt sie zurück; `aktionen` ist nie leer. */
   waehle(sicht: Sicht, aktionen: readonly SpielAktion[]): SpielAktion;
 }
+
+/** Eine Fabrik baut je Aufruf eine neue Instanz; jede Fabrik steht in der Registry `./index.ts`. */
+export type Fabrik = (zufall: () => number) => Ki;

@@ -29,7 +29,8 @@ import {
   type Verstoss,
 } from './architektur_pruefung'
 import { ausBibliothek, zustandstypen } from './architektur_ki_typen'
-import { aufModulebene, pruefeFabrikname, pruefeModulebene, thisIstKlasse } from './architektur_ki_modulebene'
+import { aufModulebene, pruefeModulebene, thisIstKlasse } from './architektur_ki_modulebene'
+import { REGISTRY_DATEI, pruefeExporte, pruefeRegistry, registrierteNamen } from './architektur_ki_registry'
 import {
   ERLAUBTE_ENGINE_EMPFAENGER,
   GEERBT_VON_OBJECT,
@@ -79,8 +80,11 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
   const sichtPfad = absolut(SICHT_DATEI)
   const strategienOrdner = absolut(STRATEGIEN)
   /** Ob eine Strategie aus `zielpfad` holen darf: Engine-Schnittstelle, sicht.ts, andere Strategien. */
+  const registryPfad = absolut(REGISTRY_DATEI)
+  /** Die Registry lesen nur der Rahmen und die Tests; eine Strategie erreichte darüber die Fabriken aller anderen. */
   const strategieDarf = (zielpfad: string) =>
-    zielpfad === engineEinstieg || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner))
+    zielpfad === engineEinstieg || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner) && zielpfad !== registryPfad)
+  const registriert = registrierteNamen(programm.getSourceFile(join(wurzel, REGISTRY_DATEI)), pruefer)
   /** Die Datei, auf die eine Modulangabe zeigt, wie der Typprüfer sie aufgelöst hat; leer, wenn nicht aufgelöst. */
   const zielpfadVon = (modulangabe: ts.Node) => {
     const ziel = pruefer.getSymbolAtLocation(modulangabe)?.declarations?.find(ts.isSourceFile)
@@ -191,6 +195,8 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     const melde = (knoten: ts.Node, was: string) => verstoesse.push({ regel: 'U5', datei, zeile: zeileVon(knoten), was })
     const geschrieben = new Set<ts.Node>()
     const istStrategie = datei.startsWith(STRATEGIEN)
+    // Die Registry hält Fabriken als Werte; Modulebene und Weitergabe prüft sie nicht wie eine Strategie.
+    const istRegistry = datei === REGISTRY_DATEI
 
     /** H1: geschrieben wird nur in Variablen und Objekte dieser Datei; die Schlüssel prüft `pruefeGlobales`. */
     const pruefeSchreiben = (ziel: ts.Expression) => {
@@ -320,7 +326,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
         strategieErwaehnt.set(symbol, erwaehnt)
       }
       if (erwaehnt) melde(knoten, `Strategie erwähnt ${VOLLER_ZUSTAND_TYP}: ${knoten.text}`)
-      pruefeGeteiltenWert(knoten, symbol)
+      if (!istRegistry) pruefeGeteiltenWert(knoten, symbol)
     }
 
     /** H1: kein Weg zu einem Prototyp; globale Objekte nur aufrufen oder an ihnen lesen, nie weitergeben. */
@@ -374,7 +380,11 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     if (istStrategie) {
       const istPrimitiv = (knoten: ts.Node) =>
         !hatTeilMit(typ(knoten), ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive | ts.TypeFlags.Any | ts.TypeFlags.Unknown)
-      pruefeModulebene(quelle, istPrimitiv, melde)
+      if (istRegistry) pruefeRegistry(quelle, melde)
+      else {
+        pruefeModulebene(quelle, istPrimitiv, melde)
+        pruefeExporte(quelle, registriert.get(absolut(datei)) ?? new Set(), pruefer, melde)
+      }
     }
     besucheAlle(quelle, (knoten) => {
       for (const ziel of geschriebeneZiele(knoten)) pruefeSchreiben(ziel)
@@ -382,10 +392,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       pruefeZufallUndZeit(knoten)
       pruefeTypen(knoten)
       pruefeImport(knoten)
-      if (istStrategie) {
-        pruefeStrategie(knoten)
-        pruefeFabrikname(knoten, pruefer, melde)
-      }
+      if (istStrategie) pruefeStrategie(knoten)
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })
   }
