@@ -2,9 +2,10 @@ import { OFFENE_AUFGABEN } from '../constants';
 import type { AufgabenkarteInfo, Spielzustand } from '../types';
 
 /*
-Erfüllte Aufgaben für Tests und Szenarien (E10). Ob eine Aufgabe erfüllt ist,
-prüft die Engine erst mit X1/X2; bis dahin setzen diese Hilfen den Zustand so,
-wie ihn die Wertung liest. Jede Aufgabe bleibt dabei genau einmal im Spiel.
+Aufgaben für Tests und Szenarien. Erfüllte Aufgaben setzen die Hilfen von E10
+so, wie die Wertung sie liest, ohne dass die Engine sie geprüft hat;
+`legeAufgabenAus` (X1) legt die Aufgaben so aus, wie ein Test zum Einlösen sie
+braucht. Jede Aufgabe bleibt dabei genau einmal im Spiel.
 */
 
 /** Nimmt die Aufgabe `name` aus der Auslage, dem Stapel oder der geheimen Hand eines Spielers; Lücken füllt der Stapel. */
@@ -40,4 +41,45 @@ export function legeGeheimeAufgabe(zustand: Spielzustand, spieler: number, name:
   if (bisher !== null) zustand.aufgabenStapel.push(bisher);
   zustand.spieler[spieler].geheimeAufgabe = aufgabe;
   zustand.spieler[spieler].geheimeAufgabeErfuellt = erfuellt;
+}
+
+/** Welche Aufgaben offen liegen, oben auf dem Stapel und geheim bei einem Spieler (Name aus A9). */
+export interface Aufgabenauslage {
+  /** Die offenen Aufgaben in dieser Reihenfolge; höchstens 3 (A4). */
+  offen?: string[];
+  /** Diese Aufgaben liegen in dieser Reihenfolge oben auf dem Aufgabenstapel. */
+  stapelOben?: string[];
+  /** Je Spieler seine geheime Aufgabe. */
+  geheim?: Array<[spieler: number, name: string]>;
+}
+
+/**
+ * Legt die Aufgaben, die noch niemand erfüllt hat, nach `auslage` aus. Was die
+ * Auslage nicht nennt, bleibt in seiner Reihenfolge: offene Aufgaben ohne Angabe
+ * bleiben liegen, geheime bei ihrem Spieler, solange niemand sie anders
+ * verlangt; alle übrigen kommen unter die genannten in den Stapel. Verändert
+ * `zustand`; die Invarianten prüft der Baukasten.
+ */
+export function legeAufgabenAus(zustand: Spielzustand, auslage: Aufgabenauslage): void {
+  if (!zustand.erweiterung) throw new Error('Ohne Erweiterung gibt es keine Aufgaben (D34).');
+  const frei = new Map<string, AufgabenkarteInfo>();
+  for (const aufgabe of [...zustand.offeneAufgaben, ...zustand.spieler.flatMap((spieler) => spieler.geheimeAufgabe ?? []), ...zustand.aufgabenStapel]) {
+    frei.set(aufgabe.name, aufgabe);
+  }
+  const nimm = (name: string): AufgabenkarteInfo => {
+    const aufgabe = frei.get(name);
+    if (aufgabe === undefined) throw new Error(`Die Aufgabe ${name} liegt nicht frei oder ist doppelt genannt.`);
+    frei.delete(name);
+    return aufgabe;
+  };
+  const offen = auslage.offen?.map(nimm);
+  const geheim = new Map((auslage.geheim ?? []).map(([spieler, name]) => [spieler, nimm(name)]));
+  const oben = (auslage.stapelOben ?? []).map(nimm);
+  const bleibt = (aufgabe: AufgabenkarteInfo | null) => (aufgabe !== null && frei.has(aufgabe.name) ? nimm(aufgabe.name) : undefined);
+  zustand.offeneAufgaben = offen ?? zustand.offeneAufgaben.flatMap((aufgabe) => bleibt(aufgabe) ?? []);
+  for (const [index, spieler] of zustand.spieler.entries()) {
+    if (!geheim.has(index)) geheim.set(index, bleibt(spieler.geheimeAufgabe) ?? nimm([...frei.keys()][0]));
+  }
+  for (const [index, spieler] of zustand.spieler.entries()) spieler.geheimeAufgabe = geheim.get(index)!;
+  zustand.aufgabenStapel = [...oben, ...frei.values()];
 }

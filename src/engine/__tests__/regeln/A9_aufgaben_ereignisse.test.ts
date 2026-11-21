@@ -1,3 +1,4 @@
+import { isDeepStrictEqual } from 'node:util'
 import { describe, expect, it } from 'vitest'
 import { AUFGABENREGISTER, definitionFuerAufgabe } from '../../aufgabenKarten'
 import type { Ereignis, Spielzustand } from '../../index'
@@ -99,7 +100,10 @@ const DAUERLAUF_BEDINGUNGEN: Record<string, Testbedingung> = Object.fromEntries(
 /** Prüft jeden Schritt: nachrechenbar, nichts verraten, eingelöst nur vom Spieler am Zug, und danach ist nichts mehr einzulösen. */
 function aufgabenPruefer(zaehler: Aufgabenzaehler): SchrittPruefer {
   return (vorher, _aktion, { zustand, ereignisse }) => {
-    if (JSON.stringify(spieleNach(lageVon(vorher), ereignisse)) !== JSON.stringify(lageVon(zustand))) return 'E2 Kriterium 11: nicht nachrechenbar.'
+    const gerechnet = spieleNach(lageVon(vorher), ereignisse)
+    const erwartet = lageVon(zustand)
+    const abweichend = (Object.keys(erwartet) as Array<keyof typeof erwartet>).filter((feld) => !isDeepStrictEqual(gerechnet[feld], erwartet[feld]))
+    if (abweichend.length > 0) return `E2 Kriterium 11: nicht nachrechenbar (${abweichend.map((feld) => `${feld}: ${JSON.stringify(gerechnet[feld])} statt ${JSON.stringify(erwartet[feld])}`).join('; ')}).`
     const verraten = [...verrateneGeheimeAufgaben(zustand, ereignisse), ...verrateneHandkarten(zustand, ereignisse)]
     if (verraten.length > 0) return `B2: Ereignisse nennen ${verraten.join(', ')}.`
     const amZug = zustand.zug.spielerIndex
@@ -139,7 +143,7 @@ describe('A9/D5/D35: Dauerlauf mit Testbedingungen', () => {
     setzeTestbedingungen(DAUERLAUF_BEDINGUNGEN)
     const zaehler: Aufgabenzaehler = { erfuellt: 0, aufgedeckt: 0, leer: 0, kette: 0, geheim: 0 }
     const ergebnisse = dauerlauf(dauerlaufPartien(30, true, 4001), { neuerPruefer: () => aufgabenPruefer(zaehler) })
-    expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet'), 'Partien, die nicht regulär endeten').toEqual([])
+    expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet').map((ergebnis) => ergebnis.detail).slice(0, 3), 'Partien, die nicht regulär endeten').toEqual([])
     expect(zaehler.erfuellt, 'A9: eingelöste Aufgaben').toBeGreaterThan(100)
     expect(zaehler.kette, 'D5: sofort eingelöste aufgedeckte Aufgaben').toBeGreaterThan(10)
     expect(zaehler.leer, 'A9: Plätze, die leer blieben').toBeGreaterThan(10)

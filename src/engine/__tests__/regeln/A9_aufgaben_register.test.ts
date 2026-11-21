@@ -69,7 +69,7 @@ describe('A1/A9: die 15 Aufgaben im Register', () => {
   })
 
   it('X1: platzhalterAufgabe() markiert ihren Eintrag; eine eigene Definition ist nicht markiert', () => {
-    expect(istAufgabenPlatzhalter(platzhalterAufgabe('Lila Riese', 'X2'))).toBe(true)
+    expect(istAufgabenPlatzhalter(platzhalterAufgabe('Lila Riese'))).toBe(true)
     expect(istAufgabenPlatzhalter({ name: 'Lila Riese', istErfuellt: () => false })).toBe(false)
   })
 
@@ -78,7 +78,7 @@ describe('A1/A9: die 15 Aufgaben im Register', () => {
   })
 })
 
-describe('X1: die Platzhalter sind nie erfüllt', () => {
+describe('A9/X1: die Platzhalter sind nie erfüllt', () => {
   // Welche Aufgabe noch Platzhalter ist, sagt das Register; setzt X2 eine um, fällt sie hier heraus.
   const istPlatzhalterKarte = (aufgabe: { name: string }) => istAufgabenPlatzhalter(AUFGABENREGISTER.get(aufgabe.name)!)
 
@@ -131,7 +131,7 @@ describe('D34: ein Schalter für die ganze Erweiterung', () => {
   })
 })
 
-describe('X1: Testbedingungen für Tests und den Entwicklertisch', () => {
+describe('A9/X1: Testbedingungen für Tests und den Entwicklertisch', () => {
   it('X1: setzeTestbedingungen ersetzt nur die genannten Aufgaben, entferneTestbedingungen stellt die Platzhalter wieder her', () => {
     const vorher = AUFGABENREGISTER.get('Farbkombination')!.istErfuellt
     const zustand = aufgabenTisch().zustand()

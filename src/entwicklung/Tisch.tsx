@@ -241,6 +241,12 @@ function beschreibeOrt(zustand: Spielzustand, ort: Kartenort): string {
   }
 }
 
+/** Name und Id einer offenen oder erfüllten Aufgabe (A9). */
+function aufgabenname(zustand: Spielzustand, aufgabeId: string): string {
+  const alle = [...zustand.offeneAufgaben, ...zustand.spieler.flatMap((spieler) => spieler.erfuellteAufgaben)]
+  return `${alle.find((aufgabe) => aufgabe.id === aufgabeId)?.name ?? 'Aufgabe'} (${aufgabeId})`
+}
+
 /** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer. */
 function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
   const wer = (index: number) => name(zustand, index)
@@ -279,6 +285,12 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':
       return 'PartieBeendet'
+    case 'AufgabeErfuellt':
+      return `AufgabeErfuellt: ${wer(ereignis.spielerIndex)} nimmt ${aufgabenname(zustand, ereignis.aufgabeId)}`
+    case 'AufgabeAufgedeckt':
+      return `AufgabeAufgedeckt: ${aufgabenname(zustand, ereignis.aufgabeId)} an Stelle von ${aufgabenname(zustand, ereignis.anStelleVon)}`
+    case 'AufgabenstapelLeer':
+      return `AufgabenstapelLeer: der Platz von ${aufgabenname(zustand, ereignis.anStelleVon)} bleibt leer`
   }
 }
 

@@ -219,7 +219,18 @@ export type Ereignis =
   /** D29: Der Spieler hat für die Schlangengrube `karteId` keinen Zug mehr; sie kommt ohne Wirkung auf den Ablagestapel von `ablagestapelVon`. */
   | { typ: 'GrubeOhneWirkung'; spielerIndex: number; karteId: string; ablagestapelVon: number }
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
-  | { typ: 'PartieBeendet' };
+  | { typ: 'PartieBeendet' }
+  /**
+   * A9: Der Spieler am Zug erfüllt die offene Aufgabe `aufgabeId` und nimmt sie zu
+   * sich; „Schlangenspass!“ ruft niemand (B2). Danach folgt für ihren Platz
+   * `AufgabeAufgedeckt` oder `AufgabenstapelLeer`. Die geheime Aufgabe meldet
+   * kein Ereignis (D35, B2).
+   */
+  | { typ: 'AufgabeErfuellt'; spielerIndex: number; aufgabeId: string }
+  /** A9, D5: Die oberste Karte des Aufgabenstapels liegt jetzt offen an der Stelle von `anStelleVon` und wird sofort mitgeprüft. */
+  | { typ: 'AufgabeAufgedeckt'; aufgabeId: string; anStelleVon: string }
+  /** A9: Der Aufgabenstapel ist leer; der Platz von `anStelleVon` bleibt leer, die übrigen offenen Aufgaben rücken nach. */
+  | { typ: 'AufgabenstapelLeer'; anStelleVon: string };
 
 export interface AktionsErgebnis {
   zustand: Spielzustand;

@@ -1,5 +1,6 @@
 import './entwicklertisch.css'
 import { SPIELER_MAX, SPIELER_MIN } from '../engine'
+import { setzeTestbedingungen } from '../engine/testing/testaufgaben'
 import { leseEntwicklerAnfrage } from './adresse'
 import { Fehler } from './Fehler'
 import type { EntwicklerAnfrage, EntwurfAnfrage } from './adresse'
@@ -51,7 +52,11 @@ function Inhalt({ anfrage }: { anfrage: Exclude<EntwicklerAnfrage, EntwurfAnfrag
       return (
         <Tisch
           titel={`Szenario ${szenario.name}`}
-          erzeuge={szenario.erzeuge}
+          erzeuge={() => {
+            // Gilt für diese Seite; ein anderes Szenario lädt die Seite neu (X1).
+            setzeTestbedingungen(szenario.testbedingungen ?? {})
+            return szenario.erzeuge()
+          }}
           hinweis={
             <p className="et-hinweis">
               {szenario.beschreibung} <strong>Erwartet:</strong> {szenario.erwartet}

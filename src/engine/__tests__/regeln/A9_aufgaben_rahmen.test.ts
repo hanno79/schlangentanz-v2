@@ -60,7 +60,7 @@ describe('A9/A5: wer am Zug ist und die Bedingung erfüllt, nimmt die offene Auf
   it('A9: erfüllt nur, wer am Zug ist: Hat der Mitspieler die Bedingung schon, bekommt er die Aufgabe erst zu Beginn seines Zuges', () => {
     setzeTestbedingungen({ Farbkombination: schlangeAb(3) })
     const start = aufgabenTisch().schlange(1, ['Rot', 'Rot', 'Rot']).zustand()
-    const gespielt = legeAn(start, 'Rot')
+    const gespielt = fuehreAus(start, erste(start, (aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'neueSchlange'))
     expect(aufgabenEreignisse(gespielt.ereignisse), 'A9: KI-Gegner 1 ist nicht am Zug').toEqual([])
     expect(gespielt.zustand.spieler[1].erfuellteAufgaben).toEqual([])
     const { zustand, ereignisse } = beenden(gespielt.zustand)
@@ -247,7 +247,7 @@ describe('D35/A9: die geheime Aufgabe', () => {
     expect(erfuellt.spieler[0].geheimeAufgabeErfuellt).toBe(true)
     const frass = erste(erfuellt, (aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'gegnerischeKarten')
     const gefressen = folge(erfuellt, () => frass, durchlassen).zustand
-    expect(gefressen.spieler[0].schlangen[0].karten, 'Testaufbau: die Schlange hat nur noch 2 Karten').toHaveLength(2)
+    expect(gefressen.spieler[0].schlangen[0].karten, 'Testaufbau: Schlangenfrass hat zwei der drei Karten gefressen').toHaveLength(1)
     expect(gefressen.spieler[0].geheimeAufgabeErfuellt).toBe(true)
     const wertung = berechneEndwertung(gefressen).spieler[0]
     expect(wertung.aufgaben).toEqual([{ aufgabeId: aufgabeId(start, 'Schlangentanz'), name: 'Schlangentanz', punkte: 7, geheim: true }])
@@ -257,9 +257,9 @@ describe('D35/A9: die geheime Aufgabe', () => {
     setzeTestbedingungen({ Symmetriemeister: schlangeAb(3) })
     const start = aufgabenTisch(['Gelb', 'Schlangenfrass', 'Gelb', 'Blau', 'Rot']).schlange(1, ['Gelb', 'Gelb']).zustand()
     const angelegt = legeAn(start, 'Gelb', 'schlange-2').zustand
-    const frass = erste(angelegt, (aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'gegnerischeKarten' && aktion.ziele.length === 1 && aktion.ziele[0].schlangenId === 'schlange-2')
+    const frass = erste(angelegt, (aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'gegnerischeKarten' && aktion.ziele[0].schlangenId === 'schlange-2')
     const { zustand } = folge(angelegt, () => frass, durchlassen, zugBeenden)
-    expect(zustand.spieler[1].schlangen[0].karten).toHaveLength(2)
+    expect(zustand.spieler[1].schlangen[0].karten, 'Testaufbau: Schlangenfrass hat zwei der drei Karten gefressen').toHaveLength(1)
     expect(zustand.zug.spielerIndex).toBe(1)
     expect(zustand.spieler[1].geheimeAufgabeErfuellt).toBe(false)
   })
