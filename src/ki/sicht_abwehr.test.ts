@@ -19,13 +19,17 @@ const MIT_GRUBE: Kartenwahl[] = ['Schlangengrube', 'Blau', 'Rot', 'Gelb', 'Grün
 const MIT_SCHUTZ: Kartenwahl[] = ['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Grün']
 const OHNE_SCHUTZ: Kartenwahl[] = ['Violett', 'Blau', 'Rot', 'Gelb', 'Grün']
 
-/** Vier Spieler: Spieler 1 greift Spieler 2 mit einer Schlangengrube an; Spieler 3 und 4 sind unbeteiligt. */
+/**
+ * Vier Spieler: Spieler 1 greift Spieler 2 mit einer Schlangengrube an; Spieler 3
+ * und 4 sind unbeteiligt. Die Hand von Spieler 2 wird zuletzt gezogen, damit alle
+ * anderen Hände in beiden Fällen dieselben Karten halten.
+ */
 function tisch(betroffener: Kartenwahl[]): Spielzustand {
   return baukasten({ spielerzahl: 4, erweiterung: false })
     .hand(0, MIT_GRUBE)
-    .hand(1, betroffener)
     .hand(2, ['Blau', 'Rot', 'Gelb', 'Braun', 'Violett'])
     .hand(3, ['Rot', 'Gelb', 'Blau', 'Braun', 'Violett'])
+    .hand(1, betroffener)
     .zustand()
 }
 
