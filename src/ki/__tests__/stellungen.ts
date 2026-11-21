@@ -1,4 +1,4 @@
-import { anwendeAktion, erstellePartie, erzeugeZufall } from '../../engine'
+import { anwendeAktion, ermittleEntscheider, erstellePartie, erzeugeZufall } from '../../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
 import type { Ki } from '../strategien/strategie'
@@ -58,4 +58,16 @@ export function entscheidungenVon({ spielerzahl, erweiterung, saat }: PartieOpti
     zustand = nachher
   }
   throw new Error(`Testaufbau: Die Partie mit Saat ${saat} endet nicht nach 5000 Schritten.`)
+}
+
+/**
+ * Wendet `aktion` an und lässt danach jeden anderen Gefragten eine angesagte Karte
+ * durchlassen (A6), bis wieder `sitz` entscheidet oder niemand mehr gefragt ist.
+ */
+export function nachDurchlassen(zustand: Spielzustand, aktion: SpielAktion, sitz: number): Spielzustand {
+  let jetzt = anwendeAktion(zustand, aktion).zustand
+  for (let gefragt = ermittleEntscheider(jetzt); jetzt.schwebend !== null && gefragt !== null && gefragt !== sitz; gefragt = ermittleEntscheider(jetzt)) {
+    jetzt = anwendeAktion(jetzt, { typ: 'Reagieren', spielerId: jetzt.spieler[gefragt].id, farbenschutzId: null }).zustand
+  }
+  return jetzt
 }

@@ -6,7 +6,7 @@ import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { findeSzenario } from '../../entwicklung/szenarien'
 import { naechsterKiSchritt } from '../schritt'
 import { entscheiderVon, sichtFuer } from '../sicht'
-import { entscheidungenVon } from '../__tests__/stellungen'
+import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
 import type { Entscheidung } from '../__tests__/stellungen'
 import type { Schlangenglied } from '../../engine/testing/szenario'
 import { gruppenwert } from './bewertung'
@@ -151,15 +151,16 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     expect(punkte(zug.zustand, 1), 'K2.1: 18 statt 17').toBe(18)
   })
 
-  it('K2.1: in Partien vollendet sie in jedem Zug, in dem eine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder holt mindestens so viele Punkte', () => {
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder holt mindestens so viele Punkte', () => {
     let geprueft = 0
     let vollendet = 0
     for (const zug of ENTSCHEIDUNGEN.flatMap(zuege)) {
       const start = zug[0].vorher
       const gruppen = gruppenzahl(start, 0)
+      // Jede Karte zählt, auch Schlangenfrass, Fusion und Farbendieb; ein Gegner lässt eine angesagte Karte durch.
       const vollendend = ermittleAktionen(start)
-        .filter((aktion) => aktion.typ === 'FarbkarteLegen' || aktion.typ === 'RegenbogenschlangeLegen')
-        .map((aktion) => anwendeAktion(start, aktion).zustand)
+        .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+        .map((aktion) => nachDurchlassen(start, aktion, 0))
         .filter((danach) => gruppenzahl(danach, 0) > gruppen)
       if (vollendend.length === 0) continue
       geprueft += 1
@@ -293,6 +294,19 @@ describe('K2 Kriterium 5: keine Karte wirkungslos, wenn ein besser bewerteter Zu
     expect(typen(zug)).toEqual(['SchlangengrubeSpielen', 'ZugBeenden'])
     expect(zug.ereignisse.filter((ereignis) => ereignis.typ === 'GrubeOhneWirkung'), 'D29: die Grube geht ohne Wirkung ab').toHaveLength(1)
     expect(zug.zustand.partiephase).toBe('Beendet')
+  })
+
+  it('K2.5, F8a: letzter Zug mit Schlangengrube und Farbenschutz, niemand hat mehr einen Zug: sie legt den Farbenschutz ab, nicht die Grube', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(213) })
+      .schlange(1, ['Blau'])
+      .hand(1, ['Schlangengrube', 'Farbenschutz'])
+      .schlussrunde(0)
+      .amZug(1)
+      .zustand()
+    expect([...new Set(ermittleAktionen(start).map((aktion) => aktion.typ))].sort(), 'D25, D29: beide angeboten').toEqual(['SchlangengrubeSpielen', 'SonderkarteWirkungslosAblegen'])
+    const zug = spieleZug('', 1, start)
+    expect(zug.aktionen, 'F8a: es gibt einen anderen Zug, also keine Grube ohne Wirkung').toMatchObject([{ typ: 'SonderkarteWirkungslosAblegen', karteId: expect.stringMatching(/^farbenschutz-/) }, { typ: 'ZugBeenden' }])
+    expect(zug.ereignisse.filter((ereignis) => ereignis.typ === 'GrubeOhneWirkung')).toEqual([])
   })
 
   it('K2.5, K2.4: ki-fusion-senkt: eine Fusion, die ihre Punkte senkt, spielt sie nicht', () => {
