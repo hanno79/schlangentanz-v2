@@ -1,0 +1,10 @@
+
+Running 5 tests using 5 workers
+
+  ok 1 [tablet-quer] › tests\layout\geraeteklasse.spec.ts:20:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts (659ms)
+  ok 2 [handy-hochkant] › tests\layout\geraeteklasse.spec.ts:20:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts (677ms)
+  ok 5 [desktop] › tests\layout\geraeteklasse.spec.ts:20:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts (734ms)
+  ok 4 [tablet-hochkant] › tests\layout\geraeteklasse.spec.ts:20:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts (802ms)
+  ok 3 [handy-quer] › tests\layout\geraeteklasse.spec.ts:20:1 › P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts (848ms)
+
+  5 passed (8.1s)

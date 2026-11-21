@@ -12,6 +12,7 @@
 
 | Punkt | wer | blockiert | seit |
 |---|---|---|---|
-| E2 (Zugablauf) und O4 (Spieltisch) abnehmen; danach E3, E4 und K1. | | E3, E4, K1, O5 | 13.11.2026 |
-| Wertung: Wert einer Farbenfusion in einer Gruppe und G9 (Gruppe nur aus Jokern) entscheiden. | Autor | E10 | 13.11.2026 |
-| P0.5: G1 bis G23 beantworten und die Antworten samt D9 bis D13 auf die Website bringen. | Autor | X1 | 12.11.2026 |
+| E9 (Schlangenhäutung) umsetzen und abnehmen. | Claude Code | M1 | 21.11.2026 |
+| P0.3d (KI-Grenze) eng abnehmen und mergen. | Claude Code | K2 | 21.11.2026 |
+| Gemeinsame Hilfen der Kartentasks zusammenführen: Schlange anlegen und finden, Karte entnehmen, Klickhilfe der Szenariotests. | Claude Code | | 21.11.2026 |
+| P0.5: G1 bis G8 und G10 bis G23 beantworten und die Antworten D14 bis D33 auf die Website bringen. | Autor | X1 | 12.11.2026 |
