@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../index'
-import type { Ereignis, FusionLegenAktion, Spielzustand } from '../index'
+import type { FusionLegenAktion, Spielzustand } from '../index'
 import { erstellePartie } from '../state'
 import type { Schlangenglied } from '../testing/szenario'
 import { erzeugeZufall } from '../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
 import { gruppen, jokerfarben } from './wertung_hilfe'
 import { aktionen, folge, FUENF, fuehreAus, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
 
@@ -13,9 +14,10 @@ eine Karte beliebiger Farbe, belegt einen Platz in der Gruppe und bringt die
 Punkte beider Karten darunter (A7.7, A11, D30). Die Wertung selbst prüfen
 schon `wertung_farbgruppen.test.ts` und `wertung_joker_kombinatorik.test.ts`
 an Schlangen aus dem Baukasten; hier entsteht jede Fusion durch eine
-aufgezählte Aktion. Dazu der Nachrechentest des Plans E2 für die Schlangen: Aus
-der alten Lage und den Ereignissen lässt sich ablesen, welche zwei Karten unter
-der Fusion liegen, ohne zwei Zustände zu vergleichen.
+aufgezählte Aktion. Dazu Zufallspartien, in denen jede angebotene Fusion
+gespielt wird, mit dem gemeinsamen Nachrechentest (`nachrechnen.ts`, E2, E4b):
+Aus der alten Lage und den Ereignissen lässt sich ablesen, welche zwei Karten
+unter der Fusion liegen, ohne zwei Zustände zu vergleichen.
 */
 
 /** Spieler 1 hält eine Farbenfusion, Spieler 2 hält `gegner`; jeder hat die genannte Schlange, sonst keine. */
@@ -98,58 +100,8 @@ describe('E7 Grenzfall: die Fusion zerstört eine gegnerische Dreiergruppe', () 
   })
 })
 
-/**
- * Was die Oberfläche von den Schlangen zeigt: Karten von vorn nach hinten und
- * die Karten unter jeder Fusion; dazu, welche Aktion gerade angesagt ist (A6).
- */
-interface Schlangenlage {
-  schlangen: Record<string, { besitzer: number; karten: string[]; unter: Record<string, string[]> }>
-  angesagt: string | null
-}
-
-function lageVon(zustand: Spielzustand): Schlangenlage {
-  const lage: Schlangenlage = { schlangen: {}, angesagt: zustand.schwebend?.aktion.typ ?? null }
-  zustand.spieler.forEach((spieler, besitzer) => {
-    for (const schlange of spieler.schlangen) {
-      const unter = Object.fromEntries(schlange.fusionen.map((fusion) => [fusion.karteId, fusion.unter.map((karte) => karte.id)]))
-      lage.schlangen[schlange.id] = { besitzer, karten: schlange.karten.map((karte) => karte.id), unter }
-    }
-  })
-  return lage
-}
-
-/**
- * Rechnet die Schlangen aus der alten Lage und den Ereignissen nach. Eine Fusion
- * liegt an der Stelle, die `nach` nennt, auf den beiden Karten, die vorher dort
- * und rechts daneben lagen (A7.7); jede andere Karte wird an dieser Stelle
- * eingefügt. Welche Aktion angesagt ist, sagt `KarteAngesagt`, oft einen
- * Schritt vor der Entscheidung.
- */
-function spieleNach(alt: Schlangenlage, ereignisse: Ereignis[]): Schlangenlage {
-  const lage = structuredClone(alt)
-  for (const ereignis of ereignisse) {
-    if (ereignis.typ === 'KarteAngesagt') lage.angesagt = ereignis.ansage.typ
-    if (ereignis.typ !== 'KarteGespielt' && ereignis.typ !== 'AnsageEntschieden') continue
-    const typ = ereignis.typ === 'KarteGespielt' ? ereignis.aktion : lage.angesagt
-    if (ereignis.typ === 'AnsageEntschieden') lage.angesagt = null
-    const { nach, karteId } = ereignis
-    if (nach.ort !== 'Schlange') continue
-    const schlange = (lage.schlangen[nach.schlangenId] ??= { besitzer: nach.spielerIndex, karten: [], unter: {} })
-    if (typ === 'FusionLegen') schlange.unter[karteId] = schlange.karten.splice(nach.position, 2, karteId)
-    else schlange.karten.splice(nach.position, 0, karteId)
-  }
-  return lage
-}
-
-/** Jeder Text in einem Ereignis, auch tief in einer angesagten Aktion (B2). */
-function texteIn(wert: unknown, gesammelt = new Set<string>()): Set<string> {
-  if (typeof wert === 'string') gesammelt.add(wert)
-  else if (typeof wert === 'object' && wert !== null) for (const eintrag of Object.values(wert)) texteIn(eintrag, gesammelt)
-  return gesammelt
-}
-
 describe('E2-Muster: die Fusion lässt sich aus den Ereignissen nachrechnen', () => {
-  it('A7.7/D9/A6: in Zufallspartien mit bevorzugter Fusion stimmen die nachgerechneten Schlangen mit dem Zustand überein, keine Handkarte wird genannt', () => {
+  it('A7.7/D9/A6: in Zufallspartien mit bevorzugter Fusion stimmt die nachgerechnete Lage mit dem Zustand überein, keine Handkarte wird genannt', () => {
     const anzahl = { eigen: 0, beimGegner: 0, abgewehrt: 0 }
     for (const saat of [41, 42, 43, 44, 45, 46]) {
       const wahl = erzeugeZufall(saat)
@@ -165,13 +117,12 @@ describe('E2-Muster: die Fusion lässt sich aus den Ereignissen nachrechnen', ()
         const nachricht = `Saat ${saat}, Schritt ${schritt}: ${JSON.stringify(aktion)}`
         const neueLage = lageVon(neu)
         expect(spieleNach(lage, ereignisse), nachricht).toEqual(neueLage)
-        const aufHand = new Set(neu.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
-        expect([...texteIn(ereignisse)].filter((text) => aufHand.has(text)), `${nachricht}: B2, ein Ereignis nennt eine Handkarte`).toEqual([])
+        expect(verrateneHandkarten(neu, ereignisse), `${nachricht}: B2, ein Ereignis nennt eine Handkarte`).toEqual([])
         expect(verletzteInvarianten(neu), nachricht).toEqual([])
         if (aktion.typ === 'FusionLegen') {
           // A6: in die eigene Schlange wirkt sie sofort, beim Mitspieler wird sie angesagt.
-          if (ereignisse[0].typ === 'KarteGespielt') anzahl.eigen += 1
-          else anzahl.beimGegner += 1
+          if (ereignisse.some((ereignis) => ereignis.typ === 'KarteAngesagt')) anzahl.beimGegner += 1
+          else anzahl.eigen += 1
         }
         anzahl.abgewehrt += ereignisse.filter((ereignis) => ereignis.typ === 'Abgewehrt').length
         zustand = neu

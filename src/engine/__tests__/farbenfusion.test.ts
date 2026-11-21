@@ -188,10 +188,23 @@ describe('D9: die Fusion geht in jede Schlange am Tisch', () => {
   it('A6/D10: in die eigene Schlange wirkt sie sofort; niemand wird gefragt, auch wenn Mitspieler Farbenschutz halten', () => {
     const start = tisch(2, MIT_SCHUTZ).schlange(0, ['Gelb', 'Gelb']).zustand()
     const fusion = fusionskarte(start)
+    const [g1, g2] = ids(start, 0)
     const { zustand, ereignisse } = fuehreAus(start, fusionAuf(start, 0, 0))
     expect(zustand.schwebend).toBeNull()
-    expect(ereignisse).toEqual([
-      { typ: 'KarteGespielt', spielerIndex: 0, karteId: fusion, aktion: 'FusionLegen', nach: { ort: 'Schlange', spielerIndex: 0, schlangenId: 'schlange-1', position: 0 } },
+    const inSchlange = { ort: 'Schlange', spielerIndex: 0, schlangenId: 'schlange-1' } as const
+    const unterFusion = { ort: 'UnterFusion', spielerIndex: 0, schlangenId: 'schlange-1', fusionId: fusion } as const
+    expect(ereignisse, 'E4b: die beiden Karten gehen links zuerst unter die Fusion, dann liegt die Fusion an ihrer Stelle').toEqual([
+      {
+        typ: 'KartenVersetzt',
+        spielerIndex: 0,
+        karteId: fusion,
+        karten: [
+          { karteId: g1, von: { ...inSchlange, position: 0 }, nach: { ...unterFusion, position: 0 } },
+          { karteId: g2, von: { ...inSchlange, position: 1 }, nach: { ...unterFusion, position: 1 } },
+        ],
+        aufgeloest: [],
+      },
+      { typ: 'KarteGespielt', spielerIndex: 0, karteId: fusion, aktion: 'FusionLegen', nach: { ...inSchlange, position: 0 } },
     ])
     expect(ermittleEntscheider(zustand)).toBe(0)
   })
