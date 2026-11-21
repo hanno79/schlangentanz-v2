@@ -1,0 +1,29 @@
+TURNIER
+2/B: Partien 8, Siege 8 (allein 8), Ø solide 67.13, Ø Zufall 0.50, Schritte 747, max ms 108.0, max Bewertungen 40, max Aktionen 1234
+2/E: Partien 4, Siege 4 (allein 4), Ø solide 72.25, Ø Zufall 0.75, Schritte 408, max ms 161.3, max Bewertungen 40, max Aktionen 1205
+3/B: Partien 7, Siege 7 (allein 7), Ø solide 41.43, Ø Zufall 0.21, Schritte 434, max ms 96.4, max Bewertungen 40, max Aktionen 685
+3/E: Partien 4, Siege 4 (allein 4), Ø solide 39.75, Ø Zufall 1.38, Schritte 260, max ms 120.8, max Bewertungen 40, max Aktionen 1085
+4/B: Partien 6, Siege 6 (allein 6), Ø solide 32.00, Ø Zufall 0.11, Schritte 277, max ms 62.6, max Bewertungen 40, max Aktionen 1005
+4/E: Partien 4, Siege 4 (allein 4), Ø solide 34.00, Ø Zufall 0.92, Schritte 208, max ms 173.0, max Bewertungen 40, max Aktionen 1520
+Zugenden mit anderer Karte: 365; verschenkt (Endwertung steigt, kein Gegner steigt): 11; davon ohne Aufgaben: 11
+unerlaubt 0; wirkungslos trotz anderem Zug 0; Gruben 42, ohne Wirkung 0
+FALL Saat 7101 (2/B) Schritt 59 phase Laufend: +2 (ohne Aufgaben +2), Bewertung -1.86, {"typ":"FusionLegen","spielerId":"spieler-2","karteId":"farbenfusion-02","schlangenId":"schlange-5","kartenIds":["violett-03","violett-10"]}; Hand Braun,Schlangenfrass,Braun,Farbenfusion; letzterZug? false
+FALL Saat 7154 (2/E) Schritt 96 phase Laufend: +1 (ohne Aufgaben +1), Bewertung +0.00, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}; Hand Gelb,Rot,Gelb,Schlangenfrass; letzterZug? false
+FALL Saat 7154 (2/E) Schritt 100 phase Laufend: +1 (ohne Aufgaben +1), Bewertung +0.00, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}; Hand Gelb,Rot,Gelb,Schlangenfrass; letzterZug? false
+FALL Saat 7154 (2/E) Schritt 107 phase Laufend: +1 (ohne Aufgaben +1), Bewertung +0.00, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}; Hand Rot,Gelb,Schlangenfrass,Regenbogenschlange; letzterZug? false
+FALL Saat 7154 (2/E) Schritt 118 phase Laufend: +1 (ohne Aufgaben +1), Bewertung +0.00, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}; Hand Gelb,Schlangenfrass,Rot,Blau; letzterZug? false
+FALL Saat 7154 (2/E) Schritt 124 phase Laufend: +1 (ohne Aufgaben +1), Bewertung +0.00, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}; Hand Schlangenfrass,Rot,Blau,Gelb; letzterZug? false
+FALL Saat 7203 (3/B) Schritt 47 phase Laufend: +1 (ohne Aufgaben +1), Bewertung -0.30, {"typ":"FusionLegen","spielerId":"spieler-1","karteId":"farbenfusion-02","schlangenId":"schlange-1","kartenIds":["gruen-09","gruen-04"]}; Hand Farbenschutz,Farbenfusion,Blau,Blau; letzterZug? false
+FALL Saat 7205 (3/B) Schritt 85 phase Laufend: +1 (ohne Aufgaben +1), Bewertung -1.58, {"typ":"FusionLegen","spielerId":"spieler-3","karteId":"farbenfusion-02","schlangenId":"schlange-5","kartenIds":["braun-06","braun-11"]}; Hand Gelb,Farbenfusion,Blau,Blau; letzterZug? false
+FALL Saat 7205 (3/B) Schritt 91 phase Laufend: +1 (ohne Aufgaben +1), Bewertung -1.58, {"typ":"FusionLegen","spielerId":"spieler-3","karteId":"farbenfusion-02","schlangenId":"schlange-5","kartenIds":["braun-06","braun-11"]}; Hand Farbenfusion,Blau,Blau,Gelb; letzterZug? false
+FALL Saat 7253 (3/E) Schritt 63 phase Laufend: +1 (ohne Aufgaben +1), Bewertung -1.20, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-6","karteId":"rot-13"}]}; Hand Schlangenfrass,Violett,Violett,Rot; letzterZug? false
+FALL Saat 7354 (4/E) Schritt 52 phase Laufend: +1 (ohne Aufgaben +1), Bewertung -0.40, {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"gruen-07"}]}; Hand Rot,Schlangenfrass,Blau,Rot; letzterZug? false
+S9206 Entscheider 2 zug {"spielerIndex":2,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+S9206 eigene schlange-3:Gelb-Violett-Regenbogenschlange-Blau-Blau | schlange-4:Braun-Braun-Gelb-Braun-Braun-Grün-Rot-Blau
+S9206 Gegner 0 schlange-5:Blau-Violett-Rot
+S9206 Gegner 1 schlange-2:Schlangenblockade-Farbenfusion-Braun-Gelb-Braun-Violett-Blau-Gelb-Violett
+S9206 Hand violett-03,rot-15,schlangenfrass-02,schlangenfrass-01
+S9206 alte KI wählt {"typ":"ZugBeenden","spielerId":"spieler-3"}
+S9206 neue KI wählt {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-4","karteId":"gelb-14"}]} Bewertungen 17 Endwertung 2 -> 15 Gegner 0/0/2 -> 0/0/15
+S9206 Zug weiter: SchlangenfrassSpielen:schlangenfrass-02 Endwertung 0/0/15
+S9206 Zug weiter: ZugBeenden Endwertung 0/0/15

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a04f885fdf9d8dda5
+
+ ❯ src/ki/strategien/zugsuche_zaehler.test.ts (2 tests | 1 failed) 116ms
+     × K2.8: späte Stellung mit über tausend Aktionen: Suche und Vorauswahl zusammen sind genau die Aufrufe von bewerte, die Suche höchstens 64 107ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/zugsuche_zaehler.test.ts > K2.8: die Zähler der Zugsuche stimmen mit den echten Aufrufen von bewerte überein > K2.8: späte Stellung mit über tausend Aktionen: Suche und Vorauswahl zusammen sind genau die Aufrufe von bewerte, die Suche höchstens 64
+AssertionError: K2.8: gemeldet gegen gezählt: expected 40 to be 1536 // Object.is equality
+
+- Expected
++ Received
+
+- 1536
++ 40
+
+ ❯ src/ki/strategien/zugsuche_zaehler.test.ts:39:98
+     37|     const plan = planeZug(sicht, ermittleAktionen(zustand), erzeugeZuf…
+     38|     const echt = vi.mocked(bewerte).mock.calls.length
+     39|     expect(plan.bewertungen.suche + plan.bewertungen.vorauswahl, 'K2.8…
+       |                                                                                                  ^
+     40|     expect(plan.bewertungen.suche, 'K2.8: durchgerechnete Stellungen')…
+     41|     expect(plan.bewertungen.vorauswahl, 'K2.8: Bewertungen in der Vora…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 8 passed (9)
+   Start at  18:09:20
+   Duration  28.01s (transform 1.01s, setup 651ms, import 7.81s, tests 19.98s, environment 0ms)
+

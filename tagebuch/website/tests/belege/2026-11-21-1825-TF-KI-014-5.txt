@@ -1,0 +1,9 @@
+=== Saat 7151 (2/E), Sitz 1, Zugende Schritt 74
+Start: Hand Blau(blau-11), Gelb(gelb-10), Blau(blau-07), Blau(blau-10), Schlangenhäutung; Schlangen schlange-2: Violett-Violett-Gelb-Rot-Rot-Schlangenblockade-Rot-Rot-Braun-Braun-Braun-Braun-Gelb-Rot | schlange-3: Grün-Grün-Grün-Violett-Blau-Blau-Blau-Blau-Farbenfusion-Blau; Gruppen 3; Endwertung 34; Bewertung 37.120; Phase Laufend
+  Schritt 73 SOLIDE: {"typ":"FarbkarteLegen","karteId":"blau-11","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}} (Bewertung danach 38.020, Endwertung 35); Ereignisse KarteGespielt
+  Schritt 74 SOLIDE: {"typ":"ZugBeenden",} (Bewertung danach 38.820, Endwertung 35); Ereignisse KartenGezogen,ZugBegonnen
+planeZug am Start: {"typ":"FarbkarteLegen","karteId":"blau-11","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}}; Bewertungen {"suche":40,"vorauswahl":972,"angeboten":972}
+Vollendende erste Karten: 3; beste drei Varianten:
+  38.020 / Endwertung 35: {"typ":"SchlangenhaeutungSpielen","karteId":"schlangenhaeutung-03","schlangenId":"schlange-3","neueReihenfolge":["gruen-03","blau-01","blau-15","blau-02","violett-02"]} + {"typ":"FarbkarteLegen","karteId":"blau-11","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}}
+  38.020 / Endwertung 35: {"typ":"SchlangenhaeutungSpielen","karteId":"schlangenhaeutung-03","schlangenId":"schlange-3","neueReihenfolge":["gruen-03","blau-01","blau-15","blau-02","violett-02"]} + {"typ":"FarbkarteLegen","karteId":"blau-07","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}}
+  38.020 / Endwertung 35: {"typ":"SchlangenhaeutungSpielen","karteId":"schlangenhaeutung-03","schlangenId":"schlange-3","neueReihenfolge":["gruen-03","blau-01","blau-15","blau-02","violett-02"]} + {"typ":"FarbkarteLegen","karteId":"blau-10","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}}

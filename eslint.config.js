@@ -7,7 +7,9 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   // .claude/worktrees/ hält vollständige Kopien des Repos (Worktrees der Agenten).
-  globalIgnores(['dist', '.claude/']),
+  // tagebuch/ enthält keinen Quellcode: Belege der Prüfer (auch Skripte als .ts) und die
+  // erzeugte Tagebuchseite.
+  globalIgnores(['dist', '.claude/', 'tagebuch/']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

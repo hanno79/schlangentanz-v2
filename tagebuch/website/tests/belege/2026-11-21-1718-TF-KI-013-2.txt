@@ -1,0 +1,44 @@
+== Saat 7101 Schritt 59 zug {"spielerIndex":1,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+   eigene schlange-4:Rot1-Rot1-Rot1-Rot1-Gelb1-Farbenfusion-Gelb1-Rot1 | schlange-5:Braun2-Regenbogenschlange-Violett2-Violett2 Gruppen 3
+   Hand braun-04,schlangenfrass-02,braun-07,farbenfusion-02
+   +2 Gruppen +0 Bewertung -1.86 {"typ":"FusionLegen","spielerId":"spieler-2","karteId":"farbenfusion-02","schlangenId":"schlange-5","kartenIds":["violett-03","violett-10"]}
+      danach schlange-4:Rot1-Rot1-Rot1-Rot1-Gelb1-Farbenfusion-Gelb1-Rot1 | schlange-5:Braun2-Regenbogenschlange-Farbenfusion
+   gewählt {"typ":"ZugBeenden","spielerId":"spieler-2"}
+   Verbleib der Karte: Schritt 78: {"typ":"FusionLegen","spielerId":"spieler-2","karteId":"farbenfusion-02","schlangenId":"schlange-6","kartenIds":["gelb-12","gelb-06"]}; Ende Hand farbenschutz-03,violett-07,braun-12,blau-04,violett-06
+== Saat 7154 Schritt 96 zug {"spielerIndex":0,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+   eigene schlange-1:Blau1-Blau1-Blau1-Blau1-Rot1-Rot1-Rot1-Rot1-Schlangenblockade-Gelb1-Gelb1-Gelb1-Schlangenblockade-Gelb1-Braun2-Braun2 | schlange-3:Violett2-Violett2-Violett2-Regenbogenschlange-Gelb1-Gelb1-Grün3-Grün3 Gruppen 5
+   Hand gelb-12,rot-10,gelb-09,schlangenfrass-01
+   +1 Gruppen +0 Bewertung 0.00 {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}
+      danach schlange-1:Blau1-Blau1-Blau1-Blau1-Rot1-Rot1-Rot1-Rot1-Schlangenblockade-Gelb1-Gelb1-Gelb1-Gelb1-Braun2-Braun2 | schlange-3:Violett2-Violett2-Violett2-Regenbogenschlange-Gelb1-Gelb1-Grün3-Grün3
+   +1 Gruppen +0 Bewertung 0.00 {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneBlockade","ziele":[{"schlangenId":"schlange-1","karteId":"schlangenblockade-03"}]}
+      danach schlange-1:Blau1-Blau1-Blau1-Blau1-Rot1-Rot1-Rot1-Rot1-Schlangenblockade-Gelb1-Gelb1-Gelb1-Gelb1-Braun2-Braun2 | schlange-3:Violett2-Violett2-Violett2-Regenbogenschlange-Gelb1-Gelb1-Grün3-Grün3
+   gewählt {"typ":"ZugBeenden","spielerId":"spieler-1"}
+   Verbleib der Karte: Schritt 129: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"farbenfusion-02"}]}; Ende Hand gelb-15,braun-05,farbenschutz-02,schlangenkorb-des-gluecks-01
+== Saat 7205 Schritt 85 zug {"spielerIndex":2,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+   eigene schlange-3:Grün3-Blau1-Regenbogenschlange-Blau1-Farbenfusion-Rot1-Rot1-Violett2-Violett2-Violett2 | schlange-5:Blau1-Regenbogenschlange-Braun2-Braun2 Gruppen 4
+   Hand gelb-01,farbenfusion-02,blau-15,blau-13
+   +1 Gruppen +0 Bewertung -1.58 {"typ":"FusionLegen","spielerId":"spieler-3","karteId":"farbenfusion-02","schlangenId":"schlange-5","kartenIds":["braun-06","braun-11"]}
+      danach schlange-3:Grün3-Blau1-Regenbogenschlange-Blau1-Farbenfusion-Rot1-Rot1-Violett2-Violett2-Violett2 | schlange-5:Blau1-Regenbogenschlange-Farbenfusion
+   gewählt {"typ":"ZugBeenden","spielerId":"spieler-3"}
+   Verbleib der Karte: Schritt 114: {"typ":"FusionLegen","spielerId":"spieler-3","karteId":"farbenfusion-02","schlangenId":"schlange-3","kartenIds":["rot-14","rot-08"]}; Ende Hand gruen-08,gruen-06,gelb-07,farbenschutz-03,verdoppler-04
+== Saat 7203 Schritt 47 zug {"spielerIndex":0,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+   eigene schlange-1:Grün3-Grün3-Regenbogenschlange-Blau1-Rot1-Rot1-Rot1-Rot1-Braun2 | schlange-3:Violett2-Regenbogenschlange-Gelb1-Violett2-Braun2-Gelb1 Gruppen 2
+   Hand farbenschutz-03,farbenfusion-02,blau-13,blau-02
+   +1 Gruppen +0 Bewertung -0.30 {"typ":"FusionLegen","spielerId":"spieler-1","karteId":"farbenfusion-02","schlangenId":"schlange-1","kartenIds":["gruen-09","gruen-04"]}
+      danach schlange-1:Farbenfusion-Regenbogenschlange-Blau1-Rot1-Rot1-Rot1-Rot1-Braun2 | schlange-3:Violett2-Regenbogenschlange-Gelb1-Violett2-Braun2-Gelb1
+   gewählt {"typ":"ZugBeenden","spielerId":"spieler-1"}
+   Verbleib der Karte: Schritt 54: {"typ":"FusionLegen","spielerId":"spieler-1","karteId":"farbenfusion-02","schlangenId":"schlange-3","kartenIds":["violett-05","violett-04"]}; Ende Hand blau-10,gelb-12,blau-04,gelb-15,gruen-01
+== Saat 7253 Schritt 63 zug {"spielerIndex":2,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+   eigene schlange-3:Grün3-Grün3-Grün3 | schlange-6:Braun2-Regenbogenschlange-Rot1-Farbenfusion-Gelb1 Gruppen 2
+   Hand schlangenfrass-01,violett-02,violett-11,rot-02
+   +1 Gruppen +0 Bewertung -1.20 {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-6","karteId":"rot-13"}]}
+      danach schlange-3:Grün3-Grün3-Grün3 | schlange-6:Braun2-Regenbogenschlange-Farbenfusion-Gelb1
+   gewählt {"typ":"ZugBeenden","spielerId":"spieler-3"}
+   Verbleib der Karte: Schritt 70: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-6","karteId":"farbenfusion-02"}]}; Ende Hand schlangenblockade-01,schlangenfrass-04,farbenschutz-01,blau-03
+== Saat 7354 Schritt 52 zug {"spielerIndex":2,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+   eigene schlange-3:Farbenfusion-Regenbogenschlange-Grün3-Braun2-Braun2-Grün3 Gruppen 1
+   Hand rot-13,schlangenfrass-02,blau-10,rot-03
+   +1 Gruppen +0 Bewertung -0.40 {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"gruen-07"}]}
+      danach schlange-3:Farbenfusion-Regenbogenschlange-Braun2-Braun2-Grün3
+   gewählt {"typ":"ZugBeenden","spielerId":"spieler-3"}
+   Verbleib der Karte: Schritt 61: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"gruen-03"}]}; Ende Hand rot-03,rot-02,braun-03,gelb-05,gelb-02
