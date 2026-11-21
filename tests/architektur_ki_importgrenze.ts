@@ -96,16 +96,19 @@ const text = (knoten: ts.Node | undefined) => (knoten && ts.isStringLiteralLike(
 /** Muster und `base` eines `import.meta.glob`-Aufrufs; null, wenn eines davon berechnet wird. */
 function globAngaben(aufruf: ts.CallExpression): Verweis['glob'] | null {
   const [erstes, optionen] = aufruf.arguments
-  const muster = (erstes && ts.isArrayLiteralExpression(erstes) ? [...erstes.elements] : [erstes]).map(text)
-  if (muster.some((eintrag) => eintrag === null)) return null
-  if (optionen === undefined) return { muster: muster as string[] }
+  const roh = (erstes && ts.isArrayLiteralExpression(erstes) ? [...erstes.elements] : [erstes]).map(text)
+  const muster = roh.filter((eintrag) => eintrag !== null)
+  if (muster.length !== roh.length) return null
+  if (optionen === undefined) return { muster }
   if (!ts.isObjectLiteralExpression(optionen)) return null
-  const eintraege = optionen.properties
-  if (eintraege.some((eintrag) => !ts.isPropertyAssignment(eintrag) || ts.isComputedPropertyName(eintrag.name))) return null
-  const basis = eintraege.find((eintrag) => eintrag.name?.getText().replace(/['"]/g, '') === 'base')
-  if (basis === undefined) return { muster: muster as string[] }
-  const wert = ts.isPropertyAssignment(basis) ? text(basis.initializer) : null
-  return wert === null ? null : { muster: muster as string[], basis: wert }
+  // Der Schlüssel zählt mit seinem Wert, nicht mit seiner Schreibweise: `'b\u0061se'` ist `base`.
+  const schluessel = (name: ts.PropertyName) => (ts.isIdentifier(name) || ts.isStringLiteralLike(name) || ts.isNumericLiteral(name) ? name.text : null)
+  const eintraege = optionen.properties.map((eintrag) => (ts.isPropertyAssignment(eintrag) ? { name: schluessel(eintrag.name), wert: eintrag.initializer } : null))
+  if (eintraege.some((eintrag) => eintrag === null || eintrag.name === null)) return null
+  const basis = eintraege.find((eintrag) => eintrag?.name === 'base')
+  if (basis === undefined) return { muster }
+  const wert = text(basis?.wert)
+  return wert === null ? null : { muster, basis: wert }
 }
 
 /**
@@ -143,18 +146,41 @@ function codeVerweise(quelle: ts.SourceFile, versatz = 0): Verweis[] {
   return gefunden
 }
 
-/** Skripte in HTML: `<script src>` und der Inhalt jedes Skripts als Code. */
-function htmlVerweise(html: string): Verweis[] {
-  return [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)].flatMap((skript) => {
-    const zeile = html.slice(0, skript.index).split('\n').length
-    const quelle = /\bsrc\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(skript[1])
-    const angabe = quelle ? (quelle[1] ?? quelle[2] ?? quelle[3]) : undefined
-    return [...(angabe ? [{ zeile, angabe, wie: 'lädt mit <script src>' }] : []), ...codeVerweise(parse('skript.ts', skript[2]), zeile - 1)]
+/** Benannte Zeichenreferenzen, die in einem Pfad vorkommen können; jede andere macht den Wert unprüfbar. */
+const BENANNT: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", sol: '/', bsol: '\\', period: '.', colon: ':', num: '#', quest: '?', percnt: '%' }
+
+/** Ein Attributwert in HTML mit aufgelösten Zeichenreferenzen; null, wenn eine Referenz unbekannt ist. */
+function htmlWert(roh: string): string | null {
+  let unbekannt = false
+  const wert = roh.replace(/&(?:#(x[0-9a-f]+|\d+);?|([a-z][a-z0-9]*);)/gi, (ganz, zahl: string | undefined, name: string | undefined) => {
+    if (zahl !== undefined) return String.fromCodePoint(zahl[0].toLowerCase() === 'x' ? parseInt(zahl.slice(1), 16) : parseInt(zahl, 10))
+    const bekannt = BENANNT[name ?? '']
+    if (bekannt === undefined) unbekannt = true
+    return bekannt ?? ganz
   })
+  return unbekannt ? null : wert
 }
 
-/** package.json: jeder Text unter `imports`, `exports`, `main`, `module` und `browser`; Muster mit `*` als Glob. */
-function paketVerweise(json: string): Verweis[] {
+/** HTML: `src` an `<script>`, `href` an `<link>` und der Inhalt jedes Skripts als Code. */
+function htmlVerweise(html: string): Verweis[] {
+  const gefunden: Verweis[] = []
+  for (const tag of html.matchAll(/<(script|link)\b((?:[^>"']|"[^"]*"|'[^']*')*)>/gi)) {
+    const zeile = html.slice(0, tag.index).split('\n').length
+    const art = tag[1].toLowerCase()
+    for (const attribut of tag[2].matchAll(/([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g)) {
+      if (attribut[1].toLowerCase() !== (art === 'script' ? 'src' : 'href')) continue
+      gefunden.push({ zeile, angabe: htmlWert(attribut[2] ?? attribut[3] ?? attribut[4] ?? ''), wie: `lädt mit <${art}>` })
+    }
+    if (art !== 'script') continue
+    const start = tag.index + tag[0].length
+    const ende = html.slice(start).search(/<\/script\s*>/i)
+    gefunden.push(...codeVerweise(parse('skript.ts', html.slice(start, ende < 0 ? undefined : start + ende)), zeile - 1))
+  }
+  return gefunden
+}
+
+/** Jeder Text unter `imports`, `exports`, `main`, `module` und `browser` einer package.json. */
+function paketEinstiege(json: string): string[] {
   const paket: Record<string, unknown> = JSON.parse(json)
   const texte: string[] = []
   const sammle = (wert: unknown): void => {
@@ -162,7 +188,12 @@ function paketVerweise(json: string): Verweis[] {
     else if (wert && typeof wert === 'object') Object.values(wert).forEach(sammle)
   }
   for (const feld of ['imports', 'exports', 'main', 'module', 'browser']) sammle(paket[feld])
-  return texte.map((angabe) => ({ zeile: 1, angabe, wie: 'nennt in package.json', ...(angabe.includes('*') ? { glob: { muster: [angabe] } } : {}) }))
+  return texte
+}
+
+/** package.json als geprüfte Datei: jeder Einstieg ein Verweis, Muster mit `*` als Glob. */
+function paketVerweise(json: string): Verweis[] {
+  return paketEinstiege(json).map((angabe) => ({ zeile: 1, angabe, wie: 'nennt in package.json', ...(angabe.includes('*') ? { glob: { muster: [angabe] } } : {}) }))
 }
 
 function verweiseVon(datei: string, inhalt: string): Verweis[] {
@@ -185,21 +216,37 @@ export function pruefeImportgrenze(wurzel: string): Verstoss[] {
   const grenze = grenzDateien(wurzel)
   const geprueft = new Set(grenze.map((pfad) => pfad.toLowerCase()))
   const strategieDateien = alleDateien(wurzel, ORDNER)
-  const istDatei = (pfad: string) => existsSync(pfad) && statSync(pfad).isFile()
+  const merke = <T>(berechne: (pfad: string) => T) => {
+    const gemerkt = new Map<string, T>()
+    return (pfad: string): T => {
+      const bekannt = gemerkt.get(pfad)
+      if (bekannt !== undefined) return bekannt
+      const neu = berechne(pfad)
+      gemerkt.set(pfad, neu)
+      return neu
+    }
+  }
+  const istDatei = merke((pfad) => existsSync(pfad) && statSync(pfad).isFile())
   /** Pfad relativ zur Wurzel; eine vorhandene Datei über ihren echten Pfad (Gross- und Kleinschreibung, Verknüpfungen). */
-  const bezug = (absolut: string) =>
-    zuPosix(existsSync(absolut) ? relative(echteWurzel, realpathSync.native(absolut)) : relative(wurzel, absolut))
-  /** Jede vorhandene Datei, die für `basis` stehen kann: mit Endung, als index, und die Laufzeitdatei neben einer `.d.ts`. */
-  const kandidaten = (basis: string) => [basis, ...ENDUNGEN.flatMap((endung) => [basis + endung, join(basis, `index${endung}`)])].filter(istDatei)
+  const bezug = merke((absolut) =>
+    zuPosix(existsSync(absolut) ? relative(echteWurzel, realpathSync.native(absolut)) : relative(wurzel, absolut)))
+  /** Jede vorhandene Datei, die für `basis` stehen kann: mit Endung, als index oder als Einstieg eines Pakets in diesem Ordner. */
+  const kandidaten = (basis: string): string[] => {
+    const paket = join(basis, 'package.json')
+    const einstiege = istDatei(paket) ? paketEinstiege(readFileSync(paket, 'utf8')).map((eintrag) => join(basis, eintrag)) : []
+    return [basis, ...einstiege, ...[basis, ...einstiege].flatMap((pfad) => ENDUNGEN.flatMap((endung) => [pfad + endung, join(pfad, `index${endung}`)]))].filter(istDatei)
+  }
 
   /** Mögliche Ziele einer Angabe: so, wie TypeScript sie auflöst, und als Pfad ohne Vite-Zusatz `?…` oder `#…`. */
   const ziele = (datei: string, angabe: string): string[] => {
     const absolut = join(wurzel, datei)
     const ohneZusatz = angabe.startsWith('#') ? angabe.replace(/\?.*$/, '') : angabe.replace(/[?#].*$/, '')
-    const kern = /^file:/i.test(ohneZusatz) ? fileURLToPath(ohneZusatz) : ohneZusatz
+    // Vites Entwicklungsserver lädt unter /@fs/ jede Datei über ihren absoluten Pfad.
+    const ohneFs = /^\/@fs\//.test(ohneZusatz) ? ohneZusatz.slice(4).replace(/^\/([a-z]:)/i, '$1') : ohneZusatz
+    const kern = /^file:/i.test(ohneFs) ? fileURLToPath(ohneFs) : ohneFs
     const aufgeloest = ts.resolveModuleName(kern, absolut, optionen, ts.sys, aufloesung).resolvedModule?.resolvedFileName
     const basen = kern.startsWith('/') ? [join(wurzel, kern), kern] : isAbsolute(kern) ? [kern] : /^\.{1,2}(\/|$)/.test(kern) ? [join(dirname(absolut), kern)] : []
-    const laufzeit = aufgeloest && /\.d\.[cm]?ts$/.test(aufgeloest) ? [aufgeloest.replace(/\.d\.[cm]?ts$/, '')] : []
+    const laufzeit = aufgeloest && /\.d\.[cm]?ts$/.test(aufgeloest) ? [aufgeloest.replace(/\.d\.[cm]?ts$/, ''), dirname(aufgeloest)] : []
     const gefunden = [...basen, ...laufzeit].flatMap(kandidaten)
     return [...new Set([...(aufgeloest ? [aufgeloest] : []), ...basen, ...gefunden].map(bezug))]
   }
