@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test'
-import { serialisiere, zugBeendenGesperrt } from '../../src/engine'
+import { anwendeAktion, berechneZwischenstand, ermittleAktionen, serialisiere, zugBeendenGesperrt } from '../../src/engine'
+import type { Spielkarte, Spielzustand } from '../../src/engine'
 import { erzeugeSzenario } from '../../src/entwicklung/szenarien'
 import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, kasten, waagrechterUeberstand } from './messung'
@@ -12,7 +13,8 @@ Spielstände kommen über `/spiel?szenario=` aus dem Testhook-Build; `tempo=sofo
 lässt die KI danach ohne Pause spielen.
 
 Bei jedem Schritt der Zielwahl ist jedes angebotene Ziel erreichbar und frei,
-die Zugleiste steht ganz im Bild, und die Seite wird nicht breiter.
+die Zugleiste steht ganz im Bild, und die Seite wird nicht breiter. Dasselbe
+gilt für die Schlangenhäutung (O7, Kriterium 4) bis zum Tauschen der Karten.
 */
 
 const gespeichert = (page: Page) => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
@@ -168,5 +170,87 @@ test.describe('O5 K9: Karten spielen mit Maus und Finger', () => {
     await tippe(page.getByRole('link', { name: 'Zur Lobby' }))
     await expect(page.getByTestId('lobby')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Weiterspielen' })).toBeVisible()
+  })
+})
+
+/* O7: Schlange wählen, die Enden des Abschnitts antippen, Karten tauschen, ausführen. */
+const karteIn = (page: Page, titel: string, nummer: number) => page.getByRole('button', { name: new RegExp(`^${titel}, Karte ${nummer}:`) })
+
+const farbe = (karte: Spielkarte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)
+
+/** Der Spielstand, den die Engine aus der aufgezählten Häutung dieser Schlange in diese Farbfolge macht. */
+function nachHaeutung(szenario: string, schlangenId: string, farben: string[]): Spielzustand {
+  const start = erzeugeSzenario(szenario)
+  const karten = start.spieler.flatMap((spieler) => spieler.schlangen).find((schlange) => schlange.id === schlangenId)!.karten
+  const aktion = ermittleAktionen(start).find(
+    (eintrag) => eintrag.typ === 'SchlangenhaeutungSpielen' && eintrag.schlangenId === schlangenId && eintrag.neueReihenfolge.map((id) => farbe(karten.find((karte) => karte.id === id)!)).join() === farben.join(),
+  )!
+  return anwendeAktion(start, aktion).zustand
+}
+
+const HAEUTUNGEN = [
+  { titel: 'Deine Schlange 1', schlangenId: 'schlange-1', enden: [1, 5], tausch: [[1, 3], [2, 5]], farben: ['Gelb', 'Gelb', 'Blau', 'Rot', 'Rot'], eigene: true },
+  { titel: 'KI-Gegner 1, Schlange 1', schlangenId: 'schlange-2', enden: [1, 3], tausch: [[2, 3]], farben: ['Braun', 'Braun', 'Violett'], eigene: false },
+]
+
+test.describe('O7 K4: Schlangenhäutung mit Maus und Finger', () => {
+  for (const fall of HAEUTUNGEN) {
+    test(`O7 K4/K1: Häutung in „${fall.titel}“: jeder Schritt erreichbar, tauschen, Ausführen`, async ({ page }, info) => {
+      const tippe = bediene(info)
+      await oeffneSzenario(page, 'haeutung')
+      const start = await gespeichert(page)
+      await tippe(hand(page).getByRole('button', { name: 'Sonderkarte Schlangenhäutung' }))
+      await pruefeSchritt(page, 'Häutung gewählt')
+      await tippe(page.getByRole('button', { name: `${fall.titel} wählen`, exact: true }))
+      await pruefeSchritt(page, 'Schlange gewählt')
+      for (const nummer of fall.enden) {
+        await karteIn(page, fall.titel, nummer).scrollIntoViewIfNeeded()
+        await tippe(karteIn(page, fall.titel, nummer))
+        await pruefeSchritt(page, `Ende Karte ${nummer} gewählt`)
+      }
+      const ausfuehren = zugleiste(page).getByRole('button', { name: 'Ausführen' })
+      await expect(ausfuehren, 'ohne neue Farbfolge gesperrt').toBeDisabled()
+      const grund = page.locator(`[id="${await ausfuehren.getAttribute('aria-describedby')}"]`)
+      await expect(grund, 'der Grund steht ganz im Bild').toBeInViewport({ ratio: 1 })
+      for (const [a, b] of fall.tausch) {
+        for (const nummer of [a, b]) {
+          await karteIn(page, fall.titel, nummer).scrollIntoViewIfNeeded()
+          await tippe(karteIn(page, fall.titel, nummer))
+        }
+        await pruefeSchritt(page, `Karte ${a} und ${b} getauscht`)
+      }
+      await expect(ausfuehren).toBeEnabled()
+      await expect(zugleiste(page).getByText(/^Ansage:/)).toContainText(fall.farben.join(', '))
+      expect(await gespeichert(page), 'vor „Ausführen“ ist nichts gespielt').toBe(start)
+      await tippe(ausfuehren)
+      if (fall.eigene) await expect.poll(() => gespeichert(page)).toBe(serialisiere(nachHaeutung('haeutung', fall.schlangenId, fall.farben)))
+      else await expect.poll(() => gespeichert(page), { message: 'die Häutung ist angesagt' }).not.toBe(start)
+    })
+  }
+
+  test('O7 K1/K3: Pfeiltasten verschieben, die Punkte stehen ganz im Bild, „Abbrechen“ stellt den Ausgangszustand her', async ({ page }, info) => {
+    const tippe = bediene(info)
+    await oeffneSzenario(page, 'haeutung-punkte')
+    const start = await gespeichert(page)
+    await tippe(hand(page).getByRole('button', { name: 'Sonderkarte Schlangenhäutung' }))
+    await tippe(page.getByRole('button', { name: 'Deine Schlange 1 wählen', exact: true }))
+    await tippe(karteIn(page, 'Deine Schlange 1', 1))
+    await tippe(karteIn(page, 'Deine Schlange 1', 4))
+    await karteIn(page, 'Deine Schlange 1', 2).focus()
+    await page.keyboard.press('ArrowRight')
+    await page.keyboard.press('ArrowRight')
+    await expect(page.getByRole('button', { name: 'Deine Schlange 1, Karte 4: Farbkarte Blau, 1 Punkt' })).toBeFocused()
+    const summe = (zustand: Spielzustand) => berechneZwischenstand(zustand, 'spieler-1').spieler[0].summe
+    const nachher = summe(nachHaeutung('haeutung-punkte', 'schlange-1', ['Rot', 'Rot', 'Rot', 'Blau']))
+    expect(nachher, 'die Häutung bringt Punkte').toBeGreaterThan(0)
+    const punkte = zugleiste(page).getByText(/^Deine Punkte/)
+    await expect(punkte).toHaveText(`Deine Punkte: vorher ${summe(erzeugeSzenario('haeutung-punkte'))}, nachher ${nachher}`)
+    await expect(punkte).toBeInViewport({ ratio: 1 })
+    await pruefeSchritt(page, 'Blau ans Ende des Abschnitts verschoben')
+    await tippe(zugleiste(page).getByRole('button', { name: 'Abbrechen' }))
+    await expect(page.getByRole('list', { name: /^Deine Schlange 1:/ }).locator('img')).toHaveCount(5)
+    const alt = await page.getByRole('list', { name: /^Deine Schlange 1:/ }).locator('img').evaluateAll((bilder) => bilder.map((bild) => (bild as HTMLImageElement).alt))
+    expect(alt.map((text) => text.replace(/^Farbkarte (\S+),.*$/, '$1'))).toEqual(['Rot', 'Blau', 'Rot', 'Rot', 'Gelb'])
+    expect(await gespeichert(page)).toBe(start)
   })
 })
