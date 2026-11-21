@@ -1,0 +1,14 @@
+Gegenproben E5 in den Kartendateien, Stand 206ca15, Befehl: npx vitest run src/engine src/entwicklung
+(G1 und G2 liefen mit der Prüfdatei zz_pruefer_e5.test.ts im Baum; G2 ohne sie 17 statt 20 rot. G3 und G4 mit --exclude '**/zz_pruefer_e5*'.)
+
+G1 farbkarte.ts ziele: (['anfang','ende']) -> (['ende'])
+      Tests  7 failed | 592 passed (599)   Test Files  3 failed | 33 passed (36)
+G2 schlangenstelle.ts ziele: .filter(({ besitzer }) => besitzer === spielerIndex)
+      Tests  20 failed | 579 passed (599)  Test Files  5 failed | 31 passed (36)  (davon 3 in der Prüfdatei)
+G3 schlangenstelle.ts betroffene: [(besitzer + 1) % zustand.spieler.length]
+      Tests  13 failed | 578 passed (591)  Test Files  3 failed | 32 passed (35)
+G4 schlangenstelle.ts wirke: splice(Math.max(0, aktion.position - 1), 0, ...)
+      Tests  13 failed | 578 passed (591)  Test Files  3 failed | 32 passed (35)
+G5 schlangenstelle.ts betroffene: return [besitzer]  (wirkungsgleich, reaktion.ts filtert den Angreifer)
+      E5-Tests grün; nur die Prüfdatei lief einmal in die 5-s-Zeitgrenze.
+Nach jeder Probe: git checkout -- <datei>, git status leer.

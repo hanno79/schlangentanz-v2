@@ -1,0 +1,6 @@
+Gegenproben E5 in src/entwicklung/beschriftung.ts, Stand 206ca15, Befehl: npx vitest run src/entwicklung
+B1 Stelle n+1:                              Tests  4 failed | 96 passed (100)
+B2 Karte ohne Id:                           Tests  10 failed | 90 passed (100)
+B3 Spieler-Id auf nächsten Spieler:         Tests  1 failed | 99 passed (100)  (Schlangengrube)
+B4 Ablagestapel/Fusion aus kartenAmTisch:   Tests  100 passed (100)  (ungetestet, Hinweis H1)
+Nach jeder Probe: git checkout -- src/entwicklung/beschriftung.ts, git status leer.

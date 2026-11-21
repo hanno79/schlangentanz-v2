@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-030 Wird die Knopfbeschriftung des Entwicklertischs bei Stelle, Karten-Id oder Spieler verfälscht, werden die Beschriftungstests rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-030 Wird die Knopfbeschriftung des Entwicklertischs bei Stelle, Karten-Id oder Spieler verfälscht, werden die Beschriftungstests rot.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Tests zu <code>beschriftung.ts</code> sind nach dem Code entstanden. Ob sie Fehler fangen, zeigt erst eine Gegenprobe: je eine Zeile verfälschen, Tests ausführen, zurücksetzen.</p><h2>Bestanden, wenn</h2><table><thead><tr><th>Verfälschung in <code>beschriftung.ts</code></th><th>rot (Tests in <code>src/entwicklung</code>)</th></tr></thead><tbody><tr><td>„Stelle n+1“ statt „Stelle n“</td><td>4 (3 in <code>beschriftung.test.ts</code>, 1 in <code>TischLegen.test.tsx</code>)</td></tr><tr><td>Karte ohne Id, nur mit Namen</td><td>10</td></tr><tr><td>Spieler-Id auf den nächsten Spieler abgebildet</td><td>1 (Schlangengrube)</td></tr></tbody></table>
+<p>Nach jedem Zurücksetzen zeigt <code>git status</code> keine Änderung.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der drei Verfälschungen alle Tests grün lässt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E5-legen (PR #66)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf <code>206ca15</code>, <code>npm ci</code> gelaufen, <code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><ol><li>`<code>return </code>Stelle ${String(wert)}<code> </code><code> wird </code><code>return </code>Stelle ${Number(wert) + 1}<code> </code>`.</li><li>`<code>return </code>${karteAnzeigename(karte)} (${karte.id})<code> </code><code> wird </code>return karteAnzeigename(karte)`.</li><li><code>name(tisch.zustand, spieler)</code> wird <code>name(tisch.zustand, (spieler + 1) % tisch.zustand.spieler.length)</code>.</li></ol></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor</td><td>Verfälschung 1 in `src/entwicklung/beschriftung.ts`</td><td>Testdaten 1</td><td>nur diese Zeile geändert</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Tests ausführen</td><td>`npx vitest run src/entwicklung`</td><td>4 rot</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>zurücksetzen</td><td>`git checkout -- src/entwicklung/beschriftung.ts`</td><td>`git status` leer</td></tr><tr><td>4</td><td>Editor</td><td>Verfälschung 2</td><td>Testdaten 2</td><td>nur diese Zeile geändert</td></tr><tr><td>5</td><td>Konsole im Repo</td><td>Tests ausführen</td><td>wie Schritt 2</td><td>10 rot</td></tr><tr><td>6</td><td>Konsole im Repo</td><td>zurücksetzen</td><td>wie Schritt 3</td><td>`git status` leer</td></tr><tr><td>7</td><td>Editor</td><td>Verfälschung 3</td><td>Testdaten 3</td><td>nur diese Zeile geändert</td></tr><tr><td>8</td><td>Konsole im Repo</td><td>Tests ausführen</td><td>wie Schritt 2</td><td>1 rot</td></tr><tr><td>9</td><td>Konsole im Repo</td><td>zurücksetzen</td><td>wie Schritt 3</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Lässt man in <code>kartenAmTisch</code> die Ablagestapel und die Karten unter Fusionen weg, bleibt alles grün (100 Tests). Das ist ungetesteter Code; heute nennt aber keine Aktion eine solche Karte, die Beschriftung zeigte dann nur die nackte Id.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 12:56</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E5) &middot; agent &middot; pruefung-E5 @ <span class="commit" title="206ca153a9540917551a89f74d3827c954b7f401">206ca15</span></p><p>B1 Stelle n+1: 4 rot. B2 Karte ohne Id: 10 rot. B3 Spieler verschoben: 1 rot (Schlangengrube). B4 (nicht Teil des Kriteriums): Ablagestapel und Fusion weggelassen, 100 grün. Nach jeder Probe git status leer.</p><ul class="belege"><li><a href="belege/2026-11-21-1256-TF-DEV-030-1.txt">2026-11-21-1256-TF-DEV-030-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

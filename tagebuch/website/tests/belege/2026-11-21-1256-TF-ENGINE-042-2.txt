@@ -1,0 +1,92 @@
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../index'
+import type { SpielAktion, Spielzustand } from '../index'
+import { erstellePartie } from '../state'
+import { erzeugeZufall } from '../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
+import { handkarte, lege } from './legen_hilfen'
+import { aktionen, fuehreAus, FUENF, grund, MIT_SCHUTZ, reaktion, tischMitHaenden as tisch, typen, verletzteInvarianten } from './zugablauf_hilfen'
+
+/* Temporäre Prüferdatei E5, wird nicht committet. */
+
+describe('Prüfer E5 Grenzfall 1: ungültige Stellen', () => {
+  it.each([-1, 0.5, 3, Number.NaN])('Stelle %s wird für Regenbogenschlange und Blockade abgelehnt', (position) => {
+    const zustand = tisch([['Regenbogenschlange', 'Schlangenblockade', 'Blau'], FUENF]).schlange(1, ['Rot', 'Gelb']).zustand()
+    for (const [typ, name] of [['RegenbogenschlangeLegen', 'Regenbogenschlange'], ['BlockadeLegen', 'Schlangenblockade']] as const) {
+      const karteId = handkarte(zustand, 0, name)
+      const text = grund(zustand, { typ, spielerId: 'spieler-1', karteId, schlangenId: 'schlange-1', position })
+      expect(text.length).toBeGreaterThan(0)
+      console.log(`${typ} Stelle ${position}: ${text}`)
+    }
+  })
+})
+
+describe('Prüfer E5 Grenzfall 2: vier Spieler, Blockade in die Schlange des letzten', () => {
+  it('nur Spieler 4 betroffen und gefragt, nach Abwehr wieder Spieler 1', () => {
+    const start = tisch([['Schlangenblockade', 'Blau', 'Rot', 'Gelb', 'Grün'], MIT_SCHUTZ, MIT_SCHUTZ, MIT_SCHUTZ])
+      .schlange(1, ['Blau']).schlange(2, ['Gelb']).schlange(3, ['Rot', 'Rot']).zustand()
+    const angesagt = lege(start, 'BlockadeLegen', 'Schlangenblockade', 'schlange-3', 2)
+    expect(angesagt.ereignisse[0]).toMatchObject({ typ: 'KarteAngesagt', betroffene: [3] })
+    expect(ermittleEntscheider(angesagt.zustand)).toBe(3)
+    expect(aktionen(angesagt.zustand).every((aktion) => aktion.spielerId === 'spieler-4')).toBe(true)
+    const nach = fuehreAus(angesagt.zustand, reaktion(angesagt.zustand, true))
+    expect(ermittleEntscheider(nach.zustand)).toBe(0)
+    expect(verletzteInvarianten(nach.zustand)).toEqual([])
+  })
+})
+
+describe('Prüfer E5 Grenzfall 3: ohne eigene Schlange Farbkarte zum Gegner, danach keine zweite Farbkarte', () => {
+  it('A5: nach der Farbkarte beim Gegner keine weitere Farbkarte und keine neue Schlange', () => {
+    const start = tisch([['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'], FUENF]).schlange(1, ['Blau']).zustand()
+    const blau = handkarte(start, 0, 'Blau')
+    const aktion = aktionen(start, 'FarbkarteLegen').find((a) => a.typ === 'FarbkarteLegen' && a.karteId === blau && a.ziel.art === 'schlange')!
+    const { zustand } = fuehreAus(start, aktion)
+    expect(typen(zustand)).toEqual(['ZugBeenden'])
+    expect(zustand.spieler[0].schlangen).toEqual([])
+  })
+})
+
+describe('Prüfer E5 Grenzfall 4: während die Blockade schwebt, kann der Angreifer nichts tun', () => {
+  it('A6: nur der Gefragte hat Aktionen; eine Aktion des Angreifers wird abgelehnt', () => {
+    const start = tisch([['Schlangenblockade', 'Blau', 'Rot', 'Gelb', 'Grün'], MIT_SCHUTZ]).schlange(1, ['Rot']).zustand()
+    const angesagt = lege(start, 'BlockadeLegen', 'Schlangenblockade', 'schlange-1', 0).zustand
+    const blau = handkarte(angesagt, 0, 'Blau')
+    const text = grund(angesagt, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: blau, ziel: { art: 'neueSchlange' } })
+    console.log('Angreifer während Ansage: ' + text)
+    expect(text.length).toBeGreaterThan(0)
+  })
+})
+
+describe('Prüfer E5: Zufallspartien mit den neuen Karten lassen sich nachrechnen', () => {
+  it('Saaten 101–130, E5-Aktionen bevorzugt', () => {
+    const zaehler: Record<string, number> = { RegenbogenschlangeLegen: 0, BlockadeLegen: 0, FarbkarteFremd: 0, Abwehr: 0 }
+    for (let saat = 101; saat <= 130; saat += 1) {
+      const wahl = erzeugeZufall(saat)
+      let zustand: Spielzustand = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+      let schritte = 0
+      while (zustand.partiephase !== 'Beendet') {
+        if (++schritte > 3000) throw new Error('endet nicht')
+        const angeboten = ermittleAktionen(zustand)
+        const e5 = angeboten.filter((a) => a.typ === 'RegenbogenschlangeLegen' || a.typ === 'BlockadeLegen')
+        const pool: SpielAktion[] = e5.length > 0 && wahl() < 0.7 ? e5 : angeboten
+        const aktion = pool[Math.floor(wahl() * pool.length)]
+        if (aktion.typ === 'RegenbogenschlangeLegen' || aktion.typ === 'BlockadeLegen') zaehler[aktion.typ] += 1
+        if (aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange') {
+          const id = aktion.ziel.schlangenId
+          const besitzer = zustand.spieler.findIndex((s) => s.schlangen.some((sch) => sch.id === id))
+          if (zustand.spieler[besitzer].id !== aktion.spielerId) zaehler.FarbkarteFremd += 1
+        }
+        if (aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null) zaehler.Abwehr += 1
+        const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+        expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}: ${JSON.stringify(aktion)}`).toEqual(lageVon(neu))
+        expect(verrateneHandkarten(neu, ereignisse)).toEqual([])
+        expect(verletzteInvarianten(neu)).toEqual([])
+        zustand = neu
+      }
+    }
+    console.log('Zähler: ' + JSON.stringify(zaehler))
+    expect(zaehler.RegenbogenschlangeLegen).toBeGreaterThan(10)
+    expect(zaehler.BlockadeLegen).toBeGreaterThan(10)
+    expect(zaehler.FarbkarteFremd).toBeGreaterThan(10)
+  })
+})
