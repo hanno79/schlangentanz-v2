@@ -35,7 +35,7 @@ const ZEIT_ZUFALL = 30_000
 const ZEIT_PARTIE = 120_000
 
 function zeichne(zustand: Spielzustand): string {
-  const { container } = render(<Tisch ansicht={tischAnsicht(zustand)} />)
+  const { container } = render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
   const html = container.innerHTML
   cleanup()
   return html
@@ -105,7 +105,7 @@ describe('O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im H
 
   it('O4 K2/B2: die geheimen Aufgaben der Gegner stehen nicht im HTML, die eigene schon', () => {
     const zustand = geheimeHaende()
-    render(<Tisch ansicht={tischAnsicht(zustand)} />)
+    render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
     const html = document.body.innerHTML
     const [ich, ...gegner] = zustand.spieler
     expect(screen.getByRole('button', { name: new RegExp(`^Deine geheime Aufgabe ${ich.geheimeAufgabe!.name}`) })).toBeInTheDocument()

@@ -12,7 +12,7 @@ KI-Ablauf (O3, O6) kommen später; hier wird nur gezeichnet.
 */
 
 function zeige(zustand: Spielzustand) {
-  return render(<Tisch ansicht={tischAnsicht(zustand)} />)
+  return render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
 }
 
 const region = (name: string) => screen.getByRole('region', { name })
