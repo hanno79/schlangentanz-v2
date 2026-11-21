@@ -62,7 +62,14 @@ describe('E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange', () => {
     expect(werteSchlangen(zustand.spieler[0].schlangen, false).gruppenPunkte).toBe(2)
   })
 
-  it('A7.3 Beispiel 3: zwischen Rot-Rot und Braun-Braun gelegt ergibt sie 4 Punkte (zwei braune Karten zu je 2)', () => {
+  it('A7.3 Beispiel 2 (Erweiterung, nur das Legen): an Blau-Rot-Gelb-Braun-Grün angelegt; ob „Farbvielfalt“ damit erfüllt ist, prüfen X1/X2', () => {
+    const start = tisch([MIT_RS, FUENF], true).schlange(0, ['Blau', 'Rot', 'Gelb', 'Braun', 'Grün']).zustand()
+    const { zustand } = legeRs(start, 'schlange-1', 5)
+    expect(schlangenNamen(zustand, 0)).toEqual(['Blau', 'Rot', 'Gelb', 'Braun', 'Grün', RS])
+    expect(verletzt(zustand)).toEqual([])
+  })
+
+  it('A7.3 Beispiel 3:zwischen Rot-Rot und Braun-Braun gelegt ergibt sie 4 Punkte (zwei braune Karten zu je 2)', () => {
     const start = tisch([MIT_RS, FUENF]).schlange(0, ['Rot', 'Rot', 'Braun', 'Braun']).zustand()
     const { zustand } = legeRs(start, 'schlange-1', 2)
     expect(schlangenNamen(zustand, 0)).toEqual(['Rot', 'Rot', RS, 'Braun', 'Braun'])
