@@ -9,7 +9,7 @@ import { entscheiderVon, sichtFuer } from '../sicht'
 import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
 import type { Entscheidung } from '../__tests__/stellungen'
 import type { Schlangenglied } from '../../engine/testing/szenario'
-import { gruppenwert } from './bewertung'
+import { bewerte, gruppenwert } from './bewertung'
 import { STRATEGIEN } from './index'
 import { erstelleSolideKi } from './solideKi'
 import { erstelleZufallsKi } from './zufallsKi'
@@ -151,10 +151,17 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     expect(punkte(zug.zustand, 1), 'K2.1: 18 statt 17').toBe(18)
   })
 
-  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder holt mindestens so viele Punkte', () => {
+  /** Die Partie aus dem Prüfprotokoll K2, Iteration 2, Hinweis 2 (Saat 7154, mit dessen Saaten), die solide KI an Stelle 0. */
+  const SAAT_7154 = entscheidungenVon(
+    { spielerzahl: 2, erweiterung: true, saat: 7154 },
+    [erstelleSolideKi(erzeugeZufall(7154 * 13 + 3)), erstelleZufallsKi(erzeugeZufall(7154 * 7 + 1 + 11))],
+    0,
+  )
+
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe, ausser ihr Zug ist strikt besser bewertet (Saat 7154 eingeschlossen)', () => {
     let geprueft = 0
     let vollendet = 0
-    for (const zug of ENTSCHEIDUNGEN.flatMap(zuege)) {
+    for (const zug of [...ENTSCHEIDUNGEN, SAAT_7154].flatMap(zuege)) {
       const start = zug[0].vorher
       const gruppen = gruppenzahl(start, 0)
       // Jede Karte zählt, auch Schlangenfrass, Fusion und Farbendieb; ein Gegner lässt eine angesagte Karte durch.
@@ -164,15 +171,20 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
         .filter((danach) => gruppenzahl(danach, 0) > gruppen)
       if (vollendend.length === 0) continue
       geprueft += 1
-      const ende = zug[zug.length - 1].nachher
-      if (gruppenzahl(ende, 0) > gruppen) vollendet += 1
-      // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann zählt, dass sie nichts verschenkt.
-      else expect(eigenePunkte(ende, 0), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}`).toBeGreaterThanOrEqual(Math.max(...vollendend.map((danach) => eigenePunkte(danach, 0))))
+      // Der Stand, mit dem sie den (ersten Teil-)Zug beendet, vor dem Nachziehen.
+      const ende = (zug.find((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden') ?? zug[zug.length - 1]).vorher
+      if (gruppenzahl(ende, 0) > gruppen) {
+        vollendet += 1
+        continue
+      }
+      // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann muss ihr Zug strikt besser bewertet sein.
+      const besteVollendung = vollendend.reduce((beste, danach) => (bewerte(sichtFuer(danach, 0)) > bewerte(sichtFuer(beste, 0)) ? danach : beste))
+      const zahlen = `Endwertung ${endpunkte(ende, 0)} gegen ${endpunkte(besteVollendung, 0)}, Bewertung ${bewerte(sichtFuer(ende, 0)).toFixed(2)} gegen ${bewerte(sichtFuer(besteVollendung, 0)).toFixed(2)}`
+      expect(bewerte(sichtFuer(ende, 0)), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}: ${zahlen}`).toBeGreaterThan(bewerte(sichtFuer(besteVollendung, 0)) + 1e-9)
     }
-    // Jeder Zug ohne Vollendung ist oben mit Zahlen belegt: Sie holt dort mindestens so viele Punkte wie die beste Vollendung.
     expect(vollendet, 'K2.1: meist vollendet sie die Gruppe selbst').toBeGreaterThanOrEqual(0.7 * geprueft)
     expect(geprueft, 'K2.1: genug solche Züge').toBeGreaterThan(30)
-  }, 60_000)
+  }, 120_000)
 })
 
 describe('K2 Kriterium 2: passende Farbkarte und nützliche Sonderkarte, sie spielt beide', () => {

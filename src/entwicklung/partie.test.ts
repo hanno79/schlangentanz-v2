@@ -69,6 +69,15 @@ describe('U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von de
     }
   })
 
+  it('U5: echte Fälle, in denen die Mischung die Partiesaat ergäbe: Die KI-Saat weicht um ein Bit aus (Prüfprotokoll K2, Iteration 2)', () => {
+    const faelle: Array<[number, number, number]> = [
+      [22, 3736942547, 3736942546],
+      [30, 4006315519, 4006315518],
+      [60, 4210738748, 4210738749],
+    ]
+    for (const [schritt, saat, ausgewichen] of faelle) expect(kiSaatAmTisch(schritt, saat), `U5: Schritt ${schritt}, Saat ${saat}`).toBe(ausgewichen)
+  })
+
   it('U5: gleicher Schritt, gleiche KI-Saat; ein anderer Schritt, eine andere', () => {
     expect(kiSaatAmTisch(3, 1)).toBe(kiSaatAmTisch(3, 1))
     expect(kiSaatAmTisch(3, 1)).not.toBe(kiSaatAmTisch(4, 1))

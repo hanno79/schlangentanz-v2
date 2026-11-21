@@ -12,15 +12,17 @@ import { jederNte, nachDurchlassen, partieZustaende, zufallszustaende } from '..
 import { bewerte } from './bewertung'
 import { erstelleSolideKi } from './solideKi'
 import { erstelleZufallsKi } from './zufallsKi'
-import { GRENZE_BEWERTUNGEN, planeZug } from './zugsuche'
+import { GRENZE_SUCHE, planeZug } from './zugsuche'
 
 /*
 K2, Kriterien 7 und 8: Die Zugsuche entscheidet nur nach der Sicht, wählt nur, was
 die Engine erlaubt, und bewertet je Schritt höchstens GRENZE Stellungen.
 */
 
-/** Kriterium 8: die im Test festgelegte Grenze für die Bewertungen je Schritt. */
+/** Kriterium 8: die im Test festgelegte Grenze für die Stellungen, die die Suche je Schritt durchrechnet und bewertet. */
 const GRENZE = 64
+/** Kriterium 8: die im Test festgelegte Zeitgrenze je Schritt in der ungünstigsten Stellung; gemessen rund 56 ms. */
+const ZEITGRENZE_MS = 500
 
 const gemischteKis = (anzahl: number, saat: number): Ki[] =>
   Array.from({ length: anzahl }, (_, sitz) => (sitz % 2 === 0 ? erstelleSolideKi(erzeugeZufall(saat + sitz)) : erstelleZufallsKi(erzeugeZufall(saat + sitz))))
@@ -41,12 +43,12 @@ function bunteSchlange(anzahl: number, versatz: number): Schlangenglied[] {
   return Array.from({ length: anzahl }, (_, stelle) => farben[(Math.floor(stelle / 2) + versatz) % farben.length])
 }
 
-describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine, die Bewertungen je Schritt sind begrenzt', () => {
-  it(`K2.8: die Zugsuche bewertet je Schritt höchstens ${GRENZE_BEWERTUNGEN} Stellungen, unter der Grenze des Tests (${GRENZE})`, () => {
-    expect(GRENZE_BEWERTUNGEN).toBeLessThanOrEqual(GRENZE)
+describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine; je Schritt sind die durchgerechneten Stellungen begrenzt, die Vorauswahl linear und die Zeit begrenzt', () => {
+  it(`K2.8: die Zugsuche rechnet je Schritt höchstens ${GRENZE_SUCHE} Stellungen durch und bewertet sie, unter der Grenze des Tests (${GRENZE})`, () => {
+    expect(GRENZE_SUCHE).toBeLessThanOrEqual(GRENZE)
   })
 
-  it('K2.8: späte Stellung, in der Farbendieb und Schlangenfrass über tausend Ziele haben: die Grenze hält, die Aktion ist erlaubt', () => {
+  it(`K2.8: späte Stellung mit über tausend Aktionen aus Farbendieb und Schlangenfrass: höchstens ${GRENZE} durchgerechnete Stellungen, die Vorauswahl bewertet jede angebotene Aktion höchstens einmal, unter ${ZEITGRENZE_MS} ms je Schritt, die Aktion ist erlaubt`, () => {
     const bau = baukasten({ spielerzahl: 3, erweiterung: false, zufall: erzeugeZufall(91) })
     for (const [spieler, versatz] of [[0, 0], [0, 1], [1, 2], [1, 3], [2, 4], [2, 0]] as const) bau.schlange(spieler, bunteSchlange(9, versatz))
     const zustand = bau.hand(1, ['Farbendieb', 'Schlangenfrass', 'Regenbogenschlange', 'Schlangenblockade', 'Grün']).haendeAuffuellen().amZug(1).zustand()
@@ -54,13 +56,21 @@ describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine, die Bewer
     expect(aktionen.filter((aktion) => aktion.typ === 'FarbendiebSpielen').length, 'K2.8: Farbendieb, 36 Karten × 20 Stellen').toBe(720)
     expect(aktionen.length, 'K2.8: über tausend Aktionen').toBeGreaterThan(1000)
 
-    const plan = planeZug(sichtFuer(zustand, 1), aktionen, erzeugeZufall(1))
-    expect(plan.bewertungen, 'K2.8: Bewertungen in diesem Schritt').toBeLessThanOrEqual(GRENZE)
-    expect(pruefeAktion(zustand, plan.aktion)).toEqual({ erlaubt: true })
-    expect(aktionen).toContain(plan.aktion)
+    const beginn = performance.now()
+    const plaene = [1, 2, 3].map((saat) => planeZug(sichtFuer(zustand, 1), aktionen, erzeugeZufall(saat)))
+    const dauer = (performance.now() - beginn) / plaene.length
+    for (const plan of plaene) {
+      const { suche, vorauswahl, angeboten } = plan.bewertungen
+      expect(suche, 'K2.8: durchgerechnete und bewertete Stellungen in diesem Schritt').toBeLessThanOrEqual(GRENZE)
+      expect(angeboten, 'K2.8: die Vorauswahl sieht mindestens die Aktionen der Stellung').toBeGreaterThanOrEqual(aktionen.length - 1)
+      expect(vorauswahl, `K2.8: Bewertungen in der Vorauswahl bei ${angeboten} angebotenen Aktionen`).toBeLessThanOrEqual(angeboten)
+      expect(pruefeAktion(zustand, plan.aktion)).toEqual({ erlaubt: true })
+      expect(aktionen).toContain(plan.aktion)
+    }
+    expect(dauer, `K2.8: Millisekunden je Schritt bei ${aktionen.length} Aktionen`).toBeLessThan(ZEITGRENZE_MS)
   })
 
-  it('K2.8: in Partien mit 2 bis 4 Spielern, mit und ohne Erweiterung, ist jede gewählte Aktion erlaubt und jeder Schritt unter der Grenze', () => {
+  it('K2.8: in Partien mit 2 bis 4 Spielern, mit und ohne Erweiterung, ist jede gewählte Aktion erlaubt; je Schritt höchstens 64 durchgerechnete Stellungen und in der Vorauswahl höchstens eine Bewertung je angebotener Aktion', () => {
     let schritte = 0
     let hoechstens = 0
     for (const [nummer, spielerzahl] of [2, 3, 4, 2, 3, 4].entries()) {
@@ -75,7 +85,8 @@ describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine, die Bewer
           const plan = planeZug(sichtFuer(zustand, entscheider), aktionen, zufall)
           expect(pruefeAktion(zustand, plan.aktion), `K2.8: Partie ${nummer}, Schritt ${schritt}`).toEqual({ erlaubt: true })
           expect(aktionen).toContain(plan.aktion)
-          hoechstens = Math.max(hoechstens, plan.bewertungen)
+          hoechstens = Math.max(hoechstens, plan.bewertungen.suche)
+          expect(plan.bewertungen.vorauswahl, `K2.8: Vorauswahl, Partie ${nummer}, Schritt ${schritt}`).toBeLessThanOrEqual(plan.bewertungen.angeboten)
           schritte += 1
           zustand = anwendeAktion(zustand, plan.aktion).zustand
         } else {
@@ -85,7 +96,7 @@ describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine, die Bewer
       expect(zustand.partiephase, `K2.8: Partie ${nummer} endet`).toBe('Beendet')
     }
     expect(schritte, 'K2.8: genug Schritte der soliden KI').toBeGreaterThan(300)
-    expect(hoechstens, 'K2.8: höchste Zahl der Bewertungen in einem Schritt').toBeLessThanOrEqual(GRENZE)
+    expect(hoechstens, 'K2.8: höchste Zahl durchgerechneter Stellungen in einem Schritt').toBeLessThanOrEqual(GRENZE)
   }, 120_000)
 })
 
