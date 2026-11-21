@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-015 Beendet die solide KI ihren Zug, liegt keine Karte mehr auf der Hand, die ihre Endwertung hebt, keinem Gegner nützt und nicht schlechter bewertet ist als das Halten. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-015 Beendet die solide KI ihren Zug, liegt keine Karte mehr auf der Hand, die ihre Endwertung hebt, keinem Gegner nützt und nicht schlechter bewertet ist als das Halten.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-009</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>TF-KI-013 zählt jede liegen gelassene Karte, die Punkte gebracht hätte. Der Orchestrator hat am 21.11.2026 entschieden: Stellt die Bewertung der KI das Halten höher, ist das ein legitimer Spielzug. Sind Spielen und Halten gleich bewertet, muss der Zug mit dem sicheren Punkt gewinnen. Dieser Testfall prüft genau diese Fassung, auf Saaten ausserhalb der Testsuite.</p><h2>Bestanden, wenn</h2><p>In allen Partien der Testdaten gibt es 0 Zugenden, nach denen eine andere erlaubte Karte die Endwertung der KI um mindestens 1 erhöht hätte, ohne die Endwertung eines Gegners zu erhöhen, und deren Bewertung nicht unter der des Haltens liegt (Abstand höchstens 1e-9).</p><h2>Fehlgeschlagen, wenn</h2><p>Die Zählung grösser als 0 ist.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/K2-solide-ki (PR #71)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K2-solide-ki</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Die 36 Partien aus TF-KI-014 und die 33 Partien aus TF-KI-013.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Die Probe <code>pruefer_k2_it3.test.ts</code> aus dem Beleg vorübergehend unter <code>tests/</code> ablegen und mit <code>PRUEFER_LOG=&lt;datei&gt; npx vitest run tests/pruefer_k2_it3.test.ts -t &quot;eigenes Turnier&quot;</code> ausführen. An jedem „ZugBeenden“ der soliden KI wendet sie jede andere angebotene Karte an, lässt gefragte Gegner durchlassen und vergleicht <code>berechneEndwertung</code> und <code>bewerte</code>. Erwartet in der Zeile „VERSCHENKT“: 0. Die Zeile „Halten höher bewertet“ ist Auskunft, kein Fehler.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Karten, die erst zusammen mit einer zweiten Karte Punkte bringen, zählt die Probe nicht. Gegen Gegner, die gezielt abwehren, misst sie nicht.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 18:25</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K2, Iteration 3) &middot; agent &middot; pruefung-K2-it3 @ <span class="commit" title="9f5435c9ff2a4750dc6307ffb2bd225bc7061fb0">9f5435c</span></p><p>36 eigene Partien: 409 Zugenden mit anderer Karte, 0 mit einer Karte, die die Endwertung hebt, keinem Gegner nützt und nicht schlechter bewertet ist; 3 mit höher bewertetem Halten (höchstens +1). 33 Partien aus TF-KI-013: 375 Zugenden, 0 solche, 5 mit höher bewertetem Halten. Saat 7154 endet 70 zu 5. Baukasten 7154 mit 30 Störungen und 5 KI-Saaten: 30-mal Schlangenfrass auf die Blockade.</p><ul class="belege"><li><a href="belege/2026-11-21-1825-TF-KI-015-1.txt">2026-11-21-1825-TF-KI-015-1.txt</a></li><li><a href="belege/2026-11-21-1825-TF-KI-015-2.txt">2026-11-21-1825-TF-KI-015-2.txt</a></li><li><a href="belege/2026-11-21-1825-TF-KI-015-3.ts">2026-11-21-1825-TF-KI-015-3.ts</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
