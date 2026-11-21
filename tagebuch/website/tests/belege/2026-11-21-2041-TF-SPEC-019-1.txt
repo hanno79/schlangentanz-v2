@@ -1,0 +1,121 @@
+Gegenproben P0.5e Iteration 2, Stand 06673aa, sieben Spec-Testdateien je Probe
+
+W-M1a GP4 D46 f gestrichen: Exit 1; 2 failed | 443 passed (445)
+    G14 f: Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equali
+    G14: Teil D ohne Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“: expected 'korb „zwei zusätzliche aktionen“: es …' to contain '„p
+W-M1b GP5 D46 e statt f: Exit 1; 2 failed | 443 passed (445)
+    G14 f: Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equali
+    G14: Teil D ohne Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“: expected 'korb „zwei zusätzliche aktionen“: es …' to contain '„p
+W-M2 GP6 D49 a gestrichen: Exit 1; 2 failed | 443 passed (445)
+    G17 a: Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Obje
+    G17: Teil D ohne Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“: expected 'comeback-aktion „zwei karten abwerfen…' to
+W-M3 GP2 D51 b statt a: Exit 1; 2 failed | 443 passed (445)
+    G19 a: Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equ
+    G19: Teil D ohne Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 
+W-M4 GP3 D51 d statt c: Exit 1; 2 failed | 443 passed (445)
+    G19 c: Kernaussage „auf die eigene hand, wie bei den aktionen 1 und 2“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is 
+    G19: Teil D ohne Kernaussage „auf die eigene hand, wie bei den aktionen 1 und 2“: expected 'risiko-aktion 2, misserfolg: die aufg…' to conta
+W-M5 GP7 D48 Zusatz gestrichen: Exit 1; 2 failed | 443 passed (445)
+    G16 f: Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Obj
+    G16: Teil D ohne Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“: expected 'für die comeback-bedingung gilt: jede…' t
+E-M1 D46 Fusion als Zusatzaktion frei: Exit 1; 2 failed | 443 passed (445)
+    G14 f: Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equali
+    G14: Teil D ohne Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“: expected 'korb „zwei zusätzliche aktionen“: es …' to contain '„p
+E-M2 D49 a durch b ersetzt: Exit 1; 2 failed | 443 passed (445)
+    G17 a: Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Obje
+    G17: Teil D ohne Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“: expected 'comeback-aktion „zwei karten abwerfen…' to
+E-M3 D51 Aktion 2 Sonderkarte zum Gegner: Exit 1; 2 failed | 443 passed (445)
+    G19 a: Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equ
+    G19: Teil D ohne Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 
+E-M4 D51 Aktion 3 Farbkarte abgelegt: Exit 1; 2 failed | 443 passed (445)
+    G19 c: Kernaussage „auf die eigene hand, wie bei den aktionen 1 und 2“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is 
+    G19: Teil D ohne Kernaussage „auf die eigene hand, wie bei den aktionen 1 und 2“: expected 'risiko-aktion 2, misserfolg: die aufg…' to conta
+E-M5 D48 zweiter Zug immer: Exit 1; 2 failed | 443 passed (445)
+    G16 f: Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Obj
+    G16: Teil D ohne Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“: expected 'für die comeback-bedingung gilt: jede…' t
+S-G5a Teil 1 a statt b: Exit 1; 2 failed | 443 passed (445)
+    G5 b: Kernaussage „zwei schlangen mit je mindestens vier farben“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equali
+    G5: Teil D ohne Kernaussage „zwei schlangen mit je mindestens vier farben“: expected 'bei „vielfaltskönig“ genügt eine schl…' to contain 'zw
+S-G5b Teil 2 d statt c: Exit 1; 2 failed | 443 passed (445)
+    G5 c: Kernaussage „über alle vorhandenen schlangen“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G5: Teil D ohne Kernaussage „über alle vorhandenen schlangen“: expected '„vielfaltskönig“ braucht zwei schlang…' to contain 'über alle vorha
+S-G6 Teil 2 d statt c: Exit 1; 2 failed | 443 passed (445)
+    G6 c: Kernaussage „liegt eine andere sonderkarte (etwa eine blockade) in der schlange, ist die aufgabe nicht erfüllt“ steht nicht genau einm
+    G6: Teil D ohne Kernaussage „liegt eine andere sonderkarte (etwa eine blockade) in der schlange, ist die aufgabe nicht erfüllt“: expected '„
+S-G10a Teil 1 b statt a: Exit 1; 2 failed | 443 passed (445)
+    G10 a: Kernaussage „zählt zu den 5 handkarten“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G10: Teil D ohne Kernaussage „zählt zu den 5 handkarten“: expected 'der schlangenkorb liegt offen vor dem…' to contain 'zählt zu den 5 handk
+S-G10b Teil 2 d statt c: Exit 1; 2 failed | 443 passed (445)
+    G10 c: Kernaussage „ist die sonderkarte des zuges“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G10: Teil D ohne Kernaussage „ist die sonderkarte des zuges“: expected 'der schlangenkorb liegt auf der hand …' to contain 'ist die sonderka
+S-G13a Teil 2 d statt c: Exit 1; 2 failed | 443 passed (445)
+    G13 c: Kernaussage „abwehrbar mit farbenschutz (d10)“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G13: Teil D ohne Kernaussage „abwehrbar mit farbenschutz (d10)“: expected 'korb „sonderkarte aus gegnerischer sc…' to contain 'abwehrbar mit
+S-G13b Teil 3 f statt e: Exit 1; 2 failed | 443 passed (445)
+    G13 e: Kernaussage „des spielers, der den korb nutzt“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G13: Teil D ohne Kernaussage „des spielers, der den korb nutzt“: expected 'korb „sonderkarte aus gegnerischer sc…' to contain 'des spielers,
+S-G20a Teil 2 d statt c: Exit 1; 2 failed | 443 passed (445)
+    G20 c: Kernaussage „zwischen der geplanten farbkarte und der obersten stapelkarte“ steht nicht genau einmal in Teil D: expected +0 to be 1 /
+    G20: Teil D ohne Kernaussage „zwischen der geplanten farbkarte und der obersten stapelkarte“: expected 'risiko-aktion 2: vor dem aufdecken b
+S-G20b Teil 4 h statt g: Exit 1; 2 failed | 443 passed (445)
+    G20 g: Kernaussage „ende einer eigenen schlange“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G20: Teil D ohne Kernaussage „ende einer eigenen schlange“: expected 'risiko-aktion 2: vor dem aufdecken be…' to contain 'ende einer eigenen
+S-G22a Teil 1 b statt a: Exit 1; 2 failed | 443 passed (445)
+    G22 a: Kernaussage „die erste der zwei karten; der spieler zieht eine weitere“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Ob
+    G22: Teil D ohne Kernaussage „die erste der zwei karten; der spieler zieht eine weitere“: expected 'risiko-aktion 4: bei erfolg zählt die…' 
+S-G22b Teil 3 f statt e: Exit 1; 2 failed | 443 passed (445)
+    G22 e: Kernaussage „liegen nie auf einem ablagestapel“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G22: Teil D ohne Kernaussage „liegen nie auf einem ablagestapel“: expected 'risiko-aktion 4: bei erfolg ist die a…' to contain 'liegen nie a
+X-G17a Regelsatz weg, Folge bleibt: Exit 0; 445 passed (445)
+X-G19e Ziel der ersetzten Karte f, Tausch bleibt: Exit 0; 445 passed (445)
+X-G19e f vollständig: Exit 1; 2 failed | 443 passed (445)
+    G19 e: Kernaussage „es ist ein tausch“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+    G19: Teil D ohne Kernaussage „es ist ein tausch“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 'es ist ein tausch'
+X-G10c Folge umgekehrt: Exit 0; 445 passed (445)
+X-G5d Teil 2 nur Satz von d: Exit 0; 445 passed (445)
+X-G17d Teil 2 nur Satz von d: Exit 1; 2 failed | 443 passed (445)
+    G17 c: Kernaussage „wer die letzte karte zieht, spielt seinen zug zu ende“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object
+    G17: Teil D ohne Kernaussage „wer die letzte karte zieht, spielt seinen zug zu ende“: expected 'comeback-aktion „zwei karten abwerfen…' to c
+X-G19b Aktion 2 b, Zusatz bleibt: Exit 1; 2 failed | 443 passed (445)
+    G19 a: Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equ
+    G19: Teil D ohne Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 
+X-RF G14 Antwort ohne Buchstabe f: Exit 1; 1 failed | 444 passed (445)
+    G14: gewählte Möglichkeit: expected 'a, c, e, g' to be 'a, c, f, g' // Object.is equality
+X-G16d Bedingung ohne Schlange nie erfüllt: Exit 0; 445 passed (445)
+X-G13c Gegner nicht gefragt: Exit 0; 445 passed (445)
+X-G14g Verdoppler wirkt doch: Exit 0; 445 passed (445)
+
+Definition der Proben (alt -> neu):
+W-M1a GP4 D46 f gestrichen [docs/GAME_SPEC.md]: « Eine zweite Farbenfusion ist nicht erlaubt; „pro Zug nur eine Farbenfusion“ gilt weiter.» -> «»
+W-M1b GP5 D46 e statt f [docs/GAME_SPEC.md]: «Eine zweite Farbenfusion ist nicht erlaubt; „pro Zug nur eine Farbenfusion“ gilt weiter.» -> «Eine zweite Farbenfusion ist erlaubt, wenn sie als Zusatzaktion gespielt wird.»
+W-M2 GP6 D49 a gestrichen [docs/GAME_SPEC.md]: « Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur eine Karte hält, wählt eine andere Zusatzaktion.» -> «»
+W-M3 GP2 D51 b statt a [docs/GAME_SPEC.md]: «Die aufgedeckte Sonderkarte kommt auf den eigenen Ablagestapel, wie bei Aktion 3; der Spieler verliert die Karte.» -> «Die aufgedeckte Sonderkarte kommt auf die eigene Hand.»
+W-M4 GP3 D51 d statt c [docs/GAME_SPEC.md]: «Die aufgedeckte Farbkarte kommt auf die eigene Hand, wie bei den Aktionen 1 und 2; die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand, es ist ein Tausch.» -> «Die aufgedeckte Farbkarte kommt auf den eigenen Ablagestapel, die ersetzte Schlangenkarte auf die Hand; es ist ein Tausch.»
+W-M5 GP7 D48 Zusatz gestrichen [docs/GAME_SPEC.md]: «, im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt (D47)» -> «»
+E-M1 D46 Fusion als Zusatzaktion frei [docs/GAME_SPEC.md]: «Eine zweite Farbenfusion ist nicht erlaubt; „pro Zug nur eine Farbenfusion“ gilt weiter.» -> «Als Zusatzaktion darf auch eine zweite Farbenfusion gespielt werden.»
+E-M2 D49 a durch b ersetzt [docs/GAME_SPEC.md]: «Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur eine Karte hält, wählt eine andere Zusatzaktion.» -> «Mit weniger als zwei Handkarten wirft man ab, was man hat.»
+E-M3 D51 Aktion 2 Sonderkarte zum Gegner [docs/GAME_SPEC.md]: «Die aufgedeckte Sonderkarte kommt auf den eigenen Ablagestapel, wie bei Aktion 3; der Spieler verliert die Karte.» -> «Die aufgedeckte Sonderkarte bekommt der begünstigte Gegner; der Spieler verliert die Karte.»
+E-M4 D51 Aktion 3 Farbkarte abgelegt [docs/GAME_SPEC.md]: «Die aufgedeckte Farbkarte kommt auf die eigene Hand, wie bei den Aktionen 1 und 2;» -> «Die aufgedeckte Farbkarte wird abgelegt;»
+E-M5 D48 zweiter Zug immer [docs/GAME_SPEC.md]: «im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt (D47)» -> «auch im zweiten Zug nach Verdoppler (D47)»
+S-G5a Teil 1 a statt b [docs/GAME_SPEC.md]: «„Vielfaltskönig“ braucht zwei Schlangen mit je mindestens vier Farben.» -> «Bei „Vielfaltskönig“ genügt eine Schlange mit vier Farben.»
+S-G5b Teil 2 d statt c [docs/GAME_SPEC.md]: «Bei „Farbenpracht“ wird über alle vorhandenen Schlangen gezählt; eine genügt, wenn sie von jeder Farbe zwei Karten hat.» -> «Auch „Farbenpracht“ braucht zwei Schlangen.»
+S-G6 Teil 2 d statt c [docs/GAME_SPEC.md]: «liegt eine andere Sonderkarte (etwa eine Blockade) in der Schlange, ist die Aufgabe nicht erfüllt.» -> «andere Sonderkarten wie eine Blockade zählen nicht mit und schaden der Aufgabe nicht.»
+S-G10a Teil 1 b statt a [docs/GAME_SPEC.md]: «Der Schlangenkorb liegt auf der Hand und zählt zu den 5 Handkarten.» -> «Der Schlangenkorb liegt offen vor dem Spieler und kostet keinen Handplatz.»
+S-G10b Teil 2 d statt c [docs/GAME_SPEC.md]: «Sein Einsatz ist die Sonderkarte des Zuges; daneben ist keine weitere Sonderkarte erlaubt.» -> «Sein Einsatz zählt nicht als Sonderkarte des Zuges; daneben ist eine Sonderkarte erlaubt.»
+S-G13a Teil 2 d statt c [docs/GAME_SPEC.md]: «Der Gegner wird gefragt, der Effekt ist abwehrbar mit Farbenschutz (D10).» -> «Der Gegner wird nicht gefragt; Farbenschutz hilft hier nicht (Ausnahme von D10).»
+S-G13b Teil 3 f statt e [docs/GAME_SPEC.md]: «Die entfernte Karte kommt auf den Ablagestapel des Spielers, der den Korb nutzt, wie gefressene Karten.» -> «Die entfernte Karte kommt auf den Ablagestapel ihres Besitzers.»
+S-G20a Teil 2 d statt c [docs/GAME_SPEC.md]: «Bei Misserfolg wählt der begünstigte Gegner zwischen der geplanten Farbkarte und der obersten Stapelkarte.» -> «Bei Misserfolg entscheidet der Spieler selbst, ob der Gegner die geplante Farbkarte oder die oberste Stapelkarte bekommt.»
+S-G20b Teil 4 h statt g [docs/GAME_SPEC.md]: «Die zusätzliche Farbkarte kommt nur an ein Ende einer eigenen Schlange; für diese Aktion gilt D9 nicht.» -> «Die zusätzliche Farbkarte darf an jedes Schlangenende gelegt werden, wie D9 es sagt.»
+S-G22a Teil 1 b statt a [docs/GAME_SPEC.md]: «Bei Erfolg ist die aufgedeckte Karte die erste der zwei Karten; der Spieler zieht eine weitere.» -> «Bei Erfolg zählt die aufgedeckte Karte nicht mit; der Spieler nimmt noch zwei Karten.»
+S-G22b Teil 3 f statt e [docs/GAME_SPEC.md]: «Risiko-Karte und Schlangenkorb kommen nach der Nutzung aus dem Spiel und liegen nie auf einem Ablagestapel; der Satz dazu in A8.2 ist nur eine Klarstellung.» -> «Ein Schlangenkorb, der als Überhand abgelegt wird, landet auf dem Ablagestapel.»
+X-G17a Regelsatz weg, Folge bleibt [docs/GAME_SPEC.md]: «Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur eine Karte hält,» -> «Wer nur eine Karte hält,»
+X-G19e Ziel der ersetzten Karte f, Tausch bleibt [docs/GAME_SPEC.md]: «die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand, es ist ein Tausch.» -> «die ersetzte Schlangenkarte kommt auf den eigenen Ablagestapel, es ist ein Tausch.»
+X-G19e f vollständig [docs/GAME_SPEC.md]: «die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand, es ist ein Tausch.» -> «die ersetzte Schlangenkarte kommt auf den eigenen Ablagestapel.»
+X-G10c Folge umgekehrt [docs/GAME_SPEC.md]: «daneben ist keine weitere Sonderkarte erlaubt.» -> «daneben ist eine weitere Sonderkarte erlaubt.»
+X-G5d Teil 2 nur Satz von d [docs/GAME_SPEC.md]: «Bei „Farbenpracht“ wird über alle vorhandenen Schlangen gezählt; eine genügt, wenn sie von jeder Farbe zwei Karten hat.» -> «Bei „Farbenpracht“ wird über alle vorhandenen Schlangen gezählt; es braucht zwei Schlangen.»
+X-G17d Teil 2 nur Satz von d [docs/GAME_SPEC.md]: «Liegen weniger als drei Karten im Stapel, zieht man, was da ist; wer die letzte Karte zieht, spielt seinen Zug zu Ende, dann beginnt die Schlussrunde (A10).» -> «Liegen weniger als drei Karten im Stapel, ist sie nicht wählbar.»
+X-G19b Aktion 2 b, Zusatz bleibt [docs/GAME_SPEC.md]: «Die aufgedeckte Sonderkarte kommt auf den eigenen Ablagestapel, wie bei Aktion 3; der Spieler verliert die Karte.» -> «Die aufgedeckte Sonderkarte kommt auf die eigene Hand, nicht wie bei Aktion 3 auf den eigenen Ablagestapel.»
+X-RF G14 Antwort ohne Buchstabe f [docs/REGELFRAGEN.md]: «**Antwort:** a, c, f, g.» -> «**Antwort:** a, c, e, g.»
+X-G16d Bedingung ohne Schlange nie erfüllt [docs/GAME_SPEC.md]: «die Bedingung kann für ihn erfüllt sein.» -> «die Bedingung kann für ihn nicht erfüllt sein.»
+X-G13c Gegner nicht gefragt [docs/GAME_SPEC.md]: «Der Gegner wird gefragt, der Effekt ist abwehrbar mit Farbenschutz (D10).» -> «Der Gegner wird nicht gefragt, der Effekt ist abwehrbar mit Farbenschutz (D10) nur in der eigenen Schlange.»
+X-G14g Verdoppler wirkt doch [docs/GAME_SPEC.md]: «Ein Verdoppler als Zusatzaktion wirkt nicht, weil er nicht mit anderen zugerweiternden Effekten kombinierbar ist.» -> «Ein Verdoppler als Zusatzaktion wirkt, obwohl er sonst nicht mit anderen zugerweiternden Effekten kombinierbar ist.»

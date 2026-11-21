@@ -34,12 +34,15 @@ Mindestens eine Verfälschung bleibt grün (Exit 0).
 Je Zeile eine Verfälschung in `docs/GAME_SPEC.md`, Teil D, wo nichts anderes steht:
 
 - D39 „Auch eine ungerade Kartenzahl ist erlaubt; die mittlere Karte ist die Achse und gehört zu keiner Hälfte.“ ersetzt durch „Die Kartenzahl muss gerade sein, damit es zwei gleiche Hälften gibt.“ (G6 a statt b)
-- D51 „Risiko-Aktion 2, Misserfolg: Die aufgedeckte Sonderkarte kommt auf den eigenen Ablagestapel.“ ersetzt durch „… kommt auf die eigene Hand.“ (G19 b statt a)
-- D51 „Risiko-Aktion 3, Erfolg: Die aufgedeckte Farbkarte kommt auf die eigene Hand, die ersetzte Schlangenkarte ebenfalls; es ist ein Tausch.“ ersetzt durch „Risiko-Aktion 3, Erfolg: Die aufgedeckte Farbkarte kommt auf den eigenen Ablagestapel, die ersetzte Schlangenkarte auf die Hand; es ist ein Tausch.“ (G19 d statt c)
-- D46 den Satz „Eine zweite Farbenfusion ist nicht erlaubt, es bleibt bei einer Farbenfusion pro Zug.“ streichen (G14 f fehlt)
+- D51 „Die aufgedeckte Sonderkarte kommt auf den eigenen Ablagestapel, wie bei Aktion 3; der Spieler verliert die Karte.“ ersetzt durch „Die aufgedeckte Sonderkarte kommt auf die eigene Hand.“ (G19 b statt a)
+- D51 „Die aufgedeckte Farbkarte kommt auf die eigene Hand, wie bei den Aktionen 1 und 2; die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand, es ist ein Tausch.“ ersetzt durch „Die aufgedeckte Farbkarte kommt auf den eigenen Ablagestapel, die ersetzte Schlangenkarte auf die Hand; es ist ein Tausch.“ (G19 d statt c)
+- D51 „die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand, es ist ein Tausch.“ ersetzt durch „die ersetzte Schlangenkarte kommt auf den eigenen Ablagestapel, es ist ein Tausch.“ (G19 f statt e)
+- D46 den Satz „Eine zweite Farbenfusion ist nicht erlaubt; „pro Zug nur eine Farbenfusion“ gilt weiter.“ streichen (G14 f fehlt)
 - D46 denselben Satz ersetzen durch „Eine zweite Farbenfusion ist erlaubt, wenn sie als Zusatzaktion gespielt wird.“ (G14 e statt f)
-- D49 den Satz „Mit weniger als zwei Handkarten ist sie nicht wählbar.“ streichen (G17 a fehlt)
-- D48 „, im zweiten Zug nach einem Verdoppler nur, wenn D47 (G15) das zulässt“ streichen (G16 f unvollständig)
+- D49 den Satz „Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur eine Karte hält, wählt eine andere Zusatzaktion.“ streichen (G17 a fehlt)
+- D48 „, im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt (D47)“ streichen (G16 f unvollständig)
+- D38 „eine genügt, wenn sie von jeder Farbe zwei Karten hat.“ ersetzt durch „es braucht zwei Schlangen.“ (G5 d statt c)
+- D42 „daneben ist keine weitere Sonderkarte erlaubt.“ ersetzt durch „daneben ist eine weitere Sonderkarte erlaubt.“ (G10 Folge von d statt c)
 - D48 „ist sie erfüllt, darf die Karte irgendwann in diesem Zug eingesetzt werden“ ersetzt durch „die Karte darf nur gleich zu Zugbeginn, vor der ersten Karte, eingesetzt werden“ (G16 g statt f)
 - D52 „Die zusätzliche Farbkarte kommt nur an ein Ende einer eigenen Schlange; für diese Aktion gilt D9 nicht.“ ersetzt durch „Die zusätzliche Farbkarte kommt an jedes Ende jeder Schlange (D9).“ (G20 h statt g)
 - Spalte „Folge“ von D45 „X6“ ersetzt durch „X5“; von D37 „X2“ ersetzt durch „E9“
