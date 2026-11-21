@@ -1,8 +1,10 @@
 // @vitest-environment node
 import { afterAll, describe, expect, it } from 'vitest'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { beschreibe } from './architektur_pruefung'
 import { grenzDateien, istAusgenommen, pruefeImportgrenze } from './architektur_ki_importgrenze'
-import { WURZEL, legeAn, raeumeAuf } from './probebaum'
+import { WURZEL, legeAn, raeumeAuf, schreibe } from './probebaum'
 
 /*
 Die Importgrenze der Strategien (U5, P0.3d, Weg (b) aus Mangel 1 der Schlussprüfung 2):
@@ -90,7 +92,7 @@ describe('P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Regis
     const dateien = grenzDateien(WURZEL)
 
     expect(dateien, 'U5: erwartet Tisch, App und Rahmen unter den geprüften Dateien').toEqual(
-      expect.arrayContaining(['src/entwicklung/Tisch.tsx', 'src/App.tsx', 'src/ki/schritt.ts', 'vite.config.ts']),
+      expect.arrayContaining(['src/entwicklung/Tisch.tsx', 'src/App.tsx', 'src/ki/schritt.ts', 'vite.config.ts', 'index.html', 'package.json']),
     )
     expect(dateien.filter((pfad) => pfad.startsWith('src/ki/strategien/') || istAusgenommen(pfad)), 'U5: Strategien und Tests gehören nicht dazu').toEqual([])
     expect(beschreibe(pruefeImportgrenze(WURZEL)), 'U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien').toBe('')
@@ -123,7 +125,9 @@ describe('P0.3d: U5 – aus strategie.ts nur Typen, sobald die Datei Werte hat',
       "import type { Ki } from '../ki/strategien/strategie'",
       "import { type Fabrik, Ki as Auch } from '../ki/strategien/strategie'",
       "import type * as alles from '../ki/strategien/strategie'",
-      'export type T = Ki | Fabrik | Auch | typeof alles',
+      // Codex zu Iteration 4 (Fehlalarm): ein reiner Typimport über require.
+      "import type api = require('../ki/strategien/strategie')",
+      'export type T = Ki | Fabrik | Auch | typeof alles | api.Ki',
       '',
     ].join('\n'),
     'src/entwicklung/wert.ts': "import { STANDARD } from '../ki/strategien/strategie'\nexport const k = STANDARD\n",
@@ -147,5 +151,78 @@ describe('P0.3d: U5 – aus strategie.ts nur Typen, sobald die Datei Werte hat',
 
   it('P0.3d: hat strategie.ts keine Werte, bleibt auch import * as erlaubt', () => {
     expect(beschreibe(befundeIn('src/entwicklung/erlaubt.tsx')), 'U5: import * as aus strategie.ts ohne Werte ist erlaubt').toBe('')
+  })
+})
+
+describe('P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4)', () => {
+  const umwege = legeAn({
+    ...STRATEGIEN,
+    // Nur index.ts und strategie.ts sind erlaubt, nicht dieselben Namen mit anderer Endung.
+    'src/ki/strategien/index.tsx': 'export const geheim = 42\n',
+    'src/ki/strategien/strategie.tsx': 'export const geheim = 43\n',
+    'package.json': JSON.stringify({
+      name: 'probe',
+      imports: { '#geheim': './src/ki/strategien/zufallsKi.ts' },
+      exports: { './geheim': { types: './tests/typ.d.ts', default: './src/ki/strategien/zufallsKi.ts' } },
+    }),
+    'tests/typ.d.ts': 'export declare const erstelleZufallsKi: () => unknown\n',
+    'tests/globbruecke.ts': importiere('../src/ki/strategien/zufallsKi'),
+    'tests/verdeckt.d.ts': 'export declare const k: number\n',
+    'tests/verdeckt.js': "export { erstelleZufallsKi as k } from '../src/ki/strategien/zufallsKi.ts'\n",
+    'index.html': [
+      '<!doctype html>',
+      '<html><body>',
+      '<script type="module">',
+      "  import { erstelleZufallsKi } from '/src/ki/strategien/zufallsKi.ts'",
+      '  console.log(erstelleZufallsKi)',
+      '</script>',
+      '</body></html>',
+      '',
+    ].join('\n'),
+    'src/entwicklung/seite.html': '<script type="module" src="../ki/strategien/zufallsKi.ts"></script>\n',
+    'src/entwicklung/raute.ts': "export { erstelleZufallsKi } from '#geheim'\n",
+    'src/entwicklung/registry_tsx.ts': "export { geheim } from '../ki/strategien/index.tsx'\n",
+    'src/entwicklung/strategie_tsx.ts': "export { geheim } from '../ki/strategien/strategie.tsx'\n",
+    'src/entwicklung/globbruecke.ts': "export const m = import.meta.glob('../../tests/globbruecke.ts', { eager: true })\n",
+    'src/entwicklung/globbasis.ts': "export const m = import.meta.glob('./zufallsKi.ts', { base: '/src/ki/strategien', eager: true })\n",
+    'src/entwicklung/globbasis2.ts': "export const m = import.meta.glob('./*.ts', { base: '../ki/strategien' })\n",
+    'src/entwicklung/globbasis3.ts': "const basis = '/src/ki/strategien'\nexport const m = import.meta.glob('./*.ts', { base: basis })\n",
+    'src/entwicklung/globoptionen.ts': "const optionen = { base: '/src/ki/strategien' }\nexport const m = import.meta.glob('./*.ts', optionen)\n",
+    'src/entwicklung/verdeckt.ts': "export { k } from '../../tests/verdeckt'\n",
+    'scripts/__snapshots__/probe.mjs': importiere('../../src/ki/strategien/zufallsKi.ts'),
+    'src/dist/probe.ts': importiere('../ki/strategien/zufallsKi'),
+    // Fehlalarm aus dem Review: nach den Ausschlüssen bleiben nur index.ts und strategie.ts.
+    'src/entwicklung/globohne.ts': "export const m = import.meta.glob(['../ki/strategien/*.ts', '!../ki/strategien/{zufallsKi,hilfe}.ts'])\n",
+  })
+  schreibe(umwege, {
+    'scripts/dateiurl.mjs': importiere(pathToFileURL(join(umwege, 'src/ki/strategien/zufallsKi.ts')).href),
+  })
+  const gefunden = pruefeImportgrenze(umwege)
+  const gemeldet = new Set(gefunden.map(({ datei }) => datei))
+
+  const faelle: Array<[string, string]> = [
+    ['import.meta.glob auf eine Testdatei, die eine Strategie weitergibt', 'src/entwicklung/globbruecke.ts'],
+    ['import.meta.glob mit base als Text vom Projektordner', 'src/entwicklung/globbasis.ts'],
+    ['import.meta.glob mit relativer base', 'src/entwicklung/globbasis2.ts'],
+    ['import.meta.glob mit berechneter base', 'src/entwicklung/globbasis3.ts'],
+    ['import.meta.glob mit Optionen aus einer Variablen', 'src/entwicklung/globoptionen.ts'],
+    ['index.tsx neben index.ts', 'src/entwicklung/registry_tsx.ts'],
+    ['strategie.tsx neben strategie.ts', 'src/entwicklung/strategie_tsx.ts'],
+    ['ein #-Import aus package.json', 'src/entwicklung/raute.ts'],
+    ['package.json mit imports und exports in die Strategien', 'package.json'],
+    ['eine Typdatei verdeckt die JavaScript-Datei daneben', 'src/entwicklung/verdeckt.ts'],
+    ['Modulskript in index.html', 'index.html'],
+    ['script src in einer HTML-Datei', 'src/entwicklung/seite.html'],
+    ['Import über eine file://-URL', 'scripts/dateiurl.mjs'],
+    ['Datei unter __snapshots__', 'scripts/__snapshots__/probe.mjs'],
+    ['Datei unter einem Ordner dist', 'src/dist/probe.ts'],
+  ]
+
+  it.each(faelle)('P0.3d: Umweg „%s“ wird gemeldet', (name, datei) => {
+    expect(gemeldet.has(datei), `U5: erwartet eine Meldung für ${name} in ${datei}, gefunden:\n${beschreibe(gefunden)}`).toBe(true)
+  })
+
+  it('P0.3d: import.meta.glob mit Ausschlüssen, die nur Erlaubtes übrig lassen, bleibt erlaubt', () => {
+    expect(gemeldet.has('src/entwicklung/globohne.ts'), `U5: Ausschlüsse zählen mit, gefunden:\n${beschreibe(gefunden)}`).toBe(false)
   })
 })
