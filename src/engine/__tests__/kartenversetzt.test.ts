@@ -6,7 +6,7 @@ import { baukasten } from '../testing/szenario'
 import type { Baukasten } from '../testing/szenario'
 import { entnehmeHandkarte, legeAufEigenenAblagestapel } from '../zugablauf'
 import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
-import { aktionen, durchlassen, ereignisseVom, fuehreAus, verletzteInvarianten } from './zugablauf_hilfen'
+import { ablage, aktionen, durchlassen, ereignisseVom, fuehreAus, hand, verletzteInvarianten } from './zugablauf_hilfen'
 import type { Schritt } from './zugablauf_hilfen'
 
 /*
@@ -133,16 +133,11 @@ describe('E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein', () =
 
   it('E4b Gegenprobe: ohne KartenVersetzt lässt sich die Wirkung nicht nachrechnen', () => {
     const { start } = aufbau()
-    let jetzt = start
-    const schritte: Schritt[] = []
-    for (const waehle of [(z: Spielzustand) => aktionen(z, 'FarbendiebSpielen')[0], durchlassen]) {
-      schritte.push(fuehreAus(jetzt, waehle(jetzt)))
-      jetzt = schritte.at(-1)!.zustand
-    }
-    const { ereignisse } = schritte[1]
+    const angesagt = fuehreAus(start, aktionen(start, 'FarbendiebSpielen')[0]).zustand
+    const { zustand, ereignisse } = fuehreAus(angesagt, durchlassen(angesagt))
     const ohne = ereignisse.filter((ereignis) => ereignis.typ !== 'KartenVersetzt')
     expect(ohne.length).toBe(ereignisse.length - 1)
-    expect(spieleNach(lageVon(schritte[0].zustand), ohne)).not.toEqual(lageVon(jetzt))
+    expect(spieleNach(lageVon(angesagt), ohne)).not.toEqual(lageVon(zustand))
   })
 })
 
@@ -158,7 +153,7 @@ describe('E4b/A7.4: Schlangenfrass als Test-Karte', () => {
       zustand.spieler[0].ablagestapel.push(nimmAusSchlange(zustand, 'schlange-1', blau))
     })
     const { zustand, ereignisse } = spiele(start)
-    expect(zustand.spieler[0].ablagestapel.map((karte) => karte.id)).toEqual([gelb, gespielt, blau])
+    expect(ablage(zustand, 0)).toEqual([gelb, gespielt, blau])
     expect(versetzt(ereignisse)[0].karten.map((eintrag) => [eintrag.karteId, eintrag.nach])).toEqual([
       [gelb, { ort: 'Ablagestapel', spielerIndex: 0, position: 0 }],
       [blau, { ort: 'Ablagestapel', spielerIndex: 0, position: 1 }],
@@ -262,7 +257,7 @@ describe('E4b/B2: Karten, die auf eine Hand gehen, bleiben verdeckt', () => {
       zustand.spieler[1].hand.push(zustand.nachziehstapel.shift()!)
     })
     const { zustand, ereignisse } = spiele(start)
-    expect(zustand.spieler[0].hand.map((karte) => karte.id)).toContain(rot)
+    expect(hand(zustand, 0)).toContain(rot)
     expect(versetzt(ereignisse)[0].karten).toEqual([
       { karteId: null, von: { ort: 'Schlange', spielerIndex: 0, schlangenId: 'schlange-1', position: 0 }, nach: { ort: 'Hand', spielerIndex: 0 } },
       { karteId: null, von: { ort: 'Nachziehstapel' }, nach: { ort: 'Hand', spielerIndex: 1 } },

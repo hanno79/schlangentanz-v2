@@ -41,7 +41,7 @@ function behaelter(ort: Kartenort): string {
 }
 
 /** Hände und Nachziehstapel sind verdeckt; ihre Reihenfolge meldet niemand (B2). */
-function istVerdeckt(ort: Kartenort): boolean {
+export function istVerdeckt(ort: Kartenort): boolean {
   return ort.ort === 'Hand' || ort.ort === 'Nachziehstapel';
 }
 
@@ -59,19 +59,18 @@ function ortVon(orte: ReadonlyMap<string, Kartenort>, karteId: string, wann: str
  * Einfügen in Listenreihenfolge jede Position trifft.
  */
 function versetzungen(vorher: ReadonlyMap<string, Kartenort>, nachher: ReadonlyMap<string, Kartenort>): Versetzung[] {
-  for (const karteId of vorher.keys()) ortVon(nachher, karteId, 'nach');
   const bewegt = new Set<string>();
   const geblieben = new Map<string, { vorher: string[]; nachher: string[] }>();
   for (const [karteId, nach] of nachher) {
-    const von = ortVon(vorher, karteId, 'vor');
-    if (behaelter(von) !== behaelter(nach)) bewegt.add(karteId);
+    const schluessel = behaelter(nach);
+    if (behaelter(ortVon(vorher, karteId, 'vor')) !== schluessel) bewegt.add(karteId);
     else if ('position' in nach) {
-      const folge = geblieben.get(behaelter(nach)) ?? { vorher: [], nachher: [] };
-      folge.nachher.push(karteId);
-      geblieben.set(behaelter(nach), folge);
+      if (!geblieben.has(schluessel)) geblieben.set(schluessel, { vorher: [], nachher: [] });
+      geblieben.get(schluessel)!.nachher.push(karteId);
     }
   }
   for (const [karteId, von] of vorher) {
+    ortVon(nachher, karteId, 'nach');
     if (!bewegt.has(karteId) && 'position' in von) geblieben.get(behaelter(von))!.vorher.push(karteId);
   }
   for (const folge of geblieben.values()) {
@@ -82,6 +81,10 @@ function versetzungen(vorher: ReadonlyMap<string, Kartenort>, nachher: ReadonlyM
   return [...nachher]
     .filter(([karteId]) => bewegt.has(karteId))
     .map(([karteId, nach]) => ({ karteId: istVerdeckt(nach) ? null : karteId, von: vorher.get(karteId)!, nach }));
+}
+
+function schlangenIds(zustand: Spielzustand): string[] {
+  return zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id));
 }
 
 /**
@@ -97,10 +100,10 @@ export function wirkeUndMeldeVersetzte(
   ereignisse: Ereignis[],
 ): Spielzustand {
   const vorher = alleKartenorte(zustand, karteId);
-  const schlangenVorher = zustand.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id));
+  const schlangenVorher = schlangenIds(zustand);
   const nach = wirkung(zustand);
   const karten = versetzungen(vorher, alleKartenorte(nach, karteId));
-  const bestehend = new Set(nach.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => schlange.id)));
+  const bestehend = new Set(schlangenIds(nach));
   const aufgeloest = schlangenVorher.filter((schlangenId) => !bestehend.has(schlangenId));
   if (karten.length > 0 || aufgeloest.length > 0) ereignisse.push({ typ: 'KartenVersetzt', spielerIndex, karteId, karten, aufgeloest });
   return nach;

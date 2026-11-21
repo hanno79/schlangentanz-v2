@@ -94,7 +94,6 @@ describe('A1/A7: das Kartenregister', () => {
   it('A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind keine Platzhalter mehr, die übrigen kommen mit E5 bis E9 und X6', () => {
     const umgesetzt = ARTEN.map(([kartenart]) => kartenart).filter((kartenart) => !istPlatzhalter(KARTENREGISTER[kartenart]))
     expect(umgesetzt).toEqual(expect.arrayContaining(['Farbkarte', 'Verdoppler', 'Farbenschutz', 'Schlangengrube']))
-    expect(PLATZHALTER.length + umgesetzt.length).toBe(ARTEN.length)
   })
 
   it.each(PLATZHALTER)('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {

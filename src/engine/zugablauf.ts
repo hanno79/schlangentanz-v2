@@ -1,6 +1,6 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
-import { alleKartenorte } from './kartenorte';
+import { alleKartenorte, istVerdeckt } from './kartenorte';
 import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
@@ -67,7 +67,7 @@ export function meldeGespielteKarte(zustand: Spielzustand, aktion: GespielteKart
 /** Wo eine gespielte Karte liegt, ausserhalb der Hände und des Nachziehstapels. Gesucht wird im Zustand, deshalb gilt es für jede Kartenwirkung. */
 export function findeKartenort(zustand: Spielzustand, karteId: string): Kartenort {
   const ort = alleKartenorte(zustand).get(karteId);
-  if (ort === undefined || ort.ort === 'Hand' || ort.ort === 'Nachziehstapel') {
+  if (ort === undefined || istVerdeckt(ort)) {
     throw new Error(`Die gespielte Karte ${karteId} liegt an keinem Ort, den ein Ereignis nennen kann.`);
   }
   return ort;
