@@ -70,6 +70,21 @@ describe('O3: Die Aktionen des Menschen in der Sicht', () => {
   })
 })
 
+describe('O5/B2: Der Grund gegen „Zug beenden“ verrät nichts aus fremden Händen', () => {
+  it('O5/B2: tauscht man die Hand eines Gegners gegen andere Karten, bleibt der Grund in deiner Sicht gleich', () => {
+    const lagen = partie(2, 3, true).filter((stand) => ermittleEntscheider(stand) === 0 && stand.nachziehstapel.length >= stand.spieler[1].hand.length)
+    expect(lagen.length, 'Lagen, in denen du entscheidest').toBeGreaterThan(5)
+    for (const zustand of lagen.slice(0, 30)) {
+      const vorher = tischAnsicht(zustand).zugBeendenGesperrt
+      const getauscht = structuredClone(zustand)
+      const fremd = getauscht.spieler[1]
+      const tausch = getauscht.nachziehstapel.splice(0, fremd.hand.length, ...fremd.hand)
+      fremd.hand = tausch
+      expect(tischAnsicht(getauscht).zugBeendenGesperrt).toBe(vorher)
+    }
+  })
+})
+
 describe('O3 K6/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe, nach jedem Schritt einer Partie', () => {
   it.each(PARTIEN)('O3 K6: Partie aus Saat $saat mit $spieler Spielern (Erweiterung $erweiterung)', ({ saat, spieler, erweiterung }) => {
     const zustaende = partie(saat, spieler, erweiterung)

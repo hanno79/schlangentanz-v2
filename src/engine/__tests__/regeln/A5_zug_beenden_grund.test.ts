@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, pruefeAktion, zugBeendenGesperrt } from '../../index'
 import type { SpielAktion, Spielzustand } from '../../index'
 import { baukasten } from '../../testing/szenario'
+import { erzeugeZufall } from '../../testing/zufall'
+import { zufallszustand } from '../../testing/zufallszustand'
 
 /*
 O5, Prüfprotokoll Iteration 1: Die Oberfläche zeigt neben einem gesperrten
@@ -61,5 +63,39 @@ describe('A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine', () 
       .zustand()
     expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
     expect(zugBeendenGesperrt(zustand)).toMatch(/schwebt/)
+  })
+
+  it('A5/D12: mit leerer Hand ist das Beenden nicht gesperrt, auch ohne gespielte Karte', () => {
+    const zustand = baukasten({ spielerzahl: 2, erweiterung: false }).hand(1, ['Blau']).zustand()
+    expect(zustand.spieler[0].hand).toHaveLength(0)
+    expect(zugBeendenGesperrt(zustand)).toBeNull()
+    expect(grundDerPruefung(zustand)).toBeNull()
+  })
+
+  it('A7.8/D12: im zweiten Zug nach dem Verdoppler gilt die Kartenpflicht neu; eine Sonderkarte allein erfüllt sie', () => {
+    const zustand = baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, ['Farbenschutz', 'Rot']).amZug(0, 2).zustand()
+    expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
+    expect(zugBeendenGesperrt(zustand)).toMatch(/mindestens eine Karte/)
+    const ablegen = ermittleAktionen(zustand).find((aktion) => aktion.typ === 'SonderkarteWirkungslosAblegen')!
+    const nach = anwendeAktion(zustand, ablegen).zustand
+    expect(zugBeendenGesperrt(nach)).toBeNull()
+  })
+
+  it('A10: nach dem Spielende nennt sie den Grund aus pruefeAktion', () => {
+    const zustand = baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, ['Rot']).beendet(0).zustand()
+    expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
+    expect(zugBeendenGesperrt(zustand)).toMatch(/A10/)
+  })
+
+  it('A5, A6, A10: in 1000 Zufallszuständen jeder Phase derselbe Grund wie pruefeAktion, und gesperrt genau dann, wenn sie ablehnt', () => {
+    let gesperrt = 0
+    for (let saat = 1; saat <= 1000; saat += 1) {
+      const zustand = zufallszustand(erzeugeZufall(saat))
+      const grund = zugBeendenGesperrt(zustand)
+      expect(grund, `Saat ${saat}`).toBe(grundDerPruefung(zustand))
+      if (grund !== null) gesperrt += 1
+    }
+    expect(gesperrt, 'gesperrte und freie Zustände kommen beide vor').toBeGreaterThan(0)
+    expect(gesperrt).toBeLessThan(1000)
   })
 })
