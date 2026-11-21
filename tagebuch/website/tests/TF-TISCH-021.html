@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-021 Lehnt die Engine eine Aktion ab, zeigt die Zugleiste ihren eigenen deutschen Grund, und gespielt ist nichts. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-021 Lehnt die Engine eine Aktion ab, zeigt die Zugleiste ihren eigenen deutschen Grund, und gespielt ist nichts.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Oberfläche bietet nur an, was die Engine aufzählt; eine Ablehnung entsteht nur, wenn Aufzählen und Prüfen auseinanderlaufen. Im Browser lässt sich das nicht auslösen. Der Komponententest des Umsetzers gibt der Prüfung einen erfundenen Grund vor. Hier prüft die echte <code>pruefeAktion</code> eine falsche Aktion, damit sichtbar wird, dass der Satz der Engine selbst ankommt.</p><h2>Bestanden, wenn</h2><p>Nach Rot, „Neue Schlange“ und „Ausführen“ steht in der Zugleiste als Meldung „Eine neue Schlange geht nicht: Jeder Spieler hat höchstens 2 Schlangen (A5).“, und der gespeicherte Spielstand ist derselbe wie beim Laden.</p><h2>Fehlgeschlagen, wenn</h2><p>Keine Meldung erscheint, die Meldung ist nicht der Satz der Engine, oder die Karte ist gespielt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O5-karten-spielen (PR #73)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Vitest mit jsdom, Stand ab Commit 27d85d3</td></tr><tr><td>Ausgangslage prüfen</td><td>Szenario <code>farbkarte-beim-gegner</code>: du hast schon zwei Schlangen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zu den Aktionen der Engine kommt eine falsche: FarbkarteLegen mit deiner Rot und dem Ziel „neue Schlange“.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Testdatei</td><td>`ermittleAktionen` um die falsche Aktion ergänzen, `/spiel` mit dem Szenario rendern</td><td>`farbkarte-beim-gegner`</td><td>„Neue Schlange“ wird nach Rot angeboten</td></tr><tr><td>2</td><td>Deine Hand</td><td>„Farbkarte Rot, 1 Punkt“ antippen</td><td></td><td>Ziele markiert</td></tr><tr><td>3</td><td>Deine Schlangen</td><td>„Neue Schlange“ antippen, dann „Ausführen“</td><td></td><td>Meldung in der Zugleiste</td></tr><tr><td>4</td><td>Speicher</td><td>Spielstand lesen</td><td></td><td>unverändert</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Vorübergehende Testdatei unter <code>src/ui/tisch/</code>, die <code>ermittleAktionen</code> so ersetzt, dass sie die echte Liste plus die falsche Aktion liefert; <code>pruefeAktion</code> bleibt echt. Dann wie in <code>Ablehnung.test.tsx</code>: <code>spieleAm(erzeugeSzenario(&#x27;farbkarte-beim-gegner&#x27;))</code>, Rot antippen, „Neue Schlange“ antippen, „Ausführen“. Erwartet: <code>getByRole(&#x27;alert&#x27;)</code> enthält den Satz oben, <code>roh()</code> gleich <code>serialisiere(start)</code>. Die Datei wird danach gelöscht.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Eine Ablehnung im echten Spiel: lässt sich nicht herbeiführen, solange Aufzählen und Prüfen übereinstimmen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 17:12</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O5) &middot; agent &middot; pruefung-O5 @ <span class="commit" title="27d85d379c06cc18a6e9f65853b716e3c9019c66">27d85d3</span> / Vitest 4.1.7, jsdom</p><p>Meldung &#x27;Eine neue Schlange geht nicht: Jeder Spieler hat höchstens 2 Schlangen (A5).&#x27; in der Zugleiste, Speicher unverändert; vorübergehende Testdatei danach gelöscht</p><ul class="belege"><li><a href="belege/2026-11-21-1712-TF-TISCH-021-1.txt">2026-11-21-1712-TF-TISCH-021-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

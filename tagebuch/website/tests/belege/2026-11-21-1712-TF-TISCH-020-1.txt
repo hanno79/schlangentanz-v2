@@ -1,0 +1,5 @@
+[desktop] ohne Karte: Zug beenden gesperrt, Grund daneben: Du musst immer mindestens eine Karte spielen. | Rot gewählt: Zug beenden gesperrt, Grund daneben: — | Ansage: Zug beenden gesperrt, Grund daneben: —
+[tablet-quer] ohne Karte: Zug beenden gesperrt, Grund daneben: Du musst immer mindestens eine Karte spielen. | Rot gewählt: Zug beenden gesperrt, Grund daneben: — | Ansage: Zug beenden gesperrt, Grund daneben: —
+[tablet-hochkant] ohne Karte: Zug beenden gesperrt, Grund daneben: Du musst immer mindestens eine Karte spielen. | Rot gewählt: Zug beenden gesperrt, Grund daneben: — | Ansage: Zug beenden gesperrt, Grund daneben: —
+[handy-hochkant] ohne Karte: Zug beenden gesperrt, Grund daneben: Du musst immer mindestens eine Karte spielen. | Rot gewählt: Zug beenden gesperrt, Grund daneben: — | Ansage: Zug beenden gesperrt, Grund daneben: —
+[handy-quer] ohne Karte: Zug beenden gesperrt, Grund daneben: Du musst immer mindestens eine Karte spielen. | Rot gewählt: Zug beenden gesperrt, Grund daneben: — | Ansage: Zug beenden gesperrt, Grund daneben: —
