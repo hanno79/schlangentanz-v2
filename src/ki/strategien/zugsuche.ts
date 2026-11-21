@@ -66,7 +66,10 @@ export interface Zugplan {
   bewertungen: Bewertungen;
 }
 
-const OHNE_BEWERTUNG: Bewertungen = { suche: 0, vorauswahl: 0, angeboten: 0 };
+/** Ein Schritt ohne jede Bewertung; je Aufruf ein neues Objekt, weil eine Strategie auf der Modulebene nichts Veränderliches hält (U5). */
+function ohneBewertung(): Bewertungen {
+  return { suche: 0, vorauswahl: 0, angeboten: 0 };
+}
 
 interface Folge {
   aktion: SpielAktion;
@@ -206,14 +209,14 @@ function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => 
 function werfeAb(sicht: Sicht, aktionen: readonly SpielAktion[]): Zugplan {
   const verlust = (aktion: SpielAktion) =>
     aktion.typ !== 'UeberhandAbwerfen' ? 0 : sicht.hand.filter((karte) => aktion.karteIds.includes(karte.id)).reduce((summe, karte) => summe + haltewert(karte, sicht), 0);
-  return { aktion: aktionen.reduce((bisher, aktion) => (verlust(aktion) < verlust(bisher) ? aktion : bisher)), bewertungen: OHNE_BEWERTUNG };
+  return { aktion: aktionen.reduce((bisher, aktion) => (verlust(aktion) < verlust(bisher) ? aktion : bisher)), bewertungen: ohneBewertung() };
 }
 
 /** Plant den nächsten Schritt aus der Sicht des Entscheiders; die gewählte Aktion ist eine aus `aktionen`. */
 export function planeZug(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const erste = aktionen[0];
   if (erste === undefined) throw new Error('Zugsuche: Es gibt keine Aktion zur Auswahl.');
-  if (aktionen.length === 1) return { aktion: erste, bewertungen: OHNE_BEWERTUNG };
+  if (aktionen.length === 1) return { aktion: erste, bewertungen: ohneBewertung() };
   if (erste.typ === 'Reagieren') return reagiere(sicht, aktionen, zufall);
   if (erste.typ === 'UeberhandAbwerfen') return werfeAb(sicht, aktionen);
   return spiele(sicht, aktionen, zufall);
