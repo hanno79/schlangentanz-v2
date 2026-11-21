@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test'
-import { serialisiere, zugBeendenGesperrt } from '../../src/engine'
+import { serialisiere } from '../../src/engine'
 import { erzeugeSzenario } from '../../src/entwicklung/szenarien'
 import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, kasten, waagrechterUeberstand } from './messung'
@@ -142,7 +142,8 @@ test.describe('O5 K9: Karten spielen mit Maus und Finger', () => {
   test('O5 Iteration 2: neben dem gesperrten „Zug beenden“ steht der Grund der Engine, auch mit gewählter Karte und Ansage', async ({ page }, info) => {
     const tippe = bediene(info)
     await oeffneSzenario(page, 'farbkarte-beim-gegner')
-    const grund = zugBeendenGesperrt(erzeugeSzenario('farbkarte-beim-gegner'))!
+    // O6: in Du-Form (Weg A), aus dem Grund der Engine „Spieler 1 muss erst …“.
+    const grund = 'Du musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).'
     const zugBeenden = zugleiste(page).getByRole('button', { name: 'Zug beenden' })
     const pruefe = async (lage: string) => {
       await expect(zugBeenden, lage).toBeDisabled()

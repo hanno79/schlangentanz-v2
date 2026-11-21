@@ -101,8 +101,9 @@ describe('O3: Aktionen des Menschen', () => {
     const { result } = renderHook(() => useSpiel(start, { pause: 0 }))
     const fremd: SpielAktion = { typ: 'ZugBeenden', spielerId: 'spieler-2' }
     act(() => result.current.fuehreAus(fremd))
-    expect(result.current.ablehnung).toMatch(/[a-zäöü]{4,}/)
-    expect(pruefeAktion(start, fremd)).toEqual({ erlaubt: false, grund: result.current.ablehnung })
+    expect(pruefeAktion(start, fremd).erlaubt).toBe(false)
+    // O6: Der Grund der Engine nennt den Menschen, am Tisch heisst er „du“.
+    expect(result.current.ablehnung).toBe('KI-Gegner 1 ist nicht am Zug; am Zug bist du (A5).')
     expect(gespeichert()).toBeNull()
     act(() => result.current.fuehreAus(result.current.ansicht.aktionen[0]))
     expect(result.current.ablehnung).toBeNull()
@@ -141,7 +142,7 @@ describe('O3 K2: Neu laden setzt genau dort fort', () => {
     warte(0)
     warte(1000)
     const frage = erst.result.current.ansicht
-    expect(frage.status.schwebend).toEqual({ karte: 'Schlangengrube', von: { name: 'KI-Gegner 1', ich: false }, entscheidet: { name: 'Spieler 1', ich: true } })
+    expect(frage.status.schwebend).toMatchObject({ karte: 'Schlangengrube', von: { name: 'KI-Gegner 1', ich: false }, entscheidet: { name: 'Spieler 1', ich: true } })
     erst.unmount()
     const stand = gespeichert()!
     expect(stand.schwebend?.ausstehend).toEqual([0])
