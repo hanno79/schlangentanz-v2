@@ -1,0 +1,6 @@
+1) vor dem Neuladen: {"phase":"Schlussrunde","dran":2,"teilzug":1,"hand":[3,4,5,5],"schlangen":[3,0,0,0],"ablage":[22,22,22,22],"stapel":0,"schwebend":null} | Status: KI-Gegner 2 ist dran Schlussrunde
+1) direkt nach dem Neuladen gleich? true | Status: KI-Gegner 2 ist dran Schlussrunde | Adresse: http://localhost:4184/spiel
+1) erster Schritt nach dem Neuladen nach 1923 ms ab Ladebeginn: {"phase":"Schlussrunde","dran":2,"teilzug":1,"hand":[3,4,4,5],"schlangen":[4,0,0,0],"ablage":[22,22,22,22],"stapel":0,"schwebend":null}
+2) Abwehrfrage: {"phase":"Laufend","dran":1,"teilzug":1,"hand":[5,5],"schlangen":[0,2],"ablage":[0,0],"stapel":95,"schwebend":{"karte":"Schlangengrube","ausstehend":[0]}} | Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Adresse: http://localhost:4184/spiel
+2) nach Neuladen und 4 s: Stand gleich? true | Schreibvorgänge seit dem Laden: 0 | Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst.
+scrollWidth/clientWidth: 1280/1280 | Konsolenfehler: 0 

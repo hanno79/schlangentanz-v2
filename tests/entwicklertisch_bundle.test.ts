@@ -59,6 +59,7 @@ function baue(modus: 'production' | 'testhooks'): Build {
 }
 
 const TISCH = 'src/entwicklung/Entwicklertisch.tsx'
+const SPIEL_TESTHOOKS = 'src/entwicklung/SpielTesthooks.tsx'
 
 describe('P0.4 K3: der Entwicklertisch steht nicht im Produktionsbundle', () => {
   it('P0.4 K3: kein Modul aus src/entwicklung und kein Text des Tischs im Produktionsbuild', () => {
@@ -75,5 +76,8 @@ describe('P0.4 K3: der Entwicklertisch steht nicht im Produktionsbundle', () => 
     expect(manifest[TISCH]?.isDynamicEntry, `${TISCH} ist kein nachgeladener Chunk`).toBe(true)
     const einstieg = Object.values(manifest).find((eintrag) => eintrag.isEntry === true)
     expect(einstieg?.dynamicImports, 'Der Einstieg lädt den Tisch nicht nach').toContain(TISCH)
+    // O3 K7: Auch die Testhooks unter /spiel kommen nur als eigener Chunk; im Produktionsbuild prüft sie der Test oben mit.
+    expect(manifest[SPIEL_TESTHOOKS]?.isDynamicEntry, `${SPIEL_TESTHOOKS} ist kein nachgeladener Chunk`).toBe(true)
+    expect(einstieg?.dynamicImports, 'Der Einstieg lädt die Testhooks von /spiel nicht nach').toContain(SPIEL_TESTHOOKS)
   }, 120_000)
 })

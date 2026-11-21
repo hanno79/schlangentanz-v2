@@ -1,0 +1,36 @@
+
+== ausstehend-5
+Seite nach 3 s: Spieltisch Es läuft keine Partie. Starte in der Lobby eine neue. Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Alle Verweise auf Spieler und Karten sind gültig verletzt. Die schwebende schlangengrube-02 verweist auf Spieler 5, es gibt 2). Sie wurde verworfen; starte eine neue Partie. Zurück zur Lobby
+Schreibvorgänge seit dem Laden: 0
+Kein Knopf „Zurück zur Lobby“.
+Konsole: 1 error: Gespeicherte Partie beschädigt und verworfen: Error: Ungültiger Spielstand: Alle Verweise auf Spieler und Karten sind gültig verletzt. Die schwebende schlangeng
+
+== ausstehend-leer
+Seite nach 3 s: Hier ist ein Fehler aufgetreten Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6). Eine laufende Partie lässt sich nicht fortsetzen: Ihr Spielstand wird verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt. Zurück zur Lobby
+Schreibvorgänge seit dem Laden: 0
+Nach „Zurück zur Lobby“: Schlangentanz Du gegen bis zu drei KI-Gegner Regeln Gegner 1 Gegner 2 Gegner 3 Gegner Mit Erweiterung Aus Neue Partie | Stand im Speicher: null | Adresse: http://localhost:4184/
+Konsole: 2 error: Error: Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).
+    at ln (http://localhost:4184/assets/index-BYy_niZE.js:10:66708)
+    at Hn (http://localhos || error: Fehler beim Zeichnen: Error: Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).
+    at ln (http://localhost:4184/assets/index-BYy_niZE.js:10:66708)
+    
+
+== doppelte-karte
+Seite nach 3 s: Spieltisch Es läuft keine Partie. Starte in der Lobby eine neue. Die gespeicherte Partie liess sich nicht laden. Der Spielstand ist beschädigt (Ungültiger Spielstand: Jede Spielkarte liegt genau einmal an genau einem Ort verletzt. Fehlt: blau-13. Doppelt: braun-01 (2×). Verändert: braun-01). Sie wurde verworfen; starte eine neue Partie. Zurück zur Lobby
+Schreibvorgänge seit dem Laden: 0
+Kein Knopf „Zurück zur Lobby“.
+Konsole: 1 error: Gespeicherte Partie beschädigt und verworfen: Error: Ungültiger Spielstand: Jede Spielkarte liegt genau einmal an genau einem Ort verletzt. Fehlt: blau-13. Dopp
+
+== zwei-menschen
+Seite nach 3 s: Hier ist ein Fehler aufgetreten Am Tisch muss genau ein Mensch sitzen (B2), es sind 2. Eine laufende Partie lässt sich nicht fortsetzen: Ihr Spielstand wird verworfen, damit der Fehler sich beim nächsten Aufruf nicht wiederholt. Zurück zur Lobby
+Schreibvorgänge seit dem Laden: 0
+Nach „Zurück zur Lobby“: Schlangentanz Du gegen bis zu drei KI-Gegner Regeln Gegner 1 Gegner 2 Gegner 3 Gegner Mit Erweiterung Aus Neue Partie | Stand im Speicher: null | Adresse: http://localhost:4184/
+Konsole: 2 error: Error: Am Tisch muss genau ein Mensch sitzen (B2), es sind 2.
+    at Sa (http://localhost:4184/assets/index-BYy_niZE.js:10:111426)
+    at http://localhost:4184/ || error: Fehler beim Zeichnen: Error: Am Tisch muss genau ein Mensch sitzen (B2), es sind 2.
+    at Sa (http://localhost:4184/assets/index-BYy_niZE.js:10:111426)
+    at 
+
+== alter Stand, erstes Öffnen der Lobby: Schlangentanz Du gegen bis zu drei KI-Gegner Regeln Die gespeicherte Partie liess sich nicht laden. Sie stammt aus einem älteren Speicherformat, das diese Fassung des Spiels nicht mehr liest. Sie wurde verworfen; starte eine neue Partie. Gegner 1 Gegner 2 Gegner 3 Gegner Mit Erweiterung Aus Neue Partie
+== alter Stand, nach Neuladen: Schlangentanz Du gegen bis zu drei KI-Gegner Regeln Gegner 1 Gegner 2 Gegner 3 Gegner Mit Erweiterung Aus Neue Partie | Speicher: null
+Konsole: 1 warning: Gespeicherte Partie im älteren Speicherformat verworfen: Ungültiger Spielstand: Format 1 wird nicht mehr geladen; seit dem Neuaufbau gilt Format 2, alte Spielst

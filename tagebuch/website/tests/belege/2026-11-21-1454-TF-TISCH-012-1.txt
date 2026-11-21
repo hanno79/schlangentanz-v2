@@ -1,0 +1,35 @@
+
+=== Desktop 1280×900 (pointer: coarse false)
+1) Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Breite 1280/1280
+1) nach Lobby und Weiterspielen: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Stand gleich: true | Adresse http://localhost:4184/spiel
+2) Status: Die Partie ist beendet. | Breite 1280/1280
+3) Status: Du bist dran Spiele Karten aus deiner Hand. | nach 2 s unverändert: true | Breite 1280/1280 | Gegner: 3
+Konsolenfehler: 0 
+
+=== Tablet quer 1024×768, Touch (pointer: coarse true)
+1) Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Breite 1024/1024
+1) nach Lobby und Weiterspielen: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Stand gleich: true | Adresse http://localhost:4184/spiel
+2) Status: Die Partie ist beendet. | Breite 1024/1024
+3) Status: Du bist dran Spiele Karten aus deiner Hand. | nach 2 s unverändert: true | Breite 1024/1024 | Gegner: 3
+Konsolenfehler: 0 
+
+=== Tablet hochkant 768×1024, Touch (pointer: coarse true)
+1) Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Breite 768/768
+1) nach Lobby und Weiterspielen: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Stand gleich: true | Adresse http://localhost:4184/spiel
+2) Status: Die Partie ist beendet. | Breite 768/768
+3) Status: Du bist dran Spiele Karten aus deiner Hand. | nach 2 s unverändert: true | Breite 768/768 | Gegner: 3
+Konsolenfehler: 0 
+
+=== Handy hochkant 390×844, Touch (pointer: coarse true)
+1) Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Breite 390/390
+1) nach Lobby und Weiterspielen: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Stand gleich: true | Adresse http://localhost:4184/spiel
+2) Status: Die Partie ist beendet. | Breite 390/390
+3) Status: Du bist dran Spiele Karten aus deiner Hand. | nach 2 s unverändert: true | Breite 390/390 | Gegner: 3
+Konsolenfehler: 0 
+
+=== Handy quer 844×390, Touch (pointer: coarse true)
+1) Status: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Breite 844/844
+1) nach Lobby und Weiterspielen: KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Stand gleich: true | Adresse http://localhost:4184/spiel
+2) Status: Die Partie ist beendet. | Breite 844/844
+3) Status: Du bist dran Spiele Karten aus deiner Hand. | nach 2 s unverändert: true | Breite 844/844 | Gegner: 3
+Konsolenfehler: 0 
