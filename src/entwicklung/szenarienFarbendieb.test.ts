@@ -61,7 +61,7 @@ describe('E8: Szenarien des Farbendiebs', () => {
     expect(ermittleEntscheider(angesagt.zustand), 'D33: KI-Gegner 1 wird gefragt').toBe(1)
     expect(ermittleAktionen(angesagt.zustand)).toEqual([{ typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: null }])
     const durch = klicke(angesagt.zustand, durchlassen)
-    expect(typen(durch.ereignisse)).toEqual(['AnsageEntschieden'])
+    expect(typen(durch.ereignisse), 'E4b: erst die gestohlene Karte, dann der Farbendieb').toEqual(['KartenVersetzt', 'AnsageEntschieden'])
     expect(farben(durch.zustand, 0)).toEqual([['Gelb', 'Gelb', 'Gelb']])
     expect(farben(durch.zustand, 1)).toEqual([['Blau']])
     expect(ablagen(durch.zustand)).toEqual([['Farbendieb'], []])

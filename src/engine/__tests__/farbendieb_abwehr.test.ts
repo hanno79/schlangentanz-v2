@@ -53,7 +53,7 @@ describe('A7.1, A7.2: der Farbendieb kann durch Farbenschutz abgewehrt werden (E
     expect(hand(zustand, 1), 'A6: wer abwehrt, zieht nicht gleich nach').toHaveLength(4)
     expect(ereignisse.slice(2)).toEqual([
       { typ: 'Abgewehrt', spielerIndex: 1, karteId: schutz, gegen: dieb },
-      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: dieb, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: dieb, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(ermittleEntscheider(zustand), 'A5: A spielt seinen Zug weiter').toBe(0)
     expect(verletzteInvarianten(zustand)).toEqual([])

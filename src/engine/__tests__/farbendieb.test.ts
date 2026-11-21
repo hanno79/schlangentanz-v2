@@ -44,7 +44,7 @@ describe('A7.1: das Beispiel der Website', () => {
     expect(ablage(zustand, 0), 'A7.1: der Farbendieb kommt auf deinen Ablagestapel').toEqual([dieb])
     expect(ablage(zustand, 1)).toEqual([])
     expect(zustand.spieler[0].hand.map((karte) => karte.id)).not.toContain(dieb)
-    expect(ereignisse.at(-1)).toEqual({ typ: 'AnsageEntschieden', spielerIndex: 0, karteId: dieb, abgewehrt: [], ohneWirkung: false, nach: { ort: 'Ablagestapel', spielerIndex: 0 } })
+    expect(ereignisse.at(-1)).toEqual({ typ: 'AnsageEntschieden', spielerIndex: 0, karteId: dieb, abgewehrt: [], ohneWirkung: false, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } })
     expect(verletzteInvarianten(zustand)).toEqual([])
   })
 
