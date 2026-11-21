@@ -1,0 +1,86 @@
+Saat 7154: Endwertung 70 : 5, solide an Sitz 0
+TURNIER (Saaten des Testfalls TF-KI-013, 32 + Saat 7154)
+2/B: Partien 8, Siege 8 (allein 8), Ø solide 67.75, Ø Zufall 0.00, Schritte 752, max ms 127.2, max Aktionen 1234
+2/E: Partien 4, Siege 4 (allein 4), Ø solide 68.00, Ø Zufall 1.25, Schritte 400, max ms 130.8, max Aktionen 958
+3/B: Partien 7, Siege 7 (allein 7), Ø solide 40.71, Ø Zufall 0.36, Schritte 434, max ms 116.4, max Aktionen 685
+3/E: Partien 4, Siege 4 (allein 4), Ø solide 38.25, Ø Zufall 1.38, Schritte 261, max ms 107.9, max Aktionen 1280
+4/B: Partien 6, Siege 6 (allein 6), Ø solide 32.00, Ø Zufall 0.11, Schritte 277, max ms 57.2, max Aktionen 1005
+4/E: Partien 4, Siege 4 (allein 4), Ø solide 29.50, Ø Zufall 2.42, Schritte 208, max ms 159.6, max Aktionen 1520
+Schritte gesamt 2332 (mit Saat 7154); max ms 159.6 bei 1265 Aktionen; Median 8.30 ms; 99. Perzentil 86.1 ms; über 500 ms: 0
+unerlaubt 0; Fusion senkt 0; Regenbogen zum Gegner trotz eigener 0; wirkungslos trotz anderem 0; Verdoppler 47; zweiter Teilzug ohne Karte trotz Möglichkeit 0
+Zugenden mit anderer Karte 358; VERSCHENKT (hebt Punkte, nützt keinem Gegner, nicht schlechter bewertet) 0; Halten höher bewertet (legitim) 4, höchstens +1; Karte bei Gleichstand gespielt 2
+K2.1: geprüft 283, vollendet 210 (74.2 %), Ausnahmen 73, davon nicht strikt besser bewertet 0
+K2.1 ok Saat 7101 Schritt 117: Bewertung Zug 40.700 gegen beste Vollendung samt zweiter Karte 39.500 (Δ 1.200); Endwertung 35 gegen 33 (Start 31); Varianten 17
+K2.1 ok Saat 7101 Schritt 160: Bewertung Zug 56.200 gegen beste Vollendung samt zweiter Karte 55.900 (Δ 0.300); Endwertung 50 gegen 50 (Start 50); Varianten 99
+K2.1 ok Saat 7101 Schritt 164: Bewertung Zug 56.200 gegen beste Vollendung samt zweiter Karte 55.900 (Δ 0.300); Endwertung 50 gegen 50 (Start 50); Varianten 99
+K2.1 ok Saat 7101 Schritt 169: Bewertung Zug 56.600 gegen beste Vollendung samt zweiter Karte 56.500 (Δ 0.100); Endwertung 50 gegen 50 (Start 50); Varianten 99
+K2.1 ok Saat 7102 Schritt 148: Bewertung Zug 66.300 gegen beste Vollendung samt zweiter Karte 66.000 (Δ 0.300); Endwertung 62 gegen 61 (Start 58); Varianten 21
+K2.1 ok Saat 7104 Schritt 169: Bewertung Zug 71.800 gegen beste Vollendung samt zweiter Karte 71.300 (Δ 0.500); Endwertung 64 gegen 63 (Start 61); Varianten 272
+K2.1 ok Saat 7104 Schritt 176: Bewertung Zug 75.000 gegen beste Vollendung samt zweiter Karte 72.500 (Δ 2.500); Endwertung 66 gegen 65 (Start 64); Varianten 25
+K2.1 ok Saat 7105 Schritt 92: Bewertung Zug 37.400 gegen beste Vollendung samt zweiter Karte 36.600 (Δ 0.800); Endwertung 40 gegen 38 (Start 37); Varianten 759
+K2.1 ok Saat 7105 Schritt 121: Bewertung Zug 43.700 gegen beste Vollendung samt zweiter Karte 43.200 (Δ 0.500); Endwertung 45 gegen 45 (Start 45); Varianten 231
+K2.1 ok Saat 7105 Schritt 133: Bewertung Zug 53.150 gegen beste Vollendung samt zweiter Karte 51.950 (Δ 1.200); Endwertung 52 gegen 50 (Start 49); Varianten 3531
+K2.1 ok Saat 7105 Schritt 169: Bewertung Zug 74.800 gegen beste Vollendung samt zweiter Karte 73.300 (Δ 1.500); Endwertung 67 gegen 66 (Start 66); Varianten 34
+K2.1 ok Saat 7105 Schritt 178: Bewertung Zug 80.500 gegen beste Vollendung samt zweiter Karte 79.000 (Δ 1.500); Endwertung 74 gegen 73 (Start 73); Varianten 34
+K2.1 ok Saat 7105 Schritt 182: Bewertung Zug 79.800 gegen beste Vollendung samt zweiter Karte 79.300 (Δ 0.500); Endwertung 75 gegen 74 (Start 74); Varianten 34
+K2.1 ok Saat 7106 Schritt 99: Bewertung Zug 57.700 gegen beste Vollendung samt zweiter Karte 57.400 (Δ 0.300); Endwertung 53 gegen 53 (Start 51); Varianten 100
+K2.1 ok Saat 7106 Schritt 105: Bewertung Zug 59.200 gegen beste Vollendung samt zweiter Karte 58.900 (Δ 0.300); Endwertung 54 gegen 54 (Start 54); Varianten 100
+K2.1 ok Saat 7106 Schritt 111: Bewertung Zug 59.900 gegen beste Vollendung samt zweiter Karte 59.600 (Δ 0.300); Endwertung 55 gegen 55 (Start 54); Varianten 75
+K2.1 ok Saat 7106 Schritt 117: Bewertung Zug 61.800 gegen beste Vollendung samt zweiter Karte 60.300 (Δ 1.500); Endwertung 55 gegen 55 (Start 55); Varianten 51
+K2.1 ok Saat 7106 Schritt 119: Bewertung Zug 61.900 gegen beste Vollendung samt zweiter Karte 61.600 (Δ 0.300); Endwertung 57 gegen 57 (Start 55); Varianten 75
+K2.1 ok Saat 7106 Schritt 127: Bewertung Zug 63.600 gegen beste Vollendung samt zweiter Karte 62.100 (Δ 1.500); Endwertung 57 gegen 57 (Start 57); Varianten 68
+K2.1 ok Saat 7106 Schritt 131: Bewertung Zug 65.000 gegen beste Vollendung samt zweiter Karte 63.500 (Δ 1.500); Endwertung 57 gegen 57 (Start 57); Varianten 36
+K2.1 ok Saat 7106 Schritt 133: Bewertung Zug 65.500 gegen beste Vollendung samt zweiter Karte 65.200 (Δ 0.300); Endwertung 59 gegen 59 (Start 57); Varianten 36
+K2.1 ok Saat 7106 Schritt 143: Bewertung Zug 64.500 gegen beste Vollendung samt zweiter Karte 64.100 (Δ 0.400); Endwertung 59 gegen 58 (Start 58); Varianten 45
+K2.1 ok Saat 7106 Schritt 147: Bewertung Zug 65.500 gegen beste Vollendung samt zweiter Karte 65.200 (Δ 0.300); Endwertung 59 gegen 59 (Start 59); Varianten 45
+K2.1 ok Saat 7106 Schritt 153: Bewertung Zug 66.400 gegen beste Vollendung samt zweiter Karte 62.400 (Δ 4.000); Endwertung 59 gegen 59 (Start 59); Varianten 5
+K2.1 ok Saat 7106 Schritt 157: Bewertung Zug 67.700 gegen beste Vollendung samt zweiter Karte 66.400 (Δ 1.300); Endwertung 59 gegen 59 (Start 59); Varianten 5
+K2.1 ok Saat 7106 Schritt 167: Bewertung Zug 68.100 gegen beste Vollendung samt zweiter Karte 67.900 (Δ 0.200); Endwertung 62 gegen 62 (Start 62); Varianten 125
+K2.1 ok Saat 7106 Schritt 175: Bewertung Zug 71.150 gegen beste Vollendung samt zweiter Karte 70.850 (Δ 0.300); Endwertung 66 gegen 66 (Start 65); Varianten 125
+K2.1 ok Saat 7106 Schritt 179: Bewertung Zug 71.500 gegen beste Vollendung samt zweiter Karte 71.200 (Δ 0.300); Endwertung 66 gegen 66 (Start 66); Varianten 125
+K2.1 ok Saat 7107 Schritt 123: Bewertung Zug 65.400 gegen beste Vollendung samt zweiter Karte 65.060 (Δ 0.340); Endwertung 57 gegen 57 (Start 57); Varianten 27
+K2.1 ok Saat 7107 Schritt 130: Bewertung Zug 65.200 gegen beste Vollendung samt zweiter Karte 64.900 (Δ 0.300); Endwertung 57 gegen 57 (Start 57); Varianten 42
+K2.1 ok Saat 7107 Schritt 149: Bewertung Zug 72.800 gegen beste Vollendung samt zweiter Karte 72.500 (Δ 0.300); Endwertung 65 gegen 65 (Start 63); Varianten 56
+K2.1 ok Saat 7107 Schritt 155: Bewertung Zug 73.700 gegen beste Vollendung samt zweiter Karte 73.400 (Δ 0.300); Endwertung 65 gegen 65 (Start 65); Varianten 70
+K2.1 ok Saat 7107 Schritt 162: Bewertung Zug 75.010 gegen beste Vollendung samt zweiter Karte 74.710 (Δ 0.300); Endwertung 67 gegen 67 (Start 65); Varianten 90
+K2.1 ok Saat 7107 Schritt 166: Bewertung Zug 75.510 gegen beste Vollendung samt zweiter Karte 75.210 (Δ 0.300); Endwertung 67 gegen 67 (Start 67); Varianten 90
+K2.1 ok Saat 7107 Schritt 170: Bewertung Zug 76.110 gegen beste Vollendung samt zweiter Karte 75.810 (Δ 0.300); Endwertung 67 gegen 67 (Start 67); Varianten 90
+K2.1 ok Saat 7107 Schritt 174: Bewertung Zug 77.510 gegen beste Vollendung samt zweiter Karte 77.210 (Δ 0.300); Endwertung 69 gegen 69 (Start 67); Varianten 90
+K2.1 ok Saat 7107 Schritt 178: Bewertung Zug 77.210 gegen beste Vollendung samt zweiter Karte 76.910 (Δ 0.300); Endwertung 69 gegen 69 (Start 69); Varianten 108
+K2.1 ok Saat 7107 Schritt 182: Bewertung Zug 77.710 gegen beste Vollendung samt zweiter Karte 77.410 (Δ 0.300); Endwertung 69 gegen 69 (Start 69); Varianten 108
+K2.1 ok Saat 7107 Schritt 186: Bewertung Zug 78.410 gegen beste Vollendung samt zweiter Karte 78.110 (Δ 0.300); Endwertung 71 gegen 71 (Start 69); Varianten 108
+K2.1 ok Saat 7108 Schritt 175: Bewertung Zug 69.810 gegen beste Vollendung samt zweiter Karte 69.710 (Δ 0.100); Endwertung 65 gegen 65 (Start 60); Varianten 297
+K2.1 ok Saat 7152 Schritt 76: Bewertung Zug 37.550 gegen beste Vollendung samt zweiter Karte 37.250 (Δ 0.300); Endwertung 34 gegen 34 (Start 34); Varianten 25
+K2.1 ok Saat 7152 Schritt 80: Bewertung Zug 37.700 gegen beste Vollendung samt zweiter Karte 37.500 (Δ 0.200); Endwertung 34 gegen 34 (Start 34); Varianten 25
+K2.1 ok Saat 7152 Schritt 85: Bewertung Zug 38.600 gegen beste Vollendung samt zweiter Karte 38.300 (Δ 0.300); Endwertung 35 gegen 34 (Start 34); Varianten 19
+K2.1 ok Saat 7152 Schritt 89: Bewertung Zug 38.950 gegen beste Vollendung samt zweiter Karte 38.650 (Δ 0.300); Endwertung 35 gegen 35 (Start 35); Varianten 76
+K2.1 ok Saat 7152 Schritt 93: Bewertung Zug 39.750 gegen beste Vollendung samt zweiter Karte 39.450 (Δ 0.300); Endwertung 35 gegen 35 (Start 35); Varianten 52
+K2.1 ok Saat 7152 Schritt 99: Bewertung Zug 39.100 gegen beste Vollendung samt zweiter Karte 38.630 (Δ 0.470); Endwertung 35 gegen 35 (Start 35); Varianten 68
+K2.1 ok Saat 7152 Schritt 107: Bewertung Zug 42.830 gegen beste Vollendung samt zweiter Karte 42.530 (Δ 0.300); Endwertung 40 gegen 40 (Start 38); Varianten 100
+K2.1 ok Saat 7152 Schritt 115: Bewertung Zug 46.030 gegen beste Vollendung samt zweiter Karte 44.530 (Δ 1.500); Endwertung 41 gegen 41 (Start 40); Varianten 68
+K2.1 ok Saat 7152 Schritt 117: Bewertung Zug 45.130 gegen beste Vollendung samt zweiter Karte 44.830 (Δ 0.300); Endwertung 42 gegen 42 (Start 41); Varianten 100
+K2.1 ok Saat 7152 Schritt 122: Bewertung Zug 48.030 gegen beste Vollendung samt zweiter Karte 46.730 (Δ 1.300); Endwertung 42 gegen 42 (Start 42); Varianten 68
+K2.1 ok Saat 7152 Schritt 130: Bewertung Zug 50.480 gegen beste Vollendung samt zweiter Karte 50.180 (Δ 0.300); Endwertung 46 gegen 46 (Start 45); Varianten 100
+K2.1 ok Saat 7152 Schritt 134: Bewertung Zug 52.630 gegen beste Vollendung samt zweiter Karte 52.330 (Δ 0.300); Endwertung 46 gegen 46 (Start 46); Varianten 102
+K2.1 ok Saat 7152 Schritt 139: Bewertung Zug 54.900 gegen beste Vollendung samt zweiter Karte 53.600 (Δ 1.300); Endwertung 46 gegen 46 (Start 46); Varianten 54
+K2.1 ok Saat 7152 Schritt 145: Bewertung Zug 57.700 gegen beste Vollendung samt zweiter Karte 57.400 (Δ 0.300); Endwertung 50 gegen 50 (Start 49); Varianten 54
+K2.1 ok Saat 7152 Schritt 149: Bewertung Zug 58.300 gegen beste Vollendung samt zweiter Karte 58.000 (Δ 0.300); Endwertung 50 gegen 50 (Start 50); Varianten 54
+K2.1 ok Saat 7152 Schritt 155: Bewertung Zug 57.900 gegen beste Vollendung samt zweiter Karte 57.600 (Δ 0.300); Endwertung 50 gegen 50 (Start 50); Varianten 81
+K2.1 ok Saat 7152 Schritt 161: Bewertung Zug 58.900 gegen beste Vollendung samt zweiter Karte 57.400 (Δ 1.500); Endwertung 49 gegen 49 (Start 49); Varianten 6
+K2.1 ok Saat 7152 Schritt 163: Bewertung Zug 56.900 gegen beste Vollendung samt zweiter Karte 56.700 (Δ 0.200); Endwertung 49 gegen 49 (Start 49); Varianten 54
+K2.1 ok Saat 7152 Schritt 167: Bewertung Zug 57.900 gegen beste Vollendung samt zweiter Karte 57.700 (Δ 0.200); Endwertung 50 gegen 50 (Start 50); Varianten 54
+K2.1 ok Saat 7152 Schritt 171: Bewertung Zug 57.900 gegen beste Vollendung samt zweiter Karte 57.700 (Δ 0.200); Endwertung 50 gegen 50 (Start 50); Varianten 54
+K2.1 ok Saat 7152 Schritt 175: Bewertung Zug 58.100 gegen beste Vollendung samt zweiter Karte 57.800 (Δ 0.300); Endwertung 50 gegen 50 (Start 50); Varianten 54
+K2.1 ok Saat 7152 Schritt 185: Bewertung Zug 65.150 gegen beste Vollendung samt zweiter Karte 64.850 (Δ 0.300); Endwertung 57 gegen 57 (Start 57); Varianten 102
+K2.1 ok Saat 7152 Schritt 191: Bewertung Zug 62.500 gegen beste Vollendung samt zweiter Karte 60.500 (Δ 2.000); Endwertung 56 gegen 56 (Start 56); Varianten 27
+K2.1 ok Saat 7153 Schritt 188: Bewertung Zug 77.450 gegen beste Vollendung samt zweiter Karte 76.160 (Δ 1.290); Endwertung 70 gegen 68 (Start 68); Varianten 561
+K2.1 ok Saat 7201 Schritt 158: Bewertung Zug 49.700 gegen beste Vollendung samt zweiter Karte 49.400 (Δ 0.300); Endwertung 48 gegen 48 (Start 48); Varianten 147
+K2.1 ok Saat 7206 Schritt 94: Bewertung Zug 43.710 gegen beste Vollendung samt zweiter Karte 40.880 (Δ 2.830); Endwertung 41 gegen 41 (Start 41); Varianten 66
+K2.1 ok Saat 7207 Schritt 83: Bewertung Zug 24.780 gegen beste Vollendung samt zweiter Karte 24.180 (Δ 0.600); Endwertung 22 gegen 21 (Start 17); Varianten 75
+K2.1 ok Saat 7207 Schritt 116: Bewertung Zug 23.980 gegen beste Vollendung samt zweiter Karte 23.480 (Δ 0.500); Endwertung 21 gegen 21 (Start 21); Varianten 37
+K2.1 ok Saat 7207 Schritt 122: Bewertung Zug 25.980 gegen beste Vollendung samt zweiter Karte 25.680 (Δ 0.300); Endwertung 21 gegen 21 (Start 21); Varianten 98
+K2.1 ok Saat 7207 Schritt 155: Bewertung Zug 36.680 gegen beste Vollendung samt zweiter Karte 36.280 (Δ 0.400); Endwertung 33 gegen 33 (Start 30); Varianten 49
+K2.1 ok Saat 7354 Schritt 111: Bewertung Zug 18.051 gegen beste Vollendung samt zweiter Karte 14.151 (Δ 3.900); Endwertung 26 gegen 27 (Start 25); Varianten 5
+K2.1 ok Saat 7154 Schritt 119: Bewertung Zug 47.100 gegen beste Vollendung samt zweiter Karte 45.600 (Δ 1.500); Endwertung 44 gegen 42 (Start 42); Varianten 462
+K2.1 ok Saat 7154 Schritt 186: Bewertung Zug 71.300 gegen beste Vollendung samt zweiter Karte 70.800 (Δ 0.500); Endwertung 70 gegen 70 (Start 66); Varianten 25
+STÖRPROBE: Stellungen 245 (Reaktion 119, Zug 75, zweiter Teilzug 38, Schlussrunde 13), verändert 245, Sicht gleich 245, abweichende Wahl 0

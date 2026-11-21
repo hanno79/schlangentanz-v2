@@ -1,0 +1,19 @@
+Gegenprobe A: verschiedene() durch slice(0, ZWEITE_TIEFE) ersetzt
+     × K2.1: saat-8803-schritt-124.json – Farbendieb violett-09 und braun-07 vollenden (Endwertung 41 statt 37) 71ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: K2.1: Gruppen nach dem Teilzug, Endwertung 37: expected 5 to be greater than 5
+      Tests  1 failed | 1 passed (2)
+
+Gegenprobe B: Gruppenvergleich in besser() abgeschaltet
+     × K2.1: saat-7151-schritt-73.json – Schlangenhäutung und eine blaue Karte vollenden 70ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: K2.1: Gruppen nach dem Teilzug, Endwertung 35: expected 3 to be greater than 3
+      Tests  1 failed | 1 passed (2)
+
+Testcommit 349c9c0: neue Tests gegen zugsuche.ts und bewertung.ts von 349c9c0 (= 80aa481)
+     × K2.1: saat-8803-schritt-124.json – Farbendieb violett-09 und braun-07 vollenden (Endwertung 41 statt 37) 75ms
+     × K2.1: saat-7151-schritt-73.json – Schlangenhäutung und eine blaue Karte vollenden 60ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: K2.1: Gruppen nach dem Teilzug, Endwertung 37: expected 5 to be greater than 5
+AssertionError: K2.1: Gruppen nach dem Teilzug, Endwertung 35: expected 3 to be greater than 3
+      Tests  2 failed | 24 passed (26)
