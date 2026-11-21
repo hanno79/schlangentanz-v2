@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
-import type { SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import type { Ereignis, SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
 import type { Kartenwahl } from '../testing/szenario'
+import { lageVon, spieleNach } from './nachrechnen'
 import {
   ablage,
   aktionen,
@@ -87,7 +88,7 @@ describe('A6 Beispiel 2: Schlangenfrass mit mehreren Zielen', () => {
     const { zustand, ereignisse } = folge(start, () => ansage, bWehrtAb ? abwehren : durchlassen, cWehrtAb ? abwehren : durchlassen)
     const abgewehrt = [...(bWehrtAb ? [1] : []), ...(cWehrtAb ? [2] : [])]
     expect(ereignisseVom(ereignisse, 'AnsageEntschieden')).toEqual([
-      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: frass, abgewehrt, ohneWirkung: bWehrtAb && cWehrtAb, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: frass, abgewehrt, ohneWirkung: bWehrtAb && cWehrtAb, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(ids(zustand, 1).includes(vonB), 'Karte von B liegt noch').toBe(bWehrtAb)
     expect(ids(zustand, 2).includes(vonC), 'Karte von C liegt noch').toBe(cWehrtAb)
@@ -167,9 +168,77 @@ describe('A6/D33: wer gefragt wird', () => {
     expect(eigene).toHaveLength(4)
     for (const aktion of eigene) {
       const { zustand, ereignisse } = fuehreAus(start, aktion)
-      expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteGespielt'])
+      expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KartenVersetzt', 'KarteGespielt'])
       expect(zustand.schwebend).toBeNull()
     }
+  })
+})
+
+describe('A6 Beispiel 2/E4b: KartenVersetzt meldet, was gefressen ist', () => {
+  /** Die gespielte Aktion und alle Ereignisse bis zur Wirkung; jeder Schritt lässt sich aus den Ereignissen nachrechnen. */
+  function nachgerechnet(start: Spielzustand, ...wahlen: Array<(jetzt: Spielzustand) => SpielAktion>) {
+    let jetzt = start
+    const ereignisse: Ereignis[] = []
+    for (const waehle of wahlen) {
+      const schritt = fuehreAus(jetzt, waehle(jetzt))
+      expect(spieleNach(lageVon(jetzt), schritt.ereignisse), 'E2 Kriterium 11: nicht nachrechenbar').toEqual(lageVon(schritt.zustand))
+      ereignisse.push(...schritt.ereignisse)
+      jetzt = schritt.zustand
+    }
+    return { zustand: jetzt, ereignisse }
+  }
+
+  it('A6 Beispiel 2: auf den Ablagestapel von A kommt zuerst der Schlangenfrass, dann die Karten in Tischreihenfolge, gleich in welcher Reihenfolge die Ansage sie nennt', () => {
+    const { start, vonB, vonC, frass, ansage } = beispielZwei()
+    const [schlangeB, schlangeC] = [start.spieler[1].schlangen[0].id, start.spieler[2].schlangen[0].id]
+    const erwartet = {
+      typ: 'KartenVersetzt',
+      spielerIndex: 0,
+      karteId: frass,
+      karten: [
+        { karteId: vonB, von: { ort: 'Schlange', spielerIndex: 1, schlangenId: schlangeB, position: 1 }, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
+        { karteId: vonC, von: { ort: 'Schlange', spielerIndex: 2, schlangenId: schlangeC, position: 0 }, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 1 } },
+      ],
+      aufgeloest: [],
+    }
+    for (const ziele of [ansage.ziele, [...ansage.ziele].reverse()]) {
+      const { zustand, ereignisse } = nachgerechnet(start, () => ({ ...ansage, ziele }), durchlassen, durchlassen)
+      const ende = ereignisse.slice(-2)
+      expect(ende[0]).toEqual(erwartet)
+      expect(ende[1]).toMatchObject({ typ: 'AnsageEntschieden', karteId: frass, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } })
+      expect(ablage(zustand, 0)).toEqual([frass, vonB, vonC])
+    }
+  })
+
+  it('A6 Beispiel 2: wehrt B ab, nennt KartenVersetzt nur die Karte von C', () => {
+    const { start, vonC, ansage } = beispielZwei()
+    const { ereignisse } = nachgerechnet(start, () => ansage, abwehren, durchlassen)
+    expect(ereignisseVom(ereignisse, 'KartenVersetzt').map((ereignis) => ereignis.karten.map((karte) => karte.karteId))).toEqual([[vonC]])
+  })
+
+  it('A7.4/A7.7: eine gefressene Fusion: ihre Karten gehen von UnterFusion in die Schlange, die Fusion auf den Ablagestapel; eine leer gefressene Schlange steht in aufgeloest', () => {
+    const start = tisch([MIT_FRASS, FUENF]).schlange(0, [{ fusion: ['Gelb', 'Gelb'] }]).schlange(1, ['Blau', 'Rot']).zustand()
+    const eigene = start.spieler[0].schlangen[0]
+    const [links, rechts] = eigene.fusionen[0].unter.map((karte) => karte.id)
+    const fusion = eigene.karten[0].id
+    const frass = start.spieler[0].hand[0].id
+    const eigen = nachgerechnet(start, (jetzt) => aktionen(jetzt, 'SchlangenfrassSpielen').find((aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'eigeneKarte')!)
+    expect(ereignisseVom(eigen.ereignisse, 'KartenVersetzt')).toEqual([
+      {
+        typ: 'KartenVersetzt',
+        spielerIndex: 0,
+        karteId: frass,
+        karten: [
+          { karteId: links, von: { ort: 'UnterFusion', spielerIndex: 0, schlangenId: eigene.id, fusionId: fusion, position: 0 }, nach: { ort: 'Schlange', spielerIndex: 0, schlangenId: eigene.id, position: 0 } },
+          { karteId: rechts, von: { ort: 'UnterFusion', spielerIndex: 0, schlangenId: eigene.id, fusionId: fusion, position: 1 }, nach: { ort: 'Schlange', spielerIndex: 0, schlangenId: eigene.id, position: 1 } },
+          { karteId: fusion, von: { ort: 'Schlange', spielerIndex: 0, schlangenId: eigene.id, position: 0 }, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
+        ],
+        aufgeloest: [],
+      },
+    ])
+    const fremd = nachgerechnet(start, (jetzt) => frassAuf(jetzt, ...ids(jetzt, 1)), durchlassen)
+    expect(ereignisseVom(fremd.ereignisse, 'KartenVersetzt')[0].aufgeloest).toEqual([start.spieler[1].schlangen[0].id])
+    expect(fremd.zustand.spieler[1].schlangen).toEqual([])
   })
 })
 

@@ -94,8 +94,16 @@ describe('A7.4 a) und b): Karten aus der eigenen Schlange', () => {
     const start = zweiSpieler([['Blau', 'Rot', 'Gelb']], [['Grün', 'Grün']], MIT_SCHUTZ)
     const [blau, rot, gelb] = ids(start, 0)
     const { zustand, ereignisse } = fuehreAus(start, frass(start, 'eigeneKarte', rot))
+    const schlangenId = start.spieler[0].schlangen[0].id
     expect(ereignisse).toEqual([
-      { typ: 'KarteGespielt', spielerIndex: 0, karteId: frassId(start), aktion: 'SchlangenfrassSpielen', nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      {
+        typ: 'KartenVersetzt',
+        spielerIndex: 0,
+        karteId: frassId(start),
+        karten: [{ karteId: rot, von: { ort: 'Schlange', spielerIndex: 0, schlangenId, position: 1 }, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } }],
+        aufgeloest: [],
+      },
+      { typ: 'KarteGespielt', spielerIndex: 0, karteId: frassId(start), aktion: 'SchlangenfrassSpielen', nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(zustand.schwebend, 'A6/D10: a) trifft keinen Mitspieler, auch wenn er Farbenschutz hält').toBeNull()
     expect(ermittleEntscheider(zustand)).toBe(0)
