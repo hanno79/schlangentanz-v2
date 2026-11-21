@@ -194,6 +194,11 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     const objekt = teile && globalerWert(ohneKlammern(teile.objekt))
     return objekt && teile.schluessel ? `${objekt}.${teile.schluessel}` : null
   }
+  /** Ein Mitglied aus der Bibliothek an einem beliebigen Wert, etwa `[].map`: gemeinsam für alle, also wie ein Globales. */
+  const bibliotheksMitglied = (knoten: ts.Node): string | null => {
+    const name = ts.isPropertyAccessExpression(knoten) ? knoten.name : ts.isElementAccessExpression(knoten) ? knoten.argumentExpression : undefined
+    return name !== undefined && ausBibliothek(symbolVon(name)) ? knoten.getText() : null
+  }
 
   /** Schlüssel beim Zerlegen und in Objekten: `{ constructor: k } = …`, `{ __proto__: … }`. */
   const schluesselImMuster = (knoten: ts.Node): string[] | null | undefined => {
@@ -302,7 +307,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       const schluessel = ts.isPropertyAccessExpression(knoten) || ts.isElementAccessExpression(knoten) ? schluesselVon(knoten) : schluesselImMuster(knoten)
       if (schluessel === null) melde(knoten, `greift mit einem Schlüssel zu, der jeder Text sein kann: ${knoten.getText()}`)
       else if (schluessel?.some((wert) => PROTOTYP_SCHLUESSEL.has(wert))) melde(knoten, `greift auf ${knoten.getText()} zu`)
-      const name = globalerWert(knoten) ?? globalesMitglied(knoten)
+      const name = globalerWert(knoten) ?? globalesMitglied(knoten) ?? bibliotheksMitglied(knoten)
       if (name === null || geschrieben.has(knoten)) return
       if (ts.isIdentifier(knoten) && !POSITIVLISTE_GLOBALE.has(name)) return melde(knoten, `nutzt das globale ${name}; unter src/ki gilt POSITIVLISTE_GLOBALE`)
       const wert = typ(knoten)
@@ -321,8 +326,13 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       melde(knoten, `gibt das globale ${name} als Wert weiter`)
     }
 
-    /** Die Prüfung glaubt den Typen: keine Casts ausser `as const`, kein `any`, kein `arguments`. */
+    /** Die Prüfung glaubt den Typen: keine Casts ausser `as const`, keine Typprädikate, kein `declare`, kein `any`, kein `arguments`. */
     const pruefeTypen = (knoten: ts.Node) => {
+      // Ein Typprädikat und eine Ambient-Deklaration lügen dem Typprüfer wie ein Cast.
+      if (ts.isTypePredicateNode(knoten)) return melde(knoten, `Typprädikat: ${knoten.getText()}; es verdeckt den Typ wie ein Cast`)
+      if (ts.isModuleDeclaration(knoten)) return melde(knoten, `deklariert ${knoten.name.getText()}; unter src/ki keine Namensräume und kein declare global`)
+      const modifikatoren = ts.canHaveModifiers(knoten) ? ts.getModifiers(knoten) : undefined
+      if (modifikatoren?.some((m) => m.kind === ts.SyntaxKind.DeclareKeyword)) return melde(knoten, 'declare: eine Ambient-Deklaration tarnt einen fremden Wert als eigenen')
       if (!istWertausdruck(knoten)) return
       if (ts.isIdentifier(knoten) && knoten.text === 'arguments') melde(knoten, 'liest arguments')
       if (typ(knoten).flags & ts.TypeFlags.Any) melde(knoten, `Ausdruck vom Typ any: ${knoten.getText()}`)
