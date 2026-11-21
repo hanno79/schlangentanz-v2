@@ -1,0 +1,14 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2d84aa7c08dee4e7
+
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: der Test erfasst die Strategien unter src/ki/strategien, mindestens die Zufalls-KI 2ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zufallsKi.ts, erstelleZufallsKi entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 663ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: tests/isolation/spion_anker.ts (erstelleSpionAnker) verhält sich mit geteiltem Modul anders 168ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: tests/isolation/spion_map.ts (erstelleSpionMap) verhält sich mit geteiltem Modul anders 158ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: tests/isolation/spion_newtarget.ts (erstelleSpionNewTarget) verhält sich mit geteiltem Modul anders 152ms
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  08:35:42
+   Duration  2.54s (transform 563ms, setup 279ms, import 830ms, tests 1.15s, environment 0ms)
+

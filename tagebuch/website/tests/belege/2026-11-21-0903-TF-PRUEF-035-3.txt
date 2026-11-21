@@ -1,0 +1,2 @@
+T01 Zeitzünder (Kanal N02): 30 Partien zu 2, Ausgänge beendet; erste Partie mit Fund (0-basiert) 10; Entscheidungen mit richtigem verborgenem Fremdwissen 3396; richtige verborgene Fremdkarten 12362
+G01 globales JSON: 5 Partien zu 2, Ausgänge beendet; erste Partie mit Fund (0-basiert) 0; Entscheidungen mit richtigem verborgenem Fremdwissen 843; richtige verborgene Fremdkarten 3058

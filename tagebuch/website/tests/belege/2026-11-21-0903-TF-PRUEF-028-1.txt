@@ -1,0 +1,20 @@
+DATEI src/ki/strategien/zz_p_a02.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_a02.ts:7 gibt anker von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_p_a03.ts: 2 Befunde
+U5 src/ki/strategien/zz_p_a03.ts:4 this-Parameter: damit liesse sich eine Funktion mit geteiltem this aufrufen
+U5 src/ki/strategien/zz_p_a03.ts:9 gibt anker von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_p_a04.ts: 3 Befunde
+U5 src/ki/strategien/zz_p_a04.ts:5 this-Parameter: damit liesse sich eine Funktion mit geteiltem this aufrufen
+U5 src/ki/strategien/zz_p_a04.ts:12 gibt merke von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_p_a04.ts:12 gibt anker von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_p_a05.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_a05.ts:7 gibt AKTIONSTYPEN von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_p_a05b.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_a05b.ts:7 gibt werteSchlangen von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_p_a06.ts: 2 Befunde
+U5 src/ki/strategien/zz_p_a06.ts:5 this-Parameter: damit liesse sich eine Funktion mit geteiltem this aufrufen
+U5 src/ki/strategien/zz_p_a06.ts:11 gibt Anker von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_p_a07.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_a07.ts:7 new.target gibt die Klasse der Modulebene als Wert heraus
+DATEI src/ki/strategien/zz_p_a14.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_a14.ts:8 gibt anker von der Modulebene weiter; alle Instanzen der Strategie teilen es

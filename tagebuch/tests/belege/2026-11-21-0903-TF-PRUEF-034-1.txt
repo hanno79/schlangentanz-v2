@@ -1,0 +1,47 @@
+=== zz_p_f01_default.ts: Isolationstest exit 0, 6.2 s
+      Tests  5 passed (5)
+   Duration  2.65s (transform 584ms, setup 311ms, import 836ms, tests 1.14s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f02_umbenannt.ts: Isolationstest exit 0, 4.9 s
+      Tests  5 passed (5)
+   Duration  2.53s (transform 565ms, setup 278ms, import 823ms, tests 1.15s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f03_stufe.ts: Isolationstest exit 0, 4.9 s
+      Tests  5 passed (5)
+   Duration  2.49s (transform 552ms, setup 275ms, import 802ms, tests 1.14s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f04_klasse.ts: Isolationstest exit 0, 5.6 s
+      Tests  5 passed (5)
+   Duration  3.17s (transform 600ms, setup 281ms, import 827ms, tests 1.78s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f05_neu.ts: Isolationstest exit 0, 5.5 s
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_f05_neu.ts, erstelleErsteAktion entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 598ms
+      Tests  6 passed (6)
+   Duration  3.14s (transform 588ms, setup 279ms, import 835ms, tests 1.74s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f06_falscher_name.ts: Isolationstest exit 0, 4.9 s
+      Tests  5 passed (5)
+   Duration  2.52s (transform 560ms, setup 276ms, import 812ms, tests 1.15s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f07_helfer.ts: Isolationstest exit 1, 5.0 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_f07_helfer.ts, erstelleHandliste entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 5ms
+      Tests  1 failed | 5 passed (6)
+   Duration  2.52s (transform 565ms, setup 280ms, import 808ms, tests 1.15s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_f07_helfer.ts, erstelleHandliste entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ ❯ erstelleHandliste src/ki/strategien/zz_p_f07_helfer.ts:5:21
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
