@@ -122,7 +122,7 @@ describe('O3: Karte wählen, dann Ziel wählen', () => {
   it('O3: am Anfang sind genau die spielbaren Handkarten und „Zug beenden“ angeboten, wie die Engine sie nennt', () => {
     const zustand = mittelspiel()
     const aktionen = ermittleAktionen(zustand)
-    const erwartet = new Set(aktionen.flatMap((aktion) => ('karteId' in aktion && aktion.typ !== 'Reagieren' ? [aktion.karteId] : [])))
+    const erwartet = new Set(aktionen.flatMap((aktion) => ('karteId' in aktion ? [aktion.karteId] : [])))
     const karten = ANGEBOTEN(aktionen).flatMap((wahl) => (wahl.art === 'karte' ? [wahl.karteId] : []))
     expect(new Set(karten)).toEqual(erwartet)
     expect(ANGEBOTEN(aktionen).some((wahl) => wahl.art === 'zugBeenden')).toBe(aktionen.some((aktion) => aktion.typ === 'ZugBeenden'))

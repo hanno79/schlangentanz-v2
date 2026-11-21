@@ -31,9 +31,10 @@ import { describe, expect, it } from 'vitest'
 const VERZEICHNIS = 'tests/layout'
 const SUFFIX = '.hooks.spec.ts'
 
-/** Merkmale, an denen ein Vertrag den Test-Hook tatsächlich benutzt: Seit P0.4
-    ist das einzige, was nur der Testhook-Build hat, der Entwicklertisch unter `/dev`. */
-const HOOK_MERKMAL = /['"`]\/dev(?=[/?'"`])/
+/** Merkmale, an denen ein Vertrag den Test-Hook tatsächlich benutzt: Nur der
+    Testhook-Build hat den Entwicklertisch unter `/dev` (P0.4) und die Parameter
+    `szenario`, `seed` und `tempo` unter `/spiel` (O3). */
+const HOOK_MERKMAL = /['"`]\/dev(?=[/?'"`])|\/spiel\?(?:szenario|seed|tempo)=/
 
 /* ÄNDERUNG [04.08.2026]: `recursive` — aus dem zweiten Codex-Review (Gate 7).
    Vorher las der Guard nur die flache Ebene. Ein Hilfsmodul in einem

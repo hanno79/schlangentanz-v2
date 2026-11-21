@@ -1,4 +1,4 @@
-import { ermittleEntscheider, werteSchlangen } from '../../engine'
+import { ermittleAktionen, ermittleEntscheider, werteSchlangen } from '../../engine'
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -9,6 +9,7 @@ import type {
   Schlange,
   Sonderkartenname,
   SonderkarteInfo,
+  SpielAktion,
   Spieler,
   Spielkarte,
   Spielzustand,
@@ -20,8 +21,11 @@ diese Sicht und bekommt den vollen Zustand nie zu sehen: Was hier nicht steht,
 kann er nicht verraten. Von den Gegnern stehen deshalb nur offene Dinge darin;
 ihre Hand nur als Zahl, ihre geheime Aufgabe gar nicht.
 
-O4 baut den Teil, den der Tisch zum Anzeigen braucht. Was die Bedienung braucht
-(erlaubte Aktionen, Auswahl), ergänzt O3.
+O4 baut den Teil, den der Tisch zum Anzeigen braucht. O3 ergänzt, was die
+Bedienung braucht: die Aktionen, die der Mensch jetzt wählen darf. Sie stehen
+nur darin, solange er entscheidet; die Aktionen eines Gegners nennen dessen
+Handkarten (B2, „auch nicht mittelbar über angebotene Aktionen“). Von der Karte
+zur fertigen Aktion führt `auswahl.ts`.
 
 Regeln stehen hier keine: Farbgruppen kommen aus der Wertung der Engine, wer
 entscheidet aus `ermittleEntscheider`.
@@ -97,6 +101,8 @@ export interface TischAnsicht {
   nachziehstapel: number
   offeneAufgaben: AufgabenkarteInfo[]
   status: StatusAnsicht
+  /** Was du jetzt tun darfst, wie die Engine es aufzählt (U3); leer, solange ein Gegner entscheidet oder die Partie beendet ist. */
+  aktionen: SpielAktion[]
 }
 
 function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]): SchlangeAnsicht {
@@ -178,5 +184,6 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
           ? null
           : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider) },
     },
+    aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],
   }
 }

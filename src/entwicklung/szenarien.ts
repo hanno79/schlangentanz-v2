@@ -8,6 +8,7 @@ import { FARBENDIEB_SZENARIEN } from './szenarienFarbendieb'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
 import { FRASS_SZENARIEN } from './szenarienFrass'
 import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
+import { SPIEL_SZENARIEN } from './szenarienSpiel'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -234,6 +235,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...FRASS_SZENARIEN,
   ...FARBENDIEB_SZENARIEN,
   ...FARBENFUSION_SZENARIEN,
+  ...SPIEL_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

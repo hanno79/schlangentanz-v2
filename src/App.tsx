@@ -28,6 +28,13 @@ const Entwicklertisch =
     ? lazy(() => import('./entwicklung/Entwicklertisch'))
     : null
 
+/* Die Testhooks unter `/spiel` (O3 K7: `szenario`, `seed`, `tempo`), nach
+   demselben Muster: im Produktionsbuild weder erreichbar noch im Bundle. */
+const SpielTesthooks =
+  import.meta.env.DEV || import.meta.env.VITE_TEST_HOOKS === '1'
+    ? lazy(() => import('./entwicklung/SpielTesthooks'))
+    : null
+
 function istEntwicklerPfad(pfad: string): boolean {
   return pfad === '/dev' || pfad.startsWith('/dev/')
 }
@@ -77,7 +84,14 @@ function Seiteninhalt({ pfad }: { pfad: string }) {
     case 'lobby':
       return <Lobby />
     case 'spiel':
-      return <Spielseite />
+      // Nur mit Parametern, damit `/spiel` ohne sie auch hier sofort zeichnet, ohne nachzuladen.
+      return SpielTesthooks !== null && window.location.search !== '' ? (
+        <Suspense fallback={<p>Lädt …</p>}>
+          <SpielTesthooks />
+        </Suspense>
+      ) : (
+        <Spielseite />
+      )
     case 'regeln':
       return <Regeln />
     case null:

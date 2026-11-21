@@ -1,23 +1,29 @@
-import { useMemo } from 'react'
+import { useSyncExternalStore } from 'react'
+import type { Spielzustand } from '../../engine'
 import Rahmen from '../lobby/Rahmen'
 import { useGespeichertePartie } from '../lobby/partie'
 import { SPIEL, ZURUECK_ZUR_LOBBY } from '../lobby/texte'
 import Verweis from '../lobby/Verweis'
 import VerworfenHinweis from '../lobby/VerworfenHinweis'
 import { Tisch } from '../tisch/Tisch'
-import { tischAnsicht } from './tischAnsicht'
+import { KI_PAUSE, useSpiel } from './useSpiel'
 
 /**
  * Die Seite unter `/spiel`. Ist eine Partie gespeichert, steht hier der
- * Spieltisch und zeigt sie (O4); gespielt wird erst mit O3 und O5. Ohne Partie
+ * Spieltisch, und die Partie läuft (O3): Die KI-Gegner spielen, bis du
+ * entscheidest. Bedienen lässt sich der Tisch erst mit O5 und O6. Ohne Partie
  * sagt die Seite das und führt in die Lobby.
+ *
+ * `pause` setzen nur die Testhooks (`?tempo=sofort`); sonst kommt sie aus
+ * „weniger Bewegung“.
  */
-export default function Spielseite() {
+export default function Spielseite({ pause }: { pause?: number }) {
   const gespeichert = useGespeichertePartie()
-  const zustand = gespeichert.art === 'laufend' ? gespeichert.zustand : null
-  const ansicht = useMemo(() => (zustand === null ? null : tischAnsicht(zustand)), [zustand])
+  const wenigerBewegung = useWenigerBewegung()
 
-  if (ansicht !== null) return <Tisch ansicht={ansicht} />
+  if (gespeichert.art === 'laufend') {
+    return <Partie start={gespeichert.zustand} pause={pause ?? (wenigerBewegung ? 0 : KI_PAUSE)} />
+  }
 
   return (
     <Rahmen
@@ -29,4 +35,27 @@ export default function Spielseite() {
       {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
     </Rahmen>
   )
+}
+
+function Partie({ start, pause }: { start: Spielzustand; pause: number }) {
+  const { ansicht } = useSpiel(start, { pause })
+  return <Tisch ansicht={ansicht} />
+}
+
+const WENIGER_BEWEGUNG = '(prefers-reduced-motion: reduce)'
+
+/* jsdom kennt `matchMedia` nicht; dort gibt es auch keine Bewegung, die man abschalten könnte. */
+function abfrage(): MediaQueryList | null {
+  return typeof window.matchMedia === 'function' ? window.matchMedia(WENIGER_BEWEGUNG) : null
+}
+
+function abonniere(melde: () => void): () => void {
+  const liste = abfrage()
+  liste?.addEventListener('change', melde)
+  return () => liste?.removeEventListener('change', melde)
+}
+
+/** Ob der Mensch „weniger Bewegung“ eingestellt hat; folgt einer Änderung während der Partie. */
+function useWenigerBewegung(): boolean {
+  return useSyncExternalStore(abonniere, () => abfrage()?.matches ?? false)
 }

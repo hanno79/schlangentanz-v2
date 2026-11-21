@@ -231,10 +231,12 @@ describe('O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry', (
         },
       }
     })
-    renderHook(() => useSpiel(szenario('schlussrunde-4'), { pause: 0 }))
+    // Die drei KI-Gegner spielen ihre letzten Züge, ohne dass du gefragt wirst.
+    renderHook(() => useSpiel(szenario('schlussrunde-ohne-dich'), { pause: 0 }))
     for (let schritt = 0; schritt < 30; schritt += 1) warte(0)
+    expect(gespeichert()!.partiephase).toBe('Beendet')
     const benutzt = sitzeJeInstanz.filter((sitze) => sitze.length > 0)
-    expect(benutzt.length, 'mehrere Gegner haben gespielt').toBeGreaterThanOrEqual(2)
+    expect(benutzt.length, 'alle drei Gegner haben gespielt').toBe(3)
     for (const sitze of benutzt) expect(new Set(sitze).size, `Instanz spielte für die Sitze ${sitze.join(', ')}`).toBe(1)
     expect(new Set(benutzt.map((sitze) => sitze[0])).size).toBe(benutzt.length)
   })
