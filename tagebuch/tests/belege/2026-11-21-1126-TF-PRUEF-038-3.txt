@@ -1,0 +1,5 @@
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/entwicklung/Tisch.tsx:8 import…' to be '' // Object.is equality
++ U5 src/entwicklung/Tisch.tsx:8 importiert „../ki/strategien/zufallsKi“ (src/ki/strategien/zufallsKi.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 passed (32)

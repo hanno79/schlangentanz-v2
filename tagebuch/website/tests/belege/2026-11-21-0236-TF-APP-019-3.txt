@@ -1,0 +1,6 @@
+Produktionsbuild (npm run build, vite preview Port 4173), eingebauter Browser 1280x900, Stand d3d1cb6.
+Lobby: Gegner 1, Erweiterung Aus, "Neue Partie" geklickt. Danach "Zur Lobby", gleiche Einstellungen, "Neue Partie", "Ja, neue Partie".
+Gelesen aus localStorage "schlangentanz-v2:partie" direkt nach dem Anlegen:
+Partie 1: Hände [gruen-03, rot-09, schlangenfrass-03, schlangenblockade-02, farbenfusion-01] / [verdoppler-03, schlangengrube-02, violett-02, violett-03, gruen-08]; Stapel beginnt rot-13, rot-04, schlangenfrass-01
+Partie 2: Hände [farbenfusion-01, farbenfusion-04, verdoppler-01, verdoppler-03, blau-05] / [braun-05, gruen-01, schlangenblockade-02, gruen-03, gelb-14]; Stapel beginnt schlangengrube-02, violett-08, verdoppler-02
+Starthände und Stapel verschieden (src/ui/lobby/partie.ts:37 erstellePartie(... zufall: Math.random)). Konsole ohne Fehler, scrollWidth 1280 = clientWidth 1280.

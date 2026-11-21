@@ -1,0 +1,211 @@
+DAUER pruefeSichtZugriff 1265 ms, 43 Dateien
+DATEI src/ki/schritt.ts: 0 Befunde
+
+DATEI src/ki/sicht.ts: 0 Befunde
+
+DATEI src/ki/strategien/strategie.ts: 0 Befunde
+
+DATEI src/ki/strategien/zufallsKi.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a01_iife.ts: 1 Befunde
+U5 src/ki/strategien/zz_a01_iife.ts:4 lager: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+DATEI src/ki/strategien/zz_a02_arrayof.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a03_call_this.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a04_thisarg.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a05_engine.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a06_klasse_call.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a07_newtarget.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a08_generator.ts: 3 Befunde
+U5 src/ki/strategien/zz_a08_generator.ts:8 quelle: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_a08_generator.ts:6 Ausdruck vom Typ any: yield m
+U5 src/ki/strategien/zz_a08_generator.ts:9 Ausdruck vom Typ any: quelle.next().value
+DATEI src/ki/strategien/zz_a09_static.ts: 4 Befunde
+U5 src/ki/strategien/zz_a09_static.ts:15 static in Privat: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_a09_static.ts:7 gibt Basis von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_a09_static.ts:10 verändert super, das nicht in dieser Datei entsteht: super.lager
+U5 src/ki/strategien/zz_a09_static.ts:17 Ausdruck vom Typ any: #m
+DATEI src/ki/strategien/zz_a10_global_alias.ts: 2 Befunde
+U5 src/ki/strategien/zz_a10_global_alias.ts:6 gibt das globale JSON als Wert weiter
+U5 src/ki/strategien/zz_a10_global_alias.ts:12 gibt das globale Math als Wert weiter
+DATEI src/ki/strategien/zz_a11_default_weakmap.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_a12_prototyp.ts: 3 Befunde
+U5 src/ki/strategien/zz_a12_prototyp.ts:7 Ausdruck vom Typ any: Object.getPrototypeOf(sicht)
+U5 src/ki/strategien/zz_a12_prototyp.ts:7 nutzt Object.getPrototypeOf
+U5 src/ki/strategien/zz_a12_prototyp.ts:12 greift auf constructor: k zu
+DATEI src/ki/strategien/zz_a13_rueckgabe.ts: 1 Befunde
+U5 src/ki/strategien/zz_a13_rueckgabe.ts:6 gibt anker von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_a14_map_set.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_b01_export_stern.ts: 3 Befunde
+U5 src/ki/strategien/zz_b01_export_stern.ts:2 Strategie importiert aus '../../engine/deck'; erlaubt sind sicht.ts, Strategien und die Engine
+U5 src/ki/strategien/zz_b01_export_stern.ts:3 Strategie importiert erzeugeZufall aus der Engine; nicht auf POSITIVLISTE_ENGINE_FUER_STRATEGIEN
+U5 src/ki/strategien/zz_b01_export_stern.ts:4 Strategie importiert aus '../turnier'; erlaubt sind sicht.ts, Strategien und die Engine
+DATEI src/ki/strategien/zz_b02_namensraum.ts: 12 Befunde
+U5 src/ki/strategien/zz_b02_namensraum.ts:1 Strategie importiert * aus der Engine; nicht auf POSITIVLISTE_ENGINE_FUER_STRATEGIEN
+U5 src/ki/strategien/zz_b02_namensraum.ts:1 Strategie erwähnt Spielzustand: engine
+U5 src/ki/strategien/zz_b02_namensraum.ts:2 Strategie importiert erzeugeZufall aus der Engine; nicht auf POSITIVLISTE_ENGINE_FUER_STRATEGIEN
+U5 src/ki/strategien/zz_b02_namensraum.ts:2 Strategie erwähnt Spielzustand: Spielzustand
+U5 src/ki/strategien/zz_b02_namensraum.ts:3 Strategie importiert aus '../schritt'; erlaubt sind sicht.ts, Strategien und die Engine
+U5 src/ki/strategien/zz_b02_namensraum.ts:3 Strategie erwähnt Spielzustand: waehleFuer
+U5 src/ki/strategien/zz_b02_namensraum.ts:6 Strategie erwähnt Spielzustand: engine
+U5 src/ki/strategien/zz_b02_namensraum.ts:7 Strategie erwähnt Spielzustand: Z
+U5 src/ki/strategien/zz_b02_namensraum.ts:7 Strategie erwähnt Spielzustand: Spielzustand
+U5 src/ki/strategien/zz_b02_namensraum.ts:8 Strategie erwähnt Spielzustand: w
+U5 src/ki/strategien/zz_b02_namensraum.ts:8 Strategie erwähnt Spielzustand: waehleFuer
+U5 src/ki/strategien/zz_b02_namensraum.ts:8 gibt waehleFuer von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_b03_typumweg.ts: 7 Befunde
+U5 src/ki/strategien/zz_b03_typumweg.ts:1 Strategie erwähnt Spielzustand: sichtFuer
+U5 src/ki/strategien/zz_b03_typumweg.ts:4 Strategie erwähnt Spielzustand: M
+U5 src/ki/strategien/zz_b03_typumweg.ts:5 Strategie erwähnt Spielzustand: Z1
+U5 src/ki/strategien/zz_b03_typumweg.ts:5 Strategie erwähnt Spielzustand: M
+U5 src/ki/strategien/zz_b03_typumweg.ts:6 Strategie erwähnt Spielzustand: Z2
+U5 src/ki/strategien/zz_b03_typumweg.ts:6 Strategie erwähnt Spielzustand: sichtFuer
+U5 src/ki/strategien/zz_b03_typumweg.ts:7 Strategie erwähnt Spielzustand: Z1
+DATEI src/ki/strategien/zz_b05_kenner.ts: 1 Befunde
+U5 src/ki/strategien/zz_b05_kenner.ts:17 gibt Ki von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_b06_zufall.ts: 11 Befunde
+U5 src/ki/strategien/zz_b06_zufall.ts:3 gibt das globale Math als Wert weiter
+U4 src/ki/strategien/zz_b06_zufall.ts:4 nutzt Math.random; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U4 src/ki/strategien/zz_b06_zufall.ts:4 nutzt m.random; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U4 src/ki/strategien/zz_b06_zufall.ts:4 nutzt crypto.getRandomValues; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U5 src/ki/strategien/zz_b06_zufall.ts:4 nutzt das globale crypto; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_b06_zufall.ts:4 nutzt das globale Uint8Array; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_b06_zufall.ts:4 nutzt das globale Date; unter src/ki gilt POSITIVLISTE_GLOBALE
+U4 src/ki/strategien/zz_b06_zufall.ts:4 nutzt Date; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U4 src/ki/strategien/zz_b06_zufall.ts:4 nutzt performance.now; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U5 src/ki/strategien/zz_b06_zufall.ts:4 nutzt das globale performance; unter src/ki gilt POSITIVLISTE_GLOBALE
+U4 src/ki/strategien/zz_b06_zufall.ts:4 nutzt performance; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+DATEI src/ki/strategien/zz_c01_sauber.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_k2_solide.ts: 1 Befunde
+U5 src/ki/strategien/zz_k2_solide.ts:66 gibt VORRANG von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_leck_basis.ts: 1 Befunde
+U5 src/ki/strategien/zz_leck_basis.ts:10 gibt Ki von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_s00_globale.ts: 29 Befunde
+U5 src/ki/strategien/zz_s00_globale.ts:4 verborgen: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s00_globale.ts:1 Strategie importiert aus '../../entwicklung/namen'; erlaubt sind sicht.ts, Strategien und die Engine
+U5 src/ki/strategien/zz_s00_globale.ts:1 Strategie erwähnt Spielzustand: name
+U5 src/ki/strategien/zz_s00_globale.ts:4 declare: eine Ambient-Deklaration tarnt einen fremden Wert als eigenen
+U5 src/ki/strategien/zz_s00_globale.ts:5 Typprädikat: wert is string; es verdeckt den Typ wie ein Cast
+U5 src/ki/strategien/zz_s00_globale.ts:9 nutzt das globale self; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:11 nutzt das globale top; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:13 gibt das globale frames.self als Wert weiter
+U5 src/ki/strategien/zz_s00_globale.ts:13 nutzt das globale frames; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:15 nutzt das globale setTimeout; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:16 nutzt das globale setInterval; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:17 nutzt das globale Intl; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:18 nutzt das globale Event; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:19 nutzt die geerbte Methode JSON.valueOf
+U5 src/ki/strategien/zz_s00_globale.ts:21 Strategie erwähnt Spielzustand: m1
+U5 src/ki/strategien/zz_s00_globale.ts:21 importiert mit import() oder require(); unter src/ki nur statisch
+U5 src/ki/strategien/zz_s00_globale.ts:21 Ausdruck vom Typ any: import
+U5 src/ki/strategien/zz_s00_globale.ts:22 Strategie erwähnt Spielzustand: name
+U5 src/ki/strategien/zz_s00_globale.ts:22 gibt name von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s00_globale.ts:22 Strategie erwähnt Spielzustand: m1
+U5 src/ki/strategien/zz_s00_globale.ts:22 gibt verborgen von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s00_globale.ts:22 nutzt das globale globalThis; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s00_globale.ts:22 nutzt das globale queueMicrotask; unter src/ki gilt POSITIVLISTE_GLOBALE
+U4 src/ki/strategien/zz_s00_globale.ts:22 nutzt performance.now; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U5 src/ki/strategien/zz_s00_globale.ts:22 nutzt das globale performance; unter src/ki gilt POSITIVLISTE_GLOBALE
+U4 src/ki/strategien/zz_s00_globale.ts:22 nutzt performance; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U4 src/ki/strategien/zz_s00_globale.ts:22 nutzt Date.now; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+U5 src/ki/strategien/zz_s00_globale.ts:22 nutzt das globale Date; unter src/ki gilt POSITIVLISTE_GLOBALE
+U4 src/ki/strategien/zz_s00_globale.ts:22 nutzt Date; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+DATEI src/ki/strategien/zz_s01_returntype.ts: 3 Befunde
+U5 src/ki/strategien/zz_s01_returntype.ts:1 Strategie erwähnt Spielzustand: ermittleAktionen
+U5 src/ki/strategien/zz_s01_returntype.ts:2 Strategie erwähnt Spielzustand: Z
+U5 src/ki/strategien/zz_s01_returntype.ts:2 Strategie erwähnt Spielzustand: ermittleAktionen
+DATEI src/ki/strategien/zz_s02_importtype.ts: 3 Befunde
+U5 src/ki/strategien/zz_s02_importtype.ts:1 Strategie erwähnt Spielzustand: Z
+U5 src/ki/strategien/zz_s02_importtype.ts:1 Strategie erwähnt Spielzustand: Spielzustand
+U5 src/ki/strategien/zz_s02_importtype.ts:1 gibt Spielzustand von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_s03_importtype_fremd.ts: 3 Befunde
+U5 src/ki/strategien/zz_s03_importtype_fremd.ts:1 Strategie holt einen Typ aus '../../engine/deck'; erlaubt sind sicht.ts, Strategien und die Engine
+U5 src/ki/strategien/zz_s03_importtype_fremd.ts:2 Strategie holt einen Typ aus '../../engine/types'; erlaubt sind sicht.ts, Strategien und die Engine
+U5 src/ki/strategien/zz_s03_importtype_fremd.ts:2 gibt Spieler von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_s04_glob.ts: 4 Befunde
+U5 src/ki/strategien/zz_s04_glob.ts:3 deck: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s04_glob.ts:4 zufall: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s04_glob.ts:3 nutzt import.meta; import.meta.glob lädt jedes Modul an der Importregel vorbei
+U5 src/ki/strategien/zz_s04_glob.ts:4 nutzt import.meta; import.meta.glob lädt jedes Modul an der Importregel vorbei
+DATEI src/ki/strategien/zz_s05_glob_lazy.ts: 2 Befunde
+U5 src/ki/strategien/zz_s05_glob_lazy.ts:1 laden: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s05_glob_lazy.ts:1 nutzt import.meta; import.meta.glob lädt jedes Modul an der Importregel vorbei
+DATEI src/ki/strategien/zz_s06_require_equals.ts: 3 Befunde
+U5 src/ki/strategien/zz_s06_require_equals.ts:1 import zufall = require('../../engine/testing/zufall'): auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s06_require_equals.ts:2 z: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s06_require_equals.ts:1 Ausdruck vom Typ any: '../../engine/testing/zufall'
+DATEI src/ki/strategien/zz_s07_harmlos.ts: 1 Befunde
+U5 src/ki/strategien/zz_s07_harmlos.ts:7 Ausdruck vom Typ any: JSON.parse('{"a":1}', function (this: unknown, _k: string, v: unknown) { texte.push(JSON.stringify(this)); return v })
+DATEI src/ki/strategien/zz_s08_typ_umweg.ts: 3 Befunde
+U5 src/ki/strategien/zz_s08_typ_umweg.ts:1 Strategie erwähnt Spielzustand: AktionsErgebnis
+U5 src/ki/strategien/zz_s08_typ_umweg.ts:3 Strategie erwähnt Spielzustand: K
+U5 src/ki/strategien/zz_s08_typ_umweg.ts:3 Strategie erwähnt Spielzustand: AktionsErgebnis
+DATEI src/ki/strategien/zz_s10_seher.ts: 5 Befunde
+U5 src/ki/strategien/zz_s10_seher.ts:4 FARBEN: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s10_seher.ts:5 SONDER: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s10_seher.ts:23 gibt FARBEN von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s10_seher.ts:23 gibt SONDER von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s10_seher.ts:36 gibt Ki von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_s11_kollusion.ts: 3 Befunde
+U5 src/ki/strategien/zz_s11_kollusion.ts:4 geteilt: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s11_kollusion.ts:6 gibt Ki von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s11_kollusion.ts:16 gibt geteilt von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/strategien/zz_s12_zeit.ts: 8 Befunde
+U5 src/ki/strategien/zz_s12_zeit.ts:3 nutzt das globale queueMicrotask; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:4 nutzt das globale Promise; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:5 nutzt das globale SharedArrayBuffer; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:6 nutzt das globale Atomics; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:6 nutzt das globale Int32Array; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:6 nutzt das globale SharedArrayBuffer; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:7 nutzt das globale Intl; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:9 Ausdruck vom Typ any: Error.stackTraceLimit
+DATEI src/ki/strategien/zz_s13_handseher.ts: 5 Befunde
+U5 src/ki/strategien/zz_s13_handseher.ts:4 FARBEN: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s13_handseher.ts:5 SONDER: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_s13_handseher.ts:21 gibt FARBEN von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s13_handseher.ts:21 gibt SONDER von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_s13_handseher.ts:34 gibt Ki von der Modulebene weiter; alle Instanzen der Strategie teilen es
+DATEI src/ki/turnier.ts: 0 Befunde
+
+DATEI src/ki/zz_it1_rahmen.ts: 23 Befunde
+U5 src/ki/zz_it1_rahmen.ts:1 importiert Werte aus '../entwicklung/namen'; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki
+U5 src/ki/zz_it1_rahmen.ts:2 importiert Werte aus './turnier.test'; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki
+U5 src/ki/zz_it1_rahmen.ts:3 importiert Werte aus '../engine/testing/zufall'; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki
+U5 src/ki/zz_it1_rahmen.ts:5 nutzt das globale self; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:7 gibt das globale self als Wert weiter
+U5 src/ki/zz_it1_rahmen.ts:7 nutzt das globale globalThis; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:9 nutzt das globale top; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:11 gibt das globale frames.self als Wert weiter
+U5 src/ki/zz_it1_rahmen.ts:11 nutzt das globale frames; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:13 nutzt das globale setTimeout; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:14 nutzt das globale setInterval; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:15 nutzt das globale Intl; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:16 nutzt das globale Event; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:17 nutzt das globale URL; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:17 nutzt das globale Blob; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:18 nutzt die geerbte Methode JSON.valueOf
+U5 src/ki/zz_it1_rahmen.ts:20 importiert mit import() oder require(); unter src/ki nur statisch
+U5 src/ki/zz_it1_rahmen.ts:20 Ausdruck vom Typ any: import
+U5 src/ki/zz_it1_rahmen.ts:21 Ausdruck vom Typ any: require('./sicht')
+U5 src/ki/zz_it1_rahmen.ts:21 importiert mit import() oder require(); unter src/ki nur statisch
+U5 src/ki/zz_it1_rahmen.ts:21 nutzt das globale require; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:21 Ausdruck vom Typ any: require
+U5 src/ki/zz_it1_rahmen.ts:22 Ausdruck vom Typ any: m2
+DATEI src/ki/zz_rahmen.ts: 3 Befunde
+U5 src/ki/zz_rahmen.ts:11 verwendet Spielzustand, statt ihn weiterzureichen: zustand
+U5 src/ki/zz_rahmen.ts:14 verwendet Spielzustand, statt ihn weiterzureichen: zustand
+U5 src/ki/zz_rahmen.ts:20 verwendet Spielzustand, statt ihn weiterzureichen: zustand
+DATEI src/ki/zz_rahmen2.ts: 5 Befunde
+U5 src/ki/zz_rahmen2.ts:8 verwendet Spielzustand, statt ihn weiterzureichen: zustand
+U5 src/ki/zz_rahmen2.ts:11 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(zustand, aktion)
+U5 src/ki/zz_rahmen2.ts:14 verwendet Spielzustand, statt ihn weiterzureichen: zustand
+U5 src/ki/zz_rahmen2.ts:18 verwendet Spielzustand, statt ihn weiterzureichen: { zustand }
+U5 src/ki/zz_rahmen2.ts:18 verwendet Spielzustand, statt ihn weiterzureichen: zustand

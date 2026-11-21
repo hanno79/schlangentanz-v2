@@ -1,0 +1,1 @@
+Korrektur zum Lauf 2026-11-21-0236-TF-APP-019: Dessen letzter Satz zum Local Storage ist falsch. Zurücksetzen nachgeholt: Produktionsbuild erneut auf Port 4173, im eingebauten Browser localStorage vorher ['schlangentanz-v2:partie'], removeItem, nach Neuladen Schlüssel [] und die Lobby ohne 'Laufende Partie'. Server danach beendet (PID 1564, eigener Worktree).

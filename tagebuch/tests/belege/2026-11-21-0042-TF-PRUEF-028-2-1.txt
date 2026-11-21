@@ -1,0 +1,359 @@
+GRÜN src/ki/zz-angriff-g01.ts
+GRÜN src/ki/zz-angriff-g02.ts
+ROT  src/ki/zz-angriff-g03.ts
+      U5:3 gibt das globale globalThis als Wert weiter
+ROT  src/ki/zz-angriff-g04.ts
+      U5:3 Cast: f as never; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+ROT  src/ki/zz-angriff-g05.ts
+      U5:3 Cast: f as never; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+      U4:3 nutzt das DOM (document)
+ROT  src/ki/zz-angriff-g06.ts
+      U5:3 gibt das globale Array als Wert weiter
+      U5:3 verändert super, das nicht in dieser Datei entsteht: super.indexOf
+      U5:3 Ausdruck vom Typ any: super.indexOf
+ROT  src/ki/zz-angriff-g07.ts
+      U5:3 Ausdruck vom Typ any: ({}).__defineSetter__("x", () => 0)
+      U5:3 Ausdruck vom Typ any: ({}).__defineSetter__
+ROT  src/ki/zz-angriff-g08.ts
+      U5:3 gibt das globale globalThis als Wert weiter
+ROT  src/ki/zz-angriff-g09.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(z, aktion)
+GRÜN src/ki/zz-angriff-s01.ts
+GRÜN src/ki/zz-angriff-s02.ts
+GRÜN src/ki/zz-angriff-s03.ts
+GRÜN src/ki/zz-angriff-s04.ts
+GRÜN src/ki/zz-angriff-s05.ts
+ROT  src/ki/zz-angriff-u01.ts
+      U5:3 Ausdruck vom Typ any: Object.getOwnPropertyDescriptor(z, 'nachziehstapel')?.value
+      U5:3 nutzt Object.getOwnPropertyDescriptor
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u02.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u03.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: rest
+ROT  src/ki/zz-angriff-u04.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: x
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: x
+ROT  src/ki/zz-angriff-u05.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u06.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: lies()
+ROT  src/ki/zz-angriff-u07.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u08.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: new Proxy(z, {})
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u09.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u10.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: this.z
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: Leser
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u11.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u12.ts
+      U5:3 Ausdruck vom Typ any: yield z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: [...g(z)]
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: g(z)
+ROT  src/ki/zz-angriff-u13.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: this
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u14.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u15.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u16.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u17.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u18.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u19.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: h.zustand
+ROT  src/ki/zz-angriff-u20.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [z]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: s
+ROT  src/ki/zz-angriff-u21.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u22.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u23.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: new Map([[1, z]])
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [[1, z]]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [1, z]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+GRÜN src/ki/zz-angriff-z01.ts
+GRÜN src/ki/zz-angriff-z02.ts
+GRÜN src/ki/zz-angriff-z03.ts
+GRÜN src/ki/zz-angriff-z04.ts
+ROT  src/ki/zz-angriff-z05.ts
+      U4:3 nutzt performance.timeOrigin; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+      U4:3 nutzt performance; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+      U4:3 nutzt performance; Zeit gehört nicht in Engine und KI
+echte Dateien: 0 VerstösseGRÜN src/ki/zz-angriff-g01.ts
+GRÜN src/ki/zz-angriff-g02.ts
+ROT  src/ki/zz-angriff-g03.ts
+      U5:3 gibt das globale globalThis als Wert weiter
+ROT  src/ki/zz-angriff-g04.ts
+      U5:3 Cast: f as never; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+GRÜN src/ki/zz-angriff-g04b.ts
+ROT  src/ki/zz-angriff-g05.ts
+      U5:3 Cast: f as never; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+      U4:3 nutzt das DOM (document)
+ROT  src/ki/zz-angriff-g06.ts
+      U5:3 gibt das globale Array als Wert weiter
+      U5:3 verändert super, das nicht in dieser Datei entsteht: super.indexOf
+      U5:3 Ausdruck vom Typ any: super.indexOf
+ROT  src/ki/zz-angriff-g07.ts
+      U5:3 Ausdruck vom Typ any: ({}).__defineSetter__("x", () => 0)
+      U5:3 Ausdruck vom Typ any: ({}).__defineSetter__
+ROT  src/ki/zz-angriff-g08.ts
+      U5:3 gibt das globale globalThis als Wert weiter
+ROT  src/ki/zz-angriff-g09.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(z, aktion)
+GRÜN src/ki/zz-angriff-g09b.ts
+ROT  src/ki/zz-angriff-g10.ts
+      U5:3 Ausdruck vom Typ any: import
+ROT  src/ki/zz-angriff-g11.ts
+      U5:3 verändert Error, das nicht in dieser Datei entsteht: Error.prepareStackTrace
+      U5:3 Ausdruck vom Typ any: Error.prepareStackTrace
+ROT  src/ki/zz-angriff-g12.ts
+      U4:3 nutzt das DOM (window)
+GRÜN src/ki/zz-angriff-g13.ts
+GRÜN src/ki/zz-angriff-g14.ts
+GRÜN src/ki/zz-angriff-s01.ts
+GRÜN src/ki/zz-angriff-s02.ts
+GRÜN src/ki/zz-angriff-s03.ts
+GRÜN src/ki/zz-angriff-s04.ts
+GRÜN src/ki/zz-angriff-s05.ts
+ROT  src/ki/zz-angriff-u01.ts
+      U5:3 Ausdruck vom Typ any: Object.getOwnPropertyDescriptor(z, 'nachziehstapel')?.value
+      U5:3 nutzt Object.getOwnPropertyDescriptor
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u02.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u03.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: rest
+ROT  src/ki/zz-angriff-u04.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: x
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: x
+ROT  src/ki/zz-angriff-u05.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u06.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: lies()
+ROT  src/ki/zz-angriff-u07.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u08.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: new Proxy(z, {})
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u09.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u10.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: this.z
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: Leser
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u11.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u12.ts
+      U5:3 Ausdruck vom Typ any: yield z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: [...g(z)]
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: g(z)
+ROT  src/ki/zz-angriff-u13.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: this
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u14.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u15.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u16.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u17.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u18.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u19.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: h.zustand
+ROT  src/ki/zz-angriff-u20.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [z]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: s
+ROT  src/ki/zz-angriff-u21.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u22.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u23.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: new Map([[1, z]])
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [[1, z]]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [1, z]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u24.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: new Kiste(z).wert
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u25.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(z, aktion).zustand
+GRÜN src/ki/zz-angriff-u26.ts
+GRÜN src/ki/zz-angriff-z01.ts
+GRÜN src/ki/zz-angriff-z02.ts
+GRÜN src/ki/zz-angriff-z03.ts
+GRÜN src/ki/zz-angriff-z04.ts
+ROT  src/ki/zz-angriff-z05.ts
+      U4:3 nutzt performance.timeOrigin; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+      U4:3 nutzt performance; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+      U4:3 nutzt performance; Zeit gehört nicht in Engine und KI
+GRÜN src/ki/zz-angriff-z06.ts
+echte Dateien: 0 VerstösseGRÜN src/ki/zz-angriff-g01.ts
+GRÜN src/ki/zz-angriff-g02.ts
+ROT  src/ki/zz-angriff-g03.ts
+      U5:3 gibt das globale globalThis als Wert weiter
+ROT  src/ki/zz-angriff-g04.ts
+      U5:3 Cast: f as never; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+GRÜN src/ki/zz-angriff-g04b.ts
+ROT  src/ki/zz-angriff-g05.ts
+      U5:3 Cast: f as never; ein Cast verdeckt den Typ, an dem die Prüfung hängt
+      U4:3 nutzt das DOM (document)
+ROT  src/ki/zz-angriff-g06.ts
+      U5:3 gibt das globale Array als Wert weiter
+      U5:3 verändert super, das nicht in dieser Datei entsteht: super.indexOf
+      U5:3 Ausdruck vom Typ any: super.indexOf
+ROT  src/ki/zz-angriff-g07.ts
+      U5:3 Ausdruck vom Typ any: ({}).__defineSetter__("x", () => 0)
+      U5:3 Ausdruck vom Typ any: ({}).__defineSetter__
+ROT  src/ki/zz-angriff-g08.ts
+      U5:3 gibt das globale globalThis als Wert weiter
+ROT  src/ki/zz-angriff-g09.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(z, aktion)
+GRÜN src/ki/zz-angriff-g09b.ts
+ROT  src/ki/zz-angriff-g10.ts
+      U5:3 Ausdruck vom Typ any: import
+ROT  src/ki/zz-angriff-g11.ts
+      U5:3 verändert Error, das nicht in dieser Datei entsteht: Error.prepareStackTrace
+      U5:3 Ausdruck vom Typ any: Error.prepareStackTrace
+ROT  src/ki/zz-angriff-g12.ts
+      U4:3 nutzt das DOM (window)
+GRÜN src/ki/zz-angriff-g13.ts
+GRÜN src/ki/zz-angriff-g14.ts
+GRÜN src/ki/zz-angriff-g15.ts
+GRÜN src/ki/zz-angriff-g16.ts
+GRÜN src/ki/zz-angriff-g17.ts
+ROT  src/ki/zz-angriff-g18.ts
+      U5:3 gibt das globale parent als Wert weiter
+ROT  src/ki/zz-angriff-g19.ts
+      U5:3 gibt das globale frames als Wert weiter
+ROT  src/ki/zz-angriff-g20.ts
+      U5:3 Object.assign schreibt in ein bestehendes Objekt: Object.assign(self, { structuredClone: f })
+ROT  src/ki/zz-angriff-g21.ts
+      U5:3 gibt das globale Math als Wert weiter
+      U4:3 gibt Math als Wert weiter; Zufall kommt als Parameter
+GRÜN src/ki/zz-angriff-s01.ts
+GRÜN src/ki/zz-angriff-s02.ts
+GRÜN src/ki/zz-angriff-s03.ts
+GRÜN src/ki/zz-angriff-s04.ts
+GRÜN src/ki/zz-angriff-s05.ts
+ROT  src/ki/zz-angriff-u01.ts
+      U5:3 Ausdruck vom Typ any: Object.getOwnPropertyDescriptor(z, 'nachziehstapel')?.value
+      U5:3 nutzt Object.getOwnPropertyDescriptor
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u02.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u03.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: rest
+ROT  src/ki/zz-angriff-u04.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: x
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: x
+ROT  src/ki/zz-angriff-u05.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u06.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: lies()
+ROT  src/ki/zz-angriff-u07.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u08.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: new Proxy(z, {})
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u09.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u10.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: this.z
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: Leser
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u11.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u12.ts
+      U5:3 Ausdruck vom Typ any: yield z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: [...g(z)]
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: g(z)
+ROT  src/ki/zz-angriff-u13.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: this
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u14.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u15.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u16.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u17.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: k
+ROT  src/ki/zz-angriff-u18.ts
+      U5:5 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u19.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: h.zustand
+ROT  src/ki/zz-angriff-u20.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [z]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: s
+ROT  src/ki/zz-angriff-u21.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u22.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u23.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: new Map([[1, z]])
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [[1, z]]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: [1, z]
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u24.ts
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: new Kiste(z).wert
+      U5:4 verwendet Spielzustand, statt ihn weiterzureichen: z
+ROT  src/ki/zz-angriff-u25.ts
+      U5:3 verwendet Spielzustand, statt ihn weiterzureichen: anwendeAktion(z, aktion).zustand
+GRÜN src/ki/zz-angriff-u26.ts
+GRÜN src/ki/zz-angriff-z01.ts
+GRÜN src/ki/zz-angriff-z02.ts
+GRÜN src/ki/zz-angriff-z03.ts
+GRÜN src/ki/zz-angriff-z04.ts
+ROT  src/ki/zz-angriff-z05.ts
+      U4:3 nutzt performance.timeOrigin; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+      U4:3 nutzt performance; Zufall kommt als Parameter, Zeit gehört nicht in die KI
+      U4:3 nutzt performance; Zeit gehört nicht in Engine und KI
+GRÜN src/ki/zz-angriff-z06.ts
+echte Dateien: 0 Verstösses01 fremde Hand über sichtFuer(z, 1): blau-12,schlangenblockade-01,braun-10,blau-09,verdoppler-03 | echt: blau-12,schlangenblockade-01,braun-10,blau-09,verdoppler-03
+s02 Karten in den Aktionen des Nächsten: blau-12,braun-10,blau-09,verdoppler-03,schlangenblockade-01 | Gegnerhand: blau-12,schlangenblockade-01,braun-10,blau-09,verdoppler-03
+s03 nach simuliertem Zugende neu auf der Hand: gruen-03 | oberste Stapelkarten: gruen-03,verdoppler-02,rot-08
+g09b Seitenkanal (nur Sicht in der KI-Datei) liest Stapelkarte: gruen-03 | echte Stapelkarte [0]: gruen-03
+z01 Intl ohne Datum: 00:30:31
+z02 Event.timeStamp: 951.0998
+z03 URL.createObjectURL: blob:nodedata:5b4d5cae-214e-40f5-a953-1df728432037 / blob:nodedata:fd3fa45c-172a-437e-a12e-f52424e53b2a
+Kontrolle: ermittleAktionen(z).length = 1

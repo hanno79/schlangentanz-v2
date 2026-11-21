@@ -1,0 +1,14 @@
+DATEI src/ki/strategien/zz_p_f01_default.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_f02_umbenannt.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_f03_stufe.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_f04_klasse.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_f05_neu.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_f06_falscher_name.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_f06_falscher_name.ts:4 baueErsteAktion liefert eine KI; Fabriken einer Strategie heissen erstelle…, damit der Isolationstest sie findet
+DATEI src/ki/strategien/zz_p_f07_helfer.ts: 0 Befunde
+

@@ -1,0 +1,8 @@
+DATEI src/ki/strategien/zz_p_g13_hilfe.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g13_hilfe.ts:4 baueVersteckt liefert eine KI, steht aber nicht in der Registry src/ki/strategien/index.ts; der Isolationstest prüft nur deren Einträge
+DATEI src/ki/strategien/zz_p_g13_weiter.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g13_weiter.ts:2 Strategie exportiert weiter; jede Datei exportiert nur, was sie selbst deklariert
+DATEI src/ki/strategien/zz_p_h01_hilfe.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_h01_spion.ts: 0 Befunde
+

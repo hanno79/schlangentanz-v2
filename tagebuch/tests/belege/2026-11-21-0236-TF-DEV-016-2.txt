@@ -1,0 +1,5 @@
+Testhook-Build (npm run build:testhooks, npm run preview:testhooks, Port 4174), eingebauter Browser 1280x900, Stand d3d1cb6.
+/dev -> "Partie starten" (Saat 1, 2 Spieler, ohne Erweiterung): Schritt 0, KI-Schritt gesperrt ("Spieler 1 entscheidet; das ist ein Mensch").
+Klick "FarbkarteLegen: blau-12 -> neue Schlange", dann "ZugBeenden": Schritt 2, "KI-Gegner 1 entscheidet; das ist eine KI", Aktionen der Engine (5): blau-08, gruen-08, verdoppler-04, gruen-03, violett-06.
+Klick "KI-Schritt": Schritt 3 (genau ein Schritt), Ereignis "KarteGespielt: KI-Gegner 1 (spieler-2), gruen-03 (FarbkarteLegen) -> schlange-2 ... Stelle 0" (eine der aufgezählten Aktionen), Invarianten alle erfüllt, verbleibende Aktionen VerdopplerSpielen, ZugBeenden.
+Konsole ohne Fehler; scrollWidth 1265 = clientWidth 1265.

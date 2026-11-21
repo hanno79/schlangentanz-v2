@@ -1,0 +1,33 @@
+DATEI src/ki/strategien/zz_p_f01_default.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_f01_default.ts:23 Default-Export in einer Strategie; Fabriken stehen mit Namen in der Registry
+DATEI src/ki/strategien/zz_p_f02_umbenannt.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_f02_umbenannt.ts:27 umbenennender Export erstelleSpion as spion in einer Strategie
+DATEI src/ki/strategien/zz_p_f03_stufe.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_f03_stufe.ts:23 mitStufe liefert eine KI, steht aber nicht in der Registry src/ki/strategien/index.ts; der Isolationstest prüft nur deren Einträge
+DATEI src/ki/strategien/zz_p_f04_klasse.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_f04_klasse.ts:23 exportierte Klasse SpionKi in einer Strategie; eine Fabrik in der Registry erzeugt die Instanzen
+DATEI src/ki/strategien/zz_p_g01_objekt_methode.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g01_objekt_methode.ts:9 spione: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+DATEI src/ki/strategien/zz_p_g02_freeze.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g02_freeze.ts:10 fabriken: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+DATEI src/ki/strategien/zz_p_g03_klasse_aus_funktion.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g03_klasse_aus_funktion.ts:9 baueKlasse liefert eine KI, steht aber nicht in der Registry src/ki/strategien/index.ts; der Isolationstest prüft nur deren Einträge
+DATEI src/ki/strategien/zz_p_g04_generator.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g04_generator.ts:10 Ausdruck vom Typ any: yield baue('G04', zufall)
+DATEI src/ki/strategien/zz_p_g05_vielleicht.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_g06_vierfach.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_g07_liste.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_g08_promise.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_g09_paket.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_g10_namensraum.ts: 2 Befunde
+U5 src/ki/strategien/zz_p_g10_namensraum.ts:9 export namespace Spione {: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+U5 src/ki/strategien/zz_p_g10_namensraum.ts:9 deklariert Spione; unter src/ki keine Namensräume und kein declare global
+DATEI src/ki/strategien/zz_p_g11_zerlegt.ts: 1 Befunde
+U5 src/ki/strategien/zz_p_g11_zerlegt.ts:9 [erstelleZerlegt]: auf Modulebene einer Strategie liegt nur Unveränderliches; Zustand gehört in die Closure je Instanz
+DATEI src/ki/strategien/zz_p_g12_null.ts: 0 Befunde
+

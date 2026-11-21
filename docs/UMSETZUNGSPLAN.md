@@ -183,7 +183,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 | U2 | Keine Regel im Code, die nicht in Teil A, B oder D steht. Bei einer Lücke: anhalten, Frage in Teil D. | Prüfer, Codex |
 | U3 | Die Oberfläche enthält keine Regellogik. `src/ui/**` und `src/ki/**` importieren die Engine nur über `src/engine/index.ts`. Die Oberfläche filtert aufgezählte Aktionen und baut nie selbst eine. | Architekturtest |
 | U4 | Die Engine ist rein: kein React, kein DOM, kein `Math.random`, kein `Date`. Zufall kommt als Parameter. | Architekturtest |
-| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. | Architekturtest, Test K2.7 |
+| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. **Aufbau (P0.3d):** Den vollen Zustand hält allein der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`); er reicht ihn nur unverändert an die Sicht, an eigene Funktionen oder an freigegebene Engine-Funktionen weiter. Jede andere Datei ist eine **Strategie** unter `src/ki/strategien/`, gilt als nicht vertrauenswürdig und bekommt nur Sicht, Aktionen und Zufall. Jede Fabrik einer Strategie steht in der **Registry** `src/ki/strategien/index.ts`; Strategien importieren die Registry nicht. Der KI-Zufall hat eine eigene Saat, unabhängig von der Partie. **Erste Hürde, statisch (Architekturtest):** Eine Strategie erwähnt den vollen Zustand nicht, auch nicht als Typ oder über einen Typ, der ihn enthält oder nimmt, und importiert nur aus `sicht.ts`, anderen Strategien und einer Positivliste von Engine-Exporten. **Importgrenze (`tests/architektur_ki_importgrenze.test.ts`):** Ausserhalb von `src/ki/strategien/` importiert Code von dort nur die Registry `index.ts` und aus `strategie.ts` nur Typen, sobald die Datei Werte hat. Erlaubt sind genau diese beiden Dateien, nicht dieselben Namen mit anderer Endung oder anderer Schreibweise. Gemessen wird der Import-Graph aller Dateien, die Module laden (Code, HTML, `package.json`, die Endung in beliebiger Schreibweise wie `.JS`), unter `src/` und `scripts/` ohne übersprungene Unterordner und im Wurzelordner. Aufgelöst wird wie im Build: mit der Modulauflösung von TypeScript und zusätzlich über jede Datei, die für einen Pfad stehen kann, auch die JavaScript-Datei und den Paketeinstieg (`main`, `exports` …) neben einer `.d.ts`, ohne Vite-Zusatz wie `?raw`, mit `/@fs/` des Entwicklungsservers und zusätzlich so, wie ein Browser die Angabe als URL liest (ohne Zeilenumbrüche, Prozentkodierung aufgelöst). Erfasst sind statische Importe, `export … from`, `import()`, `require`, `import.meta.glob` mit `base` und Ausschlüssen, `import.meta.resolve`, `new URL(…, import.meta.url)` mit einer Angabe, die mit `./`, `../` oder `/` beginnt, Typimporte, `<script>` (Quelle und Inhalt) und `<link>` in HTML mit aufgelösten Zeichenreferenzen, `imports` und `exports` in `package.json` und jeder Text, der wie ein Pfad oder eine `file://`-URL beginnt. Ein Lader mit berechnetem Namen oder berechneten Optionen ist verboten, ebenso ein Glob mit mehreren Optionen `base`. Ausgenommen sind genau `*.test.ts(x)` und `tests/**`, weil Tests eine Strategie gezielt auch an der Registry vorbei prüfen; erreicht Code über eine solche Datei eine Strategie, wird er trotzdem gemeldet. Eine Fabrik, die nicht in der Registry steht, erreicht deshalb über keinen der genannten Wege einen Rahmen, die App oder ein Skript, gleich in welcher Form sie exportiert ist; die Wege, die die Prüfung nicht sieht, stehen unter Grenze (3). Jede Fabrik, die über die Registry ankommt, prüft der Isolationstest. Messläufe liegen als Tests unter der Ausnahme; dass sie jede Instanz aus der Registry laden, verlangt K5. **Tragend sind diese Importgrenze und der Isolationstest**, der alle Module frisch lädt, auch Hilfsmodule, die eine registrierte Strategie importiert. Als zusätzliche Hilfe meldet die Prüfung in den Strategien Default-Exporte, umbenennende Exporte, Weiterexporte und exportierte Klassen, dazu Funktionen, die eine KI liefern und nicht in der Registry stehen. Diese Erkennung über Typen greift nur, wenn der Rückgabetyp die KI selbst ist oder sie über höchstens drei Aufrufe liefert; `Ki | undefined`, `Ki | null`, `Ki[]`, `Promise<Ki>`, `{ ki: Ki }` und tiefere Ketten erkennt sie nicht. Für allen Code unter `src/ki` gilt: kein Cast ausser `as const`, kein Typprädikat, kein `declare`, kein `any`, kein `arguments`, kein `import()` und kein `import.meta`, kein Zugriff mit einem Schlüssel vom Typ `string` (dafür `Map` oder Literaltypen), keine Prototyp-Schlüssel, `Object.assign` nur in ein neues `{ … }`, keine Änderung globaler Objekte, nur globale Werte aus einer Positivliste (`Math` ohne `random`, `JSON`, `Array`, `Object`, `Map`, `Set`, `Number`, `String`, `Error`, `structuredClone` …), Werte nur aus `src/engine/index.ts` und geprüften Dateien unter `src/ki`, und U4. Auf der Modulebene einer Strategie meldet die Prüfung `let`, `var`, Behälter, Objekte (auch mit `as const`), `static`-Felder, Schreiben in Werte der Modulebene, Schreiben über `this` in `static`-Methoden, `new.target`, `this`-Parameter und die Weitergabe einer Funktion oder Klasse der Modulebene ausser beim Aufruf, bei `new`, beim Lesen und als Rückruf an erster Stelle einer Listenmethode (`map`, `filter`, `sort` …, ohne `thisArg`). Diese Regeln decken die genannten Fälle ab, nicht jeden Weg: Methoden am Prototyp einer Klasse, statische Methoden als Wert, `this` als Rückgabe einer `static`-Methode und `import * as` der eigenen Datei erkennt sie nicht. **Verhaltensprüfung (Isolationstest `tests/strategie_isolation.test.ts`, Entscheidung des Autors vom 21.11.2026):** Jede Fabrik der Registry spielt Partien mit 2 bis 4 Sitzen derselben Strategie einmal mit allen Instanzen aus einer Modulinstanz und einmal mit jeder Instanz aus einem frisch geladenen Modul, mit festen und mit je Lauf gezogenen Saaten, zusammen 27 Instanzen; Entscheidungen und sichtbarer Zustand müssen gleich sein. **Bekannte Grenzen:** (1) Kennt eine Strategie die Partiesaat, etwa die festgehaltenen Saaten eines Messlaufs, rechnet sie daraus alle Hände und den Stapel nach, gleich wie gross die Saat ist. (2) Ein Zeitzünder, der erst nach mehr Instanzen als im Isolationstest oder beim Erkennen fester Saaten Wissen teilt, besteht beide Tests; ebenso ein Kanal über ein globales Objekt, den die Positivliste nicht verhindert, weil beide Läufe des Isolationstests dieselben globalen Objekte teilen. (3) Die Importgrenze sieht nicht: (a) ein Modul, das über `eval`, `new Function` oder einen umbenannten Lader mit berechnetem Pfad geladen wird; (b) einen Vite-Alias, der nicht in der tsconfig steht, oder ein Vite-Plugin mit eigener Auflösung (`resolveId`/`load`), etwa für ein virtuelles Modul (heute gibt es in `vite.config.ts` weder einen Alias noch ein eigenes Plugin, nur `@vitejs/plugin-react`); (c) Dateien unter `public/`, auch HTML-Seiten und Lader, die `index.html` einbindet. Über (a) im Browser und über (c) kommt eine nicht registrierte Strategie nur im Entwicklungsserver an, weil `/src/…` im Produktionsbuild fehlt; über (a) in Skripten unter `scripts/` und im Wurzelordner und über (b) gelangt sie auch in einen echten Lauf oder ins Produktionsbündel. Gegenmittel für (a) bis (c) ist das Review, besonders jeder Änderung an `vite.config.ts` und unter `public/`. Gegenmittel: Messläufe (K5) laden jede KI-Instanz aus einem frisch geladenen Modul, in der App bekommt jeder KI-Gegner eine eigene Instanz (O3), und jede Strategie im Repo geht durch Review. Die Listen stehen in `tests/architektur_ki_listen.ts`. | Architekturtest (mit Importgrenze), Isolationstest, Review, Test K2.7 |
 | U6 | Kein `any`, kein `@ts-ignore`, kein `eslint-disable` ohne Begründung in derselben Zeile, kein `it.skip`, `it.only`, `describe.skip`. | `check:regeln` |
 | U7 | Testdateien höchstens 499 Zeilen; neue Dateien in `src/ui` und `src/ki` höchstens 300 Zeilen. | `check:test-lines`, `check:regeln` |
 | U8 | Layout wird gemessen (Playwright, `tests/layout/messung.ts`), nie im CSS-Quelltext gelesen. | `check:css-asserts` |
@@ -734,14 +734,25 @@ bis E9.*
 ## 6. Phase 3 — KI (Teil von M2, Erweiterung in M3)
 
 Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
+Aufbau nach U5 (P0.3d): Der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`)
+hält den vollen Zustand, ruft `sichtFuer` und gibt der Strategie nur Sicht,
+Aktionen und Zufall. **Strategien** liegen unter `src/ki/strategien/` und
+implementieren `Ki` aus `src/ki/strategien/strategie.ts`; ihre Fabriken stehen in der
+Registry `src/ki/strategien/index.ts`. Den Zufall einer KI
+liefert der Rahmen aus einer eigenen Quelle, nie aus der Partiesaat: im Turnier
+aus `kiSaat`, getrennt von den Partiesaaten (P0.3d); in der App, sobald sie KIs
+spielen lässt (O3, O6), aus einer eigenen Quelle wie `Math.random`, so wie die
+Lobby schon heute die Partie mit `Math.random` anlegt.
 
 ### K1 Schnittstelle, Sicht und Zufalls-KI
 
 - **Hängt ab von:** E2.
 - **Dateien:** `src/ki/sicht.ts` (einzige Datei mit Zugriff auf den vollen
   Zustand), `src/ki/schritt.ts` (`naechsterKiSchritt(zustand)`: liefert genau
-  eine Aktion oder nichts, wenn ein Mensch entscheidet), `src/ki/zufallsKi.ts`,
-  `src/ki/turnier.ts` (N Partien mit Saat, Sitz rotierend).
+  eine Aktion oder nichts, wenn ein Mensch entscheidet), `src/ki/turnier.ts`
+  (N Partien mit Saat, Sitz rotierend); seit P0.3d die Strategien
+  `src/ki/strategien/strategie.ts` (Schnittstelle `Ki`) und
+  `src/ki/strategien/zufallsKi.ts`.
 - **Abnahmekriterien:**
   1. Die Sicht enthält: eigene Hand, alle Schlangen, Ablagestapel (nach
      F15 → D28 in Teil D), Handgrössen, Stapelgrösse, offene Aufgaben, eigene
@@ -754,7 +765,19 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
 ### K2 Bewertung und Zugplanung (Basis-Spiel)
 
 - **Hängt ab von:** E5–E10.
-- **Dateien:** `src/ki/bewertung.ts`, `src/ki/zugsuche.ts`, `src/ki/solideKi.ts`.
+- **Dateien:** `src/ki/strategien/bewertung.ts`, `src/ki/strategien/zugsuche.ts`,
+  `src/ki/strategien/solideKi.ts`; für die Simulation zusätzlich der Rahmen in
+  `src/ki/sicht.ts` (siehe Vorgabe).
+- **Vorgabe aus P0.3d (Simulation ohne verdeckte Information):** Eine Strategie
+  bekommt nie den echten Zustand, auch nicht für die Zugsuche; über
+  `sichtFuer(zustand, gegner)`, `ermittleAktionen` nach einem simulierten
+  Zugende oder `berechneEndwertung` als Orakel käme sie sonst an fremde Hände
+  und den Stapel. Simuliert wird deshalb auf einem erratenen Zustand: Der Rahmen
+  bietet in `sicht.ts` eine Funktion wie `bestimmeZustand(sicht, zufall)`, die
+  fremde Hände, Stapel und fremde geheime Aufgaben aus den ungesehenen Karten
+  zufällig füllt (Determinisierung), und darauf eine Folgefunktion, die einer
+  Strategie zu einer Aktion die **Sicht danach** liefert. Die Strategie sieht so
+  nur Sichten, nie einen Zustand. K2.7 prüft das Verhalten.
 - **Vorgehen:** Bewertet wird der eigene Zwischenstand plus Aussichten (Paare,
   offene Enden, Joker, Rennen um die längste Kette) minus der stärkste Gegner.
   Die Zugsuche rechnet die Folgen eines Zuges durch (nur Farbkarte, nur
@@ -774,10 +797,12 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
      geheime Aufgaben neu gemischt werden.
   8. Jede gewählte Aktion besteht die Prüfung der Engine; die Zahl der
      Bewertungen je Schritt bleibt unter einer im Test festgelegten Grenze.
+  9. Die Strategie besteht den Isolationstest (U5, P0.3d): Mit geteiltem und mit
+     getrenntem Modul trifft sie dieselben Entscheidungen.
 
 ### K3 Angriff und Abwehr
 
-- **Dateien:** `src/ki/zugsuche.ts`, `src/ki/abwehr.ts`.
+- **Dateien:** `src/ki/strategien/zugsuche.ts`, `src/ki/strategien/abwehr.ts`.
 - **Abnahmekriterien:**
   1. Schlangenfrass: Liegt eine Blockade in einer eigenen Gruppe und hat kein
      Gegner ein lohnendes Ziel, entfernt sie die Blockade; hat der Führende
@@ -804,6 +829,22 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
 
 ### K5 Stärkenachweis
 
+- **Bekannte Grenze aus P0.3d:** Kennt eine Strategie die Partiesaat, findet
+  sie aus ihrer eigenen Starthand die Partie und damit alle Hände und den
+  Stapel, auch bei einer grossen Saat. Die Saaten eines Messlaufs stehen im
+  Test und sind deshalb bekannt. Weder der Architekturtest noch der
+  Isolationstest kann das verhindern, weil dafür kein verbotener Zugriff und
+  kein geteiltes Wissen nötig ist. Gegenmittel ist das Review jeder Strategie im
+  Repo; grosse, zufällig gewählte Saaten und eine eigene `kiSaat` schützen nur
+  gegen Durchprobieren ohne Kenntnis. Im Spiel stellt sich die Frage nicht, dort
+  entsteht die Partie aus `Math.random`.
+- **Isolationstest:** Jede Strategie, die K5 misst, besteht ihn (U5).
+- **Jede KI-Instanz aus einem frisch geladenen Modul:** Ein Messlauf lädt für
+  jede Instanz die Registry neu (wie Lauf (b) des Isolationstests,
+  `vi.resetModules()` und `import()`), damit Instanzen derselben Strategie auch
+  ohne erkennbaren Kanal kein Modul teilen. Das schliesst die Zeitzünder-Grenze
+  aus U5 für die Messung aus; Kanäle über globale Objekte bleiben dem
+  Architekturtest und dem Review überlassen.
 - **Abnahmekriterien** (Turnier mit festen Saaten, im Test hinterlegt; die
   Schwellen werden nach der ersten Messung nach oben festgeschrieben, nie
   nach unten):
@@ -869,11 +910,16 @@ Aktionen der Engine (U3). Ziehen und Ablegen gehört nicht zu M2.
   2. Neu laden mitten in der Partie, auch während einer offenen Abwehrfrage,
      setzt genau dort fort.
   3. Ein alter Spielstand wird verworfen; die Lobby sagt es einmal.
-  4. Wirft Engine oder KI einen Fehler, friert nichts ein: Meldung und Weg
+  4. Jeder KI-Gegner bekommt eine eigene Instanz seiner Strategie aus der
+     Registry `src/ki/strategien/index.ts`, mit eigener Zufallsquelle (etwa aus
+     `Math.random`), nie aus dem Partie-Zufall (U5, P0.3d). Spielen mehrere
+     Gegner dieselbe Strategie, gilt die Grenze aus U5 (Zeitzünder, globale
+     Objekte) auch hier; Gegenmittel ist das Review.
+  5. Wirft Engine oder KI einen Fehler, friert nichts ein: Meldung und Weg
      zurück zur Lobby.
-  5. `tischAnsicht` enthält keine fremde Handkarte und keine fremde geheime
+  6. `tischAnsicht` enthält keine fremde Handkarte und keine fremde geheime
      Aufgabe (Test).
-  6. Im Testhook-Build: `/spiel?szenario=<name>`, `?seed=`, `?tempo=sofort`.
+  7. Im Testhook-Build: `/spiel?szenario=<name>`, `?seed=`, `?tempo=sofort`.
 
 ### O4 Spieltisch
 

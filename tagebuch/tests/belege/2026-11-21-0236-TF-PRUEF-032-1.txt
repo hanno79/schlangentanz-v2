@@ -1,0 +1,17 @@
+Stand d3d1cb6 plus vorübergehend src/ki/strategien/zz_k2_bewertung.ts (Probe aus Iteration 2, unverändert),
+zz_k2_solide.ts und zz_k2_erweitert.ts (Proben Iteration 3) und tests/zz_k2.test.ts.
+pruefeSichtZugriff über die 5 echten Dateien plus die drei Proben (Ausgabe von tests/zz_k2.test.ts, Datei k2-probe.txt):
+
+Befunde (735 ms): 2
+U5 src/ki/strategien/zz_k2_solide.ts:66 gibt VORRANG von der Modulebene weiter; alle Instanzen der Strategie teilen es
+U5 src/ki/strategien/zz_k2_erweitert.ts:4 gibt Ki von der Modulebene weiter; alle Instanzen der Strategie teilen es
+It2-Probe zz_k2_bewertung: 20 Partien ab Saat 1, Ausgänge [["beendet",20]], Siege Probe 20, Zufall 0
+It3-Probe zz_k2_solide: 30 Partien ab Saat 424242, Ausgänge [["beendet",30]], Siege Probe 26, Zufall 7
+
+npx tsc -p tsconfig.app.json --noEmit: exit 0
+
+Bewertung: zz_k2_bewertung.ts (Testdaten von TF-PRUEF-032) hat 0 Meldungen, 20 von 20 Partien beendet.
+Die zwei Meldungen der It3-Proben sind Fehlalarme mit einfacher Umgehung:
+- zz_k2_solide.ts:66 `new Set<string>(VORRANG)` mit `const VORRANG = [...] as const` (Array.from(VORRANG) wäre erlaubt)
+- zz_k2_erweitert.ts:4 `export interface SolideKi extends Ki { ... }` (type SolideKi = Ki & { ... } wäre erlaubt)
+Quellen: angriffe/zz_k2_solide.ts, angriffe/zz_k2_erweitert.ts, angriffe/zz_k2.test.ts im Prüferordner.

@@ -1,0 +1,14 @@
+=== zz_p_g01_global.ts: Isolationstest exit 0, 5.5 s
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_g01_global.ts, erstelleGlobal entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 622ms
+      Tests  6 passed (6)
+   Duration  3.11s (transform 561ms, setup 275ms, import 808ms, tests 1.75s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_t01_zeitzuender.ts: Isolationstest exit 0, 5.5 s
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_t01_zeitzuender.ts, erstelleZeitzuender entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 617ms
+      Tests  6 passed (6)
+   Duration  3.15s (transform 574ms, setup 280ms, import 820ms, tests 1.75s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 

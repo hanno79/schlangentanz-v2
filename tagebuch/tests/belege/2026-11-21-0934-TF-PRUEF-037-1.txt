@@ -1,0 +1,48 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a321a40cf43920cff
+
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: der Test prüft jede Fabrik der Registry, mindestens die Zufalls-KI 2ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: zufallsKi entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht (Laufsaat 1463473614) 1351ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion anker (Eigenschaft einer Funktion über Array.of (Angriff der Prüfung)) verhält sich mit geteiltem Modul anders 227ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion map (Funktion der Modulebene über Map.set/get) verhält sich mit geteiltem Modul anders 162ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion newTarget (Klasse der Modulebene über new.target) verhält sich mit geteiltem Modul anders 170ms
+ × tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion ruecksetzer (Kanal, den die Fabrik bei jeder Instanz leert; fällt nur mit getrennten Modulen auf) verhält sich mit geteiltem Modul anders 292ms
+   → P0.3d: erwartet, dass der Isolationstest den Kanal „Kanal, den die Fabrik bei jeder Instanz leert; fällt nur mit getrennten Modulen auf“ bemerkt: expected [ { ausgang: 'beendet', …(2) } ] to not deeply equal [ { ausgang: 'beendet', …(2) } ]
+ × tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: zwei Ladevorgänge der Registry liefern verschiedene Modulobjekte 7ms
+   → P0.3d: ohne vi.resetModules() kämen beide Fabriken aus demselben Modul: expected [Function erstelleSpionAnker] not to be [Function erstelleSpionAnker] // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion ruecksetzer (Kanal, den die Fabrik bei jeder Instanz leert; fällt nur mit getrennten Modulen auf) verhält sich mit geteiltem Modul anders
+AssertionError: P0.3d: erwartet, dass der Isolationstest den Kanal „Kanal, den die Fabrik bei jeder Instanz leert; fällt nur mit getrennten Modulen auf“ bemerkt: expected [ { ausgang: 'beendet', …(2) } ] to not deeply equal [ { ausgang: 'beendet', …(2) } ]
+
+Compared values have no visual difference.
+
+ ❯ tests/strategie_isolation.test.ts:110:97
+    108|     const { geteilt, getrennt } = await vergleiche({ ...SPIONE, eintra…
+    109|
+    110|     expect(getrennt, `P0.3d: erwartet, dass der Isolationstest den Kan…
+       |                                                                                                 ^
+    111|   }, 120_000)
+    112|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: zwei Ladevorgänge der Registry liefern verschiedene Modulobjekte
+AssertionError: P0.3d: ohne vi.resetModules() kämen beide Fabriken aus demselben Modul: expected [Function erstelleSpionAnker] not to be [Function erstelleSpionAnker] // Object.is equality
+ ❯ tests/strategie_isolation.test.ts:117:104
+    115|     const zweite = await ladeRegistry(SPIONE.pfad, SPIONE.registry)
+    116|
+    117|     expect(zweite.anker, 'P0.3d: ohne vi.resetModules() kämen beide Fa…
+       |                                                                                                        ^
+    118|   })
+    119| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 passed (7)
+   Start at  09:30:19
+   Duration  3.27s (transform 505ms, setup 308ms, import 422ms, tests 2.21s, environment 0ms)
+

@@ -1,0 +1,84 @@
+=== zz_p_n01_valueof.ts: Isolationstest exit 1, 6.3 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n01_valueof.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 664ms
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n01_valueof.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 695ms
+      Tests  2 failed | 5 passed (7)
+   Duration  3.86s (transform 581ms, setup 277ms, import 814ms, tests 2.50s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n01_valueof.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n01_valueof.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+   → P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+   → P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_n02_methode.ts: Isolationstest exit 1, 7.9 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n02_methode.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 664ms
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n02_methode.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 694ms
+      Tests  2 failed | 5 passed (7)
+   Duration  4.54s (transform 837ms, setup 509ms, import 1.10s, tests 2.49s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n02_methode.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n02_methode.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+   → P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+   → P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_n03_statisch.ts: Isolationstest exit 1, 9.0 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n03_statisch.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 1263ms
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n03_statisch.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 916ms
+      Tests  2 failed | 5 passed (7)
+   Duration  5.44s (transform 713ms, setup 360ms, import 960ms, tests 3.68s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n03_statisch.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n03_statisch.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+   → P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+   → P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_n04_static_this.ts: Isolationstest exit 1, 6.3 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n04_static_this.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 655ms
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n04_static_this.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 696ms
+      Tests  2 failed | 5 passed (7)
+   Duration  3.90s (transform 596ms, setup 280ms, import 831ms, tests 2.50s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n04_static_this.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n04_static_this.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+   → P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+   → P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_n05_namensraum.ts: Isolationstest exit 1, 6.3 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n05_namensraum.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 659ms
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n05_namensraum.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 695ms
+      Tests  2 failed | 5 passed (7)
+   Duration  3.88s (transform 585ms, setup 280ms, import 816ms, tests 2.50s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n05_namensraum.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n05_namensraum.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+   → P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+   → P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_n06_engine_valueof.ts: Isolationstest exit 1, 8.5 s
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n06_engine_valueof.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 1182ms
+ × tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n06_engine_valueof.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 1069ms
+      Tests  2 failed | 5 passed (7)
+   Duration  6.03s (transform 843ms, setup 462ms, import 1.23s, tests 3.97s, environment 0ms)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n06_engine_valueof.ts, erstelleLeckOffen entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+ FAIL  tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_n06_engine_valueof.ts, erstelleLeckVerdeckt entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht
+   → P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+   → P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckOffen verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+AssertionError: P0.3d: erstelleLeckVerdeckt verhält sich mit geteiltem Modul anders als mit getrennten Modulen; Instanzen teilen Wissen: expected [ { ausgang: 'beendet', …(2) }, …(3) ] to deeply equal [ { ausgang: 'beendet', …(2) }, …(3) ]
+    statische Prüfung lief, exit 0
+    tsc exit 0 

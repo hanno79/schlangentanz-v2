@@ -6,14 +6,14 @@ import { dirname, join, resolve } from 'node:path'
 import {
   AUSNAHMEN_U4,
   VOLLER_ZUSTAND_TYP,
-  exportiertEngine,
+  beschreibe,
+  engineExporte,
   istTestdatei,
-  pruefeEngineReinheit,
+  pruefeReinheit,
   pruefeEngineZugang,
-  pruefeSichtZugriff,
   sammleDateien,
-  type Verstoss,
 } from './architektur_pruefung'
+import { pruefeSichtZugriff } from './architektur_ki_pruefung'
 import { abgleich, merkmalDerZeile } from '../scripts/pruefung/ausnahmen.mjs'
 
 const WURZEL = resolve(__dirname, '..')
@@ -23,17 +23,16 @@ const ohneTests = (pfade: string[]) => pfade.filter((pfad) => !istTestdatei(pfad
 const engineDateien = ohneTests(sammleDateien(WURZEL, 'src/engine'))
 const uiKiDateien = ohneTests([...sammleDateien(WURZEL, 'src/ui'), ...sammleDateien(WURZEL, 'src/ki')])
 const kiDateien = uiKiDateien.filter((pfad) => pfad.startsWith('src/ki/'))
+/** U4 gilt für Engine und KI (P0.3d, H7). */
+const u4Dateien = [...engineDateien, ...kiDateien]
 
 /** U4 je Datei: alle Verstösse, dazu welche davon nicht in der Ausnahmeliste stehen und welche Merkmale dort veraltet sind. */
 function u4Abgleich(pfad: string, quelltext: string, erlaubt: string[]) {
-  const verstoesse = pruefeEngineReinheit(pfad, quelltext)
+  const verstoesse = pruefeReinheit(pfad, quelltext)
   const { neu, veraltet } = abgleich(verstoesse.map(({ zeile }) => merkmalDerZeile(quelltext, zeile)), erlaubt)
   return { neue: neu.map((index) => verstoesse[index]), veraltet }
 }
-const u4 = new Map(engineDateien.map((pfad) => [pfad, u4Abgleich(pfad, lies(pfad), AUSNAHMEN_U4[pfad] ?? [])]))
-
-const beschreibe = (verstoesse: Verstoss[]) =>
-  verstoesse.map(({ regel, datei, zeile, was }) => `${regel} ${datei}:${zeile} ${was}`).join('\n')
+const u4 = new Map(u4Dateien.map((pfad) => [pfad, u4Abgleich(pfad, lies(pfad), AUSNAHMEN_U4[pfad] ?? [])]))
 
 if (uiKiDateien.length === 0) {
   console.warn(
@@ -42,8 +41,8 @@ if (uiKiDateien.length === 0) {
   )
 }
 
-describe('U4: Die Engine ist rein', () => {
-  it(`U4: ${engineDateien.length} Dateien unter src/engine (ohne Tests) nutzen kein React, kein DOM, kein Math.random, kein Date`, () => {
+describe('U4: Engine und KI sind rein', () => {
+  it(`U4: ${u4Dateien.length} Dateien unter src/engine und src/ki (ohne Tests) nutzen kein React, kein DOM, kein Math.random, kein Date, kein performance`, () => {
     expect(engineDateien.length, 'U4: unter src/engine wurde keine Datei gefunden').toBeGreaterThan(0)
 
     const neue = [...u4.values()].flatMap(({ neue }) => neue)
@@ -83,15 +82,23 @@ describe('U3: Oberfläche und KI kennen nur src/engine/index.ts', () => {
 describe('U5: Die KI sieht nur ihre Sicht', () => {
   it(`U5: src/engine/index.ts exportiert den vollen Zustandstyp ${VOLLER_ZUSTAND_TYP}`, () => {
     expect(
-      exportiertEngine(WURZEL, VOLLER_ZUSTAND_TYP),
+      engineExporte(WURZEL).has(VOLLER_ZUSTAND_TYP),
       `U5: ${VOLLER_ZUSTAND_TYP} fehlt in src/engine/index.ts; nach einer Umbenennung VOLLER_ZUSTAND_TYP nachziehen`,
     ).toBe(true)
   })
 
   it('K1: die Prüfung erfasst die echten Dateien der KI unter src/ki', () => {
-    expect(kiDateien, 'K1: erwartet Sicht, Schritt, Zufalls-KI und Turnier unter src/ki').toEqual(
-      expect.arrayContaining(['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/zufallsKi.ts', 'src/ki/turnier.ts']),
+    expect(kiDateien, 'K1: erwartet Sicht, Schritt, Turnier und die Zufalls-KI unter src/ki/strategien').toEqual(
+      expect.arrayContaining(['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/turnier.ts', 'src/ki/strategien/zufallsKi.ts']),
     )
+  })
+
+  // P0.3d, Iteration 2: Den vollen Zustand hält nur der Rahmen; alles andere ist eine Strategie und sieht nur die Sicht.
+  it('P0.3d: jede Datei unter src/ki gehört zum Rahmen (sicht, schritt, turnier) oder liegt unter src/ki/strategien', () => {
+    const rahmen = ['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/turnier.ts']
+    const ausserhalb = kiDateien.filter((pfad) => !rahmen.includes(pfad) && !pfad.startsWith('src/ki/strategien/'))
+
+    expect(ausserhalb, 'U5: diese Dateien nach src/ki/strategien verschieben oder in den Rahmen aufnehmen').toEqual([])
   })
 
   it(`U5: ${kiDateien.length} Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts`, () => {
@@ -121,7 +128,7 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
   ]
 
   it.each(verbotenInDerEngine)('U4: „%s“ unter src/engine wird gemeldet', (zeile) => {
-    const verstoesse = pruefeEngineReinheit('src/engine/probe.ts', `${zeile}\n`)
+    const verstoesse = pruefeReinheit('src/engine/probe.ts', `${zeile}\n`)
 
     expect(verstoesse.length, `U4: erwartet einen Verstoss für ${zeile}`).toBeGreaterThan(0)
     expect(verstoesse[0]).toMatchObject({ regel: 'U4', datei: 'src/engine/probe.ts', zeile: 1 })
@@ -144,7 +151,7 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
   ]
 
   it.each(umgehungenZufall)('P0.3b: U4-Umgehung „%s“ wird als Zufall gemeldet', (zeile) => {
-    const verstoesse = pruefeEngineReinheit('src/engine/probe.ts', `${zeile}\n`)
+    const verstoesse = pruefeReinheit('src/engine/probe.ts', `${zeile}\n`)
 
     expect(
       verstoesse.filter(({ was }) => was.includes('Zufall kommt als Parameter')).map(({ zeile }) => zeile),
@@ -155,11 +162,22 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
   const zeitInDerEngine = ['const d = new Date', 'const t = Date.now()', 'globalThis.Date.now()', 'const { now } = Date', "const h = globalThis['Date']"]
 
   it.each(zeitInDerEngine)('P0.3b: U4 verbietet Date: „%s“ wird gemeldet', (zeile) => {
-    const verstoesse = pruefeEngineReinheit('src/engine/probe.ts', `${zeile}\n`)
+    const verstoesse = pruefeReinheit('src/engine/probe.ts', `${zeile}\n`)
 
     expect(
       verstoesse.filter(({ was }) => was.includes('Date')).map(({ zeile }) => zeile),
       `U4: erwartet eine Date-Meldung in Zeile 1, gefunden:\n${beschreibe(verstoesse)}`,
+    ).toContain(1)
+  })
+
+  const performanceInDerKi = ['const t = performance.now()', 'const t = globalThis.performance.now()', 'const { now } = performance']
+
+  it.each(performanceInDerKi)('P0.3d: U4 verbietet performance auch unter src/ki: „%s“ wird gemeldet', (zeile) => {
+    const verstoesse = pruefeReinheit('src/ki/probe.ts', `${zeile}\n`)
+
+    expect(
+      verstoesse.filter(({ was }) => was.includes('performance')).map(({ zeile }) => zeile),
+      `U4: erwartet eine performance-Meldung in Zeile 1, gefunden:\n${beschreibe(verstoesse)}`,
     ).toContain(1)
   })
 
@@ -177,7 +195,7 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
       '',
     ].join('\n')
 
-    expect(beschreibe(pruefeEngineReinheit('src/engine/probe.ts', quelltext))).toBe('')
+    expect(beschreibe(pruefeReinheit('src/engine/probe.ts', quelltext))).toBe('')
   })
 
   it('U3: Importe an src/engine/index.ts vorbei werden gemeldet, über index.ts nicht', () => {
@@ -208,7 +226,7 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     const dateien: Record<string, string> = {
       'src/engine/index.ts': [
         'export interface Spielzustand { spieler: string[]; stapel: string[] }',
-        'export function erlaubteAktionen(zustand: Spielzustand): string[] { return zustand.spieler }',
+        'export function ermittleAktionen(zustand: Spielzustand): string[] { return zustand.spieler }',
         '',
       ].join('\n'),
       'src/ki/sicht.ts': [
@@ -217,9 +235,9 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
         '',
       ].join('\n'),
       'src/ki/schritt.ts': [
-        "import { erlaubteAktionen, type Spielzustand } from '../engine'",
+        "import { ermittleAktionen, type Spielzustand } from '../engine'",
         "import { sicht } from './sicht'",
-        'export function schritt(zustand: Spielzustand) { return [sicht(zustand), erlaubteAktionen(zustand)] }',
+        'export function schritt(zustand: Spielzustand) { return [sicht(zustand), ermittleAktionen(zustand)] }',
         '',
       ].join('\n'),
       'src/ki/boese.ts': [
@@ -240,7 +258,8 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     it('U5: jeder Lesezugriff ausserhalb von sicht.ts wird gemeldet', () => {
       const verstoesse = pruefeSichtZugriff(probe, ['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/boese.ts'])
 
-      expect(verstoesse.map(({ datei, zeile }) => `${datei}:${zeile}`)).toEqual([
+      // Je Zeile genügt eine Meldung; beim Spreizen meldet die Prüfung `zustand` und die Kopie, die selbst der Zustand ist.
+      expect([...new Set(verstoesse.map(({ datei, zeile }) => `${datei}:${zeile}`))]).toEqual([
         'src/ki/boese.ts:2',
         'src/ki/boese.ts:3',
         'src/ki/boese.ts:4',
@@ -251,8 +270,9 @@ describe('P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstö
     })
 
     it('U5: der Typ wird über den Export von src/engine/index.ts gefunden', () => {
-      expect(exportiertEngine(probe, 'Spielzustand')).toBe(true)
-      expect(exportiertEngine(probe, 'GibtEsNicht')).toBe(false)
+      const exporte = engineExporte(probe)
+      expect(exporte.has('Spielzustand')).toBe(true)
+      expect(exporte.has('GibtEsNicht')).toBe(false)
     })
   })
 })

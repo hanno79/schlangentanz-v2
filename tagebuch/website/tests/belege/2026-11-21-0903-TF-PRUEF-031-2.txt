@@ -1,0 +1,5 @@
+DATEI src/ki/strategien/zz_p_g01_global.ts: 2 Befunde
+U5 src/ki/strategien/zz_p_g01_global.ts:8 gibt das globale JSON als Wert weiter
+U5 src/ki/strategien/zz_p_g01_global.ts:14 verändert ablage(), das nicht in dieser Datei entsteht: ablage().lager
+DATEI src/ki/strategien/zz_p_t01_zeitzuender.ts: 0 Befunde
+
