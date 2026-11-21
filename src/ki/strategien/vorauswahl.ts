@@ -1,18 +1,19 @@
 import type { Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
-import { AUSGESETZTER_ZUG, ZWEITER_ZUG, haltewert, hatNochZug, kettenbonus, schlangenwert, wertDerSchlangen, zukunft } from './bewertung';
+import { bewerte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 
 /*
 Die Vorauswahl der Zugsuche (Plan K2, Kriterium 8). Der Farbendieb allein bietet in
 späten Stellungen über tausend Aktionen an, der Schlangenfrass Hunderte; jede
 durchzurechnen kostet eine Simulation. Die Vorauswahl schätzt deshalb jede Aktion
-ohne Simulation, aber mit derselben Bewertung wie die Zugsuche (`bewertung.ts`): Sie
-legt die Karte so in die Schlangen, wie die Aktion es beschreibt (wohin eine Karte
-kommt, welche wegkommt), und bewertet nur die Schlangen, die sich dabei ändern, dazu
-die verlorene Handkarte. Für Karten, die keine Schlange ändern, nimmt sie dieselben
-Werte wie die Bewertung (ausgesetzter Zug, zweiter Zug). So fällt kein Zug, den die
-Bewertung höher stellt, systematisch heraus (Prüfprotokoll K2, Mangel 1).
+ohne Simulation, aber mit derselben Bewertung wie die Zugsuche (`bewerte`): Sie baut
+die Sicht danach selbst, so wie die Aktion es beschreibt (wohin eine Karte kommt,
+welche wegkommt, die Karte ist von der Hand, eine Grube liegt aus, ein Verdoppler
+gibt den zweiten Zug), und bewertet sie. Unveränderte Schlangen kosten dabei dank
+des Merkers fast nichts. So fällt kein Zug, den die Bewertung höher stellt,
+systematisch heraus (Prüfprotokoll K2, Mangel 1, und die Befunde des Codex-Reviews
+dazu).
 
 Die Vorauswahl entscheidet nichts. Ob eine Aktion erlaubt ist, sagt die Engine; was
 sie wirklich bewirkt, die Simulation in `zugsuche.ts`. Damit jede Handkarte eine
@@ -138,33 +139,23 @@ function gespielteKarte(aktion: SpielAktion): string | null {
   }
 }
 
-/** Was eine Suche je Schritt einmal rechnet: der Wert der Schlangen jedes Spielers vorher und die Ketten. */
-function erstelleSchaetzung(sicht: Sicht, merker: Wertungsmerker) {
-  const vorher = sicht.spieler.map((spieler) => schlangenwert(spieler.schlangen, sicht.erweiterung, merker));
-  const ketten = vorher.map((wert) => wert.kette);
-  const bonusVorher = kettenbonus(ketten);
-  const vorzeichen = (besitzer: number) => (besitzer === sicht.ich ? 1 : -1);
-
-  /** Die grobe Schätzung einer Aktion: Änderung der eigenen Bewertung; höher heisst zuerst durchrechnen. */
-  return (aktion: SpielAktion): number => {
-    const id = gespielteKarte(aktion);
-    const karte = id === null ? undefined : sicht.hand.find((eintrag) => eintrag.id === id);
-    const halten = karte === undefined ? 0 : haltewert(karte, sicht);
-    if (aktion.typ === 'SchlangengrubeSpielen') {
-      const ziel = sicht.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId);
-      return (ziel >= 0 && hatNochZug(sicht, ziel) ? AUSGESETZTER_ZUG : 0) - halten;
-    }
-    if (aktion.typ === 'VerdopplerSpielen') return ZWEITER_ZUG - halten;
-    const nachher = [...ketten];
-    let wert = -halten;
-    for (const [besitzer, schlangen] of folgeSchlangen(sicht, aktion, karte)) {
-      const neu = schlangenwert(schlangen, sicht.erweiterung, merker);
-      const ausblick = zukunft(sicht, besitzer);
-      wert += vorzeichen(besitzer) * (wertDerSchlangen(neu, ausblick) - wertDerSchlangen(vorher[besitzer], ausblick));
-      nachher[besitzer] = neu.kette;
-    }
-    const bonusNachher = kettenbonus(nachher);
-    return wert + bonusNachher.reduce((summe, bonus, besitzer) => summe + vorzeichen(besitzer) * (bonus - bonusVorher[besitzer]), 0);
+/**
+ * Die Sicht nach der Aktion, wie die Vorauswahl sie schätzt: die gespielte Karte ist
+ * von der Hand, die Schlangen sind wie in `folgeSchlangen`, eine Grube liegt vor ihrem
+ * Ziel (A7.6), nach einem Verdoppler folgt der zweite Zug (A7.8). Gegner lassen eine
+ * angesagte Karte durch, wie in der Zugsuche.
+ */
+function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
+  const id = gespielteKarte(aktion);
+  const karte = id === null ? undefined : sicht.hand.find((eintrag) => eintrag.id === id);
+  const aenderung = folgeSchlangen(sicht, aktion, karte);
+  const ziel = aktion.typ === 'SchlangengrubeSpielen' ? sicht.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId) : -1;
+  return {
+    ...sicht,
+    hand: karte === undefined ? sicht.hand : sicht.hand.filter((eintrag) => eintrag !== karte),
+    spieler: aenderung.size === 0 ? sicht.spieler : sicht.spieler.map((spieler, index) => ({ ...spieler, schlangen: aenderung.get(index) ?? spieler.schlangen })),
+    ausliegendeGruben: karte?.typ === 'Sonderkarte' && ziel >= 0 ? [...sicht.ausliegendeGruben, { karte, gespieltVon: sicht.ich, vor: ziel }] : sicht.ausliegendeGruben,
+    zug: aktion.typ === 'VerdopplerSpielen' ? { ...sicht.zug, verdopplerGespielt: true } : sicht.zug,
   };
 }
 
@@ -176,8 +167,7 @@ function erstelleSchaetzung(sicht: Sicht, merker: Wertungsmerker) {
  */
 export function vorauswahl(sicht: Sicht, aktionen: readonly SpielAktion[], anzahl: number, merker: Wertungsmerker): SpielAktion[] {
   if (aktionen.length <= anzahl) return [...aktionen];
-  const vorwert = erstelleSchaetzung(sicht, merker);
-  const geordnet = aktionen.map((aktion, stelle) => ({ aktion, stelle, wert: vorwert(aktion) })).sort((a, b) => b.wert - a.wert || a.stelle - b.stelle);
+  const geordnet = aktionen.map((aktion, stelle) => ({ aktion, stelle, wert: bewerte(folgeSicht(sicht, aktion), merker) })).sort((a, b) => b.wert - a.wert || a.stelle - b.stelle);
   const gewaehlt = new Set<number>();
   const karten = new Set<string | null>();
   for (const eintrag of geordnet) {

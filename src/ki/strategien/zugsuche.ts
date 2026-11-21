@@ -1,7 +1,7 @@
 import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
-import { bewerte, eigenePunkte, haltewert } from './bewertung';
+import { bewerte, eigenePunkte, haltewert, neuerMerker } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 import { vorauswahl } from './vorauswahl';
 
@@ -100,7 +100,7 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
   let bewertungen = 0;
   const ich = sicht.ich;
   const wurzel = simuliere(sicht, zufall);
-  const merker: Wertungsmerker = new Map();
+  const merker: Wertungsmerker = neuerMerker();
 
   const werte = (stand: Sicht) => {
     bewertungen += 1;

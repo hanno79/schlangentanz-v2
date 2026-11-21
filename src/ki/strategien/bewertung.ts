@@ -27,9 +27,9 @@ die die Engine erlaubt.
 /** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. */
 const HANDKARTE_GEGNER = 0.4;
 /** Ein Zug, den ein Spieler wegen einer Schlangengrube aussetzt (A7.6). */
-export const AUSGESETZTER_ZUG = 2;
+const AUSGESETZTER_ZUG = 2;
 /** Der zweite Zug nach einem Verdoppler (A7.8). */
-export const ZWEITER_ZUG = 2.5;
+const ZWEITER_ZUG = 2.5;
 /** Wie stark die übrigen Gegner neben dem stärksten zählen. */
 const UEBRIGE_GEGNER = 0.1;
 /** Ein Farbenschutz schützt auch nach dem letzten eigenen Zug noch (A6, A10). */
@@ -38,7 +38,7 @@ const FARBENSCHUTZ_NACH_LETZTEM_ZUG = 0.8;
 const FERTIGE_GRUPPE = 0.5;
 
 /** Was die Schlangen eines Spielers wert sind, ohne Hand und Kettenbonus. */
-export interface Schlangenwert {
+interface Schlangenwert {
   /** Farbgruppen und Vielfaltbonus (A11, D30 bis D32). */
   punkte: number;
   gruppen: number;
@@ -52,9 +52,17 @@ export interface Schlangenwert {
  * Der Wert gleicher Schlangen, für eine Suche gemerkt: Eine Aktion ändert meist nur
  * eine Schlange, und die Wertung der übrigen kostet sonst bei jeder Stellung neu.
  * Schlüssel sind die Schlangen ohne Ids (`wertschluessel`); die Erweiterung ist in
- * einer Suche fest.
+ * einer Suche fest. Den Schlüssel einer Liste von Schlangen, die sich nicht ändert,
+ * merkt er sich ebenfalls; Sichten der Simulation ändern sich nie.
  */
-export type Wertungsmerker = Map<string, Schlangenwert>;
+export interface Wertungsmerker {
+  werte: Map<string, Schlangenwert>;
+  schluessel: WeakMap<readonly Schlange[], string>;
+}
+
+export function neuerMerker(): Wertungsmerker {
+  return { werte: new Map(), schluessel: new WeakMap() };
+}
 
 /** Was an einer Karte für den Wert zählt: die Farbe, der Name einer Sonderkarte, bei einer Fusion die Punkte darunter (A7.7, D30). */
 function wertzeichen(schlange: Schlange, karte: Spielkarte): string {
@@ -70,9 +78,10 @@ function wertschluessel(schlangen: readonly Schlange[]): string {
 }
 
 /** Was die Schlangen eines Spielers wert sind: Punkte wie die Wertung, fertige Gruppen, Aussichten und die längste Kette. */
-export function schlangenwert(schlangen: Schlange[], erweiterung: boolean, merker: Wertungsmerker): Schlangenwert {
-  const schluessel = wertschluessel(schlangen);
-  const bekannt = merker.get(schluessel);
+function schlangenwert(schlangen: Schlange[], erweiterung: boolean, merker: Wertungsmerker): Schlangenwert {
+  const schluessel = merker.schluessel.get(schlangen) ?? wertschluessel(schlangen);
+  merker.schluessel.set(schlangen, schluessel);
+  const bekannt = merker.werte.get(schluessel);
   if (bekannt !== undefined) return bekannt;
   const wertung = werteSchlangen(schlangen, erweiterung);
   const neu = {
@@ -81,17 +90,17 @@ export function schlangenwert(schlangen: Schlange[], erweiterung: boolean, merke
     aussicht: schlangen.reduce((summe, schlange) => summe + aussichtVon(schlange), 0),
     kette: laengsteFarbkette({ schlangen }),
   };
-  merker.set(schluessel, neu);
+  merker.werte.set(schluessel, neu);
   return neu;
 }
 
 /** Die Punkte aus Farbgruppen und Vielfaltbonus, wie die Wertung sie zählt (A11, D30 bis D32). */
-export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean, merker: Wertungsmerker = new Map()): number {
+export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean, merker: Wertungsmerker = neuerMerker()): number {
   return schlangenwert(spieler.schlangen, erweiterung, merker).punkte;
 }
 
 /** Die eigenen Punkte, wie die Wertung sie jetzt zählte: Farbgruppen, Vielfaltbonus und Kettenbonus (A11), ohne Aufgaben. */
-export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = new Map()): number {
+export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
   const kette = kettenbonus(sicht.spieler.map((spieler) => schlangenwert(spieler.schlangen, sicht.erweiterung, merker).kette))[sicht.ich];
   return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker) + kette;
 }
@@ -202,7 +211,7 @@ function grubenVor(sicht: Sicht, spieler: number): number {
  * Wie sehr die Zukunft eines Spielers zählt: voll, solange die Partie läuft; in der
  * Schlussrunde ein letzter Zug, und keiner, wenn eine Schlangengrube ihn kostet (D21).
  */
-export function zukunft(sicht: Sicht, spieler: number): number {
+function zukunft(sicht: Sicht, spieler: number): number {
   if (!hatNochZug(sicht, spieler)) return 0;
   if (sicht.partiephase === 'Laufend') return 1;
   return grubenVor(sicht, spieler) > 0 ? 0 : 0.5;
@@ -224,18 +233,18 @@ function spielerwert(sicht: Sicht, index: number, merker: Wertungsmerker): numbe
 }
 
 /** Der Wert von Schlangen in der Bewertung: Punkte, fertige Gruppen und, soweit noch Züge kommen, die Aussichten. */
-export function wertDerSchlangen(wert: Schlangenwert, ausblick: number): number {
+function wertDerSchlangen(wert: Schlangenwert, ausblick: number): number {
   return wert.punkte + FERTIGE_GRUPPE * wert.gruppen + ausblick * wert.aussicht;
 }
 
 /** Wer die längste Kette ab 3 Karten hat, bekommt den Kettenbonus, bei Gleichstand jeder (A11, D24); `laengsteFarbkette` zählt erst ab 3. */
-export function kettenbonus(laengen: readonly number[]): number[] {
+function kettenbonus(laengen: readonly number[]): number[] {
   const laengste = Math.max(0, ...laengen);
   return laengen.map((laenge) => (laenge > 0 && laenge === laengste ? KETTENBONUS : 0));
 }
 
 /** Der Wert der Stellung für den Betrachter der Sicht: sein Wert minus der des stärksten Gegners. */
-export function bewerte(sicht: Sicht, merker: Wertungsmerker = new Map()): number {
+export function bewerte(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
   const bonus = kettenbonus(sicht.spieler.map((spieler) => schlangenwert(spieler.schlangen, sicht.erweiterung, merker).kette));
   const werte = sicht.spieler.map((_, index) => spielerwert(sicht, index, merker) + bonus[index]);
   const gegner = werte.filter((_, index) => index !== sicht.ich);
