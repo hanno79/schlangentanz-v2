@@ -3,9 +3,10 @@
 Task P0.5 · Katalog aus `docs/UMSETZUNGSPLAN.md`, Abschnitt 9 · 38 Fragen:
 F1–F15 zum Basis-Spiel, G1–G23 zur Erweiterung.
 
-Stand 20.11.2026: F1–F15 und die Nachfrage F8a sind beantwortet, die
-Antworten stehen in `docs/GAME_SPEC.md` Teil D (D14–D29). Von den Fragen zur
-Erweiterung ist G9 beantwortet (D31). Offen sind G1–G8 und G10–G23.
+Stand 21.11.2026: Alle Fragen sind beantwortet, die Antworten stehen in
+`docs/GAME_SPEC.md` Teil D. F1–F15 und die Nachfrage F8a: D14–D29. G9: D31.
+G1–G8 und G10–G23 hat der Autor am 21.11.2026 mit einer Sammelantwort
+beantwortet, es gilt je der Vorschlag: D34–D55.
 
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der
@@ -546,9 +547,9 @@ stammen vom Orchestrator und sind je Frage so gekennzeichnet.
 
 **Betroffene Tasks:** nennt die Frage: X1. Hängt davon ab: E1 (Erweiterungs-Schalter, Abnahmekriterium 1), E10 (Vielfaltbonus nur mit Erweiterung), O2 (Lobby), O10 (Abnahmekriterium 4).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Ein einziger Schalter in der Lobby schaltet die ganze Erweiterung. Teil D: D34.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G2: Wann die geheime Aufgabe zählt
 
@@ -573,9 +574,9 @@ stammen vom Orchestrator und sind je Frage so gekennzeichnet.
 
 **Betroffene Tasks:** nennt die Frage: X1 (Abnahmekriterium 5). Hängt davon ab: E10 (Endwertung), K4 (Abnahmekriterium 1), O10.
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Die geheime Aufgabe zählt, sobald sie einmal in einem eigenen Zug erfüllt war. Teil D: D35.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G3: Was als „ausgespielt“ zählt
 
@@ -601,9 +602,9 @@ stammen vom Orchestrator und sind je Frage so gekennzeichnet.
 
 **Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: X1 (Zählung gespielter Sonderkarten im Zustand), K4 (Abnahmekriterium 1).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Als ausgespielt zählt jede Sonderkarte, die der Spieler aus der Hand gespielt hat. Teil D: D36.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G4: Aufgabe „Schlangentanz“
 
@@ -631,11 +632,11 @@ Teil 2, eine oder zwei Häutungen:
 
 **Vorschlag:** a, c. Vorschlag des Orchestrators: Der Kartentext spricht den Spieler an („Bilde“), und das einzige Beispiel zeigt beide Gruppen aus einer Häutung; E9 hält die Zahl neuer Gruppen bereits je Häutung fest.
 
-**Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: E9 (Abnahmekriterium 5), K4 (Abnahmekriterium 3).
+**Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: X2 (Abnahmekriterium 7, am 21.11.2026 aus E9 Kriterium 5 verschoben), K4 (Abnahmekriterium 3).
 
-**Antwort:** —
+**Antwort:** a, c. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Für Schlangentanz zählt nur eine Häutung, die der Spieler selbst in einer eigenen Schlange spielt, und beide Dreiergruppen entstehen aus derselben Häutung. Teil D: D37.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G5: Eine oder zwei Schlangen bei „Vielfaltskönig“ und „Farbenpracht“
 
@@ -665,9 +666,9 @@ Teil 2, „Farbenpracht“:
 
 **Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: K4 (Abnahmekriterium 1).
 
-**Antwort:** —
+**Antwort:** b, c. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Vielfaltskönig braucht zwei Schlangen, bei Farbenpracht genügt eine. Teil D: D38.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G6: Aufgabe „Symmetriemeister“
 
@@ -700,9 +701,9 @@ Teil 2, Sonderkarten in der Schlange:
 
 **Betroffene Tasks:** nennt die Frage: X2 (behebt C23). Hängt davon ab: K4 (Abnahmekriterium 1).
 
-**Antwort:** —
+**Antwort:** b, c. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Symmetriemeister erlaubt eine ungerade Kartenzahl und Joker, aber keine anderen Sonderkarten in der Schlange. Teil D: D39.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G7: Aufgabe „Schlangenbändiger“
 
@@ -724,9 +725,9 @@ Teil 2, Sonderkarten in der Schlange:
 
 **Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: K4 (Abnahmekriterium 1).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Für Schlangenbändiger liegt das Muster mindestens zweimal direkt hintereinander. Teil D: D40.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G8: „Farbkombination“, „Gelber Schatz“ und „Lila Riese“
 
@@ -762,9 +763,9 @@ Teil 2, Joker bei „Gelber Schatz“ und „Lila Riese“:
 
 **Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: K4 (Abnahmekriterium 1).
 
-**Antwort:** —
+**Antwort:** b, c. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Bei Farbkombination genügen fünf Karten irgendwo in derselben Schlange, und bei Gelber Schatz und Lila Riese zählen Joker mit. Teil D: D41.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G9: Gruppe nur aus Jokern
 
@@ -830,9 +831,9 @@ Teil 3, Liste der Effekte:
 
 **Betroffene Tasks:** nennt die Frage: X6. Hängt davon ab: E1 (Material und Platzhalter), X3 (Zusatzaktionen), K4 (Abnahmekriterium 2), O10 (Abnahmekriterium 3).
 
-**Antwort:** —
+**Antwort:** a, c, e. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Der Schlangenkorb liegt auf der Hand, sein Einsatz ist die Sonderkarte des Zuges, und er hat genau die vier genannten Boni. Teil D: D42.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G11: Korb „Ziehe 3, spiele bis zu 2“
 
@@ -871,9 +872,9 @@ Nicht gespielte gezogene Karten bleiben auf der Hand; über 5 Karten wird am Zug
 
 **Betroffene Tasks:** nennt die Frage: X6. Hängt davon ab: X3 (Ziehen mitten im Zug, Auslöser der Schlussrunde), E2 (Schlussrunde).
 
-**Antwort:** —
+**Antwort:** a, c, e. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Die bis zu zwei Karten kommen in beliebiger Art zusätzlich, ein gezogener Verdoppler wirkt nicht, und bei kleinem Stapel zieht man, was da ist. Teil D: D43.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G12: Korb „Tausche bis zu 2 Karten“
 
@@ -902,9 +903,9 @@ Teil 2, Platz und Verbleib:
 
 **Betroffene Tasks:** nennt die Frage: X6. Hängt davon ab: K4 (Abnahmekriterium 2), O10 (Abnahmekriterium 3).
 
-**Antwort:** —
+**Antwort:** a, d. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Getauscht werden nur Farbkarten, Platz gegen Platz, und die getauschte Karte kommt auf die Hand. Teil D: D44.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G13: Korb „Sonderkarte aus gegnerischer Schlange entfernen“
 
@@ -943,9 +944,9 @@ Teil 3, Ablagestapel:
 
 **Betroffene Tasks:** nennt die Frage: X6. Hängt davon ab: E4 (Reaktionsablauf), E6 (Entfernen einer Farbenfusion), K3 (Abwehr der KI).
 
-**Antwort:** —
+**Antwort:** a, c, e. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Entfernt werden darf jede Sonderkarte, der Gegner kann mit Farbenschutz abwehren, und die Karte kommt auf den Ablagestapel des Spielers, der den Korb nutzt. Teil D: D45.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G14: Korb „Zwei zusätzliche Aktionen“
 
@@ -995,9 +996,9 @@ Teil 4, ein Verdoppler als Zusatzaktion:
 
 **Betroffene Tasks:** nennt die Frage: X3. Hängt davon ab: X6 (Schlangenkorb), X4 (gemeinsamer Baustein mit Comeback), E7 (Grenze für die Farbenfusion, siehe F14).
 
-**Antwort:** —
+**Antwort:** a, c, f, g. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Es sind die drei Aktionen der Comeback-Karte, sie kommen obendrauf, eine zweite Farbenfusion ist nicht erlaubt, und ein Verdoppler wirkt dabei nicht. Teil D: D46.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G15: Zugerweiternde Effekte im selben Zug
 
@@ -1023,9 +1024,9 @@ Teil 4, ein Verdoppler als Zusatzaktion:
 
 **Betroffene Tasks:** nennt die Frage: X3. Hängt davon ab: E3 (Verdoppler), X4 (Comeback), X5 (Risiko), X6 (Schlangenkorb).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Verdoppler, Comeback-Karte und die zugerweiternden Boni des Korbs schliessen sich im selben Zug aus. Teil D: D47.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G16: Comeback-Bedingung und Zeitpunkt
 
@@ -1063,9 +1064,9 @@ Teil 3, Zeitpunkt des Einsatzes:
 
 **Betroffene Tasks:** nennt die Frage: X4. Hängt davon ab: X3 (Zusatzaktionen), K4 (Abnahmekriterium 2), O10 (Abnahmekriterium 3).
 
-**Antwort:** —
+**Antwort:** a, d, f. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Jede Karte in der Reihe zählt eins, ohne Schlange ist die Länge null, und ist die Bedingung zu Zugbeginn erfüllt, darf die Karte im ganzen Zug eingesetzt werden. Teil D: D48.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G17: Comeback-Aktion „Zwei abwerfen, drei ziehen“
 
@@ -1107,9 +1108,9 @@ Teil 4, zweimal in einem Zug:
 
 **Betroffene Tasks:** nennt die Frage: X4. Hängt davon ab: X3 (Ziehen mitten im Zug, Auslöser der Schlussrunde), E2 (Schlussrunde).
 
-**Antwort:** —
+**Antwort:** a, c, e, g. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Die Aktion braucht zwei Handkarten, zieht bei kleinem Stapel, was da ist, fällt in der Schlussrunde weg und darf zweimal gewählt werden. Teil D: D49.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G18: „Pro Runde eine Risiko-Karte“
 
@@ -1134,9 +1135,9 @@ Teil 4, zweimal in einem Zug:
 
 **Betroffene Tasks:** nennt die Frage: X5. Hängt davon ab: E3 (Teilzug), K4 (Abnahmekriterium 2).
 
-**Antwort:** —
+**Antwort:** a. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Eine Runde ist der eigene Zug samt zweitem Zug nach einem Verdoppler. Teil D: D50.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G19: Verbleib der aufgedeckten Karte bei den Risiko-Aktionen
 
@@ -1185,9 +1186,9 @@ Teil 4, Aktion 4, die aufgedeckte Karte:
 
 **Betroffene Tasks:** nennt die Frage: X5. Hängt davon ab: X3 (Karten mitten im Zug aufdecken), O10 (Abnahmekriterium 3).
 
-**Antwort:** —
+**Antwort:** a, c, e, g. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Eine aufgedeckte Sonderkarte kommt auf den eigenen Ablagestapel, eine aufgedeckte Farbkarte bei Erfolg auf die eigene Hand, ebenso die ersetzte Schlangenkarte. Teil D: D51.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G20: Risiko-Aktion 2 „Zusätzliche Farbkarte spielen“
 
@@ -1229,9 +1230,9 @@ Teil 4, Ziel der zusätzlichen Farbkarte:
 
 **Betroffene Tasks:** nennt die Frage: X5. Hängt davon ab: X3 (Entscheidung eines Gegners), O10 (Abnahmekriterium 3).
 
-**Antwort:** —
+**Antwort:** a, c, e, g. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Die geplante Farbkarte wird vorher benannt, bei Misserfolg wählt der begünstigte Gegner, ohne Farbkarte ist die Aktion nicht wählbar, und gespielt wird nur an eine eigene Schlange. Teil D: D52.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G21: Risiko-Aktion 3 „Karten tauschen“
 
@@ -1260,9 +1261,9 @@ Teil 2, Platz der zusätzlichen Karte bei anderem Punktewert:
 
 **Betroffene Tasks:** nennt die Frage: X5. Hängt davon ab: O10 (Abnahmekriterium 3), K4 (Abnahmekriterium 2).
 
-**Antwort:** —
+**Antwort:** a, d. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Ersetzen darf jede Farbkarte der Hand, und bei anderem Punktewert wählt der Spieler, ob die zusätzliche Karte davor oder dahinter liegt. Teil D: D53.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G22: Risiko-Aktion 4 „Karten aus Ablage- oder Nachziehstapel“
 
@@ -1301,9 +1302,9 @@ Teil 3, Risiko-Karte und Schlangenkorb auf einem Ablagestapel:
 
 **Betroffene Tasks:** nennt die Frage: X5. Hängt davon ab: X6 (Schlangenkorb nicht vom Ablagestapel zurückholbar), E2 (Überhand abwerfen).
 
-**Antwort:** —
+**Antwort:** a, c, e. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Die aufgedeckte Karte zählt zu den zwei Karten, bei leerem Ablagestapel bleibt der Nachziehstapel, und Risiko-Karte und Schlangenkorb liegen nie auf einem Ablagestapel. Teil D: D54.
 
-**Datum:** —
+**Datum:** 21.11.2026
 
 ### G23: Risiko-Karte und Spielende
 
@@ -1333,6 +1334,6 @@ Teil 2, wer die Schlussrunde auslöst:
 
 **Betroffene Tasks:** nennt die Frage: X5. Hängt davon ab: X3 (Abnahmekriterium 2, Auslöser der Schlussrunde), E2 (Schlussrunde), X4 und X6 (Ziehen durch Comeback und Korb).
 
-**Antwort:** —
+**Antwort:** a, c. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Bei leerem Stapel ist keine Risiko-Karte spielbar, und die Schlussrunde löst immer der Spieler am Zug aus. Teil D: D55.
 
-**Datum:** —
+**Datum:** 21.11.2026

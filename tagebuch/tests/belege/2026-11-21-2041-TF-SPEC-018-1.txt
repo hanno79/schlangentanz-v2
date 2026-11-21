@@ -1,0 +1,23 @@
+Erster Commit c6d58a1 (Tests und Dokumente dieses Stands), sieben Spec-Testdateien
+     × P0.5: G14: gewählt „a, c, f, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 9ms
+     × P0.5: G16: gewählt „a, d, f“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 4ms
+     × P0.5: G17: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 2ms
+     × P0.5: G19: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D 1ms
+     × P0.5e: G14: jeder gewählte Teil hat eine eigene Kernaussage, jede andere Möglichkeit desselben Teils eine Gegenprobe 3ms
+     × P0.5e: G16: jeder gewählte Teil hat eine eigene Kernaussage, jede andere Möglichkeit desselben Teils eine Gegenprobe 2ms
+     × P0.5e: G17: jeder gewählte Teil hat eine eigene Kernaussage, jede andere Möglichkeit desselben Teils eine Gegenprobe 1ms
+     × P0.5e: G19: jeder gewählte Teil hat eine eigene Kernaussage, jede andere Möglichkeit desselben Teils eine Gegenprobe 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: G14: Teil D ohne Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“: expected 'korb „zwei zusätzliche aktionen“: es …' to contain '„pro zug nur eine farbenfusion“ gilt …'
+AssertionError: G16: Teil D ohne Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“: expected 'für die comeback-bedingung gilt: jede…' to contain 'im zweiten zug nach verdoppler nur, w…'
+AssertionError: G17: Teil D ohne Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“: expected 'comeback-aktion „zwei karten abwerfen…' to contain 'wer nur eine karte hält, wählt eine a…'
+AssertionError: G19: Teil D ohne Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 'auf den eigenen ablagestapel, wie bei…'
+AssertionError: G14 f: Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+AssertionError: G16 f: Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+AssertionError: G17 a: Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+AssertionError: G19 a: Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“ steht nicht genau einmal in Teil D: expected +0 to be 1 // Object.is equality
+      Tests  8 failed | 437 passed (445)
+
+HEAD 06673aa, dieselben sieben Dateien:
+ Test Files  7 passed (7)
+      Tests  445 passed (445)

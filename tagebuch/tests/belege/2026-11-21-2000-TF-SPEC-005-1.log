@@ -1,0 +1,9 @@
+
+> schlangentanz-v2@0.0.0 abgleich:website
+> node scripts/website_abgleich/abgleich.cjs
+
+Website geladen: 17914 Zeichen Markdown, 27 Karten-Dialoge, Bundle index-EH-TKokX.js
+
+Abdeckung: 469 Zeilen der Website geprüft, 0 fehlen, 22 nur anders formatiert.
+
+Ergebnis: Teil A stimmt mit der Website überein (Bundle index-EH-TKokX.js).

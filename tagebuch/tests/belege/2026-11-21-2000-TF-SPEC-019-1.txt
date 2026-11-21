@@ -1,0 +1,62 @@
+## GP1: falsche Möglichkeit G6 Teil 1 (a statt b) in D39
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP2: falsche Möglichkeit G19 Teil 1 (b statt a) in D51
+Exit 0; Tests  410 passed (410)
+
+## GP3: falsche Möglichkeit G19 Teil 2 (d statt c) in D51
+Exit 0; Tests  410 passed (410)
+
+## GP4: fehlender Satz G14 Teil 3 (f) in D46
+Exit 0; Tests  410 passed (410)
+
+## GP5: falsche Möglichkeit G14 Teil 3 (e statt f) in D46
+Exit 0; Tests  410 passed (410)
+
+## GP6: fehlender Satz G17 Teil 1 (a) in D49
+Exit 0; Tests  410 passed (410)
+
+## GP7: fehlender Zusatz D47 bei G16 Teil 3 in D48
+Exit 0; Tests  410 passed (410)
+
+## GP8: falsche Möglichkeit G16 Teil 3 (g statt f) in D48
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP9: falsche Möglichkeit G20 Teil 4 (h statt g) in D52
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP10: fehlender Satz zu A5 in D43 (Zusatz aus dem Fragenblock)
+Exit 0; Tests  410 passed (410)
+
+## GP11: falsche Folge D45 (X5 statt X6)
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP12: falsche Folge D37 (E9 statt X2)
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP13: falsches Datum D40
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP14: Nummernlücke: D44 als D45 nummeriert
+Exit 1; Tests  5 failed | 405 passed (410)
+
+## GP15: Einleitung Teil D nennt wieder offene Fragen
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP16: Plan Abschnitt 9: Spalte Antwort G4 nennt D36 statt D37
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP17: Plan X2: G4 → D36 statt D37
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP18: Plan F-Tabelle: Vorschlag F1 „drei“ statt „zwei“ (Leser nach Spaltenkopf)
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP19: Plan F-Tabelle: Antwort F1 nennt D15 statt D14
+Exit 1; Tests  1 failed | 409 passed (410)
+
+## GP20: Wortlaut des Autors bei G1 in REGELFRAGEN.md verändert (Grossschreibung)
+Exit 1; Tests  2 failed | 408 passed (410)
+
+## GP21: REGELFRAGEN.md G21: Buchstaben a, e statt a, d
+Exit 1; Tests  1 failed | 409 passed (410)

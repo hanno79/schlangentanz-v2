@@ -1,0 +1,51 @@
+## GP1: falsche Möglichkeit G6 Teil 1 (a statt b) in D39
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G6: gewählt „b, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  > G6: Teil D ohne Kernaussage „ungerade“: expected '„symmetriemeister“: die kartenzahl mu…' to contain 'ungerade'
+
+## GP8: falsche Möglichkeit G16 Teil 3 (g statt f) in D48
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G16: gewählt „a, d, f“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  > G16: Teil D ohne Kernaussage „irgendwann in diesem zug“: expected 'für die comeback-bedingung gilt: jede…' to contain 'irgendwann in diesem zug'
+
+## GP9: falsche Möglichkeit G20 Teil 4 (h statt g) in D52
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G20: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  > G20: Teil D ohne Kernaussage „ende einer eigenen schlange“: expected 'risiko-aktion 2: vor dem aufdecken be…' to contain 'ende einer eigenen schlange'
+
+## GP11: falsche Folge D45 (X5 statt X6)
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G13 > P0.5: G13 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und Status zur Website
+  > G13: Teil D D45, Spalte „Folge“ ohne X6, der die Frage nennt: expected 'X5' to match /\bX6\b/
+
+## GP12: falsche Folge D37 (E9 statt X2)
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G4 > P0.5: G4 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und Status zur Website
+  > G4: Teil D D37, Spalte „Folge“ ohne X2, der die Frage nennt: expected 'E9' to match /\bX2\b/
+
+## GP16: Plan Abschnitt 9: Spalte Antwort G4 nennt D36 statt D37
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G4 > P0.5: G4: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D
+  > Plan Abschnitt 9, G4: Spalte „Antwort“ nennt D37 nicht: expected 'wie Vorschlag, 21.11.2026 (D36)' to match /\bD37\b/
+
+## GP17: Plan X2: G4 → D36 statt D37
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G4 > P0.5: G4: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D
+  > Plan X2: nennt G4, aber ohne „G4 → D37“: expected '#### X2 Die 15 Aufgaben mit Jokern\n\…' to match /\bG4 → D37\b/
+
+## GP18: Plan F-Tabelle: Vorschlag F1 „drei“ statt „zwei“ (Leser nach Spaltenkopf)
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F1, Abgleich mit dem Plan > P0.5: F1 übernimmt den Vorschlag des Plans oder kennzeichnet den eigenen
+  > F1: Vorschlag des Plans fehlt wörtlich: expected 'b. Aus dem Plan: „zwei“.' to contain '„drei“'
+
+## GP19: Plan F-Tabelle: Antwort F1 nennt D15 statt D14
+Exit 1; Tests  1 failed | 409 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: F1 > P0.5: F1: jeder Task, der die Frage nennt, verweist auf die Antwort in Teil D
+  > Plan Abschnitt 9, F1: Spalte „Antwort“ nennt D14 nicht: expected 'wie Vorschlag (D15)' to match /\bD14\b/
+
+## GP20: Wortlaut des Autors bei G1 in REGELFRAGEN.md verändert (Grossschreibung)
+Exit 1; Tests  2 failed | 408 passed (410)
+- FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G1 > P0.5: G1 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und Status zur Website
+- FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G1: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  > G1: Teil D D34 ohne Wortlaut des Autors „Ja zu deinen Vorschlägen.“: expected 'Ja, ein Schalter für die ganze Erweit…' to contain '„Ja zu deinen Vorschlägen.“'
+  > G1: Wortlaut des Autors fehlt: expected 'a. Vorschlag übernommen, Sammelantwor…' to contain '„ja zu deinen vorschlägen.“'

@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { existsSync } from 'node:fs'
 import {
   FREI,
+  NACHFRAGE,
   OFFEN,
   TASK_ID,
   ZITAT,
@@ -138,9 +139,16 @@ function pruefeTeilD(nr: string, block: string): void {
   for (const zitat of antwort.match(ZITAT) ?? []) {
     expect(eintrag.antwort, `${nr}: Teil D ${eintrag.nr} ohne Wortlaut des Autors ${zitat}`).toContain(zitat)
   }
+  // P0.5e: Die Spalte „Folge“ nennt jeden Task, der die Frage nennt; er setzt die Antwort um.
+  for (const task of nennendeTasks(feld(block, 'Betroffene Tasks'))) {
+    expect(eintrag.folge, `${nr}: Teil D ${eintrag.nr}, Spalte „Folge“ ohne ${task}, der die Frage nennt`).toMatch(alsWort(task))
+  }
 }
 
-/** Kriterium 3: Jeder Task, der eine beantwortete Frage nennt, verweist mit „F1 → D14“ auf Teil D. */
+/**
+ * Kriterium 3: Jeder Task, der eine beantwortete Frage nennt, verweist mit „F1 → D14“ auf Teil D,
+ * und die Spalte „Antwort“ in Abschnitt 9 des Plans nennt den Eintrag (P0.5e).
+ */
 function pruefeVerweise(nr: string): void {
   const eintrag = teilD.get(nr)
   if (!eintrag) return
@@ -149,6 +157,10 @@ function pruefeVerweise(nr: string): void {
       alsWort(`${nr} → ${eintrag.nr}`),
     )
   }
+  // Nachfragen wie F8a haben keine eigene Zeile im Plan; ihre Antwort steht bei der Ausgangsfrage.
+  if (NACHFRAGE.test(nr)) return
+  const planAntwort = planFragen.find((frage) => frage.nr === nr)?.antwort ?? ''
+  expect(planAntwort,`Plan Abschnitt 9, ${nr}: Spalte „Antwort“ nennt ${eintrag.nr} nicht`).toMatch(alsWort(eintrag.nr))
 }
 
 describe('P0.5: Regelfragen an den Autor', () => {
