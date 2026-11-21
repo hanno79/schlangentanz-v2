@@ -29,29 +29,51 @@ Feste Regeln neben der Bewertung, Vorgaben des Autors:
 
 Verletzt jede durchgerechnete erste Aktion eine dieser Regeln, rechnet die Suche
 die nächsten nach dem Vorwert durch, bis eine erlaubt ist (Nachlese, höchstens
-NACHLESE). Die Zahl der Bewertungen je Schritt ist begrenzt (Kriterium 8): höchstens
-ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE × ZWEITE_AUSWAHL + 1.
+NACHLESE).
+
+Sind Spielen und Halten gleich bewertet, gewinnt der Zug, der die eigenen Punkte
+sicher hebt (Entscheidung des Orchestrators vom 21.11.2026: die KI spielt auf Sieg).
+
+Kriterium 8: Die Suche rechnet je Schritt höchstens GRENZE_SUCHE Stellungen durch
+und bewertet sie (ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE × ZWEITE_AUSWAHL + 1).
+Die Vorauswahl bewertet dazu jede angebotene Aktion höchstens einmal, ohne
+Simulation; beides meldet der Zugplan getrennt.
 */
 
 const ERSTE_AUSWAHL = 16;
 const ZWEITE_TIEFE = 3;
 const ZWEITE_AUSWAHL = 8;
 const NACHLESE = 8;
-/** Kriterium 8: mehr Stellungen bewertet die Zugsuche in einem Schritt nie. */
-export const GRENZE_BEWERTUNGEN = ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
+/** Kriterium 8: mehr Stellungen rechnet die Zugsuche in einem Schritt nie durch. */
+export const GRENZE_SUCHE = ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
 /** Abzug für eine Karte, die nichts bewirkt (Kriterium 5). */
 const OHNE_WIRKUNG = 0.05;
+/** Unterhalb dieses Abstands gelten zwei Bewertungen als gleich. */
+const GLEICH = 1e-9;
+
+/** Wie oft ein Schritt `bewerte` aufgerufen hat (Kriterium 8). */
+export interface Bewertungen {
+  /** Für Stellungen, die die Suche durchgerechnet hat, und den Stand vor „Zug beenden“. */
+  suche: number;
+  /** In der Vorauswahl, ohne Simulation. */
+  vorauswahl: number;
+  /** Wie viele Aktionen der Vorauswahl angeboten waren, über alle Stände des Schritts. */
+  angeboten: number;
+}
 
 export interface Zugplan {
   aktion: SpielAktion;
-  /** Wie viele Stellungen die Suche dafür bewertet hat (Kriterium 8). */
-  bewertungen: number;
+  bewertungen: Bewertungen;
 }
+
+const OHNE_BEWERTUNG: Bewertungen = { suche: 0, vorauswahl: 0, angeboten: 0 };
 
 interface Folge {
   aktion: SpielAktion;
   stellung: Stellung;
   wert: number;
+  /** Die eigenen Punkte danach, wie die Wertung sie zählte (A11); entscheiden bei gleicher Bewertung. */
+  punkte: number;
   /** Verletzt die Aktion eine der festen Regeln oben? Dann nur, wenn nichts anderes geht. */
   verworfen: boolean;
 }
@@ -97,13 +119,13 @@ function folgeVon(stellung: Stellung, aktion: SpielAktion, ich: number): Stellun
 
 /** Die Suche eines Schritts; sie zählt ihre Bewertungen und merkt sich die Wertung gleicher Schlangen. */
 function erstelleSuche(sicht: Sicht, zufall: () => number) {
-  let bewertungen = 0;
+  const bewertungen: Bewertungen = { suche: 0, vorauswahl: 0, angeboten: 0 };
   const ich = sicht.ich;
   const wurzel = simuliere(sicht, zufall);
   const merker: Wertungsmerker = neuerMerker();
 
   const werte = (stand: Sicht) => {
-    bewertungen += 1;
+    bewertungen.suche += 1;
     return bewerte(stand, merker);
   };
 
@@ -114,13 +136,16 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const wirkungslos = ohneWirkung(aktion, sichtNach);
     const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
-    return { aktion, stellung: nach, wert: werte(sichtNach) - (wirkungslos ? OHNE_WIRKUNG : 0), verworfen: fusionSenkt || grubeOhneZug };
+    const wert = werte(sichtNach) - (wirkungslos ? OHNE_WIRKUNG : 0);
+    return { aktion, stellung: nach, wert, punkte: eigenePunkte(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
   };
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
     const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen));
-    const geordnet = vorauswahl(stand, karten, anzahl, merker);
+    const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
+    bewertungen.angeboten += karten.length;
+    bewertungen.vorauswahl += bewertet;
     const folgen = geordnet.slice(0, anzahl).map((aktion) => folge(stellung, stand, aktion));
     for (const aktion of geordnet.slice(anzahl, anzahl + nachlese)) {
       if (folgen.some((eintrag) => !eintrag.verworfen)) break;
@@ -129,43 +154,50 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     return folgen;
   };
 
-  return { wurzel, werte, folge, kandidaten, gezaehlt: () => bewertungen };
+  return { wurzel, werte, folge, kandidaten, gezaehlt: () => ({ ...bewertungen }), punkte: (stand: Sicht) => eigenePunkte(stand, merker) };
 }
 
-/** Die beste Folge, bei gleichem Wert die frühere; verworfene nur, wenn es keine andere gibt. */
+/** Ob `folge` besser ist als `bisher`: höher bewertet, bei gleicher Bewertung mit mehr eigenen Punkten, sonst nicht. */
+function besser(folge: { wert: number; punkte: number }, bisher: { wert: number; punkte: number }): boolean {
+  if (Math.abs(folge.wert - bisher.wert) > GLEICH) return folge.wert > bisher.wert;
+  return folge.punkte > bisher.punkte;
+}
+
+/** Die beste Folge, bei Gleichstand die frühere; verworfene nur, wenn es keine andere gibt. */
 function beste(folgen: readonly Folge[]): Folge | undefined {
   const erlaubt = folgen.filter((folge) => !folge.verworfen);
-  return (erlaubt.length > 0 ? erlaubt : folgen).reduce<Folge | undefined>((bisher, folge) => (bisher === undefined || folge.wert > bisher.wert ? folge : bisher), undefined);
+  return (erlaubt.length > 0 ? erlaubt : folgen).reduce<Folge | undefined>((bisher, folge) => (bisher === undefined || besser(folge, bisher) ? folge : bisher), undefined);
 }
 
 /** Karten ausspielen: jede Aktion der Vorauswahl, für die besten drei die zweite Karte, oder den Zug beenden. */
 function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const suche = erstelleSuche(sicht, zufall);
   const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL, NACHLESE);
-  const vertieft = new Map<Folge, number>();
+  const vertieft = new Map<Folge, Folge>();
   const vertiefen = erste
     .filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht))
     .sort((a, b) => b.wert - a.wert)
     .slice(0, ZWEITE_TIEFE);
   for (const folge of vertiefen) {
     const zweite = beste(suche.kandidaten(folge.stellung, folge.stellung.sicht, folge.stellung.aktionen(), ZWEITE_AUSWAHL));
-    if (zweite !== undefined && !zweite.verworfen) vertieft.set(folge, Math.max(folge.wert, zweite.wert));
+    if (zweite !== undefined && !zweite.verworfen && besser(zweite, folge)) vertieft.set(folge, zweite);
   }
-  // Der Wert eines Plans ist der seiner besten Fortsetzung im selben Zug.
-  const gewaehlt = beste(erste.map((folge) => ({ ...folge, wert: vertieft.get(folge) ?? folge.wert })));
+  // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
+  const gewaehlt = beste(erste.map((folge) => ({ ...folge, wert: vertieft.get(folge)?.wert ?? folge.wert, punkte: vertieft.get(folge)?.punkte ?? folge.punkte })));
   const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
-  if (beenden !== undefined && (gewaehlt === undefined || gewaehlt.verworfen || gewaehlt.wert <= suche.werte(sicht))) {
+  if (beenden !== undefined && (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, { wert: suche.werte(sicht), punkte: suche.punkte(sicht) }))) {
     return { aktion: beenden, bewertungen: suche.gezaehlt() };
   }
   if (gewaehlt === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');
   return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
 }
 
-/** Abwehren oder durchlassen (A6, A7.2): was die Stellung danach besser macht; bei Gleichstand durchlassen. */
+/** Abwehren oder durchlassen (A6, A7.2): was die Stellung danach höher bewertet; bei gleicher Bewertung durchlassen. */
 function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const suche = erstelleSuche(sicht, zufall);
   const geordnet = [...aktionen.filter(istDurchlassen), ...aktionen.filter((aktion) => !istDurchlassen(aktion))];
-  const gewaehlt = beste(geordnet.map((aktion) => suche.folge(suche.wurzel, sicht, aktion)));
+  const folgen = geordnet.map((aktion) => suche.folge(suche.wurzel, sicht, aktion));
+  const gewaehlt = folgen.reduce<Folge | undefined>((bisher, folge) => (bisher === undefined || folge.wert > bisher.wert + GLEICH ? folge : bisher), undefined);
   if (gewaehlt === undefined) throw new Error('Zugsuche: Für die Abwehr bietet die Engine keine Aktion an.');
   return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
 }
@@ -174,14 +206,14 @@ function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => 
 function werfeAb(sicht: Sicht, aktionen: readonly SpielAktion[]): Zugplan {
   const verlust = (aktion: SpielAktion) =>
     aktion.typ !== 'UeberhandAbwerfen' ? 0 : sicht.hand.filter((karte) => aktion.karteIds.includes(karte.id)).reduce((summe, karte) => summe + haltewert(karte, sicht), 0);
-  return { aktion: aktionen.reduce((bisher, aktion) => (verlust(aktion) < verlust(bisher) ? aktion : bisher)), bewertungen: 0 };
+  return { aktion: aktionen.reduce((bisher, aktion) => (verlust(aktion) < verlust(bisher) ? aktion : bisher)), bewertungen: OHNE_BEWERTUNG };
 }
 
 /** Plant den nächsten Schritt aus der Sicht des Entscheiders; die gewählte Aktion ist eine aus `aktionen`. */
 export function planeZug(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const erste = aktionen[0];
   if (erste === undefined) throw new Error('Zugsuche: Es gibt keine Aktion zur Auswahl.');
-  if (aktionen.length === 1) return { aktion: erste, bewertungen: 0 };
+  if (aktionen.length === 1) return { aktion: erste, bewertungen: OHNE_BEWERTUNG };
   if (erste.typ === 'Reagieren') return reagiere(sicht, aktionen, zufall);
   if (erste.typ === 'UeberhandAbwerfen') return werfeAb(sicht, aktionen);
   return spiele(sicht, aktionen, zufall);

@@ -163,10 +163,12 @@ function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
  * Die Aktionen in der Reihenfolge, in der sie durchgerechnet werden: vorn höchstens
  * `anzahl`, die mit dem höchsten Vorwert, von jeder Handkarte mindestens ihre beste;
  * dahinter die übrigen nach Vorwert, für eine Nachlese. Bei gleichem Vorwert gilt die
- * Reihenfolge der Engine, damit die Wahl nur von der Sicht abhängt.
+ * Reihenfolge der Engine, damit die Wahl nur von der Sicht abhängt. `bewertet` sagt,
+ * wie oft dafür `bewerte` lief: einmal je Aktion, oder gar nicht, wenn alle in die
+ * Auswahl passen (Kriterium 8).
  */
-export function vorauswahl(sicht: Sicht, aktionen: readonly SpielAktion[], anzahl: number, merker: Wertungsmerker): SpielAktion[] {
-  if (aktionen.length <= anzahl) return [...aktionen];
+export function vorauswahl(sicht: Sicht, aktionen: readonly SpielAktion[], anzahl: number, merker: Wertungsmerker): { geordnet: SpielAktion[]; bewertet: number } {
+  if (aktionen.length <= anzahl) return { geordnet: [...aktionen], bewertet: 0 };
   const geordnet = aktionen.map((aktion, stelle) => ({ aktion, stelle, wert: bewerte(folgeSicht(sicht, aktion), merker) })).sort((a, b) => b.wert - a.wert || a.stelle - b.stelle);
   const gewaehlt = new Set<number>();
   const karten = new Set<string | null>();
@@ -176,5 +178,6 @@ export function vorauswahl(sicht: Sicht, aktionen: readonly SpielAktion[], anzah
     karten.add(karte);
   }
   for (const eintrag of geordnet) if (gewaehlt.size < anzahl) gewaehlt.add(eintrag.stelle);
-  return [...geordnet.filter((eintrag) => gewaehlt.has(eintrag.stelle)), ...geordnet.filter((eintrag) => !gewaehlt.has(eintrag.stelle))].map((eintrag) => eintrag.aktion);
+  const reihenfolge = [...geordnet.filter((eintrag) => gewaehlt.has(eintrag.stelle)), ...geordnet.filter((eintrag) => !gewaehlt.has(eintrag.stelle))];
+  return { geordnet: reihenfolge.map((eintrag) => eintrag.aktion), bewertet: geordnet.length };
 }

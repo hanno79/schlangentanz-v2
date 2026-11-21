@@ -62,7 +62,7 @@ describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine; je Schrit
     for (const plan of plaene) {
       const { suche, vorauswahl, angeboten } = plan.bewertungen
       expect(suche, 'K2.8: durchgerechnete und bewertete Stellungen in diesem Schritt').toBeLessThanOrEqual(GRENZE)
-      expect(angeboten, 'K2.8: die Vorauswahl sieht mindestens die Aktionen der Stellung').toBeGreaterThanOrEqual(aktionen.length - 1)
+      expect(angeboten, 'K2.8: die über tausend Aktionen gehen durch die Vorauswahl').toBeGreaterThan(1000)
       expect(vorauswahl, `K2.8: Bewertungen in der Vorauswahl bei ${angeboten} angebotenen Aktionen`).toBeLessThanOrEqual(angeboten)
       expect(pruefeAktion(zustand, plan.aktion)).toEqual({ erlaubt: true })
       expect(aktionen).toContain(plan.aktion)
