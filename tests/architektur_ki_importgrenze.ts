@@ -1,7 +1,7 @@
 // Die Importgrenze der Strategien (U5, P0.3d, Mangel 1 der Schlussprüfung 2): Ausserhalb von
 // src/ki/strategien/ erreicht Code die Strategien nur über die Registry index.ts und über die
 // Typen aus strategie.ts. Eine Fabrik, die nicht in der Registry steht, gleich in welcher Form
-// sie exportiert ist, kommt so bei keinem Rahmen, keiner App und keinem Messlauf an; geprüft
+// sie exportiert ist, kommt so bei keinem Rahmen, keiner App und keinem Skript an; geprüft
 // wird der Import-Graph, aufgelöst wie im Build, nicht der Wortlaut der Pfade.
 //
 // Ausgenommen sind genau Testdateien `*.test.ts(x)` und alles unter tests/: Tests prüfen eine

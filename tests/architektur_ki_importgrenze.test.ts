@@ -7,7 +7,7 @@ import { WURZEL, legeAn, raeumeAuf } from './probebaum'
 /*
 Die Importgrenze der Strategien (U5, P0.3d, Weg (b) aus Mangel 1 der Schlussprüfung 2):
 Ausserhalb von src/ki/strategien/ importiert Code von dort nur die Registry index.ts und
-Typen aus strategie.ts. So erreicht kein Rahmen, keine App und kein Messlauf eine Fabrik,
+Typen aus strategie.ts. So erreicht kein Rahmen, keine App und kein Skript eine Fabrik,
 die nicht in der Registry steht, gleich in welcher Form sie exportiert ist; der
 Isolationstest prüft jeden Eintrag der Registry. Ausgenommen sind genau `*.test.ts(x)`
 und tests/.
