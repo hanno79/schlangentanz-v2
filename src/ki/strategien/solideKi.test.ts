@@ -1,0 +1,262 @@
+// @vitest-environment node
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, berechneZwischenstand, ermittleAktionen, erzeugeZufall, werteSchlangen } from '../../engine'
+import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
+import { findeSzenario } from '../../entwicklung/szenarien'
+import { naechsterKiSchritt } from '../schritt'
+import { entscheiderVon, sichtFuer } from '../sicht'
+import { entscheidungenVon } from '../__tests__/stellungen'
+import type { Entscheidung } from '../__tests__/stellungen'
+import { gruppenwert } from './bewertung'
+import { STRATEGIEN } from './index'
+import { erstelleSolideKi } from './solideKi'
+import { erstelleZufallsKi } from './zufallsKi'
+
+/*
+K2, Kriterien 1 bis 6, als Szenariotests: dieselben Szenarien stehen am
+Entwicklertisch (`src/entwicklung/szenarienKi.ts`). In jedem ist KI-Gegner 1
+(Stelle 1) am Zug; gespielt wird sein ganzer Zug. Dazu Eigenschaften, die in
+Partien gegen die Zufalls-KI für jede Entscheidung der soliden KI gelten.
+*/
+
+const KI = 'spieler-2'
+
+interface Zug {
+  /** Die Aktionen von KI-Gegner 1 in diesem Zug, auch über einen Verdoppler hinweg. */
+  aktionen: SpielAktion[]
+  ereignisse: Ereignis[]
+  zustand: Spielzustand
+}
+
+/** Spielt den Zug von KI-Gegner 1 im Szenario `name` mit der soliden KI; ein gefragter Mensch lässt durch. */
+function spieleZug(name: string, saat = 1): Zug {
+  const szenario = findeSzenario(name)
+  if (szenario === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
+  let zustand = szenario.erzeuge()
+  const ki = erstelleSolideKi(erzeugeZufall(saat))
+  const zug: Zug = { aktionen: [], ereignisse: [], zustand }
+  while (zustand.partiephase !== 'Beendet' && zustand.zug.spielerIndex === 1) {
+    const entscheider = entscheiderVon(zustand)
+    const aktion =
+      entscheider?.steuerung === 'KI' ? naechsterKiSchritt(zustand, ki) : ermittleAktionen(zustand).find((angeboten) => angeboten.typ === 'Reagieren' && angeboten.farbenschutzId === null)
+    if (aktion == null) throw new Error(`Testaufbau: In ${name} entscheidet ${entscheider?.name ?? 'niemand'} ohne Aktion.`)
+    const schritt = anwendeAktion(zustand, aktion)
+    if (aktion.spielerId === KI) zug.aktionen.push(aktion)
+    zug.ereignisse.push(...schritt.ereignisse)
+    zustand = schritt.zustand
+  }
+  return { ...zug, zustand }
+}
+
+function punkte(zustand: Spielzustand, sitz: number): number {
+  return berechneZwischenstand(zustand, zustand.spieler[sitz].id).spieler[sitz].summe
+}
+
+function eigenePunkte(zustand: Spielzustand, sitz: number): number {
+  return gruppenwert(sichtFuer(zustand, sitz).spieler[sitz], zustand.erweiterung)
+}
+
+/** Wie viele Farbgruppen der Spieler hat (A11); eine vollendete Dreiergruppe erhöht die Zahl. */
+function gruppenzahl(zustand: Spielzustand, sitz: number): number {
+  return werteSchlangen(zustand.spieler[sitz].schlangen, zustand.erweiterung).schlangen.reduce((summe, schlange) => summe + schlange.gruppen.length, 0)
+}
+
+const farben = (zustand: Spielzustand, sitz: number) =>
+  zustand.spieler[sitz].schlangen.map((schlange) => schlange.karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)))
+
+const typen = (zug: Zug) => zug.aktionen.map((aktion) => aktion.typ)
+
+/** Partien der soliden KI an Stelle 0 gegen Zufalls-KIs, 2 bis 4 Spieler, mit und ohne Erweiterung. */
+const PARTIEN = [2, 2, 2, 2, 3, 3, 3, 4, 4, 4].map((spielerzahl, nummer) => ({ spielerzahl, erweiterung: nummer % 2 === 1, saat: 600 + nummer }))
+const ENTSCHEIDUNGEN: Entscheidung[][] = PARTIEN.map((partie, nummer) =>
+  entscheidungenVon(
+    partie,
+    Array.from({ length: partie.spielerzahl }, (_, sitz) => (sitz === 0 ? erstelleSolideKi(erzeugeZufall(nummer)) : erstelleZufallsKi(erzeugeZufall(100 * nummer + sitz)))),
+    0,
+  ),
+)
+const ALLE = ENTSCHEIDUNGEN.flat()
+
+/** Die Entscheidungen einer Partie, Zug für Zug: ein Zug endet mit „Zug beenden“ oder dem Abwerfen danach. */
+function zuege(entscheidungen: readonly Entscheidung[]): Entscheidung[][] {
+  const ergebnis: Entscheidung[][] = [[]]
+  for (const entscheidung of entscheidungen) {
+    if (entscheidung.aktion.typ === 'Reagieren') continue
+    ergebnis[ergebnis.length - 1].push(entscheidung)
+    if (entscheidung.nachher.zug.spielerIndex !== 0 || entscheidung.nachher.partiephase === 'Beendet') ergebnis.push([])
+  }
+  return ergebnis.filter((zug) => zug.length > 0)
+}
+
+describe('K2: die solide KI steht in der Registry', () => {
+  it('U5: STRATEGIEN.solideKi ist die Fabrik der soliden KI', () => {
+    expect(STRATEGIEN.solideKi).toBe(erstelleSolideKi)
+    expect(erstelleSolideKi(erzeugeZufall(1)).name).toBe('Solide KI')
+  })
+
+  it(`K2: in ${PARTIEN.length} Partien gegen die Zufalls-KI enden alle, und die solide KI gewinnt die meisten`, () => {
+    const gewonnen = ENTSCHEIDUNGEN.filter((entscheidungen) => {
+      const ende = entscheidungen[entscheidungen.length - 1].nachher
+      const stand = PARTIEN.length > 0 ? berechneZwischenstand(ende, ende.spieler[0].id).spieler.map((spieler) => spieler.summe) : []
+      return stand[0] === Math.max(...stand)
+    })
+    expect(gewonnen.length).toBeGreaterThanOrEqual(8)
+  })
+})
+
+describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollenden, tut sie es', () => {
+  it('K2.1: ki-dreiergruppe: sie legt das Violett an ihr Paar, Gruppe mit 6 Punkten', () => {
+    const zug = spieleZug('ki-dreiergruppe')
+    expect(zug.aktionen[0], 'K2.1: erste Aktion').toMatchObject({ typ: 'FarbkarteLegen', ziel: { art: 'schlange', schlangenId: 'schlange-1' } })
+    expect(farben(zug.zustand, 1)).toEqual([['Violett', 'Violett', 'Violett']])
+    expect(punkte(zug.zustand, 1)).toBe(6)
+  })
+
+  it('K2.1: ki-dreiergruppe-joker: ohne passende Farbkarte vollendet sie die grüne Gruppe mit der Regenbogenschlange', () => {
+    const zug = spieleZug('ki-dreiergruppe-joker')
+    const regenbogen = zug.aktionen.find((aktion) => aktion.typ === 'RegenbogenschlangeLegen')
+    expect(regenbogen, 'K2.1: sie spielt die Regenbogenschlange').toMatchObject({ schlangenId: 'schlange-1' })
+    expect(punkte(zug.zustand, 1), 'K2.1: Grün, Grün, Regenbogenschlange bringt 6 (A7.3)').toBe(6)
+  })
+
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem eine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder holt mindestens so viele Punkte', () => {
+    let geprueft = 0
+    let vollendet = 0
+    for (const zug of ENTSCHEIDUNGEN.flatMap(zuege)) {
+      const start = zug[0].vorher
+      const gruppen = gruppenzahl(start, 0)
+      const vollendend = ermittleAktionen(start)
+        .filter((aktion) => aktion.typ === 'FarbkarteLegen' || aktion.typ === 'RegenbogenschlangeLegen')
+        .map((aktion) => anwendeAktion(start, aktion).zustand)
+        .filter((danach) => gruppenzahl(danach, 0) > gruppen)
+      if (vollendend.length === 0) continue
+      geprueft += 1
+      const ende = zug[zug.length - 1].nachher
+      if (gruppenzahl(ende, 0) > gruppen) vollendet += 1
+      // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann zählt, dass sie nichts verschenkt.
+      else expect(eigenePunkte(ende, 0), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}`).toBeGreaterThanOrEqual(Math.max(...vollendend.map((danach) => eigenePunkte(danach, 0))))
+    }
+    expect(vollendet, 'K2.1: fast immer vollendet sie die Gruppe selbst').toBeGreaterThanOrEqual(geprueft - 3)
+    expect(geprueft, 'K2.1: genug solche Züge').toBeGreaterThan(30)
+  })
+})
+
+describe('K2 Kriterium 2: passende Farbkarte und nützliche Sonderkarte, sie spielt beide', () => {
+  it('K2.2: ki-farbe-und-sonderkarte: Blau an die blaue Schlange und die Regenbogenschlange an die braune, zusammen 7 Punkte', () => {
+    const zug = spieleZug('ki-farbe-und-sonderkarte')
+    expect([...typen(zug)].sort()).toEqual(['FarbkarteLegen', 'RegenbogenschlangeLegen', 'ZugBeenden'])
+    expect(farben(zug.zustand, 1).map((schlange) => [...schlange].sort())).toEqual([
+      ['Blau', 'Blau', 'Blau'],
+      ['Braun', 'Braun', 'Regenbogenschlange'],
+    ])
+    expect(punkte(zug.zustand, 1)).toBe(7)
+  })
+})
+
+describe('K2 Kriterium 3: keine Regenbogenschlange in eine gegnerische Schlange, wenn eine eigene sie aufnehmen kann', () => {
+  it('K2.3: ki-regenbogen-eigene: auch wenn sie dort die längste Kette des Gegners unterbräche', () => {
+    for (const saat of [1, 2, 3]) {
+      const zug = spieleZug('ki-regenbogen-eigene', saat)
+      const fremd = zug.aktionen.filter((aktion) => aktion.typ === 'RegenbogenschlangeLegen' && aktion.schlangenId === 'schlange-2')
+      expect(fremd, `K2.3: Saat ${saat}`).toEqual([])
+    }
+  })
+
+  it('K2.3: in Partien legt sie jede Regenbogenschlange in eine eigene Schlange, sobald sie eine hat', () => {
+    const gelegt = ALLE.filter(({ aktion, vorher }) => aktion.typ === 'RegenbogenschlangeLegen' && vorher.spieler[0].schlangen.length > 0)
+    for (const { aktion, vorher } of gelegt) {
+      if (aktion.typ !== 'RegenbogenschlangeLegen') continue
+      expect(vorher.spieler[0].schlangen.map((schlange) => schlange.id), 'K2.3').toContain(aktion.schlangenId)
+    }
+    expect(gelegt.length, 'K2.3: genug Regenbogenschlangen').toBeGreaterThan(5)
+  })
+})
+
+describe('K2 Kriterium 4: keine Farbenfusion, die die eigenen Punkte senkt', () => {
+  it('K2.4: ki-fusion-senkt: jede angebotene Fusion zerstörte ihre blaue Gruppe; sie spielt keine', () => {
+    const start = findeSzenario('ki-fusion-senkt')!.erzeuge()
+    expect(ermittleAktionen(start).filter((aktion) => aktion.typ === 'FusionLegen'), 'K2.4: zwei Fusionen angeboten').toHaveLength(2)
+    const zug = spieleZug('ki-fusion-senkt')
+    expect(typen(zug)).not.toContain('FusionLegen')
+    expect(punkte(zug.zustand, 1), 'K2.4: die blaue Gruppe bleibt').toBe(3)
+  })
+
+  it('K2.4: in Partien senkt keine ihrer Farbenfusionen die eigenen Punkte', () => {
+    const fusionen = ALLE.filter(({ aktion }) => aktion.typ === 'FusionLegen')
+    for (const { vorher, nachher } of fusionen) expect(eigenePunkte(nachher, 0), 'K2.4').toBeGreaterThanOrEqual(eigenePunkte(vorher, 0))
+  })
+})
+
+describe('K2 Kriterium 5: keine Karte wirkungslos, wenn ein besser bewerteter Zug möglich ist', () => {
+  it('K2.5: ki-wirkungslos: statt Verdoppler oder Farbenschutz wirkungslos abzulegen, vollendet sie mit dem Rot ihre Gruppe', () => {
+    const start = findeSzenario('ki-wirkungslos')!.erzeuge()
+    expect(ermittleAktionen(start).filter((aktion) => aktion.typ === 'SonderkarteWirkungslosAblegen'), 'D23, D25: zwei angeboten').toHaveLength(2)
+    const zug = spieleZug('ki-wirkungslos')
+    expect(typen(zug)).toEqual(['FarbkarteLegen', 'ZugBeenden'])
+    expect(punkte(zug.zustand, 1)).toBe(3)
+  })
+
+  it('K2.5: ki-dreiergruppe: den Farbenschutz legt sie nicht wirkungslos ab', () => {
+    expect(typen(spieleZug('ki-dreiergruppe'))).toEqual(['FarbkarteLegen', 'ZugBeenden'])
+  })
+
+  it('K2.5, F8a: ki-grube-ohne-zug: keine Schlangengrube auf den, der keinen Zug mehr hat (D29); sie vollendet ihre Gruppe, dann endet die Partie', () => {
+    const start = findeSzenario('ki-grube-ohne-zug')!.erzeuge()
+    expect(ermittleAktionen(start).some((aktion) => aktion.typ === 'SchlangengrubeSpielen'), 'D29: die Engine bietet die Grube an').toBe(true)
+    const zug = spieleZug('ki-grube-ohne-zug')
+    expect(typen(zug)).toEqual(['FarbkarteLegen', 'ZugBeenden'])
+    expect(zug.zustand.partiephase).toBe('Beendet')
+    expect(punkte(zug.zustand, 1)).toBe(3)
+  })
+
+  it('K2.5, F8a: ki-grube-schlussrunde: eine Grube nur auf KI-Gegner 2, der noch einen Zug hat, nie auf Spieler 1', () => {
+    for (const saat of [1, 2, 3]) {
+      const gruben = spieleZug('ki-grube-schlussrunde', saat).aktionen.filter((aktion) => aktion.typ === 'SchlangengrubeSpielen')
+      for (const grube of gruben) expect(grube, `F8a: Saat ${saat}`).toMatchObject({ zielSpielerId: 'spieler-3' })
+    }
+  })
+
+  it('K2.5, K2.4: ki-fusion-senkt: eine Fusion, die ihre Punkte senkt, spielt sie nicht', () => {
+    expect(typen(spieleZug('ki-fusion-senkt'))).not.toContain('FusionLegen')
+  })
+
+  it('K2.5, F8a: in Partien geht keine ihrer Schlangengruben ohne Wirkung ab', () => {
+    const ohneWirkung = ALLE.filter(({ aktion, ereignisse }) =>
+      ereignisse.some((ereignis) => ereignis.typ === 'GrubeOhneWirkung' && aktion.typ === 'SchlangengrubeSpielen' && ereignis.karteId === aktion.karteId),
+    )
+    expect(ohneWirkung.map(({ aktion }) => aktion)).toEqual([])
+  })
+})
+
+describe('K2 Kriterium 6: mit Verdoppler nutzt sie den zweiten Zug', () => {
+  it('K2.6: ki-verdoppler: Verdoppler und eine Gruppe im ersten Zug, die zweite Gruppe im zweiten', () => {
+    const zug = spieleZug('ki-verdoppler')
+    expect(typen(zug)).toContain('VerdopplerSpielen')
+    const zweiter = zug.ereignisse.findIndex((ereignis) => ereignis.typ === 'ZugBegonnen' && ereignis.spielerIndex === 1 && ereignis.teilzug === 2)
+    expect(zweiter, 'A7.8: der zweite Zug beginnt').toBeGreaterThan(-1)
+    const imZweiten = zug.aktionen.slice(zug.aktionen.findIndex((aktion) => aktion.typ === 'ZugBeenden') + 1)
+    expect(imZweiten.map((aktion) => aktion.typ), 'K2.6: im zweiten Zug legt sie eine Farbkarte').toEqual(['FarbkarteLegen', 'ZugBeenden'])
+    expect(farben(zug.zustand, 1)).toEqual([
+      ['Rot', 'Rot', 'Rot'],
+      ['Blau', 'Blau', 'Blau'],
+    ])
+    expect(zug.zustand.zug.spielerIndex, 'K2.6: danach ist Spieler 1 dran').toBe(0)
+  })
+
+  it('K2.6: in Partien spielt sie nach jedem Verdoppler im zweiten Zug eine Karte mit Wirkung', () => {
+    let geprueft = 0
+    for (const entscheidungen of ENTSCHEIDUNGEN) {
+      for (const [stelle, { aktion }] of entscheidungen.entries()) {
+        if (aktion.typ !== 'VerdopplerSpielen') continue
+        const danach = entscheidungen.slice(stelle + 1)
+        const ende = danach.findIndex((eintrag) => eintrag.aktion.typ === 'ZugBeenden')
+        const zweiter = danach.slice(ende + 1)
+        const schluss = zweiter.findIndex((eintrag) => eintrag.aktion.typ === 'ZugBeenden')
+        const karten = zweiter.slice(0, schluss < 0 ? undefined : schluss).map((eintrag) => eintrag.aktion.typ)
+        geprueft += 1
+        expect(karten.filter((typ) => typ !== 'Reagieren' && typ !== 'SonderkarteWirkungslosAblegen').length, `K2.6: nach ${aktion.karteId}`).toBeGreaterThan(0)
+      }
+    }
+    expect(geprueft, 'K2.6: genug Verdoppler').toBeGreaterThan(5)
+  })
+})

@@ -93,6 +93,12 @@ describe('U5: Die KI sieht nur ihre Sicht', () => {
     )
   })
 
+  it('K2: die Prüfung erfasst die Dateien der soliden KI unter src/ki/strategien', () => {
+    expect(kiDateien, 'K2: erwartet Bewertung, Vorauswahl, Zugsuche und die solide KI unter src/ki/strategien').toEqual(
+      expect.arrayContaining(['src/ki/strategien/bewertung.ts', 'src/ki/strategien/vorauswahl.ts', 'src/ki/strategien/zugsuche.ts', 'src/ki/strategien/solideKi.ts']),
+    )
+  })
+
   // P0.3d, Iteration 2: Den vollen Zustand hält nur der Rahmen; alles andere ist eine Strategie und sieht nur die Sicht.
   it('P0.3d: jede Datei unter src/ki gehört zum Rahmen (sicht, schritt, turnier) oder liegt unter src/ki/strategien', () => {
     const rahmen = ['src/ki/sicht.ts', 'src/ki/schritt.ts', 'src/ki/turnier.ts']
