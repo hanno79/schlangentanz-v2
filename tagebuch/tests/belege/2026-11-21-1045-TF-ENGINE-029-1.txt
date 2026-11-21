@@ -1,0 +1,184 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import type { Ereignis, KartenAktion, Schlange, Sonderkartenname, Spielkarte, Spielzustand } from '../index'
+import { KARTENREGISTER } from '../karten/register'
+import { baukasten } from '../testing/szenario'
+import { legeAufEigenenAblagestapel } from '../zugablauf'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
+import { aktionen, durchlassen, ereignisseVom, fuehreAus, reaktion, verletzteInvarianten } from './zugablauf_hilfen'
+
+// Prüfer E4b: eigene Proben, nicht Teil des Repos.
+
+afterEach(() => vi.restoreAllMocks())
+
+type Ansage = (zustand: Spielzustand, karteId: string, spielerId: string) => KartenAktion
+function testkarte(name: Sonderkartenname, ansage: Ansage, betroffene: number[], wirkung: (zustand: Spielzustand, aktion: KartenAktion, abgewehrt: readonly number[]) => void): void {
+  const definition = KARTENREGISTER[name]
+  vi.spyOn(definition, 'ziele').mockImplementation((zustand, index, karte) => [ansage(zustand, karte.id, zustand.spieler[index].id)])
+  vi.spyOn(definition, 'pruefe').mockReturnValue(null)
+  vi.spyOn(definition, 'betroffene').mockReturnValue(betroffene)
+  vi.spyOn(definition, 'wirke').mockImplementation((zustand, aktion, abgewehrt) => {
+    wirkung(zustand, aktion, abgewehrt)
+    return zustand
+  })
+}
+const schlangeMit = (z: Spielzustand, id: string): Schlange => z.spieler.flatMap((s) => s.schlangen).find((s) => s.id === id)!
+const idsIn = (z: Spielzustand, id: string) => schlangeMit(z, id).karten.map((k) => k.id)
+function nimm(z: Spielzustand, id: string, karteId: string): Spielkarte {
+  const karten = schlangeMit(z, id).karten
+  return karten.splice(karten.findIndex((k) => k.id === karteId), 1)[0]
+}
+
+/** Führt Schritte aus; prüft je Schritt Nachrechnen, B2, Invarianten. `abwehr` sagt je Gefragtem, ob er abwehrt. */
+function spiele(start: Spielzustand, abwehr: (gefragt: number) => boolean = () => false) {
+  const gespielt = start.spieler[0].hand[0].id
+  let jetzt = start
+  const alle: Ereignis[] = []
+  let aktion = aktionen(jetzt).find((a) => a.typ !== 'SonderkarteWirkungslosAblegen' && 'karteId' in a && a.karteId === gespielt)!
+  for (;;) {
+    const schritt = fuehreAus(jetzt, aktion)
+    expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `nachrechnen nach ${aktion.typ}`).toEqual(lageVon(schritt.zustand))
+    expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse)).toEqual([])
+    expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+    alle.push(...schritt.ereignisse)
+    const vorher = jetzt
+    jetzt = schritt.zustand
+    void vorher
+    if (jetzt.schwebend === null) return { zustand: jetzt, ereignisse: alle }
+    const gefragt = jetzt.schwebend.ausstehend[0]
+    aktion = abwehr(gefragt) ? reaktion(jetzt, true) : durchlassen(jetzt)
+  }
+}
+
+describe('Prüfer E4b: eigene Proben', () => {
+  it('P1 teilweise abgewehrt (3 Spieler): Spieler 2 wehrt ab, Spieler 3 nicht; nur Spieler 3 verliert eine Karte, nachrechenbar', () => {
+    const start = baukasten({ spielerzahl: 3, erweiterung: true })
+      .hand(0, ['Schlangenfrass', 'Blau'])
+      .hand(1, ['Farbenschutz', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .hand(2, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .schlange(1, ['Blau', 'Rot'])
+      .schlange(2, ['Gelb', 'Grün', 'Rot'])
+      .zustand()
+    const p2 = idsIn(start, 'schlange-1')[0]
+    const p3 = idsIn(start, 'schlange-2')[1]
+    testkarte('Schlangenfrass', (_z, karteId, spielerId) => ({ typ: 'SchlangenfrassSpielen', spielerId, karteId, option: 'gegnerischeKarten', ziele: [{ schlangenId: 'schlange-1', karteId: p2 }, { schlangenId: 'schlange-2', karteId: p3 }] }), [1, 2], (z, a, abgewehrt) => {
+      legeAufEigenenAblagestapel(z, a.spielerId, a.karteId)
+      if (!abgewehrt.includes(1)) z.spieler[0].ablagestapel.push(nimm(z, 'schlange-1', p2))
+      if (!abgewehrt.includes(2)) z.spieler[0].ablagestapel.unshift(nimm(z, 'schlange-2', p3))
+    })
+    const { zustand, ereignisse } = spiele(start, (gefragt) => gefragt === 1)
+    expect(ereignisseVom(ereignisse, 'Abgewehrt').length).toBe(1)
+    const v = ereignisseVom(ereignisse, 'KartenVersetzt')
+    expect(v.length).toBe(1)
+    expect(v[0].karten).toEqual([{ karteId: p3, von: { ort: 'Schlange', spielerIndex: 2, schlangenId: 'schlange-2', position: 1 }, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } }])
+    expect(idsIn(zustand, 'schlange-1')).toContain(p2)
+    const typen = ereignisse.map((e) => e.typ)
+    expect(typen.indexOf('KartenVersetzt')).toBe(typen.indexOf('AnsageEntschieden') - 1)
+  })
+
+  it('P2 zwei Schlangen zweier Spieler gleichzeitig: Fusion wechselt samt Unterkarten den Besitzer, eigene Schlange wird umgeordnet, Ablagekarte geht in fremde Schlange', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true })
+      .hand(0, ['Farbendieb', 'Blau'])
+      .hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .schlange(0, ['Blau', 'Rot', 'Gelb'])
+      .schlange(1, ['Grün', { fusion: ['Gelb', 'Gelb'] }, 'Rot'])
+      .ablage(0, ['Violett', 'Grün'])
+      .zustand()
+    const [b, r, g] = idsIn(start, 'schlange-1')
+    const fusion = idsIn(start, 'schlange-2')[1]
+    const [ablageUnten] = start.spieler[0].ablagestapel.map((k) => k.id)
+    testkarte('Farbendieb', (_z, karteId, spielerId) => ({ typ: 'FarbendiebSpielen', spielerId, karteId, quelle: { schlangenId: 'schlange-2', karteId: fusion }, ziel: { art: 'neueSchlange' } }), [1], (z, a) => {
+      legeAufEigenenAblagestapel(z, a.spielerId, a.karteId)
+      const fremd = schlangeMit(z, 'schlange-2')
+      const fus = nimm(z, 'schlange-2', fusion)
+      const [eintrag] = fremd.fusionen.splice(0, 1)
+      const eigen = schlangeMit(z, 'schlange-1')
+      eigen.karten = [g, b, r].map((id) => eigen.karten.find((k) => k.id === id)!)
+      eigen.karten.splice(1, 0, fus)
+      eigen.fusionen.push(eintrag)
+      const unten = z.spieler[0].ablagestapel.shift()!
+      fremd.karten.push(unten)
+    })
+    const { zustand, ereignisse } = spiele(start)
+    expect(idsIn(zustand, 'schlange-1')).toEqual([g, fusion, b, r])
+    expect(idsIn(zustand, 'schlange-2').at(-1)).toBe(ablageUnten)
+    const v = ereignisseVom(ereignisse, 'KartenVersetzt')[0]
+    const orte = v.karten.map((e) => [e.karteId, e.von.ort, e.nach.ort])
+    expect(orte).toEqual(expect.arrayContaining([[fusion, 'Schlange', 'Schlange'], [ablageUnten, 'Ablagestapel', 'Schlange']]))
+    expect(v.karten.filter((e) => e.von.ort === 'UnterFusion' && e.nach.ort === 'UnterFusion' && e.nach.spielerIndex === 0).length).toBe(2)
+  })
+
+  it('P3 Rotation in einer Schlange [A,B,C,D] → [B,C,D,A] lässt sich nachrechnen', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, ['Schlangenhäutung', 'Blau']).hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']).schlange(0, ['Blau', 'Rot', 'Gelb', 'Grün']).zustand()
+    const [a, b, c, d] = idsIn(start, 'schlange-1')
+    testkarte('Schlangenhäutung', (_z, karteId, spielerId) => ({ typ: 'SchlangenhaeutungSpielen', spielerId, karteId, schlangenId: 'schlange-1', neueReihenfolge: [b, c, d] }), [], (z, akt) => {
+      legeAufEigenenAblagestapel(z, akt.spielerId, akt.karteId)
+      const s = schlangeMit(z, 'schlange-1')
+      s.karten = [b, c, d, a].map((id) => s.karten.find((k) => k.id === id)!)
+    })
+    const { ereignisse } = spiele(start)
+    console.log('P3 gemeldet:', ereignisseVom(ereignisse, 'KartenVersetzt')[0].karten.map((e) => e.karteId).join(','))
+  })
+
+  it('P4 B2: Reihenfolge, in der offene Karten auf Hand und in den Stapel kommen, ändert das Ereignis nicht; keine Id', () => {
+    const lauf = (umgekehrt: boolean) => {
+      const start = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, ['Farbendieb', 'Blau']).hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']).schlange(0, ['Blau', 'Rot', 'Gelb', 'Grün']).schlange(1, ['Violett', 'Gelb']).zustand()
+      const [a, b, c] = idsIn(start, 'schlange-1')
+      const [x] = idsIn(start, 'schlange-2')
+      const handKarte = start.spieler[1].hand[2].id
+      testkarte('Farbendieb', (_z, karteId, spielerId) => ({ typ: 'FarbendiebSpielen', spielerId, karteId, quelle: { schlangenId: 'schlange-2', karteId: x }, ziel: { art: 'neueSchlange' } }), [], (z, akt) => {
+        legeAufEigenenAblagestapel(z, akt.spielerId, akt.karteId)
+        const ka = nimm(z, 'schlange-1', a), kb = nimm(z, 'schlange-1', b), kc = nimm(z, 'schlange-1', c), kx = nimm(z, 'schlange-2', x)
+        const h = z.spieler[1].hand.splice(z.spieler[1].hand.findIndex((k) => k.id === handKarte), 1)[0]
+        if (umgekehrt) {
+          z.spieler[1].hand.unshift(kb, ka)
+          z.nachziehstapel.splice(7, 0, kc)
+          z.nachziehstapel.unshift(h, kx)
+        } else {
+          z.spieler[1].hand.push(ka, kb)
+          z.nachziehstapel.unshift(kx, kc, h)
+        }
+      })
+      const { ereignisse } = spiele(start)
+      vi.restoreAllMocks()
+      return { v: ereignisseVom(ereignisse, 'KartenVersetzt'), ids: [a, b, c, x, handKarte] }
+    }
+    const eins = lauf(false)
+    const zwei = lauf(true)
+    expect(eins.v).toEqual(zwei.v)
+    for (const e of eins.v[0].karten) expect(e.karteId).toBeNull()
+    const text = JSON.stringify(eins.v)
+    expect(text.includes(eins.ids[4])).toBe(false)
+    console.log('P4 Ereignis:', text)
+  })
+
+  it('P5 Gegenprobe am Nachrechnen: eine verfälschte Position macht das Ergebnis rot', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, ['Schlangenhäutung', 'Blau']).hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']).schlange(0, ['Blau', 'Rot', 'Gelb', 'Grün']).zustand()
+    const [a, b, c, d] = idsIn(start, 'schlange-1')
+    testkarte('Schlangenhäutung', (_z, karteId, spielerId) => ({ typ: 'SchlangenhaeutungSpielen', spielerId, karteId, schlangenId: 'schlange-1', neueReihenfolge: [c, b, a] }), [], (z, akt) => {
+      legeAufEigenenAblagestapel(z, akt.spielerId, akt.karteId)
+      const s = schlangeMit(z, 'schlange-1')
+      s.karten = [c, b, a, d].map((id) => s.karten.find((k) => k.id === id)!)
+    })
+    const aktion = aktionen(start).find((x) => x.typ === 'SchlangenhaeutungSpielen')!
+    const { zustand, ereignisse } = fuehreAus(start, aktion)
+    expect(spieleNach(lageVon(start), ereignisse)).toEqual(lageVon(zustand))
+    const falsch = structuredClone(ereignisse)
+    const v = falsch.find((e) => e.typ === 'KartenVersetzt')!
+    if (v.typ !== 'KartenVersetzt' || v.karten[0].nach.ort !== 'Schlange') throw new Error('Aufbau')
+    v.karten[0].nach.position += 1
+    expect(spieleNach(lageVon(start), falsch)).not.toEqual(lageVon(zustand))
+  })
+
+  it('P6 (Hinweis) eine ganze Schlange wechselt den Besitzer: lässt sich das nachrechnen?', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, ['Farbendieb', 'Blau']).hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']).schlange(1, ['Violett', 'Gelb']).zustand()
+    const [x] = idsIn(start, 'schlange-1')
+    testkarte('Farbendieb', (_z, karteId, spielerId) => ({ typ: 'FarbendiebSpielen', spielerId, karteId, quelle: { schlangenId: 'schlange-1', karteId: x }, ziel: { art: 'neueSchlange' } }), [], (z, akt) => {
+      legeAufEigenenAblagestapel(z, akt.spielerId, akt.karteId)
+      z.spieler[0].schlangen.push(...z.spieler[1].schlangen.splice(0))
+    })
+    const aktion = aktionen(start).find((a) => a.typ === 'FarbendiebSpielen')!
+    const { zustand, ereignisse } = fuehreAus(start, aktion)
+    const ok = JSON.stringify(spieleNach(lageVon(start), ereignisse)) === JSON.stringify(lageVon(zustand))
+    console.log('P6 Besitzerwechsel nachrechenbar:', ok, JSON.stringify(spieleNach(lageVon(start), ereignisse).schlangen), JSON.stringify(lageVon(zustand).schlangen))
+  })
+})

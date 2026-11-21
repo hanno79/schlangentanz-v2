@@ -1,0 +1,23 @@
+import { createHash } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
+import { it } from 'vitest'
+import { serialisiere } from '../index'
+import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
+
+// Prüfer E4b: gleiche Saat, gleicher Verlauf auf fb04ba9 und auf dem Branch? Nicht Teil des Repos.
+it('Prüfer: Verlauf der 300 Dauerlauf-Partien als Prüfsumme', () => {
+  const hash = createHash('sha256')
+  const PARTIEN = [...dauerlaufPartien(150, false), ...dauerlaufPartien(150, true, 151)]
+  const ergebnisse = dauerlauf(PARTIEN, {
+    neuerPruefer: () => (_vorher, aktion, { zustand }) => {
+      hash.update(JSON.stringify(aktion))
+      hash.update(JSON.stringify(serialisiere(zustand)))
+      return null
+    },
+  })
+  const ausgaenge: Record<string, number> = {}
+  for (const e of ergebnisse) ausgaenge[e.ausgang] = (ausgaenge[e.ausgang] ?? 0) + 1
+  const schritte = ergebnisse.reduce((s, e) => s + e.schritte, 0)
+  writeFileSync(process.env.PRUEF_AUS!, `PRUEFSUMME ${hash.digest('hex')} AUSGAENGE ${JSON.stringify(ausgaenge)} SCHRITTE ${schritte}
+`)
+}, 600_000)
