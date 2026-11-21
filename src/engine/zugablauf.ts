@@ -5,7 +5,8 @@ import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 /*
 Der Zugablauf (A5, A6, A7.6, A7.8, A10): Karten des Zuges zählen, Zug beenden,
 Auffüllen, überzählige Karten abwerfen, nach einem Verdoppler den zweiten Zug
-beginnen und den Zug weitergeben, bis wieder jemand entscheiden muss. Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
+beginnen, den Zug weitergeben, bis wieder jemand entscheiden muss, und
+Schlangengruben ohne verbleibenden Zug ablegen (D29). Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
 Aktion erlaubt ist; die Funktionen hier verändern den übergebenen Zustand, den
 `anwendeAktion` vorher kopiert hat, und schreiben mit, was geschieht.
 
@@ -51,9 +52,14 @@ export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKar
   return karte;
 }
 
+/** Die Stelle des Spielers mit dieser Id in `spieler`, -1, wenn es ihn nicht gibt. */
+export function spielerIndexVon(zustand: Spielzustand, spielerId: string): number {
+  return zustand.spieler.findIndex((spieler) => spieler.id === spielerId);
+}
+
 /** Meldet die gespielte Karte, nachdem sie hingelegt ist, mit dem Ort, an dem sie jetzt liegt (Plan E2, Kriterium 11). */
 export function meldeGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte, ereignisse: Ereignis[]): void {
-  const spielerIndex = zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId);
+  const spielerIndex = spielerIndexVon(zustand, aktion.spielerId);
   ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: aktion.karteId, aktion: aktion.typ, nach: findeKartenort(zustand, aktion.karteId) });
 }
 
@@ -196,6 +202,47 @@ function gibZugWeiter(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   }
   beginneZug(zustand, naechster, 1, ereignisse);
   fuelleHandAuf(zustand, naechster, ereignisse);
+}
+
+/** Die Mitspieler von `spielerIndex` im Uhrzeigersinn, beginnend mit seinem linken Nachbarn (A5, A6). */
+export function mitspielerImUhrzeigersinn(zustand: Spielzustand, spielerIndex: number): number[] {
+  const anzahl = zustand.spieler.length;
+  return Array.from({ length: anzahl - 1 }, (_, schritt) => (spielerIndex + 1 + schritt) % anzahl);
+}
+
+/**
+ * A10, D21: Kommt der letzte Zug dieses Spielers in der Schlussrunde noch? Ja für
+ * jeden, der nach dem Spieler am Zug und vor dem Auslöser sitzt; ist der Auslöser
+ * selbst am Zug, für alle anderen. Nach Spielende für niemanden.
+ */
+function hatNochLetztenZug(zustand: Spielzustand, spielerIndex: number): boolean {
+  const { partiephase, schlussrundeAusloeser: ausloeser, zug } = zustand;
+  if (partiephase === 'Beendet' || ausloeser === null) return false;
+  const anzahl = zustand.spieler.length;
+  // Abstand im Uhrzeigersinn ab dem Spieler am Zug; er selbst und der Auslöser am Zug zählen als ganze Runde.
+  const abstand = (index: number) => (index - zug.spielerIndex + anzahl) % anzahl || anzahl;
+  return spielerIndex !== zug.spielerIndex && abstand(spielerIndex) < abstand(ausloeser);
+}
+
+/**
+ * D29: Jede Schlangengrube kostet den Spieler, vor dem sie liegt, einen eigenen
+ * Zug (D14); solange die Partie läuft, hat er dafür genug. Hat er für sie keinen
+ * Zug mehr, weil die Schlussrunde läuft und sein letzter Zug vorbei oder schon
+ * von einer früheren Grube belegt ist, oder weil die Partie beendet ist, kommt
+ * sie ohne Wirkung auf den Ablagestapel dessen, der sie gespielt hat (A6).
+ */
+export function legeGrubenOhneZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  if (zustand.partiephase === 'Laufend' || zustand.ausliegendeGruben.length === 0) return;
+  const belegt = new Set<number>();
+  zustand.ausliegendeGruben = zustand.ausliegendeGruben.filter((grube) => {
+    if (!belegt.has(grube.vor) && hatNochLetztenZug(zustand, grube.vor)) {
+      belegt.add(grube.vor);
+      return true;
+    }
+    zustand.spieler[grube.gespieltVon].ablagestapel.push(grube.karte);
+    ereignisse.push({ typ: 'GrubeOhneWirkung', spielerIndex: grube.vor, karteId: grube.karte.id, ablagestapelVon: grube.gespieltVon });
+    return false;
+  });
 }
 
 /** Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben Teilzug nennen. */

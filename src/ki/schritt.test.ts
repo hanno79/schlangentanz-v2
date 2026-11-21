@@ -144,18 +144,23 @@ describe('K1: naechsterKiSchritt liefert genau eine Aktion oder nichts', () => {
     )
   })
 
-  it('A6: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht (füllt E4)', () => {
+  it('A6/E4: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht und Abwehren oder Durchlassen zur Wahl', () => {
     const zustand = baukasten({ spielerzahl: 3, erweiterung: false, zufall: erzeugeZufall(8) })
+      .hand(2, ['Farbenschutz'])
       .schwebend(0, 'Schlangengrube', (karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-3' }), [2])
       .haendeAuffuellen()
       .amZug(0)
       .zustand()
-    const reaktion: SpielAktion = { typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: null }
-    vi.mocked(ermittleAktionen).mockReturnValueOnce([reaktion])
+    const schutz = zustand.spieler[2].hand[0].id
     const ki = merkKi()
     expect(entscheidetKi(zustand), 'A6: der Spieler am Zug ist ein Mensch, gefragt ist KI-Gegner 2').toBe(true)
-    expect(naechsterKiSchritt(zustand, ki)).toEqual(reaktion)
+    expect(naechsterKiSchritt(zustand, ki)).toEqual({ typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: schutz })
+    expect(ki.aufrufe[0].aktionen).toEqual([
+      { typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: schutz },
+      { typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: null },
+    ])
     expect(ki.aufrufe[0].sicht.ich).toBe(2)
+    expect(ki.aufrufe[0].sicht.entscheider).toBe(2)
     expect(ki.aufrufe[0].sicht.angesagt?.aktion).toMatchObject({ typ: 'SchlangengrubeSpielen', zielSpielerId: 'spieler-3' })
   })
 })

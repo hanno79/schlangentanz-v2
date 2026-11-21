@@ -1,0 +1,9 @@
+
+ RUN  v4.1.7 C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/E4-pruefer/kopie
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  08:44:18
+   Duration  33.07s (transform 438ms, setup 279ms, import 444ms, tests 29.75s, environment 2.30s)
+
