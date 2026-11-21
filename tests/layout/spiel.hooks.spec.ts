@@ -45,8 +45,9 @@ test.describe('O3 K7: /spiel mit Testhooks', () => {
 
   test('O3 K1/K7: mit ?tempo=sofort spielen die drei KI-Gegner ihre letzten Züge, bis die Partie beendet ist', async ({ page }) => {
     await page.goto('/spiel?szenario=schlussrunde-ohne-dich&tempo=sofort')
-    await expect(status(page)).toContainText('Die Partie ist beendet.', { timeout: 15_000 })
-    await expect(page.getByRole('region', { name: 'Deine Hand' })).toBeVisible()
+    // Seit O8 steht nach Spielende die Wertung statt des Tischs.
+    await expect(page.getByTestId('ergebnis')).toBeVisible({ timeout: 15_000 })
+    await expect(page.getByRole('list', { name: 'Wertung' }).getByRole('listitem', { name: 'Du', exact: true })).toBeVisible()
     expect(await waagrechterUeberstand(page)).toBe(0)
   })
 

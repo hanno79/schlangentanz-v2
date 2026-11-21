@@ -1,0 +1,8 @@
+G1 Drehen 390x844 -> 844x390: scrollTop vorher 900, nachher {"scrollTop":749,"clientHeight":234,"scrollHeight":1644}, Noch einmal im Bild true, Zur Lobby im Bild true, Titel im Bild true, Ueberstand 0, oben 1 unten 1
+G1 zurück auf 390x844: Noch einmal im Bild true, Ueberstand 0, Fehler []
+G2 320x568 saat7004: Ueberstand 0, Liste {"clientHeight":378,"scrollWidth":304,"clientWidth":304}, Knoepfe im Bild true/true, Schlangenreihen [scrollWidth, clientWidth] [[624,252],[492,252],[591,254],[525,254]]
+G2 320x568 wertung-beispiele: Ueberstand 0, Liste {"clientHeight":355,"scrollWidth":304,"clientWidth":304}, Knoepfe im Bild true/true, Schlangenreihen [scrollWidth, clientWidth] [[294,252],[294,252],[261,254],[254,254],[254,254],[254,254],[254,254]]
+G3 Noch einmal nach Saat 7023 (2 Gegner, ohne Erw.): ki=2 erw=false; Neuladen zeigt Tisch true, Spielstand unverändert true
+G3 Zurück im Browser: url /, Lobby 1, laufende-partie „Laufende Partie: 2 Gegner, Erweiterung aus“, Weiterspielen 1
+G3 Neue Partie bei laufender Partie: Rückfrage 1
+G4 Doppelklick auf Noch einmal: Tisch da, phase Laufend, Spieler 4, Schlangen 0,0,0,0, Status „Du bist dranSpiele Karten aus deiner Hand.“, Fehler []

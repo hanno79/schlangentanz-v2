@@ -897,8 +897,9 @@ Aktionen der Engine (U3). Ziehen und Ablegen gehört nicht zu M2.
   Titel, Favicon). Seiten: `/` Lobby, `/spiel`, `/regeln`.
 - **Abnahmekriterien:**
   1. Die Lobby bietet: 1, 2 oder 3 Gegner; Erweiterung an/aus; „Neue Partie".
-  2. Gibt es einen Spielstand, bietet sie „Weiterspielen" und fragt vor einer
-     neuen Partie nach.
+  2. Gibt es eine laufende Partie, bietet sie „Weiterspielen" und fragt vor einer
+     neuen Partie nach. Eine beendete Partie zeigt sie mit „Ergebnis ansehen"
+     (präzisiert mit O8, 21.11.2026).
   3. Vor und Zurück im Browser wechseln die Ansicht richtig.
   4. Ein Fehler beim Start wird sichtbar gemeldet.
   5. In der Lobby läuft keine Partie im Hintergrund.
