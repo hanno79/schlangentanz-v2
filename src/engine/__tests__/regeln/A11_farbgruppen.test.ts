@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { Farbe } from '../index'
-import { eineSchlange, endwertung, erfuellt, gruppen, jokerfarben } from './wertung_hilfe'
+import type { Farbe } from '../../index'
+import { eineSchlange, endwertung, erfuellt, gruppen, jokerfarben } from '../wertung_hilfe'
 
 /*
 E10, Satz für Satz: A11 Abschnitt 1 (Farbgruppen), die Wertungssätze aus A7.3

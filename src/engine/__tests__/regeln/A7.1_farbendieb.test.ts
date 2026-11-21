@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleFarbgruppen } from '../index'
-import type { Spielzustand } from '../index'
-import { DIEB, diebId, diebstaehle, karteIn, schlangeMit, schlangenVon, stiehl } from './farbendieb_hilfen'
-import type { Diebesziel } from './farbendieb_hilfen'
+import { ermittleFarbgruppen } from '../../index'
+import type { Spielzustand } from '../../index'
+import { DIEB, diebId, diebstaehle, karteIn, schlangeMit, schlangenVon, stiehl } from '../farbendieb_hilfen'
+import type { Diebesziel } from '../farbendieb_hilfen'
 import {
   ablage,
   aktionen,
@@ -15,14 +15,14 @@ import {
   typen,
   verletzteInvarianten,
   zugBeenden,
-} from './zugablauf_hilfen'
+} from '../zugablauf_hilfen'
 
 /*
 E8, der Farbendieb (A7.1, D2, D17): Er stiehlt eine Farbkarte aus einer
 gegnerischen Schlange, nie eine Sonderkarte und nie eine Karte unter einer
 Farbenfusion, und legt sie an eine beliebige Stelle einer eigenen Schlange; ohne
 eigene Schlange beginnt sie eine neue. Danach liegt er auf dem Ablagestapel des
-Diebs. Die Abwehr prüft `farbendieb_abwehr.test.ts`.
+Diebs. Die Abwehr prüft `A7.1_farbendieb_abwehr.test.ts`.
 */
 
 /** Spieler A (0) stiehlt, Spieler B (1) lässt durch: die ganze Wirkung ohne Abwehr. */

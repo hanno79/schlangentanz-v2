@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
-skript: src/engine/__tests__/verdoppler.test.ts
+skript: src/engine/__tests__/regeln/A7.8_verdoppler.test.ts
 aenderung: task/E3-verdoppler (PR #51)
 ---
 
@@ -17,7 +17,7 @@ Der Verdoppler ist die einzige Karte, die einen Zug verlängert. Spielt man ihn,
 
 ## Bestanden, wenn
 
-Die Regeltests in `src/engine/__tests__/verdoppler.test.ts`, die Szenariotests „E3: Szenarien des Verdopplers“ und der Dauerlauf laufen grün, und jede der Verfälschungen aus „Technische Prüfung“ macht mindestens einen dieser Tests rot. Im Einzelnen: Der Verdoppler zählt als Sonderkarte des ersten Zuges, geht mit höchstens einer Farbkarte davor oder danach und auch allein. Beim Beenden des ersten Zuges zieht der Spieler auf 5 nach (Ereignis KartenGezogen), dann folgt ZugBegonnen für denselben Spieler mit Teilzug 2. Im zweiten Zug gelten wieder mindestens eine und höchstens eine Farbkarte und eine Sonderkarte. Ein Verdoppler mit Wirkung wird dort nicht angeboten und mit dem Hinweis auf A7.8, D11 und D23 abgelehnt; wirkungslos ablegen geht. Nach dem zweiten Zug ist der Nächste mit Teilzug 1 dran.
+Die Regeltests in `src/engine/__tests__/regeln/A7.8_verdoppler.test.ts`, die Szenariotests „E3: Szenarien des Verdopplers“ und der Dauerlauf laufen grün, und jede der Verfälschungen aus „Technische Prüfung“ macht mindestens einen dieser Tests rot. Im Einzelnen: Der Verdoppler zählt als Sonderkarte des ersten Zuges, geht mit höchstens einer Farbkarte davor oder danach und auch allein. Beim Beenden des ersten Zuges zieht der Spieler auf 5 nach (Ereignis KartenGezogen), dann folgt ZugBegonnen für denselben Spieler mit Teilzug 2. Im zweiten Zug gelten wieder mindestens eine und höchstens eine Farbkarte und eine Sonderkarte. Ein Verdoppler mit Wirkung wird dort nicht angeboten und mit dem Hinweis auf A7.8, D11 und D23 abgelehnt; wirkungslos ablegen geht. Nach dem zweiten Zug ist der Nächste mit Teilzug 1 dran.
 
 ## Fehlgeschlagen, wenn
 

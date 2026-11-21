@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { berechneEndwertung, berechneZwischenstand, deserialisiere, serialisiere } from '../index'
-import type { Spielzustand } from '../index'
-import { endwertung, erfuellt, geheim, jokerfarben, nacheinander, tisch } from './wertung_hilfe'
+import { berechneEndwertung, berechneZwischenstand, deserialisiere, serialisiere } from '../../index'
+import type { Spielzustand } from '../../index'
+import { endwertung, erfuellt, geheim, jokerfarben, nacheinander, tisch } from '../wertung_hilfe'
 
 /*
 E10, Satz für Satz: A11 (Siegbedingung, Abschnitt 4 Aufgaben), A9 (geheime

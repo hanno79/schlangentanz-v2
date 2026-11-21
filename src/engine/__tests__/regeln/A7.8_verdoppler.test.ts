@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleAktionen, ermittleEntscheider } from '../index'
-import type { Aktionstyp, Ereignis, SpielAktion, Spielzustand } from '../index'
-import { KARTENREGISTER } from '../karten/register'
-import { baukasten } from '../testing/szenario'
-import type { Baukasten, Kartenwahl } from '../testing/szenario'
-import { ablage, aktionFuer, aktionen, ereignisseVom, fuehreAus, grund, hand, spieleZug, typen, zugBeenden } from './zugablauf_hilfen'
-import type { Schritt } from './zugablauf_hilfen'
+import { ermittleAktionen, ermittleEntscheider } from '../../index'
+import type { Aktionstyp, Ereignis, SpielAktion, Spielzustand } from '../../index'
+import { KARTENREGISTER } from '../../karten/register'
+import { baukasten } from '../../testing/szenario'
+import type { Baukasten, Kartenwahl } from '../../testing/szenario'
+import { ablage, aktionFuer, aktionen, ereignisseVom, fuehreAus, grund, hand, spieleZug, typen, zugBeenden } from '../zugablauf_hilfen'
+import type { Schritt } from '../zugablauf_hilfen'
 
 /*
 E3, Verdoppler: A5 (der Verdoppler im Zug, Wichtig), A7.8 (Text, Beispiel,

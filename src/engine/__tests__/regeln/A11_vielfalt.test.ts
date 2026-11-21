@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { eineSchlange, endwertung, jokerfarben } from './wertung_hilfe'
+import { eineSchlange, endwertung, jokerfarben } from '../wertung_hilfe'
 
 /*
 E10, Satz für Satz: A11 Abschnitt 2 (Vielfaltbonus, nur mit Erweiterung) und die

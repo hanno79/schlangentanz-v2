@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleEntscheider, werteSchlangen } from '../index'
-import type { Spielzustand } from '../index'
-import type { Kartenwahl } from '../testing/szenario'
-import { alleLuecken, einfuegen, handkarte, lege, luecken, mitEingefuegt, schlangenKarten, schlangenNamen } from './legen_hilfen'
+import { ermittleEntscheider, werteSchlangen } from '../../index'
+import type { Spielzustand } from '../../index'
+import type { Kartenwahl } from '../../testing/szenario'
+import { alleLuecken, einfuegen, handkarte, lege, luecken, mitEingefuegt, schlangenKarten, schlangenNamen } from '../legen_hilfen'
 import {
   ablage,
   aktionen,
@@ -19,7 +19,7 @@ import {
   typen,
   verletzteInvarianten as verletzt,
   zugBeenden,
-} from './zugablauf_hilfen'
+} from '../zugablauf_hilfen'
 
 /*
 E5, Schlangenblockade (A5, A6 Beispiel 1, A7.2, A7.5, D9, D10, D16, D33): Sie

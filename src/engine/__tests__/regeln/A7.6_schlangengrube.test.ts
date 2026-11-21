@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleAktionen } from '../index'
-import type { Ereignis, Spielzustand } from '../index'
-import type { Baukasten, Kartenwahl } from '../testing/szenario'
+import { ermittleAktionen } from '../../index'
+import type { Ereignis, Spielzustand } from '../../index'
+import type { Baukasten, Kartenwahl } from '../../testing/szenario'
 import {
   ablage,
   aktionen,
@@ -22,15 +22,15 @@ import {
   typen,
   verletzteInvarianten,
   zugBeenden,
-} from './zugablauf_hilfen'
+} from '../zugablauf_hilfen'
 
 /*
 E4, die Schlangengrube durch Spielen (A7.6 mit beiden Beispielen, D14, D18,
 D21, D29, A10): Sie trifft einen Mitspieler, bleibt vor ihm liegen, bis er für
 sie ausgesetzt hat, und geht dann auf den Ablagestapel dessen, der sie gespielt
 hat. Hat er für sie keinen Zug mehr, geht sie ohne Wirkung dorthin. Den
-allgemeinen Reaktionsablauf prüft `reaktion.test.ts`, das Aussetzen mit schon
-liegender Grube `zugablauf_schlussrunde.test.ts` (E2).
+allgemeinen Reaktionsablauf prüft `A6_reaktion.test.ts`, das Aussetzen mit schon
+liegender Grube `A10_schlussrunde.test.ts` (E2).
 */
 
 /** Grube auf `ziel`, der Getroffene lässt durch, eine Farbkarte, Zug beenden: der Zug des Angreifers ohne Abwehr. */

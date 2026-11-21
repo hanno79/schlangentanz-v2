@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { SpielAktion, Spielzustand } from '../index'
-import { KARTENREGISTER } from '../karten/register'
-import { baukasten } from '../testing/szenario'
-import type { Kartenwahl, Schlangenglied } from '../testing/szenario'
-import { ablage, aktionFuer, aktionen, fuehreAus, grund, hand, typen, zugBeenden } from './zugablauf_hilfen'
+import type { SpielAktion, Spielzustand } from '../../index'
+import { KARTENREGISTER } from '../../karten/register'
+import { baukasten } from '../../testing/szenario'
+import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
+import { ablage, aktionFuer, aktionen, fuehreAus, grund, hand, typen, zugBeenden } from '../zugablauf_hilfen'
 
 /*
 E2, Ausspielen: A5 (Karten ausspielen, Wichtig, Schlangen), D12, D13, D25.

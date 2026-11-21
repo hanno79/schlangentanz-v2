@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, ermittleEntscheider, serialisiere } from '../index'
-import type { SpielAktion, Spielzustand } from '../index'
-import { baukasten } from '../testing/szenario'
-import type { Kartenwahl } from '../testing/szenario'
-import { ablage, aktionen, ereignisseVom, fuehreAus, grund, hand, spieleZug, typen, zugBeenden } from './zugablauf_hilfen'
+import { anwendeAktion, ermittleEntscheider, serialisiere } from '../../index'
+import type { SpielAktion, Spielzustand } from '../../index'
+import { baukasten } from '../../testing/szenario'
+import type { Kartenwahl } from '../../testing/szenario'
+import { ablage, aktionen, ereignisseVom, fuehreAus, grund, hand, spieleZug, typen, zugBeenden } from '../zugablauf_hilfen'
 
 /*
 E2, Nachziehen und Zugwechsel: A5 (Kartenhand prüfen, Zug beenden, Überhand,

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { erstellePartie } from '../index'
-import type { Spielzustand } from '../index'
-import { mischeDeck } from '../deck'
-import { erzeugeZufall } from '../testing/zufall'
+import { erstellePartie } from '../../index'
+import type { Spielzustand } from '../../index'
+import { mischeDeck } from '../../deck'
+import { erzeugeZufall } from '../../testing/zufall'
 
 /*
 A4 nennt eine Reihenfolge: erst mischen, dann austeilen, für die Spielkarten

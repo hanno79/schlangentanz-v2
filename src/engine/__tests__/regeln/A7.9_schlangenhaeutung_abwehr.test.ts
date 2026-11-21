@@ -1,14 +1,14 @@
 import { isDeepStrictEqual } from 'node:util'
 import { describe, expect, it } from 'vitest'
-import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
-import type { Ereignis, SchlangenhaeutungSpielenAktion, Spielkarte, Spielzustand } from '../index'
-import { findeSchlange, gepruefteSchlange } from '../karten/schlangenstelle'
-import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
-import type { SchrittPruefer } from '../testing/dauerlauf'
-import { spielerIndexVon } from '../zugablauf'
-import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
-import { ablage, durchlassen, ereignisseVom, folge, fuehreAus, grund, hand, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
-import { art, arten, HAEUTUNG, haeutungAuf, haeutungen, haeutungId, ids, tisch } from './schlangenhaeutung_hilfen'
+import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../../index'
+import type { Ereignis, SchlangenhaeutungSpielenAktion, Spielkarte, Spielzustand } from '../../index'
+import { findeSchlange, gepruefteSchlange } from '../../karten/schlangenstelle'
+import { dauerlauf, dauerlaufPartien } from '../../testing/dauerlauf'
+import type { SchrittPruefer } from '../../testing/dauerlauf'
+import { spielerIndexVon } from '../../zugablauf'
+import { lageVon, spieleNach, verrateneHandkarten } from '../nachrechnen'
+import { ablage, durchlassen, ereignisseVom, folge, fuehreAus, grund, hand, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from '../zugablauf_hilfen'
+import { art, arten, HAEUTUNG, haeutungAuf, haeutungen, haeutungId, ids, tisch } from '../schlangenhaeutung_hilfen'
 
 /*
 E9, die Schlangenhäutung in jeder Schlange am Tisch (D9) und mit dem

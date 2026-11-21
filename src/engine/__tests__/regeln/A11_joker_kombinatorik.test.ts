@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { werteSchlangen } from '../jokerGruppen'
-import type { Farbe, FarbkarteInfo, Schlange, Spielkarte } from '../index'
-import { erzeugeZufall } from '../testing/zufall'
-import { endwertung, jokerfarben } from './wertung_hilfe'
+import { werteSchlangen } from '../../jokerGruppen'
+import type { Farbe, FarbkarteInfo, Schlange, Spielkarte } from '../../index'
+import { erzeugeZufall } from '../../testing/zufall'
+import { endwertung, jokerfarben } from '../wertung_hilfe'
 
 /*
 E10, Kriterien 3 und 8 mit Kombinatorik: Mehrere Joker in einem oder zwei

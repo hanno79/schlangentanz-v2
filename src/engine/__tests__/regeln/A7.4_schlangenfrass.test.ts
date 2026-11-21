@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleEntscheider, werteSchlangen } from '../index'
-import type { SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
-import type { Kartenwahl, Schlangenglied } from '../testing/szenario'
+import { ermittleEntscheider, werteSchlangen } from '../../index'
+import type { SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../../index'
+import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
 import {
   ablage,
   aktionen,
@@ -14,15 +14,15 @@ import {
   tischMitHaenden as tisch,
   typen,
   verletzteInvarianten,
-} from './zugablauf_hilfen'
-import { frass, frassAktionen, frassId, ids, MIT_FRASS } from './schlangenfrass_hilfen'
-import type { Option } from './schlangenfrass_hilfen'
+} from '../zugablauf_hilfen'
+import { frass, frassAktionen, frassId, ids, MIT_FRASS } from '../schlangenfrass_hilfen'
+import type { Option } from '../schlangenfrass_hilfen'
 
 /*
 E6, Schlangenfrass (A7.4 mit allen drei Beispielen, A7.7, A5, D12, D13, D25):
 die drei Optionen, welche Karten Ziel sind, „zwei, sofern möglich“, Lücken,
 leere Schlangen, Fusionen und Joker. Die Abwehr bei Option c) prüft
-`schlangenfrass_abwehr.test.ts`.
+`A7.4_schlangenfrass_abwehr.test.ts`.
 */
 
 /** Die gefressenen Karten jeder aufgezählten Aktion dieser Option. */

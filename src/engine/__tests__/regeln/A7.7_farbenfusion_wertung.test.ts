@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../index'
-import type { FusionLegenAktion, Spielzustand } from '../index'
-import { erstellePartie } from '../state'
-import type { Schlangenglied } from '../testing/szenario'
-import { erzeugeZufall } from '../testing/zufall'
-import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
-import { gruppen, jokerfarben } from './wertung_hilfe'
-import { aktionen, folge, FUENF, fuehreAus, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../../index'
+import type { FusionLegenAktion, Spielzustand } from '../../index'
+import { erstellePartie } from '../../state'
+import type { Schlangenglied } from '../../testing/szenario'
+import { erzeugeZufall } from '../../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from '../nachrechnen'
+import { gruppen, jokerfarben } from '../wertung_hilfe'
+import { aktionen, folge, FUENF, fuehreAus, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from '../zugablauf_hilfen'
 
 /*
 E7, Kriterium 2 über das echte Spielen: Eine gespielte Farbenfusion zählt als
 eine Karte beliebiger Farbe, belegt einen Platz in der Gruppe und bringt die
 Punkte beider Karten darunter (A7.7, A11, D30). Die Wertung selbst prüfen
-schon `wertung_farbgruppen.test.ts` und `wertung_joker_kombinatorik.test.ts`
+schon `A11_farbgruppen.test.ts` und `A11_joker_kombinatorik.test.ts`
 an Schlangen aus dem Baukasten; hier entsteht jede Fusion durch eine
 aufgezählte Aktion. Dazu Zufallspartien, in denen jede angebotene Fusion
 gespielt wird, mit dem gemeinsamen Nachrechentest (`nachrechnen.ts`, E2, E4b):

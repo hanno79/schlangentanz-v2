@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { berechneZwischenstand } from '../index'
-import { eineSchlange, endwertung, tisch } from './wertung_hilfe'
+import { berechneZwischenstand } from '../../index'
+import { eineSchlange, endwertung, tisch } from '../wertung_hilfe'
 
 /*
 E10, Satz für Satz: A11 Abschnitt 3 (längste Farbkette) und D24 (F11: eine Kette

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
-import type { Ereignis, FarbendiebSpielenAktion, Schlange, Spielzustand } from '../index'
-import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
-import type { SchrittPruefer } from '../testing/dauerlauf'
-import { DIEB, diebId, karteIn, schlangeMit, schlangenVon, stiehl } from './farbendieb_hilfen'
+import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../../index'
+import type { Ereignis, FarbendiebSpielenAktion, Schlange, Spielzustand } from '../../index'
+import { dauerlauf, dauerlaufPartien } from '../../testing/dauerlauf'
+import type { SchrittPruefer } from '../../testing/dauerlauf'
+import { DIEB, diebId, karteIn, schlangeMit, schlangenVon, stiehl } from '../farbendieb_hilfen'
 import {
   ablage,
   durchlassen,
@@ -19,7 +19,7 @@ import {
   tischMitHaenden as tisch,
   verletzteInvarianten,
   zugBeenden,
-} from './zugablauf_hilfen'
+} from '../zugablauf_hilfen'
 
 /*
 E8, der Farbendieb mit dem Reaktionsablauf aus E4 (A7.1 „Kann durch

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { erstellePartie, pruefeInvarianten } from '../index'
-import type { Spielkarte, Spielzustand } from '../index'
-import { erzeugeZufall } from '../testing/zufall'
+import { erstellePartie, pruefeInvarianten } from '../../index'
+import type { Spielkarte, Spielzustand } from '../../index'
+import { erzeugeZufall } from '../../testing/zufall'
 
 function partie(spielerzahl: number, erweiterung: boolean, saat = 1): Spielzustand {
   return erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })

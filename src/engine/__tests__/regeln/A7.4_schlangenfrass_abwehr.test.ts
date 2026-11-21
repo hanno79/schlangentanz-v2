@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
-import type { Ereignis, SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
-import { lageVon, spieleNach } from './nachrechnen'
-import { frass as frassAktion, frassAktionen, ids, MIT_FRASS } from './schlangenfrass_hilfen'
+import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../../index'
+import type { Ereignis, SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../../index'
+import { lageVon, spieleNach } from '../nachrechnen'
+import { frass as frassAktion, frassAktionen, ids, MIT_FRASS } from '../schlangenfrass_hilfen'
 import {
   ablage,
   durchlassen,
@@ -17,14 +17,14 @@ import {
   tischMitHaenden as tisch,
   verletzteInvarianten,
   zugBeenden,
-} from './zugablauf_hilfen'
+} from '../zugablauf_hilfen'
 
 /*
 E6, Schlangenfrass c) und die Abwehr (A6 Beispiel 2, A6 Timing, A7.2, D15,
 D33, B2): Jeder betroffene Spieler entscheidet einmal, im Uhrzeigersinn ab dem
 Angreifer, auch wenn beide Karten von ihm sind. Wer abwehrt, behält seine
 Karten; die übrigen werden gefressen, erst wenn alle entschieden haben. Den
-Reaktionsablauf selbst prüft `reaktion.test.ts` (E4).
+Reaktionsablauf selbst prüft `A6_reaktion.test.ts` (E4).
 */
 
 /** Die aufgezählte Option c), die genau diese Karten frisst. */

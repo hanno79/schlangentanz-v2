@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
-skript: tests/spec_documentation.test.ts
+skript: tests/spec_documentation_teil_d.test.ts
 aenderung: task/E10b-vielfalt-regenbogen (PR #52)
 ---
 
@@ -17,7 +17,7 @@ Die Antwort des Autors zum Vielfaltbonus einer Gruppe nur aus Regenbogenschlange
 
 ## Bestanden, wenn
 
-Die Zeile D32 enthält die Frage, den Wortlaut in Anführungszeichen, „Website folgt.“, die Folge E10b und das Datum 20.11.2026, nennt die Gruppe mit Farbenfusion ausdrücklich als offen und sagt zu „Farbharmonie“ nur, dass dort D31 weiter gilt. D31 endet mit „Für den Vielfaltbonus schränkt D32 das ein.“ Teil E hat einen Eintrag vom 20.11.2026 zu E10b. Ersetzt man in D32 „bringt keine Farbe für den Vielfaltbonus“ durch „bringt eine Farbe für den Vielfaltbonus“, endet `npx vitest run tests/spec_documentation.test.ts` mit 1.
+Die Zeile D32 enthält die Frage, den Wortlaut in Anführungszeichen, „Website folgt.“, die Folge E10b und das Datum 20.11.2026, nennt die Gruppe mit Farbenfusion ausdrücklich als offen und sagt zu „Farbharmonie“ nur, dass dort D31 weiter gilt. D31 endet mit „Für den Vielfaltbonus schränkt D32 das ein.“ Teil E hat einen Eintrag vom 20.11.2026 zu E10b. Ersetzt man in D32 „bringt keine Farbe für den Vielfaltbonus“ durch „bringt eine Farbe für den Vielfaltbonus“, endet `npx vitest run tests/spec_documentation_teil_d.test.ts` mit 1.
 
 ## Fehlgeschlagen, wenn
 
@@ -38,7 +38,7 @@ Gegenprobe: in `docs/GAME_SPEC.md`, Zeile D32, den ersten Satz „Nein: Eine Gru
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
 | 1 | Editor, `docs/GAME_SPEC.md`, Teil D | Zeilen D31 und D32 lesen | | Felder wie unter „Bestanden, wenn“ |
-| 2 | Git Bash im Repo | Spec-Tests ausführen | `npx vitest run tests/spec_documentation.test.ts; echo $?` | Exit 0 |
+| 2 | Git Bash im Repo | Spec-Tests ausführen | `npx vitest run tests/spec_documentation_teil_d.test.ts; echo $?` | Exit 0 |
 | 3 | Editor | Gegenprobe einsetzen | siehe „Testdaten“ | |
 | 4 | Git Bash im Repo | Tests wie in Schritt 2 | | Exit 1, rot: „D32: eine Gruppe nur aus Regenbogenschlangen bringt keine Farbe …“ |
 | 5 | Git Bash im Repo | zurücksetzen | `git checkout -- docs/GAME_SPEC.md` | `git status` leer |

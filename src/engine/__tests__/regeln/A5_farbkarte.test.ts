@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleEntscheider, werteSchlangen } from '../index'
-import type { FarbkarteLegenAktion, Spielzustand } from '../index'
-import type { Kartenwahl } from '../testing/szenario'
-import { schlangenKarten as ids } from './legen_hilfen'
-import { aktionen, fuehreAus, FUENF, grund, hand, MIT_SCHUTZ, tischMitHaenden as tisch, verletzteInvarianten as verletzt } from './zugablauf_hilfen'
+import { ermittleEntscheider, werteSchlangen } from '../../index'
+import type { FarbkarteLegenAktion, Spielzustand } from '../../index'
+import type { Kartenwahl } from '../../testing/szenario'
+import { schlangenKarten as ids } from '../legen_hilfen'
+import { aktionen, fuehreAus, FUENF, grund, hand, MIT_SCHUTZ, tischMitHaenden as tisch, verletzteInvarianten as verletzt } from '../zugablauf_hilfen'
 
 /*
 E5, Farbkarte in jede Schlange (A5, D9, D10, D19): Eine Farbkarte geht an
 beide Enden jeder Schlange am Tisch, auch einer gegnerischen, und als neue
 Schlange nur für den, der sie spielt. Gegen eine Farbkarte gibt es keine Abwehr.
 Was eine eigene Schlange mit Farbkarten angeht, prüft schon
-`zugablauf_ausspielen.test.ts` (E2).
+`A5_ausspielen.test.ts` (E2).
 */
 
 /** Die aufgezählten Ziele der Farbkarte `karteId`. */

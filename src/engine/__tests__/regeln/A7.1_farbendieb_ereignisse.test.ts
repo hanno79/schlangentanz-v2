@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import type { SpielAktion, Spielzustand } from '../index'
-import { DIEB, diebId, karteIn, stiehl } from './farbendieb_hilfen'
-import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
-import { durchlassen, ereignisseVom, folge, FUENF, MIT_SCHUTZ, reaktion, tischMitHaenden as tisch } from './zugablauf_hilfen'
-import type { Schritt } from './zugablauf_hilfen'
+import type { SpielAktion, Spielzustand } from '../../index'
+import { DIEB, diebId, karteIn, stiehl } from '../farbendieb_hilfen'
+import { lageVon, spieleNach, verrateneHandkarten } from '../nachrechnen'
+import { durchlassen, ereignisseVom, folge, FUENF, MIT_SCHUTZ, reaktion, tischMitHaenden as tisch } from '../zugablauf_hilfen'
+import type { Schritt } from '../zugablauf_hilfen'
 
 /*
 E8, Plan E2 Kriterium 11, E4b: Was der Farbendieb bewegt, meldet die Engine als

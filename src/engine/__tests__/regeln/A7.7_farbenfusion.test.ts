@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
-import type { FusionLegenAktion, SpielAktion, Spielkarte, Spielzustand } from '../index'
-import type { Baukasten, Kartenwahl } from '../testing/szenario'
+import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../../index'
+import type { FusionLegenAktion, SpielAktion, Spielkarte, Spielzustand } from '../../index'
+import type { Baukasten, Kartenwahl } from '../../testing/szenario'
 import {
   ablage,
   aktionen,
@@ -16,14 +16,14 @@ import {
   tischMitHaenden,
   verletzteInvarianten,
   zugBeenden,
-} from './zugablauf_hilfen'
+} from '../zugablauf_hilfen'
 
 /*
 E7, Farbenfusion legen: A7.7 (Text, Wichtige Regeln), D9 (jede Karte in jede
 Schlange), D10 und A6 (abwehrbar in der Schlange eines Mitspielers), D20 (nur
 zwei Farbkarten derselben Farbe), D27 (je Zug eine), D13 und D25 (wirkungslos
 nur ohne Ziel). Was die Fusion in der Wertung bringt, prüfen
-`wertung_farbgruppen.test.ts` und `farbenfusion_wertung.test.ts`.
+`A11_farbgruppen.test.ts` und `A7.7_farbenfusion_wertung.test.ts`.
 */
 
 const MIT_FUSION: Kartenwahl[] = ['Farbenfusion', 'Blau', 'Rot', 'Gelb', 'Grün']

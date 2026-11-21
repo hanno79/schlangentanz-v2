@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { ermittleEntscheider } from '../index'
-import type { Ereignis, Spielzustand } from '../index'
-import { baukasten } from '../testing/szenario'
-import type { Baukasten, Kartenwahl } from '../testing/szenario'
-import { ablage, aktionen, ereignisseVom, fuehreAus, grund, spieleZug, typen, zugBeenden } from './zugablauf_hilfen'
+import { ermittleEntscheider } from '../../index'
+import type { Ereignis, Spielzustand } from '../../index'
+import { baukasten } from '../../testing/szenario'
+import type { Baukasten, Kartenwahl } from '../../testing/szenario'
+import { ablage, aktionen, ereignisseVom, fuehreAus, grund, spieleZug, typen, zugBeenden } from '../zugablauf_hilfen'
 
 /*
 E2, Spielende und Aussetzen: A10 (Schlussrunde), A7.6 (der ausgesetzte Zug),
