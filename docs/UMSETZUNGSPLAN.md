@@ -787,7 +787,10 @@ Lobby schon heute die Partie mit `Math.random` anlegt.
   Sonderkarte, beide Reihenfolgen) und prüft für jedes Ziel, wem die Karte
   dort nützt. Nach einem Verdoppler plant sie den zweiten Zug neu.
 - **Abnahmekriterien** (je als Szenariotest und am Entwicklertisch):
-  1. Kann die KI mit einer Handkarte eine Dreiergruppe vollenden, tut sie es.
+  1. Kann die KI mit einer Handkarte eine Dreiergruppe vollenden, tut sie es,
+     es sei denn, ein anderer Zug ist nachweislich besser bewertet; der Test
+     belegt diese Ausnahme mit Zahlen (Orchestrator, 21.11.2026: die KI soll
+     auf Sieg spielen).
   2. Hat sie eine passende Farbkarte **und** eine nützliche Sonderkarte, spielt
      sie beide.
   3. Sie legt eine Regenbogenschlange nie in eine gegnerische Schlange, wenn
