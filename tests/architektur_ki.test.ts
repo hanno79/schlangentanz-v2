@@ -301,6 +301,7 @@ const strategien: Array<[string, string]> = [
   ['forEach mit thisArg', 'function anker(): void {}\nexport const kanal = () => [1].forEach(function (this: unknown) { return this }, anker)\n'],
   ['einen this-Parameter', 'export function lies(this: { lager?: number }) { return this.lager }\n'],
   ['new.target', 'export class Anker { constructor() { const k = new.target; k.name.length } }\n'],
+  ['eine Fabrik, die nicht erstelle… heisst', "import type { Sicht } from '../sicht'\nexport const baueKi = () => ({ name: 'x', waehle: (sicht: Sicht) => sicht.ich })\n"],
 ]
 const faelleStrategie = strategien.map(([name, inhalt], index) => ({ name, datei: `src/ki/strategien/verboten-${index + 1}.ts`, inhalt }))
 const faelleSeitenkanal = seitenkanaele.map(([name, inhalt], index) => ({ name, datei: `src/ki/seitenkanal-${index + 1}.ts`, inhalt }))

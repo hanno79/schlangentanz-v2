@@ -7,12 +7,16 @@ kennt, schreibt sie in `funde` und wählt danach anders. Keine echte Strategie; 
 Dateien liegen unter tests/, damit sie nie im Spiel landen.
 */
 
+export type Haende = Map<number, string[]>
+/** Eine Funktion als Ablage: dieselbe Eigenschaft für alle Instanzen, die dieselbe Funktion erreichen. */
+export type Ablage = { (): void; haende?: Haende }
+
 export interface SpionKi extends Ki {
   funde: string[][]
 }
 
 /** Eine Spion-KI über `kanal`, der für alle Instanzen derselben Modulinstanz dieselbe Map liefert. */
-export function erstelleSpion(zufall: () => number, kanal: () => Map<number, string[]>): SpionKi {
+export function erstelleSpion(zufall: () => number, kanal: () => Haende): SpionKi {
   const funde: string[][] = []
   return {
     name: 'Spion',

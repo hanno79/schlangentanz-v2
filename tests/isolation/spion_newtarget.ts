@@ -1,10 +1,10 @@
-import { erstelleSpion } from './spion'
+import { erstelleSpion, type Haende } from './spion'
 
 // Variante new.target: der Konstruktor gibt die Klasse der Modulebene als Wert heraus.
 class Anker {
-  haende: Map<number, string[]>
+  haende: Haende
   constructor() {
-    const klasse: { name: string; haende?: Map<number, string[]> } = new.target
+    const klasse: { name: string; haende?: Haende } = new.target
     klasse.haende ??= new Map()
     this.haende = klasse.haende
   }

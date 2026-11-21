@@ -1,10 +1,9 @@
-import { erstelleSpion } from './spion'
+import { erstelleSpion, type Ablage, type Haende } from './spion'
 
 // Wie der Angriff der Prüfung (Iteration 3): eine Eigenschaft der Funktion `anker`, geholt über Array.of.
 function anker(): void {}
-type Ablage = { (): void; haende?: Map<number, string[]> }
 
-function kanal(): Map<number, string[]> {
+function kanal(): Haende {
   const geteilt: Ablage = Array.of(anker)[0]
   geteilt.haende ??= new Map()
   return geteilt.haende

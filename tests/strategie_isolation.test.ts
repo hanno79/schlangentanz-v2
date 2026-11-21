@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url'
 import { erstellePartie, erzeugeZufall } from '../src/engine'
 import type { Ki } from '../src/ki/strategien/strategie'
 import { spielePartie } from '../src/ki/turnier'
+import type { Teilnehmer } from '../src/ki/turnier'
 import { istTestdatei, sammleDateien } from './architektur_pruefung'
 import { WURZEL } from './probebaum'
 
@@ -21,9 +22,10 @@ Erfasst wird jede Strategie unter src/ki/strategien: jede exportierte Funktion,
 deren Name mit `erstelle` beginnt, gilt als Fabrik `(zufall) => Ki`.
 */
 
-type Fabrik = (zufall: () => number) => Ki
+type Fabrik = Teilnehmer['erstelle']
+type Partie = { spielerzahl: number; erweiterung: boolean; saat: number }
 
-const PARTIEN = [
+const PARTIEN: Partie[] = [
   { spielerzahl: 2, erweiterung: false, saat: 11 },
   { spielerzahl: 3, erweiterung: false, saat: 12 },
   { spielerzahl: 4, erweiterung: true, saat: 13 },
@@ -47,39 +49,39 @@ function sichtbarerZustand(ki: Ki): string {
   })
 }
 
-/** Spielt alle PARTIEN; mit `jeInstanzNeu` kommt jede KI aus einem eigenen, frisch geladenen Modul. */
-async function spiele(pfad: string, name: string, jeInstanzNeu: boolean) {
+/** Spielt `partien`; mit `jeInstanzNeu` kommt jede KI aus einem eigenen, frisch geladenen Modul. */
+async function spiele(pfad: string, name: string, jeInstanzNeu: boolean, partien: Partie[]) {
   const gemeinsam = jeInstanzNeu ? null : await ladeFabriken(pfad)
   const ergebnisse: Array<{ ausgang: string; verlauf: unknown[]; kis: string[] }> = []
-  for (const [nummer, { spielerzahl, erweiterung, saat }] of PARTIEN.entries()) {
+  for (const [nummer, { spielerzahl, erweiterung, saat }] of partien.entries()) {
     const kis: Ki[] = []
     for (let sitz = 0; sitz < spielerzahl; sitz++) {
       const fabrik = (gemeinsam ?? (await ladeFabriken(pfad))).get(name)
       if (fabrik === undefined) throw new Error(`Isolationstest: ${pfad} exportiert ${name} nicht mehr`)
       kis.push(fabrik(erzeugeZufall(1000 * (nummer + 1) + sitz)))
     }
-    const lauf = spielePartie(erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) }), kis, 5000, `${name}, Partie ${nummer + 1}`)
+    const lauf = spielePartie(erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) }), kis, undefined, `${name}, Partie ${nummer + 1}`)
     ergebnisse.push({ ausgang: lauf.ausgang, verlauf: lauf.verlauf, kis: kis.map(sichtbarerZustand) })
   }
   return ergebnisse
 }
 
 /** Ob die Fabrik `name` aus `pfad` sich gleich verhält, ob ihre Instanzen ein Modul teilen oder nicht. */
-async function vergleiche(pfad: string, name: string) {
-  const geteilt = await spiele(pfad, name, false)
-  const getrennt = await spiele(pfad, name, true)
+async function vergleiche(pfad: string, name: string, partien = PARTIEN) {
+  const geteilt = await spiele(pfad, name, false, partien)
+  const getrennt = await spiele(pfad, name, true, partien)
   return { geteilt, getrennt }
 }
 
 const strategien = sammleDateien(WURZEL, 'src/ki/strategien').filter((pfad) => !istTestdatei(pfad))
-const fabriken = await Promise.all(strategien.map(async (pfad) => [...(await ladeFabriken(pfad)).keys()].map((name) => [pfad, name] as const)))
+const fabriken = (await Promise.all(strategien.map(async (pfad) => [...(await ladeFabriken(pfad)).keys()].map((name) => [pfad, name] as const)))).flat()
 
 describe('P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest)', () => {
   it('P0.3d: der Test erfasst die Strategien unter src/ki/strategien, mindestens die Zufalls-KI', () => {
-    expect(fabriken.flat(), 'P0.3d: erwartet erstelleZufallsKi unter den gefundenen Fabriken').toContainEqual(['src/ki/strategien/zufallsKi.ts', 'erstelleZufallsKi'])
+    expect(fabriken, 'P0.3d: erwartet erstelleZufallsKi unter den gefundenen Fabriken').toContainEqual(['src/ki/strategien/zufallsKi.ts', 'erstelleZufallsKi'])
   })
 
-  it.each(fabriken.flat())('P0.3d: %s, %s entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht', async (pfad, name) => {
+  it.each(fabriken)('P0.3d: %s, %s entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht', async (pfad, name) => {
     const { geteilt, getrennt } = await vergleiche(pfad, name)
 
     expect(geteilt.map(({ ausgang }) => ausgang), 'P0.3d: erwartet, dass jede Partie endet').toEqual(PARTIEN.map(() => 'beendet'))
@@ -95,7 +97,8 @@ describe('P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen', (
   ] as const
 
   it.each(spione)('P0.3d: %s (%s) verhält sich mit geteiltem Modul anders', async (pfad, name, wie) => {
-    const { geteilt, getrennt } = await vergleiche(pfad, name)
+    // Der Kanal zeigt sich schon in der ersten Partie, sobald der zweite Sitz wählt.
+    const { geteilt, getrennt } = await vergleiche(pfad, name, PARTIEN.slice(0, 1))
 
     expect(getrennt, `P0.3d: erwartet, dass der Isolationstest den Kanal „${wie}“ bemerkt`).not.toEqual(geteilt)
   }, 120_000)

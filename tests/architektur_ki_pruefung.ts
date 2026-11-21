@@ -279,9 +279,6 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
      */
     const pruefeGeteiltenWert = (knoten: ts.Identifier, symbol: ts.Symbol) => {
       if (!istFreierWert(knoten) || ausBibliothek(symbol) || !aufModulebene(symbol)) return
-      // `interface Mehr extends Basis` nennt nur einen Typ.
-      const erbt = knoten.parent
-      if (ts.isExpressionWithTypeArguments(erbt) && ts.isHeritageClause(erbt.parent) && ts.isInterfaceDeclaration(erbt.parent.parent)) return
       const wert = typ(knoten)
       if (!hatTeilMit(wert, ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive)) return
       const aussen = aeusserer(knoten)
@@ -291,19 +288,27 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       const istListe = pruefer.isArrayType(wert) || pruefer.isTupleType(wert)
       // Eine Liste darf kopiert werden: `[...LISTE]`, `Array.from(LISTE)`, `new Set(LISTE)`.
       if (istListe && ts.isSpreadElement(eltern)) return
-      if ((ts.isCallExpression(eltern) || ts.isNewExpression(eltern)) && eltern.arguments !== undefined) {
-        const stelle = eltern.arguments.indexOf(aussen as ts.Expression)
+      // Nur an erster Stelle einer Funktion der Bibliothek: eine Liste zum Kopieren, eine Funktion als Rückruf.
+      const erstesArgument = (ts.isCallExpression(eltern) || ts.isNewExpression(eltern)) && eltern.arguments?.[0] === aussen
+      const ausBibliothekAufgerufen = erstesArgument && zuPosix(pruefer.getResolvedSignature(eltern)?.declaration?.getSourceFile().fileName ?? '').includes('/node_modules/')
+      if (ausBibliothekAufgerufen) {
         const aufgerufen = ohneHuellen(eltern.expression)
-        const methode = ts.isPropertyAccessExpression(aufgerufen) ? aufgerufen.name.text : undefined
-        const ausBibliothekAufgerufen = zuPosix(pruefer.getResolvedSignature(eltern)?.declaration?.getSourceFile().fileName ?? '').includes('/node_modules/')
-        if (ausBibliothekAufgerufen && istListe) {
-          const kopiert = ts.isNewExpression(eltern) ? globalerWert(aufgerufen) === 'Set' : methode === 'from' && globalerWert(ohneHuellen((aufgerufen as ts.PropertyAccessExpression).expression)) === 'Array'
-          if (kopiert && stelle === 0) return
-        }
-        const ohneThisArg = eltern.arguments.length <= (methode?.startsWith('reduce') ? 2 : 1)
-        if (ausBibliothekAufgerufen && !istListe && ts.isCallExpression(eltern) && stelle === 0 && RUECKRUF_METHODEN.has(methode ?? '') && ohneThisArg) return
+        const methode = ts.isPropertyAccessExpression(aufgerufen) ? aufgerufen.name.text : ''
+        const kopiert = ts.isNewExpression(eltern) ? globalerWert(aufgerufen) === 'Set' : globalesMitglied(aufgerufen) === 'Array.from'
+        const ohneThisArg = (eltern.arguments?.length ?? 0) <= (methode.startsWith('reduce') ? 2 : 1)
+        const rueckruf = ts.isCallExpression(eltern) && RUECKRUF_METHODEN.has(methode) && ohneThisArg
+        if (istListe ? kopiert : rueckruf) return
       }
       melde(knoten, `gibt ${knoten.text} von der Modulebene weiter; alle Instanzen der Strategie teilen es`)
+    }
+
+    /** Eine exportierte Funktion, die eine KI liefert, heisst `erstelle…`; sonst fände sie der Isolationstest nicht. */
+    const pruefeFabrikname = (knoten: ts.Node) => {
+      const exportiert = ts.isFunctionDeclaration(knoten) || ts.isVariableDeclaration(knoten)
+      if (!exportiert || !knoten.name || !ts.isIdentifier(knoten.name) || !aufModulebene(pruefer.getSymbolAtLocation(knoten.name))) return
+      const signaturen = pruefer.getSignaturesOfType(typ(knoten.name), ts.SignatureKind.Call)
+      const liefertKi = signaturen.some((signatur) => signatur.getReturnType().getProperty('waehle') !== undefined)
+      if (liefertKi && !knoten.name.text.startsWith('erstelle')) melde(knoten.name, `${knoten.name.text} liefert eine KI; Fabriken einer Strategie heissen erstelle…, damit der Isolationstest sie findet`)
     }
 
     /** Strategien erwähnen den vollen Zustand nicht, auch nicht über einen Typ, der ihn enthält oder nimmt. */
@@ -386,7 +391,10 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       pruefeZufallUndZeit(knoten)
       pruefeTypen(knoten)
       pruefeImport(knoten)
-      if (istStrategie) pruefeStrategie(knoten)
+      if (istStrategie) {
+        pruefeStrategie(knoten)
+        pruefeFabrikname(knoten)
+      }
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })
   }

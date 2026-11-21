@@ -92,6 +92,10 @@ export function istFreierWert(bezeichner: ts.Identifier): boolean {
   if (ts.isShorthandPropertyAssignment(eltern)) return eltern.name === bezeichner
   if (ts.isLabeledStatement(eltern) || ts.isBreakOrContinueStatement(eltern)) return false
   if (ts.isQualifiedName(eltern) || ts.isTypeReferenceNode(eltern) || ts.isTypeQueryNode(eltern)) return false
+  // `interface A extends B` und `class A implements B` nennen nur Typen; `class A extends B` liest einen Wert.
+  if (ts.isExpressionWithTypeArguments(eltern) && ts.isHeritageClause(eltern.parent)) {
+    return eltern.parent.token === ts.SyntaxKind.ExtendsKeyword && !ts.isInterfaceDeclaration(eltern.parent.parent)
+  }
   if (ts.isBindingElement(eltern)) return eltern.initializer === bezeichner
   const deklaration = eltern as ts.Node & { name?: ts.Node }
   if (deklaration.name === bezeichner) return false
@@ -237,7 +241,7 @@ export function geholteWerte(knoten: ts.ImportDeclaration | ts.ExportDeclaration
   return klausel.name ? ['default', ...benannt] : benannt
 }
 
-export function inTypposition(knoten: ts.Node): boolean {
+function inTypposition(knoten: ts.Node): boolean {
   for (let eltern = knoten.parent; eltern; eltern = eltern.parent) if (ts.isTypeNode(eltern)) return true
   return false
 }
