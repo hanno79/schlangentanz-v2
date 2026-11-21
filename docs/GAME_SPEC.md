@@ -734,9 +734,9 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 | Bestandteil | Website | Digital heute |
 |---|---|---|
-| 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja, mit abweichenden Stückzahlen (C1) |
+| 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja |
 | 15 Aufgabenkarten | Erweiterung | ja, 14 von 15 (C1) |
-| Schlangenhäutung | Erweiterung | ja, mit abweichender Wirkung (C9) |
+| Schlangenhäutung | Erweiterung | ja |
 | Schlangenkorb des Glücks | Erweiterung | nein |
 | Comeback-Karten | Erweiterung | nein |
 | Risiko-Belohnungs-Karten | Erweiterung | nein |

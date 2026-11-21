@@ -208,7 +208,7 @@ git diff --stat origin/neuaufbau...HEAD      # drei Punkte: seit der Basis
   trägt sie nicht, ist das ein Mangel.
 - Prüfe dabei auch: **U10** keine neue Laufzeit-Abhängigkeit in
   `package.json`, neue Entwicklungs-Abhängigkeiten nur, wenn der Task sie
-  nennt; **U13** `docs/GAME_SPEC.md`, `tests/spec_documentation.test.ts`,
+  nennt; **U13** `docs/GAME_SPEC.md`, `tests/spec_documentation*.ts`,
   `src/engine/aktionen/typen.ts` und `src/engine/karten/register.ts` nur, wenn
   der Task sie nennt; **U9** kein Dateikopf mit Author, Datum oder Version und
   keine `// ÄNDERUNG`-Kommentare in neuen Dateien; **U11** kein Code aus
