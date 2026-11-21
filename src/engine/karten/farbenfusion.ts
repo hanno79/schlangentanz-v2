@@ -1,7 +1,9 @@
 import type { FusionLegenAktion } from '../aktionen/typen';
+import { findeSchlange, gepruefteSchlange, schlangenVon } from '../schlangen';
 import type { FarbkarteInfo, Schlange, Spielkarte, Spielzustand } from '../types';
-import { entnehmeHandkarte, mitspielerImUhrzeigersinn, spielerIndexVon } from '../zugablauf';
+import { entnehmeHandkarte, mitspielerImUhrzeigersinn } from '../zugablauf';
 import type { KartenDefinition } from './register';
+import { betroffenerBesitzer, grundVerdeckt } from './schlangenstelle';
 
 /*
 A7.7: Die Farbenfusion kommt auf zwei nebeneinanderliegende Karten der gleichen
@@ -18,19 +20,6 @@ zählt. Was die Fusion in der Wertung bringt, steht in `jokerGruppen.ts` (D30).
 
 const NUR_EINE = 'Pro Zug nur eine Farbenfusion (A7.7); in diesem Zug ist schon eine gespielt.';
 
-interface Fundort {
-  schlange: Schlange;
-  besitzer: number;
-}
-
-function findeSchlange(zustand: Spielzustand, schlangenId: string): Fundort | null {
-  for (const [besitzer, spieler] of zustand.spieler.entries()) {
-    const schlange = spieler.schlangen.find((eintrag) => eintrag.id === schlangenId);
-    if (schlange !== undefined) return { schlange, besitzer };
-  }
-  return null;
-}
-
 /** D20: Nur zwei Farbkarten derselben Farbe lassen sich fusionieren; `pruefePaar` nennt für jeden Fall den Grund. */
 function gleichfarbig(links: Spielkarte, rechts: Spielkarte): boolean {
   return links.typ === 'Farbkarte' && rechts.typ === 'Farbkarte' && links.farbe === rechts.farbe;
@@ -43,10 +32,11 @@ function pruefePaar(schlange: Schlange, [linksId, rechtsId]: readonly [string, s
   const rechts = schlange.karten.findIndex((karte) => karte.id === rechtsId);
   const fehlend = links < 0 ? linksId : rechts < 0 ? rechtsId : null;
   if (fehlend !== null) {
-    const verdeckt = schlange.fusionen.find((fusion) => fusion.unter.some((karte) => karte.id === fehlend));
-    return verdeckt === undefined
-      ? `Die Karte ${fehlend} liegt nicht in der Schlange ${schlange.id}.`
-      : `Die Karte ${fehlend} liegt unter der Farbenfusion ${verdeckt.karteId}; fusionieren lassen sich nur Karten, die offen in der Schlange liegen (A7.7).`;
+    return grundVerdeckt(
+      schlange,
+      fehlend,
+      (fusionId) => `Die Karte ${fehlend} liegt unter der Farbenfusion ${fusionId}; fusionieren lassen sich nur Karten, die offen in der Schlange liegen (A7.7).`,
+    );
   }
   if (rechts === links - 1) return `Die Farbenfusion nennt ihre zwei Karten links zuerst: erst ${rechtsId}, dann ${linksId}.`;
   if (rechts !== links + 1) return `Die Karten ${linksId} und ${rechtsId} liegen nicht nebeneinander; die Farbenfusion kommt auf zwei nebeneinanderliegende Karten (A7.7).`;
@@ -64,7 +54,7 @@ function pruefePaar(schlange: Schlange, [linksId, rechtsId]: readonly [string, s
 
 /** Die Schlangen am Tisch, zuerst die eigenen, dann die der Mitspieler im Uhrzeigersinn (D9). */
 function schlangenAmTisch(zustand: Spielzustand, spielerIndex: number): Schlange[] {
-  return [spielerIndex, ...mitspielerImUhrzeigersinn(zustand, spielerIndex)].flatMap((index) => zustand.spieler[index].schlangen);
+  return schlangenVon(zustand, [spielerIndex, ...mitspielerImUhrzeigersinn(zustand, spielerIndex)]).map(({ schlange }) => schlange);
 }
 
 export const farbenfusion: KartenDefinition<FusionLegenAktion> = {
@@ -94,16 +84,12 @@ export const farbenfusion: KartenDefinition<FusionLegenAktion> = {
     return pruefePaar(fundort.schlange, aktion.kartenIds);
   },
 
-  betroffene(zustand: Spielzustand, aktion: FusionLegenAktion): number[] {
-    const fundort = findeSchlange(zustand, aktion.schlangenId);
-    if (fundort === null) throw new Error(`Die Schlange ${aktion.schlangenId} gibt es nicht.`);
-    return fundort.besitzer === spielerIndexVon(zustand, aktion.spielerId) ? [] : [fundort.besitzer];
-  },
+  betroffene: betroffenerBesitzer,
 
   wirke(zustand: Spielzustand, aktion: FusionLegenAktion): Spielzustand {
     const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
     if (karte.typ !== 'Sonderkarte') throw new Error(`Die Karte ${karte.id} ist keine Farbenfusion.`);
-    const { schlange } = findeSchlange(zustand, aktion.schlangenId)!;
+    const { schlange } = gepruefteSchlange(zustand, aktion.schlangenId);
     const links = schlange.karten.findIndex((eintrag) => eintrag.id === aktion.kartenIds[0]);
     // Links zuerst, wie sie in der Schlange lagen; E6 legt sie beim Fressen so zurück.
     const unter = schlange.karten.splice(links, 2, karte) as [FarbkarteInfo, FarbkarteInfo];

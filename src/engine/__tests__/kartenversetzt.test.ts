@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Ereignis, FarbkarteInfo, KartenAktion, Schlange, Sonderkartenname, Spielkarte, Spielzustand } from '../index'
 import { KARTENREGISTER } from '../karten/register'
-import { schlangenIdFuer } from '../state'
+import { schlangenIdFuer } from '../schlangen'
 import { baukasten } from '../testing/szenario'
 import type { Baukasten } from '../testing/szenario'
 import { entnehmeHandkarte, legeAufEigenenAblagestapel } from '../zugablauf'

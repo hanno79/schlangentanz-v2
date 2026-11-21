@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../engine'
 import type { Ereignis, SchlangenhaeutungSpielenAktion, SpielAktion, Spielkarte, Spielzustand } from '../engine'
 import { beschrifte } from './beschriftung'
-import { findeSzenario, SZENARIEN } from './szenarien'
+import { SZENARIEN } from './szenarien'
+import { abwehren, durchlassen, erzeuge, klicke } from './szenarienTesthilfe'
+import type { Wahl } from './szenarienTesthilfe'
 
 /*
 E9: Die Szenarien `haeutung` und `haeutung-nicht-moeglich` lassen sich am
@@ -10,23 +12,7 @@ Entwicklertisch so durchklicken, wie ihre Erwartung es sagt. Jeder Schritt hier
 ist ein Knopf, den die Engine aufzählt; gesucht wird er über seine Beschriftung.
 */
 
-function erzeuge(name: string): Spielzustand {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return szenario.erzeuge()
-}
-
-type Wahl = (aktion: SpielAktion) => boolean
-
 const haeutung = (aktion: SpielAktion): aktion is SchlangenhaeutungSpielenAktion => aktion.typ === 'SchlangenhaeutungSpielen'
-const abwehren: Wahl = (aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null
-const durchlassen: Wahl = (aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId === null
-
-function klicke(zustand: Spielzustand, wahl: Wahl): { zustand: Spielzustand; ereignisse: Ereignis[] } {
-  const aktion = ermittleAktionen(zustand).find(wahl)
-  if (aktion === undefined) throw new Error(`Testaufbau: kein passender Knopf unter ${JSON.stringify(ermittleAktionen(zustand))}`)
-  return anwendeAktion(zustand, aktion)
-}
 
 /** Der Knopf, der den Abschnitt der Schlange in diese Farbfolge bringt. */
 function knopf(zustand: Spielzustand, schlangenId: string, farben: string[]): Wahl {

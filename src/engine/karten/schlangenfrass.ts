@@ -1,5 +1,7 @@
 import type { SchlangenfrassSpielenAktion } from '../aktionen/typen';
-import type { Schlange, Spielkarte, Spielzustand } from '../types';
+import { findeSchlange, nimmAusSchlange, schlangenVon } from '../schlangen';
+import type { SchlangeAmTisch } from '../schlangen';
+import type { Spielkarte, Spielzustand } from '../types';
 import { legeAufEigenenAblagestapel, mitspielerImUhrzeigersinn, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
 
@@ -27,9 +29,7 @@ nicht mehr; Nachbarn schliessen auf.
 type Ziel = SchlangenfrassSpielenAktion['ziele'][number];
 
 /** Eine Karte in einer Schlange, mit dem Besitzer der Schlange. */
-interface Fundstelle {
-  besitzer: number;
-  schlange: Schlange;
+interface Fundstelle extends SchlangeAmTisch {
   karte: Spielkarte;
 }
 
@@ -43,9 +43,7 @@ function verweis({ schlange, karte }: Fundstelle): Ziel {
 
 /** Jede Karte in den Schlangen dieser Spieler, in ihrer Reihenfolge, je Spieler Schlange für Schlange von vorn. */
 function kartenIn(zustand: Spielzustand, besitzer: readonly number[]): Fundstelle[] {
-  return besitzer.flatMap((index) =>
-    zustand.spieler[index].schlangen.flatMap((schlange) => schlange.karten.map((karte) => ({ besitzer: index, schlange, karte }))),
-  );
+  return schlangenVon(zustand, besitzer).flatMap((amTisch) => amTisch.schlange.karten.map((karte) => ({ ...amTisch, karte })));
 }
 
 /** A7.4 c): Was der Angreifer bei den Mitspielern fressen darf, im Uhrzeigersinn ab ihm; Schlangenblockaden nicht. */
@@ -54,12 +52,9 @@ function gegnerischeZiele(zustand: Spielzustand, angreifer: number): Fundstelle[
 }
 
 function finde(zustand: Spielzustand, ziel: Ziel): Fundstelle | undefined {
-  for (const [besitzer, spieler] of zustand.spieler.entries()) {
-    const schlange = spieler.schlangen.find((eintrag) => eintrag.id === ziel.schlangenId);
-    const karte = schlange?.karten.find((eintrag) => eintrag.id === ziel.karteId);
-    if (schlange !== undefined) return karte === undefined ? undefined : { besitzer, schlange, karte };
-  }
-  return undefined;
+  const gefunden = findeSchlange(zustand, ziel.schlangenId);
+  const karte = gefunden?.schlange.karten.find((eintrag) => eintrag.id === ziel.karteId);
+  return gefunden === null || karte === undefined ? undefined : { ...gefunden, karte };
 }
 
 /** A7.4 c): zwei Karten, sofern möglich; jedes Paar einmal, in der Reihenfolge am Tisch. */
@@ -67,21 +62,6 @@ function paare(ziele: Fundstelle[]): Ziel[][] {
   if (ziele.length === 1) return [[verweis(ziele[0])]];
   // Ohne Ziel bleibt die Liste leer.
   return ziele.flatMap((erste, index) => ziele.slice(index + 1).map((zweite) => [verweis(erste), verweis(zweite)]));
-}
-
-/**
- * Nimmt die Karte aus ihrer Schlange und legt sie auf den Ablagestapel. Eine
- * Farbenfusion lässt ihre beiden Karten an ihrer Stelle zurück (A7.4); eine
- * leer gefressene Schlange verschwindet.
- */
-function friss(zustand: Spielzustand, { besitzer, schlange, karte }: Fundstelle, ablagestapel: Spielkarte[]): void {
-  const stelle = schlange.karten.indexOf(karte);
-  const fusion = schlange.fusionen.find((eintrag) => eintrag.karteId === karte.id);
-  schlange.karten.splice(stelle, 1, ...(fusion?.unter ?? []));
-  schlange.fusionen = schlange.fusionen.filter((eintrag) => eintrag !== fusion);
-  ablagestapel.push(karte);
-  const spieler = zustand.spieler[besitzer];
-  if (schlange.karten.length === 0) spieler.schlangen = spieler.schlangen.filter((eintrag) => eintrag !== schlange);
 }
 
 /** Der Grund, warum die Ziele für diese Option nicht passen, oder `null`. */
@@ -148,7 +128,8 @@ export const schlangenfrass: KartenDefinition<SchlangenfrassSpielenAktion> = {
     const gefressen = kartenIn(zustand, [angreifer, ...mitspielerImUhrzeigersinn(zustand, angreifer)]).filter(
       ({ besitzer, karte }) => ziele.has(karte.id) && !abgewehrt.includes(besitzer),
     );
-    for (const fund of gefressen) friss(zustand, fund, zustand.spieler[angreifer].ablagestapel);
+    // Eine gefressene Farbenfusion lässt ihre beiden Karten liegen, eine leer gefressene Schlange verschwindet (`nimmAusSchlange`).
+    for (const fund of gefressen) zustand.spieler[angreifer].ablagestapel.push(nimmAusSchlange(zustand, fund, fund.karte.id));
     return zustand;
   },
 };

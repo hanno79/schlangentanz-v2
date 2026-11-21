@@ -9,7 +9,7 @@ R1: Die gemeinsame Klickhilfe der Szenariotests. Sie klickt nur Knöpfe, die die
 Engine aufzählt, wie der Entwicklertisch.
 */
 
-const typ = (gesucht: SpielAktion['typ']): Wahl => (aktion) => aktion.typ === gesucht
+const typ = (gesucht: SpielAktion['typ']) => (aktion: SpielAktion) => aktion.typ === gesucht
 
 describe('R1: Klickhilfe der Szenariotests', () => {
   it('R1: erzeuge baut das genannte Szenario; ein unbekannter Name ist ein Fehler im Testaufbau', () => {

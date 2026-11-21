@@ -1,9 +1,10 @@
 import type { FarbendiebSpielenAktion } from '../aktionen/typen';
 import { istGueltigeEinfuegePosition } from '../constants';
-import { schlangenIdFuer } from '../state';
+import { beginneSchlange, findeSchlange, gepruefteSchlange, nimmAusSchlange, schlangenVon } from '../schlangen';
 import type { Schlange, Spielkarte, Spielzustand } from '../types';
 import { legeAufEigenenAblagestapel, mitspielerImUhrzeigersinn, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
+import { grundVerdeckt } from './schlangenstelle';
 
 /*
 A7.1, D2, D17: Der Farbendieb nimmt eine Farbkarte aus einer gegnerischen
@@ -19,21 +20,10 @@ Diebstahl dorthin.
 
 type Ziel = FarbendiebSpielenAktion['ziel'];
 
-/** Die Schlange mit dieser Id und der Index ihres Besitzers, oder `null`. */
-function findeSchlange(zustand: Spielzustand, schlangenId: string): { besitzer: number; schlange: Schlange } | null {
-  for (const [besitzer, spieler] of zustand.spieler.entries()) {
-    const schlange = spieler.schlangen.find((eintrag) => eintrag.id === schlangenId);
-    if (schlange !== undefined) return { besitzer, schlange };
-  }
-  return null;
-}
-
 /** A7.1, D2: die offen liegenden Farbkarten in den Schlangen der Mitspieler, im Uhrzeigersinn ab dem linken Nachbarn. */
 function beute(zustand: Spielzustand, spielerIndex: number): FarbendiebSpielenAktion['quelle'][] {
-  return mitspielerImUhrzeigersinn(zustand, spielerIndex).flatMap((mitspieler) =>
-    zustand.spieler[mitspieler].schlangen.flatMap((schlange) =>
-      schlange.karten.filter((karte) => karte.typ === 'Farbkarte').map((karte) => ({ schlangenId: schlange.id, karteId: karte.id })),
-    ),
+  return schlangenVon(zustand, mitspielerImUhrzeigersinn(zustand, spielerIndex)).flatMap(({ schlange }) =>
+    schlange.karten.filter((karte) => karte.typ === 'Farbkarte').map((karte) => ({ schlangenId: schlange.id, karteId: karte.id })),
   );
 }
 
@@ -51,10 +41,11 @@ function pruefeQuelle(zustand: Spielzustand, dieb: number, quelle: FarbendiebSpi
   if (gefunden.besitzer === dieb) return 'Der Farbendieb stiehlt aus einer gegnerischen Schlange, nicht aus der eigenen (A7.1).';
   const karte = gefunden.schlange.karten.find((eintrag) => eintrag.id === quelle.karteId);
   if (karte === undefined) {
-    const unterFusion = gefunden.schlange.fusionen.some((fusion) => fusion.unter.some((eintrag) => eintrag.id === quelle.karteId));
-    return unterFusion
-      ? `Die Karte ${quelle.karteId} liegt unter einer Farbenfusion; gestohlen werden nur Farbkarten, die offen in der Schlange liegen (A7.1, A7.7).`
-      : `Die Karte ${quelle.karteId} liegt nicht in der Schlange ${quelle.schlangenId}.`;
+    return grundVerdeckt(
+      gefunden.schlange,
+      quelle.karteId,
+      () => `Die Karte ${quelle.karteId} liegt unter einer Farbenfusion; gestohlen werden nur Farbkarten, die offen in der Schlange liegen (A7.1, A7.7).`,
+    );
   }
   if (karte.typ !== 'Farbkarte') return `Die Karte ${karte.id} ist eine Sonderkarte (${karte.name}); der Farbendieb stiehlt nur Farbkarten (D2).`;
   return null;
@@ -77,18 +68,6 @@ function pruefeZiel(zustand: Spielzustand, dieb: number, ziel: Ziel): string | n
     return `Die Stelle ${ziel.position} gibt es in ${schlange.id} nicht; erlaubt sind 0 bis ${schlange.karten.length} (A7.1).`;
   }
   return null;
-}
-
-/** Nimmt die Karte aus der Schlange; ist es die letzte, verschwindet die Schlange (keine leere Schlange). */
-function nimmAusSchlange(zustand: Spielzustand, quelle: FarbendiebSpielenAktion['quelle']): Spielkarte {
-  const { besitzer, schlange } = findeSchlange(zustand, quelle.schlangenId)!;
-  const [karte] = schlange.karten.splice(
-    schlange.karten.findIndex((eintrag) => eintrag.id === quelle.karteId),
-    1,
-  );
-  const spieler = zustand.spieler[besitzer];
-  if (schlange.karten.length === 0) spieler.schlangen = spieler.schlangen.filter((eintrag) => eintrag !== schlange);
-  return karte;
 }
 
 export const farbendieb: KartenDefinition<FarbendiebSpielenAktion> = {
@@ -115,15 +94,11 @@ export const farbendieb: KartenDefinition<FarbendiebSpielenAktion> = {
 
   wirke(zustand: Spielzustand, aktion: FarbendiebSpielenAktion): Spielzustand {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
-    const karte = nimmAusSchlange(zustand, aktion.quelle);
-    const eigene = zustand.spieler[spielerIndexVon(zustand, aktion.spielerId)].schlangen;
+    // Ist die gestohlene Karte die letzte ihrer Schlange, gibt es diese danach nicht mehr.
+    const karte = nimmAusSchlange(zustand, gepruefteSchlange(zustand, aktion.quelle.schlangenId), aktion.quelle.karteId);
     const { ziel } = aktion;
-    if (ziel.art === 'neueSchlange') {
-      zustand.schlangenZaehler += 1;
-      eigene.push({ id: schlangenIdFuer(zustand.schlangenZaehler), karten: [karte], fusionen: [] });
-    } else {
-      eigene.find((schlange) => schlange.id === ziel.schlangenId)!.karten.splice(ziel.position, 0, karte);
-    }
+    if (ziel.art === 'neueSchlange') beginneSchlange(zustand, spielerIndexVon(zustand, aktion.spielerId), [karte]);
+    else gepruefteSchlange(zustand, ziel.schlangenId).schlange.karten.splice(ziel.position, 0, karte);
     return zustand;
   },
 };
