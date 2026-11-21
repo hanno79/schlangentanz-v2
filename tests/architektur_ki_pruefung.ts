@@ -26,7 +26,7 @@ import {
   type Verstoss,
 } from './architektur_pruefung'
 import { ausBibliothek, zustandstypen } from './architektur_ki_typen'
-import { aufModulebene, pruefeModulebene } from './architektur_ki_modulebene'
+import { aufModulebene, pruefeModulebene, thisIstKlasse } from './architektur_ki_modulebene'
 import {
   ERLAUBTE_ENGINE_EMPFAENGER,
   GEERBT_VON_OBJECT,
@@ -239,7 +239,10 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
       let wurzelobjekt = ziel
       for (let teile = zugriff(wurzelobjekt); teile; teile = zugriff(wurzelobjekt)) wurzelobjekt = ohneHuellen(teile.objekt)
-      if (wurzelobjekt.kind === ts.SyntaxKind.ThisKeyword) return
+      if (wurzelobjekt.kind === ts.SyntaxKind.ThisKeyword) {
+        if (istStrategie && thisIstKlasse(wurzelobjekt)) melde(ziel, `verändert die Klasse über this: ${ziel.getText()}; alle Instanzen der Strategie teilen sie`)
+        return
+      }
       const symbol = ts.isIdentifier(wurzelobjekt) ? pruefer.getSymbolAtLocation(wurzelobjekt) : undefined
       const ausDieserDatei = symbol !== undefined && !(symbol.flags & ts.SymbolFlags.Alias) &&
         (symbol.declarations ?? []).some((d) => d.getSourceFile() === quelle)
@@ -305,6 +308,24 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
     }
 
+    /**
+     * Ein Objekt der Modulebene, auch eine Funktion oder Klasse, teilen alle Instanzen einer
+     * Strategie. Eine Strategie ruft es auf, erzeugt daraus mit `new`, liest an ihm oder gibt
+     * es einer Funktion der Bibliothek (etwa `[…].map(f)`); als Wert weitergegeben liesse es
+     * sich über einen Alias beschreiben.
+     */
+    const pruefeGeteiltenWert = (knoten: ts.Identifier, symbol: ts.Symbol) => {
+      if (!istFreierWert(knoten) || ausBibliothek(symbol) || !aufModulebene(symbol)) return
+      if (!hatTeilMit(typ(knoten), ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive)) return
+      const aussen = aeusserer(knoten)
+      const eltern = aussen.parent
+      if ((ts.isCallExpression(eltern) || ts.isNewExpression(eltern)) && eltern.expression === aussen) return
+      if ((ts.isPropertyAccessExpression(eltern) || ts.isElementAccessExpression(eltern)) && eltern.expression === aussen) return
+      const signatur = ts.isCallExpression(eltern) ? pruefer.getResolvedSignature(eltern)?.declaration : undefined
+      if (signatur && zuPosix(signatur.getSourceFile().fileName).includes('/node_modules/')) return
+      melde(knoten, `gibt ${knoten.text} von der Modulebene weiter; alle Instanzen der Strategie teilen es`)
+    }
+
     /** Strategien erwähnen den vollen Zustand nicht, auch nicht über einen Typ, der ihn enthält oder nimmt. */
     const pruefeStrategie = (knoten: ts.Node) => {
       if (!ts.isIdentifier(knoten)) return
@@ -321,6 +342,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
         strategieErwaehnt.set(symbol, erwaehnt)
       }
       if (erwaehnt) melde(knoten, `Strategie erwähnt ${VOLLER_ZUSTAND_TYP}: ${knoten.text}`)
+      pruefeGeteiltenWert(knoten, symbol)
     }
 
     /** H1: kein Weg zu einem Prototyp; globale Objekte nur aufrufen oder an ihnen lesen, nie weitergeben. */
