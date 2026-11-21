@@ -1,7 +1,7 @@
 import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
-import { bewerte, eigenePunkte, haltewert, neuerMerker } from './bewertung';
+import { bewerte, eigeneGruppen, eigenePunkte, haltewert, neuerMerker, wertschluessel } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 import { vorauswahl } from './vorauswahl';
 
@@ -71,12 +71,17 @@ function ohneBewertung(): Bewertungen {
   return { suche: 0, vorauswahl: 0, angeboten: 0 };
 }
 
-interface Folge {
+/** Was beim Vergleich zweier Züge zählt: erst die Bewertung, bei Gleichstand die eigenen Punkte, dann die Zahl der Gruppen. */
+interface Ergebnis {
+  wert: number;
+  punkte: number;
+  gruppen: number;
+}
+
+/** Eine durchgerechnete Aktion; `punkte` und `gruppen` sind die eigenen nach ihr (A11). */
+interface Folge extends Ergebnis {
   aktion: SpielAktion;
   stellung: Stellung;
-  wert: number;
-  /** Die eigenen Punkte danach, wie die Wertung sie zählte (A11); entscheiden bei gleicher Bewertung. */
-  punkte: number;
   /** Verletzt die Aktion eine der festen Regeln oben? Dann nur, wenn nichts anderes geht. */
   verworfen: boolean;
 }
@@ -96,6 +101,35 @@ function regenbogenZumGegner(sicht: Sicht, aktion: SpielAktion, aktionen: readon
   if (aktion.typ !== 'RegenbogenschlangeLegen') return false;
   const eigene = new Set(sicht.spieler[sicht.ich].schlangen.map((schlange) => schlange.id));
   return !eigene.has(aktion.schlangenId) && aktionen.some((angeboten) => angeboten.typ === 'RegenbogenschlangeLegen' && eigene.has(angeboten.schlangenId));
+}
+
+/**
+ * Was nach einer ersten Karte am Tisch liegt, ohne Ids: Schlangen aller Spieler, die
+ * eigene Hand (Farben und Namen), ausliegende Gruben und der Zug. Varianten, die
+ * denselben Tisch ergeben (ein Farbendieb, der dieselbe Farbe an benachbarte Stellen
+ * derselben Reihe legt, oder eine von drei gleichen Farbkarten an dasselbe Ende), sind
+ * derselbe Zug und werden nur einmal vertieft
+ * (Prüfprotokoll K2, Iteration 3, Mangel 1).
+ */
+function folgeschluessel(sicht: Sicht): string {
+  const schlangen = sicht.spieler.map((spieler) => wertschluessel(spieler.schlangen)).join('/');
+  const hand = sicht.hand.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)).sort().join(',');
+  const gruben = sicht.ausliegendeGruben.map((grube) => grube.vor).join(',');
+  return `${schlangen}#${hand}#${gruben}#${JSON.stringify(sicht.zug)}`;
+}
+
+/** Die ersten `anzahl` Folgen mit verschiedenem Folgeschlüssel, in der gegebenen Reihenfolge. */
+function verschiedene(folgen: readonly Folge[], anzahl: number): Folge[] {
+  const gesehen = new Set<string>();
+  const auswahl: Folge[] = [];
+  for (const folge of folgen) {
+    const schluessel = folgeschluessel(folge.stellung.sicht);
+    if (gesehen.has(schluessel)) continue;
+    gesehen.add(schluessel);
+    auswahl.push(folge);
+    if (auswahl.length === anzahl) break;
+  }
+  return auswahl;
 }
 
 /** Ob gerade derselbe Zug des Spielers läuft, in dem er noch Karten spielt. */
@@ -140,7 +174,7 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     const fusionSenkt = aktion.typ === 'FusionLegen' && eigenePunkte(sichtNach, merker) < eigenePunkte(vorher, merker);
     const grubeOhneZug = aktion.typ === 'SchlangengrubeSpielen' && wirkungslos;
     const wert = werte(sichtNach) - (wirkungslos ? OHNE_WIRKUNG : 0);
-    return { aktion, stellung: nach, wert, punkte: eigenePunkte(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
+    return { aktion, stellung: nach, wert, punkte: eigenePunkte(sichtNach, merker), gruppen: eigeneGruppen(sichtNach, merker), verworfen: fusionSenkt || grubeOhneZug };
   };
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
@@ -157,13 +191,15 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     return folgen;
   };
 
-  return { wurzel, werte, folge, kandidaten, gezaehlt: () => ({ ...bewertungen }), punkte: (stand: Sicht) => eigenePunkte(stand, merker) };
+  const ergebnis = (stand: Sicht): Ergebnis => ({ wert: werte(stand), punkte: eigenePunkte(stand, merker), gruppen: eigeneGruppen(stand, merker) });
+  return { wurzel, werte, folge, kandidaten, gezaehlt: () => ({ ...bewertungen }), ergebnis };
 }
 
-/** Ob `folge` besser ist als `bisher`: höher bewertet, bei gleicher Bewertung mit mehr eigenen Punkten, sonst nicht. */
-function besser(folge: { wert: number; punkte: number }, bisher: { wert: number; punkte: number }): boolean {
+/** Ob `folge` besser ist als `bisher`: höher bewertet; bei gleicher Bewertung mehr eigene Punkte; bei gleichen Punkten mehr Gruppen (Kriterium 1). */
+function besser(folge: Ergebnis, bisher: Ergebnis): boolean {
   if (Math.abs(folge.wert - bisher.wert) > GLEICH) return folge.wert > bisher.wert;
-  return folge.punkte > bisher.punkte;
+  if (folge.punkte !== bisher.punkte) return folge.punkte > bisher.punkte;
+  return folge.gruppen > bisher.gruppen;
 }
 
 /** Die beste Folge, bei Gleichstand die frühere; verworfene nur, wenn es keine andere gibt. */
@@ -177,18 +213,24 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   const suche = erstelleSuche(sicht, zufall);
   const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL, NACHLESE);
   const vertieft = new Map<Folge, Folge>();
-  const vertiefen = erste
-    .filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht))
-    .sort((a, b) => b.wert - a.wert)
-    .slice(0, ZWEITE_TIEFE);
+  // Vertieft werden die besten drei verschiedenen Züge; gleichwertige Varianten derselben Folge belegen nur einen Platz.
+  const vertiefen = verschiedene(
+    erste.filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht)).sort((a, b) => b.wert - a.wert),
+    ZWEITE_TIEFE,
+  );
   for (const folge of vertiefen) {
     const zweite = beste(suche.kandidaten(folge.stellung, folge.stellung.sicht, folge.stellung.aktionen(), ZWEITE_AUSWAHL));
     if (zweite !== undefined && !zweite.verworfen && besser(zweite, folge)) vertieft.set(folge, zweite);
   }
   // Wert und Punkte eines Plans sind die seiner besten Fortsetzung im selben Zug.
-  const gewaehlt = beste(erste.map((folge) => ({ ...folge, wert: vertieft.get(folge)?.wert ?? folge.wert, punkte: vertieft.get(folge)?.punkte ?? folge.punkte })));
+  const gewaehlt = beste(
+    erste.map((folge) => {
+      const plan = vertieft.get(folge) ?? folge;
+      return { ...folge, wert: plan.wert, punkte: plan.punkte, gruppen: plan.gruppen };
+    }),
+  );
   const beenden = aktionen.find((aktion) => aktion.typ === 'ZugBeenden');
-  if (beenden !== undefined && (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, { wert: suche.werte(sicht), punkte: suche.punkte(sicht) }))) {
+  if (beenden !== undefined && (gewaehlt === undefined || gewaehlt.verworfen || !besser(gewaehlt, suche.ergebnis(sicht)))) {
     return { aktion: beenden, bewertungen: suche.gezaehlt() };
   }
   if (gewaehlt === undefined) throw new Error('Zugsuche: Die Engine bietet weder eine Karte noch „Zug beenden“ an.');

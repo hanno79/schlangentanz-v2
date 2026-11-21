@@ -73,7 +73,7 @@ function wertzeichen(schlange: Schlange, karte: Spielkarte): string {
 }
 
 /** Die Schlangen eines Spielers als Text, ohne Ids: Gleicher Text, gleicher Wert. */
-function wertschluessel(schlangen: readonly Schlange[]): string {
+export function wertschluessel(schlangen: readonly Schlange[]): string {
   return schlangen.map((schlange) => schlange.karten.map((karte) => wertzeichen(schlange, karte)).join(',')).join('|');
 }
 
@@ -103,6 +103,11 @@ export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean, merker:
 export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
   const kette = kettenbonus(sicht.spieler.map((spieler) => schlangenwert(spieler.schlangen, sicht.erweiterung, merker).kette))[sicht.ich];
   return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker) + kette;
+}
+
+/** Wie viele Farbgruppen der Betrachter der Sicht hat (A11). */
+export function eigeneGruppen(sicht: Sicht, merker: Wertungsmerker = neuerMerker()): number {
+  return schlangenwert(sicht.spieler[sicht.ich].schlangen, sicht.erweiterung, merker).gruppen;
 }
 
 /** A10: Hat der Spieler nach dem laufenden Zug noch einen Zug? Solange die Partie läuft, immer; in der Schlussrunde sagt es die Engine. */
