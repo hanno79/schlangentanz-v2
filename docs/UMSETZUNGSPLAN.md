@@ -582,8 +582,9 @@ bis E9.*
   3. Die Engine nennt alle wählbaren Abschnitte; ohne einen ist die Karte nur
      wirkungslos ablegbar (A7.9, Beispiel 2).
   4. In einer gegnerischen Schlange ist sie abwehrbar.
-  5. Die Zahl neu entstandener Dreiergruppen wird für die Aufgabe
-     „Schlangentanz" festgehalten.
+  5. *Verschoben nach X2 (Orchestrator, 21.11.2026):* Die Zahl neu
+     entstandener Dreiergruppen für die Aufgabe „Schlangentanz" hängt an G4
+     (wessen Häutung zählt, eine oder zwei Häutungen) und gehört zu den Aufgaben.
 - **Grenzfälle:** Abschnitt am Schlangenende; Schlange mit genau 3 Farbkarten;
   Abschnitt von 6 abgelehnt; unveränderte Reihenfolge (F13); eine neue Gruppe
   entsteht nur zusammen mit einem Nachbarn ausserhalb des Abschnitts.
@@ -685,6 +686,8 @@ bis E9.*
   4. Eine erfüllte Aufgabe bleibt erfüllt, auch wenn der Joker später anders zählt.
   5. Lila Riese: Reihe aus mindestens 5 violetten Karten (Tests mit 4 und 5).
   6. Farbwechsler: Reihen gleicher Farbe gelten als eine Farbe in der Folge.
+  7. Schlangentanz (aus E9 verschoben): Die Engine hält fest, wie viele neue
+     Dreiergruppen eine Schlangenhäutung bildet, nach der Antwort auf G4.
 
 #### X3 Rahmen für Zusatzaktionen und Entscheidungen
 
