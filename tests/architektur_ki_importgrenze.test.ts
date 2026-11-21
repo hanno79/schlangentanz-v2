@@ -17,6 +17,9 @@ und tests/.
 
 afterAll(raeumeAuf)
 
+/** Der Lauf über das ganze Repo liest jede Datei; im vollen Testlauf unter Last braucht er mehr als die Vorgabe von 5 s. */
+const REPO_LAUF = 30_000
+
 const STRATEGIEN = {
   'src/ki/strategien/strategie.ts': 'export interface Ki { name: string }\nexport type Fabrik = (zufall: () => number) => Ki\n',
   'src/ki/strategien/zufallsKi.ts': "import type { Ki } from './strategie'\nexport function erstelleZufallsKi(_zufall: () => number): Ki { return { name: 'z' } }\n",
@@ -96,7 +99,7 @@ describe('P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Regis
     )
     expect(dateien.filter((pfad) => pfad.startsWith('src/ki/strategien/') || istAusgenommen(pfad)), 'U5: Strategien und Tests gehören nicht dazu').toEqual([])
     expect(beschreibe(pruefeImportgrenze(WURZEL)), 'U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien').toBe('')
-  })
+  }, REPO_LAUF)
 
   it('P0.3d: die Ausnahme gilt genau für *.test.ts(x) und tests/', () => {
     const ausgenommen = ['src/a.test.ts', 'src/ui/b.test.tsx', 'tests/c.ts', 'tests/layout/d.spec.ts']
@@ -191,11 +194,23 @@ describe('P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4)'
     'src/entwicklung/verdeckt.ts': "export { k } from '../../tests/verdeckt'\n",
     'scripts/__snapshots__/probe.mjs': importiere('../../src/ki/strategien/zufallsKi.ts'),
     'src/dist/probe.ts': importiere('../ki/strategien/zufallsKi'),
+    // Codex, zweite Runde: maskierter Schlüssel, Paketeinstieg hinter einer .d.ts, HTML-Attribute.
+    'src/entwicklung/globmaskiert.ts': "export const m = import.meta.glob('./*.ts', { 'b\\u0061se': '/src/ki/strategien', eager: true })\n",
+    'tests/pkg/package.json': JSON.stringify({ types: './index.d.ts', main: './runtime.mjs' }),
+    'tests/pkg/index.d.ts': 'export declare function erstelleZufallsKi(): unknown\n',
+    'tests/pkg/runtime.mjs': "export { erstelleZufallsKi } from '../../src/ki/strategien/zufallsKi.ts'\n",
+    'src/entwicklung/paket.ts': "export { erstelleZufallsKi } from '../../tests/pkg'\n",
+    'src/entwicklung/entitaet.html': '<script type="module" src="&#47;src/ki/strategien/zufallsKi.ts"></script>\n',
+    'src/entwicklung/benannt.html': '<script type="module" src="&sol;src/ki/strategien/zufallsKi.ts"></script>\n',
+    'src/entwicklung/attribut.html': '<script data-label=">" type="module" src="/src/ki/strategien/zufallsKi.ts"></script>\n',
+    'src/entwicklung/vorladen.html': '<link rel="modulepreload" href="/src/ki/strategien/zufallsKi.ts">\n',
     // Fehlalarm aus dem Review: nach den Ausschlüssen bleiben nur index.ts und strategie.ts.
     'src/entwicklung/globohne.ts': "export const m = import.meta.glob(['../ki/strategien/*.ts', '!../ki/strategien/{zufallsKi,hilfe}.ts'])\n",
   })
   schreibe(umwege, {
     'scripts/dateiurl.mjs': importiere(pathToFileURL(join(umwege, 'src/ki/strategien/zufallsKi.ts')).href),
+    // Vites Entwicklungsserver lädt unter /@fs/ jede Datei über ihren absoluten Pfad.
+    'src/entwicklung/fs.html': `<script type="module" src="/@fs/${join(umwege, 'src/ki/strategien/zufallsKi.ts').split('\\').join('/').replace(/^\//, '')}"></script>\n`,
   })
   const gefunden = pruefeImportgrenze(umwege)
   const gemeldet = new Set(gefunden.map(({ datei }) => datei))
@@ -216,6 +231,13 @@ describe('P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4)'
     ['Import über eine file://-URL', 'scripts/dateiurl.mjs'],
     ['Datei unter __snapshots__', 'scripts/__snapshots__/probe.mjs'],
     ['Datei unter einem Ordner dist', 'src/dist/probe.ts'],
+    ['import.meta.glob mit maskiertem Schlüssel base', 'src/entwicklung/globmaskiert.ts'],
+    ['Paket unter tests/ mit main neben einer .d.ts', 'src/entwicklung/paket.ts'],
+    ['script src mit Zeichenreferenz &#47;', 'src/entwicklung/entitaet.html'],
+    ['script src mit benannter Zeichenreferenz', 'src/entwicklung/benannt.html'],
+    ['script mit > in einem anderen Attribut', 'src/entwicklung/attribut.html'],
+    ['link rel=modulepreload', 'src/entwicklung/vorladen.html'],
+    ['script src über /@fs/', 'src/entwicklung/fs.html'],
   ]
 
   it.each(faelle)('P0.3d: Umweg „%s“ wird gemeldet', (name, datei) => {
