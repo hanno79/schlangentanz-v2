@@ -53,6 +53,13 @@ async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void>
   )
   await oeffne(page, '/spiel')
   await expect(page.getByRole('region', { name: 'Deine Hand' }), '/spiel zeigt keinen Tisch').toBeVisible()
+  // Seit O5 öffnet sich beim Abwerfen (zehn Handkarten) der Dialog „Zu viele Handkarten“.
+  // Gemessen wird der Tisch, wie er nach „Zum Tisch“ dahinter steht.
+  const abwerfen = page.getByRole('dialog', { name: 'Zu viele Handkarten' })
+  if (zustand.zug.abschnitt === 'Abwerfen') {
+    await abwerfen.getByRole('button', { name: 'Zum Tisch' }).click()
+    await expect(abwerfen).toBeHidden()
+  }
 }
 
 /** Tippen mit Touch-Geräten, sonst klicken. */
@@ -188,7 +195,8 @@ test.describe('O4: Grossansicht einer offenen Aufgabe', () => {
     await tippe(aufgabe)
     const lupe = page.getByRole('dialog')
     await expect(lupe).toBeVisible()
-    const karte = await kasten(lupe.getByRole('img'))
+    // Seit O5 die Grossansicht mit Kartentext (O9): das erste Bild ist die Karte, darunter folgen die Bilder ihrer Beispiele.
+    const karte = await kasten(lupe.getByRole('img').first())
     const fenster = page.viewportSize()!
     expect(karte.unten, 'Karte in der Grossansicht unten im Bild').toBeLessThanOrEqual(fenster.height)
     expect(karte.breite, 'Karte in der Grossansicht').toBeGreaterThanOrEqual(Math.min(280, (fenster.height - 140) * 0.6))

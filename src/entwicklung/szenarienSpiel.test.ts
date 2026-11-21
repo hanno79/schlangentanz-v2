@@ -30,4 +30,14 @@ describe('O3: Szenarien für den Spieltisch', () => {
     }
     expect(zustand.partiephase).toBe('Beendet')
   })
+
+  it('O5 K8/A5: zu-viele-handkarten: dein Zug ist beendet, du hältst 7 Karten und wählst 2 zum Ablegen', () => {
+    const zustand = erzeugeSzenario('zu-viele-handkarten')
+    expect(ermittleEntscheider(zustand)).toBe(0)
+    expect(zustand.zug.abschnitt).toBe('Abwerfen')
+    expect(zustand.spieler[0].hand).toHaveLength(7)
+    const aktionen = ermittleAktionen(zustand)
+    expect(aktionen).toHaveLength(21)
+    expect(aktionen.every((aktion) => aktion.typ === 'UeberhandAbwerfen' && aktion.karteIds.length === 2)).toBe(true)
+  })
 })

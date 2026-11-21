@@ -11,8 +11,8 @@ import { KI_PAUSE, useSpiel } from './useSpiel'
 /**
  * Die Seite unter `/spiel`. Ist eine Partie gespeichert, steht hier der
  * Spieltisch, und die Partie läuft (O3): Die KI-Gegner spielen, bis du
- * entscheidest. Bedienen lässt sich der Tisch erst mit O5 und O6. Ohne Partie
- * sagt die Seite das und führt in die Lobby.
+ * entscheidest. Deine Karten spielst du am Tisch (O5); die Abwehr folgt mit O6.
+ * Ohne Partie sagt die Seite das und führt in die Lobby.
  *
  * `pause` setzen nur die Testhooks (`?tempo=sofort`); sonst kommt sie aus
  * „weniger Bewegung“.
@@ -38,8 +38,8 @@ export default function Spielseite({ pause }: { pause?: number }) {
 }
 
 function Partie({ start, pause }: { start: Spielzustand; pause: number }) {
-  const { ansicht } = useSpiel(start, { pause })
-  return <Tisch ansicht={ansicht} />
+  const { ansicht, fuehreAus, ablehnung } = useSpiel(start, { pause })
+  return <Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={ablehnung} />
 }
 
 const WENIGER_BEWEGUNG = '(prefers-reduced-motion: reduce)'

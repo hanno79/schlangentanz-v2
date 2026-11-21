@@ -8,14 +8,16 @@ nach ihr geladen.
    Handygrösse, weil die Breitenstufen oben erst ab 501 px Höhe gelten. */
 @media (orientation: landscape) and (max-height: 500px) {
   .spieltisch {
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
-    /* Dein Platz reicht über die ganze Höhe, die Kopfleiste steht nur über der Tischfläche. */
-    grid-template-areas: 'kopf unten' 'flaeche unten';
+    /* Dein Platz reicht über die ganze Höhe, Kopfleiste und Zugleiste stehen links über
+       und unter der Tischfläche: Deinen Schlangen nähme die Leiste sonst die Höhe. */
+    grid-template-areas: 'kopf unten' 'flaeche unten' 'zug unten';
   }
 
   .st-unten {
     grid-template-rows: minmax(0, 1fr) auto;
+    align-content: stretch;
     border-top: 0;
     border-left: 1px solid var(--farbe-linie);
     box-shadow: var(--schatten-leiste-seite);

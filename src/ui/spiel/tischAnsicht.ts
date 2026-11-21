@@ -1,4 +1,4 @@
-import { ermittleAktionen, ermittleEntscheider, werteSchlangen } from '../../engine'
+import { ermittleAktionen, ermittleEntscheider, werteSchlangen, zugBeendenGesperrt } from '../../engine'
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -103,6 +103,8 @@ export interface TischAnsicht {
   status: StatusAnsicht
   /** Was du jetzt tun darfst, wie die Engine es aufzählt (U3); leer, solange ein Gegner entscheidet oder die Partie beendet ist. */
   aktionen: SpielAktion[]
+  /** Warum du deinen Zug jetzt nicht beenden darfst, mit dem Grund der Engine (O5); `null`, wenn du darfst oder nicht entscheidest. */
+  zugBeendenGesperrt: string | null
 }
 
 function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]): SchlangeAnsicht {
@@ -185,5 +187,6 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
           : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider) },
     },
     aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],
+    zugBeendenGesperrt: entscheider === mensch ? zugBeendenGesperrt(zustand) : null,
   }
 }
