@@ -16,7 +16,7 @@ Tests, die nie rot werden, belegen nichts. Hier wird die Regel in `src/engine/ka
 
 ## Bestanden, wenn
 
-Nach jeder Verfälschung endet der Lauf über `schlangenhaeutung.test.ts`, `schlangenhaeutung_abwehr.test.ts` und `szenarienHaeutung.test.ts` mit Exit 1. Erwartete Zahl roter Tests von 35: GP1 9, GP2 9, GP3 2, GP4 3, GP5 9, GP6 12. Nach dem Zurücksetzen ist `git status` leer.
+Nach jeder Verfälschung endet der Lauf über `A7.9_schlangenhaeutung.test.ts`, `A7.9_schlangenhaeutung_abwehr.test.ts` und `szenarienHaeutung.test.ts` mit Exit 1. Erwartete Zahl roter Tests von 35: GP1 9, GP2 9, GP3 2, GP4 3, GP5 9, GP6 12. Nach dem Zurücksetzen ist `git status` leer.
 
 ## Fehlgeschlagen, wenn
 
@@ -45,7 +45,7 @@ Eine Verfälschung lässt alle 35 Tests grün, oder die Datei ist nach dem Zurü
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
 | 1 | `src/engine/karten/schlangenhaeutung.ts` | Zeile „alt“ von GP1 durch „neu“ ersetzen | siehe Testdaten | genau eine Stelle geändert |
-| 2 | Konsole im Repo | Tests ausführen | `npx vitest run src/engine/__tests__/schlangenhaeutung.test.ts src/engine/__tests__/schlangenhaeutung_abwehr.test.ts src/entwicklung/szenarienHaeutung.test.ts` | Exit 1, Zahl der roten Tests wie unter „Bestanden, wenn“ |
+| 2 | Konsole im Repo | Tests ausführen | `npx vitest run src/engine/__tests__/regeln/A7.9_schlangenhaeutung.test.ts src/engine/__tests__/regeln/A7.9_schlangenhaeutung_abwehr.test.ts src/entwicklung/szenarienHaeutung.test.ts` | Exit 1, Zahl der roten Tests wie unter „Bestanden, wenn“ |
 | 3 | Konsole im Repo | zurücksetzen | `git checkout -- src/engine/karten/schlangenhaeutung.ts` | `git status` leer |
 | 4 | wie 1 bis 3 | für GP2 bis GP6 wiederholen | siehe Testdaten | je Exit 1 und danach `git status` leer |
 

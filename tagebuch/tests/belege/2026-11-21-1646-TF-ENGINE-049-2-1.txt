@@ -1,0 +1,206 @@
+E11-Prüfer, Kriterium 6: ganze Partie zu zweit am Entwicklertisch, mit echten Mausklicks im eingebauten Browser
+Adresse: http://localhost:4174/dev?seed=42&spieler=2&erweiterung=0 (Testhook-Build von b4d8509, vite preview Port 4174)
+Beide Spieler von Hand gezogen (Knöpfe der Aktionsliste, kein "KI-Schritt"). 186 Schritte. Konsolenfehler: keine.
+Verlauf, wie ihn der Entwicklertisch am Ende anzeigt (F = FarbkarteLegen):
+
+1 F (braun-12) -> neue Schlange
+2 RegenbogenschlangeLegen: regenbogenschlange-02 -> schlange-1 Stelle 1
+3 ZugBeenden
+4 FarbendiebSpielen: farbendieb-03 -> schlange-1 (braun-12) neue Schlange
+5 Reagieren: durchlassen
+6 F (rot-11) -> schlange-2 ende
+7 ZugBeenden
+8 F (gruen-06) -> schlange-1 ende
+9 ZugBeenden
+10 F (gelb-07) -> neue Schlange
+11 BlockadeLegen: schlangenblockade-03 -> schlange-1 Stelle 1
+12 Reagieren: durchlassen
+13 ZugBeenden
+14 F (blau-12) -> neue Schlange
+15 ZugBeenden
+16 F (gelb-15) -> schlange-3 ende
+17 ZugBeenden
+18 F (blau-02) -> schlange-4 ende
+19 SchlangenfrassSpielen: schlangenfrass-02 c) schlange-3 (gelb-07), schlange-3 (gelb-15)
+20 Reagieren: abwehren mit Farbenschutz (farbenschutz-04)
+21 ZugBeenden
+22 F (gelb-04) -> schlange-3 ende
+23 SchlangengrubeSpielen: schlangengrube-01 -> Spieler 1
+24 Reagieren: durchlassen
+25 ZugBeenden  (Ereignis: Spieler 1 setzt aus; Grube auf Ablagestapel KI-Gegner 1)
+26 F (gelb-10) -> schlange-3 ende
+27 FusionLegen: farbenfusion-02 -> schlange-4 (blau-12, blau-02)
+28 Reagieren: durchlassen
+29 ZugBeenden
+30 F (blau-15) -> schlange-4 ende
+31 ZugBeenden
+32 F (braun-05) -> schlange-2 anfang
+33 ZugBeenden
+34 F (gruen-08) -> schlange-1 ende
+35 ZugBeenden
+36 F (blau-08) -> schlange-2 ende
+37 ZugBeenden
+38 F (rot-06) -> schlange-2 ende
+39 ZugBeenden
+40 F (braun-09) -> schlange-2 anfang
+41 ZugBeenden
+42 F (gelb-11) -> schlange-1 anfang
+43 ZugBeenden
+44 F (gelb-06) -> schlange-3 ende
+45 ZugBeenden
+46 F (gruen-04) -> schlange-1 ende
+47 ZugBeenden
+48 F (violett-07) -> schlange-2 ende
+49 ZugBeenden
+50 F (gelb-01) -> schlange-1 anfang
+51 ZugBeenden
+52 FarbendiebSpielen: farbendieb-01 -> schlange-1 (gruen-08) schlange-2 Stelle 7
+53 Reagieren: durchlassen
+54 F (blau-09) -> schlange-2 anfang
+55 ZugBeenden
+56 F (gelb-05) -> schlange-1 anfang
+57 ZugBeenden
+58 F (blau-10) -> schlange-2 anfang
+59 ZugBeenden
+60 F (violett-01) -> schlange-4 anfang
+61 ZugBeenden
+62 F (blau-11) -> schlange-2 anfang
+63 ZugBeenden
+64 F (violett-04) -> schlange-4 anfang
+65 VerdopplerSpielen: verdoppler-01
+66 ZugBeenden  (zweiter Zug, Teilzug 2)
+67 F (violett-12) -> schlange-4 anfang
+68 ZugBeenden
+69 FarbendiebSpielen: farbendieb-02 -> schlange-4 (blau-15) schlange-2 Stelle 0
+70 Reagieren: durchlassen
+71 F (braun-10) -> schlange-3 anfang
+72 ZugBeenden
+73 F (violett-09) -> schlange-4 ende
+74 ZugBeenden
+75 SchlangenfrassSpielen: schlangenfrass-04 c) schlange-1 (gruen-06), schlange-4 (farbenfusion-02)
+76 Reagieren: durchlassen  (Fusion entfernt, blau-12/blau-02 bleiben an Stelle 3/4)
+77 F (braun-06) -> schlange-3 anfang
+78 ZugBeenden
+79 F (rot-14) -> schlange-3 anfang
+80 ZugBeenden
+81 RegenbogenschlangeLegen: regenbogenschlange-01 -> schlange-3 Stelle 3
+82 F (rot-07) -> schlange-3 anfang
+83 ZugBeenden
+84 F (violett-05) -> schlange-4 ende
+85 ZugBeenden
+86 FarbendiebSpielen: farbendieb-04 -> schlange-1 (gelb-01) schlange-3 Stelle 10
+87 Reagieren: durchlassen
+88 F (braun-01) -> schlange-3 anfang
+89 ZugBeenden
+90 F (braun-02) -> schlange-1 ende
+91 VerdopplerSpielen: verdoppler-02
+92 ZugBeenden  (zweiter Zug)
+93 F (braun-11) -> schlange-1 ende
+94 SchlangengrubeSpielen: schlangengrube-03 -> KI-Gegner 1
+95 Reagieren: durchlassen
+96 ZugBeenden  (Ereignis: KI-Gegner 1 setzt aus; Grube auf Ablagestapel Spieler 1)
+97 F (braun-03) -> schlange-1 ende
+98 ZugBeenden
+99 F (gruen-01) -> schlange-2 ende
+100 SonderkarteWirkungslosAblegen: farbenschutz-02
+101 ZugBeenden
+102 F (gelb-02) -> schlange-1 anfang
+103 ZugBeenden
+104 F (gruen-07) -> schlange-2 ende
+105 VerdopplerSpielen: verdoppler-03
+106 ZugBeenden  (zweiter Zug)
+107 F (gruen-09) -> schlange-2 ende
+108 FusionLegen: farbenfusion-03 -> schlange-4 (violett-12, violett-04)
+109 Reagieren: durchlassen
+110 ZugBeenden
+111 F (rot-12) -> schlange-1 anfang
+112 ZugBeenden
+113 SchlangenfrassSpielen: schlangenfrass-03 c) schlange-1 (braun-11), schlange-1 (braun-03)
+114 Reagieren: durchlassen
+115 F (gelb-14) -> schlange-3 ende
+116 ZugBeenden
+117 F (rot-03) -> schlange-1 anfang
+118 ZugBeenden
+119 F (blau-04) -> schlange-2 anfang
+120 SonderkarteWirkungslosAblegen: farbenschutz-03
+121 ZugBeenden
+122 F (rot-05) -> schlange-1 anfang
+123 ZugBeenden
+124 F (braun-04) -> schlange-3 anfang
+125 SonderkarteWirkungslosAblegen: farbenschutz-01
+126 ZugBeenden
+127 F (blau-07) -> schlange-4 ende
+128 ZugBeenden
+129 F (blau-14) -> schlange-2 anfang
+130 VerdopplerSpielen: verdoppler-04
+131 ZugBeenden  (zweiter Zug)
+132 F (gelb-13) -> schlange-3 ende
+133 BlockadeLegen: schlangenblockade-02 -> schlange-1 Stelle 1
+134 Reagieren: durchlassen
+135 ZugBeenden
+136 F (blau-13) -> schlange-4 ende
+137 RegenbogenschlangeLegen: regenbogenschlange-03 -> schlange-4 Stelle 1
+138 ZugBeenden
+139 F (blau-06) -> schlange-2 anfang
+140 ZugBeenden
+141 F (blau-03) -> schlange-4 ende
+142 ZugBeenden
+143 F (rot-02) -> schlange-2 ende
+144 ZugBeenden
+145 F (blau-05) -> schlange-4 ende
+146 ZugBeenden
+147 F (rot-09) -> schlange-2 ende
+148 ZugBeenden
+149 F (gelb-09) -> schlange-1 ende
+150 ZugBeenden
+151 F (rot-01) -> schlange-2 ende
+152 ZugBeenden
+153 F (gelb-03) -> schlange-1 ende
+154 ZugBeenden
+155 F (blau-01) -> schlange-2 anfang
+156 FusionLegen: farbenfusion-01 -> schlange-1 (gelb-09, gelb-03)
+157 Reagieren: durchlassen
+158 ZugBeenden
+159 F (gelb-08) -> schlange-1 ende
+160 SchlangengrubeSpielen: schlangengrube-02 -> KI-Gegner 1
+161 Reagieren: durchlassen
+162 ZugBeenden  (Ereignis: KI-Gegner 1 setzt aus)
+163 F (gelb-12) -> schlange-1 ende
+164 RegenbogenschlangeLegen: regenbogenschlange-04 -> schlange-1 Stelle 2
+165 ZugBeenden
+166 F (rot-15) -> schlange-2 ende
+167 ZugBeenden
+168 F (violett-11) -> schlange-4 anfang
+169 ZugBeenden
+170 SchlangenfrassSpielen: schlangenfrass-01 c) schlange-4 (violett-11), schlange-4 (regenbogenschlange-03)
+171 Reagieren: durchlassen
+172 F (violett-08) -> schlange-3 anfang
+173 ZugBeenden
+174 F (violett-02) -> schlange-4 anfang
+175 ZugBeenden
+176 F (violett-06) -> schlange-3 anfang
+177 FusionLegen: farbenfusion-04 -> schlange-3 (gelb-14, gelb-13)
+178 ZugBeenden
+179 F (rot-08) -> schlange-1 anfang
+180 ZugBeenden
+181 F (rot-13) -> schlange-2 ende
+182 BlockadeLegen: schlangenblockade-01 -> schlange-4 Stelle 1
+183 Reagieren: durchlassen
+184 ZugBeenden  (Ereignisse: KI-Gegner 1 zieht 1; SchlussrundeBegonnen, ausgelöst von KI-Gegner 1; ZugBegonnen Spieler 1)
+185 F (rot-10) -> schlange-1 anfang
+186 ZugBeenden  (Ereignis: PartieBeendet; kein Nachziehen)
+
+Endstand:
+Spieler 1, schlange-1: Rot Rot Rot Blockade Rb(04) Rot Rot Gelb Gelb Gelb Rb(02) Blockade Grün Braun Fusion[Gelb+Gelb] Gelb Gelb
+Spieler 1, schlange-4: Violett Blockade Fusion[Violett+Violett] Violett Blau Blau Violett Violett Blau Blau Blau Blau
+KI-Gegner 1, schlange-2: Blau x8, Braun x3, Rot, Blau, Rot, Violett, Grün x4, Rot x5
+KI-Gegner 1, schlange-3: Violett Violett Braun Braun Rot Rot Braun Braun Rb(01) Gelb x6 Fusion[Gelb+Gelb]
+
+Endwertung von Hand (A11, D30, D24):
+Spieler 1: schlange-1 Rot 3 (Stellen 0-2) = 3; Rb(04)+Rot+Rot als Rot = 0+1+1 = 2; Gelb Gelb Gelb + Rb(02) als Gelb = 3; Fusion als Gelb + Gelb + Gelb = 2+1+1 = 4 -> 12.
+           schlange-4: Blau x4 am Ende = 4; Fusion zwischen Blockade und Violett: nur 2 Karten, keine Gruppe -> 4.
+           Gruppen 16; längste reine Kette 4 (Blau); Bonus 0 (KI hat 8). Summe 16.
+KI-Gegner 1: schlange-2 Blau 8 + Braun 3x2=6 + Grün 4x3=12 + Rot 5 = 31.
+           schlange-3: Braun Braun Rb(01) als Braun = 2+2+0 = 4; Gelb x6 + Fusion als Gelb = 6+2 = 8 -> 12.
+           Gruppen 43; längste Kette Blau 8 -> Bonus 5. Summe 48.
+Anzeige: Spieler 1 16 (Kette 4, Bonus 0), KI-Gegner 1 48 (Kette 8, Bonus 5), "Gewonnen: KI-Gegner 1 (48)". Übereinstimmung.

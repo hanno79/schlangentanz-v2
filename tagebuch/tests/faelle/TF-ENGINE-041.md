@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
-skript: src/engine/__tests__/legen_regenbogenschlange.test.ts
+skript: src/engine/__tests__/regeln/A7.3_regenbogenschlange.test.ts
 aenderung: task/E5-legen (PR #66)
 ---
 
@@ -51,8 +51,8 @@ Szenario `regenbogen` (Saat 52, drei Spieler). Karte regenbogenschlange-01, Farb
 
 ## Technische Prüfung
 
-`npx vitest run src/engine/__tests__/legen_regenbogenschlange.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
+`npx vitest run src/engine/__tests__/regeln/A7.3_regenbogenschlange.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
 
 ## Nicht abgedeckte Grenzfälle
 
-Ohne Schlange am Tisch nur wirkungslos ablegen und drei Joker nebeneinander stehen als Tests in `legen_regenbogenschlange.test.ts`. Ungültige Stellen (-1, 0,5, Länge+1) und vier Spieler stehen in TF-ENGINE-043. Wie sie in der Wertung zählt, gehört zu E10.
+Ohne Schlange am Tisch nur wirkungslos ablegen und drei Joker nebeneinander stehen als Tests in `A7.3_regenbogenschlange.test.ts`. Ungültige Stellen (-1, 0,5, Länge+1) und vier Spieler stehen in TF-ENGINE-043. Wie sie in der Wertung zählt, gehört zu E10.

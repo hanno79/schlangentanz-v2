@@ -1,0 +1,136 @@
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../../index'
+import type { FusionLegenAktion, Spielzustand } from '../../index'
+import { erstellePartie } from '../../state'
+import type { Schlangenglied } from '../../testing/szenario'
+import { erzeugeZufall } from '../../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from '../nachrechnen'
+import { gruppen, jokerfarben } from '../wertung_hilfe'
+import { aktionen, folge, FUENF, fuehreAus, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from '../zugablauf_hilfen'
+
+/*
+E7, Kriterium 2 über das echte Spielen: Eine gespielte Farbenfusion zählt als
+eine Karte beliebiger Farbe, belegt einen Platz in der Gruppe und bringt die
+Punkte beider Karten darunter (A7.7, A11, D30). Die Wertung selbst prüfen
+schon `A11_farbgruppen.test.ts` und `A11_joker_kombinatorik.test.ts`
+an Schlangen aus dem Baukasten; hier entsteht jede Fusion durch eine
+aufgezählte Aktion. Dazu Zufallspartien, in denen jede angebotene Fusion
+gespielt wird, mit dem gemeinsamen Nachrechentest (`nachrechnen.ts`, E2, E4b):
+Aus der alten Lage und den Ereignissen lässt sich ablesen, welche zwei Karten
+unter der Fusion liegen, ohne zwei Zustände zu vergleichen.
+*/
+
+/** Spieler 1 hält eine Farbenfusion, Spieler 2 hält `gegner`; jeder hat die genannte Schlange, sonst keine. */
+function tisch(glieder: Schlangenglied[] | undefined, gegnerSchlange?: Schlangenglied[], gegner = FUENF): Spielzustand {
+  const bau = tischMitHaenden([['Farbenfusion', 'Blau', 'Rot', 'Gelb', 'Grün'], gegner])
+  if (glieder !== undefined) bau.schlange(0, glieder)
+  if (gegnerSchlange !== undefined) bau.schlange(1, gegnerSchlange)
+  return bau.zustand()
+}
+
+/** Spielt die aufgezählte Fusion auf die Karten an den Stellen `links` und `links + 1` der ersten Schlange von `besitzer`; beim Gegner lässt er durch oder wehrt ab. */
+function fusioniere(zustand: Spielzustand, besitzer: number, links: number, abwehren = false): Spielzustand {
+  const schlange = zustand.spieler[besitzer].schlangen[0]
+  const erwartet = [schlange.karten[links].id, schlange.karten[links + 1].id].join()
+  const aktion = (aktionen(zustand, 'FusionLegen') as FusionLegenAktion[]).find((eintrag) => eintrag.schlangenId === schlange.id && eintrag.kartenIds.join() === erwartet)
+  expect(aktion, `FusionLegen auf ${erwartet} ist nicht aufgezählt`).toBeDefined()
+  if (besitzer === 0) return fuehreAus(zustand, aktion!).zustand
+  return folge(zustand, () => aktion!, (jetzt) => reaktion(jetzt, abwehren)).zustand
+}
+
+function wertung(zustand: Spielzustand, spieler = 0) {
+  return berechneEndwertung(zustand).spieler[spieler]
+}
+
+describe('A7.7/A11: die gespielte Fusion in der Wertung (Kriterium 2)', () => {
+  it('A7.7 Beispiel 1: Blau-Blau-Gelb-Gelb, die Fusion auf die beiden gelben gilt als Karte beliebiger Farbe, hier Blau', () => {
+    const vorher = tisch(['Blau', 'Blau', 'Gelb', 'Gelb'])
+    expect(wertung(vorher).gruppenPunkte).toBe(0)
+    const nachher = wertung(fusioniere(vorher, 0, 2))
+    expect(jokerfarben(nachher)).toEqual(['Blau'])
+    expect(gruppen(nachher)).toEqual(['Blau×3=4'])
+  })
+
+  it('A7.7 Beispiel 2: Blau-Blau-Gelb-Gelb-Rot-Rot, nach der Fusion auf die gelben eine Dreiergruppe mit 4 Punkten', () => {
+    const nachher = wertung(fusioniere(tisch(['Blau', 'Blau', 'Gelb', 'Gelb', 'Rot', 'Rot']), 0, 2))
+    expect(nachher.gruppenPunkte).toBe(4)
+    expect(nachher.schlangen[0].gruppen).toHaveLength(1)
+  })
+
+  it('A11 Beispiel 2: Fusion auf das dritte und vierte Blau vor Violett-Violett ergibt 6 Punkte, die Fusion zählt als Violett', () => {
+    const vorher = tisch(['Blau', 'Blau', 'Blau', 'Blau', 'Violett', 'Violett'])
+    expect(gruppen(wertung(vorher))).toEqual(['Blau×4=4'])
+    const nachher = wertung(fusioniere(vorher, 0, 2))
+    expect(jokerfarben(nachher)).toEqual(['Violett'])
+    expect(gruppen(nachher), 'A11: die fusionierten blauen Karten zählen nicht mehr als blaue Gruppe').toEqual(['Violett×3=6'])
+  })
+
+  it('D30: die Fusion bringt die Summe der beiden Karten darunter, nicht den Wert einer Karte der Gruppenfarbe', () => {
+    const nachher = wertung(fusioniere(tisch(['Violett', 'Violett', 'Grün', 'Grün']), 0, 2))
+    expect(gruppen(nachher)).toEqual(['Violett×3=10'])
+  })
+
+  it('D30: eine Fusion über zwei roten Karten allein ist keine Dreiergruppe; sie braucht zwei weitere', () => {
+    const vorher = tisch(['Rot', 'Rot', 'Rot', 'Rot'])
+    expect(wertung(vorher).gruppenPunkte).toBe(4)
+    const nachher = fusioniere(vorher, 0, 0)
+    expect(gruppen(wertung(nachher))).toEqual(['Rot×3=4'])
+    expect(wertung(fusioniere(tisch(['Grün', 'Grün']), 0, 0)).gruppenPunkte).toBe(0)
+  })
+
+  it('A11: eine Fusion unterbricht die längste Farbkette, die Punkte der Gruppe bleiben', () => {
+    const nachher = wertung(fusioniere(tisch(['Gelb', 'Gelb', 'Gelb', 'Gelb', 'Gelb']), 0, 1))
+    expect(nachher.kette?.laenge).toBe(0)
+    expect(nachher.gruppenPunkte).toBe(5)
+  })
+})
+
+describe('E7 Grenzfall: die Fusion zerstört eine gegnerische Dreiergruppe', () => {
+  it('D9/D30: auf zwei Karten einer gegnerischen Dreiergruppe gelegt, bringt die Gruppe dem Gegner nichts mehr', () => {
+    const vorher = tisch(undefined, ['Rot', 'Rot', 'Rot'])
+    expect(wertung(vorher, 1).gruppenPunkte).toBe(3)
+    const nachher = fusioniere(vorher, 1, 0)
+    expect(wertung(nachher, 1).gruppenPunkte).toBe(0)
+    expect(wertung(nachher, 1).kette?.laenge).toBe(0)
+  })
+
+  it('A7.2: wehrt der Gegner ab, behält er seine Dreiergruppe', () => {
+    const nachher = fusioniere(tisch(undefined, ['Rot', 'Rot', 'Rot'], MIT_SCHUTZ), 1, 0, true)
+    expect(wertung(nachher, 1).gruppenPunkte).toBe(3)
+  })
+})
+
+describe('E2-Muster: die Fusion lässt sich aus den Ereignissen nachrechnen', () => {
+  it('A7.7/D9/A6: in Zufallspartien mit bevorzugter Fusion stimmt die nachgerechnete Lage mit dem Zustand überein, keine Handkarte wird genannt', () => {
+    const anzahl = { eigen: 0, beimGegner: 0, abgewehrt: 0 }
+    for (const saat of [41, 42, 43, 44, 45, 46]) {
+      const wahl = erzeugeZufall(saat)
+      let zustand = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+      let lage = lageVon(zustand)
+      for (let schritt = 0; zustand.partiephase !== 'Beendet'; schritt += 1) {
+        if (schritt > 2000) throw new Error(`Saat ${saat}: Die Partie endet nicht nach 2000 Schritten.`)
+        const angeboten = ermittleAktionen(zustand)
+        const fusionen = angeboten.filter((aktion) => aktion.typ === 'FusionLegen')
+        const auswahl = fusionen.length > 0 ? fusionen : angeboten
+        const aktion = auswahl[Math.floor(wahl() * auswahl.length)]
+        const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+        const nachricht = `Saat ${saat}, Schritt ${schritt}: ${JSON.stringify(aktion)}`
+        const neueLage = lageVon(neu)
+        expect(spieleNach(lage, ereignisse), nachricht).toEqual(neueLage)
+        expect(verrateneHandkarten(neu, ereignisse), `${nachricht}: B2, ein Ereignis nennt eine Handkarte`).toEqual([])
+        expect(verletzteInvarianten(neu), nachricht).toEqual([])
+        if (aktion.typ === 'FusionLegen') {
+          // A6: in die eigene Schlange wirkt sie sofort, beim Mitspieler wird sie angesagt.
+          if (ereignisse.some((ereignis) => ereignis.typ === 'KarteAngesagt')) anzahl.beimGegner += 1
+          else anzahl.eigen += 1
+        }
+        anzahl.abgewehrt += ereignisse.filter((ereignis) => ereignis.typ === 'Abgewehrt').length
+        zustand = neu
+        lage = neueLage
+      }
+    }
+    expect(anzahl.eigen, 'Fusionen in eigene Schlangen').toBeGreaterThanOrEqual(5)
+    expect(anzahl.beimGegner, 'D9: Fusionen in gegnerische Schlangen').toBeGreaterThanOrEqual(5)
+    expect(anzahl.abgewehrt, 'D10: mindestens eine Abwehr').toBeGreaterThan(0)
+  })
+})

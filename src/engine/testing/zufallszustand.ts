@@ -79,7 +79,8 @@ export function zufallszustand(zufall: () => number): Spielzustand {
   const verdoppler = waehle(bau, wuerfel, 1, istSonderkarte('Verdoppler'))[0];
   if (phase !== 'Beendet' && ja(0.3) && verdoppler !== undefined) {
     const angreifer = bis(spielerzahl);
-    const ausstehend = ja(0.5) ? [(angreifer + 1) % spielerzahl] : [];
+    // A6: Eine schwebende Karte hat immer mindestens einen, der noch entscheidet.
+    const ausstehend = ja(0.5) && spielerzahl > 2 ? [(angreifer + 1) % spielerzahl, (angreifer + 2) % spielerzahl] : [(angreifer + 1) % spielerzahl];
     bau.schwebend(angreifer, verdoppler, (karteId, spielerId) => ({ typ: 'VerdopplerSpielen', spielerId, karteId }), ausstehend);
   }
 

@@ -7,7 +7,7 @@ prioritaet: mittel
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
-skript: src/engine/__tests__/wertung_gesamt.test.ts
+skript: src/engine/__tests__/regeln/A11_gesamt.test.ts
 aenderung: task/E10-wertung (PR #33)
 grenzfall_von: TF-ENGINE-007
 ---

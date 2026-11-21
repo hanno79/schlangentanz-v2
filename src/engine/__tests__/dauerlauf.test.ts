@@ -1,9 +1,11 @@
+// @vitest-environment node
+import { readdirSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { ermittleAktionen } from '../index'
 import type { AktionsErgebnis, SpielAktion, Spielzustand } from '../index'
 import { ENGINE_MOTOR, dauerlauf, dauerlaufPartien, spieleDauerlaufPartie } from '../testing/dauerlauf'
-import type { Motor, SchrittPruefer } from '../testing/dauerlauf'
-import { istFarbenschutz } from '../reaktion'
+import type { Motor } from '../testing/dauerlauf'
+import { partienDesTeils, TEILE } from './dauerlauf_lang'
+import { erwarteGeprueftenLauf, neuerZugzaehler, regelPruefer, spieleGeprueft } from './dauerlauf_pruefer'
 
 const ZUG_BEENDEN = (zustand: Spielzustand): SpielAktion[] => [
   { typ: 'ZugBeenden', spielerId: zustand.spieler[zustand.zug.spielerIndex].id },
@@ -145,104 +147,6 @@ describe('A10: Dauerlauf-Grundgerüst', () => {
   })
 })
 
-/** Wie oft der Dauerlauf einen zweiten Zug nach einem Verdoppler sah (E3). */
-interface ZweiteZuege {
-  gesamt: number
-  inSchlussrunde: number
-}
-
-/** Wie oft der Dauerlauf eine Ansage, eine Frage, eine Abwehr, ein Aussetzen und eine Grube ohne Wirkung sah (E4). */
-type Reaktionen = Record<'KarteAngesagt' | 'AbwehrGefragt' | 'Abgewehrt' | 'Ausgesetzt' | 'GrubeOhneWirkung', number>
-
-/**
- * E4 (A6, A7.2, A7.6, D29, D33): Gefragt wird jeder Betroffene, im Uhrzeigersinn
- * und jeder einmal, nie der Angreifer; abwehren kann nur, wer Farbenschutz hält;
- * wer ausserhalb seines Zuges abwehrt, zieht nicht nach; der Farbenschutz liegt
- * danach auf seinem Ablagestapel; nach Spielende liegt keine Grube mehr aus.
- */
-function reaktionsPruefer(zaehler: Reaktionen): SchrittPruefer {
-  /** Die Betroffenen der laufenden Ansage, die noch nicht gefragt wurden. */
-  let ungefragt: number[] = []
-  return (vorher, _aktion, { zustand, ereignisse }) => {
-    const ziehenDarf = new Set([vorher.zug.spielerIndex])
-    for (const ereignis of ereignisse) {
-      if (ereignis.typ in zaehler) zaehler[ereignis.typ as keyof Reaktionen] += 1
-      if (ereignis.typ === 'KarteAngesagt') ungefragt = [...ereignis.betroffene]
-      if (ereignis.typ === 'AbwehrGefragt' && ereignis.spielerIndex !== ungefragt.shift()) return `D33: Spieler ${ereignis.spielerIndex} ist ausser der Reihe gefragt.`
-      if (ereignis.typ === 'AnsageEntschieden' && ungefragt.length > 0) return `D33: Spieler ${ungefragt.join(', ')} wurden nicht gefragt.`
-      if (ereignis.typ === 'ZugBegonnen') ziehenDarf.add(ereignis.spielerIndex)
-      if (ereignis.typ === 'KartenGezogen' && !ziehenDarf.has(ereignis.spielerIndex)) return `A6: Spieler ${ereignis.spielerIndex} zieht ausserhalb seines Zuges.`
-      if (ereignis.typ === 'Abgewehrt' && !zustand.spieler[ereignis.spielerIndex].ablagestapel.some((karte) => karte.id === ereignis.karteId)) {
-        return `A7.2: Der Farbenschutz ${ereignis.karteId} liegt nicht auf dem Ablagestapel von Spieler ${ereignis.spielerIndex}.`
-      }
-    }
-    const { schwebend } = zustand
-    if (schwebend !== null) {
-      const gefragt = schwebend.ausstehend[0]
-      if (gefragt === undefined) return 'A6: Eine Karte schwebt, aber niemand ist gefragt.'
-      if (zustand.spieler[gefragt].id === schwebend.aktion.spielerId) return 'A6: Der Angreifer ist bei seiner eigenen Karte gefragt.'
-      const abwehren = ermittleAktionen(zustand).filter((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null).length
-      const farbenschutz = zustand.spieler[gefragt].hand.filter(istFarbenschutz).length
-      if (abwehren !== farbenschutz) return `D33: Spieler ${gefragt} hält ${farbenschutz} Farbenschutz, angeboten sind ${abwehren} Abwehren.`
-    }
-    if (zustand.partiephase === 'Beendet' && zustand.ausliegendeGruben.length > 0) return 'D29: Nach Spielende liegt noch eine Grube aus.'
-    return null
-  }
-}
-
-/** Beide Prüfer nacheinander; der erste Befund zählt. */
-function beidePruefer(...pruefer: SchrittPruefer[]): SchrittPruefer {
-  return (vorher, aktion, ergebnis) => {
-    for (const pruefe of pruefer) {
-      const befund = pruefe(vorher, aktion, ergebnis)
-      if (befund !== null) return befund
-    }
-    return null
-  }
-}
-
-/**
- * Was der Dauerlauf je Partie zusätzlich zu den Invarianten prüft (E2): höchstens
- * eine Farbkarte und eine Sonderkarte je Zug (D12), höchstens 5 Handkarten nach
- * dem eigenen Zugende (A5), in der Schlussrunde zieht niemand, der Auslöser kommt
- * nicht mehr dran, und jeder andere hat genau einen letzten Zug (A10).
- *
- * Seit E3 (A7.8, D11): Ein zweiter Zug beginnt nur für denselben Spieler direkt
- * nach seinem ersten Zug mit Verdoppler, im zweiten Zug wird kein Verdoppler mit
- * Wirkung gespielt, und in der Schlussrunde zählen beide Züge als ein letzter Zug.
- */
-function regelPruefer(zaehler: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }): SchrittPruefer {
-  /** Wer in der Schlussrunde seinen letzten Zug hatte, gespielt oder ausgesetzt (D21); `null` vor der Schlussrunde. */
-  let letzteZuege: number[] | null = null
-  return (vorher, aktion, { zustand, ereignisse }) => {
-    const { zug } = zustand
-    if (zug.gespielteFarbkarten > 1 || zug.gespielteSonderkarten > 1) return `D12: ${JSON.stringify(zug)}`
-    if (aktion.typ === 'VerdopplerSpielen' && vorher.zug.teilzug === 2) return 'D11: Im zweiten Zug wirkt ein Verdoppler.'
-    for (const ereignis of ereignisse) {
-      if (ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2) {
-        const { spielerIndex, teilzug, verdopplerGespielt } = vorher.zug
-        if (ereignis.spielerIndex !== spielerIndex || teilzug !== 1 || !verdopplerGespielt) {
-          return `A7.8: zweiter Zug für ${ereignis.spielerIndex} nach ${JSON.stringify(vorher.zug)}.`
-        }
-        zaehler.gesamt += 1
-        if (letzteZuege !== null) zaehler.inSchlussrunde += 1
-      } else if (ereignis.typ === 'SchlussrundeBegonnen') letzteZuege = []
-      else if (letzteZuege === null) continue
-      else if (ereignis.typ === 'KartenGezogen') return `A10: In der Schlussrunde zieht ${ereignis.spielerIndex} Karten.`
-      else if (ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'Ausgesetzt') {
-        if (ereignis.spielerIndex === zustand.schlussrundeAusloeser) return 'A10: Der Auslöser ist noch einmal dran.'
-        if (letzteZuege.includes(ereignis.spielerIndex)) return `A10: Spieler ${ereignis.spielerIndex} hat einen zweiten letzten Zug.`
-        letzteZuege.push(ereignis.spielerIndex)
-      } else if (ereignis.typ === 'PartieBeendet' && letzteZuege.length !== zustand.spieler.length - 1) {
-        return `A10: ${letzteZuege.length} statt ${zustand.spieler.length - 1} letzte Züge.`
-      }
-    }
-    const zugende = ereignisse.some((ereignis) => ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'PartieBeendet')
-    const hand = zustand.spieler[vorher.zug.spielerIndex].hand.length
-    return zugende && hand > 5 ? `A5: Nach dem Zugende hält Spieler ${vorher.zug.spielerIndex} ${hand} Karten.` : null
-  }
-}
-
 describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
   /** Ein Zustand mit `spieler` Spielern, Auslöser Spieler 0; nur die Felder, die der Prüfer liest. */
   function lage(spieler: number, amZug: number, zug: Partial<Spielzustand['zug']> = {}): Spielzustand {
@@ -278,10 +182,10 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
     const ohne = lage(2, 0)
     expect(regelPruefer()(ohne, ende, { zustand: ohne, ereignisse: zweiter })).toMatch(/A7\.8/)
     const mit = lage(2, 0, { teilzug: 1, verdopplerGespielt: true, gespielteSonderkarten: 1 })
-    const zaehler = { gesamt: 0, inSchlussrunde: 0 }
+    const zaehler = neuerZugzaehler()
     const pruefer = regelPruefer(zaehler)
     expect(pruefer(mit, ende, { zustand: lage(2, 0), ereignisse: [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, ...zweiter] })).toBeNull()
-    expect(zaehler).toEqual({ gesamt: 1, inSchlussrunde: 1 })
+    expect(zaehler).toEqual({ zweite: 1, zweiteInSchlussrunde: 1, letzte: 0 })
   })
 
   it('D11: ein Verdoppler mit Wirkung im zweiten Zug wird gemeldet', () => {
@@ -299,26 +203,37 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
   })
 })
 
-describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2)', () => {
+describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2, Plan 3.6 Punkt 7)', () => {
   const PARTIEN = [...dauerlaufPartien(150, false), ...dauerlaufPartien(150, true, 151)]
 
   it('A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz', () => {
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 2)).toHaveLength(100)
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 4)).toHaveLength(100)
-    const zweiteZuege: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }
-    const reaktionen: Reaktionen = { KarteAngesagt: 0, AbwehrGefragt: 0, Abgewehrt: 0, Ausgesetzt: 0, GrubeOhneWirkung: 0 }
-    const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer: () => beidePruefer(regelPruefer(zweiteZuege), reaktionsPruefer(reaktionen)) })
-    expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet')).toEqual([])
+    const lauf = spieleGeprueft(PARTIEN, 0xfa15c4)
+    const { ergebnisse, zuege, reaktionen } = lauf
+    erwarteGeprueftenLauf(lauf, '300 Partien')
     // Jede Partie braucht mehrere Züge: mindestens eine Karte und „Zug beenden“ je Zug.
     expect(Math.min(...ergebnisse.map((ergebnis) => ergebnis.schritte))).toBeGreaterThan(40)
     // E3: Der Verdoppler wird wirklich gespielt, auch in der Schlussrunde.
-    expect(zweiteZuege.gesamt, 'zweite Züge nach einem Verdoppler im Dauerlauf').toBeGreaterThan(100)
-    expect(zweiteZuege.inSchlussrunde, 'zweite Züge in der Schlussrunde im Dauerlauf').toBeGreaterThan(0)
+    expect(zuege.zweite, 'zweite Züge nach einem Verdoppler im Dauerlauf').toBeGreaterThan(100)
+    expect(zuege.zweiteInSchlussrunde, 'zweite Züge in der Schlussrunde im Dauerlauf').toBeGreaterThan(0)
     // E4: Gruben werden angesagt, abgewehrt, ausgesessen und gehen auch ohne Wirkung ab (D29).
     expect(reaktionen.KarteAngesagt, 'angesagte Gruben im Dauerlauf').toBeGreaterThan(300)
     expect(reaktionen.AbwehrGefragt, 'D33: jede Ansage fragt mindestens einen Betroffenen').toBeGreaterThanOrEqual(reaktionen.KarteAngesagt)
     expect(reaktionen.Abgewehrt, 'Abwehren mit Farbenschutz im Dauerlauf').toBeGreaterThan(30)
     expect(reaktionen.Ausgesetzt, 'ausgesetzte Züge im Dauerlauf').toBeGreaterThan(100)
     expect(reaktionen.GrubeOhneWirkung, 'Gruben ohne Wirkung im Dauerlauf (D29)').toBeGreaterThan(0)
-  }, 300_000)
+  }, 600_000)
+})
+
+describe('A10: der lange Dauerlauf (E11, Kriterium 3, npm run test:dauerlauf)', () => {
+  it('A10: die vier Teile sind zusammen 2000 Partien mit verschiedenen Saaten, je 1000 ohne und mit Erweiterung, reihum 2, 3 und 4 Spieler', () => {
+    const alle = Array.from({ length: TEILE }, (_, index) => partienDesTeils(index + 1)).flat()
+    expect(alle).toHaveLength(2000)
+    expect(new Set(alle.map((partie) => partie.saat)).size, 'jede Saat einmal').toBe(2000)
+    expect(alle.filter((partie) => partie.erweiterung)).toHaveLength(1000)
+    expect(new Set(alle.map((partie) => partie.spielerzahl))).toEqual(new Set([2, 3, 4]))
+    const dateien = readdirSync('src/engine/__tests__').filter((datei) => datei.endsWith('.dauerlauf.test.ts'))
+    expect(dateien, 'je Teil eine Datei, die Vitest nebeneinander rechnet').toEqual(Array.from({ length: TEILE }, (_, index) => `dauerlauf_teil_${index + 1}.dauerlauf.test.ts`))
+  })
 })
