@@ -67,12 +67,16 @@ test.describe('O3 K7: /spiel mit Testhooks', () => {
 test.describe('O3 K1: Pause vor jedem KI-Schritt', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } })
 
+  /* Der Stand kommt hier über den Speicher wie aus der Lobby, nicht über `?szenario=`:
+     Die Testhooks werden nachgeladen, und React zeigt nachgeladenen Inhalt erst nach
+     einem Zeitgeber, der bei angehaltener Uhr nie abläuft. */
   test('O3 K1: ohne „weniger Bewegung“ folgt jeder KI-Schritt nach 700 ms, nicht früher', async ({ page }) => {
+    const start = serialisiere(erzeugeSzenario('schlussrunde-ohne-dich'))
     await halteUhrAn(page)
-    await page.goto('/spiel?szenario=schlussrunde-ohne-dich')
+    await page.addInitScript(([schluessel, wert]) => window.localStorage.setItem(schluessel, wert), [SPIELSTAND_SCHLUESSEL, start] as const)
+    await page.goto('/spiel')
     await expect(status(page)).toContainText('KI-Gegner 1 ist')
-    const start = await gespeichert(page)
-    expect(start).toBe(serialisiere(erzeugeSzenario('schlussrunde-ohne-dich')))
+    expect(await gespeichert(page)).toBe(start)
     await page.clock.runFor(699)
     expect(await gespeichert(page), 'vor 700 ms').toBe(start)
     await page.clock.runFor(1)
