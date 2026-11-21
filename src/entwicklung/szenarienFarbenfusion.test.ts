@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, berechneEndwertung, ermittleAktionen, ermittleEntscheider } from '../engine'
-import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../engine'
+import type { Ereignis, FusionLegenAktion, SpielAktion, Spielkarte, Spielzustand } from '../engine'
 import { findeSzenario, SZENARIEN } from './szenarien'
 
 /*
@@ -17,7 +17,7 @@ function erzeuge(name: string): Spielzustand {
 
 type Wahl = (aktion: SpielAktion) => boolean
 
-const fusion: Wahl = (aktion) => aktion.typ === 'FusionLegen'
+const fusion = (aktion: SpielAktion): aktion is FusionLegenAktion => aktion.typ === 'FusionLegen'
 const abwehren: Wahl = (aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null
 const durchlassen: Wahl = (aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId === null
 
@@ -41,7 +41,7 @@ describe('E7: Szenarien der Farbenfusion', () => {
   it('A7.7/D25: fusion-eigen: zwei Ziele je Fusion, kein wirkungsloses Ablegen; auf die Gelben wirkt sie sofort, danach keine zweite', () => {
     const start = erzeuge('fusion-eigen')
     const knoepfe = ermittleAktionen(start).filter(fusion)
-    expect(knoepfe.map((aktion) => aktion.typ === 'FusionLegen' && aktion.kartenIds.map((id) => id.replace(/-\d+$/, '')))).toEqual([
+    expect(knoepfe.map((aktion) => aktion.kartenIds.map((id) => id.replace(/-\d+$/, '')))).toEqual([
       ['blau', 'blau'],
       ['gelb', 'gelb'],
       ['blau', 'blau'],
@@ -60,7 +60,7 @@ describe('E7: Szenarien der Farbenfusion', () => {
 
   it('D10/A7.2: fusion-beim-gegner: KI-Gegner 1 wehrt ab, seine Dreiergruppe bleibt, die Fusion liegt bei Spieler 1', () => {
     const start = erzeuge('fusion-beim-gegner')
-    expect(ermittleAktionen(start).filter(fusion).map((aktion) => aktion.typ === 'FusionLegen' && aktion.schlangenId)).toEqual([
+    expect(ermittleAktionen(start).filter(fusion).map((aktion) => aktion.schlangenId)).toEqual([
       'schlange-1',
       'schlange-1',
       'schlange-2',

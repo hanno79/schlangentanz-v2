@@ -18,10 +18,10 @@ der alten Lage und den Ereignissen lässt sich ablesen, welche zwei Karten unter
 der Fusion liegen, ohne zwei Zustände zu vergleichen.
 */
 
-/** Spieler 1 hält eine Farbenfusion und hat genau diese Schlange; Spieler 2 hält `gegner` und hat `gegnerSchlange`, falls genannt. */
-function tisch(glieder: Schlangenglied[], gegnerSchlange?: Schlangenglied[], gegner = FUENF): Spielzustand {
+/** Spieler 1 hält eine Farbenfusion, Spieler 2 hält `gegner`; jeder hat die genannte Schlange, sonst keine. */
+function tisch(glieder: Schlangenglied[] | undefined, gegnerSchlange?: Schlangenglied[], gegner = FUENF): Spielzustand {
   const bau = tischMitHaenden([['Farbenfusion', 'Blau', 'Rot', 'Gelb', 'Grün'], gegner])
-  if (glieder.length > 0) bau.schlange(0, glieder)
+  if (glieder !== undefined) bau.schlange(0, glieder)
   if (gegnerSchlange !== undefined) bau.schlange(1, gegnerSchlange)
   return bau.zustand()
 }
@@ -85,7 +85,7 @@ describe('A7.7/A11: die gespielte Fusion in der Wertung (Kriterium 2)', () => {
 
 describe('E7 Grenzfall: die Fusion zerstört eine gegnerische Dreiergruppe', () => {
   it('D9/D30: auf zwei Karten einer gegnerischen Dreiergruppe gelegt, bringt die Gruppe dem Gegner nichts mehr', () => {
-    const vorher = tisch([], ['Rot', 'Rot', 'Rot'])
+    const vorher = tisch(undefined, ['Rot', 'Rot', 'Rot'])
     expect(wertung(vorher, 1).gruppenPunkte).toBe(3)
     const nachher = fusioniere(vorher, 1, 0)
     expect(wertung(nachher, 1).gruppenPunkte).toBe(0)
@@ -93,7 +93,7 @@ describe('E7 Grenzfall: die Fusion zerstört eine gegnerische Dreiergruppe', () 
   })
 
   it('A7.2: wehrt der Gegner ab, behält er seine Dreiergruppe', () => {
-    const nachher = fusioniere(tisch([], ['Rot', 'Rot', 'Rot'], MIT_SCHUTZ), 1, 0, true)
+    const nachher = fusioniere(tisch(undefined, ['Rot', 'Rot', 'Rot'], MIT_SCHUTZ), 1, 0, true)
     expect(wertung(nachher, 1).gruppenPunkte).toBe(3)
   })
 })
@@ -154,6 +154,7 @@ describe('E2-Muster: die Fusion lässt sich aus den Ereignissen nachrechnen', ()
     for (const saat of [41, 42, 43, 44, 45, 46]) {
       const wahl = erzeugeZufall(saat)
       let zustand = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+      let lage = lageVon(zustand)
       for (let schritt = 0; zustand.partiephase !== 'Beendet'; schritt += 1) {
         if (schritt > 2000) throw new Error(`Saat ${saat}: Die Partie endet nicht nach 2000 Schritten.`)
         const angeboten = ermittleAktionen(zustand)
@@ -162,17 +163,19 @@ describe('E2-Muster: die Fusion lässt sich aus den Ereignissen nachrechnen', ()
         const aktion = auswahl[Math.floor(wahl() * auswahl.length)]
         const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
         const nachricht = `Saat ${saat}, Schritt ${schritt}: ${JSON.stringify(aktion)}`
-        expect(spieleNach(lageVon(zustand), ereignisse), nachricht).toEqual(lageVon(neu))
+        const neueLage = lageVon(neu)
+        expect(spieleNach(lage, ereignisse), nachricht).toEqual(neueLage)
         const aufHand = new Set(neu.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
         expect([...texteIn(ereignisse)].filter((text) => aufHand.has(text)), `${nachricht}: B2, ein Ereignis nennt eine Handkarte`).toEqual([])
         expect(verletzteInvarianten(neu), nachricht).toEqual([])
         if (aktion.typ === 'FusionLegen') {
-          const eigen = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)!.schlangen.some((schlange) => schlange.id === aktion.schlangenId)
-          if (eigen) anzahl.eigen += 1
+          // A6: in die eigene Schlange wirkt sie sofort, beim Mitspieler wird sie angesagt.
+          if (ereignisse[0].typ === 'KarteGespielt') anzahl.eigen += 1
           else anzahl.beimGegner += 1
         }
         anzahl.abgewehrt += ereignisse.filter((ereignis) => ereignis.typ === 'Abgewehrt').length
         zustand = neu
+        lage = neueLage
       }
     }
     expect(anzahl.eigen, 'Fusionen in eigene Schlangen').toBeGreaterThanOrEqual(5)

@@ -33,16 +33,16 @@ function tisch(spielerzahl = 2, gegner: Kartenwahl[] = FUENF): Baukasten {
   return tischMitHaenden([MIT_FUSION, ...Array.from({ length: spielerzahl - 1 }, () => gegner)])
 }
 
-function ids(zustand: Spielzustand, spieler: number, nr = 0): string[] {
-  return zustand.spieler[spieler].schlangen[nr].karten.map((karte) => karte.id)
+function ids(zustand: Spielzustand, spieler: number): string[] {
+  return zustand.spieler[spieler].schlangen[0].karten.map((karte) => karte.id)
 }
 
 function art(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? karte.farbe : karte.name
 }
 
-function arten(zustand: Spielzustand, spieler: number, nr = 0): string[] {
-  return zustand.spieler[spieler].schlangen[nr].karten.map(art)
+function arten(zustand: Spielzustand, spieler: number): string[] {
+  return zustand.spieler[spieler].schlangen[0].karten.map(art)
 }
 
 function fusionskarte(zustand: Spielzustand, spieler = 0): string {
@@ -55,9 +55,9 @@ function fusionen(zustand: Spielzustand): FusionLegenAktion[] {
   return aktionen(zustand, 'FusionLegen') as FusionLegenAktion[]
 }
 
-/** Die aufgezählte Fusion mit der ersten Farbenfusion der Hand auf die Karten an den Stellen `links` und `links + 1` dieser Schlange. */
-function fusionAuf(zustand: Spielzustand, besitzer: number, links: number, nr = 0): FusionLegenAktion {
-  const schlange = zustand.spieler[besitzer].schlangen[nr]
+/** Die aufgezählte Fusion mit der ersten Farbenfusion der Hand auf die Karten an den Stellen `links` und `links + 1` der ersten Schlange von `besitzer`. */
+function fusionAuf(zustand: Spielzustand, besitzer: number, links: number): FusionLegenAktion {
+  const schlange = zustand.spieler[besitzer].schlangen[0]
   const erwartet = [schlange.karten[links].id, schlange.karten[links + 1].id]
   const karteId = fusionskarte(zustand, zustand.zug.spielerIndex)
   const passend = fusionen(zustand).filter(
@@ -65,6 +65,11 @@ function fusionAuf(zustand: Spielzustand, besitzer: number, links: number, nr = 
   )
   expect(passend, `FusionLegen auf ${erwartet.join(', ')} in ${schlange.id} ist nicht aufgezählt`).toHaveLength(1)
   return passend[0]
+}
+
+/** Die Handkarten, die die Engine zum wirkungslosen Ablegen anbietet (D13, D25). */
+function wirkungslosAblegbar(zustand: Spielzustand): string[] {
+  return aktionen(zustand, 'SonderkarteWirkungslosAblegen').flatMap((aktion) => ('karteId' in aktion ? [aktion.karteId] : []))
 }
 
 /** Eine Fusion, wie sie ein Aufrufer selbst bauen könnte, um eine unerlaubte zu zeigen. */
@@ -94,6 +99,14 @@ describe('A7.7: zwei nebeneinanderliegende Farbkarten gleicher Farbe kommen unte
     expect(zustand.spieler[0].hand.map((karte) => karte.id)).not.toContain(fusion)
     expect(ablage(zustand, 0), 'A7.7: die Fusion bleibt in der Schlange, nicht auf dem Ablagestapel').toEqual([])
     expect(verletzteInvarianten(zustand)).toEqual([])
+  })
+
+  it('A7.4/A7.7: unter der Fusion liegen die Karten links zuerst, in der Reihenfolge der Schlange, auch beim Mitspieler', () => {
+    const start = tisch().schlange(0, [{ id: 'gelb-09' }, { id: 'gelb-04' }]).schlange(1, [{ id: 'rot-12' }, { id: 'rot-07' }]).zustand()
+    const eigen = fuehreAus(start, fusionAuf(start, 0, 0)).zustand
+    expect(eigen.spieler[0].schlangen[0].fusionen[0].unter.map((karte) => karte.id)).toEqual(['gelb-09', 'gelb-04'])
+    const beimGegner = folge(start, (jetzt) => fusionAuf(jetzt, 1, 0), (jetzt) => reaktion(jetzt, false)).zustand
+    expect(beimGegner.spieler[1].schlangen[0].fusionen[0].unter.map((karte) => karte.id)).toEqual(['rot-12', 'rot-07'])
   })
 
   it('A7.7: Karten, die nicht nebeneinanderliegen, sind kein Ziel und werden abgelehnt', () => {
@@ -154,14 +167,14 @@ describe('D13/D25: wirkungslos ablegen nur ohne Ziel', () => {
   it('D13: ohne zwei gleichfarbige Nachbarn am Tisch hat die Fusion kein Ziel und lässt sich nur wirkungslos ablegen', () => {
     const zustand = tisch().schlange(0, ['Gelb', 'Blau']).schlange(1, ['Rot', 'Gelb']).zustand()
     const fusion = fusionskarte(zustand)
-    expect(aktionen(zustand, 'SonderkarteWirkungslosAblegen').map((aktion) => 'karteId' in aktion && aktion.karteId)).toContain(fusion)
+    expect(wirkungslosAblegbar(zustand)).toContain(fusion)
   })
 
   it('D25: hat die Fusion ein Ziel, auch nur beim Gegner, bietet die Engine kein wirkungsloses Ablegen an und lehnt es ab', () => {
     const zustand = tisch().schlange(1, ['Rot', 'Rot']).zustand()
     const fusion = fusionskarte(zustand)
     expect(fusionen(zustand)).toHaveLength(1)
-    expect(aktionen(zustand, 'SonderkarteWirkungslosAblegen').map((aktion) => 'karteId' in aktion && aktion.karteId)).not.toContain(fusion)
+    expect(wirkungslosAblegbar(zustand)).not.toContain(fusion)
     expect(grund(zustand, { typ: 'SonderkarteWirkungslosAblegen', spielerId: 'spieler-1', karteId: fusion })).toMatch(/D25/)
   })
 })
@@ -234,7 +247,7 @@ describe('D10/A6/A7.2: in der Schlange eines Mitspielers ist die Fusion abwehrba
   })
 
   it('A6: zu dritt ist nur der Besitzer der Zielschlange betroffen, nicht der andere Mitspieler', () => {
-    const start = tischMitHaenden([MIT_FUSION, MIT_SCHUTZ, MIT_SCHUTZ]).schlange(2, ['Braun', 'Braun']).zustand()
+    const start = tisch(3, MIT_SCHUTZ).schlange(2, ['Braun', 'Braun']).zustand()
     const { zustand, ereignisse } = fuehreAus(start, fusionAuf(start, 2, 0))
     expect(ereignisseVom(ereignisse, 'KarteAngesagt')[0].betroffene).toEqual([2])
     expect(ermittleEntscheider(zustand)).toBe(2)
@@ -264,10 +277,7 @@ describe('A7.7/D27: höchstens eine Farbenfusion je Zug (Kriterium 3)', () => {
     const { zustand } = fuehreAus(start, fusionAuf(start, 0, 0))
     expect(zustand.zug.farbenfusionGespielt).toBe(true)
     expect(fusionen(zustand)).toEqual([])
-    const zweite = zustand.spieler[0].hand.find((karte) => art(karte) === 'Farbenfusion')!.id
-    expect(grund(zustand, { typ: 'FusionLegen', spielerId: 'spieler-1', karteId: zweite, schlangenId: 'schlange-1', kartenIds: ids(start, 0).slice(2) })).toMatch(
-      /schon eine Sonderkarte/,
-    )
+    expect(grund(zustand, selbstGebaut(zustand, 'schlange-1', ids(start, 0).slice(2)))).toMatch(/schon eine Sonderkarte/)
   })
 
   it('A7.7: die Karte selbst lässt keine zweite Fusion im Zug zu, unabhängig von der Grenze je Sonderkarte', () => {
