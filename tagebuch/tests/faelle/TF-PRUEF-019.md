@@ -17,7 +17,7 @@ Ein Layout-Vertrag misst das Fenster, das ihm das Playwright-Projekt gibt. Läuf
 
 ## Bestanden, wenn
 
-`npx playwright test --list` zeigt die Projekte `desktop`, `tablet-quer`, `tablet-hochkant`, `handy-hochkant`, `handy-quer` und je eines mit `-testhooks`. Der Vertrag „P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts“ ist in allen fünf Produktionsprojekten grün: `innerWidth`×`innerHeight` gleich dem Fenster der Klasse, `(orientation: portrait)` genau bei Tablet hochkant und Handy hochkant, `(pointer: coarse)` und `maxTouchPoints > 0` genau bei den vier Touch-Klassen, `devicePixelRatio` 1.
+`npx playwright test --list` zeigt die Projekte `desktop`, `tablet-quer`, `tablet-hochkant`, `handy-hochkant`, `handy-quer` und je eines mit `-testhooks`. Der Vertrag „P0.3c: Fenster, Ausrichtung, Zeiger und Touch entsprechen der Geräteklasse des Projekts“ ist in allen fünf Produktionsprojekten grün: `innerWidth`×`innerHeight` gleich dem Fenster der Klasse, `(orientation: portrait)` genau bei Tablet hochkant und Handy hochkant, `(pointer: coarse)` genau bei den vier Touch-Klassen, `maxTouchPoints > 0` bei diesen vier Klassen, `devicePixelRatio` 1. Auf Desktop wird `maxTouchPoints` seit #64 nicht gemessen: Ohne `hasTouch` meldet Chromium dort die Touch-Hardware des Prüfrechners.
 
 ## Fehlgeschlagen, wenn
 

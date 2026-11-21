@@ -2,18 +2,20 @@ import type { FarbkarteLegenAktion } from '../aktionen/typen';
 import { MAX_SCHLANGEN_PRO_SPIELER } from '../constants';
 import { schlangenIdFuer } from '../state';
 import type { Spielkarte, Spielzustand } from '../types';
-import { entnehmeHandkarte } from '../zugablauf';
+import { entnehmeHandkarte, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
+import { alleSchlangen, findeSchlange, gepruefteSchlange } from './schlangenstelle';
 
 /*
-A5: Eine Farbkarte beginnt eine neue eigene Schlange (höchstens zwei je
-Spieler) oder setzt eine eigene Schlange an einem ihrer beiden Enden fort.
-Gegnerische Schlangen (D9, D19) bringt E5; eine Abwehr gegen Farbkarten gibt es
-nicht (D10).
+A5, D9, D19: Eine Farbkarte beginnt eine neue eigene Schlange (höchstens zwei je
+Spieler) oder setzt jede Schlange am Tisch an einem ihrer beiden Enden fort, auch
+die eines Mitspielers. Eine neue Schlange beginnt jeder nur für sich selbst
+(D19). Gegen eine Farbkarte gibt es keine Abwehr (A6, D10): Sie trifft niemanden,
+auch nicht in einer fremden Schlange.
 */
 
 function eigeneSchlangen(zustand: Spielzustand, spielerId: string) {
-  return zustand.spieler.find((spieler) => spieler.id === spielerId)?.schlangen ?? [];
+  return zustand.spieler[spielerIndexVon(zustand, spielerId)].schlangen;
 }
 
 export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
@@ -23,7 +25,7 @@ export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
   ziele(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): FarbkarteLegenAktion[] {
     const spieler = zustand.spieler[spielerIndex];
     const basis = { typ: 'FarbkarteLegen', spielerId: spieler.id, karteId: karte.id } as const;
-    const anEnden = spieler.schlangen.flatMap((schlange) =>
+    const anEnden = alleSchlangen(zustand).flatMap(({ schlange }) =>
       (['anfang', 'ende'] as const).map((seite): FarbkarteLegenAktion => ({ ...basis, ziel: { art: 'schlange', schlangenId: schlange.id, seite } })),
     );
     const neu: FarbkarteLegenAktion[] = spieler.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? [{ ...basis, ziel: { art: 'neueSchlange' } }] : [];
@@ -31,16 +33,13 @@ export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
   },
 
   pruefe(zustand: Spielzustand, aktion: FarbkarteLegenAktion): string | null {
-    const schlangen = eigeneSchlangen(zustand, aktion.spielerId);
     const { ziel } = aktion;
     if (ziel.art === 'neueSchlange') {
-      return schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? null : `Eine neue Schlange geht nicht: Jeder Spieler hat höchstens ${MAX_SCHLANGEN_PRO_SPIELER} Schlangen (A5).`;
+      return eigeneSchlangen(zustand, aktion.spielerId).length < MAX_SCHLANGEN_PRO_SPIELER
+        ? null
+        : `Eine neue Schlange geht nicht: Jeder Spieler hat höchstens ${MAX_SCHLANGEN_PRO_SPIELER} Schlangen (A5).`;
     }
-    if (schlangen.some((schlange) => schlange.id === ziel.schlangenId)) return null;
-    const gegnerisch = zustand.spieler.some((spieler) => spieler.schlangen.some((schlange) => schlange.id === ziel.schlangenId));
-    return gegnerisch
-      ? `Eine Farbkarte in die gegnerische Schlange ${ziel.schlangenId} ist noch nicht umgesetzt (kommt mit E5, D9).`
-      : `Die Schlange ${ziel.schlangenId} gibt es nicht.`;
+    return findeSchlange(zustand, ziel.schlangenId) === null ? `Die Schlange ${ziel.schlangenId} gibt es nicht.` : null;
   },
 
   betroffene(): number[] {
@@ -55,7 +54,7 @@ export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
       eigeneSchlangen(zustand, aktion.spielerId).push({ id: schlangenIdFuer(zustand.schlangenZaehler), karten: [karte], fusionen: [] });
       return zustand;
     }
-    const schlange = eigeneSchlangen(zustand, aktion.spielerId).find((eintrag) => eintrag.id === ziel.schlangenId)!;
+    const { schlange } = gepruefteSchlange(zustand, ziel.schlangenId);
     if (ziel.seite === 'anfang') schlange.karten.unshift(karte);
     else schlange.karten.push(karte);
     return zustand;

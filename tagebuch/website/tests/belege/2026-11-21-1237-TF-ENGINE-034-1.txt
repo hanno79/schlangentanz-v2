@@ -1,0 +1,8 @@
+PRUEFER-ZAEHLER {"frass":24,"c":19,"a":5,"b":0,"abgewehrt":4}
+ ✓ src/engine/__tests__/pruefer_e6_tmp.test.ts > Prüfer E6: eigene Grenzfälle > G1: vier Spieler, Angreifer Index 2, Ziele bei 1 und 3: Ablage in Tischreihenfolge ab Angreifer (3 vor 1); 3 wehrt ab, nur die Karte von 1 geht 35ms
+ ✓ src/engine/__tests__/pruefer_e6_tmp.test.ts > Prüfer E6: eigene Grenzfälle > G2: c) frisst eine Fusion und die Karte direkt rechts daneben in derselben Schlange; Positionen nachrechenbar 5ms
+ ✓ src/engine/__tests__/pruefer_e6_tmp.test.ts > Prüfer E6: eigene Grenzfälle > G3: b) auf die eigene Blockade als einzige Karte: Schlange verschwindet, aufgeloest nennt sie 5ms
+PRUEFER-BESTAND {"1:gegnerischeKarten":4,"2:gegnerischeKarten":4,"3:gegnerischeKarten":4,"4:gegnerischeKarten":4}
+ ✓ src/engine/__tests__/pruefer_e6_tmp.test.ts > Prüfer E6: eigene Grenzfälle > G4: Zufallspartien mit bevorzugtem Schlangenfrass: jeder Schritt nachrechenbar, keine Handkarte verraten 926ms
+ ✓ src/engine/__tests__/pruefer_e6_tmp.test.ts > Prüfer E6: eigene Grenzfälle > G5: die Saaten des bestehenden Nachrechentests (zugablauf_ereignisse) enthalten Schlangenfrass 260ms
+      Tests  5 passed (5)

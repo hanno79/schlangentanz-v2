@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-044 In Zufallspartien, in denen Regenbogenschlange, Blockade und Farbkarten beim Gegner oft vorkommen, lässt sich jeder Schritt aus den Ereignissen nachrechnen, kein Ereignis nennt eine Handkarte, und keine Invariante bricht. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-044 In Zufallspartien, in denen Regenbogenschlange, Blockade und Farbkarten beim Gegner oft vorkommen, lässt sich jeder Schritt aus den Ereignissen nachrechnen, kein Ereignis nennt eine Handkarte, und keine Invariante bricht.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Oberfläche soll die Wirkung jeder Karte aus den Ereignissen ablesen, ohne Zustände zu vergleichen (Plan E2 Kriterium 11, E4b), und kein Ereignis darf eine verdeckte Karte verraten (B2). Die Zufallspartien der Suite wählen gleichverteilt; hier werden die neuen Aktionen bevorzugt, damit sie sicher oft vorkommen.</p><h2>Bestanden, wenn</h2><p>In 30 Partien (Saaten 101 bis 130, 2 bis 4 Spieler, mit und ohne Erweiterung) ergibt <code>spieleNach(lageVon(vorher), ereignisse)</code> bei jedem Schritt <code>lageVon(nachher)</code>, <code>verrateneHandkarten</code> ist leer, keine Invariante ist verletzt, und es kommen mindestens je 10 RegenbogenschlangeLegen, BlockadeLegen und Farbkarten in fremde Schlangen vor. Gemessen: 115, 84 und 1&#x27;183, dazu 12 Abwehren.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Schritt sich nicht nachrechnen lässt, ein Ereignis eine Handkarte nennt, eine Invariante bricht oder eine der neuen Aktionen weniger als zehnmal vorkommt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E5-legen (PR #66)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf <code>206ca15</code>, <code>npm ci</code> gelaufen, <code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Prüfdatei <code>zz_pruefer_e5.test.ts</code> aus dem Beleg des Laufs, Abschnitt „Zufallspartien“: Mit Wahrscheinlichkeit 0,7 wird unter den angebotenen RegenbogenschlangeLegen und BlockadeLegen gewählt, sonst unter allen Aktionen.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor</td><td>Prüfdatei anlegen</td><td>Inhalt aus dem Beleg nach `src/engine/__tests__/zz_pruefer_e5.test.ts`</td><td>nur diese Datei neu</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Zufallspartien ausführen</td><td>`npx vitest run src/engine/__tests__/zz_pruefer_e5.test.ts -t Zufallspartien --silent=false`</td><td>1 grün, Zeile „Zähler: …“ mit Werten über 10</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Prüfdatei löschen</td><td>`rm src/engine/__tests__/zz_pruefer_e5.test.ts`</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Schlangenfrass, Farbendieb, Farbenfusion und Häutung sind auf diesem Stand Platzhalter und kommen nicht vor; ihre Ereignisse prüfen E6 bis E9. Unter hoher Last kann der Test die Vorgabe von 5 s überschreiten; dann ist es eine Zeitüberschreitung, kein roter Befund.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 12:56</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E5) &middot; agent &middot; pruefung-E5 @ <span class="commit" title="206ca153a9540917551a89f74d3827c954b7f401">206ca15</span> / Saaten 101 bis 130, 2 bis 4 Spieler, mit und ohne Erweiterung</p><p>30 Partien bis zum Ende, jeder Schritt mit spieleNach nachrechenbar, verrateneHandkarten leer, keine Invariante verletzt. Vorgekommen: 115 RegenbogenschlangeLegen, 84 BlockadeLegen, 1&#x27;183 Farbkarten in fremde Schlangen, 12 Abwehren. Prüfdatei danach gelöscht.</p><ul class="belege"><li><a href="belege/2026-11-21-1256-TF-ENGINE-044-1.txt">2026-11-21-1256-TF-ENGINE-044-1.txt</a></li><li><a href="belege/2026-11-21-1256-TF-ENGINE-044-2.txt">2026-11-21-1256-TF-ENGINE-044-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

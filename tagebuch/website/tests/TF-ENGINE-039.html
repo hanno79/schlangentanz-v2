@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-039 Gespielte Farbenfusionen zwischen Regenbogenschlangen, nebeneinander und in Zufallspartien werten und melden sich richtig. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-039 Gespielte Farbenfusionen zwischen Regenbogenschlangen, nebeneinander und in Zufallspartien werten und melden sich richtig.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-038</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Tests des Tasks legen die Fusion meist auf einfache Paare. Hier entsteht jede Fusion durch eine angebotene Aktion in Lagen, die dort fehlen: zwischen zwei Regenbogenschlangen, zwei Fusionen nebeneinander über zwei Züge, in der zweiten Schlange eines Gegners. Dazu kommen 120 Zufallspartien, in denen die Fusion bevorzugt gespielt wird.</p><h2>Bestanden, wenn</h2><ul><li>Rot, Rot, Rot, Blockade, Regenbogenschlange, Grün, Grün, Regenbogenschlange mit Erweiterung: Nach der Fusion auf die beiden Grün gibt es zwei Gruppen, eine davon mit 6 Punkten, zusammen 9, und die Schlange zählt zwei Farben für den Vielfaltbonus (D30, D31, D32).</li><li>Rot, Grün, Grün, Grün, Grün: Fusion auf Grün 1 und 2, im nächsten eigenen Zug Fusion auf Grün 3 und 4. Danach Rot, Farbenfusion, Farbenfusion, die Wertung <code>Rot×3=13</code>, keine Invariante verletzt, Speichern und Laden ändert nichts.</li><li>Gegner mit Blau und Gelb, Gelb, Gelb: zwei Ziele; die Fusion auf Gelb 2 und 3 ändert nur die zweite Schlange.</li><li>Zwei Karten aus verschiedenen Schlangen werden mit „liegt nicht in der Schlange“ abgelehnt.</li><li>In 120 Zufallspartien (2 bis 4 Spieler, mit und ohne Erweiterung) stimmt nach jedem Schritt die nachgerechnete Lage, kein Ereignis nennt eine Handkarte, jede Partie endet, und jedes <code>KartenVersetzt</code> einer Fusion meldet die Karten darunter mit den Stellen 0 und 1.</li></ul><h2>Fehlgeschlagen, wenn</h2><p>Eine Punktzahl, eine Schlange oder ein Ereignis anders ausfällt als oben, eine Partie nicht endet oder ein Ereignis eine Handkarte nennt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E7-farbenfusion (PR #65)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Worktree auf <code>task/E7-farbenfusion</code>, ab Commit <code>e48c49e</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Das Prüferskript liegt als Beleg beim Lauf; es wird für den Lauf nach <code>src/engine/__tests__/</code> kopiert und danach wieder entfernt.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>Prüferskript aus dem Beleg als `src/engine/__tests__/zz_e7_pruefer.test.ts` anlegen und ausführen</td><td>`npx vitest --run src/engine/__tests__/zz_e7_pruefer.test.ts`</td><td>Exit 0, „Tests 5 passed“</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>den Zufallslauf mit Ausgabe wiederholen</td><td>`npx vitest --run src/engine/__tests__/zz_e7_pruefer.test.ts -t Dauerlauf --silent=false`</td><td>„Fusionen mit UnterFusion-Meldung: 359“</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Skript wieder löschen</td><td></td><td>`git status` ohne die Datei</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Eine Fusion, die gefressen wird, gehört zu E6. Ein Zustand mit gesetztem <code>farbenfusionGespielt</code> ohne gezählte Sonderkarte entsteht im Spiel nicht und ist nur im Regeltest von TF-ENGINE-038 geprüft.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 12:50</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E7) &middot; agent &middot; pruefung-E7 @ <span class="commit" title="e48c49e39260830d0c06813594db2fcabe8e2095">e48c49e</span></p><p>Prüferskript 5 passed, Exit 0. R-FF(Grün,Grün)-R hinter Rot x3 und Blockade: zwei Gruppen, eine mit 6 Punkten, zusammen 9, zwei Vielfaltfarben. Rot + zwei Fusionen über zwei Züge: Rot, Farbenfusion, Farbenfusion, Rot×3=13, Invarianten erfüllt, Speichern/Laden gleich. Gegner Blau / Gelb,Gelb,Gelb: 2 Ziele, nur zweite Schlange geändert. Karten aus zwei Schlangen abgelehnt. 120 Zufallspartien (2-4 Spieler, mit/ohne Erweiterung): Nachrechnen gleich, keine Handkarte verraten, alle beendet, 359 Fusionen mit UnterFusion-Stellen [0,1].</p><ul class="belege"><li><a href="belege/2026-11-21-1250-TF-ENGINE-039-1.txt">2026-11-21-1250-TF-ENGINE-039-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

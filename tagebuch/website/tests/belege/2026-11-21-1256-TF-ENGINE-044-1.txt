@@ -1,0 +1,20 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a1acffba110b4c49d
+
+stdout | src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5: Zufallspartien mit den neuen Karten lassen sich nachrechnen > Saaten 101–130, E5-Aktionen bevorzugt
+Zähler: {"RegenbogenschlangeLegen":115,"BlockadeLegen":84,"FarbkarteFremd":1183,"Abwehr":12}
+
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 1: ungültige Stellen > Stelle -1 wird für Regenbogenschlange und Blockade abgelehnt
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 1: ungültige Stellen > Stelle 0.5 wird für Regenbogenschlange und Blockade abgelehnt
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 1: ungültige Stellen > Stelle 3 wird für Regenbogenschlange und Blockade abgelehnt
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 1: ungültige Stellen > Stelle NaN wird für Regenbogenschlange und Blockade abgelehnt
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 2: vier Spieler, Blockade in die Schlange des letzten > nur Spieler 4 betroffen und gefragt, nach Abwehr wieder Spieler 1
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 3: ohne eigene Schlange Farbkarte zum Gegner, danach keine zweite Farbkarte > A5: nach der Farbkarte beim Gegner keine weitere Farbkarte und keine neue Schlange
+ ↓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5 Grenzfall 4: während die Blockade schwebt, kann der Angreifer nichts tun > A6: nur der Gefragte hat Aktionen; eine Aktion des Angreifers wird abgelehnt
+ ✓ src/engine/__tests__/zz_pruefer_e5.test.ts > Prüfer E5: Zufallspartien mit den neuen Karten lassen sich nachrechnen > Saaten 101–130, E5-Aktionen bevorzugt 5325ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 7 skipped (8)
+   Start at  12:47:35
+   Duration  12.45s (transform 848ms, setup 536ms, import 860ms, tests 5.33s, environment 5.16s)
+

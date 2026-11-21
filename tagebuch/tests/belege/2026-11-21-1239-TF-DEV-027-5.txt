@@ -1,0 +1,58 @@
+[
+ {
+  "name": "desktop",
+  "szenario": "farbendieb",
+  "m0": {
+   "sw": 1280,
+   "cw": 1280
+  },
+  "m1": {
+   "sw": 1280,
+   "cw": 1280
+  },
+  "versetzt": "KartenVersetzt durch farbendieb-02 von Spieler 1 (spieler-1): gelb-01: schlange-2 von KI-Gegner 1 (spieler-2), Stelle 1 → schlange-1 von Spieler 1 (spieler-1), Stelle 2",
+  "zwischen": "3"
+ },
+ {
+  "name": "desktop",
+  "szenario": "farbendieb-abwehr",
+  "frage": [
+   "Reagieren: abwehren mit Farbenschutz (farbenschutz-02)spieler-2",
+   "Reagieren: durchlassenspieler-2"
+  ],
+  "m2": {
+   "sw": 1280,
+   "cw": 1280
+  },
+  "ereignisse": "Ereignisse des letzten Schritts (2)\nAbgewehrt: KI-Gegner 1 (spieler-2) wehrt farbendieb-01 mit farbenschutz-02 ab\nAnsageEntschieden: farbendieb-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0\nInvarianten (alle erfüllt)",
+  "fehler": []
+ },
+ {
+  "name": "handy-hochkant",
+  "szenario": "farbendieb",
+  "m0": {
+   "sw": 390,
+   "cw": 390
+  },
+  "m1": {
+   "sw": 390,
+   "cw": 390
+  },
+  "versetzt": "KartenVersetzt durch farbendieb-02 von Spieler 1 (spieler-1): gelb-01: schlange-2 von KI-Gegner 1 (spieler-2), Stelle 1 → schlange-1 von Spieler 1 (spieler-1), Stelle 2",
+  "zwischen": "3"
+ },
+ {
+  "name": "handy-hochkant",
+  "szenario": "farbendieb-abwehr",
+  "frage": [
+   "Reagieren: abwehren mit Farbenschutz (farbenschutz-02)spieler-2",
+   "Reagieren: durchlassenspieler-2"
+  ],
+  "m2": {
+   "sw": 390,
+   "cw": 390
+  },
+  "ereignisse": "Ereignisse des letzten Schritts (2)\nAbgewehrt: KI-Gegner 1 (spieler-2) wehrt farbendieb-01 mit farbenschutz-02 ab\nAnsageEntschieden: farbendieb-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0\nInvarianten (alle erfüllt)",
+  "fehler": []
+ }
+]
