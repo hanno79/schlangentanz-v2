@@ -1,0 +1,67 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a1acffba110b4c49d
+
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Farbkarte, neue Schlange: der Knopf nennt Karte und Ziel 16ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Farbkarte an ein Ende: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Regenbogenschlange: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Blockade: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Fusion: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Farbendieb: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Schlangenfrass: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Schlangengrube: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A7: Schlangenhäutung: der Knopf nennt Karte und Ziel 1ms
+ ✓ src/entwicklung/beschriftung.test.ts > E5: Beschriftung der Aktionsknöpfe > A5/A6: Aktionen ohne Ziel bleiben kurz; Abwerfen und Reagieren nennen die Karten 1ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D9/A5: eine Farbkarte geht an beide Enden jeder Schlange > D9/A5: aufgezählt sind die neue eigene Schlange und beide Enden jeder Schlange am Tisch, auch der Mitspieler 25ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D9/A5: eine Farbkarte geht an beide Enden jeder Schlange > D9: an das Ende einer gegnerischen Schlange: die Karte liegt dort, die Schlange gehört weiter dem Gegner 9ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D9/A5: eine Farbkarte geht an beide Enden jeder Schlange > D9: an den Anfang einer gegnerischen Schlange, bei drei Spielern auch in die des übernächsten 7ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D9/A5: eine Farbkarte geht an beide Enden jeder Schlange > A5: endet die gegnerische Schlange mit einer Farbenfusion oder einer Blockade, kommt die Farbkarte dahinter; die Fusion bleibt eine Einheit 5ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D9/A5: eine Farbkarte geht an beide Enden jeder Schlange > A5: eine Farbkarte geht nur an ein Ende, nicht an eine Stelle in der Mitte 4ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D9/A5: eine Farbkarte geht an beide Enden jeder Schlange > A5/U12: eine Schlange, die es nicht gibt, wird mit Grund abgelehnt 3ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D19/A5: eine neue Schlange beginnt jeder nur für sich > D19: die neue Schlange gehört dem, der die Farbkarte spielt, auch wenn nur der Gegner eine Schlange hat 4ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D19/A5: eine neue Schlange beginnt jeder nur für sich > D19: eine neue Schlange für einen Mitspieler lässt sich nicht einmal angeben 3ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D19/A5: eine neue Schlange beginnt jeder nur für sich > A5/D19: mit zwei eigenen Schlangen ist eine dritte abgelehnt; an jede Schlange am Tisch darf er weiter anlegen 6ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Kriterium 1, D10/A6: gegen eine Farbkarte gibt es keine Abwehr > D10/A6: in die Schlange eines Gegners mit Farbenschutz: niemand wird gefragt, die Karte wirkt sofort 4ms
+ ✓ src/engine/__tests__/legen_farbkarte.test.ts > E5 Grenzfall: eine Farbkarte vollendet eine gegnerische Gruppe > D9/A11: Rot an Rot-Rot des Gegners ergibt seine rote Dreiergruppe; die Punkte gehören dem Gegner 8ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A5/A7.3/D9: aufgezählt ist jede Lücke 0 bis Länge jeder Schlange am Tisch, eigene und gegnerische 29ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3: in der eigenen Schlange am Anfang (Stelle 0): dort liegt sie, niemand wird gefragt 9ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3: in der eigenen Schlange in der Mitte (Stelle 1): dort liegt sie, niemand wird gefragt 5ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3: in der eigenen Schlange am Ende (Stelle 2): dort liegt sie, niemand wird gefragt 6ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3 Beispiel 1: an Blau-Blau angelegt ergibt sie Blau-Blau-Regenbogenschlange, eine Dreiergruppe mit 2 Punkten 6ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3 Beispiel 2 (Erweiterung, nur das Legen): an Blau-Rot-Gelb-Braun-Grün angelegt; ob „Farbvielfalt“ damit erfüllt ist, prüfen X1/X2 7ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3 Beispiel 3:zwischen Rot-Rot und Braun-Braun gelegt ergibt sie 4 Punkte (zwei braune Karten zu je 2) 4ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3/A7.7: neben einer Farbenfusion: zwischen die fusionierten Karten kommt sie nicht, die Fusion bleibt eine Einheit 5ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3/D31: drei Joker nebeneinander: die dritte Regenbogenschlange darf neben zwei andere 5ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange > A7.3/U12: eine Stelle ausserhalb der Schlange oder eine unbekannte Schlange wird mit Grund abgelehnt 7ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, D16: die Regenbogenschlange beginnt keine Schlange > D16/D13: ohne Schlange am Tisch hat sie kein Ziel und lässt sich nur wirkungslos ablegen 2ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, D16: die Regenbogenschlange beginnt keine Schlange > D16/D9: hat nur der Gegner eine Schlange, geht sie nur dorthin; eine eigene Schlange entsteht nicht 7ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A5/D12: die Sonderkarte des Zuges > A7.3/D12: nach der Regenbogenschlange keine weitere Sonderkarte, eine Farbkarte schon 4ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5/D9: aufgezählt ist jede Lücke 0 bis Länge jeder Schlange am Tisch, auch die Enden und die eigene 25ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5: in die eigene Schlange an Stelle 0, ohne Rückfrage, auch wenn der Gegner Farbenschutz hält 8ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5: in die eigene Schlange an Stelle 1, ohne Rückfrage, auch wenn der Gegner Farbenschutz hält 5ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5: in die eigene Schlange an Stelle 2, ohne Rückfrage, auch wenn der Gegner Farbenschutz hält 5ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5 Beispiel: zwischen die erste und die zweite rote Karte des Gegners: Rot – Blockade – Rot – Rot zählt keine Punkte mehr 9ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5: die Blockade bleibt liegen, auch nach dem Ende des Zuges 4ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange > A7.5/U12: eine Stelle ausserhalb der Schlange wird mit Grund abgelehnt 4ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Grenzfall, D16: ohne Schlange am Tisch > D16/D13: die Blockade hat kein Ziel und lässt sich nur wirkungslos ablegen 3ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz > A6 Beispiel 1, Schritte 1 bis 3: A sagt die Blockade auf die Schlange von B an, B wehrt ab; beide Karten auf dem Ablagestapel ihres Spielers, keine Wirkung 6ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz > A6 Beispiel 1, Schritt 3: A darf die Blockade nicht gegen einen anderen Spieler richten, auch nicht mit seiner zweiten Blockade 6ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz > A6 Beispiel 1, Schritt 4: A füllt am Ende seines Zuges auf, B erst zu Beginn seines nächsten Zuges 6ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz > A7.2 Beispiel: B spielt die Blockade gegen A, A wehrt ab: die Blockade auf den Ablagestapel von B, A bleibt unberührt 4ms
+ ✓ src/engine/__tests__/legen_schlangenblockade.test.ts > E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz > D33: ein Gegner ohne Farbenschutz wird gefragt und kann nur durchlassen; danach liegt die Blockade in seiner Schlange 6ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, A5/D12: die Sonderkarte des Zuges > A5: erst die Farbkarte, dann die Regenbogenschlange 7ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, D10/A6: in der Schlange eines Gegners abwehrbar > D10/A7.2: der Gegner wehrt ab: keine Wirkung, die Regenbogenschlange auf dem Ablagestapel des Spielers, der Farbenschutz auf seinem 6ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, D10/A6: in der Schlange eines Gegners abwehrbar > D9/D33: lässt der Gegner durch, liegt sie in seiner Schlange und nützt ihm (Gelb-Gelb-Regenbogenschlange: 2 Punkte für ihn) 5ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, D10/A6: in der Schlange eines Gegners abwehrbar > D33: auch ein Gegner ohne Farbenschutz wird gefragt und kann nur durchlassen 4ms
+ ✓ src/engine/__tests__/legen_regenbogenschlange.test.ts > E5 Kriterium 2, D10/A6: in der Schlange eines Gegners abwehrbar > A6/D10: bei drei Spielern ist nur der Besitzer der Schlange betroffen, nicht der andere Mitspieler 5ms
+ ✓ src/entwicklung/szenarienLegen.test.ts > E5: Szenarien zum Legen > E5: die Szenarien des Tasks sind da 17ms
+ ✓ src/entwicklung/szenarienLegen.test.ts > E5: Szenarien zum Legen > D9/D10/D19: farbkarte-beim-gegner: keine dritte eigene Schlange, Rot an Rot-Rot von KI-Gegner 1 ohne Rückfrage, Rot×3 zählt für ihn 14ms
+ ✓ src/entwicklung/szenarienLegen.test.ts > E5: Szenarien zum Legen > A7.3 Beispiel 3/D10: regenbogen: in die eigene Schlange ohne Rückfrage (4 Punkte), in die von KI-Gegner 1 abwehrbar 12ms
+ ✓ src/entwicklung/szenarienLegen.test.ts > E5: Szenarien zum Legen > A6 Beispiel 1/A7.5: blockade-abwehr: KI-Gegner 1 wehrt ab, keine zweite Blockade im Zug, Auffüllen erst zu seinem Zugbeginn 8ms
+ ✓ src/entwicklung/TischLegen.test.tsx > E5: Knöpfe zum Legen am Entwicklertisch > A7.5: jeder Knopf BlockadeLegen nennt Schlange und Stelle 675ms
+ ✓ src/entwicklung/TischLegen.test.tsx > E5: Knöpfe zum Legen am Entwicklertisch > A7.3: jeder Knopf RegenbogenschlangeLegen nennt Schlange und Stelle 148ms
+
+ Test Files  6 passed (6)
+      Tests  58 passed (58)
+   Start at  12:51:52
+   Duration  12.87s (transform 2.24s, setup 5.07s, import 3.06s, tests 1.21s, environment 51.27s)
+

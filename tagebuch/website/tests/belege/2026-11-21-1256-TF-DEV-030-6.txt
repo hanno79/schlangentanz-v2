@@ -1,0 +1,302 @@
+[
+ {
+  "klasse": "desktop",
+  "farbkarte": {
+   "knoepfe": 30,
+   "neueSchlange": 0,
+   "ereignisse": "Ereignisse des letzten Schritts (1) | KarteGespielt: Spieler 1 (spieler-1), rot-03 (FarbkarteLegen) → schlange-3 von KI-Gegner 1 (spieler-2), Stelle 2 | ",
+   "reagierenKnoepfe": 0,
+   "messung": {
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "knoepfe": 33,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "regenbogen": {
+   "knoepfe": 8,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), regenbogenschlange-01 (RegenbogenschlangeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er regenbogenschlange-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt regenbogenschlange-01 mit farbenschutz-01 ab | AnsageEntschieden: regenbogenschlange-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "messung": {
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "knoepfe": 31,
+    "ueberlauf": [],
+    "breiteste": 688
+   },
+   "messungAnsage": {
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "knoepfe": 5,
+    "ueberlauf": [],
+    "breiteste": 423
+   }
+  },
+  "blockade": {
+   "knoepfe": 18,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), schlangenblockade-01 (BlockadeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangenblockade-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangenblockade-01 mit farbenschutz-04 ab | AnsageEntschieden: schlangenblockade-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "typenDanach": [
+    "FarbkarteLegen",
+    "ZugBeenden"
+   ],
+   "zugBeenden": "Ereignisse des letzten Schritts (3) | KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1 | ",
+   "messung": {
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "knoepfe": 42,
+    "ueberlauf": [],
+    "breiteste": 586
+   },
+   "messungEnde": {
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "knoepfe": 38,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "konsolenfehler": []
+ },
+ {
+  "klasse": "tablet-quer",
+  "farbkarte": {
+   "knoepfe": 30,
+   "neueSchlange": 0,
+   "ereignisse": "Ereignisse des letzten Schritts (1) | KarteGespielt: Spieler 1 (spieler-1), rot-03 (FarbkarteLegen) → schlange-3 von KI-Gegner 1 (spieler-2), Stelle 2 | ",
+   "reagierenKnoepfe": 0,
+   "messung": {
+    "scrollWidth": 1024,
+    "clientWidth": 1024,
+    "knoepfe": 33,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "regenbogen": {
+   "knoepfe": 8,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), regenbogenschlange-01 (RegenbogenschlangeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er regenbogenschlange-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt regenbogenschlange-01 mit farbenschutz-01 ab | AnsageEntschieden: regenbogenschlange-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "messung": {
+    "scrollWidth": 1024,
+    "clientWidth": 1024,
+    "knoepfe": 31,
+    "ueberlauf": [],
+    "breiteste": 688
+   },
+   "messungAnsage": {
+    "scrollWidth": 1024,
+    "clientWidth": 1024,
+    "knoepfe": 5,
+    "ueberlauf": [],
+    "breiteste": 423
+   }
+  },
+  "blockade": {
+   "knoepfe": 18,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), schlangenblockade-01 (BlockadeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangenblockade-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangenblockade-01 mit farbenschutz-04 ab | AnsageEntschieden: schlangenblockade-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "typenDanach": [
+    "FarbkarteLegen",
+    "ZugBeenden"
+   ],
+   "zugBeenden": "Ereignisse des letzten Schritts (3) | KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1 | ",
+   "messung": {
+    "scrollWidth": 1024,
+    "clientWidth": 1024,
+    "knoepfe": 42,
+    "ueberlauf": [],
+    "breiteste": 586
+   },
+   "messungEnde": {
+    "scrollWidth": 1024,
+    "clientWidth": 1024,
+    "knoepfe": 38,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "konsolenfehler": []
+ },
+ {
+  "klasse": "tablet-hochkant",
+  "farbkarte": {
+   "knoepfe": 30,
+   "neueSchlange": 0,
+   "ereignisse": "Ereignisse des letzten Schritts (1) | KarteGespielt: Spieler 1 (spieler-1), rot-03 (FarbkarteLegen) → schlange-3 von KI-Gegner 1 (spieler-2), Stelle 2 | ",
+   "reagierenKnoepfe": 0,
+   "messung": {
+    "scrollWidth": 768,
+    "clientWidth": 768,
+    "knoepfe": 33,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "regenbogen": {
+   "knoepfe": 8,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), regenbogenschlange-01 (RegenbogenschlangeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er regenbogenschlange-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt regenbogenschlange-01 mit farbenschutz-01 ab | AnsageEntschieden: regenbogenschlange-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "messung": {
+    "scrollWidth": 768,
+    "clientWidth": 768,
+    "knoepfe": 31,
+    "ueberlauf": [],
+    "breiteste": 688
+   },
+   "messungAnsage": {
+    "scrollWidth": 768,
+    "clientWidth": 768,
+    "knoepfe": 5,
+    "ueberlauf": [],
+    "breiteste": 423
+   }
+  },
+  "blockade": {
+   "knoepfe": 18,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), schlangenblockade-01 (BlockadeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangenblockade-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangenblockade-01 mit farbenschutz-04 ab | AnsageEntschieden: schlangenblockade-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "typenDanach": [
+    "FarbkarteLegen",
+    "ZugBeenden"
+   ],
+   "zugBeenden": "Ereignisse des letzten Schritts (3) | KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1 | ",
+   "messung": {
+    "scrollWidth": 768,
+    "clientWidth": 768,
+    "knoepfe": 42,
+    "ueberlauf": [],
+    "breiteste": 586
+   },
+   "messungEnde": {
+    "scrollWidth": 768,
+    "clientWidth": 768,
+    "knoepfe": 38,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "konsolenfehler": []
+ },
+ {
+  "klasse": "handy-hochkant",
+  "farbkarte": {
+   "knoepfe": 30,
+   "neueSchlange": 0,
+   "ereignisse": "Ereignisse des letzten Schritts (1) | KarteGespielt: Spieler 1 (spieler-1), rot-03 (FarbkarteLegen) → schlange-3 von KI-Gegner 1 (spieler-2), Stelle 2 | ",
+   "reagierenKnoepfe": 0,
+   "messung": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "knoepfe": 33,
+    "ueberlauf": [],
+    "breiteste": 326
+   }
+  },
+  "regenbogen": {
+   "knoepfe": 8,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), regenbogenschlange-01 (RegenbogenschlangeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er regenbogenschlange-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt regenbogenschlange-01 mit farbenschutz-01 ab | AnsageEntschieden: regenbogenschlange-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "messung": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "knoepfe": 31,
+    "ueberlauf": [],
+    "breiteste": 326
+   },
+   "messungAnsage": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "knoepfe": 5,
+    "ueberlauf": [],
+    "breiteste": 326
+   }
+  },
+  "blockade": {
+   "knoepfe": 18,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), schlangenblockade-01 (BlockadeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangenblockade-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangenblockade-01 mit farbenschutz-04 ab | AnsageEntschieden: schlangenblockade-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "typenDanach": [
+    "FarbkarteLegen",
+    "ZugBeenden"
+   ],
+   "zugBeenden": "Ereignisse des letzten Schritts (3) | KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1 | ",
+   "messung": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "knoepfe": 42,
+    "ueberlauf": [],
+    "breiteste": 326
+   },
+   "messungEnde": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "knoepfe": 38,
+    "ueberlauf": [],
+    "breiteste": 326
+   }
+  },
+  "konsolenfehler": []
+ },
+ {
+  "klasse": "handy-quer",
+  "farbkarte": {
+   "knoepfe": 30,
+   "neueSchlange": 0,
+   "ereignisse": "Ereignisse des letzten Schritts (1) | KarteGespielt: Spieler 1 (spieler-1), rot-03 (FarbkarteLegen) → schlange-3 von KI-Gegner 1 (spieler-2), Stelle 2 | ",
+   "reagierenKnoepfe": 0,
+   "messung": {
+    "scrollWidth": 844,
+    "clientWidth": 844,
+    "knoepfe": 33,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "regenbogen": {
+   "knoepfe": 8,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), regenbogenschlange-01 (RegenbogenschlangeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er regenbogenschlange-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt regenbogenschlange-01 mit farbenschutz-01 ab | AnsageEntschieden: regenbogenschlange-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "messung": {
+    "scrollWidth": 844,
+    "clientWidth": 844,
+    "knoepfe": 31,
+    "ueberlauf": [],
+    "breiteste": 688
+   },
+   "messungAnsage": {
+    "scrollWidth": 844,
+    "clientWidth": 844,
+    "knoepfe": 5,
+    "ueberlauf": [],
+    "breiteste": 423
+   }
+  },
+  "blockade": {
+   "knoepfe": 18,
+   "ansage": "Ereignisse des letzten Schritts (2) | KarteAngesagt: Spieler 1 (spieler-1), schlangenblockade-01 (BlockadeLegen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangenblockade-01 abwehrt | ",
+   "abwehr": "Ereignisse des letzten Schritts (2) | Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangenblockade-01 mit farbenschutz-04 ab | AnsageEntschieden: schlangenblockade-01 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 | ",
+   "typenDanach": [
+    "FarbkarteLegen",
+    "ZugBeenden"
+   ],
+   "zugBeenden": "Ereignisse des letzten Schritts (3) | KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1 | ",
+   "messung": {
+    "scrollWidth": 844,
+    "clientWidth": 844,
+    "knoepfe": 42,
+    "ueberlauf": [],
+    "breiteste": 586
+   },
+   "messungEnde": {
+    "scrollWidth": 844,
+    "clientWidth": 844,
+    "knoepfe": 38,
+    "ueberlauf": [],
+    "breiteste": 451
+   }
+  },
+  "konsolenfehler": []
+ }
+]
