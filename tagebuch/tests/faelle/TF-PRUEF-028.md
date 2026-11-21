@@ -8,9 +8,12 @@ herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
 aenderung: task/P0.3d-ki-grenze (PR #55)
+status: stillgelegt
 ---
 
 ## Worum es geht
+
+Stillgelegt mit P0.3d, Abschluss 2: Seit der Entscheidung des Autors vom 21.11.2026 erkennt der Isolationstest geteiltes Wissen am Verhalten, der Architekturtest ist nur noch die erste Hürde. Die Nachfolger sind die Isolationstest-Fälle ab TF-PRUEF-033.
 
 Seit P0.3d gilt KI-Code ausserhalb von `src/ki/sicht.ts` als nicht vertrauenswürdig. Der Architekturtest soll deshalb jeden Versuch melden, den vollen Zustand anders als unverändert weiterzureichen, ein globales Objekt wie `structuredClone` zu ersetzen oder Zufall und Zeit selbst zu holen. Der Test spielt einen Angreifer, der neue Umgehungen in eigene Dateien unter `src/ki` schreibt.
 
