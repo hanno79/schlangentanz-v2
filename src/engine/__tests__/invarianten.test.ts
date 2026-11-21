@@ -258,7 +258,7 @@ describe('A10: Partiephase', () => {
 
   it('A10: eine beendete Partie mit schwebender Karte wird gemeldet', () => {
     const zustand = baukasten({ spielerzahl: 2, erweiterung: false })
-      .schwebend(0, 'Verdoppler', (karteId, spielerId) => ({ typ: 'VerdopplerSpielen', spielerId, karteId }), [])
+      .schwebend(0, 'Verdoppler', (karteId, spielerId) => ({ typ: 'VerdopplerSpielen', spielerId, karteId }), [1])
       .zustand()
     zustand.partiephase = 'Beendet'
     zustand.schlussrundeAusloeser = 0

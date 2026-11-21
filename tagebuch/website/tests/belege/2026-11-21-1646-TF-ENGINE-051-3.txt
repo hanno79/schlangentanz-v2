@@ -1,0 +1,3 @@
+ermittleAktionen: 39375 Aktionen; ms je Lauf: 64.8, 53.3, 40.6, 51.7, 45.7, 55.2, 26.5
+pruefeAktion über alle 39375: 153.8 ms, abgelehnt 0
+anwendeAktion, 5 Proben: 2.1 ms

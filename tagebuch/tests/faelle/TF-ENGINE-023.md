@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
-skript: src/engine/__tests__/reaktion.test.ts
+skript: src/engine/__tests__/regeln/A6_reaktion.test.ts
 aenderung: task/E4-abwehr-grube (PR #54)
 ---
 

@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
-skript: src/engine/__tests__/zugablauf_ausspielen.test.ts
+skript: src/engine/__tests__/regeln/A5_ausspielen.test.ts
 aenderung: task/E2-zugablauf (PR #36)
 ---
 
@@ -35,7 +35,7 @@ Die Zustände baut der Szenario-Baukasten der Engine aus echtem Material (feste 
 
 ## Technische Prüfung
 
-`npx vitest run src/engine/__tests__/zugablauf_ausspielen.test.ts src/engine/__tests__/zugablauf_nachziehen.test.ts src/engine/__tests__/zugablauf_schlussrunde.test.ts src/engine/__tests__/aktionen.test.ts` endet mit Exit 0.
+`npx vitest run src/engine/__tests__/regeln/A5_ausspielen.test.ts src/engine/__tests__/regeln/A5_nachziehen.test.ts src/engine/__tests__/regeln/A10_schlussrunde.test.ts src/engine/__tests__/aktionen.test.ts` endet mit Exit 0.
 
 ## Nicht abgedeckte Grenzfälle
 

@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
-skript: src/engine/__tests__/legen_schlangenblockade.test.ts
+skript: src/engine/__tests__/regeln/A7.5_schlangenblockade.test.ts
 aenderung: task/E5-legen (PR #66)
 ---
 
@@ -49,8 +49,8 @@ Szenario `blockade-abwehr` (Saat 53, drei Spieler). Karten schlangenblockade-01 
 
 ## Technische Prüfung
 
-`npx vitest run src/engine/__tests__/legen_schlangenblockade.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
+`npx vitest run src/engine/__tests__/regeln/A7.5_schlangenblockade.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
 
 ## Nicht abgedeckte Grenzfälle
 
-Durchlassen (Feuerkeim, Blockade, Feuerkeim, Feuerkeim mit 0 Punkten), Blockade in der eigenen Schlange ohne Rückfrage und Blockade ohne Schlange am Tisch stehen als Tests in `legen_schlangenblockade.test.ts`. Ungültige Stellen, vier Spieler und Aktionen des Angreifers während der offenen Frage stehen in TF-ENGINE-043. Entfernen durch Schlangenfrass gehört zu E6.
+Durchlassen (Feuerkeim, Blockade, Feuerkeim, Feuerkeim mit 0 Punkten), Blockade in der eigenen Schlange ohne Rückfrage und Blockade ohne Schlange am Tisch stehen als Tests in `A7.5_schlangenblockade.test.ts`. Ungültige Stellen, vier Spieler und Aktionen des Angreifers während der offenen Frage stehen in TF-ENGINE-043. Entfernen durch Schlangenfrass gehört zu E6.

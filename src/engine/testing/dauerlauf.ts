@@ -64,12 +64,17 @@ export function dauerlaufPartien(anzahl: number, erweiterung: boolean, ersteSaat
   return Array.from({ length: anzahl }, (_, index) => ({ saat: ersteSaat + index, spielerzahl: 2 + (index % 3), erweiterung }));
 }
 
-/** Der Befund des Zustands, bevor die nächste Aktion gewählt wird, oder `null`. */
+/**
+ * Der Befund des Zustands, bevor die nächste Aktion gewählt wird, oder `null`.
+ * Laden prüft die Invarianten mit (`deserialisiere`); einzeln gesucht werden sie
+ * nur, wenn Speichern und Laden scheitert, damit der Befund sie beim Namen nennt.
+ */
 function befundVorDemSchritt(zustand: Spielzustand): { ausgang: DauerlaufAusgang; detail: string } | null {
+  const speichern = pruefeSpeichernUndLaden(zustand);
+  if (speichern.length === 0) return null;
   const verletzt = pruefeInvarianten(zustand).filter((befund) => befund.verletzt);
   if (verletzt.length > 0) return { ausgang: 'invariante', detail: verletzt.map((befund) => `${befund.name}: ${befund.detail}`).join(' | ') };
-  const speichern = pruefeSpeichernUndLaden(zustand);
-  return speichern.length > 0 ? { ausgang: 'speichern', detail: speichern.join(' ') } : null;
+  return { ausgang: 'speichern', detail: speichern.join(' ') };
 }
 
 /** Wer gerade dran ist und wie viele Handkarten er hält, für die Meldung „festgefahren“. */

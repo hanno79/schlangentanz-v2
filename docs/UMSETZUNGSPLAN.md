@@ -191,7 +191,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 | U10 | Keine neue Laufzeit-Abhängigkeit. Neue Entwicklungs-Abhängigkeiten nur, wenn der Task sie nennt. | Prüfer liest `package.json`-Diff |
 | U11 | Kein Code aus Altprojekten. | Prüfer |
 | U12 | Fehlermeldungen der Engine sind deutsch und nennen den Grund. | Regeltests |
-| U13 | `docs/GAME_SPEC.md`, `tests/spec_documentation.test.ts`, `src/engine/aktionen/typen.ts` und `src/engine/karten/register.ts` ändert nach E1 nur der Orchestrator oder ein Task, der es ausdrücklich nennt. | Prüfer liest Diff |
+| U13 | `docs/GAME_SPEC.md`, `tests/spec_documentation*.ts`, `src/engine/aktionen/typen.ts` und `src/engine/karten/register.ts` ändert nach E1 nur der Orchestrator oder ein Task, der es ausdrücklich nennt. | Prüfer liest Diff |
 
 ### 3.8 Kosten
 

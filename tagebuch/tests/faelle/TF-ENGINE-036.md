@@ -16,7 +16,7 @@ Geprüft wird, ob die Tests einen Fehler im Code bemerken. Dazu werden fünf Reg
 
 ## Bestanden, wenn
 
-Jede der fünf Verfälschungen aus „Testdaten“ führt zu Exit 1 mit mindestens einem roten Test, dessen Name die verfälschte Regel nennt. GP3 macht den Test „A7.1: in eine eigene Schlange: Herkunft …, Ziel an der angesagten Stelle …“ in `farbendieb_ereignisse.test.ts` rot. Nach dem Zurücksetzen ist `git status` leer.
+Jede der fünf Verfälschungen aus „Testdaten“ führt zu Exit 1 mit mindestens einem roten Test, dessen Name die verfälschte Regel nennt. GP3 macht den Test „A7.1: in eine eigene Schlange: Herkunft …, Ziel an der angesagten Stelle …“ in `A7.1_farbendieb_ereignisse.test.ts` rot. Nach dem Zurücksetzen ist `git status` leer.
 
 ## Fehlgeschlagen, wenn
 
@@ -42,13 +42,13 @@ Nach einer Verfälschung laufen alle Tests grün (Exit 0), oder es wird nur ein 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
 | 1 | Editor | Verfälschung 1 einbauen | Testdaten 1 | nur diese Datei geändert |
-| 2 | Konsole im Repo | Farbendieb-Tests ausführen | `npx vitest run src/engine/__tests__/farbendieb.test.ts src/engine/__tests__/farbendieb_abwehr.test.ts src/engine/__tests__/farbendieb_ereignisse.test.ts src/entwicklung/szenarienFarbendieb.test.ts` | Exit 1; rot u. a. „D2: die Sonderkarte … wird abgelehnt“ (5 rot) |
+| 2 | Konsole im Repo | Farbendieb-Tests ausführen | `npx vitest run src/engine/__tests__/regeln/A7.1_farbendieb.test.ts src/engine/__tests__/regeln/A7.1_farbendieb_abwehr.test.ts src/engine/__tests__/regeln/A7.1_farbendieb_ereignisse.test.ts src/entwicklung/szenarienFarbendieb.test.ts` | Exit 1; rot u. a. „D2: die Sonderkarte … wird abgelehnt“ (5 rot) |
 | 3 | Konsole im Repo | zurücksetzen | `git checkout -- src/engine/karten/farbendieb.ts` | `git status` leer |
 | 4 | Editor und Konsole | wie 1 bis 3 mit Verfälschung 2 | Testdaten 2 | Exit 1; rot u. a. „an Stelle 1 liegt die Karte danach genau dort“ (9 rot) |
-| 5 | Editor und Konsole | Verfälschung 3, nur `farbendieb_ereignisse.test.ts` ausführen, dann `git checkout -- src/engine/kartenorte.ts` | Testdaten 3 | Exit 1; 2 rot, Meldung „der Schritt lässt sich nicht nachrechnen“ |
+| 5 | Editor und Konsole | Verfälschung 3, nur `A7.1_farbendieb_ereignisse.test.ts` ausführen, dann `git checkout -- src/engine/kartenorte.ts` | Testdaten 3 | Exit 1; 2 rot, Meldung „der Schritt lässt sich nicht nachrechnen“ |
 | 6 | Editor und Konsole | wie 1 bis 3 mit Verfälschung 4 | Testdaten 4 | Exit 1; rot u. a. „A6/D33: betroffen ist nur der Besitzer …“ (9 rot) |
 | 7 | Editor und Konsole | wie 1 bis 3 mit Verfälschung 5 | Testdaten 5 | Exit 1; rot u. a. „D17: hat der Dieb eine Schlange, beginnt die gestohlene Karte keine neue“ (3 rot) |
 
 ## Nicht abgedeckte Grenzfälle
 
-Bei GP1 und GP4 bleibt der Dauerlauf in `farbendieb_abwehr.test.ts` grün; rot werden nur die gezielten Tests. Eine Verfälschung der Abwehr selbst gehört zu E4 und wird hier nicht wiederholt.
+Bei GP1 und GP4 bleibt der Dauerlauf in `A7.1_farbendieb_abwehr.test.ts` grün; rot werden nur die gezielten Tests. Eine Verfälschung der Abwehr selbst gehört zu E4 und wird hier nicht wiederholt.

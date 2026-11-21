@@ -17,7 +17,7 @@ Der Autor hat am 20.11.2026 drei Antworten präzisiert: Regenbogenschlange, Fusi
 
 ## Bestanden, wenn
 
-Jede der drei Gegenproben unter „Testdaten“ lässt `npx vitest run tests/spec_documentation.test.ts tests/regelfragen_antworten.test.ts tests/regelfragen.test.ts` mit 1 enden. Gegenprobe 1 macht „D31: drei Joker nebeneinander sind eine Gruppe …“ und „P0.5: G9: gewählt „a“ …“ rot, Gegenprobe 2 „D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden …“, Gegenprobe 3 „P0.5: F6 steht in Teil D …“ mit der Meldung „F6: Beleg steht nicht in Teil A“.
+Jede der drei Gegenproben unter „Testdaten“ lässt `npx vitest run tests/spec_documentation_teil_d.test.ts tests/regelfragen_antworten.test.ts tests/regelfragen.test.ts` mit 1 enden. Gegenprobe 1 macht „D31: drei Joker nebeneinander sind eine Gruppe …“ und „P0.5: G9: gewählt „a“ …“ rot, Gegenprobe 2 „D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden …“, Gegenprobe 3 „P0.5: F6 steht in Teil D …“ mit der Meldung „F6: Beleg steht nicht in Teil A“.
 
 ## Fehlgeschlagen, wenn
 
@@ -38,7 +38,7 @@ Gegenprobe 1: in der Zeile D31 von `docs/GAME_SPEC.md` „Regenbogenschlange: ei
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
 | 1 | Editor, `docs/GAME_SPEC.md`, Teil D, Zeile D31 | Gegenprobe 1 einsetzen, speichern | siehe „Testdaten“ | |
-| 2 | Git Bash im Repo | Tests ausführen | `npx vitest run tests/spec_documentation.test.ts tests/regelfragen_antworten.test.ts tests/regelfragen.test.ts; echo $?` | Exit 1, rot: D31 und G9 |
+| 2 | Git Bash im Repo | Tests ausführen | `npx vitest run tests/spec_documentation_teil_d.test.ts tests/regelfragen_antworten.test.ts tests/regelfragen.test.ts; echo $?` | Exit 1, rot: D31 und G9 |
 | 3 | Git Bash im Repo | zurücksetzen | `git checkout -- docs/GAME_SPEC.md` | `git status` leer |
 | 4 | Editor, `docs/GAME_SPEC.md`, Teil D, Zeile D23 | Gegenprobe 2 einsetzen, speichern | siehe „Testdaten“ | |
 | 5 | Git Bash im Repo | Tests wie in Schritt 2 | | Exit 1, rot: D23 |

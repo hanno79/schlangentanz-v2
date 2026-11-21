@@ -81,8 +81,8 @@ export function pruefeAktionsform(wert: unknown): string | null {
 export function ermittleEntscheider(zustand: Spielzustand): number | null {
   if (zustand.partiephase === 'Beendet') return null;
   const { schwebend } = zustand;
-  if (schwebend === null) return zustand.zug.spielerIndex;
-  return schwebend.ausstehend[0] ?? zustand.spieler.findIndex((spieler) => spieler.id === schwebend.aktion.spielerId);
+  // Eine schwebende Karte hat immer einen Ausstehenden (Invariante, A6).
+  return schwebend === null ? zustand.zug.spielerIndex : schwebend.ausstehend[0];
 }
 
 const MAENNLICH = new Set<Kartenart>(['Farbenschutz', 'Farbendieb', 'Schlangenfrass', 'Verdoppler', 'Schlangenkorb des Glücks']);

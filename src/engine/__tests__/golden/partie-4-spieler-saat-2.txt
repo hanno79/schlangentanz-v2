@@ -1,0 +1,1130 @@
+Partie aus Saat 2, 4 Spieler, ohne Erweiterung
+Gewählt wird gleichverteilt unter den aufgezählten Aktionen (nach ihrer JSON-Form sortiert).
+Aufbau (A4): je 5 Handkarten, 88 Karten im Nachziehstapel.
+
+Zug von Spieler 1
+    Spieler 1: Hand Rot (rot-09), Rot (rot-11), Violett (violett-03), Farbenfusion (farbenfusion-02), Violett (violett-02)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Farbendieb (farbendieb-03), Violett (violett-08), Schlangengrube (schlangengrube-01), Regenbogenschlange (regenbogenschlange-01)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 2: Hand Verdoppler (verdoppler-01), Blau (blau-03), Rot (rot-10), Rot (rot-06), Farbenschutz (farbenschutz-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-09), Gelb (gelb-09), Schlangenfrass (schlangenfrass-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    Nachziehstapel: 88 Karten
+  1. Spieler 1 beginnt mit Rot (rot-09) eine neue Schlange.
+     Rot (rot-09) liegt jetzt: schlange-1 von Spieler 1, Stelle 0.
+  2. Spieler 1 legt Farbenfusion (farbenfusion-02) ohne Wirkung ab.
+     Farbenfusion (farbenfusion-02) liegt jetzt: Ablagestapel von Spieler 1.
+  3. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: schlange-1: Rot; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Farbendieb (farbendieb-03), Violett (violett-08), Schlangengrube (schlangengrube-01), Regenbogenschlange (regenbogenschlange-01)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 2: Hand Verdoppler (verdoppler-01), Blau (blau-03), Rot (rot-10), Rot (rot-06), Farbenschutz (farbenschutz-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-09), Gelb (gelb-09), Schlangenfrass (schlangenfrass-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    Nachziehstapel: 86 Karten
+  4. KI-Gegner 1 spielt Schlangengrube (schlangengrube-01) auf Spieler 1.
+     Schlangengrube (schlangengrube-01) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  5. Spieler 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangengrube (schlangengrube-01) liegt jetzt: vor Spieler 1.
+  6. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: schlange-1: Rot; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Farbendieb (farbendieb-03), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Gelb (gelb-02)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 2: Hand Verdoppler (verdoppler-01), Blau (blau-03), Rot (rot-10), Rot (rot-06), Farbenschutz (farbenschutz-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-09), Gelb (gelb-09), Schlangenfrass (schlangenfrass-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    Nachziehstapel: 85 Karten; liegt aus: Schlangengrube (schlangengrube-01) vor Spieler 1
+  7. KI-Gegner 2 beginnt mit Blau (blau-03) eine neue Schlange.
+     Blau (blau-03) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 0.
+  8. KI-Gegner 2 spielt Verdoppler (verdoppler-01).
+     Verdoppler (verdoppler-01) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  9. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 2, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: schlange-1: Rot; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Farbendieb (farbendieb-03), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Gelb (gelb-02)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 2: Hand Rot (rot-10), Rot (rot-06), Farbenschutz (farbenschutz-04), Blau (blau-07), Gelb (gelb-15)
+      Schlangen: schlange-2: Blau; Ablagestapel: 1 Karte, oben Verdoppler
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-09), Gelb (gelb-09), Schlangenfrass (schlangenfrass-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    Nachziehstapel: 83 Karten; liegt aus: Schlangengrube (schlangengrube-01) vor Spieler 1
+  10. KI-Gegner 2 legt Rot (rot-06) an den Anfang von schlange-2 von KI-Gegner 2.
+     Rot (rot-06) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 0.
+  11. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: schlange-1: Rot; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Farbendieb (farbendieb-03), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Gelb (gelb-02)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    KI-Gegner 2: Hand Rot (rot-10), Farbenschutz (farbenschutz-04), Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03)
+      Schlangen: schlange-2: Rot - Blau; Ablagestapel: 1 Karte, oben Verdoppler
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-09), Gelb (gelb-09), Schlangenfrass (schlangenfrass-04)
+      Schlangen: keine; Ablagestapel: 0 Karten
+    Nachziehstapel: 82 Karten; liegt aus: Schlangengrube (schlangengrube-01) vor Spieler 1
+  12. KI-Gegner 3 legt Blau (blau-09) an das Ende von schlange-2 von KI-Gegner 2.
+     Blau (blau-09) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 2.
+  13. KI-Gegner 3 frisst mit Schlangenfrass (schlangenfrass-04), Option c), Rot (rot-09) aus schlange-1 von Spieler 1 und Rot (rot-06) aus schlange-2 von KI-Gegner 2.
+     Schlangenfrass (schlangenfrass-04) ist angesagt; betroffen: Spieler 1, KI-Gegner 2.
+     Spieler 1 entscheidet, ob er abwehrt.
+  14. Spieler 1 lässt durch.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  15. KI-Gegner 2 wehrt mit Farbenschutz (farbenschutz-04) ab.
+     KI-Gegner 2 wehrt Schlangenfrass (schlangenfrass-04) mit Farbenschutz (farbenschutz-04) ab.
+     Versetzt: Rot (rot-09) von schlange-1, Stelle 0 nach Ablagestapel von KI-Gegner 3; aufgelöst: schlange-1.
+     Entschieden, abgewehrt von KI-Gegner 2; Schlangenfrass (schlangenfrass-04) liegt jetzt: Ablagestapel von KI-Gegner 3.
+  16. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 2 Karten.
+     Spieler 1 setzt aus; Schlangengrube (schlangengrube-01) kommt auf den Ablagestapel von KI-Gegner 1.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Farbendieb (farbendieb-03), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Gelb (gelb-02)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-10), Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03)
+      Schlangen: schlange-2: Rot - Blau - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-09), Blau (blau-10), Gelb (gelb-06)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 80 Karten
+  17. KI-Gegner 1 beginnt mit Gelb (gelb-02) eine neue Schlange.
+     Gelb (gelb-02) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 0.
+  18. KI-Gegner 1 stiehlt mit Farbendieb (farbendieb-03) Rot (rot-06) aus schlange-2 von KI-Gegner 2 und legt sie in schlange-3 von KI-Gegner 1 an Stelle 1.
+     Farbendieb (farbendieb-03) ist angesagt; betroffen: KI-Gegner 2.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  19. KI-Gegner 2 lässt durch.
+     Versetzt: Rot (rot-06) von schlange-2 von KI-Gegner 2, Stelle 0 nach schlange-3 von KI-Gegner 1, Stelle 1.
+     Entschieden, niemand hat abgewehrt; Farbendieb (farbendieb-03) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  20. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Schlangenfrass (schlangenfrass-01), Rot (rot-14)
+      Schlangen: schlange-3: Gelb - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Rot (rot-10), Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03), Rot (rot-08)
+      Schlangen: schlange-2: Blau - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-09), Blau (blau-10), Gelb (gelb-06)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 77 Karten
+  21. KI-Gegner 2 legt Rot (rot-10) an das Ende von schlange-3 von KI-Gegner 1.
+     Rot (rot-10) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 2.
+  22. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Schlangenfrass (schlangenfrass-01), Rot (rot-14)
+      Schlangen: schlange-3: Gelb - Rot - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03), Rot (rot-08), Braun (braun-07)
+      Schlangen: schlange-2: Blau - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-09), Blau (blau-10), Gelb (gelb-06)
+      Schlangen: keine; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 76 Karten
+  23. KI-Gegner 3 beginnt mit Gelb (gelb-09) eine neue Schlange.
+     Gelb (gelb-09) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  24. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Rot (rot-11), Violett (violett-03), Violett (violett-02), Regenbogenschlange (regenbogenschlange-03), Braun (braun-06)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Schlangenfrass (schlangenfrass-01), Rot (rot-14)
+      Schlangen: schlange-3: Gelb - Rot - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03), Rot (rot-08), Braun (braun-07)
+      Schlangen: schlange-2: Blau - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-10), Gelb (gelb-06), Rot (rot-07)
+      Schlangen: schlange-4: Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 75 Karten
+  25. Spieler 1 legt Rot (rot-11) an den Anfang von schlange-3 von KI-Gegner 1.
+     Rot (rot-11) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 0.
+  26. Spieler 1 legt Regenbogenschlange (regenbogenschlange-03) in schlange-2 von KI-Gegner 2 an Stelle 1.
+     Regenbogenschlange (regenbogenschlange-03) ist angesagt; betroffen: KI-Gegner 2.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  27. KI-Gegner 2 lässt durch.
+     Entschieden, niemand hat abgewehrt; Regenbogenschlange (regenbogenschlange-03) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 1.
+  28. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Grün (gruen-05), Braun (braun-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Regenbogenschlange (regenbogenschlange-01), Schlangenfrass (schlangenfrass-01), Rot (rot-14)
+      Schlangen: schlange-3: Rot - Gelb - Rot - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03), Rot (rot-08), Braun (braun-07)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-10), Gelb (gelb-06), Rot (rot-07)
+      Schlangen: schlange-4: Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 73 Karten
+  29. KI-Gegner 1 legt Regenbogenschlange (regenbogenschlange-01) in schlange-3 von KI-Gegner 1 an Stelle 3.
+     Regenbogenschlange (regenbogenschlange-01) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 3.
+  30. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Grün (gruen-05), Braun (braun-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Schlangenfrass (schlangenfrass-01), Rot (rot-14), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-3: Rot - Gelb - Rot - Regenbogenschlange - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Blau (blau-07), Gelb (gelb-15), Schlangenblockade (schlangenblockade-03), Rot (rot-08), Braun (braun-07)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-10), Gelb (gelb-06), Rot (rot-07)
+      Schlangen: schlange-4: Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 72 Karten
+  31. KI-Gegner 2 legt Blau (blau-07) an den Anfang von schlange-4 von KI-Gegner 3.
+     Blau (blau-07) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  32. KI-Gegner 2 legt Schlangenblockade (schlangenblockade-03) in schlange-3 von KI-Gegner 1 an Stelle 2.
+     Schlangenblockade (schlangenblockade-03) ist angesagt; betroffen: KI-Gegner 1.
+     KI-Gegner 1 entscheidet, ob er abwehrt.
+  33. KI-Gegner 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangenblockade (schlangenblockade-03) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 2.
+  34. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Grün (gruen-05), Braun (braun-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Schlangenfrass (schlangenfrass-01), Rot (rot-14), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Gelb (gelb-03), Verdoppler (verdoppler-02)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Blau (blau-10), Gelb (gelb-06), Rot (rot-07)
+      Schlangen: schlange-4: Blau - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 70 Karten
+  35. KI-Gegner 3 legt Blau (blau-10) an das Ende von schlange-2 von KI-Gegner 2.
+     Blau (blau-10) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 3.
+  36. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Grün (gruen-05), Braun (braun-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Schlangenfrass (schlangenfrass-01), Rot (rot-14), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Gelb (gelb-03), Verdoppler (verdoppler-02)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Rot (rot-03)
+      Schlangen: schlange-4: Blau - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 69 Karten
+  37. Spieler 1 legt Grün (gruen-05) an den Anfang von schlange-4 von KI-Gegner 3.
+     Grün (gruen-05) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  38. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-03), Farbenfusion (farbenfusion-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Regenbogenschlange (regenbogenschlange-04), Violett (violett-08), Schlangenfrass (schlangenfrass-01), Rot (rot-14), Schlangenblockade (schlangenblockade-01)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Gelb (gelb-03), Verdoppler (verdoppler-02)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau - Blau; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Rot (rot-03)
+      Schlangen: schlange-4: Grün - Blau - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 68 Karten
+  39. KI-Gegner 1 legt Regenbogenschlange (regenbogenschlange-04) in schlange-3 von KI-Gegner 1 an Stelle 5.
+     Regenbogenschlange (regenbogenschlange-04) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 5.
+  40. KI-Gegner 1 legt Rot (rot-14) an das Ende von schlange-2 von KI-Gegner 2.
+     Rot (rot-14) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 4.
+  41. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-03), Farbenfusion (farbenfusion-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenfrass (schlangenfrass-01), Schlangenblockade (schlangenblockade-01), Grün (gruen-02), Grün (gruen-03)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Rot; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Gelb (gelb-03), Verdoppler (verdoppler-02)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau - Blau - Rot; Ablagestapel: 2 Karten, oben Farbenschutz
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Rot (rot-03)
+      Schlangen: schlange-4: Grün - Blau - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 66 Karten
+  42. KI-Gegner 2 spielt Verdoppler (verdoppler-02).
+     Verdoppler (verdoppler-02) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  43. KI-Gegner 2 legt Gelb (gelb-03) an das Ende von schlange-3 von KI-Gegner 1.
+     Gelb (gelb-03) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 7.
+  44. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 2, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-03), Farbenfusion (farbenfusion-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenfrass (schlangenfrass-01), Schlangenblockade (schlangenblockade-01), Grün (gruen-02), Grün (gruen-03)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Rot - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Rot (rot-01), Farbendieb (farbendieb-04)
+      Schlangen: schlange-2: Blau - Regenbogenschlange - Blau - Blau - Rot; Ablagestapel: 3 Karten, oben Verdoppler
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Rot (rot-03)
+      Schlangen: schlange-4: Grün - Blau - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 64 Karten
+  45. KI-Gegner 2 stiehlt mit Farbendieb (farbendieb-04) Blau (blau-07) aus schlange-4 von KI-Gegner 3 und legt sie in schlange-2 von KI-Gegner 2 an Stelle 0.
+     Farbendieb (farbendieb-04) ist angesagt; betroffen: KI-Gegner 3.
+     KI-Gegner 3 entscheidet, ob er abwehrt.
+  46. KI-Gegner 3 lässt durch.
+     Versetzt: Blau (blau-07) von schlange-4 von KI-Gegner 3, Stelle 1 nach schlange-2 von KI-Gegner 2, Stelle 0.
+     Entschieden, niemand hat abgewehrt; Farbendieb (farbendieb-04) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  47. KI-Gegner 2 beginnt mit Rot (rot-01) eine neue Schlange.
+     Rot (rot-01) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 0.
+  48. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-03), Farbenfusion (farbenfusion-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenfrass (schlangenfrass-01), Schlangenblockade (schlangenblockade-01), Grün (gruen-02), Grün (gruen-03)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Rot - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Farbendieb (farbendieb-01), Farbenfusion (farbenfusion-04)
+      Schlangen: schlange-2: Blau - Blau - Regenbogenschlange - Blau - Blau - Rot | schlange-5: Rot; Ablagestapel: 4 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Rot (rot-03)
+      Schlangen: schlange-4: Grün - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 62 Karten
+  49. KI-Gegner 3 legt Rot (rot-03) an den Anfang von schlange-4 von KI-Gegner 3.
+     Rot (rot-03) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  50. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-03), Farbenfusion (farbenfusion-03)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenfrass (schlangenfrass-01), Schlangenblockade (schlangenblockade-01), Grün (gruen-02), Grün (gruen-03)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Rot - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Farbendieb (farbendieb-01), Farbenfusion (farbenfusion-04)
+      Schlangen: schlange-2: Blau - Blau - Regenbogenschlange - Blau - Blau - Rot | schlange-5: Rot; Ablagestapel: 4 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15)
+      Schlangen: schlange-4: Rot - Grün - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 61 Karten
+  51. Spieler 1 legt Braun (braun-03) an das Ende von schlange-4 von KI-Gegner 3.
+     Braun (braun-03) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 3.
+  52. Spieler 1 legt Farbenfusion (farbenfusion-03) auf Blau (blau-09) und Blau (blau-10) in schlange-2 von KI-Gegner 2.
+     Farbenfusion (farbenfusion-03) ist angesagt; betroffen: KI-Gegner 2.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  53. KI-Gegner 2 lässt durch.
+     Versetzt: Blau (blau-09) von schlange-2 von KI-Gegner 2, Stelle 3 nach unter Farbenfusion (farbenfusion-03) in schlange-2 von KI-Gegner 2, Stelle 0; Blau (blau-10) von schlange-2 von KI-Gegner 2, Stelle 4 nach unter Farbenfusion (farbenfusion-03) in schlange-2 von KI-Gegner 2, Stelle 1.
+     Entschieden, niemand hat abgewehrt; Farbenfusion (farbenfusion-03) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 3.
+  54. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Gelb (gelb-12)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenfrass (schlangenfrass-01), Schlangenblockade (schlangenblockade-01), Grün (gruen-02), Grün (gruen-03)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Rot - Gelb; Ablagestapel: 2 Karten, oben Farbendieb
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Farbendieb (farbendieb-01), Farbenfusion (farbenfusion-04)
+      Schlangen: schlange-2: Blau - Blau - Regenbogenschlange - Farbenfusion[Blau+Blau] - Rot | schlange-5: Rot; Ablagestapel: 4 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15)
+      Schlangen: schlange-4: Rot - Grün - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 59 Karten
+  55. KI-Gegner 1 frisst mit Schlangenfrass (schlangenfrass-01), Option c), Regenbogenschlange (regenbogenschlange-03) aus schlange-2 von KI-Gegner 2 und Grün (gruen-05) aus schlange-4 von KI-Gegner 3.
+     Schlangenfrass (schlangenfrass-01) ist angesagt; betroffen: KI-Gegner 2, KI-Gegner 3.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  56. KI-Gegner 2 lässt durch.
+     KI-Gegner 3 entscheidet, ob er abwehrt.
+  57. KI-Gegner 3 lässt durch.
+     Versetzt: Regenbogenschlange (regenbogenschlange-03) von schlange-2 von KI-Gegner 2, Stelle 2 nach Ablagestapel von KI-Gegner 1; Grün (gruen-05) von schlange-4 von KI-Gegner 3, Stelle 1 nach Ablagestapel von KI-Gegner 1.
+     Entschieden, niemand hat abgewehrt; Schlangenfrass (schlangenfrass-01) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  58. KI-Gegner 1 beginnt mit Grün (gruen-02) eine neue Schlange.
+     Grün (gruen-02) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 0.
+  59. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Gelb (gelb-12)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenblockade (schlangenblockade-01), Grün (gruen-03), Gelb (gelb-13), Blau (blau-02)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Rot - Gelb | schlange-6: Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Braun (braun-07), Farbendieb (farbendieb-01), Farbenfusion (farbenfusion-04)
+      Schlangen: schlange-2: Blau - Blau - Farbenfusion[Blau+Blau] - Rot | schlange-5: Rot; Ablagestapel: 4 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15)
+      Schlangen: schlange-4: Rot - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 57 Karten
+  60. KI-Gegner 2 legt Braun (braun-07) an den Anfang von schlange-6 von KI-Gegner 1.
+     Braun (braun-07) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 0.
+  61. KI-Gegner 2 stiehlt mit Farbendieb (farbendieb-01) Rot (rot-10) aus schlange-3 von KI-Gegner 1 und legt sie in schlange-2 von KI-Gegner 2 an Stelle 0.
+     Farbendieb (farbendieb-01) ist angesagt; betroffen: KI-Gegner 1.
+     KI-Gegner 1 entscheidet, ob er abwehrt.
+  62. KI-Gegner 1 lässt durch.
+     Versetzt: Rot (rot-10) von schlange-3 von KI-Gegner 1, Stelle 6 nach schlange-2 von KI-Gegner 2, Stelle 0.
+     Entschieden, niemand hat abgewehrt; Farbendieb (farbendieb-01) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  63. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Gelb (gelb-12)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenblockade (schlangenblockade-01), Grün (gruen-03), Gelb (gelb-13), Blau (blau-02)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb | schlange-6: Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot | schlange-5: Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Blau (blau-11), Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15)
+      Schlangen: schlange-4: Rot - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 55 Karten
+  64. KI-Gegner 3 legt Blau (blau-11) an das Ende von schlange-2 von KI-Gegner 2.
+     Blau (blau-11) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 5.
+  65. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Gelb (gelb-12)
+      Schlangen: keine; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenblockade (schlangenblockade-01), Grün (gruen-03), Gelb (gelb-13), Blau (blau-02)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb | schlange-6: Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15), Violett (violett-01)
+      Schlangen: schlange-4: Rot - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 54 Karten
+  66. Spieler 1 beginnt mit Gelb (gelb-12) eine neue Schlange.
+     Gelb (gelb-12) liegt jetzt: schlange-7 von Spieler 1, Stelle 0.
+  67. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Violett (violett-09)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-08), Schlangenblockade (schlangenblockade-01), Grün (gruen-03), Gelb (gelb-13), Blau (blau-02)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb | schlange-6: Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15), Violett (violett-01)
+      Schlangen: schlange-4: Rot - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 53 Karten
+  68. KI-Gegner 1 legt Schlangenblockade (schlangenblockade-01) in schlange-5 von KI-Gegner 2 an Stelle 0.
+     Schlangenblockade (schlangenblockade-01) ist angesagt; betroffen: KI-Gegner 2.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  69. KI-Gegner 2 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangenblockade (schlangenblockade-01) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 0.
+  70. KI-Gegner 1 legt Violett (violett-08) an den Anfang von schlange-4 von KI-Gegner 3.
+     Violett (violett-08) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  71. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Violett (violett-09)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Braun (braun-12)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb | schlange-6: Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Gelb (gelb-15), Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15), Violett (violett-01)
+      Schlangen: schlange-4: Violett - Rot - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 51 Karten
+  72. KI-Gegner 2 legt Gelb (gelb-15) an das Ende von schlange-4 von KI-Gegner 3.
+     Gelb (gelb-15) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 4.
+  73. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Violett (violett-09)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Braun (braun-12)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb | schlange-6: Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10), Braun (braun-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Gelb (gelb-06), Rot (rot-07), Blau (blau-15), Violett (violett-01)
+      Schlangen: schlange-4: Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 50 Karten
+  74. KI-Gegner 3 legt Gelb (gelb-06) an das Ende von schlange-3 von KI-Gegner 1.
+     Gelb (gelb-06) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 7.
+  75. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Braun (braun-02), Violett (violett-09)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Braun (braun-12)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10), Braun (braun-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Rot (rot-07), Blau (blau-15), Violett (violett-01), Grün (gruen-08)
+      Schlangen: schlange-4: Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 49 Karten
+  76. Spieler 1 legt Braun (braun-02) an den Anfang von schlange-6 von KI-Gegner 1.
+     Braun (braun-02) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 0.
+  77. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Violett (violett-09), Violett (violett-05)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Braun (braun-12)
+      Schlangen: schlange-3: Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10), Braun (braun-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Rot (rot-07), Blau (blau-15), Violett (violett-01), Grün (gruen-08)
+      Schlangen: schlange-4: Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 48 Karten
+  78. KI-Gegner 1 legt Braun (braun-12) an den Anfang von schlange-3 von KI-Gegner 1.
+     Braun (braun-12) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 0.
+  79. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Violett (violett-09), Violett (violett-05)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Violett (violett-11)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-08), Farbenfusion (farbenfusion-04), Rot (rot-13), Braun (braun-10), Braun (braun-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Rot; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Rot (rot-07), Blau (blau-15), Violett (violett-01), Grün (gruen-08)
+      Schlangen: schlange-4: Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 47 Karten
+  80. KI-Gegner 2 legt Rot (rot-08) an das Ende von schlange-5 von KI-Gegner 2.
+     Rot (rot-08) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 2.
+  81. KI-Gegner 2 legt Farbenfusion (farbenfusion-04) auf Rot (rot-01) und Rot (rot-08) in schlange-5 von KI-Gegner 2.
+     Versetzt: Rot (rot-01) von schlange-5 von KI-Gegner 2, Stelle 1 nach unter Farbenfusion (farbenfusion-04) in schlange-5 von KI-Gegner 2, Stelle 0; Rot (rot-08) von schlange-5 von KI-Gegner 2, Stelle 2 nach unter Farbenfusion (farbenfusion-04) in schlange-5 von KI-Gegner 2, Stelle 1.
+     Farbenfusion (farbenfusion-04) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 1.
+  82. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Violett (violett-09), Violett (violett-05)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Violett (violett-11)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-10), Braun (braun-04), Violett (violett-04), Schlangenfrass (schlangenfrass-03)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Rot (rot-07), Blau (blau-15), Violett (violett-01), Grün (gruen-08)
+      Schlangen: schlange-4: Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 45 Karten
+  83. KI-Gegner 3 legt Rot (rot-07) an den Anfang von schlange-4 von KI-Gegner 3.
+     Rot (rot-07) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  84. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Braun (braun-06), Violett (violett-09), Violett (violett-05)
+      Schlangen: schlange-7: Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Violett (violett-11)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-10), Braun (braun-04), Violett (violett-04), Schlangenfrass (schlangenfrass-03)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Grün (gruen-08), Gelb (gelb-14)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 44 Karten
+  85. Spieler 1 legt Braun (braun-06) an das Ende von schlange-7 von Spieler 1.
+     Braun (braun-06) liegt jetzt: schlange-7 von Spieler 1, Stelle 1.
+  86. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Violett (violett-09), Violett (violett-05), Blau (blau-13)
+      Schlangen: schlange-7: Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Blau (blau-02), Grün (gruen-06), Violett (violett-11)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-10), Braun (braun-04), Violett (violett-04), Schlangenfrass (schlangenfrass-03)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Grün (gruen-08), Gelb (gelb-14)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 43 Karten
+  87. KI-Gegner 1 legt Blau (blau-02) an den Anfang von schlange-5 von KI-Gegner 2.
+     Blau (blau-02) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 0.
+  88. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Violett (violett-09), Violett (violett-05), Blau (blau-13)
+      Schlangen: schlange-7: Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Grün (gruen-06), Violett (violett-11), Verdoppler (verdoppler-03)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Regenbogenschlange - Gelb - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-10), Braun (braun-04), Violett (violett-04), Schlangenfrass (schlangenfrass-03)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 5 Karten, oben Farbendieb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Grün (gruen-08), Gelb (gelb-14)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 42 Karten
+  89. KI-Gegner 2 frisst mit Schlangenfrass (schlangenfrass-03), Option c), Regenbogenschlange (regenbogenschlange-04) aus schlange-3 von KI-Gegner 1 und Gelb (gelb-03) aus schlange-3 von KI-Gegner 1.
+     Schlangenfrass (schlangenfrass-03) ist angesagt; betroffen: KI-Gegner 1.
+     KI-Gegner 1 entscheidet, ob er abwehrt.
+  90. KI-Gegner 1 lässt durch.
+     Versetzt: Regenbogenschlange (regenbogenschlange-04) von schlange-3 von KI-Gegner 1, Stelle 6 nach Ablagestapel von KI-Gegner 2; Gelb (gelb-03) von schlange-3 von KI-Gegner 1, Stelle 7 nach Ablagestapel von KI-Gegner 2.
+     Entschieden, niemand hat abgewehrt; Schlangenfrass (schlangenfrass-03) liegt jetzt: Ablagestapel von KI-Gegner 2.
+  91. KI-Gegner 2 legt Braun (braun-10) an das Ende von schlange-4 von KI-Gegner 3.
+     Braun (braun-10) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 6.
+  92. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 2 Karten.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Violett (violett-09), Violett (violett-05), Blau (blau-13)
+      Schlangen: schlange-7: Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Grün (gruen-06), Violett (violett-11), Verdoppler (verdoppler-03)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Violett (violett-04), Braun (braun-09), Grün (gruen-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Grün (gruen-08), Gelb (gelb-14)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 40 Karten
+  93. KI-Gegner 3 legt Grün (gruen-08) an den Anfang von schlange-5 von KI-Gegner 2.
+     Grün (gruen-08) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 0.
+  94. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-02), Violett (violett-09), Violett (violett-05), Blau (blau-13)
+      Schlangen: schlange-7: Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Grün (gruen-06), Violett (violett-11), Verdoppler (verdoppler-03)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Violett (violett-04), Braun (braun-09), Grün (gruen-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Braun (braun-11)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 39 Karten
+  95. Spieler 1 legt Violett (violett-02) an das Ende von schlange-3 von KI-Gegner 1.
+     Violett (violett-02) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 7.
+  96. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-13), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-7: Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Grün (gruen-06), Violett (violett-11), Verdoppler (verdoppler-03)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 5 Karten, oben Grün
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Violett (violett-04), Braun (braun-09), Grün (gruen-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Braun (braun-11)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 38 Karten
+  97. KI-Gegner 1 legt Grün (gruen-06) an den Anfang von schlange-7 von Spieler 1.
+     Grün (gruen-06) liegt jetzt: schlange-7 von Spieler 1, Stelle 0.
+  98. KI-Gegner 1 spielt Verdoppler (verdoppler-03).
+     Verdoppler (verdoppler-03) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  99. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-13), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Grün (gruen-03), Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-01)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Violett (violett-04), Braun (braun-09), Grün (gruen-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Braun (braun-11)
+      Schlangen: schlange-4: Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 36 Karten
+  100. KI-Gegner 1 legt Grün (gruen-03) an den Anfang von schlange-4 von KI-Gegner 3.
+     Grün (gruen-03) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  101. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-13), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-01), Grün (gruen-07)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Violett (violett-04), Braun (braun-09), Grün (gruen-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Braun (braun-11)
+      Schlangen: schlange-4: Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 35 Karten
+  102. KI-Gegner 2 legt Violett (violett-04) an den Anfang von schlange-4 von KI-Gegner 3.
+     Violett (violett-04) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  103. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-13), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-01), Grün (gruen-07)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Braun (braun-09), Grün (gruen-04), Blau (blau-08)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot]; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Braun (braun-11)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 34 Karten
+  104. KI-Gegner 3 legt Braun (braun-11) an das Ende von schlange-5 von KI-Gegner 2.
+     Braun (braun-11) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 4.
+  105. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-13), Regenbogenschlange (regenbogenschlange-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-01), Grün (gruen-07)
+      Schlangen: schlange-3: Braun - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Braun (braun-09), Grün (gruen-04), Blau (blau-08)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Gelb (gelb-10)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 33 Karten
+  106. Spieler 1 beginnt mit Blau (blau-13) eine neue Schlange.
+     Blau (blau-13) liegt jetzt: schlange-8 von Spieler 1, Stelle 0.
+  107. Spieler 1 legt Regenbogenschlange (regenbogenschlange-02) in schlange-3 von KI-Gegner 1 an Stelle 1.
+     Regenbogenschlange (regenbogenschlange-02) ist angesagt; betroffen: KI-Gegner 1.
+     KI-Gegner 1 entscheidet, ob er abwehrt.
+  108. KI-Gegner 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Regenbogenschlange (regenbogenschlange-02) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 1.
+  109. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-05), Rot (rot-12)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-01), Grün (gruen-07)
+      Schlangen: schlange-3: Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Braun (braun-09), Grün (gruen-04), Blau (blau-08)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Gelb (gelb-10)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 31 Karten
+  110. KI-Gegner 1 legt Grün (gruen-01) an den Anfang von schlange-3 von KI-Gegner 1.
+     Grün (gruen-01) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 0.
+  111. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-05), Rot (rot-12)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-07), Farbenfusion (farbenfusion-01)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Braun (braun-09), Grün (gruen-04), Blau (blau-08)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Gelb (gelb-10)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 30 Karten
+  112. KI-Gegner 2 legt Braun (braun-09) an das Ende von schlange-8 von Spieler 1.
+     Braun (braun-09) liegt jetzt: schlange-8 von Spieler 1, Stelle 1.
+  113. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-05), Rot (rot-12)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau - Braun; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-07), Farbenfusion (farbenfusion-01)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Grün (gruen-04), Blau (blau-08), Rot (rot-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-14), Gelb (gelb-10)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 29 Karten
+  114. KI-Gegner 3 legt Gelb (gelb-14) an das Ende von schlange-8 von Spieler 1.
+     Gelb (gelb-14) liegt jetzt: schlange-8 von Spieler 1, Stelle 2.
+  115. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-05), Blau (blau-05), Rot (rot-12)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau - Braun - Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-07), Farbenfusion (farbenfusion-01)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Grün (gruen-04), Blau (blau-08), Rot (rot-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 28 Karten
+  116. Spieler 1 legt Violett (violett-05) an das Ende von schlange-5 von KI-Gegner 2.
+     Violett (violett-05) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 5.
+  117. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Rot (rot-12), Violett (violett-07)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau - Braun - Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Grün (gruen-07), Farbenfusion (farbenfusion-01)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Braun - Braun - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Grün (gruen-04), Blau (blau-08), Rot (rot-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 27 Karten
+  118. KI-Gegner 1 legt Grün (gruen-07) an das Ende von schlange-8 von Spieler 1.
+     Grün (gruen-07) liegt jetzt: schlange-8 von Spieler 1, Stelle 3.
+  119. KI-Gegner 1 legt Farbenfusion (farbenfusion-01) auf Braun (braun-02) und Braun (braun-07) in schlange-6 von KI-Gegner 1.
+     Versetzt: Braun (braun-02) von schlange-6 von KI-Gegner 1, Stelle 0 nach unter Farbenfusion (farbenfusion-01) in schlange-6 von KI-Gegner 1, Stelle 0; Braun (braun-07) von schlange-6 von KI-Gegner 1, Stelle 1 nach unter Farbenfusion (farbenfusion-01) in schlange-6 von KI-Gegner 1, Stelle 1.
+     Farbenfusion (farbenfusion-01) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 0.
+  120. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Rot (rot-12), Violett (violett-07)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau - Braun - Gelb - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Farbenfusion[Braun+Braun] - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Grün (gruen-04), Blau (blau-08), Rot (rot-04)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 25 Karten
+  121. KI-Gegner 2 legt Grün (gruen-04) an das Ende von schlange-8 von Spieler 1.
+     Grün (gruen-04) liegt jetzt: schlange-8 von Spieler 1, Stelle 4.
+  122. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Rot (rot-12), Violett (violett-07)
+      Schlangen: schlange-7: Grün - Gelb - Braun | schlange-8: Blau - Braun - Gelb - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Farbenfusion[Braun+Braun] - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-01)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Rot (rot-15), Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Farbendieb (farbendieb-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Braun; Ablagestapel: 2 Karten, oben Rot
+    Nachziehstapel: 24 Karten
+  123. KI-Gegner 3 stiehlt mit Farbendieb (farbendieb-02) Gelb (gelb-14) aus schlange-8 von Spieler 1 und legt sie in schlange-4 von KI-Gegner 3 an Stelle 8.
+     Farbendieb (farbendieb-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  124. Spieler 1 lässt durch.
+     Versetzt: Gelb (gelb-14) von schlange-8 von Spieler 1, Stelle 2 nach schlange-4 von KI-Gegner 3, Stelle 8.
+     Entschieden, niemand hat abgewehrt; Farbendieb (farbendieb-02) liegt jetzt: Ablagestapel von KI-Gegner 3.
+  125. KI-Gegner 3 legt Rot (rot-15) an das Ende von schlange-7 von Spieler 1.
+     Rot (rot-15) liegt jetzt: schlange-7 von Spieler 1, Stelle 3.
+  126. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 2 Karten.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Rot (rot-12), Violett (violett-07)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett | schlange-6: Farbenfusion[Braun+Braun] - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-01)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Rot (rot-02), Schlangengrube (schlangengrube-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 3 Karten, oben Farbendieb
+    Nachziehstapel: 22 Karten
+  127. Spieler 1 legt Rot (rot-12) an das Ende von schlange-3 von KI-Gegner 1.
+     Rot (rot-12) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 10.
+  128. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Blau (blau-06)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Gelb (gelb-13), Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-01)
+      Schlangen: schlange-2: Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Rot (rot-02), Schlangengrube (schlangengrube-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 3 Karten, oben Farbendieb
+    Nachziehstapel: 21 Karten
+  129. KI-Gegner 1 legt Gelb (gelb-13) an den Anfang von schlange-2 von KI-Gegner 2.
+     Gelb (gelb-13) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 0.
+  130. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Blau (blau-06)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03), Farbenschutz (farbenschutz-03)
+      Schlangen: schlange-3: Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Rot (rot-02), Schlangengrube (schlangengrube-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 3 Karten, oben Farbendieb
+    Nachziehstapel: 20 Karten
+  131. KI-Gegner 2 legt Blau (blau-01) an den Anfang von schlange-3 von KI-Gegner 1.
+     Blau (blau-01) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 0.
+  132. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Blau (blau-06)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03), Farbenschutz (farbenschutz-03)
+      Schlangen: schlange-3: Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-04)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Rot (rot-02), Schlangengrube (schlangengrube-02)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 3 Karten, oben Farbendieb
+    Nachziehstapel: 19 Karten
+  133. KI-Gegner 3 legt Rot (rot-02) an das Ende von schlange-6 von KI-Gegner 1.
+     Rot (rot-02) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 2.
+  134. KI-Gegner 3 spielt Schlangengrube (schlangengrube-02) auf Spieler 1.
+     Schlangengrube (schlangengrube-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  135. Spieler 1 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangengrube (schlangengrube-02) liegt jetzt: vor Spieler 1.
+  136. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 2 Karten.
+     Spieler 1 setzt aus; Schlangengrube (schlangengrube-02) kommt auf den Ablagestapel von KI-Gegner 3.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Blau (blau-06)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Braun (braun-01), Gelb (gelb-08), Schlangengrube (schlangengrube-03), Farbenschutz (farbenschutz-03)
+      Schlangen: schlange-3: Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-04)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Schlangenfrass (schlangenfrass-02), Gelb (gelb-04)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangengrube
+    Nachziehstapel: 17 Karten
+  137. KI-Gegner 1 legt Braun (braun-01) an das Ende von schlange-6 von KI-Gegner 1.
+     Braun (braun-01) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 3.
+  138. KI-Gegner 1 spielt Schlangengrube (schlangengrube-03) auf KI-Gegner 3.
+     Schlangengrube (schlangengrube-03) ist angesagt; betroffen: KI-Gegner 3.
+     KI-Gegner 3 entscheidet, ob er abwehrt.
+  139. KI-Gegner 3 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangengrube (schlangengrube-03) liegt jetzt: vor KI-Gegner 3.
+  140. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Blau (blau-06)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Blau (blau-14)
+      Schlangen: schlange-3: Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 6 Karten, oben Verdoppler
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Rot (rot-04), Blau (blau-04)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Schlangenfrass (schlangenfrass-02), Gelb (gelb-04)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangengrube
+    Nachziehstapel: 15 Karten; liegt aus: Schlangengrube (schlangengrube-03) vor KI-Gegner 3
+  141. KI-Gegner 2 legt Rot (rot-04) an den Anfang von schlange-3 von KI-Gegner 1.
+     Rot (rot-04) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 0.
+  142. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+     KI-Gegner 3 setzt aus; Schlangengrube (schlangengrube-03) kommt auf den Ablagestapel von KI-Gegner 1.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Blau (blau-06)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Blau (blau-14)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Blau (blau-04), Violett (violett-10)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Schlangenfrass (schlangenfrass-02), Gelb (gelb-04)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangengrube
+    Nachziehstapel: 14 Karten
+  143. Spieler 1 legt Blau (blau-06) an das Ende von schlange-8 von Spieler 1.
+     Blau (blau-06) liegt jetzt: schlange-8 von Spieler 1, Stelle 4.
+  144. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Verdoppler (verdoppler-04)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün - Blau; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Blau (blau-14)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Blau (blau-04), Violett (violett-10)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Schlangenfrass (schlangenfrass-02), Gelb (gelb-04)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangengrube
+    Nachziehstapel: 13 Karten
+  145. KI-Gegner 1 legt Blau (blau-14) an den Anfang von schlange-5 von KI-Gegner 2.
+     Blau (blau-14) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 0.
+  146. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 1 Karte.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Verdoppler (verdoppler-04)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün - Blau; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Gelb (gelb-11)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-08), Blau (blau-04), Violett (violett-10)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Schlangenfrass (schlangenfrass-02), Gelb (gelb-04)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangengrube
+    Nachziehstapel: 12 Karten
+  147. KI-Gegner 2 legt Blau (blau-08) an den Anfang von schlange-7 von Spieler 1.
+     Blau (blau-08) liegt jetzt: schlange-7 von Spieler 1, Stelle 0.
+  148. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Verdoppler (verdoppler-04)
+      Schlangen: schlange-7: Blau - Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Grün - Blau; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Gelb (gelb-11)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Violett (violett-10), Rot (rot-05)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-10), Schlangenfrass (schlangenfrass-02), Gelb (gelb-04)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 4 Karten, oben Schlangengrube
+    Nachziehstapel: 11 Karten
+  149. KI-Gegner 3 frisst mit Schlangenfrass (schlangenfrass-02), Option c), Blau (blau-08) aus schlange-7 von Spieler 1 und Grün (gruen-04) aus schlange-8 von Spieler 1.
+     Schlangenfrass (schlangenfrass-02) ist angesagt; betroffen: Spieler 1.
+     Spieler 1 entscheidet, ob er abwehrt.
+  150. Spieler 1 lässt durch.
+     Versetzt: Blau (blau-08) von schlange-7 von Spieler 1, Stelle 0 nach Ablagestapel von KI-Gegner 3; Grün (gruen-04) von schlange-8 von Spieler 1, Stelle 3 nach Ablagestapel von KI-Gegner 3.
+     Entschieden, niemand hat abgewehrt; Schlangenfrass (schlangenfrass-02) liegt jetzt: Ablagestapel von KI-Gegner 3.
+  151. KI-Gegner 3 legt Gelb (gelb-10) an das Ende von schlange-8 von Spieler 1.
+     Gelb (gelb-10) liegt jetzt: schlange-8 von Spieler 1, Stelle 4.
+  152. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 2 Karten.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Blau (blau-05), Violett (violett-07), Verdoppler (verdoppler-04)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 1 Karte, oben Farbenfusion
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Gelb (gelb-11)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Violett (violett-10), Rot (rot-05)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 9 Karten
+  153. Spieler 1 legt Blau (blau-05) an das Ende von schlange-3 von KI-Gegner 1.
+     Blau (blau-05) liegt jetzt: schlange-3 von KI-Gegner 1, Stelle 13.
+  154. Spieler 1 spielt Verdoppler (verdoppler-04).
+     Verdoppler (verdoppler-04) liegt jetzt: Ablagestapel von Spieler 1.
+  155. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von Spieler 1, zweiter Zug nach dem Verdoppler
+    Spieler 1: Hand Violett (violett-03), Violett (violett-09), Violett (violett-07), Farbenschutz (farbenschutz-01), Gelb (gelb-07)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot | schlange-8: Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 2 Karten, oben Verdoppler
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Gelb (gelb-11)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Violett (violett-10), Rot (rot-05)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 7 Karten
+  156. Spieler 1 legt Violett (violett-09) an das Ende von schlange-7 von Spieler 1.
+     Violett (violett-09) liegt jetzt: schlange-7 von Spieler 1, Stelle 4.
+  157. Spieler 1 legt Farbenschutz (farbenschutz-01) ohne Wirkung ab.
+     Farbenschutz (farbenschutz-01) liegt jetzt: Ablagestapel von Spieler 1.
+  158. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 2 Karten.
+
+Zug von KI-Gegner 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-07), Gelb (gelb-07), Violett (violett-06), Braun (braun-08)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Violett (violett-11), Gelb (gelb-08), Farbenschutz (farbenschutz-03), Braun (braun-05), Gelb (gelb-11)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 7 Karten, oben Schlangengrube
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Violett (violett-10), Rot (rot-05)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 5 Karten
+  159. KI-Gegner 1 legt Violett (violett-11) an den Anfang von schlange-6 von KI-Gegner 1.
+     Violett (violett-11) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 0.
+  160. KI-Gegner 1 legt Farbenschutz (farbenschutz-03) ohne Wirkung ab.
+     Farbenschutz (farbenschutz-03) liegt jetzt: Ablagestapel von KI-Gegner 1.
+  161. KI-Gegner 1 beendet den Zug.
+     KI-Gegner 1 zieht 2 Karten.
+
+Zug von KI-Gegner 2
+    Spieler 1: Hand Violett (violett-03), Violett (violett-07), Gelb (gelb-07), Violett (violett-06), Braun (braun-08)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Braun (braun-05), Gelb (gelb-11), Schlangenblockade (schlangenblockade-02), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Violett (violett-10), Rot (rot-05)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 3 Karten
+  162. KI-Gegner 2 legt Violett (violett-10) an den Anfang von schlange-8 von Spieler 1.
+     Violett (violett-10) liegt jetzt: schlange-8 von Spieler 1, Stelle 0.
+  163. KI-Gegner 2 beendet den Zug.
+     KI-Gegner 2 zieht 1 Karte.
+
+Zug von KI-Gegner 3
+    Spieler 1: Hand Violett (violett-03), Violett (violett-07), Gelb (gelb-07), Violett (violett-06), Braun (braun-08)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Violett - Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Braun (braun-05), Gelb (gelb-11), Schlangenblockade (schlangenblockade-02), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Rot (rot-05), Gelb (gelb-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Blau (blau-15), Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 2 Karten
+  164. KI-Gegner 3 beginnt mit Blau (blau-15) eine neue Schlange.
+     Blau (blau-15) liegt jetzt: schlange-9 von KI-Gegner 3, Stelle 0.
+  165. KI-Gegner 3 beendet den Zug.
+     KI-Gegner 3 zieht 1 Karte.
+
+Zug von Spieler 1
+    Spieler 1: Hand Violett (violett-03), Violett (violett-07), Gelb (gelb-07), Violett (violett-06), Braun (braun-08)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Violett - Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Braun (braun-05), Gelb (gelb-11), Schlangenblockade (schlangenblockade-02), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Rot (rot-05), Gelb (gelb-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12), Gelb (gelb-05)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun | schlange-9: Blau; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 1 Karte
+  166. Spieler 1 legt Violett (violett-07) an das Ende von schlange-6 von KI-Gegner 1.
+     Violett (violett-07) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 5.
+  167. Spieler 1 beendet den Zug.
+     Spieler 1 zieht 1 Karte.
+     Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von Spieler 1.
+
+Zug von KI-Gegner 1 (Schlussrunde)
+    Spieler 1: Hand Violett (violett-03), Gelb (gelb-07), Violett (violett-06), Braun (braun-08), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Violett - Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Braun (braun-05), Gelb (gelb-11), Schlangenblockade (schlangenblockade-02), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun - Violett; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Rot (rot-05), Gelb (gelb-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12), Gelb (gelb-05)
+      Schlangen: schlange-4: Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun | schlange-9: Blau; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 0 Karten
+  168. KI-Gegner 1 legt Braun (braun-05) an den Anfang von schlange-4 von KI-Gegner 3.
+     Braun (braun-05) liegt jetzt: schlange-4 von KI-Gegner 3, Stelle 0.
+  169. KI-Gegner 1 legt Schlangenblockade (schlangenblockade-02) in schlange-2 von KI-Gegner 2 an Stelle 6.
+     Schlangenblockade (schlangenblockade-02) ist angesagt; betroffen: KI-Gegner 2.
+     KI-Gegner 2 entscheidet, ob er abwehrt.
+  170. KI-Gegner 2 lässt durch.
+     Entschieden, niemand hat abgewehrt; Schlangenblockade (schlangenblockade-02) liegt jetzt: schlange-2 von KI-Gegner 2, Stelle 6.
+  171. KI-Gegner 1 beendet den Zug.
+
+Zug von KI-Gegner 2 (Schlussrunde)
+    Spieler 1: Hand Violett (violett-03), Gelb (gelb-07), Violett (violett-06), Braun (braun-08), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Violett - Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Gelb (gelb-11), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun - Violett; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Blau (blau-04), Rot (rot-05), Gelb (gelb-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Schlangenblockade - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12), Gelb (gelb-05)
+      Schlangen: schlange-4: Braun - Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun | schlange-9: Blau; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 0 Karten
+  172. KI-Gegner 2 legt Blau (blau-04) an das Ende von schlange-5 von KI-Gegner 2.
+     Blau (blau-04) liegt jetzt: schlange-5 von KI-Gegner 2, Stelle 7.
+  173. KI-Gegner 2 beendet den Zug.
+
+Zug von KI-Gegner 3 (Schlussrunde)
+    Spieler 1: Hand Violett (violett-03), Gelb (gelb-07), Violett (violett-06), Braun (braun-08), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Violett - Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Gelb (gelb-11), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun - Violett; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Rot (rot-05), Gelb (gelb-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Schlangenblockade - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett - Blau; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Blau (blau-12), Gelb (gelb-05)
+      Schlangen: schlange-4: Braun - Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun | schlange-9: Blau; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 0 Karten
+  174. KI-Gegner 3 legt Blau (blau-12) an das Ende von schlange-6 von KI-Gegner 1.
+     Blau (blau-12) liegt jetzt: schlange-6 von KI-Gegner 1, Stelle 6.
+  175. KI-Gegner 3 beendet den Zug.
+     Die Partie ist beendet.
+
+Lage am Ende
+    Spieler 1: Hand Violett (violett-03), Gelb (gelb-07), Violett (violett-06), Braun (braun-08), Farbenschutz (farbenschutz-02)
+      Schlangen: schlange-7: Grün - Gelb - Braun - Rot - Violett | schlange-8: Violett - Blau - Braun - Grün - Blau - Gelb; Ablagestapel: 3 Karten, oben Farbenschutz
+    KI-Gegner 1: Hand Gelb (gelb-08), Gelb (gelb-11), Violett (violett-12)
+      Schlangen: schlange-3: Rot - Blau - Grün - Braun - Regenbogenschlange - Rot - Gelb - Schlangenblockade - Rot - Regenbogenschlange - Gelb - Violett - Rot - Blau | schlange-6: Violett - Farbenfusion[Braun+Braun] - Grün - Rot - Braun - Violett - Blau; Ablagestapel: 8 Karten, oben Farbenschutz
+    KI-Gegner 2: Hand Rot (rot-13), Braun (braun-04), Rot (rot-05), Gelb (gelb-01)
+      Schlangen: schlange-2: Gelb - Rot - Blau - Blau - Farbenfusion[Blau+Blau] - Rot - Schlangenblockade - Blau | schlange-5: Blau - Grün - Blau - Schlangenblockade - Farbenfusion[Rot+Rot] - Braun - Violett - Blau; Ablagestapel: 8 Karten, oben Gelb
+    KI-Gegner 3: Hand Violett (violett-01), Gelb (gelb-04), Grün (gruen-09), Gelb (gelb-05)
+      Schlangen: schlange-4: Braun - Violett - Grün - Rot - Violett - Rot - Gelb - Braun - Gelb - Gelb - Braun | schlange-9: Blau; Ablagestapel: 7 Karten, oben Grün
+    Nachziehstapel: 0 Karten
+
+Endwertung (A11)
+  Spieler 1: Summe 0
+    schlange-7: Gruppen keine, zusammen 0
+    schlange-8: Gruppen keine, zusammen 0
+    Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+  KI-Gegner 1: Summe 0
+    schlange-3: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-02) als keine Farbe, Regenbogenschlange (regenbogenschlange-01) als keine Farbe
+    schlange-6: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-01) als keine Farbe
+    Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+  KI-Gegner 2: Summe 4
+    schlange-2: Gruppen Blau ×3 = 4, zusammen 4; Joker: Farbenfusion (farbenfusion-03) als Blau
+    schlange-5: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-04) als keine Farbe
+    Gruppenpunkte 4; keine Kette ab 3 Farbkarten
+  KI-Gegner 3: Summe 0
+    schlange-4: Gruppen keine, zusammen 0
+    schlange-9: Gruppen keine, zusammen 0
+    Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+  Gewonnen: KI-Gegner 2 mit 4 Punkten.

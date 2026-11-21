@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
-skript: src/engine/__tests__/farbenfusion.test.ts
+skript: src/engine/__tests__/regeln/A7.7_farbenfusion.test.ts
 aenderung: task/E7-farbenfusion (PR #65)
 ---
 
@@ -18,7 +18,7 @@ Die Farbenfusion kommt auf zwei nebeneinanderliegende Farbkarten derselben Farbe
 ## Bestanden, wenn
 
 - Auf dem ersten Testcommit `64258d8` enden die drei Testdateien mit Exit 1 und „Tests 39 failed | 1 passed (40)“; rot, weil die Karte noch ein Platzhalter ohne Ziel ist.
-- Auf dem geprüften Stand enden `farbenfusion.test.ts`, `farbenfusion_wertung.test.ts`, `szenarienFarbenfusion.test.ts`, `dauerlauf.test.ts`, `kartenversetzt.test.ts` und `aktionen.test.ts` mit Exit 0.
+- Auf dem geprüften Stand enden `A7.7_farbenfusion.test.ts`, `A7.7_farbenfusion_wertung.test.ts`, `szenarienFarbenfusion.test.ts`, `dauerlauf.test.ts`, `kartenversetzt.test.ts` und `aktionen.test.ts` mit Exit 0.
 - Jede Gegenprobe aus „Testdaten“ macht mindestens einen Test rot, dessen Name zur umgekehrten Regel passt, und `farbenfusion.ts` ist danach wieder unverändert.
 
 ## Fehlgeschlagen, wenn
@@ -40,7 +40,7 @@ Gegenproben in `src/engine/karten/farbenfusion.ts`: G1 Reihenfolge unter der Fus
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Konsole im Repo | ersten Testcommit auschecken und seine Testdateien ausführen | `git checkout 64258d8`, dann `npx vitest --run src/engine/__tests__/farbenfusion.test.ts src/engine/__tests__/farbenfusion_wertung.test.ts src/entwicklung/szenarienFarbenfusion.test.ts` | Exit 1, „39 failed“ |
+| 1 | Konsole im Repo | ersten Testcommit auschecken und seine Testdateien ausführen | `git checkout 64258d8`, dann `npx vitest --run src/engine/__tests__/regeln/A7.7_farbenfusion.test.ts src/engine/__tests__/regeln/A7.7_farbenfusion_wertung.test.ts src/entwicklung/szenarienFarbenfusion.test.ts` | Exit 1, „39 failed“ |
 | 2 | Konsole im Repo | zurück auf den geprüften Stand und die Tests aus „Bestanden, wenn“ ausführen | `git checkout pruefung-E7`, dann `npx vitest --run <sechs Dateien>` | Exit 0, „Tests 112 passed“ |
 | 3 | Konsole im Repo | jede Gegenprobe einzeln einbauen, die drei E7-Testdateien ausführen, Datei zurückkopieren | Skript `gp.sh` im Prüferordner | G1 4 rot, G2 14 rot, G3 4 rot, G4 2 rot, G5 1 rot |
 

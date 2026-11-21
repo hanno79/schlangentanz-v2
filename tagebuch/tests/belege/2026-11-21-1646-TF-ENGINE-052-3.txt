@@ -1,0 +1,33 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a04450aa0902e90be
+
+ ❯ src/engine/__tests__/dauerlauf.test.ts (17 tests | 1 failed) 1151ms
+     × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 1045ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2, Plan 3.6 Punkt 7) > A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz
+AssertionError: 300 Partien: Partien, die nicht regulär endeten: expected [ Array(300) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 1, nach {\"typ\":\"ZugBeenden\",\"spielerId\":\"spieler-1\"}: A5: Nach dem Zugende hält Spieler 0 6 Karten.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 1,
++       "spielerzahl": 2,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 2, nach {\"typ\":\"ZugBeenden\",\"spielerId\":\"spieler-1\"}: A5: Nach dem Zugende hält Spieler 0 6 Karten.",
++     "partie": {
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  1 failed | 16 passed (17)

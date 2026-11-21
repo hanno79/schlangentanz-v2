@@ -1,0 +1,56 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a04450aa0902e90be
+
+ ❯ src/engine/__tests__/invarianten_grenzfaelle.test.ts (12 tests | 1 failed) 76ms
+     × A6/E4-H3: eine schwebende Karte ohne Ausstehenden wird gemeldet und beim Laden mit Grund abgelehnt 16ms
+ ❯ src/engine/__tests__/aktionen.test.ts (39 tests | 1 failed) 83ms
+     × A6: schwebt eine Karte, entscheidet der nächste Betroffene; eine schwebende Karte ohne Ausstehenden gibt es nicht (E4-H3) 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A6: schwebt eine Karte, entscheidet der nächste Betroffene; eine schwebende Karte ohne Ausstehenden gibt es nicht (E4-H3)
+AssertionError: Baukasten: ohne Ausstehenden entschiede niemand: expected [Function] to throw an error
+
+- Expected:
+null
+
++ Received:
+undefined
+
+ ❯ src/engine/__tests__/aktionen.test.ts:138:85
+    136|       .schwebend(1, 'Verdoppler', (karteId, spielerId) => ({ typ: 'Ver…
+    137|       .amZug(1)
+    138|     expect(() => ohne.zustand(), 'Baukasten: ohne Ausstehenden entschi…
+       |                                                                                     ^
+    139|   })
+    140|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/engine/__tests__/invarianten_grenzfaelle.test.ts > A2/A4: Grenzfälle der Invarianten > A6/E4-H3: eine schwebende Karte ohne Ausstehenden wird gemeldet und beim Laden mit Grund abgelehnt
+AssertionError: pruefeInvarianten: ausstehend [] erwartet verletzt: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "Alle Verweise auf Spieler und Karten sind gültig",
+- ]
++ []
+
+ ❯ src/engine/__tests__/invarianten_grenzfaelle.test.ts:105:86
+    103|     const zustand = mitSchwebender((karteId, spielerId) => ({ typ: 'Sc…
+    104|     zustand.schwebend!.ausstehend = []
+    105|     expect(verletzte(zustand), 'pruefeInvarianten: ausstehend [] erwar…
+       |                                                                                      ^
+    106|     const befund = pruefeInvarianten(zustand).find((eintrag) => eintra…
+    107|     expect(befund.detail, 'pruefeInvarianten: der Grund nennt die schw…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 49 passed (51)
+   Start at  16:29:48
+   Duration  6.58s (transform 1.38s, setup 816ms, import 1.47s, tests 159ms, environment 9.14s)
+

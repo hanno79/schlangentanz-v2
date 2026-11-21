@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
-skript: src/engine/__tests__/wertung_vielfalt.test.ts
+skript: src/engine/__tests__/regeln/A11_vielfalt.test.ts
 aenderung: task/E10b-vielfalt-regenbogen (PR #52)
 ---
 
@@ -37,7 +37,7 @@ Schlange A: Rot, Rot, Rot, Blau, Blau, Blau, Gelb, Gelb, Gelb, Schlangenblockade
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Git Bash im Repo | Vielfalttests ausführen | `npx vitest run src/engine/__tests__/wertung_vielfalt.test.ts src/engine/__tests__/wertung_farbgruppen.test.ts; echo $?` | Exit 0, der Block „D32: eine Gruppe nur aus Regenbogenschlangen …“ mit 6 grünen Tests |
+| 1 | Git Bash im Repo | Vielfalttests ausführen | `npx vitest run src/engine/__tests__/regeln/A11_vielfalt.test.ts src/engine/__tests__/regeln/A11_farbgruppen.test.ts; echo $?` | Exit 0, der Block „D32: eine Gruppe nur aus Regenbogenschlangen …“ mit 6 grünen Tests |
 | 2 | Browser, `http://localhost:<port>/dev?szenario=wertung-vielfalt-regenbogen` (Testhook-Build) | bis zum Abschnitt „Wertung“ scrollen | | Spieler 1: „Blau×3 = 0“, „Farben für den Vielfaltbonus: Blau, Rot, Gelb, Vielfalt 2“, „Summe 16“ |
 
 ## Nicht abgedeckte Grenzfälle

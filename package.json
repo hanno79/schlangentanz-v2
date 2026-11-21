@@ -18,6 +18,7 @@
     "preview:testhooks": "vite preview --outDir dist-testhooks --port 4174 --strictPort",
     "test": "vitest",
     "test:layout": "playwright test",
+    "test:dauerlauf": "vitest run --mode dauerlauf",
     "typecheck": "tsc -b",
     "smoke:production": "node scripts/run_smokes.mjs production",
     "smoke:preview": "node scripts/run_smokes.mjs preview",
