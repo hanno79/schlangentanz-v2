@@ -1,38 +1,37 @@
 import type { BlockadeLegenAktion, RegenbogenschlangeLegenAktion } from '../aktionen/typen';
 import { istGueltigeEinfuegePosition } from '../constants';
+import { alleSchlangen, findeSchlange, gepruefteSchlange } from '../schlangen';
 import type { Schlange, Sonderkartenname, Spielkarte, Spielzustand } from '../types';
 import { entnehmeHandkarte, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
 
 /*
 A5, D9: Jede Karte darf in jede Schlange am Tisch, auch in die eines
-Mitspielers. Hier steht, wie eine Kartendatei eine Schlange über ihre Id findet,
-und die gemeinsame Regel von Regenbogenschlange und Schlangenblockade: Beide
-kommen an eine beliebige Stelle einer bestehenden Schlange (A5, A7.3, A7.5) und
-beginnen keine neue (D16).
+Mitspielers. Hier stehen die Regeln, die mehrere Kartendateien teilen: wen eine
+Karte in einer Schlange trifft (A6, D10), warum eine Karte nicht offen in der
+Schlange liegt (A7.7), und die gemeinsame Regel von Regenbogenschlange und
+Schlangenblockade: Beide kommen an eine beliebige Stelle einer bestehenden
+Schlange (A5, A7.3, A7.5) und beginnen keine neue (D16). Wie Schlangen im
+Zustand liegen, steht in `schlangen.ts`.
 */
 
-interface SchlangeAmTisch {
-  schlange: Schlange;
-  /** Die Stelle des Besitzers in `zustand.spieler`. */
-  besitzer: number;
+/**
+ * A6, D10: Wen eine Karte trifft, die in diese Schlange gespielt wird: ihren
+ * Besitzer, ausser er spielt sie selbst. Die Schlange muss es geben.
+ */
+export function betroffenerBesitzer(zustand: Spielzustand, aktion: { spielerId: string; schlangenId: string }): number[] {
+  const { besitzer } = gepruefteSchlange(zustand, aktion.schlangenId);
+  return besitzer === spielerIndexVon(zustand, aktion.spielerId) ? [] : [besitzer];
 }
 
-/** Jede Schlange am Tisch mit ihrem Besitzer, in Sitzordnung und je Spieler in seiner Reihenfolge. */
-export function alleSchlangen(zustand: Spielzustand): SchlangeAmTisch[] {
-  return zustand.spieler.flatMap((spieler, besitzer) => spieler.schlangen.map((schlange) => ({ schlange, besitzer })));
-}
-
-/** Die Schlange mit dieser Id, gleich wem sie gehört, oder `null`, wenn es sie nicht gibt. */
-export function findeSchlange(zustand: Spielzustand, schlangenId: string): SchlangeAmTisch | null {
-  return alleSchlangen(zustand).find(({ schlange }) => schlange.id === schlangenId) ?? null;
-}
-
-/** Wie `findeSchlange`, für Aktionen, die schon geprüft sind: Fehlt die Schlange, ist das ein Fehler der Engine. */
-export function gepruefteSchlange(zustand: Spielzustand, schlangenId: string): SchlangeAmTisch {
-  const gefunden = findeSchlange(zustand, schlangenId);
-  if (gefunden === null) throw new Error(`Die Schlange ${schlangenId} gibt es nicht.`);
-  return gefunden;
+/**
+ * A7.7: Der Grund, warum die Karte nicht offen in der Schlange liegt, für eine
+ * Karte, die dort nicht offen liegt. Liegt sie unter einer Farbenfusion, sagt
+ * `unterFusion` mit der Id der Fusion, was die Kartendatei mit ihr nicht darf.
+ */
+export function grundVerdeckt(schlange: Schlange, karteId: string, unterFusion: (fusionId: string) => string): string {
+  const verdeckt = schlange.fusionen.find((fusion) => fusion.unter.some((karte) => karte.id === karteId));
+  return verdeckt === undefined ? `Die Karte ${karteId} liegt nicht in der Schlange ${schlange.id}.` : unterFusion(verdeckt.karteId);
 }
 
 /** Die Aktionen, die eine Sonderkarte an eine Lücke einer Schlange legen. */
@@ -68,10 +67,7 @@ export function sonderkarteAnJedeStelle<A extends EinfuegeAktion>(art: Sonderkar
       return null;
     },
 
-    betroffene(zustand: Spielzustand, aktion: A): number[] {
-      const { besitzer } = gepruefteSchlange(zustand, aktion.schlangenId);
-      return besitzer === spielerIndexVon(zustand, aktion.spielerId) ? [] : [besitzer];
-    },
+    betroffene: betroffenerBesitzer,
 
     wirke(zustand: Spielzustand, aktion: A): Spielzustand {
       const { schlange } = gepruefteSchlange(zustand, aktion.schlangenId);
