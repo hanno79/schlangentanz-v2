@@ -1,6 +1,6 @@
 import { anwendeAktion, ermittleAktionen } from '../engine'
 import type { AktionsErgebnis, Ereignis, SpielAktion, Spielzustand } from '../engine'
-import { findeSzenario } from './szenarien'
+import { erzeugeSzenario } from './szenarien'
 
 /*
 Hilfen für die Szenariotests (`szenarien*.test.ts`): ein Szenario erzeugen und
@@ -11,11 +11,8 @@ Engine aufzählt; eine Wahl sucht ihn aus.
 /** Passt diese aufgezählte Aktion? `zustand` ist der Stand, in dem geklickt wird. */
 export type Wahl = (aktion: SpielAktion, zustand: Spielzustand) => boolean
 
-export function erzeuge(name: string): Spielzustand {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return szenario.erzeuge()
-}
+/** Der Zustand des Szenarios; wirft, wenn es kein Szenario dieses Namens gibt. */
+export const erzeuge = erzeugeSzenario
 
 export const abwehren = (aktion: SpielAktion): boolean => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null
 export const durchlassen = (aktion: SpielAktion): boolean => aktion.typ === 'Reagieren' && aktion.farbenschutzId === null

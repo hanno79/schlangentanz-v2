@@ -1,5 +1,5 @@
 import type { FusionLegenAktion } from '../aktionen/typen';
-import { findeSchlange, gepruefteSchlange, schlangenVon } from '../schlangen';
+import { findeSchlange, gepruefteSchlange } from '../schlangen';
 import type { FarbkarteInfo, Schlange, Spielkarte, Spielzustand } from '../types';
 import { entnehmeHandkarte, mitspielerImUhrzeigersinn } from '../zugablauf';
 import type { KartenDefinition } from './register';
@@ -54,7 +54,7 @@ function pruefePaar(schlange: Schlange, [linksId, rechtsId]: readonly [string, s
 
 /** Die Schlangen am Tisch, zuerst die eigenen, dann die der Mitspieler im Uhrzeigersinn (D9). */
 function schlangenAmTisch(zustand: Spielzustand, spielerIndex: number): Schlange[] {
-  return schlangenVon(zustand, [spielerIndex, ...mitspielerImUhrzeigersinn(zustand, spielerIndex)]).map(({ schlange }) => schlange);
+  return [spielerIndex, ...mitspielerImUhrzeigersinn(zustand, spielerIndex)].flatMap((index) => zustand.spieler[index].schlangen);
 }
 
 export const farbenfusion: KartenDefinition<FusionLegenAktion> = {

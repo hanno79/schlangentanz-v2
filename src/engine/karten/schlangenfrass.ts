@@ -128,7 +128,6 @@ export const schlangenfrass: KartenDefinition<SchlangenfrassSpielenAktion> = {
     const gefressen = kartenIn(zustand, [angreifer, ...mitspielerImUhrzeigersinn(zustand, angreifer)]).filter(
       ({ besitzer, karte }) => ziele.has(karte.id) && !abgewehrt.includes(besitzer),
     );
-    // Eine gefressene Farbenfusion lässt ihre beiden Karten liegen, eine leer gefressene Schlange verschwindet (`nimmAusSchlange`).
     for (const fund of gefressen) zustand.spieler[angreifer].ablagestapel.push(nimmAusSchlange(zustand, fund, fund.karte.id));
     return zustand;
   },

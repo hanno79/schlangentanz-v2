@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import type { Spielkarte, Spielzustand } from '../index'
+import type { Spielzustand } from '../index'
 import { betroffenerBesitzer, grundVerdeckt } from '../karten/schlangenstelle'
 import { alleSchlangen, beginneSchlange, findeSchlange, gepruefteSchlange, nimmAusSchlange, schlangenVon } from '../schlangen'
 import { baukasten } from '../testing/szenario'
+import { kartenname } from './legen_hilfen'
 
 /*
 R1: Die gemeinsamen Hilfen, die die Kartendateien für Schlangen am Tisch
@@ -19,9 +20,8 @@ function tisch(): Spielzustand {
     .zustand()
 }
 
-const art = (karte: Spielkarte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)
 const ids = (zustand: Spielzustand, spieler: number) => zustand.spieler[spieler].schlangen.map((schlange) => schlange.id)
-const karten = (zustand: Spielzustand, schlangenId: string) => gepruefteSchlange(zustand, schlangenId).schlange.karten.map(art)
+const karten = (zustand: Spielzustand, schlangenId: string) => gepruefteSchlange(zustand, schlangenId).schlange.karten.map(kartenname)
 
 describe('A5/D9: Schlangen am Tisch finden und durchlaufen (R1)', () => {
   it('A5: alleSchlangen nennt jede Schlange mit Besitzer, in Sitzordnung und je Spieler in seiner Reihenfolge', () => {

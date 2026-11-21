@@ -3,8 +3,7 @@ import type { Schlange, Spielkarte, Spielzustand } from './types';
 /*
 Die Schlangen am Tisch (A5, D9): finden, durchlaufen, eine neue beginnen und
 eine Karte herausnehmen. Hier steht nur, wie Schlangen im Zustand liegen; ob
-eine Karte dorthin darf, prüfen die Kartendateien unter `karten/`. Auch der
-Szenario-Baukasten und das Partieprotokoll benutzen diese Hilfen.
+eine Karte dorthin darf, prüfen die Kartendateien unter `karten/`.
 */
 
 export interface SchlangeAmTisch {
@@ -37,12 +36,17 @@ export function schlangenVon(zustand: Spielzustand, besitzer: readonly number[])
 
 /** Jede Schlange am Tisch mit ihrem Besitzer, in Sitzordnung und je Spieler in seiner Reihenfolge. */
 export function alleSchlangen(zustand: Spielzustand): SchlangeAmTisch[] {
-  return schlangenVon(zustand, zustand.spieler.map((_, index) => index));
+  return zustand.spieler.flatMap((spieler, besitzer) => spieler.schlangen.map((schlange) => ({ schlange, besitzer })));
 }
 
 /** Die Schlange mit dieser Id, gleich wem sie gehört, oder `null`, wenn es sie nicht gibt. */
 export function findeSchlange(zustand: Spielzustand, schlangenId: string): SchlangeAmTisch | null {
-  return alleSchlangen(zustand).find(({ schlange }) => schlange.id === schlangenId) ?? null;
+  // Ohne Zwischenliste: `pruefe` sucht so für jede aufgezählte Aktion.
+  for (const [besitzer, spieler] of zustand.spieler.entries()) {
+    const schlange = spieler.schlangen.find((eintrag) => eintrag.id === schlangenId);
+    if (schlange !== undefined) return { schlange, besitzer };
+  }
+  return null;
 }
 
 /** Wie `findeSchlange`, für Aktionen, die schon geprüft sind: Fehlt die Schlange, ist das ein Fehler der Engine. */

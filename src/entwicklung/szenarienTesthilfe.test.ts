@@ -14,7 +14,7 @@ const typ = (gesucht: SpielAktion['typ']) => (aktion: SpielAktion) => aktion.typ
 describe('R1: Klickhilfe der Szenariotests', () => {
   it('R1: erzeuge baut das genannte Szenario; ein unbekannter Name ist ein Fehler im Testaufbau', () => {
     expect(ermittleAktionen(erzeuge('schlangengrube')).some(typ('SchlangengrubeSpielen')), 'erzeuge: schlangengrube bietet die Grube an').toBe(true)
-    expect(() => erzeuge('gibt-es-nicht')).toThrow('Szenario gibt-es-nicht fehlt')
+    expect(() => erzeuge('gibt-es-nicht')).toThrow('Unbekanntes Szenario „gibt-es-nicht“')
   })
 
   it('R1: klicke wendet nacheinander je den ersten passenden Knopf an und sammelt alle Ereignisse', () => {

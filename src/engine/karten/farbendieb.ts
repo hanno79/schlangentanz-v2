@@ -94,7 +94,6 @@ export const farbendieb: KartenDefinition<FarbendiebSpielenAktion> = {
 
   wirke(zustand: Spielzustand, aktion: FarbendiebSpielenAktion): Spielzustand {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
-    // Ist die gestohlene Karte die letzte ihrer Schlange, gibt es diese danach nicht mehr.
     const karte = nimmAusSchlange(zustand, gepruefteSchlange(zustand, aktion.quelle.schlangenId), aktion.quelle.karteId);
     const { ziel } = aktion;
     if (ziel.art === 'neueSchlange') beginneSchlange(zustand, spielerIndexVon(zustand, aktion.spielerId), [karte]);
