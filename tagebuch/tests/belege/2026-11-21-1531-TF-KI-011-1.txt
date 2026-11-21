@@ -1,0 +1,198 @@
+PRUEFER == 2 Spieler: 12 Partien, Siege 12 (allein 12), Mittel solide 60.58, Mittel Zufall 0.00
+PRUEFER    Schritte 1118, Zeit Mittel 6.6 ms, max 32.1 ms, >1s 0, max Bewertungen 40, unerlaubt 0, Zählerabweichung 0
+PRUEFER    wirkungslos mit Alternative 0, ohne Alternative 0
+PRUEFER    Gruben 16, sofort ohne Wirkung 0, später verfallen 0
+PRUEFER    Fusionen 16, senkend 0
+PRUEFER    Regenbogen fremd trotz eigener 0
+PRUEFER    vollendbar 82, nicht vollendet 0
+PRUEFER    Verdoppler 21, zweiter Zug ohne Wirkung 0
+PRUEFER    Zug beendet, obwohl weitere Karte ohne Gegnernutzen >=3 (>=2 im letzten Zug) gebracht hätte: 47
+PRUEFER      Z P2/B/s9102/sitz0 schritt 169: SchlangenfrassSpielen +4
+PRUEFER      Z P2/B/s9103/sitz1 schritt 131: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 135: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 139: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 145: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 149: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 155: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 163: FusionLegen +6
+PRUEFER      Z P2/B/s9104/sitz0 schritt 129: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 135: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 139: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 148: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 160: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 166: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 172: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 176: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9106/sitz0 schritt 74: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 78: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 82: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 86: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 95: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 101: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 107: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 113: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 119: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9106/sitz0 schritt 123: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 127: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 139: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 145: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 151: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 161: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 165: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 169: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 173: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 181: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 186 letzter Zug: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9107/sitz1 schritt 149: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9110/sitz0 schritt 129: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9110/sitz0 schritt 135: FusionLegen +4
+PRUEFER      Z P2/B/s9110/sitz0 schritt 144: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9110/sitz0 schritt 154: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9110/sitz0 schritt 159: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9110/sitz0 schritt 168: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9110/sitz0 schritt 172: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9111/sitz1 schritt 70: FusionLegen +4
+PRUEFER      Z P2/B/s9111/sitz1 schritt 74: FusionLegen +4
+PRUEFER      Z P2/B/s9111/sitz1 schritt 78: FusionLegen +4
+PRUEFER == 3 Spieler: 10 Partien, Siege 10 (allein 10), Mittel solide 35.40, Mittel Zufall 0.90
+PRUEFER    Schritte 618, Zeit Mittel 5.4 ms, max 27.0 ms, >1s 0, max Bewertungen 40, unerlaubt 0, Zählerabweichung 0
+PRUEFER    wirkungslos mit Alternative 0, ohne Alternative 0
+PRUEFER    Gruben 9, sofort ohne Wirkung 0, später verfallen 0
+PRUEFER    Fusionen 10, senkend 0
+PRUEFER    Regenbogen fremd trotz eigener 0
+PRUEFER    vollendbar 38, nicht vollendet 0
+PRUEFER    Verdoppler 9, zweiter Zug ohne Wirkung 0
+PRUEFER    Zug beendet, obwohl weitere Karte ohne Gegnernutzen >=3 (>=2 im letzten Zug) gebracht hätte: 13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 68: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 74: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 82: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 99: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 108: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 130: SchlangenfrassSpielen +8
+PRUEFER      Z P3/B/s9206/sitz2 schritt 153: SchlangenfrassSpielen +8
+PRUEFER      Z P3/B/s9207/sitz0 schritt 122: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 139: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 147: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 154: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 164: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 174: SchlangenfrassSpielen +9
+PRUEFER == 4 Spieler: 10 Partien, Siege 10 (allein 10), Mittel solide 29.00, Mittel Zufall 0.87
+PRUEFER    Schritte 475, Zeit Mittel 4.5 ms, max 35.6 ms, >1s 0, max Bewertungen 40, unerlaubt 0, Zählerabweichung 0
+PRUEFER    wirkungslos mit Alternative 0, ohne Alternative 0
+PRUEFER    Gruben 3, sofort ohne Wirkung 0, später verfallen 0
+PRUEFER    Fusionen 10, senkend 0
+PRUEFER    Regenbogen fremd trotz eigener 0
+PRUEFER    vollendbar 38, nicht vollendet 1
+PRUEFER      V P4/B/s9302/sitz2 ab schritt 105: Endpunkte vorher 10, nach eigenem Zug 16, beste Vollendung allein 16
+PRUEFER    Verdoppler 12, zweiter Zug ohne Wirkung 0
+PRUEFER    Zug beendet, obwohl weitere Karte ohne Gegnernutzen >=3 (>=2 im letzten Zug) gebracht hätte: 6
+PRUEFER      Z P4/B/s9308/sitz0 schritt 59: SchlangenfrassSpielen +3
+PRUEFER      Z P4/B/s9308/sitz0 schritt 71: SchlangenfrassSpielen +3
+PRUEFER      Z P4/B/s9308/sitz0 schritt 88: SchlangenfrassSpielen +5
+PRUEFER      Z P4/B/s9308/sitz0 schritt 143: SchlangenfrassSpielen +5
+PRUEFER      Z P4/B/s9308/sitz0 schritt 151: SchlangenfrassSpielen +5
+PRUEFER      Z P4/B/s9308/sitz0 schritt 159: SchlangenfrassSpielen +5
+PRUEFER == gesamt: 32 Partien, Siege 32 (allein 32), Mittel solide 42.84, Mittel Zufall 0.71
+PRUEFER    Schritte 2211, Zeit Mittel 5.8 ms, max 35.6 ms, >1s 0, max Bewertungen 40, unerlaubt 0, Zählerabweichung 0
+PRUEFER    wirkungslos mit Alternative 0, ohne Alternative 0
+PRUEFER    Gruben 28, sofort ohne Wirkung 0, später verfallen 0
+PRUEFER    Fusionen 36, senkend 0
+PRUEFER    Regenbogen fremd trotz eigener 0
+PRUEFER    vollendbar 158, nicht vollendet 1
+PRUEFER      V P4/B/s9302/sitz2 ab schritt 105: Endpunkte vorher 10, nach eigenem Zug 16, beste Vollendung allein 16
+PRUEFER    Verdoppler 42, zweiter Zug ohne Wirkung 0
+PRUEFER    Zug beendet, obwohl weitere Karte ohne Gegnernutzen >=3 (>=2 im letzten Zug) gebracht hätte: 66
+PRUEFER      Z P2/B/s9102/sitz0 schritt 169: SchlangenfrassSpielen +4
+PRUEFER      Z P2/B/s9103/sitz1 schritt 131: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 135: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 139: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 145: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 149: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 155: FusionLegen +6
+PRUEFER      Z P2/B/s9103/sitz1 schritt 163: FusionLegen +6
+PRUEFER      Z P2/B/s9104/sitz0 schritt 129: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 135: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 139: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 148: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 160: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 166: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 172: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9104/sitz0 schritt 176: SchlangenfrassSpielen +9
+PRUEFER      Z P2/B/s9106/sitz0 schritt 74: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 78: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 82: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 86: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 95: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 101: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 107: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 113: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 119: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9106/sitz0 schritt 123: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 127: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 139: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 145: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 151: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 161: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 165: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 169: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 173: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 181: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9106/sitz0 schritt 186 letzter Zug: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9107/sitz1 schritt 149: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9110/sitz0 schritt 129: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9110/sitz0 schritt 135: FusionLegen +4
+PRUEFER      Z P2/B/s9110/sitz0 schritt 144: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9110/sitz0 schritt 154: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9110/sitz0 schritt 159: SchlangenfrassSpielen +6
+PRUEFER      Z P2/B/s9110/sitz0 schritt 168: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9110/sitz0 schritt 172: SchlangenfrassSpielen +3
+PRUEFER      Z P2/B/s9111/sitz1 schritt 70: FusionLegen +4
+PRUEFER      Z P2/B/s9111/sitz1 schritt 74: FusionLegen +4
+PRUEFER      Z P2/B/s9111/sitz1 schritt 78: FusionLegen +4
+PRUEFER      Z P3/B/s9206/sitz2 schritt 68: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 74: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 82: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 99: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 108: SchlangenfrassSpielen +13
+PRUEFER      Z P3/B/s9206/sitz2 schritt 130: SchlangenfrassSpielen +8
+PRUEFER      Z P3/B/s9206/sitz2 schritt 153: SchlangenfrassSpielen +8
+PRUEFER      Z P3/B/s9207/sitz0 schritt 122: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 139: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 147: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 154: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 164: SchlangenfrassSpielen +9
+PRUEFER      Z P3/B/s9207/sitz0 schritt 174: SchlangenfrassSpielen +9
+PRUEFER      Z P4/B/s9308/sitz0 schritt 59: SchlangenfrassSpielen +3
+PRUEFER      Z P4/B/s9308/sitz0 schritt 71: SchlangenfrassSpielen +3
+PRUEFER      Z P4/B/s9308/sitz0 schritt 88: SchlangenfrassSpielen +5
+PRUEFER      Z P4/B/s9308/sitz0 schritt 143: SchlangenfrassSpielen +5
+PRUEFER      Z P4/B/s9308/sitz0 schritt 151: SchlangenfrassSpielen +5
+PRUEFER      Z P4/B/s9308/sitz0 schritt 159: SchlangenfrassSpielen +5
+PRUEFER == Erweiterung: 6 Partien, Siege 6 (allein 6), Mittel solide 40.33, Mittel Zufall 0.25
+PRUEFER    Schritte 410, Zeit Mittel 7.4 ms, max 36.1 ms, >1s 0, max Bewertungen 40, unerlaubt 0, Zählerabweichung 0
+PRUEFER    wirkungslos mit Alternative 0, ohne Alternative 0
+PRUEFER    Gruben 4, sofort ohne Wirkung 0, später verfallen 0
+PRUEFER    Fusionen 7, senkend 0
+PRUEFER    Regenbogen fremd trotz eigener 0
+PRUEFER    vollendbar 31, nicht vollendet 1
+PRUEFER      V P4/E/s9440/sitz0 ab schritt 139: Endpunkte vorher 7, nach eigenem Zug 7, beste Vollendung allein 11
+PRUEFER    Verdoppler 8, zweiter Zug ohne Wirkung 0
+PRUEFER    Zug beendet, obwohl weitere Karte ohne Gegnernutzen >=3 (>=2 im letzten Zug) gebracht hätte: 12
+PRUEFER      Z P2/E/s9420/sitz0 schritt 80: SchlangenfrassSpielen +4
+PRUEFER      Z P2/E/s9420/sitz0 schritt 84: SchlangenfrassSpielen +4
+PRUEFER      Z P2/E/s9420/sitz0 schritt 88: SchlangenfrassSpielen +4
+PRUEFER      Z P2/E/s9420/sitz0 schritt 102: SchlangenfrassSpielen +4
+PRUEFER      Z P2/E/s9420/sitz0 schritt 108: SchlangenfrassSpielen +4
+PRUEFER      Z P2/E/s9420/sitz0 schritt 114: SchlangenfrassSpielen +5
+PRUEFER      Z P2/E/s9420/sitz0 schritt 120: SchlangenfrassSpielen +4
+PRUEFER      Z P2/E/s9420/sitz0 schritt 126: SchlangenfrassSpielen +4
+PRUEFER      Z P3/E/s9430/sitz1 schritt 122: FusionLegen +3
+PRUEFER      Z P3/E/s9430/sitz1 schritt 133: FusionLegen +3
+PRUEFER      Z P3/E/s9431/sitz2 schritt 79: FusionLegen +6
+PRUEFER      Z P3/E/s9431/sitz2 schritt 105: SchlangenfrassSpielen +3
+PRUEFER K2.7 eigene Probe: 232 Stellungen, verändert 232, abweichend 0, Reaktionen 54, Schlussrunde 5, zweiter Teilzug 6; Wahl hängt vom KI-Zufall ab in 0
+PRUEFER Spion: 150 Stellungen, gemeinsame Verweise mit echtem Zustand 0, fremde Hand in Sicht 0
+PRUEFER Spion: Handtreffer 99 (Erwartung bei reinem Raten 101.9, 150 Hände), oberste Stapelkarte 6 (Erwartung 4.20)
+PRUEFER Spion: Wahl ändert sich bei Störung des Verdeckten in 0 von 150
+PRUEFER Saatkollision KI-Saat = Partiesaat: fremde Handkarten richtig geraten 1904 von 3395 (Erwartung bei reinem Raten 430.3), oberste 5 Stapelkarten exakt 383 von 383
+PRUEFER Saatkollision KI-Saat anders: fremde Handkarten richtig geraten 450 von 3395 (Erwartung bei reinem Raten 430.3), oberste 5 Stapelkarten exakt 0 von 383

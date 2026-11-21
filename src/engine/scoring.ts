@@ -72,7 +72,7 @@ type Wertungsgrundlage = Pick<Spielzustand, 'spieler' | 'erweiterung'>;
  * zählen nicht mit und unterbrechen sie, auch Regenbogenschlange und Farbenfusion;
  * `ermittleFarbgruppen` arbeitet deshalb auf der rohen Schlange. Unter 3 Karten: 0 (D24).
  */
-export function laengsteFarbkette(spieler: Spieler): number {
+export function laengsteFarbkette(spieler: Pick<Spieler, 'schlangen'>): number {
   const laengen = spieler.schlangen.flatMap((schlange) => ermittleFarbgruppen(schlange, MINDEST_KETTENLAENGE).map((kette) => kette.laenge));
   return Math.max(0, ...laengen);
 }

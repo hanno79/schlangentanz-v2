@@ -101,7 +101,7 @@ interface Lage {
 
 const START: Lage = { farbe: -1, laenge: 0, offen: 0, offeneJoker: 0, offenBelegt: false, farben: 0, bonus: 0 };
 
-function istJoker(karte: Spielkarte): karte is Spielkarte & { typ: 'Sonderkarte'; name: Jokerart } {
+export function istJoker(karte: Spielkarte): karte is Spielkarte & { typ: 'Sonderkarte'; name: Jokerart } {
   return karte.typ === 'Sonderkarte' && (karte.name === 'Regenbogenschlange' || karte.name === 'Farbenfusion');
 }
 

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a04f885fdf9d8dda5
+
+ ❯ src/entwicklung/partie.test.ts (13 tests | 1 failed) 226ms
+     × U5: echte Fälle, in denen die Mischung die Partiesaat ergäbe: Die KI-Saat weicht um ein Bit aus (Prüfprotokoll K2, Iteration 2) 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/partie.test.ts > U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von der Partie > U5: echte Fälle, in denen die Mischung die Partiesaat ergäbe: Die KI-Saat weicht um ein Bit aus (Prüfprotokoll K2, Iteration 2)
+AssertionError: U5: Schritt 22, Saat 3736942547: expected 3736942547 to be 3736942546 // Object.is equality
+
+- Expected
++ Received
+
+- 3736942546
++ 3736942547
+
+ ❯ src/entwicklung/partie.test.ts:78:133
+     76|       [60, 4210738748, 4210738749],
+     77|     ]
+     78|     for (const [schritt, saat, ausgewichen] of faelle) expect(kiSaatAm…
+       |                                                                                                                                     ^
+     79|   })
+     80|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+   Start at  18:10:02
+   Duration  5.27s (transform 680ms, setup 476ms, import 704ms, tests 226ms, environment 3.42s)
+

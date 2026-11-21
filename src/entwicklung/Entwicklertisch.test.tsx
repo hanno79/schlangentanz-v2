@@ -231,3 +231,29 @@ describe('K1: Knopf „KI-Schritt“ am Entwicklertisch', () => {
     expect(screen.getByTestId('ki-schritt-hinweis')).toHaveTextContent('Spieler 1 entscheidet; das ist ein Mensch.')
   })
 })
+
+describe('K2: Knopf „KI-Schritt (solide)“ am Entwicklertisch', () => {
+  const soliderKnopf = () => screen.getByRole('button', { name: 'KI-Schritt (solide)' })
+  const verlaufseintraege = () => within(screen.getByTestId('verlauf')).getAllByRole('listitem')
+
+  it('B2: solange der Mensch entscheidet, ist auch dieser Knopf gesperrt', () => {
+    oeffne('/dev?seed=1&spieler=2')
+    expect(soliderKnopf()).toBeDisabled()
+  })
+
+  it('K2.1: im Szenario ki-dreiergruppe legt ein Klick das Violett an die eigene Schlange, ein zweiter beendet den Zug', () => {
+    oeffne('/dev?szenario=ki-dreiergruppe')
+    expect(soliderKnopf()).toBeEnabled()
+    fireEvent.click(soliderKnopf())
+    expect(verlaufseintraege().at(-1)).toHaveTextContent(/^KI-Schritt \(solide\): FarbkarteLegen: .*\(violett-\d+\) → schlange-1/)
+    fireEvent.click(soliderKnopf())
+    expect(verlaufseintraege().at(-1)).toHaveTextContent('KI-Schritt (solide): ZugBeenden')
+    expect(soliderKnopf(), 'K2: danach entscheidet wieder der Mensch').toBeDisabled()
+    expect(screen.queryByTestId('fehlermeldung')).toBeNull()
+  })
+
+  it('K1: der Knopf der Zufalls-KI bleibt daneben bestehen', () => {
+    oeffne('/dev?szenario=ki-dreiergruppe')
+    expect(screen.getByRole('button', { name: 'KI-Schritt' })).toBeEnabled()
+  })
+})

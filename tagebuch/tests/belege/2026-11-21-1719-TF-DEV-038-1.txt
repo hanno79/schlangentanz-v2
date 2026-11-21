@@ -1,0 +1,6 @@
+[{"schritt":22,"saat":3736942547,"roh":3736942547},{"schritt":30,"saat":4006315519,"roh":4006315519},{"schritt":60,"saat":4210738748,"roh":4210738748},{"schritt":64,"saat":4273669358,"roh":4273669358},{"schritt":80,"saat":4278506630,"roh":4278506630}]
+kiSaatAmTisch(22, 3736942547) = 3736942546; gleich der Partiesaat: false
+kiSaatAmTisch(30, 4006315519) = 4006315518; gleich der Partiesaat: false
+kiSaatAmTisch(60, 4210738748) = 4210738749; gleich der Partiesaat: false
+      Tests  12 passed (12)
+(Gegenprobe: letzte Zeile von kiSaatAmTisch durch 'return saat' ersetzt)
