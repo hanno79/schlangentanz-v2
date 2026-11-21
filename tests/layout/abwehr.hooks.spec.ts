@@ -35,8 +35,11 @@ async function pruefeFrage(page: Page, handgroesse: number): Promise<void> {
 test.describe('O6: Abwehr, Aussetzen und Protokoll am Tisch', () => {
   test('O6 K2/K3: Schlangengrube auf dich: Frage mit Angreifer, Karte und Ziel; „Abwehren“ lässt eine Karte weniger auf der Hand', async ({ page }, info) => {
     const tippe = bediene(info)
+    await page.clock.install()
     await page.goto('/spiel?szenario=angriff-auf-dich&tempo=sofort')
     await expect(frage(page)).toContainText('KI-Gegner 1 sagt an: Schlangengrube auf dich.')
+    // Ab hier steht die Uhr, damit KI-Gegner 1 nach der Abwehr nicht weiterspielt und du nicht schon wieder auffüllst.
+    await page.clock.pauseAt(await page.evaluate(() => Date.now() + 1000))
     await pruefeFrage(page, 5)
     const vorher = await gespeichert(page)
     await tippe(frage(page).getByRole('button', { name: 'Abwehren' }))
