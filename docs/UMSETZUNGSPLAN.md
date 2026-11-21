@@ -655,7 +655,7 @@ bis E9.*
 
 #### X1 Aufgaben: Rahmen
 
-- **Behebt:** C15, C20, Rest von C1. Spec: A4, A5, A9. Fragen: G1, G2.
+- **Behebt:** C15, C20, Rest von C1. Spec: A4, A5, A9. Fragen: G1 → D34, G2 → D35.
 - **Dateien:** `src/engine/aufgabenKarten.ts`, `zugablauf.ts` (Prüfstellen),
   neu `src/engine/aufgaben/rahmen.ts`.
 - **Abnahmekriterien:**
@@ -672,7 +672,8 @@ bis E9.*
 
 #### X2 Die 15 Aufgaben mit Jokern
 
-- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3–G8, G9 → D31.
+- **Behebt:** C10, C14, C21, C23. Spec: A9, A7.3, A7.7. Fragen: G3 → D36,
+  G4 → D37, G5 → D38, G6 → D39, G7 → D40, G8 → D41, G9 → D31.
   D32 betrifft nur den Vielfaltbonus, nicht „Farbharmonie“ (dort gilt D31).
 - **Dateien:** `src/engine/aufgaben/<name>.ts` je Aufgabe, gemeinsame Helfer
   in `jokerGruppen.ts`. **Drei gleichzeitige Pakete zu je fünf Aufgaben.**
@@ -691,7 +692,7 @@ bis E9.*
 
 #### X3 Rahmen für Zusatzaktionen und Entscheidungen
 
-- **Spec:** A7.10, A8. Fragen: G14, G15.
+- **Spec:** A7.10, A8. Fragen: G14 → D46, G15 → D47.
 - **Dateien:** `zugablauf.ts`, `aktionen/*`, `reaktion.ts` (erweitert zu
   einem allgemeinen Entscheidungsablauf, auch für Entscheidungen eines Gegners).
 - **Abnahmekriterien:**
@@ -708,15 +709,16 @@ bis E9.*
 
 *Drei Tasks, gleichzeitig nach X3. Die genauen Kriterien entstehen aus den Antworten in P0.5 und werden vor Taskbeginn in Plan und Dart nachgetragen.*
 
-- **X4** (A8.1, Fragen G16, G17): Bedingung zu Zugbeginn (5 Karten Rückstand,
-  Grenze bei 4 und 5 getestet); je Spieler einmal; zwei Zusatzaktionen aus
+- **X4** (A8.1, Fragen G16 → D48, G17 → D49): Bedingung zu Zugbeginn
+  (5 Karten Rückstand, Grenze bei 4 und 5 getestet); je Spieler einmal; zwei Zusatzaktionen aus
   drei Möglichkeiten; danach verbraucht. Datei `src/engine/erweiterung/comeback.ts`.
-- **X5** (A8.2, Fragen G18–G23): je Spieler zwei Karten; höchstens eine pro
+- **X5** (A8.2, Fragen G18 → D50, G19 → D51, G20 → D52, G21 → D53,
+  G22 → D54, G23 → D55): je Spieler zwei Karten; höchstens eine pro
   Runde; aufgedeckte Farbkarte heisst Erfolg, Sonderkarte Misserfolg; vier
   Aktionen, je Erfolg und Misserfolg ein Test; Wahl des begünstigten Gegners;
   Karte danach aus dem Spiel. Datei `src/engine/erweiterung/risiko.ts`.
-- **X6** (A7.10, Fragen G10–G13): einmal im Deck; vier Effekte je mit Test;
-  danach aus dem Spiel; nicht vom Ablagestapel zurückholbar. Datei
+- **X6** (A7.10, Fragen G10 → D42, G11 → D43, G12 → D44, G13 → D45): einmal
+  im Deck; vier Effekte je mit Test; danach aus dem Spiel; nicht vom Ablagestapel zurückholbar. Datei
   `src/engine/karten/schlangenkorb.ts`.
 - **Für alle drei:** jeder Regelsatz des Abschnitts hat einen Test; Dauerlauf
   mit Erweiterung grün; Szenarien am Entwicklertisch.
@@ -1076,10 +1078,12 @@ Die Website lässt diese Punkte offen. Ein Vorschlag gilt **nicht**, bevor der
 Autor ihn bestätigt hat. Fragen F blockieren Basis-Tasks, Fragen G nur die
 Erweiterung.
 
-Stand 13.11.2026: Der Autor hat F1–F15 beantwortet. Die Antworten stehen in
+Stand 21.11.2026: Der Autor hat F1–F15 am 13.11.2026 beantwortet. Die Antworten stehen in
 `docs/GAME_SPEC.md` Teil D (D14–D28), die zur Nachfrage F8a als D29; jeder
 Task, der eine Frage nennt, verweist mit „F1 → D14“ darauf. G9 hat der
-Autor am 20.11.2026 beantwortet (D31). Offen sind G1–G8 und G10–G23.
+Autor am 20.11.2026 beantwortet (D31), G1–G8 und G10–G23 am 21.11.2026 mit
+einer Sammelantwort: Es gilt je der Vorschlag aus `docs/REGELFRAGEN.md`
+(D34–D55). Offene Regelfragen gibt es keine mehr.
 
 ### Basis-Spiel
 
@@ -1103,31 +1107,31 @@ Autor am 20.11.2026 beantwortet (D31). Offen sind G1–G8 und G10–G23.
 
 ### Erweiterung
 
-| Nr. | Stelle | Frage |
-|---|---|---|
-| G1 | A1, B1 | Ohne Erweiterung gibt es keine Aufgaben, keine Schlangenhäutung, keinen Vielfaltbonus (ein Schalter für alles). Richtig? |
-| G2 | A9 | Geheime Aufgabe: Zählt sie, sobald sie in einem eigenen Zug einmal erfüllt war, oder muss sie am Spielende erfüllt sein? |
-| G3 | A9 | Zählen für „Schlangenmeister" und „Schlangenrepertoire" als „ausgespielt": ein zur Abwehr gespielter Farbenschutz, eine wirkungslos abgelegte und eine abgewehrte Sonderkarte, der Schlangenkorb? |
-| G4 | A9 | „Schlangentanz": Zählt nur eine Schlangenhäutung in der eigenen Schlange? Dürfen die zwei Gruppen aus zwei Häutungen stammen? |
-| G5 | A9 | „Vielfaltskönig" und „Farbenpracht": Braucht es zwei Schlangen, oder genügt eine? |
-| G6 | A9 | „Symmetriemeister": Muss die Kartenzahl gerade sein? Dürfen Joker oder andere Sonderkarten in der Schlange liegen? |
-| G7 | A9 | „Schlangenbändiger": Muss das Muster zweimal direkt hintereinander liegen (ABCABC)? |
-| G8 | A9 | „Farbkombination": Müssen die fünf Karten nebeneinander liegen? Zählen Joker bei „Gelber Schatz" und „Lila Riese" mit? |
-| G9 | A11, A9 | Zählt eine Gruppe nur aus Jokern (drei nebeneinander) für Vielfaltbonus und „Farbharmonie"? |
-| G10 | A7.10 | Schlangenkorb: Liegt er auf der Hand (zählt zu den 5)? Kostet sein Einsatz die Sonderkarte des Zuges? Sind die vier Beispiele die vollständige Liste der Effekte? |
-| G11 | A7.10 | „Ziehe 3 Karten und spiele sofort bis zu 2 davon": zusätzlich zu den Karten des Zuges, beliebige Arten, auch ein gezogener Verdoppler? Was bei weniger als 3 Karten im Stapel? |
-| G12 | A7.10 | „Tausche bis zu 2 Karten aus deiner Schlange mit Handkarten": beliebige Karten, gleicher Platz, getauschte Karte auf die Hand? |
-| G13 | A7.10 | „Sonderkarte aus gegnerischer Schlange entfernen": welche Karten (auch Blockade), abwehrbar mit Farbenschutz, auf wessen Ablagestapel? |
-| G14 | A7.10, A8.1 | „Zwei zusätzliche Aktionen": dieselben drei Möglichkeiten wie bei der Comeback-Karte? Gelten die Grenzen (eine Farbkarte, eine Sonderkarte) dann nicht? Zweite Farbenfusion, zweiter Verdoppler? |
-| G15 | A7.8, A8 | „Nicht mit anderen zugerweiternden Effekten kombinierbar": Schliessen sich Verdoppler, Comeback und Schlangenkorb im selben Zug aus? |
-| G16 | A8.1 | Schlangenlänge für die Comeback-Bedingung: Zählt jede Karte eins, die Farbenfusion eins oder drei, ein Spieler ohne Schlange null? Ist die Karte später im Zug und im zweiten Zug nach Verdoppler einsetzbar? |
-| G17 | A8.1 | „Zwei Karten abwerfen, drei ziehen": mit weniger als zwei Handkarten, bei weniger als drei im Stapel, in der Schlussrunde, zweimal? |
-| G18 | A8.2 | „Pro Runde eine Risiko-Karte": pro eigenem Zug? Gilt der zweite Zug nach Verdoppler als neue Runde? |
-| G19 | A8.2 | Wohin kommt die aufgedeckte Karte bei Aktion 2 (Misserfolg), Aktion 3 (Erfolg, samt der ersetzten Schlangenkarte) und Aktion 4 (beide Fälle)? |
-| G20 | A8.2 | Aktion 2: Muss die „geplante Farbkarte" vorher benannt werden? Wer wählt bei Misserfolg zwischen ihr und der obersten Stapelkarte? Was gilt ohne Farbkarte auf der Hand? Nur eigene Schlange? |
-| G21 | A8.2 | Aktion 3: Welche Handkarte darf ersetzen, und wird bei „anderer Punktewert" die aufgedeckte Karte vor oder nach der gewählten Karte eingefügt? |
-| G22 | A8.2 | Aktion 4: Zählt die aufgedeckte Karte zu den „zwei Karten vom Nachziehstapel"? Was bei leerem Ablagestapel? Wie kann eine Risiko-Karte auf einem Ablagestapel liegen, wenn sie aus dem Spiel kommt? |
-| G23 | A8.2, A10 | Ist eine Risiko-Karte bei leerem Stapel oder in der Schlussrunde spielbar? Wer löst die Schlussrunde aus, wenn ein Effekt oder ein Gegner die letzte Karte nimmt? |
+| Nr. | Stelle | Frage | Antwort |
+|---|---|---|---|
+| G1 | A1, B1 | Ohne Erweiterung gibt es keine Aufgaben, keine Schlangenhäutung, keinen Vielfaltbonus (ein Schalter für alles). Richtig? | wie Vorschlag, 21.11.2026 (D34) |
+| G2 | A9 | Geheime Aufgabe: Zählt sie, sobald sie in einem eigenen Zug einmal erfüllt war, oder muss sie am Spielende erfüllt sein? | wie Vorschlag, 21.11.2026 (D35) |
+| G3 | A9 | Zählen für „Schlangenmeister" und „Schlangenrepertoire" als „ausgespielt": ein zur Abwehr gespielter Farbenschutz, eine wirkungslos abgelegte und eine abgewehrte Sonderkarte, der Schlangenkorb? | wie Vorschlag, 21.11.2026 (D36) |
+| G4 | A9 | „Schlangentanz": Zählt nur eine Schlangenhäutung in der eigenen Schlange? Dürfen die zwei Gruppen aus zwei Häutungen stammen? | wie Vorschlag, 21.11.2026 (D37) |
+| G5 | A9 | „Vielfaltskönig" und „Farbenpracht": Braucht es zwei Schlangen, oder genügt eine? | wie Vorschlag, 21.11.2026 (D38) |
+| G6 | A9 | „Symmetriemeister": Muss die Kartenzahl gerade sein? Dürfen Joker oder andere Sonderkarten in der Schlange liegen? | wie Vorschlag, 21.11.2026 (D39) |
+| G7 | A9 | „Schlangenbändiger": Muss das Muster zweimal direkt hintereinander liegen (ABCABC)? | wie Vorschlag, 21.11.2026 (D40) |
+| G8 | A9 | „Farbkombination": Müssen die fünf Karten nebeneinander liegen? Zählen Joker bei „Gelber Schatz" und „Lila Riese" mit? | wie Vorschlag, 21.11.2026 (D41) |
+| G9 | A11, A9 | Zählt eine Gruppe nur aus Jokern (drei nebeneinander) für Vielfaltbonus und „Farbharmonie"? | wie Vorschlag, 20.11.2026 (D31; zum Vielfaltbonus D32) |
+| G10 | A7.10 | Schlangenkorb: Liegt er auf der Hand (zählt zu den 5)? Kostet sein Einsatz die Sonderkarte des Zuges? Sind die vier Beispiele die vollständige Liste der Effekte? | wie Vorschlag, 21.11.2026 (D42) |
+| G11 | A7.10 | „Ziehe 3 Karten und spiele sofort bis zu 2 davon": zusätzlich zu den Karten des Zuges, beliebige Arten, auch ein gezogener Verdoppler? Was bei weniger als 3 Karten im Stapel? | wie Vorschlag, 21.11.2026 (D43) |
+| G12 | A7.10 | „Tausche bis zu 2 Karten aus deiner Schlange mit Handkarten": beliebige Karten, gleicher Platz, getauschte Karte auf die Hand? | wie Vorschlag, 21.11.2026 (D44) |
+| G13 | A7.10 | „Sonderkarte aus gegnerischer Schlange entfernen": welche Karten (auch Blockade), abwehrbar mit Farbenschutz, auf wessen Ablagestapel? | wie Vorschlag, 21.11.2026 (D45) |
+| G14 | A7.10, A8.1 | „Zwei zusätzliche Aktionen": dieselben drei Möglichkeiten wie bei der Comeback-Karte? Gelten die Grenzen (eine Farbkarte, eine Sonderkarte) dann nicht? Zweite Farbenfusion, zweiter Verdoppler? | wie Vorschlag, 21.11.2026 (D46) |
+| G15 | A7.8, A8 | „Nicht mit anderen zugerweiternden Effekten kombinierbar": Schliessen sich Verdoppler, Comeback und Schlangenkorb im selben Zug aus? | wie Vorschlag, 21.11.2026 (D47) |
+| G16 | A8.1 | Schlangenlänge für die Comeback-Bedingung: Zählt jede Karte eins, die Farbenfusion eins oder drei, ein Spieler ohne Schlange null? Ist die Karte später im Zug und im zweiten Zug nach Verdoppler einsetzbar? | wie Vorschlag, 21.11.2026 (D48) |
+| G17 | A8.1 | „Zwei Karten abwerfen, drei ziehen": mit weniger als zwei Handkarten, bei weniger als drei im Stapel, in der Schlussrunde, zweimal? | wie Vorschlag, 21.11.2026 (D49) |
+| G18 | A8.2 | „Pro Runde eine Risiko-Karte": pro eigenem Zug? Gilt der zweite Zug nach Verdoppler als neue Runde? | wie Vorschlag, 21.11.2026 (D50) |
+| G19 | A8.2 | Wohin kommt die aufgedeckte Karte bei Aktion 2 (Misserfolg), Aktion 3 (Erfolg, samt der ersetzten Schlangenkarte) und Aktion 4 (beide Fälle)? | wie Vorschlag, 21.11.2026 (D51) |
+| G20 | A8.2 | Aktion 2: Muss die „geplante Farbkarte" vorher benannt werden? Wer wählt bei Misserfolg zwischen ihr und der obersten Stapelkarte? Was gilt ohne Farbkarte auf der Hand? Nur eigene Schlange? | wie Vorschlag, 21.11.2026 (D52) |
+| G21 | A8.2 | Aktion 3: Welche Handkarte darf ersetzen, und wird bei „anderer Punktewert" die aufgedeckte Karte vor oder nach der gewählten Karte eingefügt? | wie Vorschlag, 21.11.2026 (D53) |
+| G22 | A8.2 | Aktion 4: Zählt die aufgedeckte Karte zu den „zwei Karten vom Nachziehstapel"? Was bei leerem Ablagestapel? Wie kann eine Risiko-Karte auf einem Ablagestapel liegen, wenn sie aus dem Spiel kommt? | wie Vorschlag, 21.11.2026 (D54) |
+| G23 | A8.2, A10 | Ist eine Risiko-Karte bei leerem Stapel oder in der Schlussrunde spielbar? Wer löst die Schlussrunde aus, wenn ein Effekt oder ein Gegner die letzte Karte nimmt? | wie Vorschlag, 21.11.2026 (D55) |
 
 ## 10. Reihenfolge und Parallelisierung
 

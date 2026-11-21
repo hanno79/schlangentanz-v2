@@ -1,0 +1,28 @@
+TF-SPEC-018, Iteration 3, Stand a70c00d, Prüfer Claude Code
+
+Vergleichsgrundlage: docs/REGELFRAGEN.md auf 8cbda18 (vor dem Task), gewählte Möglichkeiten laut Vorschlag des Orchestrators.
+
+1. Die 51 Sätze in tests/regelfragen_sammelantwort.ts (= Spalte „Antwort“ von D34–D55 ohne Schluss)
+   wurden alle 51 Satz für Satz neben die gewählte Möglichkeit gelegt. Abweichungen nur in der Form:
+   - Folge-Angabe der Möglichkeit teils als zweiter Satzteil übernommen (G1 a, G2 a, G4 a, G8 b, G10 c,
+     G12 d, G13 c, G14 c, G15 a, G18 a, G19 a, G20 g), teils weggelassen; keine Folge als Regel umgekehrt.
+   - Einleitender Name der Aufgabe, des Korbs oder der Aktion vorangestellt (etwa „Korb „Tausche bis zu 2 Karten“:“).
+   - G1 a „für alles“ als „für die ganze Erweiterung“; G22 e die zwei Halbsätze getauscht; G16 f „(D47)“ ergänzt.
+   Kein Satz enthält eine nicht gewählte Möglichkeit, keiner lässt einen Regelteil der gewählten weg.
+
+2. D43 (G11): entfernt ist nur „Nicht gespielte gezogene Karten bleiben auf der Hand; über 5 Karten wird am
+   Zugende abgelegt (A5).“ Der Satz steht in REGELFRAGEN.md (8cbda18) als Hinweis nach Teil 3, ausserhalb
+   jeder Möglichkeit a–f. A5 in Teil A, Zeile 126: „Hast du am Ende deines Zuges mehr als 5 Karten auf der
+   Hand, lege die überzähligen Karten auf deinen Ablagestapel.“ Die Sätze zu a, c, e stehen unverändert.
+
+3. D51 (G19): Aktion 3 vorher ein Satz „…, wie bei den Aktionen 1 und 2; die ersetzte Schlangenkarte kommt
+   ebenfalls auf die eigene Hand, es ist ein Tausch.“, jetzt zwei Sätze „…, wie bei den Aktionen 1 und 2.“
+   und „Die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand; es ist ein Tausch.“ Wortlaut
+   gleich, nur Satzgrenze und Semikolon wie in Möglichkeit e. Aktion 2 (a) und Aktion 4 (g) unverändert.
+
+4. Sonst seit Iteration 2 (06673aa) in docs/GAME_SPEC.md nur der Verlaufseintrag in Teil E; REGELFRAGEN.md
+   unverändert; UMSETZUNGSPLAN.md nur O2 Kriterium 2 aus dem Merge von 2aef0f2 (nicht P0.5e).
+   git diff -U0 8cbda18 a70c00d -- docs/GAME_SPEC.md: Hunks ab Zeile 775, Teil A reicht von 48 bis 723.
+
+5. npx vitest run über die sieben Spec-Testdateien auf a70c00d: Exit 0, 467 passed.
+   npm run abgleich:website: Exit 0.

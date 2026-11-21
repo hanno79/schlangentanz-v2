@@ -16,7 +16,9 @@ import {
   spec,
   teilD,
   teilDTabelle,
+  teileDerFrage,
 } from './regelfragen_lesen'
+import { DATUM_G, ERWARTET_G, type Teil } from './regelfragen_sammelantwort'
 
 // Stand der Antworten des Autors. Die Form jeder Antwort prüft
 // tests/regelfragen.test.ts; hier steht, was der Autor wann geantwortet hat.
@@ -27,12 +29,13 @@ const DATUM_F = '13.11.2026'
 const DATUM_G9 = '20.11.2026'
 
 /** `datum` fehlt bei den Antworten vom 13.11.2026 (`DATUM_F`). */
-type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string }
+type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string; teile?: Record<string, Teil>; eintrag?: string }
 
 /**
  * Was der Autor gewählt hat, abgeleitet aus seinen Worten, nicht aus den Dateien:
  * „Alle andere Vorschläge sind passend“ (also der Vorschlag), F8 frei, F11 „mindestens
- * aus 3 Farbkarten … sonst ok“ mit der Bestätigung „Ja, genau so“, F8a „Ja, ohne Wirkung“, G9 „Ja, als Gruppe“ (Vorschlag a, 20.11.2026).
+ * aus 3 Farbkarten … sonst ok“ mit der Bestätigung „Ja, genau so“, F8a „Ja, ohne Wirkung“, G9 „Ja, als Gruppe“ (Vorschlag a, 20.11.2026),
+ * die übrigen Fragen G „ja zu deinen vorschlägen.“ (also je der Vorschlag, 21.11.2026; tests/regelfragen_sammelantwort.ts).
  * `kern` sind die tragenden Aussagen: Sie stehen in REGELFRAGEN.md (in der Antwort oder
  * in der gewählten Möglichkeit) und im Eintrag in Teil D; `verboten` steht an keiner
  * dieser Stellen. `wortlaut` zitiert den Autor in der Antwort; dass jedes Zitat auch in
@@ -95,6 +98,8 @@ const ERWARTET: Record<string, Erwartung> = {
     wortlaut: ['„Ja, als Gruppe“'],
     datum: DATUM_G9,
   },
+  // Sammelantwort vom 21.11.2026, je Teil der Frage (P0.5e).
+  ...ERWARTET_G,
 }
 
 /** Kleinbuchstaben, Leerraum zusammengefasst: Kernaussagen gelten auch am Satzanfang. */
@@ -102,7 +107,7 @@ function vergleichbar(text: string): string {
   return normalisiert(text).toLowerCase()
 }
 
-describe('P0.5: Antworten des Autors vom 13.11.2026 und 20.11.2026', () => {
+describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026', () => {
   it('P0.5: genau die beantworteten Fragen stehen in der Erwartungstabelle', () => {
     const beantwortet = [...bloecke].filter(([, block]) => feld(block, 'Antwort') !== OFFEN).map(([nr]) => nr)
 
@@ -134,6 +139,62 @@ describe('P0.5: Antworten des Autors vom 13.11.2026 und 20.11.2026', () => {
       }
     })
   }
+
+  for (const [nr, { teile, eintrag }] of Object.entries(ERWARTET)) {
+    if (!teile || eintrag === undefined) continue
+    it(`P0.5e: ${nr}: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“`, () => {
+      const antwort = teilD.get(nr)?.antwort ?? ''
+      expect(antwort, `${nr}: Teil D, Spalte „Antwort“, Satz für Satz`).toBe(eintrag)
+      for (const [buchstabe, { satz }] of Object.entries(teile)) {
+        expect(antwort.split(satz).length - 1, `${nr} ${buchstabe}: Satz steht nicht genau einmal in Teil D: „${satz}“`).toBe(1)
+      }
+    })
+
+    it(`P0.5e: ${nr}: jeder Satz gibt die gewählte Möglichkeit seines Teils wieder, jede andere Möglichkeit desselben Teils hat eine Gegenprobe`, () => {
+      const block = bloecke.get(nr) ?? ''
+      const gruppen = teileDerFrage(block)
+      const gewaehlteBuchstaben = Object.keys(teile)
+      expect(
+        gewaehlteBuchstaben.map((buchstabe) => gruppen.findIndex((gruppe) => gruppe.includes(buchstabe))),
+        `${nr}: je Teil der Frage genau eine gewählte Möglichkeit, in der Reihenfolge der Teile`,
+      ).toEqual(gruppen.map((_, i) => i))
+
+      for (const [buchstabe, { satz, beleg, verboten }] of Object.entries(teile)) {
+        const andereTeile = gewaehlteBuchstaben.filter((b) => b !== buchstabe).map((b) => vergleichbar(moeglichkeitText(block, b)))
+        const gruppe = gruppen.find((g) => g.includes(buchstabe)) ?? []
+        expect(beleg.length, `${nr} ${buchstabe}: kein Beleg aus der Möglichkeit`).toBeGreaterThan(0)
+        for (const stelle of beleg.map(vergleichbar)) {
+          expect(vergleichbar(moeglichkeitText(block, buchstabe)), `${nr} ${buchstabe}: Beleg stammt nicht aus der Möglichkeit`).toContain(stelle)
+          expect(vergleichbar(satz), `${nr} ${buchstabe}: Satz gibt den Beleg „${stelle}“ nicht wieder`).toContain(stelle)
+          for (const text of andereTeile) {
+            expect(text, `${nr} ${buchstabe}: Beleg „${stelle}“ passt auch zu einem anderen Teil`).not.toContain(stelle)
+          }
+        }
+        expect(Object.keys(verboten), `${nr} ${buchstabe}: Gegenproben für genau die anderen Möglichkeiten dieses Teils`).toEqual(
+          gruppe.filter((b) => b !== buchstabe),
+        )
+        for (const [andere, stellen] of Object.entries(verboten)) {
+          expect(stellen.length, `${nr} ${andere}: keine Gegenprobe`).toBeGreaterThan(0)
+          for (const stelle of stellen.map(vergleichbar)) {
+            expect(vergleichbar(moeglichkeitText(block, andere)), `${nr} ${andere}: Gegenprobe „${stelle}“ stammt nicht aus der Möglichkeit`).toContain(stelle)
+            expect(vergleichbar(satz), `${nr} ${buchstabe}: Satz enthält die Gegenprobe „${stelle}“`).not.toContain(stelle)
+          }
+        }
+      }
+    })
+  }
+
+  it('P0.5e: keine Frage ist mehr offen; G1–G8 und G10–G23 stehen der Reihe nach als D34–D55 in Teil D', () => {
+    const offen = [...bloecke].filter(([, block]) => feld(block, 'Antwort') === OFFEN || feld(block, 'Datum') === OFFEN)
+    expect(offen.map(([nr]) => nr), 'Fragen ohne Antwort oder Datum').toEqual([])
+
+    const sammel = Object.entries(ERWARTET).filter(([, erwartung]) => erwartung.datum === DATUM_G).map(([nr]) => nr)
+    const g = [...bloecke.keys()].filter((nr) => nr.startsWith('G') && nr !== 'G9')
+    expect(sammel, 'Sammelantwort vom 21.11.2026: genau G1–G8 und G10–G23').toEqual(g)
+    expect(g.map((nr) => teilD.get(nr)?.nr), 'Teil D: Nummern der Antworten auf G1–G8 und G10–G23').toEqual(
+      g.map((_, i) => `D${34 + i}`),
+    )
+  })
 
   it('P0.5: F8a steht so da, wie die Nachfrage dem Autor gestellt wurde', () => {
     expect(feld(bloecke.get('F8a') ?? '', 'Frage')).toBe(
