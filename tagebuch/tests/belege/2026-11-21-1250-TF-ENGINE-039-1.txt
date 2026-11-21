@@ -1,0 +1,118 @@
+== Prüferskript
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, berechneEndwertung, deserialisiere, ermittleAktionen, serialisiere } from '../index'
+import type { FusionLegenAktion, SpielAktion, Spielzustand } from '../index'
+import { dauerlaufPartien } from '../testing/dauerlauf'
+import { erstellePartie } from '../state'
+import { erzeugeZufall } from '../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
+import { gruppen } from './wertung_hilfe'
+import { aktionen, folge, FUENF, fuehreAus, grund, reaktion, tischMitHaenden, verletzteInvarianten, zugBeenden } from './zugablauf_hilfen'
+
+function fusionAuf(z: Spielzustand, besitzer: number, links: number, schlange = 0): FusionLegenAktion {
+  const s = z.spieler[besitzer].schlangen[schlange]
+  const erwartet = [s.karten[links].id, s.karten[links + 1].id].join()
+  const a = (aktionen(z, 'FusionLegen') as FusionLegenAktion[]).find((x) => x.schlangenId === s.id && x.kartenIds.join() === erwartet)
+  expect(a, `FusionLegen auf ${erwartet} fehlt`).toBeDefined()
+  return a!
+}
+
+describe('Prüfer E7: eigene Proben', () => {
+  it('D30/D31/D32: gespielte Fusion zwischen zwei Regenbogenschlangen: eine Gruppe mit 6 Punkten, Farbe für Vielfalt', () => {
+    const start = tischMitHaenden([['Farbenfusion', 'Blau', 'Rot', 'Gelb', 'Grün'], FUENF], true)
+      .schlange(0, ['Rot', 'Rot', 'Rot', 'Schlangenblockade', 'Regenbogenschlange', 'Grün', 'Grün', 'Regenbogenschlange'])
+      .zustand()
+    const nach = fuehreAus(start, fusionAuf(start, 0, 5)).zustand
+    const w = berechneEndwertung(nach).spieler[0]
+    expect(gruppen(w)).toHaveLength(2)
+    expect(gruppen(w).some((g) => /×3=6$/.test(g))).toBe(true)
+    expect(w.gruppenPunkte).toBe(9)
+    expect(w.schlangen[0].vielfaltFarben).toHaveLength(2)
+  })
+
+  it('D30: zwei gespielte Fusionen nebeneinander (zwei Züge) und Rot: Rot+FF(Grün)+FF(Grün) = 13', () => {
+    let z = tischMitHaenden([['Farbenfusion', 'Farbenfusion', 'Blau', 'Gelb', 'Gelb'], FUENF])
+      .schlange(0, ['Rot', 'Grün', 'Grün', 'Grün', 'Grün'])
+      .zustand()
+    z = fuehreAus(z, fusionAuf(z, 0, 1)).zustand
+    // nächster Zug von Spieler 1: Gegner spielt eine Farbkarte
+    z = folge(z, zugBeenden).zustand
+    while (z.zug.spielerIndex !== 0) {
+      const farb = ermittleAktionen(z).find((a) => a.typ === 'FarbkarteLegen' && a.ziel.art === 'neueSchlange')
+      z = fuehreAus(z, farb!).zustand
+      z = fuehreAus(z, ermittleAktionen(z).find((a) => a.typ === 'ZugBeenden')!).zustand
+      if (z.zug.abschnitt === 'Abwerfen') z = fuehreAus(z, ermittleAktionen(z)[0]).zustand
+    }
+    expect(z.zug.farbenfusionGespielt).toBe(false)
+    const s = z.spieler[0].schlangen[0]
+    expect(s.karten.length).toBe(4)
+    z = fuehreAus(z, fusionAuf(z, 0, 2)).zustand
+    const s2 = z.spieler[0].schlangen[0]
+    expect(s2.karten.map((k) => (k.typ === 'Farbkarte' ? k.farbe : k.name))).toEqual(['Rot', 'Farbenfusion', 'Farbenfusion'])
+    expect(s2.fusionen).toHaveLength(2)
+    expect(verletzteInvarianten(z)).toEqual([])
+    expect(gruppen(berechneEndwertung(z).spieler[0])).toEqual(['Rot×3=13'])
+    expect(deserialisiere(serialisiere(z))).toEqual(z)
+  })
+
+  it('A7.7: Fusion in die zweite Schlange eines Gegners trifft die richtige Schlange; drei Gleiche ergeben zwei Ziele', () => {
+    const start = tischMitHaenden([['Farbenfusion', 'Blau', 'Rot', 'Gelb', 'Grün'], FUENF]).schlange(1, ['Blau']).schlange(1, ['Gelb', 'Gelb', 'Gelb']).zustand()
+    expect(aktionen(start, 'FusionLegen')).toHaveLength(2)
+    const a = fusionAuf(start, 1, 1, 1)
+    const z = folge(start, () => a, (j) => reaktion(j, false)).zustand
+    expect(z.spieler[1].schlangen[0].karten).toHaveLength(1)
+    expect(z.spieler[1].schlangen[1].karten.map((k) => k.typ === 'Farbkarte' ? k.farbe : k.name)).toEqual(['Gelb', 'Farbenfusion'])
+  })
+
+  it('A7.7: zwei Karten aus verschiedenen Schlangen und eine Karte vom Ablagestapel werden abgelehnt', () => {
+    const z = tischMitHaenden([['Farbenfusion', 'Blau', 'Rot', 'Gelb', 'Grün'], FUENF]).schlange(0, ['Rot']).schlange(0, ['Rot']).zustand()
+    const [a, b] = z.spieler[0].schlangen.map((s) => s.karten[0].id)
+    const f = z.spieler[0].hand[0].id
+    const aktion = { typ: 'FusionLegen', spielerId: 'spieler-1', karteId: f, schlangenId: 'schlange-1', kartenIds: [a, b] } as SpielAktion
+    expect(grund(z, aktion)).toMatch(/liegt nicht in der Schlange/)
+    const fremd = { typ: 'FusionLegen', spielerId: 'spieler-1', karteId: 'blau-01', schlangenId: 'schlange-1', kartenIds: [a, b] } as SpielAktion
+    expect(grund(z, fremd)).not.toBe('')
+  })
+
+  it('B2/E4b: 300 Dauerlauf-Partien mit bevorzugter Fusion: Nachrechnen stimmt, keine Handkarte verraten, UnterFusion-Positionen 0/1', () => {
+    let gezaehlt = 0
+    for (const partie of dauerlaufPartien(60, false).concat(dauerlaufPartien(60, true, 61))) {
+      const wahl = erzeugeZufall(partie.saat + 1000)
+      let z = erstellePartie({ spielerzahl: partie.spielerzahl, erweiterung: partie.erweiterung, zufall: erzeugeZufall(partie.saat) })
+      let lage = lageVon(z)
+      for (let i = 0; z.partiephase !== 'Beendet' && i < 3000; i += 1) {
+        const ang = ermittleAktionen(z)
+        const fus = ang.filter((a) => a.typ === 'FusionLegen')
+        const pool = fus.length > 0 && wahl() < 0.7 ? fus : ang
+        const a = pool[Math.floor(wahl() * pool.length)]
+        const { zustand: n, ereignisse } = anwendeAktion(z, a)
+        const nl = lageVon(n)
+        expect(spieleNach(lage, ereignisse)).toEqual(nl)
+        expect(verrateneHandkarten(n, ereignisse)).toEqual([])
+        for (const e of ereignisse) {
+          if (e.typ !== 'KartenVersetzt') continue
+          const unter = e.karten.filter((k) => k.nach.ort === 'UnterFusion')
+          if (unter.length === 0) continue
+          gezaehlt += 1
+          expect(unter.map((k) => ('position' in k.nach ? k.nach.position : -1))).toEqual([0, 1])
+        }
+        z = n
+        lage = nl
+      }
+      expect(z.partiephase).toBe('Beendet')
+    }
+    expect(gezaehlt).toBeGreaterThan(50)
+    console.log('Fusionen mit UnterFusion-Meldung:', gezaehlt)
+  }, 300_000)
+})
+== Ausgabe
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ab2267fe5e1d24648
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  12:15:31
+   Duration  19.32s (transform 859ms, setup 576ms, import 875ms, tests 12.84s, environment 4.49s)
+
+Fusionen mit UnterFusion-Meldung: 359
