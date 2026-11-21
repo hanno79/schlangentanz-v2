@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, erzeugeZufall, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
@@ -9,6 +9,7 @@ import { beschrifte } from './beschriftung'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
 import { name } from './namen'
+import { kiSaatAmTisch } from './partie'
 import { ZustandsAnsicht } from './ZustandsAnsicht'
 
 interface Eintrag {
@@ -31,21 +32,24 @@ interface TischProps {
   titel: string
   erzeuge: () => Spielzustand
   hinweis?: ReactNode
+  /** Die Saat der Partie, wenn sie aus einer entsteht; der Zufall der KI weicht ihr aus (U5). */
+  saat?: number
 }
 
-export function Tisch({ titel, erzeuge, hinweis }: TischProps) {
+export function Tisch({ titel, erzeuge, hinweis, saat }: TischProps) {
   const [anfang] = useState(() => beginne(erzeuge))
   if ('fehler' in anfang) return <Fehler meldung={`${titel} lässt sich nicht aufbauen: ${anfang.fehler}`} />
-  return <Spielverlauf titel={titel} startzustand={anfang.zustand} hinweis={hinweis} />
+  return <Spielverlauf titel={titel} startzustand={anfang.zustand} hinweis={hinweis} saat={saat ?? null} />
 }
 
 interface SpielverlaufProps {
   titel: string
   startzustand: Spielzustand
   hinweis?: ReactNode
+  saat: number | null
 }
 
-function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
+function Spielverlauf({ titel, startzustand, hinweis, saat }: SpielverlaufProps) {
   const [verlauf, setVerlauf] = useState<Eintrag[]>(() => [{ zustand: startzustand, schritt: 'Start', ereignisse: [] }])
   const [fehler, setFehler] = useState<string | null>(null)
   const { zustand, ereignisse } = verlauf[verlauf.length - 1]
@@ -81,7 +85,7 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
             Von vorn
           </button>
         </p>
-        <KiSchritt zustand={zustand} schritt={verlauf.length} fuehreAus={fuehreAus} scheitert={setFehler} />
+        <KiSchritt zustand={zustand} kiSaat={kiSaatAmTisch(verlauf.length, saat)} fuehreAus={fuehreAus} scheitert={setFehler} />
         {fehler === null ? null : <Fehler meldung={`Abgelehnt: ${fehler}`} />}
         <Bedienung zustand={zustand} fuehreAus={fuehreAus} />
         <Ereignisse zustand={zustand} ereignisse={ereignisse} />
@@ -108,24 +112,34 @@ function Spielverlauf({ titel, startzustand, hinweis }: SpielverlaufProps) {
 
 interface KiSchrittProps {
   zustand: Spielzustand
-  /** Die Nummer des Schritts; aus ihr entsteht der Zufall der KI, damit derselbe Stand denselben Schritt ergibt. */
-  schritt: number
+  /** Die Saat für den Zufall der KI, je Schritt fest, damit derselbe Stand denselben Schritt ergibt, und nie die Partiesaat (U5, `kiSaatAmTisch`). */
+  kiSaat: number
   fuehreAus: (aktion: SpielAktion, beschriftung: string) => void
   scheitert: (grund: string) => void
 }
 
-/** K1, Kriterium 4: spielt genau einen Schritt der Zufalls-KI, wenn eine KI entscheidet. */
-function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
+/**
+ * Die Knöpfe für einen KI-Schritt: „KI-Schritt“ spielt die Zufalls-KI (K1, Kriterium 4),
+ * „KI-Schritt (solide)“ die solide KI, damit sich ihr Verhalten am Tisch prüfen lässt
+ * (K2). Beide Fabriken kommen aus der Registry.
+ */
+const KI_KNOEPFE = [
+  { beschriftung: 'KI-Schritt', strategie: 'zufallsKi' },
+  { beschriftung: 'KI-Schritt (solide)', strategie: 'solideKi' },
+] as const
+
+/** Spielt genau einen Schritt der gewählten KI, wenn eine KI entscheidet. */
+function KiSchritt({ zustand, kiSaat, fuehreAus, scheitert }: KiSchrittProps) {
   const entscheider = entscheiderVon(zustand)
   const kiAmZug = entscheider?.steuerung === 'KI'
   const hinweis =
     entscheider === null ? 'Die Partie ist beendet.' : `${entscheider.name} entscheidet; das ist ${kiAmZug ? 'eine KI.' : 'ein Mensch.'}`
 
-  function spiele() {
+  function spiele({ beschriftung, strategie }: (typeof KI_KNOEPFE)[number]) {
     try {
-      const aktion = naechsterKiSchritt(zustand, STRATEGIEN.zufallsKi(erzeugeZufall(schritt)))
+      const aktion = naechsterKiSchritt(zustand, STRATEGIEN[strategie](erzeugeZufall(kiSaat)))
       if (aktion === null) throw new Error('Es entscheidet keine KI.')
-      fuehreAus(aktion, `KI-Schritt: ${beschrifte(zustand, aktion)}`)
+      fuehreAus(aktion, `${beschriftung}: ${beschrifte(zustand, aktion)}`)
     } catch (fehler) {
       scheitert(fehlertext(fehler))
     }
@@ -133,9 +147,13 @@ function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
 
   return (
     <p>
-      <button type="button" onClick={spiele} disabled={!kiAmZug}>
-        KI-Schritt
-      </button>{' '}
+      {KI_KNOEPFE.map((knopf) => (
+        <Fragment key={knopf.strategie}>
+          <button type="button" onClick={() => spiele(knopf)} disabled={!kiAmZug}>
+            {knopf.beschriftung}
+          </button>{' '}
+        </Fragment>
+      ))}
       <small data-testid="ki-schritt-hinweis">{hinweis}</small>
     </p>
   )

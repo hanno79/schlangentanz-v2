@@ -175,12 +175,13 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
    „Menü“; kein Task des Plans (O3 bis O8, O11) baut ein Menü, deshalb bleibt
    es bei „Zur Lobby“, bis eines geplant wird.
 2. **Tischfläche** (scrollt senkrecht): Gegner mit Name, Zahl der Handkarten,
-   oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
+   Punkten, oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
    Nachziehstapel und Zahl, offene Aufgaben; deine Auslage (geheime Aufgabe,
    Comeback, Risiko-Karten, Ablage). Gegner stehen auf dem Handy untereinander,
    ab 700 px nebeneinander.
-3. **Unten fest, weiss abgesetzt:** deine Schlangen (scrollen in sich, wenn sie
-   sehr lang werden), deine Hand und die Zugleiste. Ab 700 px steht die
+3. **Unten fest, weiss abgesetzt:** deine Schlangen mit deinen Punkten neben dem
+   Titel (scrollen in sich, wenn sie sehr lang werden), deine Hand und die
+   Zugleiste. Ab 700 px steht die
    Zugleiste rechts neben Schlangen und Hand (22rem, ab 1000 px 26rem) und zeigt
    die gewählte Karte gross.
    Auf dem Handy hochkant steht sie über deinen Schlangen: So bleibt die Hand am
@@ -223,7 +224,7 @@ Jede Komponente kennt Ruhe, Hover (Maus), Fokus (Tastatur: doppelter Ring aus
 Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
 
 - **Hauptknopf** (`knopf--haupt`): Akzentfläche, weisse Schrift. Höchstens einer
-  je Bildschirm (Lobby: „Weiterspielen“; Ergebnis: „Neue Partie“; Tisch:
+  je Bildschirm (Lobby: „Weiterspielen“; Ergebnis: „Noch einmal“; Tisch:
   „Ausführen“).
 - **Zweitknopf** (`knopf--zweit`): weisse Fläche, Akzent-Rand und -Schrift.
 - **Leiser Knopf** (`knopf--leise`): nur Text, Tischfarbe beim Hover.
@@ -293,9 +294,27 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   „Karten wählen“ in der Zugleiste öffnet ihn wieder.
 - **Kopf- und Aktionsleiste:** weisse Leisten oben und unten; die Aktionsleiste
   trägt die Knöpfe eines Bildschirms rechtsbündig, den Hauptknopf zuletzt.
+- **Punkte am Tisch:** der Zwischenstand der Engine ohne Kettenbonus, bei den
+  Gegnern im Kopf, bei dir neben „Deine Schlangen“ („12 Punkte“, halbfett);
+  „Zwischenstand ohne Kettenbonus“ wird davor vorgelesen.
 - **Rangliste:** ein Eintrag je Spieler mit Platz, Name, Gesamtpunkten und den
-  Posten Farbgruppen, Vielfalt, Längste Kette, Aufgaben. Der Sieger trägt das
-  Abzeichen „Sieger“ und einen Akzent-Rand.
+  Posten Farbgruppen, Vielfalt, Längste Kette, Aufgaben; ohne Erweiterung
+  entfallen Vielfalt und Aufgaben. Jeder Sieger trägt das Abzeichen „Sieger“ und
+  einen Akzent-Rand, bei Gleichstand alle. Darunter, durch eine Linie
+  getrennt, woher die Zahlen kommen: je Schlange die Karten mit den Balken der
+  Gruppen (wie am Tisch, in Gegnergrösse), jede Gruppe als „Rot × 3: 3 Punkte“,
+  jeder Joker als „Regenbogenschlange als Rot“ oder „… in keiner Gruppe“, mit
+  Erweiterung die Farben für den Vielfaltbonus, dann die längste Kette und die
+  Aufgaben.
+- **Ergebnis** (`/spiel` nach Spielende, `src/ui/ergebnis/`): Der Titel nennt
+  den Sieger („Du gewinnst!“, „KI-Gegner 2 gewinnt!“, „Gleichstand: Du und
+  KI-Gegner 1 gewinnen!“), darunter die höchste Punktzahl und, wenn du nicht
+  gewonnen hast, dein Platz. Es folgt die Rangliste, am Fuss „Zur Lobby“
+  (Zweitknopf) und „Noch einmal“ (Hauptknopf). Die Seite ist so hoch wie das
+  Fenster, und wie im Entwurf scrollt nur die Rangliste, mit „mehr ↓“ und
+  „mehr ↑“ am Rand; Titel und Knöpfe bleiben im Bild. Die Spalte ist 48rem breit
+  statt 32rem wie in der Lobby. In der Lobby steht eine beendete Partie als „Letzte
+  Partie: …, beendet“ mit dem Zweitknopf „Ergebnis ansehen“.
 
 ## Bewegung
 

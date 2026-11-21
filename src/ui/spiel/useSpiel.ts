@@ -7,6 +7,9 @@ import type { Entscheider } from '../../ki/sicht'
 import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../spielstand'
+import { useWurfImZeichnen } from '../wurfImZeichnen'
+import { ergebnisAnsicht } from './ergebnisAnsicht'
+import type { ErgebnisAnsicht } from './ergebnisAnsicht'
 import { vorschauFuer } from './haeutungsvorschau'
 import type { Haeutungsvorschauer } from './haeutungsvorschau'
 import { tischAnsicht } from './tischAnsicht'
@@ -37,6 +40,8 @@ export interface SpielOptionen {
 
 export interface Spielsteuerung {
   ansicht: TischAnsicht
+  /** Die Wertung, sobald die Partie beendet ist (O8); bis dahin `null`. */
+  ergebnis: ErgebnisAnsicht | null
   /** Führt eine Aktion des Menschen aus, eine aus `ansicht.aktionen`. */
   fuehreAus: (aktion: SpielAktion) => void
   /** Der deutsche Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat (B2, U12). */
@@ -76,10 +81,9 @@ export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielst
   const [zustand, setzeZustand] = useState(start)
   const [gegner] = useState(() => erstelleGegner(start))
   const [ablehnung, setzeAblehnung] = useState<string | null>(null)
-  /* Ein Wurf im Zeitgeber oder im Klick erreicht keine Fehlergrenze. Er wird
-     festgehalten und beim nächsten Zeichnen geworfen (wie in der Lobby). */
-  const [fehler, setzeFehler] = useState<{ fehler: unknown } | null>(null)
+  const halteFehlerFest = useWurfImZeichnen()
   const ansicht = useMemo(() => tischAnsicht(zustand), [zustand])
+  const ergebnis = useMemo(() => (zustand.partiephase === 'Beendet' ? ergebnisAnsicht(zustand) : null), [zustand])
   const vorschau = useMemo(() => vorschauFuer(zustand), [zustand])
 
   /**
@@ -95,10 +99,10 @@ export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielst
         setzeZustand(neu)
         setzeAblehnung(null)
       } catch (grund) {
-        setzeFehler({ fehler: grund })
+        halteFehlerFest(grund)
       }
     },
-    [zustand],
+    [zustand, halteFehlerFest],
   )
 
   useEffect(() => {
@@ -117,7 +121,6 @@ export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielst
     [zustand, spiele],
   )
 
-  if (fehler !== null) throw fehler.fehler
   if (!(pause >= 0)) throw new Error(`Die Pause vor einem KI-Schritt muss 0 oder mehr Millisekunden sein, erhalten: ${pause}.`)
-  return { ansicht, fuehreAus, ablehnung, haeutungsVorschau: vorschau }
+  return { ansicht, ergebnis, fuehreAus, ablehnung, haeutungsVorschau: vorschau }
 }

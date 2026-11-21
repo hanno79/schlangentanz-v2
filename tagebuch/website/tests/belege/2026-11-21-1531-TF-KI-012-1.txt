@@ -1,0 +1,13 @@
+PRUEFER    ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): 33 ms, FarbendiebSpielen
+PRUEFER Zeit Hand 0 laufend: 2279 Aktionen (Dieb 585, Frass 754, Häutung 864), Schritt ms 45/26/25/36, Zugschritte ms 36, max Bewertungen 40
+PRUEFER    ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): 30 ms, FarbendiebSpielen
+PRUEFER Zeit Hand 0 Schlussrunde: 2279 Aktionen (Dieb 585, Frass 754, Häutung 864), Schritt ms 29/24/24/32, Zugschritte ms 28, max Bewertungen 40
+PRUEFER    ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): 22 ms, FarbendiebSpielen
+PRUEFER Zeit Hand 1 laufend: 3542 Aktionen (Dieb 1170, Frass 1508, Häutung 864), Schritt ms 16/18/14/24, Zugschritte ms 12, max Bewertungen 16
+PRUEFER    ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): 20 ms, FarbendiebSpielen
+PRUEFER Zeit Hand 1 Schlussrunde: 3542 Aktionen (Dieb 1170, Frass 1508, Häutung 864), Schritt ms 13/14/13/23, Zugschritte ms 15, max Bewertungen 16
+PRUEFER    ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): 13 ms, FarbendiebSpielen
+PRUEFER Zeit Hand 2 laufend: 1534 Aktionen (Dieb 585, Frass 0, Häutung 864), Schritt ms 12/12/14/15, Zugschritte ms 12, max Bewertungen 16
+PRUEFER    ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): 16 ms, FarbendiebSpielen
+PRUEFER Zeit Hand 2 Schlussrunde: 1534 Aktionen (Dieb 585, Frass 0, Häutung 864), Schritt ms 13/14/13/18, Zugschritte ms 17, max Bewertungen 16
+PRUEFER Zeit: höchster Schritt 45 ms

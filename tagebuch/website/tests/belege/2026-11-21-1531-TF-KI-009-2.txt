@@ -1,0 +1,73 @@
+DIAG == P2/B/s9106 schritt 186 letzter Zug: phase Schlussrunde, zug {"spielerIndex":0,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+DIAG    eigene Schlangen schlange-1:Violett-Violett-Violett-Violett-Violett-Regenbogenschlange-Rot-Rot-Braun-Braun-Braun-Farbenfusion-Blau-Blau-Regenbogenschlange-Grün-Regenbogenschlange-Blau-Grün-Grün-Grün-Grün-Braun | schlange-3:Braun-Braun-Rot-Grün-Braun-Violett-Farbenfusion-Violett-Violett-Rot-Gelb-Braun-Gelb-Gelb-Rot-Rot-Rot
+DIAG    Gegner 1 schlange-2:Blau-Gelb-Blau-Blau-Schlangenblockade-Rot-Gelb-Rot-Gelb-Blau-Rot-Regenbogenschlange-Grün-Gelb-Grün-Gelb-Rot-Rot-Gelb-Grün-Blau-Blau-Gelb-Rot | schlange-5:Violett-Braun-Schlangenblockade-Rot-Violett-Blau-Braun-Rot-Braun-Gelb
+DIAG    Hand Schlangenfrass(schlangenfrass-01) Farbenschutz(farbenschutz-04) Gelb(gelb-14) Gelb(gelb-05)
+DIAG    538 Aktionen, Endpunkte 55/0
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"braun-12"}]} +3, bewerte danach 63.30, Rang in Vorauswahl 531 von 537
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"farbenfusion-01"}]} +0, bewerte danach 59.80, Rang in Vorauswahl 1 von 537
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"blau-03"}]} +0, bewerte danach 59.30, Rang in Vorauswahl 515 von 537
+DIAG    bewerte jetzt 59.80 (ZugBeenden angeboten)
+DIAG    gewählt: {"typ":"ZugBeenden","spielerId":"spieler-1"}, Bewertungen 17
+DIAG    Vorauswahl oben: SchlangenfrassSpielen:schlangenfrass-01, SchlangenfrassSpielen:schlangenfrass-01, SchlangenfrassSpielen:schlangenfrass-01, SchlangenfrassSpielen:schlangenfrass-01, SchlangenfrassSpielen:schlangenfrass-01, SchlangenfrassSpielen:schlangenfrass-01, SchlangenfrassSpielen:schlangenfrass-01, SonderkarteWirkungslosAblegen:farbenschutz-04
+DIAG == P2/B/s9104 schritt 129: phase Laufend, zug {"spielerIndex":0,"teilzug":2,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+DIAG    eigene Schlangen schlange-1:Gelb-Gelb-Blau-Blau-Blau-Regenbogenschlange-Blau-Blau-Grün-Grün-Blau-Schlangenblockade-Gelb-Gelb-Gelb-Violett-Violett-Regenbogenschlange-Rot-Rot-Rot-Rot-Farbenfusion-Violett-Violett-Violett-Grün-Grün-Gelb-Grün | schlange-2:Braun-Braun-Braun-Violett-Rot-Rot-Rot-Violett-Violett-Farbenfusion-Braun-Braun-Braun
+DIAG    Gegner 1 schlange-3:Rot-Gelb-Braun-Blau-Blau-Violett-Blau-Gelb-Gelb-Schlangenblockade-Rot
+DIAG    Hand Farbenschutz(farbenschutz-02) Farbenschutz(farbenschutz-01) Schlangenfrass(schlangenfrass-03) Verdoppler(verdoppler-04)
+DIAG    93 Aktionen, Endpunkte 50/0
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-03","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"gelb-02"}]} +9, bewerte danach 68.90, Rang in Vorauswahl 78 von 92
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-03","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"gelb-12"}]} +0, bewerte danach 58.60, Rang in Vorauswahl 54 von 92
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-1","karteId":"schlangenfrass-03","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-1","karteId":"gelb-11"}]} +0, bewerte danach 58.60, Rang in Vorauswahl 55 von 92
+DIAG    bewerte jetzt 60.10 (ZugBeenden angeboten)
+DIAG    gewählt: {"typ":"ZugBeenden","spielerId":"spieler-1"}, Bewertungen 17
+DIAG    Vorauswahl oben: SchlangenfrassSpielen:schlangenfrass-03, SchlangenfrassSpielen:schlangenfrass-03, SchlangenfrassSpielen:schlangenfrass-03, SchlangenfrassSpielen:schlangenfrass-03, SchlangenfrassSpielen:schlangenfrass-03, SonderkarteWirkungslosAblegen:farbenschutz-02, SonderkarteWirkungslosAblegen:farbenschutz-01, SonderkarteWirkungslosAblegen:verdoppler-04
+DIAG == P2/B/s9103 schritt 131: phase Laufend, zug {"spielerIndex":1,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+DIAG    eigene Schlangen schlange-2:Grün-Grün-Rot-Rot-Rot-Rot-Rot-Rot-Farbenfusion-Rot-Grün-Regenbogenschlange-Grün-Regenbogenschlange-Gelb-Gelb-Blau-Violett | schlange-4:Rot-Rot-Violett-Grün-Grün-Grün-Braun-Violett-Violett-Violett-Violett
+DIAG    Gegner 0 schlange-1:Rot-Braun-Braun-Gelb-Gelb-Grün-Blau-Blau-Gelb-Braun-Braun-Gelb | schlange-3:Blau-Violett-Gelb-Gelb-Rot-Rot-Blau-Regenbogenschlange-Rot-Blau-Braun-Rot
+DIAG    Hand Farbenfusion(farbenfusion-04) Schlangenblockade(schlangenblockade-01) Blau(blau-09) Braun(braun-11)
+DIAG    77 Aktionen, Endpunkte 0/41
+DIAG    bester Gewinn: {"typ":"FusionLegen","spielerId":"spieler-2","karteId":"farbenfusion-04","schlangenId":"schlange-2","kartenIds":["gruen-04","gruen-08"]} +6, bewerte danach 50.00, Rang in Vorauswahl 25 von 76
+DIAG    bester Gewinn: {"typ":"FusionLegen","spielerId":"spieler-2","karteId":"farbenfusion-04","schlangenId":"schlange-2","kartenIds":["rot-06","rot-07"]} +6, bewerte danach 51.30, Rang in Vorauswahl 62 von 76
+DIAG    bester Gewinn: {"typ":"FusionLegen","spielerId":"spieler-2","karteId":"farbenfusion-04","schlangenId":"schlange-2","kartenIds":["gelb-06","gelb-12"]} +1, bewerte danach 47.00, Rang in Vorauswahl 41 von 76
+DIAG    bewerte jetzt 46.50 (ZugBeenden angeboten)
+DIAG    gewählt: {"typ":"ZugBeenden","spielerId":"spieler-2"}, Bewertungen 17
+DIAG    Vorauswahl oben: FusionLegen:farbenfusion-04, FusionLegen:farbenfusion-04, FusionLegen:farbenfusion-04, FusionLegen:farbenfusion-04, FusionLegen:farbenfusion-04, FusionLegen:farbenfusion-04, BlockadeLegen:schlangenblockade-01, BlockadeLegen:schlangenblockade-01
+DIAG == P3/B/s9206 schritt 68: phase Laufend, zug {"spielerIndex":2,"teilzug":1,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+DIAG    eigene Schlangen schlange-3:Gelb-Violett-Regenbogenschlange-Blau-Blau | schlange-4:Braun-Braun-Gelb-Braun-Braun-Grün-Rot-Blau
+DIAG    Gegner 0 schlange-5:Blau-Violett-Rot
+DIAG    Gegner 1 schlange-2:Schlangenblockade-Farbenfusion-Braun-Gelb-Braun-Violett-Blau-Gelb-Violett
+DIAG    Hand Violett(violett-03) Rot(rot-15) Schlangenfrass(schlangenfrass-02) Schlangenfrass(schlangenfrass-01)
+DIAG    137 Aktionen, Endpunkte 0/0/2
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-4","karteId":"gelb-14"}]} +13, bewerte danach 16.24, Rang in Vorauswahl 118 von 136
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-01","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-4","karteId":"gelb-14"}]} +13, bewerte danach 16.24, Rang in Vorauswahl 130 von 136
+DIAG    bester Gewinn: {"typ":"SchlangenfrassSpielen","spielerId":"spieler-3","karteId":"schlangenfrass-02","option":"eigeneKarte","ziele":[{"schlangenId":"schlange-3","karteId":"gelb-13"}]} +0, bewerte danach 5.84, Rang in Vorauswahl 112 von 136
+DIAG    bewerte jetzt 4.54 (ZugBeenden angeboten)
+DIAG    gewählt: {"typ":"ZugBeenden","spielerId":"spieler-3"}, Bewertungen 17
+DIAG    Vorauswahl oben: SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-02, SchlangenfrassSpielen:schlangenfrass-01
+DIAG == P4/E/s9440 schritt 139 (K2.1): phase Laufend, zug {"spielerIndex":0,"teilzug":1,"gespielteFarbkarten":0,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+DIAG    eigene Schlangen schlange-1:Grün-Violett-Regenbogenschlange-Grün-Violett-Grün-Regenbogenschlange-Rot-Rot-Braun | schlange-6:Violett-Rot-Farbenfusion-Rot-Rot-Grün-Gelb
+DIAG    Gegner 1 schlange-7:Rot-Braun-Violett-Gelb-Grün-Violett-Blau | schlange-9:Braun-Violett-Grün
+DIAG    Gegner 2 schlange-5:Violett-Gelb-Blau-Braun-Farbenfusion-Blau | schlange-8:Blau-Gelb
+DIAG    Gegner 3 schlange-3:Gelb-Braun-Braun-Gelb-Schlangenblockade-Gelb-Regenbogenschlange-Schlangenblockade-Farbenfusion
+DIAG    Hand Braun(braun-04) Blau(blau-04) Regenbogenschlange(regenbogenschlange-03) Gelb(gelb-04) Farbendieb(farbendieb-02)
+DIAG    511 Aktionen, Endpunkte 7/0/0/0
+DIAG    bester Gewinn: {"typ":"RegenbogenschlangeLegen","spielerId":"spieler-1","karteId":"regenbogenschlange-03","schlangenId":"schlange-1","position":2} +4, bewerte danach 12.17, Rang in Vorauswahl 28 von 511
+DIAG    bester Gewinn: {"typ":"RegenbogenschlangeLegen","spielerId":"spieler-1","karteId":"regenbogenschlange-03","schlangenId":"schlange-1","position":3} +4, bewerte danach 12.17, Rang in Vorauswahl 29 von 511
+DIAG    bester Gewinn: {"typ":"RegenbogenschlangeLegen","spielerId":"spieler-1","karteId":"regenbogenschlange-03","schlangenId":"schlange-1","position":4} +4, bewerte danach 12.17, Rang in Vorauswahl 30 von 511
+DIAG    bewerte jetzt 8.67
+DIAG    gewählt: {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-02","quelle":{"schlangenId":"schlange-9","karteId":"gruen-07"},"ziel":{"art":"schlange","schlangenId":"schlange-1","position":2}}, Bewertungen 40
+DIAG    Vorauswahl oben: FarbendiebSpielen:farbendieb-02, FarbendiebSpielen:farbendieb-02, FarbendiebSpielen:farbendieb-02, FarbendiebSpielen:farbendieb-02, RegenbogenschlangeLegen:regenbogenschlange-03, FarbkarteLegen:braun-04, FarbkarteLegen:gelb-04, FarbkarteLegen:blau-04
+DIAG == P4/B/s9302 schritt 105 (K2.1): phase Laufend, zug {"spielerIndex":2,"teilzug":2,"gespielteFarbkarten":0,"gespielteSonderkarten":0,"verdopplerGespielt":false,"farbenfusionGespielt":false,"abschnitt":"Ausspielen"}
+DIAG    eigene Schlangen schlange-2:Blau-Violett-Regenbogenschlange-Farbenfusion-Gelb-Schlangenblockade-Rot-Braun | schlange-3:Grün-Regenbogenschlange-Gelb-Blau-Farbenfusion-Gelb-Gelb
+DIAG    Gegner 0 schlange-1:Braun-Blau-Violett-Grün-Braun-Schlangenblockade-Schlangenblockade-Blau-Gelb | schlange-4:Rot-Regenbogenschlange-Grün-Violett-Braun-Gelb
+DIAG    Gegner 1 schlange-5:Blau-Grün-Blau-Grün-Braun
+DIAG    Gegner 3 
+DIAG    Hand Gelb(gelb-15) Rot(rot-05) Farbenfusion(farbenfusion-02) Grün(gruen-02) Gelb(gelb-02)
+DIAG    41 Aktionen, Endpunkte 0/0/10/0
+DIAG    bester Gewinn: {"typ":"FarbkarteLegen","spielerId":"spieler-3","karteId":"gelb-15","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}} +6, bewerte danach 18.71, Rang in Vorauswahl 1 von 41
+DIAG    bester Gewinn: {"typ":"FarbkarteLegen","spielerId":"spieler-3","karteId":"gruen-02","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"anfang"}} +6, bewerte danach 16.31, Rang in Vorauswahl 0 von 41
+DIAG    bester Gewinn: {"typ":"FarbkarteLegen","spielerId":"spieler-3","karteId":"gelb-02","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}} +6, bewerte danach 18.71, Rang in Vorauswahl 2 von 41
+DIAG    bewerte jetzt 12.81
+DIAG    gewählt: {"typ":"FarbkarteLegen","spielerId":"spieler-3","karteId":"gelb-15","ziel":{"art":"schlange","schlangenId":"schlange-3","seite":"ende"}}, Bewertungen 22
+DIAG    Vorauswahl oben: FarbkarteLegen:gruen-02, FarbkarteLegen:gelb-15, FarbkarteLegen:gelb-02, FarbkarteLegen:gelb-15, FarbkarteLegen:gruen-02, FarbkarteLegen:gelb-02, FarbkarteLegen:rot-05, FusionLegen:farbenfusion-02
+DIAG   s9440 Schritt 0: {"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-02","quelle":{"schlangenId":"schlange-9","karteId":"gruen-07"},"ziel":{"art":"schlange","schlangenId":"schlange-1","position":2}} bewerte vorher 8.67 nachher 7.48 Endpunkte 7
+DIAG      eigene schlange-1:Grün-Violett-Regenbogenschlange-Grün-Violett-Grün-Regenbogenschlange-Rot-Rot-Braun | schlange-6:Violett-Rot-Farbenfusion-Rot-Rot-Grün-Gelb

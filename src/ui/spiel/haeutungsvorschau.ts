@@ -1,6 +1,6 @@
 import { anwendeAktion, berechneZwischenstand, ermittleAktionen } from '../../engine'
 import type { SchlangenhaeutungSpielenAktion, Spielzustand } from '../../engine'
-import { menschVon, schlangenAnsicht } from './tischAnsicht'
+import { menschIndex, schlangeAnsicht } from './tischAnsicht'
 import type { Person, SchlangeAnsicht } from './tischAnsicht'
 
 /*
@@ -28,13 +28,13 @@ export interface HaeutungsVorschau {
 export type Haeutungsvorschauer = (schlangenId: string, aktion: SchlangenhaeutungSpielenAktion | null) => HaeutungsVorschau
 
 export function haeutungsVorschau(zustand: Spielzustand, schlangenId: string, aktion: SchlangenhaeutungSpielenAktion | null): HaeutungsVorschau {
-  const mensch = menschVon(zustand)
+  const mensch = menschIndex(zustand)
   const besitzer = zustand.spieler.findIndex((spieler) => spieler.schlangen.some((schlange) => schlange.id === schlangenId))
   if (besitzer < 0) throw new Error(`Die Schlange ${schlangenId} liegt nicht am Tisch.`)
   const betrachter = zustand.spieler[mensch].id
-  const punkte = (stand: Spielzustand) => berechneZwischenstand(stand, betrachter).spieler[besitzer].summe
+  const wertung = (stand: Spielzustand) => berechneZwischenstand(stand, betrachter).spieler[besitzer]
   const person: Person = { name: zustand.spieler[besitzer].name, ich: besitzer === mensch }
-  const vorher = punkte(zustand)
+  const vorher = wertung(zustand).summe
   if (aktion === null) return { besitzer: person, vorher, nachher: null }
   if (aktion.schlangenId !== schlangenId) throw new Error(`Die Häutung gilt der Schlange ${aktion.schlangenId}, nicht ${schlangenId}.`)
 
@@ -44,9 +44,11 @@ export function haeutungsVorschau(zustand: Spielzustand, schlangenId: string, ak
     if (durchlassen === undefined) throw new Error(`Die Häutung der Schlange ${schlangenId} lässt sich nicht durchlassen; die Engine zählt kein „durchlassen“ auf.`)
     danach = anwendeAktion(danach, durchlassen).zustand
   }
-  const schlangen = danach.spieler[besitzer].schlangen
-  const schlange = schlangenAnsicht(schlangen, danach.erweiterung)[schlangen.findIndex((eintrag) => eintrag.id === schlangenId)]
-  return { besitzer: person, vorher, nachher: { punkte: punkte(danach), schlange } }
+  // Wie am Tisch nimmt die Schlange ihre Farbgruppen aus dem Zwischenstand der Engine (tischAnsicht, O8).
+  const nachher = wertung(danach)
+  const nummer = danach.spieler[besitzer].schlangen.findIndex((eintrag) => eintrag.id === schlangenId)
+  const schlange = schlangeAnsicht(danach.spieler[besitzer].schlangen[nummer], nachher.schlangen[nummer].gruppen)
+  return { besitzer: person, vorher, nachher: { punkte: nachher.summe, schlange } }
 }
 
 /** Die Vorschau für diesen Stand, so wie die Partie-Steuerung sie dem Tisch gibt. */

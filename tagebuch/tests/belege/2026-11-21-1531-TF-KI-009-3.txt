@@ -1,0 +1,78 @@
+// @vitest-environment node
+// Prüferprobe K2, Diagnose verschenkter Karten; wird nach dem Lauf entfernt.
+import { it } from 'vitest'
+import { appendFileSync } from 'node:fs'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall } from '../src/engine'
+import type { SpielAktion, Spielzustand } from '../src/engine'
+import { kiWahl } from '../src/ki/schritt'
+import { sichtFuer } from '../src/ki/sicht'
+import { erstelleZufallsKi } from '../src/ki/strategien/zufallsKi'
+import { planeZug } from '../src/ki/strategien/zugsuche'
+import { bewerte } from '../src/ki/strategien/bewertung'
+import { vorauswahl } from '../src/ki/strategien/vorauswahl'
+
+const LOG = process.env.PRUEFER_LOG ?? 'diag.log'
+const log = (...t: unknown[]) => appendFileSync(LOG, ['DIAG', ...t].join(' ') + String.fromCharCode(10))
+const zeige = (z: Spielzustand, i: number) => z.spieler[i].schlangen.map((s) => s.id + ':' + s.karten.map((k) => (k.typ === 'Farbkarte' ? k.farbe : k.name)).join('-')).join(' | ')
+
+function bis(spielerzahl: number, erweiterung: boolean, saat: number, sitz: number, ziel: number): Spielzustand {
+  let z = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
+  const zk = Array.from({ length: spielerzahl }, (_, i) => erstelleZufallsKi(erzeugeZufall(saat * 31 + i + 5)))
+  const kz = erzeugeZufall(saat * 17 + 999)
+  for (let s = 0; s < ziel; s++) {
+    const e = ermittleEntscheider(z)!
+    const a = e === sitz ? planeZug(sichtFuer(z, e), ermittleAktionen(z), kz).aktion : kiWahl(z, zk[e])!
+    z = anwendeAktion(z, a).zustand
+  }
+  return z
+}
+
+function diagnose(name: string, z: Spielzustand, sitz: number) {
+  const aktionen = ermittleAktionen(z)
+  const sicht = sichtFuer(z, sitz)
+  const vor = berechneEndwertung(z).spieler.map((s) => s.summe)
+  log(`== ${name}: phase ${z.partiephase}, zug ${JSON.stringify(z.zug)}`)
+  log('   eigene Schlangen', zeige(z, sitz))
+  z.spieler.forEach((_, i) => i !== sitz && log(`   Gegner ${i}`, zeige(z, i)))
+  log('   Hand', z.spieler[sitz].hand.map((k) => (k.typ === 'Farbkarte' ? k.farbe : k.name) + '(' + k.id + ')').join(' '))
+  log(`   ${aktionen.length} Aktionen, Endpunkte ${vor.join('/')}`)
+  const karten = aktionen.filter((a) => a.typ !== 'ZugBeenden')
+  const geordnet = vorauswahl(sicht, karten, 8)
+  const gewinn = karten.map((a) => {
+    const n = anwendeAktion(z, a).zustand
+    const nach = berechneEndwertung(n).spieler.map((s) => s.summe)
+    return { a, g: nach[sitz] - vor[sitz], gegner: nach.some((p, i) => i !== sitz && p > vor[i]), wert: bewerte(sichtFuer(n, sitz)), rang: geordnet.indexOf(a) }
+  })
+  const beste = gewinn.filter((x) => !x.gegner).sort((x, y) => y.g - x.g).slice(0, 3)
+  for (const b of beste) log(`   bester Gewinn: ${JSON.stringify(b.a)} +${b.g}, bewerte danach ${b.wert.toFixed(2)}, Rang in Vorauswahl ${b.rang} von ${karten.length}`)
+  const zugEnde = aktionen.find((a) => a.typ === 'ZugBeenden')
+  log(`   bewerte jetzt ${bewerte(sicht).toFixed(2)}${zugEnde ? ' (ZugBeenden angeboten)' : ''}`)
+  const plan = planeZug(sicht, aktionen, erzeugeZufall(1))
+  log(`   gewählt: ${JSON.stringify(plan.aktion)}, Bewertungen ${plan.bewertungen}`)
+  log('   Vorauswahl oben:', geordnet.slice(0, 8).map((a) => a.typ + ('karteId' in a ? ':' + a.karteId : '')).join(', '))
+}
+
+const FAELLE: Array<[string, number, boolean, number, number, number]> = [
+  ['P2/B/s9106 schritt 186 letzter Zug', 2, false, 9106, 0, 186],
+  ['P2/B/s9104 schritt 129', 2, false, 9104, 0, 129],
+  ['P2/B/s9103 schritt 131', 2, false, 9103, 1, 131],
+  ['P3/B/s9206 schritt 68', 3, false, 9206, 2, 68],
+  ['P4/E/s9440 schritt 139 (K2.1)', 4, true, 9440, 0, 139],
+  ['P4/B/s9302 schritt 105 (K2.1)', 4, false, 9302, 2, 105],
+]
+it('Verlauf s9440', () => {
+  let z = bis(4, true, 9440, 0, 139)
+  const kz = erzeugeZufall(5)
+  for (let k = 0; k < 6 && ermittleEntscheider(z) === 0 && z.zug.spielerIndex === 0; k++) {
+    const sicht = sichtFuer(z, 0)
+    const a = ermittleAktionen(z)
+    const p = planeZug(sicht, a, kz)
+    const n = anwendeAktion(z, p.aktion).zustand
+    log(`  s9440 Schritt ${k}: ${JSON.stringify(p.aktion)} bewerte vorher ${bewerte(sicht).toFixed(2)} nachher ${bewerte(sichtFuer(n, 0)).toFixed(2)} Endpunkte ${berechneEndwertung(n).spieler[0].summe}`)
+    log('     eigene', zeige(n, 0))
+    z = n
+  }
+}, 300_000)
+it('Diagnose', () => {
+  for (const [name, n, e, saat, sitz, schritt] of FAELLE) diagnose(name, bis(n, e, saat, sitz, schritt), sitz)
+}, 300_000)

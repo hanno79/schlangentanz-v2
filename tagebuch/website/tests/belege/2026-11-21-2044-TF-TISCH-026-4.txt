@@ -1,0 +1,120 @@
+== desktop
+  [desktop] spiele Farbkarte Blau, 1 Punkt -> Neue Schlange
+  [desktop] Zug beenden
+  [desktop] spiele Farbkarte Braun, 2 Punkte -> Neue Schlange
+  [desktop] Zug beenden
+  Wertung nach 10 Schleifen: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 0 Punkte / 1. KI-Gegner 1 0 Punkte
+  Zwischenstand vor erstem Zug: ["Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte"]
+  ueberstand {"sw":1280,"cw":1280}, knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":697,"scrollHeight":697,"scrollTop":0},"weiterUnten":0,"weiterOben":0,"seiteScrollTop":0}
+  nach Neuladen gleich: true, url http://localhost:4174/spiel
+  Lobby: beendete-partie=Letzte Partie: 1 Gegner, Erweiterung aus, beendet weiterspielen=0 ergebnisAnsehen=1 url http://localhost:4174/
+  ueberstand lobby {"sw":1280,"cw":1280}
+  Ergebnis ansehen -> gleiche Wertung: true
+  Neue Partie aus Lobby: Rueckfrage=0 url=/spiel phase=Laufend spieler=4 erw=true
+  4 Spieler oben: {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":697,"scrollHeight":1644,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0} ueberstand {"sw":1280,"cw":1280}
+  4 Spieler nach Scrollen (Mausrad): {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":697,"scrollHeight":1644,"scrollTop":947},"weiterUnten":0,"weiterOben":1,"seiteScrollTop":0}
+  Noch einmal nach 4-Spieler-Wertung: phase=Laufend ki=3 erw=true schlangen=0,0,0,0 url=/spiel gegnerKaesten=3
+  ueberstand neuer tisch {"sw":1280,"cw":1280}
+  Gleichstand: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 12 Punkte sieger=true / 1. KI-Gegner 1 12 Punkte sieger=true / 3. KI-Gegner 2 4 Punkte sieger=false | knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":697,"scrollHeight":850,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  Noch einmal nach Gleichstand: ki=2 erw=false
+  Saat 7023: KI-Gegner 2 gewinnt! | {"name":"KI-Gegner 2","platz":"1.","sieger":true,"gesamt":"17 Punkte","posten":{"farbgruppen":"12","kette":"5"},"schlangen":[{"titel":"Schlange 1: 8 Punkte","zeilen":["Violett × 5: 8 Punkte","Regenbogenschlange als Violett","Farbenfusion als Violett","Regenbogenschlange als Violett","Farbenfusion als Violett"]},{"titel":"Schlange 2: 4 Punkte","zeilen":["Gelb × 4: 4 Punkte"]}],"herkunft":["Längste Kette: 4 Karten"]}
+  Zwischenstand wertung-joker: ["Zwischenstand ohne Kettenbonus: 14 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 55 Punkte","Zwischenstand ohne Kettenbonus: 15 Punkte"] ueberstand {"sw":1280,"cw":1280}
+  Produktion: Lobby „Letzte Partie: 1 Gegner, Erweiterung aus, beendet“, Wertung Du gewinnst! | Du 17 Punkte kette=5 / KI-Gegner 1 10 Punkte kette=5
+  Produktion /dev zeigt: Diese Seite gibt es nicht  Unter /dev ist nichts zu finden.  Zurück zur Lobby
+  Konsolenfehler: 0 []
+== tablet-quer
+  [tablet-quer] spiele Farbkarte Blau, 1 Punkt -> Neue Schlange
+  [tablet-quer] Zug beenden
+  [tablet-quer] spiele Farbkarte Braun, 2 Punkte -> Neue Schlange
+  [tablet-quer] Zug beenden
+  Wertung nach 10 Schleifen: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 0 Punkte / 1. KI-Gegner 1 0 Punkte
+  Zwischenstand vor erstem Zug: ["Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte"]
+  ueberstand {"sw":1024,"cw":1024}, knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":565,"scrollHeight":668,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  nach Neuladen gleich: true, url http://localhost:4174/spiel
+  Lobby: beendete-partie=Letzte Partie: 1 Gegner, Erweiterung aus, beendet weiterspielen=0 ergebnisAnsehen=1 url http://localhost:4174/
+  ueberstand lobby {"sw":1024,"cw":1024}
+  Ergebnis ansehen -> gleiche Wertung: true
+  Neue Partie aus Lobby: Rueckfrage=0 url=/spiel phase=Laufend spieler=4 erw=true
+  4 Spieler oben: {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":565,"scrollHeight":1644,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0} ueberstand {"sw":1024,"cw":1024}
+  4 Spieler nach Scrollen (Wischen): {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":565,"scrollHeight":1644,"scrollTop":1079},"weiterUnten":0,"weiterOben":1,"seiteScrollTop":0}
+  Noch einmal nach 4-Spieler-Wertung: phase=Laufend ki=3 erw=true schlangen=0,0,0,0 url=/spiel gegnerKaesten=3
+  ueberstand neuer tisch {"sw":1024,"cw":1024}
+  Gleichstand: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 12 Punkte sieger=true / 1. KI-Gegner 1 12 Punkte sieger=true / 3. KI-Gegner 2 4 Punkte sieger=false | knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":565,"scrollHeight":850,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  Noch einmal nach Gleichstand: ki=2 erw=false
+  Saat 7023: KI-Gegner 2 gewinnt! | {"name":"KI-Gegner 2","platz":"1.","sieger":true,"gesamt":"17 Punkte","posten":{"farbgruppen":"12","kette":"5"},"schlangen":[{"titel":"Schlange 1: 8 Punkte","zeilen":["Violett × 5: 8 Punkte","Regenbogenschlange als Violett","Farbenfusion als Violett","Regenbogenschlange als Violett","Farbenfusion als Violett"]},{"titel":"Schlange 2: 4 Punkte","zeilen":["Gelb × 4: 4 Punkte"]}],"herkunft":["Längste Kette: 4 Karten"]}
+  Zwischenstand wertung-joker: ["Zwischenstand ohne Kettenbonus: 14 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 55 Punkte","Zwischenstand ohne Kettenbonus: 15 Punkte"] ueberstand {"sw":1024,"cw":1024}
+  Produktion: Lobby „Letzte Partie: 1 Gegner, Erweiterung aus, beendet“, Wertung Du gewinnst! | Du 17 Punkte kette=5 / KI-Gegner 1 10 Punkte kette=5
+  Produktion /dev zeigt: Diese Seite gibt es nicht  Unter /dev ist nichts zu finden.  Zurück zur Lobby
+  Konsolenfehler: 0 []
+== tablet-hochkant
+  [tablet-hochkant] spiele Farbkarte Blau, 1 Punkt -> Neue Schlange
+  [tablet-hochkant] Zug beenden
+  [tablet-hochkant] spiele Farbkarte Braun, 2 Punkte -> Neue Schlange
+  [tablet-hochkant] Zug beenden
+  Wertung nach 10 Schleifen: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 0 Punkte / 1. KI-Gegner 1 0 Punkte
+  Zwischenstand vor erstem Zug: ["Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte"]
+  ueberstand {"sw":768,"cw":768}, knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":826,"scrollHeight":826,"scrollTop":0},"weiterUnten":0,"weiterOben":0,"seiteScrollTop":0}
+  nach Neuladen gleich: true, url http://localhost:4174/spiel
+  Lobby: beendete-partie=Letzte Partie: 1 Gegner, Erweiterung aus, beendet weiterspielen=0 ergebnisAnsehen=1 url http://localhost:4174/
+  ueberstand lobby {"sw":768,"cw":768}
+  Ergebnis ansehen -> gleiche Wertung: true
+  Neue Partie aus Lobby: Rueckfrage=0 url=/spiel phase=Laufend spieler=4 erw=true
+  4 Spieler oben: {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":826,"scrollHeight":1644,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0} ueberstand {"sw":768,"cw":768}
+  4 Spieler nach Scrollen (Wischen): {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":826,"scrollHeight":1644,"scrollTop":818},"weiterUnten":0,"weiterOben":1,"seiteScrollTop":0}
+  Noch einmal nach 4-Spieler-Wertung: phase=Laufend ki=3 erw=true schlangen=0,0,0,0 url=/spiel gegnerKaesten=3
+  ueberstand neuer tisch {"sw":768,"cw":768}
+  Gleichstand: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 12 Punkte sieger=true / 1. KI-Gegner 1 12 Punkte sieger=true / 3. KI-Gegner 2 4 Punkte sieger=false | knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":826,"scrollHeight":850,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  Noch einmal nach Gleichstand: ki=2 erw=false
+  Saat 7023: KI-Gegner 2 gewinnt! | {"name":"KI-Gegner 2","platz":"1.","sieger":true,"gesamt":"17 Punkte","posten":{"farbgruppen":"12","kette":"5"},"schlangen":[{"titel":"Schlange 1: 8 Punkte","zeilen":["Violett × 5: 8 Punkte","Regenbogenschlange als Violett","Farbenfusion als Violett","Regenbogenschlange als Violett","Farbenfusion als Violett"]},{"titel":"Schlange 2: 4 Punkte","zeilen":["Gelb × 4: 4 Punkte"]}],"herkunft":["Längste Kette: 4 Karten"]}
+  Zwischenstand wertung-joker: ["Zwischenstand ohne Kettenbonus: 14 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 55 Punkte","Zwischenstand ohne Kettenbonus: 15 Punkte"] ueberstand {"sw":768,"cw":768}
+  Produktion: Lobby „Letzte Partie: 1 Gegner, Erweiterung aus, beendet“, Wertung Du gewinnst! | Du 17 Punkte kette=5 / KI-Gegner 1 10 Punkte kette=5
+  Produktion /dev zeigt: Diese Seite gibt es nicht  Unter /dev ist nichts zu finden.  Zurück zur Lobby
+  Konsolenfehler: 0 []
+== handy-hochkant
+  [handy-hochkant] spiele Farbkarte Blau, 1 Punkt -> Neue Schlange
+  [handy-hochkant] Zug beenden
+  [handy-hochkant] spiele Farbkarte Braun, 2 Punkte -> Neue Schlange
+  [handy-hochkant] Zug beenden
+  Wertung nach 8 Schleifen: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 0 Punkte / 1. KI-Gegner 1 0 Punkte
+  Zwischenstand vor erstem Zug: ["Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte"]
+  ueberstand {"sw":390,"cw":390}, knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":623,"scrollHeight":623,"scrollTop":0},"weiterUnten":0,"weiterOben":0,"seiteScrollTop":0}
+  nach Neuladen gleich: true, url http://localhost:4174/spiel
+  Lobby: beendete-partie=Letzte Partie: 1 Gegner, Erweiterung aus, beendet weiterspielen=0 ergebnisAnsehen=1 url http://localhost:4174/
+  ueberstand lobby {"sw":390,"cw":390}
+  Ergebnis ansehen -> gleiche Wertung: true
+  Neue Partie aus Lobby: Rueckfrage=0 url=/spiel phase=Laufend spieler=4 erw=true
+  4 Spieler oben: {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":631,"scrollHeight":1933,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0} ueberstand {"sw":390,"cw":390}
+  4 Spieler nach Scrollen (Wischen): {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":631,"scrollHeight":1933,"scrollTop":1302},"weiterUnten":0,"weiterOben":1,"seiteScrollTop":0}
+  Noch einmal nach 4-Spieler-Wertung: phase=Laufend ki=3 erw=true schlangen=0,0,0,0 url=/spiel gegnerKaesten=3
+  ueberstand neuer tisch {"sw":390,"cw":390}
+  Gleichstand: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 12 Punkte sieger=true / 1. KI-Gegner 1 12 Punkte sieger=true / 3. KI-Gegner 2 4 Punkte sieger=false | knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":623,"scrollHeight":828,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  Noch einmal nach Gleichstand: ki=2 erw=false
+  Saat 7023: KI-Gegner 2 gewinnt! | {"name":"KI-Gegner 2","platz":"1.","sieger":true,"gesamt":"17 Punkte","posten":{"farbgruppen":"12","kette":"5"},"schlangen":[{"titel":"Schlange 1: 8 Punkte","zeilen":["Violett × 5: 8 Punkte","Regenbogenschlange als Violett","Farbenfusion als Violett","Regenbogenschlange als Violett","Farbenfusion als Violett"]},{"titel":"Schlange 2: 4 Punkte","zeilen":["Gelb × 4: 4 Punkte"]}],"herkunft":["Längste Kette: 4 Karten"]}
+  Zwischenstand wertung-joker: ["Zwischenstand ohne Kettenbonus: 14 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 55 Punkte","Zwischenstand ohne Kettenbonus: 15 Punkte"] ueberstand {"sw":390,"cw":390}
+  Produktion: Lobby „Letzte Partie: 1 Gegner, Erweiterung aus, beendet“, Wertung Du gewinnst! | Du 17 Punkte kette=5 / KI-Gegner 1 10 Punkte kette=5
+  Produktion /dev zeigt: Diese Seite gibt es nicht  Unter /dev ist nichts zu finden.  Zurück zur Lobby
+  Konsolenfehler: 0 []
+== handy-quer
+  [handy-quer] spiele Farbkarte Blau, 1 Punkt -> Neue Schlange
+  [handy-quer] Zug beenden
+  [handy-quer] spiele Farbkarte Braun, 2 Punkte -> Neue Schlange
+  [handy-quer] Zug beenden
+  Wertung nach 8 Schleifen: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 0 Punkte / 1. KI-Gegner 1 0 Punkte
+  Zwischenstand vor erstem Zug: ["Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte"]
+  ueberstand {"sw":844,"cw":844}, knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":234,"scrollHeight":576,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  nach Neuladen gleich: true, url http://localhost:4174/spiel
+  Lobby: beendete-partie=Letzte Partie: 1 Gegner, Erweiterung aus, beendet weiterspielen=0 ergebnisAnsehen=1 url http://localhost:4174/
+  ueberstand lobby {"sw":844,"cw":844}
+  Ergebnis ansehen -> gleiche Wertung: true
+  Neue Partie aus Lobby: Rueckfrage=0 url=/spiel phase=Laufend spieler=4 erw=true
+  4 Spieler oben: {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":234,"scrollHeight":1644,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0} ueberstand {"sw":844,"cw":844}
+  4 Spieler nach Scrollen (Wischen): {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":234,"scrollHeight":1644,"scrollTop":1410},"weiterUnten":0,"weiterOben":1,"seiteScrollTop":0}
+  Noch einmal nach 4-Spieler-Wertung: phase=Laufend ki=3 erw=true schlangen=0,0,0,0 url=/spiel gegnerKaesten=3
+  ueberstand neuer tisch {"sw":844,"cw":844}
+  Gleichstand: Gleichstand: Du und KI-Gegner 1 gewinnen! | 1. Du 12 Punkte sieger=true / 1. KI-Gegner 1 12 Punkte sieger=true / 3. KI-Gegner 2 4 Punkte sieger=false | knoepfe {"nochEinmal":true,"lobby":true,"titel":true,"liste":{"clientHeight":234,"scrollHeight":850,"scrollTop":0},"weiterUnten":1,"weiterOben":0,"seiteScrollTop":0}
+  Noch einmal nach Gleichstand: ki=2 erw=false
+  Saat 7023: KI-Gegner 2 gewinnt! | {"name":"KI-Gegner 2","platz":"1.","sieger":true,"gesamt":"17 Punkte","posten":{"farbgruppen":"12","kette":"5"},"schlangen":[{"titel":"Schlange 1: 8 Punkte","zeilen":["Violett × 5: 8 Punkte","Regenbogenschlange als Violett","Farbenfusion als Violett","Regenbogenschlange als Violett","Farbenfusion als Violett"]},{"titel":"Schlange 2: 4 Punkte","zeilen":["Gelb × 4: 4 Punkte"]}],"herkunft":["Längste Kette: 4 Karten"]}
+  Zwischenstand wertung-joker: ["Zwischenstand ohne Kettenbonus: 14 Punkte","Zwischenstand ohne Kettenbonus: 0 Punkte","Zwischenstand ohne Kettenbonus: 55 Punkte","Zwischenstand ohne Kettenbonus: 15 Punkte"] ueberstand {"sw":844,"cw":844}
+  Produktion: Lobby „Letzte Partie: 1 Gegner, Erweiterung aus, beendet“, Wertung Du gewinnst! | Du 17 Punkte kette=5 / KI-Gegner 1 10 Punkte kette=5
+  Produktion /dev zeigt: Diese Seite gibt es nicht  Unter /dev ist nichts zu finden.  Zurück zur Lobby
+  Konsolenfehler: 0 []

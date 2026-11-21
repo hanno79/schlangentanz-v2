@@ -1,0 +1,5 @@
+Schritt 22, Partiesaat 3736942547: KI-Saat 3736942546, gleich der Partiesaat: false, Abstand 1
+Schritt 30, Partiesaat 4006315519: KI-Saat 4006315518, gleich der Partiesaat: false, Abstand 1
+Schritt 60, Partiesaat 4210738748: KI-Saat 4210738749, gleich der Partiesaat: false, Abstand 1
+Schritt 64, Partiesaat 4273669358: KI-Saat 4273669359, gleich der Partiesaat: false, Abstand 1
+Schritt 80, Partiesaat 4278506630: KI-Saat 4278506631, gleich der Partiesaat: false, Abstand 1

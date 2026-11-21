@@ -10,6 +10,7 @@ import { FRASS_SZENARIEN } from './szenarienFrass'
 import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
 import { SPIEL_SZENARIEN } from './szenarienSpiel'
 import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
+import { KI_SZENARIEN } from './szenarienKi'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -238,6 +239,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...FARBENFUSION_SZENARIEN,
   ...SPIEL_SZENARIEN,
   ...HAEUTUNG_SZENARIEN,
+  ...KI_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

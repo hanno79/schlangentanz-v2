@@ -1,4 +1,4 @@
-import { ermittleAktionen, ermittleEntscheider, werteSchlangen, zugBeendenGesperrt } from '../../engine'
+import { berechneZwischenstand, ermittleAktionen, ermittleEntscheider, zugBeendenGesperrt } from '../../engine'
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -27,8 +27,11 @@ nur darin, solange er entscheidet; die Aktionen eines Gegners nennen dessen
 Handkarten (B2, „auch nicht mittelbar über angebotene Aktionen“). Von der Karte
 zur fertigen Aktion führt `auswahl.ts`.
 
-Regeln stehen hier keine: Farbgruppen kommen aus der Wertung der Engine, wer
-entscheidet aus `ermittleEntscheider`.
+Regeln stehen hier keine: Farbgruppen und Punkte kommen aus der Wertung der
+Engine, wer entscheidet aus `ermittleEntscheider`. Die Punkte sind der
+Zwischenstand aus deiner Sicht (O8, Kriterium 5): ohne Kettenbonus und ohne die
+geheimen Aufgaben der Gegner. Nach Spielende ist niemand am Zug, auch wenn
+`zug.spielerIndex` beim zuletzt Spielenden stehen bleibt.
 */
 
 /** Ein Spieler, von dem die Sicht spricht; `ich` ist der Mensch. */
@@ -69,7 +72,10 @@ interface PlatzAnsicht {
   schlangen: SchlangeAnsicht[]
   ablage: AblageAnsicht
   gruben: GrubeAnsicht[]
+  /** Nach Spielende bei niemandem. */
   amZug: boolean
+  /** Der Zwischenstand der Engine aus deiner Sicht (`berechneZwischenstand`). */
+  punkte: number
 }
 
 export interface GegnerAnsicht extends PlatzAnsicht {
@@ -86,7 +92,8 @@ export interface EigeneAnsicht extends PlatzAnsicht {
 
 export interface StatusAnsicht {
   partiephase: Partiephase
-  amZug: Person
+  /** `null` nach Spielende: Dann ist niemand mehr am Zug. */
+  amZug: Person | null
   teilzug: 1 | 2
   abschnitt: 'Ausspielen' | 'Abwerfen'
   /** Eine angesagte Sonderkarte, über die noch jemand entscheidet (A6). */
@@ -107,7 +114,8 @@ export interface TischAnsicht {
   zugBeendenGesperrt: string | null
 }
 
-function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]): SchlangeAnsicht {
+/** Eine Schlange mit den Gruppen aus einer Wertung der Engine; auch die Wertung nach Spielende zeichnet so (O8). */
+export function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]): SchlangeAnsicht {
   const gruppeVon = new Map<string, KarteInSchlange['gruppe']>()
   for (const gruppe of gruppen) {
     gruppe.kartenIds.forEach((id, stelle) => {
@@ -125,18 +133,8 @@ function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]
   }
 }
 
-/**
- * Die Schlangen eines Spielers mit ihren Farbgruppen. Die Gruppen kommen aus der
- * Wertung der Engine; sie wertet alle Schlangen eines Spielers zusammen, weil die
- * Farbe eines Jokers mit Erweiterung vom Vielfaltbonus beider Schlangen abhängt.
- */
-export function schlangenAnsicht(schlangen: readonly Schlange[], erweiterung: boolean): SchlangeAnsicht[] {
-  const wertung = werteSchlangen(schlangen, erweiterung).schlangen
-  return schlangen.map((schlange, index) => schlangeAnsicht(schlange, wertung[index].gruppen))
-}
-
-/** Der Platz des Menschen am Tisch. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
-export function menschVon(zustand: Spielzustand): number {
+/** Der Sitz des Menschen. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
+export function menschIndex(zustand: Spielzustand): number {
   const menschen = zustand.spieler.flatMap((spieler, index) => (spieler.steuerung === 'Mensch' ? [index] : []))
   if (menschen.length !== 1) {
     throw new Error(`Am Tisch muss genau ein Mensch sitzen (B2), es sind ${menschen.length}.`)
@@ -146,16 +144,21 @@ export function menschVon(zustand: Spielzustand): number {
 
 /** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
 export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
-  const mensch = menschVon(zustand)
+  const mensch = menschIndex(zustand)
   const person = (index: number): Person => ({ name: zustand.spieler[index].name, ich: index === mensch })
+  const beendet = zustand.partiephase === 'Beendet'
+  const zwischenstand = berechneZwischenstand(zustand, zustand.spieler[mensch].id).spieler
 
   const platz = (spieler: Spieler, index: number): PlatzAnsicht => ({
     id: spieler.id,
     name: spieler.name,
-    schlangen: schlangenAnsicht(spieler.schlangen, zustand.erweiterung),
+    // Die Gruppen kommen aus der Wertung der Engine; sie wertet alle Schlangen eines Spielers zusammen, weil die
+    // Farbe eines Jokers mit Erweiterung vom Vielfaltbonus beider Schlangen abhängt.
+    schlangen: spieler.schlangen.map((schlange, nummer) => schlangeAnsicht(schlange, zwischenstand[index].schlangen[nummer].gruppen)),
     ablage: { anzahl: spieler.ablagestapel.length, oben: spieler.ablagestapel.at(-1) ?? null },
     gruben: zustand.ausliegendeGruben.filter((grube) => grube.vor === index).map((grube) => ({ karte: grube.karte, von: person(grube.gespieltVon) })),
-    amZug: zustand.zug.spielerIndex === index,
+    amZug: !beendet && zustand.zug.spielerIndex === index,
+    punkte: zwischenstand[index].summe,
   })
 
   const ich = zustand.spieler[mensch]
@@ -183,7 +186,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
     offeneAufgaben: zustand.offeneAufgaben,
     status: {
       partiephase: zustand.partiephase,
-      amZug: person(zustand.zug.spielerIndex),
+      amZug: beendet ? null : person(zustand.zug.spielerIndex),
       teilzug: zustand.zug.teilzug,
       abschnitt: zustand.zug.abschnitt,
       schwebend:

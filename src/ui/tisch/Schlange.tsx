@@ -5,7 +5,7 @@ import type { AblageAnsicht, GrubeAnsicht, KarteInSchlange, Person, SchlangeAnsi
 import { KARTENGROESSE } from './groessen'
 import { useUeberlauf } from './ueberlauf'
 import { Weiter } from './Weiter'
-import { TISCH, ablageText, grubeText, schlangenName, schlangenTitel } from './texte'
+import { TISCH, ablageText, grubeText, punkteText, schlangenName, schlangenTitel } from './texte'
 import { useZiele, zielDerArt, zieleDerSchlange } from './bedienung'
 import { useLaufendeHaeutung } from './haeutung'
 import { HaeutungsKarte } from './HaeutungsKarte'
@@ -14,7 +14,7 @@ import { ZIELNAME } from './zugtexte'
 
 /*
 Bausteine, die beim Menschen und bei den Gegnern gleich aussehen: Schlangen,
-Ablagestapel und eine ausliegende Schlangengrube. Die Grösse der Karten setzt
+Ablagestapel, Punkte und eine ausliegende Schlangengrube. Die Grösse der Karten setzt
 der umgebende Bereich (`--karte-breite` im CSS); `groesse` sagt dem Browser
 dieselbe Obergrenze, damit er die passende Bildfassung lädt.
 */
@@ -125,6 +125,16 @@ export function Ablage({ ablage, eigene }: { ablage: AblageAnsicht; eigene: bool
     <span className="st-ablage">
       {ablage.oben !== null && <Karte karte={ablage.oben} sizes={KARTENGROESSE.klein} />}
       <span>{ablageText(ablage.anzahl, eigene)}</span>
+    </span>
+  )
+}
+
+/** Der Zwischenstand eines Spielers (O8, Kriterium 5); dass der Kettenbonus fehlt, wird vorgelesen. */
+export function Punkte({ punkte }: { punkte: number }) {
+  return (
+    <span className="st-punkte" data-testid="punkte">
+      <span className="nur-vorlesen">{TISCH.zwischenstand} </span>
+      {punkteText(punkte)}
     </span>
   )
 }

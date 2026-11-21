@@ -1,0 +1,175 @@
+/*
+Die Wertung nach Spielende nach dem freigegebenen Entwurf
+(`src/entwicklung/entwurf/Ergebnis.tsx`): Sieger als Titel, darunter die
+Rangliste, am Fuss die Knöpfe. Die Seite ist so hoch wie das Fenster; nur die
+Rangliste scrollt, damit Titel und Knöpfe immer im Bild bleiben. Die Spalte ist
+breiter als in der Lobby, damit die Schlangen der Aufschlüsselung Platz haben;
+auf dem Handy scrollen sie in sich (karten.css), die Seite nie waagrecht. Nur
+Variablen aus src/ui/tokens.css.
+*/
+
+.rahmen--ergebnis {
+  --rahmen-breite: 48rem;
+  --karte-breite: 30px;
+  flex: none;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* Flache Fenster (Handy quer): engere Abstände, damit die Rangliste Höhe behält. */
+@media (max-height: 500px) {
+  .rahmen--ergebnis {
+    --rahmen-abstand: var(--abstand-2);
+  }
+}
+
+/* Die scrollende Rangliste mit dem Zeichen „mehr ↓“ (karten.css) über dem Seitengrund. */
+.erg-rangliste-rahmen {
+  --weiter-grund: var(--farbe-grund);
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+@media (min-width: 700px) {
+  .rahmen--ergebnis {
+    --karte-breite: 34px;
+  }
+}
+
+/* Der Innenabstand hält Rand und Schatten der Einträge frei vom Rand des Scrollbereichs. */
+.erg-rangliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-3);
+  min-height: 0;
+  margin: 0 calc(-1 * var(--abstand-2));
+  padding: var(--abstand-1) var(--abstand-2) var(--abstand-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+}
+
+.erg-rang {
+  /* Grund unter dem Zeichen „geht weiter“ an einer scrollenden Schlange (karten.css). */
+  --weiter-grund: var(--farbe-flaeche);
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  min-width: 0;
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.erg-rang--sieger {
+  border: 2px solid var(--farbe-akzent);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.erg-rang-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--abstand-1) var(--abstand-3);
+}
+
+.erg-rang-platz,
+.erg-rang-gesamt {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  line-height: var(--zeilenhoehe-titel);
+}
+
+.erg-rang-platz {
+  color: var(--farbe-tinte-leise);
+}
+
+.erg-rang-name {
+  flex: 1;
+  margin: 0;
+  font-size: var(--groesse-text);
+  font-weight: 700;
+}
+
+.erg-rang-gesamt {
+  margin-left: auto;
+}
+
+.erg-rang-abzeichen {
+  padding: 0 var(--abstand-2);
+  border-radius: var(--radius-voll);
+  background: var(--farbe-akzent-stark);
+  color: var(--farbe-auf-akzent);
+  font-size: var(--groesse-klein);
+  font-weight: 700;
+}
+
+.erg-rang-posten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--abstand-1) var(--abstand-3);
+  margin: 0;
+  font-size: var(--groesse-klein);
+}
+
+@media (min-width: 560px) {
+  .erg-rang-posten {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.erg-rang-posten dt {
+  color: var(--farbe-tinte-leise);
+}
+
+.erg-rang-posten dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Woher die Zahlen kommen: Schlangen mit Gruppen und Jokern, Kette, Aufgaben. */
+.erg-rang-herkunft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  min-width: 0;
+  padding-top: var(--abstand-2);
+  border-top: 1px solid var(--farbe-linie);
+  font-size: var(--groesse-klein);
+}
+
+.erg-rang-herkunft p {
+  margin: 0;
+}
+
+.erg-rang-schlange {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-width: 0;
+}
+
+.erg-rang-schlange-titel {
+  margin: 0;
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+}
+
+.erg-rang-zeilen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--abstand-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.erg-rang-leise {
+  color: var(--farbe-tinte-leise);
+}
