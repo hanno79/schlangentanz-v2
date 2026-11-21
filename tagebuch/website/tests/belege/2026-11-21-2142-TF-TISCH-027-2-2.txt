@@ -1,0 +1,189 @@
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : Stufe Abschnitt: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : Stufe Abschnitt: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 1: angeboten 3,4,5 = Engine 3,4,5
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : Stufe Abschnitt: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Stufe Abschnitt: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 2: angeboten 4,5 = Engine 4,5
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 1: angeboten 3,4,5 = Engine 3,4,5
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Stufe Abschnitt: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 1: angeboten 3,4,5 = Engine 3,4,5
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 1: angeboten 3,4,5 = Engine 3,4,5
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 3: angeboten 1,5 = Engine 1,5
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 2: angeboten 4,5 = Engine 4,5
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 1: angeboten 3,4,5 = Engine 3,4,5
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 2: angeboten 4,5 = Engine 4,5
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 2: angeboten 4,5 = Engine 4,5
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 4: angeboten 1,2 = Engine 1,2
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 3: angeboten 1,5 = Engine 1,5
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 3: angeboten 1,5 = Engine 1,5
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 2: angeboten 4,5 = Engine 4,5
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 5: angeboten 1,2,3 = Engine 1,2,3
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 3: angeboten 1,5 = Engine 1,5
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 4: angeboten 1,2 = Engine 1,2
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 4: angeboten 1,2 = Engine 1,2
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 3: angeboten 1,5 = Engine 1,5
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 4: angeboten 1,2 = Engine 1,2
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 5: angeboten 1,2,3 = Engine 1,2,3
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 5: angeboten 1,2,3 = Engine 1,2,3
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 4: angeboten 1,2 = Engine 1,2
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 5: angeboten 1,2,3 = Engine 1,2,3
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : erstes Ende 5: angeboten 1,2,3 = Engine 1,2,3
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen unverändert: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen unverändert: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen unverändert: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen unverändert: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen unverändert: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ansage: Ansage: Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Gelb, Blau, Rot, Rot.
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : Ansage: Ansage: Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Gelb, Blau, Rot, Rot.
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ansage: Ansage: Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Gelb, Blau, Rot, Rot.
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ansage: Ansage: Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Gelb, Blau, Rot, Rot.
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ansage: Ansage: Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Gelb, Blau, Rot, Rot.
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen mit Ansage: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen mit Ansage: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen mit Ansage: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : Abbrechen: Blau, Rot, Gelb, Rot, Gelb, keine Ziele, Stand unverändert
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : Abbrechen: Blau, Rot, Gelb, Rot, Gelb, keine Ziele, Stand unverändert
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen mit Ansage: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ordnen mit Ansage: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : Abbrechen: Blau, Rot, Gelb, Rot, Gelb, keine Ziele, Stand unverändert
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Abbrechen: Blau, Rot, Gelb, Rot, Gelb, keine Ziele, Stand unverändert
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Abbrechen: Blau, Rot, Gelb, Rot, Gelb, keine Ziele, Stand unverändert
+[desktop] O7 Prüfer A: haeutung, eigene Schlange: : Ausgeführt: gespeicherter Stand = anwendeAktion(gelb-03,gelb-01,blau-02,rot-13,rot-07)
+[tablet-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ausgeführt: gespeicherter Stand = anwendeAktion(gelb-03,gelb-01,blau-02,rot-13,rot-07)
+[handy-quer] O7 Prüfer A: haeutung, eigene Schlange: : Ausgeführt: gespeicherter Stand = anwendeAktion(gelb-03,gelb-01,blau-02,rot-13,rot-07)
+[handy-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ausgeführt: gespeicherter Stand = anwendeAktion(gelb-03,gelb-01,blau-02,rot-13,rot-07)
+[tablet-hochkant] O7 Prüfer A: haeutung, eigene Schlange: : Ausgeführt: gespeicherter Stand = anwendeAktion(gelb-03,gelb-01,blau-02,rot-13,rot-07)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->2: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->2: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 3<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->2: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 3<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->2: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->3: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->2: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 3<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 3<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 3<->4: Blau,Rot,Rot,Rot,Gelb -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->3: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 1<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->3: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->3: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 2<->3: Gelb,Rot,Rot,Blau,Rot -> „Deine Punkte: vorher 0, nachher 0“ (Engine: Deine Punkte: vorher 0, nachher 0)
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: Punkte: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: 4<->5: Gelb,Rot,Rot,Rot,Blau -> „Deine Punkte: vorher 0, nachher 3“ (Engine: Deine Punkte: vorher 0, nachher 3)
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: ausgeführt: Tisch „Deine Schlangen Zwischenstand ohne Kettenbonus: 3 Punkte“, Engine 3
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Punkte: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Punkte: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: ausgeführt: Tisch „Deine Schlangen Zwischenstand ohne Kettenbonus: 3 Punkte“, Engine 3
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Punkte: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: ausgeführt: Tisch „Deine Schlangen Zwischenstand ohne Kettenbonus: 3 Punkte“, Engine 3
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Punkte: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: ausgeführt: Tisch „Deine Schlangen Zwischenstand ohne Kettenbonus: 3 Punkte“, Engine 3
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: ausgeführt: Tisch „Deine Schlangen Zwischenstand ohne Kettenbonus: 3 Punkte“, Engine 3
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner: „Punkte von KI-Gegner 1: vorher 9, nachher 0“
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner: „Punkte von KI-Gegner 1: vorher 9, nachher 0“
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner: „Punkte von KI-Gegner 1: vorher 9, nachher 0“
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner: „Punkte von KI-Gegner 1: vorher 9, nachher 0“
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner ordnen: 4 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner: „Punkte von KI-Gegner 1: vorher 9, nachher 0“
+[desktop] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner nach Durchlassen: „KI-Gegner 1 5 Handkarten Zwischenstand ohne Kettenbonus: 0 Punkte Ablage leer“
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner ordnen: 4 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner ordnen: 4 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner ordnen: 4 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner nach Durchlassen: „KI-Gegner 1 5 Handkarten Zwischenstand ohne Kettenbonus: 0 Punkte Ablage leer“
+[handy-quer] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner nach Durchlassen: „KI-Gegner 1 5 Handkarten Zwischenstand ohne Kettenbonus: 0 Punkte Ablage leer“
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner ordnen: 4 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner nach Durchlassen: „KI-Gegner 1 5 Handkarten Zwischenstand ohne Kettenbonus: 0 Punkte Ablage leer“
+[tablet-hochkant] O7 Prüfer B: haeutung-punkte, mehrere An: Gegner nach Durchlassen: „KI-Gegner 1 5 Handkarten Zwischenstand ohne Kettenbonus: 0 Punkte Ablage leer“
+[desktop] O7 Prüfer E: Häutung in einer echten, vo: echte Partie ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer E: Häutung in einer echten, vo: Saat 1, nach 32 Zufallsschritten, Deine Schlange 2 Karte 1–3, 1 Abschnitte; „Ansage: Schlangenhäutung, Karte 1–3 deiner Schlange 2: Rot, Rot, Blau.“; „Deine Punkte: vorher 0, nachher 0“; Stand nachher = anwendeAktion
+[tablet-quer] O7 Prüfer E: Häutung in einer echten, vo: echte Partie ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer E: Häutung in einer echten, vo: echte Partie ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer E: Häutung in einer echten, vo: echte Partie ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer E: Häutung in einer echten, vo: Saat 1, nach 32 Zufallsschritten, Deine Schlange 2 Karte 1–3, 1 Abschnitte; „Ansage: Schlangenhäutung, Karte 1–3 deiner Schlange 2: Rot, Rot, Blau.“; „Deine Punkte: vorher 0, nachher 0“; Stand nachher = anwendeAktion
+[handy-quer] O7 Prüfer E: Häutung in einer echten, vo: Saat 1, nach 32 Zufallsschritten, Deine Schlange 2 Karte 1–3, 1 Abschnitte; „Ansage: Schlangenhäutung, Karte 1–3 deiner Schlange 2: Rot, Rot, Blau.“; „Deine Punkte: vorher 0, nachher 0“; Stand nachher = anwendeAktion
+[handy-hochkant] O7 Prüfer E: Häutung in einer echten, vo: Saat 1, nach 32 Zufallsschritten, Deine Schlange 2 Karte 1–3, 1 Abschnitte; „Ansage: Schlangenhäutung, Karte 1–3 deiner Schlange 2: Rot, Rot, Blau.“; „Deine Punkte: vorher 0, nachher 0“; Stand nachher = anwendeAktion
+[tablet-hochkant] O7 Prüfer E: Häutung in einer echten, vo: echte Partie ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer E: Häutung in einer echten, vo: Saat 1, nach 32 Zufallsschritten, Deine Schlange 2 Karte 1–3, 1 Abschnitte; „Ansage: Schlangenhäutung, Karte 1–3 deiner Schlange 2: Rot, Rot, Blau.“; „Deine Punkte: vorher 0, nachher 0“; Stand nachher = anwendeAktion
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: 16 Abschnitte der Engine, Enden 1,2,3,4,6,7,8,9,10,11,12,14,16 = angeboten
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: 16 Abschnitte der Engine, Enden 1,2,3,4,6,7,8,9,10,11,12,14,16 = angeboten
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: 16 Abschnitte der Engine, Enden 1,2,3,4,6,7,8,9,10,11,12,14,16 = angeboten
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: 16 Abschnitte der Engine, Enden 1,2,3,4,6,7,8,9,10,11,12,14,16 = angeboten
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: 16 Abschnitte der Engine, Enden 1,2,3,4,6,7,8,9,10,11,12,14,16 = angeboten
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: lang Abschnitt: 13 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang Abschnitt: 13 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang Abschnitt: 13 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang Abschnitt: 13 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang Abschnitt: 13 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: Partner aller 13 Enden = Engine
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: 12 Abschnitte der Engine, Enden 1,2,3,4,5,6,7 = angeboten
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: Partner aller 13 Enden = Engine
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: Partner aller 13 Enden = Engine
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: Partner aller 13 Enden = Engine
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: 12 Abschnitte der Engine, Enden 1,2,3,4,5,6,7 = angeboten
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: 12 Abschnitte der Engine, Enden 1,2,3,4,5,6,7 = angeboten
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: Deine Schlange 1: Partner aller 13 Enden = Engine
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: 12 Abschnitte der Engine, Enden 1,2,3,4,5,6,7 = angeboten
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: 12 Abschnitte der Engine, Enden 1,2,3,4,5,6,7 = angeboten
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: Partner aller 7 Enden = Engine
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: Partner aller 7 Enden = Engine
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: Partner aller 7 Enden = Engine
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: Partner aller 7 Enden = Engine
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: KI-Gegner 1, Schlange 1: Partner aller 7 Enden = Engine
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: lang ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: lang Ansage: Ansage: Schlangenhäutung, Karte 14–16 deiner Schlange 1: Blau, Gelb, Gelb.
+[desktop] O7 Prüfer C: lange Schlange mit Fusion u: lang ausgeführt: Stand = Engine (Blau, Gelb, Gelb an 14–16)
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang Ansage: Ansage: Schlangenhäutung, Karte 14–16 deiner Schlange 1: Blau, Gelb, Gelb.
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang Ansage: Ansage: Schlangenhäutung, Karte 14–16 deiner Schlange 1: Blau, Gelb, Gelb.
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang ausgeführt: Stand = Engine (Blau, Gelb, Gelb an 14–16)
+[handy-quer] O7 Prüfer C: lange Schlange mit Fusion u: lang ausgeführt: Stand = Engine (Blau, Gelb, Gelb an 14–16)
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang Ansage: Ansage: Schlangenhäutung, Karte 14–16 deiner Schlange 1: Blau, Gelb, Gelb.
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang ordnen: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang ausgeführt: Stand = Engine (Blau, Gelb, Gelb an 14–16)
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang Ansage: Ansage: Schlangenhäutung, Karte 14–16 deiner Schlange 1: Blau, Gelb, Gelb.
+[tablet-hochkant] O7 Prüfer C: lange Schlange mit Fusion u: lang ausgeführt: Stand = Engine (Blau, Gelb, Gelb an 14–16)
+[desktop] O7 Prüfer D: haeutung in Gegnerschlange : Gegner Ansage: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[desktop] O7 Prüfer D: haeutung in Gegnerschlange : Gegner: Ansage: Schlangenhäutung, Karte 1–3 der Schlange 1 von KI-Gegner 1: Braun, Braun, Violett.; danach Schlange Braun,Violett,Braun, Ablage KI Farbenschutz, Status „Du bist dran
+Spiele Karten aus deiner Hand.“
+[tablet-quer] O7 Prüfer D: haeutung in Gegnerschlange : Gegner Ansage: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-quer] O7 Prüfer D: haeutung in Gegnerschlange : Gegner Ansage: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer D: haeutung in Gegnerschlange : Gegner Ansage: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-hochkant] O7 Prüfer D: haeutung in Gegnerschlange : Gegner Ansage: 3 Ziele frei, waagrecht 0, Karten unverdeckt
+[tablet-quer] O7 Prüfer D: haeutung in Gegnerschlange : Gegner: Ansage: Schlangenhäutung, Karte 1–3 der Schlange 1 von KI-Gegner 1: Braun, Braun, Violett.; danach Schlange Braun,Violett,Braun, Ablage KI Farbenschutz, Status „Du bist dran
+Spiele Karten aus deiner Hand.“
+[handy-quer] O7 Prüfer D: haeutung in Gegnerschlange : Gegner: Ansage: Schlangenhäutung, Karte 1–3 der Schlange 1 von KI-Gegner 1: Braun, Braun, Violett.; danach Schlange Braun,Violett,Braun, Ablage KI Farbenschutz, Status „Du bist dran
+Spiele Karten aus deiner Hand.“
+[handy-hochkant] O7 Prüfer D: haeutung in Gegnerschlange : Gegner: Ansage: Schlangenhäutung, Karte 1–3 der Schlange 1 von KI-Gegner 1: Braun, Braun, Violett.; danach Schlange Braun,Braun,Violett, Ablage KI , Status „Du bist dran
+Spiele Karten aus deiner Hand.“
+[tablet-hochkant] O7 Prüfer D: haeutung in Gegnerschlange : Gegner: Ansage: Schlangenhäutung, Karte 1–3 der Schlange 1 von KI-Gegner 1: Braun, Braun, Violett.; danach Schlange Braun,Violett,Braun, Ablage KI Farbenschutz, Status „Du bist dran
+Spiele Karten aus deiner Hand.“
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : nach Drehen 844x390: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : Drehen 390x844 -> 844x390: Anordnung Gelb,Rot,Blau,Rot,Gelb bleibt, Ansage bleibt
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : nach Drehen 844x390: 5 Ziele frei, waagrecht 0, Karten unverdeckt
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : Drehen 390x844 -> 844x390: Anordnung Gelb,Rot,Blau,Rot,Gelb bleibt, Ansage bleibt
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : 320x640 BEFUND: 320x640 ordnen: verdeckte Karten  expect(received).toEqual(expected) // deep equality  - Expected  - 1 + Received  + 5  - Array [] + Array [ +   "Farbkarte Braun, 2 Punkte: unter „mehr ↑“", +   "Farbkarte Violett, 2 Punkte: unter „mehr ↑“", +   "Farbkarte Braun, 2 Punkte: unter „mehr ↑“", + ]
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : 320x640: Ansage: Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Rot, Blau, Rot, Gelb.
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : Escape: Ausgangszustand, keine Ziele
+[handy-hochkant] O7 Prüfer F: Grenzfälle Drehen, Escape, : Neuladen mitten im Ordnen: Schlange wie gespeichert, keine Auswahl, Stand unverändert
+[handy-hochkant] O7 Prüfer G: Vergleich O5 Farbendieb mit: 320x640 O5 BEFUND: 320x640 O5 Farbendieb: verdeckte Karten  expect(received).toEqual(expected) // deep equality  - Expected  - 1 + Received  + 4  - Array [] + Array [ +   "Farbkarte Blau, 1 Punkt: unter „mehr ↑“", +   "Farbkarte Gelb, 1 Punkt: unter „mehr ↑“", + ]

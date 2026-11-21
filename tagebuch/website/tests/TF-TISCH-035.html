@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-035 Mitten im Ordnen einer Häutung überlebt die Anordnung das Drehen des Handys; Escape und Neuladen beginnen ohne Auswahl, und gespielt ist nichts. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-035 Mitten im Ordnen einer Häutung überlebt die Anordnung das Drehen des Handys; Escape und Neuladen beginnen ohne Auswahl, und gespielt ist nichts.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-032</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die gelegte Anordnung lebt nur im Browser, bis man ausführt. Dreht man das Handy, darf sie nicht verloren gehen. Escape oder Neuladen sollen sauber zum Anfang zurückführen, ohne halbe Häutung.</p><h2>Bestanden, wenn</h2><p>Eine Karte zweimal antippen drückt sie und löst sie wieder. Nach Drehen von 390 × 844 auf 844 × 390 steht dieselbe Anordnung (Gelb, Rot, Blau, Rot, Gelb) mit derselben Ansage, alle Ziele frei. Escape zeigt Blau, Rot, Gelb, Rot, Gelb ohne Ziele. Neuladen mitten im Ordnen zeigt die Schlange wie gespeichert, ohne Auswahl, und der gespeicherte Stand ist unverändert.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Anordnung springt beim Drehen zurück, nach Escape oder Neuladen bleibt eine Auswahl stehen, oder der Spielstand hat sich geändert.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O7-haeutung-tisch (PR #78)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Handy hochkant 390 × 844 mit Touch, Stand ab Commit 49a394c</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>haeutung</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser</td><td>Adresse öffnen</td><td>`/spiel?szenario=haeutung&amp;tempo=sofort`</td><td>Schlange Blau, Rot, Gelb, Rot, Gelb</td></tr><tr><td>2</td><td>Tisch</td><td>Häutung, „Deine Schlange 1 wählen“, Karte 1 und 5, dann Karte 1 und 3 tauschen</td><td></td><td>Gelb, Rot, Blau, Rot, Gelb; Ansage</td></tr><tr><td>3</td><td>Deine Schlange 1</td><td>Karte 2 zweimal antippen</td><td></td><td>erst gedrückt, dann nicht mehr</td></tr><tr><td>4</td><td>Gerät</td><td>auf 844 × 390 drehen</td><td></td><td>gleiche Anordnung und Ansage, Ziele frei</td></tr><tr><td>5</td><td>Tastatur</td><td>Escape</td><td></td><td>Blau, Rot, Gelb, Rot, Gelb, keine Ziele</td></tr><tr><td>6</td><td>Tisch</td><td>Schritt 2 wiederholen, dann Seite neu laden</td><td></td><td>Blau, Rot, Gelb, Rot, Gelb, keine Auswahl, Spielstand unverändert</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 21:39</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O7) &middot; agent &middot; pruefung-O7 @ <span class="commit" title="49a394c3a768552f98b0efd329122db79a226a5b">49a394c</span> / Playwright Chromium 1.60.0, Handy hochkant 390x844 mit Touch, gedreht auf 844x390</p><p>Karte 2 zweimal angetippt: aria-pressed true, dann false. Drehen 390x844 auf 844x390: Anordnung Gelb,Rot,Blau,Rot,Gelb und Ansage bleiben, 5 Ziele frei. Escape: Blau,Rot,Gelb,Rot,Gelb, 0 Ziele. Neuladen mitten im Ordnen: Schlange wie gespeichert, keine Auswahl, Speicher unverändert. 0 Konsolenfehler.</p><ul class="belege"><li><a href="belege/2026-11-21-2139-TF-TISCH-035-1.txt">2026-11-21-2139-TF-TISCH-035-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,11 @@
+Prüfung O7, eingebauter Browser, 1280x900, Maus, Testhook-Build auf Port 4184, Stand 49a394c
+Adresse: http://localhost:4184/spiel?szenario=haeutung-nicht-moeglich
+Klick auf button "Sonderkarte Schlangenhäutung" (ref_83)
+Ausgabe von javascript_exec ({leiste: .st-zugleiste innerText, ziele: alle [data-ziel],[data-zielplatz]}), unverändert aus dem Werkzeug übernommen:
+{
+  "leiste": "Lege die Karte ohne Wirkung auf deine Ablage: Tippe die Ablage an.\n\nSpieler 1 muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).\nZug beenden\nAnsehen\nAbbrechen",
+  "ziele": [
+    "Ohne Wirkung auf deine Ablage"
+  ]
+}
+read_console_messages (nur Fehler): No console logs.
