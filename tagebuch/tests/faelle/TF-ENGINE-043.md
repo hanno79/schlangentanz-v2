@@ -1,33 +1,30 @@
 ---
 id: TF-ENGINE-043
-titel: Wird in den Kartendateien von E5 eine Regel verfälscht, wird mindestens ein Regeltest rot.
+titel: Ungültige Stellen werden für Regenbogenschlange und Blockade abgelehnt, bei vier Spielern wird nur der Besitzer der Schlange gefragt, und solange eine Blockade schwebt oder eine Farbkarte beim Gegner liegt, bekommt der Angreifer keine weitere Farbkarte.
 art: manuell
 regression: nein
-prioritaet: hoch
+prioritaet: mittel
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
 aenderung: task/E5-legen (PR #66)
+grenzfall_von: TF-ENGINE-042
 ---
 
 ## Worum es geht
 
-Gegenprobe des Prüfers: Grüne Tests belegen wenig, solange unklar ist, ob sie eine falsche Regel bemerken. Verfälscht wird je eine Zeile in `farbkarte.ts` oder `schlangenstelle.ts`, danach wird die Datei zurückgesetzt.
+Grenzfälle zum Legen, die der Task-Block nicht nennt: Stellen ausserhalb der Schlange (negativ, keine ganze Zahl, hinter dem Ende), die Abwehrfrage am Tisch mit vier Spielern, eine Aktion des Angreifers, während seine Ansage noch offen ist (A6), und ein Spieler ohne eigene Schlange, der seine Farbkarte beim Gegner anlegt und danach keine zweite bekommt (A5, D12).
 
 ## Bestanden, wenn
 
-| Verfälschung | rot (Tests) |
-|---|---|
-| Farbkarte nur an „ende“, nicht an „anfang“ | 7 |
-| Regenbogenschlange und Blockade nur in eigene Schlangen | 17 |
-| Betroffen ist der nächste Spieler statt des Besitzers | 13 |
-| Einfügen eine Stelle zu weit vorn | 13 |
-
-Nach jedem Zurücksetzen zeigt `git status` keine Änderung.
+- Stelle -1, 0,5 und NaN werden für beide Karten mit „Feld position ist ungültig“ abgelehnt, Stelle 3 in einer Schlange mit zwei Karten mit „Die Stelle 3 gibt es in schlange-1 nicht: erlaubt sind 0 bis 2 (A7.3)“ beziehungsweise „(A7.5)“.
+- Vier Spieler, alle drei Gegner mit Farbenschutz, Blockade in schlange-3 von Spieler 4: KarteAngesagt nennt `betroffene: [3]`, es entscheidet Spieler 4, alle angebotenen Aktionen gehören spieler-4; nach dem Abwehren entscheidet wieder Spieler 1, keine Invariante verletzt.
+- Während die Blockade schwebt, lehnt die Engine eine Farbkarte von Spieler 1 ab mit „Die Schlangenblockade schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).“
+- Spieler 1 ohne eigene Schlange legt Blau an die Schlange des Gegners; danach ist nur ZugBeenden angeboten, und Spieler 1 hat weiter keine Schlange.
 
 ## Fehlgeschlagen, wenn
 
-Eine Verfälschung die Suite grün lässt.
+Eine ungültige Stelle angenommen wird, ein anderer als Spieler 4 gefragt wird, der Angreifer während der offenen Frage handeln darf oder nach der Farbkarte beim Gegner eine zweite Farbkarte oder eine neue Schlange angeboten wird.
 
 ## Vorbedingungen
 
@@ -37,28 +34,12 @@ Eine Verfälschung die Suite grün lässt.
 
 ## Testdaten
 
-1. `farbkarte.ts`: `(['anfang', 'ende'] as const)` in `ziele` wird `(['ende'] as const)`.
-2. `schlangenstelle.ts`, `ziele`: vor `.flatMap` kommt `.filter(({ besitzer }) => besitzer === spielerIndex)`.
-3. `schlangenstelle.ts`, `betroffene`: `[besitzer]` wird `[(besitzer + 1) % zustand.spieler.length]`.
-4. `schlangenstelle.ts`, `wirke`: `splice(aktion.position, …)` wird `splice(Math.max(0, aktion.position - 1), …)`.
+Prüfdatei `zz_pruefer_e5.test.ts` aus dem Beleg des Laufs (Abschnitte „Grenzfall 1“ bis „Grenzfall 4“), mit den Hilfen aus `legen_hilfen.ts` und `zugablauf_hilfen.ts`.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Editor | Verfälschung 1 einsetzen | Testdaten 1 | nur diese Zeile geändert |
-| 2 | Konsole im Repo | Tests ausführen | `npx vitest run src/engine src/entwicklung` | 7 rot, darunter „D9/A5: aufgezählt sind …“ |
-| 3 | Konsole im Repo | zurücksetzen | `git checkout -- src/engine/karten/farbkarte.ts` | `git status` leer |
-| 4 | Editor | Verfälschung 2 einsetzen | Testdaten 2 | nur diese Zeile geändert |
-| 5 | Konsole im Repo | Tests ausführen | wie Schritt 2 | 17 rot |
-| 6 | Konsole im Repo | zurücksetzen | `git checkout -- src/engine/karten/schlangenstelle.ts` | `git status` leer |
-| 7 | Editor | Verfälschung 3 einsetzen | Testdaten 3 | nur diese Zeile geändert |
-| 8 | Konsole im Repo | Tests ausführen | wie Schritt 2 | 13 rot |
-| 9 | Konsole im Repo | zurücksetzen | wie Schritt 6 | `git status` leer |
-| 10 | Editor | Verfälschung 4 einsetzen | Testdaten 4 | nur diese Zeile geändert |
-| 11 | Konsole im Repo | Tests ausführen | wie Schritt 2 | 13 rot |
-| 12 | Konsole im Repo | zurücksetzen | wie Schritt 6 | `git status` leer |
-
-## Nicht abgedeckte Grenzfälle
-
-Die Verfälschung „eigene Schlange gilt als betroffen“ (`betroffene` gibt immer `[besitzer]` zurück) ist wirkungsgleich, weil `reaktion.ts` den Angreifer ohnehin aus den Betroffenen nimmt; sie macht deshalb nichts rot und ist kein Befund.
+| 1 | Editor | Prüfdatei anlegen | Inhalt aus dem Beleg nach `src/engine/__tests__/zz_pruefer_e5.test.ts` | nur diese Datei neu |
+| 2 | Konsole im Repo | Grenzfälle ausführen | `npx vitest run src/engine/__tests__/zz_pruefer_e5.test.ts -t Grenzfall --reporter=verbose --silent=false` | 7 grün; die ausgegebenen Meldungen wie unter „Bestanden, wenn“ |
+| 3 | Konsole im Repo | Prüfdatei löschen | `rm src/engine/__tests__/zz_pruefer_e5.test.ts` | `git status` leer |

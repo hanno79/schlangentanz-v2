@@ -1,45 +1,58 @@
 ---
 id: TF-ENGINE-041
-titel: Ungültige Stellen werden für Regenbogenschlange und Blockade abgelehnt, bei vier Spielern wird nur der Besitzer der Schlange gefragt, und solange eine Blockade schwebt oder eine Farbkarte beim Gegner liegt, bekommt der Angreifer keine weitere Farbkarte.
-art: manuell
-regression: nein
-prioritaet: mittel
+titel: Die Regenbogenschlange kommt an jede Lücke jeder bestehenden Schlange, in der eigenen ohne Rückfrage, und in der Schlange eines Gegners kann dieser sie abwehren oder durchlassen.
+art: beides
+regression: ja
+prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
+skript: src/engine/__tests__/legen_regenbogenschlange.test.ts
 aenderung: task/E5-legen (PR #66)
-grenzfall_von: TF-ENGINE-040
 ---
 
 ## Worum es geht
 
-Grenzfälle zum Legen, die der Task-Block nicht nennt: Stellen ausserhalb der Schlange (negativ, keine ganze Zahl, hinter dem Ende), die Abwehrfrage am Tisch mit vier Spielern, eine Aktion des Angreifers, während seine Ansage noch offen ist (A6), und ein Spieler ohne eigene Schlange, der seine Farbkarte beim Gegner anlegt und danach keine zweite bekommt (A5, D12).
+Die Regenbogenschlange ist die Sonderkarte des Zuges und darf an jede Stelle jeder Schlange (A5, A7.3, D9), beginnt aber keine neue (D16). Legt ein Gegner sie in meine Schlange, werde ich gefragt und kann mit Farbenschutz abwehren (A7.2, D10, D33). Lasse ich sie durch, nützt sie mir.
 
 ## Bestanden, wenn
 
-- Stelle -1, 0,5 und NaN werden für beide Karten mit „Feld position ist ungültig“ abgelehnt, Stelle 3 in einer Schlange mit zwei Karten mit „Die Stelle 3 gibt es in schlange-1 nicht: erlaubt sind 0 bis 2 (A7.3)“ beziehungsweise „(A7.5)“.
-- Vier Spieler, alle drei Gegner mit Farbenschutz, Blockade in schlange-3 von Spieler 4: KarteAngesagt nennt `betroffene: [3]`, es entscheidet Spieler 4, alle angebotenen Aktionen gehören spieler-4; nach dem Abwehren entscheidet wieder Spieler 1, keine Invariante verletzt.
-- Während die Blockade schwebt, lehnt die Engine eine Farbkarte von Spieler 1 ab mit „Die Schlangenblockade schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).“
-- Spieler 1 ohne eigene Schlange legt Blau an die Schlange des Gegners; danach ist nur ZugBeenden angeboten, und Spieler 1 hat weiter keine Schlange.
+- Im Szenario `regenbogen` stehen 8 Knöpfe „RegenbogenschlangeLegen“: schlange-1 Stelle 0 bis 4 und schlange-2 Stelle 0 bis 2, keiner für KI-Gegner 2.
+- Weg 1, schlange-1 Stelle 2: nur „KarteGespielt … → schlange-1 von Spieler 1 (spieler-1), Stelle 2“; schlange-1 ist Feuerkeim, Feuerkeim, Regenbogenschlange, Wurzelpfad, Wurzelpfad; Zwischenstand Spieler 1 Gruppen 4; danach nur FarbkarteLegen (20) und ZugBeenden.
+- Weg 2, schlange-2 Stelle 2: „KarteAngesagt … trifft KI-Gegner 1 (spieler-2)“ und „AbwehrGefragt“, zwei Knöpfe „Reagieren“. Abwehren ergibt „Abgewehrt“ und „AnsageEntschieden … ohne Wirkung … → Ablagestapel von Spieler 1 (spieler-1), Stelle 0“, schlange-2 bleibt Sonnenblatt, Sonnenblatt. Durchlassen ergibt „AnsageEntschieden … wirkt, niemand hat abgewehrt → schlange-2 von KI-Gegner 1 (spieler-2), Stelle 2“ und Zwischenstand KI-Gegner 1 Gruppen 2.
 
 ## Fehlgeschlagen, wenn
 
-Eine ungültige Stelle angenommen wird, ein anderer als Spieler 4 gefragt wird, der Angreifer während der offenen Frage handeln darf oder nach der Farbkarte beim Gegner eine zweite Farbkarte oder eine neue Schlange angeboten wird.
+Eine Lücke fehlt oder ein Knopf für KI-Gegner 2 erscheint, in der eigenen Schlange jemand gefragt wird, in der fremden niemand gefragt wird, nach der Abwehr die Karte in der Schlange liegt oder nach dem Legen noch eine Sonderkarte angeboten wird.
 
 ## Vorbedingungen
 
 | Was | Wert |
 |---|---|
-| Ausgangslage | Worktree auf `206ca15`, `npm ci` gelaufen, `git status` leer |
+| Anwendung | Testhook-Build, Stand ab `206ca15` |
+| Ausgangslage prüfen | `/dev?szenario=regenbogen` zeigt „Schritt 0“ und „Aktionen der Engine (28)“ |
 
 ## Testdaten
 
-Prüfdatei `zz_pruefer_e5.test.ts` aus dem Beleg des Laufs (Abschnitte „Grenzfall 1“ bis „Grenzfall 4“), mit den Hilfen aus `legen_hilfen.ts` und `zugablauf_hilfen.ts`.
+Szenario `regenbogen` (Saat 52, drei Spieler). Karte regenbogenschlange-01, Farbenschutz farbenschutz-01 bei KI-Gegner 1.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Editor | Prüfdatei anlegen | Inhalt aus dem Beleg nach `src/engine/__tests__/zz_pruefer_e5.test.ts` | nur diese Datei neu |
-| 2 | Konsole im Repo | Grenzfälle ausführen | `npx vitest run src/engine/__tests__/zz_pruefer_e5.test.ts -t Grenzfall --reporter=verbose --silent=false` | 7 grün; die ausgegebenen Meldungen wie unter „Bestanden, wenn“ |
-| 3 | Konsole im Repo | Prüfdatei löschen | `rm src/engine/__tests__/zz_pruefer_e5.test.ts` | `git status` leer |
+| 1 | „Aktionen der Engine“ | Knöpfe unter „RegenbogenschlangeLegen“ lesen | | „(8)“, schlange-1 · Stelle 0 bis 4, schlange-2 · Stelle 0 bis 2 |
+| 2 | „Aktionen der Engine“ | Knopf anklicken | „… → schlange-1 · Stelle 2“ | ein Ereignis KarteGespielt, Stelle 2 |
+| 3 | „Spieler“ und „Wertung“ | schlange-1 und Zwischenstand lesen | | Feuerkeim, Feuerkeim, Regenbogenschlange, Wurzelpfad, Wurzelpfad; Gruppen 4 |
+| 4 | Kopf des Szenarios | „Von vorn“ anklicken | | „Schritt 0“ |
+| 5 | „Aktionen der Engine“ | Knopf anklicken | „… → schlange-2 · Stelle 2“ | KarteAngesagt und AbwehrGefragt; „KI-Gegner 1 entscheidet“ |
+| 6 | „Aktionen der Engine“ | Knopf anklicken | „Reagieren: abwehren mit Farbenschutz (farbenschutz-01)“ | Abgewehrt, AnsageEntschieden ohne Wirkung → Ablagestapel von Spieler 1, Stelle 0; schlange-2 zwei Karten |
+| 7 | Kopf des Szenarios | „Schritt zurück“ anklicken | | wieder die zwei Knöpfe „Reagieren“ |
+| 8 | „Aktionen der Engine“ | Knopf anklicken | „Reagieren: durchlassen“ | AnsageEntschieden → schlange-2 Stelle 2; Zwischenstand KI-Gegner 1 Gruppen 2 |
+
+## Technische Prüfung
+
+`npx vitest run src/engine/__tests__/legen_regenbogenschlange.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
+
+## Nicht abgedeckte Grenzfälle
+
+Ohne Schlange am Tisch nur wirkungslos ablegen und drei Joker nebeneinander stehen als Tests in `legen_regenbogenschlange.test.ts`. Ungültige Stellen (-1, 0,5, Länge+1) und vier Spieler stehen in TF-ENGINE-043. Wie sie in der Wertung zählt, gehört zu E10.

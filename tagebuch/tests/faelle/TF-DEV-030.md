@@ -1,6 +1,6 @@
 ---
 id: TF-DEV-030
-titel: Wird die Knopfbeschriftung des Entwicklertischs bei Stelle, Karten-Id oder Spieler verfälscht, werden die Beschriftungstests rot.
+titel: Die Knöpfe zum Legen am Entwicklertisch nennen Karte, Schlange und Stelle und sind in allen fünf Geräteklassen ganz lesbar, ohne waagrechtes Scrollen.
 art: manuell
 regression: nein
 prioritaet: mittel
@@ -12,48 +12,39 @@ aenderung: task/E5-legen (PR #66)
 
 ## Worum es geht
 
-Die Tests zu `beschriftung.ts` sind nach dem Code entstanden. Ob sie Fehler fangen, zeigt erst eine Gegenprobe: je eine Zeile verfälschen, Tests ausführen, zurücksetzen.
+Mit E5 haben Regenbogenschlange und Blockade je Karte bis zu 18 Ziele. Die Beschriftung der Knöpfe (`beschriftung.ts`) nennt deshalb Karte mit Id, Schlange und „Stelle n“. Die Texte sind länger als vorher und dürfen auf schmalen Geräten weder abgeschnitten werden noch die Seite verbreitern.
 
 ## Bestanden, wenn
 
-| Verfälschung in `beschriftung.ts` | rot (Tests in `src/entwicklung`) |
-|---|---|
-| „Stelle n+1“ statt „Stelle n“ | 4 (3 in `beschriftung.test.ts`, 1 in `TischLegen.test.tsx`) |
-| Karte ohne Id, nur mit Namen | 10 |
-| Spieler-Id auf den nächsten Spieler abgebildet | 1 (Schlangengrube) |
-
-Nach jedem Zurücksetzen zeigt `git status` keine Änderung.
+- In `blockade-abwehr` lautet jeder der 18 Knöpfe „BlockadeLegen: Schlangenblockade (schlangenblockade-0n) → schlange-m · Stelle k“, in `regenbogen` jeder der 8 Knöpfe „RegenbogenschlangeLegen: Regenbogenschlange (regenbogenschlange-01) → schlange-m · Stelle k“, in `farbkarte-beim-gegner` jeder der 30 „FarbkarteLegen: <Bildname> (<id>) → schlange-m anfang|ende“.
+- In jeder Klasse ist `document.documentElement.scrollWidth` gleich `clientWidth` (1280, 1024, 768, 390, 844), kein Knopf hat `scrollWidth > clientWidth` und keiner ragt über den rechten Rand.
+- Desktop, Tablet und Handy quer: jeder Knopf einzeilig. Handy hochkant: höchstens drei Zeilen, alles sichtbar.
+- Keine Konsolenfehler.
 
 ## Fehlgeschlagen, wenn
 
-Eine der drei Verfälschungen alle Tests grün lässt.
+Ein Knopftext abgeschnitten oder mit Auslassungspunkten endet, die Seite waagrecht scrollt, zwei Knöpfe derselben Karte gleich beschriftet sind oder ein Konsolenfehler erscheint.
 
 ## Vorbedingungen
 
 | Was | Wert |
 |---|---|
-| Ausgangslage | Worktree auf `206ca15`, `npm ci` gelaufen, `git status` leer |
+| Anwendung | Testhook-Build, Stand ab `206ca15` |
+| Ausgangslage prüfen | `/dev?szenario=blockade-abwehr` lädt ohne Fehler |
 
 ## Testdaten
 
-1. ``return `Stelle ${String(wert)}` `` wird ``return `Stelle ${Number(wert) + 1}` ``.
-2. ``return `${karteAnzeigename(karte)} (${karte.id})` `` wird `return karteAnzeigename(karte)`.
-3. `name(tisch.zustand, spieler)` wird `name(tisch.zustand, (spieler + 1) % tisch.zustand.spieler.length)`.
+Geräteklassen: Desktop 1280×900, Tablet quer 1024×768 Touch, Tablet hochkant 768×1024 Touch, Handy hochkant 390×844 Touch, Handy quer 844×390 Touch. Szenarien `farbkarte-beim-gegner`, `regenbogen`, `blockade-abwehr`.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Editor | Verfälschung 1 in `src/entwicklung/beschriftung.ts` | Testdaten 1 | nur diese Zeile geändert |
-| 2 | Konsole im Repo | Tests ausführen | `npx vitest run src/entwicklung` | 4 rot |
-| 3 | Konsole im Repo | zurücksetzen | `git checkout -- src/entwicklung/beschriftung.ts` | `git status` leer |
-| 4 | Editor | Verfälschung 2 | Testdaten 2 | nur diese Zeile geändert |
-| 5 | Konsole im Repo | Tests ausführen | wie Schritt 2 | 10 rot |
-| 6 | Konsole im Repo | zurücksetzen | wie Schritt 3 | `git status` leer |
-| 7 | Editor | Verfälschung 3 | Testdaten 3 | nur diese Zeile geändert |
-| 8 | Konsole im Repo | Tests ausführen | wie Schritt 2 | 1 rot |
-| 9 | Konsole im Repo | zurücksetzen | wie Schritt 3 | `git status` leer |
+| 1 | Browser, Desktop 1280×900 | `/dev?szenario=blockade-abwehr` öffnen, zu „BlockadeLegen (18)“ scrollen | | 18 Knöpfe, je eine Zeile, Stelle am Ende sichtbar |
+| 2 | Browser | Szenarien `regenbogen` und `farbkarte-beim-gegner` öffnen | | 8 bzw. 30 Knöpfe, alle verschieden beschriftet |
+| 3 | Browser | Schritte 1 und 2 in Tablet quer, Tablet hochkant, Handy hochkant und Handy quer wiederholen, Knöpfe antippen wie in TF-ENGINE-040 bis 040 | | kein waagrechtes Scrollen; auf Handy hochkant brechen die Knöpfe in bis zu drei Zeilen um, nichts fehlt |
+| 4 | Entwicklerwerkzeuge, Konsole | Fehler lesen | | keine |
 
 ## Nicht abgedeckte Grenzfälle
 
-Lässt man in `kartenAmTisch` die Ablagestapel und die Karten unter Fusionen weg, bleibt alles grün (100 Tests). Das ist ungetesteter Code; heute nennt aber keine Aktion eine solche Karte, die Beschriftung zeigte dann nur die nackte Id.
+Sehr lange Ids (zweistellige Schlangennummern, `schlange-12 · Stelle 14`) sind nicht eigens geprüft; die Knöpfe brechen um und bleiben in der Breite begrenzt. Kartenziele unter einer Fusion oder auf einem Ablagestapel nennt heute keine Aktion.
