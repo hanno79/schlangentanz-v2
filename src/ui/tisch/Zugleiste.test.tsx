@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { cleanup, render, screen } from '@testing-library/react'
-import { anwendeAktion, ermittleAktionen, serialisiere } from '../../engine'
+import { anwendeAktion, ermittleAktionen, serialisiere, zugBeendenGesperrt } from '../../engine'
 import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { starteEntwicklerPartie } from '../../entwicklung/partie'
@@ -50,6 +50,8 @@ describe('O5 K5: „Zug beenden“ ist genau dann bedienbar, wenn die Engine es 
       const knopf = zugBeenden()
       expect(knopf !== null && !knopf.disabled, `${serialisiere(zustand).slice(0, 60)}…: Zug beenden erlaubt ${erlaubt}`).toBe(erlaubt)
       if (erlaubt) erlaubtGesehen += 1
+      // Steht er gesperrt da, steht der Grund der Engine daneben (DESIGN.md, „Gesperrt“).
+      if (knopf !== null && knopf.disabled) expect(knopf).toHaveAccessibleDescription(zugBeendenGesperrt(zustand)!)
       cleanup()
     }
     expect(erlaubtGesehen, 'mindestens ein Zustand, in dem du den Zug beenden darfst').toBeGreaterThan(0)
@@ -59,7 +61,7 @@ describe('O5 K5: „Zug beenden“ ist genau dann bedienbar, wenn die Engine es 
     const start = erzeugeSzenario('farbkarte-beim-gegner')
     spieleAm(start)
     expect(zugBeenden()).toBeDisabled()
-    expect(zugleiste().getByText('Du musst immer mindestens eine Karte spielen.')).toBeInTheDocument()
+    expect(zugleiste().getByText(zugBeendenGesperrt(start)!)).toBeInTheDocument()
     tippe(handkarte('Farbkarte Rot, 1 Punkt'))
     tippeZiel('Deine Schlange 1: Ende')
     ausfuehren()
@@ -68,6 +70,26 @@ describe('O5 K5: „Zug beenden“ ist genau dann bedienbar, wenn die Engine es 
     expect(zugBeenden()).toBeEnabled()
     tippe(zugBeenden()!)
     expect(gespieltWurde(mitte, aktionMit(mitte, (a) => a.typ === 'ZugBeenden'))).toBe(true)
+  })
+})
+
+describe('O5 Iteration 2, Mangel 1: Neben jedem gesperrten „Zug beenden“ steht der Grund der Engine', () => {
+  it('O5/DESIGN.md: vor einer Karte, mit gewählter Karte und mit fertiger Ansage', () => {
+    const start = erzeugeSzenario('farbkarte-beim-gegner')
+    const grund = zugBeendenGesperrt(start)!
+    expect(grund, 'die Engine sperrt das Beenden vor der ersten Karte').toBeTruthy()
+    spieleAm(start)
+    const pruefe = (lage: string) => {
+      expect(zugBeenden(), lage).toBeDisabled()
+      expect(zugBeenden(), lage).toHaveAccessibleDescription(grund)
+      expect(zugleiste().getByText(grund), lage).toBeVisible()
+    }
+    pruefe('ohne gewählte Karte')
+    tippe(handkarte('Farbkarte Rot, 1 Punkt'))
+    pruefe('mit gewählter Karte')
+    tippeZiel('Deine Schlange 1: Ende')
+    expect(zugleiste().getByRole('button', { name: 'Ausführen' })).toBeInTheDocument()
+    pruefe('mit fertiger Ansage')
   })
 })
 
