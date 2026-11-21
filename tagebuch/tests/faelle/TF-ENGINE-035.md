@@ -1,27 +1,26 @@
 ---
 id: TF-ENGINE-035
-titel: Der Farbendieb verhält sich auch im zweiten Zug, bei einer Grube vor dem Bestohlenen, bei einer neuen und einer zweiten Schlange, bei einer zurückbleibenden Fusion und bei unförmigen Ansagen richtig.
+titel: Zufallspartien, in denen der Farbendieb gespielt und abgewehrt wird, lassen sich Schritt für Schritt aus den Ereignissen nachrechnen, und kein Ereignis nennt eine Handkarte.
 art: manuell
 regression: nein
-prioritaet: niedrig
+prioritaet: mittel
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
 aenderung: task/E8-farbendieb (PR #67)
-grenzfall_von: TF-ENGINE-033
 ---
 
 ## Worum es geht
 
-Geprüft werden fünf Fälle, die der Plan nicht nennt. Der Farbendieb wird im zweiten Zug nach einem Verdoppler gespielt, und einmal muss der Bestohlene wegen einer Grube aussetzen, darf aber trotzdem abwehren (D18). Ein Dieb ohne Schlange beginnt mit der gestohlenen Karte eine und danach mit einer Farbkarte eine zweite, aber keine dritte. Beim Gegner bleibt nach dem Diebstahl nur eine Fusion in der Schlange zurück. Zuletzt gehen Ansagen mit falsch geformten Feldern an die Engine.
+Die Oberfläche soll aus den Ereignissen der Engine nachvollziehen können, wohin der Farbendieb eine Karte versetzt hat, ohne Zustände zu vergleichen (E4b). Hier laufen ganze Zufallspartien, in denen der Farbendieb so oft wie möglich gespielt und abgewehrt wird. Jeder Schritt wird nachgerechnet. Dazu wird gezählt, ob der Farbendieb auch in den vier Zufallspartien des gemeinsamen Nachrechentests vorkommt.
 
 ## Bestanden, wenn
 
-G1: im Teilzug 2 wird gestohlen, die Schlange heisst danach Gelb, Rot, `gespielteSonderkarten` ist 1. G2: KarteAngesagt nennt `betroffene: [1]`, Spieler 2 wehrt ab, seine Schlange bleibt Blau. G3: Nach dem Diebstahl und einer Farbkarte hat der Dieb 2 Schlangen mit verschiedenen Ids, Speichern und Laden ändert nichts, im nächsten Zug ist keine neue Schlange angeboten. G4: Beim Gegner bleibt eine Schlange nur mit der Fusion und Blau, Blau darunter; der Schritt lässt sich nachrechnen. G5: vier unförmige Ansagen werden mit deutschem Grund abgelehnt.
+Alle 9 Partien mit Vorzug (Saaten 101 bis 109, je 2, 3 und 4 Spieler) enden, und jeder Schritt lässt sich mit `spieleNach` nachrechnen; `verrateneHandkarten` bleibt leer. Zusammen gibt es mehr als 10 KartenVersetzt nach einem Farbendieb und mindestens eine Abwehr. In den Partien des gemeinsamen Tests (Saaten 1 bis 4 aus `zugablauf_ereignisse.test.ts`) wird der Farbendieb mindestens einmal angesagt und wirkt mindestens einmal.
 
 ## Fehlgeschlagen, wenn
 
-Einer der fünf Tests im Prüfskript rot wird oder die Engine bei G5 wirft statt abzulehnen.
+Ein Schritt lässt sich nicht nachrechnen (Meldung mit Saat und Schritt), ein Ereignis nennt eine Handkarte, eine Partie endet nicht nach 3'000 Schritten, oder in den Partien des gemeinsamen Tests kommt kein Farbendieb vor.
 
 ## Vorbedingungen
 
@@ -32,16 +31,16 @@ Einer der fünf Tests im Prüfskript rot wird oder die Engine bei G5 wirft statt
 
 ## Testdaten
 
-Prüfskript `zz_pruefer_e8.test.ts` (Teil „eigene Grenzfälle“, G1 bis G5), als Beleg des Laufs abgelegt. G5 nutzt `ziel: { art: 'fremd' }`, `position: 0.5`, eine Quelle ohne `karteId` und eine Farbkarte als gespielte Karte.
+Prüfskript `zz_pruefer_e8.test.ts`, als Beleg des Laufs abgelegt (Teile M1, M2 und M3). Saaten 1 bis 4 wie im gemeinsamen Test, Saaten 101 bis 109 mit Vorzug für „FarbendiebSpielen“ und für die Abwehr mit Farbenschutz.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Konsole im Repo | Prüfskript aus dem Beleg nach `src/engine/__tests__/zz_pruefer_e8.test.ts` kopieren | – | Datei neu |
-| 2 | Konsole im Repo | nur die Grenzfälle ausführen | `npx vitest run src/engine/__tests__/zz_pruefer_e8.test.ts -t "eigene Grenzfälle" --silent=false` | Exit 0, 5 Tests grün; Zeile „G5“ mit vier deutschen Gründen |
+| 1 | Konsole im Repo | Prüfskript aus dem Beleg nach `src/engine/__tests__/zz_pruefer_e8.test.ts` kopieren | – | Datei neu, sonst nichts geändert |
+| 2 | Konsole im Repo | ausführen | `npx vitest run src/engine/__tests__/zz_pruefer_e8.test.ts --silent=false --reporter=verbose` | Exit 0; Zeile „M1“ mit `farbendiebe` ≥ 1 und `versetzt` ≥ 1 je Saat; Zeile „M2“ mit 9 Partien |
 | 3 | Konsole im Repo | Prüfskript löschen | – | `git status` leer |
 
 ## Nicht abgedeckte Grenzfälle
 
-Ein Farbendieb in der Schlussrunde ist nicht eigens geprüft; die Schlussrunde ändert an der Wirkung nichts, und der Dauerlauf spielt sie mit. Eine Karte mit Wert 0 gibt es im Spiel nicht.
+Partien mit Erweiterung laufen nur für gerade Saaten mit. Ob die KI den Farbendieb sinnvoll einsetzt, ist Sache von K2/K3 und hier nicht geprüft.

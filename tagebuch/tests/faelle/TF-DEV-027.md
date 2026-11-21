@@ -1,6 +1,6 @@
 ---
 id: TF-DEV-027
-titel: Im Szenario farbendieb-abwehr wird nur der Bestohlene gefragt; wehrt er ab, bleibt seine Karte liegen, lässt er durch, beginnt sie eine neue Schlange von Spieler 1.
+titel: Im Szenario farbendieb stiehlt Spieler 1 am Entwicklertisch das Gelb von KI-Gegner 1 und hat danach drei gelbe Karten in seiner Schlange.
 art: manuell
 regression: nein
 prioritaet: mittel
@@ -12,40 +12,38 @@ aenderung: task/E8-farbendieb (PR #67)
 
 ## Worum es geht
 
-Spieler 1 hat keine Schlange und stiehlt mit dem Farbendieb. Die gestohlene Karte beginnt dann eine neue eigene Schlange (D17). Gefragt wird nur der Spieler, aus dessen Schlange gestohlen wird, auch wenn ein anderer Spieler Farbenschutz hält (D33). Geprüft werden Abwehr, Durchlassen und der Diebstahl der letzten Karte einer Schlange.
+Das Beispiel der Website zum Farbendieb (A7.1) wird am Entwicklertisch mit echten Klicks nachgespielt. Spieler 1 nimmt KI-Gegner 1 eine Karte aus der Schlange und legt sie in seine eigene. Geprüft wird, was die Engine anbietet, wer gefragt wird, welche Ereignisse erscheinen und wie die Schlangen danach aussehen.
 
 ## Bestanden, wenn
 
-Am Anfang stehen 4 Knöpfe „FarbendiebSpielen“, alle mit Ziel „neueSchlange“. Beim Grün von KI-Gegner 1 hat KI-Gegner 1 die Knöpfe „abwehren mit Farbenschutz (farbenschutz-02)“ und „durchlassen“. Nach dem Abwehren melden die Ereignisse Abgewehrt und AnsageEntschieden „ohne Wirkung … → Ablagestapel von Spieler 1“, kein KartenVersetzt; KI-Gegner 1 behält Grün, Grün, Grün und hält 4 Karten, Spieler 1 hat keine Schlange. Nach dem Durchlassen liegt gruen-03 in schlange-3 von Spieler 1. Beim Blau von KI-Gegner 2 wird nur KI-Gegner 2 gefragt; nach dem Durchlassen nennt KartenVersetzt „aufgelöst: schlange-2“, und KI-Gegner 2 hat keine Schlange mehr.
+Am Anfang stehen genau 6 Knöpfe „FarbendiebSpielen“ und keiner „SonderkarteWirkungslosAblegen“. Nach dem Diebstahl von gelb-01 an Stelle 2 hat nur KI-Gegner 1 den Knopf „Reagieren: durchlassen“. Danach meldet KartenVersetzt „gelb-01: schlange-2 von KI-Gegner 1 (spieler-2), Stelle 1 → schlange-1 von Spieler 1 (spieler-1), Stelle 2“, Spieler 1 hat Gelb, Gelb, Gelb mit 3 Punkten im Zwischenstand, KI-Gegner 1 nur noch Blau, der Farbendieb liegt auf dem Ablagestapel von Spieler 1. Alle Invarianten sind erfüllt, die Konsole zeigt keinen Fehler.
 
 ## Fehlgeschlagen, wenn
 
-Ein Ziel ausser „neueSchlange“ angeboten wird, beim Blau auch KI-Gegner 1 gefragt wird, nach der Abwehr eine Karte versetzt ist oder der Farbendieb nicht auf dem Ablagestapel von Spieler 1 liegt, die neue Schlange keine Id hat oder die leer gestohlene Schlange stehen bleibt.
+Eine andere Zahl von Farbendieb-Knöpfen erscheint, ein Knopf eine neue Schlange oder eine fremde Schlange als Ziel nennt, KartenVersetzt fehlt oder eine andere Stelle nennt, das Gelb an einer anderen Stelle liegt, der Zwischenstand nicht 3 zeigt oder eine Invariante verletzt ist.
 
 ## Vorbedingungen
 
 | Was | Wert |
 |---|---|
 | Anwendung | Testhook-Build (`npm run build:testhooks`), ausgeliefert mit `vite preview --outDir dist-testhooks`, Stand ab Commit `bb19f19` |
-| Ausgangslage prüfen | Die Seite zeigt „Szenario farbendieb-abwehr“ und „Schritt 0“ |
+| Ausgangslage prüfen | Die Seite zeigt die Überschrift „Szenario farbendieb“ und „Schritt 0“ |
 
 ## Testdaten
 
-Szenario `farbendieb-abwehr`: drei Spieler. Spieler 1 hält farbendieb-01 und hat keine Schlange; KI-Gegner 1 hat gruen-03, gruen-04, gruen-01 und hält farbenschutz-02; KI-Gegner 2 hat nur blau-08 und keinen Farbenschutz.
+Szenario `farbendieb`: Spieler 1 hat die Schlange gelb-05, gelb-12 und den Farbendieb farbendieb-02 auf der Hand; KI-Gegner 1 hat die Schlange blau-04, gelb-01 und keinen Farbenschutz.
 
 ## Schritte
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Browser, 1280×900 | Adresse öffnen | `http://localhost:<port>/dev?szenario=farbendieb-abwehr` | „FarbendiebSpielen (4)“; im Tooltip jedes Knopfs `"ziel":{"art":"neueSchlange"}` |
-| 2 | Abschnitt „FarbendiebSpielen“ | ersten Knopf klicken (Tooltip `gruen-03`) | – | KarteAngesagt trifft KI-Gegner 1; zwei Knöpfe „Reagieren“ für spieler-2 |
-| 3 | Abschnitt „Reagieren“ | „abwehren mit Farbenschutz (farbenschutz-02)“ klicken | – | Abgewehrt, AnsageEntschieden ohne Wirkung; KI-Gegner 1: Hand (4), Schlange Grün ×3, Ablagestapel Farbenschutz; Spieler 1: „Schlangen: keine“, Ablagestapel Farbendieb |
-| 4 | oben | „Schritt zurück“ klicken, dann „Reagieren: durchlassen“ | – | KartenVersetzt gruen-03 nach schlange-3 von Spieler 1, Stelle 0 |
-| 5 | oben | „Von vorn“ klicken, dann den vierten Farbendieb-Knopf (Tooltip `blau-08`) | – | KarteAngesagt trifft KI-Gegner 2; nur „Reagieren: durchlassen“ für spieler-3 |
-| 6 | oben | „KI-Schritt“ klicken | – | KartenVersetzt blau-08 nach schlange-3, „aufgelöst: schlange-2“; KI-Gegner 2 „Schlangen: keine“ |
-| 7 | Browser, 390×844 Touch | Schritte 1 bis 3 mit Antippen wiederholen | – | dieselben Werte; Seite nicht breiter als 390 px |
-| 8 | Entwicklerwerkzeuge, Konsole | Fehler ablesen | – | keine Fehlermeldung |
+| 1 | Browser, 1280×900 | Adresse öffnen | `http://localhost:<port>/dev?szenario=farbendieb` | „Aktionen der Engine (18)“, darunter „FarbendiebSpielen (6)“ und „FarbkarteLegen (12)“ |
+| 2 | Abschnitt „FarbendiebSpielen“ | mit der Maus über jeden Knopf fahren und den Tooltip lesen | – | Quelle blau-04 oder gelb-01 aus schlange-2, Ziel schlange-1 an Stelle 0, 1 oder 2; kein „neueSchlange“ |
+| 3 | Abschnitt „FarbendiebSpielen“ | den Knopf klicken, dessen Tooltip `"karteId":"gelb-01"` und `"position":2` enthält | – | Ereignisse KarteAngesagt (trifft KI-Gegner 1) und AbwehrGefragt; einziger Knopf „Reagieren: durchlassen“ mit spieler-2 |
+| 4 | Abschnitt „Reagieren“ | „Reagieren: durchlassen“ klicken | – | Ereignisse KartenVersetzt und AnsageEntschieden wie unter „Bestanden, wenn“ |
+| 5 | Abschnitt „Spieler“ und „Wertung“ | Schlangen, Ablagestapel und Zwischenstand ablesen | – | Spieler 1: Sonnenblatt gelb-05, gelb-12, gelb-01; Ablagestapel Farbendieb; Zwischenstand Spieler 1 = 3; KI-Gegner 1: nur Wasserwirbel blau-04 |
+| 6 | Entwicklerwerkzeuge, Konsole | Fehler ablesen | – | keine Fehlermeldung |
 
 ## Nicht abgedeckte Grenzfälle
 
-Ein Bestohlener, der zwei Farbenschutz hält, wird nicht nachgespielt: Er kann nur einen spielen, das prüft E4. Ein Diebstahl, wenn Spieler 1 schon eine Schlange hat, steht in TF-DEV-026.
+Die Stellen 0 und 1 und das Blau als Beute werden hier nicht geklickt; sie prüfen die Engine-Tests `farbendieb.test.ts` („an eine beliebige Position: an Stelle %i …“). Tablet und Handy quer sind nicht nachgespielt, weil E8 die Oberfläche des Entwicklertischs nicht ändert und `npm run test:layout` sie misst.

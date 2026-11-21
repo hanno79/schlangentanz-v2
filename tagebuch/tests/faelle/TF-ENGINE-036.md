@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-034
+id: TF-ENGINE-036
 titel: Wird eine Regel des Farbendiebs im Code verfälscht, schlagen die Farbendieb-Tests fehl, auch der Ereignistest bei einem falschen Ziel im Ereignis.
 art: manuell
 regression: nein
