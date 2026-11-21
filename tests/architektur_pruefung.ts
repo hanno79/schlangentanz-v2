@@ -220,6 +220,23 @@ export function pruefeReinheit(datei: string, quelltext: string): Verstoss[] {
   return verstoesse
 }
 
+const werteNamen = (elemente: ts.NodeArray<ts.ImportSpecifier | ts.ExportSpecifier>) =>
+  elemente.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text)
+
+/** Die Namen der Werte, die ein Import oder `export … from` holt; `*` für einen Namensraum, `default` für den Standardexport. */
+export function geholteWerte(knoten: ts.ImportDeclaration | ts.ExportDeclaration): string[] {
+  if (ts.isExportDeclaration(knoten)) {
+    if (knoten.isTypeOnly) return []
+    return knoten.exportClause && ts.isNamedExports(knoten.exportClause) ? werteNamen(knoten.exportClause.elements) : ['*']
+  }
+  const klausel = knoten.importClause
+  if (klausel === undefined) return ['*']
+  if (klausel.isTypeOnly) return []
+  const gebunden = klausel.namedBindings
+  const benannt = gebunden === undefined ? [] : ts.isNamedImports(gebunden) ? werteNamen(gebunden.elements) : ['*']
+  return klausel.name ? ['default', ...benannt] : benannt
+}
+
 /** U3: Importe aus src/engine nur über src/engine/index.ts. `datei` ist relativ zur Projektwurzel. */
 export function pruefeEngineZugang(datei: string, quelltext: string): Verstoss[] {
   const verstoesse: Verstoss[] = []

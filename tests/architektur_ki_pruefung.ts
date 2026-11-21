@@ -16,6 +16,7 @@ import {
   ZEIT,
   aeusserer,
   besucheAlle,
+  geholteWerte,
   geschriebeneZiele,
   istDynamischerImport,
   istFreierWert,
@@ -54,23 +55,6 @@ function istWertausdruck(knoten: ts.Node): knoten is ts.Expression {
   if (ts.isImportDeclaration(knoten.parent) || ts.isExportDeclaration(knoten.parent)) return false
   if (ts.isIdentifier(knoten) && !istFreierWert(knoten)) return false
   return !inTypposition(knoten)
-}
-
-const werteNamen = (elemente: ts.NodeArray<ts.ImportSpecifier | ts.ExportSpecifier>) =>
-  elemente.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text)
-
-/** Die Namen der Werte, die ein Import oder `export … from` holt; `*` für einen Namensraum, `default` für den Standardexport. */
-function geholteWerte(knoten: ts.ImportDeclaration | ts.ExportDeclaration): string[] {
-  if (ts.isExportDeclaration(knoten)) {
-    if (knoten.isTypeOnly) return []
-    return knoten.exportClause && ts.isNamedExports(knoten.exportClause) ? werteNamen(knoten.exportClause.elements) : ['*']
-  }
-  const klausel = knoten.importClause
-  if (klausel === undefined) return ['*']
-  if (klausel.isTypeOnly) return []
-  const gebunden = klausel.namedBindings
-  const benannt = gebunden === undefined ? [] : ts.isNamedImports(gebunden) ? werteNamen(gebunden.elements) : ['*']
-  return klausel.name ? ['default', ...benannt] : benannt
 }
 
 /** Die Funktion hinter einem Namen, der sich nicht umhängen lässt: `function f` oder `const f = (…) => …`. */
