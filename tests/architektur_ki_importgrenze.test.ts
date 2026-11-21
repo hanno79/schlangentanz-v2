@@ -204,6 +204,10 @@ describe('P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4)'
     'src/entwicklung/benannt.html': '<script type="module" src="&sol;src/ki/strategien/zufallsKi.ts"></script>\n',
     'src/entwicklung/attribut.html': '<script data-label=">" type="module" src="/src/ki/strategien/zufallsKi.ts"></script>\n',
     'src/entwicklung/vorladen.html': '<link rel="modulepreload" href="/src/ki/strategien/zufallsKi.ts">\n',
+    // Codex, dritte Runde: doppeltes base (Vite nimmt das letzte), Zeilenumbruch und Prozentkodierung in URLs.
+    'src/entwicklung/globdoppelt.ts': "export const m = import.meta.glob('./*.ts', { base: './leer', 'b\\u0061se': '/src/ki/strategien', eager: true })\n",
+    'src/entwicklung/umbruch.html': '<script type="module" src="/sr&#10;c/ki/strategien/zufallsKi.ts"></script>\n',
+    'src/entwicklung/prozent.ts': importiere('../ki/strategien/%7AufallsKi.ts'),
     // Fehlalarm aus dem Review: nach den Ausschlüssen bleiben nur index.ts und strategie.ts.
     'src/entwicklung/globohne.ts': "export const m = import.meta.glob(['../ki/strategien/*.ts', '!../ki/strategien/{zufallsKi,hilfe}.ts'])\n",
   })
@@ -211,6 +215,7 @@ describe('P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4)'
     'scripts/dateiurl.mjs': importiere(pathToFileURL(join(umwege, 'src/ki/strategien/zufallsKi.ts')).href),
     // Vites Entwicklungsserver lädt unter /@fs/ jede Datei über ihren absoluten Pfad.
     'src/entwicklung/fs.html': `<script type="module" src="/@fs/${join(umwege, 'src/ki/strategien/zufallsKi.ts').split('\\').join('/').replace(/^\//, '')}"></script>\n`,
+    'src/entwicklung/fsprozent.html': `<script type="module" src="/@fs/${join(umwege, '%73rc/ki/strategien/zufallsKi.ts').split('\\').join('/').replace(/^\//, '')}"></script>\n`,
   })
   const gefunden = pruefeImportgrenze(umwege)
   const gemeldet = new Set(gefunden.map(({ datei }) => datei))
@@ -238,6 +243,10 @@ describe('P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4)'
     ['script mit > in einem anderen Attribut', 'src/entwicklung/attribut.html'],
     ['link rel=modulepreload', 'src/entwicklung/vorladen.html'],
     ['script src über /@fs/', 'src/entwicklung/fs.html'],
+    ['import.meta.glob mit zwei Schlüsseln base', 'src/entwicklung/globdoppelt.ts'],
+    ['script src mit Zeilenumbruch als Zeichenreferenz', 'src/entwicklung/umbruch.html'],
+    ['Import mit Prozentkodierung', 'src/entwicklung/prozent.ts'],
+    ['script src über /@fs/ mit Prozentkodierung', 'src/entwicklung/fsprozent.html'],
   ]
 
   it.each(faelle)('P0.3d: Umweg „%s“ wird gemeldet', (name, datei) => {
