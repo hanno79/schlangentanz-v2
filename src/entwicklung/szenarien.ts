@@ -4,6 +4,7 @@ import type { Baukasten } from '../engine/testing/szenario'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
+import { FRASS_SZENARIEN } from './szenarienFrass'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -226,6 +227,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...zugablaufSzenarien(),
   ...verdopplerSzenarien(),
   ...abwehrSzenarien(),
+  ...FRASS_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {
