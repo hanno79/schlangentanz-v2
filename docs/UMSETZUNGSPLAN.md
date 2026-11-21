@@ -583,8 +583,8 @@ bis E9.*
      wirkungslos ablegbar (A7.9, Beispiel 2).
   4. In einer gegnerischen Schlange ist sie abwehrbar.
   5. *Verschoben nach X2 (Orchestrator, 21.11.2026):* Die Zahl neu
-     entstandener Dreiergruppen für die Aufgabe „Schlangentanz" hängt an G4
-     (wessen Häutung zählt, eine oder zwei Häutungen) und gehört zu den Aufgaben.
+     entstandener Dreiergruppen für die Aufgabe „Schlangentanz" hängt an einer
+     offenen Regelfrage zu dieser Aufgabe und gehört deshalb zu X2.
 - **Grenzfälle:** Abschnitt am Schlangenende; Schlange mit genau 3 Farbkarten;
   Abschnitt von 6 abgelehnt; unveränderte Reihenfolge (F13); eine neue Gruppe
   entsteht nur zusammen mit einem Nachbarn ausserhalb des Abschnitts.
