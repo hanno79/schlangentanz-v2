@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ermittleEntscheider, werteSchlangen } from '../index'
 import type { FarbkarteLegenAktion, Spielzustand } from '../index'
 import type { Kartenwahl } from '../testing/szenario'
+import { schlangenKarten as ids } from './legen_hilfen'
 import { aktionen, fuehreAus, FUENF, grund, hand, MIT_SCHUTZ, tischMitHaenden as tisch, verletzteInvarianten as verletzt } from './zugablauf_hilfen'
 
 /*
@@ -25,10 +26,6 @@ function anlegen(zustand: Spielzustand, karteId: string, schlangenId: string, se
   )
   expect(passend, `FarbkarteLegen ${karteId} → ${schlangenId} ${seite} ist nicht aufgezählt`).toBeDefined()
   return passend!
-}
-
-function ids(zustand: Spielzustand, spieler: number, schlange = 0): string[] {
-  return zustand.spieler[spieler].schlangen[schlange].karten.map((karte) => karte.id)
 }
 
 const ROT: Kartenwahl[] = ['Rot']

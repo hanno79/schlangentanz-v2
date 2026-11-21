@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ermittleEntscheider, werteSchlangen } from '../index'
 import type { Spielzustand } from '../index'
 import type { Kartenwahl } from '../testing/szenario'
-import { alleLuecken, einfuegen, handkarte, luecken, mitEingefuegt, schlangenKarten } from './legen_hilfen'
+import { alleLuecken, einfuegen, handkarte, lege, luecken, mitEingefuegt, schlangenKarten, schlangenNamen } from './legen_hilfen'
 import {
   ablage,
   aktionen,
@@ -33,7 +33,7 @@ const BLOCKADE = 'Schlangenblockade'
 const MIT_BLOCKADE: Kartenwahl[] = [BLOCKADE, 'Blau', 'Rot', 'Gelb', 'Grün']
 
 function legeBlockade(zustand: Spielzustand, schlangenId: string, position: number) {
-  return fuehreAus(zustand, einfuegen(zustand, 'BlockadeLegen', handkarte(zustand, 0, BLOCKADE), schlangenId, position))
+  return lege(zustand, 'BlockadeLegen', BLOCKADE, schlangenId, position)
 }
 
 describe('E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange', () => {
@@ -59,7 +59,7 @@ describe('E5 Kriterium 3, A7.5/D9: an jede Stelle jeder Schlange', () => {
     expect(werteSchlangen(start.spieler[1].schlangen, false).gruppenPunkte).toBe(3)
     const angesagt = legeBlockade(start, 'schlange-1', 1).zustand
     const { zustand, ereignisse } = fuehreAus(angesagt, durchlassen(angesagt))
-    expect(zustand.spieler[1].schlangen[0].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))).toEqual(['Rot', BLOCKADE, 'Rot', 'Rot'])
+    expect(schlangenNamen(zustand, 1)).toEqual(['Rot', BLOCKADE, 'Rot', 'Rot'])
     expect(ereignisse).toEqual([
       expect.objectContaining({ typ: 'AnsageEntschieden', ohneWirkung: false, nach: { ort: 'Schlange', spielerIndex: 1, schlangenId: 'schlange-1', position: 1 } }),
     ])

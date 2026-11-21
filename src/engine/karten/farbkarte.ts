@@ -4,7 +4,7 @@ import { schlangenIdFuer } from '../state';
 import type { Spielkarte, Spielzustand } from '../types';
 import { entnehmeHandkarte, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
-import { findeSchlange } from './schlangenstelle';
+import { alleSchlangen, findeSchlange, gepruefteSchlange } from './schlangenstelle';
 
 /*
 A5, D9, D19: Eine Farbkarte beginnt eine neue eigene Schlange (höchstens zwei je
@@ -25,10 +25,8 @@ export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
   ziele(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): FarbkarteLegenAktion[] {
     const spieler = zustand.spieler[spielerIndex];
     const basis = { typ: 'FarbkarteLegen', spielerId: spieler.id, karteId: karte.id } as const;
-    const anEnden = zustand.spieler.flatMap((besitzer) =>
-      besitzer.schlangen.flatMap((schlange) =>
-        (['anfang', 'ende'] as const).map((seite): FarbkarteLegenAktion => ({ ...basis, ziel: { art: 'schlange', schlangenId: schlange.id, seite } })),
-      ),
+    const anEnden = alleSchlangen(zustand).flatMap(({ schlange }) =>
+      (['anfang', 'ende'] as const).map((seite): FarbkarteLegenAktion => ({ ...basis, ziel: { art: 'schlange', schlangenId: schlange.id, seite } })),
     );
     const neu: FarbkarteLegenAktion[] = spieler.schlangen.length < MAX_SCHLANGEN_PRO_SPIELER ? [{ ...basis, ziel: { art: 'neueSchlange' } }] : [];
     return [...neu, ...anEnden];
@@ -56,7 +54,7 @@ export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
       eigeneSchlangen(zustand, aktion.spielerId).push({ id: schlangenIdFuer(zustand.schlangenZaehler), karten: [karte], fusionen: [] });
       return zustand;
     }
-    const schlange = findeSchlange(zustand, ziel.schlangenId)!.schlange;
+    const { schlange } = gepruefteSchlange(zustand, ziel.schlangenId);
     if (ziel.seite === 'anfang') schlange.karten.unshift(karte);
     else schlange.karten.push(karte);
     return zustand;

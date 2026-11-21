@@ -41,8 +41,7 @@ function klicke(zustand: Spielzustand, ...wahlen: Wahl[]): { zustand: Spielzusta
 
 const ereignistypen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)
 const aktionstypen = (zustand: Spielzustand) => [...new Set(ermittleAktionen(zustand).map((aktion) => aktion.typ))]
-const namen = (zustand: Spielzustand, spieler: number, schlange = 0) =>
-  zustand.spieler[spieler].schlangen[schlange].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
+const namen = (zustand: Spielzustand, spieler: number) => zustand.spieler[spieler].schlangen[0].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
 const punkte = (zustand: Spielzustand, spieler: number) => werteSchlangen(zustand.spieler[spieler].schlangen, false).gruppenPunkte
 
 describe('E5: Szenarien zum Legen', () => {

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ermittleEntscheider, werteSchlangen } from '../index'
 import type { Spielzustand } from '../index'
 import type { Kartenwahl } from '../testing/szenario'
-import { alleLuecken, einfuegen, handkarte, luecken, mitEingefuegt, schlangenKarten } from './legen_hilfen'
+import { alleLuecken, einfuegen, handkarte, lege, luecken, mitEingefuegt, schlangenKarten, schlangenNamen } from './legen_hilfen'
 import {
   ablage,
   aktionen,
@@ -31,7 +31,7 @@ const RS = 'Regenbogenschlange'
 const MIT_RS: Kartenwahl[] = [RS, 'Blau', 'Rot', 'Gelb', 'Grün']
 
 function legeRs(zustand: Spielzustand, schlangenId: string, position: number) {
-  return fuehreAus(zustand, einfuegen(zustand, 'RegenbogenschlangeLegen', handkarte(zustand, 0, RS), schlangenId, position))
+  return lege(zustand, 'RegenbogenschlangeLegen', RS, schlangenId, position)
 }
 
 describe('E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange', () => {
@@ -65,7 +65,7 @@ describe('E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange', () => {
   it('A7.3 Beispiel 3: zwischen Rot-Rot und Braun-Braun gelegt ergibt sie 4 Punkte (zwei braune Karten zu je 2)', () => {
     const start = tisch([MIT_RS, FUENF]).schlange(0, ['Rot', 'Rot', 'Braun', 'Braun']).zustand()
     const { zustand } = legeRs(start, 'schlange-1', 2)
-    expect(zustand.spieler[0].schlangen[0].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))).toEqual(['Rot', 'Rot', RS, 'Braun', 'Braun'])
+    expect(schlangenNamen(zustand, 0)).toEqual(['Rot', 'Rot', RS, 'Braun', 'Braun'])
     expect(werteSchlangen(zustand.spieler[0].schlangen, false).gruppenPunkte).toBe(4)
   })
 
@@ -81,7 +81,7 @@ describe('E5 Kriterium 2, A7.3/D9: an jede Stelle jeder Schlange', () => {
     const start = tisch([MIT_RS, FUENF]).schlange(0, ['Blau', RS, RS, 'Gelb']).zustand()
     const rs = handkarte(start, 0, RS)
     const { zustand } = legeRs(start, 'schlange-1', 3)
-    expect(zustand.spieler[0].schlangen[0].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))).toEqual(['Blau', RS, RS, RS, 'Gelb'])
+    expect(schlangenNamen(zustand, 0)).toEqual(['Blau', RS, RS, RS, 'Gelb'])
     expect(schlangenKarten(zustand, 0)[3]).toBe(rs)
     expect(verletzt(zustand)).toEqual([])
   })
