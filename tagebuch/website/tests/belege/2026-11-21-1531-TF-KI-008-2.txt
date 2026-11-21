@@ -1,0 +1,481 @@
+// @vitest-environment node
+// Prüferprobe K2, vorübergehend; wird nach dem Lauf entfernt.
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall, pruefeAktion, werteSchlangen } from '../src/engine'
+import type { SpielAktion, Spielzustand } from '../src/engine'
+import { baukasten } from '../src/engine/testing/szenario'
+import type { Schlangenglied } from '../src/engine/testing/szenario'
+import { kiWahl } from '../src/ki/schritt'
+import { bestimmeZustand, sichtFuer, simuliere } from '../src/ki/sicht'
+import type { Sicht, Stellung } from '../src/ki/sicht'
+import type { Ki } from '../src/ki/strategien/strategie'
+import { erstelleSolideKi } from '../src/ki/strategien/solideKi'
+import { erstelleZufallsKi } from '../src/ki/strategien/zufallsKi'
+import { planeZug } from '../src/ki/strategien/zugsuche'
+
+import { appendFileSync } from 'node:fs'
+const LOG = process.env.PRUEFER_LOG ?? 'pruefer.log'
+const log = (...teile: unknown[]) => appendFileSync(LOG, ['PRUEFER', ...teile].join(' ') + String.fromCharCode(10))
+
+/** Eigener Zufall, unabhängig von erzeugeZufall/mischeDeck: LCG. */
+function lcg(saat: number) {
+  let s = (saat * 2654435761 + 12345) >>> 0
+  return () => {
+    s = (Math.imul(s, 1664525) + 1013904223) >>> 0
+    return s / 4294967296
+  }
+}
+function fy<T>(liste: T[], z: () => number): T[] {
+  const a = [...liste]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(z() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+/** Eigene Störung des Verdeckten für Spieler `fuer`. */
+function stoere(zustand: Spielzustand, fuer: number, saat: number): Spielzustand {
+  const z = lcg(saat)
+  const neu = structuredClone(zustand)
+  const fremde = neu.spieler.filter((_, i) => i !== fuer)
+  const pool = fy([...fremde.flatMap((s) => s.hand), ...neu.nachziehstapel].reverse(), z)
+  for (const s of fremde) s.hand = pool.splice(0, s.hand.length)
+  neu.nachziehstapel = pool
+  const mit = fremde.filter((s) => s.geheimeAufgabe !== null)
+  const aufg = fy([...mit.map((s) => s.geheimeAufgabe!), ...neu.aufgabenStapel], z)
+  for (const s of mit) s.geheimeAufgabe = aufg.splice(0, 1)[0]
+  neu.aufgabenStapel = aufg
+  for (const s of fremde) s.geheimeAufgabeErfuellt = !s.geheimeAufgabeErfuellt
+  return neu
+}
+
+const gruppenzahl = (z: Spielzustand, sitz: number) =>
+  werteSchlangen(z.spieler[sitz].schlangen, z.erweiterung).schlangen.reduce((s, sch) => s + sch.gruppen.length, 0)
+const endpunkte = (z: Spielzustand, sitz: number) => berechneEndwertung(z).spieler[sitz].summe
+const istKarte = (a: SpielAktion) => a.typ !== 'ZugBeenden' && a.typ !== 'Reagieren' && a.typ !== 'UeberhandAbwerfen'
+
+interface Befund {
+  partien: number
+  siege: number
+  alleinSiege: number
+  punkteSolide: number
+  punkteZufall: number
+  zufallSitze: number
+  schritte: number
+  maxMs: number
+  summeMs: number
+  maxBew: number
+  ueber1s: number
+  wirkungslos: string[]
+  wirkungslosOhneAlternative: number
+  grubeSofortOhne: string[]
+  grubeSpaeterOhne: string[]
+  gruben: number
+  fusionen: number
+  fusionSenkt: string[]
+  regenbogenFremd: string[]
+  vollendbar: number
+  nichtVollendet: string[]
+  verdoppler: number
+  verdopplerZweiterLeer: string[]
+  zweiteKarteVerschenkt: string[]
+  unerlaubt: number
+  zaehlerAbweichung: number
+  positionen: Array<{ zustand: Spielzustand; sitz: number }>
+}
+
+function neuerBefund(): Befund {
+  return {
+    partien: 0, siege: 0, alleinSiege: 0, punkteSolide: 0, punkteZufall: 0, zufallSitze: 0, schritte: 0, maxMs: 0, summeMs: 0, maxBew: 0, ueber1s: 0,
+    wirkungslos: [], wirkungslosOhneAlternative: 0, grubeSofortOhne: [], grubeSpaeterOhne: [], gruben: 0, fusionen: 0, fusionSenkt: [], regenbogenFremd: [],
+    vollendbar: 0, nichtVollendet: [], verdoppler: 0, verdopplerZweiterLeer: [], zweiteKarteVerschenkt: [], unerlaubt: 0, zaehlerAbweichung: 0, positionen: [],
+  }
+}
+
+function spiele(b: Befund, spielerzahl: number, erweiterung: boolean, saat: number, sitz: number) {
+  let z = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
+  const zufallsKis = Array.from({ length: spielerzahl }, (_, i) => erstelleZufallsKi(erzeugeZufall(saat * 31 + i + 5)))
+  const kiZufall = erzeugeZufall(saat * 17 + 999)
+  const tag = `P${spielerzahl}/${erweiterung ? 'E' : 'B'}/s${saat}/sitz${sitz}`
+  const meineGruben = new Map<string, number>()
+  let maxSchlange = 0
+  let vollendStart: { gruppen: number; besteEnd: number; startEnd: number; schritt: number } | null = null
+  let nachVerdoppler = false
+  let zweiterTeilzugWirkung = false
+  for (let schritt = 0; schritt < 5000 && z.partiephase !== 'Beendet'; schritt++) {
+    // schlangenZaehler aus öffentlicher Geschichte ableitbar?
+    for (const sp of z.spieler) for (const sch of sp.schlangen) maxSchlange = Math.max(maxSchlange, Number(/(\d+)$/.exec(sch.id)?.[1] ?? 0))
+    if (z.schlangenZaehler !== maxSchlange) b.zaehlerAbweichung++
+    const e = ermittleEntscheider(z)
+    if (e === null) break
+    const aktionen = ermittleAktionen(z)
+    let aktion: SpielAktion
+    if (e === sitz) {
+      if (aktionen.length > 1 && (schritt % 4 === 0 || aktionen[0].typ === 'Reagieren')) b.positionen.push({ zustand: z, sitz })
+      // Kriterium 1: Beginn eines Teilzugs ohne gespielte Farbkarte
+      if (z.zug.spielerIndex === sitz && z.zug.abschnitt === 'Ausspielen' && z.schwebend === null && z.zug.gespielteFarbkarten === 0 && z.zug.gespielteSonderkarten === 0 && vollendStart === null) {
+        const g = gruppenzahl(z, sitz)
+        const vollendend = aktionen.filter((a) => a.typ === 'FarbkarteLegen' || a.typ === 'RegenbogenschlangeLegen' || a.typ === 'FarbendiebSpielen').map((a) => anwendeAktion(z, a).zustand).filter((n) => gruppenzahl(n, sitz) > g)
+        if (vollendend.length > 0) vollendStart = { gruppen: g, besteEnd: Math.max(...vollendend.map((n) => endpunkte(n, sitz))), startEnd: endpunkte(z, sitz), schritt }
+      }
+      const t0 = performance.now()
+      const plan = planeZug(sichtFuer(z, e), structuredClone(aktionen), kiZufall)
+      const ms = performance.now() - t0
+      b.schritte++
+      b.summeMs += ms
+      b.maxMs = Math.max(b.maxMs, ms)
+      if (ms > 1000) b.ueber1s++
+      b.maxBew = Math.max(b.maxBew, plan.bewertungen)
+      const stelle = aktionen.findIndex((a) => JSON.stringify(a) === JSON.stringify(plan.aktion))
+      if (stelle < 0 || !pruefeAktion(z, aktionen[stelle]).erlaubt) b.unerlaubt++
+      aktion = aktionen[stelle]
+      if (aktion.typ === 'SonderkarteWirkungslosAblegen') {
+        const alternativen = aktionen.filter((a) => a.typ !== 'SonderkarteWirkungslosAblegen')
+        if (alternativen.length > 0) b.wirkungslos.push(`${tag} schritt ${schritt} teilzug ${z.zug.teilzug} karten F${z.zug.gespielteFarbkarten}/S${z.zug.gespielteSonderkarten} alternativen: ${[...new Set(alternativen.map((a) => a.typ))].join(',')} hand: ${z.spieler[sitz].hand.map((k) => k.id).join(' ')} ablegen: ${aktion.karteId}`)
+        else b.wirkungslosOhneAlternative++
+        if (nachVerdoppler) zweiterTeilzugWirkung = zweiterTeilzugWirkung || false
+      } else if (istKarte(aktion) && nachVerdoppler && z.zug.teilzug === 2) zweiterTeilzugWirkung = true
+      if (aktion.typ === 'FusionLegen') {
+        b.fusionen++
+        const vor = endpunkte(z, sitz)
+        const nach = endpunkte(anwendeAktion(z, aktion).zustand, sitz)
+        if (nach < vor) b.fusionSenkt.push(`${tag} schritt ${schritt}: ${vor} -> ${nach}`)
+      }
+      if (aktion.typ === 'SchlangengrubeSpielen') {
+        b.gruben++
+        meineGruben.set(aktion.karteId, schritt)
+      }
+      if (aktion.typ === 'RegenbogenschlangeLegen') {
+        const eigene = new Set(z.spieler[sitz].schlangen.map((s) => s.id))
+        if (!eigene.has(aktion.schlangenId) && aktionen.some((a) => a.typ === 'RegenbogenschlangeLegen' && eigene.has(a.schlangenId))) b.regenbogenFremd.push(`${tag} schritt ${schritt}`)
+      }
+      if (aktion.typ === 'VerdopplerSpielen') {
+        b.verdoppler++
+        nachVerdoppler = true
+        zweiterTeilzugWirkung = false
+      }
+      if (aktion.typ === 'ZugBeenden') {
+        // Kriterium 2 (Annäherung): hätte eine weitere Karte die eigenen Endpunkte erhöht, ohne einem Gegner zu nützen?
+        const weitere = aktionen.filter(istKarte).filter((a) => a.typ !== 'SonderkarteWirkungslosAblegen')
+        if (weitere.length > 0) {
+          let bestes = 0
+          let beste = ''
+          const vor = berechneEndwertung(z).spieler.map((s) => s.summe)
+          for (const a of weitere) {
+            const n = anwendeAktion(z, a).zustand
+            const nach = berechneEndwertung(n).spieler.map((s) => s.summe)
+            const gewinn = nach[sitz] - vor[sitz]
+            const gegnerNutzen = nach.some((p, i) => i !== sitz && p > vor[i])
+            if (!gegnerNutzen && gewinn > bestes) {
+              bestes = gewinn
+              beste = a.typ
+            }
+          }
+          if (bestes >= 2 && z.partiephase !== 'Laufend') b.zweiteKarteVerschenkt.push(`${tag} schritt ${schritt} letzter Zug: ${beste} +${bestes}`)
+          else if (bestes >= 3) b.zweiteKarteVerschenkt.push(`${tag} schritt ${schritt}: ${beste} +${bestes}`)
+        }
+        if (nachVerdoppler && z.zug.teilzug === 2) {
+          if (!zweiterTeilzugWirkung) b.verdopplerZweiterLeer.push(`${tag} schritt ${schritt}`)
+          nachVerdoppler = false
+        }
+      }
+    } else {
+      aktion = kiWahl(z, zufallsKis[e])!
+    }
+    const r = anwendeAktion(z, aktion)
+    for (const er of r.ereignisse) {
+      if (er.typ === 'GrubeOhneWirkung' && 'karteId' in er && meineGruben.has(er.karteId as string)) {
+        const gespielt = meineGruben.get(er.karteId as string)!
+        ;(gespielt === schritt ? b.grubeSofortOhne : b.grubeSpaeterOhne).push(`${tag} gespielt ${gespielt}, verfallen ${schritt}`)
+      }
+    }
+    z = r.zustand
+    // Kriterium 1: Ende des Teilzugs
+    if (vollendStart !== null && (z.zug.spielerIndex !== sitz || z.partiephase === 'Beendet' || z.zug.teilzug !== (z.zug.teilzug))) {
+      // erst bewerten, wenn der Spieler seinen Teilzug beendet hat
+    }
+    if (vollendStart !== null && aktion.spielerId === z.spieler[sitz].id && aktion.typ === 'ZugBeenden') {
+      b.vollendbar++
+      if (gruppenzahl(z, sitz) <= vollendStart.gruppen) {
+        b.nichtVollendet.push(`${tag} ab schritt ${vollendStart.schritt}: Endpunkte vorher ${vollendStart.startEnd}, nach eigenem Zug ${endpunkte(z, sitz)}, beste Vollendung allein ${vollendStart.besteEnd}`)
+      }
+      vollendStart = null
+    }
+  }
+  expect(z.partiephase, `${tag} endet`).toBe('Beendet')
+  const summen = berechneEndwertung(z).spieler.map((s) => s.summe)
+  b.partien++
+  const max = Math.max(...summen)
+  if (summen[sitz] === max) b.siege++
+  if (summen[sitz] === max && summen.filter((s) => s === max).length === 1) b.alleinSiege++
+  b.punkteSolide += summen[sitz]
+  summen.forEach((s, i) => {
+    if (i !== sitz) {
+      b.punkteZufall += s
+      b.zufallSitze++
+    }
+  })
+}
+
+function bericht(name: string, b: Befund) {
+  log(`== ${name}: ${b.partien} Partien, Siege ${b.siege} (allein ${b.alleinSiege}), Mittel solide ${(b.punkteSolide / b.partien).toFixed(2)}, Mittel Zufall ${(b.punkteZufall / b.zufallSitze).toFixed(2)}`)
+  log(`   Schritte ${b.schritte}, Zeit Mittel ${(b.summeMs / b.schritte).toFixed(1)} ms, max ${b.maxMs.toFixed(1)} ms, >1s ${b.ueber1s}, max Bewertungen ${b.maxBew}, unerlaubt ${b.unerlaubt}, Zählerabweichung ${b.zaehlerAbweichung}`)
+  log(`   wirkungslos mit Alternative ${b.wirkungslos.length}, ohne Alternative ${b.wirkungslosOhneAlternative}`)
+  for (const w of b.wirkungslos) log('     W', w)
+  log(`   Gruben ${b.gruben}, sofort ohne Wirkung ${b.grubeSofortOhne.length}, später verfallen ${b.grubeSpaeterOhne.length}`)
+  for (const w of [...b.grubeSofortOhne, ...b.grubeSpaeterOhne]) log('     G', w)
+  log(`   Fusionen ${b.fusionen}, senkend ${b.fusionSenkt.length}`)
+  for (const w of b.fusionSenkt) log('     F', w)
+  log(`   Regenbogen fremd trotz eigener ${b.regenbogenFremd.length}`)
+  log(`   vollendbar ${b.vollendbar}, nicht vollendet ${b.nichtVollendet.length}`)
+  for (const w of b.nichtVollendet) log('     V', w)
+  log(`   Verdoppler ${b.verdoppler}, zweiter Zug ohne Wirkung ${b.verdopplerZweiterLeer.length}`)
+  log(`   Zug beendet, obwohl weitere Karte ohne Gegnernutzen >=3 (>=2 im letzten Zug) gebracht hätte: ${b.zweiteKarteVerschenkt.length}`)
+  for (const w of b.zweiteKarteVerschenkt) log('     Z', w)
+}
+
+const BASIS = neuerBefund()
+
+describe('Prüfer K2', () => {
+  it('Turnier solide gegen Zufall, Basis-Spiel, 2/3/4 Spieler', () => {
+    const gesamt: Record<number, Befund> = { 2: neuerBefund(), 3: neuerBefund(), 4: neuerBefund() }
+    const plan: Array<[number, number]> = [
+      ...Array.from({ length: 12 }, (_, i) => [2, 9100 + i] as [number, number]),
+      ...Array.from({ length: 10 }, (_, i) => [3, 9200 + i] as [number, number]),
+      ...Array.from({ length: 10 }, (_, i) => [4, 9300 + i] as [number, number]),
+    ]
+    for (const [n, saat] of plan) {
+      const sitz = saat % n
+      spiele(gesamt[n], n, false, saat, sitz)
+    }
+    for (const n of [2, 3, 4]) bericht(`${n} Spieler`, gesamt[n])
+    const alle = neuerBefund()
+    for (const n of [2, 3, 4]) {
+      const g = gesamt[n]
+      for (const k of Object.keys(alle) as Array<keyof Befund>) {
+        const a = alle[k]
+        const v = g[k]
+        if (Array.isArray(a) && Array.isArray(v)) (a as unknown[]).push(...v)
+        else if (typeof a === 'number' && typeof v === 'number') (alle as unknown as Record<string, number>)[k] = k.startsWith('max') ? Math.max(a, v) : a + v
+      }
+    }
+    bericht('gesamt', alle)
+    BASIS.positionen.push(...alle.positionen)
+  }, 1_800_000)
+
+  it('Grenzfall: solide KI mit Erweiterung, 2/3/4 Spieler, je 2 Partien', () => {
+    const b = neuerBefund()
+    for (const n of [2, 3, 4]) for (const saat of [9400, 9401]) spiele(b, n, true, saat + n * 10, (saat + n) % n)
+    bericht('Erweiterung', b)
+  }, 1_800_000)
+
+  it('Kriterium 7 eigene Probe: Entscheidung bleibt bei eigener Störung des Verdeckten gleich', () => {
+    const stellungen = BASIS.positionen.filter((_, i) => i % 2 === 0).slice(0, 240)
+    let veraendert = 0
+    let abweichend = 0
+    let reaktionen = 0
+    let schluss = 0
+    let zweiterTeilzug = 0
+    let kiAbhaengig = 0
+    for (const [i, { zustand, sitz }] of stellungen.entries()) {
+      const gestoert = stoere(zustand, sitz, 500 + i)
+      if (JSON.stringify(gestoert) !== JSON.stringify(zustand)) veraendert++
+      if (ermittleAktionen(zustand)[0].typ === 'Reagieren') reaktionen++
+      if (zustand.partiephase !== 'Laufend') schluss++
+      if (zustand.zug.teilzug === 2) zweiterTeilzug++
+      const a = JSON.stringify(kiWahl(zustand, erstelleSolideKi(erzeugeZufall(i))))
+      const c = JSON.stringify(kiWahl(gestoert, erstelleSolideKi(erzeugeZufall(i))))
+      if (a !== c) abweichend++
+      const d = JSON.stringify(kiWahl(zustand, erstelleSolideKi(erzeugeZufall(i + 100000))))
+      if (a !== d) kiAbhaengig++
+    }
+    log(`K2.7 eigene Probe: ${stellungen.length} Stellungen, verändert ${veraendert}, abweichend ${abweichend}, Reaktionen ${reaktionen}, Schlussrunde ${schluss}, zweiter Teilzug ${zweiterTeilzug}; Wahl hängt vom KI-Zufall ab in ${kiAbhaengig}`)
+    expect(stellungen.length).toBeGreaterThanOrEqual(200)
+    expect(abweichend).toBe(0)
+  }, 1_800_000)
+
+  it('Spion-Probe: eine Strategie, die über Stellung und Sicht an fremde Hände und den Stapel will', () => {
+    const stellungen = BASIS.positionen.slice(0, 150)
+    let treffHand = 0
+    let erwartHand = 0
+    let treffStapel = 0
+    let erwartStapel = 0
+    let gemeinsameVerweise = 0
+    let fremdeHandInSicht = 0
+    let spionAbweichend = 0
+    let probenHand = 0
+    const echteObjekte = new WeakSet<object>()
+    const sammle = (w: unknown, ziel: WeakSet<object> | Set<object>) => {
+      const stapel: unknown[] = [w]
+      const gesehen = new Set<object>()
+      while (stapel.length > 0) {
+        const x = stapel.pop()
+        if (typeof x !== 'object' || x === null || gesehen.has(x)) continue
+        gesehen.add(x)
+        ziel.add(x)
+        for (const v of Object.values(x)) stapel.push(v)
+      }
+      return gesehen
+    }
+    for (const [i, { zustand, sitz }] of stellungen.entries()) {
+      sammle(zustand, echteObjekte)
+      const erreicht = new Set<object>()
+      /** Spion: liest, was immer Stellung und Sicht hergeben; wählt danach. */
+      const spion = (z: () => number): Ki => ({
+        name: 'Spion',
+        waehle(sicht: Sicht, aktionen) {
+          sammle(sicht, erreicht)
+          sammle(aktionen, erreicht)
+          const s: Stellung = simuliere(sicht, z)
+          sammle(s.sicht, erreicht)
+          sammle(Object.getOwnPropertyNames(s), erreicht)
+          const roh = JSON.parse(JSON.stringify(s)) as Record<string, unknown>
+          if (JSON.stringify(roh).includes('"hand"')) {
+            const andere = (s.sicht.spieler as unknown as Array<Record<string, unknown>>).filter((_, k) => k !== sicht.ich)
+            if (andere.some((sp) => 'hand' in sp)) fremdeHandInSicht++
+          }
+          // Weg 1: erratener Zustand direkt
+          const geraten = bestimmeZustand(sicht, z)
+          // Weg 2: bis ein Gegner entscheidet, dann seine Aktionen lesen
+          let weiter = s
+          for (let k = 0; k < 6 && weiter.entscheider === sicht.ich; k++) {
+            const ak = weiter.aktionen()
+            weiter = weiter.nach(ak.find((a) => a.typ === 'ZugBeenden') ?? ak[ak.length - 1])
+          }
+          const gegnerKarten = weiter.entscheider !== null && weiter.entscheider !== sicht.ich ? weiter.aktionen().flatMap((a) => ('karteId' in a ? [a.karteId] : [])) : []
+          sammle(weiter.sicht, erreicht)
+          const kennung = JSON.stringify([geraten.spieler.map((sp) => sp.hand.map((k) => k.id)), geraten.nachziehstapel[0]?.id, gegnerKarten])
+          let h = 0
+          for (const c of kennung) h = (h * 31 + c.charCodeAt(0)) >>> 0
+          ;(spion as unknown as { letzte?: Spielzustand }).letzte = geraten
+          letzterGeraten = geraten
+          return aktionen[h % aktionen.length]
+        },
+      })
+      let letzterGeraten: Spielzustand | null = null
+      const wahl = JSON.stringify(kiWahl(zustand, spion(erzeugeZufall(i))))
+      const g = letzterGeraten as unknown as Spielzustand
+      for (const v of erreicht) if (echteObjekte.has(v)) gemeinsameVerweise++
+      // Trefferquote erratener fremder Hände gegen den echten Zustand
+      const ungesehen = zustand.spieler.filter((_, k) => k !== sitz).reduce((s, sp) => s + sp.hand.length, 0) + zustand.nachziehstapel.length
+      zustand.spieler.forEach((sp, k) => {
+        if (k === sitz || sp.hand.length === 0) return
+        const echt = new Set(sp.hand.map((x) => x.id))
+        treffHand += g.spieler[k].hand.filter((x) => echt.has(x.id)).length
+        erwartHand += (g.spieler[k].hand.length * sp.hand.length) / ungesehen
+        probenHand++
+      })
+      if (zustand.nachziehstapel.length > 0) {
+        if (g.nachziehstapel[0]?.id === zustand.nachziehstapel[0].id) treffStapel++
+        erwartStapel += 1 / ungesehen
+      }
+      const gestoert = stoere(zustand, sitz, 7000 + i)
+      if (JSON.stringify(kiWahl(gestoert, spion(erzeugeZufall(i)))) !== wahl) spionAbweichend++
+    }
+    log(`Spion: ${stellungen.length} Stellungen, gemeinsame Verweise mit echtem Zustand ${gemeinsameVerweise}, fremde Hand in Sicht ${fremdeHandInSicht}`)
+    log(`Spion: Handtreffer ${treffHand} (Erwartung bei reinem Raten ${erwartHand.toFixed(1)}, ${probenHand} Hände), oberste Stapelkarte ${treffStapel} (Erwartung ${erwartStapel.toFixed(2)})`)
+    log(`Spion: Wahl ändert sich bei Störung des Verdeckten in ${spionAbweichend} von ${stellungen.length}`)
+    expect(gemeinsameVerweise).toBe(0)
+    expect(fremdeHandInSicht).toBe(0)
+    expect(spionAbweichend).toBe(0)
+  }, 1_800_000)
+})
+
+describe('Prüfer K2: KI-Zufall gleich Partiesaat (Entwicklertisch: erzeugeZufall(schritt))', () => {
+  it('Trefferquote des erratenen Zustands, wenn die KI-Saat der Partiesaat gleicht', () => {
+    for (const gleich of [true, false]) {
+      let treff = 0
+      let erwart = 0
+      let stapelTreff = 0
+      let stapelProben = 0
+      let proben = 0
+      for (let saat = 1; saat <= 30; saat++) {
+        const spielerzahl = 2 + (saat % 3)
+        let z = erstellePartie({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
+        const kis = Array.from({ length: spielerzahl }, (_, i) => erstelleZufallsKi(erzeugeZufall(saat * 13 + i)))
+        for (let schritt = 0; schritt < 400 && z.partiephase !== 'Beendet'; schritt++) {
+          const e = ermittleEntscheider(z)
+          if (e === null) break
+          if (e === 1 && schritt % 5 === 0) {
+            const g = bestimmeZustand(sichtFuer(z, 1), erzeugeZufall(gleich ? saat : saat + 50000))
+            const ungesehen = z.spieler.filter((_, k) => k !== 1).reduce((s2, sp) => s2 + sp.hand.length, 0) + z.nachziehstapel.length
+            z.spieler.forEach((sp, k) => {
+              if (k === 1) return
+              const echt = new Set(sp.hand.map((x) => x.id))
+              treff += g.spieler[k].hand.filter((x) => echt.has(x.id)).length
+              erwart += (g.spieler[k].hand.length * sp.hand.length) / Math.max(1, ungesehen)
+              proben += sp.hand.length
+            })
+            if (z.nachziehstapel.length > 0) {
+              stapelProben++
+              if (g.nachziehstapel.slice(0, 5).map((k) => k.id).join() === z.nachziehstapel.slice(0, 5).map((k) => k.id).join()) stapelTreff++
+            }
+          }
+          z = anwendeAktion(z, kiWahl(z, kis[e])!).zustand
+        }
+      }
+      log(`Saatkollision ${gleich ? 'KI-Saat = Partiesaat' : 'KI-Saat anders'}: fremde Handkarten richtig geraten ${treff} von ${proben} (Erwartung bei reinem Raten ${erwart.toFixed(1)}), oberste 5 Stapelkarten exakt ${stapelTreff} von ${stapelProben}`)
+    }
+  }, 600_000)
+})
+
+describe('Prüfer K2: Zeit in späten Stellungen', () => {
+  const farben = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'] as const
+  const bunt = (n: number, v: number): Schlangenglied[] => Array.from({ length: n }, (_, k) => farben[(Math.floor(k / 2) + v) % farben.length])
+  it('Farbendieb, Schlangenfrass, Schlangenhäutung in langen Schlangen, 4 Spieler mit Erweiterung', () => {
+    const fall = (saat: number, hand: Schlangenglied[], schluss: boolean) => {
+      const bau = baukasten({ spielerzahl: 4, erweiterung: true, zufall: erzeugeZufall(saat) })
+      for (let sp = 0; sp < 4; sp++) {
+        bau.schlange(sp, bunt(8, sp))
+        bau.schlange(sp, bunt(5, sp + 3))
+      }
+      bau.hand(1, hand as never)
+      if (schluss) bau.schlussrunde(3)
+      else bau.haendeAuffuellen()
+      return bau.amZug(1).zustand()
+    }
+    const haende: Schlangenglied[][] = [
+      ['Farbendieb', 'Schlangenfrass', 'Schlangenhäutung', 'Regenbogenschlange', 'Blau'],
+      ['Farbendieb', 'Farbendieb', 'Schlangenfrass', 'Schlangenfrass', 'Schlangenhäutung'],
+      ['Schlangenhäutung', 'Farbenfusion', 'Schlangenblockade', 'Verdoppler', 'Farbendieb'],
+    ]
+    let max = 0
+    for (const [h, hand] of haende.entries()) {
+      for (const schluss of [false, true]) {
+        const zustand = fall(4000 + h, hand, schluss)
+        const aktionen = ermittleAktionen(zustand)
+        const zeiten: number[] = []
+        let bew = 0
+        for (let rep = 0; rep < 3; rep++) {
+          const t0 = performance.now()
+          const plan = planeZug(sichtFuer(zustand, 1), aktionen, erzeugeZufall(rep))
+          zeiten.push(performance.now() - t0)
+          bew = Math.max(bew, plan.bewertungen)
+          expect(pruefeAktion(zustand, plan.aktion)).toEqual({ erlaubt: true })
+        }
+        {
+          const t0 = performance.now()
+          const ganz = kiWahl(zustand, erstelleSolideKi(erzeugeZufall(9)))
+          log(`   ganzer KI-Schritt über kiWahl (Aufzählen, Abschrift, Suche): ${(performance.now() - t0).toFixed(0)} ms, ${ganz?.typ}`)
+          zeiten.push(performance.now() - t0)
+        }
+        // ganzer Zug: Schritte nacheinander
+        let z = zustand
+        const zugZeiten: number[] = []
+        const ki = erzeugeZufall(77)
+        for (let k = 0; k < 8 && z.partiephase !== 'Beendet' && ermittleEntscheider(z) === 1; k++) {
+          const a = ermittleAktionen(z)
+          const t0 = performance.now()
+          const p = planeZug(sichtFuer(z, 1), a, ki)
+          zugZeiten.push(performance.now() - t0)
+          bew = Math.max(bew, p.bewertungen)
+          z = anwendeAktion(z, p.aktion).zustand
+        }
+        max = Math.max(max, ...zeiten, ...zugZeiten)
+        log(`Zeit Hand ${h} ${schluss ? 'Schlussrunde' : 'laufend'}: ${aktionen.length} Aktionen (Dieb ${aktionen.filter((a) => a.typ === 'FarbendiebSpielen').length}, Frass ${aktionen.filter((a) => a.typ === 'SchlangenfrassSpielen').length}, Häutung ${aktionen.filter((a) => a.typ === 'SchlangenhaeutungSpielen').length}), Schritt ms ${zeiten.map((t) => t.toFixed(0)).join('/')}, Zugschritte ms ${zugZeiten.map((t) => t.toFixed(0)).join('/')}, max Bewertungen ${bew}`)
+        expect(bew).toBeLessThanOrEqual(64)
+      }
+    }
+    log(`Zeit: höchster Schritt ${max.toFixed(0)} ms`)
+  }, 600_000)
+})

@@ -89,6 +89,10 @@ describe('P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest)',
     expect(eintraege, 'P0.3d: erwartet die Zufalls-KI in STRATEGIEN').toContain('zufallsKi')
   })
 
+  it('K2.9: der Test prüft auch die solide KI', () => {
+    expect(eintraege, 'K2.9: erwartet die solide KI in STRATEGIEN').toContain('solideKi')
+  })
+
   it.each(eintraege)(`P0.3d: %s entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht (Laufsaat ${LAUFSAAT})`, async (eintrag) => {
     const { geteilt, getrennt } = await vergleiche({ ...STRATEGIEN, eintrag })
 

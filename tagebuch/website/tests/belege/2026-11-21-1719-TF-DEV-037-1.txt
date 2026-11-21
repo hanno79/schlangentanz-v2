@@ -1,0 +1,118 @@
+== ki-dreiergruppe (2 Klicks, Schritt 2, Breite 1280,1280)
+   Erwartet: Der erste „KI-Schritt (solide)“ legt das Violett an ein Ende seiner Schlange: Violett, Violett, Violett, eine Gruppe mit 6 Punkten. Danach beendet er den Zug; den Farbenschutz legt er nicht wirkungslos ab.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Mondranke (violett-09) → schlange-1 anfang | KI-Schritt (solide): ZugBeenden
+   K2, Kriterium 1: KI-Gegner 1 ist am Zug und hat eine Schlange Violett, Violett. Auf der Hand hält er ein Violett, dazu Blau, Rot, Gelb und einen Farbenschutz. Erwartet: Der erste „KI-Schritt (solide)“ legt das Violett an ein Ende seiner Schlange: Violett, Violett, Violett, eine Gruppe mit 6 Punkten. Danach beendet er den Zug; den Farbenschutz legt er nicht wirkungslos ab.
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-2: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Violett×3 = 6, zusammen 6
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 11
+== ki-dreiergruppe-joker (3 Klicks, Schritt 3, Breite 1280,1280)
+   Erwartet: Er legt die Regenbogenschlange vor oder hinter die beiden grünen Karten: eine grüne Dreiergruppe mit 6 Punkten (die Regenbogenschlange bringt selbst keinen Punkt, A7.3). Eine Farbkarte darf er im selben Zug zusätzlich legen.
+   Verlauf: KI-Schritt (solide): RegenbogenschlangeLegen: Regenbogenschlange (regenbogenschlange-02) → schlange-1 · Stelle 0 | KI-Schritt (solide): FarbkarteLegen: Wurzelpfad (braun-01) → schlange-1 anfang | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-2: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Grün×3 = 6, zusammen 6; Joker: Regenbogenschlange (regenbogenschlange-02) als Grün
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 6
+== ki-dreiergruppe-ausnahme (2 Klicks, Schritt 2, Breite 1280,1280)
+   Erwartet: Das Rot hinten an die zweite Schlange vollendet eine rote Dreiergruppe aus Fusion, Rot, Rot, aber die Fusion zählt dann als Rot statt als Violett: 15 → 17 (+2). Das Grün an die grüne Gruppe bringt 15 → 18 (+3). Die KI legt das Grün, weil es nachweislich besser bewertet ist; danach steht ihr Zwischenstand auf 18.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Waldspross (gruen-09) → schlange-1 anfang | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-3: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Grün×4 = 12, zusammen 12
+   schlange-2: Gruppen Violett×4 = 6, zusammen 6; Joker: Regenbogenschlange (regenbogenschlange-03) als Violett, Farbenfusion (farbenfusion-03) als Violett
+   Vielfaltbonus: ohne Erweiterung; Kette 4, Bonus 5; Aufgaben: ohne Erweiterung; Summe 23
+== ki-farbe-und-sonderkarte (3 Klicks, Schritt 3, Breite 1280,1280)
+   Erwartet: In einem Zug spielt er beide Karten, in beliebiger Reihenfolge: das Blau an die blaue Schlange (Gruppe mit 3 Punkten) und die Regenbogenschlange an die braune (Gruppe mit 4 Punkten). Danach steht sein Zwischenstand auf 7.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Wasserwirbel (blau-09) → schlange-1 anfang | KI-Schritt (solide): RegenbogenschlangeLegen: Regenbogenschlange (regenbogenschlange-04) → schlange-2 · Stelle 0 | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-3: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Blau×3 = 3, zusammen 3
+   schlange-2: Gruppen Braun×3 = 4, zusammen 4; Joker: Regenbogenschlange (regenbogenschlange-04) als Braun
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 12
+== ki-regenbogen-eigene (3 Klicks, Schritt 3, Breite 1280,1280)
+   Erwartet: Er legt die Regenbogenschlange nicht in die Schlange von Spieler 1: Unter den Knöpfen „RegenbogenschlangeLegen“ gibt es solche mit schlange-2 (Spieler 1), gewählt wird keiner davon. Entweder legt er sie in seine eigene Schlange oder behält sie.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Wurzelpfad (braun-08) → neue Schlange | KI-Schritt (solide): RegenbogenschlangeLegen: Regenbogenschlange (regenbogenschlange-02) → schlange-3 · Stelle 0 | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-2: Gruppen Grün×5 = 15, zusammen 15
+   Vielfaltbonus: ohne Erweiterung; Kette 5, Bonus 5; Aufgaben: ohne Erweiterung; Summe 20
+   schlange-1: Gruppen Rot×4 = 4, zusammen 4
+   schlange-3: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-02) in keiner Gruppe
+   Vielfaltbonus: ohne Erweiterung; Kette 4, Bonus 0; Aufgaben: ohne Erweiterung; Summe 4
+== ki-fusion-senkt (2 Klicks, Schritt 2, Breite 1280,1280)
+   Erwartet: Die Engine bietet zwei Knöpfe „FusionLegen“ an; die KI wählt keinen. Sie spielt eine Farbkarte und beendet den Zug, ihre blaue Gruppe bleibt bei 3 Punkten.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Mondranke (violett-12) → neue Schlange | KI-Schritt (solide): ZugBeenden
+   K2, Kriterium 4: KI-Gegner 1 hat Blau, Blau, Blau (3 Punkte). Jede Farbenfusion, die er spielen kann, liegt auf zwei seiner blauen Karten; danach wären es nur noch zwei Plätze und 0 Punkte (A7.7, D30). Spieler 1 hat Rot, Gelb, also nichts zu fusionieren. Erwartet: Die Engine bietet zwei Knöpfe „FusionLegen“ an; die KI wählt keinen. Sie spielt eine Farbkarte und beendet den Zug, ihre blaue Gruppe bleibt bei 3 Punkten.
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-2: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Blau×3 = 3, zusammen 3
+   schlange-3: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 8
+== ki-grube-ohne-zug (2 Klicks, Schritt 2, Breite 1280,1280)
+   Erwartet: Die Engine bietet „SchlangengrubeSpielen“ auf Spieler 1 an, obwohl der keinen Zug mehr hat (D29). Die KI spielt sie nicht: Sie legt das Blau an ihre Schlange (Gruppe mit 3 Punkten), und mit ihrem „Zug beenden“ endet die Partie.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Wasserwirbel (blau-01) → schlange-1 anfang | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Die Partie ist beendet.
+   Die Partie ist beendet (A10); die Wertung steht unten.
+   Invarianten (alle erfüllt)
+   niemand, die Partie ist beendet (A10)
+   Gewonnen: Spieler 1 (8), KI-Gegner 1 (8)
+   schlange-2: Gruppen Rot×3 = 3, zusammen 3
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 8
+   schlange-1: Gruppen Blau×3 = 3, zusammen 3
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 8
+== ki-grube-schlussrunde (3 Klicks, Schritt 3, Breite 1280,1280)
+   Erwartet: Spielt KI-Gegner 1 die Schlangengrube, dann auf KI-Gegner 2, der dadurch seinen letzten Zug verliert (D21), nie auf Spieler 1 (D29: dort ohne Wirkung).
+   Verlauf: KI-Schritt (solide): SchlangengrubeSpielen: Schlangengrube (schlangengrube-02) → KI-Gegner 2 (spieler-3) | KI-Schritt (solide): Reagieren: durchlassen | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Die Partie ist beendet.
+   Die Partie ist beendet (A10); die Wertung steht unten.
+   Ausgesetzt: KI-Gegner 2 (spieler-3) setzt aus; schlangengrube-02 auf den Ablagestapel von KI-Gegner 1 (spieler-2)
+   Invarianten (alle erfüllt)
+   niemand, die Partie ist beendet (A10)
+   Gewonnen: KI-Gegner 2 (14)
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-2: Gruppen Grün×3 = 9, zusammen 9
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 14
+== ki-wirkungslos (2 Klicks, Schritt 2, Breite 1280,1280)
+   Erwartet: Er legt das Rot an seine Schlange (Gruppe mit 3 Punkten) und beendet den Zug. „SonderkarteWirkungslosAblegen“ wird angeboten, er wählt es nicht.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Feuerkeim (rot-06) → schlange-1 anfang | KI-Schritt (solide): ZugBeenden
+   K2, Kriterium 5: KI-Gegner 1 spielt den zweiten Zug nach einem Verdoppler. Er hält einen Verdoppler, der hier nur wirkungslos abgelegt werden kann (D23), einen Farbenschutz, der immer wirkungslos abgelegt werden darf (D25), und ein Rot zu seiner Schlange Rot, Rot. Erwartet: Er legt das Rot an seine Schlange (Gruppe mit 3 Punkten) und beendet den Zug. „SonderkarteWirkungslosAblegen“ wird angeboten, er wählt es nicht.
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-2: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Rot×3 = 3, zusammen 3
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 8
+== ki-verdoppler (5 Klicks, Schritt 5, Breite 1280,1280)
+   Erwartet: Im ersten Zug spielt er den Verdoppler und eine der beiden Farbkarten, die eine Gruppe vollendet, und beendet den Zug: Er zieht Violett und Braun, Teilzug 2 beginnt. Im zweiten Zug vollendet er mit der anderen Farbkarte die zweite Gruppe. Am Ende hat er Rot, Rot, Rot und Blau, Blau, Blau (6 Punkte), dann ist Spieler 1 dran.
+   Verlauf: KI-Schritt (solide): FarbkarteLegen: Feuerkeim (rot-12) → schlange-1 anfang | KI-Schritt (solide): VerdopplerSpielen: Verdoppler (verdoppler-01) | KI-Schritt (solide): ZugBeenden | KI-Schritt (solide): FarbkarteLegen: Wasserwirbel (blau-03) → schlange-2 anfang | KI-Schritt (solide): ZugBeenden
+   K2, Kriterium 6: KI-Gegner 1 hat zwei Schlangen, Rot, Rot und Blau, Blau. Er hält einen Verdoppler, ein Rot, ein Blau und zwei Gelb. Oben auf dem Nachziehstapel liegen Violett und Braun. Erwartet: Im ersten Zug spielt er den Verdoppler und eine der beiden Farbkarten, die eine Gruppe vollendet, und beendet den Zug: Er zieht Violett und Braun, Teilzug 2 beginnt. Im zweiten Zug vollendet er mit der anderen Farbkarte die zweite Gruppe. Am Ende hat er Rot, Rot, Rot und Blau, Blau, Blau (6 Punkte), dann ist Spieler 1 dran.
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-3: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-1: Gruppen Rot×3 = 3, zusammen 3
+   schlange-2: Gruppen Blau×3 = 3, zusammen 3
+   Vielfaltbonus: ohne Erweiterung; Kette 3, Bonus 5; Aufgaben: ohne Erweiterung; Summe 11
+== Saat 5 zu dritt (8 Klicks, Schritt 10, Breite 1280,1280)
+   Verlauf: FarbkarteLegen: Sonnenblatt (gelb-15) → neue Schlange | ZugBeenden | KI-Schritt (solide): FarbkarteLegen: Sonnenblatt (gelb-02) → neue Schlange | KI-Schritt (solide): ZugBeenden | KI-Schritt (solide): VerdopplerSpielen: Verdoppler (verdoppler-02) | KI-Schritt (solide): FarbkarteLegen: Wurzelpfad (braun-01) → neue Schlange | KI-Schritt (solide): ZugBeenden | KI-Schritt (solide): FarbkarteLegen: Mondranke (violett-11) → schlange-3 anfang | KI-Schritt (solide): RegenbogenschlangeLegen: Regenbogenschlange (regenbogenschlange-02) → schlange-3 · Stelle 1 | KI-Schritt (solide): ZugBeenden
+   KI-Schritt KI-Schritt (solide) Spieler 1 entscheidet; das ist ein Mensch.
+   Invarianten (alle erfüllt)
+   schlange-1: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-2: Gruppen keine, zusammen 0
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+   schlange-3: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-02) in keiner Gruppe
+   Vielfaltbonus: ohne Erweiterung; Kette: keine ab 3 Farbkarten; Aufgaben: ohne Erweiterung; Summe 0
+Konsolenfehler 0 []

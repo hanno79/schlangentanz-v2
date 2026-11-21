@@ -1,7 +1,7 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
 import { alleKartenorte, istVerdeckt } from './kartenorte';
-import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
+import type { Partiephase, Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
 Der Zugablauf (A5, A6, A7.6, A7.8, A10): Karten des Zuges zählen, Zug beenden,
@@ -207,9 +207,13 @@ export function mitspielerImUhrzeigersinn(zustand: Spielzustand, spielerIndex: n
 /**
  * A10, D21: Kommt der letzte Zug dieses Spielers in der Schlussrunde noch? Ja für
  * jeden, der nach dem Spieler am Zug und vor dem Auslöser sitzt; ist der Auslöser
- * selbst am Zug, für alle anderen. Nach Spielende für niemanden.
+ * selbst am Zug, für alle anderen. Nach Spielende für niemanden. Gelesen werden nur
+ * öffentliche Angaben; deshalb passt auch die Sicht eines Spielers (Plan K2).
  */
-function hatNochLetztenZug(zustand: Spielzustand, spielerIndex: number): boolean {
+export function hatNochLetztenZug(
+  zustand: { partiephase: Partiephase; schlussrundeAusloeser: number | null; zug: Pick<Zug, 'spielerIndex'>; spieler: readonly unknown[] },
+  spielerIndex: number,
+): boolean {
   const { partiephase, schlussrundeAusloeser: ausloeser, zug } = zustand;
   if (partiephase === 'Beendet' || ausloeser === null) return false;
   const anzahl = zustand.spieler.length;

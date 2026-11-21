@@ -1,0 +1,28 @@
+// @vitest-environment node
+// Prüferprobe K2: Grube ohne Wirkung gegen einen anderen erlaubten Zug; wird entfernt.
+import { expect, it } from 'vitest'
+import { appendFileSync } from 'node:fs'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erzeugeZufall } from '../src/engine'
+import { baukasten } from '../src/engine/testing/szenario'
+import { naechsterKiSchritt } from '../src/ki/schritt'
+import { erstelleSolideKi } from '../src/ki/strategien/solideKi'
+
+const LOG = process.env.PRUEFER_LOG ?? 'grube.log'
+
+it('Grube und Farbenschutz im letzten Zug, niemand hat mehr einen Zug', () => {
+  let z = baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(211) })
+    .schlange(1, ['Blau'])
+    .hand(1, ['Schlangengrube', 'Farbenschutz'])
+    .schlussrunde(0)
+    .amZug(1)
+    .zustand()
+  const angeboten = [...new Set(ermittleAktionen(z).map((a) => a.typ))]
+  const gespielt: string[] = []
+  for (let k = 0; k < 4 && z.partiephase !== 'Beendet' && ermittleEntscheider(z) === 1; k++) {
+    const a = naechsterKiSchritt(z, erstelleSolideKi(erzeugeZufall(1)))!
+    gespielt.push(a.typ + ('karteId' in a ? ':' + a.karteId : ''))
+    z = anwendeAktion(z, a).zustand
+  }
+  appendFileSync(LOG, `ANGEBOTEN ${angeboten.join(',')} GESPIELT ${gespielt.join(' > ')}` + String.fromCharCode(10))
+  expect(gespielt[0]).not.toContain('SchlangengrubeSpielen')
+})
