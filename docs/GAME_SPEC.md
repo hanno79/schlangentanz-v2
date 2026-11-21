@@ -760,7 +760,7 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026); C19 teilweise (Farbenfusion, E7); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
@@ -772,8 +772,7 @@ laufenden Spiel beobachtet.
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
 | C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
-| C16 | Farbenfusion | die zwei Farbkarten liegen unter der Fusion; wird sie entfernt, liegen beide wieder einzeln an ihrer Stelle (A7.7, A7.4) | die zwei Farbkarten kommen auf den Ablagestapel, nur ihre Punktsumme bleibt gespeichert; beim Entfernen kehren sie nicht zurück | `src/engine/kartenwirkungen.ts` (`spieleFarbenfusion`), `src/engine/zugHelfer.ts` (`bereinigeFarbenfusionen`) |
-| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle; eine neue Schlange beginnt man nur für sich, beim Gegner nur an eine bestehende Schlange (A5, D9, D19) | Farbkarte, Farbenfusion und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
+| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle; eine neue Schlange beginnt man nur für sich, beim Gegner nur an eine bestehende Schlange (A5, D9, D19) | Farbkarte und Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
 | C20 | Zeitpunkt der Aufgabenprüfung | eine Aufgabe kann erfüllt werden, sobald die Bedingung gilt und der Spieler am Zug ist (A9) | geprüft wird nur einmal am Ende der Ausspielphase | `src/engine/turnState.ts` (`beendeAufgabenpruefung`) |
 | C21 | Farbwechsler | „Es gelten auch Reihen" (A9) | geprüft werden vier verschiedene Einzelkarten direkt nacheinander | `src/engine/aufgabenPruefung.ts` (`pruefeFarbwechsler`) |
 | C23 | Symmetriemeister | „min. 8 Karten, erste Hälfte Spiegelbild der zweiten" (A9); gerade Länge und Sonderkarten sagt die Website nicht | verlangt gerade Länge und ausschliesslich Farbkarten (Auslegung offen, Umsetzungsplan Frage G6) | `src/engine/aufgabenPruefung.ts` (`pruefeSymmetriemeister`) |
