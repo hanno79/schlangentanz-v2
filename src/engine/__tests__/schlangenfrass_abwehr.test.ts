@@ -1,0 +1,192 @@
+import { describe, expect, it } from 'vitest'
+import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
+import type { SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import type { Kartenwahl } from '../testing/szenario'
+import {
+  ablage,
+  aktionen,
+  durchlassen,
+  ereignisseVom,
+  farbkarte,
+  folge,
+  FUENF,
+  fuehreAus,
+  hand,
+  MIT_SCHUTZ,
+  reaktion,
+  tischMitHaenden as tisch,
+  verletzteInvarianten,
+  zugBeenden,
+} from './zugablauf_hilfen'
+
+/*
+E6, Schlangenfrass c) und die Abwehr (A6 Beispiel 2, A6 Timing, A7.2, D15,
+D33, B2): Jeder betroffene Spieler entscheidet einmal, im Uhrzeigersinn ab dem
+Angreifer, auch wenn beide Karten von ihm sind. Wer abwehrt, behält seine
+Karten; die übrigen werden gefressen, erst wenn alle entschieden haben. Den
+Reaktionsablauf selbst prüft `reaktion.test.ts` (E4).
+*/
+
+const MIT_FRASS: Kartenwahl[] = ['Schlangenfrass', 'Blau', 'Rot', 'Gelb', 'Grün']
+
+/** Die aufgezählte Option c), die genau diese Karten frisst. */
+function frassAuf(zustand: Spielzustand, ...karteIds: string[]): SchlangenfrassSpielenAktion {
+  const gesucht = [...karteIds].sort().join(',')
+  const passend = aktionen(zustand, 'SchlangenfrassSpielen').find(
+    (aktion): aktion is SchlangenfrassSpielenAktion =>
+      aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'gegnerischeKarten' && aktion.ziele.map((ziel) => ziel.karteId).sort().join(',') === gesucht,
+  )
+  expect(passend, `Schlangenfrass c) auf ${karteIds.join(', ')} ist nicht aufgezählt`).toBeDefined()
+  return passend!
+}
+
+function ids(zustand: Spielzustand, spieler: number, nummer = 0): string[] {
+  return zustand.spieler[spieler].schlangen[nummer]?.karten.map((karte) => karte.id) ?? []
+}
+
+const abwehren = (zustand: Spielzustand): SpielAktion => reaktion(zustand, true)
+
+/**
+ * A6 Beispiel 2 am Tisch: Spieler A (Index 0) frisst je eine Karte von B (1)
+ * und C (2). Beide halten einen Farbenschutz, damit jeder wählen kann.
+ */
+function beispielZwei() {
+  const start = tisch([MIT_FRASS, MIT_SCHUTZ, MIT_SCHUTZ]).schlange(1, ['Blau', 'Blau', 'Blau']).schlange(2, ['Gelb', 'Gelb', 'Gelb']).zustand()
+  const vonB = ids(start, 1)[1]
+  const vonC = ids(start, 2)[0]
+  const frass = start.spieler[0].hand[0].id
+  const schutz = [start.spieler[1].hand[0].id, start.spieler[2].hand[0].id]
+  return { start, vonB, vonC, frass, schutz, ansage: frassAuf(start, vonB, vonC) }
+}
+
+describe('A6 Beispiel 2: Schlangenfrass mit mehreren Zielen', () => {
+  it('A6 Beispiel 2: A sagt an, je eine Karte von B und C; zuerst entscheidet B, dann C; bis dahin wird nichts gefressen', () => {
+    const { start, vonB, vonC, frass, ansage } = beispielZwei()
+    const angesagt = fuehreAus(start, ansage)
+    expect(angesagt.ereignisse).toEqual([
+      { typ: 'KarteAngesagt', spielerIndex: 0, karteId: frass, ansage, betroffene: [1, 2] },
+      { typ: 'AbwehrGefragt', spielerIndex: 1, karteId: frass },
+    ])
+    expect(ermittleEntscheider(angesagt.zustand)).toBe(1)
+    const nachB = fuehreAus(angesagt.zustand, durchlassen(angesagt.zustand))
+    expect(nachB.ereignisse).toEqual([{ typ: 'AbwehrGefragt', spielerIndex: 2, karteId: frass }])
+    expect(ermittleEntscheider(nachB.zustand)).toBe(2)
+    expect(ids(nachB.zustand, 1), 'A6 Timing: erst nach allen Reaktionen tritt der Effekt ein').toEqual(ids(start, 1))
+    expect(ids(nachB.zustand, 2)).toEqual(ids(start, 2))
+    expect(ids(nachB.zustand, 1)).toContain(vonB)
+    expect(ids(nachB.zustand, 2)).toContain(vonC)
+  })
+
+  it.each([
+    ['niemand wehrt ab: beide Karten werden gefressen', false, false],
+    ['nur B wehrt ab: seine Karte bleibt liegen, die von C wird trotzdem entfernt', true, false],
+    ['nur C wehrt ab: seine Karte bleibt liegen, die von B wird entfernt', false, true],
+    ['beide wehren ab: keine Karte wird gefressen', true, true],
+  ])('A6 Beispiel 2/E6 Kriterium 4: %s', (_fall, bWehrtAb, cWehrtAb) => {
+    const { start, vonB, vonC, frass, schutz, ansage } = beispielZwei()
+    const { zustand, ereignisse } = folge(start, () => ansage, bWehrtAb ? abwehren : durchlassen, cWehrtAb ? abwehren : durchlassen)
+    const abgewehrt = [...(bWehrtAb ? [1] : []), ...(cWehrtAb ? [2] : [])]
+    expect(ereignisseVom(ereignisse, 'AnsageEntschieden')).toEqual([
+      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: frass, abgewehrt, ohneWirkung: bWehrtAb && cWehrtAb, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+    ])
+    expect(ids(zustand, 1).includes(vonB), 'Karte von B liegt noch').toBe(bWehrtAb)
+    expect(ids(zustand, 2).includes(vonC), 'Karte von C liegt noch').toBe(cWehrtAb)
+    expect(ids(zustand, 1)).toHaveLength(bWehrtAb ? 3 : 2)
+    expect(ids(zustand, 2)).toHaveLength(cWehrtAb ? 3 : 2)
+    // A6 Beispiel 2, Punkt 4: Schlangenfrass und gefressene Karten auf den Ablagestapel von A, Farbenschutz auf den seines Spielers.
+    expect(ablage(zustand, 0)).toEqual([frass, ...(bWehrtAb ? [] : [vonB]), ...(cWehrtAb ? [] : [vonC])])
+    expect(ablage(zustand, 1)).toEqual(bWehrtAb ? [schutz[0]] : [])
+    expect(ablage(zustand, 2)).toEqual(cWehrtAb ? [schutz[1]] : [])
+    expect(verletzteInvarianten(zustand)).toEqual([])
+  })
+
+  it('A6 Beispiel 2, Punkt 5: A füllt am Ende seines Zuges auf; B und C, die abgewehrt haben, erst zu Beginn ihres nächsten Zuges', () => {
+    const { start, ansage } = beispielZwei()
+    const abgewehrt = folge(start, () => ansage, abwehren, abwehren).zustand
+    expect([hand(abgewehrt, 1).length, hand(abgewehrt, 2).length]).toEqual([4, 4])
+    const { zustand, ereignisse } = folge(abgewehrt, farbkarte, zugBeenden)
+    expect(ereignisseVom(ereignisse, 'KartenGezogen')).toEqual([
+      { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 2 },
+      { typ: 'KartenGezogen', spielerIndex: 1, anzahl: 1 },
+    ])
+    expect(hand(zustand, 2), 'C füllt erst in seinem eigenen Zug auf').toHaveLength(4)
+  })
+})
+
+describe('D15/F2: zwei Karten desselben Spielers', () => {
+  function zweiVonB() {
+    const start = tisch([MIT_FRASS, MIT_SCHUTZ, MIT_SCHUTZ]).schlange(1, ['Blau', 'Rot', 'Gelb']).schlange(2, ['Grün']).zustand()
+    const [blau, , gelb] = ids(start, 1)
+    return { start, blau, gelb, ansage: frassAuf(start, blau, gelb) }
+  }
+
+  it('D15/A6: frisst c) zwei Karten von B, entscheidet B einmal; C ist nicht betroffen', () => {
+    const { start, ansage } = zweiVonB()
+    const angesagt = fuehreAus(start, ansage)
+    expect(ereignisseVom(angesagt.ereignisse, 'KarteAngesagt')[0].betroffene).toEqual([1])
+    expect(ereignisseVom(angesagt.ereignisse, 'AbwehrGefragt')).toHaveLength(1)
+  })
+
+  it('D15: ein Farbenschutz wehrt den ganzen Schlangenfrass für B ab, beide Karten bleiben liegen', () => {
+    const { start, ansage } = zweiVonB()
+    const { zustand, ereignisse } = folge(start, () => ansage, abwehren)
+    expect(ids(zustand, 1)).toEqual(ids(start, 1))
+    expect(ereignisseVom(ereignisse, 'Abgewehrt')).toHaveLength(1)
+    expect(ereignisseVom(ereignisse, 'AnsageEntschieden')[0]).toMatchObject({ abgewehrt: [1], ohneWirkung: true })
+    expect(ablage(zustand, 0)).toEqual([ansage.karteId])
+    expect(hand(zustand, 1), 'D15: nur ein Farbenschutz ist verbraucht').toHaveLength(4)
+  })
+
+  it('D15: lässt B durch, werden beide Karten gefressen', () => {
+    const { start, blau, gelb, ansage } = zweiVonB()
+    const { zustand } = folge(start, () => ansage, durchlassen)
+    expect(ids(zustand, 1)).toEqual([ids(start, 1)[1]])
+    expect(ablage(zustand, 0)).toEqual([ansage.karteId, blau, gelb])
+  })
+})
+
+describe('A6/D33: wer gefragt wird', () => {
+  it('A6: im Uhrzeigersinn ab dem Angreifer, auch wenn er nicht Spieler 1 ist', () => {
+    const start = tisch([FUENF, FUENF, MIT_FRASS, FUENF]).schlange(0, ['Rot']).schlange(1, ['Blau']).schlange(3, ['Gelb']).amZug(2).zustand()
+    const ansage = frassAuf(start, ids(start, 1)[0], ids(start, 3)[0])
+    const { ereignisse } = fuehreAus(start, ansage)
+    expect(ereignisseVom(ereignisse, 'KarteAngesagt')[0].betroffene).toEqual([3, 1])
+    expect(ereignisseVom(ereignisse, 'AbwehrGefragt')).toEqual([{ typ: 'AbwehrGefragt', spielerIndex: 3, karteId: ansage.karteId }])
+  })
+
+  it('D33: ein Betroffener ohne Farbenschutz wird gefragt und kann nur durchlassen', () => {
+    const start = tisch([MIT_FRASS, FUENF]).schlange(1, ['Blau', 'Rot']).zustand()
+    const angesagt = fuehreAus(start, frassAuf(start, ...ids(start, 1))).zustand
+    expect(ermittleEntscheider(angesagt)).toBe(1)
+    expect(ermittleAktionen(angesagt)).toEqual([{ typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: null }])
+  })
+
+  it('A6/D10: a) und b) treffen keinen Mitspieler: niemand wird gefragt, auch wenn jeder Farbenschutz hält', () => {
+    const start = tisch([MIT_FRASS, MIT_SCHUTZ, MIT_SCHUTZ]).schlange(0, ['Rot', 'Schlangenblockade', 'Rot']).schlange(1, ['Blau']).zustand()
+    const eigene = aktionen(start, 'SchlangenfrassSpielen').filter((aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option !== 'gegnerischeKarten')
+    expect(eigene).toHaveLength(4)
+    for (const aktion of eigene) {
+      const { zustand, ereignisse } = fuehreAus(start, aktion)
+      expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteGespielt'])
+      expect(zustand.schwebend).toBeNull()
+    }
+  })
+})
+
+describe('B2/A6: Ansage, Geheimnis, Speichern', () => {
+  it('B2: die Ansage nennt nur Karten, die offen in Schlangen liegen, keine Handkarte', () => {
+    const { start, ansage } = beispielZwei()
+    const { zustand, ereignisse } = fuehreAus(start, ansage)
+    const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
+    const genannt = JSON.stringify(ereignisse).match(/[a-z]+-\d\d/g) ?? []
+    expect(genannt.filter((id) => aufHand.has(id))).toEqual([])
+  })
+
+  it('A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt dort fort; das Ergebnis ist dasselbe', () => {
+    const { start, ansage } = beispielZwei()
+    const angesagt = folge(start, () => ansage, abwehren).zustand
+    const geladen = deserialisiere(serialisiere(angesagt))
+    expect(ermittleEntscheider(geladen)).toBe(2)
+    expect(folge(geladen, durchlassen).zustand).toEqual(folge(angesagt, durchlassen).zustand)
+  })
+})
