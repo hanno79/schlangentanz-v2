@@ -1,0 +1,234 @@
+import { appendFileSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
+const MESS = 'C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/E9-pruefer/messung.txt'
+const melde = (text: string) => appendFileSync(MESS, `${text}
+`)
+import { anwendeAktion, ermittleAktionen, erzeugeZufall, pruefeAktion } from '../index'
+import { pruefeAktionsform } from '../aktionen/pruefen'
+import type { Ereignis, SchlangenhaeutungSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import { erstellePartie } from '../state'
+import { pruefeInvarianten } from '../invarianten'
+import { gepruefteSchlange } from '../karten/schlangenstelle'
+import { naechsterKiSchritt } from '../../ki/schritt'
+import { erstelleZufallsKi } from '../../ki/strategien/zufallsKi'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
+import { ablage, durchlassen, fuehreAus, grund, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
+import { arten, haeutungAuf, haeutungen, haeutungId, ids, selbstGebaut, tisch } from './schlangenhaeutung_hilfen'
+
+/* Prüfskript des unabhängigen Prüfers für E9, nicht für den Commit. */
+
+const FARBEN = ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun', 'Violett'] as const
+const lang = (n: number) => Array.from({ length: n }, (_, i) => FARBEN[i % 6])
+
+function endlage(zustand: Spielzustand, aktion: SchlangenhaeutungSpielenAktion): string {
+  const karten = gepruefteSchlange(zustand, aktion.schlangenId).schlange.karten.map((k) => k.id)
+  const abschnitt = new Set(aktion.neueReihenfolge)
+  const erste = karten.findIndex((id) => abschnitt.has(id))
+  karten.splice(erste, aktion.neueReihenfolge.length, ...aktion.neueReihenfolge)
+  const nachFarbe = gepruefteSchlange(zustand, aktion.schlangenId).schlange.karten
+  const farbe = new Map(nachFarbe.map((k) => [k.id, k.typ === 'Farbkarte' ? k.farbe : k.name]))
+  return `${aktion.schlangenId}:${karten.map((id) => farbe.get(id)).join('-')}`
+}
+
+describe('Prüfer E9: eigene Grenzfälle', () => {
+  it('G1: Häutung im zweiten Zug nach einem Verdoppler (A7.8) wirkt und zählt als Sonderkarte dieses Teilzugs', () => {
+    const start = tisch().schlange(0, ['Blau', 'Rot', 'Gelb']).amZug(0, 2).zustand()
+    expect(start.zug.teilzug).toBe(2)
+    const { zustand } = fuehreAus(start, haeutungAuf(start, 0, 0, ['Gelb', 'Rot', 'Blau']))
+    expect(arten(zustand, 0)).toEqual(['Gelb', 'Rot', 'Blau'])
+    expect(zustand.zug.teilzug).toBe(2)
+    expect(zustand.zug.gespielteSonderkarten).toBe(1)
+    expect(haeutungen(zustand)).toEqual([])
+    expect(verletzteInvarianten(zustand)).toEqual([])
+  })
+
+  it('G2: eine KI häutet die Schlange des Menschen; der Mensch wird gefragt und kann abwehren', () => {
+    const start = tischMitHaenden([['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Grün'], ['Schlangenhäutung', 'Blau', 'Rot', 'Gelb', 'Grün']], true)
+      .schlange(0, ['Blau', 'Rot', 'Gelb'])
+      .amZug(1)
+      .zustand()
+    const ansage = haeutungen(start).find((a) => a.schlangenId === 'schlange-1')!
+    const angesagt = fuehreAus(start, ansage)
+    expect(angesagt.ereignisse[0]).toMatchObject({ typ: 'KarteAngesagt', spielerIndex: 1, betroffene: [0] })
+    const abwehr = ermittleAktionen(angesagt.zustand).find((a) => a.typ === 'Reagieren' && a.farbenschutzId !== null)!
+    const { zustand, ereignisse } = fuehreAus(angesagt.zustand, abwehr)
+    expect(arten(zustand, 0)).toEqual(['Blau', 'Rot', 'Gelb'])
+    expect(ablage(zustand, 1)).toEqual([ansage.karteId])
+    expect(spieleNach(lageVon(angesagt.zustand), ereignisse)).toEqual(lageVon(zustand))
+  })
+
+  it('G3: zwei Häutungen auf der Hand verdoppeln die Aufzählung; jede Karte für sich', () => {
+    const zwei = tischMitHaenden([['Schlangenhäutung', 'Schlangenhäutung', 'Blau', 'Rot', 'Gelb'], ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot']], true)
+      .schlange(0, ['Blau', 'Rot', 'Gelb'])
+      .zustand()
+    const liste = haeutungen(zwei)
+    expect(liste).toHaveLength(10)
+    expect(new Set(liste.map((a) => a.karteId)).size).toBe(2)
+  })
+
+  it('G4: unförmige und unsinnige Häutungen werden mit deutschem Grund abgelehnt, ohne Absturz', () => {
+    const z = tisch().schlange(0, ['Blau', 'Rot', 'Gelb', 'Grün']).zustand()
+    const [b, r, g] = ids(z, 0)
+    expect(pruefeAktionsform({ ...selbstGebaut(z, 'schlange-1', []) })).toMatch(/neueReihenfolge ist ungültig/)
+    expect(pruefeAktionsform({ ...selbstGebaut(z, 'schlange-1', [b, r, g]), neueReihenfolge: [b, 3, g] })).toMatch(/neueReihenfolge ist ungültig/)
+    expect(grund(z, selbstGebaut(z, 'schlange-1', [haeutungId(z), r, g]))).toMatch(/liegt nicht in der Schlange/)
+    // Karte aus der Hand als Teil des Abschnitts
+    const handFarbe = z.spieler[0].hand.find((k) => k.typ === 'Farbkarte')!.id
+    expect(grund(z, selbstGebaut(z, 'schlange-1', [handFarbe, r, g]))).toMatch(/liegt nicht in der Schlange/)
+    // Farbkarte als gespielte Karte
+    const alsKarte = { ...selbstGebaut(z, 'schlange-1', [g, r, b]), karteId: handFarbe }
+    expect(pruefeAktion(z, alsKarte).erlaubt).toBe(false)
+  })
+
+  it('G5: eine nicht aufgezählte, aber erlaubte Anordnung (gleiche Farben vertauscht) wird angenommen und genau so gelegt', () => {
+    const start = tisch().schlange(0, ['Rot', 'Blau', 'Rot', 'Gelb']).zustand()
+    const [r1, b, r2, g] = ids(start, 0)
+    const aktion = selbstGebaut(start, 'schlange-1', [r2, r1, b, g]) as SchlangenhaeutungSpielenAktion
+    const aufgezaehlt = haeutungen(start).some((a) => a.neueReihenfolge.join() === aktion.neueReihenfolge.join())
+    expect(aufgezaehlt).toBe(false)
+    expect(pruefeAktion(start, aktion)).toEqual({ erlaubt: true })
+    const { zustand, ereignisse } = fuehreAus(start, aktion)
+    expect(ids(zustand, 0)).toEqual([r2, r1, b, g])
+    expect(spieleNach(lageVon(start), ereignisse)).toEqual(lageVon(zustand))
+  })
+
+  it('G6: Blockade vorn und Regenbogenschlange hinten, Abschnitt dazwischen; liegt schon etwas auf dem Ablagestapel, nennt KarteGespielt die nächste Stelle', () => {
+    const start = tisch().schlange(0, ['Schlangenblockade', 'Blau', 'Rot', 'Gelb', 'Regenbogenschlange']).ablage(0, ['Grün', 'Braun']).zustand()
+    const [blockade, , , , joker] = ids(start, 0)
+    const { zustand, ereignisse } = fuehreAus(start, haeutungAuf(start, 0, 1, ['Gelb', 'Blau', 'Rot']))
+    expect(arten(zustand, 0)).toEqual(['Schlangenblockade', 'Gelb', 'Blau', 'Rot', 'Regenbogenschlange'])
+    expect([ids(zustand, 0)[0], ids(zustand, 0)[4]]).toEqual([blockade, joker])
+    const gespielt = ereignisse.find((e) => e.typ === 'KarteGespielt')
+    expect(gespielt).toMatchObject({ nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 2 } })
+    expect(spieleNach(lageVon(start), ereignisse)).toEqual(lageVon(zustand))
+  })
+
+  it('G7: lange Schlange (12 Karten, 6 Farben): Zahl der Knöpfe, verschiedene Endlagen, alle erlaubt', () => {
+    const z = tisch().schlange(0, lang(12)).zustand()
+    const liste = haeutungen(z)
+    expect(liste).toHaveLength(10 * 5 + 9 * 23 + 8 * 119)
+    const lagen = new Set(liste.map((a) => endlage(z, a)))
+    melde(`G7: ${liste.length} Häutungen, ${lagen.size} verschiedene Endlagen`)
+    for (const a of liste) expect(pruefeAktion(z, a).erlaubt).toBe(true)
+  })
+
+  it('Szenario haeutung: 56 Knöpfe, verschiedene Endlagen zählen', async () => {
+    const { findeSzenario } = await import('../../entwicklung/szenarien')
+    const z = findeSzenario('haeutung')!.erzeuge()
+    const liste = haeutungen(z)
+    const lagen = new Set(liste.map((a) => endlage(z, a)))
+    melde(`Szenario haeutung: ${liste.length} Knöpfe, ${lagen.size} Endlagen`)
+    expect(liste).toHaveLength(56)
+  })
+})
+
+/** Wählt bevorzugt eine Schlangenhäutung (85 %), sonst zufällig. */
+function waehle(aktionen: SpielAktion[], wahl: () => number): SpielAktion {
+  const haeut = aktionen.filter((a) => a.typ === 'SchlangenhaeutungSpielen')
+  if (haeut.length > 0 && wahl() < 0.85) return haeut[Math.floor(wahl() * haeut.length)]
+  return aktionen[Math.floor(wahl() * aktionen.length)]
+}
+
+describe('Prüfer E9: Zufallspartien mit Vorzug für die Häutung', () => {
+  it('M1: 60 Partien, jeder Schritt nachrechenbar, keine Handkarte verraten, Invarianten', () => {
+    const z = { gewirkt: 0, abgewehrt: 0, beimGegner: 0, mitFusion: 0, schritte: 0 }
+    let maxAktionen = 0
+    let maxHaeut = 0
+    let maxZeit = 0
+    let summeZeit = 0
+    let aufrufe = 0
+    let maxBei = ''
+    let maxZustand: Spielzustand | null = null
+    for (let saat = 1; saat <= 60; saat += 1) {
+      const spielerzahl = 2 + (saat % 3)
+      let zustand = erstellePartie({ spielerzahl, erweiterung: true, zufall: erzeugeZufall(saat * 7919) })
+      const wahl = erzeugeZufall(saat ^ 0xe9)
+      for (let schritt = 0; schritt < 5000 && zustand.partiephase !== 'Beendet'; schritt += 1) {
+        const t0 = performance.now()
+        const aktionen = ermittleAktionen(zustand)
+        const dt = performance.now() - t0
+        summeZeit += dt
+        aufrufe += 1
+        if (dt > maxZeit) maxZeit = dt
+        const h = aktionen.filter((a) => a.typ === 'SchlangenhaeutungSpielen').length
+        if (aktionen.length > maxAktionen) {
+          maxAktionen = aktionen.length
+          maxBei = `Saat ${saat * 7919}, ${spielerzahl} Spieler, Schritt ${schritt}`
+          maxZustand = zustand
+        }
+        if (h > maxHaeut) maxHaeut = h
+        expect(aktionen.length, `festgefahren Saat ${saat}`).toBeGreaterThan(0)
+        const aktion = waehle(aktionen, wahl)
+        const vorher = zustand
+        const { zustand: nachher, ereignisse } = anwendeAktion(zustand, aktion)
+        expect(spieleNach(lageVon(vorher), ereignisse), `nicht nachrechenbar Saat ${saat} Schritt ${schritt}`).toEqual(lageVon(nachher))
+        expect(verrateneHandkarten(nachher, ereignisse)).toEqual([])
+        const verletzt = pruefeInvarianten(nachher).filter((b) => b.verletzt)
+        expect(verletzt.map((b) => b.name)).toEqual([])
+        zaehle(z, vorher, aktion, ereignisse)
+        zustand = nachher
+        z.schritte += 1
+      }
+      expect(zustand.partiephase, `Saat ${saat} endet nicht`).toBe('Beendet')
+    }
+    melde(`M1: ${JSON.stringify(z)}; max. Aktionen ${maxAktionen} (${maxBei}), max. Häutungen ${maxHaeut}; ermittleAktionen max ${maxZeit.toFixed(1)} ms, Mittel ${(summeZeit / aufrufe).toFixed(3)} ms über ${aufrufe} Aufrufe`)
+    const ki = erstelleZufallsKi(erzeugeZufall(3))
+    const m = maxZustand!
+    const e = m.schwebend === null ? m.zug.spielerIndex : m.schwebend.ausstehend[0]
+    const kiZustand = { ...m, spieler: m.spieler.map((sp, i) => (i === e ? { ...sp, steuerung: 'KI' as const } : sp)) }
+    const zeiten: number[] = []
+    for (let i = 0; i < 5; i += 1) {
+      const k0 = performance.now()
+      naechsterKiSchritt(kiZustand, ki)
+      zeiten.push(performance.now() - k0)
+    }
+    melde(`M1: KI-Schritt im Zustand mit ${maxAktionen} Aktionen: ${zeiten.map((t) => t.toFixed(1)).join(', ')} ms`)
+    expect(z.gewirkt).toBeGreaterThan(30)
+    expect(z.abgewehrt).toBeGreaterThan(0)
+    expect(z.mitFusion).toBeGreaterThan(0)
+  }, 600_000)
+})
+
+function zaehle(z: { gewirkt: number; abgewehrt: number; beimGegner: number; mitFusion: number }, vorher: Spielzustand, aktion: SpielAktion, ereignisse: Ereignis[]) {
+  const entschieden = ereignisse.find((e) => e.typ === 'AnsageEntschieden')
+  if (aktion.typ === 'SchlangenhaeutungSpielen' && ereignisse.some((e) => e.typ === 'KarteGespielt')) {
+    z.gewirkt += 1
+    if (gepruefteSchlange(vorher, aktion.schlangenId).schlange.fusionen.length > 0) z.mitFusion += 1
+  }
+  if (entschieden !== undefined && entschieden.typ === 'AnsageEntschieden' && vorher.schwebend?.aktion.typ === 'SchlangenhaeutungSpielen') {
+    z.beimGegner += 1
+    if (entschieden.ohneWirkung) z.abgewehrt += 1
+    else {
+      z.gewirkt += 1
+      if (gepruefteSchlange(vorher, vorher.schwebend.aktion.schlangenId).schlange.fusionen.length > 0) z.mitFusion += 1
+    }
+  }
+}
+
+describe('Prüfer E9: Leistung im ungünstigsten Fall', () => {
+  it('M2: 3 Spieler, je 2 Schlangen mit 12 und 9 Karten in 6 Farben, 3 Häutungen auf der Hand', () => {
+    const haende = [['Schlangenhäutung', 'Schlangenhäutung', 'Schlangenhäutung', 'Blau', 'Rot'], ['Farbenschutz', 'Verdoppler', 'Rot', 'Gelb', 'Blau'], ['Schlangenfrass', 'Rot', 'Gelb', 'Blau', 'Braun']] as const
+    let bau = tischMitHaenden(haende.map((h) => [...h]), true)
+    for (let s = 0; s < 3; s += 1) bau = bau.schlange(s, lang(12)).schlange(s, lang(9))
+    const z = bau.zustand()
+    const t0 = performance.now()
+    const aktionen = ermittleAktionen(z)
+    const t1 = performance.now()
+    let pruefzeit = 0
+    const p0 = performance.now()
+    for (const a of aktionen) pruefeAktion(z, a)
+    pruefzeit = performance.now() - p0
+    const ki = erstelleZufallsKi(erzeugeZufall(5))
+    // Menschen stehen auf Platz 1; die KI wählt hier für Spieler 1, gemessen wie ein KI-Schritt.
+    const kiZeiten: number[] = []
+    const kiZustand = { ...z, spieler: z.spieler.map((s, i) => (i === 0 ? { ...s, steuerung: 'KI' as const } : s)) }
+    for (let i = 0; i < 5; i += 1) {
+      const k0 = performance.now()
+      naechsterKiSchritt(kiZustand, ki)
+      kiZeiten.push(performance.now() - k0)
+    }
+    const h = aktionen.filter((a) => a.typ === 'SchlangenhaeutungSpielen').length
+    melde(`M2: ${aktionen.length} Aktionen (${h} Häutungen); ermittleAktionen ${(t1 - t0).toFixed(1)} ms; pruefeAktion über alle ${pruefzeit.toFixed(0)} ms; KI-Schritt ${kiZeiten.map((t) => t.toFixed(1)).join(', ')} ms`)
+    expect(h).toBeGreaterThan(0)
+  }, 120_000)
+})

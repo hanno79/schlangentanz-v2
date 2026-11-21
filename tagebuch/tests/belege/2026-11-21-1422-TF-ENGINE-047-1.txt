@@ -1,0 +1,62 @@
+=== GP1 ===
+     × A7.9 Beispiel 2: in Blau, Violett, Schlangenblockade, Grün, Violett gibt es keinen Abschnitt; die Häutung ist nur wirkungslos ablegbar
+     × A7.9: eine Schlangenblockade trennt die Abschnitte; sie gehört nie dazu und bleibt an ihrer Stelle
+     × A7.9: auch ein Joker (Regenbogenschlange) gehört nie zum Abschnitt und unterbricht ihn
+     × A7.9/A7.7: eine Farbenfusion ist eine Sonderkarte und unterbricht; die Karten darunter gehören nicht zum Abschnitt und bleiben unter ihr
+     × D26/F13: ein Abschnitt aus lauter gleichen Farben ist nicht wählbar; gibt es keinen anderen, ist die Häutung nur wirkungslos ablegbar
+     × D13: ohne Schlange am Tisch und ohne drei Farbkarten in Folge hat die Häutung kein Ziel
+     × A7.9 Beispiel 2/D26/D13: haeutung-nicht-moeglich: kein Abschnitt, nur wirkungslos ablegen; die Schlangen bleiben
+     × E4b/A7.7: Fusionen vor, zwischen und hinter den Abschnitten bleiben liegen; jede aufgezählte Häutung ist nachrechenbar
+     × A7.9/D9/D10: 40 Zufallspartien mit Erweiterung und 2, 3 und 4 Spielern enden; jede Häutung wirkt wie angesagt und ist nachrechenbar
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  9 failed | 26 passed (35)
+=== GP2 ===
+     × A7.9: aufgezählt ist jeder Abschnitt von 3, 4 und 5 Farbkarten einer längeren Folge, jeder mit jeder neuen Farbfolge
+     × A7.9: eine Schlange mit genau 3 Farbkarten hat einen Abschnitt mit fünf neuen Farbfolgen
+     × D26: jede aufgezählte Häutung ändert die Farbfolge, und keine Farbfolge eines Abschnitts ist doppelt
+     × D26/F13: ein Abschnitt aus lauter gleichen Farben ist nicht wählbar; gibt es keinen anderen, ist die Häutung nur wirkungslos ablegbar
+     × D25: hat die Häutung ein Ziel, auch nur beim Gegner, bietet die Engine kein wirkungsloses Ablegen an und lehnt es ab
+     × A7.9 Beispiel 1/D25: haeutung: 54 Knöpfe in der eigenen, 2 in der gegnerischen Schlange; Gelb, Gelb, Blau, Rot, Rot wirkt sofort
+     × A7.9 Beispiel 2/D26/D13: haeutung-nicht-moeglich: kein Abschnitt, nur wirkungslos ablegen; die Schlangen bleiben
+     × E4b/A7.7: Fusionen vor, zwischen und hinter den Abschnitten bleiben liegen; jede aufgezählte Häutung ist nachrechenbar
+     × A7.9/D9/D10: 40 Zufallspartien mit Erweiterung und 2, 3 und 4 Spielern enden; jede Häutung wirkt wie angesagt und ist nachrechenbar
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  9 failed | 26 passed (35)
+=== GP3 ===
+     × D26: dieselbe Reihenfolge wird abgelehnt
+     × D26: zwei gleichfarbige Karten zu tauschen ändert die Farbfolge nicht und wird abgelehnt
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 33 passed (35)
+=== GP4 ===
+     × A7.9: aufgezählt ist jeder Abschnitt von 3, 4 und 5 Farbkarten einer längeren Folge, jeder mit jeder neuen Farbfolge
+     × A7.9: weniger als 3 und mehr als 5 Karten werden abgelehnt, auch ein Abschnitt von 6
+     × A7.9/D9/D10: 40 Zufallspartien mit Erweiterung und 2, 3 und 4 Spielern enden; jede Häutung wirkt wie angesagt und ist nachrechenbar
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  3 failed | 32 passed (35)
+=== GP5 ===
+     × D10/A7.2: haeutung: in schlange-2 angesagt, KI-Gegner 1 wehrt ab; seine Schlange bleibt
+     × D9: haeutung: durchgelassen liegt schlange-2 in der Folge des Knopfes
+     × A6/D33: angesagt mit Ziel; betroffen ist nur der Besitzer der Schlange, gefragt auch ohne Farbenschutz
+     × A7.2: B wehrt ab; seine Schlange bleibt, wie sie war, die Häutung liegt beim Angreifer, der Farbenschutz bei B, der nicht nachzieht
+     × A6: lässt B durch, ist sein Abschnitt neu geordnet; die Häutung liegt beim Angreifer, B behält seinen Farbenschutz
+     × A6/B2: das Ziel steht mit der Ansage fest; solange die Häutung schwebt, gibt es keine andere Häutung
+     × A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt genau dort fort; danach wirkt die Häutung
+     × B2/D33: Angreifer und Unbeteiligte sehen dieselben Ereignisse, ob das Ziel Farbenschutz hält und durchlässt oder keinen hält
+     × A7.9/D9/D10: 40 Zufallspartien mit Erweiterung und 2, 3 und 4 Spielern enden; jede Häutung wirkt wie angesagt und ist nachrechenbar
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  9 failed | 26 passed (35)
+=== GP6 ===
+     × A7.9 Beispiel 1: aus Blau, Rot, Gelb, Rot, Gelb wird Gelb, Gelb, Blau, Rot, Rot; die Häutung liegt danach auf dem Ablagestapel (A6)
+     × A7.9: nur der gewählte Abschnitt wird neu geordnet; die Karten davor und dahinter bleiben an ihrer Stelle
+     × A7.9: der Abschnitt darf am Anfang und am Ende der Schlange liegen
+     × A9 Beispiel „Schlangentanz“: die letzten 5 Karten Rot, Violett, Violett, Rot, Violett werden zu Rot, Rot, Violett, Violett, Violett; die neuen Gruppen zählen in der Wertung
+     × A7.9: eine Schlangenblockade trennt die Abschnitte; sie gehört nie dazu und bleibt an ihrer Stelle
+     × A7.9/A7.7: eine Farbenfusion ist eine Sonderkarte und unterbricht; die Karten darunter gehören nicht zum Abschnitt und bleiben unter ihr
+     × A7.9 Beispiel 1/D25: haeutung: 54 Knöpfe in der eigenen, 2 in der gegnerischen Schlange; Gelb, Gelb, Blau, Rot, Rot wirkt sofort
+     × D9: haeutung: durchgelassen liegt schlange-2 in der Folge des Knopfes
+     × A6/D10: in der eigenen Schlange wirkt sie sofort; niemand wird gefragt, auch wenn Mitspieler Farbenschutz halten
+     × A6: lässt B durch, ist sein Abschnitt neu geordnet; die Häutung liegt beim Angreifer, B behält seinen Farbenschutz
+     × A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt genau dort fort; danach wirkt die Häutung
+     × A7.9/D9/D10: 40 Zufallspartien mit Erweiterung und 2, 3 und 4 Spielern enden; jede Häutung wirkt wie angesagt und ist nachrechenbar
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  12 failed | 23 passed (35)
