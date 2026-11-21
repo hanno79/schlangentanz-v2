@@ -1,0 +1,53 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2cfb00f4ded295a7
+
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/A6/A7: die Aktionstypen > A5/A6/A7: alle Aktionstypen der Basis-Engine sind festgelegt, auch die der späteren Tasks
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/A6/A7: die Aktionstypen > A7.9: die Schlangenhäutung hat einen eigenen Aktionstyp
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A1: das Register hat je Kartenart genau einen Eintrag
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbkarte steht in karten/farbkarte.ts und wird mit FarbkarteLegen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbenschutz steht in karten/farbenschutz.ts und wird mit null gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Regenbogenschlange steht in karten/regenbogenschlange.ts und wird mit RegenbogenschlangeLegen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenfrass steht in karten/schlangenfrass.ts und wird mit SchlangenfrassSpielen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenblockade steht in karten/schlangenblockade.ts und wird mit BlockadeLegen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbendieb steht in karten/farbendieb.ts und wird mit FarbendiebSpielen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangengrube steht in karten/schlangengrube.ts und wird mit SchlangengrubeSpielen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbenfusion steht in karten/farbenfusion.ts und wird mit FusionLegen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Verdoppler steht in karten/verdoppler.ts und wird mit VerdopplerSpielen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenhäutung steht in karten/schlangenhaeutung.ts und wird mit SchlangenhaeutungSpielen gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenkorb des Glücks steht in karten/schlangenkorb.ts und wird mit null gespielt
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: definitionFuer findet zu jeder Karte ihren Eintrag
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind keine Platzhalter mehr, die übrigen kommen mit E5 bis E9 und X6 10ms
+ ↓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Definition ist nicht markiert
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbkarte ist genau dann als Platzhalter markiert, wenn karten/farbkarte.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbenschutz ist genau dann als Platzhalter markiert, wenn karten/farbenschutz.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Regenbogenschlange ist genau dann als Platzhalter markiert, wenn karten/regenbogenschlange.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenfrass ist genau dann als Platzhalter markiert, wenn karten/schlangenfrass.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenblockade ist genau dann als Platzhalter markiert, wenn karten/schlangenblockade.ts platzhalter() aufruft 0ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbendieb ist genau dann als Platzhalter markiert, wenn karten/farbendieb.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangengrube ist genau dann als Platzhalter markiert, wenn karten/schlangengrube.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbenfusion ist genau dann als Platzhalter markiert, wenn karten/farbenfusion.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Verdoppler ist genau dann als Platzhalter markiert, wenn karten/verdoppler.ts platzhalter() aufruft 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenhäutung ist genau dann als Platzhalter markiert, wenn karten/schlangenhaeutung.ts platzhalter() aufruft 0ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenkorb des Glücks ist genau dann als Platzhalter markiert, wenn karten/schlangenkorb.ts platzhalter() aufruft 0ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Regenbogenschlange ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 2ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Schlangenfrass ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Farbendieb ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Farbenfusion ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 0ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Schlangenhäutung ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Schlangenkorb des Glücks ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 0ms
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A5: ohne schwebende Karte entscheidet der Spieler am Zug
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A6: schwebt eine Karte, entscheidet der nächste Betroffene; ohne Betroffene der Angreifer
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A10: nach Spielende entscheidet niemand
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A5: zu Beginn zählt die Engine nur Aktionen des Spielers am Zug auf, und noch kein „Zug beenden“ (D12)
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A10: nach Spielende gibt es keine Aktion und jede wird abgelehnt
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > B2: eine Aktion in falscher Form wird mit Grund abgelehnt
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > B2: ein unbekannter Spieler oder ein Spieler, der nicht am Zug ist, wird abgelehnt
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A6: während eine Karte schwebt, ist nur Reagieren dran, und nur für den, der entscheidet
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A5/A7.8: eine Karte, die nicht auf der Hand liegt, oder eine Karte der falschen Art wird abgelehnt; der Verdoppler selbst ist erlaubt
+ ↓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > B2: anwendeAktion lehnt mit dem Grund ab und lässt den Zustand unverändert
+
+ Test Files  1 passed (1)
+      Tests  18 passed | 26 skipped (44)
+   Start at  11:17:10
+   Duration  3.51s (transform 404ms, setup 288ms, import 416ms, tests 22ms, environment 2.47s)
+

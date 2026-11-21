@@ -1,0 +1,20 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a93a951f76d2e5c63
+
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein > E4b/A6: nach der Ansage meldet KartenVersetzt jede bewegte Karte mit altem und neuem Ort, vor AnsageEntschieden 34ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein > E4b/A7.1: die neue Schlange steht mit ihrer Id und ihrem Besitzer im Ereignis 6ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein > E4b Gegenprobe: ohne KartenVersetzt lässt sich die Wirkung nicht nachrechnen 3ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.4: Schlangenfrass als Test-Karte > A7.4: die Karten kommen in fester Reihenfolge auf den Ablagestapel des Angreifers, auch über und unter der gespielten Karte 5ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.4: Schlangenfrass als Test-Karte > A7.4/A7.7: eine gefressene Fusion wird durch ihre Karten ersetzt, die linke zuerst 8ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.4: Schlangenfrass als Test-Karte > A7.4: eine leer gefressene Schlange verschwindet, und das Ereignis nennt sie 7ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.7/A7.9: Wirkungen ohne Ansage melden ebenso, vor KarteGespielt > A7.7: eine Fusion in der eigenen Schlange legt zwei Karten unter sich; die Positionen zählen ohne die gespielte Karte 6ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.7/A7.9: Wirkungen ohne Ansage melden ebenso, vor KarteGespielt > A7.9: beim Umordnen sind nur die Karten genannt, die ihre Reihenfolge zu den übrigen ändern 5ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.7/A7.9: Wirkungen ohne Ansage melden ebenso, vor KarteGespielt > A7.8: eine Wirkung, die ausser der gespielten Karte nichts bewegt, meldet kein KartenVersetzt 4ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/B2: Karten, die auf eine Hand gehen, bleiben verdeckt > B2: eine Karte aus der Schlange und eine vom Stapel gehen auf Hände; das Ereignis nennt Ort, aber keine Id 5ms
+ ✓ src/engine/__tests__/kartenversetzt.test.ts > E4b/B2: Karten, die auf eine Hand gehen, bleiben verdeckt > B2: die Reihenfolge verdeckt abgelegter Karten verrät nicht, wie sie im Nachziehstapel liegen 7ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  10:44:31
+   Duration  6.50s (transform 758ms, setup 542ms, import 756ms, tests 94ms, environment 4.64s)
+

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-028 Ändert eine Wirkung gleichzeitig Schlangen zweier Spieler, eine Fusion samt Unterkarten und den Ablagestapel, lässt sich die Lage aus KartenVersetzt nachrechnen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-028 Ändert eine Wirkung gleichzeitig Schlangen zweier Spieler, eine Fusion samt Unterkarten und den Ablagestapel, lässt sich die Lage aus KartenVersetzt nachrechnen.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-026</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Tests des Umsetzers bewegen je Wirkung höchstens eine Art von Karte. Hier ändert eine einzige Wirkung alles auf einmal: Eine Fusion wandert mit ihren zwei Unterkarten in die Schlange eines anderen Spielers, die eigene Schlange wird umgeordnet, und die unterste Karte des Ablagestapels geht in die fremde Schlange. Dazu eine Drehung in einer Schlange, bei der jede Karte die Stelle wechselt.</p><h2>Bestanden, wenn</h2><ul><li>P2: Die eigene Schlange lautet danach Gelb, Fusion, Blau, Rot, die fremde endet mit der früher untersten Ablagekarte. Das Ereignis nennt die Fusion (Schlange nach Schlange), die Ablagekarte (Ablagestapel nach Schlange) und genau zwei Unterkarten mit Ziel unter der Fusion bei Spieler 1. <code>spieleNach</code> ergibt nach jedem Schritt die Lage des neuen Zustands.</li><li>P3: Die Drehung A, B, C, D zu B, C, D, A lässt sich nachrechnen.</li></ul><h2>Fehlgeschlagen, wenn</h2><p><code>spieleNach</code> eine andere Lage ergibt, etwa die Fusion ohne Unterkarten oder Karten an falscher Stelle.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E4b-versetzt (PR #63)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/E4b-versetzt</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>P2: zwei Spieler mit Erweiterung, Spieler 1 mit Schlange Blau, Rot, Gelb und Ablagestapel Violett, Grün; Spieler 2 mit Schlange Grün, Fusion auf Gelb und Gelb, Rot. P3: Schlange Blau, Rot, Gelb, Grün von Spieler 1. Die Prüfdatei liegt dem Lauf als Beleg bei (Tests „P2“ und „P3“).</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>Prüfdatei aus dem Beleg als `src/engine/__tests__/zz_pruefer_e4b_probe.test.ts` anlegen</td><td>Inhalt des Belegs</td><td>Datei liegt neben `kartenversetzt.test.ts`</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Tests P2 und P3 ausführen</td><td>`npx vitest run src/engine/__tests__/zz_pruefer_e4b_probe.test.ts -t &quot;P2|P3&quot;`</td><td>Exit 0, beide bestanden</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Prüfdatei wieder löschen</td><td></td><td>`git status` zeigt nichts</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 10:45</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E4b) &middot; agent &middot; pruefung-E4b @ <span class="commit" title="591486135dc5683c0967e8cecf0df8c632503fd4">5914861</span></p><p>P2 bestanden: eigene Schlange Gelb, Fusion, Blau, Rot; zwei Unterkarten mit Ziel UnterFusion bei Spieler 1; Ablagekarte in fremder Schlange; Nachrechnen grün. P3 Drehung bestanden, gemeldet alle vier Karten (rot-03, gelb-02, gruen-01, blau-04).</p><ul class="belege"><li><a href="belege/2026-11-21-1045-TF-ENGINE-028-1.txt">2026-11-21-1045-TF-ENGINE-028-1.txt</a></li><li><a href="belege/2026-11-21-1045-TF-ENGINE-028-2.txt">2026-11-21-1045-TF-ENGINE-028-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
