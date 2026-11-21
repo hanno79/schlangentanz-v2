@@ -1,0 +1,98 @@
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, erstellePartie } from '../index'
+import type { Ereignis, SpielAktion, Spielzustand } from '../index'
+import { erzeugeZufall } from '../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
+import { frass, ids, MIT_FRASS } from './schlangenfrass_hilfen'
+import { ablage, durchlassen, ereignisseVom, FUENF, fuehreAus, MIT_SCHUTZ, reaktion, tischMitHaenden as tisch, verletzteInvarianten } from './zugablauf_hilfen'
+
+function nachgerechnet(start: Spielzustand, ...wahlen: Array<(jetzt: Spielzustand) => SpielAktion>) {
+  let jetzt = start
+  const ereignisse: Ereignis[] = []
+  for (const waehle of wahlen) {
+    const schritt = fuehreAus(jetzt, waehle(jetzt))
+    expect(spieleNach(lageVon(jetzt), schritt.ereignisse)).toEqual(lageVon(schritt.zustand))
+    expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse)).toEqual([])
+    ereignisse.push(...schritt.ereignisse)
+    jetzt = schritt.zustand
+  }
+  return { zustand: jetzt, ereignisse }
+}
+
+describe('Prüfer E6: eigene Grenzfälle', () => {
+  it('G1: vier Spieler, Angreifer Index 2, Ziele bei 1 und 3: Ablage in Tischreihenfolge ab Angreifer (3 vor 1); 3 wehrt ab, nur die Karte von 1 geht', () => {
+    const start = tisch([FUENF, FUENF, MIT_FRASS, MIT_SCHUTZ]).schlange(1, ['Blau', 'Rot']).schlange(3, ['Gelb', 'Grün']).amZug(2).zustand()
+    const von1 = ids(start, 1)[0]
+    const von3 = ids(start, 3)[1]
+    const fid = start.spieler[2].hand.find((k) => k.typ === 'Sonderkarte')!.id
+    const alle = nachgerechnet(start, (j) => frass(j, 'gegnerischeKarten', von1, von3), durchlassen, durchlassen)
+    expect(ereignisseVom(alle.ereignisse, 'KarteAngesagt')[0].betroffene).toEqual([3, 1])
+    expect(ablage(alle.zustand, 2)).toEqual([fid, von3, von1])
+    const teil = nachgerechnet(start, (j) => frass(j, 'gegnerischeKarten', von1, von3), (j) => reaktion(j, true), durchlassen)
+    expect(ids(teil.zustand, 3)).toEqual(ids(start, 3))
+    expect(ids(teil.zustand, 1)).toEqual([ids(start, 1)[1]])
+    expect(ablage(teil.zustand, 2)).toEqual([fid, von1])
+    expect(verletzteInvarianten(teil.zustand)).toEqual([])
+  })
+
+  it('G2: c) frisst eine Fusion und die Karte direkt rechts daneben in derselben Schlange; Positionen nachrechenbar', () => {
+    const start = tisch([MIT_FRASS, FUENF]).schlange(1, ['Rot', { fusion: ['Blau', 'Blau'] }, 'Gelb', 'Grün']).zustand()
+    const [rot, fusion, gelb, gruen] = ids(start, 1)
+    const unter = start.spieler[1].schlangen[0].fusionen[0].unter.map((k) => k.id)
+    const { zustand, ereignisse } = nachgerechnet(start, (j) => frass(j, 'gegnerischeKarten', fusion, gelb), durchlassen)
+    expect(ids(zustand, 1)).toEqual([rot, ...unter, gruen])
+    expect(ablage(zustand, 0).slice(1)).toEqual([fusion, gelb])
+    expect(ereignisseVom(ereignisse, 'KartenVersetzt')[0].karten.map((k) => k.karteId).sort()).toEqual([...unter, fusion, gelb].sort())
+  })
+
+  it('G3: b) auf die eigene Blockade als einzige Karte: Schlange verschwindet, aufgeloest nennt sie', () => {
+    const start = tisch([MIT_FRASS, FUENF]).schlange(0, ['Schlangenblockade']).schlange(0, ['Rot']).zustand()
+    const sid = start.spieler[0].schlangen[0].id
+    const { zustand, ereignisse } = nachgerechnet(start, (j) => frass(j, 'eigeneBlockade', ids(j, 0)[0]))
+    expect(zustand.spieler[0].schlangen).toHaveLength(1)
+    expect(ereignisseVom(ereignisse, 'KartenVersetzt')[0].aufgeloest).toEqual([sid])
+  })
+
+  it('G4: Zufallspartien mit bevorzugtem Schlangenfrass: jeder Schritt nachrechenbar, keine Handkarte verraten', () => {
+    const zaehler = { frass: 0, c: 0, a: 0, b: 0, abgewehrt: 0 }
+    for (const saat of [101, 102, 103, 104, 105, 106]) {
+      let zustand = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+      const wahl = erzeugeZufall(saat)
+      let schritte = 0
+      while (zustand.partiephase !== 'Beendet') {
+        if (++schritte > 3000) throw new Error('endet nicht')
+        const angeboten = ermittleAktionen(zustand)
+        const frassListe = angeboten.filter((a) => a.typ === 'SchlangenfrassSpielen')
+        const aktion = frassListe.length > 0 ? frassListe[Math.floor(wahl() * frassListe.length)] : angeboten[Math.floor(wahl() * angeboten.length)]
+        if (aktion.typ === 'SchlangenfrassSpielen') {
+          zaehler.frass++
+          zaehler[aktion.option === 'eigeneKarte' ? 'a' : aktion.option === 'eigeneBlockade' ? 'b' : 'c']++
+        }
+        const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+        if (ereignisse.some((e) => e.typ === 'Abgewehrt')) zaehler.abgewehrt++
+        expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat} Schritt ${schritte}`).toEqual(lageVon(neu))
+        expect(verrateneHandkarten(neu, ereignisse)).toEqual([])
+        expect(verletzteInvarianten(neu)).toEqual([])
+        zustand = neu
+      }
+    }
+    console.log('PRUEFER-ZAEHLER', JSON.stringify(zaehler))
+    expect(zaehler.c).toBeGreaterThan(0)
+    expect(zaehler.a).toBeGreaterThan(0)
+  })
+
+  it('G5: die Saaten des bestehenden Nachrechentests (zugablauf_ereignisse) enthalten Schlangenfrass', () => {
+    const zaehler: Record<string, number> = {}
+    for (const [spielerzahl, saat] of [[2, 1], [3, 2], [4, 3], [2, 4]]) {
+      let zustand = erstellePartie({ spielerzahl, erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+      const wahl = erzeugeZufall(saat)
+      while (zustand.partiephase !== 'Beendet') {
+        const angeboten = ermittleAktionen(zustand)
+        const aktion = angeboten[Math.floor(wahl() * angeboten.length)]
+        if (aktion.typ === 'SchlangenfrassSpielen') zaehler[`${saat}:${aktion.option}`] = (zaehler[`${saat}:${aktion.option}`] ?? 0) + 1
+        zustand = anwendeAktion(zustand, aktion).zustand
+      }
+    }
+    console.log('PRUEFER-BESTAND', JSON.stringify(zaehler))
+  })
+})
