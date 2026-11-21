@@ -23,8 +23,11 @@ const SCHNITTSTELLE = `${ORDNER}/strategie.ts`
 const GRUND = `ausserhalb von ${ORDNER}/ nur index.ts und Typen aus strategie.ts`
 /** Wo die Grenze gilt: alle Dateien unter diesen Ordnern, ohne Ausnahme für Unterordner, und im Wurzelordner. */
 const BEREICHE = ['src', 'scripts']
+/** Endung in Kleinbuchstaben: Vite, Rollup und Windows lesen `x.JS` wie `x.js` (Schlussprüfung 3, Mangel 1). */
+const endung = (pfad: string) => extname(pfad).toLowerCase()
+const istPaket = (pfad: string) => posix.basename(pfad).toLowerCase() === 'package.json'
 /** Was Module lädt: Code, HTML mit Modulskripten und package.json mit `imports` und `exports`. */
-const laedt = (pfad: string) => CODE_ENDUNGEN.has(extname(pfad)) || extname(pfad) === '.html' || posix.basename(pfad) === 'package.json'
+const laedt = (pfad: string) => CODE_ENDUNGEN.has(endung(pfad)) || endung(pfad) === '.html' || istPaket(pfad)
 /** Endungen, unter denen Vite und Node eine Datei ohne Endung finden; `.d.ts` steht nur für Typen. */
 const ENDUNGEN = [...CODE_ENDUNGEN, '.json']
 
@@ -33,14 +36,16 @@ export const istAusgenommen = (pfad: string) => /\.test\.tsx?$/.test(pfad) || pf
 const imOrdner = (pfad: string) => pfad.toLowerCase().startsWith(`${ORDNER}/`)
 
 /**
- * Was ein Ziel ist; erlaubt sind genau index.ts und strategie.ts, nicht dieselben Namen mit
- * anderer Endung. Bei einem Pfad ohne Endung (der Ordner, `…/index`, `…/strategie`) entscheidet
- * die Datei, die dahinter gefunden wird.
+ * Was ein Ziel ist; erlaubt sind genau index.ts und strategie.ts in dieser Schreibweise, nicht
+ * dieselben Namen mit anderer Endung oder anderer Gross- und Kleinschreibung (vorhandene Dateien
+ * kommen über ihren echten Pfad). Bei einem Pfad ohne Endung (der Ordner, `…/index`,
+ * `…/strategie`) entscheidet die Datei, die dahinter gefunden wird.
  */
 export function artDesZiels(pfad: string): 'registry' | 'schnittstelle' | 'strategie' | null {
-  const klein = pfad.toLowerCase().replace(/\/+$/, '')
-  if (klein === REGISTRY_DATEI.toLowerCase()) return 'registry'
-  if (klein === SCHNITTSTELLE.toLowerCase()) return 'schnittstelle'
+  const genau = pfad.replace(/\/+$/, '')
+  const klein = genau.toLowerCase()
+  if (genau === REGISTRY_DATEI) return 'registry'
+  if (genau === SCHNITTSTELLE) return 'schnittstelle'
   if ([ORDNER, `${ORDNER}/index`, `${ORDNER}/strategie`].includes(klein)) return null
   return imOrdner(klein) ? 'strategie' : null
 }
@@ -198,8 +203,8 @@ function paketVerweise(json: string): Verweis[] {
 }
 
 function verweiseVon(datei: string, inhalt: string): Verweis[] {
-  if (posix.basename(datei) === 'package.json') return paketVerweise(inhalt)
-  if (extname(datei) === '.html') return htmlVerweise(inhalt)
+  if (istPaket(datei)) return paketVerweise(inhalt)
+  if (endung(datei) === '.html') return htmlVerweise(inhalt)
   return codeVerweise(parse(datei, inhalt))
 }
 
@@ -235,7 +240,7 @@ export function pruefeImportgrenze(wurzel: string): Verstoss[] {
   const kandidaten = (basis: string): string[] => {
     const paket = join(basis, 'package.json')
     const einstiege = istDatei(paket) ? paketEinstiege(readFileSync(paket, 'utf8')).map((eintrag) => join(basis, eintrag)) : []
-    return [basis, ...einstiege, ...[basis, ...einstiege].flatMap((pfad) => ENDUNGEN.flatMap((endung) => [pfad + endung, join(pfad, `index${endung}`)]))].filter(istDatei)
+    return [basis, ...einstiege, ...[basis, ...einstiege].flatMap((pfad) => ENDUNGEN.flatMap((anhang) => [pfad + anhang, join(pfad, `index${anhang}`)]))].filter(istDatei)
   }
 
   /**
@@ -255,7 +260,7 @@ export function pruefeImportgrenze(wurzel: string): Verstoss[] {
     const kern = /^file:/i.test(ohneFs) ? fileURLToPath(ohneFs) : ohneFs
     const aufgeloest = ts.resolveModuleName(kern, absolut, optionen, ts.sys, aufloesung).resolvedModule?.resolvedFileName
     const basen = kern.startsWith('/') ? [join(wurzel, kern), kern] : isAbsolute(kern) ? [kern] : /^\.{1,2}(\/|$)/.test(kern) ? [join(dirname(absolut), kern)] : []
-    const laufzeit = aufgeloest && /\.d\.[cm]?ts$/.test(aufgeloest) ? [aufgeloest.replace(/\.d\.[cm]?ts$/, ''), dirname(aufgeloest)] : []
+    const laufzeit = aufgeloest && /\.d\.[cm]?ts$/i.test(aufgeloest) ? [aufgeloest.replace(/\.d\.[cm]?ts$/i, ''), dirname(aufgeloest)] : []
     const gefunden = [...basen, ...laufzeit].flatMap(kandidaten)
     return [...new Set([...(aufgeloest ? [aufgeloest] : []), ...basen, ...gefunden].map(bezug))]
   }
