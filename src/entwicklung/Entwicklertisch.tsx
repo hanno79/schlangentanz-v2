@@ -65,6 +65,7 @@ function Inhalt({ anfrage }: { anfrage: Exclude<EntwicklerAnfrage, EntwurfAnfrag
         <Tisch
           titel={`Partie aus Saat ${anfrage.saat}, ${anfrage.spieler} Spieler, ${anfrage.erweiterung === 1 ? 'mit' : 'ohne'} Erweiterung`}
           erzeuge={() => starteEntwicklerPartie(anfrage.saat, anfrage.spieler, anfrage.erweiterung === 1)}
+          saat={anfrage.saat}
         />
       )
     case 'fehler':

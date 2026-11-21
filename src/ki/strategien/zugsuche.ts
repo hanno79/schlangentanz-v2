@@ -120,7 +120,7 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
     const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen));
-    const geordnet = vorauswahl(stand, karten, anzahl);
+    const geordnet = vorauswahl(stand, karten, anzahl, merker);
     const folgen = geordnet.slice(0, anzahl).map((aktion) => folge(stellung, stand, aktion));
     for (const aktion of geordnet.slice(anzahl, anzahl + nachlese)) {
       if (folgen.some((eintrag) => !eintrag.verworfen)) break;
