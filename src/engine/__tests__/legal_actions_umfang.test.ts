@@ -1,9 +1,11 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest'
+import { FARBEN, erstelleSpielkarten } from '../deck'
 import { ermittleAktionen, pruefeAktion } from '../index'
-import type { Farbe, SchlangenhaeutungSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import type { Farbe, SpielAktion, Spielzustand } from '../index'
 import { baukasten } from '../testing/szenario'
 import type { Kartenwahl } from '../testing/szenario'
-import { HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF } from './dauerlauf_pruefer'
+import { haeutungen } from './schlangenhaeutung_hilfen'
 
 /*
 E11, Kriterium 4: die Zahl der erlaubten Aktionen, neu gemessen und begrenzt.
@@ -21,10 +23,14 @@ Danach kommt der Schlangenfrass c) mit jedem Paar gegnerischer Karten
 (A7.4): Bei 78 Karten in gegnerischen Schlangen sind das 3'003 je Karte. Der
 ungünstigste Tisch hat also drei Häutungen und zwei Schlangenfrass auf der
 Hand und die Schlange aus allen Farbkarten beim Gegner. In Zufallspartien
-bleibt es weit darunter; das misst der Dauerlauf (`dauerlauf_pruefer.ts`).
+bleibt es weit darunter, höchstens bei `HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF`
+(`dauerlauf_pruefer.ts`).
 */
 
-const VORRAT: Readonly<Record<Farbe, number>> = { Blau: 15, Rot: 15, Gelb: 15, Violett: 12, Braun: 12, Grün: 9 }
+/** A1: wie viele Farbkarten jeder Farbe es gibt, aus dem Material. */
+const VORRAT = Object.fromEntries(
+  FARBEN.map((farbe) => [farbe, erstelleSpielkarten(false).filter((karte) => karte.typ === 'Farbkarte' && karte.farbe === farbe).length]),
+) as Readonly<Record<Farbe, number>>
 
 /** Die Farbkarten in einer Folge, in der möglichst keine Farbe unter den vier vorigen liegt: je mehr Farben im Abschnitt, desto mehr Farbfolgen. */
 function bunteFolge(anzahl: number): Farbe[] {
@@ -80,37 +86,38 @@ const HAEUTUNGEN: Kartenwahl[] = ['Schlangenhäutung', 'Schlangenhäutung', 'Sch
 
 describe('E11 Kriterium 4: die Zahl der erlaubten Aktionen ist gemessen und begrenzt (A7.9, A7.4, A7.1)', () => {
   const folge = bunteFolge(78)
+  // Die bunte Schlange beim Spieler selbst, auf der Hand drei Häutungen, ein Farbendieb und ein Schlangenfrass.
+  const eigene = tisch(0, [...HAEUTUNGEN, 'Farbendieb', 'Schlangenfrass'])
+  const eigeneHaeutungen = haeutungen(eigene)
 
   it('A7.9: die Schranke 147 · L − 555 je Häutung; die bunte Schlange aus allen 78 Farbkarten erreicht sie', () => {
     expect(schranke(5), 'fünf Karten: 3 · 5 + 2 · 23 + 119').toBe(180)
-    expect(schranke(78), 'schranke: für den längsten möglichen Lauf').toBe(147 * 78 - 555)
     expect(haeutungenErwartet(['Blau', 'Rot', 'Gelb', 'Violett', 'Braun']), 'haeutungenErwartet: fünf verschiedene Farben').toBe(180)
+    expect(schranke(78), 'schranke: für den längsten möglichen Lauf').toBe(10_911)
     expect(haeutungenErwartet(folge), 'haeutungenErwartet: jeder Abschnitt der bunten Folge hat nur verschiedene Farben').toBe(schranke(78))
-    expect(schranke(78)).toBe(10_911)
   })
 
   it('A7.9/D26: je Häutung auf der Hand so viele Aktionen, wie die Abschnitte neue Farbfolgen haben; nachgerechnet ohne die Engine', () => {
-    const zustand = tisch(0, [...HAEUTUNGEN, 'Farbendieb', 'Schlangenfrass'])
-    const haeutungen = ermittleAktionen(zustand).filter((aktion): aktion is SchlangenhaeutungSpielenAktion => aktion.typ === 'SchlangenhaeutungSpielen')
-    for (const karte of zustand.spieler[0].hand.filter((eintrag) => eintrag.typ === 'Sonderkarte' && eintrag.name === 'Schlangenhäutung')) {
-      expect(haeutungen.filter((aktion) => aktion.karteId === karte.id).length, `ermittleAktionen: Häutungen mit ${karte.id}`).toBe(haeutungenErwartet(folge))
+    for (const karte of eigene.spieler[0].hand.filter((eintrag) => eintrag.typ === 'Sonderkarte' && eintrag.name === 'Schlangenhäutung')) {
+      expect(eigeneHaeutungen.filter((aktion) => aktion.karteId === karte.id).length, `ermittleAktionen: Häutungen mit ${karte.id}`).toBe(haeutungenErwartet(folge))
     }
-    expect(haeutungen.length).toBe(32_733)
+    // Schlangenfrass a) frisst jede der 78 eigenen Karten; der Farbendieb findet keine gegnerische Farbkarte und ist nur wirkungslos ablegbar (D13).
+    expect(zaehleTypen(ermittleAktionen(eigene))).toEqual({ SchlangenhaeutungSpielen: 32_733, SchlangenfrassSpielen: 78, SonderkarteWirkungslosAblegen: 1 })
   })
 
   it('A7.9: gleichwertige Aktionen: die drei Häutungen unterscheiden sich nur in der Karte; je Karte führen 10911 Aktionen zu 7127 verschiedenen Schlangen', () => {
-    const zustand = tisch(0, HAEUTUNGEN)
-    const haeutungen = ermittleAktionen(zustand).filter((aktion): aktion is SchlangenhaeutungSpielenAktion => aktion.typ === 'SchlangenhaeutungSpielen')
-    const ohneKarte = new Set(haeutungen.map((aktion) => aktion.neueReihenfolge.join(',')))
+    const ohneKarte = new Set(eigeneHaeutungen.map((aktion) => aktion.neueReihenfolge.join(',')))
     expect(ohneKarte.size, 'verschiedene Häutungen ohne Rücksicht auf die gespielte Karte').toBe(10_911)
-    const [schlange] = zustand.spieler[0].schlangen
+    const [schlange] = eigene.spieler[0].schlangen
+    const ids = schlange.karten.map((karte) => karte.id)
+    const stelle = new Map(ids.map((id, index) => [id, index]))
     const farbeVon = new Map(schlange.karten.map((karte) => [karte.id, karte.typ === 'Farbkarte' ? karte.farbe : karte.name]))
     const endlagen = new Set(
       [...ohneKarte].map((eintrag) => {
-        const ids = schlange.karten.map((karte) => karte.id)
         const neu = eintrag.split(',')
-        ids.splice(Math.min(...neu.map((id) => ids.indexOf(id))), neu.length, ...neu)
-        return ids.map((id) => farbeVon.get(id)).join(',')
+        const danach = ids.slice()
+        danach.splice(Math.min(...neu.map((id) => stelle.get(id)!)), neu.length, ...neu)
+        return danach.map((id) => farbeVon.get(id)).join(',')
       }),
     )
     expect(endlagen.size, 'verschiedene Farbfolgen der Schlange nach der Häutung').toBe(7_127)
@@ -123,14 +130,5 @@ describe('E11 Kriterium 4: die Zahl der erlaubten Aktionen ist gemessen und begr
     expect(zaehleTypen(aktionen)).toEqual({ SchlangenhaeutungSpielen: 3 * 10_911, SchlangenfrassSpielen: 2 * ((78 * 77) / 2) })
     expect(aktionen.length).toBe(38_739)
     expect(aktionen.filter((aktion) => !pruefeAktion(zustand, aktion).erlaubt), 'aufgezählt, aber abgelehnt').toEqual([])
-  })
-
-  it('E11: mit der Schlange beim Spieler selbst sind es weniger: Schlangenfrass a) frisst nur eine eigene Karte, der Farbendieb hat kein Ziel', () => {
-    const zustand = tisch(0, [...HAEUTUNGEN, 'Farbendieb', 'Schlangenfrass'])
-    expect(zaehleTypen(ermittleAktionen(zustand))).toEqual({ SchlangenhaeutungSpielen: 32_733, SchlangenfrassSpielen: 78, SonderkarteWirkungslosAblegen: 1 })
-  })
-
-  it('E11: die Schranke für Zufallspartien liegt weit unter dem ungünstigsten Tisch', () => {
-    expect(HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF).toBeLessThan(38_739 / 4)
   })
 })

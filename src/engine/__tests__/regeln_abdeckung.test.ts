@@ -1,4 +1,5 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+// @vitest-environment node
+import { readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 /*
@@ -53,7 +54,7 @@ function nennt(text: string, abschnitt: string): boolean {
   return new RegExp(`(^|[^\\w.])${abschnitt.replace('.', '\\.')}(?![\\d]|\\.\\d)`).test(text)
 }
 
-const dateien = existsSync(REGELN) ? readdirSync(REGELN) : []
+const dateien = readdirSync(REGELN)
 
 describe('E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bis A11)', () => {
   it('E11: die Abschnitte aus Teil A sind genau die des Plans und die begründet ausgenommenen', () => {
@@ -78,7 +79,7 @@ describe('E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bi
     const ohneNennung = dateien.filter((datei) => {
       const abschnitt = abschnittVon(datei)
       const namen = testnamen(readFileSync(`${REGELN}/${datei}`, 'utf8'))
-      return abschnitt === null || namen.length === 0 || !namen.some((name) => nennt(name, abschnitt))
+      return abschnitt === null || !namen.some((name) => nennt(name, abschnitt))
     })
     expect(ohneNennung, 'Dateien, deren Tests ihren Abschnitt nicht nennen').toEqual([])
   })
@@ -88,10 +89,6 @@ describe('E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bi
     const erlaubt = [
       'aktionen.test.ts',
       'dauerlauf.test.ts',
-      'dauerlauf_teil_1.dauerlauf.test.ts',
-      'dauerlauf_teil_2.dauerlauf.test.ts',
-      'dauerlauf_teil_3.dauerlauf.test.ts',
-      'dauerlauf_teil_4.dauerlauf.test.ts',
       'golden_master.test.ts',
       'invarianten.test.ts',
       'invarianten_grenzfaelle.test.ts',
@@ -103,7 +100,8 @@ describe('E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bi
       'zugablauf_ereignisse.test.ts',
       'zustand_format.test.ts',
     ]
-    const tests = readdirSync(TESTS).filter((datei) => datei.endsWith('.test.ts'))
+    // Die Teile des langen Dauerlaufs (`*.dauerlauf.test.ts`) prüft `dauerlauf.test.ts`.
+    const tests = readdirSync(TESTS).filter((datei) => datei.endsWith('.test.ts') && !datei.endsWith('.dauerlauf.test.ts'))
     expect(tests.filter((datei) => !erlaubt.includes(datei)), 'Regeltests ausserhalb von regeln/').toEqual([])
   })
 

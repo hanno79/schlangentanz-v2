@@ -1,17 +1,21 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
+import { alleSpielkarten } from '../invarianten';
+import { findeSchlange } from '../karten/schlangenstelle';
 import { berechneEndwertung } from '../scoring';
 import type { Schlange, Spielkarte, Spielzustand } from '../types';
+import { spielerIndexVon } from '../zugablauf';
 import { ENGINE_MOTOR, spieleDauerlaufPartie } from './dauerlauf';
-import type { DauerlaufPartie, Motor } from './dauerlauf';
+import type { DauerlaufPartie, Motor, SchrittPruefer } from './dauerlauf';
 
 /*
 Das lesbare Protokoll einer Zufallspartie, Zug für Zug (E11, Kriterium 5). Es
 ist der Golden Master der Basis-Engine: Ein Prüfer liest es gegen Teil A,
 bevor es eingefroren wird, und der Test vergleicht danach jede Partie mit ihm.
 
-Gespielt wird wie im Dauerlauf (`dauerlauf.ts`, mit allen Prüfungen je
-Schritt); gewählt wird gleichverteilt unter den aufgezählten Aktionen, die
+Gespielt wird wie im Dauerlauf (`dauerlauf.ts`, mit Invarianten, Speichern
+und Laden und der Prüfung jeder aufgezählten Aktion; weitere Prüfer gibt der
+Aufrufer mit); gewählt wird gleichverteilt unter den aufgezählten Aktionen, die
 vorher nach ihrer JSON-Form sortiert sind. So ändert eine neue Reihenfolge der
 Aufzählung die Partie nicht, eine neue Regel aber schon.
 
@@ -21,12 +25,6 @@ für Spieler (B2 gilt für die Oberfläche).
 
 export interface Partieprotokoll {
   text: string;
-  /** Abwehren mit Farbenschutz (A7.2). */
-  abwehren: number;
-  /** Zweite Züge nach einem Verdoppler (A7.8). */
-  zweiteZuege: number;
-  /** Letzte Züge in der Schlussrunde, gespielt oder ausgesetzt (A10, D21). */
-  letzteZuege: number;
   schritte: number;
 }
 
@@ -48,29 +46,19 @@ function kartenname(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? karte.farbe : karte.name;
 }
 
-/** Jede Karte am Tisch nach Id, wo sie auch liegt, damit Aktionen und Ereignisse sie beim Namen nennen. */
-function kartenAmTisch(zustand: Spielzustand): Map<string, Spielkarte> {
-  const alle = [
-    ...zustand.nachziehstapel,
-    ...zustand.spieler.flatMap((spieler) => [
-      ...spieler.hand,
-      ...spieler.ablagestapel,
-      ...spieler.schlangen.flatMap((schlange) => [...schlange.karten, ...schlange.fusionen.flatMap((fusion) => fusion.unter)]),
-    ]),
-    ...zustand.ausliegendeGruben.map((grube) => grube.karte),
-    ...(zustand.schwebend === null ? [] : [zustand.schwebend.karte]),
-  ];
-  return new Map(alle.map((karte) => [karte.id, karte]));
-}
-
 class Schreiber {
   readonly zeilen: string[] = [];
-  private bekannt = new Map<string, Spielkarte>();
-  private zustand!: Spielzustand;
+  /** Jede Spielkarte nach Id; die Ids ändern sich nie, deshalb reicht der Anfang. */
+  private readonly bekannt: ReadonlyMap<string, Spielkarte>;
+  private zustand: Spielzustand;
+
+  constructor(anfang: Spielzustand) {
+    this.zustand = anfang;
+    this.bekannt = new Map(alleSpielkarten(anfang).map((karte) => [karte.id, karte]));
+  }
 
   setze(zustand: Spielzustand): void {
     this.zustand = zustand;
-    for (const [id, karte] of kartenAmTisch(zustand)) this.bekannt.set(id, karte);
   }
 
   zeile(text: string): void {
@@ -82,7 +70,7 @@ class Schreiber {
   }
 
   spielerMitId(id: string): string {
-    const index = this.zustand.spieler.findIndex((spieler) => spieler.id === id);
+    const index = spielerIndexVon(this.zustand, id);
     return index < 0 ? id : this.spieler(index);
   }
 
@@ -92,8 +80,8 @@ class Schreiber {
   }
 
   besitzerVon(schlangenId: string): string {
-    const index = this.zustand.spieler.findIndex((spieler) => spieler.schlangen.some((schlange) => schlange.id === schlangenId));
-    return index < 0 ? schlangenId : `${schlangenId} von ${this.spieler(index)}`;
+    const gefunden = findeSchlange(this.zustand, schlangenId);
+    return gefunden === null ? schlangenId : `${schlangenId} von ${this.spieler(gefunden.besitzer)}`;
   }
 
   schlange(schlange: Schlange): string {
@@ -243,53 +231,43 @@ class Schreiber {
 }
 
 /**
- * Spielt die Partie und schreibt ihr Protokoll. Endet sie nicht regulär oder
- * verletzt ein Schritt eine Prüfung des Dauerlaufs, wirft die Funktion mit dem
- * Befund, statt ein Protokoll zu liefern.
+ * Spielt die Partie und schreibt ihr Protokoll. `pruefer` sieht jeden Schritt
+ * wie im Dauerlauf. Endet die Partie nicht regulär oder meldet ein Prüfer einen
+ * Verstoss, wirft die Funktion mit dem Befund, statt ein Protokoll zu liefern.
  */
-export function protokolliere(partie: DauerlaufPartie): Partieprotokoll {
-  const schreiber = new Schreiber();
-  const zaehler = { abwehren: 0, zweiteZuege: 0, letzteZuege: 0 };
-  let erster = true;
-  let schlussrunde = false;
-  let letzter: Spielzustand | null = null;
+export function protokolliere(partie: DauerlaufPartie, pruefer: SchrittPruefer = () => null): Partieprotokoll {
+  let schreiber: Schreiber | null = null;
   let schritt = 0;
 
-  const neuerPruefer = () => (vorher: Spielzustand, aktion: SpielAktion, ergebnis: { zustand: Spielzustand; ereignisse: Ereignis[] }) => {
-    if (erster) {
-      schreiber.setze(vorher);
+  const schreibe: SchrittPruefer = (vorher, aktion, ergebnis) => {
+    if (schreiber === null) {
+      schreiber = new Schreiber(vorher);
       schreiber.zeile(`Partie aus Saat ${partie.saat}, ${partie.spielerzahl} Spieler, ${partie.erweiterung ? 'mit' : 'ohne'} Erweiterung`);
       schreiber.zeile('Gewählt wird gleichverteilt unter den aufgezählten Aktionen (nach ihrer JSON-Form sortiert).');
       schreiber.zeile(`Aufbau (A4): je 5 Handkarten, ${karten(vorher.nachziehstapel.length)} im Nachziehstapel.`);
       schreiber.zugkopf();
-      erster = false;
     }
     schritt += 1;
-    schreiber.setze(vorher);
+    // `vorher` ist der Zustand nach dem vorigen Schritt; der Schreiber steht schon dort.
     schreiber.zeile(`  ${schritt}. ${schreiber.aktion(aktion)}`);
     schreiber.setze(ergebnis.zustand);
     for (const ereignis of ergebnis.ereignisse) {
-      if (ereignis.typ === 'Abgewehrt') zaehler.abwehren += 1;
-      if (ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2) zaehler.zweiteZuege += 1;
-      if (ereignis.typ === 'SchlussrundeBegonnen') schlussrunde = true;
-      // A10, D21: Nach dem Beginn der Schlussrunde ist jeder begonnene oder ausgesetzte Zug ein letzter Zug.
-      if (schlussrunde && ((ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 1) || ereignis.typ === 'Ausgesetzt')) zaehler.letzteZuege += 1;
       const text = schreiber.ereignis(ereignis);
       if (text !== null) schreiber.zeile(`     ${text}`);
     }
     if (ergebnis.ereignisse.some((ereignis) => ereignis.typ === 'ZugBegonnen')) schreiber.zugkopf();
-    letzter = ergebnis.zustand;
-    return null;
+    return pruefer(vorher, aktion, ergebnis);
   };
 
-  const ergebnis = spieleDauerlaufPartie(partie, { motor: SORTIERTER_MOTOR, neuerPruefer });
-  if (ergebnis.ausgang !== 'beendet' || letzter === null) {
+  const ergebnis = spieleDauerlaufPartie(partie, { motor: SORTIERTER_MOTOR, neuerPruefer: () => schreibe });
+  // Ohne Schritt gäbe es weder Aufbau noch Ende; eine Partie endet aber nie ohne Zug.
+  const fertig = schreiber as Schreiber | null;
+  if (ergebnis.ausgang !== 'beendet' || fertig === null) {
     throw new Error(`Partie aus Saat ${partie.saat} endet nicht regulär: ${ergebnis.ausgang}, ${ergebnis.detail}`);
   }
-  schreiber.setze(letzter);
-  schreiber.zeile('');
-  schreiber.zeile('Lage am Ende');
-  schreiber.lage();
-  schreiber.wertung();
-  return { text: `${schreiber.zeilen.join('\n')}\n`, ...zaehler, schritte: ergebnis.schritte };
+  fertig.zeile('');
+  fertig.zeile('Lage am Ende');
+  fertig.lage();
+  fertig.wertung();
+  return { text: `${fertig.zeilen.join('\n')}\n`, schritte: ergebnis.schritte };
 }

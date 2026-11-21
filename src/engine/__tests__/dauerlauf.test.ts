@@ -1,22 +1,11 @@
-import { describe, expect, it } from 'vitest'
+// @vitest-environment node
 import { readdirSync } from 'node:fs'
+import { describe, expect, it } from 'vitest'
 import type { AktionsErgebnis, SpielAktion, Spielzustand } from '../index'
 import { ENGINE_MOTOR, dauerlauf, dauerlaufPartien, spieleDauerlaufPartie } from '../testing/dauerlauf'
 import type { Motor } from '../testing/dauerlauf'
-import { erzeugeZufall } from '../testing/zufall'
-import {
-  allePruefer,
-  neueReaktionen,
-  neueVerfaelschungen,
-  reaktionsPruefer,
-  regelPruefer,
-  stapelPruefer,
-  umfangsPruefer,
-  verfaelschungsPruefer,
-  HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF,
-} from './dauerlauf_pruefer'
-import type { Umfang, ZweiteZuege } from './dauerlauf_pruefer'
 import { partienDesTeils, TEILE } from './dauerlauf_lang'
+import { erwarteGeprueftenLauf, neuerZugzaehler, regelPruefer, spieleGeprueft } from './dauerlauf_pruefer'
 
 const ZUG_BEENDEN = (zustand: Spielzustand): SpielAktion[] => [
   { typ: 'ZugBeenden', spielerId: zustand.spieler[zustand.zug.spielerIndex].id },
@@ -193,10 +182,10 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
     const ohne = lage(2, 0)
     expect(regelPruefer()(ohne, ende, { zustand: ohne, ereignisse: zweiter })).toMatch(/A7\.8/)
     const mit = lage(2, 0, { teilzug: 1, verdopplerGespielt: true, gespielteSonderkarten: 1 })
-    const zaehler = { gesamt: 0, inSchlussrunde: 0 }
+    const zaehler = neuerZugzaehler()
     const pruefer = regelPruefer(zaehler)
     expect(pruefer(mit, ende, { zustand: lage(2, 0), ereignisse: [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, ...zweiter] })).toBeNull()
-    expect(zaehler).toEqual({ gesamt: 1, inSchlussrunde: 1 })
+    expect(zaehler).toEqual({ zweite: 1, zweiteInSchlussrunde: 1, letzte: 0 })
   })
 
   it('D11: ein Verdoppler mit Wirkung im zweiten Zug wird gemeldet', () => {
@@ -220,37 +209,20 @@ describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2, Plan 3.6 Punkt 7)', ()
   it('A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz', () => {
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 2)).toHaveLength(100)
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 4)).toHaveLength(100)
-    const zweiteZuege: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }
-    const reaktionen = neueReaktionen()
-    const verfaelscht = neueVerfaelschungen()
-    const umfang: Umfang = { hoechste: 0, bei: '' }
-    let partie = 0
-    const neuerPruefer = () =>
-      allePruefer(
-        regelPruefer(zweiteZuege),
-        reaktionsPruefer(reaktionen),
-        stapelPruefer,
-        verfaelschungsPruefer(erzeugeZufall(0xfa15c4 + (partie += 1)), verfaelscht),
-        umfangsPruefer(umfang),
-      )
-    const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer })
-    expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet')).toEqual([])
+    const lauf = spieleGeprueft(PARTIEN, 0xfa15c4)
+    const { ergebnisse, zuege, reaktionen } = lauf
+    erwarteGeprueftenLauf(lauf, '300 Partien')
     // Jede Partie braucht mehrere Züge: mindestens eine Karte und „Zug beenden“ je Zug.
     expect(Math.min(...ergebnisse.map((ergebnis) => ergebnis.schritte))).toBeGreaterThan(40)
     // E3: Der Verdoppler wird wirklich gespielt, auch in der Schlussrunde.
-    expect(zweiteZuege.gesamt, 'zweite Züge nach einem Verdoppler im Dauerlauf').toBeGreaterThan(100)
-    expect(zweiteZuege.inSchlussrunde, 'zweite Züge in der Schlussrunde im Dauerlauf').toBeGreaterThan(0)
+    expect(zuege.zweite, 'zweite Züge nach einem Verdoppler im Dauerlauf').toBeGreaterThan(100)
+    expect(zuege.zweiteInSchlussrunde, 'zweite Züge in der Schlussrunde im Dauerlauf').toBeGreaterThan(0)
     // E4: Gruben werden angesagt, abgewehrt, ausgesessen und gehen auch ohne Wirkung ab (D29).
     expect(reaktionen.KarteAngesagt, 'angesagte Gruben im Dauerlauf').toBeGreaterThan(300)
     expect(reaktionen.AbwehrGefragt, 'D33: jede Ansage fragt mindestens einen Betroffenen').toBeGreaterThanOrEqual(reaktionen.KarteAngesagt)
     expect(reaktionen.Abgewehrt, 'Abwehren mit Farbenschutz im Dauerlauf').toBeGreaterThan(30)
     expect(reaktionen.Ausgesetzt, 'ausgesetzte Züge im Dauerlauf').toBeGreaterThan(100)
     expect(reaktionen.GrubeOhneWirkung, 'Gruben ohne Wirkung im Dauerlauf (D29)').toBeGreaterThan(0)
-    // E11, Kriterium 3: in jedem Schritt eine verfälschte Aktion, jede abgelehnt.
-    const schritte = ergebnisse.reduce((summe, ergebnis) => summe + ergebnis.schritte, 0)
-    expect(verfaelscht.abgelehnt, 'verfälschte Aktionen: in jedem Schritt eine, jede abgelehnt').toBe(schritte)
-    // E11, Kriterium 4: die Zahl der aufgezählten Aktionen bleibt begrenzt.
-    expect(umfang.hoechste, `höchste Aktionszahl im Dauerlauf (${umfang.bei})`).toBeLessThanOrEqual(HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF)
   }, 600_000)
 })
 

@@ -1,8 +1,11 @@
+import { expect } from 'vitest'
 import { AKTIONSTYPEN, anwendeAktion, ermittleAktionen, ermittleEntscheider, pruefeAktion } from '../index'
 import type { SpielAktion, Spielzustand } from '../index'
 import { alleSpielkarten } from '../invarianten'
 import { istFarbenschutz } from '../reaktion'
-import type { SchrittPruefer } from '../testing/dauerlauf'
+import { dauerlauf, ENGINE_MOTOR } from '../testing/dauerlauf'
+import type { DauerlaufErgebnis, DauerlaufPartie, Motor, SchrittPruefer } from '../testing/dauerlauf'
+import { erzeugeZufall } from '../testing/zufall'
 
 /*
 Die Prüfer des Dauerlaufs, gemeinsam für den Lauf in `npm test` (300 Partien,
@@ -12,10 +15,15 @@ meldet einen Verstoss als Text; die Zähler zeigen dem Test, dass die geprüfte
 Lage überhaupt vorkam.
 */
 
-/** Wie oft der Dauerlauf einen zweiten Zug nach einem Verdoppler sah (E3). */
-export interface ZweiteZuege {
-  gesamt: number
-  inSchlussrunde: number
+/** Zweite Züge nach einem Verdoppler (E3), davon in der Schlussrunde, und die letzten Züge der Schlussrunden (A10). */
+export interface Zugzaehler {
+  zweite: number
+  zweiteInSchlussrunde: number
+  letzte: number
+}
+
+export function neuerZugzaehler(): Zugzaehler {
+  return { zweite: 0, zweiteInSchlussrunde: 0, letzte: 0 }
 }
 
 /** Wie oft der Dauerlauf eine Ansage, eine Frage, eine Abwehr, ein Aussetzen und eine Grube ohne Wirkung sah (E4). */
@@ -82,7 +90,7 @@ export function allePruefer(...pruefer: SchrittPruefer[]): SchrittPruefer {
  * nach seinem ersten Zug mit Verdoppler, im zweiten Zug wird kein Verdoppler mit
  * Wirkung gespielt, und in der Schlussrunde zählen beide Züge als ein letzter Zug.
  */
-export function regelPruefer(zaehler: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }): SchrittPruefer {
+export function regelPruefer(zaehler: Zugzaehler = neuerZugzaehler()): SchrittPruefer {
   /** Wer in der Schlussrunde seinen letzten Zug hatte, gespielt oder ausgesetzt (D21); `null` vor der Schlussrunde. */
   let letzteZuege: number[] | null = null
   return (vorher, aktion, { zustand, ereignisse }) => {
@@ -95,8 +103,8 @@ export function regelPruefer(zaehler: ZweiteZuege = { gesamt: 0, inSchlussrunde:
         if (ereignis.spielerIndex !== spielerIndex || teilzug !== 1 || !verdopplerGespielt) {
           return `A7.8: zweiter Zug für ${ereignis.spielerIndex} nach ${JSON.stringify(vorher.zug)}.`
         }
-        zaehler.gesamt += 1
-        if (letzteZuege !== null) zaehler.inSchlussrunde += 1
+        zaehler.zweite += 1
+        if (letzteZuege !== null) zaehler.zweiteInSchlussrunde += 1
       } else if (ereignis.typ === 'SchlussrundeBegonnen') letzteZuege = []
       else if (letzteZuege === null) continue
       else if (ereignis.typ === 'KartenGezogen') return `A10: In der Schlussrunde zieht ${ereignis.spielerIndex} Karten.`
@@ -104,8 +112,9 @@ export function regelPruefer(zaehler: ZweiteZuege = { gesamt: 0, inSchlussrunde:
         if (ereignis.spielerIndex === zustand.schlussrundeAusloeser) return 'A10: Der Auslöser ist noch einmal dran.'
         if (letzteZuege.includes(ereignis.spielerIndex)) return `A10: Spieler ${ereignis.spielerIndex} hat einen zweiten letzten Zug.`
         letzteZuege.push(ereignis.spielerIndex)
-      } else if (ereignis.typ === 'PartieBeendet' && letzteZuege.length !== zustand.spieler.length - 1) {
-        return `A10: ${letzteZuege.length} statt ${zustand.spieler.length - 1} letzte Züge.`
+      } else if (ereignis.typ === 'PartieBeendet') {
+        if (letzteZuege.length !== zustand.spieler.length - 1) return `A10: ${letzteZuege.length} statt ${zustand.spieler.length - 1} letzte Züge.`
+        zaehler.letzte += letzteZuege.length
       }
     }
     const zugende = ereignisse.some((ereignis) => ereignis.typ === 'ZugBegonnen' || ereignis.typ === 'PartieBeendet')
@@ -122,11 +131,12 @@ export const stapelPruefer: SchrittPruefer = (_vorher, _aktion, { zustand }) => 
 
 /**
  * E11, Kriterium 4: So viele Aktionen zählt die Engine in einem Zustand der
- * Dauerläufe höchstens auf. Gemessen am 21.11.2026: höchstens 2'785 in den
- * 366'389 Zuständen der 2'000 Partien (4 Spieler mit Erweiterung, meist
- * Schlangenhäutungen). Den ungünstigsten Tisch misst `legal_actions_umfang.test.ts`.
+ * Dauerläufe höchstens auf. Gemessen am 21.11.2026 in den rund 366'000
+ * Zuständen der 2'000 Partien: höchstens 4'007 (2 Spieler mit Erweiterung,
+ * meist Schlangenhäutungen); mit anderer Zuordnung der Spielerzahlen zu den
+ * Saaten waren es 2'785. Den ungünstigsten Tisch misst `legal_actions_umfang.test.ts`.
  */
-export const HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF = 4_000
+export const HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF = 6_000
 
 /** Die grösste Zahl aufgezählter Aktionen in einem Zustand des Laufs (E11, Kriterium 4). */
 export interface Umfang {
@@ -135,15 +145,18 @@ export interface Umfang {
   bei: string
 }
 
-export function umfangsPruefer(umfang: Umfang): SchrittPruefer {
-  return (vorher) => {
-    const aktionen = ermittleAktionen(vorher)
-    if (aktionen.length > umfang.hoechste) {
-      const typen = [...new Set(aktionen.map((aktion) => aktion.typ))].join(', ')
-      umfang.hoechste = aktionen.length
-      umfang.bei = `${vorher.spieler.length} Spieler, Erweiterung ${vorher.erweiterung}, Typen ${typen}`
-    }
-    return null
+/** Merkt sich die grösste Aufzählung; der Lauf zählt jeden Zustand ohnehin einmal auf (`testing/dauerlauf.ts`). */
+function zaehlenderMotor(umfang: Umfang): Motor {
+  return {
+    ...ENGINE_MOTOR,
+    aktionen: (zustand) => {
+      const aktionen = ermittleAktionen(zustand)
+      if (aktionen.length > umfang.hoechste) {
+        umfang.hoechste = aktionen.length
+        umfang.bei = `${zustand.spieler.length} Spieler, Erweiterung ${zustand.erweiterung}, Typen ${[...new Set(aktionen.map((aktion) => aktion.typ))].join(', ')}`
+      }
+      return aktionen
+    },
   }
 }
 
@@ -163,16 +176,10 @@ function waehle<T>(liste: readonly T[], zufall: () => number): T {
   return liste[Math.floor(zufall() * liste.length)]
 }
 
-/** Das erste Feld mit einer Schlangen-Id, auch in `ziel`, `quelle` oder dem ersten Eintrag von `ziele`. */
-function mitSchlange(aktion: Record<string, unknown>): Record<string, unknown> | null {
+/** Der erste Teil der Aktion mit diesem Feld: die Aktion selbst, `ziel`, `quelle` oder der erste Eintrag von `ziele`. */
+function teilMit(aktion: Record<string, unknown>, feld: string): Record<string, unknown> | null {
   const kandidaten = [aktion, aktion.ziel, aktion.quelle, Array.isArray(aktion.ziele) ? aktion.ziele[0] : undefined]
-  return (kandidaten.find((teil) => typeof teil === 'object' && teil !== null && 'schlangenId' in teil) as Record<string, unknown> | undefined) ?? null
-}
-
-/** Das erste Feld mit einer Stelle in einer Schlange, auch in `ziel`. */
-function mitStelle(aktion: Record<string, unknown>): Record<string, unknown> | null {
-  const kandidaten = [aktion, aktion.ziel]
-  return (kandidaten.find((teil) => typeof teil === 'object' && teil !== null && 'position' in teil) as Record<string, unknown> | undefined) ?? null
+  return (kandidaten.find((teil) => typeof teil === 'object' && teil !== null && feld in teil) as Record<string, unknown> | undefined) ?? null
 }
 
 /**
@@ -201,14 +208,14 @@ const VERFAELSCHER: Readonly<Record<string, Verfaelscher>> = {
   'fremdes Feld': (aktion) => ({ ...aktion, zusatz: 1 }),
   'unbekannte Schlange': (aktion) => {
     const kopie = structuredClone(aktion)
-    const teil = mitSchlange(kopie)
+    const teil = teilMit(kopie, 'schlangenId')
     if (teil === null) return null
     teil.schlangenId = 'schlange-999'
     return kopie
   },
   'Stelle ausserhalb der Schlange': (aktion, _zustand, zufall) => {
     const kopie = structuredClone(aktion)
-    const teil = mitStelle(kopie)
+    const teil = teilMit(kopie, 'position')
     if (teil === null) return null
     teil.position = zufall() < 0.5 ? -1 : 999
     return kopie
@@ -257,4 +264,34 @@ export function verfaelschungsPruefer(zufall: () => number, zaehler: Verfaelschu
     zaehler.jeArt[art] = (zaehler.jeArt[art] ?? 0) + 1
     return null
   }
+}
+
+/** Ein Lauf mit allen Prüfern und was sie gezählt haben. */
+export interface GepruefterLauf {
+  ergebnisse: DauerlaufErgebnis[]
+  schritte: number
+  zuege: Zugzaehler
+  reaktionen: Reaktionen
+  verfaelscht: Verfaelschungen
+  umfang: Umfang
+}
+
+/** Spielt die Partien mit allen Prüfern dieser Datei; die Verfälschungen ziehen ihren Zufall aus `saat`. */
+export function spieleGeprueft(partien: readonly DauerlaufPartie[], saat: number): GepruefterLauf {
+  const zuege = neuerZugzaehler()
+  const reaktionen = neueReaktionen()
+  const verfaelscht = neueVerfaelschungen()
+  const umfang: Umfang = { hoechste: 0, bei: '' }
+  const zufall = erzeugeZufall(saat)
+  const neuerPruefer = () => allePruefer(regelPruefer(zuege), reaktionsPruefer(reaktionen), stapelPruefer, verfaelschungsPruefer(zufall, verfaelscht))
+  const ergebnisse = dauerlauf(partien, { motor: zaehlenderMotor(umfang), neuerPruefer })
+  const schritte = ergebnisse.reduce((summe, ergebnis) => summe + ergebnis.schritte, 0)
+  return { ergebnisse, schritte, zuege, reaktionen, verfaelscht, umfang }
+}
+
+/** Was jeder Lauf mit allen Prüfern erfüllt: jede Partie endet, jede Verfälschung ist abgelehnt, die Aktionszahl bleibt begrenzt. */
+export function erwarteGeprueftenLauf(lauf: GepruefterLauf, titel: string): void {
+  expect(lauf.ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet'), `${titel}: Partien, die nicht regulär endeten`).toEqual([])
+  expect(lauf.verfaelscht.abgelehnt, `${titel}: verfälschte Aktionen, in jedem Schritt eine, jede abgelehnt`).toBe(lauf.schritte)
+  expect(lauf.umfang.hoechste, `${titel}: E11 Kriterium 4, höchste Aktionszahl (${lauf.umfang.bei})`).toBeLessThanOrEqual(HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF)
 }

@@ -1,18 +1,6 @@
 import { expect } from 'vitest'
-import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
-import { erzeugeZufall } from '../testing/zufall'
-import {
-  allePruefer,
-  HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF,
-  neueReaktionen,
-  neueVerfaelschungen,
-  reaktionsPruefer,
-  regelPruefer,
-  stapelPruefer,
-  umfangsPruefer,
-  verfaelschungsPruefer,
-} from './dauerlauf_pruefer'
-import type { Umfang, ZweiteZuege } from './dauerlauf_pruefer'
+import { dauerlaufPartien } from '../testing/dauerlauf'
+import { erwarteGeprueftenLauf, spieleGeprueft } from './dauerlauf_pruefer'
 
 /*
 E11, Kriterium 3: der lange Dauerlauf mit 2'000 Zufallspartien, aufgeteilt in
@@ -42,35 +30,20 @@ export function partienDesTeils(teil: number) {
 /** Spielt einen Teil mit allen Prüfern und prüft, dass jede Partie endet und jede geprüfte Lage vorkam. */
 export function pruefeLangenDauerlauf(teil: number): void {
   const partien = partienDesTeils(teil)
-  const zweiteZuege: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }
-  const reaktionen = neueReaktionen()
-  const verfaelscht = neueVerfaelschungen()
-  const umfang: Umfang = { hoechste: 0, bei: '' }
-  let partie = 0
-  const neuerPruefer = () =>
-    allePruefer(
-      regelPruefer(zweiteZuege),
-      reaktionsPruefer(reaktionen),
-      stapelPruefer,
-      verfaelschungsPruefer(erzeugeZufall(0xe11 * TEILE + teil * 10_000 + (partie += 1)), verfaelscht),
-      umfangsPruefer(umfang),
-    )
-  const ergebnisse = dauerlauf(partien, { neuerPruefer })
-  const schritte = ergebnisse.reduce((summe, ergebnis) => summe + ergebnis.schritte, 0)
+  const lauf = spieleGeprueft(partien, 0xe11 + teil)
+  const { zuege, reaktionen, verfaelscht, umfang } = lauf
   console.info(
-    `E11-Dauerlauf Teil ${teil}: ${ergebnisse.length} Partien, ${schritte} Schritte, höchste Aktionszahl ${umfang.hoechste} (${umfang.bei}), ` +
-      `zweite Züge ${zweiteZuege.gesamt} (Schlussrunde ${zweiteZuege.inSchlussrunde}), Reaktionen ${JSON.stringify(reaktionen)}, ` +
+    `E11-Dauerlauf Teil ${teil}: ${lauf.ergebnisse.length} Partien, ${lauf.schritte} Schritte, höchste Aktionszahl ${umfang.hoechste} (${umfang.bei}), ` +
+      `zweite Züge ${zuege.zweite} (Schlussrunde ${zuege.zweiteInSchlussrunde}), Reaktionen ${JSON.stringify(reaktionen)}, ` +
       `verfälscht ${JSON.stringify(verfaelscht.jeArt)}`,
   )
 
   expect(new Set(partien.map((eintrag) => eintrag.spielerzahl)), `Teil ${teil}: 2, 3 und 4 Spieler`).toEqual(new Set([2, 3, 4]))
-  expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet'), `Teil ${teil}: Partien, die nicht regulär endeten`).toEqual([])
-  expect(verfaelscht.abgelehnt, `Teil ${teil}: verfälschte Aktionen, in jedem Schritt eine, jede abgelehnt`).toBe(schritte)
+  erwarteGeprueftenLauf(lauf, `Teil ${teil}`)
   expect(Object.keys(verfaelscht.jeArt).length, `Teil ${teil}: jede Art der Verfälschung kam vor`).toBe(10)
-  expect(zweiteZuege.gesamt, `Teil ${teil}: A7.8, zweite Züge nach einem Verdoppler`).toBeGreaterThan(1000)
-  expect(zweiteZuege.inSchlussrunde, `Teil ${teil}: A7.8/A10, zweite Züge in der Schlussrunde`).toBeGreaterThan(0)
+  expect(zuege.zweite, `Teil ${teil}: A7.8, zweite Züge nach einem Verdoppler`).toBeGreaterThan(1000)
+  expect(zuege.zweiteInSchlussrunde, `Teil ${teil}: A7.8/A10, zweite Züge in der Schlussrunde`).toBeGreaterThan(0)
   expect(reaktionen.Abgewehrt, `Teil ${teil}: A7.2, Abwehren mit Farbenschutz`).toBeGreaterThan(200)
   expect(reaktionen.Ausgesetzt, `Teil ${teil}: A7.6, ausgesetzte Züge`).toBeGreaterThan(500)
   expect(reaktionen.GrubeOhneWirkung, `Teil ${teil}: D29, Gruben ohne Wirkung`).toBeGreaterThan(0)
-  expect(umfang.hoechste, `Teil ${teil}: E11 Kriterium 4, höchste Aktionszahl (${umfang.bei})`).toBeLessThanOrEqual(HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF)
 }
