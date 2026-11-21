@@ -40,13 +40,13 @@ function Posten({ titel, wert, kennung }: { titel: string; wert: number | null; 
 function SchlangeDerWertung({ ansicht, wertung, titel, nummer }: { ansicht: SchlangeAnsicht; wertung: SchlangenWertung; titel: string; nummer: number }) {
   const kennung = useId()
   return (
-    <section className="rang-schlange" aria-labelledby={kennung}>
-      <h3 id={kennung} className="rang-schlange-titel">
+    <section className="erg-rang-schlange" aria-labelledby={kennung}>
+      <h3 id={kennung} className="erg-rang-schlange-titel">
         {schlangeTitel(nummer, wertung.gruppenPunkte)}
       </h3>
       <Schlange schlange={ansicht} titel={titel} groesse={KARTENGROESSE.gegner} />
-      <ul className="rang-zeilen">
-        {wertung.gruppen.length === 0 && <li className="rang-leise">{ERGEBNIS.keineGruppe}</li>}
+      <ul className="erg-rang-zeilen">
+        {wertung.gruppen.length === 0 && <li className="erg-rang-leise">{ERGEBNIS.keineGruppe}</li>}
         {wertung.gruppen.map((gruppe) => (
           <li key={`gruppe-${gruppe.kartenIds[0]}`}>{gruppeText(gruppe)}</li>
         ))}
@@ -64,26 +64,26 @@ export function Rang({ eintrag }: { eintrag: ErgebnisEintrag }) {
   const { wertung, person } = eintrag
   const { kette } = wertung
   return (
-    <li className={eintrag.sieger ? 'rang rang--sieger' : 'rang'} aria-labelledby={kennung}>
-      <div className="rang-kopf">
-        <span className="rang-platz">{platzText(eintrag.platz)}</span>
-        <h2 id={kennung} className="rang-name">
+    <li className={eintrag.sieger ? 'erg-rang erg-rang--sieger' : 'erg-rang'} aria-labelledby={kennung}>
+      <div className="erg-rang-kopf">
+        <span className="erg-rang-platz">{platzText(eintrag.platz)}</span>
+        <h2 id={kennung} className="erg-rang-name">
           {anzeigename(person)}
         </h2>
-        {eintrag.sieger && <span className="rang-abzeichen">{ERGEBNIS.sieger}</span>}
-        <span className="rang-gesamt" data-testid="gesamt">
+        {eintrag.sieger && <span className="erg-rang-abzeichen">{ERGEBNIS.sieger}</span>}
+        <span className="erg-rang-gesamt" data-testid="gesamt">
           {punkteText(wertung.summe)}
         </span>
       </div>
-      <dl className="rang-posten">
+      <dl className="erg-rang-posten">
         <Posten titel={ERGEBNIS.farbgruppen} wert={wertung.gruppenPunkte} kennung="farbgruppen" />
         <Posten titel={ERGEBNIS.vielfalt} wert={wertung.vielfaltBonus} kennung="vielfalt" />
         <Posten titel={ERGEBNIS.kette} wert={kette.bonus} kennung="kette" />
         <Posten titel={ERGEBNIS.aufgaben} wert={wertung.aufgaben === null ? null : wertung.aufgabenPunkte} kennung="aufgaben" />
       </dl>
-      <div className="rang-herkunft">
+      <div className="erg-rang-herkunft">
         {eintrag.schlangen.length === 0 ? (
-          <p className="rang-leise">{ERGEBNIS.keineSchlange}</p>
+          <p className="erg-rang-leise">{ERGEBNIS.keineSchlange}</p>
         ) : (
           eintrag.schlangen.map((schlange, index) => (
             <SchlangeDerWertung

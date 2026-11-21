@@ -297,8 +297,10 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   den Sieger („Du gewinnst!“, „KI-Gegner 2 gewinnt!“, „Gleichstand: Du und
   KI-Gegner 1 gewinnen!“), darunter die höchste Punktzahl und, wenn du nicht
   gewonnen hast, dein Platz. Es folgt die Rangliste, am Fuss „Zur Lobby“
-  (Zweitknopf) und „Noch einmal“ (Hauptknopf). Die Spalte ist 48rem breit statt
-  32rem wie in der Lobby. In der Lobby steht eine beendete Partie als „Letzte
+  (Zweitknopf) und „Noch einmal“ (Hauptknopf). Die Seite ist so hoch wie das
+  Fenster, und wie im Entwurf scrollt nur die Rangliste, mit „mehr ↓“ und
+  „mehr ↑“ am Rand; Titel und Knöpfe bleiben im Bild. Die Spalte ist 48rem breit
+  statt 32rem wie in der Lobby. In der Lobby steht eine beendete Partie als „Letzte
   Partie: …, beendet“ mit dem Zweitknopf „Ergebnis ansehen“.
 
 ## Bewegung

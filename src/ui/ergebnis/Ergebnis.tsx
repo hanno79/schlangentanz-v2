@@ -5,6 +5,8 @@ import Rahmen from '../lobby/Rahmen'
 import Verweis from '../lobby/Verweis'
 import type { ErgebnisAnsicht } from '../spiel/ergebnisAnsicht'
 import { TISCH } from '../tisch/texte'
+import { useUeberlauf } from '../tisch/ueberlauf'
+import { Weiter } from '../tisch/Weiter'
 import { Rang } from './Rang'
 import { ERGEBNIS, siegerText, siegerTitel } from './texte'
 
@@ -12,7 +14,9 @@ import { ERGEBNIS, siegerText, siegerTitel } from './texte'
 Die Wertung nach Spielende (Plan O8, Entwurf „Ergebnis“ aus O1): oben wer
 gewonnen hat, bei Gleichstand alle (D22), darunter die Rangliste mit der
 Aufschlüsselung je Spieler und am Fuss „Zur Lobby“ und „Noch einmal“, der
-Hauptknopf zuletzt (DESIGN.md „Kopf- und Aktionsleiste“).
+Hauptknopf zuletzt (DESIGN.md „Kopf- und Aktionsleiste“). Wie im Entwurf
+scrollt nur die Rangliste; Titel und Knöpfe bleiben im Bild, und das Zeichen
+„mehr ↓“ sagt, dass darunter noch Spieler stehen.
 
 Die Seite zeigt nur, was `ergebnisAnsicht` aus der Endwertung der Engine
 liefert. Was „Noch einmal“ tut, entscheidet die Spielseite; hier wird nur
@@ -26,6 +30,7 @@ interface ErgebnisEigenschaften {
 }
 
 export function Ergebnis({ ergebnis, nochEinmal }: ErgebnisEigenschaften) {
+  const [liste, ueberlauf] = useUeberlauf<HTMLOListElement>()
   return (
     <Rahmen
       testId="ergebnis"
@@ -43,11 +48,14 @@ export function Ergebnis({ ergebnis, nochEinmal }: ErgebnisEigenschaften) {
         </>
       }
     >
-      <ol className="rangliste" aria-label={ERGEBNIS.rangliste}>
-        {ergebnis.rangliste.map((eintrag) => (
-          <Rang key={eintrag.wertung.spielerId} eintrag={eintrag} />
-        ))}
-      </ol>
+      <div className="erg-rangliste-rahmen">
+        <ol ref={liste} className="erg-rangliste" aria-label={ERGEBNIS.rangliste}>
+          {ergebnis.rangliste.map((eintrag) => (
+            <Rang key={eintrag.wertung.spielerId} eintrag={eintrag} />
+          ))}
+        </ol>
+        <Weiter ueberlauf={ueberlauf} />
+      </div>
     </Rahmen>
   )
 }

@@ -48,11 +48,17 @@ test.describe('O8 K1/K2: Wertung mit vier Spielern und Jokern', () => {
     await expect(eintrag(page, 'KI-Gegner 1')).toContainText('Längste Kette: 4 Karten')
   })
 
-  test('O8: die Hauptknöpfe stehen nach dem Scrollen ganz im Bild', async ({ page }) => {
-    const knopf = page.getByRole('button', { name: 'Noch einmal' })
-    await knopf.scrollIntoViewIfNeeded()
-    await expect(knopf).toBeInViewport({ ratio: 1 })
+  test('O8: nur die Rangliste scrollt; Titel und Knöpfe stehen ohne Scrollen ganz im Bild', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Noch einmal' })).toBeInViewport({ ratio: 1 })
     await expect(page.getByRole('link', { name: 'Zur Lobby' })).toBeInViewport({ ratio: 1 })
+    await expect(page.getByRole('heading', { level: 1 })).toBeInViewport({ ratio: 1 })
+    // Vier Spieler mit Aufschlüsselung passen in keine Geräteklasse; die Liste zeigt, dass es weitergeht.
+    await expect(page.locator('[data-weiter="unten"]')).toBeVisible()
+    const liste = page.getByRole('list', { name: 'Wertung' })
+    await liste.evaluate((element) => element.scrollTo(0, element.scrollHeight))
+    await expect(page.locator('[data-weiter="oben"]')).toBeVisible()
+    await expect(eintrag(page, 'KI-Gegner 3')).toBeInViewport()
+    expect(await page.evaluate(() => document.scrollingElement!.scrollTop), 'die Seite selbst scrollt nicht').toBe(0)
   })
 })
 
