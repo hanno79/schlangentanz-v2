@@ -177,6 +177,8 @@ const globaleAenderungen: Array<[string, string, string?]> = [
     'globalThis.valueOf() ohne Cast',
     'const g: { toString(): string; structuredClone?: typeof structuredClone } = globalThis.valueOf()\ng.structuredClone = f',
   ],
+  // Gegenprobe zur Regel GEERBT_VON_OBJECT: JSON steht auf der Positivliste, nur valueOf gibt es ohne Cast heraus.
+  ['JSON.valueOf() ohne Cast', 'const j: { toString(): string; stringify?: unknown } = JSON.valueOf()\nj.stringify = f'],
   // Codex zu Iteration 2: Ambient-Deklarationen, Typprädikate als versteckter Cast, geerbte Methoden als Wert.
   ['declare let tarnt das Globale als lokal', 'structuredClone = <T>(wert: T): T => wert', 'declare let structuredClone: <T>(wert: T) => T'],
   // Eine Ergänzung des globalen Bereichs gilt im ganzen Probe-Programm; deshalb hier ein Name, den sonst niemand nutzt.
