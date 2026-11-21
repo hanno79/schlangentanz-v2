@@ -1,0 +1,5 @@
+Stellungen 245: Zug 216, zweiter Teilzug 13, Reaktion 10, Schlussrunde 6
+Spion: echte Objekte erreicht 0; fremde Hand in einer Sicht 0; fremde Handkarten richtig geraten 251 (Raten erwartet 272.5); oberste Stapelkarte 2 von 238
+Störprobe: 245 Stellungen, verändert 245, Sicht gleich 245, abweichende Wahl 0
+Gegenprobe Betrug: abweichende Wahl 221 von 245
+Andere KI-Saat: abweichende Wahl 0 von 245

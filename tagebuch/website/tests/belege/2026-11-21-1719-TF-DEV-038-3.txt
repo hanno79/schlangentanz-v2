@@ -1,0 +1,65 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-adeb76fd86dec245a
+
+ ❯ src/entwicklung/partie.test.ts (12 tests | 4 failed) 81ms
+     × U5: für keine Saat und keinen Schritt ist die KI-Saat die Partiesaat 7ms
+     × U5: auch eine Saat, die die Mischung auf die Partiesaat abbilden würde, wird verschoben 2ms
+     × U5: gleicher Schritt, gleiche KI-Saat; ein anderer Schritt, eine andere 1ms
+     × U5 Gegenprobe: mit der Partiesaat als KI-Saat errät der Rahmen den Stapel genau, mit der eigenen Saat nicht 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/partie.test.ts > U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von der Partie > U5: für keine Saat und keinen Schritt ist die KI-Saat die Partiesaat
+AssertionError: U5: Saat 0, Schritt 0: expected +0 not to be +0 // Object.is equality
+ ❯ src/entwicklung/partie.test.ts:59:68
+     57|       for (const schritt of [0, 1, 2, 3, saat % 1000, saat]) {
+     58|         const kiSaat = kiSaatAmTisch(schritt, saat)
+     59|         expect(kiSaat, `U5: Saat ${saat}, Schritt ${schritt}`).not.toB…
+       |                                                                    ^
+     60|         expect(Number.isInteger(kiSaat) && kiSaat >= 2 ** 31 && kiSaat…
+     61|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/entwicklung/partie.test.ts > U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von der Partie > U5: auch eine Saat, die die Mischung auf die Partiesaat abbilden würde, wird verschoben
+AssertionError: U5: fällt die Mischung auf die Partiesaat, kommt eine andere heraus: expected 3126162260 not to be 3126162260 // Object.is equality
+ ❯ src/entwicklung/partie.test.ts:68:125
+     66|     for (const schritt of [0, 1, 5, 99]) {
+     67|       const ohneGrenze = kiSaatAmTisch(schritt, null)
+     68|       expect(kiSaatAmTisch(schritt, ohneGrenze), 'U5: fällt die Mischu…
+       |                                                                                                                             ^
+     69|     }
+     70|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/entwicklung/partie.test.ts > U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von der Partie > U5: gleicher Schritt, gleiche KI-Saat; ein anderer Schritt, eine andere
+AssertionError: expected 1 not to be 1 // Object.is equality
+ ❯ src/entwicklung/partie.test.ts:74:37
+     72|   it('U5: gleicher Schritt, gleiche KI-Saat; ein anderer Schritt, eine…
+     73|     expect(kiSaatAmTisch(3, 1)).toBe(kiSaatAmTisch(3, 1))
+     74|     expect(kiSaatAmTisch(3, 1)).not.toBe(kiSaatAmTisch(4, 1))
+       |                                     ^
+     75|   })
+     76|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/entwicklung/partie.test.ts > U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von der Partie > U5 Gegenprobe: mit der Partiesaat als KI-Saat errät der Rahmen den Stapel genau, mit der eigenen Saat nicht
+AssertionError: U5: Saat 1, eigene KI-Saat: expected 5 to be less than 5
+ ❯ src/entwicklung/partie.test.ts:80:96
+     78|     for (const saat of [1, 2, 3, 4, 5]) {
+     79|       expect(erratenOben(saat, saat), `U5: Saat ${saat}, gleiche Saat`…
+     80|       expect(erratenOben(saat, kiSaatAmTisch(saat, saat)), `U5: Saat $…
+       |                                                                                                ^
+     81|     }
+     82|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 8 passed (12)
+   Start at  16:48:53
+   Duration  4.80s (transform 654ms, setup 474ms, import 670ms, tests 81ms, environment 3.14s)
+

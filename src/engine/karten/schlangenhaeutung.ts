@@ -1,8 +1,9 @@
 import type { SchlangenhaeutungSpielenAktion } from '../aktionen/typen';
 import type { FarbkarteInfo, Schlange, Spielkarte, Spielzustand } from '../types';
-import { legeAufEigenenAblagestapel, spielerIndexVon } from '../zugablauf';
+import { alleSchlangen, findeSchlange, gepruefteSchlange } from '../schlangen';
+import { legeAufEigenenAblagestapel } from '../zugablauf';
 import type { KartenDefinition } from './register';
-import { alleSchlangen, findeSchlange, gepruefteSchlange } from './schlangenstelle';
+import { betroffenerBesitzer, grundVerdeckt } from './schlangenstelle';
 
 /*
 A7.9: Die Schlangenhäutung ordnet einen Abschnitt von 3 bis 5
@@ -90,10 +91,11 @@ function pruefeAbschnitt(schlange: Schlange, neueReihenfolge: readonly string[])
   for (const id of neueReihenfolge) {
     const stelle = schlange.karten.findIndex((karte) => karte.id === id);
     if (stelle < 0) {
-      const verdeckt = schlange.fusionen.find((fusion) => fusion.unter.some((karte) => karte.id === id));
-      return verdeckt === undefined
-        ? `Die Karte ${id} liegt nicht in der Schlange ${schlange.id}.`
-        : `Die Karte ${id} liegt unter der Farbenfusion ${verdeckt.karteId}; neu ordnen lassen sich nur Farbkarten, die offen in der Schlange liegen (A7.9, A7.7).`;
+      return grundVerdeckt(
+        schlange,
+        id,
+        (fusionId) => `Die Karte ${id} liegt unter der Farbenfusion ${fusionId}; neu ordnen lassen sich nur Farbkarten, die offen in der Schlange liegen (A7.9, A7.7).`,
+      );
     }
     const karte = schlange.karten[stelle];
     if (karte.typ !== 'Farbkarte') {
@@ -140,10 +142,7 @@ export const schlangenhaeutung: KartenDefinition<SchlangenhaeutungSpielenAktion>
     return pruefeAbschnitt(gefunden.schlange, aktion.neueReihenfolge);
   },
 
-  betroffene(zustand: Spielzustand, aktion: SchlangenhaeutungSpielenAktion): number[] {
-    const { besitzer } = gepruefteSchlange(zustand, aktion.schlangenId);
-    return besitzer === spielerIndexVon(zustand, aktion.spielerId) ? [] : [besitzer];
-  },
+  betroffene: betroffenerBesitzer,
 
   wirke(zustand: Spielzustand, aktion: SchlangenhaeutungSpielenAktion): Spielzustand {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);

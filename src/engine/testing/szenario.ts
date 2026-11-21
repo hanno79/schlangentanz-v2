@@ -1,9 +1,10 @@
 import type { KartenAktion } from '../aktionen/typen';
 import { FARBEN } from '../deck';
 import { pruefeInvarianten } from '../invarianten';
-import { erstelleTisch, schlangenIdFuer, teileReihumAus } from '../state';
+import { beginneSchlange } from '../schlangen';
+import { erstelleTisch, teileReihumAus } from '../state';
 import type { TischOptionen } from '../state';
-import type { FarbkarteInfo, Farbe, Schlange, Sonderkartenname, SonderkarteInfo, Spielkarte, Spielzustand } from '../types';
+import type { FarbkarteInfo, Farbe, Sonderkartenname, SonderkarteInfo, Spielkarte, Spielzustand } from '../types';
 
 /*
 Der Szenario-Baukasten (Plan E1, Kriterium 8) baut Zustände für Tests und den
@@ -100,10 +101,10 @@ export function baukasten(optionen: TischOptionen): Baukasten {
     return karte;
   }
 
+  /** Scheitert ein Glied, nimmt `ganzOderGarNicht` auch die schon begonnene Schlange zurück. */
   function legeSchlange(index: number, glieder: Schlangenglied[]): void {
-    const besitzer = spieler(index);
-    zustand.schlangenZaehler += 1;
-    const schlange: Schlange = { id: schlangenIdFuer(zustand.schlangenZaehler), karten: [], fusionen: [] };
+    spieler(index);
+    const schlange = beginneSchlange(zustand, index);
     for (const glied of glieder) {
       if (typeof glied === 'object' && 'fusion' in glied) {
         const unter: [FarbkarteInfo, FarbkarteInfo] = [nimmFarbkarte(glied.fusion[0]), nimmFarbkarte(glied.fusion[1])];
@@ -114,7 +115,6 @@ export function baukasten(optionen: TischOptionen): Baukasten {
         schlange.karten.push(nimm(glied));
       }
     }
-    besitzer.schlangen.push(schlange);
   }
 
   const bau: Baukasten = {

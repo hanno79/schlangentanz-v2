@@ -1,10 +1,9 @@
 import type { FarbkarteLegenAktion } from '../aktionen/typen';
 import { MAX_SCHLANGEN_PRO_SPIELER } from '../constants';
-import { schlangenIdFuer } from '../state';
+import { alleSchlangen, beginneSchlange, findeSchlange, gepruefteSchlange } from '../schlangen';
 import type { Spielkarte, Spielzustand } from '../types';
 import { entnehmeHandkarte, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
-import { alleSchlangen, findeSchlange, gepruefteSchlange } from './schlangenstelle';
 
 /*
 A5, D9, D19: Eine Farbkarte beginnt eine neue eigene Schlange (höchstens zwei je
@@ -50,8 +49,7 @@ export const farbkarte: KartenDefinition<FarbkarteLegenAktion> = {
     const karte = entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
     const { ziel } = aktion;
     if (ziel.art === 'neueSchlange') {
-      zustand.schlangenZaehler += 1;
-      eigeneSchlangen(zustand, aktion.spielerId).push({ id: schlangenIdFuer(zustand.schlangenZaehler), karten: [karte], fusionen: [] });
+      beginneSchlange(zustand, spielerIndexVon(zustand, aktion.spielerId), [karte]);
       return zustand;
     }
     const { schlange } = gepruefteSchlange(zustand, ziel.schlangenId);

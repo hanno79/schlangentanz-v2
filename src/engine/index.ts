@@ -36,6 +36,8 @@ export type {
 export { erstellePartie } from './state';
 export type { PartieOptionen } from './state';
 export { ermittleAktionen } from './aktionen/enumerieren';
+/** A10, D21: Kommt der letzte Zug eines Spielers in der Schlussrunde noch? Für die Sicht der KI (Plan K2). */
+export { hatNochLetztenZug } from './zugablauf';
 export { ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
@@ -50,7 +52,7 @@ export { fehlertext } from './form';
 // Wertung
 export { ermittleFarbgruppen } from './colorGroups';
 export type { Farbgruppe } from './colorGroups';
-export { vielfaltBonusFuer, werteSchlangen } from './jokerGruppen';
+export { istJoker, vielfaltBonusFuer, werteSchlangen } from './jokerGruppen';
 export type { FarbgruppenErgebnis, GewerteteGruppe, JokerFarbe, Jokerart, SchlangenWertung } from './jokerGruppen';
 export { berechneEndwertung, berechneZwischenstand, KETTENBONUS, laengsteFarbkette } from './scoring';
 export type { AufgabenEintrag, Endwertung, KettenWertung, SpielerWertung, Zwischenstand } from './scoring';

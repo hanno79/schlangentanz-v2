@@ -1,6 +1,6 @@
 import { expect } from 'vitest'
 import type { Spielkarte, Spielzustand } from '../index'
-import { findeSchlange } from '../karten/schlangenstelle'
+import { findeSchlange } from '../schlangen'
 import type { EinfuegeAktion } from '../karten/schlangenstelle'
 import { aktionen, fuehreAus } from './zugablauf_hilfen'
 import type { Schritt } from './zugablauf_hilfen'

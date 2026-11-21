@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { serialisiere } from '../engine'
 import { erzeugeZufall } from '../engine/testing/zufall'
-import { starteEntwicklerPartie } from './partie'
+import { sichtFuer, bestimmeZustand } from '../ki/sicht'
+import { kiSaatAmTisch, starteEntwicklerPartie } from './partie'
 
 describe('P0.4: Zufall nur als Parameter', () => {
   it('P0.4: gleiche Saat liefert dieselbe Zahlenfolge, andere Saat eine andere', () => {
@@ -39,5 +40,53 @@ describe('E1: Partie aus Saat, Spielerzahl und Erweiterung', () => {
   it('E1: die Erweiterung schaltet die Engine selbst', () => {
     expect(starteEntwicklerPartie(5, 2, true).erweiterung).toBe(true)
     expect(starteEntwicklerPartie(5, 2, false).erweiterung).toBe(false)
+  })
+})
+
+describe('U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von der Partie', () => {
+  /** Wie viele der obersten fünf Karten des Nachziehstapels der Rahmen mit dieser KI-Saat richtig errät. */
+  function erratenOben(saat: number, kiSaat: number): number {
+    const partie = starteEntwicklerPartie(saat, 2, false)
+    const geraten = bestimmeZustand(sichtFuer(partie, 0), erzeugeZufall(kiSaat))
+    return partie.nachziehstapel.slice(0, 5).filter((karte, stelle) => geraten.nachziehstapel[stelle]?.id === karte.id).length
+  }
+
+  it('U5: für keine Saat und keinen Schritt ist die KI-Saat die Partiesaat', () => {
+    const saaten = [0, 1, 2, 7, 4185, 2 ** 31 - 1, 2 ** 31, 2 ** 32 - 1, ...Array.from({ length: 500 }, (_, nummer) => (nummer * 2654435761) >>> 0)]
+    for (const saat of saaten) {
+      for (const schritt of [0, 1, 2, 3, saat % 1000, saat]) {
+        const kiSaat = kiSaatAmTisch(schritt, saat)
+        expect(kiSaat, `U5: Saat ${saat}, Schritt ${schritt}`).not.toBe(saat)
+        expect(Number.isInteger(kiSaat) && kiSaat >= 2 ** 31 && kiSaat < 2 ** 32, 'U5: eine 32-Bit-Saat mit gesetztem höchstem Bit').toBe(true)
+      }
+    }
+  })
+
+  it('U5: auch eine Saat, die die Mischung auf die Partiesaat abbilden würde, wird verschoben', () => {
+    for (const schritt of [0, 1, 5, 99]) {
+      const ohneGrenze = kiSaatAmTisch(schritt, null)
+      expect(kiSaatAmTisch(schritt, ohneGrenze), 'U5: fällt die Mischung auf die Partiesaat, kommt eine andere heraus').not.toBe(ohneGrenze)
+    }
+  })
+
+  it('U5: echte Fälle, in denen die Mischung die Partiesaat ergäbe: Die KI-Saat weicht um ein Bit aus (Prüfprotokoll K2, Iteration 2)', () => {
+    const faelle: Array<[number, number, number]> = [
+      [22, 3736942547, 3736942546],
+      [30, 4006315519, 4006315518],
+      [60, 4210738748, 4210738749],
+    ]
+    for (const [schritt, saat, ausgewichen] of faelle) expect(kiSaatAmTisch(schritt, saat), `U5: Schritt ${schritt}, Saat ${saat}`).toBe(ausgewichen)
+  })
+
+  it('U5: gleicher Schritt, gleiche KI-Saat; ein anderer Schritt, eine andere', () => {
+    expect(kiSaatAmTisch(3, 1)).toBe(kiSaatAmTisch(3, 1))
+    expect(kiSaatAmTisch(3, 1)).not.toBe(kiSaatAmTisch(4, 1))
+  })
+
+  it('U5 Gegenprobe: mit der Partiesaat als KI-Saat errät der Rahmen den Stapel genau, mit der eigenen Saat nicht', () => {
+    for (const saat of [1, 2, 3, 4, 5]) {
+      expect(erratenOben(saat, saat), `U5: Saat ${saat}, gleiche Saat`).toBe(5)
+      expect(erratenOben(saat, kiSaatAmTisch(saat, saat)), `U5: Saat ${saat}, eigene KI-Saat`).toBeLessThan(5)
+    }
   })
 })

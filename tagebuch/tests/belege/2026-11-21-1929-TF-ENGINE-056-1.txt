@@ -1,0 +1,55 @@
+== pruefsumme-cf0b3f1.json
+{
+  "stand": "cf0b3f1",
+  "partienSumme": "e980d9556e76c4b4ff6553d5826defe01ed7d23a2272e77f666ef242eb442e31",
+  "gesamt": "acef900f8bae3d6f9084c36484393c04783864a8f67253cef1a2dd1a61a85765",
+  "zaehler": {
+    "partien": 400,
+    "schritte": 73060,
+    "aktionen": 2557518,
+    "pruefungen": 2557518,
+    "abwandlungen": 1168960,
+    "beendet": 400,
+    "grenze": 0,
+    "sackgasse": 0,
+    "ausnahmen": 0
+  },
+  "zz": {
+    "zustaende": 1500,
+    "angewandt": 13921,
+    "reaktionen": 5146,
+    "ausnahmen": 0
+  },
+  "szenarioMeldungen": 107808,
+  "verschiedeneMeldungen": 1040,
+  "ausnahmen": []
+}
+== pruefsumme-35c1af7.json
+{
+  "stand": "35c1af7",
+  "partienSumme": "e980d9556e76c4b4ff6553d5826defe01ed7d23a2272e77f666ef242eb442e31",
+  "gesamt": "acef900f8bae3d6f9084c36484393c04783864a8f67253cef1a2dd1a61a85765",
+  "zaehler": {
+    "partien": 400,
+    "schritte": 73060,
+    "aktionen": 2557518,
+    "pruefungen": 2557518,
+    "abwandlungen": 1168960,
+    "beendet": 400,
+    "grenze": 0,
+    "sackgasse": 0,
+    "ausnahmen": 0
+  },
+  "zz": {
+    "zustaende": 1500,
+    "angewandt": 13921,
+    "reaktionen": 5146,
+    "ausnahmen": 0
+  },
+  "szenarioMeldungen": 107808,
+  "verschiedeneMeldungen": 1040,
+  "ausnahmen": []
+}
+== gleich ohne Feld stand: True
+== meldungen: 1040 Zeilen, byte-gleich: True
+== meldungen-woertlich: 107808 Zeilen, byte-gleich: True

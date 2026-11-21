@@ -1,0 +1,38 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-adeb76fd86dec245a
+
+ ❯ src/ki/strategien/solideKi.test.ts (24 tests | 1 failed) 16049ms
+     × K2.5, F8a: letzter Zug mit Schlangengrube und Farbenschutz, niemand hat mehr einen Zug: sie legt den Farbenschutz ab, nicht die Grube 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/strategien/solideKi.test.ts > K2 Kriterium 5: keine Karte wirkungslos, wenn ein besser bewerteter Zug möglich ist > K2.5, F8a: letzter Zug mit Schlangengrube und Farbenschutz, niemand hat mehr einen Zug: sie legt den Farbenschutz ab, nicht die Grube
+AssertionError: F8a: es gibt einen anderen Zug, also keine Grube ohne Wirkung: expected [ { …(4) }, …(1) ] to match object [ { …(2) }, { typ: 'ZugBeenden' } ]
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  [
+    {
+-     "karteId": StringMatching /^farbenschutz-/,
+-     "typ": "SonderkarteWirkungslosAblegen",
++     "karteId": "schlangengrube-01",
++     "typ": "SchlangengrubeSpielen",
+    },
+    {
+      "typ": "ZugBeenden",
+    },
+  ]
+
+ ❯ src/ki/strategien/solideKi.test.ts:309:91
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 passed (24)
+   Start at  16:47:40
+   Duration  29.14s (transform 891ms, setup 447ms, import 12.19s, tests 16.05s, environment 0ms)
+

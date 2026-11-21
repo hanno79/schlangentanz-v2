@@ -1,0 +1,53 @@
+Saat 7154: Endwertung 70 : 5, solide an Sitz 0
+TURNIER (eigene Saaten 8800–9055, 36 Partien)
+2/B: Partien 6, Siege 6 (allein 6), Ø solide 62.50, Ø Zufall 1.00, Schritte 561, max ms 146.6, max Aktionen 712
+2/E: Partien 7, Siege 7 (allein 7), Ø solide 63.00, Ø Zufall 0.71, Schritte 660, max ms 189.6, max Aktionen 1325
+3/B: Partien 6, Siege 6 (allein 6), Ø solide 40.00, Ø Zufall 0.33, Schritte 377, max ms 102.9, max Aktionen 1172
+3/E: Partien 6, Siege 6 (allein 6), Ø solide 38.67, Ø Zufall 2.50, Schritte 372, max ms 152.6, max Aktionen 913
+4/B: Partien 6, Siege 6 (allein 6), Ø solide 28.33, Ø Zufall 0.83, Schritte 276, max ms 59.7, max Aktionen 730
+4/E: Partien 6, Siege 6 (allein 6), Ø solide 36.83, Ø Zufall 0.33, Schritte 309, max ms 107.5, max Aktionen 896
+Schritte gesamt 2555 (mit Saat 7154); max ms 189.6 bei 684 Aktionen; Median 9.65 ms; 99. Perzentil 96.6 ms; über 500 ms: 0
+unerlaubt 0; Fusion senkt 0; Regenbogen zum Gegner trotz eigener 0; wirkungslos trotz anderem 0; Verdoppler 46; zweiter Teilzug ohne Karte trotz Möglichkeit 0
+Zugenden mit anderer Karte 407; VERSCHENKT (hebt Punkte, nützt keinem Gegner, nicht schlechter bewertet) 0; Halten höher bewertet (legitim) 3, höchstens +1; Karte bei Gleichstand gespielt 3
+K2.1: geprüft 268, vollendet 228 (85.1 %), Ausnahmen 40, davon nicht strikt besser bewertet 5
+K2.1 ok Saat 8800 Schritt 116: Bewertung Zug 52.100 gegen beste Vollendung samt zweiter Karte 51.600 (Δ 0.500); Endwertung 47 gegen 47 (Start 47); Varianten 50
+K2.1 ok Saat 8800 Schritt 125: Bewertung Zug 53.600 gegen beste Vollendung samt zweiter Karte 52.600 (Δ 1.000); Endwertung 47 gegen 47 (Start 47); Varianten 50
+K2.1 ok Saat 8801 Schritt 137: Bewertung Zug 57.060 gegen beste Vollendung samt zweiter Karte 56.760 (Δ 0.300); Endwertung 51 gegen 51 (Start 51); Varianten 50
+K2.1 ok Saat 8801 Schritt 143: Bewertung Zug 60.760 gegen beste Vollendung samt zweiter Karte 60.460 (Δ 0.300); Endwertung 55 gegen 55 (Start 55); Varianten 50
+K2.1 ok Saat 8801 Schritt 164: Bewertung Zug 66.900 gegen beste Vollendung samt zweiter Karte 66.500 (Δ 0.400); Endwertung 60 gegen 60 (Start 60); Varianten 33
+K2.1 ok Saat 8802 Schritt 170: Bewertung Zug 64.200 gegen beste Vollendung samt zweiter Karte 63.900 (Δ 0.300); Endwertung 59 gegen 59 (Start 59); Varianten 33
+K2.1 ok Saat 8804 Schritt 102: Bewertung Zug 44.520 gegen beste Vollendung samt zweiter Karte 44.020 (Δ 0.500); Endwertung 43 gegen 42 (Start 39); Varianten 99
+K2.1 ok Saat 8804 Schritt 139: Bewertung Zug 52.820 gegen beste Vollendung samt zweiter Karte 52.120 (Δ 0.700); Endwertung 52 gegen 52 (Start 49); Varianten 2
+K2.1 ok Saat 8851 Schritt 76: Bewertung Zug 21.800 gegen beste Vollendung samt zweiter Karte 21.500 (Δ 0.300); Endwertung 20 gegen 20 (Start 20); Varianten 25
+K2.1 ok Saat 8851 Schritt 86: Bewertung Zug 28.800 gegen beste Vollendung samt zweiter Karte 28.500 (Δ 0.300); Endwertung 24 gegen 24 (Start 24); Varianten 25
+K2.1 ok Saat 8851 Schritt 106: Bewertung Zug 41.500 gegen beste Vollendung samt zweiter Karte 41.200 (Δ 0.300); Endwertung 36 gegen 36 (Start 36); Varianten 19
+K2.1 ok Saat 8851 Schritt 123: Bewertung Zug 50.300 gegen beste Vollendung samt zweiter Karte 50.000 (Δ 0.300); Endwertung 46 gegen 46 (Start 45); Varianten 25
+K2.1 ok Saat 8851 Schritt 127: Bewertung Zug 51.450 gegen beste Vollendung samt zweiter Karte 51.150 (Δ 0.300); Endwertung 46 gegen 46 (Start 46); Varianten 17
+K2.1 VERSTOSS Saat 8851 Schritt 134: Bewertung Zug 53.100 gegen beste Vollendung samt zweiter Karte 53.200 (Δ -0.100); Endwertung 47 gegen 47 (Start 47); Varianten 9
+K2.1 ok Saat 8851 Schritt 138: Bewertung Zug 53.400 gegen beste Vollendung samt zweiter Karte 53.100 (Δ 0.300); Endwertung 47 gegen 47 (Start 47); Varianten 17
+K2.1 ok Saat 8851 Schritt 143: Bewertung Zug 54.900 gegen beste Vollendung samt zweiter Karte 54.600 (Δ 0.300); Endwertung 47 gegen 47 (Start 47); Varianten 17
+K2.1 ok Saat 8851 Schritt 156: Bewertung Zug 58.000 gegen beste Vollendung samt zweiter Karte 56.900 (Δ 1.100); Endwertung 50 gegen 50 (Start 50); Varianten 17
+K2.1 ok Saat 8851 Schritt 160: Bewertung Zug 58.800 gegen beste Vollendung samt zweiter Karte 58.500 (Δ 0.300); Endwertung 50 gegen 50 (Start 50); Varianten 34
+K2.1 ok Saat 8851 Schritt 171: Bewertung Zug 65.600 gegen beste Vollendung samt zweiter Karte 65.300 (Δ 0.300); Endwertung 57 gegen 57 (Start 57); Varianten 25
+K2.1 ok Saat 8851 Schritt 177: Bewertung Zug 69.100 gegen beste Vollendung samt zweiter Karte 68.800 (Δ 0.300); Endwertung 59 gegen 59 (Start 59); Varianten 25
+K2.1 ok Saat 8851 Schritt 186: Bewertung Zug 71.400 gegen beste Vollendung samt zweiter Karte 71.100 (Δ 0.300); Endwertung 63 gegen 63 (Start 62); Varianten 25
+K2.1 ok Saat 8853 Schritt 184: Bewertung Zug 89.400 gegen beste Vollendung samt zweiter Karte 89.100 (Δ 0.300); Endwertung 80 gegen 80 (Start 80); Varianten 17
+K2.1 VERSTOSS Saat 8855 Schritt 23: Bewertung Zug 0.570 gegen beste Vollendung samt zweiter Karte 6.650 (Δ -6.080); Endwertung 0 gegen 6 (Start 0); Varianten 48
+K2.1 ok Saat 8855 Schritt 177: Bewertung Zug 57.050 gegen beste Vollendung samt zweiter Karte 55.550 (Δ 1.500); Endwertung 52 gegen 50 (Start 50); Varianten 150
+K2.1 ok Saat 8901 Schritt 160: Bewertung Zug 49.551 gegen beste Vollendung samt zweiter Karte 49.251 (Δ 0.300); Endwertung 47 gegen 47 (Start 47); Varianten 444
+K2.1 ok Saat 8901 Schritt 168: Bewertung Zug 49.850 gegen beste Vollendung samt zweiter Karte 49.550 (Δ 0.300); Endwertung 48 gegen 48 (Start 47); Varianten 444
+K2.1 ok Saat 8902 Schritt 174: Bewertung Zug 43.980 gegen beste Vollendung samt zweiter Karte 41.180 (Δ 2.800); Endwertung 40 gegen 38 (Start 40); Varianten 25
+K2.1 VERSTOSS Saat 8905 Schritt 35: Bewertung Zug 1.130 gegen beste Vollendung samt zweiter Karte 11.190 (Δ -10.060); Endwertung 0 gegen 11 (Start 0); Varianten 198
+K2.1 ok Saat 8905 Schritt 165: Bewertung Zug 43.250 gegen beste Vollendung samt zweiter Karte 42.950 (Δ 0.300); Endwertung 41 gegen 41 (Start 41); Varianten 41
+K2.1 VERSTOSS Saat 8951 Schritt 132: Bewertung Zug 36.540 gegen beste Vollendung samt zweiter Karte 41.030 (Δ -4.490); Endwertung 36 gegen 40 (Start 35); Varianten 1961
+K2.1 ok Saat 8952 Schritt 154: Bewertung Zug 36.030 gegen beste Vollendung samt zweiter Karte 35.380 (Δ 0.650); Endwertung 34 gegen 33 (Start 32); Varianten 222
+K2.1 ok Saat 8952 Schritt 172: Bewertung Zug 42.780 gegen beste Vollendung samt zweiter Karte 42.480 (Δ 0.300); Endwertung 39 gegen 39 (Start 37); Varianten 37
+K2.1 ok Saat 8952 Schritt 182: Bewertung Zug 44.000 gegen beste Vollendung samt zweiter Karte 42.500 (Δ 1.500); Endwertung 41 gegen 41 (Start 39); Varianten 37
+K2.1 ok Saat 9003 Schritt 82: Bewertung Zug 19.751 gegen beste Vollendung samt zweiter Karte 18.282 (Δ 1.469); Endwertung 19 gegen 24 (Start 19); Varianten 41
+K2.1 ok Saat 9052 Schritt 175: Bewertung Zug 28.350 gegen beste Vollendung samt zweiter Karte 20.550 (Δ 7.800); Endwertung 27 gegen 27 (Start 27); Varianten 37
+K2.1 ok Saat 9053 Schritt 150: Bewertung Zug 30.430 gegen beste Vollendung samt zweiter Karte 28.980 (Δ 1.450); Endwertung 30 gegen 28 (Start 23); Varianten 1470
+K2.1 VERSTOSS Saat 9055 Schritt 166: Bewertung Zug 44.341 gegen beste Vollendung samt zweiter Karte 44.441 (Δ -0.100); Endwertung 43 gegen 43 (Start 43); Varianten 37
+K2.1 ok Saat 9055 Schritt 180: Bewertung Zug 45.200 gegen beste Vollendung samt zweiter Karte 44.700 (Δ 0.500); Endwertung 44 gegen 43 (Start 42); Varianten 111
+K2.1 ok Saat 7154 Schritt 119: Bewertung Zug 47.100 gegen beste Vollendung samt zweiter Karte 45.600 (Δ 1.500); Endwertung 44 gegen 42 (Start 42); Varianten 462
+K2.1 ok Saat 7154 Schritt 186: Bewertung Zug 71.300 gegen beste Vollendung samt zweiter Karte 70.800 (Δ 0.500); Endwertung 70 gegen 70 (Start 66); Varianten 25
+STÖRPROBE: Stellungen 265 (Zug 82, zweiter Teilzug 32, Reaktion 136, Schlussrunde 15), verändert 265, Sicht gleich 265, abweichende Wahl 0

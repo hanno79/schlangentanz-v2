@@ -1,0 +1,2 @@
+ANGEBOTEN SchlangengrubeSpielen,SonderkarteWirkungslosAblegen GESPIELT SonderkarteWirkungslosAblegen:farbenschutz-02 > ZugBeenden
+ANGEBOTEN SchlangengrubeSpielen,SonderkarteWirkungslosAblegen GESPIELT SchlangengrubeSpielen:schlangengrube-02
