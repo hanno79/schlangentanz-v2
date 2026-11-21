@@ -17,7 +17,7 @@ Mit D33 wird jeder Betroffene gefragt, auch eine KI ohne Farbenschutz. Geprüft 
 ## Bestanden, wenn
 
 - Szenario `schlangengrube` (KI ohne Farbenschutz): „KI-Schritt“ spielt „Reagieren: durchlassen“, danach liegt die Grube vor KI-Gegner 1 und Spieler 1 entscheidet.
-- Szenario `abwehr-schlangengrube` (KI mit Farbenschutz): „KI-Schritt“ spielt eine der beiden angebotenen Reaktionen; im Lauf vom 21.11.2026 ließ sie durch, die Grube lag vor KI-Gegner 1, und nach dem Aussetzen hielt er seinen Farbenschutz noch.
+- Szenario `abwehr-schlangengrube` (KI mit Farbenschutz): „KI-Schritt“ spielt eine der beiden angebotenen Reaktionen; im Lauf vom 21.11.2026 liess sie durch, die Grube lag vor KI-Gegner 1, und nach dem Aussetzen hielt er seinen Farbenschutz noch.
 - Mit Farbenschutz und ohne ruft die Zufalls-KI ihre Zufallsquelle gleich oft auf (je einmal) und wählt bei Wert 0.99 dieselbe Aktion „Reagieren: durchlassen“.
 
 ## Fehlgeschlagen, wenn
