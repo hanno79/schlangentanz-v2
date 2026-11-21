@@ -7,8 +7,9 @@ import { entscheiderVon, spielerzahl } from './sicht';
 /*
 Das Turnier (Plan K1, gebraucht von K5): N Partien KI gegen KI, jede aus einer
 festen Saat, der Sitz rotiert von Partie zu Partie. Vor jedem Schritt werden die
-Invarianten geprüft. Gleiche Saat ergibt denselben Verlauf, denn aller Zufall
-kommt aus Quellen, die aus der Saat entstehen (U4).
+Invarianten geprüft. Gleiche Saaten ergeben denselben Verlauf, denn aller Zufall
+kommt aus Quellen, die aus ihnen entstehen (U4). Partie und KIs haben getrennte
+Saaten, damit eine KI aus ihrem Zufall die Partie nicht zurückrechnet (P0.3d).
 */
 
 /** Ein Teilnehmer baut je Partie eine frische KI aus einer eigenen Zufallsquelle. */
@@ -56,6 +57,12 @@ export interface TurnierOptionen {
   partien: number;
   /** Partie `n` (ab 0) spielt mit Saat `ersteSaat + n`. */
   ersteSaat?: number;
+  /**
+   * Saat für die Zufallsquellen der KIs, getrennt von der Partiesaat (P0.3d): Hinge
+   * der KI-Zufall an der Partiesaat, rechnete eine Strategie aus ihrem ersten
+   * Zufallswert die Saat und damit alle Starthände und den Stapel zurück.
+   */
+  kiSaat: number;
   /** B1: mit oder ohne Erweiterung. */
   erweiterung: boolean;
   schrittGrenze?: number;
@@ -68,9 +75,9 @@ export function sitzordnung(partie: number, teilnehmerzahl: number): number[] {
   return Array.from({ length: teilnehmerzahl }, (_, sitz) => (sitz + partie) % teilnehmerzahl);
 }
 
-/** Die Saat der Zufallsquelle für die KI am Sitz `sitz`, getrennt von der Saat der Partie. */
-function kiSaat(saat: number, sitz: number): number {
-  return (Math.imul(saat, 0x9e3779b1) + sitz + 1) >>> 0;
+/** Die Saat der Zufallsquelle für die KI am Sitz `sitz` in Partie `nummer`; aus `kiSaat`, nie aus der Partiesaat. */
+function kiSaatFuer(kiSaat: number, nummer: number, sitz: number): number {
+  return (Math.imul(kiSaat ^ Math.imul(nummer + 1, 0x85ebca6b), 0x9e3779b1) + sitz + 1) >>> 0;
 }
 
 /**
@@ -118,14 +125,14 @@ function pruefeOptionen({ teilnehmer, partien }: TurnierOptionen): void {
 /** Spielt `partien` Partien mit festen Saaten und rotierendem Sitz. */
 export function turnier(optionen: TurnierOptionen): TurnierErgebnis {
   pruefeOptionen(optionen);
-  const { teilnehmer, partien, ersteSaat = 1, erweiterung, schrittGrenze } = optionen;
+  const { teilnehmer, partien, ersteSaat = 1, kiSaat, erweiterung, schrittGrenze } = optionen;
   const siege = teilnehmer.map(() => 0);
 
   const ergebnisse = Array.from({ length: partien }, (_, nummer): TurnierPartie => {
     const saat = ersteSaat + nummer;
     const sitze = sitzordnung(nummer, teilnehmer.length);
     const start = erstellePartie({ spielerzahl: teilnehmer.length, erweiterung, zufall: erzeugeZufall(saat) });
-    const kis = sitze.map((wer, sitz) => teilnehmer[wer].erstelle(erzeugeZufall(kiSaat(saat, sitz))));
+    const kis = sitze.map((wer, sitz) => teilnehmer[wer].erstelle(erzeugeZufall(kiSaatFuer(kiSaat, nummer, sitz))));
     const { siegerSitze, punkteSitze, ...lauf } = spielePartie(start, kis, schrittGrenze, `Partie mit Saat ${saat}`);
     const sieger = siegerSitze.map((sitz) => sitze[sitz]).sort((a, b) => a - b);
     for (const wer of sieger) siege[wer] += 1;

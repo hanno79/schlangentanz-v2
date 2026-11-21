@@ -9,9 +9,12 @@ angelegt: 2026-11-21
 veraendert_daten: nein
 aenderung: task/P0.3d-ki-grenze (PR #55)
 grenzfall_von: TF-PRUEF-028
+status: stillgelegt
 ---
 
 ## Worum es geht
+
+Stillgelegt mit P0.3d, Iteration 3: Seit Rahmen und Strategien getrennt sind, darf eine Strategie weder `anwendeAktion` noch `sichtFuer` aufrufen. Die Frage nach Fehlalarmen beantwortet jetzt TF-PRUEF-032.
 
 Die verschärfte KI-Grenze darf K2 nicht unnötig aufhalten. Geprüft wird, ob übliche Bauweisen einer Bewertung ohne Fehlalarm durchgehen: Maps, Schleifen, Sortieren, eigene Hilfsfunktionen, `werteSchlangen` aus der Engine, Typprädikate, `as const` und eine Zugsuche, die einen Zustand über `anwendeAktion` und `sichtFuer` durchrechnet.
 

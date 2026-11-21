@@ -13,7 +13,7 @@ grenzfall_von: TF-PRUEF-028
 
 ## Worum es geht
 
-Jede Regel in `tests/architektur_ki_pruefung.ts` soll durch einen eigenen Test belegt sein. Sonst kann sie bei einer späteren Vereinfachung verschwinden, ohne dass es jemand merkt. Geprüft wird an zwei Regeln: der Liste der freigegebenen Engine-Funktionen und dem Verbot geerbter Methoden wie `valueOf` an globalen Objekten.
+Jede Regel der KI-Grenze (Prüfung in `tests/architektur_ki_pruefung.ts`, Listen in `tests/architektur_ki_listen.ts`) soll durch einen eigenen Test belegt sein. Sonst kann sie bei einer späteren Vereinfachung verschwinden, ohne dass es jemand merkt. Geprüft wird an zwei Regeln: der Liste der freigegebenen Engine-Funktionen und dem Verbot geerbter Methoden wie `valueOf` an globalen Objekten.
 
 ## Bestanden, wenn
 
@@ -21,7 +21,7 @@ Nimmt man `serialisiere` in `ERLAUBTE_ENGINE_EMPFAENGER` auf, wird „H2: serial
 
 ## Fehlgeschlagen, wenn
 
-Nach einer der beiden Änderungen enden `npx vitest run tests/architektur.test.ts tests/architektur_ki.test.ts` mit 120 bestandenen Tests.
+Nach einer der beiden Änderungen enden `npx vitest run tests/architektur.test.ts tests/architektur_ki.test.ts` ohne roten Test.
 
 ## Vorbedingungen
 
@@ -32,7 +32,7 @@ Nach einer der beiden Änderungen enden `npx vitest run tests/architektur.test.t
 
 ## Testdaten
 
-Änderung 1: in `tests/architektur_ki_pruefung.ts` die Zeile `'serialisiere',` in `ERLAUBTE_ENGINE_EMPFAENGER` ergänzen. Änderung 2: dort `'valueOf', ` aus `GEERBT_VON_OBJECT` löschen.
+Änderung 1: in `tests/architektur_ki_listen.ts` die Zeile `'serialisiere',` in `ERLAUBTE_ENGINE_EMPFAENGER` ergänzen. Änderung 2: dort `'valueOf', ` aus `GEERBT_VON_OBJECT` löschen.
 
 ## Schritte
 
@@ -40,10 +40,10 @@ Nach einer der beiden Änderungen enden `npx vitest run tests/architektur.test.t
 |---|---|---|---|---|
 | 1 | Editor | Änderung 1 vornehmen | | |
 | 2 | Konsole im Repo | Architekturtests laufen lassen | `npx vitest run tests/architektur.test.ts tests/architektur_ki.test.ts` | Exit 1, rot ist „H2: serialisiere aus der Engine“ |
-| 3 | Konsole im Repo | zurücksetzen | `git checkout -- tests/architektur_ki_pruefung.ts` | `git status` leer |
+| 3 | Konsole im Repo | zurücksetzen | `git checkout -- tests/architektur_ki_listen.ts` | `git status` leer |
 | 4 | Editor | Änderung 2 vornehmen | | |
 | 5 | Konsole im Repo | Architekturtests laufen lassen | `npx vitest run tests/architektur.test.ts tests/architektur_ki.test.ts` | Exit 1, mindestens ein roter Test |
 
 ## Zurücksetzen
 
-`git checkout -- tests/architektur_ki_pruefung.ts`, danach `git status` leer.
+`git checkout -- tests/architektur_ki_listen.ts`, danach `git status` leer.

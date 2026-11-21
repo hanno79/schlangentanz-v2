@@ -183,7 +183,7 @@ alte Oberfläche zwischenzeitlich unbrauchbar. Deshalb:
 | U2 | Keine Regel im Code, die nicht in Teil A, B oder D steht. Bei einer Lücke: anhalten, Frage in Teil D. | Prüfer, Codex |
 | U3 | Die Oberfläche enthält keine Regellogik. `src/ui/**` und `src/ki/**` importieren die Engine nur über `src/engine/index.ts`. Die Oberfläche filtert aufgezählte Aktionen und baut nie selbst eine. | Architekturtest |
 | U4 | Die Engine ist rein: kein React, kein DOM, kein `Math.random`, kein `Date`. Zufall kommt als Parameter. | Architekturtest |
-| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. Den vollen Zustand hält allein der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`); er reicht ihn nur unverändert an die Sicht, an eigene Funktionen oder an freigegebene Engine-Funktionen weiter. Jede andere Datei ist eine **Strategie** unter `src/ki/strategien/`, gilt als nicht vertrauenswürdig und bekommt nur Sicht, Aktionen und Zufall: Sie erwähnt den vollen Zustand nicht, auch nicht als Typ oder über einen Typ, der ihn enthält oder nimmt, und importiert nur aus `sicht.ts`, aus anderen Strategien und aus einer Positivliste von Engine-Exporten ohne Zustandsbezug (P0.3d). Für allen Code unter `src/ki` gilt: kein Cast ausser `as const`, kein Typprädikat (`x is T`), kein `declare`, kein `any`, kein `arguments`, kein Zugriff mit einem Schlüssel vom Typ `string` (dafür `Map` oder Literaltypen), keine Prototyp-Schlüssel, `Object.assign` nur in ein neues `{ … }`, keine Änderung globaler Objekte, globale Funktionen und Methoden der Bibliothek (etwa `[].map`) nur aufrufen, nie als Wert weitergeben, nur globale Werte aus einer Positivliste (`Math` ohne `random`, `JSON`, `Array`, `Object`, `Map`, `Set`, `Number`, `String`, `Error`, `structuredClone` …), Werte nur aus `src/engine/index.ts` und geprüften Dateien unter `src/ki` importiert, kein `import()`. Eine Hilfsfunktion des Rahmens gibt weder einen Zustand noch ein `AktionsErgebnis` zurück. Unter `src/ki` gilt auch U4. Die Listen stehen in `tests/architektur_ki_listen.ts`. | Architekturtest, Test K2.7 |
+| U5 | Die KI sieht nur ihre **Sicht**. Nur `src/ki/sicht.ts` darf den vollen Spielzustand lesen. Den vollen Zustand hält allein der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`); er reicht ihn nur unverändert an die Sicht, an eigene Funktionen oder an freigegebene Engine-Funktionen weiter. Jede andere Datei ist eine **Strategie** unter `src/ki/strategien/`, gilt als nicht vertrauenswürdig und bekommt nur Sicht, Aktionen und Zufall: Sie erwähnt den vollen Zustand nicht, auch nicht als Typ oder über einen Typ, der ihn enthält oder nimmt, und importiert nur aus `sicht.ts`, aus anderen Strategien und aus einer Positivliste von Engine-Exporten ohne Zustandsbezug (P0.3d). Für allen Code unter `src/ki` gilt: kein Cast ausser `as const`, kein Typprädikat (`x is T`), kein `declare`, kein `any`, kein `arguments`, kein Zugriff mit einem Schlüssel vom Typ `string` (dafür `Map` oder Literaltypen), keine Prototyp-Schlüssel, `Object.assign` nur in ein neues `{ … }`, keine Änderung globaler Objekte, globale Funktionen und Methoden der Bibliothek (etwa `[].map`) nur aufrufen, nie als Wert weitergeben, nur globale Werte aus einer Positivliste (`Math` ohne `random`, `JSON`, `Array`, `Object`, `Map`, `Set`, `Number`, `String`, `Error`, `structuredClone` …), Werte nur aus `src/engine/index.ts` und geprüften Dateien unter `src/ki` importiert, kein `import()`. Eine Hilfsfunktion des Rahmens gibt weder einen Zustand noch ein `AktionsErgebnis` zurück. Kein `import.meta` unter `src/ki`; Strategien holen auch Typen (`typeof import('…')`) nur aus den erlaubten Quellen. Auf Modulebene einer Strategie liegt nur Unveränderliches (`const` mit Funktion, primitivem Wert oder `as const`-Literal; kein `let`, `var`, keine `Map`, `Set`, Listen oder Objekte, kein `static`-Feld, keine Eigenschaft an einer Funktion); Zustand lebt in der Closure je Instanz, sonst teilten Instanzen derselben Strategie ihre Hände. Der KI-Zufall hat eine eigene Saat, unabhängig von der Partie. **Bekannte Grenze:** Bei kleinen, bekannten Partiesaaten kann eine Strategie die Saat aus ihrer eigenen Starthand durch Durchprobieren finden; das betrifft nur Messläufe (K5), Gegenmittel siehe K5. Unter `src/ki` gilt auch U4. Die Listen stehen in `tests/architektur_ki_listen.ts`. | Architekturtest, Test K2.7 |
 | U6 | Kein `any`, kein `@ts-ignore`, kein `eslint-disable` ohne Begründung in derselben Zeile, kein `it.skip`, `it.only`, `describe.skip`. | `check:regeln` |
 | U7 | Testdateien höchstens 499 Zeilen; neue Dateien in `src/ui` und `src/ki` höchstens 300 Zeilen. | `check:test-lines`, `check:regeln` |
 | U8 | Layout wird gemessen (Playwright, `tests/layout/messung.ts`), nie im CSS-Quelltext gelesen. | `check:css-asserts` |
@@ -699,7 +699,11 @@ Neu unter `src/ki/`. Reine Funktionen: Zustand hinein, ein Schritt heraus.
 Aufbau nach U5 (P0.3d): Der **Rahmen** (`sicht.ts`, `schritt.ts`, `turnier.ts`)
 hält den vollen Zustand, ruft `sichtFuer` und gibt der Strategie nur Sicht,
 Aktionen und Zufall. **Strategien** liegen unter `src/ki/strategien/` und
-implementieren `Ki` aus `src/ki/strategien/strategie.ts`.
+implementieren `Ki` aus `src/ki/strategien/strategie.ts`. Den Zufall einer KI
+liefert der Rahmen aus einer eigenen Quelle, nie aus der Partiesaat: im Turnier
+aus `kiSaat`, getrennt von den Partiesaaten (P0.3d); in der App, sobald sie KIs
+spielen lässt (O3, O6), aus einer eigenen Quelle wie `Math.random`, so wie die
+Lobby schon heute die Partie mit `Math.random` anlegt.
 
 ### K1 Schnittstelle, Sicht und Zufalls-KI
 
@@ -784,6 +788,14 @@ implementieren `Ki` aus `src/ki/strategien/strategie.ts`.
 
 ### K5 Stärkenachweis
 
+- **Bekannte Grenze aus P0.3d:** Eine Strategie kann bei kleinen, bekannten
+  Partiesaaten (1, 2, 3 …) die Saat aus ihrer eigenen Starthand durch
+  Durchprobieren finden und damit alle Hände und den Stapel. Der Architekturtest
+  kann das nicht verhindern, weil dafür kein verbotener Zugriff nötig ist.
+  Gegenmittel: K5 nimmt grosse, zufällig gewählte Partiesaaten und eine eigene
+  `kiSaat`, beide im Test festgehalten, und jede Strategie im Repo geht durch
+  Review. Im Spiel stellt sich die Frage nicht, dort entsteht die Partie aus
+  `Math.random`.
 - **Abnahmekriterien** (Turnier mit festen Saaten, im Test hinterlegt; die
   Schwellen werden nach der ersten Messung nach oben festgeschrieben, nie
   nach unten):

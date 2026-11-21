@@ -26,6 +26,7 @@ import {
   type Verstoss,
 } from './architektur_pruefung'
 import { ausBibliothek, zustandstypen } from './architektur_ki_typen'
+import { aufModulebene, pruefeModulebene } from './architektur_ki_modulebene'
 import {
   ERLAUBTE_ENGINE_EMPFAENGER,
   GEERBT_VON_OBJECT,
@@ -216,6 +217,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     if (!quelle) throw new Error(`pruefeSichtZugriff: ${datei} liess sich nicht laden`)
     const melde = (knoten: ts.Node, was: string) => verstoesse.push({ regel: 'U5', datei, zeile: zeileVon(knoten), was })
     const geschrieben = new Set<ts.Node>()
+    const istStrategie = datei.startsWith(STRATEGIEN)
 
     /** H1: geschrieben wird nur in Variablen und Objekte dieser Datei; die Schlüssel prüft `pruefeGlobales`. */
     const pruefeSchreiben = (ziel: ts.Expression) => {
@@ -233,6 +235,8 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
         (symbol.declarations ?? []).some((d) => d.getSourceFile() === quelle)
       if (!ausDieserDatei || globalerWert(wurzelobjekt) !== null) {
         melde(ziel, `verändert ${wurzelobjekt.getText()}, das nicht in dieser Datei entsteht: ${ziel.getText()}`)
+      } else if (istStrategie && aufModulebene(symbol)) {
+        melde(ziel, `verändert ${wurzelobjekt.getText()} auf Modulebene; alle Instanzen der Strategie teilen es: ${ziel.getText()}`)
       }
     }
 
@@ -265,16 +269,29 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
      * Importe (Prüfung P0.3d, Mangel 3): Werte nur aus src/engine/index.ts und aus `dateien`,
      * Typen im Rahmen frei; Strategien nur aus sicht.ts, Strategien und der Positivliste.
      */
+    /** Ob eine Strategie aus `zielpfad` holen darf: Engine-Schnittstelle, sicht.ts, andere Strategien. */
+    const strategieDarf = (zielpfad: string) =>
+      zielpfad === engineEinstieg || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner))
+
     const pruefeImport = (knoten: ts.Node) => {
       if (istDynamischerImport(knoten)) return melde(knoten, 'importiert mit import() oder require(); unter src/ki nur statisch')
+      if (ts.isMetaProperty(knoten) && knoten.keywordToken === ts.SyntaxKind.ImportKeyword) {
+        return melde(knoten, `nutzt ${knoten.getText()}; import.meta.glob lädt jedes Modul an der Importregel vorbei`)
+      }
+      if (ts.isImportTypeNode(knoten) && istStrategie) {
+        const argument = knoten.argument
+        const text = ts.isLiteralTypeNode(argument) && ts.isStringLiteral(argument.literal) ? argument.literal.text : undefined
+        const aufgeloest = text && ts.resolveModuleName(text, quelle.fileName, programm.getCompilerOptions(), ts.sys).resolvedModule
+        if (!aufgeloest || !strategieDarf(zuPosix(aufgeloest.resolvedFileName))) melde(knoten, `Strategie holt einen Typ aus ${argument.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
+        return
+      }
       if (!(ts.isImportDeclaration(knoten) || ts.isExportDeclaration(knoten)) || !knoten.moduleSpecifier) return
       const ziel = pruefer.getSymbolAtLocation(knoten.moduleSpecifier)?.declarations?.find(ts.isSourceFile)
       const zielpfad = ziel ? zuPosix(ziel.fileName) : ''
       const namen = geholteWerte(knoten)
       const ausEngine = zielpfad === engineEinstieg
       if (istStrategie) {
-        const erlaubtesZiel = ausEngine || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner))
-        if (!erlaubtesZiel) return melde(knoten, `Strategie importiert aus ${knoten.moduleSpecifier.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
+        if (!strategieDarf(zielpfad)) return melde(knoten, `Strategie importiert aus ${knoten.moduleSpecifier.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
         const fremd = ausEngine ? namen.filter((name) => !POSITIVLISTE_ENGINE_FUER_STRATEGIEN.has(name)) : []
         if (fremd.length > 0) melde(knoten, `Strategie importiert ${fremd.join(', ')} aus der Engine; nicht auf POSITIVLISTE_ENGINE_FUER_STRATEGIEN`)
         return
@@ -311,7 +328,8 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       if (name === null || geschrieben.has(knoten)) return
       if (ts.isIdentifier(knoten) && !POSITIVLISTE_GLOBALE.has(name)) return melde(knoten, `nutzt das globale ${name}; unter src/ki gilt POSITIVLISTE_GLOBALE`)
       const wert = typ(knoten)
-      if (!wert.isUnionOrIntersection() && !(wert.flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive))) return
+      const teile = wert.isUnionOrIntersection() ? wert.types : [wert]
+      if (!teile.some((teil) => teil.flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive))) return
       const aussen = aeusserer(knoten)
       const eltern = aussen.parent
       if ((ts.isPropertyAccessExpression(eltern) || ts.isElementAccessExpression(eltern)) && eltern.expression === aussen) {
@@ -351,7 +369,13 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
     }
 
-    const istStrategie = datei.startsWith(STRATEGIEN)
+    if (istStrategie) {
+      const istPrimitiv = (knoten: ts.Node) => {
+        const wert = typ(knoten)
+        return !(wert.isUnionOrIntersection() ? wert.types : [wert]).some((teil) => teil.flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive | ts.TypeFlags.Any | ts.TypeFlags.Unknown))
+      }
+      pruefeModulebene(quelle, istPrimitiv, melde)
+    }
     besucheAlle(quelle, (knoten) => {
       for (const ziel of geschriebeneZiele(knoten)) pruefeSchreiben(ziel)
       pruefeGlobales(knoten)
