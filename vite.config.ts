@@ -24,10 +24,12 @@ export default defineConfig(({ mode }) => ({
     // Ausschluss würde Vitest sie wegen des `.spec.ts`-Suffixes einsammeln und in
     // jsdom ausführen, wo `@playwright/test` nicht funktioniert.
     // Lauf über `npm run test:layout`.
-    exclude: ['**/node_modules/**', '**/dist/**', 'tests/layout/**'],
+    // Der lange Dauerlauf (`*.dauerlauf.test.ts`, E11) braucht mehrere Minuten und läuft
+    // nur mit `npm run test:dauerlauf` (`--mode dauerlauf`), nicht im Gate `npm test`.
+    exclude: ['**/node_modules/**', '**/dist/**', 'tests/layout/**', ...(mode === 'dauerlauf' ? [] : ['**/*.dauerlauf.test.ts'])],
     // Gesucht wird nur unter src/ und tests/, wie bei den anderen Gates. Ohne diese
     // Angabe sucht Vitest im ganzen Baum und sammelt im Hauptordner auch die
     // vollständigen Repo-Kopien unter .claude/worktrees/ (Worktrees der Agenten) ein.
-    include: ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
+    include: mode === 'dauerlauf' ? ['src/**/*.dauerlauf.test.ts'] : ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}'],
   },
 }))
