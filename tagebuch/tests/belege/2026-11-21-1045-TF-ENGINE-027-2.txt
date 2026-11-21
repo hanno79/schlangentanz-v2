@@ -1,0 +1,24 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a93a951f76d2e5c63
+
+stdout | src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P3 Rotation in einer Schlange [A,B,C,D] → [B,C,D,A] lässt sich nachrechnen
+P3 gemeldet: rot-03,gelb-02,gruen-01,blau-04
+
+stdout | src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P4 B2: Reihenfolge, in der offene Karten auf Hand und in den Stapel kommen, ändert das Ereignis nicht; keine Id
+P4 Ereignis: [{"typ":"KartenVersetzt","spielerIndex":0,"karteId":"farbendieb-01","karten":[{"karteId":null,"von":{"ort":"Schlange","spielerIndex":0,"schlangenId":"schlange-1","position":0},"nach":{"ort":"Hand","spielerIndex":1}},{"karteId":null,"von":{"ort":"Schlange","spielerIndex":0,"schlangenId":"schlange-1","position":1},"nach":{"ort":"Hand","spielerIndex":1}},{"karteId":null,"von":{"ort":"Schlange","spielerIndex":0,"schlangenId":"schlange-1","position":2},"nach":{"ort":"Nachziehstapel"}},{"karteId":null,"von":{"ort":"Hand","spielerIndex":1},"nach":{"ort":"Nachziehstapel"}},{"karteId":null,"von":{"ort":"Schlange","spielerIndex":1,"schlangenId":"schlange-2","position":0},"nach":{"ort":"Nachziehstapel"}}],"aufgeloest":[]}]
+
+stdout | src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P6 (Hinweis) eine ganze Schlange wechselt den Besitzer: lässt sich das nachrechnen?
+P6 Besitzerwechsel nachrechenbar: false {"schlange-1":{"besitzer":1,"karten":["violett-01","gelb-02"]}} {"schlange-1":{"besitzer":0,"karten":["violett-01","gelb-02"]}}
+
+ ✓ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P1 teilweise abgewehrt (3 Spieler): Spieler 2 wehrt ab, Spieler 3 nicht; nur Spieler 3 verliert eine Karte, nachrechenbar 112ms
+ ✓ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P2 zwei Schlangen zweier Spieler gleichzeitig: Fusion wechselt samt Unterkarten den Besitzer, eigene Schlange wird umgeordnet, Ablagekarte geht in fremde Schlange 16ms
+ ✓ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P3 Rotation in einer Schlange [A,B,C,D] → [B,C,D,A] lässt sich nachrechnen 9ms
+ ✓ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P4 B2: Reihenfolge, in der offene Karten auf Hand und in den Stapel kommen, ändert das Ereignis nicht; keine Id 19ms
+ ✓ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P5 Gegenprobe am Nachrechnen: eine verfälschte Position macht das Ergebnis rot 9ms
+ ✓ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P6 (Hinweis) eine ganze Schlange wechselt den Besitzer: lässt sich das nachrechnen? 5ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  10:20:43
+   Duration  9.51s (transform 849ms, setup 579ms, import 849ms, tests 173ms, environment 5.67s)
+
