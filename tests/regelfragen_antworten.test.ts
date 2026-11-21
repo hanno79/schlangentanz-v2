@@ -126,7 +126,7 @@ const ERWARTET: Record<string, Erwartung> = {
   G7: sammelantwort('a', ['mindestens zweimal direkt hintereinander', 'AABCAABC'], ['genau einmal vor', 'durch andere Karten getrennt']),
   G8: sammelantwort(
     'b, c',
-    ['irgendwo in derselben Schlange', 'Joker zählen mit', 'eine Farbenfusion zählt als eine Karte'],
+    ['irgendwo in derselben Schlange', 'zählen Joker mit', 'eine Farbenfusion zählt als eine Karte'],
     ['müssen nebeneinander liegen', 'nur echte gelbe'],
   ),
   G10: sammelantwort(
@@ -136,7 +136,7 @@ const ERWARTET: Record<string, Erwartung> = {
   ),
   G11: sammelantwort(
     'a, c, e',
-    ['zusätzlich zu den Karten des Zuges, in beliebiger Art', 'nicht mit Wirkung gespielt', 'zieht, was da ist'],
+    ['zusätzlich zu den Karten des Zuges, in beliebiger Art', 'nicht mit Wirkung gespielt', 'was da ist', 'die letzte Karte zieht, spielt seinen Zug zu Ende'],
     ['zusammen höchstens eine Farbkarte', 'gibt einen zweiten Zug', 'nicht wählbar'],
   ),
   G12: sammelantwort(
@@ -162,7 +162,7 @@ const ERWARTET: Record<string, Erwartung> = {
   ),
   G17: sammelantwort(
     'a, c, e, g',
-    ['nicht wählbar', 'zieht, was da ist', 'weil nichts gezogen werden kann', 'wie A8.1 es für alle Zusatzaktionen sagt'],
+    ['nicht wählbar', 'was da ist', 'die letzte Karte zieht, spielt seinen Zug zu Ende', 'weil nichts gezogen werden kann', 'wie A8.1 es für alle Zusatzaktionen sagt'],
     ['zieht trotzdem drei', 'blosses Abwerfen', 'nur einmal je Zug'],
   ),
   G18: sammelantwort('a', ['samt zweitem Zug nach einem Verdoppler', 'keine zweite Risiko-Karte'], ['heisst Teilzug', 'weitere Risiko-Karte erlaubt']),
