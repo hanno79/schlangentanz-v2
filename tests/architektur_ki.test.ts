@@ -255,6 +255,10 @@ const STRATEGIE_ERLAUBT = [
   '}',
   'export class Zaehler { stand = 0; erhoehe() { this.stand += 1; return this.stand } }',
   'export const verdoppelt = () => [1, 2].map(plus).concat(NAMEN.length)',
+  // Fehlalarme der Prüfung, Iteration 3: Schnittstellen erben, Listen in Set und Spreizen.
+  'interface Basis { a: number }',
+  'export interface Mehr extends Basis { b: number }',
+  'export const vorrang = () => [new Set<string>(NAMEN).size, [...NAMEN].length, Array.from(NAMEN).length]',
   "export type Helfer = typeof import('./hilfe')",
   'export function waehle(sicht: Sicht, aktionen: readonly Karte[], zufall: () => number): Karte {',
   '  return aktionen[Math.floor(zufall() * aktionen.length)] ?? aktionen[hilfe(sicht) + werteSchlangen([])]',
@@ -291,6 +295,12 @@ const strategien: Array<[string, string]> = [
   ['Rest-Zerlegen auf Modulebene', "const [...geteilt] = [''] as const\nexport const merke = (hand: string) => geteilt.push(hand)\n"],
   ['eine Engine-Funktion über einen Alias', "import { werteSchlangen } from '../../engine'\nexport function merke(n: number) { const alias: typeof werteSchlangen & { n?: number } = werteSchlangen; alias.n = n }\n"],
   ['eine Funktion der Modulebene an eine eigene Funktion', 'const plus = (n: number) => n\nfunction nimm(f: { x?: number }) { f.x = 1 }\nexport const g = () => nimm(plus)\n'],
+  // Prüfung, Iteration 3: Rückwege über Bibliotheksfunktionen, this-Parameter und new.target.
+  ['eine Funktion der Modulebene über Array.of zurück', 'function anker(): void {}\nexport const kanal = () => Array.of(anker)[0]\n'],
+  ['eine Funktion der Modulebene in Map.set', 'function anker(): void {}\nexport const kanal = () => new Map<number, () => void>().set(0, anker)\n'],
+  ['forEach mit thisArg', 'function anker(): void {}\nexport const kanal = () => [1].forEach(function (this: unknown) { return this }, anker)\n'],
+  ['einen this-Parameter', 'export function lies(this: { lager?: number }) { return this.lager }\n'],
+  ['new.target', 'export class Anker { constructor() { const k = new.target; k.name.length } }\n'],
 ]
 const faelleStrategie = strategien.map(([name, inhalt], index) => ({ name, datei: `src/ki/strategien/verboten-${index + 1}.ts`, inhalt }))
 const faelleSeitenkanal = seitenkanaele.map(([name, inhalt], index) => ({ name, datei: `src/ki/seitenkanal-${index + 1}.ts`, inhalt }))
