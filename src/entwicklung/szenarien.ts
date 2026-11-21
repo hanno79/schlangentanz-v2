@@ -5,6 +5,7 @@ import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
 import { FARBENDIEB_SZENARIEN } from './szenarienFarbendieb'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
+import { FRASS_SZENARIEN } from './szenarienFrass'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -227,6 +228,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...zugablaufSzenarien(),
   ...verdopplerSzenarien(),
   ...abwehrSzenarien(),
+  ...FRASS_SZENARIEN,
   ...FARBENDIEB_SZENARIEN,
 ]
 
