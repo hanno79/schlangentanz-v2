@@ -13,9 +13,8 @@ Hilfen für die Tests von O5: eine Partie unter `/spiel` öffnen, so wie die
 Lobby sie hinterlässt, Karten und Ziele antippen und das Ergebnis mit dem
 vergleichen, was die Engine aus derselben Aktion macht.
 
-Die Erwartungen stehen hier unabhängig von der Oberfläche: Bedienbar sind in
-O5 alle Aktionen der Engine ausser der Schlangenhäutung (O7) und der Abwehr
-(O6).
+Die Erwartungen stehen hier unabhängig von der Oberfläche: Bedienbar sind seit
+O7 alle Aktionen der Engine ausser der Abwehr (O6).
 */
 
 /** Öffnet `/spiel` mit diesem Spielstand im Speicher. */
@@ -25,9 +24,9 @@ export function spieleAm(zustand: Spielzustand) {
   return render(<App />)
 }
 
-/** Die Aktionen, die O5 bedienbar macht. */
+/** Die Aktionen, die der Tisch bedienbar macht (O5, O7). */
 export function bedienbar(zustand: Spielzustand): SpielAktion[] {
-  return ermittleAktionen(zustand).filter((aktion) => aktion.typ !== 'SchlangenhaeutungSpielen' && aktion.typ !== 'Reagieren')
+  return ermittleAktionen(zustand).filter((aktion) => aktion.typ !== 'Reagieren')
 }
 
 /** Was nach dieser Auswahl am Tisch als Ziel angeboten sein muss, als Schlüssel. */

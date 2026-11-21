@@ -11,10 +11,12 @@ import { Karte, Kartenrueckseite } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import { kartenname } from '../karten/kartentexte'
 import Verweis from '../lobby/Verweis'
+import type { Haeutungsvorschauer } from '../spiel/haeutungsvorschau'
 import type { EigeneAnsicht, StatusAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
 import type { Verlauf } from '../spiel/useSpiel'
 import { useBedienung, ZielKontext } from './bedienung'
 import { Gegner } from './Gegner'
+import { HaeutungKontext, useHaeutung } from './haeutung'
 import { Hand } from './Hand'
 import { GrossKnopf } from './Kartenknopf'
 import { useUeberlauf } from './ueberlauf'
@@ -39,7 +41,8 @@ Scrollen liest.
 Was der Tisch zeigt, kommt aus der Sicht des Menschen (`tischAnsicht`), nie
 aus dem vollen Zustand. Bedienen lässt er sich mit O5: Karte wählen, Ziel
 wählen, Ansage bestätigen; die Bedienung liegt im Kontext der Ziele, die
-Zugleiste steht unten bei deinem Platz (DESIGN.md „Zugleiste“). Mit O6 kommen
+Zugleiste steht unten bei deinem Platz (DESIGN.md „Zugleiste“). Eine laufende
+Schlangenhäutung (O7) liegt in einem eigenen Kontext. Mit O6 kommen
 Abwehrfrage, Protokoll und „Schneller“ dazu; sie brauchen den Verlauf der
 Partie (`useSpiel`). Ein Tisch ohne Verlauf zeigt nur den Stand.
 */
@@ -50,18 +53,22 @@ interface TischEigenschaften {
   fuehreAus: (aktion: SpielAktion) => void
   /** Der Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat. */
   ablehnung: string | null
+  /** Was eine Schlangenhäutung bringt, aus dem Zwischenstand der Engine (useSpiel, O7). */
+  haeutungsVorschau: Haeutungsvorschauer
   /** Protokoll, Aussetzen und „Schneller“ der laufenden Partie (O6); ohne ihn zeigt der Tisch nur den Stand. */
   verlauf?: Verlauf
 }
 
-export function Tisch({ ansicht, fuehreAus, ablehnung, verlauf }: TischEigenschaften) {
+export function Tisch({ ansicht, fuehreAus, ablehnung, haeutungsVorschau, verlauf }: TischEigenschaften) {
   const bedienung = useBedienung(ansicht.aktionen)
+  const haeutung = useHaeutung(bedienung, ansicht, haeutungsVorschau)
   const [gross, setzeGross] = useState<Bildkarte | null>(null)
   // Der Dialog zum Abwerfen ist offen, bis du ihn für diesen Stand schliesst.
   const [abwerfenZu, setzeAbwerfenZu] = useState<SpielAktion[] | null>(null)
   const [flaeche, flaecheUeberlauf] = useUeberlauf<HTMLDivElement>()
   return (
     <ZielKontext.Provider value={bedienung}>
+    <HaeutungKontext.Provider value={haeutung}>
     <div className={bedienung.ziele.length > 0 ? 'spieltisch spieltisch--zielwahl' : 'spieltisch'} data-testid="spiel">
       <header className="st-kopf">
         <Statuszeile status={ansicht.status} />
@@ -114,6 +121,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung, verlauf }: TischEigenscha
         <UeberhandDialog hand={ansicht.ich.hand} bedienung={bedienung} fuehreAus={fuehreAus} schliesse={() => setzeAbwerfenZu(ansicht.aktionen)} />
       )}
     </div>
+    </HaeutungKontext.Provider>
     </ZielKontext.Provider>
   )
 }

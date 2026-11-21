@@ -5,9 +5,9 @@ import type { Person, SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsich
 import { anzahlKarten } from './texte'
 
 /*
-Die Texte der Bedienung (O5) an einer Stelle (docs/regeln/web.md, „Texte“):
-Zugleiste, Namen der Ziele, die Ansage vor dem Ausführen und der Dialog zum
-Abwerfen. Sie beschreiben nur, was die Engine aufgezählt hat; eine Regel steht
+Die Texte der Bedienung (O5, O7) an einer Stelle (docs/regeln/web.md, „Texte“):
+Zugleiste, Namen der Ziele, die Ansage vor dem Ausführen, der Dialog zum
+Abwerfen und die Schlangenhäutung. Sie beschreiben nur, was die Engine aufgezählt hat; eine Regel steht
 hier keine. Wo ein Satz aus der Spielanleitung stammt, steht der Abschnitt
 daneben.
 */
@@ -81,7 +81,7 @@ interface SchlangeAmTisch {
   nummer: number
 }
 
-/** Karten, Schlangen und Spieler am Tisch nach ihrer Id, für die Ansage. */
+/** Karten, Schlangen und Spieler am Tisch nach ihrer Id, für die Ansage und die Schlangenhäutung. */
 export interface Tischnamen {
   karte: (id: string) => Spielkarte
   schlange: (id: string) => SchlangeAmTisch
@@ -109,7 +109,7 @@ export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[
   }
   const finde = <T,>(tabelle: Map<string, T>, id: string, was: string): T => {
     const wert = tabelle.get(id)
-    if (wert === undefined) throw new Error(`Die Ansage nennt ${was} ${id}, die am Tisch nicht zu sehen ist.`)
+    if (wert === undefined) throw new Error(`Gesucht ist ${was} ${id}, die am Tisch nicht zu sehen ist.`)
     return wert
   }
   return {
@@ -120,13 +120,13 @@ export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[
 }
 
 /** „deine Schlange 1“ oder „die Schlange 1 von KI-Gegner 1“ (Akkusativ), „deiner …“ bzw. „der …“ (Dativ). */
-export function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fall: 'akkusativ' | 'dativ'): string {
+function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fall: 'akkusativ' | 'dativ'): string {
   if (eigene) return `${fall === 'akkusativ' ? 'deine' : 'deiner'} Schlange ${nummer}`
   return `${fall === 'akkusativ' ? 'die' : 'der'} Schlange ${nummer} von ${besitzer}`
 }
 
 /** Die Stelle einer Karte in ihrer Schlange, ab 1. */
-export const nummerIn = (schlange: SchlangeAmTisch, karteId: string) => schlange.ansicht.karten.findIndex((glied) => glied.karte.id === karteId) + 1
+const nummerIn = (schlange: SchlangeAmTisch, karteId: string) => schlange.ansicht.karten.findIndex((glied) => glied.karte.id === karteId) + 1
 
 /** Die Ansage einer fertigen Auswahl (B2): Karte und Ziel in einem Satz, bevor sie ausgeführt wird. */
 export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
@@ -165,9 +165,27 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
       return 'Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.'
     case 'SonderkarteWirkungslosAblegen':
       return `${kurz(aktion.karteId)} ohne Wirkung auf deine Ablage.`
+    case 'SchlangenhaeutungSpielen': {
+      const schlange = namen.schlange(aktion.schlangenId)
+      const stellen = aktion.neueReihenfolge.map((id) => nummerIn(schlange, id))
+      return `Schlangenhäutung, Karte ${Math.min(...stellen)}–${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')}: ${aktion.neueReihenfolge.map(kurz).join(', ')}.`
+    }
     default:
-      throw new Error(`Für ${aktion.typ} gibt es in O5 keine Ansage.`)
+      throw new Error(`Für ${aktion.typ} gibt es am Tisch keine Ansage.`)
   }
+}
+
+/** Die Texte der Schlangenhäutung (O7): Abschnitt wählen, Karten ordnen, Punkte vorher und nachher. */
+export const HAEUTUNG = {
+  abschnitt: 'Wähle den Abschnitt: Tippe die erste und die letzte seiner 3 bis 5 Farbkarten an.',
+  anderesEnde: 'Tippe die Karte am anderen Ende des Abschnitts an.',
+  ordnen: 'Tippe zwei Karten an, um sie zu tauschen.',
+  /** Nur mit Maus und Tastatur zu sehen (bedienung.css). */
+  pfeiltasten: 'Die Pfeiltasten verschieben die Karte mit dem Fokus.',
+  // D26: „Ja, die Farbfolge im Abschnitt muss danach anders sein.“
+  gleicheFolge: 'Die Farbfolge ist noch dieselbe (D26).',
+  punkte: (besitzer: Person, vorher: number, nachher: number | null) =>
+    `${besitzer.ich ? 'Deine Punkte' : `Punkte von ${besitzer.name}`}: ${nachher === null ? vorher : `vorher ${vorher}, nachher ${nachher}`}`,
 }
 
 /** Die Texte des Dialogs zum Abwerfen (A5). */

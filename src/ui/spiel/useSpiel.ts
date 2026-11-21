@@ -10,6 +10,8 @@ import { speichereSpielstand } from '../../spielstand'
 import { useWurfImZeichnen } from '../wurfImZeichnen'
 import { ergebnisAnsicht } from './ergebnisAnsicht'
 import type { ErgebnisAnsicht } from './ergebnisAnsicht'
+import { vorschauFuer } from './haeutungsvorschau'
+import type { Haeutungsvorschauer } from './haeutungsvorschau'
 import { protokollSchritt } from './protokoll'
 import { grundAmTisch, personen, tischAnsicht } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
@@ -72,6 +74,8 @@ export interface Spielsteuerung {
   /** Der deutsche Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat (B2, U12), in Du-Form (O6). */
   ablehnung: string | null
   verlauf: Verlauf
+  /** Was eine Schlangenhäutung im jetzigen Stand bringt, aus dem Zwischenstand der Engine (O7). */
+  haeutungsVorschau: Haeutungsvorschauer
 }
 
 /**
@@ -122,6 +126,7 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
   useEffect(() => {
     wartezeit.current = schneller ? Math.min(pause, KI_PAUSE_SCHNELL) : pause
   }, [schneller, pause])
+  const vorschau = useMemo(() => vorschauFuer(zustand), [zustand])
 
   /**
    * Spielt die Aktion: erst speichern, dann zeigen, damit ein Neuladen nie
@@ -192,5 +197,5 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
   const schalteSchneller = useCallback(() => setzeSchneller((an) => !an), [])
 
   if (!(pause >= 0)) throw new Error(`Die Pause vor einem KI-Schritt muss 0 oder mehr Millisekunden sein, erhalten: ${pause}.`)
-  return { ansicht, ergebnis, fuehreAus, ablehnung, verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, schneller, schalteSchneller } }
+  return { ansicht, ergebnis, fuehreAus, ablehnung, haeutungsVorschau: vorschau, verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, schneller, schalteSchneller } }
 }

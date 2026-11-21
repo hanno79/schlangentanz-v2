@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { cleanup, render, screen, within } from '@testing-library/react'
 import type { Spielzustand } from '../../engine'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
+import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
 import { Tisch } from './Tisch'
 
@@ -14,7 +15,7 @@ Spielende trägt kein Gegner mehr „ist dran“.
 afterEach(cleanup)
 
 function zeige(zustand: Spielzustand) {
-  return render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
+  return render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
 }
 
 describe('O8 K5: Zwischenstand am Tisch', () => {

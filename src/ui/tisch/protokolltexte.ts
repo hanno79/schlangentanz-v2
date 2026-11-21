@@ -2,7 +2,7 @@ import type { KartenAktion, SonderkarteWirkungslosAblegenAktion } from '../../en
 import { kartenkurzname } from '../karten/kartentexte'
 import type { Person } from '../spiel/tischAnsicht'
 import { anzahlKarten } from './texte'
-import { ansage, nummerIn, schlangeImSatz } from './zugtexte'
+import { ansage } from './zugtexte'
 import type { Tischnamen } from './zugtexte'
 
 /*
@@ -59,8 +59,8 @@ export const SCHRITT = {
 
 /**
  * Karte und Ziel eines Schritts, wie in der Ansage (`ansage`). Was die Ansage in
- * deiner Bedienung anders sagt, steht hier für jeden Spieler: der Verdoppler,
- * das Ablegen ohne Wirkung und die Schlangenhäutung (A7.8, D13, A7.9).
+ * deiner Bedienung anders sagt, steht hier für jeden Spieler: der Verdoppler und
+ * das Ablegen ohne Wirkung (A7.8, D13).
  */
 export function kartenSatz(aktion: KartenAktion | SonderkarteWirkungslosAblegenAktion, namen: Tischnamen, wer: Person): string {
   const kurz = kartenkurzname(namen.karte(aktion.karteId))
@@ -69,11 +69,6 @@ export function kartenSatz(aktion: KartenAktion | SonderkarteWirkungslosAblegenA
       return 'Verdoppler, danach folgt ein zweiter Zug.'
     case 'SonderkarteWirkungslosAblegen':
       return `${kurz} ohne Wirkung auf ${wer.ich ? 'deine' : 'die eigene'} Ablage.`
-    case 'SchlangenhaeutungSpielen': {
-      const schlange = namen.schlange(aktion.schlangenId)
-      const stellen = aktion.neueReihenfolge.map((id) => nummerIn(schlange, id))
-      return `Schlangenhäutung ordnet Karte ${Math.min(...stellen)} bis ${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')} neu.`
-    }
     default:
       return ansage(aktion, namen)
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { eintragD, fehlende, pruefeKern, spalten, tabelleMitSpalte, teil } from './spec_documentation_hilfen'
+import { eintragD, fehlende, fliesstext, pruefeKern, spalten, tabelleMitSpalte, teil } from './spec_documentation_hilfen'
 
 /*
 `docs/GAME_SPEC.md`, Teil D: Auslegungsfragen an den Autor und seine Antworten.
@@ -14,6 +14,16 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     )
     expect(keineFrage).toEqual([])
     expect(fehlende(d, ['Bis zur Antwort bleibt das heutige Verhalten stehen.'])).toEqual([])
+  })
+
+  it('P0.5e: Teil D hat keine offenen Fragen mehr, nummeriert lückenlos und verweist auf die Antworten zu F und G', () => {
+    const d = teil('D')
+    const einleitung = fliesstext(d.slice(0, d.indexOf('### Beantwortet')))
+    expect(einleitung, 'Einleitung nennt noch offene Fragen').not.toMatch(/Offen sind|G1–G8|G10–G23/)
+    expect(fehlende(einleitung, ['Offene Fragen gibt es keine.'])).toEqual([])
+    expect(fehlende(d, ['D14–D29', 'D31', 'D34–D55'])).toEqual([])
+    const nummern = spalten(tabelleMitSpalte(d, 'Antwort'), 'Nr.').map(([nr]) => nr)
+    expect(nummern, 'Teil D: Nummern nicht lückenlos ab D1').toEqual(nummern.map((_, i) => `D${i + 1}`))
   })
 
   it('P0.5d: Teil D vermerkt, welche Antworten die Website übernommen hat und welche noch folgen', () => {

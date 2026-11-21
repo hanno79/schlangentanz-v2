@@ -126,10 +126,12 @@ describe('O5 K3: Jede Sonderkarte ist ohne Liste spielbar', () => {
     expect(gespieltWurde(start, aktionMit(start, (a) => a.typ === 'SonderkarteWirkungslosAblegen' && a.karteId === dieb))).toBe(true)
   })
 
-  it('O5/O7: eine Schlangenhäutung mit Ziel stört die Hand nicht; ohne Ziel liegt sie wirkungslos ab', () => {
+  it('O5/O7: eine Schlangenhäutung mit Ziel ist spielbar und bietet ihre Schlangen an; ohne Ziel liegt sie wirkungslos ab', () => {
     spieleAm(erzeugeSzenario('haeutung'))
-    expect(handkarte('Sonderkarte Schlangenhäutung (jetzt nicht spielbar)')).toBeDisabled()
-    expect(handkarte('Farbkarte Rot, 1 Punkt')).toBeEnabled()
+    tippe(handkarte('Sonderkarte Schlangenhäutung'))
+    expect(screen.getByRole('button', { name: 'Deine Schlange 1 wählen' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'KI-Gegner 1, Schlange 1 wählen' })).toBeEnabled()
+    expect(screen.queryByRole('button', { name: 'Ohne Wirkung auf deine Ablage' }), 'mit Ziel nicht wirkungslos (D25)').toBeNull()
     cleanup()
 
     const start = erzeugeSzenario('haeutung-nicht-moeglich')

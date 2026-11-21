@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../engine'
+import { anwendeAktion, berechneZwischenstand, ermittleAktionen, ermittleEntscheider } from '../engine'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { erzeugeSzenario } from './szenarien'
 
@@ -63,5 +63,18 @@ describe('O3: Szenarien für den Spieltisch', () => {
     const zustand = erzeugeSzenario(name)
     expect(ermittleEntscheider(zustand)).toBe(2)
     expect(ermittleAktionen(zustand)).toHaveLength(anzahl)
+  })
+
+  it('O7 K3/A7.9: haeutung-punkte: Häutungen in deiner Schlange (0 Punkte) und in der von KI-Gegner 1 (Grün, Grün, Grün: 9 Punkte)', () => {
+    const zustand = erzeugeSzenario('haeutung-punkte')
+    expect(ermittleEntscheider(zustand)).toBe(0)
+    expect(zustand.erweiterung).toBe(true)
+    const farben = (spieler: number) => zustand.spieler[spieler].schlangen[0].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
+    expect(farben(0)).toEqual(['Rot', 'Blau', 'Rot', 'Rot', 'Gelb'])
+    expect(farben(1)).toEqual(['Grün', 'Grün', 'Grün', 'Blau', 'Rot'])
+    expect(berechneZwischenstand(zustand, 'spieler-1').spieler.map((wertung) => wertung.summe)).toEqual([0, 9])
+    const ziele = new Set(ermittleAktionen(zustand).flatMap((aktion) => (aktion.typ === 'SchlangenhaeutungSpielen' ? [aktion.schlangenId] : [])))
+    expect([...ziele].sort()).toEqual(['schlange-1', 'schlange-2'])
+    expect(zustand.spieler[1].hand.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz'), 'KI-Gegner 1 kann nicht abwehren').toBe(false)
   })
 })

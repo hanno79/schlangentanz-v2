@@ -1,0 +1,237 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aa7d49ad7bc33bf3e
+
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K1: Jeder KI-Schritt einzeln und sichtbar > O3 K1: im Spiel etwa 700 ms Pause vor jedem KI-Schritt, und je Pause genau ein Schritt 84ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K1: Jeder KI-Schritt einzeln und sichtbar > O3 K1: ohne Pause („weniger Bewegung“, Test) folgt jeder Schritt einzeln, nicht alle auf einmal 32ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K1: Jeder KI-Schritt einzeln und sichtbar > O3: entscheidet der Mensch, läuft kein KI-Schritt; die Sicht sagt, dass er gefragt ist 6ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3: Aktionen des Menschen > O3: eine Aktion des Menschen wird ausgeführt und gespeichert; danach spielt die KI weiter 28ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3: Aktionen des Menschen > O3/B2, U12: lehnt die Engine eine Aktion ab, steht ihr deutscher Grund da und nichts ändert sich 9ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K2: Neu laden setzt genau dort fort > O3 K2: nach zwei KI-Schritten neu geladen, zeigt die Sicht denselben Stand und spielt von dort weiter 33ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K2: Neu laden setzt genau dort fort > O3 K2: neu geladen mitten in der Pause geht kein Schritt verloren und keiner doppelt 16ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3: Die Aktionen des Menschen in der Sicht > O3/U3: entscheidet der Mensch, stehen genau die Aktionen der Engine in der Sicht, in ihrer Reihenfolge 45ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3: Die Aktionen des Menschen in der Sicht > O3/B2: entscheidet ein Gegner, bietet die Sicht keine Aktion an 19ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3: Die Aktionen des Menschen in der Sicht > O3/A10: nach Spielende bietet die Sicht keine Aktion an 105ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3: Die Aktionen des Menschen in der Sicht > O5/A5: entscheidest du, steht der Grund der Engine darin, warum du den Zug nicht beenden darfst; sonst nichts 145ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario volltisch nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 315ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario mittelspiel nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 69ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K1: Pause vor jedem KI-Schritt am Tisch > O3 K1: ohne „weniger Bewegung“ spielt die KI nach 700 ms, nicht vorher 179ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O5/B2: Der Grund gegen „Zug beenden“ verrät nichts aus fremden Händen > O5/B2: tauscht man die Hand eines Gegners gegen andere Karten, bleibt der Grund in deiner Sicht gleich 160ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario geheime-haende nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 66ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario angriff-auf-mich nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 25ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario neue-partie nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 27ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K2: Neu laden setzt genau dort fort > O3 K2/A6: greift die KI den Menschen an, ist die Abwehrfrage gespeichert und steht nach dem Neuladen wieder da 17ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K2: Neu laden setzt genau dort fort > O3 K2/A6: ist eine KI gefragt, antwortet sie nach dem Neuladen auf die offene Frage 16ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry > O3 K4: je KI-Gegner ein Aufruf der Fabrik aus der Registry, mit eigener Zufallsquelle 3ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry > O3 K4: im Spiel kommt die Saat jeder KI aus Math.random, nicht aus dem Partie-Zufall 3ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry > O3 K4: jeder Gegner entscheidet mit seiner eigenen Instanz, und jede Instanz nur für ihren Sitz 30ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8 K5: Der Zwischenstand je Platz > O8 K5/A11: die Punkte am Tisch sind der Zwischenstand der Engine aus deiner Sicht 37ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8 K5: Der Zwischenstand je Platz > O8 K5/A11: ohne Kettenbonus; die Endwertung desselben Stands läge um die 5 Bonuspunkte höher 7ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8 K5: Der Zwischenstand je Platz > O8 K5/A9: die erfüllte geheime Aufgabe eines Gegners zählt am Tisch nicht mit, deine eigene schon 5ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8: in einem beendeten Szenario ist weder ein Gegner noch du am Zug 9ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: die Lobby bietet 1, 2 oder 3 Gegner, die Erweiterung als Schalter und „Neue Partie“ 385ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8/A10: nach einer ganzen Partie aus Saat 3 mit 2 Spielern trägt niemand mehr „am Zug“ 134ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8/A10: nach einer ganzen Partie aus Saat 8 mit 4 Spielern trägt niemand mehr „am Zug“ 92ms
+ ✓ src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8 Gegenprobe: solange die Partie läuft, ist genau einer am Zug 3ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K1: Pause vor jedem KI-Schritt am Tisch > O3 K1: mit „weniger Bewegung“ folgt der KI-Schritt sofort, aber einzeln 98ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: „Neue Partie“ mit 1 Gegnern legt einen Spielstand mit so vielen KI-Gegnern an 120ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3 K6/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe, nach jedem Schritt einer Partie > O3 K6: Partie aus Saat 1 mit 2 Spielern (Erweiterung false) 160ms
+ ✓ src/ui/tisch/Zwischenstand.test.tsx > O8 K5: Zwischenstand am Tisch > O8 K5: jeder Gegner zeigt seine Punkte, du deine, mit dem Hinweis „ohne Kettenbonus“ 490ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K1: Pause vor jedem KI-Schritt am Tisch > O3: „Zur Lobby“ hält die KI an; in der Lobby läuft nichts weiter (O2 K5) 309ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K3: Ein alter Spielstand wird verworfen, und es wird einmal gesagt > O3 K3: die Lobby sagt es beim ersten Öffnen und danach nicht mehr 44ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K1: Wertung je Spieler getrennt > O8 K1/A11: Farbgruppen je Schlange mit Farbe, Länge und Punkten, dazu Vielfalt, Kette, Aufgaben und Summe 700ms
+ ✓ src/ui/tisch/Zwischenstand.test.tsx > O8 K5: Zwischenstand am Tisch > O8 K5: sichtbar steht die Zahl mit „Punkte“, der Hinweis wird nur vorgelesen 179ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K3: Ein alter Spielstand wird verworfen, und es wird einmal gesagt > O3 K3: wer direkt /spiel öffnet, liest es dort einmal; die Lobby danach schweigt 67ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3 K6/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe, nach jedem Schritt einer Partie > O3 K6: Partie aus Saat 2 mit 3 Spielern (Erweiterung true) 290ms
+ ✓ src/ui/spiel/tischAnsicht.bedienung.test.ts > O3 K6/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe, nach jedem Schritt einer Partie > O3 K6: Partie aus Saat 3 mit 4 Spielern (Erweiterung false) 231ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: „Neue Partie“ mit 2 Gegnern legt einen Spielstand mit so vielen KI-Gegnern an 120ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: „Neue Partie“ mit 3 Gegnern legt einen Spielstand mit so vielen KI-Gegnern an 93ms
+ ✓ src/ui/tisch/ueberlauf.test.tsx > O4 Hinweis 4/O5: Das Zeichen folgt dem Wischen, auch nachdem die Liste neu eingehängt wurde > O5: nach Leeren und erneutem Füllen zeigt das Zeichen nach dem Scrollen links die Karten vor dem Rand 115ms
+ ✓ src/ui/tisch/Zwischenstand.test.tsx > O8: Nach Spielende ist am Tisch niemand dran > O8: ein beendeter Stand zeigt bei keinem Gegner „ist dran“ 147ms
+ ✓ src/ui/tisch/Zwischenstand.test.tsx > O8: Nach Spielende ist am Tisch niemand dran > O8 Gegenprobe: in der laufenden Schlussrunde trägt KI-Gegner 1 „ist dran“ 63ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.1, D17: Farbendieb: erst die Karte beim Gegner, dann der Platz in deiner Schlange 638ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K2: Wählbar sind nur die Abschnitte, die die Engine nennt > O7 K2/A7.9: nach Karte und Schlange bietet die Auswahl genau die Abschnitte der Engine an, jeden einmal 31ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K2: Wählbar sind nur die Abschnitte, die die Engine nennt > O7 K2/D26: in einer Schlange mit genau drei Karten gibt es einen Abschnitt; seine Enden sind die erste und die letzte Karte 9ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K2: Wählbar sind nur die Abschnitte, die die Engine nennt > O7 K1: ohne erstes Ende ist jedes Ende eines Abschnitts angeboten, danach nur die Enden, die mit ihm einen Abschnitt bilden 5ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K2: Wählbar sind nur die Abschnitte, die die Engine nennt > O7: ein angebotener Abschnitt, der nicht lückenlos in der gezeigten Schlange liegt, ist ein Fehler und kein stiller Ersatz 5ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K1/U3: Beim Bestätigen wählt die Auswahl die aufgezählte Aktion mit der Farbfolge der Anordnung > O7 K1/A7.9 Beispiel 1: Gelb, Gelb, Blau, Rot, Rot ergibt genau die Aktion der Engine, dasselbe Objekt 4ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K1/U3: Beim Bestätigen wählt die Auswahl die aufgezählte Aktion mit der Farbfolge der Anordnung > O7/A11: liegen gleichfarbige Karten anders als in der aufgezählten Aktion, zählt die Farbfolge 4ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K1/U3: Beim Bestätigen wählt die Auswahl die aufgezählte Aktion mit der Farbfolge der Anordnung > O7 D26/F13: dieselbe Farbfolge wie vorher ergibt keine Aktion, auch wenn zwei gleichfarbige Karten getauscht sind 4ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K1/U3: Beim Bestätigen wählt die Auswahl die aufgezählte Aktion mit der Farbfolge der Anordnung > O7: jede Anordnung mit neuer Farbfolge findet genau eine angebotene Reihenfolge 22ms
+ ✓ src/ui/spiel/haeutungsauswahl.test.ts > O7 K1/U3: Beim Bestätigen wählt die Auswahl die aufgezählte Aktion mit der Farbfolge der Anordnung > O7: eine Anordnung mit einer Karte ausserhalb des Abschnitts ist ein Fehler 4ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4/B2: Die Sicht verrät keine verdeckte Information > O4 K2/B2: keine fremde Handkarte und keine fremde geheime Aufgabe, in jedem Szenario und 120 Zufallszuständen 903ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4/B2: Die Sicht verrät keine verdeckte Information > O4/A5: von den Gegnern steht nur die Zahl der Handkarten in der Sicht 7ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4/B2: Die Sicht verrät keine verdeckte Information > O4: die eigene Hand und die eigene geheime Aufgabe stehen vollständig in der Sicht 5ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Feste Sicht, der Mensch sitzt unten > O4: der Mensch ist „ich“, die Gegner folgen in Sitzordnung 6ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Feste Sicht, der Mensch sitzt unten > O4/A5: sitzt der Mensch nicht vorn, beginnen die Gegner links von ihm im Uhrzeigersinn 14ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Feste Sicht, der Mensch sitzt unten > O4/B2: ohne genau einen Menschen am Tisch gibt es keine Sicht, sondern einen Fehler 6ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Feste Sicht, der Mensch sitzt unten > O4/A4: Nachziehstapel als Zahl, offene Aufgaben nur mit Erweiterung 10ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Feste Sicht, der Mensch sitzt unten > O4/A4: Ablagestapel mit Anzahl und oberster Karte, leer ohne Karte 8ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4 K4: Farbgruppen, Fusion und Grube > O4 K4/A11: die markierten Farbgruppen sind genau die der Wertung der Engine 16ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4 K4: Farbgruppen, Fusion und Grube > O4 K4/A7.3: die Regenbogenschlange schliesst eine rote Gruppe; Anfang und Ende jeder Gruppe sind markiert 12ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K1: Der Mensch sitzt unten, auch während eines KI-Zuges > O4 K1: während KI-Gegner 2 am Zug ist, stehen deine Hand und deine Schlangen als „deine“ beschriftet da 838ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4 K4: Farbgruppen, Fusion und Grube > O4 K4/A7.7: die Farbenfusion trägt die zwei Farbkarten darunter und zählt in der blauen Gruppe 6ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4 K4: Farbgruppen, Fusion und Grube > O4 K4/A7.6: eine ausliegende Schlangengrube liegt beim getroffenen Spieler und nennt, wer sie gespielt hat 6ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Statuszeile — wer ist dran, was steht an > O4: im Volltisch ist KI-Gegner 2 am Zug, in der Schlussrunde 10ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Statuszeile — wer ist dran, was steht an > O4/A6: schwebt eine Sonderkarte über dem Menschen, entscheidet er 2ms
+ ✓ src/ui/spiel/tischAnsicht.test.ts > O4: Statuszeile — wer ist dran, was steht an > O4/A5: Teilzug und Abschnitt kommen aus dem Zustand 5ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: der Erweiterungs-Schalter (true) kommt auf dem Spieltisch an, auch nach neuem Laden 149ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: der Erweiterungs-Schalter (false) kommt auf dem Spieltisch an, auch nach neuem Laden 95ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.4 a): Schlangenfrass frisst eine Karte deiner eigenen Schlange 271ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K1: Wertung je Spieler getrennt > O8 K1: jede Schlange steht mit ihren Karten da, die Gruppen in Worten im Namen der Reihe 368ms
+ ✓ src/ui/spiel/haeutungsvorschau.test.ts > O7 K3: Punkte vorher und nachher stammen aus der Engine > O7 K3/A11: in deiner Schlange sind vorher und nachher die Summen deines Zwischenstands vor und nach der Häutung 186ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K1: Der Mensch sitzt unten, auch während eines KI-Zuges > O4 K1: der eigene Bereich steht im Dokument nach der Tischfläche, also unten 293ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > E1: der Erweiterungs-Schalter erreicht die Engine; es gibt keinen Ersatzschlüssel und keine Warnung mehr 69ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K1: Einstellungen und neue Partie > O2 K1: der Spieltisch bietet einen Weg zurück in die Lobby 76ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3: Eine Partie läuft bis zum Ende > O3: 2 Spieler, der Mensch wählt zufällig, alle Invarianten nach jedem Schritt erfüllt 552ms
+ ✓ src/ui/spiel/haeutungsvorschau.test.ts > O7 K3: Punkte vorher und nachher stammen aus der Engine > O7 K3/A6: in der Schlange eines Gegners zählen seine Punkte, nachher so, als liesse er die Häutung durch 165ms
+ ✓ src/ui/spiel/haeutungsvorschau.test.ts > O7 K3: Punkte vorher und nachher stammen aus der Engine > O7 K3: die Farbgruppen der Schlange danach kommen aus der Wertung der Engine 48ms
+ ✓ src/ui/spiel/haeutungsvorschau.test.ts > O7 K3: Punkte vorher und nachher stammen aus der Engine > O7 K3: ohne Aktion nur der Stand vorher; eine unbekannte Schlange oder eine Häutung einer anderen Schlange ist ein Fehler 19ms
+ ✓ src/ui/spiel/haeutungsvorschau.test.ts > O7 K3: Punkte vorher und nachher stammen aus der Engine > O7/B2: die Vorschau lässt den Spielstand unverändert 65ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K1: Wertung je Spieler getrennt > O8 K1/A11/D24: die längste Kette nennt ihre Länge; ohne Kette ab 3 Farbkarten steht das da 274ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K1: Wertung je Spieler getrennt > O8 K1: ohne Erweiterung gibt es weder Vielfalt noch Aufgaben 91ms
+ ✓ src/ui/spiel/useSpiel.fehler.test.tsx > O3 K5: Ein Fehler friert nichts ein > O3 K5: wirft die KI beim Wählen, zeigt der Tisch die Meldung und führt zur Lobby 344ms
+ ✓ src/ui/spiel/useSpiel.fehler.test.tsx > O3 K5: Ein Fehler friert nichts ein > O3 K5/U3: wählt die KI eine Aktion, die die Engine nicht aufgezählt hat, steht der Grund da 90ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: ?szenario= legt den Stand an, die Adresse behält danach nur das Tempo 376ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: ?seed= mit spieler und erweiterung beginnt die Partie aus dieser Saat, wie am Entwicklertisch 82ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4: jeder Gegner zeigt Name, Zahl der Handkarten, Schlangen und Ablagestapel 123ms
+ ✓ src/ui/spiel/Spielseite.ergebnis.test.tsx > O8: Nach Spielende steht die Wertung da > O8/A10: spielen die KI-Gegner die Schlussrunde zu Ende, erscheint die Wertung der Engine 864ms
+ ✓ src/ui/spiel/useSpiel.fehler.test.tsx > O3 K5: Ein Fehler friert nichts ein > O3 K5: wirft die Engine beim KI-Schritt, zeigt der Tisch die Meldung und führt zur Lobby 59ms
+ ✓ src/ui/spiel/useSpiel.fehler.test.tsx > O3 K5: Ein Fehler friert nichts ein > O3 K5: wirft die Engine bei einer erlaubten Aktion des Menschen, fängt der Fehlerfang sie 41ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > O2 K2: ohne Spielstand gibt es kein „Weiterspielen“ und keine Rückfrage 48ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > O2 K2: mit Spielstand bietet die Lobby „Weiterspielen“ und nennt die laufende Partie 75ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.4 b): Schlangenfrass entfernt die Schlangenblockade aus deiner Schlange 161ms
+ ✓ src/ui/tisch/UeberhandDialog.test.tsx > O5 K8: Mehr als 5 Handkarten am Zugende: Der Mensch wählt, was er ablegt > O5 K8/A5: der Dialog nennt die Zahl, „Ablegen“ geht erst mit genau so vielen Karten, und es legt genau die gewählten ab 1105ms
+ ✓ src/ui/tisch/UeberhandDialog.test.tsx > O5 K8: Mehr als 5 Handkarten am Zugende: Der Mensch wählt, was er ablegt > O5 K8: „Zum Tisch“ schliesst den Dialog, die Zugleiste öffnet ihn wieder, die Wahl bleibt 305ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > E1: Lobby und Spieltisch lesen die Erweiterung (true) aus dem Spielstand selbst 79ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > E1: Lobby und Spieltisch lesen die Erweiterung (false) aus dem Spielstand selbst 60ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K1/K2: Schlange und Abschnitt wählen > O7 K2/A7.9: nach der Karte die Schlangen der Engine, nach der Schlange genau die Enden ihrer Abschnitte 1034ms
+ ✓ src/ui/spiel/Spielseite.ergebnis.test.tsx > O8: Nach Spielende steht die Wertung da > O8: eine beendete Partie im Speicher öffnet unter /spiel die Wertung, auch nach dem Neuladen 239ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.4 c): Schlangenfrass frisst zwei Karten aus den Schlangen zweier Mitspieler, in beliebiger Reihenfolge 274ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4/B2: von fremden Handkarten steht nur die Zahl am Tisch, kein Bild 169ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4: die Tischmitte zeigt den Nachziehstapel mit seiner Anzahl 83ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > O2 K2: „Neue Partie“ fragt erst nach; Abbrechen lässt den Spielstand unverändert 72ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > O2 K2: Escape schliesst die Rückfrage wie Abbrechen 36ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > O2 K2: die Rückfrage hat den Fokus, damit sie mit der Tastatur erreichbar ist 33ms
+ ✓ src/ui/lobby/Lobby.test.tsx > O2 K2: Weiterspielen und Rückfrage > O2 K2: Bestätigen überschreibt den Spielstand mit der neuen Partie 77ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3: Eine Partie läuft bis zum Ende > O3: 3 Spieler, der Mensch wählt zufällig, alle Invarianten nach jedem Schritt erfüllt 732ms
+ ✓ src/ui/spiel/useSpiel.test.tsx > O3: Eine Partie läuft bis zum Ende > O3: 4 Spieler, der Mensch wählt zufällig, alle Invarianten nach jedem Schritt erfüllt 467ms
+ ✓ src/ui/lobby/Lobby.hintergrund.test.tsx > O2 K5: keine Partie im Hintergrund > O2 K5: die Lobby ohne Spielstand ruft die Engine nicht auf und stellt keinen Zeitgeber 83ms
+ ✓ src/ui/lobby/Lobby.hintergrund.test.tsx > O2 K5: keine Partie im Hintergrund > O2 K5: mit Spielstand liest die Lobby ihn nur und lässt die Partie ruhen 234ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4: ein leerer Nachziehstapel wird gesagt, nicht als leere Fläche gezeigt 213ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K1/K7: ?tempo=sofort spielt die KI ohne Pause, ohne Tempo wartet sie 374ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: mit ?tempo=sofort folgt der erste KI-Schritt ohne Pause 58ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: '/spiel?szenario=gibtsnicht' sagt, was falsch ist, und führt zur Lobby 27ms
+ ✓ src/ui/spiel/Spielseite.test.tsx > O4: Der Spieltisch unter /spiel > O4: mit gespeicherter Partie zeigt /spiel den Tisch mit deiner Hand, deinen Schlangen und den Gegnern 510ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.5: Schlangenblockade: erst die Schlange, dann die Lücke 203ms
+ ✓ src/ui/spiel/Spielseite.ergebnis.test.tsx > O8 K4: Noch einmal und Zur Lobby > O8 K4: „Noch einmal“ nach wertung-beispiele beginnt eine neue Partie mit 3 Gegnern, Erweiterung true 191ms
+ ✓ src/ui/spiel/Spielseite.ergebnis.test.tsx > O8 K4: Noch einmal und Zur Lobby > O8 K4: „Noch einmal“ nach wertung-beispiele-kette beginnt eine neue Partie mit 2 Gegnern, Erweiterung false 93ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: '/spiel?seed=abc&spieler=2' sagt, was falsch ist, und führt zur Lobby 30ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: '/spiel?tempo=schnell' sagt, was falsch ist, und führt zur Lobby 16ms
+ ✓ src/ui/spiel/Spielseite.steuerung.test.tsx > O3 K7: Testhooks unter /spiel > O3 K7: nur ?tempo=sofort ohne Spielstand zeigt, dass keine Partie läuft 23ms
+ ✓ src/ui/spiel/Spielseite.ergebnis.test.tsx > O8 K4: Noch einmal und Zur Lobby > O8 K4: „Zur Lobby“ führt zurück; die Lobby bietet kein „Weiterspielen“ in die beendete Partie 153ms
+ ✓ src/ui/lobby/Lobby.drehen.test.tsx > O2b TF-APP-016: die Rückfrage geht beim Drehen mit > O2b TF-APP-016: nach einer Grössenänderung des Fensters holt die Lobby die offene Rückfrage ins Bild 417ms
+ ✓ src/ui/lobby/Lobby.drehen.test.tsx > O2b TF-APP-016: die Rückfrage geht beim Drehen mit > O2b TF-APP-016: ist die Rückfrage geschlossen, verschiebt eine Grössenänderung nichts 67ms
+ ✓ src/ui/lobby/Lobby.beendet.test.tsx > O8 K4: Die Lobby nach einer beendeten Partie > O8 K4: kein „Weiterspielen“, dafür „Ergebnis ansehen“, das zur Wertung führt 521ms
+ ✓ src/ui/spiel/Spielseite.test.tsx > O4: Der Spieltisch unter /spiel > O4: der Tisch zeigt die gespeicherte Partie, nicht irgendeine 228ms
+ ✓ src/ui/spiel/Spielseite.test.tsx > O4: Der Spieltisch unter /spiel > O4: „Zur Lobby“ führt zurück, die Partie bleibt gespeichert 125ms
+ ✓ src/ui/spiel/Spielseite.test.tsx > O4: Der Spieltisch unter /spiel > O2/O4: ohne Spielstand sagt /spiel weiter, dass keine Partie läuft 5ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: Fehler beim Start > O2 K4: wirft die Engine beim Anlegen der Partie, zeigt der Fehlerfang den Grund und meldet ihn 369ms
+ ✓ src/ui/lobby/Lobby.beendet.test.tsx > O8 K4: Die Lobby nach einer beendeten Partie > O8 K4/O2 K2: „Neue Partie“ fragt nach einer beendeten Partie nicht nach und beginnt sofort 94ms
+ ✓ src/ui/lobby/Lobby.beendet.test.tsx > O8 K4: Die Lobby nach einer beendeten Partie > O2 K2 Gegenprobe: eine laufende Partie bietet weiter „Weiterspielen“ und die Rückfrage 55ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.3: Regenbogenschlange: erst die Schlange, dann die Lücke, auch in der eigenen 154ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4: der eigene Ablagestapel steht unten bei der Hand 101ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4: ohne Schlange sagt der Tisch es in einem Satz 31ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: Fehler beim Start > O2 K4: nach dem Fehler führt der Fehlerfang zurück in eine bedienbare Lobby 126ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: ein ungültiger Zustand wird sichtbar als beschädigt verworfen und gemeldet 25ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: kein JSON wird sichtbar als beschädigt verworfen und gemeldet 20ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: eine leere Zeichenkette wird sichtbar als beschädigt verworfen und gemeldet 29ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und nur sie > O3: in Szenarien, Zufallszuständen und gespielten Partien liefert der Weg jeder Aktion genau diese Aktion der Engine 1024ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und nur sie > O3: keine zwei Aktionen haben denselben Weg, sonst wäre „fertig“ mehrdeutig 37ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und nur sie > O3: jedes Angebot führt zu mindestens einer Aktion; ohne Aktionen gibt es nichts anzubieten 6ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Karte wählen, dann Ziel wählen > O3/D9: nach einer Farbkarte sind beide Enden jeder Schlange angeboten, auch der gegnerischen 6ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Karte wählen, dann Ziel wählen > O3: am Anfang sind genau die spielbaren Handkarten und „Zug beenden“ angeboten, wie die Engine sie nennt 5ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Karte wählen, dann Ziel wählen > O3/A7.4: Schlangenfrass mit zwei Karten: erst die Option, dann beide Karten in beliebiger Reihenfolge 5ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Karte wählen, dann Ziel wählen > O3/A7.8: ein Verdoppler ist mit der Karte allein fertig 3ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Karte wählen, dann Ziel wählen > O3/A5: am Zugende wählt der Mensch genau so viele Karten zum Abwerfen, wie die Engine verlangt, in beliebiger Reihenfolge 6ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Karte wählen, dann Ziel wählen > O3/A6, D33: wird der Mensch angegriffen, sind „durchlassen“ und je Farbenschutz „abwehren“ angeboten 3ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Auswahl aufheben und wechseln > O3: dieselbe Karte noch einmal gewählt hebt die ganze Auswahl auf 5ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Auswahl aufheben und wechseln > O3: ein gewähltes Ziel noch einmal gewählt nimmt nur dieses zurück 4ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Auswahl aufheben und wechseln > O3: eine andere Handkarte wechselt die Auswahl auf sie 5ms
+ ✓ src/ui/spiel/auswahl.test.ts > O3: Auswahl aufheben und wechseln > O3: eine Wahl, die nicht angeboten ist, lehnt die Auswahl mit Grund ab, statt sie still zu übergehen 6ms
+ ✓ src/ui/tisch/Ablehnung.test.tsx > O5 K7: Eine abgelehnte Aktion zeigt den deutschen Grund > O5 K7/U12: der Grund der Engine steht in der Zugleiste, gespielt ist nichts, die Auswahl bleibt 528ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.7: Farbenfusion: das Kartenpaar, in beliebiger Reihenfolge angetippt 171ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K1/K2: Schlange und Abschnitt wählen > O7 K2: nach dem ersten Ende sind nur die Enden angeboten, die mit ihm einen Abschnitt von 3 bis 5 Karten bilden 429ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: ein unbekanntes neueres Format wird sichtbar als beschädigt verworfen und gemeldet 23ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: der Hinweis nennt den Grund der Engine 13ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > E1: ein echter Stand im Format 1 gilt als älteres Speicherformat und wird verworfen, nicht gemeldet 11ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: ein Stand im älteren Speicherformat wird sichtbar verworfen, aber nicht als Fehler gemeldet 8ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: auch /spiel sagt beim direkten Aufruf, dass der Stand verworfen wurde 5ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: im StrictMode bleibt der Hinweis stehen und der Fehler wird nur einmal gemeldet 11ms
+ ✓ src/ui/lobby/Lobby.fehler.test.tsx > O2 K4: unlesbarer Spielstand beim Öffnen > O2 K4: der Hinweis erscheint nur einmal; danach ist die Lobby leer und bedienbar 44ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4/A4: mit Erweiterung liegen die offenen Aufgaben und deine Auslage am Tisch, ohne nicht 225ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Gegner oben, Tischmitte, eigener Ablagestapel > O4: der Tisch führt zurück zur Lobby 62ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.6: Schlangengrube: den Gegner wählen 114ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/A7.8: Verdoppler: die Karte allein, dann bestätigen 73ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K3: Volltisch, jede Karte steht am Tisch > O4 K3: 4 Spieler mit je 2 Schlangen zu 11 Karten, dazu die 2 Karten unter der Fusion 118ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K4: Farbgruppen, Fusion und Grube sind sichtbar > O4 K4/A11: Karten einer Farbgruppe tragen eine Markierung, und die Schlange nennt ihre Gruppen in Worten 122ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K4: Farbgruppen, Fusion und Grube sind sichtbar > O4 K4/A7.7: eine Farbenfusion zeigt die zwei Karten darunter 64ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K1: Karten tauschen, verschieben, bestätigen, abbrechen > O7 K1/A7.9 Beispiel 1: Antippen tauscht, die Ansage nennt die neue Folge, „Ausführen“ spielt genau die Aktion der Engine 551ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5 K3/D13: ohne mögliches Ziel wirkungslos auf den eigenen Ablagestapel 89ms
+ ✓ src/ui/tisch/Sonderkarten.test.tsx > O5 K3: Jede Sonderkarte ist ohne Liste spielbar > O5/O7: eine Schlangenhäutung mit Ziel ist spielbar und bietet ihre Schlangen an; ohne Ziel liegt sie wirkungslos ab 230ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K4: Farbgruppen, Fusion und Grube sind sichtbar > O4 K4/A7.6: eine ausliegende Schlangengrube ist beim getroffenen Gegner sichtbar und nennt, von wem sie ist 72ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4 K4: Farbgruppen, Fusion und Grube sind sichtbar > O4 K4/A7.6: liegt die Grube vor dir, steht sie in deinem Bereich 154ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Statuszeile > O4: bist du am Zug, sagt sie es und was zu tun ist 41ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Statuszeile > O4/A7.8: im zweiten Zug nach einem Verdoppler sagt sie das 46ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Statuszeile > O4/A5: im Abschnitt Abwerfen sagt sie, dass du überzählige Karten ablegst 47ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Statuszeile > O4/A6: schwebt eine Sonderkarte über dir, sagt sie, wer sie spielt und dass du entscheidest 22ms
+ ✓ src/ui/tisch/Tisch.test.tsx > O4: Statuszeile > O4/A10: Schlussrunde und Spielende stehen in der Statuszeile 143ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K1: Karten tauschen, verschieben, bestätigen, abbrechen > O7 K1: die Pfeiltasten verschieben die Karte mit dem Fokus im Abschnitt; der Fokus bleibt bei ihr 352ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K1: Karten tauschen, verschieben, bestätigen, abbrechen > O7 K1: „Abbrechen“ stellt den Ausgangszustand her 471ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario lange-schlange nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 60ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: Szenario zehn-handkarten nennt keine Id einer fremden Handkarte oder geheimen Aufgabe 68ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K1: Karten tauschen, verschieben, bestätigen, abbrechen > O7 D26/F13: bleibt die Farbfolge gleich, ist „Ausführen“ gesperrt, und daneben steht der Grund 406ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K3: Punkte vorher und nachher > O7 K3/A11: die Zugleiste zeigt die Summen deines Zwischenstands vor und nach der Häutung, wie die Engine sie rechnet 269ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K1: Die Aufschlüsselung ist die Endwertung der Engine > O8 K1/A11: je Spieler stehen Gruppen je Schlange, Kette, Vielfalt, Aufgaben und Summe wie in berechneEndwertung 37ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K1: Die Aufschlüsselung ist die Endwertung der Engine > O8 K1: die Rangliste steht absteigend nach Summe, mit Platz und „du“ für den Menschen 9ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K1: Die Aufschlüsselung ist die Endwertung der Engine > O8 K1: die Balken unter den Karten liegen an genau den Karten der gewerteten Gruppen 6ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K1: Die Aufschlüsselung ist die Endwertung der Engine > O8 K1: 50 Endstände echter Partien: jede Summe und jeder Sieger stimmt mit der Endwertung überein 4566ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K3/D22: Gleichstand zeigt alle Sieger > O8 K3/D22: zwei Spieler mit 12 Punkten stehen beide auf Platz 1 und sind beide Sieger 3ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K4: Die Einstellungen der Partie für „Noch einmal“ > O8 K4: wertung-beispiele hatte 3 Gegner, Erweiterung true 5ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K4: Die Einstellungen der Partie für „Noch einmal“ > O8 K4: wertung-beispiele-kette hatte 2 Gegner, Erweiterung false 2ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8 K4: Die Einstellungen der Partie für „Noch einmal“ > O8 K4: wertung-vielfalt-regenbogen hatte 1 Gegner, Erweiterung true 2ms
+ ✓ src/ui/spiel/ergebnisAnsicht.test.ts > O8: Ein Ergebnis gibt es erst nach Spielende > O8/A10: solange die Partie läuft, wirft ergebnisAnsicht mit Grund 5ms
+ ✓ src/ui/tisch/Zugleiste.test.tsx > O5 K5: „Zug beenden“ ist genau dann bedienbar, wenn die Engine es erlaubt > O5 K5/U3: in Szenarien und gespielten Partien, ob du entscheidest oder nicht 3768ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7 K3: Punkte vorher und nachher > O7 K3/D9: in der Schlange eines Gegners stehen seine Punkte; zerstört die Häutung seine Gruppe, sinken sie 277ms
+ ✓ src/ui/tisch/Zugleiste.test.tsx > O5 K5: „Zug beenden“ ist genau dann bedienbar, wenn die Engine es erlaubt > O5 K5/A5: zu Beginn gesperrt mit Grund, nach einer Karte bedienbar, und es beendet den Zug 194ms
+ ✓ src/ui/tisch/Zugleiste.test.tsx > O5 Iteration 2, Mangel 1: Neben jedem gesperrten „Zug beenden“ steht der Grund der Engine > O5/DESIGN.md: vor einer Karte, mit gewählter Karte und mit fertiger Ansage 156ms
+ ✓ src/ui/tisch/Zugleiste.test.tsx > O5 K6: Nach einem Verdoppler zeigt die Statuszeile den zweiten Zug > O5 K6/A7.8: Verdoppler, Farbkarte, Zug beenden: „Zweiter Zug nach dem Verdoppler“ 157ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7: Häutung in der Schlange eines Gegners und U3 > O7 D9/A6: in der Schlange von KI-Gegner 1 ist die Häutung eine Ansage; „Ausführen“ sagt sie an 289ms
+ ✓ src/ui/tisch/Haeutung.test.tsx > O7: Häutung in der Schlange eines Gegners und U3 > O7/U3: „Ausführen“ übergibt genau ein Objekt aus den Aktionen der Engine, keine Abschrift 261ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K1: Nach dem Antippen einer Handkarte sind genau die erlaubten Ziele markiert > O5 K1/U3: für jede spielbare Handkarte in jedem Szenario genau die Ziele der Engine, vorher keine 4098ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K1: Nach dem Antippen einer Handkarte sind genau die erlaubten Ziele markiert > O5 K1: spielbar sind genau die Handkarten der Engine; die anderen sind gesperrt und sagen es 681ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K1: Nach dem Antippen einer Handkarte sind genau die erlaubten Ziele markiert > O5 K1: dieselbe Karte noch einmal, „Abbrechen“ oder Escape heben die Auswahl auf 125ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K1: Nach dem Antippen einer Handkarte sind genau die erlaubten Ziele markiert > O5 K1: eine andere Handkarte wechselt die Auswahl auf sie und ihre Ziele 86ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K2: Farbkarte an beide Enden jeder Schlange oder als neue Schlange > O5 K2/D9: beide Enden deiner und der gegnerischen Schlange und „Neue Schlange“ 82ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K2: Farbkarte an beide Enden jeder Schlange oder als neue Schlange > O5 K2/D9: an das Ende der gegnerischen Schlange gelegt, nach der Ansage 124ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K2: Farbkarte an beide Enden jeder Schlange oder als neue Schlange > O5 K2/A5: „Neue Schlange“ beginnt deine zweite Schlange 92ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K4/B2: Vor dem Ausführen steht die Ansage zum Bestätigen > O5 K4/A7.1: Farbendieb: Karte und Platz gewählt, die Zugleiste sagt beides, ausgeführt wird erst nach „Ausführen“ 131ms
+ ✓ src/ui/tisch/KartenSpielen.test.tsx > O5 K4/B2: Vor dem Ausführen steht die Ansage zum Bestätigen > O5 K4: „Ansehen“ zeigt die gewählte Karte gross mit ihrem Text; Escape dort hebt die Auswahl nicht auf 144ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: 80 Zufallszustände (2 bis 4 Spieler, jede Phase, mit und ohne Erweiterung) verraten keine Id 2913ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: ganze Partie aus Saat 11 mit 2 Spielern (Erweiterung false) verrät nach keinem Schritt eine Id 5130ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: ganze Partie aus Saat 14 mit 4 Spielern (Erweiterung true) verrät nach keinem Schritt eine Id 4667ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2: liegen die Kartenarten der fremden Hände sonst nirgends offen, steht auch ihr Name nicht im HTML 33ms
+ ✓ src/ui/tisch/Tisch.geheim.test.tsx > O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im HTML > O4 K2/B2: die geheimen Aufgaben der Gegner stehen nicht im HTML, die eigene schon 203ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K1: Wertung je Spieler getrennt > O8 K1/A11 Abschnitt 4: erfüllte offene Aufgaben und die geheime Aufgabe mit Namen und Punkten 51ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K1: Wertung je Spieler getrennt > O8 K1: 50 Endstände echter Partien: Gesamt und Posten stimmen mit berechneEndwertung überein 13576ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K2: Joker nennen ihre gewertete Farbe > O8 K2/A11: Regenbogenschlange und Farbenfusion stehen mit der Farbe, als die sie gewertet wurden 141ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K2: Joker nennen ihre gewertete Farbe > O8 K2: ein Joker in keiner Gruppe sagt das, statt eine Farbe zu nennen 16ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K3/D22: Sieger > O8 K3/D22: bei Gleichstand stehen alle Sieger im Titel und tragen das Abzeichen 55ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K3/D22: Sieger > O8 K3: ein Sieger allein, dazu dein Platz 64ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K3/D22: Sieger > O8 K3: gewinnst du allein, sagt der Titel es dir 19ms
+ ✓ src/ui/ergebnis/Ergebnis.test.tsx > O8 K4: Noch einmal und Zur Lobby > O8 K4: „Noch einmal“ ruft den Neustart genau einmal, „Zur Lobby“ führt auf die Lobby 66ms
+
+ Test Files  28 passed (28)
+      Tests  228 passed (228)
+   Start at  21:30:47
+   Duration  26.20s (transform 8.87s, setup 21.48s, import 24.26s, tests 70.75s, environment 248.58s)
+

@@ -24,8 +24,8 @@ export const NACHFRAGE = /^([FG]\d+)[a-z]$/
 /** Zitat in deutschen Anführungszeichen. */
 export const ZITAT = /„[^“]+“/g
 
-type PlanFrage = { nr: string; stelle: string; frage: string; vorschlag?: string }
-type TeilDEintrag = { nr: string; frage: string; antwort: string; datum: string }
+type PlanFrage = { nr: string; stelle: string; frage: string; vorschlag?: string; antwort?: string }
+type TeilDEintrag = { nr: string; frage: string; antwort: string; folge: string; datum: string }
 
 /** Fasst Leerraum zusammen, damit Zitate und Prosa über Zeilenumbrüche hinweg passen. */
 export function normalisiert(text: string): string {
@@ -83,6 +83,22 @@ export function moeglichkeiten(block: string): string[] {
   return [...moeglichkeitenMitText(block).keys()]
 }
 
+/**
+ * Buchstaben der Möglichkeiten je Teil der Frage, in der Reihenfolge des Blocks.
+ * Ein Teil beginnt mit einer Zeile „Teil 1, …“; ohne solche Zeilen hat die Frage einen Teil.
+ */
+export function teileDerFrage(block: string): string[][] {
+  const teile: string[][] = []
+  for (const zeile of block.split('\n')) {
+    if (/^Teil \d+,/.test(zeile)) teile.push([])
+    const moeglichkeit = /^- \*\*([a-z])\)\*\* \S/.exec(zeile)
+    if (!moeglichkeit) continue
+    if (teile.length === 0) teile.push([])
+    teile[teile.length - 1].push(moeglichkeit[1])
+  }
+  return teile
+}
+
 /** Text der Möglichkeit ohne den Buchstaben; leer, wenn es sie nicht gibt. */
 export function moeglichkeitText(block: string, buchstabe: string): string {
   return moeglichkeitenMitText(block).get(buchstabe) ?? ''
@@ -105,14 +121,29 @@ export function nenntStelle(text: string, stelle: string): boolean {
   return new RegExp(`(?<![\\w.])${maskiert}(?!\\d|\\.\\d)`).test(text)
 }
 
-/** Die Fragen F und G aus den Tabellen des Abschnitts „Offene Regelfragen“ im Plan. */
+/**
+ * Die Fragen F und G aus den Tabellen des Abschnitts „Offene Regelfragen“ im Plan.
+ * Spalten nach ihrem Kopf, je Unterabschnitt: Die Tabelle der Erweiterung hat
+ * eine Spalte „Antwort“, aber keine Spalte „Vorschlag“ (P0.5e).
+ */
 function fragenAusPlan(): PlanFrage[] {
   return abschnitt(plan, '##', 'Offene Regelfragen')
-    .split('\n')
-    .filter((zeile) => /^\|\s*[FG]\d+\s*\|/.test(zeile))
-    .map((zeile) => {
-      const [nr, stelle, frage, vorschlag] = zellen(zeile)
-      return { nr, stelle, frage, vorschlag }
+    .split(/^(?=### )/m)
+    .flatMap((teil) => {
+      const { kopf, zeilen } = tabelle(teil)
+      // „startsWith“, weil der Kopf etwa „Antwort (13.11.2026)“ heisst.
+      const [stelle, frage, vorschlag, antwort] = ['Stelle', 'Frage', 'Vorschlag', 'Antwort'].map((name) =>
+        kopf.findIndex((zelle) => zelle.startsWith(name)),
+      )
+      return zeilen
+        .filter((zeile) => /^[FG]\d+$/.test(zeile[0] ?? ''))
+        .map((zeile) => ({
+          nr: zeile[0],
+          stelle: zeile[stelle] ?? '',
+          frage: zeile[frage] ?? '',
+          vorschlag: zeile[vorschlag],
+          antwort: zeile[antwort],
+        }))
     })
 }
 
@@ -166,7 +197,7 @@ function fragenbloeckeLesen(): Map<string, string> {
 /** Einträge in Teil D, die eine Regelfrage beantworten („F1: …?“ in der Spalte „Frage“), je Fragennummer. */
 function beantworteteInTeilD(): Map<string, TeilDEintrag> {
   const { kopf, zeilen } = teilDTabelle
-  const [nr, frage, antwort, datum] = ['Nr.', 'Frage', 'Antwort', 'Datum'].map((name) => kopf.indexOf(name))
+  const [nr, frage, antwort, folge, datum] = ['Nr.', 'Frage', 'Antwort', 'Folge', 'Datum'].map((name) => kopf.indexOf(name))
   const eintraege = new Map<string, TeilDEintrag>()
   for (const zeile of zeilen) {
     const bezug = /^([FG]\d+[a-z]?): /.exec(zeile[frage] ?? '')
@@ -175,6 +206,7 @@ function beantworteteInTeilD(): Map<string, TeilDEintrag> {
       nr: zeile[nr] ?? '',
       frage: (zeile[frage] ?? '').slice(bezug[0].length),
       antwort: zeile[antwort] ?? '',
+      folge: zeile[folge] ?? '',
       datum: zeile[datum] ?? '',
     })
   }
