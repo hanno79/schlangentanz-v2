@@ -85,10 +85,11 @@ describe('E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bi
   })
 
   it('E11: neben regeln/ liegen unter __tests__ nur Tests der Engine selbst, keine Regeltests', () => {
-    // Aktionsschicht, Invarianten, Speicherformat, Baukasten, Ereignisse, Schlangenhilfen (R1), die Dauerläufe, Umfang, Golden Master und dieser Test.
+    // Aktionsschicht, Invarianten, Speicherformat, Baukasten, Ereignisse, Schlangenhilfen (R1), Entscheidungsablauf (X3), die Dauerläufe, Umfang, Golden Master und dieser Test.
     const erlaubt = [
       'aktionen.test.ts',
       'dauerlauf.test.ts',
+      'entscheidung.test.ts',
       'golden_master.test.ts',
       'invarianten.test.ts',
       'invarianten_grenzfaelle.test.ts',
