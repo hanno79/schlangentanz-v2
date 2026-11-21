@@ -78,3 +78,14 @@ export async function oeffne(page: Page, route: string): Promise<void> {
   ).toBeVisible()
   await page.evaluate(() => document.fonts.ready.then(() => undefined))
 }
+
+/**
+ * Hält die Uhr der Seite an, bevor sie geladen wird: Kein Zeitgeber läuft, bis
+ * der Vertrag sie mit `page.clock.runFor` vorstellt. Seit O3 spielen die
+ * KI-Gegner am Tisch nach einem Zeitgeber; wer einen festen Stand messen will
+ * oder die Pause abzählt, ruft das vor `goto` auf.
+ */
+export async function halteUhrAn(page: Page): Promise<void> {
+  await page.clock.install({ time: new Date('2026-11-21T10:00:00') })
+  await page.clock.pauseAt(new Date('2026-11-21T10:00:01'))
+}

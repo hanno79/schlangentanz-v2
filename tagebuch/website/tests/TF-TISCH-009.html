@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-009 Wer mitten in den KI-Zügen zur Lobby geht, hält die KI an; „Weiterspielen“ setzt mit genau dem nächsten Schritt nach etwa 700 ms fort. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-009 Wer mitten in den KI-Zügen zur Lobby geht, hält die KI an; „Weiterspielen“ setzt mit genau dem nächsten Schritt nach etwa 700 ms fort.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-005</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Verlässt der Mensch den Tisch, während die KI gerade zieht, darf in der Lobby nichts weiterlaufen. Kommt er zurück, soll die Partie mit dem nächsten Schritt weitergehen, ohne dass einer fehlt oder doppelt kommt.</p><h2>Bestanden, wenn</h2><p>In der Lobby wird drei Sekunden lang nichts gespeichert. Nach „Weiterspielen“ folgt nach 680 bis 800 ms genau ein Schritt: Beim Gegner am Zug ist eine Handkarte weniger und eine Karte mehr in einer Schlange oder auf dem Ablagestapel, oder der Zug ist an den nächsten Spieler gegangen.</p><h2>Fehlgeschlagen, wenn</h2><p>Die KI spielt in der Lobby weiter, nach „Weiterspielen“ kommt sofort ein Schritt oder gar keiner, oder es fehlen beziehungsweise doppeln sich Schritte.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O3-partie-steuerung (PR #70)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Desktop 1280 × 900, ohne „weniger Bewegung“, Stand ab Commit 249aebb</td></tr><tr><td>Ausgangslage prüfen</td><td>Leerer Local Storage</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>schlussrunde-ohne-dich</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser</td><td>Adresse öffnen</td><td>`/spiel?szenario=schlussrunde-ohne-dich`</td><td>„KI-Gegner 1 ist dran“</td></tr><tr><td>2</td><td>Tisch</td><td>zwei KI-Schritte abwarten, dann 0,3 s später „Zur Lobby“ klicken</td><td></td><td>Lobby mit „Weiterspielen“</td></tr><tr><td>3</td><td>Lobby</td><td>drei Sekunden warten</td><td></td><td>nichts ändert sich, Stand im Speicher gleich</td></tr><tr><td>4</td><td>Lobby</td><td>„Weiterspielen“ klicken</td><td></td><td>Tisch zeigt den Stand von Schritt 2, nach etwa 0,7 s genau ein weiterer Schritt</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage leeren oder Kontext schliessen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 14:54</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O3) &middot; agent &middot; pruefung-O3 @ <span class="commit" title="249aebb9b6327026038c1724eab00bf4166dc54a">249aebb</span> / Playwright Chromium 1.60.0, Desktop 1280x900</p><p>Nach 2 KI-Schritten zur Lobby: in 3 s 3 -&gt; 3 Schreibvorgänge; Stand dran 2, Hand 3/4/5/5. Nach Weiterspielen erster Schritt nach 702 ms: Hand 3/4/4/5, Schlangenkarten 3 -&gt; 4 bei Spieler 1 (genau ein Schritt).</p><ul class="belege"><li><a href="belege/2026-11-21-1454-TF-TISCH-009-1.txt">2026-11-21-1454-TF-TISCH-009-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

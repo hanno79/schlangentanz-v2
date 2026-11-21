@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-010 Ist dieselbe Partie in zwei Tabs offen, zeigen beide Tabs und der Speicher am Ende denselben Spielstand. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-010 Ist dieselbe Partie in zwei Tabs offen, zeigen beide Tabs und der Speicher am Ende denselben Spielstand.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-006</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Jeder Tab führt die Partie mit seiner eigenen Steuerung, beide schreiben aber in denselben Speicher. Der Plan sagt nicht, wie sich zwei offene Tabs verhalten sollen. Der Testfall hält fest, was dabei passiert, damit jemand entscheiden kann, ob es so bleiben darf.</p><h2>Bestanden, wenn</h2><p>Nach acht Sekunden zeigen beide Tabs denselben Stand, und dieser steht auch im Speicher, sodass ein Neuladen in keinem Tab etwas anderes zeigt.</p><h2>Fehlgeschlagen, wenn</h2><p>Die beiden Tabs spielen getrennte Partien weiter, und im Speicher steht nur die eines Tabs; der andere Tab zeigt dann einen Stand, den ein Neuladen nicht wiederherstellt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O3-partie-steuerung (PR #70)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Desktop 1280 × 900, ohne „weniger Bewegung“, ein Browserkontext mit zwei Tabs, Stand ab Commit 249aebb</td></tr><tr><td>Ausgangslage prüfen</td><td>Leerer Local Storage</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>schlussrunde-ohne-dich</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Tab A</td><td>Adresse öffnen</td><td>`/spiel?szenario=schlussrunde-ohne-dich`</td><td>„KI-Gegner 1 ist dran“</td></tr><tr><td>2</td><td>Tab B</td><td>sofort danach Adresse öffnen</td><td>`/spiel`</td><td>derselbe Tisch</td></tr><tr><td>3</td><td>beide Tabs</td><td>acht Sekunden warten</td><td></td><td>beide „Die Partie ist beendet.“</td></tr><tr><td>4</td><td>beide Tabs</td><td>Schlangen der Spieler vergleichen</td><td></td><td>gleich in A, B und nach Neuladen</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage leeren oder Kontext schliessen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-unklar"><h3><time datetime="2026-11-21">21.11.2026 14:54</time> <span class="status status-unklar">unklar</span></h3><p class="angaben">Claude Code (Prüfer O3) &middot; agent &middot; pruefung-O3 @ <span class="commit" title="249aebb9b6327026038c1724eab00bf4166dc54a">249aebb</span> / Playwright Chromium 1.60.0, Desktop 1280x900, zwei Tabs</p><p>Beide Tabs spielen eigene Partien: A 7, B 6 Schreibvorgänge; am Ende A Schlangenkarten 3/0/1/1, B und Speicher 5/0/0/0. Tab A zeigt einen Stand, den ein Neuladen nicht wiederherstellt.</p><ul class="belege"><li><a href="belege/2026-11-21-1454-TF-TISCH-010-1.txt">2026-11-21-1454-TF-TISCH-010-1.txt</a></li></ul><div class="kasten-unklar"><h4>Unklar</h4><p>Der Plan legt nicht fest, wie sich zwei Tabs mit derselben Partie verhalten sollen; beobachtet sind zwei getrennte Partien im selben Speicher.</p><h4>Fehlt</h4><p>Entscheidung von Orchestrator oder Autor, ob das hingenommen, gesperrt oder abgeglichen wird.</p></div></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

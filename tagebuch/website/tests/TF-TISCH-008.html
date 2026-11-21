@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-008 Dreht man das Handy während einer Abwehrfrage an dich, bleibt die Frage stehen und keine KI spielt weiter. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-008 Dreht man das Handy während einer Abwehrfrage an dich, bleibt die Frage stehen und keine KI spielt weiter.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-006</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Beim Drehen des Handys zeichnet die Seite neu. Dabei darf die Steuerung weder die offene Abwehrfrage verlieren noch die KI weiterspielen lassen.</p><h2>Bestanden, wenn</h2><p>Nach dem Drehen von 390 × 844 auf 844 × 390 und zurück steht weiter „KI-Gegner 1 spielt Schlangengrube“ und „Du entscheidest, ob du abwehrst.“, der gespeicherte Stand ist unverändert, und die Seite ist so breit wie das Fenster (<code>scrollWidth</code> 390, <code>clientWidth</code> 390).</p><h2>Fehlgeschlagen, wenn</h2><p>Die Frage verschwindet, eine KI macht einen Schritt, oder die Seite lässt sich waagrecht scrollen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O3-partie-steuerung (PR #70)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Playwright-Kontext „handy-hochkant“ (Touch), ohne „weniger Bewegung“, Stand ab Commit 249aebb</td></tr><tr><td>Ausgangslage prüfen</td><td>Leerer Local Storage</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenario <code>angriff-auf-dich</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser, 390 × 844</td><td>Adresse öffnen</td><td>`/spiel?szenario=angriff-auf-dich`</td><td>„Du entscheidest, ob du abwehrst.“</td></tr><tr><td>2</td><td>Gerät</td><td>quer drehen (844 × 390), 2,5 s warten</td><td></td><td>dieselbe Frage, Tisch quer</td></tr><tr><td>3</td><td>Gerät</td><td>zurück hochkant drehen, 1,5 s warten</td><td></td><td>dieselbe Frage, keine waagrechte Scrollleiste</td></tr><tr><td>4</td><td>Entwicklerwerkzeuge</td><td>Local Storage mit dem Stand aus Schritt 1 vergleichen</td><td></td><td>unverändert</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Local Storage leeren oder Kontext schliessen.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 14:54</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O3) &middot; agent &middot; pruefung-O3 @ <span class="commit" title="249aebb9b6327026038c1724eab00bf4166dc54a">249aebb</span> / Playwright Chromium 1.60.0, handy-hochkant Touch 390x844 -&gt; 844x390 -&gt; 390x844</p><p>Status nach dem Drehen &#x27;KI-Gegner 1 spielt Schlangengrube / Du entscheidest, ob du abwehrst.&#x27;, Stand gleich, keine Schreibvorgänge nach dem Anlegen des Szenarios (1 = Testhook), scrollWidth 390/390, 0 Konsolenfehler.</p><ul class="belege"><li><a href="belege/2026-11-21-1454-TF-TISCH-008-1.txt">2026-11-21-1454-TF-TISCH-008-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

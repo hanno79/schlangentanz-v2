@@ -13,7 +13,7 @@ import {
   volltisch,
 } from '../../src/ui/tisch/__tests__/szenarien'
 import { befundListe, kasten } from './messung'
-import { oeffne } from './oeffnen'
+import { halteUhrAn, oeffne } from './oeffnen'
 import { abgeschnitteneEigeneSchlangen, lesbareStapelzahlen, ueberdeckendeBalken, unerreichbareKarten, verborgenOhneHinweis } from './tisch_messung'
 import { bedienbarkeitsVertraege, nichtsIstStillgelegt, waechterVertraege } from './waechter'
 
@@ -41,7 +41,12 @@ const SZENARIEN: { name: string; erzeuge: () => Spielzustand; karten: number; ei
   { name: 'zehn Handkarten', erzeuge: zehnHandkarten, karten: 35, eigeneBilder: 9, gruppenBalken: 13, stapel: String(zehnHandkarten().nachziehstapel.length) },
 ]
 
+/* Seit O3 spielen die KI-Gegner am Tisch; mit „weniger Bewegung“ (playwright.config.ts)
+   sogar ohne Pause. Die Verträge hier messen einen festen Stand, deshalb hält die
+   Uhr der Seite an: So läuft kein KI-Schritt, und gemessen wird das Szenario,
+   nicht ein Stand, den die Zufalls-KI daraus gemacht hat. */
 async function oeffneMitPartie(page: Page, zustand: Spielzustand): Promise<void> {
+  await halteUhrAn(page)
   await page.addInitScript(
     ([schluessel, wert]) => window.localStorage.setItem(schluessel, wert),
     [SPIELSTAND_SCHLUESSEL, serialisiere(zustand)] as const,
