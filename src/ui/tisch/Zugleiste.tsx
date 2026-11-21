@@ -54,7 +54,7 @@ function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | n
   if (fertig !== null) return `${ZUGLEISTE.ansage} ${ansage(fertig, tischnamen(ansicht))}`
   if (haeutung !== null) {
     if (haeutung.stufe === 'ordnen') return HAEUTUNG.ordnen
-    return haeutung.erstesEnde === null ? HAEUTUNG.abschnitt : HAEUTUNG.anderesEnde
+    return haeutung.gedrueckt === null ? HAEUTUNG.abschnitt : HAEUTUNG.anderesEnde
   }
   return auftrag(bedienung.angebote, karte)
 }
@@ -83,7 +83,8 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
   const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
   const { zugBeenden, abwerfen, ausspielen } = bedienung
   const fertig = haeutung?.fertig ?? bedienung.fertig
-  const vorschau = haeutung?.vorschau ?? null
+  // Beim Ordnen der Häutung stehen hier die Punkte, und ein gesperrtes „Ausführen“ sagt, warum.
+  const vorschau = haeutung?.stufe === 'ordnen' ? haeutung.vorschau : null
 
   return (
     <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
@@ -96,7 +97,12 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
         <p className="st-zugleiste-text" aria-live="polite">
           {satz(ansicht, bedienung, karte, fertig, haeutung)}
         </p>
-        {vorschau !== null && <p className="st-zugleiste-punkte">{HAEUTUNG.punkte(vorschau.besitzer, vorschau.vorher, vorschau.nachher?.punkte ?? null)}</p>}
+        {vorschau !== null && (
+          <>
+            <p className="st-zugleiste-klein st-zugleiste-pfeiltasten">{HAEUTUNG.pfeiltasten}</p>
+            <p className="st-zugleiste-klein">{HAEUTUNG.punkte(vorschau.besitzer, vorschau.vorher, vorschau.nachher?.punkte ?? null)}</p>
+          </>
+        )}
         {ablehnung !== null && (
           <p className="st-zugleiste-fehler" role="alert">
             {ablehnung}
@@ -136,7 +142,7 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
                   {ZUGLEISTE.ausfuehren}
                 </button>
               ) : (
-                haeutung?.stufe === 'ordnen' && (
+                vorschau !== null && (
                   <KnopfMitGrund klasse="st-knopf st-knopf--haupt" grund={HAEUTUNG.gleicheFolge}>
                     {ZUGLEISTE.ausfuehren}
                   </KnopfMitGrund>

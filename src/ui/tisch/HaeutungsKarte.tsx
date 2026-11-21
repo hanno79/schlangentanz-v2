@@ -17,7 +17,8 @@ const RICHTUNG: Readonly<Record<string, -1 | 1>> = { ArrowLeft: -1, ArrowRight: 
 export function HaeutungsKarte({ haeutung, karte, name, groesse }: { haeutung: Haeutung; karte: Spielkarte; name: string; groesse: string }) {
   const knopf = useRef<HTMLButtonElement>(null)
   const ordnen = haeutung.stufe === 'ordnen'
-  const angeboten = ordnen || haeutung.enden.has(karte.id)
+  // Beim Ordnen ist jede Karte des Abschnitts angeboten; bei den Enden nicht mehr das schon gedrückte.
+  const angeboten = ordnen || haeutung.gedrueckt !== karte.id
   const nummer = haeutung.fokus?.karteId === karte.id ? haeutung.fokus.nummer : null
 
   useLayoutEffect(() => {
@@ -38,7 +39,7 @@ export function HaeutungsKarte({ haeutung, karte, name, groesse }: { haeutung: H
       className="st-ziel st-ziel--karte"
       data-ziel={angeboten ? `haeutung:${karte.id}` : undefined}
       aria-label={name}
-      aria-pressed={ordnen ? haeutung.markiert === karte.id : haeutung.erstesEnde === karte.id}
+      aria-pressed={haeutung.gedrueckt === karte.id}
       onClick={() => haeutung.tippe(karte.id)}
       onKeyDown={beiTaste}
     >

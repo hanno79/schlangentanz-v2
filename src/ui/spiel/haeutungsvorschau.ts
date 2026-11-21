@@ -34,7 +34,8 @@ export function haeutungsVorschau(zustand: Spielzustand, schlangenId: string, ak
   const betrachter = zustand.spieler[mensch].id
   const punkte = (stand: Spielzustand) => berechneZwischenstand(stand, betrachter).spieler[besitzer].summe
   const person: Person = { name: zustand.spieler[besitzer].name, ich: besitzer === mensch }
-  if (aktion === null) return { besitzer: person, vorher: punkte(zustand), nachher: null }
+  const vorher = punkte(zustand)
+  if (aktion === null) return { besitzer: person, vorher, nachher: null }
   if (aktion.schlangenId !== schlangenId) throw new Error(`Die Häutung gilt der Schlange ${aktion.schlangenId}, nicht ${schlangenId}.`)
 
   let danach = anwendeAktion(zustand, aktion).zustand
@@ -45,7 +46,7 @@ export function haeutungsVorschau(zustand: Spielzustand, schlangenId: string, ak
   }
   const schlangen = danach.spieler[besitzer].schlangen
   const schlange = schlangenAnsicht(schlangen, danach.erweiterung)[schlangen.findIndex((eintrag) => eintrag.id === schlangenId)]
-  return { besitzer: person, vorher: punkte(zustand), nachher: { punkte: punkte(danach), schlange } }
+  return { besitzer: person, vorher, nachher: { punkte: punkte(danach), schlange } }
 }
 
 /** Die Vorschau für diesen Stand, so wie die Partie-Steuerung sie dem Tisch gibt. */

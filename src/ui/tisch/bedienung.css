@@ -196,10 +196,18 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   gap: var(--abstand-2);
 }
 
-/* Die Punkte vor und nach einer Schlangenhäutung (O7). */
-.st-zugleiste-punkte {
+/* Nebentext der Schlangenhäutung (O7): die Punkte vorher und nachher und der Hinweis auf die
+   Pfeiltasten. Den Hinweis braucht nur, wer mit Maus und Tastatur spielt; auf Touch-Geräten
+   liesse er der Tischfläche im Querformat zu wenig Höhe. */
+.st-zugleiste-klein {
   font-size: var(--groesse-klein);
   color: var(--farbe-tinte-leise);
+}
+
+@media (pointer: coarse) {
+  .st-zugleiste-pfeiltasten {
+    display: none;
+  }
 }
 
 /* Ein Knopf mit seinem Grund daneben: „Zug beenden“, beim Ordnen der Häutung auch „Ausführen“. */

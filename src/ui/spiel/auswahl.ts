@@ -38,6 +38,9 @@ export type Wahl =
   | { art: 'abwehren'; farbenschutzId: string }
   | { art: 'durchlassen' }
 
+/** Die Wahl einer bestimmten Art. */
+export type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
+
 /** Die bisher getroffenen Wahlen, in der Reihenfolge des Antippens. */
 export type Auswahl = readonly Wahl[]
 
@@ -192,8 +195,6 @@ export function waehle(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl:
   throw new Error(`Auswahl: ${neu} ist nicht angeboten; angeboten sind nur Wahlen zu Aktionen der Engine (U3).`)
 }
 
-type Reihenfolge = Extract<Wahl, { art: 'reihenfolge' }>
-
 const sortiert = (ids: readonly string[]): string => [...ids].sort().join()
 
 /**
@@ -203,10 +204,11 @@ const sortiert = (ids: readonly string[]): string => [...ids].sort().join()
  * `null`, wenn keine angeboten ist, weil die Farbfolge geblieben ist (D26).
  * Ordnet die Anordnung andere Karten als den gewählten Abschnitt, wirft sie.
  */
-export function passendeReihenfolge(angebote: readonly Wahl[], anordnung: readonly string[], farbeVon: (karteId: string) => string): Reihenfolge | null {
-  const reihenfolgen = angebote.filter((wahl): wahl is Reihenfolge => wahl.art === 'reihenfolge')
+export function passendeReihenfolge(angebote: readonly Wahl[], anordnung: readonly string[], farbeVon: (karteId: string) => string): WahlDerArt<'reihenfolge'> | null {
+  const reihenfolgen = angebote.filter((wahl): wahl is WahlDerArt<'reihenfolge'> => wahl.art === 'reihenfolge')
   if (reihenfolgen.length === 0) throw new Error('Auswahl: Es ist keine Reihenfolge angeboten; erst Schlange und Abschnitt der Schlangenhäutung wählen (O7).')
-  const fremd = reihenfolgen.find((wahl) => sortiert(wahl.karteIds) !== sortiert(anordnung))
+  const karten = sortiert(anordnung)
+  const fremd = reihenfolgen.find((wahl) => sortiert(wahl.karteIds) !== karten)
   if (fremd !== undefined) {
     throw new Error(`Auswahl: Die Anordnung ${anordnung.join(', ')} ordnet nicht den gewählten Abschnitt ${fremd.karteIds.join(', ')} neu (O7).`)
   }

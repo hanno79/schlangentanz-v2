@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { SpielAktion, ZugBeendenAktion } from '../../engine'
 import { auswahlstand, waehle, wahlSchluessel } from '../spiel/auswahl'
-import type { Auswahl, Wahl } from '../spiel/auswahl'
+import type { Auswahl, Wahl, WahlDerArt } from '../spiel/auswahl'
 
 /*
 Die Bedienung am Tisch (Plan O5): Karte antippen, dann Ziele antippen, dann
@@ -127,8 +127,6 @@ export function useZiele(): Bedienung | null {
 export function zieleDerSchlange(bedienung: Bedienung | null, schlangenId: string): Wahl[] {
   return bedienung === null ? [] : bedienung.ziele.filter((wahl) => 'schlangenId' in wahl && wahl.schlangenId === schlangenId)
 }
-
-type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
 
 /** Das erste Ziel dieser Art in `ziele`, auf das `passt` zutrifft. */
 export function zielDerArt<A extends Wahl['art']>(ziele: readonly Wahl[], art: A, passt: (wahl: WahlDerArt<A>) => boolean = () => true): WahlDerArt<A> | undefined {

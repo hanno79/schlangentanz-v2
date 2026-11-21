@@ -1,4 +1,4 @@
-import type { Wahl } from './auswahl'
+import type { Wahl, WahlDerArt } from './auswahl'
 
 /*
 Der Abschnitt der Schlangenhäutung (O7), wie der Mensch ihn antippt: erst eine
@@ -7,7 +7,7 @@ Angebote der Auswahl und damit die Aktionen der Engine (U3); hier steht nur,
 wo sie in der gezeigten Schlange liegen. Eine Regel steht hier keine.
 */
 
-export type AbschnittWahl = Extract<Wahl, { art: 'abschnitt' }>
+type AbschnittWahl = WahlDerArt<'abschnitt'>
 
 export interface AbschnittLage {
   wahl: AbschnittWahl

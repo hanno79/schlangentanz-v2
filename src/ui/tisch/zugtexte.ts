@@ -81,7 +81,7 @@ interface SchlangeAmTisch {
   nummer: number
 }
 
-/** Karten, Schlangen und Spieler am Tisch nach ihrer Id, für die Ansage. */
+/** Karten, Schlangen und Spieler am Tisch nach ihrer Id, für die Ansage und die Schlangenhäutung. */
 export interface Tischnamen {
   karte: (id: string) => Spielkarte
   schlange: (id: string) => SchlangeAmTisch
@@ -102,7 +102,7 @@ export function tischnamen(ansicht: TischAnsicht): Tischnamen {
   }
   const finde = <T,>(tabelle: Map<string, T>, id: string, was: string): T => {
     const wert = tabelle.get(id)
-    if (wert === undefined) throw new Error(`Die Ansage nennt ${was} ${id}, die am Tisch nicht zu sehen ist.`)
+    if (wert === undefined) throw new Error(`Gesucht ist ${was} ${id}, die am Tisch nicht zu sehen ist.`)
     return wert
   }
   return {
@@ -170,9 +170,11 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
 export const HAEUTUNG = {
   abschnitt: 'Wähle den Abschnitt: Tippe die erste und die letzte seiner 3 bis 5 Farbkarten an.',
   anderesEnde: 'Tippe die Karte am anderen Ende des Abschnitts an.',
-  ordnen: 'Ordne die Karten neu: Tippe zwei an, um sie zu tauschen, oder verschiebe eine mit den Pfeiltasten.',
+  ordnen: 'Tippe zwei Karten an, um sie zu tauschen.',
+  /** Nur mit Maus und Tastatur zu sehen (bedienung.css). */
+  pfeiltasten: 'Die Pfeiltasten verschieben die Karte mit dem Fokus.',
   // D26: „Ja, die Farbfolge im Abschnitt muss danach anders sein.“
-  gleicheFolge: 'Die Farbfolge ist noch dieselbe; die Schlangenhäutung muss sie ändern (D26).',
+  gleicheFolge: 'Die Farbfolge ist noch dieselbe (D26).',
   punkte: (besitzer: Person, vorher: number, nachher: number | null) =>
     `${besitzer.ich ? 'Deine Punkte' : `Punkte von ${besitzer.name}`}: ${nachher === null ? vorher : `vorher ${vorher}, nachher ${nachher}`}`,
 }

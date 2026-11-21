@@ -7,7 +7,7 @@ import { useUeberlauf } from './ueberlauf'
 import { Weiter } from './Weiter'
 import { TISCH, ablageText, grubeText, schlangenName, schlangenTitel } from './texte'
 import { useZiele, zielDerArt, zieleDerSchlange } from './bedienung'
-import { istHaeutungsKarte, useLaufendeHaeutung } from './haeutung'
+import { useLaufendeHaeutung } from './haeutung'
 import { HaeutungsKarte } from './HaeutungsKarte'
 import { ZielKnopf } from './Ziele'
 import { ZIELNAME } from './zugtexte'
@@ -43,7 +43,7 @@ export function Schlange({ schlange: liegend, titel, groesse }: { schlange: Schl
   const [zeile, ueberlauf] = useUeberlauf<HTMLOListElement>()
   const bedienung = useZiele()
   const laufend = useLaufendeHaeutung()
-  const haeutung = laufend?.schlangenId === liegend.id ? laufend : null
+  const haeutung = laufend?.schlange.id === liegend.id ? laufend : null
   const schlange = haeutung?.schlange ?? liegend
   const ziele = zieleDerSchlange(bedienung, schlange.id)
   const laenge = schlange.karten.length
@@ -68,7 +68,7 @@ export function Schlange({ schlange: liegend, titel, groesse }: { schlange: Schl
           <Fragment key={glied.karte.id}>
             {luecke(stelle)}
             <li className={gliedKlasse(glied)} data-gruppe={glied.gruppe?.farbe}>
-              {haeutung !== null && istHaeutungsKarte(haeutung, glied.karte.id) ? (
+              {haeutung?.knoepfe.has(glied.karte.id) === true ? (
                 <HaeutungsKarte haeutung={haeutung} karte={glied.karte} name={name} groesse={groesse} />
               ) : karte === undefined ? (
                 <Karte karte={glied.karte} sizes={groesse} />
