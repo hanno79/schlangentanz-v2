@@ -14,17 +14,21 @@ Viele Aktionen erzeugt vor allem die Schlangenhäutung (A7.9): Je Abschnitt von
 3 bis 5 Farbkarten zählt die Engine jede neue Farbfolge einmal auf, und jede
 Häutung auf der Hand bekommt ihre eigenen Aktionen. Ein Lauf aus L Farbkarten
 hat L − 4 Abschnitte zu 5, L − 3 zu 4 und L − 2 zu 3 Karten mit höchstens 119,
-23 und 5 neuen Farbfolgen, zusammen höchstens 147 · L − 555. Mehr als 78
+23 und 5 neuen Farbfolgen, ab L = 4 zusammen höchstens 147 · L − 555. Mehr als 78
 Farbkarten gibt es nicht (A1), und jede Sonderkarte im Lauf kostet einen
 Abschnitt; am meisten bringt deshalb eine Schlange aus allen 78 Farbkarten,
 in der jeder Abschnitt fünf verschiedene Farben hat: 10'911 je Häutung.
 
 Danach kommt der Schlangenfrass c) mit jedem Paar gegnerischer Karten
-(A7.4): Bei 78 Karten in gegnerischen Schlangen sind das 3'003 je Karte. Der
-ungünstigste Tisch hat also drei Häutungen und zwei Schlangenfrass auf der
-Hand und die Schlange aus allen Farbkarten beim Gegner. In Zufallspartien
-bleibt es weit darunter, höchstens bei `HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF`
-(`dauerlauf_pruefer.ts`).
+(A7.4), auch Regenbogenschlangen, aber keine Schlangenblockaden. Die vier
+Regenbogenschlangen hinter der bunten Folge unterbrechen keinen Abschnitt;
+mit ihnen liegen 82 Karten beim Gegner, 3'321 Paare je Schlangenfrass. Eine
+Farbenfusion bringt nichts dazu, weil sie zwei Farbkarten aus dem Lauf nimmt,
+ein Farbendieb weniger als ein Schlangenfrass. Der ungünstigste Tisch, den
+diese Überlegung findet (bewiesen ist das Maximum nicht), hat drei Häutungen
+und zwei Schlangenfrass auf der Hand und diese Schlange beim Gegner. In
+Zufallspartien bleibt es weit darunter, höchstens bei
+`HOECHSTE_AKTIONSZAHL_IM_DAUERLAUF` (`dauerlauf_pruefer.ts`).
 */
 
 /** A1: wie viele Farbkarten jeder Farbe es gibt, aus dem Material. */
@@ -66,14 +70,14 @@ function haeutungenErwartet(folge: readonly Farbe[]): number {
   return summe
 }
 
-/** Die Schranke je Häutung für einen Lauf aus `laenge` Farbkarten. */
+/** Die Schranke je Häutung für einen Lauf aus `laenge` Farbkarten; ein Lauf unter 3 Karten hat keinen Abschnitt. */
 function schranke(laenge: number): number {
-  return (laenge - 4) * 119 + (laenge - 3) * 23 + (laenge - 2) * 5
+  return Math.max(0, laenge - 4) * 119 + Math.max(0, laenge - 3) * 23 + Math.max(0, laenge - 2) * 5
 }
 
-/** Alle 78 Farbkarten in einer bunten Schlange von `besitzer`, auf der Hand von Spieler 1 die genannten Karten. */
-function tisch(besitzer: number, hand: Kartenwahl[]): Spielzustand {
-  return baukasten({ spielerzahl: 4, erweiterung: true }).schlange(besitzer, bunteFolge(78)).hand(0, hand).zustand()
+/** Alle 78 Farbkarten in einer bunten Schlange von `besitzer`, dahinter `danach`; auf der Hand von Spieler 1 die genannten Karten. */
+function tisch(besitzer: number, hand: Kartenwahl[], danach: Kartenwahl[] = []): Spielzustand {
+  return baukasten({ spielerzahl: 4, erweiterung: true }).schlange(besitzer, [...bunteFolge(78), ...danach]).hand(0, hand).zustand()
 }
 
 function zaehleTypen(aktionen: readonly SpielAktion[]): Record<string, number> {
@@ -91,6 +95,8 @@ describe('E11 Kriterium 4: die Zahl der erlaubten Aktionen ist gemessen und begr
   const eigeneHaeutungen = haeutungen(eigene)
 
   it('A7.9: die Schranke 147 · L − 555 je Häutung; die bunte Schlange aus allen 78 Farbkarten erreicht sie', () => {
+    expect([0, 1, 2, 3, 4].map(schranke), 'kurze Läufe: kein Abschnitt unter 3 Karten, dann 5 und 5 · 2 + 23').toEqual([0, 0, 0, 5, 33])
+    expect(haeutungenErwartet(['Blau', 'Rot', 'Gelb']), 'haeutungenErwartet: drei verschiedene Farben').toBe(schranke(3))
     expect(schranke(5), 'fünf Karten: 3 · 5 + 2 · 23 + 119').toBe(180)
     expect(haeutungenErwartet(['Blau', 'Rot', 'Gelb', 'Violett', 'Braun']), 'haeutungenErwartet: fünf verschiedene Farben').toBe(180)
     expect(schranke(78), 'schranke: für den längsten möglichen Lauf').toBe(10_911)
@@ -123,12 +129,15 @@ describe('E11 Kriterium 4: die Zahl der erlaubten Aktionen ist gemessen und begr
     expect(endlagen.size, 'verschiedene Farbfolgen der Schlange nach der Häutung').toBe(7_127)
   })
 
-  it('E11: der ungünstigste Tisch: drei Häutungen und zwei Schlangenfrass, die bunte Schlange beim Gegner; 38739 Aktionen, jede erlaubt', () => {
-    const zustand = tisch(1, [...HAEUTUNGEN, 'Schlangenfrass', 'Schlangenfrass'])
+  it('E11: der ungünstigste Tisch: drei Häutungen und zwei Schlangenfrass, beim Gegner die bunte Schlange mit vier Regenbogenschlangen dahinter; 39375 Aktionen, jede erlaubt', () => {
+    const regenbogen: Kartenwahl[] = ['Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange', 'Regenbogenschlange']
+    const zustand = tisch(1, [...HAEUTUNGEN, 'Schlangenfrass', 'Schlangenfrass'], regenbogen)
     const aktionen = ermittleAktionen(zustand)
-    // Schlangenfrass c): jedes Paar aus den 78 gegnerischen Karten (A7.4); a) und b) gibt es ohne eigene Schlange nicht.
-    expect(zaehleTypen(aktionen)).toEqual({ SchlangenhaeutungSpielen: 3 * 10_911, SchlangenfrassSpielen: 2 * ((78 * 77) / 2) })
-    expect(aktionen.length).toBe(38_739)
+    // Schlangenfrass c): jedes Paar aus den 82 gegnerischen Karten (A7.4); a) und b) gibt es ohne eigene Schlange nicht.
+    expect(zaehleTypen(aktionen)).toEqual({ SchlangenhaeutungSpielen: 3 * 10_911, SchlangenfrassSpielen: 2 * ((82 * 81) / 2) })
+    expect(aktionen.length).toBe(39_375)
     expect(aktionen.filter((aktion) => !pruefeAktion(zustand, aktion).erlaubt), 'aufgezählt, aber abgelehnt').toEqual([])
+    // Ohne die Regenbogenschlangen sind es weniger.
+    expect(ermittleAktionen(tisch(1, [...HAEUTUNGEN, 'Schlangenfrass', 'Schlangenfrass'])).length).toBe(38_739)
   })
 })
