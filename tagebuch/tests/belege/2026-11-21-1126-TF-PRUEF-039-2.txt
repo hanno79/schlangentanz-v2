@@ -1,0 +1,78 @@
+## P01-statisch
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_p01.ts:1 importiert „../…' to be '' // Object.is equality
++ U5 src/ui/zz_p01.ts:1 importiert „../ki/strategien/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## P02-dynamisch
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_p02.ts:1 lädt mit import…' to be '' // Object.is equality
++ U5 src/ui/zz_p02.ts:1 lädt mit import() „../ki/strategien/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## P03-weiterexport-hilfsdatei
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_p03_hilfe.ts:1 exportier…' to be '' // Object.is equality
++ U5 src/ui/zz_p03_hilfe.ts:1 exportiert weiter „../ki/strategien/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## P04-relativer-umweg
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_p04.ts:1 importiert „../…' to be '' // Object.is equality
++ U5 src/ui/zz_p04.ts:1 importiert „../../src/ui/../ki/strategien/../strategien/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B01-grosse-endung-JS
+exit 0
+
+
+## B02-public-lader
+exit 0
+
+
+## B03-new-url-ohne-punkt
+exit 0
+
+
+## B05-verzeichnisverknuepfung
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_b05.ts:1 importiert „../…' to be '' // Object.is equality
++ U5 src/ui/zz_b05.ts:1 importiert „../zz_b05_verknuepfung/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
++ U5 src/zz_b05_verknuepfung/index.ts:2 importiert „./zufallsKi“ (src/ki/strategien/zufallsKi.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
++ U5 src/zz_b05_verknuepfung/zz_geheim.ts:2 importiert „./zufallsKi“ (src/ki/strategien/zufallsKi.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B06-grossschreibung-ganz
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_b06.ts:1 importiert „../…' to be '' // Object.is equality
++ U5 src/ui/zz_b06.ts:1 importiert „../KI/STRATEGIEN/ZZ_GEHEIM.TS“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B07-vite-plugin-resolveid
+exit 0
+
+
+## B08-backslash
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_b08.ts:1 importiert „..\…' to be '' // Object.is equality
++ U5 src/ui/zz_b08.ts:1 importiert „..\ki\strategien\zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B09-src-ki-index-zwischenstation
+exit 1
++ U5 src/ki/index.ts:1 exportiert weiter „./strategien/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B10-glob-platzhalter-im-ordner
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_b10.ts:1 lädt mit import…' to be '' // Object.is equality
++ U5 src/ui/zz_b10.ts:1 lädt mit import.meta.glob „../k?/strat*/zz_*.ts“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B11-paket-in-node_modules-verknuepft
+exit 1
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_b11.ts:1 importiert „zz-…' to be '' // Object.is equality
++ U5 src/ui/zz_b11.ts:1 importiert „zz-b11“ und erreicht über werkzeuge/zz-b11/index.js: exportiert weiter „../../src/ki/strategien/zz_geheim.ts“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+
+## B12-public-html-seite
+exit 0
+
+
+## B13-anderer-wurzelordner-skript
+exit 0
+
+
+## B15-css-import
+exit 0
+
