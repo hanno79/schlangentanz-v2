@@ -1,0 +1,29 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4b8416084ede2be2
+
+stdout | src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: Messungen > M1: Farbendieb in den Zufallspartien des gemeinsamen Nachrechentests (zugablauf_ereignisse.test.ts, Saaten 1-4 ohne Vorzug)
+M1 [{"n":2,"s":1,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":418,"maxDiebe":408,"schritte":178,"msAktionen":4.733600000000479},{"n":3,"s":2,"farbendiebe":4,"versetzt":4,"abgewehrt":0,"maxAktionen":1003,"maxDiebe":987,"schritte":178,"msAktionen":3.1586999999981344},{"n":4,"s":3,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":418,"maxDiebe":416,"schritte":164,"msAktionen":2.689799999994648},{"n":2,"s":4,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":374,"maxDiebe":361,"schritte":182,"msAktionen":2.1790999999966516}]
+
+stdout | src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: Messungen > M2: Zufallspartien mit Vorzug Farbendieb und Abwehr: jeder Schritt nachrechenbar, keine Handkarte verraten
+M2 [{"n":4,"saat":101,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":332,"maxDiebe":319,"schritte":164,"msAktionen":1.2981999999956315},{"n":2,"saat":102,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":1133,"maxDiebe":1120,"schritte":180,"msAktionen":1.3971000000055938},{"n":3,"saat":103,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":193,"maxDiebe":180,"schritte":168,"msAktionen":1.5591999999960535},{"n":4,"saat":104,"farbendiebe":4,"versetzt":2,"abgewehrt":2,"maxAktionen":631,"maxDiebe":615,"schritte":166,"msAktionen":1.520200000004479},{"n":2,"saat":105,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":1077,"maxDiebe":1064,"schritte":178,"msAktionen":1.3402999999971144},{"n":3,"saat":106,"farbendiebe":4,"versetzt":3,"abgewehrt":1,"maxAktionen":121,"maxDiebe":108,"schritte":173,"msAktionen":1.3658999999979642},{"n":4,"saat":107,"farbendiebe":4,"versetzt":4,"abgewehrt":0,"maxAktionen":184,"maxDiebe":168,"schritte":161,"msAktionen":2.1118999999989683},{"n":2,"saat":108,"farbendiebe":3,"versetzt":3,"abgewehrt":0,"maxAktionen":269,"maxDiebe":256,"schritte":182,"msAktionen":2.440799999999399},{"n":3,"saat":109,"farbendiebe":4,"versetzt":4,"abgewehrt":0,"maxAktionen":276,"maxDiebe":260,"schritte":173,"msAktionen":1.894599999993261}]
+
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: Messungen > M1: Farbendieb in den Zufallspartien des gemeinsamen Nachrechentests (zugablauf_ereignisse.test.ts, Saaten 1-4 ohne Vorzug) 457ms
+stdout | src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: KI-Schritt > M3: Dauer eines KI-Schritts (naechsterKiSchritt) im Zustand mit den meisten Farbendieb-Aktionen
+M3 {"diebe":180,"alle":181,"kiMedianMs":0.5781000000006316,"kiMaxMs":1.2847000000001572,"aufzaehlenMs":0.028535000000010767}
+
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: Messungen > M2: Zufallspartien mit Vorzug Farbendieb und Abwehr: jeder Schritt nachrechenbar, keine Handkarte verraten 805ms
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: KI-Schritt > M3: Dauer eines KI-Schritts (naechsterKiSchritt) im Zustand mit den meisten Farbendieb-Aktionen 68ms
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: eigene Grenzfälle > G1: Farbendieb im zweiten Zug nach einem Verdoppler wirkt und zählt als Sonderkarte dieses Zuges 11ms
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: eigene Grenzfälle > G2: der Bestohlene, vor dem eine Grube liegt (setzt seinen nächsten Zug aus), wird gefragt und darf abwehren (D18) 5ms
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: eigene Grenzfälle > G3: ohne Schlange stiehlt der Dieb in eine neue; danach darf er mit einer Farbkarte eine zweite beginnen, aber keine dritte; Ids eindeutig, Speichern und Laden ändert nichts 11ms
+stdout | src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: eigene Grenzfälle > G5: unförmige Ansagen werden mit Grund abgelehnt, ohne Absturz
+G5 ["Ungültige Aktion FarbendiebSpielen: Feld ziel ist ungültig.","Ungültige Aktion FarbendiebSpielen: Feld ziel ist ungültig.","Ungültige Aktion FarbendiebSpielen: Feld quelle ist ungültig.","Die Karte blau-01 ist eine Farbkarte; FarbendiebSpielen braucht einen Farbendieb."]
+
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: eigene Grenzfälle > G4: bleibt nach dem Diebstahl nur eine Fusion in der Schlange, bleibt die Schlange mit Fusion und den Karten darunter; nachrechenbar 6ms
+ ✓ src/engine/__tests__/zz_pruefer_e8.test.ts > Prüfer E8: eigene Grenzfälle > G5: unförmige Ansagen werden mit Grund abgelehnt, ohne Absturz 5ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  12:18:52
+   Duration  6.03s (transform 650ms, setup 473ms, import 670ms, tests 1.37s, environment 3.14s)
+

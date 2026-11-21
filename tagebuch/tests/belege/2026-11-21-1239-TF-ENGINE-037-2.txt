@@ -1,0 +1,162 @@
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
+import type { Ereignis, SpielAktion, Spielzustand } from '../index'
+import { erstellePartie } from '../state'
+import { erzeugeZufall } from '../testing/zufall'
+import { naechsterKiSchritt } from '../../ki/schritt'
+import { erstelleZufallsKi } from '../../ki/zufallsKi'
+import { DIEB, diebId, diebstaehle, karteIn, schlangenVon, stiehl } from './farbendieb_hilfen'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
+import { ablage, aktionen, durchlassen, folge, FUENF, fuehreAus, grund, MIT_SCHUTZ, reaktion, tischMitHaenden as tisch, typen, verletzteInvarianten, zugBeenden } from './zugablauf_hilfen'
+
+/* Prüfer E8: eigene Messungen und Grenzfälle; wird nicht committet. */
+
+function istFarbendieb(ereignis: Ereignis): boolean {
+  return ereignis.typ === 'KarteAngesagt' && ereignis.ansage.typ === 'FarbendiebSpielen'
+}
+
+function partie(spielerzahl: number, saat: number, bevorzugt: (aktion: SpielAktion) => boolean) {
+  const wahl = erzeugeZufall(saat)
+  let zustand = erstellePartie({ spielerzahl, erweiterung: saat % 2 === 0, zufall: erzeugeZufall(saat) })
+  const z = { farbendiebe: 0, versetzt: 0, abgewehrt: 0, maxAktionen: 0, maxDiebe: 0, schritte: 0, msAktionen: 0 }
+  while (zustand.partiephase !== 'Beendet') {
+    if (z.schritte > 3000) throw new Error('endet nicht')
+    const t0 = performance.now()
+    const angeboten = ermittleAktionen(zustand)
+    z.msAktionen += performance.now() - t0
+    z.maxAktionen = Math.max(z.maxAktionen, angeboten.length)
+    z.maxDiebe = Math.max(z.maxDiebe, angeboten.filter((a) => a.typ === 'FarbendiebSpielen').length)
+    const aktion = angeboten.find(bevorzugt) ?? angeboten[Math.floor(wahl() * angeboten.length)]
+    const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+    expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}, Schritt ${z.schritte}: ${JSON.stringify(aktion)}`).toEqual(lageVon(neu))
+    expect(verrateneHandkarten(neu, ereignisse)).toEqual([])
+    for (const e of ereignisse) {
+      if (istFarbendieb(e)) z.farbendiebe += 1
+      if (e.typ === 'KartenVersetzt' && zustand.schwebend?.aktion.typ === 'FarbendiebSpielen') z.versetzt += 1
+      if (e.typ === 'Abgewehrt' && zustand.schwebend?.aktion.typ === 'FarbendiebSpielen') z.abgewehrt += 1
+    }
+    zustand = neu
+    z.schritte += 1
+  }
+  return z
+}
+
+describe('Prüfer E8: Messungen', () => {
+  it('M1: Farbendieb in den Zufallspartien des gemeinsamen Nachrechentests (zugablauf_ereignisse.test.ts, Saaten 1-4 ohne Vorzug)', () => {
+    const zeilen = ([[2, 1], [3, 2], [4, 3], [2, 4]] as const).map(([n, s]) => ({ n, s, ...partie(n, s, () => false) }))
+    console.log('M1', JSON.stringify(zeilen))
+  })
+
+  it('M2: Zufallspartien mit Vorzug Farbendieb und Abwehr: jeder Schritt nachrechenbar, keine Handkarte verraten', () => {
+    const vorzug = (a: SpielAktion) => a.typ === 'FarbendiebSpielen' || (a.typ === 'Reagieren' && a.farbenschutzId !== null)
+    const zeilen = [] as unknown[]
+    let summe = 0
+    let abgewehrt = 0
+    for (const saat of [101, 102, 103, 104, 105, 106, 107, 108, 109]) {
+      const n = 2 + (saat % 3)
+      const z = partie(n, saat, vorzug)
+      summe += z.versetzt
+      abgewehrt += z.abgewehrt
+      zeilen.push({ n, saat, ...z })
+    }
+    console.log('M2', JSON.stringify(zeilen))
+    expect(summe).toBeGreaterThan(10)
+    expect(abgewehrt).toBeGreaterThan(0)
+  }, 120_000)
+})
+
+describe('Prüfer E8: KI-Schritt', () => {
+  it('M3: Dauer eines KI-Schritts (naechsterKiSchritt) im Zustand mit den meisten Farbendieb-Aktionen', () => {
+    const wahl = erzeugeZufall(4)
+    let zustand = erstellePartie({ spielerzahl: 4, erweiterung: false, zufall: erzeugeZufall(4) })
+    let bester = { diebe: -1, zustand }
+    let schritte = 0
+    while (zustand.partiephase !== 'Beendet' && schritte < 3000) {
+      const angeboten = ermittleAktionen(zustand)
+      const diebe = angeboten.filter((a) => a.typ === 'FarbendiebSpielen').length
+      if (diebe > bester.diebe) bester = { diebe, zustand }
+      zustand = anwendeAktion(zustand, angeboten.find((a) => a.typ === 'FarbkarteLegen') ?? angeboten[Math.floor(wahl() * angeboten.length)]).zustand
+      schritte += 1
+    }
+    const ki = erstelleZufallsKi(erzeugeZufall(9))
+    const zeiten: number[] = []
+    for (let i = 0; i < 20; i += 1) {
+      const t0 = performance.now()
+      naechsterKiSchritt(bester.zustand, ki)
+      zeiten.push(performance.now() - t0)
+    }
+    const t1 = performance.now()
+    for (let i = 0; i < 20; i += 1) ermittleAktionen(bester.zustand)
+    const aufzaehlen = (performance.now() - t1) / 20
+    zeiten.sort((a, b) => a - b)
+    console.log('M3', JSON.stringify({ diebe: bester.diebe, alle: ermittleAktionen(bester.zustand).length, kiMedianMs: zeiten[10], kiMaxMs: zeiten[19], aufzaehlenMs: aufzaehlen }))
+  })
+})
+
+describe('Prüfer E8: eigene Grenzfälle', () => {
+  it('G1: Farbendieb im zweiten Zug nach einem Verdoppler wirkt und zählt als Sonderkarte dieses Zuges', () => {
+    const start = tisch([DIEB, FUENF]).schlange(0, ['Rot']).schlange(1, ['Blau', 'Gelb']).amZug(0, 2).zustand()
+    expect(start.zug.teilzug).toBe(2)
+    const nach = folge(start, (j) => stiehl(j, karteIn(j, 1, 0, 1), { art: 'schlange', schlangenId: j.spieler[0].schlangen[0].id, position: 0 }), durchlassen).zustand
+    expect(schlangenVon(nach, 0)).toEqual([['Gelb', 'Rot']])
+    expect(nach.zug).toMatchObject({ teilzug: 2, gespielteSonderkarten: 1 })
+    expect(verletzteInvarianten(nach)).toEqual([])
+  })
+
+  it('G2: der Bestohlene, vor dem eine Grube liegt (setzt seinen nächsten Zug aus), wird gefragt und darf abwehren (D18)', () => {
+    const start = tisch([DIEB, MIT_SCHUTZ, FUENF]).schlange(0, ['Rot']).schlange(1, ['Blau']).grube(2, 1).zustand()
+    const angesagt = fuehreAus(start, stiehl(start, karteIn(start, 1, 0, 0), { art: 'schlange', schlangenId: start.spieler[0].schlangen[0].id, position: 1 }))
+    expect(angesagt.ereignisse.find((e) => e.typ === 'KarteAngesagt')).toMatchObject({ betroffene: [1] })
+    expect(ermittleEntscheider(angesagt.zustand)).toBe(1)
+    const abgewehrt = fuehreAus(angesagt.zustand, reaktion(angesagt.zustand, true)).zustand
+    expect(schlangenVon(abgewehrt, 1)).toEqual([['Blau']])
+    expect(schlangenVon(abgewehrt, 0)).toEqual([['Rot']])
+    expect(ablage(abgewehrt, 0)).toEqual([diebId(start, 0)])
+  })
+
+  it('G3: ohne Schlange stiehlt der Dieb in eine neue; danach darf er mit einer Farbkarte eine zweite beginnen, aber keine dritte; Ids eindeutig, Speichern und Laden ändert nichts', () => {
+    const start = tisch([['Farbendieb', 'Blau', 'Rot', 'Gelb', 'Grün'], FUENF]).schlange(1, ['Violett', 'Braun']).zustand()
+    const nach = folge(start, (j) => stiehl(j, karteIn(j, 1, 0, 0), { art: 'neueSchlange' }), durchlassen).zustand
+    const geladen = deserialisiere(serialisiere(nach))
+    expect(geladen).toEqual(nach)
+    const neue = aktionen(geladen, 'FarbkarteLegen').filter((a) => a.typ === 'FarbkarteLegen' && a.ziel.art === 'neueSchlange')
+    expect(neue.length).toBeGreaterThan(0)
+    const zwei = fuehreAus(geladen, neue[0]).zustand
+    const ids = zwei.spieler.flatMap((s) => s.schlangen.map((sch) => sch.id))
+    expect(new Set(ids).size).toBe(ids.length)
+    expect(zwei.spieler[0].schlangen).toHaveLength(2)
+    // nächster Zug von Spieler 1: keine dritte Schlange angeboten
+    let z = folge(zwei, zugBeenden).zustand
+    while (ermittleEntscheider(z) !== 0) {
+      const a = ermittleAktionen(z)
+      z = fuehreAus(z, a.find((x) => x.typ === 'ZugBeenden') ?? a.find((x) => x.typ === 'Reagieren') ?? a[0]).zustand
+    }
+    expect(aktionen(z, 'FarbkarteLegen').some((a) => a.typ === 'FarbkarteLegen' && a.ziel.art === 'neueSchlange')).toBe(false)
+    expect(verletzteInvarianten(zwei)).toEqual([])
+  })
+
+  it('G4: bleibt nach dem Diebstahl nur eine Fusion in der Schlange, bleibt die Schlange mit Fusion und den Karten darunter; nachrechenbar', () => {
+    const start = tisch([DIEB, FUENF]).schlange(0, ['Rot']).schlange(1, ['Gelb', { fusion: ['Blau', 'Blau'] }]).zustand()
+    const schritt = folge(start, (j) => stiehl(j, karteIn(j, 1, 0, 0), { art: 'schlange', schlangenId: j.spieler[0].schlangen[0].id, position: 1 }))
+    const durch = folge(schritt.zustand, durchlassen)
+    expect(spieleNach(lageVon(schritt.zustand), durch.ereignisse)).toEqual(lageVon(durch.zustand))
+    expect(schlangenVon(durch.zustand, 1)).toEqual([['Farbenfusion']])
+    expect(durch.zustand.spieler[1].schlangen[0].fusionen[0].unter.map((k) => k.farbe)).toEqual(['Blau', 'Blau'])
+    expect(diebstaehle(durch.zustand)).toEqual([])
+    expect(verletzteInvarianten(durch.zustand)).toEqual([])
+  })
+
+  it('G5: unförmige Ansagen werden mit Grund abgelehnt, ohne Absturz', () => {
+    const zustand = tisch([DIEB, FUENF]).schlange(0, ['Rot']).schlange(1, ['Blau']).zustand()
+    const vorlage = diebstaehle(zustand)[0]
+    const meldungen = [
+      grund(zustand, { ...vorlage, ziel: { art: 'fremd' } }),
+      grund(zustand, { ...vorlage, ziel: { art: 'schlange', schlangenId: zustand.spieler[0].schlangen[0].id, position: 0.5 } }),
+      grund(zustand, { ...vorlage, quelle: { schlangenId: zustand.spieler[1].schlangen[0].id } }),
+      grund(zustand, { ...vorlage, karteId: zustand.spieler[0].hand[1].id }),
+    ]
+    console.log('G5', JSON.stringify(meldungen))
+    for (const m of meldungen) expect(m.length).toBeGreaterThan(5)
+    expect(typen(zustand)).toContain('FarbendiebSpielen')
+  })
+})
