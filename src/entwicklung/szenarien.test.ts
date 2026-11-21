@@ -3,12 +3,7 @@ import { anwendeAktion, ermittleAktionen, serialisiere } from '../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { pruefeInvarianten } from './invarianten'
 import { findeSzenario, SZENARIEN } from './szenarien'
-
-function erzeuge(name: string) {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return szenario.erzeuge()
-}
+import { erzeuge } from './szenarienTesthilfe'
 
 describe('E1: Szenarien des Entwicklertischs', () => {
   it('E1: die Szenarien des Tasks sind da: start-2, start-4, start-erweiterung', () => {

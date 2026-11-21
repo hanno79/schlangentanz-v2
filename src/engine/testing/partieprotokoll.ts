@@ -1,7 +1,7 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
 import { alleSpielkarten } from '../invarianten';
-import { findeSchlange } from '../karten/schlangenstelle';
+import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
 import type { Schlange, Spielkarte, Spielzustand } from '../types';
 import { spielerIndexVon } from '../zugablauf';

@@ -1,0 +1,31 @@
+== Zeilen: 26 / 26
+== verschieden in Zeile 24 (unter ## K4 wirke Farbendieb mit falscher Quellkarte)
+cf0b3f1: kein Fehler; Schlangen danach: ["schlange-1[blau-01]{} schlange-3[gelb-01]{}","schlange-2[rot-01]{}"]
+35c1af7: Fehler: Error: Die Karte blau-01 liegt nicht in der Schlange schlange-2.
+== grenzfaelle-35c1af7.txt (G2 Zustand gekürzt)
+## G1 Fehler
+Error: Baukasten: Keine freie Karte mit der Id gibt-es-nicht mehr im Nachziehstapel (Partie ohne Erweiterung).
+## G1 Schlangen nach Fehler
+["schlange-1[rot-01]{}",""]
+## G1 Zähler nach Fehler
+1
+## G1 nächste Schlange
+["schlange-1[rot-01]{}","schlange-2[gruen-01]{}"]
+## G2 Anzahl Frass-Knöpfe
+15
+## G2 Schlangen nach Frass
+["","schlange-1[rot-01,gruen-01,gruen-02,blau-01]{}","schlange-3[rot-02,rot-03]{}"]
+## G2 Ablage Spieler 1
+["schlangenfrass-01","farbenfusion-01","gelb-01"]
+## G2 Zustand
+{"aufgabenStapel":[],"ausDemSpiel":[],"ausliegendeGruben":[],"erweiterung":false,"nachziehstapel":[{"farbe":"Blau","id": …
+## G3 Diebknöpfe
+[{"typ":"FarbendiebSpielen","spielerId":"spieler-1","karteId":"farbendieb-01","quelle":{"schlangenId":"schlange-1","karteId":"rot-01"},"ziel":{"art":"neueSchlange"}}]
+## G3 Schlangen nach Diebstahl
+["schlange-2[rot-01]{}",""]
+## G3 Zähler
+2
+## K4 wirke Farbendieb mit falscher Quellkarte
+Fehler: Error: Die Karte blau-01 liegt nicht in der Schlange schlange-2.
+## K4 anwendeAktion mit falscher Quellkarte
+Fehler: Error: Die Karte blau-01 liegt nicht in der Schlange schlange-2.
