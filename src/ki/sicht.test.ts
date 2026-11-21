@@ -88,6 +88,20 @@ describe('K1 Kriterium 1: Was die Sicht enthält', () => {
     expect(sicht).toMatchObject({ erweiterung: true, partiephase: 'Laufend', zug: zustand.zug, schlussrundeAusloeser: null })
     expect(sicht.entscheider, 'A6: bei der angesagten Grube entscheidet Spieler 3, nicht der Spieler am Zug').toBe(2)
   })
+
+  it('K2: wie viele Schlangen bisher angelegt wurden, auch wenn eine davon nicht mehr am Tisch liegt', () => {
+    expect(sicht.schlangenZaehler, 'K2: zwei Schlangen im Testaufbau').toBe(2)
+    const gefressen = baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(3) })
+      .schlange(0, ['Blau'])
+      .schlange(1, ['Rot'])
+      .aendere((stand) => {
+        // Wie nach einem Schlangenfrass: die letzte Karte auf dem Ablagestapel, die Schlange ist weg (A7.4).
+        stand.spieler[1].ablagestapel.push(...stand.spieler[0].schlangen[0].karten)
+        stand.spieler[0].schlangen = []
+      })
+      .zustand()
+    expect(sichtFuer(gefressen, 1).schlangenZaehler, 'K2: schlange-1 ist weg, der Zähler bleibt 2').toBe(2)
+  })
 })
 
 describe('K1 Kriterium 1: Was die Sicht nicht enthält', () => {

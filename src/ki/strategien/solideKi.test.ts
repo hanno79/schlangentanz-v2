@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, berechneZwischenstand, ermittleAktionen, erzeugeZufall, werteSchlangen } from '../../engine'
+import { baukasten } from '../../engine/testing/szenario'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { findeSzenario } from '../../entwicklung/szenarien'
 import { naechsterKiSchritt } from '../schritt'
@@ -28,11 +29,15 @@ interface Zug {
   zustand: Spielzustand
 }
 
-/** Spielt den Zug von KI-Gegner 1 im Szenario `name` mit der soliden KI; ein gefragter Mensch lässt durch. */
-function spieleZug(name: string, saat = 1): Zug {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
-  let zustand = szenario.erzeuge()
+function szenario(name: string): Spielzustand {
+  const gefunden = findeSzenario(name)
+  if (gefunden === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
+  return gefunden.erzeuge()
+}
+
+/** Spielt den Zug von KI-Gegner 1 im Szenario `name` (oder ab `start`) mit der soliden KI; ein gefragter Mensch lässt durch. */
+function spieleZug(name: string, saat = 1, start = szenario(name)): Zug {
+  let zustand = start
   const ki = erstelleSolideKi(erzeugeZufall(saat))
   const zug: Zug = { aktionen: [], ereignisse: [], zustand }
   while (zustand.partiephase !== 'Beendet' && zustand.zug.spielerIndex === 1) {
@@ -119,6 +124,27 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     expect(punkte(zug.zustand, 1), 'K2.1: Grün, Grün, Regenbogenschlange bringt 6 (A7.3)').toBe(6)
   })
 
+  it('K2.1, Ausnahme: ki-dreiergruppe-ausnahme: das Rot vollendete eine Gruppe (+2), das Grün bringt mehr (+3); sie legt das Grün', () => {
+    const start = szenario('ki-dreiergruppe-ausnahme')
+    /** Der Stand, nachdem die Farbkarte `farbe` hinten an die Schlange `schlangenId` gelegt ist. */
+    const gelegt = (farbe: string, schlangenId: string) => {
+      const aktion = ermittleAktionen(start).find(
+        (angeboten) => angeboten.typ === 'FarbkarteLegen' && angeboten.karteId.startsWith(farbe) && angeboten.ziel.art === 'schlange' && angeboten.ziel.schlangenId === schlangenId && angeboten.ziel.seite === 'ende',
+      )
+      if (aktion === undefined) throw new Error(`Testaufbau: kein Knopf für ${farbe} an ${schlangenId}`)
+      return anwendeAktion(start, aktion).zustand
+    }
+    const mitRot = gelegt('rot', 'schlange-2')
+    expect(punkte(start, 1), 'K2.1: Grün 9 und Violett 6').toBe(15)
+    expect(gruppenzahl(mitRot, 1) - gruppenzahl(start, 1), 'K2.1: das Rot vollendet eine Dreiergruppe').toBe(1)
+    expect(punkte(mitRot, 1), 'K2.1: mit dem Rot wird die Fusion rot, 4 + 4 statt 6').toBe(17)
+    expect(punkte(gelegt('gruen', 'schlange-1'), 1), 'K2.1: das Grün verlängert die grüne Gruppe').toBe(18)
+
+    const zug = spieleZug('ki-dreiergruppe-ausnahme')
+    expect(zug.aktionen[0], 'K2.1: sie legt das Grün').toMatchObject({ typ: 'FarbkarteLegen', ziel: { schlangenId: 'schlange-1' } })
+    expect(punkte(zug.zustand, 1), 'K2.1: 18 statt 17').toBe(18)
+  })
+
   it('K2.1: in Partien vollendet sie in jedem Zug, in dem eine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder holt mindestens so viele Punkte', () => {
     let geprueft = 0
     let vollendet = 0
@@ -174,7 +200,7 @@ describe('K2 Kriterium 3: keine Regenbogenschlange in eine gegnerische Schlange,
 
 describe('K2 Kriterium 4: keine Farbenfusion, die die eigenen Punkte senkt', () => {
   it('K2.4: ki-fusion-senkt: jede angebotene Fusion zerstörte ihre blaue Gruppe; sie spielt keine', () => {
-    const start = findeSzenario('ki-fusion-senkt')!.erzeuge()
+    const start = szenario('ki-fusion-senkt')
     expect(ermittleAktionen(start).filter((aktion) => aktion.typ === 'FusionLegen'), 'K2.4: zwei Fusionen angeboten').toHaveLength(2)
     const zug = spieleZug('ki-fusion-senkt')
     expect(typen(zug)).not.toContain('FusionLegen')
@@ -189,7 +215,7 @@ describe('K2 Kriterium 4: keine Farbenfusion, die die eigenen Punkte senkt', () 
 
 describe('K2 Kriterium 5: keine Karte wirkungslos, wenn ein besser bewerteter Zug möglich ist', () => {
   it('K2.5: ki-wirkungslos: statt Verdoppler oder Farbenschutz wirkungslos abzulegen, vollendet sie mit dem Rot ihre Gruppe', () => {
-    const start = findeSzenario('ki-wirkungslos')!.erzeuge()
+    const start = szenario('ki-wirkungslos')
     expect(ermittleAktionen(start).filter((aktion) => aktion.typ === 'SonderkarteWirkungslosAblegen'), 'D23, D25: zwei angeboten').toHaveLength(2)
     const zug = spieleZug('ki-wirkungslos')
     expect(typen(zug)).toEqual(['FarbkarteLegen', 'ZugBeenden'])
@@ -201,7 +227,7 @@ describe('K2 Kriterium 5: keine Karte wirkungslos, wenn ein besser bewerteter Zu
   })
 
   it('K2.5, F8a: ki-grube-ohne-zug: keine Schlangengrube auf den, der keinen Zug mehr hat (D29); sie vollendet ihre Gruppe, dann endet die Partie', () => {
-    const start = findeSzenario('ki-grube-ohne-zug')!.erzeuge()
+    const start = szenario('ki-grube-ohne-zug')
     expect(ermittleAktionen(start).some((aktion) => aktion.typ === 'SchlangengrubeSpielen'), 'D29: die Engine bietet die Grube an').toBe(true)
     const zug = spieleZug('ki-grube-ohne-zug')
     expect(typen(zug)).toEqual(['FarbkarteLegen', 'ZugBeenden'])
@@ -214,6 +240,20 @@ describe('K2 Kriterium 5: keine Karte wirkungslos, wenn ein besser bewerteter Zu
       const gruben = spieleZug('ki-grube-schlussrunde', saat).aktionen.filter((aktion) => aktion.typ === 'SchlangengrubeSpielen')
       for (const grube of gruben) expect(grube, `F8a: Saat ${saat}`).toMatchObject({ zielSpielerId: 'spieler-3' })
     }
+  })
+
+  it('K2.5, F8a: nur Schlangengruben auf der Hand und niemand hat mehr einen Zug: sie spielt genau eine, weil es keinen anderen Zug gibt, und beendet dann', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(211) })
+      .schlange(1, ['Blau'])
+      .hand(1, ['Schlangengrube', 'Schlangengrube'])
+      .schlussrunde(0)
+      .amZug(1)
+      .zustand()
+    expect([...new Set(ermittleAktionen(start).map((aktion) => aktion.typ))], 'D25: angeboten sind nur die Gruben, kein wirkungsloses Ablegen, kein Beenden').toEqual(['SchlangengrubeSpielen'])
+    const zug = spieleZug('', 1, start)
+    expect(typen(zug)).toEqual(['SchlangengrubeSpielen', 'ZugBeenden'])
+    expect(zug.ereignisse.filter((ereignis) => ereignis.typ === 'GrubeOhneWirkung'), 'D29: die Grube geht ohne Wirkung ab').toHaveLength(1)
+    expect(zug.zustand.partiephase).toBe('Beendet')
   })
 
   it('K2.5, K2.4: ki-fusion-senkt: eine Fusion, die ihre Punkte senkt, spielt sie nicht', () => {

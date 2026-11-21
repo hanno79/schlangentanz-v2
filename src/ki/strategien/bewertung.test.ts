@@ -1,12 +1,12 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { KETTENBONUS, berechneZwischenstand, erzeugeZufall } from '../../engine'
+import { KETTENBONUS, berechneZwischenstand, erzeugeZufall, laengsteFarbkette } from '../../engine'
 import type { Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import type { Baukasten, Schlangenglied } from '../../engine/testing/szenario'
 import { sichtFuer } from '../sicht'
 import { zufallszustaende } from '../__tests__/stellungen'
-import { bewerte, gruppenwert, haltewert, hatNochZug, kettenlaenge } from './bewertung'
+import { bewerte, gruppenwert, haltewert, hatNochZug } from './bewertung'
 
 /*
 K2: Die Bewertung der soliden KI zählt Punkte so, wie Teil D sie festlegt, und
@@ -39,12 +39,12 @@ describe('K2: Punkte wie in Teil D', () => {
     expect(gruppenwert(blick(zweiFarben, true).spieler[1], true), 'A11: zwei Farben bringen 1 Bonuspunkt').toBe(7)
   })
 
-  it('D24: die längste Kette zählt erst ab 3 Farbkarten; Regenbogenschlange und Fusion unterbrechen sie (A11)', () => {
-    expect(kettenlaenge(blick(['Rot', 'Rot']).spieler[1]), 'D24: Rot, Rot ist noch keine Kette').toBe(0)
-    expect(kettenlaenge(blick(['Rot', 'Rot', 'Rot']).spieler[1])).toBe(3)
+  it('D24: die Kette der Engine nimmt auch die Sicht eines Spielers; sie zählt erst ab 3 Farbkarten, Regenbogenschlange und Fusion unterbrechen sie (A11)', () => {
+    expect(laengsteFarbkette(blick(['Rot', 'Rot']).spieler[1]), 'D24: Rot, Rot ist noch keine Kette').toBe(0)
+    expect(laengsteFarbkette(blick(['Rot', 'Rot', 'Rot']).spieler[1])).toBe(3)
     const unterbrochen: Schlangenglied[] = ['Rot', 'Rot', 'Rot', 'Regenbogenschlange', 'Rot', 'Rot', 'Rot', 'Rot']
-    expect(kettenlaenge(blick(unterbrochen).spieler[1]), 'A11: Beispiel der Website').toBe(4)
-    expect(kettenlaenge(blick(['Blau', 'Blau', { fusion: ['Blau', 'Blau'] }, 'Blau']).spieler[1]), 'A11: die Fusion unterbricht').toBe(0)
+    expect(laengsteFarbkette(blick(unterbrochen).spieler[1]), 'A11: Beispiel der Website').toBe(4)
+    expect(laengsteFarbkette(blick(['Blau', 'Blau', { fusion: ['Blau', 'Blau'] }, 'Blau']).spieler[1]), 'A11: die Fusion unterbricht').toBe(0)
   })
 
   it('A11: die Bewertung zählt Farbgruppen und Vielfaltbonus wie der Zwischenstand der Engine, in 100 Zufallszuständen', () => {

@@ -4,7 +4,6 @@ import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erzeugeZufall, pr
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import { bestimmeZustand, sichtFuer, simuliere } from './sicht'
-import type { Sicht } from './sicht'
 import { erstelleZufallsKi } from './strategien/zufallsKi'
 import { alleTexte, mischeVerborgenes, verborgeneIds } from './__tests__/verborgenes'
 import { jederNte, partieZustaende, zufallszustaende } from './__tests__/stellungen'
@@ -30,11 +29,6 @@ const STELLUNGEN: Spielzustand[] = [
 
 /** Jede Stellung für jeden Spieler. */
 const BLICKE = STELLUNGEN.flatMap((zustand) => zustand.spieler.map((_, ich) => ({ zustand, ich })))
-
-/** Die Sicht ohne Ids der Schlangen: Die Id einer neuen Schlange kann die Simulation anders vergeben (`bestimmeZustand`). */
-function ohneSchlangenIds(sicht: Sicht): unknown {
-  return { ...sicht, spieler: sicht.spieler.map((spieler) => ({ ...spieler, schlangen: spieler.schlangen.map(({ karten, fusionen }) => ({ karten, fusionen })) })) }
-}
 
 describe('K2 Vorgabe: der Rahmen errät aus der Sicht einen Zustand (Determinisierung)', () => {
   it(`K2: der erratene Zustand zeigt dem Spieler genau seine Sicht, ${BLICKE.length} Blicke aus 200 Stellungen`, () => {
@@ -118,7 +112,7 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
     }
   })
 
-  it('K2: nach einer eigenen Karte zeigt die Simulation dieselbe Sicht wie die echte Partie', () => {
+  it('K2: nach einer eigenen Karte zeigt die Simulation dieselbe Sicht wie die echte Partie, auch die Id einer neuen Schlange', () => {
     expect(proben.length, 'K2: genug Proben').toBeGreaterThan(300)
     for (const { zustand, nummer, entscheider, aktion } of proben) {
       const stellung = simuliere(sichtFuer(zustand, entscheider), erzeugeZufall(nummer))
@@ -132,7 +126,7 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
         continue
       }
       const simuliert = stellung.nach(aktion)
-      expect(ohneSchlangenIds(simuliert.sicht), wo).toEqual(ohneSchlangenIds(sichtFuer(nachher, entscheider)))
+      expect(simuliert.sicht, wo).toEqual(sichtFuer(nachher, entscheider))
       expect(simuliert.entscheider, wo).toBe(ermittleEntscheider(nachher))
     }
   })
