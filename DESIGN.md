@@ -171,7 +171,9 @@ Schatten sind warm getönt (aus `--farbe-tinte`), nie grau-blau.
 Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
 
 1. **Kopfleiste:** wer dran ist, Zug und gespielte Karten, Zahl des
-   Nachziehstapels, „Zur Lobby“.
+   Nachziehstapels, „Zur Lobby“. Der Entwurf aus O1 zeigt an dieser Stelle
+   „Menü“; kein Task des Plans (O3 bis O8, O11) baut ein Menü, deshalb bleibt
+   es bei „Zur Lobby“, bis eines geplant wird.
 2. **Tischfläche** (scrollt senkrecht): Gegner mit Name, Zahl der Handkarten,
    oberster Karte ihres Ablagestapels und ihren Schlangen; Tischmitte mit
    Nachziehstapel und Zahl, offene Aufgaben; deine Auslage (geheime Aufgabe,
@@ -179,7 +181,8 @@ Von oben nach unten, in allen Geräteklassen dieselbe Reihenfolge:
    ab 700 px nebeneinander.
 3. **Unten fest, weiss abgesetzt:** deine Schlangen (scrollen in sich, wenn sie
    sehr lang werden), deine Hand und die Zugleiste. Ab 700 px steht die
-   Zugleiste rechts neben Schlangen und Hand und zeigt die gewählte Karte gross.
+   Zugleiste rechts neben Schlangen und Hand (22rem, ab 1000 px 26rem) und zeigt
+   die gewählte Karte gross.
    Auf dem Handy hochkant steht sie über deinen Schlangen: So bleibt die Hand am
    unteren Rand, auch wenn die Leiste mit einer gewählten Karte wächst. Im Handy
    quer steht sie links unter der Tischfläche, weil rechts deine Schlangen und
@@ -265,7 +268,8 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   zuletzt). Ist die Auswahl vollständig, steht dort die Ansage („Ansage: Rot an
   das Ende der Schlange 1 von KI-Gegner 1.“), und erst „Ausführen“ spielt sie.
   „Zug beenden“ ist gesperrt, bis die Engine es erlaubt; daneben steht dann
-  „Du musst immer mindestens eine Karte spielen.“ Die Möglichkeiten des
+  ihr Grund (`zugBeendenGesperrt`, etwa „Spieler 1 muss erst mindestens eine
+  Karte spielen; …“), auch mit gewählter Karte. Die Möglichkeiten des
   Schlangenfrass stehen hier als Knöpfe. Lehnt die Engine eine Aktion ab, steht
   ihr Grund in `--farbe-fehler` darunter. Der Satz wird vorgelesen, wenn er
   sich ändert (`aria-live`).

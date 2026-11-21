@@ -218,6 +218,11 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   flex: none;
 }
 
+/* Gesperrt mit Grund: eine eigene Zeile, der Grund links neben dem Knopf. */
+.st-zugleiste-beenden--gesperrt {
+  flex-basis: 100%;
+}
+
 .st-zugleiste-vorschau {
   display: none;
 }
@@ -231,7 +236,7 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   }
 
   .st-zugleiste-vorschau {
-    --karte-breite: clamp(64px, 11vh, 96px);
+    --karte-breite: clamp(56px, 9vh, 96px);
     display: flex;
     justify-content: center;
   }

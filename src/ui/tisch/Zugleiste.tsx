@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
@@ -14,7 +15,8 @@ und, sobald die Auswahl eine Aktion der Engine vollständig beschreibt, die
 Ansage mit „Ausführen“ (B2: Karte und Ziel stehen vor dem Ausführen fest);
 der Hauptknopf steht zuletzt.
 „Zug beenden“ steht da, solange du deine Karten spielst, und ist genau dann
-bedienbar, wenn die Engine es aufzählt. Lehnt die Engine eine Aktion ab, steht
+bedienbar, wenn die Engine es aufzählt; gesperrt steht der Grund der Engine
+daneben. Lehnt die Engine eine Aktion ab, steht
 ihr Grund hier.
 
 Ab 700 px Breite steht die Leiste rechts neben Schlangen und Hand und zeigt
@@ -51,6 +53,9 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
   // Nur solange gewählt wird; die gewählte Möglichkeit nennt danach der Satz, und „Abbrechen“ führt zurück.
   const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
   const { fertig, zugBeenden, abwerfen, ausspielen } = bedienung
+  // Der Grund der Engine, warum „Zug beenden“ gesperrt ist; er steht daneben, ob eine Karte gewählt ist oder nicht.
+  const gesperrt = zugBeenden === null ? ansicht.zugBeendenGesperrt : null
+  const grundId = useId()
 
   return (
     <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
@@ -84,9 +89,19 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
             </button>
           )}
           {ausspielen && (
-            <span className="st-zugleiste-beenden">
-              {zugBeenden === null && karte === null && <span className="st-zugleiste-grund">{ZUGLEISTE.mindestensEine}</span>}
-              <button type="button" className="st-knopf" disabled={zugBeenden === null} onClick={() => zugBeenden !== null && fuehreAus(zugBeenden)}>
+            <span className={gesperrt === null ? 'st-zugleiste-beenden' : 'st-zugleiste-beenden st-zugleiste-beenden--gesperrt'}>
+              {gesperrt !== null && (
+                <span id={grundId} className="st-zugleiste-grund">
+                  {gesperrt}
+                </span>
+              )}
+              <button
+                type="button"
+                className="st-knopf"
+                disabled={zugBeenden === null}
+                aria-describedby={gesperrt === null ? undefined : grundId}
+                onClick={() => zugBeenden !== null && fuehreAus(zugBeenden)}
+              >
                 {ZUGLEISTE.zugBeenden}
               </button>
             </span>

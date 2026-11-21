@@ -160,6 +160,14 @@ Tischfläche.
   color: var(--farbe-tinte-leise);
 }
 
+/* Ab 1000 px ist die Zugleiste breiter: Knöpfe und der Grund neben „Zug beenden“ brauchen
+   dann weniger Zeilen, und deinem Platz bleibt die Höhe (Tablet quer ist am engsten). */
+@media (min-width: 1000px) and (min-height: 501px) {
+  .spieltisch {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  }
+}
+
 /* Tischfläche: Gegner, Mitte, Auslage. Scrollt senkrecht, nie waagrecht. */
 /* Der Rahmen trägt das Zeichen „mehr ↓“ über dem Rand der scrollenden Fläche. */
 .st-flaeche-rahmen {

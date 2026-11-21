@@ -19,8 +19,6 @@ export const ZUGLEISTE = {
   ausfuehren: 'Ausführen',
   zugBeenden: 'Zug beenden',
   kartenWaehlen: 'Karten wählen',
-  /** A5, „Wichtig“: steht neben dem gesperrten „Zug beenden“. */
-  mindestensEine: 'Du musst immer mindestens eine Karte spielen.',
   karteWaehlen: 'Wähle eine Karte aus deiner Hand.',
   karteOderBeenden: 'Wähle eine Karte aus deiner Hand oder beende deinen Zug.',
   nurBeenden: 'Beende deinen Zug.',

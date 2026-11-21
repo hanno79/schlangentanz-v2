@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test'
-import { serialisiere } from '../../src/engine'
+import { serialisiere, zugBeendenGesperrt } from '../../src/engine'
 import { erzeugeSzenario } from '../../src/entwicklung/szenarien'
 import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { befundListe, findeAbgeschnittenes, findeKleineTippflaechen, kasten, waagrechterUeberstand } from './messung'
@@ -137,5 +137,36 @@ test.describe('O5 K9: Karten spielen mit Maus und Finger', () => {
     await tippe(ablegen)
     await expect(dialog).toBeHidden()
     expect(await gespeichert(page)).not.toBe(start)
+  })
+
+  test('O5 Iteration 2: neben dem gesperrten „Zug beenden“ steht der Grund der Engine, auch mit gewählter Karte und Ansage', async ({ page }, info) => {
+    const tippe = bediene(info)
+    await oeffneSzenario(page, 'farbkarte-beim-gegner')
+    const grund = zugBeendenGesperrt(erzeugeSzenario('farbkarte-beim-gegner'))!
+    const zugBeenden = zugleiste(page).getByRole('button', { name: 'Zug beenden' })
+    const pruefe = async (lage: string) => {
+      await expect(zugBeenden, lage).toBeDisabled()
+      await expect(zugBeenden, lage).toHaveAccessibleDescription(grund)
+      const text = zugleiste(page).getByText(grund)
+      await expect(text, lage).toBeInViewport({ ratio: 1 })
+      const [k, g] = [await kasten(zugBeenden), await kasten(text)]
+      const abstand = Math.max(0, k.links - g.rechts, g.links - k.rechts, k.oben - g.unten, g.oben - k.unten)
+      expect(abstand, `${lage}: der Grund steht neben dem Knopf`).toBeLessThanOrEqual(16)
+      expect(await waagrechterUeberstand(page), lage).toBe(0)
+    }
+    await pruefe('ohne Karte')
+    await tippe(hand(page).getByRole('button', { name: 'Farbkarte Rot, 1 Punkt' }))
+    await pruefe('Karte gewählt')
+    await tippe(page.getByRole('button', { name: 'KI-Gegner 1, Schlange 1: Ende', exact: true }))
+    await pruefe('Ansage')
+  })
+
+  test('O5: „Zur Lobby“ bleibt mitten in der Zielwahl bedienbar und führt zur Lobby', async ({ page }, info) => {
+    const tippe = bediene(info)
+    await oeffneSzenario(page, 'farbendieb')
+    await tippe(hand(page).getByRole('button', { name: 'Sonderkarte Farbendieb' }))
+    await tippe(page.getByRole('link', { name: 'Zur Lobby' }))
+    await expect(page.getByTestId('lobby')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Weiterspielen' })).toBeVisible()
   })
 })
