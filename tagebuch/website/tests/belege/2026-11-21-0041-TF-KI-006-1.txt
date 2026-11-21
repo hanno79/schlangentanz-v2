@@ -1,0 +1,15 @@
+ FAIL  tests/architektur_ki.test.ts > P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unverändert weiter > P0.3d: U5-Umgehung „H2: serialisiere aus der Engine“ wird gemeldet
+      Tests  1 failed | 119 passed (120)
+--- Gegenprobe 2: valueOf aus GEERBT_VON_OBJECT entfernt
+      Tests  120 passed (120)
+--- 2b: Probe v01 bei entfernter Regel (grün = nicht gemeldet)
+      Tests  1 passed | 46 skipped (47)
+--- 2c: Probe v01 mit Regel
+AssertionError: U5: erwartet keinen Lesezugriff auf den vollen Zustand ausser in sicht.ts: expected 'U5 src/ki/zz-angriff-v01.ts:4 nutzt d…' to be '' // Object.is equality
++ U5 src/ki/zz-angriff-v01.ts:4 nutzt die geerbte Methode globalThis.valueOf
+      Tests  1 failed | 46 skipped (47)
+--- Gegenprobe 3: Object.values(zustand) in src/ki/schritt.ts
+ FAIL  tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: 4 Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts
+AssertionError: U5: erwartet keinen Lesezugriff auf den vollen Zustand ausser in sicht.ts: expected 'U5 src/ki/schritt.ts:24 verwendet Spi…' to be '' // Object.is equality
++ U5 src/ki/schritt.ts:24 verwendet Spielzustand, statt ihn weiterzureichen: zustand
+      Tests  1 failed | 46 passed (47)

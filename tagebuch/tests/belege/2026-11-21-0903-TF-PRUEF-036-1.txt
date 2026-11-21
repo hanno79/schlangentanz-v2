@@ -1,0 +1,14 @@
+=== zz_p_k2_eigen.ts: Isolationstest exit 0, 7.8 s
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_k2_eigen.ts, erstelleEigeneKi entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 868ms
+      Tests  6 passed (6)
+   Duration  4.40s (transform 790ms, setup 358ms, import 1.23s, tests 2.46s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_k2_solide.ts: Isolationstest exit 0, 5.8 s
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: src/ki/strategien/zz_p_k2_solide.ts, erstelleSolideKi entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht 969ms
+      Tests  6 passed (6)
+   Duration  3.49s (transform 577ms, setup 278ms, import 826ms, tests 2.11s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 

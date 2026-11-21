@@ -1,0 +1,46 @@
+Stand d3d1cb6 plus ungetrackte Probedatei src/ki/strategien/zz_c01_sauber.ts (Quelle unten), nicht committet.
+
+== Architekturtest mit der Probedatei: npx vitest run tests/architektur.test.ts tests/architektur_ki.test.ts -> Test Files 2 passed, Tests 175 passed, exit 0
+ ✓ tests/architektur.test.ts > U4: Engine und KI sind rein > U4: 41 Dateien unter src/engine und src/ki (ohne Tests) nutzen kein React, kein DOM, kein Math.random, kein Date, kein performance 2ms
+ ✓ tests/architektur.test.ts > U3: Oberfläche und KI kennen nur src/engine/index.ts > U3: 40 Dateien unter src/ui und src/ki (ohne Tests) importieren die Engine nur über src/engine/index.ts 48ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > P0.3d: jede Datei unter src/ki gehört zum Rahmen (sicht, schritt, turnier) oder liegt unter src/ki/strategien 0ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: 6 Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts 505ms
+
+== npm run typecheck exit 0; npx eslint src/ki exit 0; npm run check:regeln: keine Verstösse
+
+== pruefeSichtZugriff(echte 5 Dateien + zz_c01_sauber.ts) und Laufzeit im echten Turnier
+(turnier(), ersteSaat 1000, kiSaat 77, Spiegel gegen Spiegel; jeder Fund gegen den nachgespielten Zustand geprüft;
+ gezählt nur Karten, die in der echten Fremdhand liegen und in der Sicht des Finders nicht vorkommen)
+SAUBER Befunde für echte Dateien plus zz_c01_sauber.ts: 0
+LAUFZEIT C01 Spion (Array.of), 2 Spieler: beendet/beendet/beendet/beendet/beendet; Entscheidungen mit Fremdwissen 853, davon mit vollständig richtiger verborgener Fremdhand 5; richtige verborgene Fremdkarten 3060
+LAUFZEIT C01 Spion (Array.of), 3 Spieler: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 978, davon mit vollständig richtiger verborgener Fremdhand 11; richtige verborgene Fremdkarten 3470
+
+== Quelle
+import type { Ki } from './strategie'
+
+// Prüfer P0.3d it3 (nicht committen): eigenständige Leck-Strategie ohne Befund. Instanzen teilen ihre Hände über eine Eigenschaft der Funktion `anker` der Modulebene, die sie über Array.of als Wert holen.
+export type Fund = { ich: number; fremd: number; karten: string[] }
+export type SpionKi = Ki & { funde: Fund[] }
+
+function anker(): void {}
+type Ablage = { (): void; haende?: Map<number, string[]> }
+
+function kanal(): Map<number, string[]> {
+  const geteilt: Ablage = Array.of(anker)[0]
+  geteilt.haende ??= new Map()
+  return geteilt.haende
+}
+
+export function erstelleSpionKi(zufall: () => number): SpionKi {
+  const funde: Fund[] = []
+  return {
+    name: 'Spion',
+    funde,
+    waehle(sicht, aktionen) {
+      const haende = kanal()
+      haende.set(sicht.ich, sicht.hand.map((karte) => karte.id))
+      for (const [sitz, karten] of haende) if (sitz !== sicht.ich) funde.push({ ich: sicht.ich, fremd: sitz, karten: [...karten] })
+      return aktionen[Math.floor(zufall() * aktionen.length)]
+    },
+  }
+}

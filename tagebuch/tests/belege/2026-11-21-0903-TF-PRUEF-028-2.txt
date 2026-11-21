@@ -1,0 +1,12 @@
+DATEI src/ki/strategien/zz_p_n01_valueof.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_n02_methode.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_n03_statisch.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_n04_static_this.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_n05_namensraum.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_n06_engine_valueof.ts: 0 Befunde
+

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { erzeugeZufall } from '../engine'
-import type { SpielAktion } from '../engine'
-import { baukasten } from '../engine/testing/szenario'
-import { sichtFuer } from './sicht'
+import { erzeugeZufall } from '../../engine'
+import type { SpielAktion } from '../../engine'
+import { baukasten } from '../../engine/testing/szenario'
+import { sichtFuer } from '../sicht'
 import { erstelleZufallsKi } from './zufallsKi'
 
 const SICHT = sichtFuer(baukasten({ spielerzahl: 2, erweiterung: false }).haendeAuffuellen().zustand(), 0)

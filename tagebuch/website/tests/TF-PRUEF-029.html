@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-029 Eine KI-Bewertung, die nur die Sicht nutzt und auf Casts und freie Text-Schlüssel verzichtet, bleibt im Architekturtest ohne Meldung. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-029 Eine KI-Bewertung, die nur die Sicht nutzt und auf Casts und freie Text-Schlüssel verzichtet, bleibt im Architekturtest ohne Meldung.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PRUEF-028</span><span class="etikett">stillgelegt</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Stillgelegt mit P0.3d, Iteration 3: Seit Rahmen und Strategien getrennt sind, darf eine Strategie weder <code>anwendeAktion</code> noch <code>sichtFuer</code> aufrufen. Die Frage nach Fehlalarmen beantwortet jetzt TF-PRUEF-032.</p>
+<p>Die verschärfte KI-Grenze darf K2 nicht unnötig aufhalten. Geprüft wird, ob übliche Bauweisen einer Bewertung ohne Fehlalarm durchgehen: Maps, Schleifen, Sortieren, eigene Hilfsfunktionen, <code>werteSchlangen</code> aus der Engine, Typprädikate, <code>as const</code> und eine Zugsuche, die einen Zustand über <code>anwendeAktion</code> und <code>sichtFuer</code> durchrechnet.</p><h2>Bestanden, wenn</h2><p>Die Probe-Bewertung <code>zz-k2-bewertung.ts</code> und die Varianten A (Schleife) und C (<code>map</code>) der Probe-Zugsuche erhalten 0 Meldungen. Meldungen gibt es nur an den drei absichtlich eingebauten Stellen: Schreiben in ein <code>Record&lt;string, number&gt;</code> mit <code>spieler.id</code> als Schlüssel, ein Cast <code>as FarbkarteLegenAktion[]</code> und eine Hilfsfunktion, die einen Zustand zurückgibt.</p><h2>Fehlgeschlagen, wenn</h2><p>Der Architekturtest meldet eine Zeile, die nur die Sicht, eine Map, eine Sortierung, <code>werteSchlangen</code> oder die Weitergabe an <code>anwendeAktion</code> und <code>sichtFuer</code> enthält.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/P0.3d-ki-grenze (PR #55)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo-Stand ab <code>task/P0.3d-ki-grenze</code>, <code>npm ci</code> gelaufen</td></tr><tr><td>Ausgangslage</td><td><code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zwei vorübergehende Dateien unter <code>src/ki/</code>: <code>zz-k2-bewertung.ts</code> (Bewertung aus Paaren, Vielfalt, Punkten, stärkstem Gegner, eine Probe-KI mit Gedächtnis in einer Map) und <code>zz-k2-zugsuche.ts</code> (A: Schleife über <code>ermittleAktionen</code>, B: <code>folgezustand</code> mit Rückgabe des Zustands, C: <code>map</code> über die Aktionen).</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>beide Dateien anlegen</td><td>Inhalt aus dem Beleg `P0.3d-k2-probe-quellen.txt`</td><td>`npx tsc -p tsconfig.app.json --noEmit` meldet für sie nichts</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Architekturtest laufen lassen</td><td>`npx vitest run tests/architektur.test.ts`</td><td>genau drei Meldungen: `bewertung.ts` Zeilen 70 und 81, `zugsuche.ts` Zeile 25</td></tr></tbody></table></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Beide Dateien löschen, danach <code>git status</code> leer.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 00:42</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.3d) &middot; agent &middot; pruefung-P0.3d @ <span class="commit" title="4c1a2110b74354f4dd54dc8b8830260b1632dde5">4c1a211</span></p><p>zz-k2-bewertung.ts und zz-k2-zugsuche.ts typfehlerfrei. Architekturtest meldet genau 3 Zeilen, alle absichtlich: bewertung.ts:70 freier Text-Schlüssel ergebnis[spieler.id], bewertung.ts:81 Cast as FarbkarteLegenAktion[], zugsuche.ts:25 Rückgabe des Folgezustands. Maps, Sortierung, Object.entries, werteSchlangen, Typprädikate, as const, JSON.stringify der Sicht, Zugsuche A (Schleife) und C (map) ohne Meldung. Echte KI-Dateien: 0 Meldungen.</p><ul class="belege"><li><a href="belege/2026-11-21-0042-TF-PRUEF-029-1.txt">2026-11-21-0042-TF-PRUEF-029-1.txt</a></li><li><a href="belege/2026-11-21-0042-TF-PRUEF-029-2.txt">2026-11-21-0042-TF-PRUEF-029-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

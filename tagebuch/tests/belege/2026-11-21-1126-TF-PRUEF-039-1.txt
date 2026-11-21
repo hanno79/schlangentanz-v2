@@ -1,0 +1,68 @@
+Schlussprüfung 3 P0.3d, Stand b4ce8bd, Umgehungen der Importgrenze, die durchgehen
+=================================================================================
+
+Nicht registrierte Fabrik (Form G05), in allen Proben gleich:
+  src/ki/strategien/zz_geheim.ts
+    import type { Ki } from './strategie'
+    import { erstelleZufallsKi } from './zufallsKi'
+    export function vielleichtKi(zufall: () => number): Ki | undefined { return erstelleZufallsKi(zufall) }
+
+B01 Brücke mit grosser Endung .JS (Produktionsbuild)
+----------------------------------------------------
+  src/ui/zz_b01_bruecke.JS : export { vielleichtKi } from '../ki/strategien/zz_geheim.ts'
+  src/zz_b01_module.d.ts   : declare module '*.JS' { export const vielleichtKi: (zufall: () => number) => import('./ki/strategien/strategie').Ki | undefined }
+  src/ui/zz_b01_nutzer.ts  : import { vielleichtKi } from './zz_b01_bruecke.JS'
+                             export const zzKi = vielleichtKi(() => 0.5)
+
+  npx vitest run tests/architektur_ki_importgrenze.test.ts tests/architektur.test.ts tests/architektur_ki.test.ts tests/strategie_isolation.test.ts
+    Test Files  4 passed (4)
+    Tests  252 passed (252)
+    vitest exit 0
+  npm run typecheck            -> exit 0
+  npx eslint (drei Probedateien) -> exit 0
+  npm run check:regeln         -> check:regeln: keine Verstösse., exit 0
+
+  Erste Variante mit // @ts-expect-error statt .d.ts, gebündelt mit Vite und ausgeführt:
+  npx vite build --ssr src/ui/zz_b01_nutzer.ts --outDir <scratch>/b01-out
+    ✓ built in 112ms
+  node <scratch>/b01-out/zz_b01_nutzer.js
+    zz-b01 Zufalls-KI b          (Name der KI und ihre Wahl aus ['a','b','c'])
+    node exit 0
+
+  Ursache: tests/architektur_ki_importgrenze.ts, `laedt` prüft extname(pfad) gegen CODE_ENDUNGEN
+  (nur Kleinbuchstaben). '.JS' fällt heraus: die Datei steht nicht in grenzDateien, und
+  `weiterverfolgen` folgt ihr nicht, obwohl der Import aus zz_b01_nutzer.ts sie findet.
+
+B02 Lader unter public/ (Entwicklungsserver)
+--------------------------------------------
+  public/zz_b02_lader.js : import { vielleichtKi } from '/src/ki/strategien/zz_geheim.ts'
+                           window.zzKi = vielleichtKi(() => 0.5)
+                           console.log('zz-b02', window.zzKi && window.zzKi.name)
+  index.html             : zusätzlich <script type="module" src="/zz_b02_lader.js"></script>
+  public/zz_b12.html (B12): <script type="module">import { vielleichtKi } from "/src/ki/strategien/zz_geheim.ts"; document.title = "zz-b12 " + vielleichtKi(() => 0.5).name</script>
+
+  npx vitest run tests/architektur_ki_importgrenze.test.ts -> Tests 59 passed (59), exit 0
+  npx vite --port 5197, Playwright (Chromium):
+    B02 window.zzKi.name = Zufalls-KI
+    B02 Konsole: log: zz-b02 Zufalls-KI
+    B12 Titel = zz-b12 Zufalls-KI
+
+  Ursache: public/ liegt ausserhalb von BEREICHE (src, scripts, Wurzel), und '/zz_b02_lader.js'
+  wird nur gegen die Wurzel aufgelöst, nicht gegen public/, wo Vite die Datei ausliefert.
+
+B07 Vite-Plugin mit resolveId (Produktionsbuild)
+------------------------------------------------
+  vite.config.ts: plugins: [react(), { name: 'zz-b07', resolveId(id) { if (id === 'virtual:zz-ki')
+                  return join(process.cwd(), 'src', 'ki', 'strategien', 'zz_geheim.ts') } }]
+  src/zz_b07.d.ts: declare module 'virtual:zz-ki' { … }
+  src/ui/zz_b07.ts: import { vielleichtKi } from 'virtual:zz-ki'
+
+  npx vite build --ssr src/ui/zz_b07.ts -> ✓ built in 227ms
+  node <scratch>/b07-out/zz_b07.js      -> zz-b07 Zufalls-KI, exit 0
+  npm run typecheck                     -> exit 0
+  architektur_ki_importgrenze, architektur, architektur_ki -> 245 passed, exit 0
+
+  U5, Grenze (3) nennt nur „einen Vite-Alias, der nicht in der tsconfig steht“.
+
+Alle Probedateien danach entfernt, vite.config.ts und index.html mit git checkout zurückgesetzt,
+git status leer.

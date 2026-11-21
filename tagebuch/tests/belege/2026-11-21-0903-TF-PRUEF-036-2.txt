@@ -1,0 +1,4 @@
+DATEI src/ki/strategien/zz_p_k2_eigen.ts: 0 Befunde
+
+DATEI src/ki/strategien/zz_p_k2_solide.ts: 0 Befunde
+

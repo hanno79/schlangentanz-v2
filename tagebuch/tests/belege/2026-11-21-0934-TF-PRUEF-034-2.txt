@@ -1,0 +1,97 @@
+=== zz_p_f01_default.ts: Isolationstest exit 0, 16.0 s
+      Tests  7 passed (7)
+   Duration  6.58s (transform 991ms, setup 955ms, import 857ms, tests 4.09s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f02_umbenannt.ts: Isolationstest exit 0, 11.4 s
+      Tests  7 passed (7)
+   Duration  6.24s (transform 1.01s, setup 629ms, import 861ms, tests 4.07s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f03_stufe.ts: Isolationstest exit 0, 9.0 s
+      Tests  7 passed (7)
+   Duration  4.72s (transform 894ms, setup 575ms, import 814ms, tests 2.80s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_f04_klasse.ts: Isolationstest exit 0, 5.5 s
+      Tests  7 passed (7)
+   Duration  3.06s (transform 501ms, setup 298ms, import 424ms, tests 2.03s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g01_objekt_methode.ts: Isolationstest exit 0, 5.4 s
+      Tests  7 passed (7)
+   Duration  2.93s (transform 475ms, setup 284ms, import 406ms, tests 1.96s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g02_freeze.ts: Isolationstest exit 0, 6.0 s
+      Tests  7 passed (7)
+   Duration  3.34s (transform 508ms, setup 293ms, import 429ms, tests 2.30s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g03_klasse_aus_funktion.ts: Isolationstest exit 0, 5.6 s
+      Tests  7 passed (7)
+   Duration  3.02s (transform 480ms, setup 285ms, import 405ms, tests 1.99s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 2 src/ki/strategien/zz_p_g03_klasse_aus_funktion.ts(4,10): error TS6133: 'baue' is declared but its value is never read.
+src/ki/strategien/zz_p_g03_klasse_aus_funktion.ts(12,17): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+=== zz_p_g04_generator.ts: Isolationstest exit 0, 9.6 s
+      Tests  7 passed (7)
+   Duration  4.86s (transform 777ms, setup 486ms, import 659ms, tests 3.19s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g05_vielleicht.ts: Isolationstest exit 0, 10.2 s
+      Tests  7 passed (7)
+   Duration  7.00s (transform 1.06s, setup 733ms, import 873ms, tests 4.69s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g06_vierfach.ts: Isolationstest exit 0, 7.9 s
+      Tests  7 passed (7)
+   Duration  3.43s (transform 570ms, setup 350ms, import 479ms, tests 2.24s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g07_liste.ts: Isolationstest exit 0, 6.1 s
+      Tests  7 passed (7)
+   Duration  3.25s (transform 522ms, setup 309ms, import 446ms, tests 2.12s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g08_promise.ts: Isolationstest exit 0, 5.6 s
+      Tests  7 passed (7)
+   Duration  2.99s (transform 477ms, setup 299ms, import 398ms, tests 2.01s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g09_paket.ts: Isolationstest exit 0, 5.6 s
+      Tests  7 passed (7)
+   Duration  2.97s (transform 474ms, setup 293ms, import 405ms, tests 1.98s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g10_namensraum.ts: Isolationstest exit 0, 5.4 s
+      Tests  7 passed (7)
+   Duration  3.00s (transform 503ms, setup 290ms, import 433ms, tests 1.99s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 2 src/ki/strategien/zz_p_g10_namensraum.ts(9,18): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+=== zz_p_g11_zerlegt.ts: Isolationstest exit 0, 5.7 s
+      Tests  7 passed (7)
+   Duration  3.16s (transform 507ms, setup 302ms, import 439ms, tests 2.09s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 
+=== zz_p_g12_null.ts: Isolationstest exit 0, 5.7 s
+      Tests  7 passed (7)
+   Duration  3.02s (transform 491ms, setup 284ms, import 418ms, tests 2.02s, environment 0ms)
+
+    statische Prüfung lief, exit 0
+    tsc exit 0 

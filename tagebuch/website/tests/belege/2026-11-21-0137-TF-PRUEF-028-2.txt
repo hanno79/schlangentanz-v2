@@ -1,0 +1,423 @@
+===== zz_it1_rahmen.ts
+import { name } from '../entwicklung/namen'
+import * as testdatei from './turnier.test'
+import { erzeugeZufall } from '../engine/testing/zufall'
+export function probe(f: <T>(wert: T) => T): unknown {
+  const w1 = self
+  w1.structuredClone = f
+  const w2 = globalThis.self
+  w2.structuredClone = f
+  const w3 = top
+  if (w3) w3.structuredClone = f
+  const w4 = frames.self
+  w4.structuredClone = f
+  setTimeout('globalThis.structuredClone = (x) => x', 0)
+  setInterval('globalThis.structuredClone = (x) => x', 0)
+  const z1 = new Intl.DateTimeFormat('de-CH', { timeStyle: 'medium' }).format()
+  const z2 = new Event('x').timeStamp
+  const z3 = URL.createObjectURL(new Blob([]))
+  const j: { toString(): string; stringify?: unknown } = JSON.valueOf()
+  j.stringify = f
+  const m1 = import('./sicht')
+  const m2 = require('./sicht')
+  return [name, testdatei, erzeugeZufall, z1, z2, z3, m1, m2]
+}
+===== zz_k2_bewertung.ts
+import { HANDKARTEN, KETTENBONUS, MINDEST_FARBGRUPPEN_LAENGE, werteSchlangen } from '../../engine'
+import type { Schlange, SpielAktion, Spielkarte } from '../../engine'
+import type { Sicht, SpielerSicht } from '../sicht'
+import type { Ki } from './strategie'
+
+// Prüfer-Fehlalarm-Probe (nicht committen): eine plausible K2-Bewertung, die nur die Sicht nutzt.
+
+interface Bewertet {
+  aktion: SpielAktion
+  wert: number
+}
+
+const punkteVon = (schlangen: readonly Schlange[], erweiterung: boolean) => werteSchlangen(schlangen, erweiterung).gruppenPunkte
+
+function staerksterGegner(sicht: Sicht): SpielerSicht | undefined {
+  const gegner = sicht.spieler.filter((_, sitz) => sitz !== sicht.ich)
+  return [...gegner].sort((a, b) => punkteVon(b.schlangen, sicht.erweiterung) - punkteVon(a.schlangen, sicht.erweiterung))[0]
+}
+
+/** Eine kleine Vorausschau auf einer Abschrift der eigenen Schlangen: was bringt die Farbkarte am Ziel? */
+function folgeDerFarbkarte(sicht: Sicht, aktion: SpielAktion): number {
+  if (aktion.typ !== 'FarbkarteLegen') return 0
+  const karte: Spielkarte | undefined = sicht.hand.find((k) => k.id === aktion.karteId)
+  if (karte === undefined) return 0
+  const eigene = structuredClone(sicht.spieler[sicht.ich].schlangen)
+  const ziel = aktion.ziel
+  if (ziel.art === 'neueSchlange') eigene.push({ id: 'neu', karten: [karte], fusionen: [] })
+  else {
+    const schlange = eigene.find((s) => s.id === ziel.schlangenId)
+    if (schlange === undefined) return 0
+    if (ziel.seite === 'anfang') schlange.karten.unshift(karte)
+    else schlange.karten.push(karte)
+  }
+  return punkteVon(eigene, sicht.erweiterung) - punkteVon(sicht.spieler[sicht.ich].schlangen, sicht.erweiterung)
+}
+
+export function bewerte(sicht: Sicht, aktionen: readonly SpielAktion[]): Bewertet[] {
+  const haeufigkeit = new Map<string, number>()
+  for (const karte of sicht.hand) haeufigkeit.set(karte.typ, (haeufigkeit.get(karte.typ) ?? 0) + 1)
+  const gegner = staerksterGegner(sicht)
+  const druck = gegner === undefined ? 0 : punkteVon(gegner.schlangen, sicht.erweiterung) / (KETTENBONUS + MINDEST_FARBGRUPPEN_LAENGE)
+  const nachVorrang = new Set<SpielAktion['typ']>(['FarbkarteLegen', 'RegenbogenschlangeLegen'])
+  return aktionen
+    .map((aktion) => ({
+      aktion,
+      wert: folgeDerFarbkarte(sicht, aktion) + (nachVorrang.has(aktion.typ) ? 1 : 0) - druck * (sicht.hand.length / HANDKARTEN) + (haeufigkeit.get('Farbkarte') ?? 0) / 10,
+    }))
+    .sort((a, b) => b.wert - a.wert)
+}
+
+export function erstelleSolideKi(zufall: () => number): Ki {
+  return {
+    name: 'Solide-Probe',
+    waehle(sicht, aktionen) {
+      const bewertet = bewerte(sicht, aktionen)
+      const beste = bewertet.filter(({ wert }) => wert === bewertet[0].wert)
+      return beste[Math.floor(zufall() * beste.length)].aktion
+    },
+  }
+}
+===== zz_pruef.test.ts
+// @vitest-environment node
+// Prüfer P0.3d Iteration 2 (nicht committen).
+import { describe, expect, it } from 'vitest'
+import { resolve } from 'node:path'
+import { erstellePartie, erzeugeZufall, anwendeAktion } from '../src/engine'
+import { beschreibe, istTestdatei, sammleDateien } from './architektur_pruefung'
+import { pruefeSichtZugriff } from './architektur_ki_pruefung'
+import { turnier, spielePartie } from '../src/ki/turnier'
+import { waehleFuer } from '../src/ki/schritt'
+import { entscheiderVon, sichtFuer } from '../src/ki/sicht'
+import { erstelleZufallsKi } from '../src/ki/strategien/zufallsKi'
+import { erstelleSeherKi, type SeherKi } from '../src/ki/strategien/zz_s10_seher'
+import { erstelleKollusionsKi, type KollusionsKi } from '../src/ki/strategien/zz_s11_kollusion'
+import { erstelleHandseherKi, type HandseherKi } from '../src/ki/strategien/zz_s13_handseher'
+import { erstelleSolideKi } from '../src/ki/strategien/zz_k2_bewertung'
+import { startstapel } from '../src/ki/strategien/zz_s04_glob'
+
+const WURZEL = resolve(__dirname, '..')
+const kiDateien = sammleDateien(WURZEL, 'src/ki').filter((p) => !istTestdatei(p))
+
+describe('Prüfer P0.3d it2', () => {
+  it('Befunde je Probedatei', () => {
+    const start = Date.now()
+    const befunde = pruefeSichtZugriff(WURZEL, kiDateien)
+    console.log(`DAUER pruefeSichtZugriff ${Date.now() - start} ms, ${kiDateien.length} Dateien`)
+    for (const datei of kiDateien) {
+      const hier = befunde.filter((b) => b.datei === datei)
+      console.log(`DATEI ${datei}: ${hier.length} Befunde\n${beschreibe(hier)}`)
+    }
+    expect(true).toBe(true)
+  })
+
+  it('Seher: rekonstruiert die Starthände im Turnier', () => {
+    const instanzen: SeherKi[] = []
+    const ergebnis = turnier({
+      teilnehmer: [
+        { name: 'Seher', erstelle: (z) => { const ki = erstelleSeherKi(z); instanzen.push(ki); return ki } },
+        { name: 'Zufall', erstelle: erstelleZufallsKi },
+      ],
+      partien: 4,
+      ersteSaat: 1,
+      erweiterung: false,
+      schrittGrenze: 40,
+    })
+    instanzen.forEach((ki, n) => {
+      const saat = ergebnis.partien[n].saat
+      const echt = erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(saat) }).spieler.map((s) => s.hand.map((k) => k.id))
+      console.log(`SEHER Partie ${n} Saat ${saat}: erkannt Saat ${ki.erkannt?.saat}; Haende gleich: ${JSON.stringify(ki.erkannt?.haende) === JSON.stringify(echt)}; Gegnerhand echt ${JSON.stringify(echt[ergebnis.partien[n].sitze.indexOf(1)])} erkannt ${JSON.stringify(ki.erkannt?.haende[ergebnis.partien[n].sitze.indexOf(1)])}`)
+    })
+    expect(instanzen.length).toBe(4)
+  })
+
+  it('Handseher: findet die Saat aus der eigenen Hand (3 Spieler)', () => {
+    const instanzen: HandseherKi[] = []
+    const ergebnis = turnier({
+      teilnehmer: [
+        { name: 'Handseher', erstelle: () => { const ki = erstelleHandseherKi(); instanzen.push(ki); return ki } },
+        { name: 'Zufall', erstelle: erstelleZufallsKi },
+        { name: 'Zufall2', erstelle: erstelleZufallsKi },
+      ],
+      partien: 3,
+      ersteSaat: 101,
+      erweiterung: false,
+      schrittGrenze: 60,
+    })
+    instanzen.forEach((ki, n) => {
+      const saat = ergebnis.partien[n].saat
+      const echt = erstellePartie({ spielerzahl: 3, erweiterung: false, zufall: erzeugeZufall(saat) }).spieler.map((s) => s.hand.map((k) => k.id))
+      console.log(`HANDSEHER Partie ${n} Saat ${saat} Sitz ${ergebnis.partien[n].sitze.indexOf(0)}: erkannt Saat ${ki.erkannt?.saat}; alle Haende gleich: ${JSON.stringify(ki.erkannt?.haende) === JSON.stringify(echt)}`)
+    })
+  })
+
+  it('Glob: startstapel aus Engine-Interna', () => {
+    const echt = erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(5) })
+    const stapel = startstapel(5)
+    console.log(`GLOB stapel ${stapel.length} Karten; Hand Sitz 1 echt ${echt.spieler[1].hand.map((k) => k.id).join(',')}; aus Stapel ${[1, 3, 5, 7, 9].map((i) => stapel[i]).join(',')}`)
+  })
+
+  it('Kollusion: Instanzen derselben Strategie kennen die fremde Hand', () => {
+    let zustand = erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(7) })
+    const kis: KollusionsKi[] = [erstelleKollusionsKi(erzeugeZufall(11)), erstelleKollusionsKi(erzeugeZufall(12))]
+    let entscheidungen = 0
+    let mitTreffer = 0
+    let treffer = 0
+    let falsch = 0
+    let voll = 0
+    for (let schritt = 0; schritt < 300; schritt++) {
+      const entscheider = entscheiderVon(zustand)
+      if (entscheider === null) break
+      const ki = kis[entscheider.index]
+      const vorher = ki.funde.length
+      const aktion = waehleFuer(zustand, entscheider, ki)
+      for (const fund of ki.funde.slice(vorher)) {
+        const echteHand = new Set(zustand.spieler[fund.fremd].hand.map((k) => k.id))
+        const richtig = fund.karten.filter((id) => echteHand.has(id)).length
+        entscheidungen++
+        treffer += richtig
+        falsch += fund.karten.length - richtig
+        if (richtig > 0) mitTreffer++
+        if (richtig === echteHand.size && richtig > 0) voll++
+      }
+      zustand = anwendeAktion(zustand, aktion).zustand
+    }
+    console.log(`KOLLUSION Entscheidungen mit Fremdwissen ${entscheidungen}, davon mit mind. 1 richtigen Karte ${mitTreffer}, vollständig richtige Hand ${voll}, richtige Karten ${treffer}, veraltete ${falsch}`)
+  })
+
+  it('Sicht-Objekte: keine Referenzen, keine Getter, Prototyp Object', () => {
+    const zustand = erstellePartie({ spielerzahl: 3, erweiterung: true, zufall: erzeugeZufall(3) })
+    const sicht = sichtFuer(zustand, 1)
+    const getter = JSON.stringify(Object.getOwnPropertyDescriptors(sicht)).includes('"get"')
+    sicht.spieler[0].schlangen.push({ id: 'x', karten: [], fusionen: [] })
+    sicht.hand.pop()
+    console.log(`SICHT proto ${Object.getPrototypeOf(sicht) === Object.prototype}; getter ${getter}; Zustand unveraendert ${zustand.spieler[0].schlangen.length === 0 && zustand.spieler[1].hand.length === 5}; fremde Handkarte im JSON der Sicht ${[zustand.spieler[0], zustand.spieler[2]].some((s) => s.hand.some((k) => JSON.stringify(sicht).includes(`"${k.id}"`)))}`)
+  })
+
+  it('Fehlalarm-Probe K2: spielt 20 Partien ohne Fehler', () => {
+    const ergebnis = turnier({ teilnehmer: [{ name: 'Solide', erstelle: erstelleSolideKi }, { name: 'Zufall', erstelle: erstelleZufallsKi }], partien: 20, erweiterung: false })
+    console.log(`K2PROBE Ausgaenge ${JSON.stringify(ergebnis.partien.map((p) => p.ausgang))}; Siege ${ergebnis.siege}`)
+    void spielePartie
+  })
+})
+===== zz_rahmen.test.ts
+// @vitest-environment node
+import { it } from 'vitest'
+import { resolve } from 'node:path'
+import { beschreibe } from './architektur_pruefung'
+import { pruefeSichtZugriff } from './architektur_ki_pruefung'
+
+it('Rahmen-Stichproben', () => {
+  const wurzel = resolve(__dirname, '..')
+  const befunde = pruefeSichtZugriff(wurzel, ['src/ki/sicht.ts', 'src/ki/strategien/strategie.ts', 'src/ki/strategien/zufallsKi.ts', 'src/ki/zz_rahmen.ts'])
+  console.log(`RAHMEN\n${beschreibe(befunde)}`)
+})
+===== zz_rahmen.ts
+import { ermittleAktionen, pruefeInvarianten } from '../engine'
+import type { SpielAktion, Spielzustand } from '../engine'
+import { sichtFuer } from './sicht'
+import type { Ki } from './strategien/strategie'
+import { erstelleZufallsKi } from './strategien/zufallsKi'
+
+export function a(zustand: Spielzustand, ki: Ki): SpielAktion {
+  return ki.waehle(sichtFuer(zustand, 0), ermittleAktionen(zustand))
+}
+export function b(zustand: Spielzustand): Ki {
+  return erstelleZufallsKi(() => zustand.nachziehstapel.length / 200)
+}
+export function c(zustand: Spielzustand, ki: Ki & { merke(wert: unknown): void }): void {
+  ki.merke(zustand)
+}
+export function d(zustand: Spielzustand): string {
+  return pruefeInvarianten(zustand).map((befund) => befund.detail).join()
+}
+export function e(zustand: Spielzustand): unknown {
+  return ermittleAktionen(zustand).map(() => zustand.spieler[1].hand)
+}
+===== zz_s01_returntype.ts
+import type { ermittleAktionen } from '../../engine'
+export type Z = Parameters<typeof ermittleAktionen>[0]
+===== zz_s02_importtype.ts
+export type Z = import('../../engine').Spielzustand
+===== zz_s03_importtype_fremd.ts
+export type Deck = typeof import('../../engine/deck')
+export type Hand = import('../../engine/types').Spieler['hand']
+===== zz_s04_glob.ts
+type Deck = { erstelleSpielkarten(erweiterung: boolean): Array<{ id: string }>; mischeDeck<T>(deck: readonly T[], zufall: () => number): T[] }
+type Zufall = { erzeugeZufall(saat: number): () => number }
+const deck = import.meta.glob<Deck>('../../engine/deck.ts', { eager: true })
+const zufall = import.meta.glob<Zufall>('../../engine/testing/zufall.ts', { eager: true })
+export function startstapel(saat: number): string[] {
+  const d = deck['../../engine/deck.ts']
+  const z = zufall['../../engine/testing/zufall.ts']
+  return d.mischeDeck(d.erstelleSpielkarten(false), z.erzeugeZufall(saat)).map((k) => k.id)
+}
+===== zz_s05_glob_lazy.ts
+const laden = import.meta.glob('../../ui/**/*.tsx')
+export const anzahl = () => Object.keys(laden).length
+===== zz_s06_require_equals.ts
+import zufall = require('../../engine/testing/zufall')
+export const z = zufall.erzeugeZufall(1)
+===== zz_s07_harmlos.ts
+import { fehlertext, werteSchlangen } from '../../engine'
+import type { Sicht } from '../sicht'
+export function proben(sicht: Sicht): string[] {
+  const texte: string[] = []
+  try { werteSchlangen(sicht.spieler[0].schlangen, sicht.erweiterung) } catch (fehler) { texte.push(fehlertext(fehler)) }
+  try { structuredClone(() => 0) } catch (fehler) { texte.push(fehlertext(fehler)) }
+  JSON.parse('{"a":1}', function (this: unknown, _k: string, v: unknown) { texte.push(JSON.stringify(this)); return v })
+  texte.push(new Error('x').stack ?? '')
+  return texte
+}
+export const quelle = (zufall: () => number) => zufall.toString()
+===== zz_s08_typ_umweg.ts
+import type { AktionsErgebnis } from '../../engine'
+type Kiste<T> = { inhalt: T }
+export type K = Kiste<AktionsErgebnis['zustand']>
+===== zz_s10_seher.ts
+import type { Ki } from './strategie'
+
+// Prüfer-Gegenprobe (nicht committen): rekonstruiert aus dem eigenen Zufall die Saat der Partie und daraus alle Starthände.
+const FARBEN: Array<[string, number]> = [['blau', 15], ['rot', 15], ['gelb', 15], ['violett', 12], ['braun', 12], ['gruen', 9]]
+const SONDER: Array<[string, number]> = [
+  ['farbenschutz', 4], ['regenbogenschlange', 4], ['schlangenfrass', 4], ['schlangenblockade', 3],
+  ['farbendieb', 4], ['schlangengrube', 3], ['farbenfusion', 4], ['verdoppler', 4],
+]
+
+function mulberry(saat: number): () => number {
+  let stand = saat >>> 0
+  return () => {
+    stand = (stand + 0x6d2b79f5) | 0
+    let t = Math.imul(stand ^ (stand >>> 15), 1 | stand)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const kiSaat = (saat: number, sitz: number) => (Math.imul(saat, 0x9e3779b1) + sitz + 1) >>> 0
+
+function startHaende(saat: number, spieler: number): string[][] {
+  const stapel = [...FARBEN, ...SONDER].flatMap(([name, anzahl]) => Array.from({ length: anzahl }, (_, i) => `${name}-${String(i + 1).padStart(2, '0')}`))
+  const zufall = mulberry(saat)
+  for (let i = stapel.length - 1; i > 0; i--) {
+    const j = Math.floor(zufall() * (i + 1))
+    const tausch = stapel[i]
+    stapel[i] = stapel[j]
+    stapel[j] = tausch
+  }
+  const haende: string[][] = Array.from({ length: spieler }, () => [])
+  for (let runde = 0; runde < 5; runde++) for (const hand of haende) hand.push(stapel.shift() ?? '')
+  return haende
+}
+
+export interface SeherKi extends Ki {
+  erkannt: { saat: number; haende: string[][] } | null
+}
+
+export function erstelleSeherKi(zufall: () => number): SeherKi {
+  const erster = zufall()
+  const ki: SeherKi = {
+    name: 'Seher',
+    erkannt: null,
+    waehle(sicht, aktionen) {
+      for (let saat = 0; ki.erkannt === null && saat < 1 << 20; saat++) {
+        if (mulberry(kiSaat(saat, sicht.ich))() === erster) ki.erkannt = { saat, haende: startHaende(saat, sicht.spieler.length) }
+      }
+      return aktionen[0]
+    },
+  }
+  return ki
+}
+===== zz_s11_kollusion.ts
+import type { Ki } from './strategie'
+
+// Prüfer-Gegenprobe (nicht committen): zwei Instanzen derselben Strategie teilen ihre Hände über den Modulzustand.
+const geteilt = new Map<number, string[]>()
+
+export interface KollusionsKi extends Ki {
+  funde: Array<{ ich: number; fremd: number; karten: string[] }>
+}
+
+export function erstelleKollusionsKi(zufall: () => number): KollusionsKi {
+  const ki: KollusionsKi = {
+    name: 'Kollusion',
+    funde: [],
+    waehle(sicht, aktionen) {
+      geteilt.set(sicht.ich, sicht.hand.map((karte) => karte.id))
+      for (const [sitz, karten] of geteilt) if (sitz !== sicht.ich) ki.funde.push({ ich: sicht.ich, fremd: sitz, karten: [...karten] })
+      return aktionen[Math.floor(zufall() * aktionen.length)]
+    },
+  }
+  return ki
+}
+===== zz_s12_zeit.ts
+export async function zeitproben(): Promise<unknown[]> {
+  const ergebnisse: unknown[] = []
+  queueMicrotask(() => ergebnisse.push(1))
+  await Promise.resolve()
+  ergebnisse.push(new SharedArrayBuffer(8).byteLength)
+  ergebnisse.push(Atomics.load(new Int32Array(new SharedArrayBuffer(8)), 0))
+  ergebnisse.push(Intl.DateTimeFormat().format())
+  ergebnisse.push(Symbol.for('ki-kanal').description)
+  ergebnisse.push(Error.stackTraceLimit)
+  ergebnisse.push(new WeakMap().has({}))
+  return ergebnisse
+}
+===== zz_s13_handseher.ts
+import type { Ki } from './strategie'
+
+// Prüfer-Gegenprobe (nicht committen): findet die Saat der Partie allein aus der eigenen Starthand, ohne den Zufall der KI.
+const FARBEN: Array<[string, number]> = [['blau', 15], ['rot', 15], ['gelb', 15], ['violett', 12], ['braun', 12], ['gruen', 9]]
+const SONDER: Array<[string, number]> = [
+  ['farbenschutz', 4], ['regenbogenschlange', 4], ['schlangenfrass', 4], ['schlangenblockade', 3],
+  ['farbendieb', 4], ['schlangengrube', 3], ['farbenfusion', 4], ['verdoppler', 4],
+]
+
+function mulberry(saat: number): () => number {
+  let stand = saat >>> 0
+  return () => {
+    stand = (stand + 0x6d2b79f5) | 0
+    let t = Math.imul(stand ^ (stand >>> 15), 1 | stand)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+function startHaende(saat: number, spieler: number): string[][] {
+  const stapel = [...FARBEN, ...SONDER].flatMap(([name, anzahl]) => Array.from({ length: anzahl }, (_, i) => `${name}-${String(i + 1).padStart(2, '0')}`))
+  const zufall = mulberry(saat)
+  for (let i = stapel.length - 1; i > 0; i--) {
+    const j = Math.floor(zufall() * (i + 1))
+    const tausch = stapel[i]
+    stapel[i] = stapel[j]
+    stapel[j] = tausch
+  }
+  const haende: string[][] = Array.from({ length: spieler }, () => [])
+  for (let runde = 0; runde < 5; runde++) for (const hand of haende) hand.push(stapel.shift() ?? '')
+  return haende
+}
+
+export interface HandseherKi extends Ki {
+  erkannt: { saat: number; haende: string[][] } | null
+}
+
+export function erstelleHandseherKi(): HandseherKi {
+  const ki: HandseherKi = {
+    name: 'Handseher',
+    erkannt: null,
+    waehle(sicht, aktionen) {
+      const eigene = sicht.hand.map((karte) => karte.id).join(',')
+      for (let saat = 0; ki.erkannt === null && saat < 1 << 16; saat++) {
+        const haende = startHaende(saat, sicht.spieler.length)
+        if (haende[sicht.ich].join(',') === eigene) ki.erkannt = { saat, haende }
+      }
+      return aktionen[0]
+    },
+  }
+  return ki
+}

@@ -1,0 +1,16 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a321a40cf43920cff
+
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: der Test prüft jede Fabrik der Registry, mindestens die Zufalls-KI 2ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Instanzen einer Strategie teilen kein Wissen (Isolationstest) > P0.3d: zufallsKi entscheidet gleich, ob die Instanzen ein Modul teilen oder nicht (Laufsaat 1310833533) 1396ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion anker (Eigenschaft einer Funktion über Array.of (Angriff der Prüfung)) verhält sich mit geteiltem Modul anders 218ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion map (Funktion der Modulebene über Map.set/get) verhält sich mit geteiltem Modul anders 155ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion newTarget (Klasse der Modulebene über new.target) verhält sich mit geteiltem Modul anders 168ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: Spion ruecksetzer (Kanal, den die Fabrik bei jeder Instanz leert; fällt nur mit getrennten Modulen auf) verhält sich mit geteiltem Modul anders 292ms
+ ✓ tests/strategie_isolation.test.ts > P0.3d: Gegenproben – der Isolationstest erkennt geteiltes Wissen > P0.3d: zwei Ladevorgänge der Registry liefern verschiedene Modulobjekte 6ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  09:30:01
+   Duration  3.32s (transform 546ms, setup 301ms, import 474ms, tests 2.24s, environment 0ms)
+

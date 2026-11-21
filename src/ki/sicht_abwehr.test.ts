@@ -3,7 +3,7 @@ import { anwendeAktion, ermittleAktionen } from '../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import type { Kartenwahl } from '../engine/testing/szenario'
-import { erstelleZufallsKi } from './zufallsKi'
+import { erstelleZufallsKi } from './strategien/zufallsKi'
 import { naechsterKiSchritt } from './schritt'
 import { entscheiderVon, sichtFuer } from './sicht'
 

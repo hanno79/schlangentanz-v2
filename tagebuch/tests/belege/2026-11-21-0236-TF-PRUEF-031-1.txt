@@ -1,0 +1,40 @@
+DAUER pruefeSichtZugriff 1281 ms, 43 Dateien
+LAUFZEIT A01 IIFE: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A02 Array.of eigene Funktion: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A03 call mit sich als this: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A04 forEach thisArg: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A05 Array.of(AKTIONSTYPEN): beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A05b Array.of(werteSchlangen): beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A06 Klassenmethode call(Klasse): beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A07 new.target: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A08 Generator: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A09 static Indexsignatur + super: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 0, davon mit vollständig richtiger verborgener Fremdhand 0; richtige verborgene Fremdkarten 0
+LAUFZEIT A09b static #privat: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A10 JSON schwacher Typ: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A10b Array.of(Math): beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A10c Symbol.for + WeakMap: Fehler Error: Turnier, Partie mit Saat 1000, Schritt 0: Invalid value used as weak map key; Entscheidungen mit Fremdwissen 0, davon mit vollständig richtiger verborgener Fremdhand 0; richtige verborgene Fremdkarten 0
+LAUFZEIT A11 WeakMap im Default-Parameter: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 0, davon mit vollständig richtiger verborgener Fremdhand 0; richtige verborgene Fremdkarten 0
+LAUFZEIT A12 Prototyp der Sicht: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A12b constructor der Sicht: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 513, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A13 Rückgabe der Funktion: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 513, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A14 Map.set/get: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 513, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+LAUFZEIT A02 Array.of, 4 Spieler: beendet/beendet; Entscheidungen mit Fremdwissen 934, davon mit vollständig richtiger verborgener Fremdhand 18; richtige verborgene Fremdkarten 3291
+LAUFZEIT It2 Kollusion (Map auf Modulebene): beendet/beendet/beendet; Entscheidungen mit Fremdwissen 510, davon mit vollständig richtiger verborgener Fremdhand 2; richtige verborgene Fremdkarten 1839
+KENNER Partie 0 Saat 1000: alte Ableitung findet -1; neue Ableitung mit bekannter kiSaat/ersteSaat findet 1000
+KENNER Partie 1 Saat 1001: alte Ableitung findet -1; neue Ableitung mit bekannter kiSaat/ersteSaat findet 1001
+KENNER Partie 2 Saat 1002: alte Ableitung findet -1; neue Ableitung mit bekannter kiSaat/ersteSaat findet 1002
+KENNER Partie 3 Saat 1003: alte Ableitung findet -1; neue Ableitung mit bekannter kiSaat/ersteSaat findet 1003
+KENNER mit falscher kiSaat: -1,-1
+SEHER (It2-Angriff) Partie 0 Saat 5: erkannt nichts
+SEHER (It2-Angriff) Partie 1 Saat 6: erkannt nichts
+SEHER (It2-Angriff) Partie 2 Saat 7: erkannt nichts
+HANDSEHER ersteSaat 1 Partie 0 Saat 1: erkannt 1; alle Hände richtig true
+HANDSEHER ersteSaat 1 Partie 1 Saat 2: erkannt 2; alle Hände richtig true
+HANDSEHER ersteSaat 2000000000 Partie 0 Saat 2000000000: erkannt nichts; alle Hände richtig false
+HANDSEHER ersteSaat 2000000000 Partie 1 Saat 2000000001: erkannt nichts; alle Hände richtig false
+GLOB (It2-Angriff, zur Laufzeit) Hand Sitz 1 echt schlangengrube-01,gelb-12,blau-12,gelb-02,farbendieb-03; aus Stapel schlangengrube-01,gelb-12,blau-12,gelb-02,farbendieb-03
+SAUBER Befunde für echte Dateien plus zz_c01_sauber.ts: 0
+LAUFZEIT C01 Spion (Array.of), 2 Spieler: beendet/beendet/beendet/beendet/beendet; Entscheidungen mit Fremdwissen 853, davon mit vollständig richtiger verborgener Fremdhand 5; richtige verborgene Fremdkarten 3060
+LAUFZEIT C01 Spion (Array.of), 3 Spieler: beendet/beendet/beendet; Entscheidungen mit Fremdwissen 978, davon mit vollständig richtiger verborgener Fremdhand 11; richtige verborgene Fremdkarten 3470
+SAUBER Spion gegen Zufalls-KI (eine Instanz je Partie): Funde 176,172
+K2PROBE Ausgänge [["beendet",30]]; Siege Solide 28, Zufall 6
