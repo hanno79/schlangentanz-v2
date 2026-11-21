@@ -279,16 +279,14 @@ describe('P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unv
 })
 
 describe('P0.3d: die freigegebenen Engine-Funktionen', () => {
-  it('P0.3d: jede freigegebene Engine-Funktion ist ein Export von src/engine/index.ts', () => {
+  const listen: Array<[string, Set<string>]> = [
+    ['ERLAUBTE_ENGINE_EMPFAENGER', ERLAUBTE_ENGINE_EMPFAENGER],
+    ['POSITIVLISTE_ENGINE_FUER_STRATEGIEN', POSITIVLISTE_ENGINE_FUER_STRATEGIEN],
+  ]
+  it.each(listen)('P0.3d: jeder Name in %s ist ein Export von src/engine/index.ts', (name, liste) => {
     const exporte = engineExporte(WURZEL)
 
-    expect([...ERLAUBTE_ENGINE_EMPFAENGER].filter((name) => !exporte.has(name)), 'U5: aus ERLAUBTE_ENGINE_EMPFAENGER löschen oder exportieren').toEqual([])
-  })
-
-  it('P0.3d: jeder Wert der Positivliste für Strategien ist ein Export von src/engine/index.ts', () => {
-    const exporte = engineExporte(WURZEL)
-
-    expect([...POSITIVLISTE_ENGINE_FUER_STRATEGIEN].filter((name) => !exporte.has(name)), 'U5: aus POSITIVLISTE_ENGINE_FUER_STRATEGIEN löschen').toEqual([])
+    expect([...liste].filter((eintrag) => !exporte.has(eintrag)), `U5: aus ${name} löschen oder exportieren`).toEqual([])
   })
 
   // H5: erzeugeZufall liegt unter src/engine/testing, gehört aber zur Schnittstelle (Turnier, Entwicklertisch).

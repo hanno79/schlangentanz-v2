@@ -69,7 +69,7 @@ export function besucheAlle(knoten: ts.Node, besucher: (knoten: ts.Node) => void
 }
 
 /** `import(…)` oder `require(…)`, gleich mit welchem Argument. */
-function istDynamischerImport(knoten: ts.Node): knoten is ts.CallExpression {
+export function istDynamischerImport(knoten: ts.Node): knoten is ts.CallExpression {
   if (!ts.isCallExpression(knoten)) return false
   return knoten.expression.kind === ts.SyntaxKind.ImportKeyword || (ts.isIdentifier(knoten.expression) && knoten.expression.text === 'require')
 }

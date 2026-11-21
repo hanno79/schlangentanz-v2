@@ -4,8 +4,6 @@ import { entscheiderVon, sichtFuer } from './sicht';
 import type { Entscheider } from './sicht';
 import type { Ki } from './strategien/strategie';
 
-export type { Ki };
-
 /*
 Die Schnittstelle zwischen Engine und KI (Plan K1): Zustand hinein, ein
 Schritt heraus. Eine KI (eine Strategie unter `strategien/`) sieht nur die

@@ -17,6 +17,7 @@ import {
   aeusserer,
   besucheAlle,
   geschriebeneZiele,
+  istDynamischerImport,
   istFreierWert,
   ohneHuellen,
   ohneKlammern,
@@ -54,13 +55,20 @@ function istWertausdruck(knoten: ts.Node): knoten is ts.Expression {
   return !inTypposition(knoten)
 }
 
-/** Die Namen der Werte, die ein Import holt; `*` für einen Namensraum, `default` für den Standardexport. */
-function importierteWerte(klausel: ts.ImportClause | undefined): string[] {
+const werteNamen = (elemente: ts.NodeArray<ts.ImportSpecifier | ts.ExportSpecifier>) =>
+  elemente.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text)
+
+/** Die Namen der Werte, die ein Import oder `export … from` holt; `*` für einen Namensraum, `default` für den Standardexport. */
+function geholteWerte(knoten: ts.ImportDeclaration | ts.ExportDeclaration): string[] {
+  if (ts.isExportDeclaration(knoten)) {
+    if (knoten.isTypeOnly) return []
+    return knoten.exportClause && ts.isNamedExports(knoten.exportClause) ? werteNamen(knoten.exportClause.elements) : ['*']
+  }
+  const klausel = knoten.importClause
   if (klausel === undefined) return ['*']
+  if (klausel.isTypeOnly) return []
   const gebunden = klausel.namedBindings
-  const benannt = gebunden && ts.isNamedImports(gebunden)
-    ? gebunden.elements.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text)
-    : gebunden ? ['*'] : []
+  const benannt = gebunden === undefined ? [] : ts.isNamedImports(gebunden) ? werteNamen(gebunden.elements) : ['*']
   return klausel.name ? ['default', ...benannt] : benannt
 }
 
@@ -94,6 +102,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
   const pruefer = programm.getTypeChecker()
   const engineOrdner = `${zuPosix(join(wurzel, 'src', 'engine'))}/`
   const kiPfade = new Set(dateien.map((datei) => zuPosix(join(wurzel, datei))))
+  const strategieErwaehnt = new Map<ts.Symbol, boolean>()
   const typ = (knoten: ts.Node) => pruefer.getTypeAtLocation(knoten)
   const symbolVon = (knoten: ts.Node): ts.Symbol | undefined => {
     const gefunden = pruefer.getSymbolAtLocation(knoten)
@@ -101,7 +110,10 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
   }
 
   const { istVollerZustand, traegtZustand, erwaehntZustand } = zustandstypen(pruefer, engineOrdner)
-  const engineEinstieg = zuPosix(join(wurzel, 'src', 'engine', 'index.ts'))
+  const absolut = (pfad: string) => zuPosix(join(wurzel, pfad))
+  const engineEinstieg = absolut('src/engine/index.ts')
+  const sichtPfad = absolut(SICHT_DATEI)
+  const strategienOrdner = absolut(STRATEGIEN)
 
   /**
    * Ob ein Wert vom Typ `quelle` in einen Platz vom Typ `ziel` darf: der Zustand nur
@@ -249,17 +261,14 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
      * Typen im Rahmen frei; Strategien nur aus sicht.ts, Strategien und der Positivliste.
      */
     const pruefeImport = (knoten: ts.Node) => {
-      if (ts.isCallExpression(knoten) && knoten.expression.kind === ts.SyntaxKind.ImportKeyword) return melde(knoten, 'importiert mit import(); unter src/ki nur statisch')
+      if (istDynamischerImport(knoten)) return melde(knoten, 'importiert mit import() oder require(); unter src/ki nur statisch')
       if (!(ts.isImportDeclaration(knoten) || ts.isExportDeclaration(knoten)) || !knoten.moduleSpecifier) return
       const ziel = pruefer.getSymbolAtLocation(knoten.moduleSpecifier)?.declarations?.find(ts.isSourceFile)
-      const zielpfad = ziel ? zuPosix(ziel.fileName) : `nicht aufgelöst: ${knoten.moduleSpecifier.getText()}`
-      const namen = ts.isImportDeclaration(knoten)
-        ? (knoten.importClause?.isTypeOnly ? [] : importierteWerte(knoten.importClause))
-        : knoten.isTypeOnly ? [] : knoten.exportClause && ts.isNamedExports(knoten.exportClause)
-          ? knoten.exportClause.elements.filter((e) => !e.isTypeOnly).map((e) => (e.propertyName ?? e.name).text) : ['*']
+      const zielpfad = ziel ? zuPosix(ziel.fileName) : ''
+      const namen = geholteWerte(knoten)
       const ausEngine = zielpfad === engineEinstieg
-      if (datei.startsWith(STRATEGIEN)) {
-        const erlaubtesZiel = ausEngine || zielpfad === zuPosix(join(wurzel, SICHT_DATEI)) || (kiPfade.has(zielpfad) && zielpfad.includes(`/${STRATEGIEN}`))
+      if (istStrategie) {
+        const erlaubtesZiel = ausEngine || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner))
         if (!erlaubtesZiel) return melde(knoten, `Strategie importiert aus ${knoten.moduleSpecifier.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
         const fremd = ausEngine ? namen.filter((name) => !POSITIVLISTE_ENGINE_FUER_STRATEGIEN.has(name)) : []
         if (fremd.length > 0) melde(knoten, `Strategie importiert ${fremd.join(', ')} aus der Engine; nicht auf POSITIVLISTE_ENGINE_FUER_STRATEGIEN`)
@@ -275,11 +284,17 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       if (!ts.isIdentifier(knoten)) return
       const symbol = symbolVon(knoten)
       if (symbol === undefined) return
-      const typen = [
-        ...(symbol.flags & (ts.SymbolFlags.Type | ts.SymbolFlags.TypeParameter) ? [pruefer.getDeclaredTypeOfSymbol(symbol)] : []),
-        ...(symbol.flags & ts.SymbolFlags.Value ? [pruefer.getTypeOfSymbolAtLocation(symbol, knoten)] : []),
-      ]
-      if (typen.some(erwaehntZustand)) melde(knoten, `Strategie erwähnt ${VOLLER_ZUSTAND_TYP}: ${knoten.text}`)
+      // Je Symbol einmal: Einengen an einer Stelle macht den Typ nur kleiner.
+      let erwaehnt = strategieErwaehnt.get(symbol)
+      if (erwaehnt === undefined) {
+        const typen = [
+          ...(symbol.flags & (ts.SymbolFlags.Type | ts.SymbolFlags.TypeParameter) ? [pruefer.getDeclaredTypeOfSymbol(symbol)] : []),
+          ...(symbol.flags & ts.SymbolFlags.Value ? [pruefer.getTypeOfSymbol(symbol)] : []),
+        ]
+        erwaehnt = typen.some(erwaehntZustand)
+        strategieErwaehnt.set(symbol, erwaehnt)
+      }
+      if (erwaehnt) melde(knoten, `Strategie erwähnt ${VOLLER_ZUSTAND_TYP}: ${knoten.text}`)
     }
 
     /** H1: kein Weg zu einem Prototyp; globale Objekte nur aufrufen oder an ihnen lesen, nie weitergeben. */
@@ -326,13 +341,14 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
     }
 
+    const istStrategie = datei.startsWith(STRATEGIEN)
     besucheAlle(quelle, (knoten) => {
       for (const ziel of geschriebeneZiele(knoten)) pruefeSchreiben(ziel)
       pruefeGlobales(knoten)
       pruefeZufallUndZeit(knoten)
       pruefeTypen(knoten)
       pruefeImport(knoten)
-      if (datei.startsWith(STRATEGIEN)) pruefeStrategie(knoten)
+      if (istStrategie) pruefeStrategie(knoten)
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })
   }

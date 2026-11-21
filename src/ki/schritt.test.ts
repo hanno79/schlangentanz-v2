@@ -3,7 +3,7 @@ import { ermittleAktionen, erzeugeZufall, pruefeAktion } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import { entscheidetKi, kiWahl, naechsterKiSchritt } from './schritt'
-import type { Ki } from './schritt'
+import type { Ki } from './strategien/strategie'
 import { sichtFuer } from './sicht'
 import type { Sicht } from './sicht'
 

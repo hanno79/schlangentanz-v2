@@ -5,10 +5,16 @@ import ts from 'typescript'
 import { zuPosix } from '../scripts/pruefung/quelldateien.mjs'
 import { VOLLER_ZUSTAND_TYP } from './architektur_pruefung'
 
+const ausBibliothekGemerkt = new WeakMap<ts.Symbol, boolean>()
 /** Ob ein Symbol nur in Bibliotheksdateien (lib.*.d.ts, @types) deklariert ist. */
 export function ausBibliothek(symbol: ts.Symbol | undefined): boolean {
-  const deklarationen = symbol?.declarations ?? []
-  return deklarationen.length > 0 && deklarationen.every((d) => zuPosix(d.getSourceFile().fileName).includes('/node_modules/'))
+  if (symbol === undefined) return false
+  const bekannt = ausBibliothekGemerkt.get(symbol)
+  if (bekannt !== undefined) return bekannt
+  const deklarationen = symbol.declarations ?? []
+  const ergebnis = deklarationen.length > 0 && deklarationen.every((d) => zuPosix(d.getSourceFile().fileName).includes('/node_modules/'))
+  ausBibliothekGemerkt.set(symbol, ergebnis)
+  return ergebnis
 }
 
 export function zustandstypen(pruefer: ts.TypeChecker, engineOrdner: string) {
@@ -68,6 +74,8 @@ export function zustandstypen(pruefer: ts.TypeChecker, engineOrdner: string) {
       }
       const ergebnis = suche(geprueft)
       gemerkt.set(geprueft, ergebnis)
+      // Nichts gefunden heisst: auch kein besuchter Teiltyp enthält den Zustand.
+      if (!ergebnis) for (const teil of besucht) gemerkt.set(teil, false)
       return ergebnis
     }
   }

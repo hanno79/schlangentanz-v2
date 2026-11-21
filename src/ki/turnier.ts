@@ -1,7 +1,7 @@
 import { SPIELER_MAX, SPIELER_MIN, anwendeAktion, berechneEndwertung, erstellePartie, erzeugeZufall, fehlertext, pruefeInvarianten } from '../engine';
 import type { SpielAktion, Spielzustand } from '../engine';
 import { waehleFuer } from './schritt';
-import type { Ki } from './schritt';
+import type { Ki } from './strategien/strategie';
 import { entscheiderVon, spielerzahl } from './sicht';
 
 /*
