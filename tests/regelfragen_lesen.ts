@@ -83,6 +83,22 @@ export function moeglichkeiten(block: string): string[] {
   return [...moeglichkeitenMitText(block).keys()]
 }
 
+/**
+ * Buchstaben der Möglichkeiten je Teil der Frage, in der Reihenfolge des Blocks.
+ * Ein Teil beginnt mit einer Zeile „Teil 1, …“; ohne solche Zeilen hat die Frage einen Teil.
+ */
+export function teileDerFrage(block: string): string[][] {
+  const teile: string[][] = []
+  for (const zeile of block.split('\n')) {
+    if (/^Teil \d+,/.test(zeile)) teile.push([])
+    const moeglichkeit = /^- \*\*([a-z])\)\*\* \S/.exec(zeile)
+    if (!moeglichkeit) continue
+    if (teile.length === 0) teile.push([])
+    teile[teile.length - 1].push(moeglichkeit[1])
+  }
+  return teile
+}
+
 /** Text der Möglichkeit ohne den Buchstaben; leer, wenn es sie nicht gibt. */
 export function moeglichkeitText(block: string, buchstabe: string): string {
   return moeglichkeitenMitText(block).get(buchstabe) ?? ''

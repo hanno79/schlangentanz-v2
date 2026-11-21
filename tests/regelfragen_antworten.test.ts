@@ -16,7 +16,9 @@ import {
   spec,
   teilD,
   teilDTabelle,
+  teileDerFrage,
 } from './regelfragen_lesen'
+import { DATUM_G, ERWARTET_G, type Teil } from './regelfragen_sammelantwort'
 
 // Stand der Antworten des Autors. Die Form jeder Antwort prüft
 // tests/regelfragen.test.ts; hier steht, was der Autor wann geantwortet hat.
@@ -25,19 +27,15 @@ import {
 const DATUM_F = '13.11.2026'
 /** Am 20.11.2026 hat der Autor G9 beantwortet. */
 const DATUM_G9 = '20.11.2026'
-/** Am 21.11.2026 hat der Autor alle übrigen Fragen G mit einer Sammelantwort beantwortet. */
-const DATUM_G = '21.11.2026'
-/** Sammelantwort vom 21.11.2026 zu G1–G8 und G10–G23, wörtlich. */
-const SAMMELANTWORT_G = ['„ja zu deinen vorschlägen.“']
 
 /** `datum` fehlt bei den Antworten vom 13.11.2026 (`DATUM_F`). */
-type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string }
+type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string; teile?: Record<string, Teil> }
 
 /**
  * Was der Autor gewählt hat, abgeleitet aus seinen Worten, nicht aus den Dateien:
  * „Alle andere Vorschläge sind passend“ (also der Vorschlag), F8 frei, F11 „mindestens
  * aus 3 Farbkarten … sonst ok“ mit der Bestätigung „Ja, genau so“, F8a „Ja, ohne Wirkung“, G9 „Ja, als Gruppe“ (Vorschlag a, 20.11.2026),
- * die übrigen Fragen G „ja zu deinen vorschlägen.“ (also je der Vorschlag, 21.11.2026).
+ * die übrigen Fragen G „ja zu deinen vorschlägen.“ (also je der Vorschlag, 21.11.2026; tests/regelfragen_sammelantwort.ts).
  * `kern` sind die tragenden Aussagen: Sie stehen in REGELFRAGEN.md (in der Antwort oder
  * in der gewählten Möglichkeit) und im Eintrag in Teil D; `verboten` steht an keiner
  * dieser Stellen. `wortlaut` zitiert den Autor in der Antwort; dass jedes Zitat auch in
@@ -100,94 +98,8 @@ const ERWARTET: Record<string, Erwartung> = {
     wortlaut: ['„Ja, als Gruppe“'],
     datum: DATUM_G9,
   },
-  // P0.5e: `verboten` sind je Teil die Kernsätze der nicht gewählten Möglichkeiten (Gegenprobe).
-  G1: sammelantwort('a', ['keine Schlangenhäutung, keinen Schlangenkorb', 'genau einen Schalter'], ['einzeln wählbar']),
-  G2: sammelantwort('a', ['sobald sie einmal in einem eigenen Zug erfüllt war', 'nicht mehr zerstören'], ['bei der Wertung am Spielende erfüllt']),
-  G3: sammelantwort(
-    'a',
-    ['aus der Hand gespielt hat', 'auch ein Farbenschutz zur Abwehr', 'eine abgewehrte und der Schlangenkorb'],
-    ['ausserhalb des Zuges zählt nicht', 'deren Wirkung eingetreten ist'],
-  ),
-  G4: sammelantwort(
-    'a, c',
-    ['selbst in einer eigenen Schlange', 'aus derselben Häutung entstehen'],
-    ['auch wenn ein Gegner sie gespielt hat', 'aus zwei Häutungen stammen'],
-  ),
-  G5: sammelantwort(
-    'b, c',
-    ['zwei Schlangen mit je mindestens vier Farben', 'über alle vorhandenen Schlangen'],
-    ['eine Schlange genügt:', 'mit einer Schlange ist die Aufgabe nie erfüllt'],
-  ),
-  G6: sammelantwort(
-    'b, c',
-    ['ungerade', 'die mittlere Karte ist die Achse', 'Joker zählen als die passende Farbe', 'ist die Aufgabe nicht erfüllt'],
-    ['muss gerade sein', 'werden übersprungen', 'auch ein Joker, verhindert'],
-  ),
-  G7: sammelantwort('a', ['mindestens zweimal direkt hintereinander', 'AABCAABC'], ['genau einmal vor', 'durch andere Karten getrennt']),
-  G8: sammelantwort(
-    'b, c',
-    ['irgendwo in derselben Schlange', 'zählen Joker mit', 'eine Farbenfusion zählt als eine Karte'],
-    ['müssen nebeneinander liegen', 'nur echte gelbe'],
-  ),
-  G10: sammelantwort(
-    'a, c, e',
-    ['zählt zu den 5 Handkarten', 'ist die Sonderkarte des Zuges', 'die vollständige Liste'],
-    ['sofort durch eine neue Karte ersetzt', 'kommt zusätzlich', 'es gibt weitere Boni'],
-  ),
-  G11: sammelantwort(
-    'a, c, e',
-    ['zusätzlich zu den Karten des Zuges, in beliebiger Art', 'nicht mit Wirkung gespielt', 'was da ist', 'die letzte Karte zieht, spielt seinen Zug zu Ende'],
-    ['zusammen höchstens eine Farbkarte', 'gibt einen zweiten Zug', 'nicht wählbar'],
-  ),
-  G12: sammelantwort(
-    'a, d',
-    ['nur Farbkarten gegen Farbkarten', 'die getauschte Karte kommt auf die Hand'],
-    ['beliebige Karten in beide Richtungen', 'auf den eigenen Ablagestapel'],
-  ),
-  G13: sammelantwort(
-    'a, c, e',
-    ['auch eine Schlangenblockade', 'abwehrbar mit Farbenschutz', 'des Spielers, der den Korb nutzt'],
-    ['jede ausser der Schlangenblockade', 'nicht abwehrbar', 'dem die Schlange gehört'],
-  ),
-  G14: sammelantwort(
-    'a, c, f, g',
-    ['dieselben drei wie bei der Comeback-Karte', 'auch zweimal dieselbe Art', 'nicht mit anderen zugerweiternden Effekten kombinierbar'],
-    ['zwei Fusionen in einem Zug sind möglich', 'gibt einen zweiten Zug', 'zusammen höchstens eine weitere'],
-  ),
-  G15: sammelantwort('a', ['schliessen sich gegenseitig aus', 'Risiko-Karten zählen nicht dazu'], ['dürfen zusammen genutzt werden', 'zählt als zugerweiternd']),
-  G16: sammelantwort(
-    'a, d, f',
-    ['jede Karte in der Schlange zählt eins', 'samt ihren zwei Karten zählt eins', 'die Länge null', 'irgendwann in diesem Zug'],
-    ['zählt drei', 'nur Farbkarten zählen', 'nicht einsetzbar', 'vor der ersten Karte'],
-  ),
-  G17: sammelantwort(
-    'a, c, e, g',
-    ['nicht wählbar', 'was da ist', 'die letzte Karte zieht, spielt seinen Zug zu Ende', 'weil nichts gezogen werden kann', 'wie A8.1 es für alle Zusatzaktionen sagt'],
-    ['zieht trotzdem drei', 'blosses Abwerfen', 'nur einmal je Zug'],
-  ),
-  G18: sammelantwort('a', ['samt zweitem Zug nach einem Verdoppler', 'keine zweite Risiko-Karte'], ['heisst Teilzug', 'weitere Risiko-Karte erlaubt']),
-  G19: sammelantwort(
-    'a, c, e, g',
-    ['auf den eigenen Ablagestapel', 'es ist ein Tausch', 'bei Erfolg auf die eigene Hand, bei Misserfolg auf den eigenen Ablagestapel'],
-    ['in beiden Fällen auf den eigenen Ablagestapel', 'an den begünstigten Gegner', 'die Hand wird kleiner'],
-  ),
-  G20: sammelantwort(
-    'a, c, e, g',
-    ['benennt der Spieler eine Farbkarte seiner Hand', 'zwischen der geplanten Farbkarte und der obersten Stapelkarte', 'nicht wählbar', 'Ende einer eigenen Schlange'],
-    ['der Spieler am Zug wählt', 'jedes Ende jeder Schlange', 'erst bei Misserfolg wählt'],
-  ),
-  G21: sammelantwort('a, d', ['jede Farbkarte der Hand', 'davor oder dahinter'], ['auch eine Sonderkarte wie die Regenbogenschlange', 'immer direkt dahinter', 'mit demselben Punktewert wie die ersetzte']),
-  G22: sammelantwort(
-    'a, c, e',
-    ['die erste der zwei Karten', 'bleibt nur die andere Möglichkeit', 'liegen nie auf einem Ablagestapel'],
-    ['zieht zwei weitere', 'nicht wählbar', 'eine Sperre'],
-  ),
-  G23: sammelantwort('a, c', ['nicht spielbar, weil keine Karte aufgedeckt werden kann', 'gleich wer die letzte Karte nimmt'], ['gilt sie als gescheitert', 'zählt die Schlussrunde von ihm aus']),
-}
-
-/** Erwartung zu einer Frage, die die Sammelantwort vom 21.11.2026 beantwortet. */
-function sammelantwort(wahl: string, kern: string[], verboten: string[]): Erwartung {
-  return { wahl, kern, verboten, wortlaut: SAMMELANTWORT_G, datum: DATUM_G }
+  // Sammelantwort vom 21.11.2026, je Teil der Frage (P0.5e).
+  ...ERWARTET_G,
 }
 
 /** Kleinbuchstaben, Leerraum zusammengefasst: Kernaussagen gelten auch am Satzanfang. */
@@ -224,6 +136,42 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
       }
       for (const zitat of wortlaut) {
         expect(normalisiert(antwort), `${nr}: Wortlaut des Autors fehlt`).toContain(zitat)
+      }
+    })
+  }
+
+  for (const [nr, { teile }] of Object.entries(ERWARTET)) {
+    if (!teile) continue
+    it(`P0.5e: ${nr}: jeder gewählte Teil hat eine eigene Kernaussage, jede andere Möglichkeit desselben Teils eine Gegenprobe`, () => {
+      const block = bloecke.get(nr) ?? ''
+      const eintrag = vergleichbar(teilD.get(nr)?.antwort ?? '')
+      const gruppen = teileDerFrage(block)
+      const gewaehlteBuchstaben = Object.keys(teile)
+      expect(
+        gewaehlteBuchstaben.map((buchstabe) => gruppen.findIndex((gruppe) => gruppe.includes(buchstabe))),
+        `${nr}: je Teil der Frage genau eine gewählte Möglichkeit, in der Reihenfolge der Teile`,
+      ).toEqual(gruppen.map((_, i) => i))
+
+      for (const [buchstabe, { kern, verboten }] of Object.entries(teile)) {
+        const andereTeile = gewaehlteBuchstaben.filter((b) => b !== buchstabe).map((b) => vergleichbar(moeglichkeitText(block, b)))
+        const gruppe = gruppen.find((g) => g.includes(buchstabe)) ?? []
+        expect(kern.length, `${nr} ${buchstabe}: keine Kernaussage`).toBeGreaterThan(0)
+        for (const aussage of kern.map(vergleichbar)) {
+          expect(vergleichbar(moeglichkeitText(block, buchstabe)), `${nr} ${buchstabe}: Kernaussage stammt nicht aus der Möglichkeit`).toContain(aussage)
+          for (const text of andereTeile) {
+            expect(text, `${nr} ${buchstabe}: Kernaussage „${aussage}“ passt auch zu einem anderen Teil`).not.toContain(aussage)
+          }
+          expect(eintrag.split(aussage).length - 1, `${nr} ${buchstabe}: Kernaussage „${aussage}“ steht nicht genau einmal in Teil D`).toBe(1)
+        }
+        expect(Object.keys(verboten), `${nr} ${buchstabe}: Gegenproben für genau die anderen Möglichkeiten dieses Teils`).toEqual(
+          gruppe.filter((b) => b !== buchstabe),
+        )
+        for (const [andere, saetze] of Object.entries(verboten)) {
+          expect(saetze.length, `${nr} ${andere}: keine Gegenprobe`).toBeGreaterThan(0)
+          for (const satz of saetze.map(vergleichbar)) {
+            expect(vergleichbar(moeglichkeitText(block, andere)), `${nr} ${andere}: Gegenprobe „${satz}“ stammt nicht aus der Möglichkeit`).toContain(satz)
+          }
+        }
       }
     })
   }
