@@ -55,11 +55,14 @@ function fusionen(zustand: Spielzustand): FusionLegenAktion[] {
   return aktionen(zustand, 'FusionLegen') as FusionLegenAktion[]
 }
 
-/** Die aufgezählte Fusion auf die Karten an den Stellen `links` und `links + 1` dieser Schlange. */
+/** Die aufgezählte Fusion mit der ersten Farbenfusion der Hand auf die Karten an den Stellen `links` und `links + 1` dieser Schlange. */
 function fusionAuf(zustand: Spielzustand, besitzer: number, links: number, nr = 0): FusionLegenAktion {
   const schlange = zustand.spieler[besitzer].schlangen[nr]
   const erwartet = [schlange.karten[links].id, schlange.karten[links + 1].id]
-  const passend = fusionen(zustand).filter((aktion) => aktion.schlangenId === schlange.id && aktion.kartenIds.join() === erwartet.join())
+  const karteId = fusionskarte(zustand, zustand.zug.spielerIndex)
+  const passend = fusionen(zustand).filter(
+    (aktion) => aktion.karteId === karteId && aktion.schlangenId === schlange.id && aktion.kartenIds.join() === erwartet.join(),
+  )
   expect(passend, `FusionLegen auf ${erwartet.join(', ')} in ${schlange.id} ist nicht aufgezählt`).toHaveLength(1)
   return passend[0]
 }

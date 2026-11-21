@@ -98,15 +98,21 @@ describe('E7 Grenzfall: die Fusion zerstört eine gegnerische Dreiergruppe', () 
   })
 })
 
-/** Was die Oberfläche von den Schlangen zeigt: Karten von vorn nach hinten und die Karten unter jeder Fusion. */
-type Schlangenlage = Record<string, { besitzer: number; karten: string[]; unter: Record<string, string[]> }>
+/**
+ * Was die Oberfläche von den Schlangen zeigt: Karten von vorn nach hinten und
+ * die Karten unter jeder Fusion; dazu, welche Aktion gerade angesagt ist (A6).
+ */
+interface Schlangenlage {
+  schlangen: Record<string, { besitzer: number; karten: string[]; unter: Record<string, string[]> }>
+  angesagt: string | null
+}
 
 function lageVon(zustand: Spielzustand): Schlangenlage {
-  const lage: Schlangenlage = {}
+  const lage: Schlangenlage = { schlangen: {}, angesagt: zustand.schwebend?.aktion.typ ?? null }
   zustand.spieler.forEach((spieler, besitzer) => {
     for (const schlange of spieler.schlangen) {
       const unter = Object.fromEntries(schlange.fusionen.map((fusion) => [fusion.karteId, fusion.unter.map((karte) => karte.id)]))
-      lage[schlange.id] = { besitzer, karten: schlange.karten.map((karte) => karte.id), unter }
+      lage.schlangen[schlange.id] = { besitzer, karten: schlange.karten.map((karte) => karte.id), unter }
     }
   })
   return lage
@@ -116,18 +122,19 @@ function lageVon(zustand: Spielzustand): Schlangenlage {
  * Rechnet die Schlangen aus der alten Lage und den Ereignissen nach. Eine Fusion
  * liegt an der Stelle, die `nach` nennt, auf den beiden Karten, die vorher dort
  * und rechts daneben lagen (A7.7); jede andere Karte wird an dieser Stelle
- * eingefügt. Welche Karte angesagt war, sagt `KarteAngesagt`.
+ * eingefügt. Welche Aktion angesagt ist, sagt `KarteAngesagt`, oft einen
+ * Schritt vor der Entscheidung.
  */
 function spieleNach(alt: Schlangenlage, ereignisse: Ereignis[]): Schlangenlage {
   const lage = structuredClone(alt)
-  const angesagt = new Map<string, string>()
   for (const ereignis of ereignisse) {
-    if (ereignis.typ === 'KarteAngesagt') angesagt.set(ereignis.karteId, ereignis.ansage.typ)
+    if (ereignis.typ === 'KarteAngesagt') lage.angesagt = ereignis.ansage.typ
     if (ereignis.typ !== 'KarteGespielt' && ereignis.typ !== 'AnsageEntschieden') continue
+    const typ = ereignis.typ === 'KarteGespielt' ? ereignis.aktion : lage.angesagt
+    if (ereignis.typ === 'AnsageEntschieden') lage.angesagt = null
     const { nach, karteId } = ereignis
     if (nach.ort !== 'Schlange') continue
-    const schlange = (lage[nach.schlangenId] ??= { besitzer: nach.spielerIndex, karten: [], unter: {} })
-    const typ = ereignis.typ === 'KarteGespielt' ? ereignis.aktion : angesagt.get(karteId)
+    const schlange = (lage.schlangen[nach.schlangenId] ??= { besitzer: nach.spielerIndex, karten: [], unter: {} })
     if (typ === 'FusionLegen') schlange.unter[karteId] = schlange.karten.splice(nach.position, 2, karteId)
     else schlange.karten.splice(nach.position, 0, karteId)
   }
