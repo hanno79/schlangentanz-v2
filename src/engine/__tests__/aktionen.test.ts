@@ -87,8 +87,9 @@ describe('A1/A7: das Kartenregister', () => {
     }
   })
 
-  // Die Farbkarte setzt E2 um (A5), den Verdoppler E3 (A7.8), die übrigen Karten ihre Tasks E4 bis E9 und X6.
-  it.each(ARTEN.filter(([kartenart]) => kartenart !== 'Farbkarte' && kartenart !== 'Verdoppler'))('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
+  // Die Farbkarte setzt E2 um (A5), den Verdoppler E3 (A7.8), Farbenschutz und Schlangengrube E4 (A7.2, A7.6), die übrigen Karten ihre Tasks E5 bis E9 und X6.
+  const UMGESETZT = ['Farbkarte', 'Verdoppler', 'Farbenschutz', 'Schlangengrube']
+  it.each(ARTEN.filter(([kartenart]) => !UMGESETZT.includes(kartenart)))('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
     const zustand = start()
     const definition = KARTENREGISTER[kartenart]
     const karte = zustand.spieler[0].hand[0]
@@ -162,7 +163,7 @@ describe('A5/B2: Aufzählen, Prüfen und Anwenden', () => {
       .zustand()
     expect(grund(zustand, { typ: 'ZugBeenden', spielerId: 'spieler-1' })).toMatch(/Schlangengrube schwebt/)
     expect(grund(zustand, { typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: null })).toMatch(/entscheidet gerade nicht/)
-    expect(grund(zustand, { typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: null })).toMatch(/kommt mit E4/)
+    expect(pruefeAktion(zustand, { typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: null }), 'A6: der Gefragte darf durchlassen').toEqual({ erlaubt: true })
     expect(grund(start(), { typ: 'Reagieren', spielerId: 'spieler-1', farbenschutzId: null })).toMatch(/nichts abzuwehren/)
   })
 

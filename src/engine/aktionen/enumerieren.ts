@@ -1,4 +1,5 @@
 import { definitionFuer } from '../karten/register';
+import { reaktionsAktionen } from '../reaktion';
 import type { Spielkarte, Spielzustand } from '../types';
 import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
 import { ermittleEntscheider, ohneZielAblegbar } from './pruefen';
@@ -10,11 +11,13 @@ import type { SpielAktion, UeberhandAbwerfenAktion } from './typen';
  *
  * Reihenfolge: Karten mit Wirkung in der Reihenfolge der Hand, dann das
  * wirkungslose Ablegen (D13, D25), zuletzt „Zug beenden“. Am Zugende mit mehr
- * als 5 Karten nur das Abwerfen (A5). Die Reaktionen bringt E4.
+ * als 5 Karten nur das Abwerfen (A5). Schwebt eine angesagte Karte, nur die
+ * Reaktionen des Gefragten: jeder seiner Farbenschutz, dann durchlassen (A6).
  */
 export function ermittleAktionen(zustand: Spielzustand): SpielAktion[] {
   const entscheider = ermittleEntscheider(zustand);
-  if (entscheider === null || zustand.schwebend !== null) return [];
+  if (entscheider === null) return [];
+  if (zustand.schwebend !== null) return reaktionsAktionen(zustand, entscheider);
   const spieler = zustand.spieler[entscheider];
   if (zustand.zug.abschnitt === 'Abwerfen') return abwurfAktionen(spieler.id, spieler.hand, ueberzaehligeKarten(spieler));
 

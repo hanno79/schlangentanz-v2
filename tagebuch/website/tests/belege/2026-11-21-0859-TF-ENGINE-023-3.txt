@@ -1,0 +1,458 @@
+O1 eigen: Angreifer selbst gefragt: Angreifer steht vorne in der Liste der Betroffenen
+Datei src/engine/reaktion.ts
+ALT: return mitspielerImUhrzeigersinn(zustand, spielerIndexVon(zustand, aktion.spielerId)).filter((index) => genannt.has(index));
+NEU: return [spielerIndexVon(zustand, aktion.spielerId), ...mitspielerImUhrzeigersinn(zustand, spielerIndexVon(zustand, aktion.spielerId)).filter((index) => genannt.has(index))];
+Exit 1
+Test Files  7 failed | 20 passed (27) | Tests  67 failed | 411 passed (478)
+  × A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht 39ms
+  × B2/A6 Beispiel 1: nach der Ansage lässt sich das Ziel nicht mehr ändern, auch nicht nach der Abwehr 6ms
+  × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 10ms
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 5ms
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 4ms
+  × D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt 7ms
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 5ms
+  × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 6ms
+  × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × A6/A7.8: eine Sonderkarte ohne Betroffene schwebt nicht; niemand wird gefragt 4ms
+  × A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion 4ms
+  × A6: wer die Karte angesagt hat, ist nicht betroffen und darf auf sie nicht reagieren 3ms
+  × E4 Kriterium 6: vor der Ansage der Angreifer, dann jeder Gefragte, danach wieder der Angreifer; aufgezählt wird nur für ihn 5ms
+  × A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf 3ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 3ms
+  × E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren 3ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf 3ms
+  × E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand 3ms
+  × B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 4ms
+  × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 20ms
+  × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 5ms
+  × A7.6: wer Farbenschutz hält, darf die Grube auch durchlassen; dann setzt er aus und behält den Farbenschutz 4ms
+  × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 4ms
+  × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 5ms
+  × D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren 4ms
+  × D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr 4ms
+  × D21: er darf sich in der Schlussrunde mit Farbenschutz verteidigen und spielt dann seinen letzten Zug 4ms
+  × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 6ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 4ms
+  × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 5ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden 3ms
+  × A7.8: der Verdoppler zählt als Sonderkarte des Zuges: danach keine weitere Sonderkarte, aber noch eine Farbkarte 36ms
+  × A7.8: höchstens eine Farbkarte nach dem Verdoppler; danach bleibt nur „Zug beenden“ 5ms
+  × A7.8: die Reihenfolge ist frei: die Farbkarte darf vor dem Verdoppler kommen 6ms
+  × A7.8/D12: der Verdoppler allein genügt als Karte des ersten Zuges 4ms
+  × A6/A7.8: der gespielte Verdoppler kommt auf den eigenen Ablagestapel; das Ereignis nennt ihn und den Ort 5ms
+  × A7.8: beim Beenden des ersten Zuges füllt er auf 5 auf und spielt sofort einen zweiten Zug; das Ereignis nennt Teilzug 2 3ms
+  × A7.8/D12: der zweite Zug läuft wie ein normaler Zug: ohne Karte kein „Zug beenden“ 3ms
+  × A7.8/D12: im zweiten Zug höchstens eine Farbkarte und eine Sonderkarte, in beliebiger Reihenfolge 3ms
+  × A7.8/A5: nach dem zweiten Zug füllt er auf 5 auf, dann beginnt der Nächste seinen ersten Zug 3ms
+  × A7.8 Beispiel: Verdoppler und Rot, auffüllen, dann Blau und Schlangenfrass: neben dem Verdoppler drei Karten 3ms
+  × D11: im Zug danach darf der Nächste selbst wieder einen Verdoppler mit Wirkung spielen 2ms
+  × A7.8/D11: im zweiten Zug wird ein Verdoppler mit Wirkung nicht angeboten und mit Grund abgelehnt 3ms
+  × D23: im zweiten Zug darf der Verdoppler wirkungslos auf den eigenen Ablagestapel; er zählt als Sonderkarte, ein weiterer Zug folgt nicht 3ms
+  × D23: wer im zweiten Zug nur Verdoppler hält, legt einen wirkungslos ab; „Zug beenden“ erst danach, ein dritter Zug folgt nicht 4ms
+  × A6: auch wer Farbenschutz hält, wird nicht gefragt; es entscheidet weiter der Spieler am Zug 3ms
+  × A10/A7.8: wird der Stapel beim Auffüllen zwischen den Zügen leer, spielt er den zweiten Zug noch; danach hat jeder andere genau einen letzten Zug 3ms
+  × A10/A7.8: Verdoppler in der Schlussrunde: der zweite Zug folgt ohne Auffüllen, beide zusammen sind sein letzter Zug 3ms
+  × A10/A7.8: leere Hand im zweiten Zug: angeboten ist nur „Zug beenden“, und es ist erlaubt 3ms
+  × A10/A7.8: in der Schlussrunde mit dem Verdoppler als einziger Karte folgt ein zweiter Zug mit leerer Hand 3ms
+  × A7.8: Verdoppler als einzige Handkarte: allein gespielt, aufgefüllt auf 5, dann der zweite Zug 3ms
+  × A5/A7.8: hält er nach dem Auffüllen des ersten Zuges mehr als 5 Karten, wirft er erst ab, dann folgt der zweite Zug 2ms
+  × B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 25ms
+  × D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter 8ms
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 12ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 3ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 3ms
+  × K1: 200 Partien mit 2, 3 und 4 Spielern, mit und ohne Erweiterung, enden alle ohne Invariantenverletzung 2227ms
+  × D22: die Sieger sind die Teilnehmer mit der höchsten Endwertung; der Verlauf spielt die Partie genau nach 25ms
+  × K1: dasselbe Turnier zweimal ergibt Zug für Zug dasselbe; eine andere Saat einen anderen Verlauf 28ms
+  × K1: eine Partie, die nicht endet, stösst an die Schrittgrenze 3ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 5338ms
+
+O2 eigen: Wirkung vor allen Entscheidungen: nach der ersten Entscheidung wirkt die Karte
+Datei src/engine/reaktion.ts
+ALT:   if (naechster === undefined) return loeseAuf(zustand, ereignisse);
+NEU:   if (true) return loeseAuf(zustand, ereignisse);
+Exit 1
+Test Files  1 failed | 26 passed (27) | Tests  6 failed | 472 passed (478)
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 11ms
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 10ms
+  × D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt 5ms
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 5ms
+  × E4 Kriterium 6: vor der Ansage der Angreifer, dann jeder Gefragte, danach wieder der Angreifer; aufgezählt wird nur für ihn 4ms
+  × E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand 8ms
+
+O3 eigen: Grube sofort auf den Ablagestapel (C18 alt): wirke legt die Grube gleich auf den eigenen Stapel
+Datei src/engine/karten/schlangengrube.ts
+ALT:     zustand.ausliegendeGruben.push({ karte, gespieltVon: spielerIndexVon(zustand, aktion.spielerId), vor: zielIndex(zustand, aktion) });
+NEU:     zustand.spieler[spielerIndexVon(zustand, aktion.spielerId)].ablagestapel.push(karte);
+Exit 1
+Test Files  5 failed | 22 passed (27) | Tests  14 failed | 464 passed (478)
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 17ms
+  × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 22ms
+  × A7.6: wer Farbenschutz hält, darf die Grube auch durchlassen; dann setzt er aus und behält den Farbenschutz 6ms
+  × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 13ms
+  × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 4ms
+  × D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr 8ms
+  × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 5ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 4ms
+  × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 4ms
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 17ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 6ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 13ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 393ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 42258ms
+
+O4 eigen: Farbenschutz im eigenen Zug mit Wirkung: Reagieren ohne schwebende Karte erlaubt
+Datei src/engine/aktionen/pruefen.ts
+ALT:     if (schwebend === null) return nein('Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).');
+NEU: 
+Exit 1
+Test Files  2 failed | 25 passed (27) | Tests  2 failed | 476 passed (478)
+  × E4 Kriterium 5/A7.2: Farbenschutz ist im eigenen Zug nicht mit Wirkung spielbar, nur wirkungslos ablegbar (D25) 8ms
+  × A6: während eine Karte schwebt, ist nur Reagieren dran, und nur für den, der entscheidet 5ms
+
+O5 eigen: abgewehrte Karte auf falschem Stapel: abgewehrte Karte auf den Stapel des ersten Abwehrenden
+Datei src/engine/reaktion.ts
+ALT: if (ohneWirkung) zustand.spieler[angreifer].ablagestapel.push(karte);
+NEU: if (ohneWirkung) zustand.spieler[abgewehrt[0]].ablagestapel.push(karte);
+Exit 1
+Test Files  3 failed | 24 passed (27) | Tests  11 failed | 467 passed (478)
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 15ms
+  × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 8ms
+  × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 18ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 9ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 10ms
+
+O6 eigen: Leck über das Ereignis AbwehrGefragt: AbwehrGefragt verrät, ob der Gefragte Farbenschutz hält
+Datei src/engine/reaktion.ts
+ALT:   ereignisse.push({ typ: 'AbwehrGefragt', spielerIndex: betroffene[0], karteId: karte.id });
+NEU:   ereignisse.push({ typ: 'AbwehrGefragt', spielerIndex: betroffene[0], karteId: karte.id, ...(zustand.spieler[betroffene[0]].hand.some(istFarbenschutz) ? { kann: true } : {}) });
+Exit 1
+Test Files  2 failed | 25 passed (27) | Tests  4 failed | 474 passed (478)
+  × A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht 35ms
+  × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 8ms
+  × B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 11ms
+  × B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 45ms
+
+T1 Tabelle A6 Ansage/Krit 1: Sonderkarte wirkt sofort, schwebt nie
+Datei src/engine/reaktion.ts
+ALT: if (betroffene.length === 0 || karte.typ !== 'Sonderkarte') {
+NEU: if (true) {
+Exit 1
+Test Files  6 failed | 21 passed (27) | Tests  43 failed | 435 passed (478)
+  × A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht 36ms
+  × B2/A6 Beispiel 1: nach der Ansage lässt sich das Ziel nicht mehr ändern, auch nicht nach der Abwehr 7ms
+  × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 10ms
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 5ms
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 4ms
+  × D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt 4ms
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 4ms
+  × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 7ms
+  × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion 2ms
+  × A6: wer die Karte angesagt hat, ist nicht betroffen und darf auf sie nicht reagieren 3ms
+  × E4 Kriterium 6: vor der Ansage der Angreifer, dann jeder Gefragte, danach wieder der Angreifer; aufgezählt wird nur für ihn 4ms
+  × A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf 2ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 3ms
+  × E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren 3ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf 3ms
+  × E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand 3ms
+  × B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 3ms
+  × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 11ms
+  × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 4ms
+  × A7.6: wer Farbenschutz hält, darf die Grube auch durchlassen; dann setzt er aus und behält den Farbenschutz 3ms
+  × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 3ms
+  × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 3ms
+  × D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren 4ms
+  × D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr 3ms
+  × D21: er darf sich in der Schlussrunde mit Farbenschutz verteidigen und spielt dann seinen letzten Zug 3ms
+  × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 4ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 3ms
+  × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 3ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden 3ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 17ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 444ms
+  × B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 18ms
+  × D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter 8ms
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 13ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 3ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 2ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 41724ms
+
+T3 Tabelle A6 Bsp 2 Uhrzeigersinn: Betroffene aufsteigend statt im Uhrzeigersinn
+Datei src/engine/reaktion.ts
+ALT: .filter((index) => genannt.has(index));
+NEU: .filter((index) => genannt.has(index)).sort((a, b) => a - b);
+Exit 1
+Test Files  1 failed | 26 passed (27) | Tests  4 failed | 474 passed (478)
+  × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 22ms
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 7ms
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 6ms
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 7ms
+
+T4 Tabelle D15 jeder einmal: Betroffene roh aus dem Register (Dubletten, Angreifer, Reihenfolge)
+Datei src/engine/reaktion.ts
+ALT: const genannt = new Set(definitionFuer(karte).betroffene(zustand, aktion));
+  return mitspielerImUhrzeigersinn
+NEU: const genannt = new Set(definitionFuer(karte).betroffene(zustand, aktion));
+Test Files  1 failed | 26 passed (27) | Tests  2 failed | 476 passed (478)
+  × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 20ms
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 7ms
+
+T6 Tabelle D33 jeder gefragt: nur Betroffene mit Farbenschutz werden gefragt (alter Filter)
+Datei src/engine/reaktion.ts
+ALT: const betroffene = karte.typ === 'Sonderkarte' ? betroffeneVon(zustand, karte, aktion) : [];
+NEU: const betroffene = karte.typ === 'Sonderkarte' ? betroffeneVon(zustand, karte, aktion).filter((index) => zustand.spieler[index].hand.some(istFarbenschutz)) : [];
+Exit 1
+Test Files  6 failed | 21 passed (27) | Tests  17 failed | 461 passed (478)
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 17ms
+  × D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt 7ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 7ms
+  × B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 6ms
+  × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 12ms
+  × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 11ms
+  × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 4ms
+  × D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr 7ms
+  × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 4ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 3ms
+  × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 3ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 522ms
+  × B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 24ms
+  × D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter 12ms
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 15ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 5ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 42281ms
+
+T7 Tabelle D33 Abwehr nur mit Farbenschutz: jede Handkarte als Abwehr angeboten
+Datei src/engine/reaktion.ts
+ALT: const abwehren = hand.filter(istFarbenschutz).map(
+NEU: const abwehren = hand.filter(() => true).map(
+Exit 1
+Test Files  7 failed | 20 passed (27) | Tests  21 failed | 457 passed (478)
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 24ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 6ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 9ms
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 18ms
+  × A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion 4ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 8ms
+  × A10: Zufallspartie mit 2 Spielern (Saat 1): jeder Schritt lässt sich aus den Ereignissen nachrechnen 52ms
+  × A10: Zufallspartie mit 3 Spielern (Saat 2): jeder Schritt lässt sich aus den Ereignissen nachrechnen 36ms
+  × A10: Zufallspartie mit 4 Spielern (Saat 3): jeder Schritt lässt sich aus den Ereignissen nachrechnen 5ms
+  × A10: Zufallspartie mit 2 Spielern (Saat 4): jeder Schritt lässt sich aus den Ereignissen nachrechnen 48ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 4ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 4ms
+  × D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter 15ms
+  × K1: jede Partie hat ihre Saat und ihre Sitzordnung; jeder Teilnehmer beginnt gleich oft 30ms
+  × K1: 200 Partien mit 2, 3 und 4 Spielern, mit und ohne Erweiterung, enden alle ohne Invariantenverletzung 28ms
+  × D22: die Sieger sind die Teilnehmer mit der höchsten Endwertung; der Verlauf spielt die Partie genau nach 14ms
+  × K1: dasselbe Turnier zweimal ergibt Zug für Zug dasselbe; eine andere Saat einen anderen Verlauf 63ms
+  × U4: das Turnier zieht keinen eigenen Zufall: Math.random wird nie gerufen 31ms
+  × K1: jede KI bekommt ihre eigene Zufallsquelle, auch zwei gleiche Teilnehmer spielen nicht im Gleichschritt 7ms
+  × A6/E4: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht und Abwehren oder Durchlassen zur Wahl 15ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 10219ms
+
+T8 Tabelle A6 nur Farbenschutz als Reaktion: Prüfung auf Farbenschutz entfernt
+Datei src/engine/reaktion.ts
+ALT:   if (!istFarbenschutz(karte)) {
+NEU:   if (false) {
+Exit 1
+Test Files  1 failed | 26 passed (27) | Tests  1 failed | 477 passed (478)
+  × A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion 8ms
+
+T9 Tabelle A7.2 Farbenschutz auf eigenen Stapel: Farbenschutz auf den Stapel des Angreifers
+Datei src/engine/reaktion.ts
+ALT:     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.farbenschutzId);
+NEU:     zustand.spieler[spielerIndexVon(zustand, schwebend.aktion.spielerId)].ablagestapel.push(entnehmeHandkarte(zustand, aktion.spielerId, aktion.farbenschutzId));
+Exit 1
+Test Files  5 failed | 22 passed (27) | Tests  16 failed | 462 passed (478)
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 16ms
+  × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 7ms
+  × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren 7ms
+  × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 13ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 10ms
+  × A10: Zufallspartie mit 2 Spielern (Saat 4): jeder Schritt lässt sich aus den Ereignissen nachrechnen 76ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 7ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 301ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 9ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 38590ms
+
+T11 Tabelle A7.2 keine Wirkung für Abwehrende: wirke bekommt keine Abwehrenden
+Datei src/engine/reaktion.ts
+ALT: nach = definitionFuer(karte).wirke(zustand, aktion, abgewehrt);
+NEU: nach = definitionFuer(karte).wirke(zustand, aktion, []);
+Exit 1
+Test Files  1 failed | 26 passed (27) | Tests  1 failed | 477 passed (478)
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 19ms
+
+T12 Tabelle A7.6 Bsp 2 abgewehrt ohne Wirkung: ohneWirkung nie gesetzt: abgewehrte Grube wirkt trotzdem
+Datei src/engine/reaktion.ts
+ALT: const ohneWirkung = betroffeneVon(zustand, karte, aktion).every((index) => abgewehrt.includes(index));
+NEU: const ohneWirkung = false;
+Exit 1
+Test Files  3 failed | 24 passed (27) | Tests  18 failed | 460 passed (478)
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 19ms
+  × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 6ms
+  × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 6ms
+  × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 10ms
+  × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf 9ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 5ms
+  × E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren 6ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf 5ms
+  × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 16ms
+  × D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren 5ms
+  × D21: er darf sich in der Schlussrunde mit Farbenschutz verteidigen und spielt dann seinen letzten Zug 5ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden 4ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 9ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 5ms
+
+T13 Tabelle A6 kein Nachziehen ausserhalb des Zuges: Abwehrender füllt sofort auf
+Datei src/engine/reaktion.ts
+ALT:     schwebend.abgewehrt.push(spielerIndex);
+NEU:     schwebend.abgewehrt.push(spielerIndex);
+    zustand.spieler[spielerIndex].hand.push(...zustand.nachziehstapel.splice(0, 1));
+Test Files  4 failed | 23 passed (27) | Tests  9 failed | 469 passed (478)
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 14ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 5ms
+  × D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren 17ms
+  × A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf 14ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 6ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf 4ms
+  × A10: Zufallspartie mit 2 Spielern (Saat 4): jeder Schritt lässt sich aus den Ereignissen nachrechnen 70ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 6ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 264ms
+
+T15 Tabelle Krit 6 Entscheider: Entscheider ist immer der Spieler am Zug
+Datei src/engine/aktionen/pruefen.ts
+ALT:   if (schwebend === null) return zustand.zug.spielerIndex;
+NEU:   return zustand.zug.spielerIndex;
+Exit 1
+Test Files  9 failed | 18 passed (27) | Tests  39 failed | 439 passed (478)
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 18ms
+  × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 4ms
+  × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 4ms
+  × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 10ms
+  × D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren 4ms
+  × D21: er darf sich in der Schlussrunde mit Farbenschutz verteidigen und spielt dann seinen letzten Zug 4ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 6ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden 3ms
+  × B2/A6 Beispiel 1: nach der Ansage lässt sich das Ziel nicht mehr ändern, auch nicht nach der Abwehr 14ms
+  × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 6ms
+  × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 5ms
+  × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 4ms
+  × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 4ms
+  × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 6ms
+  × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+  × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+  × A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion 5ms
+  × A6: wer die Karte angesagt hat, ist nicht betroffen und darf auf sie nicht reagieren 3ms
+  × E4 Kriterium 6: vor der Ansage der Angreifer, dann jeder Gefragte, danach wieder der Angreifer; aufgezählt wird nur für ihn 5ms
+  × A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf 3ms
+  × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 3ms
+  × E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren 3ms
+  × E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf 2ms
+  × E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand 3ms
+  × B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 11ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 20ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 520ms
+  × B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 29ms
+  × D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter 4ms
+  × A6: schwebt eine Karte, entscheidet der nächste Betroffene; ohne Betroffene der Angreifer 9ms
+  × A6: während eine Karte schwebt, ist nur Reagieren dran, und nur für den, der entscheidet 4ms
+  × A6/E4: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht und Abwehren oder Durchlassen zur Wahl 7ms
+  × K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet 10ms
+  × B2: zu Beginn entscheidet der Mensch; bei einer angesagten Karte der Gefragte; nach Spielende niemand 5ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 29607ms
+
+T17 Tabelle A7.6 Stapel nach dem Aussetzen: ausgesessene Grube auf den Stapel des Aussetzenden
+Datei src/engine/zugablauf.ts
+ALT: zustand.spieler[ausgesessen.gespieltVon].ablagestapel.push(ausgesessen.karte);
+NEU: zustand.spieler[naechster].ablagestapel.push(ausgesessen.karte);
+Exit 1
+Test Files  4 failed | 23 passed (27) | Tests  15 failed | 463 passed (478)
+  × A10: Zufallspartie mit 2 Spielern (Saat 1): jeder Schritt lässt sich aus den Ereignissen nachrechnen 61ms
+  × A10: Zufallspartie mit 3 Spielern (Saat 2): jeder Schritt lässt sich aus den Ereignissen nachrechnen 27ms
+  × A10: Zufallspartie mit 4 Spielern (Saat 3): jeder Schritt lässt sich aus den Ereignissen nachrechnen 9ms
+  × A10: Zufallspartie mit 2 Spielern (Saat 4): jeder Schritt lässt sich aus den Ereignissen nachrechnen 57ms
+  × A7.6/D14/D21: Aussetzen mit zwei Gruben verschiedener Spieler, Überhand und Schlussrunde lassen sich nachrechnen 12ms
+  × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 9ms
+  × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 7ms
+  × A7.6/A6: bei zwei Gruben verschiedener Spieler nennt das Ereignis, welche Grube auf welchen Ablagestapel geht 6ms
+  × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 21ms
+  × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 10ms
+  × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 8ms
+  × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 25ms
+  × A7.6/A6: nach dem ausgesetzten Zug liegt die Schlangengrube auf dem Ablagestapel dessen, der sie gespielt hat 13ms
+  × D14: zwei Schlangengruben kosten zwei Züge, jede geht danach an ihren Spieler 8ms
+  × D21: wer in der Schlussrunde aussetzen muss, verliert seinen letzten Zug 4ms
+
+T18 Tabelle D29 ohne Zug: Gruben ohne Zug werden nie abgelegt
+Datei src/engine/zugablauf.ts
+ALT:   if (zustand.partiephase === 'Laufend' || zustand.ausliegendeGruben.length === 0) return;
+NEU:   return;
+Exit 1
+Test Files  2 failed | 25 passed (27) | Tests  6 failed | 472 passed (478)
+  × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 18ms
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 6ms
+  × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 5ms
+  × D14/D21/D29: beginnt die Schlussrunde mit zwei Gruben vor einem Spieler, kostet die erste seinen letzten Zug, die zweite geht ohne Wirkung ab 5ms
+  × A10/D29: eine Grube vor einem Spieler ohne weiteren Zug liegt bei Spielende nicht mehr aus; sie ging ohne Wirkung an den, der sie spielte 4ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 42417ms
+
+T19 Tabelle D14/D29 letzter Zug belegt: zweite Grube vor demselben Spieler bleibt in der Schlussrunde liegen
+Datei src/engine/zugablauf.ts
+ALT: if (!belegt.has(grube.vor) && hatNochLetztenZug(zustand, grube.vor)) {
+NEU: if (hatNochLetztenZug(zustand, grube.vor)) {
+Exit 1
+Test Files  1 failed | 26 passed (27) | Tests  2 failed | 476 passed (478)
+  × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 14ms
+  × D14/D21/D29: beginnt die Schlussrunde mit zwei Gruben vor einem Spieler, kostet die erste seinen letzten Zug, die zweite geht ohne Wirkung ab 7ms
+
+T20 Tabelle D21/D29 Sitzfolge: Abstand mit <= statt <: auch der Auslöser hat noch einen Zug
+Datei src/engine/zugablauf.ts
+ALT: return spielerIndex !== zug.spielerIndex && abstand(spielerIndex) < abstand(ausloeser);
+NEU: return spielerIndex !== zug.spielerIndex && abstand(spielerIndex) <= abstand(ausloeser);
+Exit 1
+Test Files  1 failed | 26 passed (27) | Tests  1 failed | 477 passed (478)
+  × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 18ms
+
+T21 Tabelle Krit 8 Speichern/Laden: Laden verliert die schwebende Karte
+Datei src/engine/serialization.ts
+ALT:   if (roh.schwebend !== null) schwebend(roh.schwebend, 'schwebend');
+NEU:   if (roh.schwebend !== null) schwebend(roh.schwebend, 'schwebend');
+  (roh as { schwebend: unknown }).schwebend = null;
+Test Files  3 failed | 24 passed (27) | Tests  4 failed | 474 passed (478)
+  × A4: Speichern und Laden ergibt für 200 Zufallszustände denselben Zustand 77ms
+  × A6: eine schwebende Karte mit unvollständiger Aktion wird abgelehnt 4ms
+  × E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand 11ms
+  × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 10431ms
+
+Nach jeder Probe wurde die Datei aus git zurückgeholt; am Ende keine Änderung ausserhalb von tagebuch/.

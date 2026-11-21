@@ -166,8 +166,12 @@ function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   if (aktion.typ === 'UeberhandAbwerfen') {
     return `${aktion.typ}: ${aktion.karteIds.map((id) => handkarte(zustand, aktion.spielerId, id)).join(', ')}`
   }
+  if (aktion.typ === 'Reagieren') {
+    return aktion.farbenschutzId === null ? 'Reagieren: durchlassen' : `Reagieren: abwehren mit ${handkarte(zustand, aktion.spielerId, aktion.farbenschutzId)}`
+  }
   if (!('karteId' in aktion)) return aktion.typ
   const text = `${aktion.typ}: ${handkarte(zustand, aktion.spielerId, aktion.karteId)}`
+  if (aktion.typ === 'SchlangengrubeSpielen') return `${text} → ${name(zustand, zustand.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId))}`
   if (aktion.typ !== 'FarbkarteLegen') return text
   return aktion.ziel.art === 'neueSchlange' ? `${text} → neue Schlange` : `${text} → ${aktion.ziel.schlangenId} ${aktion.ziel.seite}`
 }
@@ -251,10 +255,21 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `KartenAbgeworfen: ${wer(ereignis.spielerIndex)} legt ${ereignis.karteIds.join(', ')} ab`
     case 'ZugBegonnen':
       return `ZugBegonnen: ${wer(ereignis.spielerIndex)}, Teilzug ${ereignis.teilzug}`
+    case 'KarteAngesagt':
+      return `KarteAngesagt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.ansage.typ}) trifft ${ereignis.betroffene.map(wer).join(', ')}`
+    case 'AbwehrGefragt':
+      return `AbwehrGefragt: ${wer(ereignis.spielerIndex)} entscheidet, ob er ${ereignis.karteId} abwehrt`
     case 'Abgewehrt':
-      return `Abgewehrt: ${wer(ereignis.spielerIndex)} wehrt ${ereignis.karteId} ab`
+      return `Abgewehrt: ${wer(ereignis.spielerIndex)} wehrt ${ereignis.gegen} mit ${ereignis.karteId} ab`
+    case 'AnsageEntschieden': {
+      const abgewehrt = ereignis.abgewehrt.length === 0 ? 'niemand hat abgewehrt' : `abgewehrt von ${ereignis.abgewehrt.map(wer).join(', ')}`
+      const wirkung = ereignis.ohneWirkung ? 'ohne Wirkung' : 'wirkt'
+      return `AnsageEntschieden: ${ereignis.karteId} von ${wer(ereignis.spielerIndex)} ${wirkung}, ${abgewehrt} → ${beschreibeOrt(zustand, ereignis.nach)}`
+    }
     case 'Ausgesetzt':
       return `Ausgesetzt: ${wer(ereignis.spielerIndex)} setzt aus; ${ereignis.karteId} auf den Ablagestapel von ${wer(ereignis.ablagestapelVon)}`
+    case 'GrubeOhneWirkung':
+      return `GrubeOhneWirkung: ${wer(ereignis.spielerIndex)} hat keinen Zug mehr; ${ereignis.karteId} auf den Ablagestapel von ${wer(ereignis.ablagestapelVon)}`
     case 'SchlussrundeBegonnen':
       return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':

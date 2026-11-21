@@ -1,0 +1,982 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a048138ae11fe7692
+
+ ❯ src/engine/__tests__/aktionen.test.ts (32 tests | 1 failed) 46ms
+     × A6: während eine Karte schwebt, ist nur Reagieren dran, und nur für den, der entscheidet 8ms
+ ❯ src/ki/schritt.test.ts (11 tests | 1 failed) 33ms
+     × A6/E4: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht und Abwehren oder Durchlassen zur Wahl 5ms
+ ❯ src/entwicklung/szenarienAbwehr.test.ts (4 tests | 4 failed) 21ms
+     × E4: die Szenarien des Tasks sind da 17ms
+     × A7.6: schlangengrube: zwei Ziele; ohne Farbenschutz liegt die Grube sofort, KI-Gegner 1 setzt aus, die Grube geht an Spieler 1 1ms
+     × A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf 1ms
+     × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 1ms
+ ❯ src/engine/__tests__/schlangengrube.test.ts (16 tests | 16 failed) 53ms
+     × A7.6: angeboten ist jeder Mitspieler im Uhrzeigersinn, nie der Spieler selbst 20ms
+     × A7.6: auf sich selbst oder einen unbekannten Spieler wird sie abgelehnt, mit Grund 3ms
+     × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 2ms
+     × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 2ms
+     × A7.6: wer Farbenschutz hält, darf die Grube auch durchlassen; dann setzt er aus und behält den Farbenschutz 2ms
+     × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 2ms
+     × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 2ms
+     × D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren 2ms
+     × D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr 2ms
+     × D21: er darf sich in der Schlussrunde mit Farbenschutz verteidigen und spielt dann seinen letzten Zug 2ms
+     × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 2ms
+     × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 1ms
+     × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 1ms
+     × D14/D21/D29: beginnt die Schlussrunde mit zwei Gruben vor einem Spieler, kostet die erste seinen letzten Zug, die zweite geht ohne Wirkung ab 5ms
+     × A10/D29: eine Grube vor einem Spieler ohne weiteren Zug liegt bei Spielende nicht mehr aus; sie ging ohne Wirkung an den, der sie spielte 2ms
+     × E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden 1ms
+ ❯ src/engine/__tests__/reaktion.test.ts (26 tests | 23 failed) 66ms
+     × A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht 17ms
+     × B2/A6 Beispiel 1: nach der Ansage lässt sich das Ziel nicht mehr ändern, auch nicht nach der Abwehr 2ms
+     × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 3ms
+     × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 2ms
+     × E4 Kriterium 3: gefragt wird nur, wer einen Farbenschutz hält 2ms
+     × E4 Kriterium 3: hält kein Betroffener Farbenschutz, wirkt die Karte noch in derselben Aktion 2ms
+     × A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers 2ms
+     × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+     × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 2ms
+     × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 2ms
+     × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 2ms
+     × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 2ms
+     × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 2ms
+     × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 2ms
+     × A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion 1ms
+     × A6: wer die Karte angesagt hat, ist nicht betroffen und darf auf sie nicht reagieren 1ms
+     × E4 Kriterium 6: vor der Ansage der Angreifer, dann jeder Gefragte, danach wieder der Angreifer; aufgezählt wird nur für ihn 1ms
+     × A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf 1ms
+     × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 1ms
+     × E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren 1ms
+     × E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf 1ms
+     × E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand 1ms
+     × B2: lässt ein Betroffener mit Farbenschutz durch, melden die Ereignisse dasselbe wie ohne Farbenschutz 2ms
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts (12 tests | 2 failed) 516ms
+     × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 9ms
+     × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 272ms
+ ❯ src/ki/sicht.test.ts (15 tests | 3 failed) 593ms
+     × A6/B2: die angesagte Aktion mit Karte, Ziel und wer schon abgewehrt hat, aber nicht, wer noch gefragt wird 8ms
+     × K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet; bei einer angesagten Karte nur der Gefragte selbst 1ms
+     × B2/E4: wer bei einer angesagten Karte gefragt wird, verrät einen Farbenschutz; das sieht nur der Gefragte selbst 8ms
+ ❯ src/entwicklung/Entwicklertisch.test.tsx (18 tests | 1 failed) 1111ms
+     × E4: bei einer angesagten Karte, über die eine KI entscheidet, spielt der KI-Schritt ihre Reaktion, und es geht weiter 60ms
+ ❯ src/engine/__tests__/dauerlauf.test.ts (16 tests | 1 failed) 41076ms
+     × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 40992ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 52 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > E4: bei einer angesagten Karte, über die eine KI entscheidet, spielt der KI-Schritt ihre Reaktion, und es geht weiter
+AssertionError: expected <p class="et-fehler" …(2)></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  class="et-fehler"
+  data-testid="fehlermeldung"
+  role="alert"
+>
+  Abgelehnt: KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).
+</p>
+
+ ❯ src/entwicklung/Entwicklertisch.test.tsx:216:51
+    214|     oeffne('/dev?szenario=alle-orte')
+    215|     fireEvent.click(kiKnopf())
+    216|     expect(screen.queryByTestId('fehlermeldung')).toBeNull()
+       |                                                   ^
+    217|     expect(verlaufseintraege().at(-1)).toHaveTextContent(/^KI-Schritt:…
+    218|     expect(deserialisiere(zustandsText()).schwebend).toBeNull()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/52]⎯
+
+ FAIL  src/entwicklung/szenarienAbwehr.test.ts > E4: Szenarien der Abwehr und der Schlangengrube > E4: die Szenarien des Tasks sind da
+AssertionError: expected [ 'start-2', 'start-4', …(15) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "schlangengrube",
+-   "abwehr-schlangengrube",
+-   "doppelangriff",
++ [
++   "start-2",
++   "start-4",
++   "start-erweiterung",
++   "alle-orte",
++   "wertung-beispiele",
++   "wertung-beispiele-kette",
++   "wertung-joker",
++   "wertung-vielfalt-regenbogen",
++   "kaputt-doppelte-karte",
++   "stapel-fast-leer",
++   "schlussrunde-2",
++   "schlussrunde-4",
++   "aussetzen",
++   "nur-farbenschutz",
++   "nur-sonderkarten",
++   "verdoppler",
++   "verdoppler-schlussrunde",
+  ]
+
+ ❯ src/entwicklung/szenarienAbwehr.test.ts:43:56
+     41| describe('E4: Szenarien der Abwehr und der Schlangengrube', () => {
+     42|   it('E4: die Szenarien des Tasks sind da', () => {
+     43|     expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.…
+       |                                                        ^
+     44|   })
+     45|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/52]⎯
+
+ FAIL  src/entwicklung/szenarienAbwehr.test.ts > E4: Szenarien der Abwehr und der Schlangengrube > A7.6: schlangengrube: zwei Ziele; ohne Farbenschutz liegt die Grube sofort, KI-Gegner 1 setzt aus, die Grube geht an Spieler 1
+Error: Szenario schlangengrube fehlt
+ ❯ erzeuge src/entwicklung/szenarienAbwehr.test.ts:14:37
+     12| function erzeuge(name: string): Spielzustand {
+     13|   const szenario = findeSzenario(name)
+     14|   if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
+       |                                     ^
+     15|   return szenario.erzeuge()
+     16| }
+ ❯ src/entwicklung/szenarienAbwehr.test.ts:47:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/52]⎯
+
+ FAIL  src/entwicklung/szenarienAbwehr.test.ts > E4: Szenarien der Abwehr und der Schlangengrube > A7.6 Beispiel 2: abwehr-schlangengrube: KI-Gegner 1 wehrt ab, beide Karten liegen auf ihren Ablagestapeln, er spielt normal und füllt dann auf
+Error: Szenario abwehr-schlangengrube fehlt
+ ❯ erzeuge src/entwicklung/szenarienAbwehr.test.ts:14:37
+     12| function erzeuge(name: string): Spielzustand {
+     13|   const szenario = findeSzenario(name)
+     14|   if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
+       |                                     ^
+     15|   return szenario.erzeuge()
+     16| }
+ ❯ src/entwicklung/szenarienAbwehr.test.ts:60:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/52]⎯
+
+ FAIL  src/entwicklung/szenarienAbwehr.test.ts > E4: Szenarien der Abwehr und der Schlangengrube > A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren
+Error: Szenario doppelangriff fehlt
+ ❯ erzeuge src/entwicklung/szenarienAbwehr.test.ts:14:37
+     12| function erzeuge(name: string): Spielzustand {
+     13|   const szenario = findeSzenario(name)
+     14|   if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
+       |                                     ^
+     15|   return szenario.erzeuge()
+     16| }
+ ❯ src/entwicklung/szenarienAbwehr.test.ts:79:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/52]⎯
+
+ FAIL  src/ki/schritt.test.ts > K1: naechsterKiSchritt liefert genau eine Aktion oder nichts > A6/E4: bei einer angesagten Sonderkarte entscheidet die KI des Gefragten, mit der Ansage in ihrer Sicht und Abwehren oder Durchlassen zur Wahl
+Error: KI-Schritt: KI-Gegner 2 entscheidet, aber die Engine zählt keine Aktion auf (Plan E2, Kriterium 12).
+ ❯ waehleFuer src/ki/schritt.ts:25:11
+     23|   const aufgezaehlt = ermittleAktionen(zustand);
+     24|   if (aufgezaehlt.length === 0) {
+     25|     throw new Error(`KI-Schritt: ${entscheider.name} entscheidet, aber…
+       |           ^
+     26|   }
+     27|   // Die KI bekommt Abschriften in einer eigenen Liste; wiedererkannt …
+ ❯ Module.naechsterKiSchritt src/ki/schritt.ts:53:44
+ ❯ src/ki/schritt.test.ts:157:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/52]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > A6/B2: die angesagte Aktion mit Karte, Ziel und wer schon abgewehrt hat, aber nicht, wer noch gefragt wird
+AssertionError: expected { karte: { …(3) }, …(3) } to deeply equal { karte: { …(3) }, …(2) }
+
+- Expected
++ Received
+
+@@ -4,10 +4,13 @@
+      "karteId": "schlangengrube-01",
+      "spielerId": "spieler-2",
+      "typ": "SchlangengrubeSpielen",
+      "zielSpielerId": "spieler-3",
+    },
++   "ausstehend": [
++     2,
++   ],
+    "karte": {
+      "id": "schlangengrube-01",
+      "name": "Schlangengrube",
+      "typ": "Sonderkarte",
+    },
+
+ ❯ src/ki/sicht.test.ts:82:28
+     80|   it('A6/B2: die angesagte Aktion mit Karte, Ziel und wer schon abgewe…
+     81|     const { karte, aktion, abgewehrt } = zustand.schwebend!
+     82|     expect(sicht.angesagt).toEqual({ karte, aktion, abgewehrt })
+       |                            ^
+     83|     expect(sicht.angesagt?.aktion).toMatchObject({ typ: 'Schlangengrub…
+     84|     expect(Object.keys(sicht.angesagt ?? {}), 'B2: gefragt wird nur, w…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/52]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet; bei einer angesagten Karte nur der Gefragte selbst
+AssertionError: B2: für den Angreifer bleibt verdeckt, wer gefragt wird: expected 2 to be null
+
+- Expected:
+null
+
++ Received:
+2
+
+ ❯ src/ki/sicht.test.ts:90:90
+     88|   it('K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet; b…
+     89|     expect(sicht).toMatchObject({ erweiterung: true, partiephase: 'Lau…
+     90|     expect(sicht.entscheider, 'B2: für den Angreifer bleibt verdeckt, …
+       |                                                                                          ^
+     91|     expect(sichtFuer(zustand, 2).entscheider, 'A6: der Gefragte sieht,…
+     92|     expect(sichtFuer(zustand, 0).entscheider).toBeNull()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/52]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht nicht enthält > B2/E4: wer bei einer angesagten Karte gefragt wird, verrät einen Farbenschutz; das sieht nur der Gefragte selbst
+AssertionError: B2: der Angreifer sieht nicht, wer gefragt wird: expected { ich: 1, …(15) } to deeply equal { ich: 1, …(15) }
+
+- Expected
++ Received
+
+@@ -6,10 +6,11 @@
+        "spielerId": "spieler-2",
+        "typ": "SchlangengrubeSpielen",
+        "zielSpielerId": "spieler-3",
+      },
+      "ausstehend": [
++       0,
+        2,
+      ],
+      "karte": {
+        "id": "schlangengrube-01",
+        "name": "Schlangengrube",
+@@ -33,11 +34,11 @@
+          "typ": "Sonderkarte",
+        },
+        "vor": 2,
+      },
+    ],
+-   "entscheider": 2,
++   "entscheider": 0,
+    "erweiterung": true,
+    "geheimeAufgabe": {
+      "bedingung": "Habe eine Schlange mit mindestens 2 Farbfusionen.",
+      "id": "aufgabe-07",
+      "name": "Fusionsexperte",
+
+ ❯ src/ki/sicht.test.ts:132:85
+    130|     const anders = structuredClone(zustand)
+    131|     anders.schwebend!.ausstehend = [0, 2]
+    132|     expect(sichtFuer(anders, 1), 'B2: der Angreifer sieht nicht, wer g…
+       |                                                                                     ^
+    133|     expect(sichtFuer(anders, 2), 'B2: Spieler 3 sieht nicht, ob vor ih…
+    134|     expect(sichtFuer(anders, 2).entscheider, 'B2: Spieler 3 ist noch n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/52]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A6: während eine Karte schwebt, ist nur Reagieren dran, und nur für den, der entscheidet
+AssertionError: A6: der Gefragte darf durchlassen: expected { erlaubt: false, …(1) } to deeply equal { erlaubt: true }
+
+- Expected
++ Received
+
+  {
+-   "erlaubt": true,
++   "erlaubt": false,
++   "grund": "Reagieren ist noch nicht umgesetzt (kommt mit E4).",
+  }
+
+ ❯ src/engine/__tests__/aktionen.test.ts:166:140
+    164|     expect(grund(zustand, { typ: 'ZugBeenden', spielerId: 'spieler-1' …
+    165|     expect(grund(zustand, { typ: 'Reagieren', spielerId: 'spieler-2', …
+    166|     expect(pruefeAktion(zustand, { typ: 'Reagieren', spielerId: 'spiel…
+       |                                                                                                                                            ^
+    167|     expect(grund(start(), { typ: 'Reagieren', spielerId: 'spieler-1', …
+    168|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/52]⎯
+
+ FAIL  src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz
+AssertionError: angesagte Gruben im Dauerlauf: expected 0 to be greater than 300
+ ❯ src/engine/__tests__/dauerlauf.test.ts:311:71
+    309|     expect(zweiteZuege.inSchlussrunde, 'zweite Züge in der Schlussrund…
+    310|     // E4: Gruben werden angesagt, abgewehrt, ausgesessen und gehen au…
+    311|     expect(reaktionen.KarteAngesagt, 'angesagte Gruben im Dauerlauf').…
+       |                                                                       ^
+    312|     expect(reaktionen.Abgewehrt, 'Abwehren mit Farbenschutz im Dauerla…
+    313|     expect(reaktionen.Ausgesetzt, 'ausgesetzte Züge im Dauerlauf').toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > E4 Kriterium 1, A6, B2: die Ansage > A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:42:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > E4 Kriterium 1, A6, B2: die Ansage > B2/A6 Beispiel 1: nach der Ansage lässt sich das Ziel nicht mehr ändern, auch nicht nach der Abwehr
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:53:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal
+AssertionError: Schlangengrube auf spieler-4 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ mehrereZiele src/engine/__tests__/reaktion.test.ts:73:38
+ ❯ src/engine/__tests__/reaktion.test.ts:78:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei
+AssertionError: Schlangengrube auf spieler-4 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ mehrereZiele src/engine/__tests__/reaktion.test.ts:73:38
+ ❯ src/engine/__tests__/reaktion.test.ts:86:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > E4 Kriterium 3: gefragt wird nur, wer einen Farbenschutz hält
+AssertionError: Schlangengrube auf spieler-4 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ mehrereZiele src/engine/__tests__/reaktion.test.ts:73:38
+ ❯ src/engine/__tests__/reaktion.test.ts:104:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > E4 Kriterium 3: hält kein Betroffener Farbenschutz, wirkt die Karte noch in derselben Aktion
+AssertionError: Schlangengrube auf spieler-4 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ mehrereZiele src/engine/__tests__/reaktion.test.ts:73:38
+ ❯ src/engine/__tests__/reaktion.test.ts:114:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers
+AssertionError: Schlangengrube auf spieler-4 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ mehrereZiele src/engine/__tests__/reaktion.test.ts:73:38
+ ❯ src/engine/__tests__/reaktion.test.ts:123:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Regenbogenschlange ist noch nicht umgesetzt (kommt mit E5).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Schlangenblockade ist noch nicht umgesetzt (kommt mit E5).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Farbenfusion ist noch nicht umgesetzt (kommt mit E7).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Farbendieb ist noch nicht umgesetzt (kommt mit E8).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Schlangenfrass ist noch nicht umgesetzt (kommt mit E6).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Schlangengrube ist noch nicht umgesetzt (kommt mit E4).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+Error: Schlangenhäutung ist noch nicht umgesetzt (kommt mit E9).
+ ❯ Object.wirke src/engine/karten/platzhalter.ts:18:13
+     16|     betroffene: () => [],
+     17|     wirke: () => {
+     18|       throw new Error(grund);
+       |             ^
+     19|     },
+     20|   };
+ ❯ spieleKarte src/engine/aktionen/anwenden.ts:44:38
+ ❯ anwendeAktion src/engine/aktionen/anwenden.ts:32:18
+ ❯ fuehreAus src/engine/__tests__/zugablauf_hilfen.ts:29:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:21
+ ❯ src/engine/__tests__/reaktion.test.ts:160:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6, A7.2, E4 Kriterium 5: was als Reaktion erlaubt ist > A6: als Reaktion ist nur Farbenschutz erlaubt; Schlangenfrass ist keine Reaktion
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:190:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6, A7.2, E4 Kriterium 5: was als Reaktion erlaubt ist > A6: wer die Karte angesagt hat, ist nicht betroffen und darf auf sie nicht reagieren
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:210:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 6: die Engine nennt jederzeit, wer entscheidet > E4 Kriterium 6: vor der Ansage der Angreifer, dann jeder Gefragte, danach wieder der Angreifer; aufgezählt wird nur für ihn
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:227:33
+ ❯ src/engine/__tests__/reaktion.test.ts:228:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A5, A6: Nachziehen nach einer Abwehr > A6 Beispiel 1 Schritt 4: wer ausserhalb seines Zuges abwehrt, zieht nicht nach, sondern füllt zu Beginn seines nächsten Zuges auf
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:238:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/reaktion.test.ts:238:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A5, A6: Nachziehen nach einer Abwehr > A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:251:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/reaktion.test.ts:251:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A5, A6: Nachziehen nach einer Abwehr > E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:260:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/reaktion.test.ts:260:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A5, A6: Nachziehen nach einer Abwehr > E4 Grenzfall: Abwehr mit der letzten Handkarte; zu Beginn des nächsten Zuges füllt er auf 5 auf
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:269:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/reaktion.test.ts:269:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 8: Speichern und Laden mitten in einer offenen Frage > E4 Kriterium 8: nach dem Laden steht dieselbe Frage offen, und dieselbe Antwort führt zum selben Zustand
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:281:43
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/reaktion.test.ts:281:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/52]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > B2: wer Farbenschutz hält, verraten die Ereignisse erst, wenn er ihn spielt > B2: lässt ein Betroffener mit Farbenschutz durch, melden die Ereignisse dasselbe wie ohne Farbenschutz
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/reaktion.test.ts:296:55
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/reaktion.test.ts:296:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die Schlangengrube wählt einen Mitspieler > A7.6: angeboten ist jeder Mitspieler im Uhrzeigersinn, nie der Spieler selbst
+AssertionError: expected [] to deeply equal [ 'spieler-3', 'spieler-4', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "spieler-3",
+-   "spieler-4",
+-   "spieler-1",
+- ]
++ []
+
+ ❯ src/engine/__tests__/schlangengrube.test.ts:44:19
+     42|     const zustand = tisch([FUENF, MIT_GRUBE, FUENF, FUENF]).amZug(1).z…
+     43|     const ziele = aktionen(zustand, 'SchlangengrubeSpielen').map((akti…
+     44|     expect(ziele).toEqual(['spieler-3', 'spieler-4', 'spieler-1'])
+       |                   ^
+     45|     expect(typen(zustand), 'D25: mit möglichem Ziel lässt sie sich nic…
+     46|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die Schlangengrube wählt einen Mitspieler > A7.6: auf sich selbst oder einen unbekannten Spieler wird sie abgelehnt, mit Grund
+AssertionError: expected 'Schlangengrube ist noch nicht umgeset…' to match /Mitspieler.*\(A7\.6\)/
+
+- Expected:
+/Mitspieler.*\(A7\.6\)/
+
++ Received:
+"Schlangengrube ist noch nicht umgesetzt (kommt mit E4)."
+
+ ❯ src/engine/__tests__/schlangengrube.test.ts:51:123
+     49|     const zustand = tisch([MIT_GRUBE, FUENF]).zustand()
+     50|     const karteId = grubenId(zustand, 0)
+     51|     expect(grund(zustand, { typ: 'SchlangengrubeSpielen', spielerId: '…
+       |                                                                                                                           ^
+     52|     expect(grund(zustand, { typ: 'SchlangengrubeSpielen', spielerId: '…
+     53|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die beiden Beispiele der Website > A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:60:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die beiden Beispiele der Website > A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:78:47
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:78:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die beiden Beispiele der Website > A7.6: wer Farbenschutz hält, darf die Grube auch durchlassen; dann setzt er aus und behält den Farbenschutz
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:94:43
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:94:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D14, D18: mehrere Gruben, Abwehr vor dem Aussetzen > D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:29:36
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ grubeUndEnde src/engine/__tests__/schlangengrube.test.ts:29:10
+ ❯ src/engine/__tests__/schlangengrube.test.ts:104:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D14, D18: mehrere Gruben, Abwehr vor dem Aussetzen > E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran
+AssertionError: Schlangengrube auf spieler-2 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:118:49
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:118:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D14, D18: mehrere Gruben, Abwehr vor dem Aussetzen > D18/F5: wer schon eine Grube vor sich hat, darf vor dem ausgesetzten Zug noch mit Farbenschutz abwehren
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:130:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:130:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:29:36
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ grubeUndEnde src/engine/__tests__/schlangengrube.test.ts:29:10
+ ❯ src/engine/__tests__/schlangengrube.test.ts:147:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D21: er darf sich in der Schlussrunde mit Farbenschutz verteidigen und spielt dann seinen letzten Zug
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:155:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:155:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel
+AssertionError: D29: auch der Auslöser und wer schon gespielt hat, sind Ziele: expected [] to have a length of 2 but got +0
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ src/engine/__tests__/schlangengrube.test.ts:164:119
+    162|     const start = schlussrunde([FUENF, FUENF, MIT_GRUBE], 2).zustand()
+    163|     const grube = grubenId(start, 2)
+    164|     expect(aktionen(start, 'SchlangengrubeSpielen'), 'D29: auch der Au…
+       |                                                                                                                       ^
+    165|     const { zustand, ereignisse } = fuehreAus(start, grubeAuf(start, 1…
+    166|     expect(ereignisse.slice(1)).toEqual([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren
+AssertionError: Schlangengrube auf spieler-1 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:177:48
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:186:45
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D14/D21/D29: beginnt die Schlussrunde mit zwei Gruben vor einem Spieler, kostet die erste seinen letzten Zug, die zweite geht ohne Wirkung ab
+AssertionError: expected [ { …(2) }, …(2) ] to deeply equal [ { …(2) }, …(3) ]
+
+- Expected
++ Received
+
+@@ -2,16 +2,10 @@
+    {
+      "ausloeser": 0,
+      "typ": "SchlussrundeBegonnen",
+    },
+    {
+-     "ablagestapelVon": 1,
+-     "karteId": "schlangengrube-02",
+-     "spielerIndex": 2,
+-     "typ": "GrubeOhneWirkung",
+-   },
+-   {
+      "ablagestapelVon": 0,
+      "karteId": "schlangengrube-01",
+      "spielerIndex": 2,
+      "typ": "Ausgesetzt",
+    },
+
+ ❯ src/engine/__tests__/schlangengrube.test.ts:200:145
+    198|       zustand = schritt.zustand
+    199|     }
+    200|     expect(ereignisse.filter((ereignis) => ['SchlussrundeBegonnen', 'G…
+       |                                                                                                                                                 ^
+    201|       { typ: 'SchlussrundeBegonnen', ausloeser: 0 },
+    202|       { typ: 'GrubeOhneWirkung', spielerIndex: 2, karteId: zweite, abl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > A10/D29: eine Grube vor einem Spieler ohne weiteren Zug liegt bei Spielende nicht mehr aus; sie ging ohne Wirkung an den, der sie spielte
+AssertionError: expected [ Array(2) ] to deep equally contain { typ: 'GrubeOhneWirkung', …(3) }
+
+- Expected:
+{
+  "ablagestapelVon": 1,
+  "karteId": "schlangengrube-01",
+  "spielerIndex": 0,
+  "typ": "GrubeOhneWirkung",
+}
+
++ Received:
+[
+  {
+    "aktion": "FarbkarteLegen",
+    "karteId": "blau-03",
+    "nach": {
+      "ort": "Schlange",
+      "position": 0,
+      "schlangenId": "schlange-1",
+      "spielerIndex": 1,
+    },
+    "spielerIndex": 1,
+    "typ": "KarteGespielt",
+  },
+  {
+    "typ": "PartieBeendet",
+  },
+]
+
+ ❯ src/engine/__tests__/schlangengrube.test.ts:213:24
+    211|     const { zustand, ereignisse } = spieleZug(start)
+    212|     expect(zustand.partiephase).toBe('Beendet')
+    213|     expect(ereignisse).toContainEqual({ typ: 'GrubeOhneWirkung', spiel…
+       |                        ^
+    214|     expect(zustand.ausliegendeGruben).toEqual([])
+    215|     expect(ablage(zustand, 1)).toContain(grube)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/52]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > E4 Grenzfall: Abwehr mit der letzten Handkarte in der Schlussrunde; der letzte Zug mit leerer Hand lässt sich beenden
+AssertionError: Schlangengrube auf spieler-3 ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ grubeAuf src/engine/__tests__/zugablauf_hilfen.ts:82:75
+     80|   const id = zustand.spieler[ziel].id
+     81|   const passend = aktionen(zustand, 'SchlangengrubeSpielen').filter((a…
+     82|   expect(passend.length, `Schlangengrube auf ${id} ist nicht aufgezähl…
+       |                                                                           ^
+     83|   return passend[0]
+     84| }
+ ❯ src/engine/__tests__/schlangengrube.test.ts:220:44
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:105:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:220:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/52]⎯
+
+ FAIL  src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen
+TypeError: actual value must be number or bigint, received "undefined"
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts:227:66
+    225|       .zustand()
+    226|     const { anzahl } = pruefePartie(start, 9, ['SchlangengrubeSpielen'…
+    227|     expect(anzahl.KarteAngesagt, 'A6: die Gruben sind angesagt').toBeG…
+       |                                                                  ^
+    228|     expect(anzahl.Abgewehrt, 'A7.2: wer Farbenschutz hält, wehrt ab').…
+    229|     expect((anzahl.Ausgesetzt ?? 0) + (anzahl.GrubeOhneWirkung ?? 0), …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/52]⎯
+
+ FAIL  src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen
+AssertionError: expected 0 to be greater than or equal to 10
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts:239:34
+    237|       for (const art of ['KarteAngesagt', 'Abgewehrt', 'Ausgesetzt'] a…
+    238|     }
+    239|     expect(anzahl.KarteAngesagt).toBeGreaterThanOrEqual(10)
+       |                                  ^
+    240|     expect(anzahl.Abgewehrt).toBeGreaterThan(0)
+    241|     expect(anzahl.Ausgesetzt).toBeGreaterThan(0)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/52]⎯
+
+
+ Test Files  9 failed (9)
+      Tests  52 failed | 98 passed (150)
+   Start at  08:36:25
+   Duration  45.30s (transform 2.00s, setup 3.07s, import 2.67s, tests 43.52s, environment 29.99s)
+

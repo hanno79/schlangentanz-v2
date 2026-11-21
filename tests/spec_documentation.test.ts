@@ -399,6 +399,26 @@ describe('GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten', () => 
     expect(folge).toContain('E10b')
   })
 
+  it('D33: bei einer angesagten Sonderkarte wird jeder Betroffene gefragt; abwehren kann nur, wer Farbenschutz hält (21.11.2026)', () => {
+    const { antwort, datum, folge } = eintragD('D33')
+    pruefeKern(
+      'D33',
+      antwort,
+      [
+        'Jeder Betroffene wird gefragt',
+        'Abwehren wird nur angeboten, wer Farbenschutz hält',
+        'wer keinen hält, kann nur durchlassen',
+        'Digitale Festlegung, Entscheidung des Autors',
+        'B2',
+        'Wortlaut: „B“',
+      ],
+      // Gegenprobe: die verworfene Lesart, nach der nur gefragt wird, wer Farbenschutz hält.
+      ['Gefragt wird nur, wer'],
+    )
+    expect(datum).toBe('21.11.2026')
+    expect(folge).toContain('E4')
+  })
+
   it('D23: der Verdoppler darf im zweiten Zug wirkungslos abgelegt werden; Rückfrage vom 20.11.2026', () => {
     const { antwort, datum } = eintragD('D23')
     pruefeKern(

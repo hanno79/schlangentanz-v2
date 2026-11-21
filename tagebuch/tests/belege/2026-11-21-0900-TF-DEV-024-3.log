@@ -1,0 +1,40 @@
+[
+ {
+  "name": "desktop",
+  "angebot": [
+   "Reagieren: abwehren mit Farbenschutz (farbenschutz-03)spieler-1",
+   "Reagieren: abwehren mit Farbenschutz (farbenschutz-02)spieler-1",
+   "Reagieren: durchlassenspieler-1"
+  ],
+  "vorher": "KI-Gegner 1 spielt Schlangengrube | Du entscheidest, ob du abwehrst. | ",
+  "nachher": {
+   "text": "KI-Gegner 1 spielt Schlangengrube | Du entscheidest, ob du abwehrst. | ",
+   "ausstehend": [
+    0
+   ],
+   "gleich": true,
+   "scrollWidth": 1280,
+   "clientWidth": 1280
+  },
+  "fehler": []
+ },
+ {
+  "name": "handy-hochkant",
+  "angebot": [
+   "Reagieren: abwehren mit Farbenschutz (farbenschutz-03)spieler-1",
+   "Reagieren: abwehren mit Farbenschutz (farbenschutz-02)spieler-1",
+   "Reagieren: durchlassenspieler-1"
+  ],
+  "vorher": "KI-Gegner 1 spielt Schlangengrube | Du entscheidest, ob du abwehrst. | ",
+  "nachher": {
+   "text": "KI-Gegner 1 spielt Schlangengrube | Du entscheidest, ob du abwehrst. | ",
+   "ausstehend": [
+    0
+   ],
+   "gleich": true,
+   "scrollWidth": 390,
+   "clientWidth": 390
+  },
+  "fehler": []
+ }
+]

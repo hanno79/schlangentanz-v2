@@ -443,7 +443,8 @@ daneben.
      Angreifer, im Uhrzeigersinn, jeder einmal.
   2. A6: Die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben.
      Das Ziel lässt sich nach der Ansage nicht mehr ändern.
-  3. Gefragt wird nur, wer einen Farbenschutz hält.
+  3. Gefragt wird jeder Betroffene; Abwehren wird nur angeboten, wer
+     Farbenschutz hält (Entscheidung des Autors vom 21.11.2026, D33).
   4. A7.2: Nach der Abwehr liegen Farbenschutz und abgewehrte Karte je auf dem
      Ablagestapel ihres Spielers; die Karte hatte für diesen Spieler keine Wirkung.
   5. Farbenschutz ist im eigenen Zug nicht mit Wirkung spielbar.
