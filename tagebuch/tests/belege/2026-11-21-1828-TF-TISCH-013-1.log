@@ -1,0 +1,351 @@
+[desktop] farbe-gegner: Karte: 6 Ziele -> KI-Gegner 1, Schlange 1: Ende: 0
+   Ansage: Ansage: Rot an das Ende der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] farbendieb: Karte: 2 Ziele -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 3 -> Deine Schlange 1: hinter Karte 2: 0
+   Ansage: Ansage: Farbendieb: Gelb aus der Schlange 1 von KI-Gegner 1 in deine Schlange 1, hinter Karte 2.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] frass-a: Karte: 2 Ziele -> Option: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Rot aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] frass-b: Karte: 2 Ziele -> Option: 1 Ziele -> Deine Schlange 1, Karte 3: Sonderkarte Schlangenblockade: 0
+   Ansage: Ansage: Schlangenfrass frisst Schlangenblockade aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, Farbgruppen Rot (3) # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] frass-c-zwei-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Blau, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 2 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] frass-c-ein-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 1: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 2, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Gelb aus der Schlange 1 von KI-Gegner 2 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage 3 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] frass-fusion-a: Karte: 2 Ziele -> Option: 3 Ziele -> Deine Schlange 1, Karte 2: Sonderkarte Farbenfusion: 0
+   Ansage: Ansage: Schlangenfrass frisst Farbenfusion aus deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] blockade: Karte: 3 Ziele -> KI-Gegner 1, Schlange 1 wählen: 4 -> KI-Gegner 1, Schlange 1: zwischen Karte 1 und 2: 0
+   Ansage: Ansage: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 4 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] regenbogen: Karte: 2 Ziele -> Deine Schlange 1 wählen: 5 -> Deine Schlange 1: zwischen Karte 2 und 3: 0
+   Ansage: Ansage: Regenbogenschlange in deine Schlange 1, zwischen Karte 2 und 3.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 5 Karten, Farbgruppen Braun (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] fusion: Karte: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Gelb, 1 Punkt: 1 -> Deine Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Gelb und Gelb (Karte 3 und 4) deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] fusion-gegner: Karte: 5 Ziele -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Rot, 1 Punkt: 1 -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Rot und Rot (Karte 1 und 2) der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] grube: Karte: 2 Ziele -> KI-Gegner 2 wählen: 0
+   Ansage: Ansage: Schlangengrube auf KI-Gegner 2.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] verdoppler: Karte: 0 Ziele
+   Ansage: Ansage: Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand. ## nach Zug 1: Du bist dran Zweiter Zug nach dem Verdoppler: Spiele Karten aus deiner Hand. | Zugleiste: Wähle eine Karte aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[desktop] wirkungslos: Karte: 1 Ziele -> Ohne Wirkung auf deine Ablage: 0
+   Ansage: Ansage: Farbendieb ohne Wirkung auf deine Ablage.
+   vorher:  # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] farbe-gegner: Karte: 6 Ziele -> KI-Gegner 1, Schlange 1: Ende: 0
+   Ansage: Ansage: Rot an das Ende der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] farbendieb: Karte: 2 Ziele -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 3 -> Deine Schlange 1: hinter Karte 2: 0
+   Ansage: Ansage: Farbendieb: Gelb aus der Schlange 1 von KI-Gegner 1 in deine Schlange 1, hinter Karte 2.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] frass-a: Karte: 2 Ziele -> Option: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Rot aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] frass-b: Karte: 2 Ziele -> Option: 1 Ziele -> Deine Schlange 1, Karte 3: Sonderkarte Schlangenblockade: 0
+   Ansage: Ansage: Schlangenfrass frisst Schlangenblockade aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, Farbgruppen Rot (3) # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] frass-c-zwei-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Blau, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage 3 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] frass-c-ein-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 1: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 2, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Gelb aus der Schlange 1 von KI-Gegner 2 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage 3 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] frass-fusion-a: Karte: 2 Ziele -> Option: 3 Ziele -> Deine Schlange 1, Karte 2: Sonderkarte Farbenfusion: 0
+   Ansage: Ansage: Schlangenfrass frisst Farbenfusion aus deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] blockade: Karte: 3 Ziele -> KI-Gegner 1, Schlange 1 wählen: 4 -> KI-Gegner 1, Schlange 1: zwischen Karte 1 und 2: 0
+   Ansage: Ansage: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 4 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] regenbogen: Karte: 2 Ziele -> Deine Schlange 1 wählen: 5 -> Deine Schlange 1: zwischen Karte 2 und 3: 0
+   Ansage: Ansage: Regenbogenschlange in deine Schlange 1, zwischen Karte 2 und 3.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 5 Karten, Farbgruppen Braun (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] fusion: Karte: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Gelb, 1 Punkt: 1 -> Deine Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Gelb und Gelb (Karte 3 und 4) deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] fusion-gegner: Karte: 5 Ziele -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Rot, 1 Punkt: 1 -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Rot und Rot (Karte 1 und 2) der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] grube: Karte: 2 Ziele -> KI-Gegner 2 wählen: 0
+   Ansage: Ansage: Schlangengrube auf KI-Gegner 2.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] verdoppler: Karte: 0 Ziele
+   Ansage: Ansage: Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand. ## nach Zug 1: Du bist dran Zweiter Zug nach dem Verdoppler: Spiele Karten aus deiner Hand. | Zugleiste: Wähle eine Karte aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-quer] wirkungslos: Karte: 1 Ziele -> Ohne Wirkung auf deine Ablage: 0
+   Ansage: Ansage: Farbendieb ohne Wirkung auf deine Ablage.
+   vorher:  # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] farbe-gegner: Karte: 6 Ziele -> KI-Gegner 1, Schlange 1: Ende: 0
+   Ansage: Ansage: Rot an das Ende der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] farbendieb: Karte: 2 Ziele -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 3 -> Deine Schlange 1: hinter Karte 2: 0
+   Ansage: Ansage: Farbendieb: Gelb aus der Schlange 1 von KI-Gegner 1 in deine Schlange 1, hinter Karte 2.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] frass-a: Karte: 2 Ziele -> Option: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Rot aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] frass-b: Karte: 2 Ziele -> Option: 1 Ziele -> Deine Schlange 1, Karte 3: Sonderkarte Schlangenblockade: 0
+   Ansage: Ansage: Schlangenfrass frisst Schlangenblockade aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, Farbgruppen Rot (3) # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] frass-c-zwei-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Blau, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 2 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] frass-c-ein-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 1: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 2, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Gelb aus der Schlange 1 von KI-Gegner 2 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage 3 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] frass-fusion-a: Karte: 2 Ziele -> Option: 3 Ziele -> Deine Schlange 1, Karte 2: Sonderkarte Farbenfusion: 0
+   Ansage: Ansage: Schlangenfrass frisst Farbenfusion aus deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] blockade: Karte: 3 Ziele -> KI-Gegner 1, Schlange 1 wählen: 4 -> KI-Gegner 1, Schlange 1: zwischen Karte 1 und 2: 0
+   Ansage: Ansage: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 4 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] regenbogen: Karte: 2 Ziele -> Deine Schlange 1 wählen: 5 -> Deine Schlange 1: zwischen Karte 2 und 3: 0
+   Ansage: Ansage: Regenbogenschlange in deine Schlange 1, zwischen Karte 2 und 3.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 5 Karten, Farbgruppen Braun (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: Deine Schlange 1: hinter Karte 4: nach Scrollen unter Zeichen
+[tablet-hochkant] fusion: Karte: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Gelb, 1 Punkt: 1 -> Deine Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Gelb und Gelb (Karte 3 und 4) deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] fusion-gegner: Karte: 5 Ziele -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Rot, 1 Punkt: 1 -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Rot und Rot (Karte 1 und 2) der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] grube: Karte: 2 Ziele -> KI-Gegner 2 wählen: 0
+   Ansage: Ansage: Schlangengrube auf KI-Gegner 2.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] verdoppler: Karte: 0 Ziele
+   Ansage: Ansage: Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand. ## nach Zug 1: Du bist dran Zweiter Zug nach dem Verdoppler: Spiele Karten aus deiner Hand. | Zugleiste: Wähle eine Karte aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[tablet-hochkant] wirkungslos: Karte: 1 Ziele -> Ohne Wirkung auf deine Ablage: 0
+   Ansage: Ansage: Farbendieb ohne Wirkung auf deine Ablage.
+   vorher:  # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] farbe-gegner: Karte: 6 Ziele -> KI-Gegner 1, Schlange 1: Ende: 0
+   Ansage: Ansage: Rot an das Ende der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] farbendieb: Karte: 2 Ziele -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 3 -> Deine Schlange 1: hinter Karte 2: 0
+   Ansage: Ansage: Farbendieb: Gelb aus der Schlange 1 von KI-Gegner 1 in deine Schlange 1, hinter Karte 2.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] frass-a: Karte: 2 Ziele -> Option: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Rot aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] frass-b: Karte: 2 Ziele -> Option: 1 Ziele -> Deine Schlange 1, Karte 3: Sonderkarte Schlangenblockade: 0
+   Ansage: Ansage: Schlangenfrass frisst Schlangenblockade aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, Farbgruppen Rot (3) # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] frass-c-zwei-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Blau, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 2 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] frass-c-ein-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 1: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 2, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Gelb aus der Schlange 1 von KI-Gegner 2 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage 3 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] frass-fusion-a: Karte: 2 Ziele -> Option: 3 Ziele -> Deine Schlange 1, Karte 2: Sonderkarte Farbenfusion: 0
+   Ansage: Ansage: Schlangenfrass frisst Farbenfusion aus deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] blockade: Karte: 3 Ziele -> KI-Gegner 1, Schlange 1 wählen: 4 -> KI-Gegner 1, Schlange 1: zwischen Karte 1 und 2: 0
+   Ansage: Ansage: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] regenbogen: Karte: 2 Ziele -> Deine Schlange 1 wählen: 5 [ohne Scrollen: Deine Schlange 1: hinter Karte 4 (ausserhalb)] -> Deine Schlange 1: zwischen Karte 2 und 3: 0
+   Ansage: Ansage: Regenbogenschlange in deine Schlange 1, zwischen Karte 2 und 3.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 5 Karten, Farbgruppen Braun (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: Deine Schlange 1: hinter Karte 4: nach Scrollen unter Zeichen
+[handy-hochkant] fusion: Karte: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Gelb, 1 Punkt: 1 -> Deine Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Gelb und Gelb (Karte 3 und 4) deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] fusion-gegner: Karte: 5 Ziele -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Rot, 1 Punkt: 1 -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Rot und Rot (Karte 1 und 2) der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] grube: Karte: 2 Ziele -> KI-Gegner 2 wählen: 0
+   Ansage: Ansage: Schlangengrube auf KI-Gegner 2.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] verdoppler: Karte: 0 Ziele
+   Ansage: Ansage: Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand. ## nach Zug 1: Du bist dran Zweiter Zug nach dem Verdoppler: Spiele Karten aus deiner Hand. | Zugleiste: Wähle eine Karte aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-hochkant] wirkungslos: Karte: 1 Ziele -> Ohne Wirkung auf deine Ablage: 0
+   Ansage: Ansage: Farbendieb ohne Wirkung auf deine Ablage.
+   vorher:  # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] farbe-gegner: Karte: 6 Ziele -> KI-Gegner 1, Schlange 1: Ende: 0
+   Ansage: Ansage: Rot an das Ende der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 2: 1 Karte, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] farbendieb: Karte: 2 Ziele -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 3 -> Deine Schlange 1: hinter Karte 2: 0
+   Ansage: Ansage: Farbendieb: Gelb aus der Schlange 1 von KI-Gegner 1 in deine Schlange 1, hinter Karte 2.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] frass-a: Karte: 2 Ziele -> Option: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Rot aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] frass-b: Karte: 2 Ziele -> Option: 1 Ziele -> Deine Schlange 1, Karte 3: Sonderkarte Schlangenblockade: 0
+   Ansage: Ansage: Schlangenfrass frisst Schlangenblockade aus deiner Schlange 1.
+   vorher: Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: Deine Schlange 1: 3 Karten, Farbgruppen Rot (3) # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] frass-c-zwei-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Blau, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 2 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] frass-c-ein-spieler: Karte: 1 Ziele -> Option: 6 Ziele -> KI-Gegner 2, Schlange 1, Karte 1: Farbkarte Gelb, 1 Punkt: 5 -> KI-Gegner 2, Schlange 1, Karte 2: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Schlangenfrass frisst Gelb aus der Schlange 1 von KI-Gegner 2 und Gelb aus der Schlange 1 von KI-Gegner 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 3 Karten, Farbgruppen Gelb (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Blau (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage 3 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] frass-fusion-a: Karte: 2 Ziele -> Option: 3 Ziele -> Deine Schlange 1, Karte 2: Sonderkarte Farbenfusion: 0
+   Ansage: Ansage: Schlangenfrass frisst Farbenfusion aus deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage 2 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] blockade: Karte: 3 Ziele -> KI-Gegner 1, Schlange 1 wählen: 4 -> KI-Gegner 1, Schlange 1: zwischen Karte 1 und 2: 0
+   Ansage: Ansage: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 4 Karten, keine Farbgruppe / KI-Gegner 2, Schlange 1: 1 Karte, keine Farbgruppe / Deine Schlange 1: 2 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] regenbogen: Karte: 2 Ziele -> Deine Schlange 1 wählen: 5 [ohne Scrollen: Deine Schlange 1: hinter Karte 4 (unter Zeichen)] -> Deine Schlange 1: zwischen Karte 2 und 3: 0
+   Ansage: Ansage: Regenbogenschlange in deine Schlange 1, zwischen Karte 2 und 3.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 5 Karten, Farbgruppen Braun (3) # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: Deine Schlange 1: hinter Karte 4: nach Scrollen unter Zeichen
+[handy-quer] fusion: Karte: 4 Ziele -> Deine Schlange 1, Karte 4: Farbkarte Gelb, 1 Punkt: 1 -> Deine Schlange 1, Karte 3: Farbkarte Gelb, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Gelb und Gelb (Karte 3 und 4) deiner Schlange 1.
+   vorher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 4 Karten, keine Farbgruppe # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 2 Karten, keine Farbgruppe / Deine Schlange 1: 3 Karten, Farbgruppen Blau (3) # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] fusion-gegner: Karte: 5 Ziele -> KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Rot, 1 Punkt: 1 -> KI-Gegner 1, Schlange 1, Karte 2: Farbkarte Rot, 1 Punkt: 0
+   Ansage: Ansage: Farbenfusion auf Rot und Rot (Karte 1 und 2) der Schlange 1 von KI-Gegner 1.
+   vorher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher: KI-Gegner 1, Schlange 1: 3 Karten, Farbgruppen Rot (3) / KI-Gegner 2, Schlange 1: 3 Karten, keine Farbgruppe # Ablage 1 / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] grube: Karte: 2 Ziele -> KI-Gegner 2 wählen: 0
+   Ansage: Ansage: Schlangengrube auf KI-Gegner 2.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] verdoppler: Karte: 0 Ziele
+   Ansage: Ansage: Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.
+   vorher:  # Ablage leer / Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand. ## nach Zug 1: Du bist dran Zweiter Zug nach dem Verdoppler: Spiele Karten aus deiner Hand. | Zugleiste: Wähle eine Karte aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+[handy-quer] wirkungslos: Karte: 1 Ziele -> Ohne Wirkung auf deine Ablage: 0
+   Ansage: Ansage: Farbendieb ohne Wirkung auf deine Ablage.
+   vorher:  # Ablage leer / Deine Ablage leer # Du bist dran Spiele Karten aus deiner Hand.
+   nachher:  # Ablage leer / Deine Ablage 1 # Du bist dran Spiele Karten aus deiner Hand.
+   Speicher vor Ausführen unverändert: true; Probleme: keine
+Probleme gesamt: 3

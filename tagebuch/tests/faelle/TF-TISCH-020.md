@@ -12,11 +12,11 @@ aenderung: task/O5-karten-spielen (PR #73)
 
 ## Worum es geht
 
-DESIGN.md verlangt für jeden gesperrten Knopf, dass daneben steht, warum, und für „Zug beenden“ den Satz „Du musst immer mindestens eine Karte spielen.“. Seit O5 bleibt „Zug beenden“ auch stehen, während du eine Karte gewählt hast. Dann muss der Grund ebenfalls zu sehen sein, oder der Knopf darf in dieser Lage nicht gesperrt dastehen.
+DESIGN.md verlangt für jeden gesperrten Knopf, dass daneben steht, warum. Seit O5 bleibt „Zug beenden“ auch stehen, während du eine Karte gewählt hast; dann muss der Grund ebenfalls zu sehen sein. Den Grund liefert seit O5 Iteration 2 die Engine (`zugBeendenGesperrt`). Vor der ersten Karte lautet er heute „Spieler 1 muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).“
 
 ## Bestanden, wenn
 
-In jeder Geräteklasse steht neben dem gesperrten „Zug beenden“ der Satz „Du musst immer mindestens eine Karte spielen.“, sowohl ohne gewählte Karte als auch nach dem Antippen von „Farbkarte Rot, 1 Punkt“ und nach einer vollständigen Auswahl mit Ansage.
+In jeder Geräteklasse steht neben dem gesperrten „Zug beenden“ der Grund der Engine, ganz im Bild und höchstens 16 px vom Knopf entfernt, und der Knopf verweist mit `aria-describedby` auf ihn. Das gilt ohne gewählte Karte, nach dem Antippen von „Farbkarte Rot, 1 Punkt“ und nach einer vollständigen Auswahl mit Ansage.
 
 ## Fehlgeschlagen, wenn
 
@@ -36,7 +36,7 @@ Adressen `/spiel?szenario=farbkarte-beim-gegner&tempo=sofort` und `/spiel?szenar
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Browser | `farbkarte-beim-gegner` öffnen | | „Zug beenden“ gesperrt, daneben „Du musst immer mindestens eine Karte spielen.“ |
+| 1 | Browser | `farbkarte-beim-gegner` öffnen | | „Zug beenden“ gesperrt, daneben „Spieler 1 muss erst mindestens eine Karte spielen; …“ |
 | 2 | Deine Hand | „Farbkarte Rot, 1 Punkt“ antippen | | „Zug beenden“ gesperrt: steht der Grund daneben? |
 | 3 | Browser | `farbendieb` öffnen, Farbendieb, Gelb des Gegners und „Deine Schlange 1: hinter Karte 2“ antippen | | Ansage; „Zug beenden“ gesperrt: steht der Grund daneben? |
 
