@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { existsSync } from 'node:fs'
 import {
   FREI,
+  NACHFRAGE,
   OFFEN,
   TASK_ID,
   ZITAT,
@@ -157,9 +158,9 @@ function pruefeVerweise(nr: string): void {
     )
   }
   // Nachfragen wie F8a haben keine eigene Zeile im Plan; ihre Antwort steht bei der Ausgangsfrage.
-  const planFrage = planFragen.find((frage) => frage.nr === nr)
-  if (!planFrage) return
-  expect(planFrage.antwort ?? '', `Plan Abschnitt 9, ${nr}: Spalte „Antwort“ nennt ${eintrag.nr} nicht`).toMatch(alsWort(eintrag.nr))
+  if (NACHFRAGE.test(nr)) return
+  const planAntwort = planFragen.find((frage) => frage.nr === nr)?.antwort ?? ''
+  expect(planAntwort,`Plan Abschnitt 9, ${nr}: Spalte „Antwort“ nennt ${eintrag.nr} nicht`).toMatch(alsWort(eintrag.nr))
 }
 
 describe('P0.5: Regelfragen an den Autor', () => {

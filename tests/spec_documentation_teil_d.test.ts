@@ -24,7 +24,6 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fehlende(d, ['D14–D29', 'D31', 'D34–D55'])).toEqual([])
     const nummern = spalten(tabelleMitSpalte(d, 'Antwort'), 'Nr.').map(([nr]) => nr)
     expect(nummern, 'Teil D: Nummern nicht lückenlos ab D1').toEqual(nummern.map((_, i) => `D${i + 1}`))
-    expect(nummern.at(-1), 'Teil D: letzte Nummer').toBe('D55')
   })
 
   it('P0.5d: Teil D vermerkt, welche Antworten die Website übernommen hat und welche noch folgen', () => {

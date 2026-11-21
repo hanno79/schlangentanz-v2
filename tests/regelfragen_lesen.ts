@@ -115,18 +115,18 @@ function fragenAusPlan(): PlanFrage[] {
     .split(/^(?=### )/m)
     .flatMap((teil) => {
       const { kopf, zeilen } = tabelle(teil)
-      const spalte = (zeile: string[], name: string) => {
-        const stelle = kopf.findIndex((zelle) => zelle.startsWith(name))
-        return stelle < 0 ? undefined : zeile[stelle]
-      }
+      // „startsWith“, weil der Kopf etwa „Antwort (13.11.2026)“ heisst.
+      const [stelle, frage, vorschlag, antwort] = ['Stelle', 'Frage', 'Vorschlag', 'Antwort'].map((name) =>
+        kopf.findIndex((zelle) => zelle.startsWith(name)),
+      )
       return zeilen
         .filter((zeile) => /^[FG]\d+$/.test(zeile[0] ?? ''))
         .map((zeile) => ({
           nr: zeile[0],
-          stelle: spalte(zeile, 'Stelle') ?? '',
-          frage: spalte(zeile, 'Frage') ?? '',
-          vorschlag: spalte(zeile, 'Vorschlag'),
-          antwort: spalte(zeile, 'Antwort'),
+          stelle: zeile[stelle] ?? '',
+          frage: zeile[frage] ?? '',
+          vorschlag: zeile[vorschlag],
+          antwort: zeile[antwort],
         }))
     })
 }
