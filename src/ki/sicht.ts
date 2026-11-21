@@ -1,4 +1,4 @@
-import { ermittleEntscheider } from '../engine';
+import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider } from '../engine';
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -7,6 +7,7 @@ import type {
   Schlange,
   SchwebendeKarte,
   Sonderkartenname,
+  SpielAktion,
   Spieler,
   Spielkarte,
   Spielzustand,
@@ -89,13 +90,13 @@ function spielerSicht(spieler: Spieler): SpielerSicht {
   };
 }
 
-/** Die Sicht des Spielers an Stelle `spielerIndex`. */
-export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
+/** Die Sicht, die noch auf den Zustand verweist; `sichtFuer` schreibt sie ab. */
+function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
   const ich = zustand.spieler[spielerIndex];
   if (ich === undefined) {
     throw new Error(`Sicht: Einen Spieler an Stelle ${spielerIndex} gibt es bei ${zustand.spieler.length} Spielern nicht.`);
   }
-  return structuredClone({
+  return {
     ich: spielerIndex,
     hand: ich.hand,
     geheimeAufgabe: ich.geheimeAufgabe,
@@ -112,7 +113,12 @@ export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
     ausliegendeGruben: zustand.ausliegendeGruben,
     angesagt: zustand.schwebend,
     ausDemSpiel: zustand.ausDemSpiel,
-  });
+  };
+}
+
+/** Die Sicht des Spielers an Stelle `spielerIndex`. */
+export function sichtFuer(zustand: Spielzustand, spielerIndex: number): Sicht {
+  return structuredClone(sichtAus(zustand, spielerIndex));
 }
 
 export interface Entscheider {
@@ -132,4 +138,148 @@ export function entscheiderVon(zustand: Spielzustand): Entscheider | null {
 /** Wie viele Spieler am Tisch sitzen. */
 export function spielerzahl(zustand: Spielzustand): number {
   return zustand.spieler.length;
+}
+
+/*
+Simulation ohne verdeckte Information (Plan K2, Vorgabe aus P0.3d): Eine
+Strategie bekommt nie einen Zustand, auch nicht für die Zugsuche. Der Rahmen
+errät deshalb aus der Sicht einen Zustand (Determinisierung): Was der Spieler
+nicht sieht, die fremden Handkarten, der Nachziehstapel, die fremden geheimen
+Aufgaben und der Aufgabenstapel, füllt er zufällig aus den Karten auf, die nirgends
+offen liegen. Der erratene Zustand hängt nur von der Sicht und vom Zufall der KI ab,
+nie vom echten Zustand. Darauf spielt die Strategie Aktionen durch und sieht nach
+jeder wieder nur die Sicht danach (`Stellung`).
+
+Was der erratene Zustand festlegt, ist geraten: Ob eine fremde geheime Aufgabe
+erfüllt ist, sieht niemand (A9); geraten wird „nicht erfüllt“. Den Zähler der
+Schlangen zeigt die Sicht nicht; geraten wird die höchste Nummer am Tisch, damit
+eine neue Schlange keine bestehende Id bekommt. Beides ändert an den Aktionen des
+Spielers und an den Schlangen nichts, nur die Id einer neuen Schlange kann anders
+heissen als in der echten Partie.
+*/
+
+/** Alle Spielkarten und Aufgabenkarten einer Partie dieser Grösse, gemischt mit `zufall` (A1, A4). */
+function gemischtesMaterial(spielerzahl: number, erweiterung: boolean, zufall: () => number) {
+  const partie = erstellePartie({ spielerzahl, erweiterung, zufall });
+  return {
+    karten: [...partie.spieler.flatMap((spieler) => spieler.hand), ...partie.nachziehstapel],
+    aufgaben: [...partie.offeneAufgaben, ...partie.spieler.flatMap((spieler) => (spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe])), ...partie.aufgabenStapel],
+  };
+}
+
+/** Die Ids aller Spielkarten, die der Spieler sieht: eigene Hand, Schlangen samt Karten unter Fusionen, Ablagestapel, Gruben, die angesagte Karte, was aus dem Spiel ist. */
+function offeneKarten(sicht: Sicht): Set<string> {
+  return new Set([
+    ...sicht.hand.map((karte) => karte.id),
+    ...sicht.spieler.flatMap((spieler) => [
+      ...spieler.schlangen.flatMap((schlange) => [...schlange.karten, ...schlange.fusionen.flatMap((fusion) => fusion.unter)].map((karte) => karte.id)),
+      ...spieler.ablagestapel.map((karte) => karte.id),
+    ]),
+    ...sicht.ausliegendeGruben.map((grube) => grube.karte.id),
+    ...(sicht.angesagt === null ? [] : [sicht.angesagt.karte.id]),
+    ...sicht.ausDemSpiel.map((karte) => karte.id),
+  ]);
+}
+
+/** Die Ids aller Aufgabenkarten, die der Spieler sieht: offene, erfüllte und die eigene geheime (A9). */
+function offeneAufgabenIds(sicht: Sicht): Set<string> {
+  return new Set([
+    ...sicht.offeneAufgaben.map((aufgabe) => aufgabe.id),
+    ...sicht.spieler.flatMap((spieler) => spieler.erfuellteAufgaben.map((aufgabe) => aufgabe.id)),
+    ...(sicht.geheimeAufgabe === null ? [] : [sicht.geheimeAufgabe.id]),
+  ]);
+}
+
+/** Die höchste Nummer einer Schlange am Tisch, 0 ohne Schlange. */
+function hoechsteSchlangennummer(sicht: Sicht): number {
+  const nummern = sicht.spieler.flatMap((spieler) => spieler.schlangen.map((schlange) => Number(/^schlange-(\d+)$/.exec(schlange.id)?.[1] ?? 0)));
+  return Math.max(0, ...nummern);
+}
+
+/**
+ * Ein Zustand, der zur Sicht passt: `sichtFuer(bestimmeZustand(sicht, zufall), sicht.ich)`
+ * ist wieder `sicht`. Das Verdeckte ist mit `zufall` aus den ungesehenen Karten gefüllt.
+ * Passt die Sicht zu keinem Zustand, etwa weil Karten fehlen, ist das ein Fehler.
+ */
+export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustand {
+  const kopie = structuredClone(sicht);
+  const { karten, aufgaben } = gemischtesMaterial(kopie.spieler.length, kopie.erweiterung, zufall);
+  const gesehen = offeneKarten(kopie);
+  const verdeckt = karten.filter((karte) => !gesehen.has(karte.id));
+  const fremde = kopie.spieler.filter((_, index) => index !== kopie.ich);
+  const fremdeHandkarten = fremde.reduce((summe, spieler) => summe + spieler.handgroesse, 0);
+  if (verdeckt.length !== fremdeHandkarten + kopie.nachziehstapelGroesse) {
+    throw new Error(
+      `Simulation: Verdeckt sind ${verdeckt.length} Karten, die Sicht verlangt ${fremdeHandkarten} in fremden Händen und ${kopie.nachziehstapelGroesse} im Nachziehstapel.`,
+    );
+  }
+  const bekannteAufgaben = offeneAufgabenIds(kopie);
+  const verdeckteAufgaben = aufgaben.filter((aufgabe) => !bekannteAufgaben.has(aufgabe.id));
+  const fremdeGeheime = verdeckteAufgaben.length - kopie.aufgabenstapelGroesse;
+  if (fremdeGeheime !== 0 && fremdeGeheime !== fremde.length) {
+    throw new Error(
+      `Simulation: Verdeckt sind ${verdeckteAufgaben.length} Aufgaben; zu ${kopie.aufgabenstapelGroesse} im Aufgabenstapel passen weder keine noch ${fremde.length} fremde geheime.`,
+    );
+  }
+  const spieler = kopie.spieler.map(({ handgroesse, ...offen }, index): Spieler => {
+    if (index === kopie.ich) return { ...offen, hand: kopie.hand, geheimeAufgabe: kopie.geheimeAufgabe, geheimeAufgabeErfuellt: kopie.geheimeAufgabeErfuellt };
+    const geheimeAufgabe = fremdeGeheime === 0 ? null : (verdeckteAufgaben.shift() ?? null);
+    return { ...offen, hand: verdeckt.splice(0, handgroesse), geheimeAufgabe, geheimeAufgabeErfuellt: false };
+  });
+  return {
+    version: 2,
+    erweiterung: kopie.erweiterung,
+    spieler,
+    partiephase: kopie.partiephase,
+    zug: kopie.zug,
+    schlussrundeAusloeser: kopie.schlussrundeAusloeser,
+    nachziehstapel: verdeckt,
+    ausliegendeGruben: kopie.ausliegendeGruben,
+    schwebend: kopie.angesagt,
+    ausDemSpiel: kopie.ausDemSpiel,
+    offeneAufgaben: kopie.offeneAufgaben,
+    aufgabenStapel: verdeckteAufgaben,
+    schlangenZaehler: hoechsteSchlangennummer(kopie),
+  };
+}
+
+/**
+ * Eine Stellung auf einem erratenen Zustand; die Strategie sieht davon nur Sichten
+ * und Aktionen. Die Sicht einer Stellung ist keine Abschrift, sondern verweist auf
+ * den erratenen Zustand, weil jede Abschrift die Suche bremst: Wer sie verändert,
+ * verdirbt nur die eigene Simulation. Den echten Zustand erreicht sie nie.
+ */
+export interface Stellung {
+  /** Die Sicht des Spielers, für den simuliert wird; nur lesen. */
+  readonly sicht: Sicht;
+  /** Wer jetzt entscheidet, als Stelle in `sicht.spieler`; `null` nach Spielende. */
+  readonly entscheider: number | null;
+  /** Die Aktionen, die der Entscheider jetzt hat, wie die Engine sie aufzählt. */
+  aktionen(): SpielAktion[];
+  /** Die Stellung nach `aktion`; eine unerlaubte Aktion lehnt die Engine mit ihrem Grund ab. */
+  nach(aktion: SpielAktion): Stellung;
+}
+
+function stellung(zustand: Spielzustand, ich: number): Stellung {
+  let sicht: Sicht | null = null;
+  let aktionen: SpielAktion[] | null = null;
+  return {
+    get sicht() {
+      sicht ??= sichtAus(zustand, ich);
+      return sicht;
+    },
+    entscheider: ermittleEntscheider(zustand),
+    aktionen() {
+      aktionen ??= ermittleAktionen(zustand);
+      return [...aktionen];
+    },
+    nach(aktion) {
+      return stellung(anwendeAktion(zustand, aktion).zustand, ich);
+    },
+  };
+}
+
+/** Die Stellung zur Sicht, auf einem mit `zufall` erratenen Zustand (`bestimmeZustand`). */
+export function simuliere(sicht: Sicht, zufall: () => number): Stellung {
+  return stellung(bestimmeZustand(sicht, zufall), sicht.ich);
 }

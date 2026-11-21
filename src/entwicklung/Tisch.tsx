@@ -114,18 +114,28 @@ interface KiSchrittProps {
   scheitert: (grund: string) => void
 }
 
-/** K1, Kriterium 4: spielt genau einen Schritt der Zufalls-KI, wenn eine KI entscheidet. */
+/**
+ * Die Knöpfe für einen KI-Schritt: „KI-Schritt“ spielt die Zufalls-KI (K1, Kriterium 4),
+ * „KI-Schritt (solide)“ die solide KI, damit sich ihr Verhalten am Tisch prüfen lässt
+ * (K2). Beide Fabriken kommen aus der Registry.
+ */
+const KI_KNOEPFE = [
+  { beschriftung: 'KI-Schritt', strategie: 'zufallsKi' },
+  { beschriftung: 'KI-Schritt (solide)', strategie: 'solideKi' },
+] as const
+
+/** Spielt genau einen Schritt der gewählten KI, wenn eine KI entscheidet. */
 function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
   const entscheider = entscheiderVon(zustand)
   const kiAmZug = entscheider?.steuerung === 'KI'
   const hinweis =
     entscheider === null ? 'Die Partie ist beendet.' : `${entscheider.name} entscheidet; das ist ${kiAmZug ? 'eine KI.' : 'ein Mensch.'}`
 
-  function spiele() {
+  function spiele(beschriftung: string, strategie: (typeof KI_KNOEPFE)[number]['strategie']) {
     try {
-      const aktion = naechsterKiSchritt(zustand, STRATEGIEN.zufallsKi(erzeugeZufall(schritt)))
+      const aktion = naechsterKiSchritt(zustand, STRATEGIEN[strategie](erzeugeZufall(schritt)))
       if (aktion === null) throw new Error('Es entscheidet keine KI.')
-      fuehreAus(aktion, `KI-Schritt: ${beschrifte(zustand, aktion)}`)
+      fuehreAus(aktion, `${beschriftung}: ${beschrifte(zustand, aktion)}`)
     } catch (fehler) {
       scheitert(fehlertext(fehler))
     }
@@ -133,9 +143,13 @@ function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
 
   return (
     <p>
-      <button type="button" onClick={spiele} disabled={!kiAmZug}>
-        KI-Schritt
-      </button>{' '}
+      {KI_KNOEPFE.map(({ beschriftung, strategie }) => (
+        <span key={strategie}>
+          <button type="button" onClick={() => spiele(beschriftung, strategie)} disabled={!kiAmZug}>
+            {beschriftung}
+          </button>{' '}
+        </span>
+      ))}
       <small data-testid="ki-schritt-hinweis">{hinweis}</small>
     </p>
   )
