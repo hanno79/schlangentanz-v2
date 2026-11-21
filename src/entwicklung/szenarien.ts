@@ -3,6 +3,7 @@ import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten } from '../engine/testing/szenario'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
+import { FARBENDIEB_SZENARIEN } from './szenarienFarbendieb'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
 
 export interface Szenario {
@@ -226,6 +227,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...zugablaufSzenarien(),
   ...verdopplerSzenarien(),
   ...abwehrSzenarien(),
+  ...FARBENDIEB_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

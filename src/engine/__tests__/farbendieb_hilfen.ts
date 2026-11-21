@@ -14,9 +14,12 @@ export function diebstaehle(zustand: Spielzustand): FarbendiebSpielenAktion[] {
   return aktionen(zustand, 'FarbendiebSpielen').filter((aktion): aktion is FarbendiebSpielenAktion => aktion.typ === 'FarbendiebSpielen')
 }
 
-/** Die aufgezählte Aktion, die die Karte `karteId` stiehlt und nach `ziel` legt. */
+/** Die aufgezählte Aktion, mit der der erste Farbendieb des Spielers am Zug die Karte `karteId` stiehlt und nach `ziel` legt. */
 export function stiehl(zustand: Spielzustand, karteId: string, ziel: Diebesziel): FarbendiebSpielenAktion {
-  const passend = diebstaehle(zustand).filter((aktion) => aktion.quelle.karteId === karteId && JSON.stringify(aktion.ziel) === JSON.stringify(ziel))
+  const dieb = diebId(zustand, zustand.zug.spielerIndex)
+  const passend = diebstaehle(zustand).filter(
+    (aktion) => aktion.karteId === dieb && aktion.quelle.karteId === karteId && JSON.stringify(aktion.ziel) === JSON.stringify(ziel),
+  )
   expect(passend, `FarbendiebSpielen mit ${karteId} nach ${JSON.stringify(ziel)} ist nicht aufgezählt`).toHaveLength(1)
   return passend[0]
 }
