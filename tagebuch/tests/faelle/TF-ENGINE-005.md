@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
-skript: src/engine/__tests__/material.test.ts
+skript: src/engine/__tests__/regeln/A4_material.test.ts
 aenderung: task/E1-struktur (PR #31), Commit 96b1650
 grenzfall_von: TF-ENGINE-001
 ---

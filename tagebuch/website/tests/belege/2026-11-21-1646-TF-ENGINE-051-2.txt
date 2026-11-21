@@ -1,0 +1,4 @@
+Teil 1: 500 Partien, nicht beendet 0, Zustände 91515, höchste Aktionszahl 2507 (3 Spieler, Erweiterung true), 127428 ms
+Teil 2: 500 Partien, nicht beendet 0, Zustände 91418, höchste Aktionszahl 3188 (2 Spieler, Erweiterung true), 122602 ms
+Teil 3: 500 Partien, nicht beendet 0, Zustände 91648, höchste Aktionszahl 4007 (2 Spieler, Erweiterung true), 130663 ms
+Teil 4: 500 Partien, nicht beendet 0, Zustände 91594, höchste Aktionszahl 2629 (2 Spieler, Erweiterung true), 114982 ms

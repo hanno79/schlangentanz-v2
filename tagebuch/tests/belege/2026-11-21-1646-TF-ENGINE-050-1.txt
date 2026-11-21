@@ -1,0 +1,33 @@
+### 5. Golden Master
+
+Zug-für-Zug-Lektüre von `partie-2-spieler-saat-5.txt` (Saat 5, 2 Spieler, ohne Erweiterung, 185 Schritte) gegen Teil A, B und D:
+
+| Stelle (Schritt) | Was geschieht | Regel | Urteil |
+|---|---|---|---|
+| Aufbau | je 5 Handkarten, 98 im Nachziehstapel; Spieler 1 beginnt | A4, B2 (Mensch beginnt) | stimmt (108 − 10 = 98) |
+| 1–2 | Spieler 1 legt eine Farbenfusion ohne Wirkung ab, zieht 1 | A5 Wichtig, D13, D25: kein mögliches Ziel (noch keine Schlange) | stimmt |
+| 3–4 | KI beginnt mit Gelb eine Schlange, zieht 1 | A5 | stimmt |
+| 5–8 | Spieler 1 beginnt Braun, legt eine Regenbogenschlange in die Schlange der KI; die KI wird gefragt, lässt durch; Spieler 1 zieht 2 | A5 (Sonderkarte an beliebiger Stelle jeder Schlange), D9, A6/D33 | stimmt |
+| 9–11 | KI legt Blau an die Schlange von Spieler 1 und spielt den Verdoppler; zieht 2 | D19, A7.8 (höchstens eine Farbkarte, dann auffüllen) | stimmt |
+| 12–15 | zweiter Zug: neue Schlange (zweite der KI), Farbendieb stiehlt Blau aus der Schlange von Spieler 1 an Stelle 0 der eigenen; Spieler 1 wird gefragt | A7.8, A5 (höchstens 2 Schlangen), A7.1, D17 | stimmt |
+| 16–18 | Spieler 1 legt Blau beim Gegner an, legt eine Farbenfusion ohne Wirkung ab | D25: nach Schritt 16 liegen nirgends zwei gleichfarbige Farbkarten nebeneinander | stimmt |
+| 23–26 | KI spielt Grube auf Spieler 1; er hält Farbenschutz, lässt aber durch; beim Zugwechsel „setzt aus“, Grube auf den Ablagestapel der KI; Spieler 1 zieht nicht | A7.6 Bsp. 1, A6 (Ablagestapel des Spielers), D18 | stimmt; das Durchlassen trotz Farbenschutz ist erlaubt (A6 „kann“) |
+| 29–32 | Regenbogenschlange an Stelle 3 beim Gegner, dann neue zweite Schlange | D9, A5 | stimmt |
+| 33–36 | KI legt Blau beim Spieler an, spielt Grube; Spieler 1 wehrt mit Farbenschutz ab; Grube „ohne Wirkung“ auf den Stapel der KI, Farbenschutz auf den von Spieler 1; Spieler 1 zieht erst zu Beginn seines Zuges 1 | A7.6 Bsp. 2, A7.2, A6 Timing | stimmt |
+| 39–42 | Farbendieb aus der Schlange von Spieler 1 (ohne Farbenschutz gefragt) | A7.1, D33 | stimmt |
+| 43 | Regenbogenschlange in die eigene Schlange an Stelle 0, ohne Frage | A6 (niemand betroffen) | stimmt |
+| 46–51 | Verdoppler, zweiter Zug: Schlangenfrass a) frisst eigenes Gelb, Gelb und Frass auf den eigenen Stapel; dann Grün | A7.4 a), A6 Bsp. 2 Punkt 4 | stimmt |
+| 54–57 | Blockade an Stelle 1 beim Spieler (ohne Farbenschutz gefragt) | A7.5, A6 | stimmt |
+| 58–61 | Blockade beim Gegner, abgewehrt; Blockade auf den Stapel von Spieler 1, Farbenschutz auf den der KI; danach eine Farbkarte (keine zweite Sonderkarte) | A6 Bsp. 1, A7.2, D12 | stimmt |
+| 62–65 | Schlangenfrass c) frisst Regenbogenschlange und Blau beim Spieler; beide auf den Stapel der KI | A7.4 c) (auch Regenbogenschlangen) | stimmt |
+| 77–82 | Verdoppler; zweiter Zug: Frass c) auf zwei Karten aus zwei Schlangen desselben Spielers, eine Frage; dann Blau | A7.4, D15, A7.8 | stimmt |
+| 83–86 | Farbendieb nimmt Grün aus der KI-Schlange, legt es an Stelle 1 der eigenen | A7.1, D17 | stimmt |
+| 111–112 | Farbenfusion auf zwei benachbarte Violett der KI, KI gefragt | A7.7, D9, D10, D20 | stimmt |
+| 122–123 | Farbenfusion der KI auf zwei Violett des Spielers | wie oben | stimmt |
+| 140–143 | Frass c) auf zwei Karten des Spielers, abgewehrt: beide bleiben | D15 | stimmt |
+| 147–148 | Farbendieb, Spieler 1 ohne Farbenschutz | A7.1 | stimmt |
+| 150–153 | Spieler 1 spielt Grube auf die KI; beim Zugwechsel setzt die KI aus, Grube auf den Stapel von Spieler 1; Spieler 1 ist gleich wieder dran | A7.6, A6 | stimmt |
+| 154–158 | Verdoppler; im zweiten Zug nur eine Farbkarte | A7.8 (mindestens eine Karte) | stimmt |
+| 169–172 | Blockade an Stelle 12 der KI-Schlange | A7.5 | stimmt |
+| 181–182 | KI zieht die letzte Karte am Zugende: „Schlussrunde, ausgelöst von KI-Gegner 1“ | A10 | stimmt |
+| 183–185 | Spieler 1 macht seinen letzten Zug (Farbkarte, Regenbogenschlange) ohne Nachziehen; danach „Die Partie ist beendet.“; die KI kommt nicht mehr dran | A10, D21 | stimmt |

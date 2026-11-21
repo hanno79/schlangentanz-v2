@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-13
 veraendert_daten: nein
-skript: src/engine/__tests__/wertung_farbgruppen.test.ts
+skript: src/engine/__tests__/regeln/A11_farbgruppen.test.ts
 aenderung: task/E10-wertung (PR #33)
 ---
 

@@ -44,4 +44,4 @@ Szenario `haeutung-nicht-moeglich` aus `src/entwicklung/szenarienHaeutung.ts`, S
 
 ## Nicht abgedeckte Grenzfälle
 
-Eine Schlange ganz ohne Farbkarten kommt nicht vor, weil eine Schlange immer mit einer Farbkarte beginnt (A5). Der Tisch ganz ohne Schlange ist in `schlangenhaeutung.test.ts` („D13: ohne Schlange am Tisch …“) abgedeckt.
+Eine Schlange ganz ohne Farbkarten kommt nicht vor, weil eine Schlange immer mit einer Farbkarte beginnt (A5). Der Tisch ganz ohne Schlange ist in `A7.9_schlangenhaeutung.test.ts` („D13: ohne Schlange am Tisch …“) abgedeckt.

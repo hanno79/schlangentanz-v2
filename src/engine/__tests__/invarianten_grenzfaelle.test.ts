@@ -99,6 +99,20 @@ describe('A2/A4: Grenzfälle der Invarianten', () => {
     expect(verletzte(zustand)).toEqual([VERWEISE])
   })
 
+  it('A6/E4-H3: eine schwebende Karte ohne Ausstehenden wird gemeldet und beim Laden mit Grund abgelehnt', () => {
+    const zustand = mitSchwebender((karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-2' }))
+    zustand.schwebend!.ausstehend = []
+    expect(verletzte(zustand), 'pruefeInvarianten: ausstehend [] erwartet verletzt').toEqual([VERWEISE])
+    const befund = pruefeInvarianten(zustand).find((eintrag) => eintrag.name === VERWEISE)!
+    expect(befund.detail, 'pruefeInvarianten: der Grund nennt die schwebende Karte und A6').toMatch(/schlangengrube-01.*niemand.*\(A6\)/)
+    expect(() => deserialisiere(serialisiere(zustand)), 'deserialisiere: ein Stand, in dem niemand mehr entscheidet, wird abgelehnt').toThrow(
+      /Ungültiger Spielstand: Alle Verweise auf Spieler und Karten sind gültig verletzt\..*niemand/,
+    )
+    // Haben alle entschieden, ist die Karte aufgelöst; auch mit Abwehrenden bleibt ohne Ausstehenden nichts zu fragen.
+    zustand.schwebend!.abgewehrt = [1]
+    expect(verletzte(zustand)).toEqual([VERWEISE])
+  })
+
   it('A6: ein unbekannter Aktionstyp der schwebenden Karte wird gemeldet, statt zu werfen', () => {
     const zustand = mitSchwebender((karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-2' }))
     ;(zustand.schwebend!.aktion as { typ: string }).typ = 'Zaubern'

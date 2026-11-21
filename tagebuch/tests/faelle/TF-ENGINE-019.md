@@ -7,7 +7,7 @@ prioritaet: mittel
 herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
-skript: src/engine/__tests__/wertung_joker_kombinatorik.test.ts
+skript: src/engine/__tests__/regeln/A11_joker_kombinatorik.test.ts
 aenderung: task/E10b-vielfalt-regenbogen (PR #52)
 grenzfall_von: TF-ENGINE-017
 ---

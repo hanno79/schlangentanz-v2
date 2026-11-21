@@ -46,4 +46,4 @@ Szenario `farbendieb`: Spieler 1 hat die Schlange gelb-05, gelb-12 und den Farbe
 
 ## Nicht abgedeckte Grenzfälle
 
-Die Stellen 0 und 1 und das Blau als Beute werden hier nicht geklickt; sie prüfen die Engine-Tests `farbendieb.test.ts` („an eine beliebige Position: an Stelle %i …“). Tablet und Handy quer sind nicht nachgespielt, weil E8 die Oberfläche des Entwicklertischs nicht ändert und `npm run test:layout` sie misst.
+Die Stellen 0 und 1 und das Blau als Beute werden hier nicht geklickt; sie prüfen die Engine-Tests `A7.1_farbendieb.test.ts` („an eine beliebige Position: an Stelle %i …“). Tablet und Handy quer sind nicht nachgespielt, weil E8 die Oberfläche des Entwicklertischs nicht ändert und `npm run test:layout` sie misst.

@@ -7,7 +7,7 @@ prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
-skript: src/engine/__tests__/legen_farbkarte.test.ts
+skript: src/engine/__tests__/regeln/A5_farbkarte.test.ts
 aenderung: task/E5-legen (PR #66)
 ---
 
@@ -48,8 +48,8 @@ Szenario `farbkarte-beim-gegner` (Saat 51, zwei Spieler). Gespielte Karte: Feuer
 
 ## Technische Prüfung
 
-`npx vitest run src/engine/__tests__/legen_farbkarte.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
+`npx vitest run src/engine/__tests__/regeln/A5_farbkarte.test.ts src/entwicklung/szenarienLegen.test.ts` endet mit Exit 0.
 
 ## Nicht abgedeckte Grenzfälle
 
-Farbkarte ohne jede Schlange am Tisch ist nur „neue Schlange“, geprüft in `zugablauf_ausspielen.test.ts` (E2). Eine Farbkarte in eine Schlange mit Fusion oder Blockade am Ende deckt `legen_farbkarte.test.ts` ab. Eine zweite Farbkarte im selben Zug nach dem Anlegen beim Gegner steht in TF-ENGINE-043.
+Farbkarte ohne jede Schlange am Tisch ist nur „neue Schlange“, geprüft in `A5_ausspielen.test.ts` (E2). Eine Farbkarte in eine Schlange mit Fusion oder Blockade am Ende deckt `A5_farbkarte.test.ts` ab. Eine zweite Farbkarte im selben Zug nach dem Anlegen beim Gegner steht in TF-ENGINE-043.

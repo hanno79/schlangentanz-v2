@@ -7,7 +7,7 @@ prioritaet: mittel
 herkunft: aenderung
 angelegt: 2026-11-20
 veraendert_daten: nein
-skript: src/engine/__tests__/wertung_vielfalt.test.ts
+skript: src/engine/__tests__/regeln/A11_vielfalt.test.ts
 aenderung: task/E10b-vielfalt-regenbogen (PR #52)
 grenzfall_von: TF-ENGINE-017
 ---
@@ -36,7 +36,7 @@ Schlange: Rot ×3, Schlangenblockade, Regenbogenschlange ×3, Grün; zweite Ausl
 
 ## Technische Prüfung
 
-`werteSchlangen(schlangen, true)` aus `src/engine/jokerGruppen.ts` liefert für die erste Auslage `vielfaltFarben` = `['Rot', 'Grün']`, `vielfaltBonus` = 1, `gruppenPunkte` = 6. Den zweiten Fall hält der Test „D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot“ in `wertung_vielfalt.test.ts` fest; der erste lief im eigenen Abgleich des Prüfers E10b.
+`werteSchlangen(schlangen, true)` aus `src/engine/jokerGruppen.ts` liefert für die erste Auslage `vielfaltFarben` = `['Rot', 'Grün']`, `vielfaltBonus` = 1, `gruppenPunkte` = 6. Den zweiten Fall hält der Test „D32, A7.3: in einer Gruppe mit einer roten Karte zählt die Regenbogenschlange weiter als Rot“ in `A11_vielfalt.test.ts` fest; der erste lief im eigenen Abgleich des Prüfers E10b.
 
 ## Nicht abgedeckte Grenzfälle
 

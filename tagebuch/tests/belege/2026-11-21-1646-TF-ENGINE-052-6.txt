@@ -1,0 +1,98 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a04450aa0902e90be
+
+ ❯ src/engine/__tests__/golden_master.test.ts (7 tests | 2 failed) 2040ms
+     × A10: 3 Spieler, Saat 3: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 483ms
+     × A10: 4 Spieler, Saat 2: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 490ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/golden_master.test.ts > A4/A5/A6/A7/A10/A11: Golden Master, drei Partien mit fester Saat (E11, Kriterium 5) > A10: 3 Spieler, Saat 3: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll
+Error: Snapshot `A4/A5/A6/A7/A10/A11: Golden Master, drei Partien mit fester Saat (E11, Kriterium 5) > A10: 3 Spieler, Saat 3: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 1` mismatched
+
+- Expected
++ Received
+
+@@ -1032,19 +1032,19 @@
+      KI-Gegner 2: Hand Rot (rot-09), Rot (rot-05), Rot (rot-02), Farbenschutz (farbenschutz-02)
+        Schlangen: schlange-2: Blau - Grün - Rot - Grün - Schlangenblockade - Schlangenblockade - Braun - Blau - Braun - Blau - Braun - Braun - Gelb - Braun | schlange-6: Grün - Gelb - Blau - Braun; Ablagestapel: 2 Karten, oben Farbendieb
+      Nachziehstapel: 0 Karten
+
+  Endwertung (A11)
+-   Spieler 1: Summe 4
++   Spieler 1: Summe 9
+      schlange-1: Gruppen Blau ×3 = 4, zusammen 4; Joker: Farbenfusion (farbenfusion-04) als Blau, Farbenfusion (farbenfusion-02) als keine Farbe
+      schlange-5: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-03) als keine Farbe
+-     Gruppenpunkte 4; keine Kette ab 3 Farbkarten
+-   KI-Gegner 1: Summe 0
++     Gruppenpunkte 4; Kette 2, Bonus 5
++   KI-Gegner 1: Summe 5
+      schlange-3: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-03) als keine Farbe
+      schlange-4: Gruppen keine, zusammen 0
+-     Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+-   KI-Gegner 2: Summe 0
++     Gruppenpunkte 0; Kette 2, Bonus 5
++   KI-Gegner 2: Summe 5
+      schlange-2: Gruppen keine, zusammen 0
+      schlange-6: Gruppen keine, zusammen 0
+-     Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+-   Gewonnen: Spieler 1 mit 4 Punkten.
++     Gruppenpunkte 0; Kette 2, Bonus 5
++   Gewonnen: Spieler 1 mit 9 Punkten.
+
+
+ ❯ src/engine/__tests__/golden_master.test.ts:49:5
+     47|     const pfad = new URL(datei, import.meta.url)
+     48|     expect(existsSync(pfad), `protokolliere: ${datei} fehlt; eingefror…
+     49|     await expect(spiele(saat, spielerzahl).protokoll.text).toMatchFile…
+       |     ^
+     50|   })
+     51|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/engine/__tests__/golden_master.test.ts > A4/A5/A6/A7/A10/A11: Golden Master, drei Partien mit fester Saat (E11, Kriterium 5) > A10: 4 Spieler, Saat 2: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll
+Error: Snapshot `A4/A5/A6/A7/A10/A11: Golden Master, drei Partien mit fester Saat (E11, Kriterium 5) > A10: 4 Spieler, Saat 2: der Verlauf gleicht Zug für Zug dem eingefrorenen Protokoll 1` mismatched
+
+- Expected
++ Received
+
+@@ -1117,15 +1117,15 @@
+      Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+    KI-Gegner 1: Summe 0
+      schlange-3: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-02) als keine Farbe, Regenbogenschlange (regenbogenschlange-01) als keine Farbe
+      schlange-6: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-01) als keine Farbe
+      Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+-   KI-Gegner 2: Summe 4
++   KI-Gegner 2: Summe 9
+      schlange-2: Gruppen Blau ×3 = 4, zusammen 4; Joker: Farbenfusion (farbenfusion-03) als Blau
+      schlange-5: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-04) als keine Farbe
+-     Gruppenpunkte 4; keine Kette ab 3 Farbkarten
+-   KI-Gegner 3: Summe 0
++     Gruppenpunkte 4; Kette 2, Bonus 5
++   KI-Gegner 3: Summe 5
+      schlange-4: Gruppen keine, zusammen 0
+      schlange-9: Gruppen keine, zusammen 0
+-     Gruppenpunkte 0; keine Kette ab 3 Farbkarten
+-   Gewonnen: KI-Gegner 2 mit 4 Punkten.
++     Gruppenpunkte 0; Kette 2, Bonus 5
++   Gewonnen: KI-Gegner 2 mit 9 Punkten.
+
+
+ ❯ src/engine/__tests__/golden_master.test.ts:49:5
+     47|     const pfad = new URL(datei, import.meta.url)
+     48|     expect(existsSync(pfad), `protokolliere: ${datei} fehlt; eingefror…
+     49|     await expect(spiele(saat, spielerzahl).protokoll.text).toMatchFile…
+       |     ^
+     50|   })
+     51|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+  Snapshots  2 failed
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 passed (7)
+   Start at  16:31:04
+   Duration  4.18s (transform 914ms, setup 639ms, import 924ms, tests 2.04s, environment 0ms)
+

@@ -42,7 +42,7 @@ describe('A1/A5/A10: Zustand im Format 2', () => {
       .schlange(0, ['Blau', { fusion: ['Gelb', 'Gelb'] }])
       .grube(0, 2)
       .ausDemSpiel(['Schlangenkorb des Glücks'])
-      .schwebend(1, 'Verdoppler', (karteId, spielerId) => ({ typ: 'VerdopplerSpielen', spielerId, karteId }), [])
+      .schwebend(1, 'Verdoppler', (karteId, spielerId) => ({ typ: 'VerdopplerSpielen', spielerId, karteId }), [2])
       .zustand()
 
     const [fusion] = zustand.spieler[0].schlangen[0].fusionen

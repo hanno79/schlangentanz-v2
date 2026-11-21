@@ -1,0 +1,63 @@
+
+> schlangentanz-v2@0.0.0 test:dauerlauf
+> vitest run --mode dauerlauf
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a04450aa0902e90be
+
+stdout | src/engine/__tests__/dauerlauf_teil_2.dauerlauf.test.ts > A10/A5/A6/B2: Dauerlauf mit 2000 Zufallspartien, Teil 2 von 4 (E11, Kriterium 3) > A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt
+E11-Dauerlauf Teil 2: 500 Partien, 1331 Schritte, höchste Aktionszahl 9 (4 Spieler, Erweiterung false, Typen SchlangengrubeSpielen, FarbkarteLegen, SonderkarteWirkungslosAblegen), zweite Züge 41 (Schlussrunde 0), Reaktionen {"KarteAngesagt":36,"AbwehrGefragt":36,"Abgewehrt":2,"Ausgesetzt":19,"GrubeOhneWirkung":0}, verfälscht {"fehlendes Feld":237,"anderer Aktionstyp":226,"fremdes Feld":252,"fre
+
+ ❯ src/engine/__tests__/dauerlauf_teil_2.dauerlauf.test.ts (1 test | 1 failed) 3100ms
+     × A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt 3097ms
+stdout | src/engine/__tests__/dauerlauf_teil_1.dauerlauf.test.ts > A10/A5/A6/B2: Dauerlauf mit 2000 Zufallspartien, Teil 1 von 4 (E11, Kriterium 3) > A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt
+E11-Dauerlauf Teil 1: 500 Partien, 1313 Schritte, höchste Aktionszahl 8 (2 Spieler, Erweiterung false, Typen RegenbogenschlangeLegen, BlockadeLegen, SonderkarteWirkungslosAblegen, ZugBeenden), zweite Züge 27 (Schlussrunde 0), Reaktionen {"KarteAngesagt":45,"AbwehrGefragt":45,"Abgewehrt":7,"Ausgesetzt":19,"GrubeOhneWirkung":0}, verfälscht {"fehlendes Feld":241,"unbekannter Spieler":259,"Karte ni
+
+ ❯ src/engine/__tests__/dauerlauf_teil_1.dauerlauf.test.ts (1 test | 1 failed) 3115ms
+     × A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt 3113ms
+stdout | src/engine/__tests__/dauerlauf_teil_4.dauerlauf.test.ts > A10/A5/A6/B2: Dauerlauf mit 2000 Zufallspartien, Teil 4 von 4 (E11, Kriterium 3) > A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt
+E11-Dauerlauf Teil 4: 500 Partien, 1322 Schritte, höchste Aktionszahl 8 (4 Spieler, Erweiterung false, Typen RegenbogenschlangeLegen, SchlangengrubeSpielen, ZugBeenden), zweite Züge 35 (Schlussrunde 0), Reaktionen {"KarteAngesagt":31,"AbwehrGefragt":31,"Abgewehrt":1,"Ausgesetzt":16,"GrubeOhneWirkung":0}, verfälscht {"fehlendes Feld":225,"Karte nicht auf der Hand":131,"fremder Spieler":262,"frem
+
+ ❯ src/engine/__tests__/dauerlauf_teil_4.dauerlauf.test.ts (1 test | 1 failed) 3338ms
+     × A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt 3336ms
+stdout | src/engine/__tests__/dauerlauf_teil_3.dauerlauf.test.ts > A10/A5/A6/B2: Dauerlauf mit 2000 Zufallspartien, Teil 3 von 4 (E11, Kriterium 3) > A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt
+E11-Dauerlauf Teil 3: 500 Partien, 1307 Schritte, höchste Aktionszahl 9 (4 Spieler, Erweiterung false, Typen FarbkarteLegen, SchlangengrubeSpielen), zweite Züge 30 (Schlussrunde 0), Reaktionen {"KarteAngesagt":34,"AbwehrGefragt":34,"Abgewehrt":2,"Ausgesetzt":24,"GrubeOhneWirkung":0}, verfälscht {"fremdes Feld":223,"anderer Aktionstyp":240,"fremder Spieler":213,"unbekannter Spieler":243,"fehlend
+
+ ❯ src/engine/__tests__/dauerlauf_teil_3.dauerlauf.test.ts (1 test | 1 failed) 3388ms
+     × A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt 3385ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/dauerlauf_teil_1.dauerlauf.test.ts > A10/A5/A6/B2: Dauerlauf mit 2000 Zufallspartien, Teil 1 von 4 (E11, Kriterium 3) > A10: 500 Zufallspartien je zur Hälfte ohne und mit Erweiterung enden alle; Invarianten, Speichern und Laden, Aufzählung, verfälschte Aktionen, Handgrenze und Stapel halten in jedem Schritt
+AssertionError: Teil 1: Partien, die nicht regulär endeten: expected [ Array(500) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "ausgang": "invariante",
++     "detail": "Jede Spielkarte liegt genau einmal an genau einem Ort: Doppelt: verdoppler-03 (2×). | Alle Ids sind eindeutig: Mehrfach vergeben: verdoppler-03.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 1,
++       "spielerzahl": 2,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "invariante",
++     "detail": "Jede Spielkarte liegt genau einmal an genau einem Ort: Doppelt: gelb-09 (2×), violett-02 (2×). | Alle Ids sind eindeutig: Mehrfach vergeben: gelb-09, violett-02.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 2,
++       "spielerzahl": 3,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "invariante",
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  4 failed (4)
+      Tests  4 failed (4)

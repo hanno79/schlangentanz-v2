@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-21
 veraendert_daten: nein
 aenderung: task/E6-schlangenfrass (PR #68)
-skript: src/engine/__tests__/schlangenfrass.test.ts
+skript: src/engine/__tests__/regeln/A7.4_schlangenfrass.test.ts
 ---
 
 ## Worum es geht
@@ -49,7 +49,7 @@ Die Tische bauen die Testdateien selbst; es gibt keine äusseren Daten.
 
 ## Technische Prüfung
 
-`npx vitest --run src/engine/__tests__/schlangenfrass.test.ts src/engine/__tests__/schlangenfrass_abwehr.test.ts src/entwicklung/szenarienFrass.test.ts` auf dem ersten Commit (erwartet: 42 failed) und auf dem geprüften Stand (erwartet: 45 passed). Danach je Verfälschung in `src/engine/karten/schlangenfrass.ts` dieselben Tests, erwartet mindestens ein Fehlschlag, dann `git checkout -- src/engine/karten/schlangenfrass.ts`.
+`npx vitest --run src/engine/__tests__/regeln/A7.4_schlangenfrass.test.ts src/engine/__tests__/regeln/A7.4_schlangenfrass_abwehr.test.ts src/entwicklung/szenarienFrass.test.ts` auf dem ersten Commit (erwartet: 42 failed) und auf dem geprüften Stand (erwartet: 45 passed). Danach je Verfälschung in `src/engine/karten/schlangenfrass.ts` dieselben Tests, erwartet mindestens ein Fehlschlag, dann `git checkout -- src/engine/karten/schlangenfrass.ts`.
 
 ## Nicht abgedeckte Grenzfälle
 

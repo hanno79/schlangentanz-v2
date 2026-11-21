@@ -213,6 +213,10 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
   const { schwebend } = zustand;
   if (schwebend !== null) {
     for (const index of [...schwebend.ausstehend, ...schwebend.abgewehrt]) pruefe(index, `Die schwebende ${schwebend.karte.id}`);
+    // A6: Eine Karte schwebt nur, solange ein Betroffener noch entscheidet; danach wirkt sie (`reaktion.ts`).
+    if (schwebend.ausstehend.length === 0) {
+      probleme.push(`Bei der schwebenden ${schwebend.karte.id} steht niemand mehr aus; entscheiden müsste noch ein Betroffener (A6).`);
+    }
     if (!zustand.spieler.some((spieler) => spieler.id === schwebend.aktion.spielerId)) {
       probleme.push(`Die schwebende Aktion nennt den unbekannten Spieler ${schwebend.aktion.spielerId}.`);
     }

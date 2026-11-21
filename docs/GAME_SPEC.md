@@ -734,9 +734,9 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 | Bestandteil | Website | Digital heute |
 |---|---|---|
-| 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja, mit abweichenden Stückzahlen (C1) |
+| 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja |
 | 15 Aufgabenkarten | Erweiterung | ja, 14 von 15 (C1) |
-| Schlangenhäutung | Erweiterung | ja, mit abweichender Wirkung (C9) |
+| Schlangenhäutung | Erweiterung | ja |
 | Schlangenkorb des Glücks | Erweiterung | nein |
 | Comeback-Karten | Erweiterung | nein |
 | Risiko-Belohnungs-Karten | Erweiterung | nein |
@@ -760,13 +760,13 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026), C1 bis auf die Aufgabenkarten (E11, 21.11.2026). Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
 | Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
 |---|---|---|---|---|
-| C1 | Stückzahlen | Schlangenblockade 3, Schlangengrube 3, Schlangenhäutung 3, Aufgabenkarten 15 (A1) | Stückzahlen und alle 15 Aufgaben im Material behoben mit E1 (13.11.2026); die Prüfung der Aufgaben fehlt noch (X1, X2) | `src/engine/deck.ts`, `src/engine/aufgabenKarten.ts`, `src/engine/constants.ts` |
+| C1 | Aufgabenkarten | Aufgabenkarten 15 (A1), erfüllt nach A9 | alle 15 Aufgaben liegen im Material (E1, 13.11.2026); ob eine erfüllt ist, prüft die Engine noch nicht (X1, X2) | `src/engine/aufgabenKarten.ts` |
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
 | C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |

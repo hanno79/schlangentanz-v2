@@ -41,7 +41,7 @@ Szenario-Baukasten ohne Erweiterung. G-A: 2 Spieler, Hand Verdoppler, Blau, Verd
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Konsole im Repo | vorübergehende Testdatei `src/engine/__tests__/pruefer_e3_grenz_tmp.test.ts` mit den Fällen G-A bis G-E anlegen | Lagen aus „Testdaten“ | Datei liegt neben `verdoppler.test.ts` |
+| 1 | Konsole im Repo | vorübergehende Testdatei `src/engine/__tests__/pruefer_e3_grenz_tmp.test.ts` mit den Fällen G-A bis G-E anlegen | Lagen aus „Testdaten“ | Datei liegt neben `A7.8_verdoppler.test.ts` |
 | 2 | Konsole im Repo | Datei ausführen | `npx vitest run src/engine/__tests__/pruefer_e3_grenz_tmp.test.ts` | Zeilen „G-A“ bis „G-E“ mit den Werten aus „Bestanden, wenn“, Exit 0 |
 | 3 | Konsole im Repo | Prüfdatei wieder löschen | | `git status` zeigt keine Änderung unter `src/` |
 

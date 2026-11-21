@@ -1,0 +1,19 @@
+== Probedatei src/engine/__tests__/regeln/A7.10_korb.test.ts
+     × E11: jede Datei unter regeln/ heisst <Abschnitt>_<thema>.test.ts, mit einem Abschnitt des Plans 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 18 passed (19)
+exit 1
+== Probedatei src/engine/__tests__/regeln/A7.1_probe.test.ts
+     × U1: jede Regeltestdatei nennt ihren Abschnitt in mindestens einem Testnamen 21ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: Dateien, deren Tests ihren Abschnitt nicht nennen: expected [ 'A7.1_probe.test.ts' ] to deeply equal []
+     84|     expect(ohneNennung, 'Dateien, deren Tests ihren Abschnitt nicht ne…
+      Tests  1 failed | 18 passed (19)
+exit 1
+== Probedatei src/engine/__tests__/probe_regel.test.ts
+     × E11: neben regeln/ liegen unter __tests__ nur Tests der Engine selbst, keine Regeltests 11ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/engine/__tests__/regeln_abdeckung.test.ts > E11 Kriterium 2: je Abschnitt eine Regeltestdatei unter regeln/ (A4 bis A11) > E11: neben regeln/ liegen unter __tests__ nur Tests der Engine selbst, keine Regeltests
+      Tests  1 failed | 18 passed (19)
+exit 1
+nach dem Löschen exit 0
