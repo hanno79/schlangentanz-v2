@@ -115,6 +115,16 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
   const engineEinstieg = absolut('src/engine/index.ts')
   const sichtPfad = absolut(SICHT_DATEI)
   const strategienOrdner = absolut(STRATEGIEN)
+  /** Ob eine Strategie aus `zielpfad` holen darf: Engine-Schnittstelle, sicht.ts, andere Strategien. */
+  const strategieDarf = (zielpfad: string) =>
+    zielpfad === engineEinstieg || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner))
+  /** Die Datei, auf die eine Modulangabe zeigt, wie der Typprüfer sie aufgelöst hat; leer, wenn nicht aufgelöst. */
+  const zielpfadVon = (modulangabe: ts.Node) => {
+    const ziel = pruefer.getSymbolAtLocation(modulangabe)?.declarations?.find(ts.isSourceFile)
+    return ziel ? zuPosix(ziel.fileName) : ''
+  }
+  /** Ob ein Teil des Typs (bei Vereinigung und Schnitt jeder Teil) eines der `flags` trägt. */
+  const hatTeilMit = (wert: ts.Type, flags: ts.TypeFlags) => (wert.isUnionOrIntersection() ? wert.types : [wert]).some((teil) => teil.flags & flags)
 
   /**
    * Ob ein Wert vom Typ `quelle` in einen Platz vom Typ `ziel` darf: der Zustand nur
@@ -269,10 +279,6 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
      * Importe (Prüfung P0.3d, Mangel 3): Werte nur aus src/engine/index.ts und aus `dateien`,
      * Typen im Rahmen frei; Strategien nur aus sicht.ts, Strategien und der Positivliste.
      */
-    /** Ob eine Strategie aus `zielpfad` holen darf: Engine-Schnittstelle, sicht.ts, andere Strategien. */
-    const strategieDarf = (zielpfad: string) =>
-      zielpfad === engineEinstieg || zielpfad === sichtPfad || (kiPfade.has(zielpfad) && zielpfad.startsWith(strategienOrdner))
-
     const pruefeImport = (knoten: ts.Node) => {
       if (istDynamischerImport(knoten)) return melde(knoten, 'importiert mit import() oder require(); unter src/ki nur statisch')
       if (ts.isMetaProperty(knoten) && knoten.keywordToken === ts.SyntaxKind.ImportKeyword) {
@@ -280,14 +286,12 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       }
       if (ts.isImportTypeNode(knoten) && istStrategie) {
         const argument = knoten.argument
-        const text = ts.isLiteralTypeNode(argument) && ts.isStringLiteral(argument.literal) ? argument.literal.text : undefined
-        const aufgeloest = text && ts.resolveModuleName(text, quelle.fileName, programm.getCompilerOptions(), ts.sys).resolvedModule
-        if (!aufgeloest || !strategieDarf(zuPosix(aufgeloest.resolvedFileName))) melde(knoten, `Strategie holt einen Typ aus ${argument.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
+        const zielpfad = ts.isLiteralTypeNode(argument) ? zielpfadVon(argument.literal) : ''
+        if (!strategieDarf(zielpfad)) melde(knoten, `Strategie holt einen Typ aus ${argument.getText()}; erlaubt sind sicht.ts, Strategien und die Engine`)
         return
       }
       if (!(ts.isImportDeclaration(knoten) || ts.isExportDeclaration(knoten)) || !knoten.moduleSpecifier) return
-      const ziel = pruefer.getSymbolAtLocation(knoten.moduleSpecifier)?.declarations?.find(ts.isSourceFile)
-      const zielpfad = ziel ? zuPosix(ziel.fileName) : ''
+      const zielpfad = zielpfadVon(knoten.moduleSpecifier)
       const namen = geholteWerte(knoten)
       const ausEngine = zielpfad === engineEinstieg
       if (istStrategie) {
@@ -327,9 +331,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       const name = globalerWert(knoten) ?? globalesMitglied(knoten) ?? bibliotheksMitglied(knoten)
       if (name === null || geschrieben.has(knoten)) return
       if (ts.isIdentifier(knoten) && !POSITIVLISTE_GLOBALE.has(name)) return melde(knoten, `nutzt das globale ${name}; unter src/ki gilt POSITIVLISTE_GLOBALE`)
-      const wert = typ(knoten)
-      const teile = wert.isUnionOrIntersection() ? wert.types : [wert]
-      if (!teile.some((teil) => teil.flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive))) return
+      if (!hatTeilMit(typ(knoten), ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive)) return
       const aussen = aeusserer(knoten)
       const eltern = aussen.parent
       if ((ts.isPropertyAccessExpression(eltern) || ts.isElementAccessExpression(eltern)) && eltern.expression === aussen) {
@@ -370,10 +372,8 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
     }
 
     if (istStrategie) {
-      const istPrimitiv = (knoten: ts.Node) => {
-        const wert = typ(knoten)
-        return !(wert.isUnionOrIntersection() ? wert.types : [wert]).some((teil) => teil.flags & (ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive | ts.TypeFlags.Any | ts.TypeFlags.Unknown))
-      }
+      const istPrimitiv = (knoten: ts.Node) =>
+        !hatTeilMit(typ(knoten), ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive | ts.TypeFlags.Any | ts.TypeFlags.Unknown)
       pruefeModulebene(quelle, istPrimitiv, melde)
     }
     besucheAlle(quelle, (knoten) => {

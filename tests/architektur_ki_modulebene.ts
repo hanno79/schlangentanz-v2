@@ -13,7 +13,7 @@ function istReinesLiteral(ausdruck: ts.Expression): boolean {
   if (ts.isStringLiteral(kern) || ts.isNumericLiteral(kern) || ts.isNoSubstitutionTemplateLiteral(kern)) return true
   if (kern.kind === ts.SyntaxKind.TrueKeyword || kern.kind === ts.SyntaxKind.FalseKeyword || kern.kind === ts.SyntaxKind.NullKeyword) return true
   if (ts.isPrefixUnaryExpression(kern)) return kern.operator === ts.SyntaxKind.MinusToken && ts.isNumericLiteral(kern.operand)
-  if (ts.isArrayLiteralExpression(kern)) return kern.elements.every((element) => !ts.isSpreadElement(element) && istReinesLiteral(element))
+  if (ts.isArrayLiteralExpression(kern)) return kern.elements.every(istReinesLiteral)
   if (ts.isObjectLiteralExpression(kern)) {
     return kern.properties.every((eigenschaft) =>
       ts.isPropertyAssignment(eigenschaft) && !ts.isComputedPropertyName(eigenschaft.name) && istReinesLiteral(eigenschaft.initializer),

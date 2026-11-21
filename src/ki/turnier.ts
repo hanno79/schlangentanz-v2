@@ -55,8 +55,8 @@ export interface TurnierOptionen {
   /** 2 bis 4 (A2); so viele Spieler hat jede Partie. */
   teilnehmer: readonly Teilnehmer[];
   partien: number;
-  /** Partie `n` (ab 0) spielt mit Saat `ersteSaat + n`. */
-  ersteSaat?: number;
+  /** Partie `n` (ab 0) spielt mit Saat `ersteSaat + n`; für Messläufe gross und zufällig gewählt (K5). */
+  ersteSaat: number;
   /**
    * Saat für die Zufallsquellen der KIs, getrennt von der Partiesaat (P0.3d): Hinge
    * der KI-Zufall an der Partiesaat, rechnete eine Strategie aus ihrem ersten
@@ -125,7 +125,7 @@ function pruefeOptionen({ teilnehmer, partien }: TurnierOptionen): void {
 /** Spielt `partien` Partien mit festen Saaten und rotierendem Sitz. */
 export function turnier(optionen: TurnierOptionen): TurnierErgebnis {
   pruefeOptionen(optionen);
-  const { teilnehmer, partien, ersteSaat = 1, kiSaat, erweiterung, schrittGrenze } = optionen;
+  const { teilnehmer, partien, ersteSaat, kiSaat, erweiterung, schrittGrenze } = optionen;
   const siege = teilnehmer.map(() => 0);
 
   const ergebnisse = Array.from({ length: partien }, (_, nummer): TurnierPartie => {

@@ -27,11 +27,11 @@ describe('K1: Sitzordnung im Turnier', () => {
   })
 
   it('A2: zwei bis vier Teilnehmer, mindestens eine Partie; sonst ein Fehler mit Grund', () => {
-    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(1), partien: 1, kiSaat: 7, erweiterung: false })).toThrow(
+    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(1), partien: 1, ersteSaat: 1, kiSaat: 7, erweiterung: false })).toThrow(
       'Turnier: 1 Teilnehmer; eine Partie hat 2 bis 4 Spieler (A2).',
     )
-    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(5), partien: 1, kiSaat: 7, erweiterung: false })).toThrow(/5 Teilnehmer/)
-    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(2), partien: 0, kiSaat: 7, erweiterung: false })).toThrow(
+    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(5), partien: 1, ersteSaat: 1, kiSaat: 7, erweiterung: false })).toThrow(/5 Teilnehmer/)
+    expect(() => turnier({ teilnehmer: zufallsTeilnehmer(2), partien: 0, ersteSaat: 1, kiSaat: 7, erweiterung: false })).toThrow(
       'Turnier: Ungültige Zahl der Partien 0; erwartet eine ganze Zahl ab 1.',
     )
   })
@@ -153,9 +153,10 @@ describe('P0.3d: der KI-Zufall verrät die Partiesaat nicht', () => {
     const a = beobachter(2)
     const b = beobachter(2)
     const c = beobachter(2)
-    turnier({ teilnehmer: a.teilnehmer, partien: 3, ersteSaat: 1, kiSaat: 9, erweiterung: false })
-    turnier({ teilnehmer: b.teilnehmer, partien: 3, ersteSaat: 5000, kiSaat: 9, erweiterung: false })
-    turnier({ teilnehmer: c.teilnehmer, partien: 3, ersteSaat: 1, kiSaat: 10, erweiterung: false })
+    // Schrittgrenze 0: Die KIs entstehen, gespielt wird nicht; mehr braucht der Vergleich nicht.
+    turnier({ teilnehmer: a.teilnehmer, partien: 3, ersteSaat: 1, kiSaat: 9, erweiterung: false, schrittGrenze: 0 })
+    turnier({ teilnehmer: b.teilnehmer, partien: 3, ersteSaat: 5000, kiSaat: 9, erweiterung: false, schrittGrenze: 0 })
+    turnier({ teilnehmer: c.teilnehmer, partien: 3, ersteSaat: 1, kiSaat: 10, erweiterung: false, schrittGrenze: 0 })
 
     expect(b.erste, 'P0.3d: der KI-Zufall darf nicht von der Partiesaat abhängen').toEqual(a.erste)
     expect(c.erste, 'P0.3d: eine andere KI-Saat gibt anderen KI-Zufall').not.toEqual(a.erste)
@@ -164,15 +165,13 @@ describe('P0.3d: der KI-Zufall verrät die Partiesaat nicht', () => {
   it('P0.3d: der Angriff aus der Prüfung (Partiesaat aus dem ersten KI-Zufallswert) findet die Saat nicht', () => {
     const alteKiSaat = (saat: number, sitz: number) => (Math.imul(saat, 0x9e3779b1) + sitz + 1) >>> 0
     const { erste, teilnehmer } = beobachter(2)
-    const ergebnis = turnier({ teilnehmer, partien: 4, ersteSaat: 1, kiSaat: 9, erweiterung: false })
+    turnier({ teilnehmer, partien: 4, ersteSaat: 1, kiSaat: 9, erweiterung: false, schrittGrenze: 0 })
 
-    const gefunden = ergebnis.partien.flatMap((partie, nummer) =>
-      [0, 1].flatMap((sitz) => {
-        const wert = erste[nummer * 2 + sitz]
-        return Array.from({ length: 4096 }, (_, saat) => saat).filter((saat) => erzeugeZufall(alteKiSaat(saat, sitz))() === wert && saat === partie.saat)
-      }),
+    // Wie der Angriff: alle kleinen Saaten durchprobieren, ohne die echte zu kennen.
+    const gefunden = erste.flatMap((wert, stelle) =>
+      Array.from({ length: 4096 }, (_, saat) => saat).filter((saat) => erzeugeZufall(alteKiSaat(saat, stelle % 2))() === wert),
     )
 
-    expect(gefunden, 'P0.3d: erwartet, dass keine Partiesaat aus dem KI-Zufall folgt').toEqual([])
+    expect(gefunden, 'P0.3d: erwartet, dass sich aus dem KI-Zufall keine Partiesaat ergibt').toEqual([])
   })
 })

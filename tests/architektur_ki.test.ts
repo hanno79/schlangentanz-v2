@@ -255,6 +255,7 @@ const STRATEGIE_ERLAUBT = [
   '  return (sicht: Sicht) => { gedaechtnis.set(sicht.ich, zufall()); return plus(gedaechtnis.size) }',
   '}',
   'export class Zaehler { stand = 0; erhoehe() { this.stand += 1; return this.stand } }',
+  "export type Helfer = typeof import('./hilfe')",
   'export function waehle(sicht: Sicht, aktionen: readonly Karte[], zufall: () => number): Karte {',
   '  return aktionen[Math.floor(zufall() * aktionen.length)] ?? aktionen[hilfe(sicht) + werteSchlangen([])]',
   '}',
