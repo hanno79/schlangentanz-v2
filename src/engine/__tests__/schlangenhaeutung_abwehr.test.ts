@@ -2,8 +2,10 @@ import { isDeepStrictEqual } from 'node:util'
 import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
 import type { Ereignis, SchlangenhaeutungSpielenAktion, Spielkarte, Spielzustand } from '../index'
+import { findeSchlange, gepruefteSchlange } from '../karten/schlangenstelle'
 import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
 import type { SchrittPruefer } from '../testing/dauerlauf'
+import { spielerIndexVon } from '../zugablauf'
 import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
 import { ablage, durchlassen, ereignisseVom, folge, fuehreAus, grund, hand, MIT_SCHUTZ, reaktion, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
 import { art, arten, HAEUTUNG, haeutungAuf, haeutungen, haeutungId, ids, tisch } from './schlangenhaeutung_hilfen'
@@ -164,10 +166,7 @@ interface Haeutungen {
   mitFusion: number
 }
 
-/** Die Karten der Schlange `schlangenId` als Ids, `null`, wenn es sie nicht gibt. */
-function kartenDer(zustand: Spielzustand, schlangenId: string): Spielkarte[] | null {
-  return zustand.spieler.flatMap((spieler) => spieler.schlangen).find((schlange) => schlange.id === schlangenId)?.karten ?? null
-}
+const idsVon = (karten: readonly Spielkarte[]) => karten.map((karte) => karte.id)
 
 /**
  * Rechnet jede entschiedene Schlangenhäutung nach (A7.9, D26, A7.2, E4b): Aus den
@@ -192,26 +191,25 @@ function haeutungsPruefer(zaehler: Haeutungen): SchrittPruefer {
     const nachgerechnet = spieleNach(lageVon(vorher), ereignisse)
     if (!isDeepStrictEqual(nachgerechnet, lageVon(zustand))) return 'E4b: Die Häutung lässt sich aus den Ereignissen nicht nachrechnen.'
     const { ansage, ohneWirkung } = entschieden
-    const spieler = zustand.spieler.findIndex((eintrag) => eintrag.id === ansage.spielerId)
+    const spieler = spielerIndexVon(zustand, ansage.spielerId)
     if (zustand.spieler[spieler].ablagestapel.at(-1)?.id !== ansage.karteId) return 'A6: Die Häutung liegt nicht oben auf dem Ablagestapel des Spielers.'
-    const alt = kartenDer(entschieden.vorher, ansage.schlangenId)!
-    const neu = kartenDer(zustand, ansage.schlangenId)
-    if (neu === null) return 'A7.9: Die Schlange ist verschwunden.'
-    const besitzer = entschieden.vorher.spieler.findIndex((eintrag) => eintrag.schlangen.some((schlange) => schlange.id === ansage.schlangenId))
+    const { besitzer, schlange: { karten: alt } } = gepruefteSchlange(entschieden.vorher, ansage.schlangenId)
+    const neu = findeSchlange(zustand, ansage.schlangenId)?.schlange.karten
+    if (neu === undefined) return 'A7.9: Die Schlange ist verschwunden.'
     if (besitzer !== spieler) zaehler.beimGegner += 1
     if (ohneWirkung) {
       zaehler.abgewehrt += 1
-      return neu.map((karte) => karte.id).join() === alt.map((karte) => karte.id).join() ? null : 'A7.2: Abgewehrt, aber die Schlange ist verändert.'
+      return isDeepStrictEqual(idsVon(neu), idsVon(alt)) ? null : 'A7.2: Abgewehrt, aber die Schlange ist verändert.'
     }
     zaehler.gewirkt += 1
     if (alt.some((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Farbenfusion')) zaehler.mitFusion += 1
     const abschnitt = new Set(ansage.neueReihenfolge)
     const stellen = alt.flatMap((karte, stelle) => (abschnitt.has(karte.id) ? [stelle] : []))
-    const erwartet = [...alt]
+    const erwartet = idsVon(alt)
     stellen.forEach((stelle, index) => {
-      erwartet[stelle] = alt.find((karte) => karte.id === ansage.neueReihenfolge[index])!
+      erwartet[stelle] = ansage.neueReihenfolge[index]
     })
-    if (neu.map((karte) => karte.id).join() !== erwartet.map((karte) => karte.id).join()) return 'A7.9: Die Schlange liegt nicht wie angesagt.'
+    if (!isDeepStrictEqual(idsVon(neu), erwartet)) return 'A7.9: Die Schlange liegt nicht wie angesagt.'
     if (stellen.length < 3 || stellen.length > 5 || stellen.at(-1)! - stellen[0] !== stellen.length - 1) return 'A7.9: Der Abschnitt ist nicht 3 bis 5 aufeinanderfolgende Karten.'
     if (stellen.some((stelle) => alt[stelle].typ !== 'Farbkarte')) return 'A7.9: Eine Sonderkarte wurde neu geordnet.'
     const farben = (karten: Spielkarte[]) => stellen.map((stelle) => art(karten[stelle])).join()

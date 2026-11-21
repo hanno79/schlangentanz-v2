@@ -28,13 +28,11 @@ function klicke(zustand: Spielzustand, wahl: Wahl): { zustand: Spielzustand; ere
   return anwendeAktion(zustand, aktion)
 }
 
-/** Das Präfix der Karten-Id je Farbe; die Beschriftung nennt Farbkarten mit Anzeigenamen und Id (`beschriftung.ts`). */
-const ID_PRAEFIX: Record<string, string> = { Blau: 'blau', Rot: 'rot', Gelb: 'gelb', Violett: 'violett', Braun: 'braun', Grün: 'gruen' }
-
-/** Der Knopf, dessen Beschriftung nach dem Pfeil die Schlange und die Karten in dieser Farbfolge nennt. */
+/** Der Knopf, der den Abschnitt der Schlange in diese Farbfolge bringt. */
 function knopf(zustand: Spielzustand, schlangenId: string, farben: string[]): Wahl {
-  const ziel = new RegExp(`→ ${schlangenId} · ${farben.map((farbe) => `[^,(]+ \\(${ID_PRAEFIX[farbe]}-\\d+\\)`).join(', ')}$`)
-  return (aktion) => haeutung(aktion) && ziel.test(beschrifte(zustand, aktion))
+  const karten = zustand.spieler.flatMap((spieler) => spieler.schlangen).find((eintrag) => eintrag.id === schlangenId)!.karten
+  return (aktion) =>
+    haeutung(aktion) && aktion.schlangenId === schlangenId && aktion.neueReihenfolge.map((id) => art(karten.find((karte) => karte.id === id)!)).join() === farben.join()
 }
 
 const typen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)

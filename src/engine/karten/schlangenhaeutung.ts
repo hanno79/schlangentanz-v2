@@ -1,5 +1,5 @@
 import type { SchlangenhaeutungSpielenAktion } from '../aktionen/typen';
-import type { Schlange, Spielkarte, Spielzustand } from '../types';
+import type { FarbkarteInfo, Schlange, Spielkarte, Spielzustand } from '../types';
 import { legeAufEigenenAblagestapel, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
 import { alleSchlangen, findeSchlange, gepruefteSchlange } from './schlangenstelle';
@@ -27,13 +27,14 @@ behalten dabei ihre Reihenfolge untereinander, weil sie gleich viel zählen
 const KLEINSTER_ABSCHNITT = 3;
 const GROESSTER_ABSCHNITT = 5;
 
-function farbeVon(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte' ? karte.farbe : karte.name;
+/** Die Farben dieser Karten in ihrer Folge, zum Vergleichen (D26). */
+function farbfolge(karten: readonly FarbkarteInfo[]): string {
+  return karten.map((karte) => karte.farbe).join();
 }
 
 /** Die Läufe aufeinanderfolgender Farbkarten einer Schlange; jede Sonderkarte beendet einen Lauf (A7.9). */
-function farbkartenLaeufe(schlange: Schlange): Spielkarte[][] {
-  const laeufe: Spielkarte[][] = [[]];
+function farbkartenLaeufe(schlange: Schlange): FarbkarteInfo[][] {
+  const laeufe: FarbkarteInfo[][] = [[]];
   for (const karte of schlange.karten) {
     if (karte.typ === 'Farbkarte') laeufe[laeufe.length - 1].push(karte);
     else laeufe.push([]);
@@ -42,8 +43,8 @@ function farbkartenLaeufe(schlange: Schlange): Spielkarte[][] {
 }
 
 /** Jeder Abschnitt von 3 bis 5 Karten eines Laufs, nach erster Stelle und dann nach Länge. */
-function abschnitte(lauf: readonly Spielkarte[]): Spielkarte[][] {
-  const ergebnis: Spielkarte[][] = [];
+function abschnitte(lauf: readonly FarbkarteInfo[]): FarbkarteInfo[][] {
+  const ergebnis: FarbkarteInfo[][] = [];
   for (let von = 0; von + KLEINSTER_ABSCHNITT <= lauf.length; von += 1) {
     for (let laenge = KLEINSTER_ABSCHNITT; laenge <= GROESSTER_ABSCHNITT && von + laenge <= lauf.length; laenge += 1) {
       ergebnis.push(lauf.slice(von, von + laenge));
@@ -57,23 +58,23 @@ function abschnitte(lauf: readonly Spielkarte[]): Spielkarte[][] {
  * An jeder Stelle kommt jede noch freie Farbe einmal dran, und zwar mit ihrer
  * vordersten noch freien Karte.
  */
-function neueFarbfolgen(abschnitt: readonly Spielkarte[]): Spielkarte[][] {
-  const folgen: Spielkarte[][] = [];
-  const lege = (gelegt: Spielkarte[], frei: Spielkarte[]): void => {
+function neueFarbfolgen(abschnitt: readonly FarbkarteInfo[]): FarbkarteInfo[][] {
+  const folgen: FarbkarteInfo[][] = [];
+  const lege = (gelegt: FarbkarteInfo[], frei: FarbkarteInfo[]): void => {
     if (frei.length === 0) {
       folgen.push(gelegt);
       return;
     }
     const versucht = new Set<string>();
     frei.forEach((karte, index) => {
-      if (versucht.has(farbeVon(karte))) return;
-      versucht.add(farbeVon(karte));
+      if (versucht.has(karte.farbe)) return;
+      versucht.add(karte.farbe);
       lege([...gelegt, karte], frei.filter((_, andere) => andere !== index));
     });
   };
   lege([], [...abschnitt]);
-  const bisher = abschnitt.map(farbeVon).join();
-  return folgen.filter((folge) => folge.map(farbeVon).join() !== bisher);
+  const bisher = farbfolge(abschnitt);
+  return folgen.filter((folge) => farbfolge(folge) !== bisher);
 }
 
 /** Der Grund, warum diese Karten der Schlange kein Abschnitt sind, den die Häutung neu ordnen darf, oder `null`. */
@@ -85,6 +86,7 @@ function pruefeAbschnitt(schlange: Schlange, neueReihenfolge: readonly string[])
   const doppelt = neueReihenfolge.find((id, index) => neueReihenfolge.indexOf(id) !== index);
   if (doppelt !== undefined) return `Die Karte ${doppelt} ist doppelt genannt; jede Karte des Abschnitts kommt genau einmal vor (A7.9).`;
   const stellen: number[] = [];
+  const danach: FarbkarteInfo[] = [];
   for (const id of neueReihenfolge) {
     const stelle = schlange.karten.findIndex((karte) => karte.id === id);
     if (stelle < 0) {
@@ -98,15 +100,16 @@ function pruefeAbschnitt(schlange: Schlange, neueReihenfolge: readonly string[])
       return `Die Karte ${id} ist eine Sonderkarte (${karte.name}); es dürfen nur Farbkarten neu angeordnet werden, Sonderkarten bleiben liegen (A7.9).`;
     }
     stellen.push(stelle);
+    danach.push(karte);
   }
   const erste = Math.min(...stellen);
   if (Math.max(...stellen) - erste !== anzahl - 1) {
     return `Die Karten ${neueReihenfolge.join(', ')} liegen nicht aufeinanderfolgend; gewählt werden nur zusammenhängende Farbkarten (A7.9).`;
   }
-  const bisher = schlange.karten.slice(erste, erste + anzahl).map(farbeVon);
-  const danach = neueReihenfolge.map((id) => farbeVon(schlange.karten.find((karte) => karte.id === id)!));
-  if (bisher.join() === danach.join()) {
-    return `Die Farbfolge im Abschnitt bliebe ${bisher.join(', ')}; die Schlangenhäutung muss sie ändern (D26).`;
+  // Lückenlos und nur Farbkarten: Der Abschnitt vorher ist der Ausschnitt ab der ersten Stelle.
+  const bisher = schlange.karten.slice(erste, erste + anzahl) as FarbkarteInfo[];
+  if (farbfolge(bisher) === farbfolge(danach)) {
+    return `Die Farbfolge im Abschnitt bliebe ${bisher.map((karte) => karte.farbe).join(', ')}; die Schlangenhäutung muss sie ändern (D26).`;
   }
   return null;
 }

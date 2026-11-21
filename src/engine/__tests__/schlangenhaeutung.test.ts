@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { ermittleAktionen, pruefeAktion } from '../index'
 import type { Spielzustand } from '../index'
-import { ablage, aktionen, aktionFuer, farbkarte, fuehreAus, grund, hand, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
-import { arten, farbfolge, gruppenpunkte, haeutungAuf, haeutungen, haeutungId, ids, selbstGebaut, stellen, tisch } from './schlangenhaeutung_hilfen'
+import { ablage, aktionFuer, farbkarte, fuehreAus, grund, hand, tischMitHaenden, verletzteInvarianten } from './zugablauf_hilfen'
+import { arten, farbfolge, gruppenpunkte, haeutungAuf, haeutungen, haeutungId, ids, selbstGebaut, stellen, tisch, wirkungslosAblegbar } from './schlangenhaeutung_hilfen'
 
 /*
 E9, Schlangenhäutung in der eigenen Schlange: A7.9 (Text, beide Beispiele,
@@ -11,11 +11,6 @@ Farbfolge muss sich ändern), D13 und D25 (wirkungslos nur ohne Ziel), A6 (die
 gespielte Karte kommt auf den Ablagestapel dessen, der sie gespielt hat).
 Gegnerische Schlangen, Abwehr und Ereignisse prüft `schlangenhaeutung_abwehr.test.ts`.
 */
-
-/** Die Handkarten, die die Engine zum wirkungslosen Ablegen anbietet (D13, D25). */
-function wirkungslosAblegbar(zustand: Spielzustand): string[] {
-  return aktionen(zustand, 'SonderkarteWirkungslosAblegen').flatMap((aktion) => ('karteId' in aktion ? [aktion.karteId] : []))
-}
 
 /** Die gewählten Abschnitte als „erste Stelle + Länge“, jeder einmal, in der Reihenfolge der Aufzählung. */
 function abschnitte(zustand: Spielzustand): string[] {

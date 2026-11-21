@@ -1,8 +1,12 @@
 import { expect } from 'vitest'
 import { berechneEndwertung, ermittleAktionen } from '../index'
-import type { SchlangenhaeutungSpielenAktion, SpielAktion, Spielkarte, Spielzustand } from '../index'
+import type { SchlangenhaeutungSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import { gepruefteSchlange } from '../karten/schlangenstelle'
 import type { Baukasten, Kartenwahl } from '../testing/szenario'
-import { tischMitHaenden } from './zugablauf_hilfen'
+import { handkarte, kartenname } from './legen_hilfen'
+import { aktionen, tischMitHaenden } from './zugablauf_hilfen'
+
+export { kartenname as art, schlangenNamen as arten, schlangenKarten as ids } from './legen_hilfen'
 
 /*
 Hilfen für die Tests der Schlangenhäutung (E9). Wie in `zugablauf_hilfen.ts`
@@ -19,20 +23,6 @@ export function tisch(spielerzahl = 2, gegner: Kartenwahl[] = ['Blau', 'Rot', 'G
   return tischMitHaenden([HAEUTUNG, ...Array.from({ length: spielerzahl - 1 }, () => gegner)], true)
 }
 
-export function art(karte: Spielkarte): string {
-  return karte.typ === 'Farbkarte' ? karte.farbe : karte.name
-}
-
-/** Die `schlange`-te Schlange von `spieler` als Folge von Farben und Namen der Sonderkarten. */
-export function arten(zustand: Spielzustand, spieler: number, schlange = 0): string[] {
-  return zustand.spieler[spieler].schlangen[schlange].karten.map(art)
-}
-
-/** Die Ids der `schlange`-ten Schlange von `spieler`. */
-export function ids(zustand: Spielzustand, spieler: number, schlange = 0): string[] {
-  return zustand.spieler[spieler].schlangen[schlange].karten.map((karte) => karte.id)
-}
-
 /** Alle aufgezählten Schlangenhäutungen. */
 export function haeutungen(zustand: Spielzustand): SchlangenhaeutungSpielenAktion[] {
   return ermittleAktionen(zustand).filter((aktion): aktion is SchlangenhaeutungSpielenAktion => aktion.typ === 'SchlangenhaeutungSpielen')
@@ -40,20 +30,23 @@ export function haeutungen(zustand: Spielzustand): SchlangenhaeutungSpielenAktio
 
 /** Die Id der ersten Schlangenhäutung auf der Hand von `spieler`. */
 export function haeutungId(zustand: Spielzustand, spieler = 0): string {
-  const karte = zustand.spieler[spieler].hand.find((eintrag) => art(eintrag) === 'Schlangenhäutung')
-  if (karte === undefined) throw new Error(`Testaufbau: Spieler ${spieler} hält keine Schlangenhäutung`)
-  return karte.id
+  return handkarte(zustand, spieler, 'Schlangenhäutung')
+}
+
+/** Die Handkarten, die die Engine zum wirkungslosen Ablegen anbietet (D13, D25). */
+export function wirkungslosAblegbar(zustand: Spielzustand): string[] {
+  return aktionen(zustand, 'SonderkarteWirkungslosAblegen').flatMap((aktion) => ('karteId' in aktion ? [aktion.karteId] : []))
 }
 
 /** Die Farben, in denen die Karten einer Häutung danach liegen. */
 export function farbfolge(zustand: Spielzustand, aktion: SchlangenhaeutungSpielenAktion): string[] {
-  const karten = zustand.spieler.flatMap((spieler) => spieler.schlangen).find((schlange) => schlange.id === aktion.schlangenId)!.karten
-  return aktion.neueReihenfolge.map((id) => art(karten.find((karte) => karte.id === id)!))
+  const { karten } = gepruefteSchlange(zustand, aktion.schlangenId).schlange
+  return aktion.neueReihenfolge.map((id) => kartenname(karten.find((karte) => karte.id === id)!))
 }
 
 /** Die Stellen, die eine Häutung in ihrer Schlange neu ordnet, aufsteigend. */
 export function stellen(zustand: Spielzustand, aktion: SchlangenhaeutungSpielenAktion): number[] {
-  const karten = zustand.spieler.flatMap((spieler) => spieler.schlangen).find((schlange) => schlange.id === aktion.schlangenId)!.karten
+  const { karten } = gepruefteSchlange(zustand, aktion.schlangenId).schlange
   return aktion.neueReihenfolge.map((id) => karten.findIndex((karte) => karte.id === id)).sort((a, b) => a - b)
 }
 
