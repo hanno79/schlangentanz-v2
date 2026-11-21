@@ -80,3 +80,10 @@ export const POSITIVLISTE_GLOBALE = new Set([
   'WeakSet',
   'structuredClone',
 ])
+
+/**
+ * Listenmethoden, denen eine Strategie eine Funktion der Modulebene als Rückruf an
+ * erster Stelle geben darf (`[…].map(f)`), ohne `thisArg`. Jede andere Funktion der
+ * Bibliothek könnte sie zurückgeben (`Array.of(f)[0]`, `Map.set`) oder mit `this` aufrufen.
+ */
+export const RUECKRUF_METHODEN = new Set(['every', 'filter', 'find', 'findIndex', 'flatMap', 'forEach', 'map', 'reduce', 'reduceRight', 'some', 'sort'])

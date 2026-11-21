@@ -18,8 +18,10 @@ import {
   besucheAlle,
   geholteWerte,
   geschriebeneZiele,
+  festeFunktion,
   istDynamischerImport,
   istFreierWert,
+  istWertausdruck,
   ohneHuellen,
   ohneKlammern,
   optionenFuer,
@@ -34,6 +36,7 @@ import {
   POSITIVLISTE_ENGINE_FUER_STRATEGIEN,
   POSITIVLISTE_GLOBALE,
   PROTOTYP_SCHLUESSEL,
+  RUECKRUF_METHODEN,
   VERBOTEN_AN_OBJECT,
   ZUFALL_UND_ZEIT,
 } from './architektur_ki_listen'
@@ -42,30 +45,6 @@ import {
 const SICHT_DATEI = 'src/ki/sicht.ts'
 /** Strategien: sehen nur die Sicht; alles andere unter src/ki ist Rahmen. */
 const STRATEGIEN = 'src/ki/strategien/'
-
-function inTypposition(knoten: ts.Node): boolean {
-  for (let eltern = knoten.parent; eltern; eltern = eltern.parent) if (ts.isTypeNode(eltern)) return true
-  return false
-}
-
-/** Ausdrücke, die zur Laufzeit einen Wert haben; Klammern, `!` und `...` zählen zum Ausdruck darin, Modulnamen nicht. */
-function istWertausdruck(knoten: ts.Node): knoten is ts.Expression {
-  if (!ts.isExpression(knoten) || ts.isParenthesizedExpression(knoten) || ts.isNonNullExpression(knoten)) return false
-  if (ts.isSpreadElement(knoten) || ts.isOmittedExpression(knoten)) return false
-  if (ts.isImportDeclaration(knoten.parent) || ts.isExportDeclaration(knoten.parent)) return false
-  if (ts.isIdentifier(knoten) && !istFreierWert(knoten)) return false
-  return !inTypposition(knoten)
-}
-
-/** Die Funktion hinter einem Namen, der sich nicht umhängen lässt: `function f` oder `const f = (…) => …`. */
-function festeFunktion(symbol: ts.Symbol | undefined): { funktion: ts.FunctionLikeDeclaration; name: string } | null {
-  const deklaration = symbol?.valueDeclaration
-  if (deklaration && ts.isFunctionDeclaration(deklaration) && deklaration.name) return { funktion: deklaration, name: deklaration.name.text }
-  if (!deklaration || !ts.isVariableDeclaration(deklaration) || !ts.isIdentifier(deklaration.name)) return null
-  if (!(ts.getCombinedNodeFlags(deklaration) & ts.NodeFlags.Const) || !deklaration.initializer) return null
-  const wert = ohneKlammern(deklaration.initializer)
-  return ts.isArrowFunction(wert) || ts.isFunctionExpression(wert) ? { funktion: wert, name: deklaration.name.text } : null
-}
 
 /**
  * U5 für KI-Code: Ausser in src/ki/sicht.ts darf ein Wert, der den vollen Zustand ist
@@ -300,18 +279,37 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
      */
     const pruefeGeteiltenWert = (knoten: ts.Identifier, symbol: ts.Symbol) => {
       if (!istFreierWert(knoten) || ausBibliothek(symbol) || !aufModulebene(symbol)) return
-      if (!hatTeilMit(typ(knoten), ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive)) return
+      // `interface Mehr extends Basis` nennt nur einen Typ.
+      const erbt = knoten.parent
+      if (ts.isExpressionWithTypeArguments(erbt) && ts.isHeritageClause(erbt.parent) && ts.isInterfaceDeclaration(erbt.parent.parent)) return
+      const wert = typ(knoten)
+      if (!hatTeilMit(wert, ts.TypeFlags.Object | ts.TypeFlags.NonPrimitive)) return
       const aussen = aeusserer(knoten)
       const eltern = aussen.parent
       if ((ts.isCallExpression(eltern) || ts.isNewExpression(eltern)) && eltern.expression === aussen) return
       if ((ts.isPropertyAccessExpression(eltern) || ts.isElementAccessExpression(eltern)) && eltern.expression === aussen) return
-      const signatur = ts.isCallExpression(eltern) ? pruefer.getResolvedSignature(eltern)?.declaration : undefined
-      if (signatur && zuPosix(signatur.getSourceFile().fileName).includes('/node_modules/')) return
+      const istListe = pruefer.isArrayType(wert) || pruefer.isTupleType(wert)
+      // Eine Liste darf kopiert werden: `[...LISTE]`, `Array.from(LISTE)`, `new Set(LISTE)`.
+      if (istListe && ts.isSpreadElement(eltern)) return
+      if ((ts.isCallExpression(eltern) || ts.isNewExpression(eltern)) && eltern.arguments !== undefined) {
+        const stelle = eltern.arguments.indexOf(aussen as ts.Expression)
+        const aufgerufen = ohneHuellen(eltern.expression)
+        const methode = ts.isPropertyAccessExpression(aufgerufen) ? aufgerufen.name.text : undefined
+        const ausBibliothekAufgerufen = zuPosix(pruefer.getResolvedSignature(eltern)?.declaration?.getSourceFile().fileName ?? '').includes('/node_modules/')
+        if (ausBibliothekAufgerufen && istListe) {
+          const kopiert = ts.isNewExpression(eltern) ? globalerWert(aufgerufen) === 'Set' : methode === 'from' && globalerWert(ohneHuellen((aufgerufen as ts.PropertyAccessExpression).expression)) === 'Array'
+          if (kopiert && stelle === 0) return
+        }
+        const ohneThisArg = eltern.arguments.length <= (methode?.startsWith('reduce') ? 2 : 1)
+        if (ausBibliothekAufgerufen && !istListe && ts.isCallExpression(eltern) && stelle === 0 && RUECKRUF_METHODEN.has(methode ?? '') && ohneThisArg) return
+      }
       melde(knoten, `gibt ${knoten.text} von der Modulebene weiter; alle Instanzen der Strategie teilen es`)
     }
 
     /** Strategien erwähnen den vollen Zustand nicht, auch nicht über einen Typ, der ihn enthält oder nimmt. */
     const pruefeStrategie = (knoten: ts.Node) => {
+      if (ts.isMetaProperty(knoten) && knoten.keywordToken === ts.SyntaxKind.NewKeyword) return melde(knoten, 'new.target gibt die Klasse der Modulebene als Wert heraus')
+      if (ts.isParameter(knoten) && ts.isIdentifier(knoten.name) && knoten.name.text === 'this') return melde(knoten, 'this-Parameter: damit liesse sich eine Funktion mit geteiltem this aufrufen')
       if (!ts.isIdentifier(knoten)) return
       const symbol = symbolVon(knoten)
       if (symbol === undefined) return

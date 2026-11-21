@@ -237,6 +237,30 @@ export function geholteWerte(knoten: ts.ImportDeclaration | ts.ExportDeclaration
   return klausel.name ? ['default', ...benannt] : benannt
 }
 
+export function inTypposition(knoten: ts.Node): boolean {
+  for (let eltern = knoten.parent; eltern; eltern = eltern.parent) if (ts.isTypeNode(eltern)) return true
+  return false
+}
+
+/** Ausdrücke, die zur Laufzeit einen Wert haben; Klammern, `!` und `...` zählen zum Ausdruck darin, Modulnamen nicht. */
+export function istWertausdruck(knoten: ts.Node): knoten is ts.Expression {
+  if (!ts.isExpression(knoten) || ts.isParenthesizedExpression(knoten) || ts.isNonNullExpression(knoten)) return false
+  if (ts.isSpreadElement(knoten) || ts.isOmittedExpression(knoten)) return false
+  if (ts.isImportDeclaration(knoten.parent) || ts.isExportDeclaration(knoten.parent)) return false
+  if (ts.isIdentifier(knoten) && !istFreierWert(knoten)) return false
+  return !inTypposition(knoten)
+}
+
+/** Die Funktion hinter einem Namen, der sich nicht umhängen lässt: `function f` oder `const f = (…) => …`. */
+export function festeFunktion(symbol: ts.Symbol | undefined): { funktion: ts.FunctionLikeDeclaration; name: string } | null {
+  const deklaration = symbol?.valueDeclaration
+  if (deklaration && ts.isFunctionDeclaration(deklaration) && deklaration.name) return { funktion: deklaration, name: deklaration.name.text }
+  if (!deklaration || !ts.isVariableDeclaration(deklaration) || !ts.isIdentifier(deklaration.name)) return null
+  if (!(ts.getCombinedNodeFlags(deklaration) & ts.NodeFlags.Const) || !deklaration.initializer) return null
+  const wert = ohneKlammern(deklaration.initializer)
+  return ts.isArrowFunction(wert) || ts.isFunctionExpression(wert) ? { funktion: wert, name: deklaration.name.text } : null
+}
+
 /** U3: Importe aus src/engine nur über src/engine/index.ts. `datei` ist relativ zur Projektwurzel. */
 export function pruefeEngineZugang(datei: string, quelltext: string): Verstoss[] {
   const verstoesse: Verstoss[] = []
