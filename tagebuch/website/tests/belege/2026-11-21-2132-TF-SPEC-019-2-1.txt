@@ -1,0 +1,227 @@
+Gegenproben P0.5e Iteration 3, Stand a70c00d, Prüfer Claude Code
+Je Probe: Ersetzung genau einmal, npx vitest run über tests/regelfragen.test.ts, tests/regelfragen_antworten.test.ts und die fünf tests/spec_documentation*.test.ts, Datei danach byte-genau zurück.
+Exit 1 = rot (erwartet). G-beide-* sind Grenzfälle, bei denen Test UND Spec gemeinsam verändert werden.
+
+=== X-G5d (alt It2 Mangel 1): Exit 1
+  docs/GAME_SPEC.md: „eine genügt, wenn sie von jeder Farbe zwei Karten hat.“ -> „es braucht zwei Schlangen.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G5: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G5: Teil D, Spalte „Antwort“, Satz für Satz: expected '„Vielfaltskönig“ braucht zwei Schlang…' to be '„Vielfaltskönig“ braucht zwei Schlang…' // Object.is equality
+=== X-G10c (alt It2 Mangel 2): Exit 1
+  docs/GAME_SPEC.md: „daneben ist keine weitere Sonderkarte erlaubt.“ -> „daneben ist eine weitere Sonderkarte erlaubt.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G10: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G10: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Der Schlangenkorb liegt auf der Hand …' to be 'Der Schlangenkorb liegt auf der Hand …' // Object.is equality
+=== X-G19e (alt It2 Mangel 3): Exit 1
+  docs/GAME_SPEC.md: „Die ersetzte Schlangenkarte kommt ebenfalls auf die eigene Hand; es ist ein Tausch.“ -> „Die ersetzte Schlangenkarte kommt auf den eigenen Ablagestapel; es ist ein Tausch.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G19: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G19: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Risiko-Aktion 2, Misserfolg: Die aufg…' to be 'Risiko-Aktion 2, Misserfolg: Die aufg…' // Object.is equality
+=== X-G17a (alt It2 Hinweis 1): Exit 1
+  docs/GAME_SPEC.md: „Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur“ -> „Wer nur“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G17: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G17: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Comeback-Aktion „Zwei Karten abwerfen…' to be 'Comeback-Aktion „Zwei Karten abwerfen…' // Object.is equality
+=== X-G16d (alt It2 Verneinung): Exit 1
+  docs/GAME_SPEC.md: „die Bedingung kann für ihn erfüllt sein.“ -> „die Bedingung kann für ihn nicht erfüllt sein.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G16: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G16: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Für die Comeback-Bedingung gilt: Jede…' to be 'Für die Comeback-Bedingung gilt: Jede…' // Object.is equality
+=== X-G13c (alt It2 Verneinung): Exit 1
+  docs/GAME_SPEC.md: „Der Gegner wird gefragt, der Effekt“ -> „Der Gegner wird nicht gefragt, der Effekt“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G13: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G13: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Sonderkarte aus gegnerischer Sc…' to be 'Korb „Sonderkarte aus gegnerischer Sc…' // Object.is equality
+=== X-G14g (alt It2 Verneinung): Exit 1
+  docs/GAME_SPEC.md: „Ein Verdoppler als Zusatzaktion wirkt nicht, weil er nicht“ -> „Ein Verdoppler als Zusatzaktion wirkt, obwohl er nicht“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G14: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G14: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Zwei zusätzliche Aktionen“: Es …' to be 'Korb „Zwei zusätzliche Aktionen“: Es …' // Object.is equality
+=== W-M1b (alt It1 GP5 (G14 e statt f)): Exit 1
+  docs/GAME_SPEC.md: „Eine zweite Farbenfusion ist nicht erlaubt; „pro Zug nur eine Farbenfusion“ gilt weiter.“ -> „Eine zweite Farbenfusion ist erlaubt, wenn sie als Zusatzaktion gespielt wird.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G14: gewählt „a, c, f, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G14: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G14: Teil D ohne Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“: expected 'korb „zwei zusätzliche aktionen“: es …' to contain '„pro zug nur eine farbenfusion“ gilt …'
+  AssertionError: G14: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Zwei zusätzliche Aktionen“: Es …' to be 'Korb „Zwei zusätzliche Aktionen“: Es …' // Object.is equality
+=== W-M3 (alt It1 GP2 (G19 b statt a)): Exit 1
+  docs/GAME_SPEC.md: „kommt auf den eigenen Ablagestapel, wie bei Aktion 3; der Spieler verliert die Karte.“ -> „kommt auf die eigene Hand.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G19: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G19: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G19: Teil D ohne Kernaussage „auf den eigenen ablagestapel, wie bei aktion 3“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 'auf den eigenen ablagestapel, wie bei…'
+  AssertionError: G19: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Risiko-Aktion 2, Misserfolg: Die aufg…' to be 'Risiko-Aktion 2, Misserfolg: Die aufg…' // Object.is equality
+=== W-M5 (alt It1 GP7 (G16 f gekürzt)): Exit 1
+  docs/GAME_SPEC.md: „, im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt (D47).“ -> „.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G16: gewählt „a, d, f“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G16: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G16: Teil D ohne Kernaussage „im zweiten zug nach verdoppler nur, wenn g15 das zulässt“: expected 'für die comeback-bedingung gilt: jede…' to contain 'im zweiten zug nach verdoppler nur, w…'
+  AssertionError: G16: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Für die Comeback-Bedingung gilt: Jede…' to be 'Für die Comeback-Bedingung gilt: Jede…' // Object.is equality
+=== S-G20b (alt It2 (G20 h statt g)): Exit 1
+  docs/GAME_SPEC.md: „kommt nur an ein Ende einer eigenen Schlange; für diese Aktion gilt D9 nicht.“ -> „kommt an jedes Ende jeder Schlange (D9).“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G20: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G20: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G20: Teil D ohne Kernaussage „ende einer eigenen schlange“: expected 'risiko-aktion 2: vor dem aufdecken be…' to contain 'ende einer eigenen schlange'
+  AssertionError: G20: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Risiko-Aktion 2: Vor dem Aufdecken be…' to be 'Risiko-Aktion 2: Vor dem Aufdecken be…' // Object.is equality
+=== X-RF (alt It2 (REGELFRAGEN G14)): Exit 1
+  docs/REGELFRAGEN.md: „**Antwort:** a, c, f, g.“ -> „**Antwort:** a, c, e, g.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G14: gewählt „a, c, f, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  AssertionError: G14: gewählte Möglichkeit: expected 'a, c, e, g' to be 'a, c, f, g' // Object.is equality
+=== N1-G21 (Ersetzung: G21 c statt a): Exit 1
+  docs/GAME_SPEC.md: „Ersetzen darf jede Farbkarte der Hand.“ -> „Ersetzen darf nur eine Farbkarte mit demselben Punktewert wie die ersetzte.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G21: gewählt „a, d“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G21: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G21: Teil D ohne Kernaussage „jede farbkarte der hand“: expected 'risiko-aktion 3: ersetzen darf nur ei…' to contain 'jede farbkarte der hand'
+  AssertionError: G21: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Risiko-Aktion 3: Ersetzen darf nur ei…' to be 'Risiko-Aktion 3: Ersetzen darf jede F…' // Object.is equality
+=== N2-G23 (Verneinung: G23 a): Exit 1
+  docs/GAME_SPEC.md: „ist eine Risiko-Karte nicht spielbar, weil“ -> „ist eine Risiko-Karte spielbar, weil“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G23: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G23: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G23: Teil D ohne Kernaussage „nicht spielbar, weil keine karte aufgedeckt werden kann“: expected 'bei leerem stapel und in der schlussr…' to contain 'nicht spielbar, weil keine karte aufg…'
+  AssertionError: G23: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Bei leerem Stapel und in der Schlussr…' to be 'Bei leerem Stapel und in der Schlussr…' // Object.is equality
+=== N3-G1 (Zusatzsatz: G1): Exit 1
+  docs/GAME_SPEC.md: „Die Lobby hat genau einen Schalter. Sammelantwort“ -> „Die Lobby hat genau einen Schalter. Die Comeback-Karten lassen sich einzeln abwählen. Sammelantwort“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G1: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G1: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Ja, ein Schalter für die ganze Erweit…' to be 'Ja, ein Schalter für die ganze Erweit…' // Object.is equality
+=== N4-G13 (Umstellung: G13 Sätze c und e): Exit 1
+  docs/GAME_SPEC.md: „Der Gegner wird gefragt, der Effekt ist abwehrbar mit Farbenschutz (D10). Die entfernte Karte kommt auf den Ablagestapel des Spielers, der den Korb nutzt, wie gefressene Karten.“ -> „Die entfernte Karte kommt auf den Ablagestapel des Spielers, der den Korb nutzt, wie gefressene Karten. Der Gegner wird gefragt, der Effekt ist abwehrbar mit Farbenschutz (D10).“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G13: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G13: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Sonderkarte aus gegnerischer Sc…' to be 'Korb „Sonderkarte aus gegnerischer Sc…' // Object.is equality
+=== N5-G18 (Gegenteil: G18 höchstens -> mindestens): Exit 1
+  docs/GAME_SPEC.md: „darin ist höchstens eine Risiko-Karte erlaubt“ -> „darin ist mindestens eine Risiko-Karte erlaubt“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G18: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G18: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Eine Runde ist der eigene Zug samt zw…' to be 'Eine Runde ist der eigene Zug samt zw…' // Object.is equality
+=== N6-G13e (Ersetzung: G13 f statt e): Exit 1
+  docs/GAME_SPEC.md: „Ablagestapel des Spielers, der den Korb nutzt, wie gefressene Karten.“ -> „Ablagestapel des Spielers, dem die Schlange gehört.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G13: gewählt „a, c, e“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G13: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G13: Teil D ohne Kernaussage „des spielers, der den korb nutzt“: expected 'korb „sonderkarte aus gegnerischer sc…' to contain 'des spielers, der den korb nutzt'
+  AssertionError: G13: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Sonderkarte aus gegnerischer Sc…' to be 'Korb „Sonderkarte aus gegnerischer Sc…' // Object.is equality
+=== N7-G3 (Ersetzung: G3 b statt a (Abwehr ausserhalb des Zuges)): Exit 1
+  docs/GAME_SPEC.md: „auch ein Farbenschutz zur Abwehr, eine wirkungslos“ -> „aber kein Farbenschutz zur Abwehr ausserhalb des Zuges, dafür eine wirkungslos“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G3: gewählt „a“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G3: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G3: Teil D ohne Kernaussage „auch ein farbenschutz zur abwehr“: expected 'für „schlangenmeister“ und „schlangen…' to contain 'auch ein farbenschutz zur abwehr'
+  AssertionError: G3: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Für „Schlangenmeister“ und „Schlangen…' to be 'Für „Schlangenmeister“ und „Schlangen…' // Object.is equality
+=== N8-G23c (Ersetzung: G23 d statt c): Exit 1
+  docs/GAME_SPEC.md: „Die Schlussrunde löst der Spieler am Zug aus, gleich wer die letzte Karte nimmt (auch ein begünstigter Gegner); er spielt seinen Zug zu Ende, dann hat jeder andere noch einen Zug.“ -> „Die Schlussrunde löst aus, wer die letzte Karte tatsächlich nimmt; ist das ein Gegner, zählt die Schlussrunde von ihm aus.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G23: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G23: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G23: Teil D ohne Kernaussage „gleich wer die letzte karte nimmt“: expected 'bei leerem stapel und in der schlussr…' to contain 'gleich wer die letzte karte nimmt'
+  AssertionError: G23: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Bei leerem Stapel und in der Schlussr…' to be 'Bei leerem Stapel und in der Schlussr…' // Object.is equality
+=== N9-G18u (Umstellung: G18 zwei Sätze eines Teils): Exit 1
+  docs/GAME_SPEC.md: „Eine Runde ist der eigene Zug samt zweitem Zug nach einem Verdoppler; darin ist höchstens eine Risiko-Karte erlaubt. Ein Verdoppler gibt keine zweite Risiko-Karte.“ -> „Ein Verdoppler gibt keine zweite Risiko-Karte. Eine Runde ist der eigene Zug samt zweitem Zug nach einem Verdoppler; darin ist höchstens eine Risiko-Karte erlaubt.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G18: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G18: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Ein Verdoppler gibt keine zweite Risi…' to be 'Eine Runde ist der eigene Zug samt zw…' // Object.is equality
+=== N10-D43 (Zusatzsatz: alter A5-Hinweis in D43 zurück): Exit 1
+  docs/GAME_SPEC.md: „dann beginnt die Schlussrunde (A10). Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X6“ -> „dann beginnt die Schlussrunde (A10). Nicht gespielte gezogene Karten bleiben auf der Hand; über 5 Karten wird am Zugende abgelegt (A5). Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X6“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G11: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G11: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Ziehe 3, spiele bis zu 2“: Die …' to be 'Korb „Ziehe 3, spiele bis zu 2“: Die …' // Object.is equality
+=== G-beide-G23b (Grenzfall: G23 b in Test und Spec): Exit 1
+  docs/GAME_SPEC.md: „ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann.“ -> „ist eine Risiko-Karte spielbar; ohne aufzudeckende Karte gilt sie als gescheitert.“
+  tests/regelfragen_sammelantwort.ts: „ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann.“ -> „ist eine Risiko-Karte spielbar; ohne aufzudeckende Karte gilt sie als gescheitert.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G23: gewählt „a, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G23: jeder Satz gibt die gewählte Möglichkeit seines Teils wieder, jede andere Möglichkeit desselben Teils hat eine Gegenprobe
+  AssertionError: G23: Teil D ohne Kernaussage „nicht spielbar, weil keine karte aufgedeckt werden kann“: expected 'bei leerem stapel und in der schlussr…' to contain 'nicht spielbar, weil keine karte aufg…'
+  AssertionError: G23 a: Satz gibt den Beleg „nicht spielbar, weil keine karte aufgedeckt werden kann“ nicht wieder: expected 'bei leerem stapel und in der schlussr…' to contain 'nicht spielbar, weil keine karte aufg…'
+=== G-beide-G16d (Grenzfall: G16 d verneint in Test und Spec): Exit 0
+  docs/GAME_SPEC.md: „die Bedingung kann für ihn erfüllt sein.“ -> „die Bedingung kann für ihn nicht erfüllt sein.“
+  tests/regelfragen_sammelantwort.ts: „die Bedingung kann für ihn erfüllt sein.“ -> „die Bedingung kann für ihn nicht erfüllt sein.“
+  Test Files  7 passed (7)
+  Tests  467 passed (467)
+=== T-G6a (TF-SPEC-019: G6 a statt b): Exit 1
+  docs/GAME_SPEC.md: „Auch eine ungerade Kartenzahl ist erlaubt; die mittlere Karte ist die Achse und gehört zu keiner Hälfte.“ -> „Die Kartenzahl muss gerade sein, damit es zwei gleiche Hälften gibt.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G6: gewählt „b, c“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G6: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G6: Teil D ohne Kernaussage „die mittlere karte ist die achse“: expected '„symmetriemeister“: die kartenzahl mu…' to contain 'die mittlere karte ist die achse'
+  AssertionError: G6: Teil D, Spalte „Antwort“, Satz für Satz: expected '„Symmetriemeister“: Die Kartenzahl mu…' to be '„Symmetriemeister“: Auch eine ungerad…' // Object.is equality
+=== T-G19d (TF-SPEC-019: G19 d statt c): Exit 1
+  docs/GAME_SPEC.md: „Die aufgedeckte Farbkarte kommt auf die eigene Hand, wie bei den Aktionen 1 und 2.“ -> „Die aufgedeckte Farbkarte kommt auf den eigenen Ablagestapel.“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G19: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G19: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G19: Teil D ohne Kernaussage „auf die eigene hand, wie bei den aktionen 1 und 2“: expected 'risiko-aktion 2, misserfolg: die aufg…' to contain 'auf die eigene hand, wie bei den akti…'
+  AssertionError: G19: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Risiko-Aktion 2, Misserfolg: Die aufg…' to be 'Risiko-Aktion 2, Misserfolg: Die aufg…' // Object.is equality
+=== T-G14f-weg (TF-SPEC-019: G14 f gestrichen): Exit 1
+  docs/GAME_SPEC.md: „ Eine zweite Farbenfusion ist nicht erlaubt; „pro Zug nur eine Farbenfusion“ gilt weiter.“ -> „“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G14: gewählt „a, c, f, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G14: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G14: Teil D ohne Kernaussage „„pro zug nur eine farbenfusion“ gilt weiter“: expected 'korb „zwei zusätzliche aktionen“: es …' to contain '„pro zug nur eine farbenfusion“ gilt …'
+  AssertionError: G14: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Korb „Zwei zusätzliche Aktionen“: Es …' to be 'Korb „Zwei zusätzliche Aktionen“: Es …' // Object.is equality
+=== T-G16g (TF-SPEC-019: G16 g statt f): Exit 1
+  docs/GAME_SPEC.md: „ist sie erfüllt, darf die Karte irgendwann in diesem Zug eingesetzt werden“ -> „die Karte darf nur gleich zu Zugbeginn, vor der ersten Karte, eingesetzt werden“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G16: gewählt „a, d, f“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G16: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G16: Teil D ohne Kernaussage „irgendwann in diesem zug“: expected 'für die comeback-bedingung gilt: jede…' to contain 'irgendwann in diesem zug'
+  AssertionError: G16: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Für die Comeback-Bedingung gilt: Jede…' to be 'Für die Comeback-Bedingung gilt: Jede…' // Object.is equality
+=== T-D45-Folge (TF-SPEC-019: Folge D45 X6 -> X5): Exit 1
+  docs/GAME_SPEC.md: „wie gefressene Karten. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X6“ -> „wie gefressene Karten. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G13 > P0.5: G13 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und Status zur Website
+  AssertionError: G13: Teil D D45, Spalte „Folge“ ohne X6, der die Frage nennt: expected 'X5' to match /\bX6\b/
+=== T-D37-Folge (TF-SPEC-019: Folge D37 X2 -> E9): Exit 1
+  docs/GAME_SPEC.md: „wie im Beispiel. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X2“ -> „wie im Beispiel. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | E9“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen.test.ts > P0.5: Regelfragen an den Autor > P0.5: G4 > P0.5: G4 steht in Teil D genau dann, wenn sie beantwortet ist, mit Datum und Status zur Website
+  AssertionError: G4: Teil D D37, Spalte „Folge“ ohne X2, der die Frage nennt: expected 'E9' to match /\bX2\b/
+T-RF-G21: „**Antwort:** a, d.“ steht 2-mal in docs/REGELFRAGEN.md, erwartet genau einmal
+=== T-RF-G21 (TF-SPEC-019: REGELFRAGEN G21 a, e): Exit 1
+  docs/REGELFRAGEN.md: „**Antwort:** a, d. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Ersetzen“ -> „**Antwort:** a, e. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Ersetzen“
+  Test Files  1 failed | 6 passed (7)
+  Tests  1 failed | 466 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G21: gewählt „a, d“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  AssertionError: G21: gewählte Möglichkeit: expected 'a, e' to be 'a, d' // Object.is equality
+=== T-G17a-weg (TF-SPEC-019: G17 a ganzer Satz gestrichen): Exit 1
+  docs/GAME_SPEC.md: „ Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur eine Karte hält, wählt eine andere Zusatzaktion.“ -> „“
+  Test Files  1 failed | 6 passed (7)
+  Tests  2 failed | 465 passed (467)
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5: G17: gewählt „a, c, e, g“, die Kernaussage steht in REGELFRAGEN.md und in Teil D
+  FAIL  tests/regelfragen_antworten.test.ts > P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026 > P0.5e: G17: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“
+  AssertionError: G17: Teil D ohne Kernaussage „wer nur eine karte hält, wählt eine andere zusatzaktion“: expected 'comeback-aktion „zwei karten abwerfen…' to contain 'wer nur eine karte hält, wählt eine a…'
+  AssertionError: G17: Teil D, Spalte „Antwort“, Satz für Satz: expected 'Comeback-Aktion „Zwei Karten abwerfen…' to be 'Comeback-Aktion „Zwei Karten abwerfen…' // Object.is equality
