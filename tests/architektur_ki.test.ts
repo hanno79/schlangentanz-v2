@@ -254,7 +254,8 @@ const STRATEGIE_ERLAUBT = [
   '  const gedaechtnis = new Map<number, number>()',
   '  return (sicht: Sicht) => { gedaechtnis.set(sicht.ich, zufall()); return plus(gedaechtnis.size) }',
   '}',
-  'export class Zaehler { stand = 0; erhoehe() { this.stand += 1; return this.stand } }',
+  'class Zaehler { stand = 0; erhoehe() { this.stand += 1; return this.stand } }',
+  'export const zaehle = () => new Zaehler().erhoehe()',
   'export const verdoppelt = () => [1, 2].map(plus).concat(NAMEN.length)',
   // Fehlalarme der Prüfung, Iteration 3: Schnittstellen erben, Listen in Set und Spreizen.
   'interface Basis { a: number }',
@@ -266,6 +267,10 @@ const STRATEGIE_ERLAUBT = [
   '}',
   '',
 ].join('\n')
+const KI_KOPF = "import type { Sicht } from '../sicht'\nimport type { Karte } from '../../engine'\n"
+/** Die Registry der Probe und die Strategie, die sie aufführt. */
+const REGISTRIERT = `${KI_KOPF}export function erstelleProbe(zufall: () => number) { return { name: 'p', waehle: (_s: Sicht, a: readonly Karte[]) => a[Math.floor(zufall() * a.length)] } }\n`
+const REGISTRY = "import { erstelleProbe } from './registriert'\nexport const STRATEGIEN = { probe: erstelleProbe }\n"
 const strategien: Array<[string, string]> = [
   ['den Typ des vollen Zustands', "import type { Spielzustand } from '../../engine'\nexport type T = Spielzustand\n"],
   ['einen Behälter des Zustands', "import type { AktionsErgebnis } from '../../engine'\nexport type E = AktionsErgebnis\n"],
@@ -302,7 +307,13 @@ const strategien: Array<[string, string]> = [
   ['forEach mit thisArg', 'function anker(): void {}\nexport const kanal = () => [1].forEach(function (this: unknown) { return this }, anker)\n'],
   ['einen this-Parameter', 'export function lies(this: { lager?: number }) { return this.lager }\n'],
   ['new.target', 'export class Anker { constructor() { const k = new.target; k.name.length } }\n'],
-  ['eine Fabrik, die nicht erstelle… heisst', "import type { Sicht } from '../sicht'\nexport const baueKi = () => ({ name: 'x', waehle: (sicht: Sicht) => sicht.ich })\n"],
+  ['eine Fabrik, die nicht in der Registry steht', "import type { Sicht } from '../sicht'\nexport const baueKi = () => ({ name: 'x', waehle: (sicht: Sicht) => sicht.ich })\n"],
+  // Schlussprüfung P0.3d: Fabriken in Formen, die der Isolationstest nicht fand.
+  ['einen Default-Export', `${KI_KOPF}export default function erstelleSpion(zufall: () => number) { return { name: 'x', waehle: (_s: Sicht, a: readonly Karte[]) => a[Math.floor(zufall() * a.length)] } }\n`],
+  ['einen umbenennenden Export', `${KI_KOPF}function erstelleSpion(zufall: () => number) { return { name: 'x', waehle: (_s: Sicht, a: readonly Karte[]) => a[Math.floor(zufall() * a.length)] } }\nexport { erstelleSpion as spion }\n`],
+  ['eine höherstufige Fabrik', `${KI_KOPF}export const mitStufe = (stufe: number) => (zufall: () => number) => ({ name: 'x' + stufe, waehle: (_s: Sicht, a: readonly Karte[]) => a[Math.floor(zufall() * a.length)] })\n`],
+  ['eine exportierte Klasse', `${KI_KOPF}export class SpionKi { name = 'x'; waehle(_s: Sicht, a: readonly Karte[]) { return a[0] } }\n`],
+  ['die Registry', "import { STRATEGIEN } from './index'\nexport const n = () => STRATEGIEN.probe.length\n"],
 ]
 const faelleStrategie = strategien.map(([name, inhalt], index) => ({ name, datei: `src/ki/strategien/verboten-${index + 1}.ts`, inhalt }))
 const faelleSeitenkanal = seitenkanaele.map(([name, inhalt], index) => ({ name, datei: `src/ki/seitenkanal-${index + 1}.ts`, inhalt }))
@@ -312,6 +323,8 @@ const probeInhalt: Record<string, string> = {
   'src/ki/erlaubt.ts': `${KOPF}${ERLAUBT}\nexport const erlaubtEtwas = 1\nexport type { Gefangen } from './__tests__/lauscher'\n`,
   'src/ki/strategien/erlaubt.ts': STRATEGIE_ERLAUBT,
   'src/ki/strategien/hilfe.ts': "import type { Sicht } from '../sicht'\nexport const hilfe = (sicht: Sicht) => sicht.ich\n",
+  'src/ki/strategien/registriert.ts': REGISTRIERT,
+  'src/ki/strategien/index.ts': REGISTRY,
   ...Object.fromEntries(
     [...faelleU5, ...faelleH1, ...faelleU4, ...faellePlattform, ...faelleStrategie, ...faelleSeitenkanal].map(({ datei, inhalt }) => [datei, inhalt]),
   ),
@@ -402,6 +415,8 @@ describe('P0.3d: Strategien unter src/ki/strategien sehen nur die Sicht', () => 
   it('P0.3d: Sicht, Positivliste der Engine und andere Strategien sind erlaubt', () => {
     expect(beschreibe(befundeIn('src/ki/strategien/erlaubt.ts')), 'U5: erwartet keinen Verstoss in der erlaubten Strategie').toBe('')
     expect(beschreibe(befundeIn('src/ki/strategien/hilfe.ts')), 'U5: erwartet keinen Verstoss im Helfer').toBe('')
+    expect(beschreibe(befundeIn('src/ki/strategien/registriert.ts')), 'U5: erwartet keinen Verstoss in der registrierten Strategie').toBe('')
+    expect(beschreibe(befundeIn('src/ki/strategien/index.ts')), 'U5: erwartet keinen Verstoss in der Registry').toBe('')
   })
 
   it.each(faelleStrategie.map(({ name, datei }) => [name, datei]))('P0.3d: eine Strategie erwähnt „%s“ und wird gemeldet', (name, datei) => erwarteGemeldet('U5', name, datei, 'U5'))
