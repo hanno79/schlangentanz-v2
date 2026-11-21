@@ -1,0 +1,220 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2cfb00f4ded295a7
+
+ ❯ src/engine/__tests__/aktionen.test.ts (49 tests | 10 failed) 54ms
+     × A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind keine Platzhalter mehr, die übrigen kommen mit E5 bis E9 und X6 7ms
+     × D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Definition ist nicht markiert 1ms
+     × D13/E4b: Farbkarte ist genau dann als Platzhalter markiert, wenn karten/farbkarte.ts platzhalter() aufruft 1ms
+     × D13/E4b: Farbenschutz ist genau dann als Platzhalter markiert, wenn karten/farbenschutz.ts platzhalter() aufruft 1ms
+     × D13/E4b: Schlangengrube ist genau dann als Platzhalter markiert, wenn karten/schlangengrube.ts platzhalter() aufruft 1ms
+     × D13/E4b: Verdoppler ist genau dann als Platzhalter markiert, wenn karten/verdoppler.ts platzhalter() aufruft 1ms
+     × D13: Farbkarte ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 2ms
+     × D13: Farbenschutz ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 1ms
+     × D13: Schlangengrube ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 1ms
+     × D13: Verdoppler ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind keine Platzhalter mehr, die übrigen kommen mit E5 bis E9 und X6
+AssertionError: expected [] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   "Farbkarte",
+-   "Verdoppler",
+-   "Farbenschutz",
+-   "Schlangengrube",
+- ]
++ []
+
+ ❯ src/engine/__tests__/aktionen.test.ts:96:23
+     94|   it('A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind kei…
+     95|     const umgesetzt = ARTEN.map(([kartenart]) => kartenart).filter((ka…
+     96|     expect(umgesetzt).toEqual(expect.arrayContaining(['Farbkarte', 'Ve…
+       |                       ^
+     97|   })
+     98|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Definition ist nicht markiert
+AssertionError: istPlatzhalter hält eine eigene Definition für einen Platzhalter: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/aktionen.test.ts:101:130
+     99|   it('D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Defi…
+    100|     expect(istPlatzhalter(platzhalter('Farbendieb', 'FarbendiebSpielen…
+    101|     expect(istPlatzhalter({ ...KARTENREGISTER.Verdoppler }), 'istPlatz…
+       |                                                                                                                                  ^
+    102|   })
+    103|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbkarte ist genau dann als Platzhalter markiert, wenn karten/farbkarte.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Farbkarte): erwartet false, weil karten/farbkarte.ts platzhalter() nicht aufruft: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbenschutz ist genau dann als Platzhalter markiert, wenn karten/farbenschutz.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Farbenschutz): erwartet false, weil karten/farbenschutz.ts platzhalter() nicht aufruft: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangengrube ist genau dann als Platzhalter markiert, wenn karten/schlangengrube.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Schlangengrube): erwartet false, weil karten/schlangengrube.ts platzhalter() nicht aufruft: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Verdoppler ist genau dann als Platzhalter markiert, wenn karten/verdoppler.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Verdoppler): erwartet false, weil karten/verdoppler.ts platzhalter() nicht aufruft: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Farbkarte ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt
+AssertionError: expected [ { typ: 'FarbkarteLegen', …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "karteId": "violett-09",
++     "spielerId": "spieler-1",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++ ]
+
+ ❯ src/engine/__tests__/aktionen.test.ts:114:49
+    112|     const definition = KARTENREGISTER[kartenart]
+    113|     const karte = zustand.spieler[0].hand[0]
+    114|     expect(definition.ziele(zustand, 0, karte)).toEqual([])
+       |                                                 ^
+    115|     expect(definition.betroffene(zustand, { typ: 'VerdopplerSpielen', …
+    116|     const ablehnung = definition.pruefe(zustand, { typ: 'VerdopplerSpi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Farbenschutz ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt
+AssertionError: expected 'Farbenschutz spielt man nur als Reakt…' to match /Farbenschutz ist noch nicht umgesetzt…/
+
+- Expected:
+/Farbenschutz ist noch nicht umgesetzt \(kommt mit [EX]\d/
+
++ Received:
+"Farbenschutz spielt man nur als Reaktion auf eine Sonderkarte eines Mitspielers (A6, A7.2); im eigenen Zug lässt er sich nur wirkungslos ablegen (A5, D25)."
+
+ ❯ src/engine/__tests__/aktionen.test.ts:117:23
+    115|     expect(definition.betroffene(zustand, { typ: 'VerdopplerSpielen', …
+    116|     const ablehnung = definition.pruefe(zustand, { typ: 'VerdopplerSpi…
+    117|     expect(ablehnung).toMatch(new RegExp(`${kartenart} ist noch nicht …
+       |                       ^
+    118|     expect(() => definition.wirke(zustand, { typ: 'VerdopplerSpielen',…
+    119|       /noch nicht umgesetzt/,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Schlangengrube ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt
+AssertionError: expected [ { …(4) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "karteId": "violett-09",
++     "spielerId": "spieler-1",
++     "typ": "SchlangengrubeSpielen",
++     "zielSpielerId": "spieler-2",
++   },
++ ]
+
+ ❯ src/engine/__tests__/aktionen.test.ts:114:49
+    112|     const definition = KARTENREGISTER[kartenart]
+    113|     const karte = zustand.spieler[0].hand[0]
+    114|     expect(definition.ziele(zustand, 0, karte)).toEqual([])
+       |                                                 ^
+    115|     expect(definition.betroffene(zustand, { typ: 'VerdopplerSpielen', …
+    116|     const ablehnung = definition.pruefe(zustand, { typ: 'VerdopplerSpi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13: Verdoppler ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt
+AssertionError: expected [ { typ: 'VerdopplerSpielen', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "karteId": "violett-09",
++     "spielerId": "spieler-1",
++     "typ": "VerdopplerSpielen",
++   },
++ ]
+
+ ❯ src/engine/__tests__/aktionen.test.ts:114:49
+    112|     const definition = KARTENREGISTER[kartenart]
+    113|     const karte = zustand.spieler[0].hand[0]
+    114|     expect(definition.ziele(zustand, 0, karte)).toEqual([])
+       |                                                 ^
+    115|     expect(definition.betroffene(zustand, { typ: 'VerdopplerSpielen', …
+    116|     const ablehnung = definition.pruefe(zustand, { typ: 'VerdopplerSpi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 39 passed (49)
+   Start at  11:06:33
+   Duration  3.52s (transform 378ms, setup 289ms, import 386ms, tests 54ms, environment 2.44s)
+

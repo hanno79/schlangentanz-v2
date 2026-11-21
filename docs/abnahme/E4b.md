@@ -1,5 +1,123 @@
 # Prüfprotokoll E4b – Ereignis für versetzte Karten
 
+## Iteration 2
+
+| Feld | Wert |
+|---|---|
+| Geprüfter Stand | `b03e092` (Merge von `origin/neuaufbau` = `e505858` in `task/E4b-versetzt`); Fix `26a933a` |
+| Prüfer | Claude Code als unabhängiger Prüfer, eigener Worktree, Branch `pruefung-E4b-it2` auf `origin/task/E4b-versetzt`; Bericht des Umsetzers und PR-Text nicht als Beleg benutzt |
+| Datum | 21.11.2026 |
+| Umgebung | Windows 11 Pro 10.0.26300, Node v25, Python 3.13, Playwright-Chromium aus `node_modules` |
+
+Vorbereitung: Zeilenenden vorher 409 Dateien `w/crlf`, nach `git ls-files -z | xargs -0 rm -f` und `git checkout -- .` 0. `npm ci` Exit 0. `core.hooksPath` zeigt auf `E:\Work\Privat\Schlangentanz_v2\scripts\githooks` (gemeinsame Einstellung, nicht verändert). Logs und Proben unter `<scratchpad>/E4b-pruefer-it2/`.
+
+### Urteil Iteration 2: ABGENOMMEN
+
+Mangel 1 ist behoben. Ein kaputtes `istPlatzhalter` fällt jetzt in allen drei Richtungen auf (immer falsch, immer wahr, Markierung entfernt), und der neue Quelltextabgleich ist zwar textbasiert, schlägt aber bei jeder geprüften abweichenden Schreibweise laut an. Still bleibt nur ein von Hand nachgebauter Platzhalter, der nicht unter die Markierung fällt (Hinweis H6). Der Task-Block steht im Plan (H4 erledigt). Alle Gates sind grün, auch `test:layout` vollständig.
+
+### Mangel 1 aus Iteration 1: behoben
+
+Neu in `aktionen.test.ts` (`26a933a`) sind zwei Tests. Der erste prüft direkt `istPlatzhalter(platzhalter('Farbendieb', …)) === true` und für eine kopierte Definition `false`. Der zweite läuft je Kartenart und erwartet `istPlatzhalter(KARTENREGISTER[art])` genau dann wahr, wenn `karten/<datei>.ts` auf `/\bplatzhalter(<[^>]*>)?\(/` passt.
+
+Gegenproben, jeweils `npx vitest run src/engine/__tests__/aktionen.test.ts`, danach Datei mit `git checkout --` zurückgesetzt und `git status` leer:
+
+| # | Verfälschung in `src/engine/karten/platzhalter.ts` | Ergebnis |
+|---|---|---|
+| G1 | `return false && PLATZHALTER.has(definition);` | Exit 1, 8 rot: der direkte Test und die sieben Abgleiche der Platzhalter (Regenbogenschlange bis Schlangenkorb des Glücks), 30 grün |
+| G2 | `return true \|\| PLATZHALTER.has(definition);` | Exit 1, 10 rot: „die umgesetzten Karten … sind keine Platzhalter mehr“, der direkte Test, die Abgleiche von Farbkarte, Farbenschutz, Schlangengrube, Verdoppler und deren vier D13-Tests, 39 grün |
+| G3 | Zeile `PLATZHALTER.add(definition);` entfernt | Exit 1, 8 rot, dieselben wie G1 |
+
+G1 dazu über die ganze Suite (Schritt 6 von TF-ENGINE-030): `npx vitest run src/ tests/` Exit 1, „Tests 8 failed | 1614 passed (1622)“. In Iteration 1 war das Exit 0.
+
+Die Gegenprobe aus Kriterium 5 gilt weiter: `schlangenblockade.ts` durch eine `KartenDefinition` ohne `platzhalter()` ersetzt, `aktionen.test.ts` unverändert, dann sechs D13-Tests ohne Schlangenblockade, Exit 0 („18 passed | 26 skipped“ mit `-t Platzhalter`). Der Abgleich bleibt dabei grün, weil die Datei `platzhalter(` nicht mehr enthält.
+
+#### Ist der Quelltextabgleich brüchig?
+
+Er liest Text und kann sich deshalb irren. Entscheidend ist die Richtung des Irrtums. Geprüft mit Abwandlungen der Kartendateien (TF-ENGINE-032):
+
+| Abwandlung | Abgleich erwartet | `istPlatzhalter` | Ergebnis |
+|---|---|---|---|
+| Kommentar `// Bis E4 stand hier platzhalter('Verdoppler', …)` in der umgesetzten `verdoppler.ts` | `true` | `false` | rot, 1 Test, Meldung „erwartet true“ |
+| `farbendieb.ts` ruft `spaeter<…>(…)` aus einer neuen Datei, die `platzhalter()` ruft | `false` | `true` | rot, 1 Test, „erwartet false“ |
+| halb umgesetzt: `{ ...platzhalter<…>(…), ziele: () => [] }` in `farbenfusion.ts` | `true` | `false` (Kopie) | rot |
+| verschachtelte Typangabe `platzhalter<Extract<…, { typ: … }>>(` in `regenbogenschlange.ts` | `false` (`[^>]*` endet am ersten `>`) | `true` | rot, Meldung sagt fälschlich „nicht aufruft“ |
+| Platzhalter von Hand nachgebaut, ohne `platzhalter()` (Objekt mit `ziele: () => []` und Grund „… noch nicht umgesetzt“) in `farbendieb.ts` | `false` | `false` | **grün**, 6 statt 7 D13-Tests |
+
+Nicht ausgeführt, aber gleich gelagert wie die Hilfsfunktion: ein umbenannter Import (`platzhalter as ph`) macht den Abgleich `false` bei `istPlatzhalter` `true`, also rot.
+
+Urteil: In allen Fällen, in denen eine Karte über `platzhalter()` zum Platzhalter wird, führt ein Irrtum des Textabgleichs zu einem roten Test, nie zu einem still verschwundenen Platzhalter. Er ist damit brüchig im Sinn von Fehlalarmen (Kommentar, verschachtelte Typangabe), nicht im Sinn von übersehenen Platzhaltern. Still bleibt nur der von Hand nachgebaute Platzhalter. Der liegt ausserhalb dessen, was `istPlatzhalter` markieren soll, und ein Kartentask hat keinen Grund, so zu schreiben; vor E4b mit der Hand-Liste wäre er ebenfalls nicht als Fehler aufgefallen (der D13-Test hätte ihn als Platzhalter bestätigt). Deshalb **kein Mangel**, Hinweis H6.
+
+Zur Regel aus `AGENTS.md` („Keine neuen CSS-Quelltext-Parser“): nicht berührt. Gemeint ist das Lesen von `src/App.css` in Tests; `check:css-asserts` zählt nur `appCss` und `readFileSync(…App.css…)` und meldet weiter „0 in 0 Dateien“. Ein Leser von TS-Quelltext ist im Repo nicht neu: `speicherformat.test.ts`, `sentry_produktion.test.ts` und `layout_hooks_namensgebung.test.ts` tun dasselbe, Letztere entfernt dabei Kommentarzeilen über `codeOhneKommentarzeilen`. Das wäre auch hier eine Möglichkeit, den Fehlalarm durch Kommentare zu vermeiden (H6).
+
+Der in TF-ENGINE-030 offen gelassene Grenzfall „Register ganz ohne Platzhalter (nach X6)“ ist durch den direkten Test jetzt abgedeckt: Er hängt nicht davon ab, dass das Register noch Platzhalter enthält.
+
+### H4: Task-Block im Plan
+
+`docs/UMSETZUNGSPLAN.md` hat jetzt „#### E4b Ereignis für versetzte Karten“ zwischen E4 und dem Satz über E5 bis E9, markiert als „Nachträglich vom Orchestrator eingefügt am 21.11.2026“. Zweck, Feld „Dateien“ und die sieben Kriterien decken sich mit dem, was gebaut wurde: Die Dateiliste nennt genau die 16 Dateien aus dem Diff-Abgleich von Iteration 1 (`kartenorte.ts` neu, `platzhalter.ts` „nur die Markierung“, `Tisch.tsx`, die Tests mit `position`), und Kriterium 5 lautet jetzt „eine kaputte Markierung macht Tests rot“, also das, was Mangel 1 verlangte. Erledigt. Kleinigkeiten (H7): Anders als E4 hat der Block keine Felder „Grenzfälle“ und „Szenarien“, Kriterium 7 nennt die Szenarien `verdoppler` und `schlangengrube` nicht mehr, und in der Wellentabelle steht E4b nicht als Voraussetzung von Welle 5 (E5 bis E9). Das betrifft die Planpflege, nicht die Abnahme.
+
+### Nichts kaputt
+
+`git diff afc0f2a..b03e092 --stat`:
+
+```
+ docs/UMSETZUNGSPLAN.md                | 37 +++++++++++++++++++++++++++++++++++
+ src/engine/__tests__/aktionen.test.ts | 15 ++++++++++++--
+ tests/layout/geraeteklasse.spec.ts    | 11 +++++++++--
+ 3 files changed, 59 insertions(+), 4 deletions(-)
+```
+
+Nur erlaubte Dateien. `tests/layout/geraeteklasse.spec.ts` kommt aus dem Merge von #64: `git diff origin/neuaufbau b03e092 -- tests/layout/geraeteklasse.spec.ts` ist leer, Merge-Basis und `origin/neuaufbau` sind beide `e505858`. Unter `src/` hat sich seit dem in Iteration 1 geprüften Stand `5914861` nur `aktionen.test.ts` geändert; Engine und Entwicklertisch sind gleich, die Prüfsumme der 300 Partien aus Iteration 1 gilt deshalb weiter.
+
+### Gates auf `b03e092`
+
+Jeder Befehl einzeln, Exit-Code in Git Bash mit `${PIPESTATUS[0]}` bzw. `$?`:
+
+| Befehl | Exit | gekürzte Ausgabe |
+|---|---|---|
+| `npm run test:layout` | 0 | 1940 passed (4.9m) |
+| `npm test -- --run` | 0 | Test Files 67 passed (67), Tests 1629 passed (1629) |
+| `npm run typecheck` | 0 | `tsc -b` ohne Meldung |
+| `npm run build` | 0 | built |
+| `npm run check:test-lines` | 0 | Alle Testdateien bleiben unter 500 Zeilen. |
+| `npm run check:css-asserts` | 0 | 0 in 0 Dateien (Baseline gehalten) |
+| `npm run check:regeln` | 0 | keine Verstösse, Merge-Basis e505858 |
+| `npx eslint .` | 0 | ohne Meldung |
+| `python scripts/regelcheck.py` | 0 | 9 Warnungen, keine Fehler |
+
+`test:layout` lief zuerst, um 11:08 waren 4173 und 4174 ohne lauschenden Socket; danach wieder frei. Der in Iteration 1 rote Vertrag `[desktop] geraeteklasse.spec.ts` ist mit #64 grün.
+
+### Entwicklertisch
+
+Testhook-Build (`npm run build:testhooks`, Exit 0), eigener Server `vite preview --outDir dist-testhooks --port 4182 --strictPort`. Im eingebauten Browser bei 1280×900 Szenario `verdoppler` mit Klicks: „VerdopplerSpielen: Verdoppler (verdoppler-03)“ → Ereignis „KarteGespielt: Spieler 1 (spieler-1), verdoppler-03 (VerdopplerSpielen) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0“. Weiter Rot in neue Schlange, „ZugBeenden“, dann „SonderkarteWirkungslosAblegen“ mit verdoppler-02 → „… verdoppler-02 (SonderkarteWirkungslosAblegen) → Ablagestapel von Spieler 1 (spieler-1), Stelle 1“, unten „Ablagestapel: 2 Karten, unterste zuerst“ mit verdoppler-03 vor verdoppler-02. Stellen passen zur Zahl der Karten. Konsole: keine Fehler (`read_console_messages` nur Fehler: leer; Playwright `console`/`pageerror`: leer). `scrollWidth` = `clientWidth` (1265 im Browser-Fenster mit Bildlaufleiste, 1280 in Playwright).
+
+**Foto `bilder/E4b-it2-verdoppler-desktop.png`** (Playwright, 1280×900, nach dem ersten Klick): Oben die Leiste „Entwicklertisch Start Szenarien Entwürfe“, darunter der Kasten „Szenario verdoppler“ mit der gelb hinterlegten Beschreibung, in sechs Zeilen vollständig umbrochen. „Schritt 1“, „Schritt zurück“, „Von vorn“, „KI-Schritt“ ausgegraut mit „Spieler 1 entscheidet; das ist ein Mensch.“ Unter „Aktionen der Engine (3)“ die Gruppe „FarbkarteLegen (2)“ mit Feuerkeim (rot-05) und Wasserwirbel (blau-01), je „→ neue Schlange“ und klein „spieler-1“, darunter „ZugBeenden (1)“. „Ereignisse des letzten Schritts (1)“: „1. KarteGespielt: Spieler 1 (spieler-1), verdoppler-03 (VerdopplerSpielen) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0“, in einer Zeile, nicht abgeschnitten. Darunter „Invarianten (alle erfüllt)“ mit elf grünen Zeilen. Nichts überlappt, keine waagrechte Bildlaufleiste.
+
+Server danach beendet: Hintergrundaufgabe gestoppt, der Node-Kindprozess (PID 64104) lauschte noch auf 4182; Befehlszeile aus diesem Worktree geprüft, `Stop-Process`, danach kein lauschender Socket. Browser-Tab geschlossen.
+
+TF-DEV-025 habe ich nicht als Lauf erfasst: Der Auftrag verlangte diesmal nur `verdoppler`, der Testfall verlangt dazu `schlangengrube` und eine Zufallspartie. Seit Iteration 1 hat sich unter `src/entwicklung/` nichts geändert.
+
+### Eigener Grenzfall
+
+**Halb umgesetzte Karte und verschachtelte Typangabe (TF-ENGINE-032).** Ein Kartentask, der aus dem Platzhalter heraus arbeitet, schreibt vielleicht zuerst `{ ...platzhalter(…), ziele: … }`, und eine genauere Typangabe mit `>>` ist in TypeScript üblich. Beides gleichzeitig eingebaut (`farbenfusion.ts`, `regenbogenschlange.ts`): Exit 1, genau die zwei Abgleiche dieser Karten rot, alle anderen 42 grün. Der Spread verliert die Markierung, und der Test sagt es. Bei der Typangabe stimmt die Meldung nicht („platzhalter() nicht aufruft“), rot wird der Test trotzdem. Zurückgesetzt, danach 45 grün.
+
+### Testregister
+
+| Testfall | Lauf | Status |
+|---|---|---|
+| TF-ENGINE-030 (Platzhalterliste, kaputte Ableitung fällt auf) | `2026-11-21-1123-TF-ENGINE-030` | bestanden |
+| TF-ENGINE-032 (neu, Grenzfall von TF-ENGINE-030: Schreibweisen im Quelltextabgleich) | `2026-11-21-1124-TF-ENGINE-032` | bestanden |
+| TF-ENGINE-026 (KartenVersetzt nachrechenbar, automatisch) | `2026-11-21-1124-TF-ENGINE-026` | bestanden |
+
+Alle drei Läufe auf `b03e092` mit sauberem Stand ausserhalb von `tagebuch/`. Die Nummer 032 habe ich vor dem Commit gegen `origin/neuaufbau` und alle offenen Task-Branches geprüft (höchste ENGINE-Nummer 031 auf `task/E4b-versetzt`). „Worum es geht“, „Bestanden, wenn“ und „Fehlgeschlagen, wenn“ von TF-ENGINE-032 gingen durch `/baseline:humanizer` und `pruefe_muster.py` (Exit 0, keine Befunde).
+
+### Hinweise aus Iteration 2 (kein Mangel)
+
+- **H6** Der Quelltextabgleich in `aktionen.test.ts` meldet Fehlalarme, wenn eine umgesetzte Karte `platzhalter(` in einem Kommentar trägt oder ein Platzhalter eine verschachtelte Typangabe hat (dort mit irreführender Meldung). Ein von Hand nachgebauter Platzhalter ohne `platzhalter()` bleibt still. Abhilfe bei Bedarf: Kommentare vorher entfernen wie `codeOhneKommentarzeilen` in `layout_hooks_namensgebung.test.ts`, und `[^>]*` durch ein Muster ersetzen, das verschachtelte `<…>` zulässt.
+- **H7** Task-Block E4b ohne „Grenzfälle“ und „Szenarien“, nicht in der Wellentabelle als Voraussetzung von Welle 5.
+- Die Hinweise H1 bis H3 aus Iteration 1 bleiben offen, H4 und H5 sind erledigt.
+
+## Iteration 1
+
 | Feld | Wert |
 |---|---|
 | Task | E4b Ereignis für versetzte Karten (Vorbereitung für E5 bis E9) |
@@ -12,7 +130,7 @@
 
 Vorbereitung: eigener Branch `pruefung-E4b` auf `origin/task/E4b-versetzt`. Zeilenenden vorher 409 Dateien `w/crlf`, nach `git ls-files -z | xargs -0 rm -f` und `git checkout -- .` 0. `core.hooksPath` zeigt auf `E:\Work\Privat\Schlangentanz_v2\scripts\githooks` (gemeinsame Einstellung). `npm ci` Exit 0. Logs, Proben und Fotos unter `<scratchpad>/E4b-pruefer/`. Der Task-Block steht nicht in `docs/UMSETZUNGSPLAN.md`; massgebend sind die sieben Kriterien aus dem Auftrag des Orchestrators, unten wörtlich bis auf die Aufzählungszeichen.
 
-## Urteil: ABGELEHNT
+## Urteil Iteration 1: ABGELEHNT
 
 Die Engine-Arbeit selbst ist sauber: `KartenVersetzt` entsteht generisch in `kartenorte.ts`, lässt sich in allen Fällen des Umsetzers und in vier eigenen nachrechnen, verrät keine verdeckte Karte, und die 300 Dauerlauf-Partien verlaufen Schritt für Schritt wie auf der Basis. Abgelehnt wird wegen eines kleinen, aber echten Mangels an Kriterium 5. Dazu ist `test:layout` einmal rot gewesen (ein Desktop-Test zu Touch, ohne Bezug zu E4b; siehe Gates).
 

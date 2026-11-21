@@ -1,0 +1,28 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2cfb00f4ded295a7
+
+ ❯ src/engine/__tests__/aktionen.test.ts (45 tests | 1 failed) 49ms
+     × D13/E4b: Verdoppler ist genau dann als Platzhalter markiert, wenn karten/verdoppler.ts platzhalter() aufruft 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Verdoppler ist genau dann als Platzhalter markiert, wenn karten/verdoppler.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Verdoppler): erwartet true, weil karten/verdoppler.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 44 passed (45)
+   Start at  11:07:36
+   Duration  3.46s (transform 408ms, setup 285ms, import 421ms, tests 49ms, environment 2.40s)
+
