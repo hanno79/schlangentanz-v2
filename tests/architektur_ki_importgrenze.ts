@@ -5,17 +5,21 @@
 // wird der Import-Graph, aufgelöst wie im Build, nicht der Wortlaut der Pfade.
 //
 // Ausgenommen sind genau Testdateien `*.test.ts(x)` und alles unter tests/: Tests prüfen eine
-// Strategie gezielt, auch an der Registry vorbei. Erreicht Code, für den die Grenze gilt, eine
-// Strategie über eine solche Testdatei, wird er trotzdem gemeldet.
+// Strategie gezielt, auch an der Registry vorbei. Das ist bewusst enger als `istTestdatei`
+// (architektur_pruefung.ts): Helfer unter `__tests__/` und `.spec`-Dateien unter src/ gelten
+// hier als Code. Erreicht Code, für den die Grenze gilt, eine Strategie über eine Testdatei,
+// wird er trotzdem gemeldet.
 
 import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from 'node:fs'
-import { dirname, extname, isAbsolute, join, posix, relative } from 'node:path'
+import { dirname, extname, join, posix, relative } from 'node:path'
 import ts from 'typescript'
-import { CODE_ENDUNGEN, parse, sammleDateien, zeileVon, zuPosix } from '../scripts/pruefung/quelldateien.mjs'
-import { besucheAlle, geholteWerte, istDynamischerImport, optionenFuer, type Verstoss } from './architektur_pruefung'
+import { CODE_ENDUNGEN, parse, sammleDateien as sammleAlle, zeileVon, zuPosix } from '../scripts/pruefung/quelldateien.mjs'
+import { besucheAlle, geholteWerte, istDynamischerImport, optionenFuer, sammleDateien, type Verstoss } from './architektur_pruefung'
+import { REGISTRY_DATEI } from './architektur_ki_registry'
 
-const ORDNER = 'src/ki/strategien'
+const ORDNER = posix.dirname(REGISTRY_DATEI)
 const SCHNITTSTELLE = `${ORDNER}/strategie.ts`
+const GRUND = `ausserhalb von ${ORDNER}/ nur index.ts und Typen aus strategie.ts`
 /** Wo die Grenze gilt: aller Code unter diesen Ordnern und im Wurzelordner. */
 const BEREICHE = ['src', 'scripts']
 
@@ -32,16 +36,19 @@ function artDesZiels(pfad: string): 'registry' | 'schnittstelle' | 'strategie' |
 
 /** Die Dateien, für die die Grenze gilt, relativ zur Wurzel. */
 export function grenzDateien(wurzel: string): string[] {
-  const imWurzelordner = readdirSync(wurzel, { withFileTypes: true }).filter((eintrag) => eintrag.isFile()).map((eintrag) => eintrag.name)
+  const imWurzelordner = readdirSync(wurzel, { withFileTypes: true })
+    .filter((eintrag) => eintrag.isFile() && CODE_ENDUNGEN.has(extname(eintrag.name)))
+    .map((eintrag) => eintrag.name)
   return [...imWurzelordner, ...BEREICHE.flatMap((bereich) => sammleDateien(wurzel, bereich))]
-    .filter((pfad) => CODE_ENDUNGEN.has(extname(pfad)) && !istAusgenommen(pfad) && artDesZiels(pfad) === null)
+    .filter((pfad) => !istAusgenommen(pfad) && artDesZiels(pfad) === null)
 }
 
 /** Die Namen der Werte, die strategie.ts exportiert; Typen zählen nicht. */
-function werteDerSchnittstelle(wurzel: string): Set<string> {
+function werteDerSchnittstelle(wurzel: string, optionen: ts.CompilerOptions): Set<string> {
   const datei = join(wurzel, SCHNITTSTELLE)
   if (!existsSync(datei)) return new Set()
-  const programm = ts.createProgram([datei], optionenFuer(wurzel))
+  // Für Exporte und ihre Art braucht es keine Standardbibliothek; ohne sie geht es viel schneller.
+  const programm = ts.createProgram([datei], { ...optionen, noLib: true, types: [] })
   const pruefer = programm.getTypeChecker()
   const quelle = programm.getSourceFile(datei)
   const modul = quelle && pruefer.getSymbolAtLocation(quelle)
@@ -52,8 +59,6 @@ function werteDerSchnittstelle(wurzel: string): Set<string> {
 
 type Verweis = { knoten: ts.Node; angabe: string | null; wie: string; deklaration?: ts.ImportDeclaration | ts.ExportDeclaration; nurTyp?: boolean; muster?: boolean }
 
-const istText = (knoten: ts.Node | undefined): knoten is ts.StringLiteral | ts.NoSubstitutionTemplateLiteral =>
-  knoten !== undefined && (ts.isStringLiteral(knoten) || ts.isNoSubstitutionTemplateLiteral(knoten))
 const anImportMeta = (knoten: ts.Expression, name: (text: string) => boolean) =>
   ts.isPropertyAccessExpression(knoten) && ts.isMetaProperty(knoten.expression) && knoten.expression.keywordToken === ts.SyntaxKind.ImportKeyword && name(knoten.name.text)
 /** `import(…)`, `require(…)` und `import.meta.resolve(…)`. */
@@ -70,7 +75,7 @@ function verweise(quelle: ts.SourceFile): Verweis[] {
   const verbraucht = new Set<ts.Node>()
   const nimm = (knoten: ts.Node, text: ts.Node | undefined, wie: string, mehr: Partial<Verweis> = {}) => {
     if (text) verbraucht.add(text)
-    gefunden.push({ knoten, angabe: istText(text) ? text.text : null, wie, ...mehr })
+    gefunden.push({ knoten, angabe: text && ts.isStringLiteralLike(text) ? text.text : null, wie, ...mehr })
   }
   besucheAlle(quelle, (knoten) => {
     if ((ts.isImportDeclaration(knoten) || ts.isExportDeclaration(knoten)) && knoten.moduleSpecifier) {
@@ -85,10 +90,10 @@ function verweise(quelle: ts.SourceFile): Verweis[] {
       for (const muster of liste) nimm(knoten, muster, 'lädt mit import.meta.glob', { muster: true })
     } else if (ts.isCallExpression(knoten) && istLader(knoten)) {
       nimm(knoten, knoten.arguments[0], `lädt mit ${knoten.expression.getText()}()`)
-    } else if (ts.isNewExpression(knoten) && knoten.expression.getText() === 'URL' && knoten.arguments?.[1]?.getText() === 'import.meta.url') {
+    } else if (ts.isNewExpression(knoten) && ts.isIdentifier(knoten.expression) && knoten.expression.text === 'URL' && knoten.arguments?.[1]?.getText() === 'import.meta.url') {
       nimm(knoten, knoten.arguments[0], 'nennt mit new URL(…, import.meta.url)')
-    } else if (istText(knoten) && !verbraucht.has(knoten) && /^(\.{1,2}(\/|$)|\/)/.test(knoten.text)) {
-      gefunden.push({ knoten, angabe: knoten.text, wie: 'nennt den Pfad' })
+    } else if (ts.isStringLiteralLike(knoten) && !verbraucht.has(knoten) && /^(\.{1,2}(\/|$)|\/)/.test(knoten.text)) {
+      nimm(knoten, knoten, 'nennt den Pfad')
     }
   })
   return gefunden
@@ -102,25 +107,27 @@ function verweise(quelle: ts.SourceFile): Verweis[] {
  */
 export function pruefeImportgrenze(wurzel: string): Verstoss[] {
   const optionen = optionenFuer(wurzel)
+  const aufloesung = ts.createModuleResolutionCache(wurzel, (name) => name.toLowerCase(), optionen)
   const echteWurzel = realpathSync.native(wurzel)
-  const werte = werteDerSchnittstelle(wurzel)
+  const werte = werteDerSchnittstelle(wurzel, optionen)
   const grenze = grenzDateien(wurzel)
   const geprueft = new Set(grenze.map((pfad) => pfad.toLowerCase()))
-  const strategieDateien = sammleDateien(wurzel, ORDNER)
-  const bezug = (absolut: string) => {
-    const echt = existsSync(absolut) ? realpathSync.native(absolut) : absolut
-    return zuPosix(relative(existsSync(absolut) ? echteWurzel : wurzel, echt))
-  }
+  const strategieDateien = sammleAlle(wurzel, ORDNER)
+  /** Pfad relativ zur Wurzel; eine vorhandene Datei über ihren echten Pfad (Gross- und Kleinschreibung, Verknüpfungen). */
+  const bezug = (absolut: string) =>
+    zuPosix(existsSync(absolut) ? relative(echteWurzel, realpathSync.native(absolut)) : relative(wurzel, absolut))
 
   /** Mögliche Ziele einer Angabe: so, wie TypeScript sie auflöst, und als Pfad ohne `?…` und `#…`, mit und ohne Endung. */
   const ziele = (datei: string, angabe: string): string[] => {
     const kern = angabe.replace(/[?#].*$/, '')
     const absolut = join(wurzel, datei)
-    const aufgeloest = ts.resolveModuleName(kern, absolut, optionen, ts.sys).resolvedModule?.resolvedFileName
-    const basen = kern.startsWith('/') ? [join(wurzel, kern), ...(isAbsolute(kern) ? [kern] : [])] : /^\.{1,2}(\/|$)/.test(kern) ? [join(dirname(absolut), kern)] : []
-    const kandidaten = basen.flatMap((basis) => [basis, ...[...CODE_ENDUNGEN].flatMap((endung) => [basis + endung, join(basis, `index${endung}`)])])
-    const vorhanden = kandidaten.filter((pfad) => existsSync(pfad) && statSync(pfad).isFile())
-    return [...new Set([...(aufgeloest ? [aufgeloest] : []), ...basen, ...vorhanden].map(bezug))]
+    const aufgeloest = ts.resolveModuleName(kern, absolut, optionen, ts.sys, aufloesung).resolvedModule?.resolvedFileName
+    const basen = kern.startsWith('/') ? [join(wurzel, kern), kern] : /^\.{1,2}(\/|$)/.test(kern) ? [join(dirname(absolut), kern)] : []
+    // Hat TypeScript nicht aufgelöst, die erste vorhandene Datei mit Endung oder als index.
+    const vorhanden = aufgeloest ?? basen
+      .flatMap((basis) => [...CODE_ENDUNGEN].flatMap((endung) => [basis + endung, join(basis, `index${endung}`)]))
+      .find((pfad) => existsSync(pfad) && statSync(pfad).isFile())
+    return [...new Set([...(vorhanden ? [vorhanden] : []), ...basen].map(bezug))]
   }
 
   /** Ob ein Verweis auf `ziel` die Grenze verletzt. */
@@ -139,16 +146,15 @@ export function pruefeImportgrenze(wurzel: string): Verstoss[] {
 
   /** Höchstens ein Verstoss je Verweis. */
   const pruefeVerweis = (datei: string, verweis: Verweis, besucht: Set<string>): string | null => {
-    const grund = `ausserhalb von ${ORDNER}/ nur index.ts und Typen aus strategie.ts`
     if (verweis.angabe === null) return `${verweis.wie} mit berechnetem Namen; die Importgrenze lässt sich dann nicht prüfen`
     if (verweis.muster) {
       if (verweis.angabe.startsWith('!')) return null
       const muster = [posix.join(posix.dirname(datei), verweis.angabe), posix.normalize(verweis.angabe.replace(/^\//, ''))].map((m) => m.toLowerCase())
       const treffer = strategieDateien.find((pfad) => muster.some((m) => posix.matchesGlob(pfad.toLowerCase(), m)) && verletzt(verweis, pfad))
-      return treffer ? `${verweis.wie} „${verweis.angabe}“ (trifft ${treffer}); ${grund}` : null
+      return treffer ? `${verweis.wie} „${verweis.angabe}“ (trifft ${treffer}); ${GRUND}` : null
     }
     for (const ziel of ziele(datei, verweis.angabe)) {
-      if (verletzt(verweis, ziel)) return `${verweis.wie} „${verweis.angabe}“ (${ziel}); ${grund}`
+      if (verletzt(verweis, ziel)) return `${verweis.wie} „${verweis.angabe}“ (${ziel}); ${GRUND}`
       if (!weiterverfolgen(ziel) || besucht.has(ziel)) continue
       besucht.add(ziel)
       for (const naechster of verweise(parse(ziel, readFileSync(join(wurzel, ziel), 'utf8')))) {

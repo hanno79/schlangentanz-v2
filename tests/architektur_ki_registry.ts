@@ -1,8 +1,11 @@
 // Die Registry der Strategien (tests/architektur_ki_pruefung.ts, P0.3d, Abschluss 2): Jede
 // Fabrik steht ausdrücklich in src/ki/strategien/index.ts, und genau diese Einträge prüft der
-// Isolationstest. Damit keine Fabrik daran vorbeikommt, exportiert eine Strategie eine
-// Funktion, die eine KI liefert, nur, wenn die Registry sie importiert; Default-Exporte,
-// umbenennende Exporte, Weiterexporte und exportierte Klassen gibt es in Strategien nicht.
+// Isolationstest. Dass keine Fabrik daran vorbei einen Verbraucher erreicht, sichert die
+// Importgrenze (tests/architektur_ki_importgrenze.ts): Ausserhalb der Strategien gibt es nur
+// index.ts und die Typen aus strategie.ts. Die Prüfung hier ist eine zusätzliche Hilfe in den
+// Strategien selbst: Default-Exporte, umbenennende Exporte, Weiterexporte und exportierte
+// Klassen gibt es dort nicht, und `liefertKi` meldet viele, aber nicht alle Fabriken, die nicht
+// in der Registry stehen (Grenzen dort).
 
 import ts from 'typescript'
 import { zuPosix } from '../scripts/pruefung/quelldateien.mjs'
@@ -25,7 +28,12 @@ export function registrierteNamen(registry: ts.SourceFile | undefined, pruefer: 
   return namen
 }
 
-/** Ob ein Wert dieses Typs eine KI ist oder, auch über bis zu drei Aufrufe oder `new`, eine liefert. */
+/**
+ * Ob ein Wert dieses Typs eine KI ist oder, auch über bis zu drei Aufrufe oder `new`, eine liefert.
+ * Nur eine Hilfe, nicht die Sicherung: Eine KI in einer Vereinigung (`Ki | undefined`,
+ * `Ki | null`), in einer Liste (`Ki[]`), in einem `Promise<Ki>`, in einem Objekt (`{ ki: Ki }`)
+ * oder hinter mehr als drei Aufrufen erkennt sie nicht (Schlussprüfung 2, Mangel 1).
+ */
 function liefertKi(typ: ts.Type, pruefer: ts.TypeChecker, tiefe = 0): boolean {
   if (typ.getProperty('waehle') !== undefined) return true
   if (tiefe >= 3) return false

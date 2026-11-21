@@ -5,7 +5,7 @@ import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { naechsterKiSchritt } from '../ki/schritt'
 import { entscheiderVon } from '../ki/sicht'
-import { erstelleZufallsKi } from '../ki/strategien/zufallsKi'
+import { STRATEGIEN } from '../ki/strategien'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
 import { name } from './namen'
@@ -123,7 +123,7 @@ function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
 
   function spiele() {
     try {
-      const aktion = naechsterKiSchritt(zustand, erstelleZufallsKi(erzeugeZufall(schritt)))
+      const aktion = naechsterKiSchritt(zustand, STRATEGIEN.zufallsKi(erzeugeZufall(schritt)))
       if (aktion === null) throw new Error('Es entscheidet keine KI.')
       fuehreAus(aktion, `KI-Schritt: ${beschrifte(zustand, aktion)}`)
     } catch (fehler) {

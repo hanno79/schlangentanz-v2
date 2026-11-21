@@ -21,7 +21,9 @@ const STRATEGIEN = {
   'src/ki/strategien/hilfe.ts': "import { erstelleZufallsKi } from './zufallsKi'\nexport const auchHier = erstelleZufallsKi\n",
   'src/ki/strategien/index.ts': "import { erstelleZufallsKi } from './zufallsKi'\nexport const STRATEGIEN = { zufallsKi: erstelleZufallsKi }\n",
 }
-const ZUFALLS_KI = "import { erstelleZufallsKi } from '../ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n"
+/** Eine Datei, die die Zufalls-KI aus `pfad` holt; die Gegenproben unterscheiden sich nur im Pfad. */
+const importiere = (pfad: string) => `import { erstelleZufallsKi } from '${pfad}'\nexport const k = erstelleZufallsKi\n`
+const ZUFALLS_KI = importiere('../ki/strategien/zufallsKi')
 
 /** Erlaubt: Registry, Typen aus strategie.ts, Strategien unter sich, Tests. */
 const ERLAUBT: Record<string, string> = {
@@ -38,7 +40,10 @@ const ERLAUBT: Record<string, string> = {
   ].join('\n'),
   'src/entwicklung/tisch.test.tsx': ZUFALLS_KI,
   'src/entwicklung/zweiter.test.ts': ZUFALLS_KI,
-  'tests/messlauf.ts': "import { erstelleZufallsKi } from '../src/ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n",
+  'tests/messlauf.ts': importiere('../src/ki/strategien/zufallsKi'),
+  'src/entwicklung/nutzer.ts': importiere('./weiter'),
+  'src/entwicklung/bruecke_hilfe.test.ts': ZUFALLS_KI,
+  'tests/bruecke.ts': importiere('../src/ki/strategien/zufallsKi'),
 }
 
 /** Gegenproben: jede Datei muss gemeldet werden. */
@@ -46,11 +51,11 @@ const GEGENPROBEN: Array<[string, string, string]> = [
   ['statischer Import aus src/entwicklung', 'src/entwicklung/statisch.tsx', ZUFALLS_KI],
   ['import() aus src/entwicklung', 'src/entwicklung/dynamisch.ts', "export const lade = () => import('../ki/strategien/zufallsKi')\n"],
   ['Weiterexport über eine Hilfsdatei ausserhalb von strategien/', 'src/entwicklung/weiter.ts', "export { erstelleZufallsKi } from '../ki/strategien/zufallsKi'\n"],
-  ['relativer Umweg über ./', 'src/entwicklung/umweg.ts', "import { erstelleZufallsKi } from '../ki/strategien/./zufallsKi'\nexport const k = erstelleZufallsKi\n"],
-  ['relativer Umweg über ../', 'src/entwicklung/umweg2.ts', "import { erstelleZufallsKi } from '../ki/../ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n"],
-  ['mit Endung .ts', 'src/entwicklung/endung.ts', "import { erstelleZufallsKi } from '../ki/strategien/zufallsKi.ts'\nexport const k = erstelleZufallsKi\n"],
-  ['vom Projektordner aus mit /src', 'src/entwicklung/absolut.ts', "import { erstelleZufallsKi } from '/src/ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n"],
-  ['mit anderer Gross- und Kleinschreibung', 'src/entwicklung/schreibung.ts', "import { erstelleZufallsKi } from '../ki/Strategien/ZufallsKi'\nexport const k = erstelleZufallsKi\n"],
+  ['relativer Umweg über ./', 'src/entwicklung/umweg.ts', importiere('../ki/strategien/./zufallsKi')],
+  ['relativer Umweg über ../', 'src/entwicklung/umweg2.ts', importiere('../ki/../ki/strategien/zufallsKi')],
+  ['mit Endung .ts', 'src/entwicklung/endung.ts', importiere('../ki/strategien/zufallsKi.ts')],
+  ['vom Projektordner aus mit /src', 'src/entwicklung/absolut.ts', importiere('/src/ki/strategien/zufallsKi')],
+  ['mit anderer Gross- und Kleinschreibung', 'src/entwicklung/schreibung.ts', importiere('../ki/Strategien/ZufallsKi')],
   ['mit Vite-Zusatz ?raw', 'src/entwicklung/roh.ts', "import quelle from '../ki/strategien/zufallsKi.ts?raw'\nexport const k = quelle\n"],
   ['require', 'src/entwicklung/erfordert.ts', "export const k = require('../ki/strategien/zufallsKi')\n"],
   ['export * from', 'src/entwicklung/alles.ts', "export * from '../ki/strategien/zufallsKi'\n"],
@@ -66,19 +71,16 @@ const GEGENPROBEN: Array<[string, string, string]> = [
   ['eine Hilfsdatei unter strategien/', 'src/entwicklung/hilfe.ts', "import { auchHier } from '../ki/strategien/hilfe'\nexport const k = auchHier\n"],
   ['über eine Testdatei', 'src/entwicklung/bruecke.ts', "import { k } from './bruecke_hilfe.test'\nexport const auch = k\n"],
   ['über eine Datei unter tests/', 'src/entwicklung/bruecke2.ts', "import { k } from '../../tests/bruecke'\nexport const auch = k\n"],
-  ['aus dem Rahmen unter src/ki', 'src/ki/rahmen.ts', "import { erstelleZufallsKi } from './strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n"],
-  ['aus einem Helfer unter __tests__', 'src/ui/__tests__/helfer.ts', "import { erstelleZufallsKi } from '../../ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n"],
-  ['aus scripts/', 'scripts/messlauf.mjs', "import { erstelleZufallsKi } from '../src/ki/strategien/zufallsKi.ts'\nexport const k = erstelleZufallsKi\n"],
-  ['aus dem Wurzelordner', 'messlauf.config.ts', "import { erstelleZufallsKi } from './src/ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n"],
+  ['aus dem Rahmen unter src/ki', 'src/ki/rahmen.ts', importiere('./strategien/zufallsKi')],
+  ['aus einem Helfer unter __tests__', 'src/ui/__tests__/helfer.ts', importiere('../../ki/strategien/zufallsKi')],
+  ['aus scripts/', 'scripts/messlauf.mjs', importiere('../src/ki/strategien/zufallsKi.ts')],
+  ['aus dem Wurzelordner', 'messlauf.config.ts', importiere('./src/ki/strategien/zufallsKi')],
 ]
 
 const probe = legeAn({
   ...STRATEGIEN,
   ...ERLAUBT,
   ...Object.fromEntries(GEGENPROBEN.map(([, datei, inhalt]) => [datei, inhalt])),
-  'src/entwicklung/nutzer.ts': "import { erstelleZufallsKi } from './weiter'\nexport const k = erstelleZufallsKi\n",
-  'src/entwicklung/bruecke_hilfe.test.ts': ZUFALLS_KI,
-  'tests/bruecke.ts': "import { erstelleZufallsKi } from '../src/ki/strategien/zufallsKi'\nexport const k = erstelleZufallsKi\n",
 })
 const befunde = pruefeImportgrenze(probe)
 const befundeIn = (datei: string) => befunde.filter((verstoss) => verstoss.datei === datei)
@@ -103,12 +105,12 @@ describe('P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Regis
   })
 
   it('P0.3d: Registry, Typen aus strategie.ts, Strategien unter sich und Tests bleiben erlaubt', () => {
-    const erlaubt = [...Object.keys(ERLAUBT), ...Object.keys(STRATEGIEN), 'src/entwicklung/nutzer.ts', 'src/entwicklung/bruecke_hilfe.test.ts', 'tests/bruecke.ts']
+    const erlaubt = [...Object.keys(ERLAUBT), ...Object.keys(STRATEGIEN)]
 
     expect(beschreibe(befunde.filter(({ datei }) => erlaubt.includes(datei))), 'U5: erwartet keinen Verstoss in den erlaubten Dateien').toBe('')
   })
 
-  it.each(GEGENPROBEN.map(([name, datei]) => [name, datei]))('P0.3d: Gegenprobe „%s“ wird gemeldet', (name, datei) => {
+  it.each(GEGENPROBEN)('P0.3d: Gegenprobe „%s“ wird gemeldet', (name, datei) => {
     expect(befundeIn(datei).length, `U5: erwartet eine Meldung für ${name} in ${datei}, gefunden:\n${beschreibe(befunde)}`).toBeGreaterThan(0)
   })
 })
@@ -125,7 +127,7 @@ describe('P0.3d: U5 – aus strategie.ts nur Typen, sobald die Datei Werte hat',
       '',
     ].join('\n'),
     'src/entwicklung/wert.ts': "import { STANDARD } from '../ki/strategien/strategie'\nexport const k = STANDARD\n",
-    'src/entwicklung/weitergereicht.ts': "import { erstelleZufallsKi } from '../ki/strategien/strategie'\nexport const k = erstelleZufallsKi\n",
+    'src/entwicklung/weitergereicht.ts': importiere('../ki/strategien/strategie'),
     'src/entwicklung/namensraum.ts': "import * as alles from '../ki/strategien/strategie'\nexport const k = alles\n",
     'src/entwicklung/dynamisch.ts': "export const lade = () => import('../ki/strategien/strategie')\n",
     'src/entwicklung/alles.ts': "export * from '../ki/strategien/strategie'\n",

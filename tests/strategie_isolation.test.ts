@@ -16,8 +16,11 @@ alle mit derselben Strategie, laufen zweimal, (a) mit allen Instanzen aus einer
 Modulinstanz und (b) mit jeder Instanz aus einem frisch geladenen Modul. Gleich
 sein müssen jede Entscheidung und der sichtbare Zustand jeder KI am Ende.
 
-Geprüft wird jede Fabrik der Registry `STRATEGIEN` in src/ki/strategien/index.ts;
-dass jede Fabrik dort steht, verlangt der Architekturtest. Grenze: Der Test sieht
+Geprüft wird jede Fabrik der Registry `STRATEGIEN` in src/ki/strategien/index.ts.
+Eine Fabrik, die dort fehlt, erreicht keinen Verbraucher: Ausserhalb der Strategien
+gibt es nur die Registry und Typen (Importgrenze, tests/architektur_ki_importgrenze.ts).
+Hilfsmodule einer registrierten Strategie lädt `vi.resetModules()` mit neu, sie
+werden also mitgeprüft. Grenze: Der Test sieht
 nur seine Partien. Eine Strategie, die erst nach mehr Instanzen oder bei erkannten
 Saaten Wissen teilt, fällt hier nicht auf (Plan U5, K5).
 */
