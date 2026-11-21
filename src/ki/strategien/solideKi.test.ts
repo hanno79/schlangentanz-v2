@@ -154,7 +154,14 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     0,
   )
 
-  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe, ausser ihr Zug ist strikt besser bewertet (Saat 7154 eingeschlossen)', () => {
+  /** Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte im selben Zug (A5, D12). */
+  function mitZweiterKarte(danach: Spielzustand): Spielzustand[] {
+    if (danach.schwebend !== null || danach.zug.spielerIndex !== 0 || danach.zug.abschnitt !== 'Ausspielen') return [danach]
+    const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+    return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, 0))]
+  }
+
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Saat 7154 eingeschlossen)', () => {
     let geprueft = 0
     let vollendet = 0
     for (const zug of [...ENTSCHEIDUNGEN, SAAT_7154].flatMap(zuege)) {
@@ -173,8 +180,9 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
         vollendet += 1
         continue
       }
-      // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann muss ihr Zug strikt besser bewertet sein.
-      const besteVollendung = vollendend.reduce((beste, danach) => (bewerte(sichtFuer(danach, 0)) > bewerte(sichtFuer(beste, 0)) ? danach : beste))
+      // Eine Gruppe zu vollenden kann eine andere kosten, etwa wenn eine Fusion die Farbe wechseln müsste (A11); dann muss ihr Zug strikt besser
+      // bewertet sein als die beste Vollendung samt der besten zweiten Karte desselben Zuges.
+      const besteVollendung = vollendend.flatMap(mitZweiterKarte).reduce((beste, danach) => (bewerte(sichtFuer(danach, 0)) > bewerte(sichtFuer(beste, 0)) ? danach : beste))
       const zahlen = `Endwertung ${endpunkte(ende, 0)} gegen ${endpunkte(besteVollendung, 0)}, Bewertung ${bewerte(sichtFuer(ende, 0)).toFixed(2)} gegen ${bewerte(sichtFuer(besteVollendung, 0)).toFixed(2)}`
       expect(bewerte(sichtFuer(ende, 0)), `K2.1: Zug ab ${JSON.stringify(zug[0].aktion)}: ${zahlen}`).toBeGreaterThan(bewerte(sichtFuer(besteVollendung, 0)) + 1e-9)
     }

@@ -56,9 +56,13 @@ describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine; je Schrit
     expect(aktionen.filter((aktion) => aktion.typ === 'FarbendiebSpielen').length, 'K2.8: Farbendieb, 36 Karten × 20 Stellen').toBe(720)
     expect(aktionen.length, 'K2.8: über tausend Aktionen').toBeGreaterThan(1000)
 
-    const beginn = performance.now()
-    const plaene = [1, 2, 3].map((saat) => planeZug(sichtFuer(zustand, 1), aktionen, erzeugeZufall(saat)))
-    const dauer = (performance.now() - beginn) / plaene.length
+    const dauern: number[] = []
+    const plaene = [1, 2, 3].map((saat) => {
+      const beginn = performance.now()
+      const plan = planeZug(sichtFuer(zustand, 1), aktionen, erzeugeZufall(saat))
+      dauern.push(performance.now() - beginn)
+      return plan
+    })
     for (const plan of plaene) {
       const { suche, vorauswahl, angeboten } = plan.bewertungen
       expect(suche, 'K2.8: durchgerechnete und bewertete Stellungen in diesem Schritt').toBeLessThanOrEqual(GRENZE)
@@ -67,7 +71,7 @@ describe('K2 Kriterium 8: jede Aktion besteht die Prüfung der Engine; je Schrit
       expect(pruefeAktion(zustand, plan.aktion)).toEqual({ erlaubt: true })
       expect(aktionen).toContain(plan.aktion)
     }
-    expect(dauer, `K2.8: Millisekunden je Schritt bei ${aktionen.length} Aktionen`).toBeLessThan(ZEITGRENZE_MS)
+    for (const dauer of dauern) expect(dauer, `K2.8: Millisekunden dieses Schritts bei ${aktionen.length} Aktionen`).toBeLessThan(ZEITGRENZE_MS)
   })
 
   it('K2.8: in Partien mit 2 bis 4 Spielern, mit und ohne Erweiterung, ist jede gewählte Aktion erlaubt; je Schritt höchstens 64 durchgerechnete Stellungen und in der Vorauswahl höchstens eine Bewertung je angebotener Aktion', () => {
