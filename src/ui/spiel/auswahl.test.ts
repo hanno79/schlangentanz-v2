@@ -74,7 +74,7 @@ describe('O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und 
     expect([...gesehen].sort()).toEqual(
       [
         'BlockadeLegen', 'FarbendiebSpielen', 'FarbkarteLegen', 'FusionLegen', 'Reagieren', 'RegenbogenschlangeLegen',
-        'SchlangenfrassSpielen', 'SchlangengrubeSpielen', 'SonderkarteWirkungslosAblegen', 'UeberhandAbwerfen', 'VerdopplerSpielen', 'ZugBeenden',
+        'SchlangenfrassSpielen', 'SchlangengrubeSpielen', 'SchlangenhaeutungSpielen', 'SonderkarteWirkungslosAblegen', 'UeberhandAbwerfen', 'VerdopplerSpielen', 'ZugBeenden',
       ].sort(),
     )
   })
