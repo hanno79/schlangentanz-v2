@@ -1,0 +1,13 @@
+
+> schlangentanz-v2@0.0.0 test:dauerlauf
+> vitest run --mode dauerlauf --maxWorkers=4
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a5978783931830d0b
+
+
+ Test Files  4 passed (4)
+      Tests  4 passed (4)
+   Start at  19:07:19
+   Duration  134.65s (transform 1.66s, setup 1.30s, import 1.78s, tests 530.33s, environment 0ms)
+
