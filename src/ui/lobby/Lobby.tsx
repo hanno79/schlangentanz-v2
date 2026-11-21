@@ -4,14 +4,18 @@ import './lobby.css'
 import './lobby-seite.css'
 import { geheZu } from './navigation'
 import { GEGNER_AUSWAHL, starteNeuePartie, useGespeichertePartie } from './partie'
+import type { Einstellungen } from './partie'
 import Rahmen from './Rahmen'
 import { LOBBY, SPIELNAME, partieKurz } from './texte'
 import Verweis from './Verweis'
 import VerworfenHinweis from './VerworfenHinweis'
+import { useWurfImZeichnen } from '../wurfImZeichnen'
 
 /**
  * Die Startseite: Gegnerzahl und Erweiterung wählen, eine neue Partie beginnen
- * oder die gespeicherte fortsetzen.
+ * oder die gespeicherte fortsetzen. Ist die gespeicherte Partie beendet, gibt
+ * es statt „Weiterspielen“ ihre Wertung zu sehen, und eine neue Partie beginnt
+ * ohne Rückfrage (O8, Kriterium 4).
  *
  * Hier läuft keine Partie (O2 K5): Die Lobby liest den Spielstand einmal beim
  * Öffnen, um „Weiterspielen“ anzubieten oder zu sagen, dass er unlesbar war,
@@ -23,10 +27,7 @@ export default function Lobby() {
   const [gegner, setGegner] = useState(GEGNER_AUSWAHL[0])
   const [erweiterung, setErweiterung] = useState(false)
   const [fragtNach, setFragtNach] = useState(false)
-  /* Ein Wurf im Klick-Handler erreicht keine Fehlergrenze. Er wird deshalb
-     festgehalten und beim nächsten Zeichnen geworfen; dann zeigt ihn der
-     Fehlerfang im App-Rahmen und meldet ihn an den Fehlerdienst (O2 K4). */
-  const [startfehler, setStartfehler] = useState<{ fehler: unknown } | null>(null)
+  const halteFehlerFest = useWurfImZeichnen()
   const neuePartieKnopf = useRef<HTMLButtonElement>(null)
   const frageWarOffen = useRef(false)
 
@@ -36,13 +37,11 @@ export default function Lobby() {
     frageWarOffen.current = fragtNach
   }, [fragtNach])
 
-  if (startfehler !== null) throw startfehler.fehler
-
   function beginne() {
     try {
       starteNeuePartie({ gegner, erweiterung })
     } catch (fehler) {
-      setStartfehler({ fehler })
+      halteFehlerFest(fehler)
       return
     }
     geheZu('spiel')
@@ -61,16 +60,7 @@ export default function Lobby() {
       <div className="lobby__inhalt">
         {gespeichert.art === 'verworfen' && <VerworfenHinweis lage={gespeichert} />}
 
-        {laufend !== null && (
-          <section className="lobby__laufend" aria-label={LOBBY.laufendePartie}>
-            <p data-testid="laufende-partie">
-              <strong>{LOBBY.laufendePartie}:</strong> {partieKurz(laufend.gegner, laufend.erweiterung)}
-            </p>
-            <button type="button" className="rahmen-knopf rahmen-knopf--haupt" onClick={() => geheZu('spiel')}>
-              {LOBBY.weiterspielen}
-            </button>
-          </section>
-        )}
+        {(gespeichert.art === 'laufend' || gespeichert.art === 'beendet') && <GespeichertePartie lage={gespeichert} />}
 
         <form
           className="lobby__neu"
@@ -128,6 +118,23 @@ export default function Lobby() {
         </form>
       </div>
     </Rahmen>
+  )
+}
+
+/** Die gespeicherte Partie: laufend zum Weiterspielen, beendet zum Ansehen ihrer Wertung (O8). Beides führt auf `/spiel`. */
+function GespeichertePartie({ lage }: { lage: { art: 'laufend' | 'beendet'; partie: Einstellungen } }) {
+  const laufend = lage.art === 'laufend'
+  const titel = laufend ? LOBBY.laufendePartie : LOBBY.letztePartie
+  return (
+    <section className="lobby__laufend" aria-label={titel}>
+      <p data-testid={laufend ? 'laufende-partie' : 'beendete-partie'}>
+        <strong>{titel}:</strong> {partieKurz(lage.partie.gegner, lage.partie.erweiterung)}
+        {laufend ? '' : `, ${LOBBY.beendet}`}
+      </p>
+      <button type="button" className={laufend ? 'rahmen-knopf rahmen-knopf--haupt' : 'rahmen-knopf'} onClick={() => geheZu('spiel')}>
+        {laufend ? LOBBY.weiterspielen : LOBBY.ergebnisAnsehen}
+      </button>
+    </section>
   )
 }
 

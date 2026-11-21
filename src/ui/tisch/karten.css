@@ -100,6 +100,13 @@ Höhe übrig (Plan O4).
   color: var(--farbe-tinte);
 }
 
+/* Zwischenstand (O8): bei den Gegnern im Kopf, bei dir neben „Deine Schlangen“. */
+.st-punkte {
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 /* Tischmitte und Auslage: Nachziehstapel, offene Aufgaben, deine Auslage. */
 .st-mitte {
   grid-area: mitte;

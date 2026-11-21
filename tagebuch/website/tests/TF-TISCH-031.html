@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-031 Ein Doppelklick auf „Noch einmal“ beginnt genau eine neue Partie, und Neuladen danach zeigt sie wieder. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-031 Ein Doppelklick auf „Noch einmal“ beginnt genau eine neue Partie, und Neuladen danach zeigt sie wieder.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-TISCH-026</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Wer ungeduldig zweimal auf „Noch einmal“ tippt, soll nicht zwei Partien hintereinander anlegen oder im zweiten Klick etwas am neuen Tisch auslösen. Nach dem Neuladen muss die neue Partie stehen, nicht die alte Wertung.</p><h2>Bestanden, wenn</h2><p>Nach dem Doppelklick steht der Tisch mit „Du bist dran“, der Speicher hält eine laufende Partie mit 4 Spielern und leeren Schlangen, und die Konsole meldet keinen Fehler. Nach „Noch einmal“ aus dem Endstand Saat 7023 (zwei Gegner, ohne Erweiterung) und Neuladen steht derselbe Spielstand am Tisch. Zurück im Browser führt in die Lobby mit „Laufende Partie: 2 Gegner, Erweiterung aus“ und „Weiterspielen“, und „Neue Partie“ fragt dort nach.</p><h2>Fehlgeschlagen, wenn</h2><p>Der zweite Klick spielt eine Karte oder legt eine zweite Partie an, Neuladen zeigt die alte Wertung, oder die Lobby bietet danach „Ergebnis ansehen“ statt „Weiterspielen“.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O8-spielende (PR #77)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Desktop 1280 × 900 mit Maus und Handy hochkant 390 × 844 mit Touch, Stand ab Commit 0b0d639</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Adresse <code>/spiel?szenario=wertung-beispiele</code>; Endstand Saat 7023 im Speicher <code>schlangentanz-v2:partie</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser (Desktop)</td><td>Adresse öffnen</td><td>`/spiel?szenario=wertung-beispiele`</td><td>Wertung „KI-Gegner 2 gewinnt!“</td></tr><tr><td>2</td><td>Wertung</td><td>„Noch einmal“ doppelklicken</td><td></td><td>Tisch mit drei Gegnern, „Du bist dran“, „Deine Schlangen 0 Punkte“</td></tr><tr><td>3</td><td>Browser (Handy)</td><td>Endstand Saat 7023 in den Speicher legen, Lobby öffnen, „Ergebnis ansehen“ antippen</td><td></td><td>„KI-Gegner 2 gewinnt!“ mit 17 Punkten</td></tr><tr><td>4</td><td>Wertung</td><td>„Noch einmal“ antippen, dann neu laden</td><td></td><td>Tisch mit zwei Gegnern, gleicher Spielstand wie vor dem Neuladen</td></tr><tr><td>5</td><td>Browser</td><td>Zurück</td><td></td><td>Lobby „Laufende Partie: 2 Gegner, Erweiterung aus“, „Weiterspielen“</td></tr><tr><td>6</td><td>Lobby</td><td>„Neue Partie“ antippen</td><td></td><td>Rückfrage „Es läuft schon eine Partie. …“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 20:45</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O8) &middot; agent &middot; pruefung-O8 @ <span class="commit" title="0b0d63905d9885802613a50a272f55fb42733765">0b0d639</span> / Playwright Chromium 1.60.0, Desktop 1280x900 Maus und 390x844 Touch</p><p>Doppelklick: Tisch, Laufend, 4 Spieler, Schlangen 0,0,0,0, &#x27;Du bist dran&#x27;, 0 Fehler. Saat 7023 -&gt; Noch einmal: 2 KI, ohne Erweiterung; Neuladen zeigt Tisch, Spielstand unverändert; Zurück: Lobby &#x27;Laufende Partie: 2 Gegner, Erweiterung aus&#x27;, Weiterspielen 1; Neue Partie fragt nach (alertdialog 1).</p><ul class="belege"><li><a href="belege/2026-11-21-2045-TF-TISCH-031-1.txt">2026-11-21-2045-TF-TISCH-031-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

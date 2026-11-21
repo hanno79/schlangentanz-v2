@@ -28,7 +28,12 @@ export const TISCH = {
   istDran: 'ist dran',
   schlussrunde: 'Schlussrunde',
   unterFusion: 'Unter der Farbenfusion',
+  /** Vorgelesen vor den Punkten am Tisch (O8, Kriterium 5). */
+  zwischenstand: 'Zwischenstand ohne Kettenbonus:',
 }
+
+/** „1 Punkt“ oder „12 Punkte“, am Tisch und in der Wertung. */
+export const punkteText = (anzahl: number): string => (anzahl === 1 ? '1 Punkt' : `${anzahl} Punkte`)
 
 /** Das Zeichen am Rand eines Bereichs, hinter dem noch etwas liegt (`Weiter`); mit `ziel` liegt dort auch ein Ziel (O5). */
 export const WEITER = {
@@ -68,7 +73,8 @@ export function schlangenName(titel: string, laenge: number, farbgruppen: { farb
 
 /** Die Statuszeile: wer ist dran, was steht an. Die Schlussrunde zeigt die Statuszeile als eigenes Abzeichen. */
 export function statusText(status: StatusAnsicht): { titel: string; text: string } {
-  if (status.partiephase === 'Beendet') return { titel: 'Die Partie ist beendet.', text: '' }
+  const { amZug } = status
+  if (amZug === null) return { titel: 'Die Partie ist beendet.', text: '' }
   if (status.schwebend !== null) {
     const { karte, von: spieler, entscheidet } = status.schwebend
     const titel = `${spieler.ich ? 'Du spielst' : `${spieler.name} spielt`} ${karte}`
@@ -76,10 +82,10 @@ export function statusText(status: StatusAnsicht): { titel: string; text: string
     return { titel, text }
   }
   // „ist dran“ bleibt beisammen; umbrechen darf die Zeile nur vor „ist“.
-  const titel = status.amZug.ich ? 'Du bist\u00a0dran' : `${status.amZug.name} ist\u00a0dran`
+  const titel = amZug.ich ? 'Du bist\u00a0dran' : `${amZug.name} ist\u00a0dran`
   const teile: string[] = []
   if (status.teilzug === 2) teile.push('Zweiter Zug nach dem Verdoppler')
-  if (status.amZug.ich) teile.push(status.abschnitt === 'Abwerfen' ? 'Lege überzählige Handkarten ab.' : 'Spiele Karten aus deiner Hand.')
+  if (amZug.ich) teile.push(status.abschnitt === 'Abwerfen' ? 'Lege überzählige Handkarten ab.' : 'Spiele Karten aus deiner Hand.')
   else if (status.abschnitt === 'Abwerfen') teile.push('legt überzählige Handkarten ab')
   return { titel, text: teile.join(': ') }
 }

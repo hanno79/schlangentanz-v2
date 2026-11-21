@@ -1,0 +1,82 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-afcc631a7314178f9
+
+ ❯ src/ui/spiel/tischAnsicht.ende.test.ts (7 tests | 3 failed) 241ms
+     × O8: in einem beendeten Szenario ist weder ein Gegner noch du am Zug 10ms
+     × O8/A10: nach einer ganzen Partie aus Saat 3 mit 2 Spielern trägt niemand mehr „am Zug“ 104ms
+     × O8/A10: nach einer ganzen Partie aus Saat 8 mit 4 Spielern trägt niemand mehr „am Zug“ 92ms
+ ❯ src/entwicklung/ZustandsAnsicht.test.tsx (2 tests | 1 failed) 334ms
+     × O8: nach einer ganzen Partie trägt kein Spieler die Marke „am Zug“ 234ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/ZustandsAnsicht.test.tsx > O8: Marke „am Zug“ am Entwicklertisch > O8: nach einer ganzen Partie trägt kein Spieler die Marke „am Zug“
+AssertionError: expected <span class="et-marke"></span> to be null
+
+- Expected:
+null
+
++ Received:
+<span
+  class="et-marke"
+>
+  am Zug
+</span>
+
+ ❯ src/entwicklung/ZustandsAnsicht.test.tsx:19:42
+     17|     render(<ZustandsAnsicht zustand={spieleBisZumEnde(5, 3, false)} />)
+     18|     expect(screen.getByTestId('partiephase')).toHaveTextContent('Beend…
+     19|     expect(screen.queryByText('am Zug')).toBeNull()
+       |                                          ^
+     20|     expect(document.querySelector('.et-spieler--aktiv')).toBeNull()
+     21|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8: in einem beendeten Szenario ist weder ein Gegner noch du am Zug
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/ui/spiel/tischAnsicht.ende.test.ts:44:31
+     42|   it('O8: in einem beendeten Szenario ist weder ein Gegner noch du am …
+     43|     const ansicht = tischAnsicht(erzeugeSzenario('wertung-beispiele'))
+     44|     expect(ansicht.ich.amZug).toBe(false)
+       |                               ^
+     45|     expect(ansicht.gegner.map((gegner) => gegner.amZug)).toEqual([fals…
+     46|     expect(ansicht.status.amZug).toBeNull()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8/A10: nach einer ganzen Partie aus Saat 3 mit 2 Spielern trägt niemand mehr „am Zug“
+ FAIL  src/ui/spiel/tischAnsicht.ende.test.ts > O8: Nach Spielende ist niemand am Zug > O8/A10: nach einer ganzen Partie aus Saat 8 mit 4 Spielern trägt niemand mehr „am Zug“
+AssertionError: expected [ true ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   true,
++ ]
+
+ ❯ src/ui/spiel/tischAnsicht.ende.test.ts:56:98
+     54|     expect(ende.partiephase).toBe('Beendet')
+     55|     const ansicht = tischAnsicht(ende)
+     56|     expect([ansicht.ich.amZug, ...ansicht.gegner.map((gegner) => gegne…
+       |                                                                                                  ^
+     57|     expect(ansicht.status.amZug).toBeNull()
+     58|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  4 failed | 9 passed (13)
+   Start at  20:14:47
+   Duration  5.03s (transform 1.68s, setup 1.29s, import 2.33s, tests 1.13s, environment 7.96s)
+
