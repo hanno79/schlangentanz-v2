@@ -37,7 +37,7 @@ const imOrdner = (pfad: string) => pfad.toLowerCase().startsWith(`${ORDNER}/`)
  * anderer Endung. Bei einem Pfad ohne Endung (der Ordner, `…/index`, `…/strategie`) entscheidet
  * die Datei, die dahinter gefunden wird.
  */
-function artDesZiels(pfad: string): 'registry' | 'schnittstelle' | 'strategie' | null {
+export function artDesZiels(pfad: string): 'registry' | 'schnittstelle' | 'strategie' | null {
   const klein = pfad.toLowerCase().replace(/\/+$/, '')
   if (klein === REGISTRY_DATEI.toLowerCase()) return 'registry'
   if (klein === SCHNITTSTELLE.toLowerCase()) return 'schnittstelle'

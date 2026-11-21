@@ -3,7 +3,7 @@ import { afterAll, describe, expect, it } from 'vitest'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { beschreibe } from './architektur_pruefung'
-import { grenzDateien, istAusgenommen, pruefeImportgrenze } from './architektur_ki_importgrenze'
+import { artDesZiels, grenzDateien, istAusgenommen, pruefeImportgrenze } from './architektur_ki_importgrenze'
 import { WURZEL, legeAn, raeumeAuf, schreibe } from './probebaum'
 
 /*
@@ -80,12 +80,21 @@ const GEGENPROBEN: Array<[string, string, string]> = [
   ['aus einem Helfer unter __tests__', 'src/ui/__tests__/helfer.ts', importiere('../../ki/strategien/zufallsKi')],
   ['aus scripts/', 'scripts/messlauf.mjs', importiere('../src/ki/strategien/zufallsKi.ts')],
   ['aus dem Wurzelordner', 'messlauf.config.ts', importiere('./src/ki/strategien/zufallsKi')],
+  // Schlussprüfung 3, Mangel 1: Brücken mit grossgeschriebener Endung; Vite und Rollup lesen sie als Code.
+  ['Brücke mit Endung .JS', 'src/ui/bruecke.JS', "export { vielleichtKi } from '../ki/strategien/geheim.ts'\n"],
+  ['Brücke mit Endung .Ts', 'src/ui/bruecke2.Ts', "export { vielleichtKi } from '../ki/strategien/geheim'\n"],
+  ['Brücke mit Endung .MJS', 'scripts/bruecke.MJS', "export { vielleichtKi } from '../src/ki/strategien/geheim.ts'\n"],
+  ['HTML mit Endung .HTML', 'src/ui/seite.HTML', '<script type="module" src="../ki/strategien/geheim.ts"></script>\n'],
 ]
 
 const probe = legeAn({
   ...STRATEGIEN,
   ...ERLAUBT,
   ...Object.fromEntries(GEGENPROBEN.map(([, datei, inhalt]) => [datei, inhalt])),
+  // Eine Fabrik, die nicht in der Registry steht (Form G05 der Schlussprüfung 2), und die Nutzer der Brücken.
+  'src/ki/strategien/geheim.ts': "import type { Ki } from './strategie'\nexport function vielleichtKi(_zufall: () => number): Ki | undefined { return { name: 'g' } }\n",
+  'src/ui/nutzer.ts': "import { vielleichtKi } from './bruecke.JS'\nimport { vielleichtKi as auch } from './bruecke2.Ts'\nexport const k = [vielleichtKi(Math.random), auch]\n",
+  'scripts/nutzer.mjs': "import { vielleichtKi } from './bruecke.MJS'\nexport const k = vielleichtKi\n",
 })
 const befunde = pruefeImportgrenze(probe)
 const befundeIn = (datei: string) => befunde.filter((verstoss) => verstoss.datei === datei)
@@ -113,6 +122,14 @@ describe('P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Regis
     const erlaubt = [...Object.keys(ERLAUBT), ...Object.keys(STRATEGIEN)]
 
     expect(beschreibe(befunde.filter(({ datei }) => erlaubt.includes(datei))), 'U5: erwartet keinen Verstoss in den erlaubten Dateien').toBe('')
+  })
+
+  it('P0.3d: erlaubt sind index.ts und strategie.ts nur mit genau dieser Endung, auch in der Schreibweise', () => {
+    const arten = ['index.ts', 'strategie.ts', 'index.TS', 'strategie.Ts', 'zufallsKi.TS', 'INDEX.ts'].map((name) => artDesZiels(`src/ki/strategien/${name}`))
+
+    expect(arten, 'U5: auf einem Dateisystem mit Gross- und Kleinschreibung ist index.TS eine andere Datei als index.ts').toEqual([
+      'registry', 'schnittstelle', 'strategie', 'strategie', 'strategie', 'strategie',
+    ])
   })
 
   it.each(GEGENPROBEN)('P0.3d: Gegenprobe „%s“ wird gemeldet', (name, datei) => {
