@@ -55,8 +55,7 @@ function ortVon(orte: ReadonlyMap<string, Kartenort>, karteId: string, wann: str
  * Die Karten, die von `vorher` nach `nachher` den Ort gewechselt haben, und in
  * jedem geordneten Ort die Karten, die ihre Reihenfolge zu den dort gebliebenen
  * geändert haben. Gebliebene Karten an derselben Stelle der gebliebenen Folge
- * fehlen; deren Reihenfolge stimmt schon. Sortiert nach `nachher`, damit das
- * Einfügen in Listenreihenfolge jede Position trifft.
+ * fehlen; deren Reihenfolge stimmt schon.
  */
 function versetzungen(vorher: ReadonlyMap<string, Kartenort>, nachher: ReadonlyMap<string, Kartenort>): Versetzung[] {
   const bewegt = new Set<string>();
@@ -78,9 +77,14 @@ function versetzungen(vorher: ReadonlyMap<string, Kartenort>, nachher: ReadonlyM
       if (folge.vorher[stelle] !== karteId) bewegt.add(karteId);
     });
   }
-  return [...nachher]
-    .filter(([karteId]) => bewegt.has(karteId))
-    .map(([karteId, nach]) => ({ karteId: istVerdeckt(nach) ? null : karteId, von: vorher.get(karteId)!, nach }));
+  // Offene Ziele in der Folge danach, damit das Einfügen jede Position trifft; verdeckte in der Folge davor,
+  // damit die Liste nicht verrät, wie die Karten in Hand oder Nachziehstapel liegen (B2).
+  const offen = [...nachher].filter(([karteId, nach]) => bewegt.has(karteId) && !istVerdeckt(nach));
+  const verdeckt = [...vorher].filter(([karteId]) => bewegt.has(karteId) && istVerdeckt(nachher.get(karteId)!));
+  return [
+    ...offen.map(([karteId, nach]) => ({ karteId, von: vorher.get(karteId)!, nach })),
+    ...verdeckt.map(([karteId, von]) => ({ karteId: null, von, nach: nachher.get(karteId)! })),
+  ];
 }
 
 function schlangenIds(zustand: Spielzustand): string[] {

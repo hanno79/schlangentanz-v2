@@ -201,7 +201,9 @@ export type Ereignis =
    * `nach` danach, beide ohne die gespielte Karte, die erst das folgende Ereignis
    * hinlegt. Eine neue Schlange erscheint mit ihrer Id in `nach`.
    * Liegt eine Karte danach auf einer Hand oder im Nachziehstapel, fehlt ihre Id
-   * (B2); der Besitzer sieht sie in seiner Hand.
+   * (B2); der Besitzer sieht sie in seiner Hand. Solche Karten stehen am Ende der
+   * Liste in der Reihenfolge vor der Wirkung, damit die Liste nicht verrät, wie
+   * sie danach verdeckt liegen.
    */
   | { typ: 'KartenVersetzt'; spielerIndex: number; karteId: string; karten: Versetzung[]; aufgeloest: string[] }
   | { typ: 'KartenGezogen'; spielerIndex: number; anzahl: number }
