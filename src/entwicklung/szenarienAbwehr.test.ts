@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../engine'
-import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
-import { findeSzenario, SZENARIEN } from './szenarien'
+import { ermittleAktionen, ermittleEntscheider } from '../engine'
+import type { Ereignis } from '../engine'
+import { SZENARIEN } from './szenarien'
+import { abwehren, durchlassen, erzeuge, klicke } from './szenarienTesthilfe'
+import type { Wahl } from './szenarienTesthilfe'
 
 /*
 E4: Die Szenarien `schlangengrube`, `abwehr-schlangengrube` und `doppelangriff`
@@ -9,33 +11,9 @@ lassen sich am Entwicklertisch so durchklicken, wie ihre Erwartung es sagt.
 Jeder Schritt hier ist ein Knopf, den die Engine aufzählt.
 */
 
-function erzeuge(name: string): Spielzustand {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return szenario.erzeuge()
-}
-
-type Wahl = (aktion: SpielAktion) => boolean
-
 const grubeAuf = (zielSpielerId: string): Wahl => (aktion) => aktion.typ === 'SchlangengrubeSpielen' && aktion.zielSpielerId === zielSpielerId
-const abwehren: Wahl = (aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null
-const durchlassen: Wahl = (aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId === null
 const farbkarte: Wahl = (aktion) => aktion.typ === 'FarbkarteLegen'
 const beenden: Wahl = (aktion) => aktion.typ === 'ZugBeenden'
-
-/** Klickt nacheinander die erste aufgezählte Aktion, die zur Wahl passt, und sammelt die Ereignisse. */
-function klicke(zustand: Spielzustand, ...wahlen: Wahl[]): { zustand: Spielzustand; ereignisse: Ereignis[] } {
-  let jetzt = zustand
-  const ereignisse: Ereignis[] = []
-  for (const wahl of wahlen) {
-    const aktion = ermittleAktionen(jetzt).find(wahl)
-    if (aktion === undefined) throw new Error(`Testaufbau: kein passender Knopf unter ${JSON.stringify(ermittleAktionen(jetzt))}`)
-    const schritt = anwendeAktion(jetzt, aktion)
-    jetzt = schritt.zustand
-    ereignisse.push(...schritt.ereignisse)
-  }
-  return { zustand: jetzt, ereignisse }
-}
 
 const ereignistypen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)
 

@@ -15,11 +15,6 @@ export interface TischOptionen {
 
 export type PartieOptionen = Required<TischOptionen>;
 
-/** Die Id der Schlange mit dieser laufenden Nummer. */
-export function schlangenIdFuer(nummer: number): string {
-  return `schlange-${nummer}`;
-}
-
 function pruefeSpielerzahl(spielerzahl: number): void {
   if (!Number.isInteger(spielerzahl) || spielerzahl < SPIELER_MIN || spielerzahl > SPIELER_MAX) {
     throw new Error(`Ungültige Spielerzahl ${spielerzahl}: Schlangentanz spielen ${SPIELER_MIN} bis ${SPIELER_MAX} Spieler (A2).`);
