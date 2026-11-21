@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../../engine'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, zugBeendenGesperrt } from '../../engine'
 import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { starteEntwicklerPartie } from '../../entwicklung/partie'
@@ -52,6 +52,36 @@ describe('O3: Die Aktionen des Menschen in der Sicht', () => {
     const [ende] = partie(5, 2, false).slice(-1)
     expect(ende.partiephase).toBe('Beendet')
     expect(tischAnsicht(ende).aktionen).toEqual([])
+  })
+
+  it('O5/A5: entscheidest du, steht der Grund der Engine darin, warum du den Zug nicht beenden darfst; sonst nichts', () => {
+    const zustaende = partie(1, 2, false)
+    let gesperrt = 0
+    for (const zustand of zustaende) {
+      const ansicht = tischAnsicht(zustand)
+      const erwartet = ermittleEntscheider(zustand) === 0 ? zugBeendenGesperrt(zustand) : null
+      expect(ansicht.zugBeendenGesperrt).toBe(erwartet)
+      expect(ansicht.zugBeendenGesperrt === null, 'gesperrt genau dann, wenn die Engine kein ZugBeenden aufzählt').toBe(
+        ansicht.aktionen.length === 0 || ansicht.aktionen.some((aktion) => aktion.typ === 'ZugBeenden'),
+      )
+      if (ansicht.zugBeendenGesperrt !== null) gesperrt += 1
+    }
+    expect(gesperrt, 'mindestens ein Zustand, in dem du nicht beenden darfst').toBeGreaterThan(0)
+  })
+})
+
+describe('O5/B2: Der Grund gegen „Zug beenden“ verrät nichts aus fremden Händen', () => {
+  it('O5/B2: tauscht man die Hand eines Gegners gegen andere Karten, bleibt der Grund in deiner Sicht gleich', () => {
+    const lagen = partie(2, 3, true).filter((stand) => ermittleEntscheider(stand) === 0 && stand.nachziehstapel.length >= stand.spieler[1].hand.length)
+    expect(lagen.length, 'Lagen, in denen du entscheidest').toBeGreaterThan(5)
+    for (const zustand of lagen.slice(0, 30)) {
+      const vorher = tischAnsicht(zustand).zugBeendenGesperrt
+      const getauscht = structuredClone(zustand)
+      const fremd = getauscht.spieler[1]
+      const tausch = getauscht.nachziehstapel.splice(0, fremd.hand.length, ...fremd.hand)
+      fremd.hand = tausch
+      expect(tischAnsicht(getauscht).zugBeendenGesperrt).toBe(vorher)
+    }
   })
 })
 

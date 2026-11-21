@@ -1,0 +1,74 @@
+/*
+Der Dialog „Zu viele Handkarten“ (O5, A5). Die Handkarten darin sind dieselben
+Knöpfe wie in der Hand (.st-handkarte in bedienung.css). Nur Variablen aus
+src/ui/tokens.css.
+*/
+
+/* Zu viele Handkarten: ein Dialog mit den Karten zum Antippen. */
+.st-abwerfen {
+  box-sizing: border-box;
+  width: min(44rem, calc(100vw - 2 * var(--abstand-2)));
+  max-height: calc(100dvh - 2 * var(--abstand-2));
+  padding: 0;
+  color: var(--farbe-tinte);
+  background: var(--farbe-flaeche);
+  border: 0;
+  border-radius: var(--radius-gross);
+  box-shadow: var(--schatten-erhoben);
+  font-family: var(--schrift-text);
+}
+
+.st-abwerfen[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.st-abwerfen::backdrop {
+  /* --farbe-tinte mit 60 % Deckkraft; als Wert, weil ::backdrop nicht überall Variablen erbt (wie grossansicht.css). */
+  background: rgb(43 33 28 / 0.6);
+}
+
+.st-abwerfen-koerper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  min-height: 0;
+  padding: var(--abstand-4);
+  overflow: auto;
+}
+
+.st-abwerfen-titel {
+  margin: 0;
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  font-weight: 400;
+  color: var(--farbe-akzent-stark);
+}
+
+.st-abwerfen-koerper p {
+  margin: 0;
+}
+
+.st-abwerfen-karten {
+  --karte-breite: clamp(var(--ziel-mindestens), 16vh, 80px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--abstand-2);
+  margin: 0;
+  padding: var(--abstand-2) 0 0;
+  list-style: none;
+}
+
+.st-abwerfen-zahl {
+  font-weight: 600;
+}
+
+.st-abwerfen-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--abstand-2);
+  padding: var(--abstand-2) var(--abstand-4);
+  border-top: 1px solid var(--farbe-linie);
+}

@@ -1,6 +1,6 @@
 /*
 Karten am Tisch: Schlangen mit Farbgruppen und Fusionen, Ablagestapel,
-ausliegende Grube, Tischmitte, Auslage, Grossansicht. Der Aufbau des Tischs steht in tisch.css.
+ausliegende Grube, Tischmitte, Auslage. Der Aufbau des Tischs steht in tisch.css.
 
 Schlangen brechen bei Platzmangel um, statt die Seite zu verbreitern. Auf dem
 Handy (schmal, oder niedrig im Querformat) stehen sie dagegen als kompakte
@@ -253,26 +253,8 @@ Höhe übrig (Plan O4).
   box-shadow: var(--schatten-flaeche);
 }
 
-/* Grossansicht einer Karte (<dialog>). */
-.st-lupe {
-  padding: var(--abstand-4);
-  border: 0;
-  border-radius: var(--radius-gross);
-  background: var(--farbe-flaeche);
-  box-shadow: var(--schatten-erhoben);
-}
-
-.st-lupe::backdrop {
-  background: var(--farbe-abdunkeln);
-}
-
-.st-lupe[open] {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--abstand-3);
-}
-
-.st-lupe-karte {
-  --karte-breite: min(360px, calc(100vw - 4rem), calc((100dvh - 9rem) * var(--kartenverhaeltnis)));
+/* Liegt hinter dem Rand ein angebotenes Ziel (O5), trägt das Zeichen die Farbe der Ziele und sagt „Ziel“. */
+.st-weiter-zeichen--ziel {
+  background: var(--farbe-akzent-hell);
+  border: 2px dashed var(--farbe-akzent);
 }

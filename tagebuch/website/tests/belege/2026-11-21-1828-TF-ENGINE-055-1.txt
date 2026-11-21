@@ -1,0 +1,196 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aaff40fe9b33a1293
+
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5 Wichtig/D12: vor der ersten Karte ist das Beenden gesperrt, mit dem Grund aus pruefeAktion 20ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5/D12: nach einer Karte ist das Beenden nicht gesperrt (null), wie die Aufzählung es anbietet 5ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5: im Abschnitt Abwerfen nennt sie den Grund aus pruefeAktion 2ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A6: schwebt eine angesagte Sonderkarte, nennt sie den Grund aus pruefeAktion 3ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5/D12: mit leerer Hand ist das Beenden nicht gesperrt, auch ohne gespielte Karte 3ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A7.8/D12: im zweiten Zug nach dem Verdoppler gilt die Kartenpflicht neu; eine Sonderkarte allein erfüllt sie 2ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A10: nach dem Spielende nennt sie den Grund aus pruefeAktion 2ms
+ ✓ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5, A6, A10: in 1000 Zufallszuständen jeder Phase derselbe Grund wie pruefeAktion, und gesperrt genau dann, wenn sie ablehnt 3539ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  18:27:34
+   Duration  8.01s (transform 594ms, setup 458ms, import 606ms, tests 3.58s, environment 2.95s)
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aaff40fe9b33a1293
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:52:40
+   Duration  42.72s (transform 753ms, setup 501ms, import 779ms, tests 37.13s, environment 3.85s)
+
+
+{
+ "partien": 60,
+ "zustaende": 49216,
+ "gesperrt": 22136,
+ "frei": 27080,
+ "abweichungen": [],
+ "gruende": [
+  [
+   "X muss erst mindestens eine Karte spielen; beenden ohne Kart",
+   14386
+  ],
+  [
+   "Die Schlangenfrass schwebt noch: Erst entscheiden die Betrof",
+   972
+  ],
+  [
+   "Die Farbendieb schwebt noch: Erst entscheiden die Betroffene",
+   904
+  ],
+  [
+   "Die Schlangengrube schwebt noch: Erst entscheiden die Betrof",
+   708
+  ],
+  [
+   "Die Farbenfusion schwebt noch: Erst entscheiden die Betroffe",
+   516
+  ],
+  [
+   "Die Regenbogenschlange schwebt noch: Erst entscheiden die Be",
+   612
+  ],
+  [
+   "Die Schlangenblockade schwebt noch: Erst entscheiden die Bet",
+   468
+  ],
+  [
+   "Die Partie ist beendet; es gibt keine Aktion mehr (A10).",
+   1920
+  ],
+  [
+   "Die Schlangenhäutung schwebt noch: Erst entscheiden die Betr",
+   192
+  ],
+  [
+   "Der Zug ist beendet: Jetzt werden nur überzählige Handkarten",
+   482
+  ],
+  [
+   "Die Verdoppler schwebt noch: Erst entscheiden die Betroffene",
+   976
+  ]
+ ],
+ "anzahlAbweichungen": 0
+}
+{"geprueft":2054,"mitGrund":982}
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aaff40fe9b33a1293
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts (8 tests | 6 failed) 75ms
+     × A5 Wichtig/D12: vor der ersten Karte ist das Beenden gesperrt, mit dem Grund aus pruefeAktion 35ms
+     × A5: im Abschnitt Abwerfen nennt sie den Grund aus pruefeAktion 4ms
+     × A6: schwebt eine angesagte Sonderkarte, nennt sie den Grund aus pruefeAktion 4ms
+     × A7.8/D12: im zweiten Zug nach dem Verdoppler gilt die Kartenpflicht neu; eine Sonderkarte allein erfüllt sie 3ms
+     × A10: nach dem Spielende nennt sie den Grund aus pruefeAktion 4ms
+     × A5, A6, A10: in 1000 Zufallszuständen jeder Phase derselbe Grund wie pruefeAktion, und gesperrt genau dann, wenn sie ablehnt 13ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5 Wichtig/D12: vor der ersten Karte ist das Beenden gesperrt, mit dem Grund aus pruefeAktion
+AssertionError: expected 'Du musst immer mindestens eine Karte …' to be 'Spieler 1 muss erst mindestens eine K…' // Object.is equality
+
+Expected: "Spieler 1 muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+Received: "Du musst immer mindestens eine Karte spielen."
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts:34:19
+     32|     const grund = zugBeendenGesperrt(zustand)
+     33|     expect(grund, 'gesperrt vor der ersten Karte').not.toBeNull()
+     34|     expect(grund).toBe(grundDerPruefung(zustand))
+       |                   ^
+     35|     expect(grund).toMatch(/mindestens eine Karte/)
+     36|     expect(ermittleAktionen(zustand).some((aktion) => aktion.typ === '…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5: im Abschnitt Abwerfen nennt sie den Grund aus pruefeAktion
+AssertionError: expected 'Du musst immer mindestens eine Karte …' to be 'Der Zug ist beendet: Jetzt werden nur…' // Object.is equality
+
+Expected: "Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5)."
+Received: "Du musst immer mindestens eine Karte spielen."
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts:55:41
+     53|       })
+     54|       .zustand()
+     55|     expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
+       |                                         ^
+     56|     expect(zugBeendenGesperrt(zustand)).toMatch(/abgeworfen/)
+     57|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A6: schwebt eine angesagte Sonderkarte, nennt sie den Grund aus pruefeAktion
+AssertionError: expected 'Du musst immer mindestens eine Karte …' to be 'Die Schlangengrube schwebt noch: Erst…' // Object.is equality
+
+Expected: "Die Schlangengrube schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6)."
+Received: "Du musst immer mindestens eine Karte spielen."
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts:64:41
+     62|       .schwebend(0, 'Schlangengrube', (karteId, spielerId) => ({ typ: …
+     63|       .zustand()
+     64|     expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
+       |                                         ^
+     65|     expect(zugBeendenGesperrt(zustand)).toMatch(/schwebt/)
+     66|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A7.8/D12: im zweiten Zug nach dem Verdoppler gilt die Kartenpflicht neu; eine Sonderkarte allein erfüllt sie
+AssertionError: expected 'Du musst immer mindestens eine Karte …' to be 'Spieler 1 muss erst mindestens eine K…' // Object.is equality
+
+Expected: "Spieler 1 muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12)."
+Received: "Du musst immer mindestens eine Karte spielen."
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts:77:41
+     75|   it('A7.8/D12: im zweiten Zug nach dem Verdoppler gilt die Kartenpfli…
+     76|     const zustand = baukasten({ spielerzahl: 2, erweiterung: false }).…
+     77|     expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
+       |                                         ^
+     78|     expect(zugBeendenGesperrt(zustand)).toMatch(/mindestens eine Karte…
+     79|     const ablegen = ermittleAktionen(zustand).find((aktion) => aktion.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A10: nach dem Spielende nennt sie den Grund aus pruefeAktion
+AssertionError: expected 'Du musst immer mindestens eine Karte …' to be 'Die Partie ist beendet; es gibt keine…' // Object.is equality
+
+Expected: "Die Partie ist beendet; es gibt keine Aktion mehr (A10)."
+Received: "Du musst immer mindestens eine Karte spielen."
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts:86:41
+     84|   it('A10: nach dem Spielende nennt sie den Grund aus pruefeAktion', (…
+     85|     const zustand = baukasten({ spielerzahl: 2, erweiterung: false }).…
+     86|     expect(zugBeendenGesperrt(zustand)).toBe(grundDerPruefung(zustand))
+       |                                         ^
+     87|     expect(zugBeendenGesperrt(zustand)).toMatch(/A10/)
+     88|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts > A5/D12: Warum der Zug nicht beendet werden kann, sagt die Engine > A5, A6, A10: in 1000 Zufallszuständen jeder Phase derselbe Grund wie pruefeAktion, und gesperrt genau dann, wenn sie ablehnt
+AssertionError: Saat 1: expected 'Du musst immer mindestens eine Karte …' to be 'Der Zug ist beendet: Jetzt werden nur…' // Object.is equality
+
+Expected: "Der Zug ist beendet: Jetzt werden nur überzählige Handkarten abgeworfen (A5)."
+Received: "Du musst immer mindestens eine Karte spielen."
+
+ ❯ src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts:95:37
+     93|       const zustand = zufallszustand(erzeugeZufall(saat))
+     94|       const grund = zugBeendenGesperrt(zustand)
+     95|       expect(grund, `Saat ${saat}`).toBe(grundDerPruefung(zustand))
+       |                                     ^
+     96|       if (grund !== null) gesperrt += 1
+     97|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  6 failed | 14 passed (20)
+   Start at  17:54:12
+   Duration  14.99s (transform 5.31s, setup 2.67s, import 6.15s, tests 5.33s, environment 17.61s)
+

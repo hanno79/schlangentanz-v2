@@ -1,0 +1,16 @@
+tablet-hochkant vorher {"ol":"12..404 scroll 0/68","z":["vor Karte 1 x=12..56 w=44 h=78","zwischen Karte 1 und 2 x=116..160 w=44 h=78","zwischen Karte 2 und 3 x=220..264 w=44 h=78","zwischen Karte 3 und 4 x=324..368 w=44 h=78","hinter Karte 4 x=428..472 w=44 h=78"],"w":["Ziel +1 › x=356..404"]}
+tablet-hochkant nach scrollIntoViewIfNeeded + 500 ms {"ol":"12..404 scroll 68/68","z":["vor Karte 1 x=-56..-12 w=44 h=78","zwischen Karte 1 und 2 x=48..92 w=44 h=78","zwischen Karte 2 und 3 x=152..196 w=44 h=78","zwischen Karte 3 und 4 x=256..300 w=44 h=78","hinter Karte 4 x=360..404 w=44 h=78"],"w":["‹ +1 Ziel x=12..60"]}
+tablet-hochkant Mitte trifft: Deine Schlange 1: hinter Karte 4
+tablet-hochkant nach Tippen gewählt: true Ansage: Regenbogenschlange in deine Schlange 1, hinter Karte 4.
+handy-hochkant vorher {"ol":"12..378 scroll 0/46","z":["vor Karte 1 x=12..56 w=44 h=59","zwischen Karte 1 und 2 x=104..148 w=44 h=59","zwischen Karte 2 und 3 x=196..240 w=44 h=59","zwischen Karte 3 und 4 x=288..332 w=44 h=59","hinter Karte 4 x=380..424 w=44 h=59"],"w":["Ziel › x=330..378"]}
+handy-hochkant nach scrollIntoViewIfNeeded + 500 ms {"ol":"12..378 scroll 46/46","z":["vor Karte 1 x=-34..10 w=44 h=59","zwischen Karte 1 und 2 x=58..102 w=44 h=59","zwischen Karte 2 und 3 x=150..194 w=44 h=59","zwischen Karte 3 und 4 x=242..286 w=44 h=59","hinter Karte 4 x=334..378 w=44 h=59"],"w":["‹ Ziel x=12..60"]}
+handy-hochkant Mitte trifft: Deine Schlange 1: hinter Karte 4
+handy-hochkant nach Tippen gewählt: true Ansage: Regenbogenschlange in deine Schlange 1, hinter Karte 4.
+handy-quer vorher {"ol":"441..832 scroll 0/21","z":["vor Karte 1 x=441..485 w=44 h=59","zwischen Karte 1 und 2 x=533..577 w=44 h=59","zwischen Karte 2 und 3 x=625..669 w=44 h=59","zwischen Karte 3 und 4 x=717..761 w=44 h=59","hinter Karte 4 x=809..853 w=44 h=59"],"w":["Ziel › x=784..832"]}
+handy-quer nach scrollIntoViewIfNeeded + 500 ms {"ol":"441..832 scroll 21/21","z":["vor Karte 1 x=420..464 w=44 h=59","zwischen Karte 1 und 2 x=512..556 w=44 h=59","zwischen Karte 2 und 3 x=604..648 w=44 h=59","zwischen Karte 3 und 4 x=696..740 w=44 h=59","hinter Karte 4 x=788..832 w=44 h=59"],"w":["‹ Ziel x=441..489"]}
+handy-quer Mitte trifft: Deine Schlange 1: hinter Karte 4
+handy-quer nach Tippen gewählt: true Ansage: Regenbogenschlange in deine Schlange 1, hinter Karte 4.
+tablet-quer vorher {"ol":"12..596 scroll 0/0","z":["vor Karte 1 x=12..56 w=44 h=78","zwischen Karte 1 und 2 x=116..160 w=44 h=78","zwischen Karte 2 und 3 x=220..264 w=44 h=78","zwischen Karte 3 und 4 x=324..368 w=44 h=78","hinter Karte 4 x=428..472 w=44 h=78"],"w":[]}
+tablet-quer nach scrollIntoViewIfNeeded + 500 ms {"ol":"12..596 scroll 0/0","z":["vor Karte 1 x=12..56 w=44 h=78","zwischen Karte 1 und 2 x=116..160 w=44 h=78","zwischen Karte 2 und 3 x=220..264 w=44 h=78","zwischen Karte 3 und 4 x=324..368 w=44 h=78","hinter Karte 4 x=428..472 w=44 h=78"],"w":[]}
+tablet-quer Mitte trifft: Deine Schlange 1: hinter Karte 4
+tablet-quer nach Tippen gewählt: true Ansage: Regenbogenschlange in deine Schlange 1, hinter Karte 4.

@@ -160,6 +160,17 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
 }
 
 /**
+ * Warum der Spieler am Zug seinen Zug jetzt nicht beenden darf: der Grund, mit
+ * dem `pruefeAktion` das Beenden ablehnt, oder `null`, wenn es erlaubt ist. Für
+ * die Oberfläche, die neben einem gesperrten „Zug beenden“ den Grund zeigt, aber
+ * selbst keine Aktion baut (U3).
+ */
+export function zugBeendenGesperrt(zustand: Spielzustand): string | null {
+  const ergebnis = pruefeAktion(zustand, { typ: 'ZugBeenden', spielerId: zustand.spieler[zustand.zug.spielerIndex].id });
+  return ergebnis.erlaubt ? null : ergebnis.grund;
+}
+
+/**
  * D13, D25: Eine Sonderkarte ohne mögliches Ziel und jeder Farbenschutz dürfen
  * ohne Wirkung auf den eigenen Ablagestapel. Ob die Karte ein Ziel hat, sagt ihr
  * Eintrag im Kartenregister; die Grenze je Zug prüft der Aufrufer (`kartengrenze`).
