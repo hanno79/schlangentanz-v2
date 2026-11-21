@@ -4,7 +4,7 @@ import { istFarbenschutz, pruefeReaktion } from '../reaktion';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
 import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
 import { AKTIONSTYPEN } from './typen';
-import type { Aktionstyp, KartenAktion, Pruefergebnis, SpielAktion } from './typen';
+import type { Ablehnung, Aktionstyp, KartenAktion, Pruefergebnis, SpielAktion, Spielergrund } from './typen';
 
 type Feld = (wert: unknown) => boolean;
 
@@ -85,14 +85,39 @@ export function ermittleEntscheider(zustand: Spielzustand): number | null {
   return schwebend === null ? zustand.zug.spielerIndex : schwebend.ausstehend[0];
 }
 
-const MAENNLICH = new Set<Kartenart>(['Farbenschutz', 'Farbendieb', 'Schlangenfrass', 'Verdoppler', 'Schlangenkorb des Glücks']);
+/** Das grammatische Geschlecht jeder Kartenart, für die Artikel in den Gründen; vollständig, damit keine Art einen falschen bekommt. */
+const GESCHLECHT: Record<Kartenart, 'männlich' | 'weiblich'> = {
+  Farbkarte: 'weiblich',
+  Farbenschutz: 'männlich',
+  Regenbogenschlange: 'weiblich',
+  Schlangenfrass: 'männlich',
+  Schlangenblockade: 'weiblich',
+  Farbendieb: 'männlich',
+  Schlangengrube: 'weiblich',
+  Farbenfusion: 'weiblich',
+  Verdoppler: 'männlich',
+  Schlangenhäutung: 'weiblich',
+  'Schlangenkorb des Glücks': 'männlich',
+};
 
-function mitArtikel(art: Kartenart): string {
-  return `${MAENNLICH.has(art) ? 'einen' : 'eine'} ${art}`;
+/** „Der Farbendieb“, „Die Schlangengrube“: am Satzanfang, im Nominativ. */
+function mitBestimmtemArtikel(art: Kartenart): string {
+  return `${GESCHLECHT[art] === 'männlich' ? 'Der' : 'Die'} ${art}`;
 }
 
-function nein(grund: string): Pruefergebnis {
-  return { erlaubt: false, grund };
+/** „ein Farbendieb“ (Nominativ) oder „einen Farbendieb“ (Akkusativ); weiblich in beiden Fällen „eine“. */
+function mitArtikel(art: Kartenart, fall: 'Nominativ' | 'Akkusativ'): string {
+  if (GESCHLECHT[art] === 'weiblich') return `eine ${art}`;
+  return `${fall === 'Nominativ' ? 'ein' : 'einen'} ${art}`;
+}
+
+function nein(grund: string, nennt?: Spielergrund): Ablehnung {
+  return nennt === undefined ? { erlaubt: false, grund } : { erlaubt: false, grund, nennt };
+}
+
+/** A5: Die Karte liegt nicht auf der Hand dieses Spielers. */
+function nichtAufHand(name: string, spielerIndex: number, karteId: string): Ablehnung {
+  return nein(`Die Karte ${karteId} liegt nicht auf der Hand von ${name}.`, { art: 'nichtAufHand', spielerIndex, karteId });
 }
 
 const JA: Pruefergebnis = { erlaubt: true };
@@ -115,16 +140,24 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     if (schwebend === null) return nein('Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).');
     const entscheider = ermittleEntscheider(zustand);
     if (entscheider !== spielerIndex) {
-      return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider!].name} (A6).`);
+      return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider!].name} (A6).`, {
+        art: 'entscheidetNicht',
+        spielerIndex,
+        entscheider: entscheider!,
+      });
     }
-    const grund = pruefeReaktion(zustand, spielerIndex, aktion.farbenschutzId);
-    return grund === null ? JA : nein(grund);
+    return pruefeReaktion(zustand, spielerIndex, aktion.farbenschutzId) ?? JA;
   }
   if (schwebend !== null) {
-    return nein(`Die ${schwebend.karte.name} schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).`);
+    return nein(`${mitBestimmtemArtikel(schwebend.karte.name)} schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).`);
   }
   if (zustand.zug.spielerIndex !== spielerIndex) {
-    return nein(`${spieler.name} ist nicht am Zug; am Zug ist ${zustand.spieler[zustand.zug.spielerIndex]?.name ?? 'niemand'} (A5).`);
+    const amZug = zustand.spieler[zustand.zug.spielerIndex];
+    return nein(`${spieler.name} ist nicht am Zug; am Zug ist ${amZug?.name ?? 'niemand'} (A5).`, {
+      art: 'nichtAmZug',
+      spielerIndex,
+      amZug: amZug === undefined ? null : zustand.zug.spielerIndex,
+    });
   }
 
   const { zug } = zustand;
@@ -134,7 +167,10 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
   switch (aktion.typ) {
     case 'ZugBeenden':
       if (!darfZugBeenden(zug, spieler)) {
-        return nein(`${spieler.name} muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).`);
+        return nein(`${spieler.name} muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).`, {
+          art: 'kartenpflicht',
+          spielerIndex,
+        });
       }
       return JA;
     case 'UeberhandAbwerfen':
@@ -144,7 +180,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
   }
 
   const karte = spieler.hand.find((handkarte) => handkarte.id === aktion.karteId);
-  if (karte === undefined) return nein(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${spieler.name}.`);
+  if (karte === undefined) return nichtAufHand(spieler.name, spielerIndex, aktion.karteId);
   if (aktion.typ === 'SonderkarteWirkungslosAblegen' && karte.typ !== 'Sonderkarte') {
     return nein(`Die Karte ${karte.id} ist eine Farbkarte: Wirkungslos ablegen lassen sich nur Sonderkarten (D13).`);
   }
@@ -160,14 +196,14 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
 }
 
 /**
- * Warum der Spieler am Zug seinen Zug jetzt nicht beenden darf: der Grund, mit
- * dem `pruefeAktion` das Beenden ablehnt, oder `null`, wenn es erlaubt ist. Für
- * die Oberfläche, die neben einem gesperrten „Zug beenden“ den Grund zeigt, aber
- * selbst keine Aktion baut (U3).
+ * Warum der Spieler am Zug seinen Zug jetzt nicht beenden darf: die Ablehnung,
+ * mit der `pruefeAktion` das Beenden ablehnt, oder `null`, wenn es erlaubt ist.
+ * Für die Oberfläche, die neben einem gesperrten „Zug beenden“ den Grund zeigt,
+ * aber selbst keine Aktion baut (U3).
  */
-export function zugBeendenGesperrt(zustand: Spielzustand): string | null {
+export function zugBeendenGesperrt(zustand: Spielzustand): Ablehnung | null {
   const ergebnis = pruefeAktion(zustand, { typ: 'ZugBeenden', spielerId: zustand.spieler[zustand.zug.spielerIndex].id });
-  return ergebnis.erlaubt ? null : ergebnis.grund;
+  return ergebnis.erlaubt ? null : ergebnis;
 }
 
 /**
@@ -192,9 +228,15 @@ function pruefeUeberhand(zustand: Spielzustand, spielerIndex: number, karteIds: 
   if (zustand.zug.abschnitt !== 'Abwerfen') return nein('Überzählige Karten wirft man erst am Zugende ab, nach dem Auffüllen (A5).');
   if (new Set(karteIds).size !== karteIds.length) return nein('Beim Abwerfen ist eine Karte doppelt genannt.');
   const fremd = karteIds.find((id) => !spieler.hand.some((karte) => karte.id === id));
-  if (fremd !== undefined) return nein(`Die Karte ${fremd} liegt nicht auf der Hand von ${spieler.name}.`);
+  if (fremd !== undefined) return nichtAufHand(spieler.name, spielerIndex, fremd);
   if (karteIds.length !== anzahl) {
-    return nein(`${spieler.name} hält ${spieler.hand.length} Karten und legt genau ${anzahl} Karten ab, nicht ${karteIds.length} (A5).`);
+    return nein(`${spieler.name} hält ${spieler.hand.length} Karten und legt genau ${anzahl} Karten ab, nicht ${karteIds.length} (A5).`, {
+      art: 'abwerfenAnzahl',
+      spielerIndex,
+      haelt: spieler.hand.length,
+      abwerfen: anzahl,
+      genannt: karteIds.length,
+    });
   }
   return JA;
 }
@@ -202,7 +244,7 @@ function pruefeUeberhand(zustand: Spielzustand, spielerIndex: number, karteIds: 
 function pruefeKartenaktion(zustand: Spielzustand, aktion: KartenAktion, karte: Spielkarte): Pruefergebnis {
   const erwartet = kartenartFuer(aktion.typ);
   const art = kartenartVon(karte);
-  if (art !== erwartet) return nein(`Die Karte ${karte.id} ist ${mitArtikel(art)}; ${aktion.typ} braucht ${mitArtikel(erwartet)}.`);
+  if (art !== erwartet) return nein(`Die Karte ${karte.id} ist ${mitArtikel(art, 'Nominativ')}; ${aktion.typ} braucht ${mitArtikel(erwartet, 'Akkusativ')}.`);
   const grund = KARTENREGISTER[art].pruefe(zustand, aktion);
   return grund === null ? JA : nein(grund);
 }

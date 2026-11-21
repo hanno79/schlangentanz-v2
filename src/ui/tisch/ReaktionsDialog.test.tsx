@@ -82,7 +82,7 @@ describe('O6 K3: Nach der Abwehr eine Karte weniger, nicht sofort aufgefüllt', 
     expect(screen.queryByRole('group', { name: 'Abwehrfrage' }), 'die Frage ist beantwortet').toBeNull()
     const nachher = gespeichert()!
     expect(nachher.spieler[0].hand, 'A6: wer abwehrt, zieht nicht gleich nach').toHaveLength(4)
-    expect(nachher.spieler[1].ablagestapel.map((karte) => karte.name)).toContain('Schlangengrube')
+    expect(nachher.spieler[1].ablagestapel.map((karte) => (karte.typ === 'Sonderkarte' ? karte.name : karte.farbe))).toContain('Schlangengrube')
     expect(handRegion().getByText('Deine Ablage 1')).toBeInTheDocument()
   })
 })

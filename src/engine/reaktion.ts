@@ -1,4 +1,4 @@
-import type { Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
+import type { Ablehnung, Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
 import { definitionFuer } from './karten/register';
 import { wirkeUndMeldeVersetzte } from './kartenorte';
 import type { SonderkarteInfo, Spielkarte, Spielzustand } from './types';
@@ -68,14 +68,23 @@ export function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereigni
   return zustand;
 }
 
-/** Der Grund, warum diese Reaktion nicht geht, oder `null`. Ob der Spieler gerade gefragt ist, prüft die Aktionsschicht. */
-export function pruefeReaktion(zustand: Spielzustand, spielerIndex: number, farbenschutzId: string | null): string | null {
+/** Warum diese Reaktion nicht geht, oder `null`. Ob der Spieler gerade gefragt ist, prüft die Aktionsschicht. */
+export function pruefeReaktion(zustand: Spielzustand, spielerIndex: number, farbenschutzId: string | null): Ablehnung | null {
   if (farbenschutzId === null) return null;
   const spieler = zustand.spieler[spielerIndex];
   const karte = spieler.hand.find((handkarte) => handkarte.id === farbenschutzId);
-  if (karte === undefined) return `Die Karte ${farbenschutzId} liegt nicht auf der Hand von ${spieler.name}.`;
+  if (karte === undefined) {
+    return {
+      erlaubt: false,
+      grund: `Die Karte ${farbenschutzId} liegt nicht auf der Hand von ${spieler.name}.`,
+      nennt: { art: 'nichtAufHand', spielerIndex, karteId: farbenschutzId },
+    };
+  }
   if (!istFarbenschutz(karte)) {
-    return `Die Karte ${farbenschutzId} ist kein Farbenschutz: Als Reaktion ist nur Farbenschutz erlaubt, auch Schlangenfrass ist keine Reaktion (A6).`;
+    return {
+      erlaubt: false,
+      grund: `Die Karte ${farbenschutzId} ist kein Farbenschutz: Als Reaktion ist nur Farbenschutz erlaubt, auch Schlangenfrass ist keine Reaktion (A6).`,
+    };
   }
   return null;
 }

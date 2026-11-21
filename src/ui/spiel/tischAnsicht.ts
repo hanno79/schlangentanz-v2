@@ -1,11 +1,13 @@
 import { ermittleAktionen, ermittleEntscheider, werteSchlangen, zugBeendenGesperrt } from '../../engine'
 import type {
+  Ablehnung,
   AufgabenkarteInfo,
   Auslagekarte,
   Farbe,
   FarbkarteInfo,
   Partiephase,
   GewerteteGruppe,
+  KartenAktion,
   Schlange,
   Sonderkartenname,
   SonderkarteInfo,
@@ -14,6 +16,7 @@ import type {
   Spielkarte,
   Spielzustand,
 } from '../../engine'
+import { grundFuerDich } from '../tisch/gruende'
 
 /*
 Was der Mensch am Tisch sehen darf (Plan O3 und O4, B2). Der Tisch zeichnet nur
@@ -89,8 +92,12 @@ export interface StatusAnsicht {
   amZug: Person
   teilzug: 1 | 2
   abschnitt: 'Ausspielen' | 'Abwerfen'
-  /** Eine angesagte Sonderkarte, über die noch jemand entscheidet (A6). */
-  schwebend: { karte: Sonderkartenname; von: Person; entscheidet: Person } | null
+  /**
+   * Eine angesagte Sonderkarte, über die noch jemand entscheidet (A6). Karte und
+   * Ansage liegen offen (B2: die Ansage ist die Auswahl von Karte und Ziel); die
+   * Abwehrfrage nennt daraus Karte und Ziel (O6).
+   */
+  schwebend: { karte: Sonderkartenname; von: Person; entscheidet: Person; angesagt: SonderkarteInfo; ansage: KartenAktion } | null
 }
 
 export interface TischAnsicht {
@@ -103,7 +110,7 @@ export interface TischAnsicht {
   status: StatusAnsicht
   /** Was du jetzt tun darfst, wie die Engine es aufzählt (U3); leer, solange ein Gegner entscheidet oder die Partie beendet ist. */
   aktionen: SpielAktion[]
-  /** Warum du deinen Zug jetzt nicht beenden darfst, mit dem Grund der Engine (O5); `null`, wenn du darfst oder nicht entscheidest. */
+  /** Warum du deinen Zug jetzt nicht beenden darfst, mit dem Grund der Engine in Du-Form (O5, O6); `null`, wenn du darfst oder nicht entscheidest. */
   zugBeendenGesperrt: string | null
 }
 
@@ -135,14 +142,30 @@ function schlangenAnsicht(schlangen: readonly Schlange[], erweiterung: boolean):
   return schlangen.map((schlange, index) => schlangeAnsicht(schlange, wertung[index].gruppen))
 }
 
-/** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
-export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
+/** Die Stelle des Menschen in `spieler`. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
+function menschIn(zustand: Spielzustand): number {
   const menschen = zustand.spieler.flatMap((spieler, index) => (spieler.steuerung === 'Mensch' ? [index] : []))
   if (menschen.length !== 1) {
     throw new Error(`Am Tisch muss genau ein Mensch sitzen (B2), es sind ${menschen.length}.`)
   }
-  const mensch = menschen[0]
-  const person = (index: number): Person => ({ name: zustand.spieler[index].name, ich: index === mensch })
+  return menschen[0]
+}
+
+/** Die Spieler nach ihrer Stelle in `spieler`, so wie der Mensch sie sieht. */
+export function personen(zustand: Spielzustand): (index: number) => Person {
+  const mensch = menschIn(zustand)
+  return (index) => ({ name: zustand.spieler[index].name, ich: index === mensch })
+}
+
+/** Der Grund einer Ablehnung, wie er am Tisch steht: in Du-Form, wenn er dich nennt (O6). */
+export function grundAmTisch(zustand: Spielzustand, ablehnung: Ablehnung): string {
+  return grundFuerDich(ablehnung, personen(zustand))
+}
+
+/** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
+export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
+  const mensch = menschIn(zustand)
+  const person = personen(zustand)
 
   const platz = (spieler: Spieler, index: number): PlatzAnsicht => ({
     id: spieler.id,
@@ -184,9 +207,14 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
       schwebend:
         schwebend === null || entscheider === null
           ? null
-          : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider) },
+          : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider), angesagt: schwebend.karte, ansage: schwebend.aktion },
     },
     aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],
-    zugBeendenGesperrt: entscheider === mensch ? zugBeendenGesperrt(zustand) : null,
+    zugBeendenGesperrt: entscheider === mensch ? gesperrtAmTisch(zustand) : null,
   }
+}
+
+function gesperrtAmTisch(zustand: Spielzustand): string | null {
+  const ablehnung = zugBeendenGesperrt(zustand)
+  return ablehnung === null ? null : grundAmTisch(zustand, ablehnung)
 }

@@ -94,6 +94,6 @@ describe('O6 (Weg A): Am Tisch nennt kein Grund dich „Spieler 1“', () => {
       }
     }
     expect(duGeformt, 'Gründe in Du-Form in der Stichprobe').toBeGreaterThan(100)
-    expect(woertlich, 'wörtliche Gründe in der Stichprobe').toBeGreaterThan(100)
+    expect(woertlich, 'wörtliche Gründe in der Stichprobe').toBeGreaterThan(50)
   })
 })

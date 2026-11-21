@@ -3,7 +3,11 @@ import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import type { TischAnsicht } from '../spiel/tischAnsicht'
+import type { Verlauf } from '../spiel/useSpiel'
+import { abwehrfrageOffen } from './bedienung'
 import type { Bedienung } from './bedienung'
+import { PROTOKOLL } from './protokolltexte'
+import { ReaktionsDialog } from './ReaktionsDialog'
 import { statusText } from './texte'
 import { ZielKnopf } from './Ziele'
 import { ABWERFEN, FRASS_OPTION, ZUGLEISTE, ansage, auftrag, tischnamen } from './zugtexte'
@@ -21,6 +25,11 @@ ihr Grund hier.
 
 Ab 700 px Breite steht die Leiste rechts neben Schlangen und Hand und zeigt
 die gewählte Karte gross.
+
+Mit O6: Greift dich ein Gegner an, steht hier die Abwehrfrage, die angesagte
+Karte gross daneben. Spielt ein Gegner, steht hier sein jüngster Schritt aus
+dem Protokoll und „Schneller“. Hast du ausgesetzt, sagt es ein Hinweis, bis du
+wieder handelst.
 */
 
 interface ZugleisteEigenschaften {
@@ -28,16 +37,24 @@ interface ZugleisteEigenschaften {
   bedienung: Bedienung
   fuehreAus: (aktion: SpielAktion) => void
   ablehnung: string | null
+  verlauf: Verlauf | undefined
   zeigeGross: (karte: Bildkarte) => void
   /** Öffnet den Dialog zum Abwerfen wieder, wenn er geschlossen wurde. */
   oeffneAbwerfen: () => void
 }
 
+/** Der jüngste Schritt aus dem Protokoll, alle seine Sätze; `null`, wenn noch keiner da ist. */
+function juengsterSchritt(verlauf: Verlauf | undefined): string | null {
+  const letzter = verlauf?.eintraege.at(-1)
+  if (verlauf === undefined || letzter === undefined) return null
+  return verlauf.eintraege.filter((eintrag) => eintrag.schritt === letzter.schritt).map((eintrag) => eintrag.text).join(' ')
+}
+
 /** Was die Leiste sagt; ohne Entscheidung des Menschen, was gerade geschieht. */
-function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null): string {
+function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null, verlauf: Verlauf | undefined): string {
   const { abwerfen } = bedienung
   if (ansicht.status.partiephase === 'Beendet') return statusText(ansicht.status).titel
-  if (bedienung.aktionen.length === 0) return ansicht.status.schwebend?.entscheidet.ich ? statusText(ansicht.status).text : ZUGLEISTE.warten
+  if (bedienung.aktionen.length === 0) return juengsterSchritt(verlauf) ?? ZUGLEISTE.warten
   if (abwerfen > 0) return ABWERFEN.zugleiste(abwerfen)
   if (karte === null) {
     const karten = bedienung.angebote.some((wahl) => wahl.art === 'karte')
@@ -48,8 +65,13 @@ function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | n
   return auftrag(bedienung.angebote, karte)
 }
 
-export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross, oeffneAbwerfen }: ZugleisteEigenschaften) {
+export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, verlauf, zeigeGross, oeffneAbwerfen }: ZugleisteEigenschaften) {
   const karte = ansicht.ich.hand.find((handkarte) => handkarte.id === bedienung.karteId) ?? null
+  const frage = abwehrfrageOffen(ansicht)
+  // Gross steht die gewählte Handkarte, während der Abwehrfrage die angesagte Karte.
+  const vorschau = frage ? (ansicht.status.schwebend?.angesagt ?? null) : karte
+  // „Schneller“ nur, solange ein Gegner spielt (O6 K1).
+  const gegnerSpielt = ansicht.aktionen.length === 0 && ansicht.status.partiephase !== 'Beendet'
   // Nur solange gewählt wird; die gewählte Möglichkeit nennt danach der Satz, und „Abbrechen“ führt zurück.
   const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
   const { fertig, zugBeenden, abwerfen, ausspielen } = bedienung
@@ -59,15 +81,24 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
 
   return (
     <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
-      {karte !== null && (
+      {vorschau !== null && (
         <div className="st-zugleiste-vorschau" aria-hidden="true">
-          <Karte karte={karte} sizes="150px" />
+          <Karte karte={vorschau} sizes="150px" />
         </div>
       )}
       <div className="st-zugleiste-inhalt">
-        <p className="st-zugleiste-text" aria-live="polite">
-          {satz(ansicht, bedienung, karte)}
-        </p>
+        {verlauf?.ausgesetzt === true && (
+          <p className="st-zugleiste-hinweis" aria-live="polite">
+            {PROTOKOLL.ausgesetzt}
+          </p>
+        )}
+        {frage ? (
+          <ReaktionsDialog ansicht={ansicht} fuehreAus={fuehreAus} />
+        ) : (
+          <p className="st-zugleiste-text" aria-live="polite">
+            {satz(ansicht, bedienung, karte, verlauf)}
+          </p>
+        )}
         {ablehnung !== null && (
           <p className="st-zugleiste-fehler" role="alert">
             {ablehnung}
@@ -83,6 +114,11 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
           </div>
         )}
         <div className="st-zugleiste-knoepfe">
+          {verlauf !== undefined && gegnerSpielt && (
+            <button type="button" className="st-knopf" aria-pressed={verlauf.schneller} onClick={verlauf.schalteSchneller}>
+              {PROTOKOLL.schneller}
+            </button>
+          )}
           {abwerfen > 0 && (
             <button type="button" className="st-knopf" onClick={oeffneAbwerfen}>
               {ZUGLEISTE.kartenWaehlen}

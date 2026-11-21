@@ -85,13 +85,21 @@ interface SchlangeAmTisch {
 export interface Tischnamen {
   karte: (id: string) => Spielkarte
   schlange: (id: string) => SchlangeAmTisch
+  /** Als Ziel im Akkusativ: der Name eines Gegners, für dich „dich“ (O6, Schlangengrube auf dich). */
   spieler: (id: string) => string
 }
 
-export function tischnamen(ansicht: TischAnsicht): Tischnamen {
-  const karten = new Map<string, Spielkarte>(ansicht.ich.hand.map((karte) => [karte.id, karte]))
+/**
+ * Die Namen am Tisch: deine Hand, alle Schlangen, eine angesagte Karte und
+ * `gespielt`, eine Karte, die ein Gegner eben aus seiner Hand gespielt hat (O6);
+ * mit dem Spielen liegt sie offen.
+ */
+export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[] = []): Tischnamen {
+  const angesagt = ansicht.status.schwebend?.angesagt
+  const offen = [...ansicht.ich.hand, ...(angesagt === undefined ? [] : [angesagt]), ...gespielt]
+  const karten = new Map<string, Spielkarte>(offen.map((karte) => [karte.id, karte]))
   const schlangen = new Map<string, SchlangeAmTisch>()
-  const spieler = new Map<string, string>(ansicht.gegner.map((gegner) => [gegner.id, gegner.name]))
+  const spieler = new Map<string, string>([[ansicht.ich.id, 'dich'], ...ansicht.gegner.map((gegner): [string, string] => [gegner.id, gegner.name])])
   for (const platz of [ansicht.ich, ...ansicht.gegner]) {
     const eigene = platz === ansicht.ich
     platz.schlangen.forEach((schlange, index) => {
@@ -113,7 +121,7 @@ export function tischnamen(ansicht: TischAnsicht): Tischnamen {
 }
 
 /** „deine Schlange 1“ oder „die Schlange 1 von KI-Gegner 1“ (Akkusativ), „deiner …“ bzw. „der …“ (Dativ). */
-function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fall: 'akkusativ' | 'dativ'): string {
+export function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fall: 'akkusativ' | 'dativ'): string {
   if (eigene) return `${fall === 'akkusativ' ? 'deine' : 'deiner'} Schlange ${nummer}`
   return `${fall === 'akkusativ' ? 'die' : 'der'} Schlange ${nummer} von ${besitzer}`
 }

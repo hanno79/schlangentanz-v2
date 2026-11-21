@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { screen, within } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import type { SpielAktion } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
@@ -8,6 +8,7 @@ import type { Ki } from '../../ki/strategien/strategie'
 import { warte } from '../spiel/__tests__/steuerung'
 import { GEGNER_STRATEGIE, KI_PAUSE } from '../spiel/useSpiel'
 import { spieleAm, tippe, zugleiste } from './__tests__/bedienen'
+import { Zugprotokoll } from './Zugprotokoll'
 
 /*
 O6 am Tisch: Das Protokoll steht in der Tischfläche, der jüngste Schritt eines
@@ -78,5 +79,19 @@ describe('O6 K4: Aussetzen am Tisch', () => {
     warte(KI_PAUSE)
     expect(screen.getByRole('status')).toHaveTextContent('Du bist')
     expect(zugleiste().getByText('Du hast wegen der Schlangengrube einen Zug ausgesetzt.')).toBeInTheDocument()
+  })
+})
+
+describe('O6 K1: Reihenfolge im Protokoll', () => {
+  it('O6 K1: der jüngste Schritt oben und hervorgehoben, innerhalb eines Schritts in der Reihenfolge des Geschehens', () => {
+    const eintraege = [
+      { schritt: 1, text: 'KI-Gegner 1 sagt an: Schlangengrube auf dich.' },
+      { schritt: 2, text: 'Du wehrst Schlangengrube mit Farbenschutz ab.' },
+      { schritt: 2, text: 'Schlangengrube bleibt ohne Wirkung.' },
+    ]
+    render(<Zugprotokoll verlauf={{ eintraege, ausgesetzt: false, schneller: false, schalteSchneller: () => {} }} />)
+    const zeilen = protokoll().getAllByRole('listitem')
+    expect(zeilen.map((zeile) => zeile.textContent)).toEqual([eintraege[1].text, eintraege[2].text, eintraege[0].text])
+    expect(zeilen.map((zeile) => zeile.classList.contains('st-protokoll-eintrag--neu'))).toEqual([true, true, false])
   })
 })

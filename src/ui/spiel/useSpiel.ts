@@ -7,14 +7,17 @@ import type { Entscheider } from '../../ki/sicht'
 import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../spielstand'
-import { tischAnsicht } from './tischAnsicht'
+import { protokollSchritt } from './protokoll'
+import { grundAmTisch, tischAnsicht } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
 
 /*
-Die Partie-Steuerung (Plan O3). Sie hält den Spielstand, lässt die KI-Gegner
-Schritt für Schritt spielen und nimmt die Aktionen des Menschen entgegen. Nach
-jedem Schritt steht der Stand im Speicher des Browsers; wer neu lädt, ist genau
-dort, auch wenn eine Abwehrfrage offen ist.
+Die Partie-Steuerung (Plan O3, O6). Sie hält den Spielstand, lässt die
+KI-Gegner Schritt für Schritt spielen und nimmt die Aktionen des Menschen
+entgegen. Nach jedem Schritt steht der Stand im Speicher des Browsers; wer neu
+lädt, ist genau dort, auch wenn eine Abwehrfrage offen ist. Jeder Schritt kommt
+ins Protokoll (O6); das Protokoll lebt nur in der Seite und beginnt nach dem
+Neuladen leer.
 
 Die KI läuft nur, solange eine KI entscheidet. Ist der Mensch gefragt, am Zug
 oder bei einer Abwehrfrage, wartet die Steuerung auf ihn. Ein Fehler von Engine
@@ -22,23 +25,48 @@ oder KI wird beim nächsten Zeichnen geworfen; dann zeigt ihn der Fehlerfang des
 App-Rahmens mit dem Weg zurück zur Lobby, und kein KI-Schritt läuft mehr.
 */
 
-/** Die Strategie der KI-Gegner, ein Name aus der Registry `src/ki/strategien/index.ts`. */
-export const GEGNER_STRATEGIE = 'zufallsKi'
+/** Die Strategie der KI-Gegner, ein Name aus der Registry `src/ki/strategien/index.ts` (Produktentscheidung 2.3). */
+export const GEGNER_STRATEGIE = 'solideKi'
 
 /** Pause vor jedem KI-Schritt in Millisekunden (O3 K1); bei „weniger Bewegung“ und im Test 0. */
 export const KI_PAUSE = 700
 
+/** Die Pause mit „Schneller“ (O6 K1). */
+export const KI_PAUSE_SCHNELL = 250
+
+/** So viele Einträge behält das Protokoll; ältere fallen heraus. */
+const PROTOKOLL_LAENGE = 200
+
 export interface SpielOptionen {
   /** Millisekunden vor jedem KI-Schritt. */
   pause: number
+  /** Woher die Saaten der KI-Gegner kommen; ohne Angabe aus `Math.random` (O3 K4). Die Testhooks geben unter `?seed=` eine feste Quelle mit. */
+  saatquelle?: () => number
+}
+
+export interface Protokolleintrag {
+  /** Der wievielte Schritt dieser Seite, ab 1; ein Schritt bringt oft mehrere Einträge. */
+  schritt: number
+  text: string
+}
+
+export interface Verlauf {
+  /** Das Protokoll, der älteste Eintrag zuerst (O6 K1). */
+  eintraege: Protokolleintrag[]
+  /** Ob du zuletzt wegen einer Schlangengrube aussetzen musstest; bis zu deiner nächsten Aktion (O6 K4). */
+  ausgesetzt: boolean
+  /** Ob „Schneller“ an ist (O6 K1). */
+  schneller: boolean
+  schalteSchneller: () => void
 }
 
 export interface Spielsteuerung {
   ansicht: TischAnsicht
   /** Führt eine Aktion des Menschen aus, eine aus `ansicht.aktionen`. */
   fuehreAus: (aktion: SpielAktion) => void
-  /** Der deutsche Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat (B2, U12). */
+  /** Der deutsche Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat (B2, U12), in Du-Form (O6). */
   ablehnung: string | null
+  verlauf: Verlauf
 }
 
 /**
@@ -68,51 +96,95 @@ function entscheidendeKi(zustand: Spielzustand, gegner: ReadonlyMap<string, Ki>)
   return { entscheider, ki }
 }
 
-export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielsteuerung {
+interface Protokollstand {
+  eintraege: Protokolleintrag[]
+  schritt: number
+  ausgesetzt: boolean
+}
+
+const LEERES_PROTOKOLL: Protokollstand = { eintraege: [], schritt: 0, ausgesetzt: false }
+
+export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOptionen): Spielsteuerung {
   const [zustand, setzeZustand] = useState(start)
-  const [gegner] = useState(() => erstelleGegner(start))
+  const [gegner] = useState(() => erstelleGegner(start, saatquelle))
   const [ablehnung, setzeAblehnung] = useState<string | null>(null)
+  const [protokoll, setzeProtokoll] = useState(LEERES_PROTOKOLL)
+  const [schneller, setzeSchneller] = useState(false)
   /* Ein Wurf im Zeitgeber oder im Klick erreicht keine Fehlergrenze. Er wird
      festgehalten und beim nächsten Zeichnen geworfen (wie in der Lobby). */
   const [fehler, setzeFehler] = useState<{ fehler: unknown } | null>(null)
   const ansicht = useMemo(() => tischAnsicht(zustand), [zustand])
+  const wartezeit = schneller ? Math.min(pause, KI_PAUSE_SCHNELL) : pause
 
   /**
-   * Spielt die Aktion, die `waehle` liefert: erst speichern, dann zeigen, damit
-   * ein Neuladen nie hinter dem Bild zurückliegt. Ein Wurf von Engine oder KI
-   * geht an den Fehlerfang.
+   * Spielt die Aktion: erst speichern, dann zeigen, damit ein Neuladen nie
+   * hinter dem Bild zurückliegt; danach ins Protokoll. Eine Aktion des Menschen
+   * nimmt den Hinweis aufs Aussetzen weg. Ein Wurf von Engine oder KI geht an
+   * den Fehlerfang.
    */
   const spiele = useCallback(
-    (waehle: () => SpielAktion) => {
+    (aktion: SpielAktion, vomMenschen: boolean) => {
       try {
-        const neu = anwendeAktion(zustand, waehle()).zustand
+        const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+        const saetze = protokollSchritt(zustand, aktion, ereignisse, ansicht)
+        const mensch = zustand.spieler.findIndex((spieler) => spieler.steuerung === 'Mensch')
+        const ausgesetzt = ereignisse.some((ereignis) => ereignis.typ === 'Ausgesetzt' && ereignis.spielerIndex === mensch)
         speichereSpielstand(neu)
         setzeZustand(neu)
         setzeAblehnung(null)
+        setzeProtokoll((alt) => {
+          const schritt = alt.schritt + 1
+          return {
+            schritt,
+            eintraege: [...alt.eintraege, ...saetze.map((text) => ({ schritt, text }))].slice(-PROTOKOLL_LAENGE),
+            ausgesetzt: ausgesetzt || (alt.ausgesetzt && !vomMenschen),
+          }
+        })
       } catch (grund) {
         setzeFehler({ fehler: grund })
       }
     },
-    [zustand],
+    [zustand, ansicht],
   )
 
+  /*
+   * O6 K5: Die KI wählt gleich zu Beginn der Pause; gezeigt wird ihr Schritt,
+   * wenn die Pause ab ihrem Beginn um ist. So dauert es gleich lange, ob sie
+   * viel rechnet, etwa weil sie einen Farbenschutz hält und das Abwehren
+   * abwägt, oder nichts zu wählen hat. Nur wenn sie länger rechnet als die
+   * Pause, kommt ihr Schritt später.
+   */
   useEffect(() => {
     const amZug = entscheidendeKi(zustand, gegner)
     if (amZug === null) return
-    const zeitgeber = setTimeout(() => spiele(() => waehleFuer(zustand, amZug.entscheider, amZug.ki)), pause)
+    const beginn = Date.now()
+    let zeitgeber = setTimeout(() => {
+      let aktion: SpielAktion
+      try {
+        aktion = waehleFuer(zustand, amZug.entscheider, amZug.ki)
+      } catch (grund) {
+        setzeFehler({ fehler: grund })
+        return
+      }
+      const rest = wartezeit - (Date.now() - beginn)
+      if (rest > 0) zeitgeber = setTimeout(() => spiele(aktion, false), rest)
+      else spiele(aktion, false)
+    }, 0)
     return () => clearTimeout(zeitgeber)
-  }, [zustand, gegner, pause, spiele])
+  }, [zustand, gegner, wartezeit, spiele])
 
   const fuehreAus = useCallback(
     (aktion: SpielAktion) => {
       const pruefung = pruefeAktion(zustand, aktion)
-      if (pruefung.erlaubt) spiele(() => aktion)
-      else setzeAblehnung(pruefung.grund)
+      if (pruefung.erlaubt) spiele(aktion, true)
+      else setzeAblehnung(grundAmTisch(zustand, pruefung))
     },
     [zustand, spiele],
   )
 
+  const schalteSchneller = useCallback(() => setzeSchneller((an) => !an), [])
+
   if (fehler !== null) throw fehler.fehler
   if (!(pause >= 0)) throw new Error(`Die Pause vor einem KI-Schritt muss 0 oder mehr Millisekunden sein, erhalten: ${pause}.`)
-  return { ansicht, fuehreAus, ablehnung }
+  return { ansicht, fuehreAus, ablehnung, verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, schneller, schalteSchneller } }
 }

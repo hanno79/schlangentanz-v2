@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import type { SpielAktion, ZugBeendenAktion } from '../../engine'
+import type { ReagierenAktion, SpielAktion, ZugBeendenAktion } from '../../engine'
 import { auswahlstand, waehle, wahlSchluessel } from '../spiel/auswahl'
 import type { Auswahl, Wahl } from '../spiel/auswahl'
+import type { TischAnsicht } from '../spiel/tischAnsicht'
 
 /*
 Die Bedienung am Tisch (Plan O5): Karte antippen, dann Ziele antippen, dann
@@ -10,8 +11,10 @@ angeboten ist und wann eine Aktion fertig ist, sagt `auswahl` aus den Aktionen
 der Engine (U3). Mit einem neuen Spielstand beginnt die Auswahl von vorn.
 
 Bedienbar sind in O5 alle aufgezählten Aktionen ausser der Schlangenhäutung,
-die ihre Oberfläche mit O7 bekommt, und der Abwehr, die O6 baut. Die
-Oberfläche lässt sie nur weg, sie baut keine Aktion selbst.
+die ihre Oberfläche mit O7 bekommt, und der Abwehr: Sie hat keine Karte und
+kein Ziel am Tisch, die Abwehrfrage in der Zugleiste nimmt sie direkt aus den
+aufgezählten Aktionen (O6, `ReaktionsDialog`). Die Oberfläche lässt sie nur
+weg, sie baut keine Aktion selbst.
 */
 
 const NICHT_IN_O5: ReadonlySet<SpielAktion['typ']> = new Set(['SchlangenhaeutungSpielen', 'Reagieren'])
@@ -129,4 +132,11 @@ type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
 /** Das erste Ziel dieser Art in `ziele`, auf das `passt` zutrifft. */
 export function zielDerArt<A extends Wahl['art']>(ziele: readonly Wahl[], art: A, passt: (wahl: WahlDerArt<A>) => boolean = () => true): WahlDerArt<A> | undefined {
   return ziele.find((wahl): wahl is WahlDerArt<A> => wahl.art === art && passt(wahl as WahlDerArt<A>))
+}
+
+export const istReaktion = (aktion: SpielAktion): aktion is ReagierenAktion => aktion.typ === 'Reagieren'
+
+/** Ob die Abwehrfrage an dich offen ist: Eine angesagte Karte schwebt, und du entscheidest (A6, O6). */
+export function abwehrfrageOffen(ansicht: TischAnsicht): boolean {
+  return ansicht.status.schwebend?.entscheidet.ich === true && ansicht.aktionen.some(istReaktion)
 }

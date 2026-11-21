@@ -139,7 +139,27 @@ export type SpielAktion =
   | UeberhandAbwerfenAktion
   | ReagierenAktion;
 
-export type Pruefergebnis = { erlaubt: true } | { erlaubt: false; grund: string };
+/**
+ * Eine Ablehnung, die einen Spieler nennt, als Art mit Werten (Plan O6): So kann
+ * die Oberfläche den Satz für den Menschen in der Du-Form bilden, ohne den Text
+ * zu zerlegen. Spieler stehen als Stelle in `spieler`. `grund` bleibt der Text
+ * der Engine für KI, Entwicklertisch und Protokolle.
+ */
+export type Spielergrund =
+  | { art: 'entscheidetNicht'; spielerIndex: number; entscheider: number }
+  | { art: 'nichtAmZug'; spielerIndex: number; amZug: number | null }
+  | { art: 'kartenpflicht'; spielerIndex: number }
+  | { art: 'nichtAufHand'; spielerIndex: number; karteId: string }
+  | { art: 'abwerfenAnzahl'; spielerIndex: number; haelt: number; abwerfen: number; genannt: number };
+
+/** Eine abgelehnte Aktion mit deutschem Grund (U12); nennt der Grund einen Spieler, steht in `nennt`, welchen und warum. */
+export interface Ablehnung {
+  erlaubt: false;
+  grund: string;
+  nennt?: Spielergrund;
+}
+
+export type Pruefergebnis = { erlaubt: true } | Ablehnung;
 
 /**
  * Wo eine Karte liegt; `spielerIndex` ist der Besitzer der Schlange, des

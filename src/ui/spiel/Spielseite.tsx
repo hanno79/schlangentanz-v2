@@ -11,18 +11,19 @@ import { KI_PAUSE, useSpiel } from './useSpiel'
 /**
  * Die Seite unter `/spiel`. Ist eine Partie gespeichert, steht hier der
  * Spieltisch, und die Partie läuft (O3): Die KI-Gegner spielen, bis du
- * entscheidest. Deine Karten spielst du am Tisch (O5); die Abwehr folgt mit O6.
+ * entscheidest. Deine Karten spielst du am Tisch (O5), ebenso die Abwehr (O6).
  * Ohne Partie sagt die Seite das und führt in die Lobby.
  *
- * `pause` setzen nur die Testhooks (`?tempo=sofort`); sonst kommt sie aus
- * „weniger Bewegung“.
+ * `pause` und `saatquelle` setzen nur die Testhooks (`?tempo=sofort`,
+ * `?seed=`); sonst kommt die Pause aus „weniger Bewegung“ und die Saat der
+ * KI-Gegner aus `Math.random`.
  */
-export default function Spielseite({ pause }: { pause?: number }) {
+export default function Spielseite({ pause, saatquelle }: { pause?: number; saatquelle?: () => number }) {
   const gespeichert = useGespeichertePartie()
   const wenigerBewegung = useWenigerBewegung()
 
   if (gespeichert.art === 'laufend') {
-    return <Partie start={gespeichert.zustand} pause={pause ?? (wenigerBewegung ? 0 : KI_PAUSE)} />
+    return <Partie start={gespeichert.zustand} pause={pause ?? (wenigerBewegung ? 0 : KI_PAUSE)} saatquelle={saatquelle} />
   }
 
   return (
@@ -37,9 +38,9 @@ export default function Spielseite({ pause }: { pause?: number }) {
   )
 }
 
-function Partie({ start, pause }: { start: Spielzustand; pause: number }) {
-  const { ansicht, fuehreAus, ablehnung } = useSpiel(start, { pause })
-  return <Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={ablehnung} />
+function Partie({ start, pause, saatquelle }: { start: Spielzustand; pause: number; saatquelle: (() => number) | undefined }) {
+  const { ansicht, fuehreAus, ablehnung, verlauf } = useSpiel(start, { pause, saatquelle })
+  return <Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={ablehnung} verlauf={verlauf} />
 }
 
 const WENIGER_BEWEGUNG = '(prefers-reduced-motion: reduce)'

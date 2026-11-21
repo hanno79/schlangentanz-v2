@@ -3,6 +3,7 @@ import './tisch.css'
 import './karten.css'
 import './quer.css'
 import './bedienung.css'
+import './protokoll.css'
 import { useState } from 'react'
 import type { SpielAktion } from '../../engine'
 import { Grossansicht } from '../karten/Grossansicht'
@@ -11,6 +12,7 @@ import type { Bildkarte } from '../karten/kartenbilder'
 import { kartenname } from '../karten/kartentexte'
 import Verweis from '../lobby/Verweis'
 import type { EigeneAnsicht, StatusAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
+import type { Verlauf } from '../spiel/useSpiel'
 import { useBedienung, ZielKontext } from './bedienung'
 import { Gegner } from './Gegner'
 import { Hand } from './Hand'
@@ -23,6 +25,7 @@ import { Schlangen } from './Schlange'
 import { TISCH, geheimeAufgabeName, statusText } from './texte'
 import { NeueSchlangeZiel } from './Ziele'
 import { Zugleiste } from './Zugleiste'
+import { Zugprotokoll } from './Zugprotokoll'
 
 /*
 Der Spieltisch (Plan O4, DESIGN.md „Tisch“). Feste Sicht: Der Mensch sitzt
@@ -36,7 +39,9 @@ Scrollen liest.
 Was der Tisch zeigt, kommt aus der Sicht des Menschen (`tischAnsicht`), nie
 aus dem vollen Zustand. Bedienen lässt er sich mit O5: Karte wählen, Ziel
 wählen, Ansage bestätigen; die Bedienung liegt im Kontext der Ziele, die
-Zugleiste steht unten bei deinem Platz (DESIGN.md „Zugleiste“).
+Zugleiste steht unten bei deinem Platz (DESIGN.md „Zugleiste“). Mit O6 kommen
+Abwehrfrage, Protokoll und „Schneller“ dazu; sie brauchen den Verlauf der
+Partie (`useSpiel`). Ein Tisch ohne Verlauf zeigt nur den Stand.
 */
 
 interface TischEigenschaften {
@@ -45,9 +50,11 @@ interface TischEigenschaften {
   fuehreAus: (aktion: SpielAktion) => void
   /** Der Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat. */
   ablehnung: string | null
+  /** Protokoll, Aussetzen und „Schneller“ der laufenden Partie (O6); ohne ihn zeigt der Tisch nur den Stand. */
+  verlauf?: Verlauf
 }
 
-export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
+export function Tisch({ ansicht, fuehreAus, ablehnung, verlauf }: TischEigenschaften) {
   const bedienung = useBedienung(ansicht.aktionen)
   const [gross, setzeGross] = useState<Bildkarte | null>(null)
   // Der Dialog zum Abwerfen ist offen, bis du ihn für diesen Stand schliesst.
@@ -75,6 +82,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
         </section>
         <Mitte ansicht={ansicht} zeigeGross={setzeGross} />
         {ansicht.erweiterung && <Auslage ich={ansicht.ich} zeigeGross={setzeGross} />}
+        {verlauf !== undefined && <Zugprotokoll verlauf={verlauf} />}
       </div>
       <Weiter ueberlauf={flaecheUeberlauf} />
       </div>
@@ -95,6 +103,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
         bedienung={bedienung}
         fuehreAus={fuehreAus}
         ablehnung={ablehnung}
+        verlauf={verlauf}
         zeigeGross={setzeGross}
         oeffneAbwerfen={() => setzeAbwerfenZu(null)}
       />
