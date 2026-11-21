@@ -273,6 +273,17 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   Schlangenfrass stehen hier als Knöpfe. Lehnt die Engine eine Aktion ab, steht
   ihr Grund in `--farbe-fehler` darunter. Der Satz wird vorgelesen, wenn er
   sich ändert (`aria-live`).
+- **Schlangenhäutung** (O7): Nach der Karte wählt man die Schlange wie bei der
+  Schlangenblockade, dann tippt man die Karten an beiden Enden des Abschnitts
+  an. Angeboten sind nur Karten, die mit einer anderen einen Abschnitt bilden,
+  den die Engine nennt; die erste bleibt gedrückt. Danach sind die Karten des
+  Abschnitts Ziele in der Schlange: Zwei antippen tauscht sie, die Pfeiltasten
+  links und rechts verschieben die Karte mit dem Fokus. Die Schlange zeigt die
+  neue Anordnung mit den Farbgruppen, die die Engine danach wertet. Die
+  Zugleiste nennt die Punkte des Besitzers vorher und nachher und, sobald die
+  Farbfolge neu ist, die Ansage; solange sie gleich ist, steht „Ausführen“
+  gesperrt da, mit dem Grund daneben (D26). „Abbrechen“ zeigt die Schlange
+  wieder, wie sie liegt.
 - **Dialog „Zu viele Handkarten“** (`<dialog>`): alle Handkarten als Knöpfe,
   wie viele abzulegen sind, „Gewählt: n von m“, „Zum Tisch“ und „Ablegen“
   (Hauptknopf, gesperrt mit dem Grund daneben, bis genau so viele gewählt

@@ -7,6 +7,8 @@ import type { Entscheider } from '../../ki/sicht'
 import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../spielstand'
+import { vorschauFuer } from './haeutungsvorschau'
+import type { Haeutungsvorschauer } from './haeutungsvorschau'
 import { tischAnsicht } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
 
@@ -39,6 +41,8 @@ export interface Spielsteuerung {
   fuehreAus: (aktion: SpielAktion) => void
   /** Der deutsche Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat (B2, U12). */
   ablehnung: string | null
+  /** Was eine Schlangenhäutung im jetzigen Stand bringt, aus dem Zwischenstand der Engine (O7). */
+  haeutungsVorschau: Haeutungsvorschauer
 }
 
 /**
@@ -76,6 +80,7 @@ export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielst
      festgehalten und beim nächsten Zeichnen geworfen (wie in der Lobby). */
   const [fehler, setzeFehler] = useState<{ fehler: unknown } | null>(null)
   const ansicht = useMemo(() => tischAnsicht(zustand), [zustand])
+  const vorschau = useMemo(() => vorschauFuer(zustand), [zustand])
 
   /**
    * Spielt die Aktion, die `waehle` liefert: erst speichern, dann zeigen, damit
@@ -114,5 +119,5 @@ export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielst
 
   if (fehler !== null) throw fehler.fehler
   if (!(pause >= 0)) throw new Error(`Die Pause vor einem KI-Schritt muss 0 oder mehr Millisekunden sein, erhalten: ${pause}.`)
-  return { ansicht, fuehreAus, ablehnung }
+  return { ansicht, fuehreAus, ablehnung, haeutungsVorschau: vorschau }
 }

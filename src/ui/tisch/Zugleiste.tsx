@@ -1,12 +1,15 @@
 import { useId } from 'react'
+import type { ReactNode } from 'react'
 import type { SpielAktion, Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import type { Bildkarte } from '../karten/kartenbilder'
 import type { TischAnsicht } from '../spiel/tischAnsicht'
 import type { Bedienung } from './bedienung'
+import { useLaufendeHaeutung } from './haeutung'
+import type { Haeutung } from './haeutung'
 import { statusText } from './texte'
 import { ZielKnopf } from './Ziele'
-import { ABWERFEN, FRASS_OPTION, ZUGLEISTE, ansage, auftrag, tischnamen } from './zugtexte'
+import { ABWERFEN, FRASS_OPTION, HAEUTUNG, ZUGLEISTE, ansage, auftrag, tischnamen } from './zugtexte'
 
 /*
 Die Zugleiste (Plan O5, DESIGN.md „Zugleiste“): ein Satz, was jetzt zu tun ist,
@@ -18,6 +21,10 @@ der Hauptknopf steht zuletzt.
 bedienbar, wenn die Engine es aufzählt; gesperrt steht der Grund der Engine
 daneben. Lehnt die Engine eine Aktion ab, steht
 ihr Grund hier.
+
+Beim Ordnen einer Schlangenhäutung (O7) stehen hier die Punkte des Besitzers
+vorher und nachher, aus der Vorschau der Engine; solange die Farbfolge
+dieselbe ist, steht „Ausführen“ gesperrt da, mit dem Grund daneben (D26).
 
 Ab 700 px Breite steht die Leiste rechts neben Schlangen und Hand und zeigt
 die gewählte Karte gross.
@@ -34,7 +41,7 @@ interface ZugleisteEigenschaften {
 }
 
 /** Was die Leiste sagt; ohne Entscheidung des Menschen, was gerade geschieht. */
-function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null): string {
+function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null, fertig: SpielAktion | null, haeutung: Haeutung | null): string {
   const { abwerfen } = bedienung
   if (ansicht.status.partiephase === 'Beendet') return statusText(ansicht.status).titel
   if (bedienung.aktionen.length === 0) return ansicht.status.schwebend?.entscheidet.ich ? statusText(ansicht.status).text : ZUGLEISTE.warten
@@ -44,18 +51,39 @@ function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | n
     if (karten && bedienung.zugBeenden !== null) return ZUGLEISTE.karteOderBeenden
     return karten ? ZUGLEISTE.karteWaehlen : ZUGLEISTE.nurBeenden
   }
-  if (bedienung.fertig !== null) return `${ZUGLEISTE.ansage} ${ansage(bedienung.fertig, tischnamen(ansicht))}`
+  if (fertig !== null) return `${ZUGLEISTE.ansage} ${ansage(fertig, tischnamen(ansicht))}`
+  if (haeutung !== null) {
+    if (haeutung.stufe === 'ordnen') return HAEUTUNG.ordnen
+    return haeutung.erstesEnde === null ? HAEUTUNG.abschnitt : HAEUTUNG.anderesEnde
+  }
   return auftrag(bedienung.angebote, karte)
+}
+
+/** Ein Knopf der Leiste; ist er gesperrt, steht sein Grund daneben, und der Knopf verweist darauf (DESIGN.md, „Komponenten“). */
+function KnopfMitGrund({ klasse, grund, onClick, children }: { klasse: string; grund: string | null; onClick?: () => void; children: ReactNode }) {
+  const grundId = useId()
+  return (
+    <span className={grund === null ? 'st-zugleiste-mitgrund' : 'st-zugleiste-mitgrund st-zugleiste-mitgrund--gesperrt'}>
+      {grund !== null && (
+        <span id={grundId} className="st-zugleiste-grund">
+          {grund}
+        </span>
+      )}
+      <button type="button" className={klasse} disabled={onClick === undefined} aria-describedby={grund === null ? undefined : grundId} onClick={onClick}>
+        {children}
+      </button>
+    </span>
+  )
 }
 
 export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross, oeffneAbwerfen }: ZugleisteEigenschaften) {
   const karte = ansicht.ich.hand.find((handkarte) => handkarte.id === bedienung.karteId) ?? null
+  const haeutung = useLaufendeHaeutung()
   // Nur solange gewählt wird; die gewählte Möglichkeit nennt danach der Satz, und „Abbrechen“ führt zurück.
   const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
-  const { fertig, zugBeenden, abwerfen, ausspielen } = bedienung
-  // Der Grund der Engine, warum „Zug beenden“ gesperrt ist; er steht daneben, ob eine Karte gewählt ist oder nicht.
-  const gesperrt = zugBeenden === null ? ansicht.zugBeendenGesperrt : null
-  const grundId = useId()
+  const { zugBeenden, abwerfen, ausspielen } = bedienung
+  const fertig = haeutung?.fertig ?? bedienung.fertig
+  const vorschau = haeutung?.vorschau ?? null
 
   return (
     <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
@@ -66,8 +94,9 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
       )}
       <div className="st-zugleiste-inhalt">
         <p className="st-zugleiste-text" aria-live="polite">
-          {satz(ansicht, bedienung, karte)}
+          {satz(ansicht, bedienung, karte, fertig, haeutung)}
         </p>
+        {vorschau !== null && <p className="st-zugleiste-punkte">{HAEUTUNG.punkte(vorschau.besitzer, vorschau.vorher, vorschau.nachher?.punkte ?? null)}</p>}
         {ablehnung !== null && (
           <p className="st-zugleiste-fehler" role="alert">
             {ablehnung}
@@ -89,22 +118,10 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
             </button>
           )}
           {ausspielen && (
-            <span className={gesperrt === null ? 'st-zugleiste-beenden' : 'st-zugleiste-beenden st-zugleiste-beenden--gesperrt'}>
-              {gesperrt !== null && (
-                <span id={grundId} className="st-zugleiste-grund">
-                  {gesperrt}
-                </span>
-              )}
-              <button
-                type="button"
-                className="st-knopf"
-                disabled={zugBeenden === null}
-                aria-describedby={gesperrt === null ? undefined : grundId}
-                onClick={() => zugBeenden !== null && fuehreAus(zugBeenden)}
-              >
-                {ZUGLEISTE.zugBeenden}
-              </button>
-            </span>
+            // Der Grund der Engine, warum „Zug beenden“ gesperrt ist; er steht daneben, ob eine Karte gewählt ist oder nicht.
+            <KnopfMitGrund klasse="st-knopf" grund={zugBeenden === null ? ansicht.zugBeendenGesperrt : null} onClick={zugBeenden === null ? undefined : () => fuehreAus(zugBeenden)}>
+              {ZUGLEISTE.zugBeenden}
+            </KnopfMitGrund>
           )}
           {karte !== null && (
             <>
@@ -114,10 +131,16 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
               <button type="button" className="st-knopf" onClick={bedienung.hebeAuf}>
                 {ZUGLEISTE.abbrechen}
               </button>
-              {fertig !== null && (
+              {fertig !== null ? (
                 <button type="button" className="st-knopf st-knopf--haupt" onClick={() => fuehreAus(fertig)}>
                   {ZUGLEISTE.ausfuehren}
                 </button>
+              ) : (
+                haeutung?.stufe === 'ordnen' && (
+                  <KnopfMitGrund klasse="st-knopf st-knopf--haupt" grund={HAEUTUNG.gleicheFolge}>
+                    {ZUGLEISTE.ausfuehren}
+                  </KnopfMitGrund>
+                )
               )}
             </>
           )}

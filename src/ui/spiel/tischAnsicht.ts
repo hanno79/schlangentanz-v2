@@ -130,18 +130,23 @@ function schlangeAnsicht(schlange: Schlange, gruppen: readonly GewerteteGruppe[]
  * Wertung der Engine; sie wertet alle Schlangen eines Spielers zusammen, weil die
  * Farbe eines Jokers mit Erweiterung vom Vielfaltbonus beider Schlangen abhängt.
  */
-function schlangenAnsicht(schlangen: readonly Schlange[], erweiterung: boolean): SchlangeAnsicht[] {
+export function schlangenAnsicht(schlangen: readonly Schlange[], erweiterung: boolean): SchlangeAnsicht[] {
   const wertung = werteSchlangen(schlangen, erweiterung).schlangen
   return schlangen.map((schlange, index) => schlangeAnsicht(schlange, wertung[index].gruppen))
 }
 
-/** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
-export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
+/** Der Platz des Menschen am Tisch. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
+export function menschVon(zustand: Spielzustand): number {
   const menschen = zustand.spieler.flatMap((spieler, index) => (spieler.steuerung === 'Mensch' ? [index] : []))
   if (menschen.length !== 1) {
     throw new Error(`Am Tisch muss genau ein Mensch sitzen (B2), es sind ${menschen.length}.`)
   }
-  const mensch = menschen[0]
+  return menschen[0]
+}
+
+/** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
+export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
+  const mensch = menschVon(zustand)
   const person = (index: number): Person => ({ name: zustand.spieler[index].name, ich: index === mensch })
 
   const platz = (spieler: Spieler, index: number): PlatzAnsicht => ({

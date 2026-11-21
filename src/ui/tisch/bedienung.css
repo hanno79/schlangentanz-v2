@@ -196,7 +196,14 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   gap: var(--abstand-2);
 }
 
-.st-zugleiste-beenden {
+/* Die Punkte vor und nach einer Schlangenhäutung (O7). */
+.st-zugleiste-punkte {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Ein Knopf mit seinem Grund daneben: „Zug beenden“, beim Ordnen der Häutung auch „Ausführen“. */
+.st-zugleiste-mitgrund {
   display: flex;
   flex: 1 1 auto;
   align-items: center;
@@ -214,12 +221,12 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   text-align: right;
 }
 
-.st-zugleiste-beenden > .st-knopf {
+.st-zugleiste-mitgrund > .st-knopf {
   flex: none;
 }
 
 /* Gesperrt mit Grund: eine eigene Zeile, der Grund links neben dem Knopf. */
-.st-zugleiste-beenden--gesperrt {
+.st-zugleiste-mitgrund--gesperrt {
   flex-basis: 100%;
 }
 

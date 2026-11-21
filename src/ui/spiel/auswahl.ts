@@ -12,6 +12,11 @@ Eine Aktion zerfällt in eine Folge, die der Reihe nach gewählt wird (Karte,
 dann Ziel), und eine Menge, deren Glieder in beliebiger Reihenfolge kommen
 (zwei Karten für Schlangenfrass oder Farbenfusion, die Karten zum Abwerfen).
 Regeln stehen hier keine; welche Ziele es gibt, sagt allein die Engine.
+
+Die Schlangenhäutung (O7) wählt nach der Schlange den Abschnitt und zuletzt
+die neue Reihenfolge. Die Engine zählt je Abschnitt jede neue Farbfolge einmal
+auf; der Mensch ordnet die Karten selbst, und `passendeReihenfolge` sucht die
+aufgezählte Reihenfolge mit derselben Farbfolge.
 */
 
 /** Was der Mensch antippt: ein Schritt auf dem Weg zu einer Aktion. */
@@ -24,6 +29,8 @@ export type Wahl =
   | { art: 'schlangenkarte'; schlangenId: string; karteId: string }
   | { art: 'frass'; option: SchlangenfrassSpielenAktion['option'] }
   | { art: 'spieler'; spielerId: string }
+  /** Die Karten eines Abschnitts der Schlangenhäutung, nach Id sortiert; wo sie liegen, sagt die Schlange am Tisch. */
+  | { art: 'abschnitt'; schlangenId: string; karteIds: string[] }
   | { art: 'reihenfolge'; karteIds: string[] }
   | { art: 'ablage' }
   | { art: 'zugBeenden' }
@@ -78,11 +85,18 @@ export function wegZu(aktion: SpielAktion): Weg {
       return { folge: [karte(aktion.karteId), { art: 'spieler', spielerId: aktion.zielSpielerId }], menge: [] }
     case 'VerdopplerSpielen':
       return { folge: [karte(aktion.karteId)], menge: [] }
-    case 'SchlangenhaeutungSpielen':
+    case 'SchlangenhaeutungSpielen': {
+      const { schlangenId, neueReihenfolge } = aktion
       return {
-        folge: [karte(aktion.karteId), { art: 'schlange', schlangenId: aktion.schlangenId }, { art: 'reihenfolge', karteIds: aktion.neueReihenfolge }],
+        folge: [
+          karte(aktion.karteId),
+          { art: 'schlange', schlangenId },
+          { art: 'abschnitt', schlangenId, karteIds: [...neueReihenfolge].sort() },
+          { art: 'reihenfolge', karteIds: neueReihenfolge },
+        ],
         menge: [],
       }
+    }
     case 'SonderkarteWirkungslosAblegen':
       return { folge: [karte(aktion.karteId), { art: 'ablage' }], menge: [] }
     case 'ZugBeenden':
@@ -104,11 +118,22 @@ interface Eintrag {
   menge: Map<string, Wahl>
 }
 
+/*
+Die Wege einer Aktionsliste, je Liste einmal zerlegt: Eine Liste der Engine
+ändert sich nicht, und mit der Schlangenhäutung hat sie oft Tausende Einträge,
+die sonst bei jedem Antippen neu zerlegt würden.
+*/
+const zerlegt = new WeakMap<readonly SpielAktion[], Eintrag[]>()
+
 function eintraege(aktionen: readonly SpielAktion[]): Eintrag[] {
-  return aktionen.map((aktion) => {
+  const bekannt = zerlegt.get(aktionen)
+  if (bekannt !== undefined) return bekannt
+  const liste = aktionen.map((aktion): Eintrag => {
     const { folge, menge } = wegZu(aktion)
     return { aktion, folge: folge.map((wahl) => [wahlSchluessel(wahl), wahl]), menge: new Map(menge.map((wahl) => [wahlSchluessel(wahl), wahl])) }
   })
+  zerlegt.set(aktionen, liste)
+  return liste
 }
 
 /** Ob die Auswahl auf dem Weg dieser Aktion liegt: erst ihre Folge, danach nur Glieder ihrer Menge. */
@@ -165,4 +190,28 @@ export function waehle(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl:
   if (stand(liste, gewaehlt).angebote.has(neu)) return [...auswahl, wahl]
   if (stand(liste, []).angebote.has(neu)) return [wahl]
   throw new Error(`Auswahl: ${neu} ist nicht angeboten; angeboten sind nur Wahlen zu Aktionen der Engine (U3).`)
+}
+
+type Reihenfolge = Extract<Wahl, { art: 'reihenfolge' }>
+
+const sortiert = (ids: readonly string[]): string => [...ids].sort().join()
+
+/**
+ * Schlangenhäutung (O7): die angebotene Reihenfolge, deren Farbfolge der
+ * Anordnung gleicht, die der Mensch gelegt hat. Gleichfarbige Karten dürfen
+ * dabei anders liegen als in der aufgezählten Aktion, sie zählen gleich (A11).
+ * `null`, wenn keine angeboten ist, weil die Farbfolge geblieben ist (D26).
+ * Ordnet die Anordnung andere Karten als den gewählten Abschnitt, wirft sie.
+ */
+export function passendeReihenfolge(angebote: readonly Wahl[], anordnung: readonly string[], farbeVon: (karteId: string) => string): Reihenfolge | null {
+  const reihenfolgen = angebote.filter((wahl): wahl is Reihenfolge => wahl.art === 'reihenfolge')
+  if (reihenfolgen.length === 0) throw new Error('Auswahl: Es ist keine Reihenfolge angeboten; erst Schlange und Abschnitt der Schlangenhäutung wählen (O7).')
+  const fremd = reihenfolgen.find((wahl) => sortiert(wahl.karteIds) !== sortiert(anordnung))
+  if (fremd !== undefined) {
+    throw new Error(`Auswahl: Die Anordnung ${anordnung.join(', ')} ordnet nicht den gewählten Abschnitt ${fremd.karteIds.join(', ')} neu (O7).`)
+  }
+  const farben = anordnung.map(farbeVon).join()
+  const passend = reihenfolgen.filter((wahl) => wahl.karteIds.map(farbeVon).join() === farben)
+  if (passend.length > 1) throw new Error(`Auswahl: ${passend.length} Reihenfolgen haben die Farbfolge ${farben}; die Engine nennt jede Farbfolge eines Abschnitts einmal (O7).`)
+  return passend[0] ?? null
 }

@@ -7,6 +7,8 @@ import { useUeberlauf } from './ueberlauf'
 import { Weiter } from './Weiter'
 import { TISCH, ablageText, grubeText, schlangenName, schlangenTitel } from './texte'
 import { useZiele, zielDerArt, zieleDerSchlange } from './bedienung'
+import { istHaeutungsKarte, useLaufendeHaeutung } from './haeutung'
+import { HaeutungsKarte } from './HaeutungsKarte'
 import { ZielKnopf } from './Ziele'
 import { ZIELNAME } from './zugtexte'
 
@@ -33,11 +35,16 @@ function gliedKlasse({ gruppe }: KarteInSchlange): string | undefined {
  *
  * Während der Zielwahl (O5) stehen hier die Ziele dieser Schlange: Felder „+“
  * an den Enden oder in den Lücken, Karten als Knöpfe, oder die ganze Schlange
- * als ein Ziel. Felder, die keine Karte sind, tragen `data-zielplatz`.
+ * als ein Ziel. Felder, die keine Karte sind, tragen `data-zielplatz`. Wird
+ * sie gehäutet (O7), zeigt sie die Schlange der Häutung, beim Ordnen also die
+ * gelegte Anordnung, und ihre Karten sind die Knöpfe der Häutung.
  */
-export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsicht; titel: string; groesse: string }) {
+export function Schlange({ schlange: liegend, titel, groesse }: { schlange: SchlangeAnsicht; titel: string; groesse: string }) {
   const [zeile, ueberlauf] = useUeberlauf<HTMLOListElement>()
   const bedienung = useZiele()
+  const laufend = useLaufendeHaeutung()
+  const haeutung = laufend?.schlangenId === liegend.id ? laufend : null
+  const schlange = haeutung?.schlange ?? liegend
   const ziele = zieleDerSchlange(bedienung, schlange.id)
   const laenge = schlange.karten.length
   const ende = (seite: 'anfang' | 'ende') => {
@@ -56,14 +63,17 @@ export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsic
       {ende('anfang')}
       {schlange.karten.map((glied, stelle) => {
         const karte = zielDerArt(ziele, 'schlangenkarte', (ziel) => ziel.karteId === glied.karte.id)
+        const name = ZIELNAME.karte(titel, stelle + 1, glied.karte)
         return (
           <Fragment key={glied.karte.id}>
             {luecke(stelle)}
             <li className={gliedKlasse(glied)} data-gruppe={glied.gruppe?.farbe}>
-              {karte === undefined ? (
+              {haeutung !== null && istHaeutungsKarte(haeutung, glied.karte.id) ? (
+                <HaeutungsKarte haeutung={haeutung} karte={glied.karte} name={name} groesse={groesse} />
+              ) : karte === undefined ? (
                 <Karte karte={glied.karte} sizes={groesse} />
               ) : (
-                <ZielKnopf wahl={karte} name={ZIELNAME.karte(titel, stelle + 1, glied.karte)} klasse="st-ziel--karte">
+                <ZielKnopf wahl={karte} name={name} klasse="st-ziel--karte">
                   <Karte karte={glied.karte} sizes={groesse} />
                 </ZielKnopf>
               )}

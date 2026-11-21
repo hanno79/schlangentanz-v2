@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { cleanup, render, screen, within } from '@testing-library/react'
 import type { Spielzustand } from '../../engine'
+import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
 import { angriffAufMich, mittelspiel, neuePartie, volltisch } from './__tests__/szenarien'
 import { Tisch } from './Tisch'
@@ -12,7 +13,7 @@ KI-Ablauf (O3, O6) kommen später; hier wird nur gezeichnet.
 */
 
 function zeige(zustand: Spielzustand) {
-  return render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
+  return render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
 }
 
 const region = (name: string) => screen.getByRole('region', { name })

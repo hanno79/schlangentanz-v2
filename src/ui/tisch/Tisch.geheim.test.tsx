@@ -4,6 +4,7 @@ import { anwendeAktion, ermittleAktionen, erstellePartie } from '../../engine'
 import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
+import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
 import { GEHEIME_KARTENARTEN, TISCH_SZENARIEN, geheimeHaende, verborgeneIds, verrateneIds } from './__tests__/szenarien'
 import { Tisch } from './Tisch'
@@ -35,7 +36,7 @@ const ZEIT_ZUFALL = 30_000
 const ZEIT_PARTIE = 120_000
 
 function zeichne(zustand: Spielzustand): string {
-  const { container } = render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
+  const { container } = render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
   const html = container.innerHTML
   cleanup()
   return html
@@ -105,7 +106,7 @@ describe('O4 K2/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe im H
 
   it('O4 K2/B2: die geheimen Aufgaben der Gegner stehen nicht im HTML, die eigene schon', () => {
     const zustand = geheimeHaende()
-    render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
+    render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
     const html = document.body.innerHTML
     const [ich, ...gegner] = zustand.spieler
     expect(screen.getByRole('button', { name: new RegExp(`^Deine geheime Aufgabe ${ich.geheimeAufgabe!.name}`) })).toBeInTheDocument()

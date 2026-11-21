@@ -1,13 +1,13 @@
 import type { SchlangenfrassSpielenAktion, SpielAktion, Spielkarte } from '../../engine'
 import { kartenkurzname, kartenname } from '../karten/kartentexte'
 import type { Wahl } from '../spiel/auswahl'
-import type { SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
+import type { Person, SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
 import { anzahlKarten } from './texte'
 
 /*
-Die Texte der Bedienung (O5) an einer Stelle (docs/regeln/web.md, „Texte“):
-Zugleiste, Namen der Ziele, die Ansage vor dem Ausführen und der Dialog zum
-Abwerfen. Sie beschreiben nur, was die Engine aufgezählt hat; eine Regel steht
+Die Texte der Bedienung (O5, O7) an einer Stelle (docs/regeln/web.md, „Texte“):
+Zugleiste, Namen der Ziele, die Ansage vor dem Ausführen, der Dialog zum
+Abwerfen und die Schlangenhäutung. Sie beschreiben nur, was die Engine aufgezählt hat; eine Regel steht
 hier keine. Wo ein Satz aus der Spielanleitung stammt, steht der Abschnitt
 daneben.
 */
@@ -156,9 +156,25 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
       return 'Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.'
     case 'SonderkarteWirkungslosAblegen':
       return `${kurz(aktion.karteId)} ohne Wirkung auf deine Ablage.`
+    case 'SchlangenhaeutungSpielen': {
+      const schlange = namen.schlange(aktion.schlangenId)
+      const stellen = aktion.neueReihenfolge.map((id) => nummerIn(schlange, id))
+      return `Schlangenhäutung ordnet Karte ${Math.min(...stellen)} bis ${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')} neu: ${aktion.neueReihenfolge.map(kurz).join(', ')}.`
+    }
     default:
-      throw new Error(`Für ${aktion.typ} gibt es in O5 keine Ansage.`)
+      throw new Error(`Für ${aktion.typ} gibt es am Tisch keine Ansage.`)
   }
+}
+
+/** Die Texte der Schlangenhäutung (O7): Abschnitt wählen, Karten ordnen, Punkte vorher und nachher. */
+export const HAEUTUNG = {
+  abschnitt: 'Wähle den Abschnitt: Tippe die erste und die letzte seiner 3 bis 5 Farbkarten an.',
+  anderesEnde: 'Tippe die Karte am anderen Ende des Abschnitts an.',
+  ordnen: 'Ordne die Karten neu: Tippe zwei an, um sie zu tauschen, oder verschiebe eine mit den Pfeiltasten.',
+  // D26: „Ja, die Farbfolge im Abschnitt muss danach anders sein.“
+  gleicheFolge: 'Die Farbfolge ist noch dieselbe; die Schlangenhäutung muss sie ändern (D26).',
+  punkte: (besitzer: Person, vorher: number, nachher: number | null) =>
+    `${besitzer.ich ? 'Deine Punkte' : `Punkte von ${besitzer.name}`}: ${nachher === null ? vorher : `vorher ${vorher}, nachher ${nachher}`}`,
 }
 
 /** Die Texte des Dialogs zum Abwerfen (A5). */

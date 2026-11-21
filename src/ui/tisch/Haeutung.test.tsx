@@ -4,6 +4,7 @@ import { anwendeAktion, berechneZwischenstand, ermittleAktionen, serialisiere } 
 import type { SchlangenhaeutungSpielenAktion, SpielAktion, Spielzustand } from '../../engine'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { roh } from '../spiel/__tests__/steuerung'
+import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
 import { aktionMit, angeboteneZiele, ausfuehren, erwarteteZiele, gespieltWurde, handkarte, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
 import { Tisch } from './Tisch'
@@ -20,6 +21,14 @@ const istHaeutung = (aktion: SpielAktion): aktion is SchlangenhaeutungSpielenAkt
 
 /** Der Knopf der Karte an Stelle `nummer` (ab 1) einer Schlange. */
 const karteIn = (titel: string, nummer: number) => screen.getByRole('button', { name: new RegExp(`^${titel}, Karte ${nummer}:`) })
+
+/** Die Stellen (ab 1) der Karten einer Schlange, die gerade als Ziel angeboten sind. */
+function angeboteneKarten(titel: string): number[] {
+  return screen
+    .queryAllByRole('button', { name: new RegExp(`^${titel}, Karte \\d+:`) })
+    .filter((knopf) => knopf.hasAttribute('data-ziel'))
+    .map((knopf) => Number(/Karte (\d+):/.exec(knopf.getAttribute('aria-label')!)![1]))
+}
 
 /** Die Farben, die eine Schlange am Tisch zeigt, von vorn nach hinten. */
 function gezeigteFarben(titel: string): string[] {
@@ -76,9 +85,7 @@ describe('O7 K1/K2: Schlange und Abschnitt wählen', () => {
           return [Math.min(...stellen) + 1, Math.max(...stellen) + 1]
         }),
     )
-    for (let nummer = 1; nummer <= 5; nummer += 1) {
-      expect(karteIn('Deine Schlange 1', nummer).hasAttribute('data-ziel'), `Karte ${nummer}`).toBe(enden.has(nummer))
-    }
+    expect(angeboteneKarten('Deine Schlange 1')).toEqual([...enden].sort((a, b) => a - b))
     expect(screen.queryAllByRole('button', { name: /^KI-Gegner 1, Schlange 1, Karte/ }), 'die andere Schlange bietet nichts an').toEqual([])
     expect(zugleiste().getByText(/Abschnitt/)).toBeInTheDocument()
   })
@@ -89,11 +96,11 @@ describe('O7 K1/K2: Schlange und Abschnitt wählen', () => {
     tippeZiel('Deine Schlange 1 wählen')
     tippe(karteIn('Deine Schlange 1', 3))
     expect(karteIn('Deine Schlange 1', 3)).toHaveAttribute('aria-pressed', 'true')
-    const angeboten = [1, 2, 3, 4, 5].filter((nummer) => karteIn('Deine Schlange 1', nummer).hasAttribute('data-ziel'))
-    expect(angeboten, 'Karte 3 bildet Abschnitte mit Karte 1 und Karte 5').toEqual([1, 5])
+    expect(angeboteneKarten('Deine Schlange 1'), 'Karte 3 bildet Abschnitte mit Karte 1 und Karte 5').toEqual([1, 5])
+    expect(screen.queryByRole('button', { name: /^Deine Schlange 1, Karte 2:/ }), 'Karte 2 ist jetzt kein Ziel').toBeNull()
     tippe(karteIn('Deine Schlange 1', 3))
     expect(karteIn('Deine Schlange 1', 3), 'noch einmal angetippt: kein erstes Ende mehr').toHaveAttribute('aria-pressed', 'false')
-    expect([1, 2, 3, 4, 5].filter((nummer) => karteIn('Deine Schlange 1', nummer).hasAttribute('data-ziel'))).toEqual([1, 2, 3, 4, 5])
+    expect(angeboteneKarten('Deine Schlange 1')).toEqual([1, 2, 3, 4, 5])
   })
 })
 
@@ -195,7 +202,7 @@ describe('O7: Häutung in der Schlange eines Gegners und U3', () => {
     tippe(handkarte(HAEUTUNG))
     tippeZiel('KI-Gegner 1, Schlange 1 wählen')
     tippe(karteIn('KI-Gegner 1, Schlange 1', 1))
-    expect([1, 2, 3].filter((nummer) => karteIn('KI-Gegner 1, Schlange 1', nummer).hasAttribute('data-ziel')), 'drei Karten: nur ein Abschnitt').toEqual([3])
+    expect(angeboteneKarten('KI-Gegner 1, Schlange 1'), 'drei Karten: nur ein Abschnitt').toEqual([3])
     tippe(karteIn('KI-Gegner 1, Schlange 1', 3))
     tausche('KI-Gegner 1, Schlange 1', 2, 3)
     expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Schlangenhäutung ordnet Karte 1 bis 3 der Schlange 1 von KI-Gegner 1 neu: Braun, Braun, Violett.')
@@ -204,9 +211,10 @@ describe('O7: Häutung in der Schlange eines Gegners und U3', () => {
   })
 
   it('O7/U3: „Ausführen“ übergibt genau ein Objekt aus den Aktionen der Engine, keine Abschrift', () => {
-    const ansicht = tischAnsicht(erzeugeSzenario('haeutung'))
+    const zustand = erzeugeSzenario('haeutung')
+    const ansicht = tischAnsicht(zustand)
     const fuehreAus = vi.fn()
-    render(<Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={null} />)
+    render(<Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
     waehleAbschnitt('Deine Schlange 1', 2, 4)
     tausche('Deine Schlange 1', 2, 3)
     tippe(zugleiste().getByRole('button', { name: 'Ausführen' }))

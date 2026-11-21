@@ -6,6 +6,7 @@ import { erzeugeZufall } from '../../engine/testing/zufall'
 import { starteEntwicklerPartie } from '../../entwicklung/partie'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { roh } from '../spiel/__tests__/steuerung'
+import { vorschauFuer } from '../spiel/haeutungsvorschau'
 import { tischAnsicht } from '../spiel/tischAnsicht'
 import { angriffAufMich, mittelspiel, volltisch, zehnHandkarten } from './__tests__/szenarien'
 import { aktionMit, ausfuehren, gespieltWurde, handkarte, spieleAm, tippe, tippeZiel, zugleiste } from './__tests__/bedienen'
@@ -45,7 +46,7 @@ describe('O5 K5: „Zug beenden“ ist genau dann bedienbar, wenn die Engine es 
     ]
     let erlaubtGesehen = 0
     for (const zustand of zustaende) {
-      render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} />)
+      render(<Tisch ansicht={tischAnsicht(zustand)} fuehreAus={() => {}} ablehnung={null} haeutungsVorschau={vorschauFuer(zustand)} />)
       const erlaubt = tischAnsicht(zustand).aktionen.some((aktion) => aktion.typ === 'ZugBeenden')
       const knopf = zugBeenden()
       expect(knopf !== null && !knopf.disabled, `${serialisiere(zustand).slice(0, 60)}…: Zug beenden erlaubt ${erlaubt}`).toBe(erlaubt)
