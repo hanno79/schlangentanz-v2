@@ -7,7 +7,7 @@ Szenarien für den Spieltisch unter `/spiel?szenario=<name>` (O3, Kriterium 7).
 Sie zeigen, was die Partie-Steuerung ohne Bedienung trägt: eine offene
 Abwehrfrage an dich und eine Schlussrunde, die die KI-Gegner allein zu Ende
 spielen. Am Entwicklertisch lassen sie sich wie jedes Szenario mit Klicks
-weiterspielen.
+weiterspielen. Für O5 kommt ein Zugende mit zu vielen Handkarten dazu (A5).
 */
 
 export const SPIEL_SZENARIEN: readonly Szenario[] = [
@@ -41,6 +41,22 @@ export const SPIEL_SZENARIEN: readonly Szenario[] = [
         .schlange(0, ['Grün', 'Grün'])
         .schlussrunde(0)
         .amZug(1)
+        .zustand(),
+  },
+  {
+    name: 'zu-viele-handkarten',
+    beschreibung:
+      'A5: Zwei Spieler. Spieler 1 hat seinen Zug beendet und hält danach 7 Karten (Rot, Blau, Gelb, Grün, Violett, Braun, Farbenschutz); er legt die überzähligen 2 ab. Er hat eine Schlange Rot, Rot.',
+    erwartet:
+      'Unter /spiel öffnet sich der Dialog „Zu viele Handkarten“ mit 7 Karten; „Ablegen“ geht erst mit genau 2 gewählten. Am Entwicklertisch 21 Knöpfe UeberhandAbwerfen, je ein Paar. Danach liegen die zwei Karten oben auf dem Ablagestapel von Spieler 1, er hält 5, und KI-Gegner 1 ist dran.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(93) })
+        .hand(0, ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett', 'Braun', 'Farbenschutz'])
+        .schlange(0, ['Rot', 'Rot'])
+        .haendeAuffuellen()
+        .aendere((zustand) => {
+          zustand.zug.abschnitt = 'Abwerfen'
+        })
         .zustand(),
   },
 ]

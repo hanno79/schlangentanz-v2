@@ -1,0 +1,123 @@
+import { describe, expect, it } from 'vitest'
+import { appendFileSync } from 'node:fs'
+const LOG = 'C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/O5-pruefer-it2/O5-it2-probe-zahlen.txt'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from '../../engine'
+import type { Spielzustand } from '../../engine'
+import { zufallszustand } from '../../engine/testing/zufallszustand'
+import { erzeugeZufall } from '../../engine/testing/zufall'
+import { starteEntwicklerPartie } from '../../entwicklung/partie'
+import { tischAnsicht } from './tischAnsicht'
+
+// Probe des Prüfers O5 Iteration 2, nicht für den Commit.
+
+function lcg(saat: number) {
+  let s = (saat * 2654435761) >>> 0
+  return () => {
+    s = (Math.imul(s, 1103515245) + 12345) >>> 0
+    return s / 4294967296
+  }
+}
+
+const zaehler = { zustaende: 0, gesperrt: 0, frei: 0, abweichungen: [] as string[], gruende: new Map<string, number>() }
+
+function vergleiche(zustand: Spielzustand, wo: string) {
+  zaehler.zustaende += 1
+  const amZug = zustand.spieler[zustand.zug.spielerIndex]
+  const ergebnis = pruefeAktion(zustand, { typ: 'ZugBeenden', spielerId: amZug.id })
+  const erwartet = ergebnis.erlaubt ? null : ergebnis.grund
+  const grund = zugBeendenGesperrt(zustand)
+  if (grund !== erwartet) zaehler.abweichungen.push(`${wo}: ${grund} != ${erwartet}`)
+  if (grund === null) zaehler.frei += 1
+  else {
+    zaehler.gesperrt += 1
+    const muster = grund.replace(/Spieler \d|KI-Gegner \d|Du|du/g, 'X').slice(0, 60)
+    zaehler.gruende.set(muster, (zaehler.gruende.get(muster) ?? 0) + 1)
+  }
+  // Aufzählung: Entscheidet der Spieler am Zug ohne schwebende Karte, ist ZugBeenden genau dann aufgezählt, wenn kein Grund da ist.
+  if (zustand.partiephase !== 'Beendet' && zustand.schwebend === null && zustand.zug.abschnitt !== 'Abwerfen') {
+    const aufgezaehlt = ermittleAktionen(zustand).some((aktion) => aktion.typ === 'ZugBeenden')
+    if (aufgezaehlt !== (grund === null)) zaehler.abweichungen.push(`${wo}: aufgezählt ${aufgezaehlt}, Grund ${grund}`)
+  }
+}
+
+function abwandlungen(zustand: Spielzustand): Spielzustand[] {
+  const liste: Spielzustand[] = []
+  const a = structuredClone(zustand)
+  a.zug.gespielteFarbkarten = 0
+  a.zug.gespielteSonderkarten = 0
+  liste.push(a)
+  const b = structuredClone(a)
+  b.nachziehstapel.push(...b.spieler[b.zug.spielerIndex].hand.splice(0))
+  liste.push(b)
+  const c = structuredClone(zustand)
+  c.zug.gespielteSonderkarten = 1
+  c.zug.gespielteFarbkarten = 0
+  liste.push(c)
+  return liste
+}
+
+describe('Prüfer O5: zugBeendenGesperrt gegen pruefeAktion', () => {
+  it('gespielte Partien, Abwandlungen und Zufallszustände', () => {
+    let partien = 0
+    for (let saat = 101; saat <= 160; saat += 1) {
+      const spieler = 2 + (saat % 3)
+      const erweiterung = saat % 2 === 0
+      const wahl = lcg(saat)
+      let zustand = starteEntwicklerPartie(saat, spieler, erweiterung)
+      for (let schritt = 0; schritt < 3000; schritt += 1) {
+        vergleiche(zustand, `Partie ${saat} Schritt ${schritt}`)
+        for (const [i, abgewandelt] of abwandlungen(zustand).entries()) vergleiche(abgewandelt, `Partie ${saat} Schritt ${schritt} Abwandlung ${i}`)
+        const aktionen = ermittleAktionen(zustand)
+        if (aktionen.length === 0) break
+        // Bevorzugt Karten spielen, ZugBeenden nur in einem Viertel der Fälle, wenn es mehr gibt.
+        const ohneBeenden = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden')
+        const auswahl = ohneBeenden.length > 0 && wahl() < 0.75 ? ohneBeenden : aktionen
+        zustand = anwendeAktion(zustand, auswahl[Math.floor(wahl() * auswahl.length)]).zustand
+      }
+      expect(zustand.partiephase, `Partie ${saat} endet`).toBe('Beendet')
+      vergleiche(zustand, `Partie ${saat} Ende`)
+      partien += 1
+    }
+    for (let saat = 20001; saat <= 25000; saat += 1) vergleiche(zufallszustand(erzeugeZufall(saat)), `Zufallszustand ${saat}`)
+    appendFileSync(LOG, String.fromCharCode(10) + JSON.stringify({ partien, ...zaehler, abweichungen: zaehler.abweichungen.slice(0, 5), anzahlAbweichungen: zaehler.abweichungen.length, gruende: [...zaehler.gruende] }, null, 1))
+    expect(zaehler.abweichungen).toEqual([])
+  }, 300000)
+
+  it('B2: Grund in der Sicht unabhängig von fremden Händen und Aufgaben', () => {
+    let geprueft = 0
+    let mitGrund = 0
+    for (let saat = 201; saat <= 230; saat += 1) {
+      const spieler = 2 + (saat % 3)
+      const wahl = lcg(saat)
+      let zustand = starteEntwicklerPartie(saat, spieler, saat % 2 === 1)
+      for (let schritt = 0; schritt < 3000; schritt += 1) {
+        if (ermittleEntscheider(zustand) === 0) {
+          const vorher = tischAnsicht(zustand).zugBeendenGesperrt
+          // Alle fremden Hände gegen Stapelkarten tauschen (gleiche Zahl, öffentlich), Reihenfolge des Stapels umdrehen.
+          const getauscht = structuredClone(zustand)
+          for (let i = 1; i < getauscht.spieler.length; i += 1) {
+            const fremd = getauscht.spieler[i]
+            const n = Math.min(fremd.hand.length, getauscht.nachziehstapel.length)
+            const neu = getauscht.nachziehstapel.splice(getauscht.nachziehstapel.length - n, n, ...fremd.hand.slice(0, n))
+            fremd.hand.splice(0, n, ...neu)
+          }
+          getauscht.nachziehstapel.reverse()
+          const nachher = tischAnsicht(getauscht).zugBeendenGesperrt
+          expect(nachher, `Saat ${saat} Schritt ${schritt}`).toBe(vorher)
+          if (vorher !== null) {
+            mitGrund += 1
+            for (const fremd of zustand.spieler.slice(1)) for (const karte of fremd.hand) expect(vorher.includes(karte.id)).toBe(false)
+          }
+          geprueft += 1
+        } else {
+          expect(tischAnsicht(zustand).zugBeendenGesperrt).toBeNull()
+        }
+        const aktionen = ermittleAktionen(zustand)
+        if (aktionen.length === 0) break
+        zustand = anwendeAktion(zustand, aktionen[Math.floor(wahl() * aktionen.length)]).zustand
+      }
+    }
+    appendFileSync(LOG, String.fromCharCode(10) + JSON.stringify({ geprueft, mitGrund }))
+    expect(mitGrund).toBeGreaterThan(0)
+  }, 300000)
+})
