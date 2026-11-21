@@ -760,18 +760,16 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026); C19 teilweise (Farbenfusion E7, Farbkarte E5); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026); C1 teilweise. Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
 | Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
 |---|---|---|---|---|
 | C1 | Stückzahlen | Schlangenblockade 3, Schlangengrube 3, Schlangenhäutung 3, Aufgabenkarten 15 (A1) | Stückzahlen und alle 15 Aufgaben im Material behoben mit E1 (13.11.2026); die Prüfung der Aufgaben fehlt noch (X1, X2) | `src/engine/deck.ts`, `src/engine/aufgabenKarten.ts`, `src/engine/constants.ts` |
-| C9 | Schlangenhäutung | ordnet einen Abschnitt von 3–5 aufeinanderfolgenden Farbkarten neu; Sonderkarten bleiben liegen (A7.9); die Farbfolge im Abschnitt muss sich ändern (D26) | ordnet die ganze Schlange neu, Sonderkarten eingeschlossen | `src/engine/kartenwirkungen.ts` (`spieleSchlangenhaeutung`) |
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
 | C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
-| C19 | Karten in gegnerische Schlangen | jede Karte darf in jede Schlange, Farbkarten an ein Ende, Sonderkarten an beliebiger Stelle; eine neue Schlange beginnt man nur für sich, beim Gegner nur an eine bestehende Schlange (A5, D9, D19) | Schlangenhäutung nur in eigene Schlangen | `src/engine/legalActions.ts`, `src/engine/turnState.ts`, `src/engine/kartenwirkungen.ts` |
 | C20 | Zeitpunkt der Aufgabenprüfung | eine Aufgabe kann erfüllt werden, sobald die Bedingung gilt und der Spieler am Zug ist (A9) | geprüft wird nur einmal am Ende der Ausspielphase | `src/engine/turnState.ts` (`beendeAufgabenpruefung`) |
 | C21 | Farbwechsler | „Es gelten auch Reihen" (A9) | geprüft werden vier verschiedene Einzelkarten direkt nacheinander | `src/engine/aufgabenPruefung.ts` (`pruefeFarbwechsler`) |
 | C23 | Symmetriemeister | „min. 8 Karten, erste Hälfte Spiegelbild der zweiten" (A9); gerade Länge und Sonderkarten sagt die Website nicht | verlangt gerade Länge und ausschliesslich Farbkarten (Auslegung offen, Umsetzungsplan Frage G6) | `src/engine/aufgabenPruefung.ts` (`pruefeSymmetriemeister`) |
