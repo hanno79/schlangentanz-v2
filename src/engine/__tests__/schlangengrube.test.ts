@@ -5,6 +5,7 @@ import type { Baukasten, Kartenwahl } from '../testing/szenario'
 import {
   ablage,
   aktionen,
+  durchlassen,
   ereignisseVom,
   farbkarte,
   folge,
@@ -32,9 +33,9 @@ allgemeinen Reaktionsablauf prüft `reaktion.test.ts`, das Aussetzen mit schon
 liegender Grube `zugablauf_schlussrunde.test.ts` (E2).
 */
 
-/** Grube auf `ziel`, eine Farbkarte, Zug beenden: der Zug des Angreifers ohne Abwehr. */
+/** Grube auf `ziel`, der Getroffene lässt durch, eine Farbkarte, Zug beenden: der Zug des Angreifers ohne Abwehr. */
 function grubeUndEnde(zustand: Spielzustand, ziel: number) {
-  return folge(zustand, (jetzt) => grubeAuf(jetzt, ziel), farbkarte, zugBeenden)
+  return folge(zustand, (jetzt) => grubeAuf(jetzt, ziel), durchlassen, farbkarte, zugBeenden)
 }
 
 function grubenId(zustand: Spielzustand, spieler: number): string {
@@ -61,9 +62,10 @@ describe('A7.6: die beiden Beispiele der Website', () => {
   it('A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A', () => {
     const start = tisch([MIT_GRUBE, FUENF, FUENF]).zustand()
     const grube = grubenId(start, 0)
-    const angesagt = fuehreAus(start, grubeAuf(start, 1))
+    const angesagt = folge(start, (jetzt) => grubeAuf(jetzt, 1), durchlassen)
     expect(angesagt.ereignisse).toEqual([
       expect.objectContaining({ typ: 'KarteAngesagt', spielerIndex: 0, karteId: grube, betroffene: [1] }),
+      { typ: 'AbwehrGefragt', spielerIndex: 1, karteId: grube },
       { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: grube, abgewehrt: [], ohneWirkung: false, nach: { ort: 'VorSpieler', spielerIndex: 1 } },
     ])
     expect(angesagt.zustand.ausliegendeGruben).toEqual([{ karte: start.spieler[0].hand[0], gespieltVon: 0, vor: 1 }])
@@ -80,7 +82,7 @@ describe('A7.6: die beiden Beispiele der Website', () => {
     const grube = grubenId(start, 0)
     const schutz = start.spieler[1].hand[0].id
     const abgewehrt = folge(start, (jetzt) => grubeAuf(jetzt, 1), (jetzt) => reaktion(jetzt, true))
-    expect(abgewehrt.ereignisse.slice(1)).toEqual([
+    expect(abgewehrt.ereignisse.slice(2)).toEqual([
       { typ: 'Abgewehrt', spielerIndex: 1, karteId: schutz, gegen: grube },
       { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: grube, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
     ])
@@ -119,7 +121,7 @@ describe('D14, D18: mehrere Gruben, Abwehr vor dem Aussetzen', () => {
     let zustand = tisch([['Schlangengrube', 'Schlangengrube', 'Schlangengrube', 'Blau', 'Rot'], FUENF]).stapelOben(['Gelb', 'Gelb', 'Gelb', 'Gelb']).zustand()
     const ausgesetzt: number[] = []
     for (let runde = 0; runde < 3; runde += 1) {
-      const schritt = folge(zustand, (jetzt) => grubeAuf(jetzt, 1), zugBeenden)
+      const schritt = folge(zustand, (jetzt) => grubeAuf(jetzt, 1), durchlassen, zugBeenden)
       ausgesetzt.push(...ereignisseVom(schritt.ereignisse, 'Ausgesetzt').map((ereignis) => ereignis.spielerIndex))
       zustand = schritt.zustand
       expect(zustand.zug.spielerIndex, `Runde ${runde}: Spieler 1 ist gleich wieder dran`).toBe(0)
@@ -149,7 +151,7 @@ describe('D21, D29, A10: die Schlangengrube in der Schlussrunde', () => {
   it('D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr', () => {
     const start = schlussrunde([FUENF, MIT_GRUBE, FUENF], 1).zustand()
     const { zustand, ereignisse } = grubeUndEnde(start, 2)
-    expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'AnsageEntschieden', 'KarteGespielt', 'Ausgesetzt', 'PartieBeendet'])
+    expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'AbwehrGefragt', 'AnsageEntschieden', 'KarteGespielt', 'Ausgesetzt', 'PartieBeendet'])
     expect(zustand.partiephase).toBe('Beendet')
     expect(zustand.ausliegendeGruben).toEqual([])
   })
@@ -166,8 +168,8 @@ describe('D21, D29, A10: die Schlangengrube in der Schlussrunde', () => {
     const start = schlussrunde([FUENF, FUENF, MIT_GRUBE], 2).zustand()
     const grube = grubenId(start, 2)
     expect(aktionen(start, 'SchlangengrubeSpielen'), 'D29: auch der Auslöser und wer schon gespielt hat, sind Ziele').toHaveLength(2)
-    const { zustand, ereignisse } = fuehreAus(start, grubeAuf(start, 1))
-    expect(ereignisse.slice(1)).toEqual([
+    const { zustand, ereignisse } = folge(start, (jetzt) => grubeAuf(jetzt, 1), durchlassen)
+    expect(ereignisse.slice(2)).toEqual([
       { typ: 'AnsageEntschieden', spielerIndex: 2, karteId: grube, abgewehrt: [], ohneWirkung: false, nach: { ort: 'VorSpieler', spielerIndex: 1 } },
       { typ: 'GrubeOhneWirkung', spielerIndex: 1, karteId: grube, ablagestapelVon: 2 },
     ])
@@ -178,7 +180,7 @@ describe('D21, D29, A10: die Schlangengrube in der Schlussrunde', () => {
 
   it('D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren', () => {
     const ohneSchutz = schlussrunde([FUENF, MIT_GRUBE, FUENF], 1).zustand()
-    expect(ereignisseVom(fuehreAus(ohneSchutz, grubeAuf(ohneSchutz, 0)).ereignisse, 'GrubeOhneWirkung').map((ereignis) => ereignis.spielerIndex)).toEqual([0])
+    expect(ereignisseVom(folge(ohneSchutz, (jetzt) => grubeAuf(jetzt, 0), durchlassen).ereignisse, 'GrubeOhneWirkung').map((ereignis) => ereignis.spielerIndex)).toEqual([0])
     const mitSchutz = schlussrunde([MIT_SCHUTZ, MIT_GRUBE, FUENF], 1).zustand()
     const abwehr = folge(mitSchutz, (jetzt) => grubeAuf(jetzt, 0), (jetzt) => reaktion(jetzt, true))
     expect(ereignisseVom(abwehr.ereignisse, 'Abgewehrt').map((ereignis) => ereignis.spielerIndex)).toEqual([0])
@@ -187,7 +189,7 @@ describe('D21, D29, A10: die Schlangengrube in der Schlussrunde', () => {
 
   it('D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab', () => {
     const start = schlussrunde([FUENF, MIT_GRUBE, FUENF], 1, (bau) => bau.grube(0, 2)).zustand()
-    const { ereignisse } = fuehreAus(start, grubeAuf(start, 2))
+    const { ereignisse } = folge(start, (jetzt) => grubeAuf(jetzt, 2), durchlassen)
     expect(ereignisseVom(ereignisse, 'GrubeOhneWirkung')).toEqual([{ typ: 'GrubeOhneWirkung', spielerIndex: 2, karteId: grubenId(start, 1), ablagestapelVon: 1 }])
   })
 

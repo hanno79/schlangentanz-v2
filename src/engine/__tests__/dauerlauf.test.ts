@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { ermittleAktionen } from '../index'
 import type { AktionsErgebnis, SpielAktion, Spielzustand } from '../index'
 import { ENGINE_MOTOR, dauerlauf, dauerlaufPartien, spieleDauerlaufPartie } from '../testing/dauerlauf'
 import type { Motor, SchrittPruefer } from '../testing/dauerlauf'
@@ -150,20 +151,25 @@ interface ZweiteZuege {
   inSchlussrunde: number
 }
 
-/** Wie oft der Dauerlauf eine Ansage, eine Abwehr, ein Aussetzen und eine Grube ohne Wirkung sah (E4). */
-type Reaktionen = Record<'KarteAngesagt' | 'Abgewehrt' | 'Ausgesetzt' | 'GrubeOhneWirkung', number>
+/** Wie oft der Dauerlauf eine Ansage, eine Frage, eine Abwehr, ein Aussetzen und eine Grube ohne Wirkung sah (E4). */
+type Reaktionen = Record<'KarteAngesagt' | 'AbwehrGefragt' | 'Abgewehrt' | 'Ausgesetzt' | 'GrubeOhneWirkung', number>
 
 /**
- * E4 (A6, A7.2, A7.6, D29): Gefragt wird nur, wer Farbenschutz hält, nie der
- * Angreifer; wer ausserhalb seines Zuges abwehrt, zieht nicht nach; der
- * Farbenschutz liegt danach auf seinem Ablagestapel; nach Spielende liegt keine
- * Grube mehr aus.
+ * E4 (A6, A7.2, A7.6, D29, D33): Gefragt wird jeder Betroffene, im Uhrzeigersinn
+ * und jeder einmal, nie der Angreifer; abwehren kann nur, wer Farbenschutz hält;
+ * wer ausserhalb seines Zuges abwehrt, zieht nicht nach; der Farbenschutz liegt
+ * danach auf seinem Ablagestapel; nach Spielende liegt keine Grube mehr aus.
  */
 function reaktionsPruefer(zaehler: Reaktionen): SchrittPruefer {
+  /** Die Betroffenen der laufenden Ansage, die noch nicht gefragt wurden. */
+  let ungefragt: number[] = []
   return (vorher, _aktion, { zustand, ereignisse }) => {
     const ziehenDarf = new Set([vorher.zug.spielerIndex])
     for (const ereignis of ereignisse) {
       if (ereignis.typ in zaehler) zaehler[ereignis.typ as keyof Reaktionen] += 1
+      if (ereignis.typ === 'KarteAngesagt') ungefragt = [...ereignis.betroffene]
+      if (ereignis.typ === 'AbwehrGefragt' && ereignis.spielerIndex !== ungefragt.shift()) return `D33: Spieler ${ereignis.spielerIndex} ist ausser der Reihe gefragt.`
+      if (ereignis.typ === 'AnsageEntschieden' && ungefragt.length > 0) return `D33: Spieler ${ungefragt.join(', ')} wurden nicht gefragt.`
       if (ereignis.typ === 'ZugBegonnen') ziehenDarf.add(ereignis.spielerIndex)
       if (ereignis.typ === 'KartenGezogen' && !ziehenDarf.has(ereignis.spielerIndex)) return `A6: Spieler ${ereignis.spielerIndex} zieht ausserhalb seines Zuges.`
       if (ereignis.typ === 'Abgewehrt' && !zustand.spieler[ereignis.spielerIndex].ablagestapel.some((karte) => karte.id === ereignis.karteId)) {
@@ -175,9 +181,9 @@ function reaktionsPruefer(zaehler: Reaktionen): SchrittPruefer {
       const gefragt = schwebend.ausstehend[0]
       if (gefragt === undefined) return 'A6: Eine Karte schwebt, aber niemand ist gefragt.'
       if (zustand.spieler[gefragt].id === schwebend.aktion.spielerId) return 'A6: Der Angreifer ist bei seiner eigenen Karte gefragt.'
-      if (!zustand.spieler[gefragt].hand.some(istFarbenschutz)) {
-        return `E4 Kriterium 3: Spieler ${gefragt} ist gefragt, hält aber keinen Farbenschutz.`
-      }
+      const abwehren = ermittleAktionen(zustand).filter((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null).length
+      const farbenschutz = zustand.spieler[gefragt].hand.filter(istFarbenschutz).length
+      if (abwehren !== farbenschutz) return `D33: Spieler ${gefragt} hält ${farbenschutz} Farbenschutz, angeboten sind ${abwehren} Abwehren.`
     }
     if (zustand.partiephase === 'Beendet' && zustand.ausliegendeGruben.length > 0) return 'D29: Nach Spielende liegt noch eine Grube aus.'
     return null
@@ -300,7 +306,7 @@ describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2)', () => {
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 2)).toHaveLength(100)
     expect(PARTIEN.map((partie) => partie.spielerzahl).filter((zahl) => zahl === 4)).toHaveLength(100)
     const zweiteZuege: ZweiteZuege = { gesamt: 0, inSchlussrunde: 0 }
-    const reaktionen: Reaktionen = { KarteAngesagt: 0, Abgewehrt: 0, Ausgesetzt: 0, GrubeOhneWirkung: 0 }
+    const reaktionen: Reaktionen = { KarteAngesagt: 0, AbwehrGefragt: 0, Abgewehrt: 0, Ausgesetzt: 0, GrubeOhneWirkung: 0 }
     const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer: () => beidePruefer(regelPruefer(zweiteZuege), reaktionsPruefer(reaktionen)) })
     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet')).toEqual([])
     // Jede Partie braucht mehrere Züge: mindestens eine Karte und „Zug beenden“ je Zug.
@@ -310,6 +316,7 @@ describe('A5/A10/D12/D13: Dauerlauf über die Engine (E2)', () => {
     expect(zweiteZuege.inSchlussrunde, 'zweite Züge in der Schlussrunde im Dauerlauf').toBeGreaterThan(0)
     // E4: Gruben werden angesagt, abgewehrt, ausgesessen und gehen auch ohne Wirkung ab (D29).
     expect(reaktionen.KarteAngesagt, 'angesagte Gruben im Dauerlauf').toBeGreaterThan(300)
+    expect(reaktionen.AbwehrGefragt, 'D33: jede Ansage fragt mindestens einen Betroffenen').toBeGreaterThanOrEqual(reaktionen.KarteAngesagt)
     expect(reaktionen.Abgewehrt, 'Abwehren mit Farbenschutz im Dauerlauf').toBeGreaterThan(30)
     expect(reaktionen.Ausgesetzt, 'ausgesetzte Züge im Dauerlauf').toBeGreaterThan(100)
     expect(reaktionen.GrubeOhneWirkung, 'Gruben ohne Wirkung im Dauerlauf (D29)').toBeGreaterThan(0)

@@ -46,7 +46,10 @@ describe('E4 Kriterium 1, A6, B2: die Ansage', () => {
     expect(zustand.schwebend).toEqual({ karte: grube, aktion: ansage, ausstehend: [1], abgewehrt: [] })
     expect(hand(zustand, 0), 'A6: die angesagte Karte liegt nicht mehr auf der Hand').not.toContain(grube.id)
     expect(zustand.ausliegendeGruben, 'A6: die Wirkung tritt erst nach der Reaktion ein').toEqual([])
-    expect(ereignisse).toEqual([{ typ: 'KarteAngesagt', spielerIndex: 0, karteId: grube.id, ansage, betroffene: [1] }])
+    expect(ereignisse).toEqual([
+      { typ: 'KarteAngesagt', spielerIndex: 0, karteId: grube.id, ansage, betroffene: [1] },
+      { typ: 'AbwehrGefragt', spielerIndex: 1, karteId: grube.id },
+    ])
     expect(verletzt(zustand)).toEqual([])
   })
 
@@ -79,7 +82,10 @@ describe('A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die
   it('E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal', () => {
     const { zustand, ansage } = mehrereZiele([1, 0, 2, 3, 0], ALLE_MIT_SCHUTZ)
     const { zustand: nach, ereignisse } = fuehreAus(zustand, ansage)
-    expect(ereignisse).toEqual([expect.objectContaining({ typ: 'KarteAngesagt', spielerIndex: 2, betroffene: [3, 0, 1] })])
+    expect(ereignisse).toEqual([
+      expect.objectContaining({ typ: 'KarteAngesagt', spielerIndex: 2, betroffene: [3, 0, 1] }),
+      { typ: 'AbwehrGefragt', spielerIndex: 3, karteId: zustand.spieler[2].hand[0].id },
+    ])
     expect(nach.schwebend?.ausstehend).toEqual([3, 0, 1])
     expect(ermittleEntscheider(nach), 'A6 Beispiel 2: zuerst entscheidet der Nächste im Uhrzeigersinn').toBe(3)
   })
@@ -93,8 +99,8 @@ describe('A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die
       return { wirkungen: wirke.mock.calls.length, ereignisse: schritt.ereignisse.map((ereignis) => ereignis.typ) }
     })
     expect(schritte).toEqual([
-      { wirkungen: 0, ereignisse: ['Abgewehrt'] },
-      { wirkungen: 0, ereignisse: [] },
+      { wirkungen: 0, ereignisse: ['Abgewehrt', 'AbwehrGefragt'] },
+      { wirkungen: 0, ereignisse: ['AbwehrGefragt'] },
       { wirkungen: 1, ereignisse: ['Abgewehrt', 'AnsageEntschieden'] },
     ])
     expect(wirke.mock.calls[0][2], 'A7.2: für die Abwehrenden hat die Karte keine Wirkung').toEqual([3, 1])
@@ -102,23 +108,31 @@ describe('A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die
     expect(ermittleEntscheider(jetzt), 'A6: danach entscheidet wieder der Spieler am Zug').toBe(2)
   })
 
-  it('E4 Kriterium 3: gefragt wird nur, wer einen Farbenschutz hält', () => {
+  it('D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen', () => {
     const { zustand, wirke, ansage } = mehrereZiele([3, 0, 1], [FUENF, MIT_SCHUTZ, MIT_GRUBE, FUENF])
-    const angesagt = fuehreAus(zustand, ansage).zustand
-    expect(angesagt.schwebend?.ausstehend).toEqual([1])
-    expect(ermittleEntscheider(angesagt)).toBe(1)
-    const { zustand: nach } = fuehreAus(angesagt, reaktion(angesagt, false))
+    let jetzt = fuehreAus(zustand, ansage).zustand
+    expect(jetzt.schwebend?.ausstehend).toEqual([3, 0, 1])
+    const angeboten: string[][] = []
+    for (const gefragt of [3, 0, 1]) {
+      expect(ermittleEntscheider(jetzt)).toBe(gefragt)
+      angeboten.push(aktionen(jetzt).map((aktion) => (aktion.typ === 'Reagieren' ? (aktion.farbenschutzId ?? 'durchlassen') : aktion.typ)))
+      expect(wirke, 'A6: vor der letzten Entscheidung wirkt nichts').not.toHaveBeenCalled()
+      jetzt = fuehreAus(jetzt, reaktion(jetzt, false)).zustand
+    }
+    expect(angeboten).toEqual([['durchlassen'], ['durchlassen'], [jetzt.spieler[1].hand[0].id, 'durchlassen']])
     expect(wirke).toHaveBeenCalledOnce()
-    expect(nach.schwebend).toBeNull()
+    expect(jetzt.schwebend).toBeNull()
   })
 
-  it('E4 Kriterium 3: hält kein Betroffener Farbenschutz, wirkt die Karte noch in derselben Aktion', () => {
+  it('D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt', () => {
     const { zustand, wirke, ansage } = mehrereZiele([3, 0, 1], [FUENF, FUENF, MIT_GRUBE, FUENF])
-    const { zustand: nach, ereignisse } = fuehreAus(zustand, ansage)
-    expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'AnsageEntschieden'])
+    const angesagt = fuehreAus(zustand, ansage)
+    expect(angesagt.ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'AbwehrGefragt'])
+    expect(wirke).not.toHaveBeenCalled()
+    const nach = folge(angesagt.zustand, (jetzt) => reaktion(jetzt, false), (jetzt) => reaktion(jetzt, false), (jetzt) => reaktion(jetzt, false))
     expect(wirke.mock.calls.map((aufruf) => aufruf[2])).toEqual([[]])
-    expect(nach.schwebend).toBeNull()
-    expect(ermittleEntscheider(nach)).toBe(2)
+    expect(nach.zustand.schwebend).toBeNull()
+    expect(ermittleEntscheider(nach.zustand)).toBe(2)
   })
 
   it('A7.2/E4 Kriterium 4: wehren alle ab, wirkt die Karte nicht und liegt auf dem Ablagestapel des Angreifers', () => {
@@ -165,7 +179,7 @@ describe('D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab', (
     expect(ablage(zustand, 0)).toEqual([gespielt])
     expect(ablage(zustand, 1)).toEqual([schutz])
     expect(zustand.spieler[1].schlangen, 'A7.2: die Schlange des Gegners bleibt unberührt').toEqual(deserialisiere(vorher).spieler[1].schlangen)
-    expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'Abgewehrt', 'AnsageEntschieden'])
+    expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'AbwehrGefragt', 'Abgewehrt', 'AnsageEntschieden'])
     expect(ereignisseVom(ereignisse, 'Abgewehrt')).toEqual([{ typ: 'Abgewehrt', spielerIndex: 1, karteId: schutz, gegen: gespielt }])
     expect(verletzt(zustand)).toEqual([])
   })
@@ -254,8 +268,9 @@ describe('A5, A6: Nachziehen nach einer Abwehr', () => {
     const erster = folge(start, (jetzt) => grubeAuf(jetzt, 2), (jetzt) => reaktion(jetzt, true), farbkarte, zugBeenden)
     expect(hand(erster.zustand, 2), 'A6: der Verteidiger hat nicht nachgezogen').toHaveLength(4)
     const zweiter = fuehreAus(erster.zustand, grubeAuf(erster.zustand, 2))
-    expect(zweiter.zustand.schwebend, 'A6: ohne Farbenschutz wird er nicht gefragt').toBeNull()
-    expect(zweiter.zustand.ausliegendeGruben.map((grube) => grube.vor)).toEqual([2])
+    expect(aktionen(zweiter.zustand), 'A6, D33: ohne Farbenschutz kann er nur durchlassen').toEqual([{ typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: null }])
+    const durch = fuehreAus(zweiter.zustand, reaktion(zweiter.zustand, false))
+    expect(durch.zustand.ausliegendeGruben.map((grube) => grube.vor)).toEqual([2])
   })
 
   it('E4 Grenzfall: ein Verteidiger mit zwei Farbenschutz verbraucht einen und kann den zweiten Angriff derselben Runde abwehren', () => {
@@ -292,13 +307,18 @@ describe('A6/E4 Kriterium 8: Speichern und Laden mitten in einer offenen Frage',
   })
 })
 
-describe('B2: wer Farbenschutz hält, verraten die Ereignisse erst, wenn er ihn spielt', () => {
-  it('B2: lässt ein Betroffener mit Farbenschutz durch, melden die Ereignisse dasselbe wie ohne Farbenschutz', () => {
-    const mitSchutz = tisch([MIT_GRUBE, MIT_SCHUTZ]).zustand()
-    const ohneSchutz = tisch([MIT_GRUBE, ['Violett', 'Blau', 'Rot', 'Gelb', 'Grün']]).zustand()
-    const durchgelassen = folge(mitSchutz, (jetzt) => grubeAuf(jetzt, 1), (jetzt) => reaktion(jetzt, false)).ereignisse
-    const ohneFrage = fuehreAus(ohneSchutz, grubeAuf(ohneSchutz, 1)).ereignisse
-    expect(durchgelassen).toEqual(ohneFrage)
-    expect(ohneFrage.map((ereignis) => ereignis.typ)).toEqual(['KarteAngesagt', 'AnsageEntschieden'])
+describe('B2, D33: wer Farbenschutz hält, verraten Ereignisse und Entscheider erst, wenn er ihn spielt', () => {
+  it('B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält', () => {
+    const verlauf = (zweiteHand: Kartenwahl[]) => {
+      let zustand = tisch([MIT_GRUBE, zweiteHand, FUENF]).zustand()
+      return [(jetzt: Spielzustand) => grubeAuf(jetzt, 1), (jetzt: Spielzustand) => reaktion(jetzt, false), farbkarte, zugBeenden].map((waehle) => {
+        const schritt = fuehreAus(zustand, waehle(zustand))
+        zustand = schritt.zustand
+        return { ereignisse: schritt.ereignisse, entscheider: ermittleEntscheider(zustand) }
+      })
+    }
+    const mitSchutz = verlauf(MIT_SCHUTZ)
+    expect(mitSchutz).toEqual(verlauf(['Violett', 'Blau', 'Rot', 'Gelb', 'Grün']))
+    expect(mitSchutz[0]).toMatchObject({ entscheider: 1, ereignisse: [{ typ: 'KarteAngesagt' }, { typ: 'AbwehrGefragt', spielerIndex: 1 }] })
   })
 })

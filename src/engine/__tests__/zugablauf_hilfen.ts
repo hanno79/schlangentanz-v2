@@ -109,6 +109,11 @@ export function reaktion(zustand: Spielzustand, abwehren: boolean): SpielAktion 
   return passend[0]
 }
 
+/** Der Gefragte lässt durch (A6); das kann jeder Betroffene, auch ohne Farbenschutz (D33). */
+export function durchlassen(zustand: Spielzustand): SpielAktion {
+  return reaktion(zustand, false)
+}
+
 /** Die erste aufgezählte Farbkarte, für Züge, in denen es nur darauf ankommt, dass eine Karte gespielt ist. */
 export function farbkarte(zustand: Spielzustand): SpielAktion {
   const passend = aktionen(zustand, 'FarbkarteLegen')

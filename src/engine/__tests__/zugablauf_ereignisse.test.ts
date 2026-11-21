@@ -17,10 +17,8 @@ Schlangen, wer am Zug ist, in welchem Teilzug (A7.8) und in welchem
 Abschnitt, ausliegende Gruben, Partiephase und Auslöser (A5, A6, A7.6, A10).
 
 Seit E4 auch die angesagte Karte, die schwebt, bis die Betroffenen entschieden
-haben (A6), die Abwehr (A7.2) und die Grube ohne Wirkung (D29). Wer gerade
-gefragt wird, steht absichtlich in keinem Ereignis: Gefragt wird nur, wer
-Farbenschutz hält, und das ist verdeckt (B2). Die Oberfläche erfährt es aus
-`ermittleEntscheider`, für den Menschen allein.
+haben (A6), wer gerade gefragt ist (D33: jeder Betroffene, deshalb ohne
+Geheimnis, B2), die Abwehr (A7.2) und die Grube ohne Wirkung (D29).
 */
 
 interface Lage {
@@ -38,6 +36,8 @@ interface Lage {
   ausloeser: number | null
   /** Die angesagte Karte, die noch schwebt (A6). */
   schwebend: string | null
+  /** Wer über die schwebende Karte gerade entscheidet (A6, D33). */
+  gefragt: number | null
 }
 
 function lageVon(zustand: Spielzustand): Lage {
@@ -58,6 +58,7 @@ function lageVon(zustand: Spielzustand): Lage {
     partiephase: zustand.partiephase,
     ausloeser: zustand.schlussrundeAusloeser,
     schwebend: zustand.schwebend?.karte.id ?? null,
+    gefragt: zustand.schwebend?.ausstehend[0] ?? null,
   }
 }
 
@@ -88,8 +89,12 @@ function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
         lage.haende[ereignis.spielerIndex] -= 1
         lage.ablagestapel[ereignis.spielerIndex].push(ereignis.karteId)
         break
+      case 'AbwehrGefragt':
+        lage.gefragt = ereignis.spielerIndex
+        break
       case 'AnsageEntschieden':
         lage.schwebend = null
+        lage.gefragt = null
         lege(lage, ereignis.karteId, ereignis.nach, ereignis.spielerIndex)
         break
       case 'KartenGezogen':

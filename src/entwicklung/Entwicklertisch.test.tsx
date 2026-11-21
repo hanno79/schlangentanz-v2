@@ -218,4 +218,16 @@ describe('K1: Knopf „KI-Schritt“ am Entwicklertisch', () => {
     expect(deserialisiere(zustandsText()).schwebend).toBeNull()
     expect(screen.getByTestId('ereignisse')).toHaveTextContent('AnsageEntschieden')
   })
+
+  it('D33: trifft die Grube eine KI ohne Farbenschutz, wird sie gefragt; „KI-Schritt“ lässt durch, und es geht weiter', () => {
+    oeffne('/dev?szenario=schlangengrube')
+    fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => text.includes('"zielSpielerId":"spieler-2"'))!))
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('AbwehrGefragt')
+    expect(aktionsKnoepfe()).toEqual([JSON.stringify({ typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: null })])
+    expect(kiKnopf()).toBeEnabled()
+    fireEvent.click(kiKnopf())
+    expect(verlaufseintraege().at(-1)).toHaveTextContent('KI-Schritt: Reagieren: durchlassen')
+    expect(deserialisiere(zustandsText()).ausliegendeGruben).toMatchObject([{ gespieltVon: 0, vor: 1 }])
+    expect(screen.getByTestId('ki-schritt-hinweis')).toHaveTextContent('Spieler 1 entscheidet; das ist ein Mensch.')
+  })
 })
