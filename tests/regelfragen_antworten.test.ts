@@ -29,7 +29,7 @@ const DATUM_F = '13.11.2026'
 const DATUM_G9 = '20.11.2026'
 
 /** `datum` fehlt bei den Antworten vom 13.11.2026 (`DATUM_F`). */
-type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string; teile?: Record<string, Teil> }
+type Erwartung = { wahl: string; kern: string[]; verboten?: string[]; wortlaut?: string[]; datum?: string; teile?: Record<string, Teil>; eintrag?: string }
 
 /**
  * Was der Autor gewählt hat, abgeleitet aus seinen Worten, nicht aus den Dateien:
@@ -140,11 +140,18 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
     })
   }
 
-  for (const [nr, { teile }] of Object.entries(ERWARTET)) {
-    if (!teile) continue
-    it(`P0.5e: ${nr}: jeder gewählte Teil hat eine eigene Kernaussage, jede andere Möglichkeit desselben Teils eine Gegenprobe`, () => {
+  for (const [nr, { teile, eintrag }] of Object.entries(ERWARTET)) {
+    if (!teile || eintrag === undefined) continue
+    it(`P0.5e: ${nr}: Teil D besteht genau aus dem ganzen Satz je gewähltem Teil, dazu Wortlaut und „Website folgt.“`, () => {
+      const antwort = teilD.get(nr)?.antwort ?? ''
+      expect(antwort, `${nr}: Teil D, Spalte „Antwort“, Satz für Satz`).toBe(eintrag)
+      for (const [buchstabe, { satz }] of Object.entries(teile)) {
+        expect(antwort.split(satz).length - 1, `${nr} ${buchstabe}: Satz steht nicht genau einmal in Teil D: „${satz}“`).toBe(1)
+      }
+    })
+
+    it(`P0.5e: ${nr}: jeder Satz gibt die gewählte Möglichkeit seines Teils wieder, jede andere Möglichkeit desselben Teils hat eine Gegenprobe`, () => {
       const block = bloecke.get(nr) ?? ''
-      const eintrag = vergleichbar(teilD.get(nr)?.antwort ?? '')
       const gruppen = teileDerFrage(block)
       const gewaehlteBuchstaben = Object.keys(teile)
       expect(
@@ -152,24 +159,25 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
         `${nr}: je Teil der Frage genau eine gewählte Möglichkeit, in der Reihenfolge der Teile`,
       ).toEqual(gruppen.map((_, i) => i))
 
-      for (const [buchstabe, { kern, verboten }] of Object.entries(teile)) {
+      for (const [buchstabe, { satz, beleg, verboten }] of Object.entries(teile)) {
         const andereTeile = gewaehlteBuchstaben.filter((b) => b !== buchstabe).map((b) => vergleichbar(moeglichkeitText(block, b)))
         const gruppe = gruppen.find((g) => g.includes(buchstabe)) ?? []
-        expect(kern.length, `${nr} ${buchstabe}: keine Kernaussage`).toBeGreaterThan(0)
-        for (const aussage of kern.map(vergleichbar)) {
-          expect(vergleichbar(moeglichkeitText(block, buchstabe)), `${nr} ${buchstabe}: Kernaussage stammt nicht aus der Möglichkeit`).toContain(aussage)
+        expect(beleg.length, `${nr} ${buchstabe}: kein Beleg aus der Möglichkeit`).toBeGreaterThan(0)
+        for (const stelle of beleg.map(vergleichbar)) {
+          expect(vergleichbar(moeglichkeitText(block, buchstabe)), `${nr} ${buchstabe}: Beleg stammt nicht aus der Möglichkeit`).toContain(stelle)
+          expect(vergleichbar(satz), `${nr} ${buchstabe}: Satz gibt den Beleg „${stelle}“ nicht wieder`).toContain(stelle)
           for (const text of andereTeile) {
-            expect(text, `${nr} ${buchstabe}: Kernaussage „${aussage}“ passt auch zu einem anderen Teil`).not.toContain(aussage)
+            expect(text, `${nr} ${buchstabe}: Beleg „${stelle}“ passt auch zu einem anderen Teil`).not.toContain(stelle)
           }
-          expect(eintrag.split(aussage).length - 1, `${nr} ${buchstabe}: Kernaussage „${aussage}“ steht nicht genau einmal in Teil D`).toBe(1)
         }
         expect(Object.keys(verboten), `${nr} ${buchstabe}: Gegenproben für genau die anderen Möglichkeiten dieses Teils`).toEqual(
           gruppe.filter((b) => b !== buchstabe),
         )
-        for (const [andere, saetze] of Object.entries(verboten)) {
-          expect(saetze.length, `${nr} ${andere}: keine Gegenprobe`).toBeGreaterThan(0)
-          for (const satz of saetze.map(vergleichbar)) {
-            expect(vergleichbar(moeglichkeitText(block, andere)), `${nr} ${andere}: Gegenprobe „${satz}“ stammt nicht aus der Möglichkeit`).toContain(satz)
+        for (const [andere, stellen] of Object.entries(verboten)) {
+          expect(stellen.length, `${nr} ${andere}: keine Gegenprobe`).toBeGreaterThan(0)
+          for (const stelle of stellen.map(vergleichbar)) {
+            expect(vergleichbar(moeglichkeitText(block, andere)), `${nr} ${andere}: Gegenprobe „${stelle}“ stammt nicht aus der Möglichkeit`).toContain(stelle)
+            expect(vergleichbar(satz), `${nr} ${buchstabe}: Satz enthält die Gegenprobe „${stelle}“`).not.toContain(stelle)
           }
         }
       }
