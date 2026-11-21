@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { SpielAktion, ZugBeendenAktion } from '../../engine'
 import { auswahlstand, waehle, wahlSchluessel } from '../spiel/auswahl'
-import type { Auswahl, Wahl } from '../spiel/auswahl'
+import type { Auswahl, Wahl, WahlDerArt } from '../spiel/auswahl'
 
 /*
 Die Bedienung am Tisch (Plan O5): Karte antippen, dann Ziele antippen, dann
@@ -9,20 +9,24 @@ die Ansage bestätigen. Der Hook hält nur, was der Mensch angetippt hat; was
 angeboten ist und wann eine Aktion fertig ist, sagt `auswahl` aus den Aktionen
 der Engine (U3). Mit einem neuen Spielstand beginnt die Auswahl von vorn.
 
-Bedienbar sind in O5 alle aufgezählten Aktionen ausser der Schlangenhäutung,
-die ihre Oberfläche mit O7 bekommt, und der Abwehr, die O6 baut. Die
-Oberfläche lässt sie nur weg, sie baut keine Aktion selbst.
+Bedienbar sind alle aufgezählten Aktionen ausser der Abwehr, die O6 baut; die
+Schlangenhäutung kam mit O7 dazu (`haeutung.ts`). Die Oberfläche lässt die
+Abwehr nur weg, sie baut keine Aktion selbst.
 */
 
-const NICHT_IN_O5: ReadonlySet<SpielAktion['typ']> = new Set(['SchlangenhaeutungSpielen', 'Reagieren'])
+const NOCH_NICHT_BEDIENBAR: ReadonlySet<SpielAktion['typ']> = new Set(['Reagieren'])
 
-/** Die Aktionen der Engine, die O5 bedienbar macht. */
+/** Die Aktionen der Engine, die der Tisch bedienbar macht. */
 function bedienbareAktionen(aktionen: readonly SpielAktion[]): SpielAktion[] {
-  return aktionen.filter((aktion) => !NICHT_IN_O5.has(aktion.typ))
+  return aktionen.filter((aktion) => !NOCH_NICHT_BEDIENBAR.has(aktion.typ))
 }
 
-/** Wahlen, die nicht am Tisch als Ziel stehen: Handkarte, Zug beenden, Abwerfen (Dialog), Abwehr (O6). */
-const KEIN_ZIEL: ReadonlySet<Wahl['art']> = new Set(['karte', 'zugBeenden', 'abwerfen', 'abwehren', 'durchlassen'])
+/**
+ * Wahlen, die nicht am Tisch als Ziel stehen: Handkarte, Zug beenden, Abwerfen
+ * (Dialog), Abwehr (O6) und die Reihenfolge der Häutung, die der Mensch durch
+ * Tauschen legt (O7).
+ */
+const KEIN_ZIEL: ReadonlySet<Wahl['art']> = new Set(['karte', 'zugBeenden', 'abwerfen', 'abwehren', 'durchlassen', 'reihenfolge'])
 
 export interface Bedienung {
   /** Die bedienbaren Aktionen der Engine. */
@@ -123,8 +127,6 @@ export function useZiele(): Bedienung | null {
 export function zieleDerSchlange(bedienung: Bedienung | null, schlangenId: string): Wahl[] {
   return bedienung === null ? [] : bedienung.ziele.filter((wahl) => 'schlangenId' in wahl && wahl.schlangenId === schlangenId)
 }
-
-type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
 
 /** Das erste Ziel dieser Art in `ziele`, auf das `passt` zutrifft. */
 export function zielDerArt<A extends Wahl['art']>(ziele: readonly Wahl[], art: A, passt: (wahl: WahlDerArt<A>) => boolean = () => true): WahlDerArt<A> | undefined {

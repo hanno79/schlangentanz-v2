@@ -7,7 +7,8 @@ Szenarien für den Spieltisch unter `/spiel?szenario=<name>` (O3, Kriterium 7).
 Sie zeigen, was die Partie-Steuerung ohne Bedienung trägt: eine offene
 Abwehrfrage an dich und eine Schlussrunde, die die KI-Gegner allein zu Ende
 spielen. Am Entwicklertisch lassen sie sich wie jedes Szenario mit Klicks
-weiterspielen. Für O5 kommt ein Zugende mit zu vielen Handkarten dazu (A5).
+weiterspielen. Für O5 kommt ein Zugende mit zu vielen Handkarten dazu (A5),
+für O7 eine Schlangenhäutung, die Punkte bringt oder nimmt (A7.9, A11).
 */
 
 export const SPIEL_SZENARIEN: readonly Szenario[] = [
@@ -57,6 +58,20 @@ export const SPIEL_SZENARIEN: readonly Szenario[] = [
         .aendere((zustand) => {
           zustand.zug.abschnitt = 'Abwerfen'
         })
+        .zustand(),
+  },
+  {
+    name: 'haeutung-punkte',
+    beschreibung:
+      'A7.9, A11, D9: Zwei Spieler, mit Erweiterung. Spieler 1 ist am Zug, hält eine Schlangenhäutung, Blau, Rot, Gelb und Violett und hat die Schlange Rot, Blau, Rot, Rot, Gelb (0 Punkte). KI-Gegner 1 hat die Schlange Grün, Grün, Grün, Blau, Rot (9 Punkte) und keinen Farbenschutz.',
+    erwartet:
+      'Unter /spiel: Häutung, „Deine Schlange 1 wählen“, Karte 1 und Karte 4 antippen, Blau mit dem letzten Rot tauschen: die Zugleiste zeigt „Deine Punkte: vorher 0, nachher 3“, die Schlange die Farbgruppe Rot (3). In der Schlange von KI-Gegner 1 Karte 1 bis 4 und Grün mit Blau tauschen: „Punkte von KI-Gegner 1: vorher 9, nachher 0“.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(94) })
+        .hand(0, ['Schlangenhäutung', 'Blau', 'Rot', 'Gelb', 'Violett'])
+        .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün', 'Violett'])
+        .schlange(0, ['Rot', 'Blau', 'Rot', 'Rot', 'Gelb'])
+        .schlange(1, ['Grün', 'Grün', 'Grün', 'Blau', 'Rot'])
         .zustand(),
   },
 ]
