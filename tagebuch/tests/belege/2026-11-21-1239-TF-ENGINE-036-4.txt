@@ -1,0 +1,234 @@
+Gegenprobe GP4: farbendieb.ts Z.113 betroffene = alle Mitspieler statt nur Besitzer der Quellschlange (D33)
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4b8416084ede2be2
+
+ ❯ src/entwicklung/szenarienFarbendieb.test.ts (5 tests | 3 failed) 86ms
+     × A7.1/A7.2: farbendieb-abwehr: KI-Gegner 1 wehrt ab; seine grüne Dreiergruppe bleibt, Farbendieb und Farbenschutz liegen je beim eigenen Spieler 17ms
+     × D17/F4: farbendieb-abwehr: lässt KI-Gegner 1 durch, beginnt das Grün eine neue Schlange von Spieler 1 7ms
+     × E8 Grenzfall: farbendieb-abwehr: das Blau von KI-Gegner 2 ist seine letzte Karte; seine Schlange verschwindet 5ms
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts (8 tests | 6 failed) 22609ms
+     × A7.1/A7.2: B wehrt ab; seine Karte bleibt liegen, der Farbendieb liegt auf dem Ablagestapel von A, der Farbenschutz auf dem von B 56ms
+     × A6/B2: abgewehrt lässt sich der Farbendieb nicht auf ein anderes Ziel lenken 10ms
+     × A7.2: wer Farbenschutz hält und durchlässt, verliert die Karte und behält den Farbenschutz 6ms
+     × A6/D33: betroffen ist nur der Besitzer der Schlange, aus der gestohlen wird; er wird gefragt, auch ohne Farbenschutz, B mit Farbenschutz nicht 9ms
+     × A6: die Wirkung tritt erst nach der Entscheidung ein; bis dahin schwebt der Farbendieb, und die Schlangen sind unverändert 7ms
+     × A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt genau dort fort; danach wird gestohlen 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarienFarbendieb.test.ts > E8: Szenarien des Farbendiebs > A7.1/A7.2: farbendieb-abwehr: KI-Gegner 1 wehrt ab; seine grüne Dreiergruppe bleibt, Farbendieb und Farbenschutz liegen je beim eigenen Spieler
+AssertionError: expected [ 'Abgewehrt', 'AbwehrGefragt' ] to deeply equal [ 'Abgewehrt', 'AnsageEntschieden' ]
+
+- Expected
++ Received
+
+  [
+    "Abgewehrt",
+-   "AnsageEntschieden",
++   "AbwehrGefragt",
+  ]
+
+ ❯ src/entwicklung/szenarienFarbendieb.test.ts:78:38
+     76|     expect(ermittleAktionen(angesagt.zustand).map((aktion) => aktion.t…
+     77|     const abwehr = klicke(angesagt.zustand, abwehren)
+     78|     expect(typen(abwehr.ereignisse)).toEqual(['Abgewehrt', 'AnsageEnts…
+       |                                      ^
+     79|     expect(farben(abwehr.zustand, 1)).toEqual([['Grün', 'Grün', 'Grün'…
+     80|     expect(abwehr.zustand.spieler[0].schlangen).toEqual([])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/entwicklung/szenarienFarbendieb.test.ts > E8: Szenarien des Farbendiebs > D17/F4: farbendieb-abwehr: lässt KI-Gegner 1 durch, beginnt das Grün eine neue Schlange von Spieler 1
+AssertionError: expected [] to deeply equal [ [ 'Grün' ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "Grün",
+-   ],
+- ]
++ []
+
+ ❯ src/entwicklung/szenarienFarbendieb.test.ts:87:32
+     85|   it('D17/F4: farbendieb-abwehr: lässt KI-Gegner 1 durch, beginnt das …
+     86|     const { zustand } = klicke(erzeuge('farbendieb-abwehr'), stiehl(1,…
+     87|     expect(farben(zustand, 0)).toEqual([['Grün']])
+       |                                ^
+     88|     expect(farben(zustand, 1)).toEqual([['Grün', 'Grün']])
+     89|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/entwicklung/szenarienFarbendieb.test.ts > E8: Szenarien des Farbendiebs > E8 Grenzfall: farbendieb-abwehr: das Blau von KI-Gegner 2 ist seine letzte Karte; seine Schlange verschwindet
+AssertionError: expected [] to deeply equal [ [ 'Blau' ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "Blau",
+-   ],
+- ]
++ []
+
+ ❯ src/entwicklung/szenarienFarbendieb.test.ts:93:32
+     91|   it('E8 Grenzfall: farbendieb-abwehr: das Blau von KI-Gegner 2 ist se…
+     92|     const { zustand } = klicke(erzeuge('farbendieb-abwehr'), stiehl(2,…
+     93|     expect(farben(zustand, 0)).toEqual([['Blau']])
+       |                                ^
+     94|     expect(zustand.spieler[2].schlangen).toEqual([])
+     95|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A7.1, A7.2: der Farbendieb kann durch Farbenschutz abgewehrt werden (E8 Kriterium 3) > A7.1/A7.2: B wehrt ab; seine Karte bleibt liegen, der Farbendieb liegt auf dem Ablagestapel von A, der Farbenschutz auf dem von B
+AssertionError: expected [] to deeply equal [ 'farbendieb-01' ]
+
+- Expected
++ Received
+
+- [
+-   "farbendieb-01",
+- ]
++ []
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:47:32
+     45|     expect(zustand.spieler[1].schlangen, 'A7.2: B bleibt unberührt').t…
+     46|     expect(schlangenVon(zustand, 0)).toEqual([['Rot']])
+     47|     expect(ablage(zustand, 0)).toEqual([dieb])
+       |                                ^
+     48|     expect(ablage(zustand, 1)).toEqual([schutz])
+     49|     expect(hand(zustand, 1), 'A6: wer abwehrt, zieht nicht gleich nach…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A7.1, A7.2: der Farbendieb kann durch Farbenschutz abgewehrt werden (E8 Kriterium 3) > A6/B2: abgewehrt lässt sich der Farbendieb nicht auf ein anderes Ziel lenken
+AssertionError: expected 'Die Farbendieb schwebt noch: Erst ent…' to match /nicht auf der Hand/
+
+- Expected:
+/nicht auf der Hand/
+
++ Received:
+"Die Farbendieb schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6)."
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:65:40
+     63|     const abgewehrt = fuehreAus(angesagt, reaktion(angesagt, true)).zu…
+     64|     expect(ermittleAktionen(abgewehrt).map((aktion) => aktion.typ)).no…
+     65|     expect(grund(abgewehrt, umlenken)).toMatch(/nicht auf der Hand/)
+       |                                        ^
+     66|   })
+     67|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A7.1, A7.2: der Farbendieb kann durch Farbenschutz abgewehrt werden (E8 Kriterium 3) > A7.2: wer Farbenschutz hält und durchlässt, verliert die Karte und behält den Farbenschutz
+AssertionError: expected [ [ 'Grün', 'Grün', 'Grün' ] ] to deeply equal [ [ 'Grün', 'Grün' ] ]
+
+- Expected
++ Received
+
+  [
+    [
+      "Grün",
+      "Grün",
++     "Grün",
+    ],
+  ]
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:72:38
+     70|     const gruen = karteIn(start, 1, 0, 2)
+     71|     const { zustand } = folge(start, (jetzt) => stiehl(jetzt, gruen, a…
+     72|     expect(schlangenVon(zustand, 1)).toEqual([['Grün', 'Grün']])
+       |                                      ^
+     73|     expect(karteIn(zustand, 0, 0, 1)).toBe(gruen)
+     74|     expect(hand(zustand, 1)).toEqual(hand(start, 1))
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A6, D33: Ansage und Betroffene beim Farbendieb > A6/D33: betroffen ist nur der Besitzer der Schlange, aus der gestohlen wird; er wird gefragt, auch ohne Farbenschutz, B mit Farbenschutz nicht
+AssertionError: expected [ Array(2) ] to deeply equal [ Array(2) ]
+
+- Expected
++ Received
+
+@@ -13,17 +13,18 @@
+          "position": 1,
+          "schlangenId": "schlange-1",
+        },
+      },
+      "betroffene": [
++       1,
+        2,
+      ],
+      "karteId": "farbendieb-01",
+      "spielerIndex": 0,
+      "typ": "KarteAngesagt",
+    },
+    {
+      "karteId": "farbendieb-01",
+-     "spielerIndex": 2,
++     "spielerIndex": 1,
+      "typ": "AbwehrGefragt",
+    },
+  ]
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:84:24
+     82|     const ansage = stiehl(start, karteIn(start, 2, 0, 1), anDasEnde(st…
+     83|     const { zustand, ereignisse } = fuehreAus(start, ansage)
+     84|     expect(ereignisse).toEqual([
+       |                        ^
+     85|       { typ: 'KarteAngesagt', spielerIndex: 0, karteId: dieb, ansage, …
+     86|       { typ: 'AbwehrGefragt', spielerIndex: 2, karteId: dieb },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A6, D33: Ansage und Betroffene beim Farbendieb > A6: die Wirkung tritt erst nach der Entscheidung ein; bis dahin schwebt der Farbendieb, und die Schlangen sind unverändert
+AssertionError: expected { karte: { …(3) }, …(3) } to match object { aktion: { …(5) }, …(2) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -14,7 +14,8 @@
+        "schlangenId": "schlange-1",
+      },
+    },
+    "ausstehend": [
+      1,
++     2,
+    ],
+  }
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:96:31
+     94|     const ansage = stiehl(start, karteIn(start, 1, 0, 0), anDasEnde(st…
+     95|     const { zustand } = fuehreAus(start, ansage)
+     96|     expect(zustand.schwebend).toMatchObject({ aktion: ansage, ausstehe…
+       |                               ^
+     97|     expect(zustand.spieler.map((spieler) => spieler.schlangen)).toEqua…
+     98|     expect(ablage(zustand, 0)).toEqual([])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A6, D33: Ansage und Betroffene beim Farbendieb > A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt genau dort fort; danach wird gestohlen
+TypeError: Cannot read properties of undefined (reading 'id')
+ ❯ karteIn src/engine/__tests__/farbendieb_hilfen.ts:33:70
+     31| /** Die Id der Karte an `stelle` in der `schlange`-ten Schlange von `s…
+     32| export function karteIn(zustand: Spielzustand, spieler: number, schlan…
+     33|   return zustand.spieler[spieler].schlangen[schlange].karten[stelle].id
+       |                                                                      ^
+     34| }
+     35|
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:109:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  9 failed | 33 passed (42)
+   Start at  12:22:13
+   Duration  47.34s (transform 10.81s, setup 4.57s, import 10.71s, tests 22.99s, environment 79.19s)
+
+exit 1

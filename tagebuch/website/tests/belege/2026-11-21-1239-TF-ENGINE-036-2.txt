@@ -1,0 +1,281 @@
+Gegenprobe GP2: farbendieb.ts Z.125 splice(ziel.position, 0, karte) -> splice(0, 0, karte): die Karte landet immer an Stelle 0
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4b8416084ede2be2
+
+ ❯ src/engine/__tests__/farbendieb_ereignisse.test.ts (3 tests | 1 failed) 58ms
+     × A7.1: in eine eigene Schlange: Herkunft in der Schlange des Gegners, Ziel an der angesagten Stelle; danach AnsageEntschieden 45ms
+ ❯ src/engine/__tests__/farbendieb.test.ts (26 tests | 5 failed) 149ms
+     × A7.1 Beispiel: Spieler A stiehlt eine blaue Karte aus der Schlange von Spieler B und fügt sie an seine eigene Schlange an; der Farbendieb kommt auf seinen Ablagestapel 43ms
+     × A7.1: an eine beliebige Position: an Stelle 1 liegt die Karte danach genau dort 6ms
+     × A7.1: an eine beliebige Position: an Stelle 2 liegt die Karte danach genau dort 6ms
+     × A7.1: auch in die zweite eigene Schlange 5ms
+     × E8 Grenzfall: gestohlen wird die letzte Karte einer Schlange; die Schlange verschwindet, und der Gegner darf wieder eine neue beginnen 5ms
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts (8 tests | 3 failed) 3097ms
+     × A7.2: wer Farbenschutz hält und durchlässt, verliert die Karte und behält den Farbenschutz 16ms
+     × A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt genau dort fort; danach wird gestohlen 10ms
+     × A7.1/D2/D17: 40 Zufallspartien mit 2, 3 und 4 Spielern enden; jeder Farbendieb wirkt wie angesagt 3009ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/farbendieb.test.ts > A7.1: das Beispiel der Website > A7.1 Beispiel: Spieler A stiehlt eine blaue Karte aus der Schlange von Spieler B und fügt sie an seine eigene Schlange an; der Farbendieb kommt auf seinen Ablagestapel
+AssertionError: expected [ [ 'Blau', 'Rot', 'Rot' ] ] to deeply equal [ [ 'Rot', 'Rot', 'Blau' ] ]
+
+- Expected
++ Received
+
+  [
+    [
++     "Blau",
+      "Rot",
+      "Rot",
+-     "Blau",
+    ],
+  ]
+
+ ❯ src/engine/__tests__/farbendieb.test.ts:39:38
+     37|     const blau = karteIn(start, 1, 0, 1)
+     38|     const { zustand, ereignisse } = stiehlUndDurch(start, blau, { art:…
+     39|     expect(schlangenVon(zustand, 0)).toEqual([['Rot', 'Rot', 'Blau']])
+       |                                      ^
+     40|     expect(karteIn(zustand, 0, 0, 2)).toBe(blau)
+     41|     expect(schlangenVon(zustand, 1), 'A7.1: die Karte ist aus der Schl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb.test.ts > A7.1, D17: wohin die gestohlene Karte kommt (E8 Kriterium 2) > A7.1: an eine beliebige Position: an Stelle 1 liegt die Karte danach genau dort
+AssertionError: expected [ Array(2) ] to deeply equal [ Array(2) ]
+
+- Expected
++ Received
+
+@@ -1,9 +1,9 @@
+  [
+    [
+-     "Rot",
+      "Blau",
++     "Rot",
+      "Rot",
+    ],
+    [
+      "Gelb",
+    ],
+
+ ❯ src/engine/__tests__/farbendieb.test.ts:138:38
+    136|     const blau = karteIn(start, 1, 0, 0)
+    137|     const { zustand } = stiehlUndDurch(start, blau, { art: 'schlange',…
+    138|     expect(schlangenVon(zustand, 0)).toEqual([erwartet, ['Gelb']])
+       |                                      ^
+    139|     expect(karteIn(zustand, 0, 0, position)).toBe(blau)
+    140|     expect(zustand.spieler[0].schlangen, 'A5: kein Spieler hat mehr al…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb.test.ts > A7.1, D17: wohin die gestohlene Karte kommt (E8 Kriterium 2) > A7.1: an eine beliebige Position: an Stelle 2 liegt die Karte danach genau dort
+AssertionError: expected [ Array(2) ] to deeply equal [ Array(2) ]
+
+- Expected
++ Received
+
+  [
+    [
++     "Blau",
+      "Rot",
+      "Rot",
+-     "Blau",
+    ],
+    [
+      "Gelb",
+    ],
+  ]
+
+ ❯ src/engine/__tests__/farbendieb.test.ts:138:38
+    136|     const blau = karteIn(start, 1, 0, 0)
+    137|     const { zustand } = stiehlUndDurch(start, blau, { art: 'schlange',…
+    138|     expect(schlangenVon(zustand, 0)).toEqual([erwartet, ['Gelb']])
+       |                                      ^
+    139|     expect(karteIn(zustand, 0, 0, position)).toBe(blau)
+    140|     expect(zustand.spieler[0].schlangen, 'A5: kein Spieler hat mehr al…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb.test.ts > A7.1, D17: wohin die gestohlene Karte kommt (E8 Kriterium 2) > A7.1: auch in die zweite eigene Schlange
+AssertionError: expected [ [ 'Rot', 'Rot' ], …(1) ] to deeply equal [ [ 'Rot', 'Rot' ], …(1) ]
+
+- Expected
++ Received
+
+@@ -2,9 +2,9 @@
+    [
+      "Rot",
+      "Rot",
+    ],
+    [
+-     "Gelb",
+      "Braun",
++     "Gelb",
+    ],
+  ]
+
+ ❯ src/engine/__tests__/farbendieb.test.ts:146:38
+    144|     const start = mitZweiSchlangen()
+    145|     const { zustand } = stiehlUndDurch(start, karteIn(start, 1, 0, 1),…
+    146|     expect(schlangenVon(zustand, 0)).toEqual([['Rot', 'Rot'], ['Gelb',…
+       |                                      ^
+    147|     expect(schlangenVon(zustand, 1)).toEqual([['Blau']])
+    148|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb.test.ts > A7.1, D13, A5: Grenzfälle des Farbendiebs (E8) > E8 Grenzfall: gestohlen wird die letzte Karte einer Schlange; die Schlange verschwindet, und der Gegner darf wieder eine neue beginnen
+AssertionError: expected [ [ 'Blau', 'Rot' ] ] to deeply equal [ [ 'Rot', 'Blau' ] ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "Rot",
+      "Blau",
++     "Rot",
+    ],
+  ]
+
+ ❯ src/engine/__tests__/farbendieb.test.ts:209:38
+    207|     const { zustand } = stiehlUndDurch(start, karteIn(start, 1, 1, 0),…
+    208|     expect(schlangenVon(zustand, 1)).toEqual([['Gelb', 'Gelb']])
+    209|     expect(schlangenVon(zustand, 0)).toEqual([['Rot', 'Blau']])
+       |                                      ^
+    210|     expect(verletzteInvarianten(zustand)).toEqual([])
+    211|     const amZugB = folge(zustand, zugBeenden).zustand
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A7.1, A7.2: der Farbendieb kann durch Farbenschutz abgewehrt werden (E8 Kriterium 3) > A7.2: wer Farbenschutz hält und durchlässt, verliert die Karte und behält den Farbenschutz
+AssertionError: expected 'rot-05' to be 'gruen-05' // Object.is equality
+
+Expected: "gruen-05"
+Received: "rot-05"
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:73:39
+     71|     const { zustand } = folge(start, (jetzt) => stiehl(jetzt, gruen, a…
+     72|     expect(schlangenVon(zustand, 1)).toEqual([['Grün', 'Grün']])
+     73|     expect(karteIn(zustand, 0, 0, 1)).toBe(gruen)
+       |                                       ^
+     74|     expect(hand(zustand, 1)).toEqual(hand(start, 1))
+     75|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A6, D33: Ansage und Betroffene beim Farbendieb > A6/E4 Kriterium 8: Speichern und Laden mitten in der Frage setzt genau dort fort; danach wird gestohlen
+AssertionError: expected 'rot-05' to be 'gruen-03' // Object.is equality
+
+Expected: "gruen-03"
+Received: "rot-05"
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:109:39
+    107|     expect(geladen).toEqual(angesagt)
+    108|     const { zustand } = fuehreAus(geladen, durchlassen(geladen))
+    109|     expect(karteIn(zustand, 0, 0, 1)).toBe(gruen)
+       |                                       ^
+    110|   })
+    111| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_abwehr.test.ts > A7.1, D17: Dauerlauf mit dem Farbendieb (Plan 3.6, Punkt 7) > A7.1/D2/D17: 40 Zufallspartien mit 2, 3 und 4 Spielern enden; jeder Farbendieb wirkt wie angesagt
+AssertionError: expected [ …(40) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "verstoss: Saat 701, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":4}.",
++   "verstoss: Saat 702, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 703, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":3}.",
++   "verstoss: Saat 704, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-4\",\"position\":2}.",
++   "verstoss: Saat 705, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":3}.",
++   "verstoss: Saat 706, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 707, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":2}.",
++   "verstoss: Saat 708, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":3}.",
++   "verstoss: Saat 709, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":4}.",
++   "verstoss: Saat 710, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":2}.",
++   "verstoss: Saat 711, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":1}.",
++   "verstoss: Saat 712, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 713, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":2}.",
++   "verstoss: Saat 714, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":7}.",
++   "verstoss: Saat 715, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-4\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 716, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":2}.",
++   "verstoss: Saat 717, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":2}.",
++   "verstoss: Saat 718, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-5\",\"position\":1}.",
++   "verstoss: Saat 719, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":2}.",
++   "verstoss: Saat 720, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":2}.",
++   "verstoss: Saat 801, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":2}.",
++   "verstoss: Saat 802, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-4\",\"position\":2}.",
++   "verstoss: Saat 803, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":2}.",
++   "verstoss: Saat 804, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":2}.",
++   "verstoss: Saat 805, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 806, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-8\",\"position\":2}.",
++   "verstoss: Saat 807, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 808, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":1}.",
++   "verstoss: Saat 809, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":5}.",
++   "verstoss: Saat 810, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 811, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":3}.",
++   "verstoss: Saat 812, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-7\",\"position\":2}.",
++   "verstoss: Saat 813, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":2}.",
++   "verstoss: Saat 814, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-6\",\"position\":1}.",
++   "verstoss: Saat 815, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-4\",\"position\":1}.",
++   "verstoss: Saat 816, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-2\",\"position\":2}.",
++   "verstoss: Saat 817, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-4\",\"position\":3}.",
++   "verstoss: Saat 818, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":1}.",
++   "verstoss: Saat 819, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-3\",\"position\":2}.",
++   "verstoss: Saat 820, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D17: Die Karte liegt nicht an der angesagten Stelle {\"art\":\"schlange\",\"schlangenId\":\"schlange-1\",\"position\":5}.",
++ ]
+
+ ❯ src/engine/__tests__/farbendieb_abwehr.test.ts:173:87
+    171|     const ergebnisse = dauerlauf(partien, { neuerPruefer: () => diebPr…
+    172|     const nichtBeendet = ergebnisse.filter((ergebnis) => ergebnis.ausg…
+    173|     expect(nichtBeendet.map((ergebnis) => `${ergebnis.ausgang}: ${erge…
+       |                                                                                       ^
+    174|     expect(zaehler.gestohlen, 'gestohlene Karten im Dauerlauf').toBeGr…
+    175|     expect(zaehler.abgewehrt, 'abgewehrte Farbendiebe im Dauerlauf').t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_ereignisse.test.ts > A7.1, D17: KartenVersetzt meldet die gestohlene Karte (E4b) > A7.1: in eine eigene Schlange: Herkunft in der Schlange des Gegners, Ziel an der angesagten Stelle; danach AnsageEntschieden
+AssertionError: expected [ { typ: 'KartenVersetzt', …(4) } ] to deeply equal [ { typ: 'KartenVersetzt', …(4) } ]
+
+- Expected
++ Received
+
+@@ -5,11 +5,11 @@
+      "karten": [
+        {
+          "karteId": "blau-04",
+          "nach": {
+            "ort": "Schlange",
+-           "position": 1,
++           "position": 0,
+            "schlangenId": "schlange-1",
+            "spielerIndex": 0,
+          },
+          "von": {
+            "ort": "Schlange",
+
+ ❯ src/engine/__tests__/farbendieb_ereignisse.test.ts:37:57
+     35|     const dieb = diebId(start, 0)
+     36|     const { ereignisse } = nachgerechnet(start, (jetzt) => stiehl(jetz…
+     37|     expect(ereignisseVom(ereignisse, 'KartenVersetzt')).toEqual([
+       |                                                         ^
+     38|       {
+     39|         typ: 'KartenVersetzt',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  9 failed | 33 passed (42)
+   Start at  12:20:47
+   Duration  10.85s (transform 2.24s, setup 1.94s, import 2.52s, tests 3.36s, environment 17.43s)
+
+exit 1

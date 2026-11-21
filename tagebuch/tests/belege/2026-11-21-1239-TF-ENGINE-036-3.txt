@@ -1,0 +1,79 @@
+Gegenprobe GP3: kartenorte.ts Z.85 KartenVersetzt meldet bei Ziel in einer Schlange position + 1 (falsches Ziel nur im Ereignis, Zustand richtig)
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a4b8416084ede2be2
+
+ ❯ src/engine/__tests__/farbendieb_ereignisse.test.ts (3 tests | 2 failed) 56ms
+     × A7.1: in eine eigene Schlange: Herkunft in der Schlange des Gegners, Ziel an der angesagten Stelle; danach AnsageEntschieden 40ms
+     × D17/F4: ohne eigene Schlange nennt `nach` die neue Schlange mit ihrer Id; die leer gewordene Schlange des Gegners steht in `aufgeloest` 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/farbendieb_ereignisse.test.ts > A7.1, D17: KartenVersetzt meldet die gestohlene Karte (E4b) > A7.1: in eine eigene Schlange: Herkunft in der Schlange des Gegners, Ziel an der angesagten Stelle; danach AnsageEntschieden
+AssertionError: E2 Kriterium 11: der Schritt lässt sich nicht nachrechnen: expected { haende: [ 4, 5 ], …(13) } to deeply equal { haende: [ 4, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -20,12 +20,12 @@
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
+          "rot-04",
+-         "blau-04",
+          "rot-05",
++         "blau-04",
+        ],
+      },
+      "schlange-2": {
+        "besitzer": 1,
+        "karten": [
+
+ ❯ nachgerechnet src/engine/__tests__/farbendieb_ereignisse.test.ts:22:121
+     20|   for (const waehle of wahlen) {
+     21|     const schritt = folge(jetzt, waehle)
+     22|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), 'E2 Kriteri…
+       |                                                                                                                         ^
+     23|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     24|     ereignisse.push(...schritt.ereignisse)
+ ❯ src/engine/__tests__/farbendieb_ereignisse.test.ts:36:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/engine/__tests__/farbendieb_ereignisse.test.ts > A7.1, D17: KartenVersetzt meldet die gestohlene Karte (E4b) > D17/F4: ohne eigene Schlange nennt `nach` die neue Schlange mit ihrer Id; die leer gewordene Schlange des Gegners steht in `aufgeloest`
+AssertionError: expected [ { typ: 'KartenVersetzt', …(4) } ] to deeply equal [ { typ: 'KartenVersetzt', …(4) } ]
+
+- Expected
++ Received
+
+@@ -7,11 +7,11 @@
+      "karten": [
+        {
+          "karteId": "gruen-02",
+          "nach": {
+            "ort": "Schlange",
+-           "position": 0,
++           "position": 1,
+            "schlangenId": "schlange-2",
+            "spielerIndex": 0,
+          },
+          "von": {
+            "ort": "Schlange",
+
+ ❯ src/engine/__tests__/farbendieb_ereignisse.test.ts:56:57
+     54|     const neue = zustand.spieler[0].schlangen[0].id
+     55|     expect(neue).not.toBe(fremde)
+     56|     expect(ereignisseVom(ereignisse, 'KartenVersetzt')).toEqual([
+       |                                                         ^
+     57|       {
+     58|         typ: 'KartenVersetzt',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  12:21:41
+   Duration  4.27s (transform 558ms, setup 432ms, import 573ms, tests 56ms, environment 2.84s)
+
+exit 1
