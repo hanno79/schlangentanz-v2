@@ -257,6 +257,8 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `ZugBegonnen: ${wer(ereignis.spielerIndex)}, Teilzug ${ereignis.teilzug}`
     case 'KarteAngesagt':
       return `KarteAngesagt: ${wer(ereignis.spielerIndex)}, ${ereignis.karteId} (${ereignis.ansage.typ}) trifft ${ereignis.betroffene.map(wer).join(', ')}`
+    case 'AbwehrGefragt':
+      return `AbwehrGefragt: ${wer(ereignis.spielerIndex)} entscheidet, ob er ${ereignis.karteId} abwehrt`
     case 'Abgewehrt':
       return `Abgewehrt: ${wer(ereignis.spielerIndex)} wehrt ${ereignis.gegen} mit ${ereignis.karteId} ab`
     case 'AnsageEntschieden': {

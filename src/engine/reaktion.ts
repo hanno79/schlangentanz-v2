@@ -16,8 +16,9 @@ Der Reaktionsablauf (A6, A7.2, D10, Plan E4), für jede Sonderkarte gleich: Wer
 eine Sonderkarte gegen Mitspieler oder in ihre Schlange spielt, sagt sie mit
 Ziel an (B2), und sie schwebt. Betroffen sind die Besitzer der Ziele ohne den
 Angreifer, im Uhrzeigersinn ab ihm, jeder einmal, auch wenn mehrere seiner
-Karten getroffen sind (A6 Beispiel 2, D15). Gefragt wird nur, wer Farbenschutz
-hält; jeder entscheidet einmal, ob er abwehrt. Erst wenn alle entschieden haben,
+Karten getroffen sind (A6 Beispiel 2, D15). Gefragt wird jeder Betroffene, der
+Reihe nach; abwehren kann nur, wer Farbenschutz hält, wer keinen hält, kann nur
+durchlassen (D33). So verrät die Frage keine Handkarte (B2). Erst wenn alle entschieden haben,
 wirkt die Karte nach ihrem Eintrag im Kartenregister, und für die Abwehrenden
 hat sie keine Wirkung (A7.2). Haben alle abgewehrt, liegt sie wirkungslos auf
 dem Ablagestapel des Angreifers. Gegen Farbkarten gibt es keine Abwehr (A6).
@@ -39,8 +40,7 @@ function betroffeneVon(zustand: Spielzustand, karte: SonderkarteInfo, aktion: Ka
 /**
  * Eine Handkarte mit Wirkung spielen: Sie zählt zum Zug (A5, D12). Trifft sie
  * keinen Mitspieler, wirkt sie sofort. Sonst wird sie angesagt und schwebt, bis
- * die Gefragten entschieden haben; hält kein Betroffener Farbenschutz, wirkt sie
- * noch in dieser Aktion.
+ * jeder Betroffene entschieden hat (D33).
  */
 export function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereignisse: Ereignis[]): Spielzustand {
   const karte = zaehleGespielteKarte(zustand, aktion);
@@ -53,10 +53,10 @@ export function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereigni
     return nach;
   }
   entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId);
-  const ausstehend = betroffene.filter((index) => zustand.spieler[index].hand.some(istFarbenschutz));
-  zustand.schwebend = { karte, aktion: structuredClone(aktion), ausstehend, abgewehrt: [] };
+  zustand.schwebend = { karte, aktion: structuredClone(aktion), ausstehend: [...betroffene], abgewehrt: [] };
   ereignisse.push({ typ: 'KarteAngesagt', spielerIndex: spielerIndexVon(zustand, aktion.spielerId), karteId: karte.id, ansage: structuredClone(aktion), betroffene });
-  return ausstehend.length === 0 ? loeseAuf(zustand, ereignisse) : zustand;
+  ereignisse.push({ typ: 'AbwehrGefragt', spielerIndex: betroffene[0], karteId: karte.id });
+  return zustand;
 }
 
 /** Der Grund, warum diese Reaktion nicht geht, oder `null`. Ob der Spieler gerade gefragt ist, prüft die Aktionsschicht. */
@@ -71,7 +71,7 @@ export function pruefeReaktion(zustand: Spielzustand, spielerIndex: number, farb
   return null;
 }
 
-/** Was der Gefragte wählen darf: mit jedem seiner Farbenschutz abwehren oder durchlassen (A6, A7.2). */
+/** Was der Gefragte wählen darf: mit jedem seiner Farbenschutz abwehren oder durchlassen (A6, A7.2); ohne Farbenschutz nur durchlassen (D33). */
 export function reaktionsAktionen(zustand: Spielzustand, spielerIndex: number): ReagierenAktion[] {
   const { id, hand } = zustand.spieler[spielerIndex];
   const abwehren = hand.filter(istFarbenschutz).map((karte): ReagierenAktion => ({ typ: 'Reagieren', spielerId: id, farbenschutzId: karte.id }));
@@ -92,7 +92,10 @@ export function reagiere(zustand: Spielzustand, aktion: ReagierenAktion, ereigni
     schwebend.abgewehrt.push(spielerIndex);
     ereignisse.push({ typ: 'Abgewehrt', spielerIndex, karteId: aktion.farbenschutzId, gegen: schwebend.karte.id });
   }
-  return schwebend.ausstehend.length === 0 ? loeseAuf(zustand, ereignisse) : zustand;
+  const naechster = schwebend.ausstehend[0];
+  if (naechster === undefined) return loeseAuf(zustand, ereignisse);
+  ereignisse.push({ typ: 'AbwehrGefragt', spielerIndex: naechster, karteId: schwebend.karte.id });
+  return zustand;
 }
 
 /** A6: Alle haben entschieden; jetzt wirkt die Karte, ausser für die Abwehrenden (A7.2). */

@@ -153,20 +153,22 @@ export type Kartenort =
  * Was eine Aktion bewirkt hat, in der Reihenfolge, in der es geschah, damit die
  * Oberfläche keine Zustände vergleichen muss (Plan E2). Gezogene Karten stehen
  * nur als Anzahl da, weil Handkarten der Gegner verdeckt sind (B2).
- *
- * Wer bei einer angesagten Karte gerade gefragt wird, steht in keinem Ereignis:
- * Gefragt wird nur, wer Farbenschutz hält (Plan E4, Kriterium 3), und das ist
- * verdeckt, bis er ihn spielt (B2). Wer entscheidet, sagt `ermittleEntscheider`.
  */
 export type Ereignis =
   /** Eine Handkarte ist gespielt und hat gewirkt; `nach` sagt, wo sie danach liegt. Gilt für Karten, die niemanden sonst treffen. */
   | { typ: 'KarteGespielt'; spielerIndex: number; karteId: string; aktion: Aktionstyp; nach: Kartenort }
   /**
    * A6: Eine Sonderkarte, die Mitspieler trifft, ist mit ihrem Ziel angesagt und
-   * schwebt. `betroffene` sind alle, die sie trifft, im Uhrzeigersinn, gleich ob
-   * sie Farbenschutz halten.
+   * schwebt. `betroffene` sind alle, die sie trifft, im Uhrzeigersinn; jeder von
+   * ihnen wird gefragt (D33).
    */
   | { typ: 'KarteAngesagt'; spielerIndex: number; karteId: string; ansage: KartenAktion; betroffene: number[] }
+  /**
+   * A6, D33: Der Betroffene entscheidet jetzt, ob er die schwebende Karte `karteId`
+   * abwehrt. Gefragt wird jeder Betroffene, auch ohne Farbenschutz; die Frage
+   * verrät deshalb keine Handkarte (B2).
+   */
+  | { typ: 'AbwehrGefragt'; spielerIndex: number; karteId: string }
   /**
    * A6: Alle Betroffenen haben entschieden. Für die in `abgewehrt` hatte die Karte
    * keine Wirkung (A7.2); `ohneWirkung` heisst, dass alle abgewehrt haben und sie

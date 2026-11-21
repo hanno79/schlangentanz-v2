@@ -131,7 +131,7 @@ function abwehrSzenarien(): Szenario[] {
       beschreibung:
         'A7.6: Drei Spieler. Spieler 1 ist am Zug und hält eine Schlangengrube und vier Farbkarten; kein KI-Gegner hält Farbenschutz.',
       erwartet:
-        'Zwei Knöpfe SchlangengrubeSpielen, auf KI-Gegner 1 und auf KI-Gegner 2. Nach „→ KI-Gegner 1“: Ereignisse KarteAngesagt (trifft KI-Gegner 1) und AnsageEntschieden (wirkt, niemand hat abgewehrt, vor KI-Gegner 1); niemand wird gefragt, Spieler 1 entscheidet weiter. Unter „Ausliegende Schlangengruben“ steht die Grube vor KI-Gegner 1. Nach einer Farbkarte und „Zug beenden“: KartenGezogen (Spieler 1 zieht 2), Ausgesetzt (KI-Gegner 1, Grube auf den Ablagestapel von Spieler 1), ZugBegonnen (KI-Gegner 2). KI-Gegner 1 behält seine 5 Karten.',
+        'Zwei Knöpfe SchlangengrubeSpielen, auf KI-Gegner 1 und auf KI-Gegner 2. Nach „→ KI-Gegner 1“: Ereignisse KarteAngesagt (trifft KI-Gegner 1) und AbwehrGefragt; KI-Gegner 1 wird gefragt, obwohl er keinen Farbenschutz hält (D33), und hat nur den Knopf „Reagieren: durchlassen“ (oder KI-Schritt). Danach AnsageEntschieden (wirkt, niemand hat abgewehrt, vor KI-Gegner 1), und Spieler 1 entscheidet weiter. Unter „Ausliegende Schlangengruben“ steht die Grube vor KI-Gegner 1. Nach einer Farbkarte und „Zug beenden“: KartenGezogen (Spieler 1 zieht 2), Ausgesetzt (KI-Gegner 1, Grube auf den Ablagestapel von Spieler 1), ZugBegonnen (KI-Gegner 2). KI-Gegner 1 behält seine 5 Karten.',
       erzeuge: () =>
         gemischt(3, 19)
           .hand(0, ['Schlangengrube', 'Blau', 'Rot', 'Gelb', 'Grün'])
@@ -144,7 +144,7 @@ function abwehrSzenarien(): Szenario[] {
       beschreibung:
         'A7.6 Beispiel 2, A7.2: Drei Spieler. Spieler 1 hält eine Schlangengrube, KI-Gegner 1 einen Farbenschutz und vier Farbkarten.',
       erwartet:
-        'Nach SchlangengrubeSpielen „→ KI-Gegner 1“: nur KarteAngesagt; die Grube schwebt, es entscheidet KI-Gegner 1 mit zwei Knöpfen „Reagieren: abwehren mit Farbenschutz“ und „Reagieren: durchlassen“ (oder Knopf KI-Schritt). Nach dem Abwehren: Abgewehrt und AnsageEntschieden (ohne Wirkung, Ablagestapel von Spieler 1); der Farbenschutz liegt auf dem Ablagestapel von KI-Gegner 1, er hält 4 Karten und zieht nicht nach. Nach Farbkarte und „Zug beenden“ von Spieler 1 kein Ausgesetzt: KI-Gegner 1 beginnt seinen Zug und zieht 1 Karte (A6).',
+        'Nach SchlangengrubeSpielen „→ KI-Gegner 1“: KarteAngesagt und AbwehrGefragt; die Grube schwebt, es entscheidet KI-Gegner 1 mit zwei Knöpfen „Reagieren: abwehren mit Farbenschutz“ und „Reagieren: durchlassen“ (oder Knopf KI-Schritt). Nach dem Abwehren: Abgewehrt und AnsageEntschieden (ohne Wirkung, Ablagestapel von Spieler 1); der Farbenschutz liegt auf dem Ablagestapel von KI-Gegner 1, er hält 4 Karten und zieht nicht nach. Nach Farbkarte und „Zug beenden“ von Spieler 1 kein Ausgesetzt: KI-Gegner 1 beginnt seinen Zug und zieht 1 Karte (A6).',
       erzeuge: () =>
         verteile(gemischt(3, 20).hand(0, ['Schlangengrube', 'Blau', 'Rot', 'Gelb', 'Grün']).hand(1, ['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Braun']), [0, 0, 5]).zustand(),
     },
@@ -153,7 +153,7 @@ function abwehrSzenarien(): Szenario[] {
       beschreibung:
         'A6: Drei Spieler. Spieler 1 und KI-Gegner 1 halten je eine Schlangengrube, KI-Gegner 2 genau einen Farbenschutz. Oben auf dem Nachziehstapel liegen zwei Farbenschutz.',
       erwartet:
-        'Spieler 1 spielt die Grube auf KI-Gegner 2; KI-Gegner 2 wehrt ab (Abgewehrt, AnsageEntschieden ohne Wirkung) und hält danach 4 Karten. Spieler 1 legt eine Farbkarte und beendet den Zug; er zieht die beiden Farbenschutz, KI-Gegner 2 zieht nichts. KI-Gegner 1 spielt seine Grube auf KI-Gegner 2: KarteAngesagt und gleich AnsageEntschieden, denn KI-Gegner 2 hat keinen Farbenschutz mehr und wird nicht gefragt. Nach Farbkarte und „Zug beenden“ von KI-Gegner 1 setzt KI-Gegner 2 aus (Grube auf den Ablagestapel von KI-Gegner 1) und hält weiter 4 Karten (D18); dann ist Spieler 1 dran.',
+        'Spieler 1 spielt die Grube auf KI-Gegner 2; KI-Gegner 2 wehrt ab (Abgewehrt, AnsageEntschieden ohne Wirkung) und hält danach 4 Karten. Spieler 1 legt eine Farbkarte und beendet den Zug; er zieht die beiden Farbenschutz, KI-Gegner 2 zieht nichts. KI-Gegner 1 spielt seine Grube auf KI-Gegner 2: KarteAngesagt und AbwehrGefragt; KI-Gegner 2 hat keinen Farbenschutz mehr und kann nur durchlassen (D33), dann AnsageEntschieden. Nach Farbkarte und „Zug beenden“ von KI-Gegner 1 setzt KI-Gegner 2 aus (Grube auf den Ablagestapel von KI-Gegner 1) und hält weiter 4 Karten (D18); dann ist Spieler 1 dran.',
       erzeuge: () =>
         gemischt(3, 21)
           .hand(0, ['Schlangengrube', 'Blau', 'Rot', 'Gelb', 'Grün'])
