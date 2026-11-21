@@ -105,9 +105,10 @@ function globAngaben(aufruf: ts.CallExpression): Verweis['glob'] | null {
   const schluessel = (name: ts.PropertyName) => (ts.isIdentifier(name) || ts.isStringLiteralLike(name) || ts.isNumericLiteral(name) ? name.text : null)
   const eintraege = optionen.properties.map((eintrag) => (ts.isPropertyAssignment(eintrag) ? { name: schluessel(eintrag.name), wert: eintrag.initializer } : null))
   if (eintraege.some((eintrag) => eintrag === null || eintrag.name === null)) return null
-  const basis = eintraege.find((eintrag) => eintrag?.name === 'base')
-  if (basis === undefined) return { muster }
-  const wert = text(basis?.wert)
+  // Mehrere Schlüssel base: Vite nimmt den letzten; die Prüfung nimmt keinen und meldet den Aufruf.
+  const basen = eintraege.filter((eintrag) => eintrag?.name === 'base')
+  if (basen.length === 0) return { muster }
+  const wert = basen.length === 1 ? text(basen[0]?.wert) : null
   return wert === null ? null : { muster, basis: wert }
 }
 
@@ -237,8 +238,16 @@ export function pruefeImportgrenze(wurzel: string): Verstoss[] {
     return [basis, ...einstiege, ...[basis, ...einstiege].flatMap((pfad) => ENDUNGEN.flatMap((endung) => [pfad + endung, join(pfad, `index${endung}`)]))].filter(istDatei)
   }
 
-  /** Mögliche Ziele einer Angabe: so, wie TypeScript sie auflöst, und als Pfad ohne Vite-Zusatz `?…` oder `#…`. */
+  /**
+   * Mögliche Ziele einer Angabe: so, wie sie dasteht, und so, wie ein Browser sie als URL liest
+   * (ohne Tabulator und Zeilenumbruch, Prozentkodierung aufgelöst). Je Fassung so, wie TypeScript
+   * sie auflöst, und als Pfad ohne Vite-Zusatz `?…` oder `#…`.
+   */
   const ziele = (datei: string, angabe: string): string[] => {
+    const alsUrl = angabe.replace(/[\t\n\r]/g, '').trim().replace(/%([0-9a-f]{2})/gi, (_, hex: string) => String.fromCharCode(parseInt(hex, 16)))
+    return [...new Set([angabe, alsUrl].flatMap((fassung) => zieleEinerFassung(datei, fassung)))]
+  }
+  const zieleEinerFassung = (datei: string, angabe: string): string[] => {
     const absolut = join(wurzel, datei)
     const ohneZusatz = angabe.startsWith('#') ? angabe.replace(/\?.*$/, '') : angabe.replace(/[?#].*$/, '')
     // Vites Entwicklungsserver lädt unter /@fs/ jede Datei über ihren absoluten Pfad.
