@@ -1,0 +1,15 @@
+desktop angriff-auf-dich: Bilder 8, ungeladen 0
+desktop schlussrunde-ohne-dich: Bilder 12, ungeladen 0
+desktop saat-7: Bilder 6, ungeladen 0
+tablet-quer angriff-auf-dich: Bilder 8, ungeladen 0
+tablet-quer schlussrunde-ohne-dich: Bilder 12, ungeladen 0
+tablet-quer saat-7: Bilder 6, ungeladen 0
+tablet-hochkant angriff-auf-dich: Bilder 8, ungeladen 0
+tablet-hochkant schlussrunde-ohne-dich: Bilder 12, ungeladen 0
+tablet-hochkant saat-7: Bilder 6, ungeladen 0
+handy-hochkant angriff-auf-dich: Bilder 8, ungeladen 0
+handy-hochkant schlussrunde-ohne-dich: Bilder 12, ungeladen 0
+handy-hochkant saat-7: Bilder 6, ungeladen 0
+handy-quer angriff-auf-dich: Bilder 8, ungeladen 0
+handy-quer schlussrunde-ohne-dich: Bilder 12, ungeladen 0
+handy-quer saat-7: Bilder 6, ungeladen 0

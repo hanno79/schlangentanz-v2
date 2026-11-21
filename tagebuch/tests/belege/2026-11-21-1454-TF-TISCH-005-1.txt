@@ -1,0 +1,50 @@
+
+== A Testhooks, normales Tempo (http://localhost:4184/spiel?szenario=schlussrunde-ohne-dich, reducedMotion no-preference)
+Adresse danach: http://localhost:4184/spiel
+Schreibvorgänge: 7; Abstände ms: 1012, 718, 704, 709, 704, 709
+verschiedene Statuszeilen nacheinander: 5
+Statuszeile am Ende: Die Partie ist beendet.
+scrollWidth/clientWidth: 1280/1280
+Konsolenfehler: 0 
+
+== B Testhooks, weniger Bewegung (http://localhost:4184/spiel?szenario=schlussrunde-ohne-dich, reducedMotion reduce)
+Adresse danach: http://localhost:4184/spiel
+Schreibvorgänge: 7; Abstände ms: 318, 4, 3, 7, 2, 3
+verschiedene Statuszeilen nacheinander: 5
+Statuszeile am Ende: Die Partie ist beendet.
+scrollWidth/clientWidth: 1280/1280
+Konsolenfehler: 0 
+
+== C Testhooks, ?tempo=sofort ohne weniger Bewegung (http://localhost:4184/spiel?szenario=schlussrunde-ohne-dich&tempo=sofort, reducedMotion no-preference)
+Adresse danach: http://localhost:4184/spiel?tempo=sofort
+Schreibvorgänge: 7; Abstände ms: 317, 5, 5, 4, 2, 2
+verschiedene Statuszeilen nacheinander: 5
+Statuszeile am Ende: Die Partie ist beendet.
+scrollWidth/clientWidth: 1280/1280
+Konsolenfehler: 0 
+
+== D Produktion, gespeicherter Stand, ?tempo=sofort wird ignoriert (http://localhost:4183/spiel?tempo=sofort, reducedMotion no-preference)
+Adresse danach: http://localhost:4183/spiel?tempo=sofort
+Schreibvorgänge: 6; Abstände ms: 714, 703, 715, 716, 707
+verschiedene Statuszeilen nacheinander: 5
+Statuszeile am Ende: Die Partie ist beendet.
+scrollWidth/clientWidth: 1280/1280
+Konsolenfehler: 0 
+Seitentext: Spieltisch Es läuft keine Partie. Starte in der Lobby eine neue. Zurück zur Lobby
+
+== E Produktion, ?szenario= wird ignoriert (http://localhost:4183/spiel?szenario=angriff-auf-dich&tempo=sofort, reducedMotion no-preference)
+Adresse danach: http://localhost:4183/spiel?szenario=angriff-auf-dich&tempo=sofort
+Schreibvorgänge: 0; Abstände ms: 
+verschiedene Statuszeilen nacheinander: 1
+Statuszeile am Ende: null
+scrollWidth/clientWidth: 1280/1280
+Konsolenfehler: 0 
+Seitentext: Spieltisch Es läuft keine Partie. Starte in der Lobby eine neue. Zurück zur Lobby
+
+== F Produktion, ?seed= wird ignoriert (http://localhost:4183/spiel?seed=3&spieler=3, reducedMotion no-preference)
+Adresse danach: http://localhost:4183/spiel?seed=3&spieler=3
+Schreibvorgänge: 0; Abstände ms: 
+verschiedene Statuszeilen nacheinander: 1
+Statuszeile am Ende: null
+scrollWidth/clientWidth: 1280/1280
+Konsolenfehler: 0 
