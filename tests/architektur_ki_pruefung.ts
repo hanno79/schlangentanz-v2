@@ -29,7 +29,7 @@ import {
   type Verstoss,
 } from './architektur_pruefung'
 import { ausBibliothek, zustandstypen } from './architektur_ki_typen'
-import { aufModulebene, pruefeModulebene, thisIstKlasse } from './architektur_ki_modulebene'
+import { aufModulebene, pruefeFabrikname, pruefeModulebene, thisIstKlasse } from './architektur_ki_modulebene'
 import {
   ERLAUBTE_ENGINE_EMPFAENGER,
   GEERBT_VON_OBJECT,
@@ -302,15 +302,6 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       melde(knoten, `gibt ${knoten.text} von der Modulebene weiter; alle Instanzen der Strategie teilen es`)
     }
 
-    /** Eine exportierte Funktion, die eine KI liefert, heisst `erstelle…`; sonst fände sie der Isolationstest nicht. */
-    const pruefeFabrikname = (knoten: ts.Node) => {
-      const exportiert = ts.isFunctionDeclaration(knoten) || ts.isVariableDeclaration(knoten)
-      if (!exportiert || !knoten.name || !ts.isIdentifier(knoten.name) || !aufModulebene(pruefer.getSymbolAtLocation(knoten.name))) return
-      const signaturen = pruefer.getSignaturesOfType(typ(knoten.name), ts.SignatureKind.Call)
-      const liefertKi = signaturen.some((signatur) => signatur.getReturnType().getProperty('waehle') !== undefined)
-      if (liefertKi && !knoten.name.text.startsWith('erstelle')) melde(knoten.name, `${knoten.name.text} liefert eine KI; Fabriken einer Strategie heissen erstelle…, damit der Isolationstest sie findet`)
-    }
-
     /** Strategien erwähnen den vollen Zustand nicht, auch nicht über einen Typ, der ihn enthält oder nimmt. */
     const pruefeStrategie = (knoten: ts.Node) => {
       if (ts.isMetaProperty(knoten) && knoten.keywordToken === ts.SyntaxKind.NewKeyword) return melde(knoten, 'new.target gibt die Klasse der Modulebene als Wert heraus')
@@ -393,7 +384,7 @@ export function pruefeSichtZugriff(wurzel: string, dateien: string[]): Verstoss[
       pruefeImport(knoten)
       if (istStrategie) {
         pruefeStrategie(knoten)
-        pruefeFabrikname(knoten)
+        pruefeFabrikname(knoten, pruefer, melde)
       }
       if (datei !== SICHT_DATEI) pruefeZustand(knoten)
     })

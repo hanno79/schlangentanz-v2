@@ -83,3 +83,14 @@ export function thisIstKlasse(knoten: ts.Node): boolean {
   }
   return false
 }
+
+/** Eine Funktion der Modulebene, die eine KI liefert, heisst `erstelle…`; sonst fände sie der Isolationstest nicht. */
+export function pruefeFabrikname(knoten: ts.Node, pruefer: ts.TypeChecker, melde: (knoten: ts.Node, was: string) => void): void {
+  if (!(ts.isFunctionDeclaration(knoten) || ts.isVariableDeclaration(knoten)) || !knoten.name || !ts.isIdentifier(knoten.name)) return
+  if (!aufModulebene(pruefer.getSymbolAtLocation(knoten.name))) return
+  const signaturen = pruefer.getSignaturesOfType(pruefer.getTypeAtLocation(knoten.name), ts.SignatureKind.Call)
+  const liefertKi = signaturen.some((signatur) => signatur.getReturnType().getProperty('waehle') !== undefined)
+  if (liefertKi && !knoten.name.text.startsWith('erstelle')) {
+    melde(knoten.name, `${knoten.name.text} liefert eine KI; Fabriken einer Strategie heissen erstelle…, damit der Isolationstest sie findet`)
+  }
+}

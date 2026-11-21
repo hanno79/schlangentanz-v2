@@ -1,4 +1,5 @@
 // @vitest-environment node
+// regelcheck: laenge-bewusst Alle Proben der KI-Grenze laufen in einem Probe-Programm; aufgeteilt müsste jede Datei es neu bauen.
 import { afterAll, describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
