@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-034 Der Entwicklertisch bleibt in Zufallspartien mit Erweiterung bedienbar, auch wenn die Engine über 2&#x27;000 Häutungen auf einmal anbietet. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-034 Der Entwicklertisch bleibt in Zufallspartien mit Erweiterung bedienbar, auch wenn die Engine über 2&#x27;000 Häutungen auf einmal anbietet.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>In langen Schlangen bietet die Engine für eine Schlangenhäutung jede Umordnung jedes Abschnitts einzeln an, oft weit über tausend Knöpfe. Hier wird gemessen, ob ein Klick am Entwicklertisch dann noch flüssig wirkt und ob Partien mit Klicks bis zum Ende laufen.</p><h2>Bestanden, wenn</h2><p>Alle vier Partien (Saat 2 und 5 mit 2 Spielern, Saat 7 mit 3, Saat 11 mit 4, je mit Erweiterung) enden mit Klicks. Kein Klick braucht bis zum nächsten Bild länger als 1 Sekunde, der Median liegt unter 100 ms. Keine Meldung „Abgelehnt“, keine verletzte Invariante, keine Konsolenfehler, kein waagrechtes Überstehen.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Partie bleibt hängen, ein Klick braucht länger als 1 Sekunde, eine Meldung „Abgelehnt“ oder eine verletzte Invariante erscheint, die Konsole meldet einen Fehler, oder die Seite steht waagrecht über.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E9-haeutung (PR #69)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build (<code>npm run build:testhooks</code>), ausgeliefert mit <code>vite preview</code>, Stand ab Commit <code>d750cda</code></td></tr><tr><td>Ausgangslage prüfen</td><td><code>/dev?seed=2&amp;spieler=2&amp;erweiterung=1</code> zeigt „Aktionen der Engine (…)“</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Playwright-Skript <code>e9_browser.mjs</code> (Teil „partien“), als Beleg des Laufs abgelegt. Es klickt „KI-Schritt“, wenn eine KI entscheidet; sonst mit 85 % eine angebotene Häutung, sonst einen zufälligen Knopf. Gemessen wird die Zeit vom Klick bis nach dem zweiten <code>requestAnimationFrame</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole</td><td>Testhook-Build ausliefern</td><td>`npx vite preview --outDir dist-testhooks --port 4189 --strictPort`</td><td>Server lauscht auf 4189</td></tr><tr><td>2</td><td>Konsole</td><td>Skript ausführen</td><td>`node e9_browser.mjs http://localhost:4189 &lt;ordner&gt; partien`</td><td>vier Zeilen „Partie Saat …“, jede mit „beendet true“</td></tr><tr><td>3</td><td>`&lt;ordner&gt;/browser.txt`</td><td>Werte lesen</td><td>–</td><td>„Klick Median“ und „KI-Schritt Median“ unter 100 ms, „max“ unter 1&#x27;000 ms, „Abgelehnt-Meldungen 0“, „Treffer „verletzt“ 0“, „waagrechtes Überstehen max 0 px“, „Konsolenfehler keine“</td></tr><tr><td>4</td><td>Konsole</td><td>Server beenden</td><td>–</td><td>Port 4189 frei</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ein künstlicher Tisch mit rund 18&#x27;000 Häutungen (Prüfskript, Teil M2) lief nur in der Engine, nicht am Entwicklertisch; in den Zufallspartien kamen höchstens 2&#x27;167 Knöpfe vor. Handy-Grössen sind für die Leistung nicht gemessen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 14:22</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruefung-E9 @ <span class="commit" title="d750cda271b667d917b65f582bba3b1c33f9afe9">d750cda</span> / Playwright Chromium desktop 1280x900</p><p>4 Partien mit Klicks beendet: Saat 2/2 Spieler 188 Schritte, max 2&#x27;167 Knöpfe (1&#x27;790 Häutung), Klick Median 29 ms max 239 ms, KI-Schritt Median 29 ms max 310 ms; Saat 5/2 192 Schritte, max 1&#x27;261 Knöpfe, Klick max 225 ms, KI max 111 ms; Saat 7/3 182 Schritte, max 1&#x27;301 Knöpfe, Klick max 44 ms, KI max 178 ms; Saat 11/4 178 Schritte, max 356 Knöpfe, Klick max 49 ms, KI max 66 ms. Keine Abgelehnt-Meldung, keine verletzte Invariante, kein Überstehen, keine Konsolenfehler</p><ul class="belege"><li><a href="belege/2026-11-21-1422-TF-DEV-034-1.txt">2026-11-21-1422-TF-DEV-034-1.txt</a></li><li><a href="belege/2026-11-21-1422-TF-DEV-034-2.txt">2026-11-21-1422-TF-DEV-034-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

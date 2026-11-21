@@ -1,0 +1,152 @@
+// Prüfer E9: Fotos (Desktop, Handy hochkant mit Touch) und Leistung am Entwicklertisch.
+// Aufruf: node e9_browser.mjs <basis-url> <bilderordner>
+import { chromium } from 'file:///E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aa19715220f4a7cc1/node_modules/playwright/index.mjs'
+import { appendFileSync } from 'node:fs'
+
+const [basis, bilder] = process.argv.slice(2)
+const LOG = `${bilder}/browser.txt`
+const melde = (text) => {
+  console.log(text)
+  appendFileSync(LOG, `${text}\n`)
+}
+
+const KLASSEN = {
+  desktop: { viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1, hasTouch: false, isMobile: false },
+  'handy-hochkant': { viewport: { width: 390, height: 844 }, deviceScaleFactor: 1, hasTouch: true, isMobile: true },
+}
+
+async function neueSeite(browser, klasse) {
+  const kontext = await browser.newContext(KLASSEN[klasse])
+  const seite = await kontext.newPage()
+  const fehler = []
+  seite.on('console', (m) => m.type() === 'error' && fehler.push(m.text()))
+  seite.on('pageerror', (e) => fehler.push(String(e)))
+  return { kontext, seite, fehler }
+}
+
+async function druecke(seite, klasse, ort) {
+  await ort.scrollIntoViewIfNeeded()
+  if (klasse === 'desktop') await ort.click()
+  else await ort.tap()
+}
+
+async function breite(seite) {
+  return seite.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }))
+}
+
+async function anzahlKnoepfe(seite, typ) {
+  return seite.locator(`button.et-aktion[data-aktion*='"typ":"${typ}"']`).count()
+}
+
+async function ereignisse(seite) {
+  const kopf = seite.getByRole('heading', { name: /Ereignisse des letzten Schritts/ })
+  return (await kopf.count()) === 0 ? '' : kopf.locator('xpath=following-sibling::*[1]').innerText()
+}
+
+async function szenarien(browser, klasse) {
+  const { kontext, seite, fehler } = await neueSeite(browser, klasse)
+  await seite.goto(`${basis}/dev?szenario=haeutung`)
+  await seite.getByRole('heading', { name: /Aktionen der Engine/ }).waitFor()
+  melde(`[${klasse}] haeutung Start: ${await seite.getByRole('heading', { name: /Aktionen der Engine/ }).innerText()}, Häutung ${await anzahlKnoepfe(seite, 'SchlangenhaeutungSpielen')}, wirkungslos ${await anzahlKnoepfe(seite, 'SonderkarteWirkungslosAblegen')}, Breite ${JSON.stringify(await breite(seite))}`)
+  await seite.screenshot({ path: `${bilder}/E9-haeutung-start-${klasse}.png` })
+  const gelb = seite.locator('button.et-aktion').filter({ hasText: /schlange-1 · Sonnenblatt \(gelb-\d+\), Sonnenblatt \(gelb-\d+\), Wasserwirbel \(blau-\d+\), Feuerkeim \(rot-\d+\), Feuerkeim \(rot-\d+\)/ })
+  melde(`[${klasse}] Knöpfe Gelb, Gelb, Blau, Rot, Rot: ${await gelb.count()}; Beschriftung: ${(await gelb.first().innerText()).replace(/\n/g, ' ')}`)
+  await druecke(seite, klasse, gelb.first())
+  await seite.getByRole('heading', { name: /Ereignisse des letzten Schritts/ }).waitFor()
+  melde(`[${klasse}] nach Gelb, Gelb, Blau, Rot, Rot: ${(await ereignisse(seite)).replace(/\n/g, ' | ')}; Aktionen ${await seite.getByRole('heading', { name: /Aktionen der Engine/ }).innerText()}; Breite ${JSON.stringify(await breite(seite))}`)
+  await seite.getByRole('heading', { name: /Ereignisse des letzten Schritts/ }).scrollIntoViewIfNeeded()
+  await seite.screenshot({ path: `${bilder}/E9-haeutung-nachher-${klasse}.png` })
+  await druecke(seite, klasse, seite.getByRole('button', { name: 'Von vorn' }))
+  const fremd = seite.locator('button.et-aktion').filter({ hasText: /schlange-2 · Mondranke/ })
+  await druecke(seite, klasse, fremd.first())
+  await seite.getByRole('heading', { name: /Reagieren/ }).waitFor()
+  melde(`[${klasse}] angesagt in schlange-2: ${(await ereignisse(seite)).replace(/\n/g, ' | ')}`)
+  await seite.getByRole('heading', { name: /Aktionen der Engine/ }).scrollIntoViewIfNeeded()
+  await seite.screenshot({ path: `${bilder}/E9-haeutung-frage-${klasse}.png` })
+  await druecke(seite, klasse, seite.locator('button.et-aktion').filter({ hasText: /abwehren/ }).first())
+  await seite.getByRole('heading', { name: /Ereignisse des letzten Schritts/ }).waitFor()
+  melde(`[${klasse}] abgewehrt: ${(await ereignisse(seite)).replace(/\n/g, ' | ')}`)
+  await druecke(seite, klasse, seite.getByRole('button', { name: 'Schritt zurück' }))
+  await druecke(seite, klasse, seite.locator('button.et-aktion').filter({ hasText: /durchlassen/ }).first())
+  melde(`[${klasse}] durchgelassen: ${(await ereignisse(seite)).replace(/\n/g, ' | ')}; Breite ${JSON.stringify(await breite(seite))}`)
+
+  await seite.goto(`${basis}/dev?szenario=haeutung-nicht-moeglich`)
+  await seite.getByRole('heading', { name: /Aktionen der Engine/ }).waitFor()
+  melde(`[${klasse}] nicht-moeglich Start: ${await seite.getByRole('heading', { name: /Aktionen der Engine/ }).innerText()}, Häutung ${await anzahlKnoepfe(seite, 'SchlangenhaeutungSpielen')}, wirkungslos ${await anzahlKnoepfe(seite, 'SonderkarteWirkungslosAblegen')}`)
+  const ablegen = seite.locator('button.et-aktion').filter({ hasText: /SonderkarteWirkungslosAblegen/ })
+  await ablegen.scrollIntoViewIfNeeded()
+  await seite.screenshot({ path: `${bilder}/E9-nicht-moeglich-${klasse}.png` })
+  await druecke(seite, klasse, ablegen.first())
+  melde(`[${klasse}] nach Ablegen: ${(await ereignisse(seite)).replace(/\n/g, ' | ')}; ${await seite.getByRole('heading', { name: /Aktionen der Engine/ }).innerText()}; Breite ${JSON.stringify(await breite(seite))}`)
+  melde(`[${klasse}] Konsolenfehler: ${fehler.length === 0 ? 'keine' : fehler.join(' | ')}`)
+  await kontext.close()
+}
+
+/** Eine Partie mit Klicks: KI-Schritt, sonst bevorzugt eine Häutung, sonst ein zufälliger Knopf. Zeit je Klick bis nach dem nächsten Bild. */
+async function partie(browser, saat, spieler, grenze) {
+  const { kontext, seite, fehler } = await neueSeite(browser, 'desktop')
+  await seite.goto(`${basis}/dev?seed=${saat}&spieler=${spieler}&erweiterung=1`)
+  await seite.getByRole('heading', { name: /Aktionen der Engine/ }).waitFor()
+  let zustandZufall = saat * 2654435761 % 4294967296
+  const zufall = () => {
+    zustandZufall = (zustandZufall * 1664525 + 1013904223) % 4294967296
+    return zustandZufall / 4294967296
+  }
+  const zeiten = []
+  const kiZeiten = []
+  let maxKnoepfe = 0
+  let maxHaeut = 0
+  let haeutungen = 0
+  let schritte = 0
+  let langsamBeiKnoepfen = 0
+  let maxScroll = 0
+  for (; schritte < grenze; schritte += 1) {
+    const lage = await seite.evaluate(() => {
+      const ki = [...document.querySelectorAll('button')].find((b) => b.textContent === 'KI-Schritt')
+      const knoepfe = [...document.querySelectorAll('button.et-aktion')]
+      return {
+        ki: ki !== undefined && !ki.disabled,
+        anzahl: knoepfe.length,
+        haeut: knoepfe.filter((b) => b.dataset.aktion.includes('"SchlangenhaeutungSpielen"')).length,
+        beendet: document.querySelector('[data-testid="keine-aktion"]') !== null,
+        scroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      }
+    })
+    maxScroll = Math.max(maxScroll, lage.scroll)
+    if (lage.beendet) break
+    maxKnoepfe = Math.max(maxKnoepfe, lage.anzahl)
+    maxHaeut = Math.max(maxHaeut, lage.haeut)
+    const wahl = lage.ki ? -1 : lage.haeut > 0 && zufall() < 0.85 ? Math.floor(zufall() * lage.haeut) : Math.floor(zufall() * lage.anzahl)
+    const art = lage.ki ? 'ki' : lage.haeut > 0 && wahl < lage.haeut ? 'haeut' : 'andere'
+    const dauer = await seite.evaluate(async ({ wahl, haeutBevorzugt }) => {
+      const ki = [...document.querySelectorAll('button')].find((b) => b.textContent === 'KI-Schritt')
+      const knoepfe = [...document.querySelectorAll('button.et-aktion')]
+      const haeut = knoepfe.filter((b) => b.dataset.aktion.includes('"SchlangenhaeutungSpielen"'))
+      const ziel = wahl < 0 ? ki : haeutBevorzugt ? haeut[wahl] : knoepfe[wahl]
+      const t0 = performance.now()
+      ziel.click()
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+      return performance.now() - t0
+    }, { wahl, haeutBevorzugt: art === 'haeut' })
+    if (art === 'haeut') haeutungen += 1
+    ;(art === 'ki' ? kiZeiten : zeiten).push(dauer)
+    if (dauer === Math.max(...zeiten, ...kiZeiten)) langsamBeiKnoepfen = lage.anzahl
+  }
+  const median = (liste) => (liste.length === 0 ? 0 : [...liste].sort((a, b) => a - b)[Math.floor(liste.length / 2)])
+  const max = (liste) => (liste.length === 0 ? 0 : Math.max(...liste))
+  const abgelehnt = await seite.getByText(/^Abgelehnt:/).count()
+  const invarianten = await seite.getByText(/verletzt/i).count()
+  melde(`Partie Saat ${saat}, ${spieler} Spieler: ${schritte} Schritte, beendet ${await seite.locator('[data-testid="keine-aktion"]').count() > 0}; max ${maxKnoepfe} Knöpfe (davon max ${maxHaeut} Häutung), ${haeutungen} Häutungen geklickt; Klick Median ${median(zeiten).toFixed(0)} ms, max ${max(zeiten).toFixed(0)} ms; KI-Schritt Median ${median(kiZeiten).toFixed(0)} ms, max ${max(kiZeiten).toFixed(0)} ms; langsamster Schritt bei ${langsamBeiKnoepfen} Knöpfen; Abgelehnt-Meldungen ${abgelehnt}; Treffer „verletzt“ ${invarianten}; waagrechtes Überstehen max ${maxScroll} px; Konsolenfehler ${fehler.length === 0 ? 'keine' : fehler.join(' | ')}`)
+  await kontext.close()
+}
+
+const browser = await chromium.launch()
+const modus = process.argv[4] ?? 'alles'
+if (modus !== 'partien') {
+  await szenarien(browser, 'desktop')
+  await szenarien(browser, 'handy-hochkant')
+}
+if (modus !== 'fotos') {
+  for (const [saat, spieler] of [[2, 2], [5, 2], [7, 3], [11, 4]]) await partie(browser, saat, spieler, 400)
+}
+await browser.close()
