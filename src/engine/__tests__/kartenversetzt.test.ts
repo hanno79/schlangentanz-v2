@@ -263,4 +263,21 @@ describe('E4b/B2: Karten, die auf eine Hand gehen, bleiben verdeckt', () => {
       { karteId: null, von: { ort: 'Nachziehstapel' }, nach: { ort: 'Hand', spielerIndex: 1 } },
     ])
   })
+
+  it('B2: die Reihenfolge verdeckt abgelegter Karten verrät nicht, wie sie im Nachziehstapel liegen', () => {
+    const gemeldet = (['erst A', 'erst B'] as const).map((folge) => {
+      const start = tisch('Schlangenfrass').schlange(0, ['Rot', 'Gelb', 'Blau']).zustand()
+      const [a, b] = idsIn(start, 'schlange-1')
+      const ziele = [a, b].map((karteId) => ({ schlangenId: 'schlange-1', karteId }))
+      testkarte('Schlangenfrass', (_z, karteId, spielerId) => ({ typ: 'SchlangenfrassSpielen', spielerId, karteId, option: 'eigeneKarte', ziele }), [], (zustand, aktion) => {
+        legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId)
+        const karten = (folge === 'erst A' ? [a, b] : [b, a]).map((karteId) => nimmAusSchlange(zustand, 'schlange-1', karteId))
+        zustand.nachziehstapel.unshift(...karten)
+      })
+      const ereignisse = versetzt(spiele(start).ereignisse)
+      vi.restoreAllMocks()
+      return ereignisse
+    })
+    expect(gemeldet[0]).toEqual(gemeldet[1])
+  })
 })
