@@ -247,7 +247,6 @@ const STRATEGIE_ERLAUBT = [
   "import { hilfe } from './hilfe'",
   'const GRENZE = 3',
   "export const NAMEN = ['a', 'b'] as const",
-  'export const ZIELE = { a: 1, b: [1, -2], c: { d: null } } as const',
   'const plus = (n: number) => n + GRENZE',
   '/** Zustand nur in der Closure je Instanz. */',
   'export function erstelle(zufall: () => number) {',
@@ -255,6 +254,7 @@ const STRATEGIE_ERLAUBT = [
   '  return (sicht: Sicht) => { gedaechtnis.set(sicht.ich, zufall()); return plus(gedaechtnis.size) }',
   '}',
   'export class Zaehler { stand = 0; erhoehe() { this.stand += 1; return this.stand } }',
+  'export const verdoppelt = () => [1, 2].map(plus).concat(NAMEN.length)',
   "export type Helfer = typeof import('./hilfe')",
   'export function waehle(sicht: Sicht, aktionen: readonly Karte[], zufall: () => number): Karte {',
   '  return aktionen[Math.floor(zufall() * aktionen.length)] ?? aktionen[hilfe(sicht) + werteSchlangen([])]',
@@ -284,6 +284,13 @@ const strategien: Array<[string, string]> = [
   ['einen static-Block', 'export class Kiste { static { Kiste.name.length } }\n'],
   ['eine Eigenschaft an einer Funktion', 'export function merke(n: number) { merke.letzte = n; return n }\nmerke.letzte = 0\n'],
   ['as const um einen veränderlichen Behälter', 'export const ablage = { m: new Map<number, number>() } as const\n'],
+  // Codex zu Iteration 3: as const ist zur Laufzeit veränderlich, Funktionen und Klassen sind geteilte Objekte.
+  ['ein Objekt mit as const über einen Alias', "const speicher = { hand: '' } as const\nexport function tausche(hand: string) { const alias: { hand: string } = speicher; const vorher = alias.hand; alias.hand = hand; return vorher }\n"],
+  ['eine Funktionseigenschaft über einen Alias', "export function tausche(hand: string): string { const alias: typeof tausche & { hand?: string } = tausche; const vorher = alias.hand ?? ''; alias.hand = hand; return vorher }\n"],
+  ['eine static-Methode über this', "export class Speicher { static lies(): string { return '' } static tausche(hand: string) { const vorher = this.lies(); this.lies = () => hand; return vorher } }\n"],
+  ['Rest-Zerlegen auf Modulebene', "const [...geteilt] = [''] as const\nexport const merke = (hand: string) => geteilt.push(hand)\n"],
+  ['eine Engine-Funktion über einen Alias', "import { werteSchlangen } from '../../engine'\nexport function merke(n: number) { const alias: typeof werteSchlangen & { n?: number } = werteSchlangen; alias.n = n }\n"],
+  ['eine Funktion der Modulebene an eine eigene Funktion', 'const plus = (n: number) => n\nfunction nimm(f: { x?: number }) { f.x = 1 }\nexport const g = () => nimm(plus)\n'],
 ]
 const faelleStrategie = strategien.map(([name, inhalt], index) => ({ name, datei: `src/ki/strategien/verboten-${index + 1}.ts`, inhalt }))
 const faelleSeitenkanal = seitenkanaele.map(([name, inhalt], index) => ({ name, datei: `src/ki/seitenkanal-${index + 1}.ts`, inhalt }))

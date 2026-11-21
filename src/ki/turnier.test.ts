@@ -136,13 +136,13 @@ describe('K1: Ausgänge einer Partie', () => {
 })
 
 describe('P0.3d: der KI-Zufall verrät die Partiesaat nicht', () => {
-  /** Teilnehmer, die den ersten Wert ihrer Zufallsquelle aufschreiben, je Partie in Sitzreihenfolge. */
+  /** Teilnehmer, die die ersten fünf Werte ihrer Zufallsquelle aufschreiben, je Partie in Sitzreihenfolge. */
   function beobachter(anzahl: number) {
     const erste: number[] = []
     const teilnehmer: Teilnehmer[] = Array.from({ length: anzahl }, (_, index) => ({
       name: `Beobachter ${index + 1}`,
       erstelle(zufall) {
-        erste.push(zufall())
+        erste.push(...Array.from({ length: 5 }, zufall))
         return erstelleZufallsKi(zufall)
       },
     }))
@@ -168,8 +168,9 @@ describe('P0.3d: der KI-Zufall verrät die Partiesaat nicht', () => {
     turnier({ teilnehmer, partien: 4, ersteSaat: 1, kiSaat: 9, erweiterung: false, schrittGrenze: 0 })
 
     // Wie der Angriff: alle kleinen Saaten durchprobieren, ohne die echte zu kennen.
-    const gefunden = erste.flatMap((wert, stelle) =>
-      Array.from({ length: 4096 }, (_, saat) => saat).filter((saat) => erzeugeZufall(alteKiSaat(saat, stelle % 2))() === wert),
+    const ersteJeKi = erste.filter((_, stelle) => stelle % 5 === 0)
+    const gefunden = ersteJeKi.flatMap((wert, ki) =>
+      Array.from({ length: 4096 }, (_, saat) => saat).filter((saat) => erzeugeZufall(alteKiSaat(saat, ki % 2))() === wert),
     )
 
     expect(gefunden, 'P0.3d: erwartet, dass sich aus dem KI-Zufall keine Partiesaat ergibt').toEqual([])
