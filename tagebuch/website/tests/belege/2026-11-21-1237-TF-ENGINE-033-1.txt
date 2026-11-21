@@ -1,0 +1,36 @@
+erster_commit.log: Test Files  3 failed (3)
+erster_commit.log:      Tests  42 failed (42)
+e6tests.log: Test Files  3 passed (3)
+e6tests.log:      Tests  45 passed (45)
+gegenprobe1.log: Test Files  1 failed (1)
+gegenprobe1.log:      Tests  3 failed | 14 passed (17)
+gegenprobe2.log: Test Files  1 failed (1)
+gegenprobe2.log:      Tests  3 failed | 20 passed (23)
+gegenprobe3.log: Test Files  2 failed | 1 passed (3)
+gegenprobe3.log:      Tests  4 failed | 41 passed (45)
+gegenprobe4.log: Test Files  2 failed (2)
+gegenprobe4.log:      Tests  11 failed | 29 passed (40)
+gegenprobe5.log: Test Files  1 failed (1)
+gegenprobe5.log:      Tests  1 failed | 22 passed (23)
+gegenprobe1.log:     × A6 Beispiel 2/E6 Kriterium 4: nur B wehrt ab: seine Karte bleibt liegen, die von C wird trotzdem entfernt 17ms
+gegenprobe1.log:     × A6 Beispiel 2/E6 Kriterium 4: nur C wehrt ab: seine Karte bleibt liegen, die von B wird entfernt 8ms
+gegenprobe1.log:     × A6 Beispiel 2: wehrt B ab, nennt KartenVersetzt nur die Karte von C 8ms
+gegenprobe2.log:     × A7.4 c)/E6 Grenzfall: nur ein gegnerisches Ziel am Tisch: c) frisst diese eine 12ms
+gegenprobe2.log:     × A7.4 c)/E6 Kriterium 3: gegnerische Blockaden sind kein Ziel; eine Blockade als Ziel wird mit Grund abgelehnt 4ms
+gegenprobe2.log:     × A7.4 c)/E6 Grenzfall: liegen beim Gegner nur Blockaden, gibt es kein c); ohne eigene Schlange ist der Schlangenfrass wirkungslos ablegbar (D13) 4ms
+gegenprobe3.log:     × A7.4/A7.7: eine gefressene Fusion: ihre Karten gehen von UnterFusion in die Schlange, die Fusion auf den Ablagestapel; eine leer gefressene Schlange steht in aufgeloest 18ms
+gegenprobe3.log:     × A7.4/A7.7/E6 Kriterium 6: wird eine Farbenfusion gefressen, geht nur sie weg; die beiden Karten darunter liegen einzeln an ihrer Stelle, links zuerst 15ms
+gegenprobe3.log:     × A7.4/A7.7: eine Fusion als einzige Karte einer Schlange: die Schlange bleibt, mit den beiden Karten darunter 4ms
+gegenprobe3.log:     × A7.4/A7.7: c) frisst beim Gegner eine Fusion und ihren Nachbarn; die zwei Karten der Fusion bleiben dort, die übrigen Fusionen bleiben Fusionen 5ms
+gegenprobe4.log:     × A7.4 Beispiel a): eine rote Karte aus der eigenen Schlange; sie und der Schlangenfrass liegen auf dem eigenen Ablagestapel, niemand wird gefragt 25ms
+gegenprobe4.log:     × A7.4 Beispiel b)/A7.5: die Blockade aus Rot, Blockade, Rot, Rot geht auf den Ablagestapel des Spielers, der Schlangenfrass gespielt hat; die Dreierreihe zählt wieder 6ms
+gegenprobe4.log:     × A7.4 c)/E6 Grenzfall: nur ein gegnerisches Ziel am Tisch: c) frisst diese eine 6ms
+gegenprobe4.log:     × A7.4 c): beide Karten in beliebiger Schreibweise ergeben dasselbe wie die aufgezählte Aktion 7ms
+gegenprobe4.log:     × A7.4/A7.7/E6 Kriterium 6: wird eine Farbenfusion gefressen, geht nur sie weg; die beiden Karten darunter liegen einzeln an ihrer Stelle, links zuerst 8ms
+gegenprobe4.log:     × A7.4/A7.7: c) frisst beim Gegner eine Fusion und ihren Nachbarn; die zwei Karten der Fusion bleiben dort, die übrigen Fusionen bleiben Fusionen 30ms
+gegenprobe4.log:     × A6 Beispiel 2/E6 Kriterium 4: niemand wehrt ab: beide Karten werden gefressen 28ms
+gegenprobe4.log:     × A6 Beispiel 2/E6 Kriterium 4: nur B wehrt ab: seine Karte bleibt liegen, die von C wird trotzdem entfernt 11ms
+gegenprobe4.log:     × A6 Beispiel 2/E6 Kriterium 4: nur C wehrt ab: seine Karte bleibt liegen, die von B wird entfernt 5ms
+gegenprobe4.log:     × D15: lässt B durch, werden beide Karten gefressen 7ms
+gegenprobe4.log:     × A6 Beispiel 2: auf den Ablagestapel von A kommt zuerst der Schlangenfrass, dann die Karten in Tischreihenfolge, gleich in welcher Reihenfolge die Ansage sie nennt 21ms
+gegenprobe5.log:     × A7.4 c)/E6 Kriterium 2: gibt es zwei erlaubte Ziele, müssen es zwei sein; eine allein wird abgelehnt 9ms

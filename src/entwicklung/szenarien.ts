@@ -3,7 +3,9 @@ import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten } from '../engine/testing/szenario'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
+import { FARBENDIEB_SZENARIEN } from './szenarienFarbendieb'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
+import { FRASS_SZENARIEN } from './szenarienFrass'
 import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
 
 export interface Szenario {
@@ -227,6 +229,8 @@ export const SZENARIEN: readonly Szenario[] = [
   ...zugablaufSzenarien(),
   ...verdopplerSzenarien(),
   ...abwehrSzenarien(),
+  ...FRASS_SZENARIEN,
+  ...FARBENDIEB_SZENARIEN,
   ...FARBENFUSION_SZENARIEN,
 ]
 
