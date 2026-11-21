@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-035 Der Farbendieb verhält sich auch im zweiten Zug, bei einer Grube vor dem Bestohlenen, bei einer neuen und einer zweiten Schlange, bei einer zurückbleibenden Fusion und bei unförmigen Ansagen richtig. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-035 Der Farbendieb verhält sich auch im zweiten Zug, bei einer Grube vor dem Bestohlenen, bei einer neuen und einer zweiten Schlange, bei einer zurückbleibenden Fusion und bei unförmigen Ansagen richtig.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität niedrig</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-033</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Geprüft werden fünf Fälle, die der Plan nicht nennt. Der Farbendieb wird im zweiten Zug nach einem Verdoppler gespielt, und einmal muss der Bestohlene wegen einer Grube aussetzen, darf aber trotzdem abwehren (D18). Ein Dieb ohne Schlange beginnt mit der gestohlenen Karte eine und danach mit einer Farbkarte eine zweite, aber keine dritte. Beim Gegner bleibt nach dem Diebstahl nur eine Fusion in der Schlange zurück. Zuletzt gehen Ansagen mit falsch geformten Feldern an die Engine.</p><h2>Bestanden, wenn</h2><p>G1: im Teilzug 2 wird gestohlen, die Schlange heisst danach Gelb, Rot, <code>gespielteSonderkarten</code> ist 1. G2: KarteAngesagt nennt <code>betroffene: [1]</code>, Spieler 2 wehrt ab, seine Schlange bleibt Blau. G3: Nach dem Diebstahl und einer Farbkarte hat der Dieb 2 Schlangen mit verschiedenen Ids, Speichern und Laden ändert nichts, im nächsten Zug ist keine neue Schlange angeboten. G4: Beim Gegner bleibt eine Schlange nur mit der Fusion und Blau, Blau darunter; der Schritt lässt sich nachrechnen. G5: vier unförmige Ansagen werden mit deutschem Grund abgelehnt.</p><h2>Fehlgeschlagen, wenn</h2><p>Einer der fünf Tests im Prüfskript rot wird oder die Engine bei G5 wirft statt abzulehnen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E8-farbendieb (PR #67)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Worktree auf <code>task/E8-farbendieb</code>, Stand ab Commit <code>bb19f19</code>, <code>npm ci</code> gelaufen</td></tr><tr><td>Ausgangslage prüfen</td><td><code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Prüfskript <code>zz_pruefer_e8.test.ts</code> (Teil „eigene Grenzfälle“, G1 bis G5), als Beleg des Laufs abgelegt. G5 nutzt <code>ziel: { art: &#x27;fremd&#x27; }</code>, <code>position: 0.5</code>, eine Quelle ohne <code>karteId</code> und eine Farbkarte als gespielte Karte.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>Prüfskript aus dem Beleg nach `src/engine/__tests__/zz_pruefer_e8.test.ts` kopieren</td><td>–</td><td>Datei neu</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>nur die Grenzfälle ausführen</td><td>`npx vitest run src/engine/__tests__/zz_pruefer_e8.test.ts -t &quot;eigene Grenzfälle&quot; --silent=false`</td><td>Exit 0, 5 Tests grün; Zeile „G5“ mit vier deutschen Gründen</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Prüfskript löschen</td><td>–</td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ein Farbendieb in der Schlussrunde ist nicht eigens geprüft; die Schlussrunde ändert an der Wirkung nichts, und der Dauerlauf spielt sie mit. Eine Karte mit Wert 0 gibt es im Spiel nicht.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 12:39</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E8) &middot; agent &middot; pruefung-E8 @ <span class="commit" title="bb19f190c9bb6d5ae99c54cd9744f0d51f3e8903">bb19f19</span></p><p>G1-G5 grün (Exit 0). G1 Teilzug 2: Gelb, Rot, gespielteSonderkarten 1. G2: betroffene [1], Abwehr trotz Grube, Blau bleibt. G3: 2 Schlangen, Ids eindeutig, Laden gleich, keine dritte angeboten. G4: Schlange nur mit Fusion (Blau, Blau darunter), nachrechenbar. G5: 4 deutsche Gründe, z. B. &#x27;Feld ziel ist ungültig&#x27;.</p><ul class="belege"><li><a href="belege/2026-11-21-1239-TF-ENGINE-035-1.txt">2026-11-21-1239-TF-ENGINE-035-1.txt</a></li><li><a href="belege/2026-11-21-1239-TF-ENGINE-035-2.txt">2026-11-21-1239-TF-ENGINE-035-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
