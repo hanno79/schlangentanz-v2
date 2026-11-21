@@ -1,0 +1,64 @@
+# Schlussprüfung 4 P0.3d, Proben auf 783a30c
+## Mit Fix (783a30c)
+===== B01-JS Exit 1
+     × P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei 1790ms
+ Test Files  1 failed (1)
+      Tests  1 failed | 63 skipped (64)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_bruecke.JS:1 exportiert …' to be '' // Object.is equality
++ U5 src/ui/zz_bruecke.JS:1 exportiert weiter „../ki/strategien/zz_geheim.ts“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+    110|     expect(beschreibe(pruefeImportgrenze(WURZEL)), 'U5: erwartet keine…
+===== B01-Ts Exit 1
+     × P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei 1327ms
+ Test Files  1 failed (1)
+      Tests  1 failed | 63 skipped (64)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 src/ui/zz_bruecke.Ts:1 exportiert …' to be '' // Object.is equality
++ U5 src/ui/zz_bruecke.Ts:1 exportiert weiter „../ki/strategien/zz_geheim“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+    110|     expect(beschreibe(pruefeImportgrenze(WURZEL)), 'U5: erwartet keine…
+===== B01-MJS Exit 1
+     × P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei 1520ms
+ Test Files  1 failed (1)
+      Tests  1 failed | 63 skipped (64)
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei
+AssertionError: U5: erwartet keinen Import einer Strategie ausserhalb von src/ki/strategien: expected 'U5 scripts/zz_bruecke.MJS:1 exportier…' to be '' // Object.is equality
++ U5 scripts/zz_bruecke.MJS:1 exportiert weiter „../src/ki/strategien/zz_geheim.ts“ (src/ki/strategien/zz_geheim.ts); ausserhalb von src/ki/strategien/ nur index.ts und Typen aus strategie.ts
+    110|     expect(beschreibe(pruefeImportgrenze(WURZEL)), 'U5: erwartet keine…
+===== R1-legitim Exit 0
+ Test Files  1 passed (1)
+      Tests  1 passed | 63 skipped (64)
+
+## Gegenprobe: endung = extname(pfad) ohne toLowerCase
+===== B01-JS Exit 0
+ Test Files  1 passed (1)
+      Tests  1 passed | 63 skipped (64)
+===== B01-Ts Exit 0
+ Test Files  1 passed (1)
+      Tests  1 passed | 63 skipped (64)
+===== B01-MJS Exit 0
+ Test Files  1 passed (1)
+      Tests  1 passed | 63 skipped (64)
+
+## Gegenprobe: ganze Testdatei ohne Fix
+     × P0.3d: Gegenprobe „Brücke mit Endung .JS“ wird gemeldet 4ms
+     × P0.3d: Gegenprobe „Brücke mit Endung .Ts“ wird gemeldet 0ms
+     × P0.3d: Gegenprobe „Brücke mit Endung .MJS“ wird gemeldet 0ms
+     × P0.3d: Gegenprobe „HTML mit Endung .HTML“ wird gemeldet 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  1 failed (1)
+      Tests  4 failed | 60 passed (64)
+
+## Grenze (3): public/ und Plugin, in U5 als (c) und (b) genannt
+===== B02-public Exit 0
+ Test Files  1 passed (1)
+      Tests  1 passed | 63 skipped (64)
+===== B07-plugin Exit 0
+ Test Files  1 passed (1)
+      Tests  1 passed | 63 skipped (64)
+
+## Index.ts und STRATEGIE.ts als eigene Dateien im Probebaum (alle vier Importe gemeldet)
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
