@@ -84,7 +84,7 @@ describe('A7.6: die beiden Beispiele der Website', () => {
     const abgewehrt = folge(start, (jetzt) => grubeAuf(jetzt, 1), (jetzt) => reaktion(jetzt, true))
     expect(abgewehrt.ereignisse.slice(2)).toEqual([
       { typ: 'Abgewehrt', spielerIndex: 1, karteId: schutz, gegen: grube },
-      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: grube, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: grube, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(ablage(abgewehrt.zustand, 0)).toEqual([grube])
     expect(ablage(abgewehrt.zustand, 1)).toEqual([schutz])

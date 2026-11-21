@@ -90,7 +90,7 @@ describe('A7.8/A5: der Verdoppler im ersten Zug', () => {
     const id = karte(start, 'Verdoppler')
     const { zustand, ereignisse } = verdoppler(start)
     expect(ereignisse).toEqual([
-      { typ: 'KarteGespielt', spielerIndex: 0, karteId: id, aktion: 'VerdopplerSpielen', nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      { typ: 'KarteGespielt', spielerIndex: 0, karteId: id, aktion: 'VerdopplerSpielen', nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(ablage(zustand, 0)).toEqual([id])
     expect(hand(zustand, 0)).not.toContain(id)

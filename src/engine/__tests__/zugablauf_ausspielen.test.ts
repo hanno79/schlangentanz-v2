@@ -187,7 +187,7 @@ describe('D13/D25: Sonderkarte wirkungslos ablegen', () => {
     expect(hand(nach, 0)).toEqual([karteId(zustand, 0)])
     expect(nach.spieler.flatMap((spieler) => spieler.schlangen)).toEqual([])
     expect(nach.zug).toMatchObject({ gespielteSonderkarten: 1, gespielteFarbkarten: 0 })
-    expect(ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blockade, aktion: 'SonderkarteWirkungslosAblegen', nach: { ort: 'Ablagestapel', spielerIndex: 0 } }])
+    expect(ereignisse).toEqual([{ typ: 'KarteGespielt', spielerIndex: 0, karteId: blockade, aktion: 'SonderkarteWirkungslosAblegen', nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } }])
   })
 
   it('D13: jederzeit, auch wenn man eine Farbkarte hätte: jede Sonderkarte ohne Ziel wird zum Ablegen angeboten', () => {
