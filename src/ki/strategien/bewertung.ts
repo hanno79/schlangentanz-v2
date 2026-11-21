@@ -68,9 +68,10 @@ export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean, merker:
   return wertungVon(spieler, erweiterung, merker).punkte;
 }
 
-/** Die eigenen Punkte aus Farbgruppen und Vielfaltbonus. */
+/** Die eigenen Punkte, wie die Wertung sie jetzt zählte: Farbgruppen, Vielfaltbonus und Kettenbonus (A11), ohne Aufgaben. */
 export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = new Map()): number {
-  return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker);
+  const kette = kettenbonus(sicht.spieler.map(laengsteFarbkette))[sicht.ich];
+  return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker) + kette;
 }
 
 /** A10: Hat der Spieler nach dem laufenden Zug noch einen Zug? Solange die Partie läuft, immer; in der Schlussrunde sagt es die Engine. */

@@ -27,15 +27,18 @@ Feste Regeln neben der Bewertung, Vorgaben des Autors:
 - Eine Karte ohne Wirkung gilt etwas weniger als derselbe Stand mit der Karte in
   Wirkung, damit sie nie gewählt wird, wenn ein gleich guter Zug möglich ist (Kriterium 5).
 
-Die Zahl der Bewertungen je Schritt ist begrenzt (Kriterium 8): höchstens
-ERSTE_AUSWAHL + ZWEITE_TIEFE × ZWEITE_AUSWAHL + 1.
+Verletzt jede durchgerechnete erste Aktion eine dieser Regeln, rechnet die Suche
+die nächsten nach dem Vorwert durch, bis eine erlaubt ist (Nachlese, höchstens
+NACHLESE). Die Zahl der Bewertungen je Schritt ist begrenzt (Kriterium 8): höchstens
+ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE × ZWEITE_AUSWAHL + 1.
 */
 
 const ERSTE_AUSWAHL = 16;
 const ZWEITE_TIEFE = 3;
 const ZWEITE_AUSWAHL = 8;
+const NACHLESE = 8;
 /** Kriterium 8: mehr Stellungen bewertet die Zugsuche in einem Schritt nie. */
-export const GRENZE_BEWERTUNGEN = ERSTE_AUSWAHL + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
+export const GRENZE_BEWERTUNGEN = ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
 /** Abzug für eine Karte, die nichts bewirkt (Kriterium 5). */
 const OHNE_WIRKUNG = 0.05;
 
@@ -114,10 +117,16 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
     return { aktion, stellung: nach, wert: werte(sichtNach) - (wirkungslos ? OHNE_WIRKUNG : 0), verworfen: fusionSenkt || grubeOhneZug };
   };
 
-  /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet. */
-  const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number): Folge[] => {
+  /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
+  const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
     const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen));
-    return vorauswahl(stand, karten, anzahl).map((aktion) => folge(stellung, stand, aktion));
+    const geordnet = vorauswahl(stand, karten, anzahl);
+    const folgen = geordnet.slice(0, anzahl).map((aktion) => folge(stellung, stand, aktion));
+    for (const aktion of geordnet.slice(anzahl, anzahl + nachlese)) {
+      if (folgen.some((eintrag) => !eintrag.verworfen)) break;
+      folgen.push(folge(stellung, stand, aktion));
+    }
+    return folgen;
   };
 
   return { wurzel, werte, folge, kandidaten, gezaehlt: () => bewertungen };
@@ -132,7 +141,7 @@ function beste(folgen: readonly Folge[]): Folge | undefined {
 /** Karten ausspielen: jede Aktion der Vorauswahl, für die besten drei die zweite Karte, oder den Zug beenden. */
 function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const suche = erstelleSuche(sicht, zufall);
-  const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL);
+  const erste = suche.kandidaten(suche.wurzel, sicht, aktionen, ERSTE_AUSWAHL, NACHLESE);
   const vertieft = new Map<Folge, number>();
   const vertiefen = erste
     .filter((folge) => !folge.verworfen && folge.stellung.entscheider === sicht.ich && gleicherZug(folge.stellung.sicht, sicht))
