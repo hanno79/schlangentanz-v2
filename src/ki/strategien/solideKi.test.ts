@@ -161,7 +161,7 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, 0))]
   }
 
-  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Saat 7154 eingeschlossen)', () => {
+  it('K2.1: in Partien vollendet sie in jedem Zug, in dem irgendeine Handkarte eine eigene Dreiergruppe vollenden kann, eine Gruppe oder spielt eine Vollendung, die abgewehrt wird, ausser ihr Zug ist strikt besser bewertet als jede Vollendung samt zweiter Karte (Saat 7154 eingeschlossen)', () => {
     let geprueft = 0
     let vollendet = 0
     for (const zug of [...ENTSCHEIDUNGEN, SAAT_7154].flatMap(zuege)) {
@@ -176,7 +176,10 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
       geprueft += 1
       // Der Stand, mit dem sie den (ersten Teil-)Zug beendet, vor dem Nachziehen.
       const ende = (zug.find((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden') ?? zug[zug.length - 1]).vorher
-      if (gruppenzahl(ende, 0) > gruppen) {
+      // Eine Vollendung, die sie gespielt hat und die ein Gegner mit Farbenschutz abwehrte, zählt als versucht (A6, A7.2).
+      const ersterTeilzug = zug.slice(0, Math.max(0, zug.findIndex((entscheidung) => entscheidung.aktion.typ === 'ZugBeenden')))
+      const versucht = ersterTeilzug.some(({ aktion, vorher }) => gruppenzahl(nachDurchlassen(vorher, aktion, 0), 0) > gruppenzahl(vorher, 0))
+      if (gruppenzahl(ende, 0) > gruppen || versucht) {
         vollendet += 1
         continue
       }
