@@ -99,47 +99,48 @@ const schluessel = (wahl: Wahl): string => JSON.stringify(wahl)
 
 interface Eintrag {
   aktion: SpielAktion
-  folge: string[]
-  folgeWahlen: Wahl[]
+  /** Die Folge als Paare aus Schlüssel und Wahl. */
+  folge: [string, Wahl][]
   menge: Map<string, Wahl>
 }
 
-/* Die Wege einer Aktionsliste werden einmal berechnet; die Sicht hält dieselbe Liste, bis sich der Stand ändert. */
-const wegeJeListe = new WeakMap<readonly SpielAktion[], Eintrag[]>()
-
 function eintraege(aktionen: readonly SpielAktion[]): Eintrag[] {
-  const vorhanden = wegeJeListe.get(aktionen)
-  if (vorhanden !== undefined) return vorhanden
-  const neu = aktionen.map((aktion) => {
+  return aktionen.map((aktion) => {
     const { folge, menge } = wegZu(aktion)
-    return { aktion, folge: folge.map(schluessel), folgeWahlen: folge, menge: new Map(menge.map((wahl) => [schluessel(wahl), wahl])) }
+    return { aktion, folge: folge.map((wahl) => [schluessel(wahl), wahl]), menge: new Map(menge.map((wahl) => [schluessel(wahl), wahl])) }
   })
-  wegeJeListe.set(aktionen, neu)
-  return neu
 }
 
 /** Ob die Auswahl auf dem Weg dieser Aktion liegt: erst ihre Folge, danach nur Glieder ihrer Menge. */
-function passt(eintrag: Eintrag, auswahl: readonly string[]): boolean {
-  const vorn = Math.min(auswahl.length, eintrag.folge.length)
-  for (let stelle = 0; stelle < vorn; stelle += 1) if (auswahl[stelle] !== eintrag.folge[stelle]) return false
-  return auswahl.slice(eintrag.folge.length).every((wahl) => eintrag.menge.has(wahl))
+function passt(eintrag: Eintrag, gewaehlt: readonly string[]): boolean {
+  return gewaehlt.every((wahl, stelle) => (stelle < eintrag.folge.length ? wahl === eintrag.folge[stelle][0] : eintrag.menge.has(wahl)))
+}
+
+/** Die Angebote nach Schlüssel und die vollständigen Aktionen zu einer Auswahl. */
+function stand(liste: readonly Eintrag[], gewaehlt: readonly string[]): { angebote: Map<string, Wahl>; fertig: SpielAktion[] } {
+  const getroffen = new Set(gewaehlt)
+  const angebote = new Map<string, Wahl>()
+  const fertig: SpielAktion[] = []
+  for (const eintrag of liste) {
+    if (!passt(eintrag, gewaehlt)) continue
+    if (gewaehlt.length < eintrag.folge.length) {
+      angebote.set(...eintrag.folge[gewaehlt.length])
+      continue
+    }
+    let offen = 0
+    for (const [wahl, objekt] of eintrag.menge) {
+      if (getroffen.has(wahl)) continue
+      angebote.set(wahl, objekt)
+      offen += 1
+    }
+    if (offen === 0) fertig.push(eintrag.aktion)
+  }
+  return { angebote, fertig }
 }
 
 /** Was nach dieser Auswahl angeboten ist und ob sie eine Aktion vollständig beschreibt. */
 export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl): Auswahlstand {
-  const gewaehlt = auswahl.map(schluessel)
-  const angebote = new Map<string, Wahl>()
-  const fertig: SpielAktion[] = []
-  for (const eintrag of eintraege(aktionen)) {
-    if (!passt(eintrag, gewaehlt)) continue
-    if (gewaehlt.length < eintrag.folge.length) {
-      angebote.set(eintrag.folge[gewaehlt.length], eintrag.folgeWahlen[gewaehlt.length])
-      continue
-    }
-    const offen = [...eintrag.menge].filter(([wahl]) => !gewaehlt.includes(wahl))
-    for (const [wahl, objekt] of offen) angebote.set(wahl, objekt)
-    if (offen.length === 0) fertig.push(eintrag.aktion)
-  }
+  const { angebote, fertig } = stand(eintraege(aktionen), auswahl.map(schluessel))
   if (fertig.length > 1) {
     throw new Error(`Auswahl: ${fertig.length} Aktionen passen zu derselben Auswahl; jede Aktion braucht einen eigenen Weg (O3).`)
   }
@@ -153,18 +154,15 @@ export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl)
  * Auswahl. Alles andere ist nicht angeboten und wird abgelehnt.
  */
 export function waehle(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl: Wahl): Auswahl {
+  const liste = eintraege(aktionen)
+  const gewaehlt = auswahl.map(schluessel)
   const neu = schluessel(wahl)
-  const stelle = auswahl.findIndex((getroffen) => schluessel(getroffen) === neu)
+  const stelle = gewaehlt.indexOf(neu)
   if (stelle >= 0) {
-    const gewaehlt = auswahl.map(schluessel)
-    const inFolge = eintraege(aktionen).some((eintrag) => passt(eintrag, gewaehlt) && stelle < eintrag.folge.length)
+    const inFolge = liste.some((eintrag) => passt(eintrag, gewaehlt) && stelle < eintrag.folge.length)
     return inFolge ? auswahl.slice(0, stelle) : auswahl.filter((_, index) => index !== stelle)
   }
-  if (istAngeboten(aktionen, auswahl, neu)) return [...auswahl, wahl]
-  if (istAngeboten(aktionen, [], neu)) return [wahl]
+  if (stand(liste, gewaehlt).angebote.has(neu)) return [...auswahl, wahl]
+  if (stand(liste, []).angebote.has(neu)) return [wahl]
   throw new Error(`Auswahl: ${neu} ist nicht angeboten; angeboten sind nur Wahlen zu Aktionen der Engine (U3).`)
-}
-
-function istAngeboten(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl: string): boolean {
-  return auswahlstand(aktionen, auswahl).angebote.some((angebot) => schluessel(angebot) === wahl)
 }

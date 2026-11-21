@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
-import { anwendeAktion, deserialisiere, ermittleAktionen, pruefeInvarianten, serialisiere } from '../../engine'
+import { anwendeAktion, pruefeAktion, pruefeInvarianten, serialisiere } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
-import { findeSzenario } from '../../entwicklung/szenarien'
+import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
-import { SPIELSTAND_SCHLUESSEL } from '../../spielstand'
 import { angriffAufMich, mittelspiel } from '../tisch/__tests__/szenarien'
+import { gespeichert, istEinSchritt, warte } from './__tests__/steuerung'
 import { GEGNER_STRATEGIE, KI_PAUSE, erstelleGegner, useSpiel } from './useSpiel'
 
 /*
@@ -16,30 +16,6 @@ O3: `useSpiel` führt die Partie. Es spielt die KI-Gegner Schritt für Schritt
 mit einer Pause, nimmt die Aktionen des Menschen entgegen und schreibt nach
 jedem Schritt den Spielstand weg, damit ein Neuladen genau dort fortsetzt.
 */
-
-function szenario(name: string): Spielzustand {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
-
-/** Der Spielstand, so wie er im Speicher liegt; `null`, wenn noch nichts geschrieben ist. */
-function gespeichert(): Spielzustand | null {
-  const roh = window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)
-  return roh === null ? null : deserialisiere(roh)
-}
-
-/** Ob `nachher` aus `vorher` mit genau einer aufgezählten Aktion entsteht. */
-function istEinSchritt(vorher: Spielzustand, nachher: Spielzustand): boolean {
-  const ziel = serialisiere(nachher)
-  return ermittleAktionen(vorher).some((aktion) => serialisiere(anwendeAktion(vorher, aktion).zustand) === ziel)
-}
-
-function warte(ms: number): void {
-  act(() => {
-    vi.advanceTimersByTime(ms)
-  })
-}
 
 /** KI-Gegner 1 hält eine Schlangengrube; zu zweit kann sie nur den Menschen treffen. */
 function grubeGegenDich(): Spielzustand {
@@ -67,7 +43,7 @@ afterEach(() => {
 describe('O3 K1: Jeder KI-Schritt einzeln und sichtbar', () => {
   it('O3 K1: im Spiel etwa 700 ms Pause vor jedem KI-Schritt, und je Pause genau ein Schritt', () => {
     expect(KI_PAUSE).toBe(700)
-    const start = szenario('schlussrunde-4')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
     const { result } = renderHook(() => useSpiel(start, { pause: KI_PAUSE }))
     const vorher = result.current.ansicht
     warte(699)
@@ -83,7 +59,7 @@ describe('O3 K1: Jeder KI-Schritt einzeln und sichtbar', () => {
   })
 
   it('O3 K1: ohne Pause („weniger Bewegung“, Test) folgt jeder Schritt einzeln, nicht alle auf einmal', () => {
-    let vorher = szenario('schlussrunde-4')
+    let vorher = erzeugeSzenario('schlussrunde-ohne-dich')
     const { result } = renderHook(() => useSpiel(vorher, { pause: 0 }))
     for (let schritt = 0; schritt < 4; schritt += 1) {
       warte(0)
@@ -108,9 +84,9 @@ describe('O3: Aktionen des Menschen', () => {
   it('O3: eine Aktion des Menschen wird ausgeführt und gespeichert; danach spielt die KI weiter', () => {
     const start = mittelspiel()
     const { result } = renderHook(() => useSpiel(start, { pause: 0 }))
-    const beenden = result.current.ansicht.aktionen.find((aktion) => aktion.typ !== 'ZugBeenden')!
-    act(() => result.current.fuehreAus(beenden))
-    expect(serialisiere(gespeichert()!)).toBe(serialisiere(anwendeAktion(start, beenden).zustand))
+    const farbkarte = result.current.ansicht.aktionen.find((aktion) => aktion.typ === 'FarbkarteLegen')!
+    act(() => result.current.fuehreAus(farbkarte))
+    expect(serialisiere(gespeichert()!)).toBe(serialisiere(anwendeAktion(start, farbkarte).zustand))
     expect(result.current.ablehnung).toBeNull()
     const zug = result.current.ansicht.aktionen.find((aktion) => aktion.typ === 'ZugBeenden')!
     act(() => result.current.fuehreAus(zug))
@@ -126,25 +102,16 @@ describe('O3: Aktionen des Menschen', () => {
     const fremd: SpielAktion = { typ: 'ZugBeenden', spielerId: 'spieler-2' }
     act(() => result.current.fuehreAus(fremd))
     expect(result.current.ablehnung).toMatch(/[a-zäöü]{4,}/)
-    expect(result.current.ablehnung).toBe(ablehnungDerEngine(start, fremd))
+    expect(pruefeAktion(start, fremd)).toEqual({ erlaubt: false, grund: result.current.ablehnung })
     expect(gespeichert()).toBeNull()
     act(() => result.current.fuehreAus(result.current.ansicht.aktionen[0]))
     expect(result.current.ablehnung).toBeNull()
   })
 })
 
-function ablehnungDerEngine(zustand: Spielzustand, aktion: SpielAktion): string {
-  try {
-    anwendeAktion(zustand, aktion)
-  } catch (fehler) {
-    return fehler instanceof Error ? fehler.message : String(fehler)
-  }
-  throw new Error('Die Engine hat die Aktion nicht abgelehnt.')
-}
-
 describe('O3 K2: Neu laden setzt genau dort fort', () => {
   it('O3 K2: nach zwei KI-Schritten neu geladen, zeigt die Sicht denselben Stand und spielt von dort weiter', () => {
-    const erst = renderHook(() => useSpiel(szenario('schlussrunde-4'), { pause: 0 }))
+    const erst = renderHook(() => useSpiel(erzeugeSzenario('schlussrunde-ohne-dich'), { pause: 0 }))
     warte(0)
     warte(0)
     const vorDemNeuladen = erst.result.current.ansicht
@@ -157,7 +124,7 @@ describe('O3 K2: Neu laden setzt genau dort fort', () => {
   })
 
   it('O3 K2: neu geladen mitten in der Pause geht kein Schritt verloren und keiner doppelt', () => {
-    const start = szenario('schlussrunde-4')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
     const erst = renderHook(() => useSpiel(start, { pause: KI_PAUSE }))
     warte(300)
     erst.unmount()
@@ -185,7 +152,7 @@ describe('O3 K2: Neu laden setzt genau dort fort', () => {
   })
 
   it('O3 K2/A6: ist eine KI gefragt, antwortet sie nach dem Neuladen auf die offene Frage', () => {
-    const stand = szenario('alle-orte')
+    const stand = erzeugeSzenario('alle-orte')
     expect(stand.schwebend?.ausstehend).toEqual([2])
     renderHook(() => useSpiel(stand, { pause: 0 }))
     warte(0)
@@ -199,7 +166,7 @@ describe('O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry', (
   it('O3 K4: je KI-Gegner ein Aufruf der Fabrik aus der Registry, mit eigener Zufallsquelle', () => {
     const fabrik = vi.spyOn(STRATEGIEN, GEGNER_STRATEGIE)
     const quelle = vi.fn().mockReturnValueOnce(0.1).mockReturnValueOnce(0.2).mockReturnValueOnce(0.3)
-    const gegner = erstelleGegner(szenario('start-4'), quelle)
+    const gegner = erstelleGegner(erzeugeSzenario('start-4'), quelle)
     expect([...gegner.keys()]).toEqual(['spieler-2', 'spieler-3', 'spieler-4'])
     expect(new Set(gegner.values()).size).toBe(3)
     expect(fabrik).toHaveBeenCalledTimes(3)
@@ -213,7 +180,7 @@ describe('O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry', (
 
   it('O3 K4: im Spiel kommt die Saat jeder KI aus Math.random, nicht aus dem Partie-Zufall', () => {
     const zufall = vi.spyOn(Math, 'random')
-    renderHook(() => useSpiel(szenario('start-4'), { pause: 0 }))
+    renderHook(() => useSpiel(erzeugeSzenario('start-4'), { pause: 0 }))
     expect(zufall.mock.calls.length, 'eine Saat je KI-Gegner und Instanz').toBeGreaterThanOrEqual(3)
     expect(zufall.mock.calls.length % 3).toBe(0)
   })
@@ -232,7 +199,7 @@ describe('O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry', (
       }
     })
     // Die drei KI-Gegner spielen ihre letzten Züge, ohne dass du gefragt wirst.
-    renderHook(() => useSpiel(szenario('schlussrunde-ohne-dich'), { pause: 0 }))
+    renderHook(() => useSpiel(erzeugeSzenario('schlussrunde-ohne-dich'), { pause: 0 }))
     for (let schritt = 0; schritt < 30; schritt += 1) warte(0)
     expect(gespeichert()!.partiephase).toBe('Beendet')
     const benutzt = sitzeJeInstanz.filter((sitze) => sitze.length > 0)
@@ -245,7 +212,7 @@ describe('O3 K4/U5: Jeder KI-Gegner hat eine eigene Instanz aus der Registry', (
 describe('O3: Eine Partie läuft bis zum Ende', () => {
   it.each([2, 3, 4])('O3: %i Spieler, der Mensch wählt zufällig, alle Invarianten nach jedem Schritt erfüllt', (spieler) => {
     const mensch = erzeugeZufall(spieler * 101)
-    const start = szenario(spieler === 2 ? 'start-2' : spieler === 3 ? 'start-erweiterung' : 'start-4')
+    const start = erzeugeSzenario(spieler === 2 ? 'start-2' : spieler === 3 ? 'start-erweiterung' : 'start-4')
     const { result } = renderHook(() => useSpiel(start, { pause: 0 }))
     let schritte = 0
     while (result.current.ansicht.status.partiephase !== 'Beendet') {

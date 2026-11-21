@@ -3,7 +3,7 @@ import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../../engi
 import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { starteEntwicklerPartie } from '../../entwicklung/partie'
-import { angriffAufMich, geheimeHaende, mittelspiel, verborgeneIds, volltisch, zehnHandkarten } from '../tisch/__tests__/szenarien'
+import { angriffAufMich, geheimeHaende, mittelspiel, verrateneIds, volltisch, zehnHandkarten } from '../tisch/__tests__/szenarien'
 import { tischAnsicht } from './tischAnsicht'
 
 /*
@@ -63,9 +63,7 @@ describe('O3 K6/B2: Keine fremde Handkarte und keine fremde geheime Aufgabe, nac
     for (const [schritt, zustand] of zustaende.entries()) {
       const ansicht = tischAnsicht(zustand)
       if (ansicht.aktionen.length > 0) menschEntschied += 1
-      const text = JSON.stringify(ansicht)
-      const verraten = verborgeneIds(zustand).filter((id) => text.includes(`"${id}"`))
-      expect(verraten, `Schritt ${schritt}: verborgene Ids in tischAnsicht`).toEqual([])
+      expect(verrateneIds(zustand, JSON.stringify(ansicht)), `Schritt ${schritt}: verborgene Ids in tischAnsicht`).toEqual([])
     }
     expect(menschEntschied, 'der Mensch hat in der Partie nie entschieden').toBeGreaterThan(0)
   })

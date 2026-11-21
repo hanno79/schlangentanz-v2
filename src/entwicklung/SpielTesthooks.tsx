@@ -8,7 +8,7 @@ import Verweis from '../ui/lobby/Verweis'
 import Spielseite from '../ui/spiel/Spielseite'
 import { leseEntwicklerAnfrage } from './adresse'
 import { starteEntwicklerPartie } from './partie'
-import { findeSzenario } from './szenarien'
+import { erzeugeSzenario } from './szenarien'
 
 /*
 Testhooks unter `/spiel` (Plan O3, Kriterium 7), nur im Dev-Server und im
@@ -26,18 +26,15 @@ beginnen. Ein falscher Parameter wird gemeldet, nie still ersetzt, und lässt
 einen vorhandenen Spielstand stehen.
 */
 
-type Vorbereitung = { art: 'bereit'; sofort: boolean } | { art: 'fehler'; meldung: string }
+type Vorbereitung = { art: 'bereit'; pause: number | undefined } | { art: 'fehler'; meldung: string }
 
 function startzustand(suche: string): Spielzustand | null {
   const anfrage = leseEntwicklerAnfrage('/dev', suche)
   switch (anfrage.art) {
     case 'start':
       return null
-    case 'szenario': {
-      const szenario = findeSzenario(anfrage.name)
-      if (szenario === undefined) throw new Error(`Unbekanntes Szenario „${anfrage.name}“; die Szenarien stehen unter /dev/szenarien.`)
-      return szenario.erzeuge()
-    }
+    case 'szenario':
+      return erzeugeSzenario(anfrage.name)
     case 'partie':
       return starteEntwicklerPartie(anfrage.saat, anfrage.spieler, anfrage.erweiterung === 1)
     case 'fehler':
@@ -62,7 +59,7 @@ function bereiteVor(): Vorbereitung {
     speichereSpielstand(zustand)
     window.history.replaceState(window.history.state, '', tempo === null ? '/spiel' : '/spiel?tempo=sofort')
   }
-  return { art: 'bereit', sofort: tempo === 'sofort' }
+  return { art: 'bereit', pause: tempo === 'sofort' ? 0 : undefined }
 }
 
 export default function SpielTesthooks() {
@@ -77,5 +74,5 @@ export default function SpielTesthooks() {
       </Rahmen>
     )
   }
-  return <Spielseite pause={vorbereitung.sofort ? 0 : undefined} />
+  return <Spielseite pause={vorbereitung.pause} />
 }

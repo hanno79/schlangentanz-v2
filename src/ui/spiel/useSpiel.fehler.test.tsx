@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { act, fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import App from '../../App'
 import Fehlerfang from '../../components/Fehlerfang'
 import type { Spielzustand } from '../../engine'
-import { findeSzenario } from '../../entwicklung/szenarien'
+import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { STRATEGIEN } from '../../ki/strategien'
-import { SPIELSTAND_SCHLUESSEL, speichereSpielstand } from '../../spielstand'
+import { speichereSpielstand } from '../../spielstand'
 import { mittelspiel } from '../tisch/__tests__/szenarien'
+import { roh, warte } from './__tests__/steuerung'
 import { GEGNER_STRATEGIE, KI_PAUSE, useSpiel } from './useSpiel'
 
 /*
@@ -35,22 +36,10 @@ vi.mock('../../engine', async (importOriginal) => {
   }
 })
 
-function szenario(name: string): Spielzustand {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
-
 function oeffneMitKiAmZug(): void {
-  speichereSpielstand(szenario('schlussrunde-4'))
+  speichereSpielstand(erzeugeSzenario('schlussrunde-ohne-dich'))
   window.history.pushState({}, '', '/spiel')
   render(<App />)
-}
-
-function warte(ms: number): void {
-  act(() => {
-    vi.advanceTimersByTime(ms)
-  })
 }
 
 /** Nach dem Fehler: Meldung, Weg zur Lobby, und danach spielt nichts weiter. */
@@ -60,10 +49,10 @@ function erwarteFehlerfangMitWegZurLobby(meldung: RegExp): void {
   expect(fang).toHaveTextContent(meldung)
   fireEvent.click(screen.getByRole('button', { name: 'Zurück zur Lobby' }))
   expect(screen.getByTestId('lobby')).toBeInTheDocument()
-  expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL), 'der Stand, an dem es scheiterte, ist verworfen').toBeNull()
+  expect(roh(), 'der Stand, an dem es scheiterte, ist verworfen').toBeNull()
   warte(10 * KI_PAUSE)
   expect(screen.queryByRole('alert')).toBeNull()
-  expect(window.localStorage.getItem(SPIELSTAND_SCHLUESSEL), 'nach dem Fehler läuft kein KI-Schritt').toBeNull()
+  expect(roh(), 'nach dem Fehler läuft kein KI-Schritt').toBeNull()
 }
 
 beforeEach(() => {

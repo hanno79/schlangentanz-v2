@@ -3,7 +3,7 @@ import { anwendeAktion, ermittleAktionen } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { zufallszustand } from '../../engine/testing/zufallszustand'
-import { SZENARIEN, findeSzenario } from '../../entwicklung/szenarien'
+import { SZENARIEN, erzeugeSzenario } from '../../entwicklung/szenarien'
 import { TISCH_SZENARIEN, angriffAufMich, mittelspiel, zehnHandkarten } from '../tisch/__tests__/szenarien'
 import { auswahlstand, waehle, wegZu } from './auswahl'
 import type { Auswahl, Wahl } from './auswahl'
@@ -14,17 +14,11 @@ keine Aktion (U3): Was sie anbietet und am Ende liefert, kommt allein aus den
 Aktionen, die die Engine aufzählt. Die Bedienelemente dazu baut O5.
 */
 
-function szenario(name: string): Spielzustand {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
-
 /** Spielt eine Partie mit gleichverteilter Wahl und liefert jeden zehnten Zustand. */
 function zustaendeEinerPartie(spielerzahl: number, saat: number): Spielzustand[] {
   const zufall = erzeugeZufall(saat)
-  let zustand = szenario(spielerzahl === 2 ? 'start-2' : 'start-4')
-  if (spielerzahl === 3) zustand = szenario('start-erweiterung')
+  let zustand = erzeugeSzenario(spielerzahl === 2 ? 'start-2' : 'start-4')
+  if (spielerzahl === 3) zustand = erzeugeSzenario('start-erweiterung')
   const gesammelt: Spielzustand[] = []
   for (let schritt = 0; schritt < 400 && zustand.partiephase !== 'Beendet'; schritt += 1) {
     const aktionen = ermittleAktionen(zustand)
@@ -65,9 +59,11 @@ function folgeWeg(aktionen: readonly SpielAktion[], aktion: SpielAktion): Auswah
 const ANGEBOTEN = (aktionen: readonly SpielAktion[], auswahl: Auswahl = []) => auswahlstand(aktionen, auswahl).angebote
 
 describe('O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und nur sie', () => {
+  const zustaende = pruefzustaende()
+
   it('O3: in Szenarien, Zufallszuständen und gespielten Partien liefert der Weg jeder Aktion genau diese Aktion der Engine', () => {
     const gesehen = new Set<string>()
-    for (const { name, zustand } of pruefzustaende()) {
+    for (const { name, zustand } of zustaende) {
       const aktionen = ermittleAktionen(zustand)
       for (const aktion of stichprobe(aktionen)) {
         gesehen.add(aktion.typ)
@@ -84,7 +80,7 @@ describe('O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und 
   })
 
   it('O3: keine zwei Aktionen haben denselben Weg, sonst wäre „fertig“ mehrdeutig', () => {
-    for (const { name, zustand } of pruefzustaende()) {
+    for (const { name, zustand } of zustaende) {
       const schluessel = ermittleAktionen(zustand).map((aktion) => {
         const { folge, menge } = wegZu(aktion)
         return JSON.stringify([folge, menge.map((wahl) => JSON.stringify(wahl)).sort()])
@@ -105,7 +101,7 @@ describe('O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und 
 
 describe('O3: Karte wählen, dann Ziel wählen', () => {
   it('O3/D9: nach einer Farbkarte sind beide Enden jeder Schlange angeboten, auch der gegnerischen', () => {
-    const zustand = szenario('farbkarte-beim-gegner')
+    const zustand = erzeugeSzenario('farbkarte-beim-gegner')
     const aktionen = ermittleAktionen(zustand)
     const rot = zustand.spieler[0].hand.find((karte) => karte.typ === 'Farbkarte' && karte.farbe === 'Rot')!
     const auswahl = waehle(aktionen, [], { art: 'karte', karteId: rot.id })
@@ -129,7 +125,7 @@ describe('O3: Karte wählen, dann Ziel wählen', () => {
   })
 
   it('O3/A7.4: Schlangenfrass mit zwei Karten: erst die Option, dann beide Karten in beliebiger Reihenfolge', () => {
-    const zustand = szenario('frass-zwei-spieler')
+    const zustand = erzeugeSzenario('frass-zwei-spieler')
     const aktionen = ermittleAktionen(zustand)
     const frass = zustand.spieler[0].hand[0]
     const [blau] = zustand.spieler[1].schlangen[0].karten
@@ -147,7 +143,7 @@ describe('O3: Karte wählen, dann Ziel wählen', () => {
   })
 
   it('O3/A7.8: ein Verdoppler ist mit der Karte allein fertig', () => {
-    const zustand = szenario('verdoppler')
+    const zustand = erzeugeSzenario('verdoppler')
     const aktionen = ermittleAktionen(zustand)
     const verdoppler = zustand.spieler[0].hand[0]
     const { fertig } = auswahlstand(aktionen, waehle(aktionen, [], { art: 'karte', karteId: verdoppler.id }))
@@ -180,7 +176,7 @@ describe('O3: Karte wählen, dann Ziel wählen', () => {
 
 describe('O3: Auswahl aufheben und wechseln', () => {
   it('O3: dieselbe Karte noch einmal gewählt hebt die ganze Auswahl auf', () => {
-    const zustand = szenario('regenbogen')
+    const zustand = erzeugeSzenario('regenbogen')
     const aktionen = ermittleAktionen(zustand)
     const regenbogen: Wahl = { art: 'karte', karteId: zustand.spieler[0].hand[0].id }
     const auswahl = waehle(aktionen, waehle(aktionen, [], regenbogen), { art: 'schlange', schlangenId: 'schlange-1' })
@@ -188,7 +184,7 @@ describe('O3: Auswahl aufheben und wechseln', () => {
   })
 
   it('O3: ein gewähltes Ziel noch einmal gewählt nimmt nur dieses zurück', () => {
-    const zustand = szenario('frass-zwei-spieler')
+    const zustand = erzeugeSzenario('frass-zwei-spieler')
     const aktionen = ermittleAktionen(zustand)
     const blau: Wahl = { art: 'schlangenkarte', schlangenId: 'schlange-1', karteId: zustand.spieler[1].schlangen[0].karten[0].id }
     const gelb: Wahl = { art: 'schlangenkarte', schlangenId: 'schlange-2', karteId: zustand.spieler[2].schlangen[0].karten[0].id }

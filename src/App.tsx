@@ -11,7 +11,8 @@ import Regeln from './ui/regeln/Regeln'
 import './ui/lobby/lobby.css'
 
 /*
-Der einzige Schalter für den Entwicklertisch: aktiv im Dev-Server und in jedem
+Der einzige Schalter für die Testhooks (Entwicklertisch unter `/dev`, Parameter
+unter `/spiel`): aktiv im Dev-Server und in jedem
 Build mit `VITE_TEST_HOOKS=1`, sonst nicht. Lokal setzt `vite build --mode
 testhooks` die Variable (siehe `vite.config.ts`), in der Vercel-Vorschau die
 Umgebung des Projekts; in Production ist sie nicht gesetzt.
@@ -23,17 +24,13 @@ nicht nur unerreichbar, sein Code steht gar nicht im Bundle. Hinter einem
 Funktionsaufruf bliebe der Import stehen; `tests/entwicklertisch_bundle.test.ts`
 schlägt dann an.
 */
-const Entwicklertisch =
-  import.meta.env.DEV || import.meta.env.VITE_TEST_HOOKS === '1'
-    ? lazy(() => import('./entwicklung/Entwicklertisch'))
-    : null
+const TESTHOOKS = import.meta.env.DEV || import.meta.env.VITE_TEST_HOOKS === '1'
 
-/* Die Testhooks unter `/spiel` (O3 K7: `szenario`, `seed`, `tempo`), nach
-   demselben Muster: im Produktionsbuild weder erreichbar noch im Bundle. */
-const SpielTesthooks =
-  import.meta.env.DEV || import.meta.env.VITE_TEST_HOOKS === '1'
-    ? lazy(() => import('./entwicklung/SpielTesthooks'))
-    : null
+const Entwicklertisch = TESTHOOKS ? lazy(() => import('./entwicklung/Entwicklertisch')) : null
+
+/* Die Testhooks unter `/spiel` (O3 K7: `szenario`, `seed`, `tempo`), am selben
+   Schalter: im Produktionsbuild weder erreichbar noch im Bundle. */
+const SpielTesthooks = TESTHOOKS ? lazy(() => import('./entwicklung/SpielTesthooks')) : null
 
 function istEntwicklerPfad(pfad: string): boolean {
   return pfad === '/dev' || pfad.startsWith('/dev/')

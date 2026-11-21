@@ -1,9 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
 import { serialisiere } from '../../src/engine'
 import { starteEntwicklerPartie } from '../../src/entwicklung/partie'
-import { findeSzenario } from '../../src/entwicklung/szenarien'
+import { erzeugeSzenario } from '../../src/entwicklung/szenarien'
 import { SPIELSTAND_SCHLUESSEL } from '../../src/spielstand'
 import { waagrechterUeberstand } from './messung'
+import { halteUhrAn } from './oeffnen'
 
 /*
 O3 im echten Browser, in jeder Geräteklasse: die Testhooks unter `/spiel`
@@ -17,12 +18,6 @@ und hält die Uhr der Seite an, damit er die 700 ms abzählt statt abzuwarten.
 
 const PRODUKTION = 'http://localhost:4173'
 
-function szenario(name: string) {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
-
 const gespeichert = (page: Page) => page.evaluate((schluessel) => window.localStorage.getItem(schluessel), SPIELSTAND_SCHLUESSEL)
 
 const status = (page: Page) => page.getByRole('status')
@@ -33,7 +28,7 @@ test.describe('O3 K7: /spiel mit Testhooks', () => {
     await expect(status(page)).toContainText('Du entscheidest, ob du abwehrst.')
     expect(new URL(page.url()).search).toBe('?tempo=sofort')
     const stand = await gespeichert(page)
-    expect(stand).toBe(serialisiere(szenario('angriff-auf-dich')))
+    expect(stand).toBe(serialisiere(erzeugeSzenario('angriff-auf-dich')))
     await page.reload()
     await expect(status(page)).toContainText('KI-Gegner 1 spielt Schlangengrube')
     await expect(status(page)).toContainText('Du entscheidest, ob du abwehrst.')
@@ -73,12 +68,11 @@ test.describe('O3 K1: Pause vor jedem KI-Schritt', () => {
   test.use({ contextOptions: { reducedMotion: 'no-preference' } })
 
   test('O3 K1: ohne „weniger Bewegung“ folgt jeder KI-Schritt nach 700 ms, nicht früher', async ({ page }) => {
-    await page.clock.install({ time: new Date('2026-11-21T10:00:00') })
-    await page.clock.pauseAt(new Date('2026-11-21T10:00:01'))
-    await page.goto('/spiel?szenario=schlussrunde-4')
-    await expect(status(page)).toContainText('KI-Gegner 2 ist')
+    await halteUhrAn(page)
+    await page.goto('/spiel?szenario=schlussrunde-ohne-dich')
+    await expect(status(page)).toContainText('KI-Gegner 1 ist')
     const start = await gespeichert(page)
-    expect(start).toBe(serialisiere(szenario('schlussrunde-4')))
+    expect(start).toBe(serialisiere(erzeugeSzenario('schlussrunde-ohne-dich')))
     await page.clock.runFor(699)
     expect(await gespeichert(page), 'vor 700 ms').toBe(start)
     await page.clock.runFor(1)

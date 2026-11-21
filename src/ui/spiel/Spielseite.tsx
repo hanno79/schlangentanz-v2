@@ -44,18 +44,13 @@ function Partie({ start, pause }: { start: Spielzustand; pause: number }) {
 
 const WENIGER_BEWEGUNG = '(prefers-reduced-motion: reduce)'
 
-/* jsdom kennt `matchMedia` nicht; dort gibt es auch keine Bewegung, die man abschalten könnte. */
-function abfrage(): MediaQueryList | null {
-  return typeof window.matchMedia === 'function' ? window.matchMedia(WENIGER_BEWEGUNG) : null
-}
-
 function abonniere(melde: () => void): () => void {
-  const liste = abfrage()
-  liste?.addEventListener('change', melde)
-  return () => liste?.removeEventListener('change', melde)
+  const liste = window.matchMedia(WENIGER_BEWEGUNG)
+  liste.addEventListener('change', melde)
+  return () => liste.removeEventListener('change', melde)
 }
 
 /** Ob der Mensch „weniger Bewegung“ eingestellt hat; folgt einer Änderung während der Partie. */
 function useWenigerBewegung(): boolean {
-  return useSyncExternalStore(abonniere, () => abfrage()?.matches ?? false)
+  return useSyncExternalStore(abonniere, () => window.matchMedia(WENIGER_BEWEGUNG).matches)
 }

@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import App from '../../App'
-import { anwendeAktion, deserialisiere, ermittleAktionen, serialisiere } from '../../engine'
-import type { Spielzustand } from '../../engine'
+import { serialisiere } from '../../engine'
 import { starteEntwicklerPartie } from '../../entwicklung/partie'
-import { findeSzenario } from '../../entwicklung/szenarien'
+import { erzeugeSzenario } from '../../entwicklung/szenarien'
 import { SPIELSTAND_SCHLUESSEL, speichereSpielstand } from '../../spielstand'
+import { gespeichert, istEinSchritt, roh } from './__tests__/steuerung'
 
 /*
 O3 am App-Rahmen: `/spiel` spielt die gespeicherte Partie mit der Pause aus
@@ -14,20 +14,6 @@ verworfen und einmal gemeldet. Im Testhook-Build (Vitest läuft wie der
 Dev-Server mit Testhooks) nimmt `/spiel` die Parameter `szenario`, `seed` und
 `tempo` (Plan O3, Kriterium 7).
 */
-
-function szenario(name: string): Spielzustand {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
-
-function roh(): string | null {
-  return window.localStorage.getItem(SPIELSTAND_SCHLUESSEL)
-}
-
-function istEinSchritt(vorher: Spielzustand, nachher: string): boolean {
-  return ermittleAktionen(vorher).some((aktion) => serialisiere(anwendeAktion(vorher, aktion).zustand) === nachher)
-}
 
 function oeffne(adresse: string) {
   window.history.pushState({}, '', adresse)
@@ -54,31 +40,31 @@ describe('O3 K1: Pause vor jedem KI-Schritt am Tisch', () => {
   it('O3 K1: ohne „weniger Bewegung“ spielt die KI nach 700 ms, nicht vorher', () => {
     vi.useFakeTimers()
     wenigerBewegung(false)
-    const start = szenario('schlussrunde-4')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
     speichereSpielstand(start)
     oeffne('/spiel')
     act(() => vi.advanceTimersByTime(699))
     expect(roh()).toBe(serialisiere(start))
     act(() => vi.advanceTimersByTime(1))
-    expect(istEinSchritt(start, roh()!)).toBe(true)
+    expect(istEinSchritt(start, gespeichert()!)).toBe(true)
   })
 
   it('O3 K1: mit „weniger Bewegung“ folgt der KI-Schritt sofort, aber einzeln', () => {
     vi.useFakeTimers()
     wenigerBewegung(true)
-    const start = szenario('schlussrunde-4')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
     speichereSpielstand(start)
     oeffne('/spiel')
     act(() => vi.advanceTimersByTime(0))
-    const erster = roh()!
+    const erster = gespeichert()!
     expect(istEinSchritt(start, erster)).toBe(true)
     act(() => vi.advanceTimersByTime(0))
-    expect(istEinSchritt(deserialisiere(erster), roh()!)).toBe(true)
+    expect(istEinSchritt(erster, gespeichert()!)).toBe(true)
   })
 
   it('O3: „Zur Lobby“ hält die KI an; in der Lobby läuft nichts weiter (O2 K5)', () => {
     vi.useFakeTimers()
-    const start = szenario('schlussrunde-4')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
     speichereSpielstand(start)
     oeffne('/spiel')
     fireEvent.click(screen.getByRole('link', { name: 'Zur Lobby' }))
@@ -119,7 +105,7 @@ describe('O3 K7: Testhooks unter /spiel', () => {
   it('O3 K7: ?szenario= legt den Stand an, die Adresse behält danach nur das Tempo', async () => {
     oeffne('/spiel?szenario=angriff-auf-dich&tempo=sofort')
     expect(await screen.findByRole('region', { name: 'Deine Hand' })).toBeInTheDocument()
-    expect(roh()).toBe(serialisiere(szenario('angriff-auf-dich')))
+    expect(roh()).toBe(serialisiere(erzeugeSzenario('angriff-auf-dich')))
     expect(window.location.pathname).toBe('/spiel')
     expect(window.location.search).toBe('?tempo=sofort')
     expect(screen.getByRole('status')).toHaveTextContent('Du entscheidest, ob du abwehrst.')
@@ -134,16 +120,16 @@ describe('O3 K7: Testhooks unter /spiel', () => {
   })
 
   it('O3 K1/K7: ?tempo=sofort spielt die KI ohne Pause, ohne Tempo wartet sie', async () => {
-    const start = szenario('schlussrunde-4')
-    oeffne('/spiel?szenario=schlussrunde-4')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
+    oeffne('/spiel?szenario=schlussrunde-ohne-dich')
     await screen.findByRole('region', { name: 'Deine Hand' })
     await new Promise((fertig) => setTimeout(fertig, 300))
     expect(roh(), 'ohne Tempo spielt die KI nicht vor 700 ms').toBe(serialisiere(start))
   })
 
   it('O3 K7: mit ?tempo=sofort folgt der erste KI-Schritt ohne Pause', async () => {
-    const start = szenario('schlussrunde-4')
-    oeffne('/spiel?szenario=schlussrunde-4&tempo=sofort')
+    const start = erzeugeSzenario('schlussrunde-ohne-dich')
+    oeffne('/spiel?szenario=schlussrunde-ohne-dich&tempo=sofort')
     await screen.findByRole('region', { name: 'Deine Hand' })
     await waitFor(() => expect(roh()).not.toBe(serialisiere(start)), { timeout: 300 })
   })
@@ -153,7 +139,7 @@ describe('O3 K7: Testhooks unter /spiel', () => {
     { adresse: '/spiel?seed=abc&spieler=2', meldung: /seed/ },
     { adresse: '/spiel?tempo=schnell', meldung: /tempo/ },
   ])('O3 K7: $adresse sagt, was falsch ist, und führt zur Lobby', async ({ adresse, meldung }) => {
-    speichereSpielstand(szenario('start-2'))
+    speichereSpielstand(erzeugeSzenario('start-2'))
     const vorher = roh()
     oeffne(adresse)
     expect(await screen.findByRole('alert')).toHaveTextContent(meldung)

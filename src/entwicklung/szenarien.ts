@@ -241,3 +241,10 @@ export const SZENARIEN: readonly Szenario[] = [
 export function findeSzenario(name: string): Szenario | undefined {
   return SZENARIEN.find((szenario) => szenario.name === name)
 }
+
+/** Der Zustand des Szenarios; wirft, wenn es kein Szenario dieses Namens gibt. */
+export function erzeugeSzenario(name: string): Spielzustand {
+  const szenario = findeSzenario(name)
+  if (szenario === undefined) throw new Error(`Unbekanntes Szenario „${name}“; die Szenarien stehen unter /dev/szenarien.`)
+  return szenario.erzeuge()
+}

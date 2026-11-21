@@ -7,6 +7,21 @@ if (typeof HTMLDialogElement !== 'undefined' && typeof HTMLDialogElement.prototy
   dialogNachbilden()
 }
 
+// O3: jsdom kennt `matchMedia` nicht. Ohne Angabe meldet es nichts als zutreffend, also auch kein „weniger Bewegung“;
+// Tests, die eine Einstellung brauchen, ersetzen es mit `vi.stubGlobal`.
+if (typeof document !== 'undefined' && typeof globalThis.matchMedia !== 'function') {
+  globalThis.matchMedia = (abfrage: string): MediaQueryList => ({
+    matches: false,
+    media: abfrage,
+    onchange: null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    addListener: () => {},
+    removeListener: () => {},
+    dispatchEvent: () => false,
+  })
+}
+
 // M1dq (2026-06-26): Globale Test-Pollution-Praevention.
 // Verschiedene Slices (M1dp, M1dq) muessen fuer ihre RED-Tests
 // `window.history.pushState({}, '', '/game')` aufrufen, damit der

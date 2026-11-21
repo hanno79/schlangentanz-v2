@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { anwendeAktion, ermittleEntscheider, erzeugeZufall, pruefeAktion } from '../../engine'
+import { anwendeAktion, erzeugeZufall, pruefeAktion } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
-import { naechsterKiSchritt } from '../../ki/schritt'
+import { waehleFuer } from '../../ki/schritt'
+import { entscheiderVon } from '../../ki/sicht'
+import type { Entscheider } from '../../ki/sicht'
 import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../spielstand'
@@ -29,8 +31,6 @@ export const KI_PAUSE = 700
 export interface SpielOptionen {
   /** Millisekunden vor jedem KI-Schritt. */
   pause: number
-  /** Woraus die Saat jeder KI-Zufallsquelle kommt; im Spiel `Math.random`, nie der Partie-Zufall (U5). */
-  saatquelle?: () => number
 }
 
 export interface Spielsteuerung {
@@ -59,62 +59,57 @@ export function erstelleGegner(zustand: Spielzustand, saatquelle: () => number =
   )
 }
 
-/** Die Instanz der KI, die gerade entscheidet; `null`, wenn ein Mensch entscheidet oder die Partie beendet ist. */
-function entscheidendeKi(zustand: Spielzustand, gegner: ReadonlyMap<string, Ki>): Ki | null {
-  const entscheider = ermittleEntscheider(zustand)
-  if (entscheider === null) return null
-  const spieler = zustand.spieler[entscheider]
-  if (spieler.steuerung !== 'KI') return null
-  const ki = gegner.get(spieler.id)
-  if (ki === undefined) throw new Error(`Für ${spieler.name} gibt es keine KI-Instanz; die Partie hat andere Spieler als beim Start.`)
-  return ki
+/** Der Gegner, der gerade entscheidet, mit seiner Instanz; `null`, wenn ein Mensch entscheidet oder die Partie beendet ist. */
+function entscheidendeKi(zustand: Spielzustand, gegner: ReadonlyMap<string, Ki>): { entscheider: Entscheider; ki: Ki } | null {
+  const entscheider = entscheiderVon(zustand)
+  if (entscheider?.steuerung !== 'KI') return null
+  const ki = gegner.get(zustand.spieler[entscheider.index].id)
+  if (ki === undefined) throw new Error(`Für ${entscheider.name} gibt es keine KI-Instanz; die Partie hat andere Spieler als beim Start.`)
+  return { entscheider, ki }
 }
 
-export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOptionen): Spielsteuerung {
+export function useSpiel(start: Spielzustand, { pause }: SpielOptionen): Spielsteuerung {
   const [zustand, setzeZustand] = useState(start)
-  const [gegner] = useState(() => erstelleGegner(start, saatquelle))
+  const [gegner] = useState(() => erstelleGegner(start))
   const [ablehnung, setzeAblehnung] = useState<string | null>(null)
   /* Ein Wurf im Zeitgeber oder im Klick erreicht keine Fehlergrenze. Er wird
      festgehalten und beim nächsten Zeichnen geworfen (wie in der Lobby). */
   const [fehler, setzeFehler] = useState<{ fehler: unknown } | null>(null)
   const ansicht = useMemo(() => tischAnsicht(zustand), [zustand])
 
-  /** Ein Schritt ist getan: erst speichern, dann zeigen, damit ein Neuladen nie hinter dem Bild zurückliegt. */
-  const weiter = useCallback((neu: Spielzustand) => {
-    speichereSpielstand(neu)
-    setzeZustand(neu)
-    setzeAblehnung(null)
-  }, [])
-
-  useEffect(() => {
-    const ki = entscheidendeKi(zustand, gegner)
-    if (ki === null) return
-    const zeitgeber = setTimeout(() => {
+  /**
+   * Spielt die Aktion, die `waehle` liefert: erst speichern, dann zeigen, damit
+   * ein Neuladen nie hinter dem Bild zurückliegt. Ein Wurf von Engine oder KI
+   * geht an den Fehlerfang.
+   */
+  const spiele = useCallback(
+    (waehle: () => SpielAktion) => {
       try {
-        const aktion = naechsterKiSchritt(zustand, ki)
-        if (aktion === null) throw new Error('KI-Schritt: Es entscheidet keine KI, obwohl die Steuerung eine erwartet hat.')
-        weiter(anwendeAktion(zustand, aktion).zustand)
-      } catch (grund) {
-        setzeFehler({ fehler: grund })
-      }
-    }, pause)
-    return () => clearTimeout(zeitgeber)
-  }, [zustand, gegner, pause, weiter])
-
-  const fuehreAus = useCallback(
-    (aktion: SpielAktion) => {
-      const pruefung = pruefeAktion(zustand, aktion)
-      if (!pruefung.erlaubt) {
-        setzeAblehnung(pruefung.grund)
-        return
-      }
-      try {
-        weiter(anwendeAktion(zustand, aktion).zustand)
+        const neu = anwendeAktion(zustand, waehle()).zustand
+        speichereSpielstand(neu)
+        setzeZustand(neu)
+        setzeAblehnung(null)
       } catch (grund) {
         setzeFehler({ fehler: grund })
       }
     },
-    [zustand, weiter],
+    [zustand],
+  )
+
+  useEffect(() => {
+    const amZug = entscheidendeKi(zustand, gegner)
+    if (amZug === null) return
+    const zeitgeber = setTimeout(() => spiele(() => waehleFuer(zustand, amZug.entscheider, amZug.ki)), pause)
+    return () => clearTimeout(zeitgeber)
+  }, [zustand, gegner, pause, spiele])
+
+  const fuehreAus = useCallback(
+    (aktion: SpielAktion) => {
+      const pruefung = pruefeAktion(zustand, aktion)
+      if (pruefung.erlaubt) spiele(() => aktion)
+      else setzeAblehnung(pruefung.grund)
+    },
+    [zustand, spiele],
   )
 
   if (fehler !== null) throw fehler.fehler
