@@ -15,6 +15,8 @@ import {
   typen,
   verletzteInvarianten,
 } from './zugablauf_hilfen'
+import { frass, frassAktionen, frassId, ids, MIT_FRASS } from './schlangenfrass_hilfen'
+import type { Option } from './schlangenfrass_hilfen'
 
 /*
 E6, Schlangenfrass (A7.4 mit allen drei Beispielen, A7.7, A5, D12, D13, D25):
@@ -23,35 +25,16 @@ leere Schlangen, Fusionen und Joker. Die Abwehr bei Option c) prüft
 `schlangenfrass_abwehr.test.ts`.
 */
 
-type Option = SchlangenfrassSpielenAktion['option']
-
-const MIT_FRASS: Kartenwahl[] = ['Schlangenfrass', 'Blau', 'Rot', 'Gelb', 'Grün']
-
-function frassAktionen(zustand: Spielzustand, option?: Option): SchlangenfrassSpielenAktion[] {
-  return aktionen(zustand, 'SchlangenfrassSpielen').filter(
-    (aktion): aktion is SchlangenfrassSpielenAktion => aktion.typ === 'SchlangenfrassSpielen' && (option === undefined || aktion.option === option),
-  )
-}
-
 /** Die gefressenen Karten jeder aufgezählten Aktion dieser Option. */
 function zielIds(zustand: Spielzustand, option: Option): string[][] {
   return frassAktionen(zustand, option).map((aktion) => aktion.ziele.map((ziel) => ziel.karteId))
 }
 
-/** Die aufgezählte Aktion dieser Option, die genau diese Karten frisst, in beliebiger Reihenfolge. */
-function frass(zustand: Spielzustand, option: Option, ...karteIds: string[]): SchlangenfrassSpielenAktion {
-  const gesucht = [...karteIds].sort().join(',')
-  const passend = frassAktionen(zustand, option).find((aktion) => aktion.ziele.map((ziel) => ziel.karteId).sort().join(',') === gesucht)
-  expect(passend, `Schlangenfrass ${option} auf ${karteIds.join(', ')} ist nicht aufgezählt`).toBeDefined()
-  return passend!
-}
-
 /** Eine selbst gebaute Aktion, für Tests, die eine unerlaubte Wahl zeigen. */
 function gebaut(zustand: Spielzustand, option: Option, ...karteIds: string[]): SchlangenfrassSpielenAktion {
   const spieler = zustand.spieler[zustand.zug.spielerIndex]
-  const frassId = spieler.hand.find((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenfrass')!.id
   const ziele = karteIds.map((karteId) => ({ schlangenId: schlangeMit(zustand, karteId) ?? 'schlange-99', karteId }))
-  return { typ: 'SchlangenfrassSpielen', spielerId: spieler.id, karteId: frassId, option, ziele }
+  return { typ: 'SchlangenfrassSpielen', spielerId: spieler.id, karteId: frassId(zustand, zustand.zug.spielerIndex), option, ziele }
 }
 
 function schlangeMit(zustand: Spielzustand, karteId: string): string | undefined {
@@ -59,18 +42,19 @@ function schlangeMit(zustand: Spielzustand, karteId: string): string | undefined
   return alle.find((schlange) => schlange.karten.some((karte) => karte.id === karteId))?.id
 }
 
-/** Die Ids der Karten in der `nummer`-ten Schlange des Spielers. */
-function ids(zustand: Spielzustand, spieler: number, nummer = 0): string[] {
-  return zustand.spieler[spieler].schlangen[nummer].karten.map((karte) => karte.id)
-}
-
 /** Farbe bzw. Name jeder Karte in der Schlange, lesbar für die Beispiele der Website. */
 function glieder(zustand: Spielzustand, spieler: number, nummer = 0): string[] {
   return zustand.spieler[spieler].schlangen[nummer].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
 }
 
-function frassId(zustand: Spielzustand, spieler = 0): string {
-  return zustand.spieler[spieler].hand.find((karte) => karte.typ === 'Sonderkarte' && karte.name === 'Schlangenfrass')!.id
+/** A11: die Gruppenpunkte aller Schlangen des Spielers, ohne Vielfaltbonus. */
+function gruppenPunkte(zustand: Spielzustand, spieler: number): number {
+  return werteSchlangen(zustand.spieler[spieler].schlangen, false).gruppenPunkte
+}
+
+/** Die Ids der beiden Karten unter der ersten Fusion der ersten Schlange des Spielers. */
+function unterFusion(zustand: Spielzustand, spieler: number): string[] {
+  return zustand.spieler[spieler].schlangen[0].fusionen[0].unter.map((karte) => karte.id)
 }
 
 /** Zwei Spieler; Spieler 1 hält den Schlangenfrass und hat diese Schlangen, Spieler 2 hält `gegnerhand` und hat seine. */
@@ -116,10 +100,10 @@ describe('A7.4 a) und b): Karten aus der eigenen Schlange', () => {
   it('A7.4 Beispiel b)/A7.5: die Blockade aus Rot, Blockade, Rot, Rot geht auf den Ablagestapel des Spielers, der Schlangenfrass gespielt hat; die Dreierreihe zählt wieder', () => {
     const start = zweiSpieler([['Rot', 'Schlangenblockade', 'Rot', 'Rot']])
     const blockade = ids(start, 0)[1]
-    expect(werteSchlangen(start.spieler[0].schlangen, false).gruppenPunkte).toBe(0)
+    expect(gruppenPunkte(start, 0)).toBe(0)
     const { zustand } = fuehreAus(start, frass(start, 'eigeneBlockade', blockade))
     expect(glieder(zustand, 0)).toEqual(['Rot', 'Rot', 'Rot'])
-    expect(werteSchlangen(zustand.spieler[0].schlangen, false).gruppenPunkte).toBe(3)
+    expect(gruppenPunkte(zustand, 0)).toBe(3)
     expect(ablage(zustand, 0)).toEqual([frassId(start), blockade])
   })
 
@@ -260,7 +244,7 @@ describe('A7.4/A7.7: leere Schlangen, Fusionen und Joker', () => {
   it('A7.4/A7.7/E6 Kriterium 6: wird eine Farbenfusion gefressen, geht nur sie weg; die beiden Karten darunter liegen einzeln an ihrer Stelle, links zuerst', () => {
     const start = zweiSpieler([['Blau', { fusion: ['Gelb', 'Gelb'] }, 'Rot']])
     const [blau, fusion, rot] = ids(start, 0)
-    const [links, rechts] = start.spieler[0].schlangen[0].fusionen[0].unter.map((karte) => karte.id)
+    const [links, rechts] = unterFusion(start, 0)
     const { zustand } = fuehreAus(start, frass(start, 'eigeneKarte', fusion))
     expect(ids(zustand, 0)).toEqual([blau, links, rechts, rot])
     expect(zustand.spieler[0].schlangen[0].fusionen).toEqual([])
@@ -270,7 +254,7 @@ describe('A7.4/A7.7: leere Schlangen, Fusionen und Joker', () => {
 
   it('A7.4/A7.7: eine Fusion als einzige Karte einer Schlange: die Schlange bleibt, mit den beiden Karten darunter', () => {
     const start = zweiSpieler([[{ fusion: ['Grün', 'Grün'] }]])
-    const unter = start.spieler[0].schlangen[0].fusionen[0].unter.map((karte) => karte.id)
+    const unter = unterFusion(start, 0)
     const { zustand } = fuehreAus(start, frass(start, 'eigeneKarte', ids(start, 0)[0]))
     expect(ids(zustand, 0)).toEqual(unter)
     expect(verletzteInvarianten(zustand)).toEqual([])
@@ -279,7 +263,7 @@ describe('A7.4/A7.7: leere Schlangen, Fusionen und Joker', () => {
   it('A7.4/A7.7: c) frisst beim Gegner eine Fusion und ihren Nachbarn; die zwei Karten der Fusion bleiben dort, die übrigen Fusionen bleiben Fusionen', () => {
     const start = zweiSpieler([], [['Rot', { fusion: ['Blau', 'Blau'] }, { fusion: ['Gelb', 'Gelb'] }]])
     const [rot, blauFusion, gelbFusion] = ids(start, 1)
-    const [blau1, blau2] = start.spieler[1].schlangen[0].fusionen[0].unter.map((karte) => karte.id)
+    const [blau1, blau2] = unterFusion(start, 1)
     const { zustand } = folge(start, (jetzt) => frass(jetzt, 'gegnerischeKarten', rot, blauFusion), durchlassen)
     expect(ids(zustand, 1)).toEqual([blau1, blau2, gelbFusion])
     expect(zustand.spieler[1].schlangen[0].fusionen.map((eintrag) => eintrag.karteId)).toEqual([gelbFusion])
@@ -290,22 +274,22 @@ describe('A7.4/A7.7: leere Schlangen, Fusionen und Joker', () => {
   it('A7.4 Beispiel c): Regenbogenschlange und eine Gelb aus Regenbogenschlange, Gelb, Gelb, Gelb: es bleiben zwei Gelb ohne Punkte', () => {
     const start = zweiSpieler([], [['Regenbogenschlange', 'Gelb', 'Gelb', 'Gelb']])
     const [regenbogen, gelb] = ids(start, 1)
-    expect(werteSchlangen(start.spieler[1].schlangen, false).gruppenPunkte).toBe(3)
+    expect(gruppenPunkte(start, 1)).toBe(3)
     const { zustand } = folge(start, (jetzt) => frass(jetzt, 'gegnerischeKarten', regenbogen, gelb), durchlassen)
     expect(glieder(zustand, 1)).toEqual(['Gelb', 'Gelb'])
-    expect(werteSchlangen(zustand.spieler[1].schlangen, false).gruppenPunkte).toBe(0)
+    expect(gruppenPunkte(zustand, 1)).toBe(0)
   })
 
   it('A7.4/A11/E6 Grenzfall: ein gefressener Joker lässt eine Gruppe zerfallen, Regenbogenschlange wie Farbenfusion', () => {
     const regenbogen = zweiSpieler([['Rot', 'Regenbogenschlange', 'Rot']])
-    expect(werteSchlangen(regenbogen.spieler[0].schlangen, false).gruppenPunkte).toBe(2)
+    expect(gruppenPunkte(regenbogen, 0)).toBe(2)
     const ohneRegenbogen = fuehreAus(regenbogen, frass(regenbogen, 'eigeneKarte', ids(regenbogen, 0)[1])).zustand
-    expect(werteSchlangen(ohneRegenbogen.spieler[0].schlangen, false).gruppenPunkte).toBe(0)
+    expect(gruppenPunkte(ohneRegenbogen, 0)).toBe(0)
 
     const fusion = zweiSpieler([['Rot', 'Rot', { fusion: ['Blau', 'Blau'] }]])
-    expect(werteSchlangen(fusion.spieler[0].schlangen, false).gruppenPunkte, 'A7.7/D30: die Fusion vervollständigt Rot und bringt 1 + 1').toBe(4)
+    expect(gruppenPunkte(fusion, 0), 'A7.7/D30: die Fusion vervollständigt Rot und bringt 1 + 1').toBe(4)
     const ohneFusion = fuehreAus(fusion, frass(fusion, 'eigeneKarte', ids(fusion, 0)[2])).zustand
     expect(glieder(ohneFusion, 0)).toEqual(['Rot', 'Rot', 'Blau', 'Blau'])
-    expect(werteSchlangen(ohneFusion.spieler[0].schlangen, false).gruppenPunkte).toBe(0)
+    expect(gruppenPunkte(ohneFusion, 0)).toBe(0)
   })
 })

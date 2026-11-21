@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../index'
 import type { Ereignis, SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
-import type { Kartenwahl } from '../testing/szenario'
 import { lageVon, spieleNach } from './nachrechnen'
+import { frass as frassAktion, frassAktionen, ids, MIT_FRASS } from './schlangenfrass_hilfen'
 import {
   ablage,
-  aktionen,
   durchlassen,
   ereignisseVom,
   farbkarte,
@@ -28,21 +27,9 @@ Karten; die übrigen werden gefressen, erst wenn alle entschieden haben. Den
 Reaktionsablauf selbst prüft `reaktion.test.ts` (E4).
 */
 
-const MIT_FRASS: Kartenwahl[] = ['Schlangenfrass', 'Blau', 'Rot', 'Gelb', 'Grün']
-
 /** Die aufgezählte Option c), die genau diese Karten frisst. */
 function frassAuf(zustand: Spielzustand, ...karteIds: string[]): SchlangenfrassSpielenAktion {
-  const gesucht = [...karteIds].sort().join(',')
-  const passend = aktionen(zustand, 'SchlangenfrassSpielen').find(
-    (aktion): aktion is SchlangenfrassSpielenAktion =>
-      aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'gegnerischeKarten' && aktion.ziele.map((ziel) => ziel.karteId).sort().join(',') === gesucht,
-  )
-  expect(passend, `Schlangenfrass c) auf ${karteIds.join(', ')} ist nicht aufgezählt`).toBeDefined()
-  return passend!
-}
-
-function ids(zustand: Spielzustand, spieler: number, nummer = 0): string[] {
-  return zustand.spieler[spieler].schlangen[nummer]?.karten.map((karte) => karte.id) ?? []
+  return frassAktion(zustand, 'gegnerischeKarten', ...karteIds)
 }
 
 const abwehren = (zustand: Spielzustand): SpielAktion => reaktion(zustand, true)
@@ -164,7 +151,7 @@ describe('A6/D33: wer gefragt wird', () => {
 
   it('A6/D10: a) und b) treffen keinen Mitspieler: niemand wird gefragt, auch wenn jeder Farbenschutz hält', () => {
     const start = tisch([MIT_FRASS, MIT_SCHUTZ, MIT_SCHUTZ]).schlange(0, ['Rot', 'Schlangenblockade', 'Rot']).schlange(1, ['Blau']).zustand()
-    const eigene = aktionen(start, 'SchlangenfrassSpielen').filter((aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option !== 'gegnerischeKarten')
+    const eigene = frassAktionen(start).filter((aktion) => aktion.option !== 'gegnerischeKarten')
     expect(eigene).toHaveLength(4)
     for (const aktion of eigene) {
       const { zustand, ereignisse } = fuehreAus(start, aktion)
@@ -222,7 +209,7 @@ describe('A6 Beispiel 2/E4b: KartenVersetzt meldet, was gefressen ist', () => {
     const [links, rechts] = eigene.fusionen[0].unter.map((karte) => karte.id)
     const fusion = eigene.karten[0].id
     const frass = start.spieler[0].hand[0].id
-    const eigen = nachgerechnet(start, (jetzt) => aktionen(jetzt, 'SchlangenfrassSpielen').find((aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'eigeneKarte')!)
+    const eigen = nachgerechnet(start, (jetzt) => frassAktionen(jetzt, 'eigeneKarte')[0])
     expect(ereignisseVom(eigen.ereignisse, 'KartenVersetzt')).toEqual([
       {
         typ: 'KartenVersetzt',

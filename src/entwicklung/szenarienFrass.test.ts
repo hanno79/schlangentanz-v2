@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, ermittleEntscheider } from '../engine'
-import type { Ereignis, SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../engine'
+import type { Ereignis, SchlangenfrassSpielenAktion, SpielAktion, Spielkarte, Spielzustand } from '../engine'
 import { findeSzenario, SZENARIEN } from './szenarien'
 
 /*
@@ -42,10 +42,9 @@ function klicke(zustand: Spielzustand, ...wahlen: Wahl[]): { zustand: Spielzusta
 
 const ereignistypen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.typ)
 const ids = (zustand: Spielzustand, spieler: number) => zustand.spieler[spieler].schlangen[0].karten.map((karte) => karte.id)
-const namen = (zustand: Spielzustand, spieler: number) =>
-  zustand.spieler[spieler].schlangen[0].karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
-const ablagenamen = (zustand: Spielzustand, spieler: number) =>
-  zustand.spieler[spieler].ablagestapel.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name))
+const name = (karte: Spielkarte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)
+const namen = (zustand: Spielzustand, spieler: number) => zustand.spieler[spieler].schlangen[0].karten.map(name)
+const ablagenamen = (zustand: Spielzustand, spieler: number) => zustand.spieler[spieler].ablagestapel.map(name)
 const optionen = (zustand: Spielzustand) => ermittleAktionen(zustand).filter(istFrass).map((aktion) => aktion.option)
 
 describe('E6: Szenarien des Schlangenfrass', () => {

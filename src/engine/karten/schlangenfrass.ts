@@ -65,6 +65,7 @@ function finde(zustand: Spielzustand, ziel: Ziel): Fundstelle | undefined {
 /** A7.4 c): zwei Karten, sofern möglich; jedes Paar einmal, in der Reihenfolge am Tisch. */
 function paare(ziele: Fundstelle[]): Ziel[][] {
   if (ziele.length === 1) return [[verweis(ziele[0])]];
+  // Ohne Ziel bleibt die Liste leer.
   return ziele.flatMap((erste, index) => ziele.slice(index + 1).map((zweite) => [verweis(erste), verweis(zweite)]));
 }
 
@@ -73,8 +74,7 @@ function paare(ziele: Fundstelle[]): Ziel[][] {
  * Farbenfusion lässt ihre beiden Karten an ihrer Stelle zurück (A7.4); eine
  * leer gefressene Schlange verschwindet.
  */
-function friss(zustand: Spielzustand, ziel: Ziel, ablagestapel: Spielkarte[]): void {
-  const { besitzer, schlange, karte } = finde(zustand, ziel)!;
+function friss(zustand: Spielzustand, { besitzer, schlange, karte }: Fundstelle, ablagestapel: Spielkarte[]): void {
   const stelle = schlange.karten.indexOf(karte);
   const fusion = schlange.fusionen.find((eintrag) => eintrag.karteId === karte.id);
   schlange.karten.splice(stelle, 1, ...(fusion?.unter ?? []));
@@ -99,8 +99,10 @@ function pruefeOption(zustand: Spielzustand, aktion: SchlangenfrassSpielenAktion
       if (fundstellen.some(({ besitzer }) => besitzer === angreifer)) return 'Option c) frisst nur aus den Schlangen der Mitspieler, nicht aus der eigenen (A7.4).';
       const blockade = fundstellen.find(({ karte }) => istBlockade(karte));
       if (blockade !== undefined) return `Schlangenblockaden in gegnerischen Schlangen kann Option c) nicht entfernen, auch ${blockade.karte.id} nicht (A7.4).`;
-      const moeglich = Math.min(2, gegnerischeZiele(zustand, angreifer).length);
-      if (fundstellen.length !== moeglich) return `Bei Option c) müssen zwei Karten entfernt werden, sofern möglich: Hier sind es ${moeglich}, nicht ${fundstellen.length} (A7.4).`;
+      // Zwei verschiedene erlaubte Ziele sind immer genug; nur bei einem zählt, ob es ein zweites gäbe.
+      if (fundstellen.length === 1 && gegnerischeZiele(zustand, angreifer).length > 1) {
+        return 'Bei Option c) müssen zwei Karten entfernt werden, sofern möglich: Am Tisch liegen mindestens zwei erlaubte Ziele, genannt ist eines (A7.4).';
+      }
       return null;
     }
   }
@@ -117,7 +119,7 @@ export const schlangenfrass: KartenDefinition<SchlangenfrassSpielenAktion> = {
     return [
       ...eigene.map((fund): SchlangenfrassSpielenAktion => ({ ...basis, option: 'eigeneKarte', ziele: [verweis(fund)] })),
       ...eigene.filter(({ karte: eigeneKarte }) => istBlockade(eigeneKarte)).map((fund): SchlangenfrassSpielenAktion => ({ ...basis, option: 'eigeneBlockade', ziele: [verweis(fund)] })),
-      ...(gegner.length === 0 ? [] : paare(gegner)).map((ziele): SchlangenfrassSpielenAktion => ({ ...basis, option: 'gegnerischeKarten', ziele })),
+      ...paare(gegner).map((ziele): SchlangenfrassSpielenAktion => ({ ...basis, option: 'gegnerischeKarten', ziele })),
     ];
   },
 
@@ -134,17 +136,19 @@ export const schlangenfrass: KartenDefinition<SchlangenfrassSpielenAktion> = {
 
   betroffene(zustand: Spielzustand, aktion: SchlangenfrassSpielenAktion): number[] {
     if (aktion.option !== 'gegnerischeKarten') return [];
-    return [...new Set(aktion.ziele.map((ziel) => finde(zustand, ziel)!.besitzer))];
+    // Jeder entscheidet einmal (D15); das macht der Reaktionsablauf aus dieser Liste.
+    return aktion.ziele.map((ziel) => finde(zustand, ziel)!.besitzer);
   },
 
   wirke(zustand: Spielzustand, aktion: SchlangenfrassSpielenAktion, abgewehrt: readonly number[]): Spielzustand {
     const angreifer = spielerIndexVon(zustand, aktion.spielerId);
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
-    const reihenfolge = kartenIn(zustand, [angreifer, ...mitspielerImUhrzeigersinn(zustand, angreifer)]).map(({ karte }) => karte.id);
-    const gefressen = aktion.ziele
-      .filter((ziel) => !abgewehrt.includes(finde(zustand, ziel)!.besitzer))
-      .sort((links, rechts) => reihenfolge.indexOf(links.karteId) - reihenfolge.indexOf(rechts.karteId));
-    for (const ziel of gefressen) friss(zustand, ziel, zustand.spieler[angreifer].ablagestapel);
+    const ziele = new Set(aktion.ziele.map((ziel) => ziel.karteId));
+    // In Tischreihenfolge ab dem Angreifer, gleich wie die Aktion die Ziele ordnet.
+    const gefressen = kartenIn(zustand, [angreifer, ...mitspielerImUhrzeigersinn(zustand, angreifer)]).filter(
+      ({ besitzer, karte }) => ziele.has(karte.id) && !abgewehrt.includes(besitzer),
+    );
+    for (const fund of gefressen) friss(zustand, fund, zustand.spieler[angreifer].ablagestapel);
     return zustand;
   },
 };
