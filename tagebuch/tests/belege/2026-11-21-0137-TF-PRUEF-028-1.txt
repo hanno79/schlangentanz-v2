@@ -1,0 +1,74 @@
+DAUER pruefeSichtZugriff 1034 ms, 19 Dateien
+DATEI src/ki/schritt.ts: 0 Befunde
+DATEI src/ki/sicht.ts: 0 Befunde
+DATEI src/ki/strategien/strategie.ts: 0 Befunde
+DATEI src/ki/strategien/zufallsKi.ts: 0 Befunde
+DATEI src/ki/strategien/zz_k2_bewertung.ts: 0 Befunde
+DATEI src/ki/strategien/zz_s01_returntype.ts: 3 Befunde
+U5 src/ki/strategien/zz_s01_returntype.ts:1 Strategie erwähnt Spielzustand: ermittleAktionen
+U5 src/ki/strategien/zz_s01_returntype.ts:2 Strategie erwähnt Spielzustand: Z
+U5 src/ki/strategien/zz_s01_returntype.ts:2 Strategie erwähnt Spielzustand: ermittleAktionen
+DATEI src/ki/strategien/zz_s02_importtype.ts: 2 Befunde
+U5 src/ki/strategien/zz_s02_importtype.ts:1 Strategie erwähnt Spielzustand: Z
+U5 src/ki/strategien/zz_s02_importtype.ts:1 Strategie erwähnt Spielzustand: Spielzustand
+DATEI src/ki/strategien/zz_s03_importtype_fremd.ts: 0 Befunde
+DATEI src/ki/strategien/zz_s04_glob.ts: 0 Befunde
+DATEI src/ki/strategien/zz_s05_glob_lazy.ts: 0 Befunde
+DATEI src/ki/strategien/zz_s06_require_equals.ts: 1 Befunde
+U5 src/ki/strategien/zz_s06_require_equals.ts:1 Ausdruck vom Typ any: '../../engine/testing/zufall'
+DATEI src/ki/strategien/zz_s07_harmlos.ts: 2 Befunde
+U5 src/ki/strategien/zz_s07_harmlos.ts:7 Ausdruck vom Typ any: JSON.parse('{"a":1}', function (this: unknown, _k: string, v: unknown) { texte.push(JSON.stringify(this)); return v })
+U5 src/ki/strategien/zz_s07_harmlos.ts:8 gibt das globale new Error('x').stack als Wert weiter
+DATEI src/ki/strategien/zz_s08_typ_umweg.ts: 3 Befunde
+U5 src/ki/strategien/zz_s08_typ_umweg.ts:1 Strategie erwähnt Spielzustand: AktionsErgebnis
+U5 src/ki/strategien/zz_s08_typ_umweg.ts:3 Strategie erwähnt Spielzustand: K
+U5 src/ki/strategien/zz_s08_typ_umweg.ts:3 Strategie erwähnt Spielzustand: AktionsErgebnis
+DATEI src/ki/strategien/zz_s10_seher.ts: 0 Befunde
+DATEI src/ki/strategien/zz_s11_kollusion.ts: 0 Befunde
+DATEI src/ki/strategien/zz_s12_zeit.ts: 9 Befunde
+U5 src/ki/strategien/zz_s12_zeit.ts:3 nutzt das globale queueMicrotask; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:4 nutzt das globale Promise; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:5 nutzt das globale SharedArrayBuffer; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:6 nutzt das globale Atomics; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:6 nutzt das globale Int32Array; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:6 nutzt das globale SharedArrayBuffer; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:7 nutzt das globale Intl; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/strategien/zz_s12_zeit.ts:8 gibt das globale Symbol.for('ki-kanal').description als Wert weiter
+U5 src/ki/strategien/zz_s12_zeit.ts:9 Ausdruck vom Typ any: Error.stackTraceLimit
+DATEI src/ki/strategien/zz_s13_handseher.ts: 0 Befunde
+DATEI src/ki/turnier.ts: 0 Befunde
+DATEI src/ki/zz_it1_rahmen.ts: 23 Befunde
+U5 src/ki/zz_it1_rahmen.ts:1 importiert Werte aus '../entwicklung/namen'; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki
+U5 src/ki/zz_it1_rahmen.ts:2 importiert Werte aus './turnier.test'; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki
+U5 src/ki/zz_it1_rahmen.ts:3 importiert Werte aus '../engine/testing/zufall'; erlaubt sind src/engine/index.ts und geprüfte Dateien unter src/ki
+U5 src/ki/zz_it1_rahmen.ts:5 nutzt das globale self; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:7 gibt das globale self als Wert weiter
+U5 src/ki/zz_it1_rahmen.ts:7 nutzt das globale globalThis; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:9 nutzt das globale top; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:11 gibt das globale frames.self als Wert weiter
+U5 src/ki/zz_it1_rahmen.ts:11 nutzt das globale frames; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:13 nutzt das globale setTimeout; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:14 nutzt das globale setInterval; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:15 nutzt das globale Intl; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:16 nutzt das globale Event; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:17 nutzt das globale URL; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:17 nutzt das globale Blob; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:18 nutzt die geerbte Methode JSON.valueOf
+U5 src/ki/zz_it1_rahmen.ts:20 importiert mit import() oder require(); unter src/ki nur statisch
+U5 src/ki/zz_it1_rahmen.ts:20 Ausdruck vom Typ any: import
+U5 src/ki/zz_it1_rahmen.ts:21 Ausdruck vom Typ any: require('./sicht')
+U5 src/ki/zz_it1_rahmen.ts:21 importiert mit import() oder require(); unter src/ki nur statisch
+U5 src/ki/zz_it1_rahmen.ts:21 nutzt das globale require; unter src/ki gilt POSITIVLISTE_GLOBALE
+U5 src/ki/zz_it1_rahmen.ts:21 Ausdruck vom Typ any: require
+U5 src/ki/zz_it1_rahmen.ts:22 Ausdruck vom Typ any: m2
+SEHER Partie 0 Saat 1: erkannt Saat 1; Haende gleich: true; Gegnerhand echt ["blau-08","gruen-08","verdoppler-04","gruen-03","violett-06"] erkannt ["blau-08","gruen-08","verdoppler-04","gruen-03","violett-06"]
+SEHER Partie 1 Saat 2: erkannt Saat 2; Haende gleich: true; Gegnerhand echt ["rot-09","verdoppler-01","rot-11","blau-03","violett-03"] erkannt ["rot-09","verdoppler-01","rot-11","blau-03","violett-03"]
+SEHER Partie 2 Saat 3: erkannt Saat 3; Haende gleich: true; Gegnerhand echt ["gelb-14","blau-04","violett-07","gruen-02","rot-13"] erkannt ["gelb-14","blau-04","violett-07","gruen-02","rot-13"]
+SEHER Partie 3 Saat 4: erkannt Saat 4; Haende gleich: true; Gegnerhand echt ["rot-02","verdoppler-01","braun-04","gelb-11","braun-11"] erkannt ["rot-02","verdoppler-01","braun-04","gelb-11","braun-11"]
+HANDSEHER Partie 0 Saat 101 Sitz 0: erkannt Saat 101; alle Haende gleich: true
+HANDSEHER Partie 1 Saat 102 Sitz 2: erkannt Saat 102; alle Haende gleich: true
+HANDSEHER Partie 2 Saat 103 Sitz 1: erkannt Saat 103; alle Haende gleich: true
+GLOB stapel 108 Karten; Hand Sitz 1 echt schlangengrube-01,gelb-12,blau-12,gelb-02,farbendieb-03; aus Stapel schlangengrube-01,gelb-12,blau-12,gelb-02,farbendieb-03
+KOLLUSION Entscheidungen mit Fremdwissen 172, davon mit mind. 1 richtigen Karte 172, vollständig richtige Hand 2, richtige Karten 619, veraltete 0
+SICHT proto true; getter false; Zustand unveraendert true; fremde Handkarte im JSON der Sicht false
+K2PROBE Ausgaenge ["beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet","beendet"]; Siege 20,0

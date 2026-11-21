@@ -1,0 +1,10 @@
+Entwicklertisch, Testhook-Build (npm run build:testhooks, Exit 0), preview:testhooks Port 4174, eingebauter Browser 1280x900
+Adresse: http://localhost:4174/dev?szenario=start-2
+Schritt 0: KI-Schritt gesperrt, "Spieler 1 entscheidet; das ist ein Mensch."
+Klick FarbkarteLegen Wasserwirbel (blau-12) -> neue Schlange, dann ZugBeenden: Schritt 2, Knopf frei, "KI-Gegner 1 entscheidet; das ist eine KI."
+Klick KI-Schritt: Schritt 3, Verlauf "KI-Schritt: FarbkarteLegen: Waldspross (gruen-03) -> neue Schlange"
+Klick KI-Schritt: Schritt 4, Verlauf zusätzlich "KI-Schritt: ZugBeenden"; Knopf gesperrt (disabled true), "Spieler 1 entscheidet; das ist ein Mensch."
+2x Schritt zurück, Klick KI-Schritt: wieder Schritt 3 mit gruen-03 (gleicher Verlauf)
+scrollWidth 1265 = clientWidth 1265; Konsolenfehler: keine
+Hinweis: gespielt wurde blau-12 statt der Karte aus dem Testfall, daher wählt die KI gruen-03 statt violett-06.
+Nebenbefund: Hand KI-Gegner 1 bei Saat 1 = blau-08, gruen-08, verdoppler-04, gruen-03, violett-06 (identisch mit der Rekonstruktion der Seher-Strategie, Turnier-Saat 1)

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-PRUEF-032 Eine K2-Bewertung als Strategie, die nur die Sicht nutzt, bleibt im Architekturtest ohne Meldung und spielt Partien zu Ende. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-PRUEF-032 Eine K2-Bewertung als Strategie, die nur die Sicht nutzt, bleibt im Architekturtest ohne Meldung und spielt Partien zu Ende.</h1><p class="etiketten"><span class="etikett">Bereich Prüfwerkzeuge: Regelcheck, Architekturtest, Geräteklassen, Bildschirmfotos, Anleitungen für die Abnahme</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-PRUEF-028</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Strategien unter <code>src/ki/strategien/</code> dürfen fast nichts importieren und keinen Zustandstyp erwähnen. K2 soll trotzdem ohne Umwege bauen können. Geprüft wird eine Bewertung, wie K2 sie schreiben würde: eine <code>Map</code> zum Zählen, Sortieren, <code>werteSchlangen</code> auf den Schlangen der Sicht, Konstanten der Engine und eine kleine Vorausschau auf einer Abschrift der eigenen Schlangen.</p><h2>Bestanden, wenn</h2><p>Die Probe <code>zz_k2_bewertung.ts</code> bekommt 0 Meldungen, <code>npx tsc -p tsconfig.app.json --noEmit</code> endet mit 0, und 20 Turnierpartien gegen die Zufalls-KI enden alle mit dem Ausgang <code>beendet</code>.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Probe bekommt eine Meldung, die keinen echten Verstoss betrifft, oder eine der 20 Partien endet mit <code>invariante</code> oder <code>schrittgrenze</code> oder mit einer Ausnahme.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/P0.3d-ki-grenze (PR #55)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo-Stand ab <code>task/P0.3d-ki-grenze</code>, <code>npm ci</code> gelaufen</td></tr><tr><td>Ausgangslage</td><td><code>git status</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Probe <code>zz_k2_bewertung.ts</code> aus dem Prüfprotokoll P0.3d, Iteration 2, mit <code>erstelleSolideKi(zufall)</code>; Turnier mit 2 Teilnehmern (Probe und Zufalls-KI), 20 Partien ab Saat 1, ohne Erweiterung.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Repo</td><td>Probe nach `src/ki/strategien/` kopieren</td><td></td><td>`git status` zeigt nur die neue Datei</td></tr><tr><td>2</td><td>Konsole im Repo</td><td>Architekturtest laufen lassen</td><td>`npx vitest run tests/architektur.test.ts tests/architektur_ki.test.ts`</td><td>Exit 0, keine Zeile mit `zz_k2_bewertung.ts`</td></tr><tr><td>3</td><td>Konsole im Repo</td><td>Typprüfung der App</td><td>`npx tsc -p tsconfig.app.json --noEmit`</td><td>Exit 0</td></tr><tr><td>4</td><td>Konsole im Repo</td><td>Turnier laufen lassen, etwa in einer vorübergehenden Testdatei</td><td>`turnier({ teilnehmer: [Probe, Zufalls-KI], partien: 20, erweiterung: false })`</td><td>20-mal `beendet`</td></tr><tr><td>5</td><td>Konsole im Repo</td><td>Probe wieder löschen</td><td></td><td>`git status` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Eine Zugsuche über mehrere Züge auf einem erratenen Zustand ist nicht dabei; dafür fehlt die Determinisierung im Rahmen, die der Plan erst für K2 vorsieht.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 01:38</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.3d, Iteration 2) &middot; agent &middot; pruef-P0.3d-it2 @ <span class="commit" title="f23599e248c1b336eb78b786e4cce8ded9c3b4e1">f23599e</span></p><p>Stand f23599e. zz_k2_bewertung.ts (Map, sort, werteSchlangen auf Sicht-Schlangen, HANDKARTEN/KETTENBONUS/MINDEST_FARBGRUPPEN_LAENGE, Vorausschau auf structuredClone der eigenen Schlangen): 0 Meldungen, tsc app Exit 0, eslint Exit 0; 20 Turnierpartien gegen die Zufalls-KI alle &#x27;beendet&#x27;, Siege 20:0.</p><ul class="belege"><li><a href="belege/2026-11-21-0138-TF-PRUEF-032-1.txt">2026-11-21-0138-TF-PRUEF-032-1.txt</a></li><li><a href="belege/2026-11-21-0138-TF-PRUEF-032-2.txt">2026-11-21-0138-TF-PRUEF-032-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

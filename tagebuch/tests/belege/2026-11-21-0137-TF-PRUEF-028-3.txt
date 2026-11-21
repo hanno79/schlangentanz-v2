@@ -1,0 +1,19 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aa26dd359bc1dc529
+
+
+ Test Files  2 passed (2)
+      Tests  153 passed (153)
+   Start at  01:28:23
+   Duration  2.99s (transform 435ms, setup 592ms, import 2.15s, tests 2.42s, environment 0ms)
+
+strategie.ts
+zufallsKi.test.ts
+zufallsKi.ts
+zz_k2_bewertung.ts
+zz_s03_importtype_fremd.ts
+zz_s04_glob.ts
+zz_s05_glob_lazy.ts
+zz_s10_seher.ts
+zz_s11_kollusion.ts
+zz_s13_handseher.ts

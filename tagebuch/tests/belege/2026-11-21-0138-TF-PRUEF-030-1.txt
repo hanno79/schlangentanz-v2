@@ -1,0 +1,28 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aa26dd359bc1dc529
+
+ ❯ tests/architektur_ki.test.ts (105 tests | 1 failed) 901ms
+     × P0.3d: U5-Umgehung „H2: serialisiere aus der Engine“ wird gemeldet 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/architektur_ki.test.ts > P0.3d: U5 – ausser sicht.ts reicht die KI den vollen Zustand nur unverändert weiter > P0.3d: U5-Umgehung „H2: serialisiere aus der Engine“ wird gemeldet
+AssertionError: U5: erwartet eine U5-Meldung für H2: serialisiere aus der Engine in src/ki/umgehung-04.ts, gefunden:
+: expected 0 to be greater than 0
+ ❯ erwarteGemeldet tests/architektur_ki.test.ts:282:158
+    280|   const gefunden = befundeIn(datei).filter((verstoss) => regel === und…
+    281|
+    282|   expect(gefunden.length, `${kuerzel}: erwartet eine ${regel ?? 'U4- o…
+       |                                                                                                                                                              ^
+    283| }
+    284|
+ ❯ tests/architektur_ki.test.ts:291:119
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 152 passed (153)
+   Start at  01:33:46
+   Duration  2.98s (transform 439ms, setup 591ms, import 2.13s, tests 2.27s, environment 0ms)
+
