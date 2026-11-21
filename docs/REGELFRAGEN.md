@@ -632,7 +632,7 @@ Teil 2, eine oder zwei Häutungen:
 
 **Vorschlag:** a, c. Vorschlag des Orchestrators: Der Kartentext spricht den Spieler an („Bilde“), und das einzige Beispiel zeigt beide Gruppen aus einer Häutung; E9 hält die Zahl neuer Gruppen bereits je Häutung fest.
 
-**Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: E9 (Abnahmekriterium 5), K4 (Abnahmekriterium 3).
+**Betroffene Tasks:** nennt die Frage: X2. Hängt davon ab: X2 (Abnahmekriterium 7, am 21.11.2026 aus E9 Kriterium 5 verschoben), K4 (Abnahmekriterium 3).
 
 **Antwort:** a, c. Vorschlag übernommen, Sammelantwort des Autors: „ja zu deinen vorschlägen.“ Für Schlangentanz zählt nur eine Häutung, die der Spieler selbst in einer eigenen Schlange spielt, und beide Dreiergruppen entstehen aus derselben Häutung. Teil D: D37.
 
