@@ -1,0 +1,35 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a93a951f76d2e5c63
+
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/A6/A7: die Aktionstypen > A5/A6/A7: alle Aktionstypen der Basis-Engine sind festgelegt, auch die der späteren Tasks 10ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/A6/A7: die Aktionstypen > A7.9: die Schlangenhäutung hat einen eigenen Aktionstyp 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A1: das Register hat je Kartenart genau einen Eintrag 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbkarte steht in karten/farbkarte.ts und wird mit FarbkarteLegen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbenschutz steht in karten/farbenschutz.ts und wird mit null gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Regenbogenschlange steht in karten/regenbogenschlange.ts und wird mit RegenbogenschlangeLegen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenfrass steht in karten/schlangenfrass.ts und wird mit SchlangenfrassSpielen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenblockade steht in karten/schlangenblockade.ts und wird mit BlockadeLegen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbendieb steht in karten/farbendieb.ts und wird mit FarbendiebSpielen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangengrube steht in karten/schlangengrube.ts und wird mit SchlangengrubeSpielen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Farbenfusion steht in karten/farbenfusion.ts und wird mit FusionLegen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Verdoppler steht in karten/verdoppler.ts und wird mit VerdopplerSpielen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenhäutung steht in karten/schlangenhaeutung.ts und wird mit SchlangenhaeutungSpielen gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: Schlangenkorb des Glücks steht in karten/schlangenkorb.ts und wird mit null gespielt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A7: definitionFuer findet zu jeder Karte ihren Eintrag 4ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind keine Platzhalter mehr, die übrigen kommen mit E5 bis E9 und X6 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A5: ohne schwebende Karte entscheidet der Spieler am Zug 4ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A6: schwebt eine Karte, entscheidet der nächste Betroffene; ohne Betroffene der Angreifer 3ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/A6: wer entscheidet > A10: nach Spielende entscheidet niemand 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A5: zu Beginn zählt die Engine nur Aktionen des Spielers am Zug auf, und noch kein „Zug beenden“ (D12) 3ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A10: nach Spielende gibt es keine Aktion und jede wird abgelehnt 2ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > B2: eine Aktion in falscher Form wird mit Grund abgelehnt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > B2: ein unbekannter Spieler oder ein Spieler, der nicht am Zug ist, wird abgelehnt 1ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A6: während eine Karte schwebt, ist nur Reagieren dran, und nur für den, der entscheidet 2ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > A5/A7.8: eine Karte, die nicht auf der Hand liegt, oder eine Karte der falschen Art wird abgelehnt; der Verdoppler selbst ist erlaubt 2ms
+ ✓ src/engine/__tests__/aktionen.test.ts > A5/B2: Aufzählen, Prüfen und Anwenden > B2: anwendeAktion lehnt mit dem Grund ab und lässt den Zustand unverändert 3ms
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  10:24:14
+   Duration  3.92s (transform 525ms, setup 368ms, import 538ms, tests 49ms, environment 2.65s)
+

@@ -459,6 +459,43 @@ daneben.
   während des Aussetzens (F5); Verteidiger mit zwei Farbenschutz verbraucht einen.
 - **Szenarien:** `schlangengrube`, `abwehr-schlangengrube`, `doppelangriff`.
 
+#### E4b Ereignis für versetzte Karten
+
+*Nachträglich vom Orchestrator eingefügt am 21.11.2026, als Vorbereitung für E5
+bis E9.*
+
+- **Zweck:** Was eine Kartenwirkung ausser der gespielten Karte bewegt, meldet
+  die Engine selbst als Ereignis `KartenVersetzt`. Die Oberfläche vergleicht
+  keine Zustände (Plan E2, Kriterium 11), und die Kartentasks ändern weder
+  Ereignisse noch den Nachrechentest noch `aktionen.test.ts`. Spec: B2.
+- **Dateien:** neu `src/engine/kartenorte.ts`; `src/engine/reaktion.ts`,
+  `src/engine/zugablauf.ts`, `src/engine/aktionen/typen.ts`,
+  `src/engine/index.ts`, `src/engine/karten/platzhalter.ts` (nur die Markierung
+  `istPlatzhalter`), `src/entwicklung/Tisch.tsx`; Tests neu
+  `__tests__/nachrechnen.ts` und `__tests__/kartenversetzt.test.ts`, geändert
+  `aktionen.test.ts`, `zugablauf_ereignisse.test.ts` und die Tests mit
+  `position` am Ablagestapel.
+- **Abnahmekriterien:**
+  1. Jede Wirkung erfasst: Nach jeder Kartenwirkung meldet die Engine ein
+     Ereignis, das alle Karten mit geändertem Ort oder geänderter Reihenfolge
+     nennt, sofort wie nach einer Ansage, auch bei teilweiser Abwehr. Der
+     Vergleich ist generisch in der Engine; die Kartendateien enthalten keine
+     Ereignislogik.
+  2. Vollständig nachrechenbar: Positionen in Schlangen, Reihenfolge auf
+     Ablagestapeln, Karten unter Fusionen, neue Schlangen mit Id und
+     verschwundene Schlangen lassen sich aus den Ereignissen allein nachrechnen.
+  3. Der Nachrechentest (`spieleNach`) enthält keine kartenspezifische Logik;
+     ohne das Ereignis oder mit verfälschter Position wird er rot.
+  4. B2: Kein Ereignis verrät die Id einer Karte, die auf eine Hand oder in den
+     Nachziehstapel geht, und keines über die Reihenfolge seiner Einträge die
+     verdeckte Reihenfolge.
+  5. `aktionen.test.ts` leitet die Platzhalter aus dem Register ab
+     (`istPlatzhalter`); eine kaputte Markierung macht Tests rot.
+  6. Verhalten unverändert: Bestehende Tests ändern sich nur in der Form der
+     Ereignisse; der Dauerlauf ist grün, gleiche Saat ergibt denselben Verlauf.
+  7. Alle Gates einzeln mit Exit-Code, dazu `test:layout`; am Entwicklertisch
+     sind die Ereignistexte lesbar und ohne Konsolenfehler.
+
 *E5 bis E9 laufen nach E4 gleichzeitig. Jeder Task ändert nur seine Kartendateien und schreibt nur neue Testdateien (U13).*
 
 #### E5 Legen: Farbkarte in jede Schlange, Regenbogenschlange, Schlangenblockade

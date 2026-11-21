@@ -28,6 +28,7 @@ export type {
   SpielAktion,
   UeberhandAbwerfenAktion,
   VerdopplerSpielenAktion,
+  Versetzung,
   ZugBeendenAktion,
 } from './aktionen/typen';
 
