@@ -24,17 +24,26 @@ export interface Einstellungen {
   erweiterung: boolean
 }
 
-export type LaufendePartie = Einstellungen
+/** Die Einstellungen, mit denen eine Partie angelegt wurde, aus dem Spielstand gelesen. */
+export function einstellungenVon(zustand: Spielzustand): Einstellungen {
+  return {
+    gegner: zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').length,
+    erweiterung: zustand.erweiterung,
+  }
+}
 
 /**
- * Legt eine neue Partie an und speichert sie; ein vorhandener Spielstand wird
- * überschrieben. Der Mensch spielt gegen `gegner` KI-Gegner (B2). Wirft die
- * Engine, ist nichts gespeichert und der Fehler geht an den Aufrufer.
+ * Legt eine neue Partie an, speichert sie und gibt sie zurück; ein vorhandener
+ * Spielstand wird überschrieben. Der Mensch spielt gegen `gegner` KI-Gegner
+ * (B2). Wirft die Engine, ist nichts gespeichert und der Fehler geht an den
+ * Aufrufer.
  *
  * Die Oberfläche liefert den Zufall, die Engine zieht keinen eigenen (U4).
  */
-export function starteNeuePartie({ gegner, erweiterung }: Einstellungen): void {
-  speichereSpielstand(erstellePartie({ spielerzahl: gegner + 1, erweiterung, zufall: Math.random }))
+export function starteNeuePartie({ gegner, erweiterung }: Einstellungen): Spielzustand {
+  const zustand = erstellePartie({ spielerzahl: gegner + 1, erweiterung, zufall: Math.random })
+  speichereSpielstand(zustand)
+  return zustand
 }
 
 /** Verwirft die gespeicherte Partie. */
@@ -44,9 +53,15 @@ export function verwirfPartie(): void {
 
 export type Verwurfsgrund = 'aelteres-format' | 'beschaedigt'
 
+/*
+Eine beendete Partie bleibt gespeichert, bis eine neue sie überschreibt (O8):
+So übersteht ihre Wertung ein Neuladen, und „Noch einmal“ kennt danach noch
+ihre Einstellungen. Die Lobby bietet sie nicht zum Weiterspielen an, sondern
+zum Ansehen der Wertung, und fragt vor einer neuen Partie nicht nach.
+*/
 export type PartieLage =
   | { art: 'keine' }
-  | { art: 'laufend'; partie: LaufendePartie; zustand: Spielzustand }
+  | { art: 'laufend' | 'beendet'; partie: Einstellungen; zustand: Spielzustand }
   | { art: 'verworfen'; grund: Verwurfsgrund; fehler: Error }
 
 /** Was im Speicher liegt, in Kurzform. Liest nur und ändert nichts. */
@@ -57,12 +72,9 @@ function leseGespeichertePartie(): PartieLage {
       return { art: 'keine' }
     case 'geladen':
       return {
-        art: 'laufend',
-        partie: {
-          gegner: lage.zustand.spieler.filter((spieler) => spieler.steuerung === 'KI').length,
-          erweiterung: lage.zustand.erweiterung,
-        },
-        // Den Zustand selbst zeigt der Spieltisch (O4).
+        art: lage.zustand.partiephase === 'Beendet' ? 'beendet' : 'laufend',
+        partie: einstellungenVon(lage.zustand),
+        // Den Zustand selbst zeigt der Spieltisch (O4), nach Spielende die Wertung (O8).
         zustand: lage.zustand,
       }
     case 'unlesbar':

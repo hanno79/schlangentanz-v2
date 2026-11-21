@@ -7,6 +7,9 @@ import type { Entscheider } from '../../ki/sicht'
 import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../spielstand'
+import { useWurfImZeichnen } from '../wurfImZeichnen'
+import { ergebnisAnsicht } from './ergebnisAnsicht'
+import type { ErgebnisAnsicht } from './ergebnisAnsicht'
 import { protokollSchritt } from './protokoll'
 import { grundAmTisch, personen, tischAnsicht } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
@@ -62,6 +65,8 @@ export interface Verlauf {
 
 export interface Spielsteuerung {
   ansicht: TischAnsicht
+  /** Die Wertung, sobald die Partie beendet ist (O8); bis dahin `null`. */
+  ergebnis: ErgebnisAnsicht | null
   /** Führt eine Aktion des Menschen aus, eine aus `ansicht.aktionen`. */
   fuehreAus: (aktion: SpielAktion) => void
   /** Der deutsche Grund, wenn die Engine die letzte Aktion des Menschen abgelehnt hat (B2, U12), in Du-Form (O6). */
@@ -109,10 +114,9 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
   const [ablehnung, setzeAblehnung] = useState<string | null>(null)
   const [protokoll, setzeProtokoll] = useState(LEERES_PROTOKOLL)
   const [schneller, setzeSchneller] = useState(false)
-  /* Ein Wurf im Zeitgeber oder im Klick erreicht keine Fehlergrenze. Er wird
-     festgehalten und beim nächsten Zeichnen geworfen (wie in der Lobby). */
-  const [fehler, setzeFehler] = useState<{ fehler: unknown } | null>(null)
+  const halteFehlerFest = useWurfImZeichnen()
   const ansicht = useMemo(() => tischAnsicht(zustand), [zustand])
+  const ergebnis = useMemo(() => (zustand.partiephase === 'Beendet' ? ergebnisAnsicht(zustand) : null), [zustand])
   // Gelesen erst, wenn die KI gewählt hat: Schaltet „Schneller“ während der Pause um, rechnet die KI nicht neu.
   const wartezeit = useRef(pause)
   useEffect(() => {
@@ -144,10 +148,10 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
           }
         })
       } catch (grund) {
-        setzeFehler({ fehler: grund })
+        halteFehlerFest(grund)
       }
     },
-    [zustand, ansicht],
+    [zustand, ansicht, halteFehlerFest],
   )
 
   /*
@@ -166,7 +170,7 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
       try {
         aktion = waehleFuer(zustand, amZug.entscheider, amZug.ki)
       } catch (grund) {
-        setzeFehler({ fehler: grund })
+        halteFehlerFest(grund)
         return
       }
       const rest = wartezeit.current - (Date.now() - beginn)
@@ -174,7 +178,7 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
       else spiele(aktion)
     }, 0)
     return () => clearTimeout(zeitgeber)
-  }, [zustand, gegner, spiele])
+  }, [zustand, gegner, spiele, halteFehlerFest])
 
   const fuehreAus = useCallback(
     (aktion: SpielAktion) => {
@@ -187,7 +191,6 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
 
   const schalteSchneller = useCallback(() => setzeSchneller((an) => !an), [])
 
-  if (fehler !== null) throw fehler.fehler
   if (!(pause >= 0)) throw new Error(`Die Pause vor einem KI-Schritt muss 0 oder mehr Millisekunden sein, erhalten: ${pause}.`)
-  return { ansicht, fuehreAus, ablehnung, verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, schneller, schalteSchneller } }
+  return { ansicht, ergebnis, fuehreAus, ablehnung, verlauf: { eintraege: protokoll.eintraege, ausgesetzt: protokoll.ausgesetzt, schneller, schalteSchneller } }
 }

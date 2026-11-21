@@ -47,7 +47,7 @@ export const SPIEL_SZENARIEN: readonly Szenario[] = [
     beschreibung:
       'A10: Vier Spieler in der Schlussrunde. Spieler 1 hat die letzte Karte gezogen und seinen Zug beendet; KI-Gegner 1 ist mit seinem letzten Zug dran. Die KI-Gegner halten nur Farbkarten, damit niemand dich angreift.',
     erwartet:
-      'KI-Gegner 1, 2 und 3 spielen je ihren letzten Zug ohne Nachziehen, dann ist die Partie beendet; Spieler 1 entscheidet nichts mehr. Unter /spiel?szenario=schlussrunde-ohne-dich&tempo=sofort steht danach „Die Partie ist beendet.“ in der Statuszeile.',
+      'KI-Gegner 1, 2 und 3 spielen je ihren letzten Zug ohne Nachziehen, dann ist die Partie beendet; Spieler 1 entscheidet nichts mehr. Unter /spiel?szenario=schlussrunde-ohne-dich&tempo=sofort steht danach die Wertung (O8) mit allen vier Spielern, „Noch einmal“ und „Zur Lobby“.',
     erzeuge: () =>
       baukasten({ spielerzahl: 4, erweiterung: false, zufall: erzeugeZufall(92) })
         .hand(0, ['Blau', 'Rot', 'Gelb'])
