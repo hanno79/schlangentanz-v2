@@ -112,7 +112,7 @@ describe('E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz
     expect(ereignisseVom(angesagt.ereignisse, 'KarteAngesagt')[0].betroffene, 'A6: nur B ist betroffen').toEqual([1])
     const { zustand, ereignisse } = fuehreAus(angesagt.zustand, reaktion(angesagt.zustand, true))
     expect(ereignisseVom(ereignisse, 'AnsageEntschieden')).toEqual([
-      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: blockade, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: blockade, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(ablage(zustand, 0)).toEqual([blockade])
     expect(ablage(zustand, 1)).toEqual([schutz])

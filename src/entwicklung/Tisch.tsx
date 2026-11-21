@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, erzeugeZufall, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
-import { karteAnzeigename } from '../kartenTexte'
 import { naechsterKiSchritt } from '../ki/schritt'
 import { entscheiderVon } from '../ki/sicht'
 import { erstelleZufallsKi } from '../ki/zufallsKi'
+import { beschrifte } from './beschriftung'
 import { Fehler } from './Fehler'
 import { fehlertext, pruefeInvarianten } from './invarianten'
 import { name } from './namen'
@@ -150,31 +150,6 @@ function laeufeNachArt(aktionen: SpielAktion[]): SpielAktion[][] {
     else laeufe.push([aktion])
   }
   return laeufe
-}
-
-/** Name und Id einer Handkarte des Spielers, der die Aktion wählt. */
-function handkarte(zustand: Spielzustand, spielerId: string, karteId: string): string {
-  const karte = zustand.spieler.find((spieler) => spieler.id === spielerId)?.hand.find((eintrag) => eintrag.id === karteId)
-  return karte === undefined ? karteId : `${karteAnzeigename(karte)} (${karteId})`
-}
-
-/**
- * Kurze Beschriftung: Aktionstyp, gespielte Karte und, wo es mehrere gibt, das
- * Ziel. Die ganze Aktion steht im Tooltip und in `data-aktion`.
- */
-function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
-  if (aktion.typ === 'UeberhandAbwerfen') {
-    return `${aktion.typ}: ${aktion.karteIds.map((id) => handkarte(zustand, aktion.spielerId, id)).join(', ')}`
-  }
-  if (aktion.typ === 'Reagieren') {
-    return aktion.farbenschutzId === null ? 'Reagieren: durchlassen' : `Reagieren: abwehren mit ${handkarte(zustand, aktion.spielerId, aktion.farbenschutzId)}`
-  }
-  if (!('karteId' in aktion)) return aktion.typ
-  const text = `${aktion.typ}: ${handkarte(zustand, aktion.spielerId, aktion.karteId)}`
-  if (aktion.typ === 'SchlangengrubeSpielen') return `${text} → ${name(zustand, zustand.spieler.findIndex((spieler) => spieler.id === aktion.zielSpielerId))}`
-  if (aktion.typ === 'RegenbogenschlangeLegen' || aktion.typ === 'BlockadeLegen') return `${text} → ${aktion.schlangenId}, Stelle ${aktion.position}`
-  if (aktion.typ !== 'FarbkarteLegen') return text
-  return aktion.ziel.art === 'neueSchlange' ? `${text} → neue Schlange` : `${text} → ${aktion.ziel.schlangenId} ${aktion.ziel.seite}`
 }
 
 interface BedienungProps {

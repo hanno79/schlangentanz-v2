@@ -94,7 +94,7 @@ describe('E5: Szenarien zum Legen', () => {
     expect(ereignistypen(angesagt.ereignisse)).toEqual(['KarteAngesagt', 'AbwehrGefragt'])
     expect(ermittleAktionen(angesagt.zustand).map((aktion) => aktion.typ)).toEqual(['Reagieren', 'Reagieren'])
     const abgewehrt = klicke(angesagt.zustand, abwehren)
-    expect(abgewehrt.ereignisse[1]).toMatchObject({ typ: 'AnsageEntschieden', ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0 } })
+    expect(abgewehrt.ereignisse[1]).toMatchObject({ typ: 'AnsageEntschieden', ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } })
     expect(namen(abgewehrt.zustand, 1)).toEqual(['Rot', 'Rot', 'Rot'])
     expect(aktionstypen(abgewehrt.zustand), 'A6 Beispiel 1: nicht gegen einen anderen Spieler').toEqual(['FarbkarteLegen', 'ZugBeenden'])
     expect(abgewehrt.zustand.spieler[1].hand).toHaveLength(4)

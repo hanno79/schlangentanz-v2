@@ -147,7 +147,7 @@ describe('E5 Kriterium 2, D10/A6: in der Schlange eines Gegners abwehrbar', () =
     const { zustand, ereignisse } = fuehreAus(angesagt.zustand, reaktion(angesagt.zustand, true))
     expect(ereignisse).toEqual([
       { typ: 'Abgewehrt', spielerIndex: 1, karteId: schutz, gegen: rs },
-      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: rs, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: rs, abgewehrt: [1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } },
     ])
     expect(schlangenKarten(zustand, 1)).toEqual(schlangenKarten(start, 1))
     expect(ablage(zustand, 0)).toEqual([rs])
