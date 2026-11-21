@@ -39,23 +39,40 @@ const FARBENSCHUTZ_NACH_LETZTEM_ZUG = 0.8;
 /** Jede fertige Gruppe zählt etwas über ihre Punkte hinaus: Sie steht, ein Paar muss erst noch vollendet werden. */
 const FERTIGE_GRUPPE = 0.5;
 
+interface Wertung {
+  punkte: number;
+  gruppen: number;
+}
+
+/**
+ * Die Wertung gleicher Schlangen, für eine Suche gemerkt: Eine Aktion ändert meist
+ * nur eine Schlange, und die Wertung der übrigen kostet sonst bei jeder Stellung neu.
+ * Schlüssel ist die Schlange als Text; die Erweiterung ist in einer Suche fest.
+ */
+export type Wertungsmerker = Map<string, Wertung>;
+
 /** Punkte aus Farbgruppen und Vielfaltbonus, wie die Wertung sie zählt (A11, D30 bis D32), und die Zahl der Gruppen. */
-function wertungVon(spieler: SpielerSicht, erweiterung: boolean): { punkte: number; gruppen: number } {
+function wertungVon(spieler: SpielerSicht, erweiterung: boolean, merker: Wertungsmerker): Wertung {
+  const schluessel = JSON.stringify(spieler.schlangen);
+  const bekannt = merker.get(schluessel);
+  if (bekannt !== undefined) return bekannt;
   const wertung = werteSchlangen(spieler.schlangen, erweiterung);
-  return {
+  const neu = {
     punkte: wertung.gruppenPunkte + (wertung.vielfaltBonus ?? 0),
     gruppen: wertung.schlangen.reduce((summe, schlange) => summe + schlange.gruppen.length, 0),
   };
+  merker.set(schluessel, neu);
+  return neu;
 }
 
 /** Die Punkte aus Farbgruppen und Vielfaltbonus, wie die Wertung sie zählt (A11, D30 bis D32). */
-export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean): number {
-  return wertungVon(spieler, erweiterung).punkte;
+export function gruppenwert(spieler: SpielerSicht, erweiterung: boolean, merker: Wertungsmerker = new Map()): number {
+  return wertungVon(spieler, erweiterung, merker).punkte;
 }
 
 /** Die eigenen Punkte aus Farbgruppen und Vielfaltbonus. */
-export function eigenePunkte(sicht: Sicht): number {
-  return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung);
+export function eigenePunkte(sicht: Sicht, merker: Wertungsmerker = new Map()): number {
+  return gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung, merker);
 }
 
 /** A11, D24: die längste ununterbrochene Kette einer Farbe ab 3 Farbkarten; Sonderkarten unterbrechen sie. 0 ohne. */
@@ -79,6 +96,31 @@ export function istJoker(karte: Spielkarte): boolean {
   return karte.typ === 'Sonderkarte' && (karte.name === 'Regenbogenschlange' || karte.name === 'Farbenfusion');
 }
 
+/** Die Farbe der ersten Farbkarte ab `start` in Richtung `schritt`, über Joker hinweg; `null`, wenn vorher eine andere Sonderkarte oder das Ende kommt. */
+export function farbeAb(karten: readonly Spielkarte[], start: number, schritt: 1 | -1): Farbe | null {
+  for (let stelle = start; stelle >= 0 && stelle < karten.length; stelle += schritt) {
+    const karte = karten[stelle];
+    if (karte.typ === 'Farbkarte') return karte.farbe;
+    if (!istJoker(karte)) return null;
+  }
+  return null;
+}
+
+/**
+ * Wie viele Karten ab `start` in Richtung `schritt` zur Farbe `farbe` passen; Joker
+ * passen immer, eine andere Farbe oder Sonderkarte beendet die Reihe. Bei `null`
+ * passen nur Joker.
+ */
+export function reiheAb(karten: readonly Spielkarte[], start: number, schritt: 1 | -1, farbe: Farbe | null): number {
+  let laenge = 0;
+  for (let stelle = start; stelle >= 0 && stelle < karten.length; stelle += schritt) {
+    const karte = karten[stelle];
+    if (!(istJoker(karte) || (karte.typ === 'Farbkarte' && karte.farbe === farbe))) break;
+    laenge += 1;
+  }
+  return laenge;
+}
+
 interface Endreihe {
   laenge: number;
   /** `null`, wenn die Reihe nur aus Jokern besteht. */
@@ -88,16 +130,11 @@ interface Endreihe {
 
 /** Die Reihe gleicher Farbe an einem Ende der Schlange; Joker passen zu jeder Farbe, andere Sonderkarten beenden sie. */
 function endreihe(karten: readonly Spielkarte[], vonHinten: boolean): Endreihe {
-  const reihe: Endreihe = { laenge: 0, farbe: null, punkte: 0 };
-  for (const karte of vonHinten ? [...karten].reverse() : karten) {
-    if (karte.typ === 'Farbkarte') {
-      if (reihe.farbe !== null && karte.farbe !== reihe.farbe) break;
-      reihe.farbe = karte.farbe;
-      reihe.punkte = karte.punkte;
-    } else if (!istJoker(karte)) break;
-    reihe.laenge += 1;
-  }
-  return reihe;
+  const start = vonHinten ? karten.length - 1 : 0;
+  const schritt = vonHinten ? -1 : 1;
+  const farbe = farbeAb(karten, start, schritt);
+  const punkte = karten.find((karte) => karte.typ === 'Farbkarte' && karte.farbe === farbe);
+  return { laenge: reiheAb(karten, start, schritt, farbe), farbe, punkte: punkte?.typ === 'Farbkarte' ? punkte.punkte : 0 };
 }
 
 /** Was ein offenes Ende verspricht: ein Paar ist eine Karte von einer Gruppe entfernt, eine Gruppe lässt sich verlängern. */
@@ -167,7 +204,7 @@ function zukunft(sicht: Sicht, spieler: number): number {
 }
 
 /** Der Wert eines Spielers ohne Kettenbonus: Zwischenstand, Aussichten, Hand, Gruben, zweiter Zug. */
-function spielerwert(sicht: Sicht, index: number): number {
+function spielerwert(sicht: Sicht, index: number, merker: Wertungsmerker): number {
   const spieler = sicht.spieler[index];
   const ausblick = zukunft(sicht, index);
   const aussichten = spieler.schlangen.reduce((summe, schlange) => summe + aussichtVon(schlange), 0);
@@ -179,7 +216,7 @@ function spielerwert(sicht: Sicht, index: number): number {
       : HANDKARTE_GEGNER * spieler.handgroesse * ausblick;
   const zug = sicht.zug;
   const zweiterZug = zug.spielerIndex === index && zug.teilzug === 1 && zug.verdopplerGespielt ? ZWEITER_ZUG : 0;
-  const { punkte, gruppen } = wertungVon(spieler, sicht.erweiterung);
+  const { punkte, gruppen } = wertungVon(spieler, sicht.erweiterung, merker);
   return punkte + FERTIGE_GRUPPE * gruppen + ausblick * aussichten + hand - AUSGESETZTER_ZUG * gruben + zweiterZug;
 }
 
@@ -190,9 +227,9 @@ function kettenbonus(laengen: readonly number[]): number[] {
 }
 
 /** Der Wert der Stellung für den Betrachter der Sicht: sein Wert minus der des stärksten Gegners. */
-export function bewerte(sicht: Sicht): number {
+export function bewerte(sicht: Sicht, merker: Wertungsmerker = new Map()): number {
   const bonus = kettenbonus(sicht.spieler.map(kettenlaenge));
-  const werte = sicht.spieler.map((_, index) => spielerwert(sicht, index) + bonus[index]);
+  const werte = sicht.spieler.map((_, index) => spielerwert(sicht, index, merker) + bonus[index]);
   const gegner = werte.filter((_, index) => index !== sicht.ich);
   const staerkster = Math.max(...gegner);
   const uebrige = gegner.reduce((summe, wert) => summe + wert, 0) - staerkster;

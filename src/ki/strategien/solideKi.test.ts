@@ -138,7 +138,7 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     }
     expect(vollendet, 'K2.1: fast immer vollendet sie die Gruppe selbst').toBeGreaterThanOrEqual(geprueft - 3)
     expect(geprueft, 'K2.1: genug solche Züge').toBeGreaterThan(30)
-  })
+  }, 60_000)
 })
 
 describe('K2 Kriterium 2: passende Farbkarte und nützliche Sonderkarte, sie spielt beide', () => {

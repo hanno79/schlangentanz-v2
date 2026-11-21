@@ -10,8 +10,8 @@ bis Spieler 1 wieder dran ist, und liest im Verlauf ab, was sie gespielt hat.
 Die übrigen Handkarten kommen gemischt mit fester Saat von oben.
 */
 
-/** Zwei Spieler ohne Erweiterung, gemischt mit dieser Saat. */
-function tisch(saat: number, spielerzahl = 2): Baukasten {
+/** Ein Tisch ohne Erweiterung, gemischt mit dieser Saat. */
+function gemischt(spielerzahl: number, saat: number): Baukasten {
   return baukasten({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
 }
 
@@ -23,7 +23,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Der erste „KI-Schritt (solide)“ legt das Violett an ein Ende seiner Schlange: Violett, Violett, Violett, eine Gruppe mit 6 Punkten. Danach beendet er den Zug; den Farbenschutz legt er nicht wirkungslos ab.',
     erzeuge: () =>
-      tisch(201)
+      gemischt(2, 201)
         .schlange(1, ['Violett', 'Violett'])
         .schlange(0, ['Braun'])
         .hand(1, ['Violett', 'Blau', 'Rot', 'Gelb', 'Farbenschutz'])
@@ -38,7 +38,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Er legt die Regenbogenschlange vor oder hinter die beiden grünen Karten: eine grüne Dreiergruppe mit 6 Punkten (die Regenbogenschlange bringt selbst keinen Punkt, A7.3). Eine Farbkarte darf er im selben Zug zusätzlich legen.',
     erzeuge: () =>
-      tisch(202)
+      gemischt(2, 202)
         .schlange(1, ['Grün', 'Grün'])
         .schlange(0, ['Braun'])
         .hand(1, ['Regenbogenschlange', 'Blau', 'Rot', 'Gelb', 'Braun'])
@@ -53,7 +53,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'In einem Zug spielt er beide Karten, in beliebiger Reihenfolge: das Blau an die blaue Schlange (Gruppe mit 3 Punkten) und die Regenbogenschlange an die braune (Gruppe mit 4 Punkten). Danach steht sein Zwischenstand auf 7.',
     erzeuge: () =>
-      tisch(203)
+      gemischt(2, 203)
         .schlange(1, ['Blau', 'Blau'])
         .schlange(1, ['Braun', 'Braun'])
         .schlange(0, ['Gelb'])
@@ -69,7 +69,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Er legt die Regenbogenschlange nicht in die Schlange von Spieler 1: Unter den Knöpfen „RegenbogenschlangeLegen“ gibt es solche mit schlange-2 (Spieler 1), gewählt wird keiner davon. Entweder legt er sie in seine eigene Schlange oder behält sie.',
     erzeuge: () =>
-      tisch(204)
+      gemischt(2, 204)
         .schlange(1, ['Rot', 'Rot', 'Rot', 'Rot'])
         .schlange(0, ['Grün', 'Grün', 'Grün', 'Grün', 'Grün'])
         .hand(1, ['Regenbogenschlange', 'Blau', 'Gelb', 'Braun', 'Violett'])
@@ -84,7 +84,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Die Engine bietet zwei Knöpfe „FusionLegen“ an; die KI wählt keinen. Sie spielt eine Farbkarte und beendet den Zug, ihre blaue Gruppe bleibt bei 3 Punkten.',
     erzeuge: () =>
-      tisch(205)
+      gemischt(2, 205)
         .schlange(1, ['Blau', 'Blau', 'Blau'])
         .schlange(0, ['Rot', 'Gelb'])
         .hand(1, ['Farbenfusion', 'Rot', 'Gelb', 'Violett', 'Braun'])
@@ -99,7 +99,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Die Engine bietet „SchlangengrubeSpielen“ auf Spieler 1 an, obwohl der keinen Zug mehr hat (D29). Die KI spielt sie nicht: Sie legt das Blau an ihre Schlange (Gruppe mit 3 Punkten), und mit ihrem „Zug beenden“ endet die Partie.',
     erzeuge: () =>
-      tisch(206)
+      gemischt(2, 206)
         .schlange(1, ['Blau', 'Blau'])
         .schlange(0, ['Rot', 'Rot', 'Rot'])
         .hand(1, ['Schlangengrube', 'Blau', 'Gelb', 'Violett', 'Braun'])
@@ -115,7 +115,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Spielt KI-Gegner 1 die Schlangengrube, dann auf KI-Gegner 2, der dadurch seinen letzten Zug verliert (D21), nie auf Spieler 1 (D29: dort ohne Wirkung).',
     erzeuge: () =>
-      tisch(207, 3)
+      gemischt(3, 207)
         .schlange(1, ['Gelb', 'Gelb'])
         .schlange(2, ['Grün', 'Grün', 'Grün'])
         .hand(1, ['Schlangengrube', 'Rot', 'Blau', 'Violett', 'Braun'])
@@ -131,7 +131,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Er legt das Rot an seine Schlange (Gruppe mit 3 Punkten) und beendet den Zug. „SonderkarteWirkungslosAblegen“ wird angeboten, er wählt es nicht.',
     erzeuge: () =>
-      tisch(208)
+      gemischt(2, 208)
         .schlange(1, ['Rot', 'Rot'])
         .schlange(0, ['Gelb'])
         .hand(1, ['Verdoppler', 'Farbenschutz', 'Rot', 'Blau', 'Gelb'])
@@ -146,7 +146,7 @@ export const KI_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Im ersten Zug spielt er den Verdoppler und eine der beiden Farbkarten, die eine Gruppe vollendet, und beendet den Zug: Er zieht Violett und Braun, Teilzug 2 beginnt. Im zweiten Zug vollendet er mit der anderen Farbkarte die zweite Gruppe. Am Ende hat er Rot, Rot, Rot und Blau, Blau, Blau (6 Punkte), dann ist Spieler 1 dran.',
     erzeuge: () =>
-      tisch(209)
+      gemischt(2, 209)
         .schlange(1, ['Rot', 'Rot'])
         .schlange(1, ['Blau', 'Blau'])
         .schlange(0, ['Gelb'])

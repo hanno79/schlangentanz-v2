@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, erzeugeZufall, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
@@ -131,7 +131,7 @@ function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
   const hinweis =
     entscheider === null ? 'Die Partie ist beendet.' : `${entscheider.name} entscheidet; das ist ${kiAmZug ? 'eine KI.' : 'ein Mensch.'}`
 
-  function spiele(beschriftung: string, strategie: (typeof KI_KNOEPFE)[number]['strategie']) {
+  function spiele({ beschriftung, strategie }: (typeof KI_KNOEPFE)[number]) {
     try {
       const aktion = naechsterKiSchritt(zustand, STRATEGIEN[strategie](erzeugeZufall(schritt)))
       if (aktion === null) throw new Error('Es entscheidet keine KI.')
@@ -143,12 +143,12 @@ function KiSchritt({ zustand, schritt, fuehreAus, scheitert }: KiSchrittProps) {
 
   return (
     <p>
-      {KI_KNOEPFE.map(({ beschriftung, strategie }) => (
-        <span key={strategie}>
-          <button type="button" onClick={() => spiele(beschriftung, strategie)} disabled={!kiAmZug}>
-            {beschriftung}
+      {KI_KNOEPFE.map((knopf) => (
+        <Fragment key={knopf.strategie}>
+          <button type="button" onClick={() => spiele(knopf)} disabled={!kiAmZug}>
+            {knopf.beschriftung}
           </button>{' '}
-        </span>
+        </Fragment>
       ))}
       <small data-testid="ki-schritt-hinweis">{hinweis}</small>
     </p>

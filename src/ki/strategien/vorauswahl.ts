@@ -1,6 +1,6 @@
-import type { Farbe, Schlange, SpielAktion, Spielkarte } from '../../engine';
+import type { Farbe, FarbkarteInfo, FarbkarteLegenAktion, Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
-import { istJoker } from './bewertung';
+import { farbeAb, reiheAb } from './bewertung';
 
 /*
 Die Vorauswahl der Zugsuche (Plan K2, Kriterium 8). Der Farbendieb allein bietet in
@@ -22,27 +22,6 @@ function finde(sicht: Sicht, schlangenId: string): Fund | null {
   for (const [besitzer, spieler] of sicht.spieler.entries()) {
     const schlange = spieler.schlangen.find((eintrag) => eintrag.id === schlangenId);
     if (schlange !== undefined) return { schlange, besitzer };
-  }
-  return null;
-}
-
-/** Wie viele Karten ab `start` in Richtung `schritt` zu `farbe` passen; Joker passen immer, andere Sonderkarten beenden die Reihe. */
-function reihe(karten: readonly Spielkarte[], start: number, schritt: 1 | -1, farbe: Farbe): number {
-  let laenge = 0;
-  for (let stelle = start; stelle >= 0 && stelle < karten.length; stelle += schritt) {
-    const karte = karten[stelle];
-    if (!(istJoker(karte) || (karte.typ === 'Farbkarte' && karte.farbe === farbe))) break;
-    laenge += 1;
-  }
-  return laenge;
-}
-
-/** Die Farbe der ersten Farbkarte ab `start` in Richtung `schritt`, über Joker hinweg; `null`, wenn vorher etwas anderes kommt. */
-function farbeAb(karten: readonly Spielkarte[], start: number, schritt: 1 | -1): Farbe | null {
-  for (let stelle = start; stelle >= 0 && stelle < karten.length; stelle += schritt) {
-    const karte = karten[stelle];
-    if (karte.typ === 'Farbkarte') return karte.farbe;
-    if (!istJoker(karte)) return null;
   }
   return null;
 }
@@ -69,19 +48,19 @@ function gewinn(links: number, rechts: number, punkte: number): number {
 /** Der beste `gewinn`, wenn an die Lücke `position` eine Karte der Farbe `farbe` kommt; `null` ist ein Joker, der zu jedem Nachbarn passt. */
 function gewinnAnLuecke(karten: readonly Spielkarte[], position: number, farbe: Farbe | null, punkte: number): number {
   const farben = farbe === null ? nachbarfarben(karten, position) : [farbe];
-  return Math.max(gewinn(0, 0, punkte), ...farben.map((wahl) => gewinn(reihe(karten, position - 1, -1, wahl), reihe(karten, position, 1, wahl), punkte)));
+  return Math.max(gewinn(0, 0, punkte), ...farben.map((wahl) => gewinn(reiheAb(karten, position - 1, -1, wahl), reiheAb(karten, position, 1, wahl), punkte)));
 }
 
 /** Wie viele Karten eine Reihe hätte, die durch die Lücke `position` hindurchgeht, ohne eine Karte dort. */
 function reiheDurch(karten: readonly Spielkarte[], position: number): number {
-  return Math.max(0, ...nachbarfarben(karten, position).map((wahl) => reihe(karten, position - 1, -1, wahl) + reihe(karten, position, 1, wahl)));
+  return Math.max(0, ...nachbarfarben(karten, position).map((wahl) => reiheAb(karten, position - 1, -1, wahl) + reiheAb(karten, position, 1, wahl)));
 }
 
 /** Die Reihe, in der die Karte an `stelle` liegt, sie selbst eingeschlossen. */
 function reiheUm(karten: readonly Spielkarte[], stelle: number): number {
   const karte = karten[stelle];
   if (karte === undefined || karte.typ !== 'Farbkarte') return 1;
-  return reihe(karten, stelle - 1, -1, karte.farbe) + 1 + reihe(karten, stelle + 1, 1, karte.farbe);
+  return reiheAb(karten, stelle - 1, -1, karte.farbe) + 1 + reiheAb(karten, stelle + 1, 1, karte.farbe);
 }
 
 /** Was es einem Gegner nimmt, eine Reihe dieser Länge zu zerstören. */
@@ -94,24 +73,23 @@ function handkarte(sicht: Sicht, karteId: string): Spielkarte | undefined {
 }
 
 /** Wo eine Farbkarte hinkommt: eigene Reihe verlängern ist gut, die eines Gegners schlecht, ausser sie bricht dort eine Reihe ab. */
-function farbkartenwert(sicht: Sicht, karte: Spielkarte, ziel: { schlangenId: string; seite: 'anfang' | 'ende' } | null): number {
-  if (karte.typ !== 'Farbkarte') return 0;
-  if (ziel === null) return 0.3 * karte.punkte;
+function farbkartenwert(sicht: Sicht, karte: FarbkarteInfo, ziel: FarbkarteLegenAktion['ziel']): number {
+  if (ziel.art === 'neueSchlange') return 0.3 * karte.punkte;
   const fund = finde(sicht, ziel.schlangenId);
   if (fund === null) return 0;
   const karten = fund.schlange.karten;
   const position = ziel.seite === 'anfang' ? 0 : karten.length;
-  const passend = reihe(karten, position - 1, -1, karte.farbe) + reihe(karten, position, 1, karte.farbe);
+  const passend = reiheAb(karten, position - 1, -1, karte.farbe) + reiheAb(karten, position, 1, karte.farbe);
   if (fund.besitzer !== sicht.ich) return passend > 0 ? -gewinnAnLuecke(karten, position, karte.farbe, karte.punkte) : 0.5 * Math.max(0, reiheDurch(karten, position) - 1);
   return passend === 0 && nachbarfarben(karten, position).length > 0 ? -0.5 : gewinnAnLuecke(karten, position, karte.farbe, karte.punkte);
 }
 
 /** Die grobe Schätzung einer Aktion; höher heisst: zuerst durchrechnen. */
-export function vorwert(sicht: Sicht, aktion: SpielAktion): number {
+function vorwert(sicht: Sicht, aktion: SpielAktion): number {
   switch (aktion.typ) {
     case 'FarbkarteLegen': {
       const karte = handkarte(sicht, aktion.karteId);
-      return karte === undefined ? 0 : farbkartenwert(sicht, karte, aktion.ziel.art === 'neueSchlange' ? null : aktion.ziel);
+      return karte?.typ === 'Farbkarte' ? farbkartenwert(sicht, karte, aktion.ziel) : 0;
     }
     case 'RegenbogenschlangeLegen': {
       const fund = finde(sicht, aktion.schlangenId);
@@ -133,19 +111,20 @@ export function vorwert(sicht: Sicht, aktion: SpielAktion): number {
     }
     case 'FarbendiebSpielen': {
       const quelle = finde(sicht, aktion.quelle.schlangenId);
-      const karte = quelle?.schlange.karten.find((eintrag) => eintrag.id === aktion.quelle.karteId);
-      if (quelle === null || karte === undefined || karte.typ !== 'Farbkarte') return 0;
-      const genommen = schaden(reiheUm(quelle.schlange.karten, quelle.schlange.karten.indexOf(karte)));
-      const ziel = aktion.ziel.art === 'neueSchlange' ? null : finde(sicht, aktion.ziel.schlangenId);
-      const gelegt =
-        aktion.ziel.art === 'neueSchlange' || ziel === null ? 0.3 * karte.punkte : gewinnAnLuecke(ziel.schlange.karten, aktion.ziel.position, karte.farbe, karte.punkte);
-      return genommen + gelegt;
+      const stelle = quelle?.schlange.karten.findIndex((eintrag) => eintrag.id === aktion.quelle.karteId) ?? -1;
+      const karte = quelle?.schlange.karten[stelle];
+      if (quelle === null || karte?.typ !== 'Farbkarte') return 0;
+      const genommen = schaden(reiheUm(quelle.schlange.karten, stelle));
+      if (aktion.ziel.art === 'neueSchlange') return genommen + 0.3 * karte.punkte;
+      const ziel = finde(sicht, aktion.ziel.schlangenId);
+      return genommen + (ziel === null ? 0 : gewinnAnLuecke(ziel.schlange.karten, aktion.ziel.position, karte.farbe, karte.punkte));
     }
     case 'SchlangenfrassSpielen':
       return aktion.ziele.reduce((summe, ziel) => {
         const fund = finde(sicht, ziel.schlangenId);
-        const stelle = fund === null ? -1 : fund.schlange.karten.findIndex((karte) => karte.id === ziel.karteId);
-        if (fund === null || stelle < 0) return summe;
+        if (fund === null) return summe;
+        const stelle = fund.schlange.karten.findIndex((karte) => karte.id === ziel.karteId);
+        if (stelle < 0) return summe;
         if (fund.besitzer !== sicht.ich) return summe + schaden(reiheUm(fund.schlange.karten, stelle));
         const ohne = fund.schlange.karten.filter((_, index) => index !== stelle);
         return summe + (fund.schlange.karten[stelle].typ === 'Farbkarte' ? -1 : reiheDurch(ohne, stelle) >= 3 ? 3 : 0);
