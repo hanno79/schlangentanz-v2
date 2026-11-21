@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-009 In Partien gegen die Zufalls-KI gewinnt die solide KI fast immer und lässt keinen Zug liegen, der ihre eigenen Punkte ohne Nutzen für einen Gegner erhöht. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-009 In Partien gegen die Zufalls-KI gewinnt die solide KI fast immer und lässt keinen Zug liegen, der ihre eigenen Punkte ohne Nutzen für einen Gegner erhöht.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Autor verlangt, dass die KI ernsthaft zu gewinnen versucht und Züge meidet, die nichts bringen. Geprüft wird das in ganzen Partien gegen die Zufalls-KI mit 2, 3 und 4 Spielern: Siegquote, Punkte und jede Entscheidung, die eine Vorgabe verletzt oder Punkte verschenkt.</p><h2>Bestanden, wenn</h2><p>Die solide KI gewinnt mindestens 80 % der Partien. Sie legt keine Karte wirkungslos ab, wenn es einen anderen erlaubten Zug gibt, spielt keine Schlangengrube ohne Wirkung und keine Farbenfusion, nach der ihre Endwertung mit Kettenbonus sinkt. Beendet sie einen Zug, gibt es keine weitere erlaubte Karte, die ihre Endwertung um 3 oder mehr Punkte erhöht, ohne einem Gegner Punkte zu bringen.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine dieser Zählungen grösser als 0 ist, etwa ein Zugende, nach dem ein Schlangenfrass auf die eigene Schlange 9 Punkte gebracht hätte, oder die Siegquote unter 80 % liegt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/K2-solide-ki (PR #71)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K2-solide-ki</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>32 Partien ohne Erweiterung: 12 zu zweit (Saaten 9100 bis 9111), 10 zu dritt (9200 bis 9209), 10 zu viert (9300 bis 9309); Sitz der soliden KI ist Saat modulo Spielerzahl, KI-Zufall aus Saat × 17 + 999.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/ki/strategien/solideKi.test.ts</code> endet mit Exit 0. Die eigene Probe ist dieselbe Datei wie bei TF-KI-008 (<code>tests/pruefer_k2.test.ts</code>, Test „Turnier solide gegen Zufall“); die Diagnose einzelner Züge steht in <code>pruefer_k2_diag.test.ts</code> im Beleg.</p></section>
+<section><h2>Grenzfälle</h2><table><thead><tr><th>ID</th><th>Titel</th><th>Letzter Lauf</th></tr></thead><tbody><tr><td><a href="TF-KI-010.html">TF-KI-010</a></td><td>Im letzten Zug mit Schlangengrube und Farbenschutz spielt die solide KI die Grube nicht, und ein Test der Suite hält diese Regel fest.</td><td><span class="status status-fehlgeschlagen">fehlgeschlagen</span> 21.11.2026</td></tr></tbody></table></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Partien mit Erweiterung prüft die Probe nur mit 6 Partien. Gegen eine stärkere Gegnerin als die Zufalls-KI misst erst K5.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-21">21.11.2026 15:31</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer K2) &middot; agent &middot; pruefung-K2 @ <span class="commit" title="2fa5fdc838a167c6596b76d5bbbb6d2a2f699b8f">2fa5fdc</span></p><p>32 Partien ohne Erweiterung: 32 Siege (allein), Mittel solide 42.84, Zufall 0.71 Punkte. Wirkungslos mit Alternative 0, Gruben ohne Wirkung 0 von 28, punktesenkende Fusionen 0 von 36, Regenbogen zum Gegner 0, unerlaubte Aktionen 0. Aber 66 Zugenden in 10 von 32 Partien, nach denen eine weitere Karte die eigene Endwertung um 3 bis 13 Punkte erhöht hätte, ohne einem Gegner zu nützen (Schlangenfrass auf eigene Karte, eigene Farbenfusion); die Vorauswahl reiht diese Züge auf Rang 25 bis 531 und rechnet sie nie durch, obwohl die eigene Bewertung sie höher stellt (etwa 16.24 gegen 4.54, P3 Saat 9206)</p><ul class="belege"><li><a href="belege/2026-11-21-1531-TF-KI-009-1.txt">2026-11-21-1531-TF-KI-009-1.txt</a></li><li><a href="belege/2026-11-21-1531-TF-KI-009-2.txt">2026-11-21-1531-TF-KI-009-2.txt</a></li><li><a href="belege/2026-11-21-1531-TF-KI-009-3.txt">2026-11-21-1531-TF-KI-009-3.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
