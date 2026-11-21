@@ -95,7 +95,7 @@ export function wegZu(aktion: SpielAktion): Weg {
 }
 
 /** Gleiche Wahlen haben denselben Schlüssel; jede Wahl entsteht hier mit fester Reihenfolge ihrer Felder. */
-const schluessel = (wahl: Wahl): string => JSON.stringify(wahl)
+export const wahlSchluessel = (wahl: Wahl): string => JSON.stringify(wahl)
 
 interface Eintrag {
   aktion: SpielAktion
@@ -107,7 +107,7 @@ interface Eintrag {
 function eintraege(aktionen: readonly SpielAktion[]): Eintrag[] {
   return aktionen.map((aktion) => {
     const { folge, menge } = wegZu(aktion)
-    return { aktion, folge: folge.map((wahl) => [schluessel(wahl), wahl]), menge: new Map(menge.map((wahl) => [schluessel(wahl), wahl])) }
+    return { aktion, folge: folge.map((wahl) => [wahlSchluessel(wahl), wahl]), menge: new Map(menge.map((wahl) => [wahlSchluessel(wahl), wahl])) }
   })
 }
 
@@ -140,7 +140,7 @@ function stand(liste: readonly Eintrag[], gewaehlt: readonly string[]): { angebo
 
 /** Was nach dieser Auswahl angeboten ist und ob sie eine Aktion vollständig beschreibt. */
 export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl): Auswahlstand {
-  const { angebote, fertig } = stand(eintraege(aktionen), auswahl.map(schluessel))
+  const { angebote, fertig } = stand(eintraege(aktionen), auswahl.map(wahlSchluessel))
   if (fertig.length > 1) {
     throw new Error(`Auswahl: ${fertig.length} Aktionen passen zu derselben Auswahl; jede Aktion braucht einen eigenen Weg (O3).`)
   }
@@ -155,8 +155,8 @@ export function auswahlstand(aktionen: readonly SpielAktion[], auswahl: Auswahl)
  */
 export function waehle(aktionen: readonly SpielAktion[], auswahl: Auswahl, wahl: Wahl): Auswahl {
   const liste = eintraege(aktionen)
-  const gewaehlt = auswahl.map(schluessel)
-  const neu = schluessel(wahl)
+  const gewaehlt = auswahl.map(wahlSchluessel)
+  const neu = wahlSchluessel(wahl)
   const stelle = gewaehlt.indexOf(neu)
   if (stelle >= 0) {
     const inFolge = liste.some((eintrag) => passt(eintrag, gewaehlt) && stelle < eintrag.folge.length)

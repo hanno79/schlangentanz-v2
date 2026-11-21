@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-055 zugBeendenGesperrt nennt genau dann einen Grund, wenn pruefeAktion das Beenden ablehnt, und zwar denselben. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-055 zugBeendenGesperrt nennt genau dann einen Grund, wenn pruefeAktion das Beenden ablehnt, und zwar denselben.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Oberfläche zeigt neben einem gesperrten „Zug beenden“ den Grund, den ihr die Engine mit <code>zugBeendenGesperrt</code> nennt. Die Funktion darf keine eigene Regel enthalten: Sie muss in jedem Zustand genau das sagen, was <code>pruefeAktion</code> beim Beenden für den Spieler am Zug antwortet.</p><h2>Bestanden, wenn</h2><p><code>npx vitest run src/engine/__tests__/regeln/A5_zug_beenden_grund.test.ts</code> endet mit 0, alle 8 Tests grün. Dazu findet eine unabhängige Probe über gespielte Partien, abgewandelte Zustände und Zufallszustände 0 Abweichungen zwischen <code>zugBeendenGesperrt</code> und <code>pruefeAktion</code>, und ohne schwebende Karte ist „Zug beenden“ genau dann aufgezählt, wenn kein Grund da ist.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Test ist rot oder die Probe meldet einen Zustand, in dem Grund und Prüfung auseinanderlaufen.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/O5-karten-spielen (PR #73)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem geprüften Stand, <code>git status</code> ohne Änderung ausserhalb von <code>tagebuch/</code></td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Probe: 60 Partien (Saaten 101 bis 160, 2 bis 4 Spieler, mit und ohne Erweiterung, Karten bevorzugt vor „Zug beenden“), an jedem Schritt der Zustand und drei Abwandlungen (keine gespielte Karte; keine gespielte Karte und leere Hand; nur eine gespielte Sonderkarte), dazu <code>zufallszustand</code> mit den Saaten 20001 bis 25000.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Die Probe liegt als vorübergehende Testdatei unter <code>src/ui/spiel/</code>, läuft mit <code>npx vitest run</code> und wird danach gelöscht. Erwartet: 0 Abweichungen, sowohl gesperrte als auch freie Zustände kommen vor. Gegenprobe: <code>zugBeendenGesperrt</code> gibt statt <code>ergebnis.grund</code> einen festen Satz zurück; dann werden 6 Tests in <code>A5_zug_beenden_grund.test.ts</code> rot.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ein ungültiger <code>zug.spielerIndex</code> wirft einen TypeError statt einen Grund zu nennen. Nicht geprüft, weil Invarianten und Laden einen solchen Zustand vorher verwerfen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 18:28</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O5 Iteration 2) &middot; agent &middot; pruefung-O5-it2 @ <span class="commit" title="6915756eb41999e7e5a1569bc73fe53488add605">6915756</span></p><p>A5_zug_beenden_grund.test.ts 8/8 grün. Eigene Probe: 60 Partien, 49&#x27;216 Zustände inkl. Abwandlungen und 5&#x27;000 Zufallszustände, 22&#x27;136 gesperrt, 27&#x27;080 frei, 0 Abweichungen zu pruefeAktion, Aufzählung von ZugBeenden stimmt überall. B2-Probe: 2&#x27;054 Lagen, in denen du entscheidest, fremde Hände getauscht, Grund gleich (982 mit Grund). Gegenprobe fester Satz: 6 Tests rot.</p><ul class="belege"><li><a href="belege/2026-11-21-1828-TF-ENGINE-055-1.txt">2026-11-21-1828-TF-ENGINE-055-1.txt</a></li><li><a href="belege/2026-11-21-1828-TF-ENGINE-055-2.txt">2026-11-21-1828-TF-ENGINE-055-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

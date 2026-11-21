@@ -3,11 +3,13 @@ import type { GegnerAnsicht } from '../spiel/tischAnsicht'
 import { KARTENGROESSE } from './groessen'
 import { Ablage, Grube, Schlangen } from './Schlange'
 import { TISCH, handkartenText } from './texte'
+import { SpielerZiel } from './Ziele'
 
 /**
  * Ein Gegner oben am Tisch: Name, Zahl seiner Handkarten, oberste Karte seines
  * Ablagestapels, eine Grube vor ihm und seine Schlangen. Seine Handkarten
- * stehen nur als Zahl da; die Sicht kennt sie gar nicht (B2).
+ * stehen nur als Zahl da; die Sicht kennt sie gar nicht (B2). Bietet eine
+ * Schlangengrube ihn als Ziel an, steht im Kopf „Wählen“ (O5).
  */
 export function Gegner({ gegner }: { gegner: GegnerAnsicht }) {
   const kennung = useId()
@@ -19,6 +21,7 @@ export function Gegner({ gegner }: { gegner: GegnerAnsicht }) {
         </h2>
         {gegner.amZug && <span className="st-abzeichen">{TISCH.istDran}</span>}
         <span className="st-gegner-info">{handkartenText(gegner.handkarten)}</span>
+        <SpielerZiel spielerId={gegner.id} name={gegner.name} />
         <Ablage ablage={gegner.ablage} eigene={false} />
         {gegner.gruben.map((grube) => (
           <Grube key={grube.karte.id} grube={grube} />

@@ -38,7 +38,7 @@ export type { PartieOptionen } from './state';
 export { ermittleAktionen } from './aktionen/enumerieren';
 /** A10, D21: Kommt der letzte Zug eines Spielers in der Schlussrunde noch? Für die Sicht der KI (Plan K2). */
 export { hatNochLetztenZug } from './zugablauf';
-export { ermittleEntscheider, pruefeAktion } from './aktionen/pruefen';
+export { ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
 export { erzeugeZufall } from './testing/zufall';

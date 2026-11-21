@@ -1,0 +1,30 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2b40caf6009907aa
+
+ ❯ src/ui/tisch/prueferTmp.test.tsx (1 test | 1 failed) 367ms
+     × echter Grund der Engine erscheint 363ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ui/tisch/prueferTmp.test.tsx > Prüfer O5 > echter Grund der Engine erscheint
+AssertionError: ECHTER GRUND: expected 'Eine neue Schlange geht nicht: Jeder …' to be 'zeige' // Object.is equality
+
+Expected: "zeige"
+Received: "Eine neue Schlange geht nicht: Jeder Spieler hat höchstens 2 Schlangen (A5)."
+
+ ❯ src/ui/tisch/prueferTmp.test.tsx:32:37
+     30|     ausfuehren()
+     31|     const meldung = screen.getByRole('alert').textContent
+     32|     expect(meldung, 'ECHTER GRUND').toBe('zeige')
+       |                                     ^
+     33|     expect(meldung).not.toBe('')
+     34|     expect(roh()).toBe(serialisiere(start))
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:57:13
+   Duration  4.91s (transform 1.29s, setup 291ms, import 1.61s, tests 367ms, environment 2.35s)
+

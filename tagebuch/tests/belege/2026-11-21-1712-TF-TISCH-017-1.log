@@ -1,0 +1,8 @@
+G1 Optionen: ["c) Zwei beliebige Karten aus den Schlangen der Mitspieler"] | Satz: Wähle, was der Schlangenfrass entfernt.
+G1 Ziele nach c): ["KI-Gegner 1, Schlange 1, Karte 1: Farbkarte Blau, 1 Punkt"]
+G1 nach einer Karte: Ansage: Schlangenfrass frisst Blau aus der Schlange 1 von KI-Gegner 1. | Ausführen da: 1
+G1 gespielt: true | KI-Gegner 1, Schlange 1: 1 Karte, keine Farbgruppe
+G2 vor dem Drehen: Wähle die Stelle (+) in der Schlange. | nach dem Drehen: Wähle die Stelle (+) in der Schlange. | Ziele: ["Deine Schlange 1: vor Karte 1","Deine Schlange 1: zwischen Karte 1 und 2","Deine Schlange 1: hinter Karte 2"] | gedrückt: 2 | waagrecht 0
+G3 nach Neuladen: Wähle eine Karte aus deiner Hand. | Ziele: 0 | Speicher gleich: true
+G4 [desktop] Doppeltipp: Hand 4, Schlange 1 2 Karten, gespielt {"abschnitt":"Ausspielen","farbenfusionGespielt":false,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"spielerIndex":0,"teilzug":1,"verdopplerGespielt":false} | Zugleiste: Beende deinen Zug. | Fehler: keine
+G4 [tablet-quer] Doppeltipp: Hand 4, Schlange 1 2 Karten, gespielt {"abschnitt":"Ausspielen","farbenfusionGespielt":false,"gespielteFarbkarten":1,"gespielteSonderkarten":0,"spielerIndex":0,"teilzug":1,"verdopplerGespielt":false} | Zugleiste: Beende deinen Zug. | Fehler: keine
