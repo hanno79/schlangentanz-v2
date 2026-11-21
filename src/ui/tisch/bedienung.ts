@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import type { SpielAktion } from '../../engine'
+import type { SpielAktion, ZugBeendenAktion } from '../../engine'
 import { auswahlstand, waehle, wahlSchluessel } from '../spiel/auswahl'
 import type { Auswahl, Wahl } from '../spiel/auswahl'
 
@@ -17,7 +17,7 @@ Oberfläche lässt sie nur weg, sie baut keine Aktion selbst.
 const NICHT_IN_O5: ReadonlySet<SpielAktion['typ']> = new Set(['SchlangenhaeutungSpielen', 'Reagieren'])
 
 /** Die Aktionen der Engine, die O5 bedienbar macht. */
-export function bedienbareAktionen(aktionen: readonly SpielAktion[]): SpielAktion[] {
+function bedienbareAktionen(aktionen: readonly SpielAktion[]): SpielAktion[] {
   return aktionen.filter((aktion) => !NICHT_IN_O5.has(aktion.typ))
 }
 
@@ -43,12 +43,27 @@ export interface Bedienung {
   karteId: string | null
   /** Ob die Engine diese Handkarte jetzt spielen lässt. */
   spielbar: (karteId: string) => boolean
+  /** Wie viele Karten der Mensch abwerfen muss (A5); 0, wenn er nicht abwirft. */
+  abwerfen: number
+  /** Ob der Mensch gerade seine Karten spielt: Er entscheidet, und es ist nicht das Abwerfen. */
+  ausspielen: boolean
+  /** „Zug beenden“, wenn die Engine es aufzählt, sonst `null`. */
+  zugBeenden: ZugBeendenAktion | null
 }
 
 const LEER: Auswahl = []
 
 export function useBedienung(alle: SpielAktion[]): Bedienung {
   const aktionen = useMemo(() => bedienbareAktionen(alle), [alle])
+  const { abwerfen, zugBeenden } = useMemo(() => {
+    let anzahl = 0
+    let beenden: ZugBeendenAktion | null = null
+    for (const aktion of aktionen) {
+      if (aktion.typ === 'UeberhandAbwerfen') anzahl = aktion.karteIds.length
+      if (aktion.typ === 'ZugBeenden') beenden = aktion
+    }
+    return { abwerfen: anzahl, zugBeenden: beenden }
+  }, [aktionen])
   const spielbareKarten = useMemo(() => new Set(aktionen.flatMap((aktion) => ('karteId' in aktion ? [aktion.karteId] : []))), [aktionen])
   // Die Auswahl gehört zu den Aktionen, für die sie getroffen wurde; ein neuer Stand beginnt leer.
   const [stand, setzeStand] = useState<{ fuer: SpielAktion[]; auswahl: Auswahl }>({ fuer: alle, auswahl: LEER })
@@ -65,13 +80,13 @@ export function useBedienung(alle: SpielAktion[]): Bedienung {
   const hebeAuf = useCallback(() => setzeStand({ fuer: alle, auswahl: LEER }), [alle])
   const tippe = useCallback((wahl: Wahl) => setzeStand({ fuer: alle, auswahl: waehle(aktionen, auswahl, wahl) }), [alle, aktionen, auswahl])
 
-  // Escape hebt die Auswahl auf (O5 K1), nicht aber in einem Dialog: Dort schliesst Escape den Dialog.
+  // Escape hebt die Auswahl auf (O5 K1), nicht aber, solange ein Dialog offen ist: Dort schliesst Escape den Dialog.
   const etwasGewaehlt = auswahl.length > 0
   useEffect(() => {
     if (!etwasGewaehlt) return
     const beiTaste = (ereignis: KeyboardEvent) => {
       if (ereignis.key !== 'Escape' || ereignis.defaultPrevented) return
-      if (ereignis.target instanceof Element && ereignis.target.closest('dialog') !== null) return
+      if (document.querySelector('dialog[open]') !== null) return
       hebeAuf()
     }
     document.addEventListener('keydown', beiTaste)
@@ -91,6 +106,9 @@ export function useBedienung(alle: SpielAktion[]): Bedienung {
     hebeAuf,
     karteId: erste?.art === 'karte' ? erste.karteId : null,
     spielbar: (karteId) => spielbareKarten.has(karteId),
+    abwerfen,
+    ausspielen: aktionen.length > 0 && abwerfen === 0,
+    zugBeenden,
   }
 }
 

@@ -28,13 +28,12 @@ export const TISCH = {
   istDran: 'ist dran',
   schlussrunde: 'Schlussrunde',
   unterFusion: 'Unter der Farbenfusion',
-  schliessen: 'Schliessen',
 }
 
 /** Das Zeichen am Rand eines Bereichs, hinter dem noch etwas liegt (`Weiter`); mit `ziel` liegt dort auch ein Ziel (O5). */
 export const WEITER = {
-  rechts: (anzahl: number, ziel = false) => `${ziel ? 'Ziel ' : ''}${anzahl > 0 ? `+${anzahl} ` : ''}›`,
-  links: (anzahl: number, ziel = false) => `‹${anzahl > 0 ? ` +${anzahl}` : ''}${ziel ? ' Ziel' : ''}`,
+  rechts: (anzahl: number, ziel: boolean) => `${ziel ? 'Ziel ' : ''}${anzahl > 0 ? `+${anzahl} ` : ''}›`,
+  links: (anzahl: number, ziel: boolean) => `‹${anzahl > 0 ? ` +${anzahl}` : ''}${ziel ? ' Ziel' : ''}`,
   unten: 'mehr ↓',
   oben: 'mehr ↑',
 }

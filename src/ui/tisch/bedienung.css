@@ -12,7 +12,7 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   border-color: var(--farbe-akzent);
 }
 
-.st-knopf--haupt:hover {
+.st-knopf--haupt:not(:disabled):hover {
   background: var(--farbe-akzent-stark);
   border-color: var(--farbe-akzent-stark);
 }
@@ -21,17 +21,13 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   border-color: transparent;
 }
 
-.st-knopf--leise:hover {
+.st-knopf--leise:not(:disabled):hover {
   background: var(--farbe-tisch);
 }
 
 .st-knopf:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.st-knopf:disabled:hover {
-  background: var(--farbe-flaeche);
 }
 
 /* Handkarte als Knopf: gewählt 8 px angehoben und mit 4 px Akzent umrandet. Die

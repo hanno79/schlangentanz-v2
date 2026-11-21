@@ -110,7 +110,7 @@ Tischfläche.
   transition: background-color var(--dauer);
 }
 
-.st-knopf:hover {
+.st-knopf:not(:disabled):hover {
   background: var(--farbe-akzent-hell);
 }
 

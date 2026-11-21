@@ -32,14 +32,14 @@ interface ZugleisteEigenschaften {
 }
 
 /** Was die Leiste sagt; ohne Entscheidung des Menschen, was gerade geschieht. */
-function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null, abwerfen: number): string {
-  if (ansicht.status.partiephase === 'Beendet') return ZUGLEISTE.beendet
+function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | null): string {
+  const { abwerfen } = bedienung
+  if (ansicht.status.partiephase === 'Beendet') return statusText(ansicht.status).titel
   if (bedienung.aktionen.length === 0) return ansicht.status.schwebend?.entscheidet.ich ? statusText(ansicht.status).text : ZUGLEISTE.warten
   if (abwerfen > 0) return ABWERFEN.zugleiste(abwerfen)
   if (karte === null) {
     const karten = bedienung.angebote.some((wahl) => wahl.art === 'karte')
-    const beenden = bedienung.aktionen.some((aktion) => aktion.typ === 'ZugBeenden')
-    if (karten && beenden) return ZUGLEISTE.karteOderBeenden
+    if (karten && bedienung.zugBeenden !== null) return ZUGLEISTE.karteOderBeenden
     return karten ? ZUGLEISTE.karteWaehlen : ZUGLEISTE.nurBeenden
   }
   if (bedienung.fertig !== null) return `${ZUGLEISTE.ansage} ${ansage(bedienung.fertig, tischnamen(ansicht))}`
@@ -48,13 +48,9 @@ function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | n
 
 export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross, oeffneAbwerfen }: ZugleisteEigenschaften) {
   const karte = ansicht.ich.hand.find((handkarte) => handkarte.id === bedienung.karteId) ?? null
-  const abwurf = bedienung.aktionen.find((aktion) => aktion.typ === 'UeberhandAbwerfen')
-  const abwerfen = abwurf === undefined ? 0 : abwurf.karteIds.length
-  const ausspielen = bedienung.aktionen.length > 0 && abwerfen === 0
-  const zugBeenden = bedienung.aktionen.find((aktion) => aktion.typ === 'ZugBeenden')
   // Nur solange gewählt wird; die gewählte Möglichkeit nennt danach der Satz, und „Abbrechen“ führt zurück.
   const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
-  const { fertig } = bedienung
+  const { fertig, zugBeenden, abwerfen, ausspielen } = bedienung
 
   return (
     <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
@@ -65,7 +61,7 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
       )}
       <div className="st-zugleiste-inhalt">
         <p className="st-zugleiste-text" aria-live="polite">
-          {satz(ansicht, bedienung, karte, abwerfen)}
+          {satz(ansicht, bedienung, karte)}
         </p>
         {ablehnung !== null && (
           <p className="st-zugleiste-fehler" role="alert">
@@ -89,8 +85,8 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
           )}
           {ausspielen && (
             <span className="st-zugleiste-beenden">
-              {zugBeenden === undefined && karte === null && <span className="st-zugleiste-grund">{ZUGLEISTE.mindestensEine}</span>}
-              <button type="button" className="st-knopf" disabled={zugBeenden === undefined} onClick={() => zugBeenden !== undefined && fuehreAus(zugBeenden)}>
+              {zugBeenden === null && karte === null && <span className="st-zugleiste-grund">{ZUGLEISTE.mindestensEine}</span>}
+              <button type="button" className="st-knopf" disabled={zugBeenden === null} onClick={() => zugBeenden !== null && fuehreAus(zugBeenden)}>
                 {ZUGLEISTE.zugBeenden}
               </button>
             </span>

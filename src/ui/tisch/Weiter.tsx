@@ -1,6 +1,8 @@
 import { WEITER } from './texte'
 import type { Ueberlauf } from './ueberlauf'
 
+const zeichenKlasse = (ziel: boolean) => (ziel ? 'st-weiter-zeichen st-weiter-zeichen--ziel' : 'st-weiter-zeichen')
+
 /**
  * Das Zeichen am Rand eines Bereichs, hinter dem noch etwas liegt: an einer
  * Schlange „+3 ›“ (so viele Karten liegen noch hinter dem Rand), an der
@@ -10,8 +12,6 @@ import type { Ueberlauf } from './ueberlauf'
  * trägt die Farbe der Ziele. `data-weiter` nennt die Richtung, daran erkennt es
  * der Layout-Vertrag.
  */
-const zeichenKlasse = (ziel: boolean) => (ziel ? 'st-weiter-zeichen st-weiter-zeichen--ziel' : 'st-weiter-zeichen')
-
 export function Weiter({ ueberlauf }: { ueberlauf: Ueberlauf }) {
   return (
     <>

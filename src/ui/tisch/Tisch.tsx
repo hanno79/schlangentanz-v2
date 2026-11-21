@@ -53,8 +53,6 @@ export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
   // Der Dialog zum Abwerfen ist offen, bis du ihn für diesen Stand schliesst.
   const [abwerfenZu, setzeAbwerfenZu] = useState<SpielAktion[] | null>(null)
   const [flaeche, flaecheUeberlauf] = useUeberlauf<HTMLDivElement>()
-  const abwerfen = bedienung.aktionen.some((aktion) => aktion.typ === 'UeberhandAbwerfen')
-  const ausspielen = bedienung.aktionen.length > 0 && !abwerfen
   return (
     <ZielKontext.Provider value={bedienung}>
     <div className={bedienung.ziele.length > 0 ? 'spieltisch spieltisch--zielwahl' : 'spieltisch'} data-testid="spiel">
@@ -89,7 +87,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
           </div>
           <Schlangen schlangen={ansicht.ich.schlangen} besitzer={{ name: ansicht.ich.name, ich: true }} groesse={KARTENGROESSE.eigene} />
         </section>
-        <Hand ich={ansicht.ich} bedienung={ausspielen ? bedienung : null} />
+        <Hand ich={ansicht.ich} />
       </section>
 
       <Zugleiste
@@ -102,7 +100,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
       />
 
       {gross !== null && <Grossansicht karte={gross} schliesse={() => setzeGross(null)} />}
-      {abwerfen && abwerfenZu !== ansicht.aktionen && (
+      {bedienung.abwerfen > 0 && abwerfenZu !== ansicht.aktionen && (
         <UeberhandDialog hand={ansicht.ich.hand} bedienung={bedienung} fuehreAus={fuehreAus} schliesse={() => setzeAbwerfenZu(ansicht.aktionen)} />
       )}
     </div>

@@ -28,9 +28,8 @@ interface DialogEigenschaften {
 export function UeberhandDialog({ hand, bedienung, fuehreAus, schliesse }: DialogEigenschaften) {
   const dialog = useRef<HTMLDialogElement>(null)
   const titelId = useId()
-  const abwurf = bedienung.aktionen.find((aktion) => aktion.typ === 'UeberhandAbwerfen')
-  if (abwurf === undefined) throw new Error('Der Dialog zum Abwerfen ist offen, aber die Engine verlangt kein Abwerfen (A5).')
-  const abwerfen = abwurf.karteIds.length
+  const { abwerfen } = bedienung
+  if (abwerfen === 0) throw new Error('Der Dialog zum Abwerfen ist offen, aber die Engine verlangt kein Abwerfen (A5).')
   const gewaehlt = bedienung.auswahl.length
   const { fertig } = bedienung
 

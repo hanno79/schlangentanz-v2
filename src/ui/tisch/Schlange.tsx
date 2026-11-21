@@ -49,7 +49,7 @@ export function Schlange({ schlange, titel, groesse }: { schlange: SchlangeAnsic
     return wahl === undefined ? null : <Feld wahl={wahl} name={ZIELNAME.luecke(titel, position, laenge)} klasse="st-ziel--luecke" />
   }
   const ganze = zielDerArt(ziele, 'schlange')
-  const ganzeGewaehlt = ganze !== undefined && bedienung !== null && bedienung.gewaehlt(ganze)
+  const ganzeGewaehlt = ganze !== undefined && bedienung?.gewaehlt(ganze) === true
   return (
     <div className={ganzeGewaehlt ? 'st-rolle st-rolle--gewaehlt' : 'st-rolle'}>
     <ol ref={zeile} className={ziele.length > 0 ? 'st-schlange st-schlange--ziele' : 'st-schlange'} aria-label={schlangenName(titel, laenge, schlange.farbgruppen)}>

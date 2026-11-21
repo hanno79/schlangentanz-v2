@@ -3,7 +3,7 @@ import type { Spielkarte } from '../../engine'
 import { Karte } from '../karten/Karte'
 import { kartenname } from '../karten/kartentexte'
 import type { EigeneAnsicht } from '../spiel/tischAnsicht'
-import { zielDerArt } from './bedienung'
+import { useZiele, zielDerArt } from './bedienung'
 import type { Bedienung } from './bedienung'
 import { KARTENGROESSE } from './groessen'
 import { Ablage, Grube } from './Schlange'
@@ -24,9 +24,11 @@ angehoben und umrandet. Hat die Karte kein Ziel, wird deine Ablage zum Ziel
 Sonst, und während des Abwerfens (das im Dialog läuft), zeigt die Hand nur an.
 */
 
-export function Hand({ ich, bedienung }: { ich: EigeneAnsicht; bedienung: Bedienung | null }) {
+export function Hand({ ich }: { ich: EigeneAnsicht }) {
   const anzahl = { '--hand-anzahl': ich.hand.length } as CSSProperties
   const [reihe, ueberlauf] = useUeberlauf<HTMLUListElement>()
+  const kontext = useZiele()
+  const bedienung = kontext?.ausspielen === true ? kontext : null
   const ablage = bedienung === null ? undefined : zielDerArt(bedienung.ziele, 'ablage')
   return (
     <section className="st-hand" aria-label={TISCH.deineHand}>
@@ -60,23 +62,18 @@ export function Hand({ ich, bedienung }: { ich: EigeneAnsicht; bedienung: Bedien
 }
 
 function Handkarte({ karte, bedienung }: { karte: Spielkarte; bedienung: Bedienung }) {
-  const bild = <Karte karte={karte} sizes={KARTENGROESSE.hand} />
-  if (!bedienung.spielbar(karte.id)) {
-    return (
-      <button type="button" className="st-handkarte" aria-label={gesperrteKarte(kartenname(karte))} disabled>
-        {bild}
-      </button>
-    )
-  }
+  const name = kartenname(karte)
+  const spielbar = bedienung.spielbar(karte.id)
   return (
     <button
       type="button"
       className="st-handkarte"
-      aria-label={kartenname(karte)}
-      aria-pressed={bedienung.karteId === karte.id}
+      aria-label={spielbar ? name : gesperrteKarte(name)}
+      aria-pressed={spielbar ? bedienung.karteId === karte.id : undefined}
+      disabled={!spielbar}
       onClick={() => bedienung.tippe({ art: 'karte', karteId: karte.id })}
     >
-      {bild}
+      <Karte karte={karte} sizes={KARTENGROESSE.hand} />
     </button>
   )
 }

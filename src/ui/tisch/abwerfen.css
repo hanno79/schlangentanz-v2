@@ -24,7 +24,8 @@ src/ui/tokens.css.
 }
 
 .st-abwerfen::backdrop {
-  background: var(--farbe-abdunkeln);
+  /* --farbe-tinte mit 60 % Deckkraft; als Wert, weil ::backdrop nicht überall Variablen erbt (wie grossansicht.css). */
+  background: rgb(43 33 28 / 0.6);
 }
 
 .st-abwerfen-koerper {

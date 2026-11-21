@@ -2,7 +2,7 @@ import type { SchlangenfrassSpielenAktion, SpielAktion, Spielkarte } from '../..
 import { kartenkurzname, kartenname } from '../karten/kartentexte'
 import type { Wahl } from '../spiel/auswahl'
 import type { SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
-import { anzahlKarten, schlangenTitel } from './texte'
+import { anzahlKarten } from './texte'
 
 /*
 Die Texte der Bedienung (O5) an einer Stelle (docs/regeln/web.md, „Texte“):
@@ -25,7 +25,6 @@ export const ZUGLEISTE = {
   karteOderBeenden: 'Wähle eine Karte aus deiner Hand oder beende deinen Zug.',
   nurBeenden: 'Beende deinen Zug.',
   warten: 'Warte, bis du dran bist.',
-  beendet: 'Die Partie ist beendet.',
   ansage: 'Ansage:',
 }
 
@@ -33,7 +32,7 @@ export const ZUGLEISTE = {
 export const gesperrteKarte = (name: string): string => `${name} (jetzt nicht spielbar)`
 
 /** Eine Stelle zwischen den Karten einer Schlange; 0 ist vor der ersten. */
-export function stelleText(position: number, laenge: number): string {
+function stelleText(position: number, laenge: number): string {
   if (position === 0) return 'vor Karte 1'
   if (position >= laenge) return `hinter Karte ${laenge}`
   return `zwischen Karte ${position} und ${position + 1}`
@@ -79,8 +78,6 @@ export function auftrag(angebote: readonly Wahl[], karte: Spielkarte): string {
 
 interface SchlangeAmTisch {
   ansicht: SchlangeAnsicht
-  /** „Deine Schlange 1“ oder „KI-Gegner 1, Schlange 1“. */
-  titel: string
   eigene: boolean
   besitzer: string
   nummer: number
@@ -101,7 +98,7 @@ export function tischnamen(ansicht: TischAnsicht): Tischnamen {
     const eigene = platz === ansicht.ich
     platz.schlangen.forEach((schlange, index) => {
       const nummer = index + 1
-      schlangen.set(schlange.id, { ansicht: schlange, titel: schlangenTitel({ name: platz.name, ich: eigene }, nummer), eigene, besitzer: platz.name, nummer })
+      schlangen.set(schlange.id, { ansicht: schlange, eigene, besitzer: platz.name, nummer })
       for (const glied of schlange.karten) karten.set(glied.karte.id, glied.karte)
     })
   }

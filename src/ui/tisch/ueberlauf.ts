@@ -32,7 +32,7 @@ const gleich = (a: Ueberlauf, b: Ueberlauf) =>
 /** Ein Glied, das nur ein Ziel trägt und keine Karte ist (`data-zielplatz`). */
 const istZielplatz = (glied: Element) => glied.hasAttribute('data-zielplatz')
 /** Ob im Glied ein angebotenes Ziel steht. */
-const hatZiel = (glied: Element) => glied.querySelector('[data-ziel]:not(:disabled)') !== null || glied.matches('[data-ziel]:not(:disabled)')
+const hatZiel = (glied: Element) => glied.matches('[data-ziel]') || glied.querySelector('[data-ziel]') !== null
 
 function miss(element: HTMLElement): Ueberlauf {
   const box = element.getBoundingClientRect()
