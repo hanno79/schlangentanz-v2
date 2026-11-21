@@ -8,6 +8,7 @@ import { FARBENDIEB_SZENARIEN } from './szenarienFarbendieb'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
 import { FRASS_SZENARIEN } from './szenarienFrass'
 import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
+import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
 import { KI_SZENARIEN } from './szenarienKi'
 
 export interface Szenario {
@@ -235,6 +236,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...FRASS_SZENARIEN,
   ...FARBENDIEB_SZENARIEN,
   ...FARBENFUSION_SZENARIEN,
+  ...HAEUTUNG_SZENARIEN,
   ...KI_SZENARIEN,
 ]
 

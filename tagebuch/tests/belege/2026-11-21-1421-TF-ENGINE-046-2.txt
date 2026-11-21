@@ -1,0 +1,5 @@
+G7: 1209 Häutungen, 791 verschiedene Endlagen
+Szenario haeutung: 56 Knöpfe, 31 Endlagen
+M1: {"gewirkt":157,"abgewehrt":5,"beimGegner":95,"mitFusion":27,"schritte":11146}; max. Aktionen 2836 (Saat 47514, 2 Spieler, Schritt 187), max. Häutungen 2563; ermittleAktionen max 9.0 ms, Mittel 0.018 ms über 11146 Aufrufe
+M1: KI-Schritt im Zustand mit 2836 Aktionen: 6.7, 6.9, 6.6, 6.6, 6.0 ms
+M2: 17817 Aktionen (17793 Häutungen); ermittleAktionen 12.5 ms; pruefeAktion über alle 81 ms; KI-Schritt 64.9, 89.2, 83.0, 84.0, 76.6 ms
