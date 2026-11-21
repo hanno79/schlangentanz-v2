@@ -139,12 +139,13 @@ describe('E5 Kriterium 3, A6 Beispiel 1/A7.2: Schlangenblockade und Farbenschutz
     const start = beispiel1()
     const angesagt = legeBlockade(start, 'schlange-1', 0).zustand
     const abgewehrt = fuehreAus(angesagt, reaktion(angesagt, true)).zustand
-    expect(hand(abgewehrt, 1)).toHaveLength(4)
+    expect(hand(abgewehrt, 1), 'A6: B zieht nach der Abwehr nicht nach').toHaveLength(4)
     const nachA = fuehreAus(abgewehrt, zugBeenden(abgewehrt))
-    expect(nachA.ereignisse).toContainEqual({ typ: 'KartenGezogen', spielerIndex: 0, anzahl: 1 })
-    expect(hand(nachA.zustand, 1), 'A6: B zieht nicht ausserhalb seines Zuges').toHaveLength(4)
-    expect(nachA.zustand.zug.spielerIndex).toBe(1)
-    expect(nachA.ereignisse).toContainEqual({ typ: 'KartenGezogen', spielerIndex: 1, anzahl: 1 })
+    expect(nachA.ereignisse, 'A6: A füllt beim Beenden auf, B erst, wenn sein Zug beginnt').toEqual([
+      { typ: 'KartenGezogen', spielerIndex: 0, anzahl: 1 },
+      { typ: 'ZugBegonnen', spielerIndex: 1, teilzug: 1 },
+      { typ: 'KartenGezogen', spielerIndex: 1, anzahl: 1 },
+    ])
     expect(hand(nachA.zustand, 1)).toHaveLength(5)
   })
 
