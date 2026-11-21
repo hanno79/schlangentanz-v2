@@ -1,7 +1,7 @@
 import { expect } from 'vitest'
 import { berechneEndwertung, ermittleAktionen } from '../index'
 import type { SchlangenhaeutungSpielenAktion, SpielAktion, Spielzustand } from '../index'
-import { gepruefteSchlange } from '../karten/schlangenstelle'
+import { gepruefteSchlange } from '../schlangen'
 import type { Baukasten, Kartenwahl } from '../testing/szenario'
 import { handkarte, kartenname } from './legen_hilfen'
 import { aktionen, tischMitHaenden } from './zugablauf_hilfen'

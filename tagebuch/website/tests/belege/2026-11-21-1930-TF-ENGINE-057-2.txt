@@ -1,0 +1,109 @@
+import { writeFileSync } from 'node:fs'
+import { it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, serialisiere } from '../index'
+import type { FarbendiebSpielenAktion, SchlangenfrassSpielenAktion, SpielAktion, Spielzustand } from '../index'
+import { KARTENREGISTER } from '../karten/register'
+import { baukasten } from '../testing/szenario'
+
+// Prüferskript R1 (nicht eingecheckt): Grenzfälle, auf cf0b3f1 und 35c1af7 verglichen.
+const AUS = process.env.R1_AUS ?? '.'
+const STAND = process.env.R1_STAND ?? 'unbekannt'
+const zeilen: string[] = []
+const notiere = (titel: string, wert: unknown) => zeilen.push(`## ${titel}\n${typeof wert === 'string' ? wert : JSON.stringify(wert)}`)
+const schlangen = (zustand: Spielzustand) =>
+  zustand.spieler.map((spieler) => spieler.schlangen.map((schlange) => `${schlange.id}[${schlange.karten.map((karte) => karte.id).join(',')}]{${schlange.fusionen.map((f) => `${f.karteId}:${f.unter.map((k) => k.id).join('+')}`).join(';')}}`).join(' '))
+
+function durchlassen(zustand: Spielzustand): Spielzustand {
+  let jetzt = zustand
+  while (jetzt.schwebend !== null) {
+    const reaktion = ermittleAktionen(jetzt).find((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId === null)
+    if (reaktion === undefined) throw new Error('keine Reaktion')
+    jetzt = anwendeAktion(jetzt, reaktion).zustand
+  }
+  return jetzt
+}
+
+it('R1-Prüfer: Grenzfälle', () => {
+  // G1: Der Baukasten scheitert mitten in einer Schlange; die begonnene Schlange und der Zähler gehen zurück.
+  const bau = baukasten({ spielerzahl: 2, erweiterung: false }).schlange(0, ['Rot'])
+  let fehler = ''
+  try {
+    bau.schlange(1, ['Blau', 'Gelb', { id: 'gibt-es-nicht' }])
+  } catch (e) {
+    fehler = String(e)
+  }
+  const nachFehler = bau.zustand()
+  notiere('G1 Fehler', fehler)
+  notiere('G1 Schlangen nach Fehler', schlangen(nachFehler))
+  notiere('G1 Zähler nach Fehler', nachFehler.schlangenZaehler)
+  bau.schlange(1, ['Grün'])
+  notiere('G1 nächste Schlange', schlangen(bau.zustand()))
+
+  // G2: Schlangenfrass c) frisst eine Fusion und die letzte Karte einer anderen Schlange; beide Mitspieler lassen durch.
+  const frassTisch = baukasten({ spielerzahl: 3, erweiterung: false })
+    .schlange(1, ['Rot', { fusion: ['Grün', 'Grün'] }, 'Blau'])
+    .schlange(2, ['Gelb'])
+    .schlange(2, ['Rot', 'Rot'])
+    .hand(0, ['Schlangenfrass'])
+    .amZug(0)
+    .zustand()
+  const frasse = ermittleAktionen(frassTisch).filter((aktion): aktion is SchlangenfrassSpielenAktion => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'gegnerischeKarten')
+  notiere('G2 Anzahl Frass-Knöpfe', frasse.length)
+  const fusionId = frassTisch.spieler[1].schlangen[0].karten[1].id
+  const gelbId = frassTisch.spieler[2].schlangen[0].karten[0].id
+  const passend = frasse.find((aktion) => aktion.ziele.map((ziel) => ziel.karteId).sort().join() === [fusionId, gelbId].sort().join())
+  if (passend === undefined) throw new Error('G2: kein Knopf')
+  const angesagt = anwendeAktion(frassTisch, passend)
+  const nachFrass = durchlassen(angesagt.zustand)
+  notiere('G2 Schlangen nach Frass', schlangen(nachFrass))
+  notiere('G2 Ablage Spieler 1', nachFrass.spieler[0].ablagestapel.map((karte) => karte.id))
+  notiere('G2 Zustand', serialisiere(nachFrass))
+
+  // G3: Spieler 1 ohne Schlange stiehlt die einzige Karte der einzigen Schlange eines Mitspielers; sie beginnt seine neue Schlange (D17).
+  const diebTisch = baukasten({ spielerzahl: 2, erweiterung: false })
+    .schlange(1, ['Rot'])
+    .hand(0, ['Farbendieb'])
+    .amZug(0)
+    .zustand()
+  const diebe = ermittleAktionen(diebTisch).filter((aktion): aktion is FarbendiebSpielenAktion => aktion.typ === 'FarbendiebSpielen')
+  notiere('G3 Diebknöpfe', diebe)
+  const neu = diebe.find((aktion) => aktion.ziel.art === 'neueSchlange')
+  if (neu === undefined) throw new Error('G3: kein Knopf')
+  const nachDieb = durchlassen(anwendeAktion(diebTisch, neu).zustand)
+  notiere('G3 Schlangen nach Diebstahl', schlangen(nachDieb))
+  notiere('G3 Zähler', nachDieb.schlangenZaehler)
+
+  // K4: wirke des Farbendiebs direkt mit einer Karte, die nicht in der Quellschlange liegt (an pruefe vorbei).
+  const roh = baukasten({ spielerzahl: 2, erweiterung: false })
+    .schlange(0, ['Blau'])
+    .schlange(1, ['Rot', 'Gelb'])
+    .hand(0, ['Farbendieb'])
+    .amZug(0)
+    .zustand()
+  const dieb = roh.spieler[0].hand[0]
+  const falsch: SpielAktion = {
+    typ: 'FarbendiebSpielen',
+    spielerId: roh.spieler[0].id,
+    karteId: dieb.id,
+    quelle: { schlangenId: roh.spieler[1].schlangen[0].id, karteId: roh.spieler[0].schlangen[0].karten[0].id },
+    ziel: { art: 'neueSchlange' },
+  }
+  let wirkung = ''
+  try {
+    const danach = KARTENREGISTER.Farbendieb.wirke(structuredClone(roh), falsch as FarbendiebSpielenAktion, [])
+    wirkung = `kein Fehler; Schlangen danach: ${JSON.stringify(schlangen(danach))}`
+  } catch (e) {
+    wirkung = `Fehler: ${String(e)}`
+  }
+  notiere('K4 wirke Farbendieb mit falscher Quellkarte', wirkung)
+  let ueberAnwenden = ''
+  try {
+    anwendeAktion(roh, falsch)
+    ueberAnwenden = 'angewandt'
+  } catch (e) {
+    ueberAnwenden = `Fehler: ${String(e)}`
+  }
+  notiere('K4 anwendeAktion mit falscher Quellkarte', ueberAnwenden)
+
+  writeFileSync(`${AUS}/grenzfaelle-${STAND}.txt`, zeilen.join('\n') + '\n')
+})

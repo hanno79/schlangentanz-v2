@@ -1,0 +1,175 @@
+import { createHash } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
+import { it } from 'vitest'
+import { anwendeAktion, erstellePartie, erzeugeZufall, ermittleAktionen, pruefeAktion, serialisiere } from '../engine'
+import type { SpielAktion, Spielzustand } from '../engine'
+import { zufallszustand } from '../engine/testing/zufallszustand'
+import { SZENARIEN } from './szenarien'
+
+// Prüferskript R1 (nicht eingecheckt). Läuft auf cf0b3f1 und 35c1af7 gleich.
+const AUS = process.env.R1_AUS ?? '.'
+const STAND = process.env.R1_STAND ?? 'unbekannt'
+
+function idPool(zustand: Spielzustand): string[] {
+  const pool = new Set<string>(['unbekannt', 'schlange-99', 'gelb-99', 'neueSchlange', 'schlange', 'anfang', 'ende', 'eigeneKarte', 'gegnerKarte'])
+  for (const spieler of zustand.spieler) {
+    pool.add(spieler.id)
+    for (const karte of spieler.hand) pool.add(karte.id)
+    for (const karte of spieler.ablagestapel) pool.add(karte.id)
+    for (const schlange of spieler.schlangen) {
+      pool.add(schlange.id)
+      for (const karte of schlange.karten) pool.add(karte.id)
+      for (const fusion of schlange.fusionen) for (const karte of fusion.unter) pool.add(karte.id)
+    }
+  }
+  if (zustand.nachziehstapel.length > 0) pool.add(zustand.nachziehstapel[0].id)
+  return [...pool]
+}
+
+type Pfad = (string | number)[]
+
+function blaetter(wert: unknown, pfad: Pfad = []): Pfad[] {
+  if (Array.isArray(wert)) return [pfad, ...wert.flatMap((eintrag, index) => blaetter(eintrag, [...pfad, index]))]
+  if (wert !== null && typeof wert === 'object') return Object.entries(wert).flatMap(([schluessel, eintrag]) => blaetter(eintrag, [...pfad, schluessel]))
+  return [pfad]
+}
+
+function setze(aktion: SpielAktion, pfad: Pfad, neu: unknown): SpielAktion {
+  const kopie = structuredClone(aktion) as unknown as Record<string | number, unknown>
+  let ziel: Record<string | number, unknown> = kopie
+  for (const teil of pfad.slice(0, -1)) ziel = ziel[teil] as Record<string | number, unknown>
+  ziel[pfad[pfad.length - 1]] = neu
+  return kopie as unknown as SpielAktion
+}
+
+function lese(aktion: SpielAktion, pfad: Pfad): unknown {
+  let wert: unknown = aktion
+  for (const teil of pfad) wert = (wert as Record<string | number, unknown>)[teil]
+  return wert
+}
+
+/** Alle Abwandlungen einer Aktion; `auswahl` begrenzt sie (null = alle). */
+function abwandlungen(aktion: SpielAktion, pool: string[], auswahl: ((liste: SpielAktion[]) => SpielAktion[]) | null): SpielAktion[] {
+  const ergebnis: SpielAktion[] = []
+  for (const pfad of blaetter(aktion)) {
+    if (pfad.length === 0 || pfad[0] === 'typ') continue
+    const wert = lese(aktion, pfad)
+    if (Array.isArray(wert)) {
+      ergebnis.push(setze(aktion, pfad, [...wert].reverse()), setze(aktion, pfad, wert.slice(0, -1)), setze(aktion, pfad, [wert[0], ...wert]), setze(aktion, pfad, []))
+    } else if (typeof wert === 'string') {
+      for (const ersatz of pool) if (ersatz !== wert) ergebnis.push(setze(aktion, pfad, ersatz))
+    } else if (typeof wert === 'number') {
+      for (const ersatz of [wert - 1, wert + 1, -1, 0, 99]) if (ersatz !== wert) ergebnis.push(setze(aktion, pfad, ersatz))
+    } else if (wert === null) {
+      ergebnis.push(setze(aktion, pfad, pool[1]))
+    }
+  }
+  return auswahl === null ? ergebnis : auswahl(ergebnis)
+}
+
+function stichprobe(zufall: () => number, anzahl: number) {
+  return (liste: SpielAktion[]) => Array.from({ length: Math.min(anzahl, liste.length) }, () => liste[Math.floor(zufall() * liste.length)])
+}
+
+it('R1-Prüfer: Prüfsumme über Partien, Zufallszustände und Szenarien', () => {
+  const summe = createHash('sha256')
+  const zaehler = { partien: 0, schritte: 0, aktionen: 0, pruefungen: 0, abwandlungen: 0, beendet: 0, grenze: 0, sackgasse: 0, ausnahmen: 0 }
+  const ausnahmen: string[] = []
+  const meldungen = new Map<string, number>()
+  const merke = (ergebnis: ReturnType<typeof pruefeAktion>) => {
+    if (!ergebnis.erlaubt) meldungen.set(ergebnis.grund.replace(/\d+/g, '#'), (meldungen.get(ergebnis.grund.replace(/\d+/g, '#')) ?? 0) + 1)
+  }
+
+  // 1. Partien: 200 ohne, 200 mit Erweiterung, Saaten 1..400, 2/3/4 Spieler reihum.
+  for (let nummer = 0; nummer < 400; nummer += 1) {
+    const saat = 1 + nummer
+    const erweiterung = nummer >= 200
+    const spielerzahl = 2 + (nummer % 3)
+    let zustand = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
+    const wahl = erzeugeZufall(saat * 7919 + 13)
+    summe.update(`P${saat}|${serialisiere(zustand)}`)
+    zaehler.partien += 1
+    for (let schritt = 0; ; schritt += 1) {
+      if (zustand.partiephase === 'Beendet') { zaehler.beendet += 1; break }
+      if (schritt >= 5000) { zaehler.grenze += 1; break }
+      const aktionen = ermittleAktionen(zustand)
+      summe.update(JSON.stringify(aktionen))
+      if (aktionen.length === 0) { zaehler.sackgasse += 1; break }
+      for (const aktion of aktionen) { summe.update(JSON.stringify(pruefeAktion(zustand, aktion))); zaehler.pruefungen += 1 }
+      const pool = idPool(zustand)
+      for (let n = 0; n < 2; n += 1) {
+        const basis = aktionen[Math.floor(wahl() * aktionen.length)]
+        for (const falsch of abwandlungen(basis, pool, stichprobe(wahl, 8))) {
+          const ergebnis = pruefeAktion(zustand, falsch)
+          merke(ergebnis)
+          summe.update(JSON.stringify(falsch) + JSON.stringify(ergebnis))
+          zaehler.abwandlungen += 1
+        }
+      }
+      const gewaehlt = aktionen[Math.floor(wahl() * aktionen.length)]
+      summe.update('W' + JSON.stringify(gewaehlt))
+      try {
+        const ergebnis = anwendeAktion(zustand, gewaehlt)
+        summe.update('Z' + serialisiere(ergebnis.zustand) + 'E' + JSON.stringify(ergebnis.ereignisse))
+        zustand = ergebnis.zustand
+      } catch (fehler) {
+        zaehler.ausnahmen += 1
+        ausnahmen.push(`Partie ${saat}: ${String(fehler)}`)
+        summe.update('X' + String(fehler))
+        break
+      }
+      zaehler.schritte += 1
+      zaehler.aktionen += aktionen.length
+    }
+  }
+  const partienSumme = createHash('sha256').update(summe.copy().digest('hex')).digest('hex')
+
+  // 2. Zufallszustände: jede aufgezählte Aktion anwenden, danach jede Reaktion.
+  const zz = { zustaende: 0, angewandt: 0, reaktionen: 0, ausnahmen: 0 }
+  for (let saat = 1; saat <= 1500; saat += 1) {
+    const zustand = zufallszustand(erzeugeZufall(saat))
+    zz.zustaende += 1
+    for (const aktion of ermittleAktionen(zustand)) {
+      summe.update(JSON.stringify(aktion) + JSON.stringify(pruefeAktion(zustand, aktion)))
+      try {
+        const ergebnis = anwendeAktion(zustand, aktion)
+        zz.angewandt += 1
+        summe.update(serialisiere(ergebnis.zustand) + JSON.stringify(ergebnis.ereignisse))
+        if (ergebnis.zustand.schwebend !== null) {
+          for (const reaktion of ermittleAktionen(ergebnis.zustand).filter((eintrag) => eintrag.typ === 'Reagieren')) {
+            const danach = anwendeAktion(ergebnis.zustand, reaktion)
+            zz.reaktionen += 1
+            summe.update(serialisiere(danach.zustand) + JSON.stringify(danach.ereignisse))
+          }
+        }
+      } catch (fehler) {
+        zz.ausnahmen += 1
+        ausnahmen.push(`Zufallszustand ${saat}: ${JSON.stringify(aktion)}: ${String(fehler)}`)
+        summe.update('X' + String(fehler))
+      }
+    }
+  }
+
+  // 3. Szenarien: jede Aktion, jede Abwandlung vollständig; Meldungen wörtlich.
+  const woertlich: string[] = []
+  for (const szenario of SZENARIEN) {
+    const zustand = szenario.erzeuge()
+    const pool = idPool(zustand)
+    for (const aktion of ermittleAktionen(zustand)) {
+      for (const falsch of abwandlungen(aktion, pool, null)) {
+        const ergebnis = pruefeAktion(zustand, falsch)
+        merke(ergebnis)
+        if (!ergebnis.erlaubt) woertlich.push(`${szenario.name} | ${JSON.stringify(falsch)} | ${ergebnis.grund}`)
+        summe.update(JSON.stringify(falsch) + JSON.stringify(ergebnis))
+      }
+    }
+  }
+
+  const gesamt = summe.digest('hex')
+  const liste = [...meldungen.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([text, anzahl]) => `${anzahl}\t${text}`)
+  writeFileSync(`${AUS}/meldungen-${STAND}.txt`, liste.join('\n') + '\n')
+  writeFileSync(`${AUS}/meldungen-woertlich-${STAND}.txt`, woertlich.join('\n') + '\n')
+  const bericht = { stand: STAND, partienSumme, gesamt, zaehler, zz, szenarioMeldungen: woertlich.length, verschiedeneMeldungen: meldungen.size, ausnahmen }
+  writeFileSync(`${AUS}/pruefsumme-${STAND}.json`, JSON.stringify(bericht, null, 2))
+  console.log(JSON.stringify(bericht))
+}, 3_600_000)

@@ -19,6 +19,12 @@ export default defineConfig(({ mode }) => ({
     // Test-Workern das `localStorage` von jsdom; die Spielstand-Tests schlagen
     // dann mit „setItem is not a function“ fehl.
     execArgv: ['--no-experimental-webstorage'],
+    // Mehrere Tests rechnen ganze Partien oder Tausende Zustände durch und brauchen allein
+    // 3 bis 6 s. Laufen mehrere Agenten gleichzeitig, reicht die Vorgabe von 5 s (Hooks 10 s)
+    // nicht, und das Gate fällt ohne Fehler im Code aus. Ein Test, der wirklich hängt,
+    // scheitert weiterhin an dieser Grenze.
+    testTimeout: 20_000,
+    hookTimeout: 30_000,
     // ÄNDERUNG [30.07.2026]: AP-2 — `tests/layout/**` enthält Playwright-Verträge,
     // die einen echten Browser und den Preview-Server brauchen. Ohne diesen
     // Ausschluss würde Vitest sie wegen des `.spec.ts`-Suffixes einsammeln und in

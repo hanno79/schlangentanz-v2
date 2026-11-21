@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { Ereignis, FarbkarteInfo, KartenAktion, Schlange, Sonderkartenname, Spielkarte, Spielzustand } from '../index'
 import { KARTENREGISTER } from '../karten/register'
-import { schlangenIdFuer } from '../state'
+import { beginneSchlange, gepruefteSchlange } from '../schlangen'
 import { baukasten } from '../testing/szenario'
 import type { Baukasten } from '../testing/szenario'
 import { entnehmeHandkarte, legeAufEigenenAblagestapel } from '../zugablauf'
@@ -68,19 +68,17 @@ function tisch(karte: Sonderkartenname): Baukasten {
 }
 
 function schlangeMit(zustand: Spielzustand, schlangenId: string): Schlange {
-  return zustand.spieler.flatMap((spieler) => spieler.schlangen).find((schlange) => schlange.id === schlangenId)!
+  return gepruefteSchlange(zustand, schlangenId).schlange
 }
 
+/** Anders als `nimmAusSchlange` in `schlangen.ts` roh: keine Fusion wird aufgelöst, eine leere Schlange bleibt stehen. */
 function nimmAusSchlange(zustand: Spielzustand, schlangenId: string, karteId: string): Spielkarte {
   const karten = schlangeMit(zustand, schlangenId).karten
   return karten.splice(karten.findIndex((karte) => karte.id === karteId), 1)[0]
 }
 
 function neueSchlange(zustand: Spielzustand, spielerIndex: number, karten: Spielkarte[]): string {
-  zustand.schlangenZaehler += 1
-  const id = schlangenIdFuer(zustand.schlangenZaehler)
-  zustand.spieler[spielerIndex].schlangen.push({ id, karten, fusionen: [] })
-  return id
+  return beginneSchlange(zustand, spielerIndex, karten).id
 }
 
 const idsIn = (zustand: Spielzustand, schlangenId: string) => schlangeMit(zustand, schlangenId).karten.map((karte) => karte.id)
