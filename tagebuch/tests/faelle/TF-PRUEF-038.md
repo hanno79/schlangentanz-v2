@@ -17,7 +17,7 @@ Der Isolationstest prüft nur die Fabriken, die in der Registry `src/ki/strategi
 
 ## Bestanden, wenn
 
-`npx vitest run tests/architektur_ki_importgrenze.test.ts` endet mit Exit 0 und 59 grünen Tests: kein Verstoss im Repo, jede der 27 Gegenproben und der 26 Umwege aus dem Codex-Review mit mindestens einer Meldung, keine Meldung in den erlaubten Dateien und beim Glob mit Ausschlüssen, und bei einer `strategie.ts` mit Werten genau fünf gemeldete Dateien.
+`npx vitest run tests/architektur_ki_importgrenze.test.ts` endet mit Exit 0 und 64 grünen Tests: kein Verstoss im Repo, jede der 31 Gegenproben (darunter Brücken mit den Endungen .JS, .Ts, .MJS und .HTML) und der 26 Umwege aus dem Codex-Review mit mindestens einer Meldung, keine Meldung in den erlaubten Dateien und beim Glob mit Ausschlüssen, und bei einer `strategie.ts` mit Werten genau fünf gemeldete Dateien; erlaubt sind `index.ts` und `strategie.ts` nur in genau dieser Schreibweise.
 
 ## Fehlgeschlagen, wenn
 
@@ -36,7 +36,7 @@ Die Gegenproben stehen in der Testdatei selbst und werden in einem Probe-Baum im
 
 ## Technische Prüfung
 
-`npx vitest run tests/architektur_ki_importgrenze.test.ts --reporter=verbose` meldet 59 bestandene Tests, Exit 0. Gegenprobe am echten Repo: In `src/entwicklung/Tisch.tsx` die Importzeile auf `import { erstelleZufallsKi } from '../ki/strategien/zufallsKi'` zurückstellen; dann wird der Repo-Test rot mit der Meldung zu `Tisch.tsx:8`.
+`npx vitest run tests/architektur_ki_importgrenze.test.ts --reporter=verbose` meldet 64 bestandene Tests, Exit 0. Gegenprobe am echten Repo: In `src/entwicklung/Tisch.tsx` die Importzeile auf `import { erstelleZufallsKi } from '../ki/strategien/zufallsKi'` zurückstellen; dann wird der Repo-Test rot mit der Meldung zu `Tisch.tsx:8`.
 
 ## Nicht abgedeckte Grenzfälle
 
