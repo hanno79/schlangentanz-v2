@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-007 Ein KI-Gegner wird bei einer Schlangengrube gefragt, ob er Farbenschutz hält oder nicht, und die Zufalls-KI verbraucht in beiden Fällen gleich viele Zufallszahlen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-007 Ein KI-Gegner wird bei einer Schlangengrube gefragt, ob er Farbenschutz hält oder nicht, und die Zufalls-KI verbraucht in beiden Fällen gleich viele Zufallszahlen.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Mit D33 wird jeder Betroffene gefragt, auch eine KI ohne Farbenschutz. Geprüft wird, dass „KI-Schritt“ am Entwicklertisch in beiden Fällen eine Reaktion spielt und die Partie weitergeht, und dass die Zufalls-KI nicht über die Zahl ihrer Zufallsaufrufe verrät, ob sie zwei Möglichkeiten hatte oder nur eine.</p><h2>Bestanden, wenn</h2><ul><li>Szenario <code>schlangengrube</code> (KI ohne Farbenschutz): „KI-Schritt“ spielt „Reagieren: durchlassen“, danach liegt die Grube vor KI-Gegner 1 und Spieler 1 entscheidet.</li><li>Szenario <code>abwehr-schlangengrube</code> (KI mit Farbenschutz): „KI-Schritt“ spielt eine der beiden angebotenen Reaktionen; im Lauf vom 21.11.2026 ließ sie durch, die Grube lag vor KI-Gegner 1, und nach dem Aussetzen hielt er seinen Farbenschutz noch.</li><li>Mit Farbenschutz und ohne ruft die Zufalls-KI ihre Zufallsquelle gleich oft auf (je einmal) und wählt bei Wert 0.99 dieselbe Aktion „Reagieren: durchlassen“.</li></ul><h2>Fehlgeschlagen, wenn</h2><p>„KI-Schritt“ einen Fehler zeigt oder nichts tut, die Partie danach hängt oder die Zahl der Zufallsaufrufe sich unterscheidet.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E4-abwehr-grube (PR #54)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build von <code>3dbb35b</code> auf Port 4196; für den Zähltest die Kopie des Stands wie in TF-ENGINE-024</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenarien <code>schlangengrube</code> und <code>abwehr-schlangengrube</code>; Zähltest mit drei Spielern, Hand von KI-Gegner 1 einmal Farbenschutz, Blau, Rot, Gelb, Grün und einmal Violett, Blau, Rot, Gelb, Grün.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser, `/dev?szenario=schlangengrube`</td><td>Grube auf KI-Gegner 1, dann „KI-Schritt“</td><td></td><td>Verlauf „KI-Schritt: Reagieren: durchlassen“, „Entscheidet: Spieler 1“</td></tr><tr><td>2</td><td>Browser, `/dev?szenario=abwehr-schlangengrube`</td><td>Grube auf KI-Gegner 1, dann „KI-Schritt“, dann Farbkarte und „ZugBeenden“</td><td></td><td>eine Reaktion gespielt, Partie geht weiter</td></tr><tr><td>3</td><td>Konsole im Kopie-Ordner</td><td>Zähltest in `pruefer_e4.test.ts` ausführen</td><td>`npx vitest run src/engine/__tests__/pruefer_e4.test.ts`</td><td>Test „die Zufalls-KI verbraucht gleich viele Zufallszahlen …“ grün</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Wie eine spätere, klügere KI (K3) entscheidet, ist hier nicht geprüft; dass sie nur ihre Sicht bekommt, hält der Architekturtest fest.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 09:00</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E4) &middot; agent &middot; pruefung-E4 @ <span class="commit" title="3dbb35b8f6e56267918bc768d8e110e190a3c7ee">3dbb35b</span> / Eingebauter Browser 1280x900 und Playwright Chromium 1.60.0</p><p>schlangengrube: KI-Schritt spielt &#x27;Reagieren: durchlassen&#x27;, Grube vor KI-Gegner 1, Spieler 1 entscheidet; abwehr-schlangengrube: KI-Schritt ließ durch, Grube vor KI-Gegner 1, nach Aussetzen hält er farbenschutz-02 noch; Zufalls-KI ruft die Zufallsquelle mit und ohne Farbenschutz je einmal auf und wählt bei 0.99 beide Male durchlassen</p><ul class="belege"><li><a href="belege/2026-11-21-0900-TF-KI-007-1.txt">2026-11-21-0900-TF-KI-007-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

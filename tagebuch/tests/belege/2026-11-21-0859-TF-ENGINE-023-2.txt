@@ -1,0 +1,3760 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a048138ae11fe7692
+
+ ❯ tests/spec_documentation.test.ts (23 tests | 1 failed) 34ms
+     × D33: bei einer angesagten Sonderkarte wird jeder Betroffene gefragt; abwehren kann nur, wer Farbenschutz hält (21.11.2026) 4ms
+ ❯ src/ki/sicht_abwehr.test.ts (2 tests | 2 failed) 30ms
+     × B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 21ms
+     × D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter 8ms
+ ❯ src/engine/__tests__/schlangengrube.test.ts (16 tests | 8 failed) 62ms
+     × A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A 7ms
+     × A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal 7ms
+     × D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler 2ms
+     × E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran 2ms
+     × D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr 2ms
+     × D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel 2ms
+     × D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren 2ms
+     × D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab 2ms
+ ❯ src/entwicklung/szenarienAbwehr.test.ts (4 tests | 2 failed) 35ms
+     × A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1 13ms
+     × A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren 5ms
+ ❯ src/engine/__tests__/reaktion.test.ts (26 tests | 14 failed) 99ms
+     × A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht 23ms
+     × E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal 5ms
+     × A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei 5ms
+     × D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen 2ms
+     × D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt 2ms
+     × D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 5ms
+     × D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 4ms
+     × D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 3ms
+     × D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 3ms
+     × D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 3ms
+     × D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 3ms
+     × D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung 3ms
+     × A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren 4ms
+     × B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält 4ms
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts (12 tests | 2 failed) 334ms
+     × A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen 10ms
+     × A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen 86ms
+ ❯ src/ki/sicht.test.ts (14 tests | 3 failed) 587ms
+     × A6/B2: die angesagte Aktion mit Karte, Ziel und wer noch entscheidet 8ms
+     × K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet 1ms
+     × K1: wer die Sicht verändert, verändert den Zustand nicht 3ms
+ ❯ src/entwicklung/Entwicklertisch.test.tsx (19 tests | 1 failed) 1220ms
+     × D33: trifft die Grube eine KI ohne Farbenschutz, wird sie gefragt; „KI-Schritt“ lässt durch, und es geht weiter 61ms
+ ❯ src/engine/__tests__/dauerlauf.test.ts (16 tests | 1 failed) 9777ms
+     × A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz 9691ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 34 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation.test.ts > GAME_SPEC Teil B bis E — digitale Fassung und Arbeitslisten > D33: bei einer angesagten Sonderkarte wird jeder Betroffene gefragt; abwehren kann nur, wer Farbenschutz hält (21.11.2026)
+AssertionError: D33 fehlt in Teil D: expected undefined to be defined
+ ❯ eintragD tests/spec_documentation.test.ts:331:48
+    329|   function eintragD(nummer: string): { antwort: string; datum: string;…
+    330|     const zeile = spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.…
+    331|     expect(zeile, `${nummer} fehlt in Teil D`).toBeDefined()
+       |                                                ^
+    332|     const [, antwort, datum, folge] = zeile as string[]
+    333|     return { antwort: fliesstext(antwort).toLowerCase(), datum, folge }
+ ❯ tests/spec_documentation.test.ts:403:39
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/34]⎯
+
+ FAIL  src/entwicklung/Entwicklertisch.test.tsx > K1: Knopf „KI-Schritt“ am Entwicklertisch > D33: trifft die Grube eine KI ohne Farbenschutz, wird sie gefragt; „KI-Schritt“ lässt durch, und es geht weiter
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  AbwehrGefragt
+Received:
+  KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2)AnsageEntschieden: schlangengrube-03 von Spieler 1 (spieler-1) wirkt, niemand hat abgewehrt → vor KI-Gegner 1 (spieler-2)
+ ❯ src/entwicklung/Entwicklertisch.test.tsx:225:46
+    223|     oeffne('/dev?szenario=schlangengrube')
+    224|     fireEvent.click(screen.getByTitle(aktionsKnoepfe().find((text) => …
+    225|     expect(screen.getByTestId('ereignisse')).toHaveTextContent('Abwehr…
+       |                                              ^
+    226|     expect(aktionsKnoepfe()).toEqual([JSON.stringify({ typ: 'Reagieren…
+    227|     expect(kiKnopf()).toBeEnabled()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/34]⎯
+
+ FAIL  src/entwicklung/szenarienAbwehr.test.ts > E4: Szenarien der Abwehr und der Schlangengrube > A7.6/D33: schlangengrube: zwei Ziele; KI-Gegner 1 ohne Farbenschutz wird gefragt und kann nur durchlassen, setzt dann aus, die Grube geht an Spieler 1
+AssertionError: expected [ Array(2) ] to deeply equal [ 'KarteAngesagt', 'AbwehrGefragt' ]
+
+- Expected
++ Received
+
+  [
+    "KarteAngesagt",
+-   "AbwehrGefragt",
++   "AnsageEntschieden",
+  ]
+
+ ❯ src/entwicklung/szenarienAbwehr.test.ts:51:48
+     49|     expect(ermittleAktionen(start).filter((aktion) => aktion.typ === '…
+     50|     const angesagt = klicke(start, grubeAuf('spieler-2'))
+     51|     expect(ereignistypen(angesagt.ereignisse)).toEqual(['KarteAngesagt…
+       |                                                ^
+     52|     expect(ermittleEntscheider(angesagt.zustand), 'D33: auch ohne Farb…
+     53|     expect(ermittleAktionen(angesagt.zustand)).toEqual([{ typ: 'Reagie…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/34]⎯
+
+ FAIL  src/entwicklung/szenarienAbwehr.test.ts > E4: Szenarien der Abwehr und der Schlangengrube > A6: doppelangriff: KI-Gegner 2 wehrt die erste Grube ab, zieht nicht nach und kann die zweite derselben Runde nicht abwehren
+AssertionError: A6, D33: ohne Farbenschutz kann KI-Gegner 2 nur durchlassen: expected [ …(5) ] to deeply equal [ { typ: 'Reagieren', …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "farbenschutzId": null,
+-     "spielerId": "spieler-3",
+-     "typ": "Reagieren",
++     "karteId": "blau-06",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "rot-02",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "gelb-07",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "braun-11",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "spielerId": "spieler-2",
++     "typ": "ZugBeenden",
+    },
+  ]
+
+ ❯ src/entwicklung/szenarienAbwehr.test.ts:88:110
+     86|     expect(erster.zustand.zug.spielerIndex).toBe(1)
+     87|     const zweiter = klicke(erster.zustand, grubeAuf('spieler-3'))
+     88|     expect(ermittleAktionen(zweiter.zustand), 'A6, D33: ohne Farbensch…
+       |                                                                                                              ^
+     89|       { typ: 'Reagieren', spielerId: 'spieler-3', farbenschutzId: null…
+     90|     ])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/34]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > A6/B2: die angesagte Aktion mit Karte, Ziel und wer noch entscheidet
+AssertionError: expected { karte: { …(3) }, …(2) } to deeply equal { karte: { …(3) }, …(3) }
+
+- Expected
++ Received
+
+@@ -4,13 +4,10 @@
+      "karteId": "schlangengrube-01",
+      "spielerId": "spieler-2",
+      "typ": "SchlangengrubeSpielen",
+      "zielSpielerId": "spieler-3",
+    },
+-   "ausstehend": [
+-     2,
+-   ],
+    "karte": {
+      "id": "schlangengrube-01",
+      "name": "Schlangengrube",
+      "typ": "Sonderkarte",
+    },
+
+ ❯ src/ki/sicht.test.ts:81:28
+     79|
+     80|   it('A6/B2: die angesagte Aktion mit Karte, Ziel und wer noch entsche…
+     81|     expect(sicht.angesagt).toEqual(zustand.schwebend)
+       |                            ^
+     82|     expect(sicht.angesagt?.aktion).toMatchObject({ typ: 'Schlangengrub…
+     83|     expect(sicht.angesagt?.ausstehend).toEqual([2])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/34]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1 Kriterium 1: Was die Sicht enthält > K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet
+AssertionError: A6: bei der angesagten Grube entscheidet Spieler 3, nicht der Spieler am Zug: expected null to be 2 // Object.is equality
+
+- Expected:
+2
+
++ Received:
+null
+
+ ❯ src/ki/sicht.test.ts:89:111
+     87|   it('K1: Partiephase, Zug, Schlussrunde und wer gerade entscheidet', …
+     88|     expect(sicht).toMatchObject({ erweiterung: true, partiephase: 'Lau…
+     89|     expect(sicht.entscheider, 'A6: bei der angesagten Grube entscheide…
+       |                                                                                                               ^
+     90|   })
+     91| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/34]⎯
+
+ FAIL  src/ki/sicht.test.ts > K1: die Sicht ist eine Abschrift > K1: wer die Sicht verändert, verändert den Zustand nicht
+TypeError: Cannot read properties of undefined (reading 'pop')
+ ❯ src/ki/sicht.test.ts:152:21
+    150|     sicht.spieler[0].schlangen[0].karten.pop()
+    151|     sicht.spieler[0].ablagestapel.pop()
+    152|     sicht.angesagt?.ausstehend.pop()
+       |                     ^
+    153|     sicht.offeneAufgaben.pop()
+    154|     expect(JSON.stringify(zustand)).toBe(roh)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/34]⎯
+
+ FAIL  src/ki/sicht_abwehr.test.ts > B2/D33: wer gefragt wird, verrät keinen Farbenschutz > B2/D33: Ereignisse, Sicht von Angreifer und Unbeteiligten und Entscheiderfolge sind gleich, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält
+Error: Testaufbau: keine passende Aktion unter [{"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"blau-01","ziel":{"art":"neueSchlange"}},{"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"rot-01","ziel":{"art":"neueSchlange"}},{"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gelb-01","ziel":{"art":"neueSchlange"}},{"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gruen-01","ziel":{"art":"neueSchlange"}},{"typ":"ZugBeenden","spielerId":"spieler-1"}]
+ ❯ src/ki/sicht_abwehr.test.ts:45:37
+     43|   return WAHLEN.map((wahl) => {
+     44|     const aktion = ermittleAktionen(zustand).find(wahl)
+     45|     if (aktion === undefined) throw new Error(`Testaufbau: keine passe…
+       |                                     ^
+     46|     const schritt = anwendeAktion(zustand, aktion)
+     47|     zustand = schritt.zustand
+ ❯ beobachtet src/ki/sicht_abwehr.test.ts:43:17
+ ❯ src/ki/sicht_abwehr.test.ts:55:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/34]⎯
+
+ FAIL  src/ki/sicht_abwehr.test.ts > B2/D33: wer gefragt wird, verrät keinen Farbenschutz > D33: eine KI ohne Farbenschutz wird gefragt, hat nur „durchlassen“, und die Zufalls-KI wählt es; danach geht es weiter
+AssertionError: expected [ …(5) ] to deeply equal [ { typ: 'Reagieren', …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "farbenschutzId": null,
+-     "spielerId": "spieler-2",
+-     "typ": "Reagieren",
++     "karteId": "blau-01",
++     "spielerId": "spieler-1",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "rot-01",
++     "spielerId": "spieler-1",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "gelb-01",
++     "spielerId": "spieler-1",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "gruen-01",
++     "spielerId": "spieler-1",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "spielerId": "spieler-1",
++     "typ": "ZugBeenden",
+    },
+  ]
+
+ ❯ src/ki/sicht_abwehr.test.ts:62:39
+     60|     let zustand = tisch(OHNE_SCHUTZ)
+     61|     zustand = anwendeAktion(zustand, ermittleAktionen(zustand).find(WA…
+     62|     expect(ermittleAktionen(zustand)).toEqual([{ typ: 'Reagieren', spi…
+       |                                       ^
+     63|     const schritt = naechsterKiSchritt(zustand, erstelleZufallsKi(() =…
+     64|     expect(schritt).toEqual({ typ: 'Reagieren', spielerId: 'spieler-2'…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/34]⎯
+
+ FAIL  src/engine/__tests__/dauerlauf.test.ts > A5/A10/D12/D13: Dauerlauf über die Engine (E2) > A10/A7.8/A6/A7.6: 300 Zufallspartien mit 2, 3 und 4 Spielern und festen Saaten enden alle, ohne verletzte Invariante, mit echtem Verdoppler, echter Schlangengrube und echtem Farbenschutz
+AssertionError: expected [ Array(300) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 1, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 1,
++       "spielerzahl": 2,
++     },
++     "schritte": 30,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 2, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 2,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 3, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 3,
++       "spielerzahl": 4,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 4, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 4,
++       "spielerzahl": 2,
++     },
++     "schritte": 95,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 5, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 5,
++       "spielerzahl": 3,
++     },
++     "schritte": 15,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 6, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 6,
++       "spielerzahl": 4,
++     },
++     "schritte": 49,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 7, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 7,
++       "spielerzahl": 2,
++     },
++     "schritte": 65,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 8, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 8,
++       "spielerzahl": 3,
++     },
++     "schritte": 71,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 9, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 9,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 10, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 10,
++       "spielerzahl": 2,
++     },
++     "schritte": 59,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 11, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 11,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 12, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 12,
++       "spielerzahl": 4,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 13, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 13,
++       "spielerzahl": 2,
++     },
++     "schritte": 20,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 14, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 14,
++       "spielerzahl": 3,
++     },
++     "schritte": 26,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 15, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 15,
++       "spielerzahl": 4,
++     },
++     "schritte": 26,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 16, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 16,
++       "spielerzahl": 2,
++     },
++     "schritte": 28,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 17, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 17,
++       "spielerzahl": 3,
++     },
++     "schritte": 51,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 18, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 18,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 19, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 19,
++       "spielerzahl": 2,
++     },
++     "schritte": 44,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 20, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 20,
++       "spielerzahl": 3,
++     },
++     "schritte": 91,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 21, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 21,
++       "spielerzahl": 4,
++     },
++     "schritte": 36,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 22, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 22,
++       "spielerzahl": 2,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 23, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 23,
++       "spielerzahl": 3,
++     },
++     "schritte": 19,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 24, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 24,
++       "spielerzahl": 4,
++     },
++     "schritte": 43,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 25, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 25,
++       "spielerzahl": 2,
++     },
++     "schritte": 53,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 26, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 26,
++       "spielerzahl": 3,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 27, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 27,
++       "spielerzahl": 4,
++     },
++     "schritte": 20,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 28, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 28,
++       "spielerzahl": 2,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 29, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 29,
++       "spielerzahl": 3,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 30, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 30,
++       "spielerzahl": 4,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 31, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 31,
++       "spielerzahl": 2,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 32, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":\"farbenschutz-02\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 32,
++       "spielerzahl": 3,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 33, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 33,
++       "spielerzahl": 4,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 34, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 34,
++       "spielerzahl": 2,
++     },
++     "schritte": 22,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 35, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 35,
++       "spielerzahl": 3,
++     },
++     "schritte": 46,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 36, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-03\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 36,
++       "spielerzahl": 4,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 37, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 37,
++       "spielerzahl": 2,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 38, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 38,
++       "spielerzahl": 3,
++     },
++     "schritte": 25,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 39, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 39,
++       "spielerzahl": 4,
++     },
++     "schritte": 43,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 40, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 40,
++       "spielerzahl": 2,
++     },
++     "schritte": 50,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 41, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 41,
++       "spielerzahl": 3,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 42, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 42,
++       "spielerzahl": 4,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 43, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 43,
++       "spielerzahl": 2,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 44, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 44,
++       "spielerzahl": 3,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 45, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 45,
++       "spielerzahl": 4,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 46, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 46,
++       "spielerzahl": 2,
++     },
++     "schritte": 36,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 47, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 47,
++       "spielerzahl": 3,
++     },
++     "schritte": 51,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 48, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 48,
++       "spielerzahl": 4,
++     },
++     "schritte": 47,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 49, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 49,
++       "spielerzahl": 2,
++     },
++     "schritte": 63,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 50, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":\"farbenschutz-02\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 50,
++       "spielerzahl": 3,
++     },
++     "schritte": 20,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 51, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 51,
++       "spielerzahl": 4,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 52, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 52,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 53, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 53,
++       "spielerzahl": 3,
++     },
++     "schritte": 21,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 54, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 54,
++       "spielerzahl": 4,
++     },
++     "schritte": 67,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 55, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 55,
++       "spielerzahl": 2,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 56, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 56,
++       "spielerzahl": 3,
++     },
++     "schritte": 61,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 57, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":\"farbenschutz-04\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 57,
++       "spielerzahl": 4,
++     },
++     "schritte": 47,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 58, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 58,
++       "spielerzahl": 2,
++     },
++     "schritte": 94,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 59, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 59,
++       "spielerzahl": 3,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 60, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 60,
++       "spielerzahl": 4,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 61, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 61,
++       "spielerzahl": 2,
++     },
++     "schritte": 86,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 62, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 62,
++       "spielerzahl": 3,
++     },
++     "schritte": 74,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 63, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 63,
++       "spielerzahl": 4,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 64, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 64,
++       "spielerzahl": 2,
++     },
++     "schritte": 40,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 65, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 65,
++       "spielerzahl": 3,
++     },
++     "schritte": 54,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 66, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-4\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 66,
++       "spielerzahl": 4,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 67, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 67,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 68, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 68,
++       "spielerzahl": 3,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 69, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 69,
++       "spielerzahl": 4,
++     },
++     "schritte": 49,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 70, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 70,
++       "spielerzahl": 2,
++     },
++     "schritte": 86,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 71, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 71,
++       "spielerzahl": 3,
++     },
++     "schritte": 14,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 72, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 72,
++       "spielerzahl": 4,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 73, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 73,
++       "spielerzahl": 2,
++     },
++     "schritte": 48,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 74, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 74,
++       "spielerzahl": 3,
++     },
++     "schritte": 12,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 75, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 75,
++       "spielerzahl": 4,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 76, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 76,
++       "spielerzahl": 2,
++     },
++     "schritte": 70,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 77, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 77,
++       "spielerzahl": 3,
++     },
++     "schritte": 116,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 78, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 78,
++       "spielerzahl": 4,
++     },
++     "schritte": 95,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 79, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 79,
++       "spielerzahl": 2,
++     },
++     "schritte": 84,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 80, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 80,
++       "spielerzahl": 3,
++     },
++     "schritte": 74,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 81, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 81,
++       "spielerzahl": 4,
++     },
++     "schritte": 72,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 82, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 82,
++       "spielerzahl": 2,
++     },
++     "schritte": 64,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 83, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 83,
++       "spielerzahl": 3,
++     },
++     "schritte": 47,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 84, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 84,
++       "spielerzahl": 4,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 85, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 85,
++       "spielerzahl": 2,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 86, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 86,
++       "spielerzahl": 3,
++     },
++     "schritte": 36,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 87, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 87,
++       "spielerzahl": 4,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 88, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 88,
++       "spielerzahl": 2,
++     },
++     "schritte": 63,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 89, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 89,
++       "spielerzahl": 3,
++     },
++     "schritte": 62,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 90, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 90,
++       "spielerzahl": 4,
++     },
++     "schritte": 30,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 91, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 91,
++       "spielerzahl": 2,
++     },
++     "schritte": 36,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 92, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 92,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 93, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 93,
++       "spielerzahl": 4,
++     },
++     "schritte": 72,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 94, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 94,
++       "spielerzahl": 2,
++     },
++     "schritte": 60,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 95, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 95,
++       "spielerzahl": 3,
++     },
++     "schritte": 34,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 96, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 96,
++       "spielerzahl": 4,
++     },
++     "schritte": 22,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 97, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-03\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 97,
++       "spielerzahl": 2,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 98, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 98,
++       "spielerzahl": 3,
++     },
++     "schritte": 23,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 99, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 99,
++       "spielerzahl": 4,
++     },
++     "schritte": 33,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 100, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 100,
++       "spielerzahl": 2,
++     },
++     "schritte": 14,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 101, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 101,
++       "spielerzahl": 3,
++     },
++     "schritte": 28,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 102, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 102,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 103, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 103,
++       "spielerzahl": 2,
++     },
++     "schritte": 68,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 104, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 104,
++       "spielerzahl": 3,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 105, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 105,
++       "spielerzahl": 4,
++     },
++     "schritte": 31,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 106, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 106,
++       "spielerzahl": 2,
++     },
++     "schritte": 66,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 107, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 107,
++       "spielerzahl": 3,
++     },
++     "schritte": 16,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 108, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-04\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 108,
++       "spielerzahl": 4,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 109, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 109,
++       "spielerzahl": 2,
++     },
++     "schritte": 107,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 110, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 110,
++       "spielerzahl": 3,
++     },
++     "schritte": 40,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 111, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 111,
++       "spielerzahl": 4,
++     },
++     "schritte": 60,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 112, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 112,
++       "spielerzahl": 2,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 113, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 113,
++       "spielerzahl": 3,
++     },
++     "schritte": 41,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 114, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 114,
++       "spielerzahl": 4,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 115, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 115,
++       "spielerzahl": 2,
++     },
++     "schritte": 31,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 116, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 116,
++       "spielerzahl": 3,
++     },
++     "schritte": 82,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 117, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 117,
++       "spielerzahl": 4,
++     },
++     "schritte": 56,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 118, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 118,
++       "spielerzahl": 2,
++     },
++     "schritte": 44,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 119, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 119,
++       "spielerzahl": 3,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 120, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 120,
++       "spielerzahl": 4,
++     },
++     "schritte": 118,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 121, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 121,
++       "spielerzahl": 2,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 122, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 122,
++       "spielerzahl": 3,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 123, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 123,
++       "spielerzahl": 4,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 124, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 124,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 125, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 125,
++       "spielerzahl": 3,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 126, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 126,
++       "spielerzahl": 4,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 127, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 127,
++       "spielerzahl": 2,
++     },
++     "schritte": 34,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 128, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 128,
++       "spielerzahl": 3,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 129, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 129,
++       "spielerzahl": 4,
++     },
++     "schritte": 72,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 130, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 130,
++       "spielerzahl": 2,
++     },
++     "schritte": 22,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 131, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 131,
++       "spielerzahl": 3,
++     },
++     "schritte": 12,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 132, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 132,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 133, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 133,
++       "spielerzahl": 2,
++     },
++     "schritte": 25,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 134, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 134,
++       "spielerzahl": 3,
++     },
++     "schritte": 62,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 135, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 135,
++       "spielerzahl": 4,
++     },
++     "schritte": 41,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 136, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 136,
++       "spielerzahl": 2,
++     },
++     "schritte": 65,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 137, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 137,
++       "spielerzahl": 3,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 138, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 138,
++       "spielerzahl": 4,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 139, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 139,
++       "spielerzahl": 2,
++     },
++     "schritte": 22,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 140, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 140,
++       "spielerzahl": 3,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 141, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 141,
++       "spielerzahl": 4,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 142, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 142,
++       "spielerzahl": 2,
++     },
++     "schritte": 78,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 143, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 143,
++       "spielerzahl": 3,
++     },
++     "schritte": 55,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 144, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 144,
++       "spielerzahl": 4,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 145, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 145,
++       "spielerzahl": 2,
++     },
++     "schritte": 76,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 146, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 146,
++       "spielerzahl": 3,
++     },
++     "schritte": 48,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 147, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 147,
++       "spielerzahl": 4,
++     },
++     "schritte": 75,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 148, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 148,
++       "spielerzahl": 2,
++     },
++     "schritte": 16,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 149, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 149,
++       "spielerzahl": 3,
++     },
++     "schritte": 110,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 150, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": false,
++       "saat": 150,
++       "spielerzahl": 4,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 151, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 151,
++       "spielerzahl": 2,
++     },
++     "schritte": 57,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 152, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":\"farbenschutz-03\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 152,
++       "spielerzahl": 3,
++     },
++     "schritte": 123,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 153, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 153,
++       "spielerzahl": 4,
++     },
++     "schritte": 75,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 154, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 154,
++       "spielerzahl": 2,
++     },
++     "schritte": 146,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 155, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 155,
++       "spielerzahl": 3,
++     },
++     "schritte": 53,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 156, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 156,
++       "spielerzahl": 4,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 157, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 157,
++       "spielerzahl": 2,
++     },
++     "schritte": 90,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 158, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 158,
++       "spielerzahl": 3,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 159, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 159,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 160, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 160,
++       "spielerzahl": 2,
++     },
++     "schritte": 28,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 161, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 161,
++       "spielerzahl": 3,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 162, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 162,
++       "spielerzahl": 4,
++     },
++     "schritte": 58,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 163, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 163,
++       "spielerzahl": 2,
++     },
++     "schritte": 80,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 164, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 164,
++       "spielerzahl": 3,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 165, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 165,
++       "spielerzahl": 4,
++     },
++     "schritte": 94,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 166, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 166,
++       "spielerzahl": 2,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 167, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 167,
++       "spielerzahl": 3,
++     },
++     "schritte": 15,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 168, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 168,
++       "spielerzahl": 4,
++     },
++     "schritte": 30,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 169, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 169,
++       "spielerzahl": 2,
++     },
++     "schritte": 53,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 170, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 170,
++       "spielerzahl": 3,
++     },
++     "schritte": 63,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 171, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 171,
++       "spielerzahl": 4,
++     },
++     "schritte": 61,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 172, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 172,
++       "spielerzahl": 2,
++     },
++     "schritte": 40,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 173, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 173,
++       "spielerzahl": 3,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 174, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 174,
++       "spielerzahl": 4,
++     },
++     "schritte": 15,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 175, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 175,
++       "spielerzahl": 2,
++     },
++     "schritte": 56,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 176, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 176,
++       "spielerzahl": 3,
++     },
++     "schritte": 76,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 177, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 177,
++       "spielerzahl": 4,
++     },
++     "schritte": 23,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 178, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 178,
++       "spielerzahl": 2,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 179, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 179,
++       "spielerzahl": 3,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 180, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 180,
++       "spielerzahl": 4,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 181, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 181,
++       "spielerzahl": 2,
++     },
++     "schritte": 55,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 182, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 182,
++       "spielerzahl": 3,
++     },
++     "schritte": 103,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 183, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 183,
++       "spielerzahl": 4,
++     },
++     "schritte": 46,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 184, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 184,
++       "spielerzahl": 2,
++     },
++     "schritte": 20,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 185, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 185,
++       "spielerzahl": 3,
++     },
++     "schritte": 60,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 186, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-4\",\"farbenschutzId\":null}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 186,
++       "spielerzahl": 4,
++     },
++     "schritte": 55,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 187, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 187,
++       "spielerzahl": 2,
++     },
++     "schritte": 72,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 188, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 188,
++       "spielerzahl": 3,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 189, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 189,
++       "spielerzahl": 4,
++     },
++     "schritte": 92,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 190, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 190,
++       "spielerzahl": 2,
++     },
++     "schritte": 145,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 191, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 191,
++       "spielerzahl": 3,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 192, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 192,
++       "spielerzahl": 4,
++     },
++     "schritte": 24,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 193, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 193,
++       "spielerzahl": 2,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 194, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 194,
++       "spielerzahl": 3,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 195, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 195,
++       "spielerzahl": 4,
++     },
++     "schritte": 19,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 196, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 196,
++       "spielerzahl": 2,
++     },
++     "schritte": 53,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 197, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 197,
++       "spielerzahl": 3,
++     },
++     "schritte": 97,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 198, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 198,
++       "spielerzahl": 4,
++     },
++     "schritte": 27,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 199, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 199,
++       "spielerzahl": 2,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 200, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 200,
++       "spielerzahl": 3,
++     },
++     "schritte": 49,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 201, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 201,
++       "spielerzahl": 4,
++     },
++     "schritte": 52,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 202, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-04\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 202,
++       "spielerzahl": 2,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 203, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 203,
++       "spielerzahl": 3,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 204, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 204,
++       "spielerzahl": 4,
++     },
++     "schritte": 29,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 205, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 205,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 206, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 206,
++       "spielerzahl": 3,
++     },
++     "schritte": 121,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 207, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-02\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 207,
++       "spielerzahl": 4,
++     },
++     "schritte": 80,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 208, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 208,
++       "spielerzahl": 2,
++     },
++     "schritte": 91,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 209, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 209,
++       "spielerzahl": 3,
++     },
++     "schritte": 18,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 210, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 210,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 211, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 211,
++       "spielerzahl": 2,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 212, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 212,
++       "spielerzahl": 3,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 213, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-4\",\"farbenschutzId\":null}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 213,
++       "spielerzahl": 4,
++     },
++     "schritte": 15,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 214, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 214,
++       "spielerzahl": 2,
++     },
++     "schritte": 42,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 215, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 215,
++       "spielerzahl": 3,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 216, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 216,
++       "spielerzahl": 4,
++     },
++     "schritte": 12,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 217, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 217,
++       "spielerzahl": 2,
++     },
++     "schritte": 61,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 218, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 218,
++       "spielerzahl": 3,
++     },
++     "schritte": 110,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 219, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 219,
++       "spielerzahl": 4,
++     },
++     "schritte": 6,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 220, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 220,
++       "spielerzahl": 2,
++     },
++     "schritte": 27,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 221, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 221,
++       "spielerzahl": 3,
++     },
++     "schritte": 92,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 222, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 222,
++       "spielerzahl": 4,
++     },
++     "schritte": 27,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 223, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 223,
++       "spielerzahl": 2,
++     },
++     "schritte": 41,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 224, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":\"farbenschutz-04\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 224,
++       "spielerzahl": 3,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 225, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 225,
++       "spielerzahl": 4,
++     },
++     "schritte": 3,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 226, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 226,
++       "spielerzahl": 2,
++     },
++     "schritte": 66,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 227, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 227,
++       "spielerzahl": 3,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 228, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 228,
++       "spielerzahl": 4,
++     },
++     "schritte": 26,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 229, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 229,
++       "spielerzahl": 2,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 230, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 230,
++       "spielerzahl": 3,
++     },
++     "schritte": 59,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 231, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 231,
++       "spielerzahl": 4,
++     },
++     "schritte": 19,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 232, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 232,
++       "spielerzahl": 2,
++     },
++     "schritte": 28,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 233, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 233,
++       "spielerzahl": 3,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 234, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 234,
++       "spielerzahl": 4,
++     },
++     "schritte": 33,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 235, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 235,
++       "spielerzahl": 2,
++     },
++     "schritte": 8,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 236, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 236,
++       "spielerzahl": 3,
++     },
++     "schritte": 73,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 237, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 237,
++       "spielerzahl": 4,
++     },
++     "schritte": 65,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 238, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 238,
++       "spielerzahl": 2,
++     },
++     "schritte": 98,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 239, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 239,
++       "spielerzahl": 3,
++     },
++     "schritte": 94,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 240, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 240,
++       "spielerzahl": 4,
++     },
++     "schritte": 44,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 241, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 241,
++       "spielerzahl": 2,
++     },
++     "schritte": 44,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 242, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 242,
++       "spielerzahl": 3,
++     },
++     "schritte": 70,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 243, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":null}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 243,
++       "spielerzahl": 4,
++     },
++     "schritte": 118,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 244, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 244,
++       "spielerzahl": 2,
++     },
++     "schritte": 97,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 245, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 245,
++       "spielerzahl": 3,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 246, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 246,
++       "spielerzahl": 4,
++     },
++     "schritte": 60,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 247, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 247,
++       "spielerzahl": 2,
++     },
++     "schritte": 63,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 248, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 248,
++       "spielerzahl": 3,
++     },
++     "schritte": 63,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 249, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":null}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 249,
++       "spielerzahl": 4,
++     },
++     "schritte": 7,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 250, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 250,
++       "spielerzahl": 2,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 251, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 251,
++       "spielerzahl": 3,
++     },
++     "schritte": 58,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 252, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-4\",\"farbenschutzId\":\"farbenschutz-04\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 252,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 253, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 253,
++       "spielerzahl": 2,
++     },
++     "schritte": 96,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 254, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":null}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 254,
++       "spielerzahl": 3,
++     },
++     "schritte": 64,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 255, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 255,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 256, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 256,
++       "spielerzahl": 2,
++     },
++     "schritte": 16,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 257, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 257,
++       "spielerzahl": 3,
++     },
++     "schritte": 33,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 258, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":\"farbenschutz-02\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 258,
++       "spielerzahl": 4,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 259, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 259,
++       "spielerzahl": 2,
++     },
++     "schritte": 35,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 260, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 260,
++       "spielerzahl": 3,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 261, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 261,
++       "spielerzahl": 4,
++     },
++     "schritte": 13,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 262, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 262,
++       "spielerzahl": 2,
++     },
++     "schritte": 15,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 263, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-3\",\"farbenschutzId\":\"farbenschutz-02\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 263,
++       "spielerzahl": 3,
++     },
++     "schritte": 30,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 264, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 264,
++       "spielerzahl": 4,
++     },
++     "schritte": 54,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 265, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 265,
++       "spielerzahl": 2,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 266, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-02\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 266,
++       "spielerzahl": 3,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 267, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 267,
++       "spielerzahl": 4,
++     },
++     "schritte": 80,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 268, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 268,
++       "spielerzahl": 2,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 269, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 269,
++       "spielerzahl": 3,
++     },
++     "schritte": 4,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 270, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 270,
++       "spielerzahl": 4,
++     },
++     "schritte": 35,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 271, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 271,
++       "spielerzahl": 2,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 272, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 272,
++       "spielerzahl": 3,
++     },
++     "schritte": 51,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 273, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 273,
++       "spielerzahl": 4,
++     },
++     "schritte": 2,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 274, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 274,
++       "spielerzahl": 2,
++     },
++     "schritte": 48,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 275, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 275,
++       "spielerzahl": 3,
++     },
++     "schritte": 34,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 276, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 276,
++       "spielerzahl": 4,
++     },
++     "schritte": 76,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 277, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 277,
++       "spielerzahl": 2,
++     },
++     "schritte": 30,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 278, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 278,
++       "spielerzahl": 3,
++     },
++     "schritte": 108,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 279, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 279,
++       "spielerzahl": 4,
++     },
++     "schritte": 27,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 280, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 280,
++       "spielerzahl": 2,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 281, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 281,
++       "spielerzahl": 3,
++     },
++     "schritte": 85,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 282, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 282,
++       "spielerzahl": 4,
++     },
++     "schritte": 10,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 283, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 283,
++       "spielerzahl": 2,
++     },
++     "schritte": 47,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 284, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 284,
++       "spielerzahl": 3,
++     },
++     "schritte": 77,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 285, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 285,
++       "spielerzahl": 4,
++     },
++     "schritte": 17,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 286, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 286,
++       "spielerzahl": 2,
++     },
++     "schritte": 175,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 287, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 287,
++       "spielerzahl": 3,
++     },
++     "schritte": 57,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 288, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 288,
++       "spielerzahl": 4,
++     },
++     "schritte": 12,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 289, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 289,
++       "spielerzahl": 2,
++     },
++     "schritte": 157,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 290, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 290,
++       "spielerzahl": 3,
++     },
++     "schritte": 93,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 291, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-4\"}: D33: Spieler 3 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 291,
++       "spielerzahl": 4,
++     },
++     "schritte": 5,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 292, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 292,
++       "spielerzahl": 2,
++     },
++     "schritte": 69,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 293, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-1\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-3\"}: D33: Spieler 2 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 293,
++       "spielerzahl": 3,
++     },
++     "schritte": 1,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 294, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-2\",\"farbenschutzId\":\"farbenschutz-01\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 294,
++       "spielerzahl": 4,
++     },
++     "schritte": 11,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 295, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 295,
++       "spielerzahl": 2,
++     },
++     "schritte": 82,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 296, nach {\"typ\":\"Reagieren\",\"spielerId\":\"spieler-1\",\"farbenschutzId\":\"farbenschutz-03\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 296,
++       "spielerzahl": 3,
++     },
++     "schritte": 68,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 297, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 297,
++       "spielerzahl": 4,
++     },
++     "schritte": 9,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 298, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-2\",\"karteId\":\"schlangengrube-02\",\"zielSpielerId\":\"spieler-1\"}: D33: Spieler 0 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 298,
++       "spielerzahl": 2,
++     },
++     "schritte": 32,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 299, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-3\",\"karteId\":\"schlangengrube-03\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 299,
++       "spielerzahl": 3,
++     },
++     "schritte": 69,
++   },
++   {
++     "ausgang": "verstoss",
++     "detail": "Saat 300, nach {\"typ\":\"SchlangengrubeSpielen\",\"spielerId\":\"spieler-4\",\"karteId\":\"schlangengrube-01\",\"zielSpielerId\":\"spieler-2\"}: D33: Spieler 1 wurden nicht gefragt.",
++     "partie": {
++       "erweiterung": true,
++       "saat": 300,
++       "spielerzahl": 4,
++     },
++     "schritte": 18,
++   },
++ ]
+
+ ❯ src/engine/__tests__/dauerlauf.test.ts:311:77
+    309|     const reaktionen: Reaktionen = { KarteAngesagt: 0, AbwehrGefragt: …
+    310|     const ergebnisse = dauerlauf(PARTIEN, { neuerPruefer: () => beideP…
+    311|     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beend…
+       |                                                                             ^
+    312|     // Jede Partie braucht mehrere Züge: mindestens eine Karte und „Zu…
+    313|     expect(Math.min(...ergebnisse.map((ergebnis) => ergebnis.schritte)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > E4 Kriterium 1, A6, B2: die Ansage > A6/E4 Kriterium 1: eine Sonderkarte gegen einen Mitspieler mit Farbenschutz wird angesagt und schwebt; sie wirkt noch nicht
+AssertionError: expected [ { typ: 'KarteAngesagt', …(4) } ] to deeply equal [ Array(2) ]
+
+- Expected
++ Received
+
+@@ -11,11 +11,6 @@
+      ],
+      "karteId": "schlangengrube-01",
+      "spielerIndex": 0,
+      "typ": "KarteAngesagt",
+    },
+-   {
+-     "karteId": "schlangengrube-01",
+-     "spielerIndex": 1,
+-     "typ": "AbwehrGefragt",
+-   },
+  ]
+
+ ❯ src/engine/__tests__/reaktion.test.ts:49:24
+     47|     expect(hand(zustand, 0), 'A6: die angesagte Karte liegt nicht mehr…
+     48|     expect(zustand.ausliegendeGruben, 'A6: die Wirkung tritt erst nach…
+     49|     expect(ereignisse).toEqual([
+       |                        ^
+     50|       { typ: 'KarteAngesagt', spielerIndex: 0, karteId: grube.id, ansa…
+     51|       { typ: 'AbwehrGefragt', spielerIndex: 1, karteId: grube.id },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > E4 Kriterium 1/D15: betroffen sind die Besitzer der Ziele ohne den Angreifer, im Uhrzeigersinn ab ihm, jeder einmal
+AssertionError: expected [ { typ: 'KarteAngesagt', …(4) } ] to deeply equal [ ObjectContaining{…}, …(1) ]
+
+- Expected
++ Received
+
+@@ -13,11 +13,6 @@
+      ],
+      "karteId": "schlangengrube-01",
+      "spielerIndex": 2,
+      "typ": "KarteAngesagt",
+    },
+-   {
+-     "karteId": "schlangengrube-01",
+-     "spielerIndex": 3,
+-     "typ": "AbwehrGefragt",
+-   },
+  ]
+
+ ❯ src/engine/__tests__/reaktion.test.ts:85:24
+     83|     const { zustand, ansage } = mehrereZiele([1, 0, 2, 3, 0], ALLE_MIT…
+     84|     const { zustand: nach, ereignisse } = fuehreAus(zustand, ansage)
+     85|     expect(ereignisse).toEqual([
+       |                        ^
+     86|       expect.objectContaining({ typ: 'KarteAngesagt', spielerIndex: 2,…
+     87|       { typ: 'AbwehrGefragt', spielerIndex: 3, karteId: zustand.spiele…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > A6 Timing/E4 Kriterium 2: die Wirkung tritt erst ein, wenn alle Betroffenen entschieden haben; wer abgewehrt hat, steht dabei
+AssertionError: expected [ { wirkungen: +0, …(1) }, …(2) ] to deeply equal [ { wirkungen: +0, …(1) }, …(2) ]
+
+- Expected
++ Received
+
+@@ -1,17 +1,14 @@
+  [
+    {
+      "ereignisse": [
+        "Abgewehrt",
+-       "AbwehrGefragt",
+      ],
+      "wirkungen": 0,
+    },
+    {
+-     "ereignisse": [
+-       "AbwehrGefragt",
+-     ],
++     "ereignisse": [],
+      "wirkungen": 0,
+    },
+    {
+      "ereignisse": [
+        "Abgewehrt",
+
+ ❯ src/engine/__tests__/reaktion.test.ts:101:22
+     99|       return { wirkungen: wirke.mock.calls.length, ereignisse: schritt…
+    100|     })
+    101|     expect(schritte).toEqual([
+       |                      ^
+    102|       { wirkungen: 0, ereignisse: ['Abgewehrt', 'AbwehrGefragt'] },
+    103|       { wirkungen: 0, ereignisse: ['AbwehrGefragt'] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > D33/E4 Kriterium 3: gefragt wird jeder Betroffene; wer keinen Farbenschutz hält, kann nur durchlassen
+AssertionError: expected [ 1 ] to deeply equal [ 3, +0, 1 ]
+
+- Expected
++ Received
+
+  [
+-   3,
+-   0,
+    1,
+  ]
+
+ ❯ src/engine/__tests__/reaktion.test.ts:114:41
+    112|     const { zustand, wirke, ansage } = mehrereZiele([3, 0, 1], [FUENF,…
+    113|     let jetzt = fuehreAus(zustand, ansage).zustand
+    114|     expect(jetzt.schwebend?.ausstehend).toEqual([3, 0, 1])
+       |                                         ^
+    115|     const angeboten: string[][] = []
+    116|     for (const gefragt of [3, 0, 1]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die Karte wirkt > D33: hält kein Betroffener Farbenschutz, wird trotzdem jeder gefragt, bevor die Karte wirkt
+AssertionError: expected [ Array(2) ] to deeply equal [ 'KarteAngesagt', 'AbwehrGefragt' ]
+
+- Expected
++ Received
+
+  [
+    "KarteAngesagt",
+-   "AbwehrGefragt",
++   "AnsageEntschieden",
+  ]
+
+ ❯ src/engine/__tests__/reaktion.test.ts:130:65
+    128|     const { zustand, wirke, ansage } = mehrereZiele([3, 0, 1], [FUENF,…
+    129|     const angesagt = fuehreAus(zustand, ansage)
+    130|     expect(angesagt.ereignisse.map((ereignis) => ereignis.typ)).toEqua…
+       |                                                                 ^
+    131|     expect(wirke).not.toHaveBeenCalled()
+    132|     const nach = folge(angesagt.zustand, (jetzt) => reaktion(jetzt, fa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Regenbogenschlange in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangenblockade in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Farbenfusion in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Farbendieb in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangenfrass in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangengrube in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+ FAIL  src/engine/__tests__/reaktion.test.ts > D10/A7.2: Farbenschutz wehrt jede Sonderkarte eines Mitspielers ab > D10/A7.2: Schlangenhäutung in die Schlange des Gegners: er wehrt ab, beide Karten liegen auf dem Ablagestapel ihres Spielers, keine Wirkung
+AssertionError: expected [ 'KarteAngesagt', 'Abgewehrt', …(1) ] to deeply equal [ 'KarteAngesagt', …(3) ]
+
+- Expected
++ Received
+
+  [
+    "KarteAngesagt",
+-   "AbwehrGefragt",
+    "Abgewehrt",
+    "AnsageEntschieden",
+  ]
+
+ ❯ src/engine/__tests__/reaktion.test.ts:182:56
+    180|     expect(ablage(zustand, 1)).toEqual([schutz])
+    181|     expect(zustand.spieler[1].schlangen, 'A7.2: die Schlange des Gegne…
+    182|     expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['Karte…
+       |                                                        ^
+    183|     expect(ereignisseVom(ereignisse, 'Abgewehrt')).toEqual([{ typ: 'Ab…
+    184|     expect(verletzt(zustand)).toEqual([])
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > A5, A6: Nachziehen nach einer Abwehr > A6: wer in einer Runde zweimal angegriffen wird, kann nicht mit einem eben nachgezogenen Farbenschutz ein zweites Mal abwehren
+AssertionError: A6, D33: ohne Farbenschutz kann er nur durchlassen: expected [ …(5) ] to deeply equal [ { typ: 'Reagieren', …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "farbenschutzId": null,
+-     "spielerId": "spieler-3",
+-     "typ": "Reagieren",
++     "karteId": "blau-02",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "rot-02",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "gelb-02",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "karteId": "gruen-02",
++     "spielerId": "spieler-2",
++     "typ": "FarbkarteLegen",
++     "ziel": {
++       "art": "neueSchlange",
++     },
++   },
++   {
++     "spielerId": "spieler-2",
++     "typ": "ZugBeenden",
+    },
+  ]
+
+ ❯ src/engine/__tests__/reaktion.test.ts:271:93
+    269|     expect(hand(erster.zustand, 2), 'A6: der Verteidiger hat nicht nac…
+    270|     const zweiter = fuehreAus(erster.zustand, grubeAuf(erster.zustand,…
+    271|     expect(aktionen(zweiter.zustand), 'A6, D33: ohne Farbenschutz kann…
+       |                                                                                             ^
+    272|     const durch = fuehreAus(zweiter.zustand, reaktion(zweiter.zustand,…
+    273|     expect(durch.zustand.ausliegendeGruben.map((grube) => grube.vor)).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/34]⎯
+
+ FAIL  src/engine/__tests__/reaktion.test.ts > B2, D33: wer Farbenschutz hält, verraten Ereignisse und Entscheider erst, wenn er ihn spielt > B2/D33: Schritt für Schritt dieselben Ereignisse und derselbe Entscheider, ob der Betroffene Farbenschutz hält und durchlässt oder keinen hält
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ src/engine/__tests__/reaktion.test.ts:314:85
+ ❯ src/engine/__tests__/reaktion.test.ts:315:44
+ ❯ verlauf src/engine/__tests__/reaktion.test.ts:314:132
+ ❯ src/engine/__tests__/reaktion.test.ts:321:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die beiden Beispiele der Website > A7.6 Beispiel 1: B hat keinen Farbenschutz und setzt seinen nächsten Zug komplett aus; danach liegt die Grube auf dem Ablagestapel von A
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:65:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > A7.6: die beiden Beispiele der Website > A7.6 Beispiel 2: B wehrt mit Farbenschutz ab; die Grube liegt ohne Wirkung auf dem Ablagestapel, B spielt seinen Zug normal
+AssertionError: expected [ { typ: 'AnsageEntschieden', …(5) } ] to deeply equal [ { typ: 'Abgewehrt', …(3) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -1,13 +1,7 @@
+  [
+    {
+-     "gegen": "schlangengrube-01",
+-     "karteId": "farbenschutz-01",
+-     "spielerIndex": 1,
+-     "typ": "Abgewehrt",
+-   },
+-   {
+      "abgewehrt": [
+        1,
+      ],
+      "karteId": "schlangengrube-01",
+      "nach": {
+
+ ❯ src/engine/__tests__/schlangengrube.test.ts:85:43
+     83|     const schutz = start.spieler[1].hand[0].id
+     84|     const abgewehrt = folge(start, (jetzt) => grubeAuf(jetzt, 1), (jet…
+     85|     expect(abgewehrt.ereignisse.slice(2)).toEqual([
+       |                                           ^
+     86|       { typ: 'Abgewehrt', spielerIndex: 1, karteId: schutz, gegen: gru…
+     87|       { typ: 'AnsageEntschieden', spielerIndex: 0, karteId: grube, abg…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D14, D18: mehrere Gruben, Abwehr vor dem Aussetzen > D14/F1: zwei Gruben von zwei Mitspielern auf denselben Spieler kosten ihn zwei Züge; jede geht an ihren Spieler
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ grubeUndEnde src/engine/__tests__/schlangengrube.test.ts:38:10
+ ❯ src/engine/__tests__/schlangengrube.test.ts:110:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D14, D18: mehrere Gruben, Abwehr vor dem Aussetzen > E4 Grenzfall: zu zweit mehrmals hintereinander setzt der Gegner jedes Mal aus, und der Angreifer ist gleich wieder dran
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:124:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D21/F8: trifft sie in der Schlussrunde einen Spieler, der noch einen Zug hätte, setzt er aus und hat keinen letzten Zug mehr
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ grubeUndEnde src/engine/__tests__/schlangengrube.test.ts:38:10
+ ❯ src/engine/__tests__/schlangengrube.test.ts:153:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D29/F8a: auf einen Spieler, der seinen letzten Zug schon gemacht hat, ist sie erlaubt und geht ohne Wirkung auf den Ablagestapel
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:171:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D29/A10: auch auf den Auslöser geht sie ohne Wirkung ab; er darf sie mit einem zuletzt gezogenen Farbenschutz abwehren
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:183:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/34]⎯
+
+ FAIL  src/engine/__tests__/schlangengrube.test.ts > D21, D29, A10: die Schlangengrube in der Schlussrunde > D14/D29: liegt vor ihm schon eine Grube für seinen letzten Zug, geht eine zweite ohne Wirkung ab
+AssertionError: Reagieren (durchlassen) ist nicht aufgezählt: expected 0 to be greater than 0
+ ❯ reaktion src/engine/__tests__/zugablauf_hilfen.ts:108:103
+    106| export function reaktion(zustand: Spielzustand, abwehren: boolean): Sp…
+    107|   const passend = aktionen(zustand, 'Reagieren').filter((aktion) => ak…
+    108|   expect(passend.length, `Reagieren (${abwehren ? 'abwehren' : 'durchl…
+       |                                                                                                       ^
+    109|   return passend[0]
+    110| }
+ ❯ durchlassen src/engine/__tests__/zugablauf_hilfen.ts:114:10
+ ❯ folge src/engine/__tests__/zugablauf_hilfen.ts:129:38
+ ❯ src/engine/__tests__/schlangengrube.test.ts:192:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/34]⎯
+
+ FAIL  src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A6/A7.2/A7.6/D29: Ansage, Abwehr, Grube vor einem Spieler und Grube ohne Wirkung lassen sich nachrechnen
+AssertionError: Saat 9, Schritt 0: {"typ":"SchlangengrubeSpielen","spielerId":"spieler-1","karteId":"schlangengrube-01","zielSpielerId":"spieler-2"}: expected { haende: [ 4, 5, 5 ], …(11) } to deeply equal { haende: [ 4, 5, 5 ], …(11) }
+
+- Expected
++ Received
+
+@@ -93,11 +93,11 @@
+      ],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+    "ausloeser": null,
+-   "gefragt": 1,
++   "gefragt": null,
+    "gruben": [],
+    "haende": [
+      4,
+      5,
+      5,
+
+ ❯ pruefePartie src/engine/__tests__/zugablauf_ereignisse.test.ts:174:118
+    172|     const aktion = angeboten.find((angebot) => istBevorzugt(angebot, b…
+    173|     const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+    174|     expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}, Sc…
+       |                                                                                                                      ^
+    175|     expect(verrateneHandkarten(neu, ereignisse), `Saat ${saat}, Schrit…
+    176|     for (const ereignis of ereignisse) {
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts:231:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/34]⎯
+
+ FAIL  src/engine/__tests__/zugablauf_ereignisse.test.ts > A5/A6/A7.6/A10: Ereignisse erklären jede sichtbare Änderung (Kriterium 11) > A6/A7.6: Zufallspartien mit echter Grube und echtem Farbenschutz lassen sich nachrechnen
+AssertionError: Saat 32, Schritt 119: {"typ":"SchlangengrubeSpielen","spielerId":"spieler-2","karteId":"schlangengrube-03","zielSpielerId":"spieler-3"}: expected { haende: [ 5, 4, 5, 5 ], …(11) } to deeply equal { haende: [ 5, 4, 5, 5 ], …(11) }
+
+- Expected
++ Received
+
+@@ -35,11 +35,11 @@
+      ],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 1,
+    "ausloeser": null,
+-   "gefragt": 2,
++   "gefragt": null,
+    "gruben": [],
+    "haende": [
+      5,
+      4,
+      5,
+
+ ❯ pruefePartie src/engine/__tests__/zugablauf_ereignisse.test.ts:174:118
+    172|     const aktion = angeboten.find((angebot) => istBevorzugt(angebot, b…
+    173|     const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
+    174|     expect(spieleNach(lageVon(zustand), ereignisse), `Saat ${saat}, Sc…
+       |                                                                                                                      ^
+    175|     expect(verrateneHandkarten(neu, ereignisse), `Saat ${saat}, Schrit…
+    176|     for (const ereignis of ereignisse) {
+ ❯ src/engine/__tests__/zugablauf_ereignisse.test.ts:241:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/34]⎯
+
+
+ Test Files  9 failed (9)
+      Tests  34 failed | 98 passed (132)
+   Start at  08:37:26
+   Duration  14.18s (transform 2.67s, setup 3.09s, import 3.27s, tests 12.18s, environment 30.15s)
+

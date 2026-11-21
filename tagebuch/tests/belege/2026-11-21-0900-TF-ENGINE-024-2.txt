@@ -1,0 +1,9 @@
+Geheimnisvergleiche: 4299, davon Ziel mit Farbenschutz: 591
+Eigener Dauerlauf: {"angesagt":867,"gefragt":867,"abgewehrt":44,"ausgesetzt":800,"ohneWirkung":23,"mehrereBetroffene":0,"schlussrundeGrube":29,"endeOhneWirkung":0}
+G-F: {"typ":"ZugBegonnen","spielerIndex":0,"teilzug":2} ; {"typ":"AnsageEntschieden","spielerIndex":0,"karteId":"schlangengrube-01","abgewehrt":[],"ohneWirkung":false,"nach":{"ort":"VorSpieler","spielerIndex":1}} ; {"typ":"Ausgesetzt","spielerIndex":1,"karteId":"schlangengrube-01","ablagestapelVon":0} ; {"typ":"ZugBegonnen","spielerIndex":0,"teilzug":1}
+G-F zweite Grube: KarteAngesagt, AbwehrGefragt, AnsageEntschieden, KartenGezogen, Ausgesetzt, ZugBegonnen; am Zug 0
+G-G: KarteGespielt(0), ZugBegonnen(0), KarteAngesagt(0), AbwehrGefragt(1), AnsageEntschieden(0), Ausgesetzt(1), ZugBegonnen(2); Phase Schlussrunde, am Zug 2
+ausstehend []: geladen; Entscheider 0; Aktionen [{"typ":"Reagieren","spielerId":"spieler-1","farbenschutzId":null}]; erste Aktion: wirft: Es gibt nichts abzuwehren: Keine Sonderkarte schwebt (A6).
+ausstehend [0]: abgelehnt: Ungültiger Spielstand: Alle Verweise auf Spieler und Karten sind gültig verletzt. Der Angreifer steht bei seiner eigenen schlangengrube-01 unter den Betroffenen.
+ausstehend [9]: abgelehnt: Ungültiger Spielstand: Alle Verweise auf Spieler und Karten sind gültig verletzt. Die schwebende schlangengrube-01 verweist auf Spieler 9, es gibt 3.
+ausstehend [1,1]: abgelehnt: Ungültiger Spielstand: Alle Verweise auf Spieler und Karten sind gültig verletzt. Bei der schwebenden schlangengrube-01 steht ein Spieler mehrfach unter ausstehend oder abgewehrt.

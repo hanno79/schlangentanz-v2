@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-025 Die Schlangengrube im zweiten Zug nach einem Verdoppler, in der Schlussrunde nach einem Verdoppler und ein beschädigter Spielstand mit offener Frage verhalten sich wie erwartet. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 13.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-025 Die Schlangengrube im zweiten Zug nach einem Verdoppler, in der Schlussrunde nach einem Verdoppler und ein beschädigter Spielstand mit offener Frage verhalten sich wie erwartet.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-ENGINE-023</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Drei Lagen, die in den Kriterien von E4 nicht stehen. Sie prüfen, ob die Grube mit dem zweiten Zug nach einem Verdoppler zusammenspielt, ob in der Schlussrunde der richtige Spieler seinen letzten Zug verliert, und was ein Spielstand auslöst, in dem die offene Frage niemanden mehr nennt.</p><h2>Bestanden, wenn</h2><ul><li>G-F: Zwei Spieler. Spieler 1 spielt Verdoppler und eine Farbkarte, im zweiten Teilzug eine Grube auf Spieler 2, der durchlässt. Nach „Zug beenden“ setzt Spieler 2 genau einmal aus, und Spieler 1 beginnt mit Teilzug 1. Eine zweite Grube im neuen Zug lässt Spieler 2 noch einmal aussetzen.</li><li>G-G: Drei Spieler in der Schlussrunde, Auslöser Spieler 1 am Zug. Verdoppler, „Zug beenden“, im zweiten Teilzug Grube auf Spieler 2, durchlassen, „Zug beenden“: Spieler 2 setzt aus (kein „GrubeOhneWirkung“), Spieler 3 spielt seinen letzten Zug, danach ist die Partie beendet und keine Grube liegt aus.</li><li>G-C: Beim Laden eines Stands mit <code>schwebend.ausstehend</code> gleich <code>[0]</code> (Angreifer), <code>[9]</code> oder <code>[1, 1]</code> lehnt die Engine mit deutschem Grund ab. Der Stand mit <code>[]</code> wird geladen; das Ergebnis wird festgehalten.</li></ul><h2>Fehlgeschlagen, wenn</h2><p>G-F oder G-G anders ausgeht, etwa ein dritter Teilzug folgt, Spieler 2 zweimal für eine Grube aussetzt oder in G-G eine Grube übrig bleibt, oder wenn einer der drei beschädigten Stände in G-C ohne Meldung geladen wird.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E4-abwehr-grube (PR #54)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Kopie des Stands <code>3dbb35b</code> wie in TF-ENGINE-024</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>G-F: Hände Verdoppler, Schlangengrube, Schlangengrube, Blau, Rot und Blau, Rot, Gelb, Braun, Violett; sechs Gelb oben auf dem Stapel. G-G: Hand Verdoppler, Schlangengrube, Blau, Rot, Gelb; <code>.schlussrunde(0)</code>. G-C: Grube von Spieler 1 auf Spieler 2, gespeichert, <code>ausstehend</code> im JSON geändert.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Konsole im Kopie-Ordner</td><td>Prüfdateien `pruefer_grenz.test.ts` (G-F, G-G) und `pruefer_laden.test.ts` (G-C) anlegen</td><td>Lagen aus „Testdaten“</td><td>Dateien liegen nur in der Kopie</td></tr><tr><td>2</td><td>Konsole im Kopie-Ordner</td><td>beide Dateien ausführen</td><td>`npx vitest run src/engine/__tests__/pruefer_grenz.test.ts src/engine/__tests__/pruefer_laden.test.ts`</td><td>Exit 0; `grenz.txt` und `laden.txt` mit den Ereignisfolgen und Meldungen aus „Bestanden, wenn“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Zwei Gruben, die gleichzeitig vor einem Spieler liegen, während er einen Verdoppler spielt, sind nicht eigens geprüft, weil ein aussetzender Spieler keinen Verdoppler spielen kann.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 09:00</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E4) &middot; agent &middot; pruefung-E4 @ <span class="commit" title="3dbb35b8f6e56267918bc768d8e110e190a3c7ee">3dbb35b</span></p><p>G-F: Grube im Teilzug 2 nach Verdoppler, Spieler 2 setzt einmal aus, Spieler 1 beginnt Teilzug 1; zweite Grube wieder ein Aussetzen. G-G: Schlussrunde, Auslöser Teilzug 2, Grube auf Spieler 2: Ausgesetzt(1), kein GrubeOhneWirkung, Spieler 3 letzter Zug, Partie beendet ohne Grube. G-C: ausstehend [0], [9], [1,1] mit deutschem Grund abgelehnt; ausstehend [] wird geladen, bietet dem Angreifer &#x27;Reagieren durchlassen&#x27; an, das beim Ausführen wirft (Hinweis H2)</p><ul class="belege"><li><a href="belege/2026-11-21-0900-TF-ENGINE-025-1.txt">2026-11-21-0900-TF-ENGINE-025-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

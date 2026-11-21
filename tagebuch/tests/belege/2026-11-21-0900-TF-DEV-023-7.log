@@ -1,0 +1,142 @@
+[
+ {
+  "name": "desktop",
+  "schritt": "schlangengrube nach Ansage",
+  "aktionen": "Aktionen der Engine (1) / Reagieren (1) / Reagieren: durchlassenspieler-2 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2) / AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangengrube-03 abwehrt / ",
+  "entscheidet": "KI-Gegner 1 (spieler-2)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ {
+  "name": "desktop",
+  "schritt": "schlangengrube nach KI-Schritt",
+  "aktionen": "Aktionen der Engine (5) / FarbkarteLegen (4) / FarbkarteLegen: Wasserwirbel (blau-15) → neue Schlangespieler-1FarbkarteLegen: Feuerkeim (rot-06) → neue Schlangespieler-1FarbkarteLegen: Sonnenblatt (gelb-06) → neue Schlangespieler-1FarbkarteLegen: Waldspross (gruen-08) → neue Schlangespieler-1 / ZugBeenden (1) / ZugBeendenspieler-1 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (1) / AnsageEntschieden: schlangengrube-03 von Spieler 1 (spieler-1) wirkt, niemand hat abgewehrt → vor KI-Gegner 1 (spieler-2) / ",
+  "entscheidet": "Spieler 1 (spieler-1)",
+  "gruben": "Ausliegende Schlangengruben: Schlangengrube schlangengrube-03 vor KI-Gegner 1 (spieler-2), gespielt von Spieler 1 (spieler-1)",
+  "verletzt": false,
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ {
+  "name": "desktop",
+  "schritt": "abwehr nach Ansage",
+  "aktionen": "Aktionen der Engine (2) / Reagieren (2) / Reagieren: abwehren mit Farbenschutz (farbenschutz-02)spieler-2Reagieren: durchlassenspieler-2 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2) / AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangengrube-03 abwehrt / ",
+  "entscheidet": "KI-Gegner 1 (spieler-2)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ {
+  "name": "desktop",
+  "schritt": "abwehr nach Abwehr",
+  "aktionen": "Aktionen der Engine (5) / FarbkarteLegen (4) / FarbkarteLegen: Wasserwirbel (blau-12) → neue Schlangespieler-1FarbkarteLegen: Feuerkeim (rot-13) → neue Schlangespieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → neue Schlangespieler-1FarbkarteLegen: Waldspross (gruen-01) → neue Schlangespieler-1 / ZugBeenden (1) / ZugBeendenspieler-1 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangengrube-03 mit farbenschutz-02 ab / AnsageEntschieden: schlangengrube-03 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1) / ",
+  "entscheidet": "Spieler 1 (spieler-1)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ {
+  "name": "desktop",
+  "schritt": "doppelangriff zweite Frage",
+  "aktionen": "Aktionen der Engine (1) / Reagieren (1) / Reagieren: durchlassenspieler-3 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / KarteAngesagt: KI-Gegner 1 (spieler-2), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 2 (spieler-3) / AbwehrGefragt: KI-Gegner 2 (spieler-3) entscheidet, ob er schlangengrube-03 abwehrt / ",
+  "entscheidet": "KI-Gegner 2 (spieler-3)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ {
+  "name": "desktop",
+  "schritt": "doppelangriff nach Aussetzen",
+  "aktionen": "Aktionen der Engine (11) / FarbkarteLegen (9) / FarbkarteLegen: Feuerkeim (rot-10) → neue Schlangespieler-1FarbkarteLegen: Feuerkeim (rot-10) → schlange-1 anfangspieler-1FarbkarteLegen: Feuerkeim (rot-10) → schlange-1 endespieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → neue Schlangespieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → schlange-1 anfangspieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → schlange-1 endespieler-1FarbkarteLegen: Waldspross (gruen-03) → neue Schlangespieler-1FarbkarteLegen: Waldspross (gruen-03) → schlange-1 anfangspieler-1FarbkarteLegen: Waldspross (gruen-03) → schlange-1 endespieler-1 / SonderkarteWirkungslosAblegen (2) / SonderkarteWirkungslosAblegen: Farbenschutz (farbenschutz-03)spieler-1SonderkarteWirkungslosAblegen: Farbenschutz (farbenschutz-02)spieler-1 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (3) / KartenGezogen: KI-Gegner 1 (spieler-2) zieht 2 / Ausgesetzt: KI-Gegner 2 (spieler-3) setzt aus; schlangengrube-03 auf den Ablagestapel von KI-Gegner 1 (spieler-2) / ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1 / ",
+  "entscheidet": "Spieler 1 (spieler-1)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ {
+  "name": "desktop",
+  "konsolenfehler": []
+ },
+ {
+  "name": "handy-hochkant",
+  "schritt": "schlangengrube nach Ansage",
+  "aktionen": "Aktionen der Engine (1) / Reagieren (1) / Reagieren: durchlassenspieler-2 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2) / AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangengrube-03 abwehrt / ",
+  "entscheidet": "KI-Gegner 1 (spieler-2)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ {
+  "name": "handy-hochkant",
+  "schritt": "schlangengrube nach KI-Schritt",
+  "aktionen": "Aktionen der Engine (5) / FarbkarteLegen (4) / FarbkarteLegen: Wasserwirbel (blau-15) → neue Schlangespieler-1FarbkarteLegen: Feuerkeim (rot-06) → neue Schlangespieler-1FarbkarteLegen: Sonnenblatt (gelb-06) → neue Schlangespieler-1FarbkarteLegen: Waldspross (gruen-08) → neue Schlangespieler-1 / ZugBeenden (1) / ZugBeendenspieler-1 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (1) / AnsageEntschieden: schlangengrube-03 von Spieler 1 (spieler-1) wirkt, niemand hat abgewehrt → vor KI-Gegner 1 (spieler-2) / ",
+  "entscheidet": "Spieler 1 (spieler-1)",
+  "gruben": "Ausliegende Schlangengruben: Schlangengrube schlangengrube-03 vor KI-Gegner 1 (spieler-2), gespielt von Spieler 1 (spieler-1)",
+  "verletzt": false,
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ {
+  "name": "handy-hochkant",
+  "schritt": "abwehr nach Ansage",
+  "aktionen": "Aktionen der Engine (2) / Reagieren (2) / Reagieren: abwehren mit Farbenschutz (farbenschutz-02)spieler-2Reagieren: durchlassenspieler-2 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2) / AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangengrube-03 abwehrt / ",
+  "entscheidet": "KI-Gegner 1 (spieler-2)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ {
+  "name": "handy-hochkant",
+  "schritt": "abwehr nach Abwehr",
+  "aktionen": "Aktionen der Engine (5) / FarbkarteLegen (4) / FarbkarteLegen: Wasserwirbel (blau-12) → neue Schlangespieler-1FarbkarteLegen: Feuerkeim (rot-13) → neue Schlangespieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → neue Schlangespieler-1FarbkarteLegen: Waldspross (gruen-01) → neue Schlangespieler-1 / ZugBeenden (1) / ZugBeendenspieler-1 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / Abgewehrt: KI-Gegner 1 (spieler-2) wehrt schlangengrube-03 mit farbenschutz-02 ab / AnsageEntschieden: schlangengrube-03 von Spieler 1 (spieler-1) ohne Wirkung, abgewehrt von KI-Gegner 1 (spieler-2) → Ablagestapel von Spieler 1 (spieler-1) / ",
+  "entscheidet": "Spieler 1 (spieler-1)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ {
+  "name": "handy-hochkant",
+  "schritt": "doppelangriff zweite Frage",
+  "aktionen": "Aktionen der Engine (1) / Reagieren (1) / Reagieren: durchlassenspieler-3 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (2) / KarteAngesagt: KI-Gegner 1 (spieler-2), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 2 (spieler-3) / AbwehrGefragt: KI-Gegner 2 (spieler-3) entscheidet, ob er schlangengrube-03 abwehrt / ",
+  "entscheidet": "KI-Gegner 2 (spieler-3)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ {
+  "name": "handy-hochkant",
+  "schritt": "doppelangriff nach Aussetzen",
+  "aktionen": "Aktionen der Engine (11) / FarbkarteLegen (9) / FarbkarteLegen: Feuerkeim (rot-10) → neue Schlangespieler-1FarbkarteLegen: Feuerkeim (rot-10) → schlange-1 anfangspieler-1FarbkarteLegen: Feuerkeim (rot-10) → schlange-1 endespieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → neue Schlangespieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → schlange-1 anfangspieler-1FarbkarteLegen: Sonnenblatt (gelb-08) → schlange-1 endespieler-1FarbkarteLegen: Waldspross (gruen-03) → neue Schlangespieler-1FarbkarteLegen: Waldspross (gruen-03) → schlange-1 anfangspieler-1FarbkarteLegen: Waldspross (gruen-03) → schlange-1 endespieler-1 / SonderkarteWirkungslosAblegen (2) / SonderkarteWirkungslosAblegen: Farbenschutz (farbenschutz-03)spieler-1SonderkarteWirkungslosAblegen: Farbenschutz (farbenschutz-02)spieler-1 / ",
+  "ereignisse": "Ereignisse des letzten Schritts (3) / KartenGezogen: KI-Gegner 1 (spieler-2) zieht 2 / Ausgesetzt: KI-Gegner 2 (spieler-3) setzt aus; schlangengrube-03 auf den Ablagestapel von KI-Gegner 1 (spieler-2) / ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1 / ",
+  "entscheidet": "Spieler 1 (spieler-1)",
+  "gruben": "Ausliegende Schlangengruben: keine",
+  "verletzt": false,
+  "scrollWidth": 390,
+  "clientWidth": 390
+ },
+ {
+  "name": "handy-hochkant",
+  "konsolenfehler": []
+ }
+]
