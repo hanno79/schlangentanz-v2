@@ -146,7 +146,11 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
         entscheider: entscheider!,
       });
     }
-    return pruefeReaktion(zustand, spielerIndex, aktion.farbenschutzId) ?? JA;
+    if (aktion.farbenschutzId === null) return JA;
+    const farbenschutz = spieler.hand.find((handkarte) => handkarte.id === aktion.farbenschutzId);
+    if (farbenschutz === undefined) return nichtAufHand(spieler.name, spielerIndex, aktion.farbenschutzId);
+    const grund = pruefeReaktion(farbenschutz);
+    return grund === null ? JA : nein(grund);
   }
   if (schwebend !== null) {
     return nein(`${mitBestimmtemArtikel(schwebend.karte.name)} schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).`);

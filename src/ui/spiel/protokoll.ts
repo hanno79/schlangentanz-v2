@@ -2,7 +2,7 @@ import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../../engi
 import { kartenkurzname } from '../karten/kartentexte'
 import { SCHRITT, kartenSatz } from '../tisch/protokolltexte'
 import { tischnamen } from '../tisch/zugtexte'
-import { personen, tischAnsicht } from './tischAnsicht'
+import { personen } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
 
 /*
@@ -24,11 +24,8 @@ function gespielteKarte(vorher: Spielzustand, aktion: SpielAktion): Spielkarte[]
   return [karte]
 }
 
-/**
- * Die Sätze zu einem Schritt, in der Reihenfolge des Geschehens. `vorher` ist
- * der Zustand vor der Aktion, `ansicht` die Sicht darauf, wenn sie schon da ist.
- */
-export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, ereignisse: readonly Ereignis[], ansicht: TischAnsicht = tischAnsicht(vorher)): string[] {
+/** Die Sätze zu einem Schritt, in der Reihenfolge des Geschehens. `vorher` ist der Zustand vor der Aktion, `ansicht` die Sicht darauf. */
+export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, ereignisse: readonly Ereignis[], ansicht: TischAnsicht): string[] {
   const person = personen(vorher)
   const namen = tischnamen(ansicht, gespielteKarte(vorher, aktion))
   const kurz = (karteId: string) => kartenkurzname(namen.karte(karteId))
@@ -39,7 +36,7 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
   for (const ereignis of ereignisse) {
     switch (ereignis.typ) {
       case 'KarteGespielt':
-        if (aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && aktion.typ !== 'Reagieren') saetze.push(SCHRITT.spielt(person(ereignis.spielerIndex), kartenSatz(aktion, namen, wer)))
+        if ('karteId' in aktion) saetze.push(SCHRITT.spielt(person(ereignis.spielerIndex), kartenSatz(aktion, namen, wer)))
         break
       case 'KarteAngesagt':
         saetze.push(SCHRITT.sagtAn(person(ereignis.spielerIndex), kartenSatz(ereignis.ansage, namen, wer)))

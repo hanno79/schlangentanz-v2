@@ -185,6 +185,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
 
   const { schwebend } = zustand
   const entscheider = ermittleEntscheider(zustand)
+  const gesperrt = entscheider === mensch ? zugBeendenGesperrt(zustand) : null
   const angreifer = schwebend === null ? -1 : zustand.spieler.findIndex((spieler) => spieler.id === schwebend.aktion.spielerId)
 
   return {
@@ -210,11 +211,6 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
           : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider), angesagt: schwebend.karte, ansage: schwebend.aktion },
     },
     aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],
-    zugBeendenGesperrt: entscheider === mensch ? gesperrtAmTisch(zustand) : null,
+    zugBeendenGesperrt: gesperrt === null ? null : grundFuerDich(gesperrt, person),
   }
-}
-
-function gesperrtAmTisch(zustand: Spielzustand): string | null {
-  const ablehnung = zugBeendenGesperrt(zustand)
-  return ablehnung === null ? null : grundAmTisch(zustand, ablehnung)
 }

@@ -1,4 +1,4 @@
-import type { Ablehnung, Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
+import type { Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
 import { definitionFuer } from './karten/register';
 import { wirkeUndMeldeVersetzte } from './kartenorte';
 import type { SonderkarteInfo, Spielkarte, Spielzustand } from './types';
@@ -68,25 +68,13 @@ export function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereigni
   return zustand;
 }
 
-/** Warum diese Reaktion nicht geht, oder `null`. Ob der Spieler gerade gefragt ist, prüft die Aktionsschicht. */
-export function pruefeReaktion(zustand: Spielzustand, spielerIndex: number, farbenschutzId: string | null): Ablehnung | null {
-  if (farbenschutzId === null) return null;
-  const spieler = zustand.spieler[spielerIndex];
-  const karte = spieler.hand.find((handkarte) => handkarte.id === farbenschutzId);
-  if (karte === undefined) {
-    return {
-      erlaubt: false,
-      grund: `Die Karte ${farbenschutzId} liegt nicht auf der Hand von ${spieler.name}.`,
-      nennt: { art: 'nichtAufHand', spielerIndex, karteId: farbenschutzId },
-    };
-  }
-  if (!istFarbenschutz(karte)) {
-    return {
-      erlaubt: false,
-      grund: `Die Karte ${farbenschutzId} ist kein Farbenschutz: Als Reaktion ist nur Farbenschutz erlaubt, auch Schlangenfrass ist keine Reaktion (A6).`,
-    };
-  }
-  return null;
+/**
+ * Warum diese Handkarte keine Reaktion sein kann, oder `null`. Ob der Spieler
+ * gerade gefragt ist und die Karte auf seiner Hand liegt, prüft die Aktionsschicht.
+ */
+export function pruefeReaktion(karte: Spielkarte): string | null {
+  if (istFarbenschutz(karte)) return null;
+  return `Die Karte ${karte.id} ist kein Farbenschutz: Als Reaktion ist nur Farbenschutz erlaubt, auch Schlangenfrass ist keine Reaktion (A6).`;
 }
 
 /** Was der Gefragte wählen darf: mit jedem seiner Farbenschutz abwehren oder durchlassen (A6, A7.2); ohne Farbenschutz nur durchlassen (D33). */

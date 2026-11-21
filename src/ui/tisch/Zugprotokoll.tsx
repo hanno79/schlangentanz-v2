@@ -28,8 +28,8 @@ export function Zugprotokoll({ verlauf }: { verlauf: Verlauf }) {
           <li className="st-leer">{PROTOKOLL.leer}</li>
         ) : (
           eintraege
-            .map((eintrag, stelle) => ({ ...eintrag, stelle }))
             .slice(-SICHTBAR)
+            .map((eintrag, stelle) => ({ ...eintrag, stelle: eintraege.length - Math.min(SICHTBAR, eintraege.length) + stelle }))
             // Der jüngste Schritt oben; innerhalb eines Schritts in der Reihenfolge des Geschehens (sort ist stabil).
             .sort((a, b) => b.schritt - a.schritt)
             .map((eintrag) => (

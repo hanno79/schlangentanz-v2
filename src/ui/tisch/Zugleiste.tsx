@@ -45,9 +45,12 @@ interface ZugleisteEigenschaften {
 
 /** Der jüngste Schritt aus dem Protokoll, alle seine Sätze; `null`, wenn noch keiner da ist. */
 function juengsterSchritt(verlauf: Verlauf | undefined): string | null {
-  const letzter = verlauf?.eintraege.at(-1)
-  if (verlauf === undefined || letzter === undefined) return null
-  return verlauf.eintraege.filter((eintrag) => eintrag.schritt === letzter.schritt).map((eintrag) => eintrag.text).join(' ')
+  const eintraege = verlauf?.eintraege ?? []
+  const schritt = eintraege.at(-1)?.schritt
+  if (schritt === undefined) return null
+  let anfang = eintraege.length - 1
+  while (anfang > 0 && eintraege[anfang - 1].schritt === schritt) anfang -= 1
+  return eintraege.slice(anfang).map((eintrag) => eintrag.text).join(' ')
 }
 
 /** Was die Leiste sagt; ohne Entscheidung des Menschen, was gerade geschieht. */

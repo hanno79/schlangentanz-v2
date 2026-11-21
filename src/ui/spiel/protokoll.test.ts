@@ -4,6 +4,7 @@ import type { SpielAktion, Spielzustand } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { protokollSchritt } from './protokoll'
+import { tischAnsicht } from './tischAnsicht'
 
 /*
 O6, Kriterium 1: Jeder Schritt steht im Protokoll, mit Karte und Ziel. Das
@@ -13,7 +14,7 @@ verdeckt auf einer Hand liegt.
 */
 
 function schritt(vorher: Spielzustand, aktion: SpielAktion): string[] {
-  return protokollSchritt(vorher, aktion, anwendeAktion(vorher, aktion).ereignisse)
+  return protokollSchritt(vorher, aktion, anwendeAktion(vorher, aktion).ereignisse, tischAnsicht(vorher))
 }
 
 describe('O6 K1: Einträge mit Karte und Ziel', () => {

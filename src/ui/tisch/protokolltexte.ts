@@ -2,7 +2,7 @@ import type { KartenAktion, SonderkarteWirkungslosAblegenAktion } from '../../en
 import { kartenkurzname } from '../karten/kartentexte'
 import type { Person } from '../spiel/tischAnsicht'
 import { anzahlKarten } from './texte'
-import { ansage, schlangeImSatz } from './zugtexte'
+import { ansage, nummerIn, schlangeImSatz } from './zugtexte'
 import type { Tischnamen } from './zugtexte'
 
 /*
@@ -71,7 +71,7 @@ export function kartenSatz(aktion: KartenAktion | SonderkarteWirkungslosAblegenA
       return `${kurz} ohne Wirkung auf ${wer.ich ? 'deine' : 'die eigene'} Ablage.`
     case 'SchlangenhaeutungSpielen': {
       const schlange = namen.schlange(aktion.schlangenId)
-      const stellen = aktion.neueReihenfolge.map((id) => schlange.ansicht.karten.findIndex((glied) => glied.karte.id === id) + 1)
+      const stellen = aktion.neueReihenfolge.map((id) => nummerIn(schlange, id))
       return `Schlangenhäutung ordnet Karte ${Math.min(...stellen)} bis ${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')} neu.`
     }
     default:

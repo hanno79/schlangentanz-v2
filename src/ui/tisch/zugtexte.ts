@@ -1,7 +1,7 @@
 import type { SchlangenfrassSpielenAktion, SpielAktion, Spielkarte } from '../../engine'
 import { kartenkurzname, kartenname } from '../karten/kartentexte'
 import type { Wahl } from '../spiel/auswahl'
-import type { SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
+import type { Person, SchlangeAnsicht, TischAnsicht } from '../spiel/tischAnsicht'
 import { anzahlKarten } from './texte'
 
 /*
@@ -85,8 +85,7 @@ interface SchlangeAmTisch {
 export interface Tischnamen {
   karte: (id: string) => Spielkarte
   schlange: (id: string) => SchlangeAmTisch
-  /** Als Ziel im Akkusativ: der Name eines Gegners, für dich „dich“ (O6, Schlangengrube auf dich). */
-  spieler: (id: string) => string
+  spieler: (id: string) => Person
 }
 
 /**
@@ -99,7 +98,7 @@ export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[
   const offen = [...ansicht.ich.hand, ...(angesagt === undefined ? [] : [angesagt]), ...gespielt]
   const karten = new Map<string, Spielkarte>(offen.map((karte) => [karte.id, karte]))
   const schlangen = new Map<string, SchlangeAmTisch>()
-  const spieler = new Map<string, string>([[ansicht.ich.id, 'dich'], ...ansicht.gegner.map((gegner): [string, string] => [gegner.id, gegner.name])])
+  const spieler = new Map<string, Person>([ansicht.ich, ...ansicht.gegner].map((platz): [string, Person] => [platz.id, { name: platz.name, ich: platz === ansicht.ich }]))
   for (const platz of [ansicht.ich, ...ansicht.gegner]) {
     const eigene = platz === ansicht.ich
     platz.schlangen.forEach((schlange, index) => {
@@ -127,7 +126,7 @@ export function schlangeImSatz({ eigene, nummer, besitzer }: SchlangeAmTisch, fa
 }
 
 /** Die Stelle einer Karte in ihrer Schlange, ab 1. */
-const nummerIn = (schlange: SchlangeAmTisch, karteId: string) => schlange.ansicht.karten.findIndex((glied) => glied.karte.id === karteId) + 1
+export const nummerIn = (schlange: SchlangeAmTisch, karteId: string) => schlange.ansicht.karten.findIndex((glied) => glied.karte.id === karteId) + 1
 
 /** Die Ansage einer fertigen Auswahl (B2): Karte und Ziel in einem Satz, bevor sie ausgeführt wird. */
 export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
@@ -157,8 +156,10 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
     }
     case 'SchlangenfrassSpielen':
       return `Schlangenfrass frisst ${aktion.ziele.map((ziel) => `${kurz(ziel.karteId)} aus ${schlangeImSatz(namen.schlange(ziel.schlangenId), 'dativ')}`).join(' und ')}.`
-    case 'SchlangengrubeSpielen':
-      return `Schlangengrube auf ${namen.spieler(aktion.zielSpielerId)}.`
+    case 'SchlangengrubeSpielen': {
+      const ziel = namen.spieler(aktion.zielSpielerId)
+      return `Schlangengrube auf ${ziel.ich ? 'dich' : ziel.name}.`
+    }
     case 'VerdopplerSpielen':
       // A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug.“
       return 'Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.'

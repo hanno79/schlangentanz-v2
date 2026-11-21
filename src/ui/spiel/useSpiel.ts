@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { anwendeAktion, erzeugeZufall, pruefeAktion } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
 import { waehleFuer } from '../../ki/schritt'
@@ -8,7 +8,7 @@ import { STRATEGIEN } from '../../ki/strategien'
 import type { Ki } from '../../ki/strategien/strategie'
 import { speichereSpielstand } from '../../spielstand'
 import { protokollSchritt } from './protokoll'
-import { grundAmTisch, tischAnsicht } from './tischAnsicht'
+import { grundAmTisch, personen, tischAnsicht } from './tischAnsicht'
 import type { TischAnsicht } from './tischAnsicht'
 
 /*
@@ -98,11 +98,10 @@ function entscheidendeKi(zustand: Spielzustand, gegner: ReadonlyMap<string, Ki>)
 
 interface Protokollstand {
   eintraege: Protokolleintrag[]
-  schritt: number
   ausgesetzt: boolean
 }
 
-const LEERES_PROTOKOLL: Protokollstand = { eintraege: [], schritt: 0, ausgesetzt: false }
+const LEERES_PROTOKOLL: Protokollstand = { eintraege: [], ausgesetzt: false }
 
 export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOptionen): Spielsteuerung {
   const [zustand, setzeZustand] = useState(start)
@@ -114,30 +113,34 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
      festgehalten und beim nächsten Zeichnen geworfen (wie in der Lobby). */
   const [fehler, setzeFehler] = useState<{ fehler: unknown } | null>(null)
   const ansicht = useMemo(() => tischAnsicht(zustand), [zustand])
-  const wartezeit = schneller ? Math.min(pause, KI_PAUSE_SCHNELL) : pause
+  // Gelesen erst, wenn die KI gewählt hat: Schaltet „Schneller“ während der Pause um, rechnet die KI nicht neu.
+  const wartezeit = useRef(pause)
+  useEffect(() => {
+    wartezeit.current = schneller ? Math.min(pause, KI_PAUSE_SCHNELL) : pause
+  }, [schneller, pause])
 
   /**
    * Spielt die Aktion: erst speichern, dann zeigen, damit ein Neuladen nie
-   * hinter dem Bild zurückliegt; danach ins Protokoll. Eine Aktion des Menschen
+   * hinter dem Bild zurückliegt; danach ins Protokoll. Deine eigene Aktion
    * nimmt den Hinweis aufs Aussetzen weg. Ein Wurf von Engine oder KI geht an
    * den Fehlerfang.
    */
   const spiele = useCallback(
-    (aktion: SpielAktion, vomMenschen: boolean) => {
+    (aktion: SpielAktion) => {
       try {
         const { zustand: neu, ereignisse } = anwendeAktion(zustand, aktion)
         const saetze = protokollSchritt(zustand, aktion, ereignisse, ansicht)
-        const mensch = zustand.spieler.findIndex((spieler) => spieler.steuerung === 'Mensch')
-        const ausgesetzt = ereignisse.some((ereignis) => ereignis.typ === 'Ausgesetzt' && ereignis.spielerIndex === mensch)
+        const person = personen(zustand)
+        const ausgesetzt = ereignisse.some((ereignis) => ereignis.typ === 'Ausgesetzt' && person(ereignis.spielerIndex).ich)
+        const vonDir = aktion.spielerId === ansicht.ich.id
         speichereSpielstand(neu)
         setzeZustand(neu)
         setzeAblehnung(null)
         setzeProtokoll((alt) => {
-          const schritt = alt.schritt + 1
+          const schritt = (alt.eintraege.at(-1)?.schritt ?? 0) + 1
           return {
-            schritt,
             eintraege: [...alt.eintraege, ...saetze.map((text) => ({ schritt, text }))].slice(-PROTOKOLL_LAENGE),
-            ausgesetzt: ausgesetzt || (alt.ausgesetzt && !vomMenschen),
+            ausgesetzt: ausgesetzt || (alt.ausgesetzt && !vonDir),
           }
         })
       } catch (grund) {
@@ -166,17 +169,17 @@ export function useSpiel(start: Spielzustand, { pause, saatquelle }: SpielOption
         setzeFehler({ fehler: grund })
         return
       }
-      const rest = wartezeit - (Date.now() - beginn)
-      if (rest > 0) zeitgeber = setTimeout(() => spiele(aktion, false), rest)
-      else spiele(aktion, false)
+      const rest = wartezeit.current - (Date.now() - beginn)
+      if (rest > 0) zeitgeber = setTimeout(() => spiele(aktion), rest)
+      else spiele(aktion)
     }, 0)
     return () => clearTimeout(zeitgeber)
-  }, [zustand, gegner, wartezeit, spiele])
+  }, [zustand, gegner, spiele])
 
   const fuehreAus = useCallback(
     (aktion: SpielAktion) => {
       const pruefung = pruefeAktion(zustand, aktion)
-      if (pruefung.erlaubt) spiele(aktion, true)
+      if (pruefung.erlaubt) spiele(aktion)
       else setzeAblehnung(grundAmTisch(zustand, pruefung))
     },
     [zustand, spiele],
