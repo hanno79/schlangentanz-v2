@@ -23,8 +23,10 @@ daneben. Lehnt die Engine eine Aktion ab, steht
 ihr Grund hier.
 
 Beim Ordnen einer Schlangenhäutung (O7) stehen hier die Punkte des Besitzers
-vorher und nachher, aus der Vorschau der Engine; solange die Farbfolge
-dieselbe ist, steht „Ausführen“ gesperrt da, mit dem Grund daneben (D26).
+vorher und nachher, aus der Vorschau der Engine. Solange die Farbfolge
+dieselbe ist, steht „Ausführen“ gesperrt in der Reihe der Knöpfe, und der Satz
+darüber nennt den Grund (D26); eine eigene Zeile dafür nähme der Tischfläche in
+Handy quer zu viel Höhe.
 
 Ab 700 px Breite steht die Leiste rechts neben Schlangen und Hand und zeigt
 die gewählte Karte gross.
@@ -53,7 +55,8 @@ function satz(ansicht: TischAnsicht, bedienung: Bedienung, karte: Spielkarte | n
   }
   if (fertig !== null) return `${ZUGLEISTE.ansage} ${ansage(fertig, tischnamen(ansicht))}`
   if (haeutung !== null) {
-    if (haeutung.stufe === 'ordnen') return HAEUTUNG.ordnen
+    // Ohne neue Farbfolge sagt der Satz zugleich, warum „Ausführen“ gesperrt ist (D26).
+    if (haeutung.stufe === 'ordnen') return `${HAEUTUNG.ordnen} ${HAEUTUNG.gleicheFolge}`
     return haeutung.gedrueckt === null ? HAEUTUNG.abschnitt : HAEUTUNG.anderesEnde
   }
   return auftrag(bedienung.angebote, karte)
@@ -83,8 +86,9 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
   const optionen = bedienung.angebote.filter((wahl) => wahl.art === 'frass')
   const { zugBeenden, abwerfen, ausspielen } = bedienung
   const fertig = haeutung?.fertig ?? bedienung.fertig
-  // Beim Ordnen der Häutung stehen hier die Punkte, und ein gesperrtes „Ausführen“ sagt, warum.
+  // Beim Ordnen der Häutung stehen hier die Punkte; der Satz verweist ein gesperrtes „Ausführen“ auf seinen Grund.
   const vorschau = haeutung?.stufe === 'ordnen' ? haeutung.vorschau : null
+  const satzId = useId()
 
   return (
     <section className="st-zugleiste" aria-label={ZUGLEISTE.titel}>
@@ -94,7 +98,7 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
         </div>
       )}
       <div className="st-zugleiste-inhalt">
-        <p className="st-zugleiste-text" aria-live="polite">
+        <p id={satzId} className="st-zugleiste-text" aria-live="polite">
           {satz(ansicht, bedienung, karte, fertig, haeutung)}
         </p>
         {vorschau !== null && (
@@ -143,9 +147,10 @@ export function Zugleiste({ ansicht, bedienung, fuehreAus, ablehnung, zeigeGross
                 </button>
               ) : (
                 vorschau !== null && (
-                  <KnopfMitGrund klasse="st-knopf st-knopf--haupt" grund={HAEUTUNG.gleicheFolge}>
+                  // Gesperrt, solange die Farbfolge dieselbe ist; den Grund sagt der Satz oben.
+                  <button type="button" className="st-knopf st-knopf--haupt" disabled aria-describedby={satzId}>
                     {ZUGLEISTE.ausfuehren}
-                  </KnopfMitGrund>
+                  </button>
                 )
               )}
             </>

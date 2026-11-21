@@ -210,7 +210,7 @@ bedeuten, steht in DESIGN.md („Handkarte“, „Angebotenes Ziel“, „Zuglei
   }
 }
 
-/* Ein Knopf mit seinem Grund daneben: „Zug beenden“, beim Ordnen der Häutung auch „Ausführen“. */
+/* Ein Knopf mit seinem Grund daneben („Zug beenden“). */
 .st-zugleiste-mitgrund {
   display: flex;
   flex: 1 1 auto;

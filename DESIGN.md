@@ -281,9 +281,11 @@ Weiss und Tinte, `--fokus-ring`) und, wo es sie gibt, Gewählt und Gesperrt.
   links und rechts verschieben die Karte mit dem Fokus. Die Schlange zeigt die
   neue Anordnung mit den Farbgruppen, die die Engine danach wertet. Die
   Zugleiste nennt die Punkte des Besitzers vorher und nachher und, sobald die
-  Farbfolge neu ist, die Ansage; solange sie gleich ist, steht „Ausführen“
-  gesperrt da, mit dem Grund daneben (D26). „Abbrechen“ zeigt die Schlange
-  wieder, wie sie liegt.
+  Farbfolge neu ist, die Ansage. Solange sie gleich ist, steht „Ausführen“
+  gesperrt in der Reihe der Knöpfe, und der Satz darüber nennt den Grund
+  (D26); eine eigene Zeile mit dem Grund nähme der Tischfläche in Handy quer
+  so viel Höhe, dass das Zeichen „mehr ↑“ die Karten des Gegners verdeckte.
+  „Abbrechen“ zeigt die Schlange wieder, wie sie liegt.
 - **Dialog „Zu viele Handkarten“** (`<dialog>`): alle Handkarten als Knöpfe,
   wie viele abzulegen sind, „Gewählt: n von m“, „Zum Tisch“ und „Ablegen“
   (Hauptknopf, gesperrt mit dem Grund daneben, bis genau so viele gewählt

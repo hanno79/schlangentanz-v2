@@ -114,7 +114,7 @@ describe('O7 K1: Karten tauschen, verschieben, bestätigen, abbrechen', () => {
     expect(gezeigteFarben('Deine Schlange 1')).toEqual(['Gelb', 'Rot', 'Blau', 'Rot', 'Gelb'])
     tausche('Deine Schlange 1', 2, 5)
     expect(gezeigteFarben('Deine Schlange 1')).toEqual(['Gelb', 'Gelb', 'Blau', 'Rot', 'Rot'])
-    expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Schlangenhäutung ordnet Karte 1 bis 5 deiner Schlange 1 neu: Gelb, Gelb, Blau, Rot, Rot.')
+    expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Schlangenhäutung, Karte 1–5 deiner Schlange 1: Gelb, Gelb, Blau, Rot, Rot.')
     expect(roh(), 'vor „Ausführen“ ist nichts gespielt').toBe(serialisiere(start))
     ausfuehren()
     expect(gespieltWurde(start, haeutungZu(start, 'schlange-1', 1, ['Gelb', 'Gelb', 'Blau', 'Rot', 'Rot']))).toBe(true)
@@ -134,7 +134,7 @@ describe('O7 K1: Karten tauschen, verschieben, bestätigen, abbrechen', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Deine Schlange 1, Karte 3: Farbkarte Blau, 1 Punkt' }))
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' })
     expect(gezeigteFarben('Deine Schlange 1')).toEqual(['Rot', 'Blau', 'Gelb', 'Rot', 'Gelb'])
-    expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Karte 1 bis 3 deiner Schlange 1 neu: Rot, Blau, Gelb.')
+    expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Karte 1–3 deiner Schlange 1: Rot, Blau, Gelb.')
   })
 
   it('O7 K1: „Abbrechen“ stellt den Ausgangszustand her', () => {
@@ -205,7 +205,7 @@ describe('O7: Häutung in der Schlange eines Gegners und U3', () => {
     expect(angeboteneKarten('KI-Gegner 1, Schlange 1'), 'drei Karten: nur ein Abschnitt').toEqual([3])
     tippe(karteIn('KI-Gegner 1, Schlange 1', 3))
     tausche('KI-Gegner 1, Schlange 1', 2, 3)
-    expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Schlangenhäutung ordnet Karte 1 bis 3 der Schlange 1 von KI-Gegner 1 neu: Braun, Braun, Violett.')
+    expect(zugleiste().getByText(/^Ansage:/)).toHaveTextContent('Schlangenhäutung, Karte 1–3 der Schlange 1 von KI-Gegner 1: Braun, Braun, Violett.')
     ausfuehren()
     expect(gespieltWurde(start, haeutungZu(start, 'schlange-2', 1, ['Braun', 'Braun', 'Violett']))).toBe(true)
   })

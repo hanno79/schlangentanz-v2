@@ -159,7 +159,7 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
     case 'SchlangenhaeutungSpielen': {
       const schlange = namen.schlange(aktion.schlangenId)
       const stellen = aktion.neueReihenfolge.map((id) => nummerIn(schlange, id))
-      return `Schlangenhäutung ordnet Karte ${Math.min(...stellen)} bis ${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')} neu: ${aktion.neueReihenfolge.map(kurz).join(', ')}.`
+      return `Schlangenhäutung, Karte ${Math.min(...stellen)}–${Math.max(...stellen)} ${schlangeImSatz(schlange, 'dativ')}: ${aktion.neueReihenfolge.map(kurz).join(', ')}.`
     }
     default:
       throw new Error(`Für ${aktion.typ} gibt es am Tisch keine Ansage.`)
