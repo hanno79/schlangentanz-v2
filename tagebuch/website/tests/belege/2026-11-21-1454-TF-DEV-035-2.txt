@@ -1,0 +1,123 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a866c896b8fd405d5
+
+ ✓ tests/architektur.test.ts > U4: Engine und KI sind rein > U4: 44 Dateien unter src/engine und src/ki (ohne Tests) nutzen kein React, kein DOM, kein Math.random, kein Date, kein performance 2ms
+ ✓ tests/architektur.test.ts > U4: Engine und KI sind rein > U4: die Ausnahmeliste für den Altbestand ist nicht veraltet 1ms
+ ✓ tests/architektur.test.ts > U4: Engine und KI sind rein > P0.3b: U4-Tausch – ein neuer Verstoss statt eines geduldeten fällt auf 2ms
+ ✓ tests/architektur.test.ts > U3: Oberfläche und KI kennen nur src/engine/index.ts > U3: 42 Dateien unter src/ui und src/ki (ohne Tests) importieren die Engine nur über src/engine/index.ts 53ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: src/engine/index.ts exportiert den vollen Zustandstyp Spielzustand 601ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > K1: die Prüfung erfasst die echten Dateien der KI unter src/ki 1ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > P0.3d: jede Datei unter src/ki gehört zum Rahmen (sicht, schritt, turnier) oder liegt unter src/ki/strategien 0ms
+ ✓ tests/entwicklertisch_bundle.test.ts > P0.4 K3: der Entwicklertisch steht nicht im Produktionsbundle > P0.4 K3: kein Modul aus src/entwicklung und kein Text des Tischs im Produktionsbuild 965ms
+ ✓ tests/entwicklertisch_bundle.test.ts > P0.4 K3: der Entwicklertisch steht nicht im Produktionsbundle > P0.4 K3 Gegenprobe: der Testhook-Build lädt ihn als eigenen Chunk nach 1082ms
+ ✓ tests/architektur.test.ts > U5: Die KI sieht nur ihre Sicht > U5: 6 Dateien unter src/ki (ohne Tests) lesen den vollen Zustand nur in src/ki/sicht.ts 540ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „import React from 'react'“ unter src/engine wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „import { createRoot } from 'react-dom/client'“ unter src/engine wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „export { useState } from 'react'“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const r = require('react')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const m = await import('react')“ unter src/engine wird gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const n = await import('re' + 'act')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const o = require(modulname)“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const z = Math.random()“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const f = Math.random“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const t = Date.now()“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const d = new Date()“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const titel = document.title“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „const s = window.localStorage“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „localStorage.getItem('x')“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: „crypto.getRandomValues(new Uint8Array(1))“ unter src/engine wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const { random } = Math“ wird als Zufall gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const { random: wuerfel } = Math“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „Math['random']()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const f = Math["random"]“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „globalThis.Math.random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „window.Math.random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „self.Math.random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const z = globalThis['Math'].random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const M = Math“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „export const z = Math[schluessel]()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „export const w = globalThis[schluessel].random()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „const { getRandomValues } = crypto“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4-Umgehung „globalThis.crypto.randomUUID()“ wird als Zufall gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const d = new Date“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const t = Date.now()“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „globalThis.Date.now()“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const { now } = Date“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3b: U4 verbietet Date: „const h = globalThis['Date']“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3d: U4 verbietet performance auch unter src/ki: „const t = performance.now()“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3d: U4 verbietet performance auch unter src/ki: „const t = globalThis.performance.now()“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > P0.3d: U4 verbietet performance auch unter src/ki: „const { now } = performance“ wird gemeldet 0ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U4: Harmloses mit ähnlichen Namen wird nicht gemeldet 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U3: Importe an src/engine/index.ts vorbei werden gemeldet, über index.ts nicht 1ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U5: Lesezugriff auf den vollen Zustand > U5: jeder Lesezugriff ausserhalb von sicht.ts wird gemeldet 229ms
+ ✓ tests/architektur.test.ts > P0.3: Gegenproben – die Prüfungen greifen bei absichtlichen Verstössen > U5: Lesezugriff auf den vollen Zustand > U5: der Typ wird über den Export von src/engine/index.ts gefunden 207ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: im Repo importiert kein Code ausserhalb der Strategien eine Strategie an der Registry vorbei 1359ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: die Ausnahme gilt genau für *.test.ts(x) und tests/ 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Registry, Typen aus strategie.ts, Strategien unter sich und Tests bleiben erlaubt 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: erlaubt sind index.ts und strategie.ts nur mit genau dieser Endung, auch in der Schreibweise 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „statischer Import aus src/entwicklung“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „import() aus src/entwicklung“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „Weiterexport über eine Hilfsdatei ausserhalb von strategien/“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „relativer Umweg über ./“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „relativer Umweg über ../“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „mit Endung .ts“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „vom Projektordner aus mit /src“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „mit anderer Gross- und Kleinschreibung“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „mit Vite-Zusatz ?raw“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „require“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „export * from“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „import type aus einer Strategie“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „typeof import()“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „import.meta.glob auf die Strategien“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „import.meta.glob über den ganzen Baum“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „import.meta.resolve“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „new URL mit import.meta.url“ wird gemeldet 1ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „import() mit berechnetem Namen“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „require mit berechnetem Namen“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „umbenannter Lader aus createRequire“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „eine Hilfsdatei unter strategien/“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „über eine Testdatei“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „über eine Datei unter tests/“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „aus dem Rahmen unter src/ki“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „aus einem Helfer unter __tests__“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „aus scripts/“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „aus dem Wurzelordner“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „Brücke mit Endung .JS“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „Brücke mit Endung .Ts“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „Brücke mit Endung .MJS“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, ausserhalb von src/ki/strategien nur Registry und Typen aus strategie.ts > P0.3d: Gegenprobe „HTML mit Endung .HTML“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – aus strategie.ts nur Typen, sobald die Datei Werte hat > P0.3d: Typen bleiben erlaubt, jeder Wert und jeder Zugriff auf das ganze Modul wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – aus strategie.ts nur Typen, sobald die Datei Werte hat > P0.3d: hat strategie.ts keine Werte, bleibt auch import * as erlaubt 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob auf eine Testdatei, die eine Strategie weitergibt“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob mit base als Text vom Projektordner“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob mit relativer base“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob mit berechneter base“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob mit Optionen aus einer Variablen“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „index.tsx neben index.ts“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „strategie.tsx neben strategie.ts“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „ein #-Import aus package.json“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „package.json mit imports und exports in die Strategien“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „eine Typdatei verdeckt die JavaScript-Datei daneben“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „Modulskript in index.html“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script src in einer HTML-Datei“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „Import über eine file://-URL“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „Datei unter __snapshots__“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „Datei unter einem Ordner dist“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob mit maskiertem Schlüssel base“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „Paket unter tests/ mit main neben einer .d.ts“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script src mit Zeichenreferenz &#47;“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script src mit benannter Zeichenreferenz“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script mit > in einem anderen Attribut“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „link rel=modulepreload“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script src über /@fs/“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „import.meta.glob mit zwei Schlüsseln base“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script src mit Zeilenumbruch als Zeichenreferenz“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „Import mit Prozentkodierung“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: Umweg „script src über /@fs/ mit Prozentkodierung“ wird gemeldet 0ms
+ ✓ tests/architektur_ki_importgrenze.test.ts > P0.3d: U5 – Importgrenze, Umwege aus dem Codex-Review (Iteration 4) > P0.3d: import.meta.glob mit Ausschlüssen, die nur Erlaubtes übrig lassen, bleibt erlaubt 0ms
+
+ Test Files  3 passed (3)
+      Tests  114 passed (114)
+   Start at  14:41:59
+   Duration  3.24s (transform 667ms, setup 1.07s, import 2.03s, tests 5.10s, environment 0ms)
+

@@ -8,6 +8,7 @@ import { FARBENDIEB_SZENARIEN } from './szenarienFarbendieb'
 import { WERTUNGS_SZENARIEN } from './szenarienWertung'
 import { FRASS_SZENARIEN } from './szenarienFrass'
 import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
+import { SPIEL_SZENARIEN } from './szenarienSpiel'
 import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
 
 export interface Szenario {
@@ -235,9 +236,17 @@ export const SZENARIEN: readonly Szenario[] = [
   ...FRASS_SZENARIEN,
   ...FARBENDIEB_SZENARIEN,
   ...FARBENFUSION_SZENARIEN,
+  ...SPIEL_SZENARIEN,
   ...HAEUTUNG_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {
   return SZENARIEN.find((szenario) => szenario.name === name)
+}
+
+/** Der Zustand des Szenarios; wirft, wenn es kein Szenario dieses Namens gibt. */
+export function erzeugeSzenario(name: string): Spielzustand {
+  const szenario = findeSzenario(name)
+  if (szenario === undefined) throw new Error(`Unbekanntes Szenario „${name}“; die Szenarien stehen unter /dev/szenarien.`)
+  return szenario.erzeuge()
 }

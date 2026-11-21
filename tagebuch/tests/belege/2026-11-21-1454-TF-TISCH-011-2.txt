@@ -1,0 +1,8 @@
+G1 Drehen: Status KI-Gegner 1 spielt Schlangengrube Du entscheidest, ob du abwehrst. | Stand gleich true | Schreibvorgänge 1 | Breite 390/390 | Fehler 0
+G2 320 px: Breite 320/320 | Status sichtbar true
+G3 zwei Tabs: Schreibvorgänge A 7 B 6
+G3 A zeigt: Die Partie ist beendet. | B zeigt: Die Partie ist beendet.
+G3 letzter Stand A: dran 3, Hand 3/4/4/4, Schlangenkarten 3/0/1/1, Phase Beendet | letzter Stand B: dran 3, Hand 3/4/4/4, Schlangenkarten 5/0/0/0, Phase Beendet
+G3 Speicher: dran 3, Hand 3/4/4/4, Schlangenkarten 5/0/0/0, Phase Beendet
+G4 in der Lobby 3 s: Schreibvorgänge vorher 3 nachher 3 | Stand dran 2, Hand 3/4/5/5, Schlangenkarten 3/0/0/0, Phase Schlussrunde
+G4 nach Weiterspielen erster Schritt nach 702 ms: dran 2, Hand 3/4/4/5, Schlangenkarten 4/0/0/0, Phase Schlussrunde
