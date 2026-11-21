@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, berechneZwischenstand, ermittleAktionen, erzeugeZufall, werteSchlangen } from '../../engine'
+import { anwendeAktion, berechneEndwertung, berechneZwischenstand, ermittleAktionen, erzeugeZufall, werteSchlangen } from '../../engine'
 import { baukasten } from '../../engine/testing/szenario'
 import type { Ereignis, SpielAktion, Spielzustand } from '../../engine'
 import { findeSzenario } from '../../entwicklung/szenarien'
@@ -8,6 +8,7 @@ import { naechsterKiSchritt } from '../schritt'
 import { entscheiderVon, sichtFuer } from '../sicht'
 import { entscheidungenVon } from '../__tests__/stellungen'
 import type { Entscheidung } from '../__tests__/stellungen'
+import type { Schlangenglied } from '../../engine/testing/szenario'
 import { gruppenwert } from './bewertung'
 import { STRATEGIEN } from './index'
 import { erstelleSolideKi } from './solideKi'
@@ -51,6 +52,11 @@ function spieleZug(name: string, saat = 1, start = szenario(name)): Zug {
     zustand = schritt.zustand
   }
   return { ...zug, zustand }
+}
+
+/** Die Punkte, die der Spieler bei Spielende jetzt hätte, mit Kettenbonus (A11). */
+function endpunkte(zustand: Spielzustand, sitz: number): number {
+  return berechneEndwertung(zustand).spieler[sitz].summe
 }
 
 function punkte(zustand: Spielzustand, sitz: number): number {
@@ -207,9 +213,42 @@ describe('K2 Kriterium 4: keine Farbenfusion, die die eigenen Punkte senkt', () 
     expect(punkte(zug.zustand, 1), 'K2.4: die blaue Gruppe bleibt').toBe(3)
   })
 
-  it('K2.4: in Partien senkt keine ihrer Farbenfusionen die eigenen Punkte', () => {
+  it('K2.4: in Partien senkt keine ihrer Farbenfusionen die eigenen Punkte, den Kettenbonus eingeschlossen', () => {
     const fusionen = ALLE.filter(({ aktion }) => aktion.typ === 'FusionLegen')
-    for (const { vorher, nachher } of fusionen) expect(eigenePunkte(nachher, 0), 'K2.4').toBeGreaterThanOrEqual(eigenePunkte(vorher, 0))
+    for (const { vorher, nachher } of fusionen) expect(endpunkte(nachher, 0), 'K2.4').toBeGreaterThanOrEqual(endpunkte(vorher, 0))
+  })
+
+  /** Schlussrunde zu zweit, Spieler 1 hat ausgelöst, KI-Gegner 1 spielt seinen letzten Zug mit dieser Hand. */
+  function letzterZug(eigene: Schlangenglied[], hand: Schlangenglied[], gegner: Schlangenglied[] = []): Spielzustand {
+    const bau = baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(212) }).schlange(1, eigene)
+    if (gegner.length > 0) bau.schlange(0, gegner)
+    return bau.hand(1, hand.filter((glied) => typeof glied === 'string')).schlussrunde(0).amZug(1).zustand()
+  }
+  const lange: Schlangenglied[] = [
+    ...(['Rot', 'Blau', 'Gelb', 'Violett', 'Braun', 'Grün', 'Rot', 'Blau'] as const).flatMap((farbe) => [farbe, farbe, farbe]),
+    'Schlangenblockade',
+    'Gelb',
+    'Gelb',
+  ]
+
+  it('K2.4, Codex-Gegenbeispiel 1: nur Fusionen auf der Hand, die meisten zerstören eine Gruppe; sie wählt eine, die nichts kostet', () => {
+    const start = letzterZug(lange, ['Farbenfusion', 'Farbenfusion', 'Farbenfusion', 'Farbenfusion'])
+    expect(endpunkte(start, 1), 'K2.4: acht Gruppen zu je 3 Karten').toBe(41)
+    const zug = spieleZug('', 1, start)
+    expect(endpunkte(zug.zustand, 1), `K2.4: gespielt ${JSON.stringify(zug.aktionen)}`).toBe(41)
+  })
+
+  it('K2.5, Codex-Gegenbeispiel 1: mit Fusion und Farbenschutz legt sie den Farbenschutz nicht wirkungslos ab, wenn eine Fusion nichts kostet', () => {
+    const zug = spieleZug('', 1, letzterZug(lange, ['Farbenfusion', 'Farbenschutz']))
+    expect(typen(zug)).not.toContain('SonderkarteWirkungslosAblegen')
+    expect(endpunkte(zug.zustand, 1)).toBe(41)
+  })
+
+  it('K2.4, Codex-Gegenbeispiel 2: eine Fusion, die ihr den Kettenbonus nimmt, senkt ihre Punkte; sie fusioniert lieber beim Gegner', () => {
+    const start = letzterZug(['Rot', 'Rot', 'Rot', 'Rot'], ['Farbenfusion', 'Farbenfusion', 'Farbenfusion', 'Farbenfusion'], ['Grün', 'Grün', 'Violett', 'Violett'])
+    expect(endpunkte(start, 1), 'A11: 4 Punkte und der Kettenbonus').toBe(9)
+    const zug = spieleZug('', 1, start)
+    expect(endpunkte(zug.zustand, 1), `K2.4: gespielt ${JSON.stringify(zug.aktionen)}`).toBe(9)
   })
 })
 
