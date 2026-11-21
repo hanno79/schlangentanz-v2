@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import {
   AKTIONSTYPEN,
@@ -11,6 +11,7 @@ import {
   serialisiere,
 } from '../index'
 import type { SpielAktion, Spielzustand } from '../index'
+import { istPlatzhalter, platzhalter } from '../karten/platzhalter'
 import { KARTENREGISTER, definitionFuer } from '../karten/register'
 import { baukasten } from '../testing/szenario'
 import { erzeugeZufall } from '../testing/zufall'
@@ -87,9 +88,26 @@ describe('A1/A7: das Kartenregister', () => {
     }
   })
 
-  // Die Farbkarte setzt E2 um (A5), den Verdoppler E3 (A7.8), Farbenschutz und Schlangengrube E4 (A7.2, A7.6), die übrigen Karten ihre Tasks E5 bis E9 und X6.
-  const UMGESETZT = ['Farbkarte', 'Verdoppler', 'Farbenschutz', 'Schlangengrube']
-  it.each(ARTEN.filter(([kartenart]) => !UMGESETZT.includes(kartenart)))('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
+  // Welche Karte noch Platzhalter ist, sagt das Register selbst (E4b): Ein Kartentask, der seine Datei füllt, ändert diese Liste nicht von Hand.
+  const PLATZHALTER = ARTEN.filter(([kartenart]) => istPlatzhalter(KARTENREGISTER[kartenart]))
+
+  it('A5/A7.2/A7.6/A7.8: die umgesetzten Karten von E2 bis E4 sind keine Platzhalter mehr, die übrigen kommen mit E5 bis E9 und X6', () => {
+    const umgesetzt = ARTEN.map(([kartenart]) => kartenart).filter((kartenart) => !istPlatzhalter(KARTENREGISTER[kartenart]))
+    expect(umgesetzt).toEqual(expect.arrayContaining(['Farbkarte', 'Verdoppler', 'Farbenschutz', 'Schlangengrube']))
+  })
+
+  it('D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Definition ist nicht markiert', () => {
+    expect(istPlatzhalter(platzhalter('Farbendieb', 'FarbendiebSpielen', 'E8')), 'istPlatzhalter erkennt einen Platzhalter nicht').toBe(true)
+    expect(istPlatzhalter({ ...KARTENREGISTER.Verdoppler }), 'istPlatzhalter hält eine eigene Definition für einen Platzhalter').toBe(false)
+  })
+
+  it.each(ARTEN)('D13/E4b: %s ist genau dann als Platzhalter markiert, wenn karten/%s.ts platzhalter() aufruft', (kartenart, datei) => {
+    const quelle = readFileSync(resolve(__dirname, `../karten/${datei}.ts`), 'utf8')
+    const ruftPlatzhalter = /\bplatzhalter(<[^>]*>)?\(/.test(quelle)
+    expect(istPlatzhalter(KARTENREGISTER[kartenart]), `istPlatzhalter(${kartenart}): erwartet ${ruftPlatzhalter}, weil karten/${datei}.ts platzhalter() ${ruftPlatzhalter ? '' : 'nicht '}aufruft`).toBe(ruftPlatzhalter)
+  })
+
+  it.each(PLATZHALTER)('D13: %s ist noch ein Platzhalter ohne Ziele, der mit deutschem Grund ablehnt', (kartenart) => {
     const zustand = start()
     const definition = KARTENREGISTER[kartenart]
     const karte = zustand.spieler[0].hand[0]

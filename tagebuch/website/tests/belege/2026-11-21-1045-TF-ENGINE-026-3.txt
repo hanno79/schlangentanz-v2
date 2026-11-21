@@ -1,0 +1,154 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a93a951f76d2e5c63
+
+ ❯ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts (6 tests | 3 failed) 238ms
+     × P2 zwei Schlangen zweier Spieler gleichzeitig: Fusion wechselt samt Unterkarten den Besitzer, eigene Schlange wird umgeordnet, Ablagekarte geht in fremde Schlange 105ms
+     × P3 Rotation in einer Schlange [A,B,C,D] → [B,C,D,A] lässt sich nachrechnen 7ms
+     × P5 Gegenprobe am Nachrechnen: eine verfälschte Position macht das Ergebnis rot 8ms
+ ❯ src/engine/__tests__/kartenversetzt.test.ts (11 tests | 1 failed) 367ms
+     × A7.9: beim Umordnen sind nur die Karten genannt, die ihre Reihenfolge zu den übrigen ändern 122ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.7/A7.9: Wirkungen ohne Ansage melden ebenso, vor KarteGespielt > A7.9: beim Umordnen sind nur die Karten genannt, die ihre Reihenfolge zu den übrigen ändern
+AssertionError: E4b: SchlangenhaeutungSpielen lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -19,13 +19,13 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
+-         "gelb-02",
+-         "rot-03",
+          "blau-04",
++         "rot-03",
++         "gelb-02",
+          "gruen-01",
+        ],
+      },
+    },
+    "schwebend": null,
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:236:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P2 zwei Schlangen zweier Spieler gleichzeitig: Fusion wechselt samt Unterkarten den Besitzer, eigene Schlange wird umgeordnet, Ablagekarte geht in fremde Schlange
+AssertionError: nachrechnen nach Reagieren: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -25,14 +25,14 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
+-         "gelb-02",
+-         "farbenfusion-01",
+          "blau-04",
++         "farbenfusion-01",
+          "rot-03",
++         "gelb-02",
+        ],
+      },
+      "schlange-2": {
+        "besitzer": 1,
+        "karten": [
+
+ ❯ spiele src/engine/__tests__/zz_pruefer_e4b_probe.test.ts:39:94
+     37|   for (;;) {
+     38|     const schritt = fuehreAus(jetzt, aktion)
+     39|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `nachrechne…
+       |                                                                                              ^
+     40|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse)).t…
+     41|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts:101:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P3 Rotation in einer Schlange [A,B,C,D] → [B,C,D,A] lässt sich nachrechnen
+AssertionError: nachrechnen nach SchlangenhaeutungSpielen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -19,14 +19,14 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
++         "blau-04",
+          "rot-03",
+          "gelb-02",
+          "gruen-01",
+-         "blau-04",
+        ],
+      },
+    },
+    "schwebend": null,
+    "stapel": 101,
+
+ ❯ spiele src/engine/__tests__/zz_pruefer_e4b_probe.test.ts:39:94
+     37|   for (;;) {
+     38|     const schritt = fuehreAus(jetzt, aktion)
+     39|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `nachrechne…
+       |                                                                                              ^
+     40|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse)).t…
+     41|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts:118:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/engine/__tests__/zz_pruefer_e4b_probe.test.ts > Prüfer E4b: eigene Proben > P5 Gegenprobe am Nachrechnen: eine verfälschte Position macht das Ergebnis rot
+AssertionError: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -19,13 +19,13 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
+-         "gelb-02",
+-         "rot-03",
+          "blau-04",
++         "rot-03",
++         "gelb-02",
+          "gruen-01",
+        ],
+      },
+    },
+    "schwebend": null,
+
+ ❯ src/engine/__tests__/zz_pruefer_e4b_probe.test.ts:164:52
+    162|     const aktion = aktionen(start).find((x) => x.typ === 'Schlangenhae…
+    163|     const { zustand, ereignisse } = fuehreAus(start, aktion)
+    164|     expect(spieleNach(lageVon(start), ereignisse)).toEqual(lageVon(zus…
+       |                                                    ^
+    165|     const falsch = structuredClone(ereignisse)
+    166|     const v = falsch.find((e) => e.typ === 'KartenVersetzt')!
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 13 passed (17)
+   Start at  10:22:03
+   Duration  13.53s (transform 6.38s, setup 4.20s, import 6.70s, tests 605ms, environment 13.85s)
+

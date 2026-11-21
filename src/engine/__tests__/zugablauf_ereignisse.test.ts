@@ -1,154 +1,25 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen } from '../index'
-import type { Aktionstyp, Ereignis, Kartenort, SpielAktion, Spielzustand } from '../index'
+import type { Aktionstyp, Ereignis, SpielAktion, Spielzustand } from '../index'
 import { erstellePartie } from '../state'
 import { baukasten } from '../testing/szenario'
 import type { Kartenwahl } from '../testing/szenario'
 import { erzeugeZufall } from '../testing/zufall'
+import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
 import { aktionen, fuehreAus, spieleZug, zugBeenden } from './zugablauf_hilfen'
 
 /*
-E2, Kriterium 11 (Iteration 2): Die Oberfläche muss aus dem Zustand vorher und
-den Ereignissen einer Aktion alles nachvollziehen können, was sie zeigt, ohne
-zwei Zustände zu vergleichen. Der Test rechnet die sichtbare Lage aus der
-alten Lage und den Ereignissen nach und vergleicht sie mit der Lage des neuen
-Zustands: Handgrössen, Ablagestapel (alle einsehbar, D28), Stapelgrösse,
-Schlangen, wer am Zug ist, in welchem Teilzug (A7.8) und in welchem
-Abschnitt, ausliegende Gruben, Partiephase und Auslöser (A5, A6, A7.6, A10).
+E2, Kriterium 11 (Iteration 2): Jeder Schritt einer Partie lässt sich aus den
+Ereignissen nachrechnen (`nachrechnen.ts`): Handgrössen, Ablagestapel (alle
+einsehbar, D28), Stapelgrösse, Schlangen, wer am Zug ist, in welchem Teilzug
+(A7.8) und in welchem Abschnitt, ausliegende Gruben, Partiephase und Auslöser
+(A5, A6, A7.6, A10).
 
 Seit E4 auch die angesagte Karte, die schwebt, bis die Betroffenen entschieden
 haben (A6), wer gerade gefragt ist (D33: jeder Betroffene, deshalb ohne
-Geheimnis, B2), die Abwehr (A7.2) und die Grube ohne Wirkung (D29).
+Geheimnis, B2), die Abwehr (A7.2) und die Grube ohne Wirkung (D29). Was eine
+Kartenwirkung sonst versetzt, prüft `kartenversetzt.test.ts` (E4b).
 */
-
-interface Lage {
-  haende: number[]
-  ablagestapel: string[][]
-  stapel: number
-  schlangen: Record<string, { besitzer: number; karten: string[] }>
-  /** `null` nach Spielende: dann ist niemand mehr am Zug (A10). */
-  amZug: number | null
-  /** A7.8: 2 im zweiten Zug nach einem Verdoppler; `null` nach Spielende. */
-  teilzug: number | null
-  abschnitt: string | null
-  gruben: { karteId: string; vor: number; von: number }[]
-  partiephase: string
-  ausloeser: number | null
-  /** Die angesagte Karte, die noch schwebt (A6). */
-  schwebend: string | null
-  /** Wer über die schwebende Karte gerade entscheidet (A6, D33). */
-  gefragt: number | null
-}
-
-function lageVon(zustand: Spielzustand): Lage {
-  const schlangen: Lage['schlangen'] = {}
-  zustand.spieler.forEach((spieler, besitzer) => {
-    for (const schlange of spieler.schlangen) schlangen[schlange.id] = { besitzer, karten: schlange.karten.map((karte) => karte.id) }
-  })
-  const beendet = zustand.partiephase === 'Beendet'
-  return {
-    haende: zustand.spieler.map((spieler) => spieler.hand.length),
-    ablagestapel: zustand.spieler.map((spieler) => spieler.ablagestapel.map((karte) => karte.id)),
-    stapel: zustand.nachziehstapel.length,
-    schlangen,
-    amZug: beendet ? null : zustand.zug.spielerIndex,
-    teilzug: beendet ? null : zustand.zug.teilzug,
-    abschnitt: beendet ? null : zustand.zug.abschnitt,
-    gruben: zustand.ausliegendeGruben.map((grube) => ({ karteId: grube.karte.id, vor: grube.vor, von: grube.gespieltVon })),
-    partiephase: zustand.partiephase,
-    ausloeser: zustand.schlussrundeAusloeser,
-    schwebend: zustand.schwebend?.karte.id ?? null,
-    gefragt: zustand.schwebend?.ausstehend[0] ?? null,
-  }
-}
-
-/** Legt eine Karte dorthin, wo ein Ereignis sie hinlegt. */
-function lege(lage: Lage, karteId: string, nach: Kartenort, von: number): void {
-  if (nach.ort === 'Ablagestapel') lage.ablagestapel[nach.spielerIndex].push(karteId)
-  else if (nach.ort === 'Schlange') {
-    lage.schlangen[nach.schlangenId] ??= { besitzer: nach.spielerIndex, karten: [] }
-    lage.schlangen[nach.schlangenId].karten.splice(nach.position, 0, karteId)
-  } else if (nach.ort === 'VorSpieler') lage.gruben.push({ karteId, vor: nach.spielerIndex, von })
-  else throw new Error(`Testaufbau: Ort ${nach.ort} kommt bis E4 nicht vor`)
-}
-
-/** Was die Oberfläche aus den Ereignissen allein ableitet. */
-function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
-  const lage: Lage = structuredClone(alt)
-  for (const ereignis of ereignisse) {
-    switch (ereignis.typ) {
-      case 'KarteGespielt':
-        lage.haende[ereignis.spielerIndex] -= 1
-        lege(lage, ereignis.karteId, ereignis.nach, ereignis.spielerIndex)
-        break
-      case 'KarteAngesagt':
-        lage.haende[ereignis.spielerIndex] -= 1
-        lage.schwebend = ereignis.karteId
-        break
-      case 'Abgewehrt':
-        lage.haende[ereignis.spielerIndex] -= 1
-        lage.ablagestapel[ereignis.spielerIndex].push(ereignis.karteId)
-        break
-      case 'AbwehrGefragt':
-        lage.gefragt = ereignis.spielerIndex
-        break
-      case 'AnsageEntschieden':
-        lage.schwebend = null
-        lage.gefragt = null
-        lege(lage, ereignis.karteId, ereignis.nach, ereignis.spielerIndex)
-        break
-      case 'KartenGezogen':
-        lage.haende[ereignis.spielerIndex] += ereignis.anzahl
-        lage.stapel -= ereignis.anzahl
-        break
-      case 'AbwerfenVerlangt':
-        lage.abschnitt = 'Abwerfen'
-        break
-      case 'KartenAbgeworfen':
-        lage.haende[ereignis.spielerIndex] -= ereignis.karteIds.length
-        lage.ablagestapel[ereignis.spielerIndex].push(...ereignis.karteIds)
-        break
-      case 'ZugBegonnen':
-        lage.amZug = ereignis.spielerIndex
-        lage.teilzug = ereignis.teilzug
-        lage.abschnitt = 'Ausspielen'
-        break
-      case 'Ausgesetzt':
-      case 'GrubeOhneWirkung':
-        lage.gruben = lage.gruben.filter((grube) => grube.karteId !== ereignis.karteId)
-        lage.ablagestapel[ereignis.ablagestapelVon].push(ereignis.karteId)
-        break
-      case 'SchlussrundeBegonnen':
-        lage.partiephase = 'Schlussrunde'
-        lage.ausloeser = ereignis.ausloeser
-        break
-      case 'PartieBeendet':
-        lage.partiephase = 'Beendet'
-        lage.amZug = null
-        lage.teilzug = null
-        lage.abschnitt = null
-        break
-    }
-  }
-  return lage
-}
-
-/**
- * B2: Ereignisse gehen an die Oberfläche aller Spieler. Jede Karte, die ein
- * Ereignis nennt, muss danach offen liegen; liegt sie auf einer Hand, verriete
- * das Ereignis eine Handkarte.
- */
-function verrateneHandkarten(zustand: Spielzustand, ereignisse: Ereignis[]): string[] {
-  const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
-  return [...texteIn(ereignisse)].filter((text) => aufHand.has(text))
-}
-
-/** Jeder Text, der irgendwo in einem Ereignis steht, auch tief in einer angesagten Aktion. */
-function texteIn(wert: unknown, gesammelt = new Set<string>()): Set<string> {
-  if (typeof wert === 'string') gesammelt.add(wert)
-  else if (typeof wert === 'object' && wert !== null) for (const eintrag of Object.values(wert)) texteIn(eintrag, gesammelt)
-  return gesammelt
-}
 
 /** Ein Aktionstyp, oder bei „Reagieren“ die Abwehr mit Farbenschutz. */
 function istBevorzugt(aktion: SpielAktion, bevorzugt: readonly (Aktionstyp | 'Abwehren')[]): boolean {

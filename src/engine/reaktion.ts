@@ -1,5 +1,6 @@
 import type { Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
 import { definitionFuer } from './karten/register';
+import { wirkeUndMeldeVersetzte } from './kartenorte';
 import type { SonderkarteInfo, Spielkarte, Spielzustand } from './types';
 import {
   entnehmeHandkarte,
@@ -22,6 +23,8 @@ durchlassen (D33). So verrät die Frage keine Handkarte (B2). Erst wenn alle ent
 wirkt die Karte nach ihrem Eintrag im Kartenregister, und für die Abwehrenden
 hat sie keine Wirkung (A7.2). Haben alle abgewehrt, liegt sie wirkungslos auf
 dem Ablagestapel des Angreifers. Gegen Farbkarten gibt es keine Abwehr (A6).
+Was eine Wirkung ausser der gespielten Karte bewegt, meldet `KartenVersetzt`
+(`kartenorte.ts`), für jede Karte gleich.
 
 Wer abwehrt, zieht nicht nach; er füllt zu Beginn seines nächsten Zuges auf
 (A6, `zugablauf.ts`).
@@ -37,6 +40,12 @@ function betroffeneVon(zustand: Spielzustand, karte: SonderkarteInfo, aktion: Ka
   return mitspielerImUhrzeigersinn(zustand, spielerIndexVon(zustand, aktion.spielerId)).filter((index) => genannt.has(index));
 }
 
+/** Die Wirkung nach dem Kartenregister; was sie ausser der gespielten Karte bewegt, meldet die Engine selbst (Plan E4b). */
+function wirke(zustand: Spielzustand, karte: Spielkarte, aktion: KartenAktion, abgewehrt: readonly number[], ereignisse: Ereignis[]): Spielzustand {
+  const spielerIndex = spielerIndexVon(zustand, aktion.spielerId);
+  return wirkeUndMeldeVersetzte(zustand, spielerIndex, karte.id, (jetzt) => definitionFuer(karte).wirke(jetzt, aktion, abgewehrt), ereignisse);
+}
+
 /**
  * Eine Handkarte mit Wirkung spielen: Sie zählt zum Zug (A5, D12). Trifft sie
  * keinen Mitspieler, wirkt sie sofort. Sonst wird sie angesagt und schwebt, bis
@@ -48,7 +57,7 @@ export function spieleKarte(zustand: Spielzustand, aktion: KartenAktion, ereigni
   const betroffene = karte.typ === 'Sonderkarte' ? betroffeneVon(zustand, karte, aktion) : [];
   if (betroffene.length === 0 || karte.typ !== 'Sonderkarte') {
     // Die Karte nimmt sich die Wirkung selbst aus der Hand.
-    const nach = definitionFuer(karte).wirke(zustand, aktion, []);
+    const nach = wirke(zustand, karte, aktion, [], ereignisse);
     meldeGespielteKarte(nach, aktion, ereignisse);
     return nach;
   }
@@ -109,7 +118,7 @@ function loeseAuf(zustand: Spielzustand, ereignisse: Ereignis[]): Spielzustand {
   else {
     // Die Kartendateien nehmen sich die gespielte Karte aus der Hand (`entnehmeHandkarte`); bis hierher hat sie geschwebt.
     zustand.spieler[angreifer].hand.push(karte);
-    nach = definitionFuer(karte).wirke(zustand, aktion, abgewehrt);
+    nach = wirke(zustand, karte, aktion, abgewehrt, ereignisse);
   }
   ereignisse.push({ typ: 'AnsageEntschieden', spielerIndex: angreifer, karteId: karte.id, abgewehrt: [...abgewehrt], ohneWirkung, nach: findeKartenort(nach, karte.id) });
   return nach;

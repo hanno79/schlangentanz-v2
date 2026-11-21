@@ -1,0 +1,477 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a93a951f76d2e5c63
+
+ ❯ src/engine/__tests__/kartenversetzt.test.ts (11 tests | 10 failed) 219ms
+     × E4b/A6: nach der Ansage meldet KartenVersetzt jede bewegte Karte mit altem und neuem Ort, vor AnsageEntschieden 62ms
+     × E4b/A7.1: die neue Schlange steht mit ihrer Id und ihrem Besitzer im Ereignis 14ms
+     × E4b Gegenprobe: ohne KartenVersetzt lässt sich die Wirkung nicht nachrechnen 9ms
+     × A7.4: die Karten kommen in fester Reihenfolge auf den Ablagestapel des Angreifers, auch über und unter der gespielten Karte 10ms
+     × A7.4/A7.7: eine gefressene Fusion wird durch ihre Karten ersetzt, die linke zuerst 29ms
+     × A7.4: eine leer gefressene Schlange verschwindet, und das Ereignis nennt sie 15ms
+     × A7.7: eine Fusion in der eigenen Schlange legt zwei Karten unter sich; die Positionen zählen ohne die gespielte Karte 24ms
+     × A7.9: beim Umordnen sind nur die Karten genannt, die ihre Reihenfolge zu den übrigen ändern 9ms
+     × B2: eine Karte aus der Schlange und eine vom Stapel gehen auf Hände; das Ereignis nennt Ort, aber keine Id 26ms
+     × B2: die Reihenfolge verdeckt abgelegter Karten verrät nicht, wie sie im Nachziehstapel liegen 8ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein > E4b/A6: nach der Ansage meldet KartenVersetzt jede bewegte Karte mit altem und neuem Ort, vor AnsageEntschieden
+AssertionError: E4b: Reagieren lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -1,10 +1,9 @@
+  {
+    "ablagestapel": [
+      [
+        "farbendieb-01",
+-       "rot-03",
+      ],
+      [],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+@@ -20,27 +19,22 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
++         "rot-03",
+          "gelb-02",
+-         "gruen-01",
+        ],
+      },
+      "schlange-2": {
+        "besitzer": 1,
+        "karten": [
+          "blau-04",
++         "rot-04",
+          "gelb-03",
+-       ],
+-     },
+-     "schlange-3": {
+-       "besitzer": 0,
+-       "karten": [
+-         "rot-04",
+        ],
+      },
+    },
+    "schwebend": null,
+-   "stapel": 99,
++   "stapel": 100,
+    "teilzug": 1,
+  }
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:108:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein > E4b/A7.1: die neue Schlange steht mit ihrer Id und ihrem Besitzer im Ereignis
+AssertionError: E4b: Reagieren lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -1,10 +1,9 @@
+  {
+    "ablagestapel": [
+      [
+        "farbendieb-01",
+-       "rot-03",
+      ],
+      [],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+@@ -20,27 +19,22 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
++         "rot-03",
+          "gelb-02",
+-         "gruen-01",
+        ],
+      },
+      "schlange-2": {
+        "besitzer": 1,
+        "karten": [
+          "blau-04",
++         "rot-04",
+          "gelb-03",
+-       ],
+-     },
+-     "schlange-3": {
+-       "besitzer": 0,
+-       "karten": [
+-         "rot-04",
+        ],
+      },
+    },
+    "schwebend": null,
+-   "stapel": 99,
++   "stapel": 100,
+    "teilzug": 1,
+  }
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:128:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.1/A7.4: eine Test-Karte versetzt, entfernt und fügt ein > E4b Gegenprobe: ohne KartenVersetzt lässt sich die Wirkung nicht nachrechnen
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:139:25
+    137|     const { zustand, ereignisse } = fuehreAus(angesagt, durchlassen(an…
+    138|     const ohne = ereignisse.filter((ereignis) => ereignis.typ !== 'Kar…
+    139|     expect(ohne.length).toBe(ereignisse.length - 1)
+       |                         ^
+    140|     expect(spieleNach(lageVon(angesagt), ohne)).not.toEqual(lageVon(zu…
+    141|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.4: Schlangenfrass als Test-Karte > A7.4: die Karten kommen in fester Reihenfolge auf den Ablagestapel des Angreifers, auch über und unter der gespielten Karte
+AssertionError: E4b: Reagieren lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -1,11 +1,9 @@
+  {
+    "ablagestapel": [
+      [
+-       "gelb-02",
+        "schlangenfrass-01",
+-       "blau-04",
+      ],
+      [],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+@@ -21,11 +19,13 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 1,
+        "karten": [
++         "blau-04",
+          "rot-03",
++         "gelb-02",
+        ],
+      },
+    },
+    "schwebend": null,
+    "stapel": 102,
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:155:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.4: Schlangenfrass als Test-Karte > A7.4/A7.7: eine gefressene Fusion wird durch ihre Karten ersetzt, die linke zuerst
+AssertionError: E4b: Reagieren lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -1,18 +1,22 @@
+  {
+    "ablagestapel": [
+      [
+        "schlangenfrass-01",
+-       "farbenfusion-01",
+      ],
+      [],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+    "ausDemSpiel": [],
+    "ausloeser": null,
+-   "fusionen": {},
++   "fusionen": {
++     "farbenfusion-01": [
++       "gelb-02",
++       "gelb-03",
++     ],
++   },
+    "gefragt": null,
+    "gruben": [],
+    "haende": [
+      1,
+      5,
+@@ -21,12 +25,11 @@
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 1,
+        "karten": [
+          "blau-04",
+-         "gelb-02",
+-         "gelb-03",
++         "farbenfusion-01",
+          "rot-03",
+        ],
+      },
+    },
+    "schwebend": null,
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:175:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.4: Schlangenfrass als Test-Karte > A7.4: eine leer gefressene Schlange verschwindet, und das Ereignis nennt sie
+AssertionError: E4b: Reagieren lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -1,11 +1,9 @@
+  {
+    "ablagestapel": [
+      [
+        "schlangenfrass-01",
+-       "rot-03",
+-       "blau-04",
+      ],
+      [],
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+@@ -18,13 +16,20 @@
+      1,
+      5,
+    ],
+    "partiephase": "Laufend",
+    "schlangen": {
++     "schlange-1": {
++       "besitzer": 1,
++       "karten": [
++         "rot-03",
++       ],
++     },
+      "schlange-2": {
+        "besitzer": 1,
+        "karten": [
++         "blau-04",
+          "gelb-02",
+        ],
+      },
+    },
+    "schwebend": null,
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:194:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.7/A7.9: Wirkungen ohne Ansage melden ebenso, vor KarteGespielt > A7.7: eine Fusion in der eigenen Schlange legt zwei Karten unter sich; die Positionen zählen ohne die gespielte Karte
+AssertionError: E4b: FusionLegen lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -5,16 +5,11 @@
+    ],
+    "abschnitt": "Ausspielen",
+    "amZug": 0,
+    "ausDemSpiel": [],
+    "ausloeser": null,
+-   "fusionen": {
+-     "farbenfusion-01": [
+-       "gelb-02",
+-       "gelb-03",
+-     ],
+-   },
++   "fusionen": {},
+    "gefragt": null,
+    "gruben": [],
+    "haende": [
+      1,
+      5,
+@@ -24,10 +19,12 @@
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
+          "blau-04",
+          "farbenfusion-01",
++         "gelb-02",
++         "gelb-03",
+          "rot-03",
+        ],
+      },
+    },
+    "schwebend": null,
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:211:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/A7.7/A7.9: Wirkungen ohne Ansage melden ebenso, vor KarteGespielt > A7.9: beim Umordnen sind nur die Karten genannt, die ihre Reihenfolge zu den übrigen ändern
+AssertionError: E4b: SchlangenhaeutungSpielen lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -19,13 +19,13 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
+-         "gelb-02",
+-         "rot-03",
+          "blau-04",
++         "rot-03",
++         "gelb-02",
+          "gruen-01",
+        ],
+      },
+    },
+    "schwebend": null,
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:236:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/B2: Karten, die auf eine Hand gehen, bleiben verdeckt > B2: eine Karte aus der Schlange und eine vom Stapel gehen auf Hände; das Ereignis nennt Ort, aber keine Id
+AssertionError: E4b: FarbendiebSpielen lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 2, 6 ], …(13) }
+
+- Expected
++ Received
+
+@@ -11,21 +11,22 @@
+    "ausloeser": null,
+    "fusionen": {},
+    "gefragt": null,
+    "gruben": [],
+    "haende": [
+-     2,
+-     6,
++     1,
++     5,
+    ],
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
++         "rot-03",
+          "gelb-02",
+        ],
+      },
+    },
+    "schwebend": null,
+-   "stapel": 102,
++   "stapel": 103,
+    "teilzug": 1,
+  }
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:259:37
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/engine/__tests__/kartenversetzt.test.ts > E4b/B2: Karten, die auf eine Hand gehen, bleiben verdeckt > B2: die Reihenfolge verdeckt abgelegter Karten verrät nicht, wie sie im Nachziehstapel liegen
+AssertionError: E4b: SchlangenfrassSpielen lässt sich nicht nachrechnen: expected { haende: [ 1, 5 ], …(13) } to deeply equal { haende: [ 1, 5 ], …(13) }
+
+- Expected
++ Received
+
+@@ -19,13 +19,15 @@
+    "partiephase": "Laufend",
+    "schlangen": {
+      "schlange-1": {
+        "besitzer": 0,
+        "karten": [
++         "rot-03",
++         "gelb-02",
+          "blau-04",
+        ],
+      },
+    },
+    "schwebend": null,
+-   "stapel": 104,
++   "stapel": 102,
+    "teilzug": 1,
+  }
+
+ ❯ spiele src/engine/__tests__/kartenversetzt.test.ts:56:111
+     54|   for (;;) {
+     55|     const schritt = fuehreAus(jetzt, aktion)
+     56|     expect(spieleNach(lageVon(jetzt), schritt.ereignisse), `E4b: ${akt…
+       |                                                                                                               ^
+     57|     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse), '…
+     58|     expect(verletzteInvarianten(schritt.zustand)).toEqual([])
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:277:35
+ ❯ src/engine/__tests__/kartenversetzt.test.ts:268:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  10 failed | 13 passed (23)
+   Start at  10:21:30
+   Duration  9.29s (transform 1.46s, setup 1.26s, import 1.54s, tests 1.64s, environment 11.87s)
+

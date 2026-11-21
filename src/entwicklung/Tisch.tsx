@@ -225,13 +225,19 @@ function Bedienung({ zustand, fuehreAus }: BedienungProps) {
   )
 }
 
-/** Wohin eine gespielte Karte kam, lesbar. */
+/** Wo eine Karte liegt, lesbar. */
 function beschreibeOrt(zustand: Spielzustand, ort: Kartenort): string {
   switch (ort.ort) {
     case 'Schlange':
       return `${ort.schlangenId} von ${name(zustand, ort.spielerIndex)}, Stelle ${ort.position}`
+    case 'UnterFusion':
+      return `unter ${ort.fusionId} in ${ort.schlangenId} von ${name(zustand, ort.spielerIndex)}, Stelle ${ort.position}`
     case 'Ablagestapel':
-      return `Ablagestapel von ${name(zustand, ort.spielerIndex)}`
+      return `Ablagestapel von ${name(zustand, ort.spielerIndex)}, Stelle ${ort.position}`
+    case 'Hand':
+      return `Hand von ${name(zustand, ort.spielerIndex)}`
+    case 'Nachziehstapel':
+      return 'Nachziehstapel'
     case 'VorSpieler':
       return `vor ${name(zustand, ort.spielerIndex)}`
     case 'Schwebend':
@@ -265,6 +271,11 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       const abgewehrt = ereignis.abgewehrt.length === 0 ? 'niemand hat abgewehrt' : `abgewehrt von ${ereignis.abgewehrt.map(wer).join(', ')}`
       const wirkung = ereignis.ohneWirkung ? 'ohne Wirkung' : 'wirkt'
       return `AnsageEntschieden: ${ereignis.karteId} von ${wer(ereignis.spielerIndex)} ${wirkung}, ${abgewehrt} → ${beschreibeOrt(zustand, ereignis.nach)}`
+    }
+    case 'KartenVersetzt': {
+      const karten = ereignis.karten.map(({ karteId, von, nach }) => `${karteId ?? 'verdeckte Karte'}: ${beschreibeOrt(zustand, von)} → ${beschreibeOrt(zustand, nach)}`)
+      const aufgeloest = ereignis.aufgeloest.length === 0 ? '' : `; aufgelöst: ${ereignis.aufgeloest.join(', ')}`
+      return `KartenVersetzt durch ${ereignis.karteId} von ${wer(ereignis.spielerIndex)}: ${karten.join('; ')}${aufgeloest}`
     }
     case 'Ausgesetzt':
       return `Ausgesetzt: ${wer(ereignis.spielerIndex)} setzt aus; ${ereignis.karteId} auf den Ablagestapel von ${wer(ereignis.ablagestapelVon)}`

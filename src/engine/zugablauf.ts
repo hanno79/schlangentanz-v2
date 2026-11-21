@@ -1,5 +1,6 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
+import { alleKartenorte, istVerdeckt } from './kartenorte';
 import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
@@ -63,20 +64,13 @@ export function meldeGespielteKarte(zustand: Spielzustand, aktion: GespielteKart
   ereignisse.push({ typ: 'KarteGespielt', spielerIndex, karteId: aktion.karteId, aktion: aktion.typ, nach: findeKartenort(zustand, aktion.karteId) });
 }
 
-/** Wo eine Karte ausserhalb der Hände und des Nachziehstapels liegt. Gesucht wird im Zustand, deshalb gilt es für jede Kartenwirkung. */
+/** Wo eine gespielte Karte liegt, ausserhalb der Hände und des Nachziehstapels. Gesucht wird im Zustand, deshalb gilt es für jede Kartenwirkung. */
 export function findeKartenort(zustand: Spielzustand, karteId: string): Kartenort {
-  for (const [spielerIndex, spieler] of zustand.spieler.entries()) {
-    for (const schlange of spieler.schlangen) {
-      const position = schlange.karten.findIndex((karte) => karte.id === karteId);
-      if (position >= 0) return { ort: 'Schlange', spielerIndex, schlangenId: schlange.id, position };
-    }
-    if (spieler.ablagestapel.some((karte) => karte.id === karteId)) return { ort: 'Ablagestapel', spielerIndex };
+  const ort = alleKartenorte(zustand).get(karteId);
+  if (ort === undefined || istVerdeckt(ort)) {
+    throw new Error(`Die gespielte Karte ${karteId} liegt an keinem Ort, den ein Ereignis nennen kann.`);
   }
-  const grube = zustand.ausliegendeGruben.find((eintrag) => eintrag.karte.id === karteId);
-  if (grube !== undefined) return { ort: 'VorSpieler', spielerIndex: grube.vor };
-  if (zustand.schwebend?.karte.id === karteId) return { ort: 'Schwebend' };
-  if (zustand.ausDemSpiel.some((karte) => karte.id === karteId)) return { ort: 'AusDemSpiel' };
-  throw new Error(`Die gespielte Karte ${karteId} liegt an keinem Ort, den ein Ereignis nennen kann.`);
+  return ort;
 }
 
 /**

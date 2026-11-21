@@ -142,7 +142,7 @@ describe('A6/E4 Kriterium 1 bis 3: wer betroffen ist, wer gefragt wird, wann die
     expect(wirke).not.toHaveBeenCalled()
     expect(ablage(nach.zustand, 2)).toEqual([grube])
     expect(ereignisseVom(nach.ereignisse, 'AnsageEntschieden')).toEqual([
-      { typ: 'AnsageEntschieden', spielerIndex: 2, karteId: grube, abgewehrt: [3, 1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 2 } },
+      { typ: 'AnsageEntschieden', spielerIndex: 2, karteId: grube, abgewehrt: [3, 1], ohneWirkung: true, nach: { ort: 'Ablagestapel', spielerIndex: 2, position: 0 } },
     ])
   })
 })

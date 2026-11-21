@@ -141,13 +141,29 @@ export type SpielAktion =
 
 export type Pruefergebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
-/** Wo eine gespielte Karte danach liegt; `spielerIndex` ist der Besitzer der Schlange, des Ablagestapels bzw. der, vor dem sie liegt. */
+/**
+ * Wo eine Karte liegt; `spielerIndex` ist der Besitzer der Schlange, des
+ * Ablagestapels, der Hand bzw. der, vor dem sie liegt. `position` zählt ab 0:
+ * in der Schlange von vorn, unter einer Fusion von links, im Ablagestapel von
+ * unten. Hand und Nachziehstapel sind verdeckt und haben keine Position (B2).
+ */
 export type Kartenort =
   | { ort: 'Schlange'; spielerIndex: number; schlangenId: string; position: number }
-  | { ort: 'Ablagestapel'; spielerIndex: number }
+  /** A7.7: unter der Farbenfusion `fusionId` in dieser Schlange. */
+  | { ort: 'UnterFusion'; spielerIndex: number; schlangenId: string; fusionId: string; position: number }
+  | { ort: 'Ablagestapel'; spielerIndex: number; position: number }
   | { ort: 'VorSpieler'; spielerIndex: number }
+  | { ort: 'Hand'; spielerIndex: number }
+  | { ort: 'Nachziehstapel' }
   | { ort: 'Schwebend' }
   | { ort: 'AusDemSpiel' };
+
+/** Eine Karte, die eine Kartenwirkung von `von` nach `nach` gebracht hat; `karteId` ist `null`, wenn sie danach verdeckt liegt (B2). */
+export interface Versetzung {
+  karteId: string | null;
+  von: Kartenort;
+  nach: Kartenort;
+}
 
 /**
  * Was eine Aktion bewirkt hat, in der Reihenfolge, in der es geschah, damit die
@@ -175,6 +191,21 @@ export type Ereignis =
    * wirkungslos auf dem Ablagestapel des Angreifers liegt. `nach` sagt, wo sie liegt.
    */
   | { typ: 'AnsageEntschieden'; spielerIndex: number; karteId: string; abgewehrt: number[]; ohneWirkung: boolean; nach: Kartenort }
+  /**
+   * Plan E4b: Was die Wirkung der gespielten Karte `karteId` ausser ihr selbst
+   * bewegt hat, kommt vor `KarteGespielt` bzw. `AnsageEntschieden`. Genannt ist
+   * jede Karte, die den Ort wechselt oder ihre Reihenfolge zu den übrigen Karten
+   * ihres Ortes; wer nur nachrückt, fehlt. Die Oberfläche nimmt erst jede Karte
+   * von `von`, dann legt sie sie in der Reihenfolge der Liste nach `nach`, und
+   * entfernt zuletzt die Schlangen in `aufgeloest`. `von` zählt vor der Wirkung,
+   * `nach` danach, beide ohne die gespielte Karte, die erst das folgende Ereignis
+   * hinlegt. Eine neue Schlange erscheint mit ihrer Id in `nach`.
+   * Liegt eine Karte danach auf einer Hand oder im Nachziehstapel, fehlt ihre Id
+   * (B2); der Besitzer sieht sie in seiner Hand. Solche Karten stehen am Ende der
+   * Liste in der Reihenfolge vor der Wirkung, damit die Liste nicht verrät, wie
+   * sie danach verdeckt liegen.
+   */
+  | { typ: 'KartenVersetzt'; spielerIndex: number; karteId: string; karten: Versetzung[]; aufgeloest: string[] }
   | { typ: 'KartenGezogen'; spielerIndex: number; anzahl: number }
   /** A5: Nach dem Auffüllen hält der Spieler mehr als 5 Karten und muss `anzahl` abwerfen. */
   | { typ: 'AbwerfenVerlangt'; spielerIndex: number; anzahl: number }

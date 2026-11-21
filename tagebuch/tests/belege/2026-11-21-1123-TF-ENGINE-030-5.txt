@@ -1,0 +1,138 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2cfb00f4ded295a7
+
+ ❯ src/engine/__tests__/aktionen.test.ts (38 tests | 8 failed) 47ms
+     × D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Definition ist nicht markiert 6ms
+     × D13/E4b: Regenbogenschlange ist genau dann als Platzhalter markiert, wenn karten/regenbogenschlange.ts platzhalter() aufruft 1ms
+     × D13/E4b: Schlangenfrass ist genau dann als Platzhalter markiert, wenn karten/schlangenfrass.ts platzhalter() aufruft 1ms
+     × D13/E4b: Schlangenblockade ist genau dann als Platzhalter markiert, wenn karten/schlangenblockade.ts platzhalter() aufruft 1ms
+     × D13/E4b: Farbendieb ist genau dann als Platzhalter markiert, wenn karten/farbendieb.ts platzhalter() aufruft 1ms
+     × D13/E4b: Farbenfusion ist genau dann als Platzhalter markiert, wenn karten/farbenfusion.ts platzhalter() aufruft 1ms
+     × D13/E4b: Schlangenhäutung ist genau dann als Platzhalter markiert, wenn karten/schlangenhaeutung.ts platzhalter() aufruft 1ms
+     × D13/E4b: Schlangenkorb des Glücks ist genau dann als Platzhalter markiert, wenn karten/schlangenkorb.ts platzhalter() aufruft 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Definition ist nicht markiert
+AssertionError: istPlatzhalter erkennt einen Platzhalter nicht: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:100:132
+     98|
+     99|   it('D13/E4b: platzhalter() markiert seinen Eintrag, eine eigene Defi…
+    100|     expect(istPlatzhalter(platzhalter('Farbendieb', 'FarbendiebSpielen…
+       |                                                                                                                                    ^
+    101|     expect(istPlatzhalter({ ...KARTENREGISTER.Verdoppler }), 'istPlatz…
+    102|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Regenbogenschlange ist genau dann als Platzhalter markiert, wenn karten/regenbogenschlange.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Regenbogenschlange): erwartet true, weil karten/regenbogenschlange.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenfrass ist genau dann als Platzhalter markiert, wenn karten/schlangenfrass.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Schlangenfrass): erwartet true, weil karten/schlangenfrass.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenblockade ist genau dann als Platzhalter markiert, wenn karten/schlangenblockade.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Schlangenblockade): erwartet true, weil karten/schlangenblockade.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbendieb ist genau dann als Platzhalter markiert, wenn karten/farbendieb.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Farbendieb): erwartet true, weil karten/farbendieb.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbenfusion ist genau dann als Platzhalter markiert, wenn karten/farbenfusion.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Farbenfusion): erwartet true, weil karten/farbenfusion.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenhäutung ist genau dann als Platzhalter markiert, wenn karten/schlangenhaeutung.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Schlangenhäutung): erwartet true, weil karten/schlangenhaeutung.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Schlangenkorb des Glücks ist genau dann als Platzhalter markiert, wenn karten/schlangenkorb.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Schlangenkorb des Glücks): erwartet true, weil karten/schlangenkorb.ts platzhalter() aufruft: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 30 passed (38)
+   Start at  11:06:56
+   Duration  3.45s (transform 393ms, setup 296ms, import 402ms, tests 47ms, environment 2.37s)
+
