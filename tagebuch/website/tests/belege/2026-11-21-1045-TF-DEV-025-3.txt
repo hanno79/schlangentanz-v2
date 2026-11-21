@@ -1,0 +1,22 @@
+verdoppler nach VerdopplerSpielen: KarteGespielt: Spieler 1 (spieler-1), verdoppler-03 (VerdopplerSpielen) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0 {"sw":1280,"cw":1280}
+grube nach Spielen: KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-03 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2)
+AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangengrube-03 abwehrt
+grube nach durchlassen: AnsageEntschieden: schlangengrube-03 von Spieler 1 (spieler-1) wirkt, niemand hat abgewehrt → vor KI-Gegner 1 (spieler-2) {"sw":1280,"cw":1280}
+schritt 1: KarteGespielt: Spieler 1 (spieler-1), verdoppler-02 (VerdopplerSpielen) → Ablagestapel von Spieler 1 (spieler-1), Stelle 0
+schritt 2: KarteGespielt: Spieler 1 (spieler-1), blau-10 (FarbkarteLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 0
+schritt 3: KartenGezogen: Spieler 1 (spieler-1) zieht 2 | ZugBegonnen: Spieler 1 (spieler-1), Teilzug 2
+schritt 4: KarteGespielt: Spieler 1 (spieler-1), braun-08 (FarbkarteLegen) → schlange-2 von Spieler 1 (spieler-1), Stelle 0
+schritt 5: KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1
+schritt 6: KarteGespielt: KI-Gegner 1 (spieler-2), gruen-05 (FarbkarteLegen) → schlange-3 von KI-Gegner 1 (spieler-2), Stelle 0
+schritt 7: KarteGespielt: KI-Gegner 1 (spieler-2), farbendieb-04 (SonderkarteWirkungslosAblegen) → Ablagestapel von KI-Gegner 1 (spieler-2), Stelle 0
+schritt 8: KartenGezogen: KI-Gegner 1 (spieler-2) zieht 2 | ZugBegonnen: KI-Gegner 2 (spieler-3), Teilzug 1
+schritt 9: KarteGespielt: KI-Gegner 2 (spieler-3), blau-06 (FarbkarteLegen) → schlange-4 von KI-Gegner 2 (spieler-3), Stelle 0
+schritt 10: KarteGespielt: KI-Gegner 2 (spieler-3), farbenfusion-01 (SonderkarteWirkungslosAblegen) → Ablagestapel von KI-Gegner 2 (spieler-3), Stelle 0
+schritt 11: KartenGezogen: KI-Gegner 2 (spieler-3) zieht 2 | ZugBegonnen: Spieler 1 (spieler-1), Teilzug 1
+schritt 12: KarteGespielt: Spieler 1 (spieler-1), rot-04 (FarbkarteLegen) → schlange-2 von Spieler 1 (spieler-1), Stelle 1
+schritt 13: KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1
+schritt 14: KarteGespielt: KI-Gegner 1 (spieler-2), braun-07 (FarbkarteLegen) → schlange-5 von KI-Gegner 1 (spieler-2), Stelle 0
+schritt 15: KartenGezogen: KI-Gegner 1 (spieler-2) zieht 1 | ZugBegonnen: KI-Gegner 2 (spieler-3), Teilzug 1
+schritt 16: KarteGespielt: KI-Gegner 2 (spieler-3), gruen-02 (FarbkarteLegen) → schlange-6 von KI-Gegner 2 (spieler-3), Stelle 0
+Breite zufall: {"sw":1280,"cw":1280}
+Konsolenfehler: 0 

@@ -1,0 +1,28 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2cfb00f4ded295a7
+
+ ❯ src/engine/__tests__/aktionen.test.ts (45 tests | 1 failed) 49ms
+     × D13/E4b: Farbendieb ist genau dann als Platzhalter markiert, wenn karten/farbendieb.ts platzhalter() aufruft 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/aktionen.test.ts > A1/A7: das Kartenregister > D13/E4b: Farbendieb ist genau dann als Platzhalter markiert, wenn karten/farbendieb.ts platzhalter() aufruft
+AssertionError: istPlatzhalter(Farbendieb): erwartet false, weil karten/farbendieb.ts platzhalter() nicht aufruft: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/aktionen.test.ts:107:197
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 44 passed (45)
+   Start at  11:07:57
+   Duration  3.81s (transform 419ms, setup 305ms, import 430ms, tests 49ms, environment 2.70s)
+
