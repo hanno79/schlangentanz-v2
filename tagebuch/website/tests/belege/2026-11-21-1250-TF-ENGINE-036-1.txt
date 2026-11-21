@@ -1,0 +1,83 @@
+== erster Commit 64258d8
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/39]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  39 failed | 1 passed (40)
+   Start at  12:07:59
+   Duration  7.17s (transform 1.56s, setup 1.34s, import 1.64s, tests 1.04s, environment 9.00s)
+
+== Gegenprobe reihenfolge
+110c110
+<     schlange.fusionen.push({ karteId: karte.id, unter });
+---
+>     schlange.fusionen.push({ karteId: karte.id, unter: [unter[1], unter[0]] });
+      Tests  4 failed | 37 passed (41)
+A6/D10: in die eigene Schlange wirkt sie sofort; niemand wird gefragt, auch wenn Mitspieler Farbenschutz halten
+A7.4/A7.7: unter der Fusion liegen die Karten links zuerst, in der Reihenfolge der Schlange, auch beim Mitspieler
+A7.7: die beiden Farbkarten bleiben unter der Fusion in der Schlange erhalten, die Fusion liegt obenauf an ihrer Stelle
+D9/A6: durchgelassen liegt sie in der Schlange des Mitspielers über seinen beiden Karten
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+== Gegenprobe betroffene
+100c100
+<     return fundort.besitzer === spielerIndexVon(zustand, aktion.spielerId) ? [] : [fundort.besitzer];
+---
+>     return [];
+      Tests  14 failed | 27 passed (41)
+A6/D33: sie wird mit Ziel angesagt, und gefragt wird der Besitzer der Schlange, auch ohne Farbenschutz
+A6: Speichern und Laden mitten in der Ansage setzt genau dort fort
+A6: zu dritt ist nur der Besitzer der Zielschlange betroffen, nicht der andere Mitspieler
+A7.2: abgewehrt bleibt die Schlange unverändert; die Fusion liegt auf dem Ablagestapel des Angreifers, der Farbenschutz auf dem des Verteidigers
+A7.2: wehrt der Gegner ab, behält er seine Dreiergruppe
+A7.4/A7.7: unter der Fusion liegen die Karten links zuerst, in der Reihenfolge der Schlange, auch beim Mitspieler
+A7.7/D9/A6: in Zufallspartien mit bevorzugter Fusion stimmt die nachgerechnete Lage mit dem Zustand überein, keine Handkarte wird genannt
+A7.7: aus einer Schlange mit genau zwei Karten wird eine Schlange aus der Fusion allein; sie bleibt bestehen
+B2/A6: das Ziel steht mit der Ansage fest; solange sie schwebt, lehnt die Engine jede andere Fusion ab
+D10/A7.2: fusion-beim-gegner: KI-Gegner 1 wehrt ab, seine Dreiergruppe bleibt, die Fusion liegt bei Spieler 1
+D33: fusion-beim-gegner: auf die Gelben von KI-Gegner 2 wird nur er gefragt und kann ohne Farbenschutz nur durchlassen
+D9/A6: durchgelassen liegt sie in der Schlange des Mitspielers über seinen beiden Karten
+D9/D30: auf zwei Karten einer gegnerischen Dreiergruppe gelegt, bringt die Gruppe dem Gegner nichts mehr
+D9/D30: fusion-beim-gegner: durchgelassen liegt die Fusion auf zwei Roten, die Dreiergruppe bringt nichts mehr
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+== Gegenprobe d20
+36c36
+<   return links.typ === 'Farbkarte' && rechts.typ === 'Farbkarte' && links.farbe === rechts.farbe;
+---
+>   return links.typ !== 'Farbkarte' || rechts.typ !== 'Farbkarte' || links.farbe === rechts.farbe;
+      Tests  4 failed | 37 passed (41)
+A7.7/D9/A6: in Zufallspartien mit bevorzugter Fusion stimmt die nachgerechnete Lage mit dem Zustand überein, keine Handkarte wird genannt
+D20: eine Farbkarte und eine Regenbogenschlange gelten nicht als zwei Karten gleicher Farbe
+D20: eine Schlangenblockade lässt sich nicht fusionieren
+D20: eine liegende Fusion und eine Farbkarte lassen sich nicht noch einmal fusionieren, die Karten darunter auch nicht
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+== Gegenprobe d27
+75c75
+<     if (zustand.zug.farbenfusionGespielt) return [];
+---
+>     if (zustand.zug.farbenfusionGespielt || zustand.zug.teilzug === 2) return [];
+111c111
+<     zustand.zug.farbenfusionGespielt = true;
+---
+>     zustand.zug.farbenfusionGespielt = true; zustand.zug.verdopplerGespielt = zustand.zug.verdopplerGespielt;
+      Tests  2 failed | 39 passed (41)
+A7.7/D9/A6: in Zufallspartien mit bevorzugter Fusion stimmt die nachgerechnete Lage mit dem Zustand überein, keine Handkarte wird genannt
+D27: im zweiten Zug nach einem Verdoppler ist wieder eine Farbenfusion erlaubt, danach keine weitere
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+== Gegenprobe ohne_flag
+75c75
+<     if (zustand.zug.farbenfusionGespielt) return [];
+---
+>     
+91c91
+<     if (zustand.zug.farbenfusionGespielt) return NUR_EINE;
+---
+>     
+      Tests  1 failed | 40 passed (41)
+A7.7: die Karte selbst lässt keine zweite Fusion im Zug zu, unabhängig von der Grenze je Sonderkarte
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+== geprüfter Stand
+ Test Files  6 passed (6)
+      Tests  112 passed (112)
+   Start at  12:12:20
+   Duration  98.17s (transform 3.26s, setup 5.54s, import 3.71s, tests 94.45s, environment 20.27s)
+
