@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-053 Der Meta-Test der Regeltestdateien wird auch bei einer falsch benannten, einer schweigsamen und einer ausgelagerten Testdatei rot. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-053 Der Meta-Test der Regeltestdateien wird auch bei einer falsch benannten, einer schweigsamen und einer ausgelagerten Testdatei rot.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-ENGINE-052</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Meta-Test soll nicht nur eine fehlende Datei melden. Er soll auch melden, wenn unter <code>regeln/</code> eine Datei für einen Abschnitt liegt, den der Plan nicht nennt, wenn die Tests einer Datei ihren Abschnitt nicht im Namen tragen, und wenn ein Regeltest ausserhalb von <code>regeln/</code> liegt.</p><h2>Bestanden, wenn</h2><p>Jede der drei Probedateien lässt <code>npx vitest run src/engine/__tests__/regeln_abdeckung.test.ts</code> mit Exit 1 enden, mit genau dem passenden roten Test. Nach dem Löschen der Probedatei ist der Lauf wieder grün (Exit 0).</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Probedatei bleibt unbemerkt, der Lauf endet also mit 0.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>21.11.2026</dd><dt>Änderung</dt><dd>task/E11-abnahme-basis (PR #72)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf dem geprüften Stand, <code>git status</code> ohne Änderung</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Drei Probedateien, je mit einem einzigen Test <code>it(&#x27;…&#x27;, () =&gt; {})</code>:</p>
+<ol><li><code>src/engine/__tests__/regeln/A7.10_korb.test.ts</code> mit Testname „A7.10: Probe“</li><li><code>src/engine/__tests__/regeln/A7.1_probe.test.ts</code> mit Testname „Probe ohne Abschnitt“</li><li><code>src/engine/__tests__/probe_regel.test.ts</code> mit Testname „A5: Probe“</li></ol></section>
+<section class="kasten-zuruecksetzen"><h2>Zurücksetzen</h2><p>Probedatei löschen, <code>git status</code> zeigt danach keine unversionierte Datei.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><table><thead><tr><th>Probedatei</th><th>erwartet rot</th></tr></thead><tbody><tr><td>1</td><td>„E11: jede Datei unter regeln/ heisst &lt;Abschnitt&gt;_&lt;thema&gt;.test.ts, mit einem Abschnitt des Plans“</td></tr><tr><td>2</td><td>„U1: jede Regeltestdatei nennt ihren Abschnitt in mindestens einem Testnamen“</td></tr><tr><td>3</td><td>„E11: neben regeln/ liegen unter __tests__ nur Tests der Engine selbst, keine Regeltests“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-21">21.11.2026 16:47</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer E11) &middot; agent &middot; pruefung-E11 @ <span class="commit" title="b4d8509276fdf178af0e0adfdccfaeb4525edeff">b4d8509</span></p><p>Probedatei regeln/A7.10_korb.test.ts -&gt; Exit 1, rot &#x27;jede Datei unter regeln/ heisst ... Abschnitt des Plans&#x27;; regeln/A7.1_probe.test.ts ohne Abschnitt im Namen -&gt; Exit 1, rot &#x27;U1: jede Regeltestdatei nennt ihren Abschnitt&#x27;; __tests__/probe_regel.test.ts -&gt; Exit 1, rot &#x27;neben regeln/ liegen ... keine Regeltests&#x27;; nach dem Löschen Exit 0</p><ul class="belege"><li><a href="belege/2026-11-21-1647-TF-ENGINE-053-1.txt">2026-11-21-1647-TF-ENGINE-053-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
