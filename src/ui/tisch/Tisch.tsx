@@ -19,7 +19,7 @@ import { useUeberlauf } from './ueberlauf'
 import { UeberhandDialog } from './UeberhandDialog'
 import { Weiter } from './Weiter'
 import { KARTENGROESSE } from './groessen'
-import { Schlangen } from './Schlange'
+import { Punkte, Schlangen } from './Schlange'
 import { TISCH, geheimeAufgabeName, statusText } from './texte'
 import { NeueSchlangeZiel } from './Ziele'
 import { Zugleiste } from './Zugleiste'
@@ -83,6 +83,7 @@ export function Tisch({ ansicht, fuehreAus, ablehnung }: TischEigenschaften) {
         <section className="st-eigene" aria-label={TISCH.deineSchlangen}>
           <div className="st-eigene-kopf">
             <h2 className="st-bereichstitel">{TISCH.deineSchlangen}</h2>
+            <Punkte punkte={ansicht.ich.punkte} />
             <NeueSchlangeZiel />
           </div>
           <Schlangen schlangen={ansicht.ich.schlangen} besitzer={{ name: ansicht.ich.name, ich: true }} groesse={KARTENGROESSE.eigene} />

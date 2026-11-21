@@ -1,0 +1,148 @@
+/*
+Die Wertung nach Spielende nach dem freigegebenen Entwurf
+(`src/entwicklung/entwurf/Ergebnis.tsx`): Sieger als Titel, darunter die
+Rangliste, am Fuss die Knöpfe. Die Spalte ist breiter als in der Lobby, damit
+die Schlangen der Aufschlüsselung Platz haben; auf dem Handy scrollen sie in
+sich (karten.css), die Seite nie waagrecht. Nur Variablen aus src/ui/tokens.css.
+*/
+
+.rahmen--ergebnis {
+  --rahmen-breite: 48rem;
+  --karte-breite: 30px;
+  /* Grund unter dem Zeichen „geht weiter“ an einer scrollenden Schlange (karten.css). */
+  --weiter-grund: var(--farbe-flaeche);
+}
+
+@media (min-width: 700px) {
+  .rahmen--ergebnis {
+    --karte-breite: 34px;
+  }
+}
+
+.rangliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rang {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  min-width: 0;
+  padding: var(--abstand-3) var(--abstand-4);
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius);
+  box-shadow: var(--schatten-flaeche);
+}
+
+.rang--sieger {
+  border: 2px solid var(--farbe-akzent);
+  box-shadow: var(--schatten-erhoben);
+}
+
+.rang-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--abstand-1) var(--abstand-3);
+}
+
+.rang-platz,
+.rang-gesamt {
+  font-family: var(--schrift-titel);
+  font-size: var(--groesse-gross);
+  line-height: var(--zeilenhoehe-titel);
+}
+
+.rang-platz {
+  color: var(--farbe-tinte-leise);
+}
+
+.rang-name {
+  flex: 1;
+  margin: 0;
+  font-size: var(--groesse-text);
+  font-weight: 700;
+}
+
+.rang-gesamt {
+  margin-left: auto;
+}
+
+.rang-abzeichen {
+  padding: 0 var(--abstand-2);
+  border-radius: var(--radius-voll);
+  background: var(--farbe-akzent-stark);
+  color: var(--farbe-auf-akzent);
+  font-size: var(--groesse-klein);
+  font-weight: 700;
+}
+
+.rang-posten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--abstand-1) var(--abstand-3);
+  margin: 0;
+  font-size: var(--groesse-klein);
+}
+
+@media (min-width: 560px) {
+  .rang-posten {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.rang-posten dt {
+  color: var(--farbe-tinte-leise);
+}
+
+.rang-posten dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Woher die Zahlen kommen: Schlangen mit Gruppen und Jokern, Kette, Aufgaben. */
+.rang-herkunft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+  min-width: 0;
+  padding-top: var(--abstand-2);
+  border-top: 1px solid var(--farbe-linie);
+  font-size: var(--groesse-klein);
+}
+
+.rang-herkunft p {
+  margin: 0;
+}
+
+.rang-schlange {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-width: 0;
+}
+
+.rang-schlange-titel {
+  margin: 0;
+  font-size: var(--groesse-klein);
+  font-weight: 600;
+}
+
+.rang-zeilen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--abstand-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rang-leise {
+  color: var(--farbe-tinte-leise);
+}

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { berechneEndwertung } from '../../engine'
 import { erzeugeSzenario } from '../../entwicklung/szenarien'
+import { einstellungenVon } from '../lobby/partie'
 import { endstaende } from './__tests__/endstaende'
 import { ergebnisAnsicht } from './ergebnisAnsicht'
 
@@ -81,7 +82,7 @@ describe('O8 K4: Die Einstellungen der Partie für „Noch einmal“', () => {
     ['wertung-beispiele-kette', 2, false],
     ['wertung-vielfalt-regenbogen', 1, true],
   ])('O8 K4: %s hatte %i Gegner, Erweiterung %s', (name, gegner, erweiterung) => {
-    expect(ergebnisAnsicht(erzeugeSzenario(name)).einstellungen).toEqual({ gegner, erweiterung })
+    expect(einstellungenVon(erzeugeSzenario(name))).toEqual({ gegner, erweiterung })
   })
 })
 

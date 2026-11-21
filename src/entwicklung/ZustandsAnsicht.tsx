@@ -13,7 +13,8 @@ export function ZustandsAnsicht({ zustand }: { zustand: Spielzustand }) {
         <h2>Spieler</h2>
         <div className="et-spielerliste">
           {zustand.spieler.map((spieler, index) => (
-            <SpielerAnsicht key={spieler.id} spieler={spieler} aktiv={index === zustand.zug.spielerIndex} />
+            // Nach Spielende bleibt `zug.spielerIndex` beim zuletzt Spielenden; am Zug ist dann niemand (A10).
+            <SpielerAnsicht key={spieler.id} spieler={spieler} aktiv={zustand.partiephase !== 'Beendet' && index === zustand.zug.spielerIndex} />
           ))}
         </div>
       </section>
