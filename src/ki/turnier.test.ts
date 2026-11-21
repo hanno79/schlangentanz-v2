@@ -131,3 +131,45 @@ describe('K1: Ausgänge einer Partie', () => {
     )
   })
 })
+
+describe('P0.3d: der KI-Zufall verrät die Partiesaat nicht', () => {
+  /** Teilnehmer, die den ersten Wert ihrer Zufallsquelle aufschreiben, je Partie in Sitzreihenfolge. */
+  function beobachter(anzahl: number) {
+    const erste: number[] = []
+    const teilnehmer: Teilnehmer[] = Array.from({ length: anzahl }, (_, index) => ({
+      name: `Beobachter ${index + 1}`,
+      erstelle(zufall) {
+        erste.push(zufall())
+        return erstelleZufallsKi(zufall)
+      },
+    }))
+    return { erste, teilnehmer }
+  }
+
+  it('P0.3d: andere Partiesaat, gleiche KI-Saat: jede KI bekommt denselben Zufall', () => {
+    const a = beobachter(2)
+    const b = beobachter(2)
+    const c = beobachter(2)
+    turnier({ teilnehmer: a.teilnehmer, partien: 3, ersteSaat: 1, kiSaat: 9, erweiterung: false })
+    turnier({ teilnehmer: b.teilnehmer, partien: 3, ersteSaat: 5000, kiSaat: 9, erweiterung: false })
+    turnier({ teilnehmer: c.teilnehmer, partien: 3, ersteSaat: 1, kiSaat: 10, erweiterung: false })
+
+    expect(b.erste, 'P0.3d: der KI-Zufall darf nicht von der Partiesaat abhängen').toEqual(a.erste)
+    expect(c.erste, 'P0.3d: eine andere KI-Saat gibt anderen KI-Zufall').not.toEqual(a.erste)
+  })
+
+  it('P0.3d: der Angriff aus der Prüfung (Partiesaat aus dem ersten KI-Zufallswert) findet die Saat nicht', () => {
+    const alteKiSaat = (saat: number, sitz: number) => (Math.imul(saat, 0x9e3779b1) + sitz + 1) >>> 0
+    const { erste, teilnehmer } = beobachter(2)
+    const ergebnis = turnier({ teilnehmer, partien: 4, ersteSaat: 1, kiSaat: 9, erweiterung: false })
+
+    const gefunden = ergebnis.partien.flatMap((partie, nummer) =>
+      [0, 1].flatMap((sitz) => {
+        const wert = erste[nummer * 2 + sitz]
+        return Array.from({ length: 4096 }, (_, saat) => saat).filter((saat) => erzeugeZufall(alteKiSaat(saat, sitz))() === wert && saat === partie.saat)
+      }),
+    )
+
+    expect(gefunden, 'P0.3d: erwartet, dass keine Partiesaat aus dem KI-Zufall folgt').toEqual([])
+  })
+})

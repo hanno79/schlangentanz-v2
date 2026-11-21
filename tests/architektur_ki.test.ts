@@ -62,7 +62,9 @@ const ERLAUBT = [
   '  const siege = [0]',
   '  siege[0] += 1',
   '  kopie[0] = Math.floor(Math.max(1, 2))',
-  "  return [Number.isInteger(kopie[0]), Array.from(kopie), new Error('x').message, Object.assign({}, { a: 1 }), siege]",
+  "  const stapelspur = new Error('x').stack ?? ''",
+  "  const beschreibung = Symbol.for('x').description ?? ''",
+  "  return [Number.isInteger(kopie[0]), Array.from(kopie), new Error('x').message, Object.assign({}, { a: 1 }), siege, stapelspur, beschreibung]",
   '}',
 ].join('\n')
 
@@ -233,6 +235,9 @@ const seitenkanaele: Array<[string, string]> = [
   ['aus einem Ordner ausserhalb', "import { gefangen } from '../hilfen/lauscher'\nexport const a = () => gefangen()\n"],
   ['mit export … from', "export { gefangen } from './__tests__/lauscher'\n"],
   ['mit import()', "export const a = () => import('./__tests__/lauscher')\n"],
+  // Prüfung P0.3d, Iteration 2: import.meta.glob lädt jedes Modul, auch Engine-Interna.
+  ['mit import.meta.glob', "export const module = import.meta.glob('../engine/deck.ts', { eager: true })\n"],
+  ['mit import.meta', 'export const adresse = import.meta.url\n'],
 ]
 
 /** Strategien unter src/ki/strategien sehen nur die Sicht (Orchestrator, Iteration 2). */
@@ -240,6 +245,16 @@ const STRATEGIE_ERLAUBT = [
   "import type { Sicht } from '../sicht'",
   "import { werteSchlangen, type Karte } from '../../engine'",
   "import { hilfe } from './hilfe'",
+  'const GRENZE = 3',
+  "export const NAMEN = ['a', 'b'] as const",
+  'export const ZIELE = { a: 1, b: [1, -2], c: { d: null } } as const',
+  'const plus = (n: number) => n + GRENZE',
+  '/** Zustand nur in der Closure je Instanz. */',
+  'export function erstelle(zufall: () => number) {',
+  '  const gedaechtnis = new Map<number, number>()',
+  '  return (sicht: Sicht) => { gedaechtnis.set(sicht.ich, zufall()); return plus(gedaechtnis.size) }',
+  '}',
+  'export class Zaehler { stand = 0; erhoehe() { this.stand += 1; return this.stand } }',
   'export function waehle(sicht: Sicht, aktionen: readonly Karte[], zufall: () => number): Karte {',
   '  return aktionen[Math.floor(zufall() * aktionen.length)] ?? aktionen[hilfe(sicht) + werteSchlangen([])]',
   '}',
@@ -252,6 +267,22 @@ const strategien: Array<[string, string]> = [
   ['sichtFuer, das den Zustand nimmt', "import { sichtFuer } from '../sicht'\nexport const s = sichtFuer\n"],
   ['den Rahmen', "import { erlaubtEtwas } from '../erlaubt'\nexport const r = erlaubtEtwas\n"],
   ['eine Funktion, deren Parameter den Zustand trägt', "import type { Spielzustand } from '../../engine'\nexport type F = (z: Spielzustand) => void\n"],
+  // Prüfung P0.3d, Iteration 2: Module über import.meta und Typen aus fremden Quellen.
+  ['import.meta.glob auf Engine-Interna', "export const deck = import.meta.glob('../../engine/deck.ts', { eager: true })\n"],
+  ['import.meta.glob ohne eager', "export const laden = import.meta.glob('../../ui/**/*.tsx')\n"],
+  ['einen Typ über typeof import aus fremder Quelle', "export type L = typeof import('../../hilfen/lauscher')\n"],
+  ['einen Typ über import() aus dem Rahmen', "export type R = import('../erlaubt').Gefangen\n"],
+  // Prüfung P0.3d, Iteration 2: Modulzustand teilt Wissen zwischen Instanzen derselben Strategie.
+  ['eine Map auf Modulebene', 'const geteilt = new Map<number, number>()\nexport const merke = (ich: number) => geteilt.set(ich, ich)\n'],
+  ['let auf Modulebene', 'let letzte = 0\nexport const merke = (ich: number) => { letzte = ich; return letzte }\n'],
+  ['var auf Modulebene', 'var letzte = 0\nexport const lies = () => letzte\n'],
+  ['eine Liste auf Modulebene', 'const liste: number[] = []\nexport const merke = (n: number) => liste.push(n)\n'],
+  ['ein Objekt auf Modulebene', 'const ablage = { wert: 0 }\nexport const merke = (n: number) => { ablage.wert = n }\n'],
+  ['eine Closure, die einmal auf Modulebene entsteht', 'const merke = (() => { const m = new Map<number, number>(); return (k: number) => m.set(k, k) })()\nexport { merke }\n'],
+  ['static in einer Klasse', 'export class Kiste { static ablage = new Map<number, number>() }\n'],
+  ['einen static-Block', 'export class Kiste { static { Kiste.name.length } }\n'],
+  ['eine Eigenschaft an einer Funktion', 'export function merke(n: number) { merke.letzte = n; return n }\nmerke.letzte = 0\n'],
+  ['as const um einen veränderlichen Behälter', 'export const ablage = { m: new Map<number, number>() } as const\n'],
 ]
 const faelleStrategie = strategien.map(([name, inhalt], index) => ({ name, datei: `src/ki/strategien/verboten-${index + 1}.ts`, inhalt }))
 const faelleSeitenkanal = seitenkanaele.map(([name, inhalt], index) => ({ name, datei: `src/ki/seitenkanal-${index + 1}.ts`, inhalt }))
