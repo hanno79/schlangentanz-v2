@@ -126,7 +126,7 @@ const umgehungenU5: Array<[string, string, string?]> = [
 ]
 
 /** H1: Wege, eine globale Funktion zu ersetzen, die die Engine später aufruft. */
-const globaleAenderungen: Array<[string, string]> = [
+const globaleAenderungen: Array<[string, string, string?]> = [
   ['H1: globalThis.structuredClone', 'globalThis.structuredClone = f'],
   ['window.structuredClone', 'window.structuredClone = f'],
   ['self.structuredClone', 'self.structuredClone = f'],
@@ -177,6 +177,17 @@ const globaleAenderungen: Array<[string, string]> = [
     'globalThis.valueOf() ohne Cast',
     'const g: { toString(): string; structuredClone?: typeof structuredClone } = globalThis.valueOf()\ng.structuredClone = f',
   ],
+  // Codex zu Iteration 2: Ambient-Deklarationen, Typprädikate als versteckter Cast, geerbte Methoden als Wert.
+  ['declare let tarnt das Globale als lokal', 'structuredClone = <T>(wert: T): T => wert', 'declare let structuredClone: <T>(wert: T) => T'],
+  // Eine Ergänzung des globalen Bereichs gilt im ganzen Probe-Programm; deshalb hier ein Name, den sonst niemand nutzt.
+  ['declare global', 'return text', 'declare global { var zusatzAusDerKi: number }'],
+  [
+    'Typprädikat als Schlüssel',
+    "const schluessel: string = 'constructor'\nif (!istName(schluessel)) return\nconst bauen: unknown = (() => 0)[schluessel]\nreturn bauen",
+    "function istName(text: string): text is 'name' { return text.length > 0 }",
+  ],
+  ['Object.freeze auf eine geerbte Methode', 'Object.freeze([].map)'],
+  ['geerbte Methode in einer Variablen', 'const liste: unknown[] = []\nconst methode: typeof liste.map & { merkmal?: number } = liste.map\nmethode.merkmal = 42'],
 ]
 
 /** Prüfung P0.3d, Iteration 1: Uhren und Zufall der Plattform; erlaubt sind nur Globale aus der Positivliste. */
