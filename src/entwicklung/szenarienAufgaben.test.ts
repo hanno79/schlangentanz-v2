@@ -1,8 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest'
+import { erstellePartie } from '../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
+import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
+import { erzeugeZufall } from '../engine/testing/zufall'
 import { entferneTestbedingungen } from '../engine/testing/testaufgaben'
-import { findeSzenario, SZENARIEN } from './szenarien'
-import { durchlassen, erzeuge as lade, klicke } from './szenarienTesthilfe'
+import { erzeugeSzenario, findeSzenario, ladeSzenario, SZENARIEN } from './szenarien'
+import { durchlassen, klicke } from './szenarienTesthilfe'
+
+const lade = (name: string) => ladeSzenario(findeSzenario(name)!)
 
 /*
 X1: Die Szenarien zum Aufgabenrahmen lassen sich am Entwicklertisch so
@@ -75,5 +80,21 @@ describe('X1: Szenarien zum Aufgabenrahmen', () => {
     const { zustand, ereignisse } = klicke(szenario.erzeuge(), anlegen('Blau', 'schlange-1'))
     expect(aufgaben(ereignisse)).toEqual([])
     expect(zustand.spieler[0].geheimeAufgabeErfuellt).toBe(false)
+  })
+
+  it('X1 (Codex-Befund): /spiel erzeugt ein Szenario ohne Testbedingungen; eine Partie danach hat die Aufgaben des Registers', () => {
+    erzeugeSzenario('aufgaben-einloesen')
+    const partie = erstellePartie({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(1) })
+    expect(AUFGABENREGISTER.get('Farbkombination')!.istErfuellt(partie, 0)).toBe(false)
+    const { zustand, ereignisse } = klicke(erzeugeSzenario('aufgaben-einloesen'), anlegen('Blau', 'schlange-1'))
+    expect(aufgaben(ereignisse)).toEqual([])
+    expect(zustand.spieler[0].geheimeAufgabeErfuellt).toBe(false)
+  })
+
+  it('X1: lädt der Tisch danach ein Szenario ohne Testbedingungen, gelten wieder die Platzhalter', () => {
+    lade('aufgaben-einloesen')
+    lade('start-erweiterung')
+    const { ereignisse } = klicke(findeSzenario('aufgaben-einloesen')!.erzeuge(), anlegen('Blau', 'schlange-1'))
+    expect(aufgaben(ereignisse)).toEqual([])
   })
 })

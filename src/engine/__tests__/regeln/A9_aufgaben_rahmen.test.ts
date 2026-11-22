@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { AKTIONSTYPEN, berechneEndwertung, ermittleEntscheider } from '../../index'
+import { AKTIONSTYPEN, berechneEndwertung, ermittleEntscheider, erstellePartie } from '../../index'
 import type { Spielzustand } from '../../index'
 import { baukasten } from '../../testing/szenario'
+import { erzeugeZufall } from '../../testing/zufall'
 import { GRUNDAUSLAGE as AUSLAGE, legeAufgabenAus, stapelBis } from '../../testing/aufgaben'
 import { immer, schlangeAb, setzeTestbedingungen, sonderkarteGespielt } from '../../testing/testaufgaben'
 import { aufgabeId, aufgabenEreignisse, aufgabenTisch, erste, FUENF, legeAn, namen } from '../aufgaben_hilfen'
@@ -256,6 +257,24 @@ describe('D35/A9: die geheime Aufgabe', () => {
     expect(zustand.spieler[1].schlangen[0].karten, 'Testaufbau: Schlangenfrass hat zwei der drei Karten gefressen').toHaveLength(1)
     expect(zustand.zug.spielerIndex).toBe(1)
     expect(zustand.spieler[1].geheimeAufgabeErfuellt).toBe(false)
+  })
+})
+
+describe('A9: Prüfung zu Beginn des ersten Zuges (Codex-Befund X1)', () => {
+  it('A9: der erste Zug der Partie beginnt mit einer Prüfung: Ist eine Bedingung schon erfüllt, hat Spieler 1 die Aufgabe sofort', () => {
+    setzeTestbedingungen({ Farbkombination: immer(0), Fusionsexperte: immer(0), 'Lila Riese': immer(0), Schlangentanz: immer(0), Farbenpracht: immer(0) })
+    const zustand = erstellePartie({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(3) })
+    const imSpiel = (name: string) => [...zustand.offeneAufgaben, ...zustand.aufgabenStapel, ...zustand.spieler[0].erfuellteAufgaben].some((aufgabe) => aufgabe.name === name)
+    const erwartet = ['Farbenpracht', 'Farbkombination', 'Fusionsexperte', 'Lila Riese', 'Schlangentanz'].filter(imSpiel)
+    expect(erwartet.length, 'Testaufbau: mindestens eine der Aufgaben liegt offen oder im Stapel').toBeGreaterThan(0)
+    expect(namen(zustand.spieler[0].erfuellteAufgaben).sort()).toEqual(erwartet)
+    expect(zustand.spieler[1].erfuellteAufgaben).toEqual([])
+  })
+
+  it('D34: ohne Erweiterung prüft auch der Partiebeginn nichts', () => {
+    setzeTestbedingungen({ Farbkombination: immer() })
+    const zustand = erstellePartie({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(3) })
+    expect(zustand.spieler.every((spieler) => spieler.erfuellteAufgaben.length === 0)).toBe(true)
   })
 })
 
