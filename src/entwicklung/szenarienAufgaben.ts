@@ -10,7 +10,7 @@ Szenarien zum Rahmen der Aufgabenkarten (X1, A9, D5, D35). Die Bedingungen der
 erfüllt ist. Damit man Prüfung und Einlösen am Tisch sieht, geben diese
 Szenarien einzelnen Aufgaben eine **Testbedingung**, die mit dem Kartentext
 nichts zu tun hat und nur hier gilt (`testbedingungen`, der Entwicklertisch
-setzt sie beim Laden des Szenarios). Was eingelöst wird, steht unter „Offene
+setzt sie beim Laden des Szenarios unter `/dev`, nicht unter `/spiel`). Was eingelöst wird, steht unter „Offene
 Aufgaben“, „Erfüllte Aufgaben“ und „Geheime Aufgabe … erfüllt“ und in den
 Ereignissen AufgabeErfuellt, AufgabeAufgedeckt und AufgabenstapelLeer.
 */

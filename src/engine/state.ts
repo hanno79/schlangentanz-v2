@@ -2,6 +2,7 @@ import type { Spieler, Spielzustand, Steuerung } from './types';
 import { HANDKARTEN, OFFENE_AUFGABEN, SPIELER_MAX, SPIELER_MIN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten, mischeDeck } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
+import { pruefeAufgabenAmZug } from './aufgaben/rahmen';
 import { neuerZug } from './zugablauf';
 
 export interface TischOptionen {
@@ -90,7 +91,9 @@ export function teileReihumAus(zustand: Spielzustand): void {
 
 /**
  * Eine neue Partie nach A4: mischen, jedem Spieler reihum 5 Karten austeilen,
- * der Rest ist der Nachziehstapel. Der Mensch beginnt (B2).
+ * der Rest ist der Nachziehstapel. Der Mensch beginnt (B2). Sein erster Zug
+ * beginnt wie jeder Zug mit der Prüfung der Aufgaben (A9); jeder spätere beginnt
+ * in einer Aktion (`anwendeAktion`).
  */
 export function erstellePartie({ spielerzahl, erweiterung, zufall }: PartieOptionen): Spielzustand {
   if (typeof zufall !== 'function') {
@@ -98,5 +101,7 @@ export function erstellePartie({ spielerzahl, erweiterung, zufall }: PartieOptio
   }
   const zustand = erstelleTisch({ spielerzahl, erweiterung, zufall });
   teileReihumAus(zustand);
+  // Ohne Vorzustand gibt es nichts nachzurechnen; was eingelöst ist, steht im Zustand selbst.
+  pruefeAufgabenAmZug(zustand, []);
   return zustand;
 }

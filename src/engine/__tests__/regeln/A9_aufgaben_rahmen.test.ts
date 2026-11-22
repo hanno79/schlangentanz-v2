@@ -262,12 +262,15 @@ describe('D35/A9: die geheime Aufgabe', () => {
 
 describe('A9: Prüfung zu Beginn des ersten Zuges (Codex-Befund X1)', () => {
   it('A9: der erste Zug der Partie beginnt mit einer Prüfung: Ist eine Bedingung schon erfüllt, hat Spieler 1 die Aufgabe sofort', () => {
-    setzeTestbedingungen({ Farbkombination: immer(0), Fusionsexperte: immer(0), 'Lila Riese': immer(0), Schlangentanz: immer(0), Farbenpracht: immer(0) })
+    const bedingt = ['Farbenpracht', 'Farbkombination', 'Fusionsexperte', 'Lila Riese', 'Schlangentanz', 'Symmetriemeister']
+    setzeTestbedingungen(Object.fromEntries(bedingt.map((name) => [name, immer(0)])))
     const zustand = erstellePartie({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(3) })
-    const imSpiel = (name: string) => [...zustand.offeneAufgaben, ...zustand.aufgabenStapel, ...zustand.spieler[0].erfuellteAufgaben].some((aufgabe) => aufgabe.name === name)
-    const erwartet = ['Farbenpracht', 'Farbkombination', 'Fusionsexperte', 'Lila Riese', 'Schlangentanz'].filter(imSpiel)
-    expect(erwartet.length, 'Testaufbau: mindestens eine der Aufgaben liegt offen oder im Stapel').toBeGreaterThan(0)
-    expect(namen(zustand.spieler[0].erfuellteAufgaben).sort()).toEqual(erwartet)
+    const eingeloest = namen(zustand.spieler[0].erfuellteAufgaben)
+    expect(eingeloest.length, 'A9: Spieler 1 hat zu Zugbeginn mindestens eine Aufgabe eingelöst').toBeGreaterThan(0)
+    expect(eingeloest.filter((name) => !bedingt.includes(name)), 'nur Aufgaben mit erfüllter Bedingung').toEqual([])
+    expect(namen(zustand.offeneAufgaben).filter((name) => bedingt.includes(name)), 'D5: keine erfüllte Aufgabe bleibt offen liegen').toEqual([])
+    const geheime = zustand.spieler[0].geheimeAufgabe!
+    expect(zustand.spieler[0].geheimeAufgabeErfuellt, 'D35: die geheime Aufgabe zählt, wenn ihre Bedingung gilt').toBe(bedingt.includes(geheime.name))
     expect(zustand.spieler[1].erfuellteAufgaben).toEqual([])
   })
 

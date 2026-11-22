@@ -257,17 +257,23 @@ export function findeSzenario(name: string): Szenario | undefined {
 }
 
 /**
- * Erzeugt das Szenario so, wie der Tisch es lädt: Erst gelten genau seine
- * Testbedingungen (X1), ohne welche die Aufgaben des Registers, dann entsteht der Zustand.
+ * Erzeugt das Szenario so, wie der Entwicklertisch unter `/dev` es lädt: Erst
+ * gelten genau seine Testbedingungen (X1), ohne welche die Aufgaben des
+ * Registers, dann entsteht der Zustand. Der Tisch wechselt Szenario und Partie
+ * nur mit echten Links, also mit neu geladener Seite.
  */
 export function ladeSzenario(szenario: Szenario): Spielzustand {
   setzeTestbedingungen(szenario.testbedingungen ?? {})
   return szenario.erzeuge()
 }
 
-/** Der Zustand des Szenarios, wie der Tisch es lädt; wirft, wenn es kein Szenario dieses Namens gibt. */
+/**
+ * Der Zustand des Szenarios ohne Testbedingungen; wirft, wenn es kein Szenario
+ * dieses Namens gibt. So lädt `/spiel` ein Szenario: Dort beginnt danach ohne
+ * Neuladen eine neue Partie, in der Testbedingungen nicht gelten dürfen (U2).
+ */
 export function erzeugeSzenario(name: string): Spielzustand {
   const szenario = findeSzenario(name)
   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „${name}“; die Szenarien stehen unter /dev/szenarien.`)
-  return ladeSzenario(szenario)
+  return szenario.erzeuge()
 }
