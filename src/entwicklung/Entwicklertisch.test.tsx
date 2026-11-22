@@ -7,6 +7,8 @@ vi.mock('../engine', async (original) => {
   const engine = await original<typeof import('../engine')>()
   return { ...engine, ermittleAktionen: vi.fn(engine.ermittleAktionen) }
 })
+import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
+import { baukasten } from '../engine/testing/szenario'
 import { entferneTestbedingungen } from '../engine/testing/testaufgaben'
 import Entwicklertisch from './Entwicklertisch'
 import { starteEntwicklerPartie } from './partie'
@@ -274,10 +276,14 @@ describe('X1: Szenarien mit Testbedingungen für Aufgaben', () => {
     expect(screen.getByTestId('offene-aufgaben')).toHaveTextContent('Farbvielfalt')
   })
 
-  it('X1: ein Szenario ohne Testbedingungen setzt die Platzhalter wieder ein', () => {
+  it('X1 (Codex-Befund): die Testbedingungen gelten nur während eines Schritts am Tisch; davor und danach hat das Register seine Platzhalter', () => {
+    const dreiKarten = baukasten({ spielerzahl: 2, erweiterung: true }).schlange(0, ['Blau', 'Blau', 'Blau']).zustand()
+    const farbkombination = () => AUFGABENREGISTER.get('Farbkombination')!.istErfuellt(dreiKarten, 0)
     oeffne('/dev?szenario=aufgaben-einloesen')
-    oeffne('/dev?szenario=start-erweiterung')
-    const zustand = findeSzenario('aufgaben-einloesen')!.erzeuge()
-    expect(anwendeAktion(zustand, ermittleAktionen(zustand).find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange')!).ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteGespielt'])
+    expect(farbkombination(), 'nach dem Aufbau des Tisches').toBe(false)
+    const blau = aktionsKnoepfe().find((text) => text.includes('FarbkarteLegen') && text.includes('"schlangenId":"schlange-1","seite":"ende"') && text.includes('blau-'))
+    fireEvent.click(screen.getByTitle(blau!))
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('AufgabeErfuellt')
+    expect(farbkombination(), 'nach dem Schritt').toBe(false)
   })
 })
