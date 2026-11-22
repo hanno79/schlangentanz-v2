@@ -210,6 +210,20 @@ function schwebend(wert: unknown, pfad: string): void {
   liste(roh.abgewehrt, `${pfad}.abgewehrt`, (index, indexPfad) => zahl(index, indexPfad));
 }
 
+/** X3: eine offene Entscheidung; ob ihre Art bekannt ist und die Verweise stimmen, prüfen die Invarianten. */
+function entscheidung(wert: unknown, pfad: string): void {
+  const roh = objekt(wert, pfad, ['art', 'karteId', 'entscheider', 'ausgeloestVon', 'optionen', 'daten']);
+  text(roh.art, `${pfad}.art`);
+  text(roh.karteId, `${pfad}.karteId`);
+  zahl(roh.entscheider, `${pfad}.entscheider`);
+  zahl(roh.ausgeloestVon, `${pfad}.ausgeloestVon`);
+  liste(roh.optionen, `${pfad}.optionen`, text);
+  if (!istObjekt(roh.daten)) fehler(`${pfad}.daten`, 'ist kein Objekt');
+  for (const [name, eintrag] of Object.entries(roh.daten)) {
+    if (!istText(eintrag) && !istGanzeZahl(eintrag)) fehler(`${pfad}.daten.${name}`, 'ist weder Text noch ganze Zahl ab 0');
+  }
+}
+
 function pruefeZustandsform(wert: unknown): asserts wert is Spielzustand {
   const roh = objekt(wert, 'Spielstand', [
     'version',
@@ -221,6 +235,8 @@ function pruefeZustandsform(wert: unknown): asserts wert is Spielzustand {
     'nachziehstapel',
     'ausliegendeGruben',
     'schwebend',
+    'entscheidung',
+    'aufgedeckt',
     'ausDemSpiel',
     'offeneAufgaben',
     'aufgabenStapel',
@@ -241,6 +257,8 @@ function pruefeZustandsform(wert: unknown): asserts wert is Spielzustand {
     zahl(grube.vor, `${pfad}.vor`);
   });
   if (roh.schwebend !== null) schwebend(roh.schwebend, 'schwebend');
+  if (roh.entscheidung !== null) entscheidung(roh.entscheidung, 'entscheidung');
+  liste(roh.aufgedeckt, 'aufgedeckt', spielkarte);
   liste(roh.ausDemSpiel, 'ausDemSpiel', (eintrag, pfad) => {
     const typ = istObjekt(eintrag) ? eintrag.typ : undefined;
     if (typ === 'Comeback' || typ === 'Risiko-Belohnung') auslagekarte(eintrag, pfad);

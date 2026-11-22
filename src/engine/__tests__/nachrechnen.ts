@@ -31,6 +31,10 @@ export interface Lage {
   schwebend: string | null
   /** Wer über die schwebende Karte gerade entscheidet (A6, D33). */
   gefragt: number | null
+  /** X3: die offen aufgedeckten Karten vom Nachziehstapel (A8.2). */
+  aufgedeckt: string[]
+  /** X3: die offene Entscheidung und wer sie trifft (D52). */
+  entscheidung: { art: string; entscheider: number } | null
 }
 
 export function lageVon(zustand: Spielzustand): Lage {
@@ -58,6 +62,8 @@ export function lageVon(zustand: Spielzustand): Lage {
     ausloeser: zustand.schlussrundeAusloeser,
     schwebend: zustand.schwebend?.karte.id ?? null,
     gefragt: zustand.schwebend?.ausstehend[0] ?? null,
+    aufgedeckt: zustand.aufgedeckt.map((karte) => karte.id),
+    entscheidung: zustand.entscheidung === null ? null : { art: zustand.entscheidung.art, entscheider: zustand.entscheidung.entscheider },
   }
 }
 
@@ -70,6 +76,8 @@ function karteAn(lage: Lage, ort: Kartenort): string | null {
       return lage.fusionen[ort.fusionId][ort.position]
     case 'Ablagestapel':
       return lage.ablagestapel[ort.spielerIndex][ort.position]
+    case 'Aufgedeckt':
+      return lage.aufgedeckt[ort.position]
     default:
       return null
   }
@@ -100,6 +108,9 @@ function nimm(lage: Lage, karteId: string | null, von: Kartenort): void {
       break
     case 'AusDemSpiel':
       lage.ausDemSpiel = ohne(lage.ausDemSpiel, karteId)
+      break
+    case 'Aufgedeckt':
+      lage.aufgedeckt = ohne(lage.aufgedeckt, karteId)
       break
     case 'Hand':
       lage.haende[von.spielerIndex] -= 1
@@ -133,6 +144,9 @@ function lege(lage: Lage, karteId: string | null, nach: Kartenort, von: number):
       break
     case 'AusDemSpiel':
       lage.ausDemSpiel.push(offen)
+      break
+    case 'Aufgedeckt':
+      lage.aufgedeckt.splice(nach.position, 0, offen)
       break
     case 'Hand':
       lage.haende[nach.spielerIndex] += 1
@@ -204,6 +218,12 @@ export function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
       case 'SchlussrundeBegonnen':
         lage.partiephase = 'Schlussrunde'
         lage.ausloeser = ereignis.ausloeser
+        break
+      case 'EntscheidungVerlangt':
+        lage.entscheidung = { art: ereignis.art, entscheider: ereignis.spielerIndex }
+        break
+      case 'Entschieden':
+        lage.entscheidung = null
         break
       case 'PartieBeendet':
         lage.partiephase = 'Beendet'

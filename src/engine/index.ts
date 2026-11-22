@@ -11,6 +11,7 @@ export type {
   Aktionstyp,
   AktionsErgebnis,
   BlockadeLegenAktion,
+  EntscheidenAktion,
   Ereignis,
   FarbendiebSpielenAktion,
   FarbkarteLegenAktion,

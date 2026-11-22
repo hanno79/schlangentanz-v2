@@ -71,6 +71,8 @@ export function erstelleTisch({ spielerzahl, erweiterung, zufall }: TischOptione
     nachziehstapel,
     ausliegendeGruben: [],
     schwebend: null,
+    entscheidung: null,
+    aufgedeckt: [],
     ausDemSpiel: [],
     offeneAufgaben,
     aufgabenStapel,

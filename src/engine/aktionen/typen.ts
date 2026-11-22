@@ -22,6 +22,7 @@ export const AKTIONSTYPEN = [
   'ZugBeenden',
   'UeberhandAbwerfen',
   'Reagieren',
+  'Entscheiden',
 ] as const;
 
 export type Aktionstyp = (typeof AKTIONSTYPEN)[number];
@@ -132,12 +133,20 @@ export interface ReagierenAktion {
   farbenschutzId: string | null;
 }
 
+/** X3: über eine offene Entscheidung wählen (D52, A8.2); `wahl` ist eine ihrer Optionen. */
+export interface EntscheidenAktion {
+  typ: 'Entscheiden';
+  spielerId: string;
+  wahl: string;
+}
+
 export type SpielAktion =
   | KartenAktion
   | SonderkarteWirkungslosAblegenAktion
   | ZugBeendenAktion
   | UeberhandAbwerfenAktion
-  | ReagierenAktion;
+  | ReagierenAktion
+  | EntscheidenAktion;
 
 export type Pruefergebnis = { erlaubt: true } | { erlaubt: false; grund: string };
 
@@ -156,7 +165,9 @@ export type Kartenort =
   | { ort: 'Hand'; spielerIndex: number }
   | { ort: 'Nachziehstapel' }
   | { ort: 'Schwebend' }
-  | { ort: 'AusDemSpiel' };
+  | { ort: 'AusDemSpiel' }
+  /** X3: offen aufgedeckt vom Nachziehstapel, bis eine Entscheidung sie weiterlegt (A8.2); `position` zählt in der Folge des Aufdeckens. */
+  | { ort: 'Aufgedeckt'; position: number };
 
 /** Eine Karte, die eine Kartenwirkung von `von` nach `nach` gebracht hat; `karteId` ist `null`, wenn sie danach verdeckt liegt (B2). */
 export interface Versetzung {
@@ -218,6 +229,15 @@ export type Ereignis =
   | { typ: 'Ausgesetzt'; spielerIndex: number; karteId: string; ablagestapelVon: number }
   /** D29: Der Spieler hat für die Schlangengrube `karteId` keinen Zug mehr; sie kommt ohne Wirkung auf den Ablagestapel von `ablagestapelVon`. */
   | { typ: 'GrubeOhneWirkung'; spielerIndex: number; karteId: string; ablagestapelVon: number }
+  /**
+   * X3: `spielerIndex` entscheidet jetzt über `art`, die die Wirkung der Karte
+   * `karteId` verlangt; zur Wahl steht `optionen` (D52, A8.2). Kommt am Ende der
+   * Aktion, nach allem, was sie bewegt hat.
+   */
+  | { typ: 'EntscheidungVerlangt'; spielerIndex: number; art: string; karteId: string; optionen: string[] }
+  /** X3: `spielerIndex` hat `wahl` gewählt; was die Wahl bewegt, meldet danach `KartenVersetzt` mit derselben `karteId`. */
+  | { typ: 'Entschieden'; spielerIndex: number; art: string; karteId: string; wahl: string }
+  /** A10, D55: Der Nachziehstapel ist leer; `ausloeser` ist der Spieler am Zug, gleich wer die letzte Karte genommen hat. */
   | { typ: 'SchlussrundeBegonnen'; ausloeser: number }
   | { typ: 'PartieBeendet' };
 

@@ -1,7 +1,8 @@
-import type { Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
+import type { EntscheidenAktion, Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
+import { definitionDerEntscheidung, ENTSCHEIDUNGSREGISTER } from './entscheidungsregister';
 import { definitionFuer } from './karten/register';
 import { wirkeUndMeldeVersetzte } from './kartenorte';
-import type { SonderkarteInfo, Spielkarte, Spielzustand } from './types';
+import type { OffeneEntscheidung, SonderkarteInfo, Spielkarte, Spielzustand } from './types';
 import {
   entnehmeHandkarte,
   findeKartenort,
@@ -28,6 +29,13 @@ Was eine Wirkung ausser der gespielten Karte bewegt, meldet `KartenVersetzt`
 
 Wer abwehrt, zieht nicht nach; er füllt zu Beginn seines nächsten Zuges auf
 (A6, `zugablauf.ts`).
+
+Daneben steht der allgemeine Entscheidungsablauf (X3): Eine Wirkung verlangt
+eine Entscheidung von einem bestimmten Spieler, auch von einem Gegner, etwa
+„der begünstigte Gegner wählt“ (D52) oder „Freie Wahl bei Misserfolg“ (A8.2).
+Bis er gewählt hat, geht nur seine Wahl; dann wirkt sie nach ihrem Eintrag im
+Entscheidungsregister und darf die nächste Entscheidung verlangen. Die Abwehr
+bleibt, wie sie ist; beides ist nie zugleich offen.
 */
 
 export function istFarbenschutz(karte: Spielkarte): boolean {
@@ -122,4 +130,59 @@ function loeseAuf(zustand: Spielzustand, ereignisse: Ereignis[]): Spielzustand {
   }
   ereignisse.push({ typ: 'AnsageEntschieden', spielerIndex: angreifer, karteId: karte.id, abgewehrt: [...abgewehrt], ohneWirkung, nach: findeKartenort(nach, karte.id) });
   return nach;
+}
+
+/**
+ * X3: Eine Wirkung verlangt eine Entscheidung. Die Engine meldet sie am Ende der
+ * Aktion (`meldeOffeneEntscheidung`). Fail-Fast: neben einer schwebenden Karte,
+ * neben einer offenen Entscheidung, ohne Wahl oder mit unbekannter Art geht das
+ * nicht.
+ */
+export function verlangeEntscheidung(zustand: Spielzustand, entscheidung: OffeneEntscheidung): void {
+  if (zustand.schwebend !== null) {
+    throw new Error(`Solange die ${zustand.schwebend.karte.name} schwebt, lässt sich keine Entscheidung verlangen; erst entscheiden die Betroffenen (A6).`);
+  }
+  if (zustand.entscheidung !== null) throw new Error(`Die Entscheidung „${zustand.entscheidung.art}“ ist schon offen; eine zweite lässt sich nicht daneben verlangen.`);
+  definitionDerEntscheidung(entscheidung.art);
+  if (entscheidung.optionen.length === 0) throw new Error(`Die Entscheidung „${entscheidung.art}“ ist ohne Wahl; entscheiden lässt sich nur zwischen Optionen.`);
+  if (zustand.spieler[entscheidung.entscheider] === undefined) throw new Error(`Spieler ${entscheidung.entscheider} gibt es nicht; er kann nicht entscheiden.`);
+  zustand.entscheidung = structuredClone(entscheidung);
+}
+
+/** X3: Was der Entscheider wählen darf: jede Option, in ihrer Reihenfolge. */
+export function entscheidungsAktionen(zustand: Spielzustand, spielerIndex: number): EntscheidenAktion[] {
+  const spielerId = zustand.spieler[spielerIndex].id;
+  return (zustand.entscheidung?.optionen ?? []).map((wahl) => ({ typ: 'Entscheiden', spielerId, wahl }));
+}
+
+/** Der Grund, warum diese Wahl nicht geht, oder `null`. Ob der Spieler gerade entscheidet, prüft die Aktionsschicht. */
+export function pruefeEntscheidung(zustand: Spielzustand, wahl: string): string | null {
+  const { entscheidung } = zustand;
+  if (entscheidung === null) return 'Es ist keine Entscheidung offen.';
+  if (!ENTSCHEIDUNGSREGISTER.has(entscheidung.art)) return `Die Entscheidung „${entscheidung.art}“ ist unbekannt; sie steht nicht im Entscheidungsregister.`;
+  if (!entscheidung.optionen.includes(wahl)) return `„${wahl}“ steht bei „${entscheidung.art}“ nicht zur Wahl; möglich sind: ${entscheidung.optionen.join(', ')}.`;
+  return null;
+}
+
+/**
+ * X3: Der Entscheider wählt. Die Wahl wirkt nach ihrem Eintrag im
+ * Entscheidungsregister; was sie bewegt, meldet die Engine als `KartenVersetzt`
+ * zur Karte der Entscheidung (Plan E4b), ohne eine Karte auszunehmen.
+ */
+export function entscheide(zustand: Spielzustand, aktion: EntscheidenAktion, ereignisse: Ereignis[]): Spielzustand {
+  const { entscheidung } = zustand;
+  if (entscheidung === null) throw new Error('Es ist keine Entscheidung offen.');
+  zustand.entscheidung = null;
+  const { art, karteId, entscheider, ausgeloestVon } = entscheidung;
+  ereignisse.push({ typ: 'Entschieden', spielerIndex: entscheider, art, karteId, wahl: aktion.wahl });
+  const definition = definitionDerEntscheidung(art);
+  return wirkeUndMeldeVersetzte(zustand, ausgeloestVon, karteId, (jetzt) => definition.loese(jetzt, entscheidung, aktion.wahl), ereignisse, null);
+}
+
+/** X3: Ist nach einer Aktion eine Entscheidung offen, ist sie neu; die Engine nennt den Entscheider und die Wahl. */
+export function meldeOffeneEntscheidung(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  const { entscheidung } = zustand;
+  if (entscheidung === null) return;
+  const { entscheider, art, karteId, optionen } = entscheidung;
+  ereignisse.push({ typ: 'EntscheidungVerlangt', spielerIndex: entscheider, art, karteId, optionen: [...optionen] });
 }

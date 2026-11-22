@@ -105,7 +105,7 @@ describe('X3 Kriterium 3 (A8.2, D52): eine Wirkung verlangt eine Entscheidung', 
   })
 })
 
-describe('X3 Kriterium 3: Speichern und Laden mitten in einer Entscheidung', () => {
+describe('X3 Kriterium 3 (D52, B2): Speichern und Laden mitten in einer Entscheidung', () => {
   it.each([
     ['vor der Wahl des Spielers am Zug', () => ersteFrage()],
     ['vor der Wahl des Gegners', () => entscheidung(ersteFrage(), 'spieler-3').zustand],

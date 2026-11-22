@@ -160,7 +160,7 @@ describe('A7.10/D43: Zusatzaktionen nur für bestimmte Karten', () => {
   })
 })
 
-describe('X3: Zusatzaktionen gelten im laufenden Zug und überstehen Speichern und Laden', () => {
+describe('A8.1/D46: Zusatzaktionen gelten im laufenden Zug und überstehen Speichern und Laden', () => {
   it('X3: nach dem Zug beginnt der Nächste ohne Zusatzaktionen und ohne gezählte Karten', () => {
     const start = tisch(['Blau'], [FREI])
     const gelegt = spiele(start, karteVon(start, 'Blau'))

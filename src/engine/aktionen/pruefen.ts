@@ -1,6 +1,6 @@
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
-import { istFarbenschutz, pruefeReaktion } from '../reaktion';
+import { istFarbenschutz, pruefeEntscheidung, pruefeReaktion } from '../reaktion';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
 import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
 import { AKTIONSTYPEN } from './typen';
@@ -56,6 +56,7 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   ZugBeenden: { spielerId: text },
   UeberhandAbwerfen: { spielerId: text, karteIds: textliste(0) },
   Reagieren: { spielerId: text, farbenschutzId: textOderNull },
+  Entscheiden: { spielerId: text, wahl: text },
 };
 
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {
@@ -77,12 +78,17 @@ export function pruefeAktionsform(wert: unknown): string | null {
   return null;
 }
 
-/** Wer als Nächster entscheidet (Plan E4, Kriterium 6), oder `null` nach Spielende. */
+/**
+ * Wer als Nächster entscheidet (Plan E4, Kriterium 6; X3, Kriterium 3), oder
+ * `null` nach Spielende: über eine schwebende Karte der nächste Betroffene, über
+ * eine offene Entscheidung ihr Entscheider, sonst der Spieler am Zug.
+ */
 export function ermittleEntscheider(zustand: Spielzustand): number | null {
   if (zustand.partiephase === 'Beendet') return null;
-  const { schwebend } = zustand;
+  const { schwebend, entscheidung } = zustand;
   // Eine schwebende Karte hat immer einen Ausstehenden (Invariante, A6).
-  return schwebend === null ? zustand.zug.spielerIndex : schwebend.ausstehend[0];
+  if (schwebend !== null) return schwebend.ausstehend[0];
+  return entscheidung === null ? zustand.zug.spielerIndex : entscheidung.entscheider;
 }
 
 const MAENNLICH = new Set<Kartenart>(['Farbenschutz', 'Farbendieb', 'Schlangenfrass', 'Verdoppler', 'Schlangenkorb des Glücks']);
@@ -120,8 +126,19 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     const grund = pruefeReaktion(zustand, spielerIndex, aktion.farbenschutzId);
     return grund === null ? JA : nein(grund);
   }
+  if (aktion.typ === 'Entscheiden') {
+    if (zustand.entscheidung === null) return nein('Es ist keine Entscheidung offen; „Entscheiden“ geht nur, wenn eine Wirkung eine Wahl verlangt (X3).');
+    const entscheider = ermittleEntscheider(zustand)!;
+    if (entscheider !== spielerIndex) return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider].name} (X3).`);
+    const grund = pruefeEntscheidung(zustand, aktion.wahl);
+    return grund === null ? JA : nein(grund);
+  }
   if (schwebend !== null) {
     return nein(`Die ${schwebend.karte.name} schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).`);
+  }
+  const { entscheidung } = zustand;
+  if (entscheidung !== null) {
+    return nein(`Erst entscheidet ${zustand.spieler[entscheidung.entscheider].name} über „${entscheidung.art}“; vorher geht keine andere Aktion (X3).`);
   }
   if (zustand.zug.spielerIndex !== spielerIndex) {
     return nein(`${spieler.name} ist nicht am Zug; am Zug ist ${zustand.spieler[zustand.zug.spielerIndex]?.name ?? 'niemand'} (A5).`);

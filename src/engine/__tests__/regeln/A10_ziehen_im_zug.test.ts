@@ -96,8 +96,8 @@ describe('A10/D55: wer mitten im Zug die letzte Karte zieht', () => {
     expect(kopie).toEqual(leer)
   })
 
-  it('A10: ohne Zug mitten im Zug bleibt alles wie bisher: wer beim Auffüllen die letzte Karte zieht, ist der Auslöser', () => {
-    const start = baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, ['Blau', 'Rot', 'Gelb', 'Grün']).hand(1, ['Blau']).stapelBehalten(2).zustand()
+  it('A10: ohne Ziehen mitten im Zug bleibt alles wie bisher: wer zu Zugbeginn beim Auffüllen die letzte Karte zieht, ist der Auslöser', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun']).hand(1, ['Blau']).stapelBehalten(2).zustand()
     const gespielt = fuehreAus(start, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: start.spieler[0].hand[0].id, ziel: { art: 'neueSchlange' } }).zustand
     const ende = fuehreAus(gespielt, zugBeenden(gespielt))
     expect(ereignisseVom(ende.ereignisse, 'SchlussrundeBegonnen')).toEqual([{ typ: 'SchlussrundeBegonnen', ausloeser: 1 }])

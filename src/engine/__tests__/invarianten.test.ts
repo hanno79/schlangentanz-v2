@@ -51,6 +51,7 @@ describe('A1/A4: pruefeInvarianten', () => {
       FUSION,
       VERWEISE,
       PHASE,
+      'Eine aufgedeckte Karte wartet auf eine Entscheidung',
     ])
     expect(verletzte(start())).toEqual([])
     expect(verletzte(start(true, 4))).toEqual([])

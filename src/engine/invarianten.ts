@@ -1,6 +1,7 @@
 import { MAX_SCHLANGEN_PRO_SPIELER, OFFENE_AUFGABEN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
+import { ENTSCHEIDUNGSREGISTER } from './entscheidungsregister';
 import type { KartenAktion } from './aktionen/typen';
 import { istKartenaktionstyp, kartenartFuer, kartenartVon } from './karten/register';
 import type { AufgabenkarteInfo, Auslagekarte, Spielkarte, Spielzustand } from './types';
@@ -31,6 +32,7 @@ const INVARIANTEN: ReadonlyArray<[name: string, pruefe: Pruefung]> = [
   ['Jede Farbenfusion deckt zwei Farbkarten gleicher Farbe', fusionenVollstaendig],
   ['Alle Verweise auf Spieler und Karten sind gültig', verweiseGueltig],
   ['Partiephase und Schlussrunde passen zusammen', partiephasePasst],
+  ['Eine aufgedeckte Karte wartet auf eine Entscheidung', aufgedecktWartet],
 ];
 
 export function pruefeInvarianten(zustand: Spielzustand): InvariantenBefund[] {
@@ -41,7 +43,7 @@ export function pruefeInvarianten(zustand: Spielzustand): InvariantenBefund[] {
   });
 }
 
-/** Jede Spielkarte, wo sie liegt (A4, A6, A7.6, A7.7, A7.10). */
+/** Jede Spielkarte, wo sie liegt (A4, A6, A7.6, A7.7, A7.10, A8.2). */
 export function alleSpielkarten(zustand: Spielzustand): Spielkarte[] {
   const karten: Spielkarte[] = [...zustand.nachziehstapel];
   for (const spieler of zustand.spieler) {
@@ -53,6 +55,7 @@ export function alleSpielkarten(zustand: Spielzustand): Spielkarte[] {
   }
   for (const grube of zustand.ausliegendeGruben) karten.push(grube.karte);
   if (zustand.schwebend !== null) karten.push(zustand.schwebend.karte);
+  karten.push(...zustand.aufgedeckt);
   for (const karte of zustand.ausDemSpiel) if (!istAuslagekarte(karte)) karten.push(karte);
   return karten;
 }
@@ -245,6 +248,17 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
       if (fehlend.length > 0) probleme.push(`Die schwebende Aktion nennt ${fehlend.join(', ')}, das liegt nicht in ${schlangenId}.`);
     }
   }
+  const { entscheidung } = zustand;
+  if (entscheidung !== null) {
+    const was = `Die offene Entscheidung „${entscheidung.art}“`;
+    pruefe(entscheidung.entscheider, `${was} (Entscheider)`);
+    pruefe(entscheidung.ausgeloestVon, `${was} (ausgelöst von)`);
+    if (!ENTSCHEIDUNGSREGISTER.has(entscheidung.art)) probleme.push(`${was} steht nicht im Entscheidungsregister.`);
+    if (entscheidung.optionen.length === 0) probleme.push(`${was} ist ohne Wahl; entscheiden lässt sich nur zwischen Optionen (X3).`);
+    if (new Set(entscheidung.optionen).size !== entscheidung.optionen.length) probleme.push(`${was} nennt eine Option mehrfach.`);
+    // X3: Abwehr und Entscheidung laufen nacheinander, nie zugleich; sonst wäre unklar, wer entscheidet.
+    if (schwebend !== null) probleme.push(`${was} ist offen, während ${schwebend.karte.id} schwebt.`);
+  }
   return probleme;
 }
 
@@ -271,6 +285,12 @@ function verweise(aktion: KartenAktion): { schlangenId: string; karteIds: string
       // Schlangengrube und Verdoppler nennen keine Schlange; ein unbekannter Typ ist oben schon gemeldet.
       return [];
   }
+}
+
+/** X3: Eine offen aufgedeckte Karte bleibt nur liegen, bis eine Entscheidung sie weiterlegt (A8.2); sonst wäre sie liegen geblieben. */
+function aufgedecktWartet(zustand: Spielzustand): string[] {
+  if (zustand.aufgedeckt.length === 0 || zustand.entscheidung !== null) return [];
+  return [`Aufgedeckt liegen ${zustand.aufgedeckt.map((karte) => karte.id).join(', ')}, aber keine Entscheidung ist offen.`];
 }
 
 function partiephasePasst(zustand: Spielzustand): string[] {

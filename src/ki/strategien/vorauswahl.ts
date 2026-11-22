@@ -133,6 +133,7 @@ function gespielteKarte(aktion: SpielAktion): string | null {
     case 'ZugBeenden':
     case 'UeberhandAbwerfen':
     case 'Reagieren':
+    case 'Entscheiden':
       return null;
     default:
       return aktion.karteId;
