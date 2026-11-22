@@ -1,6 +1,6 @@
 import type { Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
-import { bewerte } from './bewertung';
+import { bewerte, eigenePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 
 /*
@@ -157,6 +157,11 @@ function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
     ausliegendeGruben: karte?.typ === 'Sonderkarte' && ziel >= 0 ? [...sicht.ausliegendeGruben, { karte, gespieltVon: sicht.ich, vor: ziel }] : sicht.ausliegendeGruben,
     zug: aktion.typ === 'VerdopplerSpielen' ? { ...sicht.zug, verdopplerGespielt: true } : sicht.zug,
   };
+}
+
+/** Die eigenen Punkte nach der Aktion (A11), geschätzt wie oben, ohne Simulation und ohne `bewerte` (Plan K3, Kriterium 3). */
+export function punkteNach(sicht: Sicht, aktion: SpielAktion, merker: Wertungsmerker): number {
+  return eigenePunkte(folgeSicht(sicht, aktion), merker);
 }
 
 /**

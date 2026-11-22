@@ -1,9 +1,10 @@
 import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
+import { wehrtAb } from './abwehr';
 import { bewerte, eigeneGruppen, eigenePunkte, haltewert, neuerMerker, wertschluessel } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
-import { vorauswahl } from './vorauswahl';
+import { punkteNach, vorauswahl } from './vorauswahl';
 
 /*
 Die Zugsuche der soliden KI (Plan K2, Vorgehen). Sie rechnet die Folgen eines Zuges
@@ -14,8 +15,8 @@ für die besten drei die zweite Karte desselben Zuges. Nach einem Verdoppler beg
 mit dem zweiten Zug eine neue Suche auf der echten neuen Hand.
 
 Ein Gegner, den eine Sonderkarte trifft, lässt sie in der Rechnung durch; ob er
-abwehrt, sieht die KI nicht. Wer selbst gefragt wird, wehrt ab, wenn die Stellung
-danach besser ist als mit der Karte.
+abwehrt, sieht die KI nicht. Wird sie selbst gefragt, entscheidet `abwehr.ts`
+(Plan K3, Kriterium 4).
 
 Feste Regeln neben der Bewertung, Vorgaben des Autors:
 - Eine Regenbogenschlange kommt nie in eine gegnerische Schlange, solange die
@@ -24,6 +25,8 @@ Feste Regeln neben der Bewertung, Vorgaben des Autors:
 - Keine Schlangengrube auf einen Spieler, der keinen Zug mehr hat; die Engine
   erlaubt sie (D29), sie bringt aber nichts. Nur wenn nichts anderes geht, spielt
   die KI einen solchen Zug.
+- Eine Farbkarte kommt nur dann in eine gegnerische Schlange, wenn keine Farbkarte
+  der Hand in einer eigenen Schlange die eigenen Punkte hebt (Plan K3, Kriterium 3).
 - Eine Karte ohne Wirkung gilt etwas weniger als derselbe Stand mit der Karte in
   Wirkung, damit sie nie gewählt wird, wenn ein gleich guter Zug möglich ist (Kriterium 5).
 
@@ -104,6 +107,21 @@ function regenbogenZumGegner(sicht: Sicht, aktion: SpielAktion, aktionen: readon
 }
 
 /**
+ * Kriterium 3 (K3): keine Farbkarte in eine gegnerische Schlange, solange die Engine
+ * eine Farbkarte in eine eigene Schlange anbietet, die die eigenen Punkte hebt.
+ */
+function farbeZumGegner(sicht: Sicht, aktion: SpielAktion, aktionen: readonly SpielAktion[], merker: Wertungsmerker): boolean {
+  if (aktion.typ !== 'FarbkarteLegen' || aktion.ziel.art !== 'schlange') return false;
+  const eigene = new Set(sicht.spieler[sicht.ich].schlangen.map((schlange) => schlange.id));
+  if (eigene.has(aktion.ziel.schlangenId)) return false;
+  const vorher = eigenePunkte(sicht, merker);
+  return aktionen.some(
+    (angeboten) =>
+      angeboten.typ === 'FarbkarteLegen' && (angeboten.ziel.art === 'neueSchlange' || eigene.has(angeboten.ziel.schlangenId)) && punkteNach(sicht, angeboten, merker) > vorher,
+  );
+}
+
+/**
  * Was nach einer ersten Karte am Tisch liegt, ohne Ids: Schlangen aller Spieler, die
  * eigene Hand (Farben und Namen), ausliegende Gruben und der Zug. Varianten, die
  * denselben Tisch ergeben (ein Farbendieb, der dieselbe Farbe an benachbarte Stellen
@@ -179,7 +197,9 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
-    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen));
+    const karten = aktionen.filter(
+      (aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen) && !farbeZumGegner(stand, aktion, aktionen, merker),
+    );
     const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
     bewertungen.angeboten += karten.length;
     bewertungen.vorauswahl += bewertet;
@@ -237,14 +257,30 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
 }
 
-/** Abwehren oder durchlassen (A6, A7.2): was die Stellung danach höher bewertet; bei gleicher Bewertung durchlassen. */
+/**
+ * Abwehren oder durchlassen (A6, A7.2, Plan K3 Kriterium 4): bei einem Angriff auf eine
+ * Gruppe immer, sonst wenn der Schaden den Farbenschutz aufwiegt, in der Schlussrunde
+ * bei jedem Schaden (`wehrtAb`). Alle Farbenschutz-Karten wirken gleich; gerechnet
+ * wird mit der ersten angebotenen.
+ */
 function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
+  const durchlassen = aktionen.find(istDurchlassen);
+  const abwehren = aktionen.find((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null);
+  const schutz = abwehren?.typ === 'Reagieren' ? sicht.hand.find((karte) => karte.id === abwehren.farbenschutzId) : undefined;
+  if (durchlassen === undefined || abwehren === undefined || schutz === undefined) {
+    throw new Error('Zugsuche: Für die Abwehr bietet die Engine nicht Durchlassen und einen Farbenschutz der eigenen Hand an.');
+  }
   const suche = erstelleSuche(sicht, zufall);
-  const geordnet = [...aktionen.filter(istDurchlassen), ...aktionen.filter((aktion) => !istDurchlassen(aktion))];
-  const folgen = geordnet.map((aktion) => suche.folge(suche.wurzel, sicht, aktion));
-  const gewaehlt = folgen.reduce<Folge | undefined>((bisher, folge) => (bisher === undefined || folge.wert > bisher.wert + GLEICH ? folge : bisher), undefined);
-  if (gewaehlt === undefined) throw new Error('Zugsuche: Für die Abwehr bietet die Engine keine Aktion an.');
-  return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
+  const [durch, abgewehrt] = [durchlassen, abwehren].map((aktion) => suche.folge(suche.wurzel, sicht, aktion));
+  const schutzwert = haltewert(schutz, sicht);
+  const lage = {
+    schaden: abgewehrt.wert + schutzwert - durch.wert,
+    schutzwert,
+    schlussrunde: sicht.partiephase === 'Schlussrunde',
+    punkte: { vorher: eigenePunkte(sicht), nachher: durch.punkte },
+    gruppen: { vorher: eigeneGruppen(sicht), nachher: durch.gruppen },
+  };
+  return { aktion: wehrtAb(lage) ? abwehren : durchlassen, bewertungen: suche.gezaehlt() };
 }
 
 /** Überzählige Karten abwerfen (A5): die Wahl, deren Karten auf der Hand am wenigsten wert sind. */
