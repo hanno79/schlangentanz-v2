@@ -9,7 +9,7 @@ eingerichtet: 2026-11-12
 | ENGINE | Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat | src/engine/** |
 | KI | KI-Gegner | src/ki/** |
 | BRETT | Spieltisch und Kartenaktionen (Altbestand) | src/aktionsziel/**, src/reaktionen.ts, src/aktionsLabel.ts, src/spielLabelHelpers.ts, src/kartenTexte.ts, src/kartenfarben.ts |
-| TISCH | Spieltisch | src/ui/tisch/**, src/ui/spiel/**, src/ui/ergebnis/**, tests/layout/ergebnis.hooks.spec.ts, tests/layout/tisch.spec.ts, tests/layout/tisch_messung.ts, tests/layout/spiel.hooks.spec.ts, tests/layout/karten_spielen.hooks.spec.ts, tests/layout/ziele_messung.ts |
+| TISCH | Spieltisch | src/ui/tisch/**, src/ui/spiel/**, src/ui/ergebnis/**, tests/layout/ergebnis.hooks.spec.ts, tests/layout/tisch.spec.ts, tests/layout/tisch_messung.ts, tests/layout/spiel.hooks.spec.ts, tests/layout/karten_spielen.hooks.spec.ts, tests/layout/ziele_messung.ts, tests/layout/abwehr.hooks.spec.ts |
 | APP | App-Rahmen, Lobby, Fehlerdienst | src/App*, src/main.tsx, src/index.css, src/components/**, src/fehlerdienst.ts, src/spielstand*.ts, src/assets/**, public/**, index.html, vercel.json, src/ui/lobby/**, src/ui/wurfImZeichnen.ts, tests/layout/lobby.spec.ts, tests/layout/navigation.spec.ts, tests/vercel_rewrites.test.ts |
 | DEV | Entwicklertisch unter /dev (nur Testhook-Build) | src/entwicklung/**, tests/entwicklertisch_bundle.test.ts, tests/layout/entwicklertisch*.hooks.spec.ts |
 | SPEC | Regelspiegel, Regelfragen an den Autor und Website-Abgleich | docs/GAME_SPEC.md, docs/REGELFRAGEN.md, scripts/website_abgleich/**, tests/spec_documentation*.ts, tests/regelfragen*.ts, tests/website_abgleich.test.ts, tests/website_abgleich/** |
