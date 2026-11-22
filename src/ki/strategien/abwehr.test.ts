@@ -1,15 +1,16 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, berechneEndwertung, ermittleAktionen, ermittleEntscheider, erstellePartie, erzeugeZufall } from '../../engine'
+import { berechneEndwertung, ermittleAktionen, ermittleEntscheider, erzeugeZufall } from '../../engine'
 import type { Spielzustand } from '../../engine'
+import { abwehren, durchlassen, waehle } from '../../entwicklung/szenarienTesthilfe'
 import { kiWahl } from '../schritt'
 import { sichtFuer } from '../sicht'
 import { mischeVerborgenes } from '../__tests__/verborgenes'
-import { nachDurchlassen } from '../__tests__/stellungen'
-import { erstelleSolideKiK2 } from '../__tests__/k2stand/solideKi'
-import type { Ki } from './strategie'
+import { nachDurchlassen, partieZustaende } from '../__tests__/stellungen'
+import { endpunkte, kisK3gegenK2, partienK3gegenK2 } from '../__tests__/k3partien'
 import { wehrtAb } from './abwehr'
-import { bewerte, eigeneGruppen, eigenePunkte, haltewert } from './bewertung'
+import type { Angriffslage } from './abwehr'
+import { bewerte, eigeneGruppen, gruppenwert, haltewert } from './bewertung'
 import { erstelleSolideKi } from './solideKi'
 
 /*
@@ -22,39 +23,23 @@ dieser Stellungen entscheidet die solide KI für den Gefragten, gleich wer an se
 Stelle sitzt; sie sieht ja nur dessen Sicht.
 */
 
-/** Partien mit 2 bis 4 Spielern, mit und ohne Erweiterung. */
-const PARTIEN = Array.from({ length: 36 }, (_, nummer) => ({ spielerzahl: 2 + (nummer % 3), erweiterung: nummer % 2 === 1, saat: 41_000 + nummer }))
-
-function kisFuer(spielerzahl: number, saat: number): Ki[] {
-  return Array.from({ length: spielerzahl }, (_, sitz) => (sitz === 0 ? erstelleSolideKi(erzeugeZufall(saat * 3 + 1)) : erstelleSolideKiK2(erzeugeZufall(saat * 5 + sitz))))
-}
-
-const haeltSchutz = (zustand: Spielzustand) => ermittleAktionen(zustand).some((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null)
-
 /** Jede Stellung der Partien, in der ein Gefragter Farbenschutz hält. */
-const GEFRAGT: Spielzustand[] = PARTIEN.flatMap(({ spielerzahl, erweiterung, saat }) => {
-  const kis = kisFuer(spielerzahl, saat)
-  const gesammelt: Spielzustand[] = []
-  let zustand = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
-  for (let schritt = 0; schritt < 5000 && zustand.partiephase !== 'Beendet'; schritt += 1) {
-    const entscheider = ermittleEntscheider(zustand)
-    if (entscheider === null) break
-    if (zustand.schwebend !== null && haeltSchutz(zustand)) gesammelt.push(zustand)
-    zustand = anwendeAktion(zustand, kiWahl(zustand, kis[entscheider])!).zustand
-  }
-  return gesammelt
-})
+const GEFRAGT: Spielzustand[] = partienK3gegenK2(36, 41_000).flatMap((partie) =>
+  partieZustaende(partie, kisK3gegenK2(partie)).filter((zustand) => zustand.schwebend !== null && ermittleAktionen(zustand).some(abwehren)),
+)
 
-const end = (zustand: Spielzustand, sitz: number) => berechneEndwertung(zustand).spieler[sitz].summe
-const gruppen = (zustand: Spielzustand, sitz: number) => berechneEndwertung(zustand).spieler[sitz].schlangen.reduce((summe, schlange) => summe + schlange.gruppen.length, 0)
+/** Punkte aus Farbgruppen und Vielfaltbonus (A11), ohne Kettenbonus und Aufgaben. */
+function gruppenpunkte(zustand: Spielzustand, sitz: number): number {
+  const wertung = berechneEndwertung(zustand).spieler[sitz]
+  return wertung.gruppenPunkte + (wertung.vielfaltBonus ?? 0)
+}
+const gruppenzahl = (zustand: Spielzustand, sitz: number) => berechneEndwertung(zustand).spieler[sitz].schlangen.reduce((summe, schlange) => summe + schlange.gruppen.length, 0)
 
 /** Was der Gefragte vom echten Zustand aus erreicht: durchlassen oder abwehren, danach lassen weitere Gefragte durch. */
 function ausgaenge(zustand: Spielzustand) {
   const gefragt = ermittleEntscheider(zustand)!
-  const angeboten = ermittleAktionen(zustand)
-  const durchlassen = angeboten.find((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId === null)!
-  const abwehren = angeboten.find((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null)!
-  return { gefragt, durchlassen, abwehren, durch: nachDurchlassen(zustand, durchlassen, gefragt), abgewehrt: nachDurchlassen(zustand, abwehren, gefragt) }
+  const schutz = waehle(zustand, abwehren)
+  return { gefragt, schutz, durch: nachDurchlassen(zustand, waehle(zustand, durchlassen), gefragt), abgewehrt: nachDurchlassen(zustand, schutz, gefragt) }
 }
 
 describe('K3 Kriterium 4: Abwehr in Partien', () => {
@@ -64,41 +49,38 @@ describe('K3 Kriterium 4: Abwehr in Partien', () => {
     expect(GEFRAGT.filter((zustand) => zustand.partiephase === 'Schlussrunde').length, 'K3.4: davon in der Schlussrunde').toBeGreaterThanOrEqual(3)
   })
 
-  it('K3.4: zerstört ein Angriff eine eigene Gruppe oder kostet er mindestens 3 Punkte, wehrt sie mit Farbenschutz ab', () => {
+  it('K3.4: zerstört ein Angriff eine eigene Gruppe oder kostet er die Gruppen mindestens 3 Punkte, wehrt sie mit Farbenschutz ab', () => {
     let geprueft = 0
     for (const zustand of GEFRAGT) {
       const { gefragt, durch } = ausgaenge(zustand)
-      if (gruppen(durch, gefragt) >= gruppen(zustand, gefragt) && end(zustand, gefragt) - end(durch, gefragt) < 3) continue
+      if (gruppenzahl(durch, gefragt) >= gruppenzahl(zustand, gefragt) && gruppenpunkte(zustand, gefragt) - gruppenpunkte(durch, gefragt) < 3) continue
       geprueft += 1
       const wahl = kiWahl(zustand, erstelleSolideKi(erzeugeZufall(geprueft)))
-      expect(wahl, `K3.4: ${zustand.schwebend?.karte.name}, Endwertung ${end(zustand, gefragt)} → ${end(durch, gefragt)}`).toMatchObject({ typ: 'Reagieren', farbenschutzId: expect.any(String) })
+      expect(wahl, `K3.4: ${zustand.schwebend?.karte.name}, Gruppenpunkte ${gruppenpunkte(zustand, gefragt)} → ${gruppenpunkte(durch, gefragt)}`).toMatchObject({ typ: 'Reagieren', farbenschutzId: expect.any(String) })
     }
     expect(geprueft, 'K3.4: genug Angriffe auf Gruppen').toBeGreaterThan(20)
   }, 60_000)
 
   it('K3.4: sie wehrt genau dann ab, wenn der Schaden den Farbenschutz aufwiegt, in der Schlussrunde bei jedem Schaden; gerechnet auf dem echten Zustand', () => {
-    const zaehlung = { abgewehrt: 0, durchgelassen: 0, schlussrundeSchaden: 0 }
+    const zaehlung = { abgewehrt: 0, durchgelassen: 0 }
     for (const [nummer, zustand] of GEFRAGT.entries()) {
-      const { gefragt, abwehren, durch, abgewehrt } = ausgaenge(zustand)
+      const { gefragt, schutz, durch, abgewehrt } = ausgaenge(zustand)
       const sicht = sichtFuer(zustand, gefragt)
-      const schutz = sicht.hand.find((karte) => abwehren.typ === 'Reagieren' && karte.id === abwehren.farbenschutzId)!
-      const schutzwert = haltewert(schutz, sicht)
-      const schaden = bewerte(sichtFuer(abgewehrt, gefragt)) + schutzwert - bewerte(sichtFuer(durch, gefragt))
-      const schlussrunde = zustand.partiephase === 'Schlussrunde'
       const nachher = sichtFuer(durch, gefragt)
-      const erwartet = wehrtAb({
-        schaden,
-        schutzwert,
-        schlussrunde,
-        punkte: { vorher: eigenePunkte(sicht), nachher: eigenePunkte(nachher) },
+      const lage: Angriffslage = {
+        durchgelassen: bewerte(nachher),
+        abgewehrt: bewerte(sichtFuer(abgewehrt, gefragt)),
+        schutzwert: haltewert(sicht.hand.find((karte) => schutz.typ === 'Reagieren' && karte.id === schutz.farbenschutzId)!, sicht),
+        schlussrunde: zustand.partiephase === 'Schlussrunde',
+        gruppenpunkte: { vorher: gruppenwert(sicht.spieler[gefragt], sicht.erweiterung), nachher: gruppenwert(nachher.spieler[gefragt], sicht.erweiterung) },
         gruppen: { vorher: eigeneGruppen(sicht), nachher: eigeneGruppen(nachher) },
-      })
+      }
+      const erwartet = wehrtAb(lage)
       const wahl = kiWahl(zustand, erstelleSolideKi(erzeugeZufall(nummer)))
-      expect(wahl?.typ === 'Reagieren' && wahl.farbenschutzId !== null, `K3.4: Stellung ${nummer}, ${zustand.schwebend?.karte.name}, Schaden ${schaden.toFixed(3)}, Schutz ${schutzwert}, ${zustand.partiephase}`).toBe(erwartet)
+      expect(wahl?.typ === 'Reagieren' && wahl.farbenschutzId !== null, `K3.4: Stellung ${nummer}, ${zustand.schwebend?.karte.name}, ${JSON.stringify(lage)}`).toBe(erwartet)
       if (erwartet) zaehlung.abgewehrt += 1
       else zaehlung.durchgelassen += 1
-      if (schlussrunde && (end(durch, gefragt) < end(zustand, gefragt) || zustand.schwebend?.karte.name === 'Schlangengrube')) {
-        zaehlung.schlussrundeSchaden += 1
+      if (lage.schlussrunde && (endpunkte(durch, gefragt) < endpunkte(zustand, gefragt) || zustand.schwebend?.karte.name === 'Schlangengrube')) {
         expect(erwartet, `K3.4: Schlussrunde, Stellung ${nummer}: Punkte oder Zug verloren, also abwehren`).toBe(true)
       }
     }
@@ -112,8 +94,7 @@ describe('K3 Kriterium 6 (K2.7): die Abwehr beruht nur auf der Sicht', () => {
     let veraendert = 0
     const abweichend: number[] = []
     for (const [nummer, zustand] of GEFRAGT.entries()) {
-      const gefragt = ermittleEntscheider(zustand)!
-      const gemischt = mischeVerborgenes(zustand, gefragt, erzeugeZufall(9000 + nummer))
+      const gemischt = mischeVerborgenes(zustand, ermittleEntscheider(zustand)!, erzeugeZufall(9000 + nummer))
       if (JSON.stringify(gemischt) !== JSON.stringify(zustand)) veraendert += 1
       const wahl = (stand: Spielzustand) => JSON.stringify(kiWahl(stand, erstelleSolideKi(erzeugeZufall(nummer))))
       if (wahl(gemischt) !== wahl(zustand)) abweichend.push(nummer)
@@ -124,16 +105,20 @@ describe('K3 Kriterium 6 (K2.7): die Abwehr beruht nur auf der Sicht', () => {
 })
 
 describe('K3 Kriterium 4: die Abwehrregel', () => {
-  it('K3.4: wehrtAb: eine Gruppe immer; sonst in laufender Partie erst über dem Wert des Farbenschutzes, in der Schlussrunde bei jedem Schaden, bei Gleichstand nie', () => {
-    const lage = (schaden: number, schlussrunde: boolean, punkte = { vorher: 5, nachher: 5 }, gruppen = { vorher: 1, nachher: 1 }) => ({ schaden, schutzwert: 1.2, schlussrunde, punkte, gruppen })
-    expect(wehrtAb(lage(1.0, false))).toBe(false)
-    expect(wehrtAb(lage(1.3, false))).toBe(true)
-    expect(wehrtAb(lage(1.2, false)), 'K3.4: Gleichstand').toBe(false)
-    expect(wehrtAb(lage(0.1, true))).toBe(true)
-    expect(wehrtAb(lage(0, true))).toBe(false)
-    expect(wehrtAb(lage(-1, true))).toBe(false)
-    expect(wehrtAb(lage(0.5, false, { vorher: 5, nachher: 3 }, { vorher: 1, nachher: 0 })), 'K3.4: Gruppe verloren').toBe(true)
-    expect(wehrtAb(lage(0.5, false, { vorher: 9, nachher: 6 })), 'K3.4: drei Punkte verloren').toBe(true)
-    expect(wehrtAb(lage(0.5, false, { vorher: 9, nachher: 7 })), 'K3.4: zwei Punkte, keine Gruppe').toBe(false)
+  /** Laufend: Durchlassen bewertet mit 10, der Farbenschutz ist 1.2 wert. */
+  function lage(abgewehrt: number, schlussrunde: boolean, gruppenpunkte = { vorher: 5, nachher: 5 }, gruppen = { vorher: 1, nachher: 1 }): Angriffslage {
+    return { durchgelassen: 10, abgewehrt, schutzwert: 1.2, schlussrunde, gruppenpunkte, gruppen }
+  }
+
+  it('K3.4: wehrtAb: eine Gruppe immer; sonst laufend, wenn das Abwehren trotz verlorenem Farbenschutz besser steht, in der Schlussrunde bei jedem Schaden, bei Gleichstand nie', () => {
+    expect(wehrtAb(lage(9.9, false)), 'K3.4: Schaden 1.1 wiegt den Farbenschutz (1.2) nicht auf').toBe(false)
+    expect(wehrtAb(lage(10.1, false)), 'K3.4: Schaden 1.3 wiegt ihn auf').toBe(true)
+    expect(wehrtAb(lage(10, false)), 'K3.4: Gleichstand').toBe(false)
+    expect(wehrtAb(lage(8.9, true)), 'K3.4: Schlussrunde, Schaden 0.1').toBe(true)
+    expect(wehrtAb(lage(8.8, true)), 'K3.4: Schlussrunde, kein Schaden').toBe(false)
+    expect(wehrtAb(lage(7.8, true)), 'K3.4: Schlussrunde, der Angriff nützt').toBe(false)
+    expect(wehrtAb(lage(0, false, { vorher: 5, nachher: 3 }, { vorher: 1, nachher: 0 })), 'K3.4: Gruppe verloren').toBe(true)
+    expect(wehrtAb(lage(0, false, { vorher: 9, nachher: 6 })), 'K3.4: drei Gruppenpunkte verloren').toBe(true)
+    expect(wehrtAb(lage(0, false, { vorher: 9, nachher: 7 })), 'K3.4: zwei Punkte, keine Gruppe').toBe(false)
   })
 })

@@ -2,7 +2,7 @@ import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
 import { wehrtAb } from './abwehr';
-import { bewerte, eigeneGruppen, eigenePunkte, haltewert, neuerMerker, wertschluessel } from './bewertung';
+import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker, wertschluessel } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 import { punkteNach, vorauswahl } from './vorauswahl';
 
@@ -51,8 +51,6 @@ const NACHLESE = 8;
 export const GRENZE_SUCHE = ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
 /** Abzug für eine Karte, die nichts bewirkt (Kriterium 5). */
 const OHNE_WIRKUNG = 0.05;
-/** Unterhalb dieses Abstands gelten zwei Bewertungen als gleich. */
-const GLEICH = 1e-9;
 
 /** Wie oft ein Schritt `bewerte` aufgerufen hat (Kriterium 8). */
 export interface Bewertungen {
@@ -99,26 +97,22 @@ function ohneWirkung(aktion: SpielAktion, nachher: Sicht): boolean {
   return aktion.typ === 'SchlangengrubeSpielen' && !nachher.ausliegendeGruben.some((grube) => grube.karte.id === aktion.karteId);
 }
 
-/** Kriterium 3: keine Regenbogenschlange in eine gegnerische Schlange, wenn die Engine eine eigene als Ziel anbietet. */
-function regenbogenZumGegner(sicht: Sicht, aktion: SpielAktion, aktionen: readonly SpielAktion[]): boolean {
-  if (aktion.typ !== 'RegenbogenschlangeLegen') return false;
-  const eigene = new Set(sicht.spieler[sicht.ich].schlangen.map((schlange) => schlange.id));
-  return !eigene.has(aktion.schlangenId) && aktionen.some((angeboten) => angeboten.typ === 'RegenbogenschlangeLegen' && eigene.has(angeboten.schlangenId));
-}
-
 /**
- * Kriterium 3 (K3): keine Farbkarte in eine gegnerische Schlange, solange die Engine
- * eine Farbkarte in eine eigene Schlange anbietet, die die eigenen Punkte hebt.
+ * Die festen Regeln zum Ziel, einmal je Stand ausgewertet; die Antwort sagt, ob eine
+ * Aktion gesperrt ist. Gesperrt ist eine Regenbogenschlange in eine gegnerische
+ * Schlange, wenn die Engine eine eigene als Ziel anbietet (K2, Kriterium 3, D9), und
+ * eine Farbkarte in eine gegnerische Schlange, solange eine angebotene Farbkarte in
+ * eine eigene Schlange die eigenen Punkte hebt (K3, Kriterium 3).
  */
-function farbeZumGegner(sicht: Sicht, aktion: SpielAktion, aktionen: readonly SpielAktion[], merker: Wertungsmerker): boolean {
-  if (aktion.typ !== 'FarbkarteLegen' || aktion.ziel.art !== 'schlange') return false;
+function zumGegnerGesperrt(sicht: Sicht, aktionen: readonly SpielAktion[], merker: Wertungsmerker): (aktion: SpielAktion) => boolean {
   const eigene = new Set(sicht.spieler[sicht.ich].schlangen.map((schlange) => schlange.id));
-  if (eigene.has(aktion.ziel.schlangenId)) return false;
-  const vorher = eigenePunkte(sicht, merker);
-  return aktionen.some(
-    (angeboten) =>
-      angeboten.typ === 'FarbkarteLegen' && (angeboten.ziel.art === 'neueSchlange' || eigene.has(angeboten.ziel.schlangenId)) && punkteNach(sicht, angeboten, merker) > vorher,
-  );
+  const zumGegner = (aktion: SpielAktion) =>
+    aktion.typ === 'RegenbogenschlangeLegen' ? !eigene.has(aktion.schlangenId) : aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && !eigene.has(aktion.ziel.schlangenId);
+  const regenbogenEigen = aktionen.some((aktion) => aktion.typ === 'RegenbogenschlangeLegen' && !zumGegner(aktion));
+  const farbeStoert = aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && zumGegner(aktion));
+  const vorher = farbeStoert ? eigenePunkte(sicht, merker) : 0;
+  const farbeHebt = farbeStoert && aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && !zumGegner(aktion) && punkteNach(sicht, aktion, merker) > vorher);
+  return (aktion) => zumGegner(aktion) && (aktion.typ === 'RegenbogenschlangeLegen' ? regenbogenEigen : farbeHebt);
 }
 
 /**
@@ -197,9 +191,8 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
-    const karten = aktionen.filter(
-      (aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen) && !farbeZumGegner(stand, aktion, aktionen, merker),
-    );
+    const gesperrt = zumGegnerGesperrt(stand, aktionen, merker);
+    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !gesperrt(aktion));
     const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
     bewertungen.angeboten += karten.length;
     bewertungen.vorauswahl += bewertet;
@@ -258,10 +251,9 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
 }
 
 /**
- * Abwehren oder durchlassen (A6, A7.2, Plan K3 Kriterium 4): bei einem Angriff auf eine
- * Gruppe immer, sonst wenn der Schaden den Farbenschutz aufwiegt, in der Schlussrunde
- * bei jedem Schaden (`wehrtAb`). Alle Farbenschutz-Karten wirken gleich; gerechnet
- * wird mit der ersten angebotenen.
+ * Abwehren oder durchlassen (A6, A7.2, Plan K3 Kriterium 4) nach `wehrtAb`, gerechnet
+ * auf je einer Stellung danach. Alle Farbenschutz-Karten wirken gleich; gerechnet wird
+ * mit der ersten angebotenen.
  */
 function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
   const durchlassen = aktionen.find(istDurchlassen);
@@ -272,12 +264,12 @@ function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => 
   }
   const suche = erstelleSuche(sicht, zufall);
   const [durch, abgewehrt] = [durchlassen, abwehren].map((aktion) => suche.folge(suche.wurzel, sicht, aktion));
-  const schutzwert = haltewert(schutz, sicht);
   const lage = {
-    schaden: abgewehrt.wert + schutzwert - durch.wert,
-    schutzwert,
+    durchgelassen: durch.wert,
+    abgewehrt: abgewehrt.wert,
+    schutzwert: haltewert(schutz, sicht),
     schlussrunde: sicht.partiephase === 'Schlussrunde',
-    punkte: { vorher: eigenePunkte(sicht), nachher: durch.punkte },
+    gruppenpunkte: { vorher: gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung), nachher: gruppenwert(durch.stellung.sicht.spieler[sicht.ich], sicht.erweiterung) },
     gruppen: { vorher: eigeneGruppen(sicht), nachher: durch.gruppen },
   };
   return { aktion: wehrtAb(lage) ? abwehren : durchlassen, bewertungen: suche.gezaehlt() };

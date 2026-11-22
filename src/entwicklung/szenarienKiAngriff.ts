@@ -16,13 +16,18 @@ function gemischt(spielerzahl: number, saat: number): Baukasten {
   return baukasten({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
 }
 
-/** Spieler 1 hat eine Schlangenblockade an Stelle `position` der Schlange `schlangenId` von KI-Gegner 1 angesagt; KI-Gegner 1 hält einen Farbenschutz. */
-function blockadeAngesagt(bau: Baukasten, schlangenId: string, position: number, hand: Parameters<Baukasten['hand']>[1]): Baukasten {
+/** Spieler 1 hat eine Schlangenblockade an Stelle `position` der ersten Schlange von KI-Gegner 1 angesagt; KI-Gegner 1 hält einen Farbenschutz. */
+function blockadeAngesagt(bau: Baukasten, position: number): Baukasten {
   return bau
-    .hand(1, hand)
-    .schwebend(0, 'Schlangenblockade', (karteId, spielerId) => ({ typ: 'BlockadeLegen', spielerId, karteId, schlangenId, position }), [1])
+    .hand(1, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun'])
+    .schwebend(0, 'Schlangenblockade', (karteId, spielerId) => ({ typ: 'BlockadeLegen', spielerId, karteId, schlangenId: 'schlange-1', position }), [1])
     .haendeAuffuellen()
     .amZug(0)
+}
+
+/** Die Blockade hinter dem blauen Paar in Gelb, Blau, Blau von KI-Gegner 1 (Ende, Stelle 3). */
+function blauesPaarZugestellt(): Baukasten {
+  return blockadeAngesagt(gemischt(2, 308).schlange(1, ['Gelb', 'Blau', 'Blau']).schlange(0, ['Rot']), 3)
 }
 
 export const KI_ANGRIFF_SZENARIEN: readonly Szenario[] = [
@@ -129,7 +134,7 @@ export const KI_ANGRIFF_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Er wehrt mit dem Farbenschutz ab: Die Blockade geht wirkungslos auf den Ablagestapel von Spieler 1, die grüne Gruppe (9 Punkte) bleibt. Danach ist Spieler 1 wieder am Zug.',
     erzeuge: () =>
-      blockadeAngesagt(gemischt(2, 307).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(0, ['Rot']), 'schlange-1', 1, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun']).zustand(),
+      blockadeAngesagt(gemischt(2, 307).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(0, ['Rot']), 1).zustand(),
   },
   {
     name: 'ki-abwehr-harmlos',
@@ -138,7 +143,7 @@ export const KI_ANGRIFF_SZENARIEN: readonly Szenario[] = [
     erwartet:
       'Er lässt durch: Der Schaden wiegt den Farbenschutz nicht auf, den er für einen echten Angriff behält. Die Blockade liegt danach am Ende seiner Schlange, der Farbenschutz bleibt auf der Hand.',
     erzeuge: () =>
-      blockadeAngesagt(gemischt(2, 308).schlange(1, ['Gelb', 'Blau', 'Blau']).schlange(0, ['Rot']), 'schlange-1', 3, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun']).zustand(),
+      blauesPaarZugestellt().zustand(),
   },
   {
     name: 'ki-abwehr-schlussrunde',
@@ -146,10 +151,7 @@ export const KI_ANGRIFF_SZENARIEN: readonly Szenario[] = [
       'K3, Kriterium 4: Wie „ki-abwehr-harmlos“, aber in der Schlussrunde: Spieler 1 hat die letzte Karte gezogen, KI-Gegner 1 hat danach noch seinen letzten Zug. Die Blockade hinter seinem blauen Paar ist angesagt, er hält einen Farbenschutz.',
     erwartet:
       'Er wehrt ab: In der Schlussrunde wehrt er jeden Schaden ab, auch diesen kleinen. Die Blockade geht wirkungslos auf den Ablagestapel von Spieler 1, das blaue Paar bleibt offen.',
-    erzeuge: () =>
-      blockadeAngesagt(gemischt(2, 308).schlange(1, ['Gelb', 'Blau', 'Blau']).schlange(0, ['Rot']), 'schlange-1', 3, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun'])
-        .schlussrunde(0)
-        .zustand(),
+    erzeuge: () => blauesPaarZugestellt().schlussrunde(0).zustand(),
   },
   {
     name: 'ki-angriff-fuehrender',

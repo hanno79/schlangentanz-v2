@@ -24,6 +24,8 @@ Die Gewichte sind Schätzungen in Punkten; sie entscheiden nur zwischen Zügen,
 die die Engine erlaubt.
 */
 
+/** Unterhalb dieses Abstands gelten zwei Bewertungen als gleich (Zugsuche und Abwehr). */
+export const GLEICH = 1e-9;
 /** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. */
 const HANDKARTE_GEGNER = 0.4;
 /** Ein Zug, den ein Spieler wegen einer Schlangengrube aussetzt (A7.6). */

@@ -2,13 +2,10 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, berechneEndwertung, ermittleAktionen } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
-import { erzeugeZufall } from '../../engine'
 import { sichtFuer } from '../sicht'
 import { entscheidungenVon, nachDurchlassen } from '../__tests__/stellungen'
-import type { Entscheidung } from '../__tests__/stellungen'
-import { erstelleSolideKiK2 } from '../__tests__/k2stand/solideKi'
+import { kisK3gegenK2, partienK3gegenK2 } from '../__tests__/k3partien'
 import { bewerte } from './bewertung'
-import { erstelleSolideKi } from './solideKi'
 
 /*
 K3, Kriterien 2, 3 und 5 in Partien: die solide KI an Stelle 0 gegen die solide KI im
@@ -17,30 +14,26 @@ Entscheidung der soliden KI. „Führend“ ist der Gegner mit der höchsten End
 (A11) im Moment der Entscheidung; Punkte zählen, wie die Engine sie rechnet.
 */
 
-const PARTIEN = Array.from({ length: 18 }, (_, nummer) => ({ spielerzahl: 2 + (nummer % 3), erweiterung: nummer % 2 === 1, saat: 42_000 + nummer }))
-const ENTSCHEIDUNGEN: Entscheidung[][] = PARTIEN.map(({ spielerzahl, erweiterung, saat }) =>
-  entscheidungenVon(
-    { spielerzahl, erweiterung, saat },
-    Array.from({ length: spielerzahl }, (_, sitz) => (sitz === 0 ? erstelleSolideKi(erzeugeZufall(saat * 3 + 1)) : erstelleSolideKiK2(erzeugeZufall(saat * 5 + sitz)))),
-    0,
-  ),
-)
-const ALLE = ENTSCHEIDUNGEN.flat()
+const ALLE = partienK3gegenK2(18, 42_000).flatMap((partie) => entscheidungenVon(partie, kisK3gegenK2(partie), 0))
 
-const end = (zustand: Spielzustand, sitz: number) => berechneEndwertung(zustand).spieler[sitz].summe
 /** Die eigenen Punkte ohne Aufgaben: Gruppen, Vielfaltbonus, Kettenbonus (A11). */
 const punkte = (zustand: Spielzustand, sitz: number) => {
   const wertung = berechneEndwertung(zustand).spieler[sitz]
   return wertung.summe - wertung.aufgabenPunkte
 }
-const gegner = (zustand: Spielzustand) => zustand.spieler.map((_, sitz) => sitz).filter((sitz) => sitz !== 0)
+/** Die Endwertung jedes Sitzes, einmal gerechnet. */
+const summen = (zustand: Spielzustand) => berechneEndwertung(zustand).spieler.map((spieler) => spieler.summe)
 /** Die Gegner mit der höchsten Endwertung, bei Gleichstand alle. */
 function fuehrende(zustand: Spielzustand): number[] {
-  const hoechste = Math.max(...gegner(zustand).map((sitz) => end(zustand, sitz)))
-  return gegner(zustand).filter((sitz) => end(zustand, sitz) === hoechste)
+  const werte = summen(zustand)
+  const hoechste = Math.max(...werte.slice(1))
+  return werte.flatMap((wert, sitz) => (sitz > 0 && wert === hoechste ? [sitz] : []))
 }
 /** Wie weit der stärkste Gegner vor der KI liegt (Endwertung). */
-const vorsprung = (zustand: Spielzustand) => Math.max(...gegner(zustand).map((sitz) => end(zustand, sitz))) - end(zustand, 0)
+function vorsprung(zustand: Spielzustand): number {
+  const werte = summen(zustand)
+  return Math.max(...werte.slice(1)) - werte[0]
+}
 /** Die Gegner, die eine Sonderkarte der KI fragt (A6, D33); leer für alles, was keinen Gegner trifft. */
 function getroffen(zustand: Spielzustand, aktion: SpielAktion): number[] {
   if (aktion.typ === 'ZugBeenden' || aktion.typ === 'UeberhandAbwerfen' || aktion.typ === 'Reagieren' || aktion.typ === 'FarbkarteLegen') return []
@@ -80,11 +73,12 @@ describe('K3 Kriterium 3 in Partien: eine Farbkarte beim Gegner nur, wenn die ei
     )
     for (const { vorher, aktion } of gestoert) {
       const eigene = new Set(vorher.spieler[0].schlangen.map((schlange) => schlange.id))
+      const bisher = punkte(vorher, 0)
       const besser = ermittleAktionen(vorher).filter(
         (angeboten) =>
           angeboten.typ === 'FarbkarteLegen' &&
           (angeboten.ziel.art === 'neueSchlange' || eigene.has(angeboten.ziel.schlangenId)) &&
-          punkte(anwendeAktion(vorher, angeboten).zustand, 0) > punkte(vorher, 0),
+          punkte(anwendeAktion(vorher, angeboten).zustand, 0) > bisher,
       )
       expect(besser, `K3.3: statt ${JSON.stringify(aktion)}`).toEqual([])
     }
@@ -101,7 +95,8 @@ describe('K3 Kriterium 5 in Partien: bei 3 und 4 Spielern greift sie bevorzugt d
       const ziele = getroffen(vorher, aktion)
       if (ziele.length === 0) continue
       angriffe += 1
-      if (ziele.some((sitz) => fuehrende(vorher).includes(sitz))) aufFuehrende += 1
+      const vorn = fuehrende(vorher)
+      if (ziele.some((sitz) => vorn.includes(sitz))) aufFuehrende += 1
       else aufAndere += 1
     }
     expect(angriffe, 'K3.5: genug Angriffe zu dritt und zu viert').toBeGreaterThan(30)

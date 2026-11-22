@@ -1,11 +1,13 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, berechneEndwertung, ermittleAktionen, erzeugeZufall } from '../../engine'
+import { anwendeAktion, ermittleAktionen, erzeugeZufall } from '../../engine'
 import type { SpielAktion, Spielzustand } from '../../engine'
-import { findeSzenario } from '../../entwicklung/szenarien'
+import { erzeugeSzenario } from '../../entwicklung/szenarien'
+import { durchlassen } from '../../entwicklung/szenarienTesthilfe'
 import { naechsterKiSchritt } from '../schritt'
 import { entscheiderVon } from '../sicht'
 import { nachDurchlassen } from '../__tests__/stellungen'
+import { endpunkte as end } from '../__tests__/k3partien'
 import { erstelleSolideKi } from './solideKi'
 
 /*
@@ -17,11 +19,7 @@ Abwehr entscheidet KI-Gegner 1 über eine Karte, die Spieler 1 angesagt hat.
 
 const KI = 'spieler-2'
 
-function szenario(name: string): Spielzustand {
-  const gefunden = findeSzenario(name)
-  if (gefunden === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
-  return gefunden.erzeuge()
-}
+const szenario = erzeugeSzenario
 
 /** Spielt den Zug von KI-Gegner 1 im Szenario mit der soliden KI; gefragte KI-Gegner entscheiden selbst, ein gefragter Mensch lässt durch. */
 function spieleZug(name: string, saat = 1): { aktionen: SpielAktion[]; start: Spielzustand; zustand: Spielzustand } {
@@ -32,7 +30,7 @@ function spieleZug(name: string, saat = 1): { aktionen: SpielAktion[]; start: Sp
   while (zustand.partiephase !== 'Beendet' && zustand.zug.spielerIndex === 1) {
     const entscheider = entscheiderVon(zustand)
     const aktion =
-      entscheider?.steuerung === 'KI' ? naechsterKiSchritt(zustand, ki) : ermittleAktionen(zustand).find((angeboten) => angeboten.typ === 'Reagieren' && angeboten.farbenschutzId === null)
+      entscheider?.steuerung === 'KI' ? naechsterKiSchritt(zustand, ki) : ermittleAktionen(zustand).find(durchlassen)
     if (aktion == null) throw new Error(`Testaufbau: In ${name} entscheidet ${entscheider?.name ?? 'niemand'} ohne Aktion.`)
     if (aktion.spielerId === KI) aktionen.push(aktion)
     zustand = anwendeAktion(zustand, aktion).zustand
@@ -45,7 +43,6 @@ function reaktion(name: string, saat = 1): SpielAktion | null {
   return naechsterKiSchritt(szenario(name), erstelleSolideKi(erzeugeZufall(saat)))
 }
 
-const end = (zustand: Spielzustand, sitz: number) => berechneEndwertung(zustand).spieler[sitz].summe
 const farben = (zustand: Spielzustand, sitz: number) =>
   zustand.spieler[sitz].schlangen.map((schlange) => schlange.karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)))
 const SAATEN = [1, 2, 3]
@@ -110,15 +107,15 @@ describe('K3 Kriterium 2: Schlangenblockade und Farbendieb treffen die Gruppe mi
 })
 
 describe('K3 Kriterium 3: eine störende Farbkarte beim Gegner nur, wenn die eigene Hand nichts Besseres hergibt', () => {
-  const gegnerische = (aktionen: SpielAktion[]) =>
-    aktionen.filter((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId !== 'schlange-1' && aktion.ziel.schlangenId !== 'schlange-2')
+  /** Die Farbkarten, die in die Schlange `schlangenId` gehen. */
+  const farbkartenAn = (aktionen: readonly SpielAktion[], schlangenId: string) =>
+    aktionen.filter((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId === schlangenId)
 
   it('K3.3: ki-farbe-eigene: das Blau vollendet ihre Gruppe; keine Farbkarte geht an die Schlange von Spieler 1', () => {
-    const start = szenario('ki-farbe-eigene')
-    expect(ermittleAktionen(start).some((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId === 'schlange-2'), 'D9: stören ginge').toBe(true)
+    expect(farbkartenAn(ermittleAktionen(szenario('ki-farbe-eigene')), 'schlange-2'), 'D9: stören ginge').not.toEqual([])
     for (const saat of SAATEN) {
       const zug = spieleZug('ki-farbe-eigene', saat)
-      expect(zug.aktionen.filter((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId === 'schlange-2'), `K3.3: Saat ${saat}`).toEqual([])
+      expect(farbkartenAn(zug.aktionen, 'schlange-2'), `K3.3: Saat ${saat}`).toEqual([])
       expect(farben(zug.zustand, 1), `K3.3: Saat ${saat}`).toEqual([['Blau', 'Blau', 'Blau']])
     }
   })
@@ -126,7 +123,7 @@ describe('K3 Kriterium 3: eine störende Farbkarte beim Gegner nur, wenn die eig
   it('K3.3: ki-farbe-stoeren: die eigene Hand bringt nichts, sie stellt das grüne Paar von Spieler 1 mit einem Braun zu', () => {
     for (const saat of SAATEN) {
       const zug = spieleZug('ki-farbe-stoeren', saat)
-      expect(gegnerische(zug.aktionen), `K3.3: Saat ${saat}`).toMatchObject([{ ziel: { schlangenId: 'schlange-3', seite: 'ende' } }])
+      expect(farbkartenAn(zug.aktionen, 'schlange-3'), `K3.3: Saat ${saat}`).toMatchObject([{ ziel: { schlangenId: 'schlange-3', seite: 'ende' } }])
       expect(farben(zug.zustand, 0), `K3.3: Saat ${saat}`).toEqual([['Rot', 'Grün', 'Grün', 'Braun']])
     }
   })
