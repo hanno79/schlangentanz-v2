@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { AKTIONSTYPEN, berechneEndwertung, ermittleEntscheider } from '../../index'
 import type { Spielzustand } from '../../index'
 import { baukasten } from '../../testing/szenario'
-import { legeAufgabenAus } from '../../testing/aufgaben'
-import { setzeTestbedingungen } from '../../testing/testaufgaben'
-import { AUSLAGE, aufgabeId, aufgabenEreignisse, aufgabenTisch, erste, FUENF, immer, legeAn, namen, schlangeAb } from '../aufgaben_hilfen'
+import { GRUNDAUSLAGE as AUSLAGE, legeAufgabenAus, stapelBis } from '../../testing/aufgaben'
+import { immer, schlangeAb, setzeTestbedingungen, sonderkarteGespielt } from '../../testing/testaufgaben'
+import { aufgabeId, aufgabenEreignisse, aufgabenTisch, erste, FUENF, legeAn, namen } from '../aufgaben_hilfen'
 import { durchlassen, folge, fuehreAus, reaktion, zugBeenden } from '../zugablauf_hilfen'
 
 /*
@@ -31,8 +31,8 @@ describe('A9/A5: wer am Zug ist und die Bedingung erfüllt, nimmt die offene Auf
     expect(namen(zustand.offeneAufgaben), 'A9: an ihrem Platz liegt die oberste Karte vom Stapel').toEqual(['Gelber Schatz', 'Fusionsexperte', 'Lila Riese'])
     expect(zustand.aufgabenStapel).toHaveLength(stapel - 1)
     expect(aufgabenEreignisse(ereignisse)).toEqual([
-      { typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId(start, 'Farbkombination') },
-      { typ: 'AufgabeAufgedeckt', aufgabeId: aufgabeId(start, 'Gelber Schatz'), anStelleVon: aufgabeId(start, 'Farbkombination') },
+      { typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId('Farbkombination') },
+      { typ: 'AufgabeAufgedeckt', aufgabeId: aufgabeId('Gelber Schatz'), anStelleVon: aufgabeId('Farbkombination') },
     ])
     // Die Karte ist zuerst gespielt, dann wird geprüft.
     expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KarteGespielt', 'AufgabeErfuellt', 'AufgabeAufgedeckt'])
@@ -67,7 +67,7 @@ describe('A9/A5: wer am Zug ist und die Bedingung erfüllt, nimmt die offene Auf
     expect(namen(zustand.spieler[1].erfuellteAufgaben)).toEqual(['Farbkombination'])
     const typen = ereignisse.map((ereignis) => ereignis.typ)
     expect(typen.indexOf('ZugBegonnen'), 'A9: eingelöst wird erst, wenn sein Zug begonnen hat').toBeLessThan(typen.indexOf('AufgabeErfuellt'))
-    expect(aufgabenEreignisse(ereignisse)[0]).toEqual({ typ: 'AufgabeErfuellt', spielerIndex: 1, aufgabeId: aufgabeId(start, 'Farbkombination') })
+    expect(aufgabenEreignisse(ereignisse)[0]).toEqual({ typ: 'AufgabeErfuellt', spielerIndex: 1, aufgabeId: aufgabeId('Farbkombination') })
   })
 
   it('A9/D9: durch einen Gegnerzug erfüllt: Spieler 1 legt die dritte Karte in die Schlange von KI-Gegner 1; der löst erst am eigenen Zugbeginn ein', () => {
@@ -104,9 +104,6 @@ describe('A9/A5: wer am Zug ist und die Bedingung erfüllt, nimmt die offene Auf
 })
 
 describe('A9/A6: geprüft wird nach jeder vollständig aufgelösten Aktion', () => {
-  /** Testbedingung: Der Spieler am Zug hat in diesem Teilzug schon eine Sonderkarte gespielt. Sie gilt, sobald die Karte angesagt ist. */
-  const sonderkarteGespielt = (zustand: Spielzustand, spielerIndex: number) => zustand.zug.spielerIndex === spielerIndex && zustand.zug.gespielteSonderkarten > 0
-
   it('A6/A9: eine angesagte Karte mit offener Abwehr ist noch nicht aufgelöst; geprüft wird, wenn der Betroffene entschieden hat', () => {
     setzeTestbedingungen({ Farbkombination: sonderkarteGespielt })
     const start = aufgabenTisch(['Schlangengrube', 'Rot', 'Gelb', 'Blau', 'Rot']).zustand()
@@ -155,7 +152,7 @@ describe('D5/A9: die neu aufgedeckte Aufgabe wird sofort mitgeprüft', () => {
     setzeTestbedingungen({ Farbkombination: schlangeAb(3), 'Gelber Schatz': schlangeAb(3), Farbvielfalt: schlangeAb(3), Farbenpracht: schlangeAb(4) })
     const start = aufgabenTisch(FUENF, FUENF, { ...AUSLAGE, stapelOben: ['Gelber Schatz', 'Farbvielfalt', 'Farbenpracht'] }).zustand()
     const { zustand, ereignisse } = legeAn(start, 'Blau')
-    const id = (name: string) => aufgabeId(start, name)
+    const id = (name: string) => aufgabeId(name)
     expect(aufgabenEreignisse(ereignisse)).toEqual([
       { typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: id('Farbkombination') },
       { typ: 'AufgabeAufgedeckt', aufgabeId: id('Gelber Schatz'), anStelleVon: id('Farbkombination') },
@@ -179,10 +176,7 @@ describe('D5/A9: die neu aufgedeckte Aufgabe wird sofort mitgeprüft', () => {
 
 describe('A9: bei leerem Aufgabenstapel bleibt der Platz leer', () => {
   /** Der Aufgabenstapel hat nur noch `anzahl` Karten; der Rest hat KI-Gegner 1 schon früher erfüllt. */
-  const mitStapel = (anzahl: number) =>
-    aufgabenTisch().aendere((zustand) => {
-      zustand.spieler[1].erfuellteAufgaben.push(...zustand.aufgabenStapel.splice(anzahl))
-    })
+  const mitStapel = (anzahl: number) => aufgabenTisch().aendere(stapelBis(anzahl))
 
   it('A9: ist der Stapel leer, wird keine neue Aufgabe aufgedeckt; der Platz bleibt leer, und die Engine meldet es', () => {
     setzeTestbedingungen({ Fusionsexperte: schlangeAb(3) })
@@ -190,8 +184,8 @@ describe('A9: bei leerem Aufgabenstapel bleibt der Platz leer', () => {
     const { zustand, ereignisse } = legeAn(start, 'Blau')
     expect(namen(zustand.offeneAufgaben)).toEqual(['Farbkombination', 'Lila Riese'])
     expect(aufgabenEreignisse(ereignisse)).toEqual([
-      { typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId(start, 'Fusionsexperte') },
-      { typ: 'AufgabenstapelLeer', anStelleVon: aufgabeId(start, 'Fusionsexperte') },
+      { typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId('Fusionsexperte') },
+      { typ: 'AufgabenstapelLeer', anStelleVon: aufgabeId('Fusionsexperte') },
     ])
   })
 
@@ -250,7 +244,7 @@ describe('D35/A9: die geheime Aufgabe', () => {
     expect(gefressen.spieler[0].schlangen[0].karten, 'Testaufbau: Schlangenfrass hat zwei der drei Karten gefressen').toHaveLength(1)
     expect(gefressen.spieler[0].geheimeAufgabeErfuellt).toBe(true)
     const wertung = berechneEndwertung(gefressen).spieler[0]
-    expect(wertung.aufgaben).toEqual([{ aufgabeId: aufgabeId(start, 'Schlangentanz'), name: 'Schlangentanz', punkte: 7, geheim: true }])
+    expect(wertung.aufgaben).toEqual([{ aufgabeId: aufgabeId('Schlangentanz'), name: 'Schlangentanz', punkte: 7, geheim: true }])
   })
 
   it('D35: erfüllt ein Gegner die Bedingung in seinem Zug und zerstört sie wieder, zählt die geheime Aufgabe nicht', () => {
@@ -284,7 +278,7 @@ describe('A9/D8: erfüllt bleibt erfüllt; Verdoppler, Schlussrunde und Spielend
     expect(zweiter.zustand.zug.teilzug, 'Testaufbau: der zweite Zug läuft').toBe(2)
     expect(aufgabenEreignisse(zweiter.ereignisse)).toEqual([])
     const { zustand, ereignisse } = legeAn(zweiter.zustand, 'Blau')
-    expect(aufgabenEreignisse(ereignisse)[0]).toEqual({ typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId(start, 'Farbkombination') })
+    expect(aufgabenEreignisse(ereignisse)[0]).toEqual({ typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId('Farbkombination') })
     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farbkombination'])
   })
 

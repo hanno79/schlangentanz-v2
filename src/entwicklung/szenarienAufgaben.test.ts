@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
-import { entferneTestbedingungen, setzeTestbedingungen } from '../engine/testing/testaufgaben'
+import { entferneTestbedingungen } from '../engine/testing/testaufgaben'
 import { findeSzenario, SZENARIEN } from './szenarien'
-import { durchlassen, klicke } from './szenarienTesthilfe'
+import { durchlassen, erzeuge as lade, klicke } from './szenarienTesthilfe'
 
 /*
 X1: Die Szenarien zum Aufgabenrahmen lassen sich am Entwicklertisch so
@@ -13,13 +13,6 @@ Erzeugen die Testbedingungen des Szenarios.
 afterEach(() => {
   entferneTestbedingungen()
 })
-
-function lade(name: string): Spielzustand {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
-  setzeTestbedingungen(szenario.testbedingungen ?? {})
-  return szenario.erzeuge()
-}
 
 const namen = (aufgaben: { name: string }[]) => aufgaben.map((aufgabe) => aufgabe.name)
 const aufgaben = (ereignisse: Ereignis[]) => ereignisse.filter((ereignis) => ereignis.typ.startsWith('Aufgabe')).map((ereignis) => ereignis.typ)

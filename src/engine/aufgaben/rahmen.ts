@@ -1,6 +1,6 @@
 import type { Ereignis } from '../aktionen/typen';
 import { definitionFuerAufgabe } from '../aufgabenKarten';
-import type { AufgabenkarteInfo, Spielzustand } from '../types';
+import type { Spielzustand } from '../types';
 
 /*
 Der Rahmen der Aufgabenkarten (A9, A5 „Aufgabe erfüllen“, D5, D34, D35). Ob
@@ -23,10 +23,6 @@ geprüft wird und was dann geschieht.
 und meldet sie (B2).
 */
 
-function erfuellt(zustand: Spielzustand, aufgabe: AufgabenkarteInfo, spielerIndex: number): boolean {
-  return definitionFuerAufgabe(aufgabe).istErfuellt(zustand, spielerIndex);
-}
-
 /** Löst für den Spieler am Zug ein, was er jetzt erfüllt. Verändert `zustand` und meldet in `ereignisse`. */
 export function pruefeAufgabenAmZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
   if (!zustand.erweiterung || zustand.schwebend !== null || zustand.partiephase === 'Beendet') return;
@@ -34,12 +30,14 @@ export function pruefeAufgabenAmZug(zustand: Spielzustand, ereignisse: Ereignis[
   const spieler = zustand.spieler[spielerIndex];
 
   const geheime = spieler.geheimeAufgabe;
-  if (geheime !== null && !spieler.geheimeAufgabeErfuellt && erfuellt(zustand, geheime, spielerIndex)) spieler.geheimeAufgabeErfuellt = true;
+  if (geheime !== null && !spieler.geheimeAufgabeErfuellt && definitionFuerAufgabe(geheime).istErfuellt(zustand, spielerIndex)) {
+    spieler.geheimeAufgabeErfuellt = true;
+  }
 
   let platz = 0;
   while (platz < zustand.offeneAufgaben.length) {
     const aufgabe = zustand.offeneAufgaben[platz];
-    if (!erfuellt(zustand, aufgabe, spielerIndex)) {
+    if (!definitionFuerAufgabe(aufgabe).istErfuellt(zustand, spielerIndex)) {
       platz += 1;
       continue;
     }

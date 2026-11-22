@@ -1,9 +1,7 @@
-import type { Spielzustand } from '../engine'
-import { legeAufgabenAus } from '../engine/testing/aufgaben'
-import type { Aufgabenauslage } from '../engine/testing/aufgaben'
+import { GRUNDAUSLAGE, legeAufgabenAus, stapelBis } from '../engine/testing/aufgaben'
 import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten, Kartenwahl } from '../engine/testing/szenario'
-import type { Testbedingung } from '../engine/testing/testaufgaben'
+import { schlangeAb, sonderkarteGespielt } from '../engine/testing/testaufgaben'
 import type { Szenario } from './szenarien'
 
 /*
@@ -17,39 +15,15 @@ Aufgaben“, „Erfüllte Aufgaben“ und „Geheime Aufgabe … erfüllt“ und
 Ereignissen AufgabeErfuellt, AufgabeAufgedeckt und AufgabenstapelLeer.
 */
 
-/** Testbedingung: Der Spieler hat eine Schlange mit mindestens `laenge` Karten. */
-function schlangeAb(laenge: number): Testbedingung {
-  return (zustand, spielerIndex) => zustand.spieler[spielerIndex].schlangen.some((schlange) => schlange.karten.length >= laenge)
-}
-
-/** Testbedingung: Der Spieler ist am Zug und hat in diesem Teilzug eine Sonderkarte gespielt; das gilt schon, solange sie angesagt ist. */
-const sonderkarteGespielt: Testbedingung = (zustand, spielerIndex) => zustand.zug.spielerIndex === spielerIndex && zustand.zug.gespielteSonderkarten > 0
-
-const AUSLAGE: Aufgabenauslage = {
-  offen: ['Farbkombination', 'Fusionsexperte', 'Lila Riese'],
-  stapelOben: ['Gelber Schatz', 'Farbvielfalt'],
-  geheim: [
-    [0, 'Schlangentanz'],
-    [1, 'Symmetriemeister'],
-  ],
-}
-
 const FARBKARTEN: Kartenwahl[] = ['Rot', 'Gelb', 'Grün', 'Braun', 'Violett']
 
 /** Zwei Spieler mit Erweiterung; Spieler 1 ist am Zug und hat die Schlange Blau-Blau. */
-function tisch(hand0: Kartenwahl[], hand1: Kartenwahl[], auslage: Aufgabenauslage = AUSLAGE): Baukasten {
+function tisch(hand0: Kartenwahl[], hand1: Kartenwahl[]): Baukasten {
   return baukasten({ spielerzahl: 2, erweiterung: true })
     .schlange(0, ['Blau', 'Blau'])
     .hand(0, hand0)
     .hand(1, hand1)
-    .aendere((zustand) => legeAufgabenAus(zustand, auslage))
-}
-
-/** Bis auf `anzahl` Karten hat KI-Gegner 1 den Aufgabenstapel schon früher erfüllt. */
-function stapelBis(anzahl: number): (zustand: Spielzustand) => void {
-  return (zustand) => {
-    zustand.spieler[1].erfuellteAufgaben.push(...zustand.aufgabenStapel.splice(anzahl))
-  }
+    .aendere((zustand) => legeAufgabenAus(zustand, GRUNDAUSLAGE))
 }
 
 const TEST = 'Testbedingung (nur am Entwicklertisch, nicht der Kartentext):'

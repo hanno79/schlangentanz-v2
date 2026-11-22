@@ -78,8 +78,24 @@ export function legeAufgabenAus(zustand: Spielzustand, auslage: Aufgabenauslage)
   const bleibt = (aufgabe: AufgabenkarteInfo | null) => (aufgabe !== null && frei.has(aufgabe.name) ? nimm(aufgabe.name) : undefined);
   zustand.offeneAufgaben = offen ?? zustand.offeneAufgaben.flatMap((aufgabe) => bleibt(aufgabe) ?? []);
   for (const [index, spieler] of zustand.spieler.entries()) {
-    if (!geheim.has(index)) geheim.set(index, bleibt(spieler.geheimeAufgabe) ?? nimm([...frei.keys()][0]));
+    spieler.geheimeAufgabe = geheim.get(index) ?? bleibt(spieler.geheimeAufgabe) ?? nimm([...frei.keys()][0]);
   }
-  for (const [index, spieler] of zustand.spieler.entries()) spieler.geheimeAufgabe = geheim.get(index)!;
   zustand.aufgabenStapel = [...oben, ...frei.values()];
+}
+
+/** Die Auslage der Tests und Szenarien von X1: drei offene, zwei oben auf dem Stapel, bei zwei Spielern je eine geheime. */
+export const GRUNDAUSLAGE: Aufgabenauslage = {
+  offen: ['Farbkombination', 'Fusionsexperte', 'Lila Riese'],
+  stapelOben: ['Gelber Schatz', 'Farbvielfalt'],
+  geheim: [
+    [0, 'Schlangentanz'],
+    [1, 'Symmetriemeister'],
+  ],
+};
+
+/** Im Aufgabenstapel bleiben die obersten `anzahl` Karten; den Rest hat Spieler `spieler` schon früher erfüllt. */
+export function stapelBis(anzahl: number, spieler = 1): (zustand: Spielzustand) => void {
+  return (zustand) => {
+    zustand.spieler[spieler].erfuellteAufgaben.push(...zustand.aufgabenStapel.splice(anzahl));
+  };
 }

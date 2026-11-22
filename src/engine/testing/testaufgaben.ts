@@ -32,3 +32,16 @@ export function entferneTestbedingungen(): void {
   for (const [definition, bedingung] of ERSETZT) definition.istErfuellt = bedingung;
   ERSETZT.clear();
 }
+
+/** Testbedingung: Der Spieler hat eine Schlange mit mindestens `laenge` Karten. */
+export function schlangeAb(laenge: number): Testbedingung {
+  return (zustand, spielerIndex) => zustand.spieler[spielerIndex].schlangen.some((schlange) => schlange.karten.length >= laenge);
+}
+
+/** Testbedingung: immer erfüllt, für jeden Spieler oder nur für `nurFuer`. */
+export function immer(nurFuer?: number): Testbedingung {
+  return (_zustand, spielerIndex) => nurFuer === undefined || spielerIndex === nurFuer;
+}
+
+/** Testbedingung: Der Spieler ist am Zug und hat in diesem Teilzug eine Sonderkarte gespielt; das gilt schon, solange sie angesagt ist. */
+export const sonderkarteGespielt: Testbedingung = (zustand, spielerIndex) => zustand.zug.spielerIndex === spielerIndex && zustand.zug.gespielteSonderkarten > 0;

@@ -1,12 +1,11 @@
 import './entwicklertisch.css'
 import { SPIELER_MAX, SPIELER_MIN } from '../engine'
-import { setzeTestbedingungen } from '../engine/testing/testaufgaben'
 import { leseEntwicklerAnfrage } from './adresse'
 import { Fehler } from './Fehler'
 import type { EntwicklerAnfrage, EntwurfAnfrage } from './adresse'
 import { Entwurf } from './entwurf/Entwurf'
 import { starteEntwicklerPartie } from './partie'
-import { findeSzenario, SZENARIEN } from './szenarien'
+import { findeSzenario, ladeSzenario, SZENARIEN } from './szenarien'
 import { Tisch } from './Tisch'
 
 /*
@@ -52,11 +51,7 @@ function Inhalt({ anfrage }: { anfrage: Exclude<EntwicklerAnfrage, EntwurfAnfrag
       return (
         <Tisch
           titel={`Szenario ${szenario.name}`}
-          erzeuge={() => {
-            // Gilt für diese Seite; ein anderes Szenario lädt die Seite neu (X1).
-            setzeTestbedingungen(szenario.testbedingungen ?? {})
-            return szenario.erzeuge()
-          }}
+          erzeuge={() => ladeSzenario(szenario)}
           hinweis={
             <p className="et-hinweis">
               {szenario.beschreibung} <strong>Erwartet:</strong> {szenario.erwartet}

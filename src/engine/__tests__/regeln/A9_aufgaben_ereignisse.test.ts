@@ -4,9 +4,10 @@ import { AUFGABENREGISTER, definitionFuerAufgabe } from '../../aufgabenKarten'
 import type { Ereignis, Spielzustand } from '../../index'
 import { dauerlauf, dauerlaufPartien } from '../../testing/dauerlauf'
 import type { SchrittPruefer } from '../../testing/dauerlauf'
-import { setzeTestbedingungen } from '../../testing/testaufgaben'
+import { stapelBis } from '../../testing/aufgaben'
+import { schlangeAb, setzeTestbedingungen } from '../../testing/testaufgaben'
 import type { Testbedingung } from '../../testing/testaufgaben'
-import { aufgabenEreignisse, aufgabenTisch, erste, legeAn, schlangeAb } from '../aufgaben_hilfen'
+import { aufgabenEreignisse, aufgabenTisch, erste, legeAn } from '../aufgaben_hilfen'
 import { lageVon, spieleNach, verrateneGeheimeAufgaben, verrateneHandkarten } from '../nachrechnen'
 import { folge, zugBeenden } from '../zugablauf_hilfen'
 
@@ -34,11 +35,7 @@ describe('A9/E2: Einlösen, Aufdecken und leerer Stapel lassen sich aus den Erei
 
   it('A9: der Platz bleibt leer, wenn der Stapel leer ist', () => {
     setzeTestbedingungen({ Farbkombination: schlangeAb(3), 'Lila Riese': schlangeAb(3) })
-    const start = aufgabenTisch()
-      .aendere((jetzt) => {
-        jetzt.spieler[1].erfuellteAufgaben.push(...jetzt.aufgabenStapel.splice(1))
-      })
-      .zustand()
+    const start = aufgabenTisch().aendere(stapelBis(1)).zustand()
     const { zustand, ereignisse } = legeAn(start, 'Blau')
     expect(aufgabenEreignisse(ereignisse).map((ereignis) => ereignis.typ)).toContain('AufgabenstapelLeer')
     nachrechenbar(start, ereignisse, zustand)

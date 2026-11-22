@@ -54,6 +54,9 @@ export function erstelleAufgabenStapel(): AufgabenkarteInfo[] {
   }));
 }
 
+/** Die Namen der Aufgaben nach ihrer Id; die Ids ändern sich nie (A9). */
+export const AUFGABENNAMEN: ReadonlyMap<string, string> = new Map(erstelleAufgabenStapel().map((aufgabe) => [aufgabe.id, aufgabe.name]));
+
 /** Das Register der Aufgaben: Name → Bedingung, in der Reihenfolge von A9. */
 export const AUFGABENREGISTER: ReadonlyMap<string, AufgabenDefinition> = new Map(AUFGABEN.map(([name, , , definition]) => [name, definition]));
 

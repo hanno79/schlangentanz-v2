@@ -4,14 +4,16 @@ import { describe, expect, it, vi } from 'vitest'
 import { AUFGABEN_TABELLE } from '../../../test/specText'
 import { istAufgabenPlatzhalter, platzhalterAufgabe } from '../../aufgaben/definition'
 import { AUFGABENREGISTER, definitionFuerAufgabe, erstelleAufgabenStapel } from '../../aufgabenKarten'
-import { anwendeAktion, ermittleAktionen, erstellePartie } from '../../index'
+import { anwendeAktion, ermittleAktionen } from '../../index'
 import type { Spielzustand } from '../../index'
 import { legeAufgabenAus } from '../../testing/aufgaben'
+import { dauerlauf, dauerlaufPartien } from '../../testing/dauerlauf'
+import type { SchrittPruefer } from '../../testing/dauerlauf'
 import { baukasten } from '../../testing/szenario'
-import { entferneTestbedingungen, setzeTestbedingungen } from '../../testing/testaufgaben'
+import { entferneTestbedingungen, immer, setzeTestbedingungen } from '../../testing/testaufgaben'
 import { erzeugeZufall } from '../../testing/zufall'
 import { zufallszustand } from '../../testing/zufallszustand'
-import { aufgabenEreignisse, aufgabenTisch, immer, legeAn, namen } from '../aufgaben_hilfen'
+import { aufgabenEreignisse, aufgabenTisch, legeAn, namen } from '../aufgaben_hilfen'
 
 /*
 X1, Kriterium 1 und der Aufbau für X2: Die 15 Aufgaben aus A9 stehen je mit
@@ -92,20 +94,14 @@ describe('A9/X1: die Platzhalter sind nie erfüllt', () => {
     }
   })
 
-  it('A9: in 30 Zufallspartien mit Erweiterung wird kein Platzhalter eingelöst, weder offen noch geheim', () => {
-    for (let saat = 1; saat <= 30; saat += 1) {
-      const wahl = erzeugeZufall(saat + 500)
-      let zustand = erstellePartie({ spielerzahl: 2 + (saat % 3), erweiterung: true, zufall: erzeugeZufall(saat) })
-      const geheime = zustand.spieler.map((spieler) => spieler.geheimeAufgabe!)
-      while (zustand.partiephase !== 'Beendet') {
-        const aktionen = ermittleAktionen(zustand)
-        zustand = anwendeAktion(zustand, aktionen[Math.floor(wahl() * aktionen.length)]).zustand
-      }
+  it('A9: in 12 Zufallspartien mit Erweiterung wird kein Platzhalter eingelöst, weder offen noch geheim', () => {
+    const pruefer = (): SchrittPruefer => (_vorher, _aktion, { zustand }) => {
       const eingeloest = zustand.spieler.flatMap((spieler) => spieler.erfuellteAufgaben).filter(istPlatzhalterKarte)
-      expect(namen(eingeloest), `Saat ${saat}: eingelöste Platzhalter`).toEqual([])
-      const geheimErfuellt = zustand.spieler.filter((spieler, index) => spieler.geheimeAufgabeErfuellt && istPlatzhalterKarte(geheime[index]))
-      expect(geheimErfuellt.map((spieler) => spieler.id), `Saat ${saat}: geheime Platzhalter erfüllt`).toEqual([])
+      const geheim = zustand.spieler.filter((spieler) => spieler.geheimeAufgabeErfuellt && istPlatzhalterKarte(spieler.geheimeAufgabe!))
+      return eingeloest.length + geheim.length === 0 ? null : `A9: eingelöste Platzhalter ${namen(eingeloest).join(', ')}, erfüllte geheime bei ${geheim.map((spieler) => spieler.id).join(', ')}`
     }
+    const ergebnisse = dauerlauf(dauerlaufPartien(12, true, 501), { neuerPruefer: pruefer })
+    expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet').map((ergebnis) => ergebnis.detail)).toEqual([])
   }, 120_000)
 })
 

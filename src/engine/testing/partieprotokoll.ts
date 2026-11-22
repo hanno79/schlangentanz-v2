@@ -1,6 +1,6 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
-import { erstelleAufgabenStapel } from '../aufgabenKarten';
+import { AUFGABENNAMEN } from '../aufgabenKarten';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
@@ -47,10 +47,8 @@ function kartenname(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? karte.farbe : karte.name;
 }
 
-const AUFGABEN: ReadonlyMap<string, string> = new Map(erstelleAufgabenStapel().map((aufgabe) => [aufgabe.id, aufgabe.name]));
-
 function aufgabe(id: string): string {
-  return `${AUFGABEN.get(id) ?? id} (${id})`;
+  return `${AUFGABENNAMEN.get(id) ?? id} (${id})`;
 }
 
 class Schreiber {

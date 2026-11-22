@@ -1,6 +1,7 @@
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten } from '../engine/testing/szenario'
+import { setzeTestbedingungen } from '../engine/testing/testaufgaben'
 import type { Testbedingung } from '../engine/testing/testaufgaben'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
@@ -255,9 +256,18 @@ export function findeSzenario(name: string): Szenario | undefined {
   return SZENARIEN.find((szenario) => szenario.name === name)
 }
 
-/** Der Zustand des Szenarios; wirft, wenn es kein Szenario dieses Namens gibt. */
+/**
+ * Erzeugt das Szenario so, wie der Tisch es lädt: Erst gelten genau seine
+ * Testbedingungen (X1), ohne welche die Aufgaben des Registers, dann entsteht der Zustand.
+ */
+export function ladeSzenario(szenario: Szenario): Spielzustand {
+  setzeTestbedingungen(szenario.testbedingungen ?? {})
+  return szenario.erzeuge()
+}
+
+/** Der Zustand des Szenarios, wie der Tisch es lädt; wirft, wenn es kein Szenario dieses Namens gibt. */
 export function erzeugeSzenario(name: string): Spielzustand {
   const szenario = findeSzenario(name)
   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „${name}“; die Szenarien stehen unter /dev/szenarien.`)
-  return szenario.erzeuge()
+  return ladeSzenario(szenario)
 }

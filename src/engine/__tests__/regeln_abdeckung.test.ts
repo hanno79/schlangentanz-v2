@@ -28,14 +28,8 @@ const AUSGENOMMEN: Readonly<Record<string, string>> = {
   'A8.2': 'Risiko-Belohnungs-Karte, Erweiterung (X5)',
 }
 
-/** Die Abschnitte, die der Plan in E11, Kriterium 2 nennt. */
-const PLAN_E11 = ['A4', 'A5', 'A6', 'A7.1', 'A7.2', 'A7.3', 'A7.4', 'A7.5', 'A7.6', 'A7.7', 'A7.8', 'A7.9', 'A10', 'A11']
-
-/** Abschnitte der Erweiterung, die schon eine Regeltestdatei haben (A9 seit X1); X7 verlangt sie für A7.10, A8 und A9. */
-const ERWEITERUNG = ['A9']
-
-/** Alle Abschnitte mit Regeltestdatei, in der Reihenfolge von Teil A. */
-const MIT_DATEI = [...PLAN_E11.slice(0, PLAN_E11.indexOf('A10')), ...ERWEITERUNG, 'A10', 'A11']
+/** Alle Abschnitte mit Regeltestdatei in der Reihenfolge von Teil A: die aus E11, Kriterium 2, und A9 seit X1 (X7 verlangt auch A7.10 und A8). */
+const MIT_DATEI = ['A4', 'A5', 'A6', 'A7.1', 'A7.2', 'A7.3', 'A7.4', 'A7.5', 'A7.6', 'A7.7', 'A7.8', 'A7.9', 'A9', 'A10', 'A11']
 
 /** Die Nummern aller Abschnitte in Teil A, in ihrer Reihenfolge. */
 function abschnitteInTeilA(): string[] {

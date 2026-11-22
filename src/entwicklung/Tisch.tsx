@@ -2,6 +2,7 @@ import { Fragment, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, erzeugeZufall, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
+import { AUFGABENNAMEN } from '../engine/aufgabenKarten'
 import { naechsterKiSchritt } from '../ki/schritt'
 import { entscheiderVon } from '../ki/sicht'
 import { STRATEGIEN } from '../ki/strategien'
@@ -241,10 +242,9 @@ function beschreibeOrt(zustand: Spielzustand, ort: Kartenort): string {
   }
 }
 
-/** Name und Id einer offenen oder erfüllten Aufgabe (A9). */
-function aufgabenname(zustand: Spielzustand, aufgabeId: string): string {
-  const alle = [...zustand.offeneAufgaben, ...zustand.spieler.flatMap((spieler) => spieler.erfuellteAufgaben)]
-  return `${alle.find((aufgabe) => aufgabe.id === aufgabeId)?.name ?? 'Aufgabe'} (${aufgabeId})`
+/** Name und Id einer Aufgabe (A9). */
+function aufgabenname(aufgabeId: string): string {
+  return `${AUFGABENNAMEN.get(aufgabeId) ?? aufgabeId} (${aufgabeId})`
 }
 
 /** Ein Ereignis als Zeile, mit den Namen der Spieler statt ihrer Nummer. */
@@ -286,11 +286,11 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
     case 'PartieBeendet':
       return 'PartieBeendet'
     case 'AufgabeErfuellt':
-      return `AufgabeErfuellt: ${wer(ereignis.spielerIndex)} nimmt ${aufgabenname(zustand, ereignis.aufgabeId)}`
+      return `AufgabeErfuellt: ${wer(ereignis.spielerIndex)} nimmt ${aufgabenname(ereignis.aufgabeId)}`
     case 'AufgabeAufgedeckt':
-      return `AufgabeAufgedeckt: ${aufgabenname(zustand, ereignis.aufgabeId)} an Stelle von ${aufgabenname(zustand, ereignis.anStelleVon)}`
+      return `AufgabeAufgedeckt: ${aufgabenname(ereignis.aufgabeId)} an Stelle von ${aufgabenname(ereignis.anStelleVon)}`
     case 'AufgabenstapelLeer':
-      return `AufgabenstapelLeer: der Platz von ${aufgabenname(zustand, ereignis.anStelleVon)} bleibt leer`
+      return `AufgabenstapelLeer: der Platz von ${aufgabenname(ereignis.anStelleVon)} bleibt leer`
   }
 }
 
