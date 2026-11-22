@@ -1,7 +1,6 @@
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten } from '../engine/testing/szenario'
-import { setzeTestbedingungen } from '../engine/testing/testaufgaben'
 import type { Testbedingung } from '../engine/testing/testaufgaben'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
@@ -24,8 +23,8 @@ export interface Szenario {
   erzeuge: () => Spielzustand
   /**
    * Testbedingungen für Aufgaben, solange X2 sie nicht umgesetzt hat (X1). Der
-   * Entwicklertisch setzt sie, bevor er das Szenario erzeugt; jedes andere
-   * Szenario läuft mit den Aufgaben des Registers.
+   * Entwicklertisch setzt sie nur, während er eine Aktion anwendet; sonst, auch
+   * unter `/spiel`, gelten die Aufgaben des Registers.
    */
   testbedingungen?: Readonly<Record<string, Testbedingung>>
 }
@@ -256,22 +255,7 @@ export function findeSzenario(name: string): Szenario | undefined {
   return SZENARIEN.find((szenario) => szenario.name === name)
 }
 
-/**
- * Erzeugt das Szenario so, wie der Entwicklertisch unter `/dev` es lädt: Erst
- * gelten genau seine Testbedingungen (X1), ohne welche die Aufgaben des
- * Registers, dann entsteht der Zustand. Der Tisch wechselt Szenario und Partie
- * nur mit echten Links, also mit neu geladener Seite.
- */
-export function ladeSzenario(szenario: Szenario): Spielzustand {
-  setzeTestbedingungen(szenario.testbedingungen ?? {})
-  return szenario.erzeuge()
-}
-
-/**
- * Der Zustand des Szenarios ohne Testbedingungen; wirft, wenn es kein Szenario
- * dieses Namens gibt. So lädt `/spiel` ein Szenario: Dort beginnt danach ohne
- * Neuladen eine neue Partie, in der Testbedingungen nicht gelten dürfen (U2).
- */
+/** Der Zustand des Szenarios; wirft, wenn es kein Szenario dieses Namens gibt. */
 export function erzeugeSzenario(name: string): Spielzustand {
   const szenario = findeSzenario(name)
   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „${name}“; die Szenarien stehen unter /dev/szenarien.`)

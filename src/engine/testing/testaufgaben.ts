@@ -27,6 +27,20 @@ export function setzeTestbedingungen(bedingungen: Readonly<Record<string, Testbe
   }
 }
 
+/**
+ * Führt `tue` mit genau diesen Testbedingungen aus und setzt danach die
+ * Bedingungen aus den Dateien wieder ein, auch wenn `tue` wirft. So gilt eine
+ * Testbedingung nie über den Aufruf hinaus (Entwicklertisch).
+ */
+export function mitTestbedingungen<T>(bedingungen: Readonly<Record<string, Testbedingung>>, tue: () => T): T {
+  setzeTestbedingungen(bedingungen);
+  try {
+    return tue();
+  } finally {
+    entferneTestbedingungen();
+  }
+}
+
 /** Jede Aufgabe hat wieder die Bedingung aus ihrer Datei. */
 export function entferneTestbedingungen(): void {
   for (const [definition, bedingung] of ERSETZT) definition.istErfuellt = bedingung;

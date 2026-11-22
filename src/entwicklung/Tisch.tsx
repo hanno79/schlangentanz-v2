@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 import { anwendeAktion, ermittleAktionen, erzeugeZufall, serialisiere } from '../engine'
 import type { Ereignis, Kartenort, SpielAktion, Spielzustand } from '../engine'
 import { AUFGABENNAMEN } from '../engine/aufgabenKarten'
+import { mitTestbedingungen } from '../engine/testing/testaufgaben'
+import type { Testbedingung } from '../engine/testing/testaufgaben'
 import { naechsterKiSchritt } from '../ki/schritt'
 import { entscheiderVon } from '../ki/sicht'
 import { STRATEGIEN } from '../ki/strategien'
@@ -35,12 +37,14 @@ interface TischProps {
   hinweis?: ReactNode
   /** Die Saat der Partie, wenn sie aus einer entsteht; der Zufall der KI weicht ihr aus (U5). */
   saat?: number
+  /** Testbedingungen für Aufgaben (X1); sie gelten nur, während der Tisch eine Aktion anwendet. */
+  testbedingungen?: Readonly<Record<string, Testbedingung>>
 }
 
-export function Tisch({ titel, erzeuge, hinweis, saat }: TischProps) {
+export function Tisch({ titel, erzeuge, hinweis, saat, testbedingungen = {} }: TischProps) {
   const [anfang] = useState(() => beginne(erzeuge))
   if ('fehler' in anfang) return <Fehler meldung={`${titel} lässt sich nicht aufbauen: ${anfang.fehler}`} />
-  return <Spielverlauf titel={titel} startzustand={anfang.zustand} hinweis={hinweis} saat={saat ?? null} />
+  return <Spielverlauf titel={titel} startzustand={anfang.zustand} hinweis={hinweis} saat={saat ?? null} testbedingungen={testbedingungen} />
 }
 
 interface SpielverlaufProps {
@@ -48,9 +52,10 @@ interface SpielverlaufProps {
   startzustand: Spielzustand
   hinweis?: ReactNode
   saat: number | null
+  testbedingungen: Readonly<Record<string, Testbedingung>>
 }
 
-function Spielverlauf({ titel, startzustand, hinweis, saat }: SpielverlaufProps) {
+function Spielverlauf({ titel, startzustand, hinweis, saat, testbedingungen }: SpielverlaufProps) {
   const [verlauf, setVerlauf] = useState<Eintrag[]>(() => [{ zustand: startzustand, schritt: 'Start', ereignisse: [] }])
   const [fehler, setFehler] = useState<string | null>(null)
   const { zustand, ereignisse } = verlauf[verlauf.length - 1]
@@ -65,7 +70,7 @@ function Spielverlauf({ titel, startzustand, hinweis, saat }: SpielverlaufProps)
 
   function fuehreAus(aktion: SpielAktion, beschriftung: string) {
     try {
-      const ergebnis = anwendeAktion(zustand, aktion)
+      const ergebnis = mitTestbedingungen(testbedingungen, () => anwendeAktion(zustand, aktion))
       setzeVerlauf([...verlauf, { zustand: ergebnis.zustand, schritt: beschriftung, ereignisse: ergebnis.ereignisse }])
     } catch (ablehnung) {
       setFehler(`${beschriftung}: ${fehlertext(ablehnung)}`)

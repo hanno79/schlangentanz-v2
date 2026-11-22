@@ -3,16 +3,22 @@ import { erstellePartie } from '../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
 import { erzeugeZufall } from '../engine/testing/zufall'
-import { entferneTestbedingungen } from '../engine/testing/testaufgaben'
-import { erzeugeSzenario, findeSzenario, ladeSzenario, SZENARIEN } from './szenarien'
+import { entferneTestbedingungen, setzeTestbedingungen } from '../engine/testing/testaufgaben'
+import { erzeugeSzenario, findeSzenario, SZENARIEN } from './szenarien'
 import { durchlassen, klicke } from './szenarienTesthilfe'
 
-const lade = (name: string) => ladeSzenario(findeSzenario(name)!)
+/** Das Szenario mit seinen Testbedingungen; sie gelten bis zum Ende des Tests. */
+function lade(name: string): Spielzustand {
+  const szenario = findeSzenario(name)!
+  setzeTestbedingungen(szenario.testbedingungen ?? {})
+  return szenario.erzeuge()
+}
 
 /*
 X1: Die Szenarien zum Aufgabenrahmen lassen sich am Entwicklertisch so
 durchklicken, wie ihre Erwartung es sagt. Wie der Tisch setzen die Tests vor dem
-Erzeugen die Testbedingungen des Szenarios.
+Erzeugen die Testbedingungen des Szenarios; der Tisch setzt sie je Aktion
+(`Entwicklertisch.test.tsx`).
 */
 
 afterEach(() => {
@@ -89,12 +95,5 @@ describe('X1: Szenarien zum Aufgabenrahmen', () => {
     const { zustand, ereignisse } = klicke(erzeugeSzenario('aufgaben-einloesen'), anlegen('Blau', 'schlange-1'))
     expect(aufgaben(ereignisse)).toEqual([])
     expect(zustand.spieler[0].geheimeAufgabeErfuellt).toBe(false)
-  })
-
-  it('X1: lädt der Tisch danach ein Szenario ohne Testbedingungen, gelten wieder die Platzhalter', () => {
-    lade('aufgaben-einloesen')
-    lade('start-erweiterung')
-    const { ereignisse } = klicke(findeSzenario('aufgaben-einloesen')!.erzeuge(), anlegen('Blau', 'schlange-1'))
-    expect(aufgaben(ereignisse)).toEqual([])
   })
 })

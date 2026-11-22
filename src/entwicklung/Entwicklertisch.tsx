@@ -5,7 +5,7 @@ import { Fehler } from './Fehler'
 import type { EntwicklerAnfrage, EntwurfAnfrage } from './adresse'
 import { Entwurf } from './entwurf/Entwurf'
 import { starteEntwicklerPartie } from './partie'
-import { findeSzenario, ladeSzenario, SZENARIEN } from './szenarien'
+import { findeSzenario, SZENARIEN } from './szenarien'
 import { Tisch } from './Tisch'
 
 /*
@@ -51,7 +51,8 @@ function Inhalt({ anfrage }: { anfrage: Exclude<EntwicklerAnfrage, EntwurfAnfrag
       return (
         <Tisch
           titel={`Szenario ${szenario.name}`}
-          erzeuge={() => ladeSzenario(szenario)}
+          erzeuge={szenario.erzeuge}
+          testbedingungen={szenario.testbedingungen}
           hinweis={
             <p className="et-hinweis">
               {szenario.beschreibung} <strong>Erwartet:</strong> {szenario.erwartet}
