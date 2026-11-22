@@ -1,7 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { berechneEndwertung, ermittleAktionen, ermittleEntscheider, erzeugeZufall } from '../../engine'
+import { berechneEndwertung, ermittleAktionen, ermittleEntscheider, erzeugeZufall, hatNochLetztenZug } from '../../engine'
 import type { Spielzustand } from '../../engine'
+import { baukasten } from '../../engine/testing/szenario'
 import { abwehren, durchlassen, waehle } from '../../entwicklung/szenarienTesthilfe'
 import { kiWahl } from '../schritt'
 import { sichtFuer } from '../sicht'
@@ -80,7 +81,9 @@ describe('K3 Kriterium 4: Abwehr in Partien', () => {
       expect(wahl?.typ === 'Reagieren' && wahl.farbenschutzId !== null, `K3.4: Stellung ${nummer}, ${zustand.schwebend?.karte.name}, ${JSON.stringify(lage)}`).toBe(erwartet)
       if (erwartet) zaehlung.abgewehrt += 1
       else zaehlung.durchgelassen += 1
-      if (lage.schlussrunde && (endpunkte(durch, gefragt) < endpunkte(zustand, gefragt) || zustand.schwebend?.karte.name === 'Schlangengrube')) {
+      // D21, D29: Eine Grube kostet nur dann einen Zug, wenn der Getroffene noch seinen letzten hätte (Codex-Befund 3).
+      const zugVerloren = zustand.schwebend?.karte.name === 'Schlangengrube' && hatNochLetztenZug(zustand, gefragt)
+      if (lage.schlussrunde && (endpunkte(durch, gefragt) < endpunkte(zustand, gefragt) || zugVerloren)) {
         expect(erwartet, `K3.4: Schlussrunde, Stellung ${nummer}: Punkte oder Zug verloren, also abwehren`).toBe(true)
       }
     }
@@ -102,6 +105,21 @@ describe('K3 Kriterium 6 (K2.7): die Abwehr beruht nur auf der Sicht', () => {
     expect(veraendert, 'K3.6: das Mischen verändert fast jede Stellung').toBeGreaterThan(0.9 * GEFRAGT.length)
     expect(abweichend, 'K3.6: hier hinge die Abwehr vom Verdeckten ab').toEqual([])
   }, 60_000)
+})
+
+describe('K3 Kriterium 4, D21: eine Schlangengrube in der Schlussrunde kostet den letzten Zug', () => {
+  it('K3.4, D21 (Codex-Befund 1): ohne eigene Schlange wehrt sie eine Grube ab, die ihr den letzten Zug nähme', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(311) })
+      .schlange(0, ['Grün', 'Grün', 'Grün'])
+      .hand(1, ['Farbenschutz', 'Schlangenfrass', 'Blau', 'Violett', 'Braun'])
+      .schwebend(0, 'Schlangengrube', (karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-2' }), [1])
+      .haendeAuffuellen()
+      .schlussrunde(0)
+      .amZug(0)
+      .zustand()
+    expect(hatNochLetztenZug(start, 1), 'D21: ohne Grube hätte sie noch ihren letzten Zug').toBe(true)
+    for (const saat of [1, 2, 3]) expect(kiWahl(start, erstelleSolideKi(erzeugeZufall(saat))), `K3.4: Saat ${saat}`).toMatchObject({ typ: 'Reagieren', farbenschutzId: expect.any(String) })
+  })
 })
 
 describe('K3 Kriterium 4: die Abwehrregel', () => {
