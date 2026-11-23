@@ -26,9 +26,21 @@ const RUECKFRAGEN_X3: Record<string, { frage: string; wahl: string; kern: string
       'spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde',
     ],
     // Gegenprobe: die verworfene Lesart, nach der die gezogenen Karten erst ausserhalb des Zuges zählen.
-    verboten: ['erst im nächsten Zug', 'nur noch ausserhalb seines Zuges', 'nicht mehr im selben Zug'],
+    verboten: ['erst im nächsten Zug', 'darf die eben gezogenen Karten nur noch ausserhalb', 'nicht mehr im selben Zug'],
   },
 }
+
+/**
+ * P0.5f, Iteration 2: Einordnung des Satzes aus A10 neben D57, nach dem Muster von D23
+ * (Satz der Website zitieren und auslegen). Steht in Teil D und im Website-Nachtrag;
+ * jedes Zitat stammt wörtlich aus Teil A.
+ */
+const A10_EINORDNUNG = [
+  '„Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“',
+  'die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr',
+  'beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“)',
+  'Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“)',
+]
 
 describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   it('führt offene Auslegungsfragen als Fragen an den Autor', () => {
@@ -170,7 +182,7 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
       const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
       expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
       pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: ${wahl}.`], verboten)
-      expect(antwort.startsWith('ja'), `${nummer}: Antwort beginnt nicht mit „Ja“`).toBe(true)
+      expect(antwort.startsWith('ja:'), `${nummer}: Antwort beginnt nicht mit „Ja:“`).toBe(true)
       expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
       expect(datum, `${nummer}: Datum`).toBe('22.11.2026')
       expect(folge, `${nummer}: Folge`).toBe('X3')
@@ -180,8 +192,17 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
       const eintrag = nachtragEintrag(nummer)
       expect(eintrag.frage, `${nummer}: Frage im Nachtrag`).toBe(frage)
       pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), kern, [...verboten, 'Website folgt', 'gewählte Möglichkeit'])
+      expect(eintrag.antwort.startsWith('Ja:'), `${nummer}: Antwort im Nachtrag beginnt nicht mit „Ja:“`).toBe(true)
     })
   }
+
+  it('P0.5f: D57 und der Nachtrag ordnen den Satz aus A10 zu den zuletzt gezogenen Karten ein, mit Zitaten aus Teil A', () => {
+    pruefeKern('D57', eintragD('D57').antwort, [...A10_EINORDNUNG, 'Die Website soll A10 mit D57 klarstellen.'], [])
+    pruefeKern('D57 im Nachtrag', fliesstext(nachtragEintrag('D57').antwort).toLowerCase(), A10_EINORDNUNG, [])
+    const zitate = A10_EINORDNUNG.join(' ').match(/„[^“]+“/g) ?? []
+    expect(zitate.length, 'A10-Einordnung: Zahl der Zitate').toBe(4)
+    expect(fehlende(teil('A'), zitate.map((zitat) => zitat.slice(1, -1))), 'Zitate stehen nicht wörtlich in Teil A').toEqual([])
+  })
 
   it('P0.5f: der Website-Nachtrag führt D56 und D57 im Abschnitt Erweiterung', () => {
     expect(fehlende(abschnitt(websiteNachtrag, '##', 'Erweiterung'), ['(D56)', '(D57)'])).toEqual([])

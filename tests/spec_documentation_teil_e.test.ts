@@ -21,6 +21,6 @@ describe('GAME_SPEC Teil E — frühere R-Nummern und Verlauf', () => {
   })
 
   it('P0.5f: „Stand und Verlauf“ führt die Rückfragen aus X3 vom 22.11.2026', () => {
-    expect(fehlende(teil('E'), ['- **23.11.2026, Task P0.5f:**', 'D56 und D57'])).toEqual([])
+    expect(fehlende(teil('E'), ['- **23.11.2026, Task P0.5f:**', 'D56 und D57', 'Iteration 2', 'A10', 'C1, C15 und C20'])).toEqual([])
   })
 })

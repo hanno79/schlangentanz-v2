@@ -30,4 +30,13 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     )
     expect(unvollstaendig).toEqual([])
   })
+
+  it('P0.5f: C1, C15 und C20 sind nach X1 gestrichen und als behoben vermerkt; B1 nennt den Stand nach X1', () => {
+    const nummern = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.').map(([nr]) => nr)
+    for (const nr of ['C1', 'C15', 'C20']) expect(nummern, `Teil C führt ${nr} noch`).not.toContain(nr)
+    expect(fehlende(teil('C'), ['C1, C15 und C20 (X1, 23.11.2026)'])).toEqual([])
+    const aufgaben = spalten(tabelleMitSpalte(teil('B'), 'Digital heute'), 'Bestandteil', 'Digital heute').find(([was]) => was === '15 Aufgabenkarten')
+    expect(aufgaben?.[1], 'B1: Zeile „15 Aufgabenkarten“').not.toContain('14 von 15')
+    expect(aufgaben?.[1], 'B1: Zeile „15 Aufgabenkarten“').toContain('X1')
+  })
 })
