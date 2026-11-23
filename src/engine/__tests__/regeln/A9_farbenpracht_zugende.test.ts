@@ -1,11 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { berechneEndwertung } from '../../index'
 import type { Ereignis, Spielzustand } from '../../index'
+import { pruefeAufgabenAmZugende } from '../../aufgaben/rahmen'
 import { GRUNDAUSLAGE, legeAufgabenAus } from '../../testing/aufgaben'
+import { verlangeTestwahl } from '../../testing/testentscheidung'
 import type { Aufgabenauslage } from '../../testing/aufgaben'
 import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
 import { aufgabeId, aufgabenEreignisse, erste, legeAn, namen } from '../aufgaben_hilfen'
 import { mal } from '../farbmengen_hilfen'
+import { mitTestentscheidungen } from '../rahmen_hilfen'
 import { fuehreAus, tischMitHaenden, zugBeenden } from '../zugablauf_hilfen'
 import type { Schritt } from '../zugablauf_hilfen'
 
@@ -144,5 +147,25 @@ describe('D5: Kette mit Aufgaben verschiedener Prüfzeitpunkte', () => {
     expect(namen(gelegt.zustand.offeneAufgaben)).toEqual(['Farbenpracht', 'Lila Riese', 'Gelber Schatz'])
     const { zustand } = beenden(gelegt.zustand)
     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farbkombination', 'Farbenpracht'])
+  })
+})
+
+describe('A6/X3: ein Zug endet nie, solange eine Karte schwebt oder eine Entscheidung offen ist', () => {
+  it('A6: schwebt eine angesagte Karte, bricht die Prüfung am Zugende mit Grund ab, statt Farbenpracht still zu übergehen', () => {
+    const zustand = tisch()
+      .schwebend(0, 'Schlangengrube', (karteId, spielerId) => ({ typ: 'SchlangengrubeSpielen', spielerId, karteId, zielSpielerId: 'spieler-2' }), [1])
+      .zustand()
+    expect(() => pruefeAufgabenAmZugende(zustand, [])).toThrow(/Zug.*schwebt/)
+  })
+
+  it('X3: ist eine Entscheidung offen, bricht die Prüfung am Zugende mit Grund ab', () => {
+    const austragen = mitTestentscheidungen()
+    try {
+      const zustand = tisch().zustand()
+      verlangeTestwahl(zustand, 0, zustand.spieler[0].hand[0].id)
+      expect(() => pruefeAufgabenAmZugende(zustand, [])).toThrow(/Zug.*Entscheidung/)
+    } finally {
+      austragen()
+    }
   })
 })
