@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { Spielzustand } from '../../index'
 import { legeAufgabenAus } from '../../testing/aufgaben'
-import { erfuellt, stellung } from '../aufgaben_c_hilfen'
+import { erfuellt, neueSchlange, stellung } from '../aufgaben_c_hilfen'
 import type { Zeile } from '../aufgaben_c_hilfen'
 import type { Schlangenglied } from '../../testing/szenario'
 import { aufgabenEreignisse, aufgabeId, namen } from '../aufgaben_hilfen'
@@ -152,7 +152,6 @@ describe('A9/X1: die Aufgaben werden mit echten Zügen eingelöst, ohne Testbedi
       .hand(1, ['Schlangenblockade', 'Rot', 'Gelb', 'Grün', 'Braun'])
       .aendere((zustand) => legeAufgabenAus(zustand, { offen: ['Schlangenbeschwörer', 'Farbkombination', 'Lila Riese'] }))
       .zustand()
-    const neueSchlange = (zustand: Spielzustand) => aktionen(zustand, 'FarbkarteLegen').find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'neueSchlange')!
     const schlangenId = start.spieler[0].schlangen[0].id
     const blockade = (zustand: Spielzustand) => einfuegen(zustand, 'BlockadeLegen', handkarte(zustand, 1, 'Schlangenblockade'), schlangenId, 1)
     const nachBlockade = folge(start, neueSchlange, zugBeenden, blockade)

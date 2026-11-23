@@ -1,8 +1,9 @@
-import type { Sonderkartenname, Spielzustand } from '../index'
+import type { SpielAktion, Sonderkartenname, Spielzustand } from '../index'
 import { AUFGABENREGISTER } from '../aufgabenKarten'
 import { istAufgabenPlatzhalter } from '../aufgaben/definition'
 import { baukasten } from '../testing/szenario'
 import type { Baukasten, Schlangenglied } from '../testing/szenario'
+import { aktionen } from './zugablauf_hilfen'
 
 /*
 Hilfen für die Aufgaben aus Paket C von X2 (A9 Nr. 7 bis 10 und 12):
@@ -47,4 +48,11 @@ export interface Zeile {
   fall: string
   stellung: Stellung
   erwartet: boolean
+}
+
+/** Die erste aufgezählte Farbkarte, die eine neue eigene Schlange beginnt (A5). */
+export function neueSchlange(zustand: Spielzustand): SpielAktion {
+  const aktion = aktionen(zustand, 'FarbkarteLegen').find((eintrag) => eintrag.typ === 'FarbkarteLegen' && eintrag.ziel.art === 'neueSchlange')
+  if (aktion === undefined) throw new Error('Testaufbau: Eine neue Schlange ist nicht aufgezählt')
+  return aktion
 }

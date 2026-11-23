@@ -4,9 +4,9 @@ import type { Spielzustand } from '../../index'
 import { legeAufgabenAus } from '../../testing/aufgaben'
 import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
 import { aufgabenEreignisse, aufgabeId, namen } from '../aufgaben_hilfen'
-import { erfuellt } from '../aufgaben_c_hilfen'
+import { erfuellt, neueSchlange, stellung } from '../aufgaben_c_hilfen'
 import { arten, haeutungAuf, HAEUTUNG } from '../schlangenhaeutung_hilfen'
-import { aktionen, durchlassen, FUENF, folge, fuehreAus, tischMitHaenden, zugBeenden } from '../zugablauf_hilfen'
+import { durchlassen, FUENF, folge, fuehreAus, tischMitHaenden, zugBeenden } from '../zugablauf_hilfen'
 import type { Schritt } from '../zugablauf_hilfen'
 
 /*
@@ -30,16 +30,21 @@ const BEISPIEL: Kartenwahl[] = ['Blau', 'Grün', 'Grün', 'Blau', 'Grün', 'Rot'
 
 /** Spieler 1 hält eine Schlangenhäutung und hat diese Schlangen; offen liegt Schlangentanz. */
 function tisch(eigene: Schlangenglied[][], gegner: Schlangenglied[][] = [], hand0: Kartenwahl[] = HAEUTUNG): Spielzustand {
-  const bau = tischMitHaenden([hand0, FUENF], true)
-  for (const glieder of eigene) bau.schlange(0, glieder)
-  for (const glieder of gegner) bau.schlange(1, glieder)
-  return bau.aendere((zustand) => legeAufgabenAus(zustand, { offen: ['Schlangentanz', 'Farbkombination', 'Lila Riese'] })).zustand()
+  return stellung({ eigene, gegner })
+    .hand(0, hand0)
+    .hand(1, FUENF)
+    .aendere((zustand) => legeAufgabenAus(zustand, { offen: ['Schlangentanz', 'Farbkombination', 'Lila Riese'] }))
+    .zustand()
 }
 
 /** Spieler 1 häutet in seiner `schlange`-ten Schlange ab Stelle `von` zu `nachher`. */
-function haeute(zustand: Spielzustand, von: number, nachher: string[], schlange = 0, besitzer = 0): Schritt {
-  return fuehreAus(zustand, haeutungAuf(zustand, besitzer, von, nachher, schlange))
+function haeute(zustand: Spielzustand, von: number, nachher: string[], schlange = 0): Schritt {
+  return fuehreAus(zustand, haeutungAuf(zustand, 0, von, nachher, schlange))
 }
+
+/** Braun, Braun, ein Joker, dann Blau, Gelb, Blau, Gelb, Blau; gehäutet zu Gelb, Gelb, Blau, Blau, Blau. */
+const NEBEN_JOKER = (joker: Schlangenglied): Schlangenglied[] => ['Braun', 'Braun', joker, 'Blau', 'Gelb', 'Blau', 'Gelb', 'Blau']
+const ZU_GELB_BLAU = ['Gelb', 'Gelb', 'Blau', 'Blau', 'Blau']
 
 const zaehler = (zustand: Spielzustand, spieler = 0) => zustand.spieler[spieler].schlangenhaeutungDreiergruppen
 const schlangentanzErfuellt = (schritt: Schritt) =>
@@ -65,7 +70,7 @@ describe('A9 Nr. 12: Entscheidungstabelle', () => {
   })
 
   it('A9 Nr. 12/A7.3: mit Regenbogenschlange: sie zählt als Gelb, so entstehen Gelb und Blau neu; in der Wertung zählt sie als Braun (A11)', () => {
-    const schritt = haeute(tisch([['Braun', 'Braun', 'Regenbogenschlange', 'Blau', 'Gelb', 'Blau', 'Gelb', 'Blau']]), 3, ['Gelb', 'Gelb', 'Blau', 'Blau', 'Blau'])
+    const schritt = haeute(tisch([NEBEN_JOKER('Regenbogenschlange')]), 3, ZU_GELB_BLAU)
     expect(zaehler(schritt.zustand), 'A9: die Regenbogenschlange zählt für Schlangentanz als Gelb').toBe(2)
     expect(schlangentanzErfuellt(schritt)).toBe(true)
     // A7.3: Die Farbe ist nie festgelegt; die Wertung wählt die meisten Punkte (Braun 4 statt Gelb 2).
@@ -74,13 +79,13 @@ describe('A9 Nr. 12: Entscheidungstabelle', () => {
   })
 
   it('A9 Nr. 12: Gegenprobe ohne Joker: an Stelle der Regenbogenschlange eine rote Karte, so entsteht nur Blau neu', () => {
-    const schritt = haeute(tisch([['Braun', 'Braun', 'Rot', 'Blau', 'Gelb', 'Blau', 'Gelb', 'Blau']]), 3, ['Gelb', 'Gelb', 'Blau', 'Blau', 'Blau'])
+    const schritt = haeute(tisch([NEBEN_JOKER('Rot')]), 3, ZU_GELB_BLAU)
     expect(zaehler(schritt.zustand)).toBe(1)
     expect(schlangentanzErfuellt(schritt)).toBe(false)
   })
 
   it('A9 Nr. 12/A7.7: mit Farbenfusion: die Fusion aus zwei roten Karten zählt als Gelb; ihre roten Karten zählen nicht', () => {
-    const schritt = haeute(tisch([['Braun', 'Braun', { fusion: ['Rot', 'Rot'] }, 'Blau', 'Gelb', 'Blau', 'Gelb', 'Blau']]), 3, ['Gelb', 'Gelb', 'Blau', 'Blau', 'Blau'])
+    const schritt = haeute(tisch([NEBEN_JOKER({ fusion: ['Rot', 'Rot'] })]), 3, ZU_GELB_BLAU)
     expect(zaehler(schritt.zustand)).toBe(2)
     expect(schlangentanzErfuellt(schritt)).toBe(true)
   })
@@ -94,9 +99,8 @@ describe('A9 Nr. 12: Entscheidungstabelle', () => {
 
   it('A9 Nr. 12/D37: über zwei Schlangen: zwei Häutungen in zwei eigenen Schlangen mit je einer neuen Gruppe genügen nicht', () => {
     const start = tisch([['Rot', 'Rot', 'Blau', 'Rot'], ['Gelb', 'Gelb', 'Blau', 'Gelb']], [], ['Schlangenhäutung', 'Schlangenhäutung', 'Blau', 'Rot', 'Gelb'])
-    const erste = haeute(start, 1, ['Rot', 'Rot', 'Blau'], 0)
+    const erste = haeute(start, 1, ['Rot', 'Rot', 'Blau'])
     expect(zaehler(erste.zustand)).toBe(1)
-    const neueSchlange = (zustand: Spielzustand) => aktionen(zustand, 'FarbkarteLegen').find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'neueSchlange')!
     const wieder = folge(erste.zustand, zugBeenden, neueSchlange, zugBeenden)
     const zweite = haeute(wieder.zustand, 1, ['Gelb', 'Gelb', 'Blau'], 1)
     expect(arten(zweite.zustand, 0, 1)).toEqual(['Gelb', 'Gelb', 'Gelb', 'Blau'])
@@ -138,7 +142,7 @@ describe('A9 Nr. 12: was eine neue Dreiergruppe ist', () => {
 
 describe('A9 Nr. 12: erfüllt bleibt erfüllt; gespeichert bleibt gezählt', () => {
   it('A9/A7.3: „Schlangentanz“ bleibt erfüllt und bringt 7 Punkte, obwohl die Regenbogenschlange in der Wertung als Braun zählt', () => {
-    const schritt = haeute(tisch([['Braun', 'Braun', 'Regenbogenschlange', 'Blau', 'Gelb', 'Blau', 'Gelb', 'Blau']]), 3, ['Gelb', 'Gelb', 'Blau', 'Blau', 'Blau'])
+    const schritt = haeute(tisch([NEBEN_JOKER('Regenbogenschlange')]), 3, ZU_GELB_BLAU)
     const wertung = berechneEndwertung(schritt.zustand).spieler[0]
     expect(wertung.aufgaben?.map((eintrag) => eintrag.name)).toEqual(['Schlangentanz'])
     expect(wertung.aufgabenPunkte).toBe(7)

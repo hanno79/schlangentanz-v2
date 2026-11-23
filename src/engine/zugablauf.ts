@@ -1,4 +1,5 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
+import { merkeAusgespielteSonderkarte } from './aufgaben/sonderkartenZaehler';
 import { HANDKARTEN } from './constants';
 import { alleKartenorte, istVerdeckt } from './kartenorte';
 import type { Partiephase, Spieler, Spielkarte, Spielzustand, Zug } from './types';
@@ -46,10 +47,14 @@ type GespielteKarte = { typ: Aktionstyp; spielerId: string; karteId: string };
  * Zug (A5, D12, D13). Liefert die Karte; sie liegt danach noch auf der Hand.
  */
 export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte): Spielkarte {
-  const karte = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === aktion.karteId);
-  if (karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
+  const spieler = zustand.spieler.find((eintrag) => eintrag.id === aktion.spielerId);
+  const karte = spieler?.hand.find((handkarte) => handkarte.id === aktion.karteId);
+  if (spieler === undefined || karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
   if (karte.typ === 'Farbkarte') zustand.zug.gespielteFarbkarten += 1;
-  else zustand.zug.gespielteSonderkarten += 1;
+  else {
+    zustand.zug.gespielteSonderkarten += 1;
+    merkeAusgespielteSonderkarte(zustand, spieler, karte.name);
+  }
   return karte;
 }
 

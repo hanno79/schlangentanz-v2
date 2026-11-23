@@ -290,3 +290,70 @@ export function werteSchlangen(schlangen: readonly Schlange[], mitVielfalt: bool
     vielfaltBonus: mitVielfalt ? Math.max(0, ...gewertet.map((schlange) => schlange.vielfaltBonus ?? 0)) : null,
   };
 }
+
+/*
+Neue Dreiergruppen durch eine Schlangenhäutung (A9 Nr. 12 „Schlangentanz“, D37).
+
+Eine Dreiergruppe ist eine Farbgruppe aus mindestens drei Karten (A11). Neu ist
+eine Gruppe nach der Häutung, wenn vorher keine Gruppe derselben Farbe eine
+ihrer Karten enthielt; eine verlängerte oder stehengebliebene Gruppe ist nicht
+neu. Joker zählen als die Farbe, mit der die Aufgabe erfüllt ist (A9, A7.3,
+A7.7): Gesucht wird die Belegung mit den meisten neuen Gruppen, und jeder Joker
+hat vor und nach der Häutung dieselbe Farbe, denn bei einer Aufgabe zählt er
+als eine Farbe.
+
+Eine neue Gruppe enthält immer eine Karte, die ihre Stelle gewechselt hat: Eine
+Gruppe ohne solche Karte lag schon vorher so da, höchstens länger. Deshalb
+kommen nur die Farben der versetzten Karten in Frage, und nur die Joker, die
+mit ihnen ohne Sperre dazwischen in einer Strecke liegen; jede andere Farbe
+eines Jokers wirkt wie „keine dieser Farben“. Die Gruppen selbst erkennt
+`ermittleFarbgruppen` wie in der Wertung.
+*/
+
+/**
+ * Wie viele Dreiergruppen sind neu, wenn die Karten einer Schlange vorher wie
+ * `vorher` und nachher wie `nachher` liegen? Beide Listen enthalten dieselben
+ * Karten; nur Farbkarten haben ihre Stelle gewechselt (A7.9).
+ */
+export function neueDreiergruppen(vorher: readonly Spielkarte[], nachher: readonly Spielkarte[]): number {
+  const stellen = nachher.flatMap((karte, stelle) => (karte.id === vorher[stelle]?.id ? [] : [stelle]));
+  if (stellen.length === 0) return 0;
+  const farben = new Set<Farbe | null>([null]);
+  for (const stelle of stellen) {
+    const karte = nachher[stelle];
+    if (karte.typ !== 'Farbkarte') throw new Error(`Neue Dreiergruppen: ${karte.id} ist keine Farbkarte; die Schlangenhäutung versetzt nur Farbkarten (A7.9).`);
+    farben.add(karte.farbe);
+  }
+  // Ausserhalb der Strecke bis zur nächsten Sperre liegen beide Listen gleich und bilden nichts Neues.
+  const istSperre = (karte: Spielkarte) => karte.typ === 'Sonderkarte' && !istJoker(karte);
+  let von = stellen[0];
+  let bis = stellen[stellen.length - 1];
+  while (von > 0 && !istSperre(nachher[von - 1])) von -= 1;
+  while (bis < nachher.length - 1 && !istSperre(nachher[bis + 1])) bis += 1;
+  const strecke = { vorher: vorher.slice(von, bis + 1), nachher: nachher.slice(von, bis + 1) };
+  const joker = strecke.nachher.filter(istJoker).map((karte) => karte.id);
+
+  // `null`: Der Joker hat keine der Farben der versetzten Karten und unterbricht sie wie eine Sperre.
+  const belegung = new Map<string, Farbe | null>();
+  const gruppen = (karten: readonly Spielkarte[]) => {
+    const belegt = karten.map((karte): Spielkarte => {
+      const farbe = istJoker(karte) ? belegung.get(karte.id) : undefined;
+      return farbe == null ? karte : { typ: 'Farbkarte', id: karte.id, farbe, punkte: 0 };
+    });
+    return ermittleFarbgruppen({ id: 'häutung', karten: belegt, fusionen: [] });
+  };
+  const zaehle = (): number => {
+    const alteFarbe = new Map(gruppen(strecke.vorher).flatMap((gruppe) => gruppe.kartenIds.map((id) => [id, gruppe.farbe] as const)));
+    return gruppen(strecke.nachher).filter((gruppe) => !gruppe.kartenIds.some((id) => alteFarbe.get(id) === gruppe.farbe)).length;
+  };
+  const besteAb = (index: number): number => {
+    if (index === joker.length) return zaehle();
+    let bestes = 0;
+    for (const farbe of farben) {
+      belegung.set(joker[index], farbe);
+      bestes = Math.max(bestes, besteAb(index + 1));
+    }
+    return bestes;
+  };
+  return besteAb(0);
+}
