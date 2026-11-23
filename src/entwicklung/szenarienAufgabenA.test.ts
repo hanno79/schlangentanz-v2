@@ -32,11 +32,13 @@ describe('X2 Paket A: Szenarien je Aufgabe, eingelöst mit echten Karten', () =>
     for (const name of NAMEN) expect(findeSzenario(name)!.testbedingungen, name).toBeUndefined()
   })
 
-  it('A9/D38: aufgabe-farbenpracht: die zweite grüne Karte in der zweiten Schlange löst Farbenpracht ein; Rot dort löst nichts ein', () => {
+  it('A9/D38, Entscheid 23.11.2026: aufgabe-farbenpracht: die zweite grüne Karte erfüllt die Bedingung; eingelöst wird beim „Zug beenden“; Rot löst nichts ein', () => {
     const start = lade('aufgabe-farbenpracht')
-    expect(aufgabenTypen(klicke(start, farbkarte('Rot', 'schlange-2')).ereignisse)).toEqual([])
-    const { zustand, ereignisse } = klicke(start, farbkarte('Grün', 'schlange-2'))
-    expect(aufgabenTypen(ereignisse)).toEqual(['AufgabeErfuellt', 'AufgabeAufgedeckt'])
+    expect(aufgabenTypen(klicke(start, farbkarte('Rot', 'schlange-2'), (aktion) => aktion.typ === 'ZugBeenden').ereignisse)).toEqual([])
+    const gelegt = klicke(start, farbkarte('Grün', 'schlange-2'))
+    expect(aufgabenTypen(gelegt.ereignisse), 'mitten im Zug: nichts').toEqual([])
+    const { zustand, ereignisse } = klicke(gelegt.zustand, (aktion) => aktion.typ === 'ZugBeenden')
+    expect(ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KartenGezogen', 'AufgabeErfuellt', 'AufgabeAufgedeckt', 'ZugBegonnen'])
     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farbenpracht'])
     expect(namen(zustand.offeneAufgaben)).toEqual(['Gelber Schatz', 'Farbkombination', 'Lila Riese'])
   })
