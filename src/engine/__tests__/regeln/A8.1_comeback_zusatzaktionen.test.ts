@@ -141,6 +141,10 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
     expect(grund(zustand, abwerfen(zustand, [blau, blau]))).toMatch(/doppelt/)
     expect(grund(zustand, abwerfen(zustand, [blau, zustand.spieler[1].hand[0].id]))).toMatch(/nicht auf der Hand/)
     expect(grund(zustand, abwerfen(zustand, [blau]))).toMatch(/karteIds/)
+    // Codex-Review X4: Eine Liste mit Lücke hat Länge 2, nennt aber nur eine Karte.
+    const mitLuecke = new Array<string>(2)
+    mitLuecke[1] = blau
+    expect(grund(zustand, abwerfen(zustand, mitLuecke))).toMatch(/karteIds/)
   })
 
   it('D49/D55: liegen weniger als drei Karten im Stapel, zieht man, was da ist; die Schlussrunde löst der Spieler am Zug aus', () => {
