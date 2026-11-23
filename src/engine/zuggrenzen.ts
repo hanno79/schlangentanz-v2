@@ -246,6 +246,9 @@ export function zaehlerPassen(zug: Zug): string | null {
  * B2: Der Zug, wie ihn `spielerIndex` sehen darf. Gilt eine Zusatzaktion nur für
  * bestimmte Karten, etwa die mit dem Korb verdeckt gezogenen (D43), nennt sie
  * keine, die auf einer fremden Hand liegt; welche es sind, sieht nur ihr Besitzer.
+ * Ebenso nennt eine Verwendung keine Karte, die inzwischen wieder auf einer
+ * fremden Hand liegt, etwa nach dem Tausch des Korbs (D44); ihre Id ist dann
+ * `null` wie bei einer verdeckt versetzten Karte, Art und Kartenart bleiben.
  */
 export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
   const fremd = new Set(zustand.spieler.flatMap((spieler, index) => (index === spielerIndex ? [] : spieler.hand.map((karte) => karte.id))));
@@ -253,6 +256,7 @@ export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
   return {
     ...zug,
     zusatzaktionen: zug.zusatzaktionen.map((zusatz) => (zusatz.nurKarten === null ? zusatz : { ...zusatz, nurKarten: zusatz.nurKarten.filter((id) => !fremd.has(id)) })),
+    verwendet: zug.verwendet.map((eintrag) => (eintrag.karteId !== null && fremd.has(eintrag.karteId) ? { ...eintrag, karteId: null } : eintrag)),
   };
 }
 
