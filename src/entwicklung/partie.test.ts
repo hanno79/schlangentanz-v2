@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { serialisiere } from '../engine'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { sichtFuer, bestimmeZustand } from '../ki/sicht'
-import { kiSaatAmTisch, starteEntwicklerPartie } from './partie'
+import { kiSaatAmTisch, kiSaatquelle, starteEntwicklerPartie } from './partie'
 
 describe('P0.4: Zufall nur als Parameter', () => {
   it('P0.4: gleiche Saat liefert dieselbe Zahlenfolge, andere Saat eine andere', () => {
@@ -88,5 +88,24 @@ describe('U5: die KI am Entwicklertisch hat eine eigene Saat, unabhängig von de
       expect(erratenOben(saat, saat), `U5: Saat ${saat}, gleiche Saat`).toBe(5)
       expect(erratenOben(saat, kiSaatAmTisch(saat, saat)), `U5: Saat ${saat}, eigene KI-Saat`).toBeLessThan(5)
     }
+  })
+})
+
+describe('O6/U5: Die KI-Saat unter /spiel?seed= ist wiederholbar und nie die Partiesaat', () => {
+  it('O6: gleiche Partiesaat, gleiche Folge; jeder Wert in [0, 1) und als Saat nie die Partiesaat', () => {
+    const folge = (saat: number) => {
+      const quelle = kiSaatquelle(saat)
+      return Array.from({ length: 4 }, () => quelle())
+    }
+    expect(folge(7)).toEqual(folge(7))
+    expect(folge(7)).not.toEqual(folge(8))
+    for (const saat of [0, 1, 7, 2 ** 31, 2 ** 32 - 1]) {
+      for (const wert of folge(saat)) {
+        expect(wert).toBeGreaterThanOrEqual(0)
+        expect(wert).toBeLessThan(1)
+        expect(Math.floor(wert * 2 ** 32), `U5: Partiesaat ${saat}`).not.toBe(saat)
+      }
+    }
+    expect(new Set(folge(7)).size, 'jeder Gegner bekommt eine eigene Saat').toBe(4)
   })
 })

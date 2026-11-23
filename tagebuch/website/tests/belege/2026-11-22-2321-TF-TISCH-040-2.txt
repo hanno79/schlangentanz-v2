@@ -1,0 +1,58 @@
+{
+ "tag": "desktop-s1-p2-e0",
+ "ereignisse": {
+  "ichAusgesetzt": 2,
+  "grubeVorMirOhneWirkung": 0,
+  "kiAbwehr": 0,
+  "kiDurch": 10,
+  "kiDurchMitSchutz": 10,
+  "angriffeAufMich": 3
+ },
+ "ende": true,
+ "dauer_s": 98,
+ "zaehl": {
+  "meineZuege": 46,
+  "meineAbwehr": 1,
+  "meinDurchlassen": 2,
+  "meinDurchlassenOhneSchutz": 2,
+  "abwerfen": 0,
+  "schritte": 1072,
+  "fotos": [
+   "C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/O6-pruefer/laeufe/O6-partie-abwehrfrage-desktop.png",
+   "C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/O6-pruefer/laeufe/O6-partie-ausgesetzt-desktop.png",
+   "C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/O6-pruefer/laeufe/O6-partie-nach-abwehr-desktop.png",
+   "C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/O6-pruefer/laeufe/O6-partie-wertung-desktop.png"
+  ],
+  "abwehrHand": [
+   "0->0 (KI-Gegner 1 sagt an: Farbendieb: Blau aus deiner Schlange 1 in die Schlange 1 von KI-Gegner 1, vor Karte 1.)"
+  ]
+ },
+ "statistik": {
+  "mensch": {
+   "n": 95,
+   "min": 69.9,
+   "median": 139.7,
+   "max": 612.3
+  },
+  "kiZug": {
+   "n": 101,
+   "min": 702.2,
+   "median": 709.7,
+   "max": 718.4
+  },
+  "kiReagiertMitSchutz": {
+   "n": 10,
+   "min": 706.2,
+   "median": 708.7,
+   "max": 712.6
+  }
+ },
+ "befunde": {
+  "spieler1": [],
+  "ueberstand": [],
+  "konsole": []
+ },
+ "phase": "Beendet",
+ "speicherungen": 207,
+ "wertung": "KI-Gegner 1 gewinnt!\n\nMit 77 Punkten. Du bist auf Platz 2 mit 0 Punkten.\n\n1.\nKI-Gegner 1\nSieger\n77 Punkte\nFarbgruppen\n72\nLängste Kette\n5\nSchlange 1: 46 Punkte\nBraun × 3: 6 Punkte\nBlau × 3: 2 Punkte\nViolett × 3: 4 Punkte\nBlau × 3: 2 Punkte\nRot × 3: 3 Punkte\nGelb × 3: 3 Punkte\nGrün × 3: 8 Punkte\nGrün × 6: 18 Punkte\nFarbenfusion als Braun\nRegenbogenschlange als Blau\nRegenbogenschlange als Violett\nFarbenfusion als Violett\nRegenbogenschlange als Blau\nFarbenfusion als Grün\nSchlange 2: 26 Punkte\nBraun × 5: 10 Punkte\nViolett × 9: 16 Punkte\nRegenbogenschlange als Violett\n\nLängste Kette: 8 Karten\n\n2.\nDu"
+}

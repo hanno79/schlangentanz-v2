@@ -1,3 +1,4 @@
+import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
 import { entscheide, meldeOffeneEntscheidung, reagiere, spieleKarte } from '../reaktion';
 import { beginneSchlussrundeBeiLeeremStapel } from '../stapel';
 import type { Spielzustand } from '../types';
@@ -9,10 +10,12 @@ import type { AktionsErgebnis, Ereignis, SpielAktion } from './typen';
  * Führt eine erlaubte Aktion aus; eine unerlaubte wird mit ihrem Grund abgelehnt
  * (B2, U12). Der übergebene Zustand bleibt unverändert. Danach rückt die Engine
  * selbst bis zur nächsten Entscheidung vor (Zugwechsel, Auffüllen, Aussetzen,
- * Spielende, Schlangengruben ohne Zug, D29) und meldet in `ereignisse`, was
- * dabei geschah. Hat eine Wirkung die letzte Karte vom Nachziehstapel genommen,
- * beginnt danach die Schlussrunde, ausgelöst vom Spieler am Zug (A10, D55); ist
- * eine Entscheidung offen, kommt sie zuletzt (X3).
+ * Spielende, Schlangengruben ohne Zug, D29), löst mit Erweiterung die Aufgaben
+ * ein, die der Spieler am Zug jetzt erfüllt (A9), und meldet in `ereignisse`,
+ * was dabei geschah. Hat eine Wirkung die letzte Karte vom Nachziehstapel
+ * genommen, beginnt vorher die Schlussrunde, ausgelöst vom Spieler am Zug (A10,
+ * D55); ist eine Entscheidung offen, kommt sie zuletzt (X3), und die Aufgaben
+ * warten, bis sie entschieden ist.
  *
  * Eine Handkarte mit Wirkung zählt zum Zug und wirkt nach ihrem Eintrag im
  * Kartenregister; trifft sie Mitspieler, wird sie erst angesagt, und die
@@ -45,6 +48,7 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
   }
   beginneSchlussrundeBeiLeeremStapel(ergebnis, ereignisse);
   legeGrubenOhneZugAb(ergebnis, ereignisse);
+  pruefeAufgabenAmZug(ergebnis, ereignisse);
   meldeOffeneEntscheidung(ergebnis, ereignisse);
   return { zustand: ergebnis, ereignisse };
 }

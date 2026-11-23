@@ -1,5 +1,6 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
+import { AUFGABENNAMEN } from '../aufgabenKarten';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
@@ -44,6 +45,10 @@ function karten(anzahl: number): string {
 
 function kartenname(karte: Spielkarte): string {
   return karte.typ === 'Farbkarte' ? karte.farbe : karte.name;
+}
+
+function aufgabe(id: string): string {
+  return `${AUFGABENNAMEN.get(id) ?? id} (${id})`;
 }
 
 class Schreiber {
@@ -195,6 +200,12 @@ class Schreiber {
         return `Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von ${this.spieler(ereignis.ausloeser)}.`;
       case 'PartieBeendet':
         return 'Die Partie ist beendet.';
+      case 'AufgabeErfuellt':
+        return `${this.spieler(ereignis.spielerIndex)} erfüllt die Aufgabe ${aufgabe(ereignis.aufgabeId)} und nimmt sie zu sich.`;
+      case 'AufgabeAufgedeckt':
+        return `Vom Aufgabenstapel aufgedeckt: ${aufgabe(ereignis.aufgabeId)}, an der Stelle von ${aufgabe(ereignis.anStelleVon)}.`;
+      case 'AufgabenstapelLeer':
+        return `Der Aufgabenstapel ist leer; der Platz von ${aufgabe(ereignis.anStelleVon)} bleibt leer.`;
     }
   }
 

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import { anwendeAktion, deserialisiere, ermittleAktionen, serialisiere } from '../engine'
 
@@ -7,6 +7,9 @@ vi.mock('../engine', async (original) => {
   const engine = await original<typeof import('../engine')>()
   return { ...engine, ermittleAktionen: vi.fn(engine.ermittleAktionen) }
 })
+import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
+import { baukasten } from '../engine/testing/szenario'
+import { entferneTestbedingungen } from '../engine/testing/testaufgaben'
 import Entwicklertisch from './Entwicklertisch'
 import { starteEntwicklerPartie } from './partie'
 import { findeSzenario, SZENARIEN } from './szenarien'
@@ -255,5 +258,32 @@ describe('K2: Knopf „KI-Schritt (solide)“ am Entwicklertisch', () => {
   it('K1: der Knopf der Zufalls-KI bleibt daneben bestehen', () => {
     oeffne('/dev?szenario=ki-dreiergruppe')
     expect(screen.getByRole('button', { name: 'KI-Schritt' })).toBeEnabled()
+  })
+})
+
+describe('X1: Szenarien mit Testbedingungen für Aufgaben', () => {
+  afterEach(() => {
+    entferneTestbedingungen()
+  })
+
+  it('A9/D5: am Tisch gelten die Testbedingungen des Szenarios; Blau an schlange-1 zeigt Einlösen und Aufdecken in den Ereignissen', () => {
+    oeffne('/dev?szenario=aufgaben-einloesen')
+    const blau = aktionsKnoepfe().find((text) => text.includes('FarbkarteLegen') && text.includes('"schlangenId":"schlange-1","seite":"ende"') && text.includes('blau-'))
+    fireEvent.click(screen.getByTitle(blau!))
+    const ereignisse = screen.getByTestId('ereignisse')
+    expect(ereignisse).toHaveTextContent('AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbkombination (aufgabe-03)')
+    expect(ereignisse).toHaveTextContent('AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbkombination (aufgabe-03)')
+    expect(screen.getByTestId('offene-aufgaben')).toHaveTextContent('Farbvielfalt')
+  })
+
+  it('X1 (Codex-Befund): die Testbedingungen gelten nur während eines Schritts am Tisch; davor und danach hat das Register seine Platzhalter', () => {
+    const dreiKarten = baukasten({ spielerzahl: 2, erweiterung: true }).schlange(0, ['Blau', 'Blau', 'Blau']).zustand()
+    const farbkombination = () => AUFGABENREGISTER.get('Farbkombination')!.istErfuellt(dreiKarten, 0)
+    oeffne('/dev?szenario=aufgaben-einloesen')
+    expect(farbkombination(), 'nach dem Aufbau des Tisches').toBe(false)
+    const blau = aktionsKnoepfe().find((text) => text.includes('FarbkarteLegen') && text.includes('"schlangenId":"schlange-1","seite":"ende"') && text.includes('blau-'))
+    fireEvent.click(screen.getByTitle(blau!))
+    expect(screen.getByTestId('ereignisse')).toHaveTextContent('AufgabeErfuellt')
+    expect(farbkombination(), 'nach dem Schritt').toBe(false)
   })
 })

@@ -8,6 +8,7 @@ export * from './types';
 export * from './constants';
 export { AKTIONSTYPEN } from './aktionen/typen';
 export type {
+  Ablehnung,
   Aktionstyp,
   AktionsErgebnis,
   BlockadeLegenAktion,
@@ -27,6 +28,7 @@ export type {
   SchlangenhaeutungSpielenAktion,
   SonderkarteWirkungslosAblegenAktion,
   SpielAktion,
+  Spielergrund,
   UeberhandAbwerfenAktion,
   VerdopplerSpielenAktion,
   Versetzung,
