@@ -1,7 +1,8 @@
 import type { SchlangenhaeutungSpielenAktion } from '../aktionen/typen';
 import type { FarbkarteInfo, Schlange, Spielkarte, Spielzustand } from '../types';
 import { alleSchlangen, findeSchlange, gepruefteSchlange } from '../schlangen';
-import { legeAufEigenenAblagestapel } from '../zugablauf';
+import { merkeHaeutung } from '../aufgaben/sonderkartenZaehler';
+import { legeAufEigenenAblagestapel, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
 import { betroffenerBesitzer, grundVerdeckt } from './schlangenstelle';
 
@@ -17,7 +18,9 @@ Abschnitt aus lauter gleichen Farben ist deshalb kein Ziel.
 Sie geht in jede Schlange am Tisch (D9); in der Schlange eines Mitspielers
 trifft sie ihn, und er darf abwehren (A6, D10). Gespielt kommt sie auf den
 Ablagestapel dessen, der sie gespielt hat (A6); abgewehrt legt sie der
-Reaktionsablauf dorthin (`reaktion.ts`).
+Reaktionsablauf dorthin (`reaktion.ts`). Häutet der Spieler eine eigene
+Schlange, hält die Engine fest, wie viele neue Dreiergruppen dabei entstehen
+(A9 „Schlangentanz“, D37, `aufgaben/sonderkartenZaehler.ts`).
 
 Aufgezählt wird je Abschnitt jede neue Farbfolge einmal. Gleichfarbige Karten
 behalten dabei ihre Reihenfolge untereinander, weil sie gleich viel zählen
@@ -146,11 +149,13 @@ export const schlangenhaeutung: KartenDefinition<SchlangenhaeutungSpielenAktion>
 
   wirke(zustand: Spielzustand, aktion: SchlangenhaeutungSpielenAktion): Spielzustand {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
-    const { schlange } = gepruefteSchlange(zustand, aktion.schlangenId);
+    const { schlange, besitzer } = gepruefteSchlange(zustand, aktion.schlangenId);
+    const vorher = [...schlange.karten];
     const abschnitt = new Set(aktion.neueReihenfolge);
     const erste = schlange.karten.findIndex((karte) => abschnitt.has(karte.id));
     const neu = aktion.neueReihenfolge.map((id) => schlange.karten.find((karte) => karte.id === id)!);
     schlange.karten.splice(erste, neu.length, ...neu);
+    merkeHaeutung(zustand, spielerIndexVon(zustand, aktion.spielerId), besitzer, vorher, schlange.karten);
     return zustand;
   },
 };

@@ -1,4 +1,5 @@
 import type { KartenAktion, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
+import { merkeAusgespielteSonderkarte } from './aufgaben/sonderkartenZaehler';
 import type { Kartenart, Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
@@ -140,12 +141,17 @@ type GespielteKarte = KartenAktion | SonderkarteWirkungslosAblegenAktion;
  * Hand. Ob sie Platz hat, hat die Aktionsschicht vorher geprüft.
  */
 export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte): Spielkarte {
-  const karte = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === aktion.karteId);
-  if (karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
+  const spieler = zustand.spieler.find((eintrag) => eintrag.id === aktion.spielerId);
+  const karte = spieler?.hand.find((handkarte) => handkarte.id === aktion.karteId);
+  if (spieler === undefined || karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
   const { zug } = zustand;
   zug.verwendet.push({ art: karte.typ, karteId: karte.id, kartenart: karte.typ === 'Farbkarte' ? 'Farbkarte' : karte.name });
   if (karte.typ === 'Farbkarte') zug.gespielteFarbkarten += 1;
-  else zug.gespielteSonderkarten += 1;
+  else {
+    zug.gespielteSonderkarten += 1;
+    // D36: ausgespielt ist jede Sonderkarte aus der Hand, mit oder ohne Wirkung (Aufgaben, X2).
+    merkeAusgespielteSonderkarte(zustand, spieler, karte.name);
+  }
   return karte;
 }
 

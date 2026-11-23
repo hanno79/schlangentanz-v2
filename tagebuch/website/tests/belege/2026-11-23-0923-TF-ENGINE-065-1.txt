@@ -1,13 +1,65 @@
+import { describe, expect, it } from 'vitest'
+import type { Spielzustand } from '../index'
+import { legeAufgabenAus } from '../testing/aufgaben'
+import { erfuellt, neueSchlange, stellung } from './aufgaben_c_hilfen'
+import { aufgabenEreignisse, aufgabeId } from './aufgaben_hilfen'
+import { diebstaehle } from './farbendieb_hilfen'
+import { frass } from './schlangenfrass_hilfen'
+import { haeutungAuf } from './schlangenhaeutung_hilfen'
+import { durchlassen, folge, fuehreAus, zugBeenden } from './zugablauf_hilfen'
+import { einfuegen, handkarte } from './legen_hilfen'
 
- RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2db8cbcd5e58126a
+// Temporäre Grenzfälle des Prüfers X2c, werden nicht committet.
 
- ✓ src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts > Prüfer X3: Grenzfälle > G1 D56/D27: eine abgewehrte Fusion im ersten Zug nach Verdoppler sperrt die Fusion des zweiten Zuges nicht 32ms
- ✓ src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts > Prüfer X3: Grenzfälle > G2 A10/D55: wird die letzte Karte aufgedeckt und wählt der Gegner danach „stapel“, zieht er aus leerem Stapel nichts; nichts geht verloren 18ms
- ✓ src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts > Prüfer X3: Grenzfälle > G3 D43/D46: Zusatzaktion nur für gezogene Karten, aber die gezogene Karte ist schon auf dem normalen Platz gespielt: eine nicht gezogene zweite Farbkarte bekommt keinen Platz 7ms
+const fusionsIds = (z: Spielzustand, s: number, n = 0) => z.spieler[s].schlangen[n].karten.filter((k) => k.typ === 'Sonderkarte' && k.name === 'Farbenfusion').map((k) => k.id)
 
- Test Files  1 passed (1)
-      Tests  3 passed (3)
-   Start at  09:04:31
-   Duration  5.90s (transform 983ms, setup 538ms, import 1.03s, tests 59ms, environment 3.80s)
+describe('Prüfer X2c Grenzfälle', () => {
+  it('GF1a: Schlangenfrass frisst eine von zwei Fusionen des Gegners: Fusionsexperte für ihn danach nicht mehr erfüllt', () => {
+    const start = stellung({ eigene: [['Gelb', 'Gelb']], gegner: [[{ fusion: ['Rot', 'Rot'] }, 'Gelb', { fusion: ['Blau', 'Blau'] }]] })
+      .hand(0, ['Schlangenfrass', 'Blau', 'Rot', 'Gelb', 'Grün'])
+      .hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .zustand()
+    expect(erfuellt('Fusionsexperte', start, 1)).toBe(true)
+    const [f1] = fusionsIds(start, 1)
+    const angesagt = fuehreAus(start, frass(start, 'gegnerischeKarten', f1, start.spieler[1].schlangen[0].karten[1].id))
+    const nach = fuehreAus(angesagt.zustand, durchlassen(angesagt.zustand)).zustand
+    console.log('GF1a fusionen', nach.spieler[1].schlangen[0].fusionen.length, 'karten', nach.spieler[1].schlangen[0].karten.map((k) => (k.typ === 'Farbkarte' ? k.farbe : k.name)).join(' '))
+    expect(nach.spieler[1].schlangen[0].fusionen).toHaveLength(1)
+    expect(erfuellt('Fusionsexperte', nach, 1)).toBe(false)
+  })
 
-exit 0
+  it('GF1b: Farbendieb stiehlt eine Fusion in die eigene Schlange mit einer Fusion: Fusionsexperte erfüllt', () => {
+    const start = stellung({ eigene: [['Gelb', { fusion: ['Gelb', 'Gelb'] }, 'Rot']], gegner: [[{ fusion: ['Rot', 'Rot'] }, 'Gelb', 'Blau']] })
+      .hand(0, ['Farbendieb', 'Blau', 'Rot', 'Gelb', 'Grün'])
+      .hand(1, ['Blau', 'Rot', 'Gelb', 'Blau', 'Rot'])
+      .aendere((z) => legeAufgabenAus(z, { offen: ['Fusionsexperte', 'Farbkombination', 'Lila Riese'] }))
+      .zustand()
+    const [f1] = fusionsIds(start, 1)
+    const moeglich = diebstaehle(start).filter((a) => a.quelle.karteId === f1)
+    console.log('GF1b Diebstähle der Fusion aufgezählt:', moeglich.length)
+    if (moeglich.length === 0) return
+    const angesagt = fuehreAus(start, moeglich.find((a) => a.ziel.art === 'schlange')!)
+    const nach = fuehreAus(angesagt.zustand, durchlassen(angesagt.zustand))
+    console.log('GF1b fusionen eigen', nach.zustand.spieler[0].schlangen[0].fusionen.length, 'gegner', nach.zustand.spieler[1].schlangen[0].fusionen.length, 'Ereignisse', JSON.stringify(aufgabenEreignisse(nach.ereignisse)))
+    expect(erfuellt('Fusionsexperte', nach.zustand, 0)).toBe(true)
+    expect(aufgabenEreignisse(nach.ereignisse)[0]).toEqual({ typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId('Fusionsexperte') })
+  })
+
+  it('GF2: Häutung mit 2 neuen Gruppen, Schlangentanz liegt noch im Stapel; im nächsten eigenen Zug wird es aufgedeckt und mit der alten Häutung eingelöst', () => {
+    const beispiel = ['Blau', 'Grün', 'Grün', 'Blau', 'Grün', 'Rot', 'Rot', 'Violett', 'Violett', 'Rot', 'Violett'] as const
+    const start = stellung({ eigene: [[...beispiel], ['Gelb', 'Regenbogenschlange', 'Schlangenblockade', { fusion: ['Rot', 'Rot'] }]] })
+      .hand(0, ['Schlangenhäutung', 'Regenbogenschlange', 'Blau', 'Gelb', 'Grün'])
+      .hand(1, ['Blau', 'Rot', 'Blau', 'Rot', 'Blau'])
+      .aendere((z) => legeAufgabenAus(z, { offen: ['Schlangenbeschwörer', 'Lila Riese', 'Gelber Schatz'], stapelOben: ['Schlangentanz'] }))
+      .zustand()
+    const gehaeutet = fuehreAus(start, haeutungAuf(start, 0, 6, ['Rot', 'Rot', 'Violett', 'Violett', 'Violett']))
+    expect(gehaeutet.zustand.spieler[0].schlangenhaeutungDreiergruppen).toBe(2)
+    expect(aufgabenEreignisse(gehaeutet.ereignisse)).toEqual([])
+    const wieder = folge(gehaeutet.zustand, zugBeenden, neueSchlange, zugBeenden)
+    expect(wieder.zustand.zug.spielerIndex).toBe(0)
+    const z = wieder.zustand
+    const gelegt = fuehreAus(z, einfuegen(z, 'RegenbogenschlangeLegen', handkarte(z, 0, 'Regenbogenschlange'), z.spieler[0].schlangen[1].id, 1))
+    console.log('GF2 Ereignisse', JSON.stringify(aufgabenEreignisse(gelegt.ereignisse)))
+    expect(aufgabenEreignisse(gelegt.ereignisse).filter((e) => e.typ === 'AufgabeErfuellt').map((e) => (e as { aufgabeId: string }).aufgabeId)).toEqual([aufgabeId('Schlangenbeschwörer'), aufgabeId('Schlangentanz')])
+  })
+})

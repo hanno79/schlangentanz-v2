@@ -1,0 +1,175 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts (16 tests | 4 failed) 143ms
+     × A9 Nr. 12: knapp nicht: dieselbe Schlange zu Rot, Violett, Violett, Violett, Rot bildet nur die violette Gruppe 14ms
+     × A9 Nr. 12: Gegenprobe ohne Joker: an Stelle der Regenbogenschlange eine rote Karte, so entsteht nur Blau neu 13ms
+     × A9 Nr. 12/A7.5: mit Blockade dazwischen: Rot, Blockade, Rot, Rot ist keine Gruppe, nur Violett entsteht neu 6ms
+     × A9 Nr. 12/D37: eine Häutung in der Schlange des Gegners erfüllt die Aufgabe für niemanden 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts > A9 Nr. 12: Entscheidungstabelle > A9 Nr. 12: knapp nicht: dieselbe Schlange zu Rot, Violett, Violett, Violett, Rot bildet nur die violette Gruppe
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts:71:44
+     69|     const schritt = haeute(tisch([BEISPIEL]), 6, ['Rot', 'Violett', 'V…
+     70|     expect(zaehler(schritt.zustand)).toBe(1)
+     71|     expect(schlangentanzErfuellt(schritt)).toBe(false)
+       |                                            ^
+     72|   })
+     73|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts > A9 Nr. 12: Entscheidungstabelle > A9 Nr. 12: Gegenprobe ohne Joker: an Stelle der Regenbogenschlange eine rote Karte, so entsteht nur Blau neu
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts:86:44
+     84|     const schritt = haeute(tisch([NEBEN_JOKER('Rot')]), 3, ZU_GELB_BLA…
+     85|     expect(zaehler(schritt.zustand)).toBe(1)
+     86|     expect(schlangentanzErfuellt(schritt)).toBe(false)
+       |                                            ^
+     87|   })
+     88|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts > A9 Nr. 12: Entscheidungstabelle > A9 Nr. 12/A7.5: mit Blockade dazwischen: Rot, Blockade, Rot, Rot ist keine Gruppe, nur Violett entsteht neu
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts:99:44
+     97|     const schritt = haeute(tisch([mitBlockade]), 7, ['Rot', 'Rot', 'Vi…
+     98|     expect(zaehler(schritt.zustand)).toBe(1)
+     99|     expect(schlangentanzErfuellt(schritt)).toBe(false)
+       |                                            ^
+    100|   })
+    101|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts > A9 Nr. 12: Entscheidungstabelle > A9 Nr. 12/D37: eine Häutung in der Schlange des Gegners erfüllt die Aufgabe für niemanden
+AssertionError: D37: Spieler 1 hat nicht in einer eigenen Schlange gehäutet: expected 2 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_schlangentanz.test.ts:118:104
+    116|     const gewirkt = fuehreAus(angesagt.zustand, durchlassen(angesagt.z…
+    117|     expect(arten(gewirkt.zustand, 1), 'Testaufbau: die Häutung hat gew…
+    118|     expect(zaehler(gewirkt.zustand, 0), 'D37: Spieler 1 hat nicht in e…
+       |                                                                                                        ^
+    119|     expect(zaehler(gewirkt.zustand, 1), 'D37: KI-Gegner 1 hat nicht se…
+    120|     const gegnerzug = fuehreAus(gewirkt.zustand, zugBeenden(gewirkt.zu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 12 passed (16)
+   Start at  09:07:11
+   Duration  6.40s (transform 1.29s, setup 593ms, import 1.35s, tests 143ms, environment 3.83s)
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts (18 tests | 3 failed) 88ms
+     × D36/A6: eine abgewehrte Schlangengrube zählt für den Angreifer, der Farbenschutz zur Abwehr für den Verteidiger 13ms
+     × A9: Speichern und Laden erhält, was jeder ausgespielt hat 8ms
+     × A9 Nr. 10/D36: die fünfte Art ist ein Farbenschutz zur Abwehr; eingelöst wird zu Beginn des eigenen Zuges 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts > D36/A9: was als ausgespielt zählt > D36/A6: eine abgewehrte Schlangengrube zählt für den Angreifer, der Farbenschutz zur Abwehr für den Verteidiger
+AssertionError: D36: KI-Gegner 1, Farbenschutz zur Abwehr ausserhalb seines Zuges: expected [] to deeply equal [ 'Farbenschutz' ]
+
+- Expected
++ Received
+
+- [
+-   "Farbenschutz",
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts:51:106
+     49|     const { zustand } = fuehreAus(angesagt, reaktion(angesagt, true))
+     50|     expect(ausgespielt(zustand, 0), 'D36: Spieler 1, abgewehrte Grube'…
+     51|     expect(ausgespielt(zustand, 1), 'D36: KI-Gegner 1, Farbenschutz zu…
+       |                                                                                                          ^
+     52|   })
+     53|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts > D36/A9: was als ausgespielt zählt > A9: Speichern und Laden erhält, was jeder ausgespielt hat
+AssertionError: expected [] to deeply equal [ 'Farbenschutz' ]
+
+- Expected
++ Received
+
+- [
+-   "Farbenschutz",
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts:95:37
+     93|     const geladen = deserialisiere(serialisiere(zustand))
+     94|     expect(ausgespielt(geladen, 0)).toEqual(['Schlangengrube'])
+     95|     expect(ausgespielt(geladen, 1)).toEqual(['Farbenschutz'])
+       |                                     ^
+     96|   })
+     97| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts > A9/X1: Schlangenmeister und Schlangenrepertoire mit echten Zügen > A9 Nr. 10/D36: die fünfte Art ist ein Farbenschutz zur Abwehr; eingelöst wird zu Beginn des eigenen Zuges
+AssertionError: D36: der Farbenschutz zählt: expected [ 'Regenbogenschlange', …(3) ] to deeply equal [ 'Regenbogenschlange', …(4) ]
+
+- Expected
++ Received
+
+  [
+    "Regenbogenschlange",
+    "Schlangenfrass",
+    "Farbendieb",
+    "Verdoppler",
+-   "Farbenschutz",
+  ]
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_ausgespielt.test.ts:140:75
+    138|       .zustand()
+    139|     const abgewehrt = folge(start, (jetzt) => grubeAuf(jetzt, 0), (jet…
+    140|     expect(ausgespielt(abgewehrt.zustand), 'D36: der Farbenschutz zähl…
+       |                                                                           ^
+    141|     expect(aufgabenEreignisse(abgewehrt.ereignisse), 'A9: Spieler 1 is…
+    142|     const zuge = folge(abgewehrt.zustand, mit('FarbkarteLegen', 'Rot',…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 15 passed (18)
+   Start at  09:07:37
+   Duration  5.46s (transform 1.04s, setup 349ms, import 1.11s, tests 88ms, environment 3.48s)
+

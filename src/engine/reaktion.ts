@@ -1,5 +1,6 @@
 import type { EntscheidenAktion, Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
 import { befundeDerEntscheidung, definitionDerEntscheidung } from './entscheidungsregister';
+import { merkeAusgespielteSonderkarte } from './aufgaben/sonderkartenZaehler';
 import { definitionFuer } from './karten/register';
 import { wirkeUndMeldeVersetzte } from './kartenorte';
 import type { OffeneEntscheidung, SonderkarteInfo, Spielkarte, Spielzustand } from './types';
@@ -103,6 +104,7 @@ export function reagiere(zustand: Spielzustand, aktion: ReagierenAktion, ereigni
   const spielerIndex = schwebend.ausstehend.shift()!;
   if (aktion.farbenschutzId !== null) {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.farbenschutzId);
+    merkeAusgespielteSonderkarte(zustand, zustand.spieler[spielerIndex], 'Farbenschutz');
     schwebend.abgewehrt.push(spielerIndex);
     ereignisse.push({ typ: 'Abgewehrt', spielerIndex, karteId: aktion.farbenschutzId, gegen: schwebend.karte.id });
   }

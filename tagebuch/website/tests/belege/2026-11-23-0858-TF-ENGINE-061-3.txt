@@ -1,0 +1,76 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a6b2634e119ec57c1
+
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts (16 tests | 3 failed) 72ms
+     × A9 Farbwechsler, 'knapp nicht': 'vier Farben, aber Rot dazwischen wied…' 13ms
+     × A9 Farbwechsler, 'knapp nicht': 'X2 Kriterium 6: zwei blaue Reihen sin…' 3ms
+     × A9 Farbwechsler, 'Regenbogenschlange': 'eine Regenbogenschlange zwischen zwei…' 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'knapp nicht': 'vier Farben, aber Rot dazwischen wied…'
+AssertionError: Farbwechsler.istErfuellt bei „vier Farben, aber Rot dazwischen wiederholt: Blau, Rot, Gelb, Rot, Grün“ ([["Blau","Rot","Gelb","Rot","Grün"]]): erwartet false: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:47:134
+     45| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     46| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     47|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     48| }
+     49|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'knapp nicht': 'X2 Kriterium 6: zwei blaue Reihen sin…'
+AssertionError: Farbwechsler.istErfuellt bei „X2 Kriterium 6: zwei blaue Reihen sind keine zwei Farben, Blau-Blau, Rot-Rot, Blau-Blau, Gelb“ ([["Blau","Blau","Rot","Rot","Blau","Blau","Gelb"]]): erwartet false: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:47:134
+     45| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     46| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     47|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     48| }
+     49|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'Regenbogenschlange': 'eine Regenbogenschlange zwischen zwei…'
+AssertionError: Farbwechsler.istErfuellt bei „eine Regenbogenschlange zwischen zwei blauen Karten ergibt höchstens drei Farben“ ([["Blau","Regenbogenschlange","Blau","Rot"]]): erwartet false: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:47:134
+     45| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     46| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     47|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     48| }
+     49|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 passed (16)
+   Start at  08:45:26
+   Duration  7.55s (transform 1.40s, setup 614ms, import 1.42s, tests 72ms, environment 4.82s)
+

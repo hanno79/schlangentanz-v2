@@ -81,9 +81,9 @@ export interface Spieler {
   schlangen: Schlange[];
   /** Der eigene Ablagestapel (A4), unterste Karte zuerst. */
   ablagestapel: Spielkarte[];
-  /** Was der Spieler an Sonderkarten ausgespielt hat, für Aufgaben wie „Schlangenrepertoire“ (A9). */
+  /** Was der Spieler an Sonderkarten aus der Hand ausgespielt hat, für „Schlangenmeister“ und „Schlangenrepertoire“ (A9, D36); nur mit Erweiterung geführt. */
   ausgespielteSonderkarten: Sonderkartenname[];
-  /** Durch Schlangenhäutung neu gebildete Dreiergruppen, für die Aufgabe „Schlangentanz“ (A9). */
+  /** Die meisten neuen Dreiergruppen, die eine einzelne eigene Häutung in einer eigenen Schlange gebildet hat, für „Schlangentanz“ (A9, D37); nur mit Erweiterung geführt. */
   schlangenhaeutungDreiergruppen: number;
   erfuellteAufgaben: AufgabenkarteInfo[];
   /** Nur mit Erweiterung (A4), sonst `null`. */

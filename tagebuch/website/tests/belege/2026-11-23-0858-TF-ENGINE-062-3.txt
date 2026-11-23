@@ -1,0 +1,179 @@
+// TEMPORÄR (Prüfer X2b), wird nicht committet.
+import { describe, expect, it } from 'vitest'
+import { AUFGABENREGISTER } from '../aufgabenKarten'
+
+const F = ['Blau', 'Rot', 'Gelb', 'Braun', 'Violett', 'Grün'] as const
+type S = number // 0..5 Farbe, 6 Joker (Regenbogenschlange), 7 Fusion (Joker), 8 Blockade
+
+function karte(s: S) {
+  if (s < 6) return { typ: 'Farbkarte', farbe: F[s], id: 'x' }
+  if (s === 6) return { typ: 'Sonderkarte', name: 'Regenbogenschlange', id: 'x' }
+  if (s === 7) return { typ: 'Sonderkarte', name: 'Farbenfusion', id: 'x' }
+  return { typ: 'Sonderkarte', name: 'Schlangenblockade', id: 'x' }
+}
+function zustand(schlangen: S[][]): never {
+  return { spieler: [{ schlangen: schlangen.map((k) => ({ karten: k.map(karte), fusionen: [] })) }] } as never
+}
+function impl(name: string, schlangen: S[][]): boolean {
+  return AUFGABENREGISTER.get(name)!.istErfuellt(zustand(schlangen), 0)
+}
+const istJ = (s: S) => s === 6 || s === 7
+
+/** Alle Jokerbelegungen einer Strecke (ohne Blockaden), Abbruch bei true. */
+function irgendeineBelegung(strecke: S[], test: (farben: number[]) => boolean): boolean {
+  const a = strecke.slice()
+  const pos = strecke.map((s, i) => (istJ(s) ? i : -1)).filter((i) => i >= 0)
+  const rek = (k: number): boolean => {
+    if (k === pos.length) return test(a)
+    for (let f = 0; f < 6; f++) {
+      a[pos[k]] = f
+      if (rek(k + 1)) return true
+    }
+    return false
+  }
+  return rek(0)
+}
+function strecken(schlange: S[]): S[][] {
+  const r: S[][] = [[]]
+  for (const s of schlange) if (s === 8) r.push([]); else r[r.length - 1].push(s)
+  return r.filter((x) => x.length > 0)
+}
+
+// Unabhängige Definitionen
+function wechsel(f: number[]): boolean {
+  const runs: number[] = []
+  for (const x of f) if (runs[runs.length - 1] !== x) runs.push(x)
+  for (let i = 0; i + 4 <= runs.length; i++) if (new Set(runs.slice(i, i + 4)).size === 4) return true
+  return false
+}
+function vielfalt(f: number[]): boolean {
+  for (let i = 0; i + 6 <= f.length; i++) if (new Set(f.slice(i, i + 6)).size === 6) return true
+  return false
+}
+function baendiger(f: number[]): boolean {
+  for (let L = 3; 2 * L <= f.length; L++)
+    for (let s = 0; s + 2 * L <= f.length; s++) {
+      let ok = true
+      for (let i = s; i < s + L; i++) if (f[i] !== f[i + L]) { ok = false; break }
+      if (ok && new Set(f.slice(s, s + L)).size >= 3) return true
+    }
+  return false
+}
+function bf(name: string, schlangen: S[][]): boolean {
+  switch (name) {
+    case 'Farbwechsler': return schlangen.some((sch) => strecken(sch).some((st) => irgendeineBelegung(st, wechsel)))
+    case 'Farbvielfalt': return schlangen.some((sch) => strecken(sch).some((st) => irgendeineBelegung(st, vielfalt)))
+    case 'Schlangenbändiger': return schlangen.some((sch) => strecken(sch).some((st) => irgendeineBelegung(st, baendiger)))
+    case 'Symmetriemeister': return schlangen.some((sch) => sch.length >= 8 && !sch.includes(8) && irgendeineBelegung(sch, (f) => f.every((x, i) => x === f[f.length - 1 - i])))
+    case 'Vielfaltskönig': return schlangen.length >= 2 && schlangen.every((sch) => irgendeineBelegung(sch.filter((s) => s !== 8), (f) => new Set(f).size >= 4))
+  }
+  throw new Error(name)
+}
+
+function* alleFolgen(n: number, alphabet: number): Generator<S[]> {
+  const a = new Array<number>(n).fill(0)
+  while (true) {
+    yield a
+    let i = n - 1
+    while (i >= 0 && a[i] === alphabet - 1) { a[i] = 0; i-- }
+    if (i < 0) return
+    a[i]++
+  }
+}
+
+function rng(seed: number) {
+  let x = seed >>> 0
+  return () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 2 ** 32 }
+}
+
+describe('Prüfer X2b: Brute-Force-Gegenprobe', () => {
+  it('Farbwechsler: alle Folgen bis Länge 8 über 6 Farben + Regenbogenschlange', () => {
+    const abw: string[] = []
+    let n = 0
+    const t0 = performance.now()
+    for (let len = 1; len <= 8; len++) {
+      for (const f of alleFolgen(len, 7)) {
+        n++
+        const a = impl('Farbwechsler', [f]); const b = bf('Farbwechsler', [f])
+        if (a !== b && abw.length < 20) abw.push(`${f.join(',')}: impl ${a} bf ${b}`)
+      }
+    }
+    console.log(`Farbwechsler exhaustiv: ${n} Folgen, ${((performance.now() - t0) / 1000).toFixed(1)} s, Abweichungen ${abw.length}`)
+    expect(abw).toEqual([])
+  }, 1_800_000)
+
+  it('Farbwechsler: explizit Blau, Rot, Gelb, Rot, Grün', () => {
+    expect(impl('Farbwechsler', [[0, 1, 2, 1, 5]])).toBe(false)
+    expect(bf('Farbwechsler', [[0, 1, 2, 1, 5]])).toBe(false)
+  })
+
+  it.each(['Farbvielfalt', 'Schlangenbändiger'])('%s: alle Folgen bis Länge 7 über 6 Farben + RB', (name) => {
+    const abw: string[] = []
+    let n = 0
+    for (let len = 1; len <= 7; len++) for (const f of alleFolgen(len, 7)) {
+      n++
+      const a = impl(name, [f]); const b = bf(name, [f])
+      if (a !== b && abw.length < 20) abw.push(`${f.join(',')}: impl ${a} bf ${b}`)
+    }
+    console.log(`${name} exhaustiv bis 7: ${n} Folgen, Abweichungen ${abw.length}`)
+    expect(abw).toEqual([])
+  }, 1_800_000)
+
+  it('Symmetriemeister: alle Folgen Länge 7 bis 9 über 4 Farben + RB + Blockade', () => {
+    const abw: string[] = []
+    let n = 0
+    for (let len = 7; len <= 9; len++) for (const f of alleFolgen(len, 6)) {
+      const g = f.map((x) => (x === 4 ? 6 : x === 5 ? 8 : x))
+      n++
+      const a = impl('Symmetriemeister', [g]); const b = bf('Symmetriemeister', [g])
+      if (a !== b && abw.length < 20) abw.push(`${g.join(',')}: impl ${a} bf ${b}`)
+    }
+    console.log(`Symmetriemeister: ${n} Folgen, Abweichungen ${abw.length}`)
+    expect(abw).toEqual([])
+  }, 1_800_000)
+
+  it.each(['Farbwechsler', 'Farbvielfalt', 'Schlangenbändiger', 'Symmetriemeister', 'Vielfaltskönig'])('%s: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden)', (name) => {
+    const r = rng(name.length * 7919 + 13)
+    const abw: string[] = []
+    let wahr = 0
+    for (let k = 0; k < 20000; k++) {
+      const anzahl = r() < 0.5 ? 1 : 2
+      const schlangen: S[][] = []
+      for (let s = 0; s < anzahl; s++) {
+        const len = 1 + Math.floor(r() * 20)
+        const sch: S[] = []
+        let joker = 0
+        // kleine Farbauswahl je Schlange, damit Treffer häufiger werden
+        const palette = 2 + Math.floor(r() * 5)
+        for (let i = 0; i < len; i++) {
+          const z = r()
+          if (z < 0.15 && joker < 4) { sch.push(r() < 0.5 ? 6 : 7); joker++ }
+          else if (z < 0.2) sch.push(8)
+          else sch.push(Math.floor(r() * palette))
+        }
+        schlangen.push(sch)
+      }
+      const a = impl(name, schlangen); const b = bf(name, schlangen)
+      if (b) wahr++
+      if (a !== b && abw.length < 20) abw.push(`${JSON.stringify(schlangen)}: impl ${a} bf ${b}`)
+    }
+    console.log(`${name} zufällig: 20000, davon erfüllt ${wahr}, Abweichungen ${abw.length}`)
+    expect(abw).toEqual([])
+  }, 600_000)
+
+  it('Laufzeit: 20 Karten, 4 Joker (Umsetzung vs. Brute Force)', () => {
+    const r = rng(4242)
+    for (const name of ['Farbwechsler', 'Farbvielfalt', 'Schlangenbändiger', 'Symmetriemeister', 'Vielfaltskönig']) {
+      let ti = 0, tb = 0, max = 0
+      for (let k = 0; k < 500; k++) {
+        const sch: S[] = Array.from({ length: 20 }, () => Math.floor(r() * 6))
+        const pos = new Set<number>(); while (pos.size < 4) pos.add(Math.floor(r() * 20))
+        for (const p of pos) sch[p] = r() < 0.5 ? 6 : 7
+        const schl = name === 'Vielfaltskönig' ? [sch.slice(0, 10), sch.slice(10)] : [sch]
+        let t = performance.now(); impl(name, schl); const d = performance.now() - t; ti += d; max = Math.max(max, d)
+        t = performance.now(); bf(name, schl); tb += performance.now() - t
+      }
+      console.log(`${name}: Umsetzung Mittel ${(ti / 500).toFixed(4)} ms, max ${max.toFixed(3)} ms; Brute Force Mittel ${(tb / 500).toFixed(3)} ms`)
+    }
+  }, 600_000)
+})

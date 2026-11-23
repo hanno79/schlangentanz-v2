@@ -1,0 +1,1071 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a6b2634e119ec57c1
+
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts (12 tests | 5 failed) 36ms
+     × A9 Vielfaltskönig, 'erfüllt': 'vier Farben in jeder der beiden Schla…' 19ms
+     × A9 Vielfaltskönig, 'erfüllt': 'Farben dürfen sich wiederholen und mü…' 2ms
+     × A9 Vielfaltskönig, 'Regenbogenschlange': 'je eine Regenbogenschlange als vierte…' 2ms
+     × A9 Vielfaltskönig, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…' 2ms
+     × A9 Vielfaltskönig, 'Blockade dazwischen': 'eine Schlangenblockade zwischen den F…' 2ms
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts (16 tests | 7 failed) 38ms
+     × A9 Symmetriemeister, 'erfüllt': 'A9 Beispiel: Blau, Rot, Gelb, Grün, G…' 18ms
+     × A9 Symmetriemeister, 'erfüllt': 'D39: neun Karten, Violett ist die Ach…' 2ms
+     × A9 Symmetriemeister, 'erfüllt': 'zehn Karten mit Reihen' 2ms
+     × A9 Symmetriemeister, 'Regenbogenschlange': 'die Regenbogenschlange zählt als das …' 1ms
+     × A9 Symmetriemeister, 'Regenbogenschlange': 'D39: die Regenbogenschlange als Achse' 1ms
+     × A9 Symmetriemeister, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…' 2ms
+     × A9 Symmetriemeister, 'zwei Schlangen': 'die zweite Schlange ist spiegelgleich' 1ms
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts (16 tests | 8 failed) 39ms
+     × A9 Farbwechsler, 'erfüllt': 'A9 Beispiel: Blau, Rot, Gelb, Grün, B…' 18ms
+     × A9 Farbwechsler, 'erfüllt': 'X2 Kriterium 6: Reihen gelten als ein…' 2ms
+     × A9 Farbwechsler, 'erfüllt': 'sechs Farben nacheinander' 2ms
+     × A9 Farbwechsler, 'Regenbogenschlange': 'die Regenbogenschlange ist die vierte…' 1ms
+     × A9 Farbwechsler, 'Regenbogenschlange': 'die Regenbogenschlange in einer Reihe…' 1ms
+     × A9 Farbwechsler, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…' 2ms
+     × A9 Farbwechsler, 'Blockade dazwischen': 'eine Schlangenblockade hinter der Fol…' 1ms
+     × A9 Farbwechsler, 'zwei Schlangen': 'die zweite Schlange hat die Folge' 1ms
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts (17 tests | 9 failed) 41ms
+     × A9 Schlangenbändiger, 'erfüllt': 'A9 Beispiel: Rot, Blau, Grün, Rot, Bl…' 19ms
+     × A9 Schlangenbändiger, 'erfüllt': 'D40: AABCAABC, Rot-Rot, Blau, Grün, R…' 2ms
+     × A9 Schlangenbändiger, 'erfüllt': 'ein Muster aus vier Farben mitten in …' 2ms
+     × A9 Schlangenbändiger, 'Regenbogenschlange': 'die Regenbogenschlange zählt als das …' 1ms
+     × A9 Schlangenbändiger, 'Regenbogenschlange': 'je eine Regenbogenschlange in beiden …' 1ms
+     × A9 Schlangenbändiger, 'Regenbogenschlange': 'zwei Regenbogenschlangen an derselben…' 1ms
+     × A9 Schlangenbändiger, 'Farbenfusion': 'die Farbenfusion aus zwei gelben Kart…' 2ms
+     × A9 Schlangenbändiger, 'Blockade dazwischen': 'eine Schlangenblockade vor dem Muster…' 1ms
+     × A9 Schlangenbändiger, 'zwei Schlangen': 'die zweite Schlange hat das Muster' 1ms
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts (16 tests | 8 failed) 41ms
+     × A9 Farbvielfalt, 'erfüllt': 'A9 Beispiel: Blau, Rot, Gelb, Braun, …' 18ms
+     × A9 Farbvielfalt, 'erfüllt': 'die Kette liegt mitten in einer länge…' 2ms
+     × A9 Farbvielfalt, 'Regenbogenschlange': 'A7.3 Beispiel: Blau, Rot, Gelb, Braun…' 2ms
+     × A9 Farbvielfalt, 'Regenbogenschlange': 'zwei Regenbogenschlangen füllen zwei …' 1ms
+     × A9 Farbvielfalt, 'Farbenfusion': 'die Farbenfusion aus zwei gelben Kart…' 2ms
+     × A9 Farbvielfalt, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…' 2ms
+     × A9 Farbvielfalt, 'Blockade dazwischen': 'eine Schlangenblockade vor der Kette …' 2ms
+     × A9 Farbvielfalt, 'zwei Schlangen': 'die zweite Schlange hat die Kette' 1ms
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts (15 tests | 5 failed) 51ms
+     × A9: mit einer Farbkarte an der Stelle der Regenbogenschlange ist höchstens eine der beiden Aufgaben erfüllt 25ms
+     × A9/A7.3: mit der Regenbogenschlange an dieser Stelle sind beide erfüllt: für Farbvielfalt als Grün, für Schlangenbändiger als Rot 2ms
+     × A9/X1: legt Spieler 1 die Regenbogenschlange dorthin, löst er beide offenen Aufgaben mit derselben Karte ein 6ms
+     × A11/A7.3: in der Wertung zählt die Regenbogenschlange als Grün (Grün-Gruppe, 6 Punkte); Farbvielfalt zählt trotzdem 9 Punkte 3ms
+     × A9/A7.5: unterbricht KI-Gegner 1 die Kette danach mit einer Schlangenblockade, bleibt Farbvielfalt bei Spieler 1 3ms
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts (11 tests | 11 failed) 20ms
+     × X2: je Aufgabe ein Szenario, keines mit Testbedingung 12ms
+     × A9/A7.3: aufgabe-farbvielfalt: die Regenbogenschlange ans Ende löst Farbvielfalt ein (sie zählt als Violett) 1ms
+     × A9: aufgabe-farbvielfalt: Blau ans Ende erfüllt nichts 1ms
+     × A9/D38: aufgabe-vielfaltskoenig: Gelb an die zweite Schlange löst Vielfaltskönig ein 1ms
+     × A9/A7.7: aufgabe-vielfaltskoenig: Violett an die zweite Schlange erfüllt nichts (die roten Karten unter der Fusion zählen nicht) 1ms
+     × A9: aufgabe-farbwechsler: Grün ans Ende löst Farbwechsler ein (Blau-Blau, Rot, Gelb-Gelb, Grün) 0ms
+     × A9: aufgabe-farbwechsler: Blau ans Ende erfüllt nichts (Blau, Rot, Gelb, Blau) 0ms
+     × A9/D40: aufgabe-schlangenbaendiger: Grün ans Ende löst Schlangenbändiger ein (A9 Beispiel) 0ms
+     × A9/D40: aufgabe-schlangenbaendiger: Rot ans Ende erfüllt nichts 0ms
+     × A9/D39: aufgabe-symmetriemeister: Blau ans Ende löst Symmetriemeister ein (A9 Beispiel) 1ms
+     × A9/D39: aufgabe-symmetriemeister: Blau an den Anfang erfüllt nichts 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 53 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > X2: je Aufgabe ein Szenario, keines mit Testbedingung
+AssertionError: Szenario aufgabe-farbvielfalt fehlt: expected undefined to be defined
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:45:50
+     43|     for (const name of NAMEN) {
+     44|       const szenario = findeSzenario(name)
+     45|       expect(szenario, `Szenario ${name} fehlt`).toBeDefined()
+       |                                                  ^
+     46|       expect(szenario!.testbedingungen, `${name}: echte Karten, keine …
+     47|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/A7.3: aufgabe-farbvielfalt: die Regenbogenschlange ans Ende löst Farbvielfalt ein (sie zählt als Violett)
+Error: Unbekanntes Szenario „aufgabe-farbvielfalt“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:51:45
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9: aufgabe-farbvielfalt: Blau ans Ende erfüllt nichts
+Error: Unbekanntes Szenario „aufgabe-farbvielfalt“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:58:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/D38: aufgabe-vielfaltskoenig: Gelb an die zweite Schlange löst Vielfaltskönig ein
+Error: Unbekanntes Szenario „aufgabe-vielfaltskoenig“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:62:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/A7.7: aufgabe-vielfaltskoenig: Violett an die zweite Schlange erfüllt nichts (die roten Karten unter der Fusion zählen nicht)
+Error: Unbekanntes Szenario „aufgabe-vielfaltskoenig“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:68:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9: aufgabe-farbwechsler: Grün ans Ende löst Farbwechsler ein (Blau-Blau, Rot, Gelb-Gelb, Grün)
+Error: Unbekanntes Szenario „aufgabe-farbwechsler“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:72:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9: aufgabe-farbwechsler: Blau ans Ende erfüllt nichts (Blau, Rot, Gelb, Blau)
+Error: Unbekanntes Szenario „aufgabe-farbwechsler“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:78:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/D40: aufgabe-schlangenbaendiger: Grün ans Ende löst Schlangenbändiger ein (A9 Beispiel)
+Error: Unbekanntes Szenario „aufgabe-schlangenbaendiger“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:82:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/D40: aufgabe-schlangenbaendiger: Rot ans Ende erfüllt nichts
+Error: Unbekanntes Szenario „aufgabe-schlangenbaendiger“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:88:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/D39: aufgabe-symmetriemeister: Blau ans Ende löst Symmetriemeister ein (A9 Beispiel)
+Error: Unbekanntes Szenario „aufgabe-symmetriemeister“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:92:38
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/53]⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenB.test.ts > X2/A9: Szenarien zu Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister > A9/D39: aufgabe-symmetriemeister: Blau an den Anfang erfüllt nichts
+Error: Unbekanntes Szenario „aufgabe-symmetriemeister“; die Szenarien stehen unter /dev/szenarien.
+ ❯ erzeugeSzenario src/entwicklung/szenarien.ts:261:37
+    259| export function erzeugeSzenario(name: string): Spielzustand {
+    260|   const szenario = findeSzenario(name)
+    261|   if (szenario === undefined) throw new Error(`Unbekanntes Szenario „$…
+       |                                     ^
+    262|   return szenario.erzeuge()
+    263| }
+ ❯ nach src/entwicklung/szenarienAufgabenB.test.ts:31:17
+ ❯ src/entwicklung/szenarienAufgabenB.test.ts:98:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts > A9/A7.3: derselbe Joker zählt bei zwei Aufgaben als verschiedene Farben (X2, Kriterium 1) > A9: mit einer Farbkarte an der Stelle der Regenbogenschlange ist höchstens eine der beiden Aufgaben erfüllt
+AssertionError: A9: mit Rot an Stelle 6 erwartet Farbvielfalt false, Schlangenbändiger true: expected [ false, false ] to deeply equal [ false, true ]
+
+- Expected
++ Received
+
+  [
+    false,
+-   true,
++   false,
+  ]
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:47:133
+     45|       const schlange: Schlangenglied[][] = [[...VOR, farbe, ...NACH]]
+     46|       const beide = [istErfuellt('Farbvielfalt', schlange), istErfuell…
+     47|       expect(beide, `A9: mit ${farbe} an Stelle 6 erwartet Farbvielfal…
+       |                                                                                                                                     ^
+     48|     }
+     49|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts > A9/A7.3: derselbe Joker zählt bei zwei Aufgaben als verschiedene Farben (X2, Kriterium 1) > A9/A7.3: mit der Regenbogenschlange an dieser Stelle sind beide erfüllt: für Farbvielfalt als Grün, für Schlangenbändiger als Rot
+AssertionError: A9: Farbvielfalt mit der Regenbogenschlange als Grün: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:53:107
+     51|   it('A9/A7.3: mit der Regenbogenschlange an dieser Stelle sind beide …
+     52|     const schlange: Schlangenglied[][] = [[...VOR, RB, ...NACH]]
+     53|     expect(istErfuellt('Farbvielfalt', schlange), 'A9: Farbvielfalt mi…
+       |                                                                                                           ^
+     54|     expect(istErfuellt('Schlangenbändiger', schlange), 'A9: Schlangenb…
+     55|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts > A9/A7.3: derselbe Joker zählt bei zwei Aufgaben als verschiedene Farben (X2, Kriterium 1) > A9/X1: legt Spieler 1 die Regenbogenschlange dorthin, löst er beide offenen Aufgaben mit derselben Karte ein
+AssertionError: expected [] to deeply equal [ 'Farbvielfalt', 'Schlangenbändiger' ]
+
+- Expected
++ Received
+
+- [
+-   "Farbvielfalt",
+-   "Schlangenbändiger",
+- ]
++ []
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:60:57
+     58|     const start = tisch([...VOR, ...NACH], ['Farbvielfalt', 'Schlangen…
+     59|     const { zustand, ereignisse } = lege(start, 'RegenbogenschlangeLeg…
+     60|     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farb…
+       |                                                         ^
+     61|     expect(aufgabenEreignisse(ereignisse).filter((ereignis) => ereigni…
+     62|       { typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts > A9/A7.3: eine erfüllte Aufgabe bleibt erfüllt, auch wenn der Joker später anders zählt (X2, Kriterium 4) > A11/A7.3: in der Wertung zählt die Regenbogenschlange als Grün (Grün-Gruppe, 6 Punkte); Farbvielfalt zählt trotzdem 9 Punkte
+AssertionError: A9/A7.3: Farbvielfalt mit der Regenbogenschlange als Violett: expected [] to deeply equal [ 'Farbvielfalt' ]
+
+- Expected
++ Received
+
+- [
+-   "Farbvielfalt",
+- ]
++ []
+
+ ❯ eingeloest src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:73:121
+     71|     const start = tisch(['Blau', 'Rot', 'Gelb', 'Braun', 'Grün', 'Grün…
+     72|     const { zustand } = lege(start, 'RegenbogenschlangeLegen', RB, 'sc…
+     73|     expect(namen(zustand.spieler[0].erfuellteAufgaben), 'A9/A7.3: Farb…
+       |                                                                                                                         ^
+     74|     return zustand
+     75|   }
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:78:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts > A9/A7.3: eine erfüllte Aufgabe bleibt erfüllt, auch wenn der Joker später anders zählt (X2, Kriterium 4) > A9/A7.5: unterbricht KI-Gegner 1 die Kette danach mit einer Schlangenblockade, bleibt Farbvielfalt bei Spieler 1
+AssertionError: A9/A7.3: Farbvielfalt mit der Regenbogenschlange als Violett: expected [] to deeply equal [ 'Farbvielfalt' ]
+
+- Expected
++ Received
+
+- [
+-   "Farbvielfalt",
+- ]
++ []
+
+ ❯ eingeloest src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:73:121
+     71|     const start = tisch(['Blau', 'Rot', 'Gelb', 'Braun', 'Grün', 'Grün…
+     72|     const { zustand } = lege(start, 'RegenbogenschlangeLegen', RB, 'sc…
+     73|     expect(namen(zustand.spieler[0].erfuellteAufgaben), 'A9/A7.3: Farb…
+       |                                                                                                                         ^
+     74|     return zustand
+     75|   }
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts:85:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'erfüllt': 'A9 Beispiel: Blau, Rot, Gelb, Braun, …'
+AssertionError: Farbvielfalt.istErfuellt bei „A9 Beispiel: Blau, Rot, Gelb, Braun, Violett, Grün“ ([["Blau","Rot","Gelb","Braun","Violett","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'erfüllt': 'die Kette liegt mitten in einer länge…'
+AssertionError: Farbvielfalt.istErfuellt bei „die Kette liegt mitten in einer längeren Schlange“ ([["Gelb","Gelb","Blau","Rot","Gelb","Braun","Violett","Grün","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'Regenbogenschlange': 'A7.3 Beispiel: Blau, Rot, Gelb, Braun…'
+AssertionError: Farbvielfalt.istErfuellt bei „A7.3 Beispiel: Blau, Rot, Gelb, Braun, Grün und die Regenbogenschlange als Violett“ ([["Blau","Rot","Gelb","Braun","Grün","Regenbogenschlange"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'Regenbogenschlange': 'zwei Regenbogenschlangen füllen zwei …'
+AssertionError: Farbvielfalt.istErfuellt bei „zwei Regenbogenschlangen füllen zwei fehlende Farben“ ([["Blau","Regenbogenschlange","Gelb","Regenbogenschlange","Violett","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'Farbenfusion': 'die Farbenfusion aus zwei gelben Kart…'
+AssertionError: Farbvielfalt.istErfuellt bei „die Farbenfusion aus zwei gelben Karten zählt als das fehlende Gelb“ ([["Blau","Rot",{"fusion":["Gelb","Gelb"]},"Braun","Violett","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…'
+AssertionError: Farbvielfalt.istErfuellt bei „die Farbenfusion aus zwei blauen Karten zählt als Grün; die Farbe darunter spielt keine Rolle (A7.7)“ ([["Blau","Rot","Gelb","Braun","Violett",{"fusion":["Blau","Blau"]}]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'Blockade dazwischen': 'eine Schlangenblockade vor der Kette …'
+AssertionError: Farbvielfalt.istErfuellt bei „eine Schlangenblockade vor der Kette stört nicht“ ([["Schlangenblockade","Blau","Rot","Gelb","Braun","Violett","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts > A9 Nr. 4 Farbvielfalt: Entscheidungstabelle > A9 Farbvielfalt, 'zwei Schlangen': 'die zweite Schlange hat die Kette'
+AssertionError: Farbvielfalt.istErfuellt bei „die zweite Schlange hat die Kette“ ([["Blau","Blau"],["Blau","Rot","Gelb","Braun","Violett","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'erfüllt': 'A9 Beispiel: Blau, Rot, Gelb, Grün, B…'
+AssertionError: Farbwechsler.istErfuellt bei „A9 Beispiel: Blau, Rot, Gelb, Grün, Blau“ ([["Blau","Rot","Gelb","Grün","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'erfüllt': 'X2 Kriterium 6: Reihen gelten als ein…'
+AssertionError: Farbwechsler.istErfuellt bei „X2 Kriterium 6: Reihen gelten als eine Farbe, Blau-Blau, Rot, Gelb-Gelb-Gelb, Grün“ ([["Blau","Blau","Rot","Gelb","Gelb","Gelb","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'erfüllt': 'sechs Farben nacheinander'
+AssertionError: Farbwechsler.istErfuellt bei „sechs Farben nacheinander“ ([["Blau","Rot","Gelb","Grün","Braun","Violett"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'Regenbogenschlange': 'die Regenbogenschlange ist die vierte…'
+AssertionError: Farbwechsler.istErfuellt bei „die Regenbogenschlange ist die vierte Farbe“ ([["Blau","Rot","Gelb","Regenbogenschlange"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'Regenbogenschlange': 'die Regenbogenschlange in einer Reihe…'
+AssertionError: Farbwechsler.istErfuellt bei „die Regenbogenschlange in einer Reihe verlängert sie“ ([["Blau","Regenbogenschlange","Blau","Rot","Gelb","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…'
+AssertionError: Farbwechsler.istErfuellt bei „die Farbenfusion aus zwei blauen Karten zählt als Gelb“ ([["Blau","Rot",{"fusion":["Blau","Blau"]},"Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'Blockade dazwischen': 'eine Schlangenblockade hinter der Fol…'
+AssertionError: Farbwechsler.istErfuellt bei „eine Schlangenblockade hinter der Folge stört nicht“ ([["Blau","Rot","Gelb","Grün","Schlangenblockade"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts > A9 Nr. 6 Farbwechsler: Entscheidungstabelle > A9 Farbwechsler, 'zwei Schlangen': 'die zweite Schlange hat die Folge'
+AssertionError: Farbwechsler.istErfuellt bei „die zweite Schlange hat die Folge“ ([["Blau","Rot"],["Gelb","Grün","Braun","Violett"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_farbwechsler.test.ts:33:67
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'erfüllt': 'A9 Beispiel: Rot, Blau, Grün, Rot, Bl…'
+AssertionError: Schlangenbändiger.istErfuellt bei „A9 Beispiel: Rot, Blau, Grün, Rot, Blau, Grün“ ([["Rot","Blau","Grün","Rot","Blau","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'erfüllt': 'D40: AABCAABC, Rot-Rot, Blau, Grün, R…'
+AssertionError: Schlangenbändiger.istErfuellt bei „D40: AABCAABC, Rot-Rot, Blau, Grün, Rot-Rot, Blau, Grün“ ([["Rot","Rot","Blau","Grün","Rot","Rot","Blau","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'erfüllt': 'ein Muster aus vier Farben mitten in …'
+AssertionError: Schlangenbändiger.istErfuellt bei „ein Muster aus vier Farben mitten in der Schlange“ ([["Braun","Rot","Blau","Grün","Gelb","Rot","Blau","Grün","Gelb","Braun"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'Regenbogenschlange': 'die Regenbogenschlange zählt als das …'
+AssertionError: Schlangenbändiger.istErfuellt bei „die Regenbogenschlange zählt als das Blau der Wiederholung“ ([["Rot","Blau","Grün","Rot","Regenbogenschlange","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'Regenbogenschlange': 'je eine Regenbogenschlange in beiden …'
+AssertionError: Schlangenbändiger.istErfuellt bei „je eine Regenbogenschlange in beiden Hälften, an verschiedenen Stellen“ ([["Regenbogenschlange","Blau","Grün","Rot","Regenbogenschlange","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'Regenbogenschlange': 'zwei Regenbogenschlangen an derselben…'
+AssertionError: Schlangenbändiger.istErfuellt bei „zwei Regenbogenschlangen an derselben Stelle beider Hälften zählen als dritte Farbe“ ([["Regenbogenschlange","Blau","Grün","Regenbogenschlange","Blau","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'Farbenfusion': 'die Farbenfusion aus zwei gelben Kart…'
+AssertionError: Schlangenbändiger.istErfuellt bei „die Farbenfusion aus zwei gelben Karten zählt als Blau“ ([["Rot","Blau","Grün","Rot",{"fusion":["Gelb","Gelb"]},"Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'Blockade dazwischen': 'eine Schlangenblockade vor dem Muster…'
+AssertionError: Schlangenbändiger.istErfuellt bei „eine Schlangenblockade vor dem Muster stört nicht“ ([["Schlangenblockade","Rot","Blau","Grün","Rot","Blau","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts > A9 Nr. 11 Schlangenbändiger: Entscheidungstabelle > A9 Schlangenbändiger, 'zwei Schlangen': 'die zweite Schlange hat das Muster'
+AssertionError: Schlangenbändiger.istErfuellt bei „die zweite Schlange hat das Muster“ ([["Gelb"],["Rot","Blau","Grün","Rot","Blau","Grün"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_schlangenbaendiger.test.ts:34:72
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'erfüllt': 'A9 Beispiel: Blau, Rot, Gelb, Grün, G…'
+AssertionError: Symmetriemeister.istErfuellt bei „A9 Beispiel: Blau, Rot, Gelb, Grün, Grün, Gelb, Rot, Blau“ ([["Blau","Rot","Gelb","Grün","Grün","Gelb","Rot","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'erfüllt': 'D39: neun Karten, Violett ist die Ach…'
+AssertionError: Symmetriemeister.istErfuellt bei „D39: neun Karten, Violett ist die Achse“ ([["Blau","Rot","Gelb","Grün","Violett","Grün","Gelb","Rot","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'erfüllt': 'zehn Karten mit Reihen'
+AssertionError: Symmetriemeister.istErfuellt bei „zehn Karten mit Reihen“ ([["Blau","Blau","Rot","Gelb","Grün","Grün","Gelb","Rot","Blau","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'Regenbogenschlange': 'die Regenbogenschlange zählt als das …'
+AssertionError: Symmetriemeister.istErfuellt bei „die Regenbogenschlange zählt als das gespiegelte Grün“ ([["Blau","Rot","Gelb","Grün","Regenbogenschlange","Gelb","Rot","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'Regenbogenschlange': 'D39: die Regenbogenschlange als Achse'
+AssertionError: Symmetriemeister.istErfuellt bei „D39: die Regenbogenschlange als Achse“ ([["Blau","Rot","Gelb","Grün","Regenbogenschlange","Grün","Gelb","Rot","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…'
+AssertionError: Symmetriemeister.istErfuellt bei „die Farbenfusion aus zwei blauen Karten zählt als das gespiegelte Gelb“ ([["Blau","Rot",{"fusion":["Blau","Blau"]},"Grün","Grün","Gelb","Rot","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'zwei Schlangen': 'die zweite Schlange ist spiegelgleich'
+AssertionError: Symmetriemeister.istErfuellt bei „die zweite Schlange ist spiegelgleich“ ([["Braun"],["Blau","Rot","Gelb","Grün","Grün","Gelb","Rot","Blau"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts > A9 Nr. 5 Vielfaltskönig: Entscheidungstabelle > A9 Vielfaltskönig, 'erfüllt': 'vier Farben in jeder der beiden Schla…'
+AssertionError: Vielfaltskönig.istErfuellt bei „vier Farben in jeder der beiden Schlangen“ ([["Blau","Rot","Gelb","Grün"],["Braun","Violett","Blau","Rot"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts:29:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts > A9 Nr. 5 Vielfaltskönig: Entscheidungstabelle > A9 Vielfaltskönig, 'erfüllt': 'Farben dürfen sich wiederholen und mü…'
+AssertionError: Vielfaltskönig.istErfuellt bei „Farben dürfen sich wiederholen und müssen nicht nebeneinander liegen“ ([["Blau","Blau","Rot","Blau","Gelb","Gelb","Grün"],["Braun","Violett","Braun","Blau","Rot","Rot"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts:29:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts > A9 Nr. 5 Vielfaltskönig: Entscheidungstabelle > A9 Vielfaltskönig, 'Regenbogenschlange': 'je eine Regenbogenschlange als vierte…'
+AssertionError: Vielfaltskönig.istErfuellt bei „je eine Regenbogenschlange als vierte Farbe“ ([["Blau","Rot","Gelb","Regenbogenschlange"],["Braun","Violett","Grün","Regenbogenschlange"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts:29:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts > A9 Nr. 5 Vielfaltskönig: Entscheidungstabelle > A9 Vielfaltskönig, 'Farbenfusion': 'die Farbenfusion aus zwei blauen Kart…'
+AssertionError: Vielfaltskönig.istErfuellt bei „die Farbenfusion aus zwei blauen Karten zählt als vierte Farbe“ ([["Blau","Rot","Gelb",{"fusion":["Blau","Blau"]}],["Braun","Violett","Grün","Gelb"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts:29:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/53]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts > A9 Nr. 5 Vielfaltskönig: Entscheidungstabelle > A9 Vielfaltskönig, 'Blockade dazwischen': 'eine Schlangenblockade zwischen den F…'
+AssertionError: Vielfaltskönig.istErfuellt bei „eine Schlangenblockade zwischen den Farben stört nicht“ ([["Blau","Rot","Schlangenblockade","Gelb","Grün"],["Braun","Violett","Blau","Rot"]]): erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:43:134
+     41| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     42| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     43|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     44| }
+     45|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts:29:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/53]⎯
+
+
+ Test Files  7 failed (7)
+      Tests  53 failed | 50 passed (103)
+   Start at  08:37:49
+   Duration  4.79s (transform 3.47s, setup 2.87s, import 4.01s, tests 265ms, environment 22.37s)
+

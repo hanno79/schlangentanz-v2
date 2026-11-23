@@ -1,0 +1,28 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_pruefsumme_tmp.test.ts > Prüfsumme ohne und mit Erweiterung
+PRUEFSUMME ohne Erweiterung: f8bd5fb6d5b5c3dfd667d61536091218aeea0a0869d12798d5067761a02f983e (300 Partien, 53919 Schritte)
+PRUEFSUMME mit Erweiterung: 9b210e46d889e40e56d5e6df0cee38c2a6c4a248f633d5eef9191e57a44bbdfe (300 Partien, 55834 Schritte)
+
+ ✓ src/engine/__tests__/zz_pruefer_x2c_pruefsumme_tmp.test.ts > Prüfsumme ohne und mit Erweiterung 37550ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  09:09:25
+   Duration  41.00s (transform 516ms, setup 287ms, import 532ms, tests 37.55s, environment 2.32s)
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_pruefsumme_tmp.test.ts > Prüfsumme ohne und mit Erweiterung
+PRUEFSUMME ohne Erweiterung: f8bd5fb6d5b5c3dfd667d61536091218aeea0a0869d12798d5067761a02f983e (300 Partien, 53919 Schritte)
+PRUEFSUMME mit Erweiterung: ec0a590a7d4b7b80f648b27a06d78232afaade8ff1f4ba72a278d33f104408f8 (300 Partien, 55834 Schritte)
+
+ ✓ src/engine/__tests__/zz_pruefer_x2c_pruefsumme_tmp.test.ts > Prüfsumme ohne und mit Erweiterung 38083ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  09:08:27
+   Duration  41.61s (transform 527ms, setup 280ms, import 547ms, tests 38.08s, environment 2.39s)
+
