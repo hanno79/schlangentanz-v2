@@ -1,0 +1,54 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a6b2634e119ec57c1
+
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbwechsler: alle Folgen bis Länge 8 über 6 Farben + Regenbogenschlange
+Farbwechsler exhaustiv: 6725600 Folgen, 18.7 s, Abweichungen 0
+
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbvielfalt: alle Folgen bis Länge 7 über 6 Farben + RB
+Farbvielfalt exhaustiv bis 7: 960799 Folgen, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbwechsler: alle Folgen bis Länge 8 über 6 Farben + Regenbogenschlange 18753ms
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbwechsler: explizit Blau, Rot, Gelb, Rot, Grün 1ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Schlangenbändiger: alle Folgen bis Länge 7 über 6 Farben + RB
+Schlangenbändiger exhaustiv bis 7: 960799 Folgen, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbvielfalt: alle Folgen bis Länge 7 über 6 Farben + RB 6743ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Symmetriemeister: alle Folgen Länge 7 bis 9 über 4 Farben + RB + Blockade
+Symmetriemeister: 12037248 Folgen, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Schlangenbändiger: alle Folgen bis Länge 7 über 6 Farben + RB 1437ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbwechsler: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden)
+Farbwechsler zufällig: 20000, davon erfüllt 14444, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Symmetriemeister: alle Folgen Länge 7 bis 9 über 4 Farben + RB + Blockade 25096ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbvielfalt: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden)
+Farbvielfalt zufällig: 20000, davon erfüllt 3402, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbwechsler: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden) 463ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Schlangenbändiger: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden)
+Schlangenbändiger zufällig: 20000, davon erfüllt 3626, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Farbvielfalt: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden) 5055ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Symmetriemeister: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden)
+Symmetriemeister zufällig: 20000, davon erfüllt 248, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Schlangenbändiger: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden) 618ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Vielfaltskönig: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden)
+Vielfaltskönig zufällig: 20000, davon erfüllt 4516, Abweichungen 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Symmetriemeister: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden) 123ms
+stdout | src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Laufzeit: 20 Karten, 4 Joker (Umsetzung vs. Brute Force)
+Farbwechsler: Umsetzung Mittel 0.0041 ms, max 0.054 ms; Brute Force Mittel 0.004 ms
+Farbvielfalt: Umsetzung Mittel 0.0144 ms, max 3.133 ms; Brute Force Mittel 0.974 ms
+Schlangenbändiger: Umsetzung Mittel 0.0056 ms, max 0.031 ms; Brute Force Mittel 0.343 ms
+Symmetriemeister: Umsetzung Mittel 0.0018 ms, max 0.017 ms; Brute Force Mittel 0.038 ms
+Vielfaltskönig: Umsetzung Mittel 0.0040 ms, max 0.048 ms; Brute Force Mittel 0.003 ms
+
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Vielfaltskönig: 20000 Zufallsstellungen (1–2 Schlangen, bis 20 Karten, bis 4 Joker, Blockaden) 110ms
+ ✓ src/engine/__tests__/zz_pruefer_x2b_bruteforce.test.ts > Prüfer X2b: Brute-Force-Gegenprobe > Laufzeit: 20 Karten, 4 Joker (Umsetzung vs. Brute Force) 715ms
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  08:32:00
+   Duration  69.89s (transform 351ms, setup 764ms, import 340ms, tests 59.12s, environment 9.05s)
+

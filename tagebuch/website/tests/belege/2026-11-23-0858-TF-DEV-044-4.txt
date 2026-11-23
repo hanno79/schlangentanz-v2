@@ -1,0 +1,54 @@
+import { chromium } from 'playwright'
+import { GERAETEKLASSEN, chromiumPfad, kontextOptionen } from './scripts/pruefung/geraeteklassen.mjs'
+
+const ORDNER = 'C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/X2b-pruefer'
+const saat = Number(process.argv[2] ?? 4711)
+const spieler = Number(process.argv[3] ?? 2)
+const desktop = GERAETEKLASSEN.find((k) => k.name === 'desktop')
+const browser = await chromium.launch({ executablePath: chromiumPfad() })
+const kontext = await browser.newContext({ ...kontextOptionen(desktop), reducedMotion: 'reduce' })
+const seite = await kontext.newPage()
+const konsole = []
+seite.on('console', (m) => { if (m.type() === 'error') konsole.push(m.text()) })
+seite.on('pageerror', (e) => konsole.push(String(e)))
+await seite.goto(`http://localhost:4297/dev?seed=${saat}&spieler=${spieler}&erweiterung=1`)
+await seite.getByTestId('partiephase').waitFor()
+
+let x = saat >>> 0
+const zufall = () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 2 ** 32 }
+const eingeloest = []
+let verletzt = 0
+let schritte = 0
+let fotoNachEinloesen = false
+for (; schritte < 4000; schritte++) {
+  if ((await seite.getByTestId('partiephase').innerText()) === 'Beendet') break
+  const hinweis = await seite.getByTestId('ki-schritt-hinweis').innerText()
+  if (hinweis.includes('eine KI')) {
+    await seite.getByRole('button', { name: 'KI-Schritt (solide)', exact: true }).click()
+  } else {
+    const knoepfe = seite.locator('button.et-aktion')
+    const n = await knoepfe.count()
+    const texte = await knoepfe.evaluateAll((bs) => bs.map((b) => b.getAttribute("data-aktion")))
+    const ohneEnde = texte.map((t, i) => [t, i]).filter(([t]) => !t.includes('"ZugBeenden"'))
+    const wahl = ohneEnde.length > 0 && zufall() < 0.85 ? ohneEnde[Math.floor(zufall() * ohneEnde.length)][1] : Math.floor(zufall() * n)
+    await knoepfe.nth(wahl).click()
+  }
+  const ereignisse = await seite.getByTestId('ereignisse').innerText()
+  for (const zeile of ereignisse.split('\n')) if (zeile.startsWith('AufgabeErfuellt')) eingeloest.push(`Schritt ${schritte + 1}: ${zeile}`)
+  if (!fotoNachEinloesen && ereignisse.includes('AufgabeErfuellt')) {
+    fotoNachEinloesen = true
+    await seite.screenshot({ path: `${ORDNER}/X2b-zufallspartie-${saat}-einloesen-desktop.png` })
+  }
+  const v = await seite.locator('[data-testid="invariante"][data-verletzt="ja"]').count()
+  if (v > 0) { verletzt += 1; console.log('VERLETZT bei Schritt', schritte + 1); break }
+}
+const phase = await seite.getByTestId('partiephase').innerText()
+const offen = await seite.getByTestId('offene-aufgaben').innerText()
+const wertung = await seite.getByTestId('wertung').first().innerText()
+const scroll = await seite.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth])
+await seite.getByTestId('wertung').first().scrollIntoViewIfNeeded()
+await seite.screenshot({ path: `${ORDNER}/X2b-zufallspartie-${saat}-ende-desktop.png` })
+console.log(JSON.stringify({ saat, spieler, schritte, phase, verletzt, konsole, scroll, offen }, null, 1))
+console.log('Eingelöst:\n' + eingeloest.join('\n'))
+console.log('Wertung:\n' + wertung)
+await browser.close()
