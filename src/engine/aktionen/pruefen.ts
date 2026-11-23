@@ -13,8 +13,9 @@ type Feld = (wert: unknown) => boolean;
 const text: Feld = istText;
 const position: Feld = istGanzeZahl;
 const textOderNull: Feld = (wert) => wert === null || istText(wert);
+// `Array.from` macht Lücken zu `undefined`; `every` allein überspränge sie.
 const textliste = (minimum: number, maximum = Infinity): Feld => (wert) =>
-  Array.isArray(wert) && wert.length >= minimum && wert.length <= maximum && wert.every(istText);
+  Array.isArray(wert) && wert.length >= minimum && wert.length <= maximum && Array.from(wert).every(istText);
 
 function genau(felder: Record<string, Feld>): Feld {
   return (wert) =>
