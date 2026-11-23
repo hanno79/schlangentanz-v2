@@ -150,7 +150,8 @@ describe('A9/X1: die Aufgaben werden mit echten Zügen eingelöst, ohne Testbedi
     const start = stellung({ eigene: [['Rot', 'Regenbogenschlange', 'Rot', 'Regenbogenschlange', 'Rot', 'Regenbogenschlange']] })
       .hand(0, ['Blau', 'Blau', 'Gelb', 'Grün', 'Braun'])
       .hand(1, ['Schlangenblockade', 'Rot', 'Gelb', 'Grün', 'Braun'])
-      .aendere((zustand) => legeAufgabenAus(zustand, { offen: ['Schlangenbeschwörer', 'Farbkombination', 'Lila Riese'] }))
+      // Nicht Farbkombination: Rot und drei Regenbogenschlangen erfüllen sie seit X2a mit echten Karten.
+      .aendere((zustand) => legeAufgabenAus(zustand, { offen: ['Schlangenbeschwörer', 'Farbharmonie', 'Lila Riese'] }))
       .zustand()
     const schlangenId = start.spieler[0].schlangen[0].id
     const blockade = (zustand: Spielzustand) => einfuegen(zustand, 'BlockadeLegen', handkarte(zustand, 1, 'Schlangenblockade'), schlangenId, 1)

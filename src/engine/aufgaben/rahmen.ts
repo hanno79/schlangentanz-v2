@@ -1,5 +1,7 @@
 import type { Ereignis } from '../aktionen/typen';
 import { definitionFuerAufgabe } from '../aufgabenKarten';
+import { giltNachJederAktion } from './definition';
+import type { AufgabenDefinition } from './definition';
 import type { Spielzustand } from '../types';
 
 /*
@@ -12,9 +14,13 @@ geprüft wird und was dann geschieht.
   Aktion und damit auch zu Beginn jedes Zuges, der in einer Aktion beginnt
   (`anwendeAktion`). Eine angesagte Karte, über die noch ein Betroffener
   entscheidet, ist nicht aufgelöst (A6). Nach Spielende ist niemand am Zug.
+- Eine Aufgabe mit `pruefzeitpunkt: 'zugende'` (etwa Farbenpracht) prüft der
+  Rahmen nur am Ende des Zuges (`pruefeAufgabenAmZugende`, aus `zugablauf.ts`),
+  dort zusammen mit allen anderen.
 - Eine erfüllte offene Aufgabe geht an ihn, an ihren Platz kommt die oberste
   Karte des Aufgabenstapels (A9), und die wird sofort mitgeprüft, auch in einer
-  Kette (D5). Ist der Stapel leer, bleibt der Platz leer (A9).
+  Kette (D5), sofern ihr Prüfzeitpunkt gerade gilt. Ist der Stapel leer, bleibt
+  der Platz leer (A9).
 - Seine geheime Aufgabe zählt, sobald sie in seinem Zug einmal erfüllt war; das
   Spiel merkt es sich verdeckt, ohne Ereignis, und niemand kann es danach mehr
   ändern (D35, B2).
@@ -23,21 +29,31 @@ geprüft wird und was dann geschieht.
 und meldet sie (B2).
 */
 
-/** Löst für den Spieler am Zug ein, was er jetzt erfüllt. Verändert `zustand` und meldet in `ereignisse`. */
+/** Löst für den Spieler am Zug ein, was er jetzt erfüllt, nach einer vollständig aufgelösten Aktion. Verändert `zustand` und meldet in `ereignisse`. */
 export function pruefeAufgabenAmZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  loeseEin(zustand, ereignisse, false);
+}
+
+/** Löst am Ende seines Zuges für den Spieler am Zug ein, was er jetzt erfüllt, jede Aufgabe gleich welchen Prüfzeitpunkts. */
+export function pruefeAufgabenAmZugende(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  loeseEin(zustand, ereignisse, true);
+}
+
+function loeseEin(zustand: Spielzustand, ereignisse: Ereignis[], amZugende: boolean): void {
   if (!zustand.erweiterung || zustand.schwebend !== null || zustand.partiephase === 'Beendet') return;
   const { spielerIndex } = zustand.zug;
   const spieler = zustand.spieler[spielerIndex];
+  const erfuellt = (definition: AufgabenDefinition) => (amZugende || giltNachJederAktion(definition)) && definition.istErfuellt(zustand, spielerIndex);
 
   const geheime = spieler.geheimeAufgabe;
-  if (geheime !== null && !spieler.geheimeAufgabeErfuellt && definitionFuerAufgabe(geheime).istErfuellt(zustand, spielerIndex)) {
+  if (geheime !== null && !spieler.geheimeAufgabeErfuellt && erfuellt(definitionFuerAufgabe(geheime))) {
     spieler.geheimeAufgabeErfuellt = true;
   }
 
   let platz = 0;
   while (platz < zustand.offeneAufgaben.length) {
     const aufgabe = zustand.offeneAufgaben[platz];
-    if (!definitionFuerAufgabe(aufgabe).istErfuellt(zustand, spielerIndex)) {
+    if (!erfuellt(definitionFuerAufgabe(aufgabe))) {
       platz += 1;
       continue;
     }

@@ -53,7 +53,7 @@ export const AUFGABEN_SZENARIEN_A: readonly Szenario[] = [
     name: 'aufgabe-farbenpracht',
     beschreibung:
       'A9 Nr. 1 Farbenpracht, D38: Zwei Spieler, mit Erweiterung. Spieler 1 hat schlange-1 Blau, Blau, Rot, Rot, Gelb, Gelb und schlange-2 Violett, Violett, Braun, Braun, Grün und hält Grün, Rot, Gelb, Blau, Braun. Offen liegen Farbenpracht, Farbkombination und Lila Riese, oben auf dem Aufgabenstapel Gelber Schatz, dann Farbharmonie.',
-    erwartet: `Von jeder Farbe fehlt nur die zweite grüne Karte. Legt Spieler 1 Grün an ein Ende von schlange-2 (oder schlange-1): Ereignisse KarteGespielt, AufgabeErfuellt (Spieler 1, Farbenpracht; gezählt wird über beide Schlangen) und AufgabeAufgedeckt (Gelber Schatz an Stelle von Farbenpracht). Offen liegen dann Gelber Schatz, Farbkombination, Lila Riese. Legt er stattdessen Rot, Gelb, Blau oder Braun, geschieht nichts. ${ZUM_ABLESEN}`,
+    erwartet: `Von jeder Farbe fehlt nur die zweite grüne Karte. Farbenpracht gilt erst am Ende des eigenen Zuges (Entscheid des Autors vom 23.11.2026): Legt Spieler 1 Grün an ein Ende von schlange-2 (oder schlange-1), kommt nur KarteGespielt, Farbenpracht bleibt offen liegen. Nach „Zug beenden“: KartenGezogen (Spieler 1 zieht 1), AufgabeErfuellt (Spieler 1, Farbenpracht; gezählt wird über beide Schlangen), AufgabeAufgedeckt (Gelber Schatz an Stelle von Farbenpracht), dann ZugBegonnen (KI-Gegner 1). Offen liegen dann Gelber Schatz, Farbkombination, Lila Riese. Legt er statt Grün Rot, Gelb, Blau oder Braun, wird auch beim „Zug beenden“ nichts eingelöst. ${ZUM_ABLESEN}`,
     erzeuge: tisch({
       schlangen: [
         ['Blau', 'Blau', 'Rot', 'Rot', 'Gelb', 'Gelb'],
