@@ -1,0 +1,25 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ae2ee078e98a11f1c
+
+stdout | src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P1: nach Aussetzen wird zu Beginn des Zuges des Übernächsten geprüft
+P1 Ereignisse: KartenGezogen, Ausgesetzt, ZugBegonnen, AufgabeErfuellt, AufgabeAufgedeckt
+
+stdout | src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P2: zu Beginn des Verdoppler-Zweitzugs wird geprüft, bevor eine Karte fällt
+P2 Ereignisse: KartenGezogen, ZugBegonnen, AufgabeErfuellt, AufgabeAufgedeckt
+
+stdout | src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P7: auch eine wirkungslos abgelegte Sonderkarte ist eine aufgelöste Aktion; danach wird geprüft
+P7 Ereignisse: KarteGespielt, AufgabeErfuellt, AufgabeAufgedeckt
+
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P1: nach Aussetzen wird zu Beginn des Zuges des Übernächsten geprüft 17ms
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P2: zu Beginn des Verdoppler-Zweitzugs wird geprüft, bevor eine Karte fällt 4ms
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P3: die KI-Sicht eines Mitspielers ist gleich, ob die fremde geheime Aufgabe erfüllt ist oder nicht, und nennt sie nicht 4ms
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P4: eine werfende Aktion unter mitTestbedingungen lässt keine Testbedingung zurück 3ms
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P5: eine Kette endet am leeren Stapel: Die aufgedeckte letzte Karte wird erfüllt, ihr Platz bleibt leer 2ms
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P6: die verdeckt gemerkte geheime Aufgabe übersteht Speichern und Laden und wird nicht zurückgesetzt 4ms
+ ✓ src/engine/__tests__/regeln/ZZ_pruefer_x1.test.ts > Prüfer X1 > P7: auch eine wirkungslos abgelegte Sonderkarte ist eine aufgelöste Aktion; danach wird geprüft 2ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  07:19:27
+   Duration  3.41s (transform 548ms, setup 271ms, import 570ms, tests 37ms, environment 2.25s)
+

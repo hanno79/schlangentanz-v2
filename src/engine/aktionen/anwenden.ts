@@ -1,3 +1,4 @@
+import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
 import { reagiere, spieleKarte } from '../reaktion';
 import type { Spielzustand } from '../types';
 import { beendeZug, legeGrubenOhneZugAb, legeWirkungslosAb, werfeUeberhandAb } from '../zugablauf';
@@ -8,8 +9,9 @@ import type { AktionsErgebnis, Ereignis, SpielAktion } from './typen';
  * Führt eine erlaubte Aktion aus; eine unerlaubte wird mit ihrem Grund abgelehnt
  * (B2, U12). Der übergebene Zustand bleibt unverändert. Danach rückt die Engine
  * selbst bis zur nächsten Entscheidung vor (Zugwechsel, Auffüllen, Aussetzen,
- * Spielende, Schlangengruben ohne Zug, D29) und meldet in `ereignisse`, was
- * dabei geschah.
+ * Spielende, Schlangengruben ohne Zug, D29), löst mit Erweiterung die Aufgaben
+ * ein, die der Spieler am Zug jetzt erfüllt (A9), und meldet in `ereignisse`,
+ * was dabei geschah.
  *
  * Eine Handkarte mit Wirkung zählt zum Zug und wirkt nach ihrem Eintrag im
  * Kartenregister; trifft sie Mitspieler, wird sie erst angesagt, und die
@@ -38,5 +40,6 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
       ergebnis = spieleKarte(neu, aktion, ereignisse);
   }
   legeGrubenOhneZugAb(ergebnis, ereignisse);
+  pruefeAufgabenAmZug(ergebnis, ereignisse);
   return { zustand: ergebnis, ereignisse };
 }

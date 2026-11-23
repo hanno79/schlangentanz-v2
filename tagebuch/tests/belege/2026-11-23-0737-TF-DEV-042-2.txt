@@ -1,0 +1,68 @@
+== desktop: {"scrollWidth":1280,"clientWidth":1280} Konsolenfehler: 0 
+localStorage: {"erweiterung":true,"offen":3,"stapel":10,"erfuellt":[0,0],"geheimErfuellt":[false,false]}
+Du bist dran
+Spiele Karten aus deiner Hand.
+
+Stapel 102
+
+Zur Lobby
+KI-Gegner 1
+5 Handkarten
+Zwischenstand ohne Kettenbonus:
+0 Punkte
+Ablage leer
+
+Noch keine Schlange
+
+Nachziehstapel
+102
+Offene Aufgaben
+Deine Auslage
+geheim
+Deine Schlangen
+Zwischenstand ohne Kettenbonus:
+0 Punkte
+
+Noch keine Schlange
+
+Deine Hand · 5 Karten
+Deine Ablage leer
+
+Wähle eine Karte aus deiner Hand.
+
+Spieler 1 muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).
+Zug beenden
+== handy-hochkant: {"scrollWidth":390,"clientWidth":390} Konsolenfehler: 0 
+localStorage: {"erweiterung":true,"offen":3,"stapel":10,"erfuellt":[0,0],"geheimErfuellt":[false,false]}
+Du bist dran
+Spiele Karten aus deiner Hand.
+
+Stapel 102
+
+Zur Lobby
+KI-Gegner 1
+5 Handkarten
+Zwischenstand ohne Kettenbonus:
+0 Punkte
+Ablage leer
+
+Noch keine Schlange
+
+Nachziehstapel
+102
+Offene Aufgaben
+Deine Auslage
+geheim
+Deine Schlangen
+Zwischenstand ohne Kettenbonus:
+0 Punkte
+
+Noch keine Schlange
+
+Deine Hand · 5 Karten
+Deine Ablage leer
+
+Wähle eine Karte aus deiner Hand.
+
+Spieler 1 muss erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).
+Zug beenden

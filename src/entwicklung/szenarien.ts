@@ -1,6 +1,7 @@
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import type { Baukasten } from '../engine/testing/szenario'
+import type { Testbedingung } from '../engine/testing/testaufgaben'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import { starteEntwicklerPartie } from './partie'
 import { LEGEN_SZENARIEN } from './szenarienLegen'
@@ -11,6 +12,7 @@ import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
 import { SPIEL_SZENARIEN } from './szenarienSpiel'
 import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
 import { KI_SZENARIEN } from './szenarienKi'
+import { AUFGABEN_SZENARIEN } from './szenarienAufgaben'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -19,6 +21,12 @@ export interface Szenario {
   /** Was der Prüfer am Tisch sehen soll. */
   erwartet: string
   erzeuge: () => Spielzustand
+  /**
+   * Testbedingungen für Aufgaben, solange X2 sie nicht umgesetzt hat (X1). Der
+   * Entwicklertisch setzt sie nur, während er eine Aktion anwendet; sonst, auch
+   * unter `/spiel`, gelten die Aufgaben des Registers.
+   */
+  testbedingungen?: Readonly<Record<string, Testbedingung>>
 }
 
 /*
@@ -240,6 +248,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...SPIEL_SZENARIEN,
   ...HAEUTUNG_SZENARIEN,
   ...KI_SZENARIEN,
+  ...AUFGABEN_SZENARIEN,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

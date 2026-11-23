@@ -31,6 +31,10 @@ export interface Lage {
   schwebend: string | null
   /** Wer über die schwebende Karte gerade entscheidet (A6, D33). */
   gefragt: number | null
+  /** Die offenen Aufgaben in ihrer Reihenfolge, die Grösse des Aufgabenstapels und die erfüllten offenen Aufgaben je Spieler (A9). */
+  offeneAufgaben: string[]
+  aufgabenstapel: number
+  erfuellteAufgaben: string[][]
 }
 
 export function lageVon(zustand: Spielzustand): Lage {
@@ -58,6 +62,9 @@ export function lageVon(zustand: Spielzustand): Lage {
     ausloeser: zustand.schlussrundeAusloeser,
     schwebend: zustand.schwebend?.karte.id ?? null,
     gefragt: zustand.schwebend?.ausstehend[0] ?? null,
+    offeneAufgaben: zustand.offeneAufgaben.map((aufgabe) => aufgabe.id),
+    aufgabenstapel: zustand.aufgabenStapel.length,
+    erfuellteAufgaben: zustand.spieler.map((spieler) => spieler.erfuellteAufgaben.map((aufgabe) => aufgabe.id)),
   }
 }
 
@@ -211,6 +218,17 @@ export function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
         lage.teilzug = null
         lage.abschnitt = null
         break
+      // A9: Die erfüllte Aufgabe geht an den Spieler; ihren Platz nimmt die aufgedeckte ein, oder er bleibt leer.
+      case 'AufgabeErfuellt':
+        lage.erfuellteAufgaben[ereignis.spielerIndex].push(ereignis.aufgabeId)
+        break
+      case 'AufgabeAufgedeckt':
+        lage.offeneAufgaben = lage.offeneAufgaben.map((id) => (id === ereignis.anStelleVon ? ereignis.aufgabeId : id))
+        lage.aufgabenstapel -= 1
+        break
+      case 'AufgabenstapelLeer':
+        lage.offeneAufgaben = ohne(lage.offeneAufgaben, ereignis.anStelleVon)
+        break
     }
   }
   return lage
@@ -224,6 +242,15 @@ export function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
 export function verrateneHandkarten(zustand: Spielzustand, ereignisse: Ereignis[]): string[] {
   const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
   return [...texteIn(ereignisse)].filter((text) => aufHand.has(text))
+}
+
+/**
+ * B2, D35: Die geheimen Aufgaben sieht niemand vor der Wertung. Liefert jede Id
+ * und jeden Namen einer geheimen Aufgabe, die ein Ereignis nennt.
+ */
+export function verrateneGeheimeAufgaben(zustand: Spielzustand, ereignisse: Ereignis[]): string[] {
+  const geheim = new Set(zustand.spieler.flatMap((spieler) => (spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe.id, spieler.geheimeAufgabe.name])))
+  return [...texteIn(ereignisse)].filter((text) => geheim.has(text))
 }
 
 /** Jeder Text, der irgendwo in einem Ereignis steht, auch tief in einer angesagten Aktion. */
