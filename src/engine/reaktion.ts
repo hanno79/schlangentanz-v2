@@ -8,6 +8,7 @@ import {
   entnehmeHandkarte,
   findeKartenort,
   legeAufEigenenAblagestapel,
+  legeOhneWirkungAb,
   meldeGespielteKarte,
   mitspielerImUhrzeigersinn,
   spielerIndexVon,
@@ -24,7 +25,8 @@ Reihe nach; abwehren kann nur, wer Farbenschutz hält, wer keinen hält, kann nu
 durchlassen (D33). So verrät die Frage keine Handkarte (B2). Erst wenn alle entschieden haben,
 wirkt die Karte nach ihrem Eintrag im Kartenregister, und für die Abwehrenden
 hat sie keine Wirkung (A7.2). Haben alle abgewehrt, liegt sie wirkungslos auf
-dem Ablagestapel des Angreifers. Gegen Farbkarten gibt es keine Abwehr (A6).
+dem Ablagestapel des Angreifers, der Schlangenkorb aus dem Spiel (D54). Gegen
+Farbkarten gibt es keine Abwehr (A6).
 Was eine Wirkung ausser der gespielten Karte bewegt, meldet `KartenVersetzt`
 (`kartenorte.ts`), für jede Karte gleich.
 
@@ -121,7 +123,7 @@ function loeseAuf(zustand: Spielzustand, ereignisse: Ereignis[]): Spielzustand {
   const angreifer = spielerIndexVon(zustand, aktion.spielerId);
   const ohneWirkung = betroffeneVon(zustand, karte, aktion).every((index) => abgewehrt.includes(index));
   let nach = zustand;
-  if (ohneWirkung) zustand.spieler[angreifer].ablagestapel.push(karte);
+  if (ohneWirkung) legeOhneWirkungAb(zustand, angreifer, karte);
   else {
     // Die Kartendateien nehmen sich die gespielte Karte aus der Hand (`entnehmeHandkarte`); bis hierher hat sie geschwebt.
     zustand.spieler[angreifer].hand.push(karte);

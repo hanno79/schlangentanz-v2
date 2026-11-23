@@ -53,7 +53,8 @@ describe('D42: der Einsatz ist die Sonderkarte des Zuges (X6, Kriterium 2)', () 
   })
 
   it('D42: ist schon eine andere Sonderkarte gespielt, gibt es keinen Korb mehr in diesem Zug', () => {
-    const start = korbtisch([KORB, 'Schlangenblockade', 'Blau']).schlange(1, ['Grün']).zustand()
+    const start = korbtisch([KORB, 'Schlangenblockade', 'Blau']).schlange(0, ['Grün']).zustand()
+    // In die eigene Schlange: Sie trifft niemanden und wirkt sofort.
     const blockade = aktionen(start, 'BlockadeLegen')[0]
     const nach = spiele(start, blockade).zustand
     expect(angeboteneBoni(nach)).toEqual([])

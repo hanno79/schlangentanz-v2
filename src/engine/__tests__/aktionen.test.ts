@@ -48,6 +48,9 @@ describe('A5/A6/A7: die Aktionstypen', () => {
       'UeberhandAbwerfen',
       'Reagieren',
       'Entscheiden',
+      // X6 (U13, Plan „Zusätzliche Dateien für alle drei“): der Schlangenkorb und die Zusatzaktion aus A8.1, D46.
+      'SchlangenkorbSpielen',
+      'AbwerfenUndZiehen',
     ])
   })
 
@@ -68,7 +71,7 @@ describe('A1/A7: das Kartenregister', () => {
     ['Farbenfusion', 'farbenfusion', 'FusionLegen'],
     ['Verdoppler', 'verdoppler', 'VerdopplerSpielen'],
     ['Schlangenhäutung', 'schlangenhaeutung', 'SchlangenhaeutungSpielen'],
-    ['Schlangenkorb des Glücks', 'schlangenkorb', null],
+    ['Schlangenkorb des Glücks', 'schlangenkorb', 'SchlangenkorbSpielen'],
   ] as const
 
   it('A1: das Register hat je Kartenart genau einen Eintrag', () => {

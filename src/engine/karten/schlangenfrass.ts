@@ -4,6 +4,7 @@ import type { SchlangeAmTisch } from '../schlangen';
 import type { Spielkarte, Spielzustand } from '../types';
 import { legeAufEigenenAblagestapel, mitspielerImUhrzeigersinn, spielerIndexVon } from '../zugablauf';
 import type { KartenDefinition } from './register';
+import { istBlockade } from './schlangenstelle';
 
 /*
 A7.4: Der Schlangenfrass hat drei Optionen. a) frisst eine beliebige Karte aus
@@ -31,10 +32,6 @@ type Ziel = SchlangenfrassSpielenAktion['ziele'][number];
 /** Eine Karte in einer Schlange, mit dem Besitzer der Schlange. */
 interface Fundstelle extends SchlangeAmTisch {
   karte: Spielkarte;
-}
-
-function istBlockade(karte: Spielkarte): boolean {
-  return karte.typ === 'Sonderkarte' && karte.name === 'Schlangenblockade';
 }
 
 function verweis({ schlange, karte }: Fundstelle): Ziel {

@@ -1,3 +1,4 @@
+import { abwerfenUndZiehenAktionen } from '../abwerfenUndZiehen';
 import { entscheidungsAktionen, reaktionsAktionen } from '../reaktion';
 import type { Spielkarte, Spielzustand } from '../types';
 import { ueberzaehligeKarten } from '../zugablauf';
@@ -10,7 +11,8 @@ import type { SpielAktion, UeberhandAbwerfenAktion } from './typen';
  * Oberfläche und KI wählen nur hieraus (U3).
  *
  * Reihenfolge: Karten mit Wirkung in der Reihenfolge der Hand, dann das
- * wirkungslose Ablegen (D13, D25), zuletzt „Zug beenden“. Am Zugende mit mehr
+ * wirkungslose Ablegen (D13, D25), dann die Zusatzaktion „Zwei Karten
+ * abwerfen, drei ziehen“ (A8.1, D46), zuletzt „Zug beenden“. Am Zugende mit mehr
  * als 5 Karten nur das Abwerfen (A5). Schwebt eine angesagte Karte, nur die
  * Reaktionen des Gefragten: jeder seiner Farbenschutz, dann durchlassen (A6).
  * Ist eine Entscheidung offen, nur die Wahl ihres Entscheiders (X3).
@@ -32,7 +34,7 @@ export function ermittleAktionen(zustand: Spielzustand): SpielAktion[] {
     if (ohneZielAblegbar(karte, () => ziele)) wirkungslos.push({ typ: 'SonderkarteWirkungslosAblegen', spielerId: spieler.id, karteId: karte.id });
   }
   const beenden: SpielAktion[] = darfZugBeenden(zustand.zug, spieler) ? [{ typ: 'ZugBeenden', spielerId: spieler.id }] : [];
-  return [...mitWirkung, ...wirkungslos, ...beenden];
+  return [...mitWirkung, ...wirkungslos, ...abwerfenUndZiehenAktionen(zustand, entscheider), ...beenden];
 }
 
 /** A5: jede Wahl von genau `anzahl` Handkarten, in der Reihenfolge der Hand. */

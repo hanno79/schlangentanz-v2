@@ -1,3 +1,4 @@
+import { werfeAbUndZiehe } from '../abwerfenUndZiehen';
 import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
 import { entscheide, meldeOffeneEntscheidung, reagiere, spieleKarte } from '../reaktion';
 import { beginneSchlussrundeBeiLeeremStapel } from '../stapel';
@@ -42,6 +43,9 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
       break;
     case 'Entscheiden':
       ergebnis = entscheide(neu, aktion, ereignisse);
+      break;
+    case 'AbwerfenUndZiehen':
+      werfeAbUndZiehe(neu, aktion, ereignisse);
       break;
     default:
       ergebnis = spieleKarte(neu, aktion, ereignisse);

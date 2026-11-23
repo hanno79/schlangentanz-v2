@@ -8,6 +8,7 @@ export * from './types';
 export * from './constants';
 export { AKTIONSTYPEN } from './aktionen/typen';
 export type {
+  AbwerfenUndZiehenAktion,
   Ablehnung,
   Aktionstyp,
   AktionsErgebnis,
@@ -20,12 +21,16 @@ export type {
   FusionLegenAktion,
   KartenAktion,
   Kartenort,
+  Korbbonus,
+  Korbtausch,
+  Korbziel,
   Pruefergebnis,
   ReagierenAktion,
   RegenbogenschlangeLegenAktion,
   SchlangenfrassSpielenAktion,
   SchlangengrubeSpielenAktion,
   SchlangenhaeutungSpielenAktion,
+  SchlangenkorbSpielenAktion,
   SonderkarteWirkungslosAblegenAktion,
   SpielAktion,
   Spielergrund,

@@ -50,7 +50,7 @@ export function korb(zustand: Spielzustand, art: Korbbonus['art'], passt: (aktio
   return gefunden!
 }
 
-/** Spielt diese aufgezählte Aktion und prüft den Schritt (nachrechenbar, B2, Invarianten). */
+/** Spielt diese aufgezählte Aktion und prüft den Schritt (nachrechenbar, B2, Invarianten; `pruefeSchritt`). */
 export function spiele(zustand: Spielzustand, aktion: SpielAktion): Schritt {
   return pruefeSchritt(zustand, fuehreAus(zustand, aktion))
 }
@@ -60,16 +60,21 @@ export function spieleKorb(zustand: Spielzustand, art: Korbbonus['art'], passt?:
   return spiele(zustand, korb(zustand, art, passt))
 }
 
+/** Die aufgezählte Aktion, die diese Handkarte mit Wirkung spielt, oder `undefined`. */
+function angebotMitWirkung(zustand: Spielzustand, karteId: string): SpielAktion | undefined {
+  return aktionen(zustand).find((aktion) => aktion.typ !== 'SonderkarteWirkungslosAblegen' && 'karteId' in aktion && aktion.karteId === karteId)
+}
+
 /** Spielt die aufgezählte Aktion, die diese Handkarte mit Wirkung spielt. */
 export function spieleKarte(zustand: Spielzustand, karteId: string): Schritt {
-  const angebot = aktionen(zustand).find((aktion) => aktion.typ !== 'SonderkarteWirkungslosAblegen' && 'karteId' in aktion && aktion.karteId === karteId)
+  const angebot = angebotMitWirkung(zustand, karteId)
   if (angebot === undefined) throw new Error(`Testaufbau: ${karteId} ist nicht mit Wirkung aufgezählt.`)
   return spiele(zustand, angebot)
 }
 
 /** Lässt sich diese Handkarte jetzt mit Wirkung spielen? */
 export function mitWirkung(zustand: Spielzustand, karteId: string): boolean {
-  return aktionen(zustand).some((aktion) => aktion.typ !== 'SonderkarteWirkungslosAblegen' && 'karteId' in aktion && aktion.karteId === karteId)
+  return angebotMitWirkung(zustand, karteId) !== undefined
 }
 
 /** Die aufgezählten Zusatzaktionen „Zwei Karten abwerfen, drei ziehen“ (A8.1, D46). */

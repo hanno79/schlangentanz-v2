@@ -71,10 +71,20 @@ export function legeAufEigenenAblagestapel(zustand: Spielzustand, spielerId: str
   zustand.spieler.find((spieler) => spieler.id === spielerId)!.ablagestapel.push(karte);
 }
 
+/**
+ * A6, D13: Eine Sonderkarte ohne Wirkung kommt auf den Ablagestapel dessen, der
+ * sie gespielt hat. Der Schlangenkorb kommt nach der Nutzung aus dem Spiel und
+ * liegt nie auf einem Ablagestapel, auch wirkungslos oder abgewehrt (A7.10, D54).
+ */
+export function legeOhneWirkungAb(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): void {
+  if (karte.typ === 'Sonderkarte' && karte.name === 'Schlangenkorb des Glücks') zustand.ausDemSpiel.push(karte);
+  else zustand.spieler[spielerIndex].ablagestapel.push(karte);
+}
+
 /** D13, D25: Die Sonderkarte kommt ohne Wirkung auf den eigenen Ablagestapel und zählt als Sonderkarte des Zuges. */
 export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirkungslosAblegenAktion, ereignisse: Ereignis[]): void {
   zaehleGespielteKarte(zustand, aktion);
-  legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId);
+  legeOhneWirkungAb(zustand, spielerIndexVon(zustand, aktion.spielerId), entnehmeHandkarte(zustand, aktion.spielerId, aktion.karteId));
   meldeGespielteKarte(zustand, aktion, ereignisse);
 }
 
@@ -117,14 +127,18 @@ export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
  * Schreibweise derselben Wahl dasselbe ergibt wie die aufgezählte Aktion.
  */
 export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly string[], ereignisse: Ereignis[]): void {
-  const { spielerIndex } = zustand.zug;
+  legeHandkartenAb(zustand, zustand.zug.spielerIndex, karteIds, ereignisse);
+  schliesseZugAb(zustand, ereignisse);
+}
+
+/** Die gewählten Handkarten kommen in der Reihenfolge der Hand oben auf den eigenen Ablagestapel (A5, A8.1); `KartenAbgeworfen` meldet sie. */
+export function legeHandkartenAb(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[], ereignisse: Ereignis[]): void {
   const spieler = zustand.spieler[spielerIndex];
   const gewaehlt = new Set(karteIds);
   const abgeworfen = spieler.hand.filter((karte) => gewaehlt.has(karte.id));
   spieler.hand = spieler.hand.filter((karte) => !gewaehlt.has(karte.id));
   spieler.ablagestapel.push(...abgeworfen);
   ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: abgeworfen.map((karte) => karte.id) });
-  schliesseZugAb(zustand, ereignisse);
 }
 
 /**

@@ -59,6 +59,13 @@ export function entscheidung(zustand: Spielzustand, wahl: string): Schritt {
   return pruefeSchritt(zustand, fuehreAus(zustand, angebot))
 }
 
+/** JSON mit sortierten Schlüsseln: Eine neue Schlange steht in der nachgerechneten Lage am Ende, im Zustand bei ihrem Besitzer. */
+function kanonisch(wert: unknown): string {
+  return JSON.stringify(wert, (_, eintrag: unknown) =>
+    typeof eintrag === 'object' && eintrag !== null && !Array.isArray(eintrag) ? Object.fromEntries(Object.entries(eintrag).sort(([a], [b]) => (a < b ? -1 : 1))) : eintrag,
+  )
+}
+
 /**
  * Was für jeden Schritt des Rahmens gilt: Die Oberfläche rechnet ihn aus den
  * Ereignissen nach (Plan E2, Kriterium 11), kein Ereignis nennt eine Handkarte
@@ -66,7 +73,7 @@ export function entscheidung(zustand: Spielzustand, wahl: string): Schritt {
  */
 export function pruefeSchritt(vorher: Spielzustand, schritt: Schritt): Schritt {
   const nachgerechnet = spieleNach(lageVon(vorher), schritt.ereignisse)
-  if (JSON.stringify(nachgerechnet) !== JSON.stringify(lageVon(schritt.zustand))) {
+  if (kanonisch(nachgerechnet) !== kanonisch(lageVon(schritt.zustand))) {
     throw new Error(`E4b/X3: nicht nachrechenbar: ${JSON.stringify(schritt.ereignisse)}`)
   }
   const verraten = verrateneHandkarten(schritt.zustand, schritt.ereignisse)
