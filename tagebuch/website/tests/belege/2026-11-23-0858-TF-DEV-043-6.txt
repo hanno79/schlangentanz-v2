@@ -1,0 +1,31 @@
+klicke {"typ":"RegenbogenschlangeLegen","spielerId":"spieler-1","karteId":"regenbogenschlange-01","schlangenId":"schlange-1","position":2}
+== aufgabe-farbvielfalt
+KarteGespielt: Spieler 1 (spieler-1), regenbogenschlange-01 (RegenbogenschlangeLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 2
+AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbvielfalt (aufgabe-04)
+AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbvielfalt (aufgabe-04)
+Schlange 1 schlange-1:  / Erfüllte Aufgaben: Farbvielfalt (9) aufgabe-04
+klicke {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gelb-02","ziel":{"art":"schlange","schlangenId":"schlange-2","seite":"anfang"}}
+== aufgabe-vielfaltskoenig
+KarteGespielt: Spieler 1 (spieler-1), gelb-02 (FarbkarteLegen) → schlange-2 von Spieler 1 (spieler-1), Stelle 0
+AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Vielfaltskönig (aufgabe-05)
+AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Vielfaltskönig (aufgabe-05)
+Schlange 1 schlange-1:  / Schlange 2 schlange-2:  / Erfüllte Aufgaben: Vielfaltskönig (9) aufgabe-05
+klicke {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gruen-01","ziel":{"art":"schlange","schlangenId":"schlange-1","seite":"anfang"}}
+== aufgabe-farbwechsler
+KarteGespielt: Spieler 1 (spieler-1), gruen-01 (FarbkarteLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 0
+AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbwechsler (aufgabe-06)
+AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbwechsler (aufgabe-06)
+Schlange 1 schlange-1:  / Erfüllte Aufgaben: Farbwechsler (6) aufgabe-06
+klicke {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"gruen-02","ziel":{"art":"schlange","schlangenId":"schlange-1","seite":"anfang"}}
+== aufgabe-schlangenbaendiger
+KarteGespielt: Spieler 1 (spieler-1), gruen-02 (FarbkarteLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 0
+AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Schlangenbändiger (aufgabe-11)
+AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Schlangenbändiger (aufgabe-11)
+Schlange 1 schlange-1:  / Erfüllte Aufgaben: Schlangenbändiger (7) aufgabe-11
+klicke {"typ":"FarbkarteLegen","spielerId":"spieler-1","karteId":"blau-02","ziel":{"art":"schlange","schlangenId":"schlange-1","seite":"ende"}}
+== aufgabe-symmetriemeister
+KarteGespielt: Spieler 1 (spieler-1), blau-02 (FarbkarteLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 7
+AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Symmetriemeister (aufgabe-13)
+AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Symmetriemeister (aufgabe-13)
+Schlange 1 schlange-1:  / Erfüllte Aufgaben: Symmetriemeister (10) aufgabe-13
+Konsolenfehler: []

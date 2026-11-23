@@ -1,0 +1,14 @@
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a6b2634e119ec57c1
+stdout | src/engine/__tests__/zz_pruefer_x2b_partien.test.ts > Prüfer X2b: eigene Grenzfälle und Zufallspartien > G2: Vielfaltskönig mit genau 4 Farben je Schlange, eine Schlange mit 3 Farben + Blockade + Regenbogenschlange
+G2 Vielfaltskönig (3 Farben + RB | 3 Farben): false
+G2 Vielfaltskönig (3 Farben + RB | 4 Farben): true
+stdout | src/engine/__tests__/zz_pruefer_x2b_partien.test.ts > Prüfer X2b: eigene Grenzfälle und Zufallspartien > G3: 300 Zufallspartien mit Erweiterung: jede AufgabeErfuellt ist im Zustand danach wirklich erfüllt; keine erfüllte offene Aufgabe bleibt nach einer aufgelösten Aktion liegen
+G3 Ausgänge {"beendet":300} eingelöst je Aufgabe {"Vielfaltskönig":66,"Farbwechsler":75,"Schlangenbändiger":47,"Farbvielfalt":78,"Symmetriemeister":3} liegen geblieben []
+G3 Abweichende: []
+ ✓ src/engine/__tests__/zz_pruefer_x2b_partien.test.ts > Prüfer X2b: eigene Grenzfälle und Zufallspartien > G1: ein Spieler ohne Schlange erfüllt keine der fünf 9ms
+ ✓ src/engine/__tests__/zz_pruefer_x2b_partien.test.ts > Prüfer X2b: eigene Grenzfälle und Zufallspartien > G2: Vielfaltskönig mit genau 4 Farben je Schlange, eine Schlange mit 3 Farben + Blockade + Regenbogenschlange 6ms
+ ✓ src/engine/__tests__/zz_pruefer_x2b_partien.test.ts > Prüfer X2b: eigene Grenzfälle und Zufallspartien > G3: 300 Zufallspartien mit Erweiterung: jede AufgabeErfuellt ist im Zustand danach wirklich erfüllt; keine erfüllte offene Aufgabe bleibt nach einer aufgelösten Aktion liegen 73081ms
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  08:36:07
+   Duration  74.60s (transform 769ms, setup 359ms, import 805ms, tests 73.10s, environment 0ms)

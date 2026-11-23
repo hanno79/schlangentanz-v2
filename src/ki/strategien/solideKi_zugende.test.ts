@@ -24,6 +24,11 @@ function endpunkte(zustand: Spielzustand): number[] {
   return berechneEndwertung(zustand).spieler.map((spieler) => spieler.summe)
 }
 
+/** Wie `endpunkte`, aber ohne Aufgaben: Seit X2 löst jede aufgelöste Aktion eine schon erfüllte offene Aufgabe ein (A9). */
+function punkteOhneAufgaben(zustand: Spielzustand): number[] {
+  return berechneEndwertung(zustand).spieler.map((spieler) => spieler.summe - spieler.aufgabenPunkte)
+}
+
 interface Partie {
   spielerzahl: number
   erweiterung: boolean
@@ -132,7 +137,7 @@ describe('K2, Kriterien 1 und 2: am Zugende liegt keine Karte mehr, die ihr nüt
     if (frass === undefined) throw new Error('Testaufbau: kein Schlangenfrass auf die zweite Blockade')
     const danach = nachDurchlassen(start, frass, 0)
     expect(bewerte(sichtFuer(danach, 0)) - bewerte(sichtFuer(start, 0)), 'K2: Testaufbau, Halten und Spielen sind gleich bewertet').toBeCloseTo(0, 9)
-    expect(endpunkte(danach)[0] - endpunkte(start)[0], 'A11: Gelb×4 statt Gelb×3, ein Punkt').toBe(1)
+    expect(punkteOhneAufgaben(danach)[0] - punkteOhneAufgaben(start)[0], 'A11: Gelb×4 statt Gelb×3, ein Punkt').toBe(1)
 
     const aktion = kiWahl(start, erstelleSolideKi(erzeugeZufall(1)))
     expect(aktion, 'K2: bei Gleichstand gewinnt der sichere Punkt').toMatchObject({ typ: 'SchlangenfrassSpielen', ziele: [{ karteId: blockade.id }] })

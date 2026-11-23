@@ -1,0 +1,49 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aafe5e835b9dd5a24
+
+ ❯ tests/spec_documentation_teil_d.test.ts (15 tests | 2 failed) 34ms
+     × P0.5f: D57: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D 9ms
+     × P0.5f: D57 bittet um die Klarstellung von A10, und jedes Zitat der Einordnung steht wörtlich in Teil A 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D57: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+AssertionError: D57 ohne Kernaussage „„Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen““: expected 'ja: wer mitten in seinem zug die letz…' to contain '„seine zuletzt gezogenen karten kann …'
+
+Expected: "„seine zuletzt gezogenen karten kann er nur noch ausserhalb seines zuges einsetzen“"
+Received: "ja: wer mitten in seinem zug die letzte karte vom nachziehstapel zieht, etwa über schlangenkorb oder comeback-karte, spielt seinen zug zu ende (a10) und darf dabei auch die eben gezogenen karten einsetzen; danach beginnt die schlussrunde. das passt zu d43, d49 und d55. antwort des autors auf eine rückfrage aus x3, gewählte möglichkeit: „ja, im selben zug“. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation_hilfen.ts:109:90
+    107| /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    108| export function pruefeKern(nummer: string, antwort: string, kern: stri…
+    109|   for (const aussage of kern) expect(antwort, `${nummer} ohne Kernauss…
+       |                                                                                          ^
+    110|   for (const aussage of verboten) expect(antwort, `${nummer} enthält „…
+    111| }
+ ❯ tests/spec_documentation_teil_d.test.ts:186:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D57 bittet um die Klarstellung von A10, und jedes Zitat der Einordnung steht wörtlich in Teil A
+AssertionError: D57 ohne Kernaussage „Die Website soll A10 mit D57 klarstellen.“: expected 'ja: wer mitten in seinem zug die letz…' to contain 'die website soll a10 mit d57 klarstel…'
+
+Expected: "die website soll a10 mit d57 klarstellen."
+Received: "ja: wer mitten in seinem zug die letzte karte vom nachziehstapel zieht, etwa über schlangenkorb oder comeback-karte, spielt seinen zug zu ende (a10) und darf dabei auch die eben gezogenen karten einsetzen; danach beginnt die schlussrunde. das passt zu d43, d49 und d55. antwort des autors auf eine rückfrage aus x3, gewählte möglichkeit: „ja, im selben zug“. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation_hilfen.ts:109:90
+    107| /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    108| export function pruefeKern(nummer: string, antwort: string, kern: stri…
+    109|   for (const aussage of kern) expect(antwort, `${nummer} ohne Kernauss…
+       |                                                                                          ^
+    110|   for (const aussage of verboten) expect(antwort, `${nummer} enthält „…
+    111| }
+ ❯ tests/spec_documentation_teil_d.test.ts:202:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 passed (15)
+   Start at  08:05:27
+   Duration  2.91s (transform 88ms, setup 272ms, import 66ms, tests 34ms, environment 2.25s)
+

@@ -1,0 +1,41 @@
+{
+ "saat": 4714,
+ "spieler": 2,
+ "schritte": 194,
+ "phase": "Beendet",
+ "verletzt": 0,
+ "konsole": [],
+ "scroll": [
+  1280,
+  1280
+ ],
+ "offen": "Offene Aufgaben (3): Farbkombination (5) aufgabe-03Farbharmonie (10) aufgabe-02Gelber Schatz (5) aufgabe-14"
+}
+Eingelöst:
+Schritt 46: AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Vielfaltskönig (aufgabe-05)
+Schritt 87: AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Schlangenbändiger (aufgabe-11)
+Wertung:
+Wertung
+Zwischenstand (Sicht Spieler 1): ohne Kettenbonus, ohne fremde geheime Aufgaben
+Spie­ler	Grup­pen	Viel­falt	Kette	Aufg.	Sum­me
+Spieler 1	0	0	–	0	0
+KI-Gegner 1	74	4	–	16	94
+Endwertung
+Spie­ler	Grup­pen	Viel­falt	Kette	Aufg.	Sum­me
+Spieler 1	0	0	0	0	0
+KI-Gegner 1	74	4	5	16	99
+
+Gewonnen: KI-Gegner 1 (99)
+
+Aufschlüsselung der Endwertung
+Spieler 1
+schlange-4: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-03) in keiner Gruppe; Farben für den Vielfaltbonus: keine, Vielfalt 0
+schlange-5: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette: keine ab 3 Farbkarten; Aufgaben: keine; Summe 0
+
+KI-Gegner 1
+schlange-2: Gruppen Braun×4 = 8, Blau×4 = 4, Blau×4 = 8, Gelb×3 = 2, Rot×3 = 3, Violett×3 = 6, Grün×3 = 9, Violett×5 = 10, zusammen 50; Joker: Regenbogenschlange (regenbogenschlange-02) als Blau, Farbenfusion (farbenfusion-04) als Blau, Regenbogenschlange (regenbogenschlange-04) als Gelb, Farbenfusion (farbenfusion-02) als Violett; Farben für den Vielfaltbonus: Blau, Rot, Gelb, Violett, Braun, Grün, Vielfalt 4
+schlange-3: Gruppen Gelb×9 = 9, Grün×4 = 10, Rot×5 = 5, zusammen 24; Joker: Regenbogenschlange (regenbogenschlange-01) in keiner Gruppe, Regenbogenschlange (regenbogenschlange-03) als Grün, Farbenfusion (farbenfusion-01) als Grün; Farben für den Vielfaltbonus: Rot, Gelb, Grün, Vielfalt 2
+
+Vielfaltbonus 4; Kette 9, Bonus 5; Aufgaben: Vielfaltskönig 9, Schlangenbändiger 7; Summe 99

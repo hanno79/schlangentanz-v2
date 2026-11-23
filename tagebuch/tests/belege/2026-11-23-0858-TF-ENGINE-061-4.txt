@@ -1,0 +1,56 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a6b2634e119ec57c1
+
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts (16 tests | 1 failed) 184ms
+     × A9 Symmetriemeister, 'Blockade dazwischen': 'D39: eine Schlangenblockade als Achse…' 115ms
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts (12 tests | 1 failed) 65ms
+     × A9 Vielfaltskönig, 'knapp nicht': 'D38: eine Schlange mit sechs Farben g…' 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts > A9 Nr. 13 Symmetriemeister: Entscheidungstabelle > A9 Symmetriemeister, 'Blockade dazwischen': 'D39: eine Schlangenblockade als Achse…'
+AssertionError: Symmetriemeister.istErfuellt bei „D39: eine Schlangenblockade als Achse verhindert die Aufgabe“ ([["Blau","Rot","Gelb","Grün","Schlangenblockade","Grün","Gelb","Rot","Blau"]]): erwartet false: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:47:134
+     45| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     46| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     47|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     48| }
+     49|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_symmetriemeister.test.ts:34:71
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts > A9 Nr. 5 Vielfaltskönig: Entscheidungstabelle > A9 Vielfaltskönig, 'knapp nicht': 'D38: eine Schlange mit sechs Farben g…'
+AssertionError: Vielfaltskönig.istErfuellt bei „D38: eine Schlange mit sechs Farben genügt nicht“ ([["Blau","Rot","Gelb","Grün","Braun","Violett"]]): erwartet false: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ pruefeStellung src/engine/__tests__/aufgaben_folgen_hilfen.ts:47:134
+     45| /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die A…
+     46| export function pruefeStellung(name: string, { stellung, schlangen, er…
+     47|   expect(istErfuellt(name, schlangen), `${name}.istErfuellt bei „${ste…
+       |                                                                                                                                      ^
+     48| }
+     49|
+ ❯ src/engine/__tests__/regeln/A9_aufgabe_vielfaltskoenig.test.ts:29:69
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 26 passed (28)
+   Start at  08:45:57
+   Duration  22.01s (transform 8.72s, setup 3.73s, import 8.57s, tests 249ms, environment 24.81s)
+

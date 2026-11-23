@@ -1,0 +1,35 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aafe5e835b9dd5a24
+
+ ❯ tests/spec_documentation_teil_d.test.ts (15 tests | 1 failed) 41ms
+     × P0.5f: D57 bittet um die Klarstellung von A10, und jedes Zitat der Einordnung steht wörtlich in Teil A 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D57 bittet um die Klarstellung von A10, und jedes Zitat der Einordnung steht wörtlich in Teil A
+AssertionError: Zitate stehen nicht wörtlich in Teil A: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug",
++ ]
+
+ ❯ tests/spec_documentation_teil_d.test.ts:205:118
+    203|     const zitate = A10_EINORDNUNG.join(' ').match(ZITAT) ?? []
+    204|     expect(zitate, 'A10-Einordnung ohne Zitat').not.toEqual([])
+    205|     expect(fehlende(teil('A'), zitate.map((zitat) => zitat.slice(1, -1…
+       |                                                                                                                      ^
+    206|   })
+    207|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  08:06:07
+   Duration  3.33s (transform 106ms, setup 348ms, import 76ms, tests 41ms, environment 2.55s)
+

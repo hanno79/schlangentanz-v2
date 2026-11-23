@@ -1,0 +1,54 @@
+// @vitest-environment node
+// TEMPORÄR (Prüfer X2b), wird nicht committet.
+import { describe, expect, it } from 'vitest'
+import { AUFGABENREGISTER } from '../aufgabenKarten'
+import { dauerlauf, dauerlaufPartien } from '../testing/dauerlauf'
+import type { Spielzustand } from '../index'
+import { tisch } from './wertung_hilfe'
+
+const FUENF = ['Farbvielfalt', 'Vielfaltskönig', 'Farbwechsler', 'Schlangenbändiger', 'Symmetriemeister']
+
+describe('Prüfer X2b: eigene Grenzfälle und Zufallspartien', () => {
+  it('G1: ein Spieler ohne Schlange erfüllt keine der fünf', () => {
+    const z = tisch(true, [[]])
+    expect(FUENF.map((n) => AUFGABENREGISTER.get(n)!.istErfuellt(z, 0))).toEqual([false, false, false, false, false])
+  })
+
+  it('G2: Vielfaltskönig mit genau 4 Farben je Schlange, eine Schlange mit 3 Farben + Blockade + Regenbogenschlange', () => {
+    const z = tisch(true, [[['Blau', 'Rot', 'Schlangenblockade', 'Gelb', 'Regenbogenschlange'], ['Braun', 'Violett', 'Grün', 'Grün', 'Braun']]])
+    console.log('G2 Vielfaltskönig (3 Farben + RB | 3 Farben):', AUFGABENREGISTER.get('Vielfaltskönig')!.istErfuellt(z, 0))
+    const z2 = tisch(true, [[['Blau', 'Rot', 'Schlangenblockade', 'Gelb', 'Regenbogenschlange'], ['Braun', 'Violett', 'Grün', 'Blau']]])
+    console.log('G2 Vielfaltskönig (3 Farben + RB | 4 Farben):', AUFGABENREGISTER.get('Vielfaltskönig')!.istErfuellt(z2, 0))
+  })
+
+  it('G3: 300 Zufallspartien mit Erweiterung: jede AufgabeErfuellt ist im Zustand danach wirklich erfüllt; keine erfüllte offene Aufgabe bleibt nach einer aufgelösten Aktion liegen', () => {
+    const zaehler: Record<string, number> = {}
+    const liegen: string[] = []
+    const ergebnisse = dauerlauf(dauerlaufPartien(300, true, 7001), {
+      neuerPruefer: () => (vorher: Spielzustand, _a, { zustand, ereignisse }) => {
+        for (const e of ereignisse) {
+          if (e.typ !== 'AufgabeErfuellt') continue
+          const karte = zustand.spieler[e.spielerIndex].erfuellteAufgaben.find((k) => k.id === e.aufgabeId)
+          const name = karte?.name ?? 'geheim'
+          zaehler[name] = (zaehler[name] ?? 0) + 1
+          if (FUENF.includes(name) && !AUFGABENREGISTER.get(name)!.istErfuellt(zustand, e.spielerIndex)) return `${name} eingelöst, aber nicht erfüllt`
+        }
+        if (zustand.schwebend === null && zustand.partiephase !== 'Beendet') {
+          const am = zustand.zug.spielerIndex
+          for (const offen of zustand.offeneAufgaben) {
+            if (FUENF.includes(offen.name) && AUFGABENREGISTER.get(offen.name)!.istErfuellt(zustand, am) && liegen.length < 10) liegen.push(`${offen.name} bei Spieler ${am}`)
+          }
+        }
+        void vorher
+        return null
+      },
+    })
+    const ausgaenge: Record<string, number> = {}
+    for (const e of ergebnisse) ausgaenge[e.ausgang] = (ausgaenge[e.ausgang] ?? 0) + 1
+    console.log('G3 Ausgänge', JSON.stringify(ausgaenge), 'eingelöst je Aufgabe', JSON.stringify(zaehler), 'liegen geblieben', JSON.stringify(liegen))
+    console.log('G3 Abweichende:', ergebnisse.filter((e) => e.ausgang !== 'beendet').slice(0, 3).map((e) => e.detail))
+    expect(ausgaenge).toEqual({ beendet: 300 })
+    expect(liegen).toEqual([])
+    for (const n of FUENF) expect(zaehler[n] ?? 0, `${n} in 300 Partien eingelöst`).toBeGreaterThan(0)
+  }, 900_000)
+})

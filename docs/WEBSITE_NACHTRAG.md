@@ -1,6 +1,6 @@
 # Nachtrag für die Website schlangentanz.ch/rules
 
-Stand 21.11.2026. Diese Antworten hat der Autor gegeben; sie gelten im Spiel schon, stehen aber noch nicht auf der Website. Quelle ist Teil D von `docs/GAME_SPEC.md` (dort „Website folgt“). Die Nummer in Klammern ist der Eintrag in Teil D.
+Stand 23.11.2026. Diese Antworten hat der Autor gegeben; sie gelten im Spiel schon, stehen aber noch nicht auf der Website. Quelle ist Teil D von `docs/GAME_SPEC.md` (dort „Website folgt“). Die Nummer in Klammern ist der Eintrag in Teil D.
 
 Sobald ein Punkt auf der Website steht, übernimmt `npm run abgleich:website` ihn in Teil A, und in Teil D wird „Website folgt“ durch „Website übernommen am …“ ersetzt.
 
@@ -130,3 +130,9 @@ Risiko-Aktion 4: Bei Erfolg ist die aufgedeckte Karte die erste der zwei Karten;
 
 **Ist eine Risiko-Karte bei leerem Stapel oder in der Schlussrunde spielbar? Wer löst die Schlussrunde aus, wenn ein Effekt oder ein Gegner die letzte Karte nimmt?** (D55)  
 Bei leerem Stapel und in der Schlussrunde ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann. Die Schlussrunde löst der Spieler am Zug aus, gleich wer die letzte Karte nimmt (auch ein begünstigter Gegner); er spielt seinen Zug zu Ende, dann hat jeder andere noch einen Zug.
+
+**Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt, schon die Fusion des Zuges?** (D56)  
+Ja: Wer eine Farbenfusion ausgespielt hat, hat die Fusion dieses Zuges verbraucht, auch wenn ein Gegner sie mit Farbenschutz abwehrt; eine zweite Farbenfusion ist in diesem Zug nicht möglich, auch nicht über eine Zusatzaktion (Schlangenkorb, Comeback-Karte).
+
+**Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Comeback-Karte): Darf er die eben gezogenen Karten noch im selben Zug ausspielen?** (D57)  
+Ja: Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht, etwa über Schlangenkorb oder Comeback-Karte, spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde. „Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“ (A10) meint also die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr. Beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“). Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“).

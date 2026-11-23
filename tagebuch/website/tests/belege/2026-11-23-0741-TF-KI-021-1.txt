@@ -1,0 +1,32 @@
+G1 {"wahlen":["durchlassen","durchlassen","durchlassen"],"k2":["durchlassen","durchlassen","durchlassen"],"vorher":4,"nachher":3,"letzterZug":false,"phase":"Laufend"}
+G1b {"wahlen":["abwehren","abwehren","abwehren"],"k2":["abwehren","abwehren","abwehren"],"vorher":9,"nachher":8,"letzterZug":false,"phase":"Laufend"}
+G2 {"wahlen":["durchlassen","durchlassen","durchlassen"],"k2":["durchlassen","durchlassen","durchlassen"],"vorher":0,"nachher":6,"letzterZug":false,"phase":"Laufend"}
+G3 {"wahlen":["abwehren","abwehren","abwehren"],"k2":["abwehren","abwehren","abwehren"],"vorher":14,"nachher":14,"letzterZug":true,"phase":"Schlussrunde"}
+G4 {"wahlen":["durchlassen","durchlassen","durchlassen"],"k2":["durchlassen","durchlassen","durchlassen"],"vorher":14,"nachher":14,"letzterZug":false,"phase":"Schlussrunde"}
+G5 {"wahlen":["abwehren","abwehren","abwehren"],"k2":["abwehren","abwehren","abwehren"],"vorher":14,"nachher":14,"letzterZug":false,"phase":"Laufend"}
+G6 {"wahlen":["abwehren","abwehren","abwehren"],"k2":["abwehren","abwehren","abwehren"],"vorher":14,"nachher":0,"letzterZug":false,"phase":"Laufend"}
+G7 {"wahlen":["durchlassen","durchlassen","durchlassen"],"k2":["durchlassen","durchlassen","durchlassen"],"vorher":0,"nachher":0,"letzterZug":false,"phase":"Schlussrunde"}
+K2-LESARTEN gesamt 209, Lesart A (höchster Verlust des Führenden) 158, Lesart B (kleinster Vorsprung) 198, beide 153, keine 6
+ABWEICHUNG A:
+Saat 55000 (2 Sp.) Sitz 0, FarbendiebSpielen, Punkte vorher [28,22], Führende [1]; gewählt: Verlust Führender 0, Vorsprung -12, Punkte danach [34,22]; höchster Verlust wäre 2 (Vorsprung -8, danach [28,20]); kleinster Vorsprung -12 (Verlust 0)
+Saat 55000 (2 Sp.) Sitz 1, FarbendiebSpielen, Punkte vorher [14,29], Führende [0]; gewählt: Verlust Führender 0, Vorsprung -21, Punkte danach [14,35]; höchster Verlust wäre 3 (Vorsprung -18, danach [11,29]); kleinster Vorsprung -21 (Verlust 0)
+Saat 55002 (4 Sp.) Sitz 0, FarbendiebSpielen, Punkte vorher [8,6,13,6], Führende [2]; gewählt: Verlust Führender 1, Vorsprung -5, Punkte danach [17,6,12,6]; höchster Verlust wäre 3 (Vorsprung 2, danach [8,6,10,6]); kleinster Vorsprung -5 (Verlust 1)
+Saat 55002 (4 Sp.) Sitz 1, FarbendiebSpielen, Punkte vorher [13,0,8,0], Führende [0]; gewählt: Verlust Führender 1, Vorsprung 6, Punkte danach [12,6,8,0]; höchster Verlust wäre 8 (Vorsprung 8, danach [5,0,8,0]); kleinster Vorsprung 2 (Verlust 0)
+Saat 55003 (2 Sp., Erw.) Sitz 0, FarbendiebSpielen, Punkte vorher [10,40], Führende [1]; gewählt: Verlust Führender 4, Vorsprung 17, Punkte danach [19,36]; höchster Verlust wäre 6 (Vorsprung 24, danach [10,34]); kleinster Vorsprung 17 (Verlust 4)
+Saat 55003 (2 Sp., Erw.) Sitz 1, FarbendiebSpielen, Punkte vorher [8,10], Führende [0]; gewählt: Verlust Führender 0, Vorsprung -10, Punkte danach [8,18]; höchster Verlust wäre 8 (Vorsprung -10, danach [0,10]); kleinster Vorsprung -10 (Verlust 8)
+ABWEICHUNG B:
+Saat 55002 (4 Sp.) Sitz 1, FarbendiebSpielen, Punkte vorher [13,0,8,0], Führende [0]; gewählt: Verlust Führender 1, Vorsprung 6, Punkte danach [12,6,8,0]; höchster Verlust wäre 8 (Vorsprung 8, danach [5,0,8,0]); kleinster Vorsprung 2 (Verlust 0)
+Saat 55005 (4 Sp., Erw.) Sitz 3, FarbendiebSpielen, Punkte vorher [0,0,8,0], Führende [2]; gewählt: Verlust Führender 6, Vorsprung 2, Punkte danach [0,0,2,0]; höchster Verlust wäre 6 (Vorsprung 2, danach [0,0,2,0]); kleinster Vorsprung 0 (Verlust 0)
+Saat 55005 (4 Sp., Erw.) Sitz 3, BlockadeLegen, Punkte vorher [11,0,19,10], Führende [2]; gewählt: Verlust Führender 7, Vorsprung 2, Punkte danach [11,0,12,10]; höchster Verlust wäre 9 (Vorsprung 1, danach [11,0,10,10]); kleinster Vorsprung 1 (Verlust 9)
+Saat 55007 (3 Sp., Erw.) Sitz 2, FarbendiebSpielen, Punkte vorher [9,9,19], Führende [0,1]; gewählt: Verlust Führender 0, Vorsprung -10, Punkte danach [9,9,19]; höchster Verlust wäre 3 (Vorsprung -10, danach [6,9,19]); kleinster Vorsprung -11 (Verlust 2)
+Saat 55015 (2 Sp., Erw.) Sitz 1, FarbendiebSpielen, Punkte vorher [27,29], Führende [0]; gewählt: Verlust Führender 0, Vorsprung -9, Punkte danach [27,36]; höchster Verlust wäre 4 (Vorsprung -6, danach [23,29]); kleinster Vorsprung -11 (Verlust 0)
+Saat 55018 (2 Sp.) Sitz 0, FarbendiebSpielen, Punkte vorher [15,30], Führende [1]; gewählt: Verlust Führender 9, Vorsprung 6, Punkte danach [15,21]; höchster Verlust wäre 9 (Vorsprung 6, danach [15,21]); kleinster Vorsprung 3 (Verlust 6)
+ABWEHR n=149 Kategorien [durchgelassen, abgewehrt]: {"gruppe":[0,76],"harmlosLaufend":[13,19],"kleinLaufend":[0,13],"grubeLaufend":[0,26],"schlussSchaden":[0,1],"schlussOhne":[0,1],"grubeOhneZug":[0,0],"nutzt":[0,0]}
+ABWEHR K2-Stand zum Vergleich: {"gruppe":[0,76],"harmlosLaufend":[13,19]}
+STOERPROBE 894 Proben, 0 Abweichungen; KI-Saat-abhängig in 0 von 149 Stellungen
+AUFFAELLIG:
+
+GRENZEN 1634 Schritte, max Suche 40, max Zeit 81.1 ms, Median 3.9 ms, p99 39.6 ms
+STAERKE 3 Spieler, 60 Partien ab 93000: Siege K3 26 gegen Spiegel 20, mittl. Unterschied 0.52 ± 0.51
+STAERKE 2 Spieler Erw., 60 Partien ab 94000: Siege K3 30 gegen Spiegel 35, mittl. Unterschied -3.13 ± 1.87
+STAERKE 4 Spieler, 40 Partien ab 95000: Siege K3 7 gegen Spiegel 8, mittl. Unterschied 0.05 ± 0.19
