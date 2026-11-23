@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { berechneEndwertung, deserialisiere, serialisiere } from '../../index'
 import type { Spielzustand } from '../../index'
-import { neueDreiergruppen } from '../../jokerGruppen'
+import { neueDreiergruppen } from '../../aufgaben/neueDreiergruppen'
 import { legeAufgabenAus } from '../../testing/aufgaben'
 import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
 import { aufgabenEreignisse, aufgabeId, namen } from '../aufgaben_hilfen'

@@ -1,4 +1,4 @@
-import { neueDreiergruppen } from '../jokerGruppen';
+import { neueDreiergruppen } from './neueDreiergruppen';
 import type { Sonderkartenname, SonderkarteInfo, Spieler, Spielkarte, Spielzustand } from '../types';
 
 /*
