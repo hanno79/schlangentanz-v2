@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { fehlende, spalten, tabelleMitSpalte, teil } from './spec_documentation_hilfen'
 
@@ -47,5 +48,32 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     expect(fehlende(teil('C'), ['C1, C15 und C20 (X1, 23.11.2026)'])).toEqual([])
     const aufgaben = spalten(tabelleMitSpalte(teil('B'), 'Digital heute'), 'Bestandteil', 'Digital heute').find(([was]) => was === '15 Aufgabenkarten')
     expect(aufgaben?.[1], 'B1: Zeile „15 Aufgabenkarten“').not.toContain('14 von 15')
+  })
+
+  it('P0.5g: C21 und C23 sind nach X2b gestrichen; C10 und C14 bleiben bis X2a stehen oder sind als gestrichen vermerkt', () => {
+    const c = teil('C')
+    const zeilen = new Map(spalten(tabelleMitSpalte(c, 'Fundstelle'), 'Nr.', 'Engine heute').map(([nr, engine]) => [nr, engine]))
+    expect(['C21', 'C23'].filter((nr) => zeilen.has(nr)), 'Teil C führt noch').toEqual([])
+    expect(fehlende(c, ['C21 und C23 (X2b, 23.11.2026)'])).toEqual([])
+    // C10 und C14 behebt X2a; solange es nicht gemergt ist, nennen die Zeilen den Stand nach X2b und X2c.
+    for (const [nr, erwartet] of [['C10', ['X2b und X2c behoben', 'X2a']], ['C14', ['Platzhalter, der nie erfüllt ist', 'X2a']]] as const) {
+      const engine = zeilen.get(nr)
+      if (engine === undefined) expect(c, `${nr} fehlt in Teil C, ohne als gestrichen vermerkt zu sein`).toMatch(new RegExp(`Behoben und gestrichen:[^\\n]*\\b${nr}\\b`))
+      else expect(fehlende(engine, [...erwartet]), `${nr}: Spalte „Engine heute“`).toEqual([])
+    }
+    expect(c, 'Teil C: C10 weder als teilweise behoben noch als gestrichen vermerkt').toMatch(/C10 teilweise \(X2b, X2c, 23\.11\.2026\)|Behoben und gestrichen:[^\n]*\bC10\b/)
+  })
+
+  it('P0.5g: jede Fundstelle in Teil C nennt eine Datei, die es gibt', () => {
+    const fehlend = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.', 'Fundstelle').flatMap(([nr, fundstelle]) =>
+      [...fundstelle.matchAll(/`(src\/[^`]+)`/g)].filter(([, pfad]) => !existsSync(pfad)).map(([, pfad]) => `${nr}: ${pfad}`),
+    )
+    expect(fehlend, 'Teil C: Fundstellen ohne Datei').toEqual([])
+  })
+
+  it('P0.5g: B1 nennt die Bedingungen aus X2b und X2c als umgesetzt und nur die fünf aus X2a als Platzhalter', () => {
+    const aufgaben = spalten(tabelleMitSpalte(teil('B'), 'Digital heute'), 'Bestandteil', 'Digital heute').find(([was]) => was === '15 Aufgabenkarten')?.[1] ?? ''
+    expect(aufgaben, 'B1: Zeile „15 Aufgabenkarten“').not.toContain('die 15 Bedingungen sind noch Platzhalter')
+    expect(fehlende(aufgaben, ['zehn Bedingungen nach A9 (X2b, X2c, 23.11.2026)', '„Farbenpracht“, „Farbharmonie“, „Farbkombination“, „Gelber Schatz“ und „Lila Riese“', 'X2a'])).toEqual([])
   })
 })

@@ -6,8 +6,8 @@
 export const DATUM_G = '21.11.2026'
 /** Sammelantwort, wörtlich. */
 const WORTLAUT_G = '„ja zu deinen vorschlägen.“'
-/** Schluss jedes Eintrags D34–D55 nach den Sätzen der Teile. */
-const SCHLUSS_G = `Sammelantwort des Autors, Wortlaut: ${WORTLAUT_G} Website folgt.`
+/** Herkunft jedes Eintrags D34–D55 nach den Sätzen der Teile; danach folgt „Website folgt.“ */
+const HERKUNFT_G = `Sammelantwort des Autors, Wortlaut: ${WORTLAUT_G}`
 
 /**
  * Ein Teil einer Frage, benannt nach der gewählten Möglichkeit.
@@ -24,12 +24,15 @@ export type ErwartungG = {
   wortlaut: string[]
   datum: string
   teile: Record<string, Teil>
-  /** Der ganze Eintrag in Teil D, Spalte „Antwort“: die Sätze der Teile, dann der Schluss. */
+  /** Der ganze Eintrag in Teil D, Spalte „Antwort“: die Sätze der Teile, die Herkunft, eine spätere Rückfrage, dann „Website folgt.“ */
   eintrag: string
 }
 
-/** Erwartung aus den Teilen in der Reihenfolge der Frage; gewählt sind deren Buchstaben. */
-function sammelantwort(teile: Record<string, Teil>): ErwartungG {
+/**
+ * Erwartung aus den Teilen in der Reihenfolge der Frage; gewählt sind deren Buchstaben.
+ * `rueckfrage`: eine spätere Antwort des Autors, die den Eintrag ergänzt (wie D23); der bisherige Wortlaut bleibt.
+ */
+function sammelantwort(teile: Record<string, Teil>, rueckfrage?: string): ErwartungG {
   const liste = Object.values(teile)
   return {
     wahl: Object.keys(teile).join(', '),
@@ -38,7 +41,7 @@ function sammelantwort(teile: Record<string, Teil>): ErwartungG {
     wortlaut: [WORTLAUT_G],
     datum: DATUM_G,
     teile,
-    eintrag: [...liste.map((teil) => teil.satz), SCHLUSS_G].join(' '),
+    eintrag: [...liste.map((teil) => teil.satz), HERKUNFT_G, ...(rueckfrage ? [rueckfrage] : []), 'Website folgt.'].join(' '),
   }
 }
 
@@ -228,7 +231,7 @@ export const ERWARTET_G: Record<string, ErwartungG> = {
       beleg: ['irgendwann in diesem Zug', 'im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt'],
       verboten: { g: ['vor der ersten Karte'] },
     },
-  }),
+  }, 'Rückfrage vom 23.11.2026: Weil sich Verdoppler, Comeback-Karte und die zugerweiternden Boni des Korbs ausschliessen (D47), ist die Comeback-Karte im zweiten Zug nach einem Verdoppler nie einsetzbar. Antwort des Autors, gewählte Möglichkeit: „Ja, nie möglich“.'),
   G17: sammelantwort({
     a: {
       satz: 'Comeback-Aktion „Zwei Karten abwerfen, drei ziehen“: Mit weniger als zwei Handkarten ist sie nicht wählbar: Wer nur eine Karte hält, wählt eine andere Zusatzaktion.',

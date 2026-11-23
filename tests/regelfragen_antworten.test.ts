@@ -202,6 +202,13 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
     for (const text of ['22.11.2026', 'D56', 'D57']) expect(stand, `REGELFRAGEN.md: Stand-Absatz ohne „${text}“`).toContain(text)
   })
 
+  it('P0.5g: der Stand-Absatz verweist auf die Rückfragen aus den Prüfungen von X2 und X3 vom 23.11.2026 und die Ergänzung von D48', () => {
+    const stand = normalisiert(kopf)
+    for (const text of ['Prüfungen von X2 und X3', 'am 23.11.2026 beantwortet', 'D58–D65', 'ergänzt D48']) {
+      expect(stand, `REGELFRAGEN.md: Stand-Absatz ohne „${text}“`).toContain(text)
+    }
+  })
+
   it('P0.5: F8a steht so da, wie die Nachfrage dem Autor gestellt wurde', () => {
     expect(feld(bloecke.get('F8a') ?? '', 'Frage')).toBe(
       'Darf man die Schlangengrube auf einen Spieler spielen, der seinen letzten Zug schon gemacht hat?',

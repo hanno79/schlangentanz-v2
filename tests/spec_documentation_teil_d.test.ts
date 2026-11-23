@@ -1,48 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { ZITAT, abschnitt } from './regelfragen_lesen'
 import { eintragD, fehlende, fliesstext, nachtragEintrag, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
+import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN } from './spec_documentation_rueckfragen'
 
 /*
 `docs/GAME_SPEC.md`, Teil D: Auslegungsfragen an den Autor und seine Antworten.
 */
-
-/**
- * P0.5f, Iteration 2: Einordnung des Satzes aus A10 neben D57, nach dem Muster von D23
- * (Satz der Website zitieren und auslegen). Steht in Teil D und im Website-Nachtrag;
- * jedes Zitat stammt wörtlich aus Teil A.
- */
-const A10_EINORDNUNG = [
-  '„Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“',
-  'die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr',
-  'beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“)',
-  'Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“)',
-]
-
-/** Rückfragen aus X3 vom 22.11.2026 (P0.5f): Kernsätze und Gegenproben je Eintrag. */
-const RUECKFRAGEN_X3: Record<string, { frage: string; wahl: string; kern: string[]; verboten: string[] }> = {
-  D56: {
-    frage: 'Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt, schon die Fusion des Zuges?',
-    wahl: '„Ja, gespielt ist gespielt“',
-    kern: [
-      'Wer eine Farbenfusion ausgespielt hat, hat die Fusion dieses Zuges verbraucht, auch wenn ein Gegner sie mit Farbenschutz abwehrt',
-      'eine zweite Farbenfusion ist in diesem Zug nicht möglich, auch nicht über eine Zusatzaktion (Schlangenkorb, Comeback-Karte)',
-    ],
-    // Gegenprobe: die verworfene Lesart, nach der eine abgewehrte Fusion nicht zählt.
-    verboten: ['zählt nicht als Fusion', 'eine zweite Farbenfusion ist erlaubt', 'eine zweite Farbenfusion ist in diesem Zug möglich'],
-  },
-  D57: {
-    frage: 'Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Comeback-Karte): Darf er die eben gezogenen Karten noch im selben Zug ausspielen?',
-    wahl: '„Ja, im selben Zug“',
-    kern: [
-      'Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht',
-      'spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde',
-      ...A10_EINORDNUNG,
-    ],
-    // Gegenprobe: die verworfene Lesart, nach der die gezogenen Karten erst ausserhalb des Zuges zählen.
-    verboten: ['erst im nächsten Zug', 'darf die eben gezogenen Karten nur noch ausserhalb', 'nicht mehr im selben Zug'],
-  },
-}
-
 
 describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   it('führt offene Auslegungsfragen als Fragen an den Autor', () => {
@@ -179,23 +142,26 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fehlende(d, ['D56–D57', 'Rückfragen aus der Umsetzung', '22.11.2026'])).toEqual([])
   })
 
-  for (const [nummer, { frage, wahl, kern, verboten }] of Object.entries(RUECKFRAGEN_X3)) {
-    it(`P0.5f: ${nummer}: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
-      const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
-      expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
-      pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: ${wahl}.`], verboten)
-      expect(antwort.startsWith('ja:'), `${nummer}: Antwort beginnt nicht mit „Ja:“`).toBe(true)
-      expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
-      expect(datum, `${nummer}: Datum`).toBe('22.11.2026')
-      expect(folge, `${nummer}: Folge`).toBe('X3')
-    })
+  for (const { task, aus, datum: tag, eintraege } of RUECKFRAGEN) {
+    for (const [nummer, { frage, wahl, kern, verboten, anfang }] of Object.entries(eintraege)) {
+      it(`${task}: ${nummer}: Rückfrage aus ${aus} vom ${tag} steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
+        const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
+        expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
+        expect(frage.endsWith('?'), `${nummer}: Frage endet nicht mit „?“`).toBe(true)
+        pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus ${aus}, gewählte Möglichkeit: ${wahl}.`], verboten)
+        if (anfang) expect(antwort.startsWith(anfang.toLowerCase()), `${nummer}: Antwort beginnt nicht mit „${anfang}“`).toBe(true)
+        expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
+        expect(datum, `${nummer}: Datum`).toBe(tag)
+        expect(folge, `${nummer}: Folge`).toBe(aus)
+      })
 
-    it(`P0.5f: ${nummer}: der Website-Nachtrag führt die Antwort ohne „Website folgt“`, () => {
-      const eintrag = nachtragEintrag(nummer)
-      expect(eintrag.frage, `${nummer}: Frage im Nachtrag`).toBe(frage)
-      pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), kern, [...verboten, 'Website folgt', 'gewählte Möglichkeit'])
-      expect(eintrag.antwort.startsWith('Ja:'), `${nummer}: Antwort im Nachtrag beginnt nicht mit „Ja:“`).toBe(true)
-    })
+      it(`${task}: ${nummer}: der Website-Nachtrag führt die Antwort ohne „Website folgt“`, () => {
+        const eintrag = nachtragEintrag(nummer)
+        expect(eintrag.frage, `${nummer}: Frage im Nachtrag`).toBe(frage)
+        pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), kern, [...verboten, 'Website folgt', 'gewählte Möglichkeit'])
+        if (anfang) expect(eintrag.antwort.startsWith(anfang), `${nummer}: Antwort im Nachtrag beginnt nicht mit „${anfang}“`).toBe(true)
+      })
+    }
   }
 
   it('P0.5f: D57 bittet um die Klarstellung von A10, und jedes Zitat der Einordnung steht wörtlich in Teil A', () => {
@@ -205,7 +171,34 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     expect(fehlende(teil('A'), zitate.map((zitat) => zitat.slice(1, -1))), 'Zitate stehen nicht wörtlich in Teil A').toEqual([])
   })
 
-  it('P0.5f: der Website-Nachtrag führt D56 und D57 im Abschnitt Erweiterung', () => {
-    expect(fehlende(abschnitt(websiteNachtrag, '##', 'Erweiterung'), ['(D56)', '(D57)'])).toEqual([])
+  it('P0.5f, P0.5g: der Website-Nachtrag führt jede Rückfrage (D56–D65) im Abschnitt Erweiterung', () => {
+    expect(RUECKFRAGEN_NUMMERN, 'Rückfragen: Nummern lückenlos ab D56').toEqual(RUECKFRAGEN_NUMMERN.map((_, i) => `D${56 + i}`))
+    expect(fehlende(abschnitt(websiteNachtrag, '##', 'Erweiterung'), RUECKFRAGEN_NUMMERN.map((nr) => `(${nr})`))).toEqual([])
+  })
+
+  it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D65 und die Ergänzung von D48', () => {
+    const d = teil('D')
+    const einleitung = fliesstext(d.slice(0, d.indexOf('| Nr. |')))
+    expect(fehlende(einleitung, ['D58–D65', 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
+  })
+
+  it('P0.5g: D48 behält den Wortlaut der Sammelantwort und ergänzt die Rückfrage vom 23.11.2026: die Comeback-Karte ist im zweiten Zug nach einem Verdoppler nie einsetzbar', () => {
+    const { antwort, datum, folge } = eintragD('D48')
+    pruefeKern(
+      'D48',
+      antwort,
+      [
+        'im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt (D47). Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“',
+        'Rückfrage vom 23.11.2026: Weil sich Verdoppler, Comeback-Karte und die zugerweiternden Boni des Korbs ausschliessen (D47), ist die Comeback-Karte im zweiten Zug nach einem Verdoppler nie einsetzbar.',
+        'gewählte Möglichkeit: „Ja, nie möglich“.',
+      ],
+      // Gegenprobe: die Lesart, nach der G15 den Einsatz im zweiten Zug doch zulassen könnte.
+      ['im zweiten Zug nach einem Verdoppler einsetzbar, wenn', 'ist die Comeback-Karte im zweiten Zug nach einem Verdoppler einsetzbar'],
+    )
+    expect(antwort.endsWith('website folgt.'), 'D48: Antwort endet nicht mit „Website folgt.“').toBe(true)
+    expect(datum, 'D48: Datum der Sammelantwort').toBe('21.11.2026')
+    expect(folge, 'D48: Folge').toBe('X4')
+    // Der Website-Nachtrag sagt das schon seit P0.5e; die Antwort des Autors bestätigt es.
+    pruefeKern('D48', fliesstext(nachtragEintrag('D48').antwort).toLowerCase(), ['Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen'], ['Website folgt'])
   })
 })
