@@ -223,7 +223,7 @@ describe('X3 Kriterium 1: die Grenzen stehen an einer Stelle, nicht in den Karte
   it('A7.7/D27: die Farbenfusion selbst nennt ihre Ziele auch nach einer Fusion; die Grenze „eine je Zug“ zieht der Rahmen', () => {
     const zustand = structuredClone(tisch(['Farbenfusion'], [FREI], ['Rot', 'Rot']))
     // Wie nach einer ersten Farbenfusion in diesem Zug; eine Zusatzaktion ist noch frei.
-    zustand.zug.verwendet.push({ art: 'Sonderkarte', karteId: 'farbenfusion-erste', aktion: 'FusionLegen' })
+    zustand.zug.verwendet.push({ art: 'Sonderkarte', karteId: 'farbenfusion-erste', kartenart: 'Farbenfusion' })
     zustand.zug.gespielteSonderkarten = 1
     const fusion = zustand.spieler[0].hand[0]
     expect(KARTENREGISTER.Farbenfusion.ziele(zustand, 0, fusion)).toHaveLength(1)

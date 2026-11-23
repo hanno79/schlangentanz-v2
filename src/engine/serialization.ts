@@ -1,5 +1,4 @@
 import { istKartenaktion, pruefeAktionsform } from './aktionen/pruefen';
-import { AKTIONSTYPEN } from './aktionen/typen';
 import type { SpielAktion } from './aktionen/typen';
 import { SPIELER_MAX, SPIELER_MIN } from './constants';
 import { FARBEN, SONDERKARTENNAMEN } from './deck';
@@ -210,10 +209,10 @@ function zug(wert: unknown, pfad: string): void {
     if (zusatz.nurKarten !== null) liste(zusatz.nurKarten, `${eintragPfad}.nurKarten`, text);
   });
   liste(roh.verwendet, `${pfad}.verwendet`, (eintrag, eintragPfad) => {
-    const verwendung = objekt(eintrag, eintragPfad, ['art', 'karteId', 'aktion']);
+    const verwendung = objekt(eintrag, eintragPfad, ['art', 'karteId', 'kartenart']);
     text(verwendung.art, `${eintragPfad}.art`);
     if (verwendung.karteId !== null) text(verwendung.karteId, `${eintragPfad}.karteId`);
-    if (verwendung.aktion !== null) einer(verwendung.aktion, `${eintragPfad}.aktion`, AKTIONSTYPEN);
+    if (verwendung.kartenart !== null) einer(verwendung.kartenart, `${eintragPfad}.kartenart`, ['Farbkarte', ...SONDERKARTENNAMEN]);
   });
   liste(roh.runde, `${pfad}.runde`, text);
 }

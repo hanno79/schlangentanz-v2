@@ -1,4 +1,4 @@
-import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider } from '../engine';
+import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider, zugInSicht } from '../engine';
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -114,7 +114,7 @@ function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
     spieler: zustand.spieler.map(spielerSicht),
     erweiterung: zustand.erweiterung,
     partiephase: zustand.partiephase,
-    zug: zustand.zug,
+    zug: zugInSicht(zustand, spielerIndex),
     entscheider: ermittleEntscheider(zustand),
     schlussrundeAusloeser: zustand.schlussrundeAusloeser,
     nachziehstapelGroesse: zustand.nachziehstapel.length,

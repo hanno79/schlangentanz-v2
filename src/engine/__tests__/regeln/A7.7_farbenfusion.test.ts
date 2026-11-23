@@ -300,7 +300,7 @@ describe('A7.7/D27: höchstens eine Farbenfusion je Zug (Kriterium 3)', () => {
       .aendere((z) => {
         // Wie nach einer ersten Fusion mit einer freien Zusatzaktion; die Grenze steht seit X3 im Rahmen (`zuggrenzen.ts`).
         meldeZugerweiterung(z.zug, 'Comeback', [{ quelle: 'Comeback', erlaubt: ['Sonderkarte'], nurKarten: null }])
-        z.zug.verwendet.push({ art: 'Sonderkarte', karteId: 'farbenfusion-erste', aktion: 'FusionLegen' })
+        z.zug.verwendet.push({ art: 'Sonderkarte', karteId: 'farbenfusion-erste', kartenart: 'Farbenfusion' })
         z.zug.gespielteSonderkarten = 1
       })
       .zustand()

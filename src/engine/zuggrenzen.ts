@@ -1,5 +1,5 @@
-import type { Aktionstyp, KartenAktion, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
-import type { Spieler, Spielkarte, Spielzustand, Zug } from './types';
+import type { KartenAktion, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
+import type { Kartenart, Spieler, Spielkarte, Spielzustand, Zug } from './types';
 
 /*
 Die Grenzen eines Zuges, an einer Stelle (X3, Kriterium 1).
@@ -16,7 +16,8 @@ Die Grenzen eines Zuges, an einer Stelle (X3, Kriterium 1).
   spielt keine Rolle. Eine Zusatzaktion, die keine Karte spielt, zählt nicht als
   Karte des Zuges (A8.1 „zählt nicht als reguläre Aktion“).
 - Was trotzdem bleibt: je Zug nur eine Farbenfusion (A7.7, D27, D46), auch
-  wenn ein Gegner die erste abgewehrt hat (D56, „gespielt ist gespielt“), und ein
+  wenn ein Gegner die erste abgewehrt hat oder sie wirkungslos abgelegt ist (D56,
+  „gespielt ist gespielt“, D13), und ein
   Verdoppler wirkt nur, solange in dieser Runde keine andere zugerweiternde
   Wirkung gilt (A7.8, D11, D46, D47). Er bleibt dann spielbar, aber nur
   wirkungslos (D23, D25).
@@ -53,8 +54,8 @@ export interface Zusatzaktion {
 export interface Verwendung {
   art: string;
   karteId: string | null;
-  /** Mit welcher Aktion die Karte gespielt ist; bei einer eigenen Aktion `null`. */
-  aktion: Aktionstyp | null;
+  /** Welche Karte es war, Farbkarte oder der Name der Sonderkarte; bei einer eigenen Aktion `null`. */
+  kartenart: Kartenart | null;
 }
 
 /** Die Felder des Zuges, die dieser Rahmen führt. */
@@ -105,21 +106,21 @@ function hatPlatz(zug: Zugrahmen, verwendung: Verwendung): boolean {
 
 /** A5, D12, D46: Der Grund, warum diese Handkarte in diesem Teilzug keinen Platz mehr hat, oder `null`. */
 export function kartengrenze(zug: Zugrahmen, karte: Spielkarte): string | null {
-  if (hatPlatz(zug, { art: karte.typ, karteId: karte.id, aktion: null })) return null;
+  if (hatPlatz(zug, { art: karte.typ, karteId: karte.id, kartenart: null })) return null;
   if (zug.zusatzaktionen.length === 0) return `In diesem Zug ist schon eine ${karte.typ} gespielt; je Zug höchstens eine Farbkarte und eine Sonderkarte (A5, D12).`;
   return `In diesem Zug ist schon eine ${karte.typ} gespielt, und keine zusätzliche Aktion ist für ${karte.id} frei (A5, D12, D46).`;
 }
 
 /** A8.1, D46: Der Grund, warum die eigene Aktion `name` in diesem Teilzug keinen Platz hat, oder `null`. */
 export function zusatzaktionGrenze(zug: Zugrahmen, name: string): string | null {
-  return hatPlatz(zug, { art: name, karteId: null, aktion: null }) ? null : `Für „${name}“ ist in diesem Zug keine zusätzliche Aktion frei (A8.1, D46).`;
+  return hatPlatz(zug, { art: name, karteId: null, kartenart: null }) ? null : `Für „${name}“ ist in diesem Zug keine zusätzliche Aktion frei (A8.1, D46).`;
 }
 
 /** A8.1: Die eigene Aktion `name` belegt einen Platz; sie zählt nicht als Karte des Zuges. Ohne Platz ein Fehler. */
 export function zaehleZusatzaktion(zug: Zugrahmen, name: string): void {
   const grund = zusatzaktionGrenze(zug, name);
   if (grund !== null) throw new Error(grund);
-  zug.verwendet.push({ art: name, karteId: null, aktion: null });
+  zug.verwendet.push({ art: name, karteId: null, kartenart: null });
 }
 
 type GespielteKarte = KartenAktion | SonderkarteWirkungslosAblegenAktion;
@@ -133,7 +134,7 @@ export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKar
   const karte = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === aktion.karteId);
   if (karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
   const { zug } = zustand;
-  zug.verwendet.push({ art: karte.typ, karteId: karte.id, aktion: aktion.typ });
+  zug.verwendet.push({ art: karte.typ, karteId: karte.id, kartenart: karte.typ === 'Farbkarte' ? 'Farbkarte' : karte.name });
   if (karte.typ === 'Farbkarte') zug.gespielteFarbkarten += 1;
   else zug.gespielteSonderkarten += 1;
   return karte;
@@ -146,7 +147,7 @@ export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKar
  */
 export function zaehleSchonGespielt(zug: Zug, farbkarten: number, sonderkarten: number): void {
   const gezaehlt = (art: 'Farbkarte' | 'Sonderkarte', anzahl: number): Verwendung[] =>
-    Array.from({ length: anzahl }, (_, nummer) => ({ art, karteId: `gespielt-${art}-${zug.verwendet.length + nummer + 1}`, aktion: null }));
+    Array.from({ length: anzahl }, (_, nummer) => ({ art, karteId: `gespielt-${art}-${zug.verwendet.length + nummer + 1}`, kartenart: null }));
   zug.verwendet.push(...gezaehlt('Farbkarte', farbkarten));
   zug.verwendet.push(...gezaehlt('Sonderkarte', sonderkarten));
   zug.gespielteFarbkarten += farbkarten;
@@ -208,8 +209,8 @@ const ZWEITER_ZUG =
  */
 export function wirkungsgrenze(zug: Zug, karte: Spielkarte): string | null {
   if (karte.typ !== 'Sonderkarte') return null;
-  // D56: Eine Fusion ist verbraucht, sobald sie ausgespielt ist, auch wenn sie abgewehrt wurde.
-  if (karte.name === 'Farbenfusion' && zug.verwendet.some((verwendung) => verwendung.aktion === 'FusionLegen')) return NUR_EINE_FUSION;
+  // D56: Eine Fusion ist verbraucht, sobald sie gespielt ist, auch abgewehrt oder wirkungslos abgelegt (D13).
+  if (karte.name === 'Farbenfusion' && zug.verwendet.some((verwendung) => verwendung.kartenart === 'Farbenfusion')) return NUR_EINE_FUSION;
   if (karte.name !== 'Verdoppler') return null;
   if (zug.teilzug === 2) return ZWEITER_ZUG;
   const vorhanden = zugerweiterungDerRunde(zug);
@@ -224,4 +225,18 @@ export function zaehlerPassen(zug: Zug): string | null {
   const sonder = zaehle('Sonderkarte');
   if (farbe === zug.gespielteFarbkarten && sonder === zug.gespielteSonderkarten) return null;
   return `Der Zug zählt ${zug.gespielteFarbkarten} Farb- und ${zug.gespielteSonderkarten} Sonderkarten, verwendet sind ${farbe} und ${sonder}.`;
+}
+
+/**
+ * B2: Der Zug, wie ihn `spielerIndex` sehen darf. Gilt eine Zusatzaktion nur für
+ * bestimmte Karten, etwa die mit dem Korb verdeckt gezogenen (D43), nennt sie
+ * keine, die auf einer fremden Hand liegt; welche es sind, sieht nur ihr Besitzer.
+ */
+export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
+  const fremd = new Set(zustand.spieler.flatMap((spieler, index) => (index === spielerIndex ? [] : spieler.hand.map((karte) => karte.id))));
+  const { zug } = zustand;
+  return {
+    ...zug,
+    zusatzaktionen: zug.zusatzaktionen.map((zusatz) => (zusatz.nurKarten === null ? zusatz : { ...zusatz, nurKarten: zusatz.nurKarten.filter((id) => !fremd.has(id)) })),
+  };
 }
