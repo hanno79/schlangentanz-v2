@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../../index'
 import type { FusionLegenAktion, SpielAktion, Spielkarte, Spielzustand } from '../../index'
 import type { Baukasten, Kartenwahl } from '../../testing/szenario'
+import { meldeZugerweiterung } from '../../zuggrenzen'
 import {
   ablage,
   aktionen,
@@ -293,11 +294,14 @@ describe('A7.7/D27: höchstens eine Farbenfusion je Zug (Kriterium 3)', () => {
     expect(grund(zustand, selbstGebaut(zustand, 'schlange-1', ids(start, 0).slice(2)))).toMatch(/schon eine Sonderkarte/)
   })
 
-  it('A7.7: die Karte selbst lässt keine zweite Fusion im Zug zu, unabhängig von der Grenze je Sonderkarte', () => {
+  it('A7.7: nach einer Fusion lässt der Zug keine zweite zu, auch wenn noch Platz für eine Sonderkarte ist (X3, D46)', () => {
     const zustand = tisch()
       .schlange(0, ['Gelb', 'Gelb'])
       .aendere((z) => {
-        z.zug.farbenfusionGespielt = true
+        // Wie nach einer ersten Fusion mit einer freien Zusatzaktion; die Grenze steht seit X3 im Rahmen (`zuggrenzen.ts`).
+        meldeZugerweiterung(z.zug, 'Comeback', [{ quelle: 'Comeback', erlaubt: ['Sonderkarte'], nurKarten: null }])
+        z.zug.verwendet.push({ art: 'Sonderkarte', karteId: 'farbenfusion-erste', kartenart: 'Farbenfusion' })
+        z.zug.gespielteSonderkarten = 1
       })
       .zustand()
     expect(fusionen(zustand)).toEqual([])

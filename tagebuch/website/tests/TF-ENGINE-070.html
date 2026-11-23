@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-070 Gilt eine Zusatzaktion nur für eine gezogene Karte, hängt nicht von der Reihenfolge ab, ob eine zweite Farbkarte noch Platz hat. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-070 Gilt eine Zusatzaktion nur für eine gezogene Karte, hängt nicht von der Reihenfolge ab, ob eine zweite Farbkarte noch Platz hat.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Rahmen verteilt gespielte Karten auf die Plätze des Zuges, statt zu zählen. Spielt man die gezogene Karte zuerst, belegt sie nicht endgültig den normalen Platz; eine nicht gezogene Karte muss danach trotzdem auf den normalen Platz passen.</p><h2>Bestanden, wenn</h2><p>Mit einer Zusatzaktion „Farbkarte nur für Rot“: Nach Blau ist Rot noch spielbar, und nach Rot ist Blau noch spielbar.</p><h2>Fehlgeschlagen, wenn</h2><p>In einer der beiden Reihenfolgen bietet die Engine die zweite Karte nicht an.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/X3-zusatzaktionen (PR #108)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo auf 686159e</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Zwei Spieler mit Erweiterung, Spieler 1 hält Rot und Blau; Zugerweiterung „Schlangenkorb“ mit einer Zusatzaktion <code>erlaubt: Farbkarte</code>, <code>nurKarten: [Rot]</code>.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Repo</td><td>Grenzfalldatei aus dem Beleg als `src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts` ablegen</td><td></td><td>Datei liegt neben den anderen Engine-Tests</td></tr><tr><td>2</td><td>Konsole</td><td>ausführen</td><td>`npx vitest run src/engine/__tests__/x3_pruefer_grenzfaelle.test.ts --reporter=verbose`</td><td>Fall „G3“ grün</td></tr><tr><td>3</td><td>Repo</td><td>Grenzfalldatei löschen</td><td></td><td>`git status` ist leer</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Vitest-Fall „G3“ mit <code>meldeZugerweiterung</code> aus <code>zuggrenzen.ts</code> und <code>aktionen</code> aus <code>zugablauf_hilfen.ts</code>.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Drei und mehr Zusatzaktionen mit überlappenden Kartenlisten prüft der Regeltest „D43: jede Reihenfolge …“ nur mit zwei Plätzen; mehr bringt erst X6.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 13:27</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X3) &middot; agent &middot; pruefung-X3 @ <span class="commit" title="d1f2f4211700b1477ec95babb79ef656eab2bcb7">d1f2f42</span></p><p>Iteration 2 auf d1f2f42: x3_pruefer_grenzfaelle.test.ts G1, G2, G3 grün (Exit 0).</p><ul class="belege"><li><a href="belege/2026-11-23-1327-TF-ENGINE-070-1.txt">2026-11-23-1327-TF-ENGINE-070-1.txt</a></li></ul></article><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 09:23</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X3) &middot; agent &middot; pruefung-X3 @ <span class="commit" title="686159eb5b975d58441c1acfaf14addf2f7204ab">686159e</span></p><p>Vitest x3_pruefer_grenzfaelle.test.ts: G1, G2 und G3 grün (3 passed, Exit 0); dieser Testfall ist Fall G3.</p><ul class="belege"><li><a href="belege/2026-11-23-0923-TF-ENGINE-070-1.txt">2026-11-23-0923-TF-ENGINE-070-1.txt</a></li><li><a href="belege/2026-11-23-0923-TF-ENGINE-070-2.txt">2026-11-23-0923-TF-ENGINE-070-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

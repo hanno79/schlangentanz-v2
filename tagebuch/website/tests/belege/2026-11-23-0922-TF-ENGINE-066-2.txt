@@ -1,0 +1,75 @@
+import { createHash } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
+import { it } from 'vitest'
+import { anwendeAktion, erstellePartie, ermittleAktionen, serialisiere } from '../index'
+import type { Spielzustand } from '../index'
+import { erzeugeZufall } from '../testing/zufall'
+import { STRATEGIEN } from '../../ki/strategien/index'
+import { sichtFuer } from '../../ki/sicht'
+
+// Prüfer X3: eigene Probe, ob das Verhalten ohne die neuen X3-Felder gleich bleibt.
+function ohneX3(json: string): string {
+  const roh = JSON.parse(json) as Record<string, unknown> & { zug: Record<string, unknown> }
+  delete roh.entscheidung
+  delete roh.aufgedeckt
+  delete roh.zug.zusatzaktionen
+  delete roh.zug.verwendet
+  delete roh.zug.runde
+  return JSON.stringify(roh)
+}
+
+const protokoll: string[] = []
+function spiele(saat: number, spielerzahl: number, erweiterung: boolean, art: 'zufall' | 'zufallsKi' | 'solideKi', hash: ReturnType<typeof createHash>): number {
+  let zustand: Spielzustand = erstellePartie({ spielerzahl, erweiterung, zufall: erzeugeZufall(saat) })
+  const wahl = erzeugeZufall(saat * 7 + 3)
+  const ki = art === 'zufall' ? null : STRATEGIEN[art](erzeugeZufall(saat * 13 + 5))
+  let schritte = 0
+  hash.update(ohneX3(serialisiere(zustand)))
+  for (;;) {
+    const aktionen = ermittleAktionen(zustand)
+    if (aktionen.length === 0) break
+    hash.update(JSON.stringify(aktionen))
+    let aktion
+    if (ki === null) aktion = aktionen[Math.floor(wahl() * aktionen.length)]
+    else {
+      const entscheider = zustand.schwebend !== null ? zustand.schwebend.ausstehend[0] : zustand.zug.spielerIndex
+      const sicht = sichtFuer(zustand, entscheider)
+      const s = JSON.parse(JSON.stringify(sicht)) as Record<string, unknown> & { zug: Record<string, unknown> }
+      delete s.entscheidung
+      delete s.aufgedeckt
+      delete s.zug.zusatzaktionen
+      delete s.zug.verwendet
+      delete s.zug.runde
+      hash.update(JSON.stringify(s))
+      const abschriften = structuredClone(aktionen)
+      aktion = aktionen[abschriften.indexOf(ki.waehle(sicht, [...abschriften]))]
+    }
+    if (art === 'solideKi') protokoll.push(`${saat} ${schritte} ${JSON.stringify(aktion)}`)
+    const ergebnis = anwendeAktion(zustand, aktion)
+    hash.update(JSON.stringify(ergebnis.ereignisse))
+    hash.update(ohneX3(serialisiere(ergebnis.zustand)))
+    zustand = ergebnis.zustand
+    schritte += 1
+    if (schritte > 20000) throw new Error('Partie endet nicht')
+  }
+  return schritte
+}
+
+it('Prüfer X3: Prüfsummen', () => {
+  const zeilen: string[] = []
+  const laeufe: Array<[string, 'zufall' | 'zufallsKi' | 'solideKi', boolean, number, number]> = [
+    ['zufall ohne Erweiterung', 'zufall', false, 70001, 120],
+    ['zufall mit Erweiterung', 'zufall', true, 71001, 60],
+    ['zufallsKi ohne Erweiterung', 'zufallsKi', false, 72001, 30],
+    ['solideKi ohne Erweiterung', 'solideKi', false, 73001, 12],
+    ['solideKi mit Erweiterung', 'solideKi', true, 74001, 6],
+  ]
+  for (const [name, art, erweiterung, start, anzahl] of laeufe) {
+    const hash = createHash('sha256')
+    let schritte = 0
+    for (let n = 0; n < anzahl; n += 1) schritte += spiele(start + n, 2 + (n % 3), erweiterung, art, hash)
+    zeilen.push(`${name}: ${anzahl} Partien, ${schritte} Schritte, ${hash.digest('hex')}`)
+  }
+  writeFileSync(process.env.X3_PROBE_AUS ?? 'x3_probe.txt', zeilen.join('\n') + '\n')
+  writeFileSync((process.env.X3_PROBE_AUS ?? 'x3_probe.txt') + '.ki.txt', protokoll.join('\n') + '\n')
+}, 1_800_000)

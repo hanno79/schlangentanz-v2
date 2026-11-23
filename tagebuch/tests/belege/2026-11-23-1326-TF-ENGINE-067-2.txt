@@ -1,0 +1,108 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a2db8cbcd5e58126a
+
+ ❯ src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts (16 tests | 3 failed) 112ms
+     × D56: wehrt der Gegner die Farbenfusion mit Farbenschutz ab, ist die Fusion des Zuges trotzdem verbraucht; eine zweite geht auch über eine Zusatzaktion nicht 13ms
+     × D56/D13: legt der Spieler eine Farbenfusion ohne Ziel wirkungslos ab, geht danach auch über eine Zusatzaktion keine zweite mit Wirkung 5ms
+     × A7.7/D27: die Farbenfusion selbst nennt ihre Ziele auch nach einer Fusion; die Grenze „eine je Zug“ zieht der Rahmen 4ms
+ ❯ src/engine/__tests__/entscheidung.test.ts (15 tests | 1 failed) 144ms
+     × A9: solange eine Entscheidung offen ist, löst niemand eine Aufgabe ein; nach der letzten Wahl prüft die Engine für den Spieler am Zug 10ms
+ ❯ src/ki/sicht.test.ts (16 tests | 1 failed) 1039ms
+     × B2: gelten Zusatzaktionen nur für gezogene Karten, sieht nur der Spieler am Zug, welche es sind 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ki/sicht.test.ts > B2/D43: Zusatzaktionen für bestimmte Karten verraten keine fremde Handkarte > B2: gelten Zusatzaktionen nur für gezogene Karten, sieht nur der Spieler am Zug, welche es sind
+AssertionError: B2: die Sicht des Gegners nennt eine Handkarte von Spieler 1: expected [ 'braun-02', 'rot-01', 'violett-05' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "braun-02",
++   "rot-01",
++   "violett-05",
++ ]
+
+ ❯ src/ki/sicht.test.ts:204:115
+    202|     expect(sichtFuer(zustand, 0).zug.zusatzaktionen[0].nurKarten, 'der…
+    203|     const fremd = alleTexte(sichtFuer(zustand, 1))
+    204|     expect(gezogen.filter((id) => fremd.has(id)), 'B2: die Sicht des G…
+       |                                                                                                                   ^
+    205|   })
+    206| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/engine/__tests__/entscheidung.test.ts > A9/X3: die Aufgabenprüfung wartet, bis die Entscheidung gefallen ist > A9: solange eine Entscheidung offen ist, löst niemand eine Aufgabe ein; nach der letzten Wahl prüft die Engine für den Spieler am Zug
+AssertionError: A9: keine Prüfung, solange Spieler 1 noch entscheidet: expected [ 'KartenVersetzt', …(4) ] to not include 'AufgabeErfuellt'
+ ❯ src/engine/__tests__/entscheidung.test.ts:187:101
+    185|     setzeTestbedingungen({ [name]: immer(0) })
+    186|     const erste = spieleTestkarte(start)
+    187|     expect(typenDer(erste.ereignisse), 'A9: keine Prüfung, solange Spi…
+       |                                                                                                     ^
+    188|     const zweite = entscheidung(erste.zustand, 'spieler-2')
+    189|     expect(typenDer(zweite.ereignisse), 'A9: keine Prüfung, solange de…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts > D56: gespielt ist gespielt > D56: wehrt der Gegner die Farbenfusion mit Farbenschutz ab, ist die Fusion des Zuges trotzdem verbraucht; eine zweite geht auch über eine Zusatzaktion nicht
+AssertionError: D56: keine zweite Fusion mit Wirkung: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts:118:83
+    116|     expect(abgewehrt.spieler[1].schlangen[0].fusionen, 'die Fusion ist…
+    117|     const zweite = karteVon(abgewehrt, 'Farbenfusion')
+    118|     expect(mitWirkung(abgewehrt, zweite), 'D56: keine zweite Fusion mi…
+       |                                                                                   ^
+    119|     const rot = abgewehrt.spieler[0].schlangen[0].karten.map((karte) =…
+    120|     expect(grund(abgewehrt, { typ: 'FusionLegen', spielerId: 'spieler-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts > D56: auch eine wirkungslos abgelegte Farbenfusion ist gespielt > D56/D13: legt der Spieler eine Farbenfusion ohne Ziel wirkungslos ab, geht danach auch über eine Zusatzaktion keine zweite mit Wirkung
+AssertionError: D56: die Fusion des Zuges ist verbraucht: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts:133:85
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts > X3 Kriterium 1: die Grenzen stehen an einer Stelle, nicht in den Karten > A7.7/D27: die Farbenfusion selbst nennt ihre Ziele auch nach einer Fusion; die Grenze „eine je Zug“ zieht der Rahmen
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts:230:44
+    228|     const fusion = zustand.spieler[0].hand[0]
+    229|     expect(KARTENREGISTER.Farbenfusion.ziele(zustand, 0, fusion)).toHa…
+    230|     expect(mitWirkung(zustand, fusion.id)).toBe(false)
+       |                                            ^
+    231|   })
+    232|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  5 failed | 42 passed (47)
+   Start at  13:07:45
+   Duration  6.65s (transform 2.54s, setup 1.51s, import 2.77s, tests 1.29s, environment 11.16s)
+
+exit 1

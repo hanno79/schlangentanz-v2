@@ -1,5 +1,6 @@
 import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
-import { reagiere, spieleKarte } from '../reaktion';
+import { entscheide, meldeOffeneEntscheidung, reagiere, spieleKarte } from '../reaktion';
+import { beginneSchlussrundeBeiLeeremStapel } from '../stapel';
 import type { Spielzustand } from '../types';
 import { beendeZug, legeGrubenOhneZugAb, legeWirkungslosAb, werfeUeberhandAb } from '../zugablauf';
 import { pruefeAktion } from './pruefen';
@@ -11,7 +12,10 @@ import type { AktionsErgebnis, Ereignis, SpielAktion } from './typen';
  * selbst bis zur nächsten Entscheidung vor (Zugwechsel, Auffüllen, Aussetzen,
  * Spielende, Schlangengruben ohne Zug, D29), löst mit Erweiterung die Aufgaben
  * ein, die der Spieler am Zug jetzt erfüllt (A9), und meldet in `ereignisse`,
- * was dabei geschah.
+ * was dabei geschah. Hat eine Wirkung die letzte Karte vom Nachziehstapel
+ * genommen, beginnt vorher die Schlussrunde, ausgelöst vom Spieler am Zug (A10,
+ * D55); ist eine Entscheidung offen, kommt sie zuletzt (X3), und die Aufgaben
+ * warten, bis sie entschieden ist.
  *
  * Eine Handkarte mit Wirkung zählt zum Zug und wirkt nach ihrem Eintrag im
  * Kartenregister; trifft sie Mitspieler, wird sie erst angesagt, und die
@@ -36,10 +40,15 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
     case 'Reagieren':
       ergebnis = reagiere(neu, aktion, ereignisse);
       break;
+    case 'Entscheiden':
+      ergebnis = entscheide(neu, aktion, ereignisse);
+      break;
     default:
       ergebnis = spieleKarte(neu, aktion, ereignisse);
   }
+  beginneSchlussrundeBeiLeeremStapel(ergebnis, ereignisse);
   legeGrubenOhneZugAb(ergebnis, ereignisse);
   pruefeAufgabenAmZug(ergebnis, ereignisse);
+  meldeOffeneEntscheidung(ergebnis, ereignisse);
   return { zustand: ergebnis, ereignisse };
 }

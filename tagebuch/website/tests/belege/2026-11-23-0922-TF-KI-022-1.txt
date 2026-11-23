@@ -1,0 +1,32 @@
+Basisprobe Prüfer X3 (eigene Saaten 70001-74006), Probedatei x3_pruefer_probe.test.ts
+== Merge-Basis 589e2a7 (vor X3) ==
+zufall ohne Erweiterung: 120 Partien, 21625 Schritte, 233ea0ae444d302d125956804d94df36935b7267a937583b4b358dd7f1d8cbdc
+zufall mit Erweiterung: 60 Partien, 11148 Schritte, 04de6711c437dd46bf2a57fc408c6f4f65cc0adcc36992a85f17bfdafe465fa3
+zufallsKi ohne Erweiterung: 30 Partien, 5387 Schritte, ff89061469d4b39d692cabcb55de490b6444a2cf11a36b8b9d28f2de875713d2
+solideKi ohne Erweiterung: 12 Partien, 2128 Schritte, ba6b68ffc48b1775e4c286344643de5bd833c89bcefa8eace0737c130392c321
+solideKi mit Erweiterung: 6 Partien, 1090 Schritte, 376634d20ebbb27371f380d52a8a0444c22ecd830ebf7afd8315be8b3e8699c1
+
+== X3 686159e ==
+zufall ohne Erweiterung: 120 Partien, 21625 Schritte, 233ea0ae444d302d125956804d94df36935b7267a937583b4b358dd7f1d8cbdc
+zufall mit Erweiterung: 60 Partien, 11148 Schritte, 04de6711c437dd46bf2a57fc408c6f4f65cc0adcc36992a85f17bfdafe465fa3
+zufallsKi ohne Erweiterung: 30 Partien, 5387 Schritte, ff89061469d4b39d692cabcb55de490b6444a2cf11a36b8b9d28f2de875713d2
+solideKi ohne Erweiterung: 12 Partien, 2132 Schritte, 9f7f8e4fcbf29698e3997f3dd28080a7a5a7144017c1c52fa30b61e394cdf52b
+solideKi mit Erweiterung: 6 Partien, 1092 Schritte, e4cbedb4d99d3f1aab85ad35f854d55053436dd655546b7588a6b9638a2ee3e0
+
+== X3 686159e mit alten KI-Dateien sicht.ts/vorauswahl.ts (minimal ergänzt) ==
+zufall ohne Erweiterung: 120 Partien, 21625 Schritte, 233ea0ae444d302d125956804d94df36935b7267a937583b4b358dd7f1d8cbdc
+zufall mit Erweiterung: 60 Partien, 11148 Schritte, 04de6711c437dd46bf2a57fc408c6f4f65cc0adcc36992a85f17bfdafe465fa3
+zufallsKi ohne Erweiterung: 30 Partien, 5387 Schritte, ff89061469d4b39d692cabcb55de490b6444a2cf11a36b8b9d28f2de875713d2
+solideKi ohne Erweiterung: 12 Partien, 2132 Schritte, 9f7f8e4fcbf29698e3997f3dd28080a7a5a7144017c1c52fa30b61e394cdf52b
+solideKi mit Erweiterung: 6 Partien, 1092 Schritte, e4cbedb4d99d3f1aab85ad35f854d55053436dd655546b7588a6b9638a2ee3e0
+
+== X3 686159e, folgeschluessel in zugsuche.ts ohne zug.verwendet/zusatzaktionen/runde ==
+zufall ohne Erweiterung: 120 Partien, 21625 Schritte, 233ea0ae444d302d125956804d94df36935b7267a937583b4b358dd7f1d8cbdc
+zufall mit Erweiterung: 60 Partien, 11148 Schritte, 04de6711c437dd46bf2a57fc408c6f4f65cc0adcc36992a85f17bfdafe465fa3
+zufallsKi ohne Erweiterung: 30 Partien, 5387 Schritte, ff89061469d4b39d692cabcb55de490b6444a2cf11a36b8b9d28f2de875713d2
+solideKi ohne Erweiterung: 12 Partien, 2128 Schritte, ba6b68ffc48b1775e4c286344643de5bd833c89bcefa8eace0737c130392c321
+solideKi mit Erweiterung: 6 Partien, 1090 Schritte, 376634d20ebbb27371f380d52a8a0444c22ecd830ebf7afd8315be8b3e8699c1
+
+== erste Abweichung solideKi, Partie 73001 Schritt 2 ==
+Basis: 73001 2 {"typ":"FarbendiebSpielen","spielerId":"spieler-2","karteId":"farbendieb-02","quelle":{"schlangenId":"schlange-1","karteId":"violett-11"},"ziel":{"art":"neueSchlange"}}
+X3:    73001 2 {"typ":"FarbkarteLegen","spielerId":"spieler-2","karteId":"braun-04","ziel":{"art":"neueSchlange"}}

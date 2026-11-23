@@ -242,9 +242,9 @@ Bereiche bestehen: `ENGINE` (`src/engine/**`), `DEV` (`src/entwicklung/**`), `KI
 
 | Testfall | Inhalt | Lauf | Status |
 |---|---|---|---|
-| TF-ENGINE-061 | Bedingungen der fünf Aufgaben: Regeltests, Gegenproben, vollständige Jokersuche, Prüfsumme ohne Erweiterung | `2026-11-23-0925-TF-ENGINE-061` | bestanden |
-| TF-ENGINE-062 | Grenzfälle G1 bis G4 (Grenzfall von 061) | `2026-11-23-0925-TF-ENGINE-062` | bestanden |
-| TF-DEV-043 | sechs Szenarien am Entwicklertisch und Zufallspartien mit Erweiterung | `2026-11-23-0925-TF-DEV-043` | bestanden |
+| TF-ENGINE-072 | Bedingungen der fünf Aufgaben: Regeltests, Gegenproben, vollständige Jokersuche, Prüfsumme ohne Erweiterung | `2026-11-23-0925-TF-ENGINE-072` | bestanden |
+| TF-ENGINE-073 | Grenzfälle G1 bis G4 (Grenzfall von 072) | `2026-11-23-0925-TF-ENGINE-073` | bestanden |
+| TF-DEV-051 | sechs Szenarien am Entwicklertisch und Zufallspartien mit Erweiterung | `2026-11-23-0925-TF-DEV-051` | bestanden |
 
 Alle drei Läufe auf `e0e8098`, sauber (ohne nicht committete Änderung ausserhalb von `tagebuch/`). Die Nummern sind gegen `origin/neuaufbau` und die offenen Branches X2b, X2c, X3 frei; laufen andere Prüfer parallel, nummeriert der Orchestrator beim Merge um.
 

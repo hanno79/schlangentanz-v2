@@ -40,7 +40,8 @@ export function pruefeAufgabenAmZugende(zustand: Spielzustand, ereignisse: Ereig
 }
 
 function loeseEin(zustand: Spielzustand, ereignisse: Ereignis[], amZugende: boolean): void {
-  if (!zustand.erweiterung || zustand.schwebend !== null || zustand.partiephase === 'Beendet') return;
+  // Nicht, solange eine Karte schwebt oder eine Entscheidung offen ist (X3).
+  if (!zustand.erweiterung || zustand.schwebend !== null || zustand.entscheidung !== null || zustand.partiephase === 'Beendet') return;
   const { spielerIndex } = zustand.zug;
   const spieler = zustand.spieler[spielerIndex];
   const erfuellt = (definition: AufgabenDefinition) => (amZugende || giltNachJederAktion(definition)) && definition.istErfuellt(zustand, spielerIndex);

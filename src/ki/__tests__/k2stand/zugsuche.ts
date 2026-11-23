@@ -115,7 +115,10 @@ function folgeschluessel(sicht: Sicht): string {
   const schlangen = sicht.spieler.map((spieler) => wertschluessel(spieler.schlangen)).join('/');
   const hand = sicht.hand.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)).sort().join(',');
   const gruben = sicht.ausliegendeGruben.map((grube) => grube.vor).join(',');
-  return `${schlangen}#${hand}#${gruben}#${JSON.stringify(sicht.zug)}`;
+  // X3: Der Zug führt seither Felder mit Karten-Ids; der Stand von K2 kannte sie nicht und lässt sie weg (Prüfprotokoll X3, Mangel 1).
+  const { spielerIndex, teilzug, gespielteFarbkarten, gespielteSonderkarten, verdopplerGespielt, farbenfusionGespielt, abschnitt } = sicht.zug;
+  const zug = { spielerIndex, teilzug, gespielteFarbkarten, gespielteSonderkarten, verdopplerGespielt, farbenfusionGespielt, abschnitt };
+  return `${schlangen}#${hand}#${gruben}#${JSON.stringify(zug)}`;
 }
 
 /** Die ersten `anzahl` Folgen mit verschiedenem Folgeschlüssel, in der gegebenen Reihenfolge. */

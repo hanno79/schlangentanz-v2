@@ -10,14 +10,15 @@ die Ansage bestätigen. Der Hook hält nur, was der Mensch angetippt hat; was
 angeboten ist und wann eine Aktion fertig ist, sagt `auswahl` aus den Aktionen
 der Engine (U3). Mit einem neuen Spielstand beginnt die Auswahl von vorn.
 
-Bedienbar sind alle aufgezählten Aktionen ausser der Abwehr: Sie hat keine
-Karte und kein Ziel am Tisch, die Abwehrfrage in der Zugleiste nimmt sie direkt
-aus den aufgezählten Aktionen (O6, `ReaktionsDialog`). Die Schlangenhäutung kam
-mit O7 dazu (`haeutung.ts`). Die Oberfläche lässt die Abwehr nur weg, sie baut
+Bedienbar sind alle aufgezählten Aktionen ausser der Abwehr und den
+Entscheidungen der Erweiterung (X3), die O10 baut. Die Abwehr hat keine Karte
+und kein Ziel am Tisch, die Abwehrfrage in der Zugleiste nimmt sie direkt aus
+den aufgezählten Aktionen (O6, `ReaktionsDialog`). Die Schlangenhäutung kam
+mit O7 dazu (`haeutung.ts`). Die Oberfläche lässt beides nur weg, sie baut
 keine Aktion selbst.
 */
 
-const NOCH_NICHT_BEDIENBAR: ReadonlySet<SpielAktion['typ']> = new Set(['Reagieren'])
+const NOCH_NICHT_BEDIENBAR: ReadonlySet<SpielAktion['typ']> = new Set(['Reagieren', 'Entscheiden'])
 
 /** Die Aktionen der Engine, die der Tisch bedienbar macht. */
 function bedienbareAktionen(aktionen: readonly SpielAktion[]): SpielAktion[] {

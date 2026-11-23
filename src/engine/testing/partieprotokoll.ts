@@ -115,6 +115,8 @@ class Schreiber {
         return 'angesagt';
       case 'AusDemSpiel':
         return 'aus dem Spiel';
+      case 'Aufgedeckt':
+        return `aufgedeckt, Stelle ${ort.position}`;
     }
   }
 
@@ -153,6 +155,8 @@ class Schreiber {
         return `${wer} wirft ab: ${aktion.karteIds.map((id) => this.karte(id)).join(', ')}.`;
       case 'Reagieren':
         return aktion.farbenschutzId === null ? `${wer} lässt durch.` : `${wer} wehrt mit ${this.karte(aktion.farbenschutzId)} ab.`;
+      case 'Entscheiden':
+        return `${wer} wählt „${aktion.wahl}“.`;
     }
   }
 
@@ -188,6 +192,10 @@ class Schreiber {
         return `${this.spieler(ereignis.spielerIndex)} setzt aus; ${this.karte(ereignis.karteId)} kommt auf den Ablagestapel von ${this.spieler(ereignis.ablagestapelVon)}.`;
       case 'GrubeOhneWirkung':
         return `${this.spieler(ereignis.spielerIndex)} hat keinen Zug mehr; ${this.karte(ereignis.karteId)} kommt ohne Wirkung auf den Ablagestapel von ${this.spieler(ereignis.ablagestapelVon)}.`;
+      case 'EntscheidungVerlangt':
+        return `${this.spieler(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${this.karte(ereignis.karteId)}: ${ereignis.optionen.join(', ')}.`;
+      case 'Entschieden':
+        return `${this.spieler(ereignis.spielerIndex)} hat bei „${ereignis.art}“ „${ereignis.wahl}“ gewählt.`;
       case 'SchlussrundeBegonnen':
         return `Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von ${this.spieler(ereignis.ausloeser)}.`;
       case 'PartieBeendet':

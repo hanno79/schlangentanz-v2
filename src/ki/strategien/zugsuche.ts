@@ -2,8 +2,9 @@ import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
 import { wehrtAb } from './abwehr';
-import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker, wertschluessel } from './bewertung';
+import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
+import { folgeschluessel } from './folgeschluessel';
 import { punkteNach, vorauswahl } from './vorauswahl';
 
 /*
@@ -113,21 +114,6 @@ function zumGegnerGesperrt(sicht: Sicht, aktionen: readonly SpielAktion[], merke
   const vorher = farbeStoert ? eigenePunkte(sicht, merker) : 0;
   const farbeHebt = farbeStoert && aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && !zumGegner(aktion) && punkteNach(sicht, aktion, merker) > vorher);
   return (aktion) => zumGegner(aktion) && (aktion.typ === 'RegenbogenschlangeLegen' ? regenbogenEigen : farbeHebt);
-}
-
-/**
- * Was nach einer ersten Karte am Tisch liegt, ohne Ids: Schlangen aller Spieler, die
- * eigene Hand (Farben und Namen), ausliegende Gruben und der Zug. Varianten, die
- * denselben Tisch ergeben (ein Farbendieb, der dieselbe Farbe an benachbarte Stellen
- * derselben Reihe legt, oder eine von drei gleichen Farbkarten an dasselbe Ende), sind
- * derselbe Zug und werden nur einmal vertieft
- * (Prüfprotokoll K2, Iteration 3, Mangel 1).
- */
-function folgeschluessel(sicht: Sicht): string {
-  const schlangen = sicht.spieler.map((spieler) => wertschluessel(spieler.schlangen)).join('/');
-  const hand = sicht.hand.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name)).sort().join(',');
-  const gruben = sicht.ausliegendeGruben.map((grube) => grube.vor).join(',');
-  return `${schlangen}#${hand}#${gruben}#${JSON.stringify(sicht.zug)}`;
 }
 
 /** Die ersten `anzahl` Folgen mit verschiedenem Folgeschlüssel, in der gegebenen Reihenfolge. */

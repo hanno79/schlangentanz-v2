@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { erzeugeZufall } from '../engine'
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
+import { meldeZugerweiterung } from '../engine/zuggrenzen'
 import { zufallszustand } from '../engine/testing/zufallszustand'
 import { entscheiderVon, sichtFuer, spielerzahl } from './sicht'
 import { alleTexte, mischeVerborgenes, verborgeneIds } from './__tests__/verborgenes'
@@ -185,5 +186,21 @@ describe('K1: wer entscheidet', () => {
 
   it('A2: wie viele Spieler am Tisch sitzen', () => {
     expect(spielerzahl(tisch())).toBe(3)
+  })
+})
+
+describe('B2/D43: Zusatzaktionen für bestimmte Karten verraten keine fremde Handkarte', () => {
+  it('B2: gelten Zusatzaktionen nur für gezogene Karten, sieht nur der Spieler am Zug, welche es sind', () => {
+    const zustand = baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(12) })
+      .haendeAuffuellen()
+      .aendere((stand) => {
+        const gezogen = stand.spieler[0].hand.slice(0, 3).map((karte) => karte.id)
+        meldeZugerweiterung(stand.zug, 'Schlangenkorb', [{ quelle: 'Schlangenkorb', erlaubt: ['Farbkarte', 'Sonderkarte'], nurKarten: gezogen }])
+      })
+      .zustand()
+    const gezogen = zustand.zug.zusatzaktionen[0].nurKarten!
+    expect(sichtFuer(zustand, 0).zug.zusatzaktionen[0].nurKarten, 'der Spieler am Zug sieht seine Karten').toEqual(gezogen)
+    const fremd = alleTexte(sichtFuer(zustand, 1))
+    expect(gezogen.filter((id) => fremd.has(id)), 'B2: die Sicht des Gegners nennt eine Handkarte von Spieler 1').toEqual([])
   })
 })

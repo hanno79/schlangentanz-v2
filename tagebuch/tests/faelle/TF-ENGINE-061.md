@@ -1,42 +1,42 @@
 ---
 id: TF-ENGINE-061
-titel: Farbenpracht, Farbharmonie, Farbkombination, Gelber Schatz und Lila Riese gelten genau dann als erfüllt, wenn ihr Kartentext mit den Jokern als frei wählbarer Farbe zutrifft.
+titel: Farbvielfalt, Vielfaltskönig, Farbwechsler, Schlangenbändiger und Symmetriemeister gelten genau dann als erfüllt, wenn ihre Entscheidungstabelle es verlangt, mit Jokern als passender Farbe.
 art: automatisch
 regression: ja
 prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-23
 veraendert_daten: nein
-skript: src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts
-aenderung: task/X2a-aufgaben-farbmengen (PR #107)
+skript: src/engine/__tests__/regeln/A9_aufgaben_joker_folgen.test.ts
+aenderung: task/X2b-aufgaben-muster (PR #106)
 ---
 
 ## Worum es geht
 
-Fünf Aufgaben zählen Karten einer Farbe: zwei je Farbe, eine Dreiergruppe je Farbe, fünf einer Farbe in einer Schlange, sechs gelbe nebeneinander, fünf violette in einer Reihe. Regenbogenschlange und Farbenfusion zählen dabei als die Farbe, mit der die Aufgabe erfüllt ist, bei jeder Aufgabe neu. Eine Blockade zählt nicht und unterbricht Reihen.
+Paket B von X2 gibt fünf Aufgaben ihre echte Bedingung nach A9, A7.3, A7.7 und D38 bis D40. Regenbogenschlange und Farbenfusion zählen dabei bei jeder Aufgabe als die Farbe, mit der sie erfüllt ist, und eine eingelöste Aufgabe bleibt beim Spieler. Je Aufgabe hält eine Entscheidungstabelle fest, welche Stellung zählt und welche nicht.
 
 ## Bestanden, wenn
 
-Die drei Regeltestdateien `A9_aufgaben_farbmengen.test.ts`, `A9_aufgaben_reihen.test.ts` und `A9_aufgaben_joker_farbmengen.test.ts` sind grün. Lila Riese ist mit vier violetten Karten nicht erfüllt, mit fünf schon. Eine Regenbogenschlange zwischen fünf gelben und vier violetten Karten löst in einer Aktion Gelber Schatz und Lila Riese aus. Gelber Schatz bleibt bei Spieler 1, auch wenn die Regenbogenschlange in der Wertung als Violett zählt oder ein Gegner später eine Blockade in die Reihe legt.
+Die fünf Tabellentests, `A9_aufgaben_joker_folgen.test.ts` und `szenarienAufgabenB.test.ts` laufen grün durch, 106 Tests zusammen mit `solideKi_zugende.test.ts`. Jede Tabelle hat die sechs Pflichtstellungen: erfüllt, knapp nicht, Regenbogenschlange, Farbenfusion, Blockade dazwischen und zwei Schlangen.
 
 ## Fehlgeschlagen, wenn
 
-Ein Test ist rot, etwa weil vier violette Karten schon Lila Riese erfüllen, die zwei Karten unter einer Fusion einzeln zählen oder eine erfüllte Aufgabe wieder auf den Tisch zurückgeht.
+Ein Test ist rot. Das passiert etwa, wenn Blau, Rot, Gelb, Rot, Grün als Farbwechsler zählt, eine Blockade als Achse den Symmetriemeister nicht verhindert oder eine einzige Schlange mit sechs Farben den Vielfaltskönig einlöst.
 
 ## Vorbedingungen
 
 | Was | Wert |
 |---|---|
-| Anwendung | Repo mit `npm ci`, Stand ab Commit e0e8098 |
+| Anwendung | Repo mit `npm ci`, Stand ab Commit e028a82c |
 
 ## Testdaten
 
-Stellungen aus dem Baukasten mit echten Karten (`farbmengen_hilfen.ts`), je Aufgabe 11 bis 13 Zeilen einer Entscheidungstabelle, dazu Abläufe mit Zug und Gegnerzug.
+Stellungen aus dem Szenario-Baukasten: je Aufgabe 11 bis 16 Zeilen, dazu die Schlange Rot, Gelb, Braun, Violett, Blau, ?, Blau, Grün, Rot, Blau, Grün für den Joker in zwei Aufgaben und 20 Karten mit 4 und 8 Jokern für die Laufzeit.
 
 ## Technische Prüfung
 
-`npx vitest run src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts src/engine/__tests__/regeln/A9_aufgaben_reihen.test.ts src/engine/__tests__/regeln/A9_aufgaben_joker_farbmengen.test.ts` endet mit 0. Zwei Gegenproben machen Tests rot: Lila Riese mit 4 statt 5 (fünf Tests), Joker unterbrechen in Farbharmonie statt eine Farbe zu wählen (fünf Tests).
+`npx vitest run` über `src/engine/__tests__/regeln/A9_aufgabe_farbvielfalt.test.ts`, `A9_aufgabe_farbwechsler.test.ts`, `A9_aufgabe_schlangenbaendiger.test.ts`, `A9_aufgabe_symmetriemeister.test.ts`, `A9_aufgabe_vielfaltskoenig.test.ts`, `A9_aufgaben_joker_folgen.test.ts`, `src/entwicklung/szenarienAufgabenB.test.ts` und `src/ki/strategien/solideKi_zugende.test.ts` endet mit 0. Drei Gegenproben machen Tests rot: ohne den Zweig `davor === farbe` in `farbwechsler.ts` drei Zeilen, ohne die Sonderkarten-Sperre in `symmetriemeister.ts` die Zeile „Blockade als Achse“, mit einer statt zwei Schlangen in `vielfaltskoenig.ts` die Zeile D38.
 
 ## Nicht abgedeckte Grenzfälle
 
-Reine Jokerreihen (fünf Joker ohne violette Karte als Lila Riese, zwei Regenbogenschlangen statt beider grünen Karten bei Farbenpracht) zählt die Umsetzung mit; ob das gilt, ist eine offene Auslegungsfrage an den Autor und hat keinen dauerhaften Test. Der Zeitpunkt „am Ende des Zugs“ bei Farbenpracht ist ebenso offen. Eine Gegenprobe mit vollständiger Jokersuche über zufällige Schlangen lief nur als temporärer Test des Prüfers.
+Ein Spieler ohne Schlange steht in TF-ENGINE-063. Den Vergleich mit allen Jokerbelegungen und 300 Zufallspartien zeigt TF-ENGINE-062. Ob Farbvielfalt sechs verschiedene Karten direkt hintereinander verlangt oder auch Wiederholungen in der Kette zulässt, sagt Teil A nicht eindeutig. Die Tabelle hält die Auslegung der Umsetzung fest, eine Antwort des Autors fehlt.
