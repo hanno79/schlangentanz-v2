@@ -1,0 +1,112 @@
+{
+ "weniger": false,
+ "statistik": {
+  "KI greift KI an, mit Farbenschutz": {
+   "n": 8,
+   "werte": [
+    1017.3,
+    1024.9,
+    1008.4,
+    1012.8,
+    1010.8,
+    1011.3,
+    1014.7,
+    1018.6
+   ],
+   "min": 1008.4,
+   "max": 1024.9,
+   "mittel": 1014.9
+  },
+  "KI greift KI an, ohne Farbenschutz": {
+   "n": 8,
+   "werte": [
+    1017.5,
+    1013.1,
+    1025.9,
+    1011.4,
+    1016.9,
+    1014.6,
+    1010.6,
+    1015
+   ],
+   "min": 1010.6,
+   "max": 1025.9,
+   "mittel": 1015.6
+  },
+  "du greifst KI an, mit Farbenschutz": {
+   "n": 8,
+   "werte": [
+    708.6,
+    710,
+    709.2,
+    708.8,
+    709.3,
+    710.1,
+    708.8,
+    706.8
+   ],
+   "min": 706.8,
+   "max": 710.1,
+   "mittel": 709
+  },
+  "du greifst KI an, ohne Farbenschutz": {
+   "n": 8,
+   "werte": [
+    709.1,
+    712.4,
+    711.7,
+    710,
+    709.2,
+    707,
+    708.7,
+    710.5
+   ],
+   "min": 707,
+   "max": 712.4,
+   "mittel": 709.8
+  }
+ },
+ "mitteGleich": {
+  "KI greift KI an": {
+   "mitEinheitlich": true,
+   "ohneEinheitlich": true,
+   "mitGleichOhne": true,
+   "beispielMit": {
+    "status": "KI-Gegner 1 spielt Schlangenblockade\nKI-Gegner 2 entscheidet, ob abgewehrt wird.",
+    "zugleiste": "Warte, bis du dran bist.\n\nSchneller",
+    "protokoll": "Noch kein Schritt",
+    "gegner": "KI-Gegner 1\nist dran\n4 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer\n\nNoch keine Schlange\n\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   },
+   "beispielOhne": {
+    "status": "KI-Gegner 1 spielt Schlangenblockade\nKI-Gegner 2 entscheidet, ob abgewehrt wird.",
+    "zugleiste": "Warte, bis du dran bist.\n\nSchneller",
+    "protokoll": "Noch kein Schritt",
+    "gegner": "KI-Gegner 1\nist dran\n4 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer\n\nNoch keine Schlange\n\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   }
+  },
+  "du greifst KI an": {
+   "mitEinheitlich": true,
+   "ohneEinheitlich": true,
+   "mitGleichOhne": true,
+   "beispielMit": {
+    "status": "Du spielst Schlangenblockade\nKI-Gegner 1 entscheidet, ob abgewehrt wird.",
+    "zugleiste": "Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.\n\nSchneller",
+    "protokoll": "Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+    "gegner": "KI-Gegner 1\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n3 Punkte\nAblage leer\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   },
+   "beispielOhne": {
+    "status": "Du spielst Schlangenblockade\nKI-Gegner 1 entscheidet, ob abgewehrt wird.",
+    "zugleiste": "Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.\n\nSchneller",
+    "protokoll": "Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+    "gegner": "KI-Gegner 1\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n3 Punkte\nAblage leer\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   }
+  }
+ },
+ "protokolle": [
+  "KI greift KI an mit: KI-Gegner 2 lässt Schlangenblockade durch. / Schlangenblockade wirkt.",
+  "KI greift KI an ohne: KI-Gegner 2 lässt Schlangenblockade durch. / Schlangenblockade wirkt.",
+  "du greifst KI an mit: KI-Gegner 1 wehrt Schlangenblockade mit Farbenschutz ab. / Schlangenblockade bleibt ohne Wirkung. / Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+  "du greifst KI an ohne: KI-Gegner 1 lässt Schlangenblockade durch. / Schlangenblockade wirkt. / Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2."
+ ],
+ "fehler": []
+}

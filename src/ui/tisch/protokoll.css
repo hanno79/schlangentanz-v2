@@ -1,0 +1,63 @@
+/* Plan O6: Protokoll in der Tischfläche, Abwehrfrage und Hinweise in der Zugleiste. */
+
+/* Das Protokoll steht unter Gegnern, Mitte und Auslage über die ganze Breite. */
+.st-protokoll {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  min-width: 0;
+}
+
+.st-protokoll-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-1);
+  margin: 0;
+  padding: var(--abstand-2) var(--abstand-3);
+  font-size: var(--groesse-klein);
+  list-style: none;
+  background: var(--farbe-flaeche);
+  border: 1px solid var(--farbe-linie);
+  border-radius: var(--radius-klein);
+}
+
+.st-protokoll-eintrag {
+  color: var(--farbe-tinte-leise);
+  overflow-wrap: anywhere;
+}
+
+/* Der jüngste Schritt: dunkler und fett, nicht nur in anderer Farbe. */
+.st-protokoll-eintrag--neu {
+  font-weight: 600;
+  color: var(--farbe-tinte);
+}
+
+.st-reaktion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--abstand-2);
+}
+
+.st-reaktion-hinweis {
+  font-size: var(--groesse-klein);
+  color: var(--farbe-tinte-leise);
+}
+
+/* Du hast ausgesetzt: ein Hinweis in Signalfarbe mit Text (DESIGN.md, „Hinweis“). */
+.st-zugleiste-hinweis {
+  padding: var(--abstand-1) var(--abstand-2);
+  color: var(--farbe-warnung);
+  background: var(--farbe-warnung-hell);
+  border-radius: var(--radius-klein);
+}
+
+/* „Schneller“ ist ein Schalter: gedrückt in Akzentfarbe, mit aria-pressed. */
+.st-knopf[aria-pressed='true'] {
+  color: var(--farbe-auf-akzent);
+  background: var(--farbe-akzent);
+}
+
+.st-knopf[aria-pressed='true']:not(:disabled):hover {
+  background: var(--farbe-akzent-stark);
+}

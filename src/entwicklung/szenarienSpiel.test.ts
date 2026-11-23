@@ -41,6 +41,30 @@ describe('O3: Szenarien für den Spieltisch', () => {
     expect(aktionen.every((aktion) => aktion.typ === 'UeberhandAbwerfen' && aktion.karteIds.length === 2)).toBe(true)
   })
 
+  it('O6 K2/D33: angriff-ohne-schutz: Schlangenfrass auf dein Violett, du kannst nur durchlassen', () => {
+    const zustand = erzeugeSzenario('angriff-ohne-schutz')
+    expect(ermittleEntscheider(zustand)).toBe(0)
+    expect(zustand.spieler[0].schlangen[0].karten[0].id).toBe('violett-01')
+    expect(ermittleAktionen(zustand)).toEqual([{ typ: 'Reagieren', spielerId: 'spieler-1', farbenschutzId: null }])
+  })
+
+  it('O6 K4/A7.6: grube-vor-dir: nach dem Zug von KI-Gegner 1 setzt du aus', () => {
+    let zustand = erzeugeSzenario('grube-vor-dir')
+    expect(zustand.ausliegendeGruben.map((grube) => grube.vor)).toEqual([0])
+    zustand = anwendeAktion(zustand, ermittleAktionen(zustand).find((aktion) => aktion.typ === 'FarbkarteLegen')!).zustand
+    const { ereignisse } = anwendeAktion(zustand, ermittleAktionen(zustand).find((aktion) => aktion.typ === 'ZugBeenden')!)
+    expect(ereignisse.some((ereignis) => ereignis.typ === 'Ausgesetzt' && ereignis.spielerIndex === 0)).toBe(true)
+  })
+
+  it.each([
+    ['ki-angriff-mit-schutz', 2],
+    ['ki-angriff-ohne-schutz', 1],
+  ])('O6 K5/D33: %s: KI-Gegner 2 entscheidet und hat %i Möglichkeiten', (name, anzahl) => {
+    const zustand = erzeugeSzenario(name)
+    expect(ermittleEntscheider(zustand)).toBe(2)
+    expect(ermittleAktionen(zustand)).toHaveLength(anzahl)
+  })
+
   it('O7 K3/A7.9: haeutung-punkte: Häutungen in deiner Schlange (0 Punkte) und in der von KI-Gegner 1 (Grün, Grün, Grün: 9 Punkte)', () => {
     const zustand = erzeugeSzenario('haeutung-punkte')
     expect(ermittleEntscheider(zustand)).toBe(0)

@@ -7,7 +7,7 @@ import { SPIEL, ZURUECK_ZUR_LOBBY } from '../ui/lobby/texte'
 import Verweis from '../ui/lobby/Verweis'
 import Spielseite from '../ui/spiel/Spielseite'
 import { leseEntwicklerAnfrage } from './adresse'
-import { starteEntwicklerPartie } from './partie'
+import { kiSaatquelle, starteEntwicklerPartie } from './partie'
 import { erzeugeSzenario } from './szenarien'
 
 /*
@@ -19,6 +19,10 @@ Testhook-Build; der App-Rahmen lädt diese Datei nur dort nach.
   dieselben Parameter wie am Entwicklertisch.
 - `?tempo=sofort`: die KI spielt ohne Pause.
 
+Unter `?seed=` bekommen auch die KI-Gegner feste Saaten (`kiSaatquelle`), damit
+sich eine Partie mit denselben Klicks nachspielen lässt (O6); nach dem Neuladen
+kommen sie wieder aus `Math.random`.
+
 Ein Szenario oder eine Saat wird gespeichert, als hätte die Lobby die Partie
 angelegt, und verschwindet danach aus der Adresse; nur `tempo` bleibt. So
 setzt ein Neuladen die laufende Partie fort, statt das Szenario neu zu
@@ -26,17 +30,22 @@ beginnen. Ein falscher Parameter wird gemeldet, nie still ersetzt, und lässt
 einen vorhandenen Spielstand stehen.
 */
 
-type Vorbereitung = { art: 'bereit'; pause: number | undefined } | { art: 'fehler'; meldung: string }
+type Vorbereitung = { art: 'bereit'; pause: number | undefined; saatquelle: (() => number) | undefined } | { art: 'fehler'; meldung: string }
 
-function startzustand(suche: string): Spielzustand | null {
+interface Start {
+  zustand: Spielzustand
+  saatquelle?: () => number
+}
+
+function startzustand(suche: string): Start | null {
   const anfrage = leseEntwicklerAnfrage('/dev', suche)
   switch (anfrage.art) {
     case 'start':
       return null
     case 'szenario':
-      return erzeugeSzenario(anfrage.name)
+      return { zustand: erzeugeSzenario(anfrage.name) }
     case 'partie':
-      return starteEntwicklerPartie(anfrage.saat, anfrage.spieler, anfrage.erweiterung === 1)
+      return { zustand: starteEntwicklerPartie(anfrage.saat, anfrage.spieler, anfrage.erweiterung === 1), saatquelle: kiSaatquelle(anfrage.saat) }
     case 'fehler':
       throw new Error(anfrage.meldung)
     default:
@@ -49,17 +58,17 @@ function bereiteVor(): Vorbereitung {
   const parameter = new URLSearchParams(window.location.search)
   const tempo = parameter.get('tempo')
   if (tempo !== null && tempo !== 'sofort') return { art: 'fehler', meldung: `Parameter tempo kennt nur „sofort“, erhalten: „${tempo}“.` }
-  let zustand: Spielzustand | null
+  let start: Start | null
   try {
-    zustand = startzustand(window.location.search)
+    start = startzustand(window.location.search)
   } catch (fehler) {
     return { art: 'fehler', meldung: fehlertext(fehler) }
   }
-  if (zustand !== null) {
-    speichereSpielstand(zustand)
+  if (start !== null) {
+    speichereSpielstand(start.zustand)
     window.history.replaceState(window.history.state, '', tempo === null ? '/spiel' : '/spiel?tempo=sofort')
   }
-  return { art: 'bereit', pause: tempo === 'sofort' ? 0 : undefined }
+  return { art: 'bereit', pause: tempo === 'sofort' ? 0 : undefined, saatquelle: start?.saatquelle }
 }
 
 export default function SpielTesthooks() {
@@ -74,5 +83,5 @@ export default function SpielTesthooks() {
       </Rahmen>
     )
   }
-  return <Spielseite pause={vorbereitung.pause} />
+  return <Spielseite pause={vorbereitung.pause} saatquelle={vorbereitung.saatquelle} />
 }

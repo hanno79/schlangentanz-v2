@@ -85,13 +85,20 @@ interface SchlangeAmTisch {
 export interface Tischnamen {
   karte: (id: string) => Spielkarte
   schlange: (id: string) => SchlangeAmTisch
-  spieler: (id: string) => string
+  spieler: (id: string) => Person
 }
 
-export function tischnamen(ansicht: TischAnsicht): Tischnamen {
-  const karten = new Map<string, Spielkarte>(ansicht.ich.hand.map((karte) => [karte.id, karte]))
+/**
+ * Die Namen am Tisch: deine Hand, alle Schlangen, eine angesagte Karte und
+ * `gespielt`, eine Karte, die ein Gegner eben aus seiner Hand gespielt hat (O6);
+ * mit dem Spielen liegt sie offen.
+ */
+export function tischnamen(ansicht: TischAnsicht, gespielt: readonly Spielkarte[] = []): Tischnamen {
+  const angesagt = ansicht.status.schwebend?.angesagt
+  const offen = [...ansicht.ich.hand, ...(angesagt === undefined ? [] : [angesagt]), ...gespielt]
+  const karten = new Map<string, Spielkarte>(offen.map((karte) => [karte.id, karte]))
   const schlangen = new Map<string, SchlangeAmTisch>()
-  const spieler = new Map<string, string>(ansicht.gegner.map((gegner) => [gegner.id, gegner.name]))
+  const spieler = new Map<string, Person>([ansicht.ich, ...ansicht.gegner].map((platz): [string, Person] => [platz.id, { name: platz.name, ich: platz === ansicht.ich }]))
   for (const platz of [ansicht.ich, ...ansicht.gegner]) {
     const eigene = platz === ansicht.ich
     platz.schlangen.forEach((schlange, index) => {
@@ -149,8 +156,10 @@ export function ansage(aktion: SpielAktion, namen: Tischnamen): string {
     }
     case 'SchlangenfrassSpielen':
       return `Schlangenfrass frisst ${aktion.ziele.map((ziel) => `${kurz(ziel.karteId)} aus ${schlangeImSatz(namen.schlange(ziel.schlangenId), 'dativ')}`).join(' und ')}.`
-    case 'SchlangengrubeSpielen':
-      return `Schlangengrube auf ${namen.spieler(aktion.zielSpielerId)}.`
+    case 'SchlangengrubeSpielen': {
+      const ziel = namen.spieler(aktion.zielSpielerId)
+      return `Schlangengrube auf ${ziel.ich ? 'dich' : ziel.name}.`
+    }
     case 'VerdopplerSpielen':
       // A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug.“
       return 'Verdoppler: Danach füllst du deine Handkarten auf und spielst sofort einen zweiten Zug.'

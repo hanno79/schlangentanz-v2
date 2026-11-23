@@ -13,15 +13,16 @@ import { KI_PAUSE, useSpiel } from './useSpiel'
 /**
  * Die Seite unter `/spiel`. Ist eine Partie gespeichert, steht hier der
  * Spieltisch, und die Partie läuft (O3): Die KI-Gegner spielen, bis du
- * entscheidest. Deine Karten spielst du am Tisch (O5, die Häutung mit O7); die
- * Abwehr folgt mit O6. Ist die Partie beendet, steht hier ihre Wertung (O8), auch nach dem
+ * entscheidest. Deine Karten spielst du am Tisch (O5, die Häutung mit O7),
+ * ebenso die Abwehr (O6). Ist die Partie beendet, steht hier ihre Wertung (O8), auch nach dem
  * Neuladen; „Noch einmal“ beginnt auf derselben Seite eine neue Partie mit
  * denselben Einstellungen. Ohne Partie sagt die Seite das und führt in die Lobby.
  *
- * `pause` setzen nur die Testhooks (`?tempo=sofort`); sonst kommt sie aus
- * „weniger Bewegung“.
+ * `pause` und `saatquelle` setzen nur die Testhooks (`?tempo=sofort`,
+ * `?seed=`); sonst kommt die Pause aus „weniger Bewegung“ und die Saat der
+ * KI-Gegner aus `Math.random`.
  */
-export default function Spielseite({ pause }: { pause?: number }) {
+export default function Spielseite({ pause, saatquelle }: { pause?: number; saatquelle?: () => number }) {
   const gespeichert = useGespeichertePartie()
   const wenigerBewegung = useWenigerBewegung()
   // Jede Partie dieser Seite bekommt eine eigene Nummer, damit „Noch einmal“ die Steuerung frisch beginnt.
@@ -38,7 +39,9 @@ export default function Spielseite({ pause }: { pause?: number }) {
         halteFehlerFest(fehler)
       }
     }
-    return <Partie key={neu?.nummer ?? 0} start={start} pause={pause ?? (wenigerBewegung ? 0 : KI_PAUSE)} nochEinmal={nochEinmal} />
+    // Die feste Saat der Testhooks gilt nur für die Partie, mit der die Seite geöffnet wurde.
+    const quelle = neu === null ? saatquelle : undefined
+    return <Partie key={neu?.nummer ?? 0} start={start} pause={pause ?? (wenigerBewegung ? 0 : KI_PAUSE)} saatquelle={quelle} nochEinmal={nochEinmal} />
   }
 
   return (
@@ -53,10 +56,10 @@ export default function Spielseite({ pause }: { pause?: number }) {
   )
 }
 
-function Partie({ start, pause, nochEinmal }: { start: Spielzustand; pause: number; nochEinmal: () => void }) {
-  const { ansicht, ergebnis, fuehreAus, ablehnung, haeutungsVorschau } = useSpiel(start, { pause })
+function Partie({ start, pause, saatquelle, nochEinmal }: { start: Spielzustand; pause: number; saatquelle: (() => number) | undefined; nochEinmal: () => void }) {
+  const { ansicht, ergebnis, fuehreAus, ablehnung, verlauf, haeutungsVorschau } = useSpiel(start, { pause, saatquelle })
   if (ergebnis !== null) return <Ergebnis ergebnis={ergebnis} nochEinmal={nochEinmal} />
-  return <Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={ablehnung} haeutungsVorschau={haeutungsVorschau} />
+  return <Tisch ansicht={ansicht} fuehreAus={fuehreAus} ablehnung={ablehnung} verlauf={verlauf} haeutungsVorschau={haeutungsVorschau} />
 }
 
 const WENIGER_BEWEGUNG = '(prefers-reduced-motion: reduce)'

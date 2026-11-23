@@ -1,4 +1,6 @@
+import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
+import type { Baukasten } from '../engine/testing/szenario'
 import { erzeugeZufall } from '../engine/testing/zufall'
 import type { Szenario } from './szenarien'
 
@@ -8,8 +10,22 @@ Sie zeigen, was die Partie-Steuerung ohne Bedienung trägt: eine offene
 Abwehrfrage an dich und eine Schlussrunde, die die KI-Gegner allein zu Ende
 spielen. Am Entwicklertisch lassen sie sich wie jedes Szenario mit Klicks
 weiterspielen. Für O5 kommt ein Zugende mit zu vielen Handkarten dazu (A5),
-für O7 eine Schlangenhäutung, die Punkte bringt oder nimmt (A7.9, A11).
+für O6 eine Abwehrfrage ohne Farbenschutz, ein Aussetzen und ein Angriff auf
+eine KI mit und ohne Farbenschutz, für O7 eine Schlangenhäutung, die Punkte
+bringt oder nimmt (A7.9, A11).
 */
+
+/** Drei Spieler: KI-Gegner 1 hat eine Schlangenblockade in die Schlange von KI-Gegner 2 angesagt (O6 K5). */
+function blockadeGegenKi(handVonKi2: Parameters<Baukasten['hand']>[1]): Spielzustand {
+  return baukasten({ spielerzahl: 3, erweiterung: false, zufall: erzeugeZufall(97) })
+    .hand(0, ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett'])
+    .hand(1, ['Rot', 'Blau', 'Gelb', 'Grün'])
+    .hand(2, handVonKi2)
+    .schlange(2, ['Gelb', 'Gelb'])
+    .schwebend(1, 'Schlangenblockade', (karteId, spielerId) => ({ typ: 'BlockadeLegen', spielerId, karteId, schlangenId: 'schlange-1', position: 1 }), [2])
+    .amZug(1)
+    .zustand()
+}
 
 export const SPIEL_SZENARIEN: readonly Szenario[] = [
   {
@@ -59,6 +75,48 @@ export const SPIEL_SZENARIEN: readonly Szenario[] = [
           zustand.zug.abschnitt = 'Abwerfen'
         })
         .zustand(),
+  },
+  {
+    name: 'angriff-ohne-schutz',
+    beschreibung:
+      'O6 K2, D33: Zwei Spieler. KI-Gegner 1 hat Schlangenfrass c) auf das Violett vorn in deiner Schlange angesagt; du hältst keinen Farbenschutz.',
+    erwartet:
+      'Unter /spiel fragt die Zugleiste „KI-Gegner 1 sagt an: Schlangenfrass frisst Violett aus deiner Schlange 1.“ und bietet nur „Durchlassen“ an, mit dem Satz „Du hast keinen Farbenschutz auf der Hand und kannst nur durchlassen.“ Danach liegt dein Violett auf dem Ablagestapel von KI-Gegner 1.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(94) })
+        .hand(0, ['Rot', 'Blau', 'Gelb', 'Grün', 'Braun'])
+        .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün'])
+        .schlange(0, [{ id: 'violett-01' }, 'Braun'])
+        .schwebend(1, 'Schlangenfrass', (karteId, spielerId) => ({ typ: 'SchlangenfrassSpielen', spielerId, karteId, option: 'gegnerischeKarten', ziele: [{ schlangenId: 'schlange-1', karteId: 'violett-01' }] }), [0])
+        .amZug(1)
+        .zustand(),
+  },
+  {
+    name: 'grube-vor-dir',
+    beschreibung:
+      'O6 K4, A7.6: Zwei Spieler. Vor dir liegt eine Schlangengrube von KI-Gegner 1; er ist am Zug und hält nur Farbkarten.',
+    erwartet:
+      'KI-Gegner 1 spielt seinen Zug; danach setzt du aus, und er ist gleich wieder dran. Das Protokoll sagt „Du setzt diesen Zug aus (Schlangengrube).“, die Zugleiste „Du hast wegen der Schlangengrube einen Zug ausgesetzt.“, bis du wieder eine Karte spielst.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 2, erweiterung: false, zufall: erzeugeZufall(95) })
+        .hand(0, ['Rot', 'Blau', 'Gelb', 'Grün', 'Braun'])
+        .hand(1, ['Rot', 'Blau', 'Gelb', 'Grün', 'Violett'])
+        .grube(1, 0)
+        .amZug(1)
+        .zustand(),
+  },
+  {
+    name: 'ki-angriff-mit-schutz',
+    beschreibung: 'O6 K5: Drei Spieler. KI-Gegner 1 hat eine Schlangenblockade in die Schlange Gelb, Gelb von KI-Gegner 2 angesagt; KI-Gegner 2 hält einen Farbenschutz.',
+    erwartet:
+      'Die Statuszeile sagt „KI-Gegner 2 entscheidet, ob abgewehrt wird.“, nach der Pause entscheidet er. Gleiche Pause und gleiches Bild wie in ki-angriff-ohne-schutz; nur wenn er tatsächlich abwehrt, steht „KI-Gegner 2 wehrt Schlangenblockade mit Farbenschutz ab.“ im Protokoll.',
+    erzeuge: () => blockadeGegenKi(['Farbenschutz', 'Blau', 'Rot', 'Braun', 'Violett']),
+  },
+  {
+    name: 'ki-angriff-ohne-schutz',
+    beschreibung: 'O6 K5: wie ki-angriff-mit-schutz, aber KI-Gegner 2 hält keinen Farbenschutz.',
+    erwartet: 'Die Statuszeile sagt „KI-Gegner 2 entscheidet, ob abgewehrt wird.“, nach derselben Pause steht „KI-Gegner 2 lässt Schlangenblockade durch.“ und „Schlangenblockade wirkt.“ im Protokoll.',
+    erzeuge: () => blockadeGegenKi(['Grün', 'Blau', 'Rot', 'Braun', 'Violett']),
   },
   {
     name: 'haeutung-punkte',

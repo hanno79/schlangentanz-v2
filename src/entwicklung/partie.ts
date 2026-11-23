@@ -23,3 +23,14 @@ export function kiSaatAmTisch(schritt: number, partiesaat: number | null): numbe
   const saat = (gemischt | EIGENER_BEREICH) >>> 0
   return saat === partiesaat ? (saat ^ 1) >>> 0 : saat
 }
+
+/**
+ * Die Saaten der KI-Gegner unter `/spiel?seed=` (O6): eine je Gegner, in der
+ * Reihenfolge der Sitze, aus `kiSaatAmTisch` und deshalb nie die Partiesaat (U5).
+ * Gleiche Partiesaat, gleiche Gegner; so lässt sich eine Partie nachspielen (Z1, K5).
+ * Die Werte liegen in [0, 1), wie `erstelleGegner` sie von `Math.random` kennt.
+ */
+export function kiSaatquelle(partiesaat: number): () => number {
+  let sitz = 0
+  return () => kiSaatAmTisch(sitz++, partiesaat) / 2 ** 32
+}

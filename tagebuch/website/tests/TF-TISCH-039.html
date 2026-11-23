@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-TISCH-039 Wird eine KI angegriffen, vergeht bis zu ihrer Entscheidung gleich viel Zeit und der Tisch zeigt dasselbe, ob sie einen Farbenschutz hält oder nicht. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-TISCH-039 Wird eine KI angegriffen, vergeht bis zu ihrer Entscheidung gleich viel Zeit und der Tisch zeigt dasselbe, ob sie einen Farbenschutz hält oder nicht.</h1><p class="etiketten"><span class="etikett">Bereich Spieltisch</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Würde eine KI mit Farbenschutz länger überlegen oder anders angezeigt, verriete der Tisch eine verdeckte Handkarte (B2, D33). Die Pause muss deshalb in beiden Fällen gleich sein, und nur eine echte Abwehr darf als Abwehr erscheinen.</p><h2>Bestanden, wenn</h2><p>In je mindestens 8 Läufen liegt die Zeit vom Speichern der Ansage bis zum Speichern der Entscheidung in beiden Fällen im selben Bereich (Abweichung der Mittelwerte unter 5 ms, normale Pause etwa 700 ms). Während der Pause sind Statuszeile, Zugleiste, Protokoll und Gegnerbereich Zeichen für Zeichen gleich. Im Protokoll steht danach „… lässt … durch.“ oder „… wehrt … mit Farbenschutz ab.“, je nachdem, was die KI tatsächlich getan hat.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Zeiten der beiden Fälle unterscheiden sich sichtbar, der Tisch zeigt während der Pause einen Unterschied, oder eine Abwehr erscheint, obwohl die KI durchgelassen hat.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>22.11.2026</dd><dt>Änderung</dt><dd>task/O6-gegnerzuege (PR #79)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Stand ab Commit fde8e51, Desktop 1280 × 900</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Szenarien <code>ki-angriff-mit-schutz</code> und <code>ki-angriff-ohne-schutz</code> (KI-Gegner 1 legt eine Blockade in die Schlange von KI-Gegner 2), dazu <code>blockade-abwehr</code>: du legst die Blockade bei KI-Gegner 1; für den Fall ohne Schutz wird dessen Farbenschutz vor dem Zug gegen eine Farbkarte des Stapels getauscht.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Browser</td><td>Adresse öffnen</td><td>`/spiel?szenario=ki-angriff-mit-schutz`</td><td>„KI-Gegner 2 entscheidet, ob abgewehrt wird.“</td></tr><tr><td>2</td><td>Tisch</td><td>Zeit bis zum ersten Protokolleintrag stoppen</td><td></td><td>etwa 0,7 s nach dem Aufbau des Tischs</td></tr><tr><td>3</td><td>Browser</td><td>dasselbe mit `ki-angriff-ohne-schutz`</td><td></td><td>gleiche Zeit, gleiches Bild während der Pause</td></tr><tr><td>4</td><td>Deine Hand</td><td>in `blockade-abwehr` Schlangenblockade, „KI-Gegner 1, Schlange 1 wählen“, „zwischen Karte 1 und 2“, „Ausführen“</td><td></td><td>gleiche Zeit mit und ohne Farbenschutz bei KI-Gegner 1</td></tr></tbody></table></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Das Prüferskript zeichnet jedes <code>localStorage.setItem</code> auf den Spielstand mit <code>performance.now()</code> auf und nimmt den Abstand der beiden Speicherungen, 8 Läufe je Fall, mit und ohne „weniger Bewegung“.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Mit „weniger Bewegung“ ist die Pause 0; dann bleibt die Rechenzeit der KI als Unterschied von gut 1 ms, die man nicht sehen kann. „Schneller“ (250 ms) ist in ganzen Partien gemessen, nicht in diesen Szenarien, weil der Knopf erst während der Pause erscheint.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-22">22.11.2026 23:21</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer O6) &middot; agent &middot; pruef-O6 @ <span class="commit" title="fde8e5189f192474effd2849c12ba06164a01d27">fde8e51</span> / Playwright Chromium 1.60.0, Desktop 1280x900</p><p>je 8 Läufe: KI greift KI an mit Schutz 1008.4-1024.9 ms (Mittel 1014.9), ohne 1010.6-1025.9 (1015.6), inkl. Laden; du greifst KI an mit Schutz 706.8-710.1 (709.0), ohne 707.0-712.4 (709.8). Bild während der Pause in allen Läufen gleich. Weniger Bewegung: 15.8 gegen 14.5 ms Mittel. Ganze Partien: Schneller mit Schutz 255-263 ms, ohne 259.8-265.8 ms.</p><ul class="belege"><li><a href="belege/2026-11-22-2321-TF-TISCH-039-1.txt">2026-11-22-2321-TF-TISCH-039-1.txt</a></li><li><a href="belege/2026-11-22-2321-TF-TISCH-039-2.txt">2026-11-22-2321-TF-TISCH-039-2.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
