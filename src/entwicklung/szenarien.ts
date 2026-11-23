@@ -13,6 +13,7 @@ import { SPIEL_SZENARIEN } from './szenarienSpiel'
 import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
 import { KI_SZENARIEN } from './szenarienKi'
 import { AUFGABEN_SZENARIEN } from './szenarienAufgaben'
+import { AUFGABEN_SZENARIEN_A } from './szenarienAufgabenA'
 
 export interface Szenario {
   /** Steht in der Adresse: `/dev?szenario=<name>`. */
@@ -249,6 +250,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...HAEUTUNG_SZENARIEN,
   ...KI_SZENARIEN,
   ...AUFGABEN_SZENARIEN,
+  ...AUFGABEN_SZENARIEN_A,
 ]
 
 export function findeSzenario(name: string): Szenario | undefined {

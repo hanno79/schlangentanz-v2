@@ -4,6 +4,7 @@ import { farbharmonie } from '../../aufgaben/farbharmonie'
 import { farbkombination } from '../../aufgaben/farbkombination'
 import { mal, pruefeTabelle, RS, SPERRE, stellung } from '../farbmengen_hilfen'
 import type { Stellung } from '../farbmengen_hilfen'
+import type { Schlangenglied } from '../../testing/szenario'
 
 /*
 X2 Paket A, Entscheidungstabellen: „Farbenpracht“ (A9 Nr. 1, D38),
@@ -15,7 +16,7 @@ unter einer Farbenfusion zählen nicht einzeln (A7.7); andere Sonderkarten wie d
 Schlangenblockade unterbrechen Farbreihen und zählen nicht.
 */
 
-const FUSION_GELB = { fusion: ['Gelb', 'Gelb'] } as const
+const FUSION_GELB: Schlangenglied = { fusion: ['Gelb', 'Gelb'] }
 const PAARE = [...mal(2, 'Blau'), ...mal(2, 'Rot'), ...mal(2, 'Gelb'), ...mal(2, 'Violett'), ...mal(2, 'Braun'), ...mal(2, 'Grün')]
 const OHNE_GELB = [...mal(2, 'Blau'), ...mal(2, 'Rot'), ...mal(2, 'Violett'), ...mal(2, 'Braun'), ...mal(2, 'Grün')]
 

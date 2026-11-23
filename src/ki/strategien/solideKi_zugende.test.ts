@@ -132,7 +132,12 @@ describe('K2, Kriterien 1 und 2: am Zugende liegt keine Karte mehr, die ihr nüt
     if (frass === undefined) throw new Error('Testaufbau: kein Schlangenfrass auf die zweite Blockade')
     const danach = nachDurchlassen(start, frass, 0)
     expect(bewerte(sichtFuer(danach, 0)) - bewerte(sichtFuer(start, 0)), 'K2: Testaufbau, Halten und Spielen sind gleich bewertet').toBeCloseTo(0, 9)
-    expect(endpunkte(danach)[0] - endpunkte(start)[0], 'A11: Gelb×4 statt Gelb×3, ein Punkt').toBe(1)
+    // Seit X2 löst der Schlangenfrass hier auch die offene Aufgabe Farbenpracht ein (A9); gemessen wird nur der Punkt aus der Gruppe.
+    const ohneAufgaben = (zustand: Spielzustand) => {
+      const { summe, aufgabenPunkte } = berechneEndwertung(zustand).spieler[0]
+      return summe - aufgabenPunkte
+    }
+    expect(ohneAufgaben(danach) - ohneAufgaben(start), 'A11: Gelb×4 statt Gelb×3, ein Punkt').toBe(1)
 
     const aktion = kiWahl(start, erstelleSolideKi(erzeugeZufall(1)))
     expect(aktion, 'K2: bei Gleichstand gewinnt der sichere Punkt').toMatchObject({ typ: 'SchlangenfrassSpielen', ziele: [{ karteId: blockade.id }] })

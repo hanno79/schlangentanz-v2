@@ -1,4 +1,19 @@
-import { platzhalterAufgabe } from './definition';
+import { farbbestand } from '../jokerGruppen';
+import type { AufgabenDefinition } from './definition';
 
-/** A9 Nr. 1 „Farbenpracht“. Die Bedingung kommt mit X2. */
-export const farbenpracht = platzhalterAufgabe('Farbenpracht');
+const JE_FARBE = 2;
+
+/**
+ * A9 Nr. 1 „Farbenpracht“: von jeder Farbe mindestens zwei Karten in den
+ * eigenen Schlangen. D38: gezählt wird über alle vorhandenen Schlangen, eine
+ * genügt. Jeder Joker ersetzt eine fehlende Karte einer beliebigen Farbe (A9).
+ * Wann geprüft wird, regelt der Rahmen (X1).
+ */
+export const farbenpracht: AufgabenDefinition = {
+  name: 'Farbenpracht',
+  istErfuellt(zustand, spielerIndex) {
+    const { jeFarbe, joker } = farbbestand(zustand.spieler[spielerIndex].schlangen);
+    const fehlend = jeFarbe.reduce((summe, anzahl) => summe + Math.max(0, JE_FARBE - anzahl), 0);
+    return fehlend <= joker;
+  },
+};

@@ -9,7 +9,7 @@ import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
 import { aufgabeId, aufgabenEreignisse, erste, legeAn, namen } from '../aufgaben_hilfen'
 import { mal } from '../farbmengen_hilfen'
 import { einfuegen, handkarte, lege } from '../legen_hilfen'
-import { durchlassen, fuehreAus, FUENF, tischMitHaenden, zugBeenden } from '../zugablauf_hilfen'
+import { durchlassen, ereignisseVom, fuehreAus, FUENF, tischMitHaenden, zugBeenden } from '../zugablauf_hilfen'
 
 /*
 X2 Paket A im Zugablauf: Die Aufgaben Farbkombination, Gelber Schatz und Lila
@@ -40,6 +40,13 @@ function tisch(schlange: Schlangenglied[], hand0: Kartenwahl[], hand1: Kartenwah
     .zustand()
 }
 
+/** Spieler 1 beendet den Zug; KI-Gegner 1 legt seine Schlangenblockade an diese Stelle von `schlange-1`, Spieler 1 lässt sie durch. */
+function gegnerBlockiert(zustand: Spielzustand, position: number): Spielzustand {
+  const amZug = fuehreAus(zustand, zugBeenden(zustand)).zustand
+  const angesagt = fuehreAus(amZug, einfuegen(amZug, 'BlockadeLegen', handkarte(amZug, 1, 'Schlangenblockade'), 'schlange-1', position)).zustand
+  return fuehreAus(angesagt, durchlassen(angesagt)).zustand
+}
+
 const MIT_RS: Kartenwahl[] = ['Regenbogenschlange', 'Blau', 'Rot', 'Grün', 'Braun']
 
 describe('A9 Beispiel: wer am Zug ist und die Bedingung zuerst erfüllt, bekommt die Aufgabe', () => {
@@ -61,7 +68,7 @@ describe('A9 Kriterium 1: derselbe Joker hat bei zwei Aufgaben verschiedene Farb
     const start = tisch([...mal(5, 'Gelb'), ...mal(4, 'Violett')], MIT_RS)
     expect(aufgabenEreignisse(legeAn(start, 'Blau').ereignisse), 'vorher: fünf gelbe und vier violette Karten erfüllen keine der beiden').toEqual([])
     const { zustand, ereignisse } = lege(start, 'RegenbogenschlangeLegen', 'Regenbogenschlange', 'schlange-1', 5)
-    expect(aufgabenEreignisse(ereignisse).filter((ereignis) => ereignis.typ === 'AufgabeErfuellt')).toEqual(
+    expect(ereignisseVom(ereignisse, 'AufgabeErfuellt')).toEqual(
       ['Gelber Schatz', 'Lila Riese'].map((name) => ({ typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId(name) })),
     )
     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Gelber Schatz', 'Lila Riese'])
@@ -70,7 +77,7 @@ describe('A9 Kriterium 1: derselbe Joker hat bei zwei Aufgaben verschiedene Farb
 
   it('A9/A7.7: eine Farbenfusion, im Zug auf zwei rote Karten gelegt, zählt für Farbkombination als fünfte blaue Karte; die roten Karten darunter zählen nicht', () => {
     const start = tisch([...mal(4, 'Blau'), 'Rot', 'Rot'], ['Farbenfusion', 'Gelb', 'Rot', 'Grün', 'Braun'], FUENF, MIT_FARBKOMBINATION)
-    const rote = start.spieler[0].schlangen[0].karten.slice(4).map((karte) => karte.id) as [string, string]
+    const rote = start.spieler[0].schlangen[0].karten.slice(4).map((karte) => karte.id)
     const fusion = erste(start, (aktion) => aktion.typ === 'FusionLegen' && aktion.kartenIds.join() === rote.join())
     const { zustand, ereignisse } = fuehreAus(start, fusion)
     expect(aufgabenEreignisse(ereignisse)[0]).toEqual({ typ: 'AufgabeErfuellt', spielerIndex: 0, aufgabeId: aufgabeId('Farbkombination') })
@@ -94,10 +101,7 @@ describe('A9 Kriterium 4: eine erfüllte Aufgabe bleibt erfüllt, auch wenn der 
     const start = tisch(mal(5, 'Gelb'), MIT_RS, ['Schlangenblockade', 'Rot', 'Gelb', 'Grün', 'Braun'])
     const gelegt = lege(start, 'RegenbogenschlangeLegen', 'Regenbogenschlange', 'schlange-1', 5)
     expect(namen(gelegt.zustand.spieler[0].erfuellteAufgaben)).toEqual(['Gelber Schatz'])
-    const amZug = fuehreAus(gelegt.zustand, zugBeenden(gelegt.zustand)).zustand
-    const blockade = einfuegen(amZug, 'BlockadeLegen', handkarte(amZug, 1, 'Schlangenblockade'), 'schlange-1', 3)
-    const angesagt = fuehreAus(amZug, blockade).zustand
-    const { zustand } = fuehreAus(angesagt, durchlassen(angesagt))
+    const zustand = gegnerBlockiert(gelegt.zustand, 3)
     expect(gelberSchatz.istErfuellt(zustand, 0), 'gelberSchatz.istErfuellt nach der Blockade').toBe(false)
     expect(namen(zustand.spieler[0].erfuellteAufgaben), 'A9: die Aufgabe bleibt bei Spieler 1').toEqual(['Gelber Schatz'])
     expect(namen(zustand.offeneAufgaben)).not.toContain('Gelber Schatz')
@@ -109,9 +113,7 @@ describe('A9 Kriterium 4: eine erfüllte Aufgabe bleibt erfüllt, auch wenn der 
     const gelegt = lege(start, 'RegenbogenschlangeLegen', 'Regenbogenschlange', 'schlange-1', 4)
     expect(aufgabenEreignisse(gelegt.ereignisse), 'D35: die geheime Aufgabe zählt still, ohne Ereignis').toEqual([])
     expect(gelegt.zustand.spieler[0].geheimeAufgabeErfuellt).toBe(true)
-    const amZug = fuehreAus(gelegt.zustand, zugBeenden(gelegt.zustand)).zustand
-    const angesagt = fuehreAus(amZug, einfuegen(amZug, 'BlockadeLegen', handkarte(amZug, 1, 'Schlangenblockade'), 'schlange-1', 2)).zustand
-    const { zustand } = fuehreAus(angesagt, durchlassen(angesagt))
+    const zustand = gegnerBlockiert(gelegt.zustand, 2)
     expect(lilaRiese.istErfuellt(zustand, 0), 'lilaRiese.istErfuellt nach der Blockade').toBe(false)
     expect(zustand.spieler[0].geheimeAufgabeErfuellt, 'D35: einmal erfüllt, bleibt sie erfüllt').toBe(true)
   })

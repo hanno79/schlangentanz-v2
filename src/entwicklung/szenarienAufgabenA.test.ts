@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { berechneEndwertung } from '../engine'
 import type { Ereignis, SpielAktion, Spielzustand } from '../engine'
 import { findeSzenario, SZENARIEN } from './szenarien'
-import { klicke } from './szenarienTesthilfe'
+import { erzeuge as lade, klicke } from './szenarienTesthilfe'
 
 /*
 X2 Paket A: Je Aufgabe ein Szenario am Entwicklertisch, in dem sie mit echten
@@ -11,12 +11,6 @@ des Szenarios beschreibt.
 */
 
 const NAMEN = ['aufgabe-farbenpracht', 'aufgabe-farbharmonie', 'aufgabe-farbkombination', 'aufgabe-gelber-schatz', 'aufgabe-lila-riese', 'aufgabe-joker-zwei-farben']
-
-function lade(name: string): Spielzustand {
-  const szenario = findeSzenario(name)
-  if (szenario === undefined) throw new Error(`Testaufbau: Szenario ${name} fehlt`)
-  return szenario.erzeuge()
-}
 
 const namen = (aufgaben: { name: string }[]) => aufgaben.map((aufgabe) => aufgabe.name)
 const aufgabenTypen = (ereignisse: Ereignis[]) => ereignisse.filter((ereignis) => ereignis.typ.startsWith('Aufgabe')).map((ereignis) => ereignis.typ)

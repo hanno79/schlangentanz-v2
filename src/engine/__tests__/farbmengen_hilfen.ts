@@ -1,8 +1,8 @@
 import { expect, it } from 'vitest'
 import type { Spielzustand } from '../index'
 import type { AufgabenDefinition } from '../aufgaben/definition'
-import { baukasten } from '../testing/szenario'
 import type { Schlangenglied } from '../testing/szenario'
+import { tisch } from './wertung_hilfe'
 
 /*
 Hilfen für die Entscheidungstabellen der Aufgaben aus Paket A von X2
@@ -32,10 +32,7 @@ export interface Stellung {
 
 /** Zwei Spieler mit Erweiterung; Spieler 1 hat diese Schlangen, KI-Gegner 1 die aus `gegner`. */
 export function stellung(schlangen: Schlangenglied[][], gegner: Schlangenglied[][] = []): Spielzustand {
-  const bau = baukasten({ spielerzahl: 2, erweiterung: true })
-  for (const glieder of schlangen) bau.schlange(0, glieder)
-  for (const glieder of gegner) bau.schlange(1, glieder)
-  return bau.zustand()
+  return tisch(true, [schlangen, gegner])
 }
 
 /** Prüft jede Zeile der Tabelle mit `istErfuellt` der Aufgabe für Spieler 1. */
