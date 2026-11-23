@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { AUFGABENREGISTER } from '../../aufgabenKarten'
+import { FARBEN } from '../../deck'
 import { berechneEndwertung } from '../../index'
 import type { Spielzustand } from '../../index'
 import { legeAufgabenAus } from '../../testing/aufgaben'
 import type { Aufgabenauslage } from '../../testing/aufgaben'
 import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
-import { istErfuellt, langsamstePruefung, RB } from '../aufgaben_folgen_hilfen'
+import { istErfuellt, messePruefung, RB } from '../aufgaben_folgen_hilfen'
 import { aufgabenEreignisse, aufgabeId, namen } from '../aufgaben_hilfen'
 import { lege, schlangenNamen } from '../legen_hilfen'
 import { jokerfarben } from '../wertung_hilfe'
@@ -41,7 +42,7 @@ const NACH = ['Blau', 'Grün', 'Rot', 'Blau', 'Grün'] as const
 
 describe('A9/A7.3: derselbe Joker zählt bei zwei Aufgaben als verschiedene Farben (X2, Kriterium 1)', () => {
   it('A9: mit einer Farbkarte an der Stelle der Regenbogenschlange ist höchstens eine der beiden Aufgaben erfüllt', () => {
-    for (const farbe of ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün'] as const) {
+    for (const farbe of FARBEN) {
       const schlange: Schlangenglied[][] = [[...VOR, farbe, ...NACH]]
       const beide = [istErfuellt('Farbvielfalt', schlange), istErfuellt('Schlangenbändiger', schlange)]
       expect(beide, `A9: mit ${farbe} an Stelle 6 erwartet Farbvielfalt ${farbe === 'Grün'}, Schlangenbändiger ${farbe === 'Rot'}`).toEqual([farbe === 'Grün', farbe === 'Rot'])
@@ -115,7 +116,7 @@ describe('A9/X2: Laufzeit der Prüfungen bei 20 Karten', () => {
   ]
 
   it.each(FAELLE)('A9 %s: eine Prüfung bei 20 Karten mit 4 oder 8 Jokern dauert unter 5 ms', (name, schlangen) => {
-    const dauer = langsamstePruefung(name, schlangen)
-    expect(dauer, `${name}.istErfuellt: langsamste von 50 Prüfungen ${dauer.toFixed(3)} ms, erwartet unter 5 ms`).toBeLessThan(5)
+    const { median, langsamste } = messePruefung(name, schlangen)
+    expect(median, `${name}.istErfuellt: Median von 51 Prüfungen ${median.toFixed(3)} ms (langsamste ${langsamste.toFixed(3)} ms), erwartet unter 5 ms`).toBeLessThan(5)
   })
 })

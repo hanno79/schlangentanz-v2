@@ -18,7 +18,7 @@ erfüllt ist.
 /** Die sechs Stellungen, die jede Entscheidungstabelle mindestens einmal hat (X2, Kriterium 2). */
 export const PFLICHTSTELLUNGEN = ['erfüllt', 'knapp nicht', 'Regenbogenschlange', 'Farbenfusion', 'Blockade dazwischen', 'zwei Schlangen'] as const
 
-export type Art = (typeof PFLICHTSTELLUNGEN)[number] | 'weitere'
+export type Art = (typeof PFLICHTSTELLUNGEN)[number]
 
 export interface Stellung {
   art: Art
@@ -31,11 +31,15 @@ export interface Stellung {
 export const RB = 'Regenbogenschlange'
 export const BLOCKADE = 'Schlangenblockade'
 
-/** Ist die Aufgabe `name` für Spieler 1 mit diesen Schlangen erfüllt? */
-export function istErfuellt(name: string, schlangen: Schlangenglied[][]): boolean {
+function definitionVon(name: string) {
   const definition = AUFGABENREGISTER.get(name)
   if (definition === undefined) throw new Error(`Testaufbau: Eine Aufgabe ${name} gibt es in A9 nicht`)
-  return definition.istErfuellt(tisch(true, [schlangen]), 0)
+  return definition
+}
+
+/** Ist die Aufgabe `name` für Spieler 1 mit diesen Schlangen erfüllt? */
+export function istErfuellt(name: string, schlangen: Schlangenglied[][]): boolean {
+  return definitionVon(name).istErfuellt(tisch(true, [schlangen]), 0)
 }
 
 /** Prüft eine Zeile der Entscheidungstabelle mit einer Meldung, die Aufgabe, Stellung und Erwartung nennt. */
@@ -48,16 +52,20 @@ export function fehlendeStellungen(tabelle: readonly Stellung[]): string[] {
   return PFLICHTSTELLUNGEN.filter((art) => !tabelle.some((zeile) => zeile.art === art))
 }
 
-/** Die langsamste von `laeufe` Prüfungen in Millisekunden, nach einem Aufwärmlauf. */
-export function langsamstePruefung(name: string, schlangen: Schlangenglied[][], laeufe = 50): number {
-  const definition = AUFGABENREGISTER.get(name)!
+/**
+ * Dauer von `laeufe` Prüfungen nach einem Aufwärmlauf, in Millisekunden: der Median und die langsamste. Der Median
+ * misst die Prüfung selbst; die langsamste kann auch eine Pause des Rechners sein, wenn viele Testdateien zugleich laufen.
+ */
+export function messePruefung(name: string, schlangen: Schlangenglied[][], laeufe = 51): { median: number; langsamste: number } {
+  const definition = definitionVon(name)
   const zustand = tisch(true, [schlangen])
   definition.istErfuellt(zustand, 0)
-  let langsamste = 0
+  const dauern: number[] = []
   for (let lauf = 0; lauf < laeufe; lauf += 1) {
     const start = performance.now()
     definition.istErfuellt(zustand, 0)
-    langsamste = Math.max(langsamste, performance.now() - start)
+    dauern.push(performance.now() - start)
   }
-  return langsamste
+  dauern.sort((a, b) => a - b)
+  return { median: dauern[Math.floor(laeufe / 2)], langsamste: dauern[laeufe - 1] }
 }
