@@ -165,7 +165,12 @@ function gemischtesMaterial(spielerzahl: number, erweiterung: boolean, zufall: (
   const partie = erstellePartie({ spielerzahl, erweiterung, zufall });
   return {
     karten: [...partie.spieler.flatMap((spieler) => spieler.hand), ...partie.nachziehstapel],
-    aufgaben: [...partie.offeneAufgaben, ...partie.spieler.flatMap((spieler) => (spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe])), ...partie.aufgabenStapel],
+    // Auch Aufgaben, die schon zu Beginn des ersten Zuges eingelöst sind (A9), gehören zum Material.
+    aufgaben: [
+      ...partie.offeneAufgaben,
+      ...partie.spieler.flatMap((spieler) => [...spieler.erfuellteAufgaben, ...(spieler.geheimeAufgabe === null ? [] : [spieler.geheimeAufgabe])]),
+      ...partie.aufgabenStapel,
+    ],
   };
 }
 

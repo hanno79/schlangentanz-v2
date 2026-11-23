@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, ermittleEntscheider, zugBeendenGesperrt } from '../../engine'
+import { grundFuerDich } from '../tisch/gruende'
 import type { Spielzustand } from '../../engine'
 import { erzeugeZufall } from '../../engine/testing/zufall'
 import { starteEntwicklerPartie } from '../../entwicklung/partie'
@@ -59,7 +60,10 @@ describe('O3: Die Aktionen des Menschen in der Sicht', () => {
     let gesperrt = 0
     for (const zustand of zustaende) {
       const ansicht = tischAnsicht(zustand)
-      const erwartet = ermittleEntscheider(zustand) === 0 ? zugBeendenGesperrt(zustand) : null
+      const ablehnung = zugBeendenGesperrt(zustand)
+      const person = (index: number) => ({ name: zustand.spieler[index].name, ich: index === 0 })
+      // O6: Der Grund der Engine in Du-Form, sonst wörtlich.
+      const erwartet = ermittleEntscheider(zustand) === 0 && ablehnung !== null ? grundFuerDich(ablehnung, person) : null
       expect(ansicht.zugBeendenGesperrt).toBe(erwartet)
       expect(ansicht.zugBeendenGesperrt === null, 'gesperrt genau dann, wenn die Engine kein ZugBeenden aufzählt').toBe(
         ansicht.aktionen.length === 0 || ansicht.aktionen.some((aktion) => aktion.typ === 'ZugBeenden'),

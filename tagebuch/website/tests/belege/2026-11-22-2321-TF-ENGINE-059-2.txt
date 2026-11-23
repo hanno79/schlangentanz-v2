@@ -1,0 +1,64 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a3fd4b0be09f48a2f
+
+stdout | src/pruefer_o6/wegA.test.ts > Prüferprobe O6: Weg A > Text, Erlaubnis, Aufzählung und Wirkung gleich wie vor O6; nennt passt zum Text; Du-Form ohne „Spieler 1“
+{
+ "zustaende": 1785,
+ "pruefungen": 716363,
+ "ablehnungen": 553671,
+ "gleich": 548235,
+ "nurArtikel": 5436,
+ "mitNennt": 401309,
+ "angewendet": 4000,
+ "duGeformt": 190064,
+ "arten": {
+  "entscheidetNicht": 8554,
+  "nichtAufHand": 253503,
+  "nichtAmZug": 138205,
+  "abwerfenAnzahl": 421,
+  "kartenpflicht": 626
+ }
+}
+Artikel-Abweichungen (Beispiele):
+Die Verdoppler schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).  =>  Der Verdoppler schwebt noch: Erst entscheiden die Betroffenen, ob sie abwehren (A6).
+Die Karte farbendieb-02 ist einen Farbendieb; FusionLegen braucht eine Farbenfusion.  =>  Die Karte farbendieb-02 ist ein Farbendieb; FusionLegen braucht eine Farbenfusion.
+Die Karte verdoppler-01 ist einen Verdoppler; SchlangenfrassSpielen braucht einen Schlangenfrass.  =>  Die Karte verdoppler-01 ist ein Verdoppler; SchlangenfrassSpielen braucht einen Schlangenfrass.
+Die Karte farbenschutz-02 ist einen Farbenschutz; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte farbenschutz-02 ist ein Farbenschutz; FarbkarteLegen braucht eine Farbkarte.
+Die Karte farbenschutz-02 ist einen Farbenschutz; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte farbenschutz-02 ist ein Farbenschutz; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte schlangenfrass-04 ist einen Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte schlangenfrass-04 ist ein Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.
+Die Karte schlangenfrass-02 ist einen Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte schlangenfrass-02 ist ein Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.
+Die Karte schlangenfrass-04 ist einen Schlangenfrass; SchlangengrubeSpielen braucht eine Schlangengrube.  =>  Die Karte schlangenfrass-04 ist ein Schlangenfrass; SchlangengrubeSpielen braucht eine Schlangengrube.
+Die Karte verdoppler-01 ist einen Verdoppler; FarbendiebSpielen braucht einen Farbendieb.  =>  Die Karte verdoppler-01 ist ein Verdoppler; FarbendiebSpielen braucht einen Farbendieb.
+Die Karte verdoppler-02 ist einen Verdoppler; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte verdoppler-02 ist ein Verdoppler; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte farbenschutz-04 ist einen Farbenschutz; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte farbenschutz-04 ist ein Farbenschutz; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte farbendieb-03 ist einen Farbendieb; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte farbendieb-03 ist ein Farbendieb; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte schlangenfrass-01 ist einen Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte schlangenfrass-01 ist ein Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.
+Die Karte farbendieb-03 ist einen Farbendieb; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte farbendieb-03 ist ein Farbendieb; FarbkarteLegen braucht eine Farbkarte.
+Die Karte farbendieb-03 ist einen Farbendieb; RegenbogenschlangeLegen braucht eine Regenbogenschlange.  =>  Die Karte farbendieb-03 ist ein Farbendieb; RegenbogenschlangeLegen braucht eine Regenbogenschlange.
+Die Karte farbenschutz-02 ist einen Farbenschutz; RegenbogenschlangeLegen braucht eine Regenbogenschlange.  =>  Die Karte farbenschutz-02 ist ein Farbenschutz; RegenbogenschlangeLegen braucht eine Regenbogenschlange.
+Die Karte farbenschutz-03 ist einen Farbenschutz; RegenbogenschlangeLegen braucht eine Regenbogenschlange.  =>  Die Karte farbenschutz-03 ist ein Farbenschutz; RegenbogenschlangeLegen braucht eine Regenbogenschlange.
+Die Karte farbendieb-01 ist einen Farbendieb; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte farbendieb-01 ist ein Farbendieb; FarbkarteLegen braucht eine Farbkarte.
+Die Karte verdoppler-03 ist einen Verdoppler; RegenbogenschlangeLegen braucht eine Regenbogenschlange.  =>  Die Karte verdoppler-03 ist ein Verdoppler; RegenbogenschlangeLegen braucht eine Regenbogenschlange.
+Die Karte verdoppler-04 ist einen Verdoppler; RegenbogenschlangeLegen braucht eine Regenbogenschlange.  =>  Die Karte verdoppler-04 ist ein Verdoppler; RegenbogenschlangeLegen braucht eine Regenbogenschlange.
+Die Karte verdoppler-04 ist einen Verdoppler; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte verdoppler-04 ist ein Verdoppler; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte verdoppler-03 ist einen Verdoppler; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte verdoppler-03 ist ein Verdoppler; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte farbendieb-02 ist einen Farbendieb; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte farbendieb-02 ist ein Farbendieb; FarbkarteLegen braucht eine Farbkarte.
+Die Karte farbendieb-02 ist einen Farbendieb; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte farbendieb-02 ist ein Farbendieb; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte verdoppler-03 ist einen Verdoppler; SchlangenfrassSpielen braucht einen Schlangenfrass.  =>  Die Karte verdoppler-03 ist ein Verdoppler; SchlangenfrassSpielen braucht einen Schlangenfrass.
+Die Karte schlangenfrass-03 ist einen Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte schlangenfrass-03 ist ein Schlangenfrass; FarbkarteLegen braucht eine Farbkarte.
+Die Karte verdoppler-03 ist einen Verdoppler; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte verdoppler-03 ist ein Verdoppler; FarbkarteLegen braucht eine Farbkarte.
+Die Karte verdoppler-03 ist einen Verdoppler; FarbendiebSpielen braucht einen Farbendieb.  =>  Die Karte verdoppler-03 ist ein Verdoppler; FarbendiebSpielen braucht einen Farbendieb.
+Die Karte farbenschutz-03 ist einen Farbenschutz; BlockadeLegen braucht eine Schlangenblockade.  =>  Die Karte farbenschutz-03 ist ein Farbenschutz; BlockadeLegen braucht eine Schlangenblockade.
+Die Karte farbenschutz-03 ist einen Farbenschutz; FarbkarteLegen braucht eine Farbkarte.  =>  Die Karte farbenschutz-03 ist ein Farbenschutz; FarbkarteLegen braucht eine Farbkarte.
+Andere Abweichungen: 0
+
+Erlaubt, aber anwendeAktion wirft (alt wie neu): 2 | FarbkarteLegen: WURF: Error: Die gespielte Karte blau-12 liegt an keinem Ort, den ein Ereignis nennen kann.
+
+ ✓ src/pruefer_o6/wegA.test.ts > Prüferprobe O6: Weg A > Text, Erlaubnis, Aufzählung und Wirkung gleich wie vor O6; nennt passt zum Text; Du-Form ohne „Spieler 1“ 39581ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  22:23:08
+   Duration  43.49s (transform 969ms, setup 284ms, import 1.03s, tests 39.58s, environment 2.31s)
+
+exit 0

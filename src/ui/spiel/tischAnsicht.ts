@@ -1,11 +1,13 @@
 import { berechneZwischenstand, ermittleAktionen, ermittleEntscheider, zugBeendenGesperrt } from '../../engine'
 import type {
+  Ablehnung,
   AufgabenkarteInfo,
   Auslagekarte,
   Farbe,
   FarbkarteInfo,
   Partiephase,
   GewerteteGruppe,
+  KartenAktion,
   Schlange,
   Sonderkartenname,
   SonderkarteInfo,
@@ -14,6 +16,7 @@ import type {
   Spielkarte,
   Spielzustand,
 } from '../../engine'
+import { grundFuerDich } from '../tisch/gruende'
 
 /*
 Was der Mensch am Tisch sehen darf (Plan O3 und O4, B2). Der Tisch zeichnet nur
@@ -96,8 +99,12 @@ export interface StatusAnsicht {
   amZug: Person | null
   teilzug: 1 | 2
   abschnitt: 'Ausspielen' | 'Abwerfen'
-  /** Eine angesagte Sonderkarte, über die noch jemand entscheidet (A6). */
-  schwebend: { karte: Sonderkartenname; von: Person; entscheidet: Person } | null
+  /**
+   * Eine angesagte Sonderkarte, über die noch jemand entscheidet (A6). Karte und
+   * Ansage liegen offen (B2: die Ansage ist die Auswahl von Karte und Ziel); die
+   * Abwehrfrage nennt daraus Karte und Ziel (O6).
+   */
+  schwebend: { karte: Sonderkartenname; von: Person; entscheidet: Person; angesagt: SonderkarteInfo; ansage: KartenAktion } | null
 }
 
 export interface TischAnsicht {
@@ -110,7 +117,7 @@ export interface TischAnsicht {
   status: StatusAnsicht
   /** Was du jetzt tun darfst, wie die Engine es aufzählt (U3); leer, solange ein Gegner entscheidet oder die Partie beendet ist. */
   aktionen: SpielAktion[]
-  /** Warum du deinen Zug jetzt nicht beenden darfst, mit dem Grund der Engine (O5); `null`, wenn du darfst oder nicht entscheidest. */
+  /** Warum du deinen Zug jetzt nicht beenden darfst, mit dem Grund der Engine in Du-Form (O5, O6); `null`, wenn du darfst oder nicht entscheidest. */
   zugBeendenGesperrt: string | null
 }
 
@@ -142,10 +149,21 @@ export function menschIndex(zustand: Spielzustand): number {
   return menschen[0]
 }
 
+/** Die Spieler nach ihrer Stelle in `spieler`, so wie der Mensch sie sieht. */
+export function personen(zustand: Spielzustand): (index: number) => Person {
+  const mensch = menschIndex(zustand)
+  return (index) => ({ name: zustand.spieler[index].name, ich: index === mensch })
+}
+
+/** Der Grund einer Ablehnung, wie er am Tisch steht: in Du-Form, wenn er dich nennt (O6). */
+export function grundAmTisch(zustand: Spielzustand, ablehnung: Ablehnung): string {
+  return grundFuerDich(ablehnung, personen(zustand))
+}
+
 /** Die Sicht des Menschen auf den Zustand. Wirft, wenn nicht genau ein Mensch am Tisch sitzt (B2). */
 export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
   const mensch = menschIndex(zustand)
-  const person = (index: number): Person => ({ name: zustand.spieler[index].name, ich: index === mensch })
+  const person = personen(zustand)
   const beendet = zustand.partiephase === 'Beendet'
   const zwischenstand = berechneZwischenstand(zustand, zustand.spieler[mensch].id).spieler
 
@@ -170,6 +188,7 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
 
   const { schwebend } = zustand
   const entscheider = ermittleEntscheider(zustand)
+  const gesperrt = entscheider === mensch ? zugBeendenGesperrt(zustand) : null
   const angreifer = schwebend === null ? -1 : zustand.spieler.findIndex((spieler) => spieler.id === schwebend.aktion.spielerId)
 
   return {
@@ -192,9 +211,9 @@ export function tischAnsicht(zustand: Spielzustand): TischAnsicht {
       schwebend:
         schwebend === null || entscheider === null
           ? null
-          : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider) },
+          : { karte: schwebend.karte.name, von: person(angreifer), entscheidet: person(entscheider), angesagt: schwebend.karte, ansage: schwebend.aktion },
     },
     aktionen: entscheider === mensch ? ermittleAktionen(zustand) : [],
-    zugBeendenGesperrt: entscheider === mensch ? zugBeendenGesperrt(zustand) : null,
+    zugBeendenGesperrt: gesperrt === null ? null : grundFuerDich(gesperrt, person),
   }
 }

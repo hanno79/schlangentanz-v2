@@ -1,0 +1,42 @@
+{
+ "zweiGruben": {
+  "grubenVorDirAmStart": 2,
+  "aussetzenImProtokoll": 2,
+  "grubenVorDirDanach": 0,
+  "hinweis": true,
+  "protokoll": "KI-Gegner 1 zieht 1 Karte.\nDu bist dran.\nKI-Gegner 1 spielt: Rot an den Anfang der Schlange 2 von KI-Gegner 1.\nKI-Gegner 1 zieht 1 Karte.\nDu setzt diesen Zug aus (Schlangengrube).\nKI-Gegner 1 ist dran.\nKI-Gegner 1 spielt: Violett beginnt eine neue Schlange.\nKI-Gegner 1 zieht 1 Karte.\nDu setzt diesen Zug aus (Schlangengrube).\nKI-Gegner 1 ist dran.\nKI-Gegner 1 spielt: Grün beginnt eine neue Schlange.",
+  "fehler": []
+ },
+ "neuladen-desktop": {
+  "gleicheFrage": true,
+  "gleicherStand": true,
+  "frage": "KI-Gegner 1 sagt an: Schlangengrube auf dich.",
+  "protokollNachNeuladen": "Noch kein Schritt",
+  "handNachAbwehr": 4,
+  "fehler": []
+ },
+ "neuladen-handy-hochkant": {
+  "gleicheFrage": true,
+  "gleicherStand": true,
+  "frage": "KI-Gegner 1 sagt an: Schlangengrube auf dich.",
+  "protokollNachNeuladen": "Noch kein Schritt",
+  "handNachAbwehr": 4,
+  "fehler": []
+ },
+ "drehen": {
+  "frageSichtbar": true,
+  "knopf": {
+   "x": 292.40625,
+   "y": 330,
+   "width": 123.59375,
+   "height": 44
+  },
+  "ueberstand": 0,
+  "abwehrenKnopf": 0,
+  "fehler": []
+ },
+ "b2Quelltext": {
+  "fremdeHandIds": 5,
+  "imQuelltext": []
+ }
+}

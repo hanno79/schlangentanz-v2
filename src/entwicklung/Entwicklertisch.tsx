@@ -52,6 +52,7 @@ function Inhalt({ anfrage }: { anfrage: Exclude<EntwicklerAnfrage, EntwurfAnfrag
         <Tisch
           titel={`Szenario ${szenario.name}`}
           erzeuge={szenario.erzeuge}
+          testbedingungen={szenario.testbedingungen}
           hinweis={
             <p className="et-hinweis">
               {szenario.beschreibung} <strong>Erwartet:</strong> {szenario.erwartet}

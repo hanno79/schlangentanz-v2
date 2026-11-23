@@ -1,0 +1,112 @@
+{
+ "weniger": true,
+ "statistik": {
+  "KI greift KI an, mit Farbenschutz": {
+   "n": 8,
+   "werte": [
+    317.8,
+    317.4,
+    312.6,
+    313,
+    312.9,
+    325.5,
+    314.8,
+    313.4
+   ],
+   "min": 312.6,
+   "max": 325.5,
+   "mittel": 315.9
+  },
+  "KI greift KI an, ohne Farbenschutz": {
+   "n": 8,
+   "werte": [
+    311.9,
+    310.3,
+    311.8,
+    310.2,
+    315,
+    322.9,
+    311,
+    324
+   ],
+   "min": 310.2,
+   "max": 324,
+   "mittel": 314.6
+  },
+  "du greifst KI an, mit Farbenschutz": {
+   "n": 8,
+   "werte": [
+    15.5,
+    15.9,
+    16.8,
+    15.5,
+    15.3,
+    14.5,
+    17.6,
+    15.5
+   ],
+   "min": 14.5,
+   "max": 17.6,
+   "mittel": 15.8
+  },
+  "du greifst KI an, ohne Farbenschutz": {
+   "n": 8,
+   "werte": [
+    13.4,
+    13.1,
+    13.9,
+    15.1,
+    15.9,
+    15.3,
+    15,
+    14.6
+   ],
+   "min": 13.1,
+   "max": 15.9,
+   "mittel": 14.5
+  }
+ },
+ "mitteGleich": {
+  "KI greift KI an": {
+   "mitEinheitlich": false,
+   "ohneEinheitlich": false,
+   "mitGleichOhne": false,
+   "beispielMit": {
+    "status": "KI-Gegner 2 ist dran",
+    "zugleiste": "KI-Gegner 2 spielt: Braun beginnt eine neue Schlange.\n\nSchneller",
+    "protokoll": "KI-Gegner 2 spielt: Braun beginnt eine neue Schlange.\nKI-Gegner 1 zieht 2 Karten.\nKI-Gegner 2 ist dran.\nKI-Gegner 1 spielt: Grün beginnt eine neue Schlange.\nKI-Gegner 2 lässt Schlangenblockade durch.\nSchlangenblockade wirkt.",
+    "gegner": "KI-Gegner 1\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer\nKI-Gegner 2\nist dran\n4 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   },
+   "beispielOhne": {
+    "status": "Du bist dran\nSpiele Karten aus deiner Hand.",
+    "zugleiste": "Wähle eine Karte aus deiner Hand.\n\nDu musst erst mindestens eine Karte spielen; beenden ohne Karte geht nur mit leerer Hand (A5, D12).\nZug beenden",
+    "protokoll": "KI-Gegner 2 zieht 1 Karte.\nDu bist dran.\nKI-Gegner 2 spielt: Grün beginnt eine neue Schlange.\nKI-Gegner 1 zieht 2 Karten.\nKI-Gegner 2 ist dran.\nKI-Gegner 1 spielt: Grün beginnt eine neue Schlange.\nKI-Gegner 2 lässt Schlangenblockade durch.\nSchlangenblockade wirkt.",
+    "gegner": "KI-Gegner 1\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   }
+  },
+  "du greifst KI an": {
+   "mitEinheitlich": true,
+   "ohneEinheitlich": true,
+   "mitGleichOhne": false,
+   "beispielMit": {
+    "status": "Du bist dran\nSpiele Karten aus deiner Hand.",
+    "zugleiste": "Wähle eine Karte aus deiner Hand oder beende deinen Zug.\n\nZug beenden",
+    "protokoll": "KI-Gegner 1 wehrt Schlangenblockade mit Farbenschutz ab.\nSchlangenblockade bleibt ohne Wirkung.\nDu sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+    "gegner": "KI-Gegner 1\n4 Handkarten\nZwischenstand ohne Kettenbonus:\n3 Punkte\nAblage 1\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   },
+   "beispielOhne": {
+    "status": "Du bist dran\nSpiele Karten aus deiner Hand.",
+    "zugleiste": "Wähle eine Karte aus deiner Hand oder beende deinen Zug.\n\nZug beenden",
+    "protokoll": "KI-Gegner 1 lässt Schlangenblockade durch.\nSchlangenblockade wirkt.\nDu sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+    "gegner": "KI-Gegner 1\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer\nKI-Gegner 2\n5 Handkarten\nZwischenstand ohne Kettenbonus:\n0 Punkte\nAblage leer"
+   }
+  }
+ },
+ "protokolle": [
+  "KI greift KI an mit: KI-Gegner 2 zieht 1 Karte. / Du bist dran. / KI-Gegner 2 spielt: Braun beginnt eine neue Schlange.",
+  "KI greift KI an ohne: KI-Gegner 2 zieht 1 Karte. / Du bist dran. / KI-Gegner 2 spielt: Grün beginnt eine neue Schlange.",
+  "du greifst KI an mit: KI-Gegner 1 wehrt Schlangenblockade mit Farbenschutz ab. / Schlangenblockade bleibt ohne Wirkung. / Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2.",
+  "du greifst KI an ohne: KI-Gegner 1 lässt Schlangenblockade durch. / Schlangenblockade wirkt. / Du sagst an: Schlangenblockade in die Schlange 1 von KI-Gegner 1, zwischen Karte 1 und 2."
+ ],
+ "fehler": []
+}
