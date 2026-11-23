@@ -1,5 +1,5 @@
 ---
-id: TF-DEV-043
+id: TF-DEV-045
 titel: Am Entwicklertisch löst jedes der fünf Szenarien aus X2 Paket C seine Aufgabe mit echten Karten ein, und eine Zufallspartie mit Erweiterung läuft ohne verletzte Invariante bis zum Ende.
 art: manuell
 regression: nein
@@ -52,4 +52,4 @@ Die fünf Szenarien oben und die Partie `/dev?seed=11&spieler=3&erweiterung=1`.
 
 ## Nicht abgedeckte Grenzfälle
 
-Die anderen Geräteklassen entfallen, weil X2c die Oberfläche nicht ändert. Den Zweig „durchlassen“ bei Schlangenmeister prüft der Regeltest in TF-ENGINE-061. Ein Szenario, in dem die zwei Lesarten von „neue Dreiergruppe“ verschieden zählen, gibt es nicht; dazu steht die Frage im Prüfprotokoll X2c.
+Die anderen Geräteklassen entfallen, weil X2c die Oberfläche nicht ändert. Den Zweig „durchlassen“ bei Schlangenmeister prüft der Regeltest in TF-ENGINE-064. Ein Szenario, in dem die zwei Lesarten von „neue Dreiergruppe“ verschieden zählen, gibt es nicht; dazu steht die Frage im Prüfprotokoll X2c.

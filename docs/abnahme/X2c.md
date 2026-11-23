@@ -54,7 +54,7 @@ Der Rahmen aus X1 legt eingelöste Aufgaben in `erfuellteAufgaben` und prüft si
 
 `schlangenhaeutung.ts` merkt sich die Schlange vor der Häutung und ruft `merkeHaeutung` mit vorher und nachher. Gezählt wird nur mit Erweiterung und nur, wenn der Spieler in seiner eigenen Schlange häutet (D37, Teil 1); festgehalten wird der Höchstwert einer einzelnen Häutung, nicht die Summe (D37, Teil 2). Tests: „über zwei Schlangen: zwei Häutungen … genügen nicht“ (Zähler 1), „eine Häutung in der Schlange des Gegners erfüllt die Aufgabe für niemanden“ (beide Zähler 0). Was „neu“ heisst, sagt D37 nicht; dazu Auslegungsfrage 2.
 
-Eigene Gegenprobe der Suche (temporäre Testdatei, Beleg `…-TF-ENGINE-061-4.txt`): Für jeden Joker jede der sechs Farben oder keine, vorher und nachher gleich, mit derselben Regel für „neu“. 3'000 Zufallshäutungen mit bis zu fünf Jokern und Blockaden, 819 davon mit neuen Gruppen, 0 Abweichungen von `neueDreiergruppen`. Laufzeit mit acht Jokern in sechs ungünstigen Anordnungen (Joker abwechselnd mit gleichfarbigen Karten auf beiden Seiten des Abschnitts, Jokerblöcke von vier): höchstens 1.4 ms. Der Befund aus dem Codex-Review (23 s) ist damit behoben.
+Eigene Gegenprobe der Suche (temporäre Testdatei, Beleg `…-TF-ENGINE-064-4.txt`): Für jeden Joker jede der sechs Farben oder keine, vorher und nachher gleich, mit derselben Regel für „neu“. 3'000 Zufallshäutungen mit bis zu fünf Jokern und Blockaden, 819 davon mit neuen Gruppen, 0 Abweichungen von `neueDreiergruppen`. Laufzeit mit acht Jokern in sechs ungünstigen Anordnungen (Joker abwechselnd mit gleichfarbigen Karten auf beiden Seiten des Abschnitts, Jokerblöcke von vier): höchstens 1.4 ms. Der Befund aus dem Codex-Review (23 s) ist damit behoben.
 
 ## Gates
 
@@ -192,7 +192,7 @@ Geprüft gegen Teil A und Teil D, mit Zitat. Wo eine Auslegung nicht eindeutig g
 - (L2) Zahl der Gruppen nachher minus Zahl vorher.
 - (L3) Jede Gruppe nachher, die es vorher in dieser Zusammensetzung nicht gab; damit wäre auch eine verlängerte Gruppe neu.
 
-Stellungen, in denen sie verschieden zählen (geprüft mit `neueDreiergruppen` und eigenen Zählungen, Beleg `…-TF-ENGINE-061-3.txt`):
+Stellungen, in denen sie verschieden zählen (geprüft mit `neueDreiergruppen` und eigenen Zählungen, Beleg `…-TF-ENGINE-064-3.txt`):
 
 - Rot, Rot, **Rot, Blau, Gelb, Blau, Blau**, Gelb, Gelb, gehäutet (fett) zu Blau, Blau, Blau, Rot, Gelb → Rot, Rot, Blau, Blau, Blau, Rot, Gelb, Gelb, Gelb. Die rote Dreiergruppe zerfällt, Blau×3 und Gelb×3 entstehen. L1: 2, Schlangentanz erfüllt, +7 Punkte. L2: 2 − 1 = 1, nicht erfüllt. L3: 2, erfüllt. Gruppenpunkte vorher 3, nachher 6.
 - Rot, Rot, Rot, **Blau, Rot, Gelb, Blau**, Gelb, Gelb zu Rot, Blau, Blau, Gelb → Rot×4, Blau, Blau, Gelb×3. L1: 1 (Rot verlängert, Gelb neu), nicht erfüllt. L2: 2 − 1 = 1, nicht erfüllt. L3: 2 (Rot×4 gab es vorher nicht), erfüllt, +7.
@@ -217,9 +217,9 @@ Geänderte Dateien fallen in ENGINE, DEV und KI, keine Datei ohne Bereich. Neue 
 
 | Testfall | Inhalt | Lauf | Status |
 |---|---|---|---|
-| TF-ENGINE-061 | Paket C: Regeltests, Gegenproben, volle Jokersuche, Prüfsumme ohne Erweiterung | `2026-11-23-0922-TF-ENGINE-061` | bestanden |
-| TF-ENGINE-062 | Grenzfall: gefressene Fusion; Schlangentanz nach der Häutung aufgedeckt | `2026-11-23-0923-TF-ENGINE-062` | bestanden |
-| TF-DEV-043 | Fünf Szenarien per Klick und Zufallspartie mit Erweiterung bis zum Ende | `2026-11-23-0923-TF-DEV-043` | bestanden |
+| TF-ENGINE-064 | Paket C: Regeltests, Gegenproben, volle Jokersuche, Prüfsumme ohne Erweiterung | `2026-11-23-0922-TF-ENGINE-064` | bestanden |
+| TF-ENGINE-065 | Grenzfall: gefressene Fusion; Schlangentanz nach der Häutung aufgedeckt | `2026-11-23-0923-TF-ENGINE-065` | bestanden |
+| TF-DEV-045 | Fünf Szenarien per Klick und Zufallspartie mit Erweiterung bis zum Ende | `2026-11-23-0923-TF-DEV-045` | bestanden |
 
 ## Hinweise (kein Mangel)
 

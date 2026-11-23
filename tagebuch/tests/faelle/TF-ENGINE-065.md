@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-062
+id: TF-ENGINE-065
 titel: Frisst ein Mitspieler eine von zwei Fusionen, gilt Fusionsexperte nicht mehr, und eine früher gespielte Häutung löst eine später aufgedeckte Schlangentanz-Karte ein.
 art: manuell
 regression: nein
@@ -8,7 +8,7 @@ herkunft: aenderung
 angelegt: 2026-11-23
 veraendert_daten: nein
 aenderung: task/X2c-aufgaben-sonderkarten (PR #109)
-grenzfall_von: TF-ENGINE-061
+grenzfall_von: TF-ENGINE-064
 ---
 
 ## Worum es geht
@@ -37,7 +37,7 @@ Erster Fall: KI-Gegner 1 hat die Schlange Fusion (Rot, Rot), Gelb, Fusion (Blau,
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Konsole im Repo | Prüfdatei aus dem Beleg als `src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts` ablegen | Inhalt des Belegs `…-TF-ENGINE-062-1.txt` | Datei liegt neben `aufgaben_c_hilfen.ts` |
+| 1 | Konsole im Repo | Prüfdatei aus dem Beleg als `src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts` ablegen | Inhalt des Belegs `…-TF-ENGINE-065-1.txt` | Datei liegt neben `aufgaben_c_hilfen.ts` |
 | 2 | Konsole im Repo | ausführen | `npx vitest run src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts --silent=false --reporter=verbose` | Exit 0, drei Tests grün, Zeile `GF1a fusionen 1 karten Rot Rot Farbenfusion`, Zeile `GF2 Ereignisse` mit aufgabe-08, aufgabe-12 aufgedeckt, aufgabe-12 erfüllt |
 | 3 | Konsole im Repo | Prüfdatei wieder löschen | | `git status` zeigt sie nicht mehr |
 

@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-061
+id: TF-ENGINE-064
 titel: Mit Erweiterung erkennt die Engine Fusionsexperte, Schlangenbeschwörer, Schlangenmeister, Schlangenrepertoire und Schlangentanz nach A9, D36 und D37, und ohne Erweiterung bleibt jede Partie unverändert.
 art: automatisch
 regression: ja
@@ -39,4 +39,4 @@ Stellungen aus dem Baukasten mit zwei Spielern und Erweiterung, das Beispiel zu 
 
 ## Nicht abgedeckte Grenzfälle
 
-Dass der Schlangenkorb als ausgespielt zählt (D36), lässt sich erst mit X6 prüfen, weil er heute nicht spielbar ist. Dass derselbe Joker bei zwei Aufgaben verschiedene Farben hat, prüft Paket C nur gegen die Wertung, denn von den fünf Aufgaben liest nur Schlangentanz Jokerfarben. Eine gefressene Fusion und eine später aufgedeckte Schlangentanz-Karte prüft TF-ENGINE-062.
+Dass der Schlangenkorb als ausgespielt zählt (D36), lässt sich erst mit X6 prüfen, weil er heute nicht spielbar ist. Dass derselbe Joker bei zwei Aufgaben verschiedene Farben hat, prüft Paket C nur gegen die Wertung, denn von den fünf Aufgaben liest nur Schlangentanz Jokerfarben. Eine gefressene Fusion und eine später aufgedeckte Schlangentanz-Karte prüft TF-ENGINE-065.
