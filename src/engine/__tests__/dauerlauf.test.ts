@@ -153,7 +153,7 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
     return {
       spieler: Array.from({ length: spieler }, () => ({ hand: [] })),
       schlussrundeAusloeser: 0,
-      zug: { spielerIndex: amZug, gespielteFarbkarten: 0, gespielteSonderkarten: 0, ...zug },
+      zug: { spielerIndex: amZug, gespielteFarbkarten: 0, gespielteSonderkarten: 0, zusatzaktionen: [], verwendet: [], runde: [], ...zug },
     } as unknown as Spielzustand
   }
   const ende: SpielAktion = { typ: 'ZugBeenden', spielerId: 'x' }
@@ -186,6 +186,17 @@ describe('A10/D21: der Regelprüfer des Dauerlaufs selbst', () => {
     const pruefer = regelPruefer(zaehler)
     expect(pruefer(mit, ende, { zustand: lage(2, 0), ereignisse: [{ typ: 'SchlussrundeBegonnen', ausloeser: 0 }, ...zweiter] })).toBeNull()
     expect(zaehler).toEqual({ zweite: 1, zweiteInSchlussrunde: 1, letzte: 0 })
+  })
+
+  it('D12/D46: zwei Farbkarten ohne Zusatzaktion meldet der Prüfer, mit einer freien Zusatzaktion nicht', () => {
+    const zwei = [
+      { art: 'Farbkarte', karteId: 'blau-01', kartenart: 'Farbkarte' as const },
+      { art: 'Farbkarte', karteId: 'rot-01', kartenart: 'Farbkarte' as const },
+    ]
+    const ohne = lage(2, 0, { gespielteFarbkarten: 2, verwendet: zwei })
+    expect(regelPruefer()(ohne, ende, { zustand: ohne, ereignisse: [] })).toMatch(/D12/)
+    const mit = lage(2, 0, { gespielteFarbkarten: 2, verwendet: zwei, zusatzaktionen: [{ quelle: 'Comeback', erlaubt: ['Farbkarte'], nurKarten: null }] })
+    expect(regelPruefer()(mit, ende, { zustand: mit, ereignisse: [] })).toBeNull()
   })
 
   it('D11: ein Verdoppler mit Wirkung im zweiten Zug wird gemeldet', () => {

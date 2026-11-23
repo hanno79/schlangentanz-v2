@@ -69,6 +69,24 @@ function Kopf({ zustand }: { zustand: Spielzustand }) {
             </span>
           )}
         </dd>
+        <dt>Zusatzaktionen</dt>
+        <dd data-testid="zusatzaktionen">
+          {zug.zusatzaktionen.length === 0
+            ? 'keine'
+            : zug.zusatzaktionen.map((zusatz) => `${zusatz.quelle}: ${zusatz.erlaubt.join('/')}${zusatz.nurKarten === null ? '' : ` nur ${zusatz.nurKarten.join(', ')}`}`).join('; ')}
+          {zug.verwendet.length === 0 ? '' : `; belegt: ${zug.verwendet.map((verwendung) => verwendung.karteId ?? verwendung.art).join(', ')}`}
+          {zug.runde.length === 0 ? '' : `; in dieser Runde: ${zug.runde.join(', ')}`}
+        </dd>
+        <dt>Entscheidung</dt>
+        <dd data-testid="entscheidung">
+          {zustand.entscheidung === null
+            ? 'keine'
+            : `${zustand.entscheidung.art} zu ${zustand.entscheidung.karteId}; entscheidet ${name(zustand, zustand.entscheidung.entscheider)}; zur Wahl: ${zustand.entscheidung.optionen.join(', ')}`}
+        </dd>
+        <dt>Aufgedeckt</dt>
+        <dd data-testid="aufgedeckt">
+          {zustand.aufgedeckt.length === 0 ? 'keine Karte' : zustand.aufgedeckt.map((karte) => <Karte key={karte.id} karte={karte} />)}
+        </dd>
       </dl>
     </section>
   )

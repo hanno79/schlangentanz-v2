@@ -244,6 +244,8 @@ function beschreibeOrt(zustand: Spielzustand, ort: Kartenort): string {
       return 'schwebend'
     case 'AusDemSpiel':
       return 'aus dem Spiel'
+    case 'Aufgedeckt':
+      return `aufgedeckt, Stelle ${ort.position}`
   }
 }
 
@@ -286,6 +288,10 @@ function beschreibeEreignis(zustand: Spielzustand, ereignis: Ereignis): string {
       return `Ausgesetzt: ${wer(ereignis.spielerIndex)} setzt aus; ${ereignis.karteId} auf den Ablagestapel von ${wer(ereignis.ablagestapelVon)}`
     case 'GrubeOhneWirkung':
       return `GrubeOhneWirkung: ${wer(ereignis.spielerIndex)} hat keinen Zug mehr; ${ereignis.karteId} auf den Ablagestapel von ${wer(ereignis.ablagestapelVon)}`
+    case 'EntscheidungVerlangt':
+      return `EntscheidungVerlangt: ${wer(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${ereignis.karteId}; zur Wahl: ${ereignis.optionen.join(', ')}`
+    case 'Entschieden':
+      return `Entschieden: ${wer(ereignis.spielerIndex)} wählt bei „${ereignis.art}“ „${ereignis.wahl}“`
     case 'SchlussrundeBegonnen':
       return `SchlussrundeBegonnen: ausgelöst von ${wer(ereignis.ausloeser)}`
     case 'PartieBeendet':

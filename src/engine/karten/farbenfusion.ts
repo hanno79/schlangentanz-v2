@@ -15,10 +15,9 @@ Schlange eines Mitspielers trifft sie ihn, und er darf abwehren (A6, D10).
 Abgewehrt legt der Reaktionsablauf sie auf den Ablagestapel dessen, der sie
 gespielt hat (`reaktion.ts`, A7.2). Pro Zug geht nur eine (A7.7); im zweiten
 Zug nach einem Verdoppler ist wieder eine erlaubt (D27), weil jeder Zug neu
-zählt. Was die Fusion in der Wertung bringt, steht in `jokerGruppen.ts` (D30).
+zählt; diese Grenze steht im Rahmen des Zuges (`zuggrenzen.ts`, X3). Was die
+Fusion in der Wertung bringt, steht in `jokerGruppen.ts` (D30).
 */
-
-const NUR_EINE = 'Pro Zug nur eine Farbenfusion (A7.7); in diesem Zug ist schon eine gespielt.';
 
 /** D20: Nur zwei Farbkarten derselben Farbe lassen sich fusionieren; `pruefePaar` nennt für jeden Fall den Grund. */
 function gleichfarbig(links: Spielkarte, rechts: Spielkarte): boolean {
@@ -62,7 +61,6 @@ export const farbenfusion: KartenDefinition<FusionLegenAktion> = {
   aktionstyp: 'FusionLegen',
 
   ziele(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): FusionLegenAktion[] {
-    if (zustand.zug.farbenfusionGespielt) return [];
     const spielerId = zustand.spieler[spielerIndex].id;
     const ziele: FusionLegenAktion[] = [];
     for (const schlange of schlangenAmTisch(zustand, spielerIndex)) {
@@ -78,7 +76,6 @@ export const farbenfusion: KartenDefinition<FusionLegenAktion> = {
   },
 
   pruefe(zustand: Spielzustand, aktion: FusionLegenAktion): string | null {
-    if (zustand.zug.farbenfusionGespielt) return NUR_EINE;
     const fundort = findeSchlange(zustand, aktion.schlangenId);
     if (fundort === null) return `Die Schlange ${aktion.schlangenId} gibt es nicht.`;
     return pruefePaar(fundort.schlange, aktion.kartenIds);

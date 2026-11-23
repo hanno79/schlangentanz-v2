@@ -1,8 +1,9 @@
-import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider } from '../engine';
+import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider, zugInSicht } from '../engine';
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
   AusliegendeGrube,
+  OffeneEntscheidung,
   Partiephase,
   Schlange,
   SchwebendeKarte,
@@ -24,7 +25,8 @@ weiter; der Architekturtest prüft das.
 Offen liegt: die eigene Hand und die eigene geheime Aufgabe, alle Schlangen
 samt der Karten unter einer Farbenfusion, alle Ablagestapel vollständig (D28),
 die Auslage vor jedem Spieler (A4), erfüllte offene Aufgaben (A9), ausliegende
-Gruben (A7.6), was aus dem Spiel ist, die angesagte Sonderkarte (A6, B2) und
+Gruben (A7.6), was aus dem Spiel ist, die angesagte Sonderkarte (A6, B2), eine
+offene Entscheidung samt den offen aufgedeckten Karten (X3, A8.2) und
 wie viele Schlangen bisher angelegt wurden, weil jede neue Schlange am Tisch zu
 sehen war.
 Verdeckt bleibt (B2): fremde Handkarten, von denen nur die Zahl zu sehen ist;
@@ -72,6 +74,10 @@ export interface Sicht {
   ausliegendeGruben: AusliegendeGrube[];
   /** Die angesagte Sonderkarte mit Ziel, über die Betroffene noch entscheiden (A6, B2); `null`, wenn keine schwebt. */
   angesagt: SchwebendeKarte | null;
+  /** X3: die offene Entscheidung mit Entscheider und Wahl (D52); `null`, wenn keine offen ist. */
+  entscheidung: OffeneEntscheidung | null;
+  /** X3: die offen aufgedeckten Karten vom Nachziehstapel (A8.2). */
+  aufgedeckt: Spielkarte[];
   ausDemSpiel: Array<Spielkarte | Auslagekarte>;
   /** Wie viele Schlangen bisher angelegt wurden; jede neue lag offen am Tisch. Daraus entsteht die Id der nächsten. */
   schlangenZaehler: number;
@@ -108,7 +114,7 @@ function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
     spieler: zustand.spieler.map(spielerSicht),
     erweiterung: zustand.erweiterung,
     partiephase: zustand.partiephase,
-    zug: zustand.zug,
+    zug: zugInSicht(zustand, spielerIndex),
     entscheider: ermittleEntscheider(zustand),
     schlussrundeAusloeser: zustand.schlussrundeAusloeser,
     nachziehstapelGroesse: zustand.nachziehstapel.length,
@@ -116,6 +122,8 @@ function sichtAus(zustand: Spielzustand, spielerIndex: number): Sicht {
     offeneAufgaben: zustand.offeneAufgaben,
     ausliegendeGruben: zustand.ausliegendeGruben,
     angesagt: zustand.schwebend,
+    entscheidung: zustand.entscheidung,
+    aufgedeckt: zustand.aufgedeckt,
     ausDemSpiel: zustand.ausDemSpiel,
     schlangenZaehler: zustand.schlangenZaehler,
   };
@@ -174,7 +182,7 @@ function gemischtesMaterial(spielerzahl: number, erweiterung: boolean, zufall: (
   };
 }
 
-/** Die Ids aller Spielkarten, die der Spieler sieht: eigene Hand, Schlangen samt Karten unter Fusionen, Ablagestapel, Gruben, die angesagte Karte, was aus dem Spiel ist. */
+/** Die Ids aller Spielkarten, die der Spieler sieht: eigene Hand, Schlangen samt Karten unter Fusionen, Ablagestapel, Gruben, die angesagte Karte, die aufgedeckten, was aus dem Spiel ist. */
 function offeneKarten(sicht: Sicht): Set<string> {
   return new Set([
     ...sicht.hand.map((karte) => karte.id),
@@ -184,6 +192,7 @@ function offeneKarten(sicht: Sicht): Set<string> {
     ]),
     ...sicht.ausliegendeGruben.map((grube) => grube.karte.id),
     ...(sicht.angesagt === null ? [] : [sicht.angesagt.karte.id]),
+    ...sicht.aufgedeckt.map((karte) => karte.id),
     ...sicht.ausDemSpiel.map((karte) => karte.id),
   ]);
 }
@@ -237,6 +246,8 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
     nachziehstapel: verdeckt,
     ausliegendeGruben: kopie.ausliegendeGruben,
     schwebend: kopie.angesagt,
+    entscheidung: kopie.entscheidung,
+    aufgedeckt: kopie.aufgedeckt,
     ausDemSpiel: kopie.ausDemSpiel,
     offeneAufgaben: kopie.offeneAufgaben,
     aufgabenStapel: verdeckteAufgaben,

@@ -1,4 +1,5 @@
 import type { KartenAktion } from './aktionen/typen';
+import type { Zugrahmen } from './zuggrenzen';
 
 /*
 Der Spielzustand im Format 2.
@@ -97,7 +98,8 @@ export interface Spieler {
 /** A10: Die Schlussrunde beginnt, sobald der Nachziehstapel leer ist. */
 export type Partiephase = 'Laufend' | 'Schlussrunde' | 'Beendet';
 
-export interface Zug {
+/** Ein Teilzug; was der Rahmen für Zusatzaktionen führt, steht in `Zugrahmen` (X3, `zuggrenzen.ts`). */
+export interface Zug extends Zugrahmen {
   spielerIndex: number;
   /** 2 ist der zweite Zug nach einem Verdoppler (A7.8). */
   teilzug: 1 | 2;
@@ -105,6 +107,7 @@ export interface Zug {
   gespielteFarbkarten: number;
   gespielteSonderkarten: number;
   verdopplerGespielt: boolean;
+  /** Eine Farbenfusion hat in diesem Teilzug gewirkt. Die Grenze „eine je Zug“ zählt auch eine abgewehrte (D56, `zuggrenzen.ts`). */
   farbenfusionGespielt: boolean;
   /** `Abwerfen`: Der Zug ist beendet, der Spieler hält mehr als 5 Karten und wählt, welche er ablegt (A5). */
   abschnitt: 'Ausspielen' | 'Abwerfen';
@@ -130,6 +133,27 @@ export interface SchwebendeKarte {
   abgewehrt: number[];
 }
 
+/**
+ * Eine Entscheidung, die eine Wirkung verlangt und die ein bestimmter Spieler
+ * trifft, auch einer, der nicht am Zug ist (X3, D52, A8.2). Was gewählt werden
+ * kann, steht offen da (B2); was die Wahl bewirkt, sagt ihr Eintrag im
+ * Entscheidungsregister (`entscheidungsregister.ts`).
+ */
+export interface OffeneEntscheidung {
+  /** Der Eintrag im Entscheidungsregister. */
+  art: string;
+  /** Die Karte, deren Wirkung die Entscheidung verlangt, etwa eine Risiko-Belohnungs-Karte. */
+  karteId: string;
+  /** Wer jetzt entscheidet (Index). */
+  entscheider: number;
+  /** Wer die Entscheidung ausgelöst hat, meist der Spieler am Zug. */
+  ausgeloestVon: number;
+  /** Was zur Wahl steht; jede Wahl ist offen und verrät keine Handkarte (B2). */
+  optionen: string[];
+  /** Was die Art sich bis zur Wahl merkt, etwa eine benannte Karte (D52). */
+  daten: Record<string, string | number>;
+}
+
 export interface Spielzustand {
   version: 2;
   erweiterung: boolean;
@@ -142,6 +166,10 @@ export interface Spielzustand {
   nachziehstapel: Spielkarte[];
   ausliegendeGruben: AusliegendeGrube[];
   schwebend: SchwebendeKarte | null;
+  /** X3: eine offene Entscheidung, über die `entscheider` noch wählt. */
+  entscheidung: OffeneEntscheidung | null;
+  /** X3: offen aufgedeckte Karten vom Nachziehstapel, die auf eine Entscheidung warten (A8.2). */
+  aufgedeckt: Spielkarte[];
   /** Benutzter Schlangenkorb (A7.10) und gespielte Risiko-Karten (A8.2). */
   ausDemSpiel: Array<Spielkarte | Auslagekarte>;
   /** Höchstens 3 (A4); bei leerem Aufgabenstapel bleibt ein Platz leer (A9). */

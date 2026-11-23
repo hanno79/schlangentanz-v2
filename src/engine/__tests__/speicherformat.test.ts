@@ -106,7 +106,7 @@ describe('A4/B2: Speichern und Laden im Format 2', () => {
 
   it('B2: ein Spielstand mit vielen fehlenden Feldern nennt die ersten drei und die Zahl der übrigen', () => {
     expect(() => deserialisiere(JSON.stringify({ version: 2, spieler: [] }))).toThrow(
-      'Ungültiger Spielstand: Spielstand: erweiterung fehlt, partiephase fehlt, zug fehlt und 8 weitere.',
+      'Ungültiger Spielstand: Spielstand: erweiterung fehlt, partiephase fehlt, zug fehlt und 10 weitere.',
     )
   })
 

@@ -1,0 +1,42 @@
+{
+ "schluessel": [
+  "schlangentanz-v2:partie"
+ ],
+ "vorher": {
+  "entscheidung": {
+   "art": "Test: Gegner wählen",
+   "ausgeloestVon": 0,
+   "daten": {},
+   "entscheider": 0,
+   "karteId": "regenbogenschlange-04",
+   "optionen": [
+    "spieler-2",
+    "spieler-3"
+   ]
+  },
+  "aufgedeckt": [
+   "violett-06"
+  ],
+  "amZug": 0
+ },
+ "nachher": {
+  "entscheidung": {
+   "art": "Test: Gegner wählen",
+   "ausgeloestVon": 0,
+   "daten": {},
+   "entscheider": 0,
+   "karteId": "regenbogenschlange-04",
+   "optionen": [
+    "spieler-2",
+    "spieler-3"
+   ]
+  },
+  "aufgedeckt": [
+   "violett-06"
+  ],
+  "amZug": 0
+ },
+ "gleich": true,
+ "fehler": [],
+ "kopf": "Du bist dran\nSpiele Karten aus deiner Hand.\n\nStapel 95\n\nZur Lobby\nKI-Gegner 1\n5 Handkarten\nZwischenstand ohne Kettenbonu"
+}

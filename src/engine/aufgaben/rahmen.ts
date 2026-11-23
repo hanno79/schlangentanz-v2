@@ -25,7 +25,8 @@ und meldet sie (B2).
 
 /** Löst für den Spieler am Zug ein, was er jetzt erfüllt. Verändert `zustand` und meldet in `ereignisse`. */
 export function pruefeAufgabenAmZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
-  if (!zustand.erweiterung || zustand.schwebend !== null || zustand.partiephase === 'Beendet') return;
+  // Geprüft wird nach einer vollständig aufgelösten Aktion: nicht, solange eine Karte schwebt oder eine Entscheidung offen ist (X3).
+  if (!zustand.erweiterung || zustand.schwebend !== null || zustand.entscheidung !== null || zustand.partiephase === 'Beendet') return;
   const { spielerIndex } = zustand.zug;
   const spieler = zustand.spieler[spielerIndex];
 
