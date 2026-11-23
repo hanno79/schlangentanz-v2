@@ -32,10 +32,16 @@ function typen(zustand: Spielzustand): SpielAktion['typ'][] {
 describe('X6: Szenarien des Schlangenkorbs am Entwicklertisch', () => {
   it('X6: die Szenarien sind da und jeder Knopf hat eine Beschriftung', () => {
     expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.arrayContaining(NAMEN))
-    for (const name of NAMEN) {
-      const zustand = erzeuge(name)
-      for (const aktion of ermittleAktionen(zustand)) expect(beschrifte(zustand, aktion), name).toMatch(/^\w+/)
+    // Dazu die Lage nach „zwei zusätzliche Aktionen“, in der 15 Knöpfe „AbwerfenUndZiehen“ stehen.
+    const nachBonus = klicke(erzeuge('korb-aktionen'), bonus('aktionen')).zustand
+    for (const [name, zustand] of [...NAMEN.map((eintrag) => [eintrag, erzeuge(eintrag)] as const), ['korb-aktionen nach dem Bonus', nachBonus] as const]) {
+      const texte = ermittleAktionen(zustand).map((aktion) => beschrifte(zustand, aktion))
+      expect(texte.length, name).toBeGreaterThan(0)
+      expect(new Set(texte).size, `${name}: jeder Knopf heisst anders`).toBe(texte.length)
     }
+    const start = erzeuge('korb-ziehen')
+    const ziehen = ermittleAktionen(start).find((aktion) => bonus('ziehen')(aktion, start))
+    expect(ziehen && beschrifte(start, ziehen), 'der Knopf nennt den Bonus').toMatch(/→ ziehen$/)
   })
 
   it('D43: korb-ziehen: drei gezogen, der Verdoppler nur wirkungslos, Rot und Gelb zusätzlich zu Blau', () => {

@@ -8,8 +8,8 @@ Handkarte mehrere Ziele (jede Stelle jeder Schlange, zwei Karten zum Fressen);
 damit man das richtige anklickt, nennt der Knopf das Ziel. Erkannt wird am Wert,
 nicht am Feldnamen: Eine Karten-Id wird zur Karte mit Namen und Id, eine
 Spieler-Id zum Spieler; Schlangen-Ids, Seiten und Optionen stehen, wie sie sind.
-Nur `position` („Stelle n“) und `art` (neue oder bestehende Schlange) brauchen
-eigene Worte. Die ganze Aktion steht im Tooltip und in `data-aktion`.
+Nur `position` („Stelle n“) und `art` (neue oder bestehende Schlange; der
+Bonus des Schlangenkorbs steht, wie er heisst) brauchen eigene Worte. Die ganze Aktion steht im Tooltip und in `data-aktion`.
 */
 
 interface Tisch {
@@ -37,8 +37,8 @@ function zielText(tisch: Tisch, feld: string, wert: unknown): string {
       .join(' ')
   }
   if (feld === 'position') return `Stelle ${String(wert)}`
-  // Die bestehende Schlange nennt schon ihre Id; nur die neue braucht ein Wort.
-  if (feld === 'art') return wert === 'neueSchlange' ? 'neue Schlange' : ''
+  // Die bestehende Schlange nennt schon ihre Id; nur die neue braucht ein Wort. Der Bonus des Schlangenkorbs steht, wie er heisst (X6).
+  if (feld === 'art') return wert === 'neueSchlange' ? 'neue Schlange' : wert === 'schlange' ? '' : String(wert)
   const karte = tisch.karten.get(String(wert))
   if (karte !== undefined) return `${karteAnzeigename(karte)} (${karte.id})`
   const spieler = tisch.zustand.spieler.findIndex((eintrag) => eintrag.id === wert)
@@ -48,7 +48,7 @@ function zielText(tisch: Tisch, feld: string, wert: unknown): string {
 /** Aktionstyp, gespielte Karte und das Ziel, etwa „BlockadeLegen: Schlangenblockade (…) → schlange-2 · Stelle 1“. */
 export function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   const tisch: Tisch = { zustand, karten: kartenAmTisch(zustand) }
-  if (aktion.typ === 'UeberhandAbwerfen') return `${aktion.typ}: ${zielText(tisch, 'karteIds', aktion.karteIds)}`
+  if (aktion.typ === 'UeberhandAbwerfen' || aktion.typ === 'AbwerfenUndZiehen') return `${aktion.typ}: ${zielText(tisch, 'karteIds', aktion.karteIds)}`
   if (aktion.typ === 'Reagieren') {
     return aktion.farbenschutzId === null ? 'Reagieren: durchlassen' : `Reagieren: abwehren mit ${zielText(tisch, 'farbenschutzId', aktion.farbenschutzId)}`
   }
