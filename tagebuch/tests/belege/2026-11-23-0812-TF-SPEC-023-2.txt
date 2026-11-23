@@ -1,0 +1,35 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aafe5e835b9dd5a24
+
+ ❯ tests/spec_documentation_teil_b_c.test.ts (4 tests | 1 failed) 20ms
+     × vermerkt jede gestrichene Nummer unter „Behoben und gestrichen“ 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation_teil_b_c.test.ts > GAME_SPEC Teil C — Abweichungen der Engine > vermerkt jede gestrichene Nummer unter „Behoben und gestrichen“
+AssertionError: Teil C: Nummern weder in der Tabelle noch unter „Behoben und gestrichen“: expected [ 'C9' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "C9",
++ ]
+
+ ❯ tests/spec_documentation_teil_b_c.test.ts:41:97
+     39|       (nr) => !nummern.includes(Number(nr.slice(1))) && !new RegExp(`\…
+     40|     )
+     41|     expect(fehlend, 'Teil C: Nummern weder in der Tabelle noch unter „…
+       |                                                                                                 ^
+     42|   })
+     43|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  08:06:21
+   Duration  2.94s (transform 60ms, setup 275ms, import 31ms, tests 20ms, environment 2.31s)
+

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-020 Die solide KI entscheidet in sieben gebauten Grenzfällen der Abwehr wie die Regeln D21 und D29 und Kriterium 4 von K3 es verlangen. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-020 Die solide KI entscheidet in sieben gebauten Grenzfällen der Abwehr wie die Regeln D21 und D29 und Kriterium 4 von K3 es verlangen.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression ja</span><span class="etikett">Priorität mittel</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-KI-019</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Sieben Stellungen, die in Partien selten vorkommen: eine Grube in der Schlussrunde mit und ohne verbleibenden letzten Zug, eine Regenbogenschlange des Gegners, die der KI hilft, ein Farbendieb, der nur einen Punkt kostet, und einer, der dazu den Kettenbonus kostet. Jede Stellung baut der Baukasten der Engine, der Angreifer spielt seine Karte über die Engine, dann entscheidet die solide KI mit drei Saaten.</p><h2>Bestanden, wenn</h2><p>G1 Farbendieb aus Blau ×4, 1 Punkt Verlust, laufend: durchlassen. G1b derselbe Diebstahl kostet zusätzlich den Kettenbonus (9 → 8): abwehren. G2 Regenbogenschlange vollendet ihr grünes Paar (0 → 6): durchlassen. G3 Grube in der Schlussrunde, sie hätte noch ihren letzten Zug: abwehren. G4 Grube in der Schlussrunde, sie hat keinen Zug mehr (D29): durchlassen. G5 Grube laufend: abwehren. G6 Schlangenfrass frisst zwei aus Grün ×3: abwehren. G7 Schlussrunde, Blockade hinter einem Paar, sie hat keinen Zug mehr: durchlassen. Alle drei Saaten gleich.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine der acht Entscheidungen abweicht oder die drei Saaten verschieden entscheiden.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/K3-angriff-abwehr (PR #101)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K3-angriff-abwehr</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Baukasten-Saaten 501 bis 508, Aufbau je Fall in der Probe unter „eigene Grenzfälle der Abwehr“. KI-Saaten 1, 2 und 3.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Probe aus dem Beleg unter <code>tests/</code> ablegen, <code>npx vitest run tests/zz_pruefer_k3.test.ts -t &quot;Grenzfälle&quot;</code>. Je Fall steht eine Zeile „G… {&quot;wahlen&quot;:[…],&quot;k2&quot;:[…],…}“ in der Ausgabedatei; <code>k2</code> ist zum Vergleich die Abschrift aus K2.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Eine Grube in der Schlussrunde auf einen Spieler, der schon eine Grube vor sich liegen hat, und Angriffe mit der Erweiterung (Schlangenhäutung, Aufgaben) sind nicht gebaut.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 07:41</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K3) &middot; agent &middot; pruefung-K3 @ <span class="commit" title="24dbb98d2699d41df8f196f6047383ef8f220a3b">24dbb98</span></p><p>G1 durchlassen (4-&gt;3), G1b abwehren (9-&gt;8, Kettenbonus), G2 durchlassen (0-&gt;6), G3 abwehren (Schlussrunde, letzter Zug offen), G4 durchlassen (D29, kein Zug), G5 abwehren (Grube laufend), G6 abwehren (14-&gt;0), G7 durchlassen (Schlussrunde, kein Zug); jeweils alle drei Saaten gleich.</p><ul class="belege"><li><a href="belege/2026-11-23-0741-TF-KI-020-1.txt">2026-11-23-0741-TF-KI-020-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -735,7 +735,7 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 | Bestandteil | Website | Digital heute |
 |---|---|---|
 | 78 Farbkarten, 30 Sonderkarten | Basis-Spiel | ja |
-| 15 Aufgabenkarten | Erweiterung | ja, 14 von 15 (C1) |
+| 15 Aufgabenkarten | Erweiterung | teilweise: Prüfung und Einlösen nach A9 (X1, 23.11.2026); die 15 Bedingungen sind noch Platzhalter, die nie erfüllt sind (X2) |
 | Schlangenhäutung | Erweiterung | ja |
 | Schlangenkorb des Glücks | Erweiterung | nein |
 | Comeback-Karten | Erweiterung | nein |
@@ -760,17 +760,14 @@ Erweiterung spielt. Die Tabelle zeigt, was davon am 12.11.2026 umgesetzt ist.
 
 ## Teil C — Abweichungen der heutigen Engine von Teil A
 
-Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026), C1 bis auf die Aufgabenkarten (E11, 21.11.2026). Jede Zeile ist ein Fehler im Code, nicht in der
+Arbeitsliste, Stand 12.11.2026. Behoben und gestrichen: C5 und C22 (E1, 13.11.2026), C11 und C13 (E10, 13.11.2026), C3, C4 und C12 (E2, 20.11.2026), C7 (E3, 20.11.2026), C6 und C18 (E4, 21.11.2026), C8 und C17 (E6, 21.11.2026), C16 (E7, 21.11.2026), C2 (E5, 21.11.2026), C9 und C19 (E9, 21.11.2026), C1 bis auf die Aufgabenkarten (E11, 21.11.2026), C1, C15 und C20 (X1, 23.11.2026). Jede Zeile ist ein Fehler im Code, nicht in der
 Website. Geprüft heißt: am Code gelesen, mit einem Test nachgestellt oder im
 laufenden Spiel beobachtet.
 
 | Nr. | Thema | Website (Teil A) | Engine heute | Fundstelle |
 |---|---|---|---|---|
-| C1 | Aufgabenkarten | Aufgabenkarten 15 (A1), erfüllt nach A9 | alle 15 Aufgaben liegen im Material (E1, 13.11.2026); ob eine erfüllt ist, prüft die Engine noch nicht (X1, X2) | `src/engine/aufgabenKarten.ts` |
 | C10 | Joker in Aufgaben | Regenbogenschlange und Farbenfusion zählen bei jeder Aufgabe als die Farbe, mit der die Aufgabe erfüllt ist; ihre Farbe ist nie festgelegt; eine erfüllte Aufgabe bleibt erfüllt (A7.3, A7.7, A9) | Sonderkarten unterbrechen in Aufgaben immer, auch Regenbogenschlange und Farbenfusion | `src/engine/aufgabenPruefung.ts`, `src/engine/colorGroups.ts` |
 | C14 | Lila Riese | ununterbrochene Reihe aus mindestens 5 violetten Karten (A9) | jede violette Gruppe ab 3 Karten genügt | `src/engine/aufgabenPruefung.ts` (`pruefeLilaRiese`) |
-| C15 | Neu aufgedeckte Aufgabe | darf sofort eingelöst werden (Antwort des Autors zu D5) | die nachgezogene Aufgabe wird in derselben Prüfung nicht mehr geprüft | `src/engine/aufgabenPruefung.ts` (`erfuelleOffeneAufgaben`) |
-| C20 | Zeitpunkt der Aufgabenprüfung | eine Aufgabe kann erfüllt werden, sobald die Bedingung gilt und der Spieler am Zug ist (A9) | geprüft wird nur einmal am Ende der Ausspielphase | `src/engine/turnState.ts` (`beendeAufgabenpruefung`) |
 | C21 | Farbwechsler | „Es gelten auch Reihen" (A9) | geprüft werden vier verschiedene Einzelkarten direkt nacheinander | `src/engine/aufgabenPruefung.ts` (`pruefeFarbwechsler`) |
 | C23 | Symmetriemeister | „min. 8 Karten, erste Hälfte Spiegelbild der zweiten" (A9); gerade Länge und Sonderkarten sagt die Website nicht, D39 (G6): ungerade Länge erlaubt, Joker zählen, andere Sonderkarten verhindern die Aufgabe | verlangt gerade Länge und ausschliesslich Farbkarten | `src/engine/aufgabenPruefung.ts` (`pruefeSymmetriemeister`) |
 
@@ -806,6 +803,8 @@ D14–D29 beantworten die Regelfragen F1–F15 und die Nachfrage F8a aus
 `docs/REGELFRAGEN.md`, D31 die Frage G9 und D34–D55 die übrigen Fragen zur
 Erweiterung, in der Reihenfolge G1–G8 und G10–G23. Für diese hat der Autor am
 21.11.2026 mit einer Sammelantwort die Vorschläge des Orchestrators bestätigt.
+D56–D57 sind Rückfragen aus der Umsetzung (Task X3), die der Autor am
+22.11.2026 beantwortet hat; sie haben keine Nummer in `docs/REGELFRAGEN.md`.
 Die Nummer der Regelfrage steht vor der Frage. Die Spalte „Folge“ nennt dort
 den Task, der die Antwort umsetzt.
 
@@ -866,6 +865,8 @@ den Task, der die Antwort umsetzt.
 | D53 | G21: Aktion 3: Welche Handkarte darf ersetzen, und wird bei „anderer Punktewert" die aufgedeckte Karte vor oder nach der gewählten Karte eingefügt? | Risiko-Aktion 3: Ersetzen darf jede Farbkarte der Hand. Bei anderem Punktewert wählt der Spieler, ob er die zusätzliche Karte davor oder dahinter legt. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5 | 21.11.2026 |
 | D54 | G22: Aktion 4: Zählt die aufgedeckte Karte zu den „zwei Karten vom Nachziehstapel"? Was bei leerem Ablagestapel? Wie kann eine Risiko-Karte auf einem Ablagestapel liegen, wenn sie aus dem Spiel kommt? | Risiko-Aktion 4: Bei Erfolg ist die aufgedeckte Karte die erste der zwei Karten; der Spieler zieht eine weitere. Ist der eigene Ablagestapel leer, bleibt nur die andere Möglichkeit: Bei Erfolg zieht der Spieler vom Nachziehstapel, bei Misserfolg der Gegner die oberste Karte. Risiko-Karte und Schlangenkorb kommen nach der Nutzung aus dem Spiel und liegen nie auf einem Ablagestapel; der Satz dazu in A8.2 ist nur eine Klarstellung. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5 | 21.11.2026 |
 | D55 | G23: Ist eine Risiko-Karte bei leerem Stapel oder in der Schlussrunde spielbar? Wer löst die Schlussrunde aus, wenn ein Effekt oder ein Gegner die letzte Karte nimmt? | Bei leerem Stapel und in der Schlussrunde ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann. Die Schlussrunde löst der Spieler am Zug aus, gleich wer die letzte Karte nimmt (auch ein begünstigter Gegner); er spielt seinen Zug zu Ende, dann hat jeder andere noch einen Zug. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5 | 21.11.2026 |
+| D56 | Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt, schon die Fusion des Zuges? | Ja: Wer eine Farbenfusion ausgespielt hat, hat die Fusion dieses Zuges verbraucht, auch wenn ein Gegner sie mit Farbenschutz abwehrt; eine zweite Farbenfusion ist in diesem Zug nicht möglich, auch nicht über eine Zusatzaktion (Schlangenkorb, Comeback-Karte). Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, gespielt ist gespielt“. Website folgt. | X3 | 22.11.2026 |
+| D57 | Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Comeback-Karte): Darf er die eben gezogenen Karten noch im selben Zug ausspielen? | Ja: Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht, etwa über Schlangenkorb oder Comeback-Karte, spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde. Das passt zu D43, D49 und D55. Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, im selben Zug“. Der Satz in A10 „Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“ meint die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr. D57 regelt den anderen Fall, dass er mitten im Zug über eine Erweiterung zieht; beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“). Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“). Die Website soll A10 mit D57 klarstellen. Website folgt. | X3 | 22.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -895,6 +896,20 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **23.11.2026, Task P0.5f:** Zwei Rückfragen aus X3, die der Autor am
+  22.11.2026 beantwortet hat, als D56 und D57 aufgenommen (Folge X3, Website
+  folgt). D56: Eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt,
+  verbraucht die Fusion des Zuges („Ja, gespielt ist gespielt“). D57: Wer
+  mitten im Zug die letzte Karte zieht, darf die eben gezogenen Karten noch im
+  selben Zug spielen („Ja, im selben Zug“). D43, D49 und D55 stimmen damit
+  überein und bleiben unverändert. Teil A unverändert. Der Task nennt
+  `docs/GAME_SPEC.md` ausdrücklich (U13). In Iteration 2 ordnet D57 nach dem
+  Muster von D23 den Satz aus A10 zu den zuletzt gezogenen Karten ein: Er
+  meint das Auffüllen am Ende des Zuges; D57 gilt fürs Ziehen mitten im Zug,
+  und zwischen den beiden Zügen eines Verdopplers spielt man den zweiten Zug
+  noch (A7.8). Die Website soll A10 mit D57 klarstellen. Dazu sind C1, C15
+  und C20 aus Teil C gestrichen, weil X1 sie behoben hat, und B1 nennt den
+  Stand nach X1.
 - **21.11.2026, Task P0.5e:** Sammelantwort des Autors zu G1–G8 und G10–G23
   („ja zu deinen vorschlägen.“) als D34–D55 aufgenommen. Es gilt bei jeder
   Frage der Vorschlag des Orchestrators aus `docs/REGELFRAGEN.md`, als Regel

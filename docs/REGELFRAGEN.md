@@ -3,10 +3,13 @@
 Task P0.5 · Katalog aus `docs/UMSETZUNGSPLAN.md`, Abschnitt 9 · 38 Fragen:
 F1–F15 zum Basis-Spiel, G1–G23 zur Erweiterung.
 
-Stand 21.11.2026: Alle Fragen sind beantwortet, die Antworten stehen in
+Stand 23.11.2026: Alle Fragen sind beantwortet, die Antworten stehen in
 `docs/GAME_SPEC.md` Teil D. F1–F15 und die Nachfrage F8a: D14–D29. G9: D31.
 G1–G8 und G10–G23 hat der Autor am 21.11.2026 mit einer Sammelantwort
-beantwortet, es gilt je der Vorschlag: D34–D55.
+beantwortet, es gilt je der Vorschlag: D34–D55. Zwei Rückfragen aus der
+Umsetzung (Task X3) hat der Autor am 22.11.2026 beantwortet; sie stehen nicht
+in diesem Katalog, sondern nur in Teil D: D56 (abgewehrte Farbenfusion) und
+D57 (letzte Karte mitten im Zug).
 
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der

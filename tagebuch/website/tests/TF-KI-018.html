@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-018 Schlangenblockade und Farbendieb der soliden KI treffen in Partien die Stelle mit dem höchsten Punktverlust für den Führenden, gemessen in beiden Lesarten von K3 Kriterium 2. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-018 Schlangenblockade und Farbendieb der soliden KI treffen in Partien die Stelle mit dem höchsten Punktverlust für den Führenden, gemessen in beiden Lesarten von K3 Kriterium 2.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Kriterium 2 von K3 lässt zwei Lesarten zu. Lesart A: Die KI wählt die Variante, bei der der führende Gegner die meisten Punkte verliert. Lesart B, wie die Umsetzung sie misst: Die KI wählt die Variante, nach der dem stärksten Gegner gegenüber ihr der kleinste Vorsprung bleibt. Welche gilt, entscheidet der Nutzer. Der Testfall zählt beide auf Saaten, die die Testsuite nicht kennt.</p><h2>Bestanden, wenn</h2><p>Lesart B: In mindestens 80 % der Blockaden und Farbendiebe gegen Gegner ist der Vorsprung des stärksten Gegners danach der kleinste, den diese Karte zulässt. Lesart A: In mindestens 80 % ist der Verlust des führenden Gegners der höchste, den diese Karte zulässt. Die Grenze von 80 % entspricht der Ausnahmequote im Partientest der Suite.</p><h2>Fehlgeschlagen, wenn</h2><p>Die Quote der gewählten Lesart unter 80 % liegt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/K3-angriff-abwehr (PR #101)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Ausgangslage</td><td>Worktree auf dem geprüften Stand von <code>task/K3-angriff-abwehr</code>, <code>npm ci</code> gelaufen</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>30 Partien nur mit der soliden KI an allen Sitzen, Saat 55&#x27;000 bis 55&#x27;029, Spielerzahl 2 + (Nummer mod 3), Erweiterung bei ungerader Nummer, KI-Zufall <code>erzeugeZufall(Saat × 7 + Sitz + 13)</code>. Gezählt wird jede Entscheidung jedes Sitzes.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Die Probe <code>zz_pruefer_k3.test.ts</code> aus dem Beleg unter <code>tests/</code> ablegen und mit <code>npx vitest run tests/zz_pruefer_k3.test.ts -t &quot;zwei Lesarten&quot;</code> ausführen. Sie schreibt die Zeile „K2-LESARTEN gesamt …, Lesart A …, Lesart B …“ und je Lesart bis zu sechs Abweichungen mit Punkten in die Datei, die in der Probe unter <code>aus</code> steht.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ist die KI selbst vorn, ist „der Führende“ in Lesart A der stärkste Gegner. Bei Gleichstand an der Spitze zählt der höchste Verlust unter den Führenden. Die Ausnahme der Suite für strikt besser bewertete Züge wendet die Probe nicht an.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 09:43</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">hanno79 &middot; mensch &middot; orch-K3-merge @ <span class="commit" title="dd0012a6e83dcab93683344ff910a8bc4db0d6cb">dd0012a</span></p><p>Entscheid des Nutzers vom 23.11.2026: K3 Kriterium 2 gilt in Lesart B (dem stärksten Gegner bleibt gegenüber der KI der kleinste Vorsprung). Gemessen vom Prüfer K3: Lesart B 198 von 209 (94.7 %), Lesart A 158 von 209 (75.6 %); damit erfüllt.</p></article><article class="lauf status-unklar"><h3><time datetime="2026-11-23">23.11.2026 07:41</time> <span class="status status-unklar">unklar</span></h3><p class="angaben">Claude Code (Prüfer K3) &middot; agent &middot; pruefung-K3 @ <span class="commit" title="24dbb98d2699d41df8f196f6047383ef8f220a3b">24dbb98</span></p><p>209 Blockaden und Farbendiebe gegen Gegner in 30 Partien (Saat 55000-55029, alle Sitze solide KI). Lesart A (hoechster Verlust des Fuehrenden): 158 von 209 (75.6 %). Lesart B (kleinster Vorsprung des staerksten Gegners): 198 von 209 (94.7 %). Beide 153, keine 6.</p><ul class="belege"><li><a href="belege/2026-11-23-0741-TF-KI-018-1.txt">2026-11-23-0741-TF-KI-018-1.txt</a></li><li><a href="belege/2026-11-23-0741-TF-KI-018-2.txt">2026-11-23-0741-TF-KI-018-2.txt</a></li></ul><div class="kasten-unklar"><h4>Unklar</h4><p>Welche Lesart von K3 Kriterium 2 gilt: in Lesart A unter der Grenze von 80 %, in Lesart B darueber.</p><h4>Fehlt</h4><p>Entscheidung des Nutzers zur Lesart von K3 Kriterium 2.</p></div></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

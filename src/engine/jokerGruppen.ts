@@ -331,3 +331,37 @@ export function laengsteReihe(schlange: Schlange, farbe: Farbe): number {
   }
   return laengste;
 }
+
+/*
+Joker in Aufgaben (A9, „Wichtig für Sonderkarten“; A7.3, A7.7): Regenbogenschlange
+und Farbenfusion zählen für eine Aufgabe als Karte einer Farbe, und zwar als die,
+mit der die Aufgabe erfüllt ist. Jede Aufgabe wählt diese Farbe für sich, auch
+anders als die Wertung (D8). Die Karten unter einer Farbenfusion zählen nicht
+einzeln. Andere Sonderkarten, etwa die Schlangenblockade, unterbrechen Farbreihen.
+*/
+
+/** Eine Karte einer Schlange, wie eine Aufgabe sie liest (A9): ihre Farbe, ein Joker oder eine andere Sonderkarte. */
+export type AufgabenGlied = Farbe | 'Joker' | 'Sonderkarte';
+
+/** Ein Glied innerhalb einer Farbreihe: eine Farbe oder ein Joker. */
+export type ReihenGlied = Exclude<AufgabenGlied, 'Sonderkarte'>;
+
+/** Die Karten einer Schlange von vorn nach hinten, wie eine Aufgabe sie liest (A9); eine Farbenfusion ist eine Karte. */
+export function aufgabenGlieder(schlange: Schlange): AufgabenGlied[] {
+  return schlange.karten.map((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : istJoker(karte) ? 'Joker' : 'Sonderkarte'));
+}
+
+/** Die Abschnitte einer Schlange zwischen anderen Sonderkarten, die Farbreihen unterbrechen (A9); leere fallen weg. */
+export function aufgabenStrecken(schlange: Schlange): ReihenGlied[][] {
+  const strecken: ReihenGlied[][] = [[]];
+  for (const glied of aufgabenGlieder(schlange)) {
+    if (glied === 'Sonderkarte') strecken.push([]);
+    else strecken[strecken.length - 1].push(glied);
+  }
+  return strecken.filter((strecke) => strecke.length > 0);
+}
+
+/** Erfüllt ein Abschnitt einer dieser Schlangen `pruefe`? Für Aufgaben, die eine ununterbrochene Folge verlangen (A9). */
+export function irgendeineStrecke(schlangen: readonly Schlange[], pruefe: (strecke: readonly ReihenGlied[]) => boolean): boolean {
+  return schlangen.some((schlange) => aufgabenStrecken(schlange).some(pruefe));
+}

@@ -1,0 +1,5 @@
+docs/GAME_SPEC.md:642:Das Spiel endet, wenn der Nachziehstapel leer ist. Wer die letzte Karte vom Nachziehstapel zieht, spielt seinen Zug no
+docs/GAME_SPEC.md:869:| D57 | Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Come
+docs/GAME_SPEC.md:907:  Muster von D23 den Satz aus A10 zu den zuletzt gezogenen Karten ein: Er
+docs/GAME_SPEC.md:910:  noch (A7.8). Die Website soll A10 mit D57 klarstellen. Dazu sind C1, C15
+docs/WEBSITE_NACHTRAG.md:138:Ja: Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht, etwa über Schlangenkorb oder Comeback-
