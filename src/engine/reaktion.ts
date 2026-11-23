@@ -10,8 +10,8 @@ import {
   meldeGespielteKarte,
   mitspielerImUhrzeigersinn,
   spielerIndexVon,
-  zaehleGespielteKarte,
 } from './zugablauf';
+import { zaehleGespielteKarte } from './zuggrenzen';
 
 /*
 Der Reaktionsablauf (A6, A7.2, D10, Plan E4), für jede Sonderkarte gleich: Wer

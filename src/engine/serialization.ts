@@ -1,4 +1,5 @@
 import { istKartenaktion, pruefeAktionsform } from './aktionen/pruefen';
+import { AKTIONSTYPEN } from './aktionen/typen';
 import type { SpielAktion } from './aktionen/typen';
 import { SPIELER_MAX, SPIELER_MIN } from './constants';
 import { FARBEN, SONDERKARTENNAMEN } from './deck';
@@ -190,6 +191,9 @@ function zug(wert: unknown, pfad: string): void {
     'verdopplerGespielt',
     'farbenfusionGespielt',
     'abschnitt',
+    'zusatzaktionen',
+    'verwendet',
+    'runde',
   ]);
   zahl(roh.spielerIndex, `${pfad}.spielerIndex`);
   einer(roh.teilzug, `${pfad}.teilzug`, [1, 2]);
@@ -198,6 +202,20 @@ function zug(wert: unknown, pfad: string): void {
   wahrheitswert(roh.verdopplerGespielt, `${pfad}.verdopplerGespielt`);
   wahrheitswert(roh.farbenfusionGespielt, `${pfad}.farbenfusionGespielt`);
   einer(roh.abschnitt, `${pfad}.abschnitt`, ['Ausspielen', 'Abwerfen']);
+  // X3: der Rahmen für Zusatzaktionen (`zuggrenzen.ts`); ob die Zähler zu `verwendet` passen, prüfen die Invarianten.
+  liste(roh.zusatzaktionen, `${pfad}.zusatzaktionen`, (eintrag, eintragPfad) => {
+    const zusatz = objekt(eintrag, eintragPfad, ['quelle', 'erlaubt', 'nurKarten']);
+    text(zusatz.quelle, `${eintragPfad}.quelle`);
+    liste(zusatz.erlaubt, `${eintragPfad}.erlaubt`, text);
+    if (zusatz.nurKarten !== null) liste(zusatz.nurKarten, `${eintragPfad}.nurKarten`, text);
+  });
+  liste(roh.verwendet, `${pfad}.verwendet`, (eintrag, eintragPfad) => {
+    const verwendung = objekt(eintrag, eintragPfad, ['art', 'karteId', 'aktion']);
+    text(verwendung.art, `${eintragPfad}.art`);
+    if (verwendung.karteId !== null) text(verwendung.karteId, `${eintragPfad}.karteId`);
+    if (verwendung.aktion !== null) einer(verwendung.aktion, `${eintragPfad}.aktion`, AKTIONSTYPEN);
+  });
+  liste(roh.runde, `${pfad}.runde`, text);
 }
 
 function schwebend(wert: unknown, pfad: string): void {

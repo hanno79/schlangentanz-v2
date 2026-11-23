@@ -2,7 +2,8 @@ import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
 import { istFarbenschutz, pruefeEntscheidung, pruefeReaktion } from '../reaktion';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
-import { darfZugBeenden, kartengrenze, ueberzaehligeKarten } from '../zugablauf';
+import { ueberzaehligeKarten } from '../zugablauf';
+import { darfZugBeenden, kartengrenze, wirkungsgrenze } from '../zuggrenzen';
 import { AKTIONSTYPEN } from './typen';
 import type { Ablehnung, Aktionstyp, KartenAktion, Pruefergebnis, SpielAktion, Spielergrund } from './typen';
 
@@ -230,10 +231,21 @@ export function zugBeendenGesperrt(zustand: Spielzustand): Ablehnung | null {
 /**
  * D13, D25: Eine Sonderkarte ohne mögliches Ziel und jeder Farbenschutz dürfen
  * ohne Wirkung auf den eigenen Ablagestapel. Ob die Karte ein Ziel hat, sagt ihr
- * Eintrag im Kartenregister; die Grenze je Zug prüft der Aufrufer (`kartengrenze`).
+ * Eintrag im Kartenregister und der Rahmen des Zuges (`moeglicheZiele`); den
+ * freien Platz im Zug prüft der Aufrufer (`kartengrenze`).
  */
 export function istWirkungslosAblegbar(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): boolean {
-  return ohneZielAblegbar(karte, () => definitionFuer(karte).ziele(zustand, spielerIndex, karte));
+  return ohneZielAblegbar(karte, () => moeglicheZiele(zustand, spielerIndex, karte));
+}
+
+/**
+ * Die Aktionen, mit denen diese Handkarte jetzt Wirkung haben kann: die Ziele aus
+ * ihrem Eintrag im Kartenregister, keine, wenn der Rahmen ihr in diesem Zug die
+ * Wirkung nimmt (zweite Farbenfusion, Verdoppler neben einer anderen
+ * Zugerweiterung; `wirkungsgrenze`, X3).
+ */
+export function moeglicheZiele(zustand: Spielzustand, spielerIndex: number, karte: Spielkarte): KartenAktion[] {
+  return wirkungsgrenze(zustand.zug, karte) === null ? definitionFuer(karte).ziele(zustand, spielerIndex, karte) : [];
 }
 
 /** Dieselbe Regel, wenn die Ziele der Karte schon ermittelt sind (`ermittleAktionen`); `ziele` wird nur bei Bedarf gerufen. */
@@ -266,6 +278,8 @@ function pruefeKartenaktion(zustand: Spielzustand, aktion: KartenAktion, karte: 
   const erwartet = kartenartFuer(aktion.typ);
   const art = kartenartVon(karte);
   if (art !== erwartet) return nein(`Die Karte ${karte.id} ist ${mitArtikel(art, 'Nominativ')}; ${aktion.typ} braucht ${mitArtikel(erwartet, 'Akkusativ')}.`);
+  const sperre = wirkungsgrenze(zustand.zug, karte);
+  if (sperre !== null) return nein(sperre);
   const grund = KARTENREGISTER[art].pruefe(zustand, aktion);
   return grund === null ? JA : nein(grund);
 }

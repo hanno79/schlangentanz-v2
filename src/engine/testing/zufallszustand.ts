@@ -1,5 +1,6 @@
 import { SONDERKARTENNAMEN } from '../deck';
 import type { FarbkarteInfo, Partiephase, Spielkarte, Spielzustand } from '../types';
+import { zaehleSchonGespielt } from '../zuggrenzen';
 import { baukasten } from './szenario';
 import type { Baukasten, Schlangenglied } from './szenario';
 
@@ -85,8 +86,9 @@ export function zufallszustand(zufall: () => number): Spielzustand {
   }
 
   bau.amZug(bis(spielerzahl), ja(0.3) ? 2 : 1).aendere((zustand) => {
-    zustand.zug.gespielteFarbkarten = bis(2);
-    zustand.zug.gespielteSonderkarten = bis(2);
+    // X3: über den Rahmen, damit Zähler und gezählte Karten übereinstimmen; dieselben Würfe wie vorher.
+    const farbkarten = bis(2);
+    zaehleSchonGespielt(zustand.zug, farbkarten, bis(2));
     zustand.zug.verdopplerGespielt = ja(0.3);
     zustand.zug.farbenfusionGespielt = ja(0.3);
     zustand.zug.abschnitt = ja(0.2) ? 'Abwerfen' : 'Ausspielen';

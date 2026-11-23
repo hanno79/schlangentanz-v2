@@ -1,4 +1,5 @@
 import type { KartenAktion } from './aktionen/typen';
+import type { Zugrahmen } from './zuggrenzen';
 
 /*
 Der Spielzustand im Format 2.
@@ -97,7 +98,8 @@ export interface Spieler {
 /** A10: Die Schlussrunde beginnt, sobald der Nachziehstapel leer ist. */
 export type Partiephase = 'Laufend' | 'Schlussrunde' | 'Beendet';
 
-export interface Zug {
+/** Ein Teilzug; was der Rahmen für Zusatzaktionen führt, steht in `Zugrahmen` (X3, `zuggrenzen.ts`). */
+export interface Zug extends Zugrahmen {
   spielerIndex: number;
   /** 2 ist der zweite Zug nach einem Verdoppler (A7.8). */
   teilzug: 1 | 2;
@@ -105,6 +107,7 @@ export interface Zug {
   gespielteFarbkarten: number;
   gespielteSonderkarten: number;
   verdopplerGespielt: boolean;
+  /** Eine Farbenfusion hat in diesem Teilzug gewirkt. Die Grenze „eine je Zug“ zählt auch eine abgewehrte (D56, `zuggrenzen.ts`). */
   farbenfusionGespielt: boolean;
   /** `Abwerfen`: Der Zug ist beendet, der Spieler hält mehr als 5 Karten und wählt, welche er ablegt (A5). */
   abschnitt: 'Ausspielen' | 'Abwerfen';

@@ -2,12 +2,14 @@ import { ENTSCHEIDUNGSREGISTER } from '../engine/entscheidungsregister'
 import { baukasten } from '../engine/testing/szenario'
 import { TESTENTSCHEIDUNGEN, verlangeTestwahl } from '../engine/testing/testentscheidung'
 import { erzeugeZufall } from '../engine/testing/zufall'
+import { meldeZugerweiterung } from '../engine/zuggrenzen'
 import type { Szenario } from './szenarien'
 
 /*
 Szenarien für den Rahmen aus X3 (Zusatzaktionen und Entscheidungen). Comeback,
 Risiko-Belohnung und Schlangenkorb kommen erst mit X4 bis X6; die Szenarien
-zeigen den Rahmen deshalb mit den Test-Entscheidungen aus
+zeigen den Rahmen deshalb mit Test-Zusatzaktionen, die der Baukasten im Rahmen
+anmeldet, und mit den Test-Entscheidungen aus
 `engine/testing/testentscheidung.ts`. Damit der Tisch sie kennt, trägt diese
 Datei sie ins Entscheidungsregister ein; sie gehört nur zum Entwicklertisch und
 steht nicht im Produktionsbündel.
@@ -40,6 +42,23 @@ function mitOffenerWahl(stapel: number | null): Szenario['erzeuge'] {
 }
 
 export const RAHMEN_SZENARIEN: readonly Szenario[] = [
+  {
+    name: 'zusatzaktionen-test',
+    beschreibung:
+      'X3, A8.1, D46, D47 (Test-Zusatzaktionen): Zwei Spieler. Spieler 1 hat zwei Zusatzaktionen für eine Farb- oder Sonderkarte, angemeldet wie von einer Comeback-Karte. Er hält Blau, Rot, Gelb, zwei Farbenfusionen und einen Verdoppler und hat die Schlange Grün, Grün, Braun, Braun.',
+    erwartet:
+      'Lage: Zusatzaktionen „Comeback: Farbkarte/Sonderkarte“ zweimal, „in dieser Runde: Comeback“. Der Verdoppler hat nur „SonderkarteWirkungslosAblegen“ (D47). Spieler 1 legt Blau, Rot und Gelb nacheinander an (drei Farbkarten, D46) und spielt eine Farbenfusion auf Grün-Grün; danach bleibt für die zweite Fusion und den Verdoppler kein Platz mehr, nur „Zug beenden“. Spielt er die Fusion zuerst, hat die zweite Fusion danach nur „SonderkarteWirkungslosAblegen“ (D46, D56). Nach „Zug beenden“ zieht er nach und KI-Gegner 1 beginnt ohne Zusatzaktionen.',
+    erzeuge: () =>
+      baukasten({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(302) })
+        .hand(0, ['Blau', 'Rot', 'Gelb', 'Farbenfusion', 'Farbenfusion', 'Verdoppler'])
+        .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'])
+        .schlange(0, ['Grün', 'Grün', 'Braun', 'Braun'])
+        .aendere((zustand) => {
+          const zusatz = { quelle: 'Comeback', erlaubt: ['Farbkarte', 'Sonderkarte'], nurKarten: null }
+          meldeZugerweiterung(zustand.zug, 'Comeback', [zusatz, zusatz])
+        })
+        .zustand(),
+  },
   {
     name: 'entscheidung-gegner',
     beschreibung:

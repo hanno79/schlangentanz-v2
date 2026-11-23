@@ -1,21 +1,24 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
 import { alleKartenorte, istVerdeckt } from './kartenorte';
+import { beginneSchlussrundeBeiLeeremStapel, zieheVomStapel } from './stapel';
 import type { Partiephase, Spieler, Spielkarte, Spielzustand, Zug } from './types';
+import { neuerRahmen, zaehleGespielteKarte } from './zuggrenzen';
 
 /*
-Der Zugablauf (A5, A6, A7.6, A7.8, A10): Karten des Zuges zählen, Zug beenden,
+Der Zugablauf (A5, A6, A7.6, A7.8, A10): Zug beenden,
 Auffüllen, überzählige Karten abwerfen, nach einem Verdoppler den zweiten Zug
 beginnen, den Zug weitergeben, bis wieder jemand entscheiden muss, und
 Schlangengruben ohne verbleibenden Zug ablegen (D29). Die Aktionsschicht (`aktionen/`) prüft vorher, ob eine
 Aktion erlaubt ist; die Funktionen hier verändern den übergebenen Zustand, den
 `anwendeAktion` vorher kopiert hat, und schreiben mit, was geschieht.
 
-Was die einzelnen Karten bewirken, steht im Kartenregister, nicht hier.
+Was die einzelnen Karten bewirken, steht im Kartenregister, nicht hier; die
+Grenzen eines Zuges und seine Zusatzaktionen stehen in `zuggrenzen.ts` (X3).
 */
 
-/** Ein frischer Zug ohne gespielte Karte. */
-export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1): Zug {
+/** Ein frischer Zug ohne gespielte Karte; im zweiten Zug nach einem Verdoppler läuft die Runde weiter (D47, D50). */
+export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1, runde: readonly string[] = []): Zug {
   return {
     spielerIndex,
     teilzug,
@@ -24,34 +27,11 @@ export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1): Zug {
     verdopplerGespielt: false,
     farbenfusionGespielt: false,
     abschnitt: 'Ausspielen',
+    ...neuerRahmen(runde),
   };
 }
 
-/** A5, D12: Je Zug höchstens eine Farbkarte und eine Sonderkarte. Der Grund, warum diese Karte nicht mehr geht, oder `null`. */
-export function kartengrenze(zug: Zug, karte: Spielkarte): string | null {
-  const gespielt = karte.typ === 'Farbkarte' ? zug.gespielteFarbkarten : zug.gespielteSonderkarten;
-  if (gespielt === 0) return null;
-  return `In diesem Zug ist schon eine ${karte.typ} gespielt; je Zug höchstens eine Farbkarte und eine Sonderkarte (A5, D12).`;
-}
-
-/** A5, D12: Mindestens eine Karte je Zug; wer keine Karte hält, darf gleich beenden. */
-export function darfZugBeenden(zug: Zug, spieler: Spieler): boolean {
-  return zug.gespielteFarbkarten + zug.gespielteSonderkarten > 0 || spieler.hand.length === 0;
-}
-
 type GespielteKarte = { typ: Aktionstyp; spielerId: string; karteId: string };
-
-/**
- * Eine Handkarte wird gespielt, mit oder ohne Wirkung: Sie zählt zum laufenden
- * Zug (A5, D12, D13). Liefert die Karte; sie liegt danach noch auf der Hand.
- */
-export function zaehleGespielteKarte(zustand: Spielzustand, aktion: GespielteKarte): Spielkarte {
-  const karte = zustand.spieler.find((spieler) => spieler.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === aktion.karteId);
-  if (karte === undefined) throw new Error(`Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`);
-  if (karte.typ === 'Farbkarte') zustand.zug.gespielteFarbkarten += 1;
-  else zustand.zug.gespielteSonderkarten += 1;
-  return karte;
-}
 
 /** Die Stelle des Spielers mit dieser Id in `spieler`, -1, wenn es ihn nicht gibt. */
 export function spielerIndexVon(zustand: Spielzustand, spielerId: string): number {
@@ -99,20 +79,14 @@ export function legeWirkungslosAb(zustand: Spielzustand, aktion: SonderkarteWirk
 }
 
 /**
- * A5: Zieht vom Nachziehstapel, bis der Spieler 5 Handkarten hat. Zieht er die
- * letzte Karte, beginnt die Schlussrunde, und er ist ihr Auslöser (A10).
+ * A5: Zieht vom Nachziehstapel, bis der Spieler am Zug 5 Handkarten hat. Zieht
+ * er die letzte Karte, beginnt die Schlussrunde, und er ist ihr Auslöser (A10).
  */
 export function fuelleHandAuf(zustand: Spielzustand, spielerIndex: number, ereignisse: Ereignis[]): void {
-  const spieler = zustand.spieler[spielerIndex];
-  const gezogen = zustand.nachziehstapel.splice(0, Math.max(0, HANDKARTEN - spieler.hand.length));
-  if (gezogen.length === 0) return;
-  spieler.hand.push(...gezogen);
-  ereignisse.push({ typ: 'KartenGezogen', spielerIndex, anzahl: gezogen.length });
-  if (zustand.nachziehstapel.length === 0 && zustand.partiephase === 'Laufend') {
-    zustand.partiephase = 'Schlussrunde';
-    zustand.schlussrundeAusloeser = spielerIndex;
-    ereignisse.push({ typ: 'SchlussrundeBegonnen', ausloeser: spielerIndex });
-  }
+  const anzahl = zieheVomStapel(zustand, spielerIndex, HANDKARTEN - zustand.spieler[spielerIndex].hand.length);
+  if (anzahl === 0) return;
+  ereignisse.push({ typ: 'KartenGezogen', spielerIndex, anzahl });
+  beginneSchlussrundeBeiLeeremStapel(zustand, ereignisse);
 }
 
 /** A5: Wie viele Karten der Spieler über 5 hält. */
@@ -160,9 +134,9 @@ export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly strin
  * Nächste ist dran.
  */
 function schliesseZugAb(zustand: Spielzustand, ereignisse: Ereignis[]): void {
-  const { spielerIndex, teilzug, verdopplerGespielt } = zustand.zug;
+  const { spielerIndex, teilzug, verdopplerGespielt, runde } = zustand.zug;
   if (teilzug === 1 && verdopplerGespielt) {
-    beginneZug(zustand, spielerIndex, 2, ereignisse);
+    beginneZug(zustand, spielerIndex, 2, ereignisse, runde);
     return;
   }
   gibZugWeiter(zustand, ereignisse);
@@ -244,7 +218,7 @@ export function legeGrubenOhneZugAb(zustand: Spielzustand, ereignisse: Ereignis[
 }
 
 /** Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben Teilzug nennen. */
-function beginneZug(zustand: Spielzustand, spielerIndex: number, teilzug: 1 | 2, ereignisse: Ereignis[]): void {
-  zustand.zug = neuerZug(spielerIndex, teilzug);
+function beginneZug(zustand: Spielzustand, spielerIndex: number, teilzug: 1 | 2, ereignisse: Ereignis[], runde: readonly string[] = []): void {
+  zustand.zug = neuerZug(spielerIndex, teilzug, runde);
   ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug });
 }

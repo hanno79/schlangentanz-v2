@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { deserialisiere, ermittleAktionen, ermittleEntscheider, serialisiere } from '../engine'
-import type { Ereignis } from '../engine'
+import type { Ereignis, Spielzustand } from '../engine'
 import { SZENARIEN } from './szenarien'
 import { erzeuge, klicke } from './szenarienTesthilfe'
 import type { Wahl } from './szenarienTesthilfe'
@@ -18,7 +18,24 @@ const typen = (ereignisse: Ereignis[]) => ereignisse.map((ereignis) => ereignis.
 
 describe('X3: Szenarien des Rahmens am Entwicklertisch', () => {
   it('X3: die Szenarien sind da', () => {
-    expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.arrayContaining(['entscheidung-gegner', 'entscheidung-letzte-karte']))
+    expect(SZENARIEN.map((szenario) => szenario.name)).toEqual(expect.arrayContaining(['zusatzaktionen-test', 'entscheidung-gegner', 'entscheidung-letzte-karte']))
+  })
+
+  it('D46/D47: zusatzaktionen-test: drei Farbkarten und eine Fusion; Verdoppler und zweite Fusion nur wirkungslos', () => {
+    const start = erzeuge('zusatzaktionen-test')
+    const mitWirkung = (zustand: Spielzustand, name: string) =>
+      ermittleAktionen(zustand).some((aktion) => aktion.typ !== 'SonderkarteWirkungslosAblegen' && 'karteId' in aktion && aktion.karteId.startsWith(name))
+    expect(mitWirkung(start, 'verdoppler'), 'D47').toBe(false)
+    const farbe = (farbe: string): Wahl => (aktion, zustand) =>
+      aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && zustand.spieler[0].hand.find((karte) => karte.id === aktion.karteId)?.typ === 'Farbkarte' && aktion.karteId.startsWith(farbe)
+    const fusion: Wahl = (aktion) => aktion.typ === 'FusionLegen'
+    const gespielt = klicke(start, farbe('blau'), farbe('rot'), farbe('gelb'), fusion)
+    expect(gespielt.zustand.zug).toMatchObject({ gespielteFarbkarten: 3, gespielteSonderkarten: 1 })
+    expect(ermittleAktionen(gespielt.zustand).map((aktion) => aktion.typ)).toEqual(['ZugBeenden'])
+    const fusionZuerst = klicke(start, fusion).zustand
+    expect(mitWirkung(fusionZuerst, 'farbenfusion'), 'D46/D56').toBe(false)
+    const naechster = klicke(gespielt.zustand, beenden).zustand
+    expect(naechster.zug).toMatchObject({ spielerIndex: 1, zusatzaktionen: [], runde: [] })
   })
 
   it('D52/A8.2: entscheidung-gegner: erst wählt Spieler 1 den Gegner, dann der Gegner die Karte; der Gegner baut erst an seinem Zugende ab', () => {

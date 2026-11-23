@@ -110,7 +110,7 @@ describe('K2, Kriterien 1 und 2: am Zugende liegt keine Karte mehr, die ihr nüt
       .schlange(0, ['Blau', 'Violett', 'Rot'])
       .hand(2, ['Violett', 'Rot', 'Schlangenfrass', 'Schlangenfrass'])
       .amZug(2)
-      .aendere((zustand) => (zustand.zug.gespielteFarbkarten = 1))
+      .gespielt(1, 0)
       .zustand()
     const gelb = start.spieler[2].schlangen[1].karten[2]
     const aktion = naechsterKiSchritt(start, erstelleSolideKi(erzeugeZufall(1)))
@@ -125,7 +125,7 @@ describe('K2, Kriterien 1 und 2: am Zugende liegt keine Karte mehr, die ihr nüt
       .schlange(1, ['Rot', 'Grün', 'Braun'])
       .hand(0, ['Gelb', 'Rot', 'Gelb', 'Schlangenfrass'])
       .amZug(0)
-      .aendere((zustand) => (zustand.zug.gespielteFarbkarten = 1))
+      .gespielt(1, 0)
       .zustand()
     const blockade = start.spieler[0].schlangen[0].karten[12]
     const frass = ermittleAktionen(start).find((aktion) => aktion.typ === 'SchlangenfrassSpielen' && aktion.option === 'eigeneKarte' && aktion.ziele[0].karteId === blockade.id)

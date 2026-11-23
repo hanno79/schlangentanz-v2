@@ -2,6 +2,7 @@ import { MAX_SCHLANGEN_PRO_SPIELER, OFFENE_AUFGABEN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
 import { ENTSCHEIDUNGSREGISTER } from './entscheidungsregister';
+import { zaehlerPassen } from './zuggrenzen';
 import type { KartenAktion } from './aktionen/typen';
 import { istKartenaktionstyp, kartenartFuer, kartenartVon } from './karten/register';
 import type { AufgabenkarteInfo, Auslagekarte, Spielkarte, Spielzustand } from './types';
@@ -205,6 +206,9 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
     if (!gueltig(index)) probleme.push(`${was} verweist auf Spieler ${index}, es gibt ${anzahl}.`);
   };
   pruefe(zustand.zug.spielerIndex, 'Der Zug');
+  // X3: Was der Rahmen als gespielt führt, stimmt mit den Zählern des Zuges überein.
+  const zaehler = zaehlerPassen(zustand.zug);
+  if (zaehler !== null) probleme.push(zaehler);
   if (zustand.schlussrundeAusloeser !== null) pruefe(zustand.schlussrundeAusloeser, 'Der Schlussrunden-Auslöser');
   for (const grube of zustand.ausliegendeGruben) {
     pruefe(grube.gespieltVon, `${grube.karte.id} (gespielt von)`);

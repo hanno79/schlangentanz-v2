@@ -5,6 +5,7 @@ import { beginneSchlange } from '../schlangen';
 import { erstelleTisch, teileReihumAus } from '../state';
 import type { TischOptionen } from '../state';
 import type { FarbkarteInfo, Farbe, Sonderkartenname, SonderkarteInfo, Spielkarte, Spielzustand } from '../types';
+import { zaehleSchonGespielt } from '../zuggrenzen';
 
 /*
 Der Szenario-Baukasten (Plan E1, Kriterium 8) baut Zustände für Tests und den
@@ -33,6 +34,8 @@ export interface Baukasten {
   /** Teilt reihum von oben aus, bis jeder 5 Handkarten hat oder der Stapel leer ist. */
   haendeAuffuellen(): Baukasten;
   amZug(spieler: number, teilzug?: 1 | 2): Baukasten;
+  /** Wie nach so vielen schon gespielten Karten in diesem Teilzug (A5, D12); Zähler und Rahmen des Zuges (X3) stimmen überein. */
+  gespielt(farbkarten: number, sonderkarten: number): Baukasten;
   /** Eine angesagte Sonderkarte von `spieler`, über die `ausstehend` noch entscheiden (A6). */
   schwebend(spieler: number, karte: Kartenwahl, aktion: (karteId: string, spielerId: string) => KartenAktion, ausstehend: number[]): Baukasten;
   /** A10: Der Nachziehstapel ist dann leer; was dort noch lag, kommt reihum auf die Ablagestapel. */
@@ -152,6 +155,10 @@ export function baukasten(optionen: TischOptionen): Baukasten {
     amZug(index, teilzug = 1) {
       spieler(index);
       zustand.zug = { ...zustand.zug, spielerIndex: index, teilzug };
+      return bau;
+    },
+    gespielt(farbkarten, sonderkarten) {
+      zaehleSchonGespielt(zustand.zug, farbkarten, sonderkarten);
       return bau;
     },
     schwebend(index, wahl, aktion, ausstehend) {
