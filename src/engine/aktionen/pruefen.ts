@@ -1,3 +1,4 @@
+import { pruefeComebackEinsetzen, pruefeZweiAbwerfenDreiZiehen } from '../erweiterung/comeback';
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
 import { istFarbenschutz, pruefeEntscheidung, pruefeReaktion } from '../reaktion';
@@ -58,6 +59,8 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   UeberhandAbwerfen: { spielerId: text, karteIds: textliste(0) },
   Reagieren: { spielerId: text, farbenschutzId: textOderNull },
   Entscheiden: { spielerId: text, wahl: text },
+  ComebackEinsetzen: { spielerId: text, comebackId: text },
+  ZweiAbwerfenDreiZiehen: { spielerId: text, karteIds: textliste(2, 2) },
 };
 
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {
@@ -129,6 +132,10 @@ function nichtAufHand(name: string, spielerIndex: number, karteId: string): Able
 
 const JA: Pruefergebnis = { erlaubt: true };
 
+function grundOderJa(grund: string | null): Pruefergebnis {
+  return grund === null ? JA : nein(grund);
+}
+
 /**
  * Ist die Aktion jetzt erlaubt? Die allgemeinen Prüfungen stehen hier, die
  * Regeln der einzelnen Karte im Kartenregister. Jeder Grund ist deutsch (U12).
@@ -197,6 +204,10 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
       return JA;
     case 'UeberhandAbwerfen':
       return pruefeUeberhand(zustand, spielerIndex, aktion.karteIds);
+    case 'ComebackEinsetzen':
+      return grundOderJa(pruefeComebackEinsetzen(zustand, spielerIndex, aktion.comebackId));
+    case 'ZweiAbwerfenDreiZiehen':
+      return grundOderJa(pruefeZweiAbwerfenDreiZiehen(zustand, spielerIndex, aktion.karteIds));
     default:
       break;
   }

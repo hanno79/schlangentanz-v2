@@ -75,6 +75,7 @@ describe('O3/U3: Jede aufgezählte Aktion ist über ihre Wahlen erreichbar, und 
       [
         'BlockadeLegen', 'Entscheiden', 'FarbendiebSpielen', 'FarbkarteLegen', 'FusionLegen', 'Reagieren', 'RegenbogenschlangeLegen',
         'SchlangenfrassSpielen', 'SchlangengrubeSpielen', 'SchlangenhaeutungSpielen', 'SonderkarteWirkungslosAblegen', 'UeberhandAbwerfen', 'VerdopplerSpielen', 'ZugBeenden',
+        'ComebackEinsetzen', 'ZweiAbwerfenDreiZiehen',
       ].sort(),
     )
   })

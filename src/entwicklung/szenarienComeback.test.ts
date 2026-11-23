@@ -73,7 +73,10 @@ describe('X4: Szenarien der Comeback-Karte am Entwicklertisch', () => {
   })
 
   it('D49/D57/A10: comeback-letzte-karte: das Abwerfen zieht die letzten zwei Karten, Spieler 1 löst die Schlussrunde aus und spielt weiter', () => {
-    const eingesetzt = klicke(erzeuge('comeback-letzte-karte'), comeback).zustand
+    const eingesetzt = erzeuge('comeback-letzte-karte')
+    expect(eingesetzt.spieler[0].comeback?.verbraucht, 'die Comeback-Karte ist schon eingesetzt').toBe(true)
+    expect(knoepfe(eingesetzt)).not.toContain('ComebackEinsetzen')
+    expect(knoepfe(eingesetzt).filter((typ) => typ === 'ZweiAbwerfenDreiZiehen')).toHaveLength(10)
     const gezogen = klicke(eingesetzt, tauschen)
     expect(typen(gezogen.ereignisse)).toEqual(['KartenAbgeworfen', 'KartenGezogen', 'SchlussrundeBegonnen'])
     expect(gezogen.ereignisse[1]).toEqual({ typ: 'KartenGezogen', spielerIndex: 0, anzahl: 2 })

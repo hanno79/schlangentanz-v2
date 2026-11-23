@@ -39,6 +39,9 @@ export type Wahl =
   | { art: 'durchlassen' }
   /** X3: eine Option einer offenen Entscheidung; wie sie am Tisch erscheint, legt O10 fest. */
   | { art: 'entscheiden'; wahl: string }
+  /** X4: die eigene Comeback-Karte einsetzen und „Zwei Karten abwerfen, drei ziehen“; wie es am Tisch erscheint, legt O10 fest. */
+  | { art: 'comeback' }
+  | { art: 'zweiAbwerfenDreiZiehen' }
 
 /** Die Wahl einer bestimmten Art. */
 export type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
@@ -112,6 +115,10 @@ export function wegZu(aktion: SpielAktion): Weg {
       return { folge: [aktion.farbenschutzId === null ? { art: 'durchlassen' } : { art: 'abwehren', farbenschutzId: aktion.farbenschutzId }], menge: [] }
     case 'Entscheiden':
       return { folge: [{ art: 'entscheiden', wahl: aktion.wahl }], menge: [] }
+    case 'ComebackEinsetzen':
+      return { folge: [{ art: 'comeback' }], menge: [] }
+    case 'ZweiAbwerfenDreiZiehen':
+      return { folge: [{ art: 'zweiAbwerfenDreiZiehen' }], menge: aktion.karteIds.map((karteId): Wahl => ({ art: 'abwerfen', karteId })) }
   }
 }
 

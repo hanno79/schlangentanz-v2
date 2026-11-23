@@ -1,5 +1,6 @@
 import type { Aktionstyp, Ereignis, Kartenort, SonderkarteWirkungslosAblegenAktion } from './aktionen/typen';
 import { HANDKARTEN } from './constants';
+import { comebackBedingungErfuellt } from './erweiterung/comeback';
 import { alleKartenorte, istVerdeckt } from './kartenorte';
 import { beginneSchlussrundeBeiLeeremStapel, zieheVomStapel } from './stapel';
 import type { Partiephase, Spieler, Spielkarte, Spielzustand, Zug } from './types';
@@ -27,6 +28,7 @@ export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1, runde: readon
     verdopplerGespielt: false,
     farbenfusionGespielt: false,
     abschnitt: 'Ausspielen',
+    comebackBedingung: false,
     ...neuerRahmen(runde),
   };
 }
@@ -217,8 +219,14 @@ export function legeGrubenOhneZugAb(zustand: Spielzustand, ereignisse: Ereignis[
   });
 }
 
-/** Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben Teilzug nennen. */
+/**
+ * Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben
+ * Teilzug nennen. Zu Beginn des Zuges stellt die Engine fest, ob der Spieler die
+ * Comeback-Karte einsetzen dürfte (A8.1, D48); der zweite Zug nach einem
+ * Verdoppler gehört zu derselben Runde und übernimmt den Befund.
+ */
 function beginneZug(zustand: Spielzustand, spielerIndex: number, teilzug: 1 | 2, ereignisse: Ereignis[], runde: readonly string[] = []): void {
-  zustand.zug = neuerZug(spielerIndex, teilzug, runde);
+  const comebackBedingung = teilzug === 2 ? zustand.zug.comebackBedingung : comebackBedingungErfuellt(zustand, spielerIndex);
+  zustand.zug = { ...neuerZug(spielerIndex, teilzug, runde), comebackBedingung };
   ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug });
 }

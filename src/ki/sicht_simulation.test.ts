@@ -102,7 +102,9 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
   const proben = STELLUNGEN.flatMap((zustand, nummer) => {
     const entscheider = ermittleEntscheider(zustand)
     if (entscheider === null) return []
-    const aktionen = ermittleAktionen(zustand).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+    // X4: „Zwei Karten abwerfen, drei ziehen“ zieht verdeckt wie „Zug beenden“ (D49).
+    const ziehtVerdeckt = new Set(['ZugBeenden', 'UeberhandAbwerfen', 'ZweiAbwerfenDreiZiehen'])
+    const aktionen = ermittleAktionen(zustand).filter((aktion) => !ziehtVerdeckt.has(aktion.typ))
     return jederNte(aktionen, Math.max(1, Math.floor(aktionen.length / 6))).map((aktion) => ({ zustand, nummer, entscheider, aktion }))
   })
 
