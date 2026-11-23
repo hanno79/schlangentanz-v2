@@ -87,12 +87,21 @@ export function spalten(tabelle: Tabelle, ...namen: string[]): string[][] {
   return tabelle.zeilen.map((zeile) => stellen.map((stelle) => zeile[stelle] ?? ''))
 }
 
-/** Antwort, Datum und Folge eines Eintrags in Teil D, Leerraum zusammengezogen und klein geschrieben. */
-export function eintragD(nummer: string): { antwort: string; datum: string; folge: string } {
-  const zeile = spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Antwort', 'Datum', 'Folge').find(([nr]) => nr === nummer)
+/** Frage (wie in der Tabelle), Antwort (Leerraum zusammengezogen, klein geschrieben), Datum und Folge eines Eintrags in Teil D. */
+export function eintragD(nummer: string): { frage: string; antwort: string; datum: string; folge: string } {
+  const zeile = spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Frage', 'Antwort', 'Datum', 'Folge').find(([nr]) => nr === nummer)
   expect(zeile, `${nummer} fehlt in Teil D`).toBeDefined()
-  const [, antwort, datum, folge] = zeile as string[]
-  return { antwort: fliesstext(antwort).toLowerCase(), datum, folge }
+  const [, frage, antwort, datum, folge] = zeile as string[]
+  return { frage, antwort: fliesstext(antwort).toLowerCase(), datum, folge }
+}
+
+export const websiteNachtrag = readFileSync('docs/WEBSITE_NACHTRAG.md', 'utf8')
+
+/** Eintrag in `docs/WEBSITE_NACHTRAG.md`: fette Frage mit „(Dnn)“, darunter die Antwort. */
+export function nachtragEintrag(nummer: string): { frage: string; antwort: string } {
+  const treffer = new RegExp(`^\\*\\*(.+)\\*\\* \\(${nummer}\\)\\s*\\n(.+)$`, 'm').exec(websiteNachtrag)
+  expect(treffer, `${nummer} fehlt in docs/WEBSITE_NACHTRAG.md`).not.toBeNull()
+  return { frage: treffer?.[1] ?? '', antwort: treffer?.[2] ?? '' }
 }
 
 /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */

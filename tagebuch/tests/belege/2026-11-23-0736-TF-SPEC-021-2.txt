@@ -1,0 +1,45 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aafe5e835b9dd5a24
+
+ ❯ tests/spec_documentation_teil_d.test.ts (14 tests | 2 failed) 30ms
+     × P0.5f: D56: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D 8ms
+     × P0.5f: D57: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D56: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+AssertionError: D56 ohne Kernaussage „Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, gespielt ist gespielt“.“: expected 'nein: wer eine farbenfusion ausgespie…' to contain 'antwort des autors auf eine rückfrage…'
+
+Expected: "antwort des autors auf eine rückfrage aus x3, gewählte möglichkeit: „ja, gespielt ist gespielt“."
+Received: "nein: wer eine farbenfusion ausgespielt hat, hat die fusion dieses zuges verbraucht, auch wenn ein gegner sie mit farbenschutz abwehrt; eine zweite farbenfusion ist in diesem zug nicht möglich, auch nicht über eine zusatzaktion (schlangenkorb, comeback-karte). antwort des autors auf eine rückfrage aus x3, gewählte möglichkeit: „nein, nur eine wirksame“. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation_hilfen.ts:109:90
+    107| /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    108| export function pruefeKern(nummer: string, antwort: string, kern: stri…
+    109|   for (const aussage of kern) expect(antwort, `${nummer} ohne Kernauss…
+       |                                                                                          ^
+    110|   for (const aussage of verboten) expect(antwort, `${nummer} enthält „…
+    111| }
+ ❯ tests/spec_documentation_teil_d.test.ts:172:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D57: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+AssertionError: D57 fehlt in Teil D: expected undefined to be defined
+ ❯ eintragD tests/spec_documentation_hilfen.ts:93:46
+     91| export function eintragD(nummer: string): { frage: string; antwort: st…
+     92|   const zeile = spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.',…
+     93|   expect(zeile, `${nummer} fehlt in Teil D`).toBeDefined()
+       |                                              ^
+     94|   const [, frage, antwort, datum, folge] = zeile as string[]
+     95|   return { frage, antwort: fliesstext(antwort).toLowerCase(), datum, f…
+ ❯ tests/spec_documentation_teil_d.test.ts:170:62
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 passed (14)
+   Start at  07:32:42
+   Duration  2.95s (transform 85ms, setup 275ms, import 63ms, tests 30ms, environment 2.29s)
+

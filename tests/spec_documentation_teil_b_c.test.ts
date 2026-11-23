@@ -30,4 +30,22 @@ describe('GAME_SPEC Teil C — Abweichungen der Engine', () => {
     )
     expect(unvollstaendig).toEqual([])
   })
+
+  it('vermerkt jede gestrichene Nummer unter „Behoben und gestrichen“', () => {
+    const c = teil('C')
+    const nummern = spalten(tabelleMitSpalte(c, 'Fundstelle'), 'Nr.').map(([nr]) => Number(nr.slice(1)))
+    const gestrichen = /Behoben und gestrichen:[^\n]*/.exec(c)?.[0] ?? ''
+    const fehlend = Array.from({ length: Math.max(...nummern) }, (_, i) => `C${i + 1}`).filter(
+      (nr) => !nummern.includes(Number(nr.slice(1))) && !new RegExp(`\\b${nr}\\b`).test(gestrichen),
+    )
+    expect(fehlend, 'Teil C: Nummern weder in der Tabelle noch unter „Behoben und gestrichen“').toEqual([])
+  })
+
+  it('P0.5f: C1, C15 und C20 sind nach X1 gestrichen; B1 nennt nicht mehr „14 von 15“', () => {
+    const nummern = spalten(tabelleMitSpalte(teil('C'), 'Fundstelle'), 'Nr.').map(([nr]) => nr)
+    expect(nummern.filter((nr) => ['C1', 'C15', 'C20'].includes(nr)), 'Teil C führt noch').toEqual([])
+    expect(fehlende(teil('C'), ['C1, C15 und C20 (X1, 23.11.2026)'])).toEqual([])
+    const aufgaben = spalten(tabelleMitSpalte(teil('B'), 'Digital heute'), 'Bestandteil', 'Digital heute').find(([was]) => was === '15 Aufgabenkarten')
+    expect(aufgaben?.[1], 'B1: Zeile „15 Aufgabenkarten“').not.toContain('14 von 15')
+  })
 })
