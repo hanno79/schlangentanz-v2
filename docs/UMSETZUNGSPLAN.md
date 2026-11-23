@@ -884,7 +884,10 @@ Lobby schon heute die Partie mit `Math.random` anlegt.
      Gegner ein lohnendes Ziel, entfernt sie die Blockade; hat der Führende
      eine wertvolle Gruppe, frisst sie dort. Je ein Szenario.
   2. Schlangenblockade und Farbendieb treffen die Gruppe mit dem höchsten
-     Punktverlust für den Führenden.
+     Punktverlust für den Führenden. Gemessen wird nach Entscheid des Nutzers
+     vom 23.11.2026 der Vorsprung: Nach dem Zug bleibt dem stärksten Gegner
+     gegenüber der KI der kleinste Vorsprung, auch wenn die KI dabei selbst
+     Punkte gewinnt.
   3. Eine störende Farbkarte legt sie beim Gegner nur, wenn die eigene Hand
      nichts Besseres hergibt.
   4. Abwehr: Sie spielt Farbenschutz bei einem Angriff auf eine Dreiergruppe
