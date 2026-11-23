@@ -36,6 +36,9 @@ export function pruefeAufgabenAmZug(zustand: Spielzustand, ereignisse: Ereignis[
 
 /** Löst am Ende seines Zuges für den Spieler am Zug ein, was er jetzt erfüllt, jede Aufgabe gleich welchen Prüfzeitpunkts. */
 export function pruefeAufgabenAmZugende(zustand: Spielzustand, ereignisse: Ereignis[]): void {
+  // Am Zugende gibt es keine zweite Gelegenheit; still übergehen hiesse, Farbenpracht zu verlieren.
+  if (zustand.schwebend !== null) throw new Error(`Ein Zug endet nicht, solange die ${zustand.schwebend.karte.name} schwebt (A6).`);
+  if (zustand.entscheidung !== null) throw new Error(`Ein Zug endet nicht, solange die Entscheidung „${zustand.entscheidung.art}“ offen ist (X3).`);
   loeseEin(zustand, ereignisse, true);
 }
 
