@@ -707,19 +707,87 @@ bis E9.*
 
 #### X4 Comeback-Karte · X5 Risiko-Belohnungs-Karten · X6 Schlangenkorb des Glücks
 
-*Drei Tasks, gleichzeitig nach X3. Die genauen Kriterien entstehen aus den Antworten in P0.5 und werden vor Taskbeginn in Plan und Dart nachgetragen.*
+*Drei Tasks, gleichzeitig nach X3. Die Kriterien aus den Antworten in P0.5
+(D42–D57) sind am 23.11.2026 nachgetragen. Alle drei bauen auf dem Rahmen aus
+X3 auf: Zuggrenzen nur in `zuggrenzen.ts`, Entscheidungen eines Gegners über den
+Entscheidungsablauf, Ziehen mitten im Zug über `stapel.ts`.*
 
 - **X4** (A8.1, Fragen G16 → D48, G17 → D49): Bedingung zu Zugbeginn
   (5 Karten Rückstand, Grenze bei 4 und 5 getestet); je Spieler einmal; zwei Zusatzaktionen aus
   drei Möglichkeiten; danach verbraucht. Datei `src/engine/erweiterung/comeback.ts`.
+  **Abnahmekriterien:**
+  1. Jeder Spieler hat zu Spielbeginn eine Comeback-Karte, nur mit Erweiterung.
+  2. Die Bedingung wird zu Beginn des eigenen Zuges festgestellt und gilt den
+     ganzen Zug: längste eigene Schlange mindestens 5 Karten kürzer als die
+     längste auf dem Tisch (Tests mit Rückstand 4 und 5). Jede Karte zählt
+     eins, auch Sonderkarten; eine Farbenfusion samt ihren zwei Karten zählt
+     eins; ohne Schlange ist die Länge 0 (D48).
+  3. Eingesetzt werden darf sie irgendwann in diesem Zug; ihr Einsatz zählt
+     nicht als reguläre Aktion. Im zweiten Zug nach Verdoppler nur, wenn D47
+     es zulässt; Verdoppler, Comeback und Korb-Erweiterung schliessen sich aus
+     (D47).
+  4. Zwei Zusatzaktionen aus den drei Möglichkeiten, in beliebiger Reihenfolge
+     mit den normalen Aktionen, auch zweimal dieselbe; die Grenze „eine
+     Farbenfusion pro Zug“ gilt weiter (D46, D56).
+  5. „Zwei Karten abwerfen, drei ziehen“ (D49): mit weniger als zwei
+     Handkarten nicht wählbar; bei weniger als drei im Stapel zieht man, was
+     da ist; wer so die letzte Karte zieht, darf sie im selben Zug noch
+     spielen, danach beginnt die Schlussrunde (D57); in der Schlussrunde nicht
+     wählbar.
+  6. Danach verbraucht und umgedreht; nie wieder aktivierbar, auch wenn die
+     Bedingung später wieder gilt. Mehrere Spieler dürfen in ihren Zügen je
+     ihre eigene einsetzen.
 - **X5** (A8.2, Fragen G18 → D50, G19 → D51, G20 → D52, G21 → D53,
   G22 → D54, G23 → D55): je Spieler zwei Karten; höchstens eine pro
   Runde; aufgedeckte Farbkarte heisst Erfolg, Sonderkarte Misserfolg; vier
   Aktionen, je Erfolg und Misserfolg ein Test; Wahl des begünstigten Gegners;
   Karte danach aus dem Spiel. Datei `src/engine/erweiterung/risiko.ts`.
+  **Abnahmekriterien:**
+  1. Jeder Spieler hat zu Spielbeginn zwei Risiko-Karten, nur mit
+     Erweiterung; nach dem Ausspielen kommt die Karte aus dem Spiel und liegt
+     nie auf einem Ablagestapel (D54).
+  2. Höchstens eine Risiko-Karte pro Runde; der eigene Zug samt zweitem Zug
+     nach Verdoppler ist eine Runde (D50). Ihr Einsatz zählt nicht als
+     reguläre Aktion und ist keine Zugerweiterung im Sinn von D47.
+  3. Die oberste Stapelkarte wird offen aufgedeckt: Farbkarte heisst Erfolg,
+     Sonderkarte Misserfolg. Bei leerem Stapel und in der Schlussrunde ist
+     eine Risiko-Karte nicht spielbar (D55).
+  4. Alle vier Aktionen je mit einem Test für Erfolg und Misserfolg, mit dem
+     Verbleib jeder Karte nach D51–D54: Aktion 2 verlangt vorher eine
+     benannte Farbkarte der Hand und legt nur an ein Ende einer eigenen
+     Schlange (D52); Aktion 3 ersetzt jede Farbkarte der Hand, bei anderem
+     Punktewert wählt der Spieler davor oder dahinter (D53); Aktion 4 bei
+     leerem eigenem Ablagestapel nur die andere Möglichkeit (D54).
+  5. Bei Misserfolg wählt der Spieler den begünstigten Gegner frei; die Wahl
+     des Gegners (Aktion 2: geplante Karte oder oberste Stapelkarte; Aktion 4:
+     eigener Ablagestapel oder Stapel) läuft über den Entscheidungsablauf aus
+     X3, die Engine nennt den Entscheider.
+  6. Mehr als 5 Handkarten baut jeder an seinem eigenen Zugende ab (A8.2,
+     X3 Kriterium 4). Nimmt ein Gegner die letzte Karte, löst der Spieler am
+     Zug die Schlussrunde aus (D55).
+  7. Keine verdeckte Karten-Id eines anderen Spielers in Entscheidungsdaten,
+     Ereignissen oder KI-Sicht (B2).
 - **X6** (A7.10, Fragen G10 → D42, G11 → D43, G12 → D44, G13 → D45): einmal
   im Deck; vier Effekte je mit Test; danach aus dem Spiel; nicht vom Ablagestapel zurückholbar. Datei
   `src/engine/karten/schlangenkorb.ts`.
+  **Abnahmekriterien:**
+  1. Der Korb liegt nur mit Erweiterung genau einmal im Deck, wird gezogen,
+     liegt auf der Hand und zählt zu den 5 Handkarten (D42).
+  2. Sein Einsatz ist die Sonderkarte des Zuges; daneben keine weitere
+     Sonderkarte (D42), ausser über die Boni selbst.
+  3. Die vier Boni sind die vollständige Liste, je mit Test: „Ziehe 3, spiele
+     bis zu 2“ zusätzlich, beliebige Art, ein so gezogener Verdoppler nur
+     ohne Wirkung, weniger als 3 im Stapel nach D43 und D57; „Tausche bis zu
+     2“ nur Farbkarte gegen Farbkarte am selben Platz (D44); Blockade aus der
+     eigenen Schlange entfernen oder Sonderkarte aus gegnerischer Schlange
+     (jede, auch Blockade, Regenbogenschlange, Fusion; abwehrbar mit
+     Farbenschutz; auf den Ablagestapel des Nutzers; D45); „Zwei zusätzliche
+     Aktionen“ wie bei der Comeback-Karte, keine zweite Fusion, Verdoppler
+     ohne Wirkung (D46, D56).
+  4. Verdoppler, Comeback und die zugerweiternden Boni schliessen sich aus
+     (D47).
+  5. Nach der Nutzung aus dem Spiel; nie auf einem Ablagestapel, also nicht
+     zurückholbar (A8.2 Aktion 4, D54).
 - **Für alle drei:** jeder Regelsatz des Abschnitts hat einen Test; Dauerlauf
   mit Erweiterung grün; Szenarien am Entwicklertisch.
 - **Zusätzliche Dateien für alle drei (U13, nachgetragen nach E1):** E1 legt

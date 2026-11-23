@@ -10,6 +10,7 @@ import {
   bloecke,
   feld,
   gewaehlt,
+  kopf,
   moeglichkeitText,
   nachfragen,
   normalisiert,
@@ -194,6 +195,11 @@ describe('P0.5: Antworten des Autors vom 13.11.2026, 20.11.2026 und 21.11.2026',
     expect(g.map((nr) => teilD.get(nr)?.nr), 'Teil D: Nummern der Antworten auf G1–G8 und G10–G23').toEqual(
       g.map((_, i) => `D${34 + i}`),
     )
+  })
+
+  it('P0.5f: der Stand-Absatz verweist auf die Rückfragen aus X3 vom 22.11.2026 in Teil D', () => {
+    const stand = normalisiert(kopf)
+    for (const text of ['22.11.2026', 'D56', 'D57']) expect(stand, `REGELFRAGEN.md: Stand-Absatz ohne „${text}“`).toContain(text)
   })
 
   it('P0.5: F8a steht so da, wie die Nachfrage dem Autor gestellt wurde', () => {

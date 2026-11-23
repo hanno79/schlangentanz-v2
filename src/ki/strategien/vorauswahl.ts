@@ -1,6 +1,6 @@
 import type { Schlange, SpielAktion, Spielkarte } from '../../engine';
 import type { Sicht } from '../sicht';
-import { bewerte } from './bewertung';
+import { bewerte, eigenePunkte } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
 
 /*
@@ -18,6 +18,11 @@ dazu).
 Die Vorauswahl entscheidet nichts. Ob eine Aktion erlaubt ist, sagt die Engine; was
 sie wirklich bewirkt, die Simulation in `zugsuche.ts`. Damit jede Handkarte eine
 Chance bekommt, kommt von jeder Karte ihre beste Aktion mit.
+
+Eine Ausnahme nutzt die geschätzte Sicht für eine feste Regel (`punkteNach`, Plan K3,
+Kriterium 3): Ob eine Farbkarte an eine eigene Schlange die eigenen Punkte hebt. Eine
+Farbkarte an ein Ende oder als neue Schlange bildet die Schätzung genau so ab wie die
+Engine; das prüft der Test zu K3.3 in Partien gegen die Endwertung der Engine.
 */
 
 /** Je Besitzer seine Schlangen, wie sie nach der Aktion aussähen; nur wer sich ändert, steht darin. */
@@ -157,6 +162,11 @@ function folgeSicht(sicht: Sicht, aktion: SpielAktion): Sicht {
     ausliegendeGruben: karte?.typ === 'Sonderkarte' && ziel >= 0 ? [...sicht.ausliegendeGruben, { karte, gespieltVon: sicht.ich, vor: ziel }] : sicht.ausliegendeGruben,
     zug: aktion.typ === 'VerdopplerSpielen' ? { ...sicht.zug, verdopplerGespielt: true } : sicht.zug,
   };
+}
+
+/** Die eigenen Punkte nach der Aktion (A11), geschätzt wie oben, ohne Simulation und ohne `bewerte` (Plan K3, Kriterium 3). */
+export function punkteNach(sicht: Sicht, aktion: SpielAktion, merker: Wertungsmerker): number {
+  return eigenePunkte(folgeSicht(sicht, aktion), merker);
 }
 
 /**
