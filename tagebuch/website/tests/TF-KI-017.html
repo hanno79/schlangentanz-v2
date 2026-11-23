@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-KI-017 In einer ganzen Partie zu dritt am Entwicklertisch greift die solide KI mit Sonderkarten den jeweils stärksten Gegner an und wehrt einen Angriff auf ihre Dreiergruppe ab. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-KI-017 In einer ganzen Partie zu dritt am Entwicklertisch greift die solide KI mit Sonderkarten den jeweils stärksten Gegner an und wehrt einen Angriff auf ihre Dreiergruppe ab.</h1><p class="etiketten"><span class="etikett">Bereich KI-Gegner</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Szenarien zeigen Einzelfälle. Hier spielt ein Mensch eine ganze Partie gegen zwei solide KIs, greift sie selbst an und schaut, wen die KIs angreifen. Unter <code>/spiel</code> geht das nicht, dort spielen die Gegner mit der Zufalls-KI.</p><h2>Bestanden, wenn</h2><p>Jede Sonderkarte, die eine KI gegen einen Gegner spielt, trifft den Gegner mit der höchsten Endwertung aus ihrer Sicht, ausser alle Gegner stehen gleich. Greift der Mensch eine Dreiergruppe einer KI an, die Farbenschutz hält, wehrt sie ab. Die Partie endet mit „Gewonnen: …“ und „Invarianten (alle erfüllt)“, ohne Konsolenfehler.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine KI einen schwächeren Gegner angreift, obwohl ein stärkerer ein Ziel bietet, oder einen Gruppenangriff mit Farbenschutz auf der Hand durchlässt.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/K3-angriff-abwehr (PR #101)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, <code>vite preview</code> auf freiem Port</td></tr><tr><td>Ausgangslage prüfen</td><td><code>/dev?seed=7731&amp;spieler=3&amp;erweiterung=0</code> zeigt „Partie aus Saat 7731, 3 Spieler, ohne Erweiterung“</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Saat 7731, drei Spieler, ohne Erweiterung. Spieler 1 ist der Mensch, KI-Gegner 1 und 2 ziehen über den Knopf „KI-Schritt (solide)“.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Adresszeile</td><td>`/dev?seed=7731&amp;spieler=3&amp;erweiterung=0` öffnen</td><td></td><td>Spieler 1 ist am Zug</td></tr><tr><td>2</td><td>Aktionen der Engine</td><td>als Spieler 1 je Zug eine Karte spielen und „ZugBeenden“ klicken</td><td></td><td></td></tr><tr><td>3</td><td>Knopf „KI-Schritt (solide)“</td><td>klicken, bis wieder Spieler 1 entscheidet</td><td></td><td>Im Verlauf jede Sonderkarte einer KI notieren und mit der Endwertung davor vergleichen</td></tr><tr><td>4</td><td>Aktionen der Engine</td><td>hält eine KI Farbenschutz (Hand im Abschnitt „Spieler“), ihre Dreiergruppe angreifen, etwa mit Farbenfusion auf zwei ihrer Karten</td><td></td><td>Verlauf: „KI-Schritt (solide): Reagieren: abwehren mit Farbenschutz“</td></tr><tr><td>5</td><td>Schritte 2 bis 4</td><td>wiederholen, bis die Partiephase „Beendet“ ist</td><td></td><td>Abschnitt „Wertung“ zeigt „Gewonnen: …“</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Vier Spieler und die Erweiterung prüft diese Partie nicht; das übernehmen die Partientests in <code>src/ki/strategien/solideKi_angriff_partien.test.ts</code>. Ob eine KI richtig zwischen zwei gleich starken Gegnern wählt, lässt sich hier nicht beurteilen.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 07:41</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer K3) &middot; agent &middot; pruefung-K3 @ <span class="commit" title="24dbb98d2699d41df8f196f6047383ef8f220a3b">24dbb98</span> / eingebauter Browser 1024x768</p><p>Partie /dev?seed=7731&amp;spieler=3&amp;erweiterung=0, 181 Schritte bis Beendet, Gewonnen KI-Gegner 2 (22), Spieler 1 19, KI-Gegner 1 12. 11 Sonderkarten der KIs gegen Gegner: 1 bei Gleichstand 0/0/0, die uebrigen 10 trafen den Gegner mit der hoechsten Endwertung aus Sicht der KI. Meine Farbenfusion auf die Gruen-Gruppe von KI-Gegner 2 abgewehrt (farbenschutz-03); Grube laufend abgewehrt (farbenschutz-02); Farbendieb auf Blau-Paar von KI-Gegner 1 abgewehrt (Blau x2 auf ihrer Hand). Invarianten alle erfuellt, 0 Konsolenfehler.</p><ul class="belege"><li><a href="belege/2026-11-23-0741-TF-KI-017-1.png"><img class="beleg-vorschau" src="belege/2026-11-23-0741-TF-KI-017-1.png" alt="Beleg 2026-11-23-0741-TF-KI-017-1.png" loading="lazy"></a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

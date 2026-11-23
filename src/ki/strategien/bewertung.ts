@@ -24,6 +24,8 @@ Die Gewichte sind Schätzungen in Punkten; sie entscheiden nur zwischen Zügen,
 die die Engine erlaubt.
 */
 
+/** Unterhalb dieses Abstands gelten zwei Bewertungen als gleich (Zugsuche und Abwehr). */
+export const GLEICH = 1e-9;
 /** Was eine Handkarte eines Gegners im Mittel wert ist; seine Karten sieht die KI nicht. */
 const HANDKARTE_GEGNER = 0.4;
 /** Ein Zug, den ein Spieler wegen einer Schlangengrube aussetzt (A7.6). */
@@ -196,10 +198,11 @@ function sonderkartenwert(karte: Spielkarte & { typ: 'Sonderkarte' }): number {
 /**
  * Was eine eigene Handkarte wert ist. Eine Farbkarte ist mehr wert, wenn sie an ein
  * eigenes Ende mit derselben Farbe passt. Im letzten eigenen Zug zählt nur noch der
- * Farbenschutz, der auch danach abwehrt.
+ * Farbenschutz, der auch danach abwehrt; ebenso, wenn eine Schlangengrube den letzten
+ * Zug kostet (D21).
  */
 export function haltewert(karte: Spielkarte, sicht: Sicht): number {
-  if (!hatNochZug(sicht, sicht.ich)) return karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz' ? FARBENSCHUTZ_NACH_LETZTEM_ZUG : 0;
+  if (zukunft(sicht, sicht.ich) === 0) return karte.typ === 'Sonderkarte' && karte.name === 'Farbenschutz' ? FARBENSCHUTZ_NACH_LETZTEM_ZUG : 0;
   if (karte.typ === 'Sonderkarte') return sonderkartenwert(karte);
   const reihen = sicht.spieler[sicht.ich].schlangen.flatMap((schlange) => [endreihe(schlange.karten, false), endreihe(schlange.karten, true)]);
   const passend = reihen.filter((reihe) => reihe.farbe === null || reihe.farbe === karte.farbe).map((reihe) => reihe.laenge);

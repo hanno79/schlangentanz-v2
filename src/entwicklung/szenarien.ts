@@ -12,6 +12,7 @@ import { FARBENFUSION_SZENARIEN } from './szenarienFarbenfusion'
 import { SPIEL_SZENARIEN } from './szenarienSpiel'
 import { HAEUTUNG_SZENARIEN } from './szenarienHaeutung'
 import { KI_SZENARIEN } from './szenarienKi'
+import { KI_ANGRIFF_SZENARIEN } from './szenarienKiAngriff'
 import { AUFGABEN_SZENARIEN } from './szenarienAufgaben'
 
 export interface Szenario {
@@ -248,6 +249,7 @@ export const SZENARIEN: readonly Szenario[] = [
   ...SPIEL_SZENARIEN,
   ...HAEUTUNG_SZENARIEN,
   ...KI_SZENARIEN,
+  ...KI_ANGRIFF_SZENARIEN,
   ...AUFGABEN_SZENARIEN,
 ]
 

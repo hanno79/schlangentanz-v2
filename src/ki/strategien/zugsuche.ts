@@ -1,9 +1,10 @@
 import type { SpielAktion } from '../../engine';
 import { simuliere } from '../sicht';
 import type { Sicht, Stellung } from '../sicht';
-import { bewerte, eigeneGruppen, eigenePunkte, haltewert, neuerMerker, wertschluessel } from './bewertung';
+import { wehrtAb } from './abwehr';
+import { GLEICH, bewerte, eigeneGruppen, eigenePunkte, gruppenwert, haltewert, neuerMerker, wertschluessel } from './bewertung';
 import type { Wertungsmerker } from './bewertung';
-import { vorauswahl } from './vorauswahl';
+import { punkteNach, vorauswahl } from './vorauswahl';
 
 /*
 Die Zugsuche der soliden KI (Plan K2, Vorgehen). Sie rechnet die Folgen eines Zuges
@@ -14,8 +15,8 @@ für die besten drei die zweite Karte desselben Zuges. Nach einem Verdoppler beg
 mit dem zweiten Zug eine neue Suche auf der echten neuen Hand.
 
 Ein Gegner, den eine Sonderkarte trifft, lässt sie in der Rechnung durch; ob er
-abwehrt, sieht die KI nicht. Wer selbst gefragt wird, wehrt ab, wenn die Stellung
-danach besser ist als mit der Karte.
+abwehrt, sieht die KI nicht. Wird sie selbst gefragt, entscheidet `abwehr.ts`
+(Plan K3, Kriterium 4).
 
 Feste Regeln neben der Bewertung, Vorgaben des Autors:
 - Eine Regenbogenschlange kommt nie in eine gegnerische Schlange, solange die
@@ -24,6 +25,8 @@ Feste Regeln neben der Bewertung, Vorgaben des Autors:
 - Keine Schlangengrube auf einen Spieler, der keinen Zug mehr hat; die Engine
   erlaubt sie (D29), sie bringt aber nichts. Nur wenn nichts anderes geht, spielt
   die KI einen solchen Zug.
+- Eine Farbkarte kommt nur dann in eine gegnerische Schlange, wenn keine Farbkarte
+  der Hand in einer eigenen Schlange die eigenen Punkte hebt (Plan K3, Kriterium 3).
 - Eine Karte ohne Wirkung gilt etwas weniger als derselbe Stand mit der Karte in
   Wirkung, damit sie nie gewählt wird, wenn ein gleich guter Zug möglich ist (Kriterium 5).
 
@@ -48,8 +51,6 @@ const NACHLESE = 8;
 export const GRENZE_SUCHE = ERSTE_AUSWAHL + NACHLESE + ZWEITE_TIEFE * ZWEITE_AUSWAHL + 1;
 /** Abzug für eine Karte, die nichts bewirkt (Kriterium 5). */
 const OHNE_WIRKUNG = 0.05;
-/** Unterhalb dieses Abstands gelten zwei Bewertungen als gleich. */
-const GLEICH = 1e-9;
 
 /** Wie oft ein Schritt `bewerte` aufgerufen hat (Kriterium 8). */
 export interface Bewertungen {
@@ -96,11 +97,22 @@ function ohneWirkung(aktion: SpielAktion, nachher: Sicht): boolean {
   return aktion.typ === 'SchlangengrubeSpielen' && !nachher.ausliegendeGruben.some((grube) => grube.karte.id === aktion.karteId);
 }
 
-/** Kriterium 3: keine Regenbogenschlange in eine gegnerische Schlange, wenn die Engine eine eigene als Ziel anbietet. */
-function regenbogenZumGegner(sicht: Sicht, aktion: SpielAktion, aktionen: readonly SpielAktion[]): boolean {
-  if (aktion.typ !== 'RegenbogenschlangeLegen') return false;
+/**
+ * Die festen Regeln zum Ziel, einmal je Stand ausgewertet; die Antwort sagt, ob eine
+ * Aktion gesperrt ist. Gesperrt ist eine Regenbogenschlange in eine gegnerische
+ * Schlange, wenn die Engine eine eigene als Ziel anbietet (K2, Kriterium 3, D9), und
+ * eine Farbkarte in eine gegnerische Schlange, solange eine angebotene Farbkarte in
+ * eine eigene Schlange die eigenen Punkte hebt (K3, Kriterium 3).
+ */
+function zumGegnerGesperrt(sicht: Sicht, aktionen: readonly SpielAktion[], merker: Wertungsmerker): (aktion: SpielAktion) => boolean {
   const eigene = new Set(sicht.spieler[sicht.ich].schlangen.map((schlange) => schlange.id));
-  return !eigene.has(aktion.schlangenId) && aktionen.some((angeboten) => angeboten.typ === 'RegenbogenschlangeLegen' && eigene.has(angeboten.schlangenId));
+  const zumGegner = (aktion: SpielAktion) =>
+    aktion.typ === 'RegenbogenschlangeLegen' ? !eigene.has(aktion.schlangenId) : aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && !eigene.has(aktion.ziel.schlangenId);
+  const regenbogenEigen = aktionen.some((aktion) => aktion.typ === 'RegenbogenschlangeLegen' && !zumGegner(aktion));
+  const farbeStoert = aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && zumGegner(aktion));
+  const vorher = farbeStoert ? eigenePunkte(sicht, merker) : 0;
+  const farbeHebt = farbeStoert && aktionen.some((aktion) => aktion.typ === 'FarbkarteLegen' && !zumGegner(aktion) && punkteNach(sicht, aktion, merker) > vorher);
+  return (aktion) => zumGegner(aktion) && (aktion.typ === 'RegenbogenschlangeLegen' ? regenbogenEigen : farbeHebt);
 }
 
 /**
@@ -179,7 +191,8 @@ function erstelleSuche(sicht: Sicht, zufall: () => number) {
 
   /** Die Karten, die von `stand` aus in Frage kommen, durchgerechnet; mit `nachlese` weitere, solange keine erlaubt ist. */
   const kandidaten = (stellung: Stellung, stand: Sicht, aktionen: readonly SpielAktion[], anzahl: number, nachlese = 0): Folge[] => {
-    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !regenbogenZumGegner(stand, aktion, aktionen));
+    const gesperrt = zumGegnerGesperrt(stand, aktionen, merker);
+    const karten = aktionen.filter((aktion) => aktion.typ !== 'ZugBeenden' && !gesperrt(aktion));
     const { geordnet, bewertet } = vorauswahl(stand, karten, anzahl, merker);
     bewertungen.angeboten += karten.length;
     bewertungen.vorauswahl += bewertet;
@@ -237,14 +250,29 @@ function spiele(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => nu
   return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
 }
 
-/** Abwehren oder durchlassen (A6, A7.2): was die Stellung danach höher bewertet; bei gleicher Bewertung durchlassen. */
+/**
+ * Abwehren oder durchlassen (A6, A7.2, Plan K3 Kriterium 4) nach `wehrtAb`, gerechnet
+ * auf je einer Stellung danach. Alle Farbenschutz-Karten wirken gleich; gerechnet wird
+ * mit der ersten angebotenen.
+ */
 function reagiere(sicht: Sicht, aktionen: readonly SpielAktion[], zufall: () => number): Zugplan {
+  const durchlassen = aktionen.find(istDurchlassen);
+  const abwehren = aktionen.find((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null);
+  const schutz = abwehren?.typ === 'Reagieren' ? sicht.hand.find((karte) => karte.id === abwehren.farbenschutzId) : undefined;
+  if (durchlassen === undefined || abwehren === undefined || schutz === undefined) {
+    throw new Error('Zugsuche: Für die Abwehr bietet die Engine nicht Durchlassen und einen Farbenschutz der eigenen Hand an.');
+  }
   const suche = erstelleSuche(sicht, zufall);
-  const geordnet = [...aktionen.filter(istDurchlassen), ...aktionen.filter((aktion) => !istDurchlassen(aktion))];
-  const folgen = geordnet.map((aktion) => suche.folge(suche.wurzel, sicht, aktion));
-  const gewaehlt = folgen.reduce<Folge | undefined>((bisher, folge) => (bisher === undefined || folge.wert > bisher.wert + GLEICH ? folge : bisher), undefined);
-  if (gewaehlt === undefined) throw new Error('Zugsuche: Für die Abwehr bietet die Engine keine Aktion an.');
-  return { aktion: gewaehlt.aktion, bewertungen: suche.gezaehlt() };
+  const [durch, abgewehrt] = [durchlassen, abwehren].map((aktion) => suche.folge(suche.wurzel, sicht, aktion));
+  const lage = {
+    durchgelassen: durch.wert,
+    abgewehrt: abgewehrt.wert,
+    schutzwert: haltewert(schutz, sicht),
+    schlussrunde: sicht.partiephase === 'Schlussrunde',
+    gruppenpunkte: { vorher: gruppenwert(sicht.spieler[sicht.ich], sicht.erweiterung), nachher: gruppenwert(durch.stellung.sicht.spieler[sicht.ich], sicht.erweiterung) },
+    gruppen: { vorher: eigeneGruppen(sicht), nachher: durch.gruppen },
+  };
+  return { aktion: wehrtAb(lage) ? abwehren : durchlassen, bewertungen: suche.gezaehlt() };
 }
 
 /** Überzählige Karten abwerfen (A5): die Wahl, deren Karten auf der Hand am wenigsten wert sind. */
