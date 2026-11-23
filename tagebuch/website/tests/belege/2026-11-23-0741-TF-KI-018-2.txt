@@ -1,0 +1,225 @@
+// @vitest-environment node
+// Prüfer K3: eigene Auswertungen, nicht Teil des Repos.
+import { describe, expect, it } from 'vitest'
+import { anwendeAktion, berechneEndwertung, ermittleAktionen, ermittleEntscheider, erzeugeZufall, hatNochLetztenZug } from '../src/engine'
+import type { SpielAktion, Spielzustand } from '../src/engine'
+import { STRATEGIEN } from '../src/ki/strategien'
+import { erstelleSolideKiK2 } from '../src/ki/__tests__/k2stand/solideKi'
+import { entscheidungenVon, nachDurchlassen, partieZustaende } from '../src/ki/__tests__/stellungen'
+import type { PartieOptionen } from '../src/ki/__tests__/stellungen'
+import { mischeVerborgenes } from '../src/ki/__tests__/verborgenes'
+import { kiWahl } from '../src/ki/schritt'
+import { sichtFuer, entscheiderVon } from '../src/ki/sicht'
+import { planeZug } from '../src/ki/strategien/zugsuche'
+import { turnier } from '../src/ki/turnier'
+import type { Teilnehmer } from '../src/ki/turnier'
+import { baukasten } from '../src/engine/testing/szenario'
+import { appendFileSync } from 'node:fs'
+const aus = (s: string, ...r: unknown[]) => appendFileSync('C:/Users/hanno/AppData/Local/Temp/claude/29dfebc845fc3914/302a7f32-1072-4fc8-a34d-c8f4b23507c9/scratchpad/K3-pruefer/K3-auswertung.txt', [s, ...r].join(' ') + '\n')
+
+const neu = (saat: number) => STRATEGIEN.solideKi(erzeugeZufall(saat))
+const summe = (z: Spielzustand, s: number) => berechneEndwertung(z).spieler[s].summe
+const gruppenpunkte = (z: Spielzustand, s: number) => {
+  const w = berechneEndwertung(z).spieler[s]
+  return w.gruppenPunkte + (w.vielfaltBonus ?? 0)
+}
+const gruppenzahl = (z: Spielzustand, s: number) => berechneEndwertung(z).spieler[s].schlangen.reduce((a, sch) => a + sch.gruppen.length, 0)
+function getroffen(z: Spielzustand, a: SpielAktion): number[] {
+  if (a.typ === 'ZugBeenden' || a.typ === 'UeberhandAbwerfen' || a.typ === 'Reagieren' || a.typ === 'FarbkarteLegen') return []
+  return anwendeAktion(z, a).zustand.schwebend?.ausstehend ?? []
+}
+function partien(anzahl: number, ersteSaat: number): PartieOptionen[] {
+  return Array.from({ length: anzahl }, (_, n) => ({ spielerzahl: 2 + (n % 3), erweiterung: n % 2 === 1, saat: ersteSaat + n }))
+}
+const nurK3 = (p: PartieOptionen) => Array.from({ length: p.spielerzahl }, (_, s) => neu(p.saat * 7 + s + 13))
+
+describe('Prüfer K3', () => {
+  it('Kriterium 2 in zwei Lesarten', () => {
+    let gesamt = 0, a = 0, b = 0, beide = 0, keine = 0
+    const beispieleA: string[] = [], beispieleB: string[] = []
+    for (const p of partien(30, 55_000)) {
+      const kis = nurK3(p)
+      for (let sitz = 0; sitz < p.spielerzahl; sitz += 1) {
+        for (const { vorher, aktion } of entscheidungenVon(p, kis, sitz)) {
+          if ((aktion.typ !== 'BlockadeLegen' && aktion.typ !== 'FarbendiebSpielen') || getroffen(vorher, aktion).length === 0) continue
+          const werte = vorher.spieler.map((_, s) => summe(vorher, s))
+          const gegner = werte.map((_, s) => s).filter((s) => s !== sitz)
+          const hoechste = Math.max(...gegner.map((s) => werte[s]))
+          const fuehrende = gegner.filter((s) => werte[s] === hoechste)
+          const varianten = ermittleAktionen(vorher)
+            .filter((x) => 'karteId' in x && x.karteId === aktion.karteId && getroffen(vorher, x).length > 0)
+            .map((x) => {
+              const d = nachDurchlassen(vorher, x, sitz)
+              const nach = d.spieler.map((_, s) => summe(d, s))
+              return { x, verlust: Math.max(...fuehrende.map((f) => werte[f] - nach[f])), vorsprung: Math.max(...gegner.map((s) => nach[s])) - nach[sitz], nach }
+            })
+          const maxVerlust = Math.max(...varianten.map((v) => v.verlust))
+          const minVorsprung = Math.min(...varianten.map((v) => v.vorsprung))
+          const g = varianten.find((v) => JSON.stringify(v.x) === JSON.stringify(aktion))!
+          gesamt += 1
+          const okA = g.verlust === maxVerlust, okB = g.vorsprung === minVorsprung
+          if (okA) a += 1
+          if (okB) b += 1
+          if (okA && okB) beide += 1
+          if (!okA && !okB) keine += 1
+          const besteA = varianten.find((v) => v.verlust === maxVerlust)!
+          const besteB = varianten.find((v) => v.vorsprung === minVorsprung)!
+          const text = `Saat ${p.saat} (${p.spielerzahl} Sp.${p.erweiterung ? ', Erw.' : ''}) Sitz ${sitz}, ${aktion.typ}, Punkte vorher ${JSON.stringify(werte)}, Führende ${JSON.stringify(fuehrende)}; gewählt: Verlust Führender ${g.verlust}, Vorsprung ${g.vorsprung}, Punkte danach ${JSON.stringify(g.nach)}; höchster Verlust wäre ${maxVerlust} (Vorsprung ${besteA.vorsprung}, danach ${JSON.stringify(besteA.nach)}); kleinster Vorsprung ${minVorsprung} (Verlust ${besteB.verlust})`
+          if (!okA && beispieleA.length < 6) beispieleA.push(text)
+          if (!okB && beispieleB.length < 6) beispieleB.push(text)
+        }
+      }
+    }
+    aus(`K2-LESARTEN gesamt ${gesamt}, Lesart A (höchster Verlust des Führenden) ${a}, Lesart B (kleinster Vorsprung) ${b}, beide ${beide}, keine ${keine}`)
+    aus('ABWEICHUNG A:\n' + beispieleA.join('\n'))
+    aus('ABWEICHUNG B:\n' + beispieleB.join('\n'))
+    expect(gesamt).toBeGreaterThan(0)
+  }, 900_000)
+
+  it('Kriterium 4 und 6: Abwehr in Partien, Kategorien, Störprobe', () => {
+    const k = { gruppe: [0, 0], harmlosLaufend: [0, 0], kleinLaufend: [0, 0], grubeLaufend: [0, 0], schlussSchaden: [0, 0], schlussOhne: [0, 0], grubeOhneZug: [0, 0], nutzt: [0, 0] }
+    const k2 = { gruppe: [0, 0], harmlosLaufend: [0, 0] }
+    let stoer = 0, stoerAbw = 0, saatAbw = 0, n = 0
+    const notizen: string[] = []
+    for (const p of partien(40, 61_000)) {
+      for (const zustand of partieZustaende(p, nurK3(p))) {
+        if (zustand.schwebend === null || !ermittleAktionen(zustand).some((x) => x.typ === 'Reagieren' && x.farbenschutzId !== null)) continue
+        n += 1
+        const gefragt = ermittleEntscheider(zustand)!
+        const ids = ermittleAktionen(zustand)
+        const durchAkt = ids.find((x) => x.typ === 'Reagieren' && x.farbenschutzId === null)!
+        const durch = nachDurchlassen(zustand, durchAkt, gefragt)
+        const wahl = kiWahl(zustand, neu(n))
+        const wehrt = wahl?.typ === 'Reagieren' && wahl.farbenschutzId !== null ? 1 : 0
+        const wahlK2 = kiWahl(zustand, erstelleSolideKiK2(erzeugeZufall(n)))
+        const wehrtK2 = wahlK2?.typ === 'Reagieren' && wahlK2.farbenschutzId !== null ? 1 : 0
+        const name = zustand.schwebend.karte.name
+        const schluss = zustand.partiephase === 'Schlussrunde'
+        const gruppeVerl = gruppenzahl(durch, gefragt) < gruppenzahl(zustand, gefragt) || gruppenpunkte(zustand, gefragt) - gruppenpunkte(durch, gefragt) >= 3
+        const verlust = summe(zustand, gefragt) - summe(durch, gefragt)
+        const zugWeg = name === 'Schlangengrube' && (zustand.partiephase === 'Laufend' || hatNochLetztenZug(zustand, gefragt))
+        const kat: keyof typeof k = gruppeVerl ? 'gruppe'
+          : name === 'Schlangengrube' && schluss && !zugWeg ? 'grubeOhneZug'
+          : schluss && (verlust > 0 || zugWeg) ? 'schlussSchaden'
+          : schluss ? 'schlussOhne'
+          : name === 'Schlangengrube' ? 'grubeLaufend'
+          : verlust < 0 ? 'nutzt'
+          : verlust === 0 ? 'harmlosLaufend' : 'kleinLaufend'
+        k[kat][wehrt] += 1
+        if (kat === 'gruppe' || kat === 'harmlosLaufend') k2[kat][wehrtK2] += 1
+        if ((kat === 'gruppe' && !wehrt) || (kat === 'schlussSchaden' && !wehrt) || (kat === 'grubeOhneZug' && wehrt) || (kat === 'nutzt' && wehrt)) notizen.push(`${kat} ${name} Saat ${p.saat} Verlust ${verlust} wehrt ${wehrt}`)
+        // Störprobe: drei Mischungen, zwei KI-Saaten
+        for (const ks of [n, n + 500]) {
+          const basis = JSON.stringify(kiWahl(zustand, neu(ks)))
+          for (const ms of [1, 2, 3]) {
+            stoer += 1
+            const gemischt = mischeVerborgenes(zustand, gefragt, erzeugeZufall(ks * 31 + ms))
+            if (JSON.stringify(kiWahl(gemischt, neu(ks))) !== basis) stoerAbw += 1
+          }
+        }
+        // Hängt die Wahl von der eigenen KI-Saat ab?
+        const wahlen = new Set([1, 2, 3, 4, 5].map((s) => JSON.stringify(kiWahl(zustand, neu(1000 + s)))))
+        if (wahlen.size > 1) saatAbw += 1
+      }
+    }
+    aus(`ABWEHR n=${n} Kategorien [durchgelassen, abgewehrt]: ${JSON.stringify(k)}`)
+    aus(`ABWEHR K2-Stand zum Vergleich: ${JSON.stringify(k2)}`)
+    aus(`STOERPROBE ${stoer} Proben, ${stoerAbw} Abweichungen; KI-Saat-abhängig in ${saatAbw} von ${n} Stellungen`)
+    aus('AUFFAELLIG:\n' + notizen.join('\n'))
+    expect(n).toBeGreaterThan(0)
+  }, 900_000)
+
+  it('Grenzen: Bewertungen und Zeit je Schritt', () => {
+    let maxSuche = 0, maxZeit = 0, schritte = 0
+    const zeiten: number[] = []
+    for (const p of partien(9, 67_000)) {
+      for (const zustand of partieZustaende(p, nurK3(p))) {
+        const e = entscheiderVon(zustand)
+        if (e === null) continue
+        const aktionen = ermittleAktionen(zustand)
+        const t0 = performance.now()
+        const plan = planeZug(sichtFuer(zustand, e.index), aktionen, erzeugeZufall(schritte))
+        const dt = performance.now() - t0
+        schritte += 1
+        zeiten.push(dt)
+        maxSuche = Math.max(maxSuche, plan.bewertungen.suche)
+        maxZeit = Math.max(maxZeit, dt)
+      }
+    }
+    zeiten.sort((x, y) => x - y)
+    aus(`GRENZEN ${schritte} Schritte, max Suche ${maxSuche}, max Zeit ${maxZeit.toFixed(1)} ms, Median ${zeiten[Math.floor(zeiten.length / 2)].toFixed(1)} ms, p99 ${zeiten[Math.floor(zeiten.length * 0.99)].toFixed(1)} ms`)
+  }, 900_000)
+
+  it('Spielstärke: eigene Stichprobe mit anderen Saaten', () => {
+    const K3: Teilnehmer = { name: 'K3', erstelle: STRATEGIEN.solideKi }
+    const K2: Teilnehmer = { name: 'K2', erstelle: erstelleSolideKiK2 }
+    for (const [sp, anzahl, saat, erw] of [[3, 60, 93_000, false], [2, 60, 94_000, true], [4, 40, 95_000, false]] as const) {
+      const messe = (erster: Teilnehmer) => {
+        const e = turnier({ teilnehmer: [erster, ...Array.from({ length: sp - 1 }, () => K2)], partien: anzahl, ersteSaat: saat, kiSaat: 4242 + sp, erweiterung: erw })
+        return { ab: e.partien.map((x) => x.punkte[0] - Math.max(...x.punkte.slice(1))), siege: e.siege[0] }
+      }
+      const a = messe(K3), b = messe(K2)
+      const d = a.ab.map((x, i) => x - b.ab[i])
+      const m = d.reduce((s, x) => s + x, 0) / anzahl
+      const sd = Math.sqrt(d.reduce((s, x) => s + (x - m) ** 2, 0) / (anzahl - 1))
+      aus(`STAERKE ${sp} Spieler${erw ? ' Erw.' : ''}, ${anzahl} Partien ab ${saat}: Siege K3 ${a.siege} gegen Spiegel ${b.siege}, mittl. Unterschied ${m.toFixed(2)} ± ${(sd / Math.sqrt(anzahl)).toFixed(2)}`)
+    }
+  }, 1_800_000)
+})
+
+/** Spieler `angreifer` spielt die erste angebotene Aktion, die `passt`; danach entscheidet die KI an Stelle `ki` mit drei Saaten. */
+function abwehrFall(bau: ReturnType<typeof baukasten>, angreifer: number, ki: number, passt: (a: SpielAktion) => boolean) {
+  const start = bau.zustand()
+  const aktion = ermittleAktionen(start).find((a) => a.spielerId === start.spieler[angreifer].id && passt(a))
+  if (aktion === undefined) throw new Error('Testaufbau: Angriff nicht angeboten')
+  const gefragt = anwendeAktion(start, aktion).zustand
+  expect(ermittleEntscheider(gefragt)).toBe(ki)
+  const durch = nachDurchlassen(gefragt, ermittleAktionen(gefragt).find((a) => a.typ === 'Reagieren' && a.farbenschutzId === null)!, ki)
+  const wahlen = [1, 2, 3].map((s) => { const w = kiWahl(gefragt, neu(s)); return w?.typ === 'Reagieren' && w.farbenschutzId !== null ? 'abwehren' : 'durchlassen' })
+  const k2 = [1, 2, 3].map((s) => { const w = kiWahl(gefragt, erstelleSolideKiK2(erzeugeZufall(s))); return w?.typ === 'Reagieren' && w.farbenschutzId !== null ? 'abwehren' : 'durchlassen' })
+  return { wahlen, k2, vorher: summe(gefragt, ki), nachher: summe(durch, ki), letzterZug: hatNochLetztenZug(gefragt, ki), phase: gefragt.partiephase }
+}
+
+describe('Prüfer K3: eigene Grenzfälle der Abwehr', () => {
+  const b = (n: number, s: number) => baukasten({ spielerzahl: n, erweiterung: false, zufall: erzeugeZufall(s) })
+  it('G1 Farbendieb nimmt ein Blau aus Blau x4 (Gruppe bleibt), laufend', () => {
+    const r = abwehrFall(b(2, 501).schlange(1, ['Blau', 'Blau', 'Blau', 'Blau']).schlange(0, ['Gelb', 'Gelb', 'Gelb', 'Gelb', 'Gelb']).hand(0, ['Farbendieb']).hand(1, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().amZug(0), 0, 1,
+      (a) => a.typ === 'FarbendiebSpielen' && a.quelle.schlangenId === 'schlange-1' && a.ziel.art === 'schlange')
+    aus('G1', JSON.stringify(r))
+  })
+  it('G1b Farbendieb nimmt ein Blau aus Blau x4 und kostet den Kettenbonus', () => {
+    const r = abwehrFall(b(2, 502).schlange(1, ['Blau', 'Blau', 'Blau', 'Blau']).schlange(0, ['Gelb', 'Gelb', 'Gelb']).hand(0, ['Farbendieb']).hand(1, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().amZug(0), 0, 1,
+      (a) => a.typ === 'FarbendiebSpielen' && a.quelle.schlangenId === 'schlange-1')
+    aus('G1b', JSON.stringify(r))
+  })
+  it('G2 Regenbogenschlange des Gegners vollendet das grüne Paar der KI', () => {
+    const r = abwehrFall(b(2, 503).schlange(1, ['Grün', 'Grün']).schlange(0, ['Rot']).hand(0, ['Regenbogenschlange']).hand(1, ['Farbenschutz', 'Rot', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().amZug(0), 0, 1,
+      (a) => a.typ === 'RegenbogenschlangeLegen' && a.schlangenId === 'schlange-1' && a.position === 2)
+    aus('G2', JSON.stringify(r))
+  })
+  it('G3 Schlussrunde: Grube auf die KI, die noch ihren letzten Zug mit Gruppen hätte', () => {
+    const r = abwehrFall(b(2, 504).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(1, ['Blau', 'Blau']).schlange(0, ['Rot']).hand(0, ['Schlangengrube']).hand(1, ['Farbenschutz', 'Blau', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().schlussrunde(0).amZug(0), 0, 1,
+      (a) => a.typ === 'SchlangengrubeSpielen')
+    aus('G3', JSON.stringify(r))
+  })
+  it('G4 Schlussrunde D29: Grube auf die KI, die keinen Zug mehr hat', () => {
+    const r = abwehrFall(b(3, 505).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(2, ['Rot']).hand(2, ['Schlangengrube']).hand(1, ['Farbenschutz', 'Blau', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().schlussrunde(1).amZug(2), 2, 1,
+      (a) => a.typ === 'SchlangengrubeSpielen' && a.zielSpielerId === 'spieler-2')
+    aus('G4', JSON.stringify(r))
+  })
+  it('G5 laufend: Grube auf die KI', () => {
+    const r = abwehrFall(b(2, 506).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(0, ['Rot']).hand(0, ['Schlangengrube']).hand(1, ['Farbenschutz', 'Blau', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().amZug(0), 0, 1,
+      (a) => a.typ === 'SchlangengrubeSpielen')
+    aus('G5', JSON.stringify(r))
+  })
+  it('G6 laufend: Schlangenfrass c) frisst zwei aus Grün x3 der KI', () => {
+    const r = abwehrFall(b(2, 507).schlange(1, ['Grün', 'Grün', 'Grün']).schlange(0, ['Rot']).hand(0, ['Schlangenfrass']).hand(1, ['Farbenschutz', 'Blau', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().amZug(0), 0, 1,
+      (a) => a.typ === 'SchlangenfrassSpielen' && a.option === 'gegnerischeKarten')
+    aus('G6', JSON.stringify(r))
+  })
+  it('G7 Schlussrunde: Blockade hinter ein Paar, die KI hat ihren letzten Zug schon gemacht', () => {
+    const r = abwehrFall(b(3, 508).schlange(1, ['Gelb', 'Blau', 'Blau']).schlange(2, ['Rot']).hand(2, ['Schlangenblockade']).hand(1, ['Farbenschutz', 'Blau', 'Gelb', 'Violett', 'Braun']).haendeAuffuellen().schlussrunde(1).amZug(2), 2, 1,
+      (a) => a.typ === 'BlockadeLegen' && a.schlangenId === 'schlange-1' && a.position === 3)
+    aus('G7', JSON.stringify(r))
+  })
+})
