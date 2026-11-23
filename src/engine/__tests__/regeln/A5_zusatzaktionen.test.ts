@@ -123,6 +123,17 @@ describe('D56: gespielt ist gespielt', () => {
   })
 })
 
+describe('D56: auch eine wirkungslos abgelegte Farbenfusion ist gespielt', () => {
+  it('D56/D13: legt der Spieler eine Farbenfusion ohne Ziel wirkungslos ab, geht danach auch über eine Zusatzaktion keine zweite mit Wirkung', () => {
+    let zustand = tisch(['Farbenfusion', 'Rot', 'Farbenfusion'], [FREI, FREI], ['Rot'])
+    const erste = karteVon(zustand, 'Farbenfusion')
+    zustand = fuehreAus(zustand, { typ: 'SonderkarteWirkungslosAblegen', spielerId: 'spieler-1', karteId: erste }).zustand
+    zustand = fuehreAus(zustand, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: karteVon(zustand, 'Rot'), ziel: { art: 'schlange', schlangenId: zustand.spieler[0].schlangen[0].id, seite: 'ende' } }).zustand
+    const zweite = karteVon(zustand, 'Farbenfusion')
+    expect(mitWirkung(zustand, zweite), 'D56: die Fusion des Zuges ist verbraucht').toBe(false)
+  })
+})
+
 describe('A8.1: eine Zusatzaktion, die keine Karte spielt', () => {
   it('A8.1/D46: eine benannte Zusatzaktion (wie „zwei abwerfen, drei ziehen“) verbraucht eine Zusatzaktion; zweimal geht, ein drittes Mal nicht', () => {
     const zustand = structuredClone(tisch(['Blau'], [FREI, FREI]))
