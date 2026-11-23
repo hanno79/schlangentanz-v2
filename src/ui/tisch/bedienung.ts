@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import type { SpielAktion, ZugBeendenAktion } from '../../engine'
+import type { ReagierenAktion, SpielAktion, ZugBeendenAktion } from '../../engine'
 import { auswahlstand, waehle, wahlSchluessel } from '../spiel/auswahl'
 import type { Auswahl, Wahl, WahlDerArt } from '../spiel/auswahl'
+import type { TischAnsicht } from '../spiel/tischAnsicht'
 
 /*
 Die Bedienung am Tisch (Plan O5): Karte antippen, dann Ziele antippen, dann
@@ -9,9 +10,11 @@ die Ansage bestätigen. Der Hook hält nur, was der Mensch angetippt hat; was
 angeboten ist und wann eine Aktion fertig ist, sagt `auswahl` aus den Aktionen
 der Engine (U3). Mit einem neuen Spielstand beginnt die Auswahl von vorn.
 
-Bedienbar sind alle aufgezählten Aktionen ausser der Abwehr, die O6 baut; die
-Schlangenhäutung kam mit O7 dazu (`haeutung.ts`). Die Oberfläche lässt die
-Abwehr nur weg, sie baut keine Aktion selbst.
+Bedienbar sind alle aufgezählten Aktionen ausser der Abwehr: Sie hat keine
+Karte und kein Ziel am Tisch, die Abwehrfrage in der Zugleiste nimmt sie direkt
+aus den aufgezählten Aktionen (O6, `ReaktionsDialog`). Die Schlangenhäutung kam
+mit O7 dazu (`haeutung.ts`). Die Oberfläche lässt die Abwehr nur weg, sie baut
+keine Aktion selbst.
 */
 
 const NOCH_NICHT_BEDIENBAR: ReadonlySet<SpielAktion['typ']> = new Set(['Reagieren'])
@@ -131,4 +134,11 @@ export function zieleDerSchlange(bedienung: Bedienung | null, schlangenId: strin
 /** Das erste Ziel dieser Art in `ziele`, auf das `passt` zutrifft. */
 export function zielDerArt<A extends Wahl['art']>(ziele: readonly Wahl[], art: A, passt: (wahl: WahlDerArt<A>) => boolean = () => true): WahlDerArt<A> | undefined {
   return ziele.find((wahl): wahl is WahlDerArt<A> => wahl.art === art && passt(wahl as WahlDerArt<A>))
+}
+
+export const istReaktion = (aktion: SpielAktion): aktion is ReagierenAktion => aktion.typ === 'Reagieren'
+
+/** Ob die Abwehrfrage an dich offen ist: Eine angesagte Karte schwebt, und du entscheidest (A6, O6). */
+export function abwehrfrageOffen(ansicht: TischAnsicht): boolean {
+  return ansicht.status.schwebend?.entscheidet.ich === true && ansicht.aktionen.some(istReaktion)
 }

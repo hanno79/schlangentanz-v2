@@ -157,11 +157,15 @@ describe('O4: Statuszeile — wer ist dran, was steht an', () => {
   })
 
   it('O4/A6: schwebt eine Sonderkarte über dem Menschen, entscheidet er', () => {
-    const { status } = tischAnsicht(angriffAufMich())
+    const zustand = angriffAufMich()
+    const { status } = tischAnsicht(zustand)
     expect(status.schwebend).toEqual({
       karte: 'Schlangengrube',
       von: { name: 'KI-Gegner 1', ich: false },
       entscheidet: { name: 'Spieler 1', ich: true },
+      // O6: Karte und Ansage sind offen (A6, B2); die Abwehrfrage nennt daraus Karte und Ziel.
+      angesagt: zustand.schwebend!.karte,
+      ansage: zustand.schwebend!.aktion,
     })
   })
 
