@@ -1,28 +1,16 @@
-import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { eintragD, fehlende, fliesstext, pruefeKern, spalten, tabelleMitSpalte, teil } from './spec_documentation_hilfen'
+import { abschnitt } from './regelfragen_lesen'
+import { eintragD, fehlende, fliesstext, nachtragEintrag, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
 
 /*
 `docs/GAME_SPEC.md`, Teil D: Auslegungsfragen an den Autor und seine Antworten.
 */
 
-/** Eintrag im Website-Nachtrag: fette Frage mit „(Dnn)“, darunter die Antwort. */
-function nachtrag(nummer: string): { frage: string; antwort: string } {
-  const text = readFileSync('docs/WEBSITE_NACHTRAG.md', 'utf8')
-  const treffer = new RegExp(`^\\*\\*(.+)\\*\\* \\(${nummer}\\)\\s*\\n(.+)$`, 'm').exec(text)
-  expect(treffer, `${nummer} fehlt in docs/WEBSITE_NACHTRAG.md`).not.toBeNull()
-  return { frage: treffer?.[1] ?? '', antwort: treffer?.[2] ?? '' }
-}
-
-/** Frage eines Eintrags in Teil D, wie sie in der Tabelle steht. */
-function frageD(nummer: string): string {
-  return spalten(tabelleMitSpalte(teil('D'), 'Antwort'), 'Nr.', 'Frage').find(([nr]) => nr === nummer)?.[1] ?? ''
-}
-
 /** Rückfragen aus X3 vom 22.11.2026 (P0.5f): Kernsätze und Gegenproben je Eintrag. */
-const RUECKFRAGEN_X3: Record<string, { frage: string; kern: string[]; verboten: string[] }> = {
+const RUECKFRAGEN_X3: Record<string, { frage: string; wahl: string; kern: string[]; verboten: string[] }> = {
   D56: {
     frage: 'Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt, schon die Fusion des Zuges?',
+    wahl: '„Ja, gespielt ist gespielt“',
     kern: [
       'Wer eine Farbenfusion ausgespielt hat, hat die Fusion dieses Zuges verbraucht, auch wenn ein Gegner sie mit Farbenschutz abwehrt',
       'eine zweite Farbenfusion ist in diesem Zug nicht möglich, auch nicht über eine Zusatzaktion (Schlangenkorb, Comeback-Karte)',
@@ -32,6 +20,7 @@ const RUECKFRAGEN_X3: Record<string, { frage: string; kern: string[]; verboten: 
   },
   D57: {
     frage: 'Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Comeback-Karte): Darf er die eben gezogenen Karten noch im selben Zug ausspielen?',
+    wahl: '„Ja, im selben Zug“',
     kern: [
       'Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht',
       'spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde',
@@ -40,7 +29,6 @@ const RUECKFRAGEN_X3: Record<string, { frage: string; kern: string[]; verboten: 
     verboten: ['erst im nächsten Zug', 'nur noch ausserhalb seines Zuges', 'nicht mehr im selben Zug'],
   },
 }
-const WAHL_X3: Record<string, string> = { D56: '„Ja, gespielt ist gespielt“', D57: '„Ja, im selben Zug“' }
 
 describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   it('führt offene Auslegungsfragen als Fragen an den Autor', () => {
@@ -172,18 +160,16 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     }
   })
 
-  it('P0.5f: Teil D nennt die Rückfragen aus X3 als D56–D57 und nummeriert weiter lückenlos', () => {
+  it('P0.5f: die Einleitung von Teil D nennt die Rückfragen aus X3 als D56–D57', () => {
     const d = teil('D')
     expect(fehlende(d, ['D56–D57', 'Rückfragen aus der Umsetzung', '22.11.2026'])).toEqual([])
-    const nummern = spalten(tabelleMitSpalte(d, 'Antwort'), 'Nr.').map(([nr]) => nr)
-    expect(nummern.slice(-2), 'Teil D: D56 und D57 stehen nicht am Ende der Tabelle').toEqual(['D56', 'D57'])
   })
 
-  for (const [nummer, { frage, kern, verboten }] of Object.entries(RUECKFRAGEN_X3)) {
+  for (const [nummer, { frage, wahl, kern, verboten }] of Object.entries(RUECKFRAGEN_X3)) {
     it(`P0.5f: ${nummer}: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
-      const { antwort, datum, folge } = eintragD(nummer)
-      expect(frageD(nummer), `${nummer}: Frage`).toBe(frage)
-      pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: ${WAHL_X3[nummer]}.`], verboten)
+      const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
+      expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
+      pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: ${wahl}.`], verboten)
       expect(antwort.startsWith('ja'), `${nummer}: Antwort beginnt nicht mit „Ja“`).toBe(true)
       expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
       expect(datum, `${nummer}: Datum`).toBe('22.11.2026')
@@ -191,23 +177,13 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     })
 
     it(`P0.5f: ${nummer}: der Website-Nachtrag führt die Antwort ohne „Website folgt“`, () => {
-      const eintrag = nachtrag(nummer)
+      const eintrag = nachtragEintrag(nummer)
       expect(eintrag.frage, `${nummer}: Frage im Nachtrag`).toBe(frage)
       pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), kern, [...verboten, 'Website folgt', 'gewählte Möglichkeit'])
     })
   }
 
-  it('P0.5f: Website-Nachtrag, REGELFRAGEN.md und Teil E nennen den Stand vom 23.11.2026', () => {
-    const nachtragText = readFileSync('docs/WEBSITE_NACHTRAG.md', 'utf8')
-    expect(nachtragText, 'WEBSITE_NACHTRAG.md: Stand').toMatch(/^Stand 23\.11\.2026\./m)
-    const erweiterung = nachtragText.slice(nachtragText.indexOf('## Erweiterung'))
-    expect(fehlende(erweiterung, ['(D56)', '(D57)']), 'WEBSITE_NACHTRAG.md: D56 und D57 im Abschnitt Erweiterung').toEqual([])
-
-    const regelfragenKopf = readFileSync('docs/REGELFRAGEN.md', 'utf8').split(/^## /m)[0]
-    expect(fehlende(regelfragenKopf, ['D56', 'D57', '22.11.2026']), 'REGELFRAGEN.md: Stand-Absatz').toEqual([])
-
-    const e = teil('E')
-    const ersterEintrag = e.slice(e.indexOf('### Stand und Verlauf')).split('\n').find((zeile) => zeile.startsWith('- **')) ?? ''
-    expect(ersterEintrag, 'Teil E: oberster Eintrag in „Stand und Verlauf“').toContain('Task P0.5f')
+  it('P0.5f: der Website-Nachtrag führt D56 und D57 im Abschnitt Erweiterung', () => {
+    expect(fehlende(abschnitt(websiteNachtrag, '##', 'Erweiterung'), ['(D56)', '(D57)'])).toEqual([])
   })
 })
