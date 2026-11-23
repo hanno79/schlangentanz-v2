@@ -2,10 +2,10 @@
 import { describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, erstellePartie, erzeugeZufall } from '../../engine'
 import type { Aktionstyp, Spielzustand } from '../../engine'
-import { comebackBedingungErfuellt } from '../../engine/erweiterung/comeback'
 import { baukasten } from '../../engine/testing/szenario'
 import { kiWahl } from '../schritt'
 import { sichtFuer } from '../sicht'
+import { spielePartie } from '../turnier'
 import { erstelleSolideKi } from './solideKi'
 import type { Fabrik } from './strategie'
 import { erstelleZufallsKi } from './zufallsKi'
@@ -19,19 +19,16 @@ und spielt Partien mit Erweiterung zu Ende. Die Sicht eines Gegners nennt keine
 Karte, die beim Abwerfen und Ziehen verdeckt auf die Hand kam (B2).
 */
 
-/** Spielt Partien mit Erweiterung allein mit dieser KI und zählt, welche Aktionen sie wählte. */
+/** Spielt Partien mit Erweiterung allein mit dieser KI (Invarianten je Schritt, `spielePartie`) und zählt, welche Aktionen sie wählte. */
 function spielePartien(fabrik: Fabrik, saaten: number[]): { gezaehlt: Map<Aktionstyp, number>; beendet: number } {
   const gezaehlt = new Map<Aktionstyp, number>()
   let beendet = 0
   saaten.forEach((saat, index) => {
-    let zustand = erstellePartie({ spielerzahl: 2 + (index % 3), erweiterung: true, zufall: erzeugeZufall(saat) })
+    const start = erstellePartie({ spielerzahl: 2 + (index % 3), erweiterung: true, zufall: erzeugeZufall(saat) })
     const ki = fabrik(erzeugeZufall(saat * 7 + 3))
-    for (let schritte = 0, aktion = kiWahl(zustand, ki); aktion !== null; aktion = kiWahl(zustand, ki), schritte += 1) {
-      if (schritte > 5000) throw new Error(`X4: Partie ${saat} endet nicht.`)
-      gezaehlt.set(aktion.typ, (gezaehlt.get(aktion.typ) ?? 0) + 1)
-      zustand = anwendeAktion(zustand, aktion).zustand
-    }
-    if (zustand.partiephase === 'Beendet') beendet += 1
+    const { ausgang, verlauf } = spielePartie(start, start.spieler.map(() => ki), 5000, `X4, Saat ${saat}`)
+    for (const aktion of verlauf) gezaehlt.set(aktion.typ, (gezaehlt.get(aktion.typ) ?? 0) + 1)
+    if (ausgang === 'beendet') beendet += 1
   })
   return { gezaehlt, beendet }
 }
@@ -43,9 +40,7 @@ function rueckstand(): Spielzustand {
     .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'])
     .schlange(0, ['Grün'])
     .schlange(1, ['Rot', 'Rot', 'Rot', 'Blau', 'Blau', 'Blau'])
-    .aendere((zustand) => {
-      zustand.zug.comebackBedingung = comebackBedingungErfuellt(zustand, 0)
-    })
+    .zugbeginn()
     .zustand()
 }
 

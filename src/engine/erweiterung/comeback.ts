@@ -1,6 +1,7 @@
-import type { ComebackEinsetzenAktion, Ereignis, SpielAktion, ZweiAbwerfenDreiZiehenAktion } from '../aktionen/typen';
+import type { Ereignis } from '../aktionen/typen';
 import { zieheVomStapel } from '../stapel';
 import type { Spieler, Spielzustand } from '../types';
+import { werfeAufEigenenAblagestapel } from '../zugablauf';
 import { meldeZugerweiterung, zaehleZusatzaktion, zugerweiterungGesperrt, zusatzaktionGrenze } from '../zuggrenzen';
 import type { Zusatzaktion } from '../zuggrenzen';
 
@@ -28,7 +29,9 @@ eigenen Ablagestapel, dann zieht der Spieler bis zu drei; liegen weniger im
 Stapel, zieht er, was da ist. Zieht er die letzte Karte, spielt er seinen Zug zu
 Ende und darf dabei auch die eben gezogenen Karten spielen, danach beginnt die
 Schlussrunde (A10, D57); in der Schlussrunde ist die Aktion nicht wählbar. Die
-Aktion spielt keine Karte und zählt nicht als Karte des Zuges.
+Aktion spielt keine Karte und zählt nicht als Karte des Zuges. Welche zwei
+Karten genannt sein dürfen, prüft und zählt die Aktionsschicht wie beim
+Abwerfen am Zugende (`aktionen/`).
 */
 
 /** A8.1, D46, D49: der Name der Zusatzaktion ohne Karte, wie er in `Zusatzaktion.erlaubt` und `Verwendung.art` steht. */
@@ -37,8 +40,7 @@ export const ZWEI_ABWERFEN_DREI_ZIEHEN = 'Zwei Karten abwerfen, drei ziehen';
 /** A8.1: Um so viele Karten muss die längste eigene Schlange mindestens zurückliegen. */
 const RUECKSTAND = 5;
 
-/** D49: So viele Karten werden abgeworfen und gezogen. */
-const ABWERFEN = 2;
+/** D49: So viele Karten werden gezogen. */
 const ZIEHEN = 3;
 
 /** A8.1, D46: die beiden Zusatzaktionen der Comeback-Karte. */
@@ -87,24 +89,13 @@ export function setzeComebackEin(zustand: Spielzustand, spielerIndex: number, er
 }
 
 /** D49: Der Grund, warum „Zwei Karten abwerfen, drei ziehen“ jetzt gar nicht wählbar ist, gleich mit welchen Karten, oder `null`. */
-function tauschGesperrt(zustand: Spielzustand, spielerIndex: number): string | null {
+export function zweiAbwerfenGesperrt(zustand: Spielzustand, spielerIndex: number): string | null {
   const grenze = zusatzaktionGrenze(zustand.zug, ZWEI_ABWERFEN_DREI_ZIEHEN);
   if (grenze !== null) return grenze;
   if (zustand.partiephase === 'Schlussrunde') return `„${ZWEI_ABWERFEN_DREI_ZIEHEN}“ ist in der Schlussrunde nicht wählbar: Es gibt nichts mehr zu ziehen (D49).`;
-  if (zustand.spieler[spielerIndex].hand.length < ABWERFEN) {
+  if (zustand.spieler[spielerIndex].hand.length < 2) {
     return `„${ZWEI_ABWERFEN_DREI_ZIEHEN}“ ist mit weniger als zwei Handkarten nicht wählbar; dann bleibt eine andere Zusatzaktion (D49).`;
   }
-  return null;
-}
-
-/** D49: Der Grund, warum der Spieler am Zug genau diese zwei Karten jetzt nicht abwerfen darf, oder `null`. */
-export function pruefeZweiAbwerfenDreiZiehen(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[]): string | null {
-  const gesperrt = tauschGesperrt(zustand, spielerIndex);
-  if (gesperrt !== null) return gesperrt;
-  const spieler = zustand.spieler[spielerIndex];
-  if (new Set(karteIds).size !== karteIds.length) return `Beim Abwerfen ist eine Karte doppelt genannt; „${ZWEI_ABWERFEN_DREI_ZIEHEN}“ wirft zwei verschiedene Handkarten ab (D49).`;
-  const fremd = karteIds.find((id) => !spieler.hand.some((karte) => karte.id === id));
-  if (fremd !== undefined) return `Die Karte ${fremd} liegt nicht auf der Hand von ${spieler.name}.`;
   return null;
 }
 
@@ -116,30 +107,7 @@ export function pruefeZweiAbwerfenDreiZiehen(zustand: Spielzustand, spielerIndex
  */
 export function werfeZweiAbZieheDrei(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[], ereignisse: Ereignis[]): void {
   zaehleZusatzaktion(zustand.zug, ZWEI_ABWERFEN_DREI_ZIEHEN);
-  const spieler = zustand.spieler[spielerIndex];
-  const gewaehlt = new Set(karteIds);
-  const abgeworfen = spieler.hand.filter((karte) => gewaehlt.has(karte.id));
-  spieler.hand = spieler.hand.filter((karte) => !gewaehlt.has(karte.id));
-  spieler.ablagestapel.push(...abgeworfen);
-  ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: abgeworfen.map((karte) => karte.id) });
+  werfeAufEigenenAblagestapel(zustand, spielerIndex, karteIds, ereignisse);
   const anzahl = zieheVomStapel(zustand, spielerIndex, ZIEHEN);
   if (anzahl > 0) ereignisse.push({ typ: 'KartenGezogen', spielerIndex, anzahl });
-}
-
-/** Die Aktionen der Comeback-Karte, die der Spieler am Zug jetzt hat: den Einsatz und jede Wahl von zwei Handkarten, in der Reihenfolge der Hand. */
-export function comebackAktionen(zustand: Spielzustand, spielerIndex: number): SpielAktion[] {
-  const spieler = zustand.spieler[spielerIndex];
-  const aktionen: SpielAktion[] = [];
-  if (spieler.comeback !== null && pruefeComebackEinsetzen(zustand, spielerIndex, spieler.comeback.karte.id) === null) {
-    const einsetzen: ComebackEinsetzenAktion = { typ: 'ComebackEinsetzen', spielerId: spieler.id, comebackId: spieler.comeback.karte.id };
-    aktionen.push(einsetzen);
-  }
-  if (tauschGesperrt(zustand, spielerIndex) !== null) return aktionen;
-  spieler.hand.forEach((erste, stelle) => {
-    for (const zweite of spieler.hand.slice(stelle + 1)) {
-      const tausch: ZweiAbwerfenDreiZiehenAktion = { typ: 'ZweiAbwerfenDreiZiehen', spielerId: spieler.id, karteIds: [erste.id, zweite.id] };
-      aktionen.push(tausch);
-    }
-  });
-  return aktionen;
 }

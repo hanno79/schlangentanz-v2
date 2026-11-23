@@ -1,7 +1,7 @@
 import type { SpielAktion, Spielzustand } from '../index'
-import { comebackBedingungErfuellt } from '../erweiterung/comeback'
 import { baukasten } from '../testing/szenario'
 import type { Baukasten, Kartenwahl, Schlangenglied } from '../testing/szenario'
+import { handkarte } from './legen_hilfen'
 import { pruefeSchritt } from './rahmen_hilfen'
 import { aktionen, fuehreAus, zugBeenden } from './zugablauf_hilfen'
 import type { Schritt } from './zugablauf_hilfen'
@@ -13,7 +13,7 @@ Ereignis nennt eine Handkarte (B2), und alle Invarianten halten.
 */
 
 /** Fünf Farbkarten für einen Spieler, der nur dasitzt. */
-export const FUENF: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun']
+export const FUENF_FARBEN: Kartenwahl[] = ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun']
 
 /** Eine Schlange aus `anzahl` Farbkarten in wechselnden Farben. */
 export function schlangeAus(anzahl: number): Schlangenglied[] {
@@ -23,7 +23,7 @@ export function schlangeAus(anzahl: number): Schlangenglied[] {
 
 /** Zwei Spieler mit Erweiterung; Spieler 1 hält `hand`, hat eine Schlange mit `eigene` Karten (0: keine), KI-Gegner 1 eine mit `fremde`. */
 export function zwei(hand: Kartenwahl[], eigene: number, fremde: number): Baukasten {
-  const bau = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, hand).hand(1, FUENF)
+  const bau = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, hand).hand(1, FUENF_FARBEN)
   if (eigene > 0) bau.schlange(0, schlangeAus(eigene))
   if (fremde > 0) bau.schlange(1, schlangeAus(fremde))
   return bau
@@ -31,11 +31,7 @@ export function zwei(hand: Kartenwahl[], eigene: number, fremde: number): Baukas
 
 /** Stellt die Bedingung fest, als begänne der Zug des Spielers am Zug gerade (D48), ohne dass jemand nachzieht. */
 export function mitBedingung(bau: Baukasten): Spielzustand {
-  return bau
-    .aendere((zustand) => {
-      zustand.zug.comebackBedingung = comebackBedingungErfuellt(zustand, zustand.zug.spielerIndex)
-    })
-    .zustand()
+  return bau.zugbeginn().zustand()
 }
 
 /**
@@ -43,9 +39,9 @@ export function mitBedingung(bau: Baukasten): Spielzustand {
  * gespielt und beendet den Zug; dann beginnt der Zug von Spieler 1, und die
  * Engine stellt die Bedingung selbst fest (A8.1, D48).
  */
-export function zugbeginn(bau: Baukasten): Spielzustand {
+export function nachZugwechsel(bau: Baukasten): Spielzustand {
   const vorher = bau.amZug(bau.zustand().spieler.length - 1).gespielt(1, 0).zustand()
-  const schritt = pruefeSchritt(vorher, fuehreAus(vorher, zugBeenden(vorher)))
+  const schritt = beende(vorher)
   if (schritt.zustand.zug.spielerIndex !== 0) throw new Error('Testaufbau: Nach dem Beenden ist nicht Spieler 1 am Zug.')
   return schritt.zustand
 }
@@ -73,11 +69,9 @@ export function tausche(zustand: Spielzustand, karteIds?: [string, string]): Sch
   return pruefeSchritt(zustand, fuehreAus(zustand, angebot))
 }
 
-/** Die `nummer`-te Handkarte dieser Art (Farbe oder Name der Sonderkarte) des Spielers. */
-export function karteVon(zustand: Spielzustand, art: string, spieler = 0, nummer = 0): string {
-  const passend = zustand.spieler[spieler].hand.filter((karte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name) === art)
-  if (passend[nummer] === undefined) throw new Error(`Testaufbau: ${art} Nummer ${nummer} fehlt auf der Hand von Spieler ${spieler + 1}.`)
-  return passend[nummer].id
+/** Die erste Handkarte dieser Art (Farbe oder Name der Sonderkarte) von Spieler 1. */
+export function karteVon(zustand: Spielzustand, art: string): string {
+  return handkarte(zustand, 0, art)
 }
 
 /** Ob diese Handkarte jetzt mit Wirkung aufgezählt ist. */

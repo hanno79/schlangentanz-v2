@@ -3,7 +3,7 @@ import { zugInSicht } from '../../index'
 import type { SpielAktion, Spielzustand } from '../../index'
 import { baukasten } from '../../testing/szenario'
 import { ZWEI_ABWERFEN_DREI_ZIEHEN } from '../../erweiterung/comeback'
-import { beende, einsetzen, FUENF, karteVon, mitBedingung, mitWirkung, spiele, tauschAktionen, tausche, zwei } from '../comeback_hilfen'
+import { beende, einsetzen, FUENF_FARBEN, karteVon, mitBedingung, mitWirkung, spiele, tauschAktionen, tausche, zwei } from '../comeback_hilfen'
 import { verrateneHandkarten } from '../nachrechnen'
 import { aktionen, fuehreAus, grund, typen } from '../zugablauf_hilfen'
 
@@ -52,7 +52,7 @@ describe('A8.1/D46: zwei Zusatzaktionen aus drei Möglichkeiten, obendrauf', () 
   })
 
   it('A8.1/D49: zweimal „Zwei Karten abwerfen, drei ziehen“, und die normale Farb- und Sonderkarte bleiben', () => {
-    let zustand = eingesetzt(FUENF)
+    let zustand = eingesetzt(FUENF_FARBEN)
     zustand = tausche(zustand).zustand
     expect(zustand.spieler[0].hand, 'D49: 5 − 2 + 3').toHaveLength(6)
     zustand = tausche(zustand).zustand
@@ -75,7 +75,7 @@ describe('A8.1/D46: zwei Zusatzaktionen aus drei Möglichkeiten, obendrauf', () 
   })
 
   it('A7.7/D46/D56: auch mit der Comeback-Karte nur eine Farbenfusion je Zug; die zweite lässt sich nur wirkungslos ablegen', () => {
-    const bau = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, ['Farbenfusion', 'Farbenfusion']).hand(1, FUENF).schlange(0, ['Rot', 'Rot', 'Blau', 'Blau']).schlange(1, ['Grün', 'Grün', 'Grün', 'Grün', 'Grün', 'Gelb', 'Gelb', 'Gelb', 'Gelb'])
+    const bau = baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, ['Farbenfusion', 'Farbenfusion']).hand(1, FUENF_FARBEN).schlange(0, ['Rot', 'Rot', 'Blau', 'Blau']).schlange(1, ['Grün', 'Grün', 'Grün', 'Grün', 'Grün', 'Gelb', 'Gelb', 'Gelb', 'Gelb'])
     let zustand = eingesetzt([], bau)
     zustand = spiele(zustand, karteVon(zustand, 'Farbenfusion')).zustand
     const zweite = karteVon(zustand, 'Farbenfusion')
@@ -84,7 +84,7 @@ describe('A8.1/D46: zwei Zusatzaktionen aus drei Möglichkeiten, obendrauf', () 
   })
 
   it('A8.1: ohne eingesetzte Comeback-Karte gibt es „Zwei Karten abwerfen, drei ziehen“ nicht', () => {
-    const zustand = mitBedingung(zwei(FUENF, 1, 6))
+    const zustand = mitBedingung(zwei(FUENF_FARBEN, 1, 6))
     expect(tauschAktionen(zustand)).toEqual([])
     expect(grund(zustand, abwerfen(zustand, zustand.spieler[0].hand.slice(0, 2).map((karte) => karte.id)))).toMatch(/keine zusätzliche Aktion frei/)
   })
@@ -92,7 +92,7 @@ describe('A8.1/D46: zwei Zusatzaktionen aus drei Möglichkeiten, obendrauf', () 
 
 describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   it('D49: die zwei gewählten Karten kommen auf den eigenen Ablagestapel, drei neue vom Nachziehstapel auf die Hand', () => {
-    const start = eingesetzt(FUENF)
+    const start = eingesetzt(FUENF_FARBEN)
     const stapel = start.nachziehstapel.slice(0, 3).map((karte) => karte.id)
     const gewaehlt: [string, string] = [karteVon(start, 'Blau'), karteVon(start, 'Gelb')]
     const schritt = tausche(start, gewaehlt)
@@ -108,7 +108,7 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('B2: kein Ereignis und nicht die Sicht des Gegners nennen eine der gezogenen Karten', () => {
-    const start = eingesetzt(FUENF)
+    const start = eingesetzt(FUENF_FARBEN)
     const gezogen = start.nachziehstapel.slice(0, 3).map((karte) => karte.id)
     const schritt = tausche(start)
     expect(verrateneHandkarten(schritt.zustand, schritt.ereignisse)).toEqual([])
@@ -117,7 +117,7 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('D49/A5: das Abwerfen zählt nicht als Karte des Zuges: ohne gespielte Karte lässt sich der Zug nicht beenden', () => {
-    const getauscht = tausche(eingesetzt(FUENF)).zustand
+    const getauscht = tausche(eingesetzt(FUENF_FARBEN)).zustand
     expect(typen(getauscht)).not.toContain('ZugBeenden')
     expect(grund(getauscht, { typ: 'ZugBeenden', spielerId: 'spieler-1' })).toMatch(/mindestens eine Karte/)
   })
@@ -136,7 +136,7 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('D49: zwei verschiedene eigene Handkarten: eine doppelt genannte oder eine fremde lehnt die Engine ab', () => {
-    const zustand = eingesetzt(FUENF)
+    const zustand = eingesetzt(FUENF_FARBEN)
     const blau = karteVon(zustand, 'Blau')
     expect(grund(zustand, abwerfen(zustand, [blau, blau]))).toMatch(/doppelt/)
     expect(grund(zustand, abwerfen(zustand, [blau, zustand.spieler[1].hand[0].id]))).toMatch(/nicht auf der Hand/)
@@ -144,7 +144,7 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('D49/D55: liegen weniger als drei Karten im Stapel, zieht man, was da ist; die Schlussrunde löst der Spieler am Zug aus', () => {
-    const start = eingesetzt(FUENF, zwei(FUENF, 1, 6).stapelBehalten(2))
+    const start = eingesetzt(FUENF_FARBEN, zwei(FUENF_FARBEN, 1, 6).stapelBehalten(2))
     const schritt = tausche(start)
     expect(schritt.ereignisse.map((ereignis) => ereignis.typ)).toEqual(['KartenAbgeworfen', 'KartenGezogen', 'SchlussrundeBegonnen'])
     expect(schritt.ereignisse[1]).toEqual({ typ: 'KartenGezogen', spielerIndex: 0, anzahl: 2 })
@@ -153,7 +153,7 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('D57: wer so die letzte Karte zieht, spielt sie im selben Zug noch; danach hat jeder andere einen letzten Zug', () => {
-    const start = eingesetzt(['Blau', 'Rot', 'Gelb', 'Braun', 'Grün'], zwei(FUENF, 1, 6).stapelOben(['Violett']).stapelBehalten(1))
+    const start = eingesetzt(['Blau', 'Rot', 'Gelb', 'Braun', 'Grün'], zwei(FUENF_FARBEN, 1, 6).stapelOben(['Violett']).stapelBehalten(1))
     let zustand = tausche(start, [karteVon(start, 'Blau'), karteVon(start, 'Rot')]).zustand
     expect(zustand.partiephase).toBe('Schlussrunde')
     const violett = karteVon(zustand, 'Violett')
@@ -169,7 +169,7 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('D49: in der Schlussrunde nicht wählbar, die Karten-Zusatzaktionen der Comeback-Karte gehen dort aber', () => {
-    const zustand = eingesetzt(FUENF, zwei(FUENF, 1, 6).schlussrunde(1).amZug(0))
+    const zustand = eingesetzt(FUENF_FARBEN, zwei(FUENF_FARBEN, 1, 6).schlussrunde(1).amZug(0))
     expect(tauschAktionen(zustand)).toEqual([])
     expect(grund(zustand, abwerfen(zustand, [karteVon(zustand, 'Blau'), karteVon(zustand, 'Rot')]))).toMatch(/Schlussrunde.*D49/)
     let gespielt = zustand
@@ -178,14 +178,14 @@ describe('D49: Zwei Karten abwerfen, drei ziehen', () => {
   })
 
   it('D49: zieht das erste Abwerfen die letzte Karte, ist das zweite nicht mehr wählbar', () => {
-    const start = eingesetzt(FUENF, zwei(FUENF, 1, 6).stapelBehalten(3))
+    const start = eingesetzt(FUENF_FARBEN, zwei(FUENF_FARBEN, 1, 6).stapelBehalten(3))
     const nach = tausche(start).zustand
     expect(nach.partiephase).toBe('Schlussrunde')
     expect(tauschAktionen(nach)).toEqual([])
   })
 
   it('A8.1: die Zusatzaktion steht im Zug als belegter Platz ohne Karte', () => {
-    const nach = tausche(eingesetzt(FUENF)).zustand
+    const nach = tausche(eingesetzt(FUENF_FARBEN)).zustand
     expect(nach.zug.verwendet).toEqual([{ art: ZWEI_ABWERFEN_DREI_ZIEHEN, karteId: null, kartenart: null }])
   })
 })

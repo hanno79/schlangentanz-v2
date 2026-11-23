@@ -3,7 +3,7 @@ import { deserialisiere, erstellePartie, erzeugeZufall, serialisiere } from '../
 import type { Spielzustand } from '../../index'
 import { baukasten } from '../../testing/szenario'
 import { meldeZugerweiterung } from '../../zuggrenzen'
-import { beende, comebackAktion, einsetzen, FUENF, karteVon, mitBedingung, mitWirkung, schlangeAus, spiele, zugbeginn, zwei } from '../comeback_hilfen'
+import { beende, comebackAktion, einsetzen, FUENF_FARBEN, karteVon, mitBedingung, mitWirkung, schlangeAus, spiele, nachZugwechsel, zwei } from '../comeback_hilfen'
 import { pruefeSchritt } from '../rahmen_hilfen'
 import { aktionen, fuehreAus, grund, typen } from '../zugablauf_hilfen'
 
@@ -38,7 +38,7 @@ describe('A8.1/A4: jeder Spieler hat zu Spielbeginn eine Comeback-Karte, nur mit
   })
 
   it('A8.1/A4: ohne Erweiterung gibt es keine Comeback-Aktion, auch nicht bei einem Rückstand von 6 Karten', () => {
-    const zustand = zugbeginn(baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, FUENF).hand(1, FUENF).schlange(1, schlangeAus(6)))
+    const zustand = nachZugwechsel(baukasten({ spielerzahl: 2, erweiterung: false }).hand(0, FUENF_FARBEN).hand(1, FUENF_FARBEN).schlange(1, schlangeAus(6)))
     expect(zustand.zug.comebackBedingung, 'D48: ohne Erweiterung stellt die Engine keine Bedingung fest').toBe(false)
     expect(typen(zustand)).not.toContain('ComebackEinsetzen')
     expect(grund(zustand, einsatz(zustand))).toMatch(/ohne Erweiterung.*A4/)
@@ -47,33 +47,33 @@ describe('A8.1/A4: jeder Spieler hat zu Spielbeginn eine Comeback-Karte, nur mit
 
 describe('A8.1/D48: Die Bedingung wird zu Beginn des eigenen Zuges festgestellt', () => {
   it('A8.1: Rückstand 5 zu Zugbeginn (1 gegen 6 Karten): die Comeback-Karte ist einsetzbar', () => {
-    const zustand = zugbeginn(zwei(FUENF, 1, 6))
+    const zustand = nachZugwechsel(zwei(FUENF_FARBEN, 1, 6))
     expect(zustand.zug.comebackBedingung).toBe(true)
     expect(comebackAktion(zustand)).toEqual({ typ: 'ComebackEinsetzen', spielerId: 'spieler-1', comebackId: 'comeback-01' })
   })
 
   it('A8.1: Rückstand 4 zu Zugbeginn (1 gegen 5 Karten): nicht einsetzbar, die Engine nennt den Grund', () => {
-    const zustand = zugbeginn(zwei(FUENF, 1, 5))
+    const zustand = nachZugwechsel(zwei(FUENF_FARBEN, 1, 5))
     expect(zustand.zug.comebackBedingung).toBe(false)
     expect(einsetzbar(zustand)).toBe(false)
     expect(grund(zustand, einsatz(zustand))).toMatch(/mindestens 5 Karten.*\(A8\.1, D48\)/)
   })
 
   it('D48: ohne eigene Schlange ist die Länge 0; gegen 5 Karten ist die Bedingung erfüllt, gegen 4 nicht', () => {
-    expect(zugbeginn(zwei(FUENF, 0, 5)).zug.comebackBedingung, 'D48: 0 gegen 5').toBe(true)
-    expect(zugbeginn(zwei(FUENF, 0, 4)).zug.comebackBedingung, 'D48: 0 gegen 4').toBe(false)
+    expect(nachZugwechsel(zwei(FUENF_FARBEN, 0, 5)).zug.comebackBedingung, 'D48: 0 gegen 5').toBe(true)
+    expect(nachZugwechsel(zwei(FUENF_FARBEN, 0, 4)).zug.comebackBedingung, 'D48: 0 gegen 4').toBe(false)
   })
 
   it('D48: jede Karte der Schlange zählt eins, auch Sonderkarten', () => {
     const mitSonderkarten = (glieder: Parameters<ReturnType<typeof baukasten>['schlange']>[1]) =>
-      zugbeginn(baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, FUENF).hand(1, FUENF).schlange(1, glieder)).zug.comebackBedingung
+      nachZugwechsel(baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, FUENF_FARBEN).hand(1, FUENF_FARBEN).schlange(1, glieder)).zug.comebackBedingung
     expect(mitSonderkarten(['Rot', 'Schlangenblockade', 'Rot', 'Regenbogenschlange', 'Rot']), 'D48: drei Farbkarten und zwei Sonderkarten sind 5').toBe(true)
     expect(mitSonderkarten(['Rot', 'Schlangenblockade', 'Rot', 'Regenbogenschlange']), 'D48: zwei Farbkarten und zwei Sonderkarten sind 4').toBe(false)
   })
 
   it('D48: eine Farbenfusion samt ihren zwei Karten zählt eins', () => {
     const mitFusion = (vorne: number) =>
-      zugbeginn(baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, FUENF).hand(1, FUENF).schlange(1, [...schlangeAus(vorne), { fusion: ['Gelb', 'Gelb'] }])).zug
+      nachZugwechsel(baukasten({ spielerzahl: 2, erweiterung: true }).hand(0, FUENF_FARBEN).hand(1, FUENF_FARBEN).schlange(1, [...schlangeAus(vorne), { fusion: ['Gelb', 'Gelb'] }])).zug
         .comebackBedingung
     expect(mitFusion(4), 'D48: vier Karten und eine Fusion sind 5').toBe(true)
     expect(mitFusion(3), 'D48: drei Karten und eine Fusion sind 4, nicht 6').toBe(false)
@@ -81,11 +81,11 @@ describe('A8.1/D48: Die Bedingung wird zu Beginn des eigenen Zuges festgestellt'
 
   it('A8.1: gemessen wird die längste eigene Schlange gegen die längste auf dem Tisch, gleich wessen', () => {
     const drei = (eigene: [number, number], fremde: [number, number]) =>
-      zugbeginn(
+      nachZugwechsel(
         baukasten({ spielerzahl: 3, erweiterung: true })
-          .hand(0, FUENF)
-          .hand(1, FUENF)
-          .hand(2, FUENF)
+          .hand(0, FUENF_FARBEN)
+          .hand(1, FUENF_FARBEN)
+          .hand(2, FUENF_FARBEN)
           .schlange(0, schlangeAus(eigene[0]))
           .schlange(0, schlangeAus(eigene[1]))
           .schlange(1, schlangeAus(fremde[0]))
@@ -97,7 +97,7 @@ describe('A8.1/D48: Die Bedingung wird zu Beginn des eigenen Zuges festgestellt'
   })
 
   it('A8.1/D48: die Bedingung gilt den ganzen Zug: verkürzt Spieler 1 den Rückstand im Zug auf 4, bleibt sie einsetzbar', () => {
-    const start = zugbeginn(zwei(FUENF, 1, 6))
+    const start = nachZugwechsel(zwei(FUENF_FARBEN, 1, 6))
     const eigeneSchlange = start.spieler[0].schlangen[0].id
     const angelegt = aktionen(start, 'FarbkarteLegen').find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId === eigeneSchlange)
     if (angelegt === undefined || angelegt.typ !== 'FarbkarteLegen') throw new Error('Testaufbau: Anlegen an die eigene Schlange fehlt.')
@@ -108,7 +108,7 @@ describe('A8.1/D48: Die Bedingung wird zu Beginn des eigenen Zuges festgestellt'
   })
 
   it('A8.1/D48: wächst der Rückstand erst im Zug auf 5, bleibt sie unerfüllt', () => {
-    const start = zugbeginn(zwei(FUENF, 1, 5))
+    const start = nachZugwechsel(zwei(FUENF_FARBEN, 1, 5))
     const fremdeSchlange = start.spieler[1].schlangen[0].id
     const angelegt = aktionen(start, 'FarbkarteLegen').find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId === fremdeSchlange)
     if (angelegt === undefined || angelegt.typ !== 'FarbkarteLegen') throw new Error('Testaufbau: Anlegen an die fremde Schlange fehlt (D9).')
@@ -119,7 +119,7 @@ describe('A8.1/D48: Die Bedingung wird zu Beginn des eigenen Zuges festgestellt'
   })
 
   it('A8.1: zu Beginn jedes eigenen Zuges stellt die Engine die Bedingung neu fest, für jeden Spieler selbst', () => {
-    const start = zugbeginn(zwei(FUENF, 1, 6))
+    const start = nachZugwechsel(zwei(FUENF_FARBEN, 1, 6))
     expect(start.zug.comebackBedingung, 'Spieler 1 liegt 5 zurück').toBe(true)
     const gegner = beende(spiele(start, karteVon(start, 'Blau')).zustand).zustand
     expect(gegner.zug).toMatchObject({ spielerIndex: 1, comebackBedingung: false })
@@ -152,7 +152,7 @@ describe('A8.1/D47/D48: einsetzbar irgendwann im eigenen Zug, nie im zweiten Zug
   })
 
   it('A8.1: nur im eigenen Zug: der Gegner kann seine Comeback-Karte im Zug von Spieler 1 nicht einsetzen', () => {
-    const zustand = mitBedingung(zwei(FUENF, 6, 1))
+    const zustand = mitBedingung(zwei(FUENF_FARBEN, 6, 1))
     expect(grund(zustand, einsatz(zustand, 1))).toMatch(/nicht am Zug/)
   })
 
@@ -164,7 +164,7 @@ describe('A8.1/D47/D48: einsetzbar irgendwann im eigenen Zug, nie im zweiten Zug
   })
 
   it('D48 (Rückfrage vom 23.11.2026): im zweiten Zug nach einem Verdoppler ist sie nie einsetzbar, auch wenn die Bedingung galt', () => {
-    const start = zugbeginn(zwei(['Verdoppler', 'Blau', 'Rot', 'Gelb', 'Grün'], 1, 6))
+    const start = nachZugwechsel(zwei(['Verdoppler', 'Blau', 'Rot', 'Gelb', 'Grün'], 1, 6))
     expect(start.zug.comebackBedingung).toBe(true)
     const zweiter = beende(spiele(start, karteVon(start, 'Verdoppler')).zustand).zustand
     expect(zweiter.zug).toMatchObject({ spielerIndex: 0, teilzug: 2 })
@@ -180,20 +180,20 @@ describe('A8.1/D47/D48: einsetzbar irgendwann im eigenen Zug, nie im zweiten Zug
   })
 
   it('D47: neben einem zugerweiternden Bonus des Schlangenkorbs geht die Comeback-Karte nicht', () => {
-    const zustand = mitBedingung(zwei(FUENF, 1, 6).aendere((jetzt) => meldeZugerweiterung(jetzt.zug, 'Schlangenkorb', [])))
+    const zustand = mitBedingung(zwei(FUENF_FARBEN, 1, 6).aendere((jetzt) => meldeZugerweiterung(jetzt.zug, 'Schlangenkorb', [])))
     expect(einsetzbar(zustand)).toBe(false)
     expect(grund(zustand, einsatz(zustand))).toMatch(/Schlangenkorbs.*D47/)
   })
 
   it('A8.1: in der Schlussrunde ist sie im letzten eigenen Zug einsetzbar', () => {
-    const zustand = mitBedingung(zwei(FUENF, 1, 6).schlussrunde(1).amZug(0))
+    const zustand = mitBedingung(zwei(FUENF_FARBEN, 1, 6).schlussrunde(1).amZug(0))
     expect(einsetzbar(zustand)).toBe(true)
   })
 })
 
 describe('A8.1: Nach der Nutzung ist sie umgedreht und nie wieder aktivierbar', () => {
   it('A8.1: nach dem Einsatz ist sie verbraucht; das Ereignis nennt sie, und der Zug hat zwei Zusatzaktionen aus drei Möglichkeiten', () => {
-    const start = mitBedingung(zwei(FUENF, 1, 6))
+    const start = mitBedingung(zwei(FUENF_FARBEN, 1, 6))
     const schritt = einsetzen(start)
     expect(schritt.ereignisse).toEqual([{ typ: 'ComebackEingesetzt', spielerIndex: 0, karteId: 'comeback-01' }])
     expect(schritt.zustand.spieler[0].comeback).toEqual({ karte: { typ: 'Comeback', id: 'comeback-01' }, verbraucht: true })
@@ -203,13 +203,13 @@ describe('A8.1: Nach der Nutzung ist sie umgedreht und nie wieder aktivierbar', 
   })
 
   it('A8.1: ein zweites Mal im selben Zug geht nicht', () => {
-    const eingesetzt = einsetzen(mitBedingung(zwei(FUENF, 1, 6))).zustand
+    const eingesetzt = einsetzen(mitBedingung(zwei(FUENF_FARBEN, 1, 6))).zustand
     expect(einsetzbar(eingesetzt)).toBe(false)
     expect(grund(eingesetzt, einsatz(eingesetzt))).toMatch(/umgedreht.*A8\.1/)
   })
 
   it('A8.1: gilt die Bedingung in einem späteren Zug wieder, bleibt sie verbraucht', () => {
-    const eingesetzt = einsetzen(zugbeginn(zwei(FUENF, 1, 7))).zustand
+    const eingesetzt = einsetzen(nachZugwechsel(zwei(FUENF_FARBEN, 1, 7))).zustand
     const gegner = beende(spiele(eingesetzt, karteVon(eingesetzt, 'Blau')).zustand).zustand
     const fremd = gegner.spieler[1].schlangen[0].id
     const anlegen = aktionen(gegner, 'FarbkarteLegen').find((aktion) => aktion.typ === 'FarbkarteLegen' && aktion.ziel.art === 'schlange' && aktion.ziel.schlangenId === fremd)
@@ -221,8 +221,8 @@ describe('A8.1: Nach der Nutzung ist sie umgedreht und nie wieder aktivierbar', 
   })
 
   it('A8.1: mehrere Spieler setzen in ihren Zügen je ihre eigene ein', () => {
-    const start = zugbeginn(
-      baukasten({ spielerzahl: 3, erweiterung: true }).hand(0, FUENF).hand(1, FUENF).hand(2, FUENF).schlange(0, schlangeAus(1)).schlange(1, schlangeAus(1)).schlange(2, schlangeAus(8)),
+    const start = nachZugwechsel(
+      baukasten({ spielerzahl: 3, erweiterung: true }).hand(0, FUENF_FARBEN).hand(1, FUENF_FARBEN).hand(2, FUENF_FARBEN).schlange(0, schlangeAus(1)).schlange(1, schlangeAus(1)).schlange(2, schlangeAus(8)),
     )
     const erster = einsetzen(start).zustand
     const zweiter = beende(spiele(erster, karteVon(erster, 'Blau')).zustand).zustand
@@ -233,13 +233,13 @@ describe('A8.1: Nach der Nutzung ist sie umgedreht und nie wieder aktivierbar', 
   })
 
   it('A8.1: nur die eigene Comeback-Karte: eine fremde oder erfundene Id lehnt die Engine ab', () => {
-    const zustand = mitBedingung(zwei(FUENF, 1, 6))
+    const zustand = mitBedingung(zwei(FUENF_FARBEN, 1, 6))
     expect(grund(zustand, { ...einsatz(zustand), comebackId: 'comeback-02' })).toMatch(/comeback-02.*nicht die Comeback-Karte von Spieler 1/)
     expect(grund(zustand, { ...einsatz(zustand), comebackId: 'blau-01' })).toMatch(/blau-01/)
   })
 
   it('A8.1/X3: Speichern und Laden mitten im Comeback-Zug: Bedingung, Verbrauch und Zusatzaktionen bleiben', () => {
-    const eingesetzt = einsetzen(mitBedingung(zwei(FUENF, 1, 6))).zustand
+    const eingesetzt = einsetzen(mitBedingung(zwei(FUENF_FARBEN, 1, 6))).zustand
     expect(deserialisiere(serialisiere(eingesetzt))).toEqual(eingesetzt)
     const kaputt = JSON.parse(serialisiere(eingesetzt))
     kaputt.zug.comebackBedingung = 'ja'

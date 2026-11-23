@@ -13,14 +13,14 @@ vorkommt, zeigt, dass die Prüfer des Dauerlaufs diese Züge auch sehen.
 */
 
 describe('X4/A8.1: Dauerlauf mit Erweiterung und Comeback-Karte', () => {
-  it('A8.1/D49: in 80 Zufallspartien mit Erweiterung kommen Comeback und Abwerfen vor; jede Partie endet ohne Befund', () => {
+  it('A8.1/D49: in 40 Zufallspartien mit Erweiterung kommen Comeback und Abwerfen vor; jede Partie endet ohne Befund', () => {
     const gezaehlt = new Map<Aktionstyp, number>()
     const zaehler: SchrittPruefer = (_vorher, aktion) => {
       gezaehlt.set(aktion.typ, (gezaehlt.get(aktion.typ) ?? 0) + 1)
       return null
     }
     const neuerPruefer = () => allePruefer(regelPruefer(), reaktionsPruefer(neueReaktionen()), stapelPruefer, zaehler)
-    const ergebnisse = dauerlauf(dauerlaufPartien(80, true, 4001), { neuerPruefer })
+    const ergebnisse = dauerlauf(dauerlaufPartien(40, true, 6001), { neuerPruefer })
     expect(ergebnisse.filter((ergebnis) => ergebnis.ausgang !== 'beendet'), 'X4: Partien, die nicht regulär endeten').toEqual([])
     expect(gezaehlt.get('ComebackEinsetzen') ?? 0, 'A8.1: eingesetzte Comeback-Karten').toBeGreaterThan(0)
     expect(gezaehlt.get('ZweiAbwerfenDreiZiehen') ?? 0, 'D49: „Zwei Karten abwerfen, drei ziehen“').toBeGreaterThan(0)

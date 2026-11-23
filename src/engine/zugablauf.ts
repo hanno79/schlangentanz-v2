@@ -19,7 +19,7 @@ Grenzen eines Zuges und seine Zusatzaktionen stehen in `zuggrenzen.ts` (X3).
 */
 
 /** Ein frischer Zug ohne gespielte Karte; im zweiten Zug nach einem Verdoppler läuft die Runde weiter (D47, D50). */
-export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1, runde: readonly string[] = []): Zug {
+export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1, runde: readonly string[] = [], comebackBedingung = false): Zug {
   return {
     spielerIndex,
     teilzug,
@@ -28,7 +28,7 @@ export function neuerZug(spielerIndex: number, teilzug: 1 | 2 = 1, runde: readon
     verdopplerGespielt: false,
     farbenfusionGespielt: false,
     abschnitt: 'Ausspielen',
-    comebackBedingung: false,
+    comebackBedingung,
     ...neuerRahmen(runde),
   };
 }
@@ -119,14 +119,18 @@ export function beendeZug(zustand: Spielzustand, ereignisse: Ereignis[]): void {
  * Schreibweise derselben Wahl dasselbe ergibt wie die aufgezählte Aktion.
  */
 export function werfeUeberhandAb(zustand: Spielzustand, karteIds: readonly string[], ereignisse: Ereignis[]): void {
-  const { spielerIndex } = zustand.zug;
+  werfeAufEigenenAblagestapel(zustand, zustand.zug.spielerIndex, karteIds, ereignisse);
+  schliesseZugAb(zustand, ereignisse);
+}
+
+/** Die gewählten Handkarten kommen in der Reihenfolge der Hand auf den eigenen Ablagestapel (A5, D49); gemeldet als `KartenAbgeworfen`. */
+export function werfeAufEigenenAblagestapel(zustand: Spielzustand, spielerIndex: number, karteIds: readonly string[], ereignisse: Ereignis[]): void {
   const spieler = zustand.spieler[spielerIndex];
   const gewaehlt = new Set(karteIds);
   const abgeworfen = spieler.hand.filter((karte) => gewaehlt.has(karte.id));
   spieler.hand = spieler.hand.filter((karte) => !gewaehlt.has(karte.id));
   spieler.ablagestapel.push(...abgeworfen);
   ereignisse.push({ typ: 'KartenAbgeworfen', spielerIndex, karteIds: abgeworfen.map((karte) => karte.id) });
-  schliesseZugAb(zustand, ereignisse);
 }
 
 /**
@@ -222,11 +226,10 @@ export function legeGrubenOhneZugAb(zustand: Spielzustand, ereignisse: Ereignis[
 /**
  * Setzt den frischen Zug und meldet ihn, damit Zustand und Ereignis denselben
  * Teilzug nennen. Zu Beginn des Zuges stellt die Engine fest, ob der Spieler die
- * Comeback-Karte einsetzen dürfte (A8.1, D48); der zweite Zug nach einem
- * Verdoppler gehört zu derselben Runde und übernimmt den Befund.
+ * Comeback-Karte einsetzen dürfte (A8.1, D48); im zweiten Zug nach einem
+ * Verdoppler nie (D47, D48).
  */
 function beginneZug(zustand: Spielzustand, spielerIndex: number, teilzug: 1 | 2, ereignisse: Ereignis[], runde: readonly string[] = []): void {
-  const comebackBedingung = teilzug === 2 ? zustand.zug.comebackBedingung : comebackBedingungErfuellt(zustand, spielerIndex);
-  zustand.zug = { ...neuerZug(spielerIndex, teilzug, runde), comebackBedingung };
+  zustand.zug = neuerZug(spielerIndex, teilzug, runde, teilzug === 1 && comebackBedingungErfuellt(zustand, spielerIndex));
   ereignisse.push({ typ: 'ZugBegonnen', spielerIndex, teilzug });
 }

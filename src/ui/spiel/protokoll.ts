@@ -60,8 +60,8 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
         saetze.push(SCHRITT.zieht(person(ereignis.spielerIndex), ereignis.anzahl))
         break
       case 'KartenAbgeworfen':
-        // D49: Wer mit der Comeback-Karte abwirft, legt keine überzähligen Karten ab.
-        saetze.push((aktion.typ === 'ZweiAbwerfenDreiZiehen' ? SCHRITT.wirftAb : SCHRITT.legtAb)(person(ereignis.spielerIndex), ereignis.karteIds.length))
+        // A5: Überzählig sind nur die Karten am Zugende; wer mitten im Zug abwirft (D49), legt keine überzähligen ab.
+        saetze.push((vorher.zug.abschnitt === 'Abwerfen' ? SCHRITT.legtAb : SCHRITT.wirftAb)(person(ereignis.spielerIndex), ereignis.karteIds.length))
         break
       case 'ComebackEingesetzt':
         saetze.push(SCHRITT.comeback(person(ereignis.spielerIndex)))
