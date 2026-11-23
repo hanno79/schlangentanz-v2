@@ -6,6 +6,7 @@ import { istFarbenschutz } from '../reaktion'
 import { dauerlauf, ENGINE_MOTOR } from '../testing/dauerlauf'
 import type { DauerlaufErgebnis, DauerlaufPartie, Motor, SchrittPruefer } from '../testing/dauerlauf'
 import { erzeugeZufall } from '../testing/zufall'
+import { belegungGueltig } from '../zuggrenzen'
 
 /*
 Die Prüfer des Dauerlaufs, gemeinsam für den Lauf in `npm test` (300 Partien,
@@ -82,7 +83,7 @@ export function allePruefer(...pruefer: SchrittPruefer[]): SchrittPruefer {
 
 /**
  * Was der Dauerlauf je Partie zusätzlich zu den Invarianten prüft (E2): höchstens
- * eine Farbkarte und eine Sonderkarte je Zug (D12), höchstens 5 Handkarten nach
+ * eine Farbkarte und eine Sonderkarte je Zug, dazu die Zusatzaktionen (D12, D46, `zuggrenzen.ts`), höchstens 5 Handkarten nach
  * dem eigenen Zugende (A5), in der Schlussrunde zieht niemand, der Auslöser kommt
  * nicht mehr dran, und jeder andere hat genau einen letzten Zug (A10).
  *
@@ -95,7 +96,7 @@ export function regelPruefer(zaehler: Zugzaehler = neuerZugzaehler()): SchrittPr
   let letzteZuege: number[] | null = null
   return (vorher, aktion, { zustand, ereignisse }) => {
     const { zug } = zustand
-    if (zug.gespielteFarbkarten > 1 || zug.gespielteSonderkarten > 1) return `D12: ${JSON.stringify(zug)}`
+    if (!belegungGueltig(zug)) return `D12/D46: ${JSON.stringify(zug)}`
     if (aktion.typ === 'VerdopplerSpielen' && vorher.zug.teilzug === 2) return 'D11: Im zweiten Zug wirkt ein Verdoppler.'
     for (const ereignis of ereignisse) {
       if (ereignis.typ === 'ZugBegonnen' && ereignis.teilzug === 2) {

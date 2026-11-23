@@ -104,6 +104,11 @@ function hatPlatz(zug: Zugrahmen, verwendung: Verwendung): boolean {
   return zuordenbar(plaetze(zug), [...zug.verwendet, verwendung]);
 }
 
+/** A5, D12, D46: Belegt alles, was in diesem Teilzug gespielt oder genutzt ist, je einen eigenen Platz? Für Prüfer, die einen Zug nachträglich ansehen. */
+export function belegungGueltig(zug: Zugrahmen): boolean {
+  return zuordenbar(plaetze(zug), zug.verwendet);
+}
+
 /** A5, D12, D46: Der Grund, warum diese Handkarte in diesem Teilzug keinen Platz mehr hat, oder `null`. */
 export function kartengrenze(zug: Zugrahmen, karte: Spielkarte): string | null {
   if (hatPlatz(zug, { art: karte.typ, karteId: karte.id, kartenart: null })) return null;
