@@ -1,4 +1,4 @@
-import { ENTSCHEIDUNGSREGISTER } from '../engine/entscheidungsregister'
+import { trageEntscheidungenEin } from '../engine/entscheidungsregister'
 import { baukasten } from '../engine/testing/szenario'
 import { TESTENTSCHEIDUNGEN, verlangeTestwahl } from '../engine/testing/testentscheidung'
 import { erzeugeZufall } from '../engine/testing/zufall'
@@ -19,7 +19,7 @@ oberste Karte ist offen aufgedeckt, Spieler 1 wählt frei einen Gegner, und der
 wählt, ob er die aufgedeckte Karte nimmt oder die oberste Stapelkarte zieht.
 */
 
-for (const definition of TESTENTSCHEIDUNGEN) ENTSCHEIDUNGSREGISTER.set(definition.art, definition)
+trageEntscheidungenEin(TESTENTSCHEIDUNGEN)
 
 /**
  * Drei Spieler, Spieler 1 am Zug; die Test-Karte (eine Regenbogenschlange) liegt

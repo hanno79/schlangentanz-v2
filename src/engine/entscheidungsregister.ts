@@ -21,9 +21,37 @@ export interface EntscheidungsDefinition {
 
 export const ENTSCHEIDUNGSREGISTER = new Map<string, EntscheidungsDefinition>();
 
+function unbekannt(art: string): string {
+  return `Die Entscheidung „${art}“ ist unbekannt; sie steht nicht im Entscheidungsregister.`;
+}
+
 /** Die Definition dieser Art; eine unbekannte Art ist ein Fehler, keine leere Wahl. */
 export function definitionDerEntscheidung(art: string): EntscheidungsDefinition {
   const definition = ENTSCHEIDUNGSREGISTER.get(art);
-  if (definition === undefined) throw new Error(`Die Entscheidung „${art}“ ist unbekannt; sie steht nicht im Entscheidungsregister.`);
+  if (definition === undefined) throw new Error(unbekannt(art));
   return definition;
+}
+
+/**
+ * Was an einer Entscheidung nicht stimmt, gleich ob sie verlangt oder geladen
+ * wird: unbekannte Art, keine Wahl, eine Option doppelt, ein Spieler ausserhalb
+ * des Tisches. Leer, wenn sie gültig ist.
+ */
+export function befundeDerEntscheidung(entscheidung: OffeneEntscheidung, spielerzahl: number): string[] {
+  const { art, optionen, entscheider, ausgeloestVon } = entscheidung;
+  const befunde = ENTSCHEIDUNGSREGISTER.has(art) ? [] : [unbekannt(art)];
+  if (optionen.length === 0) befunde.push(`Die Entscheidung „${art}“ ist ohne Wahl; entscheiden lässt sich nur zwischen Optionen.`);
+  if (new Set(optionen).size !== optionen.length) befunde.push(`Die Entscheidung „${art}“ nennt eine Option mehrfach.`);
+  for (const [index, rolle] of [[entscheider, 'Entscheider'], [ausgeloestVon, 'ausgelöst von']] as const) {
+    if (!Number.isInteger(index) || index < 0 || index >= spielerzahl) befunde.push(`Die Entscheidung „${art}“ (${rolle}) verweist auf Spieler ${index}, es gibt ${spielerzahl}.`);
+  }
+  return befunde;
+}
+
+/** Trägt diese Arten ein, für Tests und den Entwicklertisch; der Rückgabewert trägt sie wieder aus. */
+export function trageEntscheidungenEin(definitionen: readonly EntscheidungsDefinition[]): () => void {
+  for (const definition of definitionen) ENTSCHEIDUNGSREGISTER.set(definition.art, definition);
+  return () => {
+    for (const definition of definitionen) ENTSCHEIDUNGSREGISTER.delete(definition.art);
+  };
 }

@@ -163,7 +163,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     if (zustand.entscheidung === null) return nein('Es ist keine Entscheidung offen; „Entscheiden“ geht nur, wenn eine Wirkung eine Wahl verlangt (X3).');
     const entscheider = ermittleEntscheider(zustand)!;
     if (entscheider !== spielerIndex) return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider].name} (X3).`);
-    const grund = pruefeEntscheidung(zustand, aktion.wahl);
+    const grund = pruefeEntscheidung(zustand.entscheidung, aktion.wahl, zustand.spieler.length);
     return grund === null ? JA : nein(grund);
   }
   if (schwebend !== null) {

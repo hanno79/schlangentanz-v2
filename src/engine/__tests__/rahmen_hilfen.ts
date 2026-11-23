@@ -1,10 +1,10 @@
 import { vi } from 'vitest'
 import type { Ereignis, KartenAktion, Spielzustand } from '../index'
-import { ENTSCHEIDUNGSREGISTER } from '../entscheidungsregister'
+import { trageEntscheidungenEin } from '../entscheidungsregister'
 import type { EntscheidungsDefinition } from '../entscheidungsregister'
 import { KARTENREGISTER } from '../karten/register'
 import { TESTENTSCHEIDUNGEN } from '../testing/testentscheidung'
-import { legeAufEigenenAblagestapel } from '../zugablauf'
+import { legeAufEigenenAblagestapel, spielerIndexVon } from '../zugablauf'
 import { lageVon, spieleNach, verrateneHandkarten } from './nachrechnen'
 import { aktionen, fuehreAus, verletzteInvarianten } from './zugablauf_hilfen'
 import type { Schritt } from './zugablauf_hilfen'
@@ -35,7 +35,7 @@ export function testkarte(wirkung: (zustand: Spielzustand, spielerIndex: number)
   vi.spyOn(definition, 'betroffene').mockReturnValue([])
   vi.spyOn(definition, 'wirke').mockImplementation((zustand: Spielzustand, aktion: KartenAktion) => {
     legeAufEigenenAblagestapel(zustand, aktion.spielerId, aktion.karteId)
-    wirkung(zustand, zustand.spieler.findIndex((spieler) => spieler.id === aktion.spielerId))
+    wirkung(zustand, spielerIndexVon(zustand, aktion.spielerId))
     return zustand
   })
 }
@@ -49,11 +49,7 @@ export function spieleTestkarte(zustand: Spielzustand): Schritt {
 
 /** Trägt die Test-Entscheidungen ins Register ein; der Rückgabewert trägt sie wieder aus. */
 export function mitTestentscheidungen(weitere: EntscheidungsDefinition[] = []): () => void {
-  const alle = [...TESTENTSCHEIDUNGEN, ...weitere]
-  for (const definition of alle) ENTSCHEIDUNGSREGISTER.set(definition.art, definition)
-  return () => {
-    for (const definition of alle) ENTSCHEIDUNGSREGISTER.delete(definition.art)
-  }
+  return trageEntscheidungenEin([...TESTENTSCHEIDUNGEN, ...weitere])
 }
 
 /** Die aufgezählte Entscheidung mit dieser Wahl; sie muss angeboten sein. */

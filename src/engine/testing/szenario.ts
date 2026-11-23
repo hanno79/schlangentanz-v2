@@ -154,7 +154,9 @@ export function baukasten(optionen: TischOptionen): Baukasten {
     },
     amZug(index, teilzug = 1) {
       spieler(index);
-      zustand.zug = { ...zustand.zug, spielerIndex: index, teilzug };
+      // A7.8, D47: Ein zweiter Zug folgt nur auf einen Verdoppler; seine Runde nennt ihn wie nach `neuerZug`.
+      const runde = teilzug === 2 && !zustand.zug.runde.includes('Verdoppler') ? [...zustand.zug.runde, 'Verdoppler'] : zustand.zug.runde;
+      zustand.zug = { ...zustand.zug, spielerIndex: index, teilzug, runde };
       return bau;
     },
     gespielt(farbkarten, sonderkarten) {

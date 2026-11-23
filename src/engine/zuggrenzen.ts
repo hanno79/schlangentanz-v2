@@ -33,8 +33,6 @@ Grenzen.
 
 export type Zugerweiterung = 'Verdoppler' | 'Comeback' | 'Schlangenkorb';
 
-const ZUGERWEITERUNGEN: ReadonlySet<string> = new Set<Zugerweiterung>(['Verdoppler', 'Comeback', 'Schlangenkorb']);
-
 const BENANNT: Readonly<Record<Zugerweiterung, string>> = {
   Verdoppler: 'der Verdoppler',
   Comeback: 'die Comeback-Karte',
@@ -100,6 +98,8 @@ function zuordenbar(platzliste: readonly Zusatzaktion[], verwendungen: readonly 
 }
 
 function hatPlatz(zug: Zugrahmen, verwendung: Verwendung): boolean {
+  // Ohne Zusatzaktion gibt es nur die beiden Plätze des Zuges; belegt ist einer, wenn seine Art schon gespielt ist.
+  if (zug.zusatzaktionen.length === 0) return (verwendung.art === 'Farbkarte' || verwendung.art === 'Sonderkarte') && !zug.verwendet.some((eintrag) => eintrag.art === verwendung.art);
   return zuordenbar(plaetze(zug), [...zug.verwendet, verwendung]);
 }
 
@@ -158,10 +158,13 @@ export function darfZugBeenden(zug: Zugrahmen, spieler: Spieler): boolean {
   return zug.verwendet.some((verwendung) => verwendung.karteId !== null) || spieler.hand.length === 0;
 }
 
-/** Die Zugerweiterung dieser Runde (D47); im zweiten Zug nach einem Verdoppler ist es der Verdoppler. */
-export function zugerweiterungDerRunde(zug: Zug): Zugerweiterung | null {
-  if (zug.teilzug === 2) return 'Verdoppler';
-  return (zug.runde.find((eintrag) => ZUGERWEITERUNGEN.has(eintrag)) as Zugerweiterung | undefined) ?? null;
+function istZugerweiterung(eintrag: string): eintrag is Zugerweiterung {
+  return Object.hasOwn(BENANNT, eintrag);
+}
+
+/** Die Zugerweiterung dieser Runde (D47); im zweiten Zug nach einem Verdoppler steht dort der Verdoppler (`neuerZug`). */
+function zugerweiterungDerRunde(zug: Zug): Zugerweiterung | null {
+  return zug.runde.find(istZugerweiterung) ?? null;
 }
 
 /** D47: Der Grund, warum in dieser Runde keine Zugerweiterung mehr geht, oder `null`. */

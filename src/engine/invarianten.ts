@@ -1,7 +1,7 @@
 import { MAX_SCHLANGEN_PRO_SPIELER, OFFENE_AUFGABEN } from './constants';
 import { erstelleAuslagekarten, erstelleSpielkarten } from './deck';
 import { erstelleAufgabenStapel } from './aufgabenKarten';
-import { ENTSCHEIDUNGSREGISTER } from './entscheidungsregister';
+import { befundeDerEntscheidung } from './entscheidungsregister';
 import { zaehlerPassen } from './zuggrenzen';
 import type { KartenAktion } from './aktionen/typen';
 import { istKartenaktionstyp, kartenartFuer, kartenartVon } from './karten/register';
@@ -254,14 +254,9 @@ function verweiseGueltig(zustand: Spielzustand): string[] {
   }
   const { entscheidung } = zustand;
   if (entscheidung !== null) {
-    const was = `Die offene Entscheidung „${entscheidung.art}“`;
-    pruefe(entscheidung.entscheider, `${was} (Entscheider)`);
-    pruefe(entscheidung.ausgeloestVon, `${was} (ausgelöst von)`);
-    if (!ENTSCHEIDUNGSREGISTER.has(entscheidung.art)) probleme.push(`${was} steht nicht im Entscheidungsregister.`);
-    if (entscheidung.optionen.length === 0) probleme.push(`${was} ist ohne Wahl; entscheiden lässt sich nur zwischen Optionen (X3).`);
-    if (new Set(entscheidung.optionen).size !== entscheidung.optionen.length) probleme.push(`${was} nennt eine Option mehrfach.`);
+    probleme.push(...befundeDerEntscheidung(entscheidung, anzahl));
     // X3: Abwehr und Entscheidung laufen nacheinander, nie zugleich; sonst wäre unklar, wer entscheidet.
-    if (schwebend !== null) probleme.push(`${was} ist offen, während ${schwebend.karte.id} schwebt.`);
+    if (schwebend !== null) probleme.push(`Die Entscheidung „${entscheidung.art}“ ist offen, während ${schwebend.karte.id} schwebt.`);
   }
   return probleme;
 }

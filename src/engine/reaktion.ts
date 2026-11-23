@@ -1,5 +1,5 @@
 import type { EntscheidenAktion, Ereignis, KartenAktion, ReagierenAktion } from './aktionen/typen';
-import { definitionDerEntscheidung, ENTSCHEIDUNGSREGISTER } from './entscheidungsregister';
+import { befundeDerEntscheidung, definitionDerEntscheidung } from './entscheidungsregister';
 import { definitionFuer } from './karten/register';
 import { wirkeUndMeldeVersetzte } from './kartenorte';
 import type { OffeneEntscheidung, SonderkarteInfo, Spielkarte, Spielzustand } from './types';
@@ -140,9 +140,8 @@ export function verlangeEntscheidung(zustand: Spielzustand, entscheidung: Offene
     throw new Error(`Solange die ${zustand.schwebend.karte.name} schwebt, lässt sich keine Entscheidung verlangen; erst entscheiden die Betroffenen (A6).`);
   }
   if (zustand.entscheidung !== null) throw new Error(`Die Entscheidung „${zustand.entscheidung.art}“ ist schon offen; eine zweite lässt sich nicht daneben verlangen.`);
-  definitionDerEntscheidung(entscheidung.art);
-  if (entscheidung.optionen.length === 0) throw new Error(`Die Entscheidung „${entscheidung.art}“ ist ohne Wahl; entscheiden lässt sich nur zwischen Optionen.`);
-  if (zustand.spieler[entscheidung.entscheider] === undefined) throw new Error(`Spieler ${entscheidung.entscheider} gibt es nicht; er kann nicht entscheiden.`);
+  const [befund] = befundeDerEntscheidung(entscheidung, zustand.spieler.length);
+  if (befund !== undefined) throw new Error(befund);
   zustand.entscheidung = structuredClone(entscheidung);
 }
 
@@ -152,11 +151,10 @@ export function entscheidungsAktionen(zustand: Spielzustand, spielerIndex: numbe
   return (zustand.entscheidung?.optionen ?? []).map((wahl) => ({ typ: 'Entscheiden', spielerId, wahl }));
 }
 
-/** Der Grund, warum diese Wahl nicht geht, oder `null`. Ob der Spieler gerade entscheidet, prüft die Aktionsschicht. */
-export function pruefeEntscheidung(zustand: Spielzustand, wahl: string): string | null {
-  const { entscheidung } = zustand;
-  if (entscheidung === null) return 'Es ist keine Entscheidung offen.';
-  if (!ENTSCHEIDUNGSREGISTER.has(entscheidung.art)) return `Die Entscheidung „${entscheidung.art}“ ist unbekannt; sie steht nicht im Entscheidungsregister.`;
+/** Der Grund, warum diese Wahl nicht geht, oder `null`. Ob eine Entscheidung offen ist und der Spieler sie trifft, prüft die Aktionsschicht. */
+export function pruefeEntscheidung(entscheidung: OffeneEntscheidung, wahl: string, spielerzahl: number): string | null {
+  const [befund] = befundeDerEntscheidung(entscheidung, spielerzahl);
+  if (befund !== undefined) return befund;
   if (!entscheidung.optionen.includes(wahl)) return `„${wahl}“ steht bei „${entscheidung.art}“ nicht zur Wahl; möglich sind: ${entscheidung.optionen.join(', ')}.`;
   return null;
 }
