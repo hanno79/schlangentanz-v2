@@ -42,7 +42,7 @@ export { ermittleAktionen } from './aktionen/enumerieren';
 /** A10, D21: Kommt der letzte Zug eines Spielers in der Schlussrunde noch? Für die Sicht der KI (Plan K2). */
 export { hatNochLetztenZug } from './zugablauf';
 /** B2: der Zug, wie ihn ein Spieler sehen darf, für die Sicht der KI (Plan K1, X3). */
-export { zugInSicht } from './zuggrenzen';
+export { zugInSicht, zugOhneIds } from './zuggrenzen';
 export { ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */

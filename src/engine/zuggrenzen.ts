@@ -78,9 +78,13 @@ function plaetze(zug: Zugrahmen): Zusatzaktion[] {
   return [{ quelle: 'Zug', erlaubt: ['Farbkarte'], nurKarten: null }, { quelle: 'Zug', erlaubt: ['Sonderkarte'], nurKarten: null }, ...zug.zusatzaktionen];
 }
 
+/** D43: Gilt der Platz für diese Karte? Ohne Einschränkung für jede; eine eigene Aktion ohne Karte nie für einen eingeschränkten. */
+function giltFuerKarte(platz: Zusatzaktion, karteId: string | null): boolean {
+  return platz.nurKarten === null || (karteId !== null && platz.nurKarten.includes(karteId));
+}
+
 function passt(platz: Zusatzaktion, verwendung: Verwendung): boolean {
-  if (!platz.erlaubt.includes(verwendung.art)) return false;
-  return platz.nurKarten === null || (verwendung.karteId !== null && platz.nurKarten.includes(verwendung.karteId));
+  return platz.erlaubt.includes(verwendung.art) && giltFuerKarte(platz, verwendung.karteId);
 }
 
 /** Lässt sich jede Verwendung einem eigenen Platz zuordnen? Paarung über verlängernde Wege; die Mengen sind klein. */
@@ -244,4 +248,35 @@ export function zugInSicht(zustand: Spielzustand, spielerIndex: number): Zug {
     ...zug,
     zusatzaktionen: zug.zusatzaktionen.map((zusatz) => (zusatz.nurKarten === null ? zusatz : { ...zusatz, nurKarten: zusatz.nurKarten.filter((id) => !fremd.has(id)) })),
   };
+}
+
+/**
+ * Der Zug ohne Karten-Ids, für die Zugsuche der KI (Plan K2; Prüfprotokoll X3,
+ * Mangel 1): je belegtem Platz die Art der Karte und für welche Zusatzaktion sie
+ * in Frage kam, je Zusatzaktion die Handkarten, für die sie noch gilt (D43). Zwei
+ * Züge mit derselben Beschreibung erlauben dasselbe. Jedes Feld des Zuges ist
+ * genannt; ein neues Feld fällt beim Übersetzen auf, statt Ids hineinzutragen.
+ */
+export function zugOhneIds(zug: Zug, hand: readonly Spielkarte[]): string {
+  const art = (karte: Spielkarte) => (karte.typ === 'Farbkarte' ? karte.farbe : karte.name);
+  const { spielerIndex, teilzug, gespielteFarbkarten, gespielteSonderkarten, verdopplerGespielt, farbenfusionGespielt, abschnitt, runde } = zug;
+  const beschreibung = {
+    spielerIndex,
+    teilzug,
+    gespielteFarbkarten,
+    gespielteSonderkarten,
+    verdopplerGespielt,
+    farbenfusionGespielt,
+    abschnitt,
+    runde,
+    verwendet: zug.verwendet
+      .map((eintrag) => JSON.stringify([eintrag.art, eintrag.kartenart, zug.zusatzaktionen.map((zusatz) => giltFuerKarte(zusatz, eintrag.karteId))]))
+      .sort(),
+    zusatzaktionen: zug.zusatzaktionen.map(({ quelle, erlaubt, nurKarten }) => [
+      quelle,
+      erlaubt,
+      nurKarten === null ? null : hand.filter((karte) => nurKarten.includes(karte.id)).map(art).sort(),
+    ]),
+  } satisfies Record<keyof Zug, unknown>;
+  return JSON.stringify(beschreibung);
 }

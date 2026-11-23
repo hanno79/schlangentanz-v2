@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { createHash } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider, erzeugeZufall } from '../../engine'
-import { sichtFuer } from '../sicht'
+import { anwendeAktion, erstellePartie, erzeugeZufall } from '../../engine'
+import { kiWahl } from '../schritt'
 import { erstelleSolideKi } from './solideKi'
 
 /*
@@ -23,10 +23,8 @@ function wahlen(saat: number, spielerzahl: number): string[] {
   let zustand = erstellePartie({ spielerzahl, erweiterung: false, zufall: erzeugeZufall(saat) })
   const ki = erstelleSolideKi(erzeugeZufall(saat * 13 + 5))
   const protokoll: string[] = []
-  for (let schritt = 0; zustand.partiephase !== 'Beendet'; schritt += 1) {
-    if (schritt > 5000) throw new Error(`Partie ${saat} endet nicht.`)
-    const entscheider = ermittleEntscheider(zustand)!
-    const aktion = ki.waehle(sichtFuer(zustand, entscheider), ermittleAktionen(zustand))
+  for (let aktion = kiWahl(zustand, ki); aktion !== null; aktion = kiWahl(zustand, ki)) {
+    if (protokoll.length > 5000) throw new Error(`Partie ${saat} endet nicht.`)
     protokoll.push(JSON.stringify(aktion))
     zustand = anwendeAktion(zustand, aktion).zustand
   }

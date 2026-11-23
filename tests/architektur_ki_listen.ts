@@ -56,6 +56,8 @@ export const POSITIVLISTE_ENGINE_FUER_STRATEGIEN = new Set([
   'laengsteFarbkette',
   'vielfaltBonusFuer',
   'werteSchlangen',
+  // X3: beschreibt nur Zug und eigene Hand aus der Sicht, ohne vollen Zustand (Folgeschlüssel der Zugsuche).
+  'zugOhneIds',
 ])
 
 /**
