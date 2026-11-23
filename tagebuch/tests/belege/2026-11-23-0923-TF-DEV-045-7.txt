@@ -1,0 +1,20 @@
+{
+ "saat": 11,
+ "schritte": 174,
+ "phase": "Beendet",
+ "verletzt": 0,
+ "haeutungen": 1,
+ "aufgaben": [
+  "Schritt 62: AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Schlangenmeister (aufgabe-09)"
+ ],
+ "breite": {
+  "scrollWidth": 1280,
+  "clientWidth": 1280
+ },
+ "fehler": [],
+ "ausgespielt": [
+  "Ausgespielte Sonderkarten:",
+  "Ausgespielte Sonderkarten:",
+  "Ausgespielte Sonderkarten:"
+ ]
+}

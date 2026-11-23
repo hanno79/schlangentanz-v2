@@ -7,6 +7,7 @@ import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
 import { erstellePartie } from '../engine'
 import { entferneTestbedingungen, immer, setzeTestbedingungen } from '../engine/testing/testaufgaben'
 import { bestimmeZustand, sichtFuer, simuliere } from './sicht'
+import type { Sicht } from './sicht'
 import { erstelleZufallsKi } from './strategien/zufallsKi'
 import { alleTexte, mischeVerborgenes, verborgeneIds } from './__tests__/verborgenes'
 import { jederNte, partieZustaende, zufallszustaende } from './__tests__/stellungen'
@@ -121,15 +122,32 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
       const stellung = simuliere(sichtFuer(zustand, entscheider), erzeugeZufall(nummer))
       const wo = `K2: Stellung ${nummer}, ${JSON.stringify(aktion)}`
       let nachher: Spielzustand
+      let aufgedeckt = false
       try {
-        nachher = anwendeAktion(zustand, aktion).zustand
+        const ergebnis = anwendeAktion(zustand, aktion)
+        nachher = ergebnis.zustand
+        aufgedeckt = ergebnis.ereignisse.some((ereignis) => ereignis.typ === 'AufgabeAufgedeckt')
       } catch (ablehnung) {
         // Manche Zufallszustände erreicht keine Partie; lehnt die Engine dort ab, lehnt sie in der Simulation gleich ab.
         expect(() => stellung.nach(aktion), wo).toThrow(ablehnung instanceof Error ? ablehnung.message : String(ablehnung))
         continue
       }
+      // Löst die Karte eine Aufgabe ein, deckt sie die nächste vom verdeckten Aufgabenstapel auf (A9); wie beim Ziehen errät die Simulation diese nur.
+      // Wird die aufgedeckte gleich mit eingelöst (Kette, D5), hängen Stapelgrösse und weitere Einlösungen davon ab;
+      // verglichen werden dann nur die Aufgaben, die vor der Aktion offen oder eingelöst waren.
+      const vorher = sichtFuer(zustand, entscheider)
+      const bekannt = new Set([...vorher.offeneAufgaben, ...vorher.spieler.flatMap((spieler) => spieler.erfuellteAufgaben)].map((aufgabe) => aufgabe.id))
+      const vergleichbar = (sicht: Sicht): Sicht =>
+        aufgedeckt
+          ? {
+              ...sicht,
+              offeneAufgaben: [],
+              aufgabenstapelGroesse: 0,
+              spieler: sicht.spieler.map((spieler) => ({ ...spieler, erfuellteAufgaben: spieler.erfuellteAufgaben.filter((aufgabe) => bekannt.has(aufgabe.id)) })),
+            }
+          : sicht
       const simuliert = stellung.nach(aktion)
-      expect(simuliert.sicht, wo).toEqual(sichtFuer(nachher, entscheider))
+      expect(vergleichbar(simuliert.sicht), wo).toEqual(vergleichbar(sichtFuer(nachher, entscheider)))
       expect(simuliert.entscheider, wo).toBe(ermittleEntscheider(nachher))
     }
   })

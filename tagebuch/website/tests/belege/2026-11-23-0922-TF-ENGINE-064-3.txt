@@ -1,0 +1,69 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > volle Suche gleich der Umsetzung
+Gegenprobe: 3000 Fälle, 819 mit neuen Gruppen, max 2, Abweichungen 0
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Lesarten ohne Joker vergleichen
+verschieden (A vs B, erfüllt ja/nein): 0; A vs D: 0
+
+ ✓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > volle Suche gleich der Umsetzung 3298ms
+stdout | src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Laufzeit mit 8 Jokern
+Laufzeit JRJRJRJR BYRVN JBJBJBJB: 1.4 ms, Ergebnis 1
+Laufzeit JFJFJFJF BYRVN Y: 0.1 ms, Ergebnis 1
+Laufzeit R JRJFRJ RYRYR FJRJF B: 1.3 ms, Ergebnis 1
+Laufzeit JJJJ RBRBR JJJJ: 0.2 ms, Ergebnis 2
+Laufzeit JRJR JRJR BRYRB JRJR: 0.2 ms, Ergebnis 1
+Laufzeit FJFJFJFJ RBYBR: 0.1 ms, Ergebnis 1
+
+ ✓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Lesarten ohne Joker vergleichen 195ms
+ ✓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Laufzeit mit 8 Jokern 5ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  09:03:27
+   Duration  8.40s (transform 195ms, setup 490ms, import 158ms, tests 3.50s, environment 3.85s)
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: erschöpfend kleine Schlangen > Lesarten A (Fortleben) und B (nachher minus vorher), D (ohne alte Karte)
+Fälle 1063776
+A erfüllt, B nicht:
+
+B erfüllt, A nicht:
+
+A und D verschieden:
+
+
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > volle Suche gleich der Umsetzung
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Lesarten ohne Joker vergleichen
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Laufzeit mit 8 Jokern
+ ✓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: erschöpfend kleine Schlangen > Lesarten A (Fortleben) und B (nachher minus vorher), D (ohne alte Karte) 9043ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 3 skipped (4)
+   Start at  09:04:48
+   Duration  13.20s (transform 150ms, setup 365ms, import 113ms, tests 9.04s, environment 3.22s)
+
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: erschöpfend kleine Schlangen > Beispiele Lesarten
+RRRBYBBYY -> RRBBBRYYY: A=2 B=1 D=2
+RRRBRYBYY -> RRRRBBYYY: A=1 B=1 D=1
+YYJYRRBR -> YYJRRRYB: A=1 B=1 D=1
+BGGBGRRVVRV -> BGGBGRRRVVV: A=2 B=2 D=2
+
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > volle Suche gleich der Umsetzung
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Lesarten ohne Joker vergleichen
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: Gegenprobe neueDreiergruppen > Laufzeit mit 8 Jokern
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: erschöpfend kleine Schlangen > Lesarten A (Fortleben) und B (nachher minus vorher), D (ohne alte Karte)
+ ✓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: erschöpfend kleine Schlangen > Beispiele Lesarten 21ms
+ ↓ src/engine/__tests__/zz_pruefer_x2c_tmp.test.ts > Prüfer X2c: erschöpfend kleine Schlangen > lange Schlangen, Stichprobe
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 5 skipped (6)
+   Start at  09:06:33
+   Duration  4.54s (transform 236ms, setup 405ms, import 202ms, tests 24ms, environment 3.46s)
+

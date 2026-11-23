@@ -1,0 +1,21 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a020369e020d13520
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts > Prüfer X2c Grenzfälle > GF1a: Schlangenfrass frisst eine von zwei Fusionen des Gegners: Fusionsexperte für ihn danach nicht mehr erfüllt
+GF1a fusionen 1 karten Rot Rot Farbenfusion
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts > Prüfer X2c Grenzfälle > GF1b: Farbendieb stiehlt eine Fusion in die eigene Schlange mit einer Fusion: Fusionsexperte erfüllt
+GF1b Diebstähle der Fusion aufgezählt: 0
+
+stdout | src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts > Prüfer X2c Grenzfälle > GF2: Häutung mit 2 neuen Gruppen, Schlangentanz liegt noch im Stapel; im nächsten eigenen Zug wird es aufgedeckt und mit der alten Häutung eingelöst
+GF2 Ereignisse [{"typ":"AufgabeErfuellt","spielerIndex":0,"aufgabeId":"aufgabe-08"},{"typ":"AufgabeAufgedeckt","aufgabeId":"aufgabe-12","anStelleVon":"aufgabe-08"},{"typ":"AufgabeErfuellt","spielerIndex":0,"aufgabeId":"aufgabe-12"},{"typ":"AufgabeAufgedeckt","aufgabeId":"aufgabe-01","anStelleVon":"aufgabe-12"}]
+
+ ✓ src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts > Prüfer X2c Grenzfälle > GF1a: Schlangenfrass frisst eine von zwei Fusionen des Gegners: Fusionsexperte für ihn danach nicht mehr erfüllt 20ms
+ ✓ src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts > Prüfer X2c Grenzfälle > GF1b: Farbendieb stiehlt eine Fusion in die eigene Schlange mit einer Fusion: Fusionsexperte erfüllt 3ms
+ ✓ src/engine/__tests__/zz_pruefer_x2c_grenz_tmp.test.ts > Prüfer X2c Grenzfälle > GF2: Häutung mit 2 neuen Gruppen, Schlangentanz liegt noch im Stapel; im nächsten eigenen Zug wird es aufgedeckt und mit der alten Häutung eingelöst 8ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  09:13:08
+   Duration  3.59s (transform 645ms, setup 279ms, import 679ms, tests 32ms, environment 2.31s)
+
