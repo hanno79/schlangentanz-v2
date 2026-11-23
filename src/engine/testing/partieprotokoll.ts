@@ -1,6 +1,7 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
 import { AUFGABENNAMEN } from '../aufgabenKarten';
+import { RISIKOAKTIONEN } from '../erweiterung/risiko';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
@@ -157,6 +158,10 @@ class Schreiber {
         return aktion.farbenschutzId === null ? `${wer} lässt durch.` : `${wer} wehrt mit ${this.karte(aktion.farbenschutzId)} ab.`;
       case 'Entscheiden':
         return `${wer} wählt „${aktion.wahl}“.`;
+      case 'RisikoKarteSpielen': {
+        const benannt = aktion.benannt === null ? '' : `, benannt: ${this.karte(aktion.benannt)}`;
+        return `${wer} spielt die Risiko-Belohnungs-Karte ${aktion.karteId}, Aktion ${aktion.risikoAktion} (${RISIKOAKTIONEN[aktion.risikoAktion]})${benannt}.`;
+      }
     }
   }
 
@@ -196,6 +201,8 @@ class Schreiber {
         return `${this.spieler(ereignis.spielerIndex)} entscheidet über „${ereignis.art}“ zu ${this.karte(ereignis.karteId)}: ${ereignis.optionen.join(', ')}.`;
       case 'Entschieden':
         return `${this.spieler(ereignis.spielerIndex)} hat bei „${ereignis.art}“ „${ereignis.wahl}“ gewählt.`;
+      case 'RisikoKarteGespielt':
+        return `Risikoprüfung: ${this.karte(ereignis.aufgedeckt)} aufgedeckt, ${ereignis.erfolg ? 'Erfolg' : 'Misserfolg'}; ${ereignis.karteId} ist aus dem Spiel.`;
       case 'SchlussrundeBegonnen':
         return `Der Nachziehstapel ist leer: Die Schlussrunde beginnt, ausgelöst von ${this.spieler(ereignis.ausloeser)}.`;
       case 'PartieBeendet':

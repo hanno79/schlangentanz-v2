@@ -154,10 +154,10 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
     0,
   )
 
-  /** Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte im selben Zug (A5, D12). */
+  /** Der Stand nach einer Karte, dazu jeder Stand nach einer zweiten Karte im selben Zug (A5, D12); ohne Risiko-Karten, die die solide KI erst ab K4 spielt (X5). */
   function mitZweiterKarte(danach: Spielzustand): Spielzustand[] {
     if (danach.schwebend !== null || danach.zug.spielerIndex !== 0 || danach.zug.abschnitt !== 'Ausspielen') return [danach]
-    const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+    const zweite = ermittleAktionen(danach).filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && aktion.typ !== 'RisikoKarteSpielen')
     return [danach, ...zweite.map((aktion) => nachDurchlassen(danach, aktion, 0))]
   }
 
@@ -169,7 +169,7 @@ describe('K2 Kriterium 1: Kann sie mit einer Handkarte eine Dreiergruppe vollend
       const gruppen = gruppenzahl(start, 0)
       // Jede Karte zählt, auch Schlangenfrass, Fusion und Farbendieb; ein Gegner lässt eine angesagte Karte durch.
       const vollendend = ermittleAktionen(start)
-        .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen')
+        .filter((aktion) => aktion.typ !== 'ZugBeenden' && aktion.typ !== 'UeberhandAbwerfen' && aktion.typ !== 'RisikoKarteSpielen')
         .map((aktion) => nachDurchlassen(start, aktion, 0))
         .filter((danach) => gruppenzahl(danach, 0) > gruppen)
       if (vollendend.length === 0) continue

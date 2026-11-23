@@ -1,3 +1,4 @@
+import { RISIKOAKTIONEN } from '../engine'
 import type { SpielAktion, Spielkarte, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { name } from './namen'
@@ -10,6 +11,11 @@ nicht am Feldnamen: Eine Karten-Id wird zur Karte mit Namen und Id, eine
 Spieler-Id zum Spieler; Schlangen-Ids, Seiten und Optionen stehen, wie sie sind.
 Nur `position` („Stelle n“) und `art` (neue oder bestehende Schlange) brauchen
 eigene Worte. Die ganze Aktion steht im Tooltip und in `data-aktion`.
+
+Eine Risiko-Aktion nennt ihre Nummer und ihren Namen aus A8.2 und die benannte
+Karte. Eine Wahl aus mehreren Wörtern („blau-01 schlange-2 ende“) wird Wort für
+Wort beschriftet; „ablagestapel-n“ nennt die Karte an dieser Stelle des
+Ablagestapels dessen, der entscheidet (X5).
 */
 
 interface Tisch {
@@ -45,6 +51,13 @@ function zielText(tisch: Tisch, feld: string, wert: unknown): string {
   return spieler >= 0 ? name(tisch.zustand, spieler) : String(wert)
 }
 
+/** Ein Wort einer Wahl; eine Stelle im Ablagestapel wird zur Karte dort (A8.2 Aktion 4). */
+function wahlText(tisch: Tisch, spielerId: string, wort: string): string {
+  const stelle = /^ablagestapel-(\d+)$/.exec(wort)
+  const karte = stelle === null ? undefined : tisch.zustand.spieler.find((spieler) => spieler.id === spielerId)?.ablagestapel[Number(stelle[1])]
+  return karte === undefined ? zielText(tisch, 'wahl', wort) : `Ablagestapel ${zielText(tisch, 'karteId', karte.id)}`
+}
+
 /** Aktionstyp, gespielte Karte und das Ziel, etwa „BlockadeLegen: Schlangenblockade (…) → schlange-2 · Stelle 1“. */
 export function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   const tisch: Tisch = { zustand, karten: kartenAmTisch(zustand) }
@@ -53,7 +66,11 @@ export function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
     return aktion.farbenschutzId === null ? 'Reagieren: durchlassen' : `Reagieren: abwehren mit ${zielText(tisch, 'farbenschutzId', aktion.farbenschutzId)}`
   }
   // X3: Die Wahl nennt einen Spieler oder steht, wie sie ist.
-  if (aktion.typ === 'Entscheiden') return `Entscheiden: ${zielText(tisch, 'wahl', aktion.wahl)}`
+  if (aktion.typ === 'Entscheiden') return `Entscheiden: ${aktion.wahl.split(' ').map((teil) => wahlText(tisch, aktion.spielerId, teil)).join(' · ')}`
+  if (aktion.typ === 'RisikoKarteSpielen') {
+    const benannt = aktion.benannt === null ? '' : ` · benennt ${zielText(tisch, 'benannt', aktion.benannt)}`
+    return `${aktion.typ}: Aktion ${aktion.risikoAktion} (${RISIKOAKTIONEN[aktion.risikoAktion]}) mit ${aktion.karteId}${benannt}`
+  }
   if (!('karteId' in aktion)) return aktion.typ
   const text = `${aktion.typ}: ${zielText(tisch, 'karteId', aktion.karteId)}`
   const ziel = Object.entries(aktion)

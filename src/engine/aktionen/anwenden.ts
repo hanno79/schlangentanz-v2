@@ -1,4 +1,5 @@
 import { pruefeAufgabenAmZug } from '../aufgaben/rahmen';
+import { spieleRisikoKarte } from '../erweiterung/risiko';
 import { entscheide, meldeOffeneEntscheidung, reagiere, spieleKarte } from '../reaktion';
 import { beginneSchlussrundeBeiLeeremStapel } from '../stapel';
 import type { Spielzustand } from '../types';
@@ -42,6 +43,9 @@ export function anwendeAktion(zustand: Spielzustand, aktion: SpielAktion): Aktio
       break;
     case 'Entscheiden':
       ergebnis = entscheide(neu, aktion, ereignisse);
+      break;
+    case 'RisikoKarteSpielen':
+      ergebnis = spieleRisikoKarte(neu, aktion, ereignisse);
       break;
     default:
       ergebnis = spieleKarte(neu, aktion, ereignisse);

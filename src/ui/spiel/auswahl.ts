@@ -39,6 +39,8 @@ export type Wahl =
   | { art: 'durchlassen' }
   /** X3: eine Option einer offenen Entscheidung; wie sie am Tisch erscheint, legt O10 fest. */
   | { art: 'entscheiden'; wahl: string }
+  /** X5: eine Risiko-Aktion mit ihrer benannten Karte (A8.2); wie sie am Tisch erscheint, legt O10 fest. */
+  | { art: 'risiko'; karteId: string; risikoAktion: number; benannt: string | null }
 
 /** Die Wahl einer bestimmten Art. */
 export type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
@@ -112,6 +114,8 @@ export function wegZu(aktion: SpielAktion): Weg {
       return { folge: [aktion.farbenschutzId === null ? { art: 'durchlassen' } : { art: 'abwehren', farbenschutzId: aktion.farbenschutzId }], menge: [] }
     case 'Entscheiden':
       return { folge: [{ art: 'entscheiden', wahl: aktion.wahl }], menge: [] }
+    case 'RisikoKarteSpielen':
+      return { folge: [{ art: 'risiko', karteId: aktion.karteId, risikoAktion: aktion.risikoAktion, benannt: aktion.benannt }], menge: [] }
   }
 }
 

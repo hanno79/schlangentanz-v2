@@ -42,8 +42,8 @@ describe('A8.2: zwei Risiko-Karten je Spieler, nur mit Erweiterung (X5, Kriteriu
   it('A8.2: eine fremde oder schon gespielte Risiko-Karte lässt sich nicht spielen, mit deutschem Grund', () => {
     const start = tisch()
     const fremd: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', karteId: 'risiko-belohnung-03', risikoAktion: 1, benannt: null }
-    expect(grund(start, fremd)).toMatch(/risiko-belohnung-03.*nicht vor Spieler 1/)
-    expect(grund(start, { ...fremd, karteId: 'blau-01' })).toMatch(/nicht vor Spieler 1/)
+    expect(grund(start, fremd)).toMatch(/risiko-belohnung-03.*nicht in der eigenen Auslage/)
+    expect(grund(start, { ...fremd, karteId: 'blau-01' })).toMatch(/nicht in der eigenen Auslage/)
   })
 })
 
@@ -59,7 +59,8 @@ describe('A8.2/D50: höchstens eine Risiko-Karte je Runde (X5, Kriterium 2)', ()
     const gespielt = spieleRisiko(tisch(), 1).zustand
     const verdoppler = aktionen(gespielt, 'VerdopplerSpielen')
     expect(verdoppler, 'D47: die Risiko-Karte ist keine Zugerweiterung, der Verdoppler wirkt').toHaveLength(1)
-    const zweiterZug = folge(gespielt, () => verdoppler[0], zugBeenden).zustand
+    // Nach den drei gezogenen Karten hält er 6 und wirft vor dem zweiten Zug eine ab (A5).
+    const zweiterZug = folge(gespielt, () => verdoppler[0], zugBeenden, (jetzt) => aktionen(jetzt, 'UeberhandAbwerfen')[0]).zustand
     expect(zweiterZug.zug).toMatchObject({ spielerIndex: 0, teilzug: 2 })
     expect(risikoAktionen(zweiterZug)).toEqual([])
   })

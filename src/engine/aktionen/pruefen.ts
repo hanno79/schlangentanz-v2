@@ -1,5 +1,6 @@
 import { abweichendeFelder, istGanzeZahl, istObjekt, istText } from '../form';
 import { KARTENREGISTER, definitionFuer, istKartenaktionstyp, kartenartFuer, kartenartVon } from '../karten/register';
+import { istRisikoaktion, pruefeRisikoKarte } from '../erweiterung/risiko';
 import { istFarbenschutz, pruefeEntscheidung, pruefeReaktion } from '../reaktion';
 import type { Kartenart, Spielkarte, Spielzustand } from '../types';
 import { ueberzaehligeKarten } from '../zugablauf';
@@ -58,6 +59,7 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   UeberhandAbwerfen: { spielerId: text, karteIds: textliste(0) },
   Reagieren: { spielerId: text, farbenschutzId: textOderNull },
   Entscheiden: { spielerId: text, wahl: text },
+  RisikoKarteSpielen: { ...MIT_KARTE, risikoAktion: istRisikoaktion, benannt: textOderNull },
 };
 
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {
@@ -163,7 +165,7 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
     if (zustand.entscheidung === null) return nein('Es ist keine Entscheidung offen; „Entscheiden“ geht nur, wenn eine Wirkung eine Wahl verlangt (X3).');
     const entscheider = ermittleEntscheider(zustand)!;
     if (entscheider !== spielerIndex) return nein(`${spieler.name} entscheidet gerade nicht; dran ist ${zustand.spieler[entscheider].name} (X3).`);
-    const grund = pruefeEntscheidung(zustand.entscheidung, aktion.wahl, zustand.spieler.length);
+    const grund = pruefeEntscheidung(zustand, zustand.entscheidung, aktion.wahl);
     return grund === null ? JA : nein(grund);
   }
   if (schwebend !== null) {
@@ -197,6 +199,10 @@ export function pruefeAktion(zustand: Spielzustand, aktion: SpielAktion): Pruefe
       return JA;
     case 'UeberhandAbwerfen':
       return pruefeUeberhand(zustand, spielerIndex, aktion.karteIds);
+    case 'RisikoKarteSpielen': {
+      const grund = pruefeRisikoKarte(zustand, spielerIndex, aktion);
+      return grund === null ? JA : nein(grund);
+    }
     default:
       break;
   }

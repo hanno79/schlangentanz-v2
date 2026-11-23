@@ -1,4 +1,4 @@
-import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider, zugInSicht } from '../engine';
+import { anwendeAktion, benannteHandkarten, erstellePartie, ermittleAktionen, ermittleEntscheider, zugInSicht } from '../engine';
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -26,9 +26,9 @@ Offen liegt: die eigene Hand und die eigene geheime Aufgabe, alle Schlangen
 samt der Karten unter einer Farbenfusion, alle Ablagestapel vollständig (D28),
 die Auslage vor jedem Spieler (A4), erfüllte offene Aufgaben (A9), ausliegende
 Gruben (A7.6), was aus dem Spiel ist, die angesagte Sonderkarte (A6, B2), eine
-offene Entscheidung samt den offen aufgedeckten Karten (X3, A8.2) und
-wie viele Schlangen bisher angelegt wurden, weil jede neue Schlange am Tisch zu
-sehen war.
+offene Entscheidung samt den aufgedeckten und der für Risiko-Aktion 2 offen
+benannten Karte (X3, A8.2, D52) und wie viele Schlangen bisher angelegt
+wurden, weil jede neue Schlange am Tisch zu sehen war.
 Verdeckt bleibt (B2): fremde Handkarten, von denen nur die Zahl zu sehen ist;
 die Reihenfolge von Nachzieh- und Aufgabenstapel, von denen nur die Grösse zu
 sehen ist; fremde geheime Aufgaben und ob sie erfüllt sind, weil sie erst bei
@@ -215,9 +215,11 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
   const kopie = structuredClone(sicht);
   const { karten, aufgaben } = gemischtesMaterial(kopie.spieler.length, kopie.erweiterung, zufall);
   const gesehen = offeneKarten(kopie);
-  const verdeckt = karten.filter((karte) => !gesehen.has(karte.id));
+  // D52: Eine offen benannte Karte einer fremden Hand liegt dort; nur der Rest der Hand ist verdeckt.
+  const benannt = benannteHandkarten(kopie.entscheidung).filter((eintrag) => eintrag.spielerIndex !== kopie.ich);
+  const verdeckt = karten.filter((karte) => !gesehen.has(karte.id) && !benannt.some((eintrag) => eintrag.karteId === karte.id));
   const fremde = kopie.spieler.filter((_, index) => index !== kopie.ich);
-  const fremdeHandkarten = fremde.reduce((summe, spieler) => summe + spieler.handgroesse, 0);
+  const fremdeHandkarten = fremde.reduce((summe, spieler) => summe + spieler.handgroesse, 0) - benannt.length;
   if (verdeckt.length !== fremdeHandkarten + kopie.nachziehstapelGroesse) {
     throw new Error(
       `Simulation: Verdeckt sind ${verdeckt.length} Karten, die Sicht verlangt ${fremdeHandkarten} in fremden Händen und ${kopie.nachziehstapelGroesse} im Nachziehstapel.`,
@@ -234,7 +236,8 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
   const spieler = kopie.spieler.map(({ handgroesse, ...offen }, index): Spieler => {
     if (index === kopie.ich) return { ...offen, hand: kopie.hand, geheimeAufgabe: kopie.geheimeAufgabe, geheimeAufgabeErfuellt: kopie.geheimeAufgabeErfuellt };
     const geheimeAufgabe = fremdeGeheime === 0 ? null : (verdeckteAufgaben.shift() ?? null);
-    return { ...offen, hand: verdeckt.splice(0, handgroesse), geheimeAufgabe, geheimeAufgabeErfuellt: false };
+    const bekannt = karten.filter((karte) => benannt.some((eintrag) => eintrag.spielerIndex === index && eintrag.karteId === karte.id));
+    return { ...offen, hand: [...bekannt, ...verdeckt.splice(0, handgroesse - bekannt.length)], geheimeAufgabe, geheimeAufgabeErfuellt: false };
   });
   return {
     version: 2,

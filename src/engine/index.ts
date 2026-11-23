@@ -23,6 +23,8 @@ export type {
   Pruefergebnis,
   ReagierenAktion,
   RegenbogenschlangeLegenAktion,
+  RisikoKarteSpielenAktion,
+  Risikoaktion,
   SchlangenfrassSpielenAktion,
   SchlangengrubeSpielenAktion,
   SchlangenhaeutungSpielenAktion,
@@ -45,6 +47,8 @@ export { hatNochLetztenZug } from './zugablauf';
 export { zugInSicht, zugOhneIds } from './zuggrenzen';
 export { ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
+/** A8.2, D52: die Namen der vier Risiko-Aktionen und die offen benannte Handkarte einer Risiko-Entscheidung, für Sicht und Oberfläche (X5). */
+export { RISIKOAKTIONEN, benannteHandkarten } from './erweiterung/risiko';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
 export { erzeugeZufall } from './testing/zufall';
 

@@ -51,8 +51,15 @@ export const SCHRITT = {
     return person.ich ? 'Du bist dran.' : `${person.name} ist dran.`
   },
   zieht: (person: Person, anzahl: number) => `${satzanfang(person, 'Du ziehst', 'zieht')} ${anzahlKarten(anzahl)}.`,
+  // A5, A8.2: Wer am Zugende mehr als 5 Karten hält, zieht nichts nach und legt die überzähligen ab.
+  mussAblegen: (person: Person, anzahl: number) =>
+    `${satzanfang(person, 'Du hältst', 'hält')} mehr als 5 Karten und ${person.ich ? 'legst' : 'legt'} ${anzahl === 1 ? '1 Karte' : `${anzahl} Karten`} ab.`,
   legtAb: (person: Person, anzahl: number) =>
     `${satzanfang(person, 'Du legst', 'legt')} ${anzahl === 1 ? '1 überzählige Karte' : `${anzahl} überzählige Karten`} ab.`,
+  // A8.2: Welche Aktion gespielt ist, ist offen; was aufgedeckt ist und wie die Wahl ausgeht, zeigt der Tisch (O10).
+  risiko: (person: Person, aktion: string, benannt: string | null) =>
+    `${satzanfang(person, 'Du spielst', 'spielt')} eine Risiko-Belohnungs-Karte: ${aktion}${benannt === null ? '' : `, benannt: ${benannt}`}.`,
+  entscheidet: (person: Person, art: string) => `${satzanfang(person, 'Du entscheidest', 'entscheidet')}: ${art}.`,
   schlussrunde: 'Der Nachziehstapel ist leer: Die Schlussrunde beginnt.',
   beendet: 'Die Partie ist beendet.',
 }

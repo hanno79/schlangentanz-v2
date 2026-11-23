@@ -1,3 +1,4 @@
+import { RISIKOAKTIONEN } from '../../engine'
 import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../../engine'
 import { kartenkurzname } from '../karten/kartentexte'
 import { SCHRITT, kartenSatz } from '../tisch/protokolltexte'
@@ -15,11 +16,17 @@ wer abwehrt; so sieht der Ablauf bei einer KI gleich aus, ob sie einen
 Farbenschutz hält oder nicht (Kriterium 5, D33).
 */
 
-/** Die Karte, die der Spieler mit dieser Aktion aus der Hand spielt; mit dem Spielen liegt sie offen. */
+/**
+ * Die Karte, die der Spieler mit dieser Aktion aus der Hand spielt; mit dem
+ * Spielen liegt sie offen. Eine Risiko-Karte liegt vor ihm, nicht auf der Hand;
+ * offen ist dann die Handkarte, die er für Aktion 2 benennt (A8.2, D52).
+ */
 function gespielteKarte(vorher: Spielzustand, aktion: SpielAktion): Spielkarte[] {
   if (!('karteId' in aktion)) return []
+  const karteId = aktion.typ === 'RisikoKarteSpielen' ? aktion.benannt : aktion.karteId
   const spieler = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)
-  const karte = spieler?.hand.find((handkarte) => handkarte.id === aktion.karteId)
+  const karte = spieler?.hand.find((handkarte) => handkarte.id === karteId)
+  if (aktion.typ === 'RisikoKarteSpielen') return karte === undefined ? [] : [karte]
   if (karte === undefined) throw new Error(`Protokoll: Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
   return [karte]
 }
@@ -36,7 +43,7 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
   for (const ereignis of ereignisse) {
     switch (ereignis.typ) {
       case 'KarteGespielt':
-        if ('karteId' in aktion) saetze.push(SCHRITT.spielt(person(ereignis.spielerIndex), kartenSatz(aktion, namen, wer)))
+        if ('karteId' in aktion && aktion.typ !== 'RisikoKarteSpielen') saetze.push(SCHRITT.spielt(person(ereignis.spielerIndex), kartenSatz(aktion, namen, wer)))
         break
       case 'KarteAngesagt':
         saetze.push(SCHRITT.sagtAn(person(ereignis.spielerIndex), kartenSatz(ereignis.ansage, namen, wer)))
@@ -59,8 +66,17 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
       case 'KartenGezogen':
         saetze.push(SCHRITT.zieht(person(ereignis.spielerIndex), ereignis.anzahl))
         break
+      case 'AbwerfenVerlangt':
+        saetze.push(SCHRITT.mussAblegen(person(ereignis.spielerIndex), ereignis.anzahl))
+        break
       case 'KartenAbgeworfen':
         saetze.push(SCHRITT.legtAb(person(ereignis.spielerIndex), ereignis.karteIds.length))
+        break
+      case 'RisikoKarteGespielt':
+        saetze.push(SCHRITT.risiko(person(ereignis.spielerIndex), `Aktion ${ereignis.risikoAktion} (${RISIKOAKTIONEN[ereignis.risikoAktion]})`, ereignis.benannt === null ? null : kurz(ereignis.benannt)))
+        break
+      case 'Entschieden':
+        saetze.push(SCHRITT.entscheidet(person(ereignis.spielerIndex), ereignis.art))
         break
       case 'SchlussrundeBegonnen':
         saetze.push(SCHRITT.schlussrunde)
@@ -71,7 +87,6 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
       // Wer als Nächster gefragt ist, sagt die Statuszeile; wie die Karten wandern, sagt schon die Ansage.
       case 'AbwehrGefragt':
       case 'KartenVersetzt':
-      case 'AbwerfenVerlangt':
         break
     }
   }

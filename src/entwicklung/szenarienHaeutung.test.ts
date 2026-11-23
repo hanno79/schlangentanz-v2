@@ -42,7 +42,7 @@ describe('E9: Szenarien der Schlangenhäutung', () => {
     expect(ereignisse[1]).toMatchObject({ nach: { ort: 'Ablagestapel', spielerIndex: 0, position: 0 } })
     expect(schlange(zustand, 0)).toEqual(['Gelb', 'Gelb', 'Blau', 'Rot', 'Rot'])
     expect(ermittleEntscheider(zustand)).toBe(0)
-    expect([...new Set(ermittleAktionen(zustand).map((aktion) => aktion.typ))]).toEqual(['FarbkarteLegen', 'ZugBeenden'])
+    expect([...new Set(ermittleAktionen(zustand).map((aktion) => aktion.typ))], 'X5: mit Erweiterung auch die Risiko-Karte').toEqual(['FarbkarteLegen', 'RisikoKarteSpielen', 'ZugBeenden'])
   })
 
   it('D10/A7.2: haeutung: in schlange-2 angesagt, KI-Gegner 1 wehrt ab; seine Schlange bleibt', () => {
@@ -77,6 +77,6 @@ describe('E9: Szenarien der Schlangenhäutung', () => {
     const { zustand } = anwendeAktion(start, ablegen[0])
     expect(ablagen(zustand)).toEqual([['Schlangenhäutung'], []])
     expect(zustand.spieler.map((spieler) => spieler.schlangen)).toEqual(start.spieler.map((spieler) => spieler.schlangen))
-    expect([...new Set(ermittleAktionen(zustand).map((aktion) => aktion.typ))]).toEqual(['FarbkarteLegen', 'ZugBeenden'])
+    expect([...new Set(ermittleAktionen(zustand).map((aktion) => aktion.typ))], 'X5: mit Erweiterung auch die Risiko-Karte').toEqual(['FarbkarteLegen', 'RisikoKarteSpielen', 'ZugBeenden'])
   })
 })

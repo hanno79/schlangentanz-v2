@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { isDeepStrictEqual } from 'node:util'
 import { describe, expect, it } from 'vitest'
 import { benannteHandkarten } from '../../index'
 import type { Spielzustand } from '../../index'
@@ -45,7 +46,7 @@ function risikoPruefer(zaehler: Zaehler): SchrittPruefer {
       zaehler.gespielt[schluessel] = (zaehler.gespielt[schluessel] ?? 0) + 1
     }
     const nachgerechnet = spieleNach(lageVon(vorher), ereignisse)
-    if (JSON.stringify(nachgerechnet) !== JSON.stringify(lageVon(zustand))) return `E2: nicht nachrechenbar: ${JSON.stringify(ereignisse)}`
+    if (!isDeepStrictEqual(nachgerechnet, lageVon(zustand))) return `E2: nicht nachrechenbar: ${JSON.stringify(ereignisse)}`
     const verraten = verrateneHandkarten(zustand, ereignisse)
     if (verraten.length > 0) return `B2: ein Ereignis nennt die Handkarten ${verraten.join(', ')}`
     const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
