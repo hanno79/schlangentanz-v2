@@ -128,8 +128,9 @@ describe('D34: ein Schalter für die ganze Erweiterung', () => {
 })
 
 describe('A9/X1: Testbedingungen für Tests und den Entwicklertisch', () => {
-  it('X1: setzeTestbedingungen ersetzt nur die genannten Aufgaben, entferneTestbedingungen stellt die Platzhalter wieder her', () => {
+  it('X1: setzeTestbedingungen ersetzt nur die genannten Aufgaben, entferneTestbedingungen stellt die Bedingungen aus den Dateien wieder her', () => {
     const vorher = AUFGABENREGISTER.get('Farbkombination')!.istErfuellt
+    const lilaVorher = AUFGABENREGISTER.get('Lila Riese')!.istErfuellt
     const zustand = aufgabenTisch().zustand()
     setzeTestbedingungen({ Farbkombination: immer() })
     expect(AUFGABENREGISTER.get('Farbkombination')!.istErfuellt(zustand, 0)).toBe(true)
@@ -138,7 +139,7 @@ describe('A9/X1: Testbedingungen für Tests und den Entwicklertisch', () => {
     expect(AUFGABENREGISTER.get('Farbkombination')!.istErfuellt, 'X1: ein neuer Satz Testbedingungen ersetzt den alten ganz').toBe(vorher)
     entferneTestbedingungen()
     expect(AUFGABENREGISTER.get('Lila Riese')!.istErfuellt(zustand, 0)).toBe(false)
-    expect(istAufgabenPlatzhalter(AUFGABENREGISTER.get('Lila Riese')!)).toBe(true)
+    expect(AUFGABENREGISTER.get('Lila Riese')!.istErfuellt, 'X1: nach entferneTestbedingungen gilt wieder die Bedingung aus aufgaben/lilaRiese.ts').toBe(lilaVorher)
   })
 
   it('X1: eine Testbedingung für eine Aufgabe, die es nicht gibt, wird abgelehnt', () => {
