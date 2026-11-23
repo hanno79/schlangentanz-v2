@@ -232,6 +232,10 @@ export function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
       case 'Entschieden':
         lage.entscheidung = null
         break
+      // A8.2, D54: Die gespielte Risiko-Karte kommt aus der Auslage aus dem Spiel; bewegte Spielkarten meldet `KartenVersetzt`.
+      case 'RisikoKarteGespielt':
+        lage.ausDemSpiel.push(ereignis.karteId)
+        break
       case 'PartieBeendet':
         lage.partiephase = 'Beendet'
         lage.amZug = null
@@ -257,11 +261,15 @@ export function spieleNach(alt: Lage, ereignisse: Ereignis[]): Lage {
 /**
  * B2: Ereignisse gehen an die Oberfläche aller Spieler. Jede Karte, die ein
  * Ereignis nennt, muss danach offen liegen; liegt sie auf einer Hand, verriete
- * das Ereignis eine Handkarte.
+ * das Ereignis eine Handkarte. Eine Wahl aus mehreren Wörtern („blau-01
+ * schlange-2 ende“) zählt Wort für Wort. Ausgenommen ist die Farbkarte, die ein
+ * Spieler für Risiko-Aktion 2 offen benennt (D52).
  */
 export function verrateneHandkarten(zustand: Spielzustand, ereignisse: Ereignis[]): string[] {
   const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
-  return [...texteIn(ereignisse)].filter((text) => aufHand.has(text))
+  const benannt = new Set(ereignisse.flatMap((ereignis) => (ereignis.typ === 'RisikoKarteGespielt' && ereignis.benannt !== null ? [ereignis.benannt] : [])))
+  const woerter = [...texteIn(ereignisse)].flatMap((text) => text.split(' '))
+  return [...new Set(woerter)].filter((text) => aufHand.has(text) && !benannt.has(text))
 }
 
 /**
