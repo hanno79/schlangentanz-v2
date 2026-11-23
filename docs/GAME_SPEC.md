@@ -806,6 +806,8 @@ D14–D29 beantworten die Regelfragen F1–F15 und die Nachfrage F8a aus
 `docs/REGELFRAGEN.md`, D31 die Frage G9 und D34–D55 die übrigen Fragen zur
 Erweiterung, in der Reihenfolge G1–G8 und G10–G23. Für diese hat der Autor am
 21.11.2026 mit einer Sammelantwort die Vorschläge des Orchestrators bestätigt.
+D56–D57 sind Rückfragen aus der Umsetzung (Task X3), die der Autor am
+22.11.2026 beantwortet hat; sie haben keine Nummer in `docs/REGELFRAGEN.md`.
 Die Nummer der Regelfrage steht vor der Frage. Die Spalte „Folge“ nennt dort
 den Task, der die Antwort umsetzt.
 
@@ -866,6 +868,8 @@ den Task, der die Antwort umsetzt.
 | D53 | G21: Aktion 3: Welche Handkarte darf ersetzen, und wird bei „anderer Punktewert" die aufgedeckte Karte vor oder nach der gewählten Karte eingefügt? | Risiko-Aktion 3: Ersetzen darf jede Farbkarte der Hand. Bei anderem Punktewert wählt der Spieler, ob er die zusätzliche Karte davor oder dahinter legt. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5 | 21.11.2026 |
 | D54 | G22: Aktion 4: Zählt die aufgedeckte Karte zu den „zwei Karten vom Nachziehstapel"? Was bei leerem Ablagestapel? Wie kann eine Risiko-Karte auf einem Ablagestapel liegen, wenn sie aus dem Spiel kommt? | Risiko-Aktion 4: Bei Erfolg ist die aufgedeckte Karte die erste der zwei Karten; der Spieler zieht eine weitere. Ist der eigene Ablagestapel leer, bleibt nur die andere Möglichkeit: Bei Erfolg zieht der Spieler vom Nachziehstapel, bei Misserfolg der Gegner die oberste Karte. Risiko-Karte und Schlangenkorb kommen nach der Nutzung aus dem Spiel und liegen nie auf einem Ablagestapel; der Satz dazu in A8.2 ist nur eine Klarstellung. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5 | 21.11.2026 |
 | D55 | G23: Ist eine Risiko-Karte bei leerem Stapel oder in der Schlussrunde spielbar? Wer löst die Schlussrunde aus, wenn ein Effekt oder ein Gegner die letzte Karte nimmt? | Bei leerem Stapel und in der Schlussrunde ist eine Risiko-Karte nicht spielbar, weil keine Karte aufgedeckt werden kann. Die Schlussrunde löst der Spieler am Zug aus, gleich wer die letzte Karte nimmt (auch ein begünstigter Gegner); er spielt seinen Zug zu Ende, dann hat jeder andere noch einen Zug. Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“ Website folgt. | X5 | 21.11.2026 |
+| D56 | Pro Zug ist nur eine Farbenfusion erlaubt: Verbraucht eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt, schon die Fusion des Zuges? | Ja: Wer eine Farbenfusion ausgespielt hat, hat die Fusion dieses Zuges verbraucht, auch wenn ein Gegner sie mit Farbenschutz abwehrt; eine zweite Farbenfusion ist in diesem Zug nicht möglich, auch nicht über eine Zusatzaktion (Schlangenkorb, Comeback-Karte). Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, gespielt ist gespielt“. Website folgt. | X3 | 22.11.2026 |
+| D57 | Zieht ein Spieler mitten in seinem Zug die letzte Karte vom Nachziehstapel (etwa über Schlangenkorb oder Comeback-Karte): Darf er die eben gezogenen Karten noch im selben Zug ausspielen? | Ja: Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht, etwa über Schlangenkorb oder Comeback-Karte, spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde. Das passt zu D43, D49 und D55. Antwort des Autors auf eine Rückfrage aus X3, gewählte Möglichkeit: „Ja, im selben Zug“. Website folgt. | X3 | 22.11.2026 |
 
 ## Teil E — Frühere R-Nummern, Stand und Verlauf
 
@@ -895,6 +899,14 @@ Code-Kommentare und ältere Dokumente verweisen auf R-Nummern der Fassung bis
 
 ### Stand und Verlauf
 
+- **23.11.2026, Task P0.5f:** Zwei Rückfragen aus X3, die der Autor am
+  22.11.2026 beantwortet hat, als D56 und D57 aufgenommen (Folge X3, Website
+  folgt). D56: Eine Farbenfusion, die ein Gegner mit Farbenschutz abwehrt,
+  verbraucht die Fusion des Zuges („Ja, gespielt ist gespielt“). D57: Wer
+  mitten im Zug die letzte Karte zieht, darf die eben gezogenen Karten noch im
+  selben Zug spielen („Ja, im selben Zug“). D43, D49 und D55 stimmen damit
+  überein und bleiben unverändert. Teil A unverändert. Der Task nennt
+  `docs/GAME_SPEC.md` ausdrücklich (U13).
 - **21.11.2026, Task P0.5e:** Sammelantwort des Autors zu G1–G8 und G10–G23
   („ja zu deinen vorschlägen.“) als D34–D55 aufgenommen. Es gilt bei jeder
   Frage der Vorschlag des Orchestrators aus `docs/REGELFRAGEN.md`, als Regel
