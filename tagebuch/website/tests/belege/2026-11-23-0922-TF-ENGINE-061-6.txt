@@ -1,0 +1,31 @@
+import { createHash } from 'node:crypto'
+import { it } from 'vitest'
+import { anwendeAktion, ermittleAktionen, erstellePartie, erzeugeZufall, serialisiere } from '../index'
+
+// Temporäre Prüfsumme des Prüfers X2c, wird nicht committet.
+
+function pruefsumme(erweiterung: boolean, ersteSaat: number, anzahl: number): string {
+  const hash = createHash('sha256')
+  let schritteGesamt = 0
+  for (let n = 0; n < anzahl; n++) {
+    const saat = ersteSaat + n
+    const wahl = erzeugeZufall(saat * 7919 + 13)
+    let zustand = erstellePartie({ spielerzahl: 2 + (n % 3), erweiterung, zufall: erzeugeZufall(saat) })
+    hash.update(serialisiere(zustand))
+    for (let schritt = 0; schritt < 5000 && zustand.partiephase !== 'Beendet'; schritt++) {
+      const aktionen = ermittleAktionen(zustand)
+      const aktion = aktionen[Math.floor(wahl() * aktionen.length)]
+      const ergebnis = anwendeAktion(zustand, aktion)
+      zustand = ergebnis.zustand
+      hash.update(JSON.stringify(ergebnis.ereignisse))
+      hash.update(serialisiere(zustand))
+      schritteGesamt++
+    }
+  }
+  return `${hash.digest('hex')} (${anzahl} Partien, ${schritteGesamt} Schritte)`
+}
+
+it('Prüfsumme ohne und mit Erweiterung', () => {
+  console.log('PRUEFSUMME ohne Erweiterung:', pruefsumme(false, 5001, 300))
+  console.log('PRUEFSUMME mit Erweiterung:', pruefsumme(true, 5001, 300))
+}, 600000)

@@ -1,0 +1,275 @@
+import { describe, expect, it } from 'vitest'
+import { neueDreiergruppen } from '../aufgaben/neueDreiergruppen'
+import { ermittleFarbgruppen } from '../colorGroups'
+import type { Farbe, Spielkarte } from '../types'
+
+// Temporäre Gegenprobe des Prüfers X2c, wird nicht committet.
+
+const FARBEN: Farbe[] = ['Blau', 'Rot', 'Gelb', 'Violett', 'Braun', 'Grün']
+const CODE: Record<string, Farbe> = { B: 'Blau', R: 'Rot', Y: 'Gelb', V: 'Violett', N: 'Braun', G: 'Grün' }
+
+function zufall(saat: number) {
+  let s = saat >>> 0
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0
+    return s / 2 ** 32
+  }
+}
+
+function karte(code: string, id: string): Spielkarte {
+  if (code === 'J') return { typ: 'Sonderkarte', id, name: 'Regenbogenschlange' }
+  if (code === 'F') return { typ: 'Sonderkarte', id, name: 'Farbenfusion' }
+  if (code === 'X') return { typ: 'Sonderkarte', id, name: 'Schlangenblockade' }
+  return { typ: 'Farbkarte', id, farbe: CODE[code], punkte: 1 }
+}
+const istJ = (k: Spielkarte) => k.typ === 'Sonderkarte' && (k.name === 'Regenbogenschlange' || k.name === 'Farbenfusion')
+
+function gruppen(karten: readonly Spielkarte[], bel: Map<string, Farbe | null>) {
+  const belegt = karten.map((k): Spielkarte => {
+    const f = istJ(k) ? bel.get(k.id) : undefined
+    return f == null ? k : { typ: 'Farbkarte', id: k.id, farbe: f, punkte: 0 }
+  })
+  return ermittleFarbgruppen({ id: 'x', karten: belegt, fusionen: [] })
+}
+
+function fortleben(vor: ReturnType<typeof gruppen>, nach: ReturnType<typeof gruppen>): number {
+  const fort = new Set<number>()
+  for (const alt of vor) {
+    const ids = new Set(alt.kartenIds)
+    let beste = -1
+    let meiste = 0
+    nach.forEach((g, i) => {
+      const geteilt = g.farbe === alt.farbe ? g.kartenIds.filter((id) => ids.has(id)).length : 0
+      if (geteilt > meiste) [beste, meiste] = [i, geteilt]
+    })
+    if (beste >= 0) fort.add(beste)
+  }
+  return nach.length - fort.size
+}
+
+/** Volle Suche: jeder Joker jede Farbe oder keine, vorher und nachher gleich. */
+function brute(vorher: Spielkarte[], nachher: Spielkarte[]): number {
+  const joker = vorher.filter(istJ).map((k) => k.id)
+  const opts: Array<Farbe | null> = [...FARBEN, null]
+  let best = 0
+  const bel = new Map<string, Farbe | null>()
+  const rek = (i: number) => {
+    if (i === joker.length) {
+      best = Math.max(best, fortleben(gruppen(vorher, bel), gruppen(nachher, bel)))
+      return
+    }
+    for (const o of opts) {
+      bel.set(joker[i], o)
+      rek(i + 1)
+    }
+  }
+  rek(0)
+  return best
+}
+
+/** Lesart „nachher minus vorher“, ohne Joker. */
+function differenz(vorher: Spielkarte[], nachher: Spielkarte[]): number {
+  const leer = new Map<string, Farbe | null>()
+  return gruppen(nachher, leer).length - gruppen(vorher, leer).length
+}
+
+/** Lesart vor dem Codex-Fix: neu ist eine Gruppe ohne jede Karte einer alten Gruppe derselben Farbe. */
+function ohneAlteKarte(vorher: Spielkarte[], nachher: Spielkarte[]): number {
+  const leer = new Map<string, Farbe | null>()
+  const vor = gruppen(vorher, leer)
+  return gruppen(nachher, leer).filter((g) => !vor.some((a) => a.farbe === g.farbe && a.kartenIds.some((id) => g.kartenIds.includes(id)))).length
+}
+
+function zufallsFall(r: () => number, mitJoker: number, mitSperre: boolean) {
+  for (;;) {
+    const laenge = 3 + Math.floor(r() * 12)
+    const codes: string[] = []
+    for (let i = 0; i < laenge; i++) {
+      const x = r()
+      if (x < mitJoker) codes.push(r() < 0.5 ? 'J' : 'F')
+      else if (mitSperre && x < mitJoker + 0.07) codes.push('X')
+      else codes.push('BRYVNG'[Math.floor(r() * (r() < 0.7 ? 3 : 6))])
+    }
+    const vorher = codes.map((c, i) => karte(c, `${c}${i}`))
+    // Abschnitte aus 3 bis 5 Farbkarten
+    const abschnitte: Array<[number, number]> = []
+    for (let a = 0; a < laenge; a++) for (let l = 3; l <= 5; l++) if (a + l <= laenge && vorher.slice(a, a + l).every((k) => k.typ === 'Farbkarte')) abschnitte.push([a, l])
+    if (abschnitte.length === 0) continue
+    const [a, l] = abschnitte[Math.floor(r() * abschnitte.length)]
+    const teil = vorher.slice(a, a + l)
+    for (let versuch = 0; versuch < 20; versuch++) {
+      const perm = [...teil]
+      for (let i = perm.length - 1; i > 0; i--) {
+        const j = Math.floor(r() * (i + 1))
+        ;[perm[i], perm[j]] = [perm[j], perm[i]]
+      }
+      const farbfolge = (ks: Spielkarte[]) => ks.map((k) => (k.typ === 'Farbkarte' ? k.farbe : '')).join()
+      if (farbfolge(perm) === farbfolge(teil)) continue
+      const nachher = [...vorher.slice(0, a), ...perm, ...vorher.slice(a + l)]
+      return { vorher, nachher, codes, a, l }
+    }
+  }
+}
+
+const zeige = (ks: Spielkarte[]) => ks.map((k) => (k.typ === 'Farbkarte' ? k.farbe : k.name)).join(' ')
+
+describe('Prüfer X2c: Gegenprobe neueDreiergruppen', () => {
+  it('volle Suche gleich der Umsetzung', () => {
+    const r = zufall(4711)
+    let mitNeuen = 0
+    let max = 0
+    let abw = 0
+    const n = 3000
+    for (let i = 0; i < n; i++) {
+      const fall = zufallsFall(r, 0.25, true)
+      const joker = fall.vorher.filter(istJ).length
+      if (joker > 5) continue
+      const ist = neueDreiergruppen(fall.vorher, fall.nachher)
+      const soll = brute(fall.vorher, fall.nachher)
+      if (ist !== soll) {
+        abw++
+        if (abw < 5) console.log('ABWEICHUNG', zeige(fall.vorher), '=>', zeige(fall.nachher), 'ist', ist, 'soll', soll)
+      }
+      if (soll > 0) mitNeuen++
+      max = Math.max(max, soll)
+    }
+    console.log(`Gegenprobe: ${n} Fälle, ${mitNeuen} mit neuen Gruppen, max ${max}, Abweichungen ${abw}`)
+    expect(abw).toBe(0)
+  })
+
+  it('Lesarten ohne Joker vergleichen', () => {
+    const r = zufall(99)
+    const beispiele: string[] = []
+    let verschiedenB = 0
+    let verschiedenD = 0
+    for (let i = 0; i < 20000; i++) {
+      const fall = zufallsFall(r, 0, true)
+      const a = neueDreiergruppen(fall.vorher, fall.nachher)
+      const b = differenz(fall.vorher, fall.nachher)
+      const d = ohneAlteKarte(fall.vorher, fall.nachher)
+      if ((a >= 2) !== (b >= 2)) {
+        verschiedenB++
+        if (fall.vorher.length <= 9 && beispiele.length < 12) beispiele.push(`A=${a} B=${b} D=${d}: ${zeige(fall.vorher)} => ${zeige(fall.nachher)}`)
+      }
+      if ((a >= 2) !== (d >= 2)) verschiedenD++
+    }
+    console.log(`verschieden (A vs B, erfüllt ja/nein): ${verschiedenB}; A vs D: ${verschiedenD}`)
+    for (const b of beispiele) console.log(b)
+  })
+
+  it('Laufzeit mit 8 Jokern', () => {
+    const muster = [
+      'JRJRJRJR BYRVN JBJBJBJB',
+      'JFJFJFJF BYRVN Y',
+      'R JRJFRJ RYRYR FJRJF B',
+      'JJJJ RBRBR JJJJ',
+      'JRJR JRJR BRYRB JRJR',
+      'FJFJFJFJ RBYBR',
+    ]
+    for (const m of muster) {
+      const codes = m.replace(/ /g, '').split('')
+      const vorher = codes.map((c, i) => karte(c, `${c}${i}`))
+      const start = codes.findIndex((_, i) => m.replace(/ /g, '').slice(i, i + 5) === m.split(' ').find((t) => t.length === 5 && !/[JF]/.test(t)))
+      const teil = vorher.slice(start, start + 5)
+      const perm = [teil[1], teil[2], teil[3], teil[4], teil[0]]
+      const nachher = [...vorher.slice(0, start), ...perm, ...vorher.slice(start + 5)]
+      const t0 = performance.now()
+      const ist = neueDreiergruppen(vorher, nachher)
+      const dt = performance.now() - t0
+      console.log(`Laufzeit ${m}: ${dt.toFixed(1)} ms, Ergebnis ${ist}`)
+      expect(dt).toBeLessThan(2000)
+    }
+  })
+})
+
+describe('Prüfer X2c: erschöpfend kleine Schlangen', () => {
+  it('Lesarten A (Fortleben) und B (nachher minus vorher), D (ohne alte Karte)', () => {
+    const farben = ['R', 'B', 'Y']
+    const aB: string[] = []
+    const bA: string[] = []
+    const aD: string[] = []
+    let faelle = 0
+    const perms = (xs: Spielkarte[]): Spielkarte[][] => (xs.length <= 1 ? [xs] : xs.flatMap((k, i) => perms([...xs.slice(0, i), ...xs.slice(i + 1)]).map((p) => [k, ...p])))
+    const fa = (k: Spielkarte) => (k.typ === 'Farbkarte' ? k.farbe : '?')
+    for (let laenge = 3; laenge <= 8; laenge++) {
+      const anzahl = farben.length ** laenge
+      for (let n = 0; n < anzahl; n++) {
+        const codes: string[] = []
+        let x = n
+        for (let i = 0; i < laenge; i++) {
+          codes.push(farben[x % 3])
+          x = Math.floor(x / 3)
+        }
+        const vorher = codes.map((c, i) => karte(c, `${c}${i}`))
+        for (let a = 0; a < laenge; a++)
+          for (let l = 3; l <= 5 && a + l <= laenge; l++) {
+            const teil = vorher.slice(a, a + l)
+            const gesehen = new Set<string>([teil.map(fa).join()])
+            for (const p of perms(teil)) {
+              const f = p.map(fa).join()
+              if (gesehen.has(f)) continue
+              gesehen.add(f)
+              faelle++
+              const nachher = [...vorher.slice(0, a), ...p, ...vorher.slice(a + l)]
+              const A = neueDreiergruppen(vorher, nachher)
+              const B = differenz(vorher, nachher)
+              const D = ohneAlteKarte(vorher, nachher)
+              const zeile = `A=${A} B=${B} D=${D}: ${codes.join('')} [${a}..${a + l - 1}] => ${nachher.map((k) => fa(k)[0]).join('')}`
+              if (A >= 2 && B < 2 && aB.length < 6) aB.push(zeile)
+              if (B >= 2 && A < 2 && bA.length < 6) bA.push(zeile)
+              if ((A >= 2) !== (D >= 2) && aD.length < 6) aD.push(zeile)
+            }
+          }
+      }
+    }
+    console.log(`Fälle ${faelle}`)
+    console.log('A erfüllt, B nicht:\n' + aB.join('\n'))
+    console.log('B erfüllt, A nicht:\n' + bA.join('\n'))
+    console.log('A und D verschieden:\n' + aD.join('\n'))
+  })
+
+  it('Beispiele Lesarten', () => {
+    const fall = (v: string, a: number, nach: string) => {
+      const vorher = v.split('').map((c, j) => karte(c, `${c}${j}`))
+      const pool = vorher.slice(a, a + nach.length)
+      const neu = nach.split('').map((c) => {
+        const i = pool.findIndex((k) => k.id.startsWith(c))
+        return pool.splice(i, 1)[0]
+      })
+      const nachher = [...vorher.slice(0, a), ...neu, ...vorher.slice(a + neu.length)]
+      console.log(`${v} -> ${nachher.map((k) => k.id[0]).join('')}: A=${neueDreiergruppen(vorher, nachher)} B=${differenz(vorher, nachher)} D=${ohneAlteKarte(vorher, nachher)}`)
+    }
+    fall('RRRBYBBYY', 2, 'BBBRY')
+    fall('RRRBRYBYY', 3, 'RBBY')
+    fall('YYJYRRBR', 3, 'RRRYB')
+    fall('BGGBGRRVVRV', 6, 'RRVVV')
+  })
+
+  it('lange Schlangen, Stichprobe', () => {
+    const r = zufall(123)
+    const fa = (k: Spielkarte) => (k.typ === 'Farbkarte' ? k.farbe[0] : k.typ === 'Sonderkarte' ? k.name[0] : '?')
+    const treffer: string[] = []
+    let n = 0
+    for (let i = 0; i < 400000 && treffer.length < 8; i++) {
+      const laenge = 9 + Math.floor(r() * 6)
+      const nf = 2 + Math.floor(r() * 2)
+      const codes = Array.from({ length: laenge }, () => 'RBY'.slice(0, nf)[Math.floor(r() * nf)])
+      const vorher = codes.map((c, j) => karte(c, `${c}${j}`))
+      const a = Math.floor(r() * (laenge - 2))
+      const l = Math.min(3 + Math.floor(r() * 3), laenge - a)
+      if (l < 3) continue
+      const perm = vorher.slice(a, a + l)
+      for (let j = perm.length - 1; j > 0; j--) {
+        const k = Math.floor(r() * (j + 1))
+        ;[perm[j], perm[k]] = [perm[k], perm[j]]
+      }
+      const nachher = [...vorher.slice(0, a), ...perm, ...vorher.slice(a + l)]
+      if (nachher.map(fa).join() === vorher.map(fa).join()) continue
+      n++
+      const A = neueDreiergruppen(vorher, nachher)
+      const B = differenz(vorher, nachher)
+      if (A >= 2 && B < 2) treffer.push(`A=${A} B=${B}: ${vorher.map(fa).join('')} [${a}..${a + l - 1}] => ${nachher.map(fa).join('')}`)
+    }
+    console.log(`Stichprobe ${n}, A erfüllt und B nicht:\n${treffer.join('\n')}`)
+  })
+})
