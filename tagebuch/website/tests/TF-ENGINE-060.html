@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-ENGINE-060 Mit Erweiterung löst die Engine für den Spieler am Zug jede erfüllte Aufgabe ein, ersetzt sie vom Stapel, prüft die neue sofort mit und merkt sich die geheime Aufgabe verdeckt. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-ENGINE-060 Mit Erweiterung löst die Engine für den Spieler am Zug jede erfüllte Aufgabe ein, ersetzt sie vom Stapel, prüft die neue sofort mit und merkt sich die geheime Aufgabe verdeckt.</h1><p class="etiketten"><span class="etikett">Bereich Spiel-Engine: Regeln, Zugablauf, Wertung, Speicherformat</span><span class="etikett">Regression ja</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Der Rahmen der Aufgabenkarten (A9, D5, D34, D35) entscheidet, wann geprüft wird und was beim Einlösen passiert. Geprüft wird nur für den Spieler am Zug, am Zugbeginn und nach jeder aufgelösten Aktion. Solange X2 die 15 Bedingungen nicht umgesetzt hat, prüfen die Tests den Rahmen mit Testbedingungen.</p><h2>Bestanden, wenn</h2><p>Die drei Regeltestdateien <code>A9_aufgaben_rahmen.test.ts</code>, <code>A9_aufgaben_ereignisse.test.ts</code> und <code>A9_aufgaben_register.test.ts</code> sind grün. Dazu gehören: eine Kette über drei Aufgaben, zwei Aufgaben zugleich, der leere Stapel lässt den Platz leer, das Einlösen beim Gegner erst an seinem Zugbeginn, keine Prüfung während einer offenen Abwehr, ohne Erweiterung kein Aufruf einer Bedingung und kein Ereignis, das eine geheime Aufgabe nennt.</p><h2>Fehlgeschlagen, wenn</h2><p>Ein Test ist rot, etwa weil eine aufgedeckte Aufgabe liegen bleibt, obwohl ihre Bedingung gilt, ein Mitspieler ausserhalb seines Zuges einlöst oder ein Ereignis die geheime Aufgabe verrät.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/X1-aufgaben-rahmen (PR #100)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Repo mit <code>npm ci</code>, Stand ab Commit 0f83bf6</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Stellungen aus dem Baukasten (<code>aufgabenTisch</code>, zwei Spieler, Schlange Blau-Blau), Testbedingungen wie <code>schlangeAb(3)</code>, dazu 30 Zufallspartien mit Testbedingungen und 12 Zufallspartien mit Platzhaltern.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p><code>npx vitest run src/engine/__tests__/regeln/A9_aufgaben_rahmen.test.ts src/engine/__tests__/regeln/A9_aufgaben_ereignisse.test.ts src/engine/__tests__/regeln/A9_aufgaben_register.test.ts</code> endet mit 0. Zwei Gegenproben in <code>src/engine/aufgaben/rahmen.ts</code> machen Tests rot: ohne Nachprüfung des ersetzten Platzes (D5) fünf Tests, ohne die Sperre bei schwebender Karte (A6) vier Tests.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Der Prüfer von X1 hat mit einem temporären Test (nicht im Repo) belegt: Einlösen am Zugbeginn des Übernächsten nach Aussetzen, Prüfung zu Beginn des Verdoppler-Zweitzugs vor jeder Karte, Prüfung nach wirkungslos abgelegter Sonderkarte, gleiche KI-Sicht für Mitspieler, ob die fremde geheime Aufgabe erfüllt ist oder nicht, und das Speichern und Laden der verdeckt erfüllten Aufgabe. Für diese Fälle gibt es keinen dauerhaften Test. Echte Bedingungen der 15 Aufgaben und Joker prüft X2.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 07:36</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X1) &middot; agent &middot; pruefung-X1 @ <span class="commit" title="0f83bf647001011de9cbb814381b451b42f4464c">0f83bf6</span></p><p>3 Regeltestdateien A9_aufgaben_* grün, 72 Tests; Gegenproben in rahmen.ts: ohne D5-Nachprüfung 5 Tests rot, ohne Sperre bei schwebender Karte 4 Tests rot; temporäre Grenzfälle P1-P7 grün (Aussetzen, Verdoppler-Zweitzugbeginn, KI-Sicht fremde geheime Aufgabe, Testbedingung nach Wurf entfernt, Kette bis leerer Stapel, Speichern/Laden, wirkungslos abgelegt); Dauerlauf 4 Dateien grün</p><ul class="belege"><li><a href="belege/2026-11-23-0736-TF-ENGINE-060-1.txt">2026-11-23-0736-TF-ENGINE-060-1.txt</a></li><li><a href="belege/2026-11-23-0736-TF-ENGINE-060-2.txt">2026-11-23-0736-TF-ENGINE-060-2.txt</a></li><li><a href="belege/2026-11-23-0736-TF-ENGINE-060-3.txt">2026-11-23-0736-TF-ENGINE-060-3.txt</a></li><li><a href="belege/2026-11-23-0736-TF-ENGINE-060-4.log">2026-11-23-0736-TF-ENGINE-060-4.log</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

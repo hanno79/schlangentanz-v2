@@ -1,0 +1,16 @@
+aufgaben-einloesen nach "blau-03","ziel":{"art":"schlange","schlangenId":"schlange-1","seite":"ende": KarteGespielt: Spieler 1 (spieler-1), blau-03 (FarbkarteLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 2 | AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbkombination (aufgabe-03) | AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbkombination (aufgabe-03) | AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Gelber Schatz (aufgabe-14) | AufgabeAufgedeckt: Farbvielfalt (aufgabe-04) an Stelle von Gelber Schatz (aufgabe-14)
+aufgaben-stapel-leer nach "blau-03","ziel":{"art":"schlange","schlangenId":"schlange-1","seite":"ende": KarteGespielt: Spieler 1 (spieler-1), blau-03 (FarbkarteLegen) → schlange-1 von Spieler 1 (spieler-1), Stelle 2 | AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbkombination (aufgabe-03) | AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbkombination (aufgabe-03) | AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Lila Riese (aufgabe-15) | AufgabenstapelLeer: der Platz von Lila Riese (aufgabe-15) bleibt leer
+aufgaben-abwehr nach SchlangengrubeSpielen: KarteAngesagt: Spieler 1 (spieler-1), schlangengrube-01 (SchlangengrubeSpielen) trifft KI-Gegner 1 (spieler-2) | AbwehrGefragt: KI-Gegner 1 (spieler-2) entscheidet, ob er schlangengrube-01 abwehrt
+aufgaben-abwehr nach "farbenschutzId":null: AnsageEntschieden: schlangengrube-01 von Spieler 1 (spieler-1) wirkt, niemand hat abgewehrt → vor KI-Gegner 1 (spieler-2) | AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbkombination (aufgabe-03) | AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbkombination (aufgabe-03)
+aufgaben-gegnerzug nach "gelb-01","ziel":{"art":"schlange","schlangenId":"schlange-2","seite":"ende": KarteGespielt: Spieler 1 (spieler-1), gelb-01 (FarbkarteLegen) → schlange-2 von KI-Gegner 1 (spieler-2), Stelle 2
+aufgaben-gegnerzug nach ZugBeenden: KartenGezogen: Spieler 1 (spieler-1) zieht 1 | ZugBegonnen: KI-Gegner 1 (spieler-2), Teilzug 1 | AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Farbkombination (aufgabe-03) | AufgabeAufgedeckt: Gelber Schatz (aufgabe-14) an Stelle von Farbkombination (aufgabe-03)
+Zufallspartie: 181 Schritte, Partiephase und, Invarianten verletzt in 0 Schritten, Schritte mit Aufgaben-Ereignis 0
+Geheime Aufgabe: Vielfaltskönig (9) aufgabe-05 nicht erfüllt
+Erfüllte Aufgaben: keine
+Geheime Aufgabe: Schlangenbeschwörer (7) aufgabe-08 nicht erfüllt
+Erfüllte Aufgaben: keine
+Geheime Aufgabe: Farbvielfalt (9) aufgabe-04 nicht erfüllt
+Erfüllte Aufgaben: keine
+Offene Aufgaben (3): Schlangentanz (7) aufgabe-12Farbenpracht (8) aufgabe-01Farbharmonie (10) aufgabe-02
+Aufgabenstapel: 9 Karten
+Masse {"scrollWidth":1280,"clientWidth":1280}; Konsolenfehler 0: 
