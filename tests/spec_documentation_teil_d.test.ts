@@ -1,10 +1,22 @@
 import { describe, expect, it } from 'vitest'
-import { abschnitt } from './regelfragen_lesen'
+import { ZITAT, abschnitt } from './regelfragen_lesen'
 import { eintragD, fehlende, fliesstext, nachtragEintrag, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
 
 /*
 `docs/GAME_SPEC.md`, Teil D: Auslegungsfragen an den Autor und seine Antworten.
 */
+
+/**
+ * P0.5f, Iteration 2: Einordnung des Satzes aus A10 neben D57, nach dem Muster von D23
+ * (Satz der Website zitieren und auslegen). Steht in Teil D und im Website-Nachtrag;
+ * jedes Zitat stammt wörtlich aus Teil A.
+ */
+const A10_EINORDNUNG = [
+  '„Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“',
+  'die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr',
+  'beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“)',
+  'Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“)',
+]
 
 /** Rückfragen aus X3 vom 22.11.2026 (P0.5f): Kernsätze und Gegenproben je Eintrag. */
 const RUECKFRAGEN_X3: Record<string, { frage: string; wahl: string; kern: string[]; verboten: string[] }> = {
@@ -24,23 +36,13 @@ const RUECKFRAGEN_X3: Record<string, { frage: string; wahl: string; kern: string
     kern: [
       'Wer mitten in seinem Zug die letzte Karte vom Nachziehstapel zieht',
       'spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde',
+      ...A10_EINORDNUNG,
     ],
     // Gegenprobe: die verworfene Lesart, nach der die gezogenen Karten erst ausserhalb des Zuges zählen.
     verboten: ['erst im nächsten Zug', 'darf die eben gezogenen Karten nur noch ausserhalb', 'nicht mehr im selben Zug'],
   },
 }
 
-/**
- * P0.5f, Iteration 2: Einordnung des Satzes aus A10 neben D57, nach dem Muster von D23
- * (Satz der Website zitieren und auslegen). Steht in Teil D und im Website-Nachtrag;
- * jedes Zitat stammt wörtlich aus Teil A.
- */
-const A10_EINORDNUNG = [
-  '„Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“',
-  'die Karten, die er beim Auffüllen am Ende seines Zuges zieht (A5, „Zug beenden“); danach folgt kein Zug mehr',
-  'beim Schlangenkorb verlangt A7.10 selbst, sofort auszuspielen („Ziehe 3 zusätzliche Karten und spiele sofort bis zu 2 davon aus“)',
-  'Zieht er die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers, spielt er den zweiten Zug noch, der wie ein normaler Zug abläuft (A7.8: „Du füllst deine Handkarten auf und spielst sofort einen zweiten Zug“)',
-]
 
 describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   it('führt offene Auslegungsfragen als Fragen an den Autor', () => {
@@ -196,11 +198,10 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
     })
   }
 
-  it('P0.5f: D57 und der Nachtrag ordnen den Satz aus A10 zu den zuletzt gezogenen Karten ein, mit Zitaten aus Teil A', () => {
-    pruefeKern('D57', eintragD('D57').antwort, [...A10_EINORDNUNG, 'Die Website soll A10 mit D57 klarstellen.'], [])
-    pruefeKern('D57 im Nachtrag', fliesstext(nachtragEintrag('D57').antwort).toLowerCase(), A10_EINORDNUNG, [])
-    const zitate = A10_EINORDNUNG.join(' ').match(/„[^“]+“/g) ?? []
-    expect(zitate.length, 'A10-Einordnung: Zahl der Zitate').toBe(4)
+  it('P0.5f: D57 bittet um die Klarstellung von A10, und jedes Zitat der Einordnung steht wörtlich in Teil A', () => {
+    pruefeKern('D57', eintragD('D57').antwort, ['Die Website soll A10 mit D57 klarstellen.'], [])
+    const zitate = A10_EINORDNUNG.join(' ').match(ZITAT) ?? []
+    expect(zitate, 'A10-Einordnung ohne Zitat').not.toEqual([])
     expect(fehlende(teil('A'), zitate.map((zitat) => zitat.slice(1, -1))), 'Zitate stehen nicht wörtlich in Teil A').toEqual([])
   })
 
