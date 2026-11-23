@@ -1,8 +1,11 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erzeugeZufall, pruefeInvarianten } from '../engine'
 import type { Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
+import { AUFGABENREGISTER } from '../engine/aufgabenKarten'
+import { erstellePartie } from '../engine'
+import { entferneTestbedingungen, immer, setzeTestbedingungen } from '../engine/testing/testaufgaben'
 import { bestimmeZustand, sichtFuer, simuliere } from './sicht'
 import { erstelleZufallsKi } from './strategien/zufallsKi'
 import { alleTexte, mischeVerborgenes, verborgeneIds } from './__tests__/verborgenes'
@@ -155,5 +158,23 @@ describe('K2 Vorgabe: die Folgefunktion liefert der Strategie die Sicht danach',
     stellung.sicht.hand.length = 0
     for (const aktion of stellung.aktionen().slice(0, 3)) void stellung.nach(aktion).sicht
     expect(zustand).toEqual(vorher)
+  })
+})
+
+describe('X1/K2: erfüllte Aufgaben am Partiebeginn (Codex-Befund)', () => {
+  afterEach(() => {
+    entferneTestbedingungen()
+  })
+
+  it('K2/X1: löst der Spieler am Zug schon zu Beginn Aufgaben ein, errät der Rahmen trotzdem einen Zustand mit allen 15 Aufgaben', () => {
+    setzeTestbedingungen(Object.fromEntries([...AUFGABENREGISTER.keys()].map((name) => [name, immer(0)])))
+    const zustand = erstellePartie({ spielerzahl: 2, erweiterung: true, zufall: erzeugeZufall(3) })
+    expect(zustand.spieler[0].erfuellteAufgaben.length, 'Testaufbau: Spieler 1 hat zu Beginn Aufgaben').toBeGreaterThan(0)
+    for (const ich of [0, 1]) {
+      const sicht = sichtFuer(zustand, ich)
+      const erraten = bestimmeZustand(sicht, erzeugeZufall(4))
+      expect(pruefeInvarianten(erraten).filter((befund) => befund.verletzt), `Sicht von Spieler ${ich}`).toEqual([])
+      expect(sichtFuer(erraten, ich)).toEqual(sicht)
+    }
   })
 })

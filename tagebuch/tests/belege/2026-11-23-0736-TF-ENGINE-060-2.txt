@@ -1,0 +1,24 @@
+Gegenprobe 1: rahmen.ts Zeile 52 alt 'zustand.offeneAufgaben[platz] = neue;' neu '... platz += 1;'
+     × D5: Kette über drei Aufgaben: Farbkombination, dann die aufgedeckten Gelber Schatz und Farbvielfalt, dann bleibt Farbenpracht liegen 12ms
+     × A9/D34: ist jede Aufgabe erfüllt, nimmt der Spieler am Zug alle offenen und alle aus dem Stapel; danach liegt keine mehr offen 3ms
+     × A9: der erste Zug der Partie beginnt mit einer Prüfung: Ist eine Bedingung schon erfüllt, hat Spieler 1 die Aufgabe sofort 1ms
+     × A9/D5: eine Kette aus Einlösen und Aufdecken 23ms
+     × A9/D5/D35: 30 Zufallspartien mit Erweiterung enden alle; eingelöst wird nur vom Spieler am Zug, in Ketten und bis der Stapel leer ist 718ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_ereignisse.test.ts > A9/E2: Einlösen, Aufdecken und leerer Stapel lassen sich aus den Ereignissen nachrechnen > A9/D5: eine Kette aus Einlösen und Aufdecken
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_ereignisse.test.ts > A9/D5/D35: Dauerlauf mit Testbedingungen > A9/D5/D35: 30 Zufallspartien mit Erweiterung enden alle; eingelöst wird nur vom Spieler am Zug, in Ketten und bis der Stapel leer ist
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_rahmen.test.ts > D5/A9: die neu aufgedeckte Aufgabe wird sofort mitgeprüft > D5: Kette über drei Aufgaben: Farbkombination, dann die aufgedeckten Gelber Schatz und Farbvielfalt, dann bleibt Farbenpracht liegen
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_rahmen.test.ts > A9: bei leerem Aufgabenstapel bleibt der Platz leer > A9/D34: ist jede Aufgabe erfüllt, nimmt der Spieler am Zug alle offenen und alle aus dem Stapel; danach liegt keine mehr offen
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_rahmen.test.ts > A9: Prüfung zu Beginn des ersten Zuges (Codex-Befund X1) > A9: der erste Zug der Partie beginnt mit einer Prüfung: Ist eine Bedingung schon erfüllt, hat Spieler 1 die Aufgabe sofort
+ Test Files  2 failed (2)
+      Tests  5 failed | 26 passed (31)
+exit 1
+Gegenprobe 2: rahmen.ts Zeile 28 Bedingung 'zustand.schwebend !== null ||' entfernt
+     × A6/A9: eine angesagte Karte mit offener Abwehr ist noch nicht aufgelöst; geprüft wird, wenn der Betroffene entschieden hat 9ms
+     × A6/A9: auch eine abgewehrte Karte ist aufgelöst; die Aufgabe geht an den Spieler am Zug, nicht an den Abwehrenden 3ms
+     × A6/A9: bei drei Spielern bleibt die Karte angesagt, bis auch der zweite Betroffene entschieden hat 4ms
+     × A6/A9: aufgaben-abwehr: erst nach der Entscheidung von KI-Gegner 1 wird eingelöst, und zwar für Spieler 1 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+ Test Files  2 failed (2)
+      Tests  4 failed | 28 passed (32)
+exit 1

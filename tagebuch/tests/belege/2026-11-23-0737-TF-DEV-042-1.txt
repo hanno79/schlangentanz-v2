@@ -1,0 +1,7 @@
+Entwicklertisch: dist/assets/index-D18Nts__.js:0 dist/assets/prod-z7sulLV0.js:0 
+nur am Entwicklertisch: dist/assets/index-D18Nts__.js:0 dist/assets/prod-z7sulLV0.js:0 
+legeAufgabenAus: dist/assets/index-D18Nts__.js:0 dist/assets/prod-z7sulLV0.js:0 
+GRUNDAUSLAGE: dist/assets/index-D18Nts__.js:0 dist/assets/prod-z7sulLV0.js:0 
+aufgaben-gegnerzug: dist/assets/index-D18Nts__.js:0 dist/assets/prod-z7sulLV0.js:0 
+AufgabeErfuellt: dist/assets/index-D18Nts__.js:1 dist/assets/prod-z7sulLV0.js:0 
+Farbkombination: dist/assets/index-D18Nts__.js:1 dist/assets/prod-z7sulLV0.js:0 
