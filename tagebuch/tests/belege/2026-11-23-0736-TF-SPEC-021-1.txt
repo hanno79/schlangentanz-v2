@@ -1,0 +1,31 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aafe5e835b9dd5a24
+
+ ❯ tests/spec_documentation_teil_d.test.ts (14 tests | 1 failed) 32ms
+     × P0.5f: D57: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D57: Rückfrage aus X3 vom 22.11.2026 steht als Regel mit gewählter Möglichkeit in Teil D
+AssertionError: D57 ohne Kernaussage „spielt seinen Zug zu Ende (A10) und darf dabei auch die eben gezogenen Karten einsetzen; danach beginnt die Schlussrunde“: expected 'nein: wer mitten in seinem zug die le…' to contain 'spielt seinen zug zu ende (a10) und d…'
+
+Expected: "spielt seinen zug zu ende (a10) und darf dabei auch die eben gezogenen karten einsetzen; danach beginnt die schlussrunde"
+Received: "nein: wer mitten in seinem zug die letzte karte vom nachziehstapel zieht, etwa über schlangenkorb oder comeback-karte, spielt seinen zug zu ende (a10) und darf die eben gezogenen karten nur noch ausserhalb seines zuges einsetzen; danach beginnt die schlussrunde. das passt zu d43, d49 und d55. antwort des autors auf eine rückfrage aus x3, gewählte möglichkeit: „ja, im selben zug“. website folgt."
+
+ ❯ pruefeKern tests/spec_documentation_hilfen.ts:109:90
+    107| /** Kernaussagen stehen im Eintrag, die Gegenteile nicht. */
+    108| export function pruefeKern(nummer: string, antwort: string, kern: stri…
+    109|   for (const aussage of kern) expect(antwort, `${nummer} ohne Kernauss…
+       |                                                                                          ^
+    110|   for (const aussage of verboten) expect(antwort, `${nummer} enthält „…
+    111| }
+ ❯ tests/spec_documentation_teil_d.test.ts:172:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  07:32:17
+   Duration  2.93s (transform 88ms, setup 271ms, import 72ms, tests 32ms, environment 2.27s)
+

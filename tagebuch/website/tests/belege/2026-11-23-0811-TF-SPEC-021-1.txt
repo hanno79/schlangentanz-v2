@@ -1,0 +1,33 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-aafe5e835b9dd5a24
+
+ ❯ tests/spec_documentation_teil_d.test.ts (15 tests | 1 failed) 30ms
+     × P0.5f: D57: der Website-Nachtrag führt die Antwort ohne „Website folgt“ 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/spec_documentation_teil_d.test.ts > GAME_SPEC Teil D — Fragen an den Autor und Antworten > P0.5f: D57: der Website-Nachtrag führt die Antwort ohne „Website folgt“
+AssertionError: D57: Antwort im Nachtrag beginnt nicht mit „Ja:“: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/spec_documentation_teil_d.test.ts:197:107
+    195|       expect(eintrag.frage, `${nummer}: Frage im Nachtrag`).toBe(frage)
+    196|       pruefeKern(nummer, fliesstext(eintrag.antwort).toLowerCase(), ke…
+    197|       expect(eintrag.antwort.startsWith('Ja:'), `${nummer}: Antwort im…
+       |                                                                                                           ^
+    198|     })
+    199|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  08:10:41
+   Duration  2.98s (transform 89ms, setup 281ms, import 67ms, tests 30ms, environment 2.31s)
+
