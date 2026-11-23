@@ -9,7 +9,11 @@ G1–G8 und G10–G23 hat der Autor am 21.11.2026 mit einer Sammelantwort
 beantwortet, es gilt je der Vorschlag: D34–D55. Zwei Rückfragen aus der
 Umsetzung (Task X3) hat der Autor am 22.11.2026 beantwortet; sie stehen nicht
 in diesem Katalog, sondern nur in Teil D: D56 (abgewehrte Farbenfusion) und
-D57 (letzte Karte mitten im Zug).
+D57 (letzte Karte mitten im Zug). Ebenso stehen die Rückfragen aus den
+Prüfungen von X2 und X3, die der Autor am 23.11.2026 beantwortet hat, nur in
+Teil D: D58–D65 (Aufgabenkarten und wirkungslose Farbenfusion). Eine Antwort
+vom selben Tag ergänzt D48 (Comeback-Karte im zweiten Zug nach einem
+Verdoppler).
 
 Die Website `https://schlangentanz.ch/rules` lässt diese Punkte offen. Jede
 Frage nennt die Stelle in `docs/GAME_SPEC.md` mit dem wörtlichen Satz der
