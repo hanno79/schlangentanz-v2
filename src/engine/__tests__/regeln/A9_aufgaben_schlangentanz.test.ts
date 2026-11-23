@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { berechneEndwertung, deserialisiere, serialisiere } from '../../index'
 import type { Spielzustand } from '../../index'
+import { neueDreiergruppen } from '../../jokerGruppen'
 import { legeAufgabenAus } from '../../testing/aufgaben'
 import type { Kartenwahl, Schlangenglied } from '../../testing/szenario'
 import { aufgabenEreignisse, aufgabeId, namen } from '../aufgaben_hilfen'
@@ -18,9 +19,10 @@ Dreiergruppen seine beste solche Häutung gebildet hat (Kriterium 7, aus E9
 verschoben).
 
 Eine Dreiergruppe ist eine Farbgruppe aus mindestens drei Karten (A11, A7.3
-„Dreiergruppe (oder länger)“). Neu ist sie, wenn vor der Häutung keine Gruppe
-derselben Farbe eine ihrer Karten enthielt; eine verlängerte oder
-stehengebliebene Gruppe ist nicht neu. Regenbogenschlange und Farbenfusion
+„Dreiergruppe (oder länger)“). Jede Gruppe von vorher lebt nachher höchstens
+in einer Gruppe derselben Farbe fort, in der mit den meisten ihrer Karten;
+neu ist jede Gruppe, in der keine alte fortlebt. Eine verlängerte oder
+stehengebliebene Gruppe ist also nicht neu. Regenbogenschlange und Farbenfusion
 zählen als die Farbe, mit der die Aufgabe erfüllt ist (A9, A7.3, A7.7), vor
 und nach der Häutung dieselbe.
 */
@@ -137,6 +139,28 @@ describe('A9 Nr. 12: was eine neue Dreiergruppe ist', () => {
   it('A9 Nr. 12/A7.9: eine neue Gruppe mit einem Nachbarn ausserhalb des Abschnitts zählt', () => {
     const schritt = haeute(tisch([['Gelb', 'Gelb', 'Blau', 'Gelb', 'Blau']]), 2, ['Gelb', 'Blau', 'Blau'])
     expect(zaehler(schritt.zustand)).toBe(1)
+  })
+
+  it('A9 Nr. 12/A11: gibt eine alte Gruppe eine Karte an eine neue ab, ist die neue trotzdem neu; die alte lebt in der grösseren fort', () => {
+    // Codex-Befund: Rot×6 wird zu Rot×5, daneben entstehen Blau×3 und eine getrennte Rot×3 mit einer Karte der alten Gruppe.
+    const schritt = haeute(tisch([['Rot', 'Rot', 'Rot', 'Rot', 'Rot', 'Rot', 'Blau', 'Rot', 'Blau', 'Blau', 'Rot']]), 5, ['Blau', 'Blau', 'Blau', 'Rot', 'Rot'])
+    expect(arten(schritt.zustand, 0)).toEqual(['Rot', 'Rot', 'Rot', 'Rot', 'Rot', 'Blau', 'Blau', 'Blau', 'Rot', 'Rot', 'Rot'])
+    expect(zaehler(schritt.zustand), 'Blau×3 und die zweite Rot×3 sind neu').toBe(2)
+    expect(schlangentanzErfuellt(schritt)).toBe(true)
+  })
+
+  it('A9 Nr. 12/A7.3/A7.7: acht Joker neben einem Abschnitt aus fünf Farben: die Suche bleibt schnell und findet die zwei Randgruppen', () => {
+    const glieder: Schlangenglied[] = [
+      'Regenbogenschlange', { fusion: ['Rot', 'Rot'] }, 'Regenbogenschlange', { fusion: ['Gelb', 'Gelb'] },
+      'Blau', 'Rot', 'Gelb', 'Violett', 'Braun',
+      'Regenbogenschlange', { fusion: ['Blau', 'Blau'] }, 'Regenbogenschlange', { fusion: ['Grün', 'Grün'] },
+    ]
+    const vorher = stellung({ eigene: [glieder] }).zustand().spieler[0].schlangen[0].karten
+    // Alle fünf Karten wechseln die Stelle: Rot, Gelb, Violett, Braun, Blau.
+    const nachher = [...vorher.slice(0, 4), ...vorher.slice(5, 9), vorher[4], ...vorher.slice(9)]
+    const beginn = performance.now()
+    expect(neueDreiergruppen(vorher, nachher), 'je Rand eine neue Gruppe aus zwei Jokern und der Randkarte').toBe(2)
+    expect(performance.now() - beginn, 'neueDreiergruppen: Laufzeit in ms').toBeLessThan(500)
   })
 })
 
