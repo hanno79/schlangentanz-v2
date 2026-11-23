@@ -1,4 +1,4 @@
-import { RISIKOAKTIONEN } from '../../engine'
+import { risikoaktionText } from '../../engine'
 import type { Ereignis, SpielAktion, Spielkarte, Spielzustand } from '../../engine'
 import { kartenkurzname } from '../karten/kartentexte'
 import { SCHRITT, kartenSatz } from '../tisch/protokolltexte'
@@ -18,16 +18,17 @@ Farbenschutz hält oder nicht (Kriterium 5, D33).
 
 /**
  * Die Karte, die der Spieler mit dieser Aktion aus der Hand spielt; mit dem
- * Spielen liegt sie offen. Eine Risiko-Karte liegt vor ihm, nicht auf der Hand;
- * offen ist dann die Handkarte, die er für Aktion 2 benennt (A8.2, D52).
+ * Spielen liegt sie offen. Bei einer Risiko-Karte ist es die Handkarte, die er
+ * für Aktion 2 offen benennt (A8.2, D52).
  */
 function gespielteKarte(vorher: Spielzustand, aktion: SpielAktion): Spielkarte[] {
-  if (!('karteId' in aktion)) return []
-  const karteId = aktion.typ === 'RisikoKarteSpielen' ? aktion.benannt : aktion.karteId
-  const spieler = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)
-  const karte = spieler?.hand.find((handkarte) => handkarte.id === karteId)
-  if (aktion.typ === 'RisikoKarteSpielen') return karte === undefined ? [] : [karte]
-  if (karte === undefined) throw new Error(`Protokoll: Die Karte ${aktion.karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
+  const benannt = aktion.typ === 'RisikoKarteSpielen' ? aktion.benannt : null
+  if (!('karteId' in aktion) && benannt === null) return []
+  const karteId = 'karteId' in aktion ? aktion.karteId : benannt
+  const karte = vorher.spieler.find((eintrag) => eintrag.id === aktion.spielerId)?.hand.find((handkarte) => handkarte.id === karteId)
+  // Bei Aktion 3 liegt die benannte Karte in der Schlange; die Namen am Tisch kennen sie schon.
+  if (karte === undefined && benannt !== null) return []
+  if (karte === undefined) throw new Error(`Protokoll: Die Karte ${karteId} liegt nicht auf der Hand von ${aktion.spielerId}.`)
   return [karte]
 }
 
@@ -43,7 +44,7 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
   for (const ereignis of ereignisse) {
     switch (ereignis.typ) {
       case 'KarteGespielt':
-        if ('karteId' in aktion && aktion.typ !== 'RisikoKarteSpielen') saetze.push(SCHRITT.spielt(person(ereignis.spielerIndex), kartenSatz(aktion, namen, wer)))
+        if ('karteId' in aktion) saetze.push(SCHRITT.spielt(person(ereignis.spielerIndex), kartenSatz(aktion, namen, wer)))
         break
       case 'KarteAngesagt':
         saetze.push(SCHRITT.sagtAn(person(ereignis.spielerIndex), kartenSatz(ereignis.ansage, namen, wer)))
@@ -73,7 +74,7 @@ export function protokollSchritt(vorher: Spielzustand, aktion: SpielAktion, erei
         saetze.push(SCHRITT.legtAb(person(ereignis.spielerIndex), ereignis.karteIds.length))
         break
       case 'RisikoKarteGespielt':
-        saetze.push(SCHRITT.risiko(person(ereignis.spielerIndex), `Aktion ${ereignis.risikoAktion} (${RISIKOAKTIONEN[ereignis.risikoAktion]})`, ereignis.benannt === null ? null : kurz(ereignis.benannt)))
+        saetze.push(SCHRITT.risiko(person(ereignis.spielerIndex), risikoaktionText(ereignis.risikoAktion), ereignis.benannt === null ? null : kurz(ereignis.benannt)))
         break
       case 'Entschieden':
         saetze.push(SCHRITT.entscheidet(person(ereignis.spielerIndex), ereignis.art))

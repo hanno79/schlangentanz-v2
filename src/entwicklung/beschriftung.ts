@@ -1,4 +1,4 @@
-import { RISIKOAKTIONEN } from '../engine'
+import { ablagestapelStelle, risikoaktionText } from '../engine'
 import type { SpielAktion, Spielkarte, Spielzustand } from '../engine'
 import { karteAnzeigename } from '../kartenTexte'
 import { name } from './namen'
@@ -53,8 +53,8 @@ function zielText(tisch: Tisch, feld: string, wert: unknown): string {
 
 /** Ein Wort einer Wahl; eine Stelle im Ablagestapel wird zur Karte dort (A8.2 Aktion 4). */
 function wahlText(tisch: Tisch, spielerId: string, wort: string): string {
-  const stelle = /^ablagestapel-(\d+)$/.exec(wort)
-  const karte = stelle === null ? undefined : tisch.zustand.spieler.find((spieler) => spieler.id === spielerId)?.ablagestapel[Number(stelle[1])]
+  const stelle = ablagestapelStelle(wort)
+  const karte = stelle === null ? undefined : tisch.zustand.spieler.find((spieler) => spieler.id === spielerId)?.ablagestapel[stelle]
   return karte === undefined ? zielText(tisch, 'wahl', wort) : `Ablagestapel ${zielText(tisch, 'karteId', karte.id)}`
 }
 
@@ -69,7 +69,7 @@ export function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   if (aktion.typ === 'Entscheiden') return `Entscheiden: ${aktion.wahl.split(' ').map((teil) => wahlText(tisch, aktion.spielerId, teil)).join(' · ')}`
   if (aktion.typ === 'RisikoKarteSpielen') {
     const benannt = aktion.benannt === null ? '' : ` · benennt ${zielText(tisch, 'benannt', aktion.benannt)}`
-    return `${aktion.typ}: Aktion ${aktion.risikoAktion} (${RISIKOAKTIONEN[aktion.risikoAktion]}) mit ${aktion.karteId}${benannt}`
+    return `${aktion.typ}: ${risikoaktionText(aktion.risikoAktion)} mit ${aktion.risikoKarteId}${benannt}`
   }
   if (!('karteId' in aktion)) return aktion.typ
   const text = `${aktion.typ}: ${zielText(tisch, 'karteId', aktion.karteId)}`

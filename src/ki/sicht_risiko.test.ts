@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest'
-import { anwendeAktion, benannteHandkarten, ermittleAktionen, ermittleEntscheider, erzeugeZufall } from '../engine'
+import { anwendeAktion, ermittleAktionen, ermittleEntscheider, erzeugeZufall, offeneHandkarteDer } from '../engine'
 import type { SpielAktion, Spielzustand } from '../engine'
 import { baukasten } from '../engine/testing/szenario'
 import { bestimmeZustand, sichtFuer } from './sicht'
@@ -66,10 +66,10 @@ describe('B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriteriu
   it('D52: die benannte Farbkarte steht offen in der Entscheidung und liegt auf der Hand dessen, der sie benannt hat', () => {
     const zustand = gegnerWaehlt()
     expect(ermittleEntscheider(zustand)).toBe(2)
-    const benannt = benannteHandkarten(zustand.entscheidung)
-    expect(benannt).toHaveLength(1)
-    expect(zustand.spieler[benannt[0].spielerIndex].hand.map((karte) => karte.id)).toContain(benannt[0].karteId)
-    expect(woerter(sichtFuer(zustand, 2)).has(benannt[0].karteId)).toBe(true)
+    const benannt = offeneHandkarteDer(zustand.entscheidung)
+    expect(benannt, 'D52: die Entscheidung nennt die benannte Farbkarte').not.toBeNull()
+    expect(zustand.spieler[benannt!.spielerIndex].hand.map((karte) => karte.id)).toContain(benannt!.karteId)
+    expect(woerter(sichtFuer(zustand, 2)).has(benannt!.karteId)).toBe(true)
   })
 
   it('K2: der erratene Zustand zeigt jedem Spieler seine Sicht; die benannte Karte liegt auf der richtigen Hand; der Entscheider hat dieselben Wahlen', () => {
@@ -78,9 +78,8 @@ describe('B2/D52: offene Risiko-Entscheidungen in der Sicht der KI (X5, Kriteriu
         const sicht = sichtFuer(zustand, ich)
         const geraten = bestimmeZustand(sicht, erzeugeZufall(nummer * 7 + ich))
         expect(sichtFuer(geraten, ich), `K2: Stellung ${nummer}, Spieler ${ich}`).toEqual(sicht)
-        for (const { spielerIndex, karteId } of benannteHandkarten(zustand.entscheidung)) {
-          expect(geraten.spieler[spielerIndex].hand.map((karte) => karte.id), `D52: Stellung ${nummer}`).toContain(karteId)
-        }
+        const benannt = offeneHandkarteDer(zustand.entscheidung)
+        if (benannt !== null) expect(geraten.spieler[benannt.spielerIndex].hand.map((karte) => karte.id), `D52: Stellung ${nummer}`).toContain(benannt.karteId)
         if (ich === ermittleEntscheider(zustand)) expect(ermittleAktionen(geraten), `K2: Stellung ${nummer}`).toEqual(ermittleAktionen(zustand))
       }
     }

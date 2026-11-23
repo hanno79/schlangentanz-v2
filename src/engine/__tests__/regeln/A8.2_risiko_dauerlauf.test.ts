@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { isDeepStrictEqual } from 'node:util'
 import { describe, expect, it } from 'vitest'
-import { benannteHandkarten } from '../../index'
+import { offeneHandkarteDer } from '../../index'
 import type { Spielzustand } from '../../index'
 import { dauerlauf, dauerlaufPartien } from '../../testing/dauerlauf'
 import type { SchrittPruefer } from '../../testing/dauerlauf'
@@ -50,7 +50,7 @@ function risikoPruefer(zaehler: Zaehler): SchrittPruefer {
     const verraten = verrateneHandkarten(zustand, ereignisse)
     if (verraten.length > 0) return `B2: ein Ereignis nennt die Handkarten ${verraten.join(', ')}`
     const aufHand = new Set(zustand.spieler.flatMap((spieler) => spieler.hand.map((karte) => karte.id)))
-    const benannt = new Set(benannteHandkarten(zustand.entscheidung).map((eintrag) => eintrag.karteId))
+    const benannt = new Set([offeneHandkarteDer(zustand.entscheidung)?.karteId])
     const verdeckt = woerterDerEntscheidung(zustand).filter((wort) => aufHand.has(wort) && !benannt.has(wort))
     if (verdeckt.length > 0) return `B2: die Entscheidung ${JSON.stringify(zustand.entscheidung)} nennt die Handkarten ${verdeckt.join(', ')}`
     return null

@@ -1,3 +1,4 @@
+import { HANDKARTEN } from '../../engine'
 import type { KartenAktion, SonderkarteWirkungslosAblegenAktion } from '../../engine'
 import { kartenkurzname } from '../karten/kartentexte'
 import type { Person } from '../spiel/tischAnsicht'
@@ -53,7 +54,7 @@ export const SCHRITT = {
   zieht: (person: Person, anzahl: number) => `${satzanfang(person, 'Du ziehst', 'zieht')} ${anzahlKarten(anzahl)}.`,
   // A5, A8.2: Wer am Zugende mehr als 5 Karten hält, zieht nichts nach und legt die überzähligen ab.
   mussAblegen: (person: Person, anzahl: number) =>
-    `${satzanfang(person, 'Du hältst', 'hält')} mehr als 5 Karten und ${person.ich ? 'legst' : 'legt'} ${anzahl === 1 ? '1 Karte' : `${anzahl} Karten`} ab.`,
+    `${satzanfang(person, 'Du hältst', 'hält')} mehr als ${HANDKARTEN} Karten und ${person.ich ? 'legst' : 'legt'} ${anzahlKarten(anzahl)} ab.`,
   legtAb: (person: Person, anzahl: number) =>
     `${satzanfang(person, 'Du legst', 'legt')} ${anzahl === 1 ? '1 überzählige Karte' : `${anzahl} überzählige Karten`} ab.`,
   // A8.2: Welche Aktion gespielt ist, ist offen; was aufgedeckt ist und wie die Wahl ausgeht, zeigt der Tisch (O10).

@@ -153,8 +153,8 @@ export type Risikoaktion = 1 | 2 | 3 | 4;
 export interface RisikoKarteSpielenAktion {
   typ: 'RisikoKarteSpielen';
   spielerId: string;
-  /** Die Risiko-Belohnungs-Karte, keine Handkarte. */
-  karteId: string;
+  /** Die Risiko-Belohnungs-Karte aus der Auslage; keine Handkarte, deshalb nicht `karteId`. */
+  risikoKarteId: string;
   risikoAktion: Risikoaktion;
   benannt: string | null;
 }

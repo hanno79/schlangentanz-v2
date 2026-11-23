@@ -47,8 +47,10 @@ export { hatNochLetztenZug } from './zugablauf';
 export { zugInSicht, zugOhneIds } from './zuggrenzen';
 export { ermittleEntscheider, pruefeAktion, zugBeendenGesperrt } from './aktionen/pruefen';
 export { anwendeAktion } from './aktionen/anwenden';
-/** A8.2, D52: die Namen der vier Risiko-Aktionen und die offen benannte Handkarte einer Risiko-Entscheidung, für Sicht und Oberfläche (X5). */
-export { RISIKOAKTIONEN, benannteHandkarten } from './erweiterung/risiko';
+/** A8.2: Texte zu Risiko-Aktionen und ihren Wahlen, für Protokolle und Knöpfe (X5). */
+export { ablagestapelStelle, risikoaktionText } from './erweiterung/risiko';
+/** D52: die Handkarte, die eine offene Entscheidung offen nennt, für die Sicht der KI (X5). */
+export { offeneHandkarteDer } from './entscheidungsregister';
 /** Reproduzierbarer Zufall aus einer Saat, für Partie und KI (U4: Zufall kommt als Parameter). */
 export { erzeugeZufall } from './testing/zufall';
 

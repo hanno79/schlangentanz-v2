@@ -139,6 +139,7 @@ function gespielteKarte(aktion: SpielAktion): string | null {
     case 'UeberhandAbwerfen':
     case 'Reagieren':
     case 'Entscheiden':
+    case 'RisikoKarteSpielen':
       return null;
     default:
       return aktion.karteId;

@@ -1,4 +1,4 @@
-import type { SchlangenfrassSpielenAktion, SpielAktion } from '../../engine'
+import type { RisikoKarteSpielenAktion, SchlangenfrassSpielenAktion, SpielAktion } from '../../engine'
 
 /*
 Von der Karte über die Ziele zur fertigen Aktion (Plan O3, DESIGN.md „Karte
@@ -40,7 +40,7 @@ export type Wahl =
   /** X3: eine Option einer offenen Entscheidung; wie sie am Tisch erscheint, legt O10 fest. */
   | { art: 'entscheiden'; wahl: string }
   /** X5: eine Risiko-Aktion mit ihrer benannten Karte (A8.2); wie sie am Tisch erscheint, legt O10 fest. */
-  | { art: 'risiko'; karteId: string; risikoAktion: number; benannt: string | null }
+  | ({ art: 'risiko' } & Pick<RisikoKarteSpielenAktion, 'risikoKarteId' | 'risikoAktion' | 'benannt'>)
 
 /** Die Wahl einer bestimmten Art. */
 export type WahlDerArt<A extends Wahl['art']> = Extract<Wahl, { art: A }>
@@ -115,7 +115,7 @@ export function wegZu(aktion: SpielAktion): Weg {
     case 'Entscheiden':
       return { folge: [{ art: 'entscheiden', wahl: aktion.wahl }], menge: [] }
     case 'RisikoKarteSpielen':
-      return { folge: [{ art: 'risiko', karteId: aktion.karteId, risikoAktion: aktion.risikoAktion, benannt: aktion.benannt }], menge: [] }
+      return { folge: [{ art: 'risiko', risikoKarteId: aktion.risikoKarteId, risikoAktion: aktion.risikoAktion, benannt: aktion.benannt }], menge: [] }
   }
 }
 

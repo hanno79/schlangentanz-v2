@@ -29,7 +29,7 @@ describe('A8.2: zwei Risiko-Karten je Spieler, nur mit Erweiterung (X5, Kriteriu
     const mit = tisch()
     expect(mit.spieler[0].risikoKarten.map((karte) => karte.id)).toEqual(['risiko-belohnung-01', 'risiko-belohnung-02'])
     expect(new Set(risikoTypen(mit))).toEqual(new Set([1, 2, 3, 4]))
-    expect(risikoAktionen(mit).every((aktion) => 'karteId' in aktion && aktion.karteId === 'risiko-belohnung-01'), 'je Aktion einmal, mit der ersten Karte').toBe(true)
+    expect(risikoAktionen(mit).every((aktion) => aktion.typ === 'RisikoKarteSpielen' && aktion.risikoKarteId === 'risiko-belohnung-01'), 'je Aktion einmal, mit der ersten Karte').toBe(true)
   })
 
   it('A8.2/D54: nach dem Ausspielen ist die Karte aus dem Spiel und liegt auf keinem Ablagestapel; die zweite bleibt vor dem Spieler', () => {
@@ -41,9 +41,9 @@ describe('A8.2: zwei Risiko-Karten je Spieler, nur mit Erweiterung (X5, Kriteriu
 
   it('A8.2: eine fremde oder schon gespielte Risiko-Karte lässt sich nicht spielen, mit deutschem Grund', () => {
     const start = tisch()
-    const fremd: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', karteId: 'risiko-belohnung-03', risikoAktion: 1, benannt: null }
+    const fremd: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', risikoKarteId: 'risiko-belohnung-03', risikoAktion: 1, benannt: null }
     expect(grund(start, fremd)).toMatch(/risiko-belohnung-03.*nicht in der eigenen Auslage/)
-    expect(grund(start, { ...fremd, karteId: 'blau-01' })).toMatch(/nicht in der eigenen Auslage/)
+    expect(grund(start, { ...fremd, risikoKarteId: 'blau-01' })).toMatch(/nicht in der eigenen Auslage/)
   })
 })
 
@@ -51,7 +51,7 @@ describe('A8.2/D50: höchstens eine Risiko-Karte je Runde (X5, Kriterium 2)', ()
   it('D50: nach einer Risiko-Karte bietet die Engine in dieser Runde keine zweite an und lehnt sie ab', () => {
     const gespielt = spieleRisiko(tisch(), 1).zustand
     expect(risikoAktionen(gespielt)).toEqual([])
-    const zweite: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', karteId: 'risiko-belohnung-02', risikoAktion: 1, benannt: null }
+    const zweite: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', risikoKarteId: 'risiko-belohnung-02', risikoAktion: 1, benannt: null }
     expect(grund(gespielt, zweite)).toMatch(/D50/)
   })
 
@@ -76,7 +76,7 @@ describe('A8.2/D50: höchstens eine Risiko-Karte je Runde (X5, Kriterium 2)', ()
     const gespielt = spieleRisiko(risikoTisch({ hand: ['Blau', 'Rot'], spielerzahl: 2, oben: ['Gelb', 'Grün', 'Braun'] }), 1).zustand
     const naechste = spieleZug(fuehreAus(fuehreAus(gespielt, farbkarte(gespielt)).zustand, zugBeenden(gespielt)).zustand).zustand
     expect(naechste.zug.spielerIndex).toBe(0)
-    expect(risikoAktionen(naechste).every((aktion) => 'karteId' in aktion && aktion.karteId === 'risiko-belohnung-02')).toBe(true)
+    expect(risikoAktionen(naechste).every((aktion) => aktion.typ === 'RisikoKarteSpielen' && aktion.risikoKarteId === 'risiko-belohnung-02')).toBe(true)
     expect(risikoAktionen(naechste).length).toBeGreaterThan(0)
   })
 })
@@ -118,7 +118,7 @@ describe('A8.2/D55: Prüfung über den Nachziehstapel und das Spielende (X5, Kri
   it('D55: in der Schlussrunde ist keine Risiko-Karte spielbar', () => {
     const schluss = risikoTisch({ hand: ['Blau', 'Rot'], weiter: (bau) => bau.schlussrunde(1) })
     expect(risikoAktionen(schluss)).toEqual([])
-    expect(grund(schluss, { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', karteId: 'risiko-belohnung-01', risikoAktion: 1, benannt: null })).toMatch(/D55/)
+    expect(grund(schluss, { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', risikoKarteId: 'risiko-belohnung-01', risikoAktion: 1, benannt: null })).toMatch(/D55/)
   })
 
   it('D55: deckt die Prüfung die letzte Karte auf, beginnt die Schlussrunde; Auslöser ist der Spieler am Zug, er spielt weiter', () => {
@@ -147,7 +147,7 @@ describe('A8.2/D55: Prüfung über den Nachziehstapel und das Spielende (X5, Kri
 describe('A8.2: wann und von wem eine Risiko-Karte gespielt wird', () => {
   it('A8.2: nur im eigenen Zug; ein Gegner bekommt keine Risiko-Aktion und wird abgelehnt', () => {
     const start = tisch()
-    const gegner: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-2', karteId: 'risiko-belohnung-03', risikoAktion: 1, benannt: null }
+    const gegner: SpielAktion = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-2', risikoKarteId: 'risiko-belohnung-03', risikoAktion: 1, benannt: null }
     expect(pruefeAktion(start, gegner)).toMatchObject({ erlaubt: false, grund: expect.stringMatching(/nicht am Zug/) })
   })
 
@@ -173,7 +173,7 @@ describe('A8.2: wann und von wem eine Risiko-Karte gespielt wird', () => {
 
   it('A8.2: eine falsch benannte Karte lehnt die Engine mit Grund ab', () => {
     const start = tisch()
-    const basis = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', karteId: 'risiko-belohnung-01' } as const
+    const basis = { typ: 'RisikoKarteSpielen', spielerId: 'spieler-1', risikoKarteId: 'risiko-belohnung-01' } as const
     expect(grund(start, { ...basis, risikoAktion: 2, benannt: idVon(start, 0, 'Verdoppler') })).toMatch(/D52/)
     expect(grund(start, { ...basis, risikoAktion: 2, benannt: idVon(start, 1, 'Blau') })).toMatch(/D52/)
     expect(grund(start, { ...basis, risikoAktion: 3, benannt: schlangenkarte(start, 1, 0) })).toMatch(/eigenen Schlange/)

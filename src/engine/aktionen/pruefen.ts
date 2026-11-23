@@ -59,7 +59,7 @@ const FELDER: Record<Aktionstyp, Record<string, Feld>> = {
   UeberhandAbwerfen: { spielerId: text, karteIds: textliste(0) },
   Reagieren: { spielerId: text, farbenschutzId: textOderNull },
   Entscheiden: { spielerId: text, wahl: text },
-  RisikoKarteSpielen: { ...MIT_KARTE, risikoAktion: istRisikoaktion, benannt: textOderNull },
+  RisikoKarteSpielen: { spielerId: text, risikoKarteId: text, risikoAktion: istRisikoaktion, benannt: textOderNull },
 };
 
 export function istKartenaktion(aktion: SpielAktion): aktion is KartenAktion {

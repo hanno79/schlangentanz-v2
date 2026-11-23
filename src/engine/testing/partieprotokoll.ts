@@ -1,7 +1,7 @@
 import { ermittleAktionen } from '../aktionen/enumerieren';
 import type { Ereignis, Kartenort, SpielAktion } from '../aktionen/typen';
 import { AUFGABENNAMEN } from '../aufgabenKarten';
-import { RISIKOAKTIONEN } from '../erweiterung/risiko';
+import { risikoaktionText } from '../erweiterung/risiko';
 import { alleSpielkarten } from '../invarianten';
 import { findeSchlange } from '../schlangen';
 import { berechneEndwertung } from '../scoring';
@@ -160,7 +160,7 @@ class Schreiber {
         return `${wer} wählt „${aktion.wahl}“.`;
       case 'RisikoKarteSpielen': {
         const benannt = aktion.benannt === null ? '' : `, benannt: ${this.karte(aktion.benannt)}`;
-        return `${wer} spielt die Risiko-Belohnungs-Karte ${aktion.karteId}, Aktion ${aktion.risikoAktion} (${RISIKOAKTIONEN[aktion.risikoAktion]})${benannt}.`;
+        return `${wer} spielt die Risiko-Belohnungs-Karte ${aktion.risikoKarteId}, ${risikoaktionText(aktion.risikoAktion)}${benannt}.`;
       }
     }
   }

@@ -1,4 +1,4 @@
-import { anwendeAktion, benannteHandkarten, erstellePartie, ermittleAktionen, ermittleEntscheider, zugInSicht } from '../engine';
+import { anwendeAktion, erstellePartie, ermittleAktionen, ermittleEntscheider, offeneHandkarteDer, zugInSicht } from '../engine';
 import type {
   AufgabenkarteInfo,
   Auslagekarte,
@@ -216,10 +216,11 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
   const { karten, aufgaben } = gemischtesMaterial(kopie.spieler.length, kopie.erweiterung, zufall);
   const gesehen = offeneKarten(kopie);
   // D52: Eine offen benannte Karte einer fremden Hand liegt dort; nur der Rest der Hand ist verdeckt.
-  const benannt = benannteHandkarten(kopie.entscheidung).filter((eintrag) => eintrag.spielerIndex !== kopie.ich);
-  const verdeckt = karten.filter((karte) => !gesehen.has(karte.id) && !benannt.some((eintrag) => eintrag.karteId === karte.id));
+  const genannt = offeneHandkarteDer(kopie.entscheidung);
+  const benannt = genannt === null || genannt.spielerIndex === kopie.ich ? null : { ...genannt, karte: karten.find((karte) => karte.id === genannt.karteId) };
+  const verdeckt = karten.filter((karte) => !gesehen.has(karte.id) && karte !== benannt?.karte);
   const fremde = kopie.spieler.filter((_, index) => index !== kopie.ich);
-  const fremdeHandkarten = fremde.reduce((summe, spieler) => summe + spieler.handgroesse, 0) - benannt.length;
+  const fremdeHandkarten = fremde.reduce((summe, spieler) => summe + spieler.handgroesse, 0) - (benannt === null ? 0 : 1);
   if (verdeckt.length !== fremdeHandkarten + kopie.nachziehstapelGroesse) {
     throw new Error(
       `Simulation: Verdeckt sind ${verdeckt.length} Karten, die Sicht verlangt ${fremdeHandkarten} in fremden Händen und ${kopie.nachziehstapelGroesse} im Nachziehstapel.`,
@@ -236,7 +237,7 @@ export function bestimmeZustand(sicht: Sicht, zufall: () => number): Spielzustan
   const spieler = kopie.spieler.map(({ handgroesse, ...offen }, index): Spieler => {
     if (index === kopie.ich) return { ...offen, hand: kopie.hand, geheimeAufgabe: kopie.geheimeAufgabe, geheimeAufgabeErfuellt: kopie.geheimeAufgabeErfuellt };
     const geheimeAufgabe = fremdeGeheime === 0 ? null : (verdeckteAufgaben.shift() ?? null);
-    const bekannt = karten.filter((karte) => benannt.some((eintrag) => eintrag.spielerIndex === index && eintrag.karteId === karte.id));
+    const bekannt = benannt?.spielerIndex === index && benannt.karte !== undefined ? [benannt.karte] : [];
     return { ...offen, hand: [...bekannt, ...verdeckt.splice(0, handgroesse - bekannt.length)], geheimeAufgabe, geheimeAufgabeErfuellt: false };
   });
   return {

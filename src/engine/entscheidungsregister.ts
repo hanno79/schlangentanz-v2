@@ -20,6 +20,12 @@ export interface EntscheidungsDefinition {
    */
   verdeckteWahlen?(zustand: Spielzustand, entscheidung: OffeneEntscheidung): string[];
   /**
+   * Nur wenn die Entscheidung eine Handkarte offen nennt, etwa die für
+   * Risiko-Aktion 2 benannte Farbkarte (D52): welche und auf wessen Hand sie
+   * liegt. Die KI legt sie beim Erraten des Verdeckten dorthin (Plan K2).
+   */
+  offeneHandkarte?(entscheidung: OffeneEntscheidung): { spielerIndex: number; karteId: string } | null;
+  /**
    * Die Wirkung der Wahl. Sie darf Karten bewegen (die Engine meldet sie selbst,
    * Plan E4b) und eine weitere Entscheidung verlangen, etwa vom gewählten Gegner.
    */
@@ -42,6 +48,11 @@ export function definitionDerEntscheidung(art: string): EntscheidungsDefinition 
 /** Was der Entscheider jetzt wählen kann: die offenen `optionen` oder die verdeckten Wahlen seiner Art. */
 export function wahlenDer(zustand: Spielzustand, entscheidung: OffeneEntscheidung): readonly string[] {
   return definitionDerEntscheidung(entscheidung.art).verdeckteWahlen?.(zustand, entscheidung) ?? entscheidung.optionen;
+}
+
+/** D52: die Handkarte, die die offene Entscheidung offen nennt, mit ihrem Besitzer; sonst `null`. */
+export function offeneHandkarteDer(entscheidung: OffeneEntscheidung | null): { spielerIndex: number; karteId: string } | null {
+  return entscheidung === null ? null : (definitionDerEntscheidung(entscheidung.art).offeneHandkarte?.(entscheidung) ?? null);
 }
 
 /**

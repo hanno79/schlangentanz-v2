@@ -1,4 +1,4 @@
-import { benannteHandkarten } from '../../engine'
+import { offeneHandkarteDer } from '../../engine'
 import type { AufgabenkarteInfo, Spieler, Spielzustand } from '../../engine'
 import { mischeDeck } from '../../engine/deck'
 
@@ -10,7 +10,8 @@ auf ihr beruht, muss danach gleich bleiben.
 
 /** D52: Die Farbkarte, die ein Spieler für Risiko-Aktion 2 offen benannt hat, ist nicht verborgen. */
 function benannt(zustand: Spielzustand): Set<string> {
-  return new Set(benannteHandkarten(zustand.entscheidung).map((eintrag) => eintrag.karteId))
+  const genannt = offeneHandkarteDer(zustand.entscheidung)
+  return new Set(genannt === null ? [] : [genannt.karteId])
 }
 
 /**
