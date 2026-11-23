@@ -1,0 +1,15 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-ac6d963f920ecedd8
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  13:58:00
+   Duration  2.97s (transform 77ms, setup 289ms, import 40ms, tests 16ms, environment 2.32s)
+
+src/engine/aufgaben/definition.ts
+src/engine/aufgaben/farbenpracht.ts
+src/engine/aufgaben/farbharmonie.ts
+src/engine/aufgaben/farbkombination.ts
+src/engine/aufgaben/gelberSchatz.ts
+src/engine/aufgaben/lilaRiese.ts

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-025 Wird eine der Antworten D48, D58 bis D65 auf eine nicht gewählte Möglichkeit umgestellt, ein Datum geändert oder Teil C zurückgedreht, schlagen die Spec-Tests fehl. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-025 Wird eine der Antworten D48, D58 bis D65 auf eine nicht gewählte Möglichkeit umgestellt, ein Datum geändert oder Teil C zurückgedreht, schlagen die Spec-Tests fehl.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art automatisch</span><span class="etikett">Grenzfall von TF-SPEC-024</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Spec-Tests sollen festhalten, was der Autor am 23.11.2026 gewählt hat. Ein Test, der auch bei einer falschen Antwort grün bleibt, hält nichts fest. Geprüft wird deshalb mit absichtlich verfälschten Fassungen, ob die Tests sie erkennen.</p><h2>Bestanden, wenn</h2><p>Jede der zwölf Verfälschungen aus den Testdaten führt zu Exit 1 mit einer Meldung, die den verfälschten Eintrag nennt. Danach sind die drei Dateien wieder im Originalzustand, und dieselben vier Testdateien enden mit Exit 0 und 134 bestandenen Tests.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Verfälschung endet mit Exit 0, oder nach dem Zurücksetzen bleibt ein Test rot.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/P0.5g-antworten-x2-x3 (PR #110)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>npm ci</code> gelaufen, Kopien von <code>docs/GAME_SPEC.md</code>, <code>docs/WEBSITE_NACHTRAG.md</code> und <code>docs/REGELFRAGEN.md</code> ausserhalb des Repos</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Je eine Ersetzung, genau eine Fundstelle: A D59 „Nur am Zugende“ → „Nach jeder Aktion“; B D63 „gilt das für „Schlangentanz“ die ganze Partie; die Häutung muss nicht im Zug des Einlösens liegen“ → „zählt für „Schlangentanz“ nur eine Häutung im selben Zug“; C D58 „Nein:“ → „Ja:“; D im Nachtrag bei D61 der Satz „Es braucht mindestens eine echte Farbkarte.“ angehängt; E D64 „Zwei Arten“ → „Zwei beliebige“; F in D48 die Rückfrage vom 23.11.2026 entfernt; G Fundstelle von C10 → <code>src/engine/aufgabenPruefung.ts</code>; H Zeile C21 wieder eingefügt; I in <code>docs/REGELFRAGEN.md</code> „D58–D65“ → „D58–D64“; J bei D56 „Ja:“ am Anfang entfernt; K Datum von D48 → 23.11.2026; L Datum von D65 → 22.11.2026.</p></section>
+<section class="technisch"><p class="hinweis">nicht für Tester</p><h2>Technische Prüfung</h2><p>Für jede Ersetzung: Ersetzung anwenden, <code>npx vitest run tests/spec_documentation_teil_d.test.ts tests/spec_documentation_teil_b_c.test.ts tests/regelfragen_antworten.test.ts tests/spec_documentation_teil_e.test.ts</code>, Exit-Code und fehlgeschlagene Tests notieren, die drei Dateien aus den Kopien zurückholen. Erwartet: zwölfmal Exit 1, danach Exit 0 mit 134 bestandenen Tests und <code>git status --short</code> ohne Änderung an <code>docs/</code>.</p></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 13:58</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code &middot; agent &middot; pruefung-P0.5g @ <span class="commit" title="e8280ba0f39dbbef8b25f9a7fb55008219c2a211">e8280ba</span></p><p>12 von 12 Verfälschungen (A bis L) enden mit Exit 1, je 1 failed von 134, der rote Test nennt den verfälschten Eintrag (D59, D63, D58, D61 im Nachtrag, D64, G16/D48, Fundstellen Teil C, C21, REGELFRAGEN-Stand, D56, D48-Datum, D65); nach dem Zurückholen der Kopien 134 passed, Arbeitskopie ohne Änderung an docs/.</p><ul class="belege"><li><a href="belege/2026-11-23-1358-TF-SPEC-025-1.txt">2026-11-23-1358-TF-SPEC-025-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
