@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-022 D57 und sein Eintrag im Website-Nachtrag sagen, wie der Satz zu den zuletzt gezogenen Karten in A10 zu lesen ist, damit der Autor die Website klarstellen kann. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-022 D57 und sein Eintrag im Website-Nachtrag sagen, wie der Satz zu den zuletzt gezogenen Karten in A10 zu lesen ist, damit der Autor die Website klarstellen kann.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-020</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>A10 sagt über den Spieler, der die letzte Karte zieht: „Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen“. D57 erlaubt, mitten im Zug gezogene letzte Karten noch im selben Zug zu spielen. Wörtlich gelesen widersprechen sich die beiden Sätze. Übernimmt der Autor D57 auf die Website, ohne den Satz in A10 anzupassen, stehen dort zwei Regeln gegeneinander. Wie bei D23 und A7.8 muss deshalb in Teil D und im Nachtrag stehen, wie A10 zu lesen ist.</p><h2>Bestanden, wenn</h2><p>D57 in Teil D und der Eintrag „(D57)“ in <code>docs/WEBSITE_NACHTRAG.md</code> nennen den Satz aus A10 und sagen, wie er zu lesen ist, etwa: Er betrifft die Karten, die der Spieler am Ende seines Zuges beim Auffüllen zieht. Im Nachtrag steht das ohne Verweis auf Teil D verständlich.</p><h2>Fehlgeschlagen, wenn</h2><p>Weder D57 noch der Nachtrag nennen den Satz aus A10 oder sagen, wie er zu lesen ist. Ein Hinweis nur in der PR-Beschreibung oder in einem Commit genügt nicht, weil der Autor mit dem Nachtrag arbeitet.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/P0.5f-rueckfragen-x3 (PR #105)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Satz der Website in A10: „Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen, etwa einen Farbenschutz zur Abwehr.“ Vorbild für die Einordnung: D23 und sein Nachtrag-Eintrag, die „Im zweiten Zug darfst du keinen weiteren Verdoppler spielen“ (A7.8) zitieren und auslegen.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Git Bash im Repo</td><td>Fundstellen des Satzes suchen</td><td>`grep -n &quot;zuletzt gezogenen|ausserhalb seines Zuges&quot; docs/GAME_SPEC.md docs/WEBSITE_NACHTRAG.md`</td><td>ausser in A10 auch in D57 oder im Nachtrag-Eintrag „(D57)“</td></tr><tr><td>2</td><td>Editor, `docs/GAME_SPEC.md`, Teil D, Zeile D57</td><td>Antwort lesen</td><td></td><td>nennt A10 und sagt, wie der Satz zu lesen ist</td></tr><tr><td>3</td><td>Editor, `docs/WEBSITE_NACHTRAG.md`, Eintrag „(D57)“</td><td>Antwort lesen</td><td></td><td>wie Schritt 2, ohne Teil D verständlich</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Ob der Autor die Website so anpasst, prüft erst <code>npm run abgleich:website</code> (TF-SPEC-005). Der Fall, dass jemand die letzte Karte beim Auffüllen zwischen den beiden Zügen eines Verdopplers zieht, ist nicht Gegenstand von D57; ihn hat die Abnahme von E3 (Hinweis H1) als durch A7.8 gedeckt beurteilt.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-fehlgeschlagen"><h3><time datetime="2026-11-23">23.11.2026 07:36</time> <span class="status status-fehlgeschlagen">fehlgeschlagen</span></h3><p class="angaben">Claude Code (Prüfer P0.5f) &middot; agent &middot; pruefung-P0.5f @ <span class="commit" title="481d17a9eaa781b58c811f87fc06825d13ae8d71">481d17a</span></p><p>Satz Seine zuletzt gezogenen Karten kann er nur noch ausserhalb seines Zuges einsetzen steht nur in A10 (GAME_SPEC.md:642); D57 (Zeile 872) und Nachtrag (D57, Zeile 137/138) nennen ihn nicht und sagen nicht, wie er zu lesen ist; D57 verweist nur mit (A10) auf den Abschnitt. Hinweis auf die Spannung steht nur in der PR-Beschreibung von #105. Vorbild D23 zitiert und deutet A7.8 in Teil D und Nachtrag.</p><ul class="belege"><li><a href="belege/2026-11-23-0736-TF-SPEC-022-1.txt">2026-11-23-0736-TF-SPEC-022-1.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

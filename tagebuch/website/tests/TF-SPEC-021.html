@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-SPEC-021 Wird D56 oder D57 in Teil D auf die verworfene Möglichkeit umgestellt oder fehlt eine der beiden Zeilen, schlagen die Spec-Tests fehl. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-SPEC-021 Wird D56 oder D57 in Teil D auf die verworfene Möglichkeit umgestellt oder fehlt eine der beiden Zeilen, schlagen die Spec-Tests fehl.</h1><p class="etiketten"><span class="etikett">Bereich Regelspiegel, Regelfragen an den Autor und Website-Abgleich</span><span class="etikett">Regression nein</span><span class="etikett">Priorität hoch</span><span class="etikett">Art manuell</span><span class="etikett">Grenzfall von TF-SPEC-020</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>Die Tests zu D56 und D57 sollen die Wahl des Autors festhalten, nicht nur, dass es die Zeilen gibt. Sonst kann eine spätere Änderung aus „Ja“ ein „Nein“ machen, und X3 baut die verworfene Regel, ohne dass ein Test es merkt.</p><h2>Bestanden, wenn</h2><p>Jede Verfälschung unter „Testdaten“ führt einzeln zu Exit ungleich 0 bei <code>npx vitest run tests/spec_documentation_teil_d.test.ts</code>, und die Meldung nennt D56 oder D57.</p><h2>Fehlgeschlagen, wenn</h2><p>Mindestens eine Verfälschung bleibt grün (Exit 0).</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/P0.5f-rueckfragen-x3 (PR #105)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Arbeitskopie auf dem zu prüfenden Commit, <code>git status --short</code> leer</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Je Zeile eine Verfälschung in <code>docs/GAME_SPEC.md</code>, Teil D:</p>
+<ul><li>D57 „Ja: Wer mitten“ ersetzt durch „Nein: Wer mitten“ und „darf dabei auch die eben gezogenen Karten einsetzen“ ersetzt durch „darf die eben gezogenen Karten nur noch ausserhalb seines Zuges einsetzen“ (verworfene Möglichkeit „Nein, erst später“)</li><li>D56 „Ja: Wer eine“ ersetzt durch „Nein: Wer eine“ und „„Ja, gespielt ist gespielt““ ersetzt durch „„Nein, nur eine wirksame““, zugleich die Zeile D57 gelöscht</li></ul></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>Editor</td><td>eine Verfälschung aus „Testdaten“ eintragen</td><td></td><td>nur die genannte Stelle geändert</td></tr><tr><td>2</td><td>Git Bash im Repo</td><td>Tests ausführen</td><td>`npx vitest run tests/spec_documentation_teil_d.test.ts; echo $?`</td><td>Exit ungleich 0; fehlgeschlagener Test „P0.5f: D56 …“ oder „P0.5f: D57 …“</td></tr><tr><td>3</td><td>dieselbe Konsole</td><td>zurücksetzen</td><td>`git checkout -- docs/GAME_SPEC.md`</td><td>`git status --short` leer</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Im Website-Nachtrag prüfen die Tests Frage und Kernsätze, nicht den Anfang der Antwort: Wird dort nur „Ja:“ durch „Nein:“ ersetzt, bleibt der Test grün (am 23.11.2026 bei D57 ausprobiert). Weil die Kernsätze stehen bleiben müssen, entsteht so ein widersprüchlicher Eintrag, aber keine andere Regel; Quelle bleibt Teil D. Wird Teil D zusammen mit dem Test verfälscht, merkt das nur ein Mensch, der beides gegen die Rückfragen liest (TF-SPEC-020).</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 07:36</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer P0.5f) &middot; agent &middot; pruefung-P0.5f @ <span class="commit" title="481d17a9eaa781b58c811f87fc06825d13ae8d71">481d17a</span></p><p>Verfälschung 1 (D57 Nein, nur noch ausserhalb seines Zuges): Exit 1, 1 failed | 13 passed, D57 ohne Kernaussage; Verfälschung 2 (D56 Nein, nur eine wirksame, D57 gelöscht): Exit 1, 2 failed | 12 passed, D56 ohne Kernaussage und D57 fehlt in Teil D; danach git checkout, git status leer. Zusatz: Nachtrag D57 nur Ja: zu Nein: bleibt grün (14 passed, Exit 0)</p><ul class="belege"><li><a href="belege/2026-11-23-0736-TF-SPEC-021-1.txt">2026-11-23-0736-TF-SPEC-021-1.txt</a></li><li><a href="belege/2026-11-23-0736-TF-SPEC-021-2.txt">2026-11-23-0736-TF-SPEC-021-2.txt</a></li><li><a href="belege/2026-11-23-0736-TF-SPEC-021-3.txt">2026-11-23-0736-TF-SPEC-021-3.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>
