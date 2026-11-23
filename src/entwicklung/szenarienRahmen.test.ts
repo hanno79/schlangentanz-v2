@@ -61,7 +61,9 @@ describe('X3: Szenarien des Rahmens am Entwicklertisch', () => {
   })
 
   it('D55: entscheidung-letzte-karte: zieht der Gegner die letzte Karte, löst Spieler 1 die Schlussrunde aus', () => {
-    const gegner = klicke(erzeuge('entscheidung-letzte-karte'), waehle('spieler-2'))
+    const start = erzeuge('entscheidung-letzte-karte')
+    expect(start.entscheidung?.karteId, 'die Entscheidung gehört zur Test-Karte').toMatch(/^regenbogenschlange-/)
+    const gegner = klicke(start, waehle('spieler-2'))
     const gezogen = klicke(gegner.zustand, waehle('stapel'))
     expect(typen(gezogen.ereignisse)).toEqual(['Entschieden', 'KartenVersetzt', 'SchlussrundeBegonnen'])
     expect(gezogen.zustand).toMatchObject({ partiephase: 'Schlussrunde', schlussrundeAusloeser: 0 })

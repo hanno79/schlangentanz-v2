@@ -36,7 +36,8 @@ function mitOffenerWahl(stapel: number | null): Szenario['erzeuge'] {
       .stapelOben(['Violett'])
     if (stapel !== null) bau.stapelBehalten(stapel)
     return bau
-      .aendere((zustand) => verlangeTestwahl(zustand, 0, zustand.spieler[0].ablagestapel.at(-1)!.id))
+      // Die Test-Karte liegt zuunterst; `stapelBehalten` legt den übrigen Stapel darauf.
+      .aendere((zustand) => verlangeTestwahl(zustand, 0, zustand.spieler[0].ablagestapel[0].id))
       .zustand()
   }
 }

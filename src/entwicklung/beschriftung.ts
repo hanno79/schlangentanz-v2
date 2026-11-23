@@ -52,6 +52,8 @@ export function beschrifte(zustand: Spielzustand, aktion: SpielAktion): string {
   if (aktion.typ === 'Reagieren') {
     return aktion.farbenschutzId === null ? 'Reagieren: durchlassen' : `Reagieren: abwehren mit ${zielText(tisch, 'farbenschutzId', aktion.farbenschutzId)}`
   }
+  // X3: Die Wahl nennt einen Spieler oder steht, wie sie ist.
+  if (aktion.typ === 'Entscheiden') return `Entscheiden: ${zielText(tisch, 'wahl', aktion.wahl)}`
   if (!('karteId' in aktion)) return aktion.typ
   const text = `${aktion.typ}: ${zielText(tisch, 'karteId', aktion.karteId)}`
   const ziel = Object.entries(aktion)

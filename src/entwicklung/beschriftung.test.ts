@@ -72,5 +72,7 @@ describe('E5: Beschriftung der Aktionsknöpfe', () => {
     )
     expect(beschrifte(zustand, { typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: schutz })).toBe(`Reagieren: abwehren mit Farbenschutz (${schutz})`)
     expect(beschrifte(zustand, { typ: 'Reagieren', spielerId: 'spieler-2', farbenschutzId: null })).toBe('Reagieren: durchlassen')
+    expect(beschrifte(zustand, { typ: 'Entscheiden', spielerId: 'spieler-1', wahl: 'spieler-2' }), 'X3: die Wahl eines Gegners nennt ihn').toBe('Entscheiden: KI-Gegner 1 (spieler-2)')
+    expect(beschrifte(zustand, { typ: 'Entscheiden', spielerId: 'spieler-2', wahl: 'stapel' })).toBe('Entscheiden: stapel')
   })
 })
