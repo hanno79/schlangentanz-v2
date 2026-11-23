@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { pruefeAktion } from '../../index'
+import { pruefeAktion, zugInSicht } from '../../index'
 import type { SchlangenkorbSpielenAktion, Spielzustand } from '../../index'
 import { ereignisseVom, hand } from '../zugablauf_hilfen'
 import { angeboteneBoni, handIds, KORB, korbAktionen, korbId, korbtisch, schlangenIds, spiele, spieleKorb } from '../korb_hilfen'
@@ -121,5 +121,16 @@ describe('A7.10/D44: Tausche bis zu 2 Karten', () => {
       { karteId: gelb, von: { ort: 'Hand', spielerIndex: 0 }, nach: { ort: 'Schlange', spielerIndex: 0, schlangenId: start.spieler[0].schlangen[0].id, position: 1 } },
       { karteId: null, von: { ort: 'Schlange', spielerIndex: 0, schlangenId: start.spieler[0].schlangen[0].id, position: 1 }, nach: { ort: 'Hand', spielerIndex: 0 } },
     ])
+  })
+
+  it('B2: tauscht der Spieler eine eben gelegte Karte zurück auf die Hand, nennt der Zug in der Sicht des Gegners ihre Id nicht mehr (Codex-Befund)', () => {
+    const start = korbtisch([KORB, 'Rot', 'Gelb']).schlange(0, ['Blau']).zustand()
+    const [rot] = handIds(start, 0, 'Rot')
+    const [gelb] = handIds(start, 0, 'Gelb')
+    let zustand = spiele(start, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: rot, ziel: { art: 'schlange', schlangenId: start.spieler[0].schlangen[0].id, seite: 'ende' } }).zustand
+    zustand = spiele(zustand, tausch(zustand, [rot, gelb])).zustand
+    expect(hand(zustand, 0), 'Rot liegt wieder auf der Hand').toContain(rot)
+    expect(JSON.stringify(zugInSicht(zustand, 1)), 'B2: der Gegner sieht die Id der Handkarte').not.toContain(rot)
+    expect(zugInSicht(zustand, 0).verwendet.map((eintrag) => eintrag.karteId), 'der Spieler selbst sieht seine Karte').toContain(rot)
   })
 })
