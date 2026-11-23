@@ -1,0 +1,112 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a811891994bcc6ed4
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_reihen.test.ts (27 tests | 3 failed) 83ms
+     × A9/D3 (C14): vier violette Karten in einer Reihe erfüllen nicht, fünf erfüllen 13ms
+     × A9/D41 Lila Riese: 'mit Regenbogenschlange, knapp nicht: …' 2ms
+     × A9/D41 Lila Riese: 'mit Farbenfusion, knapp nicht: eine F…' 2ms
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_farbmengen.test.ts (6 tests | 1 failed) 49ms
+     × A9/A7.3: eine Regenbogenschlange zwischen fünf gelben und vier violetten Karten löst in einer Aktion Gelber Schatz (als Gelb) und Lila Riese (als Violett) ein 12ms
+ ❯ src/entwicklung/szenarienAufgabenA.test.ts (7 tests | 1 failed) 58ms
+     × A9/D3 (C14): aufgabe-lila-riese: bei vier violetten Karten geschieht nichts, die fünfte löst Lila Riese ein 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenA.test.ts > X2 Paket A: Szenarien je Aufgabe, eingelöst mit echten Karten > A9/D3 (C14): aufgabe-lila-riese: bei vier violetten Karten geschieht nichts, die fünfte löst Lila Riese ein
+AssertionError: expected [ 'AufgabeErfuellt', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "AufgabeErfuellt",
++   "AufgabeAufgedeckt",
++ ]
+
+ ❯ src/entwicklung/szenarienAufgabenA.test.ts:72:96
+     70|   it('A9/D3 (C14): aufgabe-lila-riese: bei vier violetten Karten gesch…
+     71|     const start = lade('aufgabe-lila-riese')
+     72|     expect(aufgabenTypen(klicke(start, farbkarte('Blau', 'schlange-1',…
+       |                                                                                                ^
+     73|     const { zustand, ereignisse } = klicke(start, farbkarte('Violett',…
+     74|     expect(aufgabenTypen(ereignisse)).toEqual(['AufgabeErfuellt', 'Auf…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_joker_farbmengen.test.ts > A9 Kriterium 1: derselbe Joker hat bei zwei Aufgaben verschiedene Farben > A9/A7.3: eine Regenbogenschlange zwischen fünf gelben und vier violetten Karten löst in einer Aktion Gelber Schatz (als Gelb) und Lila Riese (als Violett) ein
+AssertionError: vorher: fünf gelbe und vier violette Karten erfüllen keine der beiden: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "aufgabeId": "aufgabe-15",
++     "spielerIndex": 0,
++     "typ": "AufgabeErfuellt",
++   },
++   {
++     "anStelleVon": "aufgabe-15",
++     "aufgabeId": "aufgabe-01",
++     "typ": "AufgabeAufgedeckt",
++   },
++ ]
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_joker_farbmengen.test.ts:69:139
+     67|   it('A9/A7.3: eine Regenbogenschlange zwischen fünf gelben und vier v…
+     68|     const start = tisch([...mal(5, 'Gelb'), ...mal(4, 'Violett')], MIT…
+     69|     expect(aufgabenEreignisse(legeAn(start, 'Blau').ereignisse), 'vorh…
+       |                                                                                                                                           ^
+     70|     const { zustand, ereignisse } = lege(start, 'RegenbogenschlangeLeg…
+     71|     expect(ereignisseVom(ereignisse, 'AufgabeErfuellt')).toEqual(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_reihen.test.ts > A9/D3/D41: Lila Riese – eine ununterbrochene Reihe aus mindestens 5 violetten Karten (behebt C14) > A9/D3 (C14): vier violette Karten in einer Reihe erfüllen nicht, fünf erfüllen
+AssertionError: lilaRiese.istErfuellt mit 4 violetten Karten: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_reihen.test.ts:36:117
+     34| describe('A9/D3/D41: Lila Riese – eine ununterbrochene Reihe aus minde…
+     35|   it('A9/D3 (C14): vier violette Karten in einer Reihe erfüllen nicht,…
+     36|     expect(lilaRiese.istErfuellt(stellung([mal(4, 'Violett')]), 0), 'l…
+       |                                                                                                                     ^
+     37|     expect(lilaRiese.istErfuellt(stellung([mal(5, 'Violett')]), 0), 'l…
+     38|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_reihen.test.ts > A9/D3/D41: Lila Riese – eine ununterbrochene Reihe aus mindestens 5 violetten Karten (behebt C14) > A9/D41 Lila Riese: 'mit Regenbogenschlange, knapp nicht: …'
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_reihen.test.ts > A9/D3/D41: Lila Riese – eine ununterbrochene Reihe aus mindestens 5 violetten Karten (behebt C14) > A9/D41 Lila Riese: 'mit Farbenfusion, knapp nicht: eine F…'
+AssertionError: Lila Riese.istErfuellt für Spieler 1: erwartet false: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/engine/__tests__/farbmengen_hilfen.ts:42:112
+     40|   it.each(tabelle)(`${abschnitt} ${aufgabe.name}: $fall`, ({ schlangen…
+     41|     const zustand = stellung(schlangen, gegner)
+     42|     expect(aufgabe.istErfuellt(zustand, 0), `${aufgabe.name}.istErfuel…
+       |                                                                                                                ^
+     43|   })
+     44| }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  5 failed | 35 passed (40)
+   Start at  08:42:25
+   Duration  6.18s (transform 2.94s, setup 1.37s, import 3.27s, tests 191ms, environment 11.88s)
+
+exit 1

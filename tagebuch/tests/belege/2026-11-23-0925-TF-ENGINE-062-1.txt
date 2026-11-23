@@ -1,0 +1,14 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a811891994bcc6ed4
+
+ ✓ src/engine/__tests__/tmp_x2a_grenzfaelle.test.ts > G1 Farbharmonie: Regenbogenschlange am Ende von Schlange 1 und zwei violette Karten am Anfang von Schlange 2 sind keine Gruppe 14ms
+ ✓ src/engine/__tests__/tmp_x2a_grenzfaelle.test.ts > G2 reine Jokerreihen (Auslegung): fünf Joker ohne violette Karte erfüllen Lila Riese, fünf Joker Farbkombination, sechs Joker Gelber Schatz 3ms
+ ✓ src/engine/__tests__/tmp_x2a_grenzfaelle.test.ts > G3 Farbenpracht im Zug erfüllt und im selben Zug mit eigener Fusion zerstört: bleibt eingelöst 7ms
+ ✓ src/engine/__tests__/tmp_x2a_grenzfaelle.test.ts > G4 ohne Erweiterung: dieselbe Stellung löst keine Aufgabe aus und es gibt keine 2ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  08:53:24
+   Duration  3.57s (transform 633ms, setup 282ms, import 665ms, tests 28ms, environment 2.31s)
+
+exit 0

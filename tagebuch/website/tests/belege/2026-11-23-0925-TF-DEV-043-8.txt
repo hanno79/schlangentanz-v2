@@ -1,0 +1,111 @@
+PARTIE 4711 182 {"ev":"Ereignisse des letzten Schritts (1)\nPartieBeendet","erf":["Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine"],"off":"Offene Aufgaben (3): Fusionsexperte (6) aufgabe-07Gelber Schatz (5) aufgabe-14Schlangenrepertoire (4) aufgabe-10","inv":"Invarianten (alle erfüllt)","phase":"Partiephase Beendet","scroll":[1280,1280]}
+AUFGABEN []
+Aufschlüsselung der Endwertung
+Spieler 1
+schlange-4: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+schlange-7: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette: keine ab 3 Farbkarten; Aufgaben: keine; Summe 0
+
+KI-Gegner 1
+schlange-5: Gruppen Gelb×5 = 10, zusammen 10; Joker: Farbenfusion (farbenfusion-01) als Gelb; Farben für den Vielfaltbonus: Gelb, Vielfalt 0
+schlange-8: Gruppen Rot×4 = 7, zusammen 7; Joker: Farbenfusion (farbenfusion-04) als Rot; Farben für den Vielfaltbonus: Rot, Vielfalt 0
+
+Vielfaltbonus 0; Kette 4, Bonus 0; Aufgaben: keine; Summe 17
+
+KI-Gegner 2
+schlange-3: Gruppen Violett×6 = 12, zusammen 12; Farben für den Vielfaltbonus: Violett, Vielfalt 0
+schlange-6: Gruppen Rot×4 = 4, Braun×3 = 6, Rot×3 = 2, Grün×3 = 5, Gelb×3 = 3, zusammen 20; Joker: Regenbogenschlange (regenbogenschlange-02) als Rot, Regenbogenschlange (regenbogenschlange-04) als Grün, Farbenfusion (farbenfusion-02) als Grün; Farben für den Vielfaltbonus: Rot, Gelb, Braun, Grün, Vielfalt 3
+
+Vielfaltbonus 3; Kette 6, Bonus 5; Aufgaben: keine; Summe 40
+
+
+PARTIE 11 175 {"ev":"Ereignisse des letzten Schritts (1)\nPartieBeendet","erf":["Erfüllte Aufgaben: Farbenpracht (8) aufgabe-01","Erfüllte Aufgaben: Lila Riese (5) aufgabe-15Farbkombination (5) aufgabe-03","Erfüllte Aufgaben: keine"],"off":"Offene Aufgaben (3): Schlangenmeister (4) aufgabe-09Farbharmonie (10) aufgabe-02Farbwechsler (6) aufgabe-06","inv":"Invarianten (alle erfüllt)","phase":"Partiephase Beendet","scroll":[1280,1280]}
+AUFGABEN ["113: AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Lila Riese (aufgabe-15)","113: AufgabeErfuellt: KI-Gegner 1 (spieler-2) nimmt Farbkombination (aufgabe-03)","126: AufgabeErfuellt: Spieler 1 (spieler-1) nimmt Farbenpracht (aufgabe-01)"]
+Aufschlüsselung der Endwertung
+Spieler 1
+schlange-1: Gruppen Gelb×3 = 3, zusammen 3; Joker: Regenbogenschlange (regenbogenschlange-04) in keiner Gruppe; Farben für den Vielfaltbonus: Gelb, Vielfalt 0
+schlange-5: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette 3, Bonus 0; Aufgaben: Farbenpracht 8; Summe 11
+
+KI-Gegner 1
+schlange-2: Gruppen Violett×4 = 6, zusammen 6; Joker: Regenbogenschlange (regenbogenschlange-01) als Violett, Farbenfusion (farbenfusion-03) in keiner Gruppe; Farben für den Vielfaltbonus: Violett, Vielfalt 0
+schlange-6: Gruppen Blau×3 = 3, Rot×4 = 5, zusammen 8; Joker: Farbenfusion (farbenfusion-02) als Rot; Farben für den Vielfaltbonus: Blau, Rot, Vielfalt 1
+
+Vielfaltbonus 1; Kette 3, Bonus 0; Aufgaben: Lila Riese 5, Farbkombination 5; Summe 25
+
+KI-Gegner 2
+schlange-3: Gruppen Rot×5 = 5, Gelb×3 = 2, zusammen 7; Joker: Regenbogenschlange (regenbogenschlange-03) als Gelb; Farben für den Vielfaltbonus: Rot, Gelb, Vielfalt 1
+schlange-4: Gruppen Violett×3 = 6, Blau×7 = 7, zusammen 13; Joker: Farbenfusion (farbenfusion-01) als Violett; Farben für den Vielfaltbonus: Blau, Violett, Vielfalt 1
+
+Vielfaltbonus 1; Kette 7, Bonus 5; Aufgaben: keine; Summe 26
+
+
+PARTIE 12 179 {"ev":"Ereignisse des letzten Schritts (1)\nPartieBeendet","erf":["Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine"],"off":"Offene Aufgaben (3): Schlangenmeister (4) aufgabe-09Vielfaltskönig (9) aufgabe-05Farbharmonie (10) aufgabe-02","inv":"Invarianten (alle erfüllt)","phase":"Partiephase Beendet","scroll":[1280,1280]}
+AUFGABEN []
+Aufschlüsselung der Endwertung
+Spieler 1
+schlange-5: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+schlange-7: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette: keine ab 3 Farbkarten; Aufgaben: keine; Summe 0
+
+KI-Gegner 1
+schlange-6: Gruppen Rot×4 = 4, Gelb×3 = 4, Grün×3 = 6, zusammen 14; Joker: Farbenfusion (farbenfusion-03) als Gelb, Regenbogenschlange (regenbogenschlange-04) als Grün; Farben für den Vielfaltbonus: Rot, Gelb, Grün, Vielfalt 2
+schlange-8: Gruppen Gelb×4 = 12, zusammen 12; Joker: Farbenfusion (farbenfusion-02) als Gelb, Farbenfusion (farbenfusion-04) als Gelb; Farben für den Vielfaltbonus: Gelb, Vielfalt 0
+
+Vielfaltbonus 2; Kette 4, Bonus 5; Aufgaben: keine; Summe 33
+
+KI-Gegner 2
+schlange-3: Gruppen Blau×5 = 8, Grün×3 = 6, zusammen 14; Joker: Farbenfusion (farbenfusion-01) als Blau, Regenbogenschlange (regenbogenschlange-02) als Grün; Farben für den Vielfaltbonus: Blau, Grün, Vielfalt 1
+schlange-4: Gruppen Braun×3 = 4, zusammen 4; Joker: Regenbogenschlange (regenbogenschlange-01) als Braun; Farben für den Vielfaltbonus: Braun, Vielfalt 0
+
+Vielfaltbonus 1; Kette 3, Bonus 0; Aufgaben: Farbenpracht 8 (geheim); Summe 27
+
+
+PARTIE 13 181 {"ev":"Ereignisse des letzten Schritts (1)\nPartieBeendet","erf":["Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine","Erfüllte Aufgaben: Farbkombination (5) aufgabe-03"],"off":"Offene Aufgaben (3): Farbharmonie (10) aufgabe-02Schlangentanz (7) aufgabe-12Vielfaltskönig (9) aufgabe-05","inv":"Invarianten (alle erfüllt)","phase":"Partiephase Beendet","scroll":[1280,1280]}
+AUFGABEN ["76: AufgabeErfuellt: KI-Gegner 2 (spieler-3) nimmt Farbkombination (aufgabe-03)"]
+Aufschlüsselung der Endwertung
+Spieler 1
+schlange-5: Gruppen keine, zusammen 0; Joker: Farbenfusion (farbenfusion-02) in keiner Gruppe; Farben für den Vielfaltbonus: keine, Vielfalt 0
+schlange-7: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette: keine ab 3 Farbkarten; Aufgaben: keine; Summe 0
+
+KI-Gegner 1
+schlange-6: Gruppen Rot×4 = 4, zusammen 4; Joker: Farbenfusion (farbenfusion-01) in keiner Gruppe; Farben für den Vielfaltbonus: Rot, Vielfalt 0
+schlange-8: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-02) in keiner Gruppe; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette 4, Bonus 0; Aufgaben: keine; Summe 4
+
+KI-Gegner 2
+schlange-3: Gruppen Violett×4 = 6, Violett×3 = 6, zusammen 12; Joker: Regenbogenschlange (regenbogenschlange-04) als Violett; Farben für den Vielfaltbonus: Violett, Vielfalt 0
+schlange-4: Gruppen Braun×3 = 4, Gelb×6 = 6, zusammen 10; Joker: Regenbogenschlange (regenbogenschlange-03) als Braun, Farbenfusion (farbenfusion-03) als Braun; Farben für den Vielfaltbonus: Gelb, Braun, Vielfalt 1
+
+Vielfaltbonus 1; Kette 6, Bonus 5; Aufgaben: Farbkombination 5; Summe 33
+
+
+PARTIE 14 177 {"ev":"Ereignisse des letzten Schritts (1)\nPartieBeendet","erf":["Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine","Erfüllte Aufgaben: keine"],"off":"Offene Aufgaben (3): Symmetriemeister (10) aufgabe-13Lila Riese (5) aufgabe-15Schlangenmeister (4) aufgabe-09","inv":"Invarianten (alle erfüllt)","phase":"Partiephase Beendet","scroll":[1280,1280]}
+AUFGABEN []
+Aufschlüsselung der Endwertung
+Spieler 1
+schlange-1: Gruppen keine, zusammen 0; Joker: Regenbogenschlange (regenbogenschlange-04) in keiner Gruppe; Farben für den Vielfaltbonus: keine, Vielfalt 0
+schlange-4: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 0; Kette: keine ab 3 Farbkarten; Aufgaben: keine; Summe 0
+
+KI-Gegner 1
+schlange-5: Gruppen Blau×5 = 5, Grün×3 = 9, zusammen 14; Joker: Farbenfusion (farbenfusion-03) als Grün, Regenbogenschlange (regenbogenschlange-03) als Grün; Farben für den Vielfaltbonus: Blau, Grün, Vielfalt 1
+schlange-6: Gruppen keine, zusammen 0; Farben für den Vielfaltbonus: keine, Vielfalt 0
+
+Vielfaltbonus 1; Kette 5, Bonus 0; Aufgaben: Farbkombination 5 (geheim); Summe 20
+
+KI-Gegner 2
+schlange-3: Gruppen Blau×5 = 8, Braun×5 = 10, zusammen 18; Joker: Farbenfusion (farbenfusion-02) als Blau, Farbenfusion (farbenfusion-04) als Braun; Farben für den Vielfaltbonus: Blau, Braun, Vielfalt 1
+schlange-7: Gruppen Gelb×6 = 6, Violett×3 = 8, zusammen 14; Joker: Farbenfusion (farbenfusion-01) als Violett; Farben für den Vielfaltbonus: Gelb, Violett, Vielfalt 1
+
+Vielfaltbonus 1; Kette 6, Bonus 5; Aufgaben: keine; Summe 38
+
+
+KONSOLENFEHLER []

@@ -1,0 +1,64 @@
+
+ RUN  v4.1.7 E:/Work/Privat/Schlangentanz_v2/.claude/worktrees/agent-a811891994bcc6ed4
+
+ ❯ src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts (39 tests | 4 failed) 81ms
+     × A9/D31 Farbharmonie: 'mit Regenbogenschlange: sie vervollst…' 7ms
+     × A9/D31 Farbharmonie: 'mit Farbenfusion: sie zählt als dritt…' 3ms
+     × A9/D31 Farbharmonie: 'D31: drei Regenbogenschlangen nebenei…' 2ms
+     × A9/D31 Farbharmonie: 'D31: Regenbogenschlange, Farbenfusion…' 2ms
+ ❯ src/entwicklung/szenarienAufgabenA.test.ts (7 tests | 1 failed) 53ms
+     × A9/A7.3: aufgabe-farbharmonie: die Regenbogenschlange am Ende der zweiten Schlange vervollständigt die violette Gruppe und löst Farbharmonie ein 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/entwicklung/szenarienAufgabenA.test.ts > X2 Paket A: Szenarien je Aufgabe, eingelöst mit echten Karten > A9/A7.3: aufgabe-farbharmonie: die Regenbogenschlange am Ende der zweiten Schlange vervollständigt die violette Gruppe und löst Farbharmonie ein
+AssertionError: expected [] to deeply equal [ 'AufgabeErfuellt', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "AufgabeErfuellt",
+-   "AufgabeAufgedeckt",
+- ]
++ []
+
+ ❯ src/entwicklung/szenarienAufgabenA.test.ts:48:39
+     46|     expect(aufgabenTypen(klicke(start, regenbogen('schlange-2', 0)).er…
+     47|     const { zustand, ereignisse } = klicke(start, regenbogen('schlange…
+     48|     expect(aufgabenTypen(ereignisse)).toEqual(['AufgabeErfuellt', 'Auf…
+       |                                       ^
+     49|     expect(namen(zustand.spieler[0].erfuellteAufgaben)).toEqual(['Farb…
+     50|     expect(namen(zustand.offeneAufgaben)).toEqual(['Gelber Schatz', 'F…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts > A9/D31: Farbharmonie – in den eigenen Schlangen mindestens eine Dreiergruppe jeder Farbe > A9/D31 Farbharmonie: 'mit Regenbogenschlange: sie vervollst…'
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts > A9/D31: Farbharmonie – in den eigenen Schlangen mindestens eine Dreiergruppe jeder Farbe > A9/D31 Farbharmonie: 'mit Farbenfusion: sie zählt als dritt…'
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts > A9/D31: Farbharmonie – in den eigenen Schlangen mindestens eine Dreiergruppe jeder Farbe > A9/D31 Farbharmonie: 'D31: drei Regenbogenschlangen nebenei…'
+ FAIL  src/engine/__tests__/regeln/A9_aufgaben_farbmengen.test.ts > A9/D31: Farbharmonie – in den eigenen Schlangen mindestens eine Dreiergruppe jeder Farbe > A9/D31 Farbharmonie: 'D31: Regenbogenschlange, Farbenfusion…'
+AssertionError: Farbharmonie.istErfuellt für Spieler 1: erwartet true: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/engine/__tests__/farbmengen_hilfen.ts:42:112
+     40|   it.each(tabelle)(`${abschnitt} ${aufgabe.name}: $fall`, ({ schlangen…
+     41|     const zustand = stellung(schlangen, gegner)
+     42|     expect(aufgabe.istErfuellt(zustand, 0), `${aufgabe.name}.istErfuel…
+       |                                                                                                                ^
+     43|   })
+     44| }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 41 passed (46)
+   Start at  08:42:47
+   Duration  5.26s (transform 1.47s, setup 812ms, import 1.57s, tests 135ms, environment 6.81s)
+
+exit 1
