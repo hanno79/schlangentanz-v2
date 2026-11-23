@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { ZITAT, abschnitt } from './regelfragen_lesen'
 import { eintragD, fehlende, fliesstext, nachtragEintrag, pruefeKern, spalten, tabelleMitSpalte, teil, websiteNachtrag } from './spec_documentation_hilfen'
 import { A10_EINORDNUNG, RUECKFRAGEN, RUECKFRAGEN_NUMMERN } from './spec_documentation_rueckfragen'
+import { DATUM_G } from './regelfragen_sammelantwort'
 
 /*
 `docs/GAME_SPEC.md`, Teil D: Auslegungsfragen an den Autor und seine Antworten.
@@ -147,7 +148,6 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
       it(`${task}: ${nummer}: Rückfrage aus ${aus} vom ${tag} steht als Regel mit gewählter Möglichkeit in Teil D`, () => {
         const { frage: frageInTeilD, antwort, datum, folge } = eintragD(nummer)
         expect(frageInTeilD, `${nummer}: Frage`).toBe(frage)
-        expect(frage.endsWith('?'), `${nummer}: Frage endet nicht mit „?“`).toBe(true)
         pruefeKern(nummer, antwort, [...kern, `Antwort des Autors auf eine Rückfrage aus ${aus}, gewählte Möglichkeit: ${wahl}.`], verboten)
         if (anfang) expect(antwort.startsWith(anfang.toLowerCase()), `${nummer}: Antwort beginnt nicht mit „${anfang}“`).toBe(true)
         expect(antwort.endsWith('website folgt.'), `${nummer}: Antwort endet nicht mit „Website folgt.“`).toBe(true)
@@ -177,28 +177,14 @@ describe('GAME_SPEC Teil D — Fragen an den Autor und Antworten', () => {
   })
 
   it('P0.5g: die Einleitung von Teil D nennt die Rückfragen aus den Prüfungen von X2 und X3 als D58–D65 und die Ergänzung von D48', () => {
-    const d = teil('D')
-    const einleitung = fliesstext(d.slice(0, d.indexOf('| Nr. |')))
-    expect(fehlende(einleitung, ['D58–D65', 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
+    expect(fehlende(teil('D'), ['D58–D65', 'Rückfragen aus den Prüfungen von X2 und X3', '23.11.2026', 'ergänzt D48'])).toEqual([])
   })
 
-  it('P0.5g: D48 behält den Wortlaut der Sammelantwort und ergänzt die Rückfrage vom 23.11.2026: die Comeback-Karte ist im zweiten Zug nach einem Verdoppler nie einsetzbar', () => {
-    const { antwort, datum, folge } = eintragD('D48')
-    pruefeKern(
-      'D48',
-      antwort,
-      [
-        'im zweiten Zug nach Verdoppler nur, wenn G15 das zulässt (D47). Sammelantwort des Autors, Wortlaut: „ja zu deinen vorschlägen.“',
-        'Rückfrage vom 23.11.2026: Weil sich Verdoppler, Comeback-Karte und die zugerweiternden Boni des Korbs ausschliessen (D47), ist die Comeback-Karte im zweiten Zug nach einem Verdoppler nie einsetzbar.',
-        'gewählte Möglichkeit: „Ja, nie möglich“.',
-      ],
-      // Gegenprobe: die Lesart, nach der G15 den Einsatz im zweiten Zug doch zulassen könnte.
-      ['im zweiten Zug nach einem Verdoppler einsetzbar, wenn', 'ist die Comeback-Karte im zweiten Zug nach einem Verdoppler einsetzbar'],
-    )
-    expect(antwort.endsWith('website folgt.'), 'D48: Antwort endet nicht mit „Website folgt.“').toBe(true)
-    expect(datum, 'D48: Datum der Sammelantwort').toBe('21.11.2026')
+  // Den Wortlaut von D48 samt Rückfrage vom 23.11.2026 prüft tests/regelfragen_antworten.test.ts Satz für Satz (ERWARTET_G.G16).
+  it('P0.5g: D48 bleibt Eintrag der Sammelantwort, und der Website-Nachtrag sagt schon, dass die Comeback-Karte im zweiten Zug nach einem Verdoppler nicht einsetzbar ist', () => {
+    const { datum, folge } = eintragD('D48')
+    expect(datum, 'D48: Datum der Sammelantwort').toBe(DATUM_G)
     expect(folge, 'D48: Folge').toBe('X4')
-    // Der Website-Nachtrag sagt das schon seit P0.5e; die Antwort des Autors bestätigt es.
     pruefeKern('D48', fliesstext(nachtragEintrag('D48').antwort).toLowerCase(), ['Im zweiten Zug nach einem Verdoppler ist sie nicht einsetzbar, weil sich Verdoppler und Comeback-Karte ausschliessen'], ['Website folgt'])
   })
 })

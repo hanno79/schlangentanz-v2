@@ -13,7 +13,7 @@
  */
 export type Rueckfrage = { frage: string; wahl: string; kern: string[]; verboten: string[]; anfang?: 'Ja:' | 'Nein:' }
 
-/** Rückfragen eines Tasks aus demselben Task (`aus`, zugleich die Spalte „Folge“), beantwortet am selben Tag. */
+/** Rückfragen, die `task` in Teil D aufnimmt: alle aus der Prüfung oder Umsetzung von `aus` (zugleich die Spalte „Folge“), alle vom selben Tag. */
 export type Rueckfragen = { task: string; aus: string; datum: string; eintraege: Record<string, Rueckfrage> }
 
 /**
