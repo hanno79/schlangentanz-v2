@@ -1,0 +1,78 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { deserialisiere, ermittleAktionen, serialisiere } from '../index'
+import { baukasten } from '../testing/szenario'
+import { verlangeTestwahl } from '../testing/testentscheidung'
+import { meldeZugerweiterung } from '../zuggrenzen'
+import { entscheidung, mitTestentscheidungen, spieleTestkarte, testkarte, TESTKARTE } from './rahmen_hilfen'
+import { aktionen, fuehreAus, verletzteInvarianten, zugBeenden } from './zugablauf_hilfen'
+
+// Prüfer X3: eigene Grenzfälle.
+afterEach(() => vi.restoreAllMocks())
+
+describe('Prüfer X3: Grenzfälle', () => {
+  it('G1 D56/D27: eine abgewehrte Fusion im ersten Zug nach Verdoppler sperrt die Fusion des zweiten Zuges nicht', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: false })
+      .hand(0, ['Farbenfusion', 'Verdoppler', 'Farbenfusion'])
+      .hand(1, ['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Grün'])
+      .schlange(0, ['Rot', 'Rot'])
+      .schlange(1, ['Blau', 'Blau'])
+      .zustand()
+    // Erster Zug: Fusion auf die gegnerische Schlange, abgewehrt.
+    const angriff = aktionen(start, 'FusionLegen').find((a) => a.typ === 'FusionLegen' && a.schlangenId === start.spieler[1].schlangen[0].id)!
+    const angesagt = fuehreAus(start, angriff).zustand
+    const abgewehrt = fuehreAus(angesagt, aktionen(angesagt, 'Reagieren').find((a) => a.typ === 'Reagieren' && a.farbenschutzId !== null)!).zustand
+    expect(abgewehrt.spieler[1].schlangen[0].fusionen).toEqual([])
+    // Verdoppler hat keinen Platz mehr (die Sonderkarte des Zuges ist die Fusion) -> Zug beenden, kein zweiter Zug.
+    expect(ermittleAktionen(abgewehrt).some((a) => a.typ === 'VerdopplerSpielen')).toBe(false)
+    // Andere Reihenfolge: Verdoppler zuerst, dann im zweiten Zug Fusion abgewehrt ... hier: Verdoppler im ersten Zug, Fusion im zweiten.
+    const v = fuehreAus(start, aktionen(start, 'VerdopplerSpielen')[0]).zustand
+    const zweiter = fuehreAus(v, zugBeenden(v)).zustand
+    expect(zweiter.zug.teilzug).toBe(2)
+    expect(aktionen(zweiter, 'FusionLegen').length, 'D27: im zweiten Zug ist wieder eine Fusion erlaubt').toBeGreaterThan(0)
+    expect(verletzteInvarianten(zweiter)).toEqual([])
+  })
+
+  it('G2 A10/D55: wird die letzte Karte aufgedeckt und wählt der Gegner danach „stapel“, zieht er aus leerem Stapel nichts; nichts geht verloren', () => {
+    const austragen = mitTestentscheidungen()
+    try {
+      testkarte((zustand, index) => verlangeTestwahl(zustand, index, zustand.spieler[index].ablagestapel.at(-1)!.id))
+      const start = baukasten({ spielerzahl: 3, erweiterung: true })
+        .hand(0, [TESTKARTE, 'Blau'])
+        .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'])
+        .hand(2, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'])
+        .stapelBehalten(1)
+        .zustand()
+      const erste = spieleTestkarte(start)
+      expect(erste.zustand.partiephase).toBe('Schlussrunde')
+      const zweite = entscheidung(erste.zustand, 'spieler-2')
+      const geladen = deserialisiere(serialisiere(zweite.zustand))
+      const dritte = entscheidung(geladen, 'stapel')
+      expect(dritte.zustand.spieler[1].hand).toHaveLength(5)
+      expect(dritte.zustand.aufgedeckt).toEqual([])
+      expect(dritte.zustand.spieler[0].ablagestapel, 'die aufgedeckte Karte kommt auf den Ablagestapel des Auslösers').toHaveLength(zweite.zustand.spieler[0].ablagestapel.length + 1)
+      expect(dritte.zustand.schlussrundeAusloeser).toBe(0)
+      expect(verletzteInvarianten(dritte.zustand)).toEqual([])
+    } finally {
+      austragen()
+    }
+  })
+
+  it('G3 D43/D46: Zusatzaktion nur für gezogene Karten, aber die gezogene Karte ist schon auf dem normalen Platz gespielt: eine nicht gezogene zweite Farbkarte bekommt keinen Platz', () => {
+    const zustand0 = baukasten({ spielerzahl: 2, erweiterung: true })
+      .hand(0, ['Rot', 'Blau'])
+      .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'])
+      .aendere((z) => {
+        const rot = z.spieler[0].hand[0].id
+        meldeZugerweiterung(z.zug, 'Schlangenkorb', [{ quelle: 'Schlangenkorb', erlaubt: ['Farbkarte'], nurKarten: [rot] }])
+      })
+      .zustand()
+    // Blau (nicht gezogen) auf den normalen Farbplatz, dann Rot auf den Korbplatz: beides geht.
+    const blau = zustand0.spieler[0].hand[1].id
+    const rot = zustand0.spieler[0].hand[0].id
+    const nachBlau = fuehreAus(zustand0, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: blau, ziel: { art: 'neueSchlange' } }).zustand
+    expect(aktionen(nachBlau, 'FarbkarteLegen').some((a) => 'karteId' in a && a.karteId === rot)).toBe(true)
+    // Umgekehrt: Rot zuerst (belegt den normalen Platz nach der Zuordnung) – Blau muss trotzdem gehen, weil Rot auf den Korbplatz umziehen kann.
+    const nachRot = fuehreAus(zustand0, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: rot, ziel: { art: 'neueSchlange' } }).zustand
+    expect(aktionen(nachRot, 'FarbkarteLegen').some((a) => 'karteId' in a && a.karteId === blau), 'Zuordnung statt Zählung').toBe(true)
+  })
+})

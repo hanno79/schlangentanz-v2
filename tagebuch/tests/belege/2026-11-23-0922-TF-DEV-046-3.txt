@@ -1,0 +1,29 @@
+{
+ "saat": "4242",
+ "spieler": "3",
+ "erweiterung": "0",
+ "schritt": "Schritt 176",
+ "phase": "Partiephase\nBeendet",
+ "invarianten": "Invarianten (alle erfüllt)",
+ "zaehler": {
+  "ki": 119,
+  "mensch": 57,
+  "verletzt": 0,
+  "ereignisse": {
+   "KarteGespielt": 80,
+   "KartenGezogen": 68,
+   "ZugBegonnen": 66,
+   "KarteAngesagt": 14,
+   "AbwehrGefragt": 15,
+   "AnsageEntschieden": 14,
+   "Abgewehrt": 3,
+   "Ausgesetzt": 2,
+   "SchlussrundeBegonnen": 1
+  }
+ },
+ "konsolenfehler": [],
+ "scroll": [
+  1280,
+  1280
+ ]
+}

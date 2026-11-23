@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TF-DEV-046 Eine Zufallspartie ohne und eine mit Erweiterung laufen am Entwicklertisch mit Klicks bis „PartieBeendet“, ohne verletzte Invariante und ohne Konsolenfehler. — Schlangentanz v2</title>
+<link rel="stylesheet" href="../stil.css">
+<link rel="stylesheet" href="../eigen.css">
+<script src="../tagebuch.js" defer></script>
+</head>
+<body class="seite-testfall">
+<header class="kopf"><div class="innen">
+<p class="projektname">Schlangentanz v2</p>
+<p class="angaben"><span class="status" data-stand="laufend">laufend</span> &middot; <span>seit 31.05.2026</span> &middot; <span>zuletzt aktualisiert 21.11.2026</span></p>
+</div></header>
+<div class="rahmen">
+<nav aria-label="Gliederung"><ul><li><a href="../index.html">Überblick</a></li><li><a href="../auftrag.html">1 Auftrag</a></li><li><a href="../datengrundlage.html">2 Datengrundlage</a></li><li><a href="../vorgehen.html">3 Vorgehen</a></li><li><a href="../ergebnisse.html">4 Ergebnisse</a></li><li><a href="../entscheidungen.html">5 Entscheidungen</a></li><li><a href="../offen.html">6 Offen &amp; Ausblick</a></li><li class="gruppe">Nachschlagen</li><li><a href="../verlauf.html">Verlauf</a></li><li><a href="../abbildungen.html">Abbildungen</a></li><li class="gruppe">Prüfen</li><li><a href="../tests.html" class="aktiv" aria-current="page">Tests</a></li><li><a href="../durchgaenge.html">Durchgänge</a></li></ul></nav>
+<main>
+<h1>TF-DEV-046 Eine Zufallspartie ohne und eine mit Erweiterung laufen am Entwicklertisch mit Klicks bis „PartieBeendet“, ohne verletzte Invariante und ohne Konsolenfehler.</h1><p class="etiketten"><span class="etikett">Bereich Entwicklertisch unter /dev (nur Testhook-Build)</span><span class="etikett">Regression nein</span><span class="etikett">Priorität mittel</span><span class="etikett">Art manuell</span></p>
+<section class="kasten-ziel"><h2>Worum es geht</h2><p>X3 baut den Zugablauf um: Grenzen des Zuges, Prüfung der Schlussrunde nach jeder Aktion, neue Zustandsfelder. Eine ganze Partie am Entwicklertisch zeigt, dass das gewöhnliche Spiel davon nichts merkt, mit und ohne Erweiterung.</p><h2>Bestanden, wenn</h2><p>Beide Partien erreichen „Partiephase: Beendet“ mit „Aktionen der Engine (0)“. Nach jedem Schritt steht „Invarianten (alle erfüllt)“, die Konsole hat keinen Fehler, und <code>scrollWidth</code> ist gleich <code>clientWidth</code>.</p><h2>Fehlgeschlagen, wenn</h2><p>Eine Partie bleibt stehen, eine Invariante ist verletzt, oder die Konsole meldet einen Fehler.</p></section>
+<section><h2>Herkunft</h2><dl><dt>Herkunft</dt><dd>Änderung</dd><dt>Angelegt</dt><dd>23.11.2026</dd><dt>Änderung</dt><dd>task/X3-zusatzaktionen (PR #108)</dd></dl></section>
+<section><h2>Vorbedingungen</h2><table><thead><tr><th>Was</th><th>Wert</th></tr></thead><tbody><tr><td>Anwendung</td><td>Testhook-Build, Desktop 1280×900, Stand ab Commit 686159e</td></tr></tbody></table></section>
+<section><h2>Testdaten</h2><p>Partie 1: Saat 4242, 3 Spieler, Erweiterung 0. Partie 2: Saat 777, 4 Spieler, Erweiterung 1.</p></section>
+<section><h2>Schritte</h2><table><thead><tr><th>#</th><th>Wo</th><th>Tun</th><th>Eingabe</th><th>Worauf achten</th></tr></thead><tbody><tr><td>1</td><td>`/dev`</td><td>Saat und Spieler eintragen, Erweiterung wählen, „Partie starten“</td><td>4242, 3, 0</td><td>Titel „Partie aus Saat 4242, 3 Spieler, ohne Erweiterung“</td></tr><tr><td>2</td><td>Kopf und Aktionen</td><td>entscheidet eine KI, „KI-Schritt (solide)“ klicken, sonst den ersten Knopf unter „Aktionen der Engine“</td><td></td><td>nach jedem Klick „Invarianten (alle erfüllt)“</td></tr><tr><td>3</td><td>Lage</td><td>Schritt 2 wiederholen, bis „Partiephase: Beendet“</td><td></td><td>Ereignis „PartieBeendet“, „Aktionen der Engine (0)“</td></tr><tr><td>4</td><td>`/dev`</td><td>Schritte 1 bis 3 mit Partie 2</td><td>777, 4, 1</td><td>Titel „… 4 Spieler, mit Erweiterung“, endet ebenso</td></tr></tbody></table></section>
+<section><h2>Grenzfälle</h2><p>Keine eigenen Grenzfälle.</p></section>
+<section><h2>Nicht abgedeckte Grenzfälle</h2><p>Zusatzaktionen und Entscheidungen kommen in Zufallspartien noch nicht vor, weil keine Karte sie auslöst (X4 bis X6); sie prüfen TF-DEV-043 bis TF-DEV-045.</p></section>
+<section><h2>Läufe</h2><article class="lauf status-bestanden"><h3><time datetime="2026-11-23">23.11.2026 09:22</time> <span class="status status-bestanden">bestanden</span></h3><p class="angaben">Claude Code (Prüfer X3) &middot; agent &middot; pruefung-X3 @ <span class="commit" title="686159eb5b975d58441c1acfaf14addf2f7204ab">686159e</span> / Playwright Chromium 1.60.0, 1280x900 Maus, Klicks auf KI-Schritt (solide) und erste Aktion</p><p>Saat 4242, 3 Spieler, ohne: Schritt 176, Partiephase Beendet, 119 KI- und 57 Menschenschritte, nach jedem Schritt Invarianten alle erfüllt (0 Verletzungen), 0 Konsolenfehler, scrollWidth 1280 = clientWidth. Saat 777, 4 Spieler, mit: Schritt 173, Beendet, 125/48 Schritte, 0 Verletzungen, 0 Konsolenfehler, 1280 = 1280.</p><ul class="belege"><li><a href="belege/2026-11-23-0922-TF-DEV-046-1.png"><img class="beleg-vorschau" src="belege/2026-11-23-0922-TF-DEV-046-1.png" alt="Beleg 2026-11-23-0922-TF-DEV-046-1.png" loading="lazy"></a></li><li><a href="belege/2026-11-23-0922-TF-DEV-046-2.png"><img class="beleg-vorschau" src="belege/2026-11-23-0922-TF-DEV-046-2.png" alt="Beleg 2026-11-23-0922-TF-DEV-046-2.png" loading="lazy"></a></li><li><a href="belege/2026-11-23-0922-TF-DEV-046-3.txt">2026-11-23-0922-TF-DEV-046-3.txt</a></li><li><a href="belege/2026-11-23-0922-TF-DEV-046-4.txt">2026-11-23-0922-TF-DEV-046-4.txt</a></li></ul></article></section>
+</main>
+</div>
+<footer>Erzeugt aus den Quellen unter <code>tagebuch/</code>. Nicht von Hand bearbeiten.</footer>
+</body>
+</html>

@@ -1,0 +1,85 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { anwendeAktion, ermittleAktionen, erzeugeZufall } from '../index'
+import type { Spielzustand } from '../index'
+import { baukasten } from '../testing/szenario'
+import { meldeZugerweiterung } from '../zuggrenzen'
+import { verlangeTestwahl } from '../testing/testentscheidung'
+import { sichtFuer } from '../../ki/sicht'
+import { mischeVerborgenes } from '../../ki/__tests__/verborgenes'
+import { entscheidung, mitTestentscheidungen, spieleTestkarte, testkarte, TESTKARTE } from './rahmen_hilfen'
+
+// Prüfer X3: Störprobe B2. Was ein Spieler nicht sehen darf, wird neu gemischt; Sicht und Ereignisse müssen gleich bleiben.
+
+afterEach(() => vi.restoreAllMocks())
+
+/** Mischt für `fuer` neu und hält die Zusatzaktionen „nur für gezogene Karten“ stimmig: sie nennen die Karten an denselben Handplätzen des Spielers am Zug. */
+function gemischt(zustand: Spielzustand, fuer: number, saat: number): Spielzustand {
+  const neu = mischeVerborgenes(zustand, fuer, erzeugeZufall(saat))
+  const amZug = zustand.zug.spielerIndex
+  neu.zug.zusatzaktionen = zustand.zug.zusatzaktionen.map((zusatz) => {
+    if (zusatz.nurKarten === null) return zusatz
+    const plaetze = zusatz.nurKarten.map((id) => zustand.spieler[amZug].hand.findIndex((karte) => karte.id === id))
+    return { ...zusatz, nurKarten: plaetze.map((platz, i) => (platz < 0 ? zusatz.nurKarten![i] : neu.spieler[amZug].hand[platz].id)) }
+  })
+  return neu
+}
+
+describe('Prüfer X3: Störprobe B2', () => {
+  it('B2/D43: die Sicht eines Gegners bleibt gleich, wenn die verdeckt gezogenen Karten andere sind', () => {
+    const zustand = baukasten({ spielerzahl: 3, erweiterung: true, zufall: erzeugeZufall(4711) })
+      .haendeAuffuellen()
+      .aendere((stand) => {
+        const gezogen = stand.spieler[0].hand.slice(0, 3).map((karte) => karte.id)
+        meldeZugerweiterung(stand.zug, 'Schlangenkorb', [
+          { quelle: 'Schlangenkorb', erlaubt: ['Farbkarte', 'Sonderkarte'], nurKarten: gezogen },
+          { quelle: 'Schlangenkorb', erlaubt: ['Farbkarte', 'Sonderkarte'], nurKarten: gezogen },
+        ])
+      })
+      .zustand()
+    for (const fuer of [1, 2]) {
+      const vorher = JSON.stringify(sichtFuer(zustand, fuer))
+      for (let saat = 1; saat <= 25; saat += 1) {
+        const anders = gemischt(zustand, fuer, saat)
+        expect(JSON.stringify(sichtFuer(anders, fuer)), `Sicht von ${fuer}, Saat ${saat}`).toBe(vorher)
+      }
+    }
+  })
+
+  it('B2/D52: die Ereignisse der ganzen Entscheidungskette bleiben gleich, wenn Stapel und fremde Hände neu gemischt sind', () => {
+    const austragen = mitTestentscheidungen()
+    try {
+      testkarte((zustand, index) => verlangeTestwahl(zustand, index, zustand.spieler[index].ablagestapel.at(-1)!.id))
+      const start = baukasten({ spielerzahl: 3, erweiterung: true, zufall: erzeugeZufall(99) })
+        .hand(0, [TESTKARTE, 'Blau', 'Rot', 'Gelb', 'Grün'])
+        .haendeAuffuellen()
+        .zustand()
+      const ablauf = (anfang: Spielzustand, letzte: string) => {
+        const erste = spieleTestkarte(anfang)
+        const zweite = entscheidung(erste.zustand, 'spieler-3')
+        const dritte = anwendeAktion(zweite.zustand, ermittleAktionen(zweite.zustand).find((a) => a.typ === 'Entscheiden' && a.wahl === letzte)!)
+        return { ereignisse: [erste.ereignisse, zweite.ereignisse], letzte: dritte.ereignisse, sicht1: [erste.zustand, zweite.zustand, dritte.zustand].map((z) => JSON.stringify(sichtFuer(z, 1))) }
+      }
+      // Gemischt wird, was Spieler 1 (Index 0, am Zug) nicht sieht: die Hände der Gegner und der Stapel.
+      let geprueft = 0
+      for (const letzte of ['stapel', 'aufgedeckte']) {
+        const basis = ablauf(start, letzte)
+        for (let saat = 1; saat <= 60; saat += 1) {
+          const anders = mischeVerborgenes(start, 0, erzeugeZufall(saat))
+          // Die Test-Karte muss bei Spieler 1 bleiben; sonst ist es ein anderer Zug.
+          const testId = start.spieler[0].hand.find((karte) => karte.typ === 'Sonderkarte' && karte.name === TESTKARTE)!.id
+          if (!anders.spieler[0].hand.some((karte) => karte.id === testId) || anders.spieler[0].hand.filter((karte) => karte.typ === 'Sonderkarte' && karte.name === TESTKARTE).length !== 1) continue
+          const probe = ablauf(anders, letzte)
+          // Die aufgedeckte Karte ist offen und darf sich ändern; verglichen wird ohne ihre Id.
+          const ohneAufgedeckt = (wert: unknown, aufgedecktId: string) => JSON.stringify(wert).split(aufgedecktId).join('AUFGEDECKT')
+          expect(ohneAufgedeckt(probe.ereignisse, anders.nachziehstapel[0].id), `Saat ${saat}`).toBe(ohneAufgedeckt(basis.ereignisse, start.nachziehstapel[0].id))
+          expect(ohneAufgedeckt(probe.letzte, anders.nachziehstapel[0].id), `Saat ${saat}, letzte Wahl ${letzte}`).toBe(ohneAufgedeckt(basis.letzte, start.nachziehstapel[0].id))
+          geprueft += 1
+        }
+      }
+      console.info(`Störprobe Ereignisse: ${geprueft} gemischte Abläufe verglichen`)
+      expect(geprueft).toBeGreaterThan(5)
+    } finally {
+      austragen()
+    }
+  })
+})
