@@ -3,6 +3,7 @@ import { anwendeAktion, deserialisiere, ermittleAktionen, ermittleEntscheider, p
 import type { Spielzustand } from '../index'
 import { ENTSCHEIDUNGSREGISTER } from '../entscheidungsregister'
 import { verlangeEntscheidung } from '../reaktion'
+import { entferneTestbedingungen, immer, setzeTestbedingungen } from '../testing/testaufgaben'
 import { baukasten } from '../testing/szenario'
 import { TEST_GEGNERWAHL, TEST_KARTENWAHL, verlangeTestwahl } from '../testing/testentscheidung'
 import { entscheidung, mitTestentscheidungen, pruefeSchritt, spieleTestkarte, testkarte, TESTKARTE, typenDer } from './rahmen_hilfen'
@@ -170,5 +171,24 @@ describe('X3: Entscheidung und Abwehr (D33) kommen sich nicht in die Quere', () 
     const erste = ersteFrage()
     const zweite = entscheidung(erste, 'spieler-2')
     for (const wahl of ['aufgedeckte', 'stapel']) expect(() => pruefeSchritt(zweite.zustand, anwendeAktion(zweite.zustand, { typ: 'Entscheiden', spielerId: 'spieler-2', wahl }))).not.toThrow()
+  })
+})
+
+describe('A9/X3: die Aufgabenprüfung wartet, bis die Entscheidung gefallen ist', () => {
+  afterEach(() => {
+    entferneTestbedingungen()
+  })
+
+  it('A9: solange eine Entscheidung offen ist, löst niemand eine Aufgabe ein; nach der letzten Wahl prüft die Engine für den Spieler am Zug', () => {
+    const start = tisch()
+    const name = start.offeneAufgaben[0].name
+    setzeTestbedingungen({ [name]: immer(0) })
+    const erste = spieleTestkarte(start)
+    expect(typenDer(erste.ereignisse), 'A9: keine Prüfung, solange Spieler 1 noch entscheidet').not.toContain('AufgabeErfuellt')
+    const zweite = entscheidung(erste.zustand, 'spieler-2')
+    expect(typenDer(zweite.ereignisse), 'A9: keine Prüfung, solange der Gegner noch entscheidet').not.toContain('AufgabeErfuellt')
+    const dritte = entscheidung(zweite.zustand, 'aufgedeckte')
+    expect(typenDer(dritte.ereignisse).slice(0, 3)).toEqual(['Entschieden', 'KartenVersetzt', 'AufgabeErfuellt'])
+    expect(dritte.zustand.spieler[0].erfuellteAufgaben.map((aufgabe) => aufgabe.name)).toEqual([name])
   })
 })

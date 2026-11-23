@@ -5,7 +5,7 @@ import { deckeAuf, zieheVomStapel } from '../../stapel'
 import { baukasten } from '../../testing/szenario'
 import { verlangeTestwahl } from '../../testing/testentscheidung'
 import { entscheidung, mitTestentscheidungen, spieleTestkarte, testkarte, TESTKARTE, typenDer } from '../rahmen_hilfen'
-import { ereignisseVom, folge, fuehreAus, hand, spieleZug, zugBeenden } from '../zugablauf_hilfen'
+import { aktionen, ereignisseVom, folge, fuehreAus, hand, spieleZug, zugBeenden } from '../zugablauf_hilfen'
 
 /*
 X3, Kriterium 2: Karten mitten im Zug ziehen und offen aufdecken (`stapel.ts`),
@@ -101,6 +101,28 @@ describe('A10/D55: wer mitten im Zug die letzte Karte zieht', () => {
     const gespielt = fuehreAus(start, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: start.spieler[0].hand[0].id, ziel: { art: 'neueSchlange' } }).zustand
     const ende = fuehreAus(gespielt, zugBeenden(gespielt))
     expect(ereignisseVom(ende.ereignisse, 'SchlussrundeBegonnen')).toEqual([{ typ: 'SchlussrundeBegonnen', ausloeser: 1 }])
+  })
+})
+
+describe('D57: eben gezogene Karten im selben Zug', () => {
+  it('D57: zieht der Spieler am Zug mitten im Zug die letzte Karte, darf er die eben gezogenen Karten im selben Zug noch ausspielen', () => {
+    testkarte((zustand, spielerIndex) => {
+      zieheVomStapel(zustand, spielerIndex, 3)
+    })
+    const start = baukasten({ spielerzahl: 2, erweiterung: true })
+      .hand(0, [TESTKARTE])
+      .hand(1, ['Blau', 'Rot', 'Gelb', 'Grün', 'Braun'])
+      .stapelOben(['Rot', 'Gelb'])
+      .stapelBehalten(2)
+      .zustand()
+    const [rot, gelb] = start.nachziehstapel.map((karte) => karte.id)
+    const gezogen = spieleTestkarte(start).zustand
+    expect(gezogen.partiephase, 'die zwei Karten waren die letzten').toBe('Schlussrunde')
+    const angeboten = aktionen(gezogen, 'FarbkarteLegen').map((aktion) => ('karteId' in aktion ? aktion.karteId : null))
+    expect(angeboten, 'D57: die eben gezogenen Karten sind spielbar').toEqual(expect.arrayContaining([rot, gelb]))
+    const gelegt = fuehreAus(gezogen, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: rot, ziel: { art: 'neueSchlange' } }).zustand
+    expect(gelegt.spieler[0].schlangen[0].karten.map((karte) => karte.id)).toEqual([rot])
+    expect(ereignisseVom(fuehreAus(gelegt, zugBeenden(gelegt)).ereignisse, 'KartenGezogen'), 'D57: danach beginnt die Schlussrunde ohne Nachziehen').toEqual([])
   })
 })
 

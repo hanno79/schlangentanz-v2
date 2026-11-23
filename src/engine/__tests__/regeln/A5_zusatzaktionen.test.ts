@@ -100,6 +100,29 @@ describe('A8.1/D46: Zusatzaktionen kommen obendrauf', () => {
   })
 })
 
+describe('D56: gespielt ist gespielt', () => {
+  it('D56: wehrt der Gegner die Farbenfusion mit Farbenschutz ab, ist die Fusion des Zuges trotzdem verbraucht; eine zweite geht auch über eine Zusatzaktion nicht', () => {
+    const start = baukasten({ spielerzahl: 2, erweiterung: true })
+      .hand(0, ['Farbenfusion', 'Farbenfusion'])
+      .hand(1, ['Farbenschutz', 'Blau', 'Rot', 'Gelb', 'Grün'])
+      .schlange(0, ['Rot', 'Rot'])
+      .schlange(1, ['Blau', 'Blau'])
+      .aendere((zustand) => meldeZugerweiterung(zustand.zug, 'Comeback', [FREI, FREI]))
+      .zustand()
+    const gegnerSchlange = start.spieler[1].schlangen[0].id
+    const angriff = aktionen(start, 'FusionLegen').find((aktion) => aktion.typ === 'FusionLegen' && aktion.schlangenId === gegnerSchlange)!
+    const angesagt = fuehreAus(start, angriff).zustand
+    const abgewehrt = fuehreAus(angesagt, aktionen(angesagt, 'Reagieren').find((aktion) => aktion.typ === 'Reagieren' && aktion.farbenschutzId !== null)!).zustand
+    expect(abgewehrt.spieler[1].schlangen[0].fusionen, 'die Fusion ist abgewehrt').toEqual([])
+    const zweite = karteVon(abgewehrt, 'Farbenfusion')
+    expect(mitWirkung(abgewehrt, zweite), 'D56: keine zweite Fusion mit Wirkung').toBe(false)
+    const rot = abgewehrt.spieler[0].schlangen[0].karten.map((karte) => karte.id) as [string, string]
+    expect(grund(abgewehrt, { typ: 'FusionLegen', spielerId: 'spieler-1', karteId: zweite, schlangenId: abgewehrt.spieler[0].schlangen[0].id, kartenIds: rot })).toBe(
+      'Pro Zug nur eine Farbenfusion (A7.7); in diesem Zug ist schon eine gespielt.',
+    )
+  })
+})
+
 describe('A8.1: eine Zusatzaktion, die keine Karte spielt', () => {
   it('A8.1/D46: eine benannte Zusatzaktion (wie „zwei abwerfen, drei ziehen“) verbraucht eine Zusatzaktion; zweimal geht, ein drittes Mal nicht', () => {
     const zustand = structuredClone(tisch(['Blau'], [FREI, FREI]))
