@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-064
+id: TF-ENGINE-069
 titel: War die aufgedeckte Karte die letzte des Stapels und wählt der Gegner danach „stapel“, zieht er nichts, die aufgedeckte Karte kommt auf den Ablagestapel des Auslösers, und keine Karte geht verloren.
 art: manuell
 regression: nein
@@ -46,4 +46,4 @@ Vitest-Fall „G2“ mit `verlangeTestwahl`, `entscheidung` aus `rahmen_hilfen.t
 
 ## Nicht abgedeckte Grenzfälle
 
-Keine weiteren; der Fall mit einer Karte nach dem Aufdecken steht in TF-DEV-045.
+Keine weiteren; der Fall mit einer Karte nach dem Aufdecken steht in TF-DEV-048.

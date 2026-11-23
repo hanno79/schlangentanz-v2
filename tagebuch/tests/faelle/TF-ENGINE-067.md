@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-062
+id: TF-ENGINE-067
 titel: Mischt man verdeckte Karten neu, bleiben die KI-Sicht eines Gegners und die Ereignisse einer Entscheidungskette gleich; nur die offen aufgedeckte Karte darf sich ändern.
 art: manuell
 regression: nein

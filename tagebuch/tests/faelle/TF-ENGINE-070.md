@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-065
+id: TF-ENGINE-070
 titel: Gilt eine Zusatzaktion nur für eine gezogene Karte, hängt nicht von der Reihenfolge ab, ob eine zweite Farbkarte noch Platz hat.
 art: manuell
 regression: nein

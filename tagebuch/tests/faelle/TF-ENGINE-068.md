@@ -1,5 +1,5 @@
 ---
-id: TF-ENGINE-063
+id: TF-ENGINE-068
 titel: Eine abgewehrte Farbenfusion verbraucht nur die Fusion ihres Teilzugs; im zweiten Zug nach einem Verdoppler ist wieder eine Fusion erlaubt.
 art: manuell
 regression: nein

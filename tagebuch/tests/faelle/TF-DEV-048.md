@@ -1,5 +1,5 @@
 ---
-id: TF-DEV-045
+id: TF-DEV-048
 titel: Nimmt ein Gegner im Szenario entscheidung-letzte-karte die letzte Stapelkarte, löst Spieler 1 die Schlussrunde aus, spielt seinen Zug zu Ende, und danach hat jeder Gegner noch genau einen Zug.
 art: manuell
 regression: nein
@@ -44,4 +44,4 @@ Szenario `entscheidung-letzte-karte`: wie `entscheidung-gegner`, aber nach dem A
 
 ## Nicht abgedeckte Grenzfälle
 
-Dass ein Gegner aus dem leeren Stapel nichts zieht, wenn schon die aufgedeckte Karte die letzte war, prüft TF-ENGINE-064.
+Dass ein Gegner aus dem leeren Stapel nichts zieht, wenn schon die aufgedeckte Karte die letzte war, prüft TF-ENGINE-069.

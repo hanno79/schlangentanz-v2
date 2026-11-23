@@ -47,4 +47,4 @@ Die Partie bleibt im Speicher des Browsers; eine neue Partie oder ein frischer B
 
 ## Nicht abgedeckte Grenzfälle
 
-Die übrigen drei Geräteklassen prüft `npm run test:layout`; eine offene Entscheidung am Tisch prüft TF-DEV-047.
+Die übrigen drei Geräteklassen prüft `npm run test:layout`; eine offene Entscheidung am Tisch prüft TF-DEV-050.

@@ -1,42 +1,51 @@
 ---
 id: TF-ENGINE-066
-titel: Die Engine führt Zusatzaktionen, Zugerweiterungen, Ziehen mitten im Zug und Entscheidungen eines Gegners nach A5, A7.7, A7.8, A8, A10, D46, D47, D50, D52, D55, D56 und D57.
-art: automatisch
-regression: ja
+titel: Mit zufällig gewählten Aktionen liefert die Engine nach X3 je Schritt dieselben Aktionen, Ereignisse und Spielstände wie vor X3, ohne die neuen X3-Felder.
+art: manuell
+regression: nein
 prioritaet: hoch
 herkunft: aenderung
 angelegt: 2026-11-23
 veraendert_daten: nein
-skript: src/engine/__tests__/regeln/A5_zusatzaktionen.test.ts
 aenderung: task/X3-zusatzaktionen (PR #108)
 ---
 
 ## Worum es geht
 
-X3 baut den Rahmen, auf dem Comeback, Risiko-Karte und Schlangenkorb aufsetzen. Die Regeltests prüfen ihn mit Test-Zusatzaktionen und Test-Entscheidungen, weil die echten Karten erst mit X4 bis X6 kommen.
+X3 verlegt die Zuggrenzen von Verdoppler und Farbenfusion in einen Rahmen und prüft die Schlussrunde nach jeder Aktion. Das Basis-Spiel darf sich dadurch nicht ändern. Die Probe spielt Partien mit eigenen Saaten vor und nach X3 und vergleicht eine Prüfsumme.
 
 ## Bestanden, wenn
 
-Die sechs Dateien `regeln/A5_zusatzaktionen.test.ts`, `regeln/A7.8_zugerweiterung.test.ts`, `regeln/A10_ziehen_im_zug.test.ts`, `regeln/A5_ueberhand_ausserhalb.test.ts`, `entscheidung.test.ts` und `src/ki/sicht.test.ts` sind grün.
+Die SHA-256-Summen über 120 Partien ohne und 60 mit Erweiterung (Zufallswahl) und 30 Partien mit der Zufalls-KI sind auf der Merge-Basis 589e2a7 und auf 686159e gleich, mit gleicher Schrittzahl (21'625, 11'148, 5'387).
 
 ## Fehlgeschlagen, wenn
 
-Ein Test dieser Dateien ist rot.
+Eine Summe oder eine Schrittzahl weicht ab.
 
 ## Vorbedingungen
 
 | Was | Wert |
 |---|---|
-| Anwendung | Repo ab Commit 686159e |
+| Anwendung | Repo, einmal auf 589e2a7 und einmal auf 686159e ausgecheckt |
 
 ## Testdaten
 
-Baukasten-Zustände der Tests; Test-Karte und Test-Entscheidungen aus `rahmen_hilfen.ts` und `testing/testentscheidung.ts`.
+Saaten 70001–70120 (ohne), 71001–71060 (mit), 72001–72030 (Zufalls-KI), Spielerzahl reihum 2, 3, 4; Wahl-Zufall mit Saat × 7 + 3.
+
+## Schritte
+
+| # | Wo | Tun | Eingabe | Worauf achten |
+|---|---|---|---|---|
+| 1 | Repo | Probedatei aus dem Beleg als `src/engine/__tests__/x3_pruefer_probe.test.ts` ablegen |  | Datei liegt neben den anderen Engine-Tests |
+| 2 | Konsole | auf 589e2a7 wechseln und ausführen | `git switch --detach 589e2a72`, dann `X3_PROBE_AUS=<ordner>/basis.txt npx vitest run src/engine/__tests__/x3_pruefer_probe.test.ts` | Exit-Code 0, fünf Zeilen mit Partien, Schritten und Summe |
+| 3 | Konsole | auf 686159e wechseln und dasselbe ausführen | `git switch pruefung-X3`, Ausgabe nach `<ordner>/x3.txt` | Exit-Code 0 |
+| 4 | Konsole | die ersten drei Zeilen beider Dateien vergleichen |  | Schritte und Summe gleich: 21'625, 11'148, 5'387 |
+| 5 | Repo | Probedatei löschen |  | `git status` ist leer |
 
 ## Technische Prüfung
 
-`npx vitest run` mit den sechs Dateien; erwartet Exit-Code 0.
+Eine Vitest-Datei unter `src/engine/__tests__/` spielt jede Partie mit `erstellePartie`, `ermittleAktionen` und `anwendeAktion` und füttert je Schritt die Aktionsliste, die Ereignisse und `serialisiere(zustand)` ohne `entscheidung`, `aufgedeckt`, `zug.zusatzaktionen`, `zug.verwendet` und `zug.runde` in einen SHA-256. Die Datei liegt nur während der Probe im Repo und wird danach gelöscht; ihr Inhalt steht im Beleg des Laufs.
 
 ## Nicht abgedeckte Grenzfälle
 
-Die eigenen Grenzfälle des Prüfers stehen in TF-ENGINE-063 bis TF-ENGINE-065.
+Die solide KI prüft TF-KI-022, weil sie zusätzlich die Sicht und die Zugsuche benutzt.

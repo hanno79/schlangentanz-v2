@@ -36,14 +36,14 @@ Saaten wie oben; Strategie `solideKi` aus `src/ki/strategien/index.ts`.
 
 | # | Wo | Tun | Eingabe | Worauf achten |
 |---|---|---|---|---|
-| 1 | Repo und Konsole | wie TF-ENGINE-061, Schritte 1 bis 3 |  | Dateien `basis.txt` und `x3.txt` |
+| 1 | Repo und Konsole | wie TF-ENGINE-066, Schritte 1 bis 3 |  | Dateien `basis.txt` und `x3.txt` |
 | 2 | Konsole | die Zeilen „solideKi ohne Erweiterung“ und „solideKi mit Erweiterung“ vergleichen |  | Schritte und Summe gleich |
 | 3 | Konsole | bei Abweichung das Aktionsprotokoll beider Stände vergleichen | `diff basis.txt.ki.txt x3.txt.ki.txt` | erste abweichende Zeile nennt Partie und Schritt |
 | 4 | Repo | Probedatei löschen |  | `git status` ist leer |
 
 ## Technische Prüfung
 
-Dieselbe Probedatei wie in TF-ENGINE-061; für die KI kommt je Schritt die Sicht des Entscheiders ohne die X3-Felder in die Summe, und jede gewählte Aktion wird mitgeschrieben, damit sich die erste Abweichung finden lässt.
+Dieselbe Probedatei wie in TF-ENGINE-066; für die KI kommt je Schritt die Sicht des Entscheiders ohne die X3-Felder in die Summe, und jede gewählte Aktion wird mitgeschrieben, damit sich die erste Abweichung finden lässt.
 
 ## Nicht abgedeckte Grenzfälle
 
