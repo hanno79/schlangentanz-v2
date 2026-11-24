@@ -26,9 +26,8 @@ Offen liegt: die eigene Hand und die eigene geheime Aufgabe, alle Schlangen
 samt der Karten unter einer Farbenfusion, alle Ablagestapel vollständig (D28),
 die Auslage vor jedem Spieler (A4), erfüllte offene Aufgaben (A9), ausliegende
 Gruben (A7.6), was aus dem Spiel ist, die angesagte Sonderkarte (A6, B2), eine
-offene Entscheidung samt den aufgedeckten und der für Risiko-Aktion 2 offen
-benannten Karte (X3, A8.2, D52) und wie viele Schlangen bisher angelegt
-wurden, weil jede neue Schlange am Tisch zu sehen war.
+offene Entscheidung samt aufgedeckter und offen benannter Karte (X3, A8.2,
+D52) und die Zahl der bisher angelegten Schlangen, die jeder am Tisch sah.
 Verdeckt bleibt (B2): fremde Handkarten, von denen nur die Zahl zu sehen ist;
 die Reihenfolge von Nachzieh- und Aufgabenstapel, von denen nur die Grösse zu
 sehen ist; fremde geheime Aufgaben und ob sie erfüllt sind, weil sie erst bei
