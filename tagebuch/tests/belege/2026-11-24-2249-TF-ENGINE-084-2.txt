@@ -1,0 +1,54 @@
+import { describe, expect, it } from 'vitest'
+import type { SchlangenkorbSpielenAktion, SpielAktion, Spielzustand } from '../../index'
+import { sichtFuer } from '../../../ki/sicht'
+import { verrateneHandkarten } from '../nachrechnen'
+import { risiko } from '../risiko_hilfen'
+import { aktionen, fuehreAus, hand } from '../zugablauf_hilfen'
+import { handIds, KORB, korbId, korbtisch, spiele, spieleKarte, spieleKorb } from '../korb_hilfen'
+
+// Prüfer X6, Nachprüfung nach Merge mit X5: B2-Störproben; temporär.
+const sicht = (z: Spielzustand) => JSON.stringify(sichtFuer(z, 1))
+
+describe('Prüfer X6 Nachprüfung B2', () => {
+  it('Ziehe 3: Sicht des Gegners unabhängig von den gezogenen Karten, auch nach einer Risiko-Karte', () => {
+    const a = korbtisch([KORB, 'Blau']).stapelOben(['Rot', 'Gelb', 'Grün', 'Braun', 'Violett', 'Blau']).zustand()
+    const b = korbtisch([KORB, 'Blau']).stapelOben(['Rot', 'Violett', 'Schlangenblockade', 'Braun', 'Violett', 'Blau']).zustand()
+    const na = spieleKorb(a, 'ziehen')
+    const nb = spieleKorb(b, 'ziehen')
+    expect(sicht(na.zustand)).toEqual(sicht(nb.zustand))
+    for (const id of a.nachziehstapel.slice(0, 3).map((k) => k.id)) expect(sicht(na.zustand)).not.toContain(id)
+    expect(verrateneHandkarten(na.zustand, na.ereignisse)).toEqual([])
+    const ra = fuehreAus(na.zustand, risiko(na.zustand, 1))
+    const rb = fuehreAus(nb.zustand, risiko(nb.zustand, 1))
+    console.log('PROBE nach Risiko 1:', ra.ereignisse.map((e) => e.typ).join(','), '| Hand', hand(ra.zustand, 0).length)
+    console.log('PROBE EA', JSON.stringify(ra.ereignisse))
+    console.log('PROBE EB', JSON.stringify(rb.ereignisse))
+    console.log('PROBE Stapel A', a.nachziehstapel.slice(0, 6).map((k) => k.id).join(','), 'B', b.nachziehstapel.slice(0, 6).map((k) => k.id).join(','))
+    expect(sicht(ra.zustand)).toEqual(sicht(rb.zustand))
+    expect(ra.ereignisse).toEqual(rb.ereignisse)
+    for (const id of a.nachziehstapel.slice(0, 3).map((k) => k.id)) expect(sicht(ra.zustand)).not.toContain(id)
+    expect(verrateneHandkarten(ra.zustand, ra.ereignisse)).toEqual([])
+    // gezogene Rot (in beiden gleich) ausspielen
+    const xa = spieleKarte(ra.zustand, handIds(ra.zustand, 0, 'Rot')[0])
+    const xb = spieleKarte(rb.zustand, handIds(rb.zustand, 0, 'Rot')[0])
+    expect(sicht(xa.zustand)).toEqual(sicht(xb.zustand))
+  })
+
+  it('Zurücktauschen: Id nicht in der Sicht, Platz als verdeckte Karte belegt; auch danach mit Risiko-Karte', () => {
+    const start = korbtisch([KORB, 'Rot', 'Gelb']).schlange(0, ['Blau']).stapelOben(['Grün', 'Braun', 'Violett']).zustand()
+    const [rot] = handIds(start, 0, 'Rot')
+    const [gelb] = handIds(start, 0, 'Gelb')
+    let z = spiele(start, { typ: 'FarbkarteLegen', spielerId: 'spieler-1', karteId: rot, ziel: { art: 'schlange', schlangenId: start.spieler[0].schlangen[0].id, seite: 'ende' } } as SpielAktion).zustand
+    const tausch: SchlangenkorbSpielenAktion = { typ: 'SchlangenkorbSpielen', spielerId: 'spieler-1', karteId: korbId(z), bonus: { art: 'tauschen', tausch: [{ schlangenId: z.spieler[0].schlangen[0].id, karteId: rot, handkarteId: gelb }] } }
+    const t = spiele(z, tausch)
+    z = t.zustand
+    expect(hand(z, 0)).toContain(rot)
+    console.log('PROBE verwendet Gegnersicht:', JSON.stringify(sichtFuer(z, 1).zug.verwendet))
+    expect(sicht(z)).not.toContain(rot)
+    expect(verrateneHandkarten(z, t.ereignisse)).toEqual([])
+    const r = fuehreAus(z, risiko(z, 1))
+    expect(sicht(r.zustand)).not.toContain(rot)
+    expect(verrateneHandkarten(r.zustand, r.ereignisse)).toEqual([])
+    console.log('PROBE Aktionen danach:', [...new Set(aktionen(r.zustand).map((a) => a.typ))].join(','))
+  })
+})
